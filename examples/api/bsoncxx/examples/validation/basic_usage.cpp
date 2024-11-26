@@ -30,14 +30,14 @@ void example() {
     {
         std::uint8_t bytes[1]{};  // Invalid.
 
-        ASSERT(!bsoncxx::validate(bytes, sizeof(bytes)));
+        EXPECT(!bsoncxx::validate(bytes, sizeof(bytes)));
 
         std::size_t offset;
 
-        ASSERT(!bsoncxx::validate(bytes, sizeof(bytes), bsoncxx::validator{}, &offset));
+        EXPECT(!bsoncxx::validate(bytes, sizeof(bytes), bsoncxx::validator{}, &offset));
 
         // Set to `0` for an invalid BSON document.
-        ASSERT(offset == 0u);
+        EXPECT(offset == 0u);
     }
 
     bsoncxx::document::value owner = bsoncxx::from_json(R"({"x": 1})");
@@ -46,24 +46,24 @@ void example() {
 
     {
         auto doc_opt = bsoncxx::validate(data, length);
-        ASSERT(doc_opt);
+        EXPECT(doc_opt);
 
         bsoncxx::document::view doc = *doc_opt;
 
-        ASSERT(doc.data() == data);
-        ASSERT(doc.length() == length);
-        ASSERT(doc == owner.view());
+        EXPECT(doc.data() == data);
+        EXPECT(doc.length() == length);
+        EXPECT(doc == owner.view());
     }
 
     {
         bsoncxx::validator options;
         std::size_t offset = 123u;
 
-        ASSERT(bsoncxx::validate(data, length) ==
+        EXPECT(bsoncxx::validate(data, length) ==
                bsoncxx::validate(data, length, options, &offset));
 
         // Not set when valid.
-        ASSERT(offset == 123u);
+        EXPECT(offset == 123u);
     }
 }
 // [Example]

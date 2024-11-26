@@ -449,11 +449,11 @@ void add_observe_events(spec::apm_checker& apm, options::apm& apm_opts, document
 
     for (const auto& event : events) {
         const auto event_type = event.get_string().value;
-        if (event_type == mongocxx::stdx::string_view("commandStartedEvent")) {
+        if (event_type == bsoncxx::stdx::string_view("commandStartedEvent")) {
             apm.set_command_started_unified(apm_opts);
-        } else if (event_type == mongocxx::stdx::string_view("commandSucceededEvent")) {
+        } else if (event_type == bsoncxx::stdx::string_view("commandSucceededEvent")) {
             apm.set_command_succeeded_unified(apm_opts);
-        } else if (event_type == mongocxx::stdx::string_view("commandFailedEvent")) {
+        } else if (event_type == bsoncxx::stdx::string_view("commandFailedEvent")) {
             apm.set_command_failed_unified(apm_opts);
         } else {
             UNSCOPED_INFO("ignoring unsupported command monitoring event " << event_type);
@@ -505,7 +505,7 @@ read_preference get_read_preference(const document::element& opts) {
 
     const auto mode = read_pref["mode"].get_string().value;
 
-    if (mode.compare("secondaryPreferred") == 0) {
+    if (mode == "secondaryPreferred") {
         rp.mode(read_preference::read_mode::k_secondary_preferred);
     } else {
         FAIL("unhandled readPreference mode: " << mode);
@@ -517,9 +517,9 @@ read_preference get_read_preference(const document::element& opts) {
 write_concern get_write_concern(const document::element& opts) {
     auto wc = write_concern{};
     if (auto w = opts["writeConcern"]["w"]) {
-        if (w.type() == type::k_utf8) {
+        if (w.type() == type::k_string) {
             const auto strval = w.get_string().value;
-            if (0 == strval.compare("majority")) {
+            if (strval == "majority") {
                 wc.acknowledge_level(mongocxx::write_concern::level::k_majority);
             } else {
                 FAIL("Unsupported write concern string " << strval);
@@ -866,46 +866,59 @@ void assert_error(const mongocxx::operation_exception& exception,
     }
 
     if (const auto is_client_error = expect_error["isClientError"]) {
-        if (std::strstr(exception.what(), "Snapshot reads require MongoDB 5.0 or later") !=
-            nullptr) {
-            // Original error: { MONGOC_ERROR_CLIENT, MONGOC_ERROR_CLIENT_SESSION_FAILURE }
-            // Do not assert a server-side error.
-            // The C++ driver throws this error as a server-side error operation_exception.
-            // Remove this special case as part of CXX-2377.
-            REQUIRE(is_client_error.get_bool());
-        } else if (std::strstr(exception.what(), "The selected server does not support hint for") !=
-                   nullptr) {
-            // Original error: { MONGOC_ERROR_COMMAND, MONGOC_ERROR_PROTOCOL_BAD_WIRE_VERSION }
-            // Do not assert a server-side error.
-            // The C++ driver throws this error as a server-side error operation_exception.
-            // Remove this special case as part of CXX-2377.
-            REQUIRE(is_client_error.get_bool());
-        } else if (std::strstr(exception.what(), "Error in KMS response") != nullptr) {
-            REQUIRE(is_client_error.get_bool());
-        } else if (std::strstr(exception.what(),
-                               "keyMaterial should have length 96, but has length 84") != nullptr) {
-            REQUIRE(is_client_error.get_bool());
-        } else if (std::strstr(exception.what(), "expected UTF-8 key") != nullptr) {
-            REQUIRE(is_client_error.get_bool());
-        } else if (std::strstr(exception.what(), "Unexpected field: 'invalid'") != nullptr) {
-            REQUIRE(is_client_error.get_bool());
-        } else if (std::strstr(exception.what(), "Failed to resolve kms.invalid.amazonaws.com") !=
-                   nullptr) {
-            REQUIRE(is_client_error.get_bool());
-        } else if (std::strstr(
-                       exception.what(),
-                       "The ciphertext refers to a customer master key that does not exist") !=
-                   nullptr) {
-            REQUIRE(is_client_error.get_bool());
-        } else if (std::strstr(exception.what(), "does not exist") != nullptr) {
-            REQUIRE(is_client_error.get_bool());
-        } else if (std::strstr(exception.what(),
-                               "Failed to resolve invalid-vault-csfle.vault.azure.net") !=
-                   nullptr) {
-            REQUIRE(is_client_error.get_bool());
-        } else if (is_client_error.get_bool()) {
-            // An operation_exception represents a server-side error.
-            REQUIRE(!is_client_error.get_bool());
+        // An explicit list of client-side errors. We do not yet have a reliable and consistent
+        // method to distinguish client-side errors from server-side errors. (CXX-2377)
+        static const bsoncxx::stdx::string_view patterns[] = {
+            // { MONGOC_ERROR_CLIENT, MONGOC_ERROR_CLIENT_SESSION_FAILURE }
+            // mongoc: mongoc_cmd_parts_assemble
+            "Snapshot reads require MongoDB 5.0 or later",
+
+            // { MONGOC_ERROR_COMMAND, MONGOC_ERROR_PROTOCOL_BAD_WIRE_VERSION }
+            // mongoc: mongoc_collection_find_and_modify_with_opts,
+            // _mongoc_write_command_execute_idl
+            "The selected server does not support hint for",
+
+            // { MONGOC_ERROR_STREAM, MONGOC_ERROR_STREAM_NAME_RESOLUTION }
+            // mongoc: mongoc_client_connect_tcp, mongoc_topology_scanner_node_setup_tcp
+            "Failed to resolve ",
+
+            // { MONGOCRYPT_STATUS_ERROR_CLIENT, MONGOCRYPT_GENERIC_ERROR_CODE }
+            // libmongocrypt: mongocrypt_kms_ctx_feed
+            "Error in KMS response",
+
+            // { MONGOCRYPT_STATUS_ERROR_CLIENT, MONGOCRYPT_GENERIC_ERROR_CODE }
+            // libmongocrypt: mongocrypt_ctx_setopt_key_material
+            "keyMaterial should have length 96, but has length 84",
+
+            // { MONGOCRYPT_STATUS_ERROR_CLIENT, MONGOCRYPT_GENERIC_ERROR_CODE }
+            // libmongocrypt: _mongocrypt_parse_optional_utf8, _mongocrypt_parse_required_utf8
+            "expected UTF-8 key",
+
+            // { MONGOCRYPT_STATUS_ERROR_CLIENT, MONGOCRYPT_GENERIC_ERROR_CODE }
+            // libmongocrypt: _mongocrypt_check_allowed_fields
+            "Unexpected field: 'invalid'",
+
+            // { MONGOCRYPT_STATUS_ERROR_CLIENT, MONGOCRYPT_GENERIC_ERROR_CODE }
+            // libmongocrypt: _kms_done
+            "key material not expected length",
+        };
+
+        const bsoncxx::stdx::string_view message = exception.what();
+
+        const auto iter = std::find_if(std::begin(patterns),
+                                       std::end(patterns),
+                                       [message](bsoncxx::stdx::string_view pattern) {
+                                           return message.find(pattern) != message.npos;
+                                       });
+
+        if (iter != std::end(patterns)) {
+            // Treat this as a client-side error.
+            const auto pattern = *iter;
+            CAPTURE(pattern);
+            REQUIRE(is_client_error.get_bool().value);
+        } else {
+            // Treat this as a server-side error.
+            REQUIRE(!is_client_error.get_bool().value);
         }
     }
 
@@ -942,7 +955,7 @@ void assert_error(const mongocxx::operation_exception& exception,
         // in assert_error():
         // See
         //
-    "https://github.com/mongodb/specifications/blob/master/source/unified-test-format/unified-test-format.rst#expectederror":
+    "https://github.com/mongodb/specifications/blob/master/source/unified-test-format/unified-test-format.md#expectederror":
         // A substring of the expected error message (e.g. "errmsg" field in a server error
         // document). The test runner MUST assert that the error message contains this string using
         // a case-insensitive match.
@@ -1085,9 +1098,9 @@ struct fail_point_guard_type {
     }
 };
 
-void disable_targeted_fail_point(mongocxx::stdx::string_view uri,
+void disable_targeted_fail_point(bsoncxx::stdx::string_view uri,
                                  std::uint32_t server_id,
-                                 mongocxx::stdx::string_view fail_point) {
+                                 bsoncxx::stdx::string_view fail_point) {
     const auto command_owner =
         make_document(kvp("configureFailPoint", fail_point), kvp("mode", "off"));
     const auto command = command_owner.view();
@@ -1137,8 +1150,8 @@ document::value bulk_write_result(const mongocxx::bulk_write_exception& e) {
 }
 
 // Match test cases that should be skipped by both test and case descriptions.
-const std::map<std::pair<mongocxx::stdx::string_view, mongocxx::stdx::string_view>,
-               mongocxx::stdx::string_view>
+const std::map<std::pair<bsoncxx::stdx::string_view, bsoncxx::stdx::string_view>,
+               bsoncxx::stdx::string_view>
     should_skip_test_cases = {
         {{"retryable reads handshake failures",
           "collection.findOne succeeds after retryable handshake network error"},
@@ -1156,7 +1169,7 @@ const std::map<std::pair<mongocxx::stdx::string_view, mongocxx::stdx::string_vie
          "collection.listIndexNames optional helper is not supported"},
 };
 
-void run_tests(mongocxx::stdx::string_view test_description, document::view test) {
+void run_tests(bsoncxx::stdx::string_view test_description, document::view test) {
     REQUIRE(test["tests"]);
 
     for (const auto& ele : test["tests"].get_array().value) {
@@ -1299,7 +1312,7 @@ void run_tests_in_file(const std::string& test_path) {
 // file:
 void run_unified_format_tests_in_env_dir(
     const std::string& env_path,
-    const std::set<mongocxx::stdx::string_view>& unsupported_tests = {}) {
+    const std::set<bsoncxx::stdx::string_view>& unsupported_tests = {}) {
     const char* p = std::getenv(env_path.c_str());
 
     if (nullptr == p)
@@ -1328,7 +1341,7 @@ void run_unified_format_tests_in_env_dir(
 }
 
 TEST_CASE("unified format spec automated tests", "[unified_format_specs]") {
-    const std::set<mongocxx::stdx::string_view> unsupported_tests = {
+    const std::set<bsoncxx::stdx::string_view> unsupported_tests = {
         // Waiting on CDRIVER-3525 and CXX-2166.
         "valid-pass/entity-client-cmap-events.json",
         // Waiting on CDRIVER-3525 and CXX-2166.
@@ -1374,7 +1387,7 @@ TEST_CASE("index management spec automated tests", "[unified_format_specs]") {
 }
 
 // See:
-// https://github.com/mongodb/specifications/blob/master/source/client-side-encryption/client-side-encryption.rst
+// https://github.com/mongodb/specifications/blob/master/source/client-side-encryption/client-side-encryption.md
 TEST_CASE("client side encryption unified format spec automated tests", "[unified_format_specs]") {
     CLIENT_SIDE_ENCRYPTION_ENABLED_OR_SKIP();
     run_unified_format_tests_in_env_dir("CLIENT_SIDE_ENCRYPTION_UNIFIED_TESTS_PATH");

@@ -29,7 +29,7 @@ void example() {
         bsoncxx::oid a;
         bsoncxx::oid b;
 
-        ASSERT(a != b);  // Random and unique per process.
+        EXPECT(a != b);  // Random and unique per process.
     }
 
     {
@@ -40,17 +40,17 @@ void example() {
         {
             std::time_t time = oid.get_time_t();
             char str[sizeof("YYYY-MM-DD HH:MM:SS")];
-            ASSERT(std::strftime(str, sizeof(str), "%F %T", std::gmtime(&time)) ==
+            EXPECT(std::strftime(str, sizeof(str), "%F %T", std::gmtime(&time)) ==
                    sizeof(str) - 1u);
-            ASSERT(std::string(str) == "1970-01-01 00:00:00");
+            EXPECT(std::string(str) == "1970-01-01 00:00:00");
         }
 
-        ASSERT(oid.bytes() != bytes);  // Seperate storage.
-        ASSERT(oid.size() == bsoncxx::oid::k_oid_length);
-        ASSERT(std::memcmp(bytes, oid.bytes(), oid.size()) == 0);
+        EXPECT(oid.bytes() != bytes);  // Seperate storage.
+        EXPECT(oid.size() == bsoncxx::oid::k_oid_length);
+        EXPECT(std::memcmp(bytes, oid.bytes(), oid.size()) == 0);
 
-        ASSERT(oid.to_string() == "000000000000000000000000");
-        ASSERT(oid == bsoncxx::oid{"000000000000000000000000"});
+        EXPECT(oid.to_string() == "000000000000000000000000");
+        EXPECT(oid == bsoncxx::oid{"000000000000000000000000"});
     }
 
     {
@@ -62,17 +62,17 @@ void example() {
         {
             std::time_t time = oid.get_time_t();
             char str[sizeof("YYYY-MM-DD HH:MM:SS")];
-            ASSERT(std::strftime(str, sizeof(str), "%F %T", std::gmtime(&time)) ==
+            EXPECT(std::strftime(str, sizeof(str), "%F %T", std::gmtime(&time)) ==
                    sizeof(str) - 1u);
-            ASSERT(std::string(str) == "2000-01-01 23:59:59");
+            EXPECT(std::string(str) == "2000-01-01 23:59:59");
         }
 
-        ASSERT(oid < bsoncxx::oid{"389622001112131415212223"});  // Timestamp: 2000-02-01 00:00:00
-        ASSERT(oid > bsoncxx::oid{"386d43801112131415212223"});  // Timestamp: 2000-01-01 00:00:00
-        ASSERT(oid < bsoncxx::oid{"386e94ffffffffffff212223"});  // Value: 1099511627775
-        ASSERT(oid > bsoncxx::oid{"386e94ff0000000000212223"});  // Value: 0
-        ASSERT(oid < bsoncxx::oid{"386e94ff1112131415ffffff"});  // Counter: 16777215
-        ASSERT(oid > bsoncxx::oid{"386e94ff1112131415000000"});  // Counter: 0
+        EXPECT(oid < bsoncxx::oid{"389622001112131415212223"});  // Timestamp: 2000-02-01 00:00:00
+        EXPECT(oid > bsoncxx::oid{"386d43801112131415212223"});  // Timestamp: 2000-01-01 00:00:00
+        EXPECT(oid < bsoncxx::oid{"386e94ffffffffffff212223"});  // Value: 1099511627775
+        EXPECT(oid > bsoncxx::oid{"386e94ff0000000000212223"});  // Value: 0
+        EXPECT(oid < bsoncxx::oid{"386e94ff1112131415ffffff"});  // Counter: 16777215
+        EXPECT(oid > bsoncxx::oid{"386e94ff1112131415000000"});  // Counter: 0
     }
 }
 // [Example]

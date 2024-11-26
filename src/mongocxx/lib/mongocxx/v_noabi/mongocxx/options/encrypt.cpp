@@ -34,7 +34,8 @@ encrypt& encrypt::key_id(bsoncxx::v_noabi::types::bson_value::view_or_value key_
     return *this;
 }
 
-const stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value>& encrypt::key_id() const {
+const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value>&
+encrypt::key_id() const {
     return _key_id;
 }
 
@@ -43,7 +44,7 @@ encrypt& encrypt::key_alt_name(std::string name) {
     return *this;
 }
 
-const stdx::optional<std::string>& encrypt::key_alt_name() const {
+const bsoncxx::v_noabi::stdx::optional<std::string>& encrypt::key_alt_name() const {
     return _key_alt_name;
 }
 
@@ -52,7 +53,7 @@ encrypt& encrypt::algorithm(encrypt::encryption_algorithm algorithm) {
     return *this;
 }
 
-const stdx::optional<encrypt::encryption_algorithm>& encrypt::algorithm() const {
+const bsoncxx::v_noabi::stdx::optional<encrypt::encryption_algorithm>& encrypt::algorithm() const {
     return _algorithm;
 }
 
@@ -61,7 +62,7 @@ encrypt& encrypt::contention_factor(int64_t contention_factor) {
     return *this;
 }
 
-const stdx::optional<int64_t>& encrypt::contention_factor() const {
+const bsoncxx::v_noabi::stdx::optional<int64_t>& encrypt::contention_factor() const {
     return _contention_factor;
 }
 
@@ -70,7 +71,8 @@ encrypt& encrypt::query_type(encrypt::encryption_query_type query_type) {
     return *this;
 }
 
-const stdx::optional<encrypt::encryption_query_type>& encrypt::query_type() const {
+const bsoncxx::v_noabi::stdx::optional<encrypt::encryption_query_type>& encrypt::query_type()
+    const {
     return _query_type;
 }
 
@@ -79,7 +81,7 @@ encrypt& encrypt::range_opts(options::range opts) {
     return *this;
 }
 
-const stdx::optional<options::range>& encrypt::range_opts() const {
+const bsoncxx::v_noabi::stdx::optional<options::range>& encrypt::range_opts() const {
     return _range_opts;
 }
 

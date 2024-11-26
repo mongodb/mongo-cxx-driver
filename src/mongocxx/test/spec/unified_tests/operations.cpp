@@ -149,7 +149,7 @@ document::value find(collection& coll, client_session* session, document::view o
 
     options::find options = make_find_options(arguments);
 
-    stdx::optional<cursor> result_cursor;
+    bsoncxx::stdx::optional<cursor> result_cursor;
 
     if (session) {
         result_cursor.emplace(coll.find(*session, filter, options));
@@ -368,7 +368,7 @@ document::value run_bulk_write(collection& coll, client_session* session, docume
         auto request_arguments = request_element[operation_name].get_document().value;
         CAPTURE(to_json(request_arguments), operation_name);
 
-        if (operation_name.compare("updateOne") == 0) {
+        if (operation_name == "updateOne") {
             auto update_one = _build_update_model<model::update_one>(request_arguments);
 
             add_hint_to_model(update_one, request_arguments);
@@ -390,7 +390,7 @@ document::value run_bulk_write(collection& coll, client_session* session, docume
             }
 
             writes.emplace_back(update_one);
-        } else if (operation_name.compare("updateMany") == 0) {
+        } else if (operation_name == "updateMany") {
             auto update_many = _build_update_model<model::update_many>(request_arguments);
 
             add_hint_to_model(update_many, request_arguments);
@@ -412,7 +412,7 @@ document::value run_bulk_write(collection& coll, client_session* session, docume
             }
 
             writes.emplace_back(update_many);
-        } else if (operation_name.compare("replaceOne") == 0) {
+        } else if (operation_name == "replaceOne") {
             document::view filter = request_arguments["filter"].get_document().value;
             document::view replacement = request_arguments["replacement"].get_document().value;
             model::replace_one replace_one(filter, replacement);
@@ -432,11 +432,11 @@ document::value run_bulk_write(collection& coll, client_session* session, docume
             }
 
             writes.emplace_back(replace_one);
-        } else if (operation_name.compare("insertOne") == 0) {
+        } else if (operation_name == "insertOne") {
             document::view document = request_arguments["document"].get_document().value;
             model::insert_one insert_one(document);
             writes.emplace_back(insert_one);
-        } else if (operation_name.compare("deleteOne") == 0) {
+        } else if (operation_name == "deleteOne") {
             document::view filter = request_arguments["filter"].get_document().value;
             model::delete_one delete_one(filter);
             add_hint_to_model(delete_one, request_arguments);
@@ -450,7 +450,7 @@ document::value run_bulk_write(collection& coll, client_session* session, docume
             }
 
             writes.emplace_back(delete_one);
-        } else if (operation_name.compare("deleteMany") == 0) {
+        } else if (operation_name == "deleteMany") {
             document::view filter = request_arguments["filter"].get_document().value;
             model::delete_many delete_many(filter);
             add_hint_to_model(delete_many, request_arguments);
@@ -529,7 +529,7 @@ document::value insert_many(collection& coll, client_session* session, document:
         documents_to_insert.push_back(element.get_document().value);
     }
 
-    stdx::optional<result::insert_many> insert_many_result;
+    bsoncxx::stdx::optional<result::insert_many> insert_many_result;
 
     if (session) {
         insert_many_result = coll.insert_many(*session, documents_to_insert, insert_options);
@@ -588,7 +588,7 @@ document::value replace_one(collection& coll, client_session* session, document:
     std::int32_t matched_count = 0;
     bsoncxx::stdx::optional<std::int32_t> modified_count;
     std::int32_t upserted_count = 0;
-    stdx::optional<result::replace_one> replace_result;
+    bsoncxx::stdx::optional<result::replace_one> replace_result;
 
     if (session) {
         replace_result = coll.replace_one(*session, filter, replacement, options);
@@ -656,7 +656,7 @@ document::value aggregate(Entity& entity, client_session* session, document::vie
         options.allow_disk_use(allow_disk_use.get_bool());
     }
 
-    stdx::optional<cursor> result_cursor;
+    bsoncxx::stdx::optional<cursor> result_cursor;
 
     if (session) {
         result_cursor.emplace(entity.aggregate(*session, pipeline, options));
@@ -688,7 +688,7 @@ document::value insert_one(collection& coll, client_session* session, document::
         opts.comment(comment.get_value());
     }
 
-    stdx::optional<result::insert_one> insert_one_result;
+    bsoncxx::stdx::optional<result::insert_one> insert_one_result;
     if (session) {
         insert_one_result = coll.insert_one(*session, document, opts);
     } else {
@@ -872,7 +872,7 @@ document::value find_one_and_delete(collection& coll,
         options.sort(sort.get_document().value);
     }
 
-    stdx::optional<document::value> document;
+    bsoncxx::stdx::optional<document::value> document;
     if (session) {
         document = coll.find_one_and_delete(*session, filter, options);
     } else {
@@ -941,7 +941,7 @@ document::value find_one_and_replace(collection& coll,
         options.upsert(upsert.get_bool().value);
     }
 
-    stdx::optional<document::value> document;
+    bsoncxx::stdx::optional<document::value> document;
     document::view replacement = arguments["replacement"].get_document().value;
     if (session) {
         document = coll.find_one_and_replace(*session, filter, replacement, options);
@@ -1016,7 +1016,7 @@ document::value find_one_and_update(collection& coll,
     }
 
     auto result = builder::basic::document{};
-    stdx::optional<document::value> document;
+    bsoncxx::stdx::optional<document::value> document;
 
     switch (arguments["update"].type()) {
         case bsoncxx::type::k_document: {
@@ -1284,7 +1284,7 @@ document::value delete_many(collection& coll, client_session* session, document:
     auto result = builder::basic::document{};
     std::int32_t deleted_count = 0;
 
-    stdx::optional<result::delete_result> delete_result;
+    bsoncxx::stdx::optional<result::delete_result> delete_result;
     if (session) {
         delete_result = coll.delete_many(*session, filter, options);
     } else {
@@ -1372,7 +1372,7 @@ document::value update_one(collection& coll, client_session* session, document::
         options.upsert(upsert.get_bool().value);
     }
 
-    stdx::optional<result::update> update_one_result;
+    bsoncxx::stdx::optional<result::update> update_one_result;
 
     {
         const auto update = arguments["update"];
@@ -1465,7 +1465,7 @@ document::value update_many(collection& coll, document::view operation) {
         options.upsert(upsert.get_bool().value);
     }
 
-    stdx::optional<result::update> update_many_result;
+    bsoncxx::stdx::optional<result::update> update_many_result;
 
     {
         const auto update = arguments["update"];
@@ -1621,7 +1621,7 @@ document::value distinct(collection& coll, client_session* session, document::vi
         options.comment(comment.get_value());
     }
 
-    stdx::optional<cursor> result_cursor;
+    bsoncxx::stdx::optional<cursor> result_cursor;
     if (session) {
         result_cursor.emplace(coll.distinct(*session, field_name, filter, options));
     } else {
@@ -1893,7 +1893,7 @@ document::value list_search_indexes(collection& coll, document::view operation) 
     if (arguments["aggregationOptions"]) {
         const auto aggregation_options = arguments["aggregationOptions"].get_document().view();
         for (auto&& element : aggregation_options) {
-            if (element.key() == stdx::string_view("batchSize")) {
+            if (element.key() == bsoncxx::stdx::string_view("batchSize")) {
                 options.batch_size(element.get_int32().value);
             } else {
                 throw std::logic_error{"unsupported aggregateOptions field: " +

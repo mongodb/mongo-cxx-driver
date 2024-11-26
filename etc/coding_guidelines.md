@@ -130,7 +130,7 @@ class foo {
     private:
       friend baz;
 
-      class MONGOCXX_PRIVATE impl;
+      class impl;
       std::unique_ptr<impl> _impl;
 
 };

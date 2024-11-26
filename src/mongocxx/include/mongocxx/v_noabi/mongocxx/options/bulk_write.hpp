@@ -88,7 +88,8 @@ class bulk_write {
     /// @see
     /// - https://www.mongodb.com/docs/manual/core/write-concern/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<mongocxx::v_noabi::write_concern>&)
+    MONGOCXX_ABI_EXPORT_CDECL(
+        const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern>&)
     write_concern() const;
 
     ///
@@ -110,7 +111,8 @@ class bulk_write {
     /// @return
     ///  The current document validation bypass setting.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<bool>) bypass_document_validation() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<bool>)
+    bypass_document_validation() const;
 
     ///
     /// Set the value of the let option.
@@ -130,7 +132,8 @@ class bulk_write {
     /// @return
     ///  The current let option.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<bsoncxx::v_noabi::document::view_or_value>)
+    MONGOCXX_ABI_EXPORT_CDECL(
+        const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value>)
     let() const;
 
     ///
@@ -153,15 +156,15 @@ class bulk_write {
     ///  The current comment option.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(
-        const stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value>)
+        const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value>)
     comment() const;
 
    private:
     bool _ordered;
-    stdx::optional<mongocxx::v_noabi::write_concern> _write_concern;
-    stdx::optional<bool> _bypass_document_validation;
-    stdx::optional<bsoncxx::v_noabi::document::view_or_value> _let;
-    stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value> _comment;
+    bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern> _write_concern;
+    bsoncxx::v_noabi::stdx::optional<bool> _bypass_document_validation;
+    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> _let;
+    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value> _comment;
 };
 
 }  // namespace options

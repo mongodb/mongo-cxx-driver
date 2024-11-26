@@ -17,7 +17,7 @@
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/builder/basic/kvp.hpp>
 #include <bsoncxx/document/value.hpp>
-#include <bsoncxx/document/view.hpp>
+#include <bsoncxx/json.hpp>
 #include <bsoncxx/types.hpp>
 
 #include <examples/api/runner.hh>
@@ -33,17 +33,10 @@ void example() {
     bsoncxx::types::b_double b{2.0};
     bsoncxx::types::b_string c{"three"};
 
-    bsoncxx::document::value owner =
+    bsoncxx::document::value doc =
         bsoncxx::builder::basic::make_document(kvp("a", a), kvp("b", b), kvp("c", c));
-    bsoncxx::document::view doc = owner.view();
 
-    ASSERT(doc["a"].type() == bsoncxx::type::k_int32);
-    ASSERT(doc["b"].type() == bsoncxx::type::k_double);
-    ASSERT(doc["c"].type() == bsoncxx::type::k_string);
-
-    ASSERT(doc["a"].get_int32() == a);
-    ASSERT(doc["b"].get_double() == b);
-    ASSERT(doc["c"].get_string() == c);
+    EXPECT(doc.view() == bsoncxx::from_json(R"({"a": 1, "b": 2.0, "c": "three"})"));
 }
 // [Example]
 

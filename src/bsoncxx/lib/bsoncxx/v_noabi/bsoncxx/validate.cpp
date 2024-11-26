@@ -13,7 +13,7 @@
 // limitations under the License.
 
 #include <bsoncxx/private/libbson.hh>
-#include <bsoncxx/stdx/make_unique.hpp>
+#include <bsoncxx/private/make_unique.hh>
 #include <bsoncxx/validate.hpp>
 
 #include <bsoncxx/config/private/prelude.hh>
@@ -28,7 +28,7 @@ struct validator::impl {
     bool _check_dot_keys{false};
 };
 
-validator::validator() : _impl{stdx::make_unique<impl>()} {}
+validator::validator() : _impl{make_unique<impl>()} {}
 
 validator::~validator() = default;
 

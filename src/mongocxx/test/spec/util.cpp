@@ -66,27 +66,27 @@ using bsoncxx::stdx::string_view;
 static const int kMaxHelloFailCommands = 7;
 
 uint32_t error_code_from_name(string_view name) {
-    if (name.compare("CannotSatisfyWriteConcern") == 0) {
+    if (name == "CannotSatisfyWriteConcern") {
         return 100;
-    } else if (name.compare("DuplicateKey") == 0) {
+    } else if (name == "DuplicateKey") {
         return 11000;
-    } else if (name.compare("NoSuchTransaction") == 0) {
+    } else if (name == "NoSuchTransaction") {
         return 251;
-    } else if (name.compare("WriteConflict") == 0) {
+    } else if (name == "WriteConflict") {
         return 112;
-    } else if (name.compare("Interrupted") == 0) {
+    } else if (name == "Interrupted") {
         return 11601;
-    } else if (name.compare("MaxTimeMSExpired") == 0) {
+    } else if (name == "MaxTimeMSExpired") {
         return 50;
-    } else if (name.compare("UnknownReplWriteConcern") == 0) {
+    } else if (name == "UnknownReplWriteConcern") {
         return 79;
-    } else if (name.compare("UnsatisfiableWriteConcern") == 0) {
+    } else if (name == "UnsatisfiableWriteConcern") {
         return 100;
-    } else if (name.compare("OperationNotSupportedInTransaction") == 0) {
+    } else if (name == "OperationNotSupportedInTransaction") {
         return 263;
-    } else if (name.compare("APIStrictError") == 0) {
+    } else if (name == "APIStrictError") {
         return 323;
-    } else if (name.compare("ChangeStreamFatalError") == 0) {
+    } else if (name == "ChangeStreamFatalError") {
         return 280;
     }
 
@@ -220,7 +220,7 @@ void configure_fail_point(const client& client, document::view test) {
     }
 }
 
-void disable_fail_point(const client& client, stdx::string_view fail_point) {
+void disable_fail_point(const client& client, bsoncxx::stdx::string_view fail_point) {
     /* Some transactions tests have a failCommand for "hello" repeat seven times. */
     for (int i = 0; i < kMaxHelloFailCommands; i++) {
         try {
@@ -255,7 +255,7 @@ struct fail_point_guard_type {
 
 void disable_fail_point(std::string uri_string,
                         options::client client_opts,
-                        stdx::string_view fail_point) {
+                        bsoncxx::stdx::string_view fail_point) {
     mongocxx::client client = {uri{uri_string}, client_opts};
     disable_fail_point(client, fail_point);
 }
@@ -593,10 +593,10 @@ void run_tests_in_suite(std::string ev, test_runner cb, std::set<std::string> un
     while (std::getline(test_files, test_file)) {
         DYNAMIC_SECTION(test_file) {
             if (unsupported_tests.find(test_file) != unsupported_tests.end()) {
-                WARN("Skipping unsupported test file: " << test_file);
-            } else {
-                cb(path + "/" + test_file);
+                SKIP("Skipping unsupported test file: " << test_file);
             }
+
+            cb(path + "/" + test_file);
         }
     }
 }
@@ -664,7 +664,7 @@ static void run_transaction_operations(
     string_view coll_name,
     client_session* session0,
     client_session* session1,
-    stdx::optional<targeted_fail_point_guard_type>* targeted_fail_point_guard,
+    bsoncxx::stdx::optional<targeted_fail_point_guard_type>* targeted_fail_point_guard,
     const apm_checker& apm_checker,
     bool throw_on_error = false) {
     auto operations = test["operations"].get_array().value;
@@ -684,14 +684,14 @@ static void run_transaction_operations(
         const auto operation = op.get_document().value;
 
         // Handle with_transaction separately.
-        if (operation["name"].get_string().value.compare("withTransaction") == 0) {
+        if (operation["name"].get_string().value == "withTransaction") {
             const auto session = [&]() -> mongocxx::client_session* {
                 const auto object = operation["object"].get_string().value;
-                if (object.compare("session0") == 0) {
+                if (object == "session0") {
                     return session0;
                 }
 
-                if (object.compare("session1") == 0) {
+                if (object == "session1") {
                     return session1;
                 }
 
@@ -749,15 +749,15 @@ static void run_transaction_operations(
                 // activating the disable guard. There is no harm attempting to disable a fail point
                 // that hasn't been set.
                 if (operation["name"] && operation["name"].get_string().value ==
-                                             stdx::string_view("targetedFailPoint")) {
+                                             bsoncxx::stdx::string_view("targetedFailPoint")) {
                     const auto arguments = operation["arguments"];
 
                     const auto session = [&]() -> mongocxx::client_session* {
                         const auto value = arguments["session"].get_string().value;
-                        if (value == stdx::string_view("session0")) {
+                        if (value == bsoncxx::stdx::string_view("session0")) {
                             return session0;
                         }
-                        if (value == stdx::string_view("session1")) {
+                        if (value == bsoncxx::stdx::string_view("session1")) {
                             return session1;
                         }
                         FAIL("unexpected session name: " << value);
@@ -767,7 +767,7 @@ static void run_transaction_operations(
                     // We expect and assume the name of the fail point is always "failCommand". To
                     // date, *all* legacy spec tests use "failCommand" as the fail point name.
                     REQUIRE(arguments["failPoint"]["configureFailPoint"].get_string().value ==
-                            stdx::string_view("failCommand"));
+                            bsoncxx::stdx::string_view("failCommand"));
 
                     // We expect at most one targetedFailPoint operation per test case.
                     REQUIRE(!(*targeted_fail_point_guard));
@@ -894,7 +894,7 @@ void run_transactions_tests_in_file(const std::string& test_path) {
             test_setup(test.get_document().value, test_spec_view);
 
             {
-                stdx::optional<fail_point_guard_type> fail_point_guard;
+                bsoncxx::stdx::optional<fail_point_guard_type> fail_point_guard;
                 if (test["failPoint"]) {
                     const auto fail_point_name = string::to_string(
                         test["failPoint"]["configureFailPoint"].get_string().value);
@@ -949,7 +949,8 @@ void run_transactions_tests_in_file(const std::string& test_path) {
 
                     // If a test uses `targetedFailPoint`, disable the fail point after running all
                     // `operations` to avoid spurious failures in subsequent tests.
-                    stdx::optional<targeted_fail_point_guard_type> targeted_fail_point_guard;
+                    bsoncxx::stdx::optional<targeted_fail_point_guard_type>
+                        targeted_fail_point_guard;
 
                     // Step 11. Perform the operations.
                     run_transaction_operations(test.get_document().value,
@@ -973,12 +974,12 @@ void run_transactions_tests_in_file(const std::string& test_path) {
                     [&](bsoncxx::stdx::string_view key,
                         bsoncxx::stdx::optional<bsoncxx::types::bson_value::view> main,
                         bsoncxx::types::bson_value::view pattern) {
-                        if (key.compare("lsid") == 0) {
+                        if (key == "lsid") {
                             REQUIRE(pattern.type() == type::k_string);
                             REQUIRE(main);
                             REQUIRE(main->type() == type::k_document);
                             auto session_name = pattern.get_string().value;
-                            if (session_name.compare("session0") == 0) {
+                            if (session_name == "session0") {
                                 REQUIRE(
                                     test_util::matches(session_lsid0, main->get_document().value));
                             } else {
@@ -991,7 +992,7 @@ void run_transactions_tests_in_file(const std::string& test_path) {
                                 return test_util::match_action::k_not_equal;
                             }
                             return test_util::match_action::k_skip;
-                        } else if (key.compare("upsert") == 0 || key.compare("multi") == 0) {
+                        } else if (key == "upsert" || key == "multi") {
                             // libmongoc includes `multi: false` and `upsert: false`.
                             // Some tests do not include `multi: false` and `upsert: false`
                             // in expectations. See DRIVERS-2271 and DRIVERS-976.
@@ -1076,7 +1077,7 @@ void run_crud_tests_in_file(const std::string& test_path, uri test_uri) {
 
             configure_fail_point(client, test.get_document().value);
 
-            stdx::optional<fail_point_guard_type> fail_point_guard;
+            bsoncxx::stdx::optional<fail_point_guard_type> fail_point_guard;
             if (test["failPoint"]) {
                 const auto fail_point_name =
                     string::to_string(test["failPoint"]["configureFailPoint"].get_string().value);

@@ -14,20 +14,6 @@
 
 include(CMakePackageConfigHelpers)
 
-# Required by legacy CMake package config files.
-set(BSONCXX_POLY_MNMLSTC_DEPRECATED_INCLUDE_DIRS "")
-
-# Required by pkg-config package config files.
-set(BSONCXX_POLY_MNMLSTC_PKGCONFIG_INCLUDE_DIRS "")
-
-if(BSONCXX_POLY_USE_MNMLSTC AND NOT BSONCXX_POLY_USE_SYSTEM_MNMLSTC)
-    set(BSONCXX_POLY_MNMLSTC_DEPRECATED_INCLUDE_DIRS
-        "${CMAKE_INSTALL_INCLUDEDIR}/bsoncxx/v_noabi/bsoncxx/third_party/mnmlstc"
-    )
-
-    set(BSONCXX_POLY_MNMLSTC_ENABLED ON)
-endif()
-
 # Generate and install modern CMake package config files.
 if(1)
     write_basic_package_version_file(
@@ -94,7 +80,6 @@ if(1)
                 -D "is_static=${is_static}"
                 -D "libbson_req_abi_ver=${LIBBSON_REQUIRED_ABI_VERSION}"
                 -D "libbson_req_ver=${LIBBSON_REQUIRED_VERSION}"
-                -D "mnmlstc_enabled=${BSONCXX_POLY_MNMLSTC_ENABLED}"
                 -P ${CMAKE_CURRENT_SOURCE_DIR}/generate-pc.cmake
             MAIN_DEPENDENCY
                 ${CMAKE_CURRENT_SOURCE_DIR}/libbsoncxx.pc.in

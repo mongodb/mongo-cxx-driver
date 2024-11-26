@@ -141,7 +141,7 @@ class update_functor {
 
    private:
     bool* _called;
-    stdx::optional<bsoncxx::document::view> _expected_collation;
+    bsoncxx::stdx::optional<bsoncxx::document::view> _expected_collation;
     bool _expected_upsert = false;
     bsoncxx::document::view _filter;
     bsoncxx::document::view _update;
@@ -177,7 +177,7 @@ class delete_functor {
 
    private:
     bool* _called;
-    stdx::optional<bsoncxx::document::view> _expected_collation;
+    bsoncxx::stdx::optional<bsoncxx::document::view> _expected_collation;
     bsoncxx::document::view _filter;
 };
 

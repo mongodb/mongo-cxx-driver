@@ -14,7 +14,6 @@
 
 #pragma once
 
-#include <bsoncxx/builder/concatenate.hpp>
 #include <bsoncxx/document/view_or_value.hpp>
 
 #include <bsoncxx/config/prelude.hpp>
@@ -23,8 +22,6 @@ namespace bsoncxx {
 namespace v_noabi {
 namespace builder {
 namespace stream {
-
-using ::bsoncxx::v_noabi::builder::concatenate;  // Deprecated. Deliberately undocumented.
 
 ///
 /// The type of a stream manipulator to open a subdocument.
@@ -98,8 +95,6 @@ constexpr finalize_type finalize;
 namespace bsoncxx {
 namespace builder {
 namespace stream {
-
-using ::bsoncxx::v_noabi::builder::stream::concatenate;  // Deprecated. Deliberately undocumented.
 
 using ::bsoncxx::v_noabi::builder::stream::close_array;
 using ::bsoncxx::v_noabi::builder::stream::close_document;

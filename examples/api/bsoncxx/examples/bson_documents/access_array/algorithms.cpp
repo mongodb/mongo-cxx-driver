@@ -17,7 +17,7 @@
 
 #include <bsoncxx/array/element.hpp>
 #include <bsoncxx/array/view.hpp>
-#include <bsoncxx/json.hpp>
+#include <bsoncxx/builder/basic/array.hpp>
 #include <bsoncxx/types.hpp>
 
 #include <examples/api/runner.hh>
@@ -28,23 +28,23 @@ namespace {
 // [Example]
 // [1, 2.0, "three"]
 void example(bsoncxx::array::view arr) {
-    ASSERT(std::distance(arr.begin(), arr.end()) == 3);
+    EXPECT(std::distance(arr.begin(), arr.end()) == 3);
 
     std::vector<bsoncxx::array::element> elements;
 
     std::copy_if(
         arr.begin(), arr.end(), std::back_inserter(elements), [](const bsoncxx::array::element& e) {
-            return e.key().compare("0") == 0 || e.type() == bsoncxx::type::k_string;
+            return e.key() == "0" || e.type() == bsoncxx::type::k_string;
         });
 
-    ASSERT(elements.size() == 2u);
-    ASSERT(elements[0].key().compare("0") == 0);
-    ASSERT(elements[1].key().compare("2") == 0);
+    EXPECT(elements.size() == 2u);
+    EXPECT(elements[0].key() == "0");
+    EXPECT(elements[1].key() == "2");
 }
 // [Example]
 
 }  // namespace
 
 RUNNER_REGISTER_COMPONENT() {
-    example(bsoncxx::from_json(R"({"v": [1, 2.0, "three"]})")["v"].get_array().value);
+    example(bsoncxx::builder::basic::make_array(1, 2.0, "three"));
 }

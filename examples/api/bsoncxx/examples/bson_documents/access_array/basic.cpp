@@ -14,7 +14,7 @@
 
 #include <bsoncxx/array/element.hpp>
 #include <bsoncxx/array/view.hpp>
-#include <bsoncxx/json.hpp>
+#include <bsoncxx/builder/basic/array.hpp>
 #include <bsoncxx/types.hpp>
 
 #include <examples/api/runner.hh>
@@ -28,16 +28,16 @@ void example(bsoncxx::array::view arr) {
     for (bsoncxx::array::element e : arr) {
         switch (e.type()) {
             case bsoncxx::type::k_int32:
-                ASSERT(e.key().compare("0") == 0);
-                ASSERT(e.get_int32().value == 1);
+                EXPECT(e.key() == "0");
+                EXPECT(e.get_int32().value == 1);
                 break;
             case bsoncxx::type::k_double:
-                ASSERT(e.key().compare("1") == 0);
-                ASSERT(e.get_double().value == 2.0);
+                EXPECT(e.key() == "1");
+                EXPECT(e.get_double().value == 2.0);
                 break;
             case bsoncxx::type::k_string:
-                ASSERT(e.key().compare("2") == 0);
-                ASSERT(e.get_string().value.compare("three") == 0);
+                EXPECT(e.key() == "2");
+                EXPECT(e.get_string().value == "three");
                 break;
         }
     }
@@ -47,6 +47,6 @@ void example(bsoncxx::array::view arr) {
 }  // namespace
 
 RUNNER_REGISTER_COMPONENT() {  // clang-format off
-    example(bsoncxx::from_json(R"({"v": [1, 2.0, "three"]})")["v"].get_array().value);
+    example(bsoncxx::builder::basic::make_array(1, 2.0, "three"));
 
 }  // clang-format on

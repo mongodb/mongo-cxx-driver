@@ -25,7 +25,8 @@ tls& tls::pem_file(bsoncxx::v_noabi::string::view_or_value pem_file) {
     return *this;
 }
 
-const stdx::optional<bsoncxx::v_noabi::string::view_or_value>& tls::pem_file() const {
+const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value>& tls::pem_file()
+    const {
     return _pem_file;
 }
 
@@ -34,7 +35,8 @@ tls& tls::pem_password(bsoncxx::v_noabi::string::view_or_value pem_password) {
     return *this;
 }
 
-const stdx::optional<bsoncxx::v_noabi::string::view_or_value>& tls::pem_password() const {
+const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value>& tls::pem_password()
+    const {
     return _pem_password;
 }
 
@@ -43,7 +45,8 @@ tls& tls::ca_file(bsoncxx::v_noabi::string::view_or_value ca_file) {
     return *this;
 }
 
-const stdx::optional<bsoncxx::v_noabi::string::view_or_value>& tls::ca_file() const {
+const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value>& tls::ca_file()
+    const {
     return _ca_file;
 }
 
@@ -52,7 +55,8 @@ tls& tls::ca_dir(bsoncxx::v_noabi::string::view_or_value ca_dir) {
     return *this;
 }
 
-const stdx::optional<bsoncxx::v_noabi::string::view_or_value>& tls::ca_dir() const {
+const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value>& tls::ca_dir()
+    const {
     return _ca_dir;
 }
 
@@ -61,7 +65,8 @@ tls& tls::crl_file(bsoncxx::v_noabi::string::view_or_value crl_file) {
     return *this;
 }
 
-const stdx::optional<bsoncxx::v_noabi::string::view_or_value>& tls::crl_file() const {
+const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value>& tls::crl_file()
+    const {
     return _crl_file;
 }
 
@@ -70,7 +75,7 @@ tls& tls::allow_invalid_certificates(bool allow_invalid_certificates) {
     return *this;
 }
 
-const stdx::optional<bool>& tls::allow_invalid_certificates() const {
+const bsoncxx::v_noabi::stdx::optional<bool>& tls::allow_invalid_certificates() const {
     return _allow_invalid_certificates;
 }
 

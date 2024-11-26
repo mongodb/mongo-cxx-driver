@@ -13,7 +13,7 @@
 // limitations under the License.
 
 #include <bsoncxx/array/element.hpp>
-#include <bsoncxx/json.hpp>
+#include <bsoncxx/builder/basic/array.hpp>
 #include <bsoncxx/types.hpp>
 #include <bsoncxx/types/bson_value/view.hpp>
 
@@ -26,20 +26,20 @@ namespace {
 // [1, 2.0, "three"]
 void example(bsoncxx::array::element e) {
     bsoncxx::types::bson_value::view v = e.get_value();
-    ASSERT(v.type() == e.type());
+    EXPECT(v.type() == e.type());
 
     switch (v.type()) {
         case bsoncxx::type::k_int32:
-            ASSERT(e.key().compare("0") == 0);
-            ASSERT(v.get_int32() == e.get_int32());
+            EXPECT(e.key() == "0");
+            EXPECT(v.get_int32() == e.get_int32());
             break;
         case bsoncxx::type::k_double:
-            ASSERT(e.key().compare("1") == 0);
-            ASSERT(v.get_double() == e.get_double());
+            EXPECT(e.key() == "1");
+            EXPECT(v.get_double() == e.get_double());
             break;
         case bsoncxx::type::k_string:
-            ASSERT(e.key().compare("2") == 0);
-            ASSERT(v.get_string() == e.get_string());
+            EXPECT(e.key() == "2");
+            EXPECT(v.get_string() == e.get_string());
             break;
     }
 }
@@ -48,8 +48,8 @@ void example(bsoncxx::array::element e) {
 }  // namespace
 
 RUNNER_REGISTER_COMPONENT() {
-    const auto doc = bsoncxx::from_json(R"({"v": [1, 2.0, "three"]})");
-    const auto arr = doc["v"].get_array().value;
+    const auto owner = bsoncxx::builder::basic::make_array(1, 2.0, "three");
+    const auto arr = owner.view();
 
     example(arr[0]);
     example(arr[1]);

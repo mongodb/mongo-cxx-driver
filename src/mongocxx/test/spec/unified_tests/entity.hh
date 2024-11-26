@@ -61,7 +61,7 @@ class map {
     cursor& get_cursor(const key_type& key);
     mongocxx::client_encryption& get_client_encryption(const key_type& key);
 
-    database& get_database_by_name(stdx::string_view name);
+    database& get_database_by_name(bsoncxx::stdx::string_view name);
 
     void clear() noexcept;
     const std::type_info& type(const key_type& key);

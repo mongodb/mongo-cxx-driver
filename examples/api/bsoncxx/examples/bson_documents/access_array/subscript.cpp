@@ -14,7 +14,7 @@
 
 #include <bsoncxx/array/element.hpp>
 #include <bsoncxx/array/view.hpp>
-#include <bsoncxx/json.hpp>
+#include <bsoncxx/builder/basic/array.hpp>
 #include <bsoncxx/types.hpp>
 
 #include <examples/api/runner.hh>
@@ -25,21 +25,21 @@ namespace {
 // [Example]
 // [1, 2]
 void example(bsoncxx::array::view arr) {
-    ASSERT(arr[0]);
+    EXPECT(arr[0]);
 
     {
         bsoncxx::array::element e = arr[1];
 
-        ASSERT(e.key().compare("1") == 0);
-        ASSERT(e.get_int32().value == 2);
+        EXPECT(e.key() == "1");
+        EXPECT(e.get_int32().value == 2);
     }
 
-    ASSERT(!arr[2]);  // Invalid element.
+    EXPECT(!arr[2]);  // Invalid element.
 }
 // [Example]
 
 }  // namespace
 
 RUNNER_REGISTER_COMPONENT() {
-    example(bsoncxx::from_json(R"({"v": [1, 2]})")["v"].get_array().value);
+    example(bsoncxx::builder::basic::make_array(1, 2));
 }

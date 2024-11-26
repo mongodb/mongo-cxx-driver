@@ -13,6 +13,7 @@
 // limitations under the License.
 
 #include <bsoncxx/array/view.hpp>
+#include <bsoncxx/builder/basic/array.hpp>
 #include <bsoncxx/document/value.hpp>
 #include <bsoncxx/json.hpp>
 #include <bsoncxx/types.hpp>
@@ -31,8 +32,7 @@ void example() {
     )");
     bsoncxx::array::view sub = owner.view()["v"].get_array().value;
 
-    ASSERT(sub[0].get_int32().value == 1);
-    ASSERT(sub[1].get_int32().value == 2);
+    EXPECT(sub == bsoncxx::builder::basic::make_array(1, 2));
 }
 // [Example]
 

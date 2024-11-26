@@ -57,31 +57,35 @@ replace& replace::write_concern(mongocxx::v_noabi::write_concern wc) {
     return *this;
 }
 
-const stdx::optional<mongocxx::v_noabi::hint>& replace::hint() const {
+const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::hint>& replace::hint() const {
     return _hint;
 }
 
-const stdx::optional<bsoncxx::v_noabi::document::view_or_value> replace::let() const {
+const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> replace::let()
+    const {
     return _let;
 }
 
-const stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value> replace::comment() const {
+const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value>
+replace::comment() const {
     return _comment;
 }
 
-const stdx::optional<bool>& replace::bypass_document_validation() const {
+const bsoncxx::v_noabi::stdx::optional<bool>& replace::bypass_document_validation() const {
     return _bypass_document_validation;
 }
 
-const stdx::optional<bsoncxx::v_noabi::document::view_or_value>& replace::collation() const {
+const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value>&
+replace::collation() const {
     return _collation;
 }
 
-const stdx::optional<bool>& replace::upsert() const {
+const bsoncxx::v_noabi::stdx::optional<bool>& replace::upsert() const {
     return _upsert;
 }
 
-const stdx::optional<mongocxx::v_noabi::write_concern>& replace::write_concern() const {
+const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern>& replace::write_concern()
+    const {
     return _write_concern;
 }
 

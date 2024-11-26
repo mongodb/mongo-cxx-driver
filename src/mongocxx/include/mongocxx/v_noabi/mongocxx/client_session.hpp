@@ -153,7 +153,8 @@ class client_session {
     /// a transaction already in progress.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(void)
-    start_transaction(const stdx::optional<options::transaction>& transaction_opts = {});
+    start_transaction(
+        const bsoncxx::v_noabi::stdx::optional<options::transaction>& transaction_opts = {});
 
     ///
     /// Commits a transaction on the current client session.
@@ -185,10 +186,18 @@ class client_session {
     /// the transaction, the entire sequence may be retried, and the callback
     /// may be run multiple times.
     ///
-    /// If the user callback calls driver methods that run operations against the
-    /// server that can throw an operation_exception (ex: collection::insert_one),
-    /// the user callback should allow those exceptions to propagate up the stack
-    /// so they can be caught and processed by the with_transaction helper.
+    /// This method has an internal non-adjustable time limit of 120 seconds,
+    /// including all retries.
+    ///
+    /// If the user callback invokes driver methods that run operations against the
+    /// server which could throw an operation_exception, the user callback MUST allow
+    /// those exceptions to propagate up the stack so they can be caught and processed
+    /// by the with_transaction() helper.
+    ///
+    /// For example, a callback that invokes collection::insert_one may encounter a
+    /// "duplicate key" error with accompanying server-side transaction abort. If this
+    /// error were not seen by the with_transaction() helper, the entire transaction
+    /// would retry repeatedly until the overall time limit expires.
     ///
     /// @param cb
     ///   The callback to run inside of a transaction.

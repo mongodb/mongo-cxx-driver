@@ -117,17 +117,6 @@ class element {
     ///
     /// Getter for elements of the b_string type.
     ///
-    /// @deprecated use document::element::get_string() instead.
-    ///
-    /// @throws bsoncxx::v_noabi::exception if this element is not a b_string.
-    ///
-    /// @return the element's value.
-    ///
-    BSONCXX_DEPRECATED BSONCXX_ABI_EXPORT_CDECL(types::b_string) get_utf8() const;
-
-    ///
-    /// Getter for elements of the b_string type.
-    ///
     /// @throws bsoncxx::v_noabi::exception if this element is not a b_string.
     ///
     /// @return the element's value.

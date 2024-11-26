@@ -14,7 +14,7 @@
 
 #include <bsoncxx/array/element.hpp>
 #include <bsoncxx/array/view.hpp>
-#include <bsoncxx/json.hpp>
+#include <bsoncxx/builder/basic/array.hpp>
 #include <bsoncxx/types.hpp>
 
 #include <examples/api/runner.hh>
@@ -25,7 +25,7 @@ namespace {
 // [Example]
 // [1, 2, 3]
 void example(bsoncxx::array::view arr) {
-    ASSERT(arr.begin() != arr.end());
+    EXPECT(arr.begin() != arr.end());
 
     auto iter = arr.begin();  // 1
 
@@ -33,20 +33,20 @@ void example(bsoncxx::array::view arr) {
     ++iter;  // 3
     ++iter;  // End iterator.
 
-    ASSERT(iter == arr.end());
+    EXPECT(iter == arr.end());
 
     ++iter;  // DO NOT DO THIS
 
-    ASSERT(iter == arr.end());  // Incrementing an end iterator results in an end iterator.
+    EXPECT(iter == arr.end());  // Incrementing an end iterator results in an end iterator.
 
     bsoncxx::array::element e = *iter;  // DO NOT DO THIS
 
-    ASSERT(!e);  // An end iterator returns an invalid element.
+    EXPECT(!e);  // An end iterator returns an invalid element.
 }
 // [Example]
 
 }  // namespace
 
 RUNNER_REGISTER_COMPONENT() {
-    example(bsoncxx::from_json(R"({"v": [1, 2, 3]})")["v"].get_array().value);
+    example(bsoncxx::builder::basic::make_array(1, 2, 3));
 }

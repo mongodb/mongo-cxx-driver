@@ -30,13 +30,13 @@ void example() {
         bsoncxx::builder::basic::make_array(std::int32_t{1}, 2.0, "three");
     bsoncxx::array::view arr = owner.view();
 
-    ASSERT(arr[0].type() == bsoncxx::type::k_int32);
-    ASSERT(arr[1].type() == bsoncxx::type::k_double);
-    ASSERT(arr[2].type() == bsoncxx::type::k_string);
+    EXPECT(arr[0].type() == bsoncxx::type::k_int32);
+    EXPECT(arr[1].type() == bsoncxx::type::k_double);
+    EXPECT(arr[2].type() == bsoncxx::type::k_string);
 
-    ASSERT(arr[0].get_int32().value == 1);
-    ASSERT(arr[1].get_double().value == 2.0);
-    ASSERT(arr[2].get_string().value.compare("three") == 0);
+    EXPECT(arr[0].get_int32().value == 1);
+    EXPECT(arr[1].get_double().value == 2.0);
+    EXPECT(arr[2].get_string().value == "three");
 }
 // [Example]
 

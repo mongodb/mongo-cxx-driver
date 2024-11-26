@@ -14,7 +14,7 @@
 
 #include <bsoncxx/array/element.hpp>
 #include <bsoncxx/array/view.hpp>
-#include <bsoncxx/json.hpp>
+#include <bsoncxx/builder/basic/array.hpp>
 #include <bsoncxx/types.hpp>
 
 #include <examples/api/runner.hh>
@@ -25,37 +25,37 @@ namespace {
 // [Example]
 // [1, 2]
 void example(bsoncxx::array::view arr) {
-    ASSERT(arr.begin() != arr.end());
+    EXPECT(arr.begin() != arr.end());
 
     auto iter = arr.begin();
-    ASSERT(iter == arr.begin());
+    EXPECT(iter == arr.begin());
 
     {
         bsoncxx::array::element e = *iter;
 
-        ASSERT(e.key().compare("0") == 0);
-        ASSERT(e.get_int32().value == 1);
+        EXPECT(e.key() == "0");
+        EXPECT(e.get_int32().value == 1);
     }
 
     ++iter;
 
-    ASSERT(iter->key().compare("1") == 0);
-    ASSERT(iter->get_int32().value == 2);
+    EXPECT(iter->key() == "1");
+    EXPECT(iter->get_int32().value == 2);
 
     {
         auto iter_copy = iter++;
 
-        ASSERT(iter_copy != iter);
-        ASSERT(iter_copy->key().compare("1") == 0);
-        ASSERT(iter_copy->get_int32() == 2);
+        EXPECT(iter_copy != iter);
+        EXPECT(iter_copy->key() == "1");
+        EXPECT(iter_copy->get_int32() == 2);
     }
 
-    ASSERT(iter == arr.end());
+    EXPECT(iter == arr.end());
 }
 // [Example]
 
 }  // namespace
 
 RUNNER_REGISTER_COMPONENT() {
-    example(bsoncxx::from_json(R"({"v": [1, 2]})")["v"].get_array().value);
+    example(bsoncxx::builder::basic::make_array(1, 2));
 }

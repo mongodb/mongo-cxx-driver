@@ -30,7 +30,6 @@
 #include <mongocxx/client_session.hpp>
 #include <mongocxx/collection.hpp>
 #include <mongocxx/result/gridfs/upload.hpp>
-#include <mongocxx/stdx.hpp>
 
 #include <mongocxx/config/prelude.hpp>
 
@@ -150,13 +149,14 @@ class uploader {
     // @param metadata
     //   Optional metadata field of the files collection document.
     //
-    uploader(const client_session* session,
-             bsoncxx::v_noabi::types::bson_value::view id,
-             stdx::string_view filename,
-             collection files,
-             collection chunks,
-             std::int32_t chunk_size,
-             stdx::optional<bsoncxx::v_noabi::document::view_or_value> metadata = {});
+    uploader(
+        const client_session* session,
+        bsoncxx::v_noabi::types::bson_value::view id,
+        bsoncxx::v_noabi::stdx::string_view filename,
+        collection files,
+        collection chunks,
+        std::int32_t chunk_size,
+        bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> metadata = {});
 
     void finish_chunk();
     void flush_chunks();
@@ -173,10 +173,7 @@ class uploader {
 }  // namespace v_noabi
 }  // namespace mongocxx
 
-// CXX-2770: missing include of postlude header.
-#if defined(MONGOCXX_TEST_MACRO_GUARDS_FIX_MISSING_POSTLUDE)
 #include <mongocxx/config/postlude.hpp>
-#endif
 
 ///
 /// @file

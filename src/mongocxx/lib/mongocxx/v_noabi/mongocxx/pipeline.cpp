@@ -14,11 +14,10 @@
 
 #include <bsoncxx/builder/basic/kvp.hpp>
 #include <bsoncxx/builder/basic/sub_document.hpp>
-#include <bsoncxx/stdx/make_unique.hpp>
+#include <bsoncxx/private/make_unique.hh>
 
 #include <mongocxx/pipeline.hpp>
 #include <mongocxx/private/pipeline.hh>
-#include <mongocxx/stdx.hpp>
 
 #include <mongocxx/config/private/prelude.hh>
 
@@ -28,7 +27,7 @@ using bsoncxx::v_noabi::builder::basic::sub_document;
 namespace mongocxx {
 namespace v_noabi {
 
-pipeline::pipeline() : _impl(stdx::make_unique<impl>()) {}
+pipeline::pipeline() : _impl(bsoncxx::make_unique<impl>()) {}
 
 pipeline::pipeline(pipeline&&) noexcept = default;
 pipeline& pipeline::operator=(pipeline&&) noexcept = default;

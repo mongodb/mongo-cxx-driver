@@ -33,24 +33,24 @@ void example() {
         value_type owner = bsoncxx::types::bson_value::make_value(1);
         view_type v = owner.view();
 
-        ASSERT(v.type() == bsoncxx::type::k_int32);
-        ASSERT(v.get_int32().value == 1);
+        EXPECT(v.type() == bsoncxx::type::k_int32);
+        EXPECT(v.get_int32().value == 1);
     }
 
     {
         value_type owner = bsoncxx::types::bson_value::make_value(bsoncxx::types::b_int64{2});
         view_type v = owner.view();
 
-        ASSERT(v.type() == bsoncxx::type::k_int64);
-        ASSERT(v.get_int64().value == 2);
+        EXPECT(v.type() == bsoncxx::type::k_int64);
+        EXPECT(v.get_int64().value == 2);
     }
 
     {
         value_type owner = bsoncxx::types::bson_value::make_value(std::string("three"));
         view_type v = owner.view();
 
-        ASSERT(v.type() == bsoncxx::type::k_string);
-        ASSERT(v.get_string().value.compare("three") == 0);
+        EXPECT(v.type() == bsoncxx::type::k_string);
+        EXPECT(v.get_string().value == "three");
     }
 }
 // [Example]

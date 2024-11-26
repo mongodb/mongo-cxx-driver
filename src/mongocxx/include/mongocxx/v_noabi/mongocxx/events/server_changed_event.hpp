@@ -32,7 +32,7 @@ namespace events {
 /// connected to.
 ///
 /// @see
-/// - "ServerDescriptionChangedEvent" in https://github.com/mongodb/specifications/blob/master/source/server-discovery-and-monitoring/server-discovery-and-monitoring.rst
+/// - "ServerDescriptionChangedEvent" in https://github.com/mongodb/specifications/blob/master/source/server-discovery-and-monitoring/server-discovery-and-monitoring.md
 ///
 class server_changed_event {
    public:

@@ -25,19 +25,19 @@ namespace {
 void example() {
     bsoncxx::types::bson_value::value v = nullptr;
 
-    ASSERT(v.view().type() == bsoncxx::type::k_null);
-    ASSERT(v.view().get_null() == bsoncxx::types::b_null{});
+    EXPECT(v.view().type() == bsoncxx::type::k_null);
+    EXPECT(v.view().get_null() == bsoncxx::types::b_null{});
 
     v = bsoncxx::from_json(R"({"v": ["value"]})")  // Temporary object.
             ["v"]
                 .get_owning_value();  // Copy: no dangling.
 
-    ASSERT(v.view().type() == bsoncxx::type::k_array);
+    EXPECT(v.view().type() == bsoncxx::type::k_array);
 
     v = v.view().get_array().value[0].get_string();  // Copy: no dangling.
 
-    ASSERT(v.view().type() == bsoncxx::type::k_string);
-    ASSERT(v.view().get_string().value.compare("value") == 0);
+    EXPECT(v.view().type() == bsoncxx::type::k_string);
+    EXPECT(v.view().get_string().value == "value");
 }
 // [Example]
 

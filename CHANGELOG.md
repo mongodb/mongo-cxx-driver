@@ -7,7 +7,58 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Changes prior to 3.9.0 are documented as [release notes on GitHub](https://github.com/mongodb/mongo-cxx-driver/releases).
 
+## 4.0.0
+
+### Added
+
+- Getter for the `start_at_operation_time` option in `mongocxx::v_noabi::options::change_stream`.
+
+### Changed
+
+- Bump the minimum required C Driver version to [1.29.0](https://github.com/mongodb/mongo-c-driver/releases/tag/1.29.0).
+- CMake option `ENABLE_TESTS` is now `OFF` by default.
+  - Set `ENABLE_TEST=ON` to re-enable building test targets.
+  - Set `BUILD_TESTING=ON` to include test targets in the "all" target when `ENABLE_TESTS=ON` (since 3.9.0, `OFF` by default).
+- Layout of `mongocxx::v_noabi::options::change_stream` to support the new optional `start_at_operation_time` accessor.
+
+### Deprecated
+
+- Support for MongoDB Server 4.0.
+  - See: [MongoDB Software Lifecycle Schedules](https://www.mongodb.com/legal/support-policy/lifecycles).
+
+### Removed
+
+- Support for external polyfill libraries.
+  - `ENABLE_BSONCXX_POLY_USE_IMPLS=ON` is now implicit behavior.
+  - The following CMake options are no longer supported:
+    - `ENABLE_BSONCXX_POLY_USE_IMPLS`
+    - `BSONCXX_POLY_USE_MNMLSTC`
+    - `BSONCXX_POLY_USE_MNMLSTC_SYSTEM`
+    - `BSONCXX_POLY_USE_BOOST`
+- Support for CMake option `MONGOCXX_OVERRIDE_DEFAULT_INSTALL_PREFIX`.
+  - `MONGOCXX_OVERRIDE_DEFAULT_INSTALL_PREFIX=OFF` is now implicit behavior.
+- Redeclarations of `bsoncxx::stdx` interfaces in the `mongocxx::stdx` namespace.
+  - Use `bsoncxx::stdx::optional<T>` instead of `mongocxx::stdx::optional<T>`.
+  - Use `bsoncxx::stdx::string_view` instead of `mongocxx::stdx::string_view`.
+- Inline namespace macros for bsoncxx and mongocxx namespace: `*_INLINE_NAMESPACE_*`.
+- The `<bsoncxx/stdx/make_unique.hpp>` header.
+- The `<bsoncxx/types/value.hpp>` header.
+- The `<bsoncxx/util/functor.hpp>` header.
+- The `<mongocxx/options/create_collection.hpp>` header.
+- References to deprecated `utf8` which have equivalent `string` alternatives.
+  - `k_utf8` in `bsoncxx::v_noabi::type`. Use `k_string` instead.
+  - `b_utf8` in `bsoncxx::v_noabi::types`. Use `b_string` instead.
+  - `get_utf8` in `bsoncxx::v_noabi::document::element`, `bsoncxx::v_noabi::array::element`, and `bsoncxx::v_noabi::types::bson_value::view`. Use `get_string` instead.
+  - `k_cannot_append_utf8` and `k_need_element_type_k_utf8` in `bsoncxx::v_noabi::exception::error_code`. Use `k_cannot_append_string` and `k_need_element_type_k_string` instead.
+- Undocumented using-directives and using-declarations.
+  - `bsoncxx::builder::types` in `<bsoncxx/builder/list.hpp>`. Use `bsoncxx::types` in `<bsoncxx/types.hpp>` instead.
+  - `bsoncxx::builder::stream::concatenate` in `<bsoncxx/builder/stream/helpers.hpp>`. Use `bsoncxx::builder::concatenate` in `<bsoncxx/builder/concatenate.hpp>` instead.
+  - `mongocxx::events::read_preference` in `<mongocxx/events/topology_description.hpp>`. Use `mongocxx::read_preference` in `<mongocxx/read_preference.hpp>` instead.
+
 ## 3.11.0
+
+> [!IMPORTANT]
+> This is the final v3 minor release. Patch releases containing backports for relevant bug fixes will be supported for up to one year after the first v4 release. New features will not be backported.
 
 ### Added
 
@@ -40,12 +91,14 @@ Changes prior to 3.9.0 are documented as [release notes on GitHub](https://githu
 
 ### Deprecated
 
-- Support for MongoDB Server 3.6. See [MongoDB Software Lifecycle Schedules](https://www.mongodb.com/legal/support-policy/lifecycles).
 - The `bsoncxx/util/functor.hpp` header.
 - The `bsoncxx::util` namespace.
 
 ### Removed
 
+- Support for MongoDB Server 3.6 (due to the minimum required C Driver version).
+  - See: [MongoDB Software Lifecycle Schedules](https://www.mongodb.com/legal/support-policy/lifecycles).
+  - See: [MongoDB C Driver 1.28.0 Release Notes](https://github.com/mongodb/mongo-c-driver/releases/tag/1.28.0).
 - Export of private member functions in the bsoncxx ABI:
   - `bsoncxx::v_noabi::types::bson_value::value::value(const uint8_t*, uint32_t, uint32_t, uint32_t)`
   - `bsoncxx::v_noabi::types::bson_value::view::_init(void*)`

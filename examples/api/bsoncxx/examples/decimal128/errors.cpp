@@ -26,9 +26,9 @@ void example() {
     try {
         bsoncxx::decimal128 d{"invalid"};  // Throws.
 
-        ASSERT(false && "should not reach this point");
+        EXPECT(false && "should not reach this point");
     } catch (const bsoncxx::exception& ex) {
-        ASSERT(ex.code() == bsoncxx::error_code::k_invalid_decimal128);
+        EXPECT(ex.code() == bsoncxx::error_code::k_invalid_decimal128);
     }
 }
 // [Example]

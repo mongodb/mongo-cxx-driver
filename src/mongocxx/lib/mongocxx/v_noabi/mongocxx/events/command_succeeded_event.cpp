@@ -13,7 +13,7 @@
 // limitations under the License.
 
 #include <bsoncxx/private/helpers.hh>
-#include <bsoncxx/stdx/make_unique.hpp>
+#include <bsoncxx/private/make_unique.hh>
 
 #include <mongocxx/events/command_succeeded_event.hpp>
 #include <mongocxx/private/libmongoc.hh>

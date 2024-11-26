@@ -12,7 +12,6 @@
 
 #include <mongocxx/client.hpp>
 #include <mongocxx/instance.hpp>
-#include <mongocxx/stdx.hpp>
 #include <mongocxx/uri.hpp>
 
 #include <examples/macros.hh>
@@ -55,7 +54,7 @@ int EXAMPLES_CDECL main() {
         auto element = doc_view["name"];
         assert(element.type() == bsoncxx::type::k_string);
         auto name = element.get_string().value;  // For C++ driver version < 3.7.0, use get_utf8()
-        assert(0 == name.compare("MongoDB"));
+        assert(name == "MongoDB");
     }
 
     // Insert One Document: { "i": 0 }

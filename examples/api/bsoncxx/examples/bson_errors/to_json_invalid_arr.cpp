@@ -40,9 +40,9 @@ void example() {
     try {
         std::string json = bsoncxx::to_json(doc);  // Throws.
 
-        ASSERT(false && "should not reach this point");
+        EXPECT(false && "should not reach this point");
     } catch (const bsoncxx::exception& ex) {
-        ASSERT(ex.code() == bsoncxx::error_code::k_failed_converting_bson_to_json);
+        EXPECT(ex.code() == bsoncxx::error_code::k_failed_converting_bson_to_json);
     }
 }
 // [Example]

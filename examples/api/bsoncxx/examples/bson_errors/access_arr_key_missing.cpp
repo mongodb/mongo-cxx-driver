@@ -16,7 +16,7 @@
 
 #include <bsoncxx/array/element.hpp>
 #include <bsoncxx/array/view.hpp>
-#include <bsoncxx/json.hpp>
+#include <bsoncxx/builder/basic/array.hpp>
 #include <bsoncxx/types.hpp>
 
 #include <examples/api/runner.hh>
@@ -27,16 +27,16 @@ namespace {
 // [Example]
 // [1, 2, 3]
 void example(bsoncxx::array::view arr) {
-    ASSERT(std::distance(arr.begin(), arr.end()) == 3);
+    EXPECT(std::distance(arr.begin(), arr.end()) == 3);
 
     bsoncxx::array::element e = arr[3];
 
-    ASSERT(!e);  // A missing element is represented as an invalid element.
+    EXPECT(!e);  // A missing element is represented as an invalid element.
 }
 // [Example]
 
 }  // namespace
 
 RUNNER_REGISTER_COMPONENT() {
-    example(bsoncxx::from_json(R"({"v": [1, 2, 3]})")["v"].get_array().value);
+    example(bsoncxx::builder::basic::make_array(1, 2, 3));
 }

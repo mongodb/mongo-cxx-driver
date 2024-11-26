@@ -28,42 +28,42 @@ TEST_CASE("valid read concern settings", "[read_concern]") {
     read_concern rc{};
 
     read_concern::level level_setting = read_concern::level::k_server_default;
-    stdx::string_view string_setting{""};
+    bsoncxx::stdx::string_view string_setting{""};
 
     SECTION("default-constructed read_concern") {
         level_setting = read_concern::level::k_server_default;
-        string_setting = stdx::string_view{""};
+        string_setting = bsoncxx::stdx::string_view{""};
     }
 
     SECTION("can be assigned with acknowledge_level()") {
         SECTION("local") {
             level_setting = read_concern::level::k_local;
-            string_setting = stdx::string_view{"local"};
+            string_setting = bsoncxx::stdx::string_view{"local"};
         }
 
         SECTION("majority") {
             level_setting = read_concern::level::k_majority;
-            string_setting = stdx::string_view{"majority"};
+            string_setting = bsoncxx::stdx::string_view{"majority"};
         }
 
         SECTION("linearizable") {
             level_setting = read_concern::level::k_linearizable;
-            string_setting = stdx::string_view{"linearizable"};
+            string_setting = bsoncxx::stdx::string_view{"linearizable"};
         }
 
         SECTION("server default") {
             level_setting = read_concern::level::k_server_default;
-            string_setting = stdx::string_view{""};
+            string_setting = bsoncxx::stdx::string_view{""};
         }
 
         SECTION("available") {
             level_setting = read_concern::level::k_available;
-            string_setting = stdx::string_view{"available"};
+            string_setting = bsoncxx::stdx::string_view{"available"};
         }
 
         SECTION("server default") {
             level_setting = read_concern::level::k_snapshot;
-            string_setting = stdx::string_view{"snapshot"};
+            string_setting = bsoncxx::stdx::string_view{"snapshot"};
         }
 
         REQUIRE_NOTHROW(rc.acknowledge_level(level_setting));
@@ -72,32 +72,32 @@ TEST_CASE("valid read concern settings", "[read_concern]") {
     SECTION("can be assigned with acknowledge_string()") {
         SECTION("local") {
             level_setting = read_concern::level::k_local;
-            string_setting = stdx::string_view{"local"};
+            string_setting = bsoncxx::stdx::string_view{"local"};
         }
 
         SECTION("majority") {
             level_setting = read_concern::level::k_majority;
-            string_setting = stdx::string_view{"majority"};
+            string_setting = bsoncxx::stdx::string_view{"majority"};
         }
 
         SECTION("linearizable") {
             level_setting = read_concern::level::k_linearizable;
-            string_setting = stdx::string_view{"linearizable"};
+            string_setting = bsoncxx::stdx::string_view{"linearizable"};
         }
 
         SECTION("server default") {
             level_setting = read_concern::level::k_server_default;
-            string_setting = stdx::string_view{""};
+            string_setting = bsoncxx::stdx::string_view{""};
         }
 
         SECTION("available") {
             level_setting = read_concern::level::k_available;
-            string_setting = stdx::string_view{"available"};
+            string_setting = bsoncxx::stdx::string_view{"available"};
         }
 
         SECTION("server default") {
             level_setting = read_concern::level::k_snapshot;
-            string_setting = stdx::string_view{"snapshot"};
+            string_setting = bsoncxx::stdx::string_view{"snapshot"};
         }
 
         REQUIRE_NOTHROW(rc.acknowledge_string(string_setting));

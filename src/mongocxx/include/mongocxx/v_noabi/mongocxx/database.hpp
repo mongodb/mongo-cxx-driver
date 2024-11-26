@@ -28,7 +28,6 @@
 #include <mongocxx/client_session.hpp>
 #include <mongocxx/collection.hpp>
 #include <mongocxx/gridfs/bucket.hpp>
-#include <mongocxx/options/create_collection.hpp>
 #include <mongocxx/options/gridfs/bucket.hpp>
 #include <mongocxx/read_preference.hpp>
 #include <mongocxx/write_concern.hpp>
@@ -203,9 +202,9 @@ class database {
     ///   mongocxx::v_noabi::operation_exception if the operation fails.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(mongocxx::v_noabi::collection)
-    create_collection(stdx::string_view name,
+    create_collection(bsoncxx::v_noabi::stdx::string_view name,
                       bsoncxx::v_noabi::document::view_or_value collection_options = {},
-                      const stdx::optional<write_concern>& write_concern = {});
+                      const bsoncxx::v_noabi::stdx::optional<write_concern>& write_concern = {});
 
     ///
     /// Explicitly creates a collection in this database with the specified options.
@@ -231,102 +230,9 @@ class database {
     ///
     MONGOCXX_ABI_EXPORT_CDECL(mongocxx::v_noabi::collection)
     create_collection(const client_session& session,
-                      stdx::string_view name,
+                      bsoncxx::v_noabi::stdx::string_view name,
                       bsoncxx::v_noabi::document::view_or_value collection_options = {},
-                      const stdx::optional<write_concern>& write_concern = {});
-
-    ///
-    /// Explicitly creates a collection in this database with the specified options.
-    ///
-    /// @deprecated
-    ///   This overload is deprecated. Call database::create_collection with a
-    ///   bsoncxx::v_noabi::document::view_or_value collection_options instead.
-    ///
-    /// @see
-    /// - https://www.mongodb.com/docs/manual/reference/command/create/
-    ///
-    /// @param name
-    ///   the new collection's name.
-    /// @param collection_options
-    ///   the options for the new collection.
-    /// @param write_concern
-    ///   the write concern to use for this operation. Will default to database
-    ///   set write concern if none passed here.
-    ///
-    /// @exception
-    ///   mongocxx::v_noabi::operation_exception if the operation fails.
-    ///
-    MONGOCXX_DEPRECATED MONGOCXX_ABI_EXPORT_CDECL(mongocxx::v_noabi::collection)
-        create_collection(bsoncxx::v_noabi::string::view_or_value name,
-                          const options::create_collection_deprecated& collection_options,
-                          const stdx::optional<write_concern>& write_concern = {}) {
-        return create_collection_deprecated(name, collection_options, write_concern);
-    }
-
-    MONGOCXX_ABI_EXPORT_CDECL(mongocxx::v_noabi::collection)
-    create_collection_deprecated(bsoncxx::v_noabi::string::view_or_value name,
-                                 const options::create_collection_deprecated& collection_options,
-                                 const stdx::optional<write_concern>& write_concern = {});
-
-    ///
-    /// Explicitly creates a collection in this database with the specified options.
-    ///
-    /// @deprecated
-    ///   This overload is deprecated. Call database::create_collection with a
-    ///   bsoncxx::v_noabi::document::view_or_value collection_options instead.
-    ///
-    /// @see
-    /// - https://www.mongodb.com/docs/manual/reference/command/create/
-    ///
-    /// @param session
-    ///   The mongocxx::v_noabi::client_session with which to perform the create operation.
-    /// @param name
-    ///   the new collection's name.
-    /// @param collection_options
-    ///   the options for the new collection.
-    /// @param write_concern
-    ///   the write concern to use for this operation. Will default to database
-    ///   set write concern if none passed here.
-    ///
-    /// @exception
-    ///   mongocxx::v_noabi::operation_exception if the operation fails.
-    ///
-    MONGOCXX_DEPRECATED MONGOCXX_ABI_EXPORT_CDECL(mongocxx::v_noabi::collection)
-        create_collection(const client_session& session,
-                          bsoncxx::v_noabi::string::view_or_value name,
-                          const options::create_collection_deprecated& collection_options,
-                          const stdx::optional<write_concern>& write_concern = {}) {
-        return create_collection_deprecated(session, name, collection_options, write_concern);
-    }
-
-    ///
-    /// Explicitly creates a collection in this database with the specified options.
-    ///
-    /// @deprecated
-    ///   This overload is deprecated. Call database::create_collection with a
-    ///   bsoncxx::v_noabi::document::view_or_value collection_options instead.
-    ///
-    /// @see
-    /// - https://www.mongodb.com/docs/manual/reference/command/create/
-    ///
-    /// @param session
-    ///   The mongocxx::v_noabi::client_session with which to perform the create operation.
-    /// @param name
-    ///   the new collection's name.
-    /// @param collection_options
-    ///   the options for the new collection.
-    /// @param write_concern
-    ///   the write concern to use for this operation. Will default to database
-    ///   set write concern if none passed here.
-    ///
-    /// @exception
-    ///   mongocxx::v_noabi::operation_exception if the operation fails.
-    ///
-    MONGOCXX_ABI_EXPORT_CDECL(mongocxx::v_noabi::collection)
-    create_collection_deprecated(const client_session& session,
-                                 bsoncxx::v_noabi::string::view_or_value name,
-                                 const options::create_collection_deprecated& collection_options,
-                                 const stdx::optional<write_concern>& write_concern = {});
+                      const bsoncxx::v_noabi::stdx::optional<write_concern>& write_concern = {});
 
     ///
     /// Drops the database and all its collections.
@@ -451,7 +357,7 @@ class database {
     ///
     /// @return the name of this database.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(stdx::string_view) name() const;
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::string_view) name() const;
 
     ///
     /// Sets the read_concern for this database.
@@ -644,15 +550,9 @@ class database {
 
     mongocxx::v_noabi::collection _create_collection(
         const client_session* session,
-        stdx::string_view name,
+        bsoncxx::v_noabi::stdx::string_view name,
         bsoncxx::v_noabi::document::view_or_value collection_options,
-        const stdx::optional<mongocxx::v_noabi::write_concern>& write_concern);
-
-    mongocxx::v_noabi::collection _create_collection_deprecated(
-        const client_session* session,
-        bsoncxx::v_noabi::string::view_or_value name,
-        const options::create_collection_deprecated& collection_options,
-        const stdx::optional<mongocxx::v_noabi::write_concern>& write_concern);
+        const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern>& write_concern);
 
     cursor _list_collections(const client_session* session,
                              bsoncxx::v_noabi::document::view_or_value filter);

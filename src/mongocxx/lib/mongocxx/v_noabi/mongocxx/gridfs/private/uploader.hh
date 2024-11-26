@@ -17,7 +17,7 @@
 #include <string>
 #include <vector>
 
-#include <bsoncxx/stdx/make_unique.hpp>
+#include <bsoncxx/private/make_unique.hh>
 #include <bsoncxx/string/to_string.hpp>
 
 #include <mongocxx/gridfs/uploader.hpp>
@@ -32,13 +32,13 @@ class uploader::impl {
    public:
     impl(const client_session* session,
          result::gridfs::upload result,
-         stdx::string_view filename,
+         bsoncxx::v_noabi::stdx::string_view filename,
          collection files,
          collection chunks,
          std::int32_t chunk_size,
-         stdx::optional<bsoncxx::v_noabi::document::value> metadata)
+         bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::value> metadata)
         : session{session},
-          buffer{stdx::make_unique<std::uint8_t[]>(static_cast<size_t>(chunk_size))},
+          buffer{bsoncxx::make_unique<std::uint8_t[]>(static_cast<size_t>(chunk_size))},
           buffer_off{0},
           chunks{std::move(chunks)},
           chunk_size{chunk_size},
@@ -80,7 +80,7 @@ class uploader::impl {
     collection files;
 
     // User-specified metadata for the file.
-    stdx::optional<bsoncxx::v_noabi::document::value> metadata;
+    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::value> metadata;
 
     // Contains the id of the file being written.
     result::gridfs::upload result;

@@ -26,24 +26,24 @@ namespace {
 // [Example]
 // {"x": 1}
 void example(bsoncxx::document::element e) {
-    ASSERT(e.key().compare("x") == 0);
-    ASSERT(e.type() == bsoncxx::type::k_int32);
-    ASSERT(e.get_int32().value == 1);
+    EXPECT(e.key() == "x");
+    EXPECT(e.type() == bsoncxx::type::k_int32);
+    EXPECT(e.get_int32().value == 1);
 
     try {
         bsoncxx::types::b_double d = e.get_double();  // Throws.
 
-        ASSERT(false && "should not reach this point");
+        EXPECT(false && "should not reach this point");
     } catch (const bsoncxx::exception& ex) {
-        ASSERT(ex.code() == bsoncxx::error_code::k_need_element_type_k_double);
+        EXPECT(ex.code() == bsoncxx::error_code::k_need_element_type_k_double);
     }
 
     try {
         bsoncxx::types::b_string str = e.get_string();  // Throws.
 
-        ASSERT(false && "should not reach this point");
+        EXPECT(false && "should not reach this point");
     } catch (const bsoncxx::exception& ex) {
-        ASSERT(ex.code() == bsoncxx::error_code::k_need_element_type_k_string);
+        EXPECT(ex.code() == bsoncxx::error_code::k_need_element_type_k_string);
     }
 }
 // [Example]

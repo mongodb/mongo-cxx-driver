@@ -15,7 +15,7 @@
 #include <sstream>
 
 #include <bsoncxx/private/helpers.hh>
-#include <bsoncxx/stdx/make_unique.hpp>
+#include <bsoncxx/private/make_unique.hh>
 
 #include <mongocxx/client.hpp>
 #include <mongocxx/exception/bulk_write_exception.hpp>
@@ -124,7 +124,7 @@ TEST_CASE("session options", "[session]") {
 
         options::client_session opts;
 
-        // Unfortunately, stdx::nullopt doesn't always play well with others, so we'll use
+        // Unfortunately, bsoncxx::stdx::nullopt doesn't always play well with others, so we'll use
         // an enumeration:
         enum struct optional_state { empty, no, yes };
 
@@ -215,8 +215,8 @@ TEST_CASE("session", "[session]") {
 
     SECTION("pool") {
         // "Pool is LIFO" test from Driver Sessions Spec.
-        auto session_a = stdx::make_unique<client_session>(c.start_session());
-        auto session_b = stdx::make_unique<client_session>(c.start_session());
+        auto session_a = bsoncxx::make_unique<client_session>(c.start_session());
+        auto session_b = bsoncxx::make_unique<client_session>(c.start_session());
         auto a_id = value(session_a->id());
         auto b_id = value(session_b->id());
 
@@ -227,9 +227,9 @@ TEST_CASE("session", "[session]") {
         session_a = nullptr;
         session_b = nullptr;
 
-        auto session_c = stdx::make_unique<client_session>(c.start_session());
+        auto session_c = bsoncxx::make_unique<client_session>(c.start_session());
         REQUIRE(session_c->id() == b_id);
-        auto session_d = stdx::make_unique<client_session>(c.start_session());
+        auto session_d = bsoncxx::make_unique<client_session>(c.start_session());
         REQUIRE(session_d->id() == a_id);
     }
 
@@ -320,8 +320,8 @@ class session_test {
             // Ignore auth commands like "saslStart", and handshakes with "hello" (and the legacy
             // "hello" command).
             std::string sasl{"sasl"};
-            if (event.command_name().substr(0, sasl.size()).compare(sasl) == 0 ||
-                command_name.compare("hello") == 0 || command_name.compare("isMaster") == 0) {
+            if (event.command_name().substr(0, sasl.size()) == sasl || command_name == "hello" ||
+                command_name == "isMaster") {
                 return;
             }
 

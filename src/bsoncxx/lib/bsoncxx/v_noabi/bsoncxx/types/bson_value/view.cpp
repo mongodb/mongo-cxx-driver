@@ -42,9 +42,6 @@ namespace bson_value {
 
 view::view() noexcept : view(nullptr) {}
 
-// Boost doesn't mark the copy constructor and copy-assignment operator of string_ref as noexcept
-// so we can't rely on automatic noexcept propagation. It really is though, so it is OK.
-#if !defined(BSONCXX_POLY_USE_BOOST)
 #define BSONCXX_ENUM(name, val)                                                                \
     view::view(b_##name v) noexcept                                                            \
         : _type(static_cast<bsoncxx::v_noabi::type>(val)), _b_##name(std::move(v)) {           \
@@ -52,13 +49,6 @@ view::view() noexcept : view(nullptr) {}
         static_assert(std::is_nothrow_copy_assignable<b_##name>::value, "Copy may throw");     \
         static_assert(std::is_nothrow_destructible<b_##name>::value, "Destruction may throw"); \
     }
-#else
-#define BSONCXX_ENUM(name, val)                                                                \
-    view::view(b_##name value) noexcept                                                        \
-        : _type(static_cast<bsoncxx::v_noabi::type>(val)), _b_##name(std::move(value)) {       \
-        static_assert(std::is_nothrow_destructible<b_##name>::value, "Destruction may throw"); \
-    }
-#endif
 
 #include <bsoncxx/enums/type.hpp>
 #undef BSONCXX_ENUM
@@ -113,11 +103,6 @@ bsoncxx::v_noabi::type view::type() const {
     }
 #include <bsoncxx/enums/type.hpp>
 #undef BSONCXX_ENUM
-
-const types::b_string& view::get_utf8() const {
-    BSONCXX_TYPE_CHECK(string);
-    return _b_string;
-}
 
 view::view(const std::uint8_t* raw,
            std::uint32_t length,

@@ -26,7 +26,7 @@ set(CMAKE_MODULE_PATH
     ${PROJECT_SOURCE_DIR}/cmake/make_dist
 )
 
-option(BUILD_TESTING "Include test targets in the \"all\" target")
+option(BUILD_TESTING "When ENABLE_TESTS=ON, include test targets in the \"all\" target")
 
 if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS "4.8.2")
@@ -49,12 +49,12 @@ else()
 endif()
 
 # Also update etc/purls.txt.
-set(LIBBSON_REQUIRED_VERSION 1.28.0)
+set(LIBBSON_REQUIRED_VERSION 1.29.0)
 set(LIBBSON_REQUIRED_ABI_VERSION 1.0)
 
 # Also update etc/purls.txt.
-set(LIBMONGOC_REQUIRED_VERSION 1.28.0)
-set(LIBMONGOC_DOWNLOAD_VERSION 1.28.0)
+set(LIBMONGOC_REQUIRED_VERSION 1.29.0)
+set(LIBMONGOC_DOWNLOAD_VERSION 1.29.0)
 set(LIBMONGOC_REQUIRED_ABI_VERSION 1.0)
 
 set(NEED_DOWNLOAD_C_DRIVER false)
@@ -125,9 +125,6 @@ option(BUILD_SHARED_LIBS_WITH_STATIC_MONGOC
     OFF
 )
 
-# Allow the user to opt into using bsoncxx implementations for C++17 polyfills by default.
-option(ENABLE_BSONCXX_POLY_USE_IMPLS "Enable using bsoncxx implementations of C++17 polyfills for pre-C++17 configurations by default" OFF)
-
 if(DEFINED CACHE{ENABLE_ABI_TAG_IN_LIBRARY_FILENAMES} AND NOT MSVC)
     message(WARNING "ENABLE_ABI_TAG_IN_LIBRARY_FILENAMES is an MSVC-only option and will be ignored by the current configuration")
     unset(ENABLE_ABI_TAG_IN_LIBRARY_FILENAMES CACHE)
@@ -186,18 +183,6 @@ To build static libraries only, set both BUILD_SHARED_LIBS and BUILD_SHARED_AND_
 
     set(BSONCXX_LINK_WITH_STATIC_MONGOC ON CACHE INTERNAL "")
     set(MONGOCXX_LINK_WITH_STATIC_MONGOC ON CACHE INTERNAL "")
-endif()
-
-option(MONGOCXX_OVERRIDE_DEFAULT_INSTALL_PREFIX "If enabled, mongocxx will set a default CMAKE_INSTALL_PREFIX if one is not already defined" TRUE)
-
-if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT AND MONGOCXX_OVERRIDE_DEFAULT_INSTALL_PREFIX)
-    message(WARNING
-        "mongocxx: The default CMAKE_INSTALL_PREFIX is being overridden to the "
-        "build directory. This behavior will not be the default in a future "
-        "release. Build with 'MONGOCXX_OVERRIDE_DEFAULT_INSTALL_PREFIX=OFF' to opt "
-        "into what will be the default behavior in a future release. Setting install "
-        "path to: ${CMAKE_BINARY_DIR}/install")
-    set(CMAKE_INSTALL_PREFIX "${CMAKE_BINARY_DIR}/install" CACHE PATH "default install path" FORCE)
 endif()
 
 include(GNUInstallDirs)
@@ -339,8 +324,12 @@ add_custom_target(docs
 set(THIRD_PARTY_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src/third_party)
 set(DATA_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/data)
 
-option(ENABLE_TESTS "Build MongoDB C++ Driver tests." ON)
-option(ENABLE_MACRO_GUARD_TESTS "Enable targets for macro guard compile tests." OFF)
+option(ENABLE_TESTS "Enable building test targets." OFF)
+option(ENABLE_MACRO_GUARD_TESTS "When ENABLE_TESTS=ON, enable macro guard test targets." OFF)
+
+if(BUILD_TESTING AND NOT ENABLE_TESTS)
+    message(WARNING "BUILD_TESTING is enabled without also setting ENABLE_TESTS. Set ENABLE_TESTS=ON to building test targets.")
+endif()
 
 if(ENABLE_TESTS)
     enable_testing()
@@ -422,22 +411,6 @@ if(NOT(TARGET dist OR TARGET distcheck))
 
     if(NOT "${CMAKE_CXX_STANDARD}" STREQUAL "")
         list(APPEND polyfill_flags "-DCMAKE_CXX_STANDARD=${CMAKE_CXX_STANDARD}")
-    endif()
-
-    if(NOT "${BOOST_ROOT}" STREQUAL "")
-        list(APPEND polyfill_flags "-DBOOST_ROOT=${BOOST_ROOT}")
-    endif()
-
-    if(NOT "${BSONCXX_POLY_USE_MNMLSTC}" STREQUAL "")
-        list(APPEND polyfill_flags "-DBSONCXX_POLY_USE_MNMLSTC=${BSONCXX_POLY_USE_MNMLSTC}")
-    endif()
-
-    if(NOT "${BSONCXX_POLY_USE_SYSTEM_MNMLSTC}" STREQUAL "")
-        list(APPEND polyfill_flags "-DBSONCXX_POLY_USE_SYSTEM_MNMLSTC=${BSONCXX_POLY_USE_SYSTEM_MNMLSTC}")
-    endif()
-
-    if(NOT "${BSONCXX_POLY_USE_BOOST}" STREQUAL "")
-        list(APPEND polyfill_flags "-DBSONCXX_POLY_USE_BOOST=${BSONCXX_POLY_USE_BOOST}")
     endif()
 
     if(NOT "${BSONCXX_POLY_USE_IMPLS}" STREQUAL "")

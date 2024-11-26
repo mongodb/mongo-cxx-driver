@@ -1,4 +1,10 @@
 #!/usr/bin/env python
+
+# /// script
+# requires-python = "<3.0"
+# dependencies = []
+# ///
+
 """
 A script that provides:
 1. Ability to grab binaries where possible from LLVM.
@@ -852,6 +858,10 @@ def usage():
 def main():
     """Main entry point
     """
+
+    # Python 3 is not supported by this script.
+    assert sys.version_info.major < 3
+
     parser = OptionParser()
     parser.add_option("-c", "--clang-format", type="string", dest="clang_format")
 

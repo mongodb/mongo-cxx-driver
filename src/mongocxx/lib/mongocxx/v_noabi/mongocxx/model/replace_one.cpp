@@ -37,7 +37,8 @@ replace_one& replace_one::collation(bsoncxx::v_noabi::document::view_or_value co
     return *this;
 }
 
-const stdx::optional<bsoncxx::v_noabi::document::view_or_value>& replace_one::collation() const {
+const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value>&
+replace_one::collation() const {
     return _collation;
 }
 
@@ -47,7 +48,7 @@ replace_one& replace_one::upsert(bool upsert) {
     return *this;
 }
 
-const stdx::optional<bool>& replace_one::upsert() const {
+const bsoncxx::v_noabi::stdx::optional<bool>& replace_one::upsert() const {
     return _upsert;
 }
 
@@ -56,7 +57,7 @@ replace_one& replace_one::hint(mongocxx::v_noabi::hint index_hint) {
     return *this;
 }
 
-const stdx::optional<mongocxx::v_noabi::hint>& replace_one::hint() const {
+const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::hint>& replace_one::hint() const {
     return _hint;
 }
 }  // namespace model

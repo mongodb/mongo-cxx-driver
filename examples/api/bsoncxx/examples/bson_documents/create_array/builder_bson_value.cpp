@@ -18,7 +18,6 @@
 #include <bsoncxx/array/view.hpp>
 #include <bsoncxx/builder/basic/array.hpp>
 #include <bsoncxx/builder/basic/kvp.hpp>
-#include <bsoncxx/types.hpp>
 #include <bsoncxx/types/bson_value/value.hpp>
 
 #include <examples/api/runner.hh>
@@ -36,17 +35,10 @@ void example() {
         "three",
     };
 
-    bsoncxx::array::value owner =
+    bsoncxx::array::value arr =
         bsoncxx::builder::basic::make_array(values[0], values[1], values[2]);
-    bsoncxx::array::view arr = owner.view();
 
-    ASSERT(arr[0].type() == bsoncxx::type::k_int32);
-    ASSERT(arr[1].type() == bsoncxx::type::k_double);
-    ASSERT(arr[2].type() == bsoncxx::type::k_string);
-
-    ASSERT(arr[0].get_value() == values[0]);
-    ASSERT(arr[1].get_value() == values[1]);
-    ASSERT(arr[2].get_value() == values[2]);
+    EXPECT(arr.view() == bsoncxx::builder::basic::make_array(1, 2.0, "three"));
 }
 // [Example]
 

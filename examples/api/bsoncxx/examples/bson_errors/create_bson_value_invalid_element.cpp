@@ -28,9 +28,9 @@ void example() {
         bsoncxx::document::element e;
         bsoncxx::types::bson_value::view v = e.get_value();  // Throws.
 
-        ASSERT(false && "should not reach this point");
+        EXPECT(false && "should not reach this point");
     } catch (const bsoncxx::exception& ex) {
-        ASSERT(ex.code() == bsoncxx::error_code::k_unset_element);
+        EXPECT(ex.code() == bsoncxx::error_code::k_unset_element);
     }
 }
 // [Example]

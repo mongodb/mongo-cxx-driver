@@ -27,7 +27,6 @@
 #include <bsoncxx/types/bson_value/view.hpp>
 
 #include <mongocxx/cursor.hpp>
-#include <mongocxx/stdx.hpp>
 
 #include <mongocxx/config/prelude.hpp>
 
@@ -155,7 +154,7 @@ class downloader {
     // @param files_doc
     //   The files collection document of the file being downloaded.
     //
-    downloader(stdx::optional<cursor> chunks,
+    downloader(bsoncxx::v_noabi::stdx::optional<cursor> chunks,
                chunks_and_bytes_offset start,
                std::int32_t chunk_size,
                std::int64_t file_len,
@@ -175,10 +174,7 @@ class downloader {
 }  // namespace v_noabi
 }  // namespace mongocxx
 
-// CXX-2770: missing include of postlude header.
-#if defined(MONGOCXX_TEST_MACRO_GUARDS_FIX_MISSING_POSTLUDE)
 #include <mongocxx/config/postlude.hpp>
-#endif
 
 ///
 /// @file

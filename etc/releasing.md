@@ -103,11 +103,26 @@ For patch releases, check the [mongo-cxx-driver-latest-release](https://spruce.m
 
 Ensure there are no new or unexpected task failures.
 
+### Minimum Required MongoDB C Driver Version
+
+Ensure `MONGOC_VERSION_MINIMUM` and related values are updated for the latest minimum required C Driver release.
+
+See the comment accompanying `MONGOC_VERSION_MINIMUM` for a list of other sources to update.
+
 ### Coverity
 
 Ensure there are no new or unexpected issues with High severity or greater.
 
-Update the [SSDLC Report spreadsheet](https://docs.google.com/spreadsheets/d/1sp0bLjj29xO9T8BwDIxUk5IPJ493QkBVCJKIgptxEPc/edit?usp=sharing) with any updates to new or known issues.
+Triage any outstanding issues using the `Issues: By Snapshot | Outstanding Issues` view, create JIRA tickets if necessary, and update issue fields accordingly.
+
+> [!NOTE]
+> The "Classification", "Action", and "MongoDB Final Status" fields should always be updated. The "Ext. Reference" field may refer to a JIRA ticket number or an external issue tracker as appropriate. Use the "Notes" field to document rationale for the "MongoDB Final Status" for issues with Medium severity or higher. Add any additional notes for future reference in the "Comments" field.
+
+Verify that all issues listed in the `Issues: By Snapshot | SSDLC Report (v2)` view have been triaged.
+
+All issues with an Impact level of "High" or greater must have a "MongoDB Final Status" of "Fix Committed" and a corresponding JIRA ticket number in the "Ext. Reference" field.
+
+All issues with an Impact level of "Medium" or greater which do not have a "MongoDB Final Status" of "Fix Committed" must document rationale for its current status in the "Notes" field.
 
 ### SBOM Lite
 
@@ -136,11 +151,18 @@ podman run \
 
 Commit the latest version of the SBOM Lite document into the repo as `etc/cyclonedx.sbom.json`. (This may just be a modification of the timestamp.)
 
+Generate an updated Augmented SBOM as described below.
+
+> [!IMPORTANT]
+> If the SBOM Lite was updated, generate an updated Augmented SBOM as described below even if the `silk-check-augmented-sbom` is currently passing on Evergreen!
+
 ### Augmented SBOM
 
-Ensure the `silk-check-augmented-sbom` task is passing on Evergreen for the relevant release branch. If it is passing, nothing needs to be done.
+Ensure the `silk-check-augmented-sbom` task is passing on Evergreen for the relevant release branch. If it is passing, nothing needs to be done (unless the SBOM Lite was updated as described above).
 
- If the `silk-check-augmented-sbom` task was failing, update the Augmented SBOM document using the following command(s):
+#### Regular Update
+
+Update the Augmented SBOM document using the following command(s):
 
 ```bash
 # Artifactory and Silk credentials.
@@ -169,6 +191,44 @@ Update `etc/third_party_vulnerabilities.md` with any updates to new or known vul
 
 Commit the latest version of the Augmented SBOM document into the repo as `etc/augmented.sbom.json`. The Augmented SBOM document does not need to be updated if the `silk-check-augmented-sbom` was not failing (in which case the only changes present would a version bump or timestamp update).
 
+#### Instant Update
+
+If the Augmented SBOM has not yet been updated in time for a release, a temporary Silk Asset Group may be used instead:
+
+```bash
+# Artifactory and Silk credentials.
+. $HOME/.secrets/artifactory-creds.txt
+. $HOME/.secrets/silk-creds.txt
+
+# Name of the temporary Silk Asset Group. Do NOT use an existing Silk Asset Group!
+asset_group_id="mongo-cxx-driver-X.Y.Z-tmp"
+
+# Output: "Login succeeded!"
+podman login --password-stdin --username "${ARTIFACTORY_USER:?}" artifactory.corp.mongodb.com <<<"${ARTIFACTORY_PASSWORD:?}"
+
+# Ensure latest version of SilkBomb is being used.
+podman pull artifactory.corp.mongodb.com/release-tools-container-registry-public-local/silkbomb:1.0
+
+# Common flags to podman.
+silkbomb_flags=(
+  --env-file "$HOME/.secrets/silk-creds.txt"
+  -it --rm -v "$(pwd):/pwd"
+  artifactory.corp.mongodb.com/release-tools-container-registry-public-local/silkbomb:1.0
+)
+
+# Create a new and temporary Silk Asset Group.
+podman run "${silkbomb_flags[@]:?}" asset-group --asset-cmd create --silk-asset-group "${asset_group_id:?}" --name "${asset_group_id:?}"
+
+# Upload the SBOM Lite.
+podman run "${silkbomb_flags[@]:?}" upload --silk-asset-group "${asset_group_id:?}" -i /pwd/etc/cyclonedx.sbom.json -o /pwd/etc/cyclonedx.sbom.json
+
+# Download the Augmented SBOM.
+podman run "${silkbomb_flags[@]:?}" download --silk-asset-group "${asset_group_id:?}" -o /pwd/etc/augmented.sbom.json
+
+# Remove the temporary Silk Asset Group.
+podman run "${silkbomb_flags[@]:?}" asset-group --asset-cmd delete --silk-asset-group "${asset_group_id:?}"
+```
+
 ### Check Snyk
 
 Inspect the list of projects in the latest report for the `mongodb/mongo-cxx-driver` target in [Snyk](https://app.snyk.io/org/dev-prod/).
@@ -194,6 +254,12 @@ Update the contents of related Jira tickets as appropriate (improve the title, c
 > [!NOTE]
 > A ticket whose changes may impact users should either be a "Bug" or "New Feature".
 > Otherwise, the ticket should typically be a "Task".
+
+### Dry-run etc/make_release.py
+
+Perform a dry-run of the "Run etc/make_release.py" steps described below.
+
+Verify there are no unexpected errors or issues.
 
 ## Release Steps
 
@@ -265,6 +331,8 @@ Commit the updates to `CHANGELOG.md`.
 git commit -m 'Update CHANGELOG for X.Y.Z'
 ```
 
+### Pre-Release Changes PR
+
 Push the `pre-release-changes` branch to a fork repository and create a PR to merge `pre-release-changes` onto `master`:
 
 ```bash
@@ -283,13 +351,17 @@ git clone -o upstream git@github.com:mongodb/mongo-cxx-driver.git mongo-cxx-driv
 cd mongo-cxx-driver-release
 ```
 
-Create and activate a fresh Python 3 virtual environment with required packages installed:
+Create and activate a fresh Python 3 virtual environment with required packages installed using [uv](https://docs.astral.sh/uv/getting-started/installation/):
 
 ```bash
+# Outside the mongo-cxx-driver-release directory!
+export UV_PROJECT_ENVIRONMENT="$HOME/mongo-cxx-driver-release-venv"
 
-python3 -m venv ~/mongo-cxx-driver-release-venv # Outside the mongo-cxx-driver-release directory!
-source ~/mongo-cxx-driver-release-venv/bin/activate
-pip install -r etc/requirements.txt
+# Install required packages into a new virtual environment.
+uv sync --frozen
+
+# Activate the virtual environment.
+source "$UV_PROJECT_ENVIRONMENT/bin/activate"
 ```
 
 ### Create a Release Tag...
@@ -345,6 +417,7 @@ Run the release script with the git tag created above as an argument and
 
 ```bash
 make_release_args=(
+    -r upstream
     --jira-creds-file ~/.secrets/jira-creds.txt
     --github-token-file ~/.secrets/github-token.txt
 )
@@ -352,7 +425,7 @@ python ./etc/make_release.py "${make_release_args[@]:?}" --dry-run rX.Y.Z
 ```
 
 > [!TIP]
-> Export environment variables (e.g.`CMAKE_BUILD_PARALLEL_LEVEL`) to improve the speed of this command.
+> Export environment variables (e.g. `CMAKE_BUILD_PARALLEL_LEVEL`, `CMAKE_GENERATOR`, etc.) to improve the speed of this command.
 
 If an error occurs, inspect logs the script produces, and troubleshoot as
 follows:
@@ -374,7 +447,7 @@ Verify the successful creation of the release draft on GitHub.
 Push the release tag (created earlier) to the remote repository:
 
 ```bash
-git push origin rX.Y.Z
+git push upstream rX.Y.Z
 ```
 
 ### Release on GitHub
@@ -407,17 +480,13 @@ git reset --hard rX.Y.Z
 git push -f upstream releases/stable
 ```
 
+### Coverity Report
+
+Export the `Issues: By Snapshot | SSDLC Report (v2)` view as a CSV named `static_analysis-X.Y.Z.csv`.
+
 ### Upload SSDLC Reports
 
-Navigate to the [C++ Driver SSDLC Reports](https://drive.google.com/drive/folders/1q9RI55trFzHlh8McALSIAbT6ugyn8zlO) folder and update the master spreadsheet.
-
-Once complete, make two copies of the spreadsheet.
-
-Rename one copy to: "SSDLC Report: mongo-cxx-driver X.Y.Z". Leave this copy in this folder.
-
-Rename the other copy to: "static_analysis_report-X.Y.Z". Move this copy into the [SSDLC Compliance Files](https://drive.google.com/drive/folders/1_qwTwYyqPL7VjrZOiuyiDYi1y2NYiClS) folder and name it.
-
-Upload a copy of the `etc/ssdlc_compliance_report.md`, `etc/third_party_vulnerabilities.md`, and `etc/augmented.sbom.json` files. Rename the files with the version number `-X.Y.Z` suffix in their filenames as already done for other files in this folder.
+Upload a copy of the `static_analysis-X.Y.Z.csv`, `etc/ssdlc_compliance_report.md`, `etc/third_party_vulnerabilities.md`, and `etc/augmented.sbom.json` files. Rename the files with the version number `-X.Y.Z` suffix in their filenames as already done for other files in this folder.
 
 > [!WARNING]
 > Uploading a file into the SSDLC Compliance Files folder is an irreversible action! However, the files may still be renamed. If necessary, rename any accidentally uploaded files to "(Delete Me)" or similar.
@@ -425,10 +494,10 @@ Upload a copy of the `etc/ssdlc_compliance_report.md`, `etc/third_party_vulnerab
 Four new files should be present in the [SSDLC Compliance Files](https://drive.google.com/drive/folders/1_qwTwYyqPL7VjrZOiuyiDYi1y2NYiClS) folder following a release `X.Y.Z`:
 
 ```
-ssdlc_compliance_report-X.Y.Z.md
-third_party_vulnerabilities-X.Y.Z.md
-static_analysis-X.Y.Z
 augmented.sbom-X.Y.Z.json
+ssdlc_compliance_report-X.Y.Z.md
+static_analysis-X.Y.Z.csv
+third_party_vulnerabilities-X.Y.Z.md
 ```
 
 ## Post-Release Steps
@@ -448,7 +517,7 @@ git checkout -b releases/vX.Y upstream/master
 Push the new branch to the remote repository:
 
 ```
-git push origin releases/vX.Y
+git push upstream releases/vX.Y
 ```
 
 The new branch should be continuously tested on Evergreen. Update the "Display Name" and "Branch Name" of the [mongo-cxx-driver-latest-release Evergreen project](https://spruce.mongodb.com/project/mongo-cxx-driver-latest-release/settings/general) to refer to the new release branch.
@@ -457,7 +526,7 @@ The new branch should be tracked by Silk. Use the [create-silk-asset-group.py sc
 
 ```bash
 # Snyk credentials. Ask for these from a team member.
-. ~/.secrets/silk-creds.txt.
+. ~/.secrets/silk-creds.txt
 
 # Ensure correct release version number!
 version="X.Y"
@@ -475,6 +544,8 @@ create_args=(
 python path/to/tools/create-silk-asset-group.py "${create_args[@]:?}"
 ```
 
+Verify the new asset group (`mongo-cxx-driver-X.Y`) is present in the [Silk Asset Inventory](https://us1.app.silk.security/inventory/all).
+
 ### Update Snyk
 
 > [!IMPORTANT]
@@ -482,7 +553,14 @@ python path/to/tools/create-silk-asset-group.py "${create_args[@]:?}"
 
 Checkout the new release tag.
 
-Configure and build the CXX Driver with `BSONCXX_POLY_USE_MNMLSTC=ON` (force download of mnmlstc/core sources) and no `CMAKE_PREFIX_PATH` entry to an existing C Driver installation (force download of C Driver sources), then run:
+Configure and build the CXX Driver (do not reuse an existing C Driver installation; use the auto-downloaded C Driver sources instead):
+
+```bash
+cmake -S . -B build
+cmake --build build
+```
+
+Then run:
 
 ```bash
 # Snyk credentials. Ask for these from a team member.
@@ -502,7 +580,6 @@ snyk_args=(
   --target-reference="${release_tag:?}"
   --unmanaged
   --all-projects
-  --detection-depth=10 # build/src/bsoncxx/third_party/_deps/core-install/include/core
   --exclude=extras # CXX-3042
 )
 snyk test "${snyk_args[@]:?}" --print-deps
@@ -511,7 +588,9 @@ snyk test "${snyk_args[@]:?}" --print-deps
 snyk monitor "${snyk_args[@]:?}"
 ```
 
-### Create Documentation Tickets
+Verify the new Snyk target reference is present in the [Snyk project targets list](https://app.snyk.io/org/dev-prod/projects?groupBy=targets&before&after&searchQuery=mongo-cxx-driver&sortBy=highest+severity&filters[Show]=&filters[Integrations]=cli&filters[CollectionIds]=) for `mongodb/mongo-cxx-driver`.
+
+### Post-Release Changes
 
 Create and checkout a new branch `post-release-changes` relative to `master` to contain documentation updates following the new release:
 
@@ -525,9 +604,17 @@ This branch will be used to create a PR later.
 > [!IMPORTANT]
 > Make sure the `post-release-changes` branch is created on `master`, not `rX.Y.Z` or `releases/vX.Y`!
 
-Add the new release to the tables in `etc/apidocmenu.md`.
+Update the tables in `etc/apidocmenu.md` with entries for the new release.
 
 Edit `README.md` to match the updated `etc/apidocmenu.md`.
+
+Commit these changes to the `post-release-changes` branch:
+
+```bash
+git commit -m "Post-release changes"
+```
+
+### Create Documentation Tickets
 
 (Stable Releases Only) Close the Jira ticket tracking this release with "Documentation Changes" set to "Needed". Fill the "Documentation Changes Summary" field with information requesting updates to:
 
@@ -542,7 +629,7 @@ This will generate a DOCSP ticket with instructions to update the C++ Driver doc
 Example (using Jira syntax formatting):
 
 ```
-* The [Advanced Installation|https://www.mongodb.com/docs/languages/cpp/cpp-driver/current/installation/advanced/#installing-the-mongodb-c-driver] page must be updated with a new requirement: "For mongocxx-X.Y.x, libmongoc A.B.C or later is required.
+* The [Advanced Installation|https://www.mongodb.com/docs/languages/cpp/cpp-driver/current/installation/advanced/#installing-the-mongodb-c-driver] page must be updated with a new requirement: "For mongocxx-X.Y.x, libmongoc A.B.C or later is required."
 * The [MongoDB C++ Driver|https://www.mongodb.com/docs/languages/cpp/cpp-driver/current/#driver-status-by-family-and-version] page must be updated: {{{}mongocxx X.Y.x{}}} is now a previous stable release and no longer under active development; {{{}mongocxx X.Y+1.x{}}} is the new current stable release eligible for bug fixes.
 * the [full version|https://github.com/mongodb/docs-cpp/blob/master/snooty.toml] for C++ Driver documentation must be updated to {{{}X.Y.Z{}}}.
 ```
@@ -574,7 +661,7 @@ command -V doxygen hugo
 Run `git clean -dfx` to restore the repository to a clean state.
 
 > [!WARNING]
-> Do NOT run `git clean -dfx` in your local development repository, as it may delete your local development files present in the repository (even if excluded)! Only run this in the command in the separate repository being used for this release!
+> Do NOT run `git clean -dfx` in your local development repository, as it may delete your local development files present in the repository (even if normally ignored by git)! Only run this in the command in the separate repository being used for this release!
 
 Configure CMake using `build` as the binary directory. Leave all other configuration variables as their default.
 
@@ -591,6 +678,7 @@ cmake --build build --target docs
 Test generating the latest versioned Doxygen docs by building the `doxygen-latest` target (this command DOES checks for the required Doxygen version):
 
 ```bash
+export DOXYGEN_BINARY=<path/to/doxygen> # Optional. For binary version compatibility.
 cmake --build build --target doxygen-latest
 ```
 
@@ -613,7 +701,7 @@ These commands will update the `gh-pages` branch and push the changes to the rem
 > [!WARNING]
 > Build and release artifacts may still be present in the repository after this step. Do not accidentally commit these files into the repository in the following steps!
 
-### Update Symlinks
+### Update gh-pages
 
 > [!IMPORTANT]
 > Symlink updates only apply to stable releases! Release candidates and other unstable releases do not require updating symlinks.
@@ -640,11 +728,30 @@ current     -> mongocxx-v3
 mongocxx-v3 -> mongocxx-X.Y.Z
 ```
 
-Commit and push this change to the `gh-pages` branch:
+Add a new entry to the `sitemap_index.xml` file referencing the sitemap for `api/mongocxx-X.Y.Z`.
+Set `<lastmod>` for both the new entry and the `/current` sitemap entry to the current date:
+
+```xml
+...
+<!-- API Documentation Pages. -->
+<sitemap>
+  <loc>https://mongocxx.org/api/current/sitemap.xml</loc>
+  <lastmod>YYYY-MM-DD</lastmod>
+</sitemap>
+<sitemap>
+  <loc>https://mongocxx.org/api/mongocxx-X.Y.Z/sitemap.xml</loc>
+  <lastmod>YYYY-MM-DD</lastmod>
+</sitemap>
+...
+```
+
+Commit and push these change to the `gh-pages` branch:
 
 ```bash
-git commit -m "Update symlink for rX.Y.Z"
+git commit -m "Update symlink and sitemap for rX.Y.Z"
 ```
+
+Wait for [GitHub Actions](https://github.com/mongodb/mongo-cxx-driver/actions) to finish deploying the updated pages.
 
 Verify the https://mongocxx.org/api/current/ page has been updated with the new release.
 
@@ -715,6 +822,10 @@ Add a section for the next minor release, e.g. following a `1.3.0` release:
 
 Commit these changes to `post-release-changes`.
 
+```bash
+git commit -m "Add CHANGELOG section for the next minor release"
+```
+
 ### Merge Post-Release Changes
 
 Push the `post-releases-changes` branch to your personal fork repository and create a PR to merge the post-release changes into `master`.
@@ -728,12 +839,18 @@ git push -u origin post-release-changes
 
 Post an announcement to the [Developer Community Forum](https://www.mongodb.com/community/forums/tags/c/announcements/driver-releases/110/cxx) under "Product & Driver Announcements > Driver Releases" and include the "production" and "cxx" tags.
 
-Template:
+Template Title:
+
+```
+MongoDB C++11 Driver X.Y.Z Released
+```
+
+Template Body:
 
 ```md
 The MongoDB C++ Driver Team is pleased to announce the availability of [MongoDB C++ Driver X.Y.Z](https://github.com/mongodb/mongo-cxx-driver/releases/tag/rX.Y.Z).
 
-Please note that this version of mongocxx requires [MongoDB C Driver A.B.C](https://github.com/mongodb/mongo-c-driver/releases/tag/A.B.C) or higher.
+Please note that this version of mongocxx requires [MongoDB C Driver A.B.C](https://github.com/mongodb/mongo-c-driver/releases/tag/A.B.C) or newer.
 
 See the [MongoDB C++ Driver Manual](https://www.mongodb.com/docs/languages/cpp/cpp-driver/current/) and the [Driver Installation Instructions](https://www.mongodb.com/docs/languages/cpp/cpp-driver/current/installation/) for more details on downloading, installing, and using this driver.
 
@@ -746,17 +863,25 @@ Sincerely,
 The C++ Driver Team
 ```
 
+### Update the Release Info Spreadsheet
+
+Add an entry to the [C/C++ Release Info](https://docs.google.com/spreadsheets/d/1yHfGmDnbA5-Qt8FX4tKWC5xk9AhzYZx1SKF4AD36ecY) spreadsheet documenting the date, release version, author (of the release), and additional comments.
+
 ## Packaging
 
 ### vcpkg
 
 Submit a PR or create an issue to update the vc-pkg file for mongo-cxx-driver.
-To submit an issue, follow: https://github.com/microsoft/vcpkg/issues/new/choose. Example: https://github.com/microsoft/vcpkg/issues/34984
+To submit an issue, follow: https://github.com/microsoft/vcpkg/issues/new/choose (Request an update to an existing port). Example: [r3.10.2](https://github.com/microsoft/vcpkg/issues/39539).
+
+Include a note communicating new minimum C Driver version requirements.
 
 ### Conan
 
 Submit a PR or create an issue to update the Conan recipe for mongo-cxx-driver.
-To submit an issue, follow: https://github.com/conan-io/conan-center-index/issues/new/choose/. Example: https://github.com/conan-io/conan-center-index/issues/21006
+To submit an issue, follow: https://github.com/conan-io/conan-center-index/issues/new/choose/ (Package: New Version). Example: [r3.10.2](https://github.com/conan-io/conan-center-index/issues/24451).
+
+Include a note communicating new minimum C Driver version requirements.
 
 ## Docker Image Build and Publish
 
@@ -841,120 +966,65 @@ driver process documentation Google doc.
 
 ### Debian
 
+> [!IMPORTANT]
+> These instructions should be kept in sync with the corresponding C driver
+> release process documentation located in the `docs/dev/debian.rst` file in the
+> C driver repository.
+
 #### Build
 
-- Checkout the appropriate release branch.
-- For the first Debian package release on a new release branch, edit
-  `debian/gbp.conf` and update the `upstream-branch` and `debian-branch`
-  variables to match the name of the new release branch (e.g., `releases/v3.x`);
-  both variables will have the same value
-- The Debian package release is made after the upstream release has been tagged
-- Create a new changelog entry (use the command `dch -i` to ensure proper
-  formatting), then adjust the version number on the top line of the changelog
-  as appropriate
+1. Change to the packaging branch, `git checkout debian/unstable`, and make sure
+   the working directorty is clean, `git status`, and up-to-date, `git pull`.
+2. Because it is possible to have divergences between release branches, some
+   special procedures are needed. Execute the following sequence of commands
+   (substituting version numbers as appropriate):
 
 ```
-DEBEMAIL='my-email@mongodb.com' DEBFULLNAME='FIRSTNAME LASTNAME' dch -v VERSION
+$ git merge --no-commit --no-ff r3.xx.y     # may result in conflicts
+$ git checkout HEAD -- debian               # ensures debian/ dir is preserved
+$ git add .                                 # prepare to resolve conflicts
+$ git checkout --no-overlay r3.xx.y -- . ':!debian' # resolve conflicts
+$ git add .
+$ git commit
 ```
 
-- Make any other necessary changes to the Debian packaging components
-  (e.g., update to standards version, dependencies, descriptions, etc.) and make
-  relevant entries in `debian/changelog` as needed
-- If this release fixes any Debian bugs that are tracked in the Debian bug
-  tracking system (links below in [Post Build](#post-build)), then note that
-  the bug is closed with this release in `debian/changelog`, for example:
-```
-  * New upstream release (Closes: #1042682)
-```
+3. Verify that there are no extraneous differences from the release tag,
+   `git diff r3.xx.y..HEAD --stat -- . ':!debian'`; the command should produce
+   no output, and if any output is shown then that indicates differences in
+   files outside the `debian/` directory.
+4. If there were any files outside the `debian/` directory listed in the last
+   step then something has gone wrong. Discard the changes on the branch and
+   start again.
+5. Create a new changelog entry (use the command `dch -i` to ensure proper
+   formatting), then adjust the version number on the top line of the changelog
+   as appropriate.
+6. Make any other necessary changes to the Debian packaging components (e.g.,
+   update to standards version, dependencies, descriptions, etc.) and make
+   relevant entries in `debian/changelog` as needed.
+7. Use `git add` to stage the changed files for commit (only files in the
+   `debian/` directory should be committed), then commit them (the `debcommit`
+   utility is helpful here).
+8. Build the package with `gbp buildpackage` and inspect the resulting package
+   files (at a minimum use `debc` on the `.changes` file in order to confirm
+   files are installed to the proper locations by the proper packages and also
+   use `lintian` on the `.changes` file in order to confirm that there are no
+   unexpected errors or warnings; the `lintian` used for this check should
+   always be the latest version as it is found in the unstable distribution).
+9. If any changes are needed, make them, commit them, and rebuild the package.
 
-- Use `git add` to stage the changed files for commit (only files in the
-  `debian/` directory should be committed), then commit them (the `debcommit`
-  utility is helpful here). A common commit message for this stage is:
+> [!IMPORTANT]
+> It may be desirable to squash multiple commits down to a single commit before building the final packages.
 
-```
-(Debian packaging) New upstream release
-```
-
-- Create a chroot environment using cowbuilder.
-
-```
-$ sudo cowbuilder --create --mirror http://ftp.us.debian.org/debian/ --distribution sid --basepath /var/cache/pbuilder/base-sid.cow
-```
-
-- If you already have a chroot environment setup, then update it.
-
-```
-$ sudo cowbuilder --update --mirror http://ftp.us.debian.org/debian/ --distribution sid --basepath /var/cache/pbuilder/base-sid.cow
-```
-
-- Create the file `~/.gbp.conf` with the following text.
-
-```
-[DEFAULT]
-cleaner = true
-pbuilder = True
-pbuilder-options = --source-only-changes
-
-[buildpackage]
-#sign-tags = True
-export-dir = ../build-area/
-```
-
-- Build the package with `gbp buildpackage`
-
-```
-DH_VERBOSE=1 DEB_BUILD_OPTIONS="parallel=$(nproc)" gbp buildpackage --git-dist=sid
-```
-
-- Inspect the resulting package files (at a minimum use `debc` on the `.changes`
-  file in order to confirm files are installed to the proper locations by the
-  proper packages and also use `lintian` on the `.changes` file in order to
-  confirm that there are no unexpected errors or warnings; the `lintian` used
-  for this check should always be the latest version as it is found in the
-  unstable distribution). This is easiest done using the Sid chroot that was
-  created in the previous steps.
-
-```
-$ sudo cowbuilder --login --basepath /var/cache/pbuilder/base-sid.cow/ --bindmounts $HOME
-# apt update && apt install -y lintian
-# lintian -viI mongo-cxx-driver_3.7.2-1_amd64.changes
-```
-
-- You may need to update to the latest Debian policy, which you can do the
-  following to see the latest policy.
-
-```
-# apt install debian-policy
-# zless /usr/share/doc/debian-policy/upgrading-checklist.txt.gz
-```
-
-- If any changes are needed, make them, commit them, and rebuild the package
-- Edit changelog, change UNRELEASED to experimental.
-
-```
-$ DEBEMAIL='my-email@mongodb.com' DEBFULLNAME='FIRSTNAME LASTNAME' dch -r -D experimental
-```
-
-- Commit this change with the following message:
-
-```
-(Debian packaging) ready for release
-```
-
-- It may be desirable to squash multiple commits down to a single commit before
-  building the final packages
-- After you finish making commits, build the Debian package for one final time,
-  and if you are not a Debian maintainer, then give the packages to a debian
-  maintainer to do the two steps below:
-  - Once the final packages are built, they can be signed and uploaded and the
-    version can be tagged using the `--git-tag` option of `gbp buildpackage`
-  - Sign and upload the package, push the commits on the release branch and
-    the master branch to the remote, and push the Debian package tag.
-- After the commit has been tagged, switch from the release branch to the
-  `master` branch and cherry-pick the commit(s) made on the release branch that
-  touch only the Debian packaging (this will ensure that the packaging and
-  especially the changelog on the master remain up to date)
-- Open a PR with the cherry-picks and use the `Rebase and merge` merge strategy.
+10. Mark the package ready for release with the `dch -Dexperimental -r` command
+    and commit the resulting changes (after inspecting them),
+    `git commit debian/changelog -m 'mark ready for release'`.
+11. Build the final packages. Once the final packages are built, they can be
+    signed and uploaded and the version can be tagged using the `--git-tag`
+    option of `gbp buildpackage`. The best approach is to build the packages,
+    prepare everything and then upload. Once the archive has accepted the
+    upload, then execute
+    `gbp buildpackage --git-tag --git-tag-only --git-sign-tags` and push the
+    commits on the `debian/unstable` branch as well as the new signed tag.
 
 #### Post Build
 

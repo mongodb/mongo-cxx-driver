@@ -67,10 +67,10 @@ void validate_gridfs_file(database db,
             expected_contents.size());
     REQUIRE(files_doc->view()["chunkSize"].get_int32().value == expected_chunk_size);
     REQUIRE(files_doc->view()["filename"].get_string().value ==
-            stdx::string_view(expected_file_name));
+            bsoncxx::stdx::string_view(expected_file_name));
 
     // md5 is deprecated in GridFS, we don't include it:
-    // https://github.com/mongodb/specifications/blob/master/source/gridfs/gridfs-spec.rst
+    // https://github.com/mongodb/specifications/blob/master/source/gridfs/gridfs-spec.md
     REQUIRE(!files_doc->view()["md5"]);
 
     std::int32_t index = 0;
@@ -125,7 +125,7 @@ void validate_gridfs_file(
     REQUIRE(files_doc->view()["length"].get_int64().value == expected_length);
     REQUIRE(files_doc->view()["chunkSize"].get_int32().value == expected_chunk_size);
     REQUIRE(files_doc->view()["filename"].get_string().value ==
-            stdx::string_view(expected_file_name));
+            bsoncxx::stdx::string_view(expected_file_name));
 
     std::size_t i = 0;
 
@@ -239,7 +239,7 @@ TEST_CASE("mongocxx::gridfs::bucket copy constructor", "[gridfs::bucket]") {
         gridfs::bucket bucket_a = db.gridfs_bucket(options::gridfs::bucket{}.bucket_name("a"));
         gridfs::bucket bucket_b{bucket_a};
         REQUIRE(bucket_b);
-        REQUIRE(bucket_b.bucket_name() == stdx::string_view{"a"});
+        REQUIRE(bucket_b.bucket_name() == bsoncxx::stdx::string_view{"a"});
     }
 
     SECTION("constructing from invalid") {
@@ -260,7 +260,7 @@ TEST_CASE("mongocxx::gridfs::bucket copy assignment operator", "[gridfs::bucket]
         gridfs::bucket bucket_b = db.gridfs_bucket(options::gridfs::bucket{}.bucket_name("b"));
         bucket_b = bucket_a;
         REQUIRE(bucket_b);
-        REQUIRE(bucket_b.bucket_name() == stdx::string_view{"a"});
+        REQUIRE(bucket_b.bucket_name() == bsoncxx::stdx::string_view{"a"});
     }
 
     SECTION("assigning invalid to valid") {
@@ -275,7 +275,7 @@ TEST_CASE("mongocxx::gridfs::bucket copy assignment operator", "[gridfs::bucket]
         gridfs::bucket bucket_b;
         bucket_b = bucket_a;
         REQUIRE(bucket_b);
-        REQUIRE(bucket_b.bucket_name() == stdx::string_view{"a"});
+        REQUIRE(bucket_b.bucket_name() == bsoncxx::stdx::string_view{"a"});
     }
 
     SECTION("assigning invalid to invalid") {
@@ -356,9 +356,9 @@ TEST_CASE("downloading throws error when files document is corrupt", "[gridfs::b
 
     const std::int32_t k_expected_chunk_size_bytes = 255 * 1024;  // Default chunk size.
     const std::int64_t k_expected_file_length = 1024 * 1024;
-    stdx::optional<bsoncxx::types::bson_value::view> chunk_size{
+    bsoncxx::stdx::optional<bsoncxx::types::bson_value::view> chunk_size{
         bsoncxx::types::bson_value::view{bsoncxx::types::b_int32{k_expected_chunk_size_bytes}}};
-    stdx::optional<bsoncxx::types::bson_value::view> length{
+    bsoncxx::stdx::optional<bsoncxx::types::bson_value::view> length{
         bsoncxx::types::bson_value::view{bsoncxx::types::b_int64{k_expected_file_length}}};
     bool expect_success = false;
 
@@ -409,7 +409,7 @@ TEST_CASE("downloading throws error when files document is corrupt", "[gridfs::b
         run_test();
     }
     SECTION("missing chunk size") {
-        chunk_size = stdx::nullopt;
+        chunk_size = bsoncxx::stdx::nullopt;
         run_test();
     }
 
@@ -423,7 +423,7 @@ TEST_CASE("downloading throws error when files document is corrupt", "[gridfs::b
         run_test();
     }
     SECTION("missing length") {
-        length = stdx::nullopt;
+        length = bsoncxx::stdx::nullopt;
         run_test();
     }
 
@@ -454,15 +454,15 @@ TEST_CASE("downloading throws error when chunks document is corrupt", "[gridfs::
 
     const std::uint8_t k_expected_data_byte = 'd';
 
-    stdx::optional<bsoncxx::types::bson_value::view> n{
+    bsoncxx::stdx::optional<bsoncxx::types::bson_value::view> n{
         bsoncxx::types::bson_value::view{bsoncxx::types::b_int32{0}}};
-    stdx::optional<bsoncxx::types::bson_value::view> data{bsoncxx::types::bson_value::view{
+    bsoncxx::stdx::optional<bsoncxx::types::bson_value::view> data{bsoncxx::types::bson_value::view{
         bsoncxx::types::b_binary{bsoncxx::binary_sub_type::k_binary, 1, &k_expected_data_byte}}};
     bool expect_success = true;
 
     // Tests for invalid n.
     SECTION("missing n") {
-        n = stdx::nullopt;
+        n = bsoncxx::stdx::nullopt;
         expect_success = false;
     }
     SECTION("wrong type for n") {
@@ -472,7 +472,7 @@ TEST_CASE("downloading throws error when chunks document is corrupt", "[gridfs::
 
     // Tests for invalid data.
     SECTION("missing data") {
-        data = stdx::nullopt;
+        data = bsoncxx::stdx::nullopt;
         expect_success = false;
     }
     SECTION("wrong type for data") {
@@ -503,7 +503,7 @@ TEST_CASE("downloading throws error when chunks document is corrupt", "[gridfs::
     gridfs::downloader downloader =
         bucket.open_download_stream(bsoncxx::types::bson_value::view{bsoncxx::types::b_int32{0}});
     auto downloader_read_one = [&downloader]() {
-        stdx::optional<std::uint8_t> result;
+        bsoncxx::stdx::optional<std::uint8_t> result;
         std::uint8_t byte;
         std::size_t bytes_downloaded = downloader.read(&byte, 1);
         if (bytes_downloaded > 0) {
@@ -513,7 +513,7 @@ TEST_CASE("downloading throws error when chunks document is corrupt", "[gridfs::
     };
 
     if (expect_success) {
-        stdx::optional<std::uint8_t> result = downloader_read_one();
+        bsoncxx::stdx::optional<std::uint8_t> result = downloader_read_one();
         REQUIRE(result);
         REQUIRE(*result == k_expected_data_byte);
         result = downloader_read_one();
@@ -1042,7 +1042,7 @@ TEST_CASE("gridfs upload large file", "[gridfs::bucket]") {
 
     char* enable_slow_tests = std::getenv("MONGOCXX_ENABLE_SLOW_TESTS");
 
-    if (!enable_slow_tests || stdx::string_view{enable_slow_tests}.empty()) {
+    if (!enable_slow_tests || bsoncxx::stdx::string_view{enable_slow_tests}.empty()) {
         return;
     }
 
@@ -1099,7 +1099,7 @@ TEST_CASE("gridfs download large file", "[gridfs::bucket]") {
 
     char* enable_slow_tests = std::getenv("MONGOCXX_ENABLE_SLOW_TESTS");
 
-    if (!enable_slow_tests || stdx::string_view{enable_slow_tests}.empty()) {
+    if (!enable_slow_tests || bsoncxx::stdx::string_view{enable_slow_tests}.empty()) {
         return;
     }
 

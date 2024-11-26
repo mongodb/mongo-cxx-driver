@@ -43,7 +43,6 @@ namespace v_noabi {
 enum class type : std::uint8_t {
     k_double = 0x01,      ///< 64-bit binary floating point.
     k_string = 0x02,      ///< UTF-8 string.
-    k_utf8 = 0x02,        ///< Equivalent to @ref k_string. @deprecated
     k_document = 0x03,    ///< Embedded document.
     k_array = 0x04,       ///< Array.
     k_binary = 0x05,      ///< Binary data.
@@ -163,13 +162,6 @@ struct b_string {
 inline bool operator==(const b_string& lhs, const b_string& rhs) {
     return lhs.value == rhs.value;
 }
-
-///
-/// Equivalent to @ref b_string.
-///
-/// @deprecated Use @ref b_string instead.
-///
-BSONCXX_DEPRECATED typedef b_string b_utf8;
 
 ///
 /// A BSON document value.
@@ -874,8 +866,6 @@ using ::bsoncxx::v_noabi::to_string;
 namespace bsoncxx {
 namespace types {
 
-using ::bsoncxx::v_noabi::types::b_utf8;  // Deprecated.
-
 using ::bsoncxx::v_noabi::types::operator==;
 using ::bsoncxx::v_noabi::types::operator!=;
 
@@ -900,10 +890,6 @@ std::string to_string(v_noabi::type rhs);
 std::string to_string(v_noabi::binary_sub_type rhs);
 
 namespace types {
-
-/// @ref bsoncxx::v_noabi::types::b_utf8
-/// @deprecated Use @ref bsoncxx::types::b_string instead.
-struct b_utf8 {};
 
 /// @ref bsoncxx::v_noabi::types::operator==(const v_noabi::types::b_double& lhs, const v_noabi::types::b_double& rhs)
 bool operator==(const v_noabi::types::b_double& lhs, const v_noabi::types::b_double& rhs);

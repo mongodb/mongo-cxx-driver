@@ -3,6 +3,9 @@
 set -o errexit
 set -o pipefail
 
+export CC="${cc_compiler:?}"
+export CXX="${cxx_compiler:?}"
+
 if [[ "${distro_id:?}" != ubuntu* ]]; then
   echo "run-clang-tidy.sh expects to be run on an Ubuntu distro!" 1>&2
   exit 1
@@ -25,7 +28,7 @@ cmake_config_flags=(
   -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
   -DCMAKE_BUILD_TYPE=Debug
   -DCMAKE_PREFIX_PATH="$(pwd)/../mongoc" # Avoid downloading C Driver.
-  -DCMAKE_CXX_STANDARD=17                # Avoid downloading mnmlstc/core.
+  -DCMAKE_CXX_STANDARD=17
 )
 
 # Generate the compilation database file.

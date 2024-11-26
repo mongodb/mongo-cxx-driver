@@ -155,24 +155,6 @@
 ///
 
 ///
-/// @ingroup mongocxx-v_noabi-mongocxx-config-config-hpp
-/// For internal use only!
-///
-/// @deprecated To be removed in an upcoming major release.
-/// <!-- Explicitly documented due to long-standing availability. -->
-///
-#define MONGOCXX_INLINE_NAMESPACE_BEGIN
-
-///
-/// @ingroup mongocxx-v_noabi-mongocxx-config-config-hpp
-/// For internal use only!
-///
-/// @deprecated To be removed in an upcoming major release.
-/// <!-- Explicitly documented due to long-standing availability. -->
-///
-#define MONGOCXX_INLINE_NAMESPACE_END
-
-///
 /// @} <!-- mongocxx/v_noabi/mongocxx/config/config.hpp -->
 ///
 
@@ -223,55 +205,11 @@
 
 ///
 /// @ingroup mongocxx-v_noabi-mongocxx-config-export-hpp
-/// Equivalent to @ref MONGOCXX_ABI_EXPORT.
-///
-/// @warning For internal use only!
-///
-/// @note This is a symbol visibility control macro, NOT a declaration of public API. Public API vs.
-/// private API is determined by the placement of the entity being declared (e.g. in a public
-/// header, as a public class member, etc.) or by documentation (e.g. absence of "For internal use
-/// only!" warnings). See [API and ABI
-/// Versioning](https://www.mongodb.com/docs/languages/cpp/cpp-driver/current/api-abi-versioning/).
-///
-#define MONGOCXX_API MONGOCXX_ABI_EXPORT
-
-///
-/// @ingroup mongocxx-v_noabi-mongocxx-config-export-hpp
-/// Equivalent to `inline` with @ref MONGOCXX_ABI_NO_EXPORT.
-///
-/// @warning For internal use only!
-///
-/// @note This is a symbol visibility control macro, NOT a declaration of private API. Public API
-/// vs. private API is determined by the placement of the entity being declared (e.g. in a detail
-/// header, as a private class member, etc.) or by documentation (e.g. "For internal use only!",
-/// absence of documentation, etc.). See [API and ABI
-/// Versioning](https://www.mongodb.com/docs/languages/cpp/cpp-driver/current/api-abi-versioning/).
-///
-#define MONGOCXX_PRIVATE inline MONGOCXX_ABI_NO_EXPORT
-
-///
-/// @ingroup mongocxx-v_noabi-mongocxx-config-export-hpp
 /// Declares the associated entity as deprecated.
 ///
 /// @warning For internal use only!
 ///
 #define MONGOCXX_DEPRECATED
-
-///
-/// @ingroup mongocxx-v_noabi-mongocxx-config-export-hpp
-/// Equivalent to @ref MONGOCXX_API and @ref MONGOCXX_DEPRECATED.
-///
-/// @warning For internal use only!
-///
-#define MONGOCXX_DEPRECATED_EXPORT
-
-///
-/// @ingroup mongocxx-v_noabi-mongocxx-config-export-hpp
-/// Equivalent to @ref MONGOCXX_PRIVATE and @ref MONGOCXX_DEPRECATED.
-///
-/// @warning For internal use only!
-///
-#define MONGOCXX_DEPRECATED_NO_EXPORT
 
 ///
 /// @} <!-- mongocxx/v_noabi/mongocxx/config/export.hpp -->
@@ -421,10 +359,4 @@
 ///
 /// @namespace mongocxx::v_noabi::result::gridfs
 /// @copydoc mongocxx::result::gridfs
-///
-
-///
-/// @namespace mongocxx::v_noabi::stdx
-/// @copydoc mongocxx::stdx
-/// @deprecated Use @ref bsoncxx::v_noabi::stdx instead.
 ///

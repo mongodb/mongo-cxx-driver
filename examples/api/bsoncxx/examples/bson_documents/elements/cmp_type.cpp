@@ -30,11 +30,11 @@ void example(bsoncxx::document::element e) {
     std::int64_t b{2};
 
     if (e.type() == bsoncxx::type::k_int32) {
-        ASSERT(e.key().compare("a") == 0);
-        ASSERT(e.get_int32().value == a);
+        EXPECT(e.key() == "a");
+        EXPECT(e.get_int32().value == a);
     } else if (e.type() == bsoncxx::type::k_int64) {
-        ASSERT(e.key().compare("b") == 0);
-        ASSERT(e.get_int64().value == b);
+        EXPECT(e.key() == "b");
+        EXPECT(e.get_int64().value == b);
     }
 }
 // [Example]

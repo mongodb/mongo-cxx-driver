@@ -30,16 +30,6 @@ namespace bsoncxx {
 namespace v_noabi {
 namespace builder {
 
-using namespace ::bsoncxx::v_noabi::types;  // Deprecated. Deliberately undocumented.
-
-}  // namespace builder
-}  // namespace v_noabi
-}  // namespace bsoncxx
-
-namespace bsoncxx {
-namespace v_noabi {
-namespace builder {
-
 ///
 /// A JSON-like builder for creating documents and arrays.
 ///
@@ -94,7 +84,7 @@ class list {
     /// @see
     /// - @ref bsoncxx::v_noabi::types::bson_value::view.
     ///
-    operator bson_value::view() {
+    operator types::bson_value::view() {
         return view();
     }
 
@@ -104,12 +94,12 @@ class list {
     /// @see
     /// - @ref bsoncxx::v_noabi::types::bson_value::view.
     ///
-    bson_value::view view() {
+    types::bson_value::view view() {
         return val.view();
     }
 
    private:
-    bson_value::value val;
+    types::bson_value::value val;
 
     friend ::bsoncxx::v_noabi::builder::document;
     friend ::bsoncxx::v_noabi::builder::array;
@@ -125,7 +115,7 @@ class list {
                 }
                 for (size_t i = 0; i < init.size(); i += 2) {
                     auto t = (begin(init) + i)->val.view().type();
-                    if (t != type::k_utf8) {
+                    if (t != type::k_string) {
                         err_msg << " : all keys must be string type. ";
                         err_msg << "Found type=" << to_string(t);
                         return false;
@@ -141,12 +131,12 @@ class list {
                 _core.key_owned(std::string((begin(init) + i)->val.view().get_string().value));
                 _core.append((begin(init) + i + 1)->val);
             }
-            val = bson_value::value(_core.extract_document());
+            val = types::bson_value::value(_core.extract_document());
         } else if (type_deduction || is_array) {
             core _core{true};
             for (auto&& ele : init)
                 _core.append(ele.val);
-            val = bson_value::value(_core.extract_array());
+            val = types::bson_value::value(_core.extract_array());
         } else {
             throw bsoncxx::v_noabi::exception{error_code::k_unmatched_key_in_builder,
                                               err_msg.str()};
@@ -207,18 +197,7 @@ class array : public list {
 }  // namespace v_noabi
 }  // namespace bsoncxx
 
-namespace bsoncxx {
-namespace builder {
-
-using namespace ::bsoncxx::v_noabi::types;  // Deprecated. Deliberately undocumented.
-
-}  // namespace builder
-}  // namespace bsoncxx
-
-// CXX-2770: missing include of postlude header.
-#if defined(BSONCXX_TEST_MACRO_GUARDS_FIX_MISSING_POSTLUDE)
 #include <bsoncxx/config/postlude.hpp>
-#endif
 
 ///
 /// @file

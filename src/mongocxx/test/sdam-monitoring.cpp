@@ -58,7 +58,7 @@ TEST_CASE("SDAM Monitoring", "[sdam_monitoring]") {
 
     bsoncxx::test::exception_guard_state eguard;
     options::apm apm_opts;
-    stdx::optional<oid> topology_id;
+    bsoncxx::stdx::optional<oid> topology_id;
 
     SECTION("Server Events") {
         int server_opening_events = 0;

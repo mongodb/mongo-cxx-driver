@@ -19,8 +19,6 @@
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/stdx/optional.hpp>
 
-#include <mongocxx/stdx.hpp>
-
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
@@ -53,7 +51,8 @@ class validation_criteria {
     /// @return
     ///   Document representing a validation rule.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<bsoncxx::v_noabi::document::view_or_value>&)
+    MONGOCXX_ABI_EXPORT_CDECL(
+        const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value>&)
     rule() const;
 
     ///
@@ -89,7 +88,8 @@ class validation_criteria {
     /// @return
     ///   The enumerated validation level.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<validation_level>&) level() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<validation_level>&)
+    level() const;
 
     ///
     /// A class to represent the different validation action options.
@@ -122,7 +122,8 @@ class validation_criteria {
     /// @return
     ///   The enumerated validation action.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<validation_action>&) action() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<validation_action>&)
+    action() const;
 
     ///
     /// Returns a bson document representing this set of validation criteria.
@@ -148,9 +149,9 @@ class validation_criteria {
     }
 
    private:
-    stdx::optional<bsoncxx::v_noabi::document::view_or_value> _rule;
-    stdx::optional<validation_level> _level;
-    stdx::optional<validation_action> _action;
+    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> _rule;
+    bsoncxx::v_noabi::stdx::optional<validation_level> _level;
+    bsoncxx::v_noabi::stdx::optional<validation_action> _action;
 };
 
 ///

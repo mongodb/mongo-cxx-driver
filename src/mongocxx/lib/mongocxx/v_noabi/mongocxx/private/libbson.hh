@@ -20,7 +20,6 @@
 #include <bsoncxx/private/libbson.hh>
 #include <bsoncxx/stdx/optional.hpp>
 
-#include <mongocxx/stdx.hpp>
 #include <mongocxx/test_util/export_for_testing.hh>
 
 #include <mongocxx/config/private/prelude.hh>

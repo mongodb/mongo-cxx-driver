@@ -88,7 +88,7 @@ ISSUE_TYPE_ID = {'Backport': '10300',
               show_default=True,
               help='The remote reference which points to the mongodb/mongo-cxx-driver repo')
 @click.option('--c-driver-build-ref',
-              default='1.28.0',
+              default='1.29.0',
               show_default=True,
               help='When building the C driver, build at this Git reference')
 @click.option('--with-c-driver',
@@ -407,7 +407,7 @@ def build_c_driver(c_driver_build_ref, quiet):
 
     env = os.environ.copy()
     env['mongoc_version'] = c_driver_build_ref
-    run_shell_script('./.evergreen/install_c_driver.sh', env=env)
+    run_shell_script('./.evergreen/scripts/install-c-driver.sh', env=env)
 
     if not quiet:
         click.echo('Build of C Driver version "{}" was successful.'.format(c_driver_build_ref))
@@ -438,10 +438,10 @@ def build_distribution(release_tag, release_version, c_driver_dir, quiet, skip_d
         click.echo('Clear ./build with "git clean -xdf ./build"', err=True)
         return None
 
-    run_shell_script('. .evergreen/find_cmake.sh;'
+    run_shell_script('. .evergreen/scripts/find-cmake-old.sh;'
                      'cd build;'
                      'echo ' + release_version + ' > VERSION_CURRENT;'
-                     '${CMAKE} -DCMAKE_BUILD_TYPE=Release '
+                     '${CMAKE} -DCMAKE_BUILD_TYPE=Release -DENABLE_TESTS=ON '
                      '-DCMAKE_PREFIX_PATH="' + c_driver_dir + '" '
                      '-DENABLE_UNINSTALL=ON ..;'
                      'cmake --build . --target dist')

@@ -1,0 +1,28 @@
+[project]
+name = "mongo-cxx-driver"
+version = "0.1.0"
+description = "For development only."
+requires-python = ">=3.10,<3.12"
+dependencies = []
+
+[dependency-groups]
+dev = [
+    # .evergreen/config_generator/generate.py
+    "packaging>=14.0",
+    "pydantic>=2.7",
+    "shrub-py>=3.4.0",
+
+    # etc/make_release.py (requires python<3.12)
+    "click>=6.0",
+    "gitpython>=3.1",
+    "jira>=3.1",
+    "looseversion>=1.3",
+    "pygithub>=2.0",
+
+    # etc/patch-apidocs-current-redirects.py
+    "packaging>=14.0",
+
+    # etc/patch-apidocs-index-pages.py
+    "beautifulsoup4>=4.12",
+    "packaging>=14.0",
+]

@@ -151,11 +151,11 @@ TEST_CASE("calling acquire on a pool returns an entry that manages its client", 
         pool p{};
         auto client = p.acquire();
         database db = client["mydb"];
-        REQUIRE(db.name() == stdx::string_view{"mydb"});
+        REQUIRE(db.name() == bsoncxx::stdx::string_view{"mydb"});
     }
 }
 
-TEST_CASE("try_acquire returns an engaged stdx::optional<entry>", "[pool]") {
+TEST_CASE("try_acquire returns an engaged bsoncxx::stdx::optional<entry>", "[pool]") {
     instance::current();
     pool p{};
     auto client = p.try_acquire();
@@ -163,7 +163,7 @@ TEST_CASE("try_acquire returns an engaged stdx::optional<entry>", "[pool]") {
 }
 
 TEST_CASE(
-    "try_acquire returns a disengaged stdx::optional<entry> if mongoc_client_pool_try_pop "
+    "try_acquire returns a disengaged bsoncxx::stdx::optional<entry> if mongoc_client_pool_try_pop "
     "returns a null pointer",
     "[pool]") {
     MOCK_POOL;

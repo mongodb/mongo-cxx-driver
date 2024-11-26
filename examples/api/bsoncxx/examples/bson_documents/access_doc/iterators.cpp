@@ -25,32 +25,32 @@ namespace {
 // [Example]
 // {"a": 1, "b": 2}
 void example(bsoncxx::document::view doc) {
-    ASSERT(doc.begin() != doc.end());
+    EXPECT(doc.begin() != doc.end());
 
     auto iter = doc.begin();
-    ASSERT(iter == doc.begin());
+    EXPECT(iter == doc.begin());
 
     {
         bsoncxx::document::element e = *iter;
 
-        ASSERT(e.key().compare("a") == 0);
-        ASSERT(e.get_int32().value == 1);
+        EXPECT(e.key() == "a");
+        EXPECT(e.get_int32().value == 1);
     }
 
     ++iter;
 
-    ASSERT(iter->key().compare("b") == 0);
-    ASSERT(iter->get_int32().value == 2);
+    EXPECT(iter->key() == "b");
+    EXPECT(iter->get_int32().value == 2);
 
     {
         auto iter_copy = iter++;
 
-        ASSERT(iter_copy != iter);
-        ASSERT(iter_copy->key().compare("b") == 0);
-        ASSERT(iter_copy->get_int32() == 2);
+        EXPECT(iter_copy != iter);
+        EXPECT(iter_copy->key() == "b");
+        EXPECT(iter_copy->get_int32() == 2);
     }
 
-    ASSERT(iter == doc.end());
+    EXPECT(iter == doc.end());
 }
 // [Example]
 

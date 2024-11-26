@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <bsoncxx/stdx/make_unique.hpp>
+#include <bsoncxx/private/make_unique.hh>
 
 #include <mongocxx/client_encryption.hpp>
 #include <mongocxx/private/client_encryption.hh>
@@ -26,7 +26,7 @@ namespace v_noabi {
 using mongocxx::libbson::scoped_bson_t;
 
 client_encryption::client_encryption(options::client_encryption opts)
-    : _impl(stdx::make_unique<impl>(std::move(opts))) {}
+    : _impl(bsoncxx::make_unique<impl>(std::move(opts))) {}
 
 client_encryption::~client_encryption() = default;
 client_encryption::client_encryption(client_encryption&&) noexcept = default;
@@ -58,7 +58,7 @@ collection client_encryption::create_encrypted_collection(
     const bsoncxx::v_noabi::document::view& options,
     bsoncxx::v_noabi::document::value& out_options,
     const std::string& kms_provider,
-    const stdx::optional<bsoncxx::v_noabi::document::view>& masterkey) {
+    const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view>& masterkey) {
     auto& db_impl = db._get_impl();
     return _impl->create_encrypted_collection(
         db, db_impl.database_t, coll_name, options, out_options, kms_provider, masterkey);
@@ -74,7 +74,7 @@ result::delete_result client_encryption::delete_key(
     return _impl->delete_key(id);
 }
 
-stdx::optional<bsoncxx::v_noabi::document::value> client_encryption::get_key(
+bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::value> client_encryption::get_key(
     bsoncxx::v_noabi::types::bson_value::view_or_value id) {
     return _impl->get_key(id);
 }
@@ -83,20 +83,20 @@ mongocxx::v_noabi::cursor client_encryption::get_keys() {
     return _impl->get_keys();
 }
 
-stdx::optional<bsoncxx::v_noabi::document::value> client_encryption::add_key_alt_name(
-    bsoncxx::v_noabi::types::bson_value::view_or_value id,
-    bsoncxx::v_noabi::string::view_or_value key_alt_name) {
+bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::value>
+client_encryption::add_key_alt_name(bsoncxx::v_noabi::types::bson_value::view_or_value id,
+                                    bsoncxx::v_noabi::string::view_or_value key_alt_name) {
     return _impl->add_key_alt_name(id, key_alt_name);
 }
 
-stdx::optional<bsoncxx::v_noabi::document::value> client_encryption::get_key_by_alt_name(
-    bsoncxx::v_noabi::string::view_or_value key_alt_name) {
+bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::value>
+client_encryption::get_key_by_alt_name(bsoncxx::v_noabi::string::view_or_value key_alt_name) {
     return _impl->get_key_by_alt_name(key_alt_name);
 }
 
-stdx::optional<bsoncxx::v_noabi::document::value> client_encryption::remove_key_alt_name(
-    bsoncxx::v_noabi::types::bson_value::view_or_value id,
-    bsoncxx::v_noabi::string::view_or_value key_alt_name) {
+bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::value>
+client_encryption::remove_key_alt_name(bsoncxx::v_noabi::types::bson_value::view_or_value id,
+                                       bsoncxx::v_noabi::string::view_or_value key_alt_name) {
     return _impl->remove_key_alt_name(id, key_alt_name);
 }
 

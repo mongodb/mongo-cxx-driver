@@ -20,7 +20,7 @@
 
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/json.hpp>
-#include <bsoncxx/stdx/make_unique.hpp>
+#include <bsoncxx/private/make_unique.hh>
 #include <bsoncxx/stdx/string_view.hpp>
 #include <bsoncxx/string/to_string.hpp>
 #include <bsoncxx/types.hpp>
@@ -70,7 +70,7 @@ TEST_CASE("mongocxx::collection copy constructor", "[collection]") {
         collection collection_a = db["a"];
         collection collection_b{collection_a};
         REQUIRE(collection_b);
-        REQUIRE(collection_b.name() == stdx::string_view{"a"});
+        REQUIRE(collection_b.name() == bsoncxx::stdx::string_view{"a"});
     }
 
     SECTION("constructing from invalid") {
@@ -91,7 +91,7 @@ TEST_CASE("mongocxx::collection copy assignment operator", "[collection]") {
         collection collection_b = db["b1"];
         collection_b = collection_a;
         REQUIRE(collection_b);
-        REQUIRE(collection_b.name() == stdx::string_view{"a1"});
+        REQUIRE(collection_b.name() == bsoncxx::stdx::string_view{"a1"});
     }
 
     SECTION("assigning invalid to valid") {
@@ -106,7 +106,7 @@ TEST_CASE("mongocxx::collection copy assignment operator", "[collection]") {
         collection collection_b;
         collection_b = collection_a;
         REQUIRE(collection_b);
-        REQUIRE(collection_b.name() == stdx::string_view{"a3"});
+        REQUIRE(collection_b.name() == bsoncxx::stdx::string_view{"a3"});
     }
 
     SECTION("assigning invalid to invalid") {
@@ -137,17 +137,17 @@ TEST_CASE("collection renaming", "[collection]") {
     coll.insert_one(filter.view());  // Ensure that the collection exists.
     other_coll.insert_one({});
 
-    REQUIRE(coll.name() == stdx::string_view(collname));
+    REQUIRE(coll.name() == bsoncxx::stdx::string_view(collname));
 
     std::string new_name{"mongo_cxx_newname"};
     coll.rename(new_name, false);
 
-    REQUIRE(coll.name() == stdx::string_view(new_name));
+    REQUIRE(coll.name() == bsoncxx::stdx::string_view(new_name));
 
     REQUIRE(coll.find_one(filter.view(), {}));
 
     coll.rename(other_collname, true);
-    REQUIRE(coll.name() == stdx::string_view(other_collname));
+    REQUIRE(coll.name() == bsoncxx::stdx::string_view(other_collname));
     REQUIRE(coll.find_one(filter.view(), {}));
 
     coll.drop();
@@ -203,7 +203,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
     }
 
     SECTION("insert_one returns correct result object", "[collection]") {
-        stdx::string_view expected_id{"foo"};
+        bsoncxx::stdx::string_view expected_id{"foo"};
 
         auto doc = make_document(kvp("_id", expected_id));
 
@@ -249,7 +249,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             options::insert options;
             options.bypass_document_validation(true);
 
-            stdx::optional<result::insert_one> result;
+            bsoncxx::stdx::optional<result::insert_one> result;
             REQUIRE_NOTHROW(result = coll.insert_one(doc.view(), options));
             REQUIRE(result);
             REQUIRE(result->result().inserted_count() == 1);
@@ -337,7 +337,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             // Verify result->inserted_ids() is correct:
             auto id_map = result->inserted_ids();
             REQUIRE(id_map[0].type() == bsoncxx::type::k_string);
-            REQUIRE(id_map[0].get_string().value == stdx::string_view{"foo"});
+            REQUIRE(id_map[0].get_string().value == bsoncxx::stdx::string_view{"foo"});
             REQUIRE(id_map[1].type() == bsoncxx::type::k_oid);
             auto second_inserted_doc = coll.find_one(make_document(kvp("x", 2)));
             REQUIRE(second_inserted_doc);
@@ -420,7 +420,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             options::insert options;
             options.bypass_document_validation(true);
 
-            stdx::optional<result::insert_many> result;
+            bsoncxx::stdx::optional<result::insert_many> result;
             REQUIRE_NOTHROW(result = coll.insert_many(docs, options));
 
             REQUIRE(result);
@@ -434,7 +434,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             // Verify result->inserted_ids() is correct:
             auto id_map = result->inserted_ids();
             REQUIRE(id_map[0].type() == bsoncxx::type::k_string);
-            REQUIRE(id_map[0].get_string().value == stdx::string_view{"foo"});
+            REQUIRE(id_map[0].get_string().value == bsoncxx::stdx::string_view{"foo"});
             REQUIRE(id_map[1].type() == bsoncxx::type::k_oid);
             auto second_inserted_doc = coll.find_one(make_document(kvp("x", 2)));
             REQUIRE(second_inserted_doc);
@@ -474,7 +474,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
         index_view indexes = coll.indexes();
 
         auto key = make_document(kvp("a", 1));
-        stdx::optional<std::string> result = indexes.create_one(key.view());
+        bsoncxx::stdx::optional<std::string> result = indexes.create_one(key.view());
 
         auto find_opts = options::find{}.return_key(true);
         auto cursor = coll.find(doc.view(), find_opts);
@@ -563,7 +563,8 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
 
         auto result = coll.find_one(bson.view());
         REQUIRE(result);
-        REQUIRE(result->view()["name"].get_string().value == stdx::string_view("Charlotte"));
+        REQUIRE(result->view()["name"].get_string().value ==
+                bsoncxx::stdx::string_view("Charlotte"));
 
         // Try adding stages with append_stage(s) instead
         pipeline array_update;
@@ -587,8 +588,10 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
 
         result = coll.find_one(bson.view());
         REQUIRE(result);
-        REQUIRE(result->view()["lastname"].get_string().value == stdx::string_view("Krause"));
-        REQUIRE(result->view()["department"].get_string().value == stdx::string_view("VIS"));
+        REQUIRE(result->view()["lastname"].get_string().value ==
+                bsoncxx::stdx::string_view("Krause"));
+        REQUIRE(result->view()["department"].get_string().value ==
+                bsoncxx::stdx::string_view("VIS"));
         REQUIRE(result->view()["count"].get_int32().value == 1);
     }
 
@@ -644,7 +647,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
 
             coll.insert_one(doc.view());
 
-            stdx::optional<result::update> result;
+            bsoncxx::stdx::optional<result::update> result;
             REQUIRE_NOTHROW(result = coll.update_one(doc.view(), update_doc.view(), options));
 
             REQUIRE(result);
@@ -757,7 +760,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             coll.insert_one(doc.view());
             coll.insert_one(doc.view());
 
-            stdx::optional<result::update> result;
+            bsoncxx::stdx::optional<result::update> result;
             REQUIRE_NOTHROW(result = coll.update_many(doc.view(), update_doc.view(), options));
 
             REQUIRE(result);
@@ -924,7 +927,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
 
             coll.insert_one(b1.view());
 
-            stdx::optional<result::replace_one> result;
+            bsoncxx::stdx::optional<result::replace_one> result;
             REQUIRE_NOTHROW(result = coll.replace_one(b1.view(), b2.view(), options));
             REQUIRE(result);
             REQUIRE(result->result().matched_count() == 1);
@@ -1228,7 +1231,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
 
             auto doc = coll.find_one_and_replace(criteria.view(), replacement.view());
             REQUIRE(doc);
-            REQUIRE(doc->view()["x"].get_string().value == stdx::string_view{"foo"});
+            REQUIRE(doc->view()["x"].get_string().value == bsoncxx::stdx::string_view{"foo"});
         }
 
         SECTION("with return replacement returns new") {
@@ -1244,7 +1247,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             options.return_document(options::return_document::k_after);
             auto doc = coll.find_one_and_replace(criteria.view(), replacement.view(), options);
             REQUIRE(doc);
-            REQUIRE(doc->view()["x"].get_string().value == stdx::string_view{"bar"});
+            REQUIRE(doc->view()["x"].get_string().value == bsoncxx::stdx::string_view{"bar"});
         }
 
         SECTION("with collation") {
@@ -1272,7 +1275,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             auto doc =
                 coll.find_one_and_replace(collation_criteria.view(), replacement.view(), options);
             REQUIRE(doc);
-            REQUIRE(doc->view()["x"].get_string().value == stdx::string_view{"foo"});
+            REQUIRE(doc->view()["x"].get_string().value == bsoncxx::stdx::string_view{"foo"});
         }
 
         SECTION("bad criteria returns negative optional") {
@@ -1305,11 +1308,11 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             options.return_document(options::return_document::k_after);
             options.bypass_document_validation(true);
 
-            stdx::optional<bsoncxx::document::value> doc;
+            bsoncxx::stdx::optional<bsoncxx::document::value> doc;
             REQUIRE_NOTHROW(
                 doc = coll.find_one_and_replace(criteria.view(), replacement.view(), options));
             REQUIRE(doc);
-            REQUIRE(doc->view()["x"].get_string().value == stdx::string_view{"bar"});
+            REQUIRE(doc->view()["x"].get_string().value == bsoncxx::stdx::string_view{"bar"});
         }
     }
 
@@ -1331,7 +1334,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
 
             REQUIRE(doc);
 
-            REQUIRE(doc->view()["x"].get_string().value == stdx::string_view{"foo"});
+            REQUIRE(doc->view()["x"].get_string().value == bsoncxx::stdx::string_view{"foo"});
         }
 
         SECTION("with return update returns new") {
@@ -1347,7 +1350,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             options.return_document(options::return_document::k_after);
             auto doc = coll.find_one_and_update(criteria.view(), update.view(), options);
             REQUIRE(doc);
-            REQUIRE(doc->view()["x"].get_string().value == stdx::string_view{"bar"});
+            REQUIRE(doc->view()["x"].get_string().value == bsoncxx::stdx::string_view{"bar"});
         }
 
         SECTION("with collation") {
@@ -1374,7 +1377,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             options.write_concern(default_wc);
             auto doc = coll.find_one_and_update(collation_criteria.view(), update.view(), options);
             REQUIRE(doc);
-            REQUIRE(doc->view()["x"].get_string().value == stdx::string_view{"foo"});
+            REQUIRE(doc->view()["x"].get_string().value == bsoncxx::stdx::string_view{"foo"});
         }
 
         SECTION("bad criteria returns negative optional") {
@@ -1407,11 +1410,11 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             options.return_document(options::return_document::k_after);
             options.bypass_document_validation(true);
 
-            stdx::optional<bsoncxx::document::value> doc;
+            bsoncxx::stdx::optional<bsoncxx::document::value> doc;
             REQUIRE_NOTHROW(doc =
                                 coll.find_one_and_update(criteria.view(), update.view(), options));
             REQUIRE(doc);
-            REQUIRE(doc->view()["x"].get_string().value == stdx::string_view{"bar"});
+            REQUIRE(doc->view()["x"].get_string().value == bsoncxx::stdx::string_view{"bar"});
         }
     }
 
@@ -1432,7 +1435,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
 
             REQUIRE(doc);
 
-            REQUIRE(doc->view()["x"].get_string().value == stdx::string_view{"foo"});
+            REQUIRE(doc->view()["x"].get_string().value == bsoncxx::stdx::string_view{"foo"});
             REQUIRE(coll.count_documents({}) == 1);
         }
 
@@ -1459,7 +1462,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             options.write_concern(default_wc);
             auto doc = coll.find_one_and_delete(collation_criteria.view(), options);
             REQUIRE(doc);
-            REQUIRE(doc->view()["x"].get_string().value == stdx::string_view{"foo"});
+            REQUIRE(doc->view()["x"].get_string().value == bsoncxx::stdx::string_view{"foo"});
         }
     }
 
@@ -1774,7 +1777,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
 
             pipeline.project(make_document(kvp("x", 1)));
             pipeline.out(bsoncxx::string::to_string(coll_out.name()));
-            stdx::optional<cursor> cursor;
+            bsoncxx::stdx::optional<cursor> cursor;
             REQUIRE_NOTHROW(cursor = coll_in.aggregate(pipeline, options));
 
             auto results = get_results(std::move(*cursor));
@@ -2044,7 +2047,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             cbulk.append(model::insert_one{std::move(doc1)});
             cbulk.append(model::insert_one{std::move(doc2)});
 
-            stdx::optional<result::bulk_write> result;
+            bsoncxx::stdx::optional<result::bulk_write> result;
             REQUIRE_NOTHROW(result = cbulk.execute());
 
             REQUIRE(result);
@@ -2086,12 +2089,12 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
         auto res_doc = results[0].view();
         auto values_array = res_doc["values"].get_array().value;
 
-        std::vector<stdx::string_view> distinct_values;
+        std::vector<bsoncxx::stdx::string_view> distinct_values;
         for (auto&& value : values_array) {
             distinct_values.push_back(value.get_string().value);
         }
 
-        const auto assert_contains_one = [&](stdx::string_view val) {
+        const auto assert_contains_one = [&](bsoncxx::stdx::string_view val) {
             REQUIRE(std::count(distinct_values.begin(), distinct_values.end(), val) == 1);
         };
 
@@ -2117,7 +2120,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
         auto result = *iter;
         auto values = result["values"].get_array().value;
         REQUIRE(std::distance(values.begin(), values.end()) == 1);
-        REQUIRE(values[0].get_string().value == stdx::string_view{"foo"});
+        REQUIRE(values[0].get_string().value == bsoncxx::stdx::string_view{"foo"});
     }
 }
 
@@ -2148,7 +2151,7 @@ TEST_CASE("read_concern is inherited from parent", "[collection]") {
 }
 
 void find_index_and_validate(collection& coll,
-                             stdx::string_view index_name,
+                             bsoncxx::stdx::string_view index_name,
                              const std::function<void(bsoncxx::document::view)>& validate =
                                  [](bsoncxx::document::view) {}) {
     auto cursor = coll.list_indexes();
@@ -2246,7 +2249,7 @@ TEST_CASE("create_index tests", "[collection]") {
         coll.drop();
         coll.insert_one({});  // Ensure that the collection exists.
 
-        mongocxx::stdx::string_view index_name{"succeeds_with_options"};
+        bsoncxx::stdx::string_view index_name{"succeeds_with_options"};
 
         bsoncxx::document::value keys = make_document(kvp("cccc", 1));
 
@@ -2310,7 +2313,7 @@ TEST_CASE("create_index tests", "[collection]") {
         options.name(index_name);
 
         std::unique_ptr<options::index::wiredtiger_storage_options> wt_options =
-            bsoncxx::stdx::make_unique<options::index::wiredtiger_storage_options>();
+            bsoncxx::make_unique<options::index::wiredtiger_storage_options>();
         wt_options->config_string("block_allocation=first");
 
         REQUIRE_NOTHROW(options.storage_options(std::move(wt_options)));
@@ -2531,7 +2534,7 @@ TEST_CASE("find_and_x operations append write concern correctly", "[collection]"
     collection.drop();
     collection.insert_one(make_document(kvp("x", 1)));
 
-    stdx::optional<bsoncxx::document::value> doc;
+    bsoncxx::stdx::optional<bsoncxx::document::value> doc;
     /* 4.4. servers will reply with an error, causing an exception. */
     /* find_one_and_update */
     mongocxx::options::find_one_and_update find_one_and_update_opts;
@@ -2667,7 +2670,7 @@ TEST_CASE("expose writeErrors[].errInfo", "[collection]") {
                                       const mongocxx::events::command_succeeded_event& ev) {
         BSONCXX_TEST_EXCEPTION_GUARD_BEGIN(eguard);
 
-        if (0 != ev.command_name().compare("insert")) {
+        if (ev.command_name() != "insert") {
             return;
         }
 

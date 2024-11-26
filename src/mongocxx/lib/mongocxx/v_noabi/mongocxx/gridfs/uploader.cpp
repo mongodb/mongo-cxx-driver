@@ -43,23 +43,24 @@ namespace mongocxx {
 namespace v_noabi {
 namespace gridfs {
 
-uploader::uploader(const client_session* session,
-                   bsoncxx::v_noabi::types::bson_value::view id,
-                   stdx::string_view filename,
-                   collection files,
-                   collection chunks,
-                   std::int32_t chunk_size,
-                   stdx::optional<bsoncxx::v_noabi::document::view_or_value> metadata)
-    : _impl{stdx::make_unique<impl>(session,
-                                    id,
-                                    filename,
-                                    files,
-                                    chunks,
-                                    chunk_size,
-                                    metadata
-                                        ? stdx::make_optional<bsoncxx::v_noabi::document::value>(
-                                              bsoncxx::v_noabi::document::value{metadata->view()})
-                                        : stdx::nullopt)} {}
+uploader::uploader(
+    const client_session* session,
+    bsoncxx::v_noabi::types::bson_value::view id,
+    bsoncxx::v_noabi::stdx::string_view filename,
+    collection files,
+    collection chunks,
+    std::int32_t chunk_size,
+    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> metadata)
+    : _impl{bsoncxx::make_unique<impl>(
+          session,
+          id,
+          filename,
+          files,
+          chunks,
+          chunk_size,
+          metadata ? bsoncxx::v_noabi::stdx::make_optional<bsoncxx::v_noabi::document::value>(
+                         bsoncxx::v_noabi::document::value{metadata->view()})
+                   : bsoncxx::v_noabi::stdx::nullopt)} {}
 
 uploader::uploader() noexcept = default;
 uploader::uploader(uploader&&) noexcept = default;

@@ -24,7 +24,6 @@
 
 #include <bsoncxx/array/view_or_value.hpp>
 #include <bsoncxx/document/view_or_value.hpp>
-#include <bsoncxx/stdx/make_unique.hpp>
 #include <bsoncxx/types/bson_value/view.hpp>
 
 #include <bsoncxx/config/prelude.hpp>

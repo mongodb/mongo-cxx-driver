@@ -25,16 +25,16 @@ namespace {
 // [Example]
 // {"a": 1, "b": 2}
 void example(bsoncxx::document::view doc) {
-    ASSERT(doc["a"]);
+    EXPECT(doc["a"]);
 
     {
         bsoncxx::document::element e = doc["b"];
 
-        ASSERT(e.key().compare("b") == 0);
-        ASSERT(e.get_int32().value == 2);
+        EXPECT(e.key() == "b");
+        EXPECT(e.get_int32().value == 2);
     }
 
-    ASSERT(!doc["c"]);  // Invalid element.
+    EXPECT(!doc["c"]);  // Invalid element.
 }
 // [Example]
 

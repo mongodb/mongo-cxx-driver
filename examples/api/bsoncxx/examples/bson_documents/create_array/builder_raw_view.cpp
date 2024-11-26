@@ -18,8 +18,6 @@
 #include <bsoncxx/array/view.hpp>
 #include <bsoncxx/builder/basic/array.hpp>
 #include <bsoncxx/document/value.hpp>
-#include <bsoncxx/json.hpp>
-#include <bsoncxx/types.hpp>
 
 #include <examples/api/runner.hh>
 #include <examples/macros.hh>
@@ -31,16 +29,15 @@ namespace {
 void example(const std::uint8_t* data, std::size_t length) {
     bsoncxx::array::view arr{data, length};
 
-    ASSERT(arr[0].get_int32().value == 1);
-    ASSERT(arr[1].get_int32().value == 2);
+    EXPECT(arr == bsoncxx::builder::basic::make_array(1, 2));
 }
 // [Example]
 
 }  // namespace
 
 RUNNER_REGISTER_COMPONENT() {
-    bsoncxx::document::value owner = bsoncxx::from_json(R"({"v": [1, 2]})");
-    bsoncxx::array::view arr = owner.view()["v"].get_array().value;
+    const auto owner = bsoncxx::builder::basic::make_array(1, 2);
+    const auto arr = owner.view();
 
     example(arr.data(), arr.length());
 }

@@ -26,8 +26,6 @@
 #include <bsoncxx/stdx/optional.hpp>
 #include <bsoncxx/string/view_or_value.hpp>
 
-#include <mongocxx/stdx.hpp>
-
 #include <bsoncxx/config/prelude.hpp>
 
 #include <mongocxx/config/prelude.hpp>
@@ -95,14 +93,15 @@ class index {
         ///
         /// @return The current config_string.
         ///
-        const stdx::optional<bsoncxx::v_noabi::string::view_or_value>& config_string() const;
+        const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value>&
+        config_string() const;
 
        private:
         friend ::mongocxx::v_noabi::collection;
 
         MONGOCXX_ABI_NO_EXPORT int type() const override;
 
-        stdx::optional<bsoncxx::v_noabi::string::view_or_value> _config_string;
+        bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value> _config_string;
     };
 
     BSONCXX_POP_WARNINGS();
@@ -130,7 +129,7 @@ class index {
     ///
     /// @return The current background.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<bool>&) background() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<bool>&) background() const;
 
     ///
     /// Whether or not to create a unique index so that the collection will not accept insertion of
@@ -153,7 +152,7 @@ class index {
     ///
     /// @return The current unique.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<bool>&) unique() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<bool>&) unique() const;
 
     ///
     /// Whether or not the index is hidden from the query planner. A hidden index is not evaluated
@@ -176,7 +175,7 @@ class index {
     ///
     /// @return The current hidden.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<bool>&) hidden() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<bool>&) hidden() const;
 
     ///
     /// The name of the index.
@@ -195,7 +194,8 @@ class index {
     ///
     /// @return The current name.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<bsoncxx::v_noabi::string::view_or_value>&)
+    MONGOCXX_ABI_EXPORT_CDECL(
+        const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value>&)
     name() const;
 
     ///
@@ -222,7 +222,8 @@ class index {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/collation/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<bsoncxx::v_noabi::document::view>&)
+    MONGOCXX_ABI_EXPORT_CDECL(
+        const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view>&)
     collation() const;
 
     ///
@@ -246,7 +247,7 @@ class index {
     ///
     /// @return The current sparse setting.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<bool>&) sparse() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<bool>&) sparse() const;
 
     ///
     /// Optionally used only in MongoDB 3.0.0 and higher. Specifies the storage engine options for
@@ -293,7 +294,8 @@ class index {
     ///
     /// @return The current expire_after value.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<std::chrono::seconds>&) expire_after() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<std::chrono::seconds>&)
+    expire_after() const;
 
     ///
     /// Sets the index version.
@@ -312,7 +314,8 @@ class index {
     ///
     /// @return The current index version.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<std::int32_t>&) version() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<std::int32_t>&)
+    version() const;
 
     ///
     /// For text indexes, sets the weight document. The weight document contains field and weight
@@ -332,7 +335,8 @@ class index {
     ///
     /// @return The current weights.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<bsoncxx::v_noabi::document::view>&)
+    MONGOCXX_ABI_EXPORT_CDECL(
+        const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view>&)
     weights() const;
 
     ///
@@ -354,7 +358,8 @@ class index {
     ///
     /// @return The current default_language.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<bsoncxx::v_noabi::string::view_or_value>&)
+    MONGOCXX_ABI_EXPORT_CDECL(
+        const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value>&)
     default_language() const;
 
     ///
@@ -376,7 +381,8 @@ class index {
     ///
     /// @return The name of the field that contains the override language for text indexes.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<bsoncxx::v_noabi::string::view_or_value>&)
+    MONGOCXX_ABI_EXPORT_CDECL(
+        const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value>&)
     language_override() const;
 
     ///
@@ -397,7 +403,8 @@ class index {
     ///
     /// @return The current partial_filter_expression.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<bsoncxx::v_noabi::document::view>&)
+    MONGOCXX_ABI_EXPORT_CDECL(
+        const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view>&)
     partial_filter_expression() const;
 
     ///
@@ -417,7 +424,8 @@ class index {
     ///
     /// @return The current twod_sphere_version.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<std::uint8_t>&) twod_sphere_version() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<std::uint8_t>&)
+    twod_sphere_version() const;
 
     ///
     /// For 2d indexes, the precision of the stored geohash value of the location data.
@@ -436,7 +444,8 @@ class index {
     ///
     /// @return The precision of the stored geohash value of the location data.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<std::uint8_t>&) twod_bits_precision() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<std::uint8_t>&)
+    twod_bits_precision() const;
 
     ///
     /// For 2d indexes, the lower inclusive boundary for the longitude and latitude values.
@@ -455,7 +464,8 @@ class index {
     ///
     /// @return The lower inclusive boundary for the longitude and latitude values.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<double>&) twod_location_min() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<double>&)
+    twod_location_min() const;
 
     ///
     /// For 2d indexes, the upper inclusive boundary for the longitude and latitude values.
@@ -474,7 +484,8 @@ class index {
     ///
     /// @return The upper inclusive boundary for the longitude and latitude values.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<double>&) twod_location_max() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<double>&)
+    twod_location_max() const;
 
     ///
     /// For geoHaystack indexes, specify the number of units within which to group the location
@@ -506,9 +517,9 @@ class index {
     /// @deprecated
     ///   This method is deprecated.
     ///
-    MONGOCXX_DEPRECATED MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<double>&)
+    MONGOCXX_DEPRECATED MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<double>&)
         haystack_bucket_size() const;
-    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<double>&)
+    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<double>&)
     haystack_bucket_size_deprecated() const;
 
     ///
@@ -524,24 +535,24 @@ class index {
    private:
     friend ::mongocxx::v_noabi::collection;
 
-    stdx::optional<bool> _background;
-    stdx::optional<bool> _unique;
-    stdx::optional<bool> _hidden;
-    stdx::optional<bsoncxx::v_noabi::string::view_or_value> _name;
-    stdx::optional<bsoncxx::v_noabi::document::view> _collation;
-    stdx::optional<bool> _sparse;
+    bsoncxx::v_noabi::stdx::optional<bool> _background;
+    bsoncxx::v_noabi::stdx::optional<bool> _unique;
+    bsoncxx::v_noabi::stdx::optional<bool> _hidden;
+    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value> _name;
+    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view> _collation;
+    bsoncxx::v_noabi::stdx::optional<bool> _sparse;
     std::unique_ptr<base_storage_options> _storage_options;
-    stdx::optional<std::chrono::seconds> _expire_after;
-    stdx::optional<std::int32_t> _version;
-    stdx::optional<bsoncxx::v_noabi::document::view> _weights;
-    stdx::optional<bsoncxx::v_noabi::string::view_or_value> _default_language;
-    stdx::optional<bsoncxx::v_noabi::string::view_or_value> _language_override;
-    stdx::optional<bsoncxx::v_noabi::document::view> _partial_filter_expression;
-    stdx::optional<std::uint8_t> _twod_sphere_version;
-    stdx::optional<std::uint8_t> _twod_bits_precision;
-    stdx::optional<double> _twod_location_min;
-    stdx::optional<double> _twod_location_max;
-    stdx::optional<double> _haystack_bucket_size;
+    bsoncxx::v_noabi::stdx::optional<std::chrono::seconds> _expire_after;
+    bsoncxx::v_noabi::stdx::optional<std::int32_t> _version;
+    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view> _weights;
+    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value> _default_language;
+    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value> _language_override;
+    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view> _partial_filter_expression;
+    bsoncxx::v_noabi::stdx::optional<std::uint8_t> _twod_sphere_version;
+    bsoncxx::v_noabi::stdx::optional<std::uint8_t> _twod_bits_precision;
+    bsoncxx::v_noabi::stdx::optional<double> _twod_location_min;
+    bsoncxx::v_noabi::stdx::optional<double> _twod_location_max;
+    bsoncxx::v_noabi::stdx::optional<double> _haystack_bucket_size;
 
     //
     // Return the current storage_options setting.

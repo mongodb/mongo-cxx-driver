@@ -90,7 +90,7 @@ int EXAMPLES_CDECL main() {
 
     // Make all variables used.
     return (awards && first_award_year && second_award_year && last_name && id_i32 == 1 &&
-            0 == first_name_str.compare("John"))
+            first_name_str == "John")
                ? EXIT_SUCCESS
                : EXIT_FAILURE;
 }

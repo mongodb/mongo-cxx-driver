@@ -59,7 +59,7 @@ TEST_CASE("result::gridfs::upload owns id", "[result::gridfs::upload]") {
 
     // Because result::gridfs::upload owns its id, we should still be able to correctly read new
     // value for the id.
-    REQUIRE(res.id().get_string().value == stdx::string_view(bar));
+    REQUIRE(res.id().get_string().value == bsoncxx::stdx::string_view(bar));
 }
 
 TEST_CASE("result::gridfs::upload equals", "[result::gridfs::upload]") {

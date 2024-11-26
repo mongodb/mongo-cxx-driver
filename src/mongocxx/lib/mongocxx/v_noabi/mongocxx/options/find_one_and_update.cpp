@@ -83,50 +83,56 @@ find_one_and_update& find_one_and_update::write_concern(
     return *this;
 }
 
-const stdx::optional<bool>& find_one_and_update::bypass_document_validation() const {
+const bsoncxx::v_noabi::stdx::optional<bool>& find_one_and_update::bypass_document_validation()
+    const {
     return _bypass_document_validation;
 }
 
-const stdx::optional<bsoncxx::v_noabi::document::view_or_value>& find_one_and_update::collation()
-    const {
+const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value>&
+find_one_and_update::collation() const {
     return _collation;
 }
 
-const stdx::optional<mongocxx::v_noabi::hint>& find_one_and_update::hint() const {
+const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::hint>& find_one_and_update::hint() const {
     return _hint;
 }
 
-const stdx::optional<bsoncxx::v_noabi::document::view_or_value> find_one_and_update::let() const {
+const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value>
+find_one_and_update::let() const {
     return _let;
 }
 
-const stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value>
+const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value>
 find_one_and_update::comment() const {
     return _comment;
 }
 
-const stdx::optional<std::chrono::milliseconds>& find_one_and_update::max_time() const {
+const bsoncxx::v_noabi::stdx::optional<std::chrono::milliseconds>& find_one_and_update::max_time()
+    const {
     return _max_time;
 }
 
-const stdx::optional<bsoncxx::v_noabi::document::view_or_value>& find_one_and_update::projection()
-    const {
+const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value>&
+find_one_and_update::projection() const {
     return _projection;
 }
 
-const stdx::optional<return_document>& find_one_and_update::return_document() const {
+const bsoncxx::v_noabi::stdx::optional<return_document>& find_one_and_update::return_document()
+    const {
     return _return_document;
 }
 
-const stdx::optional<bsoncxx::v_noabi::document::view_or_value>& find_one_and_update::sort() const {
+const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value>&
+find_one_and_update::sort() const {
     return _ordering;
 }
 
-const stdx::optional<bool>& find_one_and_update::upsert() const {
+const bsoncxx::v_noabi::stdx::optional<bool>& find_one_and_update::upsert() const {
     return _upsert;
 }
 
-const stdx::optional<mongocxx::v_noabi::write_concern>& find_one_and_update::write_concern() const {
+const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern>&
+find_one_and_update::write_concern() const {
     return _write_concern;
 }
 
@@ -136,8 +142,8 @@ find_one_and_update& find_one_and_update::array_filters(
     return *this;
 }
 
-const stdx::optional<bsoncxx::v_noabi::array::view_or_value>& find_one_and_update::array_filters()
-    const {
+const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::array::view_or_value>&
+find_one_and_update::array_filters() const {
     return _array_filters;
 }
 

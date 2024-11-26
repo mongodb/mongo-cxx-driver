@@ -13,6 +13,7 @@
 // limitations under the License.
 
 #include <bsoncxx/array/view.hpp>
+#include <bsoncxx/builder/basic/array.hpp>
 #include <bsoncxx/document/value.hpp>
 #include <bsoncxx/json.hpp>
 #include <bsoncxx/types.hpp>
@@ -24,15 +25,14 @@ namespace {
 
 // [Example]
 void example() {
-    bsoncxx::document::value owner = bsoncxx::from_json(R"(
+    bsoncxx::document::value doc = bsoncxx::from_json(R"(
         [
-            [1, 2]
+            [1, 2.0, "three"]
         ]
     )");
-    bsoncxx::array::view sub = owner.view()["0"].get_array().value;
+    bsoncxx::array::view sub = doc.view()["0"].get_array().value;
 
-    ASSERT(sub[0].get_int32().value == 1);
-    ASSERT(sub[1].get_int32().value == 2);
+    EXPECT(sub == bsoncxx::builder::basic::make_array(1, 2.0, "three"));
 }
 // [Example]
 

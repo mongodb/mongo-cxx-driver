@@ -26,7 +26,7 @@
 #include <bsoncxx/document/value.hpp>
 #include <bsoncxx/document/view.hpp>
 #include <bsoncxx/oid.hpp>
-#include <bsoncxx/stdx/make_unique.hpp>
+#include <bsoncxx/private/make_unique.hh>
 #include <bsoncxx/stdx/string_view.hpp>
 #include <bsoncxx/string/to_string.hpp>
 #include <bsoncxx/types/bson_value/view.hpp>
@@ -46,18 +46,10 @@
 #include <mongocxx/test/client_helpers.hh>
 #include <mongocxx/test/spec/util.hh>
 
-namespace {
 using namespace bsoncxx;
 using namespace mongocxx;
 
-// This function is a workaround for clang 3.8 and mnmlstc/core, where `return
-// optional<item_t>{an_item_t};` fails to compile.
-bsoncxx::stdx::optional<test_util::item_t> make_optional(test_util::item_t item) {
-    bsoncxx::stdx::optional<test_util::item_t> option{};
-    option = item;
-
-    return option;
-}
+namespace {
 
 // Query the GridFS files collection and fetch the length of the file.
 //
@@ -80,20 +72,20 @@ std::int64_t get_length_of_gridfs_file(gridfs::bucket bucket, types::bson_value:
 bsoncxx::stdx::optional<test_util::item_t> transform_hex(test_util::item_t pair,
                                                          builder::basic::array* context) {
     if (!pair.first) {
-        return make_optional(pair);
+        return {pair};
     }
 
     auto key = *(pair.first);
     auto value = pair.second;
 
     if (bsoncxx::string::to_string(key) != "data" || value.type() != type::k_document) {
-        return make_optional(pair);
+        return {pair};
     }
 
     auto data = value.get_document().value;
 
     if (!data["$hex"] || data["$hex"].type() != type::k_string) {
-        return make_optional(pair);
+        return {pair};
     }
 
     std::basic_string<std::uint8_t> bytes =
@@ -106,8 +98,8 @@ bsoncxx::stdx::optional<test_util::item_t> transform_hex(test_util::item_t pair,
     auto view = context->view();
     auto length = std::distance(view.cbegin(), view.cend());
 
-    return make_optional(std::make_pair(bsoncxx::stdx::optional<bsoncxx::stdx::string_view>("data"),
-                                        view[static_cast<std::uint32_t>(length - 1)].get_value()));
+    return {std::make_pair(bsoncxx::stdx::optional<bsoncxx::stdx::string_view>("data"),
+                           view[static_cast<std::uint32_t>(length - 1)].get_value())};
 }
 
 // The GridFS spec specifies the expected binary data in the form of { $hex: "<hexadecimal string>"
@@ -120,21 +112,20 @@ document::value convert_hex_data_to_binary(document::view document) {
 bsoncxx::stdx::optional<test_util::item_t> convert_length_to_int64(test_util::item_t pair,
                                                                    builder::basic::array*) {
     if (!pair.first) {
-        return make_optional(pair);
+        return {pair};
     }
 
     auto key = *(pair.first);
     auto value = pair.second;
 
     if (bsoncxx::string::to_string(key) != "length" || value.type() != type::k_int32) {
-        return make_optional(pair);
+        return {pair};
     }
 
     types::b_int64 length = {value.get_int32()};
 
-    return make_optional(
-        std::make_pair(bsoncxx::stdx::optional<bsoncxx::stdx::string_view>("length"),
-                       types::bson_value::view{length}));
+    return {std::make_pair(bsoncxx::stdx::optional<bsoncxx::stdx::string_view>("length"),
+                           types::bson_value::view{length})};
 }
 
 void compare_collections(database db) {
@@ -215,7 +206,7 @@ void test_download(database db,
     std::unique_ptr<std::uint8_t[]> actual(nullptr);
 
     if (length > 0) {
-        actual = bsoncxx::stdx::make_unique<std::uint8_t[]>(static_cast<std::size_t>(length));
+        actual = bsoncxx::make_unique<std::uint8_t[]>(static_cast<std::size_t>(length));
     }
 
     if (assert_doc["error"]) {
@@ -306,7 +297,7 @@ void test_upload(database db,
             [id](test_util::item_t pair,
                  builder::basic::array* context) -> bsoncxx::stdx::optional<test_util::item_t> {
                 if (!pair.first) {
-                    return make_optional(pair);
+                    return {pair};
                 }
 
                 auto key = *(pair.first);
@@ -336,10 +327,10 @@ void test_upload(database db,
                 }
 
                 if (id_str != "*result") {
-                    return make_optional(pair);
+                    return {pair};
                 }
 
-                return make_optional(std::make_pair(pair.first, types::bson_value::view{id}));
+                return {std::make_pair(pair.first, types::bson_value::view{id})};
             });
 
         db.run_command(transformed_data.view());

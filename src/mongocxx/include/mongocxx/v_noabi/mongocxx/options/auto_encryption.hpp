@@ -23,8 +23,6 @@
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/stdx/optional.hpp>
 
-#include <mongocxx/stdx.hpp>
-
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
@@ -66,7 +64,7 @@ class auto_encryption {
     /// @return
     ///   An optional pointer to the key vault client.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<mongocxx::v_noabi::client*>&)
+    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::client*>&)
     key_vault_client() const;
 
     ///
@@ -98,7 +96,7 @@ class auto_encryption {
     /// @return
     ///   An optional pointer to the key vault pool.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<mongocxx::v_noabi::pool*>&)
+    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::pool*>&)
     key_vault_pool() const;
 
     ///
@@ -132,7 +130,8 @@ class auto_encryption {
     ///   An optional pair of strings representing the namespace of the
     ///   key vault collection.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<ns_pair>&) key_vault_namespace() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<ns_pair>&)
+    key_vault_namespace() const;
 
     ///
     /// Sets the KMS providers to use for client side encryption.
@@ -187,7 +186,8 @@ class auto_encryption {
     /// @return
     ///   An optional document containing the KMS providers.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<bsoncxx::v_noabi::document::view_or_value>&)
+    MONGOCXX_ABI_EXPORT_CDECL(
+        const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value>&)
     kms_providers() const;
 
     ///
@@ -222,7 +222,8 @@ class auto_encryption {
     /// @return
     ///   An optional document containing the TLS options.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<bsoncxx::v_noabi::document::view_or_value>&)
+    MONGOCXX_ABI_EXPORT_CDECL(
+        const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value>&)
     tls_opts() const;
 
     ///
@@ -257,7 +258,8 @@ class auto_encryption {
     /// @return
     ///   An optional document containing the schema map.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<bsoncxx::v_noabi::document::view_or_value>&)
+    MONGOCXX_ABI_EXPORT_CDECL(
+        const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value>&)
     schema_map() const;
 
     ///
@@ -288,7 +290,8 @@ class auto_encryption {
     /// @return
     ///   An optional document containing the encrypted fields map
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<bsoncxx::v_noabi::document::view_or_value>&)
+    MONGOCXX_ABI_EXPORT_CDECL(
+        const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value>&)
     encrypted_fields_map() const;
 
     ///
@@ -396,7 +399,8 @@ class auto_encryption {
     /// @return
     ///   An optional document containing the extra options.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<bsoncxx::v_noabi::document::view_or_value>&)
+    MONGOCXX_ABI_EXPORT_CDECL(
+        const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value>&)
     extra_options() const;
 
    private:
@@ -407,24 +411,22 @@ class auto_encryption {
 
     bool _bypass;
     bool _bypass_query_analysis;
-    stdx::optional<mongocxx::v_noabi::client*> _key_vault_client;
-    stdx::optional<mongocxx::v_noabi::pool*> _key_vault_pool;
-    stdx::optional<ns_pair> _key_vault_namespace;
-    stdx::optional<bsoncxx::v_noabi::document::view_or_value> _kms_providers;
-    stdx::optional<bsoncxx::v_noabi::document::view_or_value> _tls_opts;
-    stdx::optional<bsoncxx::v_noabi::document::view_or_value> _schema_map;
-    stdx::optional<bsoncxx::v_noabi::document::view_or_value> _encrypted_fields_map;
-    stdx::optional<bsoncxx::v_noabi::document::view_or_value> _extra_options;
+    bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::client*> _key_vault_client;
+    bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::pool*> _key_vault_pool;
+    bsoncxx::v_noabi::stdx::optional<ns_pair> _key_vault_namespace;
+    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> _kms_providers;
+    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> _tls_opts;
+    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> _schema_map;
+    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value>
+        _encrypted_fields_map;
+    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> _extra_options;
 };
 
 }  // namespace options
 }  // namespace v_noabi
 }  // namespace mongocxx
 
-// CXX-2770: missing include of postlude header.
-#if defined(MONGOCXX_TEST_MACRO_GUARDS_FIX_MISSING_POSTLUDE)
 #include <mongocxx/config/postlude.hpp>
-#endif
 
 ///
 /// @file

@@ -40,20 +40,20 @@ struct initial_dns_seedlist_test {
 
         for (auto el : test_doc) {
             const auto key = el.key();
-            if (0 == key.compare("uri")) {
+            if (key == "uri") {
                 test.uri = el.get_string().value;
-            } else if (0 == key.compare("seeds") || 0 == key.compare("numSeeds")) {
+            } else if (key == "seeds" || key == "numSeeds") {
                 // The 'seeds' and 'numSeeds' assertions are explicitly skipped. The C++ driver does
                 // not have access to the initial seedlist populated in the C driver.
-            } else if (0 == key.compare("hosts")) {
+            } else if (key == "hosts") {
                 test.hosts = el.get_array().value;
-            } else if (0 == key.compare("options")) {
+            } else if (key == "options") {
                 test.options = el.get_document().value;
-            } else if (0 == key.compare("error")) {
+            } else if (key == "error") {
                 test.error = el.get_bool().value;
-            } else if (0 == key.compare("comment")) {
+            } else if (key == "comment") {
                 // Ignore comment.
-            } else if (0 == key.compare("ping")) {
+            } else if (key == "ping") {
                 test.ping = el.get_bool().value;
             } else {
                 FAIL("unexpected initial_dns_seedlist_test option: " << el.key());
@@ -63,7 +63,7 @@ struct initial_dns_seedlist_test {
     }
 };
 
-static bsoncxx::document::value _doc_from_file(mongocxx::stdx::string_view sub_path) {
+static bsoncxx::document::value _doc_from_file(bsoncxx::stdx::string_view sub_path) {
     const char* test_path = std::getenv("INITIAL_DNS_SEEDLIST_DISCOVERY_TESTS_PATH");
     REQUIRE(test_path);
 

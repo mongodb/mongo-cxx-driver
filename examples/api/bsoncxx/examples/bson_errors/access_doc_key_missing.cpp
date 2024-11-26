@@ -25,12 +25,12 @@ namespace {
 // [Example]
 // {"a": 1, "b": 2}
 void example(bsoncxx::document::view doc) {
-    ASSERT(doc["a"]);
-    ASSERT(doc["b"]);
+    EXPECT(doc["a"]);
+    EXPECT(doc["b"]);
 
     bsoncxx::document::element e = doc["c"];
 
-    ASSERT(!e);  // A missing element is represented as an invalid element.
+    EXPECT(!e);  // A missing element is represented as an invalid element.
 }
 // [Example]
 

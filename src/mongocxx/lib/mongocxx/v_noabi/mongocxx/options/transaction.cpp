@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <bsoncxx/stdx/make_unique.hpp>
+#include <bsoncxx/private/make_unique.hh>
 
 #include <mongocxx/exception/error_code.hpp>
 #include <mongocxx/exception/logic_error.hpp>
@@ -24,16 +24,16 @@ namespace mongocxx {
 namespace v_noabi {
 namespace options {
 
-transaction::transaction() : _impl{stdx::make_unique<impl>()} {}
+transaction::transaction() : _impl{bsoncxx::make_unique<impl>()} {}
 
 transaction::transaction(transaction&&) noexcept = default;
 transaction& transaction::operator=(transaction&&) noexcept = default;
 
 transaction::transaction(const transaction& other)
-    : _impl{stdx::make_unique<impl>(other._get_impl().get_transaction_opt_t())} {}
+    : _impl{bsoncxx::make_unique<impl>(other._get_impl().get_transaction_opt_t())} {}
 
 transaction& transaction::operator=(const transaction& other) {
-    _impl = stdx::make_unique<impl>(other._get_impl().get_transaction_opt_t());
+    _impl = bsoncxx::make_unique<impl>(other._get_impl().get_transaction_opt_t());
     return *this;
 }
 
@@ -44,7 +44,8 @@ transaction& transaction::read_concern(const mongocxx::v_noabi::read_concern& rc
     return *this;
 }
 
-stdx::optional<mongocxx::v_noabi::read_concern> transaction::read_concern() const {
+bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::read_concern> transaction::read_concern()
+    const {
     return _impl->read_concern();
 }
 
@@ -53,7 +54,8 @@ transaction& transaction::write_concern(const mongocxx::v_noabi::write_concern& 
     return *this;
 }
 
-stdx::optional<mongocxx::v_noabi::write_concern> transaction::write_concern() const {
+bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern> transaction::write_concern()
+    const {
     return _impl->write_concern();
 }
 
@@ -62,7 +64,8 @@ transaction& transaction::read_preference(const mongocxx::v_noabi::read_preferen
     return *this;
 }
 
-stdx::optional<mongocxx::v_noabi::read_preference> transaction::read_preference() const {
+bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::read_preference> transaction::read_preference()
+    const {
     return _impl->read_preference();
 }
 
@@ -71,7 +74,8 @@ transaction& transaction::max_commit_time_ms(std::chrono::milliseconds ms) {
     return *this;
 }
 
-stdx::optional<std::chrono::milliseconds> transaction::max_commit_time_ms() const {
+bsoncxx::v_noabi::stdx::optional<std::chrono::milliseconds> transaction::max_commit_time_ms()
+    const {
     return _impl->max_commit_time_ms();
 }
 

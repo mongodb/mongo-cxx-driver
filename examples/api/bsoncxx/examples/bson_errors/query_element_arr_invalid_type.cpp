@@ -13,9 +13,9 @@
 // limitations under the License.
 
 #include <bsoncxx/array/element.hpp>
+#include <bsoncxx/builder/basic/array.hpp>
 #include <bsoncxx/exception/error_code.hpp>
 #include <bsoncxx/exception/exception.hpp>
-#include <bsoncxx/json.hpp>
 #include <bsoncxx/types.hpp>
 
 #include <examples/api/runner.hh>
@@ -26,24 +26,24 @@ namespace {
 // [Example]
 // [1]
 void example(bsoncxx::array::element e) {
-    ASSERT(e.key().compare("0") == 0);
-    ASSERT(e.type() == bsoncxx::type::k_int32);
-    ASSERT(e.get_int32().value == 1);
+    EXPECT(e.key() == "0");
+    EXPECT(e.type() == bsoncxx::type::k_int32);
+    EXPECT(e.get_int32().value == 1);
 
     try {
         bsoncxx::types::b_double d = e.get_double();  // Throws.
 
-        ASSERT(false && "should not reach this point");
+        EXPECT(false && "should not reach this point");
     } catch (const bsoncxx::exception& ex) {
-        ASSERT(ex.code() == bsoncxx::error_code::k_need_element_type_k_double);
+        EXPECT(ex.code() == bsoncxx::error_code::k_need_element_type_k_double);
     }
 
     try {
         bsoncxx::types::b_string str = e.get_string();  // Throws.
 
-        ASSERT(false && "should not reach this point");
+        EXPECT(false && "should not reach this point");
     } catch (const bsoncxx::exception& ex) {
-        ASSERT(ex.code() == bsoncxx::error_code::k_need_element_type_k_string);
+        EXPECT(ex.code() == bsoncxx::error_code::k_need_element_type_k_string);
     }
 }
 // [Example]
@@ -51,5 +51,5 @@ void example(bsoncxx::array::element e) {
 }  // namespace
 
 RUNNER_REGISTER_COMPONENT() {
-    example(bsoncxx::from_json(R"({"v": [1]})")["v"].get_array().value[0]);
+    example(bsoncxx::builder::basic::make_array(1).view()[0]);
 }

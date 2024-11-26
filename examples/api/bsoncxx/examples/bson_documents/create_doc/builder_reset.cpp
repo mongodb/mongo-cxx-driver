@@ -17,8 +17,7 @@
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/builder/basic/kvp.hpp>
 #include <bsoncxx/document/value.hpp>
-#include <bsoncxx/document/view.hpp>
-#include <bsoncxx/types.hpp>
+#include <bsoncxx/json.hpp>
 
 #include <examples/api/runner.hh>
 #include <examples/macros.hh>
@@ -31,22 +30,16 @@ void example() {
 
     bsoncxx::builder::basic::document builder;
 
-    builder.append(kvp("v", std::int32_t{1}));
-    bsoncxx::document::value a_owner = builder.extract();
+    builder.append(kvp("a", 1));
+    bsoncxx::document::value a = builder.extract();
 
     builder.clear();
 
-    builder.append(kvp("v", std::int64_t{2}));
-    bsoncxx::document::value b_owner = builder.extract();
+    builder.append(kvp("b", 2));
+    bsoncxx::document::value b = builder.extract();
 
-    bsoncxx::document::view a = a_owner.view();
-    bsoncxx::document::view b = b_owner.view();
-
-    ASSERT(a["v"].type() == bsoncxx::type::k_int32);
-    ASSERT(b["v"].type() == bsoncxx::type::k_int64);
-
-    ASSERT(a["v"].get_int32().value == 1);
-    ASSERT(b["v"].get_int64().value == 2);
+    EXPECT(a.view() == bsoncxx::from_json(R"({"a": 1})"));
+    EXPECT(b.view() == bsoncxx::from_json(R"({"b": 2})"));
 }
 // [Example]
 

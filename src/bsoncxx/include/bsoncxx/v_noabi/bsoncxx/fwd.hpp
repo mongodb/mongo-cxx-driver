@@ -117,36 +117,6 @@
 
 ///
 /// @ingroup bsoncxx-v_noabi-bsoncxx-config-config-hpp
-/// Defined when configured to use a bundled mnmlstc/core as the C++17 polyfill library.
-///
-/// @deprecated Support for external polyfill libraries is deprecated and will be removed in an
-/// upcoming major release. Set `ENABLE_BSONCXX_POLY_USE_IMPLS=ON` or `BSONCXX_POLY_USE_IMPLS=ON`
-/// when configuring the bsoncxx library.
-///
-#define BSONCXX_POLY_USE_MNMLSTC
-
-///
-/// @ingroup bsoncxx-v_noabi-bsoncxx-config-config-hpp
-/// Defined when configured to use an external mnmlstc/core as the C++17 polyfill library.
-///
-/// @deprecated Support for external polyfill libraries is deprecated and will be removed in an
-/// upcoming major release. Set `ENABLE_BSONCXX_POLY_USE_IMPLS=ON` or `BSONCXX_POLY_USE_IMPLS=ON`
-/// when configuring the bsoncxx library.
-///
-#define BSONCXX_POLY_USE_SYSTEM_MNMLSTC
-
-///
-/// @ingroup bsoncxx-v_noabi-bsoncxx-config-config-hpp
-/// Defined when configured to use Boost as the C++17 polyfill library.
-///
-/// @deprecated Support for external polyfill libraries is deprecated and will be removed in an
-/// upcoming major release. Set `ENABLE_BSONCXX_POLY_USE_IMPLS=ON` or `BSONCXX_POLY_USE_IMPLS=ON`
-/// when configuring the bsoncxx library.
-///
-#define BSONCXX_POLY_USE_BOOST
-
-///
-/// @ingroup bsoncxx-v_noabi-bsoncxx-config-config-hpp
 /// Defined when configured to use bsoncxx's own C++17 polyfill implementations.
 ///
 #define BSONCXX_POLY_USE_IMPLS
@@ -156,24 +126,6 @@
 /// Defined when configured to use the C++ standard library for C++17 features.
 ///
 #define BSONCXX_POLY_USE_STD
-
-///
-/// @ingroup bsoncxx-v_noabi-bsoncxx-config-config-hpp
-/// For internal use only!
-///
-/// @deprecated To be removed in an upcoming major release.
-/// <!-- Explicitly documented due to long-standing availability. -->
-///
-#define BSONCXX_INLINE_NAMESPACE_BEGIN
-
-///
-/// @ingroup bsoncxx-v_noabi-bsoncxx-config-config-hpp
-/// For internal use only!
-///
-/// @deprecated To be removed in an upcoming major release.
-/// <!-- Explicitly documented due to long-standing availability. -->
-///
-#define BSONCXX_INLINE_NAMESPACE_END
 
 ///
 /// @} <!-- bsoncxx/v_noabi/bsoncxx/config/config.hpp -->
@@ -226,55 +178,11 @@
 
 ///
 /// @ingroup bsoncxx-v_noabi-bsoncxx-config-export-hpp
-/// Equivalent to @ref BSONCXX_ABI_EXPORT.
-///
-/// @warning For internal use only!
-///
-/// @note This is a symbol visibility control macro, NOT a declaration of public API. Public API vs.
-/// private API is determined by the placement of the entity being declared (e.g. in a public
-/// header, as a public class member, etc.) or by documentation (e.g. absence of "For internal use
-/// only!" warnings). See [API and ABI
-/// Versioning](https://www.mongodb.com/docs/languages/cpp/cpp-driver/current/api-abi-versioning/).
-///
-#define BSONCXX_API BSONCXX_ABI_EXPORT
-
-///
-/// @ingroup bsoncxx-v_noabi-bsoncxx-config-export-hpp
-/// Equivalent to `inline` with @ref BSONCXX_ABI_NO_EXPORT.
-///
-/// @warning For internal use only!
-///
-/// @note This is a symbol visibility control macro, NOT a declaration of private API. Public API
-/// vs. private API is determined by the placement of the entity being declared (e.g. in a detail
-/// header, as a private class member, etc.) or by documentation (e.g. "For internal use only!",
-/// absence of documentation, etc.). See [API and ABI
-/// Versioning](https://www.mongodb.com/docs/languages/cpp/cpp-driver/current/api-abi-versioning/).
-///
-#define BSONCXX_PRIVATE inline BSONCXX_ABI_NO_EXPORT
-
-///
-/// @ingroup bsoncxx-v_noabi-bsoncxx-config-export-hpp
 /// Declares the associated entity as deprecated.
 ///
 /// @warning For internal use only!
 ///
 #define BSONCXX_DEPRECATED
-
-///
-/// @ingroup bsoncxx-v_noabi-bsoncxx-config-export-hpp
-/// Equivalent to @ref BSONCXX_API and @ref BSONCXX_DEPRECATED.
-///
-/// @warning For internal use only!
-///
-#define BSONCXX_DEPRECATED_EXPORT
-
-///
-/// @ingroup bsoncxx-v_noabi-bsoncxx-config-export-hpp
-/// Equivalent to @ref BSONCXX_PRIVATE and @ref BSONCXX_DEPRECATED.
-///
-/// @warning For internal use only!
-///
-#define BSONCXX_DEPRECATED_NO_EXPORT
 
 ///
 /// @} <!-- bsoncxx/v_noabi/bsoncxx/config/export.hpp -->
@@ -364,13 +272,6 @@
 ///
 /// @dir bsoncxx/v_noabi/bsoncxx/types/bson_value
 /// Provides headers declaring entities in @ref bsoncxx::v_noabi::types::bson_value.
-///
-
-///
-/// @dir bsoncxx/v_noabi/bsoncxx/util
-/// Headers provided by this directory are deprecated.
-///
-/// @deprecated To be removed in an upcoming major release.
 ///
 
 ///

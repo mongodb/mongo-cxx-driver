@@ -55,7 +55,7 @@ class operation_runner {
     client* _client;
 
     client_session* _lookup_session(document::view doc);
-    client_session* _lookup_session(stdx::string_view key);
+    client_session* _lookup_session(bsoncxx::stdx::string_view key);
     document::value _run_aggregate(document::view operation);
     document::value _run_count(document::view operation);
     document::value _run_create_collection(document::view operation);

@@ -7,6 +7,7 @@ create-collection.json
 create-index.json
 delete.json
 error-labels.json
+error-labels-errorLabels.json
 errors-client.json
 errors.json
 findOneAndDelete.json
@@ -16,12 +17,15 @@ insert.json
 isolation.json
 mongos-pin-auto.json
 mongos-recovery-token.json
+mongos-recovery-token-errorLabels.json
 pin-mongos.json
 read-concern.json
 read-pref.json
 reads.json
 retryable-abort-errorLabels.json
 retryable-abort.json
+retryable-commit-errorLabels-forbid_serverless.json
+retryable-commit-forbid_serverless.json
 retryable-commit-errorLabels.json
 retryable-commit.json
 retryable-writes.json

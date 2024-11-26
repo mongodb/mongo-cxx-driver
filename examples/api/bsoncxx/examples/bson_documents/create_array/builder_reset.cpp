@@ -39,11 +39,11 @@ void example() {
     bsoncxx::array::view a = a_owner.view();
     bsoncxx::array::view b = b_owner.view();
 
-    ASSERT(a[0].type() == bsoncxx::type::k_int32);
-    ASSERT(b[0].type() == bsoncxx::type::k_int64);
+    EXPECT(a[0].type() == bsoncxx::type::k_int32);
+    EXPECT(b[0].type() == bsoncxx::type::k_int64);
 
-    ASSERT(a[0].get_int32().value == 1);
-    ASSERT(b[0].get_int64().value == 2);
+    EXPECT(a[0].get_int32().value == 1);
+    EXPECT(b[0].get_int64().value == 2);
 }
 // [Example]
 

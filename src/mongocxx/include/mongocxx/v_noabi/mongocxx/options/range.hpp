@@ -21,8 +21,6 @@
 #include <bsoncxx/types.hpp>
 #include <bsoncxx/types/bson_value/view_or_value.hpp>
 
-#include <mongocxx/stdx.hpp>
-
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
@@ -33,11 +31,11 @@ namespace options {
 /// @brief `RangeOpts` specifies index options for a Queryable Encryption field supporting
 /// "range" queries.
 ///
-/// @note @ref min, @ref max, @ref trimFactor, @ref sparsity, and @ref precision must match the
-/// values set in the encryptedFields of the destination collection.
+/// @note `min`, `max`, `trimFactor`, `sparsity`, and `precision` must match the values set in the
+/// encryptedFields of the destination collection.
 ///
-/// @note For double and decimal128, @ref min, @ref max, and @ref precision must all be set, or all
-/// be unset.
+/// @note For double and decimal128, `min`, `max`, and `precision` must all be set, or all be
+/// unset.
 ///
 class range {
    public:
@@ -48,7 +46,7 @@ class range {
     /// @brief Gets `RangeOpts.min`.
     /// @note Required if @ref precision is set.
     MONGOCXX_ABI_EXPORT_CDECL(
-        const stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value>&)
+        const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value>&)
     min() const;
 
     /// @brief Sets `RangeOpts.max`.
@@ -58,20 +56,22 @@ class range {
     /// @brief Gets `RangeOpts.max`.
     /// @note Required if @ref precision is set.
     MONGOCXX_ABI_EXPORT_CDECL(
-        const stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value>&)
+        const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value>&)
     max() const;
 
     /// @brief Sets `RangeOpts.sparsity`.
     MONGOCXX_ABI_EXPORT_CDECL(range&) sparsity(std::int64_t value);
 
     /// @brief Gets `RangeOpts.sparsity`.
-    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<std::int64_t>&) sparsity() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<std::int64_t>&)
+    sparsity() const;
 
     /// @brief Sets `RangeOpts.trimFactor`.
     MONGOCXX_ABI_EXPORT_CDECL(range&) trim_factor(std::int32_t value);
 
     /// @brief Gets `RangeOpts.trimFactor`.
-    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<std::int32_t>&) trim_factor() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<std::int32_t>&)
+    trim_factor() const;
 
     /// @brief Sets `RangeOpts.precision`.
     /// @note May only be set for `double` or `decimal128`.
@@ -79,24 +79,22 @@ class range {
 
     /// @brief Gets `RangeOpts.precision`.
     /// @note May only be set for `double` or `decimal128`.
-    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<std::int32_t>&) precision() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<std::int32_t>&)
+    precision() const;
 
    private:
-    stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value> _min;
-    stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value> _max;
-    stdx::optional<std::int64_t> _sparsity;
-    stdx::optional<std::int32_t> _trim_factor;
-    stdx::optional<std::int32_t> _precision;
+    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value> _min;
+    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value> _max;
+    bsoncxx::v_noabi::stdx::optional<std::int64_t> _sparsity;
+    bsoncxx::v_noabi::stdx::optional<std::int32_t> _trim_factor;
+    bsoncxx::v_noabi::stdx::optional<std::int32_t> _precision;
 };
 
 }  // namespace options
 }  // namespace v_noabi
 }  // namespace mongocxx
 
-// CXX-2770: missing include of postlude header.
-#if defined(MONGOCXX_TEST_MACRO_GUARDS_FIX_MISSING_POSTLUDE)
 #include <mongocxx/config/postlude.hpp>
-#endif
 
 ///
 /// @file

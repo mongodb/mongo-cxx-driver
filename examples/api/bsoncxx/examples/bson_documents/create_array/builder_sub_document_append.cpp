@@ -19,6 +19,7 @@
 #include <bsoncxx/builder/basic/kvp.hpp>
 #include <bsoncxx/builder/basic/sub_document.hpp>
 #include <bsoncxx/document/view.hpp>
+#include <bsoncxx/json.hpp>
 
 #include <examples/api/runner.hh>
 #include <examples/macros.hh>
@@ -40,9 +41,7 @@ void example() {
         });
     bsoncxx::document::view v = owner.view()[0].get_document().value;
 
-    ASSERT(v["a"].get_int32().value == 1);
-    ASSERT(v["b"].get_int32().value == 2);
-    ASSERT(v["c"].get_int32().value == 3);
+    EXPECT(v == bsoncxx::from_json(R"({"a": 1, "b": 2, "c": 3})"));
 }
 // [Example]
 

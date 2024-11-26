@@ -16,51 +16,7 @@
 
 #include <bsoncxx/config/prelude.hpp>
 
-#if defined(BSONCXX_POLY_USE_MNMLSTC)
-
-#include <core/optional.hpp>
-
-namespace bsoncxx {
-namespace v_noabi {
-namespace stdx {
-
-using ::core::in_place;
-using ::core::in_place_t;
-using ::core::make_optional;
-using ::core::nullopt;
-using ::core::nullopt_t;
-using ::core::optional;
-
-}  // namespace stdx
-}  // namespace v_noabi
-}  // namespace bsoncxx
-
-#elif defined(BSONCXX_POLY_USE_BOOST)
-
-#include <boost/none.hpp>
-#include <boost/optional/optional.hpp>
-#include <boost/optional/optional_io.hpp>
-
-namespace bsoncxx {
-namespace v_noabi {
-namespace stdx {
-
-#if BOOST_VERSION >= 106300
-using in_place_t = ::boost::in_place_init_t;
-const in_place_t in_place{::boost::in_place_init};
-#endif
-
-using ::boost::optional;
-using nullopt_t = ::boost::none_t;
-
-const nullopt_t nullopt{::boost::none};
-using ::boost::make_optional;
-
-}  // namespace stdx
-}  // namespace v_noabi
-}  // namespace bsoncxx
-
-#elif defined(BSONCXX_POLY_USE_STD)
+#if defined(BSONCXX_POLY_USE_STD)
 
 #include <optional>
 
@@ -506,7 +462,7 @@ struct optional_assign_base<T, movable> : optional_construct_base<T> {
 
     // Allow move-assignment.
 
-    bsoncxx_cxx14_constexpr optional_assign_base& operator=(optional_assign_base&& other) = default;
+    bsoncxx_cxx14_constexpr optional_assign_base& operator=(optional_assign_base&&) = default;
 };
 
 template <typename T>
@@ -529,7 +485,7 @@ struct optional_construct_base<T, movable> : optional_destruct_base<T> {
     optional_construct_base() = default;
 
     optional_construct_base(const optional_construct_base&) = delete;
-    optional_construct_base(optional_construct_base&& other) = default;
+    optional_construct_base(optional_construct_base&&) = default;
     optional_construct_base& operator=(const optional_construct_base&) = default;
     optional_construct_base& operator=(optional_construct_base&&) = default;
 };
@@ -831,12 +787,8 @@ struct hash<bsoncxx::v_noabi::stdx::optional<T>>
 namespace bsoncxx {
 namespace stdx {
 
-// Only Boost prior to 1.63 does not provide an `std::in_place` equivalent.
-#if !defined(BOOST_VERSION) || BOOST_VERSION >= 106300
 using ::bsoncxx::v_noabi::stdx::in_place;
 using ::bsoncxx::v_noabi::stdx::in_place_t;
-#endif
-
 using ::bsoncxx::v_noabi::stdx::make_optional;
 using ::bsoncxx::v_noabi::stdx::nullopt;
 using ::bsoncxx::v_noabi::stdx::nullopt_t;

@@ -41,20 +41,22 @@ distinct& distinct::read_preference(mongocxx::v_noabi::read_preference rp) {
     return *this;
 }
 
-const stdx::optional<bsoncxx::v_noabi::document::view_or_value>& distinct::collation() const {
+const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value>&
+distinct::collation() const {
     return _collation;
 }
 
-const stdx::optional<std::chrono::milliseconds>& distinct::max_time() const {
+const bsoncxx::v_noabi::stdx::optional<std::chrono::milliseconds>& distinct::max_time() const {
     return _max_time;
 }
 
-const stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value>& distinct::comment()
-    const {
+const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value>&
+distinct::comment() const {
     return _comment;
 }
 
-const stdx::optional<mongocxx::v_noabi::read_preference>& distinct::read_preference() const {
+const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::read_preference>&
+distinct::read_preference() const {
     return _read_preference;
 }
 

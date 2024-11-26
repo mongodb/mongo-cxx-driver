@@ -29,7 +29,6 @@
 #include <mongocxx/hint.hpp>
 #include <mongocxx/read_concern.hpp>
 #include <mongocxx/read_preference.hpp>
-#include <mongocxx/stdx.hpp>
 #include <mongocxx/write_concern.hpp>
 
 #include <mongocxx/config/prelude.hpp>
@@ -67,7 +66,7 @@ class aggregate {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/aggregate/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<bool>&) allow_disk_use() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<bool>&) allow_disk_use() const;
 
     ///
     /// Sets the number of documents to return per batch.
@@ -92,7 +91,8 @@ class aggregate {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/aggregate/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<std::int32_t>&) batch_size() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<std::int32_t>&)
+    batch_size() const;
 
     ///
     /// Sets the collation for this operation.
@@ -119,7 +119,8 @@ class aggregate {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/aggregate/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<bsoncxx::v_noabi::document::view_or_value>&)
+    MONGOCXX_ABI_EXPORT_CDECL(
+        const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value>&)
     collation() const;
 
     ///
@@ -146,7 +147,8 @@ class aggregate {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/aggregate/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<bsoncxx::v_noabi::document::view_or_value>&)
+    MONGOCXX_ABI_EXPORT_CDECL(
+        const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value>&)
     let() const;
 
     ///
@@ -173,7 +175,8 @@ class aggregate {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/aggregate/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<std::chrono::milliseconds>&) max_time() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<std::chrono::milliseconds>&)
+    max_time() const;
 
     ///
     /// Sets the read_preference for this operation.
@@ -197,7 +200,8 @@ class aggregate {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/aggregate/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<mongocxx::v_noabi::read_preference>&)
+    MONGOCXX_ABI_EXPORT_CDECL(
+        const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::read_preference>&)
     read_preference() const;
 
     ///
@@ -220,7 +224,8 @@ class aggregate {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/aggregate/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<bool>&) bypass_document_validation() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<bool>&)
+    bypass_document_validation() const;
 
     ///
     /// Sets the index to use for this operation.
@@ -248,7 +253,8 @@ class aggregate {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/aggregate/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<mongocxx::v_noabi::hint>&) hint() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::hint>&)
+    hint() const;
 
     ///
     /// Sets the write concern to use for this operation. Only has an effect if $out is a part of
@@ -276,7 +282,8 @@ class aggregate {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/aggregate/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<mongocxx::v_noabi::write_concern>&)
+    MONGOCXX_ABI_EXPORT_CDECL(
+        const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern>&)
     write_concern() const;
 
     ///
@@ -303,7 +310,8 @@ class aggregate {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/aggregate/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<mongocxx::v_noabi::read_concern>&)
+    MONGOCXX_ABI_EXPORT_CDECL(
+        const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::read_concern>&)
     read_concern() const;
 
     ///
@@ -331,7 +339,7 @@ class aggregate {
     /// - https://www.mongodb.com/docs/manual/reference/command/aggregate/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(
-        const stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value>&)
+        const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value>&)
     comment() const;
 
    private:
@@ -340,17 +348,17 @@ class aggregate {
 
     void append(bsoncxx::v_noabi::builder::basic::document& builder) const;
 
-    stdx::optional<bool> _allow_disk_use;
-    stdx::optional<std::int32_t> _batch_size;
-    stdx::optional<bsoncxx::v_noabi::document::view_or_value> _collation;
-    stdx::optional<bsoncxx::v_noabi::document::view_or_value> _let;
-    stdx::optional<std::chrono::milliseconds> _max_time;
-    stdx::optional<mongocxx::v_noabi::read_preference> _read_preference;
-    stdx::optional<bool> _bypass_document_validation;
-    stdx::optional<mongocxx::v_noabi::hint> _hint;
-    stdx::optional<mongocxx::v_noabi::write_concern> _write_concern;
-    stdx::optional<mongocxx::v_noabi::read_concern> _read_concern;
-    stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value> _comment;
+    bsoncxx::v_noabi::stdx::optional<bool> _allow_disk_use;
+    bsoncxx::v_noabi::stdx::optional<std::int32_t> _batch_size;
+    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> _collation;
+    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> _let;
+    bsoncxx::v_noabi::stdx::optional<std::chrono::milliseconds> _max_time;
+    bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::read_preference> _read_preference;
+    bsoncxx::v_noabi::stdx::optional<bool> _bypass_document_validation;
+    bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::hint> _hint;
+    bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern> _write_concern;
+    bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::read_concern> _read_concern;
+    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value> _comment;
 };
 
 }  // namespace options
