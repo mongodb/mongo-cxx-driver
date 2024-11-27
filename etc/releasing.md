@@ -463,6 +463,16 @@ Navigate to the
 
 Click the "..." next to the relevant version and select "Release".
 
+### Update GitHub Webhook
+
+For a non-patch release, update the [Github Webhook](https://wiki.corp.mongodb.com/display/INTX/Githook) to include the new branch.
+
+Navigate to the [Webhook Settings](https://github.com/mongodb/mongo-cxx-driver/settings/hooks)
+
+Click `Edit` on the hook for `https://githook.mongodb.com/`.
+
+Add the new release branch to the `Payload URL`. Remove unmaintained release branches.
+
 ### Update releases/stable
 
 The `releases/stable` branch tracks the most recent "stable" release for users
