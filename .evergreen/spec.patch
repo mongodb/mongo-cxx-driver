@@ -1,5 +1,5 @@
 --- mongo-cxx-driver.spec.orig	2024-10-02 16:04:01.333784649 -0400
-+++ mongo-cxx-driver.spec	2024-11-26 13:19:48.640192788 -0500
++++ mongo-cxx-driver.spec	2024-12-02 10:57:02.798895580 -0500
 @@ -1,8 +1,10 @@
  # for better compatibility with SCL spec file
  %global pkg_name mongo-cxx-driver
@@ -33,14 +33,13 @@
  
  
  %build
-@@ -78,7 +77,9 @@
+@@ -78,7 +77,8 @@
  
  %cmake \
      -DCMAKE_BUILD_TYPE=Release \
 -    -DBSONCXX_POLY_USE_BOOST=1 \
 +    -DBUILD_VERSION=4.1.0 \
 +    -DENABLE_UNINSTALL=OFF \
-+    -DENABLE_TESTS=OFF \
      .
  
  %cmake_build
