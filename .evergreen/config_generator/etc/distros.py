@@ -82,6 +82,8 @@ RHEL_DISTROS = [
 
     Distro(name='rhel8-latest-large', os='rhel', os_type='linux', os_ver='latest', size='large'),
     Distro(name='rhel8-latest-small', os='rhel', os_type='linux', os_ver='latest', size='small'),
+    Distro(name='rhel9-latest-large', os='rhel', os_type='linux', os_ver='latest', size='large'),
+    Distro(name='rhel9-latest-small', os='rhel', os_type='linux', os_ver='latest', size='small'),
 ]
 
 RHEL_ARM64_DISTROS = [

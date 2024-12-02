@@ -9,6 +9,8 @@ from shrub.v3.evg_command import EvgCommandType, git_get_project, s3_put
 from shrub.v3.evg_task import EvgTask, EvgTaskRef
 from shrub.v3.evg_task_group import EvgTaskGroup
 
+from itertools import product
+
 
 TAG = 'abi-stability'
 
@@ -16,8 +18,11 @@ TAG = 'abi-stability'
 # pylint: disable=line-too-long
 # fmt: off
 MATRIX = [
-    ('polyfill', 11),
-    ('stdlib',   17),
+    ('impls',  11),
+    ('impls',  17),
+    ('stdlib', 17),
+    ('stdlib', 20),
+    ('stdlib', 23),
 ]
 # fmt: on
 # pylint: enable=line-too-long
@@ -133,57 +138,96 @@ def functions():
     )
 
 
-def tasks():
-    distro_name = 'ubuntu2204'
-    distro = find_large_distro(distro_name)
+def generate_tasks():
+    funcs = [AbiComplianceCheck, Abidiff, AbiProhibitedSymbols]
 
-    return [
-        EvgTask(
-            name=func.name,
-            tags=[TAG, func.name, distro_name],
-            run_on=distro.name,
-            commands=[func.call()],
+    tasks = []
+
+    for func, (polyfill, cxx_standard) in product(funcs, MATRIX):
+        if func is Abidiff:
+            distro_name = 'ubuntu2204'  # Clang 12, libabigail is not available on RHEL distros.
+        else:
+            distro_name = 'rhel9-latest'  # Clang 17.
+
+        distro = find_large_distro(distro_name)
+
+        tasks.append(
+            EvgTask(
+                name=f'{func.name}-{polyfill}-cxx{cxx_standard}',
+                tags=[TAG, distro_name, func.name, polyfill, f'cxx{cxx_standard}'],
+                run_on=distro.name,
+                commands=[
+                    func.call(
+                        vars={
+                            'cxx_standard': f'{cxx_standard}',
+                            'polyfill': polyfill,
+                        }
+                    )
+                ],
+            )
         )
-        for func in [AbiComplianceCheck, Abidiff, AbiProhibitedSymbols]
-    ]
+
+    return tasks
+
+
+TASKS = generate_tasks()
+
+
+def tasks():
+    return TASKS
 
 
 def task_groups():
     return [
         EvgTaskGroup(
-            name=f'tg-{TAG}',
+            name=f'tg-{TAG}-{polyfill}-cxx{cxx_standard}',
             max_hosts=-1,
             setup_group_can_fail_task=True,
             setup_task=[
                 git_get_project(directory='mongo-cxx-driver'),
                 InstallCDriver.call(),
                 bash_exec(
-                    include_expansions_in_env=['cxx_standard'],
+                    env={
+                        'cxx_standard': f'{cxx_standard}',
+                        'polyfill': polyfill,
+                    },
+                    include_expansions_in_env=['distro_id'],
                     script='mongo-cxx-driver/.evergreen/scripts/abi-stability-setup.sh'
                 ),
+                s3_put(
+                    command_type=EvgCommandType.SETUP,
+                    aws_key='${aws_key}',
+                    aws_secret='${aws_secret}',
+                    bucket='mciuploads',
+                    content_type='text/plain',
+                    display_name='ABI Stability Setup: ',
+                    local_files_include_filter='*.log',
+                    permissions='public-read',
+                    remote_file='mongo-cxx-driver/${branch_name}/${revision}/${version_id}/${build_id}/${execution}/abi-stability-setup/',
+                ),
             ],
-            tasks=[f'.{TAG}'],
+            tasks=[task.name for task in TASKS if polyfill in task.name and f'cxx{cxx_standard}' in task.name],
             teardown_task_can_fail_task=True,
             teardown_task=[bash_exec(script='rm -rf *'),],
         )
+        for polyfill, cxx_standard in MATRIX
     ]
 
 
 def variants():
     return [
         BuildVariant(
-            name=f'abi-stability-{name}',
-            display_name=f'ABI Stability Checks ({name})',
-            expansions={
-                'cxx_standard': f'{cxx_standard}',  # Use a polyfill library.
-            },
-            tasks=[EvgTaskRef(name='tg-abi-stability')],
+            name=f'abi-stability',
+            display_name=f'ABI Stability Checks',
+            tasks=[
+                EvgTaskRef(name=f'tg-{TAG}-{polyfill}-cxx{cxx_standard}')
+                for polyfill, cxx_standard in MATRIX
+            ],
             display_tasks=[
                 DisplayTask(
-                    name=f'ABI Stability Checks ({name})',
+                    name=f'ABI Stability Checks',
                     execution_tasks=[f'.{TAG}'],
                 )
             ],
         )
-        for name, cxx_standard in MATRIX
     ]

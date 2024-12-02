@@ -117,7 +117,7 @@ fi
 # Allow task to upload the HTML report despite failed status.
 echo "Generating stable ABI report..."
 pushd cxx-abi
-if ! abi-compliance-checker -lib mongo-cxx-driver -old old.xml -new new.xml; then
+if ! abi-compliance-checker -lib mongo-cxx-driver -old old.xml -new new.xml 2>&1; then
   : # CXX-2812: enable code below once stable ABI symbols exist in the base commit libraries.
   # declare status
   # status='{"status":"failed", "type":"test", "should_continue":true, "desc":"abi-compliance-checker emitted one or more errors"}'
@@ -129,6 +129,6 @@ echo "Generating stable ABI report... done."
 # Also create a report for the unstable ABI. Errors are expected and OK.
 echo "Generating unstable ABI report..."
 pushd cxx-noabi
-abi-compliance-checker -lib mongo-cxx-driver -old old.xml -new new.xml || true
+abi-compliance-checker -lib mongo-cxx-driver -old old.xml -new new.xml 2>&1 || true
 popd # cxx-noabi
 echo "Generating unstable ABI report... done."
