@@ -23,7 +23,7 @@ silkbomb_download_flags=(
   --no-update-sbom-version
   --no-update-timestamp
 
-  --silk-asset-group mongo-cxx-driver
+  --silk-asset-group mongo-cxx-driver-4.0
   -o /pwd/etc/augmented.sbom.json.new
 )
 
