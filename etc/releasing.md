@@ -829,6 +829,27 @@ Sync the entries in the patch release section to be consistent with the entries 
 
 #### ... for a Non-Patch Release
 
+Checkout the `releases/vX.Y` release branch.
+
+```bash
+git checkout releases/vX.Y
+git pull
+```
+
+Add a section for the next patch release, e.g. following a `1.2.0` release:
+
+```md
+## 1.2.1 [Unreleased]
+
+<!-- Will contain entries for the next patch release. -->
+
+## 1.2.0 <!-- Just released. -->
+
+## 1.1.0 <!-- Prior release. -->
+```
+
+Commit the changes to the `releases/vX.Y` branch and push the branch to the remote repository (a PR is not required for this step).
+
 Checkout the `post-release-changes` branch.
 
 Add a section for the next minor release, e.g. following a `1.3.0` release:
