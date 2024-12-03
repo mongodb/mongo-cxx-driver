@@ -145,7 +145,7 @@ cygwin)
   ;;
 darwin*)
   cc_flags+=("${cc_flags_init[@]}")
-  cxx_flags+=("${cxx_flags_init[@]}" -stdlib=libc++)
+  cxx_flags+=("${cxx_flags_init[@]}" -stdlib=libc++ -Wno-align-mismatch)
   ;;
 linux*)
   cc_flags+=("${cc_flags_init[@]}")

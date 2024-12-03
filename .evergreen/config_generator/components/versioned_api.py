@@ -20,7 +20,7 @@ TAG = 'versioned-api'
 # pylint: disable=line-too-long
 # fmt: off
 MATRIX = [
-    ('macos-1100',        None,        ['Release'], ['shared'], [None]),
+    ('macos-14-arm64',    None,        ['Release'], ['shared'], [None]),
     ('ubuntu2004',        None,        ['Debug'  ], ['shared'], [None]),
     ('windows-vsCurrent', 'vs2019x64', ['Debug'  ], ['shared'], [None]),
 ]
