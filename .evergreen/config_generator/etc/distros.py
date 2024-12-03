@@ -57,10 +57,12 @@ DEBIAN_DISTROS = [
 ]
 
 MACOS_DISTROS = [
+    Distro(name='macos-11', os='macos', os_type='macos', os_ver='11'),
     Distro(name='macos-14', os='macos', os_type='macos', os_ver='14'),
 ]
 
 MACOS_ARM64_DISTROS = [
+    Distro(name='macos-11-arm64', os='macos', os_type='macos', os_ver='11', arch='arm64'),
     Distro(name='macos-14-arm64', os='macos', os_type='macos', os_ver='14', arch='arm64'),
 ]
 
