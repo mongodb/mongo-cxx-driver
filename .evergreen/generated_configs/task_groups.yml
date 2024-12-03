@@ -28,7 +28,7 @@ task_groups:
           content_type: text/plain
           local_files_include_filter: "*.log"
           permissions: public-read
-          remote_file: mongo-cxx-driver/${branch_name}/${revision}/${version_id}/${build_id}/${execution}/abi-stability-setup/
+          remote_file: mongo-cxx-driver/${branch_name}/${revision}/${version_id}/${build_id}/${task_id}/${execution}/abi-stability-setup/
     tasks:
       - abi-compliance-check-impls-cxx11
       - abidiff-impls-cxx11
@@ -70,7 +70,7 @@ task_groups:
           content_type: text/plain
           local_files_include_filter: "*.log"
           permissions: public-read
-          remote_file: mongo-cxx-driver/${branch_name}/${revision}/${version_id}/${build_id}/${execution}/abi-stability-setup/
+          remote_file: mongo-cxx-driver/${branch_name}/${revision}/${version_id}/${build_id}/${task_id}/${execution}/abi-stability-setup/
     tasks:
       - abi-compliance-check-impls-cxx17
       - abidiff-impls-cxx17
@@ -112,7 +112,7 @@ task_groups:
           content_type: text/plain
           local_files_include_filter: "*.log"
           permissions: public-read
-          remote_file: mongo-cxx-driver/${branch_name}/${revision}/${version_id}/${build_id}/${execution}/abi-stability-setup/
+          remote_file: mongo-cxx-driver/${branch_name}/${revision}/${version_id}/${build_id}/${task_id}/${execution}/abi-stability-setup/
     tasks:
       - abi-compliance-check-stdlib-cxx17
       - abidiff-stdlib-cxx17
@@ -154,7 +154,7 @@ task_groups:
           content_type: text/plain
           local_files_include_filter: "*.log"
           permissions: public-read
-          remote_file: mongo-cxx-driver/${branch_name}/${revision}/${version_id}/${build_id}/${execution}/abi-stability-setup/
+          remote_file: mongo-cxx-driver/${branch_name}/${revision}/${version_id}/${build_id}/${task_id}/${execution}/abi-stability-setup/
     tasks:
       - abi-compliance-check-stdlib-cxx20
       - abidiff-stdlib-cxx20
@@ -196,7 +196,7 @@ task_groups:
           content_type: text/plain
           local_files_include_filter: "*.log"
           permissions: public-read
-          remote_file: mongo-cxx-driver/${branch_name}/${revision}/${version_id}/${build_id}/${execution}/abi-stability-setup/
+          remote_file: mongo-cxx-driver/${branch_name}/${revision}/${version_id}/${build_id}/${task_id}/${execution}/abi-stability-setup/
     tasks:
       - abi-compliance-check-stdlib-cxx23
       - abidiff-stdlib-cxx23

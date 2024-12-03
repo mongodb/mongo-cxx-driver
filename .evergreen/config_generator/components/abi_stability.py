@@ -48,7 +48,7 @@ class AbiComplianceCheck(Function):
             display_name='ABI Compliance Check (Stable): ',
             local_files_include_filter='cxx-abi/compat_reports/**/compat_report.html',
             permissions='public-read',
-            remote_file='mongo-cxx-driver/${branch_name}/${revision}/${version_id}/${build_id}/${execution}/abi-compliance-check/abi/',
+            remote_file='mongo-cxx-driver/${branch_name}/${revision}/${version_id}/${build_id}/${task_id}/${execution}/abi-compliance-check/abi/',
         ),
         s3_put(
             command_type=EvgCommandType.SYSTEM,
@@ -59,7 +59,7 @@ class AbiComplianceCheck(Function):
             display_name='ABI Compliance Check (Stable): ',
             local_files_include_filter='cxx-abi/logs/**/log.txt',
             permissions='public-read',
-            remote_file='mongo-cxx-driver/${branch_name}/${revision}/${version_id}/${build_id}/${execution}/abi-compliance-check/abi/',
+            remote_file='mongo-cxx-driver/${branch_name}/${revision}/${version_id}/${build_id}/${task_id}/${execution}/abi-compliance-check/abi/',
         ),
         s3_put(
             command_type=EvgCommandType.SYSTEM,
@@ -70,7 +70,7 @@ class AbiComplianceCheck(Function):
             display_name='ABI Compliance Check (Unstable): ',
             local_files_include_filter='cxx-noabi/compat_reports/**/compat_report.html',
             permissions='public-read',
-            remote_file='mongo-cxx-driver/${branch_name}/${revision}/${version_id}/${build_id}/${execution}/abi-compliance-check/noabi/',
+            remote_file='mongo-cxx-driver/${branch_name}/${revision}/${version_id}/${build_id}/${task_id}/${execution}/abi-compliance-check/noabi/',
         ),
         s3_put(
             command_type=EvgCommandType.SYSTEM,
@@ -81,7 +81,7 @@ class AbiComplianceCheck(Function):
             display_name='ABI Compliance Check (Unstable): ',
             local_files_include_filter='cxx-noabi/logs/**/log.txt',
             permissions='public-read',
-            remote_file='mongo-cxx-driver/${branch_name}/${revision}/${version_id}/${build_id}/${execution}/abi-compliance-check/noabi/',
+            remote_file='mongo-cxx-driver/${branch_name}/${revision}/${version_id}/${build_id}/${task_id}/${execution}/abi-compliance-check/noabi/',
         ),
     ]
 
@@ -106,7 +106,7 @@ class Abidiff(Function):
             display_name='abidiff (Stable): ',
             local_files_include_filter='cxx-abi/*.txt',
             permissions='public-read',
-            remote_file='mongo-cxx-driver/${branch_name}/${revision}/${version_id}/${build_id}/${execution}/abidiff/abi/',
+            remote_file='mongo-cxx-driver/${branch_name}/${revision}/${version_id}/${build_id}/${task_id}/${execution}/abidiff/abi/',
         ),
         s3_put(
             command_type=EvgCommandType.SYSTEM,
@@ -117,7 +117,7 @@ class Abidiff(Function):
             display_name='abidiff (Unstable): ',
             local_files_include_filter='cxx-noabi/*.txt',
             permissions='public-read',
-            remote_file='mongo-cxx-driver/${branch_name}/${revision}/${version_id}/${build_id}/${execution}/abidiff/noabi/',
+            remote_file='mongo-cxx-driver/${branch_name}/${revision}/${version_id}/${build_id}/${task_id}/${execution}/abidiff/noabi/',
         ),
     ]
 
@@ -203,7 +203,7 @@ def task_groups():
                     display_name='ABI Stability Setup: ',
                     local_files_include_filter='*.log',
                     permissions='public-read',
-                    remote_file='mongo-cxx-driver/${branch_name}/${revision}/${version_id}/${build_id}/${execution}/abi-stability-setup/',
+                    remote_file='mongo-cxx-driver/${branch_name}/${revision}/${version_id}/${build_id}/${task_id}/${execution}/abi-stability-setup/',
                 ),
             ],
             tasks=[task.name for task in TASKS if polyfill in task.name and f'cxx{cxx_standard}' in task.name],
