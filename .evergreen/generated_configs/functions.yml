@@ -24,7 +24,7 @@ functions:
         content_type: text/html
         local_files_include_filter: cxx-abi/compat_reports/**/compat_report.html
         permissions: public-read
-        remote_file: mongo-cxx-driver/${branch_name}/${revision}/${version_id}/${build_id}/${execution}/abi-compliance-check/abi/
+        remote_file: mongo-cxx-driver/${branch_name}/${revision}/${version_id}/${build_id}/${task_id}/${execution}/abi-compliance-check/abi/
     - command: s3.put
       type: system
       params:
@@ -35,7 +35,7 @@ functions:
         content_type: text/plain
         local_files_include_filter: cxx-abi/logs/**/log.txt
         permissions: public-read
-        remote_file: mongo-cxx-driver/${branch_name}/${revision}/${version_id}/${build_id}/${execution}/abi-compliance-check/abi/
+        remote_file: mongo-cxx-driver/${branch_name}/${revision}/${version_id}/${build_id}/${task_id}/${execution}/abi-compliance-check/abi/
     - command: s3.put
       type: system
       params:
@@ -46,7 +46,7 @@ functions:
         content_type: text/html
         local_files_include_filter: cxx-noabi/compat_reports/**/compat_report.html
         permissions: public-read
-        remote_file: mongo-cxx-driver/${branch_name}/${revision}/${version_id}/${build_id}/${execution}/abi-compliance-check/noabi/
+        remote_file: mongo-cxx-driver/${branch_name}/${revision}/${version_id}/${build_id}/${task_id}/${execution}/abi-compliance-check/noabi/
     - command: s3.put
       type: system
       params:
@@ -57,7 +57,7 @@ functions:
         content_type: text/plain
         local_files_include_filter: cxx-noabi/logs/**/log.txt
         permissions: public-read
-        remote_file: mongo-cxx-driver/${branch_name}/${revision}/${version_id}/${build_id}/${execution}/abi-compliance-check/noabi/
+        remote_file: mongo-cxx-driver/${branch_name}/${revision}/${version_id}/${build_id}/${task_id}/${execution}/abi-compliance-check/noabi/
   abi-prohibited-symbols:
     command: subprocess.exec
     type: test
@@ -91,7 +91,7 @@ functions:
         content_type: text/plain
         local_files_include_filter: cxx-abi/*.txt
         permissions: public-read
-        remote_file: mongo-cxx-driver/${branch_name}/${revision}/${version_id}/${build_id}/${execution}/abidiff/abi/
+        remote_file: mongo-cxx-driver/${branch_name}/${revision}/${version_id}/${build_id}/${task_id}/${execution}/abidiff/abi/
     - command: s3.put
       type: system
       params:
@@ -102,7 +102,7 @@ functions:
         content_type: text/plain
         local_files_include_filter: cxx-noabi/*.txt
         permissions: public-read
-        remote_file: mongo-cxx-driver/${branch_name}/${revision}/${version_id}/${build_id}/${execution}/abidiff/noabi/
+        remote_file: mongo-cxx-driver/${branch_name}/${revision}/${version_id}/${build_id}/${task_id}/${execution}/abidiff/noabi/
   backtrace:
     command: subprocess.exec
     type: system

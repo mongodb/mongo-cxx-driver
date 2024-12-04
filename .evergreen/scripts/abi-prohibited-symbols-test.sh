@@ -31,7 +31,7 @@ bad_pattern=(
 
 # Ensure implementation details do not leak into the ABI.
 mapfile -t bad_symbols < <(
-  nm --demangle --dynamic --defined-only --extern-only --just-symbols "${libs[@]}" |
+  nm --demangle --dynamic --defined-only --extern-only --portability "${libs[@]}" |
     grep -E "${match_pattern[@]}" |
     grep -E "${bad_pattern[@]}"
 )
