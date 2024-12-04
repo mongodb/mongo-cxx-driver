@@ -9,7 +9,9 @@ Changes prior to 3.9.0 are documented as [release notes on GitHub](https://githu
 
 ## 4.1.0 [Unreleased]
 
-<!-- Will contain entries for the next minor release. -->
+### Deprecated
+
+- Support for MacOS 11 (EOL since Nov 2020) and MacOS 12 (EOL since Oct 2021).
 
 ## 4.0.0
 

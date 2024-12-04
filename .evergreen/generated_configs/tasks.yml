@@ -692,53 +692,6 @@ tasks:
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
           USE_STATIC_LIBS: 1
-  - name: integration-macos-1100-release-shared-5.0-single
-    run_on: macos-1100
-    tags: [integration, macos-1100, release, shared, "5.0", single]
-    commands:
-      - command: expansions.update
-        params:
-          updates:
-            - { key: build_type, value: Release }
-      - func: setup
-      - func: start_mongod
-        vars:
-          mongodb_version: "5.0"
-      - func: fetch_c_driver_source
-      - func: compile
-        vars:
-          ENABLE_TESTS: "ON"
-          RUN_DISTCHECK: 1
-      - func: fetch-det
-      - func: run_kms_servers
-      - func: test
-        vars:
-          MONGOCXX_TEST_TOPOLOGY: single
-  - name: integration-macos-1100-release-shared-extra_alignment-5.0-single
-    run_on: macos-1100
-    tags: [integration, macos-1100, release, shared, extra_alignment, "5.0", single]
-    commands:
-      - command: expansions.update
-        params:
-          updates:
-            - { key: build_type, value: Release }
-      - func: setup
-      - func: start_mongod
-        vars:
-          mongodb_version: "5.0"
-      - func: install_c_driver
-        vars:
-          BSON_EXTRA_ALIGNMENT: 1
-          SKIP_INSTALL_LIBMONGOCRYPT: 1
-      - func: compile
-        vars:
-          BSON_EXTRA_ALIGNMENT: 1
-          ENABLE_TESTS: "ON"
-      - func: fetch-det
-      - func: run_kms_servers
-      - func: test
-        vars:
-          MONGOCXX_TEST_TOPOLOGY: single
   - name: integration-macos-1100-release-shared-extra_alignment-latest-single
     run_on: macos-1100
     tags: [integration, macos-1100, release, shared, extra_alignment, latest, single]
@@ -786,57 +739,6 @@ tasks:
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
-  - name: integration-macos-1100-release-static-5.0-single
-    run_on: macos-1100
-    tags: [integration, macos-1100, release, static, "5.0", single]
-    commands:
-      - command: expansions.update
-        params:
-          updates:
-            - { key: build_type, value: Release }
-      - func: setup
-      - func: start_mongod
-        vars:
-          mongodb_version: "5.0"
-      - func: fetch_c_driver_source
-      - func: compile
-        vars:
-          ENABLE_TESTS: "ON"
-          RUN_DISTCHECK: 1
-          USE_STATIC_LIBS: 1
-      - func: fetch-det
-      - func: run_kms_servers
-      - func: test
-        vars:
-          MONGOCXX_TEST_TOPOLOGY: single
-          USE_STATIC_LIBS: 1
-  - name: integration-macos-1100-release-static-extra_alignment-5.0-single
-    run_on: macos-1100
-    tags: [integration, macos-1100, release, static, extra_alignment, "5.0", single]
-    commands:
-      - command: expansions.update
-        params:
-          updates:
-            - { key: build_type, value: Release }
-      - func: setup
-      - func: start_mongod
-        vars:
-          mongodb_version: "5.0"
-      - func: install_c_driver
-        vars:
-          BSON_EXTRA_ALIGNMENT: 1
-          SKIP_INSTALL_LIBMONGOCRYPT: 1
-      - func: compile
-        vars:
-          BSON_EXTRA_ALIGNMENT: 1
-          ENABLE_TESTS: "ON"
-          USE_STATIC_LIBS: 1
-      - func: fetch-det
-      - func: run_kms_servers
-      - func: test
-        vars:
-          MONGOCXX_TEST_TOPOLOGY: single
-          USE_STATIC_LIBS: 1
   - name: integration-macos-1100-release-static-extra_alignment-latest-single
     run_on: macos-1100
     tags: [integration, macos-1100, release, static, extra_alignment, latest, single]
@@ -881,6 +783,202 @@ tasks:
         vars:
           ENABLE_TESTS: "ON"
           RUN_DISTCHECK: 1
+          USE_STATIC_LIBS: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+          USE_STATIC_LIBS: 1
+  - name: integration-macos-14-arm64-release-shared-extra_alignment-latest-single
+    run_on: macos-14-arm64
+    tags: [integration, macos-14-arm64, release, shared, extra_alignment, latest, single]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Release }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: latest
+      - func: install_c_driver
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+          SKIP_INSTALL_LIBMONGOCRYPT: 1
+      - func: compile
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+          ENABLE_TESTS: "ON"
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+  - name: integration-macos-14-arm64-release-shared-latest-single
+    run_on: macos-14-arm64
+    tags: [integration, macos-14-arm64, release, shared, latest, single]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Release }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: latest
+      - func: fetch_c_driver_source
+      - func: compile
+        vars:
+          ENABLE_TESTS: "ON"
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+  - name: integration-macos-14-arm64-release-static-extra_alignment-latest-single
+    run_on: macos-14-arm64
+    tags: [integration, macos-14-arm64, release, static, extra_alignment, latest, single]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Release }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: latest
+      - func: install_c_driver
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+          SKIP_INSTALL_LIBMONGOCRYPT: 1
+      - func: compile
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+          ENABLE_TESTS: "ON"
+          USE_STATIC_LIBS: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+          USE_STATIC_LIBS: 1
+  - name: integration-macos-14-arm64-release-static-latest-single
+    run_on: macos-14-arm64
+    tags: [integration, macos-14-arm64, release, static, latest, single]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Release }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: latest
+      - func: fetch_c_driver_source
+      - func: compile
+        vars:
+          ENABLE_TESTS: "ON"
+          RUN_DISTCHECK: 1
+          USE_STATIC_LIBS: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+          USE_STATIC_LIBS: 1
+  - name: integration-macos-14-release-shared-5.0-single
+    run_on: macos-14
+    tags: [integration, macos-14, release, shared, "5.0", single]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Release }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: "5.0"
+      - func: fetch_c_driver_source
+      - func: compile
+        vars:
+          ENABLE_TESTS: "ON"
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+  - name: integration-macos-14-release-shared-extra_alignment-5.0-single
+    run_on: macos-14
+    tags: [integration, macos-14, release, shared, extra_alignment, "5.0", single]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Release }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: "5.0"
+      - func: install_c_driver
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+          SKIP_INSTALL_LIBMONGOCRYPT: 1
+      - func: compile
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+          ENABLE_TESTS: "ON"
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+  - name: integration-macos-14-release-static-5.0-single
+    run_on: macos-14
+    tags: [integration, macos-14, release, static, "5.0", single]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Release }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: "5.0"
+      - func: fetch_c_driver_source
+      - func: compile
+        vars:
+          ENABLE_TESTS: "ON"
+          RUN_DISTCHECK: 1
+          USE_STATIC_LIBS: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+          USE_STATIC_LIBS: 1
+  - name: integration-macos-14-release-static-extra_alignment-5.0-single
+    run_on: macos-14
+    tags: [integration, macos-14, release, static, extra_alignment, "5.0", single]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Release }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: "5.0"
+      - func: install_c_driver
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+          SKIP_INSTALL_LIBMONGOCRYPT: 1
+      - func: compile
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+          ENABLE_TESTS: "ON"
           USE_STATIC_LIBS: 1
       - func: fetch-det
       - func: run_kms_servers
@@ -4537,9 +4635,9 @@ tasks:
           TEST_WITH_VALGRIND: "ON"
           disable_slow_tests: 1
           use_mongocryptd: true
-  - name: versioned-api-one-required-macos-1100-release-shared
-    run_on: macos-1100
-    tags: [versioned-api, macos-1100, release, shared]
+  - name: versioned-api-one-required-macos-14-arm64-release-shared
+    run_on: macos-14-arm64
+    tags: [versioned-api, macos-14-arm64, release, shared]
     commands:
       - func: setup
       - func: start_mongod
@@ -4608,9 +4706,9 @@ tasks:
           example_projects_cxx_standard: 17
           generator: Visual Studio 16 2019
           platform: x64
-  - name: versioned-api-two-accepted-macos-1100-release-shared
-    run_on: macos-1100
-    tags: [versioned-api, macos-1100, release, shared]
+  - name: versioned-api-two-accepted-macos-14-arm64-release-shared
+    run_on: macos-14-arm64
+    tags: [versioned-api, macos-14-arm64, release, shared]
     commands:
       - func: setup
       - func: start_mongod

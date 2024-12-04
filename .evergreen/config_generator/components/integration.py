@@ -34,7 +34,10 @@ MATRIX = [
     ('debian12', None, ['Release'], ['shared',         ], [      20], [None], ['plain',        ], [False, True], ['latest'], ['single',                     ]),
     ('debian12', None, ['Release'], ['shared',         ], [None,   ], [None], [         'csfle'], [False,     ], ['latest'], [          'replica', 'sharded']),
 
-    ('macos-1100', None, ['Release'], ['shared', 'static'], [None], [None], ['plain'], [False, True], ['5.0', 'latest'], ['single']),
+    ('macos-1100', None, ['Release'], ['shared', 'static'], [None], [None], ['plain'], [False, True], ['latest'], ['single']),
+
+    ('macos-14',       None, ['Release'], ['shared', 'static'], [None], [None], ['plain'], [False, True], ['5.0',         ], ['single']),
+    ('macos-14-arm64', None, ['Release'], ['shared', 'static'], [None], [None], ['plain'], [False, True], [       'latest'], ['single']),
 
     ('rhel81-power8',  None, ['Release'], ['shared', 'static'], [None], [None], ['plain'], [False, True], ['5.0',        'latest'], ['single']),
     ('rhel83-zseries', None, ['Release'], ['shared', 'static'], [None], [None], ['plain'], [False, True], ['5.0', '6.0', 'latest'], ['single']),
