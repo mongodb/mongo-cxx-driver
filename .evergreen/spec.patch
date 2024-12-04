@@ -1,5 +1,5 @@
---- mongo-cxx-driver.spec.orig	2021-09-07 10:45:09.609476580 -0400
-+++ mongo-cxx-driver.spec	2021-09-07 10:48:52.781980206 -0400
+--- mongo-cxx-driver.spec.orig	2024-10-02 16:04:01.333784649 -0400
++++ mongo-cxx-driver.spec	2024-12-02 10:57:02.798895580 -0500
 @@ -1,8 +1,10 @@
  # for better compatibility with SCL spec file
  %global pkg_name mongo-cxx-driver
@@ -8,22 +8,23 @@
 +
  Name:           mongo-cxx-driver
 -Version:        3.6.5
-+Version:        3.12.0
++Version:        4.0.1
  Release:        1%{?dist}
  Summary:        A C++ Driver for MongoDB
  License:        ASL 2.0
-@@ -10,8 +12,8 @@
+@@ -10,9 +12,8 @@
  Source0:        https://github.com/mongodb/%{pkg_name}/archive/%{name}-r%{version}.tar.gz
  
  
 -Patch2:         mongo-cxx-driver-3.3.1_paths.patch
 -Patch3:         mongo-cxx-driver-catch-update.patch
+-BuildRequires:  boost-devel >= 1.49
 +BuildRequires:  pkgconfig
 +BuildRequires:  pkgconfig(libutf8proc)
- BuildRequires:  boost-devel >= 1.49
  BuildRequires:  openssl-devel
  BuildRequires:  cmake
-@@ -67,8 +67,6 @@
+ BuildRequires:  cyrus-sasl-devel
+@@ -67,8 +68,6 @@
  %prep
  %setup -q -n %{name}-r%{version}
  
@@ -32,14 +33,13 @@
  
  
  %build
-@@ -79,6 +77,9 @@
+@@ -78,7 +77,8 @@
+ 
  %cmake \
      -DCMAKE_BUILD_TYPE=Release \
-     -DBSONCXX_POLY_USE_BOOST=1 \
-+    -DBUILD_VERSION=3.12.0 \
+-    -DBSONCXX_POLY_USE_BOOST=1 \
++    -DBUILD_VERSION=4.0.1 \
 +    -DENABLE_UNINSTALL=OFF \
-+    -DENABLE_TESTS=OFF \
      .
  
- %changelog
- * Mon Aug 09 2021 Honza Horak <hhorak@redhat.com> - 3.6.5-1
+ %cmake_build
