@@ -34,7 +34,7 @@ MATRIX = [
     ('debian12', None, ['Release'], ['shared',         ], [      20], [None], ['plain',        ], [False, True], ['latest'], ['single',                     ]),
     ('debian12', None, ['Release'], ['shared',         ], [None,   ], [None], [         'csfle'], [False,     ], ['latest'], [          'replica', 'sharded']),
 
-    ('macos-11', None, ['Release'], ['shared', 'static'], [None], [None], ['plain'], [False, True], ['latest'], ['single']),
+    ('macos-1100', None, ['Release'], ['shared', 'static'], [None], [None], ['plain'], [False, True], ['latest'], ['single']),
 
     ('macos-14',       None, ['Release'], ['shared', 'static'], [None], [None], ['plain'], [False, True], ['5.0',         ], ['single']),
     ('macos-14-arm64', None, ['Release'], ['shared', 'static'], [None], [None], ['plain'], [False, True], [       'latest'], ['single']),

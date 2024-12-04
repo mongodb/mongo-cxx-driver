@@ -692,9 +692,9 @@ tasks:
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
           USE_STATIC_LIBS: 1
-  - name: integration-macos-11-release-shared-extra_alignment-latest-single
-    run_on: macos-11
-    tags: [integration, macos-11, release, shared, extra_alignment, latest, single]
+  - name: integration-macos-1100-release-shared-extra_alignment-latest-single
+    run_on: macos-1100
+    tags: [integration, macos-1100, release, shared, extra_alignment, latest, single]
     commands:
       - command: expansions.update
         params:
@@ -717,9 +717,9 @@ tasks:
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
-  - name: integration-macos-11-release-shared-latest-single
-    run_on: macos-11
-    tags: [integration, macos-11, release, shared, latest, single]
+  - name: integration-macos-1100-release-shared-latest-single
+    run_on: macos-1100
+    tags: [integration, macos-1100, release, shared, latest, single]
     commands:
       - command: expansions.update
         params:
@@ -739,9 +739,9 @@ tasks:
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
-  - name: integration-macos-11-release-static-extra_alignment-latest-single
-    run_on: macos-11
-    tags: [integration, macos-11, release, static, extra_alignment, latest, single]
+  - name: integration-macos-1100-release-static-extra_alignment-latest-single
+    run_on: macos-1100
+    tags: [integration, macos-1100, release, static, extra_alignment, latest, single]
     commands:
       - command: expansions.update
         params:
@@ -766,9 +766,9 @@ tasks:
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
           USE_STATIC_LIBS: 1
-  - name: integration-macos-11-release-static-latest-single
-    run_on: macos-11
-    tags: [integration, macos-11, release, static, latest, single]
+  - name: integration-macos-1100-release-static-latest-single
+    run_on: macos-1100
+    tags: [integration, macos-1100, release, static, latest, single]
     commands:
       - command: expansions.update
         params:
