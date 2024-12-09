@@ -71,16 +71,16 @@ AllowShortCaseExpressionOnASingleLine: true
 AllowShortCaseLabelsOnASingleLine: false
 AllowShortCompoundRequirementOnASingleLine: true
 AllowShortEnumsOnASingleLine: true
-AllowShortFunctionsOnASingleLine: All
-AllowShortIfStatementsOnASingleLine: WithoutElse
+AllowShortFunctionsOnASingleLine: Empty
+AllowShortIfStatementsOnASingleLine: Never
 AllowShortLambdasOnASingleLine: All
-AllowShortLoopsOnASingleLine: true
+AllowShortLoopsOnASingleLine: false
 AlwaysBreakAfterDefinitionReturnType: None
 AlwaysBreakBeforeMultilineStrings: true
 AttributeMacros:
   - __capability
-BinPackArguments: true
-BinPackParameters: true
+BinPackArguments: false
+BinPackParameters: false
 BitFieldColonSpacing: Both
 BraceWrapping:
   AfterCaseLabel:  false
@@ -116,13 +116,13 @@ BreakFunctionDefinitionParameters: false
 BreakInheritanceList: BeforeColon
 BreakStringLiterals: true
 BreakTemplateDeclarations: Yes
-ColumnLimit:     80
-CommentPragmas:  '^ IWYU pragma:'
+ColumnLimit:     100
+CommentPragmas:  '^\s*(@(addtogroup|copydoc|defgroup|fn|ref)|- )'
 CompactNamespaces: false
 ConstructorInitializerIndentWidth: 4
 ContinuationIndentWidth: 4
 Cpp11BracedListStyle: true
-DerivePointerAlignment: true
+DerivePointerAlignment: false
 DisableFormat:   false
 EmptyLineAfterAccessModifier: Never
 EmptyLineBeforeAccessModifier: LogicalBlock
@@ -136,22 +136,28 @@ IfMacros:
   - KJ_IF_MAYBE
 IncludeBlocks:   Regroup
 IncludeCategories:
-  - Regex:           '^<ext/.*\.h>'
-    Priority:        2
-    SortPriority:    0
-    CaseSensitive:   false
-  - Regex:           '^<.*\.h>'
-    Priority:        1
-    SortPriority:    0
-    CaseSensitive:   false
-  - Regex:           '^<.*'
-    Priority:        2
-    SortPriority:    0
-    CaseSensitive:   false
-  - Regex:           '.*'
-    Priority:        3
-    SortPriority:    0
-    CaseSensitive:   false
+  - Regex: '".*"' # relative headers
+    Priority: 10
+  - Regex: 'bsoncxx/config(/private)?/prelude\.(hpp|hh)' # v_noabi preludes
+    Priority: 50
+  - Regex: 'mongocxx/config(/private)?/prelude\.(hpp|hh)' # v_noabi preludes
+    Priority: 51
+  - Regex: 'bsoncxx/test/.*' # test headers
+    Priority: 60
+  - Regex: 'mongocxx/test/.*' # test headers
+    Priority: 61
+  - Regex: '<[[:alnum:]_.]+>' # system headers
+    Priority: 20
+  - Regex: 'bsoncxx/.*(-|\/)fwd\.(hpp|hh)' # all driver forwarding headers
+    Priority: 30
+  - Regex: 'mongocxx/.*(-|\/)fwd\.(hpp|hh)' # all driver forwarding headers
+    Priority: 31
+  - Regex: 'bsoncxx/.*' # all remaining (normal) driver headers
+    Priority: 40
+  - Regex: 'mongocxx/.*' # all remaining (normal) driver headers
+    Priority: 41
+  - Regex: '.*' # all other headers (third party)
+    Priority: 90
 IncludeIsMainRegex: '([-_](test|unittest))?$'
 IncludeIsMainSourceRegex: ''
 IndentAccessModifiers: false
@@ -161,7 +167,7 @@ IndentExternBlock: AfterExternBlock
 IndentGotoLabels: true
 IndentPPDirectives: None
 IndentRequiresClause: true
-IndentWidth:     2
+IndentWidth:     4
 IndentWrappedFunctionNames: false
 InsertBraces:    false
 InsertNewlineAtEOF: false
@@ -288,7 +294,7 @@ SpacesInParensOptions:
   InEmptyParentheses: false
   Other:           false
 SpacesInSquareBrackets: false
-Standard:        Auto
+Standard:        Cpp11
 StatementAttributeLikeMacros:
   - Q_EMIT
 StatementMacros:
@@ -305,4 +311,3 @@ WhitespaceSensitiveMacros:
   - PP_STRINGIZE
   - STRINGIZE
 ...
-
