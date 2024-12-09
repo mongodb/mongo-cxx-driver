@@ -22,6 +22,7 @@
 #include <vector>
 
 #include <bsoncxx/string/to_string.hpp>
+
 #include <mongocxx/gridfs/bucket.hpp>
 #include <mongocxx/instance.hpp>
 #include <mongocxx/pool.hpp>

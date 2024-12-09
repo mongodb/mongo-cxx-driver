@@ -14,12 +14,14 @@
 
 static_assert(__cplusplus >= 201703L, "requires C++17 or higher");
 
+#include "benchmark_runner.hpp"
+
 #include <chrono>
 #include <iostream>
 #include <stdexcept>
 
-#include "benchmark_runner.hpp"
 #include <bsoncxx/stdx/string_view.hpp>
+
 #include <mongocxx/instance.hpp>
 
 using namespace benchmark;

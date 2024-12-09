@@ -25,6 +25,7 @@
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/builder/basic/kvp.hpp>
 #include <bsoncxx/stdx/optional.hpp>
+
 #include <mongocxx/instance.hpp>
 #include <mongocxx/options/insert.hpp>
 #include <mongocxx/pool.hpp>

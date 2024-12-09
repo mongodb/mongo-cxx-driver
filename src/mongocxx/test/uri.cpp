@@ -335,18 +335,20 @@ TEST_CASE("uri::compressors()", "[uri]") {
 
 // Zero is not allowed for heartbeatFrequencyMS.
 TEST_CASE("uri::heartbeat_frequency_ms()", "[uri]") {
-    _test_int32_option("heartbeatFrequencyMS",
-                       [](mongocxx::uri& uri) { return uri.heartbeat_frequency_ms(); },
-                       "1234",
-                       false);
+    _test_int32_option(
+        "heartbeatFrequencyMS",
+        [](mongocxx::uri& uri) { return uri.heartbeat_frequency_ms(); },
+        "1234",
+        false);
 }
 
 // -1 to 9 are only valid values of zlib compression level.
 TEST_CASE("uri::zlib_compression_level()", "[uri]") {
-    _test_int32_option("zlibCompressionLevel",
-                       [](mongocxx::uri& uri) { return uri.zlib_compression_level(); },
-                       "5",
-                       true);
+    _test_int32_option(
+        "zlibCompressionLevel",
+        [](mongocxx::uri& uri) { return uri.zlib_compression_level(); },
+        "5",
+        true);
 }
 
 // End special cases.

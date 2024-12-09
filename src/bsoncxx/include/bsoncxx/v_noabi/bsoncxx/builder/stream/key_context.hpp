@@ -114,7 +114,7 @@ class key_context {
     ///
     template <typename T>
     detail::requires_t<key_context&, detail::is_invocable<T, key_context>>  //
-    operator<<(T&& func) {
+    operator<<(T && func) {
         detail::invoke(std::forward<T>(func), *this);
         return *this;
     }

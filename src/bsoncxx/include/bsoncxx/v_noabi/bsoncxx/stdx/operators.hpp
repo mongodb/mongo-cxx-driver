@@ -48,7 +48,7 @@ struct is_equality_comparable : decltype(is_equality_comparable_f<L, R>(0)) {};
 struct equal_to {
     template <typename L, typename R>
     constexpr requires_t<bool, is_equality_comparable<L, R>>  //
-    operator()(L&& l, R&& r) const noexcept(noexcept(l == r)) {
+    operator()(L && l, R && r) const noexcept(noexcept(l == r)) {
         return l == r;
     }
 };

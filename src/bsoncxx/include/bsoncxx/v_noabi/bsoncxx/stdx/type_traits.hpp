@@ -99,8 +99,7 @@ namespace impl_detection {
 // Implementation of detection idiom for is_detected: true case
 template <
     // A metafunction to try and apply
-    template <class...>
-    class Oper,
+    template <class...> class Oper,
     // The arguments to be given. These are deduced from the mp_list argument
     typename... Args,
     // Apply the arguments to the metafunction. If this yields a type, this function

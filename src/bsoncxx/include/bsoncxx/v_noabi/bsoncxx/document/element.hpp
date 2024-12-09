@@ -384,16 +384,16 @@ class element {
 /// @{
 
 /// @relatesalso bsoncxx::v_noabi::document::element
-BSONCXX_ABI_EXPORT_CDECL(bool) operator==(const element& elem, const types::bson_value::view& v);
+BSONCXX_ABI_EXPORT_CDECL(bool) operator==(const element & elem, const types::bson_value::view & v);
 
 /// @relatesalso bsoncxx::v_noabi::document::element
-BSONCXX_ABI_EXPORT_CDECL(bool) operator==(const types::bson_value::view& v, const element& elem);
+BSONCXX_ABI_EXPORT_CDECL(bool) operator==(const types::bson_value::view & v, const element & elem);
 
 /// @relatesalso bsoncxx::v_noabi::document::element
-BSONCXX_ABI_EXPORT_CDECL(bool) operator!=(const element& elem, const types::bson_value::view& v);
+BSONCXX_ABI_EXPORT_CDECL(bool) operator!=(const element & elem, const types::bson_value::view & v);
 
 /// @relatesalso bsoncxx::v_noabi::document::element
-BSONCXX_ABI_EXPORT_CDECL(bool) operator!=(const types::bson_value::view& v, const element& elem);
+BSONCXX_ABI_EXPORT_CDECL(bool) operator!=(const types::bson_value::view & v, const element & elem);
 
 /// @}
 ///

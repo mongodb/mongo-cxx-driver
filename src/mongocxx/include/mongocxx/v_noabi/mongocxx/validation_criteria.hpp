@@ -162,11 +162,11 @@ class validation_criteria {
 
 /// @relatesalso mongocxx::v_noabi::validation_criteria
 MONGOCXX_ABI_EXPORT_CDECL(bool)
-operator==(const validation_criteria& lhs, const validation_criteria& rhs);
+operator==(const validation_criteria & lhs, const validation_criteria & rhs);
 
 /// @relatesalso mongocxx::v_noabi::validation_criteria
 MONGOCXX_ABI_EXPORT_CDECL(bool)
-operator!=(const validation_criteria& lhs, const validation_criteria& rhs);
+operator!=(const validation_criteria & lhs, const validation_criteria & rhs);
 /// @}
 ///
 

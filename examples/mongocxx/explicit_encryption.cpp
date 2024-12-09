@@ -64,9 +64,7 @@ int EXAMPLES_CDECL main() {
                                     << close_document << finalize;
 
     // Create an unencrypted mongocxx::client.
-    class client client {
-        uri {}
-    };
+    class client client{uri{}};
     auto coll = client["test"]["coll"];
 
     // Clear old data.

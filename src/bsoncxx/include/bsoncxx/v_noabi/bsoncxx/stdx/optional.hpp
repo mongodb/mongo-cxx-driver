@@ -110,7 +110,7 @@ std::false_type not_an_optional_f(const optional<T>&);
 
 // Utility trait to detect specializations of stdx::optional.
 template <typename T>
-struct not_an_optional : decltype(not_an_optional_f(std::declval<T const&>())) {};
+struct not_an_optional : decltype(not_an_optional_f(std::declval<T const&>())){};
 
 template <typename T, typename Ucvr, typename U>
 struct enable_opt_conversion
@@ -612,8 +612,8 @@ struct optional_swap_mixin {};
 template <typename T>
 struct optional_swap_mixin<T, true> {
     bsoncxx_cxx14_constexpr friend void swap(optional<T>& left, optional<T>& right) noexcept(
-        std::is_nothrow_move_constructible<T>::value&&
-            bsoncxx::detail::is_nothrow_swappable<T>::value) {
+        std::is_nothrow_move_constructible<T>::value &&
+        bsoncxx::detail::is_nothrow_swappable<T>::value) {
         left.swap(right);
     }
 };
@@ -681,8 +681,8 @@ class optional_common_base : optional_operators_base, optional_swap_mixin<T> {
 
     // Special swap for optional values that removes need for a temporary.
     bsoncxx_cxx14_constexpr void swap(optional_common_base& other) noexcept(
-        std::is_nothrow_move_constructible<T>::value&&
-            bsoncxx::detail::is_nothrow_swappable<T>::value) {
+        std::is_nothrow_move_constructible<T>::value &&
+        bsoncxx::detail::is_nothrow_swappable<T>::value) {
         if (other._has_value) {
             if (this->_has_value) {
                 using std::swap;
