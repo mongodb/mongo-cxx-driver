@@ -149,10 +149,12 @@ static_assert(
     "fail");
 
 // invoke_result_t disappears when given wrong argument types:
-static_assert(
-    !tt::is_detected<tt::invoke_result_t, decltype(&something::memfn), something&&, int, int>::
-        value,
-    "fail");
+static_assert(!tt::is_detected<tt::invoke_result_t,
+                               decltype(&something::memfn),
+                               something&&,
+                               int,
+                               int>::value,
+              "fail");
 
 struct constrained_callable {
     // Viable only if F is callable as F(int, Arg)
@@ -174,10 +176,11 @@ static_assert(tt::is_detected<tt::invoke_result_t,
                               const char*>::value,
               "fail");
 
-static_assert(
-    tt::is_detected<tt::invoke_result_t, constrained_callable, void (*)(int, double), double>::
-        value,
-    "fail");
+static_assert(tt::is_detected<tt::invoke_result_t,
+                              constrained_callable,
+                              void (*)(int, double),
+                              double>::value,
+              "fail");
 
 struct rank_test {
     template <typename T>

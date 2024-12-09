@@ -544,8 +544,10 @@ struct optional_operators_base {
     template <typename T, typename U>
     friend constexpr auto tag_invoke(bsoncxx::detail::equal_to,
                                      const optional<T>& left,
-                                     const U& right) noexcept -> bsoncxx::detail::
-        requires_t<bool, not_an_optional<U>, bsoncxx::detail::is_equality_comparable<T, U>> {
+                                     const U& right) noexcept
+        -> bsoncxx::detail::requires_t<bool,
+                                       not_an_optional<U>,
+                                       bsoncxx::detail::is_equality_comparable<T, U>> {
         BSONCXX_PUSH_WARNINGS();
         BSONCXX_DISABLE_WARNING(GNU("-Wfloat-equal"));
         return left.has_value() && *left == right;

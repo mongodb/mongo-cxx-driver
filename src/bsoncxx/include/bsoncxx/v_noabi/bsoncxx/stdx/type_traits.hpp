@@ -381,9 +381,11 @@ static constexpr struct invoke_fn {
     // @cond DOXYGEN_DISABLE "Found ';' while parsing initializer list!"
     template <typename F, typename... Args, typename Fd = remove_cvref_t<F>>
     constexpr auto operator()(F&& fn, Args&&... args) const
-        BSONCXX_RETURNS(impl_invoke::invoker<std::is_member_object_pointer<Fd>::value,
-                                             std::is_member_function_pointer<Fd>::value>::
-                            apply(static_cast<F&&>(fn), static_cast<Args&&>(args)...));
+        BSONCXX_RETURNS(impl_invoke::invoker<
+                        std::is_member_object_pointer<Fd>::value,
+                        std::is_member_function_pointer<Fd>::value>::apply(static_cast<F&&>(fn),
+                                                                           static_cast<Args&&>(
+                                                                               args)...));
     // @endcond
 } invoke;
 
