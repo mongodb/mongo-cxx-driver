@@ -98,8 +98,8 @@ class rewrap_many_datakey {
     /// @see
     /// - https://www.mongodb.com/docs/manual/core/csfle/reference/kms-providers/#std-label-csfle-reference-kms-providers-create-and-store
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(
-        const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value>&)
+    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<
+                              bsoncxx::v_noabi::document::view_or_value>&)
     master_key() const;
 
    private:

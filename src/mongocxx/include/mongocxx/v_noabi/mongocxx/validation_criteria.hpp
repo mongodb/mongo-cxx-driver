@@ -51,8 +51,8 @@ class validation_criteria {
     /// @return
     ///   Document representing a validation rule.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(
-        const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value>&)
+    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<
+                              bsoncxx::v_noabi::document::view_or_value>&)
     rule() const;
 
     ///
@@ -134,8 +134,8 @@ class validation_criteria {
     ///
     /// @return Validation criteria, as a document.
     ///
-    MONGOCXX_DEPRECATED MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::document::value)
-        to_document() const;
+    MONGOCXX_DEPRECATED MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::document::value) to_document()
+        const;
 
     MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::document::value) to_document_deprecated() const;
 
@@ -162,11 +162,11 @@ class validation_criteria {
 
 /// @relatesalso mongocxx::v_noabi::validation_criteria
 MONGOCXX_ABI_EXPORT_CDECL(bool)
-operator==(const validation_criteria& lhs, const validation_criteria& rhs);
+operator==(const validation_criteria & lhs, const validation_criteria & rhs);
 
 /// @relatesalso mongocxx::v_noabi::validation_criteria
 MONGOCXX_ABI_EXPORT_CDECL(bool)
-operator!=(const validation_criteria& lhs, const validation_criteria& rhs);
+operator!=(const validation_criteria & lhs, const validation_criteria & rhs);
 /// @}
 ///
 

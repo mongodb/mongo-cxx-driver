@@ -25,4 +25,7 @@ dev = [
     # etc/patch-apidocs-index-pages.py
     "beautifulsoup4>=4.12",
     "packaging>=14.0",
+
+    # etc/clang-format-all.sh
+    "clang-format~=19.1"
 ]

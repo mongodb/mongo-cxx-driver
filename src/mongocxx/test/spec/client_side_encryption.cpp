@@ -275,9 +275,8 @@ void run_encryption_tests_in_file(const std::string& test_path) {
                     UNSCOPED_INFO("collection contents before:\n" << contents);
                 }
 
-                run_operation_check_result(op.get_document().value, [&]() {
-                    return operation_runner{&db, &test_coll};
-                });
+                run_operation_check_result(op.get_document().value,
+                                           [&]() { return operation_runner{&db, &test_coll}; });
 
                 if (check_results_logging) {
                     std::string contents;

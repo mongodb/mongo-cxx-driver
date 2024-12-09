@@ -228,8 +228,8 @@ class basic_string_view : bsoncxx::detail::equality_operators, bsoncxx::detail::
         return substr(pos1, count1).compare(basic_string_view(str, count2));
     }
 
-    bsoncxx_cxx14_constexpr size_type find(basic_string_view infix, size_type pos = 0) const
-        noexcept {
+    bsoncxx_cxx14_constexpr size_type find(basic_string_view infix,
+                                           size_type pos = 0) const noexcept {
         if (pos > size()) {
             return npos;
         }
@@ -245,8 +245,8 @@ class basic_string_view : bsoncxx::detail::equality_operators, bsoncxx::detail::
         return static_cast<size_type>(found - begin());
     }
 
-    bsoncxx_cxx14_constexpr size_type rfind(basic_string_view infix, size_type pos = npos) const
-        noexcept {
+    bsoncxx_cxx14_constexpr size_type rfind(basic_string_view infix,
+                                            size_type pos = npos) const noexcept {
         // Calc the endpos where searching should begin, which includes the infix size.
         const size_type substr_size = pos != npos ? pos + infix.size() : pos;
         if (infix.empty()) {
@@ -272,8 +272,8 @@ class basic_string_view : bsoncxx::detail::equality_operators, bsoncxx::detail::
         return _find_if(pos, [&](value_type chr) { return set.find(chr) == npos; });
     }
 
-    constexpr size_type find_last_not_of(basic_string_view set, size_type pos = npos) const
-        noexcept {
+    constexpr size_type find_last_not_of(basic_string_view set,
+                                         size_type pos = npos) const noexcept {
         return _rfind_if(pos, [&](value_type chr) { return set.find(chr) == npos; });
     }
 

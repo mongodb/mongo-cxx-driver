@@ -480,7 +480,7 @@ TEST_CASE("Database integration tests", "[database]") {
         }
 
         auto names = db.list_collection_names();
-        for (auto const& name : names) {
+        for (const auto& name : names) {
             REQUIRE(expected_colls.erase(name) == 1);
         }
 

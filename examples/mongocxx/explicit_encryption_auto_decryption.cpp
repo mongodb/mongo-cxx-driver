@@ -73,9 +73,7 @@ int EXAMPLES_CDECL main() {
 
     options::client client_opts{};
     client_opts.auto_encryption_opts(std::move(auto_encrypt_opts));
-    class client client_encrypted {
-        uri{}, std::move(client_opts)
-    };
+    class client client_encrypted{uri{}, std::move(client_opts)};
 
     auto coll = client_encrypted["test"]["coll"];
 
@@ -96,9 +94,7 @@ int EXAMPLES_CDECL main() {
     index_options.partial_filter_expression(expression.view());
     key_vault.create_index(make_document(kvp("keyAltNames", 1)), index_options);
 
-    class client unencrypted_client {
-        uri {}
-    };
+    class client unencrypted_client{uri{}};
 
     // Set up our client_encryption
     options::client_encryption client_encryption_opts{};

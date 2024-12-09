@@ -19,6 +19,7 @@
 #include <vector>
 
 #include <bsoncxx/string/to_string.hpp>
+
 #include <mongocxx/client.hpp>
 #include <mongocxx/gridfs/bucket.hpp>
 #include <mongocxx/instance.hpp>

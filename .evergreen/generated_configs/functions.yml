@@ -302,6 +302,14 @@ functions:
       args:
         - -c
         - git clone --depth 1 https://github.com/mongodb/mongo-c-driver mongoc
+  install-uv:
+    command: subprocess.exec
+    type: setup
+    params:
+      binary: bash
+      args:
+        - -c
+        - curl -LsSf https://astral.sh/uv/install.sh | sh
   install_c_driver:
     - command: expansions.update
       type: setup
@@ -322,9 +330,11 @@ functions:
     params:
       binary: bash
       working_dir: mongo-cxx-driver
+      env:
+        DRYRUN: "1"
       args:
         - -c
-        - python etc/clang_format.py lint
+        - PATH="$HOME/.local/bin:$PATH" uv run --frozen etc/clang-format-all.sh
   run scan build:
     - command: subprocess.exec
       type: test

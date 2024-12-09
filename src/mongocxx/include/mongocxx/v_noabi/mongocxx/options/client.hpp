@@ -73,7 +73,7 @@ class client {
     /// @deprecated Please use tls_opts instead.
     ///
     MONGOCXX_DEPRECATED MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<tls>&)
-        ssl_opts() const;
+    ssl_opts() const;
 
     ///
     /// The current TLS-related options.

@@ -154,7 +154,7 @@ int EXAMPLES_CDECL main() {
     const mongocxx::instance inst{};
 
     const mongocxx::client conn{mongocxx::uri{}};
-    auto const db = conn["documentation_examples"];
+    const auto db = conn["documentation_examples"];
 
     // SERVER-79306: Ensure the database exists for consistent behavior with sharded clusters.
     conn["documentation_examples"].create_collection("dummy");
