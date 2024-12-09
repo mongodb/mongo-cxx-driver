@@ -282,7 +282,7 @@ dev = [
     { name = "packaging", specifier = ">=14.0" },
     { name = "pydantic", specifier = ">=2.7" },
     { name = "pygithub", specifier = ">=2.0" },
-    { name = "shrub-py", specifier = ">=3.4.0" },
+    { name = "shrub-py", specifier = ">=3.6.0" },
 ]
 
 [[package]]
@@ -537,7 +537,7 @@ wheels = [
 
 [[package]]
 name = "shrub-py"
-version = "3.5.0"
+version = "3.6.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "croniter" },
@@ -545,9 +545,9 @@ dependencies = [
     { name = "pyyaml" },
     { name = "typing-extensions" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/c2/3b/17fae4e0ed7a858ccb5cee4e9c5bc8186737787e55f2ec67bd9afb1550ed/shrub_py-3.5.0.tar.gz", hash = "sha256:6081f283848f140cb203fc944c8de3dd883077b689437511aeed03119422936c", size = 33596 }
+sdist = { url = "https://files.pythonhosted.org/packages/fb/be/1ac80b36382c6bccebd3e00ce7cf811ca6b01fb6d5b3c4dcbd877962526e/shrub_py-3.6.0.tar.gz", hash = "sha256:35bdb700b3a9b742f8b7b6447cf86134ffbf66b154679cda4b1520123aec024e", size = 33574 }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/ee/80/6a8fc118c6e6129ddbe7687a19383ec7efd63c3cf47ad74ef68a151ae4cf/shrub_py-3.5.0-py3-none-any.whl", hash = "sha256:57e83733108f20f36d2e55299976a21ebf6c4abd02cb911a2561addfd09bb51c", size = 40044 },
+    { url = "https://files.pythonhosted.org/packages/1e/7b/1caf1c1c8d88c548d044942fc6d02dcd5e3d63bbf0a86d1a493d6b4f3745/shrub_py-3.6.0-py3-none-any.whl", hash = "sha256:bd9bb5fbb2d644915cd20d5563130ad0a5a7c110f2d3b6bea9dfdf5b28b3dda4", size = 40054 },
 ]
 
 [[package]]
