@@ -114,28 +114,27 @@ struct not_an_optional : decltype(not_an_optional_f(std::declval<const T&>())){}
 
 template <typename T, typename Ucvr, typename U>
 struct enable_opt_conversion
-    : bsoncxx::detail::conjunction<  //
+    : bsoncxx::detail::conjunction<
           std::is_constructible<T, Ucvr>,
-          bsoncxx::detail::disjunction<  //
-              std::is_same<T, bool>,
-              bsoncxx::detail::negation<
-                  bsoncxx::detail::conjunction<std::is_constructible<T, optional<U>&>,
-                                               std::is_constructible<T, const optional<U>&>,
-                                               std::is_constructible<T, optional<U>&&>,
-                                               std::is_constructible<T, const optional<U>&&>,
-                                               std::is_convertible<optional<U>&, T>,
-                                               std::is_convertible<const optional<U>&, T>,
-                                               std::is_convertible<optional<U>&&, T>,
-                                               std::is_convertible<const optional<U>&&, T>>>>> {};
+          bsoncxx::detail::disjunction<std::is_same<T, bool>,
+                                       bsoncxx::detail::negation<bsoncxx::detail::conjunction<
+                                           std::is_constructible<T, optional<U>&>,
+                                           std::is_constructible<T, const optional<U>&>,
+                                           std::is_constructible<T, optional<U>&&>,
+                                           std::is_constructible<T, const optional<U>&&>,
+                                           std::is_convertible<optional<U>&, T>,
+                                           std::is_convertible<const optional<U>&, T>,
+                                           std::is_convertible<optional<U>&&, T>,
+                                           std::is_convertible<const optional<U>&&, T>>>>> {};
 
 template <typename From, typename To>
-struct enable_opt_value_conversion   //
-    : bsoncxx::detail::conjunction<  //
+struct enable_opt_value_conversion  //
+    : bsoncxx::detail::conjunction<
           std::is_constructible<To, From&&>,
           bsoncxx::detail::negation<bsoncxx::detail::is_alike<From, in_place_t>>,
           bsoncxx::detail::negation<bsoncxx::detail::is_alike<From, optional<To>>>,
           bsoncxx::detail::disjunction<
-              bsoncxx::detail::negation<bsoncxx::detail::is_alike<To, bool>>,  //
+              bsoncxx::detail::negation<bsoncxx::detail::is_alike<To, bool>>,
               detail::not_an_optional<bsoncxx::detail::remove_cvref_t<From>>>> {};
 
 }  // namespace detail
@@ -757,8 +756,7 @@ struct optional_hash<T, true> {
     using Td = bsoncxx::detail::remove_const_t<T>;
     constexpr std::size_t operator()(const optional<T>& opt) const
         noexcept(noexcept(std::hash<Td>()(std::declval<const Td&>()))) {
-        return opt.has_value() ? std::hash<Td>()(*opt)  //
-                               : std::hash<void*>()(nullptr);
+        return opt.has_value() ? std::hash<Td>()(*opt) : std::hash<void*>()(nullptr);
     }
 };
 
