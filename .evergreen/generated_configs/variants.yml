@@ -30,10 +30,6 @@ buildvariants:
       - name: .clang-tidy
   - name: compile-only-matrix
     display_name: compile-only-matrix
-    display_tasks:
-      - name: compile-only-matrix
-        execution_tasks:
-          - .compile-only
     tasks:
       - name: .compile-only .rhel81-power8
         batchtime: 1440

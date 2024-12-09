@@ -114,11 +114,5 @@ def variants():
             name=f'{TAG}-matrix',
             display_name=f'{TAG}-matrix',
             tasks=tasks,
-            display_tasks=[
-                DisplayTask(
-                    name=f'{TAG}-matrix',
-                    execution_tasks=[f'.{TAG}'],
-                )
-            ],
         ),
     ]
