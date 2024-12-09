@@ -149,8 +149,8 @@ struct vc140_detection<Dflt, void_t<Oper<Args...>>, Oper, Args...> {
 // The type yielded by detected_t if the given type operator does not yield a type.
 struct nonesuch {
     ~nonesuch() = delete;
-    nonesuch(nonesuch const&) = delete;
-    void operator=(nonesuch const&) = delete;
+    nonesuch(const nonesuch&) = delete;
+    void operator=(const nonesuch&) = delete;
 };
 
 // Results in true_type if the given metafunction yields a valid type when applied to the given

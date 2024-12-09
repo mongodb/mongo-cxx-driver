@@ -144,7 +144,7 @@ struct compare_three_way {
               typename R,
               typename = decltype(std::declval<L>() < std::declval<R>()),
               typename = decltype(std::declval<L>() == std::declval<R>())>
-    constexpr static strong_ordering impl(L const& l, R const& r, rank<1>) {
+    constexpr static strong_ordering impl(const L& l, const R& r, rank<1>) {
         return (l < r) ? strong_ordering::less
                        : (l == r ? strong_ordering::equal  //
                                  : strong_ordering::greater);
@@ -155,12 +155,12 @@ struct compare_three_way {
               typename R,
               typename = decltype(tag_invoke(
                   std::declval<compare_three_way>(), std::declval<L>(), std::declval<R>()))>
-    constexpr static strong_ordering impl(L const& l, R const& r, rank<2>) {
+    constexpr static strong_ordering impl(const L& l, const R& r, rank<2>) {
         return tag_invoke(compare_three_way{}, l, r);
     }
 
     template <typename L, typename R>
-    constexpr auto operator()(L const& l, R const& r) const
+    constexpr auto operator()(const L& l, const R& r) const
         BSONCXX_RETURNS((impl)(l, r, rank<2>{}));
 };
 
