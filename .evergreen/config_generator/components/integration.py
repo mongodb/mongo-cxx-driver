@@ -8,7 +8,6 @@ from config_generator.components.funcs.start_mongod import StartMongod
 from config_generator.components.funcs.test import Test
 
 from config_generator.etc.distros import compiler_to_vars, find_large_distro, make_distro_str
-from config_generator.etc.utils import TaskRef
 
 from shrub.v3.evg_build_variant import BuildVariant, DisplayTask
 from shrub.v3.evg_command import KeyValueParam, expansions_update
@@ -209,8 +208,8 @@ def variants():
 
     # PowerPC and zSeries are limited resources.
     tasks = [
-        TaskRef(name=f'.{TAG} .rhel81-power8', batchtime=one_day),
-        TaskRef(name=f'.{TAG} .rhel83-zseries', batchtime=one_day),
+        EvgTaskRef(name=f'.{TAG} .rhel81-power8', batchtime=one_day),
+        EvgTaskRef(name=f'.{TAG} .rhel83-zseries', batchtime=one_day),
         EvgTaskRef(name=f'.{TAG} !.rhel81-power8 !.rhel83-zseries'),
     ]
 

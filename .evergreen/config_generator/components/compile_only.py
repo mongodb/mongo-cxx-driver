@@ -3,7 +3,6 @@ from config_generator.components.funcs.fetch_c_driver_source import FetchCDriver
 from config_generator.components.funcs.setup import Setup
 
 from config_generator.etc.distros import find_large_distro, make_distro_str
-from config_generator.etc.utils import TaskRef
 
 from shrub.v3.evg_build_variant import BuildVariant, DisplayTask
 from shrub.v3.evg_task import EvgTask, EvgTaskRef
@@ -105,8 +104,8 @@ def variants():
 
     # PowerPC and zSeries are limited resources.
     tasks = [
-        TaskRef(name=f'.{TAG} .rhel81-power8', batchtime=one_day),
-        TaskRef(name=f'.{TAG} .rhel83-zseries', batchtime=one_day),
+        EvgTaskRef(name=f'.{TAG} .rhel81-power8', batchtime=one_day),
+        EvgTaskRef(name=f'.{TAG} .rhel83-zseries', batchtime=one_day),
         EvgTaskRef(name=f'.{TAG} !.rhel81-power8 !.rhel83-zseries'),
     ]
 
