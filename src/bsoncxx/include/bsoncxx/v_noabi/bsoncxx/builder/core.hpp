@@ -56,7 +56,7 @@ class core {
     explicit BSONCXX_ABI_EXPORT_CDECL() core(bool is_array);
 
     BSONCXX_ABI_EXPORT_CDECL() core(core&& rhs) noexcept;
-    BSONCXX_ABI_EXPORT_CDECL(core&) operator=(core && rhs) noexcept;
+    BSONCXX_ABI_EXPORT_CDECL(core&) operator=(core&& rhs) noexcept;
 
     BSONCXX_ABI_EXPORT_CDECL() ~core();
 

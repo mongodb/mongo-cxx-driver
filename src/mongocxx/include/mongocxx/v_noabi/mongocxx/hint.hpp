@@ -105,13 +105,13 @@ class hint {
 /// @{
 
 /// @relatesalso mongocxx::v_noabi::hint
-MONGOCXX_ABI_EXPORT_CDECL(bool) operator==(std::string index, const hint & index_hint);
+MONGOCXX_ABI_EXPORT_CDECL(bool) operator==(std::string index, const hint& index_hint);
 
 /// @relatesalso mongocxx::v_noabi::hint
-MONGOCXX_ABI_EXPORT_CDECL(bool) operator!=(const hint & index_hint, std::string index);
+MONGOCXX_ABI_EXPORT_CDECL(bool) operator!=(const hint& index_hint, std::string index);
 
 /// @relatesalso mongocxx::v_noabi::hint
-MONGOCXX_ABI_EXPORT_CDECL(bool) operator!=(std::string index, const hint & index_index);
+MONGOCXX_ABI_EXPORT_CDECL(bool) operator!=(std::string index, const hint& index_index);
 
 /// @}
 ///

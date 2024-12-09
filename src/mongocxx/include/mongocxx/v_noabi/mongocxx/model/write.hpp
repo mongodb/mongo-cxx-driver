@@ -77,7 +77,7 @@ class write {
     ///
     /// Move assigns a write.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(write&) operator=(write && rhs) noexcept;
+    MONGOCXX_ABI_EXPORT_CDECL(write&) operator=(write&& rhs) noexcept;
 
     write(const write& rhs) = delete;
     write& operator=(const write& rhs) = delete;

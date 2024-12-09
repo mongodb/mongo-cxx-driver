@@ -119,7 +119,9 @@ class strong_ordering {
 
 #pragma push_macro("INLINE_VAR")
 #undef INLINE_VAR
-#define INLINE_VAR BSONCXX_IF_GNU_LIKE([[gnu::weak]]) BSONCXX_IF_MSVC(__declspec(selectany))
+#define INLINE_VAR                     \
+    BSONCXX_IF_GNU_LIKE([[gnu::weak]]) \
+    BSONCXX_IF_MSVC(__declspec(selectany))
 
 INLINE_VAR const strong_ordering strong_ordering::less =
     strong_ordering(strong_ordering::_construct{}, -1);

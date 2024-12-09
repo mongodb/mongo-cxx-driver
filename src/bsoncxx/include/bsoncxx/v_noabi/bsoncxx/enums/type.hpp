@@ -16,27 +16,29 @@
 #error "This header is only meant to be included as an X-macro over BSONCXX_ENUM"
 #endif
 
-BSONCXX_ENUM(double, 0x01)
-BSONCXX_ENUM(string, 0x02)
-BSONCXX_ENUM(document, 0x03)
-BSONCXX_ENUM(array, 0x04)
-BSONCXX_ENUM(binary, 0x05)
-BSONCXX_ENUM(undefined, 0x06)
-BSONCXX_ENUM(oid, 0x07)
-BSONCXX_ENUM(bool, 0x08)
-BSONCXX_ENUM(date, 0x09)
-BSONCXX_ENUM(null, 0x0A)
-BSONCXX_ENUM(regex, 0x0B)
-BSONCXX_ENUM(dbpointer, 0x0C)
-BSONCXX_ENUM(code, 0x0D)
-BSONCXX_ENUM(symbol, 0x0E)
+// clang-format off
+BSONCXX_ENUM(double,     0x01)
+BSONCXX_ENUM(string,     0x02)
+BSONCXX_ENUM(document,   0x03)
+BSONCXX_ENUM(array,      0x04)
+BSONCXX_ENUM(binary,     0x05)
+BSONCXX_ENUM(undefined,  0x06)
+BSONCXX_ENUM(oid,        0x07)
+BSONCXX_ENUM(bool,       0x08)
+BSONCXX_ENUM(date,       0x09)
+BSONCXX_ENUM(null,       0x0A)
+BSONCXX_ENUM(regex,      0x0B)
+BSONCXX_ENUM(dbpointer,  0x0C)
+BSONCXX_ENUM(code,       0x0D)
+BSONCXX_ENUM(symbol,     0x0E)
 BSONCXX_ENUM(codewscope, 0x0F)
-BSONCXX_ENUM(int32, 0x10)
-BSONCXX_ENUM(timestamp, 0x11)
-BSONCXX_ENUM(int64, 0x12)
+BSONCXX_ENUM(int32,      0x10)
+BSONCXX_ENUM(timestamp,  0x11)
+BSONCXX_ENUM(int64,      0x12)
 BSONCXX_ENUM(decimal128, 0x13)
-BSONCXX_ENUM(maxkey, 0x7F)
-BSONCXX_ENUM(minkey, 0xFF)
+BSONCXX_ENUM(maxkey,     0x7F)
+BSONCXX_ENUM(minkey,     0xFF)
+// clang-format on
 
 ///
 /// @file

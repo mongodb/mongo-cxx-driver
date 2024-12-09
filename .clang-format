@@ -77,7 +77,18 @@ AllowShortLambdasOnASingleLine: All
 AllowShortLoopsOnASingleLine: false
 AlwaysBreakAfterDefinitionReturnType: None
 AlwaysBreakBeforeMultilineStrings: true
-AttributeMacros: []
+AttributeMacros:
+  - BSONCXX_ABI_CDECL
+  - BSONCXX_ABI_EXPORT
+  - BSONCXX_ABI_NO_EXPORT
+  - BSONCXX_DEPRECATED
+  - BSONCXX_ENUM
+  - BSONCXX_PRAGMA
+  - BSONCXX_RETURNS
+  - MONGOCXX_ABI_CDECL
+  - MONGOCXX_ABI_EXPORT
+  - MONGOCXX_ABI_NO_EXPORT
+  - MONGOCXX_DEPRECATED
 BinPackArguments: false
 BinPackParameters: false
 BitFieldColonSpacing: Both
@@ -262,9 +273,26 @@ SpacesInParensOptions:
 SpacesInSquareBrackets: false
 Standard:        Cpp11
 StatementAttributeLikeMacros: []
-StatementMacros: []
+StatementMacros:
+  - BSONCXX_DISABLE_WARNING
+  - BSONCXX_FORCE_SEMICOLON
+  - BSONCXX_IF_CLANG
+  - BSONCXX_IF_GCC
+  - BSONCXX_IF_GNU_LIKE
+  - BSONCXX_IF_MSVC
+  - BSONCXX_POP_WARNINGS
+  - BSONCXX_PUSH_WARNINGS
+  - BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_BEGIN
+  - BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_END
 TableGenBreakInsideDAGArg: DontBreak
 TabWidth:        8
+TypenameMacros:
+  - BSONCXX_ABI_EXPORT_CDECL
+  - BSONCXX_ABI_EXPORT_CDECL_TESTING
+  - BSONCXX_ABI_EXPORT_TESTING
+  - MONGOCXX_ABI_EXPORT_CDECL
+  - MONGOCXX_ABI_EXPORT_CDECL_TESTING
+  - MONGOCXX_ABI_EXPORT_TESTING
 UseTab:          Never
 VerilogBreakBetweenInstancePorts: true
 WhitespaceSensitiveMacros: []

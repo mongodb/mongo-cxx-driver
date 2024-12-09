@@ -194,8 +194,8 @@ class index {
     ///
     /// @return The current name.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(
-        const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value>&)
+    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<
+                              bsoncxx::v_noabi::string::view_or_value>&)
     name() const;
 
     ///
@@ -222,8 +222,8 @@ class index {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/collation/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(
-        const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view>&)
+    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<
+                              bsoncxx::v_noabi::document::view>&)
     collation() const;
 
     ///
@@ -335,8 +335,8 @@ class index {
     ///
     /// @return The current weights.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(
-        const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view>&)
+    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<
+                              bsoncxx::v_noabi::document::view>&)
     weights() const;
 
     ///
@@ -358,8 +358,8 @@ class index {
     ///
     /// @return The current default_language.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(
-        const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value>&)
+    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<
+                              bsoncxx::v_noabi::string::view_or_value>&)
     default_language() const;
 
     ///
@@ -381,8 +381,8 @@ class index {
     ///
     /// @return The name of the field that contains the override language for text indexes.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(
-        const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value>&)
+    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<
+                              bsoncxx::v_noabi::string::view_or_value>&)
     language_override() const;
 
     ///
@@ -403,8 +403,8 @@ class index {
     ///
     /// @return The current partial_filter_expression.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(
-        const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view>&)
+    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<
+                              bsoncxx::v_noabi::document::view>&)
     partial_filter_expression() const;
 
     ///
@@ -505,8 +505,8 @@ class index {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    MONGOCXX_DEPRECATED MONGOCXX_ABI_EXPORT_CDECL(index&)
-        haystack_bucket_size(double haystack_bucket_size);
+    MONGOCXX_DEPRECATED MONGOCXX_ABI_EXPORT_CDECL(index&) haystack_bucket_size(
+        double haystack_bucket_size);
     MONGOCXX_ABI_EXPORT_CDECL(index&) haystack_bucket_size_deprecated(double haystack_bucket_size);
 
     ///
@@ -518,7 +518,7 @@ class index {
     ///   This method is deprecated.
     ///
     MONGOCXX_DEPRECATED MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<double>&)
-        haystack_bucket_size() const;
+    haystack_bucket_size() const;
     MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<double>&)
     haystack_bucket_size_deprecated() const;
 

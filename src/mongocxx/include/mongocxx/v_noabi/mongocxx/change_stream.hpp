@@ -45,7 +45,7 @@ class change_stream {
     ///
     /// Move assigns a change_stream.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(change_stream&) operator=(change_stream && other) noexcept;
+    MONGOCXX_ABI_EXPORT_CDECL(change_stream&) operator=(change_stream&& other) noexcept;
 
     ///
     /// Destroys a change_stream.
