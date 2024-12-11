@@ -81,8 +81,8 @@ class server_api {
     /// @return
     ///   The enum value of the given string.
     ///
-    static MONGOCXX_ABI_EXPORT_CDECL(version)
-        version_from_string(bsoncxx::v_noabi::stdx::string_view version);
+    static MONGOCXX_ABI_EXPORT_CDECL(version) version_from_string(
+        bsoncxx::v_noabi::stdx::string_view version);
 
     ///
     /// Sets the strict option, specifying whether the server should return

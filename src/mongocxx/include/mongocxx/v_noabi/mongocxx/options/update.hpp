@@ -85,8 +85,8 @@ class update {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/collation/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(
-        const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value>&)
+    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<
+                              bsoncxx::v_noabi::document::view_or_value>&)
     collation() const;
 
     ///
@@ -130,8 +130,8 @@ class update {
     /// @return
     ///  The current let option.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(
-        const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value>)
+    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<
+                              bsoncxx::v_noabi::document::view_or_value>)
     let() const;
 
     ///
@@ -153,8 +153,8 @@ class update {
     /// @return
     ///  The current comment option.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(
-        const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value>)
+    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<
+                              bsoncxx::v_noabi::types::bson_value::view_or_value>)
     comment() const;
 
     ///
@@ -206,8 +206,8 @@ class update {
     /// @see
     /// - https://www.mongodb.com/docs/manual/core/write-concern/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(
-        const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern>&)
+    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<
+                              mongocxx::v_noabi::write_concern>&)
     write_concern() const;
 
     ///
@@ -235,8 +235,8 @@ class update {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/update/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(
-        const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::array::view_or_value>&)
+    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<
+                              bsoncxx::v_noabi::array::view_or_value>&)
     array_filters() const;
 
    private:

@@ -65,8 +65,8 @@ class apm {
     ///
     /// @return The command started monitoring callback.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(
-        const std::function<void MONGOCXX_ABI_CDECL(const events::command_started_event&)>&)
+    MONGOCXX_ABI_EXPORT_CDECL(const std::function<
+                              void MONGOCXX_ABI_CDECL(const events::command_started_event&)>&)
     command_started() const;
 
     ///
@@ -92,8 +92,8 @@ class apm {
     ///
     /// @return The command failed monitoring callback.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(
-        const std::function<void MONGOCXX_ABI_CDECL(const events::command_failed_event&)>&)
+    MONGOCXX_ABI_EXPORT_CDECL(const std::function<
+                              void MONGOCXX_ABI_CDECL(const events::command_failed_event&)>&)
     command_failed() const;
 
     ///
@@ -120,8 +120,8 @@ class apm {
     ///
     /// @return The command succeeded monitoring callback.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(
-        const std::function<void MONGOCXX_ABI_CDECL(const events::command_succeeded_event&)>&)
+    MONGOCXX_ABI_EXPORT_CDECL(const std::function<
+                              void MONGOCXX_ABI_CDECL(const events::command_succeeded_event&)>&)
     command_succeeded() const;
 
     ///
@@ -147,8 +147,8 @@ class apm {
     ///
     /// @return The server opening monitoring callback.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(
-        const std::function<void MONGOCXX_ABI_CDECL(const events::server_opening_event&)>&)
+    MONGOCXX_ABI_EXPORT_CDECL(const std::function<
+                              void MONGOCXX_ABI_CDECL(const events::server_opening_event&)>&)
     server_opening() const;
 
     ///
@@ -174,8 +174,8 @@ class apm {
     ///
     /// @return The server closed monitoring callback.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(
-        const std::function<void MONGOCXX_ABI_CDECL(const events::server_closed_event&)>&)
+    MONGOCXX_ABI_EXPORT_CDECL(const std::function<
+                              void MONGOCXX_ABI_CDECL(const events::server_closed_event&)>&)
     server_closed() const;
 
     ///
@@ -202,8 +202,8 @@ class apm {
     ///
     /// @return The server description changed monitoring callback.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(
-        const std::function<void MONGOCXX_ABI_CDECL(const events::server_changed_event&)>&)
+    MONGOCXX_ABI_EXPORT_CDECL(const std::function<
+                              void MONGOCXX_ABI_CDECL(const events::server_changed_event&)>&)
     server_changed() const;
 
     ///
@@ -230,8 +230,8 @@ class apm {
     ///
     /// @return The topology_opening monitoring callback.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(
-        const std::function<void MONGOCXX_ABI_CDECL(const events::topology_opening_event&)>&)
+    MONGOCXX_ABI_EXPORT_CDECL(const std::function<
+                              void MONGOCXX_ABI_CDECL(const events::topology_opening_event&)>&)
     topology_opening() const;
 
     ///
@@ -257,8 +257,8 @@ class apm {
     ///
     /// @return The topology closed monitoring callback.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(
-        const std::function<void MONGOCXX_ABI_CDECL(const events::topology_closed_event&)>&)
+    MONGOCXX_ABI_EXPORT_CDECL(const std::function<
+                              void MONGOCXX_ABI_CDECL(const events::topology_closed_event&)>&)
     topology_closed() const;
 
     ///
@@ -286,8 +286,8 @@ class apm {
     ///
     /// @return The topology description changed monitoring callback.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(
-        const std::function<void MONGOCXX_ABI_CDECL(const events::topology_changed_event&)>&)
+    MONGOCXX_ABI_EXPORT_CDECL(const std::function<
+                              void MONGOCXX_ABI_CDECL(const events::topology_changed_event&)>&)
     topology_changed() const;
 
     ///
@@ -314,8 +314,8 @@ class apm {
     ///
     /// @return The heartbeat started monitoring callback.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(
-        const std::function<void MONGOCXX_ABI_CDECL(const events::heartbeat_started_event&)>&)
+    MONGOCXX_ABI_EXPORT_CDECL(const std::function<
+                              void MONGOCXX_ABI_CDECL(const events::heartbeat_started_event&)>&)
     heartbeat_started() const;
 
     ///
@@ -342,8 +342,8 @@ class apm {
     ///
     /// @return The heartbeat failed monitoring callback.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(
-        const std::function<void MONGOCXX_ABI_CDECL(const events::heartbeat_failed_event&)>&)
+    MONGOCXX_ABI_EXPORT_CDECL(const std::function<
+                              void MONGOCXX_ABI_CDECL(const events::heartbeat_failed_event&)>&)
     heartbeat_failed() const;
 
     ///
@@ -371,8 +371,8 @@ class apm {
     ///
     /// @return The heartbeat succeeded monitoring callback.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(
-        const std::function<void MONGOCXX_ABI_CDECL(const events::heartbeat_succeeded_event&)>&)
+    MONGOCXX_ABI_EXPORT_CDECL(const std::function<
+                              void MONGOCXX_ABI_CDECL(const events::heartbeat_succeeded_event&)>&)
     heartbeat_succeeded() const;
 
    private:

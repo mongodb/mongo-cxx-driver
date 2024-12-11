@@ -145,8 +145,8 @@ class find {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/find/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(
-        const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value>&)
+    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<
+                              bsoncxx::v_noabi::document::view_or_value>&)
     collation() const;
 
     ///
@@ -177,8 +177,8 @@ class find {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/find/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(
-        const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value>&)
+    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<
+                              bsoncxx::v_noabi::string::view_or_value>&)
     comment() const;
 
     ///
@@ -260,8 +260,8 @@ class find {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/find/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(
-        const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value>)
+    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<
+                              bsoncxx::v_noabi::document::view_or_value>)
     let() const;
 
     ///
@@ -293,8 +293,8 @@ class find {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/find/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(
-        const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value>&)
+    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<
+                              bsoncxx::v_noabi::types::bson_value::view_or_value>&)
     comment_option() const;
 
     ///
@@ -344,8 +344,8 @@ class find {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/find/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(
-        const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value>&)
+    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<
+                              bsoncxx::v_noabi::document::view_or_value>&)
     max() const;
 
     ///
@@ -429,8 +429,8 @@ class find {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/find/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(
-        const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value>&)
+    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<
+                              bsoncxx::v_noabi::document::view_or_value>&)
     min() const;
 
     ///
@@ -484,8 +484,8 @@ class find {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/find/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(
-        const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value>&)
+    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<
+                              bsoncxx::v_noabi::document::view_or_value>&)
     projection() const;
 
     ///
@@ -512,8 +512,8 @@ class find {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/find/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(
-        const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::read_preference>&)
+    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<
+                              mongocxx::v_noabi::read_preference>&)
     read_preference() const;
 
     ///
@@ -622,8 +622,8 @@ class find {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/find/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(
-        const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value>&)
+    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<
+                              bsoncxx::v_noabi::document::view_or_value>&)
     sort() const;
 
    private:

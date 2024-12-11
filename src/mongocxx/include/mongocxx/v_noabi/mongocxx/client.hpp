@@ -123,8 +123,8 @@ class client {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/read-concern/
     ///
-    MONGOCXX_DEPRECATED MONGOCXX_ABI_EXPORT_CDECL(void)
-        read_concern(mongocxx::v_noabi::read_concern rc);
+    MONGOCXX_DEPRECATED MONGOCXX_ABI_EXPORT_CDECL(void) read_concern(
+        mongocxx::v_noabi::read_concern rc);
 
     MONGOCXX_ABI_EXPORT_CDECL(void) read_concern_deprecated(mongocxx::v_noabi::read_concern rc);
 
@@ -152,8 +152,8 @@ class client {
     /// @see
     /// - https://www.mongodb.com/docs/manual/core/read-preference/
     ///
-    MONGOCXX_DEPRECATED MONGOCXX_ABI_EXPORT_CDECL(void)
-        read_preference(mongocxx::v_noabi::read_preference rp);
+    MONGOCXX_DEPRECATED MONGOCXX_ABI_EXPORT_CDECL(void) read_preference(
+        mongocxx::v_noabi::read_preference rp);
 
     MONGOCXX_ABI_EXPORT_CDECL(void)
     read_preference_deprecated(mongocxx::v_noabi::read_preference rp);
@@ -189,8 +189,8 @@ class client {
     /// @param wc
     ///   The new write concern
     ///
-    MONGOCXX_DEPRECATED MONGOCXX_ABI_EXPORT_CDECL(void)
-        write_concern(mongocxx::v_noabi::write_concern wc);
+    MONGOCXX_DEPRECATED MONGOCXX_ABI_EXPORT_CDECL(void) write_concern(
+        mongocxx::v_noabi::write_concern wc);
 
     MONGOCXX_ABI_EXPORT_CDECL(void) write_concern_deprecated(mongocxx::v_noabi::write_concern wc);
 

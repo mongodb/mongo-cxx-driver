@@ -14,9 +14,10 @@
 
 #pragma once
 
+#include "../microbench.hpp"
+
 #include <iostream>
 
-#include "../microbench.hpp"
 #include <bsoncxx/json.hpp>
 #include <bsoncxx/types.hpp>
 

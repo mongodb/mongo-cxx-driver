@@ -45,8 +45,8 @@ class range {
 
     /// @brief Gets `RangeOpts.min`.
     /// @note Required if @ref precision is set.
-    MONGOCXX_ABI_EXPORT_CDECL(
-        const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value>&)
+    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<
+                              bsoncxx::v_noabi::types::bson_value::view_or_value>&)
     min() const;
 
     /// @brief Sets `RangeOpts.max`.
@@ -55,8 +55,8 @@ class range {
 
     /// @brief Gets `RangeOpts.max`.
     /// @note Required if @ref precision is set.
-    MONGOCXX_ABI_EXPORT_CDECL(
-        const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value>&)
+    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<
+                              bsoncxx::v_noabi::types::bson_value::view_or_value>&)
     max() const;
 
     /// @brief Sets `RangeOpts.sparsity`.

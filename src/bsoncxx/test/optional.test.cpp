@@ -141,12 +141,12 @@ bool check_convert_alike() {
                              (std::is_convertible<From2, To2>::value));
     STATIC_ASSERT_EXPR_ALIKE((std::is_convertible<From1&, To1>::value),
                              (std::is_convertible<From2&, To2>::value));
-    STATIC_ASSERT_EXPR_ALIKE((std::is_convertible<From1 const&, To1>::value),
-                             (std::is_convertible<From2 const&, To2>::value));
+    STATIC_ASSERT_EXPR_ALIKE((std::is_convertible<const From1&, To1>::value),
+                             (std::is_convertible<const From2&, To2>::value));
     STATIC_ASSERT_EXPR_ALIKE((std::is_convertible<From1&&, To1>::value),
                              (std::is_convertible<From2&&, To2>::value));
-    STATIC_ASSERT_EXPR_ALIKE((std::is_convertible<From1 const&&, To1>::value),
-                             (std::is_convertible<From2 const&&, To2>::value));
+    STATIC_ASSERT_EXPR_ALIKE((std::is_convertible<const From1&&, To1>::value),
+                             (std::is_convertible<const From2&&, To2>::value));
     return true;
 }
 
@@ -156,12 +156,12 @@ bool check_construct_alike() {
                              (std::is_constructible<To2, From2>::value));
     STATIC_ASSERT_EXPR_ALIKE((std::is_constructible<To1, From1&>::value),
                              (std::is_constructible<To2, From2&>::value));
-    STATIC_ASSERT_EXPR_ALIKE((std::is_constructible<To1, From1 const&>::value),
-                             (std::is_constructible<To2, From2 const&>::value));
+    STATIC_ASSERT_EXPR_ALIKE((std::is_constructible<To1, const From1&>::value),
+                             (std::is_constructible<To2, const From2&>::value));
     STATIC_ASSERT_EXPR_ALIKE((std::is_constructible<To1, From1&&>::value),
                              (std::is_constructible<To2, From2&&>::value));
-    STATIC_ASSERT_EXPR_ALIKE((std::is_constructible<To1, From1 const&&>::value),
-                             (std::is_constructible<To2, From2 const&&>::value));
+    STATIC_ASSERT_EXPR_ALIKE((std::is_constructible<To1, const From1&&>::value),
+                             (std::is_constructible<To2, const From2&&>::value));
     return true;
 }
 
@@ -192,18 +192,18 @@ bool static_checks() {
     STATIC_ASSERT_EXPR((std::is_constructible<optional<T>, bsoncxx::stdx::nullopt_t>::value));
     // Assert we return proper reference types
     STATIC_ASSERT_EXPR((std::is_same<deref_t<optional<T>>, T&&>::value));
-    STATIC_ASSERT_EXPR((std::is_same<deref_t<optional<T> const>, const T&&>::value));
-    STATIC_ASSERT_EXPR((std::is_same<deref_t<optional<T> const&>, const T&>::value));
+    STATIC_ASSERT_EXPR((std::is_same<deref_t<const optional<T>>, const T&&>::value));
+    STATIC_ASSERT_EXPR((std::is_same<deref_t<const optional<T>&>, const T&>::value));
     STATIC_ASSERT_EXPR((std::is_same<deref_t<optional<T>&>, T&>::value));
     // .value()
     STATIC_ASSERT_EXPR((std::is_same<value_t<optional<T>>, T&&>::value));
-    STATIC_ASSERT_EXPR((std::is_same<value_t<optional<T> const>, const T&&>::value));
-    STATIC_ASSERT_EXPR((std::is_same<value_t<optional<T> const&>, const T&>::value));
+    STATIC_ASSERT_EXPR((std::is_same<value_t<const optional<T>>, const T&&>::value));
+    STATIC_ASSERT_EXPR((std::is_same<value_t<const optional<T>&>, const T&>::value));
     STATIC_ASSERT_EXPR((std::is_same<value_t<optional<T>&>, T&>::value));
     // operator->
     STATIC_ASSERT_EXPR((std::is_same<arrow_t<optional<T>>, T*>::value));
-    STATIC_ASSERT_EXPR((std::is_same<arrow_t<optional<T> const>, const T*>::value));
-    STATIC_ASSERT_EXPR((std::is_same<arrow_t<optional<T> const&>, const T*>::value));
+    STATIC_ASSERT_EXPR((std::is_same<arrow_t<const optional<T>>, const T*>::value));
+    STATIC_ASSERT_EXPR((std::is_same<arrow_t<const optional<T>&>, const T*>::value));
     STATIC_ASSERT_EXPR((std::is_same<arrow_t<optional<T>&>, T*>::value));
     return check_conversions<T, T>();
 }
@@ -551,7 +551,7 @@ TEST_CASE("Comparisons") {
 }
 
 template <typename T, typename U>
-void check_ordered(T const& lesser, U const& greater, std::string desc) {
+void check_ordered(const T& lesser, const U& greater, std::string desc) {
     CAPTURE(__func__, desc);
     CHECK_VS2017(lesser < greater);
     CHECK_VS2017(greater > lesser);
@@ -564,7 +564,7 @@ void check_ordered(T const& lesser, U const& greater, std::string desc) {
 }
 
 template <typename T, typename U>
-void check_equivalent(T const& a, U const& b, std::string desc) {
+void check_equivalent(const T& a, const U& b, std::string desc) {
     CAPTURE(__func__, desc);
     CHECK_VS2017(a == b);
     CHECK_VS2017(b == a);
