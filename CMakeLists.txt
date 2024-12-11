@@ -317,7 +317,7 @@ add_custom_target(doxygen-current
 
 add_custom_target(doxygen-latest
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-    COMMAND etc/generate-latest-apidocs.pl
+    COMMAND etc/generate-latest-apidocs.sh
     VERBATIM
 )
 
