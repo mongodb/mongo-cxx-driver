@@ -283,20 +283,41 @@ add_custom_target(hugo-deploy
     VERBATIM
 )
 
-add_custom_target(docs_dir_current
+add_custom_target(docs_source_directory
+    VERBATIM
+
+    # Clear any existing files in the target directory.
+    COMMAND ${CMAKE_COMMAND} -E remove_directory
+        ${MONGO_CXX_DRIVER_SOURCE_DIR}/build/doxygen/install
+
+    # Manually "install" all headers without requiring compilation.
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${MONGO_CXX_DRIVER_SOURCE_DIR}/src/bsoncxx/include
+        ${MONGO_CXX_DRIVER_BINARY_DIR}/src/bsoncxx/lib
+        ${MONGO_CXX_DRIVER_SOURCE_DIR}/build/doxygen/install/include
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${MONGO_CXX_DRIVER_SOURCE_DIR}/src/mongocxx/include
+        ${MONGO_CXX_DRIVER_BINARY_DIR}/src/mongocxx/lib
+        ${MONGO_CXX_DRIVER_SOURCE_DIR}/build/doxygen/install/include
+)
+
+add_custom_target(docs_target_directory
     COMMAND ${CMAKE_COMMAND} -E make_directory docs/api/current
 )
 
+# Set `DOXYGEN_EXECUTABLE` to specify the full path to a custom Doxygen binary.
+find_package(Doxygen 1.12.0 EXACT QUIET)
+
 add_custom_target(doxygen-current
-    DEPENDS docs_dir_current
+    DEPENDS Doxygen::doxygen docs_source_directory docs_target_directory
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-    COMMAND doxygen ${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile
+    COMMAND Doxygen::doxygen -q ${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile
     VERBATIM
 )
 
 add_custom_target(doxygen-latest
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-    COMMAND etc/generate-latest-apidocs.pl
+    COMMAND etc/generate-latest-apidocs.sh
     VERBATIM
 )
 

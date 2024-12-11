@@ -414,7 +414,7 @@ using ::bsoncxx::v_noabi::stdx::string_view;
 ///
 /// @note The API and ABI compatibility of this polyfill is determined by polyfill build
 /// configuration variables and the `BSONCXX_POLY_USE_*` macros provided by @ref
-/// bsoncxx-v_noabi-bsoncxx-config-config-hpp.
+/// bsoncxx/v_noabi/bsoncxx/config/config.hpp.
 ///
 /// @see
 /// - [Choosing a C++17 Polyfill](https://www.mongodb.com/docs/languages/cpp/cpp-driver/current/polyfill-selection/)
@@ -431,7 +431,7 @@ namespace stdx {
 ///
 /// @note The API and ABI compatibility of this polyfill is determined by polyfill build
 /// configuration variables and the `BSONCXX_POLY_USE_*` macros provided by @ref
-/// bsoncxx-v_noabi-bsoncxx-config-config-hpp.
+/// bsoncxx/v_noabi/bsoncxx/config/config.hpp.
 ///
 class string_view {};
 

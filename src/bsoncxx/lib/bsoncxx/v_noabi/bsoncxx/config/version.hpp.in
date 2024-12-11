@@ -12,7 +12,48 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+// clang-format off
 #define BSONCXX_VERSION_MAJOR @BSONCXX_VERSION_MAJOR@
 #define BSONCXX_VERSION_MINOR @BSONCXX_VERSION_MINOR@
 #define BSONCXX_VERSION_PATCH @BSONCXX_VERSION_PATCH@
 #define BSONCXX_VERSION_EXTRA @BSONCXX_VERSION_EXTRA@
+// clang-format on
+
+///
+/// @file
+/// Provides macros describing the bsoncxx library version.
+///
+/// @warning This header is not standalone includable!
+///
+
+///
+/// @def BSONCXX_VERSION_MAJOR
+/// @hideinitializer
+/// This library's API major version number as an integer literal (e.g. `1`).
+///
+/// This value is derived from the `BUILD_VERSION` variable during configuration.
+///
+
+///
+/// @def BSONCXX_VERSION_MINOR
+/// @hideinitializer
+/// This library's API minor version number as an integer literal (e.g. `2`).
+///
+/// This value is derived from the `BUILD_VERSION` variable during configuration.
+///
+
+///
+/// @def BSONCXX_VERSION_PATCH
+/// @hideinitializer
+/// This library's API patch version number as an integer literal (e.g. `3`).
+///
+/// This value is derived from the `BUILD_VERSION` variable during configuration.
+///
+
+///
+/// @def BSONCXX_VERSION_EXTRA
+/// @hideinitializer
+/// This library's API version number suffix if any as raw text (e.g. `-extra`).
+///
+/// This value is derived from the `BUILD_VERSION` variable during configuration.
+///

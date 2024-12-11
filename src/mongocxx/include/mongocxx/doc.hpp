@@ -24,7 +24,7 @@
 ///
 
 ///
-/// @dir mongocxx/include/mongocxx
+/// @dir include/mongocxx
 /// Provides headers declaring entities in @ref mongocxx
 ///
 

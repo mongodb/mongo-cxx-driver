@@ -102,18 +102,66 @@ endif()
 if(1)
     function(mongocxx_install_export_header TARGET)
         set(mongocxx_export_header_custom_content "")
-        string(APPEND mongocxx_export_header_custom_content
-            "\n"
-            "#undef MONGOCXX_DEPRECATED_EXPORT\n"
-            "#undef MONGOCXX_DEPRECATED_NO_EXPORT\n"
-            "\n"
-            "#if defined(_MSC_VER)\n"
-            "#define MONGOCXX_ABI_CDECL __cdecl\n"
-            "#else\n"
-            "#define MONGOCXX_ABI_CDECL\n"
-            "#endif\n"
-            "\n"
-            "#define MONGOCXX_ABI_EXPORT_CDECL(...) MONGOCXX_ABI_EXPORT __VA_ARGS__ MONGOCXX_ABI_CDECL\n"
+        string(APPEND mongocxx_export_header_custom_content [[
+
+#undef MONGOCXX_DEPRECATED_EXPORT
+#undef MONGOCXX_DEPRECATED_NO_EXPORT
+
+#if defined(_MSC_VER)
+#define MONGOCXX_ABI_CDECL __cdecl
+#else
+#define MONGOCXX_ABI_CDECL
+#endif
+
+#define MONGOCXX_ABI_EXPORT_CDECL(...) MONGOCXX_ABI_EXPORT __VA_ARGS__ MONGOCXX_ABI_CDECL
+
+///
+/// @file
+/// Provides macros to control the set of symbols exported in the ABI.
+///
+/// @warning For internal use only!
+///
+
+///
+/// @def MONGOCXX_ABI_EXPORT
+/// @hideinitializer
+/// Exports the associated entity as part of the ABI.
+///
+/// @warning For internal use only!
+///
+
+///
+/// @def MONGOCXX_ABI_NO_EXPORT
+/// @hideinitializer
+/// Excludes the associated entity from being part of the ABI.
+///
+/// @warning For internal use only!
+///
+
+///
+/// @def MONGOCXX_ABI_CDECL
+/// @hideinitializer
+/// Expands to `__cdecl` when built with MSVC on Windows.
+///
+/// @warning For internal use only!
+///
+
+///
+/// @def MONGOCXX_ABI_EXPORT_CDECL
+/// @hideinitializer
+/// Equivalent to @ref MONGOCXX_ABI_EXPORT with @ref MONGOCXX_ABI_CDECL.
+///
+/// @warning For internal use only!
+///
+
+///
+/// @def MONGOCXX_DEPRECATED
+/// @hideinitializer
+/// Declares the associated entity as deprecated.
+///
+/// @warning For internal use only!
+///
+        ]]
         )
         generate_export_header(${TARGET}
             BASE_NAME MONGOCXX_ABI

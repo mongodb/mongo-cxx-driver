@@ -56,9 +56,9 @@
 ///
 /// @par Includes
 /// - @ref mongocxx/v_noabi/mongocxx/config/compiler.hpp
-/// - @ref mongocxx-v_noabi-mongocxx-config-config-hpp
-/// - @ref mongocxx-v_noabi-mongocxx-config-export-hpp
-/// - @ref mongocxx-v_noabi-mongocxx-config-version-hpp
+/// - @ref mongocxx/v_noabi/mongocxx/config/config.hpp
+/// - @ref mongocxx/v_noabi/mongocxx/config/export.hpp
+/// - @ref mongocxx/v_noabi/mongocxx/config/version.hpp
 ///
 /// This header uses macro pragmas to guard macros defined by the mongocxx library for internal use
 /// by "pushing" their prior definition onto the stack before use by mongocxx headers.

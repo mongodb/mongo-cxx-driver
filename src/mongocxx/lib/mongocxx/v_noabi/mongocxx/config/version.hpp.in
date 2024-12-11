@@ -12,8 +12,57 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+// clang-format off
 #define MONGOCXX_VERSION_STRING "@MONGOCXX_VERSION@"
 #define MONGOCXX_VERSION_MAJOR @MONGOCXX_VERSION_MAJOR@
 #define MONGOCXX_VERSION_MINOR @MONGOCXX_VERSION_MINOR@
 #define MONGOCXX_VERSION_PATCH @MONGOCXX_VERSION_PATCH@
 #define MONGOCXX_VERSION_EXTRA @MONGOCXX_VERSION_EXTRA@
+// clang-format on
+
+///
+/// @file
+/// Provides macros describing the mongocxx library version.
+///
+/// @warning This header is not standalone includable!
+///
+
+///
+/// @def MONGOCXX_VERSION_STRING
+/// @hideinitializer
+/// This library's full version number as a string literal (e.g. `"1.2.3-extra"`).
+///
+/// This value is derived from the `BUILD_VERSION` variable during configuration.
+///
+
+///
+/// @def MONGOCXX_VERSION_MAJOR
+/// @hideinitializer
+/// This library's API major version number as an integer literal (e.g. `1`).
+///
+/// This value is derived from the `BUILD_VERSION` variable during configuration.
+///
+
+///
+/// @def MONGOCXX_VERSION_MINOR
+/// @hideinitializer
+/// This library's API minor version number as an integer literal (e.g. `2`).
+///
+/// This value is derived from the `BUILD_VERSION` variable during configuration.
+///
+
+///
+/// @def MONGOCXX_VERSION_PATCH
+/// @hideinitializer
+/// This library's API patch version number as an integer literal (e.g. `3`).
+///
+/// This value is derived from the `BUILD_VERSION` variable during configuration.
+///
+
+///
+/// @def MONGOCXX_VERSION_EXTRA
+/// @hideinitializer
+/// This library's API version number suffix if any as raw text (e.g. `-extra`).
+///
+/// This value is derived from the `BUILD_VERSION` variable during configuration.
+///
