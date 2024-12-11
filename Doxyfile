@@ -181,8 +181,7 @@ FULL_PATH_NAMES        = YES
 # This tag requires that the tag FULL_PATH_NAMES is set to YES.
 
 STRIP_FROM_PATH        = . \
-                         src/bsoncxx/include \
-                         src/mongocxx/include
+                         build/doxygen/install/include
 
 # The STRIP_FROM_INC_PATH tag can be used to strip a user-defined part of the
 # path mentioned in the documentation of a class, which tells the reader which
@@ -192,8 +191,7 @@ STRIP_FROM_PATH        = . \
 # using the -I flag.
 
 STRIP_FROM_INC_PATH    = . \
-                         src/bsoncxx/include \
-                         src/mongocxx/include
+                         build/doxygen/install/include
 
 # If the SHORT_NAMES tag is set to YES, doxygen will generate much shorter (but
 # less readable) file names. This can be useful is your file systems doesn't
@@ -943,8 +941,7 @@ WARN_LOGFILE           =
 # spaces. See also FILE_PATTERNS and EXTENSION_MAPPING
 # Note: If this tag is empty the current directory is searched.
 
-INPUT                  = src/bsoncxx/include \
-                         src/mongocxx/include \
+INPUT                  = build/doxygen/install/include \
                          etc/apidocmenu.md
 
 # This tag can be used to specify the character encoding of the source files
@@ -2398,10 +2395,7 @@ SEARCH_INCLUDES        = YES
 # RECURSIVE has no effect here.
 # This tag requires that the tag SEARCH_INCLUDES is set to YES.
 
-INCLUDE_PATH           = src/bsoncxx/include/bsoncxx/v_noabi \
-                         src/mongocxx/include/mongocxx/v_noabi \
-                         src/bsoncxx/include \
-                         src/mongocxx/include
+INCLUDE_PATH           = build/doxygen/install/include
 
 # You can use the INCLUDE_FILE_PATTERNS tag to specify one or more wildcard
 # patterns (like *.h and *.hpp) to filter out the header-files in the
