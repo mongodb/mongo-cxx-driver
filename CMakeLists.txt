@@ -311,7 +311,7 @@ find_package(Doxygen 1.12.0 EXACT QUIET)
 add_custom_target(doxygen-current
     DEPENDS Doxygen::doxygen docs_source_directory docs_target_directory
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-    COMMAND Doxygen::doxygen -q ${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile
+    COMMAND Doxygen::doxygen ${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile
     VERBATIM
 )
 

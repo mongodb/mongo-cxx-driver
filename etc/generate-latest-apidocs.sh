@@ -60,5 +60,5 @@ sed -i \
 
     cmake -S . -B build -D "DOXYGEN_EXECUTABLE=${DOXYGEN_BINARY:?}" --log-level=WARNING
     cmake --build build --target docs_source_directory
-    "${DOXYGEN_BINARY:?}" -q
+    "${DOXYGEN_BINARY:?}"
 )
