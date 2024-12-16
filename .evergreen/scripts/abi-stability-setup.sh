@@ -115,9 +115,9 @@ echo "Building old libraries..."
     -B build/old \
     -DCMAKE_INSTALL_PREFIX=install/old \
     -DBUILD_VERSION="${old_ver:?}-base" \
-    "${configure_flags[@]:?}"
-  "${cmake_binary:?}" --build build/old
-  "${cmake_binary:?}" --install build/old
+    "${configure_flags[@]:?}" || exit
+  "${cmake_binary:?}" --build build/old || exit
+  "${cmake_binary:?}" --install build/old || exit
 } &>old.log || {
   cat old.log 1>&2
   exit 1
@@ -136,9 +136,9 @@ echo "Building new libraries..."
     -B build/new \
     -DCMAKE_INSTALL_PREFIX=install/new \
     -DBUILD_VERSION="${new_ver:?}-current" \
-    "${configure_flags[@]:?}"
-  "${cmake_binary:?}" --build build/new
-  "${cmake_binary:?}" --install build/new
+    "${configure_flags[@]:?}" || exit
+  "${cmake_binary:?}" --build build/new || exit
+  "${cmake_binary:?}" --install build/new || exit
 } &>new.log || {
   cat new.log 1>&2
   exit 1
