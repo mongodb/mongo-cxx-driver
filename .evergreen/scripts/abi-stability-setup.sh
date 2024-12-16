@@ -109,7 +109,7 @@ git -C mongo-cxx-driver reset --hard "${base:?}"
 
 # Install old (base) to install/old.
 echo "Building old libraries..."
-{
+(
   "${cmake_binary:?}" \
     -S mongo-cxx-driver \
     -B build/old \
@@ -118,7 +118,7 @@ echo "Building old libraries..."
     "${configure_flags[@]:?}" || exit
   "${cmake_binary:?}" --build build/old || exit
   "${cmake_binary:?}" --install build/old || exit
-} &>old.log || {
+) &>old.log || {
   cat old.log 1>&2
   exit 1
 }
@@ -130,7 +130,7 @@ git -C mongo-cxx-driver stash pop -q || true # Only patch builds have stashed ch
 
 # Install new (current) to install/new.
 echo "Building new libraries..."
-{
+(
   "${cmake_binary:?}" \
     -S mongo-cxx-driver \
     -B build/new \
@@ -139,7 +139,7 @@ echo "Building new libraries..."
     "${configure_flags[@]:?}" || exit
   "${cmake_binary:?}" --build build/new || exit
   "${cmake_binary:?}" --install build/new || exit
-} &>new.log || {
+) &>new.log || {
   cat new.log 1>&2
   exit 1
 }
