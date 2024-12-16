@@ -307,9 +307,10 @@ functions:
     type: setup
     params:
       binary: bash
+      working_dir: mongo-cxx-driver
       args:
         - -c
-        - curl -LsSf https://astral.sh/uv/install.sh | sh
+        - .evergreen/scripts/uv-installer.sh
   install_c_driver:
     - command: expansions.update
       type: setup

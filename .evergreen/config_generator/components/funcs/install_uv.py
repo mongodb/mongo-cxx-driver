@@ -8,7 +8,8 @@ class InstallUV(Function):
     name = 'install-uv'
     commands = bash_exec(
         command_type=EvgCommandType.SETUP,
-        script='curl -LsSf https://astral.sh/uv/install.sh | sh'
+        working_dir='mongo-cxx-driver',
+        script='.evergreen/scripts/uv-installer.sh'
     )
 
 
