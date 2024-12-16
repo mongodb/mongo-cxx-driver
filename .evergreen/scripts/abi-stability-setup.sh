@@ -68,8 +68,8 @@ mkdir -p "${working_dir}/install"
 export CC CXX
 case "${distro_id:?}" in
 rhel9*)
-  CC="clang-17"
-  CXX="clang++-17"
+  CC="clang-18"
+  CXX="clang++-18"
   ;;
 ubuntu22*)
   CC="clang-12"
