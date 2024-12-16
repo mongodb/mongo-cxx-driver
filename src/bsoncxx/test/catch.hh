@@ -27,9 +27,44 @@
 #include <catch2/catch_test_macros.hpp>  // TEST_CASE, SECTION, CHECK, etc.
 #include <catch2/catch_tostring.hpp>     // Catch::StringMaker
 
+#define THROWS_WITH_CODE_IMPL(_assertion, _expr, _code)                        \
+    if (1) {                                                                   \
+        try {                                                                  \
+            (void)(_expr);                                                     \
+            INFO("expected an exception to be thrown: " #_expr);               \
+            _assertion(false);                                                 \
+        } catch (const Catch::TestFailureException&) {                         \
+            throw; /* Propagate Catch exceptions. */                           \
+        } catch (const Catch::TestSkipException&) {                            \
+            throw; /* Propagate Catch exceptions. */                           \
+        } catch (const std::system_error& ex) {                                \
+            using std::make_error_code;                                        \
+            (void)ex; /* Avoid unused variable warnings. */                    \
+            _assertion(ex.code() == (_code));                                  \
+        } catch (...) {                                                        \
+            /* Reuse `*_THROWS_AS` to handle the unexpected exception type. */ \
+            BSONCXX_CONCAT(_assertion, _THROWS_AS)(throw, std::system_error);  \
+        }                                                                      \
+    } else                                                                     \
+        ((void)0)
+
+#define CHECK_THROWS_WITH_CODE(_expr, _code) THROWS_WITH_CODE_IMPL(CHECK, _expr, _code)
+#define REQUIRE_THROWS_WITH_CODE(_expr, _code) THROWS_WITH_CODE_IMPL(REQUIRE, _expr, _code)
+
 namespace Catch {
 
-// Catch2 must be able to stringify documents, optionals, etc. if they're used in Catch2 macros.
+template <>
+struct StringMaker<std::error_condition> {
+    static std::string convert(const std::error_condition& value) {
+        std::string res;
+
+        res += value.category().name();
+        res += ':';
+        res += Catch::StringMaker<int>::convert(value.value());
+
+        return res;
+    }
+};
 
 template <>
 struct StringMaker<bsoncxx::oid> {
