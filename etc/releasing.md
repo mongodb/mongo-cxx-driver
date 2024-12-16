@@ -661,7 +661,7 @@ Example (using Jira syntax formatting):
 > [!NOTE]
 > Some of these commands may take a while to complete.
 
-Set `$LATEST_DOC_TAG` in `etc/generate-latest-apidocs.pl` to the latest release tag.
+Set `$LATEST_VERSION` in `etc/generate-latest-apidocs.sh` to the latest release version.
 
 Change the version number for `SITEMAP_URL` in `Doxyfile` to the latest release version.
 
@@ -678,7 +678,7 @@ command -V doxygen hugo
 ```
 
 > [!IMPORTANT]
-> The required Doxygen version is defined in `etc/generate-apidocs-from-tag.pl` as `$doxygen_version_required`. If not already present, download the required version from [Doxygen Releases](https://www.doxygen.nl/download.html). Use the `DOXYGEN_BINARY` environment variable to override the default `doxygen` command with a path to a specific Doxygen binary.
+> The required Doxygen version is defined in `etc/generate-latest-apidocs.sh` as `$DOXYGEN_VERSION_REQUIRED`. If not already present, download the required version from [Doxygen Releases](https://www.doxygen.nl/download.html). Use the `DOXYGEN_BINARY` environment variable to override the default `doxygen` command with a path to a specific Doxygen binary.
 
 Run `git clean -dfx` to restore the repository to a clean state.
 
