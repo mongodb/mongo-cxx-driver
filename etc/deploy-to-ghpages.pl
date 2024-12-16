@@ -36,6 +36,7 @@ sub _hugo_rsync {
         'CNAME',
         '/sitemap.xml',
         '/sitemap_index.xml',
+        '/404.html',
     );
     _try_run( qw{rsync -Cavz --delete}, ( map { ; '--exclude' => $_ } @exclude ), qw{build/hugo/}, $tmpdir );
 }
