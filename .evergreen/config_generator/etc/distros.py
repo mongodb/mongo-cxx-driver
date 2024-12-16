@@ -81,11 +81,11 @@ RHEL_DISTROS = [
     Distro(name='rhel87-small', os='rhel', os_type='linux', os_ver='8.7', size='small'),
     Distro(name='rhel90-large', os='rhel', os_type='linux', os_ver='9.0', size='large'),
     Distro(name='rhel90-small', os='rhel', os_type='linux', os_ver='9.0', size='small'),
+    Distro(name='rhel95-large', os='rhel', os_type='linux', os_ver='9.5', size='large'),
+    Distro(name='rhel95-small', os='rhel', os_type='linux', os_ver='9.5', size='small'),
 
     Distro(name='rhel8-latest-large', os='rhel', os_type='linux', os_ver='latest', size='large'),
     Distro(name='rhel8-latest-small', os='rhel', os_type='linux', os_ver='latest', size='small'),
-    Distro(name='rhel9-latest-large', os='rhel', os_type='linux', os_ver='latest', size='large'),
-    Distro(name='rhel9-latest-small', os='rhel', os_type='linux', os_ver='latest', size='small'),
 ]
 
 RHEL_ARM64_DISTROS = [
