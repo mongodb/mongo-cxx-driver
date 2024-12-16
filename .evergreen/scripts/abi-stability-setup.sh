@@ -68,8 +68,8 @@ mkdir -p "${working_dir}/install"
 export CC CXX
 case "${distro_id:?}" in
 rhel9*)
-  CC="clang-17"
-  CXX="clang++-17"
+  CC="clang-18"
+  CXX="clang++-18"
   ;;
 ubuntu22*)
   CC="clang-12"
@@ -109,16 +109,16 @@ git -C mongo-cxx-driver reset --hard "${base:?}"
 
 # Install old (base) to install/old.
 echo "Building old libraries..."
-{
+(
   "${cmake_binary:?}" \
     -S mongo-cxx-driver \
     -B build/old \
     -DCMAKE_INSTALL_PREFIX=install/old \
     -DBUILD_VERSION="${old_ver:?}-base" \
-    "${configure_flags[@]:?}"
-  "${cmake_binary:?}" --build build/old
-  "${cmake_binary:?}" --install build/old
-} &>old.log || {
+    "${configure_flags[@]:?}" || exit
+  "${cmake_binary:?}" --build build/old || exit
+  "${cmake_binary:?}" --install build/old || exit
+) &>old.log || {
   cat old.log 1>&2
   exit 1
 }
@@ -130,16 +130,16 @@ git -C mongo-cxx-driver stash pop -q || true # Only patch builds have stashed ch
 
 # Install new (current) to install/new.
 echo "Building new libraries..."
-{
+(
   "${cmake_binary:?}" \
     -S mongo-cxx-driver \
     -B build/new \
     -DCMAKE_INSTALL_PREFIX=install/new \
     -DBUILD_VERSION="${new_ver:?}-current" \
-    "${configure_flags[@]:?}"
-  "${cmake_binary:?}" --build build/new
-  "${cmake_binary:?}" --install build/new
-} &>new.log || {
+    "${configure_flags[@]:?}" || exit
+  "${cmake_binary:?}" --build build/new || exit
+  "${cmake_binary:?}" --install build/new || exit
+) &>new.log || {
   cat new.log 1>&2
   exit 1
 }

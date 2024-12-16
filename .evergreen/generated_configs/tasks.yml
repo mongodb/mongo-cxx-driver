@@ -1,79 +1,79 @@
 tasks:
   - name: abi-compliance-check-impls-cxx11
-    run_on: rhel9-latest-large
-    tags: [abi-stability, rhel9-latest, abi-compliance-check, impls, cxx11]
+    run_on: rhel95-large
+    tags: [abi-stability, rhel95, abi-compliance-check, impls, cxx11]
     commands:
       - func: abi-compliance-check
         vars:
           cxx_standard: "11"
           polyfill: impls
   - name: abi-compliance-check-impls-cxx17
-    run_on: rhel9-latest-large
-    tags: [abi-stability, rhel9-latest, abi-compliance-check, impls, cxx17]
+    run_on: rhel95-large
+    tags: [abi-stability, rhel95, abi-compliance-check, impls, cxx17]
     commands:
       - func: abi-compliance-check
         vars:
           cxx_standard: "17"
           polyfill: impls
   - name: abi-compliance-check-stdlib-cxx17
-    run_on: rhel9-latest-large
-    tags: [abi-stability, rhel9-latest, abi-compliance-check, stdlib, cxx17]
+    run_on: rhel95-large
+    tags: [abi-stability, rhel95, abi-compliance-check, stdlib, cxx17]
     commands:
       - func: abi-compliance-check
         vars:
           cxx_standard: "17"
           polyfill: stdlib
   - name: abi-compliance-check-stdlib-cxx20
-    run_on: rhel9-latest-large
-    tags: [abi-stability, rhel9-latest, abi-compliance-check, stdlib, cxx20]
+    run_on: rhel95-large
+    tags: [abi-stability, rhel95, abi-compliance-check, stdlib, cxx20]
     commands:
       - func: abi-compliance-check
         vars:
           cxx_standard: "20"
           polyfill: stdlib
   - name: abi-compliance-check-stdlib-cxx23
-    run_on: rhel9-latest-large
-    tags: [abi-stability, rhel9-latest, abi-compliance-check, stdlib, cxx23]
+    run_on: rhel95-large
+    tags: [abi-stability, rhel95, abi-compliance-check, stdlib, cxx23]
     commands:
       - func: abi-compliance-check
         vars:
           cxx_standard: "23"
           polyfill: stdlib
   - name: abi-prohibited-symbols-impls-cxx11
-    run_on: rhel9-latest-large
-    tags: [abi-stability, rhel9-latest, abi-prohibited-symbols, impls, cxx11]
+    run_on: rhel95-large
+    tags: [abi-stability, rhel95, abi-prohibited-symbols, impls, cxx11]
     commands:
       - func: abi-prohibited-symbols
         vars:
           cxx_standard: "11"
           polyfill: impls
   - name: abi-prohibited-symbols-impls-cxx17
-    run_on: rhel9-latest-large
-    tags: [abi-stability, rhel9-latest, abi-prohibited-symbols, impls, cxx17]
+    run_on: rhel95-large
+    tags: [abi-stability, rhel95, abi-prohibited-symbols, impls, cxx17]
     commands:
       - func: abi-prohibited-symbols
         vars:
           cxx_standard: "17"
           polyfill: impls
   - name: abi-prohibited-symbols-stdlib-cxx17
-    run_on: rhel9-latest-large
-    tags: [abi-stability, rhel9-latest, abi-prohibited-symbols, stdlib, cxx17]
+    run_on: rhel95-large
+    tags: [abi-stability, rhel95, abi-prohibited-symbols, stdlib, cxx17]
     commands:
       - func: abi-prohibited-symbols
         vars:
           cxx_standard: "17"
           polyfill: stdlib
   - name: abi-prohibited-symbols-stdlib-cxx20
-    run_on: rhel9-latest-large
-    tags: [abi-stability, rhel9-latest, abi-prohibited-symbols, stdlib, cxx20]
+    run_on: rhel95-large
+    tags: [abi-stability, rhel95, abi-prohibited-symbols, stdlib, cxx20]
     commands:
       - func: abi-prohibited-symbols
         vars:
           cxx_standard: "20"
           polyfill: stdlib
   - name: abi-prohibited-symbols-stdlib-cxx23
-    run_on: rhel9-latest-large
-    tags: [abi-stability, rhel9-latest, abi-prohibited-symbols, stdlib, cxx23]
+    run_on: rhel95-large
+    tags: [abi-stability, rhel95, abi-prohibited-symbols, stdlib, cxx23]
     commands:
       - func: abi-prohibited-symbols
         vars:
