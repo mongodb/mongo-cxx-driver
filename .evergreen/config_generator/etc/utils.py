@@ -16,7 +16,7 @@ from typing_extensions import get_args, get_origin, get_type_hints
 T = TypeVar('T')
 
 
-# Equivalent to EvgTaskRef but defines additional properties.
+# Equivalent to EvgTask but defines additional properties.
 class Task(EvgTask):
     allowed_requesters: Optional[List[str]] = None
 
