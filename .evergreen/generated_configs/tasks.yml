@@ -3977,6 +3977,7 @@ tasks:
     tags: [lint]
     commands:
       - func: setup
+      - func: set-cache-dir
       - func: install-uv
       - func: lint
   - name: macro-guards-ubuntu2004

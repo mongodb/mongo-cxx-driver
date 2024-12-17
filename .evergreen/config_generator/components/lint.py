@@ -1,4 +1,5 @@
 from config_generator.components.funcs.install_uv import InstallUV
+from config_generator.components.funcs.set_cache_dir import SetCacheDir
 from config_generator.components.funcs.setup import Setup
 
 from config_generator.etc.distros import find_small_distro
@@ -19,7 +20,7 @@ class Lint(Function):
         command_type=EvgCommandType.TEST,
         working_dir='mongo-cxx-driver',
         env={'DRYRUN': '1'},
-        script='PATH="$HOME/.local/bin:$PATH" uv run --frozen etc/clang-format-all.sh',
+        script='${UV_INSTALL_DIR}/uv run --frozen etc/clang-format-all.sh',
     )
 
 
@@ -44,6 +45,7 @@ def tasks():
             run_on=[distro.name for distro in distros],
             commands=[
                 Setup.call(),
+                SetCacheDir.call(),
                 InstallUV.call(),
                 Lint.call(),
             ],
