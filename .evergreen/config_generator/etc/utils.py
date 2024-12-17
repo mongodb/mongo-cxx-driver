@@ -3,17 +3,22 @@ from importlib import import_module
 from inspect import isclass
 from pathlib import Path
 from textwrap import dedent
-from typing import (Any, Iterable, Literal, Mapping, Type, TypeVar,
+from typing import (Any, Iterable, List, Literal, Mapping, Optional, Type, TypeVar,
                     Union, cast)
 
 import yaml
 from shrub.v3.evg_command import EvgCommandType, KeyValueParam, subprocess_exec
 from shrub.v3.evg_project import EvgProject
 from shrub.v3.shrub_service import ConfigDumper
-from shrub.v3.evg_task import EvgTaskRef
+from shrub.v3.evg_task import EvgTask
 from typing_extensions import get_args, get_origin, get_type_hints
 
 T = TypeVar('T')
+
+
+# Equivalent to EvgTask but defines additional properties.
+class Task(EvgTask):
+    allowed_requesters: Optional[List[str]] = None
 
 
 # Automatically formats the provided script and invokes it in Bash.

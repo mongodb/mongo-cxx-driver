@@ -4010,12 +4010,22 @@ tasks:
   - name: packaging-debian
     run_on: debian12-latest-large
     tags: [packaging, debian12-latest]
+    allowed_requesters:
+      - ad_hoc
+      - commit
+      - patch
+      - trigger
     commands:
       - func: setup
       - func: build-package-debian
   - name: packaging-rpm
     run_on: rhel92-arm64-large
     tags: [packaging, rhel92-arm64]
+    allowed_requesters:
+      - ad_hoc
+      - commit
+      - patch
+      - trigger
     commands:
       - func: setup
       - func: build-package-rpm
