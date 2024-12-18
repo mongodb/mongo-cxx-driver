@@ -10,6 +10,22 @@
 set -o errexit
 set -o pipefail
 
+use_current="no"
+
+while [[ "$#" > 0 ]]; do
+  case "${1:?}" in
+  --current)
+    use_current="yes"
+    ;;
+  *)
+    echo "unrecognized argument: ${1:?}" 1>&2
+    exit 1
+    ;;
+  esac
+
+  shift
+done
+
 LATEST_VERSION="4.0.0"
 DOXYGEN_VERSION_REQUIRED="1.12.0"
 
@@ -33,32 +49,38 @@ if [[ "${doxygen_version:-}" != "${DOXYGEN_VERSION_REQUIRED:?}" ]]; then
 fi
 
 working_dir="$(pwd)"
-apidocpath="${working_dir:?}/build/docs/api/mongocxx-${LATEST_VERSION:?}"
+apidocspath="${working_dir:?}/build/docs/api"
 
-# Use a temporary directory for the following operations.
-tmpdir="$(mktemp -d)"
-trap 'rm -rf "${tmpdir:?}"' EXIT
+if [[ "${use_current:?}" == "yes" ]]; then
+  # Use the current repository's build directory.
+  output_directory="${apidocspath:?}/current"
+  scratch_dir="$(pwd)"
+else
+  # Use a clean copy of the repository.
+  output_directory="${apidocspath:?}/mongocxx-${LATEST_VERSION:?}"
+  scratch_dir="$(mktemp -d)"
+  trap 'rm -rf "${scratch_dir:?}"' EXIT
 
-mkdir -p "${apidocpath:?}"
+  git clone -q -c advice.detachedHead=false -b "r${LATEST_VERSION}" . "${scratch_dir:?}"
 
-# Use a clean copy of the repository.
-git clone -q -c advice.detachedHead=false -b "r${LATEST_VERSION}" . "${tmpdir}"
+  # Update the Doxyfile configuration file:
+  #  - set OUTPUT_DIRECTORY to `build/docs/api/mongocxx-<version>`.
+  #  - set PROJECT_NUMBER to `<version>`.
+  sed -i \
+    -e "s|^OUTPUT_DIRECTORY\s*=\s*.*$|OUTPUT_DIRECTORY = ${output_directory:?}|g" \
+    -e "s|^PROJECT_NUMBER\s*=\s*.*$|PROJECT_NUMBER = ${LATEST_VERSION:?}|g" \
+    "${scratch_dir:?}/Doxyfile"
+fi
 
-cd "${tmpdir:?}"
-
-# Update the Doxyfile configuration file:
-#  - set OUTPUT_DIRECTORY to `build/docs/api/mongocxx-<version>`.
-#  - set PROJECT_NUMBER to `<version>`.
-sed -i \
-  -e "s|^OUTPUT_DIRECTORY\s*=\s*.*$|OUTPUT_DIRECTORY = ${apidocpath:?}|g" \
-  -e "s|^PROJECT_NUMBER\s*=\s*.*$|PROJECT_NUMBER = ${LATEST_VERSION:?}|g" \
-  Doxyfile
+mkdir -p "${output_directory:?}"
 
 # Generate API documentation.
 (
+  cd "${scratch_dir:?}"
+
   set -o xtrace
 
-  cmake -S . -B build -D "DOXYGEN_EXECUTABLE=${DOXYGEN_BINARY:?}" --log-level=WARNING
+  cmake -S . -B build --log-level=WARNING
   cmake --build build --target docs_source_directory
   "${DOXYGEN_BINARY:?}"
 )

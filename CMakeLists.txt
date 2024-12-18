@@ -305,13 +305,9 @@ add_custom_target(docs_target_directory
     COMMAND ${CMAKE_COMMAND} -E make_directory docs/api/current
 )
 
-# Set `DOXYGEN_EXECUTABLE` to specify the full path to a custom Doxygen binary.
-find_package(Doxygen 1.12.0 EXACT QUIET)
-
 add_custom_target(doxygen-current
-    DEPENDS Doxygen::doxygen docs_source_directory docs_target_directory
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-    COMMAND Doxygen::doxygen
+    COMMAND etc/generate-current-apidocs.sh --current
     VERBATIM
 )
 
