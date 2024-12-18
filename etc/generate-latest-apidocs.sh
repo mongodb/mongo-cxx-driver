@@ -10,22 +10,17 @@
 set -o errexit
 set -o pipefail
 
-use_current="no"
-use_any_version="no"
-
-if [[ "${DOXYGEN_USE_CURRENT:-0}" == 1 ]]; then
-  use_current="yes"
-fi
-
-if [[ "${DOXYGEN_ANY_VERSION:-0}" == 1 ]]; then
-  use_any_version="yes"
-fi
-
 LATEST_VERSION="4.0.0"
 DOXYGEN_VERSION_REQUIRED="1.12.0"
 
 # Permit using a custom Doxygen binary.
 : "${DOXYGEN_BINARY:=doxygen}"
+
+# Use the current repository instead of a clean temporary repository.
+: "${DOXYGEN_USE_CURRENT:=0}"
+
+# Permit using any Doxygen version.
+: "${DOXYGEN_ANY_VERSION:=0}"
 
 command -v git >/dev/null
 command -v mktemp >/dev/null
@@ -39,7 +34,7 @@ fi
 # Validate Doxygen version.
 doxygen_version="$("${DOXYGEN_BINARY:?}" -v | perl -lne 'print $1 if m/^(\d+\.\d+\.\d+).*$/')"
 if [[ "${doxygen_version:-}" != "${DOXYGEN_VERSION_REQUIRED:?}" ]]; then
-  if [[ "${use_any_version:?}" == "yes" ]]; then
+  if [[ "${DOXYGEN_ANY_VERSION:?}" == 1 ]]; then
     echo "using ${DOXYGEN_BINARY:?} version ${doxygen_version:-"unknown"} which does not equal ${DOXYGEN_VERSION_REQUIRED:?}" 1>&2
   else
     echo "${DOXYGEN_BINARY} version ${doxygen_version:-"unknown"} does not equal ${DOXYGEN_VERSION_REQUIRED:?}" 1>&2
@@ -50,7 +45,7 @@ fi
 working_dir="$(pwd)"
 apidocspath="${working_dir:?}/build/docs/api"
 
-if [[ "${use_current:?}" == "yes" ]]; then
+if [[ "${DOXYGEN_USE_CURRENT:?}" == "yes" ]]; then
   # Use the current repository's build directory.
   output_directory="${apidocspath:?}/current"
   scratch_dir="$(pwd)"
