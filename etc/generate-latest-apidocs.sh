@@ -81,6 +81,6 @@ mkdir -p "${output_directory:?}"
   set -o xtrace
 
   cmake -S . -B build --log-level=WARNING
-  cmake --build build --target docs_source_directory
+  cmake --build build --target doxygen-install-headers
   "${DOXYGEN_BINARY:?}"
 )

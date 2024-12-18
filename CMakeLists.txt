@@ -283,7 +283,7 @@ add_custom_target(hugo-deploy
     VERBATIM
 )
 
-add_custom_target(docs_source_directory
+add_custom_target(doxygen-install-headers
     VERBATIM
 
     # Clear any existing files in the target directory.
