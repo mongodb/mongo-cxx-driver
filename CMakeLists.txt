@@ -301,10 +301,6 @@ add_custom_target(docs_source_directory
         ${MONGO_CXX_DRIVER_SOURCE_DIR}/build/doxygen/install/include
 )
 
-add_custom_target(docs_target_directory
-    COMMAND ${CMAKE_COMMAND} -E make_directory docs/api/current
-)
-
 add_custom_target(doxygen-current
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
     COMMAND etc/generate-current-apidocs.sh --current
