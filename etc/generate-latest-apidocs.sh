@@ -28,8 +28,8 @@ fi
 # Validate Doxygen version.
 doxygen_version="$("${DOXYGEN_BINARY:?}" -v | perl -lne 'print $1 if m/^(\d+\.\d+\.\d+).*$/')"
 if [[ "${doxygen_version:-}" != "${DOXYGEN_VERSION_REQUIRED:?}" ]]; then
-    echo "${DOXYGEN_BINARY} version ${doxygen_version:-"unknown"} does not equal ${DOXYGEN_VERSION_REQUIRED:?}" 1>&2
-    exit 1
+  echo "${DOXYGEN_BINARY} version ${doxygen_version:-"unknown"} does not equal ${DOXYGEN_VERSION_REQUIRED:?}" 1>&2
+  exit 1
 fi
 
 working_dir="$(pwd)"
@@ -37,7 +37,7 @@ apidocpath="${working_dir:?}/build/docs/api/mongocxx-${LATEST_VERSION:?}"
 
 # Use a temporary directory for the following operations.
 tmpdir="$(mktemp -d)"
-trap "rm -rf \"${tmpdir}\"" EXIT
+trap 'rm -rf "${tmpdir:?}"' EXIT
 
 mkdir -p "${apidocpath:?}"
 
@@ -56,9 +56,9 @@ sed -i \
 
 # Generate API documentation.
 (
-    set -o xtrace
+  set -o xtrace
 
-    cmake -S . -B build -D "DOXYGEN_EXECUTABLE=${DOXYGEN_BINARY:?}" --log-level=WARNING
-    cmake --build build --target docs_source_directory
-    "${DOXYGEN_BINARY:?}"
+  cmake -S . -B build -D "DOXYGEN_EXECUTABLE=${DOXYGEN_BINARY:?}" --log-level=WARNING
+  cmake --build build --target docs_source_directory
+  "${DOXYGEN_BINARY:?}"
 )
