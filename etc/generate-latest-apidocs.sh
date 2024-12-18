@@ -13,22 +13,13 @@ set -o pipefail
 use_current="no"
 use_any_version="no"
 
-while [[ "$#" > 0 ]]; do
-  case "${1:?}" in
-  --current)
-    use_current="yes"
-    ;;
-  --any-version)
-    use_any_version="yes"
-    ;;
-  *)
-    echo "unrecognized argument: ${1:?}" 1>&2
-    exit 1
-    ;;
-  esac
+if [[ "${DOXYGEN_USE_CURRENT:-0}" == 1 ]]; then
+  use_current="yes"
+fi
 
-  shift
-done
+if [[ "${DOXYGEN_ANY_VERSION:-0}" == 1 ]]; then
+  use_any_version="yes"
+fi
 
 LATEST_VERSION="4.0.0"
 DOXYGEN_VERSION_REQUIRED="1.12.0"
