@@ -303,7 +303,7 @@ add_custom_target(doxygen-install-headers
 
 add_custom_target(doxygen-current
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-    COMMAND etc/generate-current-apidocs.sh --current
+    COMMAND etc/generate-latest-apidocs.sh --current
     VERBATIM
 )
 
