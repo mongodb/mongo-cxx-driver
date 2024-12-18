@@ -691,16 +691,19 @@ Configure CMake using `build` as the binary directory. Leave all other configura
 cmake -S . -B build
 ```
 
-Test generating Hugo and Doxygen docs locally by building the `docs` target (this command DOES NOT check for the required Doxygen version):
-
-```bash
-cmake --build build --target docs
-```
-
-Test generating the latest versioned Doxygen docs by building the `doxygen-latest` target (this command DOES checks for the required Doxygen version):
+Test generating both Hugo and Doxygen docs locally by building the `docs` target:
 
 ```bash
 export DOXYGEN_BINARY=<path/to/doxygen> # Optional. For binary version compatibility.
+
+cmake --build build --target docs
+```
+
+Test generating the latest versioned Doxygen docs by building the `doxygen-latest` target:
+
+```bash
+export DOXYGEN_BINARY=<path/to/doxygen> # Optional. For binary version compatibility.
+
 cmake --build build --target doxygen-latest
 ```
 
