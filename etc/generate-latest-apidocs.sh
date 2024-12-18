@@ -42,7 +42,7 @@ trap 'rm -rf "${tmpdir:?}"' EXIT
 mkdir -p "${apidocpath:?}"
 
 # Use a clean copy of the repository.
-git clone -q -c advice.detachedHead=false -b "v${LATEST_VERSION}" . "${tmpdir}"
+git clone -q -c advice.detachedHead=false -b "r${LATEST_VERSION}" . "${tmpdir}"
 
 cd "${tmpdir:?}"
 
