@@ -11,11 +11,15 @@ set -o errexit
 set -o pipefail
 
 use_current="no"
+use_any_version="no"
 
 while [[ "$#" > 0 ]]; do
   case "${1:?}" in
   --current)
     use_current="yes"
+    ;;
+  --any-version)
+    use_any_version="yes"
     ;;
   *)
     echo "unrecognized argument: ${1:?}" 1>&2
@@ -44,8 +48,12 @@ fi
 # Validate Doxygen version.
 doxygen_version="$("${DOXYGEN_BINARY:?}" -v | perl -lne 'print $1 if m/^(\d+\.\d+\.\d+).*$/')"
 if [[ "${doxygen_version:-}" != "${DOXYGEN_VERSION_REQUIRED:?}" ]]; then
-  echo "${DOXYGEN_BINARY} version ${doxygen_version:-"unknown"} does not equal ${DOXYGEN_VERSION_REQUIRED:?}" 1>&2
-  exit 1
+  if [[ "${use_any_version:?}" == "yes" ]]; then
+    echo "using ${DOXYGEN_BINARY:?} version ${doxygen_version:-"unknown"} which does not equal ${DOXYGEN_VERSION_REQUIRED:?}" 1>&2
+  else
+    echo "${DOXYGEN_BINARY} version ${doxygen_version:-"unknown"} does not equal ${DOXYGEN_VERSION_REQUIRED:?}" 1>&2
+    exit 1
+  fi
 fi
 
 working_dir="$(pwd)"
