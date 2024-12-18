@@ -65,9 +65,7 @@ int EXAMPLES_CDECL main() {
     auto kms_providers = document{} << "local" << open_document << "key" << local_master_key
                                     << close_document << finalize;
 
-    class client key_vault_client {
-        uri {}
-    };
+    class client key_vault_client{uri{}};
     auto key_vault = key_vault_client["keyvault"]["datakeys"];
 
     // Ensure that two data keys cannot share the same keyAltName by adding
@@ -110,9 +108,7 @@ int EXAMPLES_CDECL main() {
     // Create a client with auto encryption enabled.
     options::client client_opts{};
     client_opts.auto_encryption_opts(std::move(auto_encrypt_opts));
-    class client client {
-        uri{}, std::move(client_opts)
-    };
+    class client client{uri{}, std::move(client_opts)};
 
     auto db = client["test"];
 
@@ -138,9 +134,7 @@ int EXAMPLES_CDECL main() {
 
     std::cout << "Decrypted document: " << bsoncxx::to_json(*res) << std::endl;
 
-    class client unencrypted_client {
-        uri {}
-    };
+    class client unencrypted_client{uri{}};
     res = unencrypted_client["test"]["coll"].find_one({});
 
     std::cout << "Encrypted document: " << bsoncxx::to_json(*res) << std::endl;

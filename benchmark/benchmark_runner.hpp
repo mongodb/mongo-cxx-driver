@@ -14,10 +14,12 @@
 
 #pragma once
 
+#include "microbench.hpp"
+
 #include <chrono>
 
-#include "microbench.hpp"
 #include <bsoncxx/stdx/optional.hpp>
+
 #include <mongocxx/instance.hpp>
 
 namespace benchmark {

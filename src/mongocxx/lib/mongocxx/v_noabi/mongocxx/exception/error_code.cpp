@@ -103,7 +103,7 @@ class error_category final : public std::error_category {
 }  // namespace
 
 const std::error_category& error_category() {
-    static const class error_category category {};
+    static const class error_category category{};
     return category;
 }
 

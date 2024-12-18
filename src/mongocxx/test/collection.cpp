@@ -2150,10 +2150,10 @@ TEST_CASE("read_concern is inherited from parent", "[collection]") {
     }
 }
 
-void find_index_and_validate(collection& coll,
-                             bsoncxx::stdx::string_view index_name,
-                             const std::function<void(bsoncxx::document::view)>& validate =
-                                 [](bsoncxx::document::view) {}) {
+void find_index_and_validate(
+    collection& coll,
+    bsoncxx::stdx::string_view index_name,
+    const std::function<void(bsoncxx::document::view)>& validate = [](bsoncxx::document::view) {}) {
     auto cursor = coll.list_indexes();
 
     for (auto&& index : cursor) {

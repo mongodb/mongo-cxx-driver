@@ -23,7 +23,10 @@ namespace {
 
 // [Example]
 void example() {
-    { mongocxx::instance instance; }  // Initialize and cleanup.
+    // Initialize and cleanup.
+    {
+        mongocxx::instance instance;
+    }
 
     try {
         mongocxx::instance instance;  // Throws.
