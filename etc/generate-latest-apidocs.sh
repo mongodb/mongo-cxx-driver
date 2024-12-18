@@ -45,7 +45,7 @@ fi
 working_dir="$(pwd)"
 apidocspath="${working_dir:?}/build/docs/api"
 
-if [[ "${DOXYGEN_USE_CURRENT:?}" == "yes" ]]; then
+if [[ "${DOXYGEN_USE_CURRENT:?}" == 1 ]]; then
   # Use the current repository's build directory.
   output_directory="${apidocspath:?}/current"
   scratch_dir="$(pwd)"
