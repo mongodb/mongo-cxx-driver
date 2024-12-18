@@ -127,18 +127,66 @@ endif()
 if(1)
     function(bsoncxx_install_export_header TARGET)
         set(bsoncxx_export_header_custom_content "")
-        string(APPEND bsoncxx_export_header_custom_content
-            "\n"
-            "#undef BSONCXX_DEPRECATED_EXPORT\n"
-            "#undef BSONCXX_DEPRECATED_NO_EXPORT\n"
-            "\n"
-            "#if defined(_MSC_VER)\n"
-            "#define BSONCXX_ABI_CDECL __cdecl\n"
-            "#else\n"
-            "#define BSONCXX_ABI_CDECL\n"
-            "#endif\n"
-            "\n"
-            "#define BSONCXX_ABI_EXPORT_CDECL(...) BSONCXX_ABI_EXPORT __VA_ARGS__ BSONCXX_ABI_CDECL\n"
+        string(APPEND bsoncxx_export_header_custom_content [[
+
+#undef BSONCXX_DEPRECATED_EXPORT
+#undef BSONCXX_DEPRECATED_NO_EXPORT
+
+#if defined(_MSC_VER)
+#define BSONCXX_ABI_CDECL __cdecl
+#else
+#define BSONCXX_ABI_CDECL
+#endif
+
+#define BSONCXX_ABI_EXPORT_CDECL(...) BSONCXX_ABI_EXPORT __VA_ARGS__ BSONCXX_ABI_CDECL
+
+///
+/// @file
+/// Provides macros to control the set of symbols exported in the ABI.
+///
+/// @warning For internal use only!
+///
+
+///
+/// @def BSONCXX_ABI_EXPORT
+/// @hideinitializer
+/// Exports the associated entity as part of the ABI.
+///
+/// @warning For internal use only!
+///
+
+///
+/// @def BSONCXX_ABI_NO_EXPORT
+/// @hideinitializer
+/// Excludes the associated entity from being part of the ABI.
+///
+/// @warning For internal use only!
+///
+
+///
+/// @def BSONCXX_ABI_CDECL
+/// @hideinitializer
+/// Expands to `__cdecl` when built with MSVC on Windows.
+///
+/// @warning For internal use only!
+///
+
+///
+/// @def BSONCXX_ABI_EXPORT_CDECL
+/// @hideinitializer
+/// Equivalent to @ref BSONCXX_ABI_EXPORT with @ref BSONCXX_ABI_CDECL.
+///
+/// @warning For internal use only!
+///
+
+///
+/// @def BSONCXX_DEPRECATED
+/// @hideinitializer
+/// Declares the associated entity as deprecated.
+///
+/// @warning For internal use only!
+///
+]]
         )
         generate_export_header(${TARGET}
             BASE_NAME BSONCXX_ABI
