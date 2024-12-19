@@ -14,13 +14,14 @@
 
 #pragma once
 
+#include "score_recorder.hpp"
+
 #include <algorithm>
 #include <set>
 #include <string>
 #include <unordered_map>
 #include <vector>
 
-#include "score_recorder.hpp"
 #include <bsoncxx/document/value.hpp>
 #include <bsoncxx/stdx/string_view.hpp>
 

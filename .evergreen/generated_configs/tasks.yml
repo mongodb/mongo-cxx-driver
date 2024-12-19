@@ -3968,10 +3968,17 @@ tasks:
           MONGOCXX_TEST_TOPOLOGY: single
           example_projects_cxx_standard: 17
   - name: lint
-    run_on: ubuntu1804-large
-    tags: [lint, ubuntu1804]
+    run_on:
+      - ubuntu2204-small
+      - ubuntu2004-small
+      - debian12-small
+      - debian11-small
+      - debian10-small
+    tags: [lint]
     commands:
       - func: setup
+      - func: set-cache-dir
+      - func: install-uv
       - func: lint
   - name: macro-guards-ubuntu2004
     run_on: ubuntu2004-large

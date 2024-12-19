@@ -1607,8 +1607,9 @@ static void queryable_encryption_api(mongocxx::client& client) {
     client["docsExamples"].drop();
 
     // Create two data keys.
-    class client key_vault_client {
-        uri{}, add_test_server_api(),
+    class client key_vault_client{
+        uri{},
+        add_test_server_api(),
     };
 
     options::client_encryption ce_opts;
@@ -1648,9 +1649,7 @@ static void queryable_encryption_api(mongocxx::client& client) {
 
     mongocxx::options::client encrypted_client_opts;
     encrypted_client_opts.auto_encryption_opts(std::move(auto_encrypt_opts));
-    class client encrypted_client {
-        uri{}, add_test_server_api(encrypted_client_opts)
-    };
+    class client encrypted_client{uri{}, add_test_server_api(encrypted_client_opts)};
 
     // Create the Queryable Encryption collection docsExample.encrypted.
     // Because docsExample.encrypted is in encryptedFieldsMap, it is created with Queryable

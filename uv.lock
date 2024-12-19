@@ -106,6 +106,28 @@ wheels = [
 ]
 
 [[package]]
+name = "clang-format"
+version = "19.1.5"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/81/fa/eca5715fad300de89f6759dcb0728b171779587e01f6dc1a4456f47a50a3/clang_format-19.1.5.tar.gz", hash = "sha256:77693ceb22ebf60b82a27d454059d27e0574df31e8d257d8075c699915d5e91c", size = 11120 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/89/0d/95d97521082387f32700608dc92a7ea260670ec104aa67b9af56115c2847/clang_format-19.1.5-py2.py3-none-macosx_10_9_x86_64.whl", hash = "sha256:3726ba534024953c61f379c6c9c998fb3bd8265b9e9c8df6190d116591651bb7", size = 1428186 },
+    { url = "https://files.pythonhosted.org/packages/19/1f/3ec261d38b7cdcd5d1a435627f7440bdc580bcb8dcdf4d0e5a5e72ba1ff0/clang_format-19.1.5-py2.py3-none-macosx_11_0_arm64.whl", hash = "sha256:64ba4ce03b5748de364497389d36f1a32da9a1f6824fa519ecff3c7dcfcdcc7b", size = 1398351 },
+    { url = "https://files.pythonhosted.org/packages/2a/39/298f883dc7cef4b39f3b4c4868aa494f02631d0402c1a26387af80f03280/clang_format-19.1.5-py2.py3-none-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:ecff0642339dd3c35639592e8cdf309950182438a154b836b4f43f5ed127fed7", size = 1731069 },
+    { url = "https://files.pythonhosted.org/packages/42/5d/9363b901e885a2325f16a0e4f0a07dbc8e36ba2f10ba9ff42c42c77eb100/clang_format-19.1.5-py2.py3-none-manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:65ef8799445bac597983638869f875ccd89fac91f43ce9c20ac6645fb53910e3", size = 1908824 },
+    { url = "https://files.pythonhosted.org/packages/fb/db/884d4d2da2bf73d3d8fed383e7b29abd855304526bf18abee075373cb69a/clang_format-19.1.5-py2.py3-none-manylinux_2_17_ppc64le.manylinux2014_ppc64le.whl", hash = "sha256:b226d46ad383bcd70025bdc8d23eac79f49d02cd23f8d4412c882a9e6a51520f", size = 2622843 },
+    { url = "https://files.pythonhosted.org/packages/8f/2f/97f2113cd1e4b76e0897aa0154f3607e7ee32ec8b7aaa537bcc2675c21e9/clang_format-19.1.5-py2.py3-none-manylinux_2_17_s390x.manylinux2014_s390x.whl", hash = "sha256:f8933c4783f4980e47f99d5bf20880e18d719441337ec5271af6d2dfe4efd67e", size = 1723410 },
+    { url = "https://files.pythonhosted.org/packages/89/45/f90c1d186cd3cedd5f18642b46ff22e1875d140bae50979bfcd001b0ff33/clang_format-19.1.5-py2.py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:a91ef7774c1b500d27ab7edf548689c6fdfdb63aa1e0dc2fc6549de1e37f7d4a", size = 1740306 },
+    { url = "https://files.pythonhosted.org/packages/be/ba/f33350038d3687a55b9d7657740de5c0250da49fe2c3a7a056bd87be1921/clang_format-19.1.5-py2.py3-none-musllinux_1_2_aarch64.whl", hash = "sha256:e3400d986698bb75e698aa29fce2b91f7c42719239a50eeac8dc075e458dbec6", size = 2675580 },
+    { url = "https://files.pythonhosted.org/packages/52/4a/9c04392cf57c2674044d39fe039e106a8871fcf4b72b188741e54277d037/clang_format-19.1.5-py2.py3-none-musllinux_1_2_i686.whl", hash = "sha256:af2d6e5f985fe69be9fa948f603b8896b9c9b4deae303682cee2b9cbca55265b", size = 2977902 },
+    { url = "https://files.pythonhosted.org/packages/b3/63/9493d4d82b7a7a1399ca091ae0909bf09cf23bbfd3a744f1874cce4f03bb/clang_format-19.1.5-py2.py3-none-musllinux_1_2_ppc64le.whl", hash = "sha256:f70720045d1454e375a0d7755297215bcf11bdc026ee7097940e595d62edaa93", size = 3125796 },
+    { url = "https://files.pythonhosted.org/packages/23/61/3137aa39d681f31b869d0c8b99ba86927adc724143d59ba5540874278eb1/clang_format-19.1.5-py2.py3-none-musllinux_1_2_s390x.whl", hash = "sha256:97cb404ba8a27e983d5e0c40cbdba4ff9f59e77208f814e0772df70bc6ab1549", size = 3069647 },
+    { url = "https://files.pythonhosted.org/packages/8a/ae/7beff6da60d9cb654d1513dda15719a5dce70ad38ef30877c8d5d1675959/clang_format-19.1.5-py2.py3-none-musllinux_1_2_x86_64.whl", hash = "sha256:47aa71eed4e2958c11a2e05b77f5513df890949126a10cd7dc4bf23287a46a2c", size = 2763142 },
+    { url = "https://files.pythonhosted.org/packages/06/b3/71dbc718a7201d1191380d2b41d85a541efd40475bb439666c82c07551be/clang_format-19.1.5-py2.py3-none-win32.whl", hash = "sha256:d7ac4fc1f73b13c7a353c5ebe0f654d909e12e9972697ad0d17c903a55ec97c2", size = 1243307 },
+    { url = "https://files.pythonhosted.org/packages/b2/3b/a52d1ecf156e2dcab803d04ff317e898b8edc39e832ca76b6f2158ddc2f9/clang_format-19.1.5-py2.py3-none-win_amd64.whl", hash = "sha256:6bb35cbb5fcd9726a6c3575c04c8e0204429846aa7d2119cf9b1327c0f1b543a", size = 1441126 },
+]
+
+[[package]]
 name = "click"
 version = "8.1.7"
 source = { registry = "https://pypi.org/simple" }
@@ -260,6 +282,7 @@ source = { virtual = "." }
 [package.dependency-groups]
 dev = [
     { name = "beautifulsoup4" },
+    { name = "clang-format" },
     { name = "click" },
     { name = "gitpython" },
     { name = "jira" },
@@ -275,6 +298,7 @@ dev = [
 [package.metadata.dependency-groups]
 dev = [
     { name = "beautifulsoup4", specifier = ">=4.12" },
+    { name = "clang-format", specifier = "~=19.1" },
     { name = "click", specifier = ">=6.0" },
     { name = "gitpython", specifier = ">=3.1" },
     { name = "jira", specifier = ">=3.1" },
