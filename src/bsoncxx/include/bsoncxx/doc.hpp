@@ -24,7 +24,7 @@
 ///
 
 ///
-/// @dir bsoncxx/include/bsoncxx
+/// @dir include/bsoncxx
 /// Provides headers declaring entities in @ref bsoncxx
 ///
 

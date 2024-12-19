@@ -661,7 +661,7 @@ Example (using Jira syntax formatting):
 > [!NOTE]
 > Some of these commands may take a while to complete.
 
-Set `$LATEST_DOC_TAG` in `etc/generate-latest-apidocs.pl` to the latest release tag.
+Set `$LATEST_VERSION` in `etc/generate-latest-apidocs.sh` to the latest release version.
 
 Change the version number for `SITEMAP_URL` in `Doxyfile` to the latest release version.
 
@@ -678,7 +678,7 @@ command -V doxygen hugo
 ```
 
 > [!IMPORTANT]
-> The required Doxygen version is defined in `etc/generate-apidocs-from-tag.pl` as `$doxygen_version_required`. If not already present, download the required version from [Doxygen Releases](https://www.doxygen.nl/download.html). Use the `DOXYGEN_BINARY` environment variable to override the default `doxygen` command with a path to a specific Doxygen binary.
+> The required Doxygen version is defined in `etc/generate-latest-apidocs.sh` as `$DOXYGEN_VERSION_REQUIRED`. If not already present, download the required version from [Doxygen Releases](https://www.doxygen.nl/download.html). Use the `DOXYGEN_BINARY` environment variable to override the default `doxygen` command with a path to a specific Doxygen binary.
 
 Run `git clean -dfx` to restore the repository to a clean state.
 
@@ -691,16 +691,19 @@ Configure CMake using `build` as the binary directory. Leave all other configura
 cmake -S . -B build
 ```
 
-Test generating Hugo and Doxygen docs locally by building the `docs` target (this command DOES NOT check for the required Doxygen version):
-
-```bash
-cmake --build build --target docs
-```
-
-Test generating the latest versioned Doxygen docs by building the `doxygen-latest` target (this command DOES checks for the required Doxygen version):
+Test generating both Hugo and Doxygen docs locally by building the `docs` target:
 
 ```bash
 export DOXYGEN_BINARY=<path/to/doxygen> # Optional. For binary version compatibility.
+
+cmake --build build --target docs
+```
+
+Test generating the latest versioned Doxygen docs by building the `doxygen-latest` target:
+
+```bash
+export DOXYGEN_BINARY=<path/to/doxygen> # Optional. For binary version compatibility.
+
 cmake --build build --target doxygen-latest
 ```
 
