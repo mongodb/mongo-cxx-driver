@@ -53,7 +53,9 @@ TEST_CASE("a bulk_write will setup a mongoc bulk operation", "[bulk_write]") {
     });
 
     SECTION("with an ordered bulk write") {
-        { auto bw = coll.create_bulk_write(); }
+        {
+            auto bw = coll.create_bulk_write();
+        }
         REQUIRE(construct_called);
         REQUIRE(ordered_value);
     }
@@ -61,7 +63,9 @@ TEST_CASE("a bulk_write will setup a mongoc bulk operation", "[bulk_write]") {
     SECTION("with an unordered bulk write") {
         options::bulk_write bw_opts;
         bw_opts.ordered(false);
-        { auto bw = coll.create_bulk_write(bw_opts); }
+        {
+            auto bw = coll.create_bulk_write(bw_opts);
+        }
         REQUIRE(construct_called);
         REQUIRE(!ordered_value);
     }
@@ -75,7 +79,9 @@ TEST_CASE("destruction of a bulk_write will destroy mongoc operation", "[bulk_wr
 
     destruct->visit([&destruct_called](mongoc_bulk_operation_t*) { destruct_called = true; });
 
-    { auto bw = coll.create_bulk_write(); }
+    {
+        auto bw = coll.create_bulk_write();
+    }
     REQUIRE(destruct_called);
 }
 class insert_functor {

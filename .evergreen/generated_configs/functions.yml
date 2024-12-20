@@ -302,6 +302,37 @@ functions:
       args:
         - -c
         - git clone --depth 1 https://github.com/mongodb/mongo-c-driver mongoc
+  install-uv:
+    - command: subprocess.exec
+      type: setup
+      params:
+        binary: bash
+        args:
+          - -c
+          - |
+            set -o errexit
+            set -o pipefail
+
+            if [[ ! -n "${MONGO_CXX_DRIVER_CACHE_DIR}" ]]; then
+                echo "MONGO_CXX_DRIVER_CACHE_DIR is not defined!" 1>&2
+                exit 1
+            fi
+
+            uv_install_dir="${MONGO_CXX_DRIVER_CACHE_DIR}/uv-0.5.9"
+            mkdir -p "$uv_install_dir"
+
+            if ! command -V "$uv_install_dir/uv" 2>/dev/null; then
+                env \
+                    UV_INSTALL_DIR="$uv_install_dir" \
+                    UV_NO_MODIFY_PATH=1 \
+                    mongo-cxx-driver/.evergreen/scripts/uv-installer.sh
+            fi
+
+            printf "UV_INSTALL_DIR: %s\n" "$uv_install_dir" >|expansions.uv.yml
+    - command: expansions.update
+      type: setup
+      params:
+        file: expansions.uv.yml
   install_c_driver:
     - command: expansions.update
       type: setup
@@ -322,9 +353,11 @@ functions:
     params:
       binary: bash
       working_dir: mongo-cxx-driver
+      env:
+        DRYRUN: "1"
       args:
         - -c
-        - python etc/clang_format.py lint
+        - ${UV_INSTALL_DIR}/uv run --frozen etc/clang-format-all.sh
   run scan build:
     - command: subprocess.exec
       type: test
@@ -393,6 +426,38 @@ functions:
           export DRIVERS_TOOLS=$(pwd)
 
           .evergreen/atlas_data_lake/run-mongohouse-image.sh
+  set-cache-dir:
+    - command: subprocess.exec
+      type: setup
+      params:
+        binary: bash
+        args:
+          - -c
+          - |
+            if [[ -n "$XDG_CACHE_DIR" ]]; then
+                cache_dir="$XDG_CACHE_DIR" # XDG Base Directory specification.
+            elif [[ -n "$LOCALAPPDATA" ]]; then
+                cache_dir="$LOCALAPPDATA" # Windows.
+            elif [[ -n "$USERPROFILE" ]]; then
+                cache_dir="$USERPROFILE/.cache" # Windows (fallback).
+            elif [[ -d "$HOME/Library/Caches" ]]; then
+                cache_dir="$HOME/Library/Caches" # MacOS.
+            elif [[ -n "$HOME" ]]; then
+                cache_dir="$HOME/.cache" # Linux-like.
+            elif [[ -d ~/.cache ]]; then
+                cache_dir="~/.cache" # Linux-like (fallback).
+            else
+                cache_dir="$(pwd)/.cache" # EVG task directory (fallback).
+            fi
+
+            mkdir -p "$cache_dir/mongo-cxx-driver" || exit
+            cache_dir="$(cd "$cache_dir/mongo-cxx-driver" && pwd)" || exit
+
+            printf "MONGO_CXX_DRIVER_CACHE_DIR: %s\n" "$cache_dir" >|expansions.set-cache-dir.yml
+    - command: expansions.update
+      type: setup
+      params:
+        file: expansions.set-cache-dir.yml
   setup:
     - command: subprocess.exec
       type: setup

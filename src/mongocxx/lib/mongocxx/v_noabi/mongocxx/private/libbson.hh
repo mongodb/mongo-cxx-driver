@@ -57,8 +57,8 @@ class scoped_bson_t {
     //
     // The internal bson_t is considered initialized.
     //
-    explicit MONGOCXX_ABI_EXPORT_CDECL_TESTING()
-        scoped_bson_t(bsoncxx::document::view_or_value doc);
+    explicit MONGOCXX_ABI_EXPORT_CDECL_TESTING() scoped_bson_t(
+        bsoncxx::document::view_or_value doc);
 
     //
     // Initializes a bson_t from the provided document.

@@ -71,8 +71,8 @@ class server_description {
     ///
     /// @deprecated use hello instead.
     ///
-    MONGOCXX_DEPRECATED MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::document::view)
-        is_master() const;
+    MONGOCXX_DEPRECATED MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::document::view) is_master()
+        const;
 
     ///
     /// The server's last response to the "hello" command, or an empty document if the driver

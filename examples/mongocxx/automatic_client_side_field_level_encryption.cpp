@@ -62,9 +62,7 @@ void create_json_schema_file(bsoncxx::document::view_or_value kms_providers,
     client_encryption_opts.kms_providers(kms_providers);
     client_encryption_opts.key_vault_client(key_vault_client);
 
-    class client_encryption client_encryption {
-        std::move(client_encryption_opts)
-    };
+    class client_encryption client_encryption{std::move(client_encryption_opts)};
 
     // Create a new data key and json schema for the encryptedField.
     auto data_key_id = client_encryption.create_data_key("local");
@@ -116,9 +114,7 @@ int EXAMPLES_CDECL main() {
                                     << close_document << finalize;
 
     // The MongoClient used to access the key vault.
-    class client key_vault_client {
-        uri {}
-    };
+    class client key_vault_client{uri{}};
     auto key_vault = key_vault_client["keyvault"]["datakeys"];
 
     // Ensure that two data keys cannot share the same keyAltName by adding
@@ -145,9 +141,7 @@ int EXAMPLES_CDECL main() {
 
     options::client client_opts;
     client_opts.auto_encryption_opts(std::move(auto_encrypt_opts));
-    class client client {
-        uri{}, std::move(client_opts)
-    };
+    class client client{uri{}, std::move(client_opts)};
 
     auto coll = client["test"]["coll"];
 
@@ -160,9 +154,7 @@ int EXAMPLES_CDECL main() {
     std::cout << "\nDocument retrieved with auto-encrypted client:\n"
               << bsoncxx::to_json(*res) << std::endl;
 
-    class client unencrypted_client {
-        uri {}
-    };
+    class client unencrypted_client{uri{}};
     auto unencrypted_coll = unencrypted_client["test"]["coll"];
     auto res2 = unencrypted_coll.find_one({});
     std::cout << "\nDocument retrieved with unencrypted client:\n"

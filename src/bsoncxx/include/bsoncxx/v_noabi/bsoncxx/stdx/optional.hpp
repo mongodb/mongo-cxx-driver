@@ -110,32 +110,31 @@ std::false_type not_an_optional_f(const optional<T>&);
 
 // Utility trait to detect specializations of stdx::optional.
 template <typename T>
-struct not_an_optional : decltype(not_an_optional_f(std::declval<T const&>())) {};
+struct not_an_optional : decltype(not_an_optional_f(std::declval<const T&>())){};
 
 template <typename T, typename Ucvr, typename U>
 struct enable_opt_conversion
-    : bsoncxx::detail::conjunction<  //
+    : bsoncxx::detail::conjunction<
           std::is_constructible<T, Ucvr>,
-          bsoncxx::detail::disjunction<  //
-              std::is_same<T, bool>,
-              bsoncxx::detail::negation<
-                  bsoncxx::detail::conjunction<std::is_constructible<T, optional<U>&>,
-                                               std::is_constructible<T, optional<U> const&>,
-                                               std::is_constructible<T, optional<U>&&>,
-                                               std::is_constructible<T, optional<U> const&&>,
-                                               std::is_convertible<optional<U>&, T>,
-                                               std::is_convertible<optional<U> const&, T>,
-                                               std::is_convertible<optional<U>&&, T>,
-                                               std::is_convertible<optional<U> const&&, T>>>>> {};
+          bsoncxx::detail::disjunction<std::is_same<T, bool>,
+                                       bsoncxx::detail::negation<bsoncxx::detail::conjunction<
+                                           std::is_constructible<T, optional<U>&>,
+                                           std::is_constructible<T, const optional<U>&>,
+                                           std::is_constructible<T, optional<U>&&>,
+                                           std::is_constructible<T, const optional<U>&&>,
+                                           std::is_convertible<optional<U>&, T>,
+                                           std::is_convertible<const optional<U>&, T>,
+                                           std::is_convertible<optional<U>&&, T>,
+                                           std::is_convertible<const optional<U>&&, T>>>>> {};
 
 template <typename From, typename To>
-struct enable_opt_value_conversion   //
-    : bsoncxx::detail::conjunction<  //
+struct enable_opt_value_conversion  //
+    : bsoncxx::detail::conjunction<
           std::is_constructible<To, From&&>,
           bsoncxx::detail::negation<bsoncxx::detail::is_alike<From, in_place_t>>,
           bsoncxx::detail::negation<bsoncxx::detail::is_alike<From, optional<To>>>,
           bsoncxx::detail::disjunction<
-              bsoncxx::detail::negation<bsoncxx::detail::is_alike<To, bool>>,  //
+              bsoncxx::detail::negation<bsoncxx::detail::is_alike<To, bool>>,
               detail::not_an_optional<bsoncxx::detail::remove_cvref_t<From>>>> {};
 
 }  // namespace detail
@@ -211,8 +210,8 @@ class optional : bsoncxx::detail::equality_operators,
               bsoncxx::detail::requires_t<
                   int,
                   detail::enable_opt_conversion<T, const U&, U>,
-                  bsoncxx::detail::negation<std::is_convertible<U const&, T>>> = 0>
-    bsoncxx_cxx14_constexpr explicit optional(optional<U> const& other) noexcept(
+                  bsoncxx::detail::negation<std::is_convertible<const U&, T>>> = 0>
+    bsoncxx_cxx14_constexpr explicit optional(const optional<U>& other) noexcept(
         std::is_nothrow_constructible<T, bsoncxx::detail::add_lvalue_reference_t<const U>>::value) {
         if (other.has_value()) {
             this->emplace(*other);
@@ -222,8 +221,8 @@ class optional : bsoncxx::detail::equality_operators,
     template <typename U,
               bsoncxx::detail::requires_t<int,
                                           detail::enable_opt_conversion<T, const U&, U>,
-                                          std::is_convertible<U const&, T>> = 0>
-    bsoncxx_cxx14_constexpr optional(optional<U> const& other) noexcept(
+                                          std::is_convertible<const U&, T>> = 0>
+    bsoncxx_cxx14_constexpr optional(const optional<U>& other) noexcept(
         std::is_nothrow_constructible<T, bsoncxx::detail::add_lvalue_reference_t<const U>>::value) {
         if (other.has_value()) {
             this->emplace(*other);
@@ -452,7 +451,7 @@ struct optional_assign_base<T, movable> : optional_construct_base<T> {
     // Constructors defer to base.
 
     optional_assign_base() = default;
-    optional_assign_base(optional_assign_base const&) = default;
+    optional_assign_base(const optional_assign_base&) = default;
     optional_assign_base(optional_assign_base&&) = default;
     ~optional_assign_base() = default;
 
@@ -468,7 +467,7 @@ struct optional_assign_base<T, movable> : optional_construct_base<T> {
 template <typename T>
 struct optional_assign_base<T, immobile> : optional_construct_base<T> {
     optional_assign_base() = default;
-    optional_assign_base(optional_assign_base const&) = default;
+    optional_assign_base(const optional_assign_base&) = default;
     optional_assign_base(optional_assign_base&&) = default;
     ~optional_assign_base() = default;
 
@@ -505,7 +504,7 @@ struct optional_destruct_helper<false /* Non-trivial */> {
         // Special members defer to base.
 
         base() = default;
-        base(base const&) = default;
+        base(const base&) = default;
         base(base&&) = default;
         base& operator=(const base&) = default;
         base& operator=(base&&) = default;
@@ -529,8 +528,8 @@ struct optional_destruct_helper<true /* Trivial */> {
 struct optional_operators_base {
     template <typename T, typename U>
     friend bsoncxx_cxx14_constexpr auto tag_invoke(bsoncxx::detail::equal_to,
-                                                   optional<T> const& left,
-                                                   optional<U> const& right) noexcept
+                                                   const optional<T>& left,
+                                                   const optional<U>& right) noexcept
         -> bsoncxx::detail::requires_t<bool, bsoncxx::detail::is_equality_comparable<T, U>> {
         if (left.has_value() != right.has_value()) {
             return false;
@@ -544,9 +543,11 @@ struct optional_operators_base {
 
     template <typename T, typename U>
     friend constexpr auto tag_invoke(bsoncxx::detail::equal_to,
-                                     optional<T> const& left,
-                                     U const& right) noexcept -> bsoncxx::detail::
-        requires_t<bool, not_an_optional<U>, bsoncxx::detail::is_equality_comparable<T, U>> {
+                                     const optional<T>& left,
+                                     const U& right) noexcept
+        -> bsoncxx::detail::requires_t<bool,
+                                       not_an_optional<U>,
+                                       bsoncxx::detail::is_equality_comparable<T, U>> {
         BSONCXX_PUSH_WARNINGS();
         BSONCXX_DISABLE_WARNING(GNU("-Wfloat-equal"));
         return left.has_value() && *left == right;
@@ -555,15 +556,15 @@ struct optional_operators_base {
 
     template <typename T>
     friend constexpr bool tag_invoke(bsoncxx::detail::equal_to,
-                                     optional<T> const& opt,
+                                     const optional<T>& opt,
                                      nullopt_t) noexcept {
         return !opt.has_value();
     }
 
     template <typename T, typename U>
     bsoncxx_cxx14_constexpr friend auto tag_invoke(bsoncxx::detail::compare_three_way compare,
-                                                   optional<T> const& left,
-                                                   optional<U> const& right)
+                                                   const optional<T>& left,
+                                                   const optional<U>& right)
         -> bsoncxx::detail::requires_t<bsoncxx::detail::strong_ordering,
                                        bsoncxx::detail::is_totally_ordered_with<T, U>> {
         if (left.has_value()) {
@@ -586,8 +587,8 @@ struct optional_operators_base {
 
     template <typename T, typename U>
     bsoncxx_cxx14_constexpr friend auto tag_invoke(bsoncxx::detail::compare_three_way compare,
-                                                   optional<T> const& left,
-                                                   U const& right)
+                                                   const optional<T>& left,
+                                                   const U& right)
         -> bsoncxx::detail::requires_t<bsoncxx::detail::strong_ordering,
                                        not_an_optional<U>,
                                        bsoncxx::detail::is_totally_ordered_with<T, U>> {
@@ -600,7 +601,7 @@ struct optional_operators_base {
 
     template <typename T>
     constexpr friend bsoncxx::detail::strong_ordering tag_invoke(
-        bsoncxx::detail::compare_three_way compare, optional<T> const& left, nullopt_t) {
+        bsoncxx::detail::compare_three_way compare, const optional<T>& left, nullopt_t) {
         return compare(left.has_value(), false);
     }
 };
@@ -612,8 +613,8 @@ struct optional_swap_mixin {};
 template <typename T>
 struct optional_swap_mixin<T, true> {
     bsoncxx_cxx14_constexpr friend void swap(optional<T>& left, optional<T>& right) noexcept(
-        std::is_nothrow_move_constructible<T>::value&&
-            bsoncxx::detail::is_nothrow_swappable<T>::value) {
+        std::is_nothrow_move_constructible<T>::value &&
+        bsoncxx::detail::is_nothrow_swappable<T>::value) {
         left.swap(right);
     }
 };
@@ -681,8 +682,8 @@ class optional_common_base : optional_operators_base, optional_swap_mixin<T> {
 
     // Special swap for optional values that removes need for a temporary.
     bsoncxx_cxx14_constexpr void swap(optional_common_base& other) noexcept(
-        std::is_nothrow_move_constructible<T>::value&&
-            bsoncxx::detail::is_nothrow_swappable<T>::value) {
+        std::is_nothrow_move_constructible<T>::value &&
+        bsoncxx::detail::is_nothrow_swappable<T>::value) {
         if (other._has_value) {
             if (this->_has_value) {
                 using std::swap;
@@ -756,9 +757,8 @@ template <typename T>
 struct optional_hash<T, true> {
     using Td = bsoncxx::detail::remove_const_t<T>;
     constexpr std::size_t operator()(const optional<T>& opt) const
-        noexcept(noexcept(std::hash<Td>()(std::declval<Td const&>()))) {
-        return opt.has_value() ? std::hash<Td>()(*opt)  //
-                               : std::hash<void*>()(nullptr);
+        noexcept(noexcept(std::hash<Td>()(std::declval<const Td&>()))) {
+        return opt.has_value() ? std::hash<Td>()(*opt) : std::hash<void*>()(nullptr);
     }
 };
 

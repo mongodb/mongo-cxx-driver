@@ -86,8 +86,8 @@ class estimated_document_count {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/count/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(
-        const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value>&)
+    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<
+                              bsoncxx::v_noabi::types::bson_value::view_or_value>&)
     comment() const;
 
     ///
@@ -114,8 +114,8 @@ class estimated_document_count {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/count/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(
-        const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::read_preference>&)
+    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<
+                              mongocxx::v_noabi::read_preference>&)
     read_preference() const;
 
    private:

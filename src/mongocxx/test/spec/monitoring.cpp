@@ -209,10 +209,10 @@ static bool is_sensitive_command(const Ev& event) noexcept {
         "copyDbSaslStart",
         "copydb",
     };
-    const bool is_sensitive_cmd_name = std::find(std::begin(sensitive_commands),
-                                                 std::end(sensitive_commands),
-                                                 event.command_name())  //
-                                       != std::end(sensitive_commands);
+    const bool is_sensitive_cmd_name =
+        std::find(std::begin(sensitive_commands),
+                  std::end(sensitive_commands),
+                  event.command_name()) != std::end(sensitive_commands);
     if (is_sensitive_cmd_name) {
         return true;
     }

@@ -39,7 +39,9 @@ int EXAMPLES_CDECL main() {
     }
 
     // Create a single field index.
-    { db["restaurants"].create_index(make_document(kvp("cuisine", 1)), {}); }
+    {
+        db["restaurants"].create_index(make_document(kvp("cuisine", 1)), {});
+    }
 
     // Create a compound index.
     {

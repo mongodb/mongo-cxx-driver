@@ -32,7 +32,7 @@ BSONCXX_PUSH_WARNINGS();
 BSONCXX_DISABLE_WARNING(GNU("-Wfloat-equal"));
 template <typename L, typename R>
 auto is_equality_comparable_f(int, bool b = false)
-    -> true_t<decltype((std::declval<const L&>() == std::declval<const R&>()) ? 0 : 0,  //
+    -> true_t<decltype((std::declval<const L&>() == std::declval<const R&>()) ? 0 : 0,
                        (std::declval<const R&>() == std::declval<const L&>()) ? 0 : 0,
                        (std::declval<const L&>() != std::declval<const R&>()) ? 0 : 0,
                        (std::declval<const R&>() != std::declval<const L&>()) ? 0 : 0)>;
@@ -47,8 +47,8 @@ struct is_equality_comparable : decltype(is_equality_comparable_f<L, R>(0)) {};
 // Callable object and tag type for equality comparison.
 struct equal_to {
     template <typename L, typename R>
-    constexpr requires_t<bool, is_equality_comparable<L, R>>  //
-    operator()(L&& l, R&& r) const noexcept(noexcept(l == r)) {
+    constexpr requires_t<bool, is_equality_comparable<L, R>> operator()(L&& l, R&& r) const
+        noexcept(noexcept(l == r)) {
         return l == r;
     }
 };
@@ -119,7 +119,9 @@ class strong_ordering {
 
 #pragma push_macro("INLINE_VAR")
 #undef INLINE_VAR
-#define INLINE_VAR BSONCXX_IF_GNU_LIKE([[gnu::weak]]) BSONCXX_IF_MSVC(__declspec(selectany))
+#define INLINE_VAR                     \
+    BSONCXX_IF_GNU_LIKE([[gnu::weak]]) \
+    BSONCXX_IF_MSVC(__declspec(selectany))
 
 INLINE_VAR const strong_ordering strong_ordering::less =
     strong_ordering(strong_ordering::_construct{}, -1);
@@ -142,10 +144,9 @@ struct compare_three_way {
               typename R,
               typename = decltype(std::declval<L>() < std::declval<R>()),
               typename = decltype(std::declval<L>() == std::declval<R>())>
-    constexpr static strong_ordering impl(L const& l, R const& r, rank<1>) {
+    constexpr static strong_ordering impl(const L& l, const R& r, rank<1>) {
         return (l < r) ? strong_ordering::less
-                       : (l == r ? strong_ordering::equal  //
-                                 : strong_ordering::greater);
+                       : (l == r ? strong_ordering::equal : strong_ordering::greater);
     }
     BSONCXX_POP_WARNINGS();
 
@@ -153,12 +154,12 @@ struct compare_three_way {
               typename R,
               typename = decltype(tag_invoke(
                   std::declval<compare_three_way>(), std::declval<L>(), std::declval<R>()))>
-    constexpr static strong_ordering impl(L const& l, R const& r, rank<2>) {
+    constexpr static strong_ordering impl(const L& l, const R& r, rank<2>) {
         return tag_invoke(compare_three_way{}, l, r);
     }
 
     template <typename L, typename R>
-    constexpr auto operator()(L const& l, R const& r) const
+    constexpr auto operator()(const L& l, const R& r) const
         BSONCXX_RETURNS((impl)(l, r, rank<2>{}));
 };
 

@@ -40,7 +40,7 @@ class server_error_category final : public std::error_category {
 }  // namespace
 
 const std::error_category& server_error_category() {
-    static const class server_error_category category {};
+    static const class server_error_category category{};
     return category;
 }
 
