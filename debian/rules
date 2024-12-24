@@ -17,6 +17,11 @@ export DEB_BUILD_MAINT_OPTIONS = hardening=+all
 # package maintainers to append LDFLAGS
 export DEB_LDFLAGS_MAINT_APPEND := -lpthread
 
+# Ensure docs can build with the doxygen package installed by apt (rather than
+# needing to download the current/latest version). This takes precedence over
+# DOXYGEN_USE_CURRENT=1 as specified in the upstream CMakeLists.txt.
+export DOXYGEN_ANY_VERSION := 1
+
 # main packaging script based on dh7 syntax
 %:
 	dh $@
