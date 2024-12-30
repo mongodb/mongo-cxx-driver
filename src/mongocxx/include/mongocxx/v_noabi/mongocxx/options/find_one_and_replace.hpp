@@ -346,9 +346,9 @@ class find_one_and_replace {
     bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern> _write_concern;
 };
 
-}  // namespace options
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace options
+} // namespace v_noabi
+} // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
 

@@ -138,4 +138,4 @@ void json_multi_export::concurrency_task(std::uint32_t start_file, std::uint32_t
         }
     }
 }
-}  // namespace benchmark
+} // namespace benchmark

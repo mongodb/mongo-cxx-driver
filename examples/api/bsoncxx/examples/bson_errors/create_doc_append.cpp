@@ -41,7 +41,7 @@ void example(bsoncxx::stdx::string_view big_string) {
     bsoncxx::document::value original{builder.view()};
 
     try {
-        builder.append(kvp("too big", big_string));  // Throws.
+        builder.append(kvp("too big", big_string)); // Throws.
 
         EXPECT(false && "should not reach this point");
     } catch (bsoncxx::exception const& ex) {
@@ -52,7 +52,7 @@ void example(bsoncxx::stdx::string_view big_string) {
 }
 // [Example]
 
-}  // namespace
+} // namespace
 
 RUNNER_REGISTER_COMPONENT() {
     example(examples::big_string().view());

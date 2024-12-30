@@ -99,6 +99,6 @@ topology_description::server_descriptions topology_description::servers() const 
     return server_descriptions{reinterpret_cast<void*>(sds), n};
 }
 
-}  // namespace events
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace events
+} // namespace v_noabi
+} // namespace mongocxx

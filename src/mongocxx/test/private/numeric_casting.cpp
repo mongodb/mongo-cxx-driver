@@ -62,4 +62,4 @@ TEST_CASE("can do basic numeric_casting", "[numeric_casting]") {
         REQUIRE_FALSE(mongocxx::int64_to_size_t_safe(-1, sz));
     }
 }
-}  // namespace
+} // namespace

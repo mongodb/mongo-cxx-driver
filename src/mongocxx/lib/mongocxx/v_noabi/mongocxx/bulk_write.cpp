@@ -229,5 +229,5 @@ bulk_write::bulk_write(collection const& coll, options::bulk_write const& option
     }
 }
 
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace v_noabi
+} // namespace mongocxx

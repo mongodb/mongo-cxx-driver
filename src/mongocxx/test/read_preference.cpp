@@ -213,4 +213,4 @@ TEST_CASE("Read preference methods call underlying mongoc methods", "[read_prefe
         REQUIRE(called);
     }
 }
-}  // namespace
+} // namespace

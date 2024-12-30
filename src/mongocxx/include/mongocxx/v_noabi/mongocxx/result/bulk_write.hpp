@@ -94,9 +94,9 @@ class bulk_write {
     bsoncxx::v_noabi::document::value _response;
 };
 
-}  // namespace result
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace result
+} // namespace v_noabi
+} // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
 

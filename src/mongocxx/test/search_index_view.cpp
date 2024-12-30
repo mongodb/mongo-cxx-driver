@@ -562,4 +562,4 @@ TEST_CASE("atlas search indexes tests", "[atlas][search_indexes]") {
         SUCCEED("Create many works with vector search types");
     }
 }
-}  // namespace
+} // namespace

@@ -67,7 +67,7 @@ void example(mongocxx::client_session session, mongocxx::collection coll) {
 }
 // [Example]
 
-}  // namespace
+} // namespace
 
 RUNNER_REGISTER_COMPONENT_FOR_REPLICA() {
     mongocxx::client client{mongocxx::uri{}};

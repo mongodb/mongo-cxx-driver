@@ -49,7 +49,7 @@ void on_command_started_callback(mongocxx::events::command_started_event const& 
     (void)event;
 }
 
-}  // namespace
+} // namespace
 
 RUNNER_REGISTER_COMPONENT_WITH_INSTANCE() {
     example();

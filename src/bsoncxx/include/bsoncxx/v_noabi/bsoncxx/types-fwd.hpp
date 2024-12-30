@@ -24,8 +24,8 @@ namespace v_noabi {
 enum class type : std::uint8_t;
 enum class binary_sub_type : std::uint8_t;
 
-}  // namespace v_noabi
-}  // namespace bsoncxx
+} // namespace v_noabi
+} // namespace bsoncxx
 
 namespace bsoncxx {
 namespace v_noabi {
@@ -53,16 +53,16 @@ struct b_decimal128;
 struct b_maxkey;
 struct b_minkey;
 
-}  // namespace types
-}  // namespace v_noabi
-}  // namespace bsoncxx
+} // namespace types
+} // namespace v_noabi
+} // namespace bsoncxx
 
 namespace bsoncxx {
 
 using ::bsoncxx::v_noabi::binary_sub_type;
 using ::bsoncxx::v_noabi::type;
 
-}  // namespace bsoncxx
+} // namespace bsoncxx
 
 namespace bsoncxx {
 namespace types {
@@ -89,8 +89,8 @@ using ::bsoncxx::v_noabi::types::b_symbol;
 using ::bsoncxx::v_noabi::types::b_timestamp;
 using ::bsoncxx::v_noabi::types::b_undefined;
 
-}  // namespace types
-}  // namespace bsoncxx
+} // namespace types
+} // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>
 
@@ -167,7 +167,7 @@ struct b_maxkey {};
 /// @ref bsoncxx::v_noabi::types::b_minkey
 struct b_minkey {};
 
-}  // namespace types
-}  // namespace bsoncxx
+} // namespace types
+} // namespace bsoncxx
 
-#endif  // defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
+#endif // defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

@@ -217,15 +217,15 @@ bool operator!=(Value const& lhs, view_or_value<View, Value> const& rhs) {
 /// @}
 ///
 
-}  // namespace v_noabi
-}  // namespace bsoncxx
+} // namespace v_noabi
+} // namespace bsoncxx
 
 namespace bsoncxx {
 
 using ::bsoncxx::v_noabi::operator==;
 using ::bsoncxx::v_noabi::operator!=;
 
-}  // namespace bsoncxx
+} // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>
 
@@ -274,6 +274,6 @@ bool operator==(Value const& lhs, v_noabi::view_or_value<View, Value> const& rhs
 template <typename View, typename Value>
 bool operator!=(v_noabi::view_or_value<View, Value> const& lhs, Value const& rhs);
 
-}  // namespace bsoncxx
+} // namespace bsoncxx
 
-#endif  // defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
+#endif // defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

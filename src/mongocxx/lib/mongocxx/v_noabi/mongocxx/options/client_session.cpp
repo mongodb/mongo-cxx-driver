@@ -51,6 +51,6 @@ bsoncxx::v_noabi::stdx::optional<transaction> const& client_session::default_tra
     return _default_transaction_opts;
 }
 
-}  // namespace options
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace options
+} // namespace v_noabi
+} // namespace mongocxx

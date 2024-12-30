@@ -25,7 +25,7 @@ namespace {
 void example() {
     try {
         mongocxx::options::server_api::version version =
-            mongocxx::options::server_api::version_from_string("0");  // Throws.
+            mongocxx::options::server_api::version_from_string("0"); // Throws.
 
         EXPECT(false && "should not reach this point");
     } catch (mongocxx::exception const& ex) {
@@ -34,7 +34,7 @@ void example() {
 
     try {
         std::string version = mongocxx::options::server_api::version_to_string(
-            static_cast<mongocxx::options::server_api::version>(1));  // Throws.
+            static_cast<mongocxx::options::server_api::version>(1)); // Throws.
 
         EXPECT(false && "should not reach this point");
     } catch (mongocxx::exception const& ex) {
@@ -43,7 +43,7 @@ void example() {
 }
 // [Example]
 
-}  // namespace
+} // namespace
 
 RUNNER_REGISTER_COMPONENT_WITH_INSTANCE() {
     example();

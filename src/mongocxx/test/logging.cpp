@@ -64,4 +64,4 @@ TEST_CASE("a user-provided log handler will be used for logging output", "[insta
     REQUIRE(events[0] == std::make_tuple(log_level::k_error, "foo", "bar"));
 }
 
-}  // namespace
+} // namespace

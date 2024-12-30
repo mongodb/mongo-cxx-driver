@@ -21,14 +21,14 @@ namespace v_noabi {
 
 class MONGOCXX_ABI_EXPORT logic_error;
 
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace v_noabi
+} // namespace mongocxx
 
 namespace mongocxx {
 
 using ::mongocxx::v_noabi::logic_error;
 
-}  // namespace mongocxx
+} // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
 
@@ -44,6 +44,6 @@ namespace mongocxx {
 /// @ref mongocxx::v_noabi::logic_error
 class logic_error {};
 
-}  // namespace mongocxx
+} // namespace mongocxx
 
-#endif  // defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
+#endif // defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

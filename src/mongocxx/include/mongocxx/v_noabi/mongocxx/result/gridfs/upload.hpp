@@ -50,10 +50,10 @@ class upload {
     bsoncxx::v_noabi::types::bson_value::view _id;
 };
 
-}  // namespace gridfs
-}  // namespace result
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace gridfs
+} // namespace result
+} // namespace v_noabi
+} // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
 

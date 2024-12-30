@@ -277,7 +277,7 @@ TEST_CASE("A client can delete apm options and the callbacks will still work pro
             triggered = true;
         });
         client_opts.apm_opts(apm_opts);
-    }  // destructor for apm_opts is called
+    } // destructor for apm_opts is called
 
     client mongo_client(uri{}, test_util::add_test_server_api(client_opts));
 
@@ -460,4 +460,4 @@ TEST_CASE("A client can be constructed with SSL options", "[client]") {
 }
 #endif
 
-}  // namespace
+} // namespace

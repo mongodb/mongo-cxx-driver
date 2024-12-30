@@ -44,8 +44,8 @@ enum class write_type {
     k_replace_one,
 };
 
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace v_noabi
+} // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
 

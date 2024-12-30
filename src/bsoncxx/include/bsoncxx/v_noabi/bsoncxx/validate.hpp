@@ -158,14 +158,14 @@ class validator {
     std::unique_ptr<impl> _impl;
 };
 
-}  // namespace v_noabi
-}  // namespace bsoncxx
+} // namespace v_noabi
+} // namespace bsoncxx
 
 namespace bsoncxx {
 
 using ::bsoncxx::v_noabi::validate;
 
-}  // namespace bsoncxx
+} // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>
 
@@ -188,6 +188,6 @@ v_noabi::stdx::optional<v_noabi::document::view> validate(
     v_noabi::validator const& validator,
     std::size_t* invalid_offset = nullptr);
 
-}  // namespace bsoncxx
+} // namespace bsoncxx
 
-#endif  // defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
+#endif // defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

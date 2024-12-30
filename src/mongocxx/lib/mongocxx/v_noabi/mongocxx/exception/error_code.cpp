@@ -100,12 +100,12 @@ class error_category final : public std::error_category {
     }
 };
 
-}  // namespace
+} // namespace
 
 std::error_category const& error_category() {
     static const class error_category category{};
     return category;
 }
 
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace v_noabi
+} // namespace mongocxx

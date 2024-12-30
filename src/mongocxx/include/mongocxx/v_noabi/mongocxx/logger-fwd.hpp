@@ -23,8 +23,8 @@ enum class log_level;
 
 class MONGOCXX_ABI_EXPORT logger;
 
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace v_noabi
+} // namespace mongocxx
 
 namespace mongocxx {
 
@@ -32,7 +32,7 @@ using ::mongocxx::v_noabi::log_level;
 
 using ::mongocxx::v_noabi::logger;
 
-}  // namespace mongocxx
+} // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
 
@@ -51,6 +51,6 @@ enum class log_level {};
 /// @ref mongocxx::v_noabi::logger
 class logger {};
 
-}  // namespace mongocxx
+} // namespace mongocxx
 
-#endif  // defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
+#endif // defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

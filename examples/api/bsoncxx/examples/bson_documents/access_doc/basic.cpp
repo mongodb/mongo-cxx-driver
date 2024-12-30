@@ -44,7 +44,7 @@ void example(bsoncxx::document::view doc) {
 }
 // [Example]
 
-}  // namespace
+} // namespace
 
 RUNNER_REGISTER_COMPONENT() {
     example(bsoncxx::from_json(R"({"a": 1, "b": 2.0, "c": "three"})"));

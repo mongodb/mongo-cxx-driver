@@ -54,4 +54,4 @@ class benchmark_runner {
     std::vector<std::unique_ptr<microbench>> _microbenches;
     std::set<benchmark_type> _types;
 };
-}  // namespace benchmark
+} // namespace benchmark

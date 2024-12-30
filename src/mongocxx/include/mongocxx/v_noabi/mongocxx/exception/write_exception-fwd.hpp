@@ -21,14 +21,14 @@ namespace v_noabi {
 
 class MONGOCXX_ABI_EXPORT write_exception;
 
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace v_noabi
+} // namespace mongocxx
 
 namespace mongocxx {
 
 using ::mongocxx::v_noabi::write_exception;
 
-}  // namespace mongocxx
+} // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
 
@@ -44,6 +44,6 @@ namespace mongocxx {
 /// @ref mongocxx::v_noabi::write_exception
 class write_exception {};
 
-}  // namespace mongocxx
+} // namespace mongocxx
 
-#endif  // defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
+#endif // defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

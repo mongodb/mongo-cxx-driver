@@ -39,7 +39,7 @@ class write_concern::impl {
     mongoc_write_concern_t* write_concern_t;
 };
 
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace v_noabi
+} // namespace mongocxx
 
 #include <mongocxx/config/private/postlude.hh>

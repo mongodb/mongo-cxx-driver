@@ -354,7 +354,7 @@ void apm_checker::clear() {
     this->_ignore.clear();
 }
 
-}  // namespace spec
-}  // namespace mongocxx
+} // namespace spec
+} // namespace mongocxx
 
 #include <mongocxx/config/private/postlude.hh>

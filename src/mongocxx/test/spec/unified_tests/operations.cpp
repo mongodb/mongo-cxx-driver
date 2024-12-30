@@ -1877,7 +1877,7 @@ document::value update_search_index(collection& coll, document::view operation) 
     return make_document();
 }
 
-}  // namespace
+} // namespace
 
 document::value operations::run(
     entity::map& entity_map,
@@ -2326,4 +2326,4 @@ bsoncxx::stdx::optional<read_preference> operations::lookup_read_preference(docu
     return {};
 }
 
-}  // namespace mongocxx
+} // namespace mongocxx

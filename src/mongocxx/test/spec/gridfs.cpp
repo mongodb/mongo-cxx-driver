@@ -183,7 +183,7 @@ void compare_collections(database db) {
 
 // Run the download tests from the GridFS spec.
 void test_download(database db, gridfs::bucket bucket, document::view operation, document::view assert_doc) {
-    static_cast<void>(db);  // Unused.
+    static_cast<void>(db); // Unused.
 
     REQUIRE(operation["arguments"]);
     document::view arguments = operation["arguments"].get_document().value;
@@ -481,4 +481,4 @@ TEST_CASE("GridFS spec automated tests", "[gridfs_spec]") {
 
     mongocxx::spec::run_tests_in_suite("GRIDFS_TESTS_PATH", cb);
 }
-}  // namespace
+} // namespace

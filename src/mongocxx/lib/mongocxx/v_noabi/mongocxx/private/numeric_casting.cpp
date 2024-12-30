@@ -67,4 +67,4 @@ bool int64_to_size_t_safe(int64_t const in, std::size_t& out) {
     return true;
 }
 
-}  // namespace mongocxx
+} // namespace mongocxx

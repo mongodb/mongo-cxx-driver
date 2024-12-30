@@ -680,7 +680,7 @@ static void run_transaction_operations(
                 }
 
                 FAIL("unexpected session object: " << object);
-                return nullptr;  // -Wreturn-type
+                return nullptr; // -Wreturn-type
             }();
 
             auto with_txn_test_cb = [&](client_session*) {
@@ -746,7 +746,7 @@ static void run_transaction_operations(
                             return session1;
                         }
                         FAIL("unexpected session name: " << value);
-                        return nullptr;  // -Wreturn-type
+                        return nullptr; // -Wreturn-type
                     }();
 
                     // We expect and assume the name of the fail point is always "failCommand". To
@@ -1118,7 +1118,7 @@ void run_crud_tests_in_file(std::string const& test_path, uri test_uri) {
     }
 }
 
-}  // namespace spec
-}  // namespace mongocxx
+} // namespace spec
+} // namespace mongocxx
 
 #include <mongocxx/config/private/postlude.hh>

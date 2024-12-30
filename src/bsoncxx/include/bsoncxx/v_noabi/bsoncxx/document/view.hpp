@@ -185,9 +185,9 @@ class view::const_iterator {
     element _element;
 };
 
-}  // namespace document
-}  // namespace v_noabi
-}  // namespace bsoncxx
+} // namespace document
+} // namespace v_noabi
+} // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>
 

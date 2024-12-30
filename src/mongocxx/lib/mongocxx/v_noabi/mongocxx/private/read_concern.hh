@@ -39,7 +39,7 @@ class read_concern::impl {
     ::mongoc_read_concern_t* read_concern_t;
 };
 
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace v_noabi
+} // namespace mongocxx
 
 #include <mongocxx/config/private/postlude.hh>

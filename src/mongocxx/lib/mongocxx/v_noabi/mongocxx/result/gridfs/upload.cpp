@@ -37,7 +37,7 @@ bool operator!=(upload const& lhs, upload const& rhs) {
     return !(lhs == rhs);
 }
 
-}  // namespace gridfs
-}  // namespace result
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace gridfs
+} // namespace result
+} // namespace v_noabi
+} // namespace mongocxx

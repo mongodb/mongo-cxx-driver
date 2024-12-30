@@ -85,4 +85,4 @@ class score_recorder {
 
     std::vector<std::chrono::milliseconds> _samples;
 };
-}  // namespace benchmark
+} // namespace benchmark

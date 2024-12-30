@@ -365,4 +365,4 @@ TEST_CASE("calling empty on a bulk write before and after appending", "[bulk_wri
     bw.execute();
     REQUIRE_FALSE(bw.empty());
 }
-}  // namespace
+} // namespace

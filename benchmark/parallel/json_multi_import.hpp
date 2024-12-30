@@ -112,4 +112,4 @@ void json_multi_import::concurrency_task(std::uint32_t start_file, std::uint32_t
         (*client)["perftest"]["corpus"].insert_many(docs, ins_opts);
     }
 }
-}  // namespace benchmark
+} // namespace benchmark

@@ -1442,7 +1442,7 @@ static bool is_snapshot_ready(mongocxx::client& client, mongocxx::collection& co
             return true;
         }
     } catch (mongocxx::operation_exception const& e) {
-        if (e.code().value() == 246) {  // snapshot unavailable
+        if (e.code().value() == 246) { // snapshot unavailable
             return false;
         }
         throw;
@@ -1462,11 +1462,11 @@ static void wait_for_snapshot_ready(mongocxx::client& client, std::vector<mongoc
         for (auto& collection : collections) {
             if (!is_snapshot_ready(client, collection)) {
                 is_ready = false;
-                break;  // inner
+                break; // inner
             }
         }
         if (is_ready) {
-            break;  // outer
+            break; // outer
         } else {
             std::this_thread::sleep_for(std::chrono::seconds(sleep_time++));
         }
@@ -1688,7 +1688,7 @@ static void queryable_encryption_api(mongocxx::client& client) {
     // End Queryable Encryption Example
 }
 
-}  // namespace
+} // namespace
 
 int EXAMPLES_CDECL main() {
     // The mongocxx::instance constructor and destructor initialize and shut down the driver,

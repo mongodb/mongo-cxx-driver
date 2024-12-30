@@ -115,4 +115,4 @@ void gridfs_multi_import::concurrency_task(std::uint32_t start_file, std::uint32
         auto uploader = bucket.upload_from_stream(file_name, &stream);
     }
 }
-}  // namespace benchmark
+} // namespace benchmark

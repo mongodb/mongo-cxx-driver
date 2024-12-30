@@ -30,17 +30,17 @@ namespace array {
 ///
 using view_or_value = v_noabi::view_or_value<view, value>;
 
-}  // namespace array
-}  // namespace v_noabi
-}  // namespace bsoncxx
+} // namespace array
+} // namespace v_noabi
+} // namespace bsoncxx
 
 namespace bsoncxx {
 namespace array {
 
 using ::bsoncxx::v_noabi::array::view_or_value;
 
-}  // namespace array
-}  // namespace bsoncxx
+} // namespace array
+} // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>
 
@@ -57,7 +57,7 @@ namespace array {
 /// @ref bsoncxx::v_noabi::array::view_or_value
 class view_or_value {};
 
-}  // namespace array
-}  // namespace bsoncxx
+} // namespace array
+} // namespace bsoncxx
 
-#endif  // defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
+#endif // defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

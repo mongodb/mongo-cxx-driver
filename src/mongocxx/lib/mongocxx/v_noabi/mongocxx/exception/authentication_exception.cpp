@@ -19,5 +19,5 @@ namespace v_noabi {
 
 authentication_exception::~authentication_exception() = default;
 
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace v_noabi
+} // namespace mongocxx

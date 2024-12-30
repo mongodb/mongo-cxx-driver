@@ -56,7 +56,7 @@ std::string to_json_helper(document::view view, decltype(bson_as_legacy_extended
     return {result, size};
 }
 
-}  // namespace
+} // namespace
 
 std::string to_json(document::view view, ExtendedJsonMode mode) {
     switch (mode) {
@@ -106,5 +106,5 @@ document::value operator"" _bson(char const* str, size_t len) {
     return from_json(stdx::string_view{str, len});
 }
 
-}  // namespace v_noabi
-}  // namespace bsoncxx
+} // namespace v_noabi
+} // namespace bsoncxx

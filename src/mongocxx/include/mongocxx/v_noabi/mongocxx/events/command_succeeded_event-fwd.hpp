@@ -22,17 +22,17 @@ namespace events {
 
 class command_succeeded_event;
 
-}  // namespace events
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace events
+} // namespace v_noabi
+} // namespace mongocxx
 
 namespace mongocxx {
 namespace events {
 
 using ::mongocxx::v_noabi::events::command_succeeded_event;
 
-}  // namespace events
-}  // namespace mongocxx
+} // namespace events
+} // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
 
@@ -49,7 +49,7 @@ namespace events {
 /// @ref mongocxx::v_noabi::events::command_succeeded_event
 class command_succeeded_event {};
 
-}  // namespace events
-}  // namespace mongocxx
+} // namespace events
+} // namespace mongocxx
 
-#endif  // defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
+#endif // defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

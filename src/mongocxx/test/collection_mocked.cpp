@@ -988,4 +988,4 @@ TEST_CASE("Collection", "[collection]") {
         }
     }
 }
-}  // namespace
+} // namespace

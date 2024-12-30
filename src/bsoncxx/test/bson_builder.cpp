@@ -1727,4 +1727,4 @@ TEST_CASE("empty list builder", "[bsoncxx::builder::list]") {
     builder::array arr = {};
     bson_eq_object(&expected, arr.view().get_array().value);
 }
-}  // namespace
+} // namespace

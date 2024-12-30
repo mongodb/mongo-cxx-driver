@@ -33,7 +33,7 @@ bson_iter_t to_bson_iter_t(element e) {
     return iter;
 }
 
-}  // namespace
+} // namespace
 
 view::const_iterator::const_iterator() {}
 
@@ -172,6 +172,6 @@ bool operator!=(view lhs, view rhs) {
     return !(lhs == rhs);
 }
 
-}  // namespace document
-}  // namespace v_noabi
-}  // namespace bsoncxx
+} // namespace document
+} // namespace v_noabi
+} // namespace bsoncxx

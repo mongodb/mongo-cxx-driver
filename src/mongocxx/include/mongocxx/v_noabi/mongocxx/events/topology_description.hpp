@@ -161,9 +161,9 @@ class topology_description {
     void* _td;
 };
 
-}  // namespace events
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace events
+} // namespace v_noabi
+} // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
 

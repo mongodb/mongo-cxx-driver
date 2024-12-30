@@ -38,7 +38,7 @@ void example(bsoncxx::stdx::string_view big_string) {
     bsoncxx::array::value original{builder.view()};
 
     try {
-        builder.append(big_string);  // Throws.
+        builder.append(big_string); // Throws.
 
         EXPECT(false && "should not reach this point");
     } catch (bsoncxx::exception const& ex) {
@@ -49,7 +49,7 @@ void example(bsoncxx::stdx::string_view big_string) {
 }
 // [Example]
 
-}  // namespace
+} // namespace
 
 RUNNER_REGISTER_COMPONENT() {
     example(examples::big_string().view());

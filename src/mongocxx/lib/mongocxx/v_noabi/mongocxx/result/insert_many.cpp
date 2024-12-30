@@ -76,6 +76,6 @@ bool operator!=(insert_many const& lhs, insert_many const& rhs) {
     return !(lhs == rhs);
 }
 
-}  // namespace result
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace result
+} // namespace v_noabi
+} // namespace mongocxx

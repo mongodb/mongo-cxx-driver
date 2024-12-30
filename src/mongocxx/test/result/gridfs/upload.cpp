@@ -80,4 +80,4 @@ TEST_CASE("result::gridfs::upload inequals", "[result::gridfs::upload]") {
 
     REQUIRE(upload_result1 != upload_result2);
 }
-}  // namespace
+} // namespace

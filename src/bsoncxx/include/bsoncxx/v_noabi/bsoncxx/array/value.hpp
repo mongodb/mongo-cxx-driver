@@ -111,9 +111,9 @@ class value {
     std::size_t _length{0};
 };
 
-}  // namespace array
-}  // namespace v_noabi
-}  // namespace bsoncxx
+} // namespace array
+} // namespace v_noabi
+} // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>
 

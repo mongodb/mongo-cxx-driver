@@ -395,9 +395,9 @@ BSONCXX_ABI_EXPORT_CDECL(bool) operator!=(types::bson_value::view const& v, elem
 /// @}
 ///
 
-}  // namespace document
-}  // namespace v_noabi
-}  // namespace bsoncxx
+} // namespace document
+} // namespace v_noabi
+} // namespace bsoncxx
 
 namespace bsoncxx {
 namespace document {
@@ -405,8 +405,8 @@ namespace document {
 using ::bsoncxx::v_noabi::document::operator==;
 using ::bsoncxx::v_noabi::document::operator!=;
 
-}  // namespace document
-}  // namespace bsoncxx
+} // namespace document
+} // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>
 
@@ -432,7 +432,7 @@ bool operator!=(v_noabi::document::element const& elem, v_noabi::types::bson_val
 /// @ref bsoncxx::v_noabi::document::operator!=(const v_noabi::types::bson_value::view& v, const v_noabi::document::element& elem)
 bool operator!=(v_noabi::types::bson_value::view const& v, v_noabi::document::element const& elem);
 
-}  // namespace document
-}  // namespace bsoncxx
+} // namespace document
+} // namespace bsoncxx
 
-#endif  // defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
+#endif // defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

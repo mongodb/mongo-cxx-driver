@@ -361,7 +361,7 @@ class client_encryption::impl {
     std::unique_ptr<mongoc_client_encryption_t, encryption_deleter> _client_encryption;
 };
 
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace v_noabi
+} // namespace mongocxx
 
 #include <mongocxx/config/private/postlude.hh>

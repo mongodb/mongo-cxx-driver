@@ -48,7 +48,7 @@ void example(mongocxx::collection coll) {
 }
 // [Example]
 
-}  // namespace
+} // namespace
 
 RUNNER_REGISTER_COMPONENT_WITH_INSTANCE() {
     mongocxx::client client{mongocxx::uri{}};

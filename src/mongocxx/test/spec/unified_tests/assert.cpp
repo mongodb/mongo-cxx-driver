@@ -109,7 +109,7 @@ bool is_set(types::bson_value::view val) {
 
 void special_operator(types::bson_value::view actual, document::view expected, entity::map& map, bool is_root) {
     auto op = *expected.begin();
-    REQUIRE(string::to_string(op.key()).rfind("$$", 0) == 0);  // assert special operator
+    REQUIRE(string::to_string(op.key()).rfind("$$", 0) == 0); // assert special operator
 
     CAPTURE(match_doc_current_path());
     if (string::to_string(op.key()) == "$$type") {
@@ -234,7 +234,7 @@ void matches_array(
     }
 }
 
-}  // namespace
+} // namespace
 
 void assert::matches(
     types::bson_value::view actual,

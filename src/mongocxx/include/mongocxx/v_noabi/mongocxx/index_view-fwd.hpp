@@ -21,14 +21,14 @@ namespace v_noabi {
 
 class index_view;
 
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace v_noabi
+} // namespace mongocxx
 
 namespace mongocxx {
 
 using ::mongocxx::v_noabi::index_view;
 
-}  // namespace mongocxx
+} // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
 
@@ -44,6 +44,6 @@ namespace mongocxx {
 /// @ref mongocxx::v_noabi::index_view
 class index_view {};
 
-}  // namespace mongocxx
+} // namespace mongocxx
 
-#endif  // defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
+#endif // defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

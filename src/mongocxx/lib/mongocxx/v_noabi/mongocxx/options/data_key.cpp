@@ -80,6 +80,6 @@ bsoncxx::v_noabi::stdx::optional<data_key::key_material_type> const& data_key::k
     return _key_material;
 }
 
-}  // namespace options
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace options
+} // namespace v_noabi
+} // namespace mongocxx

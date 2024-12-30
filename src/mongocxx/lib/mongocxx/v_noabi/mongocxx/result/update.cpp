@@ -51,6 +51,6 @@ bool operator!=(update const& lhs, update const& rhs) {
     return !(lhs == rhs);
 }
 
-}  // namespace result
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace result
+} // namespace v_noabi
+} // namespace mongocxx

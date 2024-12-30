@@ -37,6 +37,6 @@ bool operator!=(delete_result const& lhs, delete_result const& rhs) {
     return !(lhs == rhs);
 }
 
-}  // namespace result
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace result
+} // namespace v_noabi
+} // namespace mongocxx

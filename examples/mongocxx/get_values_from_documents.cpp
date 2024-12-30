@@ -124,7 +124,7 @@ void iterate_documents(mongocxx::collection& coll) {
     }
 }
 
-}  // namespace
+} // namespace
 
 int EXAMPLES_CDECL main() {
     // The mongocxx::instance constructor and destructor initialize and shut down the driver,

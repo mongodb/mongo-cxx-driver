@@ -71,7 +71,7 @@ bsoncxx::stdx::optional<document::value> get_shards(client const& client) {
     static auto shards = client["config"]["shards"].find_one({});
     return (shards) ? shards.value() : bsoncxx::stdx::optional<document::value>{};
 }
-}  // namespace
+} // namespace
 
 std::vector<std::int32_t> parse_version(std::string version) {
     std::vector<std::int32_t> elements;
@@ -206,7 +206,7 @@ bsoncxx::document::value transform_document_recursive(
     return builder.extract();
 }
 
-}  // namespace
+} // namespace
 
 std::int32_t compare_versions(std::string version1, std::string version2) {
     std::vector<std::int32_t> v1 = parse_version(version1);
@@ -575,7 +575,7 @@ cseeos_result client_side_encryption_enabled_or_skip_impl() {
     return result;
 }
 
-#endif  // defined(MONGOC_ENABLE_CLIENT_SIDE_ENCRYPTION)
+#endif // defined(MONGOC_ENABLE_CLIENT_SIDE_ENCRYPTION)
 
 std::string getenv_or_fail(const std::string env_name) {
     auto val = std::getenv(env_name.c_str());
@@ -585,5 +585,5 @@ std::string getenv_or_fail(const std::string env_name) {
     return val;
 }
 
-}  // namespace test_util
-}  // namespace mongocxx
+} // namespace test_util
+} // namespace mongocxx

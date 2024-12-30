@@ -323,8 +323,8 @@ inline void convert_from_libbson(bson_value_t const* v, b_array* out) {
     *out = b_array{array::view{buf, len}};
 }
 
-}  // namespace types
-}  // namespace v_noabi
-}  // namespace bsoncxx
+} // namespace types
+} // namespace v_noabi
+} // namespace bsoncxx
 
 #include <bsoncxx/config/private/postlude.hh>

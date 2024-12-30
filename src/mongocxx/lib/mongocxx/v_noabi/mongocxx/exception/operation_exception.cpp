@@ -53,5 +53,5 @@ bool operation_exception::has_error_label(bsoncxx::v_noabi::stdx::string_view la
     return libmongoc::error_has_label(error.bson(), label_str.c_str());
 }
 
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace v_noabi
+} // namespace mongocxx

@@ -69,6 +69,6 @@ server_api::version server_api::get_version() const {
     return _version;
 }
 
-}  // namespace options
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace options
+} // namespace v_noabi
+} // namespace mongocxx

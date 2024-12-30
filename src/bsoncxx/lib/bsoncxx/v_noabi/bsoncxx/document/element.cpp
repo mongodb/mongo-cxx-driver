@@ -148,6 +148,6 @@ bool operator!=(types::bson_value::view const& v, element const& elem) {
     return !(elem == v);
 }
 
-}  // namespace document
-}  // namespace v_noabi
-}  // namespace bsoncxx
+} // namespace document
+} // namespace v_noabi
+} // namespace bsoncxx

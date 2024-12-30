@@ -51,8 +51,8 @@ class bucket::impl {
     bool indexes_created;
 };
 
-}  // namespace gridfs
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace gridfs
+} // namespace v_noabi
+} // namespace mongocxx
 
 #include <mongocxx/config/private/postlude.hh>

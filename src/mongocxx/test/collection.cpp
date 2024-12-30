@@ -134,7 +134,7 @@ TEST_CASE("collection renaming", "[collection]") {
     coll.drop();
     other_coll.drop();
 
-    coll.insert_one(filter.view());  // Ensure that the collection exists.
+    coll.insert_one(filter.view()); // Ensure that the collection exists.
     other_coll.insert_one({});
 
     REQUIRE(coll.name() == bsoncxx::stdx::string_view(collname));
@@ -161,7 +161,7 @@ TEST_CASE("collection dropping") {
 
     std::string collname{"mongo_cxx_driver"};
     collection coll = db[collname];
-    coll.insert_one({});  // Ensure that the collection exists.
+    coll.insert_one({}); // Ensure that the collection exists.
 
     REQUIRE_NOTHROW(coll.drop());
 }
@@ -2135,7 +2135,7 @@ void find_index_and_validate(
         validate(index);
         return;
     }
-    REQUIRE(false);  // index of given name not found
+    REQUIRE(false); // index of given name not found
 }
 
 TEST_CASE("create_index tests", "[collection]") {
@@ -2149,7 +2149,7 @@ TEST_CASE("create_index tests", "[collection]") {
     SECTION("returns index name") {
         collection coll = db["create_index_return_name"];
         coll.drop();
-        coll.insert_one({});  // Ensure that the collection exists.
+        coll.insert_one({}); // Ensure that the collection exists.
 
         bsoncxx::document::value index = make_document(kvp("a", 1));
 
@@ -2173,7 +2173,7 @@ TEST_CASE("create_index tests", "[collection]") {
     SECTION("with collation") {
         collection coll = db["create_index_with_collation"];
         coll.drop();
-        coll.insert_one({});  // Ensure that the collection exists.
+        coll.insert_one({}); // Ensure that the collection exists.
 
         bsoncxx::document::value keys = make_document(kvp("a", 1));
         auto collation = make_document(kvp("locale", "en_US"));
@@ -2197,7 +2197,7 @@ TEST_CASE("create_index tests", "[collection]") {
     SECTION("fails") {
         collection coll = db["create_index_fails"];
         coll.drop();
-        coll.insert_one({});  // Ensure that the collection exists.
+        coll.insert_one({}); // Ensure that the collection exists.
 
         bsoncxx::document::value keys1 = make_document(kvp("a", 1));
         bsoncxx::document::value keys2 = make_document(kvp("a", -1));
@@ -2212,7 +2212,7 @@ TEST_CASE("create_index tests", "[collection]") {
     SECTION("succeeds with options") {
         collection coll = db["create_index_with_options"];
         coll.drop();
-        coll.insert_one({});  // Ensure that the collection exists.
+        coll.insert_one({}); // Ensure that the collection exists.
 
         bsoncxx::stdx::string_view index_name{"succeeds_with_options"};
 
@@ -2251,7 +2251,7 @@ TEST_CASE("create_index tests", "[collection]") {
     SECTION("fails with options") {
         collection coll = db["create_index_fails_with_options"];
         coll.drop();
-        coll.insert_one({});  // Ensure that the collection exists.
+        coll.insert_one({}); // Ensure that the collection exists.
 
         bsoncxx::document::value keys = make_document(kvp("c", 1));
         options::index options{};
@@ -2268,7 +2268,7 @@ TEST_CASE("create_index tests", "[collection]") {
     SECTION("succeeds with storage engine options") {
         collection coll = db["create_index_succeeds_with_storage_options"];
         coll.drop();
-        coll.insert_one({});  // Ensure that the collection exists.
+        coll.insert_one({}); // Ensure that the collection exists.
 
         bsoncxx::stdx::string_view index_name{"storage_options_test"};
         bsoncxx::document::value keys = make_document(kvp("c", 1));
@@ -2302,7 +2302,7 @@ TEST_CASE("list_indexes", "[collection]") {
 
     collection coll = db["list_indexes_works"];
     coll.drop();
-    coll.insert_one({});  // Ensure that the collection exists.
+    coll.insert_one({}); // Ensure that the collection exists.
 
     options::index options{};
     options.unique(true);
@@ -2691,4 +2691,4 @@ TEST_CASE("expose writeErrors[].errInfo", "[collection]") {
     }
 }
 
-}  // namespace
+} // namespace

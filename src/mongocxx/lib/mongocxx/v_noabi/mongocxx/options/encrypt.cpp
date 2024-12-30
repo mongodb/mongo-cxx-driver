@@ -203,6 +203,6 @@ void* encrypt::convert() const {
     return opts_owner.release();
 }
 
-}  // namespace options
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace options
+} // namespace v_noabi
+} // namespace mongocxx

@@ -196,4 +196,4 @@ TEST_CASE("acquiring a client throws if waitQueueTimeoutMS expires", "[pool]") {
     REQUIRE_THROWS_WITH(pool.acquire(), Catch::Matchers::ContainsSubstring("failed to acquire client"));
 }
 
-}  // namespace
+} // namespace

@@ -149,9 +149,9 @@ class write {
     };
 };
 
-}  // namespace model
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace model
+} // namespace v_noabi
+} // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
 

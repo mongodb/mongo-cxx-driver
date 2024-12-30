@@ -125,5 +125,5 @@ bool change_stream::iterator::is_exhausted() const {
     return _change_stream->_impl->is_exhausted();
 }
 
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace v_noabi
+} // namespace mongocxx

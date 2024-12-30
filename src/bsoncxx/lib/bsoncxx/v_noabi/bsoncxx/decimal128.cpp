@@ -50,5 +50,5 @@ bool operator!=(decimal128 const& lhs, decimal128 const& rhs) {
     return !(lhs == rhs);
 }
 
-}  // namespace v_noabi
-}  // namespace bsoncxx
+} // namespace v_noabi
+} // namespace bsoncxx

@@ -56,8 +56,8 @@ inline unique_server_api make_server_api(server_api const& opts) {
     return {mongoc_server_api_opts, libmongoc::server_api_destroy};
 }
 
-}  // namespace options
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace options
+} // namespace v_noabi
+} // namespace mongocxx
 
 #include <mongocxx/config/private/postlude.hh>

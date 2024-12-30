@@ -40,7 +40,7 @@ class bulk_write::impl {
     bool is_empty = true;
 };
 
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace v_noabi
+} // namespace mongocxx
 
 #include <mongocxx/config/private/postlude.hh>

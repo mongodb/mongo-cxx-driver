@@ -206,5 +206,5 @@ bool operator!=(write_concern const& lhs, write_concern const& rhs) {
     return !(lhs == rhs);
 }
 
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace v_noabi
+} // namespace mongocxx

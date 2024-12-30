@@ -124,7 +124,7 @@ inline void append_if(
         doc.append(bsoncxx::v_noabi::builder::basic::kvp(key, opt.value()));
     }
 }
-}  // namespace
+} // namespace
 
 bsoncxx::v_noabi::document::value change_stream::as_bson() const {
     // Construct new bson rep each time since values may change after this is called.
@@ -150,6 +150,6 @@ bsoncxx::v_noabi::document::value change_stream::as_bson() const {
     return out.extract();
 }
 
-}  // namespace options
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace options
+} // namespace v_noabi
+} // namespace mongocxx

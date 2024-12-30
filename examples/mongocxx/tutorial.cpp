@@ -34,7 +34,7 @@ using bsoncxx::builder::basic::make_array;
 using bsoncxx::builder::basic::make_document;
 
 int EXAMPLES_CDECL main() {
-    mongocxx::instance instance{};  // This should be done only once.
+    mongocxx::instance instance{}; // This should be done only once.
     mongocxx::uri uri("mongodb://localhost:27017");
     mongocxx::client client(uri);
 
@@ -53,14 +53,14 @@ int EXAMPLES_CDECL main() {
         auto doc_view = doc_value.view();
         auto element = doc_view["name"];
         assert(element.type() == bsoncxx::type::k_string);
-        auto name = element.get_string().value;  // For C++ driver version < 3.7.0, use get_utf8()
+        auto name = element.get_string().value; // For C++ driver version < 3.7.0, use get_utf8()
         assert(name == "MongoDB");
     }
 
     // Insert One Document: { "i": 0 }
     {
         auto insert_one_result = collection.insert_one(make_document(kvp("i", 0)));
-        assert(insert_one_result);  // Acknowledged writes return results.
+        assert(insert_one_result); // Acknowledged writes return results.
         auto doc_id = insert_one_result->inserted_id();
         assert(doc_id.type() == bsoncxx::type::k_oid);
     }
@@ -72,7 +72,7 @@ int EXAMPLES_CDECL main() {
         documents.push_back(make_document(kvp("i", 2)));
 
         auto insert_many_result = collection.insert_many(documents);
-        assert(insert_many_result);  // Acknowledged writes return results.
+        assert(insert_many_result); // Acknowledged writes return results.
         auto doc0_id = insert_many_result->inserted_ids().at(0);
         auto doc1_id = insert_many_result->inserted_ids().at(1);
         assert(doc0_id.type() == bsoncxx::type::k_oid);
@@ -128,7 +128,7 @@ int EXAMPLES_CDECL main() {
     {
         auto update_one_result = collection.update_one(
             make_document(kvp("i", 0)), make_document(kvp("$set", make_document(kvp("foo", "bar")))));
-        assert(update_one_result);  // Acknowledged writes return results.
+        assert(update_one_result); // Acknowledged writes return results.
         assert(update_one_result->modified_count() == 1);
     }
 
@@ -137,21 +137,21 @@ int EXAMPLES_CDECL main() {
         auto update_many_result = collection.update_many(
             make_document(kvp("i", make_document(kvp("$gt", 0)))),
             make_document(kvp("$set", make_document(kvp("foo", "buzz")))));
-        assert(update_many_result);  // Acknowledged writes return results.
+        assert(update_many_result); // Acknowledged writes return results.
         assert(update_many_result->modified_count() == 2);
     }
 
     // Delete a Single Document
     {
         auto delete_one_result = collection.delete_one(make_document(kvp("i", 0)));
-        assert(delete_one_result);  // Acknowledged writes return results.
+        assert(delete_one_result); // Acknowledged writes return results.
         assert(delete_one_result->deleted_count() == 1);
     }
 
     // Delete All Documents That Match a Filter
     {
         auto delete_many_result = collection.delete_many(make_document(kvp("i", make_document(kvp("$gt", 0)))));
-        assert(delete_many_result);  // Acknowledged writes return results.
+        assert(delete_many_result); // Acknowledged writes return results.
         assert(delete_many_result->deleted_count() == 2);
     }
 

@@ -387,11 +387,11 @@ std::string get_hostnames(bsoncxx::document::view object) {
     auto const topology = test_util::get_topology(client0);
 
     if (topology == "single") {
-        return one;  // Single mongod.
+        return one; // Single mongod.
     }
 
     if (topology == "replicaset") {
-        return three;  // Three replset members.
+        return three; // Three replset members.
     }
 
     if (topology == "sharded") {
@@ -416,12 +416,12 @@ std::string get_hostnames(bsoncxx::document::view object) {
                     FAIL("missing required mongos on port 27018 with useMultipleMongoses=true");
                 }
 
-                return two;  // Two mongoses.
+                return two; // Two mongoses.
             } else {
                 // If false and the topology is a sharded cluster, the test runner MUST ensure that
                 // this MongoClient connects to only a single mongos host (e.g. by modifying the
                 // connection string).
-                return one;  // Single mongos.
+                return one; // Single mongos.
             }
         } else {
             // If this option is not specified and the topology is a sharded cluster, the test
@@ -430,12 +430,12 @@ std::string get_hostnames(bsoncxx::document::view object) {
             // mongos hosts.
 
             // But we still only support exactly two mongoses.
-            return two;  // Two mongoses.
+            return two; // Two mongoses.
         }
     }
 
     FAIL("unexpected topology: " << topology);
-    return {};  // -Wreturn-type
+    return {}; // -Wreturn-type
 }
 
 void add_observe_events(spec::apm_checker& apm, options::apm& apm_opts, document::view object) {
@@ -775,9 +775,9 @@ std::vector<std::string> versions_to_string(schema_versions_t versions) {
     std::vector<std::string> out;
     for (auto const& v : versions) {
         std::stringstream v_str;
-        v_str << std::to_string(v[0]) << '.'  // major.
-              << std::to_string(v[1]) << '.'  // minor.
-              << std::to_string(v[2]);        // patch
+        v_str << std::to_string(v[0]) << '.' // major.
+              << std::to_string(v[1]) << '.' // minor.
+              << std::to_string(v[2]);       // patch
         out.push_back(v_str.str());
     }
     return out;
@@ -1388,4 +1388,4 @@ TEST_CASE("client side encryption unified format spec automated tests", "[unifie
     run_unified_format_tests_in_env_dir("CLIENT_SIDE_ENCRYPTION_UNIFIED_TESTS_PATH");
 }
 
-}  // namespace
+} // namespace

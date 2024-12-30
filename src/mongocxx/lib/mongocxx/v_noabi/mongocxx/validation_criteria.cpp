@@ -50,7 +50,7 @@ std::string validation_action_to_string(mongocxx::v_noabi::validation_criteria::
     MONGOCXX_UNREACHABLE;
 }
 
-}  // namespace
+} // namespace
 
 namespace mongocxx {
 namespace v_noabi {
@@ -111,5 +111,5 @@ bool operator!=(validation_criteria const& lhs, validation_criteria const& rhs) 
     return !(lhs == rhs);
 }
 
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace v_noabi
+} // namespace mongocxx

@@ -44,6 +44,6 @@ bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::hint> const& delete_one::hin
     return _hint;
 }
 
-}  // namespace model
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace model
+} // namespace v_noabi
+} // namespace mongocxx

@@ -192,7 +192,7 @@ bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::value> find_and_mod
     return bsoncxx::v_noabi::document::value{reply_view["value"].get_document().view()};
 }
 
-}  // namespace
+} // namespace
 
 namespace mongocxx {
 namespace v_noabi {
@@ -389,7 +389,7 @@ bsoncxx::v_noabi::builder::basic::document build_find_options_document(options::
     return options_builder;
 }
 
-}  // namespace
+} // namespace
 
 cursor collection::_find(client_session const* session, view_or_value filter, options::find const& options) {
     scoped_bson_t filter_bson{std::move(filter)};
@@ -1444,5 +1444,5 @@ collection::impl& collection::_get_impl() {
     return const_cast<collection::impl&>(cthis->_get_impl());
 }
 
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace v_noabi
+} // namespace mongocxx

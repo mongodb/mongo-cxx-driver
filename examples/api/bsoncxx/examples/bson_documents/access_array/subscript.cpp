@@ -34,11 +34,11 @@ void example(bsoncxx::array::view arr) {
         EXPECT(e.get_int32().value == 2);
     }
 
-    EXPECT(!arr[2]);  // Invalid element.
+    EXPECT(!arr[2]); // Invalid element.
 }
 // [Example]
 
-}  // namespace
+} // namespace
 
 RUNNER_REGISTER_COMPONENT() {
     example(bsoncxx::builder::basic::make_array(1, 2));

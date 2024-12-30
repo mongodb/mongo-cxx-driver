@@ -35,7 +35,7 @@ class uri::impl {
     mongoc_uri_t* uri_t;
 };
 
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace v_noabi
+} // namespace mongocxx
 
 #include <mongocxx/config/private/postlude.hh>

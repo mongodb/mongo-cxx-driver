@@ -697,9 +697,9 @@ class core {
     std::unique_ptr<impl> _impl;
 };
 
-}  // namespace builder
-}  // namespace v_noabi
-}  // namespace bsoncxx
+} // namespace builder
+} // namespace v_noabi
+} // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>
 

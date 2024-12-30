@@ -149,9 +149,9 @@ class index_view {
     bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::value> _commit_quorum;
 };
 
-}  // namespace options
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace options
+} // namespace v_noabi
+} // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
 

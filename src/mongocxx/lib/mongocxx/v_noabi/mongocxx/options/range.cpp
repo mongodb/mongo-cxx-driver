@@ -65,6 +65,6 @@ bsoncxx::v_noabi::stdx::optional<std::int32_t> const& range::precision() const {
     return _precision;
 }
 
-}  // namespace options
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace options
+} // namespace v_noabi
+} // namespace mongocxx

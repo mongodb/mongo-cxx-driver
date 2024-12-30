@@ -43,6 +43,6 @@ MONGOCXX_ABI_EXPORT_CDECL_TESTING(bool) int32_to_size_t_safe(int32_t const in, s
 // If no, @out is not modified and returns false.
 MONGOCXX_ABI_EXPORT_CDECL_TESTING(bool) int64_to_size_t_safe(int64_t const in, std::size_t& out);
 
-}  // namespace mongocxx
+} // namespace mongocxx
 
 #include <mongocxx/config/private/postlude.hh>

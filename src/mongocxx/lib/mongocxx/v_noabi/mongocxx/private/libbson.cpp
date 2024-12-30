@@ -29,7 +29,7 @@ void doc_to_bson_t(bsoncxx::v_noabi::document::view const& doc, bson_t* bson) {
     bson_init_static(bson, doc.data(), doc.length());
 }
 
-}  // namespace
+} // namespace
 
 scoped_bson_t::scoped_bson_t(bsoncxx::document::view_or_value doc) : _is_initialized{true}, _doc{std::move(doc)} {
     doc_to_bson_t(*_doc, &_bson);
@@ -112,7 +112,7 @@ void bson_free_deleter(std::uint8_t* ptr) {
     bson_free(ptr);
 }
 
-}  // anonymous namespace
+} // anonymous namespace
 
 bsoncxx::v_noabi::document::value scoped_bson_t::steal() {
     if (!_is_initialized) {
@@ -127,5 +127,5 @@ bsoncxx::v_noabi::document::value scoped_bson_t::steal() {
     return bsoncxx::v_noabi::document::value(buff, length, bson_free_deleter);
 }
 
-}  // namespace libbson
-}  // namespace mongocxx
+} // namespace libbson
+} // namespace mongocxx

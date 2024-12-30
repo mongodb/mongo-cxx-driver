@@ -40,6 +40,6 @@ bool heartbeat_started_event::awaited() const {
     return libmongoc::apm_server_heartbeat_started_get_awaited(casted);
 }
 
-}  // namespace events
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace events
+} // namespace v_noabi
+} // namespace mongocxx

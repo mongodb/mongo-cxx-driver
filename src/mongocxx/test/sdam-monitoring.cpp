@@ -297,4 +297,4 @@ TEST_CASE("Heartbeat failed event", "[sdam_monitoring]") {
     REQUIRE(heartbeat_failed_events > 0);
     REQUIRE(failed_awaited_called);
 }
-}  // namespace
+} // namespace

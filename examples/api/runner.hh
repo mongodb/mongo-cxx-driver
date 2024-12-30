@@ -31,7 +31,7 @@ void runner_register_forking_component(void (*fn)(), char const* name);
 // Defined by examples/CMakeLists.txt.
 #if !defined(EXAMPLES_COMPONENT_NAME)
 #error "EXAMPLES_COMPONENT_NAME is not defined!"
-#endif  // !defined(EXAMPLES_COMPONENT_NAME)
+#endif // !defined(EXAMPLES_COMPONENT_NAME)
 
 #define EXAMPLES_COMPONENT_NAME_STR EXAMPLES_COMPONENT_NAME_STR_IMPL(EXAMPLES_COMPONENT_NAME)
 #define EXAMPLES_COMPONENT_NAME_STR_IMPL(name) EXAMPLES_STR(name)

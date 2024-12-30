@@ -331,4 +331,4 @@ TEST_CASE("uri::zlib_compression_level()", "[uri]") {
 
 // End special cases.
 
-}  // namespace
+} // namespace

@@ -118,4 +118,4 @@ void gridfs_multi_export::concurrency_task(std::uint32_t start_file, std::uint32
         bucket.download_to_stream(_ids[i], &stream);
     }
 }
-}  // namespace benchmark
+} // namespace benchmark

@@ -73,6 +73,6 @@ std::uint16_t command_failed_event::port() const {
     return libmongoc::apm_command_failed_get_host(static_cast<mongoc_apm_command_failed_t const*>(_failed_event))->port;
 }
 
-}  // namespace events
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace events
+} // namespace v_noabi
+} // namespace mongocxx

@@ -94,8 +94,8 @@ class decimal128 {
     uint64_t _low = 0;
 };
 
-}  // namespace v_noabi
-}  // namespace bsoncxx
+} // namespace v_noabi
+} // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>
 

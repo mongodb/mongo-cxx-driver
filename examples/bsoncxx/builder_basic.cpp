@@ -36,7 +36,7 @@ int EXAMPLES_CDECL main() {
     // We append key-value pairs to a document using the kvp helper.
     using bsoncxx::builder::basic::kvp;
 
-    doc.append(kvp("foo", "bar"));  // string literal value will be converted to b_string automatically
+    doc.append(kvp("foo", "bar")); // string literal value will be converted to b_string automatically
     doc.append(kvp("baz", types::b_bool{false}));
     doc.append(kvp("garply", types::b_double{3.14159}));
 

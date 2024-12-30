@@ -62,9 +62,9 @@ class insert_one {
     bsoncxx::v_noabi::types::bson_value::view _inserted_id;
 };
 
-}  // namespace result
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace result
+} // namespace v_noabi
+} // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
 

@@ -223,4 +223,4 @@ TEST_CASE("Convert to/from std::string_view") {
 }
 #endif
 
-#endif  // defined(BSONCXX_POLY_USE_IMPLS) || defined(BSONCXX_POLY_USE_STD)
+#endif // defined(BSONCXX_POLY_USE_IMPLS) || defined(BSONCXX_POLY_USE_STD)

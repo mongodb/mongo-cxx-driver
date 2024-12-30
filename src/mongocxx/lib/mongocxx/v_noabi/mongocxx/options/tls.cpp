@@ -74,6 +74,6 @@ bsoncxx::v_noabi::stdx::optional<bool> const& tls::allow_invalid_certificates() 
     return _allow_invalid_certificates;
 }
 
-}  // namespace options
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace options
+} // namespace v_noabi
+} // namespace mongocxx

@@ -33,7 +33,7 @@ bson_iter_t to_bson_iter_t(element e) {
     bson_iter_init_from_data_at_offset(&iter, e.raw(), e.length(), e.offset(), e.keylen());
     return iter;
 }
-}  // namespace
+} // namespace
 
 view::const_iterator::const_iterator() {}
 
@@ -162,6 +162,6 @@ bool operator!=(view lhs, view rhs) {
     return !(lhs == rhs);
 }
 
-}  // namespace array
-}  // namespace v_noabi
-}  // namespace bsoncxx
+} // namespace array
+} // namespace v_noabi
+} // namespace bsoncxx

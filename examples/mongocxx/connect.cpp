@@ -52,7 +52,7 @@ std::unique_ptr<logger> make_logger() {
     return std::unique_ptr<logger>(new logger(&std::cout));
 }
 
-}  // namespace
+} // namespace
 
 int EXAMPLES_CDECL main(int argc, char* argv[]) {
     using bsoncxx::builder::basic::kvp;

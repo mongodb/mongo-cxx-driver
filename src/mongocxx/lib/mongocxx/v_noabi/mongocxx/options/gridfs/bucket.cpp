@@ -71,7 +71,7 @@ bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern> const& bucket
     return _write_concern;
 }
 
-}  // namespace gridfs
-}  // namespace options
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace gridfs
+} // namespace options
+} // namespace v_noabi
+} // namespace mongocxx

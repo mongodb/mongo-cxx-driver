@@ -117,4 +117,4 @@ TEST_CASE("scoped_bson_t", "[private]") {
         }
     }
 }
-}  // namespace
+} // namespace

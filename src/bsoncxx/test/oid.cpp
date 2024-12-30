@@ -121,4 +121,4 @@ TEST_CASE("oid", "[bsoncxx::oid]") {
     }
 }
 
-}  // namespace
+} // namespace

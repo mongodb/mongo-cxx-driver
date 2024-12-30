@@ -81,8 +81,8 @@ class index_model {
     bsoncxx::v_noabi::document::value _options;
 };
 
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace v_noabi
+} // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
 

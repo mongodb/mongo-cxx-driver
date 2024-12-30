@@ -29,13 +29,13 @@ namespace v_noabi {
 /// The log level of a message passed to a mongocxx::v_noabi::logger.
 ///
 enum class log_level {
-    k_error,     ///< Log Level Error.
-    k_critical,  ///< Log Level Critical.
-    k_warning,   ///< Log Level Warning.
-    k_message,   ///< Log Level Message.
-    k_info,      ///< Log Level Info.
-    k_debug,     ///< Log Level Debug.
-    k_trace,     ///< Log Level Trace.
+    k_error,    ///< Log Level Error.
+    k_critical, ///< Log Level Critical.
+    k_warning,  ///< Log Level Warning.
+    k_message,  ///< Log Level Message.
+    k_info,     ///< Log Level Info.
+    k_debug,    ///< Log Level Debug.
+    k_trace,    ///< Log Level Trace.
 };
 
 ///
@@ -82,14 +82,14 @@ class logger {
     logger();
 };
 
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace v_noabi
+} // namespace mongocxx
 
 namespace mongocxx {
 
 using ::mongocxx::v_noabi::to_string;
 
-}  // namespace mongocxx
+} // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
 
@@ -105,6 +105,6 @@ namespace mongocxx {
 /// @ref mongocxx::v_noabi::to_string(v_noabi::log_level level)
 bsoncxx::v_noabi::stdx::string_view to_string(v_noabi::log_level level);
 
-}  // namespace mongocxx
+} // namespace mongocxx
 
-#endif  // defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
+#endif // defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

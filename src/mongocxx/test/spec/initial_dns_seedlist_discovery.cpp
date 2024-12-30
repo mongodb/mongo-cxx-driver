@@ -317,4 +317,4 @@ TEST_CASE("uri::test_srv_max_hosts", "[uri]") {
     }
 }
 
-}  // namespace
+} // namespace

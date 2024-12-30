@@ -70,7 +70,7 @@ bson_t err_doc;
 
 // Generates lambda/interpose for change_stream_error_document.
 auto const gen_error = [](bool has_error) {
-    bson_init(&err_doc);  // Will fit on stack.
+    bson_init(&err_doc); // Will fit on stack.
     bson_append_int32(&err_doc, "ok", -1, 0);
     return [=](mongoc_change_stream_t const*, bson_error_t* err, bson_t const** bson) -> bool {
         if (has_error) {
@@ -431,7 +431,7 @@ TEST_CASE("Documentation Examples", "[min36]") {
     }
 
     collection events = (*mongodb_client)["streams"]["events"];
-    collection inventory = events;  // doc examples use this name
+    collection inventory = events; // doc examples use this name
 
     std::atomic_bool insert_thread_done;
     insert_thread_done.store(false);
@@ -799,4 +799,4 @@ TEST_CASE("Watch a Collection", "[min36]") {
     }
 }
 
-}  // namespace
+} // namespace

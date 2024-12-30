@@ -29,7 +29,7 @@ void example() {
     }
 
     try {
-        mongocxx::instance instance;  // Throws.
+        mongocxx::instance instance; // Throws.
 
         EXPECT(false && "should not reach this point");
     } catch (mongocxx::exception const& ex) {
@@ -37,7 +37,7 @@ void example() {
     }
 
     try {
-        auto& instance = mongocxx::instance::current();  // Throws.
+        auto& instance = mongocxx::instance::current(); // Throws.
 
         EXPECT(false && "should not reach this point");
     } catch (mongocxx::exception const& ex) {
@@ -46,7 +46,7 @@ void example() {
 }
 // [Example]
 
-}  // namespace
+} // namespace
 
 RUNNER_REGISTER_FORKING_COMPONENT() {
     example();

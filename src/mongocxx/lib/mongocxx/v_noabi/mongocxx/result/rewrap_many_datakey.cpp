@@ -30,6 +30,6 @@ bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::result::bulk_write> const& r
     return _result;
 }
 
-}  // namespace result
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace result
+} // namespace v_noabi
+} // namespace mongocxx

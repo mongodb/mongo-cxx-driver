@@ -113,8 +113,8 @@ class downloader::impl {
     std::int64_t file_len;
 };
 
-}  // namespace gridfs
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace gridfs
+} // namespace v_noabi
+} // namespace mongocxx
 
 #include <mongocxx/config/private/postlude.hh>

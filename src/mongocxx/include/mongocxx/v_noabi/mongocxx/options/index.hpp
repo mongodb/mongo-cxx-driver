@@ -552,9 +552,9 @@ class index {
     std::unique_ptr<base_storage_options> const& storage_options() const;
 };
 
-}  // namespace options
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace options
+} // namespace v_noabi
+} // namespace mongocxx
 
 #include <bsoncxx/config/postlude.hpp>
 

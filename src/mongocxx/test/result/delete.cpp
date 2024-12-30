@@ -68,4 +68,4 @@ TEST_CASE("delete inequals", "[delete][result]") {
     REQUIRE(delete_result1 != delete_result2);
 }
 
-}  // namespace
+} // namespace

@@ -42,4 +42,4 @@ TEST_CASE("Transactions spec automated tests", "[transactions_spec]") {
     }
 }
 
-}  // namespace
+} // namespace

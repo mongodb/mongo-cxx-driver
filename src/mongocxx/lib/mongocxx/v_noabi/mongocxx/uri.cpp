@@ -40,7 +40,7 @@ std::string to_string_null_safe(char const* str) {
     return str;
 }
 
-}  // namespace
+} // namespace
 
 std::string const uri::k_default_uri = "mongodb://localhost:27017";
 
@@ -297,5 +297,5 @@ bsoncxx::v_noabi::stdx::optional<std::int32_t> uri::zlib_compression_level() con
     return _int32_option(_impl->uri_t, "zlibCompressionLevel");
 }
 
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace v_noabi
+} // namespace mongocxx

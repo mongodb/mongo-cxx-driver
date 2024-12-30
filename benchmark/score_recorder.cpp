@@ -58,4 +58,4 @@ std::chrono::milliseconds const& score_recorder::get_percentile(unsigned long n)
 double score_recorder::get_score() {
     return _task_size / (static_cast<double>(get_percentile(50).count()) * .001);
 }
-}  // namespace benchmark
+} // namespace benchmark

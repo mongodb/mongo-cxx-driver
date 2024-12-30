@@ -87,7 +87,7 @@ class map {
     std::unordered_map<key_type, mongocxx::client_encryption> _client_encryption_map;
 };
 
-}  // namespace entity
-}  // namespace mongocxx
+} // namespace entity
+} // namespace mongocxx
 
 #include <mongocxx/config/private/postlude.hh>

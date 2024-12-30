@@ -80,10 +80,10 @@ class upload {
     bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> _metadata;
 };
 
-}  // namespace gridfs
-}  // namespace options
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace gridfs
+} // namespace options
+} // namespace v_noabi
+} // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
 

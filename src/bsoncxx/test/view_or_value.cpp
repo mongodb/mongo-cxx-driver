@@ -263,4 +263,4 @@ TEST_CASE("string::document::view_or_value", "[bsoncxx::string::view_or_value]")
         }
     }
 }
-}  // namespace
+} // namespace

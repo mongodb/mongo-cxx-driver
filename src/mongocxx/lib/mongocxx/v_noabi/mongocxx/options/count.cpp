@@ -84,6 +84,6 @@ bsoncxx::v_noabi::stdx::optional<read_preference> const& count::read_preference(
     return _read_preference;
 }
 
-}  // namespace options
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace options
+} // namespace v_noabi
+} // namespace mongocxx

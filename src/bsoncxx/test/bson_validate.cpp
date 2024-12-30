@@ -128,4 +128,4 @@ TEST_CASE("configuring optional validations", "[bsoncxx::validate]") {
         REQUIRE(invalid_offset == std::size_t{9});
     }
 }
-}  // namespace
+} // namespace

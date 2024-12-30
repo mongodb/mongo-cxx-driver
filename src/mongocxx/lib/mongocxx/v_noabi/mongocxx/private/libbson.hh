@@ -159,7 +159,7 @@ class scoped_bson_t {
     bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> _doc;
 };
 
-}  // namespace libbson
-}  // namespace mongocxx
+} // namespace libbson
+} // namespace mongocxx
 
 #include <mongocxx/config/private/postlude.hh>

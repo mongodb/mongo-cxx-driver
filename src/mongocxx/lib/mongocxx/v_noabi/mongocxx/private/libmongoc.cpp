@@ -39,7 +39,7 @@ mongocxx::test_util::mock<log_set_handler_cdecl_t>& log_set_handler =
 #pragma GCC diagnostic pop
 #endif
 
-#endif  // MONGOCXX_TESTING
+#endif // MONGOCXX_TESTING
 
-}  // namespace libmongoc
-}  // namespace mongocxx
+} // namespace libmongoc
+} // namespace mongocxx

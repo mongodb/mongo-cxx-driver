@@ -66,7 +66,7 @@ bool with_transaction_cpp_cb(mongoc_client_session_t*, void* ctx, bson_t** reply
     }
 }
 
-}  // namespace
+} // namespace
 
 class client_session::impl {
    public:
@@ -237,7 +237,7 @@ class client_session::impl {
     bson_t _empty_cluster_time = BSON_INITIALIZER;
 };
 
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace v_noabi
+} // namespace mongocxx
 
 #include <mongocxx/config/private/postlude.hh>

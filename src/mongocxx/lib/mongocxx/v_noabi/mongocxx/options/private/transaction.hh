@@ -127,8 +127,8 @@ class transaction::impl {
     unique_transaction_opt _transaction_opt_t;
 };
 
-}  // namespace options
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace options
+} // namespace v_noabi
+} // namespace mongocxx
 
 #include <mongocxx/config/private/postlude.hh>

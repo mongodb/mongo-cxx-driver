@@ -40,5 +40,5 @@ bsoncxx::v_noabi::document::view index_model::options() const {
     return _options.view();
 }
 
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace v_noabi
+} // namespace mongocxx

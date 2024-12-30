@@ -42,8 +42,8 @@ class gridfs_exception : public exception {
     using exception::exception;
 };
 
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace v_noabi
+} // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
 

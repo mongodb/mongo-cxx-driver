@@ -78,4 +78,4 @@ void insert_one::task() {
 void insert_one::teardown() {
     _conn["perftest"].drop();
 }
-}  // namespace benchmark
+} // namespace benchmark

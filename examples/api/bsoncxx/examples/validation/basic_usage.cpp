@@ -28,7 +28,7 @@ namespace {
 // [Example]
 void example() {
     {
-        std::uint8_t bytes[1]{};  // Invalid.
+        std::uint8_t bytes[1]{}; // Invalid.
 
         EXPECT(!bsoncxx::validate(bytes, sizeof(bytes)));
 
@@ -67,7 +67,7 @@ void example() {
 }
 // [Example]
 
-}  // namespace
+} // namespace
 
 RUNNER_REGISTER_COMPONENT() {
     example();

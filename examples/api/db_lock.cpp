@@ -30,7 +30,7 @@ namespace {
 std::unordered_map<std::string, std::mutex> db_locks;
 std::mutex db_locks_mut;
 
-}  // namespace
+} // namespace
 
 db_lock::~db_lock() {
     this->get().drop(wc_majority());

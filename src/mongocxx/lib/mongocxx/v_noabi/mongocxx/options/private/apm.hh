@@ -165,8 +165,8 @@ inline apm_unique_callbacks make_apm_callbacks(apm const& apm_opts) {
     return {callbacks, libmongoc::apm_callbacks_destroy};
 }
 
-}  // namespace options
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace options
+} // namespace v_noabi
+} // namespace mongocxx
 
 #include <mongocxx/config/private/postlude.hh>

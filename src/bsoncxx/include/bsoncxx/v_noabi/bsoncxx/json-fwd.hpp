@@ -21,14 +21,14 @@ namespace v_noabi {
 
 enum class ExtendedJsonMode : std::uint8_t;
 
-}  // namespace v_noabi
-}  // namespace bsoncxx
+} // namespace v_noabi
+} // namespace bsoncxx
 
 namespace bsoncxx {
 
 using ::bsoncxx::v_noabi::ExtendedJsonMode;
 
-}  // namespace bsoncxx
+} // namespace bsoncxx
 
 ///
 /// @file
@@ -42,6 +42,6 @@ namespace bsoncxx {
 /// @ref bsoncxx::v_noabi::ExtendedJsonMode
 enum class ExtendedJsonMode {};
 
-}  // namespace bsoncxx
+} // namespace bsoncxx
 
-#endif  // defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
+#endif // defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

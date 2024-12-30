@@ -52,8 +52,8 @@ class mongocxx_exception_matcher : public Catch::Matchers::MatcherBase<mongocxx:
     }
 };
 
-}  // namespace test_util
-}  // namespace mongocxx
+} // namespace test_util
+} // namespace mongocxx
 
 #define CHECK_OPTIONAL_ARGUMENT(OBJECT, NAME, VALUE) \
     SECTION("has NAME disengaged") {                 \

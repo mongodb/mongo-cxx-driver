@@ -38,4 +38,4 @@ TEST_CASE("delete_many model tests", "[delete_many][model]") {
 
     CHECK_OPTIONAL_ARGUMENT(dm, collation, collation.view());
 }
-}  // namespace
+} // namespace

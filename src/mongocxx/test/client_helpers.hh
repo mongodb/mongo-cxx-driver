@@ -243,11 +243,11 @@ cseeos_result client_side_encryption_enabled_or_skip_impl();
         ((void)0)
 #else
 #define CLIENT_SIDE_ENCRYPTION_ENABLED_OR_SKIP() SKIP("linked libmongoc does not support client side encryption")
-#endif  // defined(MONGOC_ENABLE_CLIENT_SIDE_ENCRYPTION)
+#endif // defined(MONGOC_ENABLE_CLIENT_SIDE_ENCRYPTION)
 
 std::string getenv_or_fail(const std::string env_name);
 
-}  // namespace test_util
-}  // namespace mongocxx
+} // namespace test_util
+} // namespace mongocxx
 
 #include <mongocxx/config/private/postlude.hh>

@@ -327,4 +327,4 @@ TEST_CASE("Client side encryption spec automated tests", "[client_side_encryptio
     }
 }
 
-}  // namespace
+} // namespace

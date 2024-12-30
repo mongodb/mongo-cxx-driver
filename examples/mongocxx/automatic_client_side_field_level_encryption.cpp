@@ -95,7 +95,7 @@ bsoncxx::document::value doc_from_file(std::string path) {
     return bsoncxx::from_json(file_contents);
 }
 
-}  // namespace
+} // namespace
 
 int EXAMPLES_CDECL main() {
     instance inst{};

@@ -54,6 +54,6 @@ std::uint16_t server_description::port() const {
     return libmongoc::server_description_host(static_cast<mongoc_server_description_t const*>(_sd))->port;
 }
 
-}  // namespace events
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace events
+} // namespace v_noabi
+} // namespace mongocxx

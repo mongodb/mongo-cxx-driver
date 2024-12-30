@@ -83,7 +83,7 @@ void example(std::uint8_t const* bytes, std::size_t length) {
 }
 // [Example]
 
-}  // namespace
+} // namespace
 
 RUNNER_REGISTER_COMPONENT() {
     // clang-format off

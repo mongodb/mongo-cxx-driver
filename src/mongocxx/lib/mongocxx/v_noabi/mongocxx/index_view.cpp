@@ -139,5 +139,5 @@ index_view::impl& index_view::_get_impl() {
     return *_impl;
 }
 
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace v_noabi
+} // namespace mongocxx

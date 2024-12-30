@@ -85,7 +85,7 @@ class apm_checker {
     std::vector<std::string> _ignore;
 };
 
-}  // namespace spec
-}  // namespace mongocxx
+} // namespace spec
+} // namespace mongocxx
 
 #include <mongocxx/config/private/postlude.hh>

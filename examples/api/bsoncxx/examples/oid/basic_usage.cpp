@@ -29,7 +29,7 @@ void example() {
         bsoncxx::oid a;
         bsoncxx::oid b;
 
-        EXPECT(a != b);  // Random and unique per process.
+        EXPECT(a != b); // Random and unique per process.
     }
 
     {
@@ -44,7 +44,7 @@ void example() {
             EXPECT(std::string(str) == "1970-01-01 00:00:00");
         }
 
-        EXPECT(oid.bytes() != bytes);  // Seperate storage.
+        EXPECT(oid.bytes() != bytes); // Seperate storage.
         EXPECT(oid.size() == bsoncxx::oid::k_oid_length);
         EXPECT(std::memcmp(bytes, oid.bytes(), oid.size()) == 0);
 
@@ -65,17 +65,17 @@ void example() {
             EXPECT(std::string(str) == "2000-01-01 23:59:59");
         }
 
-        EXPECT(oid < bsoncxx::oid{"389622001112131415212223"});  // Timestamp: 2000-02-01 00:00:00
-        EXPECT(oid > bsoncxx::oid{"386d43801112131415212223"});  // Timestamp: 2000-01-01 00:00:00
-        EXPECT(oid < bsoncxx::oid{"386e94ffffffffffff212223"});  // Value: 1099511627775
-        EXPECT(oid > bsoncxx::oid{"386e94ff0000000000212223"});  // Value: 0
-        EXPECT(oid < bsoncxx::oid{"386e94ff1112131415ffffff"});  // Counter: 16777215
-        EXPECT(oid > bsoncxx::oid{"386e94ff1112131415000000"});  // Counter: 0
+        EXPECT(oid < bsoncxx::oid{"389622001112131415212223"}); // Timestamp: 2000-02-01 00:00:00
+        EXPECT(oid > bsoncxx::oid{"386d43801112131415212223"}); // Timestamp: 2000-01-01 00:00:00
+        EXPECT(oid < bsoncxx::oid{"386e94ffffffffffff212223"}); // Value: 1099511627775
+        EXPECT(oid > bsoncxx::oid{"386e94ff0000000000212223"}); // Value: 0
+        EXPECT(oid < bsoncxx::oid{"386e94ff1112131415ffffff"}); // Counter: 16777215
+        EXPECT(oid > bsoncxx::oid{"386e94ff1112131415000000"}); // Counter: 0
     }
 }
 // [Example]
 
-}  // namespace
+} // namespace
 
 RUNNER_REGISTER_COMPONENT() {
     example();

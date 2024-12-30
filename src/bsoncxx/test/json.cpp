@@ -177,4 +177,4 @@ TEST_CASE("UDL _bson works like from_json()") {
         REQUIRE_THROWS_AS(""_bson, bsoncxx::exception);
     }
 }
-}  // namespace
+} // namespace

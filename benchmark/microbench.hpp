@@ -114,4 +114,4 @@ std::vector<std::string> parse_json_file_to_strings(std::string const& json_file
 std::vector<bsoncxx::document::value> parse_json_file_to_documents(std::string const& json_file);
 
 std::vector<std::string> parse_documents_to_bson(std::vector<bsoncxx::document::value> const& docs);
-}  // namespace benchmark
+} // namespace benchmark

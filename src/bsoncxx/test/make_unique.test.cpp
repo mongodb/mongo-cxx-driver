@@ -38,4 +38,4 @@ TEST_CASE("Create a unique_ptr<T[]>") {
     CHECK(std::all_of(ptr.get(), ptr.get() + length, [](int n) { return n == 42; }));
 }
 
-}  // namespace
+} // namespace

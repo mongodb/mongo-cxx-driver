@@ -27,9 +27,9 @@ namespace stdx {
 using ::std::basic_string_view;
 using ::std::string_view;
 
-}  // namespace stdx
-}  // namespace v_noabi
-}  // namespace bsoncxx
+} // namespace stdx
+} // namespace v_noabi
+} // namespace bsoncxx
 
 #elif defined(BSONCXX_POLY_USE_IMPLS)
 
@@ -358,9 +358,9 @@ constexpr std::size_t basic_string_view<C, Tr>::npos;
 
 using string_view = basic_string_view<char>;
 
-}  // namespace stdx
-}  // namespace v_noabi
-}  // namespace bsoncxx
+} // namespace stdx
+} // namespace v_noabi
+} // namespace bsoncxx
 
 namespace std {
 
@@ -373,7 +373,7 @@ struct hash<bsoncxx::v_noabi::stdx::basic_string_view<CharT, Traits>>
     }
 };
 
-}  // namespace std
+} // namespace std
 
 #else
 #error "Cannot find a valid polyfill for string_view"
@@ -387,8 +387,8 @@ namespace stdx {
 using ::bsoncxx::v_noabi::stdx::basic_string_view;
 using ::bsoncxx::v_noabi::stdx::string_view;
 
-}  // namespace stdx
-}  // namespace bsoncxx
+} // namespace stdx
+} // namespace bsoncxx
 
 ///
 /// @file
@@ -417,8 +417,8 @@ namespace stdx {
 ///
 class string_view {};
 
-}  // namespace stdx
-}  // namespace v_noabi
-}  // namespace bsoncxx
+} // namespace stdx
+} // namespace v_noabi
+} // namespace bsoncxx
 
-#endif  // defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
+#endif // defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

@@ -76,4 +76,4 @@ TEST_CASE("replace_one inequals", "[replace_one][result]") {
 
     REQUIRE(replace_one1 != replace_one2);
 }
-}  // namespace
+} // namespace

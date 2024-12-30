@@ -25,7 +25,7 @@ namespace {
 // [Example]
 void example() {
     try {
-        bsoncxx::types::bson_value::value value{bsoncxx::type::k_null};  // Throws.
+        bsoncxx::types::bson_value::value value{bsoncxx::type::k_null}; // Throws.
 
         EXPECT(false && "should not reach this point");
     } catch (bsoncxx::exception const& ex) {
@@ -34,7 +34,7 @@ void example() {
 }
 // [Example]
 
-}  // namespace
+} // namespace
 
 RUNNER_REGISTER_COMPONENT() {
     example();

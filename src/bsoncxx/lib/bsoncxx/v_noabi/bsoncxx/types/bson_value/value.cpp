@@ -286,7 +286,7 @@ value::operator bson_value::view() const noexcept {
     return view();
 }
 
-}  // namespace bson_value
-}  // namespace types
-}  // namespace v_noabi
-}  // namespace bsoncxx
+} // namespace bson_value
+} // namespace types
+} // namespace v_noabi
+} // namespace bsoncxx

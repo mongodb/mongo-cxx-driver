@@ -87,10 +87,10 @@ inline std::string to_string(bsoncxx::v_noabi::types::bson_value::view_or_value 
         case type::k_dbpointer:
             return val.view().get_dbpointer().value.to_string();
         default:
-            return "?";  // Match bsoncxx::v_noabi::to_string(bsoncxx::v_noabi::type) behavior.
+            return "?"; // Match bsoncxx::v_noabi::to_string(bsoncxx::v_noabi::type) behavior.
     }
 }
 
-}  // namespace bsoncxx
+} // namespace bsoncxx
 
 #include <bsoncxx/config/private/postlude.hh>

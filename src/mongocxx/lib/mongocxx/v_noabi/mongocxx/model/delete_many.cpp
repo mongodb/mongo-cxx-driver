@@ -44,6 +44,6 @@ bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> cons
     return _collation;
 }
 
-}  // namespace model
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace model
+} // namespace v_noabi
+} // namespace mongocxx

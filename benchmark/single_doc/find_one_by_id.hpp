@@ -75,4 +75,4 @@ void find_one_by_id::task() {
 void find_one_by_id::teardown() {
     _conn["perftest"].drop();
 }
-}  // namespace benchmark
+} // namespace benchmark

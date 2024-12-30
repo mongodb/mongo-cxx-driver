@@ -85,7 +85,7 @@ TEST_CASE("bsoncxx::test::exception_guard", "[test]") {
 
             auto const check_expr = [&] { BSONCXX_TEST_EXCEPTION_GUARD_CHECK(eguard); };
             REQUIRE_THROWS_AS(check_expr(), EGuardException);
-            REQUIRE_THROWS_AS(check_expr(), EGuardException);  // Rethrow is OK.
+            REQUIRE_THROWS_AS(check_expr(), EGuardException); // Rethrow is OK.
 
             CHECK(eguard.ptr != nullptr);
             CHECK(eguard.file == expected.file);
@@ -131,7 +131,7 @@ TEST_CASE("bsoncxx::test::exception_guard", "[test]") {
                 CHECK_THAT(log, Catch::Matchers::ContainsSubstring("two"));
                 CHECK(log_view.find(expected.file) != npos);
                 CHECK(log_view.find(std::to_string(expected.line)) != npos);
-                CHECK(log_view.find(expected.func) == npos);  // Func is not logged.
+                CHECK(log_view.find(expected.func) == npos); // Func is not logged.
             }
 
             // clang-format off
@@ -153,7 +153,7 @@ TEST_CASE("bsoncxx::test::exception_guard", "[test]") {
                 CHECK_THAT(log, Catch::Matchers::ContainsSubstring("Catch::TestFailureException"));
                 CHECK(log_view.find(expected.file) != npos);
                 CHECK(log_view.find(std::to_string(expected.line)) != npos);
-                CHECK(log_view.find(expected.func) == npos);  // Func is not logged.
+                CHECK(log_view.find(expected.func) == npos); // Func is not logged.
             }
 
             // The original exception.
@@ -224,4 +224,4 @@ TEST_CASE("bsoncxx::test::exception_guard", "[test]") {
     }
 }
 
-}  // namespace
+} // namespace

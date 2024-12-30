@@ -29,4 +29,4 @@ TEST_CASE("mongocxx::gridfs::downloader default constructor makes invalid downlo
     std::uint8_t c;
     REQUIRE_THROWS_AS(downloader.read(&c, 1), logic_error);
 }
-}  // namespace
+} // namespace

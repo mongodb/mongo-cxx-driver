@@ -60,7 +60,7 @@ void example(mongocxx::collection coll) {
 }
 // [Example]
 
-}  // namespace
+} // namespace
 
 RUNNER_REGISTER_COMPONENT_FOR_REPLICA() {
     mongocxx::client client{mongocxx::uri{}};

@@ -62,7 +62,7 @@ void throw_exception(bsoncxx::v_noabi::document::value raw_server_error, ::bson_
     throw exception_type{make_error_code(error), std::move(raw_server_error), error.message};
 }
 
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace v_noabi
+} // namespace mongocxx
 
 #include <mongocxx/config/private/postlude.hh>

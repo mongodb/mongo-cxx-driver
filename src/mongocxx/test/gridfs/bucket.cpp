@@ -344,7 +344,7 @@ TEST_CASE("downloading throws error when files document is corrupt", "[gridfs::b
 
     db["fs.files"].drop();
 
-    std::int32_t const k_expected_chunk_size_bytes = 255 * 1024;  // Default chunk size.
+    std::int32_t const k_expected_chunk_size_bytes = 255 * 1024; // Default chunk size.
     std::int64_t const k_expected_file_length = 1024 * 1024;
     bsoncxx::stdx::optional<bsoncxx::types::bson_value::view> chunk_size{
         bsoncxx::types::bson_value::view{bsoncxx::types::b_int32{k_expected_chunk_size_bytes}}};
@@ -835,7 +835,7 @@ TEST_CASE("gridfs::bucket::download_to_stream works", "[gridfs::bucket]") {
     db["fs.files"].drop();
     db["fs.chunks"].drop();
 
-    std::int64_t length = 19;  // length is the length of the test file in bytes.
+    std::int64_t length = 19; // length is the length of the test file in bytes.
     std::int32_t chunk_size = 4;
     bsoncxx::types::bson_value::view id{bsoncxx::types::b_oid{bsoncxx::oid{}}};
     auto file_bytes = manual_gridfs_initialize(db, length, chunk_size, id);
@@ -1179,4 +1179,4 @@ TEST_CASE("gridfs does not create additional indexes", "[gridfs::uploader] [grid
     }
 }
 
-}  // namespace
+} // namespace

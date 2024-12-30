@@ -102,5 +102,5 @@ bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::value> client_encry
     return _impl->remove_key_alt_name(id, key_alt_name);
 }
 
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace v_noabi
+} // namespace mongocxx

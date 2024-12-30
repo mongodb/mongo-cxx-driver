@@ -37,7 +37,7 @@ void example(bsoncxx::document::element e) {
 }
 // [Example]
 
-}  // namespace
+} // namespace
 
 RUNNER_REGISTER_COMPONENT() {
     auto const doc = bsoncxx::from_json(R"({"a": 1, "b": 2.0, "c": "three"})");

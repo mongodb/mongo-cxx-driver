@@ -189,4 +189,4 @@ TEST_CASE("Test mongohouse", "[mongohouse]") {
     test_auth_with_scram_sha();
 }
 
-}  // namespace
+} // namespace

@@ -82,4 +82,4 @@ void bulk_insert::teardown() {
 void bulk_insert::task() {
     _coll.insert_many(_docs);
 }
-}  // namespace benchmark
+} // namespace benchmark

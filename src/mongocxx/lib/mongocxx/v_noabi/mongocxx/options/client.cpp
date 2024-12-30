@@ -64,6 +64,6 @@ bsoncxx::v_noabi::stdx::optional<server_api> const& client::server_api_opts() co
     return _server_api_opts;
 }
 
-}  // namespace options
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace options
+} // namespace v_noabi
+} // namespace mongocxx

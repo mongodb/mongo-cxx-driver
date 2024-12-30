@@ -161,15 +161,15 @@ inline std::error_code make_error_code(error_code error) {
     return {static_cast<int>(error), error_category()};
 }
 
-}  // namespace v_noabi
-}  // namespace bsoncxx
+} // namespace v_noabi
+} // namespace bsoncxx
 
 namespace bsoncxx {
 
 using ::bsoncxx::v_noabi::error_category;
 using ::bsoncxx::v_noabi::make_error_code;
 
-}  // namespace bsoncxx
+} // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>
 
@@ -182,7 +182,7 @@ namespace std {
 template <>
 struct is_error_code_enum<bsoncxx::v_noabi::error_code> : public true_type {};
 
-}  // namespace std
+} // namespace std
 
 ///
 /// @file
@@ -199,6 +199,6 @@ std::error_category const& error_category();
 /// @ref bsoncxx::v_noabi::make_error_code(v_noabi::error_code error)
 std::error_code make_error_code(v_noabi::error_code error);
 
-}  // namespace bsoncxx
+} // namespace bsoncxx
 
-#endif  // defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
+#endif // defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

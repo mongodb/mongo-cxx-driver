@@ -127,5 +127,5 @@ bool operator!=(read_concern const& lhs, read_concern const& rhs) {
     return !(lhs == rhs);
 }
 
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace v_noabi
+} // namespace mongocxx

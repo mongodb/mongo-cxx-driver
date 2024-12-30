@@ -151,5 +151,5 @@ void map::erase(key_type const& key) {
         _client_encryption_map.erase(key);
 }
 
-}  // namespace entity
-}  // namespace mongocxx
+} // namespace entity
+} // namespace mongocxx

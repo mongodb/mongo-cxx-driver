@@ -28,7 +28,7 @@ namespace {
 void example() {
     try {
         mongocxx::client client{
-            mongocxx::uri{}, mongocxx::options::client{}.tls_opts(mongocxx::options::tls{})};  // Throws.
+            mongocxx::uri{}, mongocxx::options::client{}.tls_opts(mongocxx::options::tls{})}; // Throws.
 
         EXPECT(false && "should not reach this point");
     } catch (mongocxx::exception const& ex) {
@@ -44,7 +44,7 @@ void example() {
 }
 // [Example]
 
-}  // namespace
+} // namespace
 
 RUNNER_REGISTER_COMPONENT_WITH_INSTANCE() {
     example();

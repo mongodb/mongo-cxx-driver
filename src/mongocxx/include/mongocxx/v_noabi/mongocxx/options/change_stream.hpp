@@ -297,9 +297,9 @@ class change_stream {
     bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::types::b_timestamp> _start_at_operation_time;
 };
 
-}  // namespace options
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace options
+} // namespace v_noabi
+} // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
 

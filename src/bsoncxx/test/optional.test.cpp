@@ -204,7 +204,7 @@ bool static_checks() {
     return check_conversions<T, T>();
 }
 
-}  // namespace
+} // namespace
 
 STATIC_ASSERT_EXPR(bsoncxx::detail::is_totally_ordered<std::string>::value);
 STATIC_ASSERT_EXPR(bsoncxx::detail::is_totally_ordered<int>::value);
@@ -633,7 +633,7 @@ TEST_CASE("Optional: Hashing") {
     CHECK_VS2017(hashit(a) == hashit(b));
     b.emplace(41);
     CHECK_VS2017(hashit(41) == hashit(b));
-    CHECK_VS2017(hashit(a) != hashit(b));  // (Extremely probable, but not certain)
+    CHECK_VS2017(hashit(a) != hashit(b)); // (Extremely probable, but not certain)
     a.emplace(41);
     CHECK_VS2017(hashit(a) == hashit(b));
     optional<int const> c = b;
@@ -650,7 +650,7 @@ TEST_CASE("optional<T> conversions") {
     // Some stdlib implementations do not forbid this ctor correctly.
 #if defined(BSONCXX_POLY_USE_IMPLS)
     STATIC_ASSERT_EXPR((!std::is_constructible<optional<bool>, optional<std::string>>::value));
-#endif  // defined(BSONCXX_POLY_USE_IMPLS)
+#endif // defined(BSONCXX_POLY_USE_IMPLS)
 
     optional<std::string> s1(bsoncxx::stdx::in_place);
     CHECK_VS2017(s1 == "");
@@ -666,4 +666,4 @@ TEST_CASE("optional<T> conversions") {
     CHECK_VS2017(string2 == c_str);
 }
 
-#endif  // defined(BSONCXX_POLY_USE_IMPLS) || defined(BSONCXX_POLY_USE_STD)
+#endif // defined(BSONCXX_POLY_USE_IMPLS) || defined(BSONCXX_POLY_USE_STD)

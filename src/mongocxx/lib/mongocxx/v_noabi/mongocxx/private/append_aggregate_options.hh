@@ -54,7 +54,7 @@ inline void append_aggregate_options(
         builder.append(kvp("comment", *comment));
     }
 }
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace v_noabi
+} // namespace mongocxx
 
 #include <mongocxx/config/private/postlude.hh>

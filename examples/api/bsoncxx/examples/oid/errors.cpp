@@ -24,7 +24,7 @@ namespace {
 // [Example]
 void example() {
     try {
-        bsoncxx::oid oid{"invalid"};  // Throws.
+        bsoncxx::oid oid{"invalid"}; // Throws.
 
         EXPECT(false && "should not reach this point");
     } catch (bsoncxx::exception const& ex) {
@@ -34,7 +34,7 @@ void example() {
     try {
         char bytes[1]{};
 
-        bsoncxx::oid oid{bytes, sizeof(bytes)};  // Throws.
+        bsoncxx::oid oid{bytes, sizeof(bytes)}; // Throws.
 
         EXPECT(false && "should not reach this point");
     } catch (bsoncxx::exception const& ex) {
@@ -43,7 +43,7 @@ void example() {
 }
 // [Example]
 
-}  // namespace
+} // namespace
 
 RUNNER_REGISTER_COMPONENT() {
     example();

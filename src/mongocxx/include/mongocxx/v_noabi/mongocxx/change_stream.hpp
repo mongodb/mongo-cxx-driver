@@ -221,8 +221,8 @@ class change_stream::iterator {
     change_stream const* _change_stream;
 };
 
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace v_noabi
+} // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
 

@@ -60,9 +60,9 @@ inline bson_value::value make_owning_bson(void* internal_value) {
     return bson_value::value{internal_value};
 }
 
-}  // namespace bson_value
-}  // namespace types
-}  // namespace v_noabi
-}  // namespace bsoncxx
+} // namespace bson_value
+} // namespace types
+} // namespace v_noabi
+} // namespace bsoncxx
 
 #include <bsoncxx/config/private/postlude.hh>

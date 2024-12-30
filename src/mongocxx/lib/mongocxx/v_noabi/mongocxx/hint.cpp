@@ -71,5 +71,5 @@ bool operator!=(bsoncxx::v_noabi::document::view index, hint const& index_hint) 
     return !(index_hint == index);
 }
 
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace v_noabi
+} // namespace mongocxx

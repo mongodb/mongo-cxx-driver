@@ -213,4 +213,4 @@ TEST_CASE("Command Monitoring Spec Tests", "[command_monitoring_spec]") {
         run_command_monitoring_tests_in_file(path + "/" + test_file);
     }
 }
-}  // namespace
+} // namespace

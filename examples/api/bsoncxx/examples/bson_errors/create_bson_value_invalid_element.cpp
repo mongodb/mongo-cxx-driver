@@ -26,7 +26,7 @@ namespace {
 void example() {
     try {
         bsoncxx::document::element e;
-        bsoncxx::types::bson_value::view v = e.get_value();  // Throws.
+        bsoncxx::types::bson_value::view v = e.get_value(); // Throws.
 
         EXPECT(false && "should not reach this point");
     } catch (bsoncxx::exception const& ex) {
@@ -35,7 +35,7 @@ void example() {
 }
 // [Example]
 
-}  // namespace
+} // namespace
 
 RUNNER_REGISTER_COMPONENT() {
     example();

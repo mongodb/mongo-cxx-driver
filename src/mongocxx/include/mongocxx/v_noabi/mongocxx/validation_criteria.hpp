@@ -168,15 +168,15 @@ operator!=(validation_criteria const& lhs, validation_criteria const& rhs);
 /// @}
 ///
 
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace v_noabi
+} // namespace mongocxx
 
 namespace mongocxx {
 
 using ::mongocxx::v_noabi::operator==;
 using ::mongocxx::v_noabi::operator!=;
 
-}  // namespace mongocxx
+} // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
 
@@ -195,6 +195,6 @@ bool operator==(v_noabi::validation_criteria const& lhs, v_noabi::validation_cri
 /// @ref mongocxx::v_noabi::operator!=(const v_noabi::validation_criteria& lhs, const v_noabi::validation_criteria& rhs)
 bool operator!=(v_noabi::validation_criteria const& lhs, v_noabi::validation_criteria const& rhs);
 
-}  // namespace mongocxx
+} // namespace mongocxx
 
-#endif  // defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
+#endif // defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

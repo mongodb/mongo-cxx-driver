@@ -21,10 +21,10 @@ namespace stream {
 
 class document;
 
-}  // namespace stream
-}  // namespace builder
-}  // namespace v_noabi
-}  // namespace bsoncxx
+} // namespace stream
+} // namespace builder
+} // namespace v_noabi
+} // namespace bsoncxx
 
 namespace bsoncxx {
 namespace builder {
@@ -32,9 +32,9 @@ namespace stream {
 
 using ::bsoncxx::v_noabi::builder::stream::document;
 
-}  // namespace stream
-}  // namespace builder
-}  // namespace bsoncxx
+} // namespace stream
+} // namespace builder
+} // namespace bsoncxx
 
 ///
 /// @file
@@ -50,8 +50,8 @@ namespace stream {
 /// @ref bsoncxx::v_noabi::builder::stream::document
 class document {};
 
-}  // namespace stream
-}  // namespace builder
-}  // namespace bsoncxx
+} // namespace stream
+} // namespace builder
+} // namespace bsoncxx
 
-#endif  // defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
+#endif // defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

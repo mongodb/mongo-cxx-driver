@@ -60,6 +60,6 @@ replace_one& replace_one::hint(mongocxx::v_noabi::hint index_hint) {
 bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::hint> const& replace_one::hint() const {
     return _hint;
 }
-}  // namespace model
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace model
+} // namespace v_noabi
+} // namespace mongocxx

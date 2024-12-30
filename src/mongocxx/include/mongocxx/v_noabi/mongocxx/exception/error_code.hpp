@@ -132,15 +132,15 @@ inline std::error_code make_error_code(error_code error) {
     return {static_cast<int>(error), error_category()};
 }
 
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace v_noabi
+} // namespace mongocxx
 
 namespace mongocxx {
 
 using ::mongocxx::v_noabi::error_category;
 using ::mongocxx::v_noabi::make_error_code;
 
-}  // namespace mongocxx
+} // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
 
@@ -153,7 +153,7 @@ namespace std {
 template <>
 struct is_error_code_enum<::mongocxx::v_noabi::error_code> : std::true_type {};
 
-}  // namespace std
+} // namespace std
 
 ///
 /// @file
@@ -170,6 +170,6 @@ std::error_category const& error_category();
 /// @ref mongocxx::v_noabi::make_error_code(v_noabi::error_code error)
 inline std::error_code make_error_code(v_noabi::error_code error);
 
-}  // namespace mongocxx
+} // namespace mongocxx
 
-#endif  // defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
+#endif // defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

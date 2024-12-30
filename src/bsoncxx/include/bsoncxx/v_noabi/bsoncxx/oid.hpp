@@ -122,8 +122,8 @@ class oid {
     std::array<char, k_oid_length> _bytes;
 };
 
-}  // namespace v_noabi
-}  // namespace bsoncxx
+} // namespace v_noabi
+} // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>
 

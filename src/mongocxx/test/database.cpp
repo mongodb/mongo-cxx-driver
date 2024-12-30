@@ -559,4 +559,4 @@ TEST_CASE("serviceId presence depends on load-balancing mode") {
     CHECK_THROWS(database.run_command(cmd.view()));
 }
 
-}  // namespace
+} // namespace

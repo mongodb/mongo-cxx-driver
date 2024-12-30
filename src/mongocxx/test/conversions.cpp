@@ -55,4 +55,4 @@ TEST_CASE("libmongoc::conversions::read_mode_from_read_mode_t works", "[libmongo
         libmongoc::conversions::read_mode_from_read_mode_t(MONGOC_READ_NEAREST) ==
         read_preference::read_mode::k_nearest);
 }
-}  // namespace
+} // namespace

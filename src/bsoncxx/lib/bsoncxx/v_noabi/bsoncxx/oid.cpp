@@ -102,5 +102,5 @@ bool operator!=(oid const& lhs, oid const& rhs) {
     return oid_compare(lhs, rhs) != 0;
 }
 
-}  // namespace v_noabi
-}  // namespace bsoncxx
+} // namespace v_noabi
+} // namespace bsoncxx

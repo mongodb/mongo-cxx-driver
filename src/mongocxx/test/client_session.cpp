@@ -846,7 +846,7 @@ TEST_CASE("with_transaction", "[session]") {
             // expose the mock timeout mechanism that allows this to be tested without
             // performing long sleeps.
         }
-    }  // End prose tests.
+    } // End prose tests.
 }
 
 TEST_CASE("unacknowledged write in session", "[session]") {
@@ -873,4 +873,4 @@ TEST_CASE("unacknowledged write in session", "[session]") {
             mongocxx_exception_matcher{"Cannot use client session with unacknowledged writes"});
     }
 }
-}  // namespace
+} // namespace

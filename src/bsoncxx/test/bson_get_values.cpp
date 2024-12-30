@@ -387,4 +387,4 @@ TEST_CASE("document::values have a superset of document::view's methods") {
     }
 }
 
-}  // namespace
+} // namespace

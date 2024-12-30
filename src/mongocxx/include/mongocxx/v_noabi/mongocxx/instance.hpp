@@ -132,8 +132,8 @@ class instance {
     std::unique_ptr<impl> _impl;
 };
 
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace v_noabi
+} // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
 

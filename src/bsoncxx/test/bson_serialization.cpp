@@ -49,7 +49,7 @@ void from_bson(Person& person, bsoncxx::document::view const& bson_object) {
     person.last_name = to_string(bson_object["last_name"].get_string().value);
     person.age = bson_object["age"].get_int32().value;
 }
-}  // namespace test
+} // namespace test
 
 TEST_CASE("Convert between Person struct and BSON object") {
     test::Person expected_person{
@@ -89,4 +89,4 @@ TEST_CASE("Convert between Person struct and BSON object") {
         REQUIRE(test_person == other_person);
     }
 }
-}  // namespace
+} // namespace

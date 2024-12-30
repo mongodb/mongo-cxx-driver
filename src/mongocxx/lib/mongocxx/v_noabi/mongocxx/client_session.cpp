@@ -102,5 +102,5 @@ client_session::impl& client_session::_get_impl() {
     return const_cast<client_session::impl&>(cthis->_get_impl());
 }
 
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace v_noabi
+} // namespace mongocxx

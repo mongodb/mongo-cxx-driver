@@ -37,7 +37,7 @@ void runcommand_examples(mongocxx::database& db) {
     }
 }
 
-}  // namespace
+} // namespace
 
 int EXAMPLES_CDECL main() {
     // The mongocxx::instance constructor and destructor initialize and shut down the driver,

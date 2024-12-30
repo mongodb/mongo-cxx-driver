@@ -48,9 +48,9 @@ class insert_one {
     bsoncxx::v_noabi::document::view_or_value _document;
 };
 
-}  // namespace model
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace model
+} // namespace v_noabi
+} // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
 

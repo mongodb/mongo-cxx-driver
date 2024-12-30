@@ -27,24 +27,24 @@ namespace {
 void example(bsoncxx::document::view doc) {
     EXPECT(doc.begin() != doc.end());
 
-    auto iter = doc.begin();  // "a": 1
+    auto iter = doc.begin(); // "a": 1
 
-    ++iter;  // "b": 2
-    ++iter;  // End iterator.
+    ++iter; // "b": 2
+    ++iter; // End iterator.
 
     EXPECT(iter == doc.end());
 
-    ++iter;  // DO NOT DO THIS
+    ++iter; // DO NOT DO THIS
 
-    EXPECT(iter == doc.end());  // Incrementing an end iterator results in an end iterator.
+    EXPECT(iter == doc.end()); // Incrementing an end iterator results in an end iterator.
 
-    bsoncxx::document::element e = *iter;  // DO NOT DO THIS
+    bsoncxx::document::element e = *iter; // DO NOT DO THIS
 
-    EXPECT(!e);  // An end iterator returns an invalid element.
+    EXPECT(!e); // An end iterator returns an invalid element.
 }
 // [Example]
 
-}  // namespace
+} // namespace
 
 RUNNER_REGISTER_COMPONENT() {
     example(bsoncxx::from_json(R"({"a": 1, "b": 2})"));

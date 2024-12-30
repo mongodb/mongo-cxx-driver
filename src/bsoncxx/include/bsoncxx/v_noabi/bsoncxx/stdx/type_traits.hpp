@@ -144,7 +144,7 @@ struct vc140_detection<Dflt, void_t<Oper<Args...>>, Oper, Args...> {
     using type = Oper<Args...>;
 };
 
-}  // namespace impl_detection
+} // namespace impl_detection
 
 // The type yielded by detected_t if the given type operator does not yield a type.
 struct nonesuch {
@@ -240,7 +240,7 @@ struct disj<std::true_type, mp_list<H>> : H {};
 template <>
 struct disj<std::true_type, mp_list<>> : std::false_type {};
 
-}  // namespace impl_logic
+} // namespace impl_logic
 
 // Inherits unambiguously from the first of `Ts...` for which `Ts::value` is a valid expression
 // equal to `false`, or the last of `Ts...` otherwise.
@@ -317,7 +317,7 @@ struct requirement<Constraint, enable_if_t<Constraint::value>> {
     };
 };
 
-}  // namespace impl_requires
+} // namespace impl_requires
 
 // If none of `Ts::value is 'false'`, yields the type `Type`, otherwise this type is undefined.
 //
@@ -366,7 +366,7 @@ struct invoker<true, false> {
     constexpr static auto apply(F&& fun, Self&& self) BSONCXX_RETURNS(static_cast<Self&&>(self).*fun);
 };
 
-}  // namespace impl_invoke
+} // namespace impl_invoke
 
 static constexpr struct invoke_fn {
     // Invoke the given object with the given arguments.
@@ -433,7 +433,7 @@ template <typename T, typename U>
 auto is_swappable_f(rank<0>) -> std::false_type;
 
 template <typename T, typename U>
-auto is_swappable_f(rank<1>)  //
+auto is_swappable_f(rank<1>) //
     noexcept(
         noexcept(swap(std::declval<T>(), std::declval<U>())) && noexcept(swap(std::declval<U>(), std::declval<T>())))
         -> true_t<
@@ -447,7 +447,7 @@ template <typename T, typename U>
 auto is_nothrow_swappable_f(rank<1>) -> bool_constant<
     noexcept(swap(std::declval<T>(), std::declval<U>())) && noexcept(swap(std::declval<U>(), std::declval<T>()))>;
 
-}  // namespace swap_detection
+} // namespace swap_detection
 
 template <typename T, typename U>
 struct is_swappable_with : decltype(swap_detection::is_swappable_f<T, U>(rank<1>{})) {};
@@ -461,8 +461,8 @@ struct is_swappable : is_swappable_with<T&, T&> {};
 template <typename T>
 struct is_nothrow_swappable : is_nothrow_swappable_with<T&, T&> {};
 
-}  // namespace detail
-}  // namespace bsoncxx
+} // namespace detail
+} // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>
 

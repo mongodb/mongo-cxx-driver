@@ -32,7 +32,7 @@ void uint8_t_deleter(std::uint8_t* ptr) {
     delete[] ptr;
 }
 
-}  // namespace
+} // namespace
 
 value::value(document::view view)
     : _data(new std::uint8_t[static_cast<std::size_t>(view.length())], uint8_t_deleter), _length(view.length()) {
@@ -94,6 +94,6 @@ void value::reset(document::view view) {
     std::copy(view.data(), view.data() + view.length(), _data.get());
 }
 
-}  // namespace document
-}  // namespace v_noabi
-}  // namespace bsoncxx
+} // namespace document
+} // namespace v_noabi
+} // namespace bsoncxx

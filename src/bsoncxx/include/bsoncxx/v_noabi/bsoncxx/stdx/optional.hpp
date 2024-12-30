@@ -31,9 +31,9 @@ using ::std::nullopt;
 using ::std::nullopt_t;
 using ::std::optional;
 
-}  // namespace stdx
-}  // namespace v_noabi
-}  // namespace bsoncxx
+} // namespace stdx
+} // namespace v_noabi
+} // namespace bsoncxx
 
 #elif defined(BSONCXX_POLY_USE_IMPLS)
 
@@ -128,7 +128,7 @@ struct enable_opt_conversion : bsoncxx::detail::conjunction<
                                            std::is_convertible<optional<U> const&&, T>>>>> {};
 
 template <typename From, typename To>
-struct enable_opt_value_conversion  //
+struct enable_opt_value_conversion //
     : bsoncxx::detail::conjunction<
           std::is_constructible<To, From&&>,
           bsoncxx::detail::negation<bsoncxx::detail::is_alike<From, in_place_t>>,
@@ -137,7 +137,7 @@ struct enable_opt_value_conversion  //
               bsoncxx::detail::negation<bsoncxx::detail::is_alike<To, bool>>,
               detail::not_an_optional<bsoncxx::detail::remove_cvref_t<From>>>> {};
 
-}  // namespace detail
+} // namespace detail
 
 template <typename T>
 class optional : bsoncxx::detail::equality_operators,
@@ -747,20 +747,20 @@ struct optional_hash<T, true> {
     }
 };
 
-}  // namespace detail
+} // namespace detail
 
-}  // namespace stdx
+} // namespace stdx
 
-}  // namespace v_noabi
+} // namespace v_noabi
 
-}  // namespace bsoncxx
+} // namespace bsoncxx
 
 namespace std {
 
 template <typename T>
 struct hash<bsoncxx::v_noabi::stdx::optional<T>> : bsoncxx::v_noabi::stdx::detail::optional_hash<T> {};
 
-}  // namespace std
+} // namespace std
 
 #else
 #error "Cannot find a valid polyfill for optional"
@@ -778,8 +778,8 @@ using ::bsoncxx::v_noabi::stdx::nullopt;
 using ::bsoncxx::v_noabi::stdx::nullopt_t;
 using ::bsoncxx::v_noabi::stdx::optional;
 
-}  // namespace stdx
-}  // namespace bsoncxx
+} // namespace stdx
+} // namespace bsoncxx
 
 ///
 /// @file
@@ -809,8 +809,8 @@ namespace stdx {
 template <typename T>
 class optional {};
 
-}  // namespace stdx
-}  // namespace v_noabi
-}  // namespace bsoncxx
+} // namespace stdx
+} // namespace v_noabi
+} // namespace bsoncxx
 
-#endif  // defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
+#endif // defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

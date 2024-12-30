@@ -335,10 +335,10 @@ inline bool operator!=(view const& lhs, value const& rhs) {
 /// @}
 ///
 
-}  // namespace bson_value
-}  // namespace types
-}  // namespace v_noabi
-}  // namespace bsoncxx
+} // namespace bson_value
+} // namespace types
+} // namespace v_noabi
+} // namespace bsoncxx
 
 namespace bsoncxx {
 namespace types {
@@ -347,9 +347,9 @@ namespace bson_value {
 using ::bsoncxx::v_noabi::types::bson_value::operator==;
 using ::bsoncxx::v_noabi::types::bson_value::operator!=;
 
-}  // namespace bson_value
-}  // namespace types
-}  // namespace bsoncxx
+} // namespace bson_value
+} // namespace types
+} // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>
 
@@ -382,8 +382,8 @@ inline bool operator!=(v_noabi::types::bson_value::value const& lhs, v_noabi::ty
 /// @ref bsoncxx::v_noabi::types::bson_value::operator!=(const v_noabi::types::bson_value::view& lhs, const v_noabi::types::bson_value::value& rhs)
 inline bool operator!=(v_noabi::types::bson_value::view const& lhs, v_noabi::types::bson_value::value const& rhs);
 
-}  // namespace bson_value
-}  // namespace types
-}  // namespace bsoncxx
+} // namespace bson_value
+} // namespace types
+} // namespace bsoncxx
 
-#endif  // defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
+#endif // defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

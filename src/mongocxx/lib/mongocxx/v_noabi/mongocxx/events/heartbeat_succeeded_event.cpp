@@ -52,6 +52,6 @@ bool heartbeat_succeeded_event::awaited() const {
         static_cast<mongoc_apm_server_heartbeat_succeeded_t const*>(_succeeded_event));
 }
 
-}  // namespace events
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace events
+} // namespace v_noabi
+} // namespace mongocxx

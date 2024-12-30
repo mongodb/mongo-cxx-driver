@@ -87,8 +87,8 @@ transaction::impl& transaction::_get_impl() {
     return const_cast<transaction::impl&>(cthis->_get_impl());
 }
 
-}  // namespace options
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace options
+} // namespace v_noabi
+} // namespace mongocxx
 
 #include <mongocxx/config/private/postlude.hh>

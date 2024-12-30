@@ -81,7 +81,7 @@ TEST_CASE("create_one", "[index_view]") {
     SECTION("works with document and options") {
         collection coll = db["index_view_create_one_doc_and_opts"];
         coll.drop();
-        coll.insert_one({});  // Ensure that the collection exists.
+        coll.insert_one({}); // Ensure that the collection exists.
         index_view indexes = coll.indexes();
 
         auto key = make_document(kvp("a", 1));
@@ -95,7 +95,7 @@ TEST_CASE("create_one", "[index_view]") {
     SECTION("works with document and no options") {
         collection coll = db["index_view_create_one_doc"];
         coll.drop();
-        coll.insert_one({});  // Ensure that the collection exists.
+        coll.insert_one({}); // Ensure that the collection exists.
         index_view indexes = coll.indexes();
 
         auto key = make_document(kvp("a", 1), kvp("b", -1));
@@ -108,7 +108,7 @@ TEST_CASE("create_one", "[index_view]") {
     SECTION("with index_model and options") {
         collection coll = db["index_view_create_one_index_model_opts"];
         coll.drop();
-        coll.insert_one({});  // Ensure that the collection exists.
+        coll.insert_one({}); // Ensure that the collection exists.
         index_view indexes = coll.indexes();
 
         auto key = make_document(kvp("a", 1));
@@ -123,7 +123,7 @@ TEST_CASE("create_one", "[index_view]") {
     SECTION("with index_model and no options") {
         collection coll = db["index_view_create_one_index_model"];
         coll.drop();
-        coll.insert_one({});  // Ensure that the collection exists.
+        coll.insert_one({}); // Ensure that the collection exists.
         index_view indexes = coll.indexes();
 
         auto key = make_document(kvp("a", 1), kvp("b", -1));
@@ -137,7 +137,7 @@ TEST_CASE("create_one", "[index_view]") {
     SECTION("tests maxTimeMS option works") {
         collection coll = db["index_view_create_one_maxTimeMS"];
         coll.drop();
-        coll.insert_one({});  // Ensure that the collection exists.
+        coll.insert_one({}); // Ensure that the collection exists.
         index_view indexes = coll.indexes();
 
         auto key = make_document(kvp("aaa", 1));
@@ -154,7 +154,7 @@ TEST_CASE("create_one", "[index_view]") {
     SECTION("fails for same keys and options") {
         collection coll = db["index_view_create_one_exists_fail"];
         coll.drop();
-        coll.insert_one({});  // Ensure that the collection exists.
+        coll.insert_one({}); // Ensure that the collection exists.
         index_view indexes = coll.indexes();
 
         auto keys = make_document(kvp("a", 1));
@@ -166,7 +166,7 @@ TEST_CASE("create_one", "[index_view]") {
     SECTION("fails for same name") {
         collection coll = db["index_view_create_one_same_name_fail"];
         coll.drop();
-        coll.insert_one({});  // Ensure that the collection exists.
+        coll.insert_one({}); // Ensure that the collection exists.
         index_view indexes = coll.indexes();
 
         auto keys1 = make_document(kvp("a", 1));
@@ -184,7 +184,7 @@ TEST_CASE("create_one", "[index_view]") {
 
         collection coll = db["index_view_create_one_commit_quorum"];
         coll.drop();
-        coll.insert_one({});  // Ensure that the collection exists.
+        coll.insert_one({}); // Ensure that the collection exists.
         index_view indexes = coll.indexes();
 
         auto key = make_document(kvp("a", 1));
@@ -230,7 +230,7 @@ TEST_CASE("create_many", "[index_view]") {
     SECTION("test maxTimeMS option") {
         collection coll = db["index_view_create_many_maxTimeMS"];
         coll.drop();
-        coll.insert_one({});  // Ensure that the collection exists.
+        coll.insert_one({}); // Ensure that the collection exists.
 
         index_view indexes = coll.indexes();
 
@@ -246,7 +246,7 @@ TEST_CASE("create_many", "[index_view]") {
     SECTION("create three") {
         collection coll = db["index_view_create_many"];
         coll.drop();
-        coll.insert_one({});  // Ensure that the collection exists.
+        coll.insert_one({}); // Ensure that the collection exists.
 
         index_view indexes = coll.indexes();
 
@@ -288,7 +288,7 @@ TEST_CASE("drop_one", "[index_view]") {
     SECTION("drops index by name") {
         collection coll = db["index_view_drop_one_by_name"];
         coll.drop();
-        coll.insert_one({});  // Ensure that the collection exists.
+        coll.insert_one({}); // Ensure that the collection exists.
 
         index_view indexes = coll.indexes();
         auto cursor = indexes.list();
@@ -309,7 +309,7 @@ TEST_CASE("drop_one", "[index_view]") {
     SECTION("drops index by key and options") {
         collection coll = db["index_view_drop_one_by_key_and_opts"];
         coll.drop();
-        coll.insert_one({});  // Ensure that the collection exists.
+        coll.insert_one({}); // Ensure that the collection exists.
 
         index_view indexes = coll.indexes();
         auto cursor = indexes.list();
@@ -330,7 +330,7 @@ TEST_CASE("drop_one", "[index_view]") {
     SECTION("drops index by index_model") {
         collection coll = db["index_view_drop_one_by_index_model"];
         coll.drop();
-        coll.insert_one({});  // Ensure that the collection exists.
+        coll.insert_one({}); // Ensure that the collection exists.
 
         index_view indexes = coll.indexes();
         auto cursor = indexes.list();
@@ -352,7 +352,7 @@ TEST_CASE("drop_one", "[index_view]") {
     SECTION("fails for drop_one on *") {
         collection coll = db["index_view_drop_one_*_fail"];
         coll.drop();
-        coll.insert_one({});  // Ensure that the collection exists.
+        coll.insert_one({}); // Ensure that the collection exists.
 
         index_view indexes = coll.indexes();
         auto cursor = indexes.list();
@@ -364,7 +364,7 @@ TEST_CASE("drop_one", "[index_view]") {
     SECTION("fails for index that doesn't exist") {
         collection coll = db["index_view_drop_one_nonexistant_fail"];
         coll.drop();
-        coll.insert_one({});  // Ensure that the collection exists.
+        coll.insert_one({}); // Ensure that the collection exists.
 
         index_view indexes = coll.indexes();
         auto cursor = indexes.list();
@@ -388,7 +388,7 @@ TEST_CASE("drop_all", "[index_view]") {
     SECTION("drop normally") {
         collection coll = db["index_view_drop_all"];
         coll.drop();
-        coll.insert_one({});  // Ensure that the collection exists.
+        coll.insert_one({}); // Ensure that the collection exists.
 
         index_view indexes = coll.indexes();
 
@@ -419,7 +419,7 @@ TEST_CASE("drop_all", "[index_view]") {
     SECTION("test maxTimeMS option") {
         collection coll = db["index_view_drop_all_maxTimeMS"];
         coll.drop();
-        coll.insert_one({});  // Ensure that the collection exists.
+        coll.insert_one({}); // Ensure that the collection exists.
 
         index_view indexes = coll.indexes();
 
@@ -459,7 +459,7 @@ TEST_CASE("index creation and deletion with different collation") {
     database db = mongodb_client["index_view_collation"];
     collection coll = db["index_view_collation"];
     coll.drop();
-    coll.insert_one({});  // Ensure that the collection exists.
+    coll.insert_one({}); // Ensure that the collection exists.
 
     bsoncxx::document::value keys = make_document(kvp("a", 1), kvp("bcd", -1), kvp("d", 1));
     bsoncxx::document::value us_collation = make_document(kvp("collation", make_document(kvp("locale", "en_US"))));
@@ -493,4 +493,4 @@ TEST_CASE("index creation and deletion with different collation") {
     coll.drop();
     db.drop();
 }
-}  // namespace
+} // namespace

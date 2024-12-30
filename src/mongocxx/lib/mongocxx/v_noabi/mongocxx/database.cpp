@@ -74,7 +74,7 @@ class collection_names {
     char** _names;
 };
 
-}  // namespace
+} // namespace
 
 using namespace libbson;
 
@@ -431,5 +431,5 @@ database::impl& database::_get_impl() {
     return const_cast<database::impl&>(cthis->_get_impl());
 }
 
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace v_noabi
+} // namespace mongocxx

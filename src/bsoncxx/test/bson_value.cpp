@@ -55,7 +55,7 @@ void coverting_construction_test(T actual, U expected) {
     REQUIRE(_static_cast == expected);
 }
 
-}  // namespace
+} // namespace
 
 TEST_CASE("types::bson_value::value", "[bsoncxx::types::bson_value::value]") {
     SECTION("can be constructed from") {
@@ -416,4 +416,4 @@ TEST_CASE("types::bson_value::value", "[bsoncxx::types::bson_value::value]") {
     }
 }
 
-}  // namespace
+} // namespace

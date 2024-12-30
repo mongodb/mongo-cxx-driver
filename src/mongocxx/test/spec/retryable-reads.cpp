@@ -133,4 +133,4 @@ TEST_CASE("retryable reads spec tests", "[retryable_reads_specs]") {
 
     run_tests_in_suite("RETRYABLE_READS_LEGACY_TESTS_PATH", run_retryable_reads_tests_in_file, unsupported_tests);
 }
-}  // namespace
+} // namespace

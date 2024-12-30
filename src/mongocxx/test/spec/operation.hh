@@ -85,7 +85,7 @@ class operation_runner {
     void _set_collection_options(document::view operation);
 };
 
-}  // namespace spec
-}  // namespace mongocxx
+} // namespace spec
+} // namespace mongocxx
 
 #include <mongocxx/config/private/postlude.hh>

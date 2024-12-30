@@ -145,5 +145,5 @@ bsoncxx::v_noabi::stdx::optional<pool::entry> pool::try_acquire() {
     return entry(entry::unique_client(new client(cli), [this](client* client) { _release(client); }));
 }
 
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace v_noabi
+} // namespace mongocxx

@@ -41,7 +41,7 @@ class server_api {
     /// Enum representing the possible values for server API version.
     ///
     enum class version {
-        k_version_1,  ///< Stable API Version 1.
+        k_version_1, ///< Stable API Version 1.
     };
 
     ///
@@ -141,9 +141,9 @@ class server_api {
     bsoncxx::v_noabi::stdx::optional<bool> _deprecation_errors;
 };
 
-}  // namespace options
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace options
+} // namespace v_noabi
+} // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
 

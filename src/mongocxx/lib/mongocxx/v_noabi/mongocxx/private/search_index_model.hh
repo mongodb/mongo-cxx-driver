@@ -20,7 +20,7 @@ class search_index_model::impl {
     bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value> _type;
 };
 
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace v_noabi
+} // namespace mongocxx
 
 #include <mongocxx/config/private/postlude.hh>

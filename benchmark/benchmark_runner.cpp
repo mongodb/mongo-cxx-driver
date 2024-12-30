@@ -221,4 +221,4 @@ void benchmark_runner::write_scores() {
     std::ofstream os{"results.json"};
     os << '[' << bsoncxx::to_json(doc.view()) << ']';
 }
-}  // namespace benchmark
+} // namespace benchmark

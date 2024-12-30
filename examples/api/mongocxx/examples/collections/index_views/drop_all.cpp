@@ -49,15 +49,15 @@ void example(mongocxx::index_view indexes) {
         return std::distance(cursor.begin(), cursor.end());
     };
 
-    EXPECT(count_indexes() == 3);  // _id_, x_1, custom_name
+    EXPECT(count_indexes() == 3); // _id_, x_1, custom_name
 
     indexes.drop_all();
 
-    EXPECT(count_indexes() == 1);  // _id_
+    EXPECT(count_indexes() == 1); // _id_
 }
 // [Example]
 
-}  // namespace
+} // namespace
 
 RUNNER_REGISTER_COMPONENT_FOR_SINGLE() {
     mongocxx::client client{mongocxx::uri{}};

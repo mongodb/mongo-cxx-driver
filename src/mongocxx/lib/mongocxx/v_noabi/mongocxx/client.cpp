@@ -68,7 +68,7 @@ class database_names {
    private:
     char** _names;
 };
-}  // namespace
+} // namespace
 
 client::client() noexcept = default;
 
@@ -327,5 +327,5 @@ client::impl& client::_get_impl() {
     return const_cast<client::impl&>(cthis->_get_impl());
 }
 
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace v_noabi
+} // namespace mongocxx

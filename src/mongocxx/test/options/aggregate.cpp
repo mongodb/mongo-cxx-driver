@@ -55,4 +55,4 @@ TEST_CASE("aggregate", "[aggregate][option]") {
     CHECK_OPTIONAL_ARGUMENT(agg, read_preference, mongocxx::read_preference());
     CHECK_OPTIONAL_ARGUMENT(agg, write_concern, mongocxx::write_concern());
 }
-}  // namespace
+} // namespace

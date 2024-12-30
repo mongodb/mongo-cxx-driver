@@ -110,7 +110,7 @@ std::int64_t read_length_from_files_document(bsoncxx::v_noabi::document::view co
     return length;
 }
 
-}  // namespace
+} // namespace
 
 bucket::bucket(database const& db, options::gridfs::bucket const& options) {
     std::string bucket_name = "fs";
@@ -562,6 +562,6 @@ bucket::impl& bucket::_get_impl() {
     return const_cast<bucket::impl&>(cthis->_get_impl());
 }
 
-}  // namespace gridfs
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace gridfs
+} // namespace v_noabi
+} // namespace mongocxx

@@ -62,4 +62,4 @@ void bson_encoding::task() {
 }
 
 void bson_encoding::teardown() {}
-}  // namespace benchmark
+} // namespace benchmark

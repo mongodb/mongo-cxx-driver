@@ -41,7 +41,7 @@ bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> cons
     return _metadata;
 }
 
-}  // namespace gridfs
-}  // namespace options
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace gridfs
+} // namespace options
+} // namespace v_noabi
+} // namespace mongocxx

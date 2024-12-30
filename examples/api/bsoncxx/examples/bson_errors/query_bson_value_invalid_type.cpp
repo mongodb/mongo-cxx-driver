@@ -29,7 +29,7 @@ void example() {
     EXPECT(v.get_null() == bsoncxx::types::b_null{});
 
     try {
-        bsoncxx::types::b_int32 i = v.get_int32();  // Throws.
+        bsoncxx::types::b_int32 i = v.get_int32(); // Throws.
 
         EXPECT(false && "should not reach this point");
     } catch (bsoncxx::exception const& ex) {
@@ -37,7 +37,7 @@ void example() {
     }
 
     try {
-        bsoncxx::types::b_int64 i = v.get_int64();  // Throws.
+        bsoncxx::types::b_int64 i = v.get_int64(); // Throws.
 
         EXPECT(false && "should not reach this point");
     } catch (bsoncxx::exception const& ex) {
@@ -46,7 +46,7 @@ void example() {
 }
 // [Example]
 
-}  // namespace
+} // namespace
 
 RUNNER_REGISTER_COMPONENT() {
     example();

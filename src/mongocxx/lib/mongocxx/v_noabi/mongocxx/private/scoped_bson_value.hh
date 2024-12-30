@@ -70,5 +70,5 @@ struct scoped_bson_value {
     scoped_bson_value& operator=(scoped_bson_value&&) = delete;
 };
 
-}  // namespace detail
-}  // namespace mongocxx
+} // namespace detail
+} // namespace mongocxx

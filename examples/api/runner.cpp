@@ -49,7 +49,7 @@
 
 #include <sys/wait.h>
 
-#endif  // !defined(_MSC_VER)
+#endif // !defined(_MSC_VER)
 
 namespace {
 
@@ -131,7 +131,7 @@ class runner_type {
                 // Child: do nothing more than call the registered function.
                 if (pid == 0) {
                     fn();
-                    return action::return_from_main;  // Return from `main()`.
+                    return action::return_from_main; // Return from `main()`.
                 }
 
                 // Parent: wait for child and handle returned status values.
@@ -167,7 +167,7 @@ class runner_type {
             }
 
             return action::succeed;
-#endif  // !defined(_MSC_VER)
+#endif // !defined(_MSC_VER)
         }
 
         std::cout << "Skipping API examples that require forked processes" << std::endl;
@@ -324,11 +324,11 @@ class runner_type {
 
         switch (run_forking_components()) {
             case action::succeed:
-                break;  // Continue example coverage.
+                break; // Continue example coverage.
             case action::fail:
-                return EXIT_FAILURE;  // A component failed.
+                return EXIT_FAILURE; // A component failed.
             case action::return_from_main:
-                return EXIT_SUCCESS;  // Return directly from forked processes.
+                return EXIT_SUCCESS; // Return directly from forked processes.
         }
 
         run_components_with_instance();
@@ -346,7 +346,7 @@ bool parse_seed(int argc, char** argv, int i, bool& set_seed) {
             return false;
         }
 
-        char* const seed_str = argv[i + 1];  // Next argument.
+        char* const seed_str = argv[i + 1]; // Next argument.
         char* end = nullptr;
 
         auto const seed = static_cast<std::minstd_rand::result_type>(std::strtoul(seed_str, &end, 10));
@@ -370,7 +370,7 @@ bool parse_jobs(int argc, char** argv, int i, bool& set_jobs) {
             return false;
         }
 
-        char* const jobs_str = argv[i + 1];  // Next argument.
+        char* const jobs_str = argv[i + 1]; // Next argument.
         char* end = nullptr;
 
         auto const jobs = std::strtoul(jobs_str, &end, 10);
@@ -398,7 +398,7 @@ bool parse_use_fork(int argc, char** argv, int i, bool& set_use_fork) {
             return false;
         }
 
-        char* const use_fork_str = argv[i + 1];  // Next argument.
+        char* const use_fork_str = argv[i + 1]; // Next argument.
         char* end = nullptr;
 
         auto const flag = std::strtoul(use_fork_str, &end, 10);
@@ -435,7 +435,7 @@ bool parse_verbose(int argc, char** argv, int i) {
             return false;
         }
 
-        char* const verbose_str = argv[i + 1];  // Next argument.
+        char* const verbose_str = argv[i + 1]; // Next argument.
         char* end = nullptr;
 
         auto const verbose = std::strtoul(verbose_str, &end, 10);
@@ -451,7 +451,7 @@ bool parse_verbose(int argc, char** argv, int i) {
     return true;
 }
 
-}  // namespace
+} // namespace
 
 void runner_register_component(void (*fn)(), char const* name) {
     runner.add_component(fn, name);
@@ -527,5 +527,5 @@ int EXAMPLES_CDECL main(int argc, char** argv) {
         runner.set_use_fork(true);
     }
 
-    return runner.run();  // Return directly from forked processes.
+    return runner.run(); // Return directly from forked processes.
 }

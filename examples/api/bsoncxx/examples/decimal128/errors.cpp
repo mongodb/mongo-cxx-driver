@@ -24,7 +24,7 @@ namespace {
 // [Example]
 void example() {
     try {
-        bsoncxx::decimal128 d{"invalid"};  // Throws.
+        bsoncxx::decimal128 d{"invalid"}; // Throws.
 
         EXPECT(false && "should not reach this point");
     } catch (bsoncxx::exception const& ex) {
@@ -33,7 +33,7 @@ void example() {
 }
 // [Example]
 
-}  // namespace
+} // namespace
 
 RUNNER_REGISTER_COMPONENT() {
     example();

@@ -63,6 +63,6 @@ index_view& index_view::commit_quorum(std::string commit_quorum) {
     return *this;
 }
 
-}  // namespace options
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace options
+} // namespace v_noabi
+} // namespace mongocxx

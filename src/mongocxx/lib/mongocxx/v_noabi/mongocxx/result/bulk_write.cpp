@@ -66,6 +66,6 @@ bool operator!=(bulk_write const& lhs, bulk_write const& rhs) {
     return !(lhs == rhs);
 }
 
-}  // namespace result
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace result
+} // namespace v_noabi
+} // namespace mongocxx

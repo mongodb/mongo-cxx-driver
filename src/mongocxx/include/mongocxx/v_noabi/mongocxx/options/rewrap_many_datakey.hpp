@@ -108,9 +108,9 @@ class rewrap_many_datakey {
     bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> _master_key;
 };
 
-}  // namespace options
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace options
+} // namespace v_noabi
+} // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
 

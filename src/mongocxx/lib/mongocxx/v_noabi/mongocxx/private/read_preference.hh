@@ -39,7 +39,7 @@ class read_preference::impl {
     mongoc_read_prefs_t* read_preference_t;
 };
 
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace v_noabi
+} // namespace mongocxx
 
 #include <mongocxx/config/private/postlude.hh>

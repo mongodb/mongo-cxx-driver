@@ -78,7 +78,7 @@ std::atomic<instance*> current_instance{nullptr};
 static_assert(std::is_standard_layout<decltype(current_instance)>::value, "Must be standard layout");
 static_assert(std::is_trivially_destructible<decltype(current_instance)>::value, "Must be trivially destructible");
 
-}  // namespace
+} // namespace
 
 class instance::impl {
    public:
@@ -169,5 +169,5 @@ instance& instance::current() {
     return *curr;
 }
 
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace v_noabi
+} // namespace mongocxx

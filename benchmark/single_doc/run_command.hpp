@@ -49,4 +49,4 @@ void run_command::task() {
         _db.run_command(command.view());
     }
 }
-}  // namespace benchmark
+} // namespace benchmark

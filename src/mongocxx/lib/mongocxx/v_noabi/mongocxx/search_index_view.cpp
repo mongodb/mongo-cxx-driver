@@ -131,5 +131,5 @@ search_index_view::impl& search_index_view::_get_impl() {
     return const_cast<search_index_view::impl&>(cthis->_get_impl());
 }
 
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace v_noabi
+} // namespace mongocxx

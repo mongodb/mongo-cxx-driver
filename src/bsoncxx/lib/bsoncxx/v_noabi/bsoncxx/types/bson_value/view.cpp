@@ -171,7 +171,7 @@ void view::destroy() noexcept {
     }
 }
 
-}  // namespace bson_value
-}  // namespace types
-}  // namespace v_noabi
-}  // namespace bsoncxx
+} // namespace bson_value
+} // namespace types
+} // namespace v_noabi
+} // namespace bsoncxx

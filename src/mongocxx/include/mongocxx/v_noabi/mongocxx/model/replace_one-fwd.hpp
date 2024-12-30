@@ -22,17 +22,17 @@ namespace model {
 
 class replace_one;
 
-}  // namespace model
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace model
+} // namespace v_noabi
+} // namespace mongocxx
 
 namespace mongocxx {
 namespace model {
 
 using ::mongocxx::v_noabi::model::replace_one;
 
-}  // namespace model
-}  // namespace mongocxx
+} // namespace model
+} // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
 
@@ -49,7 +49,7 @@ namespace model {
 /// @ref mongocxx::v_noabi::model::replace_one
 class replace_one {};
 
-}  // namespace model
-}  // namespace mongocxx
+} // namespace model
+} // namespace mongocxx
 
-#endif  // defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
+#endif // defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

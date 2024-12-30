@@ -38,13 +38,13 @@ void example() {
     try {
         mongocxx::client client{
             mongocxx::uri{},
-            mongocxx::options::client{}.auto_encryption_opts(mongocxx::options::auto_encryption{})};  // Throws.
+            mongocxx::options::client{}.auto_encryption_opts(mongocxx::options::auto_encryption{})}; // Throws.
 
         EXPECT(false && "should not reach this point");
     } catch (mongocxx::exception const& ex) {
         // CXX-834: libmongoc error code.
         EXPECT(ex.code().category() == mongocxx::server_error_category());
-        EXPECT(ex.code().value() == 58);  // MONGOC_ERROR_CLIENT_INVALID_ENCRYPTION_ARG
+        EXPECT(ex.code().value() == 58); // MONGOC_ERROR_CLIENT_INVALID_ENCRYPTION_ARG
     }
 
     // Invalid KMS providers.
@@ -54,13 +54,13 @@ void example() {
             mongocxx::options::client{}.auto_encryption_opts(
                 mongocxx::options::auto_encryption{}
                     .key_vault_namespace({"keyvault", "datakeys"})
-                    .kms_providers(bsoncxx::from_json(R"({"invalid": 1})")))};  // Throws.
+                    .kms_providers(bsoncxx::from_json(R"({"invalid": 1})")))}; // Throws.
 
         EXPECT(false && "should not reach this point");
     } catch (mongocxx::exception const& ex) {
         // CXX-834: libmongocrypt error code.
         EXPECT(ex.code().category() == mongocxx::server_error_category());
-        EXPECT(ex.code().value() == 1);  // MONGOCRYPT_GENERIC_ERROR_CODE
+        EXPECT(ex.code().value() == 1); // MONGOCRYPT_GENERIC_ERROR_CODE
     }
 
     // Incompatible options.
@@ -68,7 +68,7 @@ void example() {
         mongocxx::client client{
             mongocxx::uri{},
             mongocxx::options::client{}.auto_encryption_opts(
-                mongocxx::options::auto_encryption{}.key_vault_client(nullptr).key_vault_pool(nullptr))};  // Throws.
+                mongocxx::options::auto_encryption{}.key_vault_client(nullptr).key_vault_pool(nullptr))}; // Throws.
 
         EXPECT(false && "should not reach this point");
     } catch (mongocxx::exception const& ex) {
@@ -77,7 +77,7 @@ void example() {
 }
 // [Example]
 
-}  // namespace
+} // namespace
 
 RUNNER_REGISTER_COMPONENT_WITH_INSTANCE() {
     using bsoncxx::builder::basic::sub_document;

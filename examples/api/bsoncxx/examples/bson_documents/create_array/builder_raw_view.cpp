@@ -33,7 +33,7 @@ void example(std::uint8_t const* data, std::size_t length) {
 }
 // [Example]
 
-}  // namespace
+} // namespace
 
 RUNNER_REGISTER_COMPONENT() {
     auto const owner = bsoncxx::builder::basic::make_array(1, 2);

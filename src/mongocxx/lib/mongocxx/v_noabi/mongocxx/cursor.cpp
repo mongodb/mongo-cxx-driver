@@ -109,5 +109,5 @@ bool operator!=(cursor::iterator const& lhs, cursor::iterator const& rhs) {
     return !(lhs == rhs);
 }
 
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace v_noabi
+} // namespace mongocxx

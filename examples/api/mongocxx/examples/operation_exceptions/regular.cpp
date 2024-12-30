@@ -42,13 +42,13 @@ void example(mongocxx::database db) {
         EXPECT(false && "should not reach this point");
     } catch (mongocxx::exception const& ex) {
         EXPECT(ex.code().category() == mongocxx::server_error_category());
-        EXPECT(ex.code().value() == 13);  // Unauthorized
+        EXPECT(ex.code().value() == 13); // Unauthorized
         EXPECT(std::strstr(ex.what(), "admin") != nullptr);
     }
 }
 // [Example]
 
-}  // namespace
+} // namespace
 
 RUNNER_REGISTER_COMPONENT_FOR_SINGLE() {
     mongocxx::client client{mongocxx::uri{}};

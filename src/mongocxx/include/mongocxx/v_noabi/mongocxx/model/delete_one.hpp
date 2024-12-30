@@ -101,9 +101,9 @@ class delete_one {
     bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::hint> _hint;
 };
 
-}  // namespace model
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace model
+} // namespace v_noabi
+} // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
 

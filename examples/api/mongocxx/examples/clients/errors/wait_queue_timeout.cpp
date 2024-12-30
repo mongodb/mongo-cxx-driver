@@ -33,7 +33,7 @@ void example() {
 
         EXPECT(hold);
 
-        mongocxx::pool::entry entry = pool.acquire();  // Throws.
+        mongocxx::pool::entry entry = pool.acquire(); // Throws.
 
         EXPECT(false && "should not reach this point");
     } catch (mongocxx::exception const& ex) {
@@ -42,7 +42,7 @@ void example() {
 }
 // [Example]
 
-}  // namespace
+} // namespace
 
 RUNNER_REGISTER_COMPONENT_WITH_INSTANCE() {
     example();

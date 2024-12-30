@@ -44,4 +44,4 @@ void bson_decoding::task() {
         // TODO CXX-1241: call bson_as_extended json on _json.
     }
 }
-}  // namespace benchmark
+} // namespace benchmark

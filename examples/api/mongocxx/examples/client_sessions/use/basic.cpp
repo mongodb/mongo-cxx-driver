@@ -52,7 +52,7 @@ void example(mongocxx::client_session session, mongocxx::database db) {
 }
 // [Example]
 
-}  // namespace
+} // namespace
 
 RUNNER_REGISTER_COMPONENT_FOR_SINGLE() {
     mongocxx::client client{mongocxx::uri{}};

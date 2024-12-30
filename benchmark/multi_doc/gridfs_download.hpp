@@ -77,4 +77,4 @@ void gridfs_download::task() {
     while ([[maybe_unused]] auto length_read = downloader.read(buffer.get(), static_cast<std::size_t>(buffer_size))) {
     }
 }
-}  // namespace benchmark
+} // namespace benchmark

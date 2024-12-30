@@ -71,4 +71,4 @@ void find_many::task() {
     for ([[maybe_unused]] auto&& doc : cursor) {
     }
 }
-}  // namespace benchmark
+} // namespace benchmark

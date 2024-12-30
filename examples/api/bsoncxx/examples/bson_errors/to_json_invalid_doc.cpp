@@ -32,13 +32,13 @@ void example() {
     using bsoncxx::ExtendedJsonMode;
 
     bsoncxx::document::value::deleter_type deleter = [](std::uint8_t*) {};
-    std::uint8_t data[] = {0u};  // Invalid BSON document.
+    std::uint8_t data[] = {0u}; // Invalid BSON document.
 
     bsoncxx::document::value owner{data, sizeof(data), deleter};
     bsoncxx::document::view doc = owner.view();
 
     try {
-        std::string json = bsoncxx::to_json(doc);  // Throws.
+        std::string json = bsoncxx::to_json(doc); // Throws.
 
         EXPECT(false && "should not reach this point");
     } catch (bsoncxx::exception const& ex) {
@@ -47,7 +47,7 @@ void example() {
 }
 // [Example]
 
-}  // namespace
+} // namespace
 
 RUNNER_REGISTER_COMPONENT() {
     example();

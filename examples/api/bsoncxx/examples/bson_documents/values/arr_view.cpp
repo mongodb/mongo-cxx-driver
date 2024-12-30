@@ -45,7 +45,7 @@ void example(bsoncxx::array::element e) {
 }
 // [Example]
 
-}  // namespace
+} // namespace
 
 RUNNER_REGISTER_COMPONENT() {
     auto const owner = bsoncxx::builder::basic::make_array(1, 2.0, "three");

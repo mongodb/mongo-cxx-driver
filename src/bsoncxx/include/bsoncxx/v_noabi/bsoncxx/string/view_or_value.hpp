@@ -123,9 +123,9 @@ inline bool operator!=(char const* lhs, view_or_value const& rhs) {
 /// @}
 ///
 
-}  // namespace string
-}  // namespace v_noabi
-}  // namespace bsoncxx
+} // namespace string
+} // namespace v_noabi
+} // namespace bsoncxx
 
 namespace bsoncxx {
 namespace string {
@@ -133,8 +133,8 @@ namespace string {
 using ::bsoncxx::v_noabi::string::operator==;
 using ::bsoncxx::v_noabi::string::operator!=;
 
-}  // namespace string
-}  // namespace bsoncxx
+} // namespace string
+} // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>
 
@@ -160,7 +160,7 @@ inline bool operator==(char const* lhs, v_noabi::string::view_or_value const& rh
 /// @ref bsoncxx::v_noabi::string::operator!=(const char* lhs, const v_noabi::string::view_or_value& rhs)
 inline bool operator!=(char const* lhs, v_noabi::string::view_or_value const& rhs);
 
-}  // namespace string
-}  // namespace bsoncxx
+} // namespace string
+} // namespace bsoncxx
 
-#endif  // defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
+#endif // defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

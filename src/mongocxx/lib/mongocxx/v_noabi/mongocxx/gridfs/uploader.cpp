@@ -37,7 +37,7 @@ std::size_t chunks_collection_documents_max_length(std::size_t chunk_size) {
     return 16 * 1000 * 1000 / chunk_size;
 }
 
-}  // namespace
+} // namespace
 
 namespace mongocxx {
 namespace v_noabi {
@@ -213,6 +213,6 @@ uploader::impl& uploader::_get_impl() {
     return const_cast<uploader::impl&>(cthis->_get_impl());
 }
 
-}  // namespace gridfs
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace gridfs
+} // namespace v_noabi
+} // namespace mongocxx

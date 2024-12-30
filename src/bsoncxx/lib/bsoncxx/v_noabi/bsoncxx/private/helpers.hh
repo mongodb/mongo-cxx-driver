@@ -45,7 +45,7 @@ inline bsoncxx::v_noabi::oid make_oid(bson_oid_t const* bson_oid) {
     return bsoncxx::v_noabi::oid(reinterpret_cast<char const*>(bson_oid), bsoncxx::v_noabi::oid::size());
 }
 
-}  // namespace helpers
-}  // namespace bsoncxx
+} // namespace helpers
+} // namespace bsoncxx
 
 #include <bsoncxx/config/private/postlude.hh>

@@ -66,7 +66,7 @@ class managed_bson_t {
     bson_t bson;
 };
 
-}  // namespace
+} // namespace
 
 class core::impl {
    public:
@@ -711,6 +711,6 @@ void core::clear() {
     _impl->reinit();
 }
 
-}  // namespace builder
-}  // namespace v_noabi
-}  // namespace bsoncxx
+} // namespace builder
+} // namespace v_noabi
+} // namespace bsoncxx

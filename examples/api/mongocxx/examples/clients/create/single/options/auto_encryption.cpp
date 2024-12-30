@@ -52,7 +52,7 @@ void example(bsoncxx::document::view kms_providers) {
 }
 // [Example]
 
-}  // namespace
+} // namespace
 
 RUNNER_REGISTER_COMPONENT_WITH_INSTANCE() {
     using bsoncxx::builder::basic::kvp;

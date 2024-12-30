@@ -1673,10 +1673,10 @@ TEST_CASE("Bypass spawning mongocryptd", "[client_side_encryption]") {
 class kms_tls_expired_cert_matcher : public Catch::Matchers::MatcherBase<mongocxx::exception> {
    public:
     bool match(mongocxx::exception const& exc) const override {
-        return (Catch::Matchers::ContainsSubstring("certificate has expired") ||  // OpenSSL
-                Catch::Matchers::ContainsSubstring("CSSMERR_TP_CERT_EXPIRED") ||  // Secure Transport
-                Catch::Matchers::ContainsSubstring("certificate has expired") ||  // Secure Channel
-                Catch::Matchers::ContainsSubstring("certificate has expired"))    // LibreSSL
+        return (Catch::Matchers::ContainsSubstring("certificate has expired") || // OpenSSL
+                Catch::Matchers::ContainsSubstring("CSSMERR_TP_CERT_EXPIRED") || // Secure Transport
+                Catch::Matchers::ContainsSubstring("certificate has expired") || // Secure Channel
+                Catch::Matchers::ContainsSubstring("certificate has expired"))   // LibreSSL
             .match(exc.what());
     }
 
@@ -1729,10 +1729,10 @@ TEST_CASE("KMS TLS expired certificate", "[client_side_encryption]") {
 class kms_tls_wrong_host_cert_matcher : public Catch::Matchers::MatcherBase<mongocxx::exception> {
    public:
     bool match(mongocxx::exception const& exc) const override {
-        return (Catch::Matchers::ContainsSubstring("IP address mismatch") ||                 // OpenSSL
-                Catch::Matchers::ContainsSubstring("Host name mismatch") ||                  // Secure Transport
-                Catch::Matchers::ContainsSubstring("hostname doesn't match certificate") ||  // Secure Channel
-                Catch::Matchers::ContainsSubstring("not present in server certificate"))     // LibreSSL
+        return (Catch::Matchers::ContainsSubstring("IP address mismatch") ||                // OpenSSL
+                Catch::Matchers::ContainsSubstring("Host name mismatch") ||                 // Secure Transport
+                Catch::Matchers::ContainsSubstring("hostname doesn't match certificate") || // Secure Channel
+                Catch::Matchers::ContainsSubstring("not present in server certificate"))    // LibreSSL
             .match(exc.what());
     }
 
@@ -2476,7 +2476,7 @@ TEST_CASE("Create Encrypted Collection", "[client_side_encryption]") {
                 coll.insert_one(make_document(kvp("ssn", "123-45-6789")));
                 FAIL_CHECK("Insert should have failed");
             } catch (mongocxx::operation_exception const& e) {
-                CHECK(e.code().value() == 121);  // VALIDATION_ERROR
+                CHECK(e.code().value() == 121); // VALIDATION_ERROR
             }
         }
 
@@ -2493,7 +2493,7 @@ TEST_CASE("Create Encrypted Collection", "[client_side_encryption]") {
                 CAPTURE(fin_options, coll);
                 FAIL_CHECK("Did not throw");
             } catch (mongocxx::operation_exception const& e) {
-                CHECK(e.code().value() == 22);  // INVALID_ARG
+                CHECK(e.code().value() == 22); // INVALID_ARG
             }
         }
 
@@ -2515,7 +2515,7 @@ TEST_CASE("Create Encrypted Collection", "[client_side_encryption]") {
                 CAPTURE(fin_options, coll);
                 FAIL_CHECK("Did not throw");
             } catch (mongocxx::operation_exception const& e) {
-                CHECK(e.code().value() == 14);  // INVALID_REPLY
+                CHECK(e.code().value() == 14); // INVALID_REPLY
             }
         }
 
@@ -3558,4 +3558,4 @@ TEST_CASE("16. Rewrap. Case 2: RewrapManyDataKeyOpts.provider is not optional", 
         Catch::Matchers::ContainsSubstring("expected 'provider' to be set to identify type of 'master_key'"));
 }
 
-}  // namespace
+} // namespace

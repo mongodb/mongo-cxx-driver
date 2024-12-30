@@ -232,9 +232,9 @@ class count {
     bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::read_preference> _read_preference;
 };
 
-}  // namespace options
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace options
+} // namespace v_noabi
+} // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
 

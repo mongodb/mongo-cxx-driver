@@ -153,4 +153,4 @@ TEST_CASE("write_concern is called with a tag", "[write_concern][base][c-driver]
         REQUIRE(wtag_value == expected_wtag);
     }
 }
-}  // namespace
+} // namespace

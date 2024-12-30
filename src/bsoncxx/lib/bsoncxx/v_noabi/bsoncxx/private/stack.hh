@@ -160,6 +160,6 @@ class stack {
     }
 };
 
-}  // namespace bsoncxx
+} // namespace bsoncxx
 
 #include <bsoncxx/config/private/postlude.hh>

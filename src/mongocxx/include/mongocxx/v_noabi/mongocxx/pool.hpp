@@ -138,8 +138,8 @@ class pool {
     std::unique_ptr<impl> const _impl;
 };
 
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace v_noabi
+} // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
 

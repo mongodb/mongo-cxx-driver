@@ -87,8 +87,8 @@ class uploader::impl {
     result::gridfs::upload result;
 };
 
-}  // namespace gridfs
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace gridfs
+} // namespace v_noabi
+} // namespace mongocxx
 
 #include <mongocxx/config/private/postlude.hh>

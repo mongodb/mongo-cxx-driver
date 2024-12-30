@@ -139,4 +139,4 @@ TEST_CASE("uri_options::test_srv_options", "[uri_options]") {
     }
 }
 
-}  // namespace
+} // namespace

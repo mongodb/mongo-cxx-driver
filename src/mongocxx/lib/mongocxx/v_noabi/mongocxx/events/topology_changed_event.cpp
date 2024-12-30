@@ -44,6 +44,6 @@ topology_description topology_changed_event::new_description() const {
             static_cast<mongoc_apm_topology_changed_t const*>(_event)))};
 }
 
-}  // namespace events
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace events
+} // namespace v_noabi
+} // namespace mongocxx

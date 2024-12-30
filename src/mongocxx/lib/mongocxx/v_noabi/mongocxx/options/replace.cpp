@@ -85,6 +85,6 @@ bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern> const& replac
     return _write_concern;
 }
 
-}  // namespace options
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace options
+} // namespace v_noabi
+} // namespace mongocxx

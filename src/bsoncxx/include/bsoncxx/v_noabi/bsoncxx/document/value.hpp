@@ -263,9 +263,9 @@ inline bool operator!=(value const& lhs, value const& rhs) {
 /// @}
 ///
 
-}  // namespace document
-}  // namespace v_noabi
-}  // namespace bsoncxx
+} // namespace document
+} // namespace v_noabi
+} // namespace bsoncxx
 
 namespace bsoncxx {
 namespace document {
@@ -273,8 +273,8 @@ namespace document {
 using ::bsoncxx::v_noabi::document::operator==;
 using ::bsoncxx::v_noabi::document::operator!=;
 
-}  // namespace document
-}  // namespace bsoncxx
+} // namespace document
+} // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>
 
@@ -294,7 +294,7 @@ inline bool operator==(v_noabi::document::value const& lhs, v_noabi::document::v
 /// @ref bsoncxx::v_noabi::document::operator!=(const v_noabi::document::value& lhs, const v_noabi::document::value& rhs)
 inline bool operator!=(v_noabi::document::value const& lhs, v_noabi::document::value const& rhs);
 
-}  // namespace document
-}  // namespace bsoncxx
+} // namespace document
+} // namespace bsoncxx
 
-#endif  // defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
+#endif // defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

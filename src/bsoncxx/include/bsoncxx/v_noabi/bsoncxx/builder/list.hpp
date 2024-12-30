@@ -192,9 +192,9 @@ class array : public list {
     ///
     array(initializer_list_t init) : list(init, false, true) {}
 };
-}  // namespace builder
-}  // namespace v_noabi
-}  // namespace bsoncxx
+} // namespace builder
+} // namespace v_noabi
+} // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>
 

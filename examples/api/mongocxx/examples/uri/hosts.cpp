@@ -35,19 +35,19 @@ void example() {
 
     EXPECT(first.name == "127.0.0.1");
     EXPECT(first.port == 27017u);
-    EXPECT(first.family == 0);  // AF_UNSPEC (AP_INET).
+    EXPECT(first.family == 0); // AF_UNSPEC (AP_INET).
 
     EXPECT(second.name == "::1");
     EXPECT(second.port == 27018u);
-    EXPECT(second.family != 0);  // AF_INET6.
+    EXPECT(second.family != 0); // AF_INET6.
 
     EXPECT(third.name == "/path/to.socket");
     EXPECT(third.port == 27019u);
-    EXPECT(third.family != 0);  // AF_UNIX.
+    EXPECT(third.family != 0); // AF_UNIX.
 }
 // [Example]
 
-}  // namespace
+} // namespace
 
 RUNNER_REGISTER_COMPONENT_WITH_INSTANCE() {
     example();

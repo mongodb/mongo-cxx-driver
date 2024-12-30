@@ -205,8 +205,8 @@ struct is_totally_ordered_with : conjunction<
                                      is_equality_comparable<T, U>,
                                      is_partially_ordered_with<T, U>> {};
 
-}  // namespace detail
-}  // namespace bsoncxx
+} // namespace detail
+} // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>
 

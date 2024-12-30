@@ -54,6 +54,6 @@ read_preference::read_mode read_mode_from_read_mode_t(mongoc_read_mode_t read_mo
     MONGOCXX_UNREACHABLE;
 }
 
-}  // namespace conversions
-}  // namespace libmongoc
-}  // namespace mongocxx
+} // namespace conversions
+} // namespace libmongoc
+} // namespace mongocxx

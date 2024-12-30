@@ -53,8 +53,8 @@ inline std::pair<::mongoc_ssl_opt_t, std::list<bsoncxx::v_noabi::string::view_or
 }
 #endif
 
-}  // namespace options
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace options
+} // namespace v_noabi
+} // namespace mongocxx
 
 #include <mongocxx/config/private/postlude.hh>

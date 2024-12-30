@@ -24,8 +24,8 @@
 
 #include <bsoncxx/test/to_string.hh>
 
-#include <catch2/catch_test_macros.hpp>  // TEST_CASE, SECTION, CHECK, etc.
-#include <catch2/catch_tostring.hpp>     // Catch::StringMaker
+#include <catch2/catch_test_macros.hpp> // TEST_CASE, SECTION, CHECK, etc.
+#include <catch2/catch_tostring.hpp>    // Catch::StringMaker
 
 #define THROWS_WITH_CODE_IMPL(_assertion, _expr, _code)                        \
     if (1) {                                                                   \
@@ -147,6 +147,6 @@ struct StringMaker<bsoncxx::detail::strong_ordering> {
     }
 };
 
-}  // namespace Catch
+} // namespace Catch
 
 #include <bsoncxx/config/private/postlude.hh>

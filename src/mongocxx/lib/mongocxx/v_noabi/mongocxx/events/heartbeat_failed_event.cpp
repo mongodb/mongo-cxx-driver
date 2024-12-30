@@ -52,6 +52,6 @@ bool heartbeat_failed_event::awaited() const {
     return libmongoc::apm_server_heartbeat_failed_get_awaited(casted);
 }
 
-}  // namespace events
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace events
+} // namespace v_noabi
+} // namespace mongocxx

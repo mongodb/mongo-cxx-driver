@@ -230,5 +230,5 @@ bsoncxx::v_noabi::array::view pipeline::view_array() const {
     return _impl->view_array();
 }
 
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace v_noabi
+} // namespace mongocxx

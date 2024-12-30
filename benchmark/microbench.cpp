@@ -85,4 +85,4 @@ std::vector<std::string> parse_documents_to_bson(std::vector<bsoncxx::document::
     }
     return bsons;
 }
-}  // namespace benchmark
+} // namespace benchmark

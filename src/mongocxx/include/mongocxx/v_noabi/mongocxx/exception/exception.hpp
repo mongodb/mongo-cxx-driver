@@ -47,8 +47,8 @@ class exception : public std::system_error {
 
 BSONCXX_POP_WARNINGS();
 
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace v_noabi
+} // namespace mongocxx
 
 #include <bsoncxx/config/postlude.hpp>
 

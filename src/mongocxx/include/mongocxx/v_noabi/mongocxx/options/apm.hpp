@@ -363,9 +363,9 @@ class apm {
     std::function<void MONGOCXX_ABI_CDECL(events::heartbeat_succeeded_event const&)> _heartbeat_succeeded;
 };
 
-}  // namespace options
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace options
+} // namespace v_noabi
+} // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
 

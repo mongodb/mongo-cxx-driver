@@ -23,7 +23,7 @@ namespace {
 
 // [Example]
 void example() {
-    using d128 = bsoncxx::decimal128;  // For brevity.
+    using d128 = bsoncxx::decimal128; // For brevity.
 
     // Default ctor.
     EXPECT(d128{}.to_string() == "0E-6176");
@@ -97,7 +97,7 @@ void example() {
 }
 // [Example]
 
-}  // namespace
+} // namespace
 
 RUNNER_REGISTER_COMPONENT() {
     example();

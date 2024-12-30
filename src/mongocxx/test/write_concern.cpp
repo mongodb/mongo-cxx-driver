@@ -410,4 +410,4 @@ TEST_CASE("write_concern changes reflected in to_document") {
     REQUIRE(generated_nodes.view() == nodes.view());
 }
 
-}  // namespace
+} // namespace

@@ -29,7 +29,7 @@ void example() {
     EXPECT(!client);
 
     try {
-        mongocxx::uri uri = client.uri();  // DO NOT DO THIS. Throws.
+        mongocxx::uri uri = client.uri(); // DO NOT DO THIS. Throws.
 
         EXPECT(false && "should not reach this point");
     } catch (mongocxx::exception const& ex) {
@@ -38,7 +38,7 @@ void example() {
 }
 // [Example]
 
-}  // namespace
+} // namespace
 
 RUNNER_REGISTER_COMPONENT_WITH_INSTANCE() {
     example();

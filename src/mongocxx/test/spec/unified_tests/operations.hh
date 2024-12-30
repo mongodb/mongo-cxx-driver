@@ -44,7 +44,7 @@ bsoncxx::stdx::optional<read_concern> lookup_read_concern(bsoncxx::document::vie
 bsoncxx::stdx::optional<write_concern> lookup_write_concern(bsoncxx::document::view doc);
 bsoncxx::stdx::optional<read_preference> lookup_read_preference(bsoncxx::document::view doc);
 
-}  // namespace operations
-}  // namespace mongocxx
+} // namespace operations
+} // namespace mongocxx
 
 #include <mongocxx/config/private/postlude.hh>

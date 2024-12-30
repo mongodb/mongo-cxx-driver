@@ -109,9 +109,9 @@ class command_succeeded_event {
     void const* _succeeded_event;
 };
 
-}  // namespace events
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace events
+} // namespace v_noabi
+} // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
 

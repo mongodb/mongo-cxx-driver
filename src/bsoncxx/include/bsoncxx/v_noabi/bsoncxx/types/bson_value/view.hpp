@@ -37,8 +37,8 @@ using is_bson_view_compatible = detail::conjunction<
         detail::is_alike<T, bsoncxx::v_noabi::types::bson_value::view>,
         detail::is_alike<T, bsoncxx::v_noabi::types::bson_value::value>>>>;
 
-}  // namespace detail
-}  // namespace bsoncxx
+} // namespace detail
+} // namespace bsoncxx
 
 namespace bsoncxx {
 namespace v_noabi {
@@ -349,10 +349,10 @@ detail::requires_t<bool, detail::is_bson_view_compatible<T>> operator!=(T&& lhs,
 /// @}
 ///
 
-}  // namespace bson_value
-}  // namespace types
-}  // namespace v_noabi
-}  // namespace bsoncxx
+} // namespace bson_value
+} // namespace types
+} // namespace v_noabi
+} // namespace bsoncxx
 
 namespace bsoncxx {
 namespace types {
@@ -361,9 +361,9 @@ namespace bson_value {
 using ::bsoncxx::v_noabi::types::bson_value::operator==;
 using ::bsoncxx::v_noabi::types::bson_value::operator!=;
 
-}  // namespace bson_value
-}  // namespace types
-}  // namespace bsoncxx
+} // namespace bson_value
+} // namespace types
+} // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>
 
@@ -394,8 +394,8 @@ bool operator!=(v_noabi::types::bson_value::view const& lhs, T&& rhs);
 template <typename T>
 bool operator!=(T&& lhs, v_noabi::types::bson_value::view const& rhs);
 
-}  // namespace bson_value
-}  // namespace types
-}  // namespace bsoncxx
+} // namespace bson_value
+} // namespace types
+} // namespace bsoncxx
 
-#endif  // defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
+#endif // defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

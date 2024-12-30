@@ -74,6 +74,6 @@ std::uint16_t command_started_event::port() const {
         ->port;
 }
 
-}  // namespace events
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace events
+} // namespace v_noabi
+} // namespace mongocxx

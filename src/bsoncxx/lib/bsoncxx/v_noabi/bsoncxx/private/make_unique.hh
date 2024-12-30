@@ -94,11 +94,11 @@ struct make_unique_impl<T&> {};
 template <typename T>
 struct make_unique_impl<T&&> {};
 
-}  // namespace detail
-}  // namespace bsoncxx
+} // namespace detail
+} // namespace bsoncxx
 
-#endif  // !defined(BSONCXX_DETAIL_USE_STD_MAKE_UNIQUE) ||
-        // !defined(__cpp_lib_smart_ptr_for_overwrite)
+#endif // !defined(BSONCXX_DETAIL_USE_STD_MAKE_UNIQUE) ||
+       // !defined(__cpp_lib_smart_ptr_for_overwrite)
 
 namespace bsoncxx {
 
@@ -165,7 +165,7 @@ std::unique_ptr<T> make_unique_for_overwrite(std::size_t count) {
 
 #endif
 
-}  // namespace bsoncxx
+} // namespace bsoncxx
 
 #pragma pop_macro("BSONCXX_DETAIL_USE_STD_MAKE_UNIQUE")
 

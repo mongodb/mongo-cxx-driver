@@ -31,7 +31,7 @@ void example(bsoncxx::document::element e) {
     EXPECT(e.get_int32().value == 1);
 
     try {
-        bsoncxx::types::b_double d = e.get_double();  // Throws.
+        bsoncxx::types::b_double d = e.get_double(); // Throws.
 
         EXPECT(false && "should not reach this point");
     } catch (bsoncxx::exception const& ex) {
@@ -39,7 +39,7 @@ void example(bsoncxx::document::element e) {
     }
 
     try {
-        bsoncxx::types::b_string str = e.get_string();  // Throws.
+        bsoncxx::types::b_string str = e.get_string(); // Throws.
 
         EXPECT(false && "should not reach this point");
     } catch (bsoncxx::exception const& ex) {
@@ -48,7 +48,7 @@ void example(bsoncxx::document::element e) {
 }
 // [Example]
 
-}  // namespace
+} // namespace
 
 RUNNER_REGISTER_COMPONENT() {
     auto const doc = bsoncxx::from_json(R"({"x": 1})");

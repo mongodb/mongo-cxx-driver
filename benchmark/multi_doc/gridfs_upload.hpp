@@ -84,4 +84,4 @@ void gridfs_upload::task() {
     uploader.write(_gridfs_file.data(), _gridfs_file.size());
     uploader.close();
 }
-}  // namespace benchmark
+} // namespace benchmark

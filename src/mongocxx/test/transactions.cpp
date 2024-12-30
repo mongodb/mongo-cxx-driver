@@ -260,7 +260,7 @@ TEST_CASE("Transactions Documentation Examples", "[transactions]") {
 
             while (true) {
                 try {
-                    session.commit_transaction();  // Uses write concern set at transaction start.
+                    session.commit_transaction(); // Uses write concern set at transaction start.
                     std::cout << "Transaction committed." << std::endl;
                     break;
                 } catch (operation_exception const& oe) {
@@ -286,7 +286,7 @@ TEST_CASE("Transactions Documentation Examples", "[transactions]") {
         auto run_transaction_with_retry = [](transaction_func txn_func, client_session& session) {
             while (true) {
                 try {
-                    txn_func(session);  // performs transaction.
+                    txn_func(session); // performs transaction.
                     break;
                 } catch (operation_exception const& oe) {
                     std::cout << "Transaction aborted. Caught exception during transaction." << std::endl;
@@ -317,7 +317,7 @@ TEST_CASE("Transactions Documentation Examples", "[transactions]") {
         auto commit_with_retry = [](client_session& session) {
             while (true) {
                 try {
-                    session.commit_transaction();  // Uses write concern set at transaction start.
+                    session.commit_transaction(); // Uses write concern set at transaction start.
                     std::cout << "Transaction committed." << std::endl;
                     break;
                 } catch (operation_exception const& oe) {
@@ -346,7 +346,7 @@ TEST_CASE("Transactions Documentation Examples", "[transactions]") {
         auto run_transaction_with_retry = [](transaction_func txn_func, client_session& session) {
             while (true) {
                 try {
-                    txn_func(session);  // performs transaction.
+                    txn_func(session); // performs transaction.
                     break;
                 } catch (operation_exception const& oe) {
                     std::cout << "Transaction aborted. Caught exception during transaction." << std::endl;
@@ -364,7 +364,7 @@ TEST_CASE("Transactions Documentation Examples", "[transactions]") {
         auto commit_with_retry = [](client_session& session) {
             while (true) {
                 try {
-                    session.commit_transaction();  // Uses write concern set at transaction start.
+                    session.commit_transaction(); // Uses write concern set at transaction start.
                     std::cout << "Transaction committed." << std::endl;
                     break;
                 } catch (operation_exception const& oe) {
@@ -484,4 +484,4 @@ TEST_CASE("Transactions Mongos Pinning Prose Tests", "[transactions]") {
     }
 }
 
-}  // namespace
+} // namespace

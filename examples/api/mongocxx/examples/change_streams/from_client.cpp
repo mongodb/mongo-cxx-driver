@@ -59,7 +59,7 @@ void example(mongocxx::client client) {
 }
 // [Example]
 
-}  // namespace
+} // namespace
 
 RUNNER_REGISTER_COMPONENT_FOR_REPLICA() {
     example(mongocxx::client{mongocxx::uri{}});

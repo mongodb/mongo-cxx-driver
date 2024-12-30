@@ -67,11 +67,11 @@ class write_concern {
     /// - [Default MongoDB Read Concerns/Write Concerns](https://www.mongodb.com/docs/manual/reference/mongodb-defaults/#write-concern)
     ///
     enum class level {
-        k_default,         ///< Represent the implicit default write concern.
-        k_majority,        ///< Represent write concern with `w: "majority"`.
-        k_tag,             ///< Represent write concern with `w: <custom write concern name>`.
-        k_unacknowledged,  ///< Represent write concern with `w: 0`.
-        k_acknowledged,    ///< Represent write concern with `w: 1`.
+        k_default,        ///< Represent the implicit default write concern.
+        k_majority,       ///< Represent write concern with `w: "majority"`.
+        k_tag,            ///< Represent write concern with `w: <custom write concern name>`.
+        k_unacknowledged, ///< Represent write concern with `w: 0`.
+        k_acknowledged,   ///< Represent write concern with `w: 1`.
     };
 
     ///
@@ -284,8 +284,8 @@ class write_concern {
     std::unique_ptr<impl> _impl;
 };
 
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace v_noabi
+} // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
 

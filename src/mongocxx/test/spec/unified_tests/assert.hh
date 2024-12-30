@@ -30,7 +30,7 @@ void matches(
     bool is_root = true,
     bool is_array_of_root_docs = false);
 
-}  // namespace assert
-}  // namespace mongocxx
+} // namespace assert
+} // namespace mongocxx
 
 #include <mongocxx/config/private/postlude.hh>

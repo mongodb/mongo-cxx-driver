@@ -31,6 +31,6 @@ bsoncxx::v_noabi::oid topology_closed_event::topology_id() const {
     return bsoncxx::v_noabi::oid(reinterpret_cast<char const*>(boid.bytes), sizeof(boid.bytes));
 }
 
-}  // namespace events
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace events
+} // namespace v_noabi
+} // namespace mongocxx

@@ -108,4 +108,4 @@ TEST_CASE("index", "[index][option]") {
         REQUIRE(d.view() == options_doc.view());
     }
 }
-}  // namespace
+} // namespace

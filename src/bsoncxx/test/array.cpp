@@ -74,4 +74,4 @@ TEST_CASE("array element lookup with std::find", "[bsoncxx::array::view]") {
         REQUIRE(*it == val);
     }
 }
-}  // namespace
+} // namespace

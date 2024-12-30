@@ -33,7 +33,7 @@ detail::requires_t<void, detail::is_invocable<T, sub_document>> generic_append(c
     core->close_document();
 }
 
-template <typename T, typename Placeholder = void>  // placeholder 'void' for VS2015 compat
+template <typename T, typename Placeholder = void> // placeholder 'void' for VS2015 compat
 detail::requires_t<void, detail::is_invocable<T, sub_array>> generic_append(core* core, T&& func) {
     core->open_array();
     detail::invoke(std::forward<T>(func), sub_array(core));
@@ -52,11 +52,11 @@ void value_append(core* core, T&& t) {
     generic_append(core, std::forward<T>(t));
 }
 
-}  // namespace impl
-}  // namespace basic
-}  // namespace builder
-}  // namespace v_noabi
-}  // namespace bsoncxx
+} // namespace impl
+} // namespace basic
+} // namespace builder
+} // namespace v_noabi
+} // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>
 

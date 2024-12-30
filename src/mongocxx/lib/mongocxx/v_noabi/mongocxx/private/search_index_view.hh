@@ -203,7 +203,7 @@ class search_index_view::impl {
     mongoc_client_t* _client;
 };
 
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace v_noabi
+} // namespace mongocxx
 
 #include <mongocxx/config/private/postlude.hh>

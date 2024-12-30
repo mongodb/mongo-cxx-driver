@@ -48,7 +48,7 @@ namespace {
     }
 }
 
-}  // namespace
+} // namespace
 
 int EXAMPLES_CDECL main(int argc, char* argv[]) {
     if (std::getenv("MONGOCXX_TEST_TOPOLOGY")) {

@@ -28,4 +28,4 @@ TEST_CASE("mongocxx::gridfs::uploader default constructor makes invalid uploader
     std::uint8_t c = 0x0;
     REQUIRE_THROWS_AS(uploader.write(&c, 1), logic_error);
 }
-}  // namespace
+} // namespace

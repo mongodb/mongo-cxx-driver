@@ -41,27 +41,27 @@ namespace v_noabi {
 /// @showenumvalues
 ///
 enum class type : std::uint8_t {
-    k_double = 0x01,      ///< 64-bit binary floating point.
-    k_string = 0x02,      ///< UTF-8 string.
-    k_document = 0x03,    ///< Embedded document.
-    k_array = 0x04,       ///< Array.
-    k_binary = 0x05,      ///< Binary data.
-    k_undefined = 0x06,   ///< Undefined value. @deprecated
-    k_oid = 0x07,         ///< ObjectId.
-    k_bool = 0x08,        ///< Boolean.
-    k_date = 0x09,        ///< UTC datetime.
-    k_null = 0x0A,        ///< Null value.
-    k_regex = 0x0B,       ///< Regular expression.
-    k_dbpointer = 0x0C,   ///< DBPointer. @deprecated
-    k_code = 0x0D,        ///< JavaScript code.
-    k_symbol = 0x0E,      ///< Symbol. @deprecated
-    k_codewscope = 0x0F,  ///< JavaScript code with scope.
-    k_int32 = 0x10,       ///< 32-bit integer.
-    k_timestamp = 0x11,   ///< Timestamp.
-    k_int64 = 0x12,       ///< 64-bit integer.
-    k_decimal128 = 0x13,  ///< 128-bit decimal floating point.
-    k_maxkey = 0x7F,      ///< Min key.
-    k_minkey = 0xFF,      ///< Max key.
+    k_double = 0x01,     ///< 64-bit binary floating point.
+    k_string = 0x02,     ///< UTF-8 string.
+    k_document = 0x03,   ///< Embedded document.
+    k_array = 0x04,      ///< Array.
+    k_binary = 0x05,     ///< Binary data.
+    k_undefined = 0x06,  ///< Undefined value. @deprecated
+    k_oid = 0x07,        ///< ObjectId.
+    k_bool = 0x08,       ///< Boolean.
+    k_date = 0x09,       ///< UTC datetime.
+    k_null = 0x0A,       ///< Null value.
+    k_regex = 0x0B,      ///< Regular expression.
+    k_dbpointer = 0x0C,  ///< DBPointer. @deprecated
+    k_code = 0x0D,       ///< JavaScript code.
+    k_symbol = 0x0E,     ///< Symbol. @deprecated
+    k_codewscope = 0x0F, ///< JavaScript code with scope.
+    k_int32 = 0x10,      ///< 32-bit integer.
+    k_timestamp = 0x11,  ///< Timestamp.
+    k_int64 = 0x12,      ///< 64-bit integer.
+    k_decimal128 = 0x13, ///< 128-bit decimal floating point.
+    k_maxkey = 0x7F,     ///< Min key.
+    k_minkey = 0xFF,     ///< Max key.
 };
 
 ///
@@ -70,16 +70,16 @@ enum class type : std::uint8_t {
 /// @showenumvalues
 ///
 enum class binary_sub_type : std::uint8_t {
-    k_binary = 0x00,             ///< Generic binary subtype.
-    k_function = 0x01,           ///< Function.
-    k_binary_deprecated = 0x02,  ///< Binary (Old). @deprecated
-    k_uuid_deprecated = 0x03,    ///< UUID (Old). @deprecated
-    k_uuid = 0x04,               ///< UUID.
-    k_md5 = 0x05,                ///< MD5.
-    k_encrypted = 0x06,          ///< Encrypted BSON value.
-    k_column = 0x07,             ///< Compressed BSON column.
-    k_sensitive = 0x08,          ///< Sensitive.
-    k_user = 0x80,               ///< User defined.
+    k_binary = 0x00,            ///< Generic binary subtype.
+    k_function = 0x01,          ///< Function.
+    k_binary_deprecated = 0x02, ///< Binary (Old). @deprecated
+    k_uuid_deprecated = 0x03,   ///< UUID (Old). @deprecated
+    k_uuid = 0x04,              ///< UUID.
+    k_md5 = 0x05,               ///< MD5.
+    k_encrypted = 0x06,         ///< Encrypted BSON value.
+    k_column = 0x07,            ///< Compressed BSON column.
+    k_sensitive = 0x08,         ///< Sensitive.
+    k_user = 0x80,              ///< User defined.
 };
 
 ///
@@ -845,9 +845,9 @@ inline bool operator!=(b_maxkey const& lhs, b_maxkey const& rhs) {
     return !(lhs == rhs);
 }
 
-}  // namespace types
-}  // namespace v_noabi
-}  // namespace bsoncxx
+} // namespace types
+} // namespace v_noabi
+} // namespace bsoncxx
 
 BSONCXX_POP_WARNINGS();
 
@@ -855,7 +855,7 @@ namespace bsoncxx {
 
 using ::bsoncxx::v_noabi::to_string;
 
-}  // namespace bsoncxx
+} // namespace bsoncxx
 
 namespace bsoncxx {
 namespace types {
@@ -863,8 +863,8 @@ namespace types {
 using ::bsoncxx::v_noabi::types::operator==;
 using ::bsoncxx::v_noabi::types::operator!=;
 
-}  // namespace types
-}  // namespace bsoncxx
+} // namespace types
+} // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>
 
@@ -1011,8 +1011,8 @@ bool operator!=(v_noabi::types::b_minkey const& lhs, v_noabi::types::b_minkey co
 /// @ref bsoncxx::v_noabi::types::operator!=(const v_noabi::types::b_maxkey& lhs, const v_noabi::types::b_maxkey& rhs)
 bool operator!=(v_noabi::types::b_maxkey const& lhs, v_noabi::types::b_maxkey const& rhs);
 
-}  // namespace types
+} // namespace types
 
-}  // namespace bsoncxx
+} // namespace bsoncxx
 
-#endif  // defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
+#endif // defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

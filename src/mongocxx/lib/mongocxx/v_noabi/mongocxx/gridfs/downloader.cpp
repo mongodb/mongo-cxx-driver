@@ -186,6 +186,6 @@ downloader::impl& downloader::_get_impl() {
     return const_cast<downloader::impl&>(cthis->_get_impl());
 }
 
-}  // namespace gridfs
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace gridfs
+} // namespace v_noabi
+} // namespace mongocxx

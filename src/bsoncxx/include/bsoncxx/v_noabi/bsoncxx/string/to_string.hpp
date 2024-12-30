@@ -49,17 +49,17 @@ std::basic_string<CharT, Traits, Allocator> to_string(
     return std::basic_string<CharT, Traits, Allocator>{value.data(), value.length(), alloc};
 }
 
-}  // namespace string
-}  // namespace v_noabi
-}  // namespace bsoncxx
+} // namespace string
+} // namespace v_noabi
+} // namespace bsoncxx
 
 namespace bsoncxx {
 namespace string {
 
 using ::bsoncxx::v_noabi::string::to_string;
 
-}  // namespace string
-}  // namespace bsoncxx
+} // namespace string
+} // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>
 
@@ -79,7 +79,7 @@ std::basic_string<CharT, Traits, Allocator> to_string(
     v_noabi::stdx::basic_string_view<CharT, Traits> value,
     Allocator const& alloc);
 
-}  // namespace string
-}  // namespace bsoncxx
+} // namespace string
+} // namespace bsoncxx
 
-#endif  // defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
+#endif // defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

@@ -118,10 +118,10 @@ bsoncxx::v_noabi::document::value make_document(Args&&... args) {
     return document.extract();
 }
 
-}  // namespace basic
-}  // namespace builder
-}  // namespace v_noabi
-}  // namespace bsoncxx
+} // namespace basic
+} // namespace builder
+} // namespace v_noabi
+} // namespace bsoncxx
 
 namespace bsoncxx {
 namespace builder {
@@ -129,9 +129,9 @@ namespace basic {
 
 using ::bsoncxx::v_noabi::builder::basic::make_document;
 
-}  // namespace basic
-}  // namespace builder
-}  // namespace bsoncxx
+} // namespace basic
+} // namespace builder
+} // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>
 
@@ -150,8 +150,8 @@ namespace basic {
 template <typename... Args>
 v_noabi::document::value make_document(Args&&... args);
 
-}  // namespace basic
-}  // namespace builder
-}  // namespace bsoncxx
+} // namespace basic
+} // namespace builder
+} // namespace bsoncxx
 
-#endif  // defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
+#endif // defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

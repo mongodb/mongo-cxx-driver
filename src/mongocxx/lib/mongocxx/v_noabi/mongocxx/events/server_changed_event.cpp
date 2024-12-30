@@ -50,6 +50,6 @@ server_description const server_changed_event::new_description() const {
         libmongoc::apm_server_changed_get_new_description(static_cast<mongoc_apm_server_changed_t const*>(_event))};
 }
 
-}  // namespace events
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace events
+} // namespace v_noabi
+} // namespace mongocxx

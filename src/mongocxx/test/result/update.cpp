@@ -77,4 +77,4 @@ TEST_CASE("update result inequals", "[update][result]") {
     REQUIRE(update1 != update2);
 }
 
-}  // namespace
+} // namespace

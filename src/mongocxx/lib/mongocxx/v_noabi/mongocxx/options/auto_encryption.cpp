@@ -188,6 +188,6 @@ void* auto_encryption::convert() const {
     return mongoc_auto_encrypt_opts;
 }
 
-}  // namespace options
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace options
+} // namespace v_noabi
+} // namespace mongocxx

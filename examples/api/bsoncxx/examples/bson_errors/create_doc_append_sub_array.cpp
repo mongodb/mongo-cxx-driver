@@ -40,11 +40,11 @@ void example(bsoncxx::stdx::string_view big_string) {
 
     bsoncxx::builder::basic::document builder;
     builder.append(kvp("key", "value"));
-    bsoncxx::document::value original{builder.view()};  // Copy of current state.
+    bsoncxx::document::value original{builder.view()}; // Copy of current state.
 
     try {
         builder.append(kvp("bad", [&](bsoncxx::builder::basic::sub_array arr) {
-            arr.append(big_string);  // Throws.
+            arr.append(big_string); // Throws.
         }));
 
         EXPECT(false && "should not reach this point");
@@ -54,7 +54,7 @@ void example(bsoncxx::stdx::string_view big_string) {
 
     // Builder is in an erroneous state.
     try {
-        builder.view();  // Throws.
+        builder.view(); // Throws.
 
         EXPECT(false && "should not reach this point");
     } catch (bsoncxx::exception const& ex) {
@@ -72,7 +72,7 @@ void example(bsoncxx::stdx::string_view big_string) {
 }
 // [Example]
 
-}  // namespace
+} // namespace
 
 RUNNER_REGISTER_COMPONENT() {
     example(examples::big_string().view());

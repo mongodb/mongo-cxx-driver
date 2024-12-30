@@ -39,7 +39,7 @@ void example(mongocxx::collection coll) {
 }
 // [Example]
 
-}  // namespace
+} // namespace
 
 RUNNER_REGISTER_COMPONENT_FOR_SINGLE() {
     mongocxx::client client{mongocxx::uri{}};
@@ -55,10 +55,10 @@ RUNNER_REGISTER_COMPONENT_FOR_SINGLE() {
             return std::distance(cursor.begin(), cursor.end());
         };
 
-        EXPECT(count_indexes() == 1);  // _id_
+        EXPECT(count_indexes() == 1); // _id_
 
         example(coll);
 
-        EXPECT(count_indexes() == 2);  // _id_, key_1
+        EXPECT(count_indexes() == 2); // _id_, key_1
     }
 }

@@ -135,15 +135,15 @@ operator!=(bsoncxx::v_noabi::document::view index, hint const& index_hint);
 /// @}
 ///
 
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace v_noabi
+} // namespace mongocxx
 
 namespace mongocxx {
 
 using ::mongocxx::v_noabi::operator==;
 using ::mongocxx::v_noabi::operator!=;
 
-}  // namespace mongocxx
+} // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
 
@@ -174,6 +174,6 @@ bool operator!=(v_noabi::hint const& index_hint, bsoncxx::v_noabi::document::vie
 /// @ref mongocxx::v_noabi::operator!=(bsoncxx::v_noabi::document::view index, const v_noabi::hint& index_hint)
 bool operator!=(bsoncxx::v_noabi::document::view index, v_noabi::hint const& index_hint);
 
-}  // namespace mongocxx
+} // namespace mongocxx
 
-#endif  // defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
+#endif // defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

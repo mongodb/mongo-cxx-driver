@@ -77,4 +77,4 @@ TEST_CASE("bulk_write result inequals", "[bulk_write][result]") {
 
     REQUIRE(bw1 != bw2);
 }
-}  // namespace
+} // namespace

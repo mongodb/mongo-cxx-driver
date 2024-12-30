@@ -103,5 +103,5 @@ validate(std::uint8_t const* data, std::size_t length, validator const& validato
     return document::view{data, length};
 }
 
-}  // namespace v_noabi
-}  // namespace bsoncxx
+} // namespace v_noabi
+} // namespace bsoncxx

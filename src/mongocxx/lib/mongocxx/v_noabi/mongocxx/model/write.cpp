@@ -155,6 +155,6 @@ write::~write() {
     destroy_member();
 }
 
-}  // namespace model
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace model
+} // namespace v_noabi
+} // namespace mongocxx

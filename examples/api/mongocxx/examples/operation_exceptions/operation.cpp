@@ -44,7 +44,7 @@ void example(mongocxx::database db) {
         EXPECT(false && "should not reach this point");
     } catch (mongocxx::operation_exception const& ex) {
         EXPECT(ex.code().category() == mongocxx::server_error_category());
-        EXPECT(ex.code().value() == 13);  // Unauthorized
+        EXPECT(ex.code().value() == 13); // Unauthorized
         EXPECT(std::strstr(ex.what(), "admin") != nullptr);
 
         if (auto server_error_opt = ex.raw_server_error()) {
@@ -64,7 +64,7 @@ void example(mongocxx::database db) {
 }
 // [Example]
 
-}  // namespace
+} // namespace
 
 RUNNER_REGISTER_COMPONENT_FOR_SINGLE() {
     mongocxx::client client{mongocxx::uri{}};

@@ -89,12 +89,12 @@ class error_category_impl final : public std::error_category {
     }
 };
 
-}  // namespace
+} // namespace
 
 std::error_category const& error_category() {
     static error_category_impl const instance{};
     return instance;
 }
 
-}  // namespace v_noabi
-}  // namespace bsoncxx
+} // namespace v_noabi
+} // namespace bsoncxx

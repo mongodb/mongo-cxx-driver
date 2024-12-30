@@ -58,6 +58,6 @@ class itoa {
     char _buf[11];
 };
 
-}  // namespace bsoncxx
+} // namespace bsoncxx
 
 #include <bsoncxx/config/private/postlude.hh>

@@ -410,4 +410,4 @@ TEST_CASE("array uninitialized element throws exceptions", "") {
         Catch::Matchers::ContainsSubstring("cannot return the key from an uninitialized element with key "
                                            "\"3\": unset document::element"));
 }
-}  // namespace
+} // namespace

@@ -142,5 +142,5 @@ bool operator!=(read_preference const& lhs, read_preference const& rhs) {
     return !(lhs == rhs);
 }
 
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace v_noabi
+} // namespace mongocxx

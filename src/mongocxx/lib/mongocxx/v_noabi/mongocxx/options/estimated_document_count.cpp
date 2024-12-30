@@ -50,6 +50,6 @@ bsoncxx::v_noabi::stdx::optional<read_preference> const& estimated_document_coun
     return _read_preference;
 }
 
-}  // namespace options
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace options
+} // namespace v_noabi
+} // namespace mongocxx

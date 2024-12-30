@@ -81,7 +81,7 @@ constexpr auto log_set_handler = mongoc_log_set_handler;
 
 #endif
 
-}  // namespace libmongoc
-}  // namespace mongocxx
+} // namespace libmongoc
+} // namespace mongocxx
 
 #include <mongocxx/config/private/postlude.hh>

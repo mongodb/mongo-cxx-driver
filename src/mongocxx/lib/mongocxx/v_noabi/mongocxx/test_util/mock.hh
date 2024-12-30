@@ -170,7 +170,7 @@ class mock<R(MONGOCXX_ABI_CDECL*)(Args...)> {
         std::lock_guard<std::mutex> lock(_active_instances_lock);
 
         auto& current = _active_instances[id];
-        assert(!current);  // It is impossible to create two instances in a single thread
+        assert(!current); // It is impossible to create two instances in a single thread
         current = instance;
     }
 
@@ -185,7 +185,7 @@ class mock<R(MONGOCXX_ABI_CDECL*)(Args...)> {
     underlying_ptr const _func;
 };
 
-}  // namespace test_util
-}  // namespace mongocxx
+} // namespace test_util
+} // namespace mongocxx
 
 #include <mongocxx/config/private/postlude.hh>

@@ -180,4 +180,4 @@ struct rank_test {
 
 static_assert(rank_test{}(12) == 42, "fail");
 
-}  // namespace
+} // namespace

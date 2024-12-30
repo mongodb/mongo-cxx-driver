@@ -45,8 +45,8 @@ class exception : public std::system_error {
 
 BSONCXX_POP_WARNINGS();
 
-}  // namespace v_noabi
-}  // namespace bsoncxx
+} // namespace v_noabi
+} // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>
 
