@@ -21,7 +21,7 @@ source_dirs=(
 )
 
 mapfile -t source_files < <(
-  find "${source_dirs[@]:?}" -regextype posix-egrep -regex '.*\.(hpp|hh|cpp)'
+  find "${source_dirs[@]:?}" | grep -E '.*\.(hpp|hh|cpp)$'
 )
 
 if [[ -n "${DRYRUN:-}" ]]; then
