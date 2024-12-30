@@ -22,7 +22,7 @@ namespace model {
 
 delete_many::delete_many(bsoncxx::v_noabi::document::view_or_value filter) : _filter(std::move(filter)) {}
 
-const bsoncxx::v_noabi::document::view_or_value& delete_many::filter() const {
+bsoncxx::v_noabi::document::view_or_value const& delete_many::filter() const {
     return _filter;
 }
 
@@ -36,11 +36,11 @@ delete_many& delete_many::hint(mongocxx::v_noabi::hint index_hint) {
     return *this;
 }
 
-const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::hint>& delete_many::hint() const {
+bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::hint> const& delete_many::hint() const {
     return _hint;
 }
 
-const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value>& delete_many::collation() const {
+bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const& delete_many::collation() const {
     return _collation;
 }
 

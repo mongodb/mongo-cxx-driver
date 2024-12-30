@@ -39,8 +39,8 @@ class exception : public std::system_error {
 
     exception(exception&&) = default;
     exception& operator=(exception&&) = default;
-    exception(const exception&) = default;
-    exception& operator=(const exception&) = default;
+    exception(exception const&) = default;
+    exception& operator=(exception const&) = default;
 
     using system_error::system_error;
 };

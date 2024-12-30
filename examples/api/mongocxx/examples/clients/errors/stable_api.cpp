@@ -28,7 +28,7 @@ void example() {
             mongocxx::options::server_api::version_from_string("0");  // Throws.
 
         EXPECT(false && "should not reach this point");
-    } catch (const mongocxx::exception& ex) {
+    } catch (mongocxx::exception const& ex) {
         EXPECT(ex.code() == mongocxx::error_code::k_invalid_parameter);
     }
 
@@ -37,7 +37,7 @@ void example() {
             static_cast<mongocxx::options::server_api::version>(1));  // Throws.
 
         EXPECT(false && "should not reach this point");
-    } catch (const mongocxx::exception& ex) {
+    } catch (mongocxx::exception const& ex) {
         EXPECT(ex.code() == mongocxx::error_code::k_invalid_parameter);
     }
 }

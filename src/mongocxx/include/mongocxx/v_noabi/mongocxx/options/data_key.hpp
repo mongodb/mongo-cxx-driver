@@ -108,7 +108,7 @@ class data_key {
     /// @return
     ///   An optional document containing the master key.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value>&)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const&)
     master_key() const;
 
     ///
@@ -133,7 +133,7 @@ class data_key {
     /// @return
     ///   The alternate names for the data key.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const std::vector<std::string>&) key_alt_names() const;
+    MONGOCXX_ABI_EXPORT_CDECL(std::vector<std::string> const&) key_alt_names() const;
 
     ///
     /// Represents binary data used to represent key material.
@@ -170,7 +170,7 @@ class data_key {
     /// @see
     /// - https://www.mongodb.com/docs/v6.0/reference/method/KeyVault.createKey/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<key_material_type>&)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<key_material_type> const&)
     key_material();
 
    private:

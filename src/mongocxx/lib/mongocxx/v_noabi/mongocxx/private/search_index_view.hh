@@ -50,21 +50,21 @@ class search_index_view::impl {
     impl(mongoc_collection_t* collection, mongoc_client_t* client) : _coll{collection}, _client{client} {}
 
     cursor list(
-        const client_session* session,
+        client_session const* session,
         bsoncxx::v_noabi::string::view_or_value name,
-        const options::aggregate& options) {
+        options::aggregate const& options) {
         pipeline pipeline{};
         pipeline.append_stage(make_document(kvp("$listSearchIndexes", make_document(kvp("name", name.view())))));
         return list(session, pipeline, options);
     }
 
-    cursor list(const client_session* session, const options::aggregate& options) {
+    cursor list(client_session const* session, options::aggregate const& options) {
         pipeline pipeline{};
         pipeline.append_stage(make_document(kvp("$listSearchIndexes", make_document())));
         return list(session, pipeline, options);
     }
 
-    cursor list(const client_session* session, const pipeline& pipeline, const options::aggregate& options) {
+    cursor list(client_session const* session, pipeline const& pipeline, options::aggregate const& options) {
         bsoncxx::v_noabi::builder::basic::document opts_doc;
         libbson::scoped_bson_t stages(bsoncxx::v_noabi::document::view(pipeline.view_array()));
 
@@ -74,7 +74,7 @@ class search_index_view::impl {
             opts_doc.append(bsoncxx::v_noabi::builder::concatenate_doc{session->_get_impl().to_document()});
         }
 
-        const mongoc_read_prefs_t* const rp_ptr =
+        mongoc_read_prefs_t const* const rp_ptr =
             options.read_preference() ? options.read_preference()->_impl->read_preference_t : nullptr;
 
         libbson::scoped_bson_t opts_bson(opts_doc.view());
@@ -84,15 +84,15 @@ class search_index_view::impl {
             coll_copy.get(), mongoc_query_flags_t(), stages.bson(), opts_bson.bson(), rp_ptr);
     }
 
-    std::string create_one(const client_session* session, const search_index_model& model) {
-        const auto result = create_many(session, std::vector<search_index_model>{model});
+    std::string create_one(client_session const* session, search_index_model const& model) {
+        auto const result = create_many(session, std::vector<search_index_model>{model});
         return bsoncxx::v_noabi::string::to_string(
             result["indexesCreated"].get_array().value.begin()->get_document().value["name"].get_string().value);
     }
 
     bsoncxx::v_noabi::document::value create_many(
-        const client_session* session,
-        const std::vector<search_index_model>& search_indexes) {
+        client_session const* session,
+        std::vector<search_index_model> const& search_indexes) {
         using namespace bsoncxx;
 
         builder::basic::array search_index_arr;
@@ -101,13 +101,13 @@ class search_index_view::impl {
             builder::basic::document search_index_doc;
             // model may or may not have a name or type attached to it. The server will create the
             // name if it is not set.
-            const bsoncxx::v_noabi::document::view& definition = model.definition();
+            bsoncxx::v_noabi::document::view const& definition = model.definition();
 
-            if (const auto name = model.name()) {
+            if (auto const name = model.name()) {
                 search_index_doc.append(kvp("name", name.value()));
             }
             search_index_doc.append(kvp("definition", definition));
-            if (const auto type = model.type()) {
+            if (auto const type = model.type()) {
                 search_index_doc.append(kvp("type", type.value()));
             }
             search_index_arr.append(search_index_doc.view());
@@ -139,7 +139,7 @@ class search_index_view::impl {
         return reply.steal();
     }
 
-    void drop_one(const client_session* session, bsoncxx::v_noabi::string::view_or_value name) {
+    void drop_one(client_session const* session, bsoncxx::v_noabi::string::view_or_value name) {
         bsoncxx::v_noabi::builder::basic::document opts_doc;
 
         bsoncxx::v_noabi::document::value command =
@@ -158,7 +158,7 @@ class search_index_view::impl {
         bool result = libmongoc::collection_write_command_with_opts(
             coll_copy.get(), command_bson.bson(), opts_bson.bson(), reply.bson_for_init(), &error);
 
-        const uint32_t serverErrorNamespaceNotFound = 26;
+        uint32_t const serverErrorNamespaceNotFound = 26;
         if (error.domain == MONGOC_ERROR_QUERY && error.code == serverErrorNamespaceNotFound) {
             // Ignore NamespaceNotFound error.
             // NamespaceNotFound server error code is documented in server code:
@@ -172,7 +172,7 @@ class search_index_view::impl {
     }
 
     void update_one(
-        const client_session* session,
+        client_session const* session,
         bsoncxx::v_noabi::string::view_or_value name,
         bsoncxx::v_noabi::document::view_or_value definition) {
         bsoncxx::v_noabi::builder::basic::document opts_doc;

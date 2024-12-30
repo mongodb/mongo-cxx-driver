@@ -29,7 +29,7 @@ client_encryption& client_encryption::key_vault_client(mongocxx::v_noabi::client
     return *this;
 }
 
-const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::client*>& client_encryption::key_vault_client() const {
+bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::client*> const& client_encryption::key_vault_client() const {
     return _key_vault_client;
 }
 
@@ -38,7 +38,7 @@ client_encryption& client_encryption::key_vault_namespace(client_encryption::ns_
     return *this;
 }
 
-const bsoncxx::v_noabi::stdx::optional<client_encryption::ns_pair>& client_encryption::key_vault_namespace() const {
+bsoncxx::v_noabi::stdx::optional<client_encryption::ns_pair> const& client_encryption::key_vault_namespace() const {
     return _key_vault_namespace;
 }
 
@@ -47,7 +47,7 @@ client_encryption& client_encryption::kms_providers(bsoncxx::v_noabi::document::
     return *this;
 }
 
-const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value>& client_encryption::kms_providers()
+bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const& client_encryption::kms_providers()
     const {
     return _kms_providers;
 }
@@ -57,7 +57,7 @@ client_encryption& client_encryption::tls_opts(bsoncxx::v_noabi::document::view_
     return *this;
 }
 
-const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value>& client_encryption::tls_opts() const {
+bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const& client_encryption::tls_opts() const {
     return _tls_opts;
 }
 

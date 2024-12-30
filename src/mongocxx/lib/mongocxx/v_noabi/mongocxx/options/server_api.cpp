@@ -52,7 +52,7 @@ server_api& server_api::strict(bool strict) {
     return *this;
 }
 
-const bsoncxx::v_noabi::stdx::optional<bool>& server_api::strict() const {
+bsoncxx::v_noabi::stdx::optional<bool> const& server_api::strict() const {
     return _strict;
 }
 
@@ -61,7 +61,7 @@ server_api& server_api::deprecation_errors(bool deprecation_errors) {
     return *this;
 }
 
-const bsoncxx::v_noabi::stdx::optional<bool>& server_api::deprecation_errors() const {
+bsoncxx::v_noabi::stdx::optional<bool> const& server_api::deprecation_errors() const {
     return _deprecation_errors;
 }
 

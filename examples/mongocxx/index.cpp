@@ -34,7 +34,7 @@ int EXAMPLES_CDECL main() {
     auto db = conn["test"];
     try {
         db["restaurants"].drop();
-    } catch (const std::exception&) {
+    } catch (std::exception const&) {
         // Collection did not exist.
     }
 

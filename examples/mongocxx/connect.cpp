@@ -64,7 +64,7 @@ int EXAMPLES_CDECL main(int argc, char* argv[]) {
     mongocxx::instance inst{make_logger()};
 
     try {
-        const auto uri = mongocxx::uri{(argc >= 2) ? argv[1] : mongocxx::uri::k_default_uri};
+        auto const uri = mongocxx::uri{(argc >= 2) ? argv[1] : mongocxx::uri::k_default_uri};
 
         mongocxx::options::client client_options;
         if (uri.tls()) {
@@ -91,7 +91,7 @@ int EXAMPLES_CDECL main(int argc, char* argv[]) {
 
         return EXIT_SUCCESS;
 
-    } catch (const std::exception& xcp) {
+    } catch (std::exception const& xcp) {
         std::cout << "connection failed: " << xcp.what() << "\n";
         return EXIT_FAILURE;
     }

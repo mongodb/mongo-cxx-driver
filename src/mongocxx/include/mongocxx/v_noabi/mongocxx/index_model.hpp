@@ -36,8 +36,8 @@ class index_model {
     ///
     MONGOCXX_ABI_EXPORT_CDECL()
     index_model(
-        const bsoncxx::v_noabi::document::view_or_value& keys,
-        const bsoncxx::v_noabi::document::view_or_value& options = {});
+        bsoncxx::v_noabi::document::view_or_value const& keys,
+        bsoncxx::v_noabi::document::view_or_value const& options = {});
 
     index_model() = delete;
 
@@ -54,12 +54,12 @@ class index_model {
     ///
     /// Copy constructs an index_model.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL() index_model(const index_model&);
+    MONGOCXX_ABI_EXPORT_CDECL() index_model(index_model const&);
 
     ///
     /// Copy assigns an index_model.
     ///
-    index_model& operator=(const index_model&) = default;
+    index_model& operator=(index_model const&) = default;
 
     ///
     /// Destroys an index_model.

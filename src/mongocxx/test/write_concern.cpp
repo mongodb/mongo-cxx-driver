@@ -66,7 +66,7 @@ TEST_CASE("write_concern fields may be set and retrieved", "[write_concern]") {
     }
 
     SECTION("a tag may be set") {
-        const std::string tag{"MultipleDC"};
+        std::string const tag{"MultipleDC"};
         wc.tag(tag);
         auto maybe_tag = wc.tag();
         REQUIRE(maybe_tag);

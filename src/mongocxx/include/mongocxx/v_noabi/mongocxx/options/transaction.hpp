@@ -41,12 +41,12 @@ class transaction {
     ///
     /// Copy constructs transaction options.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL() transaction(const transaction&);
+    MONGOCXX_ABI_EXPORT_CDECL() transaction(transaction const&);
 
     ///
     /// Copy assigns transaction options.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(transaction&) operator=(const transaction&);
+    MONGOCXX_ABI_EXPORT_CDECL(transaction&) operator=(transaction const&);
 
     ///
     /// Move constructs transaction options.
@@ -73,7 +73,7 @@ class transaction {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(transaction&) read_concern(const mongocxx::v_noabi::read_concern& rc);
+    MONGOCXX_ABI_EXPORT_CDECL(transaction&) read_concern(mongocxx::v_noabi::read_concern const& rc);
 
     ///
     /// Gets the current transaction read concern.
@@ -95,7 +95,7 @@ class transaction {
     ///   method chaining.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(transaction&)
-    write_concern(const mongocxx::v_noabi::write_concern& wc);
+    write_concern(mongocxx::v_noabi::write_concern const& wc);
 
     ///
     /// Gets the current transaction write concern.
@@ -119,7 +119,7 @@ class transaction {
     ///   method chaining.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(transaction&)
-    read_preference(const mongocxx::v_noabi::read_preference& rp);
+    read_preference(mongocxx::v_noabi::read_preference const& rp);
 
     ///
     /// Gets the current transaction read preference.
@@ -157,7 +157,7 @@ class transaction {
     class impl;
 
     impl& _get_impl();
-    const impl& _get_impl() const;
+    impl const& _get_impl() const;
     std::unique_ptr<impl> _impl;
 };
 

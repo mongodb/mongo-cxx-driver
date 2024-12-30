@@ -149,7 +149,7 @@ enum class error_code : std::int32_t {
 ///
 /// @return The bsoncxx error_category
 ///
-BSONCXX_ABI_EXPORT_CDECL(const std::error_category&) error_category();
+BSONCXX_ABI_EXPORT_CDECL(std::error_category const&) error_category();
 
 ///
 /// Translate a bsoncxx::v_noabi::error_code into a std::error_code.
@@ -194,7 +194,7 @@ struct is_error_code_enum<bsoncxx::v_noabi::error_code> : public true_type {};
 namespace bsoncxx {
 
 /// @ref bsoncxx::v_noabi::error_category()
-const std::error_category& error_category();
+std::error_category const& error_category();
 
 /// @ref bsoncxx::v_noabi::make_error_code(v_noabi::error_code error)
 std::error_code make_error_code(v_noabi::error_code error);

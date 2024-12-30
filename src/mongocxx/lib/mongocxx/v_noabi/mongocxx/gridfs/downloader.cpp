@@ -174,7 +174,7 @@ void downloader::fetch_chunk() {
     ++_get_impl().chunks_seen;
 }
 
-const downloader::impl& downloader::_get_impl() const {
+downloader::impl const& downloader::_get_impl() const {
     if (!_impl) {
         throw logic_error{error_code::k_invalid_gridfs_downloader_object};
     }
@@ -182,7 +182,7 @@ const downloader::impl& downloader::_get_impl() const {
 }
 
 downloader::impl& downloader::_get_impl() {
-    auto cthis = const_cast<const downloader*>(this);
+    auto cthis = const_cast<downloader const*>(this);
     return const_cast<downloader::impl&>(cthis->_get_impl());
 }
 

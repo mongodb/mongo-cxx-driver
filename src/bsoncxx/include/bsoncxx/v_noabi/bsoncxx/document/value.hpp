@@ -77,8 +77,8 @@ class value {
 
     ~value() = default;
 
-    BSONCXX_ABI_EXPORT_CDECL() value(const value&);
-    BSONCXX_ABI_EXPORT_CDECL(value&) operator=(const value&);
+    BSONCXX_ABI_EXPORT_CDECL() value(value const&);
+    BSONCXX_ABI_EXPORT_CDECL(value&) operator=(value const&);
 
     value(value&&) = default;
     value& operator=(value&&) = default;
@@ -92,11 +92,11 @@ class value {
     ///   A user-defined object to serialize into a BSON object.
     ///
     template <typename T, detail::requires_not_t<int, std::is_same<T, array::view>> = 0>
-    explicit value(const T& t) : value({}) {
+    explicit value(T const& t) : value({}) {
         to_bson(t, *this);
     }
     template <typename T>
-    value& operator=(const T& t) {
+    value& operator=(T const& t) {
         *this = value{t};
         return *this;
     }
@@ -155,7 +155,7 @@ class value {
     ///
     /// @return A pointer to the value's buffer.
     ///
-    BSONCXX_ABI_EXPORT_CDECL(const std::uint8_t*) data() const;
+    BSONCXX_ABI_EXPORT_CDECL(std::uint8_t const*) data() const;
 
     ///
     /// Gets the length of the underlying buffer.
@@ -251,12 +251,12 @@ class value {
 /// @{
 
 /// @relatesalso bsoncxx::v_noabi::document::value
-inline bool operator==(const value& lhs, const value& rhs) {
+inline bool operator==(value const& lhs, value const& rhs) {
     return (lhs.view() == rhs.view());
 }
 
 /// @relatesalso bsoncxx::v_noabi::document::value
-inline bool operator!=(const value& lhs, const value& rhs) {
+inline bool operator!=(value const& lhs, value const& rhs) {
     return !(lhs == rhs);
 }
 
@@ -289,10 +289,10 @@ namespace bsoncxx {
 namespace document {
 
 /// @ref bsoncxx::v_noabi::document::operator==(const v_noabi::document::value& lhs, const v_noabi::document::value& rhs)
-inline bool operator==(const v_noabi::document::value& lhs, const v_noabi::document::value& rhs);
+inline bool operator==(v_noabi::document::value const& lhs, v_noabi::document::value const& rhs);
 
 /// @ref bsoncxx::v_noabi::document::operator!=(const v_noabi::document::value& lhs, const v_noabi::document::value& rhs)
-inline bool operator!=(const v_noabi::document::value& lhs, const v_noabi::document::value& rhs);
+inline bool operator!=(v_noabi::document::value const& lhs, v_noabi::document::value const& rhs);
 
 }  // namespace document
 }  // namespace bsoncxx

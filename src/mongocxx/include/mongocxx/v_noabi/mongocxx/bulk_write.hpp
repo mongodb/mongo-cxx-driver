@@ -88,7 +88,7 @@ class bulk_write {
     ///
     /// @throws mongocxx::v_noabi::logic_error if the given operation is invalid.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bulk_write&) append(const model::write& operation);
+    MONGOCXX_ABI_EXPORT_CDECL(bulk_write&) append(model::write const& operation);
 
     ///
     /// Executes a bulk write.
@@ -107,7 +107,7 @@ class bulk_write {
 
     class impl;
 
-    bulk_write(const collection& coll, const options::bulk_write& options, const client_session* session = nullptr);
+    bulk_write(collection const& coll, options::bulk_write const& options, client_session const* session = nullptr);
 
     bool _created_from_collection;
     std::unique_ptr<impl> _impl;

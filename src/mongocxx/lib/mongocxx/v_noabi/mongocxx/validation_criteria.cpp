@@ -70,15 +70,15 @@ validation_criteria& validation_criteria::action(validation_criteria::validation
     return *this;
 }
 
-const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value>& validation_criteria::rule() const {
+bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const& validation_criteria::rule() const {
     return _rule;
 }
 
-const bsoncxx::v_noabi::stdx::optional<validation_criteria::validation_level>& validation_criteria::level() const {
+bsoncxx::v_noabi::stdx::optional<validation_criteria::validation_level> const& validation_criteria::level() const {
     return _level;
 }
 
-const bsoncxx::v_noabi::stdx::optional<validation_criteria::validation_action>& validation_criteria::action() const {
+bsoncxx::v_noabi::stdx::optional<validation_criteria::validation_action> const& validation_criteria::action() const {
     return _action;
 }
 
@@ -104,10 +104,10 @@ bsoncxx::v_noabi::document::value validation_criteria::to_document() const {
     return to_document_deprecated();
 }
 
-bool operator==(const validation_criteria& lhs, const validation_criteria& rhs) {
+bool operator==(validation_criteria const& lhs, validation_criteria const& rhs) {
     return ((lhs.rule() == rhs.rule()) && (lhs.level() == rhs.level()) && (lhs.action() == rhs.action()));
 }
-bool operator!=(const validation_criteria& lhs, const validation_criteria& rhs) {
+bool operator!=(validation_criteria const& lhs, validation_criteria const& rhs) {
     return !(lhs == rhs);
 }
 

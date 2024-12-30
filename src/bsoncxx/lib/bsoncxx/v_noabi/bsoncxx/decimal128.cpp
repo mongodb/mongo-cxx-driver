@@ -42,11 +42,11 @@ std::string decimal128::to_string() const {
     return {str};
 }
 
-bool operator==(const decimal128& lhs, const decimal128& rhs) {
+bool operator==(decimal128 const& lhs, decimal128 const& rhs) {
     return lhs._high == rhs._high && lhs._low == rhs._low;
 }
 
-bool operator!=(const decimal128& lhs, const decimal128& rhs) {
+bool operator!=(decimal128 const& lhs, decimal128 const& rhs) {
     return !(lhs == rhs);
 }
 

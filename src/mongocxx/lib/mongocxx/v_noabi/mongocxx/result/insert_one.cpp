@@ -27,18 +27,18 @@ insert_one::insert_one(result::bulk_write result, bsoncxx::v_noabi::types::bson_
       _inserted_id_owned(bsoncxx::v_noabi::builder::basic::make_array(inserted_id)),
       _inserted_id(_inserted_id_owned.view()[0].get_value()) {}
 
-const result::bulk_write& insert_one::result() const {
+result::bulk_write const& insert_one::result() const {
     return _result;
 }
 
-const bsoncxx::v_noabi::types::bson_value::view& insert_one::inserted_id() const {
+bsoncxx::v_noabi::types::bson_value::view const& insert_one::inserted_id() const {
     return _inserted_id;
 }
 
-bool operator==(const insert_one& lhs, const insert_one& rhs) {
+bool operator==(insert_one const& lhs, insert_one const& rhs) {
     return ((lhs.result() == rhs.result()) && (lhs.inserted_id() == rhs.inserted_id()));
 }
-bool operator!=(const insert_one& lhs, const insert_one& rhs) {
+bool operator!=(insert_one const& lhs, insert_one const& rhs) {
     return !(lhs == rhs);
 }
 

@@ -28,7 +28,7 @@ upload& upload::chunk_size_bytes(std::int32_t chunk_size_bytes) {
     return *this;
 }
 
-const bsoncxx::v_noabi::stdx::optional<std::int32_t>& upload::chunk_size_bytes() const {
+bsoncxx::v_noabi::stdx::optional<std::int32_t> const& upload::chunk_size_bytes() const {
     return _chunk_size_bytes;
 }
 
@@ -37,7 +37,7 @@ upload& upload::metadata(bsoncxx::v_noabi::document::view_or_value metadata) {
     return *this;
 }
 
-const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value>& upload::metadata() const {
+bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const& upload::metadata() const {
     return _metadata;
 }
 

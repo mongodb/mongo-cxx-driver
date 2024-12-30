@@ -39,9 +39,9 @@ value::value(document::view view)
     std::copy(view.data(), view.data() + view.length(), _data.get());
 }
 
-value::value(const value& rhs) : value(rhs.view()) {}
+value::value(value const& rhs) : value(rhs.view()) {}
 
-value& value::operator=(const value& rhs) {
+value& value::operator=(value const& rhs) {
     *this = value{rhs.view()};
     return *this;
 }
@@ -71,7 +71,7 @@ element value::operator[](stdx::string_view key) const {
     return view[key];
 }
 
-const std::uint8_t* value::data() const {
+std::uint8_t const* value::data() const {
     return _data.get();
 }
 

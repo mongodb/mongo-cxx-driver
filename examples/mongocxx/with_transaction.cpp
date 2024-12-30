@@ -43,8 +43,8 @@ using namespace mongocxx;
 // conveniently run a custom callback inside of a transaction.
 //
 int EXAMPLES_CDECL main() {
-    if (const char* const topology_env = std::getenv("MONGOCXX_TEST_TOPOLOGY")) {
-        const auto topology = std::string(topology_env);
+    if (char const* const topology_env = std::getenv("MONGOCXX_TEST_TOPOLOGY")) {
+        auto const topology = std::string(topology_env);
         if (topology != "replica") {
             std::cerr << "Skipping: with_transaction example requires a replica set" << std::endl;
             return 0;
@@ -82,7 +82,7 @@ int EXAMPLES_CDECL main() {
 
         foo.insert_one(make_document(kvp("abc", 0)), opts);
         bar.insert_one(make_document(kvp("xyz", 0)), opts);
-    } catch (const mongocxx::exception& e) {
+    } catch (mongocxx::exception const& e) {
         std::cout << "An exception occurred while inserting: " << e.what() << std::endl;
         return EXIT_FAILURE;
     }
@@ -105,7 +105,7 @@ int EXAMPLES_CDECL main() {
         opts.write_concern(wc_majority);
 
         session.with_transaction(callback, opts);
-    } catch (const mongocxx::exception& e) {
+    } catch (mongocxx::exception const& e) {
         std::cout << "An exception occurred: " << e.what() << std::endl;
         return EXIT_FAILURE;
     }

@@ -75,7 +75,7 @@ class change_stream {
     /// @return
     ///   The current fullDocument option.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value>&)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value> const&)
     full_document() const;
 
     ///
@@ -106,7 +106,7 @@ class change_stream {
     /// @return
     ///   The current fullDocumentBeforeChange option.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value>&)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value> const&)
     full_document_before_change() const;
 
     ///
@@ -127,7 +127,7 @@ class change_stream {
     /// @return
     ///   The current batch size.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<std::int32_t>&)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<std::int32_t> const&)
     batch_size() const;
 
     ///
@@ -149,8 +149,8 @@ class change_stream {
     /// @return
     ///   The current comment option.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<
-                              bsoncxx::v_noabi::types::bson_value::view_or_value>&)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<
+                              bsoncxx::v_noabi::types::bson_value::view_or_value> const&)
     comment() const;
 
     ///
@@ -177,7 +177,7 @@ class change_stream {
     /// @return
     ///   The current resumeToken.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value>&)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const&)
     resume_after() const;
 
     ///
@@ -206,7 +206,7 @@ class change_stream {
     /// @return
     ///   The current startAfter token.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value>&)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const&)
     start_after() const;
 
     ///
@@ -228,7 +228,7 @@ class change_stream {
     /// @return
     ///   The current collation.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value>&)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const&)
     collation() const;
 
     ///
@@ -250,7 +250,7 @@ class change_stream {
     /// @return
     ///   The current max time (in milliseconds).
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<std::chrono::milliseconds>&)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<std::chrono::milliseconds> const&)
     max_await_time() const;
 
     ///
@@ -276,7 +276,7 @@ class change_stream {
     /// @return
     ///   The current startAtOperationTime option.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::stdx::optional<bsoncxx::v_noabi::types::b_timestamp>&)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::stdx::optional<bsoncxx::v_noabi::types::b_timestamp> const&)
     start_at_operation_time() const;
 
    private:

@@ -37,7 +37,7 @@ struct state {
 bsoncxx::document::value run(
     entity::map& map,
     std::unordered_map<std::string, spec::apm_checker>& apm,
-    const bsoncxx::array::element& op,
+    bsoncxx::array::element const& op,
     state& state);
 
 bsoncxx::stdx::optional<read_concern> lookup_read_concern(bsoncxx::document::view doc);

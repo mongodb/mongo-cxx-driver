@@ -57,7 +57,7 @@ TEST_CASE("THROWS_WITH_CODE", "[bsoncxx][test]") {
 
         try {
             THROWS_WITH_CODE_IMPL(TEST_CHECK, throw Catch::TestFailureException(), std::errc::invalid_argument);
-        } catch (const Catch::TestFailureException&) {
+        } catch (Catch::TestFailureException const&) {
             SUCCEED("Catch::TestFailureException was propagated");
         } catch (...) {
             FAIL("unexpected exception was thrown");
@@ -87,7 +87,7 @@ TEST_CASE("THROWS_WITH_CODE", "[bsoncxx][test]") {
 
         try {
             THROWS_WITH_CODE_IMPL(TEST_CHECK, throw Catch::TestSkipException(), std::errc::invalid_argument);
-        } catch (const Catch::TestSkipException&) {
+        } catch (Catch::TestSkipException const&) {
             SUCCEED("Catch::TestSkipException was propagated");
         } catch (...) {
             FAIL("unexpected exception was thrown");

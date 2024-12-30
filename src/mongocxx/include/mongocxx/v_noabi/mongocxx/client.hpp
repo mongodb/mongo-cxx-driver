@@ -79,7 +79,7 @@ class client {
     /// (whether from the URI or provided client options).
     ///
     MONGOCXX_ABI_EXPORT_CDECL()
-    client(const mongocxx::v_noabi::uri& mongodb_uri, const options::client& options = options::client());
+    client(mongocxx::v_noabi::uri const& mongodb_uri, options::client const& options = options::client());
 
     ///
     /// Move constructs a client.
@@ -96,8 +96,8 @@ class client {
     ///
     MONGOCXX_ABI_EXPORT_CDECL() ~client();
 
-    client(const client&) = delete;
-    client& operator=(const client&) = delete;
+    client(client const&) = delete;
+    client& operator=(client const&) = delete;
 
     ///
     /// Returns true if the client is valid, meaning it was not default constructed
@@ -262,7 +262,7 @@ class client {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/listDatabases
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(cursor) list_databases(const client_session& session) const;
+    MONGOCXX_ABI_EXPORT_CDECL(cursor) list_databases(client_session const& session) const;
 
     ///
     /// Enumerates the databases in the client.
@@ -283,7 +283,7 @@ class client {
     /// - https://www.mongodb.com/docs/manual/reference/command/listDatabases
     ///
     MONGOCXX_ABI_EXPORT_CDECL(cursor)
-    list_databases(const bsoncxx::v_noabi::document::view_or_value opts) const;
+    list_databases(bsoncxx::v_noabi::document::view_or_value const opts) const;
 
     ///
     /// Enumerates the databases in the client.
@@ -307,7 +307,7 @@ class client {
     /// - https://www.mongodb.com/docs/manual/reference/command/listDatabases
     ///
     MONGOCXX_ABI_EXPORT_CDECL(cursor)
-    list_databases(const client_session& session, const bsoncxx::v_noabi::document::view_or_value opts) const;
+    list_databases(client_session const& session, bsoncxx::v_noabi::document::view_or_value const opts) const;
 
     ///
     /// Queries the MongoDB server for a list of known databases.
@@ -324,7 +324,7 @@ class client {
     /// - https://www.mongodb.com/docs/manual/reference/command/listDatabases
     ///
     MONGOCXX_ABI_EXPORT_CDECL(std::vector<std::string>)
-    list_database_names(const bsoncxx::v_noabi::document::view_or_value filter = {}) const;
+    list_database_names(bsoncxx::v_noabi::document::view_or_value const filter = {}) const;
 
     ///
     /// Queries the MongoDB server for a list of known databases.
@@ -344,7 +344,7 @@ class client {
     /// - https://www.mongodb.com/docs/manual/reference/command/listDatabases
     ///
     MONGOCXX_ABI_EXPORT_CDECL(std::vector<std::string>)
-    list_database_names(const client_session& session, const bsoncxx::v_noabi::document::view_or_value filter = {})
+    list_database_names(client_session const& session, bsoncxx::v_noabi::document::view_or_value const filter = {})
         const;
 
     ///
@@ -358,7 +358,7 @@ class client {
     /// server does not support.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(client_session)
-    start_session(const options::client_session& options = {});
+    start_session(options::client_session const& options = {});
 
     ///
     /// Get a change stream on this client with an empty pipeline.
@@ -374,7 +374,7 @@ class client {
     /// @see
     /// - https://www.mongodb.com/docs/manual/changeStreams/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(change_stream) watch(const options::change_stream& options = {});
+    MONGOCXX_ABI_EXPORT_CDECL(change_stream) watch(options::change_stream const& options = {});
 
     ///
     /// Get a change stream on this client with an empty pipeline.
@@ -393,7 +393,7 @@ class client {
     /// - https://www.mongodb.com/docs/manual/changeStreams/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(change_stream)
-    watch(const client_session& session, const options::change_stream& options = {});
+    watch(client_session const& session, options::change_stream const& options = {});
 
     ///
     /// Get a change stream on this client.
@@ -414,7 +414,7 @@ class client {
     /// - https://www.mongodb.com/docs/manual/changeStreams/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(change_stream)
-    watch(const pipeline& pipe, const options::change_stream& options = {});
+    watch(pipeline const& pipe, options::change_stream const& options = {});
 
     ///
     /// Get a change stream on this client.
@@ -435,7 +435,7 @@ class client {
     /// - https://www.mongodb.com/docs/manual/changeStreams/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(change_stream)
-    watch(const client_session& session, const pipeline& pipe, const options::change_stream& options = {});
+    watch(client_session const& session, pipeline const& pipe, options::change_stream const& options = {});
 
     ///
     /// Prevents resource cleanup in the child process from interfering
@@ -464,12 +464,12 @@ class client {
 
     explicit client(void* implementation);
 
-    change_stream _watch(const client_session* session, const pipeline& pipe, const options::change_stream& options);
+    change_stream _watch(client_session const* session, pipeline const& pipe, options::change_stream const& options);
 
     class impl;
 
     impl& _get_impl();
-    const impl& _get_impl() const;
+    impl const& _get_impl() const;
 
     std::unique_ptr<impl> _impl;
 };

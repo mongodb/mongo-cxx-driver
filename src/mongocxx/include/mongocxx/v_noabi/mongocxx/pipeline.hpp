@@ -61,8 +61,8 @@ class pipeline {
     ///
     MONGOCXX_ABI_EXPORT_CDECL() ~pipeline();
 
-    pipeline(const pipeline&) = delete;
-    MONGOCXX_ABI_EXPORT_CDECL(pipeline&) operator=(const pipeline&) = delete;
+    pipeline(pipeline const&) = delete;
+    MONGOCXX_ABI_EXPORT_CDECL(pipeline&) operator=(pipeline const&) = delete;
 
     ///
     /// Adds new fields to documents.

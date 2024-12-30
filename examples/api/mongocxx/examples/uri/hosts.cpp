@@ -29,9 +29,9 @@ void example() {
 
     EXPECT(hosts.size() == 3u);
 
-    const mongocxx::uri::host& first = hosts[0];
-    const mongocxx::uri::host& second = hosts[1];
-    const mongocxx::uri::host& third = hosts[2];
+    mongocxx::uri::host const& first = hosts[0];
+    mongocxx::uri::host const& second = hosts[1];
+    mongocxx::uri::host const& third = hosts[2];
 
     EXPECT(first.name == "127.0.0.1");
     EXPECT(first.port == 27017u);

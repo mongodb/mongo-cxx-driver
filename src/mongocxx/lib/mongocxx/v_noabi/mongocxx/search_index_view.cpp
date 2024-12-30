@@ -17,32 +17,32 @@ search_index_view::search_index_view(void* coll, void* client)
 search_index_view::search_index_view(search_index_view&&) noexcept = default;
 search_index_view& search_index_view::operator=(search_index_view&&) noexcept = default;
 
-search_index_view::search_index_view(const search_index_view& other)
+search_index_view::search_index_view(search_index_view const& other)
     : _impl(bsoncxx::make_unique<impl>(other._get_impl())) {}
 
-search_index_view& search_index_view::operator=(const search_index_view& other) {
+search_index_view& search_index_view::operator=(search_index_view const& other) {
     _get_impl() = other._get_impl();
     return *this;
 }
 
 search_index_view::~search_index_view() = default;
 
-cursor search_index_view::list(const options::aggregate& options) {
+cursor search_index_view::list(options::aggregate const& options) {
     return _get_impl().list(nullptr, options);
 }
 
-cursor search_index_view::list(const client_session& session, const options::aggregate& options) {
+cursor search_index_view::list(client_session const& session, options::aggregate const& options) {
     return _get_impl().list(&session, options);
 }
 
-cursor search_index_view::list(bsoncxx::v_noabi::string::view_or_value name, const options::aggregate& options) {
+cursor search_index_view::list(bsoncxx::v_noabi::string::view_or_value name, options::aggregate const& options) {
     return _get_impl().list(nullptr, name, options);
 }
 
 cursor search_index_view::list(
-    const client_session& session,
+    client_session const& session,
     bsoncxx::v_noabi::string::view_or_value name,
-    const options::aggregate& options) {
+    options::aggregate const& options) {
     return _get_impl().list(&session, name, options);
 }
 
@@ -51,7 +51,7 @@ std::string search_index_view::create_one(bsoncxx::v_noabi::document::view_or_va
 }
 
 std::string search_index_view::create_one(
-    const client_session& session,
+    client_session const& session,
     bsoncxx::v_noabi::document::view_or_value definition) {
     return create_one(session, search_index_model(definition));
 }
@@ -63,28 +63,28 @@ std::string search_index_view::create_one(
 }
 
 std::string search_index_view::create_one(
-    const client_session& session,
+    client_session const& session,
     bsoncxx::v_noabi::string::view_or_value name,
     bsoncxx::v_noabi::document::view_or_value definition) {
     return create_one(session, search_index_model(name, definition));
 }
 
-std::string search_index_view::create_one(const search_index_model& model) {
+std::string search_index_view::create_one(search_index_model const& model) {
     return _get_impl().create_one(nullptr, model);
 }
 
-std::string search_index_view::create_one(const client_session& session, const search_index_model& model) {
+std::string search_index_view::create_one(client_session const& session, search_index_model const& model) {
     return _get_impl().create_one(&session, model);
 }
 
-std::vector<std::string> search_index_view::create_many(const std::vector<search_index_model>& models) {
+std::vector<std::string> search_index_view::create_many(std::vector<search_index_model> const& models) {
     auto response = _get_impl().create_many(nullptr, models);
     return _create_many_helper(response["indexesCreated"].get_array().value);
 }
 
 std::vector<std::string> search_index_view::create_many(
-    const client_session& session,
-    const std::vector<search_index_model>& models) {
+    client_session const& session,
+    std::vector<search_index_model> const& models) {
     auto response = _get_impl().create_many(&session, models);
     return _create_many_helper(response["indexesCreated"].get_array().value);
 }
@@ -102,7 +102,7 @@ void search_index_view::drop_one(bsoncxx::v_noabi::string::view_or_value name) {
     _get_impl().drop_one(nullptr, name);
 }
 
-void search_index_view::drop_one(const client_session& session, bsoncxx::v_noabi::string::view_or_value name) {
+void search_index_view::drop_one(client_session const& session, bsoncxx::v_noabi::string::view_or_value name) {
     _get_impl().drop_one(&session, name);
 }
 
@@ -113,13 +113,13 @@ void search_index_view::update_one(
 }
 
 void search_index_view::update_one(
-    const client_session& session,
+    client_session const& session,
     bsoncxx::v_noabi::string::view_or_value name,
     bsoncxx::v_noabi::document::view_or_value definition) {
     _get_impl().update_one(&session, name, definition);
 }
 
-const search_index_view::impl& search_index_view::_get_impl() const {
+search_index_view::impl const& search_index_view::_get_impl() const {
     if (!_impl) {
         throw mongocxx::v_noabi::logic_error{error_code::k_invalid_search_index_view};
     }
@@ -127,7 +127,7 @@ const search_index_view::impl& search_index_view::_get_impl() const {
 }
 
 search_index_view::impl& search_index_view::_get_impl() {
-    auto cthis = const_cast<const search_index_view*>(this);
+    auto cthis = const_cast<search_index_view const*>(this);
     return const_cast<search_index_view::impl&>(cthis->_get_impl());
 }
 

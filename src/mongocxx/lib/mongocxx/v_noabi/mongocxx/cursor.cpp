@@ -39,8 +39,8 @@ void cursor::iterator::operator++(int) {
 }
 
 cursor::iterator& cursor::iterator::operator++() {
-    const bson_t* out;
-    const bson_t* error_document;
+    bson_t const* out;
+    bson_t const* error_document;
     bson_error_t error;
 
     if (libmongoc::cursor_next(_cursor->_impl->cursor_t, &out)) {
@@ -88,11 +88,11 @@ bool cursor::iterator::is_exhausted() const {
     return !_cursor || _cursor->_impl->is_exhausted();
 }
 
-const bsoncxx::v_noabi::document::view& cursor::iterator::operator*() const {
+bsoncxx::v_noabi::document::view const& cursor::iterator::operator*() const {
     return _cursor->_impl->doc;
 }
 
-const bsoncxx::v_noabi::document::view* cursor::iterator::operator->() const {
+bsoncxx::v_noabi::document::view const* cursor::iterator::operator->() const {
     return &_cursor->_impl->doc;
 }
 
@@ -101,11 +101,11 @@ const bsoncxx::v_noabi::document::view* cursor::iterator::operator->() const {
 // both are "at the end".  We check for exhaustion first because the most
 // common check is `iter != cursor.end()`.
 //
-bool operator==(const cursor::iterator& lhs, const cursor::iterator& rhs) {
+bool operator==(cursor::iterator const& lhs, cursor::iterator const& rhs) {
     return ((rhs.is_exhausted() && lhs.is_exhausted()) || (lhs._cursor == rhs._cursor));
 }
 
-bool operator!=(const cursor::iterator& lhs, const cursor::iterator& rhs) {
+bool operator!=(cursor::iterator const& lhs, cursor::iterator const& rhs) {
     return !(lhs == rhs);
 }
 

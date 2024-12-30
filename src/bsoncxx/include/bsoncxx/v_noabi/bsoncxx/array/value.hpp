@@ -73,8 +73,8 @@ class value {
     ///
     explicit BSONCXX_ABI_EXPORT_CDECL() value(array::view view);
 
-    BSONCXX_ABI_EXPORT_CDECL() value(const value&);
-    BSONCXX_ABI_EXPORT_CDECL(value&) operator=(const value&);
+    BSONCXX_ABI_EXPORT_CDECL() value(value const&);
+    BSONCXX_ABI_EXPORT_CDECL(value&) operator=(value const&);
 
     value(value&&) = default;
     value& operator=(value&&) = default;

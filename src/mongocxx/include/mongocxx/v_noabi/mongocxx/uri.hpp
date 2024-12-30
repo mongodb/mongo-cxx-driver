@@ -82,8 +82,8 @@ class uri {
     ///
     MONGOCXX_ABI_EXPORT_CDECL() ~uri();
 
-    uri(const uri&) = delete;
-    uri& operator=(const uri&) = delete;
+    uri(uri const&) = delete;
+    uri& operator=(uri const&) = delete;
 
     ///
     /// Returns the authentication mechanism from the uri.

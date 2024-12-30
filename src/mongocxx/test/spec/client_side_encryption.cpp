@@ -34,7 +34,7 @@ using namespace bsoncxx;
 using namespace mongocxx;
 using namespace spec;
 
-void _set_up_key_vault(const client& client, document::view test_spec_view) {
+void _set_up_key_vault(client const& client, document::view test_spec_view) {
     if (test_spec_view["key_vault_data"]) {
         write_concern wc_majority;
         wc_majority.acknowledge_level(write_concern::level::k_majority);
@@ -63,7 +63,7 @@ void add_auto_encryption_opts(document::view test, options::client* client_opts)
             auto_encrypt_opts.bypass_auto_encryption(test_encrypt_opts["bypassAutoEncryption"].get_bool().value);
         }
 
-        if (const auto bqa = test_encrypt_opts["bypassQueryAnalysis"]) {
+        if (auto const bqa = test_encrypt_opts["bypassQueryAnalysis"]) {
             auto_encrypt_opts.bypass_query_analysis(bqa.get_bool().value);
         }
 
@@ -86,7 +86,7 @@ void add_auto_encryption_opts(document::view test, options::client* client_opts)
             auto_encrypt_opts.encrypted_fields_map(test_encrypt_opts["encryptedFieldsMap"].get_document().value);
         }
 
-        if (const auto providers = test_encrypt_opts["kmsProviders"]) {
+        if (auto const providers = test_encrypt_opts["kmsProviders"]) {
             using bsoncxx::builder::basic::kvp;
             using bsoncxx::builder::basic::sub_document;
 
@@ -182,7 +182,7 @@ void add_auto_encryption_opts(document::view test, options::client* client_opts)
     }
 }
 
-void run_encryption_tests_in_file(const std::string& test_path) {
+void run_encryption_tests_in_file(std::string const& test_path) {
     INFO("Test path: " << test_path);
 
     auto test_spec = test_util::parse_test_file(test_path);
@@ -205,7 +205,7 @@ void run_encryption_tests_in_file(const std::string& test_path) {
     wc_majority.acknowledge_level(write_concern::level::k_majority);
 
     for (auto&& test : tests) {
-        const auto description = string::to_string(test["description"].get_string().value);
+        auto const description = string::to_string(test["description"].get_string().value);
 
         DYNAMIC_SECTION(description) {
             CHECK_IF_SKIP_SPEC_TEST((client{uri{}, test_util::add_test_server_api()}), test.get_document().value);

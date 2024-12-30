@@ -45,7 +45,7 @@ bool bulk_write::empty() const noexcept {
     return _impl->is_empty;
 }
 
-bulk_write& bulk_write::append(const model::write& operation) {
+bulk_write& bulk_write::append(model::write const& operation) {
     switch (operation.type()) {
         case write_type::k_insert_one: {
             scoped_bson_t doc(operation.get_insert_one().document());
@@ -61,16 +61,16 @@ bulk_write& bulk_write::append(const model::write& operation) {
             scoped_bson_t update(operation.get_update_one().update());
 
             bsoncxx::v_noabi::builder::basic::document options_builder;
-            if (const auto collation = operation.get_update_one().collation()) {
+            if (auto const collation = operation.get_update_one().collation()) {
                 options_builder.append(kvp("collation", *collation));
             }
-            if (const auto hint = operation.get_update_one().hint()) {
+            if (auto const hint = operation.get_update_one().hint()) {
                 options_builder.append(kvp("hint", *hint));
             }
-            if (const auto upsert = operation.get_update_one().upsert()) {
+            if (auto const upsert = operation.get_update_one().upsert()) {
                 options_builder.append(kvp("upsert", *upsert));
             }
-            if (const auto array_filters = operation.get_update_one().array_filters()) {
+            if (auto const array_filters = operation.get_update_one().array_filters()) {
                 options_builder.append(kvp("arrayFilters", *array_filters));
             }
             scoped_bson_t options(options_builder.extract());
@@ -88,16 +88,16 @@ bulk_write& bulk_write::append(const model::write& operation) {
             scoped_bson_t update(operation.get_update_many().update());
 
             bsoncxx::v_noabi::builder::basic::document options_builder;
-            if (const auto collation = operation.get_update_many().collation()) {
+            if (auto const collation = operation.get_update_many().collation()) {
                 options_builder.append(kvp("collation", *collation));
             }
-            if (const auto hint = operation.get_update_many().hint()) {
+            if (auto const hint = operation.get_update_many().hint()) {
                 options_builder.append(kvp("hint", *hint));
             }
-            if (const auto upsert = operation.get_update_many().upsert()) {
+            if (auto const upsert = operation.get_update_many().upsert()) {
                 options_builder.append(kvp("upsert", *upsert));
             }
-            if (const auto array_filters = operation.get_update_many().array_filters()) {
+            if (auto const array_filters = operation.get_update_many().array_filters()) {
                 options_builder.append(kvp("arrayFilters", *array_filters));
             }
             scoped_bson_t options(options_builder.extract());
@@ -114,10 +114,10 @@ bulk_write& bulk_write::append(const model::write& operation) {
             scoped_bson_t filter(operation.get_delete_one().filter());
 
             bsoncxx::v_noabi::builder::basic::document options_builder;
-            if (const auto collation = operation.get_delete_one().collation()) {
+            if (auto const collation = operation.get_delete_one().collation()) {
                 options_builder.append(kvp("collation", *collation));
             }
-            if (const auto hint = operation.get_delete_one().hint()) {
+            if (auto const hint = operation.get_delete_one().hint()) {
                 options_builder.append(kvp("hint", *hint));
             }
             scoped_bson_t options(options_builder.extract());
@@ -134,10 +134,10 @@ bulk_write& bulk_write::append(const model::write& operation) {
             scoped_bson_t filter(operation.get_delete_many().filter());
 
             bsoncxx::v_noabi::builder::basic::document options_builder;
-            if (const auto collation = operation.get_delete_many().collation()) {
+            if (auto const collation = operation.get_delete_many().collation()) {
                 options_builder.append(kvp("collation", *collation));
             }
-            if (const auto hint = operation.get_delete_many().hint()) {
+            if (auto const hint = operation.get_delete_many().hint()) {
                 options_builder.append(kvp("hint", *hint));
             }
             scoped_bson_t options(options_builder.extract());
@@ -155,13 +155,13 @@ bulk_write& bulk_write::append(const model::write& operation) {
             scoped_bson_t replace(operation.get_replace_one().replacement());
 
             bsoncxx::v_noabi::builder::basic::document options_builder;
-            if (const auto collation = operation.get_replace_one().collation()) {
+            if (auto const collation = operation.get_replace_one().collation()) {
                 options_builder.append(kvp("collation", *collation));
             }
-            if (const auto hint = operation.get_replace_one().hint()) {
+            if (auto const hint = operation.get_replace_one().hint()) {
                 options_builder.append(kvp("hint", *hint));
             }
-            if (const auto upsert = operation.get_replace_one().upsert()) {
+            if (auto const upsert = operation.get_replace_one().upsert()) {
                 options_builder.append(kvp("upsert", *upsert));
             }
             scoped_bson_t options(options_builder.extract());
@@ -200,20 +200,20 @@ bsoncxx::v_noabi::stdx::optional<result::bulk_write> bulk_write::execute() const
     return bsoncxx::v_noabi::stdx::optional<result::bulk_write>(std::move(result));
 }
 
-bulk_write::bulk_write(const collection& coll, const options::bulk_write& options, const client_session* session)
+bulk_write::bulk_write(collection const& coll, options::bulk_write const& options, client_session const* session)
     : _created_from_collection{true} {
     bsoncxx::v_noabi::builder::basic::document options_builder;
     if (!options.ordered()) {
         // ordered is true by default. Only append it if set to false.
         options_builder.append(kvp("ordered", false));
     }
-    if (const auto& wc = options.write_concern()) {
+    if (auto const& wc = options.write_concern()) {
         options_builder.append(kvp("writeConcern", wc->to_document()));
     }
-    if (const auto& let = options.let()) {
+    if (auto const& let = options.let()) {
         options_builder.append(kvp("let", *let));
     }
-    if (const auto& comment = options.comment()) {
+    if (auto const& comment = options.comment()) {
         options_builder.append(kvp("comment", *comment));
     }
     if (session) {

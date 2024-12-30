@@ -222,7 +222,7 @@ TEST_CASE("document view begin/end/find give expected types", "[bsoncxx]") {
     auto value = make_document(kvp("a", 1));
 
     SECTION("const document::view gives const_iterator") {
-        const document::view const_doc = value.view();
+        document::view const const_doc = value.view();
 
         document::view::const_iterator citer = const_doc.begin();
         REQUIRE(citer != const_doc.end());
@@ -273,7 +273,7 @@ TEST_CASE("array view begin/end/find give expected types", "[bsoncxx]") {
     auto value = make_array("a");
 
     SECTION("const array::view gives const_iterator") {
-        const array::view const_ary = value.view();
+        array::view const const_ary = value.view();
 
         array::view::const_iterator citer = const_ary.begin();
         REQUIRE(citer != const_ary.end());
@@ -315,13 +315,13 @@ TEST_CASE("array view begin/end/find give expected types", "[bsoncxx]") {
 TEST_CASE("CXX-1476: CXX-992 regression fixes", "[bsoncxx]") {
     SECTION("request for field 'o' does not return field 'op'") {
         constexpr auto k_json = R"({ "op" : 1, "o" : 2 })";
-        const auto bson = from_json(k_json);
+        auto const bson = from_json(k_json);
         REQUIRE(bson.view()["o"].key() == stdx::string_view("o"));
     }
 
     SECTION("empty key is not ignored") {
         constexpr auto k_json = R"({ "" : 1 })";
-        const auto bson = from_json(k_json);
+        auto const bson = from_json(k_json);
         REQUIRE(bson.view().find("") != bson.view().cend());
         REQUIRE(bson.view().find(stdx::string_view()) != bson.view().cend());
     }

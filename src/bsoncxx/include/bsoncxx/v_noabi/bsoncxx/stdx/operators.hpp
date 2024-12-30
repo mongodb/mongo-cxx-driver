@@ -32,7 +32,8 @@ BSONCXX_PUSH_WARNINGS();
 BSONCXX_DISABLE_WARNING(GNU("-Wfloat-equal"));
 template <typename L, typename R>
 auto is_equality_comparable_f(int, bool b = false)
-    -> true_t<decltype((std::declval<const L&>() == std::declval<const R&>()) ? 0 : 0, (std::declval<const R&>() == std::declval<const L&>()) ? 0 : 0, (std::declval<const L&>() != std::declval<const R&>()) ? 0 : 0, (std::declval<const R&>() != std::declval<const L&>()) ? 0 : 0)>;
+    -> true_t<
+        decltype((std::declval<L const&>() == std::declval<R const&>()) ? 0 : 0, (std::declval<R const&>() == std::declval<L const&>()) ? 0 : 0, (std::declval<L const&>() != std::declval<R const&>()) ? 0 : 0, (std::declval<R const&>() != std::declval<L const&>()) ? 0 : 0)>;
 BSONCXX_POP_WARNINGS();
 
 // Detect whether two types are equality-comparable.
@@ -60,13 +61,13 @@ class equality_operators {
 
     // @cond DOXYGEN_DISABLE "Found ';' while parsing initializer list!"
     template <typename Left, typename Other>
-    constexpr friend auto operator==(const Left& self, const Other& other)
+    constexpr friend auto operator==(Left const& self, Other const& other)
         BSONCXX_RETURNS(equality_operators::impl(rank<1>{}, self, other));
     // @endcond
 
     // @cond DOXYGEN_DISABLE "Found ';' while parsing initializer list!"
     template <typename Left, typename Other>
-    constexpr friend auto operator!=(const Left& self, const Other& other)
+    constexpr friend auto operator!=(Left const& self, Other const& other)
         BSONCXX_RETURNS(!equality_operators::impl(rank<1>{}, self, other));
     // @endcond
 };
@@ -81,10 +82,10 @@ class strong_ordering {
     constexpr strong_ordering(_construct, signed char c) noexcept : _c(c) {}
 
    public:
-    static const strong_ordering less;
-    static const strong_ordering greater;
-    static const strong_ordering equivalent;
-    static const strong_ordering equal;
+    static strong_ordering const less;
+    static strong_ordering const greater;
+    static strong_ordering const equivalent;
+    static strong_ordering const equal;
 
     constexpr strong_ordering(std::nullptr_t) noexcept : strong_ordering(_construct{}, 0) {}
 
@@ -137,7 +138,7 @@ struct compare_three_way {
         typename R,
         typename = decltype(std::declval<L>() < std::declval<R>()),
         typename = decltype(std::declval<L>() == std::declval<R>())>
-    constexpr static strong_ordering impl(const L& l, const R& r, rank<1>) {
+    constexpr static strong_ordering impl(L const& l, R const& r, rank<1>) {
         return (l < r) ? strong_ordering::less : (l == r ? strong_ordering::equal : strong_ordering::greater);
     }
     BSONCXX_POP_WARNINGS();
@@ -146,22 +147,22 @@ struct compare_three_way {
         typename L,
         typename R,
         typename = decltype(tag_invoke(std::declval<compare_three_way>(), std::declval<L>(), std::declval<R>()))>
-    constexpr static strong_ordering impl(const L& l, const R& r, rank<2>) {
+    constexpr static strong_ordering impl(L const& l, R const& r, rank<2>) {
         return tag_invoke(compare_three_way{}, l, r);
     }
 
     template <typename L, typename R>
-    constexpr auto operator()(const L& l, const R& r) const BSONCXX_RETURNS((impl)(l, r, rank<2>{}));
+    constexpr auto operator()(L const& l, R const& r) const BSONCXX_RETURNS((impl)(l, r, rank<2>{}));
 };
 
 // Inherit to define ADL-visible ordering operators based on an ADL-visible
 // implementation of tag_invoke(compare_three_way, l, r).
 struct ordering_operators {
     template <typename L, typename R>
-    constexpr static auto impl(const L& l, const R& r, rank<1>) BSONCXX_RETURNS(tag_invoke(compare_three_way{}, l, r));
+    constexpr static auto impl(L const& l, R const& r, rank<1>) BSONCXX_RETURNS(tag_invoke(compare_three_way{}, l, r));
 
     template <typename L, typename R>
-    constexpr static auto impl(const L& l, const R& r, rank<0>)
+    constexpr static auto impl(L const& l, R const& r, rank<0>)
         BSONCXX_RETURNS(tag_invoke(compare_three_way{}, r, l).inverted());
 
 #pragma push_macro("DEFOP")
@@ -182,14 +183,14 @@ std::false_type is_partially_ordered_with_f(rank<0>);
 
 template <typename L, typename R>
 auto is_partially_ordered_with_f(rank<1>) -> true_t<
-    decltype(std::declval<const L&>() > std::declval<const R&>()),
-    decltype(std::declval<const L&>() < std::declval<const R&>()),
-    decltype(std::declval<const L&>() >= std::declval<const R&>()),
-    decltype(std::declval<const L&>() <= std::declval<const R&>()),
-    decltype(std::declval<const R&>() < std::declval<const L&>()),
-    decltype(std::declval<const R&>() > std::declval<const L&>()),
-    decltype(std::declval<const R&>() <= std::declval<const L&>()),
-    decltype(std::declval<const R&>() >= std::declval<const L&>())>;
+    decltype(std::declval<L const&>() > std::declval<R const&>()),
+    decltype(std::declval<L const&>() < std::declval<R const&>()),
+    decltype(std::declval<L const&>() >= std::declval<R const&>()),
+    decltype(std::declval<L const&>() <= std::declval<R const&>()),
+    decltype(std::declval<R const&>() < std::declval<L const&>()),
+    decltype(std::declval<R const&>() > std::declval<L const&>()),
+    decltype(std::declval<R const&>() <= std::declval<L const&>()),
+    decltype(std::declval<R const&>() >= std::declval<L const&>())>;
 
 template <typename T, typename U>
 struct is_partially_ordered_with : decltype(is_partially_ordered_with_f<T, U>(rank<1>{})) {};

@@ -366,16 +366,16 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             // Verify that two id->value maps have the same underlying content,
             // but are not pointing at the same memory.
             using id_map = mongocxx::result::insert_many::id_map;
-            const auto verifyEquivalentNotIdentical = [](const id_map& lhs, const id_map& rhs) {
+            auto const verifyEquivalentNotIdentical = [](id_map const& lhs, id_map const& rhs) {
                 REQUIRE(lhs.size() == rhs.size());
-                for (const auto& lhsIdVal : lhs) {
-                    const auto& rhsIdVal = rhs.find(lhsIdVal.first);
+                for (auto const& lhsIdVal : lhs) {
+                    auto const& rhsIdVal = rhs.find(lhsIdVal.first);
 
                     // copyIds[idx] doesn't exist, but ids[idx] does.
                     REQUIRE(rhsIdVal != rhs.end());
 
-                    const auto& lhsVal = lhsIdVal.second;
-                    const auto& rhsVal = rhsIdVal->second;
+                    auto const& lhsVal = lhsIdVal.second;
+                    auto const& rhsVal = rhsIdVal->second;
 
                     // The element wasn't duplicated.
                     REQUIRE(lhsVal.raw() != rhsVal.raw());
@@ -389,18 +389,18 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             std::string collname("result_insert_many_stale_references");
             db[collname].drop();
             auto coll = db.create_collection(collname);
-            const auto result = coll.insert_many(docs);
+            auto const result = coll.insert_many(docs);
             REQUIRE(result);
 
-            const auto& ids = result->inserted_ids();
+            auto const& ids = result->inserted_ids();
             REQUIRE(!ids.empty());
 
             mongocxx::result::insert_many resultCopy(*result);
-            const auto& copyIds = resultCopy.inserted_ids();
+            auto const& copyIds = resultCopy.inserted_ids();
             verifyEquivalentNotIdentical(ids, copyIds);
 
             auto resultAssign = *result;
-            const auto& assignIds = resultAssign.inserted_ids();
+            auto const& assignIds = resultAssign.inserted_ids();
             verifyEquivalentNotIdentical(ids, assignIds);
 
             verifyEquivalentNotIdentical(copyIds, assignIds);
@@ -2061,7 +2061,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             distinct_values.push_back(value.get_string().value);
         }
 
-        const auto assert_contains_one = [&](bsoncxx::stdx::string_view val) {
+        auto const assert_contains_one = [&](bsoncxx::stdx::string_view val) {
             REQUIRE(std::count(distinct_values.begin(), distinct_values.end(), val) == 1);
         };
 
@@ -2120,7 +2120,7 @@ TEST_CASE("read_concern is inherited from parent", "[collection]") {
 void find_index_and_validate(
     collection& coll,
     bsoncxx::stdx::string_view index_name,
-    const std::function<void(bsoncxx::document::view)>& validate = [](bsoncxx::document::view) {}) {
+    std::function<void(bsoncxx::document::view)> const& validate = [](bsoncxx::document::view) {}) {
     auto cursor = coll.list_indexes();
 
     for (auto&& index : cursor) {
@@ -2523,7 +2523,7 @@ TEST_CASE("find_and_x operations append write concern correctly", "[collection]"
      * manually. */
     bool called = false;
     auto visitor = libmongoc::find_and_modify_opts_append.create_instance();
-    visitor->visit([&](mongoc_find_and_modify_opts_t*, const bson_t* extra) {
+    visitor->visit([&](mongoc_find_and_modify_opts_t*, bson_t const* extra) {
         bsoncxx::document::value expected = make_document(kvp("writeConcern", make_document(kvp("w", 1))));
         bsoncxx::document::view extra_view{bson_get_data(extra), extra->len};
 
@@ -2582,7 +2582,7 @@ TEST_CASE("Ensure that the WriteConcernError 'errInfo' object is propagated", "[
     bool contains_err_info{false};
     try {
         coll.insert_one(doc.view());
-    } catch (const operation_exception& e) {
+    } catch (operation_exception const& e) {
         auto error = e.raw_server_error()->view();
         auto result = error["writeConcernErrors"][0]["errInfo"];
         contains_err_info = (err_info == result.get_document().view());
@@ -2593,12 +2593,12 @@ TEST_CASE("Ensure that the WriteConcernError 'errInfo' object is propagated", "[
 
 TEST_CASE("expose writeErrors[].errInfo", "[collection]") {
     // A helper for checking that an error document is well-formed according to our requirements:
-    auto writeErrors_well_formed = [](const bsoncxx::document::view& reply_view) {
+    auto writeErrors_well_formed = [](bsoncxx::document::view const& reply_view) {
         if (!reply_view["writeErrors"]) {
             FAIL(R"(missing "writeError" field in reply)");
         }
 
-        const auto& errdoc = reply_view["writeErrors"][0];
+        auto const& errdoc = reply_view["writeErrors"][0];
 
         auto error_code = errdoc["code"].get_int32();
 
@@ -2628,7 +2628,7 @@ TEST_CASE("expose writeErrors[].errInfo", "[collection]") {
     // Listen to the insertion-failed event: we want to get a copy of the server's
     // response so that we can compare it to the thrown exception later:
     apm_opts.on_command_succeeded(
-        [&writeErrors_well_formed, &insert_succeeded, &eguard](const mongocxx::events::command_succeeded_event& ev) {
+        [&writeErrors_well_formed, &insert_succeeded, &eguard](mongocxx::events::command_succeeded_event const& ev) {
             BSONCXX_TEST_EXCEPTION_GUARD_BEGIN(eguard);
 
             if (ev.command_name() != "insert") {
@@ -2653,7 +2653,7 @@ TEST_CASE("expose writeErrors[].errInfo", "[collection]") {
 
     database db = mongodb_client["prose_test_expose_details"];
 
-    const std::string collname{"mongo_cxx_driver-expose_details"};
+    std::string const collname{"mongo_cxx_driver-expose_details"};
 
     // Drop the existing collection, if any:
     db[collname].drop();
@@ -2673,7 +2673,7 @@ TEST_CASE("expose writeErrors[].errInfo", "[collection]") {
 
             FAIL("We should not make it here");
 
-        } catch (const operation_exception& e) {
+        } catch (operation_exception const& e) {
             BSONCXX_TEST_EXCEPTION_GUARD_CHECK(eguard);
 
             auto rse = e.raw_server_error();

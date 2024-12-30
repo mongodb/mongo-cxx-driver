@@ -30,15 +30,15 @@ inline std::error_code make_error_code(int code, int) {
     return {code, server_error_category()};
 }
 
-inline std::error_code make_error_code(const ::bson_error_t& error) {
+inline std::error_code make_error_code(::bson_error_t const& error) {
     return make_error_code(static_cast<int>(error.code), static_cast<int>(error.domain));
 }
 
-inline void set_bson_error_message(bson_error_t* error, const char* msg) {
+inline void set_bson_error_message(bson_error_t* error, char const* msg) {
     bson_strncpy(error->message, msg, std::min(strlen(msg) + 1, static_cast<size_t>(BSON_ERROR_BUFFER_SIZE)));
 }
 
-inline void make_bson_error(bson_error_t* error, const operation_exception& e) {
+inline void make_bson_error(bson_error_t* error, operation_exception const& e) {
     // No way to get the domain back out of the exception, so zero out.
     error->code = static_cast<uint32_t>(e.code().value());
     error->domain = 0;
@@ -53,12 +53,12 @@ inline void make_generic_bson_error(bson_error_t* error) {
 }
 
 template <typename exception_type>
-void throw_exception(const ::bson_error_t& error) {
+void throw_exception(::bson_error_t const& error) {
     throw exception_type{make_error_code(error), error.message};
 }
 
 template <typename exception_type>
-void throw_exception(bsoncxx::v_noabi::document::value raw_server_error, const ::bson_error_t& error) {
+void throw_exception(bsoncxx::v_noabi::document::value raw_server_error, ::bson_error_t const& error) {
     throw exception_type{make_error_code(error), std::move(raw_server_error), error.message};
 }
 

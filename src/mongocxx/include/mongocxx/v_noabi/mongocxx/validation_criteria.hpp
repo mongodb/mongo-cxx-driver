@@ -51,7 +51,7 @@ class validation_criteria {
     /// @return
     ///   Document representing a validation rule.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value>&)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const&)
     rule() const;
 
     ///
@@ -87,7 +87,7 @@ class validation_criteria {
     /// @return
     ///   The enumerated validation level.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<validation_level>&)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<validation_level> const&)
     level() const;
 
     ///
@@ -121,7 +121,7 @@ class validation_criteria {
     /// @return
     ///   The enumerated validation action.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<validation_action>&)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<validation_action> const&)
     action() const;
 
     ///
@@ -160,11 +160,11 @@ class validation_criteria {
 
 /// @relatesalso mongocxx::v_noabi::validation_criteria
 MONGOCXX_ABI_EXPORT_CDECL(bool)
-operator==(const validation_criteria & lhs, const validation_criteria & rhs);
+operator==(validation_criteria const& lhs, validation_criteria const& rhs);
 
 /// @relatesalso mongocxx::v_noabi::validation_criteria
 MONGOCXX_ABI_EXPORT_CDECL(bool)
-operator!=(const validation_criteria & lhs, const validation_criteria & rhs);
+operator!=(validation_criteria const& lhs, validation_criteria const& rhs);
 /// @}
 ///
 
@@ -190,10 +190,10 @@ using ::mongocxx::v_noabi::operator!=;
 namespace mongocxx {
 
 /// @ref mongocxx::v_noabi::operator==(const v_noabi::validation_criteria& lhs, const v_noabi::validation_criteria& rhs)
-bool operator==(const v_noabi::validation_criteria& lhs, const v_noabi::validation_criteria& rhs);
+bool operator==(v_noabi::validation_criteria const& lhs, v_noabi::validation_criteria const& rhs);
 
 /// @ref mongocxx::v_noabi::operator!=(const v_noabi::validation_criteria& lhs, const v_noabi::validation_criteria& rhs)
-bool operator!=(const v_noabi::validation_criteria& lhs, const v_noabi::validation_criteria& rhs);
+bool operator!=(v_noabi::validation_criteria const& lhs, v_noabi::validation_criteria const& rhs);
 
 }  // namespace mongocxx
 

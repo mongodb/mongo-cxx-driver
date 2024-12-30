@@ -38,7 +38,7 @@ using bsoncxx::builder::basic::kvp;
 using bsoncxx::builder::basic::make_document;
 using namespace mongocxx;
 
-bool test_commands_enabled(const client& conn) {
+bool test_commands_enabled(client const& conn) {
     auto result = conn["admin"].run_command(make_document(kvp("getParameter", 1), kvp("enableTestCommands", 1)));
     auto result_view = result.view();
 
@@ -55,7 +55,7 @@ bool test_commands_enabled(const client& conn) {
     return result_view["enableTestCommands"].get_int32() == 1;
 }
 
-bool fail_with_max_timeout(const client& conn) {
+bool fail_with_max_timeout(client const& conn) {
     if (!test_commands_enabled(conn)) {
         return false;
     }
@@ -66,7 +66,7 @@ bool fail_with_max_timeout(const client& conn) {
     return true;
 }
 
-void disable_fail_point(const client& conn) {
+void disable_fail_point(client const& conn) {
     if (test_commands_enabled(conn)) {
         conn["admin"].run_command(make_document(kvp("configureFailPoint", "maxTimeAlwaysTimeOut"), kvp("mode", "off")));
     }
@@ -255,8 +255,8 @@ TEST_CASE("create_many", "[index_view]") {
 
         // SERVER-78611: sharded clusters may place fields in a raw response document instead of in
         // the top-level document.
-        if (const auto raw = result_view["raw"]) {
-            for (const auto& shard_response : raw.get_document().view()) {
+        if (auto const raw = result_view["raw"]) {
+            for (auto const& shard_response : raw.get_document().view()) {
                 result_view = shard_response.get_document().view();
             }
         }
@@ -397,8 +397,8 @@ TEST_CASE("drop_all", "[index_view]") {
 
         // SERVER-78611: sharded clusters may place fields in a raw response document instead of
         // in the top-level document.
-        if (const auto raw = result_view["raw"]) {
-            for (const auto& shard_response : raw.get_document().view()) {
+        if (auto const raw = result_view["raw"]) {
+            for (auto const& shard_response : raw.get_document().view()) {
                 result_view = shard_response.get_document().view();
             }
         }
@@ -428,8 +428,8 @@ TEST_CASE("drop_all", "[index_view]") {
 
         // SERVER-78611: sharded clusters may place fields in a raw response document instead of
         // in the top-level document.
-        if (const auto raw = result_view["raw"]) {
-            for (const auto& shard_response : raw.get_document().view()) {
+        if (auto const raw = result_view["raw"]) {
+            for (auto const& shard_response : raw.get_document().view()) {
                 result_view = shard_response.get_document().view();
             }
         }

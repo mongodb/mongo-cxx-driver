@@ -25,11 +25,11 @@ replace_one::replace_one(
     bsoncxx::v_noabi::document::view_or_value replacement)
     : _filter(std::move(filter)), _replacement(std::move(replacement)) {}
 
-const bsoncxx::v_noabi::document::view_or_value& replace_one::filter() const {
+bsoncxx::v_noabi::document::view_or_value const& replace_one::filter() const {
     return _filter;
 }
 
-const bsoncxx::v_noabi::document::view_or_value& replace_one::replacement() const {
+bsoncxx::v_noabi::document::view_or_value const& replace_one::replacement() const {
     return _replacement;
 }
 
@@ -38,7 +38,7 @@ replace_one& replace_one::collation(bsoncxx::v_noabi::document::view_or_value co
     return *this;
 }
 
-const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value>& replace_one::collation() const {
+bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const& replace_one::collation() const {
     return _collation;
 }
 
@@ -48,7 +48,7 @@ replace_one& replace_one::upsert(bool upsert) {
     return *this;
 }
 
-const bsoncxx::v_noabi::stdx::optional<bool>& replace_one::upsert() const {
+bsoncxx::v_noabi::stdx::optional<bool> const& replace_one::upsert() const {
     return _upsert;
 }
 
@@ -57,7 +57,7 @@ replace_one& replace_one::hint(mongocxx::v_noabi::hint index_hint) {
     return *this;
 }
 
-const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::hint>& replace_one::hint() const {
+bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::hint> const& replace_one::hint() const {
     return _hint;
 }
 }  // namespace model

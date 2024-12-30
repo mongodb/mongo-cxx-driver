@@ -36,7 +36,7 @@ namespace {
 
 using namespace bsoncxx;
 
-void bson_eq_stream(const bson_t* bson, const bsoncxx::builder::stream::document& builder) {
+void bson_eq_stream(bson_t const* bson, bsoncxx::builder::stream::document const& builder) {
     bsoncxx::document::view expected(bson_get_data(bson), bson->len);
     bsoncxx::document::view test(builder.view());
 
@@ -47,7 +47,7 @@ void bson_eq_stream(const bson_t* bson, const bsoncxx::builder::stream::document
 }
 
 template <typename T, typename U>
-void viewable_eq_viewable(const T& stream, const U& basic) {
+void viewable_eq_viewable(T const& stream, U const& basic) {
     bsoncxx::document::view expected(stream.view());
     bsoncxx::document::view test(basic.view());
 
@@ -58,7 +58,7 @@ void viewable_eq_viewable(const T& stream, const U& basic) {
 }
 
 template <typename T>
-void bson_eq_object(const bson_t* bson, const T actual) {
+void bson_eq_object(bson_t const* bson, T const actual) {
     T expected(bson_get_data(bson), bson->len);
 
     INFO("expected = " << to_json(expected));
@@ -95,7 +95,7 @@ TEST_CASE("builder appends string", "[bsoncxx::builder::stream]") {
     }
 
     SECTION("works with const char*") {
-        const char* world = "world";
+        char const* world = "world";
         b << "hello" << world;
 
         bson_eq_stream(&expected, b);
@@ -145,11 +145,11 @@ TEST_CASE("builder appends binary", "[bsoncxx::builder::stream]") {
     bson_t expected;
     bson_init(&expected);
 
-    bson_append_binary(&expected, "foo", -1, BSON_SUBTYPE_BINARY, reinterpret_cast<const uint8_t*>("deadbeef"), 8);
+    bson_append_binary(&expected, "foo", -1, BSON_SUBTYPE_BINARY, reinterpret_cast<uint8_t const*>("deadbeef"), 8);
 
     builder::stream::document b;
 
-    b << "foo" << types::b_binary{binary_sub_type::k_binary, 8, reinterpret_cast<const uint8_t*>("deadbeef")};
+    b << "foo" << types::b_binary{binary_sub_type::k_binary, 8, reinterpret_cast<uint8_t const*>("deadbeef")};
 
     bson_eq_stream(&expected, b);
 
@@ -183,13 +183,13 @@ TEST_CASE("builder appends oid", "[bsoncxx::builder::stream]") {
     builder::stream::document b;
 
     SECTION("b_oid works") {
-        b << "foo" << types::b_oid{bsoncxx::oid{reinterpret_cast<const char*>(oid.bytes), 12}};
+        b << "foo" << types::b_oid{bsoncxx::oid{reinterpret_cast<char const*>(oid.bytes), 12}};
 
         bson_eq_stream(&expected, b);
     }
 
     SECTION("raw oid works") {
-        b << "foo" << bsoncxx::oid{reinterpret_cast<const char*>(oid.bytes), 12};
+        b << "foo" << bsoncxx::oid{reinterpret_cast<char const*>(oid.bytes), 12};
 
         bson_eq_stream(&expected, b);
     }
@@ -1266,7 +1266,7 @@ TEST_CASE("list builder appends utf8", "[bsoncxx::builder::list]") {
     }
 
     SECTION("works with const char*") {
-        const char* world = "world";
+        char const* world = "world";
         builder::list b{"hello", world};
 
         bson_eq_object(&expected, b.view().get_document().value);
@@ -1307,9 +1307,9 @@ TEST_CASE("list builder appends binary", "[bsoncxx::builder::list]") {
     bson_t expected;
     bson_init(&expected);
 
-    bson_append_binary(&expected, "foo", -1, BSON_SUBTYPE_BINARY, reinterpret_cast<const uint8_t*>("data"), 4);
+    bson_append_binary(&expected, "foo", -1, BSON_SUBTYPE_BINARY, reinterpret_cast<uint8_t const*>("data"), 4);
 
-    builder::list b{"foo", types::b_binary{binary_sub_type::k_binary, 4, reinterpret_cast<const uint8_t*>("data")}};
+    builder::list b{"foo", types::b_binary{binary_sub_type::k_binary, 4, reinterpret_cast<uint8_t const*>("data")}};
 
     bson_eq_object(&expected, b.view().get_document().value);
 
@@ -1339,13 +1339,13 @@ TEST_CASE("list builder appends oid", "[bsoncxx::builder::list]") {
     bson_append_oid(&expected, "foo", -1, &oid);
 
     SECTION("b_oid works") {
-        builder::list b{"foo", types::b_oid{bsoncxx::oid{reinterpret_cast<const char*>(oid.bytes), 12}}};
+        builder::list b{"foo", types::b_oid{bsoncxx::oid{reinterpret_cast<char const*>(oid.bytes), 12}}};
 
         bson_eq_object(&expected, b.view().get_document().value);
     }
 
     SECTION("raw oid works") {
-        builder::list b{"foo", bsoncxx::oid{reinterpret_cast<const char*>(oid.bytes), 12}};
+        builder::list b{"foo", bsoncxx::oid{reinterpret_cast<char const*>(oid.bytes), 12}};
 
         bson_eq_object(&expected, b.view().get_document().value);
     }

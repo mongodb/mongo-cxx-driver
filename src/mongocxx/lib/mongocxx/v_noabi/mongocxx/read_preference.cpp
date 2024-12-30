@@ -31,10 +31,10 @@ namespace v_noabi {
 read_preference::read_preference(read_preference&&) noexcept = default;
 read_preference& read_preference::operator=(read_preference&&) noexcept = default;
 
-read_preference::read_preference(const read_preference& other)
+read_preference::read_preference(read_preference const& other)
     : _impl(bsoncxx::make_unique<impl>(libmongoc::read_prefs_copy(other._impl->read_preference_t))) {}
 
-read_preference& read_preference::operator=(const read_preference& other) {
+read_preference& read_preference::operator=(read_preference const& other) {
     _impl.reset(bsoncxx::make_unique<impl>(libmongoc::read_prefs_copy(other._impl->read_preference_t)).release());
     return *this;
 }
@@ -88,7 +88,7 @@ read_preference::read_mode read_preference::mode() const {
 }
 
 bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view> read_preference::tags() const {
-    const bson_t* bson_tags = libmongoc::read_prefs_get_tags(_impl->read_preference_t);
+    bson_t const* bson_tags = libmongoc::read_prefs_get_tags(_impl->read_preference_t);
 
     if (bson_count_keys(bson_tags))
         return bsoncxx::v_noabi::document::view(bson_get_data(bson_tags), bson_tags->len);
@@ -124,8 +124,8 @@ read_preference& read_preference::hedge(bsoncxx::v_noabi::document::view_or_valu
     return *this;
 }
 
-const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view> read_preference::hedge() const {
-    const bson_t* hedge_bson = libmongoc::read_prefs_get_hedge(_impl->read_preference_t);
+bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view> const read_preference::hedge() const {
+    bson_t const* hedge_bson = libmongoc::read_prefs_get_hedge(_impl->read_preference_t);
 
     if (!bson_empty(hedge_bson)) {
         return bsoncxx::v_noabi::document::view(bson_get_data(hedge_bson), hedge_bson->len);
@@ -134,11 +134,11 @@ const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view> read_pr
     return bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view>{};
 }
 
-bool operator==(const read_preference& lhs, const read_preference& rhs) {
+bool operator==(read_preference const& lhs, read_preference const& rhs) {
     return (lhs.mode() == rhs.mode()) && (lhs.tags() == rhs.tags()) && (lhs.max_staleness() == rhs.max_staleness());
 }
 
-bool operator!=(const read_preference& lhs, const read_preference& rhs) {
+bool operator!=(read_preference const& lhs, read_preference const& rhs) {
     return !(lhs == rhs);
 }
 

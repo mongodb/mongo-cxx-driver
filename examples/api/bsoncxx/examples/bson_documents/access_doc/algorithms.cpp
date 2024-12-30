@@ -33,7 +33,7 @@ void example(bsoncxx::document::view doc) {
 
     std::vector<bsoncxx::document::element> elements;
 
-    std::copy_if(doc.begin(), doc.end(), std::back_inserter(elements), [](const bsoncxx::document::element& e) {
+    std::copy_if(doc.begin(), doc.end(), std::back_inserter(elements), [](bsoncxx::document::element const& e) {
         return e.key() == "a" || e.type() == bsoncxx::type::k_string;
     });
 

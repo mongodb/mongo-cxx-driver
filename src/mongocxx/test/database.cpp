@@ -141,7 +141,7 @@ TEST_CASE("A database", "[database]") {
 
     SECTION("is created by a client") {
         bool called = false;
-        get_database->interpose([&](mongoc_client_t*, const char* d_name) {
+        get_database->interpose([&](mongoc_client_t*, char const* d_name) {
             called = true;
             REQUIRE(database_name == bsoncxx::stdx::string_view{d_name});
             return nullptr;
@@ -167,7 +167,7 @@ TEST_CASE("A database", "[database]") {
     }
 
     SECTION("throws an exception when has_collection causes an error") {
-        database_has_collection->interpose([](mongoc_database_t*, const char*, bson_error_t* error) {
+        database_has_collection->interpose([](mongoc_database_t*, char const*, bson_error_t* error) {
             bson_set_error(error, MONGOC_ERROR_COMMAND, MONGOC_ERROR_COMMAND_INVALID_ARG, "expected error from mock");
             return false;
         });
@@ -199,9 +199,9 @@ TEST_CASE("A database", "[database]") {
         rc.acknowledge_level(read_concern::level::k_majority);
 
         database_set_read_concern->interpose(
-            [&database_set_rc_called](::mongoc_database_t*, const ::mongoc_read_concern_t* rc_t) {
+            [&database_set_rc_called](::mongoc_database_t*, ::mongoc_read_concern_t const* rc_t) {
                 REQUIRE(rc_t);
-                const auto result = libmongoc::read_concern_get_level(rc_t);
+                auto const result = libmongoc::read_concern_get_level(rc_t);
                 REQUIRE(result);
                 REQUIRE(strcmp(result, "majority") == 0);
                 database_set_rc_called = true;
@@ -223,7 +223,7 @@ TEST_CASE("A database", "[database]") {
         std::unique_ptr<mongoc_read_prefs_t, decltype(deleter)> saved_preference(nullptr, deleter);
 
         bool called = false;
-        database_set_preference->interpose([&](mongoc_database_t*, const mongoc_read_prefs_t* read_prefs) {
+        database_set_preference->interpose([&](mongoc_database_t*, mongoc_read_prefs_t const* read_prefs) {
             called = true;
             saved_preference.reset(mongoc_read_prefs_copy(read_prefs));
             REQUIRE(
@@ -231,7 +231,7 @@ TEST_CASE("A database", "[database]") {
                 libmongoc::conversions::read_mode_t_from_read_mode(read_preference::read_mode::k_secondary_preferred));
         });
 
-        database_get_preference->interpose([&](const mongoc_database_t*) { return saved_preference.get(); }).forever();
+        database_get_preference->interpose([&](mongoc_database_t const*) { return saved_preference.get(); }).forever();
 
         mongo_database.read_preference(std::move(preference));
         REQUIRE(called);
@@ -250,13 +250,13 @@ TEST_CASE("A database", "[database]") {
         mongoc_write_concern_t* underlying_wc;
 
         bool set_called = false;
-        database_set_concern->interpose([&](mongoc_database_t*, const mongoc_write_concern_t* concern) {
+        database_set_concern->interpose([&](mongoc_database_t*, mongoc_write_concern_t const* concern) {
             set_called = true;
             underlying_wc = mongoc_write_concern_copy(concern);
         });
 
         bool get_called = false;
-        database_get_concern->interpose([&](const mongoc_database_t*) {
+        database_get_concern->interpose([&](mongoc_database_t const*) {
             get_called = true;
             return underlying_wc;
         });
@@ -266,7 +266,7 @@ TEST_CASE("A database", "[database]") {
 
         MOCK_CONCERN
         bool copy_called = false;
-        concern_copy->interpose([&](const mongoc_write_concern_t*) {
+        concern_copy->interpose([&](mongoc_write_concern_t const*) {
             copy_called = true;
             return mongoc_write_concern_copy(underlying_wc);
         });
@@ -294,9 +294,9 @@ TEST_CASE("A database", "[database]") {
         libbson::scoped_bson_t bson_doc{doc.view()};
 
         database_command_with_opts->interpose([&](mongoc_database_t*,
-                                                  const bson_t*,
-                                                  const mongoc_read_prefs_t*,
-                                                  const bson_t*,
+                                                  bson_t const*,
+                                                  mongoc_read_prefs_t const*,
+                                                  bson_t const*,
                                                   bson_t* reply,
                                                   bson_error_t*) {
             called = true;
@@ -386,7 +386,7 @@ TEST_CASE("Database integration tests", "[database]") {
 
             auto cursor = database.list_collections();
             bool found = false;
-            for (const auto& coll : cursor) {
+            for (auto const& coll : cursor) {
                 auto name = bsoncxx::string::to_string(coll["name"].get_string().value);
                 if (name == std::string(collection_name)) {
                     found = true;
@@ -468,7 +468,7 @@ TEST_CASE("Database integration tests", "[database]") {
         }
 
         auto names = db.list_collection_names();
-        for (const auto& name : names) {
+        for (auto const& name : names) {
             REQUIRE(expected_colls.erase(name) == 1);
         }
 
@@ -483,11 +483,11 @@ TEST_CASE("Database integration tests", "[database]") {
 // also has a few inconsistencies with the standard, which appear to vary across platforms.
 template <typename EventT>
 struct check_service_id {
-    const bool expect_service_id;
+    bool const expect_service_id;
 
-    check_service_id(const bool expect_service_id) : expect_service_id(expect_service_id) {}
+    check_service_id(bool const expect_service_id) : expect_service_id(expect_service_id) {}
 
-    void operator()(const EventT& event) {
+    void operator()(EventT const& event) {
         INFO("checking for service_id()");
         CAPTURE(event.command_name(), expect_service_id);
 
@@ -522,7 +522,7 @@ TEST_CASE("serviceId presence depends on load-balancing mode") {
     // Set up mocked functions that DO emit a service_id:
     if (expect_service_id) {
         // Return a bson_oid_t with data where the service_id has some value:
-        const auto make_service_id_bson_oid_t = [](const void*) -> const bson_oid_t* {
+        auto const make_service_id_bson_oid_t = [](void const*) -> bson_oid_t const* {
             static bson_oid_t tmp = {0x65};
             return &tmp;
         };
@@ -535,7 +535,7 @@ TEST_CASE("serviceId presence depends on load-balancing mode") {
 
     // Set up mocked functions that DO NOT emit a service_id:
     if (!expect_service_id) {
-        auto make_empty_bson_oid_t = [](const void*) -> bson_oid_t* { return nullptr; };
+        auto make_empty_bson_oid_t = [](void const*) -> bson_oid_t* { return nullptr; };
 
         apm_command_started_get_service_id->interpose(make_empty_bson_oid_t).forever();
         apm_command_succeeded_get_service_id->interpose(make_empty_bson_oid_t).forever();

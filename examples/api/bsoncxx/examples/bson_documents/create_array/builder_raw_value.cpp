@@ -28,7 +28,7 @@ namespace {
 
 // [Example]
 // [1, 2]
-void example(const std::uint8_t* data, std::size_t length) {
+void example(std::uint8_t const* data, std::size_t length) {
     using deleter_type = bsoncxx::array::value::deleter_type;
 
     std::uint8_t* raw = new std::uint8_t[length];
@@ -44,8 +44,8 @@ void example(const std::uint8_t* data, std::size_t length) {
 }  // namespace
 
 RUNNER_REGISTER_COMPONENT() {
-    const auto owner = bsoncxx::builder::basic::make_array(1, 2);
-    const auto arr = owner.view();
+    auto const owner = bsoncxx::builder::basic::make_array(1, 2);
+    auto const arr = owner.view();
 
     example(arr.data(), arr.length());
 }

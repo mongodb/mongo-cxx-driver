@@ -59,10 +59,10 @@ class collection_names {
     collection_names(collection_names&&) noexcept = delete;
     collection_names& operator=(collection_names&&) noexcept = delete;
 
-    collection_names(const collection_names&) = delete;
-    collection_names& operator=(const collection_names&) = delete;
+    collection_names(collection_names const&) = delete;
+    collection_names& operator=(collection_names const&) = delete;
 
-    const char* operator[](const std::size_t i) const {
+    char const* operator[](std::size_t const i) const {
         return _names[i];
     }
 
@@ -85,19 +85,19 @@ database& database::operator=(database&&) noexcept = default;
 
 database::~database() = default;
 
-database::database(const mongocxx::v_noabi::client& client, bsoncxx::v_noabi::string::view_or_value name)
+database::database(mongocxx::v_noabi::client const& client, bsoncxx::v_noabi::string::view_or_value name)
     : _impl(bsoncxx::make_unique<impl>(
           libmongoc::client_get_database(client._get_impl().client_t, name.terminated().data()),
           &client._get_impl(),
           name.terminated().data())) {}
 
-database::database(const database& d) {
+database::database(database const& d) {
     if (d) {
         _impl = bsoncxx::make_unique<impl>(d._get_impl());
     }
 }
 
-database& database::operator=(const database& d) {
+database& database::operator=(database const& d) {
     if (!d) {
         _impl.reset();
     } else if (!*this) {
@@ -114,7 +114,7 @@ database::operator bool() const noexcept {
 }
 
 cursor
-database::_aggregate(const client_session* session, const pipeline& pipeline, const options::aggregate& options) {
+database::_aggregate(client_session const* session, pipeline const& pipeline, options::aggregate const& options) {
     scoped_bson_t stages(bsoncxx::v_noabi::document::view(pipeline._impl->view_array()));
 
     bsoncxx::v_noabi::builder::basic::document b;
@@ -127,7 +127,7 @@ database::_aggregate(const client_session* session, const pipeline& pipeline, co
 
     scoped_bson_t options_bson(b.view());
 
-    const ::mongoc_read_prefs_t* rp_ptr = nullptr;
+    ::mongoc_read_prefs_t const* rp_ptr = nullptr;
 
     if (options.read_preference()) {
         rp_ptr = options.read_preference()->_impl->read_preference_t;
@@ -136,15 +136,15 @@ database::_aggregate(const client_session* session, const pipeline& pipeline, co
     return cursor(libmongoc::database_aggregate(_get_impl().database_t, stages.bson(), options_bson.bson(), rp_ptr));
 }
 
-cursor database::aggregate(const pipeline& pipeline, const options::aggregate& options) {
+cursor database::aggregate(pipeline const& pipeline, options::aggregate const& options) {
     return _aggregate(nullptr, pipeline, options);
 }
 
-cursor database::aggregate(const client_session& session, const pipeline& pipeline, const options::aggregate& options) {
+cursor database::aggregate(client_session const& session, pipeline const& pipeline, options::aggregate const& options) {
     return _aggregate(&session, pipeline, options);
 }
 
-cursor database::_list_collections(const client_session* session, bsoncxx::v_noabi::document::view_or_value filter) {
+cursor database::_list_collections(client_session const* session, bsoncxx::v_noabi::document::view_or_value filter) {
     bsoncxx::v_noabi::builder::basic::document options_builder;
     options_builder.append(kvp("filter", filter));
 
@@ -161,12 +161,12 @@ cursor database::list_collections(bsoncxx::v_noabi::document::view_or_value filt
     return _list_collections(nullptr, filter);
 }
 
-cursor database::list_collections(const client_session& session, bsoncxx::v_noabi::document::view_or_value filter) {
+cursor database::list_collections(client_session const& session, bsoncxx::v_noabi::document::view_or_value filter) {
     return _list_collections(&session, filter);
 }
 
 std::vector<std::string> database::_list_collection_names(
-    const client_session* session,
+    client_session const* session,
     bsoncxx::v_noabi::document::view_or_value filter) {
     bsoncxx::v_noabi::builder::basic::document options_builder;
     options_builder.append(kvp("filter", filter));
@@ -198,7 +198,7 @@ std::vector<std::string> database::list_collection_names(bsoncxx::v_noabi::docum
 }
 
 std::vector<std::string> database::list_collection_names(
-    const client_session& session,
+    client_session const& session,
     bsoncxx::v_noabi::document::view_or_value filter) {
     return _list_collection_names(&session, filter);
 }
@@ -208,7 +208,7 @@ bsoncxx::v_noabi::stdx::string_view database::name() const {
 }
 
 bsoncxx::v_noabi::document::value database::_run_command(
-    const client_session* session,
+    client_session const* session,
     bsoncxx::v_noabi::document::view_or_value command) {
     libbson::scoped_bson_t command_bson{command};
     libbson::scoped_bson_t reply_bson;
@@ -235,7 +235,7 @@ bsoncxx::v_noabi::document::value database::run_command(bsoncxx::v_noabi::docume
 }
 
 bsoncxx::v_noabi::document::value database::run_command(
-    const client_session& session,
+    client_session const& session,
     bsoncxx::v_noabi::document::view_or_value command) {
     return _run_command(&session, command);
 }
@@ -264,10 +264,10 @@ bsoncxx::v_noabi::document::value database::run_command(
 }
 
 collection database::_create_collection(
-    const client_session* session,
+    client_session const* session,
     bsoncxx::v_noabi::stdx::string_view name,
     bsoncxx::v_noabi::document::view_or_value collection_options,
-    const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern>& write_concern) {
+    bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern> const& write_concern) {
     bsoncxx::v_noabi::builder::basic::document options_builder;
     bson_error_t error;
 
@@ -295,21 +295,21 @@ collection database::_create_collection(
 mongocxx::v_noabi::collection database::create_collection(
     bsoncxx::v_noabi::stdx::string_view name,
     bsoncxx::v_noabi::document::view_or_value collection_options,
-    const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern>& write_concern) {
+    bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern> const& write_concern) {
     return _create_collection(nullptr, name, collection_options, write_concern);
 }
 
 mongocxx::v_noabi::collection database::create_collection(
-    const client_session& session,
+    client_session const& session,
     bsoncxx::v_noabi::stdx::string_view name,
     bsoncxx::v_noabi::document::view_or_value collection_options,
-    const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern>& write_concern) {
+    bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern> const& write_concern) {
     return _create_collection(&session, name, collection_options, write_concern);
 }
 
 void database::_drop(
-    const client_session* session,
-    const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern>& write_concern) {
+    client_session const* session,
+    bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern> const& write_concern) {
     bson_error_t error;
 
     bsoncxx::v_noabi::builder::basic::document opts_doc;
@@ -328,13 +328,13 @@ void database::_drop(
     }
 }
 
-void database::drop(const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern>& write_concern) {
+void database::drop(bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern> const& write_concern) {
     return _drop(nullptr, write_concern);
 }
 
 void database::drop(
-    const client_session& session,
-    const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern>& write_concern) {
+    client_session const& session,
+    bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern> const& write_concern) {
     return _drop(&session, write_concern);
 }
 
@@ -381,29 +381,29 @@ collection database::collection(bsoncxx::v_noabi::string::view_or_value name) co
     return mongocxx::v_noabi::collection(*this, std::move(name));
 }
 
-gridfs::bucket database::gridfs_bucket(const options::gridfs::bucket& options) const {
+gridfs::bucket database::gridfs_bucket(options::gridfs::bucket const& options) const {
     return gridfs::bucket{*this, options};
 }
 
-change_stream database::watch(const options::change_stream& options) {
+change_stream database::watch(options::change_stream const& options) {
     return watch(pipeline{}, options);
 }
 
-change_stream database::watch(const client_session& session, const options::change_stream& options) {
+change_stream database::watch(client_session const& session, options::change_stream const& options) {
     return _watch(&session, pipeline{}, options);
 }
 
-change_stream database::watch(const pipeline& pipe, const options::change_stream& options) {
+change_stream database::watch(pipeline const& pipe, options::change_stream const& options) {
     return _watch(nullptr, pipe, options);
 }
 
 change_stream
-database::watch(const client_session& session, const pipeline& pipe, const options::change_stream& options) {
+database::watch(client_session const& session, pipeline const& pipe, options::change_stream const& options) {
     return _watch(&session, pipe, options);
 }
 
 change_stream
-database::_watch(const client_session* session, const pipeline& pipe, const options::change_stream& options) {
+database::_watch(client_session const* session, pipeline const& pipe, options::change_stream const& options) {
     bsoncxx::v_noabi::builder::basic::document container;
     container.append(kvp("pipeline", pipe._impl->view_array()));
     scoped_bson_t pipeline_bson{container.view()};
@@ -419,7 +419,7 @@ database::_watch(const client_session* session, const pipeline& pipe, const opti
     return change_stream{libmongoc::database_watch(_get_impl().database_t, pipeline_bson.bson(), options_bson.bson())};
 }
 
-const database::impl& database::_get_impl() const {
+database::impl const& database::_get_impl() const {
     if (!_impl) {
         throw logic_error{error_code::k_invalid_database_object};
     }
@@ -427,7 +427,7 @@ const database::impl& database::_get_impl() const {
 }
 
 database::impl& database::_get_impl() {
-    auto cthis = const_cast<const database*>(this);
+    auto cthis = const_cast<database const*>(this);
     return const_cast<database::impl&>(cthis->_get_impl());
 }
 

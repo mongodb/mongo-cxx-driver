@@ -59,9 +59,9 @@ class runner_type {
 
     struct component {
         fn_type fn;
-        const char* name;
+        char const* name;
 
-        component(fn_type f, const char* n) : fn(f), name(n) {}
+        component(fn_type f, char const* n) : fn(f), name(n) {}
     };
 
    private:
@@ -82,16 +82,16 @@ class runner_type {
     std::vector<std::string> filters;
     bool verbose = false;
 
-    static void run_with_jobs(const std::vector<component>& components, unsigned int jobs) {
+    static void run_with_jobs(std::vector<component> const& components, unsigned int jobs) {
         if (jobs == 1) {
-            for (const auto& component : components) {
+            for (auto const& component : components) {
                 component.fn();
             }
         } else {
             std::queue<std::thread> threads;
 
             // Rudimentary job scheduler.
-            for (const auto& component : components) {
+            for (auto const& component : components) {
                 while (threads.size() >= jobs) {
                     threads.front().join();
                     threads.pop();
@@ -122,11 +122,11 @@ class runner_type {
 #if !defined(_MSC_VER)
             // Forking with threads is difficult and the number of components that require forking
             // are few in number. Run forking components sequentially.
-            for (const auto& component : forking_components) {
-                const auto& fn = component.fn;
-                const auto& name = component.name;
+            for (auto const& component : forking_components) {
+                auto const& fn = component.fn;
+                auto const& name = component.name;
 
-                const pid_t pid = ::fork();
+                pid_t const pid = ::fork();
 
                 // Child: do nothing more than call the registered function.
                 if (pid == 0) {
@@ -138,7 +138,7 @@ class runner_type {
                 else {
                     int status;
 
-                    const int ret = ::waitpid(pid, &status, 0);
+                    int const ret = ::waitpid(pid, &status, 0);
 
                     // For non-zero exit codes, permit continuation for example coverage.
                     if (WIFEXITED(status) && WEXITSTATUS(status) != EXIT_SUCCESS) {
@@ -150,8 +150,8 @@ class runner_type {
 
                     // For unexpected signals, stop immediately.
                     else if (WIFSIGNALED(status)) {
-                        const int signal = WTERMSIG(status);
-                        const char* const sigstr = ::strsignal(signal);
+                        int const signal = WTERMSIG(status);
+                        char const* const sigstr = ::strsignal(signal);
 
                         std::cout << __func__ << ": failed: " << name << " was killed by signal: " << signal << " ("
                                   << (sigstr ? sigstr : "") << ")" << std::endl;
@@ -182,7 +182,7 @@ class runner_type {
         try {
             mongocxx::client client{mongocxx::uri{"mongodb://localhost:27017/"}};
 
-            const auto reply = client["admin"].run_command(bsoncxx::from_json(R"({"isMaster": 1})"));
+            auto const reply = client["admin"].run_command(bsoncxx::from_json(R"({"isMaster": 1})"));
 
             if (reply["msg"]) {
                 std::cout << "Running API examples against a live sharded server" << std::endl;
@@ -197,33 +197,33 @@ class runner_type {
                 std::cout << "Running API examples against a live single server" << std::endl;
                 run_with_jobs(components_for_single, jobs);
             }
-        } catch (const mongocxx::exception& ex) {
+        } catch (mongocxx::exception const& ex) {
             std::cout << "Skipping API examples that require a live server: " << ex.what() << std::endl;
         }
     }
 
    public:
-    void add_component(fn_type fn, const char* name) {
+    void add_component(fn_type fn, char const* name) {
         components.emplace_back(fn, name);
     }
 
-    void add_component_with_instance(fn_type fn, const char* name) {
+    void add_component_with_instance(fn_type fn, char const* name) {
         components_with_instance.emplace_back(fn, name);
     }
 
-    void add_component_for_single(fn_type fn, const char* name) {
+    void add_component_for_single(fn_type fn, char const* name) {
         components_for_single.emplace_back(fn, name);
     }
 
-    void add_component_for_replica(fn_type fn, const char* name) {
+    void add_component_for_replica(fn_type fn, char const* name) {
         components_for_replica.emplace_back(fn, name);
     }
 
-    void add_component_for_sharded(fn_type fn, const char* name) {
+    void add_component_for_sharded(fn_type fn, char const* name) {
         components_for_sharded.emplace_back(fn, name);
     }
 
-    void add_forking_component(fn_type fn, const char* name) {
+    void add_forking_component(fn_type fn, char const* name) {
         forking_components.emplace_back(fn, name);
     }
 
@@ -243,7 +243,7 @@ class runner_type {
         this->use_fork = use_fork;
     }
 
-    void add_filter(const char* filter) {
+    void add_filter(char const* filter) {
         this->filters.emplace_back(filter);
     }
 
@@ -269,7 +269,7 @@ class runner_type {
 
         // Unconditionally sort to ensure seed consistency after shuffle.
         for (auto cptr : all_components) {
-            std::sort(cptr->begin(), cptr->end(), [](const component& lhs, const component& rhs) {
+            std::sort(cptr->begin(), cptr->end(), [](component const& lhs, component const& rhs) {
                 return std::strcmp(lhs.name, rhs.name) < 0;
             });
         }
@@ -299,7 +299,7 @@ class runner_type {
                 std::begin(all_components),
                 std::end(all_components),
                 std::size_t{0},
-                [](std::size_t n, const std::vector<component>* cptr) { return n + cptr->size(); }));
+                [](std::size_t n, std::vector<component> const* cptr) { return n + cptr->size(); }));
 
             for (auto cptr : all_components) {
                 for (auto c : *cptr) {
@@ -349,7 +349,7 @@ bool parse_seed(int argc, char** argv, int i, bool& set_seed) {
         char* const seed_str = argv[i + 1];  // Next argument.
         char* end = nullptr;
 
-        const auto seed = static_cast<std::minstd_rand::result_type>(std::strtoul(seed_str, &end, 10));
+        auto const seed = static_cast<std::minstd_rand::result_type>(std::strtoul(seed_str, &end, 10));
 
         if (static_cast<std::size_t>(end - seed_str) != std::strlen(seed_str)) {
             std::cerr << "invalid seed string: " << seed_str << std::endl;
@@ -373,7 +373,7 @@ bool parse_jobs(int argc, char** argv, int i, bool& set_jobs) {
         char* const jobs_str = argv[i + 1];  // Next argument.
         char* end = nullptr;
 
-        const auto jobs = std::strtoul(jobs_str, &end, 10);
+        auto const jobs = std::strtoul(jobs_str, &end, 10);
 
         if (static_cast<std::size_t>(end - jobs_str) != std::strlen(jobs_str)) {
             std::cerr << "invalid jobs string: " << jobs_str << std::endl;
@@ -401,7 +401,7 @@ bool parse_use_fork(int argc, char** argv, int i, bool& set_use_fork) {
         char* const use_fork_str = argv[i + 1];  // Next argument.
         char* end = nullptr;
 
-        const auto flag = std::strtoul(use_fork_str, &end, 10);
+        auto const flag = std::strtoul(use_fork_str, &end, 10);
 
         if (static_cast<std::size_t>(end - use_fork_str) != std::strlen(use_fork_str)) {
             std::cerr << "invalid argument: " << use_fork_str << std::endl;
@@ -438,7 +438,7 @@ bool parse_verbose(int argc, char** argv, int i) {
         char* const verbose_str = argv[i + 1];  // Next argument.
         char* end = nullptr;
 
-        const auto verbose = std::strtoul(verbose_str, &end, 10);
+        auto const verbose = std::strtoul(verbose_str, &end, 10);
 
         if (static_cast<std::size_t>(end - verbose_str) != std::strlen(verbose_str)) {
             std::cerr << "invalid verbose string: " << verbose_str << std::endl;
@@ -453,27 +453,27 @@ bool parse_verbose(int argc, char** argv, int i) {
 
 }  // namespace
 
-void runner_register_component(void (*fn)(), const char* name) {
+void runner_register_component(void (*fn)(), char const* name) {
     runner.add_component(fn, name);
 }
 
-void runner_register_component_with_instance(void (*fn)(), const char* name) {
+void runner_register_component_with_instance(void (*fn)(), char const* name) {
     runner.add_component_with_instance(fn, name);
 }
 
-void runner_register_component_for_single(void (*fn)(), const char* name) {
+void runner_register_component_for_single(void (*fn)(), char const* name) {
     runner.add_component_for_single(fn, name);
 }
 
-void runner_register_component_for_replica(void (*fn)(), const char* name) {
+void runner_register_component_for_replica(void (*fn)(), char const* name) {
     runner.add_component_for_replica(fn, name);
 }
 
-void runner_register_component_for_sharded(void (*fn)(), const char* name) {
+void runner_register_component_for_sharded(void (*fn)(), char const* name) {
     runner.add_component_for_sharded(fn, name);
 }
 
-void runner_register_forking_component(void (*fn)(), const char* name) {
+void runner_register_forking_component(void (*fn)(), char const* name) {
     runner.add_forking_component(fn, name);
 }
 

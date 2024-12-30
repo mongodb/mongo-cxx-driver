@@ -47,7 +47,7 @@ void example(bsoncxx::stdx::string_view big_string) {
         }));
 
         EXPECT(false && "should not reach this point");
-    } catch (const bsoncxx::exception& ex) {
+    } catch (bsoncxx::exception const& ex) {
         EXPECT(ex.code() == bsoncxx::error_code::k_cannot_append_string);
     }
 
@@ -56,7 +56,7 @@ void example(bsoncxx::stdx::string_view big_string) {
         builder.view();  // Throws.
 
         EXPECT(false && "should not reach this point");
-    } catch (const bsoncxx::exception& ex) {
+    } catch (bsoncxx::exception const& ex) {
         EXPECT(ex.code() == bsoncxx::error_code::k_unmatched_key_in_builder);
     }
 

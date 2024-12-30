@@ -113,7 +113,7 @@ void validate_gridfs_file(
     std::string bucket_name,
     bsoncxx::types::bson_value::view id,
     std::string expected_file_name,
-    std::function<void(const bsoncxx::types::b_binary&, std::size_t)> validate_chunk,
+    std::function<void(bsoncxx::types::b_binary const&, std::size_t)> validate_chunk,
     std::int32_t expected_chunk_size,
     std::int64_t expected_length) {
     auto files_doc = db[bucket_name + ".files"].find_one(make_document(kvp("_id", id)));
@@ -344,8 +344,8 @@ TEST_CASE("downloading throws error when files document is corrupt", "[gridfs::b
 
     db["fs.files"].drop();
 
-    const std::int32_t k_expected_chunk_size_bytes = 255 * 1024;  // Default chunk size.
-    const std::int64_t k_expected_file_length = 1024 * 1024;
+    std::int32_t const k_expected_chunk_size_bytes = 255 * 1024;  // Default chunk size.
+    std::int64_t const k_expected_file_length = 1024 * 1024;
     bsoncxx::stdx::optional<bsoncxx::types::bson_value::view> chunk_size{
         bsoncxx::types::bson_value::view{bsoncxx::types::b_int32{k_expected_chunk_size_bytes}}};
     bsoncxx::stdx::optional<bsoncxx::types::bson_value::view> length{
@@ -388,7 +388,7 @@ TEST_CASE("downloading throws error when files document is corrupt", "[gridfs::b
         run_test();
     }
     SECTION("chunk size too large") {
-        const std::int32_t k_max_document_size = 16 * 1024 * 1024;
+        std::int32_t const k_max_document_size = 16 * 1024 * 1024;
         chunk_size = bsoncxx::types::bson_value::view{bsoncxx::types::b_int32{k_max_document_size + 1}};
         run_test();
     }
@@ -440,7 +440,7 @@ TEST_CASE("downloading throws error when chunks document is corrupt", "[gridfs::
     db["fs.files"].drop();
     db["fs.chunks"].drop();
 
-    const std::uint8_t k_expected_data_byte = 'd';
+    std::uint8_t const k_expected_data_byte = 'd';
 
     bsoncxx::stdx::optional<bsoncxx::types::bson_value::view> n{
         bsoncxx::types::bson_value::view{bsoncxx::types::b_int32{0}}};
@@ -866,7 +866,7 @@ TEST_CASE("gridfs::bucket::download_to_stream works", "[gridfs::bucket]") {
             auto str = os.str();
             std::vector<std::uint8_t> actual_bytes{str.begin(), str.end()};
             REQUIRE(actual_bytes.size() == end - start);
-            const std::vector<std::uint8_t> expected_bytes{
+            std::vector<std::uint8_t> const expected_bytes{
                 file_bytes.begin() + static_cast<std::vector<uint8_t>::difference_type>(start),
                 file_bytes.begin() + static_cast<std::vector<uint8_t>::difference_type>(end)};
             REQUIRE(expected_bytes == actual_bytes);
@@ -896,37 +896,37 @@ TEST_CASE("gridfs::bucket::download_to_stream works", "[gridfs::bucket]") {
 
         SECTION("middle of the file") {
             SECTION("partial chunk") {
-                const auto start = chunk_size + chunk_size / 2;
-                const auto end = start + 1;
+                auto const start = chunk_size + chunk_size / 2;
+                auto const end = start + 1;
                 check_downloaded_content(static_cast<std::size_t>(start), static_cast<std::size_t>(end));
             }
 
             SECTION("complete chunk") {
-                const auto start = chunk_size;
-                const auto end = start + chunk_size;
+                auto const start = chunk_size;
+                auto const end = start + chunk_size;
                 check_downloaded_content(static_cast<std::size_t>(start), static_cast<std::size_t>(end));
             }
 
             SECTION("across 2 chunks") {
-                const auto start = chunk_size / 2;
-                const auto end = start + chunk_size;
+                auto const start = chunk_size / 2;
+                auto const end = start + chunk_size;
                 check_downloaded_content(static_cast<std::size_t>(start), static_cast<std::size_t>(end));
             }
 
             SECTION("across 2 chunks at the end") {
-                const auto start = chunk_size - 1;
-                const auto end = start + chunk_size - 1;
+                auto const start = chunk_size - 1;
+                auto const end = start + chunk_size - 1;
                 check_downloaded_content(static_cast<std::size_t>(start), static_cast<std::size_t>(end));
             }
             SECTION("across 3 chunks") {
-                const auto start = chunk_size / 2;
-                const auto end = start + 2 * chunk_size;
+                auto const start = chunk_size / 2;
+                auto const end = start + 2 * chunk_size;
                 check_downloaded_content(static_cast<std::size_t>(start), static_cast<std::size_t>(end));
             }
         }
 
         SECTION("at file end") {
-            const auto last_chunk_start = chunk_size * (length / chunk_size);
+            auto const last_chunk_start = chunk_size * (length / chunk_size);
             SECTION("across chunks") {
                 check_downloaded_content(
                     static_cast<std::size_t>(last_chunk_start - (2 * chunk_size) + 1),
@@ -1045,7 +1045,7 @@ TEST_CASE("gridfs upload large file", "[gridfs::bucket]") {
         "fs",
         id,
         "large_file",
-        [&, length](const bsoncxx::types::b_binary& data, std::size_t i) {
+        [&, length](bsoncxx::types::b_binary const& data, std::size_t i) {
             REQUIRE(data.sub_type == bsoncxx::binary_sub_type::k_binary);
             REQUIRE(
                 static_cast<std::int64_t>(data.size) ==
@@ -1159,7 +1159,7 @@ TEST_CASE("gridfs does not create additional indexes", "[gridfs::uploader] [grid
                                          }))));
     }
 
-    const size_t file_size = 100;
+    size_t const file_size = 100;
     std::array<std::uint8_t, file_size> to_write, to_read;
     std::iota(begin(to_write), end(to_write), 0);
 
@@ -1173,7 +1173,7 @@ TEST_CASE("gridfs does not create additional indexes", "[gridfs::uploader] [grid
     auto bytes_read = downloader.read(to_read.data(), file_size);
     REQUIRE(bytes_read == file_size);
 
-    for (const auto& bucket_collection_name : {"fs.chunks", "fs.files"}) {
+    for (auto const& bucket_collection_name : {"fs.chunks", "fs.files"}) {
         auto indexes = db[bucket_collection_name].list_indexes();
         REQUIRE(std::distance(indexes.begin(), indexes.end()) == 2);
     }

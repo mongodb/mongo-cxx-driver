@@ -35,7 +35,7 @@ class apm_checker {
     void compare(
         bsoncxx::array::view expected,
         bool allow_extra = false,
-        const test_util::match_visitor& match_visitor = {});
+        test_util::match_visitor const& match_visitor = {});
 
     void compare_unified(bsoncxx::array::view expectations, entity::map& map, bool ignore_extra_events = false);
 
@@ -43,7 +43,7 @@ class apm_checker {
     void has(bsoncxx::array::view expected);
 
     // True if we should not process the given command:
-    bool should_ignore(const bsoncxx::stdx::string_view command_name) const;
+    bool should_ignore(bsoncxx::stdx::string_view const command_name) const;
 
     void clear();
     void clear_events();
@@ -71,7 +71,7 @@ class apm_checker {
     void set_command_started(options::apm& apm);
     void set_command_failed(options::apm& apm);
     void set_command_succeeded(options::apm& apm);
-    void set_ignore_command_monitoring_event(const std::string& event);
+    void set_ignore_command_monitoring_event(std::string const& event);
 
     void set_command_started_unified(options::apm& apm);
     void set_command_failed_unified(options::apm& apm);

@@ -40,7 +40,7 @@ inline char* make_copy_for_libbson(stdx::string_view s, uint32_t* len_out = null
     return copy;
 }
 
-inline void convert_to_libbson(const b_binary& binary, bson_value_t* v) {
+inline void convert_to_libbson(b_binary const& binary, bson_value_t* v) {
     v->value_type = BSON_TYPE_BINARY;
 
     v->value.v_binary.subtype = static_cast<bson_subtype_t>(binary.sub_type);
@@ -49,63 +49,63 @@ inline void convert_to_libbson(const b_binary& binary, bson_value_t* v) {
     std::memcpy(v->value.v_binary.data, binary.bytes, binary.size);
 }
 
-inline void convert_to_libbson(const b_string& str, bson_value_t* v) {
+inline void convert_to_libbson(b_string const& str, bson_value_t* v) {
     v->value_type = BSON_TYPE_UTF8;
     v->value.v_utf8.str = make_copy_for_libbson(str.value, &(v->value.v_utf8.len));
 }
 
-inline void convert_to_libbson(const b_double& val, bson_value_t* v) {
+inline void convert_to_libbson(b_double const& val, bson_value_t* v) {
     v->value_type = BSON_TYPE_DOUBLE;
     v->value.v_double = val.value;
 }
 
-inline void convert_to_libbson(const b_int32& val, bson_value_t* v) {
+inline void convert_to_libbson(b_int32 const& val, bson_value_t* v) {
     v->value_type = BSON_TYPE_INT32;
     v->value.v_int32 = val.value;
 }
 
-inline void convert_to_libbson(const b_int64& val, bson_value_t* v) {
+inline void convert_to_libbson(b_int64 const& val, bson_value_t* v) {
     v->value_type = BSON_TYPE_INT64;
     v->value.v_int64 = val.value;
 }
 
-inline void convert_to_libbson(const b_undefined&, bson_value_t* v) {
+inline void convert_to_libbson(b_undefined const&, bson_value_t* v) {
     v->value_type = BSON_TYPE_UNDEFINED;
 }
 
-inline void convert_to_libbson(const b_oid& val, bson_value_t* v) {
+inline void convert_to_libbson(b_oid const& val, bson_value_t* v) {
     v->value_type = BSON_TYPE_OID;
     std::memcpy(&v->value.v_oid.bytes, val.value.bytes(), val.value.k_oid_length);
 }
 
-inline void convert_to_libbson(const b_decimal128& decimal, bson_value_t* v) {
+inline void convert_to_libbson(b_decimal128 const& decimal, bson_value_t* v) {
     v->value_type = BSON_TYPE_DECIMAL128;
 
     v->value.v_decimal128.high = decimal.value.high();
     v->value.v_decimal128.low = decimal.value.low();
 }
 
-inline void convert_to_libbson(const b_bool& val, bson_value_t* v) {
+inline void convert_to_libbson(b_bool const& val, bson_value_t* v) {
     v->value_type = BSON_TYPE_BOOL;
     v->value.v_bool = val.value;
 }
 
-inline void convert_to_libbson(const b_date& date, bson_value_t* v) {
+inline void convert_to_libbson(b_date const& date, bson_value_t* v) {
     v->value_type = BSON_TYPE_DATE_TIME;
     v->value.v_datetime = date.value.count();
 }
 
-inline void convert_to_libbson(const b_null&, bson_value_t* v) {
+inline void convert_to_libbson(b_null const&, bson_value_t* v) {
     v->value_type = BSON_TYPE_NULL;
 }
 
-inline void convert_to_libbson(const b_regex& regex, bson_value_t* v) {
+inline void convert_to_libbson(b_regex const& regex, bson_value_t* v) {
     v->value_type = BSON_TYPE_REGEX;
     v->value.v_regex.options = make_copy_for_libbson(regex.options);
     v->value.v_regex.regex = make_copy_for_libbson(regex.regex);
 }
 
-inline void convert_to_libbson(const b_dbpointer& db, bson_value_t* v) {
+inline void convert_to_libbson(b_dbpointer const& db, bson_value_t* v) {
     v->value_type = BSON_TYPE_DBPOINTER;
 
     v->value.v_dbpointer.collection = make_copy_for_libbson(db.collection, &(v->value.v_dbpointer.collection_len));
@@ -113,17 +113,17 @@ inline void convert_to_libbson(const b_dbpointer& db, bson_value_t* v) {
     std::memcpy((v->value.v_dbpointer.oid.bytes), db.value.bytes(), db.value.k_oid_length);
 }
 
-inline void convert_to_libbson(const b_code& code, bson_value_t* v) {
+inline void convert_to_libbson(b_code const& code, bson_value_t* v) {
     v->value_type = BSON_TYPE_CODE;
     v->value.v_code.code = make_copy_for_libbson(code.code, &(v->value.v_code.code_len));
 }
 
-inline void convert_to_libbson(const b_symbol& symbol, bson_value_t* v) {
+inline void convert_to_libbson(b_symbol const& symbol, bson_value_t* v) {
     v->value_type = BSON_TYPE_SYMBOL;
     v->value.v_symbol.symbol = make_copy_for_libbson(symbol.symbol, &(v->value.v_symbol.len));
 }
 
-inline void convert_to_libbson(const b_codewscope& code, bson_value_t* v) {
+inline void convert_to_libbson(b_codewscope const& code, bson_value_t* v) {
     v->value_type = BSON_TYPE_CODEWSCOPE;
 
     // Copy the code
@@ -140,21 +140,21 @@ inline void convert_to_libbson(const b_codewscope& code, bson_value_t* v) {
     }
 }
 
-inline void convert_to_libbson(const b_timestamp& t, bson_value_t* v) {
+inline void convert_to_libbson(b_timestamp const& t, bson_value_t* v) {
     v->value_type = BSON_TYPE_TIMESTAMP;
     v->value.v_timestamp.timestamp = t.timestamp;
     v->value.v_timestamp.increment = t.increment;
 }
 
-inline void convert_to_libbson(const b_minkey&, bson_value_t* v) {
+inline void convert_to_libbson(b_minkey const&, bson_value_t* v) {
     v->value_type = BSON_TYPE_MINKEY;
 }
 
-inline void convert_to_libbson(const b_maxkey&, bson_value_t* v) {
+inline void convert_to_libbson(b_maxkey const&, bson_value_t* v) {
     v->value_type = BSON_TYPE_MAXKEY;
 }
 
-inline void convert_to_libbson(const b_document& doc, bson_value_t* v) {
+inline void convert_to_libbson(b_document const& doc, bson_value_t* v) {
     v->value_type = BSON_TYPE_DOCUMENT;
 
     v->value.v_doc.data_len = static_cast<std::uint32_t>(doc.value.length());
@@ -166,7 +166,7 @@ inline void convert_to_libbson(const b_document& doc, bson_value_t* v) {
     }
 }
 
-inline void convert_to_libbson(const b_array& arr, bson_value_t* v) {
+inline void convert_to_libbson(b_array const& arr, bson_value_t* v) {
     v->value_type = BSON_TYPE_ARRAY;
     // The bson_value_t struct does not have a separate union
     // member for arrays. They are handled the same as the document
@@ -183,7 +183,7 @@ inline void convert_to_libbson(const b_array& arr, bson_value_t* v) {
 //
 // Helper to convert without caller being aware of the underlying bson type.
 //
-inline void convert_to_libbson(bson_value_t* v, const bson_value::view& bson_view) {
+inline void convert_to_libbson(bson_value_t* v, bson_value::view const& bson_view) {
     switch (bson_view.type()) {
 #define BSONCXX_ENUM(name, val)              \
     case bsoncxx::v_noabi::type::k_##name: { \
@@ -198,126 +198,126 @@ inline void convert_to_libbson(bson_value_t* v, const bson_value::view& bson_vie
     }
 }
 
-inline void convert_from_libbson(const bson_value_t* v, b_binary* out) {
+inline void convert_from_libbson(bson_value_t const* v, b_binary* out) {
     bson_subtype_t subtype = v->value.v_binary.subtype;
     std::uint32_t len = v->value.v_binary.data_len;
-    const std::uint8_t* binary = v->value.v_binary.data;
+    std::uint8_t const* binary = v->value.v_binary.data;
 
     *out = {static_cast<binary_sub_type>(subtype), len, binary};
 }
 
-inline void convert_from_libbson(const bson_value_t* v, b_string* out) {
+inline void convert_from_libbson(bson_value_t const* v, b_string* out) {
     uint32_t len = v->value.v_utf8.len;
-    const char* val = v->value.v_utf8.str;
+    char const* val = v->value.v_utf8.str;
 
     *out = b_string{stdx::string_view{val, len}};
 }
 
-inline void convert_from_libbson(const bson_value_t* v, b_double* out) {
+inline void convert_from_libbson(bson_value_t const* v, b_double* out) {
     *out = b_double{v->value.v_double};
 }
 
-inline void convert_from_libbson(const bson_value_t* v, b_int32* out) {
+inline void convert_from_libbson(bson_value_t const* v, b_int32* out) {
     *out = b_int32{v->value.v_int32};
 }
 
-inline void convert_from_libbson(const bson_value_t* v, b_int64* out) {
+inline void convert_from_libbson(bson_value_t const* v, b_int64* out) {
     *out = b_int64{v->value.v_int64};
 }
 
-inline void convert_from_libbson(const bson_value_t*, b_undefined* out) {
+inline void convert_from_libbson(bson_value_t const*, b_undefined* out) {
     *out = b_undefined{};
 }
 
-inline void convert_from_libbson(const bson_value_t* v, b_oid* out) {
-    const bson_oid_t* boid = &(v->value.v_oid);
-    oid val_oid(reinterpret_cast<const char*>(boid->bytes), sizeof(boid->bytes));
+inline void convert_from_libbson(bson_value_t const* v, b_oid* out) {
+    bson_oid_t const* boid = &(v->value.v_oid);
+    oid val_oid(reinterpret_cast<char const*>(boid->bytes), sizeof(boid->bytes));
     *out = b_oid{std::move(val_oid)};
 }
 
-inline void convert_from_libbson(const bson_value_t* v, b_decimal128* out) {
+inline void convert_from_libbson(bson_value_t const* v, b_decimal128* out) {
     bson_decimal128_t d128 = v->value.v_decimal128;
     *out = b_decimal128{decimal128{d128.high, d128.low}};
 }
 
-inline void convert_from_libbson(const bson_value_t* v, b_bool* out) {
+inline void convert_from_libbson(bson_value_t const* v, b_bool* out) {
     *out = b_bool{v->value.v_bool};
 }
 
-inline void convert_from_libbson(const bson_value_t* v, b_date* out) {
+inline void convert_from_libbson(bson_value_t const* v, b_date* out) {
     *out = b_date{std::chrono::milliseconds{v->value.v_datetime}};
 }
 
-inline void convert_from_libbson(const bson_value_t*, b_null* out) {
+inline void convert_from_libbson(bson_value_t const*, b_null* out) {
     *out = b_null{};
 }
 
-inline void convert_from_libbson(const bson_value_t* v, b_regex* out) {
-    const char* options = v->value.v_regex.options;
-    const char* regex = v->value.v_regex.regex;
+inline void convert_from_libbson(bson_value_t const* v, b_regex* out) {
+    char const* options = v->value.v_regex.options;
+    char const* regex = v->value.v_regex.regex;
     *out = b_regex{regex, options ? options : stdx::string_view{}};
 }
 
-inline void convert_from_libbson(const bson_value_t* v, b_dbpointer* out) {
+inline void convert_from_libbson(bson_value_t const* v, b_dbpointer* out) {
     uint32_t collection_len = v->value.v_dbpointer.collection_len;
-    const char* collection = v->value.v_dbpointer.collection;
-    const bson_oid_t* boid = &(v->value.v_dbpointer.oid);
+    char const* collection = v->value.v_dbpointer.collection;
+    bson_oid_t const* boid = &(v->value.v_dbpointer.oid);
 
-    oid oid{reinterpret_cast<const char*>(boid->bytes), sizeof(boid->bytes)};
+    oid oid{reinterpret_cast<char const*>(boid->bytes), sizeof(boid->bytes)};
 
     *out = b_dbpointer{stdx::string_view{collection, collection_len}, std::move(oid)};
 }
 
-inline void convert_from_libbson(const bson_value_t* v, b_code* out) {
+inline void convert_from_libbson(bson_value_t const* v, b_code* out) {
     uint32_t len = v->value.v_code.code_len;
-    const char* code = v->value.v_code.code;
+    char const* code = v->value.v_code.code;
 
     *out = b_code{stdx::string_view{code, len}};
 }
 
-inline void convert_from_libbson(const bson_value_t* v, b_symbol* out) {
+inline void convert_from_libbson(bson_value_t const* v, b_symbol* out) {
     uint32_t len = v->value.v_symbol.len;
-    const char* symbol = v->value.v_symbol.symbol;
+    char const* symbol = v->value.v_symbol.symbol;
 
     *out = b_symbol{stdx::string_view{symbol, len}};
 }
 
-inline void convert_from_libbson(const bson_value_t* v, b_codewscope* out) {
+inline void convert_from_libbson(bson_value_t const* v, b_codewscope* out) {
     uint32_t code_len = v->value.v_codewscope.code_len;
-    const uint8_t* scope_ptr = v->value.v_codewscope.scope_data;
+    uint8_t const* scope_ptr = v->value.v_codewscope.scope_data;
     uint32_t scope_len = v->value.v_codewscope.scope_len;
-    const char* code = v->value.v_codewscope.code;
+    char const* code = v->value.v_codewscope.code;
     document::view view(scope_ptr, scope_len);
 
     *out = b_codewscope{stdx::string_view{code, code_len}, view};
 }
 
-inline void convert_from_libbson(const bson_value_t* v, b_timestamp* out) {
+inline void convert_from_libbson(bson_value_t const* v, b_timestamp* out) {
     uint32_t timestamp = v->value.v_timestamp.timestamp;
     uint32_t increment = v->value.v_timestamp.increment;
     *out = {increment, timestamp};
 }
 
-inline void convert_from_libbson(const bson_value_t*, b_minkey* out) {
+inline void convert_from_libbson(bson_value_t const*, b_minkey* out) {
     *out = b_minkey{};
 }
 
-inline void convert_from_libbson(const bson_value_t*, b_maxkey* out) {
+inline void convert_from_libbson(bson_value_t const*, b_maxkey* out) {
     *out = b_maxkey{};
 }
 
-inline void convert_from_libbson(const bson_value_t* v, b_document* out) {
-    const std::uint8_t* buf = v->value.v_doc.data;
+inline void convert_from_libbson(bson_value_t const* v, b_document* out) {
+    std::uint8_t const* buf = v->value.v_doc.data;
     std::uint32_t len = v->value.v_doc.data_len;
 
     *out = b_document{document::view{buf, len}};
 }
 
-inline void convert_from_libbson(const bson_value_t* v, b_array* out) {
+inline void convert_from_libbson(bson_value_t const* v, b_array* out) {
     // The bson_value_t struct does not have a separate union
     // member for arrays. They are handled the same as the document
     // BSON type.
-    const std::uint8_t* buf = v->value.v_doc.data;
+    std::uint8_t const* buf = v->value.v_doc.data;
     std::uint32_t len = v->value.v_doc.data_len;
 
     *out = b_array{array::view{buf, len}};

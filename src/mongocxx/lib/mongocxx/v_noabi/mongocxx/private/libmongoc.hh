@@ -61,7 +61,7 @@ namespace libmongoc {
 
 // CDRIVER-5678
 using log_func_cdecl_t = void(
-    MONGOCXX_ABI_CDECL*)(mongoc_log_level_t log_level, const char* log_domain, const char* message, void* user_data);
+    MONGOCXX_ABI_CDECL*)(mongoc_log_level_t log_level, char const* log_domain, char const* message, void* user_data);
 using log_set_handler_cdecl_t = void(MONGOCXX_ABI_CDECL*)(log_func_cdecl_t log_func, void* user_data);
 
 extern MONGOCXX_ABI_EXPORT_TESTING mongocxx::test_util::mock<log_set_handler_cdecl_t>& log_set_handler;

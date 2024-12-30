@@ -24,39 +24,39 @@ namespace mongocxx {
 namespace v_noabi {
 namespace events {
 
-command_succeeded_event::command_succeeded_event(const void* event) : _succeeded_event(event) {}
+command_succeeded_event::command_succeeded_event(void const* event) : _succeeded_event(event) {}
 
 command_succeeded_event::~command_succeeded_event() = default;
 
 bsoncxx::v_noabi::document::view command_succeeded_event::reply() const {
     auto reply = libmongoc::apm_command_succeeded_get_reply(
-        static_cast<const mongoc_apm_command_succeeded_t*>(_succeeded_event));
+        static_cast<mongoc_apm_command_succeeded_t const*>(_succeeded_event));
     return {bson_get_data(reply), reply->len};
 }
 
 bsoncxx::v_noabi::stdx::string_view command_succeeded_event::command_name() const {
     return libmongoc::apm_command_succeeded_get_command_name(
-        static_cast<const mongoc_apm_command_succeeded_t*>(_succeeded_event));
+        static_cast<mongoc_apm_command_succeeded_t const*>(_succeeded_event));
 }
 
 std::int64_t command_succeeded_event::duration() const {
     return libmongoc::apm_command_succeeded_get_duration(
-        static_cast<const mongoc_apm_command_succeeded_t*>(_succeeded_event));
+        static_cast<mongoc_apm_command_succeeded_t const*>(_succeeded_event));
 }
 
 std::int64_t command_succeeded_event::request_id() const {
     return libmongoc::apm_command_succeeded_get_request_id(
-        static_cast<const mongoc_apm_command_succeeded_t*>(_succeeded_event));
+        static_cast<mongoc_apm_command_succeeded_t const*>(_succeeded_event));
 }
 
 std::int64_t command_succeeded_event::operation_id() const {
     return libmongoc::apm_command_succeeded_get_operation_id(
-        static_cast<const mongoc_apm_command_succeeded_t*>(_succeeded_event));
+        static_cast<mongoc_apm_command_succeeded_t const*>(_succeeded_event));
 }
 
 bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::oid> command_succeeded_event::service_id() const {
-    const bson_oid_t* bson_oid = libmongoc::apm_command_succeeded_get_service_id(
-        static_cast<const mongoc_apm_command_succeeded_t*>(_succeeded_event));
+    bson_oid_t const* bson_oid = libmongoc::apm_command_succeeded_get_service_id(
+        static_cast<mongoc_apm_command_succeeded_t const*>(_succeeded_event));
 
     if (nullptr == bson_oid)
         return {bsoncxx::v_noabi::stdx::nullopt};
@@ -66,13 +66,13 @@ bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::oid> command_succeeded_event:
 
 bsoncxx::v_noabi::stdx::string_view command_succeeded_event::host() const {
     return libmongoc::apm_command_succeeded_get_host(
-               static_cast<const mongoc_apm_command_succeeded_t*>(_succeeded_event))
+               static_cast<mongoc_apm_command_succeeded_t const*>(_succeeded_event))
         ->host;
 }
 
 std::uint16_t command_succeeded_event::port() const {
     return libmongoc::apm_command_succeeded_get_host(
-               static_cast<const mongoc_apm_command_succeeded_t*>(_succeeded_event))
+               static_cast<mongoc_apm_command_succeeded_t const*>(_succeeded_event))
         ->port;
 }
 

@@ -80,7 +80,7 @@ std::string match_doc_current_path() noexcept {
 }
 
 template <typename Element>
-type to_type(const Element& type) {
+type to_type(Element const& type) {
     auto type_str = string::to_string(type.get_string().value);
     if (type_str == "binData")
         return bsoncxx::type::k_binary;
@@ -135,7 +135,7 @@ void special_operator(types::bson_value::view actual, document::view expected, e
         }
     } else if (string::to_string(op.key()) == "$$sessionLsid") {
         auto id = string::to_string(op.get_string().value);
-        const auto& type = map.type(id);
+        auto const& type = map.type(id);
         if (type == typeid(client_session)) {
             REQUIRE(actual == map.get_client_session(id).id());
         } else {
@@ -148,8 +148,8 @@ void special_operator(types::bson_value::view actual, document::view expected, e
         auto name = string::to_string(op.get_string().value);
         REQUIRE(actual == map.get_value(name));
     } else if (string::to_string(op.key()) == "$$exists") {
-        const bool should_exist = op.get_bool();
-        const bool does_exist = actual.type() != bsoncxx::type::k_null;
+        bool const should_exist = op.get_bool();
+        bool const does_exist = actual.type() != bsoncxx::type::k_null;
         if (does_exist && !should_exist) {
             FAIL_CHECK("Expected this document element to be absent, but it is present");
         } else if (!does_exist && should_exist) {
@@ -184,8 +184,8 @@ void matches_document(
     }
 
     REQUIRE(actual.type() == bsoncxx::type::k_document);
-    const auto actual_doc = actual.get_document().value;
-    const auto expected_doc = expected.get_document().value;
+    auto const actual_doc = actual.get_document().value;
+    auto const expected_doc = expected.get_document().value;
     auto extra_fields = test_util::size(actual_doc);
 
     CAPTURE(to_json(expected_doc));
@@ -220,8 +220,8 @@ void matches_array(
     bool is_array_of_root_docs = false) {
     REQUIRE(actual.type() == bsoncxx::type::k_array);
 
-    const auto actual_arr = actual.get_array().value;
-    const auto expected_arr = expected.get_array().value;
+    auto const actual_arr = actual.get_array().value;
+    auto const expected_arr = expected.get_array().value;
 
     CAPTURE(to_json(expected_arr));
     CAPTURE(to_json(actual_arr));

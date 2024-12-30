@@ -79,8 +79,8 @@ class write {
     ///
     MONGOCXX_ABI_EXPORT_CDECL(write&) operator=(write&& rhs) noexcept;
 
-    write(const write& rhs) = delete;
-    write& operator=(const write& rhs) = delete;
+    write(write const& rhs) = delete;
+    write& operator=(write const& rhs) = delete;
 
     ///
     /// Destroys a write.
@@ -97,42 +97,42 @@ class write {
     /// this method if the return of type() does not indicate
     /// that this object currently contains the applicable type.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const insert_one&) get_insert_one() const;
+    MONGOCXX_ABI_EXPORT_CDECL(insert_one const&) get_insert_one() const;
 
     ///
     /// Accesses the write as an model::update_one. It is illegal to call
     /// this method if the return of type() does not indicate
     /// that this object currently contains the applicable type.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const update_one&) get_update_one() const;
+    MONGOCXX_ABI_EXPORT_CDECL(update_one const&) get_update_one() const;
 
     ///
     /// Accesses the write as an model::update_many. It is illegal to call
     /// this method if the return of type() does not indicate
     /// that this object currently contains the applicable type.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const update_many&) get_update_many() const;
+    MONGOCXX_ABI_EXPORT_CDECL(update_many const&) get_update_many() const;
 
     ///
     /// Accesses the write as a model::delete_one. It is illegal to call
     /// this method if the return of type() does not indicate
     /// that this object currently contains the applicable type.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const delete_one&) get_delete_one() const;
+    MONGOCXX_ABI_EXPORT_CDECL(delete_one const&) get_delete_one() const;
 
     ///
     /// Accesses the write as a model::delete_many. It is illegal to call
     /// this method if the return of type() does not indicate
     /// that this object currently contains the applicable type.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const delete_many&) get_delete_many() const;
+    MONGOCXX_ABI_EXPORT_CDECL(delete_many const&) get_delete_many() const;
 
     ///
     /// Accesses the write as a model::replace_one. It is illegal to call
     /// this method if the return of type() does not indicate
     /// that this object currently contains the applicable type.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const replace_one&) get_replace_one() const;
+    MONGOCXX_ABI_EXPORT_CDECL(replace_one const&) get_replace_one() const;
 
    private:
     void destroy_member() noexcept;

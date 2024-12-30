@@ -31,7 +31,7 @@ void example() {
         auto name = coll.name();  // DO NOT DO THIS. Throws.
 
         EXPECT(false && "should not reach this point");
-    } catch (const mongocxx::exception& ex) {
+    } catch (mongocxx::exception const& ex) {
         EXPECT(ex.code() == mongocxx::error_code::k_invalid_collection_object);
     }
 }

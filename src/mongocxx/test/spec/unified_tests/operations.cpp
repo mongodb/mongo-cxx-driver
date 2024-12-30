@@ -40,13 +40,13 @@ using builder::basic::make_document;
 
 namespace {
 
-int64_t as_int64(const document::element& el) {
+int64_t as_int64(document::element const& el) {
     if (el.type() == type::k_int32)
         return static_cast<std::int64_t>(el.get_int32().value);
     return el.get_int64().value;
 }
 
-int32_t as_int32(const document::element& el) {
+int32_t as_int32(document::element const& el) {
     if (el.type() == type::k_int64)
         return static_cast<std::int32_t>(el.get_int64().value);
     return el.get_int32().value;
@@ -55,65 +55,65 @@ int32_t as_int32(const document::element& el) {
 options::find make_find_options(document::view arguments) {
     options::find options;
 
-    if (const auto batch_size = arguments["batchSize"]) {
+    if (auto const batch_size = arguments["batchSize"]) {
         options.batch_size(as_int32(batch_size));
     }
 
-    if (const auto collation = arguments["collation"]) {
+    if (auto const collation = arguments["collation"]) {
         options.collation(collation.get_document().value);
     }
 
-    if (const auto limit = arguments["limit"]) {
+    if (auto const limit = arguments["limit"]) {
         options.limit(as_int64(limit));
     }
 
-    if (const auto skip = arguments["skip"]) {
+    if (auto const skip = arguments["skip"]) {
         options.skip(as_int64(skip));
     }
 
-    if (const auto sort = arguments["sort"]) {
+    if (auto const sort = arguments["sort"]) {
         options.sort(sort.get_document().value);
     }
 
-    if (const auto adu = arguments["allowDiskUse"]) {
+    if (auto const adu = arguments["allowDiskUse"]) {
         options.allow_disk_use(adu.get_bool().value);
     }
 
-    if (const auto let = arguments["let"]) {
+    if (auto const let = arguments["let"]) {
         options.let(let.get_document().value);
     }
 
-    if (const auto comment = arguments["comment"]) {
+    if (auto const comment = arguments["comment"]) {
         options.comment_option(comment.get_value());
     }
 
-    if (const auto modifiers = arguments["modifiers"]) {
-        if (const auto comment = modifiers["$comment"]) {
+    if (auto const modifiers = arguments["modifiers"]) {
+        if (auto const comment = modifiers["$comment"]) {
             options.comment(comment.get_string().value);
         }
 
-        if (const auto hint = modifiers["$hint"]) {
+        if (auto const hint = modifiers["$hint"]) {
             options.hint(mongocxx::hint(hint.get_document().value));
         }
 
-        if (const auto max = modifiers["$max"]) {
+        if (auto const max = modifiers["$max"]) {
             options.max(max.get_document().value);
         }
 
-        if (const auto max_time_ms = modifiers["$maxTimeMS"]) {
+        if (auto const max_time_ms = modifiers["$maxTimeMS"]) {
             std::chrono::milliseconds my_millis(max_time_ms.get_int32().value);
             options.max_time(my_millis);
         }
 
-        if (const auto min = modifiers["$min"]) {
+        if (auto const min = modifiers["$min"]) {
             options.min(min.get_document().value);
         }
 
-        if (const auto return_key = modifiers["$returnKey"]) {
+        if (auto const return_key = modifiers["$returnKey"]) {
             options.return_key(return_key.get_bool().value);
         }
 
-        if (const auto show_disk_loc = modifiers["$showDiskLoc"]) {
+        if (auto const show_disk_loc = modifiers["$showDiskLoc"]) {
             options.show_record_id(show_disk_loc.get_bool().value);
         }
     }
@@ -121,7 +121,7 @@ options::find make_find_options(document::view arguments) {
     return options;
 }
 
-document::value bulk_write_result_to_document(const mongocxx::result::bulk_write& result) {
+document::value bulk_write_result_to_document(mongocxx::result::bulk_write const& result) {
     builder::basic::document upserted_ids_builder;
     for (auto&& index_and_id : result.upserted_ids()) {
         upserted_ids_builder.append(kvp(std::to_string(index_and_id.first), index_and_id.second.get_int32().value));
@@ -141,7 +141,7 @@ document::value find(collection& coll, client_session* session, document::view o
     document::view arguments = operation["arguments"].get_document().value;
     document::value empty_filter = builder::basic::make_document();
     document::view filter;
-    if (const auto f = arguments["filter"]) {
+    if (auto const f = arguments["filter"]) {
         filter = f.get_document().value;
     } else {
         filter = empty_filter.view();
@@ -168,12 +168,12 @@ document::value find(collection& coll, client_session* session, document::view o
 }
 
 document::value
-list_collections(entity::map& map, client_session* session, const std::string& object, document::view op) {
-    const auto arguments = op["arguments"];
-    const auto empty_doc = make_document();
+list_collections(entity::map& map, client_session* session, std::string const& object, document::view op) {
+    auto const arguments = op["arguments"];
+    auto const empty_doc = make_document();
 
     document::view filter;
-    if (const auto f = arguments["filter"]) {
+    if (auto const f = arguments["filter"]) {
         filter = f.get_document().value;
     } else {
         filter = empty_doc;
@@ -192,12 +192,12 @@ list_collections(entity::map& map, client_session* session, const std::string& o
 }
 
 document::value
-list_collection_names(entity::map& map, client_session* session, const std::string& object, document::view op) {
-    const auto arguments = op["arguments"];
-    const auto empty_doc = make_document();
+list_collection_names(entity::map& map, client_session* session, std::string const& object, document::view op) {
+    auto const arguments = op["arguments"];
+    auto const empty_doc = make_document();
 
     document::view filter;
-    if (const auto f = arguments["filter"]) {
+    if (auto const f = arguments["filter"]) {
         filter = f.get_document().value;
     } else {
         filter = empty_doc;
@@ -216,10 +216,10 @@ list_collection_names(entity::map& map, client_session* session, const std::stri
 }
 
 document::value
-list_databases(entity::map& map, client_session* session, const std::string& object, document::view op) {
-    const auto arguments = op["arguments"];
-    const auto empty_doc = make_document();
-    const auto arguments_view = arguments ? arguments.get_document().value : empty_doc.view();
+list_databases(entity::map& map, client_session* session, std::string const& object, document::view op) {
+    auto const arguments = op["arguments"];
+    auto const empty_doc = make_document();
+    auto const arguments_view = arguments ? arguments.get_document().value : empty_doc.view();
 
     auto cursor = session ? map.get_client(object).list_databases(*session, arguments_view)
                           : map.get_client(object).list_databases(arguments_view);
@@ -234,12 +234,12 @@ list_databases(entity::map& map, client_session* session, const std::string& obj
 }
 
 document::value
-list_database_names(entity::map& map, client_session* session, const std::string& object, document::view op) {
-    const auto arguments = op["arguments"];
-    const auto empty_doc = make_document();
+list_database_names(entity::map& map, client_session* session, std::string const& object, document::view op) {
+    auto const arguments = op["arguments"];
+    auto const empty_doc = make_document();
 
     document::view filter;
-    if (const auto f = arguments["filter"]) {
+    if (auto const f = arguments["filter"]) {
         filter = f.get_document().value;
     } else {
         filter = empty_doc;
@@ -257,7 +257,7 @@ list_database_names(entity::map& map, client_session* session, const std::string
     return result.extract();
 }
 
-document::value list_indexes(entity::map& map, client_session* session, const std::string& object) {
+document::value list_indexes(entity::map& map, client_session* session, std::string const& object) {
     auto cursor =
         session ? map.get_collection(object).list_indexes(*session) : map.get_collection(object).list_indexes();
 
@@ -325,7 +325,7 @@ T _build_update_model(document::view arguments) {
 }
 
 template <typename Model>
-void set_hint(Model& model, const mongocxx::document::element& hint) {
+void set_hint(Model& model, mongocxx::document::element const& hint) {
     if (hint.type() == bsoncxx::type::k_string) {
         model.hint(mongocxx::hint(hint.get_string().value));
     } else {
@@ -369,7 +369,7 @@ document::value run_bulk_write(collection& coll, client_session* session, docume
                 update_one.collation(request_arguments["collation"].get_document().value);
             }
 
-            if (const auto hint = request_arguments["hint"]) {
+            if (auto const hint = request_arguments["hint"]) {
                 set_hint(update_one, hint);
             }
 
@@ -391,7 +391,7 @@ document::value run_bulk_write(collection& coll, client_session* session, docume
                 update_many.collation(request_arguments["collation"].get_document().value);
             }
 
-            if (const auto hint = request_arguments["hint"]) {
+            if (auto const hint = request_arguments["hint"]) {
                 set_hint(update_many, hint);
             }
 
@@ -415,7 +415,7 @@ document::value run_bulk_write(collection& coll, client_session* session, docume
                 replace_one.collation(request_arguments["collation"].get_document().value);
             }
 
-            if (const auto hint = request_arguments["hint"]) {
+            if (auto const hint = request_arguments["hint"]) {
                 set_hint(replace_one, hint);
             }
 
@@ -437,7 +437,7 @@ document::value run_bulk_write(collection& coll, client_session* session, docume
                 delete_one.collation(request_arguments["collation"].get_document().value);
             }
 
-            if (const auto hint = request_arguments["hint"]) {
+            if (auto const hint = request_arguments["hint"]) {
                 set_hint(delete_one, hint);
             }
 
@@ -451,7 +451,7 @@ document::value run_bulk_write(collection& coll, client_session* session, docume
                 delete_many.collation(request_arguments["collation"].get_document().value);
             }
 
-            if (const auto hint = request_arguments["hint"]) {
+            if (auto const hint = request_arguments["hint"]) {
                 set_hint(delete_many, hint);
             }
 
@@ -508,11 +508,11 @@ document::value insert_many(collection& coll, client_session* session, document:
     std::vector<document::view> documents_to_insert{};
     options::insert insert_options;
 
-    if (const auto ordered = arguments["ordered"]) {
+    if (auto const ordered = arguments["ordered"]) {
         insert_options.ordered(ordered.get_bool().value);
     }
 
-    if (const auto comment = arguments["comment"]) {
+    if (auto const comment = arguments["comment"]) {
         insert_options.comment(comment.get_value());
     }
 
@@ -555,26 +555,26 @@ document::value replace_one(collection& coll, client_session* session, document:
     document::view replacement = arguments["replacement"].get_document().value;
     options::replace options{};
 
-    if (const auto collation = arguments["collation"]) {
+    if (auto const collation = arguments["collation"]) {
         options.collation(collation.get_document().value);
     }
 
-    if (const auto hint = arguments["hint"]) {
+    if (auto const hint = arguments["hint"]) {
         if (hint.type() == bsoncxx::type::k_string)
             options.hint(mongocxx::hint(hint.get_string().value));
         else
             options.hint(mongocxx::hint(hint.get_document().value));
     }
 
-    if (const auto let = arguments["let"]) {
+    if (auto const let = arguments["let"]) {
         options.let(let.get_document().value);
     }
 
-    if (const auto comment = arguments["comment"]) {
+    if (auto const comment = arguments["comment"]) {
         options.comment(comment.get_value());
     }
 
-    if (const auto upsert = arguments["upsert"]) {
+    if (auto const upsert = arguments["upsert"]) {
         options.upsert(upsert.get_bool().value);
     }
 
@@ -627,23 +627,23 @@ document::value aggregate(Entity& entity, client_session* session, document::vie
     pipeline pipeline = build_pipeline(arguments["pipeline"].get_array().value);
     options::aggregate options{};
 
-    if (const auto batch_size = arguments["batchSize"]) {
+    if (auto const batch_size = arguments["batchSize"]) {
         options.batch_size(batch_size.get_int32().value);
     }
 
-    if (const auto collation = arguments["collation"]) {
+    if (auto const collation = arguments["collation"]) {
         options.collation(collation.get_document().value);
     }
 
-    if (const auto let = arguments["let"]) {
+    if (auto const let = arguments["let"]) {
         options.let(let.get_document().value);
     }
 
-    if (const auto comment = arguments["comment"]) {
+    if (auto const comment = arguments["comment"]) {
         options.comment(comment.get_value());
     }
 
-    if (const auto allow_disk_use = arguments["allowDiskUse"]) {
+    if (auto const allow_disk_use = arguments["allowDiskUse"]) {
         options.allow_disk_use(allow_disk_use.get_bool());
     }
 
@@ -671,11 +671,11 @@ document::value insert_one(collection& coll, client_session* session, document::
 
     options::insert opts{};
 
-    if (const auto bdv = arguments["bypassDocumentValidation"]) {
+    if (auto const bdv = arguments["bypassDocumentValidation"]) {
         opts.bypass_document_validation(bdv.get_bool().value);
     }
 
-    if (const auto comment = arguments["comment"]) {
+    if (auto const comment = arguments["comment"]) {
         opts.comment(comment.get_value());
     }
 
@@ -701,34 +701,34 @@ document::value insert_one(collection& coll, client_session* session, document::
 }
 
 document::value
-create_change_stream(entity::map& map, client_session* session, const std::string& object, document::view operation) {
+create_change_stream(entity::map& map, client_session* session, std::string const& object, document::view operation) {
     auto args = operation["arguments"];
     auto pipeline = build_pipeline(args["pipeline"].get_array().value);
 
     options::change_stream options{};
 
-    if (const auto batch_size = args["batchSize"]) {
+    if (auto const batch_size = args["batchSize"]) {
         options.batch_size(batch_size.get_int32().value);
     }
 
-    if (const auto comment = args["comment"]) {
+    if (auto const comment = args["comment"]) {
         options.comment(comment.get_value());
     }
 
-    if (const auto full_document = args["fullDocument"]) {
+    if (auto const full_document = args["fullDocument"]) {
         options.full_document(full_document.get_string().value);
     }
 
-    if (const auto full_document_before_change = args["fullDocumentBeforeChange"]) {
+    if (auto const full_document_before_change = args["fullDocumentBeforeChange"]) {
         options.full_document_before_change(full_document_before_change.get_string().value);
     }
 
-    const auto save_result_as_entity = operation["saveResultAsEntity"];
-    const auto key =
+    auto const save_result_as_entity = operation["saveResultAsEntity"];
+    auto const key =
         save_result_as_entity ? string::to_string(save_result_as_entity.get_string().value) : std::string();
     CAPTURE(object, to_json(operation), key);
     auto stream = [&]() -> mongocxx::change_stream {
-        const auto& type = map.type(object);
+        auto const& type = map.type(object);
         if (type == typeid(mongocxx::database)) {
             if (session)
                 return map.get_database(object).watch(*session, pipeline, options);
@@ -757,8 +757,8 @@ create_change_stream(entity::map& map, client_session* session, const std::strin
 document::value iterate_until_document_or_error(
     change_stream& stream,
     std::unordered_map<mongocxx::change_stream*, mongocxx::change_stream::iterator>& stream_iters) {
-    const auto stream_iter = stream_iters.find(&stream);
-    const auto is_first = stream_iter == stream_iters.end();
+    auto const stream_iter = stream_iters.find(&stream);
+    auto const is_first = stream_iter == stream_iters.end();
 
     auto& iter = is_first ? stream_iters.emplace(&stream, stream.begin()).first->second : stream_iter->second;
 
@@ -780,8 +780,8 @@ document::value iterate_until_document_or_error(
 document::value iterate_until_document_or_error(
     cursor& cursor,
     std::unordered_map<mongocxx::cursor*, mongocxx::cursor::iterator>& cursor_iters) {
-    const auto cursor_iter = cursor_iters.find(&cursor);
-    const auto is_first = cursor_iter == cursor_iters.end();
+    auto const cursor_iter = cursor_iters.find(&cursor);
+    auto const is_first = cursor_iter == cursor_iters.end();
 
     auto& iter = is_first ? cursor_iters.emplace(&cursor, cursor.begin()).first->second : cursor_iter->second;
 
@@ -816,8 +816,8 @@ document::value fail_point(entity::map& map, spec::apm_checker& apm, document::v
 }
 
 document::value rename(mongocxx::collection& coll, document::view op) {
-    const auto args = op["arguments"];
-    const auto to = args["to"];
+    auto const args = op["arguments"];
+    auto const to = args["to"];
 
     coll.rename(to.get_string().value);
 
@@ -829,30 +829,30 @@ document::value find_one_and_delete(collection& coll, client_session* session, d
     document::view filter = arguments["filter"].get_document().value;
     options::find_one_and_delete options{};
 
-    if (const auto collation = arguments["collation"]) {
+    if (auto const collation = arguments["collation"]) {
         options.collation(collation.get_document().value);
     }
 
-    if (const auto hint = arguments["hint"]) {
+    if (auto const hint = arguments["hint"]) {
         if (hint.type() == bsoncxx::type::k_string)
             options.hint(mongocxx::hint(hint.get_string().value));
         else
             options.hint(mongocxx::hint(hint.get_document().value));
     }
 
-    if (const auto let = arguments["let"]) {
+    if (auto const let = arguments["let"]) {
         options.let(let.get_document().value);
     }
 
-    if (const auto comment = arguments["comment"]) {
+    if (auto const comment = arguments["comment"]) {
         options.comment(comment.get_value());
     }
 
-    if (const auto projection = arguments["projection"]) {
+    if (auto const projection = arguments["projection"]) {
         options.projection(projection.get_document().value);
     }
 
-    if (const auto sort = arguments["sort"]) {
+    if (auto const sort = arguments["sort"]) {
         options.sort(sort.get_document().value);
     }
 
@@ -880,31 +880,31 @@ document::value find_one_and_replace(collection& coll, client_session* session, 
     document::view filter = arguments["filter"].get_document().value;
     options::find_one_and_replace options{};
 
-    if (const auto collation = arguments["collation"]) {
+    if (auto const collation = arguments["collation"]) {
         options.collation(collation.get_document().value);
     }
 
-    if (const auto hint = arguments["hint"]) {
+    if (auto const hint = arguments["hint"]) {
         if (hint.type() == bsoncxx::type::k_string)
             options.hint(mongocxx::hint(hint.get_string().value));
         else
             options.hint(mongocxx::hint(hint.get_document().value));
     }
 
-    if (const auto let = arguments["let"]) {
+    if (auto const let = arguments["let"]) {
         options.let(let.get_document().value);
     }
 
-    if (const auto comment = arguments["comment"]) {
+    if (auto const comment = arguments["comment"]) {
         options.comment(comment.get_value());
     }
 
-    if (const auto projection = arguments["projection"]) {
+    if (auto const projection = arguments["projection"]) {
         options.projection(projection.get_document().value);
     }
 
-    if (const auto rd = arguments["returnDocument"]) {
-        const auto return_document = string::to_string(rd.get_string().value);
+    if (auto const rd = arguments["returnDocument"]) {
+        auto const return_document = string::to_string(rd.get_string().value);
 
         if (return_document == "After") {
             options.return_document(options::return_document::k_after);
@@ -915,11 +915,11 @@ document::value find_one_and_replace(collection& coll, client_session* session, 
         }
     }
 
-    if (const auto sort = arguments["sort"]) {
+    if (auto const sort = arguments["sort"]) {
         options.sort(sort.get_document().value);
     }
 
-    if (const auto upsert = arguments["upsert"]) {
+    if (auto const upsert = arguments["upsert"]) {
         options.upsert(upsert.get_bool().value);
     }
 
@@ -948,34 +948,34 @@ document::value find_one_and_update(collection& coll, client_session* session, d
     document::view filter = arguments["filter"].get_document().value;
     options::find_one_and_update options{};
 
-    if (const auto collation = arguments["collation"]) {
+    if (auto const collation = arguments["collation"]) {
         options.collation(collation.get_document().value);
     }
 
-    if (const auto hint = arguments["hint"]) {
+    if (auto const hint = arguments["hint"]) {
         if (hint.type() == bsoncxx::type::k_string)
             options.hint(mongocxx::hint(hint.get_string().value));
         else
             options.hint(mongocxx::hint(hint.get_document().value));
     }
 
-    if (const auto let = arguments["let"]) {
+    if (auto const let = arguments["let"]) {
         options.let(let.get_document().value);
     }
 
-    if (const auto comment = arguments["comment"]) {
+    if (auto const comment = arguments["comment"]) {
         options.comment(comment.get_value());
     }
 
-    if (const auto projection = arguments["projection"]) {
+    if (auto const projection = arguments["projection"]) {
         options.projection(projection.get_document().value);
     }
 
-    if (const auto array_filters = arguments["arrayFilters"]) {
+    if (auto const array_filters = arguments["arrayFilters"]) {
         options.array_filters(array_filters.get_array().value);
     }
 
-    if (const auto rd = arguments["returnDocument"]) {
+    if (auto const rd = arguments["returnDocument"]) {
         auto return_document = string::to_string(rd.get_string().value);
 
         if (return_document == "After") {
@@ -987,11 +987,11 @@ document::value find_one_and_update(collection& coll, client_session* session, d
         }
     }
 
-    if (const auto sort = arguments["sort"]) {
+    if (auto const sort = arguments["sort"]) {
         options.sort(sort.get_document().value);
     }
 
-    if (const auto upsert = arguments["upsert"]) {
+    if (auto const upsert = arguments["upsert"]) {
         options.upsert(upsert.get_bool().value);
     }
 
@@ -1111,7 +1111,7 @@ bool collection_exists(document::view op) {
     return client.database(db_name).has_collection(coll_name);
 }
 
-document::value create_index(collection& coll, client_session* session, const document::view& operation) {
+document::value create_index(collection& coll, client_session* session, document::view const& operation) {
     auto arguments = operation["arguments"];
 
     auto name = arguments["name"].get_string().value;
@@ -1154,11 +1154,11 @@ document::value download(gridfs::bucket& bucket, document::view op) {
 }
 
 document::value upload(entity::map& map, document::view op) {
-    const auto save_result_as_entity = op["saveResultAsEntity"];
-    const auto key =
+    auto const save_result_as_entity = op["saveResultAsEntity"];
+    auto const key =
         save_result_as_entity ? string::to_string(save_result_as_entity.get_string().value) : std::string();
-    const auto arguments = op["arguments"].get_document().value;
-    const auto object = string::to_string(op["object"].get_string().value);
+    auto const arguments = op["arguments"].get_document().value;
+    auto const object = string::to_string(op["object"].get_string().value);
     auto& bucket = map.get_bucket(object);
 
     options::gridfs::upload upload_options;
@@ -1193,18 +1193,18 @@ document::value delete_one(collection& coll, client_session* session, document::
     document::view filter = arguments["filter"].get_document().value;
     options::delete_options options{};
 
-    if (const auto collation = arguments["collation"]) {
+    if (auto const collation = arguments["collation"]) {
         options.collation(collation.get_document().value);
     }
 
-    if (const auto hint = arguments["hint"]) {
+    if (auto const hint = arguments["hint"]) {
         if (hint.type() == bsoncxx::type::k_string)
             options.hint(mongocxx::hint(hint.get_string().value));
         else
             options.hint(mongocxx::hint(hint.get_document().value));
     }
 
-    if (const auto let = arguments["let"]) {
+    if (auto const let = arguments["let"]) {
         options.let(let.get_document().value);
     }
 
@@ -1237,11 +1237,11 @@ document::value delete_many(collection& coll, client_session* session, document:
     document::view filter = arguments["filter"].get_document().value;
     options::delete_options options{};
 
-    if (const auto collation = arguments["collation"]) {
+    if (auto const collation = arguments["collation"]) {
         options.collation(collation.get_document().value);
     }
 
-    if (const auto hint = arguments["hint"]) {
+    if (auto const hint = arguments["hint"]) {
         if (hint.type() == bsoncxx::type::k_string) {
             options.hint(mongocxx::hint(hint.get_string().value));
         } else {
@@ -1249,11 +1249,11 @@ document::value delete_many(collection& coll, client_session* session, document:
         }
     }
 
-    if (const auto let = arguments["let"]) {
+    if (auto const let = arguments["let"]) {
         options.let(let.get_document().value);
     }
 
-    if (const auto comment = arguments["comment"]) {
+    if (auto const comment = arguments["comment"]) {
         options.comment(comment.get_value());
     }
 
@@ -1287,7 +1287,7 @@ document::value with_transaction(client_session& session, document::view op, cli
     return make_document();
 }
 
-document::value end_session(entity::map& map, const std::string& name) {
+document::value end_session(entity::map& map, std::string const& name) {
     auto& session = map.get_client_session(name);
     auto id = types::bson_value::value(session.id());
 
@@ -1322,38 +1322,38 @@ document::value update_one(collection& coll, client_session* session, document::
     document::view filter = arguments["filter"].get_document().value;
     options::update options{};
 
-    if (const auto collation = arguments["collation"]) {
+    if (auto const collation = arguments["collation"]) {
         options.collation(collation.get_document().value);
     }
 
-    if (const auto hint = arguments["hint"]) {
+    if (auto const hint = arguments["hint"]) {
         if (arguments["hint"].type() == bsoncxx::type::k_string)
             options.hint(mongocxx::hint(hint.get_string().value));
         else
             options.hint(mongocxx::hint(hint.get_document().value));
     }
 
-    if (const auto let = arguments["let"]) {
+    if (auto const let = arguments["let"]) {
         options.let(let.get_document().value);
     }
 
-    if (const auto comment = arguments["comment"]) {
+    if (auto const comment = arguments["comment"]) {
         options.comment(comment.get_value());
     }
 
-    if (const auto upsert = arguments["upsert"]) {
+    if (auto const upsert = arguments["upsert"]) {
         options.upsert(upsert.get_bool().value);
     }
 
     bsoncxx::stdx::optional<result::update> update_one_result;
 
     {
-        const auto update = arguments["update"];
-        const auto type = update.type();
+        auto const update = arguments["update"];
+        auto const type = update.type();
 
         switch (type) {
             case bsoncxx::type::k_document: {
-                const auto doc = update.get_document().value;
+                auto const doc = update.get_document().value;
                 update_one_result =
                     session ? coll.update_one(*session, filter, doc, options) : coll.update_one(filter, doc, options);
                 break;
@@ -1414,38 +1414,38 @@ document::value update_many(collection& coll, document::view operation) {
     document::view filter = arguments["filter"].get_document().value;
     options::update options{};
 
-    if (const auto collation = arguments["collation"]) {
+    if (auto const collation = arguments["collation"]) {
         options.collation(collation.get_document().value);
     }
 
-    if (const auto hint = arguments["hint"]) {
+    if (auto const hint = arguments["hint"]) {
         if (hint.type() == bsoncxx::type::k_string)
             options.hint(mongocxx::hint(hint.get_string().value));
         else
             options.hint(mongocxx::hint(hint.get_document().value));
     }
 
-    if (const auto let = arguments["let"]) {
+    if (auto const let = arguments["let"]) {
         options.let(let.get_document().value);
     }
 
-    if (const auto comment = arguments["comment"]) {
+    if (auto const comment = arguments["comment"]) {
         options.comment(comment.get_value());
     }
 
-    if (const auto upsert = arguments["upsert"]) {
+    if (auto const upsert = arguments["upsert"]) {
         options.upsert(upsert.get_bool().value);
     }
 
     bsoncxx::stdx::optional<result::update> update_many_result;
 
     {
-        const auto update = arguments["update"];
-        const auto type = update.type();
+        auto const update = arguments["update"];
+        auto const type = update.type();
 
         switch (type) {
             case bsoncxx::type::k_document: {
-                const auto doc = update.get_document().value;
+                auto const doc = update.get_document().value;
                 update_many_result = coll.update_many(filter, doc, options);
                 break;
             }
@@ -1510,19 +1510,19 @@ document::value count_documents(collection& coll, client_session* session, docum
     }
     options::count options{};
 
-    if (const auto collation = arguments["collation"]) {
+    if (auto const collation = arguments["collation"]) {
         options.collation(collation.get_document().value);
     }
 
-    if (const auto limit = arguments["limit"]) {
+    if (auto const limit = arguments["limit"]) {
         options.limit(as_int64(limit));
     }
 
-    if (const auto skip = arguments["skip"]) {
+    if (auto const skip = arguments["skip"]) {
         options.skip(as_int64(skip));
     }
 
-    if (const auto hint = arguments["hint"]) {
+    if (auto const hint = arguments["hint"]) {
         if (hint.type() == bsoncxx::type::k_string) {
             options.hint(mongocxx::hint(hint.get_string().value));
         } else {
@@ -1530,7 +1530,7 @@ document::value count_documents(collection& coll, client_session* session, docum
         }
     }
 
-    if (const auto comment = arguments["comment"]) {
+    if (auto const comment = arguments["comment"]) {
         options.comment(comment.get_value());
     }
 
@@ -1550,12 +1550,12 @@ document::value count_documents(collection& coll, client_session* session, docum
 document::value estimated_document_count(collection& coll, document::view operation) {
     options::estimated_document_count options{};
 
-    if (const auto arguments = operation["arguments"]) {
-        if (const auto max_time_ms = arguments["maxTimeMS"]) {
+    if (auto const arguments = operation["arguments"]) {
+        if (auto const max_time_ms = arguments["maxTimeMS"]) {
             options.max_time(std::chrono::milliseconds(max_time_ms.get_int32()));
         }
 
-        if (const auto comment = arguments["comment"]) {
+        if (auto const comment = arguments["comment"]) {
             options.comment(comment.get_value());
         }
     }
@@ -1574,7 +1574,7 @@ document::value distinct(collection& coll, client_session* session, document::vi
     document::value empty_filter = builder::basic::make_document();
     document::view filter;
 
-    if (const auto f = arguments["filter"]) {
+    if (auto const f = arguments["filter"]) {
         filter = f.get_document().value;
     } else {
         filter = empty_filter.view();
@@ -1582,11 +1582,11 @@ document::value distinct(collection& coll, client_session* session, document::vi
 
     options::distinct options{};
 
-    if (const auto collation = arguments["collation"]) {
+    if (auto const collation = arguments["collation"]) {
         options.collation(collation.get_document().value);
     }
 
-    if (const auto comment = arguments["comment"]) {
+    if (auto const comment = arguments["comment"]) {
         options.comment(comment.get_value());
     }
 
@@ -1611,7 +1611,7 @@ document::value distinct(collection& coll, client_session* session, document::vi
     return result.extract();
 }
 
-document::value rewrap_many_datakey(entity::map& map, const std::string& object, document::view operation) {
+document::value rewrap_many_datakey(entity::map& map, std::string const& object, document::view operation) {
     auto filter = operation["arguments"]["filter"].get_document();
 
     options::rewrap_many_datakey rewrap_opts;
@@ -1641,7 +1641,7 @@ document::value rewrap_many_datakey(entity::map& map, const std::string& object,
     }
 }
 
-document::value delete_key(entity::map& map, const std::string& object, document::view operation) {
+document::value delete_key(entity::map& map, std::string const& object, document::view operation) {
     auto arguments = operation["arguments"].get_document().value;
     auto key = arguments["id"].get_value();
 
@@ -1652,7 +1652,7 @@ document::value delete_key(entity::map& map, const std::string& object, document
     return doc;
 }
 
-document::value get_key(entity::map& map, const std::string& object, document::view operation) {
+document::value get_key(entity::map& map, std::string const& object, document::view operation) {
     auto arguments = operation["arguments"].get_document().value;
     auto key = arguments["id"].get_value();
 
@@ -1668,7 +1668,7 @@ document::value get_key(entity::map& map, const std::string& object, document::v
     }
 }
 
-document::value get_keys(entity::map& map, const std::string& object, document::view operation) {
+document::value get_keys(entity::map& map, std::string const& object, document::view operation) {
     (void)operation;
     client_encryption& client_encryption = map.get_client_encryption(object);
     auto cursor = client_encryption.get_keys();
@@ -1680,7 +1680,7 @@ document::value get_keys(entity::map& map, const std::string& object, document::
     }));
 }
 
-document::value create_data_key(entity::map& map, const std::string& object, document::view operation) {
+document::value create_data_key(entity::map& map, std::string const& object, document::view operation) {
     std::string provider;
     if (operation["arguments"]["kmsProvider"]) {
         provider = std::string(operation["arguments"]["kmsProvider"].get_string().value);
@@ -1694,7 +1694,7 @@ document::value create_data_key(entity::map& map, const std::string& object, doc
     if (operation["arguments"]["opts"]["keyAltNames"]) {
         std::vector<std::string> key_alt_names;
         auto arr = operation["arguments"]["opts"]["keyAltNames"].get_array().value;
-        for (const auto& it : arr) {
+        for (auto const& it : arr) {
             key_alt_names.push_back(std::string(it.get_string().value));
         }
         data_key_opts.key_alt_names(key_alt_names);
@@ -1711,7 +1711,7 @@ document::value create_data_key(entity::map& map, const std::string& object, doc
     return make_document(kvp("result", result));
 }
 
-document::value add_key_alt_name(entity::map& map, const std::string& object, document::view operation) {
+document::value add_key_alt_name(entity::map& map, std::string const& object, document::view operation) {
     auto arguments = operation["arguments"].get_document().value;
     auto id = arguments["id"].get_value();
     std::string key_alt_name = std::string(arguments["keyAltName"].get_string().value);
@@ -1728,7 +1728,7 @@ document::value add_key_alt_name(entity::map& map, const std::string& object, do
     }
 }
 
-document::value get_key_by_alt_name(entity::map& map, const std::string& object, document::view operation) {
+document::value get_key_by_alt_name(entity::map& map, std::string const& object, document::view operation) {
     auto arguments = operation["arguments"].get_document().value;
     std::string key_alt_name = std::string(arguments["keyAltName"].get_string().value);
 
@@ -1744,7 +1744,7 @@ document::value get_key_by_alt_name(entity::map& map, const std::string& object,
     }
 }
 
-document::value remove_key_alt_name(entity::map& map, const std::string& object, document::view operation) {
+document::value remove_key_alt_name(entity::map& map, std::string const& object, document::view operation) {
     auto arguments = operation["arguments"].get_document().value;
     auto id = arguments["id"].get_value();
     std::string key_alt_name = std::string(arguments["keyAltName"].get_string().value);
@@ -1762,17 +1762,17 @@ document::value remove_key_alt_name(entity::map& map, const std::string& object,
 }
 
 document::value
-create_find_cursor(entity::map& map, const std::string& object, client_session* session, document::view operation) {
-    const auto save_result_as_entity = operation["saveResultAsEntity"];
-    const auto key =
+create_find_cursor(entity::map& map, std::string const& object, client_session* session, document::view operation) {
+    auto const save_result_as_entity = operation["saveResultAsEntity"];
+    auto const key =
         save_result_as_entity ? string::to_string(save_result_as_entity.get_string().value) : std::string();
-    const auto arguments = operation["arguments"].get_document().value;
-    const auto empty_filter = builder::basic::make_document();
-    const auto filter = [&]() -> document::view {
-        const auto f = arguments["filter"];
+    auto const arguments = operation["arguments"].get_document().value;
+    auto const empty_filter = builder::basic::make_document();
+    auto const filter = [&]() -> document::view {
+        auto const f = arguments["filter"];
         return f ? f.get_document().value : empty_filter;
     }();
-    const auto options = make_find_options(arguments);
+    auto const options = make_find_options(arguments);
 
     auto coll = map.get_collection(object);
     auto cursor = session ? coll.find(*session, filter, options) : coll.find(filter, options);
@@ -1785,11 +1785,11 @@ create_find_cursor(entity::map& map, const std::string& object, client_session* 
 }
 
 document::value create_search_index(collection& coll, document::view operation) {
-    const auto arguments = operation["arguments"];
-    const auto raw_model = arguments["model"];
-    const auto name = raw_model["name"];
-    const auto definition = raw_model["definition"].get_document().value;
-    const auto type = raw_model["type"];
+    auto const arguments = operation["arguments"];
+    auto const raw_model = arguments["model"];
+    auto const name = raw_model["name"];
+    auto const definition = raw_model["definition"].get_document().value;
+    auto const type = raw_model["type"];
 
     auto model = name ? search_index_model(name.get_string().value, definition) : search_index_model(definition);
 
@@ -1841,7 +1841,7 @@ document::value list_search_indexes(collection& coll, document::view operation) 
     auto arguments = operation["arguments"];
     options::aggregate options;
     if (arguments["aggregationOptions"]) {
-        const auto aggregation_options = arguments["aggregationOptions"].get_document().view();
+        auto const aggregation_options = arguments["aggregationOptions"].get_document().view();
         for (auto&& element : aggregation_options) {
             if (element.key() == bsoncxx::stdx::string_view("batchSize")) {
                 options.batch_size(element.get_int32().value);
@@ -1882,7 +1882,7 @@ document::value update_search_index(collection& coll, document::view operation) 
 document::value operations::run(
     entity::map& entity_map,
     std::unordered_map<std::string, spec::apm_checker>& apm_map,
-    const array::element& op,
+    array::element const& op,
     operations::state& state) {
     auto name = string::to_string(op["name"].get_string().value);
     auto object = string::to_string(op["object"].get_string().value);
@@ -1899,7 +1899,7 @@ document::value operations::run(
     if (name == "replaceOne")
         return replace_one(entity_map.get_collection(object), get_session(op_view, entity_map), op_view);
     if (name == "aggregate") {
-        const auto& type = entity_map.type(object);
+        auto const& type = entity_map.type(object);
         if (type == typeid(mongocxx::database))
             return aggregate(entity_map.get_database(object), get_session(op_view, entity_map), op_view);
         if (type == typeid(mongocxx::collection))
@@ -1922,7 +1922,7 @@ document::value operations::run(
         return create_find_cursor(entity_map, object, get_session(op_view, entity_map), op_view);
     }
     if (name == "iterateUntilDocumentOrError") {
-        const auto& type = entity_map.type(object);
+        auto const& type = entity_map.type(object);
 
         if (type == typeid(mongocxx::change_stream)) {
             return iterate_until_document_or_error(entity_map.get_change_stream(object), state.stream_iters);
@@ -1936,7 +1936,7 @@ document::value operations::run(
         throw std::logic_error("unrecognized object");
     }
     if (name == "close") {
-        const auto& type = entity_map.type(object);
+        auto const& type = entity_map.type(object);
 
         if (type == typeid(mongocxx::change_stream) || type == typeid(mongocxx::cursor)) {
             entity_map.erase(object);
@@ -1953,15 +1953,15 @@ document::value operations::run(
     if (name == "targetedFailPoint") {
         REQUIRE(object == "testRunner");
 
-        const auto arguments = op_view["arguments"];
+        auto const arguments = op_view["arguments"];
 
-        const auto fail_point = arguments["failPoint"].get_document().value;
+        auto const fail_point = arguments["failPoint"].get_document().value;
         REQUIRE(!fail_point.empty());
 
         auto* const session_ptr = get_session(op_view, entity_map);
         REQUIRE(session_ptr);
         auto& session = *session_ptr;
-        const auto server_id = session.server_id();
+        auto const server_id = session.server_id();
 
         // Test runners MUST error if the session is not pinned to a mongos server at the time
         // this operation is executed.
@@ -2080,25 +2080,25 @@ document::value operations::run(
         return empty_doc;
     }
     if (name == "createCollection") {
-        const auto coll_name = string::to_string(op["arguments"]["collection"].get_string().value);
+        auto const coll_name = string::to_string(op["arguments"]["collection"].get_string().value);
         auto& db = entity_map.get_database(object);
         auto opts = builder::basic::document{};
-        const auto arguments = op["arguments"];
-        if (const auto timeseries = arguments["timeseries"]) {
+        auto const arguments = op["arguments"];
+        if (auto const timeseries = arguments["timeseries"]) {
             opts.append(builder::basic::kvp("timeseries", timeseries.get_document().view()));
         }
-        if (const auto eas = arguments["expireAfterSeconds"]) {
+        if (auto const eas = arguments["expireAfterSeconds"]) {
             opts.append(builder::basic::kvp("expireAfterSeconds", eas.get_int32().value));
         }
-        if (const auto clustered_index = arguments["clusteredIndex"]) {
+        if (auto const clustered_index = arguments["clusteredIndex"]) {
             opts.append(builder::basic::kvp("clusteredIndex", clustered_index.get_document().view()));
         }
-        if (const auto pre_and_post = arguments["changeStreamPreAndPostImages"]) {
+        if (auto const pre_and_post = arguments["changeStreamPreAndPostImages"]) {
             opts.append(builder::basic::kvp("changeStreamPreAndPostImages", pre_and_post.get_document().view()));
         }
         {
-            const auto view_on = arguments["viewOn"];
-            const auto pipeline = arguments["pipeline"];
+            auto const view_on = arguments["viewOn"];
+            auto const pipeline = arguments["pipeline"];
 
             // Both fields must be present as a pair.
             if (view_on && pipeline) {
@@ -2107,7 +2107,7 @@ document::value operations::run(
             }
         }
 
-        if (const auto session = get_session(op_view, entity_map)) {
+        if (auto const session = get_session(op_view, entity_map)) {
             db.create_collection(*session, coll_name, opts.view());
         } else {
             db.create_collection(coll_name, opts.view());
@@ -2116,20 +2116,20 @@ document::value operations::run(
         return empty_doc;
     }
     if (name == "modifyCollection") {
-        const auto arguments = op["arguments"];
-        const auto coll_name = string::to_string(arguments["collection"].get_string().value);
+        auto const arguments = op["arguments"];
+        auto const coll_name = string::to_string(arguments["collection"].get_string().value);
         auto& db = entity_map.get_database(object);
 
         builder::basic::document command;
 
         command.append(builder::basic::kvp("collMod", coll_name));
 
-        if (const auto pre_and_post = arguments["changeStreamPreAndPostImages"]) {
+        if (auto const pre_and_post = arguments["changeStreamPreAndPostImages"]) {
             command.append(builder::basic::kvp("changeStreamPreAndPostImages", pre_and_post.get_document().view()));
         }
 
         builder::basic::document result;
-        if (const auto session = get_session(op_view, entity_map)) {
+        if (auto const session = get_session(op_view, entity_map)) {
             result.append(builder::basic::kvp("result", db.run_command(*session, command.view())));
         } else {
             result.append(builder::basic::kvp("result", db.run_command(command.view())));
@@ -2171,7 +2171,7 @@ document::value operations::run(
         return with_transaction(session, op_view, cb);
     }
     if (name == "rename") {
-        const auto& type = entity_map.type(object);
+        auto const& type = entity_map.type(object);
         if (type != typeid(mongocxx::collection)) {
             FAIL("rename operation requested on object with type " << type.name());
         }

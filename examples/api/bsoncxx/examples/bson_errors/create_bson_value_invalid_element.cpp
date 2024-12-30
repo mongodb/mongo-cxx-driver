@@ -29,7 +29,7 @@ void example() {
         bsoncxx::types::bson_value::view v = e.get_value();  // Throws.
 
         EXPECT(false && "should not reach this point");
-    } catch (const bsoncxx::exception& ex) {
+    } catch (bsoncxx::exception const& ex) {
         EXPECT(ex.code() == bsoncxx::error_code::k_unset_element);
     }
 }

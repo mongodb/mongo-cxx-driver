@@ -39,9 +39,9 @@ value::value(array::view view)
     std::copy(view.data(), view.data() + view.length(), _data.get());
 }
 
-value::value(const value& rhs) : value(rhs.view()) {}
+value::value(value const& rhs) : value(rhs.view()) {}
 
-value& value::operator=(const value& rhs) {
+value& value::operator=(value const& rhs) {
     *this = value{rhs.view()};
     return *this;
 }

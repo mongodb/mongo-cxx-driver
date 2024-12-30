@@ -37,10 +37,10 @@ write_concern::write_concern(std::unique_ptr<impl>&& implementation) {
 write_concern::write_concern(write_concern&&) noexcept = default;
 write_concern& write_concern::operator=(write_concern&&) noexcept = default;
 
-write_concern::write_concern(const write_concern& other)
+write_concern::write_concern(write_concern const& other)
     : _impl(bsoncxx::make_unique<impl>(libmongoc::write_concern_copy(other._impl->write_concern_t))) {}
 
-write_concern& write_concern::operator=(const write_concern& other) {
+write_concern& write_concern::operator=(write_concern const& other) {
     _impl.reset(bsoncxx::make_unique<impl>(libmongoc::write_concern_copy(other._impl->write_concern_t)).release());
     return *this;
 }
@@ -89,7 +89,7 @@ void write_concern::tag(bsoncxx::v_noabi::stdx::string_view confirm_from) {
 }
 
 void write_concern::majority(std::chrono::milliseconds timeout) {
-    const auto count = timeout.count();
+    auto const count = timeout.count();
     if ((count < 0) || (count >= std::numeric_limits<std::int32_t>::max()))
         throw logic_error{error_code::k_invalid_parameter};
 
@@ -97,7 +97,7 @@ void write_concern::majority(std::chrono::milliseconds timeout) {
 }
 
 void write_concern::timeout(std::chrono::milliseconds timeout) {
-    const auto count = timeout.count();
+    auto const count = timeout.count();
     if ((count < 0) || (count >= std::numeric_limits<std::int32_t>::max()))
         throw logic_error{error_code::k_invalid_parameter};
 
@@ -132,7 +132,7 @@ write_concern::level write_concern::acknowledge_level() const {
 }
 
 bsoncxx::v_noabi::stdx::optional<std::string> write_concern::tag() const {
-    const char* tag_str = libmongoc::write_concern_get_wtag(_impl->write_concern_t);
+    char const* tag_str = libmongoc::write_concern_get_wtag(_impl->write_concern_t);
     return tag_str ? bsoncxx::v_noabi::stdx::make_optional<std::string>(tag_str) : bsoncxx::v_noabi::stdx::nullopt;
 }
 
@@ -195,14 +195,14 @@ bsoncxx::v_noabi::document::value write_concern::to_document() const {
     return doc.extract();
 }
 
-bool operator==(const write_concern& lhs, const write_concern& rhs) {
+bool operator==(write_concern const& lhs, write_concern const& rhs) {
     return std::forward_as_tuple(
                lhs.journal(), lhs.nodes(), lhs.acknowledge_level(), lhs.tag(), lhs.majority(), lhs.timeout()) ==
            std::forward_as_tuple(
                rhs.journal(), rhs.nodes(), rhs.acknowledge_level(), rhs.tag(), rhs.majority(), rhs.timeout());
 }
 
-bool operator!=(const write_concern& lhs, const write_concern& rhs) {
+bool operator!=(write_concern const& lhs, write_concern const& rhs) {
     return !(lhs == rhs);
 }
 

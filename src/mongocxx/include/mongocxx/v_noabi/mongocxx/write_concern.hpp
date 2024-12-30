@@ -82,12 +82,12 @@ class write_concern {
     ///
     /// Copy constructs a write_concern.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL() write_concern(const write_concern&);
+    MONGOCXX_ABI_EXPORT_CDECL() write_concern(write_concern const&);
 
     ///
     /// Copy assigns a write_concern.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(write_concern&) operator=(const write_concern&);
+    MONGOCXX_ABI_EXPORT_CDECL(write_concern&) operator=(write_concern const&);
 
     ///
     /// Move constructs a write_concern.
@@ -264,8 +264,8 @@ class write_concern {
     /// Compares two write_concern objects for (in)-equality.
     ///
     /// @{
-    friend MONGOCXX_ABI_EXPORT_CDECL(bool) operator==(const write_concern&, const write_concern&);
-    friend MONGOCXX_ABI_EXPORT_CDECL(bool) operator!=(const write_concern&, const write_concern&);
+    friend MONGOCXX_ABI_EXPORT_CDECL(bool) operator==(write_concern const&, write_concern const&);
+    friend MONGOCXX_ABI_EXPORT_CDECL(bool) operator!=(write_concern const&, write_concern const&);
     /// @}
     ///
 

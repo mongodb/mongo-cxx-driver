@@ -55,7 +55,7 @@ class insert {
     ///
     /// @return The optional value of the bypass_document_validation option.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<bool>&)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bool> const&)
     bypass_document_validation() const;
 
     ///
@@ -81,7 +81,7 @@ class insert {
     /// @see
     /// - https://www.mongodb.com/docs/manual/core/write-concern/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern>&)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern> const&)
     write_concern() const;
 
     ///
@@ -112,7 +112,7 @@ class insert {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/insert/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<bool>&) ordered() const;
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bool> const&) ordered() const;
 
     ///
     /// Sets the comment for this operation.
@@ -138,8 +138,8 @@ class insert {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/insert/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<
-                              bsoncxx::v_noabi::types::bson_value::view_or_value>&)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<
+                              bsoncxx::v_noabi::types::bson_value::view_or_value> const&)
     comment() const;
 
    private:

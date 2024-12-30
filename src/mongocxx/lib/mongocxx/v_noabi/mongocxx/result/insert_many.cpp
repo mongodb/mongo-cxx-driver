@@ -27,11 +27,11 @@ insert_many::insert_many(result::bulk_write result, bsoncxx::v_noabi::array::val
     _buildInsertedIds();
 }
 
-insert_many::insert_many(const insert_many& src) : _result(src._result), _inserted_ids_owned(src._inserted_ids_owned) {
+insert_many::insert_many(insert_many const& src) : _result(src._result), _inserted_ids_owned(src._inserted_ids_owned) {
     _buildInsertedIds();
 }
 
-insert_many& insert_many::operator=(const insert_many& src) {
+insert_many& insert_many::operator=(insert_many const& src) {
     insert_many tmp(src);
     *this = std::move(tmp);
     return *this;
@@ -45,7 +45,7 @@ void insert_many::_buildInsertedIds() {
     }
 }
 
-const result::bulk_write& insert_many::result() const {
+result::bulk_write const& insert_many::result() const {
     return _result;
 }
 
@@ -57,7 +57,7 @@ insert_many::id_map insert_many::inserted_ids() const {
     return _inserted_ids;
 }
 
-bool operator==(const insert_many& lhs, const insert_many& rhs) {
+bool operator==(insert_many const& lhs, insert_many const& rhs) {
     if (lhs.result() != rhs.result()) {
         return false;
     } else if (lhs.inserted_ids().size() != rhs.inserted_ids().size()) {
@@ -72,7 +72,7 @@ bool operator==(const insert_many& lhs, const insert_many& rhs) {
     }
     return true;
 }
-bool operator!=(const insert_many& lhs, const insert_many& rhs) {
+bool operator!=(insert_many const& lhs, insert_many const& rhs) {
     return !(lhs == rhs);
 }
 

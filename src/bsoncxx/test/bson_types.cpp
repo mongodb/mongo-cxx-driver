@@ -79,9 +79,9 @@ TEST_CASE("b_array", "[bsoncxx::type::b_array]") {
 }
 
 TEST_CASE("b_binary", "[bsoncxx::type::b_binary]") {
-    b_binary a{binary_sub_type::k_binary, 8, reinterpret_cast<const uint8_t*>("deadbeef")};
-    b_binary b{binary_sub_type::k_binary, 8, reinterpret_cast<const uint8_t*>("deadbeef")};
-    b_binary c{binary_sub_type::k_binary, 8, reinterpret_cast<const uint8_t*>("daedbeef")};
+    b_binary a{binary_sub_type::k_binary, 8, reinterpret_cast<uint8_t const*>("deadbeef")};
+    b_binary b{binary_sub_type::k_binary, 8, reinterpret_cast<uint8_t const*>("deadbeef")};
+    b_binary c{binary_sub_type::k_binary, 8, reinterpret_cast<uint8_t const*>("daedbeef")};
     REQUIRE(a == b);
     REQUIRE(!(a == c));
 }
@@ -228,7 +228,7 @@ TEST_CASE("bson_value::view with b_array", "[bsoncxx::types::bson_value::view]")
 }
 
 TEST_CASE("bson_value::view with b_binary", "[bsoncxx::types::bson_value::view]") {
-    b_binary binary_val{binary_sub_type::k_binary, 8, reinterpret_cast<const uint8_t*>("deadbeef")};
+    b_binary binary_val{binary_sub_type::k_binary, 8, reinterpret_cast<uint8_t const*>("deadbeef")};
     REQUIRE(bson_value::view{binary_val}.get_binary() == binary_val);
 }
 

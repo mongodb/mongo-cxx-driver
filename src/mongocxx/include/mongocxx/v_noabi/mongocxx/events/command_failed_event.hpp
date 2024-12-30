@@ -36,7 +36,7 @@ namespace events {
 ///
 class command_failed_event {
    public:
-    explicit command_failed_event(const void* event);
+    explicit command_failed_event(void const* event);
 
     ///
     /// Destroys a command_failed_event.
@@ -46,8 +46,8 @@ class command_failed_event {
     command_failed_event(command_failed_event&&) = default;
     command_failed_event& operator=(command_failed_event&&) = default;
 
-    command_failed_event(const command_failed_event&) = default;
-    command_failed_event& operator=(const command_failed_event&) = default;
+    command_failed_event(command_failed_event const&) = default;
+    command_failed_event& operator=(command_failed_event const&) = default;
 
     ///
     /// Returns the server’s reply to the failed operation.
@@ -107,7 +107,7 @@ class command_failed_event {
     MONGOCXX_ABI_EXPORT_CDECL(std::uint16_t) port() const;
 
    private:
-    const void* _failed_event;
+    void const* _failed_event;
 };
 
 }  // namespace events

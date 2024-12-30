@@ -34,17 +34,17 @@ struct Person {
     std::string last_name;
     int age;
 
-    bool operator==(const Person& rhs) const {
+    bool operator==(Person const& rhs) const {
         return (first_name == rhs.first_name) && (last_name == rhs.last_name) && (age == rhs.age);
     }
 };
 
-void to_bson(const Person& person, bsoncxx::document::value& bson_object) {
+void to_bson(Person const& person, bsoncxx::document::value& bson_object) {
     bson_object =
         make_document(kvp("first_name", person.first_name), kvp("last_name", person.last_name), kvp("age", person.age));
 }
 
-void from_bson(Person& person, const bsoncxx::document::view& bson_object) {
+void from_bson(Person& person, bsoncxx::document::view const& bson_object) {
     person.first_name = to_string(bson_object["first_name"].get_string().value);
     person.last_name = to_string(bson_object["last_name"].get_string().value);
     person.age = bson_object["age"].get_int32().value;

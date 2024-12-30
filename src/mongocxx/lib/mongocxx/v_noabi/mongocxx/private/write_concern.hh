@@ -33,8 +33,8 @@ class write_concern::impl {
     impl(impl&&) = delete;
     impl& operator=(impl&&) = delete;
 
-    impl(const impl&) = delete;
-    impl& operator=(const impl&) = delete;
+    impl(impl const&) = delete;
+    impl& operator=(impl const&) = delete;
 
     mongoc_write_concern_t* write_concern_t;
 };

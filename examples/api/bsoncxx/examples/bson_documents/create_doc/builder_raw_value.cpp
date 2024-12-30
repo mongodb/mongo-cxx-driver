@@ -27,7 +27,7 @@ namespace {
 
 // [Example]
 // {"key": "value"}
-void example(const std::uint8_t* data, std::size_t length) {
+void example(std::uint8_t const* data, std::size_t length) {
     using deleter_type = bsoncxx::document::value::deleter_type;
 
     std::uint8_t* raw = new std::uint8_t[length];

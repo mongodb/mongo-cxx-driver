@@ -71,7 +71,7 @@ TEST_CASE("Transaction tests", "[transactions]") {
 
             try {
                 session.commit_transaction();
-            } catch (const operation_exception& e) {
+            } catch (operation_exception const& e) {
                 INFO("Exception raw:     " << bsoncxx::to_json(*(e.raw_server_error())) << "\n");
                 INFO("Exception message: " << e.what() << "\n");
 
@@ -177,7 +177,7 @@ TEST_CASE("Transaction tests", "[transactions]") {
                 session,
                 make_document(kvp("should_be_one", 1)),
                 make_document(kvp("$set", make_document(kvp("should_be_one", 2)))));
-        } catch (const operation_exception& e) {
+        } catch (operation_exception const& e) {
             // Intentionally do NOT abort to force TransientTransactionError from server on commit.
             auto label = "TransientTransactionError";
             has_transient_error_null_str = e.has_error_label(label);
@@ -191,7 +191,7 @@ TEST_CASE("Transaction tests", "[transactions]") {
 
         try {
             session.commit_transaction();
-        } catch (const operation_exception& e) {
+        } catch (operation_exception const& e) {
             auto label = "TransientTransactionError";
             has_transient_error_null_str = e.has_error_label(label);
             has_transient_error_no_null_str = e.has_error_label(bsoncxx::stdx::string_view(label, 25));
@@ -252,7 +252,7 @@ TEST_CASE("Transactions Documentation Examples", "[transactions]") {
                     make_document(kvp("$set", make_document(kvp("status", "Inactive")))));
                 events.insert_one(make_document(
                     kvp("employee", 3), kvp("status", make_document(kvp("new", "Inactive"), kvp("old", "Active")))));
-            } catch (const operation_exception& oe) {
+            } catch (operation_exception const& oe) {
                 std::cout << "Caught exception during transaction, aborting." << std::endl;
                 session.abort_transaction();
                 throw oe;
@@ -263,7 +263,7 @@ TEST_CASE("Transactions Documentation Examples", "[transactions]") {
                     session.commit_transaction();  // Uses write concern set at transaction start.
                     std::cout << "Transaction committed." << std::endl;
                     break;
-                } catch (const operation_exception& oe) {
+                } catch (operation_exception const& oe) {
                     // Can retry commit.
                     if (oe.has_error_label("UnknownTransactionCommitResult")) {
                         std::cout << "UnknownTransactionCommitResult, retrying commit operation ..." << std::endl;
@@ -288,7 +288,7 @@ TEST_CASE("Transactions Documentation Examples", "[transactions]") {
                 try {
                     txn_func(session);  // performs transaction.
                     break;
-                } catch (const operation_exception& oe) {
+                } catch (operation_exception const& oe) {
                     std::cout << "Transaction aborted. Caught exception during transaction." << std::endl;
                     // If transient error, retry the whole transaction.
                     if (oe.has_error_label("TransientTransactionError")) {
@@ -320,7 +320,7 @@ TEST_CASE("Transactions Documentation Examples", "[transactions]") {
                     session.commit_transaction();  // Uses write concern set at transaction start.
                     std::cout << "Transaction committed." << std::endl;
                     break;
-                } catch (const operation_exception& oe) {
+                } catch (operation_exception const& oe) {
                     // Can retry commit
                     if (oe.has_error_label("UnknownTransactionCommitResult")) {
                         std::cout << "UnknownTransactionCommitResult, retrying commit operation ..." << std::endl;
@@ -348,7 +348,7 @@ TEST_CASE("Transactions Documentation Examples", "[transactions]") {
                 try {
                     txn_func(session);  // performs transaction.
                     break;
-                } catch (const operation_exception& oe) {
+                } catch (operation_exception const& oe) {
                     std::cout << "Transaction aborted. Caught exception during transaction." << std::endl;
                     // If transient error, retry the whole transaction.
                     if (oe.has_error_label("TransientTransactionError")) {
@@ -367,7 +367,7 @@ TEST_CASE("Transactions Documentation Examples", "[transactions]") {
                     session.commit_transaction();  // Uses write concern set at transaction start.
                     std::cout << "Transaction committed." << std::endl;
                     break;
-                } catch (const operation_exception& oe) {
+                } catch (operation_exception const& oe) {
                     // Can retry commit
                     if (oe.has_error_label("UnknownTransactionCommitResult")) {
                         std::cout << "UnknownTransactionCommitResult, retrying commit operation ..." << std::endl;
@@ -402,7 +402,7 @@ TEST_CASE("Transactions Documentation Examples", "[transactions]") {
                     make_document(kvp("$set", make_document(kvp("status", "Inactive")))));
                 events.insert_one(make_document(
                     kvp("employee", 3), kvp("status", make_document(kvp("new", "Inactive"), kvp("old", "Active")))));
-            } catch (const operation_exception& oe) {
+            } catch (operation_exception const& oe) {
                 std::cout << "Caught exception during transaction, aborting." << std::endl;
                 session.abort_transaction();
                 throw oe;
@@ -414,7 +414,7 @@ TEST_CASE("Transactions Documentation Examples", "[transactions]") {
         auto session = client.start_session();
         try {
             run_transaction_with_retry(update_employee_info, session);
-        } catch (const operation_exception& oe) {
+        } catch (operation_exception const& oe) {
             // Do something with error.
             throw oe;
         }
@@ -443,12 +443,12 @@ TEST_CASE("Transactions Mongos Pinning Prose Tests", "[transactions]") {
         REQUIRE(client["config"].has_collection("shards"));
     }
 
-    const auto uri = mongocxx::uri("mongodb://localhost:27017,localhost:27018/?localThresholdMS=1000");
+    auto const uri = mongocxx::uri("mongodb://localhost:27017,localhost:27018/?localThresholdMS=1000");
 
     std::unordered_set<std::uint16_t> ports;
 
     options::apm apm_opts;
-    apm_opts.on_command_started([&](const events::command_started_event& event) { ports.insert(event.port()); });
+    apm_opts.on_command_started([&](events::command_started_event const& event) { ports.insert(event.port()); });
     options::client client_opts;
     client_opts.apm_opts(apm_opts);
     mongocxx::client client{uri, client_opts};

@@ -34,7 +34,7 @@ encrypt& encrypt::key_id(bsoncxx::v_noabi::types::bson_value::view_or_value key_
     return *this;
 }
 
-const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value>& encrypt::key_id() const {
+bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value> const& encrypt::key_id() const {
     return _key_id;
 }
 
@@ -43,7 +43,7 @@ encrypt& encrypt::key_alt_name(std::string name) {
     return *this;
 }
 
-const bsoncxx::v_noabi::stdx::optional<std::string>& encrypt::key_alt_name() const {
+bsoncxx::v_noabi::stdx::optional<std::string> const& encrypt::key_alt_name() const {
     return _key_alt_name;
 }
 
@@ -52,7 +52,7 @@ encrypt& encrypt::algorithm(encrypt::encryption_algorithm algorithm) {
     return *this;
 }
 
-const bsoncxx::v_noabi::stdx::optional<encrypt::encryption_algorithm>& encrypt::algorithm() const {
+bsoncxx::v_noabi::stdx::optional<encrypt::encryption_algorithm> const& encrypt::algorithm() const {
     return _algorithm;
 }
 
@@ -61,7 +61,7 @@ encrypt& encrypt::contention_factor(int64_t contention_factor) {
     return *this;
 }
 
-const bsoncxx::v_noabi::stdx::optional<int64_t>& encrypt::contention_factor() const {
+bsoncxx::v_noabi::stdx::optional<int64_t> const& encrypt::contention_factor() const {
     return _contention_factor;
 }
 
@@ -70,7 +70,7 @@ encrypt& encrypt::query_type(encrypt::encryption_query_type query_type) {
     return *this;
 }
 
-const bsoncxx::v_noabi::stdx::optional<encrypt::encryption_query_type>& encrypt::query_type() const {
+bsoncxx::v_noabi::stdx::optional<encrypt::encryption_query_type> const& encrypt::query_type() const {
     return _query_type;
 }
 
@@ -79,7 +79,7 @@ encrypt& encrypt::range_opts(options::range opts) {
     return *this;
 }
 
-const bsoncxx::v_noabi::stdx::optional<options::range>& encrypt::range_opts() const {
+bsoncxx::v_noabi::stdx::optional<options::range> const& encrypt::range_opts() const {
     return _range_opts;
 }
 
@@ -94,7 +94,7 @@ void* encrypt::convert() const {
 
     auto opts_owner = std::unique_ptr<mongoc_client_encryption_encrypt_opts_t, encrypt_opts_deleter>(
         libmongoc::client_encryption_encrypt_opts_new());
-    const auto opts = opts_owner.get();
+    auto const opts = opts_owner.get();
 
     // libmongoc will error if both key_id and key_alt_name are set, so no need to check here.
 
@@ -167,13 +167,13 @@ void* encrypt::convert() const {
 
         auto range_opts_owner = std::unique_ptr<mongoc_client_encryption_encrypt_range_opts_t, range_opts_deleter>(
             libmongoc::client_encryption_encrypt_range_opts_new());
-        const auto range_opts = range_opts_owner.get();
+        auto const range_opts = range_opts_owner.get();
 
-        const auto& min = _range_opts->min();
-        const auto& max = _range_opts->max();
-        const auto& precision = _range_opts->precision();
-        const auto& sparsity = _range_opts->sparsity();
-        const auto& trim_factor = _range_opts->trim_factor();
+        auto const& min = _range_opts->min();
+        auto const& max = _range_opts->max();
+        auto const& precision = _range_opts->precision();
+        auto const& sparsity = _range_opts->sparsity();
+        auto const& trim_factor = _range_opts->trim_factor();
 
         if (min) {
             libmongoc::client_encryption_encrypt_range_opts_set_min(

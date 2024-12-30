@@ -52,7 +52,7 @@ template <typename Char, typename Traits = std::char_traits<Char>>
 class basic_string_view : bsoncxx::detail::equality_operators, bsoncxx::detail::ordering_operators {
    public:
     using pointer = Char*;
-    using const_pointer = const Char*;
+    using const_pointer = Char const*;
     using size_type = std::size_t;
     using difference_type = std::ptrdiff_t;
     using value_type = Char;
@@ -69,22 +69,22 @@ class basic_string_view : bsoncxx::detail::equality_operators, bsoncxx::detail::
    public:
     using traits_type = Traits;
     using reference = Char&;
-    using const_reference = const Char&;
+    using const_reference = Char const&;
     using const_iterator = const_pointer;
     using iterator = const_iterator;
     using const_reverse_iterator = std::reverse_iterator<const_iterator>;
     using reverse_iterator = const_reverse_iterator;
 
     constexpr basic_string_view() noexcept = default;
-    constexpr basic_string_view(const basic_string_view&) noexcept = default;
-    bsoncxx_cxx14_constexpr basic_string_view& operator=(const basic_string_view&) noexcept = default;
+    constexpr basic_string_view(basic_string_view const&) noexcept = default;
+    bsoncxx_cxx14_constexpr basic_string_view& operator=(basic_string_view const&) noexcept = default;
 
     constexpr basic_string_view(const_pointer s, size_type count) : _begin(s), _size(count) {}
 
     constexpr basic_string_view(const_pointer s) : _begin(s), _size(traits_type::length(s)) {}
 
     template <typename Alloc>
-    constexpr basic_string_view(const std::basic_string<value_type, traits_type, Alloc>& str) noexcept
+    constexpr basic_string_view(std::basic_string<value_type, traits_type, Alloc> const& str) noexcept
         : _begin(str.data()), _size(str.size()) {}
 
 #if defined(__cpp_lib_string_view)
@@ -236,7 +236,7 @@ class basic_string_view : bsoncxx::detail::equality_operators, bsoncxx::detail::
 
     bsoncxx_cxx14_constexpr size_type rfind(basic_string_view infix, size_type pos = npos) const noexcept {
         // Calc the endpos where searching should begin, which includes the infix size.
-        const size_type substr_size = pos != npos ? pos + infix.size() : pos;
+        size_type const substr_size = pos != npos ? pos + infix.size() : pos;
         if (infix.empty()) {
             return (std::min)(pos, size());
         }
@@ -326,8 +326,8 @@ class basic_string_view : bsoncxx::detail::equality_operators, bsoncxx::detail::
     // returns true for substr(I). If no index exists, returns npos.
     template <typename F>
     bsoncxx_cxx14_constexpr size_type _find_if(size_type pos, F pred) const noexcept {
-        const auto sub = substr(pos);
-        const iterator found = std::find_if(sub.begin(), sub.end(), pred);
+        auto const sub = substr(pos);
+        iterator const found = std::find_if(sub.begin(), sub.end(), pred);
         if (found == end()) {
             return npos;
         }
@@ -339,10 +339,10 @@ class basic_string_view : bsoncxx::detail::equality_operators, bsoncxx::detail::
     template <typename F>
     bsoncxx_cxx14_constexpr size_type _rfind_if(size_type pos, F pred) const noexcept {
         // Adjust 'pos' for an inclusive range in substr()
-        const auto rpos = pos == npos ? npos : pos + 1;
+        auto const rpos = pos == npos ? npos : pos + 1;
         // The substring that will be searched:
-        const auto prefix = substr(0, rpos);
-        const const_reverse_iterator found = std::find_if(prefix.rbegin(), prefix.rend(), pred);
+        auto const prefix = substr(0, rpos);
+        const_reverse_iterator const found = std::find_if(prefix.rbegin(), prefix.rend(), pred);
         if (found == rend()) {
             return npos;
         }
@@ -367,7 +367,7 @@ namespace std {
 template <typename CharT, typename Traits>
 struct hash<bsoncxx::v_noabi::stdx::basic_string_view<CharT, Traits>>
     : private std::hash<std::basic_string<CharT, Traits>> {
-    std::size_t operator()(const bsoncxx::v_noabi::stdx::basic_string_view<CharT, Traits>& str) const {
+    std::size_t operator()(bsoncxx::v_noabi::stdx::basic_string_view<CharT, Traits> const& str) const {
         return std::hash<std::basic_string<CharT, Traits>>::operator()(
             std::basic_string<CharT, Traits>(str.data(), str.size()));
     }

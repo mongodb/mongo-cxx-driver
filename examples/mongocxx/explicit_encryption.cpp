@@ -46,7 +46,7 @@ using bsoncxx::types::bson_value::make_value;
 
 using namespace mongocxx;
 
-const int kKeyLength = 96;
+int const kKeyLength = 96;
 
 int EXAMPLES_CDECL main() {
     instance inst{};

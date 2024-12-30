@@ -54,7 +54,7 @@ class index_view::impl {
         return result;
     }
 
-    cursor list(const client_session* session) {
+    cursor list(client_session const* session) {
         if (session) {
             bsoncxx::v_noabi::builder::basic::document options_builder;
             options_builder.append(bsoncxx::v_noabi::builder::concatenate_doc{session->_get_impl().to_document()});
@@ -66,13 +66,13 @@ class index_view::impl {
     }
 
     bsoncxx::v_noabi::stdx::optional<std::string>
-    create_one(const client_session* session, const index_model& model, const options::index_view& options) {
-        const auto result = create_many(session, std::vector<index_model>{model}, options);
+    create_one(client_session const* session, index_model const& model, options::index_view const& options) {
+        auto const result = create_many(session, std::vector<index_model>{model}, options);
         auto result_view = result.view();
 
         // SERVER-78611: sharded clusters may place fields in a raw response document instead of in
         // the top-level document.
-        if (const auto raw = result_view["raw"]) {
+        if (auto const raw = result_view["raw"]) {
             // There should only be a single field in the raw response with the shard connection
             // string as the key. e.g.:
             //   {
@@ -83,12 +83,12 @@ class index_view::impl {
             //     }
             //   }
             // Using a for loop for convenience.
-            for (const auto& shard_response : raw.get_document().view()) {
+            for (auto const& shard_response : raw.get_document().view()) {
                 result_view = shard_response.get_document().view();
             }
         }
 
-        const auto note = result_view["note"];
+        auto const note = result_view["note"];
 
         if (note && bsoncxx::v_noabi::string::to_string(note.get_string().value) == "all indexes already exist") {
             return bsoncxx::v_noabi::stdx::nullopt;
@@ -103,9 +103,9 @@ class index_view::impl {
     }
 
     bsoncxx::v_noabi::document::value create_many(
-        const client_session* session,
-        const std::vector<index_model>& indexes,
-        const options::index_view& options) {
+        client_session const* session,
+        std::vector<index_model> const& indexes,
+        options::index_view const& options) {
         using namespace bsoncxx;
         using builder::basic::concatenate;
 
@@ -113,8 +113,8 @@ class index_view::impl {
 
         for (auto&& model : indexes) {
             builder::basic::document index_doc;
-            const bsoncxx::v_noabi::document::view& opts_view = model.options();
-            const bsoncxx::v_noabi::document::view& keys = model.keys();
+            bsoncxx::v_noabi::document::view const& opts_view = model.options();
+            bsoncxx::v_noabi::document::view const& keys = model.keys();
 
             if (!opts_view["name"]) {
                 index_doc.append(kvp("name", get_index_name_from_keys(keys)));
@@ -176,9 +176,9 @@ class index_view::impl {
     }
 
     void drop_one(
-        const client_session* session,
+        client_session const* session,
         bsoncxx::v_noabi::stdx::string_view name,
-        const options::index_view& options) {
+        options::index_view const& options) {
         if (name == bsoncxx::v_noabi::stdx::string_view{"*"}) {
             throw logic_error(error_code::k_invalid_parameter);
         }
@@ -213,7 +213,7 @@ class index_view::impl {
         }
     }
 
-    inline void drop_all(const client_session* session, const options::index_view& options) {
+    inline void drop_all(client_session const* session, options::index_view const& options) {
         bsoncxx::v_noabi::document::value command =
             make_document(kvp("dropIndexes", libmongoc::collection_get_name(_coll)), kvp("index", "*"));
 
@@ -267,8 +267,8 @@ class index_view::impl {
             return *this;
         }
 
-        scoped_server_description(const scoped_server_description&) = delete;
-        scoped_server_description& operator=(const scoped_server_description&) = delete;
+        scoped_server_description(scoped_server_description const&) = delete;
+        scoped_server_description& operator=(scoped_server_description const&) = delete;
 
         mongoc_server_description_t* sd;
     };

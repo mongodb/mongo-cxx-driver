@@ -40,7 +40,7 @@ void example(mongocxx::database db) {
         auto reply = db.run_command(cmd.view());
 
         EXPECT(false && "should not reach this point");
-    } catch (const mongocxx::exception& ex) {
+    } catch (mongocxx::exception const& ex) {
         EXPECT(ex.code().category() == mongocxx::server_error_category());
         EXPECT(ex.code().value() == 13);  // Unauthorized
         EXPECT(std::strstr(ex.what(), "admin") != nullptr);

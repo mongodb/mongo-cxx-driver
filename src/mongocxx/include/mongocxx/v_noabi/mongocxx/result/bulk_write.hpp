@@ -85,8 +85,8 @@ class bulk_write {
     ///
     MONGOCXX_ABI_EXPORT_CDECL(id_map) upserted_ids() const;
 
-    friend MONGOCXX_ABI_EXPORT_CDECL(bool) operator==(const bulk_write&, const bulk_write&);
-    friend MONGOCXX_ABI_EXPORT_CDECL(bool) operator!=(const bulk_write&, const bulk_write&);
+    friend MONGOCXX_ABI_EXPORT_CDECL(bool) operator==(bulk_write const&, bulk_write const&);
+    friend MONGOCXX_ABI_EXPORT_CDECL(bool) operator!=(bulk_write const&, bulk_write const&);
 
    private:
     bsoncxx::v_noabi::document::view view() const;

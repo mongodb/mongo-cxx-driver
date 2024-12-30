@@ -36,7 +36,7 @@ namespace events {
 ///
 class command_started_event {
    public:
-    explicit command_started_event(const void* event);
+    explicit command_started_event(void const* event);
 
     ///
     /// Destroys a command_started_event.
@@ -46,8 +46,8 @@ class command_started_event {
     command_started_event(command_started_event&&) = default;
     command_started_event& operator=(command_started_event&&) = default;
 
-    command_started_event(const command_started_event&) = default;
-    command_started_event& operator=(const command_started_event&) = default;
+    command_started_event(command_started_event const&) = default;
+    command_started_event& operator=(command_started_event const&) = default;
 
     ///
     /// Returns the command that has been started.
@@ -107,7 +107,7 @@ class command_started_event {
     MONGOCXX_ABI_EXPORT_CDECL(std::uint16_t) port() const;
 
    private:
-    const void* _started_event;
+    void const* _started_event;
 };
 
 }  // namespace events

@@ -62,8 +62,8 @@ class pool {
     /// or
     ///  provided client options).
     explicit MONGOCXX_ABI_EXPORT_CDECL() pool(
-        const uri& mongodb_uri = mongocxx::v_noabi::uri(),
-        const options::pool& options = options::pool());
+        uri const& mongodb_uri = mongocxx::v_noabi::uri(),
+        options::pool const& options = options::pool());
 
     ///
     /// Destroys a pool.
@@ -73,8 +73,8 @@ class pool {
     pool(pool&&) = delete;
     pool& operator=(pool&&) = delete;
 
-    pool(const pool&) = delete;
-    pool& operator=(const pool&) = delete;
+    pool(pool const&) = delete;
+    pool& operator=(pool const&) = delete;
 
     ///
     /// An entry is a handle on a @c client object acquired via the pool. Similar to
@@ -135,7 +135,7 @@ class pool {
     void _release(client* client);
 
     class impl;
-    const std::unique_ptr<impl> _impl;
+    std::unique_ptr<impl> const _impl;
 };
 
 }  // namespace v_noabi

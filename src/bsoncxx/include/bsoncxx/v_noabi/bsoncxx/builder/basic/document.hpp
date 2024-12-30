@@ -57,8 +57,8 @@ class document : public sub_document {
         return *this;
     }
 
-    document(const document&) = delete;
-    document& operator=(const document&) = delete;
+    document(document const&) = delete;
+    document& operator=(document const&) = delete;
 
     ///
     /// @return A view of the BSON document.

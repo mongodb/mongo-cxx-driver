@@ -107,8 +107,8 @@ class instance {
     ///
     MONGOCXX_ABI_EXPORT_CDECL() ~instance();
 
-    instance(const instance&) = delete;
-    instance& operator=(const instance&) = delete;
+    instance(instance const&) = delete;
+    instance& operator=(instance const&) = delete;
 
     ///
     /// Returns the current unique instance of the driver. If an instance was explicitly created,

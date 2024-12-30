@@ -36,7 +36,7 @@ namespace events {
 ///
 class server_closed_event {
    public:
-    explicit server_closed_event(const void* event);
+    explicit server_closed_event(void const* event);
 
     ///
     /// Destroys a server_closed_event.
@@ -46,8 +46,8 @@ class server_closed_event {
     server_closed_event(server_closed_event&&) = default;
     server_closed_event& operator=(server_closed_event&&) = default;
 
-    server_closed_event(const server_closed_event&) = default;
-    server_closed_event& operator=(const server_closed_event&) = default;
+    server_closed_event(server_closed_event const&) = default;
+    server_closed_event& operator=(server_closed_event const&) = default;
 
     ///
     /// Returns the server host name.
@@ -69,10 +69,10 @@ class server_closed_event {
     ///
     /// @return The id.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::oid) topology_id() const;
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::oid const) topology_id() const;
 
    private:
-    const void* _event;
+    void const* _event;
 };
 
 }  // namespace events

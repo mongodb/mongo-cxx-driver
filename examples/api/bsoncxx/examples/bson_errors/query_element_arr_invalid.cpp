@@ -41,7 +41,7 @@ void example() {
         bsoncxx::stdx::string_view key = e.key();  // Throws.
 
         EXPECT(false && "should not reach this point");
-    } catch (const bsoncxx::exception& ex) {
+    } catch (bsoncxx::exception const& ex) {
         EXPECT(ex.code() == bsoncxx::error_code::k_unset_element);
     }
 
@@ -49,7 +49,7 @@ void example() {
         bsoncxx::type type = e.type();  // Throws.
 
         EXPECT(false && "should not reach this point");
-    } catch (const bsoncxx::exception& ex) {
+    } catch (bsoncxx::exception const& ex) {
         EXPECT(ex.code() == bsoncxx::error_code::k_unset_element);
     }
 }

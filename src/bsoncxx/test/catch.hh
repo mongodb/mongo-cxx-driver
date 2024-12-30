@@ -55,7 +55,7 @@ namespace Catch {
 
 template <>
 struct StringMaker<std::error_condition> {
-    static std::string convert(const std::error_condition& value) {
+    static std::string convert(std::error_condition const& value) {
         std::string res;
 
         res += value.category().name();
@@ -68,35 +68,35 @@ struct StringMaker<std::error_condition> {
 
 template <>
 struct StringMaker<bsoncxx::oid> {
-    static std::string convert(const bsoncxx::oid& value) {
+    static std::string convert(bsoncxx::oid const& value) {
         return value.to_string();
     }
 };
 
 template <>
 struct StringMaker<bsoncxx::document::view> {
-    static std::string convert(const bsoncxx::document::view& value) {
+    static std::string convert(bsoncxx::document::view const& value) {
         return bsoncxx::to_json(value, bsoncxx::ExtendedJsonMode::k_relaxed);
     }
 };
 
 template <>
 struct StringMaker<bsoncxx::document::view_or_value> {
-    static std::string convert(const bsoncxx::document::view_or_value& value) {
+    static std::string convert(bsoncxx::document::view_or_value const& value) {
         return StringMaker<bsoncxx::document::view>::convert(value.view());
     }
 };
 
 template <>
 struct StringMaker<bsoncxx::document::value> {
-    static std::string convert(const bsoncxx::document::value& value) {
+    static std::string convert(bsoncxx::document::value const& value) {
         return StringMaker<bsoncxx::document::view>::convert(value.view());
     }
 };
 
 template <>
 struct StringMaker<bsoncxx::types::bson_value::view> {
-    static std::string convert(const bsoncxx::types::bson_value::view& value) {
+    static std::string convert(bsoncxx::types::bson_value::view const& value) {
         using bsoncxx::to_string;
         return '{' + to_string(value.type()) + ": " + to_string(value) + '}';
     }
@@ -104,21 +104,21 @@ struct StringMaker<bsoncxx::types::bson_value::view> {
 
 template <>
 struct StringMaker<bsoncxx::types::bson_value::value> {
-    static std::string convert(const bsoncxx::types::bson_value::value& value) {
+    static std::string convert(bsoncxx::types::bson_value::value const& value) {
         return StringMaker<bsoncxx::types::bson_value::view>::convert(value.view());
     }
 };
 
 template <>
 struct StringMaker<bsoncxx::types::bson_value::view_or_value> {
-    static std::string convert(const bsoncxx::types::bson_value::view_or_value& value) {
+    static std::string convert(bsoncxx::types::bson_value::view_or_value const& value) {
         return StringMaker<bsoncxx::types::bson_value::view>::convert(value.view());
     }
 };
 
 template <typename T>
 struct StringMaker<bsoncxx::stdx::optional<T>> {
-    static std::string convert(const bsoncxx::stdx::optional<T>& value) {
+    static std::string convert(bsoncxx::stdx::optional<T> const& value) {
         if (value) {
             return StringMaker<T>::convert(value.value());
         }
@@ -129,7 +129,7 @@ struct StringMaker<bsoncxx::stdx::optional<T>> {
 
 template <>
 struct StringMaker<bsoncxx::stdx::optional<bsoncxx::stdx::nullopt_t>> {
-    static std::string convert(const bsoncxx::stdx::optional<bsoncxx::stdx::nullopt_t>&) {
+    static std::string convert(bsoncxx::stdx::optional<bsoncxx::stdx::nullopt_t> const&) {
         return "{nullopt}";
     }
 };

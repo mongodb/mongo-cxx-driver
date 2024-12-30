@@ -29,17 +29,17 @@ transaction::transaction() : _impl{bsoncxx::make_unique<impl>()} {}
 transaction::transaction(transaction&&) noexcept = default;
 transaction& transaction::operator=(transaction&&) noexcept = default;
 
-transaction::transaction(const transaction& other)
+transaction::transaction(transaction const& other)
     : _impl{bsoncxx::make_unique<impl>(other._get_impl().get_transaction_opt_t())} {}
 
-transaction& transaction::operator=(const transaction& other) {
+transaction& transaction::operator=(transaction const& other) {
     _impl = bsoncxx::make_unique<impl>(other._get_impl().get_transaction_opt_t());
     return *this;
 }
 
 transaction::~transaction() noexcept = default;
 
-transaction& transaction::read_concern(const mongocxx::v_noabi::read_concern& rc) {
+transaction& transaction::read_concern(mongocxx::v_noabi::read_concern const& rc) {
     _impl->read_concern(rc);
     return *this;
 }
@@ -48,7 +48,7 @@ bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::read_concern> transaction::r
     return _impl->read_concern();
 }
 
-transaction& transaction::write_concern(const mongocxx::v_noabi::write_concern& wc) {
+transaction& transaction::write_concern(mongocxx::v_noabi::write_concern const& wc) {
     _impl->write_concern(wc);
     return *this;
 }
@@ -57,7 +57,7 @@ bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern> transaction::
     return _impl->write_concern();
 }
 
-transaction& transaction::read_preference(const mongocxx::v_noabi::read_preference& rp) {
+transaction& transaction::read_preference(mongocxx::v_noabi::read_preference const& rp) {
     _impl->read_preference(rp);
     return *this;
 }
@@ -75,7 +75,7 @@ bsoncxx::v_noabi::stdx::optional<std::chrono::milliseconds> transaction::max_com
     return _impl->max_commit_time_ms();
 }
 
-const transaction::impl& transaction::_get_impl() const {
+transaction::impl const& transaction::_get_impl() const {
     if (!_impl) {
         throw logic_error{error_code::k_invalid_transaction_options_object};
     }
@@ -83,7 +83,7 @@ const transaction::impl& transaction::_get_impl() const {
 }
 
 transaction::impl& transaction::_get_impl() {
-    auto cthis = const_cast<const transaction*>(this);
+    auto cthis = const_cast<transaction const*>(this);
     return const_cast<transaction::impl&>(cthis->_get_impl());
 }
 

@@ -40,7 +40,7 @@ class update {
     ///
     /// @return The raw bulk write result.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const result::bulk_write&) result() const;
+    MONGOCXX_ABI_EXPORT_CDECL(result::bulk_write const&) result() const;
 
     ///
     /// Gets the number of documents that were matched during this operation.
@@ -69,8 +69,8 @@ class update {
     MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::element>)
     upserted_id() const;
 
-    friend MONGOCXX_ABI_EXPORT_CDECL(bool) operator==(const update&, const update&);
-    friend MONGOCXX_ABI_EXPORT_CDECL(bool) operator!=(const update&, const update&);
+    friend MONGOCXX_ABI_EXPORT_CDECL(bool) operator==(update const&, update const&);
+    friend MONGOCXX_ABI_EXPORT_CDECL(bool) operator!=(update const&, update const&);
 
    private:
     result::bulk_write _result;

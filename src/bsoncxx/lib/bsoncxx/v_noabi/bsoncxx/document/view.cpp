@@ -37,7 +37,7 @@ bson_iter_t to_bson_iter_t(element e) {
 
 view::const_iterator::const_iterator() {}
 
-view::const_iterator::const_iterator(const element& element) : _element(element) {}
+view::const_iterator::const_iterator(element const& element) : _element(element) {}
 
 view::const_iterator::reference view::const_iterator::operator*() {
     return _element;
@@ -73,12 +73,12 @@ view::const_iterator view::const_iterator::operator++(int) {
     return before;
 }
 
-bool operator==(const view::const_iterator& lhs, const view::const_iterator& rhs) {
+bool operator==(view::const_iterator const& lhs, view::const_iterator const& rhs) {
     return std::forward_as_tuple(lhs._element.raw(), lhs._element.offset()) ==
            std::forward_as_tuple(rhs._element.raw(), rhs._element.offset());
 }
 
-bool operator!=(const view::const_iterator& lhs, const view::const_iterator& rhs) {
+bool operator!=(view::const_iterator const& lhs, view::const_iterator const& rhs) {
     return !(lhs == rhs);
 }
 
@@ -145,15 +145,15 @@ element view::operator[](stdx::string_view key) const {
     return *(this->find(key));
 }
 
-view::view(const std::uint8_t* data, std::size_t length) : _data(data), _length(length) {}
+view::view(std::uint8_t const* data, std::size_t length) : _data(data), _length(length) {}
 
 namespace {
-const uint8_t k_default_view[5] = {5, 0, 0, 0, 0};
+uint8_t const k_default_view[5] = {5, 0, 0, 0, 0};
 }
 
 view::view() : _data(k_default_view), _length(sizeof(k_default_view)) {}
 
-const std::uint8_t* view::data() const {
+std::uint8_t const* view::data() const {
     return _data;
 }
 std::size_t view::length() const {

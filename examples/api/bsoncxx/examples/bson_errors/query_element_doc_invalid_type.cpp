@@ -34,7 +34,7 @@ void example(bsoncxx::document::element e) {
         bsoncxx::types::b_double d = e.get_double();  // Throws.
 
         EXPECT(false && "should not reach this point");
-    } catch (const bsoncxx::exception& ex) {
+    } catch (bsoncxx::exception const& ex) {
         EXPECT(ex.code() == bsoncxx::error_code::k_need_element_type_k_double);
     }
 
@@ -42,7 +42,7 @@ void example(bsoncxx::document::element e) {
         bsoncxx::types::b_string str = e.get_string();  // Throws.
 
         EXPECT(false && "should not reach this point");
-    } catch (const bsoncxx::exception& ex) {
+    } catch (bsoncxx::exception const& ex) {
         EXPECT(ex.code() == bsoncxx::error_code::k_need_element_type_k_string);
     }
 }
@@ -51,7 +51,7 @@ void example(bsoncxx::document::element e) {
 }  // namespace
 
 RUNNER_REGISTER_COMPONENT() {
-    const auto doc = bsoncxx::from_json(R"({"x": 1})");
+    auto const doc = bsoncxx::from_json(R"({"x": 1})");
 
     example(doc["x"]);
 }

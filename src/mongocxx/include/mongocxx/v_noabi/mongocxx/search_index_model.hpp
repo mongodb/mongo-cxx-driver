@@ -45,12 +45,12 @@ class search_index_model {
     ///
     /// Copy constructs a search_index_model.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL() search_index_model(const search_index_model&);
+    MONGOCXX_ABI_EXPORT_CDECL() search_index_model(search_index_model const&);
 
     ///
     /// Copy assigns a search_index_model.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(search_index_model&) operator=(const search_index_model&);
+    MONGOCXX_ABI_EXPORT_CDECL(search_index_model&) operator=(search_index_model const&);
 
     ///
     /// Destroys a search_index_model.
@@ -86,7 +86,7 @@ class search_index_model {
    private:
     class impl;
 
-    const impl& _get_impl() const;
+    impl const& _get_impl() const;
 
     impl& _get_impl();
 

@@ -87,8 +87,8 @@ class view {
     ///
     BSONCXX_ABI_EXPORT_CDECL() view() noexcept;
 
-    BSONCXX_ABI_EXPORT_CDECL() view(const view&) noexcept;
-    BSONCXX_ABI_EXPORT_CDECL(view&) operator=(const view&) noexcept;
+    BSONCXX_ABI_EXPORT_CDECL() view(view const&) noexcept;
+    BSONCXX_ABI_EXPORT_CDECL(view&) operator=(view const&) noexcept;
 
     BSONCXX_ABI_EXPORT_CDECL() ~view();
 
@@ -98,8 +98,8 @@ class view {
     /// Compare two bson_value::views for equality
     ///
     /// @{
-    friend BSONCXX_ABI_EXPORT_CDECL(bool) operator==(const bson_value::view&, const bson_value::view&);
-    friend BSONCXX_ABI_EXPORT_CDECL(bool) operator!=(const bson_value::view&, const bson_value::view&);
+    friend BSONCXX_ABI_EXPORT_CDECL(bool) operator==(bson_value::view const&, bson_value::view const&);
+    friend BSONCXX_ABI_EXPORT_CDECL(bool) operator!=(bson_value::view const&, bson_value::view const&);
     /// @}
     ///
 
@@ -114,7 +114,7 @@ class view {
     /// @warning
     ///   Calling the wrong get_<type> method will cause an exception to be thrown.
     ///
-    BSONCXX_ABI_EXPORT_CDECL(const b_double&) get_double() const;
+    BSONCXX_ABI_EXPORT_CDECL(b_double const&) get_double() const;
 
     ///
     /// Returns the underlying BSON UTF-8 string value.
@@ -122,7 +122,7 @@ class view {
     /// @warning
     ///   Calling the wrong get_<type> method will cause an exception to be thrown.
     ///
-    BSONCXX_ABI_EXPORT_CDECL(const b_string&) get_string() const;
+    BSONCXX_ABI_EXPORT_CDECL(b_string const&) get_string() const;
 
     ///
     /// Returns the underlying BSON document value.
@@ -130,7 +130,7 @@ class view {
     /// @warning
     ///   Calling the wrong get_<type> method will cause an exception to be thrown.
     ///
-    BSONCXX_ABI_EXPORT_CDECL(const b_document&) get_document() const;
+    BSONCXX_ABI_EXPORT_CDECL(b_document const&) get_document() const;
 
     ///
     /// Returns the underlying BSON array value.
@@ -138,7 +138,7 @@ class view {
     /// @warning
     ///   Calling the wrong get_<type> method will cause an exception to be thrown.
     ///
-    BSONCXX_ABI_EXPORT_CDECL(const b_array&) get_array() const;
+    BSONCXX_ABI_EXPORT_CDECL(b_array const&) get_array() const;
 
     ///
     /// Returns the underlying BSON binary data value.
@@ -146,7 +146,7 @@ class view {
     /// @warning
     ///   Calling the wrong get_<type> method will cause an exception to be thrown.
     ///
-    BSONCXX_ABI_EXPORT_CDECL(const b_binary&) get_binary() const;
+    BSONCXX_ABI_EXPORT_CDECL(b_binary const&) get_binary() const;
 
     ///
     /// Returns the underlying BSON undefined value.
@@ -154,7 +154,7 @@ class view {
     /// @warning
     ///   Calling the wrong get_<type> method will cause an exception to be thrown.
     ///
-    BSONCXX_ABI_EXPORT_CDECL(const b_undefined&) get_undefined() const;
+    BSONCXX_ABI_EXPORT_CDECL(b_undefined const&) get_undefined() const;
 
     ///
     /// Returns the underlying BSON ObjectId value.
@@ -162,7 +162,7 @@ class view {
     /// @warning
     ///   Calling the wrong get_<type> method will cause an exception to be thrown.
     ///
-    BSONCXX_ABI_EXPORT_CDECL(const b_oid&) get_oid() const;
+    BSONCXX_ABI_EXPORT_CDECL(b_oid const&) get_oid() const;
 
     ///
     /// Returns the underlying BSON boolean value.
@@ -170,7 +170,7 @@ class view {
     /// @warning
     ///   Calling the wrong get_<type> method will cause an exception to be thrown.
     ///
-    BSONCXX_ABI_EXPORT_CDECL(const b_bool&) get_bool() const;
+    BSONCXX_ABI_EXPORT_CDECL(b_bool const&) get_bool() const;
 
     ///
     /// Returns the underlying BSON date value.
@@ -178,7 +178,7 @@ class view {
     /// @warning
     ///   Calling the wrong get_<type> method will cause an exception to be thrown.
     ///
-    BSONCXX_ABI_EXPORT_CDECL(const b_date&) get_date() const;
+    BSONCXX_ABI_EXPORT_CDECL(b_date const&) get_date() const;
 
     ///
     /// Returns the underlying BSON null value.
@@ -186,7 +186,7 @@ class view {
     /// @warning
     ///   Calling the wrong get_<type> method will cause an exception to be thrown.
     ///
-    BSONCXX_ABI_EXPORT_CDECL(const b_null&) get_null() const;
+    BSONCXX_ABI_EXPORT_CDECL(b_null const&) get_null() const;
 
     ///
     /// Returns the underlying BSON regex value.
@@ -194,7 +194,7 @@ class view {
     /// @warning
     ///   Calling the wrong get_<type> method will cause an exception to be thrown.
     ///
-    BSONCXX_ABI_EXPORT_CDECL(const b_regex&) get_regex() const;
+    BSONCXX_ABI_EXPORT_CDECL(b_regex const&) get_regex() const;
 
     ///
     /// Returns the underlying BSON DBPointer value.
@@ -202,7 +202,7 @@ class view {
     /// @warning
     ///   Calling the wrong get_<type> method will cause an exception to be thrown.
     ///
-    BSONCXX_ABI_EXPORT_CDECL(const b_dbpointer&) get_dbpointer() const;
+    BSONCXX_ABI_EXPORT_CDECL(b_dbpointer const&) get_dbpointer() const;
 
     ///
     /// Returns the underlying BSON JavaScript code value.
@@ -210,7 +210,7 @@ class view {
     /// @warning
     ///   Calling the wrong get_<type> method will cause an exception to be thrown.
     ///
-    BSONCXX_ABI_EXPORT_CDECL(const b_code&) get_code() const;
+    BSONCXX_ABI_EXPORT_CDECL(b_code const&) get_code() const;
 
     ///
     /// Returns the underlying BSON symbol value.
@@ -218,7 +218,7 @@ class view {
     /// @warning
     ///   Calling the wrong get_<type> method will cause an exception to be thrown.
     ///
-    BSONCXX_ABI_EXPORT_CDECL(const b_symbol&) get_symbol() const;
+    BSONCXX_ABI_EXPORT_CDECL(b_symbol const&) get_symbol() const;
 
     ///
     /// Returns the underlying BSON JavaScript code with scope value.
@@ -226,7 +226,7 @@ class view {
     /// @warning
     ///   Calling the wrong get_<type> method will cause an exception to be thrown.
     ///
-    BSONCXX_ABI_EXPORT_CDECL(const b_codewscope&) get_codewscope() const;
+    BSONCXX_ABI_EXPORT_CDECL(b_codewscope const&) get_codewscope() const;
 
     ///
     /// Returns the underlying BSON 32-bit signed integer value.
@@ -234,7 +234,7 @@ class view {
     /// @warning
     ///   Calling the wrong get_<type> method will cause an exception to be thrown.
     ///
-    BSONCXX_ABI_EXPORT_CDECL(const b_int32&) get_int32() const;
+    BSONCXX_ABI_EXPORT_CDECL(b_int32 const&) get_int32() const;
 
     ///
     /// Returns the underlying BSON replication timestamp value.
@@ -242,7 +242,7 @@ class view {
     /// @warning
     ///   Calling the wrong get_<type> method will cause an exception to be thrown.
     ///
-    BSONCXX_ABI_EXPORT_CDECL(const b_timestamp&) get_timestamp() const;
+    BSONCXX_ABI_EXPORT_CDECL(b_timestamp const&) get_timestamp() const;
 
     ///
     /// Returns the underlying BSON 64-bit signed integer value.
@@ -250,7 +250,7 @@ class view {
     /// @warning
     ///   Calling the wrong get_<type> method will cause an exception to be thrown.
     ///
-    BSONCXX_ABI_EXPORT_CDECL(const b_int64&) get_int64() const;
+    BSONCXX_ABI_EXPORT_CDECL(b_int64 const&) get_int64() const;
 
     ///
     /// Returns the underlying BSON Decimal128 value.
@@ -258,7 +258,7 @@ class view {
     /// @warning
     ///   Calling the wrong get_<type> method will cause an exception to be thrown.
     ///
-    BSONCXX_ABI_EXPORT_CDECL(const b_decimal128&) get_decimal128() const;
+    BSONCXX_ABI_EXPORT_CDECL(b_decimal128 const&) get_decimal128() const;
 
     ///
     /// Returns the underlying BSON min-key value.
@@ -266,7 +266,7 @@ class view {
     /// @warning
     ///   Calling the wrong get_<type> method will cause an exception to be thrown.
     ///
-    BSONCXX_ABI_EXPORT_CDECL(const b_minkey&) get_minkey() const;
+    BSONCXX_ABI_EXPORT_CDECL(b_minkey const&) get_minkey() const;
 
     ///
     /// Returns the underlying BSON max-key value.
@@ -274,13 +274,13 @@ class view {
     /// @warning
     ///   Calling the wrong get_<type> method will cause an exception to be thrown.
     ///
-    BSONCXX_ABI_EXPORT_CDECL(const b_maxkey&) get_maxkey() const;
+    BSONCXX_ABI_EXPORT_CDECL(b_maxkey const&) get_maxkey() const;
 
    private:
     friend ::bsoncxx::v_noabi::types::bson_value::value;
     friend ::bsoncxx::v_noabi::document::element;
 
-    view(const std::uint8_t* raw, std::uint32_t length, std::uint32_t offset, std::uint32_t keylen);
+    view(std::uint8_t const* raw, std::uint32_t length, std::uint32_t offset, std::uint32_t keylen);
     view(void* internal_value) noexcept;
 
     void _init(void* internal_value) noexcept;
@@ -324,25 +324,25 @@ class view {
 
 /// @relatesalso bsoncxx::v_noabi::types::bson_value::view
 template <typename T>
-detail::requires_t<bool, detail::is_bson_view_compatible<T>> operator==(const bson_value::view& lhs, T&& rhs) {
+detail::requires_t<bool, detail::is_bson_view_compatible<T>> operator==(bson_value::view const& lhs, T&& rhs) {
     return lhs == bson_value::view{std::forward<T>(rhs)};
 }
 
 /// @relatesalso bsoncxx::v_noabi::types::bson_value::view
 template <typename T>
-detail::requires_t<bool, detail::is_bson_view_compatible<T>> operator==(T&& lhs, const bson_value::view& rhs) {
+detail::requires_t<bool, detail::is_bson_view_compatible<T>> operator==(T&& lhs, bson_value::view const& rhs) {
     return bson_value::view{std::forward<T>(lhs)} == rhs;
 }
 
 /// @relatesalso bsoncxx::v_noabi::types::bson_value::view
 template <typename T>
-detail::requires_t<bool, detail::is_bson_view_compatible<T>> operator!=(const bson_value::view& lhs, T&& rhs) {
+detail::requires_t<bool, detail::is_bson_view_compatible<T>> operator!=(bson_value::view const& lhs, T&& rhs) {
     return lhs != bson_value::view{std::forward<T>(rhs)};
 }
 
 /// @relatesalso bsoncxx::v_noabi::types::bson_value::view
 template <typename T>
-detail::requires_t<bool, detail::is_bson_view_compatible<T>> operator!=(T&& lhs, const bson_value::view& rhs) {
+detail::requires_t<bool, detail::is_bson_view_compatible<T>> operator!=(T&& lhs, bson_value::view const& rhs) {
     return bson_value::view{std::forward<T>(lhs)} != rhs;
 }
 
@@ -380,19 +380,19 @@ namespace bson_value {
 
 /// @ref bsoncxx::v_noabi::types::bson_value::operator==(const v_noabi::types::bson_value::view& lhs, T&& rhs)
 template <typename T>
-bool operator==(const v_noabi::types::bson_value::view& lhs, T&& rhs);
+bool operator==(v_noabi::types::bson_value::view const& lhs, T&& rhs);
 
 /// @ref bsoncxx::v_noabi::types::bson_value::operator==(T&& lhs, const v_noabi::types::bson_value::view& rhs)
 template <typename T>
-bool operator==(T&& lhs, const v_noabi::types::bson_value::view& rhs);
+bool operator==(T&& lhs, v_noabi::types::bson_value::view const& rhs);
 
 /// @ref bsoncxx::v_noabi::types::bson_value::operator!=(const v_noabi::types::bson_value::view& lhs, T&& rhs)
 template <typename T>
-bool operator!=(const v_noabi::types::bson_value::view& lhs, T&& rhs);
+bool operator!=(v_noabi::types::bson_value::view const& lhs, T&& rhs);
 
 /// @ref bsoncxx::v_noabi::types::bson_value::operator!=(T&& lhs, const v_noabi::types::bson_value::view& rhs)
 template <typename T>
-bool operator!=(T&& lhs, const v_noabi::types::bson_value::view& rhs);
+bool operator!=(T&& lhs, v_noabi::types::bson_value::view const& rhs);
 
 }  // namespace bson_value
 }  // namespace types

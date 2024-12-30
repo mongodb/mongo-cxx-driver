@@ -22,7 +22,7 @@ namespace result {
 
 replace_one::replace_one(result::bulk_write result) : _result(std::move(result)) {}
 
-const result::bulk_write& replace_one::result() const {
+result::bulk_write const& replace_one::result() const {
     return _result;
 }
 
@@ -41,10 +41,10 @@ bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::element> replace_on
     return _result.upserted_ids()[0];
 }
 
-bool operator==(const replace_one& lhs, const replace_one& rhs) {
+bool operator==(replace_one const& lhs, replace_one const& rhs) {
     return lhs.result() == rhs.result();
 }
-bool operator!=(const replace_one& lhs, const replace_one& rhs) {
+bool operator!=(replace_one const& lhs, replace_one const& rhs) {
     return !(lhs == rhs);
 }
 

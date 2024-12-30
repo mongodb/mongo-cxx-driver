@@ -33,7 +33,7 @@ using bsoncxx::builder::basic::make_document;
 
 class gridfs_multi_export : public microbench {
    public:
-    static const std::uint32_t TOTAL_FILES{50};
+    static std::uint32_t const TOTAL_FILES{50};
 
     gridfs_multi_export() = delete;
 

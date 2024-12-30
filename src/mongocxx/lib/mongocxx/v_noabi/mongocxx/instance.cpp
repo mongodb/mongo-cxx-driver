@@ -57,12 +57,12 @@ log_level convert_log_level(::mongoc_log_level_t mongoc_log_level) {
     }
 }
 
-void null_log_handler(::mongoc_log_level_t, const char*, const char*, void*) {}
+void null_log_handler(::mongoc_log_level_t, char const*, char const*, void*) {}
 
 void user_log_handler(
     ::mongoc_log_level_t mongoc_log_level,
-    const char* log_domain,
-    const char* message,
+    char const* log_domain,
+    char const* message,
     void* user_data) {
     (*static_cast<logger*>(user_data))(
         convert_log_level(mongoc_log_level),
@@ -129,10 +129,10 @@ class instance::impl {
     impl(impl&&) noexcept = delete;
     impl& operator=(impl&&) noexcept = delete;
 
-    impl(const impl&) = delete;
-    impl& operator=(const impl&) = delete;
+    impl(impl const&) = delete;
+    impl& operator=(impl const&) = delete;
 
-    const std::unique_ptr<logger> _user_logger;
+    std::unique_ptr<logger> const _user_logger;
 };
 
 instance::instance() : instance(nullptr) {}

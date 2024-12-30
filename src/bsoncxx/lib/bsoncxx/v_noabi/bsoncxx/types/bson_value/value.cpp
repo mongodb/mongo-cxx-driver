@@ -44,7 +44,7 @@ value::value(int64_t v) : _impl{make_unique<impl>()} {
     _impl->_value.value.v_int64 = v;
 }
 
-value::value(const char* v) : value(stdx::string_view{v}) {}
+value::value(char const* v) : value(stdx::string_view{v}) {}
 value::value(std::string v) : value(stdx::string_view{v}) {}
 value::value(b_string v) : value(v.value) {}
 value::value(stdx::string_view v) : _impl{make_unique<impl>()} {
@@ -79,7 +79,7 @@ value::value(bool v) : _impl{make_unique<impl>()} {
 value::value(b_maxkey) : value(type::k_maxkey) {}
 value::value(b_minkey) : value(type::k_minkey) {}
 value::value(b_undefined) : value(type::k_undefined) {}
-value::value(const type id) : _impl{make_unique<impl>()} {
+value::value(type const id) : _impl{make_unique<impl>()} {
     switch (id) {
         case type::k_minkey:
             _impl->_value.value_type = BSON_TYPE_MINKEY;
@@ -123,7 +123,7 @@ value::value(stdx::string_view regex, stdx::string_view options) : _impl{make_un
 
 value::value(b_code v) : value(v.type_id, v) {}
 value::value(b_symbol v) : value(v.type_id, v) {}
-value::value(const type id, stdx::string_view v) : _impl{make_unique<impl>()} {
+value::value(type const id, stdx::string_view v) : _impl{make_unique<impl>()} {
     switch (id) {
         case type::k_regex:
             _impl->_value.value_type = BSON_TYPE_REGEX;
@@ -224,7 +224,7 @@ value::value(stdx::string_view code, bsoncxx::v_noabi::document::view_or_value s
 
 value::value(b_binary v) : value(v.bytes, v.size, v.sub_type) {}
 value::value(std::vector<unsigned char> v, binary_sub_type sub_type) : value(v.data(), v.size(), sub_type) {}
-value::value(const uint8_t* data, size_t size, const binary_sub_type sub_type) : _impl{make_unique<impl>()} {
+value::value(uint8_t const* data, size_t size, binary_sub_type const sub_type) : _impl{make_unique<impl>()} {
     _impl->_value.value_type = BSON_TYPE_BINARY;
     _impl->_value.value.v_binary.subtype = static_cast<bson_subtype_t>(sub_type);
     _impl->_value.value.v_binary.data_len = static_cast<uint32_t>(size);
@@ -255,7 +255,7 @@ value::value(value&&) noexcept = default;
 
 value& value::operator=(value&&) noexcept = default;
 
-value::value(const std::uint8_t* raw, std::uint32_t length, std::uint32_t offset, std::uint32_t keylen) {
+value::value(std::uint8_t const* raw, std::uint32_t length, std::uint32_t offset, std::uint32_t keylen) {
     bson_iter_t iter;
 
     bson_iter_init_from_data_at_offset(&iter, raw, length, offset, keylen);
@@ -264,16 +264,16 @@ value::value(const std::uint8_t* raw, std::uint32_t length, std::uint32_t offset
     _impl = make_unique<impl>(value);
 }
 
-value::value(void* internal_value) : _impl(make_unique<impl>(static_cast<const bson_value_t*>(internal_value))) {}
+value::value(void* internal_value) : _impl(make_unique<impl>(static_cast<bson_value_t const*>(internal_value))) {}
 
-value::value(const value& rhs) : value(&rhs._impl->_value) {}
+value::value(value const& rhs) : value(&rhs._impl->_value) {}
 
-value::value(const bson_value::view& bson_view) {
+value::value(bson_value::view const& bson_view) {
     _impl = make_unique<impl>();
     convert_to_libbson(&_impl->_value, bson_view);
 }
 
-value& value::operator=(const value& rhs) {
+value& value::operator=(value const& rhs) {
     *this = value{rhs};
     return *this;
 }

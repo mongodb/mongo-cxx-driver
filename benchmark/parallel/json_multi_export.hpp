@@ -38,8 +38,8 @@ using bsoncxx::builder::basic::make_document;
 
 class json_multi_export : public microbench {
    public:
-    static const std::uint32_t TOTAL_FILES{100};
-    static const std::uint32_t DOCS_PER_FILE{5000};
+    static std::uint32_t const TOTAL_FILES{100};
+    static std::uint32_t const DOCS_PER_FILE{5000};
 
     json_multi_export() = delete;
 

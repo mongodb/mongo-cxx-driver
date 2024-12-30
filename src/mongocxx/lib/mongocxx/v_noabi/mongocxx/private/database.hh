@@ -27,13 +27,13 @@ namespace v_noabi {
 
 class database::impl {
    public:
-    impl(mongoc_database_t* db, const mongocxx::v_noabi::client::impl* client, std::string name)
+    impl(mongoc_database_t* db, mongocxx::v_noabi::client::impl const* client, std::string name)
         : database_t(db), client_impl(client), name(std::move(name)) {}
 
-    impl(const impl& i)
+    impl(impl const& i)
         : database_t{libmongoc::database_copy(i.database_t)}, client_impl{i.client_impl}, name{i.name} {}
 
-    impl& operator=(const impl& i) {
+    impl& operator=(impl const& i) {
         if (this != &i) {
             libmongoc::database_destroy(database_t);
             database_t = libmongoc::database_copy(i.database_t);
@@ -49,7 +49,7 @@ class database::impl {
     }
 
     mongoc_database_t* database_t;
-    const mongocxx::v_noabi::client::impl* client_impl;
+    mongocxx::v_noabi::client::impl const* client_impl;
     std::string name;
 };
 

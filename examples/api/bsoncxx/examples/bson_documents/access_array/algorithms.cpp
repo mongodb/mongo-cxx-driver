@@ -32,7 +32,7 @@ void example(bsoncxx::array::view arr) {
 
     std::vector<bsoncxx::array::element> elements;
 
-    std::copy_if(arr.begin(), arr.end(), std::back_inserter(elements), [](const bsoncxx::array::element& e) {
+    std::copy_if(arr.begin(), arr.end(), std::back_inserter(elements), [](bsoncxx::array::element const& e) {
         return e.key() == "0" || e.type() == bsoncxx::type::k_string;
     });
 

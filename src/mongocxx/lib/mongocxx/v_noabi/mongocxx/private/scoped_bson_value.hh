@@ -38,21 +38,21 @@ struct scoped_bson_value {
     }
 
     template <typename T>
-    auto convert(const T& value)
+    auto convert(T const& value)
         // Use trailing return type syntax to SFINAE without triggering GCC -Wignored-attributes
         // warnings due to using decltype within template parameters.
         -> decltype(bsoncxx::v_noabi::types::convert_to_libbson(
-            std::declval<const T&>(),
+            std::declval<T const&>(),
             std::declval<bson_value_t*>())) {
         bsoncxx::v_noabi::types::convert_to_libbson(value, &this->value);
     }
 
     template <typename T>
-    explicit scoped_bson_value(const T& value) {
+    explicit scoped_bson_value(T const& value) {
         convert(value);
     }
 
-    explicit scoped_bson_value(const bsoncxx::v_noabi::types::bson_value::view& view) {
+    explicit scoped_bson_value(bsoncxx::v_noabi::types::bson_value::view const& view) {
         // Argument order is reversed for bsoncxx::v_noabi::types::bson_value::view.
         bsoncxx::v_noabi::types::convert_to_libbson(&this->value, view);
     }
@@ -64,9 +64,9 @@ struct scoped_bson_value {
     // Expectation is that value_for_init() will be used to initialize this->value.
     scoped_bson_value() = default;
 
-    scoped_bson_value(const scoped_bson_value&) = delete;
+    scoped_bson_value(scoped_bson_value const&) = delete;
     scoped_bson_value(scoped_bson_value&&) = delete;
-    scoped_bson_value& operator=(const scoped_bson_value&) = delete;
+    scoped_bson_value& operator=(scoped_bson_value const&) = delete;
     scoped_bson_value& operator=(scoped_bson_value&&) = delete;
 };
 

@@ -37,12 +37,12 @@ namespace document {
 
 element::element() : element(nullptr, 0, 0, 0) {}
 
-element::element(const std::uint8_t* raw, std::uint32_t length, std::uint32_t offset, std::uint32_t keylen)
+element::element(std::uint8_t const* raw, std::uint32_t length, std::uint32_t offset, std::uint32_t keylen)
     : _raw(raw), _length(length), _offset(offset), _keylen(keylen) {}
 
-element::element(const stdx::string_view key) : _raw(nullptr), _length(0), _offset(0), _keylen(0), _key(key) {}
+element::element(stdx::string_view const key) : _raw(nullptr), _length(0), _offset(0), _keylen(0), _key(key) {}
 
-const std::uint8_t* element::raw() const {
+std::uint8_t const* element::raw() const {
     return _raw;
 }
 
@@ -79,7 +79,7 @@ stdx::string_view element::key() const {
 
     BSONCXX_CITER;
 
-    const char* key = bson_iter_key(&iter);
+    char const* key = bson_iter_key(&iter);
 
     return stdx::string_view{key};
 }
@@ -132,19 +132,19 @@ element::operator bool() const {
     return _raw != nullptr;
 }
 
-bool operator==(const element& elem, const types::bson_value::view& v) {
+bool operator==(element const& elem, types::bson_value::view const& v) {
     return elem.get_value() == v;
 }
 
-bool operator==(const types::bson_value::view& v, const element& elem) {
+bool operator==(types::bson_value::view const& v, element const& elem) {
     return elem == v;
 }
 
-bool operator!=(const element& elem, const types::bson_value::view& v) {
+bool operator!=(element const& elem, types::bson_value::view const& v) {
     return !(elem == v);
 }
 
-bool operator!=(const types::bson_value::view& v, const element& elem) {
+bool operator!=(types::bson_value::view const& v, element const& elem) {
     return !(elem == v);
 }
 

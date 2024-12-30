@@ -38,12 +38,12 @@ class mongocxx_exception_matcher : public Catch::Matchers::MatcherBase<mongocxx:
 
     mongocxx_exception_matcher(mongocxx_exception_matcher&&) = default;
     mongocxx_exception_matcher& operator=(mongocxx_exception_matcher&&) = delete;
-    mongocxx_exception_matcher(const mongocxx_exception_matcher&) = default;
-    mongocxx_exception_matcher& operator=(const mongocxx_exception_matcher&) = delete;
+    mongocxx_exception_matcher(mongocxx_exception_matcher const&) = default;
+    mongocxx_exception_matcher& operator=(mongocxx_exception_matcher const&) = delete;
 
     mongocxx_exception_matcher(std::string msg) : expected_msg(msg) {}
 
-    bool match(const mongocxx::exception& exc) const override {
+    bool match(mongocxx::exception const& exc) const override {
         return Catch::Matchers::ContainsSubstring(expected_msg, Catch::CaseSensitive::No).match(exc.what());
     }
 

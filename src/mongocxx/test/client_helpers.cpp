@@ -57,17 +57,17 @@ using bsoncxx::builder::basic::make_document;
 
 namespace {
 // These frequently used network calls are cached to avoid bottlenecks during tests.
-document::value get_is_master(const client& client) {
+document::value get_is_master(client const& client) {
     static auto reply = client["admin"].run_command(make_document(kvp("isMaster", 1)));
     return reply;
 }
 
-document::value get_server_status(const client& client) {
+document::value get_server_status(client const& client) {
     static auto status = client["admin"].run_command(make_document(kvp("serverStatus", 1)));
     return status;
 }
 
-bsoncxx::stdx::optional<document::value> get_shards(const client& client) {
+bsoncxx::stdx::optional<document::value> get_shards(client const& client) {
     static auto shards = client["config"]["shards"].find_one({});
     return (shards) ? shards.value() : bsoncxx::stdx::optional<document::value>{};
 }
@@ -87,11 +87,11 @@ std::vector<std::int32_t> parse_version(std::string version) {
 
 bsoncxx::document::value transform_document_recursive(
     bsoncxx::document::view view,
-    const xformer_t& fcn,
+    xformer_t const& fcn,
     bsoncxx::builder::basic::array* context);
 
 bsoncxx::array::value
-transform_array(bsoncxx::array::view view, const xformer_t& fcn, bsoncxx::builder::basic::array* context) {
+transform_array(bsoncxx::array::view view, xformer_t const& fcn, bsoncxx::builder::basic::array* context) {
     bsoncxx::builder::basic::array builder;
 
     for (auto&& element : view) {
@@ -146,7 +146,7 @@ transform_array(bsoncxx::array::view view, const xformer_t& fcn, bsoncxx::builde
 
 bsoncxx::document::value transform_document_recursive(
     bsoncxx::document::view view,
-    const xformer_t& fcn,
+    xformer_t const& fcn,
     bsoncxx::builder::basic::array* context) {
     bsoncxx::builder::basic::document builder;
 
@@ -223,7 +223,7 @@ std::int32_t compare_versions(std::string version1, std::string version2) {
     return 0;
 }
 
-bool newer_than(const client& client, std::string version) {
+bool newer_than(client const& client, std::string version) {
     auto server_version = get_server_version(client);
     return (compare_versions(server_version, version) >= 0);
 }
@@ -250,7 +250,7 @@ options::client add_test_server_api(options::client opts) {
     return opts;
 }
 
-std::int32_t get_max_wire_version(const client& client) {
+std::int32_t get_max_wire_version(client const& client) {
     auto reply = get_is_master(client);
     auto max_wire_version = reply.view()["maxWireVersion"];
     if (!max_wire_version) {
@@ -264,17 +264,17 @@ std::int32_t get_max_wire_version(const client& client) {
     return max_wire_version.get_int32().value;
 }
 
-std::string get_server_version(const client& client) {
+std::string get_server_version(client const& client) {
     auto output = get_server_status(client);
     return bsoncxx::string::to_string(output.view()["version"].get_string().value);
 }
 
-document::value get_server_params(const client& client) {
+document::value get_server_params(client const& client) {
     auto reply = client["admin"].run_command(make_document(kvp("getParameter", "*")));
     return reply;
 }
 
-std::string replica_set_name(const client& client) {
+std::string replica_set_name(client const& client) {
     auto reply = get_is_master(client);
     auto name = reply.view()["setName"];
     if (name) {
@@ -288,12 +288,12 @@ static bool is_replica_set(document::view reply) {
     return static_cast<bool>(reply["setName"]);
 }
 
-bool is_replica_set(const client& client) {
+bool is_replica_set(client const& client) {
     return is_replica_set(get_is_master(client));
 }
 
 static bool is_sharded_cluster(document::view reply) {
-    const auto msg = reply["msg"];
+    auto const msg = reply["msg"];
 
     if (!msg) {
         return false;
@@ -302,19 +302,19 @@ static bool is_sharded_cluster(document::view reply) {
     return msg.get_string().value == "isdbgrid";
 }
 
-bool is_sharded_cluster(const client& client) {
+bool is_sharded_cluster(client const& client) {
     return is_sharded_cluster(get_is_master(client));
 }
 
-std::string get_hosts(const client& client) {
+std::string get_hosts(client const& client) {
     auto shards = get_shards(client);
     if (shards)
         return string::to_string(shards->view()["host"].get_string().value);
     return "";
 }
 
-std::string get_topology(const client& client) {
-    const auto reply = get_is_master(client);
+std::string get_topology(client const& client) {
+    auto const reply = get_is_master(client);
 
     if (is_replica_set(reply)) {
         return "replicaset";
@@ -339,7 +339,7 @@ bsoncxx::stdx::optional<bsoncxx::document::value> parse_test_file(std::string pa
     return bsoncxx::from_json(stream.str());
 }
 
-bsoncxx::document::value transform_document(bsoncxx::document::view view, const xformer_t& fcn) {
+bsoncxx::document::value transform_document(bsoncxx::document::view view, xformer_t const& fcn) {
     bsoncxx::builder::basic::array context;
 
     return transform_document_recursive(view, fcn, &context);
@@ -516,21 +516,21 @@ void check_outcome_collection(mongocxx::collection* coll, bsoncxx::document::vie
 
     using namespace std;
 
-    const auto expected_data = expected["data"].get_array().value;
+    auto const expected_data = expected["data"].get_array().value;
     auto actual = coll->find({}, options::find().sort(make_document(kvp("_id", 1))));
 
     REQUIRE(equal(
         begin(expected_data),
         end(expected_data),
         begin(actual),
-        [&](const bsoncxx::array::element& ele, const document::view& doc) {
+        [&](bsoncxx::array::element const& ele, document::view const& doc) {
             REQUIRE_BSON_MATCHES(doc, ele.get_document().value);
             return true;
         }));
     REQUIRE(begin(actual) == end(actual));
 }
 
-bool server_has_sessions_impl(const client& conn) {
+bool server_has_sessions_impl(client const& conn) {
     auto result = get_is_master(conn);
     auto result_view = result.view();
 
@@ -544,8 +544,8 @@ bool server_has_sessions_impl(const client& conn) {
 #if defined(MONGOC_ENABLE_CLIENT_SIDE_ENCRYPTION)
 
 cseeos_result client_side_encryption_enabled_or_skip_impl() {
-    static const cseeos_result result = [] {
-        std::vector<const char*> vars{
+    static cseeos_result const result = [] {
+        std::vector<char const*> vars{
             "MONGOCXX_TEST_AWS_SECRET_ACCESS_KEY",
             "MONGOCXX_TEST_AWS_ACCESS_KEY_ID",
             "MONGOCXX_TEST_AZURE_TENANT_ID",
@@ -557,9 +557,9 @@ cseeos_result client_side_encryption_enabled_or_skip_impl() {
             "MONGOCXX_TEST_GCP_PRIVATEKEY",
         };
 
-        const auto is_set = [](const char* var) -> bool { return std::getenv(var) != nullptr; };
+        auto const is_set = [](char const* var) -> bool { return std::getenv(var) != nullptr; };
 
-        const auto count = std::count_if(vars.begin(), vars.end(), is_set);
+        auto const count = std::count_if(vars.begin(), vars.end(), is_set);
 
         if (count == 0) {
             return cseeos_result::skip;

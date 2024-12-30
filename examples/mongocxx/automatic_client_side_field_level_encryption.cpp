@@ -51,7 +51,7 @@ using namespace mongocxx;
 
 namespace {
 
-const int kKeyLength = 96;
+int const kKeyLength = 96;
 
 using ns_pair = std::pair<std::string, std::string>;
 void create_json_schema_file(

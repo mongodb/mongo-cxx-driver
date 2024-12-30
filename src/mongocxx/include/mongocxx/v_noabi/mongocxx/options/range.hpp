@@ -45,8 +45,8 @@ class range {
 
     /// @brief Gets `RangeOpts.min`.
     /// @note Required if @ref precision is set.
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<
-                              bsoncxx::v_noabi::types::bson_value::view_or_value>&)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<
+                              bsoncxx::v_noabi::types::bson_value::view_or_value> const&)
     min() const;
 
     /// @brief Sets `RangeOpts.max`.
@@ -55,22 +55,22 @@ class range {
 
     /// @brief Gets `RangeOpts.max`.
     /// @note Required if @ref precision is set.
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<
-                              bsoncxx::v_noabi::types::bson_value::view_or_value>&)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<
+                              bsoncxx::v_noabi::types::bson_value::view_or_value> const&)
     max() const;
 
     /// @brief Sets `RangeOpts.sparsity`.
     MONGOCXX_ABI_EXPORT_CDECL(range&) sparsity(std::int64_t value);
 
     /// @brief Gets `RangeOpts.sparsity`.
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<std::int64_t>&)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<std::int64_t> const&)
     sparsity() const;
 
     /// @brief Sets `RangeOpts.trimFactor`.
     MONGOCXX_ABI_EXPORT_CDECL(range&) trim_factor(std::int32_t value);
 
     /// @brief Gets `RangeOpts.trimFactor`.
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<std::int32_t>&)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<std::int32_t> const&)
     trim_factor() const;
 
     /// @brief Sets `RangeOpts.precision`.
@@ -79,7 +79,7 @@ class range {
 
     /// @brief Gets `RangeOpts.precision`.
     /// @note May only be set for `double` or `decimal128`.
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<std::int32_t>&)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<std::int32_t> const&)
     precision() const;
 
    private:

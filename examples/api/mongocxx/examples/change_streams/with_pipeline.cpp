@@ -92,7 +92,7 @@ RUNNER_REGISTER_COMPONENT_FOR_REPLICA() {
 
         EXPECT(doc["watched"]);
         EXPECT(doc["watched"].get_bool().value);
-    } catch (const mongocxx::exception& ex) {
+    } catch (mongocxx::exception const& ex) {
         if (std::strstr(ex.what(), "not supported") != nullptr) {
             // MongoDB 4.2+ required for sharded clusters.
         } else {

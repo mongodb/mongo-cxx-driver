@@ -41,8 +41,8 @@ void example() {
     }
 
     bsoncxx::document::value owner = bsoncxx::from_json(R"({"x": 1})");
-    const std::uint8_t* data = owner.data();
-    const std::size_t length = owner.length();
+    std::uint8_t const* data = owner.data();
+    std::size_t const length = owner.length();
 
     {
         auto doc_opt = bsoncxx::validate(data, length);

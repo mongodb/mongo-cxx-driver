@@ -69,7 +69,7 @@ class key_context {
     /// key.
     ///
     template <std::size_t n>
-    value_context<key_context> operator<<(const char (&v)[n]) {
+    value_context<key_context> operator<<(char const (&v)[n]) {
         _core->key_view(stdx::string_view{v, n - 1});
         return value_context<key_context>(_core);
     }
@@ -156,7 +156,7 @@ class key_context {
     ///
     /// The argument must be a close_document_type token (it is otherwise ignored).
     ///
-    base operator<<(const close_document_type) {
+    base operator<<(close_document_type const) {
         _core->close_document();
         return unwrap();
     }

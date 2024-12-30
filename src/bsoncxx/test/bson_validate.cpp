@@ -35,12 +35,12 @@ using bsoncxx::builder::basic::make_document;
 
 // polymorphic lambdas would be nice here.
 template <typename T>
-bool is_engaged(const stdx::optional<T>& opt) {
+bool is_engaged(stdx::optional<T> const& opt) {
     return opt != stdx::nullopt;
 }
 
 template <typename T>
-bool is_disengaged(const stdx::optional<T>& opt) {
+bool is_disengaged(stdx::optional<T> const& opt) {
     return opt == stdx::nullopt;
 }
 

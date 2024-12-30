@@ -33,8 +33,8 @@ class db_lock {
 
     db_lock(db_lock&&) = delete;
     db_lock& operator=(db_lock&&) = delete;
-    db_lock(const db_lock&) = delete;
-    db_lock& operator=(const db_lock&) = delete;
+    db_lock(db_lock const&) = delete;
+    db_lock& operator=(db_lock const&) = delete;
 
     db_lock(mongocxx::client& client, std::string name);
 

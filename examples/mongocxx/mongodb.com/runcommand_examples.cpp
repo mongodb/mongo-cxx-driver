@@ -43,14 +43,14 @@ int EXAMPLES_CDECL main() {
     // The mongocxx::instance constructor and destructor initialize and shut down the driver,
     // respectively. Therefore, a mongocxx::instance must be created before using the driver and
     // must remain alive for as long as the driver is in use.
-    const mongocxx::instance inst{};
+    mongocxx::instance const inst{};
 
-    const mongocxx::client conn{mongocxx::uri{}};
+    mongocxx::client const conn{mongocxx::uri{}};
     auto db = conn["documentation_examples"];
 
     try {
         runcommand_examples(db);
-    } catch (const std::logic_error& e) {
+    } catch (std::logic_error const& e) {
         std::cerr << e.what() << std::endl;
         return EXIT_FAILURE;
     }

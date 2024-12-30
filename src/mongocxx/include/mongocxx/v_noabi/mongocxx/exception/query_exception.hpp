@@ -35,8 +35,8 @@ class query_exception : public operation_exception {
 
     query_exception(query_exception&&) = default;
     query_exception& operator=(query_exception&&) = default;
-    query_exception(const query_exception&) = default;
-    query_exception& operator=(const query_exception&) = default;
+    query_exception(query_exception const&) = default;
+    query_exception& operator=(query_exception const&) = default;
 
     using operation_exception::operation_exception;
 };

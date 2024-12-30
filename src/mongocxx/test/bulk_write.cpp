@@ -39,7 +39,7 @@ TEST_CASE("a bulk_write will setup a mongoc bulk operation", "[bulk_write]") {
     bool construct_called = false;
     bool ordered_value = false;
 
-    construct->visit([&](mongoc_collection_t*, const bson_t* opts) {
+    construct->visit([&](mongoc_collection_t*, bson_t const* opts) {
         construct_called = true;
         bson_iter_t iter;
         bson_iter_init(&iter, opts);
@@ -88,7 +88,7 @@ class insert_functor {
    public:
     insert_functor(bool* called, bsoncxx::document::view document) : _called{called}, _document{document} {}
 
-    void operator()(mongoc_bulk_operation_t*, const bson_t* document, const bson_t*, bson_error_t*) {
+    void operator()(mongoc_bulk_operation_t*, bson_t const* document, bson_t const*, bson_error_t*) {
         *_called = true;
         REQUIRE(bson_get_data(document) == _document.data());
     }
@@ -105,9 +105,9 @@ class update_functor {
 
     void operator()(
         mongoc_bulk_operation_t*,
-        const bson_t* filter,
-        const bson_t* update,
-        const bson_t* options,
+        bson_t const* filter,
+        bson_t const* update,
+        bson_t const* options,
         bson_error_t*) {
         *_called = true;
         REQUIRE(bson_get_data(filter) == _filter.data());
@@ -154,7 +154,7 @@ class delete_functor {
    public:
     delete_functor(bool* called, bsoncxx::document::view filter) : _called{called}, _filter{filter} {}
 
-    void operator()(mongoc_bulk_operation_t*, const bson_t* filter, const bson_t* options, bson_error_t*) {
+    void operator()(mongoc_bulk_operation_t*, bson_t const* filter, bson_t const* options, bson_error_t*) {
         *_called = true;
         REQUIRE(bson_get_data(filter) == _filter.data());
 

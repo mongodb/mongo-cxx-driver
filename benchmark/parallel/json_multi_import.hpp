@@ -38,7 +38,7 @@ using bsoncxx::builder::basic::make_document;
 
 class json_multi_import : public microbench {
    public:
-    static const std::uint32_t TOTAL_FILES{100};
+    static std::uint32_t const TOTAL_FILES{100};
 
     json_multi_import() = delete;
 

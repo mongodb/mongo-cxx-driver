@@ -33,7 +33,7 @@ namespace {
 
 // Some of the 'uri_get_*' string accessors may return nullptr.  Check for this case and convert to
 // the empty string.
-std::string to_string_null_safe(const char* str) {
+std::string to_string_null_safe(char const* str) {
     if (str == nullptr) {
         return std::string{};
     }
@@ -42,7 +42,7 @@ std::string to_string_null_safe(const char* str) {
 
 }  // namespace
 
-const std::string uri::k_default_uri = "mongodb://localhost:27017";
+std::string const uri::k_default_uri = "mongodb://localhost:27017";
 
 uri::uri(std::unique_ptr<impl>&& implementation) {
     _impl.reset(implementation.release());
@@ -134,7 +134,7 @@ mongocxx::v_noabi::write_concern uri::write_concern() const {
 static bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::stdx::string_view> _string_option(
     mongoc_uri_t* uri,
     std::string opt_name) {
-    const char* value;
+    char const* value;
 
     value = libmongoc::uri_get_option_as_utf8(uri, opt_name.c_str(), nullptr);
     if (!value) {
@@ -146,7 +146,7 @@ static bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::stdx::string_view> _st
 
 static bsoncxx::v_noabi::stdx::optional<std::int32_t> _int32_option(mongoc_uri_t* uri, std::string opt_name) {
     bson_iter_t iter;
-    const bson_t* options_bson = libmongoc::uri_get_options(uri);
+    bson_t const* options_bson = libmongoc::uri_get_options(uri);
 
     if (!bson_iter_init_find_case(&iter, options_bson, opt_name.c_str()) || !BSON_ITER_HOLDS_INT32(&iter)) {
         return {};
@@ -156,7 +156,7 @@ static bsoncxx::v_noabi::stdx::optional<std::int32_t> _int32_option(mongoc_uri_t
 
 static bsoncxx::v_noabi::stdx::optional<bool> _bool_option(mongoc_uri_t* uri, std::string opt_name) {
     bson_iter_t iter;
-    const bson_t* options_bson = libmongoc::uri_get_options(uri);
+    bson_t const* options_bson = libmongoc::uri_get_options(uri);
 
     if (!bson_iter_init_find_case(&iter, options_bson, opt_name.c_str()) || !BSON_ITER_HOLDS_BOOL(&iter)) {
         return {};
@@ -165,8 +165,8 @@ static bsoncxx::v_noabi::stdx::optional<bool> _bool_option(mongoc_uri_t* uri, st
 }
 
 bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view> uri::credentials() {
-    const bson_t* options_bson = libmongoc::uri_get_credentials(_impl->uri_t);
-    const uint8_t* data = bson_get_data(options_bson);
+    bson_t const* options_bson = libmongoc::uri_get_credentials(_impl->uri_t);
+    uint8_t const* data = bson_get_data(options_bson);
 
     return bsoncxx::v_noabi::document::view(data, options_bson->len);
 }
@@ -179,9 +179,9 @@ static bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view> _crede
     mongoc_uri_t* uri,
     std::string opt_name) {
     bson_iter_t iter;
-    const uint8_t* data;
+    uint8_t const* data;
     uint32_t len;
-    const bson_t* options_bson = libmongoc::uri_get_credentials(uri);
+    bson_t const* options_bson = libmongoc::uri_get_credentials(uri);
 
     if (!bson_iter_init_find_case(&iter, options_bson, opt_name.c_str()) || !BSON_ITER_HOLDS_DOCUMENT(&iter)) {
         return {};
@@ -200,7 +200,7 @@ bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view> uri::auth_mec
 }
 
 std::vector<bsoncxx::v_noabi::stdx::string_view> uri::compressors() const {
-    const bson_t* compressors;
+    bson_t const* compressors;
     std::vector<bsoncxx::v_noabi::stdx::string_view> result;
     bson_iter_t iter;
 

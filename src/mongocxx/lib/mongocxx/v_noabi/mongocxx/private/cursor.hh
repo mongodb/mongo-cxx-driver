@@ -47,8 +47,8 @@ class cursor::impl {
     impl(impl&&) = delete;
     impl& operator=(impl&&) = delete;
 
-    impl(const impl&) = delete;
-    impl& operator=(const impl&) = delete;
+    impl(impl const&) = delete;
+    impl& operator=(impl const&) = delete;
 
     bool has_started() const {
         return status >= state::k_started;

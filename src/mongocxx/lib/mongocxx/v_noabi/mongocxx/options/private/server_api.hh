@@ -28,7 +28,7 @@ namespace options {
 
 using unique_server_api = std::unique_ptr<mongoc_server_api_t, decltype(libmongoc::server_api_destroy)>;
 
-inline unique_server_api make_server_api(const server_api& opts) {
+inline unique_server_api make_server_api(server_api const& opts) {
     mongoc_server_api_version_t mongoc_api_version;
 
     // Convert version enum value to std::string then to c_str to create mongoc api version.

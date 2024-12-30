@@ -81,7 +81,7 @@ class sub_document {
     // Appends a basic::kvp where the key is a string literal
     //
     template <std::size_t n, typename V>
-    void append_(std::tuple<const char (&)[n], V>&& t) {
+    void append_(std::tuple<char const (&)[n], V>&& t) {
         _core->key_view(stdx::string_view{std::get<0>(t), n - 1});
         impl::value_append(_core, std::forward<V>(std::get<1>(t)));
     }

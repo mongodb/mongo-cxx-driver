@@ -22,7 +22,7 @@ namespace result {
 
 delete_result::delete_result(result::bulk_write result) : _result(std::move(result)) {}
 
-const result::bulk_write& delete_result::result() const {
+result::bulk_write const& delete_result::result() const {
     return _result;
 }
 
@@ -30,10 +30,10 @@ std::int32_t delete_result::deleted_count() const {
     return _result.deleted_count();
 }
 
-bool operator==(const delete_result& lhs, const delete_result& rhs) {
+bool operator==(delete_result const& lhs, delete_result const& rhs) {
     return lhs.result() == rhs.result();
 }
-bool operator!=(const delete_result& lhs, const delete_result& rhs) {
+bool operator!=(delete_result const& lhs, delete_result const& rhs) {
     return !(lhs == rhs);
 }
 

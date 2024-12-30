@@ -64,9 +64,9 @@ class downloader {
     ///
     MONGOCXX_ABI_EXPORT_CDECL(downloader&) operator=(downloader&&) noexcept;
 
-    downloader(const downloader&) = delete;
+    downloader(downloader const&) = delete;
 
-    downloader& operator=(const downloader&) = delete;
+    downloader& operator=(downloader const&) = delete;
 
     ///
     /// Destroys a downloader.
@@ -166,7 +166,7 @@ class downloader {
     class impl;
 
     impl& _get_impl();
-    const impl& _get_impl() const;
+    impl const& _get_impl() const;
 
     std::unique_ptr<impl> _impl;
 };

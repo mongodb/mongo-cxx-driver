@@ -128,79 +128,79 @@ index& index::haystack_bucket_size(double haystack_bucket_size) {
     return haystack_bucket_size_deprecated(haystack_bucket_size);
 }
 
-const bsoncxx::v_noabi::stdx::optional<bool>& index::background() const {
+bsoncxx::v_noabi::stdx::optional<bool> const& index::background() const {
     return _background;
 }
 
-const bsoncxx::v_noabi::stdx::optional<bool>& index::unique() const {
+bsoncxx::v_noabi::stdx::optional<bool> const& index::unique() const {
     return _unique;
 }
 
-const bsoncxx::v_noabi::stdx::optional<bool>& index::hidden() const {
+bsoncxx::v_noabi::stdx::optional<bool> const& index::hidden() const {
     return _hidden;
 }
 
-const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value>& index::name() const {
+bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value> const& index::name() const {
     return _name;
 }
 
-const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view>& index::collation() const {
+bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view> const& index::collation() const {
     return _collation;
 }
 
-const bsoncxx::v_noabi::stdx::optional<bool>& index::sparse() const {
+bsoncxx::v_noabi::stdx::optional<bool> const& index::sparse() const {
     return _sparse;
 }
 
-const std::unique_ptr<index::base_storage_options>& index::storage_options() const {
+std::unique_ptr<index::base_storage_options> const& index::storage_options() const {
     return _storage_options;
 }
 
-const bsoncxx::v_noabi::stdx::optional<std::chrono::seconds>& index::expire_after() const {
+bsoncxx::v_noabi::stdx::optional<std::chrono::seconds> const& index::expire_after() const {
     return _expire_after;
 }
 
-const bsoncxx::v_noabi::stdx::optional<std::int32_t>& index::version() const {
+bsoncxx::v_noabi::stdx::optional<std::int32_t> const& index::version() const {
     return _version;
 }
 
-const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view>& index::weights() const {
+bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view> const& index::weights() const {
     return _weights;
 }
 
-const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value>& index::default_language() const {
+bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value> const& index::default_language() const {
     return _default_language;
 }
 
-const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value>& index::language_override() const {
+bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value> const& index::language_override() const {
     return _language_override;
 }
 
-const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view>& index::partial_filter_expression() const {
+bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view> const& index::partial_filter_expression() const {
     return _partial_filter_expression;
 }
 
-const bsoncxx::v_noabi::stdx::optional<std::uint8_t>& index::twod_sphere_version() const {
+bsoncxx::v_noabi::stdx::optional<std::uint8_t> const& index::twod_sphere_version() const {
     return _twod_sphere_version;
 }
 
-const bsoncxx::v_noabi::stdx::optional<std::uint8_t>& index::twod_bits_precision() const {
+bsoncxx::v_noabi::stdx::optional<std::uint8_t> const& index::twod_bits_precision() const {
     return _twod_bits_precision;
 }
 
-const bsoncxx::v_noabi::stdx::optional<double>& index::twod_location_min() const {
+bsoncxx::v_noabi::stdx::optional<double> const& index::twod_location_min() const {
     return _twod_location_min;
 }
 
-const bsoncxx::v_noabi::stdx::optional<double>& index::twod_location_max() const {
+bsoncxx::v_noabi::stdx::optional<double> const& index::twod_location_max() const {
     return _twod_location_max;
 }
 
-const bsoncxx::v_noabi::stdx::optional<double>& index::haystack_bucket_size_deprecated() const {
+bsoncxx::v_noabi::stdx::optional<double> const& index::haystack_bucket_size_deprecated() const {
     return _haystack_bucket_size;
 }
 
-const bsoncxx::v_noabi::stdx::optional<double>& index::haystack_bucket_size() const {
+bsoncxx::v_noabi::stdx::optional<double> const& index::haystack_bucket_size() const {
     return haystack_bucket_size_deprecated();
 }
 
@@ -236,7 +236,7 @@ index::operator bsoncxx::v_noabi::document::view_or_value() {
     }
 
     if (_expire_after) {
-        const auto count = _expire_after->count();
+        auto const count = _expire_after->count();
         if ((count < 0) || (count > std::numeric_limits<std::int32_t>::max())) {
             throw logic_error{error_code::k_invalid_parameter};
         }
@@ -282,8 +282,8 @@ index::operator bsoncxx::v_noabi::document::view_or_value() {
 
     if (_storage_options) {
         if (_storage_options->type() == MONGOC_INDEX_STORAGE_OPT_WIREDTIGER) {
-            const options::index::wiredtiger_storage_options* wt_options =
-                static_cast<const options::index::wiredtiger_storage_options*>(_storage_options.get());
+            options::index::wiredtiger_storage_options const* wt_options =
+                static_cast<options::index::wiredtiger_storage_options const*>(_storage_options.get());
 
             bsoncxx::v_noabi::document::view_or_value storage_doc;
             if (wt_options->config_string()) {
@@ -307,7 +307,7 @@ void index::wiredtiger_storage_options::config_string(bsoncxx::v_noabi::string::
     _config_string = std::move(config_string);
 }
 
-const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value>&
+bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value> const&
 index::wiredtiger_storage_options::config_string() const {
     return _config_string;
 }

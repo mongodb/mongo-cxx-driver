@@ -34,7 +34,7 @@ struct parsed_oid {
     uint32_t counter;
 };
 
-parsed_oid parse_oid(const oid& oid) {
+parsed_oid parse_oid(oid const& oid) {
     parsed_oid parsed{};
 
     // Parse into component sections
@@ -58,7 +58,7 @@ parsed_oid parse_oid(const oid& oid) {
     return parsed;
 }
 
-void compare_string(const std::time_t& t, std::string time) {
+void compare_string(std::time_t const& t, std::string time) {
     char time_str[48];
 
     REQUIRE(0 != (strftime(time_str, sizeof(time_str), "%b %e, %Y %H:%M:%S UTC", std::gmtime(&t))));

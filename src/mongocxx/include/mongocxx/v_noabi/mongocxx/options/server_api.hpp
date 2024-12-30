@@ -101,7 +101,7 @@ class server_api {
     /// @return
     ///   The optional value of the strict option.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<bool>&) strict() const;
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bool> const&) strict() const;
 
     ///
     /// Sets the deprecation errors option, specifying whether the server should
@@ -121,7 +121,7 @@ class server_api {
     /// @return
     ///   The optional value of the deprecation errors option.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<bool>&)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bool> const&)
     deprecation_errors() const;
 
     ///

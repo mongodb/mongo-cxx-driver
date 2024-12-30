@@ -35,13 +35,13 @@ namespace {
 [[noreturn]] void watch_forever(mongocxx::collection& collection) {
     mongocxx::options::change_stream options;
     // Wait up to 1 second before polling again.
-    const std::chrono::milliseconds await_time{1000};
+    std::chrono::milliseconds const await_time{1000};
     options.max_await_time(await_time);
 
     mongocxx::change_stream stream = collection.watch(options);
 
     while (true) {
-        for (const auto& event : stream) {
+        for (auto const& event : stream) {
             std::cout << bsoncxx::to_json(event) << std::endl;
         }
         std::cout << "No new notifications. Trying again..." << std::endl;
@@ -112,7 +112,7 @@ int EXAMPLES_CDECL main(int argc, char* argv[]) {
         watch_forever(collection);
 
         return EXIT_SUCCESS;
-    } catch (const std::exception& exception) {
+    } catch (std::exception const& exception) {
         std::cerr << "Caught exception \"" << exception.what() << "\"" << std::endl;
     } catch (...) {
         std::cerr << "Caught unknown exception type" << std::endl;

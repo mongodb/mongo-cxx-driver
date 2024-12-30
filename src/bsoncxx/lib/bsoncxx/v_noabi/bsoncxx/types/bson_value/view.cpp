@@ -65,7 +65,7 @@ view::view(const view& rhs) noexcept {
     _type = rhs._type;
 }
 
-view& view::operator=(const view& rhs) noexcept {
+view& view::operator=(view const& rhs) noexcept {
     if (this == &rhs) {
         return *this;
     }
@@ -109,7 +109,7 @@ view::view(const std::uint8_t* raw, std::uint32_t length, std::uint32_t offset, 
     auto value = bson_iter_value(&iter);
 
     // ABI backward compatibility. Const is restored in `view::_init`.
-    _init(const_cast<void*>(static_cast<const void*>(value)));
+    _init(const_cast<void*>(static_cast<void const*>(value)));
 }
 
 view::view(void* internal_value) noexcept {
@@ -123,7 +123,7 @@ void view::_init(void* internal_value) noexcept {
         return;
     }
 
-    auto v = static_cast<const bson_value_t*>(internal_value);
+    auto v = static_cast<bson_value_t const*>(internal_value);
     _type = static_cast<bsoncxx::v_noabi::type>(v->value_type);
 
     switch (_type) {
@@ -139,7 +139,7 @@ void view::_init(void* internal_value) noexcept {
     }
 }
 
-bool operator==(const view& lhs, const view& rhs) {
+bool operator==(view const& lhs, view const& rhs) {
     if (lhs.type() != rhs.type()) {
         return false;
     }
@@ -156,7 +156,7 @@ bool operator==(const view& lhs, const view& rhs) {
     BSONCXX_UNREACHABLE;
 }
 
-bool operator!=(const view& lhs, const view& rhs) {
+bool operator!=(view const& lhs, view const& rhs) {
     return !(lhs == rhs);
 }
 

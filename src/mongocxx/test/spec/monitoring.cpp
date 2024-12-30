@@ -37,7 +37,7 @@ using bsoncxx::to_json;
 
 static void remove_ignored_command_monitoring_events(
     apm_checker::event_vector& events,
-    const std::vector<std::string>& ignore) {
+    std::vector<std::string> const& ignore) {
     auto is_ignored = [&](bsoncxx::document::value v) {
         return std::any_of(std::begin(ignore), std::end(ignore), [&](bsoncxx::stdx::string_view key) {
             return v.view()["commandStartedEvent"]["command"][key] || v.view()["commandFailedEvent"]["command"][key] ||
@@ -55,7 +55,7 @@ void apm_checker::compare_unified(bsoncxx::array::view expectations, entity::map
     CAPTURE(print_all());
 
     // This will throw an exception on unmatched fields and return true in all other cases.
-    auto compare = [&](const bsoncxx::array::element& exp, const bsoncxx::document::view actual) {
+    auto compare = [&](bsoncxx::array::element const& exp, bsoncxx::document::view const actual) {
         CAPTURE(to_json(actual), bsoncxx::to_string(exp.get_value()));
 
         // Extra fields are only allowed in root-level documents. Here, each k in keys is treated
@@ -94,15 +94,15 @@ void apm_checker::compare_unified(bsoncxx::array::view expectations, entity::map
 void apm_checker::compare(
     bsoncxx::array::view expectations,
     bool allow_extra,
-    const test_util::match_visitor& match_visitor) {
+    test_util::match_visitor const& match_visitor) {
     auto is_ignored = [&](bsoncxx::document::value v) {
-        const auto view = v.view();
+        auto const view = v.view();
 
         // CXX-2155: Sharing a MongoClient for metadata lookup can lead to deadlock in
         // drivers using automatic encryption. Since the C++ driver does not use a separate
         // `client` for listCollections and finds on the key vault, we skip these checks.
         if (view["command_started_event"]["command"]["listCollections"]) {
-            const auto db = view["command_started_event"]["command"]["$db"];
+            auto const db = view["command_started_event"]["command"]["$db"];
 
             if (db && db.get_string().value == bsoncxx::stdx::string_view("keyvault")) {
                 return true;
@@ -157,7 +157,7 @@ std::string apm_checker::print_all() const {
     std::ostringstream output;
     output << "\n\n";
     output << "APM Checker contents:\n";
-    for (const auto& event : _events) {
+    for (auto const& event : _events) {
         output << "APM event: " << bsoncxx::to_json(event) << "\n\n";
     }
     return std::move(output).str();
@@ -171,15 +171,15 @@ static bool is_hello_cmd_name(bsoncxx::stdx::string_view name) {
     return name == bsoncxx::stdx::string_view("hello") || name == bsoncxx::stdx::string_view("ismaster") ||
            name == bsoncxx::stdx::string_view("isMaster");
 }
-static bool is_sensitive_hello_cmd_event(const events::command_started_event& event) {
+static bool is_sensitive_hello_cmd_event(events::command_started_event const& event) {
     return event.command().empty();
 }
 
-static bool is_sensitive_hello_cmd_event(const events::command_succeeded_event& ev) {
+static bool is_sensitive_hello_cmd_event(events::command_succeeded_event const& ev) {
     return ev.reply().empty();
 }
 
-static bool is_sensitive_hello_cmd_event(const events::command_failed_event& ev) {
+static bool is_sensitive_hello_cmd_event(events::command_failed_event const& ev) {
     return ev.failure().empty();
 }
 
@@ -191,7 +191,7 @@ static bool is_sensitive_hello_cmd_event(const events::command_failed_event& ev)
  * and 'speculativeAuthenticate' is provided in the command (See is_sensitive_hello_cmd_event).
  */
 template <typename Ev>
-static bool is_sensitive_command(const Ev& event) noexcept {
+static bool is_sensitive_command(Ev const& event) noexcept {
     static bsoncxx::stdx::string_view sensitive_commands[] = {
         "authenticate",
         "saslStart",
@@ -203,7 +203,7 @@ static bool is_sensitive_command(const Ev& event) noexcept {
         "copyDbSaslStart",
         "copydb",
     };
-    const bool is_sensitive_cmd_name =
+    bool const is_sensitive_cmd_name =
         std::find(std::begin(sensitive_commands), std::end(sensitive_commands), event.command_name()) !=
         std::end(sensitive_commands);
     if (is_sensitive_cmd_name) {
@@ -216,7 +216,7 @@ static bool is_sensitive_command(const Ev& event) noexcept {
 void apm_checker::set_command_started_unified(options::apm& apm) {
     using namespace bsoncxx::builder::basic;
 
-    apm.on_command_started([&](const events::command_started_event& event) {
+    apm.on_command_started([&](events::command_started_event const& event) {
         if (!observe_sensitive_events && is_sensitive_command(event)) {
             return;
         }
@@ -239,7 +239,7 @@ void apm_checker::set_command_started_unified(options::apm& apm) {
 void apm_checker::set_command_failed_unified(options::apm& apm) {
     using namespace bsoncxx::builder::basic;
 
-    apm.on_command_failed([&](const events::command_failed_event& event) {
+    apm.on_command_failed([&](events::command_failed_event const& event) {
         if (!observe_sensitive_events && is_sensitive_command(event)) {
             return;
         }
@@ -257,7 +257,7 @@ void apm_checker::set_command_failed_unified(options::apm& apm) {
 void apm_checker::set_command_succeeded_unified(options::apm& apm) {
     using namespace bsoncxx::builder::basic;
 
-    apm.on_command_succeeded([&](const events::command_succeeded_event& event) {
+    apm.on_command_succeeded([&](events::command_succeeded_event const& event) {
         if (!observe_sensitive_events && is_sensitive_command(event)) {
             return;
         }
@@ -277,7 +277,7 @@ void apm_checker::set_command_succeeded_unified(options::apm& apm) {
 void apm_checker::set_command_started(options::apm& apm) {
     using namespace bsoncxx::builder::basic;
 
-    apm.on_command_started([&](const events::command_started_event& event) {
+    apm.on_command_started([&](events::command_started_event const& event) {
         if (should_ignore(event.command_name())) {
             return;
         }
@@ -297,7 +297,7 @@ void apm_checker::set_command_started(options::apm& apm) {
 void apm_checker::set_command_failed(options::apm& apm) {
     using namespace bsoncxx::builder::basic;
 
-    apm.on_command_failed([&](const events::command_failed_event& event) {
+    apm.on_command_failed([&](events::command_failed_event const& event) {
         if (should_ignore(event.command_name())) {
             return;
         }
@@ -313,7 +313,7 @@ void apm_checker::set_command_failed(options::apm& apm) {
 void apm_checker::set_command_succeeded(options::apm& apm) {
     using namespace bsoncxx::builder::basic;
 
-    apm.on_command_succeeded([&](const events::command_succeeded_event& event) {
+    apm.on_command_succeeded([&](events::command_succeeded_event const& event) {
         if (should_ignore(event.command_name())) {
             return;
         }
@@ -341,7 +341,7 @@ options::apm apm_checker::get_apm_opts(bool command_started_events_only) {
     return opts;
 }
 
-void apm_checker::set_ignore_command_monitoring_event(const std::string& event) {
+void apm_checker::set_ignore_command_monitoring_event(std::string const& event) {
     this->_ignore.push_back(event);
 }
 

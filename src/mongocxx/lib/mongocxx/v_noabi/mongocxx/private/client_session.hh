@@ -52,7 +52,7 @@ bool with_transaction_cpp_cb(mongoc_client_session_t*, void* ctx, bson_t** reply
     try {
         cb_ctx->cb(cb_ctx->parent);
         return true;
-    } catch (const operation_exception& e) {
+    } catch (operation_exception const& e) {
         make_bson_error(error, e);
         if (e.raw_server_error()) {
             libbson::scoped_bson_t raw{e.raw_server_error()->view()};
@@ -70,7 +70,7 @@ bool with_transaction_cpp_cb(mongoc_client_session_t*, void* ctx, bson_t** reply
 
 class client_session::impl {
    public:
-    impl(const mongocxx::v_noabi::client* client, const options::client_session& session_options)
+    impl(mongocxx::v_noabi::client const* client, options::client_session const& session_options)
         : _client(client), _options(session_options), _session_t(nullptr, nullptr) {
         // Create a mongoc_session_opts_t from session_options.
         std::unique_ptr<mongoc_session_opt_t, decltype(libmongoc::session_opts_destroy)> opt_t{
@@ -98,11 +98,11 @@ class client_session::impl {
         _session_t = unique_session{s, [](mongoc_client_session_t* cs) { libmongoc::client_session_destroy(cs); }};
     }
 
-    const mongocxx::v_noabi::client& client() const noexcept {
+    mongocxx::v_noabi::client const& client() const noexcept {
         return *_client;
     }
 
-    const options::client_session& options() const noexcept {
+    options::client_session const& options() const noexcept {
         return _options;
     }
 
@@ -116,7 +116,7 @@ class client_session::impl {
     }
 
     bsoncxx::v_noabi::document::view cluster_time() const noexcept {
-        const bson_t* ct = libmongoc::client_session_get_cluster_time(_session_t.get());
+        bson_t const* ct = libmongoc::client_session_get_cluster_time(_session_t.get());
         if (ct) {
             return bsoncxx::helpers::view_from_bson_t(ct);
         }
@@ -130,18 +130,18 @@ class client_session::impl {
         return ts;
     }
 
-    void advance_cluster_time(const bsoncxx::v_noabi::document::view& cluster_time) noexcept {
+    void advance_cluster_time(bsoncxx::v_noabi::document::view const& cluster_time) noexcept {
         bson_t bson;
         bson_init_static(&bson, cluster_time.data(), cluster_time.length());
         libmongoc::client_session_advance_cluster_time(_session_t.get(), &bson);
     }
 
-    void advance_operation_time(const bsoncxx::v_noabi::types::b_timestamp& operation_time) noexcept {
+    void advance_operation_time(bsoncxx::v_noabi::types::b_timestamp const& operation_time) noexcept {
         libmongoc::client_session_advance_operation_time(
             _session_t.get(), operation_time.timestamp, operation_time.increment);
     }
 
-    void start_transaction(const bsoncxx::v_noabi::stdx::optional<options::transaction>& transaction_opts) {
+    void start_transaction(bsoncxx::v_noabi::stdx::optional<options::transaction> const& transaction_opts) {
         bson_error_t error;
         mongoc_transaction_opt_t* transaction_opt_t = nullptr;
 
@@ -227,7 +227,7 @@ class client_session::impl {
     }
 
    private:
-    const mongocxx::v_noabi::client* _client;
+    mongocxx::v_noabi::client const* _client;
     options::client_session _options;
 
     using unique_session = std::unique_ptr<mongoc_client_session_t, std::function<void(mongoc_client_session_t*)>>;

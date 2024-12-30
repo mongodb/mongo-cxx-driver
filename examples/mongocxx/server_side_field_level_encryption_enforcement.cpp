@@ -48,7 +48,7 @@ using bsoncxx::types::bson_value::make_value;
 
 using namespace mongocxx;
 
-const int kKeyLength = 96;
+int const kKeyLength = 96;
 
 int EXAMPLES_CDECL main() {
     instance inst{};
@@ -138,7 +138,7 @@ int EXAMPLES_CDECL main() {
         // Inserting via the unencrypted client fails, because the server
         // requires that the encryptedField actually be encrypted.
         unencrypted_client["test"]["coll"].insert_one(to_insert.view());
-    } catch (const std::exception& e) {
+    } catch (std::exception const& e) {
         std::cout << "Unencrypted insert failed: " << e.what() << std::endl;
     }
 }

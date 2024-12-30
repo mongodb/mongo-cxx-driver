@@ -40,7 +40,7 @@ rewrap_many_datakey& rewrap_many_datakey::master_key(bsoncxx::v_noabi::document:
     return *this;
 }
 
-const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value>& rewrap_many_datakey::master_key()
+bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const& rewrap_many_datakey::master_key()
     const {
     return _master_key;
 }

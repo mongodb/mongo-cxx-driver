@@ -63,7 +63,7 @@ int EXAMPLES_CDECL main() {
 
             std::cout << "ERROR: server does not support document validation." << std::endl;
 
-        } catch (const mongocxx::exception& e) {
+        } catch (mongocxx::exception const& e) {
             std::cout << "Some zombie needs to eat more brains:" << std::endl;
             std::cout << e.what() << std::endl;
         }

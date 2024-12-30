@@ -56,7 +56,7 @@ std::int32_t compare_versions(std::string version1, std::string version2);
 // Returns 'true' if the server version for 'client' is at least 'version',
 // returns 'false' otherwise.
 //
-bool newer_than(const client& client, std::string version);
+bool newer_than(client const& client, std::string version);
 
 //
 // Converts a hexadecimal string to an string of bytes.
@@ -83,42 +83,42 @@ options::client add_test_server_api(options::client opts = {});
 //
 // Throws mongocxx::operation_exception if the operation fails, or the server reply is malformed.
 //
-std::int32_t get_max_wire_version(const client& client);
+std::int32_t get_max_wire_version(client const& client);
 
 ///
 /// Determines the server version number by running "serverStatus".
 ///
-std::string get_server_version(const client& client = {uri{}, add_test_server_api()});
+std::string get_server_version(client const& client = {uri{}, add_test_server_api()});
 
 ///
 /// Determines the setting of all server parameters by running "getParameter, *".
 ///
-bsoncxx::document::value get_server_params(const client& client = {uri{}, add_test_server_api()});
+bsoncxx::document::value get_server_params(client const& client = {uri{}, add_test_server_api()});
 
 ///
 /// Get replica set name, or empty string.
 ///
-std::string replica_set_name(const client& client);
+std::string replica_set_name(client const& client);
 
 ///
 /// Determines if the server is a replica set member.
 ///
-bool is_replica_set(const client& client = {uri{}, add_test_server_api()});
+bool is_replica_set(client const& client = {uri{}, add_test_server_api()});
 
 ///
 /// Determines if the server is a sharded cluster member.
 ///
-bool is_sharded_cluster(const client& client = {uri{}, add_test_server_api()});
+bool is_sharded_cluster(client const& client = {uri{}, add_test_server_api()});
 
 ///
 /// Returns "standalone", "replicaset", or "sharded".
 ///
-std::string get_topology(const client& client = {uri{}, add_test_server_api()});
+std::string get_topology(client const& client = {uri{}, add_test_server_api()});
 
 ///
 /// Returns the "host" field of the config.shards collection.
 ///
-std::string get_hosts(const client& client = {uri{}, add_test_server_api()});
+std::string get_hosts(client const& client = {uri{}, add_test_server_api()});
 
 ///
 /// Parses a JSON file at a given path and return it as a BSON document value.
@@ -160,7 +160,7 @@ using xformer_t = std::function<bsoncxx::stdx::optional<item_t>(item_t, bsoncxx:
 // @throws a logic_error{error_code::k_invalid_parameter} if fcn returns no key when a key is
 // passed in.
 //
-bsoncxx::document::value transform_document(bsoncxx::document::view view, const xformer_t& fcn);
+bsoncxx::document::value transform_document(bsoncxx::document::view view, xformer_t const& fcn);
 
 double as_double(bsoncxx::types::bson_value::view value);
 
@@ -210,7 +210,7 @@ auto size(Container c) -> decltype(std::distance(std::begin(c), std::end(c))) {
 //
 // @return Whether sessions are supported by the client's topology.
 //
-bool server_has_sessions_impl(const client& conn);
+bool server_has_sessions_impl(client const& conn);
 
 #define SERVER_HAS_SESSIONS_OR_SKIP(conn)                       \
     if (!mongocxx::test_util::server_has_sessions_impl(conn)) { \

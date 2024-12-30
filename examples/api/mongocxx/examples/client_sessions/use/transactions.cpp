@@ -76,7 +76,7 @@ RUNNER_REGISTER_COMPONENT_FOR_REPLICA() {
         db_lock guard{client, EXAMPLES_COMPONENT_NAME_STR};
 
         example(client.start_session(), set_rw_concern_majority(guard.get()).create_collection("coll"));
-    } catch (const mongocxx::exception& ex) {
+    } catch (mongocxx::exception const& ex) {
         if (std::strstr(ex.what(), "not supported") != nullptr) {
             // MongoDB 4.2+ required for sharded clusters.
         } else {

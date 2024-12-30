@@ -118,7 +118,7 @@ class array_context {
     ///
     /// The argument must be an open_document_type token (it is otherwise ignored).
     ///
-    key_context<array_context> operator<<(const open_document_type) {
+    key_context<array_context> operator<<(open_document_type const) {
         _core->open_document();
         return wrap_document();
     }
@@ -142,7 +142,7 @@ class array_context {
     ///
     /// The argument must be an open_document_type token (it is otherwise ignored).
     ///
-    array_context<array_context> operator<<(const open_array_type) {
+    array_context<array_context> operator<<(open_array_type const) {
         _core->open_array();
         return wrap_array();
     }
@@ -152,7 +152,7 @@ class array_context {
     ///
     /// The argument must be a close_array_type token (it is otherwise ignored).
     ///
-    base operator<<(const close_array_type) {
+    base operator<<(close_array_type const) {
         _core->close_array();
         return unwrap();
     }

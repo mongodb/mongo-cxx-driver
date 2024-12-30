@@ -82,7 +82,7 @@ benchmark_runner::benchmark_runner(std::set<benchmark_type> types) : _types{type
     // Need to remove some
     if (!_types.empty()) {
         for (auto&& it = _microbenches.begin(); it != _microbenches.end();) {
-            const std::set<benchmark_type>& tags = (*it)->get_tags();
+            std::set<benchmark_type> const& tags = (*it)->get_tags();
             std::set<benchmark_type> intersect;
             std::set_intersection(
                 tags.begin(), tags.end(), _types.begin(), _types.end(), std::inserter(intersect, intersect.begin()));
@@ -162,7 +162,7 @@ void benchmark_runner::write_scores() {
     auto doc = builder::basic::document{};
     doc.append(kvp("info", [](sub_document subdoc) { subdoc.append(kvp("test_name", "C++ Driver microbenchmarks")); }));
 
-    auto write_time = [](const std::chrono::time_point<std::chrono::system_clock> t) -> std::string {
+    auto write_time = [](std::chrono::time_point<std::chrono::system_clock> const t) -> std::string {
         std::time_t t1 = std::chrono::system_clock::to_time_t(t);
         std::ostringstream oss;
         oss << std::put_time(std::gmtime(&t1), "%Y-%m-%dT%H:%M:%S") << "+00:00";
@@ -178,7 +178,7 @@ void benchmark_runner::write_scores() {
     std::cout << "Individual microbenchmark scores:" << std::endl << "===========" << std::endl;
     for (auto&& bench : _microbenches) {
         auto& score = bench->get_results();
-        const auto bench_time = static_cast<double>(score.get_percentile(50).count()) / 1000.0;
+        auto const bench_time = static_cast<double>(score.get_percentile(50).count()) / 1000.0;
 
         std::cout << bench->get_name() << ": " << bench_time << " seconds | " << score.get_score() << " MB/s"
                   << std::endl;

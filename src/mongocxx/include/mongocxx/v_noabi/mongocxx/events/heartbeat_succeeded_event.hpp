@@ -34,7 +34,7 @@ namespace events {
 ///
 class heartbeat_succeeded_event {
    public:
-    explicit heartbeat_succeeded_event(const void* event);
+    explicit heartbeat_succeeded_event(void const* event);
 
     ///
     /// Destroys a heartbeat_succeeded_event.
@@ -44,8 +44,8 @@ class heartbeat_succeeded_event {
     heartbeat_succeeded_event(heartbeat_succeeded_event&&) = default;
     heartbeat_succeeded_event& operator=(heartbeat_succeeded_event&&) = default;
 
-    heartbeat_succeeded_event(const heartbeat_succeeded_event&) = default;
-    heartbeat_succeeded_event& operator=(const heartbeat_succeeded_event&) = default;
+    heartbeat_succeeded_event(heartbeat_succeeded_event const&) = default;
+    heartbeat_succeeded_event& operator=(heartbeat_succeeded_event const&) = default;
 
     ///
     /// Returns the server reply for the succeeded operation.
@@ -83,7 +83,7 @@ class heartbeat_succeeded_event {
     MONGOCXX_ABI_EXPORT_CDECL(bool) awaited() const;
 
    private:
-    const void* _succeeded_event;
+    void const* _succeeded_event;
 };
 
 }  // namespace events

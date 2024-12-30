@@ -43,11 +43,11 @@ TEST_CASE("valid json does not throw") {
 TEST_CASE("valid json is converted to equivalent BSON") {
     using namespace bsoncxx;
 
-    const auto expected = make_document(kvp("a", 1), kvp("b", 2.0));
-    const auto expected_view = expected.view();
+    auto const expected = make_document(kvp("a", 1), kvp("b", 2.0));
+    auto const expected_view = expected.view();
 
-    const auto actual_doc = from_json(k_valid_json);
-    const auto actual_view = actual_doc.view();
+    auto const actual_doc = from_json(k_valid_json);
+    auto const actual_view = actual_doc.view();
 
     REQUIRE(expected_view.length() == actual_view.length());
     REQUIRE(0 == memcmp(expected_view.data(), actual_view.data(), expected_view.length()));
@@ -74,7 +74,7 @@ TEST_CASE("CXX-941 is resolved") {
 
 TEST_CASE("CXX-1246: Legacy Extended JSON (Implicit)") {
     using namespace bsoncxx;
-    types::b_binary bin_val{binary_sub_type::k_uuid, 8, reinterpret_cast<const uint8_t*>("deadbeef")};
+    types::b_binary bin_val{binary_sub_type::k_uuid, 8, reinterpret_cast<uint8_t const*>("deadbeef")};
     auto doc = make_document(kvp("number", 42), kvp("bin", bin_val));
     auto output = bsoncxx::to_json(doc.view());
     REQUIRE(output == R"({ "number" : 42, "bin" : { "$binary" : "ZGVhZGJlZWY=", "$type" : "04" } })");
@@ -82,7 +82,7 @@ TEST_CASE("CXX-1246: Legacy Extended JSON (Implicit)") {
 
 TEST_CASE("CXX-1246: Legacy Extended JSON (Explicit)") {
     using namespace bsoncxx;
-    types::b_binary bin_val{binary_sub_type::k_uuid, 8, reinterpret_cast<const uint8_t*>("deadbeef")};
+    types::b_binary bin_val{binary_sub_type::k_uuid, 8, reinterpret_cast<uint8_t const*>("deadbeef")};
     auto doc = make_document(kvp("number", 42), kvp("bin", bin_val));
     auto output = to_json(doc.view(), ExtendedJsonMode::k_legacy);
     REQUIRE(output == R"({ "number" : 42, "bin" : { "$binary" : "ZGVhZGJlZWY=", "$type" : "04" } })");
@@ -90,7 +90,7 @@ TEST_CASE("CXX-1246: Legacy Extended JSON (Explicit)") {
 
 TEST_CASE("CXX-1246: Relaxed Extended JSON") {
     using namespace bsoncxx;
-    types::b_binary bin_val{binary_sub_type::k_uuid, 8, reinterpret_cast<const uint8_t*>("deadbeef")};
+    types::b_binary bin_val{binary_sub_type::k_uuid, 8, reinterpret_cast<uint8_t const*>("deadbeef")};
     auto doc = make_document(kvp("number", 42), kvp("bin", bin_val));
     auto output = to_json(doc.view(), ExtendedJsonMode::k_relaxed);
 
@@ -99,7 +99,7 @@ TEST_CASE("CXX-1246: Relaxed Extended JSON") {
 
 TEST_CASE("CXX-1246: Canonical Extended JSON") {
     using namespace bsoncxx;
-    types::b_binary bin_val{binary_sub_type::k_uuid, 8, reinterpret_cast<const uint8_t*>("deadbeef")};
+    types::b_binary bin_val{binary_sub_type::k_uuid, 8, reinterpret_cast<uint8_t const*>("deadbeef")};
     auto doc = make_document(kvp("number", 42), kvp("bin", bin_val));
     auto output = to_json(doc.view(), ExtendedJsonMode::k_canonical);
 
@@ -112,7 +112,7 @@ TEST_CASE("CXX-1712: Overloaded to_json Legacy (Implicit)") {
     using namespace bsoncxx;
     using namespace builder::basic;
 
-    types::b_binary bin_val{binary_sub_type::k_uuid, 8, reinterpret_cast<const uint8_t*>("deadbeef")};
+    types::b_binary bin_val{binary_sub_type::k_uuid, 8, reinterpret_cast<uint8_t const*>("deadbeef")};
     auto arr = make_array(make_document(kvp("foo", 42), kvp("bar", "A"), kvp("baz", bin_val)));
     auto output = bsoncxx::to_json(arr.view());
 
@@ -123,7 +123,7 @@ TEST_CASE("CXX-1712: Overloaded to_json Legacy (Explicit)") {
     using namespace bsoncxx;
     using namespace builder::basic;
 
-    types::b_binary bin_val{binary_sub_type::k_uuid, 8, reinterpret_cast<const uint8_t*>("deadbeef")};
+    types::b_binary bin_val{binary_sub_type::k_uuid, 8, reinterpret_cast<uint8_t const*>("deadbeef")};
     auto arr = make_array(make_document(kvp("foo", 42), kvp("bar", "A"), kvp("baz", bin_val)));
     auto output = to_json(arr.view(), ExtendedJsonMode::k_legacy);
 
@@ -134,7 +134,7 @@ TEST_CASE("CXX-1712: Overloaded to_json Relaxed") {
     using namespace bsoncxx;
     using namespace builder::basic;
 
-    types::b_binary bin_val{binary_sub_type::k_uuid, 8, reinterpret_cast<const uint8_t*>("deadbeef")};
+    types::b_binary bin_val{binary_sub_type::k_uuid, 8, reinterpret_cast<uint8_t const*>("deadbeef")};
     auto arr = make_array(make_document(kvp("foo", 42), kvp("bar", "A"), kvp("baz", bin_val)));
     auto output = to_json(arr.view(), ExtendedJsonMode::k_relaxed);
 
@@ -147,7 +147,7 @@ TEST_CASE("CXX-1712: Overloaded to_json Canonical") {
     using namespace bsoncxx;
     using namespace builder::basic;
 
-    types::b_binary bin_val{binary_sub_type::k_uuid, 8, reinterpret_cast<const uint8_t*>("deadbeef")};
+    types::b_binary bin_val{binary_sub_type::k_uuid, 8, reinterpret_cast<uint8_t const*>("deadbeef")};
     auto arr = make_array(make_document(kvp("foo", 42), kvp("bar", "A"), kvp("baz", bin_val)));
     auto output = to_json(arr.view(), ExtendedJsonMode::k_canonical);
 

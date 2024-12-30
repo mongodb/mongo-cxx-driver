@@ -48,8 +48,8 @@ void example(bsoncxx::array::element e) {
 }  // namespace
 
 RUNNER_REGISTER_COMPONENT() {
-    const auto owner = bsoncxx::builder::basic::make_array(1, 2.0, "three");
-    const auto arr = owner.view();
+    auto const owner = bsoncxx::builder::basic::make_array(1, 2.0, "three");
+    auto const arr = owner.view();
 
     example(arr[0]);
     example(arr[1]);

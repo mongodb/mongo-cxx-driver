@@ -40,11 +40,11 @@ namespace {
 
 template <typename T>
 void check_field(
-    const T& document,
-    const char* field,
+    T const& document,
+    char const* field,
     bool should_have,
     int example_no,
-    const char* example_type = nullptr) {
+    char const* example_type = nullptr) {
     std::string example_type_formatted = example_type ? example_type + std::string(" ") : "";
     if (should_have) {
         if (!document[field]) {
@@ -62,27 +62,27 @@ void check_field(
 }
 
 template <typename T>
-void check_has_field(const T& document, const char* field, int example_no) {
+void check_has_field(T const& document, char const* field, int example_no) {
     check_field(document, field, true, example_no);
 }
 
 template <typename T>
-void check_has_no_field(const T& document, const char* field, int example_no) {
+void check_has_no_field(T const& document, char const* field, int example_no) {
     check_field(document, field, false, example_no);
 }
 
 template <typename T>
-void check_has_field(const T& document, const char* field, int example_no, const char* example_type) {
+void check_has_field(T const& document, char const* field, int example_no, char const* example_type) {
     check_field(document, field, true, example_no, example_type);
 }
 
 template <typename T>
-void check_has_no_field(const T& document, const char* field, int example_no, const char* example_type) {
+void check_has_no_field(T const& document, char const* field, int example_no, char const* example_type) {
     check_field(document, field, false, example_no, example_type);
 }
 
 bool should_run_client_side_encryption_test(void) {
-    const char* const vars[] = {
+    char const* const vars[] = {
         "MONGOCXX_TEST_AWS_SECRET_ACCESS_KEY",
         "MONGOCXX_TEST_AWS_ACCESS_KEY_ID",
         "MONGOCXX_TEST_AZURE_TENANT_ID",
@@ -94,8 +94,8 @@ bool should_run_client_side_encryption_test(void) {
         "MONGOCXX_TEST_GCP_PRIVATEKEY",
     };
 
-    const auto iter =
-        std::find_if_not(std::begin(vars), std::end(vars), [](const char* var) { return std::getenv(var); });
+    auto const iter =
+        std::find_if_not(std::begin(vars), std::end(vars), [](char const* var) { return std::getenv(var); });
 
     if (iter != std::end(vars)) {
         std::cerr << "Skipping Queryable Encryption tests: environment variable " << *iter << " not defined"
@@ -107,13 +107,13 @@ bool should_run_client_side_encryption_test(void) {
 }
 
 mongocxx::options::client add_test_server_api(mongocxx::options::client opts = {}) {
-    const auto api_version = std::getenv("MONGODB_API_VERSION");
+    auto const api_version = std::getenv("MONGODB_API_VERSION");
 
     if (!api_version) {
         return opts;
     }
 
-    const auto api_version_sv = bsoncxx::stdx::string_view(api_version);
+    auto const api_version_sv = bsoncxx::stdx::string_view(api_version);
 
     if (!api_version_sv.empty()) {
         if (api_version_sv == "1") {
@@ -126,8 +126,8 @@ mongocxx::options::client add_test_server_api(mongocxx::options::client opts = {
     return opts;
 }
 
-std::string getenv_or_fail(const char* s) {
-    const char* env = std::getenv(s);
+std::string getenv_or_fail(char const* s) {
+    char const* env = std::getenv(s);
     if (!env) {
         throw std::runtime_error("missing a required environment variable: " + std::string(s));
     }
@@ -149,7 +149,7 @@ bsoncxx::document::value make_kms_doc(bool include_external = true) {
     using bsoncxx::builder::basic::kvp;
     using bsoncxx::builder::basic::make_document;
 
-    const uint8_t kLocalMasterKey[] =
+    uint8_t const kLocalMasterKey[] =
         "\x32\x78\x34\x34\x2b\x78\x64\x75\x54\x61\x42\x42\x6b\x59\x31\x36\x45\x72"
         "\x35\x44\x75\x41\x44\x61\x67\x68\x76\x53\x34\x76\x77\x64\x6b\x67\x38\x74"
         "\x70\x50\x70\x33\x74\x7a\x36\x67\x56\x30\x31\x41\x31\x43\x77\x62\x44\x39"
@@ -188,7 +188,7 @@ bsoncxx::document::value make_kms_doc(bool include_external = true) {
     return {kms_doc.extract()};
 }
 
-static bsoncxx::document::value get_is_master(const mongocxx::client& client) {
+static bsoncxx::document::value get_is_master(mongocxx::client const& client) {
     using bsoncxx::builder::basic::kvp;
     using bsoncxx::builder::basic::make_document;
 
@@ -196,7 +196,7 @@ static bsoncxx::document::value get_is_master(const mongocxx::client& client) {
     return reply;
 }
 
-static bool is_replica_set(const mongocxx::client& client) {
+static bool is_replica_set(mongocxx::client const& client) {
     auto reply = get_is_master(client);
     return static_cast<bool>(reply.view()["setName"]);
 }
@@ -1441,7 +1441,7 @@ static bool is_snapshot_ready(mongocxx::client& client, mongocxx::collection& co
         if (collection.find_one(session, {})) {
             return true;
         }
-    } catch (const mongocxx::operation_exception& e) {
+    } catch (mongocxx::operation_exception const& e) {
         if (e.code().value() == 246) {  // snapshot unavailable
             return false;
         }
@@ -1717,7 +1717,7 @@ int EXAMPLES_CDECL main() {
         if (should_run_client_side_encryption_test() && is_replica_set(conn) && version_at_least(db, 7, 0, 0)) {
             queryable_encryption_api(conn);
         }
-    } catch (const std::logic_error& e) {
+    } catch (std::logic_error const& e) {
         std::cerr << e.what() << std::endl;
         return EXIT_FAILURE;
     }

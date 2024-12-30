@@ -60,37 +60,37 @@ find_one_and_delete& find_one_and_delete::comment(bsoncxx::v_noabi::types::bson_
     return *this;
 }
 
-const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::hint>& find_one_and_delete::hint() const {
+bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::hint> const& find_one_and_delete::hint() const {
     return _hint;
 }
 
-const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value>& find_one_and_delete::collation()
+bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const& find_one_and_delete::collation()
     const {
     return _collation;
 }
 
-const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value>& find_one_and_delete::projection()
+bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const& find_one_and_delete::projection()
     const {
     return _projection;
 }
 
-const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value>& find_one_and_delete::sort() const {
+bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const& find_one_and_delete::sort() const {
     return _ordering;
 }
 
-const bsoncxx::v_noabi::stdx::optional<std::chrono::milliseconds>& find_one_and_delete::max_time() const {
+bsoncxx::v_noabi::stdx::optional<std::chrono::milliseconds> const& find_one_and_delete::max_time() const {
     return _max_time;
 }
 
-const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern>& find_one_and_delete::write_concern() const {
+bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern> const& find_one_and_delete::write_concern() const {
     return _write_concern;
 }
 
-const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> find_one_and_delete::let() const {
+bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const find_one_and_delete::let() const {
     return _let;
 }
 
-const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value>
+bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value> const
 find_one_and_delete::comment() const {
     return _comment;
 }

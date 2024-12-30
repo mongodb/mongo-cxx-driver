@@ -51,7 +51,7 @@
 #include <catch2/generators/catch_generators.hpp>
 
 namespace {
-const auto kLocalMasterKey =
+auto const kLocalMasterKey =
     "\x32\x78\x34\x34\x2b\x78\x64\x75\x54\x61\x42\x42\x6b\x59\x31\x36\x45\x72"
     "\x35\x44\x75\x41\x44\x61\x67\x68\x76\x53\x34\x76\x77\x64\x6b\x67\x38\x74"
     "\x70\x50\x70\x33\x74\x7a\x36\x67\x56\x30\x31\x41\x31\x43\x77\x62\x44\x39"
@@ -60,19 +60,19 @@ const auto kLocalMasterKey =
     "\x64\x6f\x6e\x4a\x31\x64";
 
 // This is the base64 encoding of LOCALAAAAAAAAAAAAAAAAA==.
-const auto kLocalKeyUUID = "\x2c\xe0\x80\x2c\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00";
+auto const kLocalKeyUUID = "\x2c\xe0\x80\x2c\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00";
 
 // This is the base64 encoding of AWSAAAAAAAAAAAAAAAAAAA==.
-const auto kAwsKeyUUID = "\x01\x64\x80\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00";
+auto const kAwsKeyUUID = "\x01\x64\x80\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00";
 
 // This is the base64 encoding of AZUREAAAAAAAAAAAAAAAAA==.
-const auto kAzureKeyUUID = "\x01\x95\x11\x10\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00";
+auto const kAzureKeyUUID = "\x01\x95\x11\x10\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00";
 
 // This is the base64 encoding of GCPAAAAAAAAAAAAAAAAAAA==.
-const auto kGcpKeyUUID = "\x18\x23\xc0\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00";
+auto const kGcpKeyUUID = "\x18\x23\xc0\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00";
 
 // This is the base64 encoding of KMIPAAAAAAAAAAAAAAAAAA==.
-const auto kKmipKeyUUID = "\x28\xc2\x0f\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00";
+auto const kKmipKeyUUID = "\x28\xc2\x0f\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00";
 
 using bsoncxx::builder::concatenate;
 
@@ -108,7 +108,7 @@ bsoncxx::document::value _doc_from_file(bsoncxx::stdx::string_view sub_path) {
     return bsoncxx::from_json(file_contents);
 }
 
-void _setup_drop_collections(const client& client) {
+void _setup_drop_collections(client const& client) {
     write_concern wc_majority;
     wc_majority.acknowledge_level(write_concern::level::k_majority);
 
@@ -148,7 +148,7 @@ bsoncxx::document::value _make_kms_doc(bool include_external = true) {
     memcpy(&(key_storage[0]), kLocalMasterKey, 96);
 
     bsoncxx::types::b_binary local_master_key{
-        bsoncxx::binary_sub_type::k_binary, 96, reinterpret_cast<const uint8_t*>(&key_storage)};
+        bsoncxx::binary_sub_type::k_binary, 96, reinterpret_cast<uint8_t const*>(&key_storage)};
 
     kms_doc.append(kvp("local", [&](sub_document subdoc) { subdoc.append(kvp("key", local_master_key)); }));
 
@@ -188,7 +188,7 @@ void _add_client_encrypted_opts(
     char* bypass_spawn = std::getenv("ENCRYPTION_TESTS_BYPASS_SPAWN");
     char* mongocryptd_path = std::getenv("MONGOCRYPTD_PATH");
 
-    const auto shared_lib_path = std::getenv("CRYPT_SHARED_LIB_PATH");
+    auto const shared_lib_path = std::getenv("CRYPT_SHARED_LIB_PATH");
     if (shared_lib_path) {
         auto_encrypt_opts.extra_options(
             make_document(kvp("cryptSharedLibPath", shared_lib_path), kvp("cryptSharedLibRequired", true)));
@@ -634,7 +634,7 @@ TEST_CASE("BSON size limits and batch splitting", "[client_side_encryption]") {
     // Add a counter to verify splits
     int n_inserts = 0;
     options::apm apm_opts;
-    apm_opts.on_command_started([&](const events::command_started_event& event) {
+    apm_opts.on_command_started([&](events::command_started_event const& event) {
         if (event.command_name() == "insert") {
             n_inserts++;
         }
@@ -847,15 +847,15 @@ void _run_corpus_test(bool use_schema_map) {
     memcpy(&(kmip_key_id_storage[0]), kKmipKeyUUID, 16);
 
     bsoncxx::types::b_binary local_key_id{
-        bsoncxx::binary_sub_type::k_uuid, 16, reinterpret_cast<const uint8_t*>(&local_key_id_storage)};
+        bsoncxx::binary_sub_type::k_uuid, 16, reinterpret_cast<uint8_t const*>(&local_key_id_storage)};
     bsoncxx::types::b_binary aws_key_id{
-        bsoncxx::binary_sub_type::k_uuid, 16, reinterpret_cast<const uint8_t*>(&aws_key_id_storage)};
+        bsoncxx::binary_sub_type::k_uuid, 16, reinterpret_cast<uint8_t const*>(&aws_key_id_storage)};
     bsoncxx::types::b_binary azure_key_id{
-        bsoncxx::binary_sub_type::k_uuid, 16, reinterpret_cast<const uint8_t*>(&azure_key_id_storage)};
+        bsoncxx::binary_sub_type::k_uuid, 16, reinterpret_cast<uint8_t const*>(&azure_key_id_storage)};
     bsoncxx::types::b_binary gcp_key_id{
-        bsoncxx::binary_sub_type::k_uuid, 16, reinterpret_cast<const uint8_t*>(&gcp_key_id_storage)};
+        bsoncxx::binary_sub_type::k_uuid, 16, reinterpret_cast<uint8_t const*>(&gcp_key_id_storage)};
     bsoncxx::types::b_binary kmip_key_id{
-        bsoncxx::binary_sub_type::k_uuid, 16, reinterpret_cast<const uint8_t*>(&kmip_key_id_storage)};
+        bsoncxx::binary_sub_type::k_uuid, 16, reinterpret_cast<uint8_t const*>(&kmip_key_id_storage)};
 
     auto local_key_value = make_value(local_key_id);
     auto aws_key_value = make_value(aws_key_id);
@@ -1000,7 +1000,7 @@ void _run_corpus_test(bool use_schema_map) {
                                                 << "value" << encrypted_val << finalize;
 
                     corpus_copied_builder.append(kvp(field_name, std::move(new_field)));
-                } catch (const std::exception& e) {
+                } catch (std::exception const& e) {
                     FAIL("caught an exception for encrypting an allowed field " << field_name << ": " << e.what());
                 }
             } else {
@@ -1017,7 +1017,7 @@ void _run_corpus_test(bool use_schema_map) {
     // Using client_encrypted, insert corpus_copied into db.coll.
     try {
         encrypted_coll.insert_one(corpus_copied.view(), insert_opts);
-    } catch (const std::exception& e) {
+    } catch (std::exception const& e) {
         FAIL("failed to insert the corpus document: " << e.what());
     }
 
@@ -1476,7 +1476,7 @@ TEST_CASE("Custom endpoint", "[client_side_encryption]") {
 }
 
 void bypass_mongocrypt_via_shared_library(
-    const std::string& shared_lib_path,
+    std::string const& shared_lib_path,
     bsoncxx::document::view_or_value external_schema) {
     // Via loading shared library
     // The following tests that loading crypt_shared bypasses spawning mongocryptd.
@@ -1672,7 +1672,7 @@ TEST_CASE("Bypass spawning mongocryptd", "[client_side_encryption]") {
 
 class kms_tls_expired_cert_matcher : public Catch::Matchers::MatcherBase<mongocxx::exception> {
    public:
-    bool match(const mongocxx::exception& exc) const override {
+    bool match(mongocxx::exception const& exc) const override {
         return (Catch::Matchers::ContainsSubstring("certificate has expired") ||  // OpenSSL
                 Catch::Matchers::ContainsSubstring("CSSMERR_TP_CERT_EXPIRED") ||  // Secure Transport
                 Catch::Matchers::ContainsSubstring("certificate has expired") ||  // Secure Channel
@@ -1728,7 +1728,7 @@ TEST_CASE("KMS TLS expired certificate", "[client_side_encryption]") {
 
 class kms_tls_wrong_host_cert_matcher : public Catch::Matchers::MatcherBase<mongocxx::exception> {
    public:
-    bool match(const mongocxx::exception& exc) const override {
+    bool match(mongocxx::exception const& exc) const override {
         return (Catch::Matchers::ContainsSubstring("IP address mismatch") ||                 // OpenSSL
                 Catch::Matchers::ContainsSubstring("Host name mismatch") ||                  // Secure Transport
                 Catch::Matchers::ContainsSubstring("hostname doesn't match certificate") ||  // Secure Channel
@@ -1820,7 +1820,7 @@ bsoncxx::document::value make_tls_opts_with_certs(with_certs with) {
 
     bsoncxx::stdx::string_view providers[] = {"aws", "azure", "gcp", "kmip"};
 
-    for (const auto& provider : providers) {
+    for (auto const& provider : providers) {
         tls_opts.append(kvp(provider, [&](sub_document subdoc) {
             if (with == with_certs::ca_only || with == with_certs::both) {
                 subdoc.append(kvp("tlsCAFile", test_util::getenv_or_fail("MONGOCXX_TEST_CSFLE_TLS_CA_FILE")));
@@ -1885,8 +1885,8 @@ TEST_CASE("KMS TLS Options Tests", "[client_side_encryption][!mayfail]") {
     auto client_encryption_invalid_hostname =
         make_prose_test_11_ce(&setup_client, "127.0.0.1:9001", "127.0.0.1:9001", "127.0.0.1:9001", with_certs::ca_only);
 
-    const auto expired_cert_matcher = Catch::Matchers::ContainsSubstring("expired", Catch::CaseSensitive::No);
-    const auto invalid_hostname_matcher = Catch::Matchers::Matches(
+    auto const expired_cert_matcher = Catch::Matchers::ContainsSubstring("expired", Catch::CaseSensitive::No);
+    auto const invalid_hostname_matcher = Catch::Matchers::Matches(
         // Content of error message may vary depending on the SSL library being used.
         ".*(mismatch|doesn't match|not present).*",
         Catch::CaseSensitive::No);
@@ -2061,7 +2061,7 @@ std::tuple<mongocxx::client_encryption, mongocxx::client> _setup_explicit_encryp
         auto coll = client["keyvault"]["datakeys"];
         coll.drop(wc_majority);
 
-        const auto empty_doc = make_document();
+        auto const empty_doc = make_document();
         client["keyvault"].create_collection("datakeys", empty_doc.view(), wc_majority);
     }
 
@@ -2200,7 +2200,7 @@ TEST_CASE("Explicit Encryption", "[client_side_encryption]") {
             auto find_filter = make_document(kvp("encryptedIndexed", find_payload));
             auto found = encrypted_client["db"]["explicit_encryption"].find(find_filter.view());
             size_t count = 0;
-            for (const auto& it : found) {
+            for (auto const& it : found) {
                 count++;
                 auto doc = it.find("encryptedIndexed")->get_string().value;
 
@@ -2266,7 +2266,7 @@ TEST_CASE("Explicit Encryption", "[client_side_encryption]") {
             auto find_filter = make_document(kvp("encryptedIndexed", find_payload));
             auto found = encrypted_client["db"]["explicit_encryption"].find(find_filter.view());
             size_t count = 0;
-            for (const auto& it : found) {
+            for (auto const& it : found) {
                 count++;
                 auto doc = it.find("encryptedIndexed")->get_string().value;
 
@@ -2306,7 +2306,7 @@ TEST_CASE("Explicit Encryption", "[client_side_encryption]") {
             auto find_filter = make_document(kvp("encryptedIndexed", find_payload2));
             auto found = encrypted_client["db"]["explicit_encryption"].find(find_filter.view());
             size_t count = 0;
-            for (const auto& it : found) {
+            for (auto const& it : found) {
                 count++;
                 auto doc = it.find("encryptedIndexed")->get_string().value;
 
@@ -2348,7 +2348,7 @@ TEST_CASE("Explicit Encryption", "[client_side_encryption]") {
             auto find_filter = make_document(kvp("_id", 1));
             auto found = encrypted_client["db"]["explicit_encryption"].find(find_filter.view());
             size_t count = 0;
-            for (const auto& it : found) {
+            for (auto const& it : found) {
                 count++;
 
                 // Assert one document is returned containing the field { "encryptedUnindexed":
@@ -2457,7 +2457,7 @@ TEST_CASE("Create Encrypted Collection", "[client_side_encryption]") {
 
     DYNAMIC_SECTION("KMS Provider - " << w.kms_provider) {
         SECTION("Case 1: Simple Creation and Validation") {
-            const auto create_opts = make_document(
+            auto const create_opts = make_document(
                 kvp("encryptedFields",
                     make_document(kvp(
                         "fields",
@@ -2475,13 +2475,13 @@ TEST_CASE("Create Encrypted Collection", "[client_side_encryption]") {
             try {
                 coll.insert_one(make_document(kvp("ssn", "123-45-6789")));
                 FAIL_CHECK("Insert should have failed");
-            } catch (const mongocxx::operation_exception& e) {
+            } catch (mongocxx::operation_exception const& e) {
                 CHECK(e.code().value() == 121);  // VALIDATION_ERROR
             }
         }
 
         SECTION("Case 2: Missing 'encryptedFields'") {
-            const auto create_opts = make_document();
+            auto const create_opts = make_document();
             try {
                 auto coll = cse.create_encrypted_collection(
                     db,
@@ -2492,13 +2492,13 @@ TEST_CASE("Create Encrypted Collection", "[client_side_encryption]") {
                     w.master_key ? bsoncxx::stdx::make_optional(w.master_key->view()) : bsoncxx::stdx::nullopt);
                 CAPTURE(fin_options, coll);
                 FAIL_CHECK("Did not throw");
-            } catch (const mongocxx::operation_exception& e) {
+            } catch (mongocxx::operation_exception const& e) {
                 CHECK(e.code().value() == 22);  // INVALID_ARG
             }
         }
 
         SECTION("Case 3: Invalid keyId") {
-            const auto create_opts = make_document(kvp(
+            auto const create_opts = make_document(kvp(
                 "encryptedFields",
                 make_document(kvp(
                     "fields",
@@ -2514,13 +2514,13 @@ TEST_CASE("Create Encrypted Collection", "[client_side_encryption]") {
                     w.master_key ? bsoncxx::stdx::make_optional(w.master_key->view()) : bsoncxx::stdx::nullopt);
                 CAPTURE(fin_options, coll);
                 FAIL_CHECK("Did not throw");
-            } catch (const mongocxx::operation_exception& e) {
+            } catch (mongocxx::operation_exception const& e) {
                 CHECK(e.code().value() == 14);  // INVALID_REPLY
             }
         }
 
         SECTION("Case 4: Insert encrypted value") {
-            const auto create_opts = make_document(
+            auto const create_opts = make_document(
                 kvp("encryptedFields",
                     make_document(kvp(
                         "fields",
@@ -2726,7 +2726,7 @@ TEST_CASE("Custom Key Material Test", "[client_side_encryption]") {
     // 5. Find the resulting key document in keyvault.datakeys, save a copy of the key document,
     // then remove the key document from the collection.
     auto cursor = client["keyvault"]["datakeys"].find(make_document(kvp("_id", key_id)));
-    const auto doc = *cursor.begin();
+    auto const doc = *cursor.begin();
     client["keyvault"]["datakeys"].delete_one(make_document(kvp("_id", key_id)));
 
     // 6. Replace the _id field in the copied key document with a UUID with base64 value
@@ -2902,33 +2902,33 @@ struct range_explicit_encryption_objects {
 };
 
 range_explicit_encryption_objects range_explicit_encryption_setup(
-    const std::string& type_str,
+    std::string const& type_str,
     RangeFieldType field_type) {
     range_explicit_encryption_objects res;
 
     // Load the file for the specific data type being tested `range-encryptedFields-<type>.json`.
-    const auto encrypted_fields = _doc_from_file("/explicit-encryption/range-encryptedFields-" + type_str + ".json");
-    const auto collection_options = make_document(kvp("encryptedFields", encrypted_fields));
+    auto const encrypted_fields = _doc_from_file("/explicit-encryption/range-encryptedFields-" + type_str + ".json");
+    auto const collection_options = make_document(kvp("encryptedFields", encrypted_fields));
 
     // Load the file key1-document.json as `key1Document`.
     auto& key1_document = (res.key1_document = _doc_from_file("/explicit-encryption/key1-document.json"));
 
     // Read the "_id" field of key1Document as `key1ID`.
-    const auto& key1_id = (res.key1_id = key1_document["_id"].get_value());
+    auto const& key1_id = (res.key1_id = key1_document["_id"].get_value());
 
-    const auto wc_majority = []() -> mongocxx::write_concern {
+    auto const wc_majority = []() -> mongocxx::write_concern {
         write_concern res;
         res.acknowledge_level(write_concern::level::k_majority);
         return res;
     }();
 
-    const auto rc_majority = []() -> mongocxx::read_concern {
+    auto const rc_majority = []() -> mongocxx::read_concern {
         read_concern res;
         res.acknowledge_level(read_concern::level::k_majority);
         return res;
     }();
 
-    const auto empty_doc = make_document();
+    auto const empty_doc = make_document();
 
     auto client = mongocxx::client(uri(), test_util::add_test_server_api());
 
@@ -2950,7 +2950,7 @@ range_explicit_encryption_objects range_explicit_encryption_setup(
         datakeys.insert_one(key1_document.view(), options::insert().write_concern(wc_majority));
     }
 
-    const auto kms_providers = _make_kms_doc(false);
+    auto const kms_providers = _make_kms_doc(false);
 
     // Create a MongoClient named `keyVaultClient`.
     auto& key_vault_client =
@@ -2984,9 +2984,9 @@ range_explicit_encryption_objects range_explicit_encryption_setup(
                                                                         .bypass_query_analysis(true))));
 
     // Ensure the type matches with the type of the encrypted field.
-    const auto& field_values = *(res.field_values_ptr = bsoncxx::make_unique<field_type_values>(field_type));
-    const auto& field_name = (res.field_name = "encrypted" + type_str);
-    const auto& range_opts = (res.range_opts = to_range_opts(field_type));
+    auto const& field_values = *(res.field_values_ptr = bsoncxx::make_unique<field_type_values>(field_type));
+    auto const& field_name = (res.field_name = "encrypted" + type_str);
+    auto const& range_opts = (res.range_opts = to_range_opts(field_type));
 
     // Encrypt these values with the matching `RangeOpts` listed in Test Setup: RangeOpts and these
     // `EncryptOpts`:
@@ -2995,17 +2995,17 @@ range_explicit_encryption_objects range_explicit_encryption_setup(
     //      algorithm: "Range",
     //      contentionFactor: 0
     //   }
-    const auto encrypt_opts = options::encrypt()
+    auto const encrypt_opts = options::encrypt()
                                   .range_opts(range_opts)
                                   .key_id(key1_id)
                                   .algorithm(options::encrypt::encryption_algorithm::k_range)
                                   .contention_factor(0);
 
     // Use `clientEncryption` to encrypt these values: 0, 6, 30, and 200.
-    const auto encrypted_v0 = client_encryption.encrypt(field_values.v0, encrypt_opts);
-    const auto encrypted_v6 = client_encryption.encrypt(field_values.v6, encrypt_opts);
-    const auto encrypted_v30 = client_encryption.encrypt(field_values.v30, encrypt_opts);
-    const auto encrypted_v200 = client_encryption.encrypt(field_values.v200, encrypt_opts);
+    auto const encrypted_v0 = client_encryption.encrypt(field_values.v0, encrypt_opts);
+    auto const encrypted_v6 = client_encryption.encrypt(field_values.v6, encrypt_opts);
+    auto const encrypted_v30 = client_encryption.encrypt(field_values.v30, encrypt_opts);
+    auto const encrypted_v200 = client_encryption.encrypt(field_values.v200, encrypt_opts);
 
     auto explicit_encryption = encrypted_client["db"]["explicit_encryption"];
 
@@ -3046,7 +3046,7 @@ TEST_CASE("Range Explicit Encryption", "[client_side_encryption]") {
         is_replica_set = test_util::get_topology(client) == "replicaset";
     }
 
-    const RangeFieldType field_types[] = {
+    RangeFieldType const field_types[] = {
         RangeFieldType::DecimalNoPrecision,
         RangeFieldType::DecimalPrecision,
         RangeFieldType::DoubleNoPrecision,
@@ -3056,8 +3056,8 @@ TEST_CASE("Range Explicit Encryption", "[client_side_encryption]") {
         RangeFieldType::Long,
     };
 
-    for (const auto& field_type : field_types) {
-        const auto type_str = to_type_str(field_type);
+    for (auto const& field_type : field_types) {
+        auto const type_str = to_type_str(field_type);
 
         DYNAMIC_SECTION("Field Type - " << type_str) {
             if (field_type == RangeFieldType::DecimalNoPrecision && !is_replica_set) {
@@ -3070,18 +3070,18 @@ TEST_CASE("Range Explicit Encryption", "[client_side_encryption]") {
             REQUIRE(test_objects.encrypted_client_ptr);
             REQUIRE(test_objects.field_values_ptr);
 
-            const auto& range_opts = test_objects.range_opts;
-            const auto& key1_id = test_objects.key1_id;
+            auto const& range_opts = test_objects.range_opts;
+            auto const& key1_id = test_objects.key1_id;
             auto& client_encryption = *test_objects.client_encryption_ptr;
             auto& encrypted_client = *test_objects.encrypted_client_ptr;
-            const auto& field_name = test_objects.field_name;
-            const auto& field_values = *test_objects.field_values_ptr;
+            auto const& field_name = test_objects.field_name;
+            auto const& field_values = *test_objects.field_values_ptr;
 
             auto explicit_encryption = encrypted_client["db"]["explicit_encryption"];
 
             SECTION("Case 1: can decrypt a payload") {
                 // Use `clientEncryption.encrypt()` to encrypt the value 6.
-                const auto& original = field_values.v6;
+                auto const& original = field_values.v6;
 
                 // Encrypt with the matching `RangeOpts` listed in Test Setup: RangeOpts and these
                 // `EncryptOpts`:
@@ -3091,7 +3091,7 @@ TEST_CASE("Range Explicit Encryption", "[client_side_encryption]") {
                 //      contentionFactor: 0
                 //   }
                 // Store the result in insertPayload.
-                const auto insert_payload = client_encryption.encrypt(
+                auto const insert_payload = client_encryption.encrypt(
                     original.view(),
                     options::encrypt()
                         .range_opts(range_opts)
@@ -3100,7 +3100,7 @@ TEST_CASE("Range Explicit Encryption", "[client_side_encryption]") {
                         .contention_factor(0));
 
                 // Use `clientEncryption` to decrypt `insertPayload`.
-                const auto result = client_encryption.decrypt(insert_payload);
+                auto const result = client_encryption.decrypt(insert_payload);
 
                 // Assert the returned value equals 6.
                 REQUIRE(result == original);
@@ -3110,7 +3110,7 @@ TEST_CASE("Range Explicit Encryption", "[client_side_encryption]") {
                 // Use clientEncryption.encryptExpression() to encrypt this query:
                 //   {"$and": [{"encrypted<Type>": {"$gte": 6}}, {"encrypted<Type>": {"$lte":
                 //   200}}]}
-                const auto query = make_document(
+                auto const query = make_document(
                     kvp("$and",
                         make_array(
                             make_document(kvp(field_name, make_document(kvp("$gte", field_values.v6)))),
@@ -3125,7 +3125,7 @@ TEST_CASE("Range Explicit Encryption", "[client_side_encryption]") {
                 //      contentionFactor: 0
                 //   }
                 // Store the result in `findPayload`.
-                const auto find_payload = client_encryption.encrypt_expression(
+                auto const find_payload = client_encryption.encrypt_expression(
                     query.view(),
                     options::encrypt()
                         .range_opts(range_opts)
@@ -3146,13 +3146,13 @@ TEST_CASE("Range Explicit Encryption", "[client_side_encryption]") {
                 //  - { "encrypted<Type>": 6 }
                 //  - { "encrypted<Type>": 30 }
                 //  - { "encrypted<Type>": 200 }
-                const auto expected = std::vector<bsoncxx::document::value>({
+                auto const expected = std::vector<bsoncxx::document::value>({
                     make_document(kvp(field_name, field_values.v6)),
                     make_document(kvp(field_name, field_values.v30)),
                     make_document(kvp(field_name, field_values.v200)),
                 });
 
-                const auto actual = std::vector<bsoncxx::document::value>(cursor.begin(), cursor.end());
+                auto const actual = std::vector<bsoncxx::document::value>(cursor.begin(), cursor.end());
 
                 REQUIRE(actual == expected);
             }
@@ -3160,7 +3160,7 @@ TEST_CASE("Range Explicit Encryption", "[client_side_encryption]") {
             SECTION("Case 3: can find encrypted range and return the minimum") {
                 // Use `clientEncryption.encryptExpression()` to encrypt this query:
                 //   {"$and": [{"encrypted<Type>": {"$gte": 0}}, {"encrypted<Type>": {"$lte": 6}}]}
-                const auto query = make_document(
+                auto const query = make_document(
                     kvp("$and",
                         make_array(
                             make_document(kvp(field_name, make_document(kvp("$gte", field_values.v0)))),
@@ -3175,7 +3175,7 @@ TEST_CASE("Range Explicit Encryption", "[client_side_encryption]") {
                 //      contentionFactor: 0
                 //   }
                 // Store the result in `findPayload`.
-                const auto find_payload = client_encryption.encrypt_expression(
+                auto const find_payload = client_encryption.encrypt_expression(
                     query.view(),
                     options::encrypt()
                         .range_opts(range_opts)
@@ -3195,12 +3195,12 @@ TEST_CASE("Range Explicit Encryption", "[client_side_encryption]") {
                 // Assert these two documents are returned:
                 //  - { "encrypted<Type>": 0 }
                 //  - { "encrypted<Type>": 6 }
-                const auto expected = std::vector<bsoncxx::document::value>({
+                auto const expected = std::vector<bsoncxx::document::value>({
                     make_document(kvp(field_name, field_values.v0)),
                     make_document(kvp(field_name, field_values.v6)),
                 });
 
-                const auto actual = std::vector<bsoncxx::document::value>(cursor.begin(), cursor.end());
+                auto const actual = std::vector<bsoncxx::document::value>(cursor.begin(), cursor.end());
 
                 REQUIRE(actual == expected);
             }
@@ -3208,7 +3208,7 @@ TEST_CASE("Range Explicit Encryption", "[client_side_encryption]") {
             SECTION("Case 4: can find encrypted range with an open range query") {
                 // Use clientEncryption.encryptExpression() to encrypt this query:
                 //   {"$and": [{"encrypted<Type>": {"$gt": 30}}]}
-                const auto query = make_document(kvp(
+                auto const query = make_document(kvp(
                     "$and", make_array(make_document(kvp(field_name, make_document(kvp("$gt", field_values.v30)))))));
 
                 // Use the matching `RangeOpts` listed in Test Setup: RangeOpts and these
@@ -3220,7 +3220,7 @@ TEST_CASE("Range Explicit Encryption", "[client_side_encryption]") {
                 //      contentionFactor: 0
                 //   }
                 // Store the result in `findPayload`.
-                const auto find_payload = client_encryption.encrypt_expression(
+                auto const find_payload = client_encryption.encrypt_expression(
                     query.view(),
                     options::encrypt()
                         .range_opts(range_opts)
@@ -3239,11 +3239,11 @@ TEST_CASE("Range Explicit Encryption", "[client_side_encryption]") {
 
                 // Assert that only this document is returned:
                 //  - { "encrypted<Type>": 200 }
-                const auto expected = std::vector<bsoncxx::document::value>({
+                auto const expected = std::vector<bsoncxx::document::value>({
                     make_document(kvp(field_name, field_values.v200)),
                 });
 
-                const auto actual = std::vector<bsoncxx::document::value>(cursor.begin(), cursor.end());
+                auto const actual = std::vector<bsoncxx::document::value>(cursor.begin(), cursor.end());
 
                 REQUIRE(actual == expected);
             }
@@ -3251,7 +3251,7 @@ TEST_CASE("Range Explicit Encryption", "[client_side_encryption]") {
             SECTION("Case 5: can run an aggregation expression inside $expr") {
                 // Use clientEncryption.encryptExpression() to encrypt this query:
                 //   {'$and': [ { '$lt': [ '$encrypted<Type>', 30 ] } ] } }
-                const auto query = make_document(kvp(
+                auto const query = make_document(kvp(
                     "$and", make_array(make_document(kvp(field_name, make_document(kvp("$lt", field_values.v30)))))));
 
                 // Use the matching `RangeOpts` listed in Test Setup: RangeOpts and these
@@ -3263,7 +3263,7 @@ TEST_CASE("Range Explicit Encryption", "[client_side_encryption]") {
                 //      contentionFactor: 0
                 //   }
                 // Store the result in `findPayload`.
-                const auto find_payload = client_encryption.encrypt_expression(
+                auto const find_payload = client_encryption.encrypt_expression(
                     query.view(),
                     options::encrypt()
                         .range_opts(range_opts)
@@ -3283,12 +3283,12 @@ TEST_CASE("Range Explicit Encryption", "[client_side_encryption]") {
                 // Assert these two documents are returned:
                 //  - { "encrypted<Type>": 0 }
                 //  - { "encrypted<Type>": 6 }
-                const auto expected = std::vector<bsoncxx::document::value>({
+                auto const expected = std::vector<bsoncxx::document::value>({
                     make_document(kvp(field_name, field_values.v0)),
                     make_document(kvp(field_name, field_values.v6)),
                 });
 
-                const auto actual = std::vector<bsoncxx::document::value>(cursor.begin(), cursor.end());
+                auto const actual = std::vector<bsoncxx::document::value>(cursor.begin(), cursor.end());
 
                 REQUIRE(actual == expected);
             }
@@ -3307,7 +3307,7 @@ TEST_CASE("Range Explicit Encryption", "[client_side_encryption]") {
                 case RangeFieldType::Long:
                 default: {
                     SECTION("Case 6: encrypting a document greater than the maximum errors") {
-                        const auto original = to_field_value(201, field_type);
+                        auto const original = to_field_value(201, field_type);
 
                         // Use clientEncryption.encrypt() to try to encrypt the value 201 with the
                         // matching RangeOpts listed in Test Setup: RangeOpts and these EncryptOpts:
@@ -3354,7 +3354,7 @@ TEST_CASE("Range Explicit Encryption", "[client_side_encryption]") {
                         //      algorithm: "Range",
                         //      contentionFactor: 0
                         //   }
-                        const auto encrypt_opts = options::encrypt()
+                        auto const encrypt_opts = options::encrypt()
                                                       .range_opts(range_opts)
                                                       .key_id(key1_id)
                                                       .algorithm(options::encrypt::encryption_algorithm::k_range)
@@ -3364,7 +3364,7 @@ TEST_CASE("Range Explicit Encryption", "[client_side_encryption]") {
                         //   { "encryptedInt": { "$numberDouble": "6" } }
                         // Otherwise, encrypt:
                         //   { "encrypted<Type>": { "$numberInt": "6" } }
-                        const auto value = field_type == RangeFieldType::Int
+                        auto const value = field_type == RangeFieldType::Int
                                                ? to_field_value(6, RangeFieldType::DoublePrecision)
                                                : to_field_value(6, RangeFieldType::Int);
 
@@ -3450,7 +3450,7 @@ TEST_CASE("Range Explicit Encryption applies defaults", "[client_side_encryption
     //      keyVaultNamespace: "keyvault.datakeys";
     //      kmsProviders: { "local": { "key": <base64 decoding of LOCAL_MASTERKEY> } }
     //   }
-    const auto kms_providers = _make_kms_doc(false);
+    auto const kms_providers = _make_kms_doc(false);
     mongocxx::client_encryption client_encryption(options::client_encryption()
                                                       .key_vault_client(&key_vault_client)
                                                       .key_vault_namespace({"keyvault", "datakeys"})
@@ -3458,7 +3458,7 @@ TEST_CASE("Range Explicit Encryption applies defaults", "[client_side_encryption
 
     // Create a key with `clientEncryption.createDataKey`. Store the returned key ID in a variable
     // named `keyId`.
-    const auto& keyId = client_encryption.create_data_key("local");
+    auto const& keyId = client_encryption.create_data_key("local");
 
     // Call `clientEncryption.encrypt` to encrypt the int32 value `123` with these options:
     // `EncryptOpts`:
@@ -3471,7 +3471,7 @@ TEST_CASE("Range Explicit Encryption applies defaults", "[client_side_encryption
     //         max: 1000
     //      }
     //   }
-    const auto v_123 = to_field_value(123, RangeFieldType::Int);
+    auto const v_123 = to_field_value(123, RangeFieldType::Int);
     auto payload_defaults = client_encryption.encrypt(
         v_123,
         options::encrypt()

@@ -157,7 +157,7 @@ TEST_CASE("start_session failure", "[session]") {
     instance::current();
 
     client_start_session
-        ->interpose([](mongoc_client_t*, const mongoc_session_opt_t*, bson_error_t* error) -> mongoc_client_session_t* {
+        ->interpose([](mongoc_client_t*, mongoc_session_opt_t const*, bson_error_t* error) -> mongoc_client_session_t* {
             bson_set_error(error, MONGOC_ERROR_CLIENT, MONGOC_ERROR_CLIENT_SESSION_FAILURE, "foo");
             return nullptr;
         })
@@ -304,7 +304,7 @@ class session_test {
         options::client client_opts;
         options::apm apm_opts;
 
-        apm_opts.on_command_started([&](const events::command_started_event& event) {
+        apm_opts.on_command_started([&](events::command_started_event const& event) {
             std::string command_name{event.command_name().data()};
 
             // Ignore auth commands like "saslStart", and handshakes with "hello" (and the legacy
@@ -322,7 +322,7 @@ class session_test {
         client = mongocxx::client(uri{}, test_util::add_test_server_api(client_opts));
     }
 
-    void test_method_with_session(const std::function<void(bool)>& f, const client_session& s) {
+    void test_method_with_session(std::function<void(bool)> const& f, client_session const& s) {
         using std::string;
 
         events.clear();
@@ -364,7 +364,7 @@ class session_test {
 
     class apm_event {
        public:
-        apm_event(const std::string& command_name_, const bsoncxx::document::value& document_)
+        apm_event(std::string const& command_name_, bsoncxx::document::value const& document_)
             : command_name(command_name_), value(document_), command(value.view()) {}
 
         std::string command_name;
@@ -403,7 +403,7 @@ TEST_CASE("lsid", "[session]") {
 
             auto one = bsoncxx::types::bson_value::view{bsoncxx::types::b_int32{1}};
             auto two = bsoncxx::types::bson_value::view{bsoncxx::types::b_int32{2}};
-            auto data = reinterpret_cast<const uint8_t*>("foo");
+            auto data = reinterpret_cast<uint8_t const*>("foo");
             size_t len = 4;
             // Ensure multiple chunks.
             options::gridfs::upload opts;

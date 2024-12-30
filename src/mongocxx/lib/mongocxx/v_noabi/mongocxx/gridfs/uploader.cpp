@@ -44,7 +44,7 @@ namespace v_noabi {
 namespace gridfs {
 
 uploader::uploader(
-    const client_session* session,
+    client_session const* session,
     bsoncxx::v_noabi::types::bson_value::view id,
     bsoncxx::v_noabi::stdx::string_view filename,
     collection files,
@@ -71,7 +71,7 @@ uploader::operator bool() const noexcept {
     return static_cast<bool>(_impl);
 }
 
-void uploader::write(const std::uint8_t* bytes, std::size_t length) {
+void uploader::write(std::uint8_t const* bytes, std::size_t length) {
     if (_get_impl().closed) {
         throw logic_error{error_code::k_gridfs_stream_not_open};
     }
@@ -201,7 +201,7 @@ void uploader::flush_chunks() {
     _get_impl().chunks_collection_documents.clear();
 }
 
-const uploader::impl& uploader::_get_impl() const {
+uploader::impl const& uploader::_get_impl() const {
     if (!_impl) {
         throw logic_error{error_code::k_invalid_gridfs_uploader_object};
     }
@@ -209,7 +209,7 @@ const uploader::impl& uploader::_get_impl() const {
 }
 
 uploader::impl& uploader::_get_impl() {
-    auto cthis = const_cast<const uploader*>(this);
+    auto cthis = const_cast<uploader const*>(this);
     return const_cast<uploader::impl&>(cthis->_get_impl());
 }
 

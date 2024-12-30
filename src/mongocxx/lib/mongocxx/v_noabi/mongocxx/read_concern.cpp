@@ -34,10 +34,10 @@ read_concern::read_concern(std::unique_ptr<impl>&& implementation) : _impl{std::
 read_concern::read_concern(read_concern&&) noexcept = default;
 read_concern& read_concern::operator=(read_concern&&) noexcept = default;
 
-read_concern::read_concern(const read_concern& other)
+read_concern::read_concern(read_concern const& other)
     : _impl(bsoncxx::make_unique<impl>(libmongoc::read_concern_copy(other._impl->read_concern_t))) {}
 
-read_concern& read_concern::operator=(const read_concern& other) {
+read_concern& read_concern::operator=(read_concern const& other) {
     _impl = bsoncxx::make_unique<impl>(libmongoc::read_concern_copy(other._impl->read_concern_t));
     return *this;
 }
@@ -119,11 +119,11 @@ bsoncxx::v_noabi::document::value read_concern::to_document() const {
     return doc.extract();
 }
 
-bool operator==(const read_concern& lhs, const read_concern& rhs) {
+bool operator==(read_concern const& lhs, read_concern const& rhs) {
     return lhs.acknowledge_level() == rhs.acknowledge_level();
 }
 
-bool operator!=(const read_concern& lhs, const read_concern& rhs) {
+bool operator!=(read_concern const& lhs, read_concern const& rhs) {
     return !(lhs == rhs);
 }
 

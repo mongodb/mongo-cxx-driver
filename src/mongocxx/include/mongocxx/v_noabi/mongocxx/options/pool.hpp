@@ -44,7 +44,7 @@ class pool {
     ///
     /// @return The client options.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const client&) client_opts() const;
+    MONGOCXX_ABI_EXPORT_CDECL(client const&) client_opts() const;
 
    private:
     client _client_opts;

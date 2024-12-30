@@ -85,12 +85,12 @@ class read_concern {
     ///
     /// Copy constructs a read_concern.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL() read_concern(const read_concern&);
+    MONGOCXX_ABI_EXPORT_CDECL() read_concern(read_concern const&);
 
     ///
     /// Copy assigns a read_concern.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(read_concern&) operator=(const read_concern&);
+    MONGOCXX_ABI_EXPORT_CDECL(read_concern&) operator=(read_concern const&);
 
     ///
     /// Move constructs a read_concern.
@@ -165,8 +165,8 @@ class read_concern {
     /// Compares two read_concern objects for (in)-equality.
     ///
     /// @{
-    friend MONGOCXX_ABI_EXPORT_CDECL(bool) operator==(const read_concern&, const read_concern&);
-    friend MONGOCXX_ABI_EXPORT_CDECL(bool) operator!=(const read_concern&, const read_concern&);
+    friend MONGOCXX_ABI_EXPORT_CDECL(bool) operator==(read_concern const&, read_concern const&);
+    friend MONGOCXX_ABI_EXPORT_CDECL(bool) operator!=(read_concern const&, read_concern const&);
     /// @}
     ///
 

@@ -59,9 +59,9 @@ class uploader {
     ///
     MONGOCXX_ABI_EXPORT_CDECL(uploader&) operator=(uploader&&) noexcept;
 
-    uploader(const uploader&) = delete;
+    uploader(uploader const&) = delete;
 
-    uploader& operator=(const uploader&) = delete;
+    uploader& operator=(uploader const&) = delete;
 
     ///
     /// Destroys an uploader.
@@ -91,7 +91,7 @@ class uploader {
     ///   if the uploader requires more than 2^31-1 chunks to store the file at the requested chunk
     ///   size.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(void) write(const std::uint8_t* bytes, std::size_t length);
+    MONGOCXX_ABI_EXPORT_CDECL(void) write(std::uint8_t const* bytes, std::size_t length);
 
     ///
     /// Closes the uploader stream.
@@ -150,7 +150,7 @@ class uploader {
     //   Optional metadata field of the files collection document.
     //
     uploader(
-        const client_session* session,
+        client_session const* session,
         bsoncxx::v_noabi::types::bson_value::view id,
         bsoncxx::v_noabi::stdx::string_view filename,
         collection files,
@@ -164,7 +164,7 @@ class uploader {
     class impl;
 
     impl& _get_impl();
-    const impl& _get_impl() const;
+    impl const& _get_impl() const;
 
     std::unique_ptr<impl> _impl;
 };

@@ -77,7 +77,7 @@ class client_encryption::impl {
 
     bsoncxx::v_noabi::types::bson_value::value create_data_key(
         std::string kms_provider,
-        const options::data_key& opts) {
+        options::data_key const& opts) {
         using opts_type = mongoc_client_encryption_datakey_opts_t;
 
         struct opts_deleter {
@@ -88,7 +88,7 @@ class client_encryption::impl {
 
         using datakey_opts_ptr = std::unique_ptr<opts_type, opts_deleter>;
 
-        const auto datakey_opts = datakey_opts_ptr(static_cast<opts_type*>(opts.convert()));
+        auto const datakey_opts = datakey_opts_ptr(static_cast<opts_type*>(opts.convert()));
 
         detail::scoped_bson_value keyid;
         bson_error_t error;
@@ -103,8 +103,8 @@ class client_encryption::impl {
 
     bsoncxx::v_noabi::types::bson_value::value encrypt(
         bsoncxx::v_noabi::types::bson_value::view value,
-        const options::encrypt& opts) {
-        const auto encrypt_opts =
+        options::encrypt const& opts) {
+        auto const encrypt_opts =
             encrypt_opts_ptr(static_cast<mongoc_client_encryption_encrypt_opts_t*>(opts.convert()));
 
         detail::scoped_bson_value ciphertext;
@@ -124,8 +124,8 @@ class client_encryption::impl {
 
     bsoncxx::v_noabi::document::value encrypt_expression(
         bsoncxx::v_noabi::document::view_or_value expr,
-        const options::encrypt& opts) {
-        const auto encrypt_opts =
+        options::encrypt const& opts) {
+        auto const encrypt_opts =
             encrypt_opts_ptr(static_cast<mongoc_client_encryption_encrypt_opts_t*>(opts.convert()));
 
         scoped_bson_t encrypted;
@@ -160,7 +160,7 @@ class client_encryption::impl {
 
     result::rewrap_many_datakey rewrap_many_datakey(
         bsoncxx::v_noabi::document::view_or_value filter,
-        const options::rewrap_many_datakey& opts) {
+        options::rewrap_many_datakey const& opts) {
         using result_type = mongoc_client_encryption_rewrap_many_datakey_result_t;
 
         struct result_deleter {
@@ -173,11 +173,11 @@ class client_encryption::impl {
 
         auto result = result_ptr(libmongoc::client_encryption_rewrap_many_datakey_result_new());
 
-        const auto provider_terminated = opts.provider().terminated();
+        auto const provider_terminated = opts.provider().terminated();
 
         scoped_bson_t bson_master_key;
 
-        if (const auto master_key_opt = opts.master_key()) {
+        if (auto const master_key_opt = opts.master_key()) {
             bson_master_key.init_from_static(master_key_opt->view());
         }
 
@@ -193,11 +193,11 @@ class client_encryption::impl {
             throw_exception<operation_exception>(error);
         }
 
-        const bson_t* bulk_write_result =
+        bson_t const* bulk_write_result =
             libmongoc::client_encryption_rewrap_many_datakey_result_get_bulk_write_result(result.get());
 
         if (bulk_write_result) {
-            const auto doc = bsoncxx::v_noabi::document::view(bson_get_data(bulk_write_result), bulk_write_result->len);
+            auto const doc = bsoncxx::v_noabi::document::view(bson_get_data(bulk_write_result), bulk_write_result->len);
             return result::rewrap_many_datakey(result::bulk_write(bsoncxx::v_noabi::document::value(doc)));
         } else {
             return result::rewrap_many_datakey();
@@ -314,13 +314,13 @@ class client_encryption::impl {
     }
 
     collection create_encrypted_collection(
-        const database& dbcxx,
+        database const& dbcxx,
         mongoc_database_t* const db,
-        const std::string& coll_name,
-        const bsoncxx::v_noabi::document::view opts,
+        std::string const& coll_name,
+        bsoncxx::v_noabi::document::view const opts,
         bsoncxx::v_noabi::document::value& out_options,
-        const std::string& kms_provider,
-        const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view>& masterkey) {
+        std::string const& kms_provider,
+        bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view> const& masterkey) {
         bson_error_t error = {};
         scoped_bson_t out_opts;
         out_opts.init();

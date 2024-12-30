@@ -66,7 +66,7 @@ class aggregate {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/aggregate/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<bool>&) allow_disk_use() const;
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bool> const&) allow_disk_use() const;
 
     ///
     /// Sets the number of documents to return per batch.
@@ -91,7 +91,7 @@ class aggregate {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/aggregate/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<std::int32_t>&)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<std::int32_t> const&)
     batch_size() const;
 
     ///
@@ -119,7 +119,7 @@ class aggregate {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/aggregate/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value>&)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const&)
     collation() const;
 
     ///
@@ -146,7 +146,7 @@ class aggregate {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/aggregate/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value>&)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const&)
     let() const;
 
     ///
@@ -173,7 +173,7 @@ class aggregate {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/aggregate/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<std::chrono::milliseconds>&)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<std::chrono::milliseconds> const&)
     max_time() const;
 
     ///
@@ -198,7 +198,7 @@ class aggregate {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/aggregate/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::read_preference>&)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::read_preference> const&)
     read_preference() const;
 
     ///
@@ -221,7 +221,7 @@ class aggregate {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/aggregate/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<bool>&)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bool> const&)
     bypass_document_validation() const;
 
     ///
@@ -250,7 +250,7 @@ class aggregate {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/aggregate/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::hint>&)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::hint> const&)
     hint() const;
 
     ///
@@ -279,7 +279,7 @@ class aggregate {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/aggregate/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern>&)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern> const&)
     write_concern() const;
 
     ///
@@ -306,7 +306,7 @@ class aggregate {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/aggregate/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::read_concern>&)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::read_concern> const&)
     read_concern() const;
 
     ///
@@ -333,8 +333,8 @@ class aggregate {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/aggregate/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<
-                              bsoncxx::v_noabi::types::bson_value::view_or_value>&)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<
+                              bsoncxx::v_noabi::types::bson_value::view_or_value> const&)
     comment() const;
 
    private:

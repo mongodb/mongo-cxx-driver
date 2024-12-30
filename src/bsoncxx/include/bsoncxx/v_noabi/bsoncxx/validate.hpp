@@ -42,7 +42,7 @@ namespace v_noabi {
 ///   an unengaged optional if the document is invalid.
 ///
 BSONCXX_ABI_EXPORT_CDECL(stdx::optional<document::view>)
-validate(const std::uint8_t* data, std::size_t length);
+validate(std::uint8_t const* data, std::size_t length);
 
 ///
 /// Validates a BSON document. This overload provides additional control over the
@@ -66,9 +66,9 @@ validate(const std::uint8_t* data, std::size_t length);
 ///
 BSONCXX_ABI_EXPORT_CDECL(stdx::optional<document::view>)
 validate(
-    const std::uint8_t* data,
+    std::uint8_t const* data,
     std::size_t length,
-    const validator& validator,
+    validator const& validator,
     std::size_t* invalid_offset = nullptr);
 
 ///
@@ -179,13 +179,13 @@ using ::bsoncxx::v_noabi::validate;
 namespace bsoncxx {
 
 /// @ref bsoncxx::v_noabi::validate(const std::uint8_t* data, std::size_t length)
-v_noabi::stdx::optional<v_noabi::document::view> validate(const std::uint8_t* data, std::size_t length);
+v_noabi::stdx::optional<v_noabi::document::view> validate(std::uint8_t const* data, std::size_t length);
 
 /// @ref bsoncxx::v_noabi::validate(const std::uint8_t* data, std::size_t length, const v_noabi::validator& validator, std::size_t* invalid_offset)
 v_noabi::stdx::optional<v_noabi::document::view> validate(
-    const std::uint8_t* data,
+    std::uint8_t const* data,
     std::size_t length,
-    const v_noabi::validator& validator,
+    v_noabi::validator const& validator,
     std::size_t* invalid_offset = nullptr);
 
 }  // namespace bsoncxx

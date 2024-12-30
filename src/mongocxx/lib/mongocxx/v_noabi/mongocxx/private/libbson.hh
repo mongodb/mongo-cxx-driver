@@ -129,8 +129,8 @@ class scoped_bson_t {
 
     MONGOCXX_ABI_EXPORT_CDECL_TESTING() ~scoped_bson_t();
 
-    scoped_bson_t(const scoped_bson_t& rhs) = delete;
-    scoped_bson_t& operator=(const scoped_bson_t& rhs) = delete;
+    scoped_bson_t(scoped_bson_t const& rhs) = delete;
+    scoped_bson_t& operator=(scoped_bson_t const& rhs) = delete;
     scoped_bson_t(scoped_bson_t&& rhs) = delete;
     scoped_bson_t& operator=(scoped_bson_t&& rhs) = delete;
 

@@ -24,10 +24,10 @@ namespace {
 // [Example]
 void example() {
     try {
-        const auto doc = bsoncxx::from_json(R"(invalid json)");
+        auto const doc = bsoncxx::from_json(R"(invalid json)");
 
         EXPECT(false && "should not reach this point");
-    } catch (const bsoncxx::exception& ex) {
+    } catch (bsoncxx::exception const& ex) {
         EXPECT(ex.code() == bsoncxx::error_code::k_json_parse_failure);
     }
 }

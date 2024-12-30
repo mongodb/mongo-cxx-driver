@@ -53,7 +53,7 @@ namespace spec {
 using namespace mongocxx;
 using namespace bsoncxx;
 
-static int64_t as_int64(const document::element& el) {
+static int64_t as_int64(document::element const& el) {
     if (el.type() == type::k_int32) {
         return static_cast<std::int64_t>(el.get_int32().value);
     } else if (el.type() == type::k_int64) {
@@ -722,7 +722,7 @@ document::value operation_runner::_run_replace_one(document::view operation) {
         // Server versions below 2.4 do not return an `nModified` count.
         try {
             modified_count = replace_result->modified_count();
-        } catch (const std::exception& e) {
+        } catch (std::exception const& e) {
             CAPTURE(e);
         }
 
@@ -834,7 +834,7 @@ document::value operation_runner::_run_update_many(document::view operation) {
         // Server versions below 2.4 do not return an `nModified` count.
         try {
             modified_count = update_result->modified_count();
-        } catch (const std::exception& e) {
+        } catch (std::exception const& e) {
             CAPTURE(e);
         }
 
@@ -945,7 +945,7 @@ document::value operation_runner::_run_update_one(document::view operation) {
         // Server versions below 2.4 do not return an `nModified` count.
         try {
             modified_count = update_result->modified_count();
-        } catch (const std::exception& e) {
+        } catch (std::exception const& e) {
             CAPTURE(e);
         }
 
@@ -1323,7 +1323,7 @@ document::value operation_runner::_run_run_command(bsoncxx::document::view opera
     return result.extract();
 }
 
-document::value operation_runner::_create_index(const document::view& operation) {
+document::value operation_runner::_create_index(document::view const& operation) {
     auto arguments = operation["arguments"];
     auto session = _lookup_session(arguments.get_document().value);
     REQUIRE(session);
@@ -1444,20 +1444,20 @@ document::value operation_runner::run(document::view operation) {
     } else if (key == "runCommand") {
         return _run_run_command(operation);
     } else if (key == "assertSessionPinned") {
-        const client_session* session = _lookup_session(operation["arguments"].get_document().value);
+        client_session const* session = _lookup_session(operation["arguments"].get_document().value);
         REQUIRE(session);
         REQUIRE(session->server_id() != 0);
         return empty_document;
     } else if (key == "assertSessionUnpinned") {
-        const client_session* session = _lookup_session(operation["arguments"].get_document().value);
+        client_session const* session = _lookup_session(operation["arguments"].get_document().value);
         REQUIRE(session);
         REQUIRE(session->server_id() == 0);
         return empty_document;
     } else if (key == "assertSessionTransactionState") {
-        const auto arguments = operation["arguments"].get_document().value;
-        const client_session* session = _lookup_session(arguments);
+        auto const arguments = operation["arguments"].get_document().value;
+        client_session const* session = _lookup_session(arguments);
         REQUIRE(session);
-        const auto state = arguments["state"].get_string().value;
+        auto const state = arguments["state"].get_string().value;
         switch (session->get_transaction_state()) {
             case client_session::transaction_state::k_transaction_none:
                 REQUIRE(state == bsoncxx::stdx::string_view("none"));
@@ -1555,18 +1555,18 @@ document::value operation_runner::run(document::view operation) {
     } else if (key == "targetedFailPoint") {
         REQUIRE(object == bsoncxx::stdx::string_view("testRunner"));
 
-        const auto arguments = operation["arguments"].get_document().value;
+        auto const arguments = operation["arguments"].get_document().value;
 
-        const auto session_ptr = _lookup_session(arguments);
+        auto const session_ptr = _lookup_session(arguments);
         REQUIRE(session_ptr);
         auto& session = *session_ptr;
-        const auto server_id = session.server_id();
+        auto const server_id = session.server_id();
 
         if (server_id == 0) {
             FAIL("session object is not pinned to a mongos server");
         }
 
-        const auto command = arguments["failPoint"].get_document().value;
+        auto const command = arguments["failPoint"].get_document().value;
         REQUIRE(!command.empty());
 
         session.client()["admin"].run_command(command, server_id);

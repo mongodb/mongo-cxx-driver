@@ -46,7 +46,7 @@ TEST_CASE("a pool is created with the correct MongoDB URI", "[pool]") {
     std::string actual_uri{};
     bool new_called = false;
 
-    client_pool_new_with_error->visit([&](const mongoc_uri_t* uri, bson_error_t* error) {
+    client_pool_new_with_error->visit([&](mongoc_uri_t const* uri, bson_error_t* error) {
         new_called = true;
         actual_uri = mongoc_uri_get_string(uri);
         error->code = 0;
@@ -74,12 +74,12 @@ TEST_CASE(
 
     instance::current();
 
-    const std::string pem_file = "foo";
-    const std::string pem_password = "bar";
-    const std::string ca_file = "baz";
-    const std::string ca_dir = "garply";
-    const std::string crl_file = "crl_file";
-    const bool allow_invalid_certificates = true;
+    std::string const pem_file = "foo";
+    std::string const pem_password = "bar";
+    std::string const ca_file = "baz";
+    std::string const ca_dir = "garply";
+    std::string const crl_file = "crl_file";
+    bool const allow_invalid_certificates = true;
 
     bool set_tls_opts_called = false;
     options::tls tls_opts;
@@ -92,7 +92,7 @@ TEST_CASE(
 
     ::mongoc_ssl_opt_t interposed = {};
 
-    client_pool_set_ssl_opts->visit([&](::mongoc_client_pool_t*, const ::mongoc_ssl_opt_t* opts) {
+    client_pool_set_ssl_opts->visit([&](::mongoc_client_pool_t*, ::mongoc_ssl_opt_t const* opts) {
         set_tls_opts_called = true;
         interposed = *opts;
     });

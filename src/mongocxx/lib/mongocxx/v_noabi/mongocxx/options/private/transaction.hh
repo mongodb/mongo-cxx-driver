@@ -39,12 +39,12 @@ class transaction::impl {
         : _transaction_opt_t(
               unique_transaction_opt{libmongoc::transaction_opts_clone(txn_opts), &mongoc_transaction_opts_destroy}) {}
 
-    impl(const impl& other)
+    impl(impl const& other)
         : _transaction_opt_t(unique_transaction_opt{
               libmongoc::transaction_opts_clone(other._transaction_opt_t.get()),
               &mongoc_transaction_opts_destroy}) {}
 
-    impl& operator=(const impl& other) {
+    impl& operator=(impl const& other) {
         _transaction_opt_t = unique_transaction_opt{
             libmongoc::transaction_opts_clone(other._transaction_opt_t.get()), &mongoc_transaction_opts_destroy};
         return *this;
@@ -55,7 +55,7 @@ class transaction::impl {
     impl(impl&&) = default;
     impl& operator=(impl&&) = default;
 
-    void read_concern(const mongocxx::v_noabi::read_concern& rc) {
+    void read_concern(mongocxx::v_noabi::read_concern const& rc) {
         libmongoc::transaction_opts_set_read_concern(_transaction_opt_t.get(), rc._impl->read_concern_t);
     }
 
@@ -68,7 +68,7 @@ class transaction::impl {
         return bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::read_concern>(std::move(rci));
     }
 
-    void write_concern(const mongocxx::v_noabi::write_concern& wc) {
+    void write_concern(mongocxx::v_noabi::write_concern const& wc) {
         libmongoc::transaction_opts_set_write_concern(_transaction_opt_t.get(), wc._impl->write_concern_t);
     }
 
@@ -82,7 +82,7 @@ class transaction::impl {
         return bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern>(std::move(wci));
     }
 
-    void read_preference(const mongocxx::v_noabi::read_preference& rp) {
+    void read_preference(mongocxx::v_noabi::read_preference const& rp) {
         libmongoc::transaction_opts_set_read_prefs(_transaction_opt_t.get(), rp._impl->read_preference_t);
     }
 

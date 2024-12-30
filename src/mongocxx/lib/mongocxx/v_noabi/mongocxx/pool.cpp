@@ -55,7 +55,7 @@ void pool::_release(client* client) {
 
 pool::~pool() = default;
 
-pool::pool(const uri& uri, const options::pool& options)
+pool::pool(uri const& uri, options::pool const& options)
     : _impl{bsoncxx::make_unique<impl>(construct_client_pool(uri._impl->uri_t))} {
 #if defined(MONGOCXX_ENABLE_SSL) && defined(MONGOC_ENABLE_SSL)
     if (options.client_opts().tls_opts()) {
@@ -72,7 +72,7 @@ pool::pool(const uri& uri, const options::pool& options)
 #endif
 
     if (options.client_opts().auto_encryption_opts()) {
-        const auto& auto_encrypt_opts = *(options.client_opts().auto_encryption_opts());
+        auto const& auto_encrypt_opts = *(options.client_opts().auto_encryption_opts());
         auto mongoc_auto_encrypt_opts = static_cast<mongoc_auto_encryption_opts_t*>(auto_encrypt_opts.convert());
 
         bson_error_t error;
@@ -95,7 +95,7 @@ pool::pool(const uri& uri, const options::pool& options)
     }
 
     if (options.client_opts().server_api_opts()) {
-        const auto& server_api_opts = *options.client_opts().server_api_opts();
+        auto const& server_api_opts = *options.client_opts().server_api_opts();
         auto mongoc_server_api_opts = options::make_server_api(server_api_opts);
 
         bson_error_t error;

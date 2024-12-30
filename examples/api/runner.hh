@@ -18,15 +18,15 @@
 
 #include <examples/macros.hh>
 
-void runner_register_component(void (*fn)(), const char* name);
+void runner_register_component(void (*fn)(), char const* name);
 
-void runner_register_component_with_instance(void (*fn)(), const char* name);
+void runner_register_component_with_instance(void (*fn)(), char const* name);
 
-void runner_register_component_for_single(void (*fn)(), const char* name);
-void runner_register_component_for_replica(void (*fn)(), const char* name);
-void runner_register_component_for_sharded(void (*fn)(), const char* name);
+void runner_register_component_for_single(void (*fn)(), char const* name);
+void runner_register_component_for_replica(void (*fn)(), char const* name);
+void runner_register_component_for_sharded(void (*fn)(), char const* name);
 
-void runner_register_forking_component(void (*fn)(), const char* name);
+void runner_register_forking_component(void (*fn)(), char const* name);
 
 // Defined by examples/CMakeLists.txt.
 #if !defined(EXAMPLES_COMPONENT_NAME)

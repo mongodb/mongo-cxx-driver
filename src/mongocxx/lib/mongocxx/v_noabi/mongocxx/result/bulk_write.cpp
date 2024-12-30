@@ -59,10 +59,10 @@ bsoncxx::v_noabi::document::view bulk_write::view() const {
     return _response.view();
 }
 
-bool operator==(const bulk_write& lhs, const bulk_write& rhs) {
+bool operator==(bulk_write const& lhs, bulk_write const& rhs) {
     return lhs.view() == rhs.view();
 }
-bool operator!=(const bulk_write& lhs, const bulk_write& rhs) {
+bool operator!=(bulk_write const& lhs, bulk_write const& rhs) {
     return !(lhs == rhs);
 }
 

@@ -47,7 +47,7 @@ inline std::string to_string(bsoncxx::v_noabi::types::bson_value::view_or_value 
         case type::k_oid:
             return val.view().get_oid().value.to_string();
         case type::k_binary: {
-            const auto& binary = val.view().get_binary();
+            auto const& binary = val.view().get_binary();
             std::stringstream ss;
             ss << std::hex;
             for (auto&& byte : std::vector<unsigned int>(binary.bytes, binary.bytes + binary.size)) {

@@ -80,10 +80,10 @@ class downloader::impl {
     std::size_t chunk_buffer_offset;
 
     // A pointer to the current chunk being read.
-    const uint8_t* chunk_buffer_ptr;
+    uint8_t const* chunk_buffer_ptr;
 
     // An offset from which to start downloading the file.
-    const chunks_and_bytes_offset start;
+    chunks_and_bytes_offset const start;
 
     // A cursor iterating over the chunks documents being read. In the case of a zero-length file,
     // this member does not have a value.

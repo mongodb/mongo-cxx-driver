@@ -27,7 +27,7 @@ namespace bson_value {
 
 class value::impl {
    public:
-    impl(const bson_value_t* value) {
+    impl(bson_value_t const* value) {
         bson_value_copy(value, &_value);
     }
 
@@ -43,12 +43,12 @@ class value::impl {
 
     impl(impl&&) = delete;
     impl operator=(impl&&) = delete;
-    impl(const impl&) = delete;
-    impl operator=(const impl&) = delete;
+    impl(impl const&) = delete;
+    impl operator=(impl const&) = delete;
 
     bson_value::view view() const noexcept {
         // ABI backward compatibility. Const is restored in `view::_init`.
-        return bson_value::view{const_cast<void*>(static_cast<const void*>(&_value))};
+        return bson_value::view{const_cast<void*>(static_cast<void const*>(&_value))};
     }
 
     bson_value_t _value;

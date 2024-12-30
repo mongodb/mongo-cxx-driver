@@ -21,7 +21,7 @@ namespace libbson {
 
 namespace {
 
-void doc_to_bson_t(const bsoncxx::v_noabi::document::view& doc, bson_t* bson) {
+void doc_to_bson_t(bsoncxx::v_noabi::document::view const& doc, bson_t* bson) {
     // While bson_init_static is documented as returning false if the bson_t was unable to be
     // initialized, this only occurs when the length of the data passed in is less than five. We
     // assume that the data from the bsoncxx::v_noabi::document::view is valid and that

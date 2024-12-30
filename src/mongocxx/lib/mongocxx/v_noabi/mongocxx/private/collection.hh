@@ -35,15 +35,15 @@ class collection::impl {
     impl(
         mongoc_collection_t* collection,
         bsoncxx::v_noabi::stdx::string_view database_name,
-        const mongocxx::v_noabi::client::impl* client)
+        mongocxx::v_noabi::client::impl const* client)
         : collection_t(collection), database_name(std::move(database_name)), client_impl(client) {}
 
-    impl(const impl& i)
+    impl(impl const& i)
         : collection_t{libmongoc::collection_copy(i.collection_t)},
           database_name{i.database_name},
           client_impl{i.client_impl} {}
 
-    impl& operator=(const impl& i) {
+    impl& operator=(impl const& i) {
         if (this != &i) {
             libmongoc::collection_destroy(collection_t);
             collection_t = libmongoc::collection_copy(i.collection_t);
@@ -61,7 +61,7 @@ class collection::impl {
 
     mongoc_collection_t* collection_t;
     std::string database_name;
-    const mongocxx::v_noabi::client::impl* client_impl;
+    mongocxx::v_noabi::client::impl const* client_impl;
 };
 
 }  // namespace v_noabi

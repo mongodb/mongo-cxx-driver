@@ -35,7 +35,7 @@ change_stream& change_stream::full_document(bsoncxx::v_noabi::string::view_or_va
     return *this;
 }
 
-const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value>& change_stream::full_document() const {
+bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value> const& change_stream::full_document() const {
     return _full_document;
 }
 
@@ -45,7 +45,7 @@ change_stream& change_stream::full_document_before_change(
     return *this;
 }
 
-const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value>&
+bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value> const&
 change_stream::full_document_before_change() const {
     return _full_document_before_change;
 }
@@ -55,7 +55,7 @@ change_stream& change_stream::batch_size(std::int32_t batch_size) {
     return *this;
 }
 
-const bsoncxx::v_noabi::stdx::optional<std::int32_t>& change_stream::batch_size() const {
+bsoncxx::v_noabi::stdx::optional<std::int32_t> const& change_stream::batch_size() const {
     return _batch_size;
 }
 
@@ -64,7 +64,7 @@ change_stream& change_stream::comment(bsoncxx::v_noabi::types::bson_value::view_
     return *this;
 }
 
-const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value>& change_stream::comment()
+bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value> const& change_stream::comment()
     const {
     return _comment;
 }
@@ -74,7 +74,7 @@ change_stream& change_stream::resume_after(bsoncxx::v_noabi::document::view_or_v
     return *this;
 }
 
-const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value>& change_stream::resume_after() const {
+bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const& change_stream::resume_after() const {
     return _resume_after;
 }
 
@@ -83,7 +83,7 @@ change_stream& change_stream::start_after(bsoncxx::v_noabi::document::view_or_va
     return *this;
 }
 
-const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value>& change_stream::start_after() const {
+bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const& change_stream::start_after() const {
     return _start_after;
 }
 
@@ -92,7 +92,7 @@ change_stream& change_stream::collation(bsoncxx::v_noabi::document::view_or_valu
     return *this;
 }
 
-const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value>& change_stream::collation() const {
+bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const& change_stream::collation() const {
     return _collation;
 }
 
@@ -101,7 +101,7 @@ change_stream& change_stream::max_await_time(std::chrono::milliseconds max_time)
     return *this;
 }
 
-const bsoncxx::v_noabi::stdx::optional<std::chrono::milliseconds>& change_stream::max_await_time() const {
+bsoncxx::v_noabi::stdx::optional<std::chrono::milliseconds> const& change_stream::max_await_time() const {
     return _max_await_time;
 }
 
@@ -110,7 +110,7 @@ change_stream& change_stream::start_at_operation_time(bsoncxx::v_noabi::types::b
     return *this;
 }
 
-const bsoncxx::stdx::optional<bsoncxx::v_noabi::types::b_timestamp>& change_stream::start_at_operation_time() const {
+bsoncxx::stdx::optional<bsoncxx::v_noabi::types::b_timestamp> const& change_stream::start_at_operation_time() const {
     return _start_at_operation_time;
 }
 
@@ -118,8 +118,8 @@ namespace {
 template <typename T>
 inline void append_if(
     bsoncxx::v_noabi::builder::basic::document& doc,
-    const std::string& key,
-    const bsoncxx::v_noabi::stdx::optional<T>& opt) {
+    std::string const& key,
+    bsoncxx::v_noabi::stdx::optional<T> const& opt) {
     if (opt) {
         doc.append(bsoncxx::v_noabi::builder::basic::kvp(key, opt.value()));
     }

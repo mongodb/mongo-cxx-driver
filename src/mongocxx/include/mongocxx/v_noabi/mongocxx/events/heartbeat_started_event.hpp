@@ -35,7 +35,7 @@ namespace events {
 ///
 class heartbeat_started_event {
    public:
-    explicit heartbeat_started_event(const void* event);
+    explicit heartbeat_started_event(void const* event);
 
     ///
     /// Destroys a heartbeat_started_event.
@@ -45,8 +45,8 @@ class heartbeat_started_event {
     heartbeat_started_event(heartbeat_started_event&&) = default;
     heartbeat_started_event& operator=(heartbeat_started_event&&) noexcept = default;
 
-    heartbeat_started_event(const heartbeat_started_event&) = default;
-    heartbeat_started_event& operator=(const heartbeat_started_event&) = default;
+    heartbeat_started_event(heartbeat_started_event const&) = default;
+    heartbeat_started_event& operator=(heartbeat_started_event const&) = default;
 
     ///
     /// Returns the host name.
@@ -70,7 +70,7 @@ class heartbeat_started_event {
     MONGOCXX_ABI_EXPORT_CDECL(bool) awaited() const;
 
    private:
-    const void* _started_event;
+    void const* _started_event;
 };
 
 }  // namespace events

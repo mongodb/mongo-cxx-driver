@@ -33,7 +33,7 @@ using namespace mongocxx;
 
 namespace {
 
-void aggregation_examples(const mongocxx::database& db) {
+void aggregation_examples(mongocxx::database const& db) {
     {
         // Start Aggregation Example 1
         using namespace bsoncxx::builder::basic;
@@ -145,17 +145,17 @@ int EXAMPLES_CDECL main() {
     // The mongocxx::instance constructor and destructor initialize and shut down the driver,
     // respectively. Therefore, a mongocxx::instance must be created before using the driver and
     // must remain alive for as long as the driver is in use.
-    const mongocxx::instance inst{};
+    mongocxx::instance const inst{};
 
-    const mongocxx::client conn{mongocxx::uri{}};
-    const auto db = conn["documentation_examples"];
+    mongocxx::client const conn{mongocxx::uri{}};
+    auto const db = conn["documentation_examples"];
 
     // SERVER-79306: Ensure the database exists for consistent behavior with sharded clusters.
     conn["documentation_examples"].create_collection("dummy");
 
     try {
         aggregation_examples(db);
-    } catch (const std::logic_error& e) {
+    } catch (std::logic_error const& e) {
         std::cerr << e.what() << std::endl;
         return EXIT_FAILURE;
     }

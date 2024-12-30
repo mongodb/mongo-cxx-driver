@@ -36,7 +36,7 @@ namespace events {
 ///
 class heartbeat_failed_event {
    public:
-    explicit heartbeat_failed_event(const void* event);
+    explicit heartbeat_failed_event(void const* event);
 
     ///
     /// Destroys a heartbeat_failed_event.
@@ -46,8 +46,8 @@ class heartbeat_failed_event {
     heartbeat_failed_event(heartbeat_failed_event&&) = default;
     heartbeat_failed_event& operator=(heartbeat_failed_event&&) = default;
 
-    heartbeat_failed_event(const heartbeat_failed_event&) = default;
-    heartbeat_failed_event& operator=(const heartbeat_failed_event&) = default;
+    heartbeat_failed_event(heartbeat_failed_event const&) = default;
+    heartbeat_failed_event& operator=(heartbeat_failed_event const&) = default;
 
     ///
     /// Returns the failed operation's error message.
@@ -85,7 +85,7 @@ class heartbeat_failed_event {
     MONGOCXX_ABI_EXPORT_CDECL(bool) awaited() const;
 
    private:
-    const void* _failed_event;
+    void const* _failed_event;
 };
 
 }  // namespace events

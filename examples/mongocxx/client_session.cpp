@@ -32,8 +32,8 @@ using bsoncxx::builder::basic::make_document;
 using namespace mongocxx;
 
 int EXAMPLES_CDECL main() {
-    if (const char* const topology_env = std::getenv("MONGOCXX_TEST_TOPOLOGY")) {
-        const auto topology = std::string(topology_env);
+    if (char const* const topology_env = std::getenv("MONGOCXX_TEST_TOPOLOGY")) {
+        auto const topology = std::string(topology_env);
         if (topology != "replica") {
             std::cerr << "Skipping: client_session example requires a replica set" << std::endl;
             return 0;

@@ -27,7 +27,7 @@ data_key& data_key::master_key(bsoncxx::v_noabi::document::view_or_value master_
     return *this;
 }
 
-const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value>& data_key::master_key() const {
+bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const& data_key::master_key() const {
     return _master_key;
 }
 
@@ -37,7 +37,7 @@ data_key& data_key::key_alt_names(std::vector<std::string> key_alt_names) {
     return *this;
 }
 
-const std::vector<std::string>& data_key::key_alt_names() const {
+std::vector<std::string> const& data_key::key_alt_names() const {
     return _key_alt_names;
 }
 
@@ -76,7 +76,7 @@ data_key& data_key::key_material(data_key::key_material_type key_material) {
     return *this;
 }
 
-const bsoncxx::v_noabi::stdx::optional<data_key::key_material_type>& data_key::key_material() {
+bsoncxx::v_noabi::stdx::optional<data_key::key_material_type> const& data_key::key_material() {
     return _key_material;
 }
 

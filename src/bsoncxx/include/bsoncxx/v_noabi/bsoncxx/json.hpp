@@ -82,7 +82,7 @@ BSONCXX_ABI_EXPORT_CDECL(document::value) from_json(stdx::string_view json);
 ///
 /// @throws bsoncxx::v_noabi::exception with error details if the conversion failed.
 ///
-BSONCXX_ABI_EXPORT_CDECL(document::value) operator"" _bson(const char* json, size_t len);
+BSONCXX_ABI_EXPORT_CDECL(document::value) operator"" _bson(char const* json, size_t len);
 
 }  // namespace v_noabi
 }  // namespace bsoncxx
@@ -118,7 +118,7 @@ v_noabi::document::value from_json(v_noabi::stdx::string_view json);
 
 // Space is required between `operator` and `""` in @ref to avoid confusing Doxygen.
 /// @ref bsoncxx::v_noabi::operator ""_bson(const char* json, size_t len)
-v_noabi::document::value operator""_bson(const char* json, std::size_t len);
+v_noabi::document::value operator""_bson(char const* json, std::size_t len);
 
 }  // namespace bsoncxx
 

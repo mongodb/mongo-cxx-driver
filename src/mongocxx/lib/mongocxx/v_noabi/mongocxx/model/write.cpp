@@ -132,22 +132,22 @@ write_type write::type() const {
     return _type;
 }
 
-const insert_one& write::get_insert_one() const {
+insert_one const& write::get_insert_one() const {
     return _insert_one;
 }
-const update_one& write::get_update_one() const {
+update_one const& write::get_update_one() const {
     return _update_one;
 }
-const update_many& write::get_update_many() const {
+update_many const& write::get_update_many() const {
     return _update_many;
 }
-const delete_one& write::get_delete_one() const {
+delete_one const& write::get_delete_one() const {
     return _delete_one;
 }
-const delete_many& write::get_delete_many() const {
+delete_many const& write::get_delete_many() const {
     return _delete_many;
 }
-const replace_one& write::get_replace_one() const {
+replace_one const& write::get_replace_one() const {
     return _replace_one;
 }
 

@@ -48,7 +48,7 @@ void example(bsoncxx::document::element e) {
 }  // namespace
 
 RUNNER_REGISTER_COMPONENT() {
-    const auto doc = bsoncxx::from_json(R"({"a": {"$numberInt": "1"}, "b": {"$numberLong": "2"}})");
+    auto const doc = bsoncxx::from_json(R"({"a": {"$numberInt": "1"}, "b": {"$numberLong": "2"}})");
 
     example(doc["a"]);
     example(doc["b"]);

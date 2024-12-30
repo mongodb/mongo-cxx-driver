@@ -32,7 +32,7 @@ void example() {
             mongocxx::instance another_instance;  // Throws.
 
             EXPECT(false && "should not reach this point");
-        } catch (const mongocxx::exception& ex) {
+        } catch (mongocxx::exception const& ex) {
             EXPECT(ex.code() == mongocxx::error_code::k_cannot_recreate_instance);
         }
 

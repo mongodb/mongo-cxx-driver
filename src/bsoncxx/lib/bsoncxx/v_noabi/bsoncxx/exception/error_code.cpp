@@ -25,7 +25,7 @@ namespace {
 
 class error_category_impl final : public std::error_category {
    public:
-    const char* name() const noexcept override {
+    char const* name() const noexcept override {
         return "bsoncxx";
     }
 
@@ -91,8 +91,8 @@ class error_category_impl final : public std::error_category {
 
 }  // namespace
 
-const std::error_category& error_category() {
-    static const error_category_impl instance{};
+std::error_category const& error_category() {
+    static error_category_impl const instance{};
     return instance;
 }
 

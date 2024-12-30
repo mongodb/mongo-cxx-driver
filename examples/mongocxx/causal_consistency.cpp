@@ -40,8 +40,8 @@ using bsoncxx::builder::stream::finalize;
 using bsoncxx::builder::stream::open_document;
 
 int EXAMPLES_CDECL main() {
-    if (const char* const topology_env = std::getenv("MONGOCXX_TEST_TOPOLOGY")) {
-        const auto topology = std::string(topology_env);
+    if (char const* const topology_env = std::getenv("MONGOCXX_TEST_TOPOLOGY")) {
+        auto const topology = std::string(topology_env);
         if (topology != "replica") {
             std::cerr << "Skipping: with_transaction example requires a replica set" << std::endl;
             return 0;

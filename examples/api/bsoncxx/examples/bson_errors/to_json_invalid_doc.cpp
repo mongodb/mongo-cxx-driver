@@ -41,7 +41,7 @@ void example() {
         std::string json = bsoncxx::to_json(doc);  // Throws.
 
         EXPECT(false && "should not reach this point");
-    } catch (const bsoncxx::exception& ex) {
+    } catch (bsoncxx::exception const& ex) {
         EXPECT(ex.code() == bsoncxx::error_code::k_failed_converting_bson_to_json);
     }
 }

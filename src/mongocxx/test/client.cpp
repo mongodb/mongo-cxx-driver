@@ -60,7 +60,7 @@ TEST_CASE("A client lists its databases with a filter applied", "[client]") {
     auto filter_view = filter_doc.view();
 
     client_find_databases_with_opts
-        ->interpose([&](mongoc_client_t*, const bson_t* opts) {
+        ->interpose([&](mongoc_client_t*, bson_t const* opts) {
             REQUIRE(opts);
             bsoncxx::document::view opts_view{bson_get_data(opts), opts->len};
             REQUIRE(filter_view == opts_view);
@@ -84,7 +84,7 @@ TEST_CASE("list databases passes authorizedDatabases option", "[client]") {
     bool called = false;
     bsoncxx::stdx::optional<bsoncxx::document::value> opts_passed;
 
-    client_find_databases_with_opts->visit([&](mongoc_client_t*, const bson_t* opts) {
+    client_find_databases_with_opts->visit([&](mongoc_client_t*, bson_t const* opts) {
         called = true;
         if (opts) {
             opts_passed = bsoncxx::document::value{bsoncxx::document::view{bson_get_data(opts), opts->len}};
@@ -132,7 +132,7 @@ TEST_CASE("A client connects to a provided mongodb uri", "[client]") {
     uri mongodb_uri(expected_url);
     std::string actual_url{};
 
-    client_new->visit([&](const mongoc_uri_t* url) { actual_url = std::string(mongoc_uri_get_string(url)); });
+    client_new->visit([&](mongoc_uri_t const* url) { actual_url = std::string(mongoc_uri_get_string(url)); });
 
     client a{mongodb_uri};
 
@@ -145,7 +145,7 @@ TEST_CASE("A client throws if its underlying mongoc client is NULL", "[client]")
 
     instance::current();
 
-    client_new->interpose([](const mongoc_uri_t*) -> mongoc_client_t* { return nullptr; });
+    client_new->interpose([](mongoc_uri_t const*) -> mongoc_client_t* { return nullptr; });
 
     REQUIRE_THROWS_AS(client{uri{}}, mongocxx::exception);
 }
@@ -174,7 +174,7 @@ TEST_CASE("A client supports move operations", "[client]") {
     client a{uri{}, test_util::add_test_server_api()};
 
     bool called = false;
-    client_new->visit([&](const mongoc_uri_t*) { called = true; });
+    client_new->visit([&](mongoc_uri_t const*) { called = true; });
 
     client b{std::move(a)};
     REQUIRE(!called);
@@ -195,9 +195,9 @@ TEST_CASE("A client has a settable Read Concern", "[client]") {
     rc.acknowledge_level(read_concern::level::k_majority);
 
     client_set_read_concern->interpose(
-        [&client_set_rc_called](::mongoc_client_t*, const ::mongoc_read_concern_t* rc_t) {
+        [&client_set_rc_called](::mongoc_client_t*, ::mongoc_read_concern_t const* rc_t) {
             REQUIRE(rc_t);
-            const auto result = libmongoc::read_concern_get_level(rc_t);
+            auto const result = libmongoc::read_concern_get_level(rc_t);
             REQUIRE(result);
             REQUIRE(strcmp(result, "majority") == 0);
             client_set_rc_called = true;
@@ -220,7 +220,7 @@ TEST_CASE("A client's read preferences may be set and obtained", "[client]") {
     auto deleter = [](mongoc_read_prefs_t* var) { mongoc_read_prefs_destroy(var); };
     std::unique_ptr<mongoc_read_prefs_t, decltype(deleter)> saved_preference(nullptr, deleter);
 
-    client_set_preference->interpose([&](mongoc_client_t*, const mongoc_read_prefs_t* read_prefs) {
+    client_set_preference->interpose([&](mongoc_client_t*, mongoc_read_prefs_t const* read_prefs) {
         called_set = true;
         saved_preference.reset(mongoc_read_prefs_copy(read_prefs));
         REQUIRE(
@@ -228,7 +228,7 @@ TEST_CASE("A client's read preferences may be set and obtained", "[client]") {
             libmongoc::conversions::read_mode_t_from_read_mode(read_preference::read_mode::k_secondary_preferred));
     });
 
-    client_get_preference->interpose([&](const mongoc_client_t*) { return saved_preference.get(); }).forever();
+    client_get_preference->interpose([&](mongoc_client_t const*) { return saved_preference.get(); }).forever();
 
     mongo_client.read_preference_deprecated(std::move(preference));
     REQUIRE(called_set);
@@ -242,7 +242,7 @@ TEST_CASE("A client may not change apm callbacks after they are set", "[client]"
     bool triggered = false;
 
     options::apm apm_opts;
-    apm_opts.on_command_started([&](const events::command_started_event& event) {
+    apm_opts.on_command_started([&](events::command_started_event const& event) {
         INFO(event.command_name());
         triggered = true;
     });
@@ -251,7 +251,7 @@ TEST_CASE("A client may not change apm callbacks after they are set", "[client]"
     client_opts.apm_opts(apm_opts);
     client mongo_client(uri{}, test_util::add_test_server_api(client_opts));
 
-    apm_opts.on_command_started([&](const events::command_started_event& event) {
+    apm_opts.on_command_started([&](events::command_started_event const& event) {
         INFO(event.command_name());
         // do nothing
     });
@@ -272,7 +272,7 @@ TEST_CASE("A client can delete apm options and the callbacks will still work pro
     options::client client_opts;
     {
         options::apm apm_opts;
-        apm_opts.on_command_started([&](const events::command_started_event& event) {
+        apm_opts.on_command_started([&](events::command_started_event const& event) {
             INFO(event.command_name());
             triggered = true;
         });
@@ -299,13 +299,13 @@ TEST_CASE("A client's write concern may be set and obtained", "[client]") {
     mongoc_write_concern_t* underlying_wc;
 
     bool set_called = false;
-    client_set_concern->interpose([&](mongoc_client_t*, const mongoc_write_concern_t* concern) {
+    client_set_concern->interpose([&](mongoc_client_t*, mongoc_write_concern_t const* concern) {
         set_called = true;
         underlying_wc = mongoc_write_concern_copy(concern);
     });
 
     bool get_called = false;
-    client_get_concern->interpose([&](const mongoc_client_t*) {
+    client_get_concern->interpose([&](mongoc_client_t const*) {
         get_called = true;
         return underlying_wc;
     });
@@ -315,7 +315,7 @@ TEST_CASE("A client's write concern may be set and obtained", "[client]") {
 
     MOCK_CONCERN
     bool copy_called = false;
-    concern_copy->interpose([&](const mongoc_write_concern_t*) {
+    concern_copy->interpose([&](mongoc_write_concern_t const*) {
         copy_called = true;
         return mongoc_write_concern_copy(underlying_wc);
     });
@@ -334,7 +334,7 @@ TEST_CASE("A client can be reset", "[client]") {
     instance::current();
 
     bool reset_called = false;
-    client_reset->interpose([&](const mongoc_client_t*) { reset_called = true; });
+    client_reset->interpose([&](mongoc_client_t const*) { reset_called = true; });
 
     client mongo_client{uri{}, test_util::add_test_server_api()};
     mongo_client.reset();
@@ -348,13 +348,13 @@ TEST_CASE("A client can create a named database object", "[client]") {
     instance::current();
 
     auto database_get = libmongoc::client_get_database.create_instance();
-    database_get->interpose([](mongoc_client_t*, const char*) { return nullptr; }).forever();
+    database_get->interpose([](mongoc_client_t*, char const*) { return nullptr; }).forever();
     auto database_destroy = libmongoc::database_destroy.create_instance();
     database_destroy->interpose([](mongoc_database_t*) {}).forever();
     auto database_set_preference = libmongoc::database_set_read_prefs.create_instance();
-    database_set_preference->interpose([](mongoc_database_t*, const mongoc_read_prefs_t*) {}).forever();
+    database_set_preference->interpose([](mongoc_database_t*, mongoc_read_prefs_t const*) {}).forever();
     auto database_set_concern = libmongoc::database_set_write_concern.create_instance();
-    database_set_concern->interpose([](mongoc_database_t*, const mongoc_write_concern_t*) {}).forever();
+    database_set_concern->interpose([](mongoc_database_t*, mongoc_write_concern_t const*) {}).forever();
 
     bsoncxx::stdx::string_view name("database");
 
@@ -371,7 +371,7 @@ TEST_CASE("integration tests for client metadata handshake feature") {
     uri uri{"mongodb://localhost/?appName=" + app_name};
     instance::current();
 
-    auto run_test = [app_name](const client& client) {
+    auto run_test = [app_name](client const& client) {
         mongocxx::database db = client["admin"];
         auto cursor = db.aggregate(pipeline().current_op(make_document()));
         bool found_op = false;
@@ -425,12 +425,12 @@ TEST_CASE("A client can be constructed with SSL options", "[client]") {
 
     instance::current();
 
-    const std::string pem_file = "foo";
-    const std::string pem_password = "bar";
-    const std::string ca_file = "baz";
-    const std::string ca_dir = "garply";
-    const std::string crl_file = "crl_file";
-    const bool allow_invalid_certificates = true;
+    std::string const pem_file = "foo";
+    std::string const pem_password = "bar";
+    std::string const ca_file = "baz";
+    std::string const ca_dir = "garply";
+    std::string const crl_file = "crl_file";
+    bool const allow_invalid_certificates = true;
 
     bool set_tls_opts_called = false;
     options::tls tls_opts;
@@ -443,7 +443,7 @@ TEST_CASE("A client can be constructed with SSL options", "[client]") {
 
     ::mongoc_ssl_opt_t interposed = {};
 
-    client_set_ssl_opts->interpose([&](::mongoc_client_t*, const ::mongoc_ssl_opt_t* opts) {
+    client_set_ssl_opts->interpose([&](::mongoc_client_t*, ::mongoc_ssl_opt_t const* opts) {
         set_tls_opts_called = true;
         interposed = *opts;
     });

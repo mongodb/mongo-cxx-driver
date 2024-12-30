@@ -50,9 +50,9 @@ TEST_CASE("Read preference", "[read_preference]") {
     }
 
     {
-        const auto tag_set_1 = make_document(kvp("a", "1"), kvp("b", "2"));
-        const auto tag_set_2 = make_document(kvp("c", "3"), kvp("d", "4"));
-        const auto tag_set_list = make_document(kvp("0", tag_set_1), kvp("1", tag_set_2));
+        auto const tag_set_1 = make_document(kvp("a", "1"), kvp("b", "2"));
+        auto const tag_set_2 = make_document(kvp("c", "3"), kvp("d", "4"));
+        auto const tag_set_list = make_document(kvp("0", tag_set_1), kvp("1", tag_set_2));
 
         SECTION("Can provide tag set list as a document") {
             rp.tags(tag_set_list.view());
@@ -162,12 +162,12 @@ TEST_CASE("Read preference methods call underlying mongoc methods", "[read_prefe
     }
 
     {
-        const auto tag_set_1 = make_document(kvp("foo", "abc"));
-        const auto tag_set_2 = make_document(kvp("bar", "def"));
+        auto const tag_set_1 = make_document(kvp("foo", "abc"));
+        auto const tag_set_2 = make_document(kvp("bar", "def"));
 
         SECTION("tags(document) calls mongoc_read_prefs_set_tags()") {
-            const auto tag_set_list = make_document(kvp("0", tag_set_1), kvp("1", tag_set_2));
-            read_prefs_set_tags->interpose([&](mongoc_read_prefs_t*, const bson_t* arg) {
+            auto const tag_set_list = make_document(kvp("0", tag_set_1), kvp("1", tag_set_2));
+            read_prefs_set_tags->interpose([&](mongoc_read_prefs_t*, bson_t const* arg) {
                 called = true;
                 REQUIRE(bson_get_data(arg) == tag_set_list.view().data());
             });
@@ -176,8 +176,8 @@ TEST_CASE("Read preference methods call underlying mongoc methods", "[read_prefe
         }
 
         SECTION("tags(array) calls _mongoc_read_prefs_set_tags()") {
-            const auto tag_set_list = make_array(tag_set_1, tag_set_2);
-            read_prefs_set_tags->interpose([&](mongoc_read_prefs_t*, const bson_t* arg) {
+            auto const tag_set_list = make_array(tag_set_1, tag_set_2);
+            read_prefs_set_tags->interpose([&](mongoc_read_prefs_t*, bson_t const* arg) {
                 called = true;
                 REQUIRE(bson_get_data(arg) == tag_set_list.view().data());
             });
@@ -200,7 +200,7 @@ TEST_CASE("Read preference methods call underlying mongoc methods", "[read_prefe
         /* No hedge should return a disengaged optional. */
         REQUIRE(!rp.hedge());
 
-        read_prefs_set_hedge->visit([&](mongoc_read_prefs_t*, const bson_t* doc) {
+        read_prefs_set_hedge->visit([&](mongoc_read_prefs_t*, bson_t const* doc) {
             bson_iter_t iter;
 
             REQUIRE(bson_iter_init_find(&iter, doc, "hedge"));

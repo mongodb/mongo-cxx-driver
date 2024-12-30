@@ -95,7 +95,7 @@ void run_retryable_reads_tests_in_file(std::string test_path) {
             optional<document::value> actual_outcome_value;
             try {
                 actual_outcome_value = op_runner.run(operation);
-            } catch (const operation_exception& e) {
+            } catch (operation_exception const& e) {
                 CAPTURE(e);
                 REQUIRE(operation["error"].get_bool().value);
             }

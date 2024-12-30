@@ -39,7 +39,7 @@ struct initial_dns_seedlist_test {
         initial_dns_seedlist_test test;
 
         for (auto el : test_doc) {
-            const auto key = el.key();
+            auto const key = el.key();
             if (key == "uri") {
                 test.uri = el.get_string().value;
             } else if (key == "seeds" || key == "numSeeds") {
@@ -64,7 +64,7 @@ struct initial_dns_seedlist_test {
 };
 
 static bsoncxx::document::value _doc_from_file(bsoncxx::stdx::string_view sub_path) {
-    const char* test_path = std::getenv("INITIAL_DNS_SEEDLIST_DISCOVERY_TESTS_PATH");
+    char const* test_path = std::getenv("INITIAL_DNS_SEEDLIST_DISCOVERY_TESTS_PATH");
     REQUIRE(test_path);
 
     std::string path = std::string(test_path) + sub_path.data();
@@ -122,7 +122,7 @@ static void compare_options(
     bsoncxx::document::view_or_value my_options,
     bsoncxx::stdx::optional<bsoncxx::document::view> creds) {
     auto my_options_view = my_options.view();
-    for (const auto& expected_option : expected_options.view()) {
+    for (auto const& expected_option : expected_options.view()) {
         auto key = mongocxx::test_util::tolowercase(expected_option.key());
         if (key == "ssl") {
             key = "tls";
@@ -140,11 +140,11 @@ static void compare_options(
 }
 
 static bool hosts_are_equal(bsoncxx::array::view expected_hosts, std::vector<std::string> actual, std::mutex& mtx) {
-    const std::lock_guard<std::mutex> lock(mtx);
+    std::lock_guard<std::mutex> const lock(mtx);
 
     std::vector<std::string> expected;
 
-    for (const auto& i : expected_hosts) {
+    for (auto const& i : expected_hosts) {
         expected.push_back(std::string(i.get_string().value));
     }
 
@@ -156,7 +156,7 @@ static bool hosts_are_equal(bsoncxx::array::view expected_hosts, std::vector<std
 
 static void validate_srv_max_hosts(
     mongocxx::client& client,
-    const initial_dns_seedlist_test& test,
+    initial_dns_seedlist_test const& test,
     std::mutex& mtx,
     std::vector<std::string>& new_hosts) {
     using namespace mongocxx;
@@ -184,21 +184,21 @@ static void validate_srv_max_hosts(
     }
 }
 
-static void run_srv_max_hosts_test_file(const initial_dns_seedlist_test& test) {
+static void run_srv_max_hosts_test_file(initial_dns_seedlist_test const& test) {
     using namespace mongocxx;
 
-    const bool should_ping = test.ping && !test.error;
+    bool const should_ping = test.ping && !test.error;
 
     options::apm apm_opts;
     std::mutex mtx;
     std::vector<std::string> new_hosts;
 
-    apm_opts.on_topology_changed([&](const events::topology_changed_event& event) {
-        const std::lock_guard<std::mutex> lock(mtx);
+    apm_opts.on_topology_changed([&](events::topology_changed_event const& event) {
+        std::lock_guard<std::mutex> const lock(mtx);
         auto new_td = event.new_description();
         auto servers = new_td.servers();
         new_hosts.clear();
-        for (const auto& i : servers) {
+        for (auto const& i : servers) {
             new_hosts.push_back(std::string(i.host()) + ":" + std::to_string(i.port()));
         }
     });
@@ -206,7 +206,7 @@ static void run_srv_max_hosts_test_file(const initial_dns_seedlist_test& test) {
     mongocxx::options::tls tls_options;
     mongocxx::options::client client_options;
 
-    const auto ca_file_path = test_util::getenv_or_fail("MONGOCXX_TEST_TLS_CA_FILE");
+    auto const ca_file_path = test_util::getenv_or_fail("MONGOCXX_TEST_TLS_CA_FILE");
     tls_options.ca_file(ca_file_path);
     tls_options.allow_invalid_certificates(true);
     client_options.tls_opts(tls_options);
@@ -234,7 +234,7 @@ static void run_srv_max_hosts_test_file(const initial_dns_seedlist_test& test) {
 }
 
 static void iterate_srv_max_hosts_tests(std::string dir, std::vector<std::string> files) {
-    for (const auto& file : files) {
+    for (auto const& file : files) {
         auto test_doc = _doc_from_file("/" + dir + "/" + file);
         auto test = initial_dns_seedlist_test::parse(test_doc);
         DYNAMIC_SECTION(file) {

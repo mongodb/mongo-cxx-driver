@@ -62,7 +62,7 @@ using remove_cvref_t = remove_cv_t<remove_reference_t<T>>;
 
 // Create a reference-to-const for the given type
 template <typename T>
-using const_reference_t = add_lvalue_reference_t<const remove_cvref_t<T>>;
+using const_reference_t = add_lvalue_reference_t<remove_cvref_t<T> const>;
 
 // Workaround for CWG issue 1558.
 template <typename...>
@@ -149,8 +149,8 @@ struct vc140_detection<Dflt, void_t<Oper<Args...>>, Oper, Args...> {
 // The type yielded by detected_t if the given type operator does not yield a type.
 struct nonesuch {
     ~nonesuch() = delete;
-    nonesuch(const nonesuch&) = delete;
-    void operator=(const nonesuch&) = delete;
+    nonesuch(nonesuch const&) = delete;
+    void operator=(nonesuch const&) = delete;
 };
 
 // Results in true_type if the given metafunction yields a valid type when applied to the given
@@ -277,13 +277,13 @@ using true_t = std::true_type;
 namespace impl_requires {
 
 template <typename R>
-R norm_conjunction(const R&);
+R norm_conjunction(R const&);
 
 template <typename R, typename... Cs>
-conjunction<Cs...> norm_conjunction(const conjunction<Cs...>&);
+conjunction<Cs...> norm_conjunction(conjunction<Cs...> const&);
 
 template <typename T>
-using norm_conjunction_t = decltype(norm_conjunction<T>(std::declval<const T&>()));
+using norm_conjunction_t = decltype(norm_conjunction<T>(std::declval<T const&>()));
 
 template <typename Constraint, typename = void>
 struct requirement;

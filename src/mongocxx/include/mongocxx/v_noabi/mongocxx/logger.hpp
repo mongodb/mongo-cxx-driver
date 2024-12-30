@@ -57,8 +57,8 @@ class logger {
 
     logger(logger&&) = default;
     logger& operator=(logger&&) = default;
-    logger(const logger&) = default;
-    logger& operator=(const logger&) = default;
+    logger(logger const&) = default;
+    logger& operator=(logger const&) = default;
 
     ///
     /// Handles a log message. User defined logger implementations may do whatever they wish when

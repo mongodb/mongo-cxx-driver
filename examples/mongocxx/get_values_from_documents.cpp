@@ -63,11 +63,11 @@ void insert_test_data(mongocxx::collection& coll) {
 }
 
 // Iterate over contents of messagelist.
-void iterate_messagelist(const bsoncxx::document::element& ele) {
+void iterate_messagelist(bsoncxx::document::element const& ele) {
     // Check validity and type before trying to iterate.
     if (ele.type() == type::k_array) {
         bsoncxx::array::view subarray{ele.get_array().value};
-        for (const bsoncxx::array::element& message : subarray) {
+        for (bsoncxx::array::element const& message : subarray) {
             // Check correct type before trying to access elements.
             // Only print out fields if they exist; don't report missing fields.
             if (message.type() == type::k_document) {
@@ -94,7 +94,7 @@ void iterate_messagelist(const bsoncxx::document::element& ele) {
 }
 
 // Print document parts to standard output.
-void print_document(const bsoncxx::document::view& doc) {
+void print_document(bsoncxx::document::view const& doc) {
     // Extract _id element as a string.
     bsoncxx::document::element id_ele = doc["_id"];
     if (id_ele.type() == type::k_oid) {
@@ -119,7 +119,7 @@ void iterate_documents(mongocxx::collection& coll) {
     mongocxx::cursor cursor = coll.find({});
 
     // Iterate the cursor into bsoncxx::document::view objects.
-    for (const bsoncxx::document::view& doc : cursor) {
+    for (bsoncxx::document::view const& doc : cursor) {
         print_document(doc);
     }
 }

@@ -50,7 +50,7 @@ class upload {
     /// @return
     ///   The chunk size of the GridFS file being uploaded in bytes.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<std::int32_t>&)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<std::int32_t> const&)
     chunk_size_bytes() const;
 
     ///
@@ -72,7 +72,7 @@ class upload {
     /// @return
     ///   The metadata document of the GridFS file.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value>&)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const&)
     metadata() const;
 
    private:

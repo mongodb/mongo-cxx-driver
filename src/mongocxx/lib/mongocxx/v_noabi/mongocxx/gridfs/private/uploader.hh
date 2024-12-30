@@ -31,7 +31,7 @@ namespace gridfs {
 class uploader::impl {
    public:
     impl(
-        const client_session* session,
+        client_session const* session,
         result::gridfs::upload result,
         bsoncxx::v_noabi::stdx::string_view filename,
         collection files,
@@ -51,7 +51,7 @@ class uploader::impl {
           result{std::move(result)} {}
 
     // Client session to use for upload operations.
-    const client_session* session;
+    client_session const* session;
 
     // Bytes that have been written for the current chunk.
     std::unique_ptr<std::uint8_t[]> buffer;

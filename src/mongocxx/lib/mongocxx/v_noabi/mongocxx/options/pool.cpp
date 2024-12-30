@@ -22,7 +22,7 @@ namespace options {
 
 pool::pool(client client_opts) : _client_opts(std::move(client_opts)) {}
 
-const client& pool::client_opts() const {
+client const& pool::client_opts() const {
     return _client_opts;
 }
 

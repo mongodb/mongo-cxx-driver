@@ -46,7 +46,7 @@ TEST_CASE("string_view: Default constructor") {
     CHECK(s == "");
 }
 
-static const char HELLO[] = "Hello, string_view!";
+static char const HELLO[] = "Hello, string_view!";
 TEST_CASE("string_view: Pointer+size construct") {
     auto s = string_view(HELLO, sizeof HELLO - 1);
     CHECK(s.length() == s.size());

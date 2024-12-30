@@ -28,7 +28,7 @@
 namespace {
 
 // [Example]
-void on_command_started_callback(const mongocxx::events::command_started_event& event);
+void on_command_started_callback(mongocxx::events::command_started_event const& event);
 
 void example() {
     mongocxx::options::apm apm_opts;
@@ -45,7 +45,7 @@ void example() {
 }
 // [Example]
 
-void on_command_started_callback(const mongocxx::events::command_started_event& event) {
+void on_command_started_callback(mongocxx::events::command_started_event const& event) {
     (void)event;
 }
 

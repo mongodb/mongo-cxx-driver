@@ -32,7 +32,7 @@ void example() {
         bsoncxx::types::b_int32 i = v.get_int32();  // Throws.
 
         EXPECT(false && "should not reach this point");
-    } catch (const bsoncxx::exception& ex) {
+    } catch (bsoncxx::exception const& ex) {
         EXPECT(ex.code() == bsoncxx::error_code::k_need_element_type_k_int32);
     }
 
@@ -40,7 +40,7 @@ void example() {
         bsoncxx::types::b_int64 i = v.get_int64();  // Throws.
 
         EXPECT(false && "should not reach this point");
-    } catch (const bsoncxx::exception& ex) {
+    } catch (bsoncxx::exception const& ex) {
         EXPECT(ex.code() == bsoncxx::error_code::k_need_element_type_k_int64);
     }
 }

@@ -36,7 +36,7 @@ void example() {
         mongocxx::pool::entry entry = pool.acquire();  // Throws.
 
         EXPECT(false && "should not reach this point");
-    } catch (const mongocxx::exception& ex) {
+    } catch (mongocxx::exception const& ex) {
         EXPECT(ex.code() == mongocxx::error_code::k_pool_wait_queue_timeout);
     }
 }

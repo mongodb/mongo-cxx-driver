@@ -53,8 +53,8 @@ class topology_description {
         ///
         MONGOCXX_ABI_EXPORT_CDECL(server_descriptions&) operator=(server_descriptions&&) noexcept;
 
-        server_descriptions(const server_descriptions&) = delete;
-        server_descriptions& operator=(const server_descriptions&) = delete;
+        server_descriptions(server_descriptions const&) = delete;
+        server_descriptions& operator=(server_descriptions const&) = delete;
 
         ///
         /// Destroys a server_descriptions array.
@@ -115,8 +115,8 @@ class topology_description {
     topology_description(topology_description&&) = default;
     topology_description& operator=(topology_description&&) = default;
 
-    topology_description(const topology_description&) = default;
-    topology_description& operator=(const topology_description&) = default;
+    topology_description(topology_description const&) = default;
+    topology_description& operator=(topology_description const&) = default;
 
     ///
     /// The topology type: "Unknown", "Sharded", "ReplicaSetNoPrimary", "ReplicaSetWithPrimary", or
@@ -136,7 +136,7 @@ class topology_description {
     /// @return Whether there is a readable server available.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(bool)
-    has_readable_server(const mongocxx::v_noabi::read_preference& pref) const;
+    has_readable_server(mongocxx::v_noabi::read_preference const& pref) const;
 
     ///
     /// Determines if the topology has a writable server available, such as a

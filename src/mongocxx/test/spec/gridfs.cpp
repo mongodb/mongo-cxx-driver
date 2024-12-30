@@ -477,7 +477,7 @@ TEST_CASE("GridFS spec automated tests", "[gridfs_spec]") {
         return;
     }
 
-    auto cb = [&](const std::string& test_file) { run_gridfs_tests_in_file(test_file, &client); };
+    auto cb = [&](std::string const& test_file) { run_gridfs_tests_in_file(test_file, &client); };
 
     mongocxx::spec::run_tests_in_suite("GRIDFS_TESTS_PATH", cb);
 }

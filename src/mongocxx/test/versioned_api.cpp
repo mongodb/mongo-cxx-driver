@@ -30,18 +30,18 @@
 using namespace mongocxx;
 
 static bool has_api_version_1(
-    const mongocxx::client& client = mongocxx::client(uri(), test_util::add_test_server_api())) {
+    mongocxx::client const& client = mongocxx::client(uri(), test_util::add_test_server_api())) {
     // API Version 1 was introduced in 5.0.
     return test_util::get_max_wire_version(client) >= 13;
 }
 
 static bool has_api_version_1_with_count(
-    const mongocxx::client& client = mongocxx::client(uri(), test_util::add_test_server_api())) {
+    mongocxx::client const& client = mongocxx::client(uri(), test_util::add_test_server_api())) {
     if (!has_api_version_1(client)) {
         return false;
     }
 
-    const auto version = test_util::get_server_version(client);
+    auto const version = test_util::get_server_version(client);
 
     // BACKPORT-12171: count command was backported to 5.0.9.
     if (test_util::compare_versions(version, "5.0") == 0 && test_util::compare_versions(version, "5.0.9") >= 0) {
@@ -146,7 +146,7 @@ TEST_CASE("Versioned API, non-strict with deprecation errors") {
 
 /// Not actually a version function. Just used to appear in the documentation examples "as if" we
 /// were creating a date from a timestamp string
-static bsoncxx::types::b_date iso_string_to_bson_datetime(const std::string&) {
+static bsoncxx::types::b_date iso_string_to_bson_datetime(std::string const&) {
     return bsoncxx::types::b_date(std::chrono::milliseconds{0});
 }
 
@@ -202,7 +202,7 @@ TEST_CASE("Versioned API, with insert-many for 'count' migration") {
     try {
         db.run_command(make_document(kvp("count", "sales")));
         FAIL_CHECK("Did not throw for apiStrict:true usage of old command");
-    } catch (const mongocxx::operation_exception& error) {
+    } catch (mongocxx::operation_exception const& error) {
         INFO(error.what());
         CHECK(error.code().value() == 323);
         CHECK_THAT(

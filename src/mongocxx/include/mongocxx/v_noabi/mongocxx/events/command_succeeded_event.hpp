@@ -36,7 +36,7 @@ namespace events {
 ///
 class command_succeeded_event {
    public:
-    explicit command_succeeded_event(const void* event);
+    explicit command_succeeded_event(void const* event);
     ///
     /// Destroys a command_succeeded_event.
     ///
@@ -45,8 +45,8 @@ class command_succeeded_event {
     command_succeeded_event(command_succeeded_event&&) = default;
     command_succeeded_event& operator=(command_succeeded_event&&) = default;
 
-    command_succeeded_event(const command_succeeded_event&) = default;
-    command_succeeded_event& operator=(const command_succeeded_event&) = default;
+    command_succeeded_event(command_succeeded_event const&) = default;
+    command_succeeded_event& operator=(command_succeeded_event const&) = default;
 
     ///
     /// Returns the server reply for the succeeded operation.
@@ -106,7 +106,7 @@ class command_succeeded_event {
     MONGOCXX_ABI_EXPORT_CDECL(std::uint16_t) port() const;
 
    private:
-    const void* _succeeded_event;
+    void const* _succeeded_event;
 };
 
 }  // namespace events

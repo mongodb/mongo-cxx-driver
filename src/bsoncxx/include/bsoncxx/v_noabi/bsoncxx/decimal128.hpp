@@ -70,8 +70,8 @@ class decimal128 {
     /// Relational operators for decimal128
     ///
     /// @{
-    friend BSONCXX_ABI_EXPORT_CDECL(bool) operator==(const decimal128& lhs, const decimal128& rhs);
-    friend BSONCXX_ABI_EXPORT_CDECL(bool) operator!=(const decimal128& lhs, const decimal128& rhs);
+    friend BSONCXX_ABI_EXPORT_CDECL(bool) operator==(decimal128 const& lhs, decimal128 const& rhs);
+    friend BSONCXX_ABI_EXPORT_CDECL(bool) operator!=(decimal128 const& lhs, decimal128 const& rhs);
     /// @}
     ///
 

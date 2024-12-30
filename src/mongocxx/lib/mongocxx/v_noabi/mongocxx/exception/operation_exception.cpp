@@ -34,7 +34,7 @@ operation_exception::operation_exception(
     std::string what_arg)
     : exception(ec, what_arg), _raw_server_error{std::move(raw_server_error)} {}
 
-const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::value>& operation_exception::raw_server_error()
+bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::value> const& operation_exception::raw_server_error()
     const {
     return _raw_server_error;
 }

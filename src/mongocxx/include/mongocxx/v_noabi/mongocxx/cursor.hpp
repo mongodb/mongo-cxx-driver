@@ -60,8 +60,8 @@ class cursor {
     ///
     MONGOCXX_ABI_EXPORT_CDECL() ~cursor();
 
-    cursor(const cursor&) = delete;
-    cursor& operator=(const cursor&) = delete;
+    cursor(cursor const&) = delete;
+    cursor& operator=(cursor const&) = delete;
 
     ///
     /// A cursor::iterator that points to the beginning of any available
@@ -135,12 +135,12 @@ class cursor::iterator {
     ///
     /// Dereferences the view for the document currently being pointed to.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::document::view&) operator*() const;
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::document::view const&) operator*() const;
 
     ///
     /// Accesses a member of the dereferenced document currently being pointed to.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::document::view*) operator->() const;
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::document::view const*) operator->() const;
 
     ///
     /// Pre-increments the iterator to move to the next document.
@@ -166,8 +166,8 @@ class cursor::iterator {
     /// they point to the same underlying cursor or if both are exhausted.
     ///
     /// @{
-    friend MONGOCXX_ABI_EXPORT_CDECL(bool) operator==(const iterator&, const iterator&);
-    friend MONGOCXX_ABI_EXPORT_CDECL(bool) operator!=(const iterator&, const iterator&);
+    friend MONGOCXX_ABI_EXPORT_CDECL(bool) operator==(iterator const&, iterator const&);
+    friend MONGOCXX_ABI_EXPORT_CDECL(bool) operator!=(iterator const&, iterator const&);
     /// @}
     ///
 
