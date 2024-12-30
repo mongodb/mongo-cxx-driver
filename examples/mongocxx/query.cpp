@@ -74,8 +74,7 @@ int EXAMPLES_CDECL main() {
 
     // Query with the greater-than operator ($gt).
     {
-        auto cursor = db["restaurants"].find(
-            make_document(kvp("grade.score", make_document(kvp("$gt", 30)))));
+        auto cursor = db["restaurants"].find(make_document(kvp("grade.score", make_document(kvp("$gt", 30)))));
         for (auto&& doc : cursor) {
             std::cout << bsoncxx::to_json(doc) << std::endl;
         }
@@ -83,8 +82,7 @@ int EXAMPLES_CDECL main() {
 
     // Query with the less-than operator ($lt).
     {
-        auto cursor = db["restaurants"].find(
-            make_document(kvp("grades.score", make_document(kvp("$lt", 10)))));
+        auto cursor = db["restaurants"].find(make_document(kvp("grades.score", make_document(kvp("$lt", 10)))));
         for (auto&& doc : cursor) {
             std::cout << bsoncxx::to_json(doc) << std::endl;
         }
@@ -92,8 +90,7 @@ int EXAMPLES_CDECL main() {
 
     // Query with a logical conjunction (AND) of query conditions.
     {
-        auto cursor = db["restaurants"].find(
-            make_document(kvp("cuisine", "Italian"), kvp("address.zipcode", "10075")));
+        auto cursor = db["restaurants"].find(make_document(kvp("cuisine", "Italian"), kvp("address.zipcode", "10075")));
         for (auto&& doc : cursor) {
             std::cout << bsoncxx::to_json(doc) << std::endl;
         }
@@ -101,10 +98,9 @@ int EXAMPLES_CDECL main() {
 
     // Query with a logical disjunction (OR) of query conditions.
     {
-        auto cursor = db["restaurants"].find(
-            make_document(kvp("$or",
-                              make_array(make_document(kvp("cuisine", "Italian")),
-                                         make_document(kvp("address.zipcode", "10075"))))));
+        auto cursor = db["restaurants"].find(make_document(
+            kvp("$or",
+                make_array(make_document(kvp("cuisine", "Italian")), make_document(kvp("address.zipcode", "10075"))))));
         for (auto&& doc : cursor) {
             std::cout << bsoncxx::to_json(doc) << std::endl;
         }

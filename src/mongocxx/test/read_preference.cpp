@@ -46,8 +46,7 @@ TEST_CASE("Read preference", "[read_preference]") {
 
     SECTION("Can have mode changed") {
         rp.mode(read_preference::read_mode::k_nearest);
-        REQUIRE(libmongoc::conversions::read_mode_t_from_read_mode(rp.mode()) ==
-                MONGOC_READ_NEAREST);
+        REQUIRE(libmongoc::conversions::read_mode_t_from_read_mode(rp.mode()) == MONGOC_READ_NEAREST);
     }
 
     {
@@ -95,8 +94,7 @@ TEST_CASE("Read preference can be constructed with a read_mode and tags", "[read
     instance::current();
     auto tags = make_document(kvp("tag_key", "tag_value"));
 
-    read_preference rp(
-        read_preference::read_mode::k_secondary, tags.view(), read_preference::deprecated_tag{});
+    read_preference rp(read_preference::read_mode::k_secondary, tags.view(), read_preference::deprecated_tag{});
     REQUIRE(rp.mode() == read_preference::read_mode::k_secondary);
     REQUIRE(rp.tags().value() == tags);
 }
@@ -190,11 +188,10 @@ TEST_CASE("Read preference methods call underlying mongoc methods", "[read_prefe
 
     SECTION("max_staleness() calls mongoc_read_prefs_set_max_staleness_seconds()") {
         std::chrono::seconds expected_max_staleness_sec{150};
-        read_prefs_set_max_staleness_seconds->interpose(
-            [&](mongoc_read_prefs_t*, int64_t max_staleness_sec) {
-                called = true;
-                REQUIRE(std::chrono::seconds{max_staleness_sec} == expected_max_staleness_sec);
-            });
+        read_prefs_set_max_staleness_seconds->interpose([&](mongoc_read_prefs_t*, int64_t max_staleness_sec) {
+            called = true;
+            REQUIRE(std::chrono::seconds{max_staleness_sec} == expected_max_staleness_sec);
+        });
         rp.max_staleness(expected_max_staleness_sec);
         REQUIRE(called);
     }

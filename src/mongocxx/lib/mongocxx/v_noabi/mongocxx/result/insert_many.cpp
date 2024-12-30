@@ -27,8 +27,7 @@ insert_many::insert_many(result::bulk_write result, bsoncxx::v_noabi::array::val
     _buildInsertedIds();
 }
 
-insert_many::insert_many(const insert_many& src)
-    : _result(src._result), _inserted_ids_owned(src._inserted_ids_owned) {
+insert_many::insert_many(const insert_many& src) : _result(src._result), _inserted_ids_owned(src._inserted_ids_owned) {
     _buildInsertedIds();
 }
 

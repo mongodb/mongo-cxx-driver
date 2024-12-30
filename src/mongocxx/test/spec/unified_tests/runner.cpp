@@ -50,8 +50,7 @@ using namespace spec;
 using bsoncxx::builder::basic::kvp;
 using bsoncxx::builder::basic::make_document;
 
-using schema_versions_t =
-    std::array<std::array<int, 3 /* major.minor.patch */>, 2 /* supported version */>;
+using schema_versions_t = std::array<std::array<int, 3 /* major.minor.patch */>, 2 /* supported version */>;
 constexpr schema_versions_t schema_versions{{{{1, 1, 0}}, {{1, 8, 0}}}};
 
 std::pair<std::unordered_map<std::string, spec::apm_checker>&, entity::map&> init_maps() {
@@ -94,20 +93,15 @@ bsoncxx::document::value get_kms_values() {
 
     auto kms_doc = make_document(
         kvp("aws",
-            make_document(
-                kvp("accessKeyId", test_util::getenv_or_fail("MONGOCXX_TEST_AWS_ACCESS_KEY_ID")),
-                kvp("secretAccessKey",
-                    test_util::getenv_or_fail("MONGOCXX_TEST_AWS_SECRET_ACCESS_KEY")))),
+            make_document(kvp("accessKeyId", test_util::getenv_or_fail("MONGOCXX_TEST_AWS_ACCESS_KEY_ID")),
+                          kvp("secretAccessKey", test_util::getenv_or_fail("MONGOCXX_TEST_AWS_SECRET_ACCESS_KEY")))),
         kvp("azure",
-            make_document(
-                kvp("tenantId", test_util::getenv_or_fail("MONGOCXX_TEST_AZURE_TENANT_ID")),
-                kvp("clientId", test_util::getenv_or_fail("MONGOCXX_TEST_AZURE_CLIENT_ID")),
-                kvp("clientSecret",
-                    test_util::getenv_or_fail("MONGOCXX_TEST_AZURE_CLIENT_SECRET")))),
+            make_document(kvp("tenantId", test_util::getenv_or_fail("MONGOCXX_TEST_AZURE_TENANT_ID")),
+                          kvp("clientId", test_util::getenv_or_fail("MONGOCXX_TEST_AZURE_CLIENT_ID")),
+                          kvp("clientSecret", test_util::getenv_or_fail("MONGOCXX_TEST_AZURE_CLIENT_SECRET")))),
         kvp("gcp",
-            make_document(
-                kvp("email", test_util::getenv_or_fail("MONGOCXX_TEST_GCP_EMAIL")),
-                kvp("privateKey", test_util::getenv_or_fail("MONGOCXX_TEST_GCP_PRIVATEKEY")))),
+            make_document(kvp("email", test_util::getenv_or_fail("MONGOCXX_TEST_GCP_EMAIL")),
+                          kvp("privateKey", test_util::getenv_or_fail("MONGOCXX_TEST_GCP_PRIVATEKEY")))),
         kvp("kmip", make_document(kvp("endpoint", "localhost:5698"))),
         kvp("local", make_document(kvp("key", local_master_key))));
 
@@ -129,8 +123,8 @@ bsoncxx::document::value parse_kms_doc(bsoncxx::document::view_or_value test_kms
             const auto variable = i.key();
             const auto actual_value = kms_values[provider][variable];
             if (!kms_values[provider][variable]) {
-                FAIL("FAIL: expecting to find variable: '"
-                     << variable << "' in KMS doc for provider: '" << provider << "'");
+                FAIL("FAIL: expecting to find variable: '" << variable << "' in KMS doc for provider: '" << provider
+                                                           << "'");
             }
             bool is_placeholder = false;
             if (i.type() == bsoncxx::type::k_document &&
@@ -172,8 +166,8 @@ bsoncxx::document::value parse_kms_doc(bsoncxx::document::view_or_value test_kms
                 case bsoncxx::type::k_maxkey:
                 case bsoncxx::type::k_minkey:
                 default:
-                    FAIL("FAIL: unexpected variable type in KMS doc: '"
-                         << bsoncxx::to_string(actual_value.type()) << "'");
+                    FAIL("FAIL: unexpected variable type in KMS doc: '" << bsoncxx::to_string(actual_value.type())
+                                                                        << "'");
             }
         }
         doc.append(kvp(provider, variables_doc.extract()));
@@ -606,8 +600,7 @@ options::client_encryption get_client_encryption_options(document::view object) 
     const std::string db = key_vault_namespace.substr(0, dot);
     const std::string coll = key_vault_namespace.substr(dot + 1);
 
-    const auto id =
-        string::to_string(object["clientEncryptionOpts"]["keyVaultClient"].get_string().value);
+    const auto id = string::to_string(object["clientEncryptionOpts"]["keyVaultClient"].get_string().value);
 
     auto& map = get_entity_map();
     auto& client = map.get_client(id);
@@ -622,12 +615,11 @@ options::client_encryption get_client_encryption_options(document::view object) 
 
     if (!providers.empty()) {
         // Configure TLS options.
-        auto tls_opts = make_document(kvp(
-            "kmip",
-            make_document(
-                kvp("tlsCAFile", test_util::getenv_or_fail("MONGOCXX_TEST_CSFLE_TLS_CA_FILE")),
-                kvp("tlsCertificateKeyFile",
-                    test_util::getenv_or_fail("MONGOCXX_TEST_CSFLE_TLS_CERTIFICATE_KEY_FILE")))));
+        auto tls_opts = make_document(
+            kvp("kmip",
+                make_document(kvp("tlsCAFile", test_util::getenv_or_fail("MONGOCXX_TEST_CSFLE_TLS_CA_FILE")),
+                              kvp("tlsCertificateKeyFile",
+                                  test_util::getenv_or_fail("MONGOCXX_TEST_CSFLE_TLS_CERTIFICATE_KEY_FILE")))));
         ce_opts.tls_opts(std::move(tls_opts));
     }
     return ce_opts;
@@ -754,8 +746,7 @@ void create_entities(const document::view test) {
 }
 
 document::value parse_test_file(const std::string& test_path) {
-    const bsoncxx::stdx::optional<document::value> test_spec =
-        test_util::parse_test_file(test_path);
+    const bsoncxx::stdx::optional<document::value> test_spec = test_util::parse_test_file(test_path);
     REQUIRE(test_spec);
     return test_spec.value();
 }
@@ -767,8 +758,7 @@ bool is_compatible_schema_version(document::view test_spec) {
         // Test files are considered compatible with a test runner if their schemaVersion is less
         // than or equal to a supported version in the test runner, given the same major version
         // component.
-        return test_schema_version[0] == v[0] &&
-               is_compatible_version(test_schema_version, v, ignore_patch::yes);
+        return test_schema_version[0] == v[0] && is_compatible_version(test_schema_version, v, ignore_patch::yes);
     };
     return std::any_of(std::begin(schema_versions), std::end(schema_versions), compat);
 }
@@ -813,8 +803,7 @@ void add_data_to_collection(const array::element& data) {
     insert_opts.write_concern(wc);
 
     const auto to_insert = array_elements_to_documents(data["documents"].get_array().value);
-    REQUIRE((to_insert.empty() ||
-             coll.insert_many(to_insert, insert_opts)->result().inserted_count() != 0));
+    REQUIRE((to_insert.empty() || coll.insert_many(to_insert, insert_opts)->result().inserted_count() != 0));
 }
 
 void load_initial_data(document::view test) {
@@ -826,9 +815,7 @@ void load_initial_data(document::view test) {
         add_data_to_collection(d);
 }
 
-void assert_result(const array::element& ops,
-                   document::view actual_result,
-                   bool is_array_of_root_docs) {
+void assert_result(const array::element& ops, document::view actual_result, bool is_array_of_root_docs) {
     if (!ops["expectResult"]) {
         return;
     }
@@ -905,11 +892,10 @@ void assert_error(const mongocxx::operation_exception& exception,
 
         const bsoncxx::stdx::string_view message = exception.what();
 
-        const auto iter = std::find_if(std::begin(patterns),
-                                       std::end(patterns),
-                                       [message](bsoncxx::stdx::string_view pattern) {
-                                           return message.find(pattern) != message.npos;
-                                       });
+        const auto iter =
+            std::find_if(std::begin(patterns), std::end(patterns), [message](bsoncxx::stdx::string_view pattern) {
+                return message.find(pattern) != message.npos;
+            });
 
         if (iter != std::end(patterns)) {
             // Treat this as a client-side error.
@@ -1070,8 +1056,7 @@ void assert_outcome(const array::element& test) {
 
         auto actual = results.begin();
         for (const auto& expected : docs) {
-            assert::matches(
-                types::bson_value::value(*actual), expected.get_value(), get_entity_map());
+            assert::matches(types::bson_value::value(*actual), expected.get_value(), get_entity_map());
             ++actual;
         }
 
@@ -1101,8 +1086,7 @@ struct fail_point_guard_type {
 void disable_targeted_fail_point(bsoncxx::stdx::string_view uri,
                                  std::uint32_t server_id,
                                  bsoncxx::stdx::string_view fail_point) {
-    const auto command_owner =
-        make_document(kvp("configureFailPoint", fail_point), kvp("mode", "off"));
+    const auto command_owner = make_document(kvp("configureFailPoint", fail_point), kvp("mode", "off"));
     const auto command = command_owner.view();
 
     // Unlike in the legacy test runner, there are no tests (at time of writing) that require
@@ -1150,11 +1134,9 @@ document::value bulk_write_result(const mongocxx::bulk_write_exception& e) {
 }
 
 // Match test cases that should be skipped by both test and case descriptions.
-const std::map<std::pair<bsoncxx::stdx::string_view, bsoncxx::stdx::string_view>,
-               bsoncxx::stdx::string_view>
+const std::map<std::pair<bsoncxx::stdx::string_view, bsoncxx::stdx::string_view>, bsoncxx::stdx::string_view>
     should_skip_test_cases = {
-        {{"retryable reads handshake failures",
-          "collection.findOne succeeds after retryable handshake network error"},
+        {{"retryable reads handshake failures", "collection.findOne succeeds after retryable handshake network error"},
          "collection.findOne optional helper is not supported"},
         {{"retryable reads handshake failures",
           "collection.findOne succeeds after retryable handshake server error "
@@ -1184,8 +1166,7 @@ void run_tests(bsoncxx::stdx::string_view test_description, document::view test)
             }
 
             if (!has_run_on_requirements(ele.get_document())) {
-                SKIP(test_description << ": " << description
-                                      << ": none of the runOnRequirements were met: "
+                SKIP(test_description << ": " << description << ": none of the runOnRequirements were met: "
                                       << to_json(ele["runOnRequirements"].get_array().value));
             }
 
@@ -1210,16 +1191,14 @@ void run_tests(bsoncxx::stdx::string_view test_description, document::view test)
                 }();
 
                 try {
-                    const auto result =
-                        operations::run(get_entity_map(), get_apm_map(), ops, state);
+                    const auto result = operations::run(get_entity_map(), get_apm_map(), ops, state);
 
                     if (string::to_string(ops["object"].get_string().value) == "testRunner") {
                         const auto op_name = string::to_string(ops["name"].get_string().value);
 
                         if (op_name == "failPoint") {
-                            fail_point_guard.add_fail_point(
-                                string::to_string(result["uri"].get_string().value),
-                                string::to_string(result["failPoint"].get_string().value));
+                            fail_point_guard.add_fail_point(string::to_string(result["uri"].get_string().value),
+                                                            string::to_string(result["failPoint"].get_string().value));
                         }
 
                         if (op_name == "targetedFailPoint") {
@@ -1310,9 +1289,8 @@ void run_tests_in_file(const std::string& test_path) {
 // Check the environment for the specified variable; if present, extract it
 // as a directory and run all the tests contained in the magic "test_files.txt"
 // file:
-void run_unified_format_tests_in_env_dir(
-    const std::string& env_path,
-    const std::set<bsoncxx::stdx::string_view>& unsupported_tests = {}) {
+void run_unified_format_tests_in_env_dir(const std::string& env_path,
+                                         const std::set<bsoncxx::stdx::string_view>& unsupported_tests = {}) {
     const char* p = std::getenv(env_path.c_str());
 
     if (nullptr == p)

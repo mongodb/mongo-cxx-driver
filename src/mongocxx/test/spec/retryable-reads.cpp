@@ -78,14 +78,12 @@ void run_retryable_reads_tests_in_file(std::string test_path) {
             auto chunks_collection = database[chunks_collection_name];
 
             initialize_collection(&files_collection, data[files_collection_name].get_array().value);
-            initialize_collection(&chunks_collection,
-                                  data[chunks_collection_name].get_array().value);
+            initialize_collection(&chunks_collection, data[chunks_collection_name].get_array().value);
         } else {
             initialize_collection(&collection, test_spec_view["data"].get_array().value);
         }
 
-        operation_runner op_runner{
-            &database, &collection, nullptr /* session0 */, nullptr /* session1 */, &client};
+        operation_runner op_runner{&database, &collection, nullptr /* session0 */, nullptr /* session1 */, &client};
 
         configure_fail_point(client, test.get_document().value);
 
@@ -105,10 +103,8 @@ void run_retryable_reads_tests_in_file(std::string test_path) {
             if (operation["result"]) {
                 // wrap the result, since it might not be a document.
                 bsoncxx::document::view actual_outcome = actual_outcome_value->view();
-                auto actual_result_wrapped =
-                    make_document(kvp("result", actual_outcome["result"].get_value()));
-                auto expected_result_wrapped =
-                    make_document(kvp("result", operation["result"].get_value()));
+                auto actual_result_wrapped = make_document(kvp("result", actual_outcome["result"].get_value()));
+                auto expected_result_wrapped = make_document(kvp("result", operation["result"].get_value()));
                 REQUIRE_BSON_MATCHES(actual_result_wrapped, expected_result_wrapped);
             }
         }
@@ -134,7 +130,6 @@ TEST_CASE("retryable reads spec tests", "[retryable_reads_specs]") {
                                             "count.json",
                                             "count-serverErrors.json"};
 
-    run_tests_in_suite(
-        "RETRYABLE_READS_LEGACY_TESTS_PATH", run_retryable_reads_tests_in_file, unsupported_tests);
+    run_tests_in_suite("RETRYABLE_READS_LEGACY_TESTS_PATH", run_retryable_reads_tests_in_file, unsupported_tests);
 }
 }  // namespace

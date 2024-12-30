@@ -277,10 +277,7 @@ class value {
    private:
     friend ::bsoncxx::v_noabi::document::element;
 
-    value(const std::uint8_t* raw,
-          std::uint32_t length,
-          std::uint32_t offset,
-          std::uint32_t keylen);
+    value(const std::uint8_t* raw, std::uint32_t length, std::uint32_t offset, std::uint32_t keylen);
 
     // Makes a copy of 'internal_value' and owns the copy.
     // Export is required by mongocxx via make_owning_bson.
@@ -368,28 +365,22 @@ namespace types {
 namespace bson_value {
 
 /// @ref bsoncxx::v_noabi::types::bson_value::operator==(const v_noabi::types::bson_value::value& lhs, const v_noabi::types::bson_value::value& rhs)
-inline bool operator==(const v_noabi::types::bson_value::value& lhs,
-                       const v_noabi::types::bson_value::value& rhs);
+inline bool operator==(const v_noabi::types::bson_value::value& lhs, const v_noabi::types::bson_value::value& rhs);
 
 /// @ref bsoncxx::v_noabi::types::bson_value::operator!=(const v_noabi::types::bson_value::value& lhs, const v_noabi::types::bson_value::value& rhs)
-inline bool operator!=(const v_noabi::types::bson_value::value& lhs,
-                       const v_noabi::types::bson_value::value& rhs);
+inline bool operator!=(const v_noabi::types::bson_value::value& lhs, const v_noabi::types::bson_value::value& rhs);
 
 /// @ref bsoncxx::v_noabi::types::bson_value::operator==(const v_noabi::types::bson_value::value& lhs, const v_noabi::types::bson_value::view& rhs)
-inline bool operator==(const v_noabi::types::bson_value::value& lhs,
-                       const v_noabi::types::bson_value::view& rhs);
+inline bool operator==(const v_noabi::types::bson_value::value& lhs, const v_noabi::types::bson_value::view& rhs);
 
 /// @ref bsoncxx::v_noabi::types::bson_value::operator==(const v_noabi::types::bson_value::view& lhs, const v_noabi::types::bson_value::value& rhs)
-inline bool operator==(const v_noabi::types::bson_value::view& lhs,
-                       const v_noabi::types::bson_value::value& rhs);
+inline bool operator==(const v_noabi::types::bson_value::view& lhs, const v_noabi::types::bson_value::value& rhs);
 
 /// @ref bsoncxx::v_noabi::types::bson_value::operator!=(const v_noabi::types::bson_value::value& lhs, const v_noabi::types::bson_value::view& rhs)
-inline bool operator!=(const v_noabi::types::bson_value::value& lhs,
-                       const v_noabi::types::bson_value::view& rhs);
+inline bool operator!=(const v_noabi::types::bson_value::value& lhs, const v_noabi::types::bson_value::view& rhs);
 
 /// @ref bsoncxx::v_noabi::types::bson_value::operator!=(const v_noabi::types::bson_value::view& lhs, const v_noabi::types::bson_value::value& rhs)
-inline bool operator!=(const v_noabi::types::bson_value::view& lhs,
-                       const v_noabi::types::bson_value::value& rhs);
+inline bool operator!=(const v_noabi::types::bson_value::view& lhs, const v_noabi::types::bson_value::value& rhs);
 
 }  // namespace bson_value
 }  // namespace types

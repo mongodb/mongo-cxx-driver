@@ -20,8 +20,7 @@ namespace mongocxx {
 namespace v_noabi {
 namespace model {
 
-insert_one::insert_one(bsoncxx::v_noabi::document::view_or_value document)
-    : _document(std::move(document)) {}
+insert_one::insert_one(bsoncxx::v_noabi::document::view_or_value document) : _document(std::move(document)) {}
 
 const bsoncxx::v_noabi::document::view_or_value& insert_one::document() const {
     return _document;

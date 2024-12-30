@@ -35,8 +35,7 @@ class find_one_by_id : public microbench {
     find_one_by_id(std::string json_file)
         : microbench{"TestFindOneById",
                      16.22,
-                     std::set<benchmark_type>{benchmark_type::single_bench,
-                                              benchmark_type::read_bench}},
+                     std::set<benchmark_type>{benchmark_type::single_bench, benchmark_type::read_bench}},
           _conn{mongocxx::uri{}},
           _json_file{std::move(json_file)} {}
 

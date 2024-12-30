@@ -79,8 +79,7 @@ int EXAMPLES_CDECL main() {
     auto update_filter = document{} << "sku"
                                     << "111"
                                     << "end" << none << finalize;
-    auto update_op = document{} << "$set" << open_document << "end" << current_date
-                                << close_document << finalize;
+    auto update_op = document{} << "$set" << open_document << "end" << current_date << close_document << finalize;
     items.update_one(session_1, std::move(update_filter), std::move(update_op), {});
 
     // Run an insert with our causally-consistent session.

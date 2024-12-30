@@ -66,8 +66,7 @@ class search_index_view {
     /// @return A cursor to the list of the search indexes returned.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(cursor)
-    list(bsoncxx::v_noabi::string::view_or_value name,
-         const options::aggregate& options = options::aggregate());
+    list(bsoncxx::v_noabi::string::view_or_value name, const options::aggregate& options = options::aggregate());
 
     ///
     /// Returns a cursor over all the search indexes.
@@ -121,8 +120,7 @@ class search_index_view {
     /// @return The name of the created search index.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(std::string)
-    create_one(bsoncxx::v_noabi::string::view_or_value name,
-               bsoncxx::v_noabi::document::view_or_value definition);
+    create_one(bsoncxx::v_noabi::string::view_or_value name, bsoncxx::v_noabi::document::view_or_value definition);
 
     ///
     /// This is a convenience method for creating a single search index.
@@ -216,8 +214,7 @@ class search_index_view {
     ///   The definition to update the search index to.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(void)
-    update_one(bsoncxx::v_noabi::string::view_or_value name,
-               bsoncxx::v_noabi::document::view_or_value definition);
+    update_one(bsoncxx::v_noabi::string::view_or_value name, bsoncxx::v_noabi::document::view_or_value definition);
 
     ///
     /// Updates a single search index from the collection by the search index name.

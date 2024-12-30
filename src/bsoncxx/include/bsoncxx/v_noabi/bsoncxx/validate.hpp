@@ -178,8 +178,7 @@ using ::bsoncxx::v_noabi::validate;
 namespace bsoncxx {
 
 /// @ref bsoncxx::v_noabi::validate(const std::uint8_t* data, std::size_t length)
-v_noabi::stdx::optional<v_noabi::document::view> validate(const std::uint8_t* data,
-                                                          std::size_t length);
+v_noabi::stdx::optional<v_noabi::document::view> validate(const std::uint8_t* data, std::size_t length);
 
 /// @ref bsoncxx::v_noabi::validate(const std::uint8_t* data, std::size_t length, const v_noabi::validator& validator, std::size_t* invalid_offset)
 v_noabi::stdx::optional<v_noabi::document::view> validate(const std::uint8_t* data,

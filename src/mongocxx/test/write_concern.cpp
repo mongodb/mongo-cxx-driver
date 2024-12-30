@@ -133,8 +133,7 @@ TEST_CASE("acknowledge_level responds to changes in nodes, majority, tag", "[wri
     }
 }
 
-TEST_CASE("confirmation from tags, a repl-member count, and majority are mutually exclusive",
-          "[write_concern]") {
+TEST_CASE("confirmation from tags, a repl-member count, and majority are mutually exclusive", "[write_concern]") {
     instance::current();
 
     SECTION("setting the confirmation number unsets the confirmation tag") {
@@ -360,8 +359,7 @@ TEST_CASE("write_concern to_document works") {
     }
 
     SECTION("majority and journal true") {
-        expected_doc = make_document(
-            kvp("w", "majority"), kvp("j", true), kvp("wtimeout", types::b_int32{10}));
+        expected_doc = make_document(kvp("w", "majority"), kvp("j", true), kvp("wtimeout", types::b_int32{10}));
         wc.journal(true);
         wc.majority(std::chrono::milliseconds{10});
         REQUIRE(wc.is_acknowledged());
@@ -379,8 +377,7 @@ TEST_CASE("write_concern to_document works") {
     }
 
     SECTION("Everything") {
-        expected_doc =
-            make_document(kvp("w", 3), kvp("j", true), kvp("wtimeout", types::b_int32{1000}));
+        expected_doc = make_document(kvp("w", 3), kvp("j", true), kvp("wtimeout", types::b_int32{1000}));
         wc.nodes(3);
         wc.timeout(std::chrono::milliseconds{1000});
         wc.journal(true);

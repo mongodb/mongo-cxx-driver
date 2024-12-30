@@ -28,8 +28,8 @@ namespace {
 void example() {
     using bsoncxx::builder::basic::kvp;
 
-    bsoncxx::document::value doc = bsoncxx::builder::basic::make_document(
-        kvp("a", std::int32_t{1}), kvp("b", 2.0), kvp("c", "three"));
+    bsoncxx::document::value doc =
+        bsoncxx::builder::basic::make_document(kvp("a", std::int32_t{1}), kvp("b", 2.0), kvp("c", "three"));
 
     EXPECT(doc.view() == bsoncxx::from_json(R"({"a": 1, "b": 2.0, "c": "three"})"));
 }

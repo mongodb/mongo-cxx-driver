@@ -40,9 +40,8 @@ struct Person {
 };
 
 void to_bson(const Person& person, bsoncxx::document::value& bson_object) {
-    bson_object = make_document(kvp("first_name", person.first_name),
-                                kvp("last_name", person.last_name),
-                                kvp("age", person.age));
+    bson_object =
+        make_document(kvp("first_name", person.first_name), kvp("last_name", person.last_name), kvp("age", person.age));
 }
 
 void from_bson(Person& person, const bsoncxx::document::view& bson_object) {
@@ -59,10 +58,9 @@ TEST_CASE("Convert between Person struct and BSON object") {
         18,
     };
 
-    bsoncxx::document::value expected_doc =
-        make_document(kvp("first_name", expected_person.first_name),
-                      kvp("last_name", expected_person.last_name),
-                      kvp("age", expected_person.age));
+    bsoncxx::document::value expected_doc = make_document(kvp("first_name", expected_person.first_name),
+                                                          kvp("last_name", expected_person.last_name),
+                                                          kvp("age", expected_person.age));
 
     SECTION("Conversion from Person struct to document::value works") {
         bsoncxx::document::value test_value{expected_person};

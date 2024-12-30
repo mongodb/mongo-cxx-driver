@@ -32,8 +32,7 @@ TEST_CASE("[] can reach into nested arrays", "[bsoncxx]") {
     //     "ints": [ 1, 3, [ 5 ] ],
     //     "bools": [ true, false ]
     // }
-    auto build_doc = make_document(kvp("ints", make_array(1, 3, make_array(5))),
-                                   kvp("bools", make_array(true, false)));
+    auto build_doc = make_document(kvp("ints", make_array(1, 3, make_array(5))), kvp("bools", make_array(true, false)));
     auto doc = build_doc.view();
 
     SECTION("works with one level") {
@@ -85,10 +84,9 @@ TEST_CASE("[] can reach into nested documents", "[bsoncxx]") {
     //         "f": false,
     //     }
     // }
-    auto build_doc = make_document(
-        kvp("ints",
-            make_document(kvp("x", 1), kvp("y", 3), kvp("more", make_document(kvp("z", 5))))),
-        kvp("bools", make_document(kvp("t", true), kvp("f", false))));
+    auto build_doc =
+        make_document(kvp("ints", make_document(kvp("x", 1), kvp("y", 3), kvp("more", make_document(kvp("z", 5))))),
+                      kvp("bools", make_document(kvp("t", true), kvp("f", false))));
 
     auto doc = build_doc.view();
 
@@ -149,14 +147,10 @@ TEST_CASE("[] can reach into mixed nested arrays and documents", "[bsoncxx]") {
     // }
     auto build_doc = make_document(
         kvp("ints",
-            make_document(
-                kvp("x", 1),
-                kvp("y", 3),
-                kvp("arr",
-                    make_array(
-                        5, 7, make_document(kvp("z", 9), kvp("even_more", make_array(11))))))),
-        kvp("bools",
-            make_document(kvp("t", true), kvp("f", false), kvp("arr", make_array(false, true)))));
+            make_document(kvp("x", 1),
+                          kvp("y", 3),
+                          kvp("arr", make_array(5, 7, make_document(kvp("z", 9), kvp("even_more", make_array(11))))))),
+        kvp("bools", make_document(kvp("t", true), kvp("f", false), kvp("arr", make_array(false, true)))));
 
     auto doc = build_doc.view();
 
@@ -347,9 +341,8 @@ TEST_CASE("can use operator[] with document::value") {
     //     },
     //     "test_array": [5, 4, 3]
     // }
-    auto doc = make_document(kvp("beep", 25),
-                             kvp("boop", make_document(kvp("test", true))),
-                             kvp("test_array", make_array(5, 4, 3)));
+    auto doc = make_document(
+        kvp("beep", 25), kvp("boop", make_document(kvp("test", true))), kvp("test_array", make_array(5, 4, 3)));
     auto view = doc.view();
 
     SECTION("operator[] can access valid keys") {

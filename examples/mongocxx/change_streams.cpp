@@ -97,8 +97,7 @@ int EXAMPLES_CDECL main(int argc, char* argv[]) {
         }
 
         std::cerr << "Unexpected argument: '" << arg << "'" << std::endl;
-        std::cerr << "Usage: " << argv[0] << " [--uri <uri>] [--db <db_name>] [--coll <coll_name>]"
-                  << std::endl;
+        std::cerr << "Usage: " << argv[0] << " [--uri <uri>] [--db <db_name>] [--coll <coll_name>]" << std::endl;
         return EXIT_FAILURE;
     }
 
@@ -108,8 +107,7 @@ int EXAMPLES_CDECL main(int argc, char* argv[]) {
         auto entry = pool.acquire();
         auto collection = (*entry)[db][coll];
 
-        std::cout << "Watching for notifications on the collection " << db << "." << coll
-                  << std::endl;
+        std::cout << "Watching for notifications on the collection " << db << "." << coll << std::endl;
         std::cout << "To observe a notification, try inserting a document." << std::endl;
         watch_forever(collection);
 

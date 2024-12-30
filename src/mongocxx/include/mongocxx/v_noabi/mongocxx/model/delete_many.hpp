@@ -38,8 +38,7 @@ class delete_many {
     /// @param filter
     ///   Document representing the criteria for deletion.
     ///
-    explicit MONGOCXX_ABI_EXPORT_CDECL() delete_many(
-        bsoncxx::v_noabi::document::view_or_value filter);
+    explicit MONGOCXX_ABI_EXPORT_CDECL() delete_many(bsoncxx::v_noabi::document::view_or_value filter);
 
     ///
     /// Gets the filter for this delete operation.
@@ -73,8 +72,7 @@ class delete_many {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/collation/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<
-                              bsoncxx::v_noabi::document::view_or_value>&)
+    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value>&)
     collation() const;
 
     /// Sets the index to use for this operation.

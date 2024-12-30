@@ -143,8 +143,7 @@ class runner_type {
                     // For non-zero exit codes, permit continuation for example coverage.
                     if (WIFEXITED(status) && WEXITSTATUS(status) != EXIT_SUCCESS) {
                         std::cout << __func__ << ": failed: " << name
-                                  << " exited with a non-zero exit code: " << WEXITSTATUS(status)
-                                  << std::endl;
+                                  << " exited with a non-zero exit code: " << WEXITSTATUS(status) << std::endl;
 
                         return action::fail;
                     }
@@ -154,8 +153,7 @@ class runner_type {
                         const int signal = WTERMSIG(status);
                         const char* const sigstr = ::strsignal(signal);
 
-                        std::cout << __func__ << ": failed: " << name
-                                  << " was killed by signal: " << signal << " ("
+                        std::cout << __func__ << ": failed: " << name << " was killed by signal: " << signal << " ("
                                   << (sigstr ? sigstr : "") << ")" << std::endl;
 
                         std::exit(EXIT_FAILURE);
@@ -184,8 +182,7 @@ class runner_type {
         try {
             mongocxx::client client{mongocxx::uri{"mongodb://localhost:27017/"}};
 
-            const auto reply =
-                client["admin"].run_command(bsoncxx::from_json(R"({"isMaster": 1})"));
+            const auto reply = client["admin"].run_command(bsoncxx::from_json(R"({"isMaster": 1})"));
 
             if (reply["msg"]) {
                 std::cout << "Running API examples against a live sharded server" << std::endl;
@@ -201,8 +198,7 @@ class runner_type {
                 run_with_jobs(components_for_single, jobs);
             }
         } catch (const mongocxx::exception& ex) {
-            std::cout << "Skipping API examples that require a live server: " << ex.what()
-                      << std::endl;
+            std::cout << "Skipping API examples that require a live server: " << ex.what() << std::endl;
         }
     }
 
@@ -297,12 +293,11 @@ class runner_type {
         if (verbose) {
             std::vector<bsoncxx::stdx::string_view> names;
 
-            names.reserve(std::accumulate(std::begin(all_components),
-                                          std::end(all_components),
-                                          std::size_t{0},
-                                          [](std::size_t n, const std::vector<component>* cptr) {
-                                              return n + cptr->size();
-                                          }));
+            names.reserve(
+                std::accumulate(std::begin(all_components),
+                                std::end(all_components),
+                                std::size_t{0},
+                                [](std::size_t n, const std::vector<component>* cptr) { return n + cptr->size(); }));
 
             for (auto cptr : all_components) {
                 for (auto c : *cptr) {
@@ -352,8 +347,7 @@ bool parse_seed(int argc, char** argv, int i, bool& set_seed) {
         char* const seed_str = argv[i + 1];  // Next argument.
         char* end = nullptr;
 
-        const auto seed =
-            static_cast<std::minstd_rand::result_type>(std::strtoul(seed_str, &end, 10));
+        const auto seed = static_cast<std::minstd_rand::result_type>(std::strtoul(seed_str, &end, 10));
 
         if (static_cast<std::size_t>(end - seed_str) != std::strlen(seed_str)) {
             std::cerr << "invalid seed string: " << seed_str << std::endl;

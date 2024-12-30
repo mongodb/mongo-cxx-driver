@@ -82,8 +82,7 @@ TEST_CASE("index", "[index][option]") {
         options_doc.append(kvp("collation", collation.view()));
         options_doc.append(
             kvp("storageEngine",
-                make_document(kvp("wiredTiger",
-                                  make_document(kvp("configString", bsoncxx::types::b_null{}))))));
+                make_document(kvp("wiredTiger", make_document(kvp("configString", bsoncxx::types::b_null{}))))));
 
         idx.name("name");
         idx.background(false);

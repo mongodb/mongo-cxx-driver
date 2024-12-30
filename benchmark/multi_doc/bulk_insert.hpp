@@ -38,8 +38,7 @@ class bulk_insert : public microbench {
     bulk_insert(std::string name, double task_size, std::int32_t doc_num, std::string json_file)
         : microbench{std::move(name),
                      task_size,
-                     std::set<benchmark_type>{benchmark_type::multi_bench,
-                                              benchmark_type::write_bench}},
+                     std::set<benchmark_type>{benchmark_type::multi_bench, benchmark_type::write_bench}},
           _conn{mongocxx::uri{}},
           _doc_num{doc_num},
           _file_name{std::move(json_file)} {}

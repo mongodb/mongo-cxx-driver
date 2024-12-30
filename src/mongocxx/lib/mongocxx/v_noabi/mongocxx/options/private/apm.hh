@@ -25,8 +25,7 @@ namespace mongocxx {
 namespace v_noabi {
 namespace options {
 
-using apm_unique_callbacks =
-    std::unique_ptr<mongoc_apm_callbacks_t, decltype(libmongoc::apm_callbacks_destroy)>;
+using apm_unique_callbacks = std::unique_ptr<mongoc_apm_callbacks_t, decltype(libmongoc::apm_callbacks_destroy)>;
 
 // An APM callback exiting via an exception is documented as being undefined behavior.
 // For QoI, terminate the program before allowing the exception to bypass libmongoc code.
@@ -35,8 +34,7 @@ inline void exception_guard(const char* source, Fn fn) noexcept {
     try {
         fn();
     } catch (...) {
-        std::cerr << "fatal error: APM callback " << source << " exited via an exception"
-                  << std::endl;
+        std::cerr << "fatal error: APM callback " << source << " exited via an exception" << std::endl;
         std::terminate();
     }
 }

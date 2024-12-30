@@ -50,20 +50,16 @@ int EXAMPLES_CDECL main() {
 
         // Create a validation rule: all zombies need to eat some brains.
         collection zombies = db.create_collection(
-            "zombies",
-            make_document(
-                kvp("validator", make_document(kvp("brains", make_document(kvp("$gt", 0)))))));
+            "zombies", make_document(kvp("validator", make_document(kvp("brains", make_document(kvp("$gt", 0)))))));
 
         try {
             // Insert a document passing validation
-            auto res =
-                zombies.insert_one(make_document(kvp("name", "Bloody Betty"), kvp("brains", 3)));
+            auto res = zombies.insert_one(make_document(kvp("name", "Bloody Betty"), kvp("brains", 3)));
 
             std::cout << "Bloody Betty passed document validation!" << std::endl;
 
             // Insert a document failing validation, which should throw.
-            auto res2 =
-                zombies.insert_one(make_document(kvp("name", "Undead Fred"), kvp("brains", 0)));
+            auto res2 = zombies.insert_one(make_document(kvp("name", "Undead Fred"), kvp("brains", 0)));
 
             std::cout << "ERROR: server does not support document validation." << std::endl;
 

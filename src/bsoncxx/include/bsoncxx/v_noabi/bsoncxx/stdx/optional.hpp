@@ -116,16 +116,16 @@ template <typename T, typename Ucvr, typename U>
 struct enable_opt_conversion
     : bsoncxx::detail::conjunction<
           std::is_constructible<T, Ucvr>,
-          bsoncxx::detail::disjunction<std::is_same<T, bool>,
-                                       bsoncxx::detail::negation<bsoncxx::detail::conjunction<
-                                           std::is_constructible<T, optional<U>&>,
-                                           std::is_constructible<T, const optional<U>&>,
-                                           std::is_constructible<T, optional<U>&&>,
-                                           std::is_constructible<T, const optional<U>&&>,
-                                           std::is_convertible<optional<U>&, T>,
-                                           std::is_convertible<const optional<U>&, T>,
-                                           std::is_convertible<optional<U>&&, T>,
-                                           std::is_convertible<const optional<U>&&, T>>>>> {};
+          bsoncxx::detail::disjunction<
+              std::is_same<T, bool>,
+              bsoncxx::detail::negation<bsoncxx::detail::conjunction<std::is_constructible<T, optional<U>&>,
+                                                                     std::is_constructible<T, const optional<U>&>,
+                                                                     std::is_constructible<T, optional<U>&&>,
+                                                                     std::is_constructible<T, const optional<U>&&>,
+                                                                     std::is_convertible<optional<U>&, T>,
+                                                                     std::is_convertible<const optional<U>&, T>,
+                                                                     std::is_convertible<optional<U>&&, T>,
+                                                                     std::is_convertible<const optional<U>&&, T>>>>> {};
 
 template <typename From, typename To>
 struct enable_opt_value_conversion  //
@@ -133,9 +133,8 @@ struct enable_opt_value_conversion  //
           std::is_constructible<To, From&&>,
           bsoncxx::detail::negation<bsoncxx::detail::is_alike<From, in_place_t>>,
           bsoncxx::detail::negation<bsoncxx::detail::is_alike<From, optional<To>>>,
-          bsoncxx::detail::disjunction<
-              bsoncxx::detail::negation<bsoncxx::detail::is_alike<To, bool>>,
-              detail::not_an_optional<bsoncxx::detail::remove_cvref_t<From>>>> {};
+          bsoncxx::detail::disjunction<bsoncxx::detail::negation<bsoncxx::detail::is_alike<To, bool>>,
+                                       detail::not_an_optional<bsoncxx::detail::remove_cvref_t<From>>>> {};
 
 }  // namespace detail
 
@@ -146,11 +145,9 @@ class optional : bsoncxx::detail::equality_operators,
    public:
     using value_type = T;
     using reference = bsoncxx::detail::add_lvalue_reference_t<T>;
-    using const_reference =
-        bsoncxx::detail::add_lvalue_reference_t<bsoncxx::detail::add_const_t<T>>;
+    using const_reference = bsoncxx::detail::add_lvalue_reference_t<bsoncxx::detail::add_const_t<T>>;
     using rvalue_reference = bsoncxx::detail::add_rvalue_reference_t<T>;
-    using const_rvalue_reference =
-        bsoncxx::detail::add_rvalue_reference_t<bsoncxx::detail::add_const_t<T>>;
+    using const_rvalue_reference = bsoncxx::detail::add_rvalue_reference_t<bsoncxx::detail::add_const_t<T>>;
     using pointer = bsoncxx::detail::add_pointer_t<T>;
     using const_pointer = bsoncxx::detail::add_pointer_t<const T>;
 
@@ -173,44 +170,38 @@ class optional : bsoncxx::detail::equality_operators,
     // In-place constructors
 
     template <typename... Args>
-    bsoncxx_cxx14_constexpr explicit optional(in_place_t, Args&&... args) noexcept(
-        noexcept(T(BSONCXX_FWD(args)...))) {
+    bsoncxx_cxx14_constexpr explicit optional(in_place_t, Args&&... args) noexcept(noexcept(T(BSONCXX_FWD(args)...))) {
         this->emplace(BSONCXX_FWD(args)...);
     }
 
     template <typename U, typename... Args>
-    bsoncxx_cxx14_constexpr explicit optional(
-        in_place_t,
-        std::initializer_list<U> il,
-        Args&&... args) noexcept(noexcept(T(il, BSONCXX_FWD(args)...))) {
+    bsoncxx_cxx14_constexpr explicit optional(in_place_t,
+                                              std::initializer_list<U> il,
+                                              Args&&... args) noexcept(noexcept(T(il, BSONCXX_FWD(args)...))) {
         this->emplace(il, BSONCXX_FWD(args)...);
     }
 
     // Explicit converting constructor. Only available if implicit conversion is
     // not possible.
-    template <
-        typename U = T,
-        bsoncxx::detail::requires_t<int,
-                                    detail::enable_opt_value_conversion<U&&, T>,
-                                    bsoncxx::detail::negation<std::is_convertible<U&&, T>>> = 0>
-    bsoncxx_cxx14_constexpr explicit optional(U&& arg) noexcept(
-        std::is_nothrow_constructible<T, U&&>::value)
+    template <typename U = T,
+              bsoncxx::detail::requires_t<int,
+                                          detail::enable_opt_value_conversion<U&&, T>,
+                                          bsoncxx::detail::negation<std::is_convertible<U&&, T>>> = 0>
+    bsoncxx_cxx14_constexpr explicit optional(U&& arg) noexcept(std::is_nothrow_constructible<T, U&&>::value)
         : optional(in_place, BSONCXX_FWD(arg)) {}
 
     // Implicit converting constructor. Only available if implicit conversion is
     // possible.
-    template <typename U = T,
-              bsoncxx::detail::requires_t<int,
-                                          detail::enable_opt_value_conversion<U&&, T>,
-                                          std::is_convertible<U&&, T>> = 0>
+    template <
+        typename U = T,
+        bsoncxx::detail::requires_t<int, detail::enable_opt_value_conversion<U&&, T>, std::is_convertible<U&&, T>> = 0>
     bsoncxx_cxx14_constexpr optional(U&& arg) noexcept(std::is_nothrow_constructible<T, U&&>::value)
         : optional(in_place, BSONCXX_FWD(arg)) {}
 
     template <typename U,
-              bsoncxx::detail::requires_t<
-                  int,
-                  detail::enable_opt_conversion<T, const U&, U>,
-                  bsoncxx::detail::negation<std::is_convertible<const U&, T>>> = 0>
+              bsoncxx::detail::requires_t<int,
+                                          detail::enable_opt_conversion<T, const U&, U>,
+                                          bsoncxx::detail::negation<std::is_convertible<const U&, T>>> = 0>
     bsoncxx_cxx14_constexpr explicit optional(const optional<U>& other) noexcept(
         std::is_nothrow_constructible<T, bsoncxx::detail::add_lvalue_reference_t<const U>>::value) {
         if (other.has_value()) {
@@ -229,11 +220,10 @@ class optional : bsoncxx::detail::equality_operators,
         }
     }
 
-    template <
-        typename U,
-        bsoncxx::detail::requires_t<int,
-                                    detail::enable_opt_conversion<T, U&&, U>,
-                                    bsoncxx::detail::negation<std::is_convertible<U&&, T>>> = 0>
+    template <typename U,
+              bsoncxx::detail::requires_t<int,
+                                          detail::enable_opt_conversion<T, U&&, U>,
+                                          bsoncxx::detail::negation<std::is_convertible<U&&, T>>> = 0>
     bsoncxx_cxx14_constexpr explicit optional(optional<U>&& other) noexcept(
         std::is_nothrow_constructible<T, bsoncxx::detail::add_lvalue_reference_t<U&&>>::value) {
         if (other.has_value()) {
@@ -241,10 +231,9 @@ class optional : bsoncxx::detail::equality_operators,
         }
     }
 
-    template <typename U,
-              bsoncxx::detail::requires_t<int,
-                                          detail::enable_opt_conversion<T, U&&, U>,
-                                          std::is_convertible<U&&, T>> = 0>
+    template <
+        typename U,
+        bsoncxx::detail::requires_t<int, detail::enable_opt_conversion<T, U&&, U>, std::is_convertible<U&&, T>> = 0>
     bsoncxx_cxx14_constexpr optional(optional<U>&& other) noexcept(
         std::is_nothrow_constructible<T, bsoncxx::detail::add_lvalue_reference_t<U&&>>::value) {
         if (other.has_value()) {
@@ -364,8 +353,7 @@ bsoncxx_cxx14_constexpr optional<T> make_optional(Args&&... args) noexcept(
 // Emplace-construct a new optional of the given type with the given arguments (accepts an init-list
 // as the first argument).
 template <typename T, typename U, typename... Args>
-bsoncxx_cxx14_constexpr optional<T>
-make_optional(std::initializer_list<U> il, Args&&... args) noexcept(
+bsoncxx_cxx14_constexpr optional<T> make_optional(std::initializer_list<U> il, Args&&... args) noexcept(
     std::is_nothrow_constructible<T, std::initializer_list<U>, Args&&...>::value) {
     return optional<T>(in_place, il, BSONCXX_FWD(args)...);
 }
@@ -542,12 +530,8 @@ struct optional_operators_base {
     }
 
     template <typename T, typename U>
-    friend constexpr auto tag_invoke(bsoncxx::detail::equal_to,
-                                     const optional<T>& left,
-                                     const U& right) noexcept
-        -> bsoncxx::detail::requires_t<bool,
-                                       not_an_optional<U>,
-                                       bsoncxx::detail::is_equality_comparable<T, U>> {
+    friend constexpr auto tag_invoke(bsoncxx::detail::equal_to, const optional<T>& left, const U& right) noexcept
+        -> bsoncxx::detail::requires_t<bool, not_an_optional<U>, bsoncxx::detail::is_equality_comparable<T, U>> {
         BSONCXX_PUSH_WARNINGS();
         BSONCXX_DISABLE_WARNING(GNU("-Wfloat-equal"));
         return left.has_value() && *left == right;
@@ -555,9 +539,7 @@ struct optional_operators_base {
     }
 
     template <typename T>
-    friend constexpr bool tag_invoke(bsoncxx::detail::equal_to,
-                                     const optional<T>& opt,
-                                     nullopt_t) noexcept {
+    friend constexpr bool tag_invoke(bsoncxx::detail::equal_to, const optional<T>& opt, nullopt_t) noexcept {
         return !opt.has_value();
     }
 
@@ -600,8 +582,9 @@ struct optional_operators_base {
     }
 
     template <typename T>
-    constexpr friend bsoncxx::detail::strong_ordering tag_invoke(
-        bsoncxx::detail::compare_three_way compare, const optional<T>& left, nullopt_t) {
+    constexpr friend bsoncxx::detail::strong_ordering tag_invoke(bsoncxx::detail::compare_three_way compare,
+                                                                 const optional<T>& left,
+                                                                 nullopt_t) {
         return compare(left.has_value(), false);
     }
 };
@@ -613,8 +596,7 @@ struct optional_swap_mixin {};
 template <typename T>
 struct optional_swap_mixin<T, true> {
     bsoncxx_cxx14_constexpr friend void swap(optional<T>& left, optional<T>& right) noexcept(
-        std::is_nothrow_move_constructible<T>::value &&
-        bsoncxx::detail::is_nothrow_swappable<T>::value) {
+        std::is_nothrow_move_constructible<T>::value && bsoncxx::detail::is_nothrow_swappable<T>::value) {
         left.swap(right);
     }
 };
@@ -628,15 +610,13 @@ class optional_common_base : optional_operators_base, optional_swap_mixin<T> {
     optional_common_base() = default;
     ~optional_common_base() = default;
 
-    optional_common_base(const optional_common_base& other) noexcept(
-        std::is_nothrow_copy_constructible<T>::value) {
+    optional_common_base(const optional_common_base& other) noexcept(std::is_nothrow_copy_constructible<T>::value) {
         if (other._has_value) {
             this->emplace(other._storage.value);
         }
     }
 
-    optional_common_base(optional_common_base&& other) noexcept(
-        std::is_nothrow_move_constructible<T>::value) {
+    optional_common_base(optional_common_base&& other) noexcept(std::is_nothrow_move_constructible<T>::value) {
         if (other._has_value) {
             this->_emplace_construct_anew(std::move(other)._storage.value);
         }
@@ -648,8 +628,7 @@ class optional_common_base : optional_operators_base, optional_swap_mixin<T> {
         return *this;
     }
 
-    optional_common_base& operator=(optional_common_base&& other) noexcept(
-        std::is_nothrow_move_assignable<T>::value) {
+    optional_common_base& operator=(optional_common_base&& other) noexcept(std::is_nothrow_move_assignable<T>::value) {
         this->_assign(BSONCXX_FWD(other));
         return *this;
     }
@@ -682,8 +661,7 @@ class optional_common_base : optional_operators_base, optional_swap_mixin<T> {
 
     // Special swap for optional values that removes need for a temporary.
     bsoncxx_cxx14_constexpr void swap(optional_common_base& other) noexcept(
-        std::is_nothrow_move_constructible<T>::value &&
-        bsoncxx::detail::is_nothrow_swappable<T>::value) {
+        std::is_nothrow_move_constructible<T>::value && bsoncxx::detail::is_nothrow_swappable<T>::value) {
         if (other._has_value) {
             if (this->_has_value) {
                 using std::swap;
@@ -710,8 +688,7 @@ class optional_common_base : optional_operators_base, optional_swap_mixin<T> {
     // In-place construct a new value from the given arguments. Assumes that the optional does not
     // have a live value.
     template <typename... Args>
-    void _emplace_construct_anew(Args&&... args) noexcept(
-        std::is_nothrow_constructible<T, Args&&...>::value) {
+    void _emplace_construct_anew(Args&&... args) noexcept(std::is_nothrow_constructible<T, Args&&...>::value) {
         new (std::addressof(this->_storage.value)) T(BSONCXX_FWD(args)...);
         this->_has_value = true;
     }
@@ -741,8 +718,7 @@ struct optional_base_class {
 };
 
 template <typename T,
-          bool CanHash =
-              std::is_default_constructible<std::hash<bsoncxx::detail::remove_const_t<T>>>::value>
+          bool CanHash = std::is_default_constructible<std::hash<bsoncxx::detail::remove_const_t<T>>>::value>
 struct optional_hash;
 
 // Hash is "disabled" if the underlying type is not hashable (disabled = cannot construct the hash
@@ -773,8 +749,7 @@ struct optional_hash<T, true> {
 namespace std {
 
 template <typename T>
-struct hash<bsoncxx::v_noabi::stdx::optional<T>>
-    : bsoncxx::v_noabi::stdx::detail::optional_hash<T> {};
+struct hash<bsoncxx::v_noabi::stdx::optional<T>> : bsoncxx::v_noabi::stdx::detail::optional_hash<T> {};
 
 }  // namespace std
 

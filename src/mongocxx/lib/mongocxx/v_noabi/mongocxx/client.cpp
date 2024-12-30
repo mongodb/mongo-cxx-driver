@@ -76,8 +76,7 @@ client::client(const mongocxx::v_noabi::uri& uri, const options::client& options
 #if defined(MONGOCXX_ENABLE_SSL) && defined(MONGOC_ENABLE_SSL)
     if (options.tls_opts()) {
         if (!uri.tls())
-            throw exception{error_code::k_invalid_parameter,
-                            "cannot set TLS options if 'tls=true' not in URI"};
+            throw exception{error_code::k_invalid_parameter, "cannot set TLS options if 'tls=true' not in URI"};
     }
 #else
     if (uri.tls() || options.tls_opts()) {
@@ -103,12 +102,10 @@ client::client(const mongocxx::v_noabi::uri& uri, const options::client& options
 
     if (options.auto_encryption_opts()) {
         const auto& auto_encrypt_opts = *options.auto_encryption_opts();
-        auto mongoc_auto_encrypt_opts =
-            static_cast<mongoc_auto_encryption_opts_t*>(auto_encrypt_opts.convert());
+        auto mongoc_auto_encrypt_opts = static_cast<mongoc_auto_encryption_opts_t*>(auto_encrypt_opts.convert());
 
         bson_error_t error;
-        auto r = libmongoc::client_enable_auto_encryption(
-            _get_impl().client_t, mongoc_auto_encrypt_opts, &error);
+        auto r = libmongoc::client_enable_auto_encryption(_get_impl().client_t, mongoc_auto_encrypt_opts, &error);
 
         libmongoc::auto_encryption_opts_destroy(mongoc_auto_encrypt_opts);
 
@@ -122,8 +119,7 @@ client::client(const mongocxx::v_noabi::uri& uri, const options::client& options
         auto mongoc_server_api_opts = options::make_server_api(server_api_opts);
 
         bson_error_t error;
-        auto result = libmongoc::client_set_server_api(
-            _get_impl().client_t, mongoc_server_api_opts.get(), &error);
+        auto result = libmongoc::client_set_server_api(_get_impl().client_t, mongoc_server_api_opts.get(), &error);
 
         if (!result) {
             throw_exception<operation_exception>(error);
@@ -180,8 +176,8 @@ mongocxx::v_noabi::read_preference client::read_preference() const {
 }
 
 mongocxx::v_noabi::uri client::uri() const {
-    mongocxx::v_noabi::uri connection_string(bsoncxx::make_unique<uri::impl>(
-        libmongoc::uri_copy(libmongoc::client_get_uri(_get_impl().client_t))));
+    mongocxx::v_noabi::uri connection_string(
+        bsoncxx::make_unique<uri::impl>(libmongoc::uri_copy(libmongoc::client_get_uri(_get_impl().client_t))));
     return connection_string;
 }
 
@@ -209,8 +205,7 @@ cursor client::list_databases() const {
 
 cursor client::list_databases(const client_session& session) const {
     bsoncxx::v_noabi::builder::basic::document options_doc;
-    options_doc.append(
-        bsoncxx::v_noabi::builder::concatenate_doc{session._get_impl().to_document()});
+    options_doc.append(bsoncxx::v_noabi::builder::concatenate_doc{session._get_impl().to_document()});
     scoped_bson_t options_bson(options_doc.extract());
     return libmongoc::client_find_databases_with_opts(_get_impl().client_t, options_bson.bson());
 }
@@ -223,15 +218,13 @@ cursor client::list_databases(const bsoncxx::v_noabi::document::view_or_value op
 cursor client::list_databases(const client_session& session,
                               const bsoncxx::v_noabi::document::view_or_value opts) const {
     bsoncxx::v_noabi::builder::basic::document options_doc;
-    options_doc.append(
-        bsoncxx::v_noabi::builder::concatenate_doc{session._get_impl().to_document()});
+    options_doc.append(bsoncxx::v_noabi::builder::concatenate_doc{session._get_impl().to_document()});
     options_doc.append(bsoncxx::v_noabi::builder::concatenate_doc{opts});
     mongocxx::libbson::scoped_bson_t opts_bson(options_doc.extract());
     return libmongoc::client_find_databases_with_opts(_get_impl().client_t, opts_bson.bson());
 }
 
-std::vector<std::string> client::list_database_names(
-    bsoncxx::v_noabi::document::view_or_value filter) const {
+std::vector<std::string> client::list_database_names(bsoncxx::v_noabi::document::view_or_value filter) const {
     bsoncxx::v_noabi::builder::basic::document options_builder;
 
     options_builder.append(kvp("filter", filter));
@@ -239,8 +232,8 @@ std::vector<std::string> client::list_database_names(
     scoped_bson_t options_bson(options_builder.extract());
     bson_error_t error;
 
-    const database_names names(libmongoc::client_get_database_names_with_opts(
-        _get_impl().client_t, options_bson.bson(), &error));
+    const database_names names(
+        libmongoc::client_get_database_names_with_opts(_get_impl().client_t, options_bson.bson(), &error));
 
     if (!names) {
         throw_exception<operation_exception>(error);
@@ -254,19 +247,18 @@ std::vector<std::string> client::list_database_names(
     return _names;
 }
 
-std::vector<std::string> client::list_database_names(
-    const client_session& session, const bsoncxx::v_noabi::document::view_or_value filter) const {
+std::vector<std::string> client::list_database_names(const client_session& session,
+                                                     const bsoncxx::v_noabi::document::view_or_value filter) const {
     bsoncxx::v_noabi::builder::basic::document options_builder;
 
-    options_builder.append(
-        bsoncxx::v_noabi::builder::concatenate_doc{session._get_impl().to_document()});
+    options_builder.append(bsoncxx::v_noabi::builder::concatenate_doc{session._get_impl().to_document()});
     options_builder.append(kvp("filter", filter));
 
     mongocxx::libbson::scoped_bson_t opts_bson(options_builder.extract());
     bson_error_t error;
 
-    const database_names names(libmongoc::client_get_database_names_with_opts(
-        _get_impl().client_t, opts_bson.bson(), &error));
+    const database_names names(
+        libmongoc::client_get_database_names_with_opts(_get_impl().client_t, opts_bson.bson(), &error));
 
     if (!names) {
         throw_exception<operation_exception>(error);
@@ -280,8 +272,7 @@ std::vector<std::string> client::list_database_names(
     return res;
 }
 
-mongocxx::v_noabi::client_session client::start_session(
-    const mongocxx::v_noabi::options::client_session& options) {
+mongocxx::v_noabi::client_session client::start_session(const mongocxx::v_noabi::options::client_session& options) {
     return client_session(this, options);
 }
 
@@ -317,14 +308,12 @@ change_stream client::_watch(const client_session* session,
     bsoncxx::v_noabi::builder::basic::document options_builder;
     options_builder.append(bsoncxx::v_noabi::builder::concatenate(options.as_bson()));
     if (session) {
-        options_builder.append(
-            bsoncxx::v_noabi::builder::concatenate_doc{session->_get_impl().to_document()});
+        options_builder.append(bsoncxx::v_noabi::builder::concatenate_doc{session->_get_impl().to_document()});
     }
 
     scoped_bson_t options_bson{options_builder.extract()};
 
-    return change_stream{
-        libmongoc::client_watch(_get_impl().client_t, pipeline_bson.bson(), options_bson.bson())};
+    return change_stream{libmongoc::client_watch(_get_impl().client_t, pipeline_bson.bson(), options_bson.bson())};
 }
 
 const client::impl& client::_get_impl() const {

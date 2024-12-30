@@ -124,8 +124,7 @@ options::find make_find_options(document::view arguments) {
 document::value bulk_write_result_to_document(const mongocxx::result::bulk_write& result) {
     builder::basic::document upserted_ids_builder;
     for (auto&& index_and_id : result.upserted_ids()) {
-        upserted_ids_builder.append(
-            kvp(std::to_string(index_and_id.first), index_and_id.second.get_int32().value));
+        upserted_ids_builder.append(kvp(std::to_string(index_and_id.first), index_and_id.second.get_int32().value));
     }
 
     return make_document(kvp("matchedCount", result.matched_count()),
@@ -266,8 +265,8 @@ document::value list_database_names(entity::map& map,
 }
 
 document::value list_indexes(entity::map& map, client_session* session, const std::string& object) {
-    auto cursor = session ? map.get_collection(object).list_indexes(*session)
-                          : map.get_collection(object).list_indexes();
+    auto cursor =
+        session ? map.get_collection(object).list_indexes(*session) : map.get_collection(object).list_indexes();
 
     builder::basic::document result;
     result.append(builder::basic::kvp("result", [&cursor](builder::basic::sub_array array) {
@@ -499,8 +498,7 @@ document::value run_bulk_write(collection& coll, client_session* session, docume
         subdoc.append(builder::basic::kvp("insertedCount", bulk_write_result->inserted_count()));
 
         for (auto&& index_and_id : bulk_write_result->upserted_ids()) {
-            upserted_ids_builder.append(
-                kvp(std::to_string(index_and_id.first), index_and_id.second.get_int32().value));
+            upserted_ids_builder.append(kvp(std::to_string(index_and_id.first), index_and_id.second.get_int32().value));
         }
         subdoc.append(builder::basic::kvp("upsertedIds", upserted_ids_builder.extract()));
     }));
@@ -611,9 +609,7 @@ document::value replace_one(collection& coll, client_session* session, document:
 
     auto result = builder::basic::document{};
     result.append(builder::basic::kvp(
-        "result",
-        [matched_count, modified_count, upserted_count, upserted_id](
-            builder::basic::sub_document subdoc) {
+        "result", [matched_count, modified_count, upserted_count, upserted_id](builder::basic::sub_document subdoc) {
             subdoc.append(builder::basic::kvp("matchedCount", matched_count));
 
             if (modified_count) {
@@ -735,9 +731,8 @@ document::value create_change_stream(entity::map& map,
     }
 
     const auto save_result_as_entity = operation["saveResultAsEntity"];
-    const auto key = save_result_as_entity
-                         ? string::to_string(save_result_as_entity.get_string().value)
-                         : std::string();
+    const auto key =
+        save_result_as_entity ? string::to_string(save_result_as_entity.get_string().value) : std::string();
     CAPTURE(object, to_json(operation), key);
     auto stream = [&]() -> mongocxx::change_stream {
         const auto& type = map.type(object);
@@ -772,8 +767,7 @@ document::value iterate_until_document_or_error(
     const auto stream_iter = stream_iters.find(&stream);
     const auto is_first = stream_iter == stream_iters.end();
 
-    auto& iter = is_first ? stream_iters.emplace(&stream, stream.begin()).first->second
-                          : stream_iter->second;
+    auto& iter = is_first ? stream_iters.emplace(&stream, stream.begin()).first->second : stream_iter->second;
 
     // `.begin()` performs iterator increment on first call for a given stream.
     // Ensure a double-increment does not take place on any given call to
@@ -791,13 +785,11 @@ document::value iterate_until_document_or_error(
 }
 
 document::value iterate_until_document_or_error(
-    cursor& cursor,
-    std::unordered_map<mongocxx::cursor*, mongocxx::cursor::iterator>& cursor_iters) {
+    cursor& cursor, std::unordered_map<mongocxx::cursor*, mongocxx::cursor::iterator>& cursor_iters) {
     const auto cursor_iter = cursor_iters.find(&cursor);
     const auto is_first = cursor_iter == cursor_iters.end();
 
-    auto& iter = is_first ? cursor_iters.emplace(&cursor, cursor.begin()).first->second
-                          : cursor_iter->second;
+    auto& iter = is_first ? cursor_iters.emplace(&cursor, cursor.begin()).first->second : cursor_iter->second;
 
     // `.begin()` performs iterator increment on first call for a given cursor.
     // Ensure a double-increment does not take place on any given call to
@@ -838,9 +830,7 @@ document::value rename(mongocxx::collection& coll, document::view op) {
     return make_document();
 }
 
-document::value find_one_and_delete(collection& coll,
-                                    client_session* session,
-                                    document::view operation) {
+document::value find_one_and_delete(collection& coll, client_session* session, document::view operation) {
     document::view arguments = operation["arguments"].get_document().value;
     document::view filter = arguments["filter"].get_document().value;
     options::find_one_and_delete options{};
@@ -891,9 +881,7 @@ document::value find_one_and_delete(collection& coll,
     return result.extract();
 }
 
-document::value find_one_and_replace(collection& coll,
-                                     client_session* session,
-                                     document::view operation) {
+document::value find_one_and_replace(collection& coll, client_session* session, document::view operation) {
     document::view arguments = operation["arguments"].get_document().value;
     document::view filter = arguments["filter"].get_document().value;
     options::find_one_and_replace options{};
@@ -961,9 +949,7 @@ document::value find_one_and_replace(collection& coll,
     return result.extract();
 }
 
-document::value find_one_and_update(collection& coll,
-                                    client_session* session,
-                                    document::view operation) {
+document::value find_one_and_update(collection& coll, client_session* session, document::view operation) {
     document::view arguments = operation["arguments"].get_document().value;
     document::view filter = arguments["filter"].get_document().value;
     options::find_one_and_update options{};
@@ -1131,9 +1117,7 @@ bool collection_exists(document::view op) {
     return client.database(db_name).has_collection(coll_name);
 }
 
-document::value create_index(collection& coll,
-                             client_session* session,
-                             const document::view& operation) {
+document::value create_index(collection& coll, client_session* session, const document::view& operation) {
     auto arguments = operation["arguments"];
 
     auto name = arguments["name"].get_string().value;
@@ -1177,9 +1161,8 @@ document::value download(gridfs::bucket& bucket, document::view op) {
 
 document::value upload(entity::map& map, document::view op) {
     const auto save_result_as_entity = op["saveResultAsEntity"];
-    const auto key = save_result_as_entity
-                         ? string::to_string(save_result_as_entity.get_string().value)
-                         : std::string();
+    const auto key =
+        save_result_as_entity ? string::to_string(save_result_as_entity.get_string().value) : std::string();
     const auto arguments = op["arguments"].get_document().value;
     const auto object = string::to_string(op["object"].get_string().value);
     auto& bucket = map.get_bucket(object);
@@ -1248,10 +1231,9 @@ document::value delete_one(collection& coll, client_session* session, document::
         deleted_count = delete_result->deleted_count();
     }
 
-    result.append(
-        builder::basic::kvp("result", [deleted_count](builder::basic::sub_document subdoc) {
-            subdoc.append(builder::basic::kvp("deletedCount", deleted_count));
-        }));
+    result.append(builder::basic::kvp("result", [deleted_count](builder::basic::sub_document subdoc) {
+        subdoc.append(builder::basic::kvp("deletedCount", deleted_count));
+    }));
 
     return result.extract();
 }
@@ -1294,17 +1276,14 @@ document::value delete_many(collection& coll, client_session* session, document:
     if (delete_result) {
         deleted_count = delete_result->deleted_count();
     }
-    result.append(
-        builder::basic::kvp("result", [deleted_count](builder::basic::sub_document subdoc) {
-            subdoc.append(builder::basic::kvp("deletedCount", deleted_count));
-        }));
+    result.append(builder::basic::kvp("result", [deleted_count](builder::basic::sub_document subdoc) {
+        subdoc.append(builder::basic::kvp("deletedCount", deleted_count));
+    }));
 
     return result.extract();
 }
 
-document::value with_transaction(client_session& session,
-                                 document::view op,
-                                 client_session::with_transaction_cb cb) {
+document::value with_transaction(client_session& session, document::view op, client_session::with_transaction_cb cb) {
     if (op["arguments"]) {
         auto opts = set_opts(op["arguments"].get_document());
         session.with_transaction(cb, opts);
@@ -1381,16 +1360,16 @@ document::value update_one(collection& coll, client_session* session, document::
         switch (type) {
             case bsoncxx::type::k_document: {
                 const auto doc = update.get_document().value;
-                update_one_result = session ? coll.update_one(*session, filter, doc, options)
-                                            : coll.update_one(filter, doc, options);
+                update_one_result =
+                    session ? coll.update_one(*session, filter, doc, options) : coll.update_one(filter, doc, options);
                 break;
             }
 
             case bsoncxx::type::k_array: {
                 pipeline pipe;
                 pipe.append_stages(update.get_array().value);
-                update_one_result = session ? coll.update_one(*session, filter, pipe, options)
-                                            : coll.update_one(filter, pipe, options);
+                update_one_result =
+                    session ? coll.update_one(*session, filter, pipe, options) : coll.update_one(filter, pipe, options);
                 break;
             }
 
@@ -1414,8 +1393,7 @@ document::value update_one(collection& coll, client_session* session, document::
             case bsoncxx::type::k_maxkey:
             case bsoncxx::type::k_minkey:
             default:
-                throw std::logic_error("unexpected type '" + to_string(type) +
-                                       "' for field 'update'");
+                throw std::logic_error("unexpected type '" + to_string(type) + "' for field 'update'");
         }
     }
 
@@ -1505,8 +1483,7 @@ document::value update_many(collection& coll, document::view operation) {
             case bsoncxx::type::k_maxkey:
             case bsoncxx::type::k_minkey:
             default:
-                throw std::logic_error("unexpected type '" + to_string(type) +
-                                       "' for field 'update'");
+                throw std::logic_error("unexpected type '" + to_string(type) + "' for field 'update'");
         }
     }
 
@@ -1528,9 +1505,7 @@ document::value update_many(collection& coll, document::view operation) {
     return result.extract();
 }
 
-document::value count_documents(collection& coll,
-                                client_session* session,
-                                document::view operation) {
+document::value count_documents(collection& coll, client_session* session, document::view operation) {
     document::view arguments = operation["arguments"].get_document().value;
     document::value empty_filter = builder::basic::make_document();
     document::view filter;
@@ -1642,9 +1617,7 @@ document::value distinct(collection& coll, client_session* session, document::vi
     return result.extract();
 }
 
-document::value rewrap_many_datakey(entity::map& map,
-                                    const std::string& object,
-                                    document::view operation) {
+document::value rewrap_many_datakey(entity::map& map, const std::string& object, document::view operation) {
     auto filter = operation["arguments"]["filter"].get_document();
 
     options::rewrap_many_datakey rewrap_opts;
@@ -1666,13 +1639,10 @@ document::value rewrap_many_datakey(entity::map& map,
     if (maybe_bulk_write) {
         auto bulk_write_result = maybe_bulk_write.value();
         auto doc = make_document(
-            kvp("result",
-                make_document(
-                    kvp("bulkWriteResult", bulk_write_result_to_document(bulk_write_result)))));
+            kvp("result", make_document(kvp("bulkWriteResult", bulk_write_result_to_document(bulk_write_result)))));
         return doc;
     } else {
-        auto doc =
-            make_document(kvp("result", make_document(kvp("bulkWriteResult", types::b_null{}))));
+        auto doc = make_document(kvp("result", make_document(kvp("bulkWriteResult", types::b_null{}))));
         return doc;
     }
 }
@@ -1684,8 +1654,7 @@ document::value delete_key(entity::map& map, const std::string& object, document
     client_encryption& client_encryption = map.get_client_encryption(object);
     auto result = client_encryption.delete_key(key);
 
-    auto doc =
-        make_document(kvp("result", make_document(kvp("deletedCount", result.deleted_count()))));
+    auto doc = make_document(kvp("result", make_document(kvp("deletedCount", result.deleted_count()))));
     return doc;
 }
 
@@ -1717,9 +1686,7 @@ document::value get_keys(entity::map& map, const std::string& object, document::
     }));
 }
 
-document::value create_data_key(entity::map& map,
-                                const std::string& object,
-                                document::view operation) {
+document::value create_data_key(entity::map& map, const std::string& object, document::view operation) {
     std::string provider;
     if (operation["arguments"]["kmsProvider"]) {
         provider = std::string(operation["arguments"]["kmsProvider"].get_string().value);
@@ -1750,9 +1717,7 @@ document::value create_data_key(entity::map& map,
     return make_document(kvp("result", result));
 }
 
-document::value add_key_alt_name(entity::map& map,
-                                 const std::string& object,
-                                 document::view operation) {
+document::value add_key_alt_name(entity::map& map, const std::string& object, document::view operation) {
     auto arguments = operation["arguments"].get_document().value;
     auto id = arguments["id"].get_value();
     std::string key_alt_name = std::string(arguments["keyAltName"].get_string().value);
@@ -1769,9 +1734,7 @@ document::value add_key_alt_name(entity::map& map,
     }
 }
 
-document::value get_key_by_alt_name(entity::map& map,
-                                    const std::string& object,
-                                    document::view operation) {
+document::value get_key_by_alt_name(entity::map& map, const std::string& object, document::view operation) {
     auto arguments = operation["arguments"].get_document().value;
     std::string key_alt_name = std::string(arguments["keyAltName"].get_string().value);
 
@@ -1787,9 +1750,7 @@ document::value get_key_by_alt_name(entity::map& map,
     }
 }
 
-document::value remove_key_alt_name(entity::map& map,
-                                    const std::string& object,
-                                    document::view operation) {
+document::value remove_key_alt_name(entity::map& map, const std::string& object, document::view operation) {
     auto arguments = operation["arguments"].get_document().value;
     auto id = arguments["id"].get_value();
     std::string key_alt_name = std::string(arguments["keyAltName"].get_string().value);
@@ -1811,9 +1772,8 @@ document::value create_find_cursor(entity::map& map,
                                    client_session* session,
                                    document::view operation) {
     const auto save_result_as_entity = operation["saveResultAsEntity"];
-    const auto key = save_result_as_entity
-                         ? string::to_string(save_result_as_entity.get_string().value)
-                         : std::string();
+    const auto key =
+        save_result_as_entity ? string::to_string(save_result_as_entity.get_string().value) : std::string();
     const auto arguments = operation["arguments"].get_document().value;
     const auto empty_filter = builder::basic::make_document();
     const auto filter = [&]() -> document::view {
@@ -1839,8 +1799,7 @@ document::value create_search_index(collection& coll, document::view operation) 
     const auto definition = raw_model["definition"].get_document().value;
     const auto type = raw_model["type"];
 
-    auto model = name ? search_index_model(name.get_string().value, definition)
-                      : search_index_model(definition);
+    auto model = name ? search_index_model(name.get_string().value, definition) : search_index_model(definition);
 
     if (type) {
         model.type(type.get_string().value);
@@ -1856,10 +1815,9 @@ document::value create_search_indexes(collection& coll, document::view operation
     std::vector<search_index_model> models;
 
     for (auto&& m : raw_models) {
-        search_index_model model = m["name"]
-                                       ? search_index_model(m["name"].get_string().value,
-                                                            m["definition"].get_document().value)
-                                       : search_index_model(m["definition"].get_document().value);
+        search_index_model model =
+            m["name"] ? search_index_model(m["name"].get_string().value, m["definition"].get_document().value)
+                      : search_index_model(m["definition"].get_document().value);
         if (m["type"]) {
             model.type(m["type"].get_string().value);
         }
@@ -1896,24 +1854,21 @@ document::value list_search_indexes(collection& coll, document::view operation) 
             if (element.key() == bsoncxx::stdx::string_view("batchSize")) {
                 options.batch_size(element.get_int32().value);
             } else {
-                throw std::logic_error{"unsupported aggregateOptions field: " +
-                                       std::string(element.key())};
+                throw std::logic_error{"unsupported aggregateOptions field: " + std::string(element.key())};
             }
         }
     }
 
-    cursor c = arguments["name"]
-                   ? coll.search_indexes().list(arguments["name"].get_string().value, options)
-                   : coll.search_indexes().list(options);
+    cursor c = arguments["name"] ? coll.search_indexes().list(arguments["name"].get_string().value, options)
+                                 : coll.search_indexes().list(options);
 
     // we must loop over the resulting cursor to trigger server events for the spec tests
     auto result = bsoncxx::builder::basic::document{};
-    result.append(
-        bsoncxx::builder::basic::kvp("result", [&c](bsoncxx::builder::basic::sub_array array) {
-            for (auto&& document : c) {
-                array.append(document);
-            }
-        }));
+    result.append(bsoncxx::builder::basic::kvp("result", [&c](bsoncxx::builder::basic::sub_array array) {
+        for (auto&& document : c) {
+            array.append(document);
+        }
+    }));
 
     return result.extract();
 }
@@ -1945,22 +1900,17 @@ document::value operations::run(entity::map& entity_map,
     if (name == "find")
         return find(entity_map.get_collection(object), get_session(op_view, entity_map), op_view);
     if (name == "bulkWrite")
-        return run_bulk_write(
-            entity_map.get_collection(object), get_session(op_view, entity_map), op_view);
+        return run_bulk_write(entity_map.get_collection(object), get_session(op_view, entity_map), op_view);
     if (name == "insertMany")
-        return insert_many(
-            entity_map.get_collection(object), get_session(op_view, entity_map), op_view);
+        return insert_many(entity_map.get_collection(object), get_session(op_view, entity_map), op_view);
     if (name == "replaceOne")
-        return replace_one(
-            entity_map.get_collection(object), get_session(op_view, entity_map), op_view);
+        return replace_one(entity_map.get_collection(object), get_session(op_view, entity_map), op_view);
     if (name == "aggregate") {
         const auto& type = entity_map.type(object);
         if (type == typeid(mongocxx::database))
-            return aggregate(
-                entity_map.get_database(object), get_session(op_view, entity_map), op_view);
+            return aggregate(entity_map.get_database(object), get_session(op_view, entity_map), op_view);
         if (type == typeid(mongocxx::collection))
-            return aggregate(
-                entity_map.get_collection(object), get_session(op_view, entity_map), op_view);
+            return aggregate(entity_map.get_collection(object), get_session(op_view, entity_map), op_view);
 
         CAPTURE(object, type.name());
         throw std::logic_error{"unrecognized object"};
@@ -1982,13 +1932,11 @@ document::value operations::run(entity::map& entity_map,
         const auto& type = entity_map.type(object);
 
         if (type == typeid(mongocxx::change_stream)) {
-            return iterate_until_document_or_error(entity_map.get_change_stream(object),
-                                                   state.stream_iters);
+            return iterate_until_document_or_error(entity_map.get_change_stream(object), state.stream_iters);
         }
 
         if (type == typeid(mongocxx::cursor)) {
-            return iterate_until_document_or_error(entity_map.get_cursor(object),
-                                                   state.cursor_iters);
+            return iterate_until_document_or_error(entity_map.get_cursor(object), state.cursor_iters);
         }
 
         CAPTURE(object, type.name());
@@ -2040,14 +1988,11 @@ document::value operations::run(entity::map& entity_map,
                              kvp("serverId", static_cast<std::int64_t>(server_id)));
     }
     if (name == "findOneAndDelete")
-        return find_one_and_delete(
-            entity_map.get_collection(object), get_session(op_view, entity_map), op_view);
+        return find_one_and_delete(entity_map.get_collection(object), get_session(op_view, entity_map), op_view);
     if (name == "findOneAndReplace")
-        return find_one_and_replace(
-            entity_map.get_collection(object), get_session(op_view, entity_map), op_view);
+        return find_one_and_replace(entity_map.get_collection(object), get_session(op_view, entity_map), op_view);
     if (name == "findOneAndUpdate")
-        return find_one_and_update(
-            entity_map.get_collection(object), get_session(op_view, entity_map), op_view);
+        return find_one_and_update(entity_map.get_collection(object), get_session(op_view, entity_map), op_view);
     if (name == "listCollections") {
         return list_collections(entity_map, get_session(op_view, entity_map), object, op_view);
     }
@@ -2118,14 +2063,12 @@ document::value operations::run(entity::map& entity_map,
         return assert_session_transaction_state(session, op_view);
     }
     if (name == "assertSessionPinned") {
-        auto& session = entity_map.get_client_session(
-            string::to_string(op["arguments"]["session"].get_string().value));
+        auto& session = entity_map.get_client_session(string::to_string(op["arguments"]["session"].get_string().value));
         REQUIRE(session.server_id() != 0);
         return make_document();
     }
     if (name == "assertSessionUnpinned") {
-        auto& session = entity_map.get_client_session(
-            string::to_string(op["arguments"]["session"].get_string().value));
+        auto& session = entity_map.get_client_session(string::to_string(op["arguments"]["session"].get_string().value));
         REQUIRE(session.server_id() == 0);
         return make_document();
     }
@@ -2152,12 +2095,10 @@ document::value operations::run(entity::map& entity_map,
             opts.append(builder::basic::kvp("expireAfterSeconds", eas.get_int32().value));
         }
         if (const auto clustered_index = arguments["clusteredIndex"]) {
-            opts.append(
-                builder::basic::kvp("clusteredIndex", clustered_index.get_document().view()));
+            opts.append(builder::basic::kvp("clusteredIndex", clustered_index.get_document().view()));
         }
         if (const auto pre_and_post = arguments["changeStreamPreAndPostImages"]) {
-            opts.append(builder::basic::kvp("changeStreamPreAndPostImages",
-                                            pre_and_post.get_document().view()));
+            opts.append(builder::basic::kvp("changeStreamPreAndPostImages", pre_and_post.get_document().view()));
         }
         {
             const auto view_on = arguments["viewOn"];
@@ -2188,8 +2129,7 @@ document::value operations::run(entity::map& entity_map,
         command.append(builder::basic::kvp("collMod", coll_name));
 
         if (const auto pre_and_post = arguments["changeStreamPreAndPostImages"]) {
-            command.append(builder::basic::kvp("changeStreamPreAndPostImages",
-                                               pre_and_post.get_document().view()));
+            command.append(builder::basic::kvp("changeStreamPreAndPostImages", pre_and_post.get_document().view()));
         }
 
         builder::basic::document result;
@@ -2275,8 +2215,7 @@ document::value operations::run(entity::map& entity_map,
     }
     if (name == "countDocuments") {
         // TODO: all operations which accept a session should check and apply a session.
-        return count_documents(
-            entity_map.get_collection(object), get_session(op_view, entity_map), op_view);
+        return count_documents(entity_map.get_collection(object), get_session(op_view, entity_map), op_view);
     }
     if (name == "estimatedDocumentCount") {
         return estimated_document_count(entity_map.get_collection(object), op_view);

@@ -37,8 +37,7 @@ downloader::downloader(bsoncxx::v_noabi::stdx::optional<cursor> chunks,
                        std::int32_t chunk_size,
                        std::int64_t file_len,
                        bsoncxx::v_noabi::document::value files_doc)
-    : _impl{bsoncxx::make_unique<impl>(
-          std::move(chunks), start, chunk_size, file_len, std::move(files_doc))} {}
+    : _impl{bsoncxx::make_unique<impl>(std::move(chunks), start, chunk_size, file_len, std::move(files_doc))} {}
 
 downloader::downloader() noexcept = default;
 downloader::downloader(downloader&&) noexcept = default;
@@ -60,15 +59,13 @@ std::size_t downloader::read(std::uint8_t* buffer, std::size_t length_requested)
 
     std::size_t bytes_read = 0;
 
-    while (length_requested > 0 &&
-           (_get_impl().chunks_seen != _get_impl().file_chunk_count ||
-            _get_impl().chunk_buffer_offset < _get_impl().chunk_buffer_len)) {
+    while (length_requested > 0 && (_get_impl().chunks_seen != _get_impl().file_chunk_count ||
+                                    _get_impl().chunk_buffer_offset < _get_impl().chunk_buffer_len)) {
         if (_get_impl().chunk_buffer_offset == _get_impl().chunk_buffer_len) {
             fetch_chunk();
         }
 
-        std::size_t length = std::min(
-            length_requested, _get_impl().chunk_buffer_len - _get_impl().chunk_buffer_offset);
+        std::size_t length = std::min(length_requested, _get_impl().chunk_buffer_len - _get_impl().chunk_buffer_offset);
         std::memcpy(buffer, &_get_impl().chunk_buffer_ptr[_get_impl().chunk_buffer_offset], length);
         buffer = &buffer[length];
         _get_impl().chunk_buffer_offset += length;
@@ -104,8 +101,7 @@ void downloader::fetch_chunk() {
     if (_get_impl().chunks_curr == _get_impl().chunks_end) {
         std::ostringstream err;
         err << "expected file to have " << _get_impl().file_chunk_count
-            << " chunk(s), but query to chunks collection only returned " << _get_impl().chunks_seen
-            << " chunk(s)";
+            << " chunk(s), but query to chunks collection only returned " << _get_impl().chunks_seen << " chunk(s)";
         throw gridfs_exception{error_code::k_gridfs_file_corrupted, err.str()};
     }
     auto chunks_seen = _get_impl().chunks_seen;
@@ -142,14 +138,12 @@ void downloader::fetch_chunk() {
     if (chunks_seen != _get_impl().file_chunk_count - 1) {
         if (binary_data.size != static_cast<std::uint32_t>(_get_impl().chunk_size)) {
             std::ostringstream err;
-            err << "chunk #" << chunks_seen << ": expected size of chunk to be "
-                << _get_impl().chunk_size << " bytes, but actual size of chunk is "
-                << binary_data.size << " bytes";
+            err << "chunk #" << chunks_seen << ": expected size of chunk to be " << _get_impl().chunk_size
+                << " bytes, but actual size of chunk is " << binary_data.size << " bytes";
             throw gridfs_exception{error_code::k_gridfs_file_corrupted, err.str()};
         }
     } else {
-        auto expected_size =
-            _get_impl().file_len % static_cast<std::int64_t>(_get_impl().chunk_size);
+        auto expected_size = _get_impl().file_len % static_cast<std::int64_t>(_get_impl().chunk_size);
 
         if (expected_size == 0) {
             expected_size = static_cast<std::int64_t>(_get_impl().chunk_size);
@@ -167,10 +161,8 @@ void downloader::fetch_chunk() {
     _get_impl().chunk_buffer_len = binary_data.size;
 
     if (!_get_impl().chunks_seen) {
-        if (!int32_to_size_t_safe(_get_impl().start.bytes_offset,
-                                  _get_impl().chunk_buffer_offset)) {
-            throw gridfs_exception{error_code::k_invalid_parameter,
-                                   "expected bytes offset to be in bounds of size_t"};
+        if (!int32_to_size_t_safe(_get_impl().start.bytes_offset, _get_impl().chunk_buffer_offset)) {
+            throw gridfs_exception{error_code::k_invalid_parameter, "expected bytes offset to be in bounds of size_t"};
         }
         _get_impl().chunk_buffer_offset = static_cast<std::size_t>(_get_impl().start.bytes_offset);
         _get_impl().chunks_seen = chunks_seen;

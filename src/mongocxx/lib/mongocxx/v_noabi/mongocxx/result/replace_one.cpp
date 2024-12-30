@@ -34,8 +34,7 @@ std::int32_t replace_one::modified_count() const {
     return _result.modified_count();
 }
 
-bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::element> replace_one::upserted_id()
-    const {
+bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::element> replace_one::upserted_id() const {
     if (_result.upserted_ids().size() == 0) {
         return bsoncxx::v_noabi::stdx::nullopt;
     }

@@ -69,8 +69,7 @@ class hint {
     ///
     /// Compares equal if the hint contains a matching index document. Otherwise, compares unequal.
     ///
-    friend MONGOCXX_ABI_EXPORT_CDECL(bool) operator==(const hint& index_hint,
-                                                      bsoncxx::v_noabi::document::view index);
+    friend MONGOCXX_ABI_EXPORT_CDECL(bool) operator==(const hint& index_hint, bsoncxx::v_noabi::document::view index);
 
     ///
     /// Returns a types::bson_value::view representing this hint.

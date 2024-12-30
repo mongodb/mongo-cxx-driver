@@ -97,8 +97,7 @@ class cursor {
 
     friend ::mongocxx::v_noabi::cursor::iterator;
 
-    cursor(void* cursor_ptr,
-           bsoncxx::v_noabi::stdx::optional<type> cursor_type = bsoncxx::v_noabi::stdx::nullopt);
+    cursor(void* cursor_ptr, bsoncxx::v_noabi::stdx::optional<type> cursor_type = bsoncxx::v_noabi::stdx::nullopt);
 
     class impl;
     std::unique_ptr<impl> _impl;

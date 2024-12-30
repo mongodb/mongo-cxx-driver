@@ -223,19 +223,16 @@ TEST_CASE("SDAM Monitoring", "[sdam_monitoring]") {
     SECTION("Heartbeat Events") {
         int heartbeat_started_events = 0;
         int heartbeat_succeeded_events = 0;
-        auto mock_started_awaited =
-            libmongoc::apm_server_heartbeat_started_get_awaited.create_instance();
-        auto mock_succeeded_awaited =
-            libmongoc::apm_server_heartbeat_succeeded_get_awaited.create_instance();
+        auto mock_started_awaited = libmongoc::apm_server_heartbeat_started_get_awaited.create_instance();
+        auto mock_succeeded_awaited = libmongoc::apm_server_heartbeat_succeeded_get_awaited.create_instance();
         bool started_awaited_called = false;
         bool succeeded_awaited_called = false;
 
         mock_started_awaited->visit(
             [&](const mongoc_apm_server_heartbeat_started_t*) { started_awaited_called = true; });
 
-        mock_succeeded_awaited->visit([&](const mongoc_apm_server_heartbeat_succeeded_t*) {
-            succeeded_awaited_called = true;
-        });
+        mock_succeeded_awaited->visit(
+            [&](const mongoc_apm_server_heartbeat_succeeded_t*) { succeeded_awaited_called = true; });
 
         ///////////////////////////////////////////////////////////////////////
         // Begin heartbeat listener lambdas
@@ -281,8 +278,7 @@ TEST_CASE("Heartbeat failed event", "[sdam_monitoring]") {
     bool failed_awaited_called = false;
     auto mock_failed_awaited = libmongoc::apm_server_heartbeat_failed_get_awaited.create_instance();
 
-    mock_failed_awaited->visit(
-        [&](const mongoc_apm_server_heartbeat_failed_t*) { failed_awaited_called = true; });
+    mock_failed_awaited->visit([&](const mongoc_apm_server_heartbeat_failed_t*) { failed_awaited_called = true; });
 
     int heartbeat_failed_events = 0;
 
@@ -295,9 +291,8 @@ TEST_CASE("Heartbeat failed event", "[sdam_monitoring]") {
         CHECK(!event.awaited());
     });
 
-    REQUIRE_THROWS_AS(
-        open_and_close_client(uri{"mongodb://bad-host/?connectTimeoutMS=1"}, apm_opts),
-        mongocxx::exception);
+    REQUIRE_THROWS_AS(open_and_close_client(uri{"mongodb://bad-host/?connectTimeoutMS=1"}, apm_opts),
+                      mongocxx::exception);
 
     REQUIRE(heartbeat_failed_events > 0);
     REQUIRE(failed_awaited_called);

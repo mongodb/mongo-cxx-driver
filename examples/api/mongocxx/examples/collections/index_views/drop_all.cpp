@@ -68,8 +68,7 @@ RUNNER_REGISTER_COMPONENT_FOR_SINGLE() {
         auto coll = set_rw_concern_majority(guard.get().create_collection("coll"));
 
         (void)coll.create_index(bsoncxx::from_json(R"({"x": 1})"));
-        (void)coll.create_index(bsoncxx::from_json(R"({"y": 1})"),
-                                bsoncxx::from_json(R"({"name": "custom_name"})"));
+        (void)coll.create_index(bsoncxx::from_json(R"({"y": 1})"), bsoncxx::from_json(R"({"name": "custom_name"})"));
 
         example(coll.indexes());
     }

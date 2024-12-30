@@ -108,8 +108,7 @@ inline void convert_to_libbson(const b_regex& regex, bson_value_t* v) {
 inline void convert_to_libbson(const b_dbpointer& db, bson_value_t* v) {
     v->value_type = BSON_TYPE_DBPOINTER;
 
-    v->value.v_dbpointer.collection =
-        make_copy_for_libbson(db.collection, &(v->value.v_dbpointer.collection_len));
+    v->value.v_dbpointer.collection = make_copy_for_libbson(db.collection, &(v->value.v_dbpointer.collection_len));
 
     std::memcpy((v->value.v_dbpointer.oid.bytes), db.value.bytes(), db.value.k_oid_length);
 }
@@ -128,16 +127,14 @@ inline void convert_to_libbson(const b_codewscope& code, bson_value_t* v) {
     v->value_type = BSON_TYPE_CODEWSCOPE;
 
     // Copy the code
-    v->value.v_codewscope.code =
-        make_copy_for_libbson(code.code, &(v->value.v_codewscope.code_len));
+    v->value.v_codewscope.code = make_copy_for_libbson(code.code, &(v->value.v_codewscope.code_len));
 
     // Copy the scope
     if (code.scope.length() == 0) {
         v->value.v_codewscope.scope_data = nullptr;
         v->value.v_codewscope.scope_len = 0;
     } else {
-        v->value.v_codewscope.scope_data =
-            static_cast<std::uint8_t*>(bson_malloc0(code.scope.length()));
+        v->value.v_codewscope.scope_data = static_cast<std::uint8_t*>(bson_malloc0(code.scope.length()));
         v->value.v_codewscope.scope_len = static_cast<std::uint32_t>(code.scope.length());
         std::memcpy(v->value.v_codewscope.scope_data, code.scope.data(), code.scope.length());
     }

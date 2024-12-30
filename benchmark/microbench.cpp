@@ -21,8 +21,7 @@
 
 namespace benchmark {
 
-bool finished_running(const std::chrono::duration<std::uint32_t, std::milli>& curr_time,
-                      std::uint32_t iter) {
+bool finished_running(const std::chrono::duration<std::uint32_t, std::milli>& curr_time, std::uint32_t iter) {
     return (curr_time > maxtime || (curr_time > mintime && iter > max_iter));
 }
 
@@ -79,8 +78,7 @@ std::vector<bsoncxx::document::value> parse_json_file_to_documents(const std::st
     return docs;
 }
 
-std::vector<std::string> parse_documents_to_bson(
-    const std::vector<bsoncxx::document::value>& docs) {
+std::vector<std::string> parse_documents_to_bson(const std::vector<bsoncxx::document::value>& docs) {
     std::vector<std::string> bsons;
     for (std::uint32_t i = 0; i < docs.size(); i++) {
         bsons.push_back(bsoncxx::to_json(docs[i]));

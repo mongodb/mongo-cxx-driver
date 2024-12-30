@@ -79,8 +79,7 @@ class client {
     /// (whether from the URI or provided client options).
     ///
     MONGOCXX_ABI_EXPORT_CDECL()
-    client(const mongocxx::v_noabi::uri& mongodb_uri,
-           const options::client& options = options::client());
+    client(const mongocxx::v_noabi::uri& mongodb_uri, const options::client& options = options::client());
 
     ///
     /// Move constructs a client.
@@ -123,8 +122,7 @@ class client {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/read-concern/
     ///
-    MONGOCXX_DEPRECATED MONGOCXX_ABI_EXPORT_CDECL(void) read_concern(
-        mongocxx::v_noabi::read_concern rc);
+    MONGOCXX_DEPRECATED MONGOCXX_ABI_EXPORT_CDECL(void) read_concern(mongocxx::v_noabi::read_concern rc);
 
     MONGOCXX_ABI_EXPORT_CDECL(void) read_concern_deprecated(mongocxx::v_noabi::read_concern rc);
 
@@ -152,8 +150,7 @@ class client {
     /// @see
     /// - https://www.mongodb.com/docs/manual/core/read-preference/
     ///
-    MONGOCXX_DEPRECATED MONGOCXX_ABI_EXPORT_CDECL(void) read_preference(
-        mongocxx::v_noabi::read_preference rp);
+    MONGOCXX_DEPRECATED MONGOCXX_ABI_EXPORT_CDECL(void) read_preference(mongocxx::v_noabi::read_preference rp);
 
     MONGOCXX_ABI_EXPORT_CDECL(void)
     read_preference_deprecated(mongocxx::v_noabi::read_preference rp);
@@ -189,8 +186,7 @@ class client {
     /// @param wc
     ///   The new write concern
     ///
-    MONGOCXX_DEPRECATED MONGOCXX_ABI_EXPORT_CDECL(void) write_concern(
-        mongocxx::v_noabi::write_concern wc);
+    MONGOCXX_DEPRECATED MONGOCXX_ABI_EXPORT_CDECL(void) write_concern(mongocxx::v_noabi::write_concern wc);
 
     MONGOCXX_ABI_EXPORT_CDECL(void) write_concern_deprecated(mongocxx::v_noabi::write_concern wc);
 
@@ -213,8 +209,7 @@ class client {
     MONGOCXX_ABI_EXPORT_CDECL(mongocxx::v_noabi::database)
     database(bsoncxx::v_noabi::string::view_or_value name) const&;
 
-    mongocxx::v_noabi::database database(bsoncxx::v_noabi::string::view_or_value name) const&& =
-        delete;
+    mongocxx::v_noabi::database database(bsoncxx::v_noabi::string::view_or_value name) const&& = delete;
 
     ///
     /// Allows the syntax @c client["db_name"] as a convenient shorthand for the client::database()
@@ -231,8 +226,7 @@ class client {
         return database(name);
     }
 
-    mongocxx::v_noabi::database operator[](bsoncxx::v_noabi::string::view_or_value name) const&& =
-        delete;
+    mongocxx::v_noabi::database operator[](bsoncxx::v_noabi::string::view_or_value name) const&& = delete;
     ///
     /// Enumerates the databases in the client.
     ///
@@ -313,8 +307,7 @@ class client {
     /// - https://www.mongodb.com/docs/manual/reference/command/listDatabases
     ///
     MONGOCXX_ABI_EXPORT_CDECL(cursor)
-    list_databases(const client_session& session,
-                   const bsoncxx::v_noabi::document::view_or_value opts) const;
+    list_databases(const client_session& session, const bsoncxx::v_noabi::document::view_or_value opts) const;
 
     ///
     /// Queries the MongoDB server for a list of known databases.
@@ -442,9 +435,7 @@ class client {
     /// - https://www.mongodb.com/docs/manual/changeStreams/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(change_stream)
-    watch(const client_session& session,
-          const pipeline& pipe,
-          const options::change_stream& options = {});
+    watch(const client_session& session, const pipeline& pipe, const options::change_stream& options = {});
 
     ///
     /// Prevents resource cleanup in the child process from interfering
@@ -473,9 +464,7 @@ class client {
 
     explicit client(void* implementation);
 
-    change_stream _watch(const client_session* session,
-                         const pipeline& pipe,
-                         const options::change_stream& options);
+    change_stream _watch(const client_session* session, const pipeline& pipe, const options::change_stream& options);
 
     class impl;
 

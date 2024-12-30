@@ -28,9 +28,7 @@ class bson_encoding : public microbench {
     bson_encoding() = delete;
 
     bson_encoding(std::string name, double task_size, std::string json_file)
-        : microbench{std::move(name),
-                     task_size,
-                     std::set<benchmark_type>{benchmark_type::bson_bench}},
+        : microbench{std::move(name), task_size, std::set<benchmark_type>{benchmark_type::bson_bench}},
           _json_file{std::move(json_file)} {}
 
    protected:

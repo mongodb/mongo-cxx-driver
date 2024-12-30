@@ -40,8 +40,7 @@ void example() {
         {
             std::time_t time = oid.get_time_t();
             char str[sizeof("YYYY-MM-DD HH:MM:SS")];
-            EXPECT(std::strftime(str, sizeof(str), "%F %T", std::gmtime(&time)) ==
-                   sizeof(str) - 1u);
+            EXPECT(std::strftime(str, sizeof(str), "%F %T", std::gmtime(&time)) == sizeof(str) - 1u);
             EXPECT(std::string(str) == "1970-01-01 00:00:00");
         }
 
@@ -62,8 +61,7 @@ void example() {
         {
             std::time_t time = oid.get_time_t();
             char str[sizeof("YYYY-MM-DD HH:MM:SS")];
-            EXPECT(std::strftime(str, sizeof(str), "%F %T", std::gmtime(&time)) ==
-                   sizeof(str) - 1u);
+            EXPECT(std::strftime(str, sizeof(str), "%F %T", std::gmtime(&time)) == sizeof(str) - 1u);
             EXPECT(std::string(str) == "2000-01-01 23:59:59");
         }
 

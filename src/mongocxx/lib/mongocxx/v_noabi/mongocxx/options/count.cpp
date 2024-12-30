@@ -56,8 +56,7 @@ count& count::read_preference(mongocxx::v_noabi::read_preference rp) {
     return *this;
 }
 
-const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value>&
-count::collation() const {
+const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value>& count::collation() const {
     return _collation;
 }
 
@@ -65,8 +64,7 @@ const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::hint>& count::hint() c
     return _hint;
 }
 
-const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value>&
-count::comment() const {
+const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value>& count::comment() const {
     return _comment;
 }
 

@@ -86,13 +86,9 @@ TEST_CASE("destruction of a bulk_write will destroy mongoc operation", "[bulk_wr
 }
 class insert_functor {
    public:
-    insert_functor(bool* called, bsoncxx::document::view document)
-        : _called{called}, _document{document} {}
+    insert_functor(bool* called, bsoncxx::document::view document) : _called{called}, _document{document} {}
 
-    void operator()(mongoc_bulk_operation_t*,
-                    const bson_t* document,
-                    const bson_t*,
-                    bson_error_t*) {
+    void operator()(mongoc_bulk_operation_t*, const bson_t* document, const bson_t*, bson_error_t*) {
         *_called = true;
         REQUIRE(bson_get_data(document) == _document.data());
     }
@@ -107,11 +103,8 @@ class update_functor {
     update_functor(bool* called, bsoncxx::document::view filter, bsoncxx::document::view update)
         : _called{called}, _filter{filter}, _update{update} {}
 
-    void operator()(mongoc_bulk_operation_t*,
-                    const bson_t* filter,
-                    const bson_t* update,
-                    const bson_t* options,
-                    bson_error_t*) {
+    void operator()(
+        mongoc_bulk_operation_t*, const bson_t* filter, const bson_t* update, const bson_t* options, bson_error_t*) {
         *_called = true;
         REQUIRE(bson_get_data(filter) == _filter.data());
         REQUIRE(bson_get_data(update) == _update.data());
@@ -155,13 +148,9 @@ class update_functor {
 
 class delete_functor {
    public:
-    delete_functor(bool* called, bsoncxx::document::view filter)
-        : _called{called}, _filter{filter} {}
+    delete_functor(bool* called, bsoncxx::document::view filter) : _called{called}, _filter{filter} {}
 
-    void operator()(mongoc_bulk_operation_t*,
-                    const bson_t* filter,
-                    const bson_t* options,
-                    bson_error_t*) {
+    void operator()(mongoc_bulk_operation_t*, const bson_t* filter, const bson_t* options, bson_error_t*) {
         *_called = true;
         REQUIRE(bson_get_data(filter) == _filter.data());
 
@@ -191,8 +180,7 @@ TEST_CASE("passing write operations to append calls corresponding C function", "
     instance::current();
     mongocxx::client client{mongocxx::uri{}};
     auto bw = client["db"]["coll"].create_bulk_write();
-    bsoncxx::builder::basic::document filter_builder, doc_builder, update_doc_builder,
-        collation_builder;
+    bsoncxx::builder::basic::document filter_builder, doc_builder, update_doc_builder, collation_builder;
     filter_builder.append(kvp("_id", 1));
     doc_builder.append(kvp("_id", 2));
     update_doc_builder.append(kvp("$set", make_document(kvp("_id", 2))));

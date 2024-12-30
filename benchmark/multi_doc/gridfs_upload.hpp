@@ -36,8 +36,7 @@ class gridfs_upload : public microbench {
     gridfs_upload(std::string file_name)
         : microbench{"TestGridFsUpload",
                      52.43,
-                     std::set<benchmark_type>{benchmark_type::multi_bench,
-                                              benchmark_type::write_bench}},
+                     std::set<benchmark_type>{benchmark_type::multi_bench, benchmark_type::write_bench}},
           _conn{mongocxx::uri{}},
           _file_name{file_name} {}
 

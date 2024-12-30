@@ -161,8 +161,7 @@ document::value operation_runner::_run_aggregate(document::view operation) {
     bsoncxx::stdx::optional<cursor> result_cursor;
     client_session* session = _lookup_session(operation["arguments"].get_document().value);
 
-    if (operation["object"] &&
-        operation["object"].get_string().value == bsoncxx::stdx::string_view{"database"}) {
+    if (operation["object"] && operation["object"].get_string().value == bsoncxx::stdx::string_view{"database"}) {
         REQUIRE(_db);
 
         // Run on the database
@@ -339,10 +338,9 @@ document::value operation_runner::_run_delete_many(document::view operation) {
         }
     }
 
-    result.append(
-        builder::basic::kvp("result", [deleted_count](builder::basic::sub_document subdoc) {
-            subdoc.append(builder::basic::kvp("deletedCount", deleted_count));
-        }));
+    result.append(builder::basic::kvp("result", [deleted_count](builder::basic::sub_document subdoc) {
+        subdoc.append(builder::basic::kvp("deletedCount", deleted_count));
+    }));
 
     return result.extract();
 }
@@ -376,10 +374,9 @@ document::value operation_runner::_run_delete_one(document::view operation) {
         }
     }
 
-    result.append(
-        builder::basic::kvp("result", [deleted_count](builder::basic::sub_document subdoc) {
-            subdoc.append(builder::basic::kvp("deletedCount", deleted_count));
-        }));
+    result.append(builder::basic::kvp("result", [deleted_count](builder::basic::sub_document subdoc) {
+        subdoc.append(builder::basic::kvp("deletedCount", deleted_count));
+    }));
 
     return result.extract();
 }
@@ -474,8 +471,7 @@ document::value operation_runner::_run_find_one_and_replace(document::view opera
     }
 
     if (arguments["returnDocument"]) {
-        std::string return_document =
-            bsoncxx::string::to_string(arguments["returnDocument"].get_string().value);
+        std::string return_document = bsoncxx::string::to_string(arguments["returnDocument"].get_string().value);
 
         if (return_document == "After") {
             options.return_document(options::return_document::k_after);
@@ -538,8 +534,7 @@ document::value operation_runner::_run_find_one_and_update(document::view operat
     }
 
     if (arguments["returnDocument"]) {
-        std::string return_document =
-            bsoncxx::string::to_string(arguments["returnDocument"].get_string().value);
+        std::string return_document = bsoncxx::string::to_string(arguments["returnDocument"].get_string().value);
 
         if (return_document == "After") {
             options.return_document(options::return_document::k_after);
@@ -740,9 +735,7 @@ document::value operation_runner::_run_replace_one(document::view operation) {
 
     auto result = builder::basic::document{};
     result.append(builder::basic::kvp(
-        "result",
-        [matched_count, modified_count, upserted_count, upserted_id](
-            builder::basic::sub_document subdoc) {
+        "result", [matched_count, modified_count, upserted_count, upserted_id](builder::basic::sub_document subdoc) {
             subdoc.append(builder::basic::kvp("matchedCount", matched_count));
 
             if (modified_count) {
@@ -854,9 +847,7 @@ document::value operation_runner::_run_update_many(document::view operation) {
 
     auto result = builder::basic::document{};
     result.append(builder::basic::kvp(
-        "result",
-        [matched_count, modified_count, upserted_count, upserted_id](
-            builder::basic::sub_document subdoc) {
+        "result", [matched_count, modified_count, upserted_count, upserted_id](builder::basic::sub_document subdoc) {
             subdoc.append(builder::basic::kvp("matchedCount", matched_count));
 
             if (modified_count) {
@@ -967,9 +958,7 @@ document::value operation_runner::_run_update_one(document::view operation) {
 
     auto result = builder::basic::document{};
     result.append(builder::basic::kvp(
-        "result",
-        [matched_count, modified_count, upserted_count, upserted_id](
-            builder::basic::sub_document subdoc) {
+        "result", [matched_count, modified_count, upserted_count, upserted_id](builder::basic::sub_document subdoc) {
             subdoc.append(builder::basic::kvp("matchedCount", matched_count));
 
             if (modified_count) {
@@ -1209,8 +1198,7 @@ document::value operation_runner::_run_bulk_write(document::view operation) {
     }
     builder::basic::document upserted_ids_builder;
     for (auto&& index_and_id : upserted_ids) {
-        upserted_ids_builder.append(
-            kvp(std::to_string(index_and_id.first), index_and_id.second.get_int32().value));
+        upserted_ids_builder.append(kvp(std::to_string(index_and_id.first), index_and_id.second.get_int32().value));
     }
     auto upserted_ids_doc = upserted_ids_builder.extract();
     auto result = bsoncxx::builder::basic::document{};
@@ -1383,8 +1371,7 @@ document::value operation_runner::_run_drop_collection(document::view operation)
     if (arguments.find("encryptedFields") != arguments.end()) {
         auto encrypted_fields = arguments["encryptedFields"].get_document().value;
         auto encrypted_fields_map = make_document(kvp("encryptedFields", encrypted_fields));
-        _db->collection(collection_name)
-            .drop(bsoncxx::stdx::nullopt, std::move(encrypted_fields_map));
+        _db->collection(collection_name).drop(bsoncxx::stdx::nullopt, std::move(encrypted_fields_map));
     } else {
         _db->collection(collection_name).drop();
     }
@@ -1392,11 +1379,8 @@ document::value operation_runner::_run_drop_collection(document::view operation)
 }
 
 operation_runner::operation_runner(collection* coll) : operation_runner(nullptr, coll) {}
-operation_runner::operation_runner(database* db,
-                                   collection* coll,
-                                   client_session* session0,
-                                   client_session* session1,
-                                   client* client)
+operation_runner::operation_runner(
+    database* db, collection* coll, client_session* session0, client_session* session1, client* client)
     : _coll(coll), _db(db), _session0(session0), _session1(session1), _client(client) {}
 
 document::value operation_runner::run(document::view operation) {
@@ -1454,14 +1438,12 @@ document::value operation_runner::run(document::view operation) {
     } else if (key == "runCommand") {
         return _run_run_command(operation);
     } else if (key == "assertSessionPinned") {
-        const client_session* session =
-            _lookup_session(operation["arguments"].get_document().value);
+        const client_session* session = _lookup_session(operation["arguments"].get_document().value);
         REQUIRE(session);
         REQUIRE(session->server_id() != 0);
         return empty_document;
     } else if (key == "assertSessionUnpinned") {
-        const client_session* session =
-            _lookup_session(operation["arguments"].get_document().value);
+        const client_session* session = _lookup_session(operation["arguments"].get_document().value);
         REQUIRE(session);
         REQUIRE(session->server_id() == 0);
         return empty_document;
@@ -1548,11 +1530,9 @@ document::value operation_runner::run(document::view operation) {
         client client{uri{}};
         auto cursor = client[_db->name()][_coll->name()].list_indexes();
 
-        REQUIRE(
-            cursor.end() ==
-            std::find_if(cursor.begin(), cursor.end(), [operation](bsoncxx::document::view doc) {
-                return (doc["name"].get_string() == operation["arguments"]["index"].get_string());
-            }));
+        REQUIRE(cursor.end() == std::find_if(cursor.begin(), cursor.end(), [operation](bsoncxx::document::view doc) {
+                    return (doc["name"].get_string() == operation["arguments"]["index"].get_string());
+                }));
 
         return empty_document;
     } else if (key == "assertIndexExists") {
@@ -1561,11 +1541,9 @@ document::value operation_runner::run(document::view operation) {
         auto collection = operation["arguments"]["collection"].get_string().value;
         auto cursor = client[db][collection].list_indexes();
 
-        REQUIRE(
-            cursor.end() !=
-            std::find_if(cursor.begin(), cursor.end(), [operation](bsoncxx::document::view doc) {
-                return (doc["name"].get_string() == operation["arguments"]["index"].get_string());
-            }));
+        REQUIRE(cursor.end() != std::find_if(cursor.begin(), cursor.end(), [operation](bsoncxx::document::view doc) {
+                    return (doc["name"].get_string() == operation["arguments"]["index"].get_string());
+                }));
 
         return empty_document;
     } else if (key == "targetedFailPoint") {

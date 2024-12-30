@@ -146,9 +146,9 @@ void map::clear() noexcept {
 }
 
 void map::erase(const key_type& key) {
-    _database_map.erase(key) || _collection_map.erase(key) || _session_map.erase(key) ||
-        _bucket_map.erase(key) || _stream_map.erase(key) || _value_map.erase(key) ||
-        _client_map.erase(key) || _cursor_map.erase(key) || _client_encryption_map.erase(key);
+    _database_map.erase(key) || _collection_map.erase(key) || _session_map.erase(key) || _bucket_map.erase(key) ||
+        _stream_map.erase(key) || _value_map.erase(key) || _client_map.erase(key) || _cursor_map.erase(key) ||
+        _client_encryption_map.erase(key);
 }
 
 }  // namespace entity

@@ -29,8 +29,7 @@ update_one::update_one(bsoncxx::v_noabi::document::view_or_value filter,
 update_one::update_one(bsoncxx::v_noabi::document::view_or_value filter, const pipeline& update)
     : _filter(std::move(filter)), _update(bsoncxx::v_noabi::document::value(update.view_array())) {}
 
-update_one::update_one(bsoncxx::v_noabi::document::view_or_value filter,
-                       std::initializer_list<_empty_doc_tag>)
+update_one::update_one(bsoncxx::v_noabi::document::view_or_value filter, std::initializer_list<_empty_doc_tag>)
     : _filter(std::move(filter)), _update() {}
 
 const bsoncxx::v_noabi::document::view_or_value& update_one::filter() const {
@@ -46,8 +45,7 @@ update_one& update_one::collation(bsoncxx::v_noabi::document::view_or_value coll
     return *this;
 }
 
-const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value>&
-update_one::collation() const {
+const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value>& update_one::collation() const {
     return _collation;
 }
 
@@ -74,8 +72,7 @@ update_one& update_one::array_filters(bsoncxx::v_noabi::array::view_or_value arr
     return *this;
 }
 
-const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::array::view_or_value>&
-update_one::array_filters() const {
+const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::array::view_or_value>& update_one::array_filters() const {
     return _array_filters;
 }
 

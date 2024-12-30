@@ -99,13 +99,10 @@ struct my_false {
     static constexpr bool value = false;
 };
 
-static_assert(std::is_base_of<my_false, tt::conjunction<my_false, std::false_type, void>>::value,
-              "fail");
+static_assert(std::is_base_of<my_false, tt::conjunction<my_false, std::false_type, void>>::value, "fail");
 
-static_assert(
-    std::is_base_of<my_false,
-                    tt::conjunction<my_false, std::false_type, void, hard_error<int>>>::value,
-    "fail");
+static_assert(std::is_base_of<my_false, tt::conjunction<my_false, std::false_type, void, hard_error<int>>>::value,
+              "fail");
 
 template <typename T>
 tt::requires_t<T, std::is_integral<T>> add_one(T v) {
@@ -128,33 +125,20 @@ struct something {
     int memfn(int, std::string);
 };
 
-static_assert(tt::is_detected<tt::invoke_result_t, decltype(&something::value), something>::value,
+static_assert(tt::is_detected<tt::invoke_result_t, decltype(&something::value), something>::value, "fail");
+
+static_assert(std::is_same<tt::invoke_result_t<decltype(&something::value), something&>, int&>::value, "fail");
+
+static_assert(std::is_same<tt::invoke_result_t<decltype(&something::value), something&&>, int&&>::value, "fail");
+
+static_assert(std::is_same<tt::invoke_result_t<decltype(&something::value), const something&>, const int&>::value,
               "fail");
 
-static_assert(
-    std::is_same<tt::invoke_result_t<decltype(&something::value), something&>, int&>::value,
-    "fail");
-
-static_assert(
-    std::is_same<tt::invoke_result_t<decltype(&something::value), something&&>, int&&>::value,
-    "fail");
-
-static_assert(std::is_same<tt::invoke_result_t<decltype(&something::value), const something&>,
-                           const int&>::value,
+static_assert(std::is_same<tt::invoke_result_t<decltype(&something::memfn), something&&, int, const char*>, int>::value,
               "fail");
-
-static_assert(
-    std::is_same<tt::invoke_result_t<decltype(&something::memfn), something&&, int, const char*>,
-                 int>::value,
-    "fail");
 
 // invoke_result_t disappears when given wrong argument types:
-static_assert(!tt::is_detected<tt::invoke_result_t,
-                               decltype(&something::memfn),
-                               something&&,
-                               int,
-                               int>::value,
-              "fail");
+static_assert(!tt::is_detected<tt::invoke_result_t, decltype(&something::memfn), something&&, int, int>::value, "fail");
 
 struct constrained_callable {
     // Viable only if F is callable as F(int, Arg)
@@ -164,23 +148,13 @@ struct constrained_callable {
     }
 };
 
-static_assert(!tt::is_detected<tt::invoke_result_t,
-                               constrained_callable,
-                               void (*)(int, std::string),
-                               double>::value,
+static_assert(!tt::is_detected<tt::invoke_result_t, constrained_callable, void (*)(int, std::string), double>::value,
               "fail");
 
-static_assert(tt::is_detected<tt::invoke_result_t,
-                              constrained_callable,
-                              void (*)(int, std::string),
-                              const char*>::value,
-              "fail");
+static_assert(
+    tt::is_detected<tt::invoke_result_t, constrained_callable, void (*)(int, std::string), const char*>::value, "fail");
 
-static_assert(tt::is_detected<tt::invoke_result_t,
-                              constrained_callable,
-                              void (*)(int, double),
-                              double>::value,
-              "fail");
+static_assert(tt::is_detected<tt::invoke_result_t, constrained_callable, void (*)(int, double), double>::value, "fail");
 
 struct rank_test {
     template <typename T>

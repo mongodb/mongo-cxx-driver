@@ -63,13 +63,11 @@ void client_session::advance_cluster_time(const bsoncxx::v_noabi::document::view
     _impl->advance_cluster_time(cluster_time);
 }
 
-void client_session::advance_operation_time(
-    const bsoncxx::v_noabi::types::b_timestamp& operation_time) {
+void client_session::advance_operation_time(const bsoncxx::v_noabi::types::b_timestamp& operation_time) {
     _impl->advance_operation_time(operation_time);
 }
 
-void client_session::start_transaction(
-    const bsoncxx::v_noabi::stdx::optional<options::transaction>& transaction_opts) {
+void client_session::start_transaction(const bsoncxx::v_noabi::stdx::optional<options::transaction>& transaction_opts) {
     _impl->start_transaction(transaction_opts);
 }
 

@@ -28,10 +28,7 @@ namespace gridfs {
 
 class bucket::impl {
    public:
-    impl(std::string bucket_name,
-         std::int32_t default_chunk_size_bytes,
-         collection chunks,
-         collection files)
+    impl(std::string bucket_name, std::int32_t default_chunk_size_bytes, collection chunks, collection files)
         : bucket_name{std::move(bucket_name)},
           default_chunk_size_bytes{default_chunk_size_bytes},
           chunks{std::move(chunks)},

@@ -37,8 +37,7 @@ replace_one& replace_one::collation(bsoncxx::v_noabi::document::view_or_value co
     return *this;
 }
 
-const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value>&
-replace_one::collation() const {
+const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value>& replace_one::collation() const {
     return _collation;
 }
 

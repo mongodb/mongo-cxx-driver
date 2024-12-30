@@ -390,11 +390,8 @@ struct b_regex {
     /// @param options
     ///   The regex options
     ///
-    template <typename T,
-              typename U = stdx::string_view,
-              detail::requires_not_t<int, detail::is_alike<b_regex, T>> = 0>
-    explicit b_regex(T&& regex, U&& options = U{})
-        : regex(std::forward<T>(regex)), options(std::forward<U>(options)) {}
+    template <typename T, typename U = stdx::string_view, detail::requires_not_t<int, detail::is_alike<b_regex, T>> = 0>
+    explicit b_regex(T&& regex, U&& options = U{}) : regex(std::forward<T>(regex)), options(std::forward<U>(options)) {}
 
     stdx::string_view regex;
     stdx::string_view options;
@@ -515,11 +512,8 @@ struct b_codewscope {
     /// @param scope
     ///   A bson document view holding the scope environment.
     ///
-    template <typename T,
-              typename U,
-              detail::requires_not_t<int, detail::is_alike<b_codewscope, T>> = 0>
-    explicit b_codewscope(T&& code, U&& scope)
-        : code(std::forward<T>(code)), scope(std::forward<U>(scope)) {}
+    template <typename T, typename U, detail::requires_not_t<int, detail::is_alike<b_codewscope, T>> = 0>
+    explicit b_codewscope(T&& code, U&& scope) : code(std::forward<T>(code)), scope(std::forward<U>(scope)) {}
 
     stdx::string_view code;
     document::view scope;

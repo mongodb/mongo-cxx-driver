@@ -37,8 +37,7 @@ upload& upload::metadata(bsoncxx::v_noabi::document::view_or_value metadata) {
     return *this;
 }
 
-const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value>&
-upload::metadata() const {
+const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value>& upload::metadata() const {
     return _metadata;
 }
 

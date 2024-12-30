@@ -23,9 +23,7 @@ class bson_decoding : public microbench {
     bson_decoding() = delete;
 
     bson_decoding(std::string name, double task_size, std::string json_file)
-        : microbench{std::move(name),
-                     task_size,
-                     std::set<benchmark_type>{benchmark_type::bson_bench}},
+        : microbench{std::move(name), task_size, std::set<benchmark_type>{benchmark_type::bson_bench}},
           _file_name{std::move(json_file)} {}
 
    protected:

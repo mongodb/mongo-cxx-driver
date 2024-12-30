@@ -126,7 +126,7 @@ BreakFunctionDefinitionParameters: false
 BreakInheritanceList: BeforeColon
 BreakStringLiterals: true
 BreakTemplateDeclarations: Yes
-ColumnLimit:     100
+ColumnLimit:     120
 CommentPragmas:  '^\s*(@(addtogroup|copydoc|defgroup|fn|ref)|- )'
 CompactNamespaces: false
 ConstructorInitializerIndentWidth: 4

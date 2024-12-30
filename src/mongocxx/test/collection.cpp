@@ -242,9 +242,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             std::string collname = "insert_one_bypass_document_validation";
             db[collname].drop();
             collection coll = db.create_collection(
-                collname,
-                make_document(
-                    kvp("validator", make_document(kvp("_id", make_document(kvp("$eq", "baz")))))));
+                collname, make_document(kvp("validator", make_document(kvp("_id", make_document(kvp("$eq", "baz")))))));
 
             options::insert options;
             options.bypass_document_validation(true);
@@ -343,8 +341,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             REQUIRE(second_inserted_doc);
             REQUIRE(second_inserted_doc->view()["_id"]);
             REQUIRE(second_inserted_doc->view()["_id"].type() == bsoncxx::type::k_oid);
-            REQUIRE(id_map[1].get_oid().value ==
-                    second_inserted_doc->view()["_id"].get_oid().value);
+            REQUIRE(id_map[1].get_oid().value == second_inserted_doc->view()["_id"].get_oid().value);
         }
 
         SECTION("unacknowledged write concern returns disengaged optional") {
@@ -413,9 +410,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             std::string collname = "insert_many_bypass_document_validation";
             db[collname].drop();
             collection coll = db.create_collection(
-                collname,
-                make_document(
-                    kvp("validator", make_document(kvp("x", make_document(kvp("$eq", 1)))))));
+                collname, make_document(kvp("validator", make_document(kvp("x", make_document(kvp("$eq", 1)))))));
 
             options::insert options;
             options.bypass_document_validation(true);
@@ -440,8 +435,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             REQUIRE(second_inserted_doc);
             REQUIRE(second_inserted_doc->view()["_id"]);
             REQUIRE(second_inserted_doc->view()["_id"].type() == bsoncxx::type::k_oid);
-            REQUIRE(id_map[1].get_oid().value ==
-                    second_inserted_doc->view()["_id"].get_oid().value);
+            REQUIRE(id_map[1].get_oid().value == second_inserted_doc->view()["_id"].get_oid().value);
         }
     }
 
@@ -563,8 +557,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
 
         auto result = coll.find_one(bson.view());
         REQUIRE(result);
-        REQUIRE(result->view()["name"].get_string().value ==
-                bsoncxx::stdx::string_view("Charlotte"));
+        REQUIRE(result->view()["name"].get_string().value == bsoncxx::stdx::string_view("Charlotte"));
 
         // Try adding stages with append_stage(s) instead
         pipeline array_update;
@@ -588,10 +581,8 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
 
         result = coll.find_one(bson.view());
         REQUIRE(result);
-        REQUIRE(result->view()["lastname"].get_string().value ==
-                bsoncxx::stdx::string_view("Krause"));
-        REQUIRE(result->view()["department"].get_string().value ==
-                bsoncxx::stdx::string_view("VIS"));
+        REQUIRE(result->view()["lastname"].get_string().value == bsoncxx::stdx::string_view("Krause"));
+        REQUIRE(result->view()["department"].get_string().value == bsoncxx::stdx::string_view("VIS"));
         REQUIRE(result->view()["count"].get_int32().value == 1);
     }
 
@@ -637,8 +628,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             db[collname].drop();
             collection coll = db.create_collection(
                 collname,
-                make_document(kvp(
-                    "validator", make_document(kvp("changed", make_document(kvp("$eq", false)))))));
+                make_document(kvp("validator", make_document(kvp("changed", make_document(kvp("$eq", false)))))));
 
             options::update options;
             options.bypass_document_validation(true);
@@ -669,8 +659,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
         auto update_opts = options::update{}.collation(case_insensitive_collation.view());
         INFO("unacknowledged write concern fails");
         update_opts.write_concern(noack);
-        REQUIRE_THROWS_AS(coll.update_one(predicate.view(), update_doc.view(), update_opts),
-                          operation_exception);
+        REQUIRE_THROWS_AS(coll.update_one(predicate.view(), update_doc.view(), update_opts), operation_exception);
 
         INFO("default write concern succeeds");
         update_opts.write_concern(default_wc);
@@ -749,8 +738,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             db[collname].drop();
             collection coll = db.create_collection(
                 collname,
-                make_document(kvp(
-                    "validator", make_document(kvp("changed", make_document(kvp("$eq", false)))))));
+                make_document(kvp("validator", make_document(kvp("changed", make_document(kvp("$eq", false)))))));
 
             options::update options;
             options.bypass_document_validation(true);
@@ -782,8 +770,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
         auto update_opts = options::update{}.collation(case_insensitive_collation.view());
         INFO("unacknowledged write concern fails");
         update_opts.write_concern(noack);
-        REQUIRE_THROWS_AS(coll.update_many(predicate.view(), update_doc.view(), update_opts),
-                          operation_exception);
+        REQUIRE_THROWS_AS(coll.update_many(predicate.view(), update_doc.view(), update_opts), operation_exception);
 
         INFO("default write concern succeeds");
         update_opts.write_concern(default_wc);
@@ -918,9 +905,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             std::string collname = "replace_one_bypass_document_validation";
             db[collname].drop();
             collection coll = db.create_collection(
-                collname,
-                make_document(
-                    kvp("validator", make_document(kvp("x", make_document(kvp("$eq", 1)))))));
+                collname, make_document(kvp("validator", make_document(kvp("x", make_document(kvp("$eq", 1)))))));
 
             options::replace options;
             options.bypass_document_validation(true);
@@ -1266,14 +1251,12 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
 
             INFO("unacknowledged write concern fails");
             options.write_concern(noack);
-            REQUIRE_THROWS_AS(
-                coll.find_one_and_replace(collation_criteria.view(), replacement.view(), options),
-                logic_error);
+            REQUIRE_THROWS_AS(coll.find_one_and_replace(collation_criteria.view(), replacement.view(), options),
+                              logic_error);
 
             INFO("default write concern succeeds");
             options.write_concern(default_wc);
-            auto doc =
-                coll.find_one_and_replace(collation_criteria.view(), replacement.view(), options);
+            auto doc = coll.find_one_and_replace(collation_criteria.view(), replacement.view(), options);
             REQUIRE(doc);
             REQUIRE(doc->view()["x"].get_string().value == bsoncxx::stdx::string_view{"foo"});
         }
@@ -1298,9 +1281,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             std::string collname = "find_one_and_replace_bypass_document_validation";
             db[collname].drop();
             collection coll = db.create_collection(
-                collname,
-                make_document(
-                    kvp("validator", make_document(kvp("x", make_document(kvp("$eq", "foo")))))));
+                collname, make_document(kvp("validator", make_document(kvp("x", make_document(kvp("$eq", "foo")))))));
 
             coll.insert_one(b1.view());
 
@@ -1309,8 +1290,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             options.bypass_document_validation(true);
 
             bsoncxx::stdx::optional<bsoncxx::document::value> doc;
-            REQUIRE_NOTHROW(
-                doc = coll.find_one_and_replace(criteria.view(), replacement.view(), options));
+            REQUIRE_NOTHROW(doc = coll.find_one_and_replace(criteria.view(), replacement.view(), options));
             REQUIRE(doc);
             REQUIRE(doc->view()["x"].get_string().value == bsoncxx::stdx::string_view{"bar"});
         }
@@ -1369,9 +1349,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
 
             INFO("unacknowledged write concern fails");
             options.write_concern(noack);
-            REQUIRE_THROWS_AS(
-                coll.find_one_and_update(collation_criteria.view(), update.view(), options),
-                logic_error);
+            REQUIRE_THROWS_AS(coll.find_one_and_update(collation_criteria.view(), update.view(), options), logic_error);
 
             INFO("default write concern succeeds");
             options.write_concern(default_wc);
@@ -1400,9 +1378,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             std::string collname = "find_one_and_update_bypass_document_validation";
             db[collname].drop();
             collection coll = db.create_collection(
-                collname,
-                make_document(
-                    kvp("validator", make_document(kvp("x", make_document(kvp("$eq", "foo")))))));
+                collname, make_document(kvp("validator", make_document(kvp("x", make_document(kvp("$eq", "foo")))))));
 
             coll.insert_one(b1.view());
 
@@ -1411,8 +1387,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             options.bypass_document_validation(true);
 
             bsoncxx::stdx::optional<bsoncxx::document::value> doc;
-            REQUIRE_NOTHROW(doc =
-                                coll.find_one_and_update(criteria.view(), update.view(), options));
+            REQUIRE_NOTHROW(doc = coll.find_one_and_update(criteria.view(), update.view(), options));
             REQUIRE(doc);
             REQUIRE(doc->view()["x"].get_string().value == bsoncxx::stdx::string_view{"bar"});
         }
@@ -1455,8 +1430,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
 
             INFO("unacknowledged write concern fails");
             options.write_concern(noack);
-            REQUIRE_THROWS_AS(coll.find_one_and_delete(collation_criteria.view(), options),
-                              logic_error);
+            REQUIRE_THROWS_AS(coll.find_one_and_delete(collation_criteria.view(), options), logic_error);
 
             INFO("default write concern succeeds");
             options.write_concern(default_wc);
@@ -1471,10 +1445,9 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
 
         auto get_results = [](cursor&& cursor) {
             std::vector<bsoncxx::document::value> results;
-            std::transform(cursor.begin(),
-                           cursor.end(),
-                           std::back_inserter(results),
-                           [](bsoncxx::document::view v) { return bsoncxx::document::value{v}; });
+            std::transform(cursor.begin(), cursor.end(), std::back_inserter(results), [](bsoncxx::document::view v) {
+                return bsoncxx::document::value{v};
+            });
             return results;
         };
 
@@ -1500,8 +1473,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             coll.insert_one(make_document(kvp("x", 3)));
             coll.insert_one(make_document(kvp("x", 5)));
 
-            pipeline.bucket(
-                make_document(kvp("groupBy", "$x"), kvp("boundaries", make_array(0, 2, 6))));
+            pipeline.bucket(make_document(kvp("groupBy", "$x"), kvp("boundaries", make_array(0, 2, 6))));
             auto cursor = coll.aggregate(pipeline);
 
             auto results = get_results(std::move(cursor));
@@ -1590,8 +1562,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             coll.insert_one(make_document(kvp("_id", 1), kvp("x", make_array(1, 1))));
             coll.create_index(make_document(kvp("x", "2d")));
 
-            pipeline.geo_near(
-                make_document(kvp("near", make_array(0, 0)), kvp("distanceField", "d")));
+            pipeline.geo_near(make_document(kvp("near", make_array(0, 0)), kvp("distanceField", "d")));
             auto cursor = coll.aggregate(pipeline);
 
             auto results = get_results(std::move(cursor));
@@ -1684,10 +1655,8 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             coll.insert_one(make_document(kvp("x", 0)));
             coll.insert_one(make_document(kvp("x", 1), kvp("y", 0)));
 
-            pipeline.lookup(make_document(kvp("from", coll.name()),
-                                          kvp("localField", "x"),
-                                          kvp("foreignField", "y"),
-                                          kvp("as", "z")));
+            pipeline.lookup(make_document(
+                kvp("from", coll.name()), kvp("localField", "x"), kvp("foreignField", "y"), kvp("as", "z")));
             // Add a sort to the pipeline, so below tests can make assumptions about result order.
             pipeline.sort(make_document(kvp("x", 1)));
             auto cursor = coll.aggregate(pipeline);
@@ -1768,9 +1737,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             std::string collname = "aggregation_out_bypass_document_validation_out";
             db[collname].drop();
             collection coll_out = db.create_collection(
-                collname,
-                make_document(
-                    kvp("validator", make_document(kvp("x", make_document(kvp("$eq", 2)))))));
+                collname, make_document(kvp("validator", make_document(kvp("x", make_document(kvp("$eq", 2)))))));
 
             options::aggregate options;
             options.bypass_document_validation(true);
@@ -1822,11 +1789,11 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
 
             coll.insert_one(make_document(kvp("x", make_document(kvp("secret", 1))), kvp("y", 1)));
 
-            pipeline.redact(make_document(
-                kvp("$cond",
-                    make_document(kvp("if", make_document(kvp("$eq", make_array("$secret", 1)))),
-                                  kvp("then", "$$PRUNE"),
-                                  kvp("else", "$$DESCEND")))));
+            pipeline.redact(
+                make_document(kvp("$cond",
+                                  make_document(kvp("if", make_document(kvp("$eq", make_array("$secret", 1)))),
+                                                kvp("then", "$$PRUNE"),
+                                                kvp("else", "$$DESCEND")))));
             auto cursor = coll.aggregate(pipeline);
 
             // The server supports redact().
@@ -2038,9 +2005,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             std::string collname = "bulk_write_bypass_document_validation";
             db[collname].drop();
             collection coll = db.create_collection(
-                collname,
-                make_document(
-                    kvp("validator", make_document(kvp("foo", make_document(kvp("$eq", 1)))))));
+                collname, make_document(kvp("validator", make_document(kvp("foo", make_document(kvp("$eq", 1)))))));
 
             bulk_opts.bypass_document_validation(true);
             auto cbulk = coll.create_bulk_write(bulk_opts);
@@ -2191,16 +2156,14 @@ TEST_CASE("create_index tests", "[collection]") {
         options.name(indexName);
 
         auto response = coll.create_index(index.view(), options);
-        REQUIRE(response.view()["name"].get_string().value ==
-                bsoncxx::stdx::string_view(indexName));
+        REQUIRE(response.view()["name"].get_string().value == bsoncxx::stdx::string_view(indexName));
 
         find_index_and_validate(coll, indexName);
 
         bsoncxx::document::value index2 = make_document(kvp("b", 1), kvp("c", -1));
 
         auto response2 = coll.create_index(index2.view(), options::index{});
-        REQUIRE(response2.view()["name"].get_string().value ==
-                bsoncxx::stdx::string_view{"b_1_c_-1"});
+        REQUIRE(response2.view()["name"].get_string().value == bsoncxx::stdx::string_view{"b_1_c_-1"});
 
         find_index_and_validate(coll, "b_1_c_-1");
     }
@@ -2291,8 +2254,7 @@ TEST_CASE("create_index tests", "[collection]") {
         bsoncxx::document::value keys = make_document(kvp("c", 1));
         options::index options{};
 
-        auto expire_after =
-            std::chrono::seconds(static_cast<int64_t>(std::numeric_limits<int32_t>::max()) + 1);
+        auto expire_after = std::chrono::seconds(static_cast<int64_t>(std::numeric_limits<int32_t>::max()) + 1);
         options.expire_after(expire_after);
         REQUIRE_THROWS_AS(coll.create_index(keys.view(), options), logic_error);
 
@@ -2546,8 +2508,7 @@ TEST_CASE("find_and_x operations append write concern correctly", "[collection]"
     /* find_one_and_replace */
     mongocxx::options::find_one_and_replace find_one_and_replace_opts;
     find_one_and_replace_opts.write_concern(wc);
-    doc = collection.find_one_and_replace(
-        make_document(), make_document(kvp("x", 2)), find_one_and_replace_opts);
+    doc = collection.find_one_and_replace(make_document(), make_document(kvp("x", 2)), find_one_and_replace_opts);
     REQUIRE(doc);
 
     /* find_one_and_delete */
@@ -2561,8 +2522,7 @@ TEST_CASE("find_and_x operations append write concern correctly", "[collection]"
     bool called = false;
     auto visitor = libmongoc::find_and_modify_opts_append.create_instance();
     visitor->visit([&](mongoc_find_and_modify_opts_t*, const bson_t* extra) {
-        bsoncxx::document::value expected =
-            make_document(kvp("writeConcern", make_document(kvp("w", 1))));
+        bsoncxx::document::value expected = make_document(kvp("writeConcern", make_document(kvp("w", 1))));
         bsoncxx::document::view extra_view{bson_get_data(extra), extra->len};
 
         called = true;
@@ -2609,8 +2569,7 @@ TEST_CASE("Ensure that the WriteConcernError 'errInfo' object is propagated", "[
         }));
     }));
 
-    fail_point.append(
-        kvp("mode", [](sub_document sub_doc) { sub_doc.append(kvp("times", types::b_int32{1})); }));
+    fail_point.append(kvp("mode", [](sub_document sub_doc) { sub_doc.append(kvp("times", types::b_int32{1})); }));
 
     mongodb_client["admin"].run_command(fail_point.view());
     collection coll = mongodb_client["test"]["errInfo"];
@@ -2666,21 +2625,21 @@ TEST_CASE("expose writeErrors[].errInfo", "[collection]") {
 
     // Listen to the insertion-failed event: we want to get a copy of the server's
     // response so that we can compare it to the thrown exception later:
-    apm_opts.on_command_succeeded([&writeErrors_well_formed, &insert_succeeded, &eguard](
-                                      const mongocxx::events::command_succeeded_event& ev) {
-        BSONCXX_TEST_EXCEPTION_GUARD_BEGIN(eguard);
+    apm_opts.on_command_succeeded(
+        [&writeErrors_well_formed, &insert_succeeded, &eguard](const mongocxx::events::command_succeeded_event& ev) {
+            BSONCXX_TEST_EXCEPTION_GUARD_BEGIN(eguard);
 
-        if (ev.command_name() != "insert") {
-            return;
-        }
+            if (ev.command_name() != "insert") {
+                return;
+            }
 
-        writeErrors_well_formed(ev.reply());
+            writeErrors_well_formed(ev.reply());
 
-        // Make sure that "we" were actually called:
-        insert_succeeded = true;
+            // Make sure that "we" were actually called:
+            insert_succeeded = true;
 
-        BSONCXX_TEST_EXCEPTION_GUARD_END(eguard);
-    });
+            BSONCXX_TEST_EXCEPTION_GUARD_END(eguard);
+        });
 
     client_opts.apm_opts(apm_opts);
 
@@ -2700,8 +2659,7 @@ TEST_CASE("expose writeErrors[].errInfo", "[collection]") {
     // Make a new collection with validation checking:
     collection coll = db.create_collection(
         collname,
-        make_document(kvp("validator",
-                          make_document(kvp("field_x", make_document(kvp("$type", "string")))))));
+        make_document(kvp("validator", make_document(kvp("field_x", make_document(kvp("$type", "string")))))));
 
     SECTION("cause a type violation on insert") {
         bsoncxx::builder::basic::document entry;

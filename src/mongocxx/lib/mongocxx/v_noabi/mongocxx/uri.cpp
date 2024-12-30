@@ -51,8 +51,7 @@ uri::uri(std::unique_ptr<impl>&& implementation) {
 uri::uri(bsoncxx::v_noabi::string::view_or_value uri_string) {
     bson_error_t error;
 
-    _impl = bsoncxx::make_unique<impl>(
-        libmongoc::uri_new_with_error(uri_string.terminated().data(), &error));
+    _impl = bsoncxx::make_unique<impl>(libmongoc::uri_new_with_error(uri_string.terminated().data(), &error));
 
     if (_impl->uri_t == nullptr) {
         throw logic_error{error_code::k_invalid_uri, error.message};
@@ -79,8 +78,7 @@ std::string uri::database() const {
 std::vector<uri::host> uri::hosts() const {
     std::vector<host> result;
 
-    for (auto host_list = libmongoc::uri_get_hosts(_impl->uri_t); host_list;
-         host_list = host_list->next) {
+    for (auto host_list = libmongoc::uri_get_hosts(_impl->uri_t); host_list; host_list = host_list->next) {
         result.push_back(host{host_list->host, host_list->port, host_list->family});
     }
 
@@ -98,8 +96,7 @@ std::string uri::password() const {
 
 mongocxx::v_noabi::read_concern uri::read_concern() const {
     auto rc = libmongoc::uri_get_read_concern(_impl->uri_t);
-    return mongocxx::v_noabi::read_concern(
-        bsoncxx::make_unique<read_concern::impl>(libmongoc::read_concern_copy(rc)));
+    return mongocxx::v_noabi::read_concern(bsoncxx::make_unique<read_concern::impl>(libmongoc::read_concern_copy(rc)));
 }
 
 mongocxx::v_noabi::read_preference uri::read_preference() const {
@@ -134,8 +131,8 @@ mongocxx::v_noabi::write_concern uri::write_concern() const {
         bsoncxx::make_unique<write_concern::impl>(libmongoc::write_concern_copy(wc)));
 }
 
-static bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::stdx::string_view> _string_option(
-    mongoc_uri_t* uri, std::string opt_name) {
+static bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::stdx::string_view> _string_option(mongoc_uri_t* uri,
+                                                                                            std::string opt_name) {
     const char* value;
 
     value = libmongoc::uri_get_option_as_utf8(uri, opt_name.c_str(), nullptr);
@@ -146,25 +143,21 @@ static bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::stdx::string_view> _st
     return bsoncxx::v_noabi::stdx::string_view{value};
 }
 
-static bsoncxx::v_noabi::stdx::optional<std::int32_t> _int32_option(mongoc_uri_t* uri,
-                                                                    std::string opt_name) {
+static bsoncxx::v_noabi::stdx::optional<std::int32_t> _int32_option(mongoc_uri_t* uri, std::string opt_name) {
     bson_iter_t iter;
     const bson_t* options_bson = libmongoc::uri_get_options(uri);
 
-    if (!bson_iter_init_find_case(&iter, options_bson, opt_name.c_str()) ||
-        !BSON_ITER_HOLDS_INT32(&iter)) {
+    if (!bson_iter_init_find_case(&iter, options_bson, opt_name.c_str()) || !BSON_ITER_HOLDS_INT32(&iter)) {
         return {};
     }
     return bson_iter_int32(&iter);
 }
 
-static bsoncxx::v_noabi::stdx::optional<bool> _bool_option(mongoc_uri_t* uri,
-                                                           std::string opt_name) {
+static bsoncxx::v_noabi::stdx::optional<bool> _bool_option(mongoc_uri_t* uri, std::string opt_name) {
     bson_iter_t iter;
     const bson_t* options_bson = libmongoc::uri_get_options(uri);
 
-    if (!bson_iter_init_find_case(&iter, options_bson, opt_name.c_str()) ||
-        !BSON_ITER_HOLDS_BOOL(&iter)) {
+    if (!bson_iter_init_find_case(&iter, options_bson, opt_name.c_str()) || !BSON_ITER_HOLDS_BOOL(&iter)) {
         return {};
     }
     return bson_iter_bool(&iter);
@@ -181,15 +174,14 @@ bsoncxx::v_noabi::stdx::optional<std::int32_t> uri::srv_max_hosts() const {
     return _int32_option(_impl->uri_t, MONGOC_URI_SRVMAXHOSTS);
 }
 
-static bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view>
-_credential_document_option(mongoc_uri_t* uri, std::string opt_name) {
+static bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view> _credential_document_option(
+    mongoc_uri_t* uri, std::string opt_name) {
     bson_iter_t iter;
     const uint8_t* data;
     uint32_t len;
     const bson_t* options_bson = libmongoc::uri_get_credentials(uri);
 
-    if (!bson_iter_init_find_case(&iter, options_bson, opt_name.c_str()) ||
-        !BSON_ITER_HOLDS_DOCUMENT(&iter)) {
+    if (!bson_iter_init_find_case(&iter, options_bson, opt_name.c_str()) || !BSON_ITER_HOLDS_DOCUMENT(&iter)) {
         return {};
     }
     bson_iter_document(&iter, &len, &data);
@@ -201,8 +193,7 @@ bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::stdx::string_view> uri::appna
 }
 
 // Special case. authMechanismProperties are stored as part of libmongoc's credentials.
-bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view> uri::auth_mechanism_properties()
-    const {
+bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view> uri::auth_mechanism_properties() const {
     return _credential_document_option(_impl->uri_t, "authMechanismProperties");
 }
 
@@ -219,8 +210,7 @@ std::vector<bsoncxx::v_noabi::stdx::string_view> uri::compressors() const {
     }
     bson_iter_init(&iter, compressors);
     while (bson_iter_next(&iter)) {
-        result.push_back(
-            bsoncxx::v_noabi::stdx::string_view{bson_iter_key(&iter), bson_iter_key_len(&iter)});
+        result.push_back(bsoncxx::v_noabi::stdx::string_view{bson_iter_key(&iter), bson_iter_key_len(&iter)});
     }
     return result;
 }
@@ -277,13 +267,11 @@ bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::stdx::string_view> uri::tls_c
     return _string_option(_impl->uri_t, "tlsCAFile");
 }
 
-bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::stdx::string_view>
-uri::tls_certificate_key_file() const {
+bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::stdx::string_view> uri::tls_certificate_key_file() const {
     return _string_option(_impl->uri_t, "tlsCertificateKeyFile");
 }
 
-bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::stdx::string_view>
-uri::tls_certificate_key_file_password() const {
+bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::stdx::string_view> uri::tls_certificate_key_file_password() const {
     return _string_option(_impl->uri_t, "tlsCertificateKeyFilePassword");
 }
 

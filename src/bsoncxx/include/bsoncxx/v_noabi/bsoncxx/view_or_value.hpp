@@ -37,14 +37,12 @@ class view_or_value {
     ///
     /// Class View must be constructible from an instance of class Value.
     ///
-    static_assert(std::is_constructible<View, Value>::value,
-                  "View type must be constructible from a Value");
+    static_assert(std::is_constructible<View, Value>::value, "View type must be constructible from a Value");
 
     ///
     /// Class View must be default constructible.
     ///
-    static_assert(std::is_default_constructible<View>::value,
-                  "View type must be default constructible");
+    static_assert(std::is_default_constructible<View>::value, "View type must be default constructible");
 
     ///
     /// Destroys a view_or_value.
@@ -77,8 +75,7 @@ class view_or_value {
     ///
     /// Construct a view_or_value from a copied view_or_value.
     ///
-    view_or_value(const view_or_value& other)
-        : _value(other._value), _view(_value ? *_value : other._view) {}
+    view_or_value(const view_or_value& other) : _value(other._value), _view(_value ? *_value : other._view) {}
 
     ///
     /// Assign to this view_or_value from a copied view_or_value.
@@ -243,13 +240,11 @@ namespace bsoncxx {
 
 /// @ref bsoncxx::v_noabi::operator==(const v_noabi::view_or_value<View, Value>& lhs, const v_noabi::view_or_value<View, Value>& rhs)
 template <typename View, typename Value>
-bool operator==(const v_noabi::view_or_value<View, Value>& lhs,
-                const v_noabi::view_or_value<View, Value>& rhs);
+bool operator==(const v_noabi::view_or_value<View, Value>& lhs, const v_noabi::view_or_value<View, Value>& rhs);
 
 /// @ref bsoncxx::v_noabi::operator!=(const v_noabi::view_or_value<View, Value>& lhs, const v_noabi::view_or_value<View, Value>& rhs)
 template <typename View, typename Value>
-bool operator!=(const v_noabi::view_or_value<View, Value>& lhs,
-                const v_noabi::view_or_value<View, Value>& rhs);
+bool operator!=(const v_noabi::view_or_value<View, Value>& lhs, const v_noabi::view_or_value<View, Value>& rhs);
 
 /// @ref bsoncxx::v_noabi::operator==(const v_noabi::view_or_value<View, Value>& lhs, View rhs)
 template <typename View, typename Value>

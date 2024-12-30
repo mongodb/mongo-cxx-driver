@@ -90,9 +90,8 @@ std::string to_json(array::view view, ExtendedJsonMode mode) {
 
 document::value from_json(stdx::string_view json) {
     bson_error_t error;
-    bson_t* result = bson_new_from_json(reinterpret_cast<const uint8_t*>(json.data()),
-                                        static_cast<std::int32_t>(json.size()),
-                                        &error);
+    bson_t* result = bson_new_from_json(
+        reinterpret_cast<const uint8_t*>(json.data()), static_cast<std::int32_t>(json.size()), &error);
 
     if (!result)
         throw exception(error_code::k_json_parse_failure, error.message);

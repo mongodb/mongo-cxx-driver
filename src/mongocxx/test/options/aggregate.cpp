@@ -41,8 +41,7 @@ TEST_CASE("aggregate", "[aggregate][option]") {
     const auto let = make_document(kvp("x", "foo"));
 
     // Avoid error: use of overloaded operator '==' is ambiguous.
-    const auto comment_value =
-        bsoncxx::types::bson_value::view_or_value(comment["$comment"].get_value());
+    const auto comment_value = bsoncxx::types::bson_value::view_or_value(comment["$comment"].get_value());
 
     CHECK_OPTIONAL_ARGUMENT(agg, allow_disk_use, true);
     CHECK_OPTIONAL_ARGUMENT(agg, batch_size, 500);

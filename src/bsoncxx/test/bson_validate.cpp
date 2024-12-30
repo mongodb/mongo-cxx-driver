@@ -88,9 +88,8 @@ TEST_CASE("configuring optional validations", "[bsoncxx::validate]") {
         }
 
         SECTION("and in nested documents") {
-            doc.append(kvp("foo",
-                           make_array(make_document(
-                               kvp("garply", make_array(make_document(kvp("$bar", "baz"))))))));
+            doc.append(
+                kvp("foo", make_array(make_document(kvp("garply", make_array(make_document(kvp("$bar", "baz"))))))));
 
             auto view = doc.view();
             REQUIRE(is_disengaged(validate(view.data(), view.length(), vtor)));
@@ -107,9 +106,8 @@ TEST_CASE("configuring optional validations", "[bsoncxx::validate]") {
         }
 
         SECTION("and in nested documents") {
-            doc.append(kvp("foo",
-                           make_array(make_document(
-                               kvp("garply", make_array(make_document(kvp("bad.dot", "baz"))))))));
+            doc.append(
+                kvp("foo", make_array(make_document(kvp("garply", make_array(make_document(kvp("bad.dot", "baz"))))))));
 
             auto view = doc.view();
             REQUIRE(is_disengaged(validate(view.data(), view.length(), vtor)));

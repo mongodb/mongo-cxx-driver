@@ -44,12 +44,10 @@ class json_multi_export : public microbench {
     json_multi_export() = delete;
 
     // The task size comes from the Driver Perfomance Benchmarking Reference Doc.
-    json_multi_export(std::string dir,
-                      std::uint32_t thread_num = std::thread::hardware_concurrency())
+    json_multi_export(std::string dir, std::uint32_t thread_num = std::thread::hardware_concurrency())
         : microbench{"TestJsonMultiExport",
                      565,
-                     std::set<benchmark_type>{benchmark_type::parallel_bench,
-                                              benchmark_type::read_bench}},
+                     std::set<benchmark_type>{benchmark_type::parallel_bench, benchmark_type::read_bench}},
           _directory{std::move(dir)},
           _pool{mongocxx::uri{}},
           _thread_num{thread_num} {}
@@ -86,9 +84,8 @@ void json_multi_export::setup() {
         ins_opts.ordered(false);
 
         for (std::uint32_t j = 0; j < docs.size(); j++) {
-            bsoncxx::document::value insert =
-                make_document(kvp("file", bsoncxx::types::b_int32{static_cast<std::int32_t>(j)}),
-                              concatenate(docs[i].view()));
+            bsoncxx::document::value insert = make_document(
+                kvp("file", bsoncxx::types::b_int32{static_cast<std::int32_t>(j)}), concatenate(docs[i].view()));
             db["corpus"].insert_one(insert.view(), ins_opts);
         }
     }
@@ -108,8 +105,7 @@ void json_multi_export::teardown() {
 }
 
 void json_multi_export::task() {
-    std::div_t result =
-        std::div(static_cast<std::int32_t>(TOTAL_FILES), static_cast<std::int32_t>(_thread_num));
+    std::div_t result = std::div(static_cast<std::int32_t>(TOTAL_FILES), static_cast<std::int32_t>(_thread_num));
     std::uint32_t num_each = static_cast<std::uint32_t>(result.quot);
     if (result.rem != 0) {
         num_each++;
@@ -117,8 +113,8 @@ void json_multi_export::task() {
     std::vector<std::thread> threads;
 
     for (std::uint32_t i = 0; i < TOTAL_FILES; i += num_each) {
-        threads.push_back(std::thread{
-            [i, num_each, this] { concurrency_task(i, std::min(TOTAL_FILES - i, num_each)); }});
+        threads.push_back(
+            std::thread{[i, num_each, this] { concurrency_task(i, std::min(TOTAL_FILES - i, num_each)); }});
     }
     for (std::uint32_t i = 0; i < threads.size(); i++) {
         threads[i].join();

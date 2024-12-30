@@ -100,19 +100,16 @@ class pool {
 
         // Allows the pool_entry["db_name"] syntax to be used to access a database within the
         // entry's underlying client.
-        mongocxx::v_noabi::database operator[](
-            bsoncxx::v_noabi::string::view_or_value name) const& {
+        mongocxx::v_noabi::database operator[](bsoncxx::v_noabi::string::view_or_value name) const& {
             return (**this)[name];
         }
 
-        mongocxx::v_noabi::database operator[](bsoncxx::v_noabi::string::view_or_value name) && =
-            delete;
+        mongocxx::v_noabi::database operator[](bsoncxx::v_noabi::string::view_or_value name) && = delete;
 
        private:
         friend ::mongocxx::v_noabi::pool;
 
-        using unique_client =
-            std::unique_ptr<client, std::function<void MONGOCXX_ABI_CDECL(client*)>>;
+        using unique_client = std::unique_ptr<client, std::function<void MONGOCXX_ABI_CDECL(client*)>>;
 
         explicit entry(unique_client);
 

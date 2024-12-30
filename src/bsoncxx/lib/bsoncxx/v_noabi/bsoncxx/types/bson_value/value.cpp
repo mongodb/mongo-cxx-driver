@@ -118,8 +118,7 @@ value::value(b_regex v) : value(v.regex, v.options) {}
 value::value(stdx::string_view regex, stdx::string_view options) : _impl{make_unique<impl>()} {
     _impl->_value.value_type = BSON_TYPE_REGEX;
     _impl->_value.value.v_regex.regex = make_copy_for_libbson(regex);
-    _impl->_value.value.v_regex.options =
-        options.empty() ? nullptr : make_copy_for_libbson(options);
+    _impl->_value.value.v_regex.options = options.empty() ? nullptr : make_copy_for_libbson(options);
 }
 
 value::value(b_code v) : value(v.type_id, v) {}
@@ -214,23 +213,18 @@ value::value(stdx::string_view collection, oid value) : _impl{make_unique<impl>(
 }
 
 value::value(b_codewscope v) : value(v.code, v.scope) {}
-value::value(stdx::string_view code, bsoncxx::v_noabi::document::view_or_value scope)
-    : _impl{make_unique<impl>()} {
+value::value(stdx::string_view code, bsoncxx::v_noabi::document::view_or_value scope) : _impl{make_unique<impl>()} {
     _impl->_value.value_type = BSON_TYPE_CODEWSCOPE;
     _impl->_value.value.v_codewscope.code = make_copy_for_libbson(code);
     _impl->_value.value.v_codewscope.code_len = static_cast<uint32_t>(code.length());
     _impl->_value.value.v_codewscope.scope_len = static_cast<uint32_t>(scope.view().length());
-    _impl->_value.value.v_codewscope.scope_data =
-        static_cast<uint8_t*>(bson_malloc(scope.view().length()));
-    std::memcpy(
-        _impl->_value.value.v_codewscope.scope_data, scope.view().data(), scope.view().length());
+    _impl->_value.value.v_codewscope.scope_data = static_cast<uint8_t*>(bson_malloc(scope.view().length()));
+    std::memcpy(_impl->_value.value.v_codewscope.scope_data, scope.view().data(), scope.view().length());
 }
 
 value::value(b_binary v) : value(v.bytes, v.size, v.sub_type) {}
-value::value(std::vector<unsigned char> v, binary_sub_type sub_type)
-    : value(v.data(), v.size(), sub_type) {}
-value::value(const uint8_t* data, size_t size, const binary_sub_type sub_type)
-    : _impl{make_unique<impl>()} {
+value::value(std::vector<unsigned char> v, binary_sub_type sub_type) : value(v.data(), v.size(), sub_type) {}
+value::value(const uint8_t* data, size_t size, const binary_sub_type sub_type) : _impl{make_unique<impl>()} {
     _impl->_value.value_type = BSON_TYPE_BINARY;
     _impl->_value.value.v_binary.subtype = static_cast<bson_subtype_t>(sub_type);
     _impl->_value.value.v_binary.data_len = static_cast<uint32_t>(size);
@@ -261,10 +255,7 @@ value::value(value&&) noexcept = default;
 
 value& value::operator=(value&&) noexcept = default;
 
-value::value(const std::uint8_t* raw,
-             std::uint32_t length,
-             std::uint32_t offset,
-             std::uint32_t keylen) {
+value::value(const std::uint8_t* raw, std::uint32_t length, std::uint32_t offset, std::uint32_t keylen) {
     bson_iter_t iter;
 
     bson_iter_init_from_data_at_offset(&iter, raw, length, offset, keylen);
@@ -273,8 +264,7 @@ value::value(const std::uint8_t* raw,
     _impl = make_unique<impl>(value);
 }
 
-value::value(void* internal_value)
-    : _impl(make_unique<impl>(static_cast<const bson_value_t*>(internal_value))) {}
+value::value(void* internal_value) : _impl(make_unique<impl>(static_cast<const bson_value_t*>(internal_value))) {}
 
 value::value(const value& rhs) : value(&rhs._impl->_value) {}
 

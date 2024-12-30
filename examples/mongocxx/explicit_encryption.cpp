@@ -54,14 +54,11 @@ int EXAMPLES_CDECL main() {
     // This must be the same master key that was used to create
     // the encryption key; here, we use a random key as a placeholder.
     std::uint8_t key_storage[kKeyLength];
-    std::generate_n(key_storage, kKeyLength, []() {
-        return static_cast<std::uint8_t>(std::rand() % UINT8_MAX);
-    });
-    bsoncxx::types::b_binary local_master_key{
-        bsoncxx::binary_sub_type::k_binary, kKeyLength, key_storage};
+    std::generate_n(key_storage, kKeyLength, []() { return static_cast<std::uint8_t>(std::rand() % UINT8_MAX); });
+    bsoncxx::types::b_binary local_master_key{bsoncxx::binary_sub_type::k_binary, kKeyLength, key_storage};
 
-    auto kms_providers = document{} << "local" << open_document << "key" << local_master_key
-                                    << close_document << finalize;
+    auto kms_providers = document{} << "local" << open_document << "key" << local_master_key << close_document
+                                    << finalize;
 
     // Create an unencrypted mongocxx::client.
     class client client{uri{}};
@@ -79,8 +76,7 @@ int EXAMPLES_CDECL main() {
 
     mongocxx::options::index index_options{};
     index_options.unique(true);
-    auto expression = document{} << "keyAltNames" << open_document << "$exists" << true
-                                 << close_document << finalize;
+    auto expression = document{} << "keyAltNames" << open_document << "$exists" << true << close_document << finalize;
     index_options.partial_filter_expression(expression.view());
     key_vault.create_index(make_document(kvp("keyAltNames", 1)), index_options);
 
@@ -112,6 +108,5 @@ int EXAMPLES_CDECL main() {
     // Explicitly decrypt the field:
     auto encrypted_message_retrieved = res->view()["encryptedField"].get_value();
     auto decrypted_message = client_encryption.decrypt(encrypted_message_retrieved);
-    std::cout << "Explicitly decrypted message: " << decrypted_message.view().get_string().value
-              << std::endl;
+    std::cout << "Explicitly decrypted message: " << decrypted_message.view().get_string().value << std::endl;
 }

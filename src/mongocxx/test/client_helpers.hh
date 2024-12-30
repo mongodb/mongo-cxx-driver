@@ -127,10 +127,8 @@ std::string get_hosts(const client& client = {uri{}, add_test_server_api()});
 ///
 bsoncxx::stdx::optional<bsoncxx::document::value> parse_test_file(std::string path);
 
-using item_t = std::pair<bsoncxx::stdx::optional<bsoncxx::stdx::string_view>,
-                         bsoncxx::types::bson_value::view>;
-using xformer_t =
-    std::function<bsoncxx::stdx::optional<item_t>(item_t, bsoncxx::builder::basic::array*)>;
+using item_t = std::pair<bsoncxx::stdx::optional<bsoncxx::stdx::string_view>, bsoncxx::types::bson_value::view>;
+using xformer_t = std::function<bsoncxx::stdx::optional<item_t>(item_t, bsoncxx::builder::basic::array*)>;
 
 //
 // Transforms a document and returns a copy of it.
@@ -169,18 +167,15 @@ double as_double(bsoncxx::types::bson_value::view value);
 bool is_numeric(bsoncxx::types::bson_value::view value);
 
 enum class match_action { k_skip, k_proceed, k_not_equal };
-using match_visitor =
-    std::function<match_action(bsoncxx::stdx::string_view key,
-                               bsoncxx::stdx::optional<bsoncxx::types::bson_value::view> main,
-                               bsoncxx::types::bson_value::view pattern)>;
+using match_visitor = std::function<match_action(bsoncxx::stdx::string_view key,
+                                                 bsoncxx::stdx::optional<bsoncxx::types::bson_value::view> main,
+                                                 bsoncxx::types::bson_value::view pattern)>;
 
 bool matches(bsoncxx::types::bson_value::view main,
              bsoncxx::types::bson_value::view pattern,
              match_visitor visitor_fn = {});
 
-bool matches(bsoncxx::document::view doc,
-             bsoncxx::document::view pattern,
-             match_visitor visitor_fn = {});
+bool matches(bsoncxx::document::view doc, bsoncxx::document::view pattern, match_visitor visitor_fn = {});
 
 #define REQUIRE_BSON_MATCHES(_main, _pattern)                                                      \
     do {                                                                                           \
@@ -245,8 +240,7 @@ cseeos_result client_side_encryption_enabled_or_skip_impl();
     } else                                                                            \
         ((void)0)
 #else
-#define CLIENT_SIDE_ENCRYPTION_ENABLED_OR_SKIP() \
-    SKIP("linked libmongoc does not support client side encryption")
+#define CLIENT_SIDE_ENCRYPTION_ENABLED_OR_SKIP() SKIP("linked libmongoc does not support client side encryption")
 #endif  // defined(MONGOC_ENABLE_CLIENT_SIDE_ENCRYPTION)
 
 std::string getenv_or_fail(const std::string env_name);

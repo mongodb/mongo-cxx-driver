@@ -37,8 +37,7 @@ void example(mongocxx::database db) {
 
     mongocxx::pipeline pipeline;
 
-    pipeline.match(
-        bsoncxx::from_json(R"({"operationType": "insert", "fullDocument.watched": true})"));
+    pipeline.match(bsoncxx::from_json(R"({"operationType": "insert", "fullDocument.watched": true})"));
     // ... other pipeline options.
 
     mongocxx::change_stream stream = coll.watch(pipeline);
@@ -50,8 +49,7 @@ void example(mongocxx::database db) {
     EXPECT(coll.insert_one(bsoncxx::from_json(R"({"x": 2, "watched": false})")));
 
     // Not observed (operationType mismatch).
-    EXPECT(coll.update_one(bsoncxx::from_json(R"({"x": 2})"),
-                           bsoncxx::from_json(R"({"$set": {"watched": true}})")));
+    EXPECT(coll.update_one(bsoncxx::from_json(R"({"x": 2})"), bsoncxx::from_json(R"({"$set": {"watched": true}})")));
 
     // Observed.
     EXPECT(coll.insert_one(bsoncxx::from_json(R"({"x": 3, "watched": true})")));

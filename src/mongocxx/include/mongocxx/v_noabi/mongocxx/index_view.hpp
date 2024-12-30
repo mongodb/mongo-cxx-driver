@@ -136,8 +136,7 @@ class index_view {
     /// - https://www.mongodb.com/docs/manual/reference/method/cursor.maxTimeMS/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<std::string>)
-    create_one(const index_model& index,
-               const options::index_view& options = options::index_view{});
+    create_one(const index_model& index, const options::index_view& options = options::index_view{});
 
     ///
     /// Creates an index. A convenience method that calls create_many.
@@ -185,8 +184,7 @@ class index_view {
     /// - https://www.mongodb.com/docs/manual/reference/method/cursor.maxTimeMS/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::document::value)
-    create_many(const std::vector<index_model>& indexes,
-                const options::index_view& options = options::index_view{});
+    create_many(const std::vector<index_model>& indexes, const options::index_view& options = options::index_view{});
 
     ///
     /// Adds a container of indexes to the collection.
@@ -232,8 +230,7 @@ class index_view {
     /// - https://www.mongodb.com/docs/manual/reference/method/cursor.maxTimeMS/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(void)
-    drop_one(bsoncxx::v_noabi::stdx::string_view name,
-             const options::index_view& options = options::index_view{});
+    drop_one(bsoncxx::v_noabi::stdx::string_view name, const options::index_view& options = options::index_view{});
 
     ///
     /// Drops a single index by name.
@@ -402,8 +399,7 @@ class index_view {
     /// - https://www.mongodb.com/docs/manual/reference/method/cursor.maxTimeMS/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(void)
-    drop_all(const client_session& session,
-             const options::index_view& options = options::index_view{});
+    drop_all(const client_session& session, const options::index_view& options = options::index_view{});
 
    private:
     friend ::mongocxx::v_noabi::collection;

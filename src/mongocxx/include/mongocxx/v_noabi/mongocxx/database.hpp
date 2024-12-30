@@ -248,8 +248,7 @@ class database {
     /// - https://www.mongodb.com/docs/manual/reference/command/dropDatabase/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(void)
-    drop(const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern>& write_concern =
-             {});
+    drop(const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern>& write_concern = {});
 
     ///
     /// Drops the database and all its collections.
@@ -268,8 +267,7 @@ class database {
     ///
     MONGOCXX_ABI_EXPORT_CDECL(void)
     drop(const client_session& session,
-         const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern>& write_concern =
-             {});
+         const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern>& write_concern = {});
 
     ///
     /// Checks whether this database contains a collection having the given name.
@@ -312,8 +310,7 @@ class database {
     /// - https://www.mongodb.com/docs/manual/reference/command/listCollections/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(cursor)
-    list_collections(const client_session& session,
-                     bsoncxx::v_noabi::document::view_or_value filter = {});
+    list_collections(const client_session& session, bsoncxx::v_noabi::document::view_or_value filter = {});
 
     ///
     /// Enumerates the collection names in this database.
@@ -349,8 +346,7 @@ class database {
     /// - https://www.mongodb.com/docs/manual/reference/command/listCollections/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(std::vector<std::string>)
-    list_collection_names(const client_session& session,
-                          bsoncxx::v_noabi::document::view_or_value filter = {});
+    list_collection_names(const client_session& session, bsoncxx::v_noabi::document::view_or_value filter = {});
 
     ///
     /// Get the name of this database.
@@ -530,9 +526,7 @@ class database {
     /// - https://www.mongodb.com/docs/manual/changeStreams/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(change_stream)
-    watch(const client_session& session,
-          const pipeline& pipe,
-          const options::change_stream& options = {});
+    watch(const client_session& session, const pipeline& pipe, const options::change_stream& options = {});
 
    private:
     friend ::mongocxx::v_noabi::client_encryption;
@@ -541,12 +535,10 @@ class database {
 
     database(const mongocxx::v_noabi::client& client, bsoncxx::v_noabi::string::view_or_value name);
 
-    cursor _aggregate(const client_session* session,
-                      const pipeline& pipeline,
-                      const options::aggregate& options);
+    cursor _aggregate(const client_session* session, const pipeline& pipeline, const options::aggregate& options);
 
-    bsoncxx::v_noabi::document::value _run_command(
-        const client_session* session, bsoncxx::v_noabi::document::view_or_value command);
+    bsoncxx::v_noabi::document::value _run_command(const client_session* session,
+                                                   bsoncxx::v_noabi::document::view_or_value command);
 
     mongocxx::v_noabi::collection _create_collection(
         const client_session* session,
@@ -554,19 +546,15 @@ class database {
         bsoncxx::v_noabi::document::view_or_value collection_options,
         const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern>& write_concern);
 
-    cursor _list_collections(const client_session* session,
-                             bsoncxx::v_noabi::document::view_or_value filter);
+    cursor _list_collections(const client_session* session, bsoncxx::v_noabi::document::view_or_value filter);
 
-    std::vector<std::string> _list_collection_names(
-        const client_session* session, bsoncxx::v_noabi::document::view_or_value filter);
+    std::vector<std::string> _list_collection_names(const client_session* session,
+                                                    bsoncxx::v_noabi::document::view_or_value filter);
 
-    void _drop(
-        const client_session* session,
-        const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern>& write_concern);
+    void _drop(const client_session* session,
+               const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern>& write_concern);
 
-    change_stream _watch(const client_session* session,
-                         const pipeline& pipe,
-                         const options::change_stream& options);
+    change_stream _watch(const client_session* session, const pipeline& pipe, const options::change_stream& options);
 
     class impl;
 

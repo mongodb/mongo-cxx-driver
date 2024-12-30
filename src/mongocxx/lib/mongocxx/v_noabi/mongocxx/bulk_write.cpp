@@ -50,8 +50,7 @@ bulk_write& bulk_write::append(const model::write& operation) {
         case write_type::k_insert_one: {
             scoped_bson_t doc(operation.get_insert_one().document());
             bson_error_t error;
-            auto result = libmongoc::bulk_operation_insert_with_opts(
-                _impl->operation_t, doc.bson(), nullptr, &error);
+            auto result = libmongoc::bulk_operation_insert_with_opts(_impl->operation_t, doc.bson(), nullptr, &error);
             if (!result) {
                 throw_exception<logic_error>(error);
             }
@@ -201,9 +200,7 @@ bsoncxx::v_noabi::stdx::optional<result::bulk_write> bulk_write::execute() const
     return bsoncxx::v_noabi::stdx::optional<result::bulk_write>(std::move(result));
 }
 
-bulk_write::bulk_write(const collection& coll,
-                       const options::bulk_write& options,
-                       const client_session* session)
+bulk_write::bulk_write(const collection& coll, const options::bulk_write& options, const client_session* session)
     : _created_from_collection{true} {
     bsoncxx::v_noabi::builder::basic::document options_builder;
     if (!options.ordered()) {
@@ -220,14 +217,12 @@ bulk_write::bulk_write(const collection& coll,
         options_builder.append(kvp("comment", *comment));
     }
     if (session) {
-        options_builder.append(
-            bsoncxx::v_noabi::builder::concatenate_doc{session->_get_impl().to_document()});
+        options_builder.append(bsoncxx::v_noabi::builder::concatenate_doc{session->_get_impl().to_document()});
     }
 
     scoped_bson_t bson_options(options_builder.extract());
     _impl = bsoncxx::make_unique<bulk_write::impl>(
-        libmongoc::collection_create_bulk_operation_with_opts(coll._get_impl().collection_t,
-                                                              bson_options.bson()));
+        libmongoc::collection_create_bulk_operation_with_opts(coll._get_impl().collection_t, bson_options.bson()));
 
     if (auto validation = options.bypass_document_validation()) {
         libmongoc::bulk_operation_set_bypass_document_validation(_impl->operation_t, *validation);

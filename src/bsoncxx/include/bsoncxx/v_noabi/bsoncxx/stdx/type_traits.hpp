@@ -159,8 +159,7 @@ struct nonesuch {
 // @tparam Oper A template that evaluates to a type
 // @tparam Args Some number of arguments to apply to Oper
 template <template <class...> class Oper, typename... Args>
-struct is_detected
-    : decltype(impl_detection::is_detected_f<Oper>(static_cast<mp_list<Args...>*>(nullptr))) {};
+struct is_detected : decltype(impl_detection::is_detected_f<Oper>(static_cast<mp_list<Args...>*>(nullptr))) {};
 
 // If Oper<Args...> evaluates to a type, yields that type. Otherwise, yields the Dflt type.
 //
@@ -172,8 +171,7 @@ using detected_or =
 #if defined(_MSC_VER) && _MSC_VER < 1910
     typename impl_detection::vc140_detection<Dflt, void, Oper, Args...>::type
 #else
-    typename impl_detection::detection<
-        is_detected<Oper, Args...>::value>::template f<Dflt, Oper, Args...>
+    typename impl_detection::detection<is_detected<Oper, Args...>::value>::template f<Dflt, Oper, Args...>
 #endif
     ;
 
@@ -303,8 +301,7 @@ struct failed_requirement<conjunction<SubRequirements...>> {
     failed_requirement(int) = delete;
 
     template <typename T>
-    static auto explain(int)
-        -> common_type_t<decltype(requirement<SubRequirements>::test::template explain<T>(0))...>;
+    static auto explain(int) -> common_type_t<decltype(requirement<SubRequirements>::test::template explain<T>(0))...>;
 };
 
 template <typename Constraint, typename>
@@ -334,8 +331,7 @@ template <typename Type, typename... Traits>
 using requires_t = enable_if_t<conjunction<Traits...>::value, Type>;
 #else
 // Generates better error messages in case of substitution failure than a plain enable_if_t:
-using requires_t =
-    decltype(impl_requires::requirement<conjunction<Traits...>>::test::template explain<Type>(0));
+using requires_t = decltype(impl_requires::requirement<conjunction<Traits...>>::test::template explain<Type>(0));
 #endif
 
 // If any of `Ts::value` is 'true', this type is undefined, otherwise yields the type `Type`.
@@ -367,8 +363,7 @@ struct invoker<false, true> {
 template <>
 struct invoker<true, false> {
     template <typename F, typename Self>
-    constexpr static auto apply(F&& fun, Self&& self)
-        BSONCXX_RETURNS(static_cast<Self&&>(self).*fun);
+    constexpr static auto apply(F&& fun, Self&& self) BSONCXX_RETURNS(static_cast<Self&&>(self).*fun);
 };
 
 }  // namespace impl_invoke
@@ -381,11 +376,10 @@ static constexpr struct invoke_fn {
     // @cond DOXYGEN_DISABLE "Found ';' while parsing initializer list!"
     template <typename F, typename... Args, typename Fd = remove_cvref_t<F>>
     constexpr auto operator()(F&& fn, Args&&... args) const
-        BSONCXX_RETURNS(impl_invoke::invoker<
-                        std::is_member_object_pointer<Fd>::value,
-                        std::is_member_function_pointer<Fd>::value>::apply(static_cast<F&&>(fn),
-                                                                           static_cast<Args&&>(
-                                                                               args)...));
+        BSONCXX_RETURNS(impl_invoke::invoker<std::is_member_object_pointer<Fd>::value,
+                                             std::is_member_function_pointer<Fd>::value>::apply(static_cast<F&&>(fn),
+                                                                                                static_cast<Args&&>(
+                                                                                                    args)...));
     // @endcond
 } invoke;
 
@@ -449,9 +443,8 @@ template <typename T, typename U>
 auto is_nothrow_swappable_f(rank<0>) -> std::false_type;
 
 template <typename T, typename U>
-auto is_nothrow_swappable_f(rank<1>)
-    -> bool_constant<noexcept(swap(std::declval<T>(), std::declval<U>())) &&
-                     noexcept(swap(std::declval<U>(), std::declval<T>()))>;
+auto is_nothrow_swappable_f(rank<1>) -> bool_constant<noexcept(swap(std::declval<T>(), std::declval<U>())) &&
+                                                      noexcept(swap(std::declval<U>(), std::declval<T>()))>;
 
 }  // namespace swap_detection
 
@@ -459,8 +452,7 @@ template <typename T, typename U>
 struct is_swappable_with : decltype(swap_detection::is_swappable_f<T, U>(rank<1>{})) {};
 
 template <typename T, typename U>
-struct is_nothrow_swappable_with
-    : decltype(swap_detection::is_nothrow_swappable_f<T, U>(rank<1>{})) {};
+struct is_nothrow_swappable_with : decltype(swap_detection::is_nothrow_swappable_f<T, U>(rank<1>{})) {};
 
 template <typename T>
 struct is_swappable : is_swappable_with<T&, T&> {};

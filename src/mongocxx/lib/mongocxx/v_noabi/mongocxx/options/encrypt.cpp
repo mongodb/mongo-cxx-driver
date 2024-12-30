@@ -34,8 +34,7 @@ encrypt& encrypt::key_id(bsoncxx::v_noabi::types::bson_value::view_or_value key_
     return *this;
 }
 
-const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value>&
-encrypt::key_id() const {
+const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value>& encrypt::key_id() const {
     return _key_id;
 }
 
@@ -71,8 +70,7 @@ encrypt& encrypt::query_type(encrypt::encryption_query_type query_type) {
     return *this;
 }
 
-const bsoncxx::v_noabi::stdx::optional<encrypt::encryption_query_type>& encrypt::query_type()
-    const {
+const bsoncxx::v_noabi::stdx::optional<encrypt::encryption_query_type>& encrypt::query_type() const {
     return _query_type;
 }
 
@@ -94,9 +92,8 @@ void* encrypt::convert() const {
         }
     };
 
-    auto opts_owner =
-        std::unique_ptr<mongoc_client_encryption_encrypt_opts_t, encrypt_opts_deleter>(
-            libmongoc::client_encryption_encrypt_opts_new());
+    auto opts_owner = std::unique_ptr<mongoc_client_encryption_encrypt_opts_t, encrypt_opts_deleter>(
+        libmongoc::client_encryption_encrypt_opts_new());
     const auto opts = opts_owner.get();
 
     // libmongoc will error if both key_id and key_alt_name are set, so no need to check here.
@@ -109,12 +106,10 @@ void* encrypt::convert() const {
         auto key_id = _key_id->view().get_binary();
 
         if (key_id.sub_type != bsoncxx::v_noabi::binary_sub_type::k_uuid) {
-            throw exception{error_code::k_invalid_parameter,
-                            "key id must be a binary value with subtype 4 (UUID)"};
+            throw exception{error_code::k_invalid_parameter, "key id must be a binary value with subtype 4 (UUID)"};
         }
 
-        libmongoc::client_encryption_encrypt_opts_set_keyid(
-            opts, detail::scoped_bson_value(key_id).get());
+        libmongoc::client_encryption_encrypt_opts_set_keyid(opts, detail::scoped_bson_value(key_id).get());
     }
 
     if (_key_alt_name) {
@@ -124,47 +119,39 @@ void* encrypt::convert() const {
     if (_algorithm) {
         switch (*_algorithm) {
             case encryption_algorithm::k_deterministic:
-                libmongoc::client_encryption_encrypt_opts_set_algorithm(
-                    opts, "AEAD_AES_256_CBC_HMAC_SHA_512-Deterministic");
+                libmongoc::client_encryption_encrypt_opts_set_algorithm(opts,
+                                                                        "AEAD_AES_256_CBC_HMAC_SHA_512-Deterministic");
                 break;
             case encryption_algorithm::k_random:
-                libmongoc::client_encryption_encrypt_opts_set_algorithm(
-                    opts, "AEAD_AES_256_CBC_HMAC_SHA_512-Random");
+                libmongoc::client_encryption_encrypt_opts_set_algorithm(opts, "AEAD_AES_256_CBC_HMAC_SHA_512-Random");
                 break;
             case encryption_algorithm::k_indexed:
-                libmongoc::client_encryption_encrypt_opts_set_algorithm(
-                    opts, MONGOC_ENCRYPT_ALGORITHM_INDEXED);
+                libmongoc::client_encryption_encrypt_opts_set_algorithm(opts, MONGOC_ENCRYPT_ALGORITHM_INDEXED);
                 break;
             case encryption_algorithm::k_unindexed:
-                libmongoc::client_encryption_encrypt_opts_set_algorithm(
-                    opts, MONGOC_ENCRYPT_ALGORITHM_UNINDEXED);
+                libmongoc::client_encryption_encrypt_opts_set_algorithm(opts, MONGOC_ENCRYPT_ALGORITHM_UNINDEXED);
                 break;
             case encryption_algorithm::k_range:
-                libmongoc::client_encryption_encrypt_opts_set_algorithm(
-                    opts, MONGOC_ENCRYPT_ALGORITHM_RANGE);
+                libmongoc::client_encryption_encrypt_opts_set_algorithm(opts, MONGOC_ENCRYPT_ALGORITHM_RANGE);
                 break;
             default:
-                throw exception{error_code::k_invalid_parameter,
-                                "unsupported encryption algorithm"};
+                throw exception{error_code::k_invalid_parameter, "unsupported encryption algorithm"};
         }
     } else {
         // libmongoc will error in this case, encryption algorithm must be set.
     }
 
     if (_contention_factor) {
-        libmongoc::client_encryption_encrypt_opts_set_contention_factor(opts,
-                                                                        _contention_factor.value());
+        libmongoc::client_encryption_encrypt_opts_set_contention_factor(opts, _contention_factor.value());
     }
 
     if (_query_type) {
         switch (*_query_type) {
             case encryption_query_type::k_equality:
-                libmongoc::client_encryption_encrypt_opts_set_query_type(
-                    opts, MONGOC_ENCRYPT_QUERY_TYPE_EQUALITY);
+                libmongoc::client_encryption_encrypt_opts_set_query_type(opts, MONGOC_ENCRYPT_QUERY_TYPE_EQUALITY);
                 break;
             case encryption_query_type::k_range:
-                libmongoc::client_encryption_encrypt_opts_set_query_type(
-                    opts, MONGOC_ENCRYPT_QUERY_TYPE_RANGE);
+                libmongoc::client_encryption_encrypt_opts_set_query_type(opts, MONGOC_ENCRYPT_QUERY_TYPE_RANGE);
                 break;
             default:
                 throw exception{error_code::k_invalid_parameter, "unsupported query type"};
@@ -178,9 +165,8 @@ void* encrypt::convert() const {
             }
         };
 
-        auto range_opts_owner =
-            std::unique_ptr<mongoc_client_encryption_encrypt_range_opts_t, range_opts_deleter>(
-                libmongoc::client_encryption_encrypt_range_opts_new());
+        auto range_opts_owner = std::unique_ptr<mongoc_client_encryption_encrypt_range_opts_t, range_opts_deleter>(
+            libmongoc::client_encryption_encrypt_range_opts_new());
         const auto range_opts = range_opts_owner.get();
 
         const auto& min = _range_opts->min();
@@ -190,13 +176,13 @@ void* encrypt::convert() const {
         const auto& trim_factor = _range_opts->trim_factor();
 
         if (min) {
-            libmongoc::client_encryption_encrypt_range_opts_set_min(
-                range_opts, detail::scoped_bson_value(min->view()).get());
+            libmongoc::client_encryption_encrypt_range_opts_set_min(range_opts,
+                                                                    detail::scoped_bson_value(min->view()).get());
         }
 
         if (max) {
-            libmongoc::client_encryption_encrypt_range_opts_set_max(
-                range_opts, detail::scoped_bson_value(max->view()).get());
+            libmongoc::client_encryption_encrypt_range_opts_set_max(range_opts,
+                                                                    detail::scoped_bson_value(max->view()).get());
         }
 
         if (precision) {
@@ -208,8 +194,7 @@ void* encrypt::convert() const {
         }
 
         if (trim_factor) {
-            libmongoc::client_encryption_encrypt_range_opts_set_trim_factor(range_opts,
-                                                                            *trim_factor);
+            libmongoc::client_encryption_encrypt_range_opts_set_trim_factor(range_opts, *trim_factor);
         }
 
         libmongoc::client_encryption_encrypt_opts_set_range_opts(opts, range_opts);

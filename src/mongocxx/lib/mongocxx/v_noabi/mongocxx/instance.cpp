@@ -73,10 +73,8 @@ void user_log_handler(::mongoc_log_level_t mongoc_log_level,
 typename std::aligned_storage<sizeof(instance), alignof(instance)>::type sentinel;
 
 std::atomic<instance*> current_instance{nullptr};
-static_assert(std::is_standard_layout<decltype(current_instance)>::value,
-              "Must be standard layout");
-static_assert(std::is_trivially_destructible<decltype(current_instance)>::value,
-              "Must be trivially destructible");
+static_assert(std::is_standard_layout<decltype(current_instance)>::value, "Must be standard layout");
+static_assert(std::is_trivially_destructible<decltype(current_instance)>::value, "Must be trivially destructible");
 
 }  // namespace
 
@@ -106,8 +104,7 @@ class instance::impl {
 #endif
         platform << "CXX=" << MONGOCXX_COMPILER_ID << " " << MONGOCXX_COMPILER_VERSION << " "
                  << "stdcxx=" << stdcxx << " / ";
-        libmongoc::handshake_data_append(
-            "mongocxx", MONGOCXX_VERSION_STRING, platform.str().c_str());
+        libmongoc::handshake_data_append("mongocxx", MONGOCXX_VERSION_STRING, platform.str().c_str());
     }
 
     ~impl() {

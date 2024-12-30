@@ -86,9 +86,7 @@ class mock<R(MONGOCXX_ABI_CDECL*)(Args...)> {
             return _callbacks.top();
         }
 
-        template <typename T,
-                  typename... U,
-                  bsoncxx::detail::requires_t<int, std::is_same<T, R>> = 0>
+        template <typename T, typename... U, bsoncxx::detail::requires_t<int, std::is_same<T, R>> = 0>
         rule& interpose(T r, U... rs) {
             std::array<R, sizeof...(rs) + 1> vec = {r, rs...};
             std::size_t i = 0;

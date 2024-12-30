@@ -129,8 +129,7 @@ class bucket {
     /// indexes.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(uploader)
-    open_upload_stream(bsoncxx::v_noabi::stdx::string_view filename,
-                       const options::gridfs::upload& options = {});
+    open_upload_stream(bsoncxx::v_noabi::stdx::string_view filename, const options::gridfs::upload& options = {});
 
     ///
     /// Opens a gridfs::uploader to create a new GridFS file. The id of the file will be
@@ -470,8 +469,7 @@ class bucket {
     ///   if an error occurs when reading from the files collection for this bucket.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(downloader)
-    open_download_stream(const client_session& session,
-                         bsoncxx::v_noabi::types::bson_value::view id);
+    open_download_stream(const client_session& session, bsoncxx::v_noabi::types::bson_value::view id);
 
     ///
     /// Downloads the contents of a stored GridFS file from the bucket and writes it to a stream.

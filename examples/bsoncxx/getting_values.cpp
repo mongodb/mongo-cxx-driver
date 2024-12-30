@@ -89,8 +89,7 @@ int EXAMPLES_CDECL main() {
     auto first_name_str = doc["name"]["first"].get_string().value;
 
     // Make all variables used.
-    return (awards && first_award_year && second_award_year && last_name && id_i32 == 1 &&
-            first_name_str == "John")
+    return (awards && first_award_year && second_award_year && last_name && id_i32 == 1 && first_name_str == "John")
                ? EXIT_SUCCESS
                : EXIT_FAILURE;
 }

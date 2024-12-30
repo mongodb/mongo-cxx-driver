@@ -97,8 +97,7 @@ TEST_CASE(
         interposed = *opts;
     });
 
-    pool p{uri{"mongodb://mongodb.example.com:9999/?tls=true"},
-           options::client().tls_opts(tls_opts)};
+    pool p{uri{"mongodb://mongodb.example.com:9999/?tls=true"}, options::client().tls_opts(tls_opts)};
 
     REQUIRE(set_tls_opts_called);
     REQUIRE(interposed.pem_file == pem_file);
@@ -122,8 +121,7 @@ TEST_CASE("calling acquire on a pool returns an entry that manages its client", 
     });
 
     bool push_called = false;
-    client_pool_push->visit(
-        [&](::mongoc_client_pool_t*, ::mongoc_client_t*) { push_called = true; });
+    client_pool_push->visit([&](::mongoc_client_pool_t*, ::mongoc_client_t*) { push_called = true; });
 
     SECTION("entry releases its client at end of scope") {
         {
@@ -188,15 +186,13 @@ TEST_CASE("a pool is created with an invalid connection string", "[pool]") {
 
 TEST_CASE("acquiring a client throws if waitQueueTimeoutMS expires", "[pool]") {
     instance::current();
-    mongocxx::pool pool{
-        mongocxx::uri{"mongodb://localhost:27017/?waitQueueTimeoutMS=1&maxPoolSize=1"},
-        options::pool(test_util::add_test_server_api())};
+    mongocxx::pool pool{mongocxx::uri{"mongodb://localhost:27017/?waitQueueTimeoutMS=1&maxPoolSize=1"},
+                        options::pool(test_util::add_test_server_api())};
     // Acquire only available client:
     auto client = pool.acquire();
     CHECK(client);
     // Try to acquire again. Expect timeout:
-    REQUIRE_THROWS_WITH(pool.acquire(),
-                        Catch::Matchers::ContainsSubstring("failed to acquire client"));
+    REQUIRE_THROWS_WITH(pool.acquire(), Catch::Matchers::ContainsSubstring("failed to acquire client"));
 }
 
 }  // namespace

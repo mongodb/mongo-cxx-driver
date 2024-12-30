@@ -50,8 +50,7 @@ inline std::string to_string(bsoncxx::v_noabi::types::bson_value::view_or_value 
             const auto& binary = val.view().get_binary();
             std::stringstream ss;
             ss << std::hex;
-            for (auto&& byte :
-                 std::vector<unsigned int>(binary.bytes, binary.bytes + binary.size)) {
+            for (auto&& byte : std::vector<unsigned int>(binary.bytes, binary.bytes + binary.size)) {
                 ss << std::setw(2) << std::setfill('0') << byte;
             }
             return ss.str();
@@ -72,8 +71,8 @@ inline std::string to_string(bsoncxx::v_noabi::types::bson_value::view_or_value 
         case type::k_undefined:
             return "undefined";
         case type::k_timestamp:
-            return "timestamp={" + std::to_string(val.view().get_timestamp().timestamp) +
-                   "}, increment={" + std::to_string(val.view().get_timestamp().increment) + "}";
+            return "timestamp={" + std::to_string(val.view().get_timestamp().timestamp) + "}, increment={" +
+                   std::to_string(val.view().get_timestamp().increment) + "}";
         case type::k_regex:
             return "regex={" + string::to_string(val.view().get_regex().regex) + "}, options={" +
                    string::to_string(val.view().get_regex().options) + "}";

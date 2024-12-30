@@ -35,9 +35,7 @@ inline std::error_code make_error_code(const ::bson_error_t& error) {
 }
 
 inline void set_bson_error_message(bson_error_t* error, const char* msg) {
-    bson_strncpy(error->message,
-                 msg,
-                 std::min(strlen(msg) + 1, static_cast<size_t>(BSON_ERROR_BUFFER_SIZE)));
+    bson_strncpy(error->message, msg, std::min(strlen(msg) + 1, static_cast<size_t>(BSON_ERROR_BUFFER_SIZE)));
 }
 
 inline void make_bson_error(bson_error_t* error, const operation_exception& e) {
@@ -60,8 +58,7 @@ void throw_exception(const ::bson_error_t& error) {
 }
 
 template <typename exception_type>
-void throw_exception(bsoncxx::v_noabi::document::value raw_server_error,
-                     const ::bson_error_t& error) {
+void throw_exception(bsoncxx::v_noabi::document::value raw_server_error, const ::bson_error_t& error) {
     throw exception_type{make_error_code(error), std::move(raw_server_error), error.message};
 }
 

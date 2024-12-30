@@ -98,8 +98,7 @@ class bucket {
     /// @return
     ///   The read concern of the bucket.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<
-                              mongocxx::v_noabi::read_concern>&)
+    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::read_concern>&)
     read_concern() const;
 
     ///
@@ -128,8 +127,7 @@ class bucket {
     /// @return
     ///   The read preference of the bucket.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<
-                              mongocxx::v_noabi::read_preference>&)
+    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::read_preference>&)
     read_preference() const;
 
     ///
@@ -152,8 +150,7 @@ class bucket {
     /// @return
     ///   The write concern of the bucket.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<
-                              mongocxx::v_noabi::write_concern>&)
+    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern>&)
     write_concern() const;
 
    private:

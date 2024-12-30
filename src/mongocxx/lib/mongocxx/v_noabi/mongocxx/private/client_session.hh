@@ -46,10 +46,7 @@ struct with_transaction_ctx {
 // user callback. Before giving control back to libmongoc, we convert
 // any exception the user callback emits into an error_t and reply object;
 // libmongoc uses these to determine whether to retry.
-bool with_transaction_cpp_cb(mongoc_client_session_t*,
-                             void* ctx,
-                             bson_t** reply,
-                             bson_error_t* error) noexcept {
+bool with_transaction_cpp_cb(mongoc_client_session_t*, void* ctx, bson_t** reply, bson_error_t* error) noexcept {
     with_transaction_ctx* cb_ctx = static_cast<with_transaction_ctx*>(ctx);
 
     try {
@@ -80,8 +77,7 @@ class client_session::impl {
             libmongoc::session_opts_new(), libmongoc::session_opts_destroy};
 
         if (_options._causal_consistency) {
-            libmongoc::session_opts_set_causal_consistency(opt_t.get(),
-                                                           session_options.causal_consistency());
+            libmongoc::session_opts_set_causal_consistency(opt_t.get(), session_options.causal_consistency());
         }
 
         if (_options._enable_snapshot_reads) {
@@ -90,19 +86,16 @@ class client_session::impl {
 
         if (session_options.default_transaction_opts()) {
             libmongoc::session_opts_set_default_transaction_opts(
-                opt_t.get(),
-                (session_options.default_transaction_opts())->_get_impl().get_transaction_opt_t());
+                opt_t.get(), (session_options.default_transaction_opts())->_get_impl().get_transaction_opt_t());
         }
 
         bson_error_t error;
-        auto s =
-            libmongoc::client_start_session(_client->_get_impl().client_t, opt_t.get(), &error);
+        auto s = libmongoc::client_start_session(_client->_get_impl().client_t, opt_t.get(), &error);
         if (!s) {
             throw mongocxx::v_noabi::exception{error_code::k_cannot_create_session, error.message};
         }
 
-        _session_t = unique_session{
-            s, [](mongoc_client_session_t* cs) { libmongoc::client_session_destroy(cs); }};
+        _session_t = unique_session{s, [](mongoc_client_session_t* cs) { libmongoc::client_session_destroy(cs); }};
     }
 
     const mongocxx::v_noabi::client& client() const noexcept {
@@ -119,8 +112,7 @@ class client_session::impl {
 
     // Get session id, also known as "logical session id" or "lsid".
     bsoncxx::v_noabi::document::view id() const noexcept {
-        return bsoncxx::helpers::view_from_bson_t(
-            libmongoc::client_session_get_lsid(_session_t.get()));
+        return bsoncxx::helpers::view_from_bson_t(libmongoc::client_session_get_lsid(_session_t.get()));
     }
 
     bsoncxx::v_noabi::document::view cluster_time() const noexcept {
@@ -134,8 +126,7 @@ class client_session::impl {
 
     bsoncxx::v_noabi::types::b_timestamp operation_time() const noexcept {
         bsoncxx::v_noabi::types::b_timestamp ts;
-        libmongoc::client_session_get_operation_time(
-            _session_t.get(), &ts.timestamp, &ts.increment);
+        libmongoc::client_session_get_operation_time(_session_t.get(), &ts.timestamp, &ts.increment);
         return ts;
     }
 
@@ -145,14 +136,12 @@ class client_session::impl {
         libmongoc::client_session_advance_cluster_time(_session_t.get(), &bson);
     }
 
-    void advance_operation_time(
-        const bsoncxx::v_noabi::types::b_timestamp& operation_time) noexcept {
+    void advance_operation_time(const bsoncxx::v_noabi::types::b_timestamp& operation_time) noexcept {
         libmongoc::client_session_advance_operation_time(
             _session_t.get(), operation_time.timestamp, operation_time.increment);
     }
 
-    void start_transaction(
-        const bsoncxx::v_noabi::stdx::optional<options::transaction>& transaction_opts) {
+    void start_transaction(const bsoncxx::v_noabi::stdx::optional<options::transaction>& transaction_opts) {
         bson_error_t error;
         mongoc_transaction_opt_t* transaction_opt_t = nullptr;
 
@@ -160,8 +149,7 @@ class client_session::impl {
             transaction_opt_t = transaction_opts->_get_impl().get_transaction_opt_t();
         }
 
-        if (!libmongoc::client_session_start_transaction(
-                _session_t.get(), transaction_opt_t, &error)) {
+        if (!libmongoc::client_session_start_transaction(_session_t.get(), transaction_opt_t, &error)) {
             throw_exception<operation_exception>(error);
         }
     }
@@ -169,8 +157,7 @@ class client_session::impl {
     void commit_transaction() {
         libbson::scoped_bson_t reply;
         bson_error_t error;
-        if (!libmongoc::client_session_commit_transaction(
-                _session_t.get(), reply.bson_for_init(), &error)) {
+        if (!libmongoc::client_session_commit_transaction(_session_t.get(), reply.bson_for_init(), &error)) {
             throw_exception<operation_exception>(reply.steal(), error);
         }
     }
@@ -182,9 +169,7 @@ class client_session::impl {
         }
     }
 
-    void with_transaction(client_session* parent,
-                          client_session::with_transaction_cb cb,
-                          options::transaction opts) {
+    void with_transaction(client_session* parent, client_session::with_transaction_cb cb, options::transaction opts) {
         auto session_t = _session_t.get();
         auto opts_t = opts._get_impl().get_transaction_opt_t();
 
@@ -245,8 +230,7 @@ class client_session::impl {
     const mongocxx::v_noabi::client* _client;
     options::client_session _options;
 
-    using unique_session =
-        std::unique_ptr<mongoc_client_session_t, std::function<void(mongoc_client_session_t*)>>;
+    using unique_session = std::unique_ptr<mongoc_client_session_t, std::function<void(mongoc_client_session_t*)>>;
 
     unique_session _session_t;
 

@@ -59,8 +59,7 @@ void example() {
         bsoncxx::validator options;
         std::size_t offset = 123u;
 
-        EXPECT(bsoncxx::validate(data, length) ==
-               bsoncxx::validate(data, length, options, &offset));
+        EXPECT(bsoncxx::validate(data, length) == bsoncxx::validate(data, length, options, &offset));
 
         // Not set when valid.
         EXPECT(offset == 123u);

@@ -355,10 +355,7 @@ class element {
     /// @param offset
     ///   The element's offset into the buffer.
     ///
-    explicit element(const std::uint8_t* raw,
-                     std::uint32_t length,
-                     std::uint32_t offset,
-                     std::uint32_t keylen);
+    explicit element(const std::uint8_t* raw, std::uint32_t length, std::uint32_t offset, std::uint32_t keylen);
 
     // Construct an invalid element with a key. Useful for exceptions.
     explicit element(const stdx::string_view key);

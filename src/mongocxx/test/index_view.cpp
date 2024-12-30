@@ -39,8 +39,7 @@ using bsoncxx::builder::basic::make_document;
 using namespace mongocxx;
 
 bool test_commands_enabled(const client& conn) {
-    auto result = conn["admin"].run_command(
-        make_document(kvp("getParameter", 1), kvp("enableTestCommands", 1)));
+    auto result = conn["admin"].run_command(make_document(kvp("getParameter", 1), kvp("enableTestCommands", 1)));
     auto result_view = result.view();
 
     if (!result_view["enableTestCommands"]) {
@@ -69,8 +68,7 @@ bool fail_with_max_timeout(const client& conn) {
 
 void disable_fail_point(const client& conn) {
     if (test_commands_enabled(conn)) {
-        conn["admin"].run_command(
-            make_document(kvp("configureFailPoint", "maxTimeAlwaysTimeOut"), kvp("mode", "off")));
+        conn["admin"].run_command(make_document(kvp("configureFailPoint", "maxTimeAlwaysTimeOut"), kvp("mode", "off")));
     }
 }
 
@@ -88,8 +86,7 @@ TEST_CASE("create_one", "[index_view]") {
 
         auto key = make_document(kvp("a", 1));
         auto options = make_document(kvp("name", "myIndex"));
-        bsoncxx::stdx::optional<std::string> result =
-            indexes.create_one(key.view(), options.view());
+        bsoncxx::stdx::optional<std::string> result = indexes.create_one(key.view(), options.view());
 
         REQUIRE(result);
         REQUIRE(*result == "myIndex");
@@ -194,8 +191,7 @@ TEST_CASE("create_one", "[index_view]") {
         index_model model(key.view());
         options::index_view options;
 
-        auto commit_quorum_regex =
-            Catch::Matchers::Matches("(.*)commit( )?quorum(.*)", Catch::CaseSensitive::No);
+        auto commit_quorum_regex = Catch::Matchers::Matches("(.*)commit( )?quorum(.*)", Catch::CaseSensitive::No);
 
         bool is_supported = test_util::get_max_wire_version(mongodb_client) >= 9;
         CAPTURE(is_supported);
@@ -264,8 +260,7 @@ TEST_CASE("create_many", "[index_view]") {
             }
         }
 
-        REQUIRE((result_view["numIndexesAfter"].get_int32() -
-                 result_view["numIndexesBefore"].get_int32()) == 3);
+        REQUIRE((result_view["numIndexesAfter"].get_int32() - result_view["numIndexesBefore"].get_int32()) == 3);
 
         std::vector<std::string> expected_names{"a_1", "b_1_c_-1", "c_-1"};
         std::int8_t found = 0;
@@ -407,11 +402,9 @@ TEST_CASE("drop_all", "[index_view]") {
         }
 
         auto cursor1 = indexes.list();
-        REQUIRE(static_cast<std::size_t>(std::distance(cursor1.begin(), cursor1.end())) ==
-                models.size() + 1);
+        REQUIRE(static_cast<std::size_t>(std::distance(cursor1.begin(), cursor1.end())) == models.size() + 1);
         REQUIRE(static_cast<std::size_t>(result_view["numIndexesAfter"].get_int32() -
-                                         result_view["numIndexesBefore"].get_int32()) ==
-                models.size());
+                                         result_view["numIndexesBefore"].get_int32()) == models.size());
 
         indexes.drop_all();
         auto cursor2 = indexes.list();
@@ -438,11 +431,9 @@ TEST_CASE("drop_all", "[index_view]") {
         }
 
         auto cursor1 = indexes.list();
-        REQUIRE(static_cast<std::size_t>(std::distance(cursor1.begin(), cursor1.end())) ==
-                models.size() + 1u);
+        REQUIRE(static_cast<std::size_t>(std::distance(cursor1.begin(), cursor1.end())) == models.size() + 1u);
         REQUIRE(static_cast<std::size_t>(result_view["numIndexesAfter"].get_int32() -
-                                         result_view["numIndexesBefore"].get_int32()) ==
-                models.size());
+                                         result_view["numIndexesBefore"].get_int32()) == models.size());
 
         options::index_view options;
         options.max_time(std::chrono::milliseconds(1));
@@ -465,10 +456,9 @@ TEST_CASE("index creation and deletion with different collation") {
     coll.insert_one({});  // Ensure that the collection exists.
 
     bsoncxx::document::value keys = make_document(kvp("a", 1), kvp("bcd", -1), kvp("d", 1));
-    bsoncxx::document::value us_collation =
-        make_document(kvp("collation", make_document(kvp("locale", "en_US"))));
-    bsoncxx::document::value ko_collation = make_document(
-        kvp("name", "custom_index_name"), kvp("collation", make_document(kvp("locale", "ko"))));
+    bsoncxx::document::value us_collation = make_document(kvp("collation", make_document(kvp("locale", "en_US"))));
+    bsoncxx::document::value ko_collation =
+        make_document(kvp("name", "custom_index_name"), kvp("collation", make_document(kvp("locale", "ko"))));
 
     index_model index_us{keys.view(), us_collation.view()};
     index_model index_ko{keys.view(), ko_collation.view()};

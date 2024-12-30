@@ -42,8 +42,7 @@ something that can be improved as part of CXX-2350 (migration to more recent C++
 standards).
 */
 inline bsoncxx::v_noabi::oid make_oid(const bson_oid_t* bson_oid) {
-    return bsoncxx::v_noabi::oid(reinterpret_cast<const char*>(bson_oid),
-                                 bsoncxx::v_noabi::oid::size());
+    return bsoncxx::v_noabi::oid(reinterpret_cast<const char*>(bson_oid), bsoncxx::v_noabi::oid::size());
 }
 
 }  // namespace helpers

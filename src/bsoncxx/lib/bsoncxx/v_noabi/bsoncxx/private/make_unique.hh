@@ -21,8 +21,7 @@
 #pragma push_macro("BSONCXX_DETAIL_USE_STD_MAKE_UNIQUE")
 #undef BSONCXX_DETAIL_USE_STD_MAKE_UNIQUE
 
-#if (defined(__cplusplus) && __cplusplus >= 201402L) || \
-    (defined(_MSVC_LANG) && _MSVC_LANG >= 201402L)
+#if (defined(__cplusplus) && __cplusplus >= 201402L) || (defined(_MSVC_LANG) && _MSVC_LANG >= 201402L)
 #define BSONCXX_DETAIL_USE_STD_MAKE_UNIQUE
 #endif
 
@@ -108,12 +107,12 @@ using std::make_unique;
 
 // Equivalent to `std::make_unique<T>(args...)` where `T` is a non-array type.
 // @cond DOXYGEN_DISABLE
-template <typename T,
-          typename... Args,
-          typename Impl = detail::make_unique_impl<T>,
-          typename std::enable_if<!std::is_array<T>::value,
-                                  decltype(Impl::make(std::true_type{}, std::declval<Args>()...),
-                                           void())>::type* = nullptr>
+template <
+    typename T,
+    typename... Args,
+    typename Impl = detail::make_unique_impl<T>,
+    typename std::enable_if<!std::is_array<T>::value,
+                            decltype(Impl::make(std::true_type{}, std::declval<Args>()...), void())>::type* = nullptr>
 std::unique_ptr<T> make_unique(Args&&... args) {
     return Impl::make(std::true_type{}, std::forward<Args>(args)...);
 }
@@ -121,12 +120,11 @@ std::unique_ptr<T> make_unique(Args&&... args) {
 
 // Equivalent to `std::make_unique<T>(count)` where `T` is an array type.
 // @cond DOXYGEN_DISABLE
-template <
-    typename T,
-    typename Impl = detail::make_unique_impl<T>,
-    typename std::enable_if<std::is_array<T>::value,
-                            decltype(Impl::make(std::true_type{}, std::declval<std::size_t>()),
-                                     void())>::type* = nullptr>
+template <typename T,
+          typename Impl = detail::make_unique_impl<T>,
+          typename std::enable_if<std::is_array<T>::value,
+                                  decltype(Impl::make(std::true_type{}, std::declval<std::size_t>()), void())>::type* =
+              nullptr>
 std::unique_ptr<T> make_unique(std::size_t count) {
     return Impl::make(std::true_type{}, count);
 }
@@ -141,21 +139,20 @@ using std::make_unique_for_overwrite;
 #else
 
 // Equivalent to `std::make_unique_for_overwrite<T>()` where `T` is a non-array type.
-template <typename T,
-          typename Impl = detail::make_unique_impl<T>,
-          typename std::enable_if<!std::is_array<T>::value,
-                                  decltype(Impl::make(std::false_type{}), void())>::type* = nullptr>
+template <
+    typename T,
+    typename Impl = detail::make_unique_impl<T>,
+    typename std::enable_if<!std::is_array<T>::value, decltype(Impl::make(std::false_type{}), void())>::type* = nullptr>
 std::unique_ptr<T> make_unique_for_overwrite() {
     return Impl::make(std::false_type{});
 }
 
 // Equivalent to `std::make_unique_for_overwrite<T>(count)` where `T` is an array type.
-template <
-    typename T,
-    typename Impl = detail::make_unique_impl<T>,
-    typename std::enable_if<std::is_array<T>::value,
-                            decltype(Impl::make(std::false_type{}, std::declval<std::size_t>()),
-                                     void())>::type* = nullptr>
+template <typename T,
+          typename Impl = detail::make_unique_impl<T>,
+          typename std::enable_if<std::is_array<T>::value,
+                                  decltype(Impl::make(std::false_type{}, std::declval<std::size_t>()), void())>::type* =
+              nullptr>
 std::unique_ptr<T> make_unique_for_overwrite(std::size_t count) {
     return Impl::make(std::false_type{}, count);
 }

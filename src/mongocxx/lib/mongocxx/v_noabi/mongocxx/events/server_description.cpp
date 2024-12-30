@@ -30,8 +30,7 @@ std::uint32_t server_description::id() const {
 }
 
 std::int64_t server_description::round_trip_time() const {
-    return libmongoc::server_description_round_trip_time(
-        static_cast<const mongoc_server_description_t*>(_sd));
+    return libmongoc::server_description_round_trip_time(static_cast<const mongoc_server_description_t*>(_sd));
 }
 
 bsoncxx::v_noabi::stdx::string_view server_description::type() const {
@@ -43,19 +42,16 @@ bsoncxx::v_noabi::document::view server_description::is_master() const {
 }
 
 bsoncxx::v_noabi::document::view server_description::hello() const {
-    auto reply = libmongoc::server_description_hello_response(
-        static_cast<const mongoc_server_description_t*>(_sd));
+    auto reply = libmongoc::server_description_hello_response(static_cast<const mongoc_server_description_t*>(_sd));
     return {bson_get_data(reply), reply->len};
 }
 
 bsoncxx::v_noabi::stdx::string_view server_description::host() const {
-    return libmongoc::server_description_host(static_cast<const mongoc_server_description_t*>(_sd))
-        ->host;
+    return libmongoc::server_description_host(static_cast<const mongoc_server_description_t*>(_sd))->host;
 }
 
 std::uint16_t server_description::port() const {
-    return libmongoc::server_description_host(static_cast<const mongoc_server_description_t*>(_sd))
-        ->port;
+    return libmongoc::server_description_host(static_cast<const mongoc_server_description_t*>(_sd))->port;
 }
 
 }  // namespace events

@@ -47,15 +47,13 @@ static collection_ptr copy_and_apply_default_rw_concerns(mongoc_collection_t* co
 
 class search_index_view::impl {
    public:
-    impl(mongoc_collection_t* collection, mongoc_client_t* client)
-        : _coll{collection}, _client{client} {}
+    impl(mongoc_collection_t* collection, mongoc_client_t* client) : _coll{collection}, _client{client} {}
 
     cursor list(const client_session* session,
                 bsoncxx::v_noabi::string::view_or_value name,
                 const options::aggregate& options) {
         pipeline pipeline{};
-        pipeline.append_stage(
-            make_document(kvp("$listSearchIndexes", make_document(kvp("name", name.view())))));
+        pipeline.append_stage(make_document(kvp("$listSearchIndexes", make_document(kvp("name", name.view())))));
         return list(session, pipeline, options);
     }
 
@@ -65,22 +63,18 @@ class search_index_view::impl {
         return list(session, pipeline, options);
     }
 
-    cursor list(const client_session* session,
-                const pipeline& pipeline,
-                const options::aggregate& options) {
+    cursor list(const client_session* session, const pipeline& pipeline, const options::aggregate& options) {
         bsoncxx::v_noabi::builder::basic::document opts_doc;
         libbson::scoped_bson_t stages(bsoncxx::v_noabi::document::view(pipeline.view_array()));
 
         append_aggregate_options(opts_doc, options);
 
         if (session) {
-            opts_doc.append(
-                bsoncxx::v_noabi::builder::concatenate_doc{session->_get_impl().to_document()});
+            opts_doc.append(bsoncxx::v_noabi::builder::concatenate_doc{session->_get_impl().to_document()});
         }
 
         const mongoc_read_prefs_t* const rp_ptr =
-            options.read_preference() ? options.read_preference()->_impl->read_preference_t
-                                      : nullptr;
+            options.read_preference() ? options.read_preference()->_impl->read_preference_t : nullptr;
 
         libbson::scoped_bson_t opts_bson(opts_doc.view());
 
@@ -91,17 +85,12 @@ class search_index_view::impl {
 
     std::string create_one(const client_session* session, const search_index_model& model) {
         const auto result = create_many(session, std::vector<search_index_model>{model});
-        return bsoncxx::v_noabi::string::to_string(result["indexesCreated"]
-                                                       .get_array()
-                                                       .value.begin()
-                                                       ->get_document()
-                                                       .value["name"]
-                                                       .get_string()
-                                                       .value);
+        return bsoncxx::v_noabi::string::to_string(
+            result["indexesCreated"].get_array().value.begin()->get_document().value["name"].get_string().value);
     }
 
-    bsoncxx::v_noabi::document::value create_many(
-        const client_session* session, const std::vector<search_index_model>& search_indexes) {
+    bsoncxx::v_noabi::document::value create_many(const client_session* session,
+                                                  const std::vector<search_index_model>& search_indexes) {
         using namespace bsoncxx;
 
         builder::basic::array search_index_arr;
@@ -122,9 +111,8 @@ class search_index_view::impl {
             search_index_arr.append(search_index_doc.view());
         }
 
-        document::view_or_value command =
-            make_document(kvp("createSearchIndexes", libmongoc::collection_get_name(_coll)),
-                          kvp("indexes", search_index_arr.view()));
+        document::view_or_value command = make_document(
+            kvp("createSearchIndexes", libmongoc::collection_get_name(_coll)), kvp("indexes", search_index_arr.view()));
 
         libbson::scoped_bson_t reply;
         bson_error_t error;
@@ -132,8 +120,7 @@ class search_index_view::impl {
         builder::basic::document opts_doc;
 
         if (session) {
-            opts_doc.append(
-                bsoncxx::v_noabi::builder::concatenate_doc{session->_get_impl().to_document()});
+            opts_doc.append(bsoncxx::v_noabi::builder::concatenate_doc{session->_get_impl().to_document()});
         }
 
         libbson::scoped_bson_t command_bson{command};
@@ -154,12 +141,10 @@ class search_index_view::impl {
         bsoncxx::v_noabi::builder::basic::document opts_doc;
 
         bsoncxx::v_noabi::document::value command =
-            make_document(kvp("dropSearchIndex", libmongoc::collection_get_name(_coll)),
-                          kvp("name", name.view()));
+            make_document(kvp("dropSearchIndex", libmongoc::collection_get_name(_coll)), kvp("name", name.view()));
 
         if (session) {
-            opts_doc.append(
-                bsoncxx::v_noabi::builder::concatenate_doc{session->_get_impl().to_document()});
+            opts_doc.append(bsoncxx::v_noabi::builder::concatenate_doc{session->_get_impl().to_document()});
         }
 
         libbson::scoped_bson_t reply;
@@ -194,8 +179,7 @@ class search_index_view::impl {
                           kvp("definition", definition.view()));
 
         if (session) {
-            opts_doc.append(
-                bsoncxx::v_noabi::builder::concatenate_doc{session->_get_impl().to_document()});
+            opts_doc.append(bsoncxx::v_noabi::builder::concatenate_doc{session->_get_impl().to_document()});
         }
 
         libbson::scoped_bson_t reply;

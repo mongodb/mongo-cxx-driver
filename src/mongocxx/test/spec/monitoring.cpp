@@ -38,21 +38,17 @@ using bsoncxx::to_json;
 static void remove_ignored_command_monitoring_events(apm_checker::event_vector& events,
                                                      const std::vector<std::string>& ignore) {
     auto is_ignored = [&](bsoncxx::document::value v) {
-        return std::any_of(
-            std::begin(ignore), std::end(ignore), [&](bsoncxx::stdx::string_view key) {
-                return v.view()["commandStartedEvent"]["command"][key] ||
-                       v.view()["commandFailedEvent"]["command"][key] ||
-                       v.view()["commandSucceededEvent"]["command"][key];
-            });
+        return std::any_of(std::begin(ignore), std::end(ignore), [&](bsoncxx::stdx::string_view key) {
+            return v.view()["commandStartedEvent"]["command"][key] || v.view()["commandFailedEvent"]["command"][key] ||
+                   v.view()["commandSucceededEvent"]["command"][key];
+        });
     };
 
     events.erase(std::remove_if(events.begin(), events.end(), is_ignored), std::end(events));
 }
 
 // commands postfixed with "_unified" are used to support the unified test format.
-void apm_checker::compare_unified(bsoncxx::array::view expectations,
-                                  entity::map& map,
-                                  bool ignore_extra_events) {
+void apm_checker::compare_unified(bsoncxx::array::view expectations, entity::map& map, bool ignore_extra_events) {
     remove_ignored_command_monitoring_events(_events, _ignore);
 
     CAPTURE(print_all());
@@ -63,8 +59,7 @@ void apm_checker::compare_unified(bsoncxx::array::view expectations,
 
         // Extra fields are only allowed in root-level documents. Here, each k in keys is treated
         // as its own root-level document, allowing extra fields.
-        auto match_events = [&](bsoncxx::stdx::string_view event,
-                                std::initializer_list<std::string> keys) {
+        auto match_events = [&](bsoncxx::stdx::string_view event, std::initializer_list<std::string> keys) {
             for (auto&& k : keys)
                 if (exp[event][k])
                     assert::matches(actual[event][k].get_value(), exp[event][k].get_value(), map);
@@ -84,14 +79,12 @@ void apm_checker::compare_unified(bsoncxx::array::view expectations,
         compare(*exp_it, *ev_it);
     }
     if (exp_it != exp_end) {
-        FAIL_CHECK("Not enough events occurred (Expected "
-                   << std::distance(expectations.cbegin(), expectations.cend())
-                   << " events, but got " << (_events.size()) << " events)");
+        FAIL_CHECK("Not enough events occurred (Expected " << std::distance(expectations.cbegin(), expectations.cend())
+                                                           << " events, but got " << (_events.size()) << " events)");
     }
     if (!ignore_extra_events && ev_it != ev_end) {
-        FAIL_CHECK("Too many events occurred (Expected "
-                   << std::distance(expectations.cbegin(), expectations.cend())
-                   << " events, but got " << (_events.size()) << " events)");
+        FAIL_CHECK("Too many events occurred (Expected " << std::distance(expectations.cbegin(), expectations.cend())
+                                                         << " events, but got " << (_events.size()) << " events)");
     }
 }
 
@@ -112,12 +105,10 @@ void apm_checker::compare(bsoncxx::array::view expectations,
             }
         }
 
-        return std::any_of(
-            std::begin(_ignore), std::end(_ignore), [&](bsoncxx::stdx::string_view key) {
-                return view["command_started_event"]["command"][key] ||
-                       view["command_failed_event"]["command"][key] ||
-                       view["command_succeeded_event"]["command"][key];
-            });
+        return std::any_of(std::begin(_ignore), std::end(_ignore), [&](bsoncxx::stdx::string_view key) {
+            return view["command_started_event"]["command"][key] || view["command_failed_event"]["command"][key] ||
+                   view["command_succeeded_event"]["command"][key];
+        });
     };
 
     auto events_iter = _events.begin();
@@ -127,8 +118,8 @@ void apm_checker::compare(bsoncxx::array::view expectations,
         auto expected = expectation.get_document().view();
         if (events_iter == _events.end()) {
             FAIL("Not enough events occurred: expected exactly "
-                 << std::distance(expectations.begin(), expectations.end()) << " events, but got "
-                 << _events.size() << " events");
+                 << std::distance(expectations.begin(), expectations.end()) << " events, but got " << _events.size()
+                 << " events");
         }
         REQUIRE_BSON_MATCHES_V(*events_iter, expected, match_visitor);
         events_iter++;
@@ -136,8 +127,8 @@ void apm_checker::compare(bsoncxx::array::view expectations,
 
     if (!allow_extra && events_iter != _events.end()) {
         FAIL_CHECK("Too many events occurred: expected exactly "
-                   << std::distance(expectations.begin(), expectations.end()) << " events, but got "
-                   << _events.size() << " events");
+                   << std::distance(expectations.begin(), expectations.end()) << " events, but got " << _events.size()
+                   << " events");
     }
 }
 
@@ -152,10 +143,9 @@ void apm_checker::has(bsoncxx::array::view expectations) {
 }
 
 bool apm_checker::should_ignore(bsoncxx::stdx::string_view command_name) const {
-    return std::any_of(
-        std::begin(_ignore), std::end(_ignore), [command_name](bsoncxx::stdx::string_view cmp) {
-            return command_name == cmp;
-        });
+    return std::any_of(std::begin(_ignore), std::end(_ignore), [command_name](bsoncxx::stdx::string_view cmp) {
+        return command_name == cmp;
+    });
 }
 
 std::string apm_checker::print_all() const {
@@ -173,8 +163,7 @@ std::string apm_checker::print_all() const {
 /// detect that it is sensitive by the mongoc library having removed the main body of the
 /// command events' requests and responses, thus we check for ".empty()" on that body.
 static bool is_hello_cmd_name(bsoncxx::stdx::string_view name) {
-    return name == bsoncxx::stdx::string_view("hello") ||
-           name == bsoncxx::stdx::string_view("ismaster") ||
+    return name == bsoncxx::stdx::string_view("hello") || name == bsoncxx::stdx::string_view("ismaster") ||
            name == bsoncxx::stdx::string_view("isMaster");
 }
 static bool is_sensitive_hello_cmd_event(const events::command_started_event& event) {
@@ -210,9 +199,8 @@ static bool is_sensitive_command(const Ev& event) noexcept {
         "copydb",
     };
     const bool is_sensitive_cmd_name =
-        std::find(std::begin(sensitive_commands),
-                  std::end(sensitive_commands),
-                  event.command_name()) != std::end(sensitive_commands);
+        std::find(std::begin(sensitive_commands), std::end(sensitive_commands), event.command_name()) !=
+        std::end(sensitive_commands);
     if (is_sensitive_cmd_name) {
         return true;
     }
@@ -254,8 +242,7 @@ void apm_checker::set_command_failed_unified(options::apm& apm) {
         }
 
         document builder;
-        builder.append(
-            kvp("commandFailedEvent", make_document(kvp("commandName", event.command_name()))));
+        builder.append(kvp("commandFailedEvent", make_document(kvp("commandName", event.command_name()))));
         this->_events.emplace_back(builder.extract());
     });
 }
@@ -273,9 +260,8 @@ void apm_checker::set_command_succeeded_unified(options::apm& apm) {
         }
 
         document builder;
-        builder.append(kvp(
-            "commandSucceededEvent",
-            make_document(kvp("reply", event.reply()), kvp("commandName", event.command_name()))));
+        builder.append(kvp("commandSucceededEvent",
+                           make_document(kvp("reply", event.reply()), kvp("commandName", event.command_name()))));
         this->_events.emplace_back(builder.extract());
     });
 }
@@ -307,9 +293,9 @@ void apm_checker::set_command_failed(options::apm& apm) {
         }
 
         document builder;
-        builder.append(kvp("command_failed_event",
-                           make_document(kvp("command_name", event.command_name()),
-                                         kvp("operation_id", event.operation_id()))));
+        builder.append(
+            kvp("command_failed_event",
+                make_document(kvp("command_name", event.command_name()), kvp("operation_id", event.operation_id()))));
         this->_events.emplace_back(builder.extract());
     });
 }

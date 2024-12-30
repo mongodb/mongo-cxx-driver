@@ -174,8 +174,7 @@ bsoncxx::document::value transform_document_recursive(bsoncxx::document::view vi
                 break;
 
             case bsoncxx::type::k_array:
-                builder.append(bsoncxx::builder::basic::kvp(
-                    k, transform_array(v.get_array().value, fcn, context)));
+                builder.append(bsoncxx::builder::basic::kvp(k, transform_array(v.get_array().value, fcn, context)));
                 break;
 
             case bsoncxx::type::k_double:
@@ -234,8 +233,7 @@ std::basic_string<std::uint8_t> convert_hex_string_to_bytes(bsoncxx::stdx::strin
     // Convert each pair of hexadecimal digits into a number and store it in the array.
     for (std::size_t i = 0; i < hex.size(); i += 2) {
         bsoncxx::stdx::string_view sub = hex.substr(i, 2);
-        bytes.push_back(
-            static_cast<std::uint8_t>(std::stoi(bsoncxx::string::to_string(sub), nullptr, 16)));
+        bytes.push_back(static_cast<std::uint8_t>(std::stoi(bsoncxx::string::to_string(sub), nullptr, 16)));
     }
 
     return bytes;
@@ -357,13 +355,11 @@ double as_double(bsoncxx::types::bson_value::view value) {
         return static_cast<double>(value.get_double());
     }
 
-    throw std::logic_error{"could not convert type " + bsoncxx::to_string(value.type()) +
-                           " to double"};
+    throw std::logic_error{"could not convert type " + bsoncxx::to_string(value.type()) + " to double"};
 }
 
 bool is_numeric(types::bson_value::view value) {
-    return value.type() == type::k_int32 || value.type() == type::k_int64 ||
-           value.type() == type::k_double;
+    return value.type() == type::k_int32 || value.type() == type::k_int64 || value.type() == type::k_double;
 }
 
 static bsoncxx::stdx::optional<type> is_type_operator(types::bson_value::view value) {
@@ -379,9 +375,7 @@ static bsoncxx::stdx::optional<type> is_type_operator(types::bson_value::view va
     return {};
 }
 
-bool matches(types::bson_value::view main,
-             types::bson_value::view pattern,
-             match_visitor visitor_fn) {
+bool matches(types::bson_value::view main, types::bson_value::view pattern, match_visitor visitor_fn) {
     if (auto t = is_type_operator(pattern)) {
         return t == main.type();
     }

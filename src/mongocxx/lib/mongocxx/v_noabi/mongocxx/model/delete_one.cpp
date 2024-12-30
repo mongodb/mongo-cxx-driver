@@ -20,8 +20,7 @@ namespace mongocxx {
 namespace v_noabi {
 namespace model {
 
-delete_one::delete_one(bsoncxx::v_noabi::document::view_or_value filter)
-    : _filter(std::move(filter)) {}
+delete_one::delete_one(bsoncxx::v_noabi::document::view_or_value filter) : _filter(std::move(filter)) {}
 
 const bsoncxx::v_noabi::document::view_or_value& delete_one::filter() const {
     return _filter;
@@ -32,8 +31,7 @@ delete_one& delete_one::collation(bsoncxx::v_noabi::document::view_or_value coll
     return *this;
 }
 
-const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value>&
-delete_one::collation() const {
+const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value>& delete_one::collation() const {
     return _collation;
 }
 

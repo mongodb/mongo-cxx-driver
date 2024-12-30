@@ -27,8 +27,7 @@ namespace {
 // [Example]
 void example() {
     try {
-        mongocxx::pool pool{
-            mongocxx::uri{"mongodb://localhost:27017/?maxPoolSize=1&waitQueueTimeoutMS=1"}};
+        mongocxx::pool pool{mongocxx::uri{"mongodb://localhost:27017/?maxPoolSize=1&waitQueueTimeoutMS=1"}};
 
         mongocxx::pool::entry hold = pool.acquire();
 

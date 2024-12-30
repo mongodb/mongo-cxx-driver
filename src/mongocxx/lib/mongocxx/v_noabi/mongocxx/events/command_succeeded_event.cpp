@@ -54,8 +54,7 @@ std::int64_t command_succeeded_event::operation_id() const {
         static_cast<const mongoc_apm_command_succeeded_t*>(_succeeded_event));
 }
 
-bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::oid> command_succeeded_event::service_id()
-    const {
+bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::oid> command_succeeded_event::service_id() const {
     const bson_oid_t* bson_oid = libmongoc::apm_command_succeeded_get_service_id(
         static_cast<const mongoc_apm_command_succeeded_t*>(_succeeded_event));
 

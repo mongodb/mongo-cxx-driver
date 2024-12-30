@@ -31,9 +31,7 @@ class database::impl {
         : database_t(db), client_impl(client), name(std::move(name)) {}
 
     impl(const impl& i)
-        : database_t{libmongoc::database_copy(i.database_t)},
-          client_impl{i.client_impl},
-          name{i.name} {}
+        : database_t{libmongoc::database_copy(i.database_t)}, client_impl{i.client_impl}, name{i.name} {}
 
     impl& operator=(const impl& i) {
         if (this != &i) {

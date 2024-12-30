@@ -49,8 +49,7 @@ bucket& bucket::read_concern(mongocxx::v_noabi::read_concern read_concern) {
     return *this;
 }
 
-const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::read_concern>& bucket::read_concern()
-    const {
+const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::read_concern>& bucket::read_concern() const {
     return _read_concern;
 }
 
@@ -59,8 +58,7 @@ bucket& bucket::read_preference(mongocxx::v_noabi::read_preference read_preferen
     return *this;
 }
 
-const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::read_preference>&
-bucket::read_preference() const {
+const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::read_preference>& bucket::read_preference() const {
     return _read_preference;
 }
 
@@ -69,8 +67,7 @@ bucket& bucket::write_concern(mongocxx::v_noabi::write_concern write_concern) {
     return *this;
 }
 
-const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern>& bucket::write_concern()
-    const {
+const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern>& bucket::write_concern() const {
     return _write_concern;
 }
 

@@ -33,8 +33,8 @@ void example() {
 
     std::int32_t values[] = {1, 2, 3};
 
-    bsoncxx::document::value owner = bsoncxx::builder::basic::make_document(
-        kvp("v", [&](bsoncxx::builder::basic::sub_array arr) {
+    bsoncxx::document::value owner =
+        bsoncxx::builder::basic::make_document(kvp("v", [&](bsoncxx::builder::basic::sub_array arr) {
             for (int i = 0; i < 3; ++i) {
                 arr.append(values[i]);
             }

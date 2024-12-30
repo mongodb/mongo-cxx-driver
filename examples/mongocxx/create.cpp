@@ -49,14 +49,12 @@ int EXAMPLES_CDECL main() {
         kvp("borough", "Manhattan"),
         kvp("cuisine", "Italian"),
         kvp("grades",
-            make_array(
-                make_document(kvp("date", bsoncxx::types::b_date{std::chrono::milliseconds{12323}}),
-                              kvp("grade", "A"),
-                              kvp("score", 11)),
-                make_document(
-                    kvp("date", bsoncxx::types::b_date{std::chrono::milliseconds{121212}}),
-                    kvp("grade", "B"),
-                    kvp("score", 17)))),
+            make_array(make_document(kvp("date", bsoncxx::types::b_date{std::chrono::milliseconds{12323}}),
+                                     kvp("grade", "A"),
+                                     kvp("score", 11)),
+                       make_document(kvp("date", bsoncxx::types::b_date{std::chrono::milliseconds{121212}}),
+                                     kvp("grade", "B"),
+                                     kvp("score", 17)))),
         kvp("name", "Vella"),
         kvp("restaurant_id", "41704620"));
 

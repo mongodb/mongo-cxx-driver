@@ -72,9 +72,8 @@ void example(mongocxx::collection coll) {
         opts.upsert(true);
         // ... other update options.
 
-        EXPECT(coll.update_one(bsoncxx::from_json(R"({"x": 4})"),
-                               bsoncxx::from_json(R"({"$set": {"updated": true}})"),
-                               opts));
+        EXPECT(coll.update_one(
+            bsoncxx::from_json(R"({"x": 4})"), bsoncxx::from_json(R"({"$set": {"updated": true}})"), opts));
 
         EXPECT(coll.count_documents(x4.view()) == 1);
         EXPECT(coll.count_documents(updated.view()) == 2);

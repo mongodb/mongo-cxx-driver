@@ -33,8 +33,7 @@ void example() {
     bsoncxx::types::b_double b{2.0};
     bsoncxx::types::b_string c{"three"};
 
-    bsoncxx::document::value doc =
-        bsoncxx::builder::basic::make_document(kvp("a", a), kvp("b", b), kvp("c", c));
+    bsoncxx::document::value doc = bsoncxx::builder::basic::make_document(kvp("a", a), kvp("b", b), kvp("c", c));
 
     EXPECT(doc.view() == bsoncxx::from_json(R"({"a": 1, "b": 2.0, "c": "three"})"));
 }

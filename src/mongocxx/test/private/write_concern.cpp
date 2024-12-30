@@ -85,8 +85,7 @@ TEST_CASE("write_concern is called with w MAJORITY", "[write_concern][base][c-dr
     }
 }
 
-TEST_CASE("write_concern is called with a number of necessary confirmations",
-          "[write_concern][base][c-driver]") {
+TEST_CASE("write_concern is called with a number of necessary confirmations", "[write_concern][base][c-driver]") {
     instance::current();
 
     bool w_called = false, wmajority_called = false, wtag_called = false;

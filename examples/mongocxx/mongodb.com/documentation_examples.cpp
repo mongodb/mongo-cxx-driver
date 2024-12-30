@@ -39,23 +39,18 @@
 namespace {
 
 template <typename T>
-void check_field(const T& document,
-                 const char* field,
-                 bool should_have,
-                 int example_no,
-                 const char* example_type = nullptr) {
+void check_field(
+    const T& document, const char* field, bool should_have, int example_no, const char* example_type = nullptr) {
     std::string example_type_formatted = example_type ? example_type + std::string(" ") : "";
     if (should_have) {
         if (!document[field]) {
-            throw std::logic_error(std::string("document in ") + example_type_formatted +
-                                   std::string("example ") + std::to_string(example_no) +
-                                   " should not have field " + field);
+            throw std::logic_error(std::string("document in ") + example_type_formatted + std::string("example ") +
+                                   std::to_string(example_no) + " should not have field " + field);
         }
     } else {
         if (document[field]) {
-            throw std::logic_error(std::string("document in ") + example_type_formatted +
-                                   std::string("example ") + std::to_string(example_no) +
-                                   " should not have field " + field);
+            throw std::logic_error(std::string("document in ") + example_type_formatted + std::string("example ") +
+                                   std::to_string(example_no) + " should not have field " + field);
         }
     }
 }
@@ -71,18 +66,12 @@ void check_has_no_field(const T& document, const char* field, int example_no) {
 }
 
 template <typename T>
-void check_has_field(const T& document,
-                     const char* field,
-                     int example_no,
-                     const char* example_type) {
+void check_has_field(const T& document, const char* field, int example_no, const char* example_type) {
     check_field(document, field, true, example_no, example_type);
 }
 
 template <typename T>
-void check_has_no_field(const T& document,
-                        const char* field,
-                        int example_no,
-                        const char* example_type) {
+void check_has_no_field(const T& document, const char* field, int example_no, const char* example_type) {
     check_field(document, field, false, example_no, example_type);
 }
 
@@ -99,12 +88,12 @@ bool should_run_client_side_encryption_test(void) {
         "MONGOCXX_TEST_GCP_PRIVATEKEY",
     };
 
-    const auto iter = std::find_if_not(
-        std::begin(vars), std::end(vars), [](const char* var) { return std::getenv(var); });
+    const auto iter =
+        std::find_if_not(std::begin(vars), std::end(vars), [](const char* var) { return std::getenv(var); });
 
     if (iter != std::end(vars)) {
-        std::cerr << "Skipping Queryable Encryption tests: environment variable " << *iter
-                  << " not defined" << std::endl;
+        std::cerr << "Skipping Queryable Encryption tests: environment variable " << *iter << " not defined"
+                  << std::endl;
         return false;
     }
 
@@ -122,8 +111,7 @@ mongocxx::options::client add_test_server_api(mongocxx::options::client opts = {
 
     if (!api_version_sv.empty()) {
         if (api_version_sv == "1") {
-            opts.server_api_opts(
-                mongocxx::options::server_api(mongocxx::options::server_api::version::k_version_1));
+            opts.server_api_opts(mongocxx::options::server_api(mongocxx::options::server_api::version::k_version_1));
         } else {
             throw std::logic_error("invalid MONGODB_API_VERSION: " + std::string(api_version_sv));
         }
@@ -169,8 +157,7 @@ bsoncxx::document::value make_kms_doc(bool include_external = true) {
 
     if (include_external) {
         kms_doc.append(kvp("aws", [&](sub_document subdoc) {
-            subdoc.append(
-                kvp("secretAccessKey", getenv_or_fail("MONGOCXX_TEST_AWS_SECRET_ACCESS_KEY")));
+            subdoc.append(kvp("secretAccessKey", getenv_or_fail("MONGOCXX_TEST_AWS_SECRET_ACCESS_KEY")));
             subdoc.append(kvp("accessKeyId", getenv_or_fail("MONGOCXX_TEST_AWS_ACCESS_KEY_ID")));
         }));
 
@@ -185,16 +172,12 @@ bsoncxx::document::value make_kms_doc(bool include_external = true) {
             subdoc.append(kvp("privateKey", getenv_or_fail("MONGOCXX_TEST_GCP_PRIVATEKEY")));
         }));
 
-        kms_doc.append(kvp("kmip", [&](sub_document subdoc) {
-            subdoc.append(kvp("endpoint", "localhost:5698"));
-        }));
+        kms_doc.append(kvp("kmip", [&](sub_document subdoc) { subdoc.append(kvp("endpoint", "localhost:5698")); }));
     }
 
-    bsoncxx::types::b_binary local_master_key{
-        bsoncxx::binary_sub_type::k_binary, 96, kLocalMasterKey};
+    bsoncxx::types::b_binary local_master_key{bsoncxx::binary_sub_type::k_binary, 96, kLocalMasterKey};
 
-    kms_doc.append(
-        kvp("local", [&](sub_document subdoc) { subdoc.append(kvp("key", local_master_key)); }));
+    kms_doc.append(kvp("local", [&](sub_document subdoc) { subdoc.append(kvp("key", local_master_key)); }));
 
     return {kms_doc.extract()};
 }
@@ -212,10 +195,7 @@ static bool is_replica_set(const mongocxx::client& client) {
     return static_cast<bool>(reply.view()["setName"]);
 }
 
-static bool version_at_least(mongocxx::database& db,
-                             int minimum_major,
-                             int minimum_minor,
-                             int minimum_patch) {
+static bool version_at_least(mongocxx::database& db, int minimum_major, int minimum_minor, int minimum_patch) {
     using bsoncxx::builder::basic::kvp;
     using bsoncxx::builder::basic::make_document;
 
@@ -239,8 +219,7 @@ static bool version_at_least(mongocxx::database& db,
         }
     }
 
-    std::vector<int> server_semver{
-        std::stoi(major_string), std::stoi(minor_string), std::stoi(minor_string)};
+    std::vector<int> server_semver{std::stoi(major_string), std::stoi(minor_string), std::stoi(minor_string)};
     std::vector<int> minimum_semver{minimum_major, minimum_minor, minimum_patch};
     for (size_t i = 0; i < server_semver.size(); i++) {
         if (server_semver[i] < minimum_semver[i]) {
@@ -261,11 +240,11 @@ void insert_examples(mongocxx::database db) {
         using bsoncxx::builder::basic::make_array;
         using bsoncxx::builder::basic::make_document;
 
-        db["inventory"].insert_one(make_document(
-            kvp("item", "canvas"),
-            kvp("qty", 100),
-            kvp("tags", make_array("cotton")),
-            kvp("size", make_document(kvp("h", 28), kvp("w", 35.5), kvp("uom", "cm")))));
+        db["inventory"].insert_one(
+            make_document(kvp("item", "canvas"),
+                          kvp("qty", 100),
+                          kvp("tags", make_array("cotton")),
+                          kvp("size", make_document(kvp("h", 28), kvp("w", 35.5), kvp("uom", "cm")))));
         // End Example 1
 
         if (db["inventory"].count_documents({}) != 1) {
@@ -297,16 +276,14 @@ void insert_examples(mongocxx::database db) {
                           kvp("qty", 25),
                           kvp("tags", make_array("blank", "red")),
                           kvp("size", make_document(kvp("h", 14), kvp("w", 21), kvp("uom", "cm")))),
-            make_document(
-                kvp("item", "mat"),
-                kvp("qty", 85),
-                kvp("tags", make_array("gray")),
-                kvp("size", make_document(kvp("h", 27.9), kvp("w", 35.5), kvp("uom", "cm")))),
-            make_document(
-                kvp("item", "mousepad"),
-                kvp("qty", 25),
-                kvp("tags", make_array("gel", "blue")),
-                kvp("size", make_document(kvp("h", 19), kvp("w", 22.85), kvp("uom", "cm")))),
+            make_document(kvp("item", "mat"),
+                          kvp("qty", 85),
+                          kvp("tags", make_array("gray")),
+                          kvp("size", make_document(kvp("h", 27.9), kvp("w", 35.5), kvp("uom", "cm")))),
+            make_document(kvp("item", "mousepad"),
+                          kvp("qty", 25),
+                          kvp("tags", make_array("gel", "blue")),
+                          kvp("size", make_document(kvp("h", 19), kvp("w", 22.85), kvp("uom", "cm")))),
         };
 
         db["inventory"].insert_many(docs);
@@ -339,16 +316,14 @@ void query_top_level_fields_examples(mongocxx::database db) {
                           kvp("qty", 100),
                           kvp("size", make_document(kvp("h", 8.5), kvp("w", 11), kvp("uom", "in"))),
                           kvp("status", "D")),
-            make_document(
-                kvp("item", "planner"),
-                kvp("qty", 75),
-                kvp("size", make_document(kvp("h", 22.85), kvp("w", 30), kvp("uom", "cm"))),
-                kvp("status", "D")),
-            make_document(
-                kvp("item", "postcard"),
-                kvp("qty", 45),
-                kvp("size", make_document(kvp("h", 10), kvp("w", 15.25), kvp("uom", "cm"))),
-                kvp("status", "A")),
+            make_document(kvp("item", "planner"),
+                          kvp("qty", 75),
+                          kvp("size", make_document(kvp("h", 22.85), kvp("w", 30), kvp("uom", "cm"))),
+                          kvp("status", "D")),
+            make_document(kvp("item", "postcard"),
+                          kvp("qty", 45),
+                          kvp("size", make_document(kvp("h", 10), kvp("w", 15.25), kvp("uom", "cm"))),
+                          kvp("status", "A")),
         };
 
         db["inventory"].insert_many(docs);
@@ -388,8 +363,8 @@ void query_top_level_fields_examples(mongocxx::database db) {
         using bsoncxx::builder::basic::make_array;
         using bsoncxx::builder::basic::make_document;
 
-        auto cursor = db["inventory"].find(
-            make_document(kvp("status", make_document(kvp("$in", make_array("A", "D"))))));
+        auto cursor =
+            db["inventory"].find(make_document(kvp("status", make_document(kvp("$in", make_array("A", "D"))))));
         // End Example 10
 
         if (std::distance(cursor.begin(), cursor.end()) != 5) {
@@ -402,8 +377,8 @@ void query_top_level_fields_examples(mongocxx::database db) {
         using bsoncxx::builder::basic::kvp;
         using bsoncxx::builder::basic::make_document;
 
-        auto cursor = db["inventory"].find(
-            make_document(kvp("status", "A"), kvp("qty", make_document(kvp("$lt", 30)))));
+        auto cursor =
+            db["inventory"].find(make_document(kvp("status", "A"), kvp("qty", make_document(kvp("$lt", 30)))));
         // End Example 11
 
         if (std::distance(cursor.begin(), cursor.end()) != 1) {
@@ -417,10 +392,9 @@ void query_top_level_fields_examples(mongocxx::database db) {
         using bsoncxx::builder::basic::make_array;
         using bsoncxx::builder::basic::make_document;
 
-        auto cursor = db["inventory"].find(make_document(
-            kvp("$or",
-                make_array(make_document(kvp("status", "A")),
-                           make_document(kvp("qty", make_document(kvp("$lt", 30))))))));
+        auto cursor = db["inventory"].find(make_document(kvp(
+            "$or",
+            make_array(make_document(kvp("status", "A")), make_document(kvp("qty", make_document(kvp("$lt", 30))))))));
         // End Example 12
 
         if (std::distance(cursor.begin(), cursor.end()) != 3) {
@@ -434,11 +408,11 @@ void query_top_level_fields_examples(mongocxx::database db) {
         using bsoncxx::builder::basic::make_array;
         using bsoncxx::builder::basic::make_document;
 
-        auto cursor = db["inventory"].find(make_document(
-            kvp("status", "A"),
-            kvp("$or",
-                make_array(make_document(kvp("qty", make_document(kvp("$lt", 30)))),
-                           make_document(kvp("item", bsoncxx::types::b_regex{"^p"}))))));
+        auto cursor = db["inventory"].find(
+            make_document(kvp("status", "A"),
+                          kvp("$or",
+                              make_array(make_document(kvp("qty", make_document(kvp("$lt", 30)))),
+                                         make_document(kvp("item", bsoncxx::types::b_regex{"^p"}))))));
         // End Example 13
 
         if (std::distance(cursor.begin(), cursor.end()) != 2) {
@@ -468,16 +442,14 @@ void query_embedded_documents_examples(mongocxx::database db) {
                           kvp("qty", 100),
                           kvp("size", make_document(kvp("h", 8.5), kvp("w", 11), kvp("uom", "in"))),
                           kvp("status", "D")),
-            make_document(
-                kvp("item", "planner"),
-                kvp("qty", 75),
-                kvp("size", make_document(kvp("h", 22.85), kvp("w", 30), kvp("uom", "cm"))),
-                kvp("status", "D")),
-            make_document(
-                kvp("item", "postcard"),
-                kvp("qty", 45),
-                kvp("size", make_document(kvp("h", 10), kvp("w", 15.25), kvp("uom", "cm"))),
-                kvp("status", "A")),
+            make_document(kvp("item", "planner"),
+                          kvp("qty", 75),
+                          kvp("size", make_document(kvp("h", 22.85), kvp("w", 30), kvp("uom", "cm"))),
+                          kvp("status", "D")),
+            make_document(kvp("item", "postcard"),
+                          kvp("qty", 45),
+                          kvp("size", make_document(kvp("h", 10), kvp("w", 15.25), kvp("uom", "cm"))),
+                          kvp("status", "A")),
         };
 
         db["inventory"].insert_many(docs);
@@ -493,8 +465,8 @@ void query_embedded_documents_examples(mongocxx::database db) {
         using bsoncxx::builder::basic::kvp;
         using bsoncxx::builder::basic::make_document;
 
-        auto cursor = db["inventory"].find(make_document(
-            kvp("size", make_document(kvp("h", 14), kvp("w", 21), kvp("uom", "cm")))));
+        auto cursor = db["inventory"].find(
+            make_document(kvp("size", make_document(kvp("h", 14), kvp("w", 21), kvp("uom", "cm")))));
         // End Example 15
 
         if (std::distance(cursor.begin(), cursor.end()) != 1) {
@@ -507,8 +479,8 @@ void query_embedded_documents_examples(mongocxx::database db) {
         using bsoncxx::builder::basic::kvp;
         using bsoncxx::builder::basic::make_document;
 
-        auto cursor = db["inventory"].find(make_document(
-            kvp("size", make_document(kvp("w", 21), kvp("h", 14), kvp("uom", "cm")))));
+        auto cursor = db["inventory"].find(
+            make_document(kvp("size", make_document(kvp("w", 21), kvp("h", 14), kvp("uom", "cm")))));
         // End Example 16
 
         if (std::distance(cursor.begin(), cursor.end()) != 0) {
@@ -534,8 +506,7 @@ void query_embedded_documents_examples(mongocxx::database db) {
         using bsoncxx::builder::basic::kvp;
         using bsoncxx::builder::basic::make_document;
 
-        auto cursor =
-            db["inventory"].find(make_document(kvp("size.h", make_document(kvp("$lt", 15)))));
+        auto cursor = db["inventory"].find(make_document(kvp("size.h", make_document(kvp("$lt", 15)))));
         // End Example 18
 
         if (std::distance(cursor.begin(), cursor.end()) != 4) {
@@ -548,10 +519,8 @@ void query_embedded_documents_examples(mongocxx::database db) {
         using bsoncxx::builder::basic::kvp;
         using bsoncxx::builder::basic::make_document;
 
-        auto cursor =
-            db["inventory"].find(make_document(kvp("size.h", make_document(kvp("$lt", 15))),
-                                               kvp("size.uom", "in"),
-                                               kvp("status", "D")));
+        auto cursor = db["inventory"].find(
+            make_document(kvp("size.h", make_document(kvp("$lt", 15))), kvp("size.uom", "in"), kvp("status", "D")));
         // End Example 19
 
         if (std::distance(cursor.begin(), cursor.end()) != 1) {
@@ -620,8 +589,8 @@ void query_arrays_examples(mongocxx::database db) {
         using bsoncxx::builder::basic::make_array;
         using bsoncxx::builder::basic::make_document;
 
-        auto cursor = db["inventory"].find(
-            make_document(kvp("tags", make_document(kvp("$all", make_array("red", "blank"))))));
+        auto cursor =
+            db["inventory"].find(make_document(kvp("tags", make_document(kvp("$all", make_array("red", "blank"))))));
         // End Example 22
 
         if (std::distance(cursor.begin(), cursor.end()) != 4) {
@@ -647,8 +616,7 @@ void query_arrays_examples(mongocxx::database db) {
         using bsoncxx::builder::basic::kvp;
         using bsoncxx::builder::basic::make_document;
 
-        auto cursor =
-            db["inventory"].find(make_document(kvp("dim_cm", make_document(kvp("$gt", 25)))));
+        auto cursor = db["inventory"].find(make_document(kvp("dim_cm", make_document(kvp("$gt", 25)))));
         // End Example 24
 
         if (std::distance(cursor.begin(), cursor.end()) != 1) {
@@ -661,8 +629,7 @@ void query_arrays_examples(mongocxx::database db) {
         using bsoncxx::builder::basic::kvp;
         using bsoncxx::builder::basic::make_document;
 
-        auto cursor = db["inventory"].find(
-            make_document(kvp("dim_cm", make_document(kvp("$gt", 15), kvp("$lt", 20)))));
+        auto cursor = db["inventory"].find(make_document(kvp("dim_cm", make_document(kvp("$gt", 15), kvp("$lt", 20)))));
         // End Example 25
 
         if (std::distance(cursor.begin(), cursor.end()) != 4) {
@@ -676,8 +643,7 @@ void query_arrays_examples(mongocxx::database db) {
         using bsoncxx::builder::basic::make_document;
 
         auto cursor = db["inventory"].find(make_document(
-            kvp("dim_cm",
-                make_document(kvp("$elemMatch", make_document(kvp("$gt", 22), kvp("$lt", 30)))))));
+            kvp("dim_cm", make_document(kvp("$elemMatch", make_document(kvp("$gt", 22), kvp("$lt", 30)))))));
         // End Example 26
 
         if (std::distance(cursor.begin(), cursor.end()) != 1) {
@@ -690,8 +656,7 @@ void query_arrays_examples(mongocxx::database db) {
         using bsoncxx::builder::basic::kvp;
         using bsoncxx::builder::basic::make_document;
 
-        auto cursor =
-            db["inventory"].find(make_document(kvp("dim_cm.1", make_document(kvp("$gt", 25)))));
+        auto cursor = db["inventory"].find(make_document(kvp("dim_cm.1", make_document(kvp("$gt", 25)))));
         // End Example 27
 
         if (std::distance(cursor.begin(), cursor.end()) != 1) {
@@ -704,8 +669,7 @@ void query_arrays_examples(mongocxx::database db) {
         using bsoncxx::builder::basic::kvp;
         using bsoncxx::builder::basic::make_document;
 
-        auto cursor =
-            db["inventory"].find(make_document(kvp("tags", make_document(kvp("$size", 3)))));
+        auto cursor = db["inventory"].find(make_document(kvp("tags", make_document(kvp("$size", 3)))));
         // End Example 28
 
         if (std::distance(cursor.begin(), cursor.end()) != 1) {
@@ -728,9 +692,8 @@ void query_array_embedded_documents_examples(mongocxx::database db) {
                           kvp("instock",
                               make_array(make_document(kvp("warehouse", "A"), kvp("qty", 5)),
                                          make_document(kvp("warehouse", "C"), kvp("qty", 15))))),
-            make_document(
-                kvp("item", "notebook"),
-                kvp("instock", make_array(make_document(kvp("warehouse", "C"), kvp("qty", 5))))),
+            make_document(kvp("item", "notebook"),
+                          kvp("instock", make_array(make_document(kvp("warehouse", "C"), kvp("qty", 5))))),
             make_document(kvp("item", "paper"),
                           kvp("instock",
                               make_array(make_document(kvp("warehouse", "A"), kvp("qty", 60)),
@@ -758,8 +721,8 @@ void query_array_embedded_documents_examples(mongocxx::database db) {
         using bsoncxx::builder::basic::kvp;
         using bsoncxx::builder::basic::make_document;
 
-        auto cursor = db["inventory"].find(
-            make_document(kvp("instock", make_document(kvp("warehouse", "A"), kvp("qty", 5)))));
+        auto cursor =
+            db["inventory"].find(make_document(kvp("instock", make_document(kvp("warehouse", "A"), kvp("qty", 5)))));
         // End Example 30
 
         if (std::distance(cursor.begin(), cursor.end()) != 1) {
@@ -772,8 +735,8 @@ void query_array_embedded_documents_examples(mongocxx::database db) {
         using bsoncxx::builder::basic::kvp;
         using bsoncxx::builder::basic::make_document;
 
-        auto cursor = db["inventory"].find(
-            make_document(kvp("instock", make_document(kvp("qty", 5), kvp("warehouse", "A")))));
+        auto cursor =
+            db["inventory"].find(make_document(kvp("instock", make_document(kvp("qty", 5), kvp("warehouse", "A")))));
         // End Example 31
 
         if (std::distance(cursor.begin(), cursor.end()) != 0) {
@@ -786,8 +749,7 @@ void query_array_embedded_documents_examples(mongocxx::database db) {
         using bsoncxx::builder::basic::kvp;
         using bsoncxx::builder::basic::make_document;
 
-        auto cursor = db["inventory"].find(
-            make_document(kvp("instock.0.qty", make_document(kvp("$lte", 20)))));
+        auto cursor = db["inventory"].find(make_document(kvp("instock.0.qty", make_document(kvp("$lte", 20)))));
         // End Example 32
 
         if (std::distance(cursor.begin(), cursor.end()) != 3) {
@@ -800,8 +762,7 @@ void query_array_embedded_documents_examples(mongocxx::database db) {
         using bsoncxx::builder::basic::kvp;
         using bsoncxx::builder::basic::make_document;
 
-        auto cursor =
-            db["inventory"].find(make_document(kvp("instock.qty", make_document(kvp("$lte", 20)))));
+        auto cursor = db["inventory"].find(make_document(kvp("instock.qty", make_document(kvp("$lte", 20)))));
         // End Example 33
 
         if (std::distance(cursor.begin(), cursor.end()) != 5) {
@@ -815,9 +776,7 @@ void query_array_embedded_documents_examples(mongocxx::database db) {
         using bsoncxx::builder::basic::make_document;
 
         auto cursor = db["inventory"].find(make_document(
-            kvp("instock",
-                make_document(
-                    kvp("$elemMatch", make_document(kvp("qty", 5), kvp("warehouse", "A")))))));
+            kvp("instock", make_document(kvp("$elemMatch", make_document(kvp("qty", 5), kvp("warehouse", "A")))))));
         // End Example 34
 
         if (std::distance(cursor.begin(), cursor.end()) != 1) {
@@ -832,9 +791,8 @@ void query_array_embedded_documents_examples(mongocxx::database db) {
 
         auto cursor = db["inventory"].find(make_document(
             kvp("instock",
-                make_document(kvp(
-                    "$elemMatch",
-                    make_document(kvp("qty", make_document(kvp("$gt", 10), kvp("$lte", 20)))))))));
+                make_document(
+                    kvp("$elemMatch", make_document(kvp("qty", make_document(kvp("$gt", 10), kvp("$lte", 20)))))))));
         // End Example 35
 
         if (std::distance(cursor.begin(), cursor.end()) != 3) {
@@ -847,8 +805,8 @@ void query_array_embedded_documents_examples(mongocxx::database db) {
         using bsoncxx::builder::basic::kvp;
         using bsoncxx::builder::basic::make_document;
 
-        auto cursor = db["inventory"].find(
-            make_document(kvp("instock.qty", make_document(kvp("$gt", 10), kvp("$lte", 20)))));
+        auto cursor =
+            db["inventory"].find(make_document(kvp("instock.qty", make_document(kvp("$gt", 10), kvp("$lte", 20)))));
         // End Example 36
 
         if (std::distance(cursor.begin(), cursor.end()) != 4) {
@@ -861,8 +819,7 @@ void query_array_embedded_documents_examples(mongocxx::database db) {
         using bsoncxx::builder::basic::kvp;
         using bsoncxx::builder::basic::make_document;
 
-        auto cursor = db["inventory"].find(
-            make_document(kvp("instock.qty", 5), kvp("instock.warehouse", "A")));
+        auto cursor = db["inventory"].find(make_document(kvp("instock.qty", 5), kvp("instock.warehouse", "A")));
         // End Example 37
 
         if (std::distance(cursor.begin(), cursor.end()) != 2) {
@@ -910,8 +867,7 @@ void query_null_missing_fields_examples(mongocxx::database db) {
         using bsoncxx::builder::basic::kvp;
         using bsoncxx::builder::basic::make_document;
 
-        auto cursor =
-            db["inventory"].find(make_document(kvp("item", make_document(kvp("$type", 10)))));
+        auto cursor = db["inventory"].find(make_document(kvp("item", make_document(kvp("$type", 10)))));
         // End Example 40
 
         if (std::distance(cursor.begin(), cursor.end()) != 1) {
@@ -924,8 +880,7 @@ void query_null_missing_fields_examples(mongocxx::database db) {
         using bsoncxx::builder::basic::kvp;
         using bsoncxx::builder::basic::make_document;
 
-        auto cursor =
-            db["inventory"].find(make_document(kvp("item", make_document(kvp("$exists", false)))));
+        auto cursor = db["inventory"].find(make_document(kvp("item", make_document(kvp("$exists", false)))));
         // End Example 41
 
         if (std::distance(cursor.begin(), cursor.end()) != 1) {
@@ -944,33 +899,28 @@ void projection_insertion_example(mongocxx::database db) {
         using bsoncxx::builder::basic::make_document;
 
         std::vector<bsoncxx::document::value> docs{
-            make_document(
-                kvp("item", "journal"),
-                kvp("status", "A"),
-                kvp("size", make_document(kvp("h", 14), kvp("w", 21), kvp("uom", "cm"))),
-                kvp("instock", make_array(make_document(kvp("warehouse", "A"), kvp("qty", 5))))),
-            make_document(
-                kvp("item", "notebook"),
-                kvp("status", "A"),
-                kvp("size", make_document(kvp("h", 8.5), kvp("w", 11), kvp("uom", "in"))),
-                kvp("instock", make_array(make_document(kvp("warehouse", "C"), kvp("qty", 5))))),
-            make_document(
-                kvp("item", "paper"),
-                kvp("status", "D"),
-                kvp("size", make_document(kvp("h", 8.5), kvp("w", 11), kvp("uom", "in"))),
-                kvp("instock", make_array(make_document(kvp("warehouse", "A"), kvp("qty", 60))))),
-            make_document(
-                kvp("item", "planner"),
-                kvp("status", "D"),
-                kvp("size", make_document(kvp("h", 22.85), kvp("w", 30), kvp("uom", "cm"))),
-                kvp("instock", make_array(make_document(kvp("warehouse", "A"), kvp("qty", 40))))),
-            make_document(
-                kvp("item", "postcard"),
-                kvp("status", "A"),
-                kvp("size", make_document(kvp("h", 10), kvp("w", 15.25), kvp("uom", "cm"))),
-                kvp("instock",
-                    make_array(make_document(kvp("warehouse", "B"), kvp("qty", 15)),
-                               make_document(kvp("warehouse", "C"), kvp("qty", 35))))),
+            make_document(kvp("item", "journal"),
+                          kvp("status", "A"),
+                          kvp("size", make_document(kvp("h", 14), kvp("w", 21), kvp("uom", "cm"))),
+                          kvp("instock", make_array(make_document(kvp("warehouse", "A"), kvp("qty", 5))))),
+            make_document(kvp("item", "notebook"),
+                          kvp("status", "A"),
+                          kvp("size", make_document(kvp("h", 8.5), kvp("w", 11), kvp("uom", "in"))),
+                          kvp("instock", make_array(make_document(kvp("warehouse", "C"), kvp("qty", 5))))),
+            make_document(kvp("item", "paper"),
+                          kvp("status", "D"),
+                          kvp("size", make_document(kvp("h", 8.5), kvp("w", 11), kvp("uom", "in"))),
+                          kvp("instock", make_array(make_document(kvp("warehouse", "A"), kvp("qty", 60))))),
+            make_document(kvp("item", "planner"),
+                          kvp("status", "D"),
+                          kvp("size", make_document(kvp("h", 22.85), kvp("w", 30), kvp("uom", "cm"))),
+                          kvp("instock", make_array(make_document(kvp("warehouse", "A"), kvp("qty", 40))))),
+            make_document(kvp("item", "postcard"),
+                          kvp("status", "A"),
+                          kvp("size", make_document(kvp("h", 10), kvp("w", 15.25), kvp("uom", "cm"))),
+                          kvp("instock",
+                              make_array(make_document(kvp("warehouse", "B"), kvp("qty", 15)),
+                                         make_document(kvp("warehouse", "C"), kvp("qty", 35))))),
         };
 
         db["inventory"].insert_many(docs);
@@ -1003,9 +953,9 @@ void projection_examples(mongocxx::database db) {
         using bsoncxx::builder::basic::kvp;
         using bsoncxx::builder::basic::make_document;
 
-        auto cursor = db["inventory"].find(
-            make_document(kvp("status", "A")),
-            mongocxx::options::find{}.projection(make_document(kvp("item", 1), kvp("status", 1))));
+        auto cursor =
+            db["inventory"].find(make_document(kvp("status", "A")),
+                                 mongocxx::options::find{}.projection(make_document(kvp("item", 1), kvp("status", 1))));
         // End Example 44
 
         for (auto&& document : cursor) {
@@ -1022,9 +972,9 @@ void projection_examples(mongocxx::database db) {
         using bsoncxx::builder::basic::kvp;
         using bsoncxx::builder::basic::make_document;
 
-        auto cursor = db["inventory"].find(make_document(kvp("status", "A")),
-                                           mongocxx::options::find{}.projection(make_document(
-                                               kvp("item", 1), kvp("status", 1), kvp("_id", 0))));
+        auto cursor = db["inventory"].find(
+            make_document(kvp("status", "A")),
+            mongocxx::options::find{}.projection(make_document(kvp("item", 1), kvp("status", 1), kvp("_id", 0))));
         // End Example 45
 
         for (auto&& document : cursor) {
@@ -1041,9 +991,9 @@ void projection_examples(mongocxx::database db) {
         using bsoncxx::builder::basic::kvp;
         using bsoncxx::builder::basic::make_document;
 
-        auto cursor = db["inventory"].find(make_document(kvp("status", "A")),
-                                           mongocxx::options::find{}.projection(
-                                               make_document(kvp("status", 0), kvp("instock", 0))));
+        auto cursor = db["inventory"].find(
+            make_document(kvp("status", "A")),
+            mongocxx::options::find{}.projection(make_document(kvp("status", 0), kvp("instock", 0))));
         // End Example 46
 
         for (auto&& document : cursor) {
@@ -1060,10 +1010,9 @@ void projection_examples(mongocxx::database db) {
         using bsoncxx::builder::basic::kvp;
         using bsoncxx::builder::basic::make_document;
 
-        auto cursor =
-            db["inventory"].find(make_document(kvp("status", "A")),
-                                 mongocxx::options::find{}.projection(make_document(
-                                     kvp("item", 1), kvp("status", 1), kvp("size.uom", 1))));
+        auto cursor = db["inventory"].find(
+            make_document(kvp("status", "A")),
+            mongocxx::options::find{}.projection(make_document(kvp("item", 1), kvp("status", 1), kvp("size.uom", 1))));
         // End Example 47
 
         for (auto&& document : cursor) {
@@ -1086,9 +1035,8 @@ void projection_examples(mongocxx::database db) {
         using bsoncxx::builder::basic::kvp;
         using bsoncxx::builder::basic::make_document;
 
-        auto cursor = db["inventory"].find(
-            make_document(kvp("status", "A")),
-            mongocxx::options::find{}.projection(make_document(kvp("size.uom", 0))));
+        auto cursor = db["inventory"].find(make_document(kvp("status", "A")),
+                                           mongocxx::options::find{}.projection(make_document(kvp("size.uom", 0))));
         // End Example 48
 
         for (auto&& document : cursor) {
@@ -1111,10 +1059,9 @@ void projection_examples(mongocxx::database db) {
         using bsoncxx::builder::basic::kvp;
         using bsoncxx::builder::basic::make_document;
 
-        auto cursor =
-            db["inventory"].find(make_document(kvp("status", "A")),
-                                 mongocxx::options::find{}.projection(make_document(
-                                     kvp("item", 1), kvp("status", 1), kvp("instock.qty", 1))));
+        auto cursor = db["inventory"].find(make_document(kvp("status", "A")),
+                                           mongocxx::options::find{}.projection(
+                                               make_document(kvp("item", 1), kvp("status", 1), kvp("instock.qty", 1))));
         // End Example 49
 
         for (auto&& document : cursor) {
@@ -1138,11 +1085,10 @@ void projection_examples(mongocxx::database db) {
         using bsoncxx::builder::basic::kvp;
         using bsoncxx::builder::basic::make_document;
 
-        auto cursor = db["inventory"].find(make_document(kvp("status", "A")),
-                                           mongocxx::options::find{}.projection(make_document(
-                                               kvp("item", 1),
-                                               kvp("status", 1),
-                                               kvp("instock", make_document(kvp("$slice", -1))))));
+        auto cursor = db["inventory"].find(
+            make_document(kvp("status", "A")),
+            mongocxx::options::find{}.projection(
+                make_document(kvp("item", 1), kvp("status", 1), kvp("instock", make_document(kvp("$slice", -1))))));
         // End Example 50
 
         for (auto&& document : cursor) {
@@ -1185,24 +1131,18 @@ void projection_with_aggregation_example(mongocxx::database db) {
                         make_document(
                             kvp("branches",
                                 make_array(
-                                    make_document(
-                                        kvp("case",
-                                            make_document(kvp("$eq", make_array("$status", "A")))),
-                                        kvp("then", "Available")),
-                                    make_document(
-                                        kvp("case",
-                                            make_document(kvp("$eq", make_array("$status", "D")))),
-                                        kvp("then", "Discontinued")))),
+                                    make_document(kvp("case", make_document(kvp("$eq", make_array("$status", "A")))),
+                                                  kvp("then", "Available")),
+                                    make_document(kvp("case", make_document(kvp("$eq", make_array("$status", "D")))),
+                                                  kvp("then", "Discontinued")))),
                             kvp("default", "No status found"))))),
                 kvp("area",
                     make_document(kvp(
                         "$concat",
-                        make_array(
-                            make_document(kvp(
-                                "$toString",
-                                make_document(kvp("$multiply", make_array("$size.h", "$size.w"))))),
-                            " ",
-                            "$size.uom")))),
+                        make_array(make_document(kvp(
+                                       "$toString", make_document(kvp("$multiply", make_array("$size.h", "$size.w"))))),
+                                   " ",
+                                   "$size.uom")))),
                 kvp("reportNumber", make_document(kvp("$literal", 1))))));
         // End Aggregation Projection Example 1
 
@@ -1227,25 +1167,22 @@ void update_examples(mongocxx::database db) {
         using bsoncxx::builder::basic::make_document;
 
         std::vector<bsoncxx::document::value> docs{
-            make_document(
-                kvp("item", "canvas"),
-                kvp("qty", 100),
-                kvp("size", make_document(kvp("h", 28), kvp("w", 35.5), kvp("uom", "cm"))),
-                kvp("status", "A")),
+            make_document(kvp("item", "canvas"),
+                          kvp("qty", 100),
+                          kvp("size", make_document(kvp("h", 28), kvp("w", 35.5), kvp("uom", "cm"))),
+                          kvp("status", "A")),
             make_document(kvp("item", "journal"),
                           kvp("qty", 25),
                           kvp("size", make_document(kvp("h", 14), kvp("w", 21), kvp("uom", "cm"))),
                           kvp("status", "A")),
-            make_document(
-                kvp("item", "mat"),
-                kvp("qty", 85),
-                kvp("size", make_document(kvp("h", 27.9), kvp("w", 35.5), kvp("uom", "cm"))),
-                kvp("status", "A")),
-            make_document(
-                kvp("item", "mousepad"),
-                kvp("qty", 25),
-                kvp("size", make_document(kvp("h", 19), kvp("w", 22.85), kvp("uom", "cm"))),
-                kvp("status", "P")),
+            make_document(kvp("item", "mat"),
+                          kvp("qty", 85),
+                          kvp("size", make_document(kvp("h", 27.9), kvp("w", 35.5), kvp("uom", "cm"))),
+                          kvp("status", "A")),
+            make_document(kvp("item", "mousepad"),
+                          kvp("qty", 25),
+                          kvp("size", make_document(kvp("h", 19), kvp("w", 22.85), kvp("uom", "cm"))),
+                          kvp("status", "P")),
             make_document(kvp("item", "notebook"),
                           kvp("qty", 50),
                           kvp("size", make_document(kvp("h", 8.5), kvp("w", 11), kvp("uom", "in"))),
@@ -1254,25 +1191,22 @@ void update_examples(mongocxx::database db) {
                           kvp("qty", 100),
                           kvp("size", make_document(kvp("h", 8.5), kvp("w", 11), kvp("uom", "in"))),
                           kvp("status", "D")),
-            make_document(
-                kvp("item", "planner"),
-                kvp("qty", 75),
-                kvp("size", make_document(kvp("h", 22.85), kvp("w", 30), kvp("uom", "cm"))),
-                kvp("status", "D")),
-            make_document(
-                kvp("item", "postcard"),
-                kvp("qty", 45),
-                kvp("size", make_document(kvp("h", 10), kvp("w", 15.25), kvp("uom", "cm"))),
-                kvp("status", "A")),
+            make_document(kvp("item", "planner"),
+                          kvp("qty", 75),
+                          kvp("size", make_document(kvp("h", 22.85), kvp("w", 30), kvp("uom", "cm"))),
+                          kvp("status", "D")),
+            make_document(kvp("item", "postcard"),
+                          kvp("qty", 45),
+                          kvp("size", make_document(kvp("h", 10), kvp("w", 15.25), kvp("uom", "cm"))),
+                          kvp("status", "A")),
             make_document(kvp("item", "sketchbook"),
                           kvp("qty", 80),
                           kvp("size", make_document(kvp("h", 14), kvp("w", 21), kvp("uom", "cm"))),
                           kvp("status", "A")),
-            make_document(
-                kvp("item", "sketch pad"),
-                kvp("qty", 95),
-                kvp("size", make_document(kvp("h", 22.85), kvp("w", 30.5), kvp("uom", "cm"))),
-                kvp("status", "A")),
+            make_document(kvp("item", "sketch pad"),
+                          kvp("qty", 95),
+                          kvp("size", make_document(kvp("h", 22.85), kvp("w", 30.5), kvp("uom", "cm"))),
+                          kvp("status", "A")),
         };
 
         db["inventory"].insert_many(docs);
@@ -1288,15 +1222,13 @@ void update_examples(mongocxx::database db) {
         using bsoncxx::builder::basic::kvp;
         using bsoncxx::builder::basic::make_document;
 
-        db["inventory"].update_one(
-            make_document(kvp("item", "paper")),
-            make_document(kvp("$set", make_document(kvp("size.uom", "cm"), kvp("status", "P"))),
-                          kvp("$currentDate", make_document(kvp("lastModified", true)))));
+        db["inventory"].update_one(make_document(kvp("item", "paper")),
+                                   make_document(kvp("$set", make_document(kvp("size.uom", "cm"), kvp("status", "P"))),
+                                                 kvp("$currentDate", make_document(kvp("lastModified", true)))));
         // End Example 52
 
         for (auto&& document : db["inventory"].find(make_document(kvp("item", "paper")))) {
-            if (document["size"].get_document().value["uom"].get_string().value !=
-                bsoncxx::stdx::string_view{"cm"}) {
+            if (document["size"].get_document().value["uom"].get_string().value != bsoncxx::stdx::string_view{"cm"}) {
                 throw std::logic_error("error in example 52");
             }
             if (document["status"].get_string().value != bsoncxx::stdx::string_view{"P"}) {
@@ -1311,16 +1243,13 @@ void update_examples(mongocxx::database db) {
         using bsoncxx::builder::basic::kvp;
         using bsoncxx::builder::basic::make_document;
 
-        db["inventory"].update_many(
-            make_document(kvp("qty", make_document((kvp("$lt", 50))))),
-            make_document(kvp("$set", make_document(kvp("size.uom", "in"), kvp("status", "P"))),
-                          kvp("$currentDate", make_document(kvp("lastModified", true)))));
+        db["inventory"].update_many(make_document(kvp("qty", make_document((kvp("$lt", 50))))),
+                                    make_document(kvp("$set", make_document(kvp("size.uom", "in"), kvp("status", "P"))),
+                                                  kvp("$currentDate", make_document(kvp("lastModified", true)))));
         // End Example 53
 
-        for (auto&& document :
-             db["inventory"].find(make_document(kvp("qty", make_document(kvp("$lt", 50)))))) {
-            if (document["size"].get_document().value["uom"].get_string().value !=
-                bsoncxx::stdx::string_view{"in"}) {
+        for (auto&& document : db["inventory"].find(make_document(kvp("qty", make_document(kvp("$lt", 50)))))) {
+            if (document["size"].get_document().value["uom"].get_string().value != bsoncxx::stdx::string_view{"in"}) {
                 throw std::logic_error("error in example 53");
             }
             if (document["status"].get_string().value != bsoncxx::stdx::string_view{"P"}) {
@@ -1382,16 +1311,14 @@ void delete_examples(mongocxx::database db) {
                           kvp("qty", 100),
                           kvp("size", make_document(kvp("h", 8.5), kvp("w", 11), kvp("uom", "in"))),
                           kvp("status", "D")),
-            make_document(
-                kvp("item", "planner"),
-                kvp("qty", 75),
-                kvp("size", make_document(kvp("h", 22.85), kvp("w", 30), kvp("uom", "cm"))),
-                kvp("status", "D")),
-            make_document(
-                kvp("item", "postcard"),
-                kvp("qty", 45),
-                kvp("size", make_document(kvp("h", 10), kvp("w", 15.25), kvp("uom", "cm"))),
-                kvp("status", "A")),
+            make_document(kvp("item", "planner"),
+                          kvp("qty", 75),
+                          kvp("size", make_document(kvp("h", 22.85), kvp("w", 30), kvp("uom", "cm"))),
+                          kvp("status", "D")),
+            make_document(kvp("item", "postcard"),
+                          kvp("qty", 45),
+                          kvp("size", make_document(kvp("h", 10), kvp("w", 15.25), kvp("uom", "cm"))),
+                          kvp("status", "A")),
         };
 
         db["inventory"].insert_many(docs);
@@ -1462,8 +1389,7 @@ static bool is_snapshot_ready(mongocxx::client& client, mongocxx::collection& co
 // Seed the pets database and wait for the snapshot to become available.
 // This follows the pattern from the Python driver as seen below:
 // https://github.com/mongodb/mongo-python-driver/commit/e325b24b78e431cb889c5902d00b8f4af2c700c3#diff-c5d782e261f04fca18024ab18c3ed38fb45ede24cde4f9092e012f6fcbbe0df5R1368
-static void wait_for_snapshot_ready(mongocxx::client& client,
-                                    std::vector<mongocxx::collection> collections) {
+static void wait_for_snapshot_ready(mongocxx::client& client, std::vector<mongocxx::collection> collections) {
     size_t sleep_time = 1;
 
     for (;;) {
@@ -1536,9 +1462,8 @@ static void snapshot_example1(mongocxx::client& client) {
     // End Snapshot Query Example 1
 
     if (adoptable_pets_count != 2) {
-        throw std::logic_error(
-            "wrong number of adoptable pets in Snapshot Query Example 1, expecting 2 got: " +
-            std::to_string(adoptable_pets_count));
+        throw std::logic_error("wrong number of adoptable pets in Snapshot Query Example 1, expecting 2 got: " +
+                               std::to_string(adoptable_pets_count));
     }
 }
 
@@ -1551,8 +1476,7 @@ static void setup_retail(mongocxx::client& client) {
     auto db = client["retail"];
     db.drop();
     b_date sales_date{system_clock::now()};
-    db["sales"].insert_one(
-        make_document(kvp("shoeType", "boot"), kvp("price", 30), kvp("saleDate", sales_date)));
+    db["sales"].insert_one(make_document(kvp("shoeType", "boot"), kvp("price", 30), kvp("saleDate", sales_date)));
     wait_for_snapshot_ready(client, {db["sales"]});
 }
 
@@ -1573,12 +1497,12 @@ static void snapshot_example2(mongocxx::client& client) {
 
     pipeline p;
 
-    p.match(make_document(kvp("$expr",
-                              make_document(kvp("$gt",
-                                                make_array("$saleDate",
-                                                           make_document(kvp("startDate", "$$NOW"),
-                                                                         kvp("unit", "day"),
-                                                                         kvp("amount", 1))))))))
+    p.match(make_document(
+                kvp("$expr",
+                    make_document(kvp(
+                        "$gt",
+                        make_array("$saleDate",
+                                   make_document(kvp("startDate", "$$NOW"), kvp("unit", "day"), kvp("amount", 1))))))))
         .count("totalDailySales");
 
     auto cursor = db["sales"].aggregate(session, p);
@@ -1626,13 +1550,12 @@ static void queryable_encryption_api(mongocxx::client& client) {
         "docsExamples.encrypted",
         make_document(kvp(
             "fields",
-            make_array(make_document(kvp("path", "encryptedIndexed"),
-                                     kvp("bsonType", "string"),
-                                     kvp("keyId", key1_id),
-                                     kvp("queries", make_document(kvp("queryType", "equality")))),
-                       make_document(kvp("path", "encryptedUnindexed"),
-                                     kvp("bsonType", "string"),
-                                     kvp("keyId", key2_id)))))));
+            make_array(
+                make_document(kvp("path", "encryptedIndexed"),
+                              kvp("bsonType", "string"),
+                              kvp("keyId", key1_id),
+                              kvp("queries", make_document(kvp("queryType", "equality")))),
+                make_document(kvp("path", "encryptedUnindexed"), kvp("bsonType", "string"), kvp("keyId", key2_id)))))));
 
     // Create an Queryable Encryption collection.
     options::auto_encryption auto_encrypt_opts{};
@@ -1643,8 +1566,7 @@ static void queryable_encryption_api(mongocxx::client& client) {
     // Optional, If mongocryptd is not in PATH, then find the binary at MONGOCRYPTD_PATH.
     char* mongocryptd_path = std::getenv("MONGOCRYPTD_PATH");
     if (mongocryptd_path) {
-        auto_encrypt_opts.extra_options(
-            make_document(kvp("mongocryptdSpawnPath", mongocryptd_path)));
+        auto_encrypt_opts.extra_options(make_document(kvp("mongocryptdSpawnPath", mongocryptd_path)));
     }
 
     mongocxx::options::client encrypted_client_opts;
@@ -1661,13 +1583,11 @@ static void queryable_encryption_api(mongocxx::client& client) {
     // Auto encrypt an insert and find.
     {
         // Encrypt an insert.
-        encrypted_collection.insert_one(make_document(kvp("_id", 1),
-                                                      kvp("encryptedIndexed", "indexedValue"),
-                                                      kvp("encryptedUnindexed", "unindexedValue")));
+        encrypted_collection.insert_one(make_document(
+            kvp("_id", 1), kvp("encryptedIndexed", "indexedValue"), kvp("encryptedUnindexed", "unindexedValue")));
 
         // Encrypt a find.
-        auto res =
-            encrypted_collection.find_one(make_document(kvp("encryptedIndexed", "indexedValue")));
+        auto res = encrypted_collection.find_one(make_document(kvp("encryptedIndexed", "indexedValue")));
 
         auto doc = res.value();
 
@@ -1726,8 +1646,7 @@ int EXAMPLES_CDECL main() {
             snapshot_example1(conn);
             snapshot_example2(conn);
         }
-        if (should_run_client_side_encryption_test() && is_replica_set(conn) &&
-            version_at_least(db, 7, 0, 0)) {
+        if (should_run_client_side_encryption_test() && is_replica_set(conn) && version_at_least(db, 7, 0, 0)) {
             queryable_encryption_api(conn);
         }
     } catch (const std::logic_error& e) {

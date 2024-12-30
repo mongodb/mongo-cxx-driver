@@ -167,14 +167,10 @@ TEST_CASE("A database", "[database]") {
     }
 
     SECTION("throws an exception when has_collection causes an error") {
-        database_has_collection->interpose(
-            [](mongoc_database_t*, const char*, bson_error_t* error) {
-                bson_set_error(error,
-                               MONGOC_ERROR_COMMAND,
-                               MONGOC_ERROR_COMMAND_INVALID_ARG,
-                               "expected error from mock");
-                return false;
-            });
+        database_has_collection->interpose([](mongoc_database_t*, const char*, bson_error_t* error) {
+            bson_set_error(error, MONGOC_ERROR_COMMAND, MONGOC_ERROR_COMMAND_INVALID_ARG, "expected error from mock");
+            return false;
+        });
         database database = mongo_client["database"];
         REQUIRE_THROWS(database.has_collection("some_collection"));
     }
@@ -227,24 +223,19 @@ TEST_CASE("A database", "[database]") {
         std::unique_ptr<mongoc_read_prefs_t, decltype(deleter)> saved_preference(nullptr, deleter);
 
         bool called = false;
-        database_set_preference->interpose(
-            [&](mongoc_database_t*, const mongoc_read_prefs_t* read_prefs) {
-                called = true;
-                saved_preference.reset(mongoc_read_prefs_copy(read_prefs));
-                REQUIRE(mongoc_read_prefs_get_mode(read_prefs) ==
-                        libmongoc::conversions::read_mode_t_from_read_mode(
-                            read_preference::read_mode::k_secondary_preferred));
-            });
+        database_set_preference->interpose([&](mongoc_database_t*, const mongoc_read_prefs_t* read_prefs) {
+            called = true;
+            saved_preference.reset(mongoc_read_prefs_copy(read_prefs));
+            REQUIRE(mongoc_read_prefs_get_mode(read_prefs) == libmongoc::conversions::read_mode_t_from_read_mode(
+                                                                  read_preference::read_mode::k_secondary_preferred));
+        });
 
-        database_get_preference
-            ->interpose([&](const mongoc_database_t*) { return saved_preference.get(); })
-            .forever();
+        database_get_preference->interpose([&](const mongoc_database_t*) { return saved_preference.get(); }).forever();
 
         mongo_database.read_preference(std::move(preference));
         REQUIRE(called);
 
-        REQUIRE(read_preference::read_mode::k_secondary_preferred ==
-                mongo_database.read_preference().mode());
+        REQUIRE(read_preference::read_mode::k_secondary_preferred == mongo_database.read_preference().mode());
     }
 
     SECTION("has a write concern which may be set and obtained") {
@@ -258,11 +249,10 @@ TEST_CASE("A database", "[database]") {
         mongoc_write_concern_t* underlying_wc;
 
         bool set_called = false;
-        database_set_concern->interpose(
-            [&](mongoc_database_t*, const mongoc_write_concern_t* concern) {
-                set_called = true;
-                underlying_wc = mongoc_write_concern_copy(concern);
-            });
+        database_set_concern->interpose([&](mongoc_database_t*, const mongoc_write_concern_t* concern) {
+            set_called = true;
+            underlying_wc = mongoc_write_concern_copy(concern);
+        });
 
         bool get_called = false;
         database_get_concern->interpose([&](const mongoc_database_t*) {
@@ -335,10 +325,9 @@ TEST_CASE("Database integration tests", "[database]") {
 
         auto get_results = [](cursor&& cursor) {
             std::vector<bsoncxx::document::value> results;
-            std::transform(cursor.begin(),
-                           cursor.end(),
-                           std::back_inserter(results),
-                           [](bsoncxx::document::view v) { return bsoncxx::document::value{v}; });
+            std::transform(cursor.begin(), cursor.end(), std::back_inserter(results), [](bsoncxx::document::view v) {
+                return bsoncxx::document::value{v};
+            });
             return results;
         };
 
@@ -360,8 +349,7 @@ TEST_CASE("Database integration tests", "[database]") {
             auto results = get_results(std::move(cursor));
 
             REQUIRE(results.size() == 1);
-            REQUIRE(results[0].view()["name"].get_string().value ==
-                    bsoncxx::stdx::string_view("Jane"));
+            REQUIRE(results[0].view()["name"].get_string().value == bsoncxx::stdx::string_view("Jane"));
         }
     }
 
@@ -446,8 +434,8 @@ TEST_CASE("Database integration tests", "[database]") {
         db.drop();
 
         collection default_collection = db.create_collection("list_collections_default");
-        collection capped_collection = db.create_collection(
-            "list_collections_capped", make_document(kvp("capped", true), kvp("size", 256)));
+        collection capped_collection =
+            db.create_collection("list_collections_capped", make_document(kvp("capped", true), kvp("size", 256)));
 
         index_view default_index = default_collection.indexes();
         index_view capped_index = capped_collection.indexes();
@@ -459,8 +447,7 @@ TEST_CASE("Database integration tests", "[database]") {
         capped_collection.insert_one(make_document(kvp("a", 5)));
 
         auto cursor1 = db.list_collections();
-        std::set<std::string> expected_colls1{"list_collections_default",
-                                              "list_collections_capped"};
+        std::set<std::string> expected_colls1{"list_collections_default", "list_collections_capped"};
         REQUIRE(check_for_collections(std::move(cursor1), expected_colls1));
 
         auto cursor2 = db.list_collections(make_document(kvp("options.capped", true)));
@@ -522,20 +509,14 @@ TEST_CASE("serviceId presence depends on load-balancing mode") {
 
     // Set Application Performance Monitoring options (APM):
     mongocxx::options::apm apm_opts;
-    apm_opts.on_command_started(
-        check_service_id<mongocxx::events::command_started_event>{expect_service_id});
-    apm_opts.on_command_succeeded(
-        check_service_id<mongocxx::events::command_succeeded_event>{expect_service_id});
-    apm_opts.on_command_failed(
-        check_service_id<mongocxx::events::command_failed_event>{expect_service_id});
+    apm_opts.on_command_started(check_service_id<mongocxx::events::command_started_event>{expect_service_id});
+    apm_opts.on_command_succeeded(check_service_id<mongocxx::events::command_succeeded_event>{expect_service_id});
+    apm_opts.on_command_failed(check_service_id<mongocxx::events::command_failed_event>{expect_service_id});
 
     // Set up mocking for get_service_id events:
-    auto apm_command_started_get_service_id =
-        libmongoc::apm_command_started_get_service_id.create_instance();
-    auto apm_command_succeeded_get_service_id =
-        libmongoc::apm_command_succeeded_get_service_id.create_instance();
-    auto apm_command_failed_get_service_id =
-        libmongoc::apm_command_failed_get_service_id.create_instance();
+    auto apm_command_started_get_service_id = libmongoc::apm_command_started_get_service_id.create_instance();
+    auto apm_command_succeeded_get_service_id = libmongoc::apm_command_succeeded_get_service_id.create_instance();
+    auto apm_command_failed_get_service_id = libmongoc::apm_command_failed_get_service_id.create_instance();
 
     // Set up mocked functions that DO emit a service_id:
     if (expect_service_id) {

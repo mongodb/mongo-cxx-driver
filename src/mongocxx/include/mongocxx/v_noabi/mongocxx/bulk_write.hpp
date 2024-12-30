@@ -107,9 +107,7 @@ class bulk_write {
 
     class impl;
 
-    bulk_write(const collection& coll,
-               const options::bulk_write& options,
-               const client_session* session = nullptr);
+    bulk_write(const collection& coll, const options::bulk_write& options, const client_session* session = nullptr);
 
     bool _created_from_collection;
     std::unique_ptr<impl> _impl;

@@ -515,8 +515,7 @@ class core {
     ///
     template <typename T>
     core& append(T* v) {
-        static_assert(detail::is_alike<T, char>::value,
-                      "append is disabled for non-char pointer types");
+        static_assert(detail::is_alike<T, char>::value, "append is disabled for non-char pointer types");
         append(types::b_string{v});
 
         return *this;

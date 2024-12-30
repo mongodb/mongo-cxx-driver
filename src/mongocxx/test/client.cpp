@@ -87,8 +87,7 @@ TEST_CASE("list databases passes authorizedDatabases option", "[client]") {
     client_find_databases_with_opts->visit([&](mongoc_client_t*, const bson_t* opts) {
         called = true;
         if (opts) {
-            opts_passed =
-                bsoncxx::document::value{bsoncxx::document::view{bson_get_data(opts), opts->len}};
+            opts_passed = bsoncxx::document::value{bsoncxx::document::view{bson_get_data(opts), opts->len}};
         }
         return nullptr;
     });
@@ -133,8 +132,7 @@ TEST_CASE("A client connects to a provided mongodb uri", "[client]") {
     uri mongodb_uri(expected_url);
     std::string actual_url{};
 
-    client_new->visit(
-        [&](const mongoc_uri_t* url) { actual_url = std::string(mongoc_uri_get_string(url)); });
+    client_new->visit([&](const mongoc_uri_t* url) { actual_url = std::string(mongoc_uri_get_string(url)); });
 
     client a{mongodb_uri};
 
@@ -226,18 +224,15 @@ TEST_CASE("A client's read preferences may be set and obtained", "[client]") {
         called_set = true;
         saved_preference.reset(mongoc_read_prefs_copy(read_prefs));
         REQUIRE(mongoc_read_prefs_get_mode(read_prefs) ==
-                libmongoc::conversions::read_mode_t_from_read_mode(
-                    read_preference::read_mode::k_secondary_preferred));
+                libmongoc::conversions::read_mode_t_from_read_mode(read_preference::read_mode::k_secondary_preferred));
     });
 
-    client_get_preference->interpose([&](const mongoc_client_t*) { return saved_preference.get(); })
-        .forever();
+    client_get_preference->interpose([&](const mongoc_client_t*) { return saved_preference.get(); }).forever();
 
     mongo_client.read_preference_deprecated(std::move(preference));
     REQUIRE(called_set);
 
-    REQUIRE(read_preference::read_mode::k_secondary_preferred ==
-            mongo_client.read_preference().mode());
+    REQUIRE(read_preference::read_mode::k_secondary_preferred == mongo_client.read_preference().mode());
 }
 
 TEST_CASE("A client may not change apm callbacks after they are set", "[client]") {
@@ -268,8 +263,7 @@ TEST_CASE("A client may not change apm callbacks after they are set", "[client]"
     REQUIRE(triggered);
 }
 
-TEST_CASE("A client can delete apm options and the callbacks will still work properly",
-          "[client]") {
+TEST_CASE("A client can delete apm options and the callbacks will still work properly", "[client]") {
     instance::current();
 
     bool triggered = false;
@@ -357,11 +351,9 @@ TEST_CASE("A client can create a named database object", "[client]") {
     auto database_destroy = libmongoc::database_destroy.create_instance();
     database_destroy->interpose([](mongoc_database_t*) {}).forever();
     auto database_set_preference = libmongoc::database_set_read_prefs.create_instance();
-    database_set_preference->interpose([](mongoc_database_t*, const mongoc_read_prefs_t*) {})
-        .forever();
+    database_set_preference->interpose([](mongoc_database_t*, const mongoc_read_prefs_t*) {}).forever();
     auto database_set_concern = libmongoc::database_set_write_concern.create_instance();
-    database_set_concern->interpose([](mongoc_database_t*, const mongoc_write_concern_t*) {})
-        .forever();
+    database_set_concern->interpose([](mongoc_database_t*, const mongoc_write_concern_t*) {}).forever();
 
     bsoncxx::stdx::string_view name("database");
 
@@ -383,8 +375,7 @@ TEST_CASE("integration tests for client metadata handshake feature") {
         auto cursor = db.aggregate(pipeline().current_op(make_document()));
         bool found_op = false;
         for (auto&& op_view : cursor) {
-            if (!op_view["appName"] ||
-                op_view["appName"].get_string().value != bsoncxx::stdx::string_view(app_name)) {
+            if (!op_view["appName"] || op_view["appName"].get_string().value != bsoncxx::stdx::string_view(app_name)) {
                 continue;
             }
 
@@ -398,14 +389,12 @@ TEST_CASE("integration tests for client metadata handshake feature") {
 
             REQUIRE(metadata_view["application"]);
             auto application = metadata_view["application"].get_document();
-            REQUIRE(application.view()["name"].get_string().value ==
-                    bsoncxx::stdx::string_view(app_name));
+            REQUIRE(application.view()["name"].get_string().value == bsoncxx::stdx::string_view(app_name));
 
             REQUIRE(metadata_view["driver"]);
             auto driver = metadata_view["driver"].get_document();
             auto driver_view = driver.view();
-            REQUIRE(driver_view["name"].get_string().value ==
-                    bsoncxx::stdx::string_view{"mongoc / mongocxx"});
+            REQUIRE(driver_view["name"].get_string().value == bsoncxx::stdx::string_view{"mongoc / mongocxx"});
             auto version = bsoncxx::string::to_string(driver_view["version"].get_string().value);
             REQUIRE(version.find(MONGOCXX_VERSION_STRING) != std::string::npos);
 
@@ -458,8 +447,7 @@ TEST_CASE("A client can be constructed with SSL options", "[client]") {
         interposed = *opts;
     });
 
-    client c{uri{"mongodb://mongodb.example.com:9999/?ssl=true"},
-             options::client().tls_opts(tls_opts)};
+    client c{uri{"mongodb://mongodb.example.com:9999/?ssl=true"}, options::client().tls_opts(tls_opts)};
 
     REQUIRE(set_tls_opts_called);
     REQUIRE(interposed.pem_file == pem_file);

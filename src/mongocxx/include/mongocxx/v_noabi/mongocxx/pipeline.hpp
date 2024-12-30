@@ -134,8 +134,7 @@ class pipeline {
     ///   method chaining.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(pipeline&)
-    coll_stats(bsoncxx::v_noabi::document::view_or_value coll_stats_args =
-                   bsoncxx::v_noabi::document::view{});
+    coll_stats(bsoncxx::v_noabi::document::view_or_value coll_stats_args = bsoncxx::v_noabi::document::view{});
 
     ///
     /// Returns a document containing a count of the number of documents input to the stage.

@@ -84,9 +84,9 @@ class array_context {
     ///   The callback to invoke
     ///
     template <typename Func>
-    detail::requires_t<array_context&,
-                       detail::disjunction<detail::is_invocable<Func, array_context>,
-                                           detail::is_invocable<Func, single_context>>>
+    detail::requires_t<
+        array_context&,
+        detail::disjunction<detail::is_invocable<Func, array_context>, detail::is_invocable<Func, single_context>>>
     operator<<(Func&& func) {
         detail::invoke(std::forward<Func>(func), *this);
         return *this;

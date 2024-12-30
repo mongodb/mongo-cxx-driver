@@ -31,8 +31,7 @@ void doc_to_bson_t(const bsoncxx::v_noabi::document::view& doc, bson_t* bson) {
 
 }  // namespace
 
-scoped_bson_t::scoped_bson_t(bsoncxx::document::view_or_value doc)
-    : _is_initialized{true}, _doc{std::move(doc)} {
+scoped_bson_t::scoped_bson_t(bsoncxx::document::view_or_value doc) : _is_initialized{true}, _doc{std::move(doc)} {
     doc_to_bson_t(*_doc, &_bson);
 }
 
@@ -42,8 +41,7 @@ void scoped_bson_t::init_from_static(bsoncxx::document::view_or_value doc) {
     doc_to_bson_t(*_doc, &_bson);
 }
 
-scoped_bson_t::scoped_bson_t(bsoncxx::document::view doc)
-    : scoped_bson_t(bsoncxx::document::view_or_value(doc)) {}
+scoped_bson_t::scoped_bson_t(bsoncxx::document::view doc) : scoped_bson_t(bsoncxx::document::view_or_value(doc)) {}
 
 void scoped_bson_t::init_from_static(bsoncxx::document::view doc) {
     this->init_from_static(bsoncxx::document::view_or_value(doc));
@@ -56,15 +54,13 @@ void scoped_bson_t::init_from_static(bsoncxx::document::value doc) {
     this->init_from_static(bsoncxx::document::view_or_value(std::move(doc)));
 }
 
-scoped_bson_t::scoped_bson_t(
-    bsoncxx::v_noabi::stdx::optional<bsoncxx::document::view_or_value> doc) {
+scoped_bson_t::scoped_bson_t(bsoncxx::v_noabi::stdx::optional<bsoncxx::document::view_or_value> doc) {
     if (doc) {
         this->init_from_static(std::move(*doc));
     }
 }
 
-void scoped_bson_t::init_from_static(
-    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> doc) {
+void scoped_bson_t::init_from_static(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> doc) {
     if (doc) {
         this->init_from_static(std::move(*doc));
     }

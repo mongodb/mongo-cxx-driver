@@ -128,14 +128,10 @@ TEST_CASE("session options", "[session]") {
         // an enumeration:
         enum struct optional_state { empty, no, yes };
 
-        auto causal_consistenty_opt = GENERATE(Catch::Generators::as<optional_state>{},
-                                               optional_state::empty,
-                                               optional_state::no,
-                                               optional_state::yes);
-        auto snapshot_consistenty_opt = GENERATE(Catch::Generators::as<optional_state>{},
-                                                 optional_state::empty,
-                                                 optional_state::no,
-                                                 optional_state::yes);
+        auto causal_consistenty_opt = GENERATE(
+            Catch::Generators::as<optional_state>{}, optional_state::empty, optional_state::no, optional_state::yes);
+        auto snapshot_consistenty_opt = GENERATE(
+            Catch::Generators::as<optional_state>{}, optional_state::empty, optional_state::no, optional_state::yes);
 
         // Only actually set a value if we generate a non-empty setting:
         if (optional_state::empty != causal_consistenty_opt)
@@ -145,8 +141,7 @@ TEST_CASE("session options", "[session]") {
             opts.snapshot(optional_state::yes == snapshot_consistenty_opt);
 
         // We should always expect an error if both are enabled:
-        if (optional_state::yes == causal_consistenty_opt &&
-            optional_state::yes == snapshot_consistenty_opt) {
+        if (optional_state::yes == causal_consistenty_opt && optional_state::yes == snapshot_consistenty_opt) {
             REQUIRE_THROWS_AS(c.start_session(opts), mongocxx::exception);
         } else {
             CHECK_NOTHROW(c.start_session(opts));
@@ -162,9 +157,7 @@ TEST_CASE("start_session failure", "[session]") {
     instance::current();
 
     client_start_session
-        ->interpose([](mongoc_client_t*,
-                       const mongoc_session_opt_t*,
-                       bson_error_t* error) -> mongoc_client_session_t* {
+        ->interpose([](mongoc_client_t*, const mongoc_session_opt_t*, bson_error_t* error) -> mongoc_client_session_t* {
             bson_set_error(error, MONGOC_ERROR_CLIENT, MONGOC_ERROR_CLIENT_SESSION_FAILURE, "foo");
             return nullptr;
         })
@@ -172,8 +165,7 @@ TEST_CASE("start_session failure", "[session]") {
 
     client c{uri{}, test_util::add_test_server_api()};
 
-    REQUIRE_THROWS_MATCHES(
-        c.start_session(), mongocxx::exception, mongocxx_exception_matcher{"foo"});
+    REQUIRE_THROWS_MATCHES(c.start_session(), mongocxx::exception, mongocxx_exception_matcher{"foo"});
 }
 
 TEST_CASE("session", "[session]") {
@@ -203,8 +195,7 @@ TEST_CASE("session", "[session]") {
         REQUIRE(s.operation_time() == zero);
 
         // Advance the cluster time - just a basic test, rely on libmongoc's logic.
-        s.advance_cluster_time(
-            from_json("{\"clusterTime\": {\"$timestamp\": {\"t\": 1, \"i\": 0}}}"));
+        s.advance_cluster_time(from_json("{\"clusterTime\": {\"$timestamp\": {\"t\": 1, \"i\": 0}}}"));
         REQUIRE(!s.cluster_time().empty());
         REQUIRE(s.operation_time() == zero);
 
@@ -241,8 +232,7 @@ TEST_CASE("session", "[session]") {
         auto collection2 = db2["collection"];
 
 #define REQUIRE_THROWS_INVALID_SESSION(_expr) \
-    REQUIRE_THROWS_MATCHES(                   \
-        (_expr), mongocxx::exception, mongocxx_exception_matcher{"Invalid sessionId"})
+    REQUIRE_THROWS_MATCHES((_expr), mongocxx::exception, mongocxx_exception_matcher{"Invalid sessionId"})
 
         REQUIRE_THROWS_INVALID_SESSION(collection2.count_documents(s, {}));
         REQUIRE_THROWS_INVALID_SESSION(collection2.create_index(s, make_document(kvp("a", 1))));
@@ -346,12 +336,10 @@ class session_test {
 
         for (auto& event : events) {
             if (!event.command["lsid"]) {
-                throw std::logic_error{"no lsid in " + event.command_name +
-                                       " with explicit session"};
+                throw std::logic_error{"no lsid in " + event.command_name + " with explicit session"};
             }
             if (event.command["lsid"].get_document().view() != s.id()) {
-                throw std::logic_error{"wrong lsid in " + event.command_name +
-                                       " with explicit session"};
+                throw std::logic_error{"wrong lsid in " + event.command_name + " with explicit session"};
             }
         }
 
@@ -366,12 +354,10 @@ class session_test {
 
         for (auto& event : events) {
             if (!event.command["lsid"]) {
-                throw std::logic_error{"no lsid in " + event.command_name +
-                                       " with implicit session"};
+                throw std::logic_error{"no lsid in " + event.command_name + " with implicit session"};
             }
             if (event.command["lsid"].get_document().view() == s.id()) {
-                throw std::logic_error{"wrong lsid in " + event.command_name +
-                                       " with implicit session"};
+                throw std::logic_error{"wrong lsid in " + event.command_name + " with implicit session"};
             }
         }
     }
@@ -423,8 +409,8 @@ TEST_CASE("lsid", "[session]") {
             options::gridfs::upload opts;
             opts.chunk_size_bytes(1);
 
-            auto up = use_session ? bucket.open_upload_stream(s, "file", opts)
-                                  : bucket.open_upload_stream("file", opts);
+            auto up =
+                use_session ? bucket.open_upload_stream(s, "file", opts) : bucket.open_upload_stream("file", opts);
             up.write(data, len);
             up.close();
 
@@ -444,10 +430,8 @@ TEST_CASE("lsid", "[session]") {
             use_session ? bucket.upload_from_stream_with_id(s, two, "file", &stream, opts)
                         : bucket.upload_from_stream_with_id(two, "file", &stream, opts);
 
-            auto down = use_session ? bucket.open_download_stream(s, two)
-                                    : bucket.open_download_stream(two);
-            use_session ? bucket.download_to_stream(s, two, &stream)
-                        : bucket.download_to_stream(two, &stream);
+            auto down = use_session ? bucket.open_download_stream(s, two) : bucket.open_download_stream(two);
+            use_session ? bucket.download_to_stream(s, two, &stream) : bucket.download_to_stream(two, &stream);
 
             auto cursor = use_session ? bucket.find(s, {}) : bucket.find({});
             auto total = std::distance(cursor.begin(), cursor.end());
@@ -461,8 +445,7 @@ TEST_CASE("lsid", "[session]") {
 
     SECTION("client::list_databases") {
         auto f = [&s, &test](bool use_session) {
-            auto cursor =
-                use_session ? test.client.list_databases(s) : test.client.list_databases();
+            auto cursor = use_session ? test.client.list_databases(s) : test.client.list_databases();
             auto total = std::distance(cursor.begin(), cursor.end());
 
             REQUIRE(total > 0);
@@ -475,8 +458,7 @@ TEST_CASE("lsid", "[session]") {
         auto f = [&s, &collection](bool use_session) {
             options::aggregate opts;
             opts.batch_size(2);
-            auto cursor =
-                use_session ? collection.aggregate(s, {}, opts) : collection.aggregate({}, opts);
+            auto cursor = use_session ? collection.aggregate(s, {}, opts) : collection.aggregate({}, opts);
             auto total = std::distance(cursor.begin(), cursor.end());
 
             REQUIRE(total == 10);
@@ -506,8 +488,7 @@ TEST_CASE("lsid", "[session]") {
 
     SECTION("collection::count") {
         auto f = [&s, &collection](bool use_session) {
-            auto total =
-                use_session ? collection.count_documents(s, {}) : collection.count_documents({});
+            auto total = use_session ? collection.count_documents(s, {}) : collection.count_documents({});
             REQUIRE(total == 10);
         };
 
@@ -516,8 +497,7 @@ TEST_CASE("lsid", "[session]") {
 
     SECTION("collection::create_bulk_write") {
         auto f = [&s, &collection](bool use_session) {
-            auto bulk =
-                use_session ? collection.create_bulk_write(s) : collection.create_bulk_write();
+            auto bulk = use_session ? collection.create_bulk_write(s) : collection.create_bulk_write();
 
             bulk.append(model::insert_one{{}});
             bulk.execute();
@@ -589,8 +569,7 @@ TEST_CASE("lsid", "[session]") {
 
     SECTION("collection::find_one_and_delete") {
         auto f = [&s, &collection](bool use_session) {
-            use_session ? collection.find_one_and_delete(s, {})
-                        : collection.find_one_and_delete({});
+            use_session ? collection.find_one_and_delete(s, {}) : collection.find_one_and_delete({});
         };
 
         test.test_method_with_session(f, s);
@@ -598,8 +577,7 @@ TEST_CASE("lsid", "[session]") {
 
     SECTION("collection::find_one_and_replace") {
         auto f = [&s, &collection](bool use_session) {
-            use_session ? collection.find_one_and_replace(s, {}, {})
-                        : collection.find_one_and_replace({}, {});
+            use_session ? collection.find_one_and_replace(s, {}, {}) : collection.find_one_and_replace({}, {});
         };
 
         test.test_method_with_session(f, s);
@@ -607,8 +585,7 @@ TEST_CASE("lsid", "[session]") {
 
     SECTION("collection::find_one_and_update") {
         auto f = [&s, &collection](bool use_session) {
-            use_session ? collection.find_one_and_update(s, {}, {})
-                        : collection.find_one_and_update({}, {});
+            use_session ? collection.find_one_and_update(s, {}, {}) : collection.find_one_and_update({}, {});
         };
 
         test.test_method_with_session(f, s);
@@ -675,8 +652,7 @@ TEST_CASE("lsid", "[session]") {
     SECTION("collection::update_many") {
         auto f = [&s, &collection](bool use_session) {
             auto u = make_document(kvp("$set", make_document(kvp("a", 1))));
-            use_session ? collection.update_many(s, {}, u.view())
-                        : collection.update_many({}, u.view());
+            use_session ? collection.update_many(s, {}, u.view()) : collection.update_many({}, u.view());
         };
 
         test.test_method_with_session(f, s);
@@ -685,8 +661,7 @@ TEST_CASE("lsid", "[session]") {
     SECTION("collection::update_one") {
         auto f = [&s, &collection](bool use_session) {
             auto u = make_document(kvp("$set", make_document(kvp("a", 1))));
-            use_session ? collection.update_one(s, {}, u.view())
-                        : collection.update_one({}, u.view());
+            use_session ? collection.update_one(s, {}, u.view()) : collection.update_one({}, u.view());
         };
 
         test.test_method_with_session(f, s);
@@ -801,8 +776,7 @@ TEST_CASE("lsid", "[session]") {
     SECTION("index_view::drop_one") {
         auto drop_by_name = [&s, &indexes](bool use_session) {
             auto keys = make_document(kvp("a", 1));
-            auto name =
-                use_session ? indexes.create_one(s, keys.view()) : indexes.create_one(keys.view());
+            auto name = use_session ? indexes.create_one(s, keys.view()) : indexes.create_one(keys.view());
             use_session ? indexes.drop_one(s, name.value()) : indexes.drop_one(name.value());
         };
 
@@ -827,9 +801,7 @@ TEST_CASE("lsid", "[session]") {
     }
 
     SECTION("index_view::drop_all") {
-        auto f = [&s, &indexes](bool use_session) {
-            use_session ? indexes.drop_all(s) : indexes.drop_all();
-        };
+        auto f = [&s, &indexes](bool use_session) { use_session ? indexes.drop_all(s) : indexes.drop_all(); };
 
         test.test_method_with_session(f, s);
     }
@@ -855,15 +827,13 @@ TEST_CASE("with_transaction", "[session]") {
             }
 
             // Test an operation_exception
-            REQUIRE_THROWS_MATCHES(session.with_transaction([](client_session*) {
-                throw operation_exception{{}, "The meaning of life"};
-            }),
-                                   operation_exception,
-                                   mongocxx_exception_matcher{"The meaning of life"});
+            REQUIRE_THROWS_MATCHES(
+                session.with_transaction([](client_session*) { throw operation_exception{{}, "The meaning of life"}; }),
+                operation_exception,
+                mongocxx_exception_matcher{"The meaning of life"});
 
             // Test a different exception
-            REQUIRE_THROWS_AS(session.with_transaction(
-                                  [](client_session*) { throw std::logic_error{"it's 42"}; }),
+            REQUIRE_THROWS_AS(session.with_transaction([](client_session*) { throw std::logic_error{"it's 42"}; }),
                               std::logic_error);
         }
 
@@ -897,10 +867,9 @@ TEST_CASE("unacknowledged write in session", "[session]") {
     SECTION("insert_one") {
         options::insert insert;
         insert.write_concern(noack);
-        REQUIRE_THROWS_MATCHES(
-            collection.insert_one(s, {}, insert),
-            mongocxx::exception,
-            mongocxx_exception_matcher{"Cannot use client session with unacknowledged writes"});
+        REQUIRE_THROWS_MATCHES(collection.insert_one(s, {}, insert),
+                               mongocxx::exception,
+                               mongocxx_exception_matcher{"Cannot use client session with unacknowledged writes"});
     }
 }
 }  // namespace

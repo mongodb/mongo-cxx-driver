@@ -143,8 +143,8 @@ bool check_if_skip_spec_test_impl(const client& client, document::view test, std
     const auto topology = test_util::get_topology(client);
 
     if (test["ignore_if_server_version_greater_than"]) {
-        const auto max_server_version = bsoncxx::string::to_string(
-            test["ignore_if_server_version_greater_than"].get_string().value);
+        const auto max_server_version =
+            bsoncxx::string::to_string(test["ignore_if_server_version_greater_than"].get_string().value);
 
         if (test_util::compare_versions(server_version, max_server_version) > 0) {
             reason.append(server_version);
@@ -174,8 +174,7 @@ bool check_if_skip_spec_test_impl(const client& client, document::view test, std
         }
 
         if (requirements["minServerVersion"]) {
-            const auto min_server_version =
-                string::to_string(requirements["minServerVersion"].get_string().value);
+            const auto min_server_version = string::to_string(requirements["minServerVersion"].get_string().value);
             if (test_util::compare_versions(server_version, min_server_version) < 0) {
                 reason.append(server_version);
                 reason.append(" is greater than minimum server version ");
@@ -185,8 +184,7 @@ bool check_if_skip_spec_test_impl(const client& client, document::view test, std
         }
 
         if (requirements["maxServerVersion"]) {
-            const auto max_server_version =
-                string::to_string(requirements["maxServerVersion"].get_string().value);
+            const auto max_server_version = string::to_string(requirements["maxServerVersion"].get_string().value);
             if (test_util::compare_versions(server_version, max_server_version) > 0) {
                 reason.append(server_version);
                 reason.append(" is greater than max server version ");
@@ -224,8 +222,7 @@ void disable_fail_point(const client& client, bsoncxx::stdx::string_view fail_po
     /* Some transactions tests have a failCommand for "hello" repeat seven times. */
     for (int i = 0; i < kMaxHelloFailCommands; i++) {
         try {
-            client["admin"].run_command(
-                make_document(kvp("configureFailPoint", fail_point), kvp("mode", "off")));
+            client["admin"].run_command(make_document(kvp("configureFailPoint", fail_point), kvp("mode", "off")));
             break;
         } catch (const std::exception&) {
             /* Tests that fail with hello also fail to disable the failpoint
@@ -240,8 +237,7 @@ struct fail_point_guard_type {
     mongocxx::client& client;
     std::string name;
 
-    fail_point_guard_type(mongocxx::client& client, std::string name)
-        : client(client), name(std::move(name)) {}
+    fail_point_guard_type(mongocxx::client& client, std::string name) : client(client), name(std::move(name)) {}
 
     ~fail_point_guard_type() {
         disable_fail_point(client, name);
@@ -253,16 +249,13 @@ struct fail_point_guard_type {
     fail_point_guard_type& operator=(fail_point_guard_type&&) = delete;
 };
 
-void disable_fail_point(std::string uri_string,
-                        options::client client_opts,
-                        bsoncxx::stdx::string_view fail_point) {
+void disable_fail_point(std::string uri_string, options::client client_opts, bsoncxx::stdx::string_view fail_point) {
     mongocxx::client client = {uri{uri_string}, client_opts};
     disable_fail_point(client, fail_point);
 }
 
 static void disable_targeted_fail_point(std::uint32_t server_id) {
-    const auto command_owner =
-        make_document(kvp("configureFailPoint", "failCommand"), kvp("mode", "off"));
+    const auto command_owner = make_document(kvp("configureFailPoint", "failCommand"), kvp("mode", "off"));
     const auto command = command_owner.view();
 
     // Some transactions tests have a failCommand for "hello" repeat seven times.
@@ -327,9 +320,7 @@ void set_up_collection(const client& client,
 
     // For compatibility with Client Side Encryption tests.
     if (test["json_schema"]) {
-        opts.append(
-            kvp("validator",
-                make_document(kvp("$jsonSchema", test["json_schema"].get_document().value))));
+        opts.append(kvp("validator", make_document(kvp("$jsonSchema", test["json_schema"].get_document().value))));
     }
 
     // Execute the "create" command to recreate the collection, using writeConcern "majority".
@@ -447,8 +438,7 @@ void run_operation_check_result(document::view op, make_op_runner_fn make_op_run
         INFO("expected error message " << op["result"]["errorContains"].get_string().value);
         INFO("got error message" << error_msg);
         // Do a case insensitive check.
-        auto error_contains =
-            test_util::tolowercase(op["result"]["errorContains"].get_string().value);
+        auto error_contains = test_util::tolowercase(op["result"]["errorContains"].get_string().value);
         REQUIRE(test_util::tolowercase(error_msg).find(error_contains) < error_msg.length());
     } else if (exception) {
         CAPTURE(server_error);
@@ -503,8 +493,7 @@ void run_operation_check_result(document::view op, make_op_runner_fn make_op_run
         INFO("actual result: " << bsoncxx::to_json(actual_result->view()));
         INFO("expected result: " << bsoncxx::to_json(op));
 
-        REQUIRE(test_util::matches(actual_result->view()["result"].get_value(),
-                                   op["result"].get_value()));
+        REQUIRE(test_util::matches(actual_result->view()["result"].get_value(), op["result"].get_value()));
     }
 }
 
@@ -520,10 +509,8 @@ uri get_uri(document::view test) {
             uri_string = "mongodb://localhost:27017,localhost:27018/?";
 
             // Verify that both mongos are actually present.
-            const mongocxx::client client0 = {uri{"mongodb://localhost:27017"},
-                                              test_util::add_test_server_api()};
-            const mongocxx::client client1 = {uri{"mongodb://localhost:27018"},
-                                              test_util::add_test_server_api()};
+            const mongocxx::client client0 = {uri{"mongodb://localhost:27017"}, test_util::add_test_server_api()};
+            const mongocxx::client client1 = {uri{"mongodb://localhost:27018"}, test_util::add_test_server_api()};
 
             if (!client0["config"].has_collection("shards")) {
                 FAIL("missing required mongos on port 27017 with useMultipleMongoses=true");
@@ -552,8 +539,7 @@ uri get_uri(document::view test) {
                     (test["clientOptions"]["retryReads"].get_bool().value ? "true" : "false"));
         }
         if (test["clientOptions"]["readConcernLevel"]) {
-            add_opt("readConcernLevel=" +
-                    std::string(test["clientOptions"]["readConcernLevel"].get_string().value));
+            add_opt("readConcernLevel=" + std::string(test["clientOptions"]["readConcernLevel"].get_string().value));
         }
         if (test["clientOptions"]["w"]) {
             if (test["clientOptions"]["w"].type() == type::k_int32) {
@@ -563,13 +549,11 @@ uri get_uri(document::view test) {
             }
         }
         if (test["clientOptions"]["heartbeatFrequencyMS"]) {
-            add_opt(
-                "heartbeatFrequencyMS=" +
-                std::to_string(test["clientOptions"]["heartbeatFrequencyMS"].get_int32().value));
+            add_opt("heartbeatFrequencyMS=" +
+                    std::to_string(test["clientOptions"]["heartbeatFrequencyMS"].get_int32().value));
         }
         if (test["clientOptions"]["readPreference"]) {
-            add_opt("readPreference=" +
-                    string::to_string(test["clientOptions"]["readPreference"].get_string().value));
+            add_opt("readPreference=" + string::to_string(test["clientOptions"]["readPreference"].get_string().value));
         }
     }
     return uri{uri_string};
@@ -630,18 +614,15 @@ static void test_setup(document::view test, document::view test_spec) {
 static void parse_session_opts(document::view session_opts, options::client_session* out) {
     options::transaction txn_opts;
     if (session_opts["defaultTransactionOptions"]) {
-        if (auto rc =
-                lookup_read_concern(session_opts["defaultTransactionOptions"].get_document())) {
+        if (auto rc = lookup_read_concern(session_opts["defaultTransactionOptions"].get_document())) {
             txn_opts.read_concern(*rc);
         }
 
-        if (auto wc =
-                lookup_write_concern(session_opts["defaultTransactionOptions"].get_document())) {
+        if (auto wc = lookup_write_concern(session_opts["defaultTransactionOptions"].get_document())) {
             txn_opts.write_concern(*wc);
         }
 
-        if (auto rp =
-                lookup_read_preference(session_opts["defaultTransactionOptions"].get_document())) {
+        if (auto rp = lookup_read_preference(session_opts["defaultTransactionOptions"].get_document())) {
             txn_opts.read_preference(*rp);
         }
 
@@ -748,8 +729,8 @@ static void run_transaction_operations(
                 // exception being thrown after the targetedFailPoint operation but before
                 // activating the disable guard. There is no harm attempting to disable a fail point
                 // that hasn't been set.
-                if (operation["name"] && operation["name"].get_string().value ==
-                                             bsoncxx::stdx::string_view("targetedFailPoint")) {
+                if (operation["name"] &&
+                    operation["name"].get_string().value == bsoncxx::stdx::string_view("targetedFailPoint")) {
                     const auto arguments = operation["arguments"];
 
                     const auto session = [&]() -> mongocxx::client_session* {
@@ -778,8 +759,7 @@ static void run_transaction_operations(
                     targeted_fail_point_guard->emplace(session->server_id());
                 }
 
-                actual_result =
-                    operation_runner{&db, &coll, session0, session1, client}.run(operation);
+                actual_result = operation_runner{&db, &coll, session0, session1, client}.run(operation);
             } catch (const operation_exception& e) {
                 error_msg = e.what();
                 server_error = e.raw_server_error();
@@ -802,12 +782,9 @@ static void run_transaction_operations(
         if (op["result"]["errorContains"]) {
             REQUIRE(exception);
             // Do a case insensitive check.
-            auto error_contains =
-                test_util::tolowercase(op["result"]["errorContains"].get_string().value);
+            auto error_contains = test_util::tolowercase(op["result"]["errorContains"].get_string().value);
 
-            REQUIRE_THAT(
-                error_msg,
-                Catch::Matchers::ContainsSubstring(error_contains, Catch::CaseSensitive::No));
+            REQUIRE_THAT(error_msg, Catch::Matchers::ContainsSubstring(error_contains, Catch::CaseSensitive::No));
         }
 
         // "If the result document has an 'errorCodeName' field, verify that the method threw a
@@ -816,8 +793,7 @@ static void run_transaction_operations(
         if (op["result"]["errorCodeName"]) {
             REQUIRE(exception);
             REQUIRE(server_error);
-            uint32_t expected =
-                error_code_from_name(op["result"]["errorCodeName"].get_string().value);
+            uint32_t expected = error_code_from_name(op["result"]["errorCodeName"].get_string().value);
             REQUIRE(exception->code().value() == static_cast<int>(expected));
         }
 
@@ -828,8 +804,7 @@ static void run_transaction_operations(
             for (auto&& label_el : op["result"]["errorLabelsContain"].get_array().value) {
                 auto label = label_el.get_string().value;
                 if (!exception->has_error_label(label)) {
-                    FAIL("Expected exception to contain the label '" << label
-                                                                     << "' but it did not.\n");
+                    FAIL("Expected exception to contain the label '" << label << "' but it did not.\n");
                 }
             }
         }
@@ -841,8 +816,7 @@ static void run_transaction_operations(
             for (auto&& label_el : op["result"]["errorLabelsOmit"].get_array().value) {
                 auto label = label_el.get_string().value;
                 if (exception->has_error_label(label)) {
-                    FAIL("Expected exception to NOT contain the label '" << label
-                                                                         << "' but it did.\n");
+                    FAIL("Expected exception to NOT contain the label '" << label << "' but it did.\n");
                 }
             }
         }
@@ -855,8 +829,7 @@ static void run_transaction_operations(
             REQUIRE(actual_result->view()["result"]);
             INFO("actual result" << bsoncxx::to_json(actual_result->view()));
             INFO("expected result" << bsoncxx::to_json(op.get_document().value));
-            REQUIRE(test_util::matches(actual_result->view()["result"].get_value(),
-                                       op["result"].get_value()));
+            REQUIRE(test_util::matches(actual_result->view()["result"].get_value(), op["result"].get_value()));
         }
 
         // If we are running inside with_transaction, we need to rethrow what we caught.
@@ -884,8 +857,7 @@ void run_transactions_tests_in_file(const std::string& test_path) {
         const auto description = string::to_string(test["description"].get_string().value);
 
         DYNAMIC_SECTION(description) {
-            client setup_client{get_uri(test.get_document().value),
-                                test_util::add_test_server_api()};
+            client setup_client{get_uri(test.get_document().value), test_util::add_test_server_api()};
 
             // Step 1: If the `skipReason` field is present, skip this test completely.
             CHECK_IF_SKIP_SPEC_TEST(setup_client, test.get_document().value);
@@ -896,8 +868,8 @@ void run_transactions_tests_in_file(const std::string& test_path) {
             {
                 bsoncxx::stdx::optional<fail_point_guard_type> fail_point_guard;
                 if (test["failPoint"]) {
-                    const auto fail_point_name = string::to_string(
-                        test["failPoint"]["configureFailPoint"].get_string().value);
+                    const auto fail_point_name =
+                        string::to_string(test["failPoint"]["configureFailPoint"].get_string().value);
                     fail_point_guard.emplace(setup_client, fail_point_name);
                 }
 
@@ -908,22 +880,18 @@ void run_transactions_tests_in_file(const std::string& test_path) {
                 // (handled by `get_uri()`).
                 options::client client_opts;
                 apm_checker apm_checker;
-                client_opts.apm_opts(
-                    apm_checker.get_apm_opts(true /* command_started_events_only */));
-                client client = {get_uri(test.get_document().value),
-                                 test_util::add_test_server_api(client_opts)};
+                client_opts.apm_opts(apm_checker.get_apm_opts(true /* command_started_events_only */));
+                client client = {get_uri(test.get_document().value), test_util::add_test_server_api(client_opts)};
 
                 options::client_session session0_opts;
                 options::client_session session1_opts;
 
                 if (const auto session_opts = test["sessionOptions"]) {
                     if (session_opts["session0"]) {
-                        parse_session_opts(test["sessionOptions"]["session0"].get_document().value,
-                                           &session0_opts);
+                        parse_session_opts(test["sessionOptions"]["session0"].get_document().value, &session0_opts);
                     }
                     if (session_opts["session1"]) {
-                        parse_session_opts(test["sessionOptions"]["session1"].get_document().value,
-                                           &session1_opts);
+                        parse_session_opts(test["sessionOptions"]["session1"].get_document().value, &session1_opts);
                     }
                 }
 
@@ -949,8 +917,7 @@ void run_transactions_tests_in_file(const std::string& test_path) {
 
                     // If a test uses `targetedFailPoint`, disable the fail point after running all
                     // `operations` to avoid spurious failures in subsequent tests.
-                    bsoncxx::stdx::optional<targeted_fail_point_guard_type>
-                        targeted_fail_point_guard;
+                    bsoncxx::stdx::optional<targeted_fail_point_guard_type> targeted_fail_point_guard;
 
                     // Step 11. Perform the operations.
                     run_transaction_operations(test.get_document().value,
@@ -970,36 +937,33 @@ void run_transactions_tests_in_file(const std::string& test_path) {
                 // compare them to the actual command-started events using the same logic as the
                 // legacy Command Monitoring Spec Tests runner, plus the rules in the
                 // Command-Started Events instructions.
-                test_util::match_visitor visitor =
-                    [&](bsoncxx::stdx::string_view key,
-                        bsoncxx::stdx::optional<bsoncxx::types::bson_value::view> main,
-                        bsoncxx::types::bson_value::view pattern) {
-                        if (key == "lsid") {
-                            REQUIRE(pattern.type() == type::k_string);
-                            REQUIRE(main);
-                            REQUIRE(main->type() == type::k_document);
-                            auto session_name = pattern.get_string().value;
-                            if (session_name == "session0") {
-                                REQUIRE(
-                                    test_util::matches(session_lsid0, main->get_document().value));
-                            } else {
-                                REQUIRE(
-                                    test_util::matches(session_lsid1, main->get_document().value));
-                            }
-                            return test_util::match_action::k_skip;
-                        } else if (pattern.type() == type::k_null) {
-                            if (main) {
-                                return test_util::match_action::k_not_equal;
-                            }
-                            return test_util::match_action::k_skip;
-                        } else if (key == "upsert" || key == "multi") {
-                            // libmongoc includes `multi: false` and `upsert: false`.
-                            // Some tests do not include `multi: false` and `upsert: false`
-                            // in expectations. See DRIVERS-2271 and DRIVERS-976.
-                            return test_util::match_action::k_skip;
+                test_util::match_visitor visitor = [&](bsoncxx::stdx::string_view key,
+                                                       bsoncxx::stdx::optional<bsoncxx::types::bson_value::view> main,
+                                                       bsoncxx::types::bson_value::view pattern) {
+                    if (key == "lsid") {
+                        REQUIRE(pattern.type() == type::k_string);
+                        REQUIRE(main);
+                        REQUIRE(main->type() == type::k_document);
+                        auto session_name = pattern.get_string().value;
+                        if (session_name == "session0") {
+                            REQUIRE(test_util::matches(session_lsid0, main->get_document().value));
+                        } else {
+                            REQUIRE(test_util::matches(session_lsid1, main->get_document().value));
                         }
                         return test_util::match_action::k_skip;
-                    };
+                    } else if (pattern.type() == type::k_null) {
+                        if (main) {
+                            return test_util::match_action::k_not_equal;
+                        }
+                        return test_util::match_action::k_skip;
+                    } else if (key == "upsert" || key == "multi") {
+                        // libmongoc includes `multi: false` and `upsert: false`.
+                        // Some tests do not include `multi: false` and `upsert: false`
+                        // in expectations. See DRIVERS-2271 and DRIVERS-976.
+                        return test_util::match_action::k_skip;
+                    }
+                    return test_util::match_action::k_skip;
+                };
 
                 if (test["expectations"]) {
                     apm_checker.compare(test["expectations"].get_array().value, false, visitor);
@@ -1017,8 +981,7 @@ void run_transactions_tests_in_file(const std::string& test_path) {
                 }
                 client client{get_uri(test.get_document().value), test_util::add_test_server_api()};
                 auto coll = client[db_name][outcome_coll_name];
-                test_util::check_outcome_collection(
-                    &coll, test["outcome"]["collection"].get_document().value);
+                test_util::check_outcome_collection(&coll, test["outcome"]["collection"].get_document().value);
             }
         }
     }
@@ -1069,8 +1032,7 @@ void run_crud_tests_in_file(const std::string& test_path, uri test_uri) {
 
             std::string outcome_collection_name = collection_name;
             if (test["outcome"] && test["outcome"]["collection"]["name"]) {
-                outcome_collection_name =
-                    to_string(test["outcome"]["collection"]["name"].get_string().value);
+                outcome_collection_name = to_string(test["outcome"]["collection"]["name"].get_string().value);
                 auto outcome_collection = database[outcome_collection_name];
                 initialize_collection(&outcome_collection, array::view{});
             }
@@ -1085,51 +1047,48 @@ void run_crud_tests_in_file(const std::string& test_path, uri test_uri) {
             }
 
             apm_checker.clear();
-            auto perform_op =
-                [&database, &op_runner, &test, &outcome_collection_name](document::view operation) {
-                    optional<document::value> actual_outcome_value;
-                    INFO("Operation: " << bsoncxx::to_json(operation));
-                    try {
-                        actual_outcome_value = op_runner.run(operation);
-                    } catch (const mongocxx::operation_exception& e) {
-                        REQUIRE([&operation, &test, &e]() {
-                            if (operation["error"]) { /* v2 tests expect tests[i].operation.error */
-                                return operation["error"].get_bool().value;
-                            } else if (test["outcome"] && test["outcome"]["error"]) {
-                                /* v1 tests expect tests[i].outcome.error (but some tests may
-                                 have "outcome" without a nested "error") */
-                                return test["outcome"]["error"].get_bool().value;
-                            } else {
-                                WARN("Caught operation exception: " << e.what());
-                                return false;
-                            }
-                        }());
-                        return; /* do not check results if error is expected */
-                    } catch (const std::exception& e) {
-                        WARN("Caught exception: " << e.what());
-                    } catch (...) {
-                        WARN("Caught unknown exception");
+            auto perform_op = [&database, &op_runner, &test, &outcome_collection_name](document::view operation) {
+                optional<document::value> actual_outcome_value;
+                INFO("Operation: " << bsoncxx::to_json(operation));
+                try {
+                    actual_outcome_value = op_runner.run(operation);
+                } catch (const mongocxx::operation_exception& e) {
+                    REQUIRE([&operation, &test, &e]() {
+                        if (operation["error"]) { /* v2 tests expect tests[i].operation.error */
+                            return operation["error"].get_bool().value;
+                        } else if (test["outcome"] && test["outcome"]["error"]) {
+                            /* v1 tests expect tests[i].outcome.error (but some tests may
+                             have "outcome" without a nested "error") */
+                            return test["outcome"]["error"].get_bool().value;
+                        } else {
+                            WARN("Caught operation exception: " << e.what());
+                            return false;
+                        }
+                    }());
+                    return; /* do not check results if error is expected */
+                } catch (const std::exception& e) {
+                    WARN("Caught exception: " << e.what());
+                } catch (...) {
+                    WARN("Caught unknown exception");
+                }
+
+                if (test["outcome"]) {
+                    if (test["outcome"]["collection"]) {
+                        auto outcome_collection = database[outcome_collection_name];
+                        test_util::check_outcome_collection(&outcome_collection,
+                                                            test["outcome"]["collection"].get_document().value);
                     }
 
-                    if (test["outcome"]) {
-                        if (test["outcome"]["collection"]) {
-                            auto outcome_collection = database[outcome_collection_name];
-                            test_util::check_outcome_collection(
-                                &outcome_collection,
-                                test["outcome"]["collection"].get_document().value);
-                        }
-
-                        if (test["outcome"]["result"]) {
-                            // wrap the result, since it might not be a document.
-                            bsoncxx::document::view actual_outcome = actual_outcome_value->view();
-                            auto actual_result_wrapped =
-                                make_document(kvp("result", actual_outcome["result"].get_value()));
-                            auto expected_result_wrapped =
-                                make_document(kvp("result", test["outcome"]["result"].get_value()));
-                            REQUIRE_BSON_MATCHES(actual_result_wrapped, expected_result_wrapped);
-                        }
+                    if (test["outcome"]["result"]) {
+                        // wrap the result, since it might not be a document.
+                        bsoncxx::document::view actual_outcome = actual_outcome_value->view();
+                        auto actual_result_wrapped = make_document(kvp("result", actual_outcome["result"].get_value()));
+                        auto expected_result_wrapped =
+                            make_document(kvp("result", test["outcome"]["result"].get_value()));
+                        REQUIRE_BSON_MATCHES(actual_result_wrapped, expected_result_wrapped);
                     }
-                };
+                }
+            };
 
             if (test["operations"]) {
                 /* v2 tests expect a tests[i].operations array */

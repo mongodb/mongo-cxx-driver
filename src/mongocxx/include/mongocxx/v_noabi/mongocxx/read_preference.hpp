@@ -134,8 +134,8 @@ class read_preference {
     ///
     /// @deprecated The tags() method should be used instead.
     ///
-    MONGOCXX_DEPRECATED MONGOCXX_ABI_EXPORT_CDECL() read_preference(
-        read_mode mode, bsoncxx::v_noabi::document::view_or_value tags);
+    MONGOCXX_DEPRECATED MONGOCXX_ABI_EXPORT_CDECL() read_preference(read_mode mode,
+                                                                    bsoncxx::v_noabi::document::view_or_value tags);
 
     MONGOCXX_ABI_EXPORT_CDECL()
     read_preference(read_mode mode, bsoncxx::v_noabi::document::view_or_value tags, deprecated_tag);
@@ -293,8 +293,7 @@ class read_preference {
     ///
     /// @return A hedge document if one was set.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<
-                              bsoncxx::v_noabi::document::view>)
+    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view>)
     hedge() const;
 
     ///
@@ -303,10 +302,8 @@ class read_preference {
     /// Compares two read_preference objects for (in)-equality.
     ///
     /// @{
-    friend MONGOCXX_ABI_EXPORT_CDECL(bool) operator==(const read_preference&,
-                                                      const read_preference&);
-    friend MONGOCXX_ABI_EXPORT_CDECL(bool) operator!=(const read_preference&,
-                                                      const read_preference&);
+    friend MONGOCXX_ABI_EXPORT_CDECL(bool) operator==(const read_preference&, const read_preference&);
+    friend MONGOCXX_ABI_EXPORT_CDECL(bool) operator!=(const read_preference&, const read_preference&);
     /// @}
     ///
 

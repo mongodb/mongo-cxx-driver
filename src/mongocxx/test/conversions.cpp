@@ -21,17 +21,16 @@ namespace {
 using namespace mongocxx;
 
 TEST_CASE("libmongoc::conversions::read_mode_t_from_read_mode works", "[libmongoc::conversions]") {
-    REQUIRE(libmongoc::conversions::read_mode_t_from_read_mode(
-                read_preference::read_mode::k_primary) == MONGOC_READ_PRIMARY);
-    REQUIRE(libmongoc::conversions::read_mode_t_from_read_mode(
-                read_preference::read_mode::k_primary_preferred) == MONGOC_READ_PRIMARY_PREFERRED);
-    REQUIRE(libmongoc::conversions::read_mode_t_from_read_mode(
-                read_preference::read_mode::k_secondary) == MONGOC_READ_SECONDARY);
-    REQUIRE(libmongoc::conversions::read_mode_t_from_read_mode(
-                read_preference::read_mode::k_secondary_preferred) ==
+    REQUIRE(libmongoc::conversions::read_mode_t_from_read_mode(read_preference::read_mode::k_primary) ==
+            MONGOC_READ_PRIMARY);
+    REQUIRE(libmongoc::conversions::read_mode_t_from_read_mode(read_preference::read_mode::k_primary_preferred) ==
+            MONGOC_READ_PRIMARY_PREFERRED);
+    REQUIRE(libmongoc::conversions::read_mode_t_from_read_mode(read_preference::read_mode::k_secondary) ==
+            MONGOC_READ_SECONDARY);
+    REQUIRE(libmongoc::conversions::read_mode_t_from_read_mode(read_preference::read_mode::k_secondary_preferred) ==
             MONGOC_READ_SECONDARY_PREFERRED);
-    REQUIRE(libmongoc::conversions::read_mode_t_from_read_mode(
-                read_preference::read_mode::k_nearest) == MONGOC_READ_NEAREST);
+    REQUIRE(libmongoc::conversions::read_mode_t_from_read_mode(read_preference::read_mode::k_nearest) ==
+            MONGOC_READ_NEAREST);
 }
 
 TEST_CASE("libmongoc::conversions::read_mode_from_read_mode_t works", "[libmongoc::conversions]") {

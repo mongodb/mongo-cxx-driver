@@ -119,8 +119,8 @@ class stack {
 
             if (_buckets.empty()) {
                 // first pass at needing dynamic memory
-                _buckets.emplace_back(reinterpret_cast<T*>(operator new(
-                    sizeof(T) * static_cast<std::size_t>(_bucket_size))));
+                _buckets.emplace_back(
+                    reinterpret_cast<T*>(operator new(sizeof(T) * static_cast<std::size_t>(_bucket_size))));
 
                 _bucket_iter = _buckets.begin();
             } else if (_bucket_size != size * 2) {
@@ -128,8 +128,8 @@ class stack {
                 auto tmp_iter = _bucket_iter;
 
                 if (++tmp_iter == _buckets.end()) {
-                    _buckets.emplace_back(reinterpret_cast<T*>(operator new(
-                        sizeof(T) * static_cast<std::size_t>(_bucket_size))));
+                    _buckets.emplace_back(
+                        reinterpret_cast<T*>(operator new(sizeof(T) * static_cast<std::size_t>(_bucket_size))));
                 }
                 ++_bucket_iter;
             }

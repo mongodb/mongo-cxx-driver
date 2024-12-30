@@ -107,10 +107,7 @@ bool is_set(types::bson_value::view val) {
     return val.type() != bsoncxx::type::k_null;
 }
 
-void special_operator(types::bson_value::view actual,
-                      document::view expected,
-                      entity::map& map,
-                      bool is_root) {
+void special_operator(types::bson_value::view actual, document::view expected, entity::map& map, bool is_root) {
     auto op = *expected.begin();
     REQUIRE(string::to_string(op.key()).rfind("$$", 0) == 0);  // assert special operator
 
@@ -129,8 +126,7 @@ void special_operator(types::bson_value::view actual,
             }
         }
 
-        FAIL("type '" + to_string(actual_t) + "' expected in array '" +
-             to_json(op.get_array().value) + "'");
+        FAIL("type '" + to_string(actual_t) + "' expected in array '" + to_json(op.get_array().value) + "'");
     } else if (string::to_string(op.key()) == "$$unsetOrMatches") {
         auto val = op.get_value();
         if (is_set(actual)) {
@@ -204,8 +200,7 @@ void matches_document(types::bson_value::view actual,
         }
 
         if (!actual_doc[kvp.key()]) {
-            FAIL("expected field '" + string::to_string(kvp.key()) +
-                 "' to be present, but it is absent");
+            FAIL("expected field '" + string::to_string(kvp.key()) + "' to be present, but it is absent");
         }
 
         assert::matches(actual_doc[kvp.key()].get_value(), kvp.get_value(), map, false);
@@ -213,8 +208,7 @@ void matches_document(types::bson_value::view actual,
     }
 
     if (!is_root && extra_fields > 0) {
-        FAIL("match failed: non-root document contains " + std::to_string(extra_fields) +
-             " extra fields");
+        FAIL("match failed: non-root document contains " + std::to_string(extra_fields) + " extra fields");
     }
 }
 
@@ -232,8 +226,7 @@ void matches_array(types::bson_value::view actual,
 
     REQUIRE(test_util::size(actual_arr) == test_util::size(expected_arr));
     int idx = 0;
-    for (auto a = actual_arr.begin(), e = expected_arr.begin(); e != expected_arr.end();
-         e++, a++, ++idx) {
+    for (auto a = actual_arr.begin(), e = expected_arr.begin(); e != expected_arr.end(); e++, a++, ++idx) {
         match_scope_array_idx scope_idx{idx};
         assert::matches(a->get_value(), e->get_value(), map, is_array_of_root_docs);
     }

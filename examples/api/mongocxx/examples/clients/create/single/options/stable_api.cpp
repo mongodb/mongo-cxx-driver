@@ -26,8 +26,7 @@ namespace {
 
 // [Example]
 mongocxx::client example() {
-    mongocxx::options::server_api server_api_opts{
-        mongocxx::options::server_api::version::k_version_1};
+    mongocxx::options::server_api server_api_opts{mongocxx::options::server_api::version::k_version_1};
 
     server_api_opts.strict(true);
     // ... other Stable API options.

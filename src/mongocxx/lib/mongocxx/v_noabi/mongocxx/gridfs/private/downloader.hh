@@ -40,9 +40,8 @@ class downloader::impl {
           chunk_buffer_ptr{nullptr},
           start{start_param},
           chunks{chunks_param ? std::move(chunks_param) : bsoncxx::v_noabi::stdx::nullopt},
-          chunks_curr{chunks
-                          ? bsoncxx::v_noabi::stdx::make_optional<cursor::iterator>(chunks->begin())
-                          : bsoncxx::v_noabi::stdx::nullopt},
+          chunks_curr{chunks ? bsoncxx::v_noabi::stdx::make_optional<cursor::iterator>(chunks->begin())
+                             : bsoncxx::v_noabi::stdx::nullopt},
           chunks_end{chunks ? bsoncxx::v_noabi::stdx::make_optional<cursor::iterator>(chunks->end())
                             : bsoncxx::v_noabi::stdx::nullopt},
           chunks_seen{0},

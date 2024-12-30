@@ -51,9 +51,8 @@ int EXAMPLES_CDECL main() {
     // causal consistency.
     auto session = conn.start_session();
     auto coll = conn["db"]["collection"];
-    auto result = coll.update_one(session,
-                                  make_document(kvp("_id", 1)),
-                                  make_document(kvp("$inc", make_document(kvp("x", 1)))));
+    auto result =
+        coll.update_one(session, make_document(kvp("_id", 1)), make_document(kvp("$inc", make_document(kvp("x", 1)))));
 
     std::cout << "Updated " << result->modified_count() << " documents" << std::endl;
 

@@ -94,8 +94,7 @@ index& index::language_override(bsoncxx::v_noabi::string::view_or_value language
     return *this;
 }
 
-index& index::partial_filter_expression(
-    bsoncxx::v_noabi::document::view partial_filter_expression) {
+index& index::partial_filter_expression(bsoncxx::v_noabi::document::view partial_filter_expression) {
     _partial_filter_expression = partial_filter_expression;
     return *this;
 }
@@ -141,8 +140,7 @@ const bsoncxx::v_noabi::stdx::optional<bool>& index::hidden() const {
     return _hidden;
 }
 
-const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value>& index::name()
-    const {
+const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value>& index::name() const {
     return _name;
 }
 
@@ -170,18 +168,15 @@ const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view>& index:
     return _weights;
 }
 
-const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value>&
-index::default_language() const {
+const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value>& index::default_language() const {
     return _default_language;
 }
 
-const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value>&
-index::language_override() const {
+const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value>& index::language_override() const {
     return _language_override;
 }
 
-const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view>&
-index::partial_filter_expression() const {
+const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view>& index::partial_filter_expression() const {
     return _partial_filter_expression;
 }
 
@@ -288,17 +283,14 @@ index::operator bsoncxx::v_noabi::document::view_or_value() {
     if (_storage_options) {
         if (_storage_options->type() == MONGOC_INDEX_STORAGE_OPT_WIREDTIGER) {
             const options::index::wiredtiger_storage_options* wt_options =
-                static_cast<const options::index::wiredtiger_storage_options*>(
-                    _storage_options.get());
+                static_cast<const options::index::wiredtiger_storage_options*>(_storage_options.get());
 
             bsoncxx::v_noabi::document::view_or_value storage_doc;
             if (wt_options->config_string()) {
-                storage_doc = make_document(
-                    kvp("wiredTiger",
-                        make_document(kvp("configString", *wt_options->config_string()))));
+                storage_doc =
+                    make_document(kvp("wiredTiger", make_document(kvp("configString", *wt_options->config_string()))));
             } else {
-                storage_doc = make_document(
-                    kvp("wiredTiger", make_document(kvp("configString", types::b_null{}))));
+                storage_doc = make_document(kvp("wiredTiger", make_document(kvp("configString", types::b_null{}))));
             }
 
             root.append(kvp("storageEngine", storage_doc));
@@ -311,8 +303,7 @@ index::base_storage_options::~base_storage_options() = default;
 
 index::wiredtiger_storage_options::~wiredtiger_storage_options() = default;
 
-void index::wiredtiger_storage_options::config_string(
-    bsoncxx::v_noabi::string::view_or_value config_string) {
+void index::wiredtiger_storage_options::config_string(bsoncxx::v_noabi::string::view_or_value config_string) {
     _config_string = std::move(config_string);
 }
 

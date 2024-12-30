@@ -25,18 +25,16 @@
 
 #define EXAMPLES_CONCAT2(a, b) EXAMPLES_CONCAT_IMPL(a, b)
 #define EXAMPLES_CONCAT3(a, b, c) EXAMPLES_CONCAT2(EXAMPLES_CONCAT2(a, b), c)
-#define EXAMPLES_CONCAT4(a, b, c, d) \
-    EXAMPLES_CONCAT2(EXAMPLES_CONCAT2(a, b), EXAMPLES_CONCAT2(c, d))
+#define EXAMPLES_CONCAT4(a, b, c, d) EXAMPLES_CONCAT2(EXAMPLES_CONCAT2(a, b), EXAMPLES_CONCAT2(c, d))
 #define EXAMPLES_CONCAT_IMPL(a, b) a##b
 
 #define EXAMPLES_STR(e) #e
 
 // Unconditionally `assert()` expectations in examples.
-#define EXPECT(...)                                                                             \
-    if (!static_cast<bool>(__VA_ARGS__)) {                                                      \
-        std::printf(                                                                            \
-            "%s:%d: %s: expectation failed: %s\n", __FILE__, __LINE__, __func__, #__VA_ARGS__); \
-        std::fflush(stdout);                                                                    \
-        std::abort();                                                                           \
-    } else                                                                                      \
+#define EXPECT(...)                                                                                     \
+    if (!static_cast<bool>(__VA_ARGS__)) {                                                              \
+        std::printf("%s:%d: %s: expectation failed: %s\n", __FILE__, __LINE__, __func__, #__VA_ARGS__); \
+        std::fflush(stdout);                                                                            \
+        std::abort();                                                                                   \
+    } else                                                                                              \
         ((void)0)

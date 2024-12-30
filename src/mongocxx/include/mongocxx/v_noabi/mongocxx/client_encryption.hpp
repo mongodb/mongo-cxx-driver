@@ -105,14 +105,13 @@ class client_encryption {
      * @return collection A handle to the newly created collection
      */
     MONGOCXX_ABI_EXPORT_CDECL(collection)
-    create_encrypted_collection(
-        const database& db,
-        const std::string& coll_name,
-        const bsoncxx::v_noabi::document::view& options,
-        bsoncxx::v_noabi::document::value& out_options,
-        const std::string& kms_provider,
-        const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view>& masterkey =
-            bsoncxx::v_noabi::stdx::nullopt);
+    create_encrypted_collection(const database& db,
+                                const std::string& coll_name,
+                                const bsoncxx::v_noabi::document::view& options,
+                                bsoncxx::v_noabi::document::value& out_options,
+                                const std::string& kms_provider,
+                                const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view>& masterkey =
+                                    bsoncxx::v_noabi::stdx::nullopt);
 
     ///
     /// Encrypts a BSON value with a given key and algorithm.
@@ -145,8 +144,7 @@ class client_encryption {
     /// @returns The encrypted expression.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::document::value)
-    encrypt_expression(bsoncxx::v_noabi::document::view_or_value expr,
-                       const options::encrypt& opts);
+    encrypt_expression(bsoncxx::v_noabi::document::view_or_value expr, const options::encrypt& opts);
 
     ///
     /// Decrypts an encrypted value (BSON binary of subtype 6).
@@ -186,8 +184,7 @@ class client_encryption {
     /// - https://www.mongodb.com/docs/manual/reference/method/KeyVault.rewrapManyDataKey/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(result::rewrap_many_datakey)
-    rewrap_many_datakey(bsoncxx::v_noabi::document::view_or_value filter,
-                        const options::rewrap_many_datakey& opts);
+    rewrap_many_datakey(bsoncxx::v_noabi::document::view_or_value filter, const options::rewrap_many_datakey& opts);
 
     ///
     /// Removes the key document with the given UUID (BSON binary subtype 0x04)

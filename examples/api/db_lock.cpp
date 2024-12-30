@@ -46,8 +46,7 @@ db_lock::db_lock(mongocxx::client& client, std::string name) : _client_ptr(&clie
         _name = std::move(_name).substr(_name.size() - db_name_size_max, db_name_size_max);
     }
 
-    ((void)std::lock_guard<std::mutex>{db_locks_mut},
-     _lock = std::unique_lock<std::mutex>(db_locks[name]));
+    ((void)std::lock_guard<std::mutex>{db_locks_mut}, _lock = std::unique_lock<std::mutex>(db_locks[name]));
 
     this->get().drop(wc_majority());
 }

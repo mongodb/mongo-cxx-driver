@@ -44,8 +44,7 @@ transaction& transaction::read_concern(const mongocxx::v_noabi::read_concern& rc
     return *this;
 }
 
-bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::read_concern> transaction::read_concern()
-    const {
+bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::read_concern> transaction::read_concern() const {
     return _impl->read_concern();
 }
 
@@ -54,8 +53,7 @@ transaction& transaction::write_concern(const mongocxx::v_noabi::write_concern& 
     return *this;
 }
 
-bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern> transaction::write_concern()
-    const {
+bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern> transaction::write_concern() const {
     return _impl->write_concern();
 }
 
@@ -64,8 +62,7 @@ transaction& transaction::read_preference(const mongocxx::v_noabi::read_preferen
     return *this;
 }
 
-bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::read_preference> transaction::read_preference()
-    const {
+bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::read_preference> transaction::read_preference() const {
     return _impl->read_preference();
 }
 
@@ -74,8 +71,7 @@ transaction& transaction::max_commit_time_ms(std::chrono::milliseconds ms) {
     return *this;
 }
 
-bsoncxx::v_noabi::stdx::optional<std::chrono::milliseconds> transaction::max_commit_time_ms()
-    const {
+bsoncxx::v_noabi::stdx::optional<std::chrono::milliseconds> transaction::max_commit_time_ms() const {
     return _impl->max_commit_time_ms();
 }
 

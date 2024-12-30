@@ -29,8 +29,8 @@
 
 using namespace mongocxx;
 
-static bool has_api_version_1(
-    const mongocxx::client& client = mongocxx::client(uri(), test_util::add_test_server_api())) {
+static bool has_api_version_1(const mongocxx::client& client = mongocxx::client(uri(),
+                                                                                test_util::add_test_server_api())) {
     // API Version 1 was introduced in 5.0.
     return test_util::get_max_wire_version(client) >= 13;
 }
@@ -44,14 +44,12 @@ static bool has_api_version_1_with_count(
     const auto version = test_util::get_server_version(client);
 
     // BACKPORT-12171: count command was backported to 5.0.9.
-    if (test_util::compare_versions(version, "5.0") == 0 &&
-        test_util::compare_versions(version, "5.0.9") >= 0) {
+    if (test_util::compare_versions(version, "5.0") == 0 && test_util::compare_versions(version, "5.0.9") >= 0) {
         return true;
     }
 
     // BACKPORT-12170: count command was backported to 5.3.2.
-    if (test_util::compare_versions(version, "5.3") == 0 &&
-        test_util::compare_versions(version, "5.3.2") >= 0) {
+    if (test_util::compare_versions(version, "5.3") == 0 && test_util::compare_versions(version, "5.3.2") >= 0) {
         return true;
     }
 
@@ -167,8 +165,7 @@ TEST_CASE("Versioned API, with insert-many for 'count' migration") {
     using namespace mongocxx;
     mongocxx::client client{
         uri{},
-        options::client{}.server_api_opts(
-            options::server_api{options::server_api::version::k_version_1}.strict(true))};
+        options::client{}.server_api_opts(options::server_api{options::server_api::version::k_version_1}.strict(true))};
     using namespace bsoncxx::builder::basic;
 
     // Drop in case we have stale data
@@ -208,9 +205,9 @@ TEST_CASE("Versioned API, with insert-many for 'count' migration") {
     } catch (const mongocxx::operation_exception& error) {
         INFO(error.what());
         CHECK(error.code().value() == 323);
-        CHECK_THAT(error.what(),
-                   Catch::Matchers::StartsWith(
-                       "Provided apiStrict:true, but the command count is not in API Version 1."));
+        CHECK_THAT(
+            error.what(),
+            Catch::Matchers::StartsWith("Provided apiStrict:true, but the command count is not in API Version 1."));
     }
 
 #if 0

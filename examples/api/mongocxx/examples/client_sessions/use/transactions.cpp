@@ -55,8 +55,7 @@ void example(mongocxx::client_session session, mongocxx::collection coll) {
     }
 
     {
-        auto result_opt =
-            coll.update_many(session, bsoncxx::from_json(R"({"x": {"$exists": 1}})"), inc.view());
+        auto result_opt = coll.update_many(session, bsoncxx::from_json(R"({"x": {"$exists": 1}})"), inc.view());
 
         EXPECT(result_opt);
         EXPECT(result_opt->modified_count() == 3);
@@ -76,8 +75,7 @@ RUNNER_REGISTER_COMPONENT_FOR_REPLICA() {
     try {
         db_lock guard{client, EXAMPLES_COMPONENT_NAME_STR};
 
-        example(client.start_session(),
-                set_rw_concern_majority(guard.get()).create_collection("coll"));
+        example(client.start_session(), set_rw_concern_majority(guard.get()).create_collection("coll"));
     } catch (const mongocxx::exception& ex) {
         if (std::strstr(ex.what(), "not supported") != nullptr) {
             // MongoDB 4.2+ required for sharded clusters.

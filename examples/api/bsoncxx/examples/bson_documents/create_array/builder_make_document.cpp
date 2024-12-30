@@ -26,8 +26,7 @@ namespace {
 
 // [Example]
 void example() {
-    bsoncxx::array::value owner =
-        bsoncxx::builder::basic::make_array(std::int32_t{1}, 2.0, "three");
+    bsoncxx::array::value owner = bsoncxx::builder::basic::make_array(std::int32_t{1}, 2.0, "three");
     bsoncxx::array::view arr = owner.view();
 
     EXPECT(arr[0].get_int32().value == 1);

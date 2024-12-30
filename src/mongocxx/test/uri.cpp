@@ -30,8 +30,7 @@ TEST_CASE("URI", "[uri]") {
     SECTION("Default URI") {
         REQUIRE_NOTHROW(mongocxx::uri{});
         REQUIRE_NOTHROW(mongocxx::uri{mongocxx::uri::k_default_uri});
-        REQUIRE(mongocxx::uri{}.to_string() ==
-                mongocxx::uri{mongocxx::uri::k_default_uri}.to_string());
+        REQUIRE(mongocxx::uri{}.to_string() == mongocxx::uri{mongocxx::uri::k_default_uri}.to_string());
 
         mongocxx::uri u{};
 
@@ -45,8 +44,7 @@ TEST_CASE("URI", "[uri]") {
         REQUIRE(u.hosts()[0].port == 27017);
         REQUIRE(u.options().empty());
         REQUIRE(u.password() == "");
-        REQUIRE(u.read_concern().acknowledge_level() ==
-                mongocxx::read_concern::level::k_server_default);
+        REQUIRE(u.read_concern().acknowledge_level() == mongocxx::read_concern::level::k_server_default);
         REQUIRE(u.read_concern().acknowledge_string().empty());
         REQUIRE(u.read_preference().mode() == mongocxx::read_preference::read_mode::k_primary);
         REQUIRE(!u.read_preference().tags());
@@ -74,8 +72,7 @@ TEST_CASE("URI", "[uri]") {
         } catch (const mongocxx::logic_error& e) {
             REQUIRE(e.code() == mongocxx::error_code::k_invalid_uri);
 
-            std::string invalid_schema =
-                "Invalid URI Schema, expecting 'mongodb://' or 'mongodb+srv://': ";
+            std::string invalid_schema = "Invalid URI Schema, expecting 'mongodb://' or 'mongodb+srv://': ";
 
             REQUIRE(e.what() == invalid_schema + e.code().message());
         }
@@ -212,18 +209,15 @@ TEST_CASE("uri::auth_mechanism_properties()", "[uri]") {
 }
 
 TEST_CASE("uri::connect_timeout_ms()", "[uri]") {
-    _test_int32_option("connectTimeoutMS",
-                       [](mongocxx::uri& uri) { return uri.connect_timeout_ms(); });
+    _test_int32_option("connectTimeoutMS", [](mongocxx::uri& uri) { return uri.connect_timeout_ms(); });
 }
 
 TEST_CASE("uri::direct_connection()", "[uri]") {
-    _test_bool_option("directConnection",
-                      [](mongocxx::uri& uri) { return uri.direct_connection(); });
+    _test_bool_option("directConnection", [](mongocxx::uri& uri) { return uri.direct_connection(); });
 }
 
 TEST_CASE("uri::local_threshold_ms()", "[uri]") {
-    _test_int32_option("localThresholdMS",
-                       [](mongocxx::uri& uri) { return uri.local_threshold_ms(); });
+    _test_int32_option("localThresholdMS", [](mongocxx::uri& uri) { return uri.local_threshold_ms(); });
 }
 
 TEST_CASE("uri::max_pool_size()", "[uri]") {
@@ -244,13 +238,11 @@ TEST_CASE("uri::server_selection_timeout_ms()", "[uri]") {
 }
 
 TEST_CASE("uri::server_selection_try_once()", "[uri]") {
-    _test_bool_option("serverSelectionTryOnce",
-                      [](mongocxx::uri& uri) { return uri.server_selection_try_once(); });
+    _test_bool_option("serverSelectionTryOnce", [](mongocxx::uri& uri) { return uri.server_selection_try_once(); });
 }
 
 TEST_CASE("uri::socket_timeout_ms()", "[uri]") {
-    _test_int32_option("socketTimeoutMS",
-                       [](mongocxx::uri& uri) { return uri.socket_timeout_ms(); });
+    _test_int32_option("socketTimeoutMS", [](mongocxx::uri& uri) { return uri.socket_timeout_ms(); });
 }
 
 TEST_CASE("uri::tls_allow_invalid_certificates()", "[uri]") {
@@ -259,8 +251,7 @@ TEST_CASE("uri::tls_allow_invalid_certificates()", "[uri]") {
 }
 
 TEST_CASE("uri::tls_allow_invalid_hostnames()", "[uri]") {
-    _test_bool_option("tlsAllowInvalidHostnames",
-                      [](mongocxx::uri& uri) { return uri.tls_allow_invalid_hostnames(); });
+    _test_bool_option("tlsAllowInvalidHostnames", [](mongocxx::uri& uri) { return uri.tls_allow_invalid_hostnames(); });
 }
 
 TEST_CASE("uri::tls_ca_file()", "[uri]") {
@@ -268,8 +259,7 @@ TEST_CASE("uri::tls_ca_file()", "[uri]") {
 }
 
 TEST_CASE("uri::tls_certificate_key_file()", "[uri]") {
-    _test_string_option("tlsCertificateKeyFile",
-                        [](mongocxx::uri& uri) { return uri.tls_certificate_key_file(); });
+    _test_string_option("tlsCertificateKeyFile", [](mongocxx::uri& uri) { return uri.tls_certificate_key_file(); });
 }
 
 TEST_CASE("uri::tls_certificate_key_file_password()", "[uri]") {
@@ -278,9 +268,8 @@ TEST_CASE("uri::tls_certificate_key_file_password()", "[uri]") {
 }
 
 TEST_CASE("uri::tls_disable_certificate_revocation_check()", "[uri]") {
-    _test_bool_option("tlsDisableCertificateRevocationCheck", [](mongocxx::uri& uri) {
-        return uri.tls_disable_certificate_revocation_check();
-    });
+    _test_bool_option("tlsDisableCertificateRevocationCheck",
+                      [](mongocxx::uri& uri) { return uri.tls_disable_certificate_revocation_check(); });
 }
 
 TEST_CASE("uri::tls_disable_ocsp_endpoint_check()", "[uri]") {
@@ -293,8 +282,7 @@ TEST_CASE("uri::tls_insecure()", "[uri]") {
 }
 
 TEST_CASE("uri::wait_queue_timeout_ms()", "[uri]") {
-    _test_int32_option("waitQueueTimeoutMS",
-                       [](mongocxx::uri& uri) { return uri.wait_queue_timeout_ms(); });
+    _test_int32_option("waitQueueTimeoutMS", [](mongocxx::uri& uri) { return uri.wait_queue_timeout_ms(); });
 }
 
 // Begin special cases.
@@ -305,17 +293,14 @@ TEST_CASE("uri::compressors()", "[uri]") {
     mongocxx::uri uri{"mongodb://host/?compressors=zlib,noop"};
     std::vector<bsoncxx::stdx::string_view> compressors = uri.compressors();
     REQUIRE(compressors.size() == 2);
-    REQUIRE(std::find(compressors.begin(), compressors.end(), bsoncxx::stdx::string_view(zlib)) !=
-            compressors.end());
-    REQUIRE(std::find(compressors.begin(), compressors.end(), bsoncxx::stdx::string_view(noop)) !=
-            compressors.end());
+    REQUIRE(std::find(compressors.begin(), compressors.end(), bsoncxx::stdx::string_view(zlib)) != compressors.end());
+    REQUIRE(std::find(compressors.begin(), compressors.end(), bsoncxx::stdx::string_view(noop)) != compressors.end());
 
     /* Present with some invalid, only returns valid. */
     uri = mongocxx::uri{"mongodb://host/?compressors=zlib,invalid"};
     compressors = uri.compressors();
     REQUIRE(compressors.size() == 1);
-    REQUIRE(std::find(compressors.begin(), compressors.end(), bsoncxx::stdx::string_view(zlib)) !=
-            compressors.end());
+    REQUIRE(std::find(compressors.begin(), compressors.end(), bsoncxx::stdx::string_view(zlib)) != compressors.end());
 
     /* Not present, empty list. */
     uri = mongocxx::uri{"mongodb://host/"};
@@ -336,19 +321,13 @@ TEST_CASE("uri::compressors()", "[uri]") {
 // Zero is not allowed for heartbeatFrequencyMS.
 TEST_CASE("uri::heartbeat_frequency_ms()", "[uri]") {
     _test_int32_option(
-        "heartbeatFrequencyMS",
-        [](mongocxx::uri& uri) { return uri.heartbeat_frequency_ms(); },
-        "1234",
-        false);
+        "heartbeatFrequencyMS", [](mongocxx::uri& uri) { return uri.heartbeat_frequency_ms(); }, "1234", false);
 }
 
 // -1 to 9 are only valid values of zlib compression level.
 TEST_CASE("uri::zlib_compression_level()", "[uri]") {
     _test_int32_option(
-        "zlibCompressionLevel",
-        [](mongocxx::uri& uri) { return uri.zlib_compression_level(); },
-        "5",
-        true);
+        "zlibCompressionLevel", [](mongocxx::uri& uri) { return uri.zlib_compression_level(); }, "5", true);
 }
 
 // End special cases.

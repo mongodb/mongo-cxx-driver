@@ -92,18 +92,14 @@
     BSONCXX_IF_MSVC(BSONCXX_PRAGMA(warning(pop)))           \
     BSONCXX_FORCE_SEMICOLON
 
-#define _bsoncxxDisableWarningImpl_for_GCC(...) \
-    BSONCXX_IF_GCC(BSONCXX_PRAGMA(GCC diagnostic ignored __VA_ARGS__))
+#define _bsoncxxDisableWarningImpl_for_GCC(...) BSONCXX_IF_GCC(BSONCXX_PRAGMA(GCC diagnostic ignored __VA_ARGS__))
 
-#define _bsoncxxDisableWarningImpl_for_Clang(...) \
-    BSONCXX_IF_CLANG(BSONCXX_PRAGMA(GCC diagnostic ignored __VA_ARGS__))
+#define _bsoncxxDisableWarningImpl_for_Clang(...) BSONCXX_IF_CLANG(BSONCXX_PRAGMA(GCC diagnostic ignored __VA_ARGS__))
 
-#define _bsoncxxDisableWarningImpl_for_GNU(...)     \
-    _bsoncxxDisableWarningImpl_for_GCC(__VA_ARGS__) \
-        _bsoncxxDisableWarningImpl_for_Clang(__VA_ARGS__)
+#define _bsoncxxDisableWarningImpl_for_GNU(...) \
+    _bsoncxxDisableWarningImpl_for_GCC(__VA_ARGS__) _bsoncxxDisableWarningImpl_for_Clang(__VA_ARGS__)
 
-#define _bsoncxxDisableWarningImpl_for_MSVC(...) \
-    BSONCXX_IF_MSVC(BSONCXX_PRAGMA(warning(disable : __VA_ARGS__)))
+#define _bsoncxxDisableWarningImpl_for_MSVC(...) BSONCXX_IF_MSVC(BSONCXX_PRAGMA(warning(disable : __VA_ARGS__)))
 
 #define BSONCXX_FWD(...) static_cast<decltype(__VA_ARGS__)&&>(__VA_ARGS__)
 

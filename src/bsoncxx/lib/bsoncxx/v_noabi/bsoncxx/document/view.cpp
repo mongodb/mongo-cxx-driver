@@ -93,10 +93,8 @@ view::const_iterator view::cbegin() const {
         return cend();
     }
 
-    return const_iterator{element{data(),
-                                  static_cast<uint32_t>(length()),
-                                  bson_iter_offset(&iter),
-                                  bson_iter_key_len(&iter)}};
+    return const_iterator{
+        element{data(), static_cast<uint32_t>(length()), bson_iter_offset(&iter), bson_iter_key_len(&iter)}};
 }
 
 view::const_iterator view::cend() const {
@@ -139,8 +137,8 @@ view::const_iterator view::find(stdx::string_view key) const {
         return const_iterator(element(key));
     }
 
-    return const_iterator(element(
-        _data, static_cast<uint32_t>(_length), bson_iter_offset(&iter), bson_iter_key_len(&iter)));
+    return const_iterator(
+        element(_data, static_cast<uint32_t>(_length), bson_iter_offset(&iter), bson_iter_key_len(&iter)));
 }
 
 element view::operator[](stdx::string_view key) const {
@@ -167,8 +165,7 @@ bool view::empty() const {
 }
 
 bool operator==(view lhs, view rhs) {
-    return (lhs.length() == rhs.length()) &&
-           (std::memcmp(lhs.data(), rhs.data(), lhs.length()) == 0);
+    return (lhs.length() == rhs.length()) && (std::memcmp(lhs.data(), rhs.data(), lhs.length()) == 0);
 }
 
 bool operator!=(view lhs, view rhs) {

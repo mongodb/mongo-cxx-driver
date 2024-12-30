@@ -42,12 +42,11 @@ namespace bson_value {
 
 view::view() noexcept : view(nullptr) {}
 
-#define BSONCXX_ENUM(name, val)                                                                \
-    view::view(b_##name v) noexcept                                                            \
-        : _type(static_cast<bsoncxx::v_noabi::type>(val)), _b_##name(std::move(v)) {           \
-        static_assert(std::is_nothrow_copy_constructible<b_##name>::value, "Copy may throw");  \
-        static_assert(std::is_nothrow_copy_assignable<b_##name>::value, "Copy may throw");     \
-        static_assert(std::is_nothrow_destructible<b_##name>::value, "Destruction may throw"); \
+#define BSONCXX_ENUM(name, val)                                                                                  \
+    view::view(b_##name v) noexcept : _type(static_cast<bsoncxx::v_noabi::type>(val)), _b_##name(std::move(v)) { \
+        static_assert(std::is_nothrow_copy_constructible<b_##name>::value, "Copy may throw");                    \
+        static_assert(std::is_nothrow_copy_assignable<b_##name>::value, "Copy may throw");                       \
+        static_assert(std::is_nothrow_destructible<b_##name>::value, "Destruction may throw");                   \
     }
 
 #include <bsoncxx/enums/type.hpp>
@@ -104,10 +103,7 @@ bsoncxx::v_noabi::type view::type() const {
 #include <bsoncxx/enums/type.hpp>
 #undef BSONCXX_ENUM
 
-view::view(const std::uint8_t* raw,
-           std::uint32_t length,
-           std::uint32_t offset,
-           std::uint32_t keylen) {
+view::view(const std::uint8_t* raw, std::uint32_t length, std::uint32_t offset, std::uint32_t keylen) {
     BSONCXX_CITER;
 
     auto value = bson_iter_value(&iter);

@@ -81,8 +81,7 @@ class insert {
     /// @see
     /// - https://www.mongodb.com/docs/manual/core/write-concern/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<
-                              mongocxx::v_noabi::write_concern>&)
+    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern>&)
     write_concern() const;
 
     ///

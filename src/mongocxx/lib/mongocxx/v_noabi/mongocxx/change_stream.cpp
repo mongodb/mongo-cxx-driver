@@ -55,8 +55,7 @@ change_stream::iterator change_stream::end() const {
     return iterator{change_stream::iterator::iter_type::k_end, this};
 }
 
-bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view> change_stream::get_resume_token()
-    const {
+bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view> change_stream::get_resume_token() const {
     return _impl->get_resume_token();
 }
 
@@ -64,8 +63,7 @@ bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view> change_stream
 change_stream::change_stream(void* change_stream_ptr)
     : _impl(bsoncxx::make_unique<impl>(static_cast<mongoc_change_stream_t*>(change_stream_ptr))) {}
 
-change_stream::iterator::iterator()
-    : change_stream::iterator::iterator{iter_type::k_default_constructed, nullptr} {}
+change_stream::iterator::iterator() : change_stream::iterator::iterator{iter_type::k_default_constructed, nullptr} {}
 
 const bsoncxx::v_noabi::document::view& change_stream::iterator::operator*() const {
     return _change_stream->_impl->doc();

@@ -72,8 +72,7 @@ class operation_exception : public exception {
     /// @returns The raw server error, if it is available.
     ///
     /// @{
-    const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::value>& raw_server_error()
-        const;
+    const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::value>& raw_server_error() const;
     bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::value>& raw_server_error();
     /// @}
     ///

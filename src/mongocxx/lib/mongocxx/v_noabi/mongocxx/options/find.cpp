@@ -138,13 +138,11 @@ const bsoncxx::v_noabi::stdx::optional<std::int32_t>& find::batch_size() const {
     return _batch_size;
 }
 
-const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value>& find::collation()
-    const {
+const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value>& find::collation() const {
     return _collation;
 }
 
-const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value>& find::comment()
-    const {
+const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value>& find::comment() const {
     return _comment;
 }
 
@@ -160,18 +158,16 @@ const bsoncxx::v_noabi::stdx::optional<std::int64_t>& find::limit() const {
     return _limit;
 }
 
-const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> find::let()
-    const {
+const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> find::let() const {
     return _let;
 }
 
-const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value>&
-find::comment_option() const {
+const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value>& find::comment_option()
+    const {
     return _comment_option;
 }
 
-const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value>& find::max()
-    const {
+const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value>& find::max() const {
     return _max;
 }
 
@@ -183,8 +179,7 @@ const bsoncxx::v_noabi::stdx::optional<std::chrono::milliseconds>& find::max_tim
     return _max_time;
 }
 
-const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value>& find::min()
-    const {
+const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value>& find::min() const {
     return _min;
 }
 
@@ -192,8 +187,7 @@ const bsoncxx::v_noabi::stdx::optional<bool>& find::no_cursor_timeout() const {
     return _no_cursor_timeout;
 }
 
-const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value>&
-find::projection() const {
+const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value>& find::projection() const {
     return _projection;
 }
 
@@ -209,13 +203,11 @@ const bsoncxx::v_noabi::stdx::optional<std::int64_t>& find::skip() const {
     return _skip;
 }
 
-const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value>& find::sort()
-    const {
+const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value>& find::sort() const {
     return _ordering;
 }
 
-const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::read_preference>& find::read_preference()
-    const {
+const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::read_preference>& find::read_preference() const {
     return _read_preference;
 }
 

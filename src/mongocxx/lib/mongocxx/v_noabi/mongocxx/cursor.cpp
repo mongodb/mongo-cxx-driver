@@ -45,12 +45,11 @@ cursor::iterator& cursor::iterator::operator++() {
 
     if (libmongoc::cursor_next(_cursor->_impl->cursor_t, &out)) {
         _cursor->_impl->doc = bsoncxx::v_noabi::document::view{bson_get_data(out), out->len};
-    } else if (libmongoc::cursor_error_document(
-                   _cursor->_impl->cursor_t, &error, &error_document)) {
+    } else if (libmongoc::cursor_error_document(_cursor->_impl->cursor_t, &error, &error_document)) {
         _cursor->_impl->mark_dead();
         if (error_document) {
-            bsoncxx::v_noabi::document::value error_doc{bsoncxx::v_noabi::document::view{
-                bson_get_data(error_document), error_document->len}};
+            bsoncxx::v_noabi::document::value error_doc{
+                bsoncxx::v_noabi::document::view{bson_get_data(error_document), error_document->len}};
             throw_exception<query_exception>(error_doc, error);
         } else {
             throw_exception<query_exception>(error);

@@ -33,12 +33,10 @@ hint::hint(bsoncxx::v_noabi::string::view_or_value index) : _index_string(std::m
 
 bsoncxx::v_noabi::types::bson_value::view hint::to_value() const {
     if (_index_doc) {
-        return bsoncxx::v_noabi::types::bson_value::view{
-            bsoncxx::v_noabi::types::b_document{_index_doc->view()}};
+        return bsoncxx::v_noabi::types::bson_value::view{bsoncxx::v_noabi::types::b_document{_index_doc->view()}};
     }
 
-    return bsoncxx::v_noabi::types::bson_value::view{
-        bsoncxx::v_noabi::types::b_string{*_index_string}};
+    return bsoncxx::v_noabi::types::bson_value::view{bsoncxx::v_noabi::types::b_string{*_index_string}};
 }
 
 bool operator==(const hint& index_hint, std::string index) {

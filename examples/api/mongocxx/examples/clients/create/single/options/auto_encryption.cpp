@@ -63,9 +63,7 @@ RUNNER_REGISTER_COMPONENT_WITH_INSTANCE() {
 
         example(make_document(kvp(
             "local",
-            make_document(kvp(
-                "key",
-                bsoncxx::types::b_binary{bsoncxx::binary_sub_type::k_binary, 96, local_key})))));
+            make_document(kvp("key", bsoncxx::types::b_binary{bsoncxx::binary_sub_type::k_binary, 96, local_key})))));
     } catch (const mongocxx::exception& ex) {
         if (std::strstr(ex.what(), "ENABLE_CLIENT_SIDE_ENCRYPTION") != nullptr) {
             // Library may not be configured with TLS/SSL support enabled.

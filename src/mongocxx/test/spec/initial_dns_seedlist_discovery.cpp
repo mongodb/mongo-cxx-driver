@@ -73,14 +73,12 @@ static bsoncxx::document::value _doc_from_file(bsoncxx::stdx::string_view sub_pa
     std::ifstream file{path};
     REQUIRE(file);
 
-    std::string file_contents((std::istreambuf_iterator<char>(file)),
-                              std::istreambuf_iterator<char>());
+    std::string file_contents((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
 
     return bsoncxx::from_json(file_contents);
 }
 
-static void assert_elements_equal(bsoncxx::document::element expected_option,
-                                  bsoncxx::document::element my_option) {
+static void assert_elements_equal(bsoncxx::document::element expected_option, bsoncxx::document::element my_option) {
     REQUIRE(expected_option.type() == my_option.type());
     switch (expected_option.type()) {
         case bsoncxx::type::k_int32:
@@ -114,8 +112,7 @@ static void assert_elements_equal(bsoncxx::document::element expected_option,
         case bsoncxx::type::k_maxkey:
         case bsoncxx::type::k_minkey:
         default:
-            std::string msg =
-                "option type not handled: " + bsoncxx::to_string(expected_option.type());
+            std::string msg = "option type not handled: " + bsoncxx::to_string(expected_option.type());
             throw std::logic_error(msg);
     }
 }
@@ -141,9 +138,7 @@ static void compare_options(bsoncxx::document::view_or_value expected_options,
     }
 }
 
-static bool hosts_are_equal(bsoncxx::array::view expected_hosts,
-                            std::vector<std::string> actual,
-                            std::mutex& mtx) {
+static bool hosts_are_equal(bsoncxx::array::view expected_hosts, std::vector<std::string> actual, std::mutex& mtx) {
     const std::lock_guard<std::mutex> lock(mtx);
 
     std::vector<std::string> expected;
@@ -225,8 +220,7 @@ static void run_srv_max_hosts_test_file(const initial_dns_seedlist_test& test) {
         REQUIRE(!test.error);
         if (should_ping) {
             validate_srv_max_hosts(client, test, mtx, new_hosts);
-            mongocxx::pool pool{my_uri,
-                                options::pool(test_util::add_test_server_api(client_options))};
+            mongocxx::pool pool{my_uri, options::pool(test_util::add_test_server_api(client_options))};
             auto pool_client = pool.acquire();
             validate_srv_max_hosts(*pool_client, test, mtx, new_hosts);
         }

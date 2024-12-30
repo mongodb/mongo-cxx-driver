@@ -26,15 +26,14 @@ namespace mongocxx {
 namespace v_noabi {
 namespace options {
 
-using unique_server_api =
-    std::unique_ptr<mongoc_server_api_t, decltype(libmongoc::server_api_destroy)>;
+using unique_server_api = std::unique_ptr<mongoc_server_api_t, decltype(libmongoc::server_api_destroy)>;
 
 inline unique_server_api make_server_api(const server_api& opts) {
     mongoc_server_api_version_t mongoc_api_version;
 
     // Convert version enum value to std::string then to c_str to create mongoc api version.
-    auto result = libmongoc::server_api_version_from_string(
-        server_api::version_to_string(opts.get_version()).c_str(), &mongoc_api_version);
+    auto result = libmongoc::server_api_version_from_string(server_api::version_to_string(opts.get_version()).c_str(),
+                                                            &mongoc_api_version);
     if (!result) {
         throw mongocxx::v_noabi::logic_error{
             mongocxx::v_noabi::error_code::k_invalid_parameter,
@@ -51,8 +50,7 @@ inline unique_server_api make_server_api(const server_api& opts) {
         libmongoc::server_api_strict(mongoc_server_api_opts, opts.strict().value_or(false));
     }
     if (opts.deprecation_errors().value_or(false)) {
-        libmongoc::server_api_deprecation_errors(mongoc_server_api_opts,
-                                                 opts.deprecation_errors().value_or(false));
+        libmongoc::server_api_deprecation_errors(mongoc_server_api_opts, opts.deprecation_errors().value_or(false));
     }
 
     return {mongoc_server_api_opts, libmongoc::server_api_destroy};

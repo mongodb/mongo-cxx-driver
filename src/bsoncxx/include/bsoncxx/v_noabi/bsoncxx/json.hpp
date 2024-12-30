@@ -108,12 +108,10 @@ using ::bsoncxx::v_noabi::operator"" _bson;
 namespace bsoncxx {
 
 /// @ref bsoncxx::v_noabi::to_json(v_noabi::document::view view, v_noabi::ExtendedJsonMode mode)
-std::string to_json(v_noabi::document::view view,
-                    v_noabi::ExtendedJsonMode mode = ExtendedJsonMode::k_legacy);
+std::string to_json(v_noabi::document::view view, v_noabi::ExtendedJsonMode mode = ExtendedJsonMode::k_legacy);
 
 /// @ref bsoncxx::v_noabi::to_json(v_noabi::array::view view, v_noabi::ExtendedJsonMode mode)
-std::string to_json(v_noabi::array::view view,
-                    v_noabi::ExtendedJsonMode mode = ExtendedJsonMode::k_legacy);
+std::string to_json(v_noabi::array::view view, v_noabi::ExtendedJsonMode mode = ExtendedJsonMode::k_legacy);
 
 /// @ref bsoncxx::v_noabi::from_json(v_noabi::stdx::string_view json)
 v_noabi::document::value from_json(v_noabi::stdx::string_view json);

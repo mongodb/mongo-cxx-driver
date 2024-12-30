@@ -58,11 +58,9 @@ void aggregation_examples(const mongocxx::database& db) {
         mongocxx::pipeline p{};
         p.unwind("$items");
         p.match(make_document(kvp("items.fruit", "banana")));
-        p.group(make_document(
-            kvp("_id", make_document(kvp("day", make_document(kvp("$dayOfWeek", "$date"))))),
-            kvp("count", make_document(kvp("$sum", "$items.quantity")))));
-        p.project(make_document(
-            kvp("dayOfWeek", "$_id.day"), kvp("numberSold", "$count"), kvp("_id", 0)));
+        p.group(make_document(kvp("_id", make_document(kvp("day", make_document(kvp("$dayOfWeek", "$date"))))),
+                              kvp("count", make_document(kvp("$sum", "$items.quantity")))));
+        p.project(make_document(kvp("dayOfWeek", "$_id.day"), kvp("numberSold", "$count"), kvp("_id", 0)));
         p.sort(make_document(kvp("numberSold", 1)));
 
         auto cursor = db["sales"].aggregate(p, mongocxx::options::aggregate{});
@@ -85,20 +83,16 @@ void aggregation_examples(const mongocxx::database& db) {
             kvp("items_sold", make_document(kvp("$sum", "$items.quantity"))),
             kvp("revenue",
                 make_document(
-                    kvp("$sum",
-                        make_document(
-                            kvp("$multiply", make_array("$items.quantity", "$items.price"))))))));
+                    kvp("$sum", make_document(kvp("$multiply", make_array("$items.quantity", "$items.price"))))))));
         p.project(make_document(
             kvp("day", "$_id.day"),
             kvp("revenue", 1),
             kvp("items_sold", 1),
             kvp("discount",
-                make_document(
-                    kvp("$cond",
-                        make_document(
-                            kvp("if", make_document(kvp("$lte", make_array("$revenue", 250)))),
-                            kvp("then", 25),
-                            kvp("else", 0)))))));
+                make_document(kvp("$cond",
+                                  make_document(kvp("if", make_document(kvp("$lte", make_array("$revenue", 250)))),
+                                                kvp("then", 25),
+                                                kvp("else", 0)))))));
         auto cursor = db["sales"].aggregate(p, mongocxx::options::aggregate{});
         // End Aggregation Example 3
 
@@ -117,23 +111,20 @@ void aggregation_examples(const mongocxx::database& db) {
             kvp("from", "air_airlines"),
             kvp("let", make_document(kvp("constituents", "$airlines"))),
             kvp("pipeline",
-                make_array(make_document(
-                    kvp("$match",
-                        make_document(kvp(
-                            "$expr",
-                            make_document(kvp("$in", make_array("$name", "$$constituents"))))))))),
+                make_array(make_document(kvp(
+                    "$match",
+                    make_document(kvp("$expr", make_document(kvp("$in", make_array("$name", "$$constituents"))))))))),
             kvp("as", "airlines")));
         p.project(make_document(
             kvp("_id", 0),
             kvp("name", 1),
             kvp("airlines",
-                make_document(kvp(
-                    "$filter",
-                    make_document(kvp("input", "$airlines"),
-                                  kvp("as", "airline"),
-                                  kvp("cond",
-                                      make_document(kvp(
-                                          "$eq", make_array("$$airline.country", "Canada"))))))))));
+                make_document(
+                    kvp("$filter",
+                        make_document(
+                            kvp("input", "$airlines"),
+                            kvp("as", "airline"),
+                            kvp("cond", make_document(kvp("$eq", make_array("$$airline.country", "Canada"))))))))));
 
         auto cursor = db["air_alliances"].aggregate(p, mongocxx::options::aggregate{});
         // End Aggregation Example 4

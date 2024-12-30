@@ -43,24 +43,23 @@ namespace mongocxx {
 namespace v_noabi {
 namespace gridfs {
 
-uploader::uploader(
-    const client_session* session,
-    bsoncxx::v_noabi::types::bson_value::view id,
-    bsoncxx::v_noabi::stdx::string_view filename,
-    collection files,
-    collection chunks,
-    std::int32_t chunk_size,
-    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> metadata)
-    : _impl{bsoncxx::make_unique<impl>(
-          session,
-          id,
-          filename,
-          files,
-          chunks,
-          chunk_size,
-          metadata ? bsoncxx::v_noabi::stdx::make_optional<bsoncxx::v_noabi::document::value>(
-                         bsoncxx::v_noabi::document::value{metadata->view()})
-                   : bsoncxx::v_noabi::stdx::nullopt)} {}
+uploader::uploader(const client_session* session,
+                   bsoncxx::v_noabi::types::bson_value::view id,
+                   bsoncxx::v_noabi::stdx::string_view filename,
+                   collection files,
+                   collection chunks,
+                   std::int32_t chunk_size,
+                   bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> metadata)
+    : _impl{bsoncxx::make_unique<impl>(session,
+                                       id,
+                                       filename,
+                                       files,
+                                       chunks,
+                                       chunk_size,
+                                       metadata
+                                           ? bsoncxx::v_noabi::stdx::make_optional<bsoncxx::v_noabi::document::value>(
+                                                 bsoncxx::v_noabi::document::value{metadata->view()})
+                                           : bsoncxx::v_noabi::stdx::nullopt)} {}
 
 uploader::uploader() noexcept = default;
 uploader::uploader(uploader&&) noexcept = default;
@@ -77,8 +76,7 @@ void uploader::write(const std::uint8_t* bytes, std::size_t length) {
     }
 
     while (length > 0) {
-        std::size_t buffer_free_space =
-            static_cast<std::size_t>(_get_impl().chunk_size) - _get_impl().buffer_off;
+        std::size_t buffer_free_space = static_cast<std::size_t>(_get_impl().chunk_size) - _get_impl().buffer_off;
 
         if (buffer_free_space == 0) {
             finish_chunk();
@@ -103,8 +101,8 @@ result::gridfs::upload uploader::close() {
 
     bsoncxx::v_noabi::builder::basic::document file;
 
-    std::int64_t bytes_uploaded = static_cast<std::int64_t>(_get_impl().chunks_written) *
-                                  static_cast<std::int64_t>(_get_impl().chunk_size);
+    std::int64_t bytes_uploaded =
+        static_cast<std::int64_t>(_get_impl().chunks_written) * static_cast<std::int64_t>(_get_impl().chunk_size);
     std::int64_t leftover = static_cast<std::int64_t>(_get_impl().buffer_off);
 
     finish_chunk();
@@ -113,8 +111,7 @@ result::gridfs::upload uploader::close() {
     file.append(kvp("_id", _get_impl().result.id()));
     file.append(kvp("length", bytes_uploaded + leftover));
     file.append(kvp("chunkSize", _get_impl().chunk_size));
-    file.append(
-        kvp("uploadDate", bsoncxx::v_noabi::types::b_date{std::chrono::system_clock::now()}));
+    file.append(kvp("uploadDate", bsoncxx::v_noabi::types::b_date{std::chrono::system_clock::now()}));
     file.append(kvp("filename", _get_impl().filename));
 
     if (_get_impl().metadata) {
@@ -194,8 +191,7 @@ void uploader::flush_chunks() {
     }
 
     if (_get_impl().session) {
-        _get_impl().chunks.insert_many(*_get_impl().session,
-                                       _get_impl().chunks_collection_documents);
+        _get_impl().chunks.insert_many(*_get_impl().session, _get_impl().chunks_collection_documents);
     } else {
         _get_impl().chunks.insert_many(_get_impl().chunks_collection_documents);
     }

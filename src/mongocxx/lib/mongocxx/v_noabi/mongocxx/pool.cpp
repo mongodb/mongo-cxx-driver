@@ -60,8 +60,7 @@ pool::pool(const uri& uri, const options::pool& options)
 #if defined(MONGOCXX_ENABLE_SSL) && defined(MONGOC_ENABLE_SSL)
     if (options.client_opts().tls_opts()) {
         if (!uri.tls())
-            throw exception{error_code::k_invalid_parameter,
-                            "cannot set TLS options if 'tls=true' not in URI"};
+            throw exception{error_code::k_invalid_parameter, "cannot set TLS options if 'tls=true' not in URI"};
 
         auto mongoc_opts = options::make_tls_opts(*options.client_opts().tls_opts());
         _impl->tls_options = std::move(mongoc_opts.second);
@@ -74,12 +73,10 @@ pool::pool(const uri& uri, const options::pool& options)
 
     if (options.client_opts().auto_encryption_opts()) {
         const auto& auto_encrypt_opts = *(options.client_opts().auto_encryption_opts());
-        auto mongoc_auto_encrypt_opts =
-            static_cast<mongoc_auto_encryption_opts_t*>(auto_encrypt_opts.convert());
+        auto mongoc_auto_encrypt_opts = static_cast<mongoc_auto_encryption_opts_t*>(auto_encrypt_opts.convert());
 
         bson_error_t error;
-        auto r = libmongoc::client_pool_enable_auto_encryption(
-            _impl->client_pool_t, mongoc_auto_encrypt_opts, &error);
+        auto r = libmongoc::client_pool_enable_auto_encryption(_impl->client_pool_t, mongoc_auto_encrypt_opts, &error);
 
         libmongoc::auto_encryption_opts_destroy(mongoc_auto_encrypt_opts);
 
@@ -102,8 +99,7 @@ pool::pool(const uri& uri, const options::pool& options)
         auto mongoc_server_api_opts = options::make_server_api(server_api_opts);
 
         bson_error_t error;
-        auto result = libmongoc::client_pool_set_server_api(
-            _impl->client_pool_t, mongoc_server_api_opts.get(), &error);
+        auto result = libmongoc::client_pool_set_server_api(_impl->client_pool_t, mongoc_server_api_opts.get(), &error);
 
         if (!result) {
             throw_exception<operation_exception>(error);
@@ -134,12 +130,10 @@ pool::entry::entry(pool::entry::unique_client p) : _client(std::move(p)) {}
 pool::entry pool::acquire() {
     auto cli = libmongoc::client_pool_pop(_impl->client_pool_t);
     if (!cli)
-        throw exception{
-            error_code::k_pool_wait_queue_timeout,
-            "failed to acquire client, possibly due to parameter 'waitQueueTimeoutMS' limits."};
+        throw exception{error_code::k_pool_wait_queue_timeout,
+                        "failed to acquire client, possibly due to parameter 'waitQueueTimeoutMS' limits."};
 
-    return entry(
-        entry::unique_client(new client(cli), [this](client* client) { _release(client); }));
+    return entry(entry::unique_client(new client(cli), [this](client* client) { _release(client); }));
 }
 
 bsoncxx::v_noabi::stdx::optional<pool::entry> pool::try_acquire() {
@@ -147,8 +141,7 @@ bsoncxx::v_noabi::stdx::optional<pool::entry> pool::try_acquire() {
     if (!cli)
         return bsoncxx::v_noabi::stdx::nullopt;
 
-    return entry(
-        entry::unique_client(new client(cli), [this](client* client) { _release(client); }));
+    return entry(entry::unique_client(new client(cli), [this](client* client) { _release(client); }));
 }
 
 }  // namespace v_noabi

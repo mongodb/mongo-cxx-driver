@@ -43,12 +43,11 @@ int EXAMPLES_CDECL main() {
 
     // Create a Document
     {
-        auto doc_value = make_document(
-            kvp("name", "MongoDB"),
-            kvp("type", "database"),
-            kvp("count", 1),
-            kvp("versions", make_array("v6.0", "v5.0", "v4.4", "v4.2", "v4.0", "v3.6")),
-            kvp("info", make_document(kvp("x", 203), kvp("y", 102))));
+        auto doc_value = make_document(kvp("name", "MongoDB"),
+                                       kvp("type", "database"),
+                                       kvp("count", 1),
+                                       kvp("versions", make_array("v6.0", "v5.0", "v4.4", "v4.2", "v4.0", "v3.6")),
+                                       kvp("info", make_document(kvp("x", 203), kvp("y", 102))));
 
         auto doc_view = doc_value.view();
         auto element = doc_view["name"];
@@ -100,8 +99,7 @@ int EXAMPLES_CDECL main() {
     // Print All Documents in a Collection
     {
         auto cursor_all = collection.find({});
-        std::cout << "collection " << collection.name()
-                  << " contains these documents:" << std::endl;
+        std::cout << "collection " << collection.name() << " contains these documents:" << std::endl;
         for (auto doc : cursor_all) {
             std::cout << bsoncxx::to_json(doc, bsoncxx::ExtendedJsonMode::k_relaxed) << std::endl;
         }
@@ -118,8 +116,7 @@ int EXAMPLES_CDECL main() {
 
     // Get All Documents That Match a Filter
     {
-        auto cursor_filtered =
-            collection.find(make_document(kvp("i", make_document(kvp("$gt", 0), kvp("$lte", 2)))));
+        auto cursor_filtered = collection.find(make_document(kvp("i", make_document(kvp("$gt", 0), kvp("$lte", 2)))));
         for (auto doc : cursor_filtered) {
             // Do something with doc
             assert(doc["_id"].type() == bsoncxx::type::k_oid);
@@ -128,18 +125,16 @@ int EXAMPLES_CDECL main() {
 
     // Update a Single Document
     {
-        auto update_one_result =
-            collection.update_one(make_document(kvp("i", 0)),
-                                  make_document(kvp("$set", make_document(kvp("foo", "bar")))));
+        auto update_one_result = collection.update_one(make_document(kvp("i", 0)),
+                                                       make_document(kvp("$set", make_document(kvp("foo", "bar")))));
         assert(update_one_result);  // Acknowledged writes return results.
         assert(update_one_result->modified_count() == 1);
     }
 
     // Update Multiple Documents
     {
-        auto update_many_result =
-            collection.update_many(make_document(kvp("i", make_document(kvp("$gt", 0)))),
-                                   make_document(kvp("$set", make_document(kvp("foo", "buzz")))));
+        auto update_many_result = collection.update_many(make_document(kvp("i", make_document(kvp("$gt", 0)))),
+                                                         make_document(kvp("$set", make_document(kvp("foo", "buzz")))));
         assert(update_many_result);  // Acknowledged writes return results.
         assert(update_many_result->modified_count() == 2);
     }
@@ -153,8 +148,7 @@ int EXAMPLES_CDECL main() {
 
     // Delete All Documents That Match a Filter
     {
-        auto delete_many_result =
-            collection.delete_many(make_document(kvp("i", make_document(kvp("$gt", 0)))));
+        auto delete_many_result = collection.delete_many(make_document(kvp("i", make_document(kvp("$gt", 0)))));
         assert(delete_many_result);  // Acknowledged writes return results.
         assert(delete_many_result->deleted_count() == 2);
     }

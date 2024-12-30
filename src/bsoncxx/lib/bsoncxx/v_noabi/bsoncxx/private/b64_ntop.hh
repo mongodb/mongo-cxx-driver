@@ -119,10 +119,7 @@ const char Pad64 = '=';
  *    characters followed by one "=" padding character.
  */
 
-inline int ntop(const std::uint8_t* src,
-                std::size_t srclength,
-                char* target,
-                std::size_t targsize) {
+inline int ntop(const std::uint8_t* src, std::size_t srclength, char* target, std::size_t targsize) {
     std::size_t datalength = 0;
     std::uint8_t input[3];
     std::uint8_t output[4];

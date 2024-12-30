@@ -31,11 +31,10 @@ namespace bsoncxx {
 namespace detail {
 
 template <typename T>
-using is_bson_view_compatible =
-    detail::conjunction<std::is_constructible<bsoncxx::v_noabi::types::bson_value::view, T>,
-                        detail::negation<detail::disjunction<
-                            detail::is_alike<T, bsoncxx::v_noabi::types::bson_value::view>,
-                            detail::is_alike<T, bsoncxx::v_noabi::types::bson_value::value>>>>;
+using is_bson_view_compatible = detail::conjunction<
+    std::is_constructible<bsoncxx::v_noabi::types::bson_value::view, T>,
+    detail::negation<detail::disjunction<detail::is_alike<T, bsoncxx::v_noabi::types::bson_value::view>,
+                                         detail::is_alike<T, bsoncxx::v_noabi::types::bson_value::value>>>>;
 
 }  // namespace detail
 }  // namespace bsoncxx
@@ -98,10 +97,8 @@ class view {
     /// Compare two bson_value::views for equality
     ///
     /// @{
-    friend BSONCXX_ABI_EXPORT_CDECL(bool) operator==(const bson_value::view&,
-                                                     const bson_value::view&);
-    friend BSONCXX_ABI_EXPORT_CDECL(bool) operator!=(const bson_value::view&,
-                                                     const bson_value::view&);
+    friend BSONCXX_ABI_EXPORT_CDECL(bool) operator==(const bson_value::view&, const bson_value::view&);
+    friend BSONCXX_ABI_EXPORT_CDECL(bool) operator!=(const bson_value::view&, const bson_value::view&);
     /// @}
     ///
 
@@ -326,29 +323,25 @@ class view {
 
 /// @relatesalso bsoncxx::v_noabi::types::bson_value::view
 template <typename T>
-detail::requires_t<bool, detail::is_bson_view_compatible<T>> operator==(const bson_value::view& lhs,
-                                                                        T&& rhs) {
+detail::requires_t<bool, detail::is_bson_view_compatible<T>> operator==(const bson_value::view& lhs, T&& rhs) {
     return lhs == bson_value::view{std::forward<T>(rhs)};
 }
 
 /// @relatesalso bsoncxx::v_noabi::types::bson_value::view
 template <typename T>
-detail::requires_t<bool, detail::is_bson_view_compatible<T>> operator==(
-    T&& lhs, const bson_value::view& rhs) {
+detail::requires_t<bool, detail::is_bson_view_compatible<T>> operator==(T&& lhs, const bson_value::view& rhs) {
     return bson_value::view{std::forward<T>(lhs)} == rhs;
 }
 
 /// @relatesalso bsoncxx::v_noabi::types::bson_value::view
 template <typename T>
-detail::requires_t<bool, detail::is_bson_view_compatible<T>> operator!=(const bson_value::view& lhs,
-                                                                        T&& rhs) {
+detail::requires_t<bool, detail::is_bson_view_compatible<T>> operator!=(const bson_value::view& lhs, T&& rhs) {
     return lhs != bson_value::view{std::forward<T>(rhs)};
 }
 
 /// @relatesalso bsoncxx::v_noabi::types::bson_value::view
 template <typename T>
-detail::requires_t<bool, detail::is_bson_view_compatible<T>> operator!=(
-    T&& lhs, const bson_value::view& rhs) {
+detail::requires_t<bool, detail::is_bson_view_compatible<T>> operator!=(T&& lhs, const bson_value::view& rhs) {
     return bson_value::view{std::forward<T>(lhs)} != rhs;
 }
 

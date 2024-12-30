@@ -27,8 +27,7 @@ topology_opening_event::~topology_opening_event() = default;
 
 bsoncxx::v_noabi::oid topology_opening_event::topology_id() const {
     bson_oid_t boid;
-    libmongoc::apm_topology_opening_get_topology_id(
-        static_cast<const mongoc_apm_topology_opening_t*>(_event), &boid);
+    libmongoc::apm_topology_opening_get_topology_id(static_cast<const mongoc_apm_topology_opening_t*>(_event), &boid);
     return bsoncxx::v_noabi::oid(reinterpret_cast<const char*>(boid.bytes), sizeof(boid.bytes));
 }
 

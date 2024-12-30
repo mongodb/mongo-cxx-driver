@@ -27,9 +27,8 @@ namespace libmongoc {
 #pragma GCC diagnostic ignored "-Wignored-attributes"
 #endif
 
-#define MONGOCXX_LIBMONGOC_SYMBOL(name)               \
-    test_util::mock<decltype(&mongoc_##name)>& name = \
-        *new test_util::mock<decltype(&mongoc_##name)>(mongoc_##name);
+#define MONGOCXX_LIBMONGOC_SYMBOL(name) \
+    test_util::mock<decltype(&mongoc_##name)>& name = *new test_util::mock<decltype(&mongoc_##name)>(mongoc_##name);
 #include "libmongoc_symbols.hh"
 #undef MONGOCXX_LIBMONGOC_SYMBOL
 
