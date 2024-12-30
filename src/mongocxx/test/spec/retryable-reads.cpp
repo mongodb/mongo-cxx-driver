@@ -118,17 +118,18 @@ void run_retryable_reads_tests_in_file(std::string test_path) {
 TEST_CASE("retryable reads spec tests", "[retryable_reads_specs]") {
     instance::current();
 
-    std::set<std::string> unsupported_tests{"gridfs-downloadByName.json",
-                                            "gridfs-downloadByName-serverErrors.json",
-                                            "listCollectionObjects.json",
-                                            "listCollectionObjects-serverErrors.json",
-                                            "listDatabaseObjects.json",
-                                            "listDatabaseObjects-serverErrors.json",
-                                            "listIndexNames.json",
-                                            "listIndexNames-serverErrors.json",
-                                            "mapReduce.json",
-                                            "count.json",
-                                            "count-serverErrors.json"};
+    std::set<std::string> unsupported_tests{
+        "gridfs-downloadByName.json",
+        "gridfs-downloadByName-serverErrors.json",
+        "listCollectionObjects.json",
+        "listCollectionObjects-serverErrors.json",
+        "listDatabaseObjects.json",
+        "listDatabaseObjects-serverErrors.json",
+        "listIndexNames.json",
+        "listIndexNames-serverErrors.json",
+        "mapReduce.json",
+        "count.json",
+        "count-serverErrors.json"};
 
     run_tests_in_suite("RETRYABLE_READS_LEGACY_TESTS_PATH", run_retryable_reads_tests_in_file, unsupported_tests);
 }

@@ -58,8 +58,9 @@ void aggregation_examples(const mongocxx::database& db) {
         mongocxx::pipeline p{};
         p.unwind("$items");
         p.match(make_document(kvp("items.fruit", "banana")));
-        p.group(make_document(kvp("_id", make_document(kvp("day", make_document(kvp("$dayOfWeek", "$date"))))),
-                              kvp("count", make_document(kvp("$sum", "$items.quantity")))));
+        p.group(make_document(
+            kvp("_id", make_document(kvp("day", make_document(kvp("$dayOfWeek", "$date"))))),
+            kvp("count", make_document(kvp("$sum", "$items.quantity")))));
         p.project(make_document(kvp("dayOfWeek", "$_id.day"), kvp("numberSold", "$count"), kvp("_id", 0)));
         p.sort(make_document(kvp("numberSold", 1)));
 
@@ -89,10 +90,12 @@ void aggregation_examples(const mongocxx::database& db) {
             kvp("revenue", 1),
             kvp("items_sold", 1),
             kvp("discount",
-                make_document(kvp("$cond",
-                                  make_document(kvp("if", make_document(kvp("$lte", make_array("$revenue", 250)))),
-                                                kvp("then", 25),
-                                                kvp("else", 0)))))));
+                make_document(
+                    kvp("$cond",
+                        make_document(
+                            kvp("if", make_document(kvp("$lte", make_array("$revenue", 250)))),
+                            kvp("then", 25),
+                            kvp("else", 0)))))));
         auto cursor = db["sales"].aggregate(p, mongocxx::options::aggregate{});
         // End Aggregation Example 3
 

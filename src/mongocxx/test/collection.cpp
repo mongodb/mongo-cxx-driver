@@ -935,8 +935,8 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
         auto replace_opts = options::replace{}.collation(case_insensitive_collation.view());
         INFO("unacknowledged write concern fails");
         replace_opts.write_concern(noack);
-        REQUIRE_THROWS_AS(coll.replace_one(predicate.view(), replacement_doc.view(), replace_opts),
-                          operation_exception);
+        REQUIRE_THROWS_AS(
+            coll.replace_one(predicate.view(), replacement_doc.view(), replace_opts), operation_exception);
 
         INFO("default write concern succeeds");
         replace_opts.write_concern(default_wc);
@@ -1251,8 +1251,8 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
 
             INFO("unacknowledged write concern fails");
             options.write_concern(noack);
-            REQUIRE_THROWS_AS(coll.find_one_and_replace(collation_criteria.view(), replacement.view(), options),
-                              logic_error);
+            REQUIRE_THROWS_AS(
+                coll.find_one_and_replace(collation_criteria.view(), replacement.view(), options), logic_error);
 
             INFO("default write concern succeeds");
             options.write_concern(default_wc);
@@ -1580,11 +1580,12 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             coll.insert_one(make_document(kvp("x", "bar")));
             coll.insert_one(make_document(kvp("x", "foo"), kvp("y", "bar")));
 
-            pipeline.graph_lookup(make_document(kvp("from", coll.name()),
-                                                kvp("startWith", "$y"),
-                                                kvp("connectFromField", "y"),
-                                                kvp("connectToField", "x"),
-                                                kvp("as", "z")));
+            pipeline.graph_lookup(make_document(
+                kvp("from", coll.name()),
+                kvp("startWith", "$y"),
+                kvp("connectFromField", "y"),
+                kvp("connectToField", "x"),
+                kvp("as", "z")));
             // Add a sort to the pipeline, so below tests can make assumptions about result order.
             pipeline.sort(make_document(kvp("x", 1)));
             auto cursor = coll.aggregate(pipeline);
@@ -1789,11 +1790,12 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
 
             coll.insert_one(make_document(kvp("x", make_document(kvp("secret", 1))), kvp("y", 1)));
 
-            pipeline.redact(
-                make_document(kvp("$cond",
-                                  make_document(kvp("if", make_document(kvp("$eq", make_array("$secret", 1)))),
-                                                kvp("then", "$$PRUNE"),
-                                                kvp("else", "$$DESCEND")))));
+            pipeline.redact(make_document(
+                kvp("$cond",
+                    make_document(
+                        kvp("if", make_document(kvp("$eq", make_array("$secret", 1)))),
+                        kvp("then", "$$PRUNE"),
+                        kvp("else", "$$DESCEND")))));
             auto cursor = coll.aggregate(pipeline);
 
             // The server supports redact().

@@ -39,9 +39,8 @@ cursor search_index_view::list(bsoncxx::v_noabi::string::view_or_value name, con
     return _get_impl().list(nullptr, name, options);
 }
 
-cursor search_index_view::list(const client_session& session,
-                               bsoncxx::v_noabi::string::view_or_value name,
-                               const options::aggregate& options) {
+cursor search_index_view::list(
+    const client_session& session, bsoncxx::v_noabi::string::view_or_value name, const options::aggregate& options) {
     return _get_impl().list(&session, name, options);
 }
 
@@ -49,19 +48,20 @@ std::string search_index_view::create_one(bsoncxx::v_noabi::document::view_or_va
     return create_one(search_index_model(definition));
 }
 
-std::string search_index_view::create_one(const client_session& session,
-                                          bsoncxx::v_noabi::document::view_or_value definition) {
+std::string search_index_view::create_one(
+    const client_session& session, bsoncxx::v_noabi::document::view_or_value definition) {
     return create_one(session, search_index_model(definition));
 }
 
-std::string search_index_view::create_one(bsoncxx::v_noabi::string::view_or_value name,
-                                          bsoncxx::v_noabi::document::view_or_value definition) {
+std::string search_index_view::create_one(
+    bsoncxx::v_noabi::string::view_or_value name, bsoncxx::v_noabi::document::view_or_value definition) {
     return create_one(search_index_model(name, definition));
 }
 
-std::string search_index_view::create_one(const client_session& session,
-                                          bsoncxx::v_noabi::string::view_or_value name,
-                                          bsoncxx::v_noabi::document::view_or_value definition) {
+std::string search_index_view::create_one(
+    const client_session& session,
+    bsoncxx::v_noabi::string::view_or_value name,
+    bsoncxx::v_noabi::document::view_or_value definition) {
     return create_one(session, search_index_model(name, definition));
 }
 
@@ -78,8 +78,8 @@ std::vector<std::string> search_index_view::create_many(const std::vector<search
     return _create_many_helper(response["indexesCreated"].get_array().value);
 }
 
-std::vector<std::string> search_index_view::create_many(const client_session& session,
-                                                        const std::vector<search_index_model>& models) {
+std::vector<std::string> search_index_view::create_many(
+    const client_session& session, const std::vector<search_index_model>& models) {
     auto response = _get_impl().create_many(&session, models);
     return _create_many_helper(response["indexesCreated"].get_array().value);
 }
@@ -101,14 +101,15 @@ void search_index_view::drop_one(const client_session& session, bsoncxx::v_noabi
     _get_impl().drop_one(&session, name);
 }
 
-void search_index_view::update_one(bsoncxx::v_noabi::string::view_or_value name,
-                                   bsoncxx::v_noabi::document::view_or_value definition) {
+void search_index_view::update_one(
+    bsoncxx::v_noabi::string::view_or_value name, bsoncxx::v_noabi::document::view_or_value definition) {
     _get_impl().update_one(nullptr, name, definition);
 }
 
-void search_index_view::update_one(const client_session& session,
-                                   bsoncxx::v_noabi::string::view_or_value name,
-                                   bsoncxx::v_noabi::document::view_or_value definition) {
+void search_index_view::update_one(
+    const client_session& session,
+    bsoncxx::v_noabi::string::view_or_value name,
+    bsoncxx::v_noabi::document::view_or_value definition) {
     _get_impl().update_one(&session, name, definition);
 }
 

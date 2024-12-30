@@ -93,15 +93,18 @@ bsoncxx::document::value get_kms_values() {
 
     auto kms_doc = make_document(
         kvp("aws",
-            make_document(kvp("accessKeyId", test_util::getenv_or_fail("MONGOCXX_TEST_AWS_ACCESS_KEY_ID")),
-                          kvp("secretAccessKey", test_util::getenv_or_fail("MONGOCXX_TEST_AWS_SECRET_ACCESS_KEY")))),
+            make_document(
+                kvp("accessKeyId", test_util::getenv_or_fail("MONGOCXX_TEST_AWS_ACCESS_KEY_ID")),
+                kvp("secretAccessKey", test_util::getenv_or_fail("MONGOCXX_TEST_AWS_SECRET_ACCESS_KEY")))),
         kvp("azure",
-            make_document(kvp("tenantId", test_util::getenv_or_fail("MONGOCXX_TEST_AZURE_TENANT_ID")),
-                          kvp("clientId", test_util::getenv_or_fail("MONGOCXX_TEST_AZURE_CLIENT_ID")),
-                          kvp("clientSecret", test_util::getenv_or_fail("MONGOCXX_TEST_AZURE_CLIENT_SECRET")))),
+            make_document(
+                kvp("tenantId", test_util::getenv_or_fail("MONGOCXX_TEST_AZURE_TENANT_ID")),
+                kvp("clientId", test_util::getenv_or_fail("MONGOCXX_TEST_AZURE_CLIENT_ID")),
+                kvp("clientSecret", test_util::getenv_or_fail("MONGOCXX_TEST_AZURE_CLIENT_SECRET")))),
         kvp("gcp",
-            make_document(kvp("email", test_util::getenv_or_fail("MONGOCXX_TEST_GCP_EMAIL")),
-                          kvp("privateKey", test_util::getenv_or_fail("MONGOCXX_TEST_GCP_PRIVATEKEY")))),
+            make_document(
+                kvp("email", test_util::getenv_or_fail("MONGOCXX_TEST_GCP_EMAIL")),
+                kvp("privateKey", test_util::getenv_or_fail("MONGOCXX_TEST_GCP_PRIVATEKEY")))),
         kvp("kmip", make_document(kvp("endpoint", "localhost:5698"))),
         kvp("local", make_document(kvp("key", local_master_key))));
 
@@ -123,8 +126,9 @@ bsoncxx::document::value parse_kms_doc(bsoncxx::document::view_or_value test_kms
             const auto variable = i.key();
             const auto actual_value = kms_values[provider][variable];
             if (!kms_values[provider][variable]) {
-                FAIL("FAIL: expecting to find variable: '" << variable << "' in KMS doc for provider: '" << provider
-                                                           << "'");
+                FAIL(
+                    "FAIL: expecting to find variable: '" << variable << "' in KMS doc for provider: '" << provider
+                                                          << "'");
             }
             bool is_placeholder = false;
             if (i.type() == bsoncxx::type::k_document &&
@@ -166,8 +170,9 @@ bsoncxx::document::value parse_kms_doc(bsoncxx::document::view_or_value test_kms
                 case bsoncxx::type::k_maxkey:
                 case bsoncxx::type::k_minkey:
                 default:
-                    FAIL("FAIL: unexpected variable type in KMS doc: '" << bsoncxx::to_string(actual_value.type())
-                                                                        << "'");
+                    FAIL(
+                        "FAIL: unexpected variable type in KMS doc: '" << bsoncxx::to_string(actual_value.type())
+                                                                       << "'");
             }
         }
         doc.append(kvp(provider, variables_doc.extract()));
@@ -183,10 +188,11 @@ bsoncxx::document::value parse_kms_doc(bsoncxx::document::view_or_value test_kms
 std::vector<int> get_version(const std::string& input) {
     std::vector<int> output;
     const std::regex period("\\.");
-    std::transform(std::sregex_token_iterator(std::begin(input), std::end(input), period, -1),
-                   std::sregex_token_iterator(),
-                   std::back_inserter(output),
-                   [](const std::string& s) { return std::stoi(s); });
+    std::transform(
+        std::sregex_token_iterator(std::begin(input), std::end(input), period, -1),
+        std::sregex_token_iterator(),
+        std::back_inserter(output),
+        [](const std::string& s) { return std::stoi(s); });
 
     while (output.size() < schema_versions[0].size())
         output.push_back(0);
@@ -337,10 +343,11 @@ std::string json_to_uri_opts(const std::string& input) {
     //      output  := "readConcernLevel=local&w=1"
     std::vector<std::string> output;
     const std::regex delim(",");
-    std::transform(std::sregex_token_iterator(std::begin(input), std::end(input), delim, -1),
-                   std::sregex_token_iterator(),
-                   std::back_inserter(output),
-                   json_kvp_to_uri_kvp);
+    std::transform(
+        std::sregex_token_iterator(std::begin(input), std::end(input), delim, -1),
+        std::sregex_token_iterator(),
+        std::back_inserter(output),
+        json_kvp_to_uri_kvp);
 
     const auto join = [](const std::string& s1, const std::string& s2) { return s1 + "&" + s2; };
     return std::accumulate(std::begin(output) + 1, std::end(output), output[0], join);
@@ -617,9 +624,10 @@ options::client_encryption get_client_encryption_options(document::view object) 
         // Configure TLS options.
         auto tls_opts = make_document(
             kvp("kmip",
-                make_document(kvp("tlsCAFile", test_util::getenv_or_fail("MONGOCXX_TEST_CSFLE_TLS_CA_FILE")),
-                              kvp("tlsCertificateKeyFile",
-                                  test_util::getenv_or_fail("MONGOCXX_TEST_CSFLE_TLS_CERTIFICATE_KEY_FILE")))));
+                make_document(
+                    kvp("tlsCAFile", test_util::getenv_or_fail("MONGOCXX_TEST_CSFLE_TLS_CA_FILE")),
+                    kvp("tlsCertificateKeyFile",
+                        test_util::getenv_or_fail("MONGOCXX_TEST_CSFLE_TLS_CERTIFICATE_KEY_FILE")))));
         ce_opts.tls_opts(std::move(tls_opts));
     }
     return ce_opts;
@@ -821,11 +829,12 @@ void assert_result(const array::element& ops, document::view actual_result, bool
     }
 
     const auto expected_result = ops["expectResult"];
-    assert::matches(actual_result["result"].get_value(),
-                    expected_result.get_value(),
-                    get_entity_map(),
-                    true,
-                    is_array_of_root_docs);
+    assert::matches(
+        actual_result["result"].get_value(),
+        expected_result.get_value(),
+        get_entity_map(),
+        true,
+        is_array_of_root_docs);
 
     if (ops["saveResultAsEntity"]) {
         const auto key = string::to_string(ops["saveResultAsEntity"].get_string().value);
@@ -833,9 +842,8 @@ void assert_result(const array::element& ops, document::view actual_result, bool
     }
 }
 
-void assert_error(const mongocxx::operation_exception& exception,
-                  const array::element& expected,
-                  document::view actual) {
+void assert_error(
+    const mongocxx::operation_exception& exception, const array::element& expected, document::view actual) {
     const std::string server_error_msg =
         exception.raw_server_error() ? to_json(*exception.raw_server_error()) : "no server error";
 
@@ -1083,9 +1091,8 @@ struct fail_point_guard_type {
     }
 };
 
-void disable_targeted_fail_point(bsoncxx::stdx::string_view uri,
-                                 std::uint32_t server_id,
-                                 bsoncxx::stdx::string_view fail_point) {
+void disable_targeted_fail_point(
+    bsoncxx::stdx::string_view uri, std::uint32_t server_id, bsoncxx::stdx::string_view fail_point) {
     const auto command_owner = make_document(kvp("configureFailPoint", fail_point), kvp("mode", "off"));
     const auto command = command_owner.view();
 
@@ -1122,13 +1129,15 @@ document::value bulk_write_result(const mongocxx::bulk_write_exception& e) {
     };
 
     auto result = bsoncxx::builder::basic::document{};
-    result.append(kvp("result",
-                      make_document(kvp("matchedCount", get_or_default("nMatched")),
-                                    kvp("modifiedCount", get_or_default("nModified")),
-                                    kvp("upsertedCount", get_or_default("nUpserted")),
-                                    kvp("deletedCount", get_or_default("nRemoved")),
-                                    kvp("insertedCount", get_or_default("nInserted")),
-                                    kvp("upsertedIds", make_document()))));
+    result.append(
+        kvp("result",
+            make_document(
+                kvp("matchedCount", get_or_default("nMatched")),
+                kvp("modifiedCount", get_or_default("nModified")),
+                kvp("upsertedCount", get_or_default("nUpserted")),
+                kvp("deletedCount", get_or_default("nRemoved")),
+                kvp("insertedCount", get_or_default("nInserted")),
+                kvp("upsertedIds", make_document()))));
 
     return result.extract();
 }
@@ -1166,13 +1175,15 @@ void run_tests(bsoncxx::stdx::string_view test_description, document::view test)
             }
 
             if (!has_run_on_requirements(ele.get_document())) {
-                SKIP(test_description << ": " << description << ": none of the runOnRequirements were met: "
-                                      << to_json(ele["runOnRequirements"].get_array().value));
+                SKIP(
+                    test_description << ": " << description << ": none of the runOnRequirements were met: "
+                                     << to_json(ele["runOnRequirements"].get_array().value));
             }
 
             if (ele["skipReason"]) {
-                SKIP(test_description << ": " << description << ": "
-                                      << string::to_string(ele["skipReason"].get_string().value));
+                SKIP(
+                    test_description << ": " << description << ": "
+                                     << string::to_string(ele["skipReason"].get_string().value));
             }
 
             fail_point_guard_type fail_point_guard;
@@ -1197,8 +1208,9 @@ void run_tests(bsoncxx::stdx::string_view test_description, document::view test)
                         const auto op_name = string::to_string(ops["name"].get_string().value);
 
                         if (op_name == "failPoint") {
-                            fail_point_guard.add_fail_point(string::to_string(result["uri"].get_string().value),
-                                                            string::to_string(result["failPoint"].get_string().value));
+                            fail_point_guard.add_fail_point(
+                                string::to_string(result["uri"].get_string().value),
+                                string::to_string(result["failPoint"].get_string().value));
                         }
 
                         if (op_name == "targetedFailPoint") {
@@ -1289,8 +1301,8 @@ void run_tests_in_file(const std::string& test_path) {
 // Check the environment for the specified variable; if present, extract it
 // as a directory and run all the tests contained in the magic "test_files.txt"
 // file:
-void run_unified_format_tests_in_env_dir(const std::string& env_path,
-                                         const std::set<bsoncxx::stdx::string_view>& unsupported_tests = {}) {
+void run_unified_format_tests_in_env_dir(
+    const std::string& env_path, const std::set<bsoncxx::stdx::string_view>& unsupported_tests = {}) {
     const char* p = std::getenv(env_path.c_str());
 
     if (nullptr == p)

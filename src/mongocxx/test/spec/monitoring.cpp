@@ -35,8 +35,8 @@ namespace spec {
 using namespace mongocxx;
 using bsoncxx::to_json;
 
-static void remove_ignored_command_monitoring_events(apm_checker::event_vector& events,
-                                                     const std::vector<std::string>& ignore) {
+static void remove_ignored_command_monitoring_events(
+    apm_checker::event_vector& events, const std::vector<std::string>& ignore) {
     auto is_ignored = [&](bsoncxx::document::value v) {
         return std::any_of(std::begin(ignore), std::end(ignore), [&](bsoncxx::stdx::string_view key) {
             return v.view()["commandStartedEvent"]["command"][key] || v.view()["commandFailedEvent"]["command"][key] ||
@@ -79,18 +79,19 @@ void apm_checker::compare_unified(bsoncxx::array::view expectations, entity::map
         compare(*exp_it, *ev_it);
     }
     if (exp_it != exp_end) {
-        FAIL_CHECK("Not enough events occurred (Expected " << std::distance(expectations.cbegin(), expectations.cend())
-                                                           << " events, but got " << (_events.size()) << " events)");
+        FAIL_CHECK(
+            "Not enough events occurred (Expected " << std::distance(expectations.cbegin(), expectations.cend())
+                                                    << " events, but got " << (_events.size()) << " events)");
     }
     if (!ignore_extra_events && ev_it != ev_end) {
-        FAIL_CHECK("Too many events occurred (Expected " << std::distance(expectations.cbegin(), expectations.cend())
-                                                         << " events, but got " << (_events.size()) << " events)");
+        FAIL_CHECK(
+            "Too many events occurred (Expected " << std::distance(expectations.cbegin(), expectations.cend())
+                                                  << " events, but got " << (_events.size()) << " events)");
     }
 }
 
-void apm_checker::compare(bsoncxx::array::view expectations,
-                          bool allow_extra,
-                          const test_util::match_visitor& match_visitor) {
+void apm_checker::compare(
+    bsoncxx::array::view expectations, bool allow_extra, const test_util::match_visitor& match_visitor) {
     auto is_ignored = [&](bsoncxx::document::value v) {
         const auto view = v.view();
 
@@ -117,18 +118,19 @@ void apm_checker::compare(bsoncxx::array::view expectations,
     for (auto expectation : expectations) {
         auto expected = expectation.get_document().view();
         if (events_iter == _events.end()) {
-            FAIL("Not enough events occurred: expected exactly "
-                 << std::distance(expectations.begin(), expectations.end()) << " events, but got " << _events.size()
-                 << " events");
+            FAIL(
+                "Not enough events occurred: expected exactly "
+                << std::distance(expectations.begin(), expectations.end()) << " events, but got " << _events.size()
+                << " events");
         }
         REQUIRE_BSON_MATCHES_V(*events_iter, expected, match_visitor);
         events_iter++;
     }
 
     if (!allow_extra && events_iter != _events.end()) {
-        FAIL_CHECK("Too many events occurred: expected exactly "
-                   << std::distance(expectations.begin(), expectations.end()) << " events, but got " << _events.size()
-                   << " events");
+        FAIL_CHECK(
+            "Too many events occurred: expected exactly " << std::distance(expectations.begin(), expectations.end())
+                                                          << " events, but got " << _events.size() << " events");
     }
 }
 
@@ -221,10 +223,12 @@ void apm_checker::set_command_started_unified(options::apm& apm) {
         }
 
         document builder;
-        builder.append(kvp("commandStartedEvent",
-                           make_document(kvp("command", event.command()),
-                                         kvp("commandName", event.command_name()),
-                                         kvp("databaseName", event.database_name()))));
+        builder.append(
+            kvp("commandStartedEvent",
+                make_document(
+                    kvp("command", event.command()),
+                    kvp("commandName", event.command_name()),
+                    kvp("databaseName", event.database_name()))));
         this->_events.emplace_back(builder.extract());
     });
 }
@@ -260,8 +264,9 @@ void apm_checker::set_command_succeeded_unified(options::apm& apm) {
         }
 
         document builder;
-        builder.append(kvp("commandSucceededEvent",
-                           make_document(kvp("reply", event.reply()), kvp("commandName", event.command_name()))));
+        builder.append(
+            kvp("commandSucceededEvent",
+                make_document(kvp("reply", event.reply()), kvp("commandName", event.command_name()))));
         this->_events.emplace_back(builder.extract());
     });
 }
@@ -275,11 +280,13 @@ void apm_checker::set_command_started(options::apm& apm) {
         }
 
         document builder;
-        builder.append(kvp("command_started_event",
-                           make_document(kvp("command", event.command()),
-                                         kvp("command_name", event.command_name()),
-                                         kvp("operation_id", event.operation_id()),
-                                         kvp("database_name", event.database_name()))));
+        builder.append(
+            kvp("command_started_event",
+                make_document(
+                    kvp("command", event.command()),
+                    kvp("command_name", event.command_name()),
+                    kvp("operation_id", event.operation_id()),
+                    kvp("database_name", event.database_name()))));
         this->_events.emplace_back(builder.extract());
     });
 }
@@ -309,10 +316,12 @@ void apm_checker::set_command_succeeded(options::apm& apm) {
         }
 
         document builder;
-        builder.append(kvp("command_succeeded_event",
-                           make_document(kvp("reply", event.reply()),
-                                         kvp("command_name", event.command_name()),
-                                         kvp("operation_id", event.operation_id()))));
+        builder.append(
+            kvp("command_succeeded_event",
+                make_document(
+                    kvp("reply", event.reply()),
+                    kvp("command_name", event.command_name()),
+                    kvp("operation_id", event.operation_id()))));
         this->_events.emplace_back(builder.extract());
     });
 }

@@ -197,11 +197,11 @@ class change_stream::iterator {
     /// exhausted.
     ///
     /// @{
-    friend MONGOCXX_ABI_EXPORT_CDECL(bool) operator==(const change_stream::iterator&,
-                                                      const change_stream::iterator&) noexcept;
+    friend MONGOCXX_ABI_EXPORT_CDECL(bool) operator==(
+        const change_stream::iterator&, const change_stream::iterator&) noexcept;
 
-    friend MONGOCXX_ABI_EXPORT_CDECL(bool) operator!=(const change_stream::iterator&,
-                                                      const change_stream::iterator&) noexcept;
+    friend MONGOCXX_ABI_EXPORT_CDECL(bool) operator!=(
+        const change_stream::iterator&, const change_stream::iterator&) noexcept;
     /// @}
     ///
 

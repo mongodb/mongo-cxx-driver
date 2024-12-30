@@ -119,8 +119,8 @@ void* encrypt::convert() const {
     if (_algorithm) {
         switch (*_algorithm) {
             case encryption_algorithm::k_deterministic:
-                libmongoc::client_encryption_encrypt_opts_set_algorithm(opts,
-                                                                        "AEAD_AES_256_CBC_HMAC_SHA_512-Deterministic");
+                libmongoc::client_encryption_encrypt_opts_set_algorithm(
+                    opts, "AEAD_AES_256_CBC_HMAC_SHA_512-Deterministic");
                 break;
             case encryption_algorithm::k_random:
                 libmongoc::client_encryption_encrypt_opts_set_algorithm(opts, "AEAD_AES_256_CBC_HMAC_SHA_512-Random");
@@ -176,13 +176,13 @@ void* encrypt::convert() const {
         const auto& trim_factor = _range_opts->trim_factor();
 
         if (min) {
-            libmongoc::client_encryption_encrypt_range_opts_set_min(range_opts,
-                                                                    detail::scoped_bson_value(min->view()).get());
+            libmongoc::client_encryption_encrypt_range_opts_set_min(
+                range_opts, detail::scoped_bson_value(min->view()).get());
         }
 
         if (max) {
-            libmongoc::client_encryption_encrypt_range_opts_set_max(range_opts,
-                                                                    detail::scoped_bson_value(max->view()).get());
+            libmongoc::client_encryption_encrypt_range_opts_set_max(
+                range_opts, detail::scoped_bson_value(max->view()).get());
         }
 
         if (precision) {

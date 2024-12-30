@@ -37,12 +37,13 @@ TEST_CASE("bulk_write result", "[bulk_write][result]") {
     auto arr =
         make_array(make_document(kvp("_id", oid1), kvp("index", 0)), make_document(kvp("_id", oid2), kvp("index", 1)));
 
-    auto build = make_document(kvp("nInserted", 1),
-                               kvp("nMatched", 0),
-                               kvp("nModified", 3),
-                               kvp("nRemoved", 0),
-                               kvp("nUpserted", 2),
-                               kvp("upserted", arr.view()));
+    auto build = make_document(
+        kvp("nInserted", 1),
+        kvp("nMatched", 0),
+        kvp("nModified", 3),
+        kvp("nRemoved", 0),
+        kvp("nUpserted", 2),
+        kvp("upserted", arr.view()));
 
     mongocxx::result::bulk_write bulk_write_res{build};
 

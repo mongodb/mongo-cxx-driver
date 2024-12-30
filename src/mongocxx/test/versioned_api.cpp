@@ -29,8 +29,8 @@
 
 using namespace mongocxx;
 
-static bool has_api_version_1(const mongocxx::client& client = mongocxx::client(uri(),
-                                                                                test_util::add_test_server_api())) {
+static bool has_api_version_1(
+    const mongocxx::client& client = mongocxx::client(uri(), test_util::add_test_server_api())) {
     // API Version 1 was introduced in 5.0.
     return test_util::get_max_wire_version(client) >= 13;
 }

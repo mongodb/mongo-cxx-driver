@@ -43,55 +43,56 @@ TEST_CASE("Transaction tests", "[transactions]") {
     }
 
     // The test run in first 3 SECTIONs below
-    auto successful_insert_test = [&mongodb_client](client_session session,
-                                                    bsoncxx::stdx::optional<options::transaction> transaction_opts) {
-        auto db = mongodb_client["test"];
-        auto coll = db["txn_test"];
+    auto successful_insert_test =
+        [&mongodb_client](client_session session, bsoncxx::stdx::optional<options::transaction> transaction_opts) {
+            auto db = mongodb_client["test"];
+            auto coll = db["txn_test"];
 
-        // Insert a document that should change in this test
-        coll.insert_one(make_document(kvp("should_be_two", 1)));
+            // Insert a document that should change in this test
+            coll.insert_one(make_document(kvp("should_be_two", 1)));
 
-        if (transaction_opts) {
-            session.start_transaction(transaction_opts);
-        } else {
-            session.start_transaction();
-        }
-
-        try {
-            coll.update_one(session,
-                            make_document(kvp("should_be_two", 1)),
-                            make_document(kvp("$set", make_document(kvp("should_be_two", 2)))));
-            coll.insert_one(session, make_document(kvp("x", 1)));
-        } catch (mongocxx::exception& e) {
-            INFO("Collection transaction exception: " << e.what() << "\n");
-            session.abort_transaction();
-            REQUIRE(false);
-        }
-
-        try {
-            session.commit_transaction();
-        } catch (const operation_exception& e) {
-            INFO("Exception raw:     " << bsoncxx::to_json(*(e.raw_server_error())) << "\n");
-            INFO("Exception message: " << e.what() << "\n");
-
-            if (e.has_error_label("TransientTransactionError")) {
-                INFO("Transient error in transaction.\n");
-                REQUIRE(false);
+            if (transaction_opts) {
+                session.start_transaction(transaction_opts);
             } else {
-                INFO("Non-transient error in transaction.\n");
+                session.start_transaction();
+            }
+
+            try {
+                coll.update_one(
+                    session,
+                    make_document(kvp("should_be_two", 1)),
+                    make_document(kvp("$set", make_document(kvp("should_be_two", 2)))));
+                coll.insert_one(session, make_document(kvp("x", 1)));
+            } catch (mongocxx::exception& e) {
+                INFO("Collection transaction exception: " << e.what() << "\n");
+                session.abort_transaction();
                 REQUIRE(false);
             }
-        }
 
-        // Document with key should_be_two should have a value of 2
-        REQUIRE(coll.count_documents(make_document(kvp("should_be_two", 2))) == 1);
-        // Document {x:1} should have also been inserted
-        REQUIRE(coll.count_documents(make_document(kvp("x", 1))) == 1);
+            try {
+                session.commit_transaction();
+            } catch (const operation_exception& e) {
+                INFO("Exception raw:     " << bsoncxx::to_json(*(e.raw_server_error())) << "\n");
+                INFO("Exception message: " << e.what() << "\n");
 
-        // Cleanup
-        coll.find_one_and_delete(make_document(kvp("should_be_two", 2)));
-        coll.find_one_and_delete(make_document(kvp("x", 1)));
-    };
+                if (e.has_error_label("TransientTransactionError")) {
+                    INFO("Transient error in transaction.\n");
+                    REQUIRE(false);
+                } else {
+                    INFO("Non-transient error in transaction.\n");
+                    REQUIRE(false);
+                }
+            }
+
+            // Document with key should_be_two should have a value of 2
+            REQUIRE(coll.count_documents(make_document(kvp("should_be_two", 2))) == 1);
+            // Document {x:1} should have also been inserted
+            REQUIRE(coll.count_documents(make_document(kvp("x", 1))) == 1);
+
+            // Cleanup
+            coll.find_one_and_delete(make_document(kvp("should_be_two", 2)));
+            coll.find_one_and_delete(make_document(kvp("x", 1)));
+        };
 
     SECTION(
         "A move-constructed options::transactions object transfers properties and invalidates the "
@@ -172,9 +173,10 @@ TEST_CASE("Transaction tests", "[transactions]") {
         session.start_transaction();
 
         try {
-            coll.update_one(session,
-                            make_document(kvp("should_be_one", 1)),
-                            make_document(kvp("$set", make_document(kvp("should_be_one", 2)))));
+            coll.update_one(
+                session,
+                make_document(kvp("should_be_one", 1)),
+                make_document(kvp("$set", make_document(kvp("should_be_one", 2)))));
         } catch (const operation_exception& e) {
             // Intentionally do NOT abort to force TransientTransactionError from server on commit.
             auto label = "TransientTransactionError";
@@ -245,8 +247,9 @@ TEST_CASE("Transactions Documentation Examples", "[transactions]") {
             session.start_transaction(txn_opts);
 
             try {
-                employees.update_one(make_document(kvp("employee", 3)),
-                                     make_document(kvp("$set", make_document(kvp("status", "Inactive")))));
+                employees.update_one(
+                    make_document(kvp("employee", 3)),
+                    make_document(kvp("$set", make_document(kvp("status", "Inactive")))));
                 events.insert_one(make_document(
                     kvp("employee", 3), kvp("status", make_document(kvp("new", "Inactive"), kvp("old", "Active")))));
             } catch (const operation_exception& oe) {
@@ -394,8 +397,9 @@ TEST_CASE("Transactions Documentation Examples", "[transactions]") {
             session.start_transaction(txn_opts);
 
             try {
-                employees.update_one(make_document(kvp("employee", 3)),
-                                     make_document(kvp("$set", make_document(kvp("status", "Inactive")))));
+                employees.update_one(
+                    make_document(kvp("employee", 3)),
+                    make_document(kvp("$set", make_document(kvp("status", "Inactive")))));
                 events.insert_one(make_document(
                     kvp("employee", 3), kvp("status", make_document(kvp("new", "Inactive"), kvp("old", "Active")))));
             } catch (const operation_exception& oe) {

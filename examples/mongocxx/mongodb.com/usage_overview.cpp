@@ -41,17 +41,19 @@ int EXAMPLES_CDECL main() {
     // 2. Insert
     using bsoncxx::builder::basic::kvp;
     bsoncxx::builder::basic::document doc1;
-    doc1.append(kvp("name", "Sun Bakery Trattoria"),
-                kvp("stars", 4),
-                kvp("categories", [](bsoncxx::builder::basic::sub_array arr) {
-                    arr.append("Pizza", "Pasta", "Italian", "Coffee", "Sandwiches");
-                }));
+    doc1.append(
+        kvp("name", "Sun Bakery Trattoria"),
+        kvp("stars", 4),
+        kvp("categories", [](bsoncxx::builder::basic::sub_array arr) {
+            arr.append("Pizza", "Pasta", "Italian", "Coffee", "Sandwiches");
+        }));
 
     bsoncxx::builder::basic::document doc2;
-    doc2.append(kvp("name", "Blue Bagels Grill"),
-                kvp("stars", 3),
-                kvp("categories",
-                    [](bsoncxx::builder::basic::sub_array arr) { arr.append("Bagels", "Cookies", "Sandwiches"); }));
+    doc2.append(
+        kvp("name", "Blue Bagels Grill"),
+        kvp("stars", 3),
+        kvp("categories",
+            [](bsoncxx::builder::basic::sub_array arr) { arr.append("Bagels", "Cookies", "Sandwiches"); }));
 
     bsoncxx::builder::basic::document doc3;
     doc3.append(

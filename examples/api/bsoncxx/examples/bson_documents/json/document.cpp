@@ -36,11 +36,11 @@ void example() {
     auto data_len = static_cast<std::uint32_t>(sizeof(data) - 1u);  // Exclude null terminator.
     bsoncxx::types::b_binary binary{bsoncxx::binary_sub_type::k_binary, data_len, data};
 
-    bsoncxx::document::value owner =
-        bsoncxx::builder::basic::make_document(kvp("a", std::int32_t{1}),  // "$numberInt": "1"
-                                               kvp("b", std::int64_t{2}),  // "$numberLong": "2"
-                                               kvp("c", binary)  // "$binary": { "$base64": "dGhyZWU=", "subType": 00 }
-        );
+    bsoncxx::document::value owner = bsoncxx::builder::basic::make_document(
+        kvp("a", std::int32_t{1}),  // "$numberInt": "1"
+        kvp("b", std::int64_t{2}),  // "$numberLong": "2"
+        kvp("c", binary)            // "$binary": { "$base64": "dGhyZWU=", "subType": 00 }
+    );
     bsoncxx::document::view doc = owner.view();
 
     {

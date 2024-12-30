@@ -54,9 +54,8 @@ namespace {
 const int kKeyLength = 96;
 
 using ns_pair = std::pair<std::string, std::string>;
-void create_json_schema_file(bsoncxx::document::view_or_value kms_providers,
-                             ns_pair key_vault_ns,
-                             class client* key_vault_client) {
+void create_json_schema_file(
+    bsoncxx::document::view_or_value kms_providers, ns_pair key_vault_ns, class client* key_vault_client) {
     options::client_encryption client_encryption_opts{};
     client_encryption_opts.key_vault_namespace(std::move(key_vault_ns));
     client_encryption_opts.kms_providers(kms_providers);

@@ -146,8 +146,9 @@ void add_auto_encryption_opts(document::view test, options::client* client_opts)
 
                 tls_opts.append(kvp("kmip", [&](sub_document subdoc) {
                     subdoc.append(kvp("tlsCAFile", test_util::getenv_or_fail("MONGOCXX_TEST_CSFLE_TLS_CA_FILE")));
-                    subdoc.append(kvp("tlsCertificateKeyFile",
-                                      test_util::getenv_or_fail("MONGOCXX_TEST_CSFLE_TLS_CERTIFICATE_KEY_FILE")));
+                    subdoc.append(
+                        kvp("tlsCertificateKeyFile",
+                            test_util::getenv_or_fail("MONGOCXX_TEST_CSFLE_TLS_CERTIFICATE_KEY_FILE")));
                 }));
             }
 
@@ -224,8 +225,9 @@ void run_encryption_tests_in_file(const std::string& test_path) {
             }
 
             bool check_results_logging = false;
-            if (strcmp(test["description"].get_string().value.data(),
-                       "Insert with deterministic encryption, then find it") == 0) {
+            if (strcmp(
+                    test["description"].get_string().value.data(),
+                    "Insert with deterministic encryption, then find it") == 0) {
                 // CDRIVER-3566 Remove this once windows is debugged.
                 check_results_logging = true;
             }
@@ -253,8 +255,8 @@ void run_encryption_tests_in_file(const std::string& test_path) {
                     UNSCOPED_INFO("collection contents before:\n" << contents);
                 }
 
-                run_operation_check_result(op.get_document().value,
-                                           [&]() { return operation_runner{&db, &test_coll}; });
+                run_operation_check_result(
+                    op.get_document().value, [&]() { return operation_runner{&db, &test_coll}; });
 
                 if (check_results_logging) {
                     std::string contents;

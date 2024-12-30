@@ -116,9 +116,10 @@ const bsoncxx::stdx::optional<bsoncxx::v_noabi::types::b_timestamp>& change_stre
 
 namespace {
 template <typename T>
-inline void append_if(bsoncxx::v_noabi::builder::basic::document& doc,
-                      const std::string& key,
-                      const bsoncxx::v_noabi::stdx::optional<T>& opt) {
+inline void append_if(
+    bsoncxx::v_noabi::builder::basic::document& doc,
+    const std::string& key,
+    const bsoncxx::v_noabi::stdx::optional<T>& opt) {
     if (opt) {
         doc.append(bsoncxx::v_noabi::builder::basic::kvp(key, opt.value()));
     }

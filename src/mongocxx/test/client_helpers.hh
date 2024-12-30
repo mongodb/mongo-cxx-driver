@@ -167,13 +167,13 @@ double as_double(bsoncxx::types::bson_value::view value);
 bool is_numeric(bsoncxx::types::bson_value::view value);
 
 enum class match_action { k_skip, k_proceed, k_not_equal };
-using match_visitor = std::function<match_action(bsoncxx::stdx::string_view key,
-                                                 bsoncxx::stdx::optional<bsoncxx::types::bson_value::view> main,
-                                                 bsoncxx::types::bson_value::view pattern)>;
+using match_visitor = std::function<match_action(
+    bsoncxx::stdx::string_view key,
+    bsoncxx::stdx::optional<bsoncxx::types::bson_value::view> main,
+    bsoncxx::types::bson_value::view pattern)>;
 
-bool matches(bsoncxx::types::bson_value::view main,
-             bsoncxx::types::bson_value::view pattern,
-             match_visitor visitor_fn = {});
+bool matches(
+    bsoncxx::types::bson_value::view main, bsoncxx::types::bson_value::view pattern, match_visitor visitor_fn = {});
 
 bool matches(bsoncxx::document::view doc, bsoncxx::document::view pattern, match_visitor visitor_fn = {});
 

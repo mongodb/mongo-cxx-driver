@@ -30,13 +30,14 @@ namespace gridfs {
 
 class uploader::impl {
    public:
-    impl(const client_session* session,
-         result::gridfs::upload result,
-         bsoncxx::v_noabi::stdx::string_view filename,
-         collection files,
-         collection chunks,
-         std::int32_t chunk_size,
-         bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::value> metadata)
+    impl(
+        const client_session* session,
+        result::gridfs::upload result,
+        bsoncxx::v_noabi::stdx::string_view filename,
+        collection files,
+        collection chunks,
+        std::int32_t chunk_size,
+        bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::value> metadata)
         : session{session},
           buffer{bsoncxx::make_unique<std::uint8_t[]>(static_cast<size_t>(chunk_size))},
           buffer_off{0},

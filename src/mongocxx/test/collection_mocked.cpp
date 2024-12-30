@@ -123,94 +123,97 @@ TEST_CASE("Collection", "[collection]") {
 
         auto collection_aggregate_called = false;
 
-        collection_aggregate->interpose([&](mongoc_collection_t*,
-                                            mongoc_query_flags_t flags,
-                                            const bson_t* pipeline,
-                                            const bson_t* options,
-                                            const mongoc_read_prefs_t* read_preference) -> mongoc_cursor_t* {
-            collection_aggregate_called = true;
-            REQUIRE(flags == MONGOC_QUERY_NONE);
+        collection_aggregate->interpose(
+            [&](mongoc_collection_t*,
+                mongoc_query_flags_t flags,
+                const bson_t* pipeline,
+                const bson_t* options,
+                const mongoc_read_prefs_t* read_preference) -> mongoc_cursor_t* {
+                collection_aggregate_called = true;
+                REQUIRE(flags == MONGOC_QUERY_NONE);
 
-            bsoncxx::array::view p(bson_get_data(pipeline), pipeline->len);
-            bsoncxx::document::view o(bson_get_data(options), options->len);
+                bsoncxx::array::view p(bson_get_data(pipeline), pipeline->len);
+                bsoncxx::document::view o(bson_get_data(options), options->len);
 
-            bsoncxx::stdx::string_view bar(
-                p[0].get_document().value["$match"].get_document().value["foo"].get_string());
-            std::int32_t one(p[1].get_document().value["$sort"].get_document().value["foo"].get_int32());
+                bsoncxx::stdx::string_view bar(
+                    p[0].get_document().value["$match"].get_document().value["foo"].get_string());
+                std::int32_t one(p[1].get_document().value["$sort"].get_document().value["foo"].get_int32());
 
-            REQUIRE(bar == bsoncxx::stdx::string_view("bar"));
-            REQUIRE(one == 1);
+                REQUIRE(bar == bsoncxx::stdx::string_view("bar"));
+                REQUIRE(one == 1);
 
-            if (opts.allow_disk_use()) {
-                REQUIRE(o["allowDiskUse"].get_bool().value == expected_allow_disk_use);
-            } else {
-                REQUIRE(o.find("allowDiskUse") == o.end());
-            }
+                if (opts.allow_disk_use()) {
+                    REQUIRE(o["allowDiskUse"].get_bool().value == expected_allow_disk_use);
+                } else {
+                    REQUIRE(o.find("allowDiskUse") == o.end());
+                }
 
-            if (opts.batch_size()) {
-                REQUIRE(o["batchSize"].get_int32().value == expected_batch_size);
-            } else {
-                REQUIRE(o.find("batchSize") == o.end());
-            }
+                if (opts.batch_size()) {
+                    REQUIRE(o["batchSize"].get_int32().value == expected_batch_size);
+                } else {
+                    REQUIRE(o.find("batchSize") == o.end());
+                }
 
-            if (opts.bypass_document_validation()) {
-                REQUIRE(o["bypassDocumentValidation"].get_bool().value == expected_bypass_document_validation);
-            } else {
-                REQUIRE(!o["bypassDocumentValidation"]);
-            }
+                if (opts.bypass_document_validation()) {
+                    REQUIRE(o["bypassDocumentValidation"].get_bool().value == expected_bypass_document_validation);
+                } else {
+                    REQUIRE(!o["bypassDocumentValidation"]);
+                }
 
-            if (opts.collation()) {
-                REQUIRE(o["collation"].get_document().value == expected_collation);
-            } else {
-                REQUIRE(o.find("collation") == o.end());
-            }
+                if (opts.collation()) {
+                    REQUIRE(o["collation"].get_document().value == expected_collation);
+                } else {
+                    REQUIRE(o.find("collation") == o.end());
+                }
 
-            if (opts.comment()) {
-                REQUIRE(o["comment"].get_value() == expected_comment["$comment"].get_value());
-            } else {
-                REQUIRE(o.find("comment") == o.end());
-            }
+                if (opts.comment()) {
+                    REQUIRE(o["comment"].get_value() == expected_comment["$comment"].get_value());
+                } else {
+                    REQUIRE(o.find("comment") == o.end());
+                }
 
-            if (opts.hint()) {
-                REQUIRE(o["hint"].get_value() == expected_hint.to_value());
-            } else {
-                REQUIRE(o.find("hint") == o.end());
-            }
+                if (opts.hint()) {
+                    REQUIRE(o["hint"].get_value() == expected_hint.to_value());
+                } else {
+                    REQUIRE(o.find("hint") == o.end());
+                }
 
-            if (opts.let()) {
-                REQUIRE(o["let"].get_document().value == expected_let);
-            } else {
-                REQUIRE(o.find("let") == o.end());
-            }
+                if (opts.let()) {
+                    REQUIRE(o["let"].get_document().value == expected_let);
+                } else {
+                    REQUIRE(o.find("let") == o.end());
+                }
 
-            if (opts.max_time()) {
-                REQUIRE(o["maxTimeMS"].get_int64().value == expected_max_time_ms);
-            } else {
-                REQUIRE(o.find("maxTimeMS") == o.end());
-            }
+                if (opts.max_time()) {
+                    REQUIRE(o["maxTimeMS"].get_int64().value == expected_max_time_ms);
+                } else {
+                    REQUIRE(o.find("maxTimeMS") == o.end());
+                }
 
-            if (opts.read_concern()) {
-                REQUIRE(o["readConcern"].get_document().value == expected_read_concern);
-            } else {
-                REQUIRE(o.find("readConcern") == o.end());
-            }
+                if (opts.read_concern()) {
+                    REQUIRE(o["readConcern"].get_document().value == expected_read_concern);
+                } else {
+                    REQUIRE(o.find("readConcern") == o.end());
+                }
 
-            if (opts.read_preference()) {
-                REQUIRE(mongoc_read_prefs_get_mode(read_preference) ==
+                if (opts.read_preference()) {
+                    REQUIRE(
+                        mongoc_read_prefs_get_mode(read_preference) ==
                         static_cast<int>(opts.read_preference()->mode()));
-            } else {
-                REQUIRE(mongoc_read_prefs_get_mode(read_preference) ==
+                } else {
+                    REQUIRE(
+                        mongoc_read_prefs_get_mode(read_preference) ==
                         libmongoc::conversions::read_mode_t_from_read_mode(mongo_coll.read_preference().mode()));
-            }
+                }
 
-            if (opts.write_concern()) {
-                REQUIRE(o["writeConcern"].get_document().value == expected_write_concern);
-            } else {
-                REQUIRE(o.find("writeConcern") == o.end());
-            }
+                if (opts.write_concern()) {
+                    REQUIRE(o["writeConcern"].get_document().value == expected_write_concern);
+                } else {
+                    REQUIRE(o.find("writeConcern") == o.end());
+                }
 
-            return nullptr;
-        });
+                return nullptr;
+            });
 
         pipe.match(make_document(kvp("foo", "bar")));
         pipe.sort(make_document(kvp("foo", 1)));
@@ -432,11 +435,12 @@ TEST_CASE("Collection", "[collection]") {
                 }
 
                 if (expected_read_preference)
-                    REQUIRE(mongoc_read_prefs_get_mode(read_prefs) ==
-                            static_cast<int>(expected_read_preference->mode()));
+                    REQUIRE(
+                        mongoc_read_prefs_get_mode(read_prefs) == static_cast<int>(expected_read_preference->mode()));
                 else
-                    REQUIRE(mongoc_read_prefs_get_mode(read_prefs) ==
-                            libmongoc::conversions::read_mode_t_from_read_mode(mongo_coll.read_preference().mode()));
+                    REQUIRE(
+                        mongoc_read_prefs_get_mode(read_prefs) ==
+                        libmongoc::conversions::read_mode_t_from_read_mode(mongo_coll.read_preference().mode()));
 
                 mongoc_cursor_t* cursor = nullptr;
                 return cursor;
@@ -523,8 +527,8 @@ TEST_CASE("Collection", "[collection]") {
 
         auto perform_checks = [&]() {
             REQUIRE(collection_create_bulk_operation_called);
-            REQUIRE(expect_set_bypass_document_validation_called ==
-                    bulk_operation_set_bypass_document_validation_called);
+            REQUIRE(
+                expect_set_bypass_document_validation_called == bulk_operation_set_bypass_document_validation_called);
             REQUIRE(bulk_operation_op_called);
             REQUIRE(bulk_operation_destroy_called);
         };
@@ -811,8 +815,8 @@ TEST_CASE("Collection", "[collection]") {
                     return false;
                 });
 
-            REQUIRE_THROWS_AS(mongo_coll.update_many(filter_doc.view(), modification_doc.view()),
-                              mongocxx::logic_error);
+            REQUIRE_THROWS_AS(
+                mongo_coll.update_many(filter_doc.view(), modification_doc.view()), mongocxx::logic_error);
             REQUIRE(!bulk_operation_execute_called);
             perform_checks();
         }
@@ -891,8 +895,8 @@ TEST_CASE("Collection", "[collection]") {
                     return false;
                 });
 
-            REQUIRE_THROWS_AS(mongo_coll.replace_one(filter_doc.view(), modification_doc.view()),
-                              mongocxx::logic_error);
+            REQUIRE_THROWS_AS(
+                mongo_coll.replace_one(filter_doc.view(), modification_doc.view()), mongocxx::logic_error);
             REQUIRE(!bulk_operation_execute_called);
             perform_checks();
         }

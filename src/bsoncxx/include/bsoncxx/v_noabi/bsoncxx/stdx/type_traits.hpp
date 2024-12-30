@@ -376,10 +376,10 @@ static constexpr struct invoke_fn {
     // @cond DOXYGEN_DISABLE "Found ';' while parsing initializer list!"
     template <typename F, typename... Args, typename Fd = remove_cvref_t<F>>
     constexpr auto operator()(F&& fn, Args&&... args) const
-        BSONCXX_RETURNS(impl_invoke::invoker<std::is_member_object_pointer<Fd>::value,
-                                             std::is_member_function_pointer<Fd>::value>::apply(static_cast<F&&>(fn),
-                                                                                                static_cast<Args&&>(
-                                                                                                    args)...));
+        BSONCXX_RETURNS(impl_invoke::invoker<
+                        std::is_member_object_pointer<Fd>::value,
+                        std::is_member_function_pointer<
+                            Fd>::value>::apply(static_cast<F&&>(fn), static_cast<Args&&>(args)...));
     // @endcond
 } invoke;
 
@@ -434,17 +434,18 @@ auto is_swappable_f(rank<0>) -> std::false_type;
 
 template <typename T, typename U>
 auto is_swappable_f(rank<1>)  //
-    noexcept(noexcept(swap(std::declval<T>(), std::declval<U>())) &&
-             noexcept(swap(std::declval<U>(), std::declval<T>())))
-        -> true_t<decltype(swap(std::declval<T>(), std::declval<U>())),
-                  decltype(swap(std::declval<U>(), std::declval<T>()))>;
+    noexcept(
+        noexcept(swap(std::declval<T>(), std::declval<U>())) && noexcept(swap(std::declval<U>(), std::declval<T>())))
+        -> true_t<
+            decltype(swap(std::declval<T>(), std::declval<U>())),
+            decltype(swap(std::declval<U>(), std::declval<T>()))>;
 
 template <typename T, typename U>
 auto is_nothrow_swappable_f(rank<0>) -> std::false_type;
 
 template <typename T, typename U>
-auto is_nothrow_swappable_f(rank<1>) -> bool_constant<noexcept(swap(std::declval<T>(), std::declval<U>())) &&
-                                                      noexcept(swap(std::declval<U>(), std::declval<T>()))>;
+auto is_nothrow_swappable_f(rank<1>) -> bool_constant<
+    noexcept(swap(std::declval<T>(), std::declval<U>())) && noexcept(swap(std::declval<U>(), std::declval<T>()))>;
 
 }  // namespace swap_detection
 

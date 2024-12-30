@@ -291,8 +291,8 @@ TEST_CASE("Heartbeat failed event", "[sdam_monitoring]") {
         CHECK(!event.awaited());
     });
 
-    REQUIRE_THROWS_AS(open_and_close_client(uri{"mongodb://bad-host/?connectTimeoutMS=1"}, apm_opts),
-                      mongocxx::exception);
+    REQUIRE_THROWS_AS(
+        open_and_close_client(uri{"mongodb://bad-host/?connectTimeoutMS=1"}, apm_opts), mongocxx::exception);
 
     REQUIRE(heartbeat_failed_events > 0);
     REQUIRE(failed_awaited_called);

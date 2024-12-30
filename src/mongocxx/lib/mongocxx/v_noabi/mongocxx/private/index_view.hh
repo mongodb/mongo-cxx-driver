@@ -65,9 +65,8 @@ class index_view::impl {
         return libmongoc::collection_find_indexes_with_opts(_coll, nullptr);
     }
 
-    bsoncxx::v_noabi::stdx::optional<std::string> create_one(const client_session* session,
-                                                             const index_model& model,
-                                                             const options::index_view& options) {
+    bsoncxx::v_noabi::stdx::optional<std::string> create_one(
+        const client_session* session, const index_model& model, const options::index_view& options) {
         const auto result = create_many(session, std::vector<index_model>{model}, options);
         auto result_view = result.view();
 
@@ -103,9 +102,8 @@ class index_view::impl {
         return bsoncxx::v_noabi::stdx::make_optional(get_index_name_from_keys(model.keys()));
     }
 
-    bsoncxx::v_noabi::document::value create_many(const client_session* session,
-                                                  const std::vector<index_model>& indexes,
-                                                  const options::index_view& options) {
+    bsoncxx::v_noabi::document::value create_many(
+        const client_session* session, const std::vector<index_model>& indexes, const options::index_view& options) {
         using namespace bsoncxx;
         using builder::basic::concatenate;
 
@@ -124,8 +122,8 @@ class index_view::impl {
             index_arr.append(index_doc.view());
         }
 
-        document::view_or_value command = make_document(kvp("createIndexes", libmongoc::collection_get_name(_coll)),
-                                                        kvp("indexes", index_arr.view()));
+        document::view_or_value command = make_document(
+            kvp("createIndexes", libmongoc::collection_get_name(_coll)), kvp("indexes", index_arr.view()));
 
         libbson::scoped_bson_t reply;
         bson_error_t error;
@@ -154,8 +152,9 @@ class index_view::impl {
 
             bson_iter_t iter;
             if (!bson_iter_init_find(&iter, hello, "maxWireVersion") || bson_iter_int32(&iter) < 9) {
-                throw write_exception{error_code::k_invalid_parameter,
-                                      "option 'commitQuorum' not available on the current server version"};
+                throw write_exception{
+                    error_code::k_invalid_parameter,
+                    "option 'commitQuorum' not available on the current server version"};
             }
 
             command = make_document(concatenate(command), concatenate(options.commit_quorum()->view()));
@@ -174,9 +173,8 @@ class index_view::impl {
         return reply.steal();
     }
 
-    void drop_one(const client_session* session,
-                  bsoncxx::v_noabi::stdx::string_view name,
-                  const options::index_view& options) {
+    void drop_one(
+        const client_session* session, bsoncxx::v_noabi::stdx::string_view name, const options::index_view& options) {
         if (name == bsoncxx::v_noabi::stdx::string_view{"*"}) {
             throw logic_error(error_code::k_invalid_parameter);
         }

@@ -179,8 +179,8 @@ class mongocxx_exception_matcher : public Catch::Matchers::MatcherBase<mongocxx:
     auto find_and_modify_opts_set_bypass_document_validation =                                               \
         libmongoc::find_and_modify_opts_set_bypass_document_validation.create_instance();                    \
     find_and_modify_opts_set_bypass_document_validation->interpose(                                          \
-        [&expected_find_and_modify_opts_bypass_document_validation](mongoc_find_and_modify_opts_t*,          \
-                                                                    bool bypass_document_validation) {       \
+        [&expected_find_and_modify_opts_bypass_document_validation](                                         \
+            mongoc_find_and_modify_opts_t*, bool bypass_document_validation) {                               \
             REQUIRE(bypass_document_validation == expected_find_and_modify_opts_bypass_document_validation); \
             return true;                                                                                     \
         });                                                                                                  \
@@ -195,8 +195,8 @@ class mongocxx_exception_matcher : public Catch::Matchers::MatcherBase<mongocxx:
     ::mongoc_find_and_modify_flags_t expected_find_and_modify_opts_flags;                                    \
     auto find_and_modify_opts_set_flags = libmongoc::find_and_modify_opts_set_flags.create_instance();       \
     find_and_modify_opts_set_flags->interpose(                                                               \
-        [&expected_find_and_modify_opts_flags](mongoc_find_and_modify_opts_t*,                               \
-                                               const ::mongoc_find_and_modify_flags_t flags) {               \
+        [&expected_find_and_modify_opts_flags](                                                              \
+            mongoc_find_and_modify_opts_t*, const ::mongoc_find_and_modify_flags_t flags) {                  \
             REQUIRE(flags == expected_find_and_modify_opts_flags);                                           \
             return true;                                                                                     \
         });                                                                                                  \

@@ -71,8 +71,9 @@ using arrow_t = decltype(std::declval<T>().operator->());
 
 #ifndef NO_LWG_2543
 template <typename T, typename Td = bsoncxx::detail::remove_const_t<T>>
-struct is_hashable : bsoncxx::detail::conjunction<std::is_default_constructible<std::hash<Td>>,
-                                                  bsoncxx::detail::is_invocable<std::hash<Td>, const T&>> {};
+struct is_hashable : bsoncxx::detail::conjunction<
+                         std::is_default_constructible<std::hash<Td>>,
+                         bsoncxx::detail::is_invocable<std::hash<Td>, const T&>> {};
 #else
 
 template <typename T>
@@ -138,11 +139,11 @@ template <typename From1, typename To1, typename From2, typename To2>
 bool check_convert_alike() {
     STATIC_ASSERT_EXPR_ALIKE((std::is_convertible<From1, To1>::value), (std::is_convertible<From2, To2>::value));
     STATIC_ASSERT_EXPR_ALIKE((std::is_convertible<From1&, To1>::value), (std::is_convertible<From2&, To2>::value));
-    STATIC_ASSERT_EXPR_ALIKE((std::is_convertible<const From1&, To1>::value),
-                             (std::is_convertible<const From2&, To2>::value));
+    STATIC_ASSERT_EXPR_ALIKE(
+        (std::is_convertible<const From1&, To1>::value), (std::is_convertible<const From2&, To2>::value));
     STATIC_ASSERT_EXPR_ALIKE((std::is_convertible<From1&&, To1>::value), (std::is_convertible<From2&&, To2>::value));
-    STATIC_ASSERT_EXPR_ALIKE((std::is_convertible<const From1&&, To1>::value),
-                             (std::is_convertible<const From2&&, To2>::value));
+    STATIC_ASSERT_EXPR_ALIKE(
+        (std::is_convertible<const From1&&, To1>::value), (std::is_convertible<const From2&&, To2>::value));
     return true;
 }
 
@@ -150,12 +151,12 @@ template <typename From1, typename To1, typename From2, typename To2>
 bool check_construct_alike() {
     STATIC_ASSERT_EXPR_ALIKE((std::is_constructible<To1, From1>::value), (std::is_constructible<To2, From2>::value));
     STATIC_ASSERT_EXPR_ALIKE((std::is_constructible<To1, From1&>::value), (std::is_constructible<To2, From2&>::value));
-    STATIC_ASSERT_EXPR_ALIKE((std::is_constructible<To1, const From1&>::value),
-                             (std::is_constructible<To2, const From2&>::value));
-    STATIC_ASSERT_EXPR_ALIKE((std::is_constructible<To1, From1&&>::value),
-                             (std::is_constructible<To2, From2&&>::value));
-    STATIC_ASSERT_EXPR_ALIKE((std::is_constructible<To1, const From1&&>::value),
-                             (std::is_constructible<To2, const From2&&>::value));
+    STATIC_ASSERT_EXPR_ALIKE(
+        (std::is_constructible<To1, const From1&>::value), (std::is_constructible<To2, const From2&>::value));
+    STATIC_ASSERT_EXPR_ALIKE(
+        (std::is_constructible<To1, From1&&>::value), (std::is_constructible<To2, From2&&>::value));
+    STATIC_ASSERT_EXPR_ALIKE(
+        (std::is_constructible<To1, const From1&&>::value), (std::is_constructible<To2, const From2&&>::value));
     return true;
 }
 
@@ -177,10 +178,12 @@ bool static_checks() {
     assert_alikeness<bsoncxx::detail::is_equality_comparable, T>();
     assert_alikeness<bsoncxx::detail::is_totally_ordered, T>();
     assert_alikeness<std::is_trivially_destructible, T>();
-    STATIC_ASSERT_EXPR_ALIKE((bsoncxx::detail::is_equality_comparable<T>::value),
-                             (bsoncxx::detail::is_equality_comparable<T, optional<T>>::value));
-    STATIC_ASSERT_EXPR_ALIKE((bsoncxx::detail::is_totally_ordered<T>::value),
-                             (bsoncxx::detail::is_totally_ordered_with<T, optional<T>>::value));
+    STATIC_ASSERT_EXPR_ALIKE(
+        (bsoncxx::detail::is_equality_comparable<T>::value),
+        (bsoncxx::detail::is_equality_comparable<T, optional<T>>::value));
+    STATIC_ASSERT_EXPR_ALIKE(
+        (bsoncxx::detail::is_totally_ordered<T>::value),
+        (bsoncxx::detail::is_totally_ordered_with<T, optional<T>>::value));
     STATIC_ASSERT_EXPR_ALIKE((std::is_constructible<T, T>::value), (std::is_constructible<optional<T>, T>::value));
     STATIC_ASSERT_EXPR((std::is_constructible<optional<T>, bsoncxx::stdx::nullopt_t>::value));
     // Assert we return proper reference types

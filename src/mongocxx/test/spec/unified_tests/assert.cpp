@@ -173,10 +173,8 @@ bool is_special(T doc) {
            string::to_string(doc.get_document().value.begin()->key()).rfind("$$", 0) == 0;
 }
 
-void matches_document(types::bson_value::view actual,
-                      types::bson_value::view expected,
-                      entity::map& map,
-                      bool is_root) {
+void matches_document(
+    types::bson_value::view actual, types::bson_value::view expected, entity::map& map, bool is_root) {
     if (is_special(expected)) {
         special_operator(actual, expected.get_document(), map, is_root);
         return;
@@ -212,10 +210,11 @@ void matches_document(types::bson_value::view actual,
     }
 }
 
-void matches_array(types::bson_value::view actual,
-                   types::bson_value::view expected,
-                   entity::map& map,
-                   bool is_array_of_root_docs = false) {
+void matches_array(
+    types::bson_value::view actual,
+    types::bson_value::view expected,
+    entity::map& map,
+    bool is_array_of_root_docs = false) {
     REQUIRE(actual.type() == bsoncxx::type::k_array);
 
     const auto actual_arr = actual.get_array().value;
@@ -234,11 +233,12 @@ void matches_array(types::bson_value::view actual,
 
 }  // namespace
 
-void assert::matches(types::bson_value::view actual,
-                     types::bson_value::view expected,
-                     entity::map& map,
-                     bool is_root,
-                     bool is_array_of_root_docs) {
+void assert::matches(
+    types::bson_value::view actual,
+    types::bson_value::view expected,
+    entity::map& map,
+    bool is_root,
+    bool is_array_of_root_docs) {
     switch (expected.type()) {
         case bsoncxx::type::k_document:
             matches_document(actual, expected, map, is_root);
@@ -251,12 +251,13 @@ void assert::matches(types::bson_value::view actual,
         case bsoncxx::type::k_int32:
         case bsoncxx::type::k_int64:
         case bsoncxx::type::k_double: {
-            CAPTURE(is_root,
-                    to_string(actual.type()),
-                    to_string(expected.type()),
-                    to_string(actual),
-                    to_string(expected),
-                    match_doc_current_path());
+            CAPTURE(
+                is_root,
+                to_string(actual.type()),
+                to_string(expected.type()),
+                to_string(actual),
+                to_string(expected),
+                match_doc_current_path());
 
             BSONCXX_PUSH_WARNINGS();
             BSONCXX_DISABLE_WARNING(GNU("-Wfloat-equal"));
@@ -283,12 +284,13 @@ void assert::matches(types::bson_value::view actual,
         case bsoncxx::type::k_maxkey:
         case bsoncxx::type::k_minkey:
         default: {
-            CAPTURE(is_root,
-                    to_string(actual.type()),
-                    to_string(expected.type()),
-                    to_string(actual),
-                    to_string(expected),
-                    match_doc_current_path());
+            CAPTURE(
+                is_root,
+                to_string(actual.type()),
+                to_string(expected.type()),
+                to_string(actual),
+                to_string(expected),
+                match_doc_current_path());
             REQUIRE(actual.type() == expected.type());
             REQUIRE(actual == expected);
         }

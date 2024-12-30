@@ -51,10 +51,12 @@ bsoncxx::document::value new_message(int64_t uid, int32_t status, std::string ms
 
 // Insert a document into the database.
 void insert_test_data(mongocxx::collection& coll) {
-    bsoncxx::document::value doc = make_document(kvp("messagelist",
-                                                     make_array(new_message(413098706, 3, "Lorem ipsum..."),
-                                                                new_message(413098707, 2, "Lorem ipsum..."),
-                                                                new_message(413098708, 1, "Lorem ipsum..."))));
+    bsoncxx::document::value doc = make_document(
+        kvp("messagelist",
+            make_array(
+                new_message(413098706, 3, "Lorem ipsum..."),
+                new_message(413098707, 2, "Lorem ipsum..."),
+                new_message(413098708, 1, "Lorem ipsum..."))));
 
     // Normally, one should check the return value for success.
     coll.insert_one(std::move(doc));

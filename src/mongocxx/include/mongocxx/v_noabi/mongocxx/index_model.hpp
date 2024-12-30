@@ -35,8 +35,9 @@ class index_model {
     /// Initializes a new index_model over a mongocxx::v_noabi::collection.
     ///
     MONGOCXX_ABI_EXPORT_CDECL()
-    index_model(const bsoncxx::v_noabi::document::view_or_value& keys,
-                const bsoncxx::v_noabi::document::view_or_value& options = {});
+    index_model(
+        const bsoncxx::v_noabi::document::view_or_value& keys,
+        const bsoncxx::v_noabi::document::view_or_value& options = {});
 
     index_model() = delete;
 

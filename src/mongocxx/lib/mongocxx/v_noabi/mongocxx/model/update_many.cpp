@@ -22,8 +22,8 @@ namespace mongocxx {
 namespace v_noabi {
 namespace model {
 
-update_many::update_many(bsoncxx::v_noabi::document::view_or_value filter,
-                         bsoncxx::v_noabi::document::view_or_value update)
+update_many::update_many(
+    bsoncxx::v_noabi::document::view_or_value filter, bsoncxx::v_noabi::document::view_or_value update)
     : _filter(std::move(filter)), _update(std::move(update)) {}
 
 update_many::update_many(bsoncxx::v_noabi::document::view_or_value filter, const pipeline& update)

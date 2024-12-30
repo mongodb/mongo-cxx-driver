@@ -32,10 +32,7 @@ BSONCXX_PUSH_WARNINGS();
 BSONCXX_DISABLE_WARNING(GNU("-Wfloat-equal"));
 template <typename L, typename R>
 auto is_equality_comparable_f(int, bool b = false)
-    -> true_t<decltype((std::declval<const L&>() == std::declval<const R&>()) ? 0 : 0,
-                       (std::declval<const R&>() == std::declval<const L&>()) ? 0 : 0,
-                       (std::declval<const L&>() != std::declval<const R&>()) ? 0 : 0,
-                       (std::declval<const R&>() != std::declval<const L&>()) ? 0 : 0)>;
+    -> true_t<decltype((std::declval<const L&>() == std::declval<const R&>()) ? 0 : 0, (std::declval<const R&>() == std::declval<const L&>()) ? 0 : 0, (std::declval<const L&>() != std::declval<const R&>()) ? 0 : 0, (std::declval<const R&>() != std::declval<const L&>()) ? 0 : 0)>;
 BSONCXX_POP_WARNINGS();
 
 // Detect whether two types are equality-comparable.
@@ -135,18 +132,20 @@ INLINE_VAR const strong_ordering strong_ordering::equal = strong_ordering(strong
 struct compare_three_way {
     BSONCXX_PUSH_WARNINGS();
     BSONCXX_DISABLE_WARNING(GNU("-Wfloat-equal"));
-    template <typename L,
-              typename R,
-              typename = decltype(std::declval<L>() < std::declval<R>()),
-              typename = decltype(std::declval<L>() == std::declval<R>())>
+    template <
+        typename L,
+        typename R,
+        typename = decltype(std::declval<L>() < std::declval<R>()),
+        typename = decltype(std::declval<L>() == std::declval<R>())>
     constexpr static strong_ordering impl(const L& l, const R& r, rank<1>) {
         return (l < r) ? strong_ordering::less : (l == r ? strong_ordering::equal : strong_ordering::greater);
     }
     BSONCXX_POP_WARNINGS();
 
-    template <typename L,
-              typename R,
-              typename = decltype(tag_invoke(std::declval<compare_three_way>(), std::declval<L>(), std::declval<R>()))>
+    template <
+        typename L,
+        typename R,
+        typename = decltype(tag_invoke(std::declval<compare_three_way>(), std::declval<L>(), std::declval<R>()))>
     constexpr static strong_ordering impl(const L& l, const R& r, rank<2>) {
         return tag_invoke(compare_three_way{}, l, r);
     }
@@ -182,14 +181,15 @@ template <typename L, typename R>
 std::false_type is_partially_ordered_with_f(rank<0>);
 
 template <typename L, typename R>
-auto is_partially_ordered_with_f(rank<1>) -> true_t<decltype(std::declval<const L&>() > std::declval<const R&>()),
-                                                    decltype(std::declval<const L&>() < std::declval<const R&>()),
-                                                    decltype(std::declval<const L&>() >= std::declval<const R&>()),
-                                                    decltype(std::declval<const L&>() <= std::declval<const R&>()),
-                                                    decltype(std::declval<const R&>() < std::declval<const L&>()),
-                                                    decltype(std::declval<const R&>() > std::declval<const L&>()),
-                                                    decltype(std::declval<const R&>() <= std::declval<const L&>()),
-                                                    decltype(std::declval<const R&>() >= std::declval<const L&>())>;
+auto is_partially_ordered_with_f(rank<1>) -> true_t<
+    decltype(std::declval<const L&>() > std::declval<const R&>()),
+    decltype(std::declval<const L&>() < std::declval<const R&>()),
+    decltype(std::declval<const L&>() >= std::declval<const R&>()),
+    decltype(std::declval<const L&>() <= std::declval<const R&>()),
+    decltype(std::declval<const R&>() < std::declval<const L&>()),
+    decltype(std::declval<const R&>() > std::declval<const L&>()),
+    decltype(std::declval<const R&>() <= std::declval<const L&>()),
+    decltype(std::declval<const R&>() >= std::declval<const L&>())>;
 
 template <typename T, typename U>
 struct is_partially_ordered_with : decltype(is_partially_ordered_with_f<T, U>(rank<1>{})) {};
@@ -198,10 +198,11 @@ template <typename T>
 struct is_totally_ordered : conjunction<is_equality_comparable<T>, is_partially_ordered_with<T, T>> {};
 
 template <typename T, typename U>
-struct is_totally_ordered_with : conjunction<is_totally_ordered<T>,
-                                             is_totally_ordered<U>,
-                                             is_equality_comparable<T, U>,
-                                             is_partially_ordered_with<T, U>> {};
+struct is_totally_ordered_with : conjunction<
+                                     is_totally_ordered<T>,
+                                     is_totally_ordered<U>,
+                                     is_equality_comparable<T, U>,
+                                     is_partially_ordered_with<T, U>> {};
 
 }  // namespace detail
 }  // namespace bsoncxx

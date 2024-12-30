@@ -95,8 +95,9 @@ bsoncxx::stdx::optional<test_util::item_t> transform_hex(test_util::item_t pair,
     auto view = context->view();
     auto length = std::distance(view.cbegin(), view.cend());
 
-    return {std::make_pair(bsoncxx::stdx::optional<bsoncxx::stdx::string_view>("data"),
-                           view[static_cast<std::uint32_t>(length - 1)].get_value())};
+    return {std::make_pair(
+        bsoncxx::stdx::optional<bsoncxx::stdx::string_view>("data"),
+        view[static_cast<std::uint32_t>(length - 1)].get_value())};
 }
 
 // The GridFS spec specifies the expected binary data in the form of { $hex: "<hexadecimal string>"
@@ -351,10 +352,11 @@ void test_delete(database db, gridfs::bucket bucket, document::view operation, d
 void test_download_by_name(database, gridfs::bucket, document::view, document::view) {}
 
 std::map<std::string, std::function<void(database db, gridfs::bucket, document::view, document::view)>>
-    gridfs_test_runners = {{"delete", test_delete},
-                           {"download", test_download},
-                           {"download_by_name", test_download_by_name},
-                           {"upload", test_upload}};
+    gridfs_test_runners = {
+        {"delete", test_delete},
+        {"download", test_download},
+        {"download_by_name", test_download_by_name},
+        {"upload", test_upload}};
 
 // Clears the collections and initializes them as the spec describes.
 void initialize_collections(database db, document::view data) {

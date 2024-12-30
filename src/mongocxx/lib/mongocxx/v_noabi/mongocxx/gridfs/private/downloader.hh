@@ -29,21 +29,24 @@ namespace gridfs {
 
 class downloader::impl {
    public:
-    impl(bsoncxx::v_noabi::stdx::optional<cursor> chunks_param,
-         chunks_and_bytes_offset start_param,
-         std::int32_t chunk_size_param,
-         std::int64_t file_len_param,
-         bsoncxx::v_noabi::document::value files_doc_param)
+    impl(
+        bsoncxx::v_noabi::stdx::optional<cursor> chunks_param,
+        chunks_and_bytes_offset start_param,
+        std::int32_t chunk_size_param,
+        std::int64_t file_len_param,
+        bsoncxx::v_noabi::document::value files_doc_param)
         : files_doc{std::move(files_doc_param)},
           chunk_buffer_len{0},
           chunk_buffer_offset{0},
           chunk_buffer_ptr{nullptr},
           start{start_param},
           chunks{chunks_param ? std::move(chunks_param) : bsoncxx::v_noabi::stdx::nullopt},
-          chunks_curr{chunks ? bsoncxx::v_noabi::stdx::make_optional<cursor::iterator>(chunks->begin())
-                             : bsoncxx::v_noabi::stdx::nullopt},
-          chunks_end{chunks ? bsoncxx::v_noabi::stdx::make_optional<cursor::iterator>(chunks->end())
-                            : bsoncxx::v_noabi::stdx::nullopt},
+          chunks_curr{
+              chunks ? bsoncxx::v_noabi::stdx::make_optional<cursor::iterator>(chunks->begin())
+                     : bsoncxx::v_noabi::stdx::nullopt},
+          chunks_end{
+              chunks ? bsoncxx::v_noabi::stdx::make_optional<cursor::iterator>(chunks->end())
+                     : bsoncxx::v_noabi::stdx::nullopt},
           chunks_seen{0},
           chunk_size{chunk_size_param},
           closed{false},

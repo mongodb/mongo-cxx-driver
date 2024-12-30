@@ -33,8 +33,9 @@ namespace detail {
 template <typename T>
 using is_bson_view_compatible = detail::conjunction<
     std::is_constructible<bsoncxx::v_noabi::types::bson_value::view, T>,
-    detail::negation<detail::disjunction<detail::is_alike<T, bsoncxx::v_noabi::types::bson_value::view>,
-                                         detail::is_alike<T, bsoncxx::v_noabi::types::bson_value::value>>>>;
+    detail::negation<detail::disjunction<
+        detail::is_alike<T, bsoncxx::v_noabi::types::bson_value::view>,
+        detail::is_alike<T, bsoncxx::v_noabi::types::bson_value::value>>>>;
 
 }  // namespace detail
 }  // namespace bsoncxx

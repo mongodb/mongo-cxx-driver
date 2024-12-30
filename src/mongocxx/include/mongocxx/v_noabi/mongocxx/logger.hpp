@@ -70,9 +70,10 @@ class logger {
     ///   The domain of the current log message, such as 'client'
     /// @param message
     ///   The text of the current log message.
-    virtual void operator()(log_level level,
-                            bsoncxx::v_noabi::stdx::string_view domain,
-                            bsoncxx::v_noabi::stdx::string_view message) noexcept = 0;
+    virtual void operator()(
+        log_level level,
+        bsoncxx::v_noabi::stdx::string_view domain,
+        bsoncxx::v_noabi::stdx::string_view message) noexcept = 0;
 
    protected:
     ///

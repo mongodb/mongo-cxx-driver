@@ -1208,14 +1208,16 @@ document::value operation_runner::_run_bulk_write(document::view operation) {
     // are: "NOT REQUIRED: Drivers may choose to not provide this property." So just add an empty
     // document for insertedIds. There are no current bulk write tests testing insert operations.
     // The insertedIds field in current bulk write spec tests is always an empty document.
-    result.append(kvp("result",
-                      make_document(kvp("matchedCount", matched_count),
-                                    kvp("modifiedCount", modified_count),
-                                    kvp("upsertedCount", upserted_count),
-                                    kvp("deletedCount", deleted_count),
-                                    kvp("insertedCount", inserted_count),
-                                    kvp("insertedIds", make_document()),
-                                    kvp("upsertedIds", upserted_ids_doc))));
+    result.append(
+        kvp("result",
+            make_document(
+                kvp("matchedCount", matched_count),
+                kvp("modifiedCount", modified_count),
+                kvp("upsertedCount", upserted_count),
+                kvp("deletedCount", deleted_count),
+                kvp("insertedCount", inserted_count),
+                kvp("insertedIds", make_document()),
+                kvp("upsertedIds", upserted_ids_doc))));
     return result.extract();
 }
 

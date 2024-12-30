@@ -40,11 +40,12 @@ bsoncxx::stdx::optional<read_preference> lookup_read_preference(document::view d
 class operation_runner {
    public:
     explicit operation_runner(collection* coll);
-    operation_runner(database* db,
-                     collection* coll,
-                     client_session* session0 = nullptr,
-                     client_session* session1 = nullptr,
-                     client* client = nullptr);
+    operation_runner(
+        database* db,
+        collection* coll,
+        client_session* session0 = nullptr,
+        client_session* session1 = nullptr,
+        client* client = nullptr);
     document::value run(document::view operation);
 
    private:

@@ -223,8 +223,9 @@ TEST_CASE("A client's read preferences may be set and obtained", "[client]") {
     client_set_preference->interpose([&](mongoc_client_t*, const mongoc_read_prefs_t* read_prefs) {
         called_set = true;
         saved_preference.reset(mongoc_read_prefs_copy(read_prefs));
-        REQUIRE(mongoc_read_prefs_get_mode(read_prefs) ==
-                libmongoc::conversions::read_mode_t_from_read_mode(read_preference::read_mode::k_secondary_preferred));
+        REQUIRE(
+            mongoc_read_prefs_get_mode(read_prefs) ==
+            libmongoc::conversions::read_mode_t_from_read_mode(read_preference::read_mode::k_secondary_preferred));
     });
 
     client_get_preference->interpose([&](const mongoc_client_t*) { return saved_preference.get(); }).forever();

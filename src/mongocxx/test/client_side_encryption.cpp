@@ -167,11 +167,12 @@ bsoncxx::document::value _make_tls_opts() {
     return tls_opts.extract();
 }
 
-void _add_client_encrypted_opts(options::client* client_opts,
-                                bsoncxx::document::view_or_value schema_map,
-                                bsoncxx::document::view_or_value kms_doc,
-                                bsoncxx::document::view_or_value tls_opts,
-                                mongocxx::client* key_vault_client = nullptr) {
+void _add_client_encrypted_opts(
+    options::client* client_opts,
+    bsoncxx::document::view_or_value schema_map,
+    bsoncxx::document::view_or_value kms_doc,
+    bsoncxx::document::view_or_value tls_opts,
+    mongocxx::client* key_vault_client = nullptr) {
     options::auto_encryption auto_encrypt_opts{};
 
     // KMS
@@ -227,12 +228,13 @@ void _add_cse_opts(options::client_encryption* opts, mongocxx::client* client, b
 }
 
 template <typename Callable>
-void run_datakey_and_double_encryption(Callable create_data_key,
-                                       bsoncxx::stdx::string_view provider,
-                                       client* setup_client,
-                                       client* client_encrypted,
-                                       client_encryption* client_encryption,
-                                       mongocxx::spec::apm_checker* apm_checker) {
+void run_datakey_and_double_encryption(
+    Callable create_data_key,
+    bsoncxx::stdx::string_view provider,
+    client* setup_client,
+    client* client_encrypted,
+    client_encryption* client_encryption,
+    mongocxx::spec::apm_checker* apm_checker) {
     // Test creating and using data keys:
     INFO("using KMS provider: " << provider);
 
@@ -348,19 +350,20 @@ TEST_CASE("Datakey and double encryption", "[client_side_encryption]") {
 
     // 3. Create and configure client_encrypted, client_encryption.
     options::client encrypted_client_opts;
-    _add_client_encrypted_opts(&encrypted_client_opts,
-                               document() << "db.coll" << open_document << "bsonType"
-                                          << "object"
-                                          << "properties" << open_document << "encrypted_placeholder" << open_document
-                                          << "encrypt" << open_document << "keyId"
-                                          << "/placeholder"
-                                          << "bsonType"
-                                          << "string"
-                                          << "algorithm"
-                                          << "AEAD_AES_256_CBC_HMAC_SHA_512-Random" << close_document << close_document
-                                          << close_document << close_document << finalize,
-                               _make_kms_doc(),
-                               _make_tls_opts());
+    _add_client_encrypted_opts(
+        &encrypted_client_opts,
+        document() << "db.coll" << open_document << "bsonType"
+                   << "object"
+                   << "properties" << open_document << "encrypted_placeholder" << open_document << "encrypt"
+                   << open_document << "keyId"
+                   << "/placeholder"
+                   << "bsonType"
+                   << "string"
+                   << "algorithm"
+                   << "AEAD_AES_256_CBC_HMAC_SHA_512-Random" << close_document << close_document << close_document
+                   << close_document << finalize,
+        _make_kms_doc(),
+        _make_tls_opts());
 
     mongocxx::client client_encrypted{
         uri{},
@@ -416,8 +419,8 @@ TEST_CASE("Datakey and double encryption", "[client_side_encryption]") {
             options::data_key data_key_opts;
             data_key_opts.key_alt_names({"azure_altname"});
 
-            auto doc = make_document(kvp("keyVaultEndpoint", "key-vault-csfle.vault.azure.net"),
-                                     kvp("keyName", "key-name-csfle"));
+            auto doc = make_document(
+                kvp("keyVaultEndpoint", "key-vault-csfle.vault.azure.net"), kvp("keyName", "key-name-csfle"));
             data_key_opts.master_key(doc.view());
 
             return client_encryption.create_data_key("azure", data_key_opts);
@@ -436,10 +439,11 @@ TEST_CASE("Datakey and double encryption", "[client_side_encryption]") {
             options::data_key data_key_opts;
             data_key_opts.key_alt_names({"gcp_altname"});
 
-            auto doc = make_document(kvp("projectId", "devprod-drivers"),
-                                     kvp("location", "global"),
-                                     kvp("keyRing", "key-ring-csfle"),
-                                     kvp("keyName", "key-name-csfle"));
+            auto doc = make_document(
+                kvp("projectId", "devprod-drivers"),
+                kvp("location", "global"),
+                kvp("keyRing", "key-ring-csfle"),
+                kvp("keyName", "key-name-csfle"));
             data_key_opts.master_key(doc.view());
 
             return client_encryption.create_data_key("gcp", data_key_opts);
@@ -504,11 +508,12 @@ void run_external_key_vault_test(bool with_external_key_vault) {
     options::client encrypted_client_opts;
 
     if (with_external_key_vault) {
-        _add_client_encrypted_opts(&encrypted_client_opts,
-                                   std::move(schema_map),
-                                   _make_kms_doc(false),
-                                   _make_tls_opts(),
-                                   &external_key_vault_client);
+        _add_client_encrypted_opts(
+            &encrypted_client_opts,
+            std::move(schema_map),
+            _make_kms_doc(false),
+            _make_tls_opts(),
+            &external_key_vault_client);
     } else {
         _add_client_encrypted_opts(
             &encrypted_client_opts, std::move(schema_map), _make_kms_doc(false), _make_tls_opts());
@@ -772,9 +777,10 @@ TEST_CASE("Views are prohibited", "[client_side_encryption]") {
 
     // Using client_encrypted, attempt to insert a document into db.view.
     // Expect an exception to be thrown containing the message: "cannot auto encrypt a view".
-    REQUIRE_THROWS_MATCHES(client_encrypted["db"]["view"].insert_one(cmd.view()),
-                           mongocxx::exception,
-                           test_util::mongocxx_exception_matcher{"cannot auto encrypt a view"});
+    REQUIRE_THROWS_MATCHES(
+        client_encrypted["db"]["view"].insert_one(cmd.view()),
+        mongocxx::exception,
+        test_util::mongocxx_exception_matcher{"cannot auto encrypt a view"});
 }
 
 void _run_corpus_test(bool use_schema_map) {
@@ -1108,11 +1114,12 @@ void _round_trip(mongocxx::client_encryption* client_encryption, bsoncxx::types:
     REQUIRE(decrypted_val == to_encrypt);
 }
 
-void _run_endpoint_test(mongocxx::client* setup_client,
-                        bsoncxx::document::view masterkey,
-                        std::string kms_provider,
-                        bsoncxx::stdx::optional<std::string> error_msg = bsoncxx::stdx::nullopt,
-                        bsoncxx::stdx::optional<std::string> invalid_error_msg = bsoncxx::stdx::nullopt) {
+void _run_endpoint_test(
+    mongocxx::client* setup_client,
+    bsoncxx::document::view masterkey,
+    std::string kms_provider,
+    bsoncxx::stdx::optional<std::string> error_msg = bsoncxx::stdx::nullopt,
+    bsoncxx::stdx::optional<std::string> invalid_error_msg = bsoncxx::stdx::nullopt) {
     INFO("masterkey" << bsoncxx::to_json(masterkey));
 
     mongocxx::options::client_encryption ce_opts;
@@ -1177,18 +1184,20 @@ void _run_endpoint_test(mongocxx::client* setup_client,
     options::data_key opts;
     opts.master_key(masterkey);
     if (error_msg) {
-        REQUIRE_THROWS_MATCHES(client_encryption.create_data_key(kms_provider, std::move(opts)),
-                               mongocxx::exception,
-                               test_util::mongocxx_exception_matcher{*error_msg});
+        REQUIRE_THROWS_MATCHES(
+            client_encryption.create_data_key(kms_provider, std::move(opts)),
+            mongocxx::exception,
+            test_util::mongocxx_exception_matcher{*error_msg});
     } else {
         auto datakey = client_encryption.create_data_key(kms_provider, std::move(opts));
         _round_trip(&client_encryption, datakey);
     }
 
     if (invalid_error_msg) {
-        REQUIRE_THROWS_MATCHES(client_encryption_invalid.create_data_key(kms_provider, std::move(opts)),
-                               mongocxx::exception,
-                               test_util::mongocxx_exception_matcher{*invalid_error_msg});
+        REQUIRE_THROWS_MATCHES(
+            client_encryption_invalid.create_data_key(kms_provider, std::move(opts)),
+            mongocxx::exception,
+            test_util::mongocxx_exception_matcher{*invalid_error_msg});
     }
 }
 
@@ -1219,9 +1228,9 @@ TEST_CASE("Custom endpoint", "[client_side_encryption]") {
     // Expect this to succeed. Use the returned UUID of the key to explicitly encrypt and
     // decrypt the string "test" to validate it works.
     SECTION("Test Case 1") {
-        auto simple_masterkey =
-            make_document(kvp("region", "us-east-1"),
-                          kvp("key", "arn:aws:kms:us-east-1:579766882180:key/89fcc2c4-08b0-4bd9-9f25-e30687b580d0"));
+        auto simple_masterkey = make_document(
+            kvp("region", "us-east-1"),
+            kvp("key", "arn:aws:kms:us-east-1:579766882180:key/89fcc2c4-08b0-4bd9-9f25-e30687b580d0"));
         _run_endpoint_test(&setup_client, simple_masterkey.view(), "aws");
     }
 
@@ -1320,10 +1329,11 @@ TEST_CASE("Custom endpoint", "[client_side_encryption]") {
                                      << "arn:aws:kms:us-east-1:579766882180:key/89fcc2c4-08b0-4bd9-9f25-e30687b580d0"
                                      << "endpoint"
                                      << "doesnotexist.invalid" << finalize;
-        _run_endpoint_test(&setup_client,
-                           parse_error_masterkey.view(),
-                           "aws",
-                           {{"Failed to resolve doesnotexist.invalid: generic server error"}});
+        _run_endpoint_test(
+            &setup_client,
+            parse_error_masterkey.view(),
+            "aws",
+            {{"Failed to resolve doesnotexist.invalid: generic server error"}});
     }
 
     // Call `client_encryption.createDataKey()` with "azure" as the provider and the following
@@ -1342,11 +1352,12 @@ TEST_CASE("Custom endpoint", "[client_side_encryption]") {
                                           << "key-vault-csfle.vault.azure.net"
                                           << "keyName"
                                           << "key-name-csfle" << finalize;
-        _run_endpoint_test(&setup_client,
-                           azure_masterkey.view(),
-                           "azure",
-                           bsoncxx::stdx::nullopt,
-                           {{"Failed to resolve doesnotexist.invalid: generic server error"}});
+        _run_endpoint_test(
+            &setup_client,
+            azure_masterkey.view(),
+            "azure",
+            bsoncxx::stdx::nullopt,
+            {{"Failed to resolve doesnotexist.invalid: generic server error"}});
     }
 
     // Call `client_encryption.createDataKey()` with "gcp" as the provider and the following
@@ -1374,11 +1385,12 @@ TEST_CASE("Custom endpoint", "[client_side_encryption]") {
                                         << "key-name-csfle"
                                         << "endpoint"
                                         << "cloudkms.googleapis.com:443" << finalize;
-        _run_endpoint_test(&setup_client,
-                           gcp_masterkey.view(),
-                           "gcp",
-                           bsoncxx::stdx::nullopt,
-                           {{"Failed to resolve doesnotexist.invalid: generic server error"}});
+        _run_endpoint_test(
+            &setup_client,
+            gcp_masterkey.view(),
+            "gcp",
+            bsoncxx::stdx::nullopt,
+            {{"Failed to resolve doesnotexist.invalid: generic server error"}});
     }
 
     // Call `client_encryption.createDataKey()` with "gcp" as the provider and the following
@@ -1418,11 +1430,12 @@ TEST_CASE("Custom endpoint", "[client_side_encryption]") {
     SECTION("Test Case 10") {
         auto kmip_masterkey = document{} << "keyId"
                                          << "1" << finalize;
-        _run_endpoint_test(&setup_client,
-                           kmip_masterkey.view(),
-                           "kmip",
-                           bsoncxx::stdx::nullopt,
-                           {{"Failed to resolve doesnotexist.local: generic server error"}});
+        _run_endpoint_test(
+            &setup_client,
+            kmip_masterkey.view(),
+            "kmip",
+            bsoncxx::stdx::nullopt,
+            {{"Failed to resolve doesnotexist.local: generic server error"}});
     }
 
     // Call `client_encryption.createDataKey()` with "kmip" as the provider and the following
@@ -1454,15 +1467,16 @@ TEST_CASE("Custom endpoint", "[client_side_encryption]") {
                                          << "1"
                                          << "endpoint"
                                          << "doesnotexist.local:5698" << finalize;
-        _run_endpoint_test(&setup_client,
-                           kmip_masterkey.view(),
-                           "kmip",
-                           {{"Failed to resolve doesnotexist.local: generic server error"}});
+        _run_endpoint_test(
+            &setup_client,
+            kmip_masterkey.view(),
+            "kmip",
+            {{"Failed to resolve doesnotexist.local: generic server error"}});
     }
 }
 
-void bypass_mongocrypt_via_shared_library(const std::string& shared_lib_path,
-                                          bsoncxx::document::view_or_value external_schema) {
+void bypass_mongocrypt_via_shared_library(
+    const std::string& shared_lib_path, bsoncxx::document::view_or_value external_schema) {
     // Via loading shared library
     // The following tests that loading crypt_shared bypasses spawning mongocryptd.
     //
@@ -1701,9 +1715,10 @@ TEST_CASE("KMS TLS expired certificate", "[client_side_encryption]") {
     client_encryption client_encryption{std::move(cse_opts)};
     options::data_key data_key_opts;
 
-    auto doc = make_document(kvp("region", "us-east-1"),
-                             kvp("key", "arn:aws:kms:us-east-1:579766882180:key/89fcc2c4-08b0-4bd9-9f25-e30687b580d0"),
-                             kvp("endpoint", "127.0.0.1:9000"));
+    auto doc = make_document(
+        kvp("region", "us-east-1"),
+        kvp("key", "arn:aws:kms:us-east-1:579766882180:key/89fcc2c4-08b0-4bd9-9f25-e30687b580d0"),
+        kvp("endpoint", "127.0.0.1:9000"));
     data_key_opts.master_key(doc.view());
 
     REQUIRE_THROWS_MATCHES(
@@ -1756,19 +1771,20 @@ TEST_CASE("KMS TLS wrong host certificate", "[client_side_encryption]") {
     client_encryption client_encryption{std::move(cse_opts)};
     options::data_key data_key_opts;
 
-    auto doc = make_document(kvp("region", "us-east-1"),
-                             kvp("key", "arn:aws:kms:us-east-1:579766882180:key/89fcc2c4-08b0-4bd9-9f25-e30687b580d0"),
-                             kvp("endpoint", "127.0.0.1:9001"));
+    auto doc = make_document(
+        kvp("region", "us-east-1"),
+        kvp("key", "arn:aws:kms:us-east-1:579766882180:key/89fcc2c4-08b0-4bd9-9f25-e30687b580d0"),
+        kvp("endpoint", "127.0.0.1:9001"));
     data_key_opts.master_key(doc.view());
 
-    REQUIRE_THROWS_MATCHES(client_encryption.create_data_key("aws", data_key_opts),
-                           mongocxx::exception,
-                           kms_tls_wrong_host_cert_matcher());
+    REQUIRE_THROWS_MATCHES(
+        client_encryption.create_data_key("aws", data_key_opts),
+        mongocxx::exception,
+        kms_tls_wrong_host_cert_matcher());
 }
 
-bsoncxx::document::value make_kms_providers_with_custom_endpoints(bsoncxx::stdx::string_view azure,
-                                                                  bsoncxx::stdx::string_view gcp,
-                                                                  bsoncxx::stdx::string_view kmip) {
+bsoncxx::document::value make_kms_providers_with_custom_endpoints(
+    bsoncxx::stdx::string_view azure, bsoncxx::stdx::string_view gcp, bsoncxx::stdx::string_view kmip) {
     bsoncxx::builder::basic::document kms_doc;
 
     kms_doc.append(kvp("aws", [&](sub_document subdoc) {
@@ -1808,8 +1824,9 @@ bsoncxx::document::value make_tls_opts_with_certs(with_certs with) {
             }
 
             if (with == with_certs::cert_only || with == with_certs::both) {
-                subdoc.append(kvp("tlsCertificateKeyFile",
-                                  test_util::getenv_or_fail("MONGOCXX_TEST_CSFLE_TLS_CERTIFICATE_KEY_FILE")));
+                subdoc.append(
+                    kvp("tlsCertificateKeyFile",
+                        test_util::getenv_or_fail("MONGOCXX_TEST_CSFLE_TLS_CERTIFICATE_KEY_FILE")));
             }
         }));
     }
@@ -1817,11 +1834,12 @@ bsoncxx::document::value make_tls_opts_with_certs(with_certs with) {
     return tls_opts.extract();
 }
 
-client_encryption make_prose_test_11_ce(mongocxx::client* client,
-                                        bsoncxx::stdx::string_view azure,
-                                        bsoncxx::stdx::string_view gcp,
-                                        bsoncxx::stdx::string_view kmip,
-                                        with_certs with) {
+client_encryption make_prose_test_11_ce(
+    mongocxx::client* client,
+    bsoncxx::stdx::string_view azure,
+    bsoncxx::stdx::string_view gcp,
+    bsoncxx::stdx::string_view kmip,
+    with_certs with) {
     options::client_encryption cse_opts;
     cse_opts.key_vault_client(client);
     cse_opts.key_vault_namespace({"keyvault", "datakeys"});
@@ -1930,10 +1948,11 @@ TEST_CASE("KMS TLS Options Tests", "[client_side_encryption][!mayfail]") {
     SECTION("Case 2 - Azure") {
         options::data_key opts;
 
-        opts.master_key(document() << "keyVaultEndpoint"
-                                   << "doesnotexist.local"
-                                   << "keyName"
-                                   << "foo" << finalize);
+        opts.master_key(
+            document() << "keyVaultEndpoint"
+                       << "doesnotexist.local"
+                       << "keyName"
+                       << "foo" << finalize);
 
         // Expect an error indicating TLS handshake failed.
         // Note: The remote server may disconnect during the TLS handshake, causing miscellaneous
@@ -1942,8 +1961,9 @@ TEST_CASE("KMS TLS Options Tests", "[client_side_encryption][!mayfail]") {
 
         // Expect an error from libmongocrypt with a message containing the string: "HTTP
         // status=404". This implies TLS handshake succeeded.
-        CHECK_THROWS_WITH(client_encryption_with_tls.create_data_key("azure", opts),
-                          Catch::Matchers::ContainsSubstring("HTTP status=404", Catch::CaseSensitive::No));
+        CHECK_THROWS_WITH(
+            client_encryption_with_tls.create_data_key("azure", opts),
+            Catch::Matchers::ContainsSubstring("HTTP status=404", Catch::CaseSensitive::No));
 
         // Expect an error indicating TLS handshake failed due to an expired certificate.
         CHECK_THROWS_WITH(client_encryption_expired.create_data_key("azure", opts), expired_cert_matcher);
@@ -1955,14 +1975,15 @@ TEST_CASE("KMS TLS Options Tests", "[client_side_encryption][!mayfail]") {
     SECTION("Case 3 - GCP") {
         options::data_key opts;
 
-        opts.master_key(document() << "projectId"
-                                   << "foo"
-                                   << "location"
-                                   << "bar"
-                                   << "keyRing"
-                                   << "baz"
-                                   << "keyName"
-                                   << "foo" << finalize);
+        opts.master_key(
+            document() << "projectId"
+                       << "foo"
+                       << "location"
+                       << "bar"
+                       << "keyRing"
+                       << "baz"
+                       << "keyName"
+                       << "foo" << finalize);
 
         // Expect an error indicating TLS handshake failed.
         // Note: The remote server may disconnect during the TLS handshake, causing miscellaneous
@@ -1971,8 +1992,9 @@ TEST_CASE("KMS TLS Options Tests", "[client_side_encryption][!mayfail]") {
 
         // Expect an error from libmongocrypt with a message containing the string: "HTTP
         // status=404". This implies TLS handshake succeeded.
-        CHECK_THROWS_WITH(client_encryption_with_tls.create_data_key("gcp", opts),
-                          Catch::Matchers::ContainsSubstring("HTTP status=404", Catch::CaseSensitive::No));
+        CHECK_THROWS_WITH(
+            client_encryption_with_tls.create_data_key("gcp", opts),
+            Catch::Matchers::ContainsSubstring("HTTP status=404", Catch::CaseSensitive::No));
 
         // Expect an error indicating TLS handshake failed due to an expired certificate.
         CHECK_THROWS_WITH(client_encryption_expired.create_data_key("gcp", opts), expired_cert_matcher);
@@ -2414,8 +2436,9 @@ TEST_CASE("Create Encrypted Collection", "[client_side_encryption]") {
 
     which w = GENERATE(Catch::Generators::values<which>({
         {"aws",
-         make_document(kvp("region", "us-east-1"),
-                       kvp("key", "arn:aws:kms:us-east-1:579766882180:key/89fcc2c4-08b0-4bd9-9f25-e30687b580d0"))},
+         make_document(
+             kvp("region", "us-east-1"),
+             kvp("key", "arn:aws:kms:us-east-1:579766882180:key/89fcc2c4-08b0-4bd9-9f25-e30687b580d0"))},
         // When testing 'local', use master_key of 'null'
         {"local", bsoncxx::stdx::nullopt},
     }));
@@ -2557,11 +2580,12 @@ TEST_CASE("Unique Index on keyAltNames", "[client_side_encryption]") {
     db.run_command(make_document(
         kvp("createIndexes", "datakeys"),
         kvp("indexes",
-            make_array(make_document(kvp("name", "keyAltNames_1"),
-                                     kvp("key", make_document(kvp("keyAltNames", 1))),
-                                     kvp("unique", true),
-                                     kvp("partialFilterExpression",
-                                         make_document(kvp("keyAltNames", make_document(kvp("$exists", true)))))))),
+            make_array(make_document(
+                kvp("name", "keyAltNames_1"),
+                kvp("key", make_document(kvp("keyAltNames", 1))),
+                kvp("unique", true),
+                kvp("partialFilterExpression",
+                    make_document(kvp("keyAltNames", make_document(kvp("$exists", true)))))))),
         kvp("writeConcern", make_document(kvp("w", "majority")))));
 
     // 4. Create a ClientEncryption object (referred to as client_encryption) with client set as the
@@ -2589,9 +2613,10 @@ TEST_CASE("Unique Index on keyAltNames", "[client_side_encryption]") {
             try {
                 client_encryption.create_data_key("local", mongocxx::options::data_key().key_alt_names({"abc"}));
             } catch (mongocxx::operation_exception& e) {
-                REQUIRE(std::strstr(e.what(),
-                                    "E11000 duplicate key error collection: keyvault.datakeys index: keyAltNames_1 "
-                                    "dup key: { keyAltNames: \"abc\" }: generic server error"));
+                REQUIRE(std::strstr(
+                    e.what(),
+                    "E11000 duplicate key error collection: keyvault.datakeys index: keyAltNames_1 "
+                    "dup key: { keyAltNames: \"abc\" }: generic server error"));
                 exception_thrown = true;
             }
             REQUIRE(exception_thrown);
@@ -2604,9 +2629,10 @@ TEST_CASE("Unique Index on keyAltNames", "[client_side_encryption]") {
             try {
                 client_encryption.create_data_key("local", mongocxx::options::data_key().key_alt_names({"def"}));
             } catch (mongocxx::operation_exception& e) {
-                REQUIRE(std::strstr(e.what(),
-                                    "E11000 duplicate key error collection: keyvault.datakeys index: keyAltNames_1 "
-                                    "dup key: { keyAltNames: \"def\" }: generic server error"));
+                REQUIRE(std::strstr(
+                    e.what(),
+                    "E11000 duplicate key error collection: keyvault.datakeys index: keyAltNames_1 "
+                    "dup key: { keyAltNames: \"def\" }: generic server error"));
                 exception_thrown = true;
             }
             REQUIRE(exception_thrown);
@@ -2636,9 +2662,10 @@ TEST_CASE("Unique Index on keyAltNames", "[client_side_encryption]") {
             try {
                 client_encryption.add_key_alt_name(key_doc.view(), "def");
             } catch (mongocxx::operation_exception& e) {
-                REQUIRE(std::strstr(e.what(),
-                                    "E11000 duplicate key error collection: keyvault.datakeys index: keyAltNames_1 "
-                                    "dup key: { keyAltNames: \"def\" }: generic server error"));
+                REQUIRE(std::strstr(
+                    e.what(),
+                    "E11000 duplicate key error collection: keyvault.datakeys index: keyAltNames_1 "
+                    "dup key: { keyAltNames: \"def\" }: generic server error"));
                 exception_thrown = true;
             }
             REQUIRE(exception_thrown);
@@ -2870,8 +2897,8 @@ struct range_explicit_encryption_objects {
     std::unique_ptr<field_type_values> field_values_ptr;
 };
 
-range_explicit_encryption_objects range_explicit_encryption_setup(const std::string& type_str,
-                                                                  RangeFieldType field_type) {
+range_explicit_encryption_objects range_explicit_encryption_setup(
+    const std::string& type_str, RangeFieldType field_type) {
     range_explicit_encryption_objects res;
 
     // Load the file for the specific data type being tested `range-encryptedFields-<type>.json`.
@@ -2930,11 +2957,12 @@ range_explicit_encryption_objects range_explicit_encryption_setup(const std::str
     //      keyVaultNamespace: "keyvault.datakeys";
     //      kmsProviders: { "local": { "key": <base64 decoding of LOCAL_MASTERKEY> } }
     //   }
-    auto& client_encryption = *(res.client_encryption_ptr = bsoncxx::make_unique<mongocxx::client_encryption>(
-                                    options::client_encryption()
-                                        .key_vault_client(&key_vault_client)
-                                        .key_vault_namespace({"keyvault", "datakeys"})
-                                        .kms_providers(kms_providers.view())));
+    auto& client_encryption =
+        *(res.client_encryption_ptr =
+              bsoncxx::make_unique<mongocxx::client_encryption>(options::client_encryption()
+                                                                    .key_vault_client(&key_vault_client)
+                                                                    .key_vault_namespace({"keyvault", "datakeys"})
+                                                                    .kms_providers(kms_providers.view())));
 
     // Create a MongoClient named `encryptedClient` with these `AutoEncryptionOpts`:
     //   AutoEncryptionOpts {
@@ -3058,13 +3086,13 @@ TEST_CASE("Range Explicit Encryption", "[client_side_encryption]") {
                 //      contentionFactor: 0
                 //   }
                 // Store the result in insertPayload.
-                const auto insert_payload =
-                    client_encryption.encrypt(original.view(),
-                                              options::encrypt()
-                                                  .range_opts(range_opts)
-                                                  .key_id(key1_id)
-                                                  .algorithm(options::encrypt::encryption_algorithm::k_range)
-                                                  .contention_factor(0));
+                const auto insert_payload = client_encryption.encrypt(
+                    original.view(),
+                    options::encrypt()
+                        .range_opts(range_opts)
+                        .key_id(key1_id)
+                        .algorithm(options::encrypt::encryption_algorithm::k_range)
+                        .contention_factor(0));
 
                 // Use `clientEncryption` to decrypt `insertPayload`.
                 const auto result = client_encryption.decrypt(insert_payload);
@@ -3079,8 +3107,9 @@ TEST_CASE("Range Explicit Encryption", "[client_side_encryption]") {
                 //   200}}]}
                 const auto query = make_document(
                     kvp("$and",
-                        make_array(make_document(kvp(field_name, make_document(kvp("$gte", field_values.v6)))),
-                                   make_document(kvp(field_name, make_document(kvp("$lte", field_values.v200)))))));
+                        make_array(
+                            make_document(kvp(field_name, make_document(kvp("$gte", field_values.v6)))),
+                            make_document(kvp(field_name, make_document(kvp("$lte", field_values.v200)))))));
 
                 // Use the matching `RangeOpts` listed in Test Setup: RangeOpts and these
                 // `EncryptOpts` to encrypt the query:
@@ -3102,11 +3131,11 @@ TEST_CASE("Range Explicit Encryption", "[client_side_encryption]") {
 
                 // Use encryptedClient to run a "find" operation on the `db.explicit_encryption`
                 // collection with the filter findPayload and sort the results by _id.
-                auto cursor =
-                    explicit_encryption.find(find_payload.view(),
-                                             options::find()
-                                                 .sort(make_document(kvp("_id", 1)))
-                                                 .projection(make_document(kvp("_id", 0), kvp(field_name, 1))));
+                auto cursor = explicit_encryption.find(
+                    find_payload.view(),
+                    options::find()
+                        .sort(make_document(kvp("_id", 1)))
+                        .projection(make_document(kvp("_id", 0), kvp(field_name, 1))));
 
                 // Assert these three documents are returned:
                 //  - { "encrypted<Type>": 6 }
@@ -3128,8 +3157,9 @@ TEST_CASE("Range Explicit Encryption", "[client_side_encryption]") {
                 //   {"$and": [{"encrypted<Type>": {"$gte": 0}}, {"encrypted<Type>": {"$lte": 6}}]}
                 const auto query = make_document(
                     kvp("$and",
-                        make_array(make_document(kvp(field_name, make_document(kvp("$gte", field_values.v0)))),
-                                   make_document(kvp(field_name, make_document(kvp("$lte", field_values.v6)))))));
+                        make_array(
+                            make_document(kvp(field_name, make_document(kvp("$gte", field_values.v0)))),
+                            make_document(kvp(field_name, make_document(kvp("$lte", field_values.v6)))))));
 
                 // Use the matching `RangeOpts` listed in Test Setup: RangeOpts and these
                 // `EncryptOpts` to encrypt the query:
@@ -3151,11 +3181,11 @@ TEST_CASE("Range Explicit Encryption", "[client_side_encryption]") {
 
                 // Use `encryptedClient` to run a "find" operation on the `db.explicit_encryption`
                 // collection with the filter `findPayload` and sort the results by `_id`.
-                auto cursor =
-                    explicit_encryption.find(find_payload.view(),
-                                             options::find()
-                                                 .sort(make_document(kvp("_id", 1)))
-                                                 .projection(make_document(kvp("_id", 0), kvp(field_name, 1))));
+                auto cursor = explicit_encryption.find(
+                    find_payload.view(),
+                    options::find()
+                        .sort(make_document(kvp("_id", 1)))
+                        .projection(make_document(kvp("_id", 0), kvp(field_name, 1))));
 
                 // Assert these two documents are returned:
                 //  - { "encrypted<Type>": 0 }
@@ -3196,11 +3226,11 @@ TEST_CASE("Range Explicit Encryption", "[client_side_encryption]") {
 
                 // Use encryptedClient to run a "find" operation on the `db.explicit_encryption`
                 // collection with the filter findPayload and sort the results by _id.
-                auto cursor =
-                    explicit_encryption.find(find_payload.view(),
-                                             options::find()
-                                                 .sort(make_document(kvp("_id", 1)))
-                                                 .projection(make_document(kvp("_id", 0), kvp(field_name, 1))));
+                auto cursor = explicit_encryption.find(
+                    find_payload.view(),
+                    options::find()
+                        .sort(make_document(kvp("_id", 1)))
+                        .projection(make_document(kvp("_id", 0), kvp(field_name, 1))));
 
                 // Assert that only this document is returned:
                 //  - { "encrypted<Type>": 200 }
@@ -3239,11 +3269,11 @@ TEST_CASE("Range Explicit Encryption", "[client_side_encryption]") {
 
                 // Use encryptedClient to run a "find" operation on the `db.explicit_encryption`
                 // collection with the filter findPayload and sort the results by _id.
-                auto cursor =
-                    explicit_encryption.find(find_payload.view(),
-                                             options::find()
-                                                 .sort(make_document(kvp("_id", 1)))
-                                                 .projection(make_document(kvp("_id", 0), kvp(field_name, 1))));
+                auto cursor = explicit_encryption.find(
+                    find_payload.view(),
+                    options::find()
+                        .sort(make_document(kvp("_id", 1)))
+                        .projection(make_document(kvp("_id", 0), kvp(field_name, 1))));
 
                 // Assert these two documents are returned:
                 //  - { "encrypted<Type>": 0 }
@@ -3284,12 +3314,13 @@ TEST_CASE("Range Explicit Encryption", "[client_side_encryption]") {
                         // The error should be raised because 201 is greater than the maximum value
                         // in RangeOpts. Assert that an error was raised.
                         REQUIRE_THROWS_WITH(
-                            client_encryption.encrypt(original.view(),
-                                                      options::encrypt()
-                                                          .range_opts(range_opts)
-                                                          .key_id(key1_id)
-                                                          .algorithm(options::encrypt::encryption_algorithm::k_range)
-                                                          .contention_factor(0)),
+                            client_encryption.encrypt(
+                                original.view(),
+                                options::encrypt()
+                                    .range_opts(range_opts)
+                                    .key_id(key1_id)
+                                    .algorithm(options::encrypt::encryption_algorithm::k_range)
+                                    .contention_factor(0)),
                             Catch::Matchers::ContainsSubstring(
                                 "Value must be greater than or equal to the minimum value and "
                                 "less than or equal to the maximum value"));
@@ -3372,16 +3403,17 @@ TEST_CASE("Range Explicit Encryption", "[client_side_encryption]") {
                         //   }
                         // Assert an error was raised.
                         REQUIRE_THROWS_WITH(
-                            client_encryption.encrypt(field_values.v6,
-                                                      options::encrypt()
-                                                          .range_opts(options::range()
-                                                                          .min(to_field_value(0, field_type))
-                                                                          .max(to_field_value(200, field_type))
-                                                                          .sparsity(1)
-                                                                          .precision(2))
-                                                          .key_id(key1_id)
-                                                          .algorithm(options::encrypt::encryption_algorithm::k_range)
-                                                          .contention_factor(0)),
+                            client_encryption.encrypt(
+                                field_values.v6,
+                                options::encrypt()
+                                    .range_opts(options::range()
+                                                    .min(to_field_value(0, field_type))
+                                                    .max(to_field_value(200, field_type))
+                                                    .sparsity(1)
+                                                    .precision(2))
+                                    .key_id(key1_id)
+                                    .algorithm(options::encrypt::encryption_algorithm::k_range)
+                                    .contention_factor(0)),
                             Catch::Matchers::ContainsSubstring(
                                 "expected 'precision' to be set with double or decimal128 index"));
                     }
@@ -3435,15 +3467,15 @@ TEST_CASE("Range Explicit Encryption applies defaults", "[client_side_encryption
     //      }
     //   }
     const auto v_123 = to_field_value(123, RangeFieldType::Int);
-    auto payload_defaults =
-        client_encryption.encrypt(v_123,
-                                  options::encrypt()
-                                      .key_id(keyId.view())
-                                      .algorithm(options::encrypt::encryption_algorithm::k_range)
-                                      .contention_factor(0)
-                                      .range_opts(options::range()
-                                                      .min(to_field_value(0, RangeFieldType::Int))
-                                                      .max(to_field_value(1000, RangeFieldType::Int))));
+    auto payload_defaults = client_encryption.encrypt(
+        v_123,
+        options::encrypt()
+            .key_id(keyId.view())
+            .algorithm(options::encrypt::encryption_algorithm::k_range)
+            .contention_factor(0)
+            .range_opts(options::range()
+                            .min(to_field_value(0, RangeFieldType::Int))
+                            .max(to_field_value(1000, RangeFieldType::Int))));
 
     SECTION("Case 1: Uses libmongocrypt defaults") {
         // Call `clientEncryption.encrypt` to encrypt the int32 value `123` with these options:
@@ -3459,20 +3491,20 @@ TEST_CASE("Range Explicit Encryption applies defaults", "[client_side_encryption
         //         trimFactor: 6
         //      }
         //   }
-        auto payload_libmongocrypt_defaults =
-            client_encryption.encrypt(v_123,
-                                      options::encrypt()
-                                          .key_id(keyId.view())
-                                          .algorithm(options::encrypt::encryption_algorithm::k_range)
-                                          .contention_factor(0)
-                                          .range_opts(options::range()
-                                                          .min(to_field_value(0, RangeFieldType::Int))
-                                                          .max(to_field_value(1000, RangeFieldType::Int))
-                                                          .sparsity(2)
-                                                          .trim_factor(6)));
+        auto payload_libmongocrypt_defaults = client_encryption.encrypt(
+            v_123,
+            options::encrypt()
+                .key_id(keyId.view())
+                .algorithm(options::encrypt::encryption_algorithm::k_range)
+                .contention_factor(0)
+                .range_opts(options::range()
+                                .min(to_field_value(0, RangeFieldType::Int))
+                                .max(to_field_value(1000, RangeFieldType::Int))
+                                .sparsity(2)
+                                .trim_factor(6)));
 
-        REQUIRE_NOTHROW(payload_defaults.view().get_binary().size ==
-                        payload_libmongocrypt_defaults.view().get_binary().size);
+        REQUIRE_NOTHROW(
+            payload_defaults.view().get_binary().size == payload_libmongocrypt_defaults.view().get_binary().size);
     }
 
     SECTION("Case 2: Accepts `trimFactor` 0") {
@@ -3488,16 +3520,16 @@ TEST_CASE("Range Explicit Encryption applies defaults", "[client_side_encryption
         //         trimFactor: 0
         //      }
         //   }
-        auto payload_trim_factor_0 =
-            client_encryption.encrypt(v_123,
-                                      options::encrypt()
-                                          .key_id(keyId.view())
-                                          .algorithm(options::encrypt::encryption_algorithm::k_range)
-                                          .contention_factor(0)
-                                          .range_opts(options::range()
-                                                          .min(to_field_value(0, RangeFieldType::Int))
-                                                          .max(to_field_value(1000, RangeFieldType::Int))
-                                                          .trim_factor(0)));
+        auto payload_trim_factor_0 = client_encryption.encrypt(
+            v_123,
+            options::encrypt()
+                .key_id(keyId.view())
+                .algorithm(options::encrypt::encryption_algorithm::k_range)
+                .contention_factor(0)
+                .range_opts(options::range()
+                                .min(to_field_value(0, RangeFieldType::Int))
+                                .max(to_field_value(1000, RangeFieldType::Int))
+                                .trim_factor(0)));
 
         REQUIRE_NOTHROW(payload_defaults.view().get_binary().size < payload_trim_factor_0.view().get_binary().size);
     }
@@ -3516,8 +3548,8 @@ TEST_CASE("16. Rewrap. Case 2: RewrapManyDataKeyOpts.provider is not optional", 
 
     auto clientEncryption = mongocxx::client_encryption(ce_opts);
     REQUIRE_THROWS_WITH(
-        clientEncryption.rewrap_many_datakey(make_document(),
-                                             mongocxx::options::rewrap_many_datakey().master_key(make_document())),
+        clientEncryption.rewrap_many_datakey(
+            make_document(), mongocxx::options::rewrap_many_datakey().master_key(make_document())),
         Catch::Matchers::ContainsSubstring("expected 'provider' to be set to identify type of 'master_key'"));
 }
 

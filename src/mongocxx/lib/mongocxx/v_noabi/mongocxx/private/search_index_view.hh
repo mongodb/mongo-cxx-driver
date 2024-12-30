@@ -49,9 +49,10 @@ class search_index_view::impl {
    public:
     impl(mongoc_collection_t* collection, mongoc_client_t* client) : _coll{collection}, _client{client} {}
 
-    cursor list(const client_session* session,
-                bsoncxx::v_noabi::string::view_or_value name,
-                const options::aggregate& options) {
+    cursor list(
+        const client_session* session,
+        bsoncxx::v_noabi::string::view_or_value name,
+        const options::aggregate& options) {
         pipeline pipeline{};
         pipeline.append_stage(make_document(kvp("$listSearchIndexes", make_document(kvp("name", name.view())))));
         return list(session, pipeline, options);
@@ -89,8 +90,8 @@ class search_index_view::impl {
             result["indexesCreated"].get_array().value.begin()->get_document().value["name"].get_string().value);
     }
 
-    bsoncxx::v_noabi::document::value create_many(const client_session* session,
-                                                  const std::vector<search_index_model>& search_indexes) {
+    bsoncxx::v_noabi::document::value create_many(
+        const client_session* session, const std::vector<search_index_model>& search_indexes) {
         using namespace bsoncxx;
 
         builder::basic::array search_index_arr;
@@ -169,14 +170,15 @@ class search_index_view::impl {
         }
     }
 
-    void update_one(const client_session* session,
-                    bsoncxx::v_noabi::string::view_or_value name,
-                    bsoncxx::v_noabi::document::view_or_value definition) {
+    void update_one(
+        const client_session* session,
+        bsoncxx::v_noabi::string::view_or_value name,
+        bsoncxx::v_noabi::document::view_or_value definition) {
         bsoncxx::v_noabi::builder::basic::document opts_doc;
-        bsoncxx::v_noabi::document::value command =
-            make_document(kvp("updateSearchIndex", libmongoc::collection_get_name(_coll)),
-                          kvp("name", name.view()),
-                          kvp("definition", definition.view()));
+        bsoncxx::v_noabi::document::value command = make_document(
+            kvp("updateSearchIndex", libmongoc::collection_get_name(_coll)),
+            kvp("name", name.view()),
+            kvp("definition", definition.view()));
 
         if (session) {
             opts_doc.append(bsoncxx::v_noabi::builder::concatenate_doc{session->_get_impl().to_document()});

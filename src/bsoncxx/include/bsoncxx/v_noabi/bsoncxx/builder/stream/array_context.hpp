@@ -66,10 +66,11 @@ class array_context {
     ///   The value to append
     ///
     template <class T>
-    detail::requires_not_t<array_context&,
-                           detail::is_invocable<T, array_context<>>,
-                           detail::is_invocable<T, single_context>,
-                           detail::is_alike<T, finalize_type>>
+    detail::requires_not_t<
+        array_context&,
+        detail::is_invocable<T, array_context<>>,
+        detail::is_invocable<T, single_context>,
+        detail::is_alike<T, finalize_type>>
     operator<<(T&& t) {
         _core->append(std::forward<T>(t));
         return *this;
@@ -103,9 +104,10 @@ class array_context {
     /// @return A value type which holds the complete bson document.
     ///
     template <typename T>
-    detail::requires_t<bsoncxx::v_noabi::array::value,
-                       std::is_same<base, closed_context>,
-                       detail::is_alike<T, finalize_type>>
+    detail::requires_t<
+        bsoncxx::v_noabi::array::value,
+        std::is_same<base, closed_context>,
+        detail::is_alike<T, finalize_type>>
     // VS2015U1 can't resolve the name.
     operator<<(T&&) {
         return _core->extract_array();

@@ -289,11 +289,12 @@ core& core::append(const types::b_double& value) {
 core& core::append(const types::b_string& value) {
     stdx::string_view key = _impl->next_key();
 
-    if (!bson_append_utf8(_impl->back(),
-                          key.data(),
-                          static_cast<std::int32_t>(key.length()),
-                          value.value.data(),
-                          static_cast<std::int32_t>(value.value.length()))) {
+    if (!bson_append_utf8(
+            _impl->back(),
+            key.data(),
+            static_cast<std::int32_t>(key.length()),
+            value.value.data(),
+            static_cast<std::int32_t>(value.value.length()))) {
         throw bsoncxx::v_noabi::exception{error_code::k_cannot_append_string};
     }
 
@@ -327,12 +328,13 @@ core& core::append(const types::b_array& value) {
 core& core::append(const types::b_binary& value) {
     stdx::string_view key = _impl->next_key();
 
-    if (!bson_append_binary(_impl->back(),
-                            key.data(),
-                            static_cast<std::int32_t>(key.length()),
-                            static_cast<bson_subtype_t>(value.sub_type),
-                            value.bytes,
-                            value.size)) {
+    if (!bson_append_binary(
+            _impl->back(),
+            key.data(),
+            static_cast<std::int32_t>(key.length()),
+            static_cast<bson_subtype_t>(value.sub_type),
+            value.bytes,
+            value.size)) {
         throw bsoncxx::v_noabi::exception{error_code::k_cannot_append_binary};
     }
 
@@ -394,11 +396,12 @@ core& core::append(const types::b_null&) {
 core& core::append(const types::b_regex& value) {
     stdx::string_view key = _impl->next_key();
 
-    if (!bson_append_regex(_impl->back(),
-                           key.data(),
-                           static_cast<std::int32_t>(key.length()),
-                           string::to_string(value.regex).data(),
-                           string::to_string(value.options).data())) {
+    if (!bson_append_regex(
+            _impl->back(),
+            key.data(),
+            static_cast<std::int32_t>(key.length()),
+            string::to_string(value.regex).data(),
+            string::to_string(value.options).data())) {
         throw bsoncxx::v_noabi::exception{error_code::k_cannot_append_regex};
     }
 
@@ -411,11 +414,12 @@ core& core::append(const types::b_dbpointer& value) {
     bson_oid_t oid;
     std::memcpy(&oid.bytes, value.value.bytes(), sizeof(oid.bytes));
 
-    if (!bson_append_dbpointer(_impl->back(),
-                               key.data(),
-                               static_cast<std::int32_t>(key.length()),
-                               string::to_string(value.collection).data(),
-                               &oid)) {
+    if (!bson_append_dbpointer(
+            _impl->back(),
+            key.data(),
+            static_cast<std::int32_t>(key.length()),
+            string::to_string(value.collection).data(),
+            &oid)) {
         throw bsoncxx::v_noabi::exception{error_code::k_cannot_append_dbpointer};
     }
 
@@ -436,11 +440,12 @@ core& core::append(const types::b_code& value) {
 core& core::append(const types::b_symbol& value) {
     stdx::string_view key = _impl->next_key();
 
-    if (!bson_append_symbol(_impl->back(),
-                            key.data(),
-                            static_cast<std::int32_t>(key.length()),
-                            value.symbol.data(),
-                            static_cast<std::int32_t>(value.symbol.length()))) {
+    if (!bson_append_symbol(
+            _impl->back(),
+            key.data(),
+            static_cast<std::int32_t>(key.length()),
+            value.symbol.data(),
+            static_cast<std::int32_t>(value.symbol.length()))) {
         throw bsoncxx::v_noabi::exception{error_code::k_cannot_append_symbol};
     }
 
@@ -453,11 +458,12 @@ core& core::append(const types::b_codewscope& value) {
     bson_t bson;
     bson_init_static(&bson, value.scope.data(), value.scope.length());
 
-    if (!bson_append_code_with_scope(_impl->back(),
-                                     key.data(),
-                                     static_cast<std::int32_t>(key.length()),
-                                     string::to_string(value.code).data(),
-                                     &bson)) {
+    if (!bson_append_code_with_scope(
+            _impl->back(),
+            key.data(),
+            static_cast<std::int32_t>(key.length()),
+            string::to_string(value.code).data(),
+            &bson)) {
         throw bsoncxx::v_noabi::exception{error_code::k_cannot_append_codewscope};
     }
 

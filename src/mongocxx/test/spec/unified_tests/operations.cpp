@@ -127,13 +127,14 @@ document::value bulk_write_result_to_document(const mongocxx::result::bulk_write
         upserted_ids_builder.append(kvp(std::to_string(index_and_id.first), index_and_id.second.get_int32().value));
     }
 
-    return make_document(kvp("matchedCount", result.matched_count()),
-                         kvp("modifiedCount", result.matched_count()),
-                         kvp("deletedCount", result.deleted_count()),
-                         kvp("insertedCount", result.inserted_count()),
-                         kvp("upsertedCount", result.upserted_count()),
-                         kvp("insertedIds", make_document()),
-                         kvp("upsertedIds", upserted_ids_builder.extract()));
+    return make_document(
+        kvp("matchedCount", result.matched_count()),
+        kvp("modifiedCount", result.matched_count()),
+        kvp("deletedCount", result.deleted_count()),
+        kvp("insertedCount", result.inserted_count()),
+        kvp("upsertedCount", result.upserted_count()),
+        kvp("insertedIds", make_document()),
+        kvp("upsertedIds", upserted_ids_builder.extract()));
 }
 
 document::value find(collection& coll, client_session* session, document::view operation) {
@@ -166,10 +167,8 @@ document::value find(collection& coll, client_session* session, document::view o
     return result.extract();
 }
 
-document::value list_collections(entity::map& map,
-                                 client_session* session,
-                                 const std::string& object,
-                                 document::view op) {
+document::value list_collections(
+    entity::map& map, client_session* session, const std::string& object, document::view op) {
     const auto arguments = op["arguments"];
     const auto empty_doc = make_document();
 
@@ -192,10 +191,8 @@ document::value list_collections(entity::map& map,
     return result.extract();
 }
 
-document::value list_collection_names(entity::map& map,
-                                      client_session* session,
-                                      const std::string& object,
-                                      document::view op) {
+document::value list_collection_names(
+    entity::map& map, client_session* session, const std::string& object, document::view op) {
     const auto arguments = op["arguments"];
     const auto empty_doc = make_document();
 
@@ -218,10 +215,8 @@ document::value list_collection_names(entity::map& map,
     return result.extract();
 }
 
-document::value list_databases(entity::map& map,
-                               client_session* session,
-                               const std::string& object,
-                               document::view op) {
+document::value list_databases(
+    entity::map& map, client_session* session, const std::string& object, document::view op) {
     const auto arguments = op["arguments"];
     const auto empty_doc = make_document();
     const auto arguments_view = arguments ? arguments.get_document().value : empty_doc.view();
@@ -238,10 +233,8 @@ document::value list_databases(entity::map& map,
     return result.extract();
 }
 
-document::value list_database_names(entity::map& map,
-                                    client_session* session,
-                                    const std::string& object,
-                                    document::view op) {
+document::value list_database_names(
+    entity::map& map, client_session* session, const std::string& object, document::view op) {
     const auto arguments = op["arguments"];
     const auto empty_doc = make_document();
 
@@ -548,9 +541,11 @@ document::value insert_many(collection& coll, client_session* session, document:
         inserted_ids_builder.append(kvp(std::to_string(id_pair.first), id_pair.second.get_value()));
     }
 
-    result.append(kvp("result",
-                      make_document(kvp("insertedIds", inserted_ids_builder.extract()),
-                                    kvp("insertedCount", insert_many_result->inserted_count()))));
+    result.append(
+        kvp("result",
+            make_document(
+                kvp("insertedIds", inserted_ids_builder.extract()),
+                kvp("insertedCount", insert_many_result->inserted_count()))));
     return result.extract();
 }
 
@@ -705,10 +700,8 @@ document::value insert_one(collection& coll, client_session* session, document::
     return result.extract();
 }
 
-document::value create_change_stream(entity::map& map,
-                                     client_session* session,
-                                     const std::string& object,
-                                     document::view operation) {
+document::value create_change_stream(
+    entity::map& map, client_session* session, const std::string& object, document::view operation) {
     auto args = operation["arguments"];
     auto pipeline = build_pipeline(args["pipeline"].get_array().value);
 
@@ -817,8 +810,8 @@ document::value fail_point(entity::map& map, spec::apm_checker& apm, document::v
 
     client["admin"].run_command(args["failPoint"].get_document().value);
 
-    return make_document(kvp("uri", client.uri().to_string()),
-                         kvp("failPoint", args["failPoint"]["configureFailPoint"].get_string()));
+    return make_document(
+        kvp("uri", client.uri().to_string()), kvp("failPoint", args["failPoint"]["configureFailPoint"].get_string()));
 }
 
 document::value rename(mongocxx::collection& coll, document::view op) {
@@ -1767,10 +1760,8 @@ document::value remove_key_alt_name(entity::map& map, const std::string& object,
     }
 }
 
-document::value create_find_cursor(entity::map& map,
-                                   const std::string& object,
-                                   client_session* session,
-                                   document::view operation) {
+document::value create_find_cursor(
+    entity::map& map, const std::string& object, client_session* session, document::view operation) {
     const auto save_result_as_entity = operation["saveResultAsEntity"];
     const auto key =
         save_result_as_entity ? string::to_string(save_result_as_entity.get_string().value) : std::string();
@@ -1887,10 +1878,11 @@ document::value update_search_index(collection& coll, document::view operation) 
 
 }  // namespace
 
-document::value operations::run(entity::map& entity_map,
-                                std::unordered_map<std::string, spec::apm_checker>& apm_map,
-                                const array::element& op,
-                                operations::state& state) {
+document::value operations::run(
+    entity::map& entity_map,
+    std::unordered_map<std::string, spec::apm_checker>& apm_map,
+    const array::element& op,
+    operations::state& state) {
     auto name = string::to_string(op["name"].get_string().value);
     auto object = string::to_string(op["object"].get_string().value);
 
@@ -1983,9 +1975,10 @@ document::value operations::run(entity::map& entity_map,
         // configureFailPoint command.
         client["admin"].run_command(fail_point, server_id);
 
-        return make_document(kvp("uri", client.uri().to_string()),
-                             kvp("failPoint", fail_point["configureFailPoint"].get_string()),
-                             kvp("serverId", static_cast<std::int64_t>(server_id)));
+        return make_document(
+            kvp("uri", client.uri().to_string()),
+            kvp("failPoint", fail_point["configureFailPoint"].get_string()),
+            kvp("serverId", static_cast<std::int64_t>(server_id)));
     }
     if (name == "findOneAndDelete")
         return find_one_and_delete(entity_map.get_collection(object), get_session(op_view, entity_map), op_view);
@@ -2027,8 +2020,9 @@ document::value operations::run(entity::map& entity_map,
         auto cse2 = *(apm.end() - 2);
 
         CAPTURE(to_json(cse1), to_json(cse2));
-        REQUIRE(cse1["commandStartedEvent"]["command"]["lsid"].get_value() ==
-                cse2["commandStartedEvent"]["command"]["lsid"].get_value());
+        REQUIRE(
+            cse1["commandStartedEvent"]["command"]["lsid"].get_value() ==
+            cse2["commandStartedEvent"]["command"]["lsid"].get_value());
         return empty_doc;
     }
     if (name == "assertDifferentLsidOnLastTwoCommands") {
@@ -2039,8 +2033,9 @@ document::value operations::run(entity::map& entity_map,
         auto cse2 = *(apm.end() - 2);
 
         CAPTURE(to_json(cse1), to_json(cse2));
-        REQUIRE(cse1["commandStartedEvent"]["command"]["lsid"].get_value() !=
-                cse2["commandStartedEvent"]["command"]["lsid"].get_value());
+        REQUIRE(
+            cse1["commandStartedEvent"]["command"]["lsid"].get_value() !=
+            cse2["commandStartedEvent"]["command"]["lsid"].get_value());
         return empty_doc;
     }
     if (name == "startTransaction") {

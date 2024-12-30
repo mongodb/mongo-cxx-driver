@@ -32,18 +32,18 @@ client_encryption::~client_encryption() = default;
 client_encryption::client_encryption(client_encryption&&) noexcept = default;
 client_encryption& client_encryption::operator=(client_encryption&&) noexcept = default;
 
-bsoncxx::v_noabi::types::bson_value::value client_encryption::create_data_key(std::string kms_provider,
-                                                                              const options::data_key& opts) {
+bsoncxx::v_noabi::types::bson_value::value client_encryption::create_data_key(
+    std::string kms_provider, const options::data_key& opts) {
     return _impl->create_data_key(kms_provider, opts);
 }
 
-bsoncxx::v_noabi::types::bson_value::value client_encryption::encrypt(bsoncxx::v_noabi::types::bson_value::view value,
-                                                                      const options::encrypt& opts) {
+bsoncxx::v_noabi::types::bson_value::value client_encryption::encrypt(
+    bsoncxx::v_noabi::types::bson_value::view value, const options::encrypt& opts) {
     return _impl->encrypt(value, opts);
 }
 
-bsoncxx::v_noabi::document::value client_encryption::encrypt_expression(bsoncxx::v_noabi::document::view_or_value expr,
-                                                                        const options::encrypt& opts) {
+bsoncxx::v_noabi::document::value client_encryption::encrypt_expression(
+    bsoncxx::v_noabi::document::view_or_value expr, const options::encrypt& opts) {
     return _impl->encrypt_expression(expr, opts);
 }
 
@@ -63,8 +63,8 @@ collection client_encryption::create_encrypted_collection(
         db, db_impl.database_t, coll_name, options, out_options, kms_provider, masterkey);
 }
 
-result::rewrap_many_datakey client_encryption::rewrap_many_datakey(bsoncxx::v_noabi::document::view_or_value filter,
-                                                                   const options::rewrap_many_datakey& opts) {
+result::rewrap_many_datakey client_encryption::rewrap_many_datakey(
+    bsoncxx::v_noabi::document::view_or_value filter, const options::rewrap_many_datakey& opts) {
     return _impl->rewrap_many_datakey(filter, opts);
 }
 

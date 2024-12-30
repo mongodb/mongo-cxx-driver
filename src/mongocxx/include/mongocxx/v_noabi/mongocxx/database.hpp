@@ -133,9 +133,10 @@ class database {
     ///   (Write concern supported only for MongoDB 3.4+).
     ///
     MONGOCXX_ABI_EXPORT_CDECL(cursor)
-    aggregate(const client_session& session,
-              const pipeline& pipeline,
-              const options::aggregate& options = options::aggregate());
+    aggregate(
+        const client_session& session,
+        const pipeline& pipeline,
+        const options::aggregate& options = options::aggregate());
 
     ///
     /// Runs a command against this database.
@@ -202,9 +203,10 @@ class database {
     ///   mongocxx::v_noabi::operation_exception if the operation fails.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(mongocxx::v_noabi::collection)
-    create_collection(bsoncxx::v_noabi::stdx::string_view name,
-                      bsoncxx::v_noabi::document::view_or_value collection_options = {},
-                      const bsoncxx::v_noabi::stdx::optional<write_concern>& write_concern = {});
+    create_collection(
+        bsoncxx::v_noabi::stdx::string_view name,
+        bsoncxx::v_noabi::document::view_or_value collection_options = {},
+        const bsoncxx::v_noabi::stdx::optional<write_concern>& write_concern = {});
 
     ///
     /// Explicitly creates a collection in this database with the specified options.
@@ -229,10 +231,11 @@ class database {
     ///   mongocxx::v_noabi::operation_exception if the operation fails.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(mongocxx::v_noabi::collection)
-    create_collection(const client_session& session,
-                      bsoncxx::v_noabi::stdx::string_view name,
-                      bsoncxx::v_noabi::document::view_or_value collection_options = {},
-                      const bsoncxx::v_noabi::stdx::optional<write_concern>& write_concern = {});
+    create_collection(
+        const client_session& session,
+        bsoncxx::v_noabi::stdx::string_view name,
+        bsoncxx::v_noabi::document::view_or_value collection_options = {},
+        const bsoncxx::v_noabi::stdx::optional<write_concern>& write_concern = {});
 
     ///
     /// Drops the database and all its collections.
@@ -266,8 +269,9 @@ class database {
     /// - https://www.mongodb.com/docs/manual/reference/command/dropDatabase/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(void)
-    drop(const client_session& session,
-         const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern>& write_concern = {});
+    drop(
+        const client_session& session,
+        const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern>& write_concern = {});
 
     ///
     /// Checks whether this database contains a collection having the given name.
@@ -537,8 +541,8 @@ class database {
 
     cursor _aggregate(const client_session* session, const pipeline& pipeline, const options::aggregate& options);
 
-    bsoncxx::v_noabi::document::value _run_command(const client_session* session,
-                                                   bsoncxx::v_noabi::document::view_or_value command);
+    bsoncxx::v_noabi::document::value _run_command(
+        const client_session* session, bsoncxx::v_noabi::document::view_or_value command);
 
     mongocxx::v_noabi::collection _create_collection(
         const client_session* session,
@@ -548,11 +552,12 @@ class database {
 
     cursor _list_collections(const client_session* session, bsoncxx::v_noabi::document::view_or_value filter);
 
-    std::vector<std::string> _list_collection_names(const client_session* session,
-                                                    bsoncxx::v_noabi::document::view_or_value filter);
+    std::vector<std::string> _list_collection_names(
+        const client_session* session, bsoncxx::v_noabi::document::view_or_value filter);
 
-    void _drop(const client_session* session,
-               const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern>& write_concern);
+    void _drop(
+        const client_session* session,
+        const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern>& write_concern);
 
     change_stream _watch(const client_session* session, const pipeline& pipe, const options::change_stream& options);
 

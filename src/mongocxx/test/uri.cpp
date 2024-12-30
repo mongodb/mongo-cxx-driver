@@ -145,10 +145,8 @@ static void _test_bool_option(std::string optname, fn getter_fn) {
 }
 
 template <typename fn>
-static void _test_int32_option(std::string optname,
-                               fn getter_fn,
-                               std::string valid_value = "1234",
-                               bool zero_allowed = true) {
+static void _test_int32_option(
+    std::string optname, fn getter_fn, std::string valid_value = "1234", bool zero_allowed = true) {
     /* Not present. */
     mongocxx::uri uri{"mongodb://host/"};
     REQUIRE(!getter_fn(uri));
@@ -204,8 +202,8 @@ TEST_CASE("uri::appname()", "[uri]") {
 }
 
 TEST_CASE("uri::auth_mechanism_properties()", "[uri]") {
-    _test_document_option("authMechanismProperties",
-                          [](mongocxx::uri& uri) { return uri.auth_mechanism_properties(); });
+    _test_document_option(
+        "authMechanismProperties", [](mongocxx::uri& uri) { return uri.auth_mechanism_properties(); });
 }
 
 TEST_CASE("uri::connect_timeout_ms()", "[uri]") {
@@ -233,8 +231,8 @@ TEST_CASE("uri::retry_writes()", "[uri]") {
 }
 
 TEST_CASE("uri::server_selection_timeout_ms()", "[uri]") {
-    _test_int32_option("serverSelectionTimeoutMS",
-                       [](mongocxx::uri& uri) { return uri.server_selection_timeout_ms(); });
+    _test_int32_option(
+        "serverSelectionTimeoutMS", [](mongocxx::uri& uri) { return uri.server_selection_timeout_ms(); });
 }
 
 TEST_CASE("uri::server_selection_try_once()", "[uri]") {
@@ -246,8 +244,8 @@ TEST_CASE("uri::socket_timeout_ms()", "[uri]") {
 }
 
 TEST_CASE("uri::tls_allow_invalid_certificates()", "[uri]") {
-    _test_bool_option("tlsAllowInvalidCertificates",
-                      [](mongocxx::uri& uri) { return uri.tls_allow_invalid_certificates(); });
+    _test_bool_option(
+        "tlsAllowInvalidCertificates", [](mongocxx::uri& uri) { return uri.tls_allow_invalid_certificates(); });
 }
 
 TEST_CASE("uri::tls_allow_invalid_hostnames()", "[uri]") {
@@ -263,18 +261,19 @@ TEST_CASE("uri::tls_certificate_key_file()", "[uri]") {
 }
 
 TEST_CASE("uri::tls_certificate_key_file_password()", "[uri]") {
-    _test_string_option("tlsCertificateKeyFilePassword",
-                        [](mongocxx::uri& uri) { return uri.tls_certificate_key_file_password(); });
+    _test_string_option(
+        "tlsCertificateKeyFilePassword", [](mongocxx::uri& uri) { return uri.tls_certificate_key_file_password(); });
 }
 
 TEST_CASE("uri::tls_disable_certificate_revocation_check()", "[uri]") {
-    _test_bool_option("tlsDisableCertificateRevocationCheck",
-                      [](mongocxx::uri& uri) { return uri.tls_disable_certificate_revocation_check(); });
+    _test_bool_option("tlsDisableCertificateRevocationCheck", [](mongocxx::uri& uri) {
+        return uri.tls_disable_certificate_revocation_check();
+    });
 }
 
 TEST_CASE("uri::tls_disable_ocsp_endpoint_check()", "[uri]") {
-    _test_bool_option("tlsDisableOCSPEndpointCheck",
-                      [](mongocxx::uri& uri) { return uri.tls_disable_ocsp_endpoint_check(); });
+    _test_bool_option(
+        "tlsDisableOCSPEndpointCheck", [](mongocxx::uri& uri) { return uri.tls_disable_ocsp_endpoint_check(); });
 }
 
 TEST_CASE("uri::tls_insecure()", "[uri]") {

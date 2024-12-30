@@ -59,13 +59,12 @@ log_level convert_log_level(::mongoc_log_level_t mongoc_log_level) {
 
 void null_log_handler(::mongoc_log_level_t, const char*, const char*, void*) {}
 
-void user_log_handler(::mongoc_log_level_t mongoc_log_level,
-                      const char* log_domain,
-                      const char* message,
-                      void* user_data) {
-    (*static_cast<logger*>(user_data))(convert_log_level(mongoc_log_level),
-                                       bsoncxx::v_noabi::stdx::string_view{log_domain},
-                                       bsoncxx::v_noabi::stdx::string_view{message});
+void user_log_handler(
+    ::mongoc_log_level_t mongoc_log_level, const char* log_domain, const char* message, void* user_data) {
+    (*static_cast<logger*>(user_data))(
+        convert_log_level(mongoc_log_level),
+        bsoncxx::v_noabi::stdx::string_view{log_domain},
+        bsoncxx::v_noabi::stdx::string_view{message});
 }
 
 // A region of memory that acts as a sentintel value indicating that an instance object is being

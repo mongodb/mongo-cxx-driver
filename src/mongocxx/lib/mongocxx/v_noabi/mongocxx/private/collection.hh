@@ -32,9 +32,10 @@ namespace v_noabi {
 
 class collection::impl {
    public:
-    impl(mongoc_collection_t* collection,
-         bsoncxx::v_noabi::stdx::string_view database_name,
-         const mongocxx::v_noabi::client::impl* client)
+    impl(
+        mongoc_collection_t* collection,
+        bsoncxx::v_noabi::stdx::string_view database_name,
+        const mongocxx::v_noabi::client::impl* client)
         : collection_t(collection), database_name(std::move(database_name)), client_impl(client) {}
 
     impl(const impl& i)

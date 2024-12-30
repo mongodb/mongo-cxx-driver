@@ -41,8 +41,8 @@ class replace_one {
     ///   Document that will serve as the replacement.
     ///
     MONGOCXX_ABI_EXPORT_CDECL()
-    replace_one(bsoncxx::v_noabi::document::view_or_value filter,
-                bsoncxx::v_noabi::document::view_or_value replacement);
+    replace_one(
+        bsoncxx::v_noabi::document::view_or_value filter, bsoncxx::v_noabi::document::view_or_value replacement);
 
     ///
     /// Gets the filter for replacement.

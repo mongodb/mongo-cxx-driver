@@ -65,10 +65,8 @@ validate(const std::uint8_t* data, std::size_t length);
 ///   an unengaged optional if the document is invalid.
 ///
 BSONCXX_ABI_EXPORT_CDECL(stdx::optional<document::view>)
-validate(const std::uint8_t* data,
-         std::size_t length,
-         const validator& validator,
-         std::size_t* invalid_offset = nullptr);
+validate(
+    const std::uint8_t* data, std::size_t length, const validator& validator, std::size_t* invalid_offset = nullptr);
 
 ///
 /// A validator is used to enable or disable specific checks that can be
@@ -181,10 +179,11 @@ namespace bsoncxx {
 v_noabi::stdx::optional<v_noabi::document::view> validate(const std::uint8_t* data, std::size_t length);
 
 /// @ref bsoncxx::v_noabi::validate(const std::uint8_t* data, std::size_t length, const v_noabi::validator& validator, std::size_t* invalid_offset)
-v_noabi::stdx::optional<v_noabi::document::view> validate(const std::uint8_t* data,
-                                                          std::size_t length,
-                                                          const v_noabi::validator& validator,
-                                                          std::size_t* invalid_offset = nullptr);
+v_noabi::stdx::optional<v_noabi::document::view> validate(
+    const std::uint8_t* data,
+    std::size_t length,
+    const v_noabi::validator& validator,
+    std::size_t* invalid_offset = nullptr);
 
 }  // namespace bsoncxx
 

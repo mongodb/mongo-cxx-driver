@@ -84,8 +84,8 @@ bsoncxx::v_noabi::stdx::string_view topology_description::type() const {
 }
 
 bool topology_description::has_readable_server(const mongocxx::v_noabi::read_preference& pref) const {
-    return libmongoc::topology_description_has_readable_server(static_cast<mongoc_topology_description_t*>(_td),
-                                                               pref._impl->read_preference_t);
+    return libmongoc::topology_description_has_readable_server(
+        static_cast<mongoc_topology_description_t*>(_td), pref._impl->read_preference_t);
 }
 
 bool topology_description::has_writable_server() const {

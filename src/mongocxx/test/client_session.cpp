@@ -764,8 +764,8 @@ TEST_CASE("lsid", "[session]") {
 
     SECTION("index_view::create_many") {
         auto f = [&s, &indexes](bool use_session) {
-            auto models = std::vector<index_model>{index_model{make_document(kvp("a", 1))},
-                                                   index_model{make_document(kvp("b", 1))}};
+            auto models = std::vector<index_model>{
+                index_model{make_document(kvp("a", 1))}, index_model{make_document(kvp("b", 1))}};
 
             use_session ? indexes.create_many(s, models) : indexes.create_many(models);
         };
@@ -833,8 +833,8 @@ TEST_CASE("with_transaction", "[session]") {
                 mongocxx_exception_matcher{"The meaning of life"});
 
             // Test a different exception
-            REQUIRE_THROWS_AS(session.with_transaction([](client_session*) { throw std::logic_error{"it's 42"}; }),
-                              std::logic_error);
+            REQUIRE_THROWS_AS(
+                session.with_transaction([](client_session*) { throw std::logic_error{"it's 42"}; }), std::logic_error);
         }
 
         SECTION("callback returns a value") {
@@ -867,9 +867,10 @@ TEST_CASE("unacknowledged write in session", "[session]") {
     SECTION("insert_one") {
         options::insert insert;
         insert.write_concern(noack);
-        REQUIRE_THROWS_MATCHES(collection.insert_one(s, {}, insert),
-                               mongocxx::exception,
-                               mongocxx_exception_matcher{"Cannot use client session with unacknowledged writes"});
+        REQUIRE_THROWS_MATCHES(
+            collection.insert_one(s, {}, insert),
+            mongocxx::exception,
+            mongocxx_exception_matcher{"Cannot use client session with unacknowledged writes"});
     }
 }
 }  // namespace

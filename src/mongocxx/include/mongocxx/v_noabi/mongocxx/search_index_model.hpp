@@ -26,8 +26,8 @@ class search_index_model {
     search_index_model(bsoncxx::v_noabi::document::view_or_value definition);
 
     MONGOCXX_ABI_EXPORT_CDECL()
-    search_index_model(bsoncxx::v_noabi::string::view_or_value name,
-                       bsoncxx::v_noabi::document::view_or_value definition);
+    search_index_model(
+        bsoncxx::v_noabi::string::view_or_value name, bsoncxx::v_noabi::document::view_or_value definition);
 
     search_index_model() = delete;
 

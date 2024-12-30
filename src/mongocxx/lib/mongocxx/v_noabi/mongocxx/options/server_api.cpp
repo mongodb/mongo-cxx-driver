@@ -32,8 +32,8 @@ std::string server_api::version_to_string(server_api::version version) {
         case server_api::version::k_version_1:
             return "1";
         default:
-            throw mongocxx::v_noabi::logic_error{mongocxx::v_noabi::error_code::k_invalid_parameter,
-                                                 "invalid server API version"};
+            throw mongocxx::v_noabi::logic_error{
+                mongocxx::v_noabi::error_code::k_invalid_parameter, "invalid server API version"};
     }
 }
 
@@ -41,8 +41,8 @@ server_api::version server_api::version_from_string(bsoncxx::v_noabi::stdx::stri
     if (version == "1") {
         return server_api::version::k_version_1;
     }
-    throw mongocxx::v_noabi::logic_error{mongocxx::v_noabi::error_code::k_invalid_parameter,
-                                         "invalid server API version"};
+    throw mongocxx::v_noabi::logic_error{
+        mongocxx::v_noabi::error_code::k_invalid_parameter, "invalid server API version"};
 }
 
 server_api::server_api(server_api::version version) : _version(std::move(version)) {}

@@ -58,9 +58,10 @@ TEST_CASE("Convert between Person struct and BSON object") {
         18,
     };
 
-    bsoncxx::document::value expected_doc = make_document(kvp("first_name", expected_person.first_name),
-                                                          kvp("last_name", expected_person.last_name),
-                                                          kvp("age", expected_person.age));
+    bsoncxx::document::value expected_doc = make_document(
+        kvp("first_name", expected_person.first_name),
+        kvp("last_name", expected_person.last_name),
+        kvp("age", expected_person.age));
 
     SECTION("Conversion from Person struct to document::value works") {
         bsoncxx::document::value test_value{expected_person};
@@ -74,9 +75,10 @@ TEST_CASE("Convert between Person struct and BSON object") {
 
     SECTION("Conversion from BSON object to Person using partially constructed object") {
         test::Person other_person{"Test", "Person", 99};
-        document::value other_doc = make_document(kvp("first_name", other_person.first_name),
-                                                  kvp("last_name", other_person.last_name),
-                                                  kvp("age", other_person.age));
+        document::value other_doc = make_document(
+            kvp("first_name", other_person.first_name),
+            kvp("last_name", other_person.last_name),
+            kvp("age", other_person.age));
 
         // Default-constructed person
         test::Person test_person;

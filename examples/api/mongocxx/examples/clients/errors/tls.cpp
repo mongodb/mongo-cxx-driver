@@ -27,8 +27,8 @@ namespace {
 // [Example]
 void example() {
     try {
-        mongocxx::client client{mongocxx::uri{},
-                                mongocxx::options::client{}.tls_opts(mongocxx::options::tls{})};  // Throws.
+        mongocxx::client client{
+            mongocxx::uri{}, mongocxx::options::client{}.tls_opts(mongocxx::options::tls{})};  // Throws.
 
         EXPECT(false && "should not reach this point");
     } catch (const mongocxx::exception& ex) {

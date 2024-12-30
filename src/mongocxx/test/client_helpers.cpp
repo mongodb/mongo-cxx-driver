@@ -85,13 +85,11 @@ std::vector<std::int32_t> parse_version(std::string version) {
     return elements;
 }
 
-bsoncxx::document::value transform_document_recursive(bsoncxx::document::view view,
-                                                      const xformer_t& fcn,
-                                                      bsoncxx::builder::basic::array* context);
+bsoncxx::document::value transform_document_recursive(
+    bsoncxx::document::view view, const xformer_t& fcn, bsoncxx::builder::basic::array* context);
 
-bsoncxx::array::value transform_array(bsoncxx::array::view view,
-                                      const xformer_t& fcn,
-                                      bsoncxx::builder::basic::array* context) {
+bsoncxx::array::value transform_array(
+    bsoncxx::array::view view, const xformer_t& fcn, bsoncxx::builder::basic::array* context) {
     bsoncxx::builder::basic::array builder;
 
     for (auto&& element : view) {
@@ -144,9 +142,8 @@ bsoncxx::array::value transform_array(bsoncxx::array::view view,
     return builder.extract();
 }
 
-bsoncxx::document::value transform_document_recursive(bsoncxx::document::view view,
-                                                      const xformer_t& fcn,
-                                                      bsoncxx::builder::basic::array* context) {
+bsoncxx::document::value transform_document_recursive(
+    bsoncxx::document::view view, const xformer_t& fcn, bsoncxx::builder::basic::array* context) {
     bsoncxx::builder::basic::document builder;
 
     for (auto&& element : view) {
@@ -465,9 +462,10 @@ bool matches(types::bson_value::view main, types::bson_value::view pattern, matc
 }
 
 bool matches(document::view doc, document::view pattern, match_visitor visitor_fn) {
-    return matches(types::bson_value::view{types::b_document{doc}},
-                   types::bson_value::view{types::b_document{pattern}},
-                   visitor_fn);
+    return matches(
+        types::bson_value::view{types::b_document{doc}},
+        types::bson_value::view{types::b_document{pattern}},
+        visitor_fn);
 }
 
 std::string tolowercase(bsoncxx::stdx::string_view view) {
@@ -517,13 +515,14 @@ void check_outcome_collection(mongocxx::collection* coll, bsoncxx::document::vie
     const auto expected_data = expected["data"].get_array().value;
     auto actual = coll->find({}, options::find().sort(make_document(kvp("_id", 1))));
 
-    REQUIRE(equal(begin(expected_data),
-                  end(expected_data),
-                  begin(actual),
-                  [&](const bsoncxx::array::element& ele, const document::view& doc) {
-                      REQUIRE_BSON_MATCHES(doc, ele.get_document().value);
-                      return true;
-                  }));
+    REQUIRE(equal(
+        begin(expected_data),
+        end(expected_data),
+        begin(actual),
+        [&](const bsoncxx::array::element& ele, const document::view& doc) {
+            REQUIRE_BSON_MATCHES(doc, ele.get_document().value);
+            return true;
+        }));
     REQUIRE(begin(actual) == end(actual));
 }
 

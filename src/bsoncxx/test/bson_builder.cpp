@@ -876,10 +876,11 @@ TEST_CASE("basic document builder works", "[bsoncxx::builder::basic]") {
         {
             using namespace builder::basic;
 
-            basic.append(kvp("hello", "world"),
-                         kvp("foo", 35),
-                         kvp("bar", [](sub_document sd) { sd.append(kvp("que", "qux")); }),
-                         kvp("baz", [](sub_array sa) { sa.append(1, 2, 3); }));
+            basic.append(
+                kvp("hello", "world"),
+                kvp("foo", 35),
+                kvp("bar", [](sub_document sd) { sd.append(kvp("que", "qux")); }),
+                kvp("baz", [](sub_array sa) { sa.append(1, 2, 3); }));
         }
 
         viewable_eq_viewable(stream, basic);
@@ -1233,8 +1234,9 @@ TEST_CASE("stream in an array::view works", "[bsoncxx::builder::stream]") {
 
 TEST_CASE("builder::stream::document throws on consecutive keys", "[bsoncxx::builder::core]") {
     builder::stream::document doc;
-    REQUIRE_NOTHROW(doc << "foo"
-                        << "bar");
+    REQUIRE_NOTHROW(
+        doc << "foo"
+            << "bar");
     REQUIRE_NOTHROW(doc << "far");
     REQUIRE_THROWS_AS(doc << "boo", bsoncxx::exception);
 }

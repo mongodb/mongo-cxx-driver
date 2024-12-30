@@ -91,11 +91,12 @@ int EXAMPLES_CDECL main() {
     //   "4" : { "$regex" : "any", "$options" : "imsx" }
     // }
     //
-    arr = {false,
-           -123,
-           std::chrono::milliseconds(123456789),
-           decimal128{100, 200},
-           types::bson_value::value("regex", "imsx" /* opts */)};
+    arr = {
+        false,
+        -123,
+        std::chrono::milliseconds(123456789),
+        decimal128{100, 200},
+        types::bson_value::value("regex", "imsx" /* opts */)};
 
     //
     // The list builder will create a BSON document, if possible. Otherwise, it will create a BSON

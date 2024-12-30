@@ -20,8 +20,8 @@ namespace mongocxx {
 namespace v_noabi {
 namespace model {
 
-replace_one::replace_one(bsoncxx::v_noabi::document::view_or_value filter,
-                         bsoncxx::v_noabi::document::view_or_value replacement)
+replace_one::replace_one(
+    bsoncxx::v_noabi::document::view_or_value filter, bsoncxx::v_noabi::document::view_or_value replacement)
     : _filter(std::move(filter)), _replacement(std::move(replacement)) {}
 
 const bsoncxx::v_noabi::document::view_or_value& replace_one::filter() const {

@@ -49,11 +49,12 @@ void example() {
 
     // Invalid KMS providers.
     try {
-        mongocxx::client client{mongocxx::uri{},
-                                mongocxx::options::client{}.auto_encryption_opts(
-                                    mongocxx::options::auto_encryption{}
-                                        .key_vault_namespace({"keyvault", "datakeys"})
-                                        .kms_providers(bsoncxx::from_json(R"({"invalid": 1})")))};  // Throws.
+        mongocxx::client client{
+            mongocxx::uri{},
+            mongocxx::options::client{}.auto_encryption_opts(
+                mongocxx::options::auto_encryption{}
+                    .key_vault_namespace({"keyvault", "datakeys"})
+                    .kms_providers(bsoncxx::from_json(R"({"invalid": 1})")))};  // Throws.
 
         EXPECT(false && "should not reach this point");
     } catch (const mongocxx::exception& ex) {
@@ -82,8 +83,8 @@ RUNNER_REGISTER_COMPONENT_WITH_INSTANCE() {
     using bsoncxx::builder::basic::sub_document;
 
     try {
-        (void)mongocxx::client{mongocxx::uri{},
-                               mongocxx::options::client{}.auto_encryption_opts(mongocxx::options::auto_encryption{})};
+        (void)mongocxx::client{
+            mongocxx::uri{}, mongocxx::options::client{}.auto_encryption_opts(mongocxx::options::auto_encryption{})};
 
         EXPECT(false && "should not reach this point");
     } catch (const mongocxx::exception& ex) {

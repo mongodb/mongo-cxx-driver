@@ -57,18 +57,18 @@ int EXAMPLES_CDECL main() {
     using bsoncxx::builder::basic::sub_array;
     using bsoncxx::builder::basic::sub_document;
 
-    doc.append(kvp("subdocument key",
-                   [](sub_document subdoc) {
-                       subdoc.append(kvp("subdoc key", "subdoc value"),
-                                     kvp("another subdoc key", types::b_int64{1212}));
-                   }),
-               kvp("subarray key", [](sub_array subarr) {
-                   // subarrays work similarly
-                   subarr.append(1, types::b_bool{false}, "hello", 5, [](sub_document subdoc) {
-                       // nesting works too!
-                       subdoc.append(kvp("such", "nesting"), kvp("much", "recurse"));
-                   });
-               }));
+    doc.append(
+        kvp("subdocument key",
+            [](sub_document subdoc) {
+                subdoc.append(kvp("subdoc key", "subdoc value"), kvp("another subdoc key", types::b_int64{1212}));
+            }),
+        kvp("subarray key", [](sub_array subarr) {
+            // subarrays work similarly
+            subarr.append(1, types::b_bool{false}, "hello", 5, [](sub_document subdoc) {
+                // nesting works too!
+                subdoc.append(kvp("such", "nesting"), kvp("much", "recurse"));
+            });
+        }));
 
     // We can get a view of the resulting bson by calling view()
     auto v = doc.view();

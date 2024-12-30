@@ -113,9 +113,8 @@ database::operator bool() const noexcept {
     return static_cast<bool>(_impl);
 }
 
-cursor database::_aggregate(const client_session* session,
-                            const pipeline& pipeline,
-                            const options::aggregate& options) {
+cursor database::_aggregate(
+    const client_session* session, const pipeline& pipeline, const options::aggregate& options) {
     scoped_bson_t stages(bsoncxx::v_noabi::document::view(pipeline._impl->view_array()));
 
     bsoncxx::v_noabi::builder::basic::document b;
@@ -166,8 +165,8 @@ cursor database::list_collections(const client_session& session, bsoncxx::v_noab
     return _list_collections(&session, filter);
 }
 
-std::vector<std::string> database::_list_collection_names(const client_session* session,
-                                                          bsoncxx::v_noabi::document::view_or_value filter) {
+std::vector<std::string> database::_list_collection_names(
+    const client_session* session, bsoncxx::v_noabi::document::view_or_value filter) {
     bsoncxx::v_noabi::builder::basic::document options_builder;
     options_builder.append(kvp("filter", filter));
 
@@ -197,8 +196,8 @@ std::vector<std::string> database::list_collection_names(bsoncxx::v_noabi::docum
     return _list_collection_names(nullptr, filter);
 }
 
-std::vector<std::string> database::list_collection_names(const client_session& session,
-                                                         bsoncxx::v_noabi::document::view_or_value filter) {
+std::vector<std::string> database::list_collection_names(
+    const client_session& session, bsoncxx::v_noabi::document::view_or_value filter) {
     return _list_collection_names(&session, filter);
 }
 
@@ -206,8 +205,8 @@ bsoncxx::v_noabi::stdx::string_view database::name() const {
     return _get_impl().name;
 }
 
-bsoncxx::v_noabi::document::value database::_run_command(const client_session* session,
-                                                         bsoncxx::v_noabi::document::view_or_value command) {
+bsoncxx::v_noabi::document::value database::_run_command(
+    const client_session* session, bsoncxx::v_noabi::document::view_or_value command) {
     libbson::scoped_bson_t command_bson{command};
     libbson::scoped_bson_t reply_bson;
     bson_error_t error;
@@ -232,24 +231,25 @@ bsoncxx::v_noabi::document::value database::run_command(bsoncxx::v_noabi::docume
     return _run_command(nullptr, command);
 }
 
-bsoncxx::v_noabi::document::value database::run_command(const client_session& session,
-                                                        bsoncxx::v_noabi::document::view_or_value command) {
+bsoncxx::v_noabi::document::value database::run_command(
+    const client_session& session, bsoncxx::v_noabi::document::view_or_value command) {
     return _run_command(&session, command);
 }
 
-bsoncxx::v_noabi::document::value database::run_command(bsoncxx::v_noabi::document::view_or_value command,
-                                                        uint32_t server_id) {
+bsoncxx::v_noabi::document::value database::run_command(
+    bsoncxx::v_noabi::document::view_or_value command, uint32_t server_id) {
     libbson::scoped_bson_t command_bson{command};
     libbson::scoped_bson_t reply_bson;
     bson_error_t error;
 
-    auto result = libmongoc::client_command_simple_with_server_id(_get_impl().client_impl->client_t,
-                                                                  _get_impl().name.c_str(),
-                                                                  command_bson.bson(),
-                                                                  read_preference()._impl->read_preference_t,
-                                                                  server_id,
-                                                                  reply_bson.bson_for_init(),
-                                                                  &error);
+    auto result = libmongoc::client_command_simple_with_server_id(
+        _get_impl().client_impl->client_t,
+        _get_impl().name.c_str(),
+        command_bson.bson(),
+        read_preference()._impl->read_preference_t,
+        server_id,
+        reply_bson.bson_for_init(),
+        &error);
 
     if (!result) {
         throw_exception<operation_exception>(reply_bson.steal(), error);
@@ -302,8 +302,9 @@ mongocxx::v_noabi::collection database::create_collection(
     return _create_collection(&session, name, collection_options, write_concern);
 }
 
-void database::_drop(const client_session* session,
-                     const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern>& write_concern) {
+void database::_drop(
+    const client_session* session,
+    const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern>& write_concern) {
     bson_error_t error;
 
     bsoncxx::v_noabi::builder::basic::document opts_doc;
@@ -326,8 +327,9 @@ void database::drop(const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::wr
     return _drop(nullptr, write_concern);
 }
 
-void database::drop(const client_session& session,
-                    const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern>& write_concern) {
+void database::drop(
+    const client_session& session,
+    const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern>& write_concern) {
     return _drop(&session, write_concern);
 }
 
@@ -390,15 +392,13 @@ change_stream database::watch(const pipeline& pipe, const options::change_stream
     return _watch(nullptr, pipe, options);
 }
 
-change_stream database::watch(const client_session& session,
-                              const pipeline& pipe,
-                              const options::change_stream& options) {
+change_stream database::watch(
+    const client_session& session, const pipeline& pipe, const options::change_stream& options) {
     return _watch(&session, pipe, options);
 }
 
-change_stream database::_watch(const client_session* session,
-                               const pipeline& pipe,
-                               const options::change_stream& options) {
+change_stream database::_watch(
+    const client_session* session, const pipeline& pipe, const options::change_stream& options) {
     bsoncxx::v_noabi::builder::basic::document container;
     container.append(kvp("pipeline", pipe._impl->view_array()));
     scoped_bson_t pipeline_bson{container.view()};

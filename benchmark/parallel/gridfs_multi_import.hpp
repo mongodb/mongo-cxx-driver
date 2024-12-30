@@ -41,9 +41,7 @@ class gridfs_multi_import : public microbench {
 
     // The task size comes from the Driver Perfomance Benchmarking Reference Doc.
     gridfs_multi_import(std::string dir, std::uint32_t thread_num = std::thread::hardware_concurrency() * 2)
-        : microbench{"TestGridFsMultiImport",
-                     262.144,
-                     std::set<benchmark_type>{benchmark_type::parallel_bench, benchmark_type::write_bench}},
+        : microbench{"TestGridFsMultiImport", 262.144, std::set<benchmark_type>{benchmark_type::parallel_bench, benchmark_type::write_bench}},
           _directory{std::move(dir)},
           _pool{mongocxx::uri{}},
           _thread_num{thread_num} {}

@@ -38,10 +38,8 @@ bool does_search_index_exist_on_cursor(cursor& c, const search_index_model& mode
 }
 
 // Almost identical to does_search_index_exist_on_cursor but checks type field.
-bool does_search_index_exist_on_cursor_with_type(cursor& c,
-                                                 const search_index_model& model,
-                                                 const char* type,
-                                                 bool with_status) {
+bool does_search_index_exist_on_cursor_with_type(
+    cursor& c, const search_index_model& model, const char* type, bool with_status) {
     for (const auto& index : c) {
         // look for a queryable index with a matching name
         if (index["name"].get_string().value == model.name().value() && index["queryable"].get_bool().value) {
@@ -328,11 +326,13 @@ TEST_CASE("atlas search indexes prose tests", "[atlas][search_indexes]") {
             //   }
             const auto name = "test-search-index-case7-vector";
             const auto type = "vectorSearch";
-            const auto definition = make_document(kvp("fields",
-                                                      make_array(make_document(kvp("type", "vector"),
-                                                                               kvp("path", "plot_embedding"),
-                                                                               kvp("numDimensions", 1536),
-                                                                               kvp("similarity", "euclidean")))));
+            const auto definition = make_document(
+                kvp("fields",
+                    make_array(make_document(
+                        kvp("type", "vector"),
+                        kvp("path", "plot_embedding"),
+                        kvp("numDimensions", 1536),
+                        kvp("similarity", "euclidean")))));
             auto model = search_index_model(name, definition.view()).type(type);
 
             REQUIRE(model.type().value() == "vectorSearch");
@@ -367,11 +367,13 @@ TEST_CASE("atlas search indexes prose tests", "[atlas][search_indexes]") {
         //     }
         //   }
         const auto name = "test-search-index-case8-error";
-        const auto definition = make_document(kvp("fields",
-                                                  make_array(make_document(kvp("type", "vector"),
-                                                                           kvp("path", "plot_embedding"),
-                                                                           kvp("numDimensions", 1536),
-                                                                           kvp("similarity", "euclidean")))));
+        const auto definition = make_document(
+            kvp("fields",
+                make_array(make_document(
+                    kvp("type", "vector"),
+                    kvp("path", "plot_embedding"),
+                    kvp("numDimensions", 1536),
+                    kvp("similarity", "euclidean")))));
         const auto model = search_index_model(name, definition.view());
 
         REQUIRE_THROWS_WITH(siv.create_one(model), Catch::Matchers::ContainsSubstring("Attribute mappings missing"));
@@ -428,11 +430,13 @@ TEST_CASE("atlas search indexes tests", "[atlas][search_indexes]") {
             //   }
             const auto name = "test-search-index-vector";
             const auto type = "vectorSearch";
-            const auto definition = make_document(kvp("fields",
-                                                      make_array(make_document(kvp("type", "vector"),
-                                                                               kvp("path", "plot_embedding"),
-                                                                               kvp("numDimensions", 1536),
-                                                                               kvp("similarity", "euclidean")))));
+            const auto definition = make_document(
+                kvp("fields",
+                    make_array(make_document(
+                        kvp("type", "vector"),
+                        kvp("path", "plot_embedding"),
+                        kvp("numDimensions", 1536),
+                        kvp("similarity", "euclidean")))));
             auto model = search_index_model(name, definition.view()).type(type);
 
             REQUIRE(model.name().value() == name);
@@ -506,11 +510,13 @@ TEST_CASE("atlas search indexes tests", "[atlas][search_indexes]") {
         //   }
         const auto name1 = "test-search-index-1";
         const auto type1 = "vectorSearch";
-        const auto definition1 = make_document(kvp("fields",
-                                                   make_array(make_document(kvp("type", "vector"),
-                                                                            kvp("path", "plot_embedding"),
-                                                                            kvp("numDimensions", 1536),
-                                                                            kvp("similarity", "euclidean")))));
+        const auto definition1 = make_document(
+            kvp("fields",
+                make_array(make_document(
+                    kvp("type", "vector"),
+                    kvp("path", "plot_embedding"),
+                    kvp("numDimensions", 1536),
+                    kvp("similarity", "euclidean")))));
         auto model1 = search_index_model(name1, definition1.view()).type(type1);
 
         //   {
@@ -529,11 +535,13 @@ TEST_CASE("atlas search indexes tests", "[atlas][search_indexes]") {
         //   }
         const auto name2 = "test-search-index-2";
         const auto type2 = "vectorSearch";
-        const auto definition2 = make_document(kvp("fields",
-                                                   make_array(make_document(kvp("type", "vector"),
-                                                                            kvp("path", "plot_embedding"),
-                                                                            kvp("numDimensions", 1536),
-                                                                            kvp("similarity", "euclidean")))));
+        const auto definition2 = make_document(
+            kvp("fields",
+                make_array(make_document(
+                    kvp("type", "vector"),
+                    kvp("path", "plot_embedding"),
+                    kvp("numDimensions", 1536),
+                    kvp("similarity", "euclidean")))));
         auto model2 = search_index_model(name2, definition2.view()).type(type2);
 
         const std::vector<search_index_model> models = {model1, model2};

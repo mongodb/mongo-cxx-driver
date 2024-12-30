@@ -509,9 +509,10 @@ TEST_CASE("Documentation Examples", "[min36]") {
 
         // Start Changestream Example 4
         mongocxx::pipeline cs_pipeline;
-        cs_pipeline.match(make_document(kvp("$or",
-                                            make_array(make_document(kvp("fullDocument.username", "alice")),
-                                                       make_document(kvp("operationType", "delete"))))));
+        cs_pipeline.match(make_document(kvp(
+            "$or",
+            make_array(
+                make_document(kvp("fullDocument.username", "alice")), make_document(kvp("operationType", "delete"))))));
 
         change_stream stream = inventory.watch(cs_pipeline);
         auto it = stream.begin();

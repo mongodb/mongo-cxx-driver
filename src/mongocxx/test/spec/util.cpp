@@ -264,8 +264,8 @@ static void disable_targeted_fail_point(std::uint32_t server_id) {
             // Create a new client for every attempt to force server discovery from scratch to
             // guarantee the hello or isMaster fail points are actually triggered on the required
             // mongos.
-            mongocxx::client client = {uri{"mongodb://localhost:27017,localhost:27018"},
-                                       test_util::add_test_server_api()};
+            mongocxx::client client = {
+                uri{"mongodb://localhost:27017,localhost:27018"}, test_util::add_test_server_api()};
             client["admin"].run_command(command, server_id);
             break;
         } catch (...) {
@@ -294,10 +294,8 @@ struct targeted_fail_point_guard_type {
     targeted_fail_point_guard_type& operator=(targeted_fail_point_guard_type&&) = delete;
 };
 
-void set_up_collection(const client& client,
-                       document::view test,
-                       string_view database_name,
-                       string_view collection_name) {
+void set_up_collection(
+    const client& client, document::view test, string_view database_name, string_view collection_name) {
     write_concern wc_majority;
     wc_majority.acknowledge_level(write_concern::level::k_majority);
 
@@ -531,12 +529,13 @@ uri get_uri(document::view test) {
 
     if (test["clientOptions"]) {
         if (test["clientOptions"]["retryWrites"]) {
-            add_opt(std::string("retryWrites=") +
-                    (test["clientOptions"]["retryWrites"].get_bool().value ? "true" : "false"));
+            add_opt(
+                std::string("retryWrites=") +
+                (test["clientOptions"]["retryWrites"].get_bool().value ? "true" : "false"));
         }
         if (test["clientOptions"]["retryReads"]) {
-            add_opt(std::string("retryReads=") +
-                    (test["clientOptions"]["retryReads"].get_bool().value ? "true" : "false"));
+            add_opt(
+                std::string("retryReads=") + (test["clientOptions"]["retryReads"].get_bool().value ? "true" : "false"));
         }
         if (test["clientOptions"]["readConcernLevel"]) {
             add_opt("readConcernLevel=" + std::string(test["clientOptions"]["readConcernLevel"].get_string().value));
@@ -549,8 +548,9 @@ uri get_uri(document::view test) {
             }
         }
         if (test["clientOptions"]["heartbeatFrequencyMS"]) {
-            add_opt("heartbeatFrequencyMS=" +
-                    std::to_string(test["clientOptions"]["heartbeatFrequencyMS"].get_int32().value));
+            add_opt(
+                "heartbeatFrequencyMS=" +
+                std::to_string(test["clientOptions"]["heartbeatFrequencyMS"].get_int32().value));
         }
         if (test["clientOptions"]["readPreference"]) {
             add_opt("readPreference=" + string::to_string(test["clientOptions"]["readPreference"].get_string().value));
@@ -686,15 +686,16 @@ static void run_transaction_operations(
                 REQUIRE(operation["arguments"]);
                 REQUIRE(operation["arguments"]["callback"]);
                 auto callback = operation["arguments"]["callback"].get_document().value;
-                run_transaction_operations(callback,
-                                           client,
-                                           db_name,
-                                           coll_name,
-                                           session0,
-                                           session1,
-                                           targeted_fail_point_guard,
-                                           apm_checker,
-                                           true);
+                run_transaction_operations(
+                    callback,
+                    client,
+                    db_name,
+                    coll_name,
+                    session0,
+                    session1,
+                    targeted_fail_point_guard,
+                    apm_checker,
+                    true);
             };
 
             try {
@@ -747,8 +748,9 @@ static void run_transaction_operations(
 
                     // We expect and assume the name of the fail point is always "failCommand". To
                     // date, *all* legacy spec tests use "failCommand" as the fail point name.
-                    REQUIRE(arguments["failPoint"]["configureFailPoint"].get_string().value ==
-                            bsoncxx::stdx::string_view("failCommand"));
+                    REQUIRE(
+                        arguments["failPoint"]["configureFailPoint"].get_string().value ==
+                        bsoncxx::stdx::string_view("failCommand"));
 
                     // We expect at most one targetedFailPoint operation per test case.
                     REQUIRE(!(*targeted_fail_point_guard));
@@ -920,14 +922,15 @@ void run_transactions_tests_in_file(const std::string& test_path) {
                     bsoncxx::stdx::optional<targeted_fail_point_guard_type> targeted_fail_point_guard;
 
                     // Step 11. Perform the operations.
-                    run_transaction_operations(test.get_document().value,
-                                               &client,
-                                               db_name,
-                                               coll_name,
-                                               &session0,
-                                               &session1,
-                                               &targeted_fail_point_guard,
-                                               apm_checker);
+                    run_transaction_operations(
+                        test.get_document().value,
+                        &client,
+                        db_name,
+                        coll_name,
+                        &session0,
+                        &session1,
+                        &targeted_fail_point_guard,
+                        apm_checker);
 
                     // Step 12: Call session0.endSession() and session1.endSession (via
                     // client_session dtors).
@@ -1075,8 +1078,8 @@ void run_crud_tests_in_file(const std::string& test_path, uri test_uri) {
                 if (test["outcome"]) {
                     if (test["outcome"]["collection"]) {
                         auto outcome_collection = database[outcome_collection_name];
-                        test_util::check_outcome_collection(&outcome_collection,
-                                                            test["outcome"]["collection"].get_document().value);
+                        test_util::check_outcome_collection(
+                            &outcome_collection, test["outcome"]["collection"].get_document().value);
                     }
 
                     if (test["outcome"]["result"]) {

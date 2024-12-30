@@ -40,12 +40,12 @@ class transaction::impl {
               unique_transaction_opt{libmongoc::transaction_opts_clone(txn_opts), &mongoc_transaction_opts_destroy}) {}
 
     impl(const impl& other)
-        : _transaction_opt_t(unique_transaction_opt{libmongoc::transaction_opts_clone(other._transaction_opt_t.get()),
-                                                    &mongoc_transaction_opts_destroy}) {}
+        : _transaction_opt_t(unique_transaction_opt{
+              libmongoc::transaction_opts_clone(other._transaction_opt_t.get()), &mongoc_transaction_opts_destroy}) {}
 
     impl& operator=(const impl& other) {
-        _transaction_opt_t = unique_transaction_opt{libmongoc::transaction_opts_clone(other._transaction_opt_t.get()),
-                                                    &mongoc_transaction_opts_destroy};
+        _transaction_opt_t = unique_transaction_opt{
+            libmongoc::transaction_opts_clone(other._transaction_opt_t.get()), &mongoc_transaction_opts_destroy};
         return *this;
     }
 

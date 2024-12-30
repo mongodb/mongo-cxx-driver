@@ -47,9 +47,10 @@ std::int32_t read_chunk_size_from_files_document(bsoncxx::v_noabi::document::vie
     auto chunk_size_ele = files_doc["chunkSize"];
 
     if (!chunk_size_ele) {
-        throw gridfs_exception{error_code::k_gridfs_file_corrupted,
-                               "expected files document to contain field \"chunkSize\" with type "
-                               "k_int32 or k_int64"};
+        throw gridfs_exception{
+            error_code::k_gridfs_file_corrupted,
+            "expected files document to contain field \"chunkSize\" with type "
+            "k_int32 or k_int64"};
     }
 
     if (chunk_size_ele.type() == bsoncxx::v_noabi::type::k_int64) {
@@ -57,9 +58,10 @@ std::int32_t read_chunk_size_from_files_document(bsoncxx::v_noabi::document::vie
     } else if (chunk_size_ele.type() == bsoncxx::v_noabi::type::k_int32) {
         chunk_size = chunk_size_ele.get_int32().value;
     } else {
-        throw gridfs_exception{error_code::k_gridfs_file_corrupted,
-                               "expected files document to contain field \"chunkSize\" with type "
-                               "k_int32 or k_int64"};
+        throw gridfs_exception{
+            error_code::k_gridfs_file_corrupted,
+            "expected files document to contain field \"chunkSize\" with type "
+            "k_int32 or k_int64"};
     }
 
     // Each chunk needs to be able to fit in a single document.
@@ -82,9 +84,10 @@ std::int64_t read_length_from_files_document(const bsoncxx::v_noabi::document::v
     std::int64_t length;
 
     if (!length_ele) {
-        throw gridfs_exception{error_code::k_gridfs_file_corrupted,
-                               "expected files document to contain field \"length\" with type "
-                               "k_int32 or k_int64"};
+        throw gridfs_exception{
+            error_code::k_gridfs_file_corrupted,
+            "expected files document to contain field \"length\" with type "
+            "k_int32 or k_int64"};
     }
 
     if (length_ele.type() == bsoncxx::v_noabi::type::k_int64) {
@@ -92,9 +95,10 @@ std::int64_t read_length_from_files_document(const bsoncxx::v_noabi::document::v
     } else if (length_ele.type() == bsoncxx::v_noabi::type::k_int32) {
         length = length_ele.get_int32().value;
     } else {
-        throw gridfs_exception{error_code::k_gridfs_file_corrupted,
-                               "expected files document to contain field \"length\" with type "
-                               "k_int32 or k_int64"};
+        throw gridfs_exception{
+            error_code::k_gridfs_file_corrupted,
+            "expected files document to contain field \"length\" with type "
+            "k_int32 or k_int64"};
     }
 
     if (length < 0) {
@@ -175,29 +179,32 @@ bucket& bucket::operator=(const bucket& b) {
     return *this;
 }
 
-uploader bucket::open_upload_stream(bsoncxx::v_noabi::stdx::string_view filename,
-                                    const options::gridfs::upload& options) {
+uploader bucket::open_upload_stream(
+    bsoncxx::v_noabi::stdx::string_view filename, const options::gridfs::upload& options) {
     auto id = bsoncxx::v_noabi::types::bson_value::view{bsoncxx::v_noabi::types::b_oid{}};
     return open_upload_stream_with_id(id, filename, options);
 }
 
-uploader bucket::open_upload_stream(const client_session& session,
-                                    bsoncxx::v_noabi::stdx::string_view filename,
-                                    const options::gridfs::upload& options) {
+uploader bucket::open_upload_stream(
+    const client_session& session,
+    bsoncxx::v_noabi::stdx::string_view filename,
+    const options::gridfs::upload& options) {
     auto id = bsoncxx::v_noabi::types::bson_value::view{bsoncxx::v_noabi::types::b_oid{}};
     return open_upload_stream_with_id(session, id, filename, options);
 }
 
-uploader bucket::_open_upload_stream_with_id(const client_session* session,
-                                             bsoncxx::v_noabi::types::bson_value::view id,
-                                             bsoncxx::v_noabi::stdx::string_view filename,
-                                             const options::gridfs::upload& options) {
+uploader bucket::_open_upload_stream_with_id(
+    const client_session* session,
+    bsoncxx::v_noabi::types::bson_value::view id,
+    bsoncxx::v_noabi::stdx::string_view filename,
+    const options::gridfs::upload& options) {
     std::int32_t chunk_size_bytes = _get_impl().default_chunk_size_bytes;
 
     if (auto chunk_size = options.chunk_size_bytes()) {
         if (*chunk_size <= 0) {
-            throw logic_error{error_code::k_invalid_parameter,
-                              "positive value required for options::gridfs::upload::chunk_size_bytes()"};
+            throw logic_error{
+                error_code::k_invalid_parameter,
+                "positive value required for options::gridfs::upload::chunk_size_bytes()"};
         }
 
         chunk_size_bytes = *chunk_size;
@@ -208,41 +215,44 @@ uploader bucket::_open_upload_stream_with_id(const client_session* session,
     return uploader{session, id, filename, _get_impl().files, _get_impl().chunks, chunk_size_bytes, options.metadata()};
 }
 
-uploader bucket::open_upload_stream_with_id(bsoncxx::v_noabi::types::bson_value::view id,
-                                            bsoncxx::v_noabi::stdx::string_view filename,
-                                            const options::gridfs::upload& options) {
+uploader bucket::open_upload_stream_with_id(
+    bsoncxx::v_noabi::types::bson_value::view id,
+    bsoncxx::v_noabi::stdx::string_view filename,
+    const options::gridfs::upload& options) {
     return _open_upload_stream_with_id(nullptr, id, filename, options);
 }
 
-uploader bucket::open_upload_stream_with_id(const client_session& session,
-                                            bsoncxx::v_noabi::types::bson_value::view id,
-                                            bsoncxx::v_noabi::stdx::string_view filename,
-                                            const options::gridfs::upload& options) {
+uploader bucket::open_upload_stream_with_id(
+    const client_session& session,
+    bsoncxx::v_noabi::types::bson_value::view id,
+    bsoncxx::v_noabi::stdx::string_view filename,
+    const options::gridfs::upload& options) {
     return _open_upload_stream_with_id(&session, id, filename, options);
 }
 
-result::gridfs::upload bucket::upload_from_stream(bsoncxx::v_noabi::stdx::string_view filename,
-                                                  std::istream* source,
-                                                  const options::gridfs::upload& options) {
+result::gridfs::upload bucket::upload_from_stream(
+    bsoncxx::v_noabi::stdx::string_view filename, std::istream* source, const options::gridfs::upload& options) {
     auto id = bsoncxx::v_noabi::types::bson_value::view{bsoncxx::v_noabi::types::b_oid{}};
     upload_from_stream_with_id(id, filename, source, options);
     return id;
 }
 
-result::gridfs::upload bucket::upload_from_stream(const client_session& session,
-                                                  bsoncxx::v_noabi::stdx::string_view filename,
-                                                  std::istream* source,
-                                                  const options::gridfs::upload& options) {
+result::gridfs::upload bucket::upload_from_stream(
+    const client_session& session,
+    bsoncxx::v_noabi::stdx::string_view filename,
+    std::istream* source,
+    const options::gridfs::upload& options) {
     auto id = bsoncxx::v_noabi::types::bson_value::view{bsoncxx::v_noabi::types::b_oid{}};
     upload_from_stream_with_id(session, id, filename, source, options);
     return id;
 }
 
-void bucket::_upload_from_stream_with_id(const client_session* session,
-                                         bsoncxx::v_noabi::types::bson_value::view id,
-                                         bsoncxx::v_noabi::stdx::string_view filename,
-                                         std::istream* source,
-                                         const options::gridfs::upload& options) {
+void bucket::_upload_from_stream_with_id(
+    const client_session* session,
+    bsoncxx::v_noabi::types::bson_value::view id,
+    bsoncxx::v_noabi::stdx::string_view filename,
+    std::istream* source,
+    const options::gridfs::upload& options) {
     uploader upload_stream = _open_upload_stream_with_id(session, id, filename, options);
     std::int32_t chunk_size = upload_stream.chunk_size();
     std::unique_ptr<std::uint8_t[]> buffer = bsoncxx::make_unique<std::uint8_t[]>(static_cast<std::size_t>(chunk_size));
@@ -262,25 +272,28 @@ void bucket::_upload_from_stream_with_id(const client_session* session,
     upload_stream.close();
 }
 
-void bucket::upload_from_stream_with_id(bsoncxx::v_noabi::types::bson_value::view id,
-                                        bsoncxx::v_noabi::stdx::string_view filename,
-                                        std::istream* source,
-                                        const options::gridfs::upload& options) {
+void bucket::upload_from_stream_with_id(
+    bsoncxx::v_noabi::types::bson_value::view id,
+    bsoncxx::v_noabi::stdx::string_view filename,
+    std::istream* source,
+    const options::gridfs::upload& options) {
     return _upload_from_stream_with_id(nullptr, id, filename, source, options);
 }
 
-void bucket::upload_from_stream_with_id(const client_session& session,
-                                        bsoncxx::v_noabi::types::bson_value::view id,
-                                        bsoncxx::v_noabi::stdx::string_view filename,
-                                        std::istream* source,
-                                        const options::gridfs::upload& options) {
+void bucket::upload_from_stream_with_id(
+    const client_session& session,
+    bsoncxx::v_noabi::types::bson_value::view id,
+    bsoncxx::v_noabi::stdx::string_view filename,
+    std::istream* source,
+    const options::gridfs::upload& options) {
     return _upload_from_stream_with_id(&session, id, filename, source, options);
 }
 
-downloader bucket::_open_download_stream(const client_session* session,
-                                         bsoncxx::v_noabi::types::bson_value::view id,
-                                         bsoncxx::v_noabi::stdx::optional<std::size_t> start,
-                                         bsoncxx::v_noabi::stdx::optional<std::size_t> end) {
+downloader bucket::_open_download_stream(
+    const client_session* session,
+    bsoncxx::v_noabi::types::bson_value::view id,
+    bsoncxx::v_noabi::stdx::optional<std::size_t> start,
+    bsoncxx::v_noabi::stdx::optional<std::size_t> end) {
     using namespace bsoncxx;
 
     builder::basic::document files_filter;
@@ -297,9 +310,10 @@ downloader bucket::_open_download_stream(const client_session* session,
 
     if (!files_doc_view["length"] ||
         (files_doc_view["length"].type() != type::k_int64 && files_doc_view["length"].type() != type::k_int32)) {
-        throw gridfs_exception{error_code::k_gridfs_file_corrupted,
-                               "expected files document to contain field \"length\" with type "
-                               "k_int32 or k_int64"};
+        throw gridfs_exception{
+            error_code::k_gridfs_file_corrupted,
+            "expected files document to contain field \"length\" with type "
+            "k_int32 or k_int64"};
     }
 
     const auto chunk_size = read_chunk_size_from_files_document(*files_doc);
@@ -333,8 +347,8 @@ downloader bucket::_open_download_stream(const client_session* session,
             throw gridfs_exception{error_code::k_invalid_parameter, "expected start to not be greater than max int64"};
         }
         if (file_len >= 0 && start_i64 > file_len) {
-            throw gridfs_exception{error_code::k_invalid_parameter,
-                                   "expected start to not be greater than the file length"};
+            throw gridfs_exception{
+                error_code::k_invalid_parameter, "expected start to not be greater than the file length"};
         }
         auto start_offset_div = std::lldiv(start_i64, chunk_size);
         if (!int64_to_int32_safe(start_offset_div.quot, start_offset.chunks_offset)) {
@@ -354,8 +368,8 @@ downloader bucket::_open_download_stream(const client_session* session,
         }
 
         if (file_len >= 0 && end_i64 > file_len) {
-            throw gridfs_exception{error_code::k_invalid_parameter,
-                                   "expected end to not be greater than the file length"};
+            throw gridfs_exception{
+                error_code::k_invalid_parameter, "expected end to not be greater than the file length"};
         }
         if (file_len >= 0 && end_i64 < file_len) {
             const int64_t num_chunks =
@@ -378,11 +392,12 @@ downloader bucket::open_download_stream(const client_session& session, bsoncxx::
     return _open_download_stream(&session, id, bsoncxx::v_noabi::stdx::nullopt, bsoncxx::v_noabi::stdx::nullopt);
 }
 
-void bucket::_download_to_stream(const client_session* session,
-                                 bsoncxx::v_noabi::types::bson_value::view id,
-                                 std::ostream* destination,
-                                 bsoncxx::v_noabi::stdx::optional<std::size_t> start,
-                                 bsoncxx::v_noabi::stdx::optional<std::size_t> end) {
+void bucket::_download_to_stream(
+    const client_session* session,
+    bsoncxx::v_noabi::types::bson_value::view id,
+    std::ostream* destination,
+    bsoncxx::v_noabi::stdx::optional<std::size_t> start,
+    bsoncxx::v_noabi::stdx::optional<std::size_t> end) {
     downloader download_stream = _open_download_stream(session, id, start, end);
 
     std::size_t chunk_size;
@@ -416,24 +431,22 @@ void bucket::download_to_stream(bsoncxx::v_noabi::types::bson_value::view id, st
     _download_to_stream(nullptr, id, destination, bsoncxx::v_noabi::stdx::nullopt, bsoncxx::v_noabi::stdx::nullopt);
 }
 
-void bucket::download_to_stream(bsoncxx::v_noabi::types::bson_value::view id,
-                                std::ostream* destination,
-                                std::size_t start,
-                                std::size_t end) {
+void bucket::download_to_stream(
+    bsoncxx::v_noabi::types::bson_value::view id, std::ostream* destination, std::size_t start, std::size_t end) {
     _download_to_stream(nullptr, id, destination, start, end);
 }
 
-void bucket::download_to_stream(const client_session& session,
-                                bsoncxx::v_noabi::types::bson_value::view id,
-                                std::ostream* destination) {
+void bucket::download_to_stream(
+    const client_session& session, bsoncxx::v_noabi::types::bson_value::view id, std::ostream* destination) {
     _download_to_stream(&session, id, destination, bsoncxx::v_noabi::stdx::nullopt, bsoncxx::v_noabi::stdx::nullopt);
 }
 
-void bucket::download_to_stream(const client_session& session,
-                                bsoncxx::v_noabi::types::bson_value::view id,
-                                std::ostream* destination,
-                                std::size_t start,
-                                std::size_t end) {
+void bucket::download_to_stream(
+    const client_session& session,
+    bsoncxx::v_noabi::types::bson_value::view id,
+    std::ostream* destination,
+    std::size_t start,
+    std::size_t end) {
     _download_to_stream(&session, id, destination, start, end);
 }
 
@@ -474,9 +487,8 @@ cursor bucket::find(bsoncxx::v_noabi::document::view_or_value filter, const opti
     return _get_impl().files.find(filter, options);
 }
 
-cursor bucket::find(const client_session& session,
-                    bsoncxx::v_noabi::document::view_or_value filter,
-                    const options::find& options) {
+cursor bucket::find(
+    const client_session& session, bsoncxx::v_noabi::document::view_or_value filter, const options::find& options) {
     return _get_impl().files.find(session, filter, options);
 }
 

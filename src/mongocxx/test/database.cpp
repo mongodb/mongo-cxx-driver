@@ -226,8 +226,9 @@ TEST_CASE("A database", "[database]") {
         database_set_preference->interpose([&](mongoc_database_t*, const mongoc_read_prefs_t* read_prefs) {
             called = true;
             saved_preference.reset(mongoc_read_prefs_copy(read_prefs));
-            REQUIRE(mongoc_read_prefs_get_mode(read_prefs) == libmongoc::conversions::read_mode_t_from_read_mode(
-                                                                  read_preference::read_mode::k_secondary_preferred));
+            REQUIRE(
+                mongoc_read_prefs_get_mode(read_prefs) ==
+                libmongoc::conversions::read_mode_t_from_read_mode(read_preference::read_mode::k_secondary_preferred));
         });
 
         database_get_preference->interpose([&](const mongoc_database_t*) { return saved_preference.get(); }).forever();

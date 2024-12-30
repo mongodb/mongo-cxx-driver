@@ -186,8 +186,9 @@ TEST_CASE("a pool is created with an invalid connection string", "[pool]") {
 
 TEST_CASE("acquiring a client throws if waitQueueTimeoutMS expires", "[pool]") {
     instance::current();
-    mongocxx::pool pool{mongocxx::uri{"mongodb://localhost:27017/?waitQueueTimeoutMS=1&maxPoolSize=1"},
-                        options::pool(test_util::add_test_server_api())};
+    mongocxx::pool pool{
+        mongocxx::uri{"mongodb://localhost:27017/?waitQueueTimeoutMS=1&maxPoolSize=1"},
+        options::pool(test_util::add_test_server_api())};
     // Acquire only available client:
     auto client = pool.acquire();
     CHECK(client);

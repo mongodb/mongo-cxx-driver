@@ -277,15 +277,17 @@ class runner_type {
         // Filter components to be executed to those containing all filter substrings.
         for (auto filter : filters) {
             for (auto cptr : all_components) {
-                cptr->erase(std::remove_if(cptr->begin(),
-                                           cptr->end(),
-                                           [&filter](component c) {
-                                               if (std::strstr(c.name, filter.c_str()) != nullptr) {
-                                                   return false;
-                                               }
-                                               return true;
-                                           }),
-                            cptr->end());
+                cptr->erase(
+                    std::remove_if(
+                        cptr->begin(),
+                        cptr->end(),
+                        [&filter](component c) {
+                            if (std::strstr(c.name, filter.c_str()) != nullptr) {
+                                return false;
+                            }
+                            return true;
+                        }),
+                    cptr->end());
             }
         }
 
@@ -293,11 +295,11 @@ class runner_type {
         if (verbose) {
             std::vector<bsoncxx::stdx::string_view> names;
 
-            names.reserve(
-                std::accumulate(std::begin(all_components),
-                                std::end(all_components),
-                                std::size_t{0},
-                                [](std::size_t n, const std::vector<component>* cptr) { return n + cptr->size(); }));
+            names.reserve(std::accumulate(
+                std::begin(all_components),
+                std::end(all_components),
+                std::size_t{0},
+                [](std::size_t n, const std::vector<component>* cptr) { return n + cptr->size(); }));
 
             for (auto cptr : all_components) {
                 for (auto c : *cptr) {

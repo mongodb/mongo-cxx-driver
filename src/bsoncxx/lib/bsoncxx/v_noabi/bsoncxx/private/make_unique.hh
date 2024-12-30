@@ -44,19 +44,21 @@ namespace detail {
 template <typename T>
 struct make_unique_impl {
     // For make_unique:
-    template <typename... Args,
-              // Guard on constructible-from:
-              typename = decltype(new T(std::declval<Args>()...))>
+    template <
+        typename... Args,
+        // Guard on constructible-from:
+        typename = decltype(new T(std::declval<Args>()...))>
     static std::unique_ptr<T> make(std::true_type /* direct-init */, Args&&... args) {
         return std::unique_ptr<T>(new T(std::forward<Args>(args)...));
     }
 
     // For make_unique_for_overwrite:
-    template <typename U = T,
-              // Guard on whether T is value-initializable:
-              // (Hide behind a deduced 'U' to defer the evaluation of
-              // this default template argument until overload resolution)
-              typename = decltype(new U)>
+    template <
+        typename U = T,
+        // Guard on whether T is value-initializable:
+        // (Hide behind a deduced 'U' to defer the evaluation of
+        // this default template argument until overload resolution)
+        typename = decltype(new U)>
     static std::unique_ptr<T> make(std::false_type /* value-init */) {
         return std::unique_ptr<T>(new T);
     }
@@ -65,9 +67,10 @@ struct make_unique_impl {
 // For unbounded arrays:
 template <typename Elem>
 struct make_unique_impl<Elem[]> {
-    template <typename ShouldDirectInit,
-              // Guard on whether the new-expression will be legal:
-              typename = decltype(new Elem[std::declval<std::size_t>()])>
+    template <
+        typename ShouldDirectInit,
+        // Guard on whether the new-expression will be legal:
+        typename = decltype(new Elem[std::declval<std::size_t>()])>
     static std::unique_ptr<Elem[]> make(ShouldDirectInit, std::size_t count) {
         // These can share a function via a plain if, because both new expressions
         // must be semantically valid
@@ -111,8 +114,9 @@ template <
     typename T,
     typename... Args,
     typename Impl = detail::make_unique_impl<T>,
-    typename std::enable_if<!std::is_array<T>::value,
-                            decltype(Impl::make(std::true_type{}, std::declval<Args>()...), void())>::type* = nullptr>
+    typename std::enable_if<
+        !std::is_array<T>::value,
+        decltype(Impl::make(std::true_type{}, std::declval<Args>()...), void())>::type* = nullptr>
 std::unique_ptr<T> make_unique(Args&&... args) {
     return Impl::make(std::true_type{}, std::forward<Args>(args)...);
 }
@@ -120,11 +124,12 @@ std::unique_ptr<T> make_unique(Args&&... args) {
 
 // Equivalent to `std::make_unique<T>(count)` where `T` is an array type.
 // @cond DOXYGEN_DISABLE
-template <typename T,
-          typename Impl = detail::make_unique_impl<T>,
-          typename std::enable_if<std::is_array<T>::value,
-                                  decltype(Impl::make(std::true_type{}, std::declval<std::size_t>()), void())>::type* =
-              nullptr>
+template <
+    typename T,
+    typename Impl = detail::make_unique_impl<T>,
+    typename std::enable_if<
+        std::is_array<T>::value,
+        decltype(Impl::make(std::true_type{}, std::declval<std::size_t>()), void())>::type* = nullptr>
 std::unique_ptr<T> make_unique(std::size_t count) {
     return Impl::make(std::true_type{}, count);
 }
@@ -148,11 +153,12 @@ std::unique_ptr<T> make_unique_for_overwrite() {
 }
 
 // Equivalent to `std::make_unique_for_overwrite<T>(count)` where `T` is an array type.
-template <typename T,
-          typename Impl = detail::make_unique_impl<T>,
-          typename std::enable_if<std::is_array<T>::value,
-                                  decltype(Impl::make(std::false_type{}, std::declval<std::size_t>()), void())>::type* =
-              nullptr>
+template <
+    typename T,
+    typename Impl = detail::make_unique_impl<T>,
+    typename std::enable_if<
+        std::is_array<T>::value,
+        decltype(Impl::make(std::false_type{}, std::declval<std::size_t>()), void())>::type* = nullptr>
 std::unique_ptr<T> make_unique_for_overwrite(std::size_t count) {
     return Impl::make(std::false_type{}, count);
 }

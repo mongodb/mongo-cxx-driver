@@ -34,9 +34,10 @@ class logger final : public mongocxx::logger {
    public:
     explicit logger(std::ostream* stream) : _stream(stream) {}
 
-    void operator()(mongocxx::log_level level,
-                    bsoncxx::stdx::string_view domain,
-                    bsoncxx::stdx::string_view message) noexcept override {
+    void operator()(
+        mongocxx::log_level level,
+        bsoncxx::stdx::string_view domain,
+        bsoncxx::stdx::string_view message) noexcept override {
         if (level >= mongocxx::log_level::k_trace)
             return;
         *_stream << '[' << mongocxx::to_string(level) << '@' << domain << "] " << message << '\n';

@@ -222,9 +222,10 @@ TEST_CASE("create_many", "[index_view]") {
     client mongodb_client{uri{}, test_util::add_test_server_api()};
     database db = mongodb_client["index_view_create_many"];
 
-    std::vector<index_model> models{index_model(make_document(kvp("a", 1))),
-                                    index_model(make_document(kvp("b", 1), kvp("c", -1))),
-                                    index_model(make_document(kvp("c", -1)))};
+    std::vector<index_model> models{
+        index_model(make_document(kvp("a", 1))),
+        index_model(make_document(kvp("b", 1), kvp("c", -1))),
+        index_model(make_document(kvp("c", -1)))};
 
     SECTION("test maxTimeMS option") {
         collection coll = db["index_view_create_many_maxTimeMS"];
@@ -379,9 +380,10 @@ TEST_CASE("drop_all", "[index_view]") {
     client mongodb_client{uri{}, test_util::add_test_server_api()};
     database db = mongodb_client["index_view_drop_all"];
 
-    std::vector<index_model> models{index_model{make_document(kvp("a", 1))},
-                                    index_model{make_document(kvp("b", 1), kvp("c", -1))},
-                                    index_model{make_document(kvp("c", -1))}};
+    std::vector<index_model> models{
+        index_model{make_document(kvp("a", 1))},
+        index_model{make_document(kvp("b", 1), kvp("c", -1))},
+        index_model{make_document(kvp("c", -1))}};
 
     SECTION("drop normally") {
         collection coll = db["index_view_drop_all"];
@@ -403,8 +405,10 @@ TEST_CASE("drop_all", "[index_view]") {
 
         auto cursor1 = indexes.list();
         REQUIRE(static_cast<std::size_t>(std::distance(cursor1.begin(), cursor1.end())) == models.size() + 1);
-        REQUIRE(static_cast<std::size_t>(result_view["numIndexesAfter"].get_int32() -
-                                         result_view["numIndexesBefore"].get_int32()) == models.size());
+        REQUIRE(
+            static_cast<std::size_t>(
+                result_view["numIndexesAfter"].get_int32() - result_view["numIndexesBefore"].get_int32()) ==
+            models.size());
 
         indexes.drop_all();
         auto cursor2 = indexes.list();
@@ -432,8 +436,10 @@ TEST_CASE("drop_all", "[index_view]") {
 
         auto cursor1 = indexes.list();
         REQUIRE(static_cast<std::size_t>(std::distance(cursor1.begin(), cursor1.end())) == models.size() + 1u);
-        REQUIRE(static_cast<std::size_t>(result_view["numIndexesAfter"].get_int32() -
-                                         result_view["numIndexesBefore"].get_int32()) == models.size());
+        REQUIRE(
+            static_cast<std::size_t>(
+                result_view["numIndexesAfter"].get_int32() - result_view["numIndexesBefore"].get_int32()) ==
+            models.size());
 
         options::index_view options;
         options.max_time(std::chrono::milliseconds(1));

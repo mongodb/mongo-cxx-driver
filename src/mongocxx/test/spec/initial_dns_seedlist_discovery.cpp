@@ -117,9 +117,10 @@ static void assert_elements_equal(bsoncxx::document::element expected_option, bs
     }
 }
 
-static void compare_options(bsoncxx::document::view_or_value expected_options,
-                            bsoncxx::document::view_or_value my_options,
-                            bsoncxx::stdx::optional<bsoncxx::document::view> creds) {
+static void compare_options(
+    bsoncxx::document::view_or_value expected_options,
+    bsoncxx::document::view_or_value my_options,
+    bsoncxx::stdx::optional<bsoncxx::document::view> creds) {
     auto my_options_view = my_options.view();
     for (const auto& expected_option : expected_options.view()) {
         auto key = mongocxx::test_util::tolowercase(expected_option.key());
@@ -153,10 +154,11 @@ static bool hosts_are_equal(bsoncxx::array::view expected_hosts, std::vector<std
     return expected == actual;
 }
 
-static void validate_srv_max_hosts(mongocxx::client& client,
-                                   const initial_dns_seedlist_test& test,
-                                   std::mutex& mtx,
-                                   std::vector<std::string>& new_hosts) {
+static void validate_srv_max_hosts(
+    mongocxx::client& client,
+    const initial_dns_seedlist_test& test,
+    std::mutex& mtx,
+    std::vector<std::string>& new_hosts) {
     using namespace mongocxx;
     using bsoncxx::builder::basic::kvp;
     using bsoncxx::builder::basic::make_document;
@@ -255,8 +257,8 @@ static void assert_tls_enabled(void) {
     client_options.tls_opts(tls_options);
 
     try {
-        mongocxx::client client{uri{"mongodb://localhost:27017/?tls=true"},
-                                test_util::add_test_server_api(client_options)};
+        mongocxx::client client{
+            uri{"mongodb://localhost:27017/?tls=true"}, test_util::add_test_server_api(client_options)};
 
         auto admin = client["admin"];
         auto result = admin.run_command(make_document(kvp("ping", 1)));
@@ -278,15 +280,16 @@ TEST_CASE("uri::test_srv_max_hosts", "[uri]") {
     assert_tls_enabled();
 
     SECTION("replica-set") {
-        std::vector<std::string> files = {"srvMaxHosts-less_than_srv_records.json",
-                                          "srvMaxHosts-invalid_type.json",
-                                          "srvMaxHosts-invalid_integer.json",
-                                          "srvMaxHosts-greater_than_srv_records.json",
-                                          "srvMaxHosts-equal_to_srv_records.json",
-                                          "srvMaxHosts-conflicts_with_replicaSet.json",
-                                          "srvMaxHosts-conflicts_with_replicaSet-txt.json",
-                                          "srvMaxHosts-zero.json",
-                                          "srvMaxHosts-zero-txt.json"};
+        std::vector<std::string> files = {
+            "srvMaxHosts-less_than_srv_records.json",
+            "srvMaxHosts-invalid_type.json",
+            "srvMaxHosts-invalid_integer.json",
+            "srvMaxHosts-greater_than_srv_records.json",
+            "srvMaxHosts-equal_to_srv_records.json",
+            "srvMaxHosts-conflicts_with_replicaSet.json",
+            "srvMaxHosts-conflicts_with_replicaSet-txt.json",
+            "srvMaxHosts-zero.json",
+            "srvMaxHosts-zero-txt.json"};
 
         iterate_srv_max_hosts_tests("replica-set", files);
     }

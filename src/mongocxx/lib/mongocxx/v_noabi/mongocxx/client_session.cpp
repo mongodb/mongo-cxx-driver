@@ -25,8 +25,8 @@ namespace mongocxx {
 namespace v_noabi {
 
 // Private constructors.
-client_session::client_session(const mongocxx::v_noabi::client* client,
-                               const mongocxx::v_noabi::options::client_session& options)
+client_session::client_session(
+    const mongocxx::v_noabi::client* client, const mongocxx::v_noabi::options::client_session& options)
     : _impl(bsoncxx::make_unique<impl>(client, options)) {}
 
 client_session::client_session(client_session&&) noexcept = default;

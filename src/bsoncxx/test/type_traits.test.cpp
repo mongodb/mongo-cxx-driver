@@ -38,51 +38,55 @@ struct one_case {
 template <template <class...> class Oper, typename... Cases>
 struct check_cases : one_case<Oper, Cases>... {};
 
-constexpr check_cases<tt::decay_t,
-                      Case<int, int>,
-                      Case<int, const int>,
-                      Case<int, const int&>,
-                      Case<int, const int&&>,
-                      Case<int, int&>,
-                      Case<int, int&&>,
-                      Case<int*, int*>,
-                      Case<const int*, const int*>,
-                      Case<const int*, const int*&>,
-                      Case<const int*, const int[42]>,
-                      Case<const int*, const int (&)[42]>,
-                      Case<int*, int[42]>,
-                      Case<int (*)(int), int (&)(int)>,
-                      Case<void, void>>
+constexpr check_cases<
+    tt::decay_t,
+    Case<int, int>,
+    Case<int, const int>,
+    Case<int, const int&>,
+    Case<int, const int&&>,
+    Case<int, int&>,
+    Case<int, int&&>,
+    Case<int*, int*>,
+    Case<const int*, const int*>,
+    Case<const int*, const int*&>,
+    Case<const int*, const int[42]>,
+    Case<const int*, const int (&)[42]>,
+    Case<int*, int[42]>,
+    Case<int (*)(int), int (&)(int)>,
+    Case<void, void>>
     decay;
 
-constexpr check_cases<tt::remove_cvref_t,
-                      Case<int, int&&>,
-                      Case<int, const int&&>,
-                      Case<int(int), int (&&)(int)>,
-                      Case<int(int), int (&)(int)>,
-                      Case<int[42], const int (&)[42]>,
-                      Case<int[42], const int[42]>,
-                      Case<const int*, const int*&>,
-                      Case<int, const int>,
-                      Case<void, const void>,
-                      Case<void, void>,
-                      Case<int, int>>
+constexpr check_cases<
+    tt::remove_cvref_t,
+    Case<int, int&&>,
+    Case<int, const int&&>,
+    Case<int(int), int (&&)(int)>,
+    Case<int(int), int (&)(int)>,
+    Case<int[42], const int (&)[42]>,
+    Case<int[42], const int[42]>,
+    Case<const int*, const int*&>,
+    Case<int, const int>,
+    Case<void, const void>,
+    Case<void, void>,
+    Case<int, int>>
     remove_cvref;
 
-constexpr check_cases<tt::const_reference_t,
-                      Case<void* const&, void*>,
-                      Case<const int&, volatile int&&>,
-                      Case<const int&, int&&>,
-                      Case<const int&, int&>,
-                      Case<const void, void>,
-                      Case<const int&, int>>
+constexpr check_cases<
+    tt::const_reference_t,
+    Case<void* const&, void*>,
+    Case<const int&, volatile int&&>,
+    Case<const int&, int&&>,
+    Case<const int&, int&>,
+    Case<const void, void>,
+    Case<const int&, int>>
     const_reference;
 
-constexpr check_cases<tt::void_t,
-                      Case<void, struct in_situ_never_defined>,
-                      Case<void, int>,
-                      Case<void, int, int>,
-                      Case<void>>
+constexpr check_cases<
+    tt::void_t,
+    Case<void, struct in_situ_never_defined>,
+    Case<void, int>,
+    Case<void, int, int>,
+    Case<void>>
     void_t;
 
 constexpr assert_same<std::true_type, tt::bool_constant<true>> t;
@@ -101,8 +105,8 @@ struct my_false {
 
 static_assert(std::is_base_of<my_false, tt::conjunction<my_false, std::false_type, void>>::value, "fail");
 
-static_assert(std::is_base_of<my_false, tt::conjunction<my_false, std::false_type, void, hard_error<int>>>::value,
-              "fail");
+static_assert(
+    std::is_base_of<my_false, tt::conjunction<my_false, std::false_type, void, hard_error<int>>>::value, "fail");
 
 template <typename T>
 tt::requires_t<T, std::is_integral<T>> add_one(T v) {
@@ -131,11 +135,11 @@ static_assert(std::is_same<tt::invoke_result_t<decltype(&something::value), some
 
 static_assert(std::is_same<tt::invoke_result_t<decltype(&something::value), something&&>, int&&>::value, "fail");
 
-static_assert(std::is_same<tt::invoke_result_t<decltype(&something::value), const something&>, const int&>::value,
-              "fail");
+static_assert(
+    std::is_same<tt::invoke_result_t<decltype(&something::value), const something&>, const int&>::value, "fail");
 
-static_assert(std::is_same<tt::invoke_result_t<decltype(&something::memfn), something&&, int, const char*>, int>::value,
-              "fail");
+static_assert(
+    std::is_same<tt::invoke_result_t<decltype(&something::memfn), something&&, int, const char*>, int>::value, "fail");
 
 // invoke_result_t disappears when given wrong argument types:
 static_assert(!tt::is_detected<tt::invoke_result_t, decltype(&something::memfn), something&&, int, int>::value, "fail");
@@ -148,8 +152,8 @@ struct constrained_callable {
     }
 };
 
-static_assert(!tt::is_detected<tt::invoke_result_t, constrained_callable, void (*)(int, std::string), double>::value,
-              "fail");
+static_assert(
+    !tt::is_detected<tt::invoke_result_t, constrained_callable, void (*)(int, std::string), double>::value, "fail");
 
 static_assert(
     tt::is_detected<tt::invoke_result_t, constrained_callable, void (*)(int, std::string), const char*>::value, "fail");

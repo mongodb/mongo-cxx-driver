@@ -154,11 +154,12 @@ class downloader {
     // @param files_doc
     //   The files collection document of the file being downloaded.
     //
-    downloader(bsoncxx::v_noabi::stdx::optional<cursor> chunks,
-               chunks_and_bytes_offset start,
-               std::int32_t chunk_size,
-               std::int64_t file_len,
-               bsoncxx::v_noabi::document::value files_doc);
+    downloader(
+        bsoncxx::v_noabi::stdx::optional<cursor> chunks,
+        chunks_and_bytes_offset start,
+        std::int32_t chunk_size,
+        std::int64_t file_len,
+        bsoncxx::v_noabi::document::value files_doc);
 
     void fetch_chunk();
 

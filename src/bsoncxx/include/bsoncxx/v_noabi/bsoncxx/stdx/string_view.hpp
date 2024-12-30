@@ -306,16 +306,14 @@ class basic_string_view : bsoncxx::detail::equality_operators, bsoncxx::detail::
     }
 
     // Implementation of equality comparison.
-    constexpr friend bool tag_invoke(bsoncxx::detail::equal_to,
-                                     basic_string_view left,
-                                     basic_string_view right) noexcept {
+    constexpr friend bool tag_invoke(
+        bsoncxx::detail::equal_to, basic_string_view left, basic_string_view right) noexcept {
         return left.size() == right.size() && left.compare(right) == 0;
     }
 
     // Implementation of a three-way-comparison.
-    constexpr friend bsoncxx::detail::strong_ordering tag_invoke(bsoncxx::detail::compare_three_way cmp,
-                                                                 basic_string_view left,
-                                                                 basic_string_view right) noexcept {
+    constexpr friend bsoncxx::detail::strong_ordering tag_invoke(
+        bsoncxx::detail::compare_three_way cmp, basic_string_view left, basic_string_view right) noexcept {
         return cmp(left.compare(right), 0);
     }
 

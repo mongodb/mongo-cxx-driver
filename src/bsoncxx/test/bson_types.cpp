@@ -369,14 +369,16 @@ TEST_CASE("document uninitialized element throws exceptions", "") {
     using bsoncxx::builder::basic::make_document;
     bsoncxx::document::value doc = make_document(kvp("foo", "bar"));
 
-    REQUIRE_THROWS_WITH(doc["doesnotexist"].get_string().value,
+    REQUIRE_THROWS_WITH(
+        doc["doesnotexist"].get_string().value,
 
-                        Catch::Matchers::ContainsSubstring("cannot get string from an uninitialized element with key "
-                                                           "\"doesnotexist\": unset document::element"));
+        Catch::Matchers::ContainsSubstring("cannot get string from an uninitialized element with key "
+                                           "\"doesnotexist\": unset document::element"));
 
-    REQUIRE_THROWS_WITH(doc["alsodoesnotexist"].get_value(),
-                        Catch::Matchers::ContainsSubstring("cannot return the type of uninitialized element with key "
-                                                           "\"alsodoesnotexist\": unset document::element"));
+    REQUIRE_THROWS_WITH(
+        doc["alsodoesnotexist"].get_value(),
+        Catch::Matchers::ContainsSubstring("cannot return the type of uninitialized element with key "
+                                           "\"alsodoesnotexist\": unset document::element"));
 
     // Ensure a non-existing element evaluates to false.
     REQUIRE(!doc["doesnotexist"]);
@@ -394,9 +396,10 @@ TEST_CASE("array uninitialized element throws exceptions", "") {
     using bsoncxx::builder::basic::make_array;
     bsoncxx::array::value arr = make_array("a", "b", "c");
 
-    REQUIRE_THROWS_WITH(arr.view()[3].get_string().value,
-                        Catch::Matchers::ContainsSubstring("cannot get string from an uninitialized element with key "
-                                                           "\"3\": unset document::element"));
+    REQUIRE_THROWS_WITH(
+        arr.view()[3].get_string().value,
+        Catch::Matchers::ContainsSubstring("cannot get string from an uninitialized element with key "
+                                           "\"3\": unset document::element"));
     // Ensure a non-existing element evaluates to false.
     REQUIRE(!arr.view()[3]);
     // Ensure finding a non-existing element results in an end iterator.

@@ -212,10 +212,11 @@ bsoncxx::v_noabi::stdx::string_view collection::name() const {
     return {get_collection_name(_get_impl().collection_t)};
 }
 
-void collection::_rename(const client_session* session,
-                         bsoncxx::v_noabi::string::view_or_value new_name,
-                         bool drop_target_before_rename,
-                         const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern>& wc) {
+void collection::_rename(
+    const client_session* session,
+    bsoncxx::v_noabi::string::view_or_value new_name,
+    bool drop_target_before_rename,
+    const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern>& wc) {
     bson_error_t error;
 
     bsoncxx::v_noabi::builder::basic::document opts_doc;
@@ -229,28 +230,31 @@ void collection::_rename(const client_session* session,
 
     scoped_bson_t opts_bson{opts_doc.view()};
 
-    bool result = libmongoc::collection_rename_with_opts(_get_impl().collection_t,
-                                                         _get_impl().database_name.c_str(),
-                                                         new_name.terminated().data(),
-                                                         drop_target_before_rename,
-                                                         opts_bson.bson(),
-                                                         &error);
+    bool result = libmongoc::collection_rename_with_opts(
+        _get_impl().collection_t,
+        _get_impl().database_name.c_str(),
+        new_name.terminated().data(),
+        drop_target_before_rename,
+        opts_bson.bson(),
+        &error);
 
     if (!result) {
         throw_exception<operation_exception>(error);
     }
 }
 
-void collection::rename(bsoncxx::v_noabi::string::view_or_value new_name,
-                        bool drop_target_before_rename,
-                        const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern>& wc) {
+void collection::rename(
+    bsoncxx::v_noabi::string::view_or_value new_name,
+    bool drop_target_before_rename,
+    const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern>& wc) {
     return _rename(nullptr, new_name, drop_target_before_rename, wc);
 }
 
-void collection::rename(const client_session& session,
-                        bsoncxx::v_noabi::string::view_or_value new_name,
-                        bool drop_target_before_rename,
-                        const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern>& wc) {
+void collection::rename(
+    const client_session& session,
+    bsoncxx::v_noabi::string::view_or_value new_name,
+    bool drop_target_before_rename,
+    const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern>& wc) {
     return _rename(&session, new_name, drop_target_before_rename, wc);
 }
 
@@ -286,8 +290,8 @@ mongocxx::v_noabi::bulk_write collection::create_bulk_write(const options::bulk_
     return mongocxx::v_noabi::bulk_write{*this, options};
 }
 
-mongocxx::v_noabi::bulk_write collection::create_bulk_write(const client_session& session,
-                                                            const options::bulk_write& options) {
+mongocxx::v_noabi::bulk_write collection::create_bulk_write(
+    const client_session& session, const options::bulk_write& options) {
     return mongocxx::v_noabi::bulk_write{*this, options, &session};
 }
 
@@ -434,20 +438,18 @@ bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::value> collection::
     return bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::value>(bsoncxx::v_noabi::document::value{*it});
 }
 
-bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::value> collection::find_one(view_or_value filter,
-                                                                                         const options::find& options) {
+bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::value> collection::find_one(
+    view_or_value filter, const options::find& options) {
     return _find_one(nullptr, std::move(filter), options);
 }
 
-bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::value> collection::find_one(const client_session& session,
-                                                                                         view_or_value filter,
-                                                                                         const options::find& options) {
+bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::value> collection::find_one(
+    const client_session& session, view_or_value filter, const options::find& options) {
     return _find_one(&session, std::move(filter), options);
 }
 
-cursor collection::_aggregate(const client_session* session,
-                              const pipeline& pipeline,
-                              const options::aggregate& options) {
+cursor collection::_aggregate(
+    const client_session* session, const pipeline& pipeline, const options::aggregate& options) {
     scoped_bson_t stages(bsoncxx::v_noabi::document::view(pipeline._impl->view_array()));
 
     bsoncxx::v_noabi::builder::basic::document b;
@@ -474,15 +476,13 @@ cursor collection::aggregate(const pipeline& pipeline, const options::aggregate&
     return _aggregate(nullptr, pipeline, options);
 }
 
-cursor collection::aggregate(const client_session& session,
-                             const pipeline& pipeline,
-                             const options::aggregate& options) {
+cursor collection::aggregate(
+    const client_session& session, const pipeline& pipeline, const options::aggregate& options) {
     return _aggregate(&session, pipeline, options);
 }
 
-bsoncxx::v_noabi::stdx::optional<result::insert_one> collection::_insert_one(const client_session* session,
-                                                                             view_or_value document,
-                                                                             const options::insert& options) {
+bsoncxx::v_noabi::stdx::optional<result::insert_one> collection::_insert_one(
+    const client_session* session, view_or_value document, const options::insert& options) {
     // TODO: We should consider making it possible to convert from an options::insert into
     // an options::bulk_write at the type level, removing the need to re-iterate this code
     // many times here and below.
@@ -526,20 +526,18 @@ bsoncxx::v_noabi::stdx::optional<result::insert_one> collection::_insert_one(con
         result::insert_one(std::move(result.value()), oid.get_value()));
 }
 
-bsoncxx::v_noabi::stdx::optional<result::insert_one> collection::insert_one(view_or_value document,
-                                                                            const options::insert& options) {
+bsoncxx::v_noabi::stdx::optional<result::insert_one> collection::insert_one(
+    view_or_value document, const options::insert& options) {
     return _insert_one(nullptr, document, options);
 }
 
-bsoncxx::v_noabi::stdx::optional<result::insert_one> collection::insert_one(const client_session& session,
-                                                                            view_or_value document,
-                                                                            const options::insert& options) {
+bsoncxx::v_noabi::stdx::optional<result::insert_one> collection::insert_one(
+    const client_session& session, view_or_value document, const options::insert& options) {
     return _insert_one(&session, document, options);
 }
 
-bsoncxx::v_noabi::stdx::optional<result::replace_one> collection::_replace_one(const client_session* session,
-                                                                               const options::bulk_write& bulk_opts,
-                                                                               const model::replace_one& replace_op) {
+bsoncxx::v_noabi::stdx::optional<result::replace_one> collection::_replace_one(
+    const client_session* session, const options::bulk_write& bulk_opts, const model::replace_one& replace_op) {
     auto bulk_op = session ? create_bulk_write(*session, bulk_opts) : create_bulk_write(bulk_opts);
     bulk_op.append(replace_op);
 
@@ -551,10 +549,8 @@ bsoncxx::v_noabi::stdx::optional<result::replace_one> collection::_replace_one(c
     return bsoncxx::v_noabi::stdx::optional<result::replace_one>(result::replace_one(std::move(result.value())));
 }
 
-bsoncxx::v_noabi::stdx::optional<result::replace_one> collection::_replace_one(const client_session* session,
-                                                                               view_or_value filter,
-                                                                               view_or_value replacement,
-                                                                               const options::replace& options) {
+bsoncxx::v_noabi::stdx::optional<result::replace_one> collection::_replace_one(
+    const client_session* session, view_or_value filter, view_or_value replacement, const options::replace& options) {
     options::bulk_write bulk_opts;
 
     if (const auto& bdv = options.bypass_document_validation()) {
@@ -590,23 +586,18 @@ bsoncxx::v_noabi::stdx::optional<result::replace_one> collection::_replace_one(c
     return _replace_one(session, bulk_opts, replace_op);
 }
 
-bsoncxx::v_noabi::stdx::optional<result::replace_one> collection::replace_one(view_or_value filter,
-                                                                              view_or_value replacement,
-                                                                              const options::replace& options) {
+bsoncxx::v_noabi::stdx::optional<result::replace_one> collection::replace_one(
+    view_or_value filter, view_or_value replacement, const options::replace& options) {
     return _replace_one(nullptr, std::move(filter), replacement, options);
 }
 
-bsoncxx::v_noabi::stdx::optional<result::replace_one> collection::replace_one(const client_session& session,
-                                                                              view_or_value filter,
-                                                                              view_or_value replacement,
-                                                                              const options::replace& options) {
+bsoncxx::v_noabi::stdx::optional<result::replace_one> collection::replace_one(
+    const client_session& session, view_or_value filter, view_or_value replacement, const options::replace& options) {
     return _replace_one(&session, std::move(filter), replacement, options);
 }
 
-bsoncxx::v_noabi::stdx::optional<result::update> collection::_update_many(const client_session* session,
-                                                                          view_or_value filter,
-                                                                          view_or_value update,
-                                                                          const options::update& options) {
+bsoncxx::v_noabi::stdx::optional<result::update> collection::_update_many(
+    const client_session* session, view_or_value filter, view_or_value update, const options::update& options) {
     options::bulk_write bulk_opts;
 
     if (const auto& bdv = options.bypass_document_validation()) {
@@ -655,49 +646,41 @@ bsoncxx::v_noabi::stdx::optional<result::update> collection::_update_many(const 
     return bsoncxx::v_noabi::stdx::optional<result::update>(result::update(std::move(result.value())));
 }
 
-bsoncxx::v_noabi::stdx::optional<result::update> collection::update_many(view_or_value filter,
-                                                                         view_or_value update,
-                                                                         const options::update& options) {
+bsoncxx::v_noabi::stdx::optional<result::update> collection::update_many(
+    view_or_value filter, view_or_value update, const options::update& options) {
     return _update_many(nullptr, std::move(filter), update, options);
 }
 
-bsoncxx::v_noabi::stdx::optional<result::update> collection::update_many(view_or_value filter,
-                                                                         const pipeline& update,
-                                                                         const options::update& options) {
+bsoncxx::v_noabi::stdx::optional<result::update> collection::update_many(
+    view_or_value filter, const pipeline& update, const options::update& options) {
     return _update_many(nullptr, std::move(filter), bsoncxx::v_noabi::document::view(update.view_array()), options);
 }
 
-bsoncxx::v_noabi::stdx::optional<result::update> collection::update_many(view_or_value filter,
-                                                                         std::initializer_list<_empty_doc_tag>,
-                                                                         const options::update& options) {
+bsoncxx::v_noabi::stdx::optional<result::update> collection::update_many(
+    view_or_value filter, std::initializer_list<_empty_doc_tag>, const options::update& options) {
     return _update_many(nullptr, std::move(filter), bsoncxx::v_noabi::document::view{}, options);
 }
 
-bsoncxx::v_noabi::stdx::optional<result::update> collection::update_many(const client_session& session,
-                                                                         view_or_value filter,
-                                                                         view_or_value update,
-                                                                         const options::update& options) {
+bsoncxx::v_noabi::stdx::optional<result::update> collection::update_many(
+    const client_session& session, view_or_value filter, view_or_value update, const options::update& options) {
     return _update_many(&session, std::move(filter), update, options);
 }
 
-bsoncxx::v_noabi::stdx::optional<result::update> collection::update_many(const client_session& session,
-                                                                         view_or_value filter,
-                                                                         const pipeline& update,
-                                                                         const options::update& options) {
+bsoncxx::v_noabi::stdx::optional<result::update> collection::update_many(
+    const client_session& session, view_or_value filter, const pipeline& update, const options::update& options) {
     return _update_many(&session, std::move(filter), bsoncxx::v_noabi::document::view(update.view_array()), options);
 }
 
-bsoncxx::v_noabi::stdx::optional<result::update> collection::update_many(const client_session& session,
-                                                                         view_or_value filter,
-                                                                         std::initializer_list<_empty_doc_tag>,
-                                                                         const options::update& options) {
+bsoncxx::v_noabi::stdx::optional<result::update> collection::update_many(
+    const client_session& session,
+    view_or_value filter,
+    std::initializer_list<_empty_doc_tag>,
+    const options::update& options) {
     return _update_many(&session, std::move(filter), bsoncxx::v_noabi::document::view{}, options);
 }
 
-bsoncxx::v_noabi::stdx::optional<result::update> collection::_update_one(const client_session* session,
-                                                                         view_or_value filter,
-                                                                         view_or_value update,
-                                                                         const options::update& options) {
+bsoncxx::v_noabi::stdx::optional<result::update> collection::_update_one(
+    const client_session* session, view_or_value filter, view_or_value update, const options::update& options) {
     options::bulk_write bulk_opts;
 
     if (const auto& bdv = options.bypass_document_validation()) {
@@ -746,42 +729,36 @@ bsoncxx::v_noabi::stdx::optional<result::update> collection::_update_one(const c
     return bsoncxx::v_noabi::stdx::optional<result::update>(result::update(std::move(result.value())));
 }
 
-bsoncxx::v_noabi::stdx::optional<result::update> collection::update_one(view_or_value filter,
-                                                                        view_or_value update,
-                                                                        const options::update& options) {
+bsoncxx::v_noabi::stdx::optional<result::update> collection::update_one(
+    view_or_value filter, view_or_value update, const options::update& options) {
     return _update_one(nullptr, std::move(filter), update, options);
 }
 
-bsoncxx::v_noabi::stdx::optional<result::update> collection::update_one(view_or_value filter,
-                                                                        const pipeline& update,
-                                                                        const options::update& options) {
+bsoncxx::v_noabi::stdx::optional<result::update> collection::update_one(
+    view_or_value filter, const pipeline& update, const options::update& options) {
     return _update_one(nullptr, std::move(filter), bsoncxx::v_noabi::document::view(update.view_array()), options);
 }
 
-bsoncxx::v_noabi::stdx::optional<result::update> collection::update_one(view_or_value filter,
-                                                                        std::initializer_list<_empty_doc_tag>,
-                                                                        const options::update& options) {
+bsoncxx::v_noabi::stdx::optional<result::update> collection::update_one(
+    view_or_value filter, std::initializer_list<_empty_doc_tag>, const options::update& options) {
     return _update_one(nullptr, std::move(filter), bsoncxx::v_noabi::document::view{}, options);
 }
 
-bsoncxx::v_noabi::stdx::optional<result::update> collection::update_one(const client_session& session,
-                                                                        view_or_value filter,
-                                                                        view_or_value update,
-                                                                        const options::update& options) {
+bsoncxx::v_noabi::stdx::optional<result::update> collection::update_one(
+    const client_session& session, view_or_value filter, view_or_value update, const options::update& options) {
     return _update_one(&session, std::move(filter), update, options);
 }
 
-bsoncxx::v_noabi::stdx::optional<result::update> collection::update_one(const client_session& session,
-                                                                        view_or_value filter,
-                                                                        const pipeline& update,
-                                                                        const options::update& options) {
+bsoncxx::v_noabi::stdx::optional<result::update> collection::update_one(
+    const client_session& session, view_or_value filter, const pipeline& update, const options::update& options) {
     return _update_one(&session, std::move(filter), bsoncxx::v_noabi::document::view(update.view_array()), options);
 }
 
-bsoncxx::v_noabi::stdx::optional<result::update> collection::update_one(const client_session& session,
-                                                                        view_or_value filter,
-                                                                        std::initializer_list<_empty_doc_tag>,
-                                                                        const options::update& options) {
+bsoncxx::v_noabi::stdx::optional<result::update> collection::update_one(
+    const client_session& session,
+    view_or_value filter,
+    std::initializer_list<_empty_doc_tag>,
+    const options::update& options) {
     return _update_one(&session, std::move(filter), bsoncxx::v_noabi::document::view{}, options);
 }
 
@@ -871,14 +848,13 @@ bsoncxx::v_noabi::stdx::optional<result::delete_result> collection::_delete_one(
     return bsoncxx::v_noabi::stdx::optional<result::delete_result>(result::delete_result(std::move(result.value())));
 }
 
-bsoncxx::v_noabi::stdx::optional<result::delete_result> collection::delete_one(view_or_value filter,
-                                                                               const options::delete_options& options) {
+bsoncxx::v_noabi::stdx::optional<result::delete_result> collection::delete_one(
+    view_or_value filter, const options::delete_options& options) {
     return _delete_one(nullptr, std::move(filter), options);
 }
 
-bsoncxx::v_noabi::stdx::optional<result::delete_result> collection::delete_one(const client_session& session,
-                                                                               view_or_value filter,
-                                                                               const options::delete_options& options) {
+bsoncxx::v_noabi::stdx::optional<result::delete_result> collection::delete_one(
+    const client_session& session, view_or_value filter, const options::delete_options& options) {
     return _delete_one(&session, std::move(filter), options);
 }
 
@@ -896,14 +872,15 @@ bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::value> collection::
         flags = static_cast<mongoc_find_and_modify_flags_t>(flags | MONGOC_FIND_AND_MODIFY_RETURN_NEW);
     }
 
-    return find_and_modify(_get_impl().collection_t,
-                           session ? session->_get_impl().get_session_t() : nullptr,
-                           filter,
-                           &replacement,
-                           flags,
-                           options.bypass_document_validation().value_or(false),
-                           bsoncxx::v_noabi::stdx::nullopt,
-                           options);
+    return find_and_modify(
+        _get_impl().collection_t,
+        session ? session->_get_impl().get_session_t() : nullptr,
+        filter,
+        &replacement,
+        flags,
+        options.bypass_document_validation().value_or(false),
+        bsoncxx::v_noabi::stdx::nullopt,
+        options);
 }
 
 bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::value> collection::find_one_and_replace(
@@ -933,14 +910,15 @@ bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::value> collection::
         flags = static_cast<mongoc_find_and_modify_flags_t>(flags | MONGOC_FIND_AND_MODIFY_RETURN_NEW);
     }
 
-    return find_and_modify(_get_impl().collection_t,
-                           session ? session->_get_impl().get_session_t() : nullptr,
-                           filter,
-                           &update,
-                           flags,
-                           options.bypass_document_validation().value_or(false),
-                           options.array_filters(),
-                           options);
+    return find_and_modify(
+        _get_impl().collection_t,
+        session ? session->_get_impl().get_session_t() : nullptr,
+        filter,
+        &update,
+        flags,
+        options.bypass_document_validation().value_or(false),
+        options.array_filters(),
+        options);
 }
 
 bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::value> collection::find_one_and_update(
@@ -986,14 +964,15 @@ bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::value> collection::
 
 bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::value> collection::_find_one_and_delete(
     const client_session* session, view_or_value filter, const options::find_one_and_delete& options) {
-    return find_and_modify(_get_impl().collection_t,
-                           session ? session->_get_impl().get_session_t() : nullptr,
-                           filter,
-                           nullptr,
-                           MONGOC_FIND_AND_MODIFY_REMOVE,
-                           false,
-                           bsoncxx::v_noabi::stdx::nullopt,
-                           options);
+    return find_and_modify(
+        _get_impl().collection_t,
+        session ? session->_get_impl().get_session_t() : nullptr,
+        filter,
+        nullptr,
+        MONGOC_FIND_AND_MODIFY_REMOVE,
+        false,
+        bsoncxx::v_noabi::stdx::nullopt,
+        options);
 }
 
 bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::value> collection::find_one_and_delete(
@@ -1006,9 +985,8 @@ bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::value> collection::
     return _find_one_and_delete(&session, std::move(filter), options);
 }
 
-std::int64_t collection::_count_documents(const client_session* session,
-                                          view_or_value filter,
-                                          const options::count& options) {
+std::int64_t collection::_count_documents(
+    const client_session* session, view_or_value filter, const options::count& options) {
     scoped_bson_t bson_filter{filter};
     scoped_bson_t reply;
     bson_error_t error;
@@ -1061,9 +1039,8 @@ std::int64_t collection::count_documents(view_or_value filter, const options::co
     return _count_documents(nullptr, std::move(filter), options);
 }
 
-std::int64_t collection::count_documents(const client_session& session,
-                                         view_or_value filter,
-                                         const options::count& options) {
+std::int64_t collection::count_documents(
+    const client_session& session, view_or_value filter, const options::count& options) {
     return _count_documents(&session, std::move(filter), options);
 }
 
@@ -1096,10 +1073,11 @@ std::int64_t collection::estimated_document_count(const options::estimated_docum
     return result;
 }
 
-bsoncxx::v_noabi::document::value collection::_create_index(const client_session* session,
-                                                            bsoncxx::v_noabi::document::view_or_value keys,
-                                                            bsoncxx::v_noabi::document::view_or_value index_opts,
-                                                            options::index_view operation_options) {
+bsoncxx::v_noabi::document::value collection::_create_index(
+    const client_session* session,
+    bsoncxx::v_noabi::document::view_or_value keys,
+    bsoncxx::v_noabi::document::view_or_value index_opts,
+    options::index_view operation_options) {
     using namespace bsoncxx;
 
     auto name = session ? indexes().create_one(*session, keys, index_opts, operation_options)
@@ -1112,30 +1090,34 @@ bsoncxx::v_noabi::document::value collection::_create_index(const client_session
     }
 }
 
-bsoncxx::v_noabi::document::value collection::create_index(bsoncxx::v_noabi::document::view_or_value keys,
-                                                           bsoncxx::v_noabi::document::view_or_value index_opts,
-                                                           options::index_view operation_options) {
+bsoncxx::v_noabi::document::value collection::create_index(
+    bsoncxx::v_noabi::document::view_or_value keys,
+    bsoncxx::v_noabi::document::view_or_value index_opts,
+    options::index_view operation_options) {
     return _create_index(nullptr, keys, index_opts, operation_options);
 }
 
-bsoncxx::v_noabi::document::value collection::create_index(const client_session& session,
-                                                           bsoncxx::v_noabi::document::view_or_value keys,
-                                                           bsoncxx::v_noabi::document::view_or_value index_opts,
-                                                           options::index_view operation_options) {
+bsoncxx::v_noabi::document::value collection::create_index(
+    const client_session& session,
+    bsoncxx::v_noabi::document::view_or_value keys,
+    bsoncxx::v_noabi::document::view_or_value index_opts,
+    options::index_view operation_options) {
     return _create_index(&session, keys, index_opts, operation_options);
 }
 
-cursor collection::_distinct(const client_session* session,
-                             bsoncxx::v_noabi::string::view_or_value field_name,
-                             view_or_value query,
-                             const options::distinct& options) {
+cursor collection::_distinct(
+    const client_session* session,
+    bsoncxx::v_noabi::string::view_or_value field_name,
+    view_or_value query,
+    const options::distinct& options) {
     //
     // Construct the distinct command and options.
     //
     bsoncxx::v_noabi::builder::basic::document command_builder;
-    command_builder.append(kvp("distinct", name()),
-                           kvp("key", field_name.view()),
-                           kvp("query", bsoncxx::v_noabi::types::b_document{query}));
+    command_builder.append(
+        kvp("distinct", name()),
+        kvp("key", field_name.view()),
+        kvp("query", bsoncxx::v_noabi::types::b_document{query}));
 
     if (const auto& max_time = options.max_time()) {
         command_builder.append(kvp("maxTimeMS", bsoncxx::v_noabi::types::b_int64{max_time->count()}));
@@ -1206,16 +1188,16 @@ cursor collection::_distinct(const client_session* session,
     return fake_cursor;
 }
 
-cursor collection::distinct(bsoncxx::v_noabi::string::view_or_value field_name,
-                            view_or_value query,
-                            const options::distinct& options) {
+cursor collection::distinct(
+    bsoncxx::v_noabi::string::view_or_value field_name, view_or_value query, const options::distinct& options) {
     return _distinct(nullptr, field_name, query, options);
 }
 
-cursor collection::distinct(const client_session& session,
-                            bsoncxx::v_noabi::string::view_or_value field_name,
-                            view_or_value query,
-                            const options::distinct& options) {
+cursor collection::distinct(
+    const client_session& session,
+    bsoncxx::v_noabi::string::view_or_value field_name,
+    view_or_value query,
+    const options::distinct& options) {
     return _distinct(&session, field_name, query, options);
 }
 
@@ -1230,9 +1212,10 @@ cursor collection::list_indexes(const client_session& session) const {
     return libmongoc::collection_find_indexes_with_opts(_get_impl().collection_t, options_bson.bson());
 }
 
-void collection::_drop(const client_session* session,
-                       const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern>& wc,
-                       bsoncxx::v_noabi::document::view_or_value collection_options) {
+void collection::_drop(
+    const client_session* session,
+    const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern>& wc,
+    bsoncxx::v_noabi::document::view_or_value collection_options) {
     bson_error_t error;
 
     bsoncxx::v_noabi::builder::basic::document opts_doc;
@@ -1261,14 +1244,16 @@ void collection::_drop(const client_session* session,
     }
 }
 
-void collection::drop(const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern>& wc,
-                      bsoncxx::v_noabi::document::view_or_value collection_options) {
+void collection::drop(
+    const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern>& wc,
+    bsoncxx::v_noabi::document::view_or_value collection_options) {
     return _drop(nullptr, wc, collection_options);
 }
 
-void collection::drop(const client_session& session,
-                      const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern>& wc,
-                      bsoncxx::v_noabi::document::view_or_value collection_options) {
+void collection::drop(
+    const client_session& session,
+    const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern>& wc,
+    bsoncxx::v_noabi::document::view_or_value collection_options) {
     return _drop(&session, wc, collection_options);
 }
 
@@ -1313,15 +1298,13 @@ change_stream collection::watch(const pipeline& pipe, const options::change_stre
     return _watch(nullptr, pipe, options);
 }
 
-change_stream collection::watch(const client_session& session,
-                                const pipeline& pipe,
-                                const options::change_stream& options) {
+change_stream collection::watch(
+    const client_session& session, const pipeline& pipe, const options::change_stream& options) {
     return _watch(&session, pipe, options);
 }
 
-change_stream collection::_watch(const client_session* session,
-                                 const pipeline& pipe,
-                                 const options::change_stream& options) {
+change_stream collection::_watch(
+    const client_session* session, const pipeline& pipe, const options::change_stream& options) {
     bsoncxx::v_noabi::builder::basic::document container;
     container.append(kvp("pipeline", pipe._impl->view_array()));
     scoped_bson_t pipeline_bson{container.view()};
@@ -1347,8 +1330,8 @@ search_index_view collection::search_indexes() {
     return search_index_view{_get_impl().collection_t, _get_impl().client_impl->client_t};
 }
 
-mongocxx::v_noabi::bulk_write collection::_init_insert_many(const options::insert& options,
-                                                            const client_session* session) {
+mongocxx::v_noabi::bulk_write collection::_init_insert_many(
+    const options::insert& options, const client_session* session) {
     options::bulk_write bulk_write_options;
 
     bulk_write_options.ordered(options.ordered().value_or(true));
@@ -1372,9 +1355,10 @@ mongocxx::v_noabi::bulk_write collection::_init_insert_many(const options::inser
     return create_bulk_write(bulk_write_options);
 }
 
-void collection::_insert_many_doc_handler(mongocxx::v_noabi::bulk_write& writes,
-                                          bsoncxx::v_noabi::builder::basic::array& inserted_ids,
-                                          bsoncxx::v_noabi::document::view doc) const {
+void collection::_insert_many_doc_handler(
+    mongocxx::v_noabi::bulk_write& writes,
+    bsoncxx::v_noabi::builder::basic::array& inserted_ids,
+    bsoncxx::v_noabi::document::view doc) const {
     bsoncxx::v_noabi::builder::basic::document id_doc;
 
     if (!doc["_id"]) {

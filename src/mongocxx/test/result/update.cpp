@@ -27,9 +27,10 @@ TEST_CASE("update", "[update][result]") {
     mongocxx::instance::current();
 
     bsoncxx::builder::basic::document build;
-    build.append(kvp("_id", bsoncxx::oid{}),
-                 kvp("nMatched", bsoncxx::types::b_int32{2}),
-                 kvp("nModified", bsoncxx::types::b_int32{1}));
+    build.append(
+        kvp("_id", bsoncxx::oid{}),
+        kvp("nMatched", bsoncxx::types::b_int32{2}),
+        kvp("nModified", bsoncxx::types::b_int32{1}));
 
     mongocxx::result::bulk_write b{bsoncxx::document::value(build.view())};
 
@@ -44,9 +45,10 @@ TEST_CASE("update", "[update][result]") {
 TEST_CASE("update result equals", "[update][result]") {
     mongocxx::instance::current();
 
-    auto doc = make_document(kvp("_id", bsoncxx::oid{}),
-                             kvp("nMatched", bsoncxx::types::b_int32{2}),
-                             kvp("nModified", bsoncxx::types::b_int32{1}));
+    auto doc = make_document(
+        kvp("_id", bsoncxx::oid{}),
+        kvp("nMatched", bsoncxx::types::b_int32{2}),
+        kvp("nModified", bsoncxx::types::b_int32{1}));
 
     mongocxx::result::bulk_write a{doc};
     mongocxx::result::bulk_write b{doc};
@@ -60,12 +62,14 @@ TEST_CASE("update result equals", "[update][result]") {
 TEST_CASE("update result inequals", "[update][result]") {
     mongocxx::instance::current();
 
-    mongocxx::result::bulk_write a{make_document(kvp("_id", bsoncxx::oid{}),
-                                                 kvp("nMatched", bsoncxx::types::b_int32{2}),
-                                                 kvp("nModified", bsoncxx::types::b_int32{1}))};
-    mongocxx::result::bulk_write b{make_document(kvp("_id", bsoncxx::oid{}),
-                                                 kvp("nMatched", bsoncxx::types::b_int32{3}),
-                                                 kvp("nModified", bsoncxx::types::b_int32{1}))};
+    mongocxx::result::bulk_write a{make_document(
+        kvp("_id", bsoncxx::oid{}),
+        kvp("nMatched", bsoncxx::types::b_int32{2}),
+        kvp("nModified", bsoncxx::types::b_int32{1}))};
+    mongocxx::result::bulk_write b{make_document(
+        kvp("_id", bsoncxx::oid{}),
+        kvp("nMatched", bsoncxx::types::b_int32{3}),
+        kvp("nModified", bsoncxx::types::b_int32{1}))};
 
     mongocxx::result::update update1{std::move(a)};
     mongocxx::result::update update2{std::move(b)};

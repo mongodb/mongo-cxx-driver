@@ -28,8 +28,8 @@ int BSONCXX_ABI_CDECL main(int argc, char* argv[]) {
 
 TEST_CASE("THROWS_WITH_CODE", "[bsoncxx][test]") {
     SECTION("basic") {
-        CHECK_THROWS_WITH_CODE(throw std::system_error(std::make_error_code(std::errc::invalid_argument)),
-                               std::errc::invalid_argument);
+        CHECK_THROWS_WITH_CODE(
+            throw std::system_error(std::make_error_code(std::errc::invalid_argument)), std::errc::invalid_argument);
     }
 
     // TEST_CHECK is evaluated when a `std::system_error` exception is thrown as expected and is
@@ -141,9 +141,10 @@ TEST_CASE("THROWS_WITH_CODE", "[bsoncxx][test]") {
     } else                                        \
         ((void)0)
 
-        THROWS_WITH_CODE_IMPL(TEST_CHECK,
-                              throw std::system_error(std::make_error_code(std::errc::invalid_argument)),
-                              std::make_error_code(std::errc::invalid_argument));
+        THROWS_WITH_CODE_IMPL(
+            TEST_CHECK,
+            throw std::system_error(std::make_error_code(std::errc::invalid_argument)),
+            std::make_error_code(std::errc::invalid_argument));
 
 #undef TEST_CHECK
 #undef TEST_CHECK_THROWS_AS
@@ -196,9 +197,10 @@ TEST_CASE("THROWS_WITH_CODE", "[bsoncxx][test]") {
     } else                                        \
         ((void)0)
 
-        THROWS_WITH_CODE_IMPL(TEST_CHECK,
-                              throw std::system_error(std::make_error_code(std::errc::invalid_argument)),
-                              std::errc::not_supported);
+        THROWS_WITH_CODE_IMPL(
+            TEST_CHECK,
+            throw std::system_error(std::make_error_code(std::errc::invalid_argument)),
+            std::errc::not_supported);
 
 #undef TEST_CHECK
 #undef TEST_CHECK_THROWS_AS
@@ -222,9 +224,10 @@ TEST_CASE("THROWS_WITH_CODE", "[bsoncxx][test]") {
     } else                                        \
         ((void)0)
 
-        THROWS_WITH_CODE_IMPL(TEST_CHECK,
-                              throw std::system_error(std::make_error_code(std::errc::invalid_argument)),
-                              std::make_error_condition(std::errc::invalid_argument));
+        THROWS_WITH_CODE_IMPL(
+            TEST_CHECK,
+            throw std::system_error(std::make_error_code(std::errc::invalid_argument)),
+            std::make_error_condition(std::errc::invalid_argument));
 
 #undef TEST_CHECK
 #undef TEST_CHECK_THROWS_AS

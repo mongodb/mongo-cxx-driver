@@ -27,9 +27,10 @@ TEST_CASE("replace_one", "[replace_one][result]") {
     mongocxx::instance::current();
 
     bsoncxx::builder::basic::document build;
-    build.append(kvp("_id", bsoncxx::oid{}),
-                 kvp("nMatched", bsoncxx::types::b_int32{2}),
-                 kvp("nModified", bsoncxx::types::b_int32{1}));
+    build.append(
+        kvp("_id", bsoncxx::oid{}),
+        kvp("nMatched", bsoncxx::types::b_int32{2}),
+        kvp("nModified", bsoncxx::types::b_int32{1}));
 
     mongocxx::result::bulk_write b{bsoncxx::document::value(build.view())};
 
@@ -44,9 +45,10 @@ TEST_CASE("replace_one", "[replace_one][result]") {
 TEST_CASE("replace_one equals", "[replace_one][result]") {
     mongocxx::instance::current();
 
-    auto doc = make_document(kvp("_id", bsoncxx::oid{}),
-                             kvp("nMatched", bsoncxx::types::b_int32{2}),
-                             kvp("nModified", bsoncxx::types::b_int32{1}));
+    auto doc = make_document(
+        kvp("_id", bsoncxx::oid{}),
+        kvp("nMatched", bsoncxx::types::b_int32{2}),
+        kvp("nModified", bsoncxx::types::b_int32{1}));
 
     mongocxx::result::bulk_write a{doc};
     mongocxx::result::bulk_write b{doc};
@@ -60,12 +62,14 @@ TEST_CASE("replace_one equals", "[replace_one][result]") {
 TEST_CASE("replace_one inequals", "[replace_one][result]") {
     mongocxx::instance::current();
 
-    mongocxx::result::bulk_write a{make_document(kvp("_id", bsoncxx::oid{}),
-                                                 kvp("nMatched", bsoncxx::types::b_int32{2}),
-                                                 kvp("nModified", bsoncxx::types::b_int32{1}))};
-    mongocxx::result::bulk_write b{make_document(kvp("_id", bsoncxx::oid{}),
-                                                 kvp("nMatched", bsoncxx::types::b_int32{1}),
-                                                 kvp("nModified", bsoncxx::types::b_int32{1}))};
+    mongocxx::result::bulk_write a{make_document(
+        kvp("_id", bsoncxx::oid{}),
+        kvp("nMatched", bsoncxx::types::b_int32{2}),
+        kvp("nModified", bsoncxx::types::b_int32{1}))};
+    mongocxx::result::bulk_write b{make_document(
+        kvp("_id", bsoncxx::oid{}),
+        kvp("nMatched", bsoncxx::types::b_int32{1}),
+        kvp("nModified", bsoncxx::types::b_int32{1}))};
 
     mongocxx::result::replace_one replace_one1{std::move(a)};
     mongocxx::result::replace_one replace_one2{std::move(b)};

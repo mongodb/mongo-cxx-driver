@@ -253,8 +253,9 @@ TEST_CASE("types::bson_value::value", "[bsoncxx::types::bson_value::value]") {
             value_construction_test(test_doc.view());
 
             coverting_construction_test(bin, test_doc);
-            REQUIRE(bson_value::value(b_binary{
-                        binary_sub_type::k_binary, static_cast<uint32_t>(bin.size()), bin.data()}) == test_doc);
+            REQUIRE(
+                bson_value::value(b_binary{binary_sub_type::k_binary, static_cast<uint32_t>(bin.size()), bin.data()}) ==
+                test_doc);
             REQUIRE(bson_value::value(bin.data(), bin.size(), binary_sub_type::k_binary) == test_doc);
             REQUIRE(bson_value::value(bin.data(), bin.size()) == test_doc);
 

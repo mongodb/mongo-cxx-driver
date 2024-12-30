@@ -84,9 +84,9 @@ TEST_CASE("[] can reach into nested documents", "[bsoncxx]") {
     //         "f": false,
     //     }
     // }
-    auto build_doc =
-        make_document(kvp("ints", make_document(kvp("x", 1), kvp("y", 3), kvp("more", make_document(kvp("z", 5))))),
-                      kvp("bools", make_document(kvp("t", true), kvp("f", false))));
+    auto build_doc = make_document(
+        kvp("ints", make_document(kvp("x", 1), kvp("y", 3), kvp("more", make_document(kvp("z", 5))))),
+        kvp("bools", make_document(kvp("t", true), kvp("f", false))));
 
     auto doc = build_doc.view();
 
@@ -147,9 +147,10 @@ TEST_CASE("[] can reach into mixed nested arrays and documents", "[bsoncxx]") {
     // }
     auto build_doc = make_document(
         kvp("ints",
-            make_document(kvp("x", 1),
-                          kvp("y", 3),
-                          kvp("arr", make_array(5, 7, make_document(kvp("z", 9), kvp("even_more", make_array(11))))))),
+            make_document(
+                kvp("x", 1),
+                kvp("y", 3),
+                kvp("arr", make_array(5, 7, make_document(kvp("z", 9), kvp("even_more", make_array(11))))))),
         kvp("bools", make_document(kvp("t", true), kvp("f", false), kvp("arr", make_array(false, true)))));
 
     auto doc = build_doc.view();
