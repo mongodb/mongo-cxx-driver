@@ -149,7 +149,7 @@ view::view(std::uint8_t const* data, std::size_t length) : _data(data), _length(
 
 namespace {
 uint8_t const k_default_view[5] = {5, 0, 0, 0, 0};
-}
+} // namespace
 
 view::view() : _data(k_default_view), _length(sizeof(k_default_view)) {}
 
