@@ -40,7 +40,9 @@ cursor search_index_view::list(bsoncxx::v_noabi::string::view_or_value name, con
 }
 
 cursor search_index_view::list(
-    const client_session& session, bsoncxx::v_noabi::string::view_or_value name, const options::aggregate& options) {
+    const client_session& session,
+    bsoncxx::v_noabi::string::view_or_value name,
+    const options::aggregate& options) {
     return _get_impl().list(&session, name, options);
 }
 
@@ -49,12 +51,14 @@ std::string search_index_view::create_one(bsoncxx::v_noabi::document::view_or_va
 }
 
 std::string search_index_view::create_one(
-    const client_session& session, bsoncxx::v_noabi::document::view_or_value definition) {
+    const client_session& session,
+    bsoncxx::v_noabi::document::view_or_value definition) {
     return create_one(session, search_index_model(definition));
 }
 
 std::string search_index_view::create_one(
-    bsoncxx::v_noabi::string::view_or_value name, bsoncxx::v_noabi::document::view_or_value definition) {
+    bsoncxx::v_noabi::string::view_or_value name,
+    bsoncxx::v_noabi::document::view_or_value definition) {
     return create_one(search_index_model(name, definition));
 }
 
@@ -79,7 +83,8 @@ std::vector<std::string> search_index_view::create_many(const std::vector<search
 }
 
 std::vector<std::string> search_index_view::create_many(
-    const client_session& session, const std::vector<search_index_model>& models) {
+    const client_session& session,
+    const std::vector<search_index_model>& models) {
     auto response = _get_impl().create_many(&session, models);
     return _create_many_helper(response["indexesCreated"].get_array().value);
 }
@@ -102,7 +107,8 @@ void search_index_view::drop_one(const client_session& session, bsoncxx::v_noabi
 }
 
 void search_index_view::update_one(
-    bsoncxx::v_noabi::string::view_or_value name, bsoncxx::v_noabi::document::view_or_value definition) {
+    bsoncxx::v_noabi::string::view_or_value name,
+    bsoncxx::v_noabi::document::view_or_value definition) {
     _get_impl().update_one(nullptr, name, definition);
 }
 

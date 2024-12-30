@@ -65,8 +65,8 @@ class index_view::impl {
         return libmongoc::collection_find_indexes_with_opts(_coll, nullptr);
     }
 
-    bsoncxx::v_noabi::stdx::optional<std::string> create_one(
-        const client_session* session, const index_model& model, const options::index_view& options) {
+    bsoncxx::v_noabi::stdx::optional<std::string>
+    create_one(const client_session* session, const index_model& model, const options::index_view& options) {
         const auto result = create_many(session, std::vector<index_model>{model}, options);
         auto result_view = result.view();
 
@@ -103,7 +103,9 @@ class index_view::impl {
     }
 
     bsoncxx::v_noabi::document::value create_many(
-        const client_session* session, const std::vector<index_model>& indexes, const options::index_view& options) {
+        const client_session* session,
+        const std::vector<index_model>& indexes,
+        const options::index_view& options) {
         using namespace bsoncxx;
         using builder::basic::concatenate;
 
@@ -174,7 +176,9 @@ class index_view::impl {
     }
 
     void drop_one(
-        const client_session* session, bsoncxx::v_noabi::stdx::string_view name, const options::index_view& options) {
+        const client_session* session,
+        bsoncxx::v_noabi::stdx::string_view name,
+        const options::index_view& options) {
         if (name == bsoncxx::v_noabi::stdx::string_view{"*"}) {
             throw logic_error(error_code::k_invalid_parameter);
         }

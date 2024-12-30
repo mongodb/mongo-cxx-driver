@@ -150,7 +150,10 @@ void validate_gridfs_file(
 //
 // Returns a vector of the bytes stored in the GridFS chunks.
 std::vector<std::uint8_t> manual_gridfs_initialize(
-    database db, std::int64_t length, std::int32_t chunk_size, bsoncxx::types::bson_value::view id) {
+    database db,
+    std::int64_t length,
+    std::int32_t chunk_size,
+    bsoncxx::types::bson_value::view id) {
     std::vector<std::uint8_t> bytes;
 
     // Populate the vector with arbitrary values.

@@ -132,7 +132,8 @@ mongocxx::v_noabi::write_concern uri::write_concern() const {
 }
 
 static bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::stdx::string_view> _string_option(
-    mongoc_uri_t* uri, std::string opt_name) {
+    mongoc_uri_t* uri,
+    std::string opt_name) {
     const char* value;
 
     value = libmongoc::uri_get_option_as_utf8(uri, opt_name.c_str(), nullptr);
@@ -175,7 +176,8 @@ bsoncxx::v_noabi::stdx::optional<std::int32_t> uri::srv_max_hosts() const {
 }
 
 static bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view> _credential_document_option(
-    mongoc_uri_t* uri, std::string opt_name) {
+    mongoc_uri_t* uri,
+    std::string opt_name) {
     bson_iter_t iter;
     const uint8_t* data;
     uint32_t len;

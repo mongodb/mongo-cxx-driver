@@ -69,8 +69,8 @@ stdx::optional<document::view> validate(const std::uint8_t* data, std::size_t le
     return validate(data, length, vtor);
 }
 
-stdx::optional<document::view> validate(
-    const std::uint8_t* data, std::size_t length, const validator& validator, std::size_t* invalid_offset) {
+stdx::optional<document::view>
+validate(const std::uint8_t* data, std::size_t length, const validator& validator, std::size_t* invalid_offset) {
     ::bson_validate_flags_t flags = BSON_VALIDATE_NONE;
 
     const auto flip_if = [&flags](bool cond, ::bson_validate_flags_t flag) {

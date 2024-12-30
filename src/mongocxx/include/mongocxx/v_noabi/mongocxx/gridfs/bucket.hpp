@@ -509,7 +509,10 @@ class bucket {
     ///
     MONGOCXX_ABI_EXPORT_CDECL(void)
     download_to_stream(
-        bsoncxx::v_noabi::types::bson_value::view id, std::ostream* destination, std::size_t start, std::size_t end);
+        bsoncxx::v_noabi::types::bson_value::view id,
+        std::ostream* destination,
+        std::size_t start,
+        std::size_t end);
 
     ///
     /// Downloads the contents of a stored GridFS file from the bucket and writes it to a stream.
@@ -536,7 +539,9 @@ class bucket {
     ///
     MONGOCXX_ABI_EXPORT_CDECL(void)
     download_to_stream(
-        const client_session& session, bsoncxx::v_noabi::types::bson_value::view id, std::ostream* destination);
+        const client_session& session,
+        bsoncxx::v_noabi::types::bson_value::view id,
+        std::ostream* destination);
 
     ///
     /// @copydoc download_to_stream(const client_session& session, bsoncxx::v_noabi::types::bson_value::view id, std::ostream* destination)

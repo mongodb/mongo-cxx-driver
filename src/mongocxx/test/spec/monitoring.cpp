@@ -36,7 +36,8 @@ using namespace mongocxx;
 using bsoncxx::to_json;
 
 static void remove_ignored_command_monitoring_events(
-    apm_checker::event_vector& events, const std::vector<std::string>& ignore) {
+    apm_checker::event_vector& events,
+    const std::vector<std::string>& ignore) {
     auto is_ignored = [&](bsoncxx::document::value v) {
         return std::any_of(std::begin(ignore), std::end(ignore), [&](bsoncxx::stdx::string_view key) {
             return v.view()["commandStartedEvent"]["command"][key] || v.view()["commandFailedEvent"]["command"][key] ||
@@ -91,7 +92,9 @@ void apm_checker::compare_unified(bsoncxx::array::view expectations, entity::map
 }
 
 void apm_checker::compare(
-    bsoncxx::array::view expectations, bool allow_extra, const test_util::match_visitor& match_visitor) {
+    bsoncxx::array::view expectations,
+    bool allow_extra,
+    const test_util::match_visitor& match_visitor) {
     auto is_ignored = [&](bsoncxx::document::value v) {
         const auto view = v.view();
 

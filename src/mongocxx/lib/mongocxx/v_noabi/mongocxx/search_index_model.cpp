@@ -13,7 +13,8 @@ namespace v_noabi {
 search_index_model::search_index_model(bsoncxx::v_noabi::document::view_or_value definition)
     : _impl{bsoncxx::make_unique<impl>(definition)} {}
 search_index_model::search_index_model(
-    bsoncxx::v_noabi::string::view_or_value name, bsoncxx::v_noabi::document::view_or_value definition)
+    bsoncxx::v_noabi::string::view_or_value name,
+    bsoncxx::v_noabi::document::view_or_value definition)
     : _impl{bsoncxx::make_unique<impl>(name, definition)} {}
 
 search_index_model::search_index_model(search_index_model&&) noexcept = default;

@@ -180,7 +180,8 @@ bucket& bucket::operator=(const bucket& b) {
 }
 
 uploader bucket::open_upload_stream(
-    bsoncxx::v_noabi::stdx::string_view filename, const options::gridfs::upload& options) {
+    bsoncxx::v_noabi::stdx::string_view filename,
+    const options::gridfs::upload& options) {
     auto id = bsoncxx::v_noabi::types::bson_value::view{bsoncxx::v_noabi::types::b_oid{}};
     return open_upload_stream_with_id(id, filename, options);
 }
@@ -231,7 +232,9 @@ uploader bucket::open_upload_stream_with_id(
 }
 
 result::gridfs::upload bucket::upload_from_stream(
-    bsoncxx::v_noabi::stdx::string_view filename, std::istream* source, const options::gridfs::upload& options) {
+    bsoncxx::v_noabi::stdx::string_view filename,
+    std::istream* source,
+    const options::gridfs::upload& options) {
     auto id = bsoncxx::v_noabi::types::bson_value::view{bsoncxx::v_noabi::types::b_oid{}};
     upload_from_stream_with_id(id, filename, source, options);
     return id;
@@ -432,12 +435,17 @@ void bucket::download_to_stream(bsoncxx::v_noabi::types::bson_value::view id, st
 }
 
 void bucket::download_to_stream(
-    bsoncxx::v_noabi::types::bson_value::view id, std::ostream* destination, std::size_t start, std::size_t end) {
+    bsoncxx::v_noabi::types::bson_value::view id,
+    std::ostream* destination,
+    std::size_t start,
+    std::size_t end) {
     _download_to_stream(nullptr, id, destination, start, end);
 }
 
 void bucket::download_to_stream(
-    const client_session& session, bsoncxx::v_noabi::types::bson_value::view id, std::ostream* destination) {
+    const client_session& session,
+    bsoncxx::v_noabi::types::bson_value::view id,
+    std::ostream* destination) {
     _download_to_stream(&session, id, destination, bsoncxx::v_noabi::stdx::nullopt, bsoncxx::v_noabi::stdx::nullopt);
 }
 
@@ -488,7 +496,9 @@ cursor bucket::find(bsoncxx::v_noabi::document::view_or_value filter, const opti
 }
 
 cursor bucket::find(
-    const client_session& session, bsoncxx::v_noabi::document::view_or_value filter, const options::find& options) {
+    const client_session& session,
+    bsoncxx::v_noabi::document::view_or_value filter,
+    const options::find& options) {
     return _get_impl().files.find(session, filter, options);
 }
 

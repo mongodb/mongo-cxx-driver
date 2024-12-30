@@ -59,7 +59,9 @@ void configure_fail_point(const client& client, document::view test);
 ///
 void disable_fail_point(const client& client, bsoncxx::stdx::string_view failpoint = "failCommand");
 void disable_fail_point(
-    std::string uri_string, options::client client_opts, bsoncxx::stdx::string_view failpoint = "failCommand");
+    std::string uri_string,
+    options::client client_opts,
+    bsoncxx::stdx::string_view failpoint = "failCommand");
 
 ///
 /// Drops the given collection, then recreates it using the jsonSchema

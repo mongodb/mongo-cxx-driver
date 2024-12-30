@@ -86,10 +86,12 @@ std::vector<std::int32_t> parse_version(std::string version) {
 }
 
 bsoncxx::document::value transform_document_recursive(
-    bsoncxx::document::view view, const xformer_t& fcn, bsoncxx::builder::basic::array* context);
+    bsoncxx::document::view view,
+    const xformer_t& fcn,
+    bsoncxx::builder::basic::array* context);
 
-bsoncxx::array::value transform_array(
-    bsoncxx::array::view view, const xformer_t& fcn, bsoncxx::builder::basic::array* context) {
+bsoncxx::array::value
+transform_array(bsoncxx::array::view view, const xformer_t& fcn, bsoncxx::builder::basic::array* context) {
     bsoncxx::builder::basic::array builder;
 
     for (auto&& element : view) {
@@ -143,7 +145,9 @@ bsoncxx::array::value transform_array(
 }
 
 bsoncxx::document::value transform_document_recursive(
-    bsoncxx::document::view view, const xformer_t& fcn, bsoncxx::builder::basic::array* context) {
+    bsoncxx::document::view view,
+    const xformer_t& fcn,
+    bsoncxx::builder::basic::array* context) {
     bsoncxx::builder::basic::document builder;
 
     for (auto&& element : view) {

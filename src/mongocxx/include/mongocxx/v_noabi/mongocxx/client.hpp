@@ -344,8 +344,8 @@ class client {
     /// - https://www.mongodb.com/docs/manual/reference/command/listDatabases
     ///
     MONGOCXX_ABI_EXPORT_CDECL(std::vector<std::string>)
-    list_database_names(
-        const client_session& session, const bsoncxx::v_noabi::document::view_or_value filter = {}) const;
+    list_database_names(const client_session& session, const bsoncxx::v_noabi::document::view_or_value filter = {})
+        const;
 
     ///
     /// Create a client session for a sequence of operations.

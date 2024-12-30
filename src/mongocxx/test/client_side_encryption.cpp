@@ -1476,7 +1476,8 @@ TEST_CASE("Custom endpoint", "[client_side_encryption]") {
 }
 
 void bypass_mongocrypt_via_shared_library(
-    const std::string& shared_lib_path, bsoncxx::document::view_or_value external_schema) {
+    const std::string& shared_lib_path,
+    bsoncxx::document::view_or_value external_schema) {
     // Via loading shared library
     // The following tests that loading crypt_shared bypasses spawning mongocryptd.
     //
@@ -1784,7 +1785,9 @@ TEST_CASE("KMS TLS wrong host certificate", "[client_side_encryption]") {
 }
 
 bsoncxx::document::value make_kms_providers_with_custom_endpoints(
-    bsoncxx::stdx::string_view azure, bsoncxx::stdx::string_view gcp, bsoncxx::stdx::string_view kmip) {
+    bsoncxx::stdx::string_view azure,
+    bsoncxx::stdx::string_view gcp,
+    bsoncxx::stdx::string_view kmip) {
     bsoncxx::builder::basic::document kms_doc;
 
     kms_doc.append(kvp("aws", [&](sub_document subdoc) {
@@ -2026,7 +2029,8 @@ TEST_CASE("KMS TLS Options Tests", "[client_side_encryption][!mayfail]") {
 
 // https://github.com/mongodb/specifications/blob/master/source/client-side-encryption/tests/README.md#test-setup
 std::tuple<mongocxx::client_encryption, mongocxx::client> _setup_explicit_encryption(
-    bsoncxx::document::view key1_document, mongocxx::client* key_vault_client) {
+    bsoncxx::document::view key1_document,
+    mongocxx::client* key_vault_client) {
     mongocxx::client client{
         uri{},
         test_util::add_test_server_api(),
@@ -2898,7 +2902,8 @@ struct range_explicit_encryption_objects {
 };
 
 range_explicit_encryption_objects range_explicit_encryption_setup(
-    const std::string& type_str, RangeFieldType field_type) {
+    const std::string& type_str,
+    RangeFieldType field_type) {
     range_explicit_encryption_objects res;
 
     // Load the file for the specific data type being tested `range-encryptedFields-<type>.json`.

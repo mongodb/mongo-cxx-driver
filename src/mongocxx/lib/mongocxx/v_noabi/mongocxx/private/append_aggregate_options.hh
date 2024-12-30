@@ -10,7 +10,8 @@ namespace mongocxx {
 namespace v_noabi {
 
 inline void append_aggregate_options(
-    bsoncxx::v_noabi::builder::basic::document& builder, const options::aggregate& options) {
+    bsoncxx::v_noabi::builder::basic::document& builder,
+    const options::aggregate& options) {
     using bsoncxx::v_noabi::builder::basic::kvp;
 
     if (const auto& allow_disk_use = options.allow_disk_use()) {

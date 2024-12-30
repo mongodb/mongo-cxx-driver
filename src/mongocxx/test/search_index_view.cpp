@@ -39,7 +39,10 @@ bool does_search_index_exist_on_cursor(cursor& c, const search_index_model& mode
 
 // Almost identical to does_search_index_exist_on_cursor but checks type field.
 bool does_search_index_exist_on_cursor_with_type(
-    cursor& c, const search_index_model& model, const char* type, bool with_status) {
+    cursor& c,
+    const search_index_model& model,
+    const char* type,
+    bool with_status) {
     for (const auto& index : c) {
         // look for a queryable index with a matching name
         if (index["name"].get_string().value == model.name().value() && index["queryable"].get_bool().value) {

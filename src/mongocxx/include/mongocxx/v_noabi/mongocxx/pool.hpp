@@ -62,7 +62,8 @@ class pool {
     /// or
     ///  provided client options).
     explicit MONGOCXX_ABI_EXPORT_CDECL() pool(
-        const uri& mongodb_uri = mongocxx::v_noabi::uri(), const options::pool& options = options::pool());
+        const uri& mongodb_uri = mongocxx::v_noabi::uri(),
+        const options::pool& options = options::pool());
 
     ///
     /// Destroys a pool.

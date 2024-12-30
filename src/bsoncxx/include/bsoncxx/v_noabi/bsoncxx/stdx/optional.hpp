@@ -525,8 +525,8 @@ struct optional_destruct_helper<true /* Trivial */> {
 // Optional's ADL-only operators are defined here.
 struct optional_operators_base {
     template <typename T, typename U>
-    friend bsoncxx_cxx14_constexpr auto tag_invoke(
-        bsoncxx::detail::equal_to, const optional<T>& left, const optional<U>& right) noexcept
+    friend bsoncxx_cxx14_constexpr auto
+    tag_invoke(bsoncxx::detail::equal_to, const optional<T>& left, const optional<U>& right) noexcept
         -> bsoncxx::detail::requires_t<bool, bsoncxx::detail::is_equality_comparable<T, U>> {
         if (left.has_value() != right.has_value()) {
             return false;
@@ -553,8 +553,8 @@ struct optional_operators_base {
     }
 
     template <typename T, typename U>
-    bsoncxx_cxx14_constexpr friend auto tag_invoke(
-        bsoncxx::detail::compare_three_way compare, const optional<T>& left, const optional<U>& right)
+    bsoncxx_cxx14_constexpr friend auto
+    tag_invoke(bsoncxx::detail::compare_three_way compare, const optional<T>& left, const optional<U>& right)
         -> bsoncxx::detail::requires_t<
             bsoncxx::detail::strong_ordering,
             bsoncxx::detail::is_totally_ordered_with<T, U>> {
@@ -577,8 +577,8 @@ struct optional_operators_base {
     }
 
     template <typename T, typename U>
-    bsoncxx_cxx14_constexpr friend auto tag_invoke(
-        bsoncxx::detail::compare_three_way compare, const optional<T>& left, const U& right)
+    bsoncxx_cxx14_constexpr friend auto
+    tag_invoke(bsoncxx::detail::compare_three_way compare, const optional<T>& left, const U& right)
         -> bsoncxx::detail::requires_t<
             bsoncxx::detail::strong_ordering,
             not_an_optional<U>,
@@ -591,8 +591,8 @@ struct optional_operators_base {
     }
 
     template <typename T>
-    constexpr friend bsoncxx::detail::strong_ordering tag_invoke(
-        bsoncxx::detail::compare_three_way compare, const optional<T>& left, nullopt_t) {
+    constexpr friend bsoncxx::detail::strong_ordering
+    tag_invoke(bsoncxx::detail::compare_three_way compare, const optional<T>& left, nullopt_t) {
         return compare(left.has_value(), false);
     }
 };

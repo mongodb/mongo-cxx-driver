@@ -29,7 +29,9 @@ namespace v_noabi {
 operation_exception::~operation_exception() = default;
 
 operation_exception::operation_exception(
-    std::error_code ec, bsoncxx::v_noabi::document::value&& raw_server_error, std::string what_arg)
+    std::error_code ec,
+    bsoncxx::v_noabi::document::value&& raw_server_error,
+    std::string what_arg)
     : exception(ec, what_arg), _raw_server_error{std::move(raw_server_error)} {}
 
 const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::value>& operation_exception::raw_server_error()

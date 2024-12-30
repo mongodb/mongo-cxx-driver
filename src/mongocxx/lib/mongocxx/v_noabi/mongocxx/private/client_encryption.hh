@@ -76,7 +76,8 @@ class client_encryption::impl {
     }
 
     bsoncxx::v_noabi::types::bson_value::value create_data_key(
-        std::string kms_provider, const options::data_key& opts) {
+        std::string kms_provider,
+        const options::data_key& opts) {
         using opts_type = mongoc_client_encryption_datakey_opts_t;
 
         struct opts_deleter {
@@ -101,7 +102,8 @@ class client_encryption::impl {
     }
 
     bsoncxx::v_noabi::types::bson_value::value encrypt(
-        bsoncxx::v_noabi::types::bson_value::view value, const options::encrypt& opts) {
+        bsoncxx::v_noabi::types::bson_value::view value,
+        const options::encrypt& opts) {
         const auto encrypt_opts =
             encrypt_opts_ptr(static_cast<mongoc_client_encryption_encrypt_opts_t*>(opts.convert()));
 
@@ -121,7 +123,8 @@ class client_encryption::impl {
     }
 
     bsoncxx::v_noabi::document::value encrypt_expression(
-        bsoncxx::v_noabi::document::view_or_value expr, const options::encrypt& opts) {
+        bsoncxx::v_noabi::document::view_or_value expr,
+        const options::encrypt& opts) {
         const auto encrypt_opts =
             encrypt_opts_ptr(static_cast<mongoc_client_encryption_encrypt_opts_t*>(opts.convert()));
 
@@ -156,7 +159,8 @@ class client_encryption::impl {
     }
 
     result::rewrap_many_datakey rewrap_many_datakey(
-        bsoncxx::v_noabi::document::view_or_value filter, const options::rewrap_many_datakey& opts) {
+        bsoncxx::v_noabi::document::view_or_value filter,
+        const options::rewrap_many_datakey& opts) {
         using result_type = mongoc_client_encryption_rewrap_many_datakey_result_t;
 
         struct result_deleter {
@@ -255,7 +259,8 @@ class client_encryption::impl {
     }
 
     bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::value> add_key_alt_name(
-        bsoncxx::v_noabi::types::bson_value::view_or_value id, bsoncxx::v_noabi::string::view_or_value key_alt_name) {
+        bsoncxx::v_noabi::types::bson_value::view_or_value id,
+        bsoncxx::v_noabi::string::view_or_value key_alt_name) {
         scoped_bson_t key_doc;
         bson_error_t error;
 
@@ -289,7 +294,8 @@ class client_encryption::impl {
     }
 
     bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::value> remove_key_alt_name(
-        bsoncxx::v_noabi::types::bson_value::view_or_value id, bsoncxx::v_noabi::string::view_or_value key_alt_name) {
+        bsoncxx::v_noabi::types::bson_value::view_or_value id,
+        bsoncxx::v_noabi::string::view_or_value key_alt_name) {
         scoped_bson_t key_doc;
         bson_error_t error;
 

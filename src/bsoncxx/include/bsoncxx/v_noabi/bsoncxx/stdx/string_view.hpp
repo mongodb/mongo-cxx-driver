@@ -209,8 +209,8 @@ class basic_string_view : bsoncxx::detail::equality_operators, bsoncxx::detail::
         return compare(pos1, count1, basic_string_view(cstr));
     }
 
-    constexpr int compare(
-        size_type pos1, size_type count1, basic_string_view other, size_type pos2, size_type count2) const {
+    constexpr int compare(size_type pos1, size_type count1, basic_string_view other, size_type pos2, size_type count2)
+        const {
         return substr(pos1, count1).compare(other.substr(pos2, count2));
     }
 
@@ -306,14 +306,14 @@ class basic_string_view : bsoncxx::detail::equality_operators, bsoncxx::detail::
     }
 
     // Implementation of equality comparison.
-    constexpr friend bool tag_invoke(
-        bsoncxx::detail::equal_to, basic_string_view left, basic_string_view right) noexcept {
+    constexpr friend bool
+    tag_invoke(bsoncxx::detail::equal_to, basic_string_view left, basic_string_view right) noexcept {
         return left.size() == right.size() && left.compare(right) == 0;
     }
 
     // Implementation of a three-way-comparison.
-    constexpr friend bsoncxx::detail::strong_ordering tag_invoke(
-        bsoncxx::detail::compare_three_way cmp, basic_string_view left, basic_string_view right) noexcept {
+    constexpr friend bsoncxx::detail::strong_ordering
+    tag_invoke(bsoncxx::detail::compare_three_way cmp, basic_string_view left, basic_string_view right) noexcept {
         return cmp(left.compare(right), 0);
     }
 

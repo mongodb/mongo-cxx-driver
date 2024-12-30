@@ -247,7 +247,8 @@ class client_encryption {
     ///
     MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::value>)
     add_key_alt_name(
-        bsoncxx::v_noabi::types::bson_value::view_or_value id, bsoncxx::v_noabi::string::view_or_value key_alt_name);
+        bsoncxx::v_noabi::types::bson_value::view_or_value id,
+        bsoncxx::v_noabi::string::view_or_value key_alt_name);
 
     ///
     /// Removes a keyAltName from the keyAltNames array of the key document in
@@ -266,7 +267,8 @@ class client_encryption {
     ///
     MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::value>)
     remove_key_alt_name(
-        bsoncxx::v_noabi::types::bson_value::view_or_value id, bsoncxx::v_noabi::string::view_or_value key_alt_name);
+        bsoncxx::v_noabi::types::bson_value::view_or_value id,
+        bsoncxx::v_noabi::string::view_or_value key_alt_name);
 
     ///
     /// Get the key document from the key vault collection with the provided name.

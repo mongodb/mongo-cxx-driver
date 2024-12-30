@@ -215,8 +215,8 @@ cursor client::list_databases(const bsoncxx::v_noabi::document::view_or_value op
     return libmongoc::client_find_databases_with_opts(_get_impl().client_t, opts_bson.bson());
 }
 
-cursor client::list_databases(
-    const client_session& session, const bsoncxx::v_noabi::document::view_or_value opts) const {
+cursor client::list_databases(const client_session& session, const bsoncxx::v_noabi::document::view_or_value opts)
+    const {
     bsoncxx::v_noabi::builder::basic::document options_doc;
     options_doc.append(bsoncxx::v_noabi::builder::concatenate_doc{session._get_impl().to_document()});
     options_doc.append(bsoncxx::v_noabi::builder::concatenate_doc{opts});
@@ -248,7 +248,8 @@ std::vector<std::string> client::list_database_names(bsoncxx::v_noabi::document:
 }
 
 std::vector<std::string> client::list_database_names(
-    const client_session& session, const bsoncxx::v_noabi::document::view_or_value filter) const {
+    const client_session& session,
+    const bsoncxx::v_noabi::document::view_or_value filter) const {
     bsoncxx::v_noabi::builder::basic::document options_builder;
 
     options_builder.append(bsoncxx::v_noabi::builder::concatenate_doc{session._get_impl().to_document()});
@@ -292,13 +293,13 @@ change_stream client::watch(const pipeline& pipe, const options::change_stream& 
     return _watch(nullptr, pipe, options);
 }
 
-change_stream client::watch(
-    const client_session& session, const pipeline& pipe, const options::change_stream& options) {
+change_stream
+client::watch(const client_session& session, const pipeline& pipe, const options::change_stream& options) {
     return _watch(&session, pipe, options);
 }
 
-change_stream client::_watch(
-    const client_session* session, const pipeline& pipe, const options::change_stream& options) {
+change_stream
+client::_watch(const client_session* session, const pipeline& pipe, const options::change_stream& options) {
     bsoncxx::v_noabi::builder::basic::document container;
     container.append(bsoncxx::v_noabi::builder::basic::kvp("pipeline", pipe._impl->view_array()));
     scoped_bson_t pipeline_bson{container.view()};

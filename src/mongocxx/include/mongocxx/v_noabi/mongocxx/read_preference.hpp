@@ -135,7 +135,8 @@ class read_preference {
     /// @deprecated The tags() method should be used instead.
     ///
     MONGOCXX_DEPRECATED MONGOCXX_ABI_EXPORT_CDECL() read_preference(
-        read_mode mode, bsoncxx::v_noabi::document::view_or_value tags);
+        read_mode mode,
+        bsoncxx::v_noabi::document::view_or_value tags);
 
     MONGOCXX_ABI_EXPORT_CDECL()
     read_preference(read_mode mode, bsoncxx::v_noabi::document::view_or_value tags, deprecated_tag);

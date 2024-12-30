@@ -843,7 +843,9 @@ void assert_result(const array::element& ops, document::view actual_result, bool
 }
 
 void assert_error(
-    const mongocxx::operation_exception& exception, const array::element& expected, document::view actual) {
+    const mongocxx::operation_exception& exception,
+    const array::element& expected,
+    document::view actual) {
     const std::string server_error_msg =
         exception.raw_server_error() ? to_json(*exception.raw_server_error()) : "no server error";
 
@@ -1092,7 +1094,9 @@ struct fail_point_guard_type {
 };
 
 void disable_targeted_fail_point(
-    bsoncxx::stdx::string_view uri, std::uint32_t server_id, bsoncxx::stdx::string_view fail_point) {
+    bsoncxx::stdx::string_view uri,
+    std::uint32_t server_id,
+    bsoncxx::stdx::string_view fail_point) {
     const auto command_owner = make_document(kvp("configureFailPoint", fail_point), kvp("mode", "off"));
     const auto command = command_owner.view();
 
@@ -1302,7 +1306,8 @@ void run_tests_in_file(const std::string& test_path) {
 // as a directory and run all the tests contained in the magic "test_files.txt"
 // file:
 void run_unified_format_tests_in_env_dir(
-    const std::string& env_path, const std::set<bsoncxx::stdx::string_view>& unsupported_tests = {}) {
+    const std::string& env_path,
+    const std::set<bsoncxx::stdx::string_view>& unsupported_tests = {}) {
     const char* p = std::getenv(env_path.c_str());
 
     if (nullptr == p)

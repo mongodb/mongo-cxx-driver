@@ -295,7 +295,10 @@ struct targeted_fail_point_guard_type {
 };
 
 void set_up_collection(
-    const client& client, document::view test, string_view database_name, string_view collection_name) {
+    const client& client,
+    document::view test,
+    string_view database_name,
+    string_view collection_name) {
     write_concern wc_majority;
     wc_majority.acknowledge_level(write_concern::level::k_majority);
 

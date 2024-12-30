@@ -542,7 +542,8 @@ class database {
     cursor _aggregate(const client_session* session, const pipeline& pipeline, const options::aggregate& options);
 
     bsoncxx::v_noabi::document::value _run_command(
-        const client_session* session, bsoncxx::v_noabi::document::view_or_value command);
+        const client_session* session,
+        bsoncxx::v_noabi::document::view_or_value command);
 
     mongocxx::v_noabi::collection _create_collection(
         const client_session* session,
@@ -553,7 +554,8 @@ class database {
     cursor _list_collections(const client_session* session, bsoncxx::v_noabi::document::view_or_value filter);
 
     std::vector<std::string> _list_collection_names(
-        const client_session* session, bsoncxx::v_noabi::document::view_or_value filter);
+        const client_session* session,
+        bsoncxx::v_noabi::document::view_or_value filter);
 
     void _drop(
         const client_session* session,

@@ -1382,7 +1382,11 @@ document::value operation_runner::_run_drop_collection(document::view operation)
 
 operation_runner::operation_runner(collection* coll) : operation_runner(nullptr, coll) {}
 operation_runner::operation_runner(
-    database* db, collection* coll, client_session* session0, client_session* session1, client* client)
+    database* db,
+    collection* coll,
+    client_session* session0,
+    client_session* session1,
+    client* client)
     : _coll(coll), _db(db), _session0(session0), _session1(session1), _client(client) {}
 
 document::value operation_runner::run(document::view operation) {

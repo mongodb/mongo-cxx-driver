@@ -63,7 +63,9 @@ class operation_exception : public exception {
     ///   An optional message to be returned by `what`.
     ///
     operation_exception(
-        std::error_code ec, bsoncxx::v_noabi::document::value&& raw_server_error, std::string what_arg = "");
+        std::error_code ec,
+        bsoncxx::v_noabi::document::value&& raw_server_error,
+        std::string what_arg = "");
 
     ///
     /// The optional raw bson error document from the server.

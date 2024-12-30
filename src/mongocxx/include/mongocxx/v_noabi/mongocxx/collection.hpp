@@ -299,7 +299,8 @@ class collection {
     ///
     template <typename container_type>
     bsoncxx::v_noabi::stdx::optional<result::bulk_write> bulk_write(
-        const container_type& writes, const options::bulk_write& options = options::bulk_write()) {
+        const container_type& writes,
+        const options::bulk_write& options = options::bulk_write()) {
         return bulk_write(writes.begin(), writes.end(), options);
     }
 
@@ -1145,7 +1146,8 @@ class collection {
     ///
     template <typename container_type>
     bsoncxx::v_noabi::stdx::optional<result::insert_many> insert_many(
-        const container_type& container, const options::insert& options = options::insert()) {
+        const container_type& container,
+        const options::insert& options = options::insert()) {
         return insert_many(container.begin(), container.end(), options);
     }
 
@@ -1879,10 +1881,14 @@ class collection {
     cursor _aggregate(const client_session* session, const pipeline& pipeline, const options::aggregate& options);
 
     std::int64_t _count(
-        const client_session* session, bsoncxx::v_noabi::document::view_or_value filter, const options::count& options);
+        const client_session* session,
+        bsoncxx::v_noabi::document::view_or_value filter,
+        const options::count& options);
 
     std::int64_t _count_documents(
-        const client_session* session, bsoncxx::v_noabi::document::view_or_value filter, const options::count& options);
+        const client_session* session,
+        bsoncxx::v_noabi::document::view_or_value filter,
+        const options::count& options);
 
     bsoncxx::v_noabi::document::value _create_index(
         const client_session* session,
@@ -1912,10 +1918,14 @@ class collection {
         bsoncxx::v_noabi::document::view_or_value collection_options);
 
     cursor _find(
-        const client_session* session, bsoncxx::v_noabi::document::view_or_value filter, const options::find& options);
+        const client_session* session,
+        bsoncxx::v_noabi::document::view_or_value filter,
+        const options::find& options);
 
     bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::value> _find_one(
-        const client_session* session, bsoncxx::v_noabi::document::view_or_value filter, const options::find& options);
+        const client_session* session,
+        bsoncxx::v_noabi::document::view_or_value filter,
+        const options::find& options);
 
     bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::value> _find_one_and_delete(
         const client_session* session,
@@ -1946,7 +1956,9 @@ class collection {
         const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern>& write_concern);
 
     bsoncxx::v_noabi::stdx::optional<result::replace_one> _replace_one(
-        const client_session* session, const options::bulk_write& bulk_opts, const model::replace_one& replace_op);
+        const client_session* session,
+        const options::bulk_write& bulk_opts,
+        const model::replace_one& replace_op);
 
     bsoncxx::v_noabi::stdx::optional<result::replace_one> _replace_one(
         const client_session* session,

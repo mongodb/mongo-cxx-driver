@@ -174,7 +174,10 @@ bool is_special(T doc) {
 }
 
 void matches_document(
-    types::bson_value::view actual, types::bson_value::view expected, entity::map& map, bool is_root) {
+    types::bson_value::view actual,
+    types::bson_value::view expected,
+    entity::map& map,
+    bool is_root) {
     if (is_special(expected)) {
         special_operator(actual, expected.get_document(), map, is_root);
         return;

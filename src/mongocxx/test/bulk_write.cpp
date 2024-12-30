@@ -104,7 +104,11 @@ class update_functor {
         : _called{called}, _filter{filter}, _update{update} {}
 
     void operator()(
-        mongoc_bulk_operation_t*, const bson_t* filter, const bson_t* update, const bson_t* options, bson_error_t*) {
+        mongoc_bulk_operation_t*,
+        const bson_t* filter,
+        const bson_t* update,
+        const bson_t* options,
+        bson_error_t*) {
         *_called = true;
         REQUIRE(bson_get_data(filter) == _filter.data());
         REQUIRE(bson_get_data(update) == _update.data());

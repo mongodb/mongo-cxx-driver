@@ -66,7 +66,10 @@ validate(const std::uint8_t* data, std::size_t length);
 ///
 BSONCXX_ABI_EXPORT_CDECL(stdx::optional<document::view>)
 validate(
-    const std::uint8_t* data, std::size_t length, const validator& validator, std::size_t* invalid_offset = nullptr);
+    const std::uint8_t* data,
+    std::size_t length,
+    const validator& validator,
+    std::size_t* invalid_offset = nullptr);
 
 ///
 /// A validator is used to enable or disable specific checks that can be

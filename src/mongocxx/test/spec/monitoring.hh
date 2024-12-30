@@ -33,7 +33,9 @@ class apm_checker {
 
     // Check that the apm checker's events exactly match our expected events, in order.
     void compare(
-        bsoncxx::array::view expected, bool allow_extra = false, const test_util::match_visitor& match_visitor = {});
+        bsoncxx::array::view expected,
+        bool allow_extra = false,
+        const test_util::match_visitor& match_visitor = {});
 
     void compare_unified(bsoncxx::array::view expectations, entity::map& map, bool ignore_extra_events = false);
 

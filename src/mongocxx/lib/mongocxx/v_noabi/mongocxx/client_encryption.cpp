@@ -33,17 +33,20 @@ client_encryption::client_encryption(client_encryption&&) noexcept = default;
 client_encryption& client_encryption::operator=(client_encryption&&) noexcept = default;
 
 bsoncxx::v_noabi::types::bson_value::value client_encryption::create_data_key(
-    std::string kms_provider, const options::data_key& opts) {
+    std::string kms_provider,
+    const options::data_key& opts) {
     return _impl->create_data_key(kms_provider, opts);
 }
 
 bsoncxx::v_noabi::types::bson_value::value client_encryption::encrypt(
-    bsoncxx::v_noabi::types::bson_value::view value, const options::encrypt& opts) {
+    bsoncxx::v_noabi::types::bson_value::view value,
+    const options::encrypt& opts) {
     return _impl->encrypt(value, opts);
 }
 
 bsoncxx::v_noabi::document::value client_encryption::encrypt_expression(
-    bsoncxx::v_noabi::document::view_or_value expr, const options::encrypt& opts) {
+    bsoncxx::v_noabi::document::view_or_value expr,
+    const options::encrypt& opts) {
     return _impl->encrypt_expression(expr, opts);
 }
 
@@ -64,7 +67,8 @@ collection client_encryption::create_encrypted_collection(
 }
 
 result::rewrap_many_datakey client_encryption::rewrap_many_datakey(
-    bsoncxx::v_noabi::document::view_or_value filter, const options::rewrap_many_datakey& opts) {
+    bsoncxx::v_noabi::document::view_or_value filter,
+    const options::rewrap_many_datakey& opts) {
     return _impl->rewrap_many_datakey(filter, opts);
 }
 
@@ -82,7 +86,8 @@ mongocxx::v_noabi::cursor client_encryption::get_keys() {
 }
 
 bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::value> client_encryption::add_key_alt_name(
-    bsoncxx::v_noabi::types::bson_value::view_or_value id, bsoncxx::v_noabi::string::view_or_value key_alt_name) {
+    bsoncxx::v_noabi::types::bson_value::view_or_value id,
+    bsoncxx::v_noabi::string::view_or_value key_alt_name) {
     return _impl->add_key_alt_name(id, key_alt_name);
 }
 
@@ -92,7 +97,8 @@ bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::value> client_encry
 }
 
 bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::value> client_encryption::remove_key_alt_name(
-    bsoncxx::v_noabi::types::bson_value::view_or_value id, bsoncxx::v_noabi::string::view_or_value key_alt_name) {
+    bsoncxx::v_noabi::types::bson_value::view_or_value id,
+    bsoncxx::v_noabi::string::view_or_value key_alt_name) {
     return _impl->remove_key_alt_name(id, key_alt_name);
 }
 

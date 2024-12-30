@@ -91,7 +91,8 @@ class search_index_view::impl {
     }
 
     bsoncxx::v_noabi::document::value create_many(
-        const client_session* session, const std::vector<search_index_model>& search_indexes) {
+        const client_session* session,
+        const std::vector<search_index_model>& search_indexes) {
         using namespace bsoncxx;
 
         builder::basic::array search_index_arr;

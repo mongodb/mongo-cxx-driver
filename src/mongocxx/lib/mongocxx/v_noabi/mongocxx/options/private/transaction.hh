@@ -41,7 +41,8 @@ class transaction::impl {
 
     impl(const impl& other)
         : _transaction_opt_t(unique_transaction_opt{
-              libmongoc::transaction_opts_clone(other._transaction_opt_t.get()), &mongoc_transaction_opts_destroy}) {}
+              libmongoc::transaction_opts_clone(other._transaction_opt_t.get()),
+              &mongoc_transaction_opts_destroy}) {}
 
     impl& operator=(const impl& other) {
         _transaction_opt_t = unique_transaction_opt{

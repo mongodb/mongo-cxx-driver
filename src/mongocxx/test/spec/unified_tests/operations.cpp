@@ -167,8 +167,8 @@ document::value find(collection& coll, client_session* session, document::view o
     return result.extract();
 }
 
-document::value list_collections(
-    entity::map& map, client_session* session, const std::string& object, document::view op) {
+document::value
+list_collections(entity::map& map, client_session* session, const std::string& object, document::view op) {
     const auto arguments = op["arguments"];
     const auto empty_doc = make_document();
 
@@ -191,8 +191,8 @@ document::value list_collections(
     return result.extract();
 }
 
-document::value list_collection_names(
-    entity::map& map, client_session* session, const std::string& object, document::view op) {
+document::value
+list_collection_names(entity::map& map, client_session* session, const std::string& object, document::view op) {
     const auto arguments = op["arguments"];
     const auto empty_doc = make_document();
 
@@ -215,8 +215,8 @@ document::value list_collection_names(
     return result.extract();
 }
 
-document::value list_databases(
-    entity::map& map, client_session* session, const std::string& object, document::view op) {
+document::value
+list_databases(entity::map& map, client_session* session, const std::string& object, document::view op) {
     const auto arguments = op["arguments"];
     const auto empty_doc = make_document();
     const auto arguments_view = arguments ? arguments.get_document().value : empty_doc.view();
@@ -233,8 +233,8 @@ document::value list_databases(
     return result.extract();
 }
 
-document::value list_database_names(
-    entity::map& map, client_session* session, const std::string& object, document::view op) {
+document::value
+list_database_names(entity::map& map, client_session* session, const std::string& object, document::view op) {
     const auto arguments = op["arguments"];
     const auto empty_doc = make_document();
 
@@ -700,8 +700,8 @@ document::value insert_one(collection& coll, client_session* session, document::
     return result.extract();
 }
 
-document::value create_change_stream(
-    entity::map& map, client_session* session, const std::string& object, document::view operation) {
+document::value
+create_change_stream(entity::map& map, client_session* session, const std::string& object, document::view operation) {
     auto args = operation["arguments"];
     auto pipeline = build_pipeline(args["pipeline"].get_array().value);
 
@@ -778,7 +778,8 @@ document::value iterate_until_document_or_error(
 }
 
 document::value iterate_until_document_or_error(
-    cursor& cursor, std::unordered_map<mongocxx::cursor*, mongocxx::cursor::iterator>& cursor_iters) {
+    cursor& cursor,
+    std::unordered_map<mongocxx::cursor*, mongocxx::cursor::iterator>& cursor_iters) {
     const auto cursor_iter = cursor_iters.find(&cursor);
     const auto is_first = cursor_iter == cursor_iters.end();
 
@@ -1760,8 +1761,8 @@ document::value remove_key_alt_name(entity::map& map, const std::string& object,
     }
 }
 
-document::value create_find_cursor(
-    entity::map& map, const std::string& object, client_session* session, document::view operation) {
+document::value
+create_find_cursor(entity::map& map, const std::string& object, client_session* session, document::view operation) {
     const auto save_result_as_entity = operation["saveResultAsEntity"];
     const auto key =
         save_result_as_entity ? string::to_string(save_result_as_entity.get_string().value) : std::string();

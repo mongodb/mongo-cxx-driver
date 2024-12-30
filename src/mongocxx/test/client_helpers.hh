@@ -173,7 +173,9 @@ using match_visitor = std::function<match_action(
     bsoncxx::types::bson_value::view pattern)>;
 
 bool matches(
-    bsoncxx::types::bson_value::view main, bsoncxx::types::bson_value::view pattern, match_visitor visitor_fn = {});
+    bsoncxx::types::bson_value::view main,
+    bsoncxx::types::bson_value::view pattern,
+    match_visitor visitor_fn = {});
 
 bool matches(bsoncxx::document::view doc, bsoncxx::document::view pattern, match_visitor visitor_fn = {});
 

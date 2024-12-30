@@ -145,8 +145,8 @@ static void _test_bool_option(std::string optname, fn getter_fn) {
 }
 
 template <typename fn>
-static void _test_int32_option(
-    std::string optname, fn getter_fn, std::string valid_value = "1234", bool zero_allowed = true) {
+static void
+_test_int32_option(std::string optname, fn getter_fn, std::string valid_value = "1234", bool zero_allowed = true) {
     /* Not present. */
     mongocxx::uri uri{"mongodb://host/"};
     REQUIRE(!getter_fn(uri));
