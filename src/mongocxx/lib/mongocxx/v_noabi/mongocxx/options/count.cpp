@@ -56,36 +56,34 @@ count& count::read_preference(mongocxx::v_noabi::read_preference rp) {
     return *this;
 }
 
-const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value>&
-count::collation() const {
+bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const& count::collation() const {
     return _collation;
 }
 
-const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::hint>& count::hint() const {
+bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::hint> const& count::hint() const {
     return _hint;
 }
 
-const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value>&
-count::comment() const {
+bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value> const& count::comment() const {
     return _comment;
 }
 
-const bsoncxx::v_noabi::stdx::optional<std::int64_t>& count::limit() const {
+bsoncxx::v_noabi::stdx::optional<std::int64_t> const& count::limit() const {
     return _limit;
 }
 
-const bsoncxx::v_noabi::stdx::optional<std::chrono::milliseconds>& count::max_time() const {
+bsoncxx::v_noabi::stdx::optional<std::chrono::milliseconds> const& count::max_time() const {
     return _max_time;
 }
 
-const bsoncxx::v_noabi::stdx::optional<std::int64_t>& count::skip() const {
+bsoncxx::v_noabi::stdx::optional<std::int64_t> const& count::skip() const {
     return _skip;
 }
 
-const bsoncxx::v_noabi::stdx::optional<read_preference>& count::read_preference() const {
+bsoncxx::v_noabi::stdx::optional<read_preference> const& count::read_preference() const {
     return _read_preference;
 }
 
-}  // namespace options
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace options
+} // namespace v_noabi
+} // namespace mongocxx

@@ -30,11 +30,11 @@ void example(bsoncxx::document::view doc) {
 
     bsoncxx::document::element e = doc["c"];
 
-    EXPECT(!e);  // A missing element is represented as an invalid element.
+    EXPECT(!e); // A missing element is represented as an invalid element.
 }
 // [Example]
 
-}  // namespace
+} // namespace
 
 RUNNER_REGISTER_COMPONENT() {
     example(bsoncxx::from_json(R"({"a": 1, "b": 2})"));

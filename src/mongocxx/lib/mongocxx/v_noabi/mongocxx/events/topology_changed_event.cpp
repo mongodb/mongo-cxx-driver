@@ -21,30 +21,29 @@ namespace mongocxx {
 namespace v_noabi {
 namespace events {
 
-topology_changed_event::topology_changed_event(const void* event) : _event(event) {}
+topology_changed_event::topology_changed_event(void const* event) : _event(event) {}
 
 topology_changed_event::~topology_changed_event() = default;
 
 bsoncxx::v_noabi::oid topology_changed_event::topology_id() const {
     bson_oid_t boid;
-    libmongoc::apm_topology_changed_get_topology_id(
-        static_cast<const mongoc_apm_topology_changed_t*>(_event), &boid);
-    return bsoncxx::v_noabi::oid(reinterpret_cast<const char*>(boid.bytes), sizeof(boid.bytes));
+    libmongoc::apm_topology_changed_get_topology_id(static_cast<mongoc_apm_topology_changed_t const*>(_event), &boid);
+    return bsoncxx::v_noabi::oid(reinterpret_cast<char const*>(boid.bytes), sizeof(boid.bytes));
 }
 
 topology_description topology_changed_event::previous_description() const {
     // Unfortunately we have to cast away const: CDRIVER-2809.
-    return topology_description{const_cast<mongoc_topology_description_t*>(
-        libmongoc::apm_topology_changed_get_previous_description(
-            static_cast<const mongoc_apm_topology_changed_t*>(_event)))};
+    return topology_description{
+        const_cast<mongoc_topology_description_t*>(libmongoc::apm_topology_changed_get_previous_description(
+            static_cast<mongoc_apm_topology_changed_t const*>(_event)))};
 }
 
 topology_description topology_changed_event::new_description() const {
-    return topology_description{const_cast<mongoc_topology_description_t*>(
-        libmongoc::apm_topology_changed_get_new_description(
-            static_cast<const mongoc_apm_topology_changed_t*>(_event)))};
+    return topology_description{
+        const_cast<mongoc_topology_description_t*>(libmongoc::apm_topology_changed_get_new_description(
+            static_cast<mongoc_apm_topology_changed_t const*>(_event)))};
 }
 
-}  // namespace events
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace events
+} // namespace v_noabi
+} // namespace mongocxx

@@ -36,7 +36,7 @@ void example(bsoncxx::array::view a, bsoncxx::array::view b) {
 }
 // [Example]
 
-}  // namespace
+} // namespace
 
 RUNNER_REGISTER_COMPONENT() {
     example(bsoncxx::builder::basic::make_array(1), bsoncxx::builder::basic::make_array(2));

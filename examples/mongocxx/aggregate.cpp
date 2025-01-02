@@ -41,8 +41,7 @@ int EXAMPLES_CDECL main() {
     {
         mongocxx::pipeline stages;
 
-        stages.group(
-            make_document(kvp("_id", "$borough"), kvp("count", make_document(kvp("$sum", 1)))));
+        stages.group(make_document(kvp("_id", "$borough"), kvp("count", make_document(kvp("$sum", 1)))));
 
         auto cursor = db["restaurants"].aggregate(stages);
 
@@ -56,8 +55,7 @@ int EXAMPLES_CDECL main() {
         mongocxx::pipeline stages;
 
         stages.match(make_document(kvp("borough", "queens"), kvp("cuisine", "Brazilian")))
-            .group(make_document(kvp("_id", "$address.zipcode"),
-                                 kvp("count", make_document(kvp("$sum", 1)))));
+            .group(make_document(kvp("_id", "$address.zipcode"), kvp("count", make_document(kvp("$sum", 1)))));
 
         auto cursor = db["restaurants"].aggregate(stages);
 

@@ -28,20 +28,20 @@ void example() {
     EXPECT(v.view().type() == bsoncxx::type::k_null);
     EXPECT(v.view().get_null() == bsoncxx::types::b_null{});
 
-    v = bsoncxx::from_json(R"({"v": ["value"]})")  // Temporary object.
+    v = bsoncxx::from_json(R"({"v": ["value"]})") // Temporary object.
             ["v"]
-                .get_owning_value();  // Copy: no dangling.
+                .get_owning_value(); // Copy: no dangling.
 
     EXPECT(v.view().type() == bsoncxx::type::k_array);
 
-    v = v.view().get_array().value[0].get_string();  // Copy: no dangling.
+    v = v.view().get_array().value[0].get_string(); // Copy: no dangling.
 
     EXPECT(v.view().type() == bsoncxx::type::k_string);
     EXPECT(v.view().get_string().value == "value");
 }
 // [Example]
 
-}  // namespace
+} // namespace
 
 RUNNER_REGISTER_COMPONENT() {
     example();

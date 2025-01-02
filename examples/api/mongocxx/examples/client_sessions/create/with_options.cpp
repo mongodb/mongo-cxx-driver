@@ -35,7 +35,7 @@ void example(mongocxx::client client) {
 }
 // [Example]
 
-}  // namespace
+} // namespace
 
 RUNNER_REGISTER_COMPONENT_FOR_SINGLE() {
     example(mongocxx::client{mongocxx::uri{}});

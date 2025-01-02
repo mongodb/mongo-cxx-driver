@@ -44,15 +44,15 @@ class pool {
     ///
     /// @return The client options.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const client&) client_opts() const;
+    MONGOCXX_ABI_EXPORT_CDECL(client const&) client_opts() const;
 
    private:
     client _client_opts;
 };
 
-}  // namespace options
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace options
+} // namespace v_noabi
+} // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
 

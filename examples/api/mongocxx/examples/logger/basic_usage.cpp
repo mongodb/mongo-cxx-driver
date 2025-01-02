@@ -32,9 +32,10 @@ class example_logger : public mongocxx::logger {
    public:
     explicit example_logger(int* ptr) : counter_ptr(ptr) {}
 
-    void operator()(mongocxx::log_level level,
-                    bsoncxx::stdx::string_view domain,
-                    bsoncxx::stdx::string_view message) noexcept override {
+    void operator()(
+        mongocxx::log_level level,
+        bsoncxx::stdx::string_view domain,
+        bsoncxx::stdx::string_view message) noexcept override {
         EXPECT(level == mongocxx::log_level::k_info);
         EXPECT(domain == "mongocxx");
         EXPECT(message == "libmongoc logging callback enabled");
@@ -56,7 +57,7 @@ void example() {
 }
 // [Example]
 
-}  // namespace
+} // namespace
 
 RUNNER_REGISTER_FORKING_COMPONENT() {
     example();

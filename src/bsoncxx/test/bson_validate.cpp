@@ -35,12 +35,12 @@ using bsoncxx::builder::basic::make_document;
 
 // polymorphic lambdas would be nice here.
 template <typename T>
-bool is_engaged(const stdx::optional<T>& opt) {
+bool is_engaged(stdx::optional<T> const& opt) {
     return opt != stdx::nullopt;
 }
 
 template <typename T>
-bool is_disengaged(const stdx::optional<T>& opt) {
+bool is_disengaged(stdx::optional<T> const& opt) {
     return opt == stdx::nullopt;
 }
 
@@ -88,9 +88,8 @@ TEST_CASE("configuring optional validations", "[bsoncxx::validate]") {
         }
 
         SECTION("and in nested documents") {
-            doc.append(kvp("foo",
-                           make_array(make_document(
-                               kvp("garply", make_array(make_document(kvp("$bar", "baz"))))))));
+            doc.append(
+                kvp("foo", make_array(make_document(kvp("garply", make_array(make_document(kvp("$bar", "baz"))))))));
 
             auto view = doc.view();
             REQUIRE(is_disengaged(validate(view.data(), view.length(), vtor)));
@@ -107,9 +106,8 @@ TEST_CASE("configuring optional validations", "[bsoncxx::validate]") {
         }
 
         SECTION("and in nested documents") {
-            doc.append(kvp("foo",
-                           make_array(make_document(
-                               kvp("garply", make_array(make_document(kvp("bad.dot", "baz"))))))));
+            doc.append(
+                kvp("foo", make_array(make_document(kvp("garply", make_array(make_document(kvp("bad.dot", "baz"))))))));
 
             auto view = doc.view();
             REQUIRE(is_disengaged(validate(view.data(), view.length(), vtor)));
@@ -130,4 +128,4 @@ TEST_CASE("configuring optional validations", "[bsoncxx::validate]") {
         REQUIRE(invalid_offset == std::size_t{9});
     }
 }
-}  // namespace
+} // namespace

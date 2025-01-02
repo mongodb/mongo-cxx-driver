@@ -33,10 +33,7 @@ class find_many : public microbench {
    public:
     // The task size comes from the Driver Perfomance Benchmarking Reference Doc.
     find_many(std::string json_file)
-        : microbench{"TestFindManyAndEmptyCursor",
-                     16.22,
-                     std::set<benchmark_type>{benchmark_type::multi_bench,
-                                              benchmark_type::read_bench}},
+        : microbench{"TestFindManyAndEmptyCursor", 16.22, std::set<benchmark_type>{benchmark_type::multi_bench, benchmark_type::read_bench}},
           _conn{mongocxx::uri{}},
           _json_file{std::move(json_file)} {}
 
@@ -74,4 +71,4 @@ void find_many::task() {
     for ([[maybe_unused]] auto&& doc : cursor) {
     }
 }
-}  // namespace benchmark
+} // namespace benchmark

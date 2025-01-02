@@ -20,7 +20,7 @@
 
 namespace mongocxx {
 
-bool size_t_to_int64_safe(const std::size_t in, int64_t& out) {
+bool size_t_to_int64_safe(std::size_t const in, int64_t& out) {
     if (sizeof(in) >= sizeof(int64_t)) {
         if (in > static_cast<std::size_t>(std::numeric_limits<int64_t>::max())) {
             return false;
@@ -30,7 +30,7 @@ bool size_t_to_int64_safe(const std::size_t in, int64_t& out) {
     return true;
 }
 
-bool int64_to_int32_safe(const int64_t in, int32_t& out) {
+bool int64_to_int32_safe(int64_t const in, int32_t& out) {
     if (in > static_cast<int64_t>(std::numeric_limits<int32_t>::max())) {
         return false;
     }
@@ -41,7 +41,7 @@ bool int64_to_int32_safe(const int64_t in, int32_t& out) {
     return true;
 }
 
-bool int32_to_size_t_safe(const int32_t in, std::size_t& out) {
+bool int32_to_size_t_safe(int32_t const in, std::size_t& out) {
     if (in < 0) {
         return false;
     }
@@ -54,7 +54,7 @@ bool int32_to_size_t_safe(const int32_t in, std::size_t& out) {
     return true;
 }
 
-bool int64_to_size_t_safe(const int64_t in, std::size_t& out) {
+bool int64_to_size_t_safe(int64_t const in, std::size_t& out) {
     if (in < 0) {
         return false;
     }
@@ -67,4 +67,4 @@ bool int64_to_size_t_safe(const int64_t in, std::size_t& out) {
     return true;
 }
 
-}  // namespace mongocxx
+} // namespace mongocxx

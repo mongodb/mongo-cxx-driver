@@ -60,8 +60,8 @@ class cursor {
     ///
     MONGOCXX_ABI_EXPORT_CDECL() ~cursor();
 
-    cursor(const cursor&) = delete;
-    cursor& operator=(const cursor&) = delete;
+    cursor(cursor const&) = delete;
+    cursor& operator=(cursor const&) = delete;
 
     ///
     /// A cursor::iterator that points to the beginning of any available
@@ -97,8 +97,7 @@ class cursor {
 
     friend ::mongocxx::v_noabi::cursor::iterator;
 
-    cursor(void* cursor_ptr,
-           bsoncxx::v_noabi::stdx::optional<type> cursor_type = bsoncxx::v_noabi::stdx::nullopt);
+    cursor(void* cursor_ptr, bsoncxx::v_noabi::stdx::optional<type> cursor_type = bsoncxx::v_noabi::stdx::nullopt);
 
     class impl;
     std::unique_ptr<impl> _impl;
@@ -136,12 +135,12 @@ class cursor::iterator {
     ///
     /// Dereferences the view for the document currently being pointed to.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::document::view&) operator*() const;
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::document::view const&) operator*() const;
 
     ///
     /// Accesses a member of the dereferenced document currently being pointed to.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::document::view*) operator->() const;
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::document::view const*) operator->() const;
 
     ///
     /// Pre-increments the iterator to move to the next document.
@@ -167,8 +166,8 @@ class cursor::iterator {
     /// they point to the same underlying cursor or if both are exhausted.
     ///
     /// @{
-    friend MONGOCXX_ABI_EXPORT_CDECL(bool) operator==(const iterator&, const iterator&);
-    friend MONGOCXX_ABI_EXPORT_CDECL(bool) operator!=(const iterator&, const iterator&);
+    friend MONGOCXX_ABI_EXPORT_CDECL(bool) operator==(iterator const&, iterator const&);
+    friend MONGOCXX_ABI_EXPORT_CDECL(bool) operator!=(iterator const&, iterator const&);
     /// @}
     ///
 
@@ -180,8 +179,8 @@ class cursor::iterator {
     cursor* _cursor;
 };
 
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace v_noabi
+} // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
 

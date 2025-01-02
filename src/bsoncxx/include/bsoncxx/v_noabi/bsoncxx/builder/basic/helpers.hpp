@@ -25,10 +25,10 @@ namespace basic {
 
 using ::bsoncxx::v_noabi::builder::concatenate;
 
-}  // namespace basic
-}  // namespace builder
-}  // namespace v_noabi
-}  // namespace bsoncxx
+} // namespace basic
+} // namespace builder
+} // namespace v_noabi
+} // namespace bsoncxx
 
 namespace bsoncxx {
 namespace builder {
@@ -36,9 +36,9 @@ namespace basic {
 
 using ::bsoncxx::v_noabi::builder::basic::concatenate;
 
-}  // namespace basic
-}  // namespace builder
-}  // namespace bsoncxx
+} // namespace basic
+} // namespace builder
+} // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>
 
@@ -60,8 +60,8 @@ v_noabi::concatenate_doc concatenate(v_noabi::document::view_or_value doc);
 /// @ref bsoncxx::v_noabi::builder::concatenate(v_noabi::array::view_or_value array)
 v_noabi::concatenate_array concatenate(v_noabi::array::view_or_value array);
 
-}  // namespace basic
-}  // namespace builder
-}  // namespace bsoncxx
+} // namespace basic
+} // namespace builder
+} // namespace bsoncxx
 
-#endif  // defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
+#endif // defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

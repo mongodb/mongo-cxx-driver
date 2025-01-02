@@ -138,8 +138,7 @@ class list {
                 _core.append(ele.val);
             val = types::bson_value::value(_core.extract_array());
         } else {
-            throw bsoncxx::v_noabi::exception{error_code::k_unmatched_key_in_builder,
-                                              err_msg.str()};
+            throw bsoncxx::v_noabi::exception{error_code::k_unmatched_key_in_builder, err_msg.str()};
         }
     }
 };
@@ -193,9 +192,9 @@ class array : public list {
     ///
     array(initializer_list_t init) : list(init, false, true) {}
 };
-}  // namespace builder
-}  // namespace v_noabi
-}  // namespace bsoncxx
+} // namespace builder
+} // namespace v_noabi
+} // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>
 

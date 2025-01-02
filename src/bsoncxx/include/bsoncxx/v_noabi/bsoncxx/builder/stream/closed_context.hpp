@@ -35,10 +35,10 @@ struct closed_context {
     closed_context(core*) {}
 };
 
-}  // namespace stream
-}  // namespace builder
-}  // namespace v_noabi
-}  // namespace bsoncxx
+} // namespace stream
+} // namespace builder
+} // namespace v_noabi
+} // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>
 

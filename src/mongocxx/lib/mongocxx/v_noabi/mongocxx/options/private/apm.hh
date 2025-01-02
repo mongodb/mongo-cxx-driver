@@ -25,95 +25,93 @@ namespace mongocxx {
 namespace v_noabi {
 namespace options {
 
-using apm_unique_callbacks =
-    std::unique_ptr<mongoc_apm_callbacks_t, decltype(libmongoc::apm_callbacks_destroy)>;
+using apm_unique_callbacks = std::unique_ptr<mongoc_apm_callbacks_t, decltype(libmongoc::apm_callbacks_destroy)>;
 
 // An APM callback exiting via an exception is documented as being undefined behavior.
 // For QoI, terminate the program before allowing the exception to bypass libmongoc code.
 template <typename Fn>
-inline void exception_guard(const char* source, Fn fn) noexcept {
+inline void exception_guard(char const* source, Fn fn) noexcept {
     try {
         fn();
     } catch (...) {
-        std::cerr << "fatal error: APM callback " << source << " exited via an exception"
-                  << std::endl;
+        std::cerr << "fatal error: APM callback " << source << " exited via an exception" << std::endl;
         std::terminate();
     }
 }
 
-inline void command_started(const mongoc_apm_command_started_t* event) noexcept {
-    events::command_started_event started_event(static_cast<const void*>(event));
+inline void command_started(mongoc_apm_command_started_t const* event) noexcept {
+    events::command_started_event started_event(static_cast<void const*>(event));
     auto context = static_cast<apm*>(libmongoc::apm_command_started_get_context(event));
     exception_guard(__func__, [&] { context->command_started()(started_event); });
 }
 
-inline void command_failed(const mongoc_apm_command_failed_t* event) noexcept {
-    events::command_failed_event failed_event(static_cast<const void*>(event));
+inline void command_failed(mongoc_apm_command_failed_t const* event) noexcept {
+    events::command_failed_event failed_event(static_cast<void const*>(event));
     auto context = static_cast<apm*>(libmongoc::apm_command_failed_get_context(event));
     exception_guard(__func__, [&] { context->command_failed()(failed_event); });
 }
 
-inline void command_succeeded(const mongoc_apm_command_succeeded_t* event) noexcept {
-    events::command_succeeded_event succeeded_event(static_cast<const void*>(event));
+inline void command_succeeded(mongoc_apm_command_succeeded_t const* event) noexcept {
+    events::command_succeeded_event succeeded_event(static_cast<void const*>(event));
     auto context = static_cast<apm*>(libmongoc::apm_command_succeeded_get_context(event));
     exception_guard(__func__, [&] { context->command_succeeded()(succeeded_event); });
 }
 
-inline void server_closed(const mongoc_apm_server_closed_t* event) noexcept {
-    events::server_closed_event e(static_cast<const void*>(event));
+inline void server_closed(mongoc_apm_server_closed_t const* event) noexcept {
+    events::server_closed_event e(static_cast<void const*>(event));
     auto context = static_cast<apm*>(libmongoc::apm_server_closed_get_context(event));
     exception_guard(__func__, [&] { context->server_closed()(e); });
 }
 
-inline void server_changed(const mongoc_apm_server_changed_t* event) noexcept {
-    events::server_changed_event e(static_cast<const void*>(event));
+inline void server_changed(mongoc_apm_server_changed_t const* event) noexcept {
+    events::server_changed_event e(static_cast<void const*>(event));
     auto context = static_cast<apm*>(libmongoc::apm_server_changed_get_context(event));
     exception_guard(__func__, [&] { context->server_changed()(e); });
 }
 
-inline void server_opening(const mongoc_apm_server_opening_t* event) noexcept {
-    events::server_opening_event e(static_cast<const void*>(event));
+inline void server_opening(mongoc_apm_server_opening_t const* event) noexcept {
+    events::server_opening_event e(static_cast<void const*>(event));
     auto context = static_cast<apm*>(libmongoc::apm_server_opening_get_context(event));
     exception_guard(__func__, [&] { context->server_opening()(e); });
 }
 
-inline void topology_closed(const mongoc_apm_topology_closed_t* event) noexcept {
-    events::topology_closed_event e(static_cast<const void*>(event));
+inline void topology_closed(mongoc_apm_topology_closed_t const* event) noexcept {
+    events::topology_closed_event e(static_cast<void const*>(event));
     auto context = static_cast<apm*>(libmongoc::apm_topology_closed_get_context(event));
     exception_guard(__func__, [&] { context->topology_closed()(e); });
 }
 
-inline void topology_changed(const mongoc_apm_topology_changed_t* event) noexcept {
-    events::topology_changed_event e(static_cast<const void*>(event));
+inline void topology_changed(mongoc_apm_topology_changed_t const* event) noexcept {
+    events::topology_changed_event e(static_cast<void const*>(event));
     auto context = static_cast<apm*>(libmongoc::apm_topology_changed_get_context(event));
     exception_guard(__func__, [&] { context->topology_changed()(e); });
 }
 
-inline void topology_opening(const mongoc_apm_topology_opening_t* event) noexcept {
-    events::topology_opening_event e(static_cast<const void*>(event));
+inline void topology_opening(mongoc_apm_topology_opening_t const* event) noexcept {
+    events::topology_opening_event e(static_cast<void const*>(event));
     auto context = static_cast<apm*>(libmongoc::apm_topology_opening_get_context(event));
     exception_guard(__func__, [&] { context->topology_opening()(e); });
 }
 
-inline void heartbeat_started(const mongoc_apm_server_heartbeat_started_t* event) noexcept {
-    events::heartbeat_started_event started_event(static_cast<const void*>(event));
+inline void heartbeat_started(mongoc_apm_server_heartbeat_started_t const* event) noexcept {
+    events::heartbeat_started_event started_event(static_cast<void const*>(event));
     auto context = static_cast<apm*>(libmongoc::apm_server_heartbeat_started_get_context(event));
     exception_guard(__func__, [&] { context->heartbeat_started()(started_event); });
 }
 
-inline void heartbeat_failed(const mongoc_apm_server_heartbeat_failed_t* event) noexcept {
-    events::heartbeat_failed_event failed_event(static_cast<const void*>(event));
+inline void heartbeat_failed(mongoc_apm_server_heartbeat_failed_t const* event) noexcept {
+    events::heartbeat_failed_event failed_event(static_cast<void const*>(event));
     auto context = static_cast<apm*>(libmongoc::apm_server_heartbeat_failed_get_context(event));
     exception_guard(__func__, [&] { context->heartbeat_failed()(failed_event); });
 }
 
-inline void heartbeat_succeeded(const mongoc_apm_server_heartbeat_succeeded_t* event) noexcept {
-    events::heartbeat_succeeded_event succeeded_event(static_cast<const void*>(event));
+inline void heartbeat_succeeded(mongoc_apm_server_heartbeat_succeeded_t const* event) noexcept {
+    events::heartbeat_succeeded_event succeeded_event(static_cast<void const*>(event));
     auto context = static_cast<apm*>(libmongoc::apm_server_heartbeat_succeeded_get_context(event));
     exception_guard(__func__, [&] { context->heartbeat_succeeded()(succeeded_event); });
 }
 
-inline apm_unique_callbacks make_apm_callbacks(const apm& apm_opts) {
+inline apm_unique_callbacks make_apm_callbacks(apm const& apm_opts) {
     mongoc_apm_callbacks_t* callbacks = libmongoc::apm_callbacks_new();
 
     if (apm_opts.command_started()) {
@@ -167,8 +165,8 @@ inline apm_unique_callbacks make_apm_callbacks(const apm& apm_opts) {
     return {callbacks, libmongoc::apm_callbacks_destroy};
 }
 
-}  // namespace options
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace options
+} // namespace v_noabi
+} // namespace mongocxx
 
 #include <mongocxx/config/private/postlude.hh>

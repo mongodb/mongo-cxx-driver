@@ -36,15 +36,12 @@ int EXAMPLES_CDECL main() {
     // We append key-value pairs to a document using the kvp helper.
     using bsoncxx::builder::basic::kvp;
 
-    doc.append(
-        kvp("foo", "bar"));  // string literal value will be converted to b_string automatically
+    doc.append(kvp("foo", "bar")); // string literal value will be converted to b_string automatically
     doc.append(kvp("baz", types::b_bool{false}));
     doc.append(kvp("garply", types::b_double{3.14159}));
 
     // We can also pass a variable number of keys to append.
-    doc.append(kvp("a key", "a value"),
-               kvp("another key", "another value"),
-               kvp("moar keys", "moar values"));
+    doc.append(kvp("a key", "a value"), kvp("another key", "another value"), kvp("moar keys", "moar values"));
 
     // Appending to arrays is simple, just append one or more bson values.
     arr.append("hello");
@@ -60,18 +57,18 @@ int EXAMPLES_CDECL main() {
     using bsoncxx::builder::basic::sub_array;
     using bsoncxx::builder::basic::sub_document;
 
-    doc.append(kvp("subdocument key",
-                   [](sub_document subdoc) {
-                       subdoc.append(kvp("subdoc key", "subdoc value"),
-                                     kvp("another subdoc key", types::b_int64{1212}));
-                   }),
-               kvp("subarray key", [](sub_array subarr) {
-                   // subarrays work similarly
-                   subarr.append(1, types::b_bool{false}, "hello", 5, [](sub_document subdoc) {
-                       // nesting works too!
-                       subdoc.append(kvp("such", "nesting"), kvp("much", "recurse"));
-                   });
-               }));
+    doc.append(
+        kvp("subdocument key",
+            [](sub_document subdoc) {
+                subdoc.append(kvp("subdoc key", "subdoc value"), kvp("another subdoc key", types::b_int64{1212}));
+            }),
+        kvp("subarray key", [](sub_array subarr) {
+            // subarrays work similarly
+            subarr.append(1, types::b_bool{false}, "hello", 5, [](sub_document subdoc) {
+                // nesting works too!
+                subdoc.append(kvp("such", "nesting"), kvp("much", "recurse"));
+            });
+        }));
 
     // We can get a view of the resulting bson by calling view()
     auto v = doc.view();

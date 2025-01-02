@@ -29,24 +29,24 @@ void example() {
     EXPECT(v.get_null() == bsoncxx::types::b_null{});
 
     try {
-        bsoncxx::types::b_int32 i = v.get_int32();  // Throws.
+        bsoncxx::types::b_int32 i = v.get_int32(); // Throws.
 
         EXPECT(false && "should not reach this point");
-    } catch (const bsoncxx::exception& ex) {
+    } catch (bsoncxx::exception const& ex) {
         EXPECT(ex.code() == bsoncxx::error_code::k_need_element_type_k_int32);
     }
 
     try {
-        bsoncxx::types::b_int64 i = v.get_int64();  // Throws.
+        bsoncxx::types::b_int64 i = v.get_int64(); // Throws.
 
         EXPECT(false && "should not reach this point");
-    } catch (const bsoncxx::exception& ex) {
+    } catch (bsoncxx::exception const& ex) {
         EXPECT(ex.code() == bsoncxx::error_code::k_need_element_type_k_int64);
     }
 }
 // [Example]
 
-}  // namespace
+} // namespace
 
 RUNNER_REGISTER_COMPONENT() {
     example();

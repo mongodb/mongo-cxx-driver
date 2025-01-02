@@ -28,7 +28,7 @@ namespace {
 //
 class error_category final : public std::error_category {
    public:
-    const char* name() const noexcept override {
+    char const* name() const noexcept override {
         return "mongocxx";
     }
 
@@ -100,12 +100,12 @@ class error_category final : public std::error_category {
     }
 };
 
-}  // namespace
+} // namespace
 
-const std::error_category& error_category() {
+std::error_category const& error_category() {
     static const class error_category category{};
     return category;
 }
 
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace v_noabi
+} // namespace mongocxx

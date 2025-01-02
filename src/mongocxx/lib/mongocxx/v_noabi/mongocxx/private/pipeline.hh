@@ -44,7 +44,7 @@ class pipeline::impl {
     bsoncxx::v_noabi::builder::basic::array _builder;
 };
 
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace v_noabi
+} // namespace mongocxx
 
 #include <mongocxx/config/private/postlude.hh>

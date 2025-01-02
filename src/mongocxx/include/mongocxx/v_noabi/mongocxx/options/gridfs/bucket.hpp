@@ -54,7 +54,7 @@ class bucket {
     /// @return
     ///   The name of the bucket.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<std::string>&)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<std::string> const&)
     bucket_name() const;
 
     ///
@@ -76,7 +76,7 @@ class bucket {
     /// @return
     ///   The size of the chunks in the bucket in bytes.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<std::int32_t>&)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<std::int32_t> const&)
     chunk_size_bytes() const;
 
     ///
@@ -98,8 +98,7 @@ class bucket {
     /// @return
     ///   The read concern of the bucket.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<
-                              mongocxx::v_noabi::read_concern>&)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::read_concern> const&)
     read_concern() const;
 
     ///
@@ -128,8 +127,7 @@ class bucket {
     /// @return
     ///   The read preference of the bucket.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<
-                              mongocxx::v_noabi::read_preference>&)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::read_preference> const&)
     read_preference() const;
 
     ///
@@ -152,8 +150,7 @@ class bucket {
     /// @return
     ///   The write concern of the bucket.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<
-                              mongocxx::v_noabi::write_concern>&)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern> const&)
     write_concern() const;
 
    private:
@@ -164,10 +161,10 @@ class bucket {
     bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern> _write_concern;
 };
 
-}  // namespace gridfs
-}  // namespace options
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace gridfs
+} // namespace options
+} // namespace v_noabi
+} // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
 

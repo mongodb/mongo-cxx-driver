@@ -61,8 +61,9 @@ class pool {
     /// @throws mongocxx::v_noabi::exception if invalid options are provided (whether from the URI
     /// or
     ///  provided client options).
-    explicit MONGOCXX_ABI_EXPORT_CDECL() pool(const uri& mongodb_uri = mongocxx::v_noabi::uri(),
-                                              const options::pool& options = options::pool());
+    explicit MONGOCXX_ABI_EXPORT_CDECL() pool(
+        uri const& mongodb_uri = mongocxx::v_noabi::uri(),
+        options::pool const& options = options::pool());
 
     ///
     /// Destroys a pool.
@@ -72,8 +73,8 @@ class pool {
     pool(pool&&) = delete;
     pool& operator=(pool&&) = delete;
 
-    pool(const pool&) = delete;
-    pool& operator=(const pool&) = delete;
+    pool(pool const&) = delete;
+    pool& operator=(pool const&) = delete;
 
     ///
     /// An entry is a handle on a @c client object acquired via the pool. Similar to
@@ -100,19 +101,16 @@ class pool {
 
         // Allows the pool_entry["db_name"] syntax to be used to access a database within the
         // entry's underlying client.
-        mongocxx::v_noabi::database operator[](
-            bsoncxx::v_noabi::string::view_or_value name) const& {
+        mongocxx::v_noabi::database operator[](bsoncxx::v_noabi::string::view_or_value name) const& {
             return (**this)[name];
         }
 
-        mongocxx::v_noabi::database operator[](bsoncxx::v_noabi::string::view_or_value name) && =
-            delete;
+        mongocxx::v_noabi::database operator[](bsoncxx::v_noabi::string::view_or_value name) && = delete;
 
        private:
         friend ::mongocxx::v_noabi::pool;
 
-        using unique_client =
-            std::unique_ptr<client, std::function<void MONGOCXX_ABI_CDECL(client*)>>;
+        using unique_client = std::unique_ptr<client, std::function<void MONGOCXX_ABI_CDECL(client*)>>;
 
         explicit entry(unique_client);
 
@@ -137,11 +135,11 @@ class pool {
     void _release(client* client);
 
     class impl;
-    const std::unique_ptr<impl> _impl;
+    std::unique_ptr<impl> const _impl;
 };
 
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace v_noabi
+} // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
 

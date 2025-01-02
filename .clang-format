@@ -1,7 +1,7 @@
 ---
 Language:        Cpp
 AccessModifierOffset: -1
-AlignAfterOpenBracket: Align
+AlignAfterOpenBracket: AlwaysBreak
 AlignArrayOfStructures: None
 AlignConsecutiveAssignments:
   Enabled:         false
@@ -64,7 +64,7 @@ AlignTrailingComments:
   Kind:            Always
   OverEmptyLines:  0
 AllowAllArgumentsOnNextLine: true
-AllowAllParametersOfDeclarationOnNextLine: true
+AllowAllParametersOfDeclarationOnNextLine: false
 AllowBreakBeforeNoexceptSpecifier: Never
 AllowShortBlocksOnASingleLine: Never
 AllowShortCaseExpressionOnASingleLine: true
@@ -126,7 +126,7 @@ BreakFunctionDefinitionParameters: false
 BreakInheritanceList: BeforeColon
 BreakStringLiterals: true
 BreakTemplateDeclarations: Yes
-ColumnLimit:     100
+ColumnLimit:     120
 CommentPragmas:  '^\s*(@(addtogroup|copydoc|defgroup|fn|ref)|- )'
 CompactNamespaces: false
 ConstructorInitializerIndentWidth: 4
@@ -190,7 +190,7 @@ JavaScriptWrapImports: true
 KeepEmptyLines:
   AtEndOfFile:     false
   AtStartOfBlock:  false
-  AtStartOfFile:   true
+  AtStartOfFile:   false
 LambdaBodyIndentation: Signature
 LineEnding:      DeriveLF
 MacroBlockBegin: ''
@@ -217,7 +217,7 @@ PenaltyIndentedWhitespace: 0
 PenaltyReturnTypeOnItsOwnLine: 200
 PointerAlignment: Left
 PPIndentWidth:   -1
-QualifierAlignment: Left
+QualifierAlignment: Right
 RawStringFormats: []
 ReferenceAlignment: Pointer
 ReflowComments:  true
@@ -227,7 +227,7 @@ RemoveSemicolon: false
 RequiresClausePosition: OwnLine
 RequiresExpressionIndentation: OuterScope
 SeparateDefinitionBlocks: Leave
-ShortNamespaceLines: 1
+ShortNamespaceLines: 0
 SkipMacroDefinitionBody: false
 SortIncludes:    CaseSensitive
 SortJavaStaticImport: Before
@@ -257,7 +257,7 @@ SpaceBeforeParensOptions:
 SpaceBeforeRangeBasedForLoopColon: true
 SpaceBeforeSquareBrackets: false
 SpaceInEmptyBlock: false
-SpacesBeforeTrailingComments: 2
+SpacesBeforeTrailingComments: 1
 SpacesInAngles:  Never
 SpacesInContainerLiterals: true
 SpacesInLineCommentPrefix:

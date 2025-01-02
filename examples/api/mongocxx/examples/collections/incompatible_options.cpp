@@ -46,13 +46,13 @@ void example(mongocxx::collection coll) {
         auto name = coll.find_one_and_update(empty.view(), empty.view(), opts);
 
         EXPECT(false && "should not reach this point");
-    } catch (const mongocxx::exception& ex) {
+    } catch (mongocxx::exception const& ex) {
         EXPECT(ex.code() == mongocxx::error_code::k_invalid_parameter);
     }
 }
 // [Example]
 
-}  // namespace
+} // namespace
 
 RUNNER_REGISTER_COMPONENT_FOR_SINGLE() {
     mongocxx::client client{mongocxx::uri{}};

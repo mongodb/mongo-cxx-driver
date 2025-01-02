@@ -33,40 +33,40 @@ class map {
 
     map() = default;
 
-    map(const map&) = delete;
-    map operator=(const map&) = delete;
+    map(map const&) = delete;
+    map operator=(map const&) = delete;
 
     map(map&&) = default;
     map& operator=(map&&) = default;
 
     ~map() = default;
 
-    bool insert(const key_type& key, client&& c);
-    bool insert(const key_type& key, mongocxx::database&&);
-    bool insert(const key_type& key, mongocxx::collection&&);
-    bool insert(const key_type& key, mongocxx::client_session&&);
-    bool insert(const key_type& key, mongocxx::gridfs::bucket&&);
-    bool insert(const key_type& key, mongocxx::change_stream&&);
-    bool insert(const key_type& key, bsoncxx::types::bson_value::value&&);
-    bool insert(const key_type& key, mongocxx::cursor&&);
-    bool insert(const key_type& key, mongocxx::client_encryption&&);
+    bool insert(key_type const& key, client&& c);
+    bool insert(key_type const& key, mongocxx::database&&);
+    bool insert(key_type const& key, mongocxx::collection&&);
+    bool insert(key_type const& key, mongocxx::client_session&&);
+    bool insert(key_type const& key, mongocxx::gridfs::bucket&&);
+    bool insert(key_type const& key, mongocxx::change_stream&&);
+    bool insert(key_type const& key, bsoncxx::types::bson_value::value&&);
+    bool insert(key_type const& key, mongocxx::cursor&&);
+    bool insert(key_type const& key, mongocxx::client_encryption&&);
 
-    client& get_client(const key_type& key);
-    database& get_database(const key_type& key);
-    collection& get_collection(const key_type& key);
-    change_stream& get_change_stream(const key_type& key);
-    client_session& get_client_session(const key_type& key);
-    gridfs::bucket& get_bucket(const key_type& key);
-    bsoncxx::types::bson_value::value& get_value(const key_type& key);
-    cursor& get_cursor(const key_type& key);
-    mongocxx::client_encryption& get_client_encryption(const key_type& key);
+    client& get_client(key_type const& key);
+    database& get_database(key_type const& key);
+    collection& get_collection(key_type const& key);
+    change_stream& get_change_stream(key_type const& key);
+    client_session& get_client_session(key_type const& key);
+    gridfs::bucket& get_bucket(key_type const& key);
+    bsoncxx::types::bson_value::value& get_value(key_type const& key);
+    cursor& get_cursor(key_type const& key);
+    mongocxx::client_encryption& get_client_encryption(key_type const& key);
 
     database& get_database_by_name(bsoncxx::stdx::string_view name);
 
     void clear() noexcept;
-    const std::type_info& type(const key_type& key);
+    std::type_info const& type(key_type const& key);
 
-    void erase(const key_type& key);
+    void erase(key_type const& key);
 
    private:
     // Objects are destroyed in reverse order of their appearance in the class definition. Since the
@@ -87,7 +87,7 @@ class map {
     std::unordered_map<key_type, mongocxx::client_encryption> _client_encryption_map;
 };
 
-}  // namespace entity
-}  // namespace mongocxx
+} // namespace entity
+} // namespace mongocxx
 
 #include <mongocxx/config/private/postlude.hh>

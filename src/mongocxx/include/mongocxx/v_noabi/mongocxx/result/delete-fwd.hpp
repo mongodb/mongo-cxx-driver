@@ -22,17 +22,17 @@ namespace result {
 
 class delete_result;
 
-}  // namespace result
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace result
+} // namespace v_noabi
+} // namespace mongocxx
 
 namespace mongocxx {
 namespace result {
 
 using ::mongocxx::v_noabi::result::delete_result;
 
-}  // namespace result
-}  // namespace mongocxx
+} // namespace result
+} // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
 
@@ -49,7 +49,7 @@ namespace result {
 /// @ref mongocxx::v_noabi::result::delete_result
 class delete_result {};
 
-}  // namespace result
-}  // namespace mongocxx
+} // namespace result
+} // namespace mongocxx
 
-#endif  // defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
+#endif // defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

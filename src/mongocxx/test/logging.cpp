@@ -31,9 +31,8 @@ class test_log_handler : public logger {
 
     test_log_handler(std::vector<event>* events) : _events(events) {}
 
-    void operator()(log_level level,
-                    bsoncxx::stdx::string_view domain,
-                    bsoncxx::stdx::string_view message) noexcept final {
+    void operator()(log_level level, bsoncxx::stdx::string_view domain, bsoncxx::stdx::string_view message) noexcept
+        final {
         if (level == log_level::k_error)
             _events->emplace_back(level, std::string(domain), std::string(message));
     }
@@ -65,4 +64,4 @@ TEST_CASE("a user-provided log handler will be used for logging output", "[insta
     REQUIRE(events[0] == std::make_tuple(log_level::k_error, "foo", "bar"));
 }
 
-}  // namespace
+} // namespace

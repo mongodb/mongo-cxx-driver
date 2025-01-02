@@ -22,8 +22,7 @@ namespace bsoncxx {
 namespace v_noabi {
 namespace array {
 
-value::value(std::uint8_t* data, std::size_t length, deleter_type dtor)
-    : _data(data, dtor), _length(length) {}
+value::value(std::uint8_t* data, std::size_t length, deleter_type dtor) : _data(data, dtor), _length(length) {}
 
 value::value(unique_ptr_type ptr, std::size_t length) : _data(std::move(ptr)), _length(length) {}
 
@@ -33,17 +32,16 @@ void uint8_t_deleter(std::uint8_t* ptr) {
     delete[] ptr;
 }
 
-}  // namespace
+} // namespace
 
 value::value(array::view view)
-    : _data(new std::uint8_t[static_cast<std::size_t>(view.length())], uint8_t_deleter),
-      _length(view.length()) {
+    : _data(new std::uint8_t[static_cast<std::size_t>(view.length())], uint8_t_deleter), _length(view.length()) {
     std::copy(view.data(), view.data() + view.length(), _data.get());
 }
 
-value::value(const value& rhs) : value(rhs.view()) {}
+value::value(value const& rhs) : value(rhs.view()) {}
 
-value& value::operator=(const value& rhs) {
+value& value::operator=(value const& rhs) {
     *this = value{rhs.view()};
     return *this;
 }
@@ -53,6 +51,6 @@ value::unique_ptr_type value::release() {
     return std::move(_data);
 }
 
-}  // namespace array
-}  // namespace v_noabi
-}  // namespace bsoncxx
+} // namespace array
+} // namespace v_noabi
+} // namespace bsoncxx

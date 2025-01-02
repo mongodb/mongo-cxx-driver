@@ -27,10 +27,10 @@ struct open_array_type;
 struct close_array_type;
 struct finalize_type;
 
-}  // namespace stream
-}  // namespace builder
-}  // namespace v_noabi
-}  // namespace bsoncxx
+} // namespace stream
+} // namespace builder
+} // namespace v_noabi
+} // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>
 

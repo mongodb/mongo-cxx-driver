@@ -33,4 +33,4 @@ TEST_CASE("insert_one model tests", "[insert_one][model]") {
         REQUIRE(io.document().view() == doc.view());
     }
 }
-}  // namespace
+} // namespace

@@ -38,4 +38,4 @@ TEST_CASE("distinct", "[distinct][option]") {
     CHECK_OPTIONAL_ARGUMENT(dist, max_time, std::chrono::milliseconds{1000});
     CHECK_OPTIONAL_ARGUMENT(dist, read_preference, read_preference{});
 }
-}  // namespace
+} // namespace

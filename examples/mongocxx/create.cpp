@@ -42,17 +42,19 @@ int EXAMPLES_CDECL main() {
 
     bsoncxx::document::value restaurant_doc = make_document(
         kvp("address",
-            make_document(kvp("street", "2 Avenue"),
-                          kvp("zipcode", 10075),
-                          kvp("building", "1480"),
-                          kvp("coord", make_array(-73.9557413, 40.7720266)))),
+            make_document(
+                kvp("street", "2 Avenue"),
+                kvp("zipcode", 10075),
+                kvp("building", "1480"),
+                kvp("coord", make_array(-73.9557413, 40.7720266)))),
         kvp("borough", "Manhattan"),
         kvp("cuisine", "Italian"),
         kvp("grades",
             make_array(
-                make_document(kvp("date", bsoncxx::types::b_date{std::chrono::milliseconds{12323}}),
-                              kvp("grade", "A"),
-                              kvp("score", 11)),
+                make_document(
+                    kvp("date", bsoncxx::types::b_date{std::chrono::milliseconds{12323}}),
+                    kvp("grade", "A"),
+                    kvp("score", 11)),
                 make_document(
                     kvp("date", bsoncxx::types::b_date{std::chrono::milliseconds{121212}}),
                     kvp("grade", "B"),

@@ -27,7 +27,7 @@ namespace {
 
 // [Example]
 // {"key": "value"}
-void example(const std::uint8_t* data, std::size_t length) {
+void example(std::uint8_t const* data, std::size_t length) {
     using deleter_type = bsoncxx::document::value::deleter_type;
 
     std::uint8_t* raw = new std::uint8_t[length];
@@ -40,7 +40,7 @@ void example(const std::uint8_t* data, std::size_t length) {
 }
 // [Example]
 
-}  // namespace
+} // namespace
 
 RUNNER_REGISTER_COMPONENT() {
     bsoncxx::document::value owner = bsoncxx::from_json(R"({"key": "value"})");

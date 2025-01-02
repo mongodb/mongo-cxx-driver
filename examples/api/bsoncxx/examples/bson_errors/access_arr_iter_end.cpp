@@ -27,25 +27,25 @@ namespace {
 void example(bsoncxx::array::view arr) {
     EXPECT(arr.begin() != arr.end());
 
-    auto iter = arr.begin();  // 1
+    auto iter = arr.begin(); // 1
 
-    ++iter;  // 2
-    ++iter;  // 3
-    ++iter;  // End iterator.
+    ++iter; // 2
+    ++iter; // 3
+    ++iter; // End iterator.
 
     EXPECT(iter == arr.end());
 
-    ++iter;  // DO NOT DO THIS
+    ++iter; // DO NOT DO THIS
 
-    EXPECT(iter == arr.end());  // Incrementing an end iterator results in an end iterator.
+    EXPECT(iter == arr.end()); // Incrementing an end iterator results in an end iterator.
 
-    bsoncxx::array::element e = *iter;  // DO NOT DO THIS
+    bsoncxx::array::element e = *iter; // DO NOT DO THIS
 
-    EXPECT(!e);  // An end iterator returns an invalid element.
+    EXPECT(!e); // An end iterator returns an invalid element.
 }
 // [Example]
 
-}  // namespace
+} // namespace
 
 RUNNER_REGISTER_COMPONENT() {
     example(bsoncxx::builder::basic::make_array(1, 2, 3));

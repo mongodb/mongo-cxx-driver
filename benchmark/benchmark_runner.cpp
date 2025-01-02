@@ -47,29 +47,25 @@ namespace benchmark {
 // The task sizes and iteration numbers come from the Driver Perfomance Benchmarking Reference Doc.
 benchmark_runner::benchmark_runner(std::set<benchmark_type> types) : _types{types} {
     // Bson microbenchmarks
-    _microbenches.push_back(
-        std::make_unique<bson_encoding>("TestFlatEncoding", 75.31, "extended_bson/flat_bson.json"));
-    _microbenches.push_back(
-        std::make_unique<bson_encoding>("TestDeepEncoding", 19.64, "extended_bson/deep_bson.json"));
-    _microbenches.push_back(
-        std::make_unique<bson_encoding>("TestFullEncoding", 57.34, "extended_bson/full_bson.json"));
+    _microbenches.push_back(std::make_unique<bson_encoding>("TestFlatEncoding", 75.31, "extended_bson/flat_bson.json"));
+    _microbenches.push_back(std::make_unique<bson_encoding>("TestDeepEncoding", 19.64, "extended_bson/deep_bson.json"));
+    _microbenches.push_back(std::make_unique<bson_encoding>("TestFullEncoding", 57.34, "extended_bson/full_bson.json"));
     // TODO CXX-1241: Add bson_decoding equivalents.
 
     // Single doc microbenchmarks
     _microbenches.push_back(std::make_unique<run_command>());
-    _microbenches.push_back(
-        std::make_unique<find_one_by_id>("single_and_multi_document/tweet.json"));
+    _microbenches.push_back(std::make_unique<find_one_by_id>("single_and_multi_document/tweet.json"));
     _microbenches.push_back(std::make_unique<insert_one>(
         "TestSmallDocInsertOne", 2.75, iterations, "single_and_multi_document/small_doc.json"));
-    _microbenches.push_back(std::make_unique<insert_one>(
-        "TestLargeDocInsertOne", 27.31, 10, "single_and_multi_document/large_doc.json"));
+    _microbenches.push_back(
+        std::make_unique<insert_one>("TestLargeDocInsertOne", 27.31, 10, "single_and_multi_document/large_doc.json"));
 
     // Multi doc microbenchmarks
     _microbenches.push_back(std::make_unique<find_many>("single_and_multi_document/tweet.json"));
     _microbenches.push_back(std::make_unique<bulk_insert>(
         "TestSmallDocBulkInsert", 2.75, iterations, "single_and_multi_document/small_doc.json"));
-    _microbenches.push_back(std::make_unique<bulk_insert>(
-        "TestLargeDocBulkInsert", 27.31, 10, "single_and_multi_document/large_doc.json"));
+    _microbenches.push_back(
+        std::make_unique<bulk_insert>("TestLargeDocBulkInsert", 27.31, 10, "single_and_multi_document/large_doc.json"));
     // CXX-2794: Disable GridFS benchmarks due to long runtime
     // _microbenches.push_back(
     //     std::make_unique<gridfs_upload>("single_and_multi_document/gridfs_large.bin"));
@@ -86,13 +82,10 @@ benchmark_runner::benchmark_runner(std::set<benchmark_type> types) : _types{type
     // Need to remove some
     if (!_types.empty()) {
         for (auto&& it = _microbenches.begin(); it != _microbenches.end();) {
-            const std::set<benchmark_type>& tags = (*it)->get_tags();
+            std::set<benchmark_type> const& tags = (*it)->get_tags();
             std::set<benchmark_type> intersect;
-            std::set_intersection(tags.begin(),
-                                  tags.end(),
-                                  _types.begin(),
-                                  _types.end(),
-                                  std::inserter(intersect, intersect.begin()));
+            std::set_intersection(
+                tags.begin(), tags.end(), _types.begin(), _types.end(), std::inserter(intersect, intersect.begin()));
 
             if (intersect.empty()) {
                 _microbenches.erase(it);
@@ -112,8 +105,7 @@ void benchmark_runner::run_microbenches() {
 
         auto score = bench->get_results();
 
-        std::cout << bench->get_name() << ": "
-                  << static_cast<double>(score.get_percentile(50).count()) / 1000.0
+        std::cout << bench->get_name() << ": " << static_cast<double>(score.get_percentile(50).count()) / 1000.0
                   << " second(s) | " << score.get_score() << " MB/s" << std::endl
                   << std::endl;
     }
@@ -168,12 +160,9 @@ void benchmark_runner::write_scores() {
     using builder::basic::sub_document;
 
     auto doc = builder::basic::document{};
-    doc.append(kvp("info", [](sub_document subdoc) {
-        subdoc.append(kvp("test_name", "C++ Driver microbenchmarks"));
-    }));
+    doc.append(kvp("info", [](sub_document subdoc) { subdoc.append(kvp("test_name", "C++ Driver microbenchmarks")); }));
 
-    auto write_time =
-        [](const std::chrono::time_point<std::chrono::system_clock> t) -> std::string {
+    auto write_time = [](std::chrono::time_point<std::chrono::system_clock> const t) -> std::string {
         std::time_t t1 = std::chrono::system_clock::to_time_t(t);
         std::ostringstream oss;
         oss << std::put_time(std::gmtime(&t1), "%Y-%m-%dT%H:%M:%S") << "+00:00";
@@ -189,10 +178,10 @@ void benchmark_runner::write_scores() {
     std::cout << "Individual microbenchmark scores:" << std::endl << "===========" << std::endl;
     for (auto&& bench : _microbenches) {
         auto& score = bench->get_results();
-        const auto bench_time = static_cast<double>(score.get_percentile(50).count()) / 1000.0;
+        auto const bench_time = static_cast<double>(score.get_percentile(50).count()) / 1000.0;
 
-        std::cout << bench->get_name() << ": " << bench_time << " seconds | " << score.get_score()
-                  << " MB/s" << std::endl;
+        std::cout << bench->get_name() << ": " << bench_time << " seconds | " << score.get_score() << " MB/s"
+                  << std::endl;
 
         auto metric_doc = builder::basic::document{};
         metric_doc.append(kvp("name", bench->get_name()));
@@ -232,4 +221,4 @@ void benchmark_runner::write_scores() {
     std::ofstream os{"results.json"};
     os << '[' << bsoncxx::to_json(doc.view()) << ']';
 }
-}  // namespace benchmark
+} // namespace benchmark

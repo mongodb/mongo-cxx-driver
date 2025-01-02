@@ -37,8 +37,7 @@ int EXAMPLES_CDECL main() {
     doc << "myKey"
         << "myValue";
     // We can chain any number of keys and values
-    doc << "foo" << types::b_bool{false} << "baz" << types::b_int32{1234} << "quz"
-        << types::b_double{1.234};
+    doc << "foo" << types::b_bool{false} << "baz" << types::b_int32{1234} << "quz" << types::b_double{1.234};
 
     // For arrays, everything just becomes a value
     arr << 1 << 2 << types::b_bool{true};
@@ -79,8 +78,7 @@ int EXAMPLES_CDECL main() {
     bsoncxx::document::value nestedValue = document{} << "nested" << true << finalize;
     document topLevelDoc{};
     topLevelDoc << "subDoc1" << types::b_document{nestedValue.view()} << "subDoc2" << open_document
-                << concatenate(nestedValue.view()) << close_document << "subDoc3" << nestedValue
-                << finalize;
+                << concatenate(nestedValue.view()) << close_document << "subDoc3" << nestedValue << finalize;
 
     // `topLevelDoc` now looks like:
     // {

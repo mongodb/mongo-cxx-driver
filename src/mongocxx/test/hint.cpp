@@ -102,4 +102,4 @@ TEST_CASE("Hint", "[hint]") {
         }
     }
 }
-}  // namespace
+} // namespace

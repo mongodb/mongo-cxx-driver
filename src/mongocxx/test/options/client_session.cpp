@@ -30,4 +30,4 @@ TEST_CASE("session option", "[session][option]") {
     opts.causal_consistency(false);
     REQUIRE(!opts.causal_consistency());
 }
-}  // namespace
+} // namespace

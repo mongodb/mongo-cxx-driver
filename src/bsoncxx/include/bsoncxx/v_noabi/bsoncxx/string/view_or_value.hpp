@@ -57,7 +57,7 @@ class view_or_value : public bsoncxx::v_noabi::view_or_value<stdx::string_view, 
     ///
     /// @param str A null-terminated string
     ///
-    view_or_value(const char* str)
+    view_or_value(char const* str)
         : bsoncxx::v_noabi::view_or_value<stdx::string_view, std::string>(stdx::string_view(str)) {}
 
     ///
@@ -70,7 +70,7 @@ class view_or_value : public bsoncxx::v_noabi::view_or_value<stdx::string_view, 
     ///
     /// @param str A std::string l-value reference.
     ///
-    view_or_value(const std::string& str)
+    view_or_value(std::string const& str)
         : bsoncxx::v_noabi::view_or_value<stdx::string_view, std::string>(stdx::string_view(str)) {}
 
     ///
@@ -92,7 +92,7 @@ class view_or_value : public bsoncxx::v_noabi::view_or_value<stdx::string_view, 
     ///
     /// @return A const char* of this string.
     ///
-    BSONCXX_ABI_EXPORT_CDECL(const char*) data() const;
+    BSONCXX_ABI_EXPORT_CDECL(char const*) data() const;
 };
 
 ///
@@ -101,31 +101,31 @@ class view_or_value : public bsoncxx::v_noabi::view_or_value<stdx::string_view, 
 /// @{
 
 /// @relatesalso bsoncxx::v_noabi::string::view_or_value
-inline bool operator==(const view_or_value& lhs, const char* rhs) {
+inline bool operator==(view_or_value const& lhs, char const* rhs) {
     return lhs.view() == stdx::string_view(rhs);
 }
 
 /// @relatesalso bsoncxx::v_noabi::string::view_or_value
-inline bool operator!=(const view_or_value& lhs, const char* rhs) {
+inline bool operator!=(view_or_value const& lhs, char const* rhs) {
     return !(lhs == rhs);
 }
 
 /// @relatesalso bsoncxx::v_noabi::string::view_or_value
-inline bool operator==(const char* lhs, const view_or_value& rhs) {
+inline bool operator==(char const* lhs, view_or_value const& rhs) {
     return rhs == lhs;
 }
 
 /// @relatesalso bsoncxx::v_noabi::string::view_or_value
-inline bool operator!=(const char* lhs, const view_or_value& rhs) {
+inline bool operator!=(char const* lhs, view_or_value const& rhs) {
     return !(rhs == lhs);
 }
 
 /// @}
 ///
 
-}  // namespace string
-}  // namespace v_noabi
-}  // namespace bsoncxx
+} // namespace string
+} // namespace v_noabi
+} // namespace bsoncxx
 
 namespace bsoncxx {
 namespace string {
@@ -133,8 +133,8 @@ namespace string {
 using ::bsoncxx::v_noabi::string::operator==;
 using ::bsoncxx::v_noabi::string::operator!=;
 
-}  // namespace string
-}  // namespace bsoncxx
+} // namespace string
+} // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>
 
@@ -149,18 +149,18 @@ namespace bsoncxx {
 namespace string {
 
 /// @ref bsoncxx::v_noabi::string::operator==(const v_noabi::string::view_or_value& lhs, const char* rhs)
-inline bool operator==(const v_noabi::string::view_or_value& lhs, const char* rhs);
+inline bool operator==(v_noabi::string::view_or_value const& lhs, char const* rhs);
 
 /// @ref bsoncxx::v_noabi::string::operator!=(const v_noabi::string::view_or_value& lhs, const char* rhs)
-inline bool operator!=(const v_noabi::string::view_or_value& lhs, const char* rhs);
+inline bool operator!=(v_noabi::string::view_or_value const& lhs, char const* rhs);
 
 /// @ref bsoncxx::v_noabi::string::operator==(const char* lhs, const v_noabi::string::view_or_value& rhs)
-inline bool operator==(const char* lhs, const v_noabi::string::view_or_value& rhs);
+inline bool operator==(char const* lhs, v_noabi::string::view_or_value const& rhs);
 
 /// @ref bsoncxx::v_noabi::string::operator!=(const char* lhs, const v_noabi::string::view_or_value& rhs)
-inline bool operator!=(const char* lhs, const v_noabi::string::view_or_value& rhs);
+inline bool operator!=(char const* lhs, v_noabi::string::view_or_value const& rhs);
 
-}  // namespace string
-}  // namespace bsoncxx
+} // namespace string
+} // namespace bsoncxx
 
-#endif  // defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
+#endif // defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

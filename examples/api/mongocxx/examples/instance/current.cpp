@@ -46,7 +46,7 @@ void example() {
 // other objects with static lifetime being destroyed.
 // [Example]
 
-}  // namespace
+} // namespace
 
 RUNNER_REGISTER_FORKING_COMPONENT() {
     example();

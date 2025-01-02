@@ -87,10 +87,10 @@ struct finalize_type {
 ///
 constexpr finalize_type finalize;
 
-}  // namespace stream
-}  // namespace builder
-}  // namespace v_noabi
-}  // namespace bsoncxx
+} // namespace stream
+} // namespace builder
+} // namespace v_noabi
+} // namespace bsoncxx
 
 namespace bsoncxx {
 namespace builder {
@@ -102,9 +102,9 @@ using ::bsoncxx::v_noabi::builder::stream::finalize;
 using ::bsoncxx::v_noabi::builder::stream::open_array;
 using ::bsoncxx::v_noabi::builder::stream::open_document;
 
-}  // namespace stream
-}  // namespace builder
-}  // namespace bsoncxx
+} // namespace stream
+} // namespace builder
+} // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>
 
@@ -134,8 +134,8 @@ constexpr open_array_type open_array;
 /// @ref bsoncxx::v_noabi::builder::stream::open_document
 constexpr open_document_type open_document;
 
-}  // namespace stream
-}  // namespace builder
-}  // namespace bsoncxx
+} // namespace stream
+} // namespace builder
+} // namespace bsoncxx
 
-#endif  // defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
+#endif // defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

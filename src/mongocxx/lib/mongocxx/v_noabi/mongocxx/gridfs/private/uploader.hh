@@ -30,13 +30,14 @@ namespace gridfs {
 
 class uploader::impl {
    public:
-    impl(const client_session* session,
-         result::gridfs::upload result,
-         bsoncxx::v_noabi::stdx::string_view filename,
-         collection files,
-         collection chunks,
-         std::int32_t chunk_size,
-         bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::value> metadata)
+    impl(
+        client_session const* session,
+        result::gridfs::upload result,
+        bsoncxx::v_noabi::stdx::string_view filename,
+        collection files,
+        collection chunks,
+        std::int32_t chunk_size,
+        bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::value> metadata)
         : session{session},
           buffer{bsoncxx::make_unique<std::uint8_t[]>(static_cast<size_t>(chunk_size))},
           buffer_off{0},
@@ -50,7 +51,7 @@ class uploader::impl {
           result{std::move(result)} {}
 
     // Client session to use for upload operations.
-    const client_session* session;
+    client_session const* session;
 
     // Bytes that have been written for the current chunk.
     std::unique_ptr<std::uint8_t[]> buffer;
@@ -86,8 +87,8 @@ class uploader::impl {
     result::gridfs::upload result;
 };
 
-}  // namespace gridfs
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace gridfs
+} // namespace v_noabi
+} // namespace mongocxx
 
 #include <mongocxx/config/private/postlude.hh>

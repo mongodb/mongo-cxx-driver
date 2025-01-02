@@ -72,7 +72,7 @@ int EXAMPLES_CDECL main() {
     auto invalid1 = doc["name"]["middle"];
     auto invalid2 = doc["contribs"][1000];
     if (invalid1 || invalid2) {
-        BSONCXX_UNREACHABLE;  // Not reached.
+        BSONCXX_UNREACHABLE; // Not reached.
     }
 
     // Similarly, indexed access (either by string or numeric index) into a type that is not
@@ -81,7 +81,7 @@ int EXAMPLES_CDECL main() {
     auto invalid3 = doc["_id"]["invalid"];
     auto invalid4 = doc["name"][3];
     if (invalid3 || invalid4) {
-        BSONCXX_UNREACHABLE;  // Not reached.
+        BSONCXX_UNREACHABLE; // Not reached.
     }
 
     // Values are accessed through get_*() methods.
@@ -89,8 +89,7 @@ int EXAMPLES_CDECL main() {
     auto first_name_str = doc["name"]["first"].get_string().value;
 
     // Make all variables used.
-    return (awards && first_award_year && second_award_year && last_name && id_i32 == 1 &&
-            first_name_str == "John")
+    return (awards && first_award_year && second_award_year && last_name && id_i32 == 1 && first_name_str == "John")
                ? EXIT_SUCCESS
                : EXIT_FAILURE;
 }

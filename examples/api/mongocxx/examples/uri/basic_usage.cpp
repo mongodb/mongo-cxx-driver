@@ -21,7 +21,7 @@ namespace {
 
 // [Example]
 void example() {
-    const auto uri_str = "mongodb://bob:pwd123@localhost:27017/?tls=true";
+    auto const uri_str = "mongodb://bob:pwd123@localhost:27017/?tls=true";
 
     mongocxx::uri uri{uri_str};
 
@@ -33,7 +33,7 @@ void example() {
 }
 // [Example]
 
-}  // namespace
+} // namespace
 
 RUNNER_REGISTER_COMPONENT_WITH_INSTANCE() {
     example();

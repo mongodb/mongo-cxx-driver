@@ -41,10 +41,9 @@ int EXAMPLES_CDECL main() {
     using builder::basic::sub_array;
 
     auto doc = builder::basic::document{};
-    doc.append(
-        kvp("team", "platforms"), kvp("id", types::b_oid{oid()}), kvp("members", [](sub_array sa) {
-            sa.append("tyler", "jason", "drew", "sam", "ernie", "john", "mark", "crystal");
-        }));
+    doc.append(kvp("team", "platforms"), kvp("id", types::b_oid{oid()}), kvp("members", [](sub_array sa) {
+                   sa.append("tyler", "jason", "drew", "sam", "ernie", "john", "mark", "crystal");
+               }));
 
     // document::value is an owning bson document conceptually similar to string.
     document::value value{doc.extract()};
@@ -81,8 +80,7 @@ int EXAMPLES_CDECL main() {
                 // if we have a subarray, we can access it by getting a view of it.
                 array::view subarr{doc_ele.get_array().value};
                 for (array::element arr_ele : subarr) {
-                    std::cout << "array element: "
-                              << bsoncxx::string::to_string(arr_ele.get_string().value)
+                    std::cout << "array element: " << bsoncxx::string::to_string(arr_ele.get_string().value)
                               << std::endl;
                 }
                 break;

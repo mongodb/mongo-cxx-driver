@@ -19,5 +19,5 @@ namespace v_noabi {
 
 bulk_write_exception::~bulk_write_exception() = default;
 
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace v_noabi
+} // namespace mongocxx

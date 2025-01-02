@@ -35,8 +35,8 @@ void example(mongocxx::collection coll) {
     EXPECT(coll.count_documents(bsoncxx::from_json(R"({"x": {"$exists": 1}})")) == 0);
 
     mongocxx::model::insert_one insert{bsoncxx::from_json(R"({"x": 10})")};
-    mongocxx::model::update_one update{bsoncxx::from_json(R"({"x": {"$exists": 1}})"),
-                                       bsoncxx::from_json(R"({"$set": {"x": 20}})")};
+    mongocxx::model::update_one update{
+        bsoncxx::from_json(R"({"x": {"$exists": 1}})"), bsoncxx::from_json(R"({"$set": {"x": 20}})")};
 
     mongocxx::bulk_write bulk_write = coll.create_bulk_write();
 
@@ -57,7 +57,7 @@ void example(mongocxx::collection coll) {
 }
 // [Example]
 
-}  // namespace
+} // namespace
 
 RUNNER_REGISTER_COMPONENT_FOR_SINGLE() {
     mongocxx::client client{mongocxx::uri{}};

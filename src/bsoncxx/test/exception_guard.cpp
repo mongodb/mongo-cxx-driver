@@ -83,9 +83,9 @@ TEST_CASE("bsoncxx::test::exception_guard", "[test]") {
             CHECK(eguard.func == expected.func);
             CHECK(eguard.ignored.empty());
 
-            const auto check_expr = [&] { BSONCXX_TEST_EXCEPTION_GUARD_CHECK(eguard); };
+            auto const check_expr = [&] { BSONCXX_TEST_EXCEPTION_GUARD_CHECK(eguard); };
             REQUIRE_THROWS_AS(check_expr(), EGuardException);
-            REQUIRE_THROWS_AS(check_expr(), EGuardException);  // Rethrow is OK.
+            REQUIRE_THROWS_AS(check_expr(), EGuardException); // Rethrow is OK.
 
             CHECK(eguard.ptr != nullptr);
             CHECK(eguard.file == expected.file);
@@ -116,12 +116,12 @@ TEST_CASE("bsoncxx::test::exception_guard", "[test]") {
             BSONCXX_TEST_EXCEPTION_GUARD_END(eguard); BSONCXX_TEST_EXCEPTION_GUARD_RESET(expected);
             // clang-format on
 
-            const auto npos = std::string::npos;
+            auto const npos = std::string::npos;
 
             REQUIRE(eguard.ignored.size() == 1u);
             {
-                const auto& log = eguard.ignored[0];
-                const auto log_view = bsoncxx::stdx::string_view(log);
+                auto const& log = eguard.ignored[0];
+                auto const log_view = bsoncxx::stdx::string_view(log);
 
                 CAPTURE(log);
                 CAPTURE(expected.file);
@@ -131,7 +131,7 @@ TEST_CASE("bsoncxx::test::exception_guard", "[test]") {
                 CHECK_THAT(log, Catch::Matchers::ContainsSubstring("two"));
                 CHECK(log_view.find(expected.file) != npos);
                 CHECK(log_view.find(std::to_string(expected.line)) != npos);
-                CHECK(log_view.find(expected.func) == npos);  // Func is not logged.
+                CHECK(log_view.find(expected.func) == npos); // Func is not logged.
             }
 
             // clang-format off
@@ -142,8 +142,8 @@ TEST_CASE("bsoncxx::test::exception_guard", "[test]") {
 
             REQUIRE(eguard.ignored.size() == 2u);
             {
-                const auto& log = eguard.ignored[1];
-                const auto log_view = bsoncxx::stdx::string_view(log);
+                auto const& log = eguard.ignored[1];
+                auto const log_view = bsoncxx::stdx::string_view(log);
 
                 CAPTURE(log);
                 CAPTURE(expected.file);
@@ -153,11 +153,11 @@ TEST_CASE("bsoncxx::test::exception_guard", "[test]") {
                 CHECK_THAT(log, Catch::Matchers::ContainsSubstring("Catch::TestFailureException"));
                 CHECK(log_view.find(expected.file) != npos);
                 CHECK(log_view.find(std::to_string(expected.line)) != npos);
-                CHECK(log_view.find(expected.func) == npos);  // Func is not logged.
+                CHECK(log_view.find(expected.func) == npos); // Func is not logged.
             }
 
             // The original exception.
-            const auto check_expr = [&] { BSONCXX_TEST_EXCEPTION_GUARD_CHECK(eguard); };
+            auto const check_expr = [&] { BSONCXX_TEST_EXCEPTION_GUARD_CHECK(eguard); };
             REQUIRE_THROWS_WITH(check_expr(), Catch::Matchers::ContainsSubstring("one"));
         }
     }
@@ -214,7 +214,7 @@ TEST_CASE("bsoncxx::test::exception_guard", "[test]") {
             try {
                 BSONCXX_TEST_EXCEPTION_GUARD_CHECK(eguard);
                 FAIL("should have thrown an EGuardException");
-            } catch (const EGuardException& e) {
+            } catch (EGuardException const& e) {
                 CAPTURE(e.id);
                 CHECK(e.id > 0);
             }
@@ -224,4 +224,4 @@ TEST_CASE("bsoncxx::test::exception_guard", "[test]") {
     }
 }
 
-}  // namespace
+} // namespace

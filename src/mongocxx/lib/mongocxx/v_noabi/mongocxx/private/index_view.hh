@@ -42,8 +42,7 @@ using bsoncxx::v_noabi::builder::basic::make_document;
 
 class index_view::impl {
    public:
-    impl(mongoc_collection_t* collection, mongoc_client_t* client)
-        : _coll{collection}, _client{client} {}
+    impl(mongoc_collection_t* collection, mongoc_client_t* client) : _coll{collection}, _client{client} {}
 
     std::string get_index_name_from_keys(bsoncxx::v_noabi::document::view_or_value keys) {
         libbson::scoped_bson_t keys_bson{keys};
@@ -55,11 +54,10 @@ class index_view::impl {
         return result;
     }
 
-    cursor list(const client_session* session) {
+    cursor list(client_session const* session) {
         if (session) {
             bsoncxx::v_noabi::builder::basic::document options_builder;
-            options_builder.append(
-                bsoncxx::v_noabi::builder::concatenate_doc{session->_get_impl().to_document()});
+            options_builder.append(bsoncxx::v_noabi::builder::concatenate_doc{session->_get_impl().to_document()});
             libbson::scoped_bson_t bson_options(options_builder.extract());
             return libmongoc::collection_find_indexes_with_opts(_coll, bson_options.bson());
         }
@@ -67,15 +65,14 @@ class index_view::impl {
         return libmongoc::collection_find_indexes_with_opts(_coll, nullptr);
     }
 
-    bsoncxx::v_noabi::stdx::optional<std::string> create_one(const client_session* session,
-                                                             const index_model& model,
-                                                             const options::index_view& options) {
-        const auto result = create_many(session, std::vector<index_model>{model}, options);
+    bsoncxx::v_noabi::stdx::optional<std::string>
+    create_one(client_session const* session, index_model const& model, options::index_view const& options) {
+        auto const result = create_many(session, std::vector<index_model>{model}, options);
         auto result_view = result.view();
 
         // SERVER-78611: sharded clusters may place fields in a raw response document instead of in
         // the top-level document.
-        if (const auto raw = result_view["raw"]) {
+        if (auto const raw = result_view["raw"]) {
             // There should only be a single field in the raw response with the shard connection
             // string as the key. e.g.:
             //   {
@@ -86,15 +83,14 @@ class index_view::impl {
             //     }
             //   }
             // Using a for loop for convenience.
-            for (const auto& shard_response : raw.get_document().view()) {
+            for (auto const& shard_response : raw.get_document().view()) {
                 result_view = shard_response.get_document().view();
             }
         }
 
-        const auto note = result_view["note"];
+        auto const note = result_view["note"];
 
-        if (note && bsoncxx::v_noabi::string::to_string(note.get_string().value) ==
-                        "all indexes already exist") {
+        if (note && bsoncxx::v_noabi::string::to_string(note.get_string().value) == "all indexes already exist") {
             return bsoncxx::v_noabi::stdx::nullopt;
         }
 
@@ -106,9 +102,10 @@ class index_view::impl {
         return bsoncxx::v_noabi::stdx::make_optional(get_index_name_from_keys(model.keys()));
     }
 
-    bsoncxx::v_noabi::document::value create_many(const client_session* session,
-                                                  const std::vector<index_model>& indexes,
-                                                  const options::index_view& options) {
+    bsoncxx::v_noabi::document::value create_many(
+        client_session const* session,
+        std::vector<index_model> const& indexes,
+        options::index_view const& options) {
         using namespace bsoncxx;
         using builder::basic::concatenate;
 
@@ -116,8 +113,8 @@ class index_view::impl {
 
         for (auto&& model : indexes) {
             builder::basic::document index_doc;
-            const bsoncxx::v_noabi::document::view& opts_view = model.options();
-            const bsoncxx::v_noabi::document::view& keys = model.keys();
+            bsoncxx::v_noabi::document::view const& opts_view = model.options();
+            bsoncxx::v_noabi::document::view const& keys = model.keys();
 
             if (!opts_view["name"]) {
                 index_doc.append(kvp("name", get_index_name_from_keys(keys)));
@@ -127,9 +124,8 @@ class index_view::impl {
             index_arr.append(index_doc.view());
         }
 
-        document::view_or_value command =
-            make_document(kvp("createIndexes", libmongoc::collection_get_name(_coll)),
-                          kvp("indexes", index_arr.view()));
+        document::view_or_value command = make_document(
+            kvp("createIndexes", libmongoc::collection_get_name(_coll)), kvp("indexes", index_arr.view()));
 
         libbson::scoped_bson_t reply;
         bson_error_t error;
@@ -137,8 +133,7 @@ class index_view::impl {
         builder::basic::document opts_doc;
 
         if (options.max_time()) {
-            opts_doc.append(
-                kvp("maxTimeMS", bsoncxx::v_noabi::types::b_int64{options.max_time()->count()}));
+            opts_doc.append(kvp("maxTimeMS", bsoncxx::v_noabi::types::b_int64{options.max_time()->count()}));
         }
 
         if (options.write_concern()) {
@@ -146,28 +141,25 @@ class index_view::impl {
         }
 
         if (session) {
-            opts_doc.append(
-                bsoncxx::v_noabi::builder::concatenate_doc{session->_get_impl().to_document()});
+            opts_doc.append(bsoncxx::v_noabi::builder::concatenate_doc{session->_get_impl().to_document()});
         }
 
         if (options.commit_quorum()) {
-            auto server_description = scoped_server_description(libmongoc::client_select_server(
-                _client, true /* for_writes */, nullptr /* read_prefs */, &error));
+            auto server_description = scoped_server_description(
+                libmongoc::client_select_server(_client, true /* for_writes */, nullptr /* read_prefs */, &error));
             if (!server_description.sd)
                 throw_exception<write_exception>(error);
 
             auto hello = libmongoc::server_description_hello_response(server_description.sd);
 
             bson_iter_t iter;
-            if (!bson_iter_init_find(&iter, hello, "maxWireVersion") ||
-                bson_iter_int32(&iter) < 9) {
+            if (!bson_iter_init_find(&iter, hello, "maxWireVersion") || bson_iter_int32(&iter) < 9) {
                 throw write_exception{
                     error_code::k_invalid_parameter,
                     "option 'commitQuorum' not available on the current server version"};
             }
 
-            command =
-                make_document(concatenate(command), concatenate(options.commit_quorum()->view()));
+            command = make_document(concatenate(command), concatenate(options.commit_quorum()->view()));
         }
 
         libbson::scoped_bson_t command_bson{command};
@@ -183,9 +175,10 @@ class index_view::impl {
         return reply.steal();
     }
 
-    void drop_one(const client_session* session,
-                  bsoncxx::v_noabi::stdx::string_view name,
-                  const options::index_view& options) {
+    void drop_one(
+        client_session const* session,
+        bsoncxx::v_noabi::stdx::string_view name,
+        options::index_view const& options) {
         if (name == bsoncxx::v_noabi::stdx::string_view{"*"}) {
             throw logic_error(error_code::k_invalid_parameter);
         }
@@ -193,8 +186,7 @@ class index_view::impl {
         bsoncxx::v_noabi::builder::basic::document opts_doc;
 
         if (options.max_time()) {
-            opts_doc.append(
-                kvp("maxTimeMS", bsoncxx::v_noabi::types::b_int64{options.max_time()->count()}));
+            opts_doc.append(kvp("maxTimeMS", bsoncxx::v_noabi::types::b_int64{options.max_time()->count()}));
         }
 
         if (options.write_concern()) {
@@ -202,12 +194,11 @@ class index_view::impl {
         }
 
         if (session) {
-            opts_doc.append(
-                bsoncxx::v_noabi::builder::concatenate_doc{session->_get_impl().to_document()});
+            opts_doc.append(bsoncxx::v_noabi::builder::concatenate_doc{session->_get_impl().to_document()});
         }
 
-        bsoncxx::v_noabi::document::value command = make_document(
-            kvp("dropIndexes", libmongoc::collection_get_name(_coll)), kvp("index", name));
+        bsoncxx::v_noabi::document::value command =
+            make_document(kvp("dropIndexes", libmongoc::collection_get_name(_coll)), kvp("index", name));
 
         libbson::scoped_bson_t reply;
         libbson::scoped_bson_t command_bson{command.view()};
@@ -222,9 +213,9 @@ class index_view::impl {
         }
     }
 
-    inline void drop_all(const client_session* session, const options::index_view& options) {
-        bsoncxx::v_noabi::document::value command = make_document(
-            kvp("dropIndexes", libmongoc::collection_get_name(_coll)), kvp("index", "*"));
+    inline void drop_all(client_session const* session, options::index_view const& options) {
+        bsoncxx::v_noabi::document::value command =
+            make_document(kvp("dropIndexes", libmongoc::collection_get_name(_coll)), kvp("index", "*"));
 
         libbson::scoped_bson_t reply;
         bson_error_t error;
@@ -234,8 +225,7 @@ class index_view::impl {
         bsoncxx::v_noabi::builder::basic::document opts_doc;
 
         if (options.max_time()) {
-            opts_doc.append(
-                kvp("maxTimeMS", bsoncxx::v_noabi::types::b_int64{options.max_time()->count()}));
+            opts_doc.append(kvp("maxTimeMS", bsoncxx::v_noabi::types::b_int64{options.max_time()->count()}));
         }
 
         if (options.write_concern()) {
@@ -243,8 +233,7 @@ class index_view::impl {
         }
 
         if (session) {
-            opts_doc.append(
-                bsoncxx::v_noabi::builder::concatenate_doc{session->_get_impl().to_document()});
+            opts_doc.append(bsoncxx::v_noabi::builder::concatenate_doc{session->_get_impl().to_document()});
         }
 
         libbson::scoped_bson_t opts_bson{opts_doc.view()};
@@ -278,14 +267,14 @@ class index_view::impl {
             return *this;
         }
 
-        scoped_server_description(const scoped_server_description&) = delete;
-        scoped_server_description& operator=(const scoped_server_description&) = delete;
+        scoped_server_description(scoped_server_description const&) = delete;
+        scoped_server_description& operator=(scoped_server_description const&) = delete;
 
         mongoc_server_description_t* sd;
     };
 };
 
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace v_noabi
+} // namespace mongocxx
 
 #include <mongocxx/config/private/postlude.hh>

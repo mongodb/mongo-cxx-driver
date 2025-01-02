@@ -1,4 +1,3 @@
-
 // Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -69,7 +68,7 @@ class key_context {
     /// key.
     ///
     template <std::size_t n>
-    value_context<key_context> operator<<(const char (&v)[n]) {
+    value_context<key_context> operator<<(char const (&v)[n]) {
         _core->key_view(stdx::string_view{v, n - 1});
         return value_context<key_context>(_core);
     }
@@ -129,9 +128,10 @@ class key_context {
     /// @return A value type which holds the complete bson document.
     ///
     template <typename T>
-    detail::requires_t<bsoncxx::v_noabi::document::value,
-                       std::is_same<base, closed_context>,
-                       detail::is_alike<T, finalize_type>>
+    detail::requires_t<
+        bsoncxx::v_noabi::document::value,
+        std::is_same<base, closed_context>,
+        detail::is_alike<T, finalize_type>>
     operator<<(T&&) {
         return _core->extract_document();
     }
@@ -155,7 +155,7 @@ class key_context {
     ///
     /// The argument must be a close_document_type token (it is otherwise ignored).
     ///
-    base operator<<(const close_document_type) {
+    base operator<<(close_document_type const) {
         _core->close_document();
         return unwrap();
     }
@@ -176,10 +176,10 @@ class key_context {
     core* _core;
 };
 
-}  // namespace stream
-}  // namespace builder
-}  // namespace v_noabi
-}  // namespace bsoncxx
+} // namespace stream
+} // namespace builder
+} // namespace v_noabi
+} // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>
 

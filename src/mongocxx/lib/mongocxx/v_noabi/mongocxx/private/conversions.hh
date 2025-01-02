@@ -30,8 +30,8 @@ read_mode_t_from_read_mode(read_preference::read_mode read_mode);
 MONGOCXX_ABI_EXPORT_CDECL_TESTING(read_preference::read_mode)
 read_mode_from_read_mode_t(mongoc_read_mode_t read_mode);
 
-}  // namespace conversions
-}  // namespace libmongoc
-}  // namespace mongocxx
+} // namespace conversions
+} // namespace libmongoc
+} // namespace mongocxx
 
 #include <mongocxx/config/private/postlude.hh>

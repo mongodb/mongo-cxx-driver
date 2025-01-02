@@ -66,10 +66,11 @@ class array_context {
     ///   The value to append
     ///
     template <class T>
-    detail::requires_not_t<array_context&,
-                           detail::is_invocable<T, array_context<>>,
-                           detail::is_invocable<T, single_context>,
-                           detail::is_alike<T, finalize_type>>
+    detail::requires_not_t<
+        array_context&,
+        detail::is_invocable<T, array_context<>>,
+        detail::is_invocable<T, single_context>,
+        detail::is_alike<T, finalize_type>>
     operator<<(T&& t) {
         _core->append(std::forward<T>(t));
         return *this;
@@ -84,9 +85,9 @@ class array_context {
     ///   The callback to invoke
     ///
     template <typename Func>
-    detail::requires_t<array_context&,
-                       detail::disjunction<detail::is_invocable<Func, array_context>,
-                                           detail::is_invocable<Func, single_context>>>
+    detail::requires_t<
+        array_context&,
+        detail::disjunction<detail::is_invocable<Func, array_context>, detail::is_invocable<Func, single_context>>>
     operator<<(Func&& func) {
         detail::invoke(std::forward<Func>(func), *this);
         return *this;
@@ -103,9 +104,10 @@ class array_context {
     /// @return A value type which holds the complete bson document.
     ///
     template <typename T>
-    detail::requires_t<bsoncxx::v_noabi::array::value,
-                       std::is_same<base, closed_context>,
-                       detail::is_alike<T, finalize_type>>
+    detail::requires_t<
+        bsoncxx::v_noabi::array::value,
+        std::is_same<base, closed_context>,
+        detail::is_alike<T, finalize_type>>
     // VS2015U1 can't resolve the name.
     operator<<(T&&) {
         return _core->extract_array();
@@ -116,7 +118,7 @@ class array_context {
     ///
     /// The argument must be an open_document_type token (it is otherwise ignored).
     ///
-    key_context<array_context> operator<<(const open_document_type) {
+    key_context<array_context> operator<<(open_document_type const) {
         _core->open_document();
         return wrap_document();
     }
@@ -140,7 +142,7 @@ class array_context {
     ///
     /// The argument must be an open_document_type token (it is otherwise ignored).
     ///
-    array_context<array_context> operator<<(const open_array_type) {
+    array_context<array_context> operator<<(open_array_type const) {
         _core->open_array();
         return wrap_array();
     }
@@ -150,7 +152,7 @@ class array_context {
     ///
     /// The argument must be a close_array_type token (it is otherwise ignored).
     ///
-    base operator<<(const close_array_type) {
+    base operator<<(close_array_type const) {
         _core->close_array();
         return unwrap();
     }
@@ -187,10 +189,10 @@ class array_context {
     core* _core;
 };
 
-}  // namespace stream
-}  // namespace builder
-}  // namespace v_noabi
-}  // namespace bsoncxx
+} // namespace stream
+} // namespace builder
+} // namespace v_noabi
+} // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>
 

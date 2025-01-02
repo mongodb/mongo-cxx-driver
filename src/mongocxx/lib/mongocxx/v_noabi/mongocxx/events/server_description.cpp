@@ -21,21 +21,20 @@ namespace mongocxx {
 namespace v_noabi {
 namespace events {
 
-server_description::server_description(const void* sd) : _sd(sd) {}
+server_description::server_description(void const* sd) : _sd(sd) {}
 
 server_description::~server_description() = default;
 
 std::uint32_t server_description::id() const {
-    return libmongoc::server_description_id(static_cast<const mongoc_server_description_t*>(_sd));
+    return libmongoc::server_description_id(static_cast<mongoc_server_description_t const*>(_sd));
 }
 
 std::int64_t server_description::round_trip_time() const {
-    return libmongoc::server_description_round_trip_time(
-        static_cast<const mongoc_server_description_t*>(_sd));
+    return libmongoc::server_description_round_trip_time(static_cast<mongoc_server_description_t const*>(_sd));
 }
 
 bsoncxx::v_noabi::stdx::string_view server_description::type() const {
-    return libmongoc::server_description_type(static_cast<const mongoc_server_description_t*>(_sd));
+    return libmongoc::server_description_type(static_cast<mongoc_server_description_t const*>(_sd));
 }
 
 bsoncxx::v_noabi::document::view server_description::is_master() const {
@@ -43,21 +42,18 @@ bsoncxx::v_noabi::document::view server_description::is_master() const {
 }
 
 bsoncxx::v_noabi::document::view server_description::hello() const {
-    auto reply = libmongoc::server_description_hello_response(
-        static_cast<const mongoc_server_description_t*>(_sd));
+    auto reply = libmongoc::server_description_hello_response(static_cast<mongoc_server_description_t const*>(_sd));
     return {bson_get_data(reply), reply->len};
 }
 
 bsoncxx::v_noabi::stdx::string_view server_description::host() const {
-    return libmongoc::server_description_host(static_cast<const mongoc_server_description_t*>(_sd))
-        ->host;
+    return libmongoc::server_description_host(static_cast<mongoc_server_description_t const*>(_sd))->host;
 }
 
 std::uint16_t server_description::port() const {
-    return libmongoc::server_description_host(static_cast<const mongoc_server_description_t*>(_sd))
-        ->port;
+    return libmongoc::server_description_host(static_cast<mongoc_server_description_t const*>(_sd))->port;
 }
 
-}  // namespace events
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace events
+} // namespace v_noabi
+} // namespace mongocxx

@@ -39,8 +39,7 @@ int EXAMPLES_CDECL main() {
     coll.drop();
 
     // Insert a test document
-    auto result =
-        coll.insert_one(make_document(kvp("user info", make_document(kvp("user name", "Joe")))));
+    auto result = coll.insert_one(make_document(kvp("user info", make_document(kvp("user name", "Joe")))));
     std::cout << "Inserted " << result->inserted_id().get_oid().value.to_string() << std::endl;
 
     // Create the find options with the projection

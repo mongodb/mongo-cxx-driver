@@ -40,8 +40,8 @@ using bsoncxx::builder::stream::finalize;
 using bsoncxx::builder::stream::open_document;
 
 int EXAMPLES_CDECL main() {
-    if (const char* const topology_env = std::getenv("MONGOCXX_TEST_TOPOLOGY")) {
-        const auto topology = std::string(topology_env);
+    if (char const* const topology_env = std::getenv("MONGOCXX_TEST_TOPOLOGY")) {
+        auto const topology = std::string(topology_env);
         if (topology != "replica") {
             std::cerr << "Skipping: with_transaction example requires a replica set" << std::endl;
             return 0;
@@ -79,8 +79,7 @@ int EXAMPLES_CDECL main() {
     auto update_filter = document{} << "sku"
                                     << "111"
                                     << "end" << none << finalize;
-    auto update_op = document{} << "$set" << open_document << "end" << current_date
-                                << close_document << finalize;
+    auto update_op = document{} << "$set" << open_document << "end" << current_date << close_document << finalize;
     items.update_one(session_1, std::move(update_filter), std::move(update_op), {});
 
     // Run an insert with our causally-consistent session.

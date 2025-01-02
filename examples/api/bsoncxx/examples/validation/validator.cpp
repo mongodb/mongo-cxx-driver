@@ -29,7 +29,7 @@ namespace {
 //         "$numberInt": "123"
 //     }
 // }
-void example(const std::uint8_t* bytes, std::size_t length) {
+void example(std::uint8_t const* bytes, std::size_t length) {
     // Default options.
     {
         bsoncxx::validator options;
@@ -83,7 +83,7 @@ void example(const std::uint8_t* bytes, std::size_t length) {
 }
 // [Example]
 
-}  // namespace
+} // namespace
 
 RUNNER_REGISTER_COMPONENT() {
     // clang-format off

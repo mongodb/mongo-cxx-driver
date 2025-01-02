@@ -44,9 +44,9 @@ void example(bsoncxx::array::view arr) {
 }
 // [Example]
 
-}  // namespace
+} // namespace
 
-RUNNER_REGISTER_COMPONENT() {  // clang-format off
+RUNNER_REGISTER_COMPONENT() { // clang-format off
     example(bsoncxx::builder::basic::make_array(1, 2.0, "three"));
 
-}  // clang-format on
+} // clang-format on

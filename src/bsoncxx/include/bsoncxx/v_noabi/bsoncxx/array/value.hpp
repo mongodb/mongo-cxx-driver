@@ -73,8 +73,8 @@ class value {
     ///
     explicit BSONCXX_ABI_EXPORT_CDECL() value(array::view view);
 
-    BSONCXX_ABI_EXPORT_CDECL() value(const value&);
-    BSONCXX_ABI_EXPORT_CDECL(value&) operator=(const value&);
+    BSONCXX_ABI_EXPORT_CDECL() value(value const&);
+    BSONCXX_ABI_EXPORT_CDECL(value&) operator=(value const&);
 
     value(value&&) = default;
     value& operator=(value&&) = default;
@@ -111,9 +111,9 @@ class value {
     std::size_t _length{0};
 };
 
-}  // namespace array
-}  // namespace v_noabi
-}  // namespace bsoncxx
+} // namespace array
+} // namespace v_noabi
+} // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>
 

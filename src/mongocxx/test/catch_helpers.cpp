@@ -19,5 +19,5 @@ namespace test_util {
 
 mongocxx_exception_matcher::~mongocxx_exception_matcher() = default;
 
-}  // namespace test_util
-}  // namespace mongocxx
+} // namespace test_util
+} // namespace mongocxx

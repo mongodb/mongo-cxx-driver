@@ -22,17 +22,17 @@ namespace options {
 
 class client_encryption;
 
-}  // namespace options
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace options
+} // namespace v_noabi
+} // namespace mongocxx
 
 namespace mongocxx {
 namespace options {
 
 using ::mongocxx::v_noabi::options::client_encryption;
 
-}  // namespace options
-}  // namespace mongocxx
+} // namespace options
+} // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
 
@@ -49,7 +49,7 @@ namespace options {
 /// @ref mongocxx::v_noabi::options::client_encryption
 class client_encryption {};
 
-}  // namespace options
-}  // namespace mongocxx
+} // namespace options
+} // namespace mongocxx
 
-#endif  // defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
+#endif // defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

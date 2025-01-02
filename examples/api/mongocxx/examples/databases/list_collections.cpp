@@ -58,9 +58,9 @@ void example(mongocxx::database db) {
     {
         count_fields(db.list_collections());
 
-        EXPECT(a == 1);  // Present.
-        EXPECT(b == 1);  // Present.
-        EXPECT(c == 0);  // Missing.
+        EXPECT(a == 1); // Present.
+        EXPECT(b == 1); // Present.
+        EXPECT(c == 0); // Missing.
     }
 
     // With a filter.
@@ -69,14 +69,14 @@ void example(mongocxx::database db) {
 
         count_fields(db.list_collections(filter.view()));
 
-        EXPECT(a == 1);  // Present.
-        EXPECT(b == 0);  // Filtered.
-        EXPECT(c == 0);  // Missing.
+        EXPECT(a == 1); // Present.
+        EXPECT(b == 0); // Filtered.
+        EXPECT(c == 0); // Missing.
     }
 }
 // [Example]
 
-}  // namespace
+} // namespace
 
 RUNNER_REGISTER_COMPONENT_FOR_SINGLE() {
     mongocxx::client client{mongocxx::uri{}};

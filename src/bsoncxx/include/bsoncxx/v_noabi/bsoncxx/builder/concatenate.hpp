@@ -119,17 +119,17 @@ inline concatenate_array concatenate(array::view_or_value array) {
     return {std::move(array)};
 }
 
-}  // namespace builder
-}  // namespace v_noabi
-}  // namespace bsoncxx
+} // namespace builder
+} // namespace v_noabi
+} // namespace bsoncxx
 
 namespace bsoncxx {
 namespace builder {
 
 using ::bsoncxx::v_noabi::builder::concatenate;
 
-}  // namespace builder
-}  // namespace bsoncxx
+} // namespace builder
+} // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>
 
@@ -149,7 +149,7 @@ v_noabi::builder::concatenate_doc concatenate(v_noabi::document::view_or_value d
 /// @ref bsoncxx::v_noabi::builder::concatenate(v_noabi::array::view_or_value array)
 v_noabi::builder::concatenate_array concatenate(v_noabi::array::view_or_value array);
 
-}  // namespace builder
-}  // namespace bsoncxx
+} // namespace builder
+} // namespace bsoncxx
 
-#endif  // defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
+#endif // defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

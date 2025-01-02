@@ -58,4 +58,4 @@ TEST_CASE("find", "[find][option]") {
     CHECK_OPTIONAL_ARGUMENT(find_opts, skip, 3);
     CHECK_OPTIONAL_ARGUMENT(find_opts, sort, sort.view());
 }
-}  // namespace
+} // namespace

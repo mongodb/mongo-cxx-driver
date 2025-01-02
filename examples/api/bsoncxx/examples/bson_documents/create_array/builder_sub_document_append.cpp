@@ -33,19 +33,18 @@ void example() {
     std::string keys[] = {"a", "b", "c"};
     std::int32_t values[] = {1, 2, 3};
 
-    bsoncxx::array::value owner =
-        bsoncxx::builder::basic::make_array([&](bsoncxx::builder::basic::sub_document doc) {
-            for (int i = 0; i < 3; ++i) {
-                doc.append(kvp(keys[i], values[i]));
-            }
-        });
+    bsoncxx::array::value owner = bsoncxx::builder::basic::make_array([&](bsoncxx::builder::basic::sub_document doc) {
+        for (int i = 0; i < 3; ++i) {
+            doc.append(kvp(keys[i], values[i]));
+        }
+    });
     bsoncxx::document::view v = owner.view()[0].get_document().value;
 
     EXPECT(v == bsoncxx::from_json(R"({"a": 1, "b": 2, "c": 3})"));
 }
 // [Example]
 
-}  // namespace
+} // namespace
 
 RUNNER_REGISTER_COMPONENT() {
     example();

@@ -36,9 +36,9 @@ void example(mongocxx::database db) {
     {
         std::vector<std::string> names = db.list_collection_names();
 
-        EXPECT(std::count(names.begin(), names.end(), "a") == 1);  // Present.
-        EXPECT(std::count(names.begin(), names.end(), "b") == 1);  // Present.
-        EXPECT(std::count(names.begin(), names.end(), "c") == 0);  // Missing.
+        EXPECT(std::count(names.begin(), names.end(), "a") == 1); // Present.
+        EXPECT(std::count(names.begin(), names.end(), "b") == 1); // Present.
+        EXPECT(std::count(names.begin(), names.end(), "c") == 0); // Missing.
     }
 
     // With a filter.
@@ -47,14 +47,14 @@ void example(mongocxx::database db) {
 
         std::vector<std::string> names = db.list_collection_names(filter.view());
 
-        EXPECT(std::count(names.begin(), names.end(), "a") == 1);  // Present.
-        EXPECT(std::count(names.begin(), names.end(), "b") == 0);  // Filtered.
-        EXPECT(std::count(names.begin(), names.end(), "c") == 0);  // Missing.
+        EXPECT(std::count(names.begin(), names.end(), "a") == 1); // Present.
+        EXPECT(std::count(names.begin(), names.end(), "b") == 0); // Filtered.
+        EXPECT(std::count(names.begin(), names.end(), "c") == 0); // Missing.
     }
 }
 // [Example]
 
-}  // namespace
+} // namespace
 
 RUNNER_REGISTER_COMPONENT_FOR_SINGLE() {
     mongocxx::client client{mongocxx::uri{}};

@@ -72,23 +72,21 @@ class mock<R(MONGOCXX_ABI_CDECL*)(Args...)> {
         friend mock;
 
        public:
-        instance(const instance&) = delete;
-        instance& operator=(const instance&) = delete;
+        instance(instance const&) = delete;
+        instance& operator=(instance const&) = delete;
 
         ~instance() {
             _parent->destroy_active_instance();
         }
 
         // Interposing functions replace C-Driver functionality completely
-        rule& interpose(const std::function<R(Args...)>& func) {
+        rule& interpose(std::function<R(Args...)> const& func) {
             _callbacks.emplace([func](Args... args) { return func(args...); });
 
             return _callbacks.top();
         }
 
-        template <typename T,
-                  typename... U,
-                  bsoncxx::detail::requires_t<int, std::is_same<T, R>> = 0>
+        template <typename T, typename... U, bsoncxx::detail::requires_t<int, std::is_same<T, R>> = 0>
         rule& interpose(T r, U... rs) {
             std::array<R, sizeof...(rs) + 1> vec = {r, rs...};
             std::size_t i = 0;
@@ -133,8 +131,8 @@ class mock<R(MONGOCXX_ABI_CDECL*)(Args...)> {
 
     mock(underlying_ptr func) : _func(std::move(func)) {}
     mock(mock&&) = delete;
-    mock(const mock&) = delete;
-    mock& operator=(const mock&) = delete;
+    mock(mock const&) = delete;
+    mock& operator=(mock const&) = delete;
 
     R operator()(Args... args) {
         auto instance = active_instance();
@@ -158,9 +156,9 @@ class mock<R(MONGOCXX_ABI_CDECL*)(Args...)> {
 
    private:
     instance* active_instance() {
-        const auto id = std::this_thread::get_id();
+        auto const id = std::this_thread::get_id();
         std::lock_guard<std::mutex> lock(_active_instances_lock);
-        const auto iterator = _active_instances.find(id);
+        auto const iterator = _active_instances.find(id);
         if (iterator != _active_instances.end()) {
             return iterator->second;
         }
@@ -168,26 +166,26 @@ class mock<R(MONGOCXX_ABI_CDECL*)(Args...)> {
     }
 
     void active_instance(instance* instance) {
-        const auto id = std::this_thread::get_id();
+        auto const id = std::this_thread::get_id();
         std::lock_guard<std::mutex> lock(_active_instances_lock);
 
         auto& current = _active_instances[id];
-        assert(!current);  // It is impossible to create two instances in a single thread
+        assert(!current); // It is impossible to create two instances in a single thread
         current = instance;
     }
 
     void destroy_active_instance() {
-        const auto id = std::this_thread::get_id();
+        auto const id = std::this_thread::get_id();
         std::lock_guard<std::mutex> lock(_active_instances_lock);
         _active_instances.erase(id);
     }
 
     std::mutex _active_instances_lock;
     std::unordered_map<std::thread::id, instance*> _active_instances;
-    const underlying_ptr _func;
+    underlying_ptr const _func;
 };
 
-}  // namespace test_util
-}  // namespace mongocxx
+} // namespace test_util
+} // namespace mongocxx
 
 #include <mongocxx/config/private/postlude.hh>

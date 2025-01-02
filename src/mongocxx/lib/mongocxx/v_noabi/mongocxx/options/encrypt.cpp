@@ -34,8 +34,7 @@ encrypt& encrypt::key_id(bsoncxx::v_noabi::types::bson_value::view_or_value key_
     return *this;
 }
 
-const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value>&
-encrypt::key_id() const {
+bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value> const& encrypt::key_id() const {
     return _key_id;
 }
 
@@ -44,7 +43,7 @@ encrypt& encrypt::key_alt_name(std::string name) {
     return *this;
 }
 
-const bsoncxx::v_noabi::stdx::optional<std::string>& encrypt::key_alt_name() const {
+bsoncxx::v_noabi::stdx::optional<std::string> const& encrypt::key_alt_name() const {
     return _key_alt_name;
 }
 
@@ -53,7 +52,7 @@ encrypt& encrypt::algorithm(encrypt::encryption_algorithm algorithm) {
     return *this;
 }
 
-const bsoncxx::v_noabi::stdx::optional<encrypt::encryption_algorithm>& encrypt::algorithm() const {
+bsoncxx::v_noabi::stdx::optional<encrypt::encryption_algorithm> const& encrypt::algorithm() const {
     return _algorithm;
 }
 
@@ -62,7 +61,7 @@ encrypt& encrypt::contention_factor(int64_t contention_factor) {
     return *this;
 }
 
-const bsoncxx::v_noabi::stdx::optional<int64_t>& encrypt::contention_factor() const {
+bsoncxx::v_noabi::stdx::optional<int64_t> const& encrypt::contention_factor() const {
     return _contention_factor;
 }
 
@@ -71,8 +70,7 @@ encrypt& encrypt::query_type(encrypt::encryption_query_type query_type) {
     return *this;
 }
 
-const bsoncxx::v_noabi::stdx::optional<encrypt::encryption_query_type>& encrypt::query_type()
-    const {
+bsoncxx::v_noabi::stdx::optional<encrypt::encryption_query_type> const& encrypt::query_type() const {
     return _query_type;
 }
 
@@ -81,7 +79,7 @@ encrypt& encrypt::range_opts(options::range opts) {
     return *this;
 }
 
-const bsoncxx::v_noabi::stdx::optional<options::range>& encrypt::range_opts() const {
+bsoncxx::v_noabi::stdx::optional<options::range> const& encrypt::range_opts() const {
     return _range_opts;
 }
 
@@ -94,10 +92,9 @@ void* encrypt::convert() const {
         }
     };
 
-    auto opts_owner =
-        std::unique_ptr<mongoc_client_encryption_encrypt_opts_t, encrypt_opts_deleter>(
-            libmongoc::client_encryption_encrypt_opts_new());
-    const auto opts = opts_owner.get();
+    auto opts_owner = std::unique_ptr<mongoc_client_encryption_encrypt_opts_t, encrypt_opts_deleter>(
+        libmongoc::client_encryption_encrypt_opts_new());
+    auto const opts = opts_owner.get();
 
     // libmongoc will error if both key_id and key_alt_name are set, so no need to check here.
 
@@ -109,12 +106,10 @@ void* encrypt::convert() const {
         auto key_id = _key_id->view().get_binary();
 
         if (key_id.sub_type != bsoncxx::v_noabi::binary_sub_type::k_uuid) {
-            throw exception{error_code::k_invalid_parameter,
-                            "key id must be a binary value with subtype 4 (UUID)"};
+            throw exception{error_code::k_invalid_parameter, "key id must be a binary value with subtype 4 (UUID)"};
         }
 
-        libmongoc::client_encryption_encrypt_opts_set_keyid(
-            opts, detail::scoped_bson_value(key_id).get());
+        libmongoc::client_encryption_encrypt_opts_set_keyid(opts, detail::scoped_bson_value(key_id).get());
     }
 
     if (_key_alt_name) {
@@ -128,43 +123,35 @@ void* encrypt::convert() const {
                     opts, "AEAD_AES_256_CBC_HMAC_SHA_512-Deterministic");
                 break;
             case encryption_algorithm::k_random:
-                libmongoc::client_encryption_encrypt_opts_set_algorithm(
-                    opts, "AEAD_AES_256_CBC_HMAC_SHA_512-Random");
+                libmongoc::client_encryption_encrypt_opts_set_algorithm(opts, "AEAD_AES_256_CBC_HMAC_SHA_512-Random");
                 break;
             case encryption_algorithm::k_indexed:
-                libmongoc::client_encryption_encrypt_opts_set_algorithm(
-                    opts, MONGOC_ENCRYPT_ALGORITHM_INDEXED);
+                libmongoc::client_encryption_encrypt_opts_set_algorithm(opts, MONGOC_ENCRYPT_ALGORITHM_INDEXED);
                 break;
             case encryption_algorithm::k_unindexed:
-                libmongoc::client_encryption_encrypt_opts_set_algorithm(
-                    opts, MONGOC_ENCRYPT_ALGORITHM_UNINDEXED);
+                libmongoc::client_encryption_encrypt_opts_set_algorithm(opts, MONGOC_ENCRYPT_ALGORITHM_UNINDEXED);
                 break;
             case encryption_algorithm::k_range:
-                libmongoc::client_encryption_encrypt_opts_set_algorithm(
-                    opts, MONGOC_ENCRYPT_ALGORITHM_RANGE);
+                libmongoc::client_encryption_encrypt_opts_set_algorithm(opts, MONGOC_ENCRYPT_ALGORITHM_RANGE);
                 break;
             default:
-                throw exception{error_code::k_invalid_parameter,
-                                "unsupported encryption algorithm"};
+                throw exception{error_code::k_invalid_parameter, "unsupported encryption algorithm"};
         }
     } else {
         // libmongoc will error in this case, encryption algorithm must be set.
     }
 
     if (_contention_factor) {
-        libmongoc::client_encryption_encrypt_opts_set_contention_factor(opts,
-                                                                        _contention_factor.value());
+        libmongoc::client_encryption_encrypt_opts_set_contention_factor(opts, _contention_factor.value());
     }
 
     if (_query_type) {
         switch (*_query_type) {
             case encryption_query_type::k_equality:
-                libmongoc::client_encryption_encrypt_opts_set_query_type(
-                    opts, MONGOC_ENCRYPT_QUERY_TYPE_EQUALITY);
+                libmongoc::client_encryption_encrypt_opts_set_query_type(opts, MONGOC_ENCRYPT_QUERY_TYPE_EQUALITY);
                 break;
             case encryption_query_type::k_range:
-                libmongoc::client_encryption_encrypt_opts_set_query_type(
-                    opts, MONGOC_ENCRYPT_QUERY_TYPE_RANGE);
+                libmongoc::client_encryption_encrypt_opts_set_query_type(opts, MONGOC_ENCRYPT_QUERY_TYPE_RANGE);
                 break;
             default:
                 throw exception{error_code::k_invalid_parameter, "unsupported query type"};
@@ -178,16 +165,15 @@ void* encrypt::convert() const {
             }
         };
 
-        auto range_opts_owner =
-            std::unique_ptr<mongoc_client_encryption_encrypt_range_opts_t, range_opts_deleter>(
-                libmongoc::client_encryption_encrypt_range_opts_new());
-        const auto range_opts = range_opts_owner.get();
+        auto range_opts_owner = std::unique_ptr<mongoc_client_encryption_encrypt_range_opts_t, range_opts_deleter>(
+            libmongoc::client_encryption_encrypt_range_opts_new());
+        auto const range_opts = range_opts_owner.get();
 
-        const auto& min = _range_opts->min();
-        const auto& max = _range_opts->max();
-        const auto& precision = _range_opts->precision();
-        const auto& sparsity = _range_opts->sparsity();
-        const auto& trim_factor = _range_opts->trim_factor();
+        auto const& min = _range_opts->min();
+        auto const& max = _range_opts->max();
+        auto const& precision = _range_opts->precision();
+        auto const& sparsity = _range_opts->sparsity();
+        auto const& trim_factor = _range_opts->trim_factor();
 
         if (min) {
             libmongoc::client_encryption_encrypt_range_opts_set_min(
@@ -208,8 +194,7 @@ void* encrypt::convert() const {
         }
 
         if (trim_factor) {
-            libmongoc::client_encryption_encrypt_range_opts_set_trim_factor(range_opts,
-                                                                            *trim_factor);
+            libmongoc::client_encryption_encrypt_range_opts_set_trim_factor(range_opts, *trim_factor);
         }
 
         libmongoc::client_encryption_encrypt_opts_set_range_opts(opts, range_opts);
@@ -218,6 +203,6 @@ void* encrypt::convert() const {
     return opts_owner.release();
 }
 
-}  // namespace options
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace options
+} // namespace v_noabi
+} // namespace mongocxx

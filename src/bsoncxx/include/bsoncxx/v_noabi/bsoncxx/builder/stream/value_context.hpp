@@ -88,7 +88,7 @@ class value_context {
     ///
     /// The argument must be an open_document_type token (it is otherwise ignored).
     ///
-    key_context<base> operator<<(const open_document_type) {
+    key_context<base> operator<<(open_document_type const) {
         _core->open_document();
         return wrap_document();
     }
@@ -98,7 +98,7 @@ class value_context {
     ///
     /// The argument must be an open_array_type token (it is otherwise ignored).
     ///
-    array_context<base> operator<<(const open_array_type) {
+    array_context<base> operator<<(open_array_type const) {
         _core->open_array();
         return wrap_array();
     }
@@ -134,10 +134,10 @@ class value_context {
     core* _core;
 };
 
-}  // namespace stream
-}  // namespace builder
-}  // namespace v_noabi
-}  // namespace bsoncxx
+} // namespace stream
+} // namespace builder
+} // namespace v_noabi
+} // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>
 

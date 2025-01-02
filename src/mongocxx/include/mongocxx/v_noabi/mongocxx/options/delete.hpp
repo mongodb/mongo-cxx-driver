@@ -59,8 +59,7 @@ class delete_options {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/collation/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<
-                              bsoncxx::v_noabi::document::view_or_value>&)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const&)
     collation() const;
 
     ///
@@ -87,8 +86,7 @@ class delete_options {
     /// @see
     /// - https://www.mongodb.com/docs/manual/core/write-concern/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<
-                              mongocxx::v_noabi::write_concern>&)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern> const&)
     write_concern() const;
 
     ///
@@ -111,7 +109,7 @@ class delete_options {
     ///
     /// @return The current hint, if one is set.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::hint>&)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::hint> const&)
     hint() const;
 
     ///
@@ -132,8 +130,7 @@ class delete_options {
     /// @return
     ///  The current let option.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<
-                              bsoncxx::v_noabi::document::view_or_value>)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const)
     let() const;
 
     ///
@@ -155,8 +152,8 @@ class delete_options {
     /// @return
     ///  The current comment option.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<
-                              bsoncxx::v_noabi::types::bson_value::view_or_value>)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<
+                              bsoncxx::v_noabi::types::bson_value::view_or_value> const)
     comment() const;
 
    private:
@@ -167,9 +164,9 @@ class delete_options {
     bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value> _comment;
 };
 
-}  // namespace options
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace options
+} // namespace v_noabi
+} // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
 

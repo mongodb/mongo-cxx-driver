@@ -44,4 +44,4 @@ TEST_CASE("update_one model tests", "[update_one][model]") {
     CHECK_OPTIONAL_ARGUMENT(uo, collation, collation.view());
     CHECK_OPTIONAL_ARGUMENT(uo, array_filters, array_filters.view());
 }
-}  // namespace
+} // namespace

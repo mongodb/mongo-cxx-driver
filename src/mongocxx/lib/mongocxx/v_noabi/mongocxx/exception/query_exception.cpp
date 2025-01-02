@@ -19,5 +19,5 @@ namespace v_noabi {
 
 query_exception::~query_exception() = default;
 
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace v_noabi
+} // namespace mongocxx

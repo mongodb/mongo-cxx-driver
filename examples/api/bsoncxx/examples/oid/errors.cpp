@@ -24,26 +24,26 @@ namespace {
 // [Example]
 void example() {
     try {
-        bsoncxx::oid oid{"invalid"};  // Throws.
+        bsoncxx::oid oid{"invalid"}; // Throws.
 
         EXPECT(false && "should not reach this point");
-    } catch (const bsoncxx::exception& ex) {
+    } catch (bsoncxx::exception const& ex) {
         EXPECT(ex.code() == bsoncxx::error_code::k_invalid_oid);
     }
 
     try {
         char bytes[1]{};
 
-        bsoncxx::oid oid{bytes, sizeof(bytes)};  // Throws.
+        bsoncxx::oid oid{bytes, sizeof(bytes)}; // Throws.
 
         EXPECT(false && "should not reach this point");
-    } catch (const bsoncxx::exception& ex) {
+    } catch (bsoncxx::exception const& ex) {
         EXPECT(ex.code() == bsoncxx::error_code::k_invalid_oid);
     }
 }
 // [Example]
 
-}  // namespace
+} // namespace
 
 RUNNER_REGISTER_COMPONENT() {
     example();

@@ -27,8 +27,7 @@ using namespace bsoncxx;
 template <typename begin_t, typename end_t>
 class range_array_appender {
    public:
-    range_array_appender(begin_t begin, end_t end)
-        : _begin(std::move(begin)), _end(std::move(end)) {}
+    range_array_appender(begin_t begin, end_t end) : _begin(std::move(begin)), _end(std::move(end)) {}
 
     void operator()(bsoncxx::builder::stream::array_context<> ac) const {
         for (auto iter = _begin; iter != _end; ++iter) {
@@ -43,8 +42,7 @@ class range_array_appender {
 
 template <typename begin_t, typename end_t>
 range_array_appender<begin_t, end_t> make_range_array_appender(begin_t&& begin, end_t&& end) {
-    return range_array_appender<begin_t, end_t>(std::forward<begin_t>(begin),
-                                                std::forward<end_t>(end));
+    return range_array_appender<begin_t, end_t>(std::forward<begin_t>(begin), std::forward<end_t>(end));
 }
 
 // concatenates arbitrary ranges into an key context
@@ -66,8 +64,7 @@ class range_kvp_appender {
 
 template <typename begin_t, typename end_t>
 range_kvp_appender<begin_t, end_t> make_range_kvp_appender(begin_t&& begin, end_t&& end) {
-    return range_kvp_appender<begin_t, end_t>(std::forward<begin_t>(begin),
-                                              std::forward<end_t>(end));
+    return range_kvp_appender<begin_t, end_t>(std::forward<begin_t>(begin), std::forward<end_t>(end));
 }
 
 int EXAMPLES_CDECL main() {
@@ -83,8 +80,7 @@ int EXAMPLES_CDECL main() {
     std::map<std::string, int> some_kvps = {{"a", 1}, {"b", 2}, {"c", 3}};
 
     // Adapt our kvps
-    auto doc = document() << make_range_kvp_appender(some_kvps.begin(), some_kvps.end())
-                          << finalize;
+    auto doc = document() << make_range_kvp_appender(some_kvps.begin(), some_kvps.end()) << finalize;
     // Now doc = {
     //     "a" : 1,
     //     "b" : 2,
@@ -95,8 +91,7 @@ int EXAMPLES_CDECL main() {
     std::vector<int> some_numbers = {1, 2, 3};
 
     // Adapt our values
-    auto arr = array() << make_range_array_appender(some_numbers.begin(), some_numbers.end())
-                       << finalize;
+    auto arr = array() << make_range_array_appender(some_numbers.begin(), some_numbers.end()) << finalize;
     // Now arr = {
     //     "0" : 1,
     //     "1" : 2,

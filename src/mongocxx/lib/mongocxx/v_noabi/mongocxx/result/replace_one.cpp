@@ -22,7 +22,7 @@ namespace result {
 
 replace_one::replace_one(result::bulk_write result) : _result(std::move(result)) {}
 
-const result::bulk_write& replace_one::result() const {
+result::bulk_write const& replace_one::result() const {
     return _result;
 }
 
@@ -34,21 +34,20 @@ std::int32_t replace_one::modified_count() const {
     return _result.modified_count();
 }
 
-bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::element> replace_one::upserted_id()
-    const {
+bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::element> replace_one::upserted_id() const {
     if (_result.upserted_ids().size() == 0) {
         return bsoncxx::v_noabi::stdx::nullopt;
     }
     return _result.upserted_ids()[0];
 }
 
-bool operator==(const replace_one& lhs, const replace_one& rhs) {
+bool operator==(replace_one const& lhs, replace_one const& rhs) {
     return lhs.result() == rhs.result();
 }
-bool operator!=(const replace_one& lhs, const replace_one& rhs) {
+bool operator!=(replace_one const& lhs, replace_one const& rhs) {
     return !(lhs == rhs);
 }
 
-}  // namespace result
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace result
+} // namespace v_noabi
+} // namespace mongocxx

@@ -32,8 +32,8 @@ std::string server_api::version_to_string(server_api::version version) {
         case server_api::version::k_version_1:
             return "1";
         default:
-            throw mongocxx::v_noabi::logic_error{mongocxx::v_noabi::error_code::k_invalid_parameter,
-                                                 "invalid server API version"};
+            throw mongocxx::v_noabi::logic_error{
+                mongocxx::v_noabi::error_code::k_invalid_parameter, "invalid server API version"};
     }
 }
 
@@ -41,8 +41,8 @@ server_api::version server_api::version_from_string(bsoncxx::v_noabi::stdx::stri
     if (version == "1") {
         return server_api::version::k_version_1;
     }
-    throw mongocxx::v_noabi::logic_error{mongocxx::v_noabi::error_code::k_invalid_parameter,
-                                         "invalid server API version"};
+    throw mongocxx::v_noabi::logic_error{
+        mongocxx::v_noabi::error_code::k_invalid_parameter, "invalid server API version"};
 }
 
 server_api::server_api(server_api::version version) : _version(std::move(version)) {}
@@ -52,7 +52,7 @@ server_api& server_api::strict(bool strict) {
     return *this;
 }
 
-const bsoncxx::v_noabi::stdx::optional<bool>& server_api::strict() const {
+bsoncxx::v_noabi::stdx::optional<bool> const& server_api::strict() const {
     return _strict;
 }
 
@@ -61,7 +61,7 @@ server_api& server_api::deprecation_errors(bool deprecation_errors) {
     return *this;
 }
 
-const bsoncxx::v_noabi::stdx::optional<bool>& server_api::deprecation_errors() const {
+bsoncxx::v_noabi::stdx::optional<bool> const& server_api::deprecation_errors() const {
     return _deprecation_errors;
 }
 
@@ -69,6 +69,6 @@ server_api::version server_api::get_version() const {
     return _version;
 }
 
-}  // namespace options
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace options
+} // namespace v_noabi
+} // namespace mongocxx

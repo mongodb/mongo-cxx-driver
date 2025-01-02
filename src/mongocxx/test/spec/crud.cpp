@@ -34,4 +34,4 @@ TEST_CASE("CRUD legacy spec automated tests", "[crud_spec]") {
 
     run_tests_in_suite("CRUD_LEGACY_TESTS_PATH", _run_crud_tests_in_file);
 }
-}  // namespace
+} // namespace

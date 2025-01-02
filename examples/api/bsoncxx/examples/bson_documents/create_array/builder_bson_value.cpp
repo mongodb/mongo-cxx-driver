@@ -35,14 +35,13 @@ void example() {
         "three",
     };
 
-    bsoncxx::array::value arr =
-        bsoncxx::builder::basic::make_array(values[0], values[1], values[2]);
+    bsoncxx::array::value arr = bsoncxx::builder::basic::make_array(values[0], values[1], values[2]);
 
     EXPECT(arr.view() == bsoncxx::builder::basic::make_array(1, 2.0, "three"));
 }
 // [Example]
 
-}  // namespace
+} // namespace
 
 RUNNER_REGISTER_COMPONENT() {
     example();

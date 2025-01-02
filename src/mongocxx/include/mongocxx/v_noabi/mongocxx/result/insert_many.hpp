@@ -44,8 +44,8 @@ class insert_many {
 
     ~insert_many() = default;
 
-    MONGOCXX_ABI_EXPORT_CDECL() insert_many(const insert_many&);
-    MONGOCXX_ABI_EXPORT_CDECL(insert_many&) operator=(const insert_many&);
+    MONGOCXX_ABI_EXPORT_CDECL() insert_many(insert_many const&);
+    MONGOCXX_ABI_EXPORT_CDECL(insert_many&) operator=(insert_many const&);
 
     insert_many(insert_many&&) = default;
     insert_many& operator=(insert_many&&) = default;
@@ -55,7 +55,7 @@ class insert_many {
     ///
     /// @return The raw bulk write result.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const result::bulk_write&) result() const;
+    MONGOCXX_ABI_EXPORT_CDECL(result::bulk_write const&) result() const;
 
     ///
     /// Gets the number of documents that were inserted during this operation.
@@ -73,8 +73,8 @@ class insert_many {
     ///
     MONGOCXX_ABI_EXPORT_CDECL(id_map) inserted_ids() const;
 
-    friend MONGOCXX_ABI_EXPORT_CDECL(bool) operator==(const insert_many&, const insert_many&);
-    friend MONGOCXX_ABI_EXPORT_CDECL(bool) operator!=(const insert_many&, const insert_many&);
+    friend MONGOCXX_ABI_EXPORT_CDECL(bool) operator==(insert_many const&, insert_many const&);
+    friend MONGOCXX_ABI_EXPORT_CDECL(bool) operator!=(insert_many const&, insert_many const&);
 
    private:
     friend ::mongocxx::v_noabi::collection;
@@ -92,9 +92,9 @@ class insert_many {
     id_map _inserted_ids;
 };
 
-}  // namespace result
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace result
+} // namespace v_noabi
+} // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
 

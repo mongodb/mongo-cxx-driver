@@ -43,5 +43,5 @@ bsoncxx::v_noabi::stdx::string_view to_string(log_level level) {
 logger::logger() = default;
 logger::~logger() = default;
 
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace v_noabi
+} // namespace mongocxx

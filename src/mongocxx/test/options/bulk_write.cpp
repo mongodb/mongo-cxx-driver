@@ -29,4 +29,4 @@ TEST_CASE("bulk_write opts", "[bulk_write][options]") {
     CHECK_OPTIONAL_ARGUMENT(bulk_write_opts, write_concern, write_concern{});
     CHECK_OPTIONAL_ARGUMENT(bulk_write_opts, bypass_document_validation, true);
 }
-}  // namespace
+} // namespace

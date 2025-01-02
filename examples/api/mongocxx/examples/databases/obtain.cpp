@@ -32,7 +32,7 @@ void example(mongocxx::client client) {
 }
 // [Example]
 
-}  // namespace
+} // namespace
 
 RUNNER_REGISTER_COMPONENT_WITH_INSTANCE() {
     example(mongocxx::client{mongocxx::uri{}});

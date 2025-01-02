@@ -65,8 +65,7 @@ int EXAMPLES_CDECL main() {
     // Use `std::make_unique` with C++14 and newer.
     auto buffer = std::unique_ptr<std::uint8_t[]>(new std::uint8_t[buffer_size]);
 
-    while (auto length_read =
-               downloader.read(buffer.get(), static_cast<std::size_t>(buffer_size))) {
+    while (auto length_read = downloader.read(buffer.get(), static_cast<std::size_t>(buffer_size))) {
         bytes_counter += static_cast<std::int32_t>(length_read);
 
         // Do something with the contents of buffer.

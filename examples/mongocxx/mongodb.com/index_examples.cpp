@@ -22,7 +22,7 @@
 
 namespace {
 
-void index_examples(const mongocxx::database& db) {
+void index_examples(mongocxx::database const& db) {
     {
         // Start Index Example 1
         using namespace bsoncxx::builder::basic;
@@ -35,22 +35,21 @@ void index_examples(const mongocxx::database& db) {
         using namespace bsoncxx::builder::basic;
         auto result = db["restaurants"].create_index(
             make_document(kvp("cuisine", 1), kvp("name", 1)),
-            make_document(kvp("partialFilterExpression",
-                              make_document(kvp("rating", make_document(kvp("$gt", 5)))))));
+            make_document(kvp("partialFilterExpression", make_document(kvp("rating", make_document(kvp("$gt", 5)))))));
         // End Index Example 2
     }
 }
 
-}  // namespace
+} // namespace
 
 int EXAMPLES_CDECL main() {
     // The mongocxx::instance constructor and destructor initialize and shut down the driver,
     // respectively. Therefore, a mongocxx::instance must be created before using the driver and
     // must remain alive for as long as the driver is in use.
-    const mongocxx::instance inst{};
+    mongocxx::instance const inst{};
 
-    const mongocxx::client conn{mongocxx::uri{}};
-    const auto db = conn["documentation_examples"];
+    mongocxx::client const conn{mongocxx::uri{}};
+    auto const db = conn["documentation_examples"];
     index_examples(db);
 
     return EXIT_SUCCESS;

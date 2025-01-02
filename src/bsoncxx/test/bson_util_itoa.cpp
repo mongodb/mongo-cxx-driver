@@ -29,4 +29,4 @@ TEST_CASE("util::itoa is equivalent to to_string(int)", "[bsoncxx::util::itoa]")
     }
 #endif
 }
-}  // namespace
+} // namespace

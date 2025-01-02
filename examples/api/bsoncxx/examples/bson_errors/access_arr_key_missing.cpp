@@ -31,11 +31,11 @@ void example(bsoncxx::array::view arr) {
 
     bsoncxx::array::element e = arr[3];
 
-    EXPECT(!e);  // A missing element is represented as an invalid element.
+    EXPECT(!e); // A missing element is represented as an invalid element.
 }
 // [Example]
 
-}  // namespace
+} // namespace
 
 RUNNER_REGISTER_COMPONENT() {
     example(bsoncxx::builder::basic::make_array(1, 2, 3));

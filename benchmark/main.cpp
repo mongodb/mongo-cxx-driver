@@ -32,7 +32,7 @@ int main(int argc, char* argv[]) {
 
     if (argc > 1) {
         if (bsoncxx::stdx::string_view(argv[1]) == "all") {
-            for (const auto& [name, type] : names_types) {
+            for (auto const& [name, type] : names_types) {
                 types.insert(type);
             }
         } else {

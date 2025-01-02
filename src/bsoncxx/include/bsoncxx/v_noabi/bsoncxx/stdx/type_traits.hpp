@@ -62,7 +62,7 @@ using remove_cvref_t = remove_cv_t<remove_reference_t<T>>;
 
 // Create a reference-to-const for the given type
 template <typename T>
-using const_reference_t = add_lvalue_reference_t<const remove_cvref_t<T>>;
+using const_reference_t = add_lvalue_reference_t<remove_cvref_t<T> const>;
 
 // Workaround for CWG issue 1558.
 template <typename...>
@@ -144,13 +144,13 @@ struct vc140_detection<Dflt, void_t<Oper<Args...>>, Oper, Args...> {
     using type = Oper<Args...>;
 };
 
-}  // namespace impl_detection
+} // namespace impl_detection
 
 // The type yielded by detected_t if the given type operator does not yield a type.
 struct nonesuch {
     ~nonesuch() = delete;
-    nonesuch(const nonesuch&) = delete;
-    void operator=(const nonesuch&) = delete;
+    nonesuch(nonesuch const&) = delete;
+    void operator=(nonesuch const&) = delete;
 };
 
 // Results in true_type if the given metafunction yields a valid type when applied to the given
@@ -159,8 +159,7 @@ struct nonesuch {
 // @tparam Oper A template that evaluates to a type
 // @tparam Args Some number of arguments to apply to Oper
 template <template <class...> class Oper, typename... Args>
-struct is_detected
-    : decltype(impl_detection::is_detected_f<Oper>(static_cast<mp_list<Args...>*>(nullptr))) {};
+struct is_detected : decltype(impl_detection::is_detected_f<Oper>(static_cast<mp_list<Args...>*>(nullptr))) {};
 
 // If Oper<Args...> evaluates to a type, yields that type. Otherwise, yields the Dflt type.
 //
@@ -172,8 +171,7 @@ using detected_or =
 #if defined(_MSC_VER) && _MSC_VER < 1910
     typename impl_detection::vc140_detection<Dflt, void, Oper, Args...>::type
 #else
-    typename impl_detection::detection<
-        is_detected<Oper, Args...>::value>::template f<Dflt, Oper, Args...>
+    typename impl_detection::detection<is_detected<Oper, Args...>::value>::template f<Dflt, Oper, Args...>
 #endif
     ;
 
@@ -242,7 +240,7 @@ struct disj<std::true_type, mp_list<H>> : H {};
 template <>
 struct disj<std::true_type, mp_list<>> : std::false_type {};
 
-}  // namespace impl_logic
+} // namespace impl_logic
 
 // Inherits unambiguously from the first of `Ts...` for which `Ts::value` is a valid expression
 // equal to `false`, or the last of `Ts...` otherwise.
@@ -279,13 +277,13 @@ using true_t = std::true_type;
 namespace impl_requires {
 
 template <typename R>
-R norm_conjunction(const R&);
+R norm_conjunction(R const&);
 
 template <typename R, typename... Cs>
-conjunction<Cs...> norm_conjunction(const conjunction<Cs...>&);
+conjunction<Cs...> norm_conjunction(conjunction<Cs...> const&);
 
 template <typename T>
-using norm_conjunction_t = decltype(norm_conjunction<T>(std::declval<const T&>()));
+using norm_conjunction_t = decltype(norm_conjunction<T>(std::declval<T const&>()));
 
 template <typename Constraint, typename = void>
 struct requirement;
@@ -303,8 +301,7 @@ struct failed_requirement<conjunction<SubRequirements...>> {
     failed_requirement(int) = delete;
 
     template <typename T>
-    static auto explain(int)
-        -> common_type_t<decltype(requirement<SubRequirements>::test::template explain<T>(0))...>;
+    static auto explain(int) -> common_type_t<decltype(requirement<SubRequirements>::test::template explain<T>(0))...>;
 };
 
 template <typename Constraint, typename>
@@ -320,7 +317,7 @@ struct requirement<Constraint, enable_if_t<Constraint::value>> {
     };
 };
 
-}  // namespace impl_requires
+} // namespace impl_requires
 
 // If none of `Ts::value is 'false'`, yields the type `Type`, otherwise this type is undefined.
 //
@@ -334,8 +331,7 @@ template <typename Type, typename... Traits>
 using requires_t = enable_if_t<conjunction<Traits...>::value, Type>;
 #else
 // Generates better error messages in case of substitution failure than a plain enable_if_t:
-using requires_t =
-    decltype(impl_requires::requirement<conjunction<Traits...>>::test::template explain<Type>(0));
+using requires_t = decltype(impl_requires::requirement<conjunction<Traits...>>::test::template explain<Type>(0));
 #endif
 
 // If any of `Ts::value` is 'true', this type is undefined, otherwise yields the type `Type`.
@@ -367,11 +363,10 @@ struct invoker<false, true> {
 template <>
 struct invoker<true, false> {
     template <typename F, typename Self>
-    constexpr static auto apply(F&& fun, Self&& self)
-        BSONCXX_RETURNS(static_cast<Self&&>(self).*fun);
+    constexpr static auto apply(F&& fun, Self&& self) BSONCXX_RETURNS(static_cast<Self&&>(self).*fun);
 };
 
-}  // namespace impl_invoke
+} // namespace impl_invoke
 
 static constexpr struct invoke_fn {
     // Invoke the given object with the given arguments.
@@ -383,9 +378,8 @@ static constexpr struct invoke_fn {
     constexpr auto operator()(F&& fn, Args&&... args) const
         BSONCXX_RETURNS(impl_invoke::invoker<
                         std::is_member_object_pointer<Fd>::value,
-                        std::is_member_function_pointer<Fd>::value>::apply(static_cast<F&&>(fn),
-                                                                           static_cast<Args&&>(
-                                                                               args)...));
+                        std::is_member_function_pointer<
+                            Fd>::value>::apply(static_cast<F&&>(fn), static_cast<Args&&>(args)...));
     // @endcond
 } invoke;
 
@@ -439,28 +433,27 @@ template <typename T, typename U>
 auto is_swappable_f(rank<0>) -> std::false_type;
 
 template <typename T, typename U>
-auto is_swappable_f(rank<1>)  //
-    noexcept(noexcept(swap(std::declval<T>(), std::declval<U>())) &&
-             noexcept(swap(std::declval<U>(), std::declval<T>())))
-        -> true_t<decltype(swap(std::declval<T>(), std::declval<U>())),
-                  decltype(swap(std::declval<U>(), std::declval<T>()))>;
+auto is_swappable_f(rank<1>) //
+    noexcept(
+        noexcept(swap(std::declval<T>(), std::declval<U>())) && noexcept(swap(std::declval<U>(), std::declval<T>())))
+        -> true_t<
+            decltype(swap(std::declval<T>(), std::declval<U>())),
+            decltype(swap(std::declval<U>(), std::declval<T>()))>;
 
 template <typename T, typename U>
 auto is_nothrow_swappable_f(rank<0>) -> std::false_type;
 
 template <typename T, typename U>
-auto is_nothrow_swappable_f(rank<1>)
-    -> bool_constant<noexcept(swap(std::declval<T>(), std::declval<U>())) &&
-                     noexcept(swap(std::declval<U>(), std::declval<T>()))>;
+auto is_nothrow_swappable_f(rank<1>) -> bool_constant<
+    noexcept(swap(std::declval<T>(), std::declval<U>())) && noexcept(swap(std::declval<U>(), std::declval<T>()))>;
 
-}  // namespace swap_detection
+} // namespace swap_detection
 
 template <typename T, typename U>
 struct is_swappable_with : decltype(swap_detection::is_swappable_f<T, U>(rank<1>{})) {};
 
 template <typename T, typename U>
-struct is_nothrow_swappable_with
-    : decltype(swap_detection::is_nothrow_swappable_f<T, U>(rank<1>{})) {};
+struct is_nothrow_swappable_with : decltype(swap_detection::is_nothrow_swappable_f<T, U>(rank<1>{})) {};
 
 template <typename T>
 struct is_swappable : is_swappable_with<T&, T&> {};
@@ -468,8 +461,8 @@ struct is_swappable : is_swappable_with<T&, T&> {};
 template <typename T>
 struct is_nothrow_swappable : is_nothrow_swappable_with<T&, T&> {};
 
-}  // namespace detail
-}  // namespace bsoncxx
+} // namespace detail
+} // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>
 

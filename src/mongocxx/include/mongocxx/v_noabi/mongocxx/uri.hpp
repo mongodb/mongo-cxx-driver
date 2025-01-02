@@ -82,8 +82,8 @@ class uri {
     ///
     MONGOCXX_ABI_EXPORT_CDECL() ~uri();
 
-    uri(const uri&) = delete;
-    uri& operator=(const uri&) = delete;
+    uri(uri const&) = delete;
+    uri& operator=(uri const&) = delete;
 
     ///
     /// Returns the authentication mechanism from the uri.
@@ -395,8 +395,8 @@ class uri {
     std::unique_ptr<impl> _impl;
 };
 
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace v_noabi
+} // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
 

@@ -97,7 +97,7 @@ class client_session {
     ///
     /// @return The default transaction options.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<transaction>&)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<transaction> const&)
     default_transaction_opts() const;
 
    private:
@@ -109,9 +109,9 @@ class client_session {
     bsoncxx::v_noabi::stdx::optional<transaction> _default_transaction_opts;
 };
 
-}  // namespace options
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace options
+} // namespace v_noabi
+} // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
 

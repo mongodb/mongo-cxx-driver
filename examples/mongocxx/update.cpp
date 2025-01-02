@@ -39,8 +39,9 @@ int EXAMPLES_CDECL main() {
     {
         db["restaurants"].update_one(
             make_document(kvp("name", "Juni")),
-            make_document(kvp("$set", make_document(kvp("cuisine", "American (New)"))),
-                          kvp("$currentDate", make_document(kvp("lastModified", true)))));
+            make_document(
+                kvp("$set", make_document(kvp("cuisine", "American (New)"))),
+                kvp("$currentDate", make_document(kvp("lastModified", true)))));
     }
 
     // Update an embedded document in a single document.
@@ -54,19 +55,22 @@ int EXAMPLES_CDECL main() {
     {
         db["restaurants"].update_many(
             make_document(kvp("address.zipcode", "10016"), kvp("cuisine", "Other")),
-            make_document(kvp("$set", make_document(kvp("cuisine", "Category to be determined"))),
-                          kvp("$currentDate", make_document(kvp("lastModified", true)))));
+            make_document(
+                kvp("$set", make_document(kvp("cuisine", "Category to be determined"))),
+                kvp("$currentDate", make_document(kvp("lastModified", true)))));
     }
 
     // Replace the contents of a single document.
     {
         db["restaurants"].replace_one(
             make_document(kvp("restaurant_id", "41704620")),
-            make_document(kvp("name", "Vella 2"),
-                          kvp("address",
-                              make_document(kvp("coord", make_array(-73.9557413, 40.7720266)),
-                                            kvp("building", "1480"),
-                                            kvp("street", "2 Avenue"),
-                                            kvp("zipcode", "10075")))));
+            make_document(
+                kvp("name", "Vella 2"),
+                kvp("address",
+                    make_document(
+                        kvp("coord", make_array(-73.9557413, 40.7720266)),
+                        kvp("building", "1480"),
+                        kvp("street", "2 Avenue"),
+                        kvp("zipcode", "10075")))));
     }
 }

@@ -29,16 +29,16 @@ void example() {
     EXPECT(!client);
 
     try {
-        mongocxx::uri uri = client.uri();  // DO NOT DO THIS. Throws.
+        mongocxx::uri uri = client.uri(); // DO NOT DO THIS. Throws.
 
         EXPECT(false && "should not reach this point");
-    } catch (const mongocxx::exception& ex) {
+    } catch (mongocxx::exception const& ex) {
         EXPECT(ex.code() == mongocxx::error_code::k_invalid_client_object);
     }
 }
 // [Example]
 
-}  // namespace
+} // namespace
 
 RUNNER_REGISTER_COMPONENT_WITH_INSTANCE() {
     example();

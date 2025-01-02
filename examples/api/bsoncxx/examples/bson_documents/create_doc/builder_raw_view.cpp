@@ -26,14 +26,14 @@ namespace {
 
 // [Example]
 // {"key": "value"}
-void example(const std::uint8_t* data, std::size_t length) {
+void example(std::uint8_t const* data, std::size_t length) {
     bsoncxx::document::view doc{data, length};
 
     EXPECT(doc == bsoncxx::from_json(R"({"key": "value"})"));
 }
 // [Example]
 
-}  // namespace
+} // namespace
 
 RUNNER_REGISTER_COMPONENT() {
     bsoncxx::document::value owner = bsoncxx::from_json(R"({"key": "value"})");

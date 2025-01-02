@@ -22,21 +22,21 @@ namespace v_noabi {
 
 enum class error_code : std::int32_t;
 
-}  // namespace v_noabi
-}  // namespace bsoncxx
+} // namespace v_noabi
+} // namespace bsoncxx
 
 namespace bsoncxx {
 
 using ::bsoncxx::v_noabi::error_code;
 
-}  // namespace bsoncxx
+} // namespace bsoncxx
 
 namespace std {
 
 template <>
 struct is_error_code_enum<bsoncxx::v_noabi::error_code>;
 
-}  // namespace std
+} // namespace std
 
 ///
 /// @file
@@ -50,6 +50,6 @@ namespace bsoncxx {
 /// @ref bsoncxx::v_noabi::error_code
 class error_code {};
 
-}  // namespace bsoncxx
+} // namespace bsoncxx
 
-#endif  // defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
+#endif // defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

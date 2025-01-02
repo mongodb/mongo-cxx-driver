@@ -28,16 +28,16 @@ void example() {
     mongocxx::database db;
 
     try {
-        auto name = db.name();  // DO NOT DO THIS. Throws.
+        auto name = db.name(); // DO NOT DO THIS. Throws.
 
         EXPECT(false && "should not reach this point");
-    } catch (const mongocxx::exception& ex) {
+    } catch (mongocxx::exception const& ex) {
         EXPECT(ex.code() == mongocxx::error_code::k_invalid_database_object);
     }
 }
 // [Example]
 
-}  // namespace
+} // namespace
 
 RUNNER_REGISTER_COMPONENT_WITH_INSTANCE() {
     example();

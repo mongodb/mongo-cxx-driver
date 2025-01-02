@@ -57,4 +57,4 @@ TEST_CASE("time_point is converted to int64 consistently", "[bsoncxx::types::b_d
 
     REQUIRE(unwrapped == d);
 }
-}  // namespace
+} // namespace

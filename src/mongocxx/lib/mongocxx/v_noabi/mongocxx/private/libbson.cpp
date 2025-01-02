@@ -21,7 +21,7 @@ namespace libbson {
 
 namespace {
 
-void doc_to_bson_t(const bsoncxx::v_noabi::document::view& doc, bson_t* bson) {
+void doc_to_bson_t(bsoncxx::v_noabi::document::view const& doc, bson_t* bson) {
     // While bson_init_static is documented as returning false if the bson_t was unable to be
     // initialized, this only occurs when the length of the data passed in is less than five. We
     // assume that the data from the bsoncxx::v_noabi::document::view is valid and that
@@ -29,10 +29,9 @@ void doc_to_bson_t(const bsoncxx::v_noabi::document::view& doc, bson_t* bson) {
     bson_init_static(bson, doc.data(), doc.length());
 }
 
-}  // namespace
+} // namespace
 
-scoped_bson_t::scoped_bson_t(bsoncxx::document::view_or_value doc)
-    : _is_initialized{true}, _doc{std::move(doc)} {
+scoped_bson_t::scoped_bson_t(bsoncxx::document::view_or_value doc) : _is_initialized{true}, _doc{std::move(doc)} {
     doc_to_bson_t(*_doc, &_bson);
 }
 
@@ -42,8 +41,7 @@ void scoped_bson_t::init_from_static(bsoncxx::document::view_or_value doc) {
     doc_to_bson_t(*_doc, &_bson);
 }
 
-scoped_bson_t::scoped_bson_t(bsoncxx::document::view doc)
-    : scoped_bson_t(bsoncxx::document::view_or_value(doc)) {}
+scoped_bson_t::scoped_bson_t(bsoncxx::document::view doc) : scoped_bson_t(bsoncxx::document::view_or_value(doc)) {}
 
 void scoped_bson_t::init_from_static(bsoncxx::document::view doc) {
     this->init_from_static(bsoncxx::document::view_or_value(doc));
@@ -56,15 +54,13 @@ void scoped_bson_t::init_from_static(bsoncxx::document::value doc) {
     this->init_from_static(bsoncxx::document::view_or_value(std::move(doc)));
 }
 
-scoped_bson_t::scoped_bson_t(
-    bsoncxx::v_noabi::stdx::optional<bsoncxx::document::view_or_value> doc) {
+scoped_bson_t::scoped_bson_t(bsoncxx::v_noabi::stdx::optional<bsoncxx::document::view_or_value> doc) {
     if (doc) {
         this->init_from_static(std::move(*doc));
     }
 }
 
-void scoped_bson_t::init_from_static(
-    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> doc) {
+void scoped_bson_t::init_from_static(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> doc) {
     if (doc) {
         this->init_from_static(std::move(*doc));
     }
@@ -116,7 +112,7 @@ void bson_free_deleter(std::uint8_t* ptr) {
     bson_free(ptr);
 }
 
-}  // anonymous namespace
+} // anonymous namespace
 
 bsoncxx::v_noabi::document::value scoped_bson_t::steal() {
     if (!_is_initialized) {
@@ -131,5 +127,5 @@ bsoncxx::v_noabi::document::value scoped_bson_t::steal() {
     return bsoncxx::v_noabi::document::value(buff, length, bson_free_deleter);
 }
 
-}  // namespace libbson
-}  // namespace mongocxx
+} // namespace libbson
+} // namespace mongocxx

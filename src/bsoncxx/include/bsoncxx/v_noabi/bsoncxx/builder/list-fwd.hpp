@@ -22,9 +22,9 @@ class list;
 class document;
 class array;
 
-}  // namespace builder
-}  // namespace v_noabi
-}  // namespace bsoncxx
+} // namespace builder
+} // namespace v_noabi
+} // namespace bsoncxx
 
 namespace bsoncxx {
 namespace builder {
@@ -33,8 +33,8 @@ using ::bsoncxx::v_noabi::builder::array;
 using ::bsoncxx::v_noabi::builder::document;
 using ::bsoncxx::v_noabi::builder::list;
 
-}  // namespace builder
-}  // namespace bsoncxx
+} // namespace builder
+} // namespace bsoncxx
 
 ///
 /// @file
@@ -55,7 +55,7 @@ class document {};
 /// @ref bsoncxx::v_noabi::builder::list
 class list {};
 
-}  // namespace builder
-}  // namespace bsoncxx
+} // namespace builder
+} // namespace bsoncxx
 
-#endif  // defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
+#endif // defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

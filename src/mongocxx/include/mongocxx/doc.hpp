@@ -14,7 +14,7 @@
 
 #if !defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
 #error "This file is for documentation purposes only. It should not be included."
-#endif  // !defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
+#endif // !defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
 
 ///
 /// @file

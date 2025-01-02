@@ -23,10 +23,10 @@ namespace bson_value {
 
 class value;
 
-}  // namespace bson_value
-}  // namespace types
-}  // namespace v_noabi
-}  // namespace bsoncxx
+} // namespace bson_value
+} // namespace types
+} // namespace v_noabi
+} // namespace bsoncxx
 
 namespace bsoncxx {
 namespace types {
@@ -34,9 +34,9 @@ namespace bson_value {
 
 using ::bsoncxx::v_noabi::types::bson_value::value;
 
-}  // namespace bson_value
-}  // namespace types
-}  // namespace bsoncxx
+} // namespace bson_value
+} // namespace types
+} // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>
 
@@ -54,8 +54,8 @@ namespace bson_value {
 /// @ref bsoncxx::v_noabi::types::bson_value::value
 class value {};
 
-}  // namespace bson_value
-}  // namespace types
-}  // namespace bsoncxx
+} // namespace bson_value
+} // namespace types
+} // namespace bsoncxx
 
-#endif  // defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
+#endif // defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

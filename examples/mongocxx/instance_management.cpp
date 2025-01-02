@@ -47,8 +47,7 @@ class mongo_access {
         return instance;
     }
 
-    void configure(std::unique_ptr<mongocxx::instance> instance,
-                   std::unique_ptr<mongocxx::pool> pool) {
+    void configure(std::unique_ptr<mongocxx::instance> instance, std::unique_ptr<mongocxx::pool> pool) {
         _instance = std::move(instance);
         _pool = std::move(pool);
     }
@@ -72,14 +71,13 @@ class mongo_access {
 void configure(mongocxx::uri uri) {
     class noop_logger : public mongocxx::logger {
        public:
-        void operator()(mongocxx::log_level,
-                        bsoncxx::stdx::string_view,
-                        bsoncxx::stdx::string_view) noexcept override {}
+        void operator()(mongocxx::log_level, bsoncxx::stdx::string_view, bsoncxx::stdx::string_view) noexcept override {
+        }
     };
 
     // Use `std::make_unique` with C++14 and newer.
-    auto instance = std::unique_ptr<mongocxx::instance>(
-        new mongocxx::instance(std::unique_ptr<noop_logger>(new noop_logger())));
+    auto instance =
+        std::unique_ptr<mongocxx::instance>(new mongocxx::instance(std::unique_ptr<noop_logger>(new noop_logger())));
 
     // Use `std::make_unique` with C++14 and newer.
     auto pool = std::unique_ptr<mongocxx::pool>(new mongocxx::pool(std::move(uri)));
@@ -94,7 +92,7 @@ bool do_work() {
     return true;
 }
 
-}  // namespace
+} // namespace
 
 int EXAMPLES_CDECL main(int argc, char* argv[]) {
     auto uri = mongocxx::uri{(argc >= 2) ? argv[1] : mongocxx::uri::k_default_uri};

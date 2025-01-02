@@ -37,7 +37,7 @@ enum class benchmark_type {
     run_command_bench,
 };
 
-static const std::unordered_map<benchmark_type, std::string> type_names = {
+static std::unordered_map<benchmark_type, std::string> const type_names = {
     {benchmark_type::bson_bench, "BSONBench"},
     {benchmark_type::single_bench, "SingleBench"},
     {benchmark_type::multi_bench, "MultiBench"},
@@ -46,7 +46,7 @@ static const std::unordered_map<benchmark_type, std::string> type_names = {
     {benchmark_type::write_bench, "WriteBench"},
     {benchmark_type::run_command_bench, "RunCommandBench"}};
 
-static const std::unordered_map<std::string, benchmark_type> names_types = {
+static std::unordered_map<std::string, benchmark_type> const names_types = {
     {"BSONBench", benchmark_type::bson_bench},
     {"SingleBench", benchmark_type::single_bench},
     {"MultiBench", benchmark_type::multi_bench},
@@ -72,8 +72,8 @@ class microbench {
 
     microbench(microbench&&) = default;
     microbench& operator=(microbench&&) = default;
-    microbench(const microbench&) = default;
-    microbench& operator=(const microbench&) = default;
+    microbench(microbench const&) = default;
+    microbench& operator=(microbench const&) = default;
 
     void run();
 
@@ -85,7 +85,7 @@ class microbench {
         return _score;
     }
 
-    const std::set<benchmark_type>& get_tags() {
+    std::set<benchmark_type> const& get_tags() {
         return _tags;
     }
 
@@ -109,9 +109,9 @@ class microbench {
     std::string _name;
 };
 
-std::vector<std::string> parse_json_file_to_strings(const std::string& json_file);
+std::vector<std::string> parse_json_file_to_strings(std::string const& json_file);
 
-std::vector<bsoncxx::document::value> parse_json_file_to_documents(const std::string& json_file);
+std::vector<bsoncxx::document::value> parse_json_file_to_documents(std::string const& json_file);
 
-std::vector<std::string> parse_documents_to_bson(const std::vector<bsoncxx::document::value>& docs);
-}  // namespace benchmark
+std::vector<std::string> parse_documents_to_bson(std::vector<bsoncxx::document::value> const& docs);
+} // namespace benchmark

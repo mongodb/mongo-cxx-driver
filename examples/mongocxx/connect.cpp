@@ -34,9 +34,10 @@ class logger final : public mongocxx::logger {
    public:
     explicit logger(std::ostream* stream) : _stream(stream) {}
 
-    void operator()(mongocxx::log_level level,
-                    bsoncxx::stdx::string_view domain,
-                    bsoncxx::stdx::string_view message) noexcept override {
+    void operator()(
+        mongocxx::log_level level,
+        bsoncxx::stdx::string_view domain,
+        bsoncxx::stdx::string_view message) noexcept override {
         if (level >= mongocxx::log_level::k_trace)
             return;
         *_stream << '[' << mongocxx::to_string(level) << '@' << domain << "] " << message << '\n';
@@ -51,7 +52,7 @@ std::unique_ptr<logger> make_logger() {
     return std::unique_ptr<logger>(new logger(&std::cout));
 }
 
-}  // namespace
+} // namespace
 
 int EXAMPLES_CDECL main(int argc, char* argv[]) {
     using bsoncxx::builder::basic::kvp;
@@ -63,7 +64,7 @@ int EXAMPLES_CDECL main(int argc, char* argv[]) {
     mongocxx::instance inst{make_logger()};
 
     try {
-        const auto uri = mongocxx::uri{(argc >= 2) ? argv[1] : mongocxx::uri::k_default_uri};
+        auto const uri = mongocxx::uri{(argc >= 2) ? argv[1] : mongocxx::uri::k_default_uri};
 
         mongocxx::options::client client_options;
         if (uri.tls()) {
@@ -90,7 +91,7 @@ int EXAMPLES_CDECL main(int argc, char* argv[]) {
 
         return EXIT_SUCCESS;
 
-    } catch (const std::exception& xcp) {
+    } catch (std::exception const& xcp) {
         std::cout << "connection failed: " << xcp.what() << "\n";
         return EXIT_FAILURE;
     }

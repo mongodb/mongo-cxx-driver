@@ -38,8 +38,7 @@ using bsoncxx::builder::basic::make_document;
 
 // Set serverSelectionTryOnce to false; ADL starts up in the background, and may not be
 // ready to receive connections yet when the test begins running.
-const std::string kMongohouseURI =
-    "mongodb://mhuser:pencil@localhost/?serverSelectionTryOnce=false";
+std::string const kMongohouseURI = "mongodb://mhuser:pencil@localhost/?serverSelectionTryOnce=false";
 
 void run_mongohouse_tests_in_file(std::string test_path) {
     return run_crud_tests_in_file(test_path, uri{kMongohouseURI});
@@ -124,8 +123,7 @@ void test_kill_cursors() {
                 continue;
             }
 
-            auto cursors_killed =
-                event["command_started_event"]["command"]["cursors"].get_array().value;
+            auto cursors_killed = event["command_started_event"]["command"]["cursors"].get_array().value;
 
             if (std::find(cursors_killed.cbegin(), cursors_killed.cend(), cursor_id_val.view()) !=
                 cursors_killed.cend()) {
@@ -191,4 +189,4 @@ TEST_CASE("Test mongohouse", "[mongohouse]") {
     test_auth_with_scram_sha();
 }
 
-}  // namespace
+} // namespace

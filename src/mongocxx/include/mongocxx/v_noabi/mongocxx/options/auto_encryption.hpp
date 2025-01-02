@@ -64,7 +64,7 @@ class auto_encryption {
     /// @return
     ///   An optional pointer to the key vault client.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::client*>&)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::client*> const&)
     key_vault_client() const;
 
     ///
@@ -96,7 +96,7 @@ class auto_encryption {
     /// @return
     ///   An optional pointer to the key vault pool.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::pool*>&)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::pool*> const&)
     key_vault_pool() const;
 
     ///
@@ -130,7 +130,7 @@ class auto_encryption {
     ///   An optional pair of strings representing the namespace of the
     ///   key vault collection.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<ns_pair>&)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<ns_pair> const&)
     key_vault_namespace() const;
 
     ///
@@ -186,8 +186,7 @@ class auto_encryption {
     /// @return
     ///   An optional document containing the KMS providers.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<
-                              bsoncxx::v_noabi::document::view_or_value>&)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const&)
     kms_providers() const;
 
     ///
@@ -222,8 +221,7 @@ class auto_encryption {
     /// @return
     ///   An optional document containing the TLS options.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<
-                              bsoncxx::v_noabi::document::view_or_value>&)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const&)
     tls_opts() const;
 
     ///
@@ -258,8 +256,7 @@ class auto_encryption {
     /// @return
     ///   An optional document containing the schema map.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<
-                              bsoncxx::v_noabi::document::view_or_value>&)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const&)
     schema_map() const;
 
     ///
@@ -290,8 +287,7 @@ class auto_encryption {
     /// @return
     ///   An optional document containing the encrypted fields map
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<
-                              bsoncxx::v_noabi::document::view_or_value>&)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const&)
     encrypted_fields_map() const;
 
     ///
@@ -399,8 +395,7 @@ class auto_encryption {
     /// @return
     ///   An optional document containing the extra options.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<
-                              bsoncxx::v_noabi::document::view_or_value>&)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const&)
     extra_options() const;
 
    private:
@@ -417,14 +412,13 @@ class auto_encryption {
     bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> _kms_providers;
     bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> _tls_opts;
     bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> _schema_map;
-    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value>
-        _encrypted_fields_map;
+    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> _encrypted_fields_map;
     bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> _extra_options;
 };
 
-}  // namespace options
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace options
+} // namespace v_noabi
+} // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
 

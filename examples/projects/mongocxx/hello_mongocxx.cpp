@@ -32,7 +32,7 @@ int main(int argc, char* argv[]) {
     mongocxx::instance inst;
 
     try {
-        const auto uri = mongocxx::uri{(argc >= 2) ? argv[1] : mongocxx::uri::k_default_uri};
+        auto const uri = mongocxx::uri{(argc >= 2) ? argv[1] : mongocxx::uri::k_default_uri};
 
         auto client = mongocxx::client{uri};
         auto admin = client["admin"];
@@ -40,7 +40,7 @@ int main(int argc, char* argv[]) {
         std::cout << bsoncxx::to_json(result) << std::endl;
 
         return EXIT_SUCCESS;
-    } catch (const std::exception& xcp) {
+    } catch (std::exception const& xcp) {
         std::cout << "connection failed: " << xcp.what() << std::endl;
         return EXIT_FAILURE;
     }

@@ -97,7 +97,7 @@ int EXAMPLES_CDECL main() {
     }
 
     std::cout << "Upserted IDs" << std::endl;
-    for (const auto& id : result->upserted_ids()) {
+    for (auto const& id : result->upserted_ids()) {
         std::cout << "Bulk write index: " << id.first << std::endl
                   << (id.second.get_oid().value.to_string()) << std::endl;
     }

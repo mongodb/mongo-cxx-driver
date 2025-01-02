@@ -33,14 +33,14 @@ class bulk_write::impl {
     impl(impl&&) = delete;
     impl& operator=(impl&&) = delete;
 
-    impl(const impl&) = delete;
-    impl& operator=(const impl&) = delete;
+    impl(impl const&) = delete;
+    impl& operator=(impl const&) = delete;
 
     mongoc_bulk_operation_t* operation_t;
     bool is_empty = true;
 };
 
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace v_noabi
+} // namespace mongocxx
 
 #include <mongocxx/config/private/postlude.hh>

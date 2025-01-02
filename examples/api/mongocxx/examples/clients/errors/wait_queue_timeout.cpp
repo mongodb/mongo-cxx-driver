@@ -27,23 +27,22 @@ namespace {
 // [Example]
 void example() {
     try {
-        mongocxx::pool pool{
-            mongocxx::uri{"mongodb://localhost:27017/?maxPoolSize=1&waitQueueTimeoutMS=1"}};
+        mongocxx::pool pool{mongocxx::uri{"mongodb://localhost:27017/?maxPoolSize=1&waitQueueTimeoutMS=1"}};
 
         mongocxx::pool::entry hold = pool.acquire();
 
         EXPECT(hold);
 
-        mongocxx::pool::entry entry = pool.acquire();  // Throws.
+        mongocxx::pool::entry entry = pool.acquire(); // Throws.
 
         EXPECT(false && "should not reach this point");
-    } catch (const mongocxx::exception& ex) {
+    } catch (mongocxx::exception const& ex) {
         EXPECT(ex.code() == mongocxx::error_code::k_pool_wait_queue_timeout);
     }
 }
 // [Example]
 
-}  // namespace
+} // namespace
 
 RUNNER_REGISTER_COMPONENT_WITH_INSTANCE() {
     example();

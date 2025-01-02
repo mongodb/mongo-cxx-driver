@@ -28,11 +28,10 @@ namespace {
 void example() {
     try {
         mongocxx::client client{
-            mongocxx::uri{},
-            mongocxx::options::client{}.tls_opts(mongocxx::options::tls{})};  // Throws.
+            mongocxx::uri{}, mongocxx::options::client{}.tls_opts(mongocxx::options::tls{})}; // Throws.
 
         EXPECT(false && "should not reach this point");
-    } catch (const mongocxx::exception& ex) {
+    } catch (mongocxx::exception const& ex) {
         EXPECT(
             // When TLS/SSL is enabled for both mongocxx and libmongoc.
             ex.code() == mongocxx::error_code::k_invalid_parameter ||
@@ -45,7 +44,7 @@ void example() {
 }
 // [Example]
 
-}  // namespace
+} // namespace
 
 RUNNER_REGISTER_COMPONENT_WITH_INSTANCE() {
     example();

@@ -32,7 +32,7 @@ namespace impl {
 template <typename T>
 void value_append(core* core, T&& t);
 
-}  // namespace impl
+} // namespace impl
 
 ///
 /// An internal class of builder::basic.
@@ -78,10 +78,10 @@ class sub_array {
     core* _core;
 };
 
-}  // namespace basic
-}  // namespace builder
-}  // namespace v_noabi
-}  // namespace bsoncxx
+} // namespace basic
+} // namespace builder
+} // namespace v_noabi
+} // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>
 

@@ -48,8 +48,7 @@ struct URIOptionsTest {
                 // hosts and auth will always be null are to be skipped as per the spec test
                 // description
             } else {
-                FAIL("URIOptionsTest does not understand the field: '" << el.key()
-                                                                       << "'. Please add support.");
+                FAIL("URIOptionsTest does not understand the field: '" << el.key() << "'. Please add support.");
             }
         }
         return test;
@@ -57,7 +56,7 @@ struct URIOptionsTest {
 };
 
 static bsoncxx::document::value _doc_from_file(bsoncxx::stdx::string_view sub_path) {
-    const char* test_path = std::getenv("URI_OPTIONS_TESTS_PATH");
+    char const* test_path = std::getenv("URI_OPTIONS_TESTS_PATH");
     REQUIRE(test_path);
 
     std::string path = std::string(test_path) + sub_path.data();
@@ -66,14 +65,12 @@ static bsoncxx::document::value _doc_from_file(bsoncxx::stdx::string_view sub_pa
     std::ifstream file{path};
     REQUIRE(file);
 
-    std::string file_contents((std::istreambuf_iterator<char>(file)),
-                              std::istreambuf_iterator<char>());
+    std::string file_contents((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
 
     return bsoncxx::from_json(file_contents);
 }
 
-static void assert_elements_equal(bsoncxx::document::element expected_option,
-                                  bsoncxx::document::element my_option) {
+static void assert_elements_equal(bsoncxx::document::element expected_option, bsoncxx::document::element my_option) {
     REQUIRE(expected_option.type() == my_option.type());
     switch (expected_option.type()) {
         case bsoncxx::type::k_int32:
@@ -107,8 +104,7 @@ static void assert_elements_equal(bsoncxx::document::element expected_option,
         case bsoncxx::type::k_maxkey:
         case bsoncxx::type::k_minkey:
         default:
-            std::string msg =
-                "option type not handled: " + bsoncxx::to_string(expected_option.type());
+            std::string msg = "option type not handled: " + bsoncxx::to_string(expected_option.type());
             throw std::logic_error(msg);
     }
 }
@@ -119,7 +115,7 @@ TEST_CASE("uri_options::test_srv_options", "[uri_options]") {
 
     auto tests = test_doc["tests"].get_array().value;
 
-    for (const auto& it : tests) {
+    for (auto const& it : tests) {
         auto doc = it.get_document().value;
         auto test = URIOptionsTest::parse(doc);
 
@@ -129,10 +125,9 @@ TEST_CASE("uri_options::test_srv_options", "[uri_options]") {
                 REQUIRE(test.valid);
 
                 auto my_options = my_uri.options();
-                for (const auto& expected_option : test.options) {
+                for (auto const& expected_option : test.options) {
                     auto key = std::string(expected_option.key());
-                    std::transform(
-                        key.begin(), key.end(), key.begin(), [](int c) { return std::tolower(c); });
+                    std::transform(key.begin(), key.end(), key.begin(), [](int c) { return std::tolower(c); });
                     assert_elements_equal(expected_option, my_options[key]);
                 }
             } catch (mongocxx::logic_error& e) {
@@ -144,4 +139,4 @@ TEST_CASE("uri_options::test_srv_options", "[uri_options]") {
     }
 }
 
-}  // namespace
+} // namespace

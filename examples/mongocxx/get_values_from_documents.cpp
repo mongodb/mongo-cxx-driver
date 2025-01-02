@@ -51,22 +51,23 @@ bsoncxx::document::value new_message(int64_t uid, int32_t status, std::string ms
 
 // Insert a document into the database.
 void insert_test_data(mongocxx::collection& coll) {
-    bsoncxx::document::value doc =
-        make_document(kvp("messagelist",
-                          make_array(new_message(413098706, 3, "Lorem ipsum..."),
-                                     new_message(413098707, 2, "Lorem ipsum..."),
-                                     new_message(413098708, 1, "Lorem ipsum..."))));
+    bsoncxx::document::value doc = make_document(
+        kvp("messagelist",
+            make_array(
+                new_message(413098706, 3, "Lorem ipsum..."),
+                new_message(413098707, 2, "Lorem ipsum..."),
+                new_message(413098708, 1, "Lorem ipsum..."))));
 
     // Normally, one should check the return value for success.
     coll.insert_one(std::move(doc));
 }
 
 // Iterate over contents of messagelist.
-void iterate_messagelist(const bsoncxx::document::element& ele) {
+void iterate_messagelist(bsoncxx::document::element const& ele) {
     // Check validity and type before trying to iterate.
     if (ele.type() == type::k_array) {
         bsoncxx::array::view subarray{ele.get_array().value};
-        for (const bsoncxx::array::element& message : subarray) {
+        for (bsoncxx::array::element const& message : subarray) {
             // Check correct type before trying to access elements.
             // Only print out fields if they exist; don't report missing fields.
             if (message.type() == type::k_document) {
@@ -93,7 +94,7 @@ void iterate_messagelist(const bsoncxx::document::element& ele) {
 }
 
 // Print document parts to standard output.
-void print_document(const bsoncxx::document::view& doc) {
+void print_document(bsoncxx::document::view const& doc) {
     // Extract _id element as a string.
     bsoncxx::document::element id_ele = doc["_id"];
     if (id_ele.type() == type::k_oid) {
@@ -118,12 +119,12 @@ void iterate_documents(mongocxx::collection& coll) {
     mongocxx::cursor cursor = coll.find({});
 
     // Iterate the cursor into bsoncxx::document::view objects.
-    for (const bsoncxx::document::view& doc : cursor) {
+    for (bsoncxx::document::view const& doc : cursor) {
         print_document(doc);
     }
 }
 
-}  // namespace
+} // namespace
 
 int EXAMPLES_CDECL main() {
     // The mongocxx::instance constructor and destructor initialize and shut down the driver,

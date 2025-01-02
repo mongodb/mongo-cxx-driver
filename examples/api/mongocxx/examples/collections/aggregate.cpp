@@ -50,9 +50,7 @@ void example(mongocxx::collection coll) {
 
         mongocxx::cursor cursor = coll.aggregate(pipeline);
 
-        auto has_field_x = [](bsoncxx::document::view doc) -> bool {
-            return doc.find("x") != doc.end();
-        };
+        auto has_field_x = [](bsoncxx::document::view doc) -> bool { return doc.find("x") != doc.end(); };
 
         EXPECT(std::count_if(cursor.begin(), cursor.end(), has_field_x) == 1);
     }
@@ -70,7 +68,7 @@ void example(mongocxx::collection coll) {
 }
 // [Example]
 
-}  // namespace
+} // namespace
 
 RUNNER_REGISTER_COMPONENT_FOR_SINGLE() {
     mongocxx::client client{mongocxx::uri{}};

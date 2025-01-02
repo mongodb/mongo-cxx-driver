@@ -22,22 +22,22 @@ namespace mongocxx {
 namespace v_noabi {
 namespace model {
 
-update_many::update_many(bsoncxx::v_noabi::document::view_or_value filter,
-                         bsoncxx::v_noabi::document::view_or_value update)
+update_many::update_many(
+    bsoncxx::v_noabi::document::view_or_value filter,
+    bsoncxx::v_noabi::document::view_or_value update)
     : _filter(std::move(filter)), _update(std::move(update)) {}
 
-update_many::update_many(bsoncxx::v_noabi::document::view_or_value filter, const pipeline& update)
+update_many::update_many(bsoncxx::v_noabi::document::view_or_value filter, pipeline const& update)
     : _filter(std::move(filter)), _update(bsoncxx::v_noabi::document::value(update.view_array())) {}
 
-update_many::update_many(bsoncxx::v_noabi::document::view_or_value filter,
-                         std::initializer_list<_empty_doc_tag>)
+update_many::update_many(bsoncxx::v_noabi::document::view_or_value filter, std::initializer_list<_empty_doc_tag>)
     : _filter(std::move(filter)), _update() {}
 
-const bsoncxx::v_noabi::document::view_or_value& update_many::filter() const {
+bsoncxx::v_noabi::document::view_or_value const& update_many::filter() const {
     return _filter;
 }
 
-const bsoncxx::v_noabi::document::view_or_value& update_many::update() const {
+bsoncxx::v_noabi::document::view_or_value const& update_many::update() const {
     return _update;
 }
 
@@ -46,8 +46,7 @@ update_many& update_many::collation(bsoncxx::v_noabi::document::view_or_value co
     return *this;
 }
 
-const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value>&
-update_many::collation() const {
+bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const& update_many::collation() const {
     return _collation;
 }
 
@@ -56,7 +55,7 @@ update_many& update_many::hint(mongocxx::v_noabi::hint index_hint) {
     return *this;
 }
 
-const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::hint>& update_many::hint() const {
+bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::hint> const& update_many::hint() const {
     return _hint;
 }
 
@@ -65,7 +64,7 @@ update_many& update_many::upsert(bool upsert) {
     return *this;
 }
 
-const bsoncxx::v_noabi::stdx::optional<bool>& update_many::upsert() const {
+bsoncxx::v_noabi::stdx::optional<bool> const& update_many::upsert() const {
     return _upsert;
 }
 
@@ -74,11 +73,10 @@ update_many& update_many::array_filters(bsoncxx::v_noabi::array::view_or_value a
     return *this;
 }
 
-const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::array::view_or_value>&
-update_many::array_filters() const {
+bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::array::view_or_value> const& update_many::array_filters() const {
     return _array_filters;
 }
 
-}  // namespace model
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace model
+} // namespace v_noabi
+} // namespace mongocxx

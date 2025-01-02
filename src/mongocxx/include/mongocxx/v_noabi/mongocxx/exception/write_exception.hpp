@@ -35,14 +35,14 @@ class write_exception : public operation_exception {
 
     write_exception(write_exception&&) = default;
     write_exception& operator=(write_exception&&) = default;
-    write_exception(const write_exception&) = default;
-    write_exception& operator=(const write_exception&) = default;
+    write_exception(write_exception const&) = default;
+    write_exception& operator=(write_exception const&) = default;
 
     using operation_exception::operation_exception;
 };
 
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace v_noabi
+} // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
 

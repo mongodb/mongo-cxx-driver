@@ -135,7 +135,8 @@ class read_preference {
     /// @deprecated The tags() method should be used instead.
     ///
     MONGOCXX_DEPRECATED MONGOCXX_ABI_EXPORT_CDECL() read_preference(
-        read_mode mode, bsoncxx::v_noabi::document::view_or_value tags);
+        read_mode mode,
+        bsoncxx::v_noabi::document::view_or_value tags);
 
     MONGOCXX_ABI_EXPORT_CDECL()
     read_preference(read_mode mode, bsoncxx::v_noabi::document::view_or_value tags, deprecated_tag);
@@ -143,12 +144,12 @@ class read_preference {
     ///
     /// Copy constructs a read_preference.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL() read_preference(const read_preference&);
+    MONGOCXX_ABI_EXPORT_CDECL() read_preference(read_preference const&);
 
     ///
     /// Copy assigns a read_preference.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(read_preference&) operator=(const read_preference&);
+    MONGOCXX_ABI_EXPORT_CDECL(read_preference&) operator=(read_preference const&);
 
     ///
     /// Move constructs a read_preference.
@@ -293,8 +294,7 @@ class read_preference {
     ///
     /// @return A hedge document if one was set.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<
-                              bsoncxx::v_noabi::document::view>)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view> const)
     hedge() const;
 
     ///
@@ -303,10 +303,8 @@ class read_preference {
     /// Compares two read_preference objects for (in)-equality.
     ///
     /// @{
-    friend MONGOCXX_ABI_EXPORT_CDECL(bool) operator==(const read_preference&,
-                                                      const read_preference&);
-    friend MONGOCXX_ABI_EXPORT_CDECL(bool) operator!=(const read_preference&,
-                                                      const read_preference&);
+    friend MONGOCXX_ABI_EXPORT_CDECL(bool) operator==(read_preference const&, read_preference const&);
+    friend MONGOCXX_ABI_EXPORT_CDECL(bool) operator!=(read_preference const&, read_preference const&);
     /// @}
     ///
 
@@ -326,8 +324,8 @@ class read_preference {
     std::unique_ptr<impl> _impl;
 };
 
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace v_noabi
+} // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
 

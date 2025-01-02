@@ -34,11 +34,11 @@ void example(bsoncxx::document::view doc) {
         EXPECT(e.get_int32().value == 2);
     }
 
-    EXPECT(!doc["c"]);  // Invalid element.
+    EXPECT(!doc["c"]); // Invalid element.
 }
 // [Example]
 
-}  // namespace
+} // namespace
 
 RUNNER_REGISTER_COMPONENT() {
     example(bsoncxx::from_json(R"({"a": 1, "b": 2})"));

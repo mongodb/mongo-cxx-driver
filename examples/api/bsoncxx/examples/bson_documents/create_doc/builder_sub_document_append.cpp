@@ -33,8 +33,8 @@ void example() {
     std::string keys[] = {"a", "b", "c"};
     std::int32_t values[] = {1, 2, 3};
 
-    bsoncxx::document::value owner = bsoncxx::builder::basic::make_document(
-        kvp("v", [&](bsoncxx::builder::basic::sub_document doc) {
+    bsoncxx::document::value owner =
+        bsoncxx::builder::basic::make_document(kvp("v", [&](bsoncxx::builder::basic::sub_document doc) {
             for (int i = 0; i < 3; ++i) {
                 doc.append(kvp(keys[i], values[i]));
             }
@@ -45,7 +45,7 @@ void example() {
 }
 // [Example]
 
-}  // namespace
+} // namespace
 
 RUNNER_REGISTER_COMPONENT() {
     example();
