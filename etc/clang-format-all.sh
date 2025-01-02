@@ -12,7 +12,8 @@
 set -o errexit
 set -o pipefail
 
-clang-format --version
+clang_format_binary="${CLANG_FORMAT_BINARY:-clang-format}"
+"${clang_format_binary:?}" --version
 
 source_dirs=(
   src
@@ -21,11 +22,11 @@ source_dirs=(
 )
 
 mapfile -t source_files < <(
-  find "${source_dirs[@]:?}" -regextype posix-egrep -regex '.*\.(hpp|hh|cpp)'
+  find "${source_dirs[@]:?}" | grep -E '.*\.(hpp|hh|cpp)$'
 )
 
 if [[ -n "${DRYRUN:-}" ]]; then
-  clang-format --dry-run -Werror "${source_files[@]:?}"
+  "$clang_format_binary" --dry-run -Werror "${source_files[@]:?}"
 else
-  clang-format --verbose -i "${source_files[@]:?}"
+  "$clang_format_binary" --verbose -i "${source_files[@]:?}"
 fi
