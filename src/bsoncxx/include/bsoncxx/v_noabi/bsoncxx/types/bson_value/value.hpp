@@ -262,7 +262,7 @@ class value {
     ///
     /// Create an owning copy of a bson_value::view.
     ///
-    explicit BSONCXX_ABI_EXPORT_CDECL() value(view const&);
+    explicit BSONCXX_ABI_EXPORT_CDECL() value(bson_value::view const&);
 
     ///
     /// Get a view over the bson_value owned by this object.
