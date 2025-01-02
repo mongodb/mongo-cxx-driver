@@ -103,6 +103,11 @@ cmake_flags=(
   -DENABLE_UNINSTALL=ON
 )
 
+# System-installed libmongoc must not prevent fetch-and-build of libmongoc.
+if [[ -z "$(find "${mongoc_prefix:?}" -name 'bson-config.h')" ]]; then
+  cmake_flags+=("-DCMAKE_DISABLE_FIND_PACKAGE_mongoc-1.0=ON")
+fi
+
 _RUN_DISTCHECK=""
 case "${OSTYPE:?}" in
 cygwin)
@@ -271,7 +276,7 @@ if [[ -n "$(find "${mongoc_prefix:?}" -name 'bson-config.h')" ]]; then
       exit 1
     }
   fi
-else
+elif [[ -n "$(find install -name 'bson-config.h')" ]]; then
   if [[ "${BSON_EXTRA_ALIGNMENT:-}" == "1" ]]; then
     grep -R "#define BSON_EXTRA_ALIGN 1" install || {
       echo "BSON_EXTRA_ALIGN is not 1 despite BSON_EXTRA_ALIGNMENT=1" 1>&2
@@ -283,4 +288,7 @@ else
       exit 1
     }
   fi
+else
+  echo "unexpectedly compiled using a system libmongoc library" 1>&2
+  exit 1
 fi
