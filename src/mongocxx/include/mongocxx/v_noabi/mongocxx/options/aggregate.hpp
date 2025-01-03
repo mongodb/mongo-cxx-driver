@@ -38,7 +38,7 @@ namespace v_noabi {
 namespace options {
 
 ///
-/// Class representing the optional arguments to a MongoDB aggregation operation.
+/// Used by MongoDB aggregation operations.
 ///
 class aggregate {
    public:

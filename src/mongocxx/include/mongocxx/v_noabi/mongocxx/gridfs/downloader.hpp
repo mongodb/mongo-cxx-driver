@@ -35,7 +35,7 @@ namespace v_noabi {
 namespace gridfs {
 
 ///
-/// Class used to specify the offset from which to start reading the chunks of the file.
+/// Used to specify the offset from which to start reading the chunks of the file.
 ///
 struct chunks_and_bytes_offset {
     std::int32_t chunks_offset = 0;
@@ -43,7 +43,7 @@ struct chunks_and_bytes_offset {
 };
 
 ///
-/// Class used to download a GridFS file.
+/// Used to download a GridFS file.
 ///
 class downloader {
    public:

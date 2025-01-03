@@ -28,7 +28,7 @@ namespace mongocxx {
 namespace v_noabi {
 
 ///
-/// Class representing a batch of write operations that can be sent to the server as a group.
+/// A batch of write operations that can be sent to the server as a group.
 ///
 /// If you have a lot of write operations to execute, it can be more efficient to send them as
 /// part of a bulk_write in order to avoid unnecessary network-level round trips between the driver

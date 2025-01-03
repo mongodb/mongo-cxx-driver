@@ -30,7 +30,7 @@ namespace mongocxx {
 namespace v_noabi {
 
 ///
-/// Class representing a MongoDB change stream.
+/// A MongoDB change stream.
 ///
 class change_stream {
    public:
@@ -124,7 +124,7 @@ class change_stream {
 };
 
 ///
-/// Class representing a MongoDB change stream iterator.
+/// A MongoDB change stream iterator.
 ///
 class change_stream::iterator {
    public:

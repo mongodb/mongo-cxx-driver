@@ -26,7 +26,7 @@ namespace v_noabi {
 namespace result {
 namespace gridfs {
 
-/// Class representing the result of a GridFS upload operation.
+/// The result of a GridFS upload operation.
 class upload {
    public:
     MONGOCXX_ABI_EXPORT_CDECL() upload(bsoncxx::v_noabi::types::bson_value::view id);

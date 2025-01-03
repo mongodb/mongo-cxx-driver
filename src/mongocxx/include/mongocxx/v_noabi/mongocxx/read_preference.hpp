@@ -40,26 +40,11 @@ namespace mongocxx {
 namespace v_noabi {
 
 ///
-/// Class representing a preference for how the driver routes read operations to members of a
-/// replica set or to a sharded cluster.
-///
-/// By default read operations are directed to the primary member in a replica set. Reading from the
-/// primary guarantees that read operations reflect the latest version of a document. However, by
-/// distributing some or all reads to secondary members of the replica set, you can improve read
-/// throughput or reduce latency for an application that does not require fully up-to-date data.
-///
-/// Read preference can be broadly specified by setting a mode. It is also possible to
-/// set tags in the read preference for more granular control, and to target specific members of a
-/// replica set via attributes other than their current state as a primary or secondary node.
-/// Furthermore, it is also possible to set a staleness threshold, such that the read is limited to
-/// targeting secondaries whose staleness is less than or equal to the given threshold.
-///
-/// Read preferences are ignored for direct connections to a single mongod instance. However,
-/// in order to perform read operations on a direct connection to a secondary member of a replica
-/// set, you must set a read preference that allows reading from secondaries.
+/// Describes how MongoDB clients route read operations to the members of a replica set or sharded
+/// cluster.
 ///
 /// @see
-/// - https://www.mongodb.com/docs/manual/core/read-preference/
+/// - [Read Preference (MongoDB Manual)](https://www.mongodb.com/docs/manual/core/read-preference/)
 ///
 class read_preference {
    public:
@@ -107,7 +92,9 @@ class read_preference {
     ///
     MONGOCXX_ABI_EXPORT_CDECL() read_preference();
 
+    // @cond DOXYGEN_DISABLE
     struct deprecated_tag {};
+    // @endcond
 
     ///
     /// Constructs a new read_preference.
@@ -115,11 +102,13 @@ class read_preference {
     /// @param mode
     ///   Specifies the read_mode.
     ///
-    /// @deprecated The constructor with no arguments and the method mode() should be used.
+    /// @deprecated Use @ref mode instead.
     ///
     MONGOCXX_DEPRECATED MONGOCXX_ABI_EXPORT_CDECL() read_preference(read_mode mode);
 
+    // @cond DOXYGEN_DISABLE
     MONGOCXX_ABI_EXPORT_CDECL() read_preference(read_mode mode, deprecated_tag);
+    // @endcond
 
     ///
     /// Constructs a new read_preference with tags.
@@ -132,14 +121,16 @@ class read_preference {
     /// @see
     /// - https://www.mongodb.com/docs/manual/core/read-preference/#tag-sets
     ///
-    /// @deprecated The tags() method should be used instead.
+    /// @deprecated Use @ref tags instead.
     ///
     MONGOCXX_DEPRECATED MONGOCXX_ABI_EXPORT_CDECL() read_preference(
         read_mode mode,
         bsoncxx::v_noabi::document::view_or_value tags);
 
+    // @cond DOXYGEN_DISABLE
     MONGOCXX_ABI_EXPORT_CDECL()
     read_preference(read_mode mode, bsoncxx::v_noabi::document::view_or_value tags, deprecated_tag);
+    // @endcond
 
     ///
     /// Copy constructs a read_preference.

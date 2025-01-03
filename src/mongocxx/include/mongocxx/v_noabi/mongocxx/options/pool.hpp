@@ -25,8 +25,7 @@ namespace v_noabi {
 namespace options {
 
 ///
-/// Class representing the optional arguments to a MongoDB driver pool object. Pool options
-/// logically extend client options.
+/// Used by @ref mongocxx::v_noabi::pool.
 ///
 class pool {
    public:

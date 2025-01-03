@@ -26,7 +26,10 @@ namespace v_noabi {
 namespace events {
 
 ///
-/// Class representing what the driver knows about a MongoDB server.
+/// The description of a connected MongoDB server.
+///
+/// @see
+/// - @ref mongocxx::v_noabi::events::topology_description
 ///
 class server_description {
    public:

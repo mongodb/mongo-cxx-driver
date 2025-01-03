@@ -31,9 +31,10 @@ namespace v_noabi {
 namespace document {
 
 ///
-/// A read-only BSON document that owns its underlying buffer. When a document::value goes
-/// out of scope, the underlying buffer is freed. Generally this class should be used
-/// sparingly; document::view should be used instead wherever possible.
+/// A read-only BSON document that owns its underlying buffer.
+///
+/// When a document::value goes out of scope, the underlying buffer is freed. Generally this class
+/// should be used sparingly; document::view should be used instead wherever possible.
 ///
 class value {
    public:

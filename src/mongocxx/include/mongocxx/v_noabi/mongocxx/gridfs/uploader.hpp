@@ -38,7 +38,7 @@ namespace v_noabi {
 namespace gridfs {
 
 ///
-/// Class used to upload a GridFS file.
+/// Used to upload a GridFS file.
 ///
 class uploader {
    public:

@@ -29,7 +29,7 @@ namespace v_noabi {
 namespace options {
 
 ///
-/// Class representing the optional arguments to a MongoDB insert operation
+/// Used by @ref mongocxx::v_noabi::collection.
 ///
 class insert {
    public:

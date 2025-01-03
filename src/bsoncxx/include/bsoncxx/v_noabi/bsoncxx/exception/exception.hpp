@@ -28,8 +28,7 @@ BSONCXX_DISABLE_WARNING(MSVC(4251));
 BSONCXX_DISABLE_WARNING(MSVC(4275));
 
 ///
-/// Class representing any exceptions emitted from the bsoncxx library or
-/// its underlying implementation.
+/// Base class for all exceptions thrown by the bsoncxx library unless otherwise specified.
 ///
 class exception : public std::system_error {
    public:

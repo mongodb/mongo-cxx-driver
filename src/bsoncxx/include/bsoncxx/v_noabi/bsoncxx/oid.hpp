@@ -28,9 +28,10 @@ namespace bsoncxx {
 namespace v_noabi {
 
 ///
-/// Represents a MongoDB ObjectId. As this BSON type is used within the MongoDB server
-/// as a primary key for each document, it is useful for representing a 'pointer'
-/// to another document.
+/// Represents a MongoDB ObjectId.
+///
+/// As this BSON type is used within the MongoDB server as a primary key for each document, it is
+/// useful for representing a 'pointer' to another document.
 ///
 /// @note we use 'oid' to refer to this concrete class. We use 'ObjectId' to refer
 /// to the BSON type.

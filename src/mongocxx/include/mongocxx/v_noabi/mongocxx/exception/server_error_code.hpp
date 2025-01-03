@@ -25,10 +25,10 @@ namespace mongocxx {
 namespace v_noabi {
 
 ///
-/// Enum representing the various errors types that can be returned from the server.
+/// Errors which may be returned by the server.
 ///
-/// As this list changes over time, this is just a placeholder for an Int32 error code value from
-/// the server.
+/// This type is used to represent Int32 server error codeswithout defining the error codes
+/// themselves.
 ///
 /// @note `std::is_error_code_enum` is specialized for this type.
 ///

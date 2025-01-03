@@ -31,7 +31,7 @@ namespace v_noabi {
 namespace result {
 
 ///
-/// Class representing the result of a MongoDB bulk write operation.
+/// The result of a MongoDB bulk write operation.
 ///
 class bulk_write {
    public:

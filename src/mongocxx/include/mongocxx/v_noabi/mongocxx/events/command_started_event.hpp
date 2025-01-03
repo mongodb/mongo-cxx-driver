@@ -29,10 +29,10 @@ namespace v_noabi {
 namespace events {
 
 ///
-/// An event notification sent when the driver begins executing a MongoDB command.
+/// The start of the execution of a MongoDB command.
 ///
 /// @see
-/// - "CommandStartedEvent" in https://github.com/mongodb/specifications/blob/master/source/command-logging-and-monitoring/command-logging-and-monitoring.md
+/// - [Command Logging and Monitoring (MongoDB Specifications)](https://specifications.readthedocs.io/en/latest/command-logging-and-monitoring/command-logging-and-monitoring/)
 ///
 class command_started_event {
    public:

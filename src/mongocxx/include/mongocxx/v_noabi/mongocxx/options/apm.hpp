@@ -38,7 +38,11 @@ namespace v_noabi {
 namespace options {
 
 ///
-/// Class representing MongoDB application performance monitoring.
+/// Used by @ref mongocxx::v_noabi::options::client::apm_opts.
+///
+/// @see
+/// - [Command Logging and Monitoring (MongoDB Specifications)](https://specifications.readthedocs.io/en/latest/command-logging-and-monitoring/command-logging-and-monitoring/)
+/// - [SDAM Logging and Monitoring Specification (MongoDB Specifications)](https://specifications.readthedocs.io/en/latest/server-discovery-and-monitoring/server-discovery-and-monitoring-logging-and-monitoring/#events-api_1)
 ///
 class apm {
    public:

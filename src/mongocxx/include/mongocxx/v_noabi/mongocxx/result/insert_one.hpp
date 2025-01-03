@@ -28,7 +28,9 @@ namespace mongocxx {
 namespace v_noabi {
 namespace result {
 
-/// Class representing the result of a MongoDB insert operation.
+///
+/// The result of a MongoDB insert operation.
+///
 class insert_one {
    public:
     // This constructor is public for testing purposes only

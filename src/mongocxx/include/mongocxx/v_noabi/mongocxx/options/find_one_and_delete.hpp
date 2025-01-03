@@ -33,7 +33,7 @@ namespace v_noabi {
 namespace options {
 
 ///
-/// Class representing the optional arguments to a MongoDB find_and_modify delete operation
+/// Used by @ref mongocxx::v_noabi::collection.
 ///
 class find_one_and_delete {
    public:

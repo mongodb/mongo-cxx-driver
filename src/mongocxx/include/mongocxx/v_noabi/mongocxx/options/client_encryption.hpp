@@ -30,7 +30,7 @@ namespace v_noabi {
 namespace options {
 
 ///
-/// Class representing options for the object managing explicit client-side encryption.
+/// Used by @ref mongocxx::v_noabi::client_encryption.
 ///
 class client_encryption {
    public:

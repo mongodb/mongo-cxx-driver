@@ -27,7 +27,9 @@ namespace mongocxx {
 namespace v_noabi {
 namespace result {
 
-/// Class representing the result of a MongoDB rewrap_many_datakey operation.
+///
+/// The result of a MongoDB rewrapManyDatakey operation.
+///
 class rewrap_many_datakey {
    public:
     rewrap_many_datakey() = default;

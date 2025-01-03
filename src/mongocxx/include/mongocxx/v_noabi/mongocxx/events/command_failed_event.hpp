@@ -29,10 +29,10 @@ namespace v_noabi {
 namespace events {
 
 ///
-/// An event notification sent when the driver fails to execute a MongoDB command.
+/// The failed execution of a MongoDB command.
 ///
 /// @see
-/// - "CommandFailedEvent" in https://github.com/mongodb/specifications/blob/master/source/command-logging-and-monitoring/command-logging-and-monitoring.md
+/// - [Command Logging and Monitoring (MongoDB Specifications)](https://specifications.readthedocs.io/en/latest/command-logging-and-monitoring/command-logging-and-monitoring/)
 ///
 class command_failed_event {
    public:

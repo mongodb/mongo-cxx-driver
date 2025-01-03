@@ -31,10 +31,8 @@ namespace mongocxx {
 namespace v_noabi {
 namespace options {
 
-// NOTE: client options interface still evolving
-
 ///
-/// Class representing the optional arguments to a MongoDB driver client object.
+/// Used by clients.
 ///
 class client {
    public:

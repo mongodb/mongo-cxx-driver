@@ -71,7 +71,7 @@ namespace mongocxx {
 namespace v_noabi {
 
 ///
-/// Class representing server side document groupings within a MongoDB database.
+/// A MongoDB collection.
 ///
 /// Collections do not require or enforce a schema and documents inside of a collection can have
 /// different fields. While not a requirement, typically documents in a collection have a similar

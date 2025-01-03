@@ -27,7 +27,7 @@ namespace bsoncxx {
 namespace v_noabi {
 
 ///
-/// Represents an IEEE 754-2008 BSON Decimal128 value in a platform-independent way.
+/// Represents an IEEE 754-2008 BSON Decimal128 value.
 ///
 class decimal128 {
    public:

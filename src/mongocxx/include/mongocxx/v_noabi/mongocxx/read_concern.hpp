@@ -35,21 +35,12 @@ namespace mongocxx {
 namespace v_noabi {
 
 ///
-/// A class to represent the read concern. Read concern can be set at the client, database, or
-/// collection level. The read concern can also be provided via connection string, and will be
-/// parsed and set on the client constructed for the URI.
+/// Controls the consistency and isolation properties of data read from replica sets and sharded
+/// clusters.
 ///
-/// For the WiredTiger storage engine, MongoDB 3.2 introduced the readConcern option for replica
-/// sets and replica set shards. The readConcern option allows clients to choose a level of
-/// isolation for their reads. You can specify a readConcern of "majority" to read data that has
-/// been written to a majority of nodes and thus cannot be rolled back. By default, MongoDB uses a
-/// readConcern of "local" which does not guarantee that the read data would not be rolled back.
-///
-/// MongoDB 3.4 introduces a read concern level of "linearizable" to read data that has been written
-/// to a majority of nodes (i.e. cannot be rolled back) @b and is not stale. Linearizable read
-/// concern is available for all MongoDB supported storage engines and applies to read operations on
-/// a single document. Note that writes must be made with majority write concern in order for reads
-/// to be linearizable.
+/// Read concern can be set at the client, database, or collection level. The read concern can also
+/// be provided via connection string, and will be parsed and set on the client constructed for the
+/// URI.
 ///
 /// @see
 /// - [Read Concern (MongoDB Manual)](https://www.mongodb.com/docs/manual/reference/read-concern/)

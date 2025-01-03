@@ -30,8 +30,9 @@ namespace builder {
 namespace stream {
 
 ///
-/// A stream context which expects a value, which can later be followed by
-/// more key/value pairs.
+/// A stream context which expects a value.
+///
+/// This can later be followed by more key/value pairs.
 ///
 /// The template argument can be used to hold additional information about
 /// containing documents or arrays. I.e. value_context<> implies that this

@@ -29,7 +29,9 @@ namespace mongocxx {
 namespace v_noabi {
 namespace result {
 
-/// Class representing the result of a MongoDB update operation.
+///
+/// The result of a MongoDB update operation.
+///
 class update {
    public:
     // This constructor is public for testing purposes only

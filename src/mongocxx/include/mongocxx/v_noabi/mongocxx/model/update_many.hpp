@@ -30,7 +30,7 @@ namespace v_noabi {
 namespace model {
 
 ///
-/// Class representing a MongoDB update operation that modifies multiple documents.
+/// A MongoDB update operation that modifies multiple documents.
 ///
 class update_many {
     //

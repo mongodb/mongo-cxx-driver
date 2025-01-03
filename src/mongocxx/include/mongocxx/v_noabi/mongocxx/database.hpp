@@ -38,7 +38,7 @@ namespace mongocxx {
 namespace v_noabi {
 
 ///
-/// Class representing a MongoDB database.
+/// A MongoDB database.
 ///
 /// Acts as a gateway for accessing collections that are contained within a database. It inherits
 /// all of its default settings from the client that creates it.

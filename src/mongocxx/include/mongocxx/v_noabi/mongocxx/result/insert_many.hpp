@@ -32,8 +32,7 @@ namespace v_noabi {
 namespace result {
 
 ///
-/// Class representing the result of a MongoDB insert many operation
-/// (executed as a bulk write).
+/// The result of a MongoDB insert many operation.
 ///
 class insert_many {
    public:

@@ -29,10 +29,10 @@ namespace v_noabi {
 namespace events {
 
 ///
-/// An event notification sent when the driver successfully executes a MongoDB command.
+/// The successful execution of a MongoDB command.
 ///
 /// @see
-/// - "CommandSucceededEvent" in https://github.com/mongodb/specifications/blob/master/source/command-logging-and-monitoring/command-logging-and-monitoring.md
+/// - [Command Logging and Monitoring (MongoDB Specifications)](https://specifications.readthedocs.io/en/latest/command-logging-and-monitoring/command-logging-and-monitoring/)
 ///
 class command_succeeded_event {
    public:

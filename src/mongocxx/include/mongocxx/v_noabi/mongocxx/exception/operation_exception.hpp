@@ -35,8 +35,7 @@ BSONCXX_DISABLE_WARNING(MSVC(4251));
 BSONCXX_DISABLE_WARNING(MSVC(4275));
 
 ///
-/// Class representing an exception received from a MongoDB server.  It includes the server-provided
-/// error code, if one was available.
+/// An exception thrown during a MongoDB server operation.
 ///
 /// @see
 /// - @ref mongocxx::v_noabi::exception

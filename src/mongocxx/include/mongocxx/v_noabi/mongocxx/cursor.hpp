@@ -33,7 +33,7 @@ namespace mongocxx {
 namespace v_noabi {
 
 ///
-/// Class representing a pointer to the result set of a query on a MongoDB server.
+/// A cursor over the documents returned by a query to a MongoDB server.
 ///
 /// Clients can iterate through a cursor::iterator to retrieve results.
 ///
@@ -104,7 +104,7 @@ class cursor {
 };
 
 ///
-/// Class representing an input iterator of documents in a MongoDB cursor
+/// An input iterator of documents in a MongoDB cursor
 /// result set.
 ///
 /// All non-end iterators derived from the same mongocxx::v_noabi::cursor move in

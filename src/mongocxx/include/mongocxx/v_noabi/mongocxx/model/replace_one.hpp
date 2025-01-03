@@ -28,7 +28,7 @@ namespace v_noabi {
 namespace model {
 
 ///
-/// Class representing a MongoDB update operation that replaces a single document.
+/// A MongoDB update operation that replaces a single document.
 ///
 class replace_one {
    public:

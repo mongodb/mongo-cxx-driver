@@ -25,7 +25,7 @@ namespace mongocxx {
 namespace v_noabi {
 
 ///
-/// Class representing an instance of the MongoDB driver.
+/// An instance of the MongoDB driver.
 ///
 /// The constructor and destructor initialize and shut down the driver, respectively. Therefore, an
 /// instance must be created before using the driver and must remain alive until all other mongocxx

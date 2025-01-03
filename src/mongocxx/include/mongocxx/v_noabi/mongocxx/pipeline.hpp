@@ -34,7 +34,7 @@ namespace mongocxx {
 namespace v_noabi {
 
 ///
-/// Class representing a MongoDB aggregation pipeline.
+/// A MongoDB aggregation pipeline.
 ///
 class pipeline {
    public:

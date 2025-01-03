@@ -30,7 +30,7 @@ namespace mongocxx {
 namespace v_noabi {
 
 ///
-/// Class representing a hint to be passed to a database operation.
+/// The index to "hint" or force a MongoDB server to use when performing a query.
 ///
 class hint {
    public:

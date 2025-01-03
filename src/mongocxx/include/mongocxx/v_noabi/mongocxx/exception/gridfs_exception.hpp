@@ -24,8 +24,7 @@ namespace mongocxx {
 namespace v_noabi {
 
 ///
-/// Class representing an error encountered when attempting to perform the requested GridFS
-/// operation.
+/// An exception thrown during a GridFS operation.
 ///
 /// @see
 /// - @ref mongocxx::v_noabi::exception

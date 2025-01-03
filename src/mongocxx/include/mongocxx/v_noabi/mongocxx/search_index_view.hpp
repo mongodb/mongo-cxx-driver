@@ -19,7 +19,9 @@ namespace mongocxx {
 namespace v_noabi {
 
 ///
-/// Class representing a MongoDB search index view.
+/// A MongoDB Atlas Search Index.
+///
+/// @note Not to be confused with a MongoDB index (@ref mongocxx::v_noabi::index_view).
 ///
 class search_index_view {
    public:

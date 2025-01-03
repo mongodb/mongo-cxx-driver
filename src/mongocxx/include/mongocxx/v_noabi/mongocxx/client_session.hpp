@@ -36,6 +36,8 @@ namespace mongocxx {
 namespace v_noabi {
 
 ///
+/// Supports MongoDB client session operations.
+///
 /// Use a session for a sequence of operations, optionally with either causal consistency
 /// or snapshots.
 ///
