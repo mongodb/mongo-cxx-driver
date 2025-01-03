@@ -68,18 +68,3 @@ using ::bsoncxx::v_noabi::string::to_string;
 /// @file
 /// Provides @ref bsoncxx::v_noabi::string::to_string.
 ///
-
-#if defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
-
-namespace bsoncxx {
-namespace string {
-
-/// @ref bsoncxx::v_noabi::string::to_string
-template <class CharT, class Traits, class Allocator>
-std::basic_string<CharT, Traits, Allocator> to_string(
-    v_noabi::stdx::basic_string_view<CharT, Traits> value, const Allocator& alloc);
-
-}  // namespace string
-}  // namespace bsoncxx
-
-#endif  // defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

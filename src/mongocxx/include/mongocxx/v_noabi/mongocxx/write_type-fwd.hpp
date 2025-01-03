@@ -36,14 +36,3 @@ using ::mongocxx::v_noabi::write_type;
 /// @file
 /// Declares @ref mongocxx::v_noabi::write_type.
 ///
-
-#if defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
-
-namespace mongocxx {
-
-/// @ref mongocxx::v_noabi::write_type
-class write_type {};
-
-}  // namespace mongocxx
-
-#endif  // defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

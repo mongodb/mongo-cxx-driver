@@ -36,14 +36,3 @@ using ::mongocxx::v_noabi::index_model;
 /// @file
 /// Declares @ref mongocxx::v_noabi::index_model.
 ///
-
-#if defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
-
-namespace mongocxx {
-
-/// @ref mongocxx::v_noabi::index_model
-class index_model {};
-
-}  // namespace mongocxx
-
-#endif  // defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

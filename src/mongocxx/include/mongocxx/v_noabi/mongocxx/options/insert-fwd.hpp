@@ -40,16 +40,3 @@ using ::mongocxx::v_noabi::options::insert;
 /// @file
 /// Declares @ref mongocxx::v_noabi::options::insert.
 ///
-
-#if defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
-
-namespace mongocxx {
-namespace options {
-
-/// @ref mongocxx::v_noabi::options::insert
-class insert {};
-
-}  // namespace options
-}  // namespace mongocxx
-
-#endif  // defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

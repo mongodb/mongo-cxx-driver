@@ -40,16 +40,3 @@ using ::mongocxx::v_noabi::result::delete_result;
 /// @file
 /// Declares @ref mongocxx::v_noabi::result::delete_result.
 ///
-
-#if defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
-
-namespace mongocxx {
-namespace result {
-
-/// @ref mongocxx::v_noabi::result::delete_result
-class delete_result {};
-
-}  // namespace result
-}  // namespace mongocxx
-
-#endif  // defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

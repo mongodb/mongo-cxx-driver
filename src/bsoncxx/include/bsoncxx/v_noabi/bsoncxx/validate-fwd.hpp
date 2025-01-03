@@ -36,14 +36,3 @@ using ::bsoncxx::v_noabi::validator;
 /// @file
 /// Declares @ref bsoncxx::v_noabi::validator.
 ///
-
-#if defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
-
-namespace bsoncxx {
-
-/// @ref bsoncxx::v_noabi::validator
-class validator {};
-
-}  // namespace bsoncxx
-
-#endif  // defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

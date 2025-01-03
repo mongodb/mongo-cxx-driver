@@ -42,14 +42,3 @@ struct is_error_code_enum<::mongocxx::v_noabi::server_error_code>;
 /// @file
 /// Declares @ref mongocxx::v_noabi::server_error_code.
 ///
-
-#if defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
-
-namespace mongocxx {
-
-/// @ref mongocxx::v_noabi::server_error_code
-class server_error_code {};
-
-}  // namespace mongocxx
-
-#endif  // defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

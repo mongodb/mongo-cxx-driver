@@ -40,16 +40,3 @@ using ::mongocxx::v_noabi::options::server_api;
 /// @file
 /// Declares @ref mongocxx::v_noabi::options::server_api.
 ///
-
-#if defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
-
-namespace mongocxx {
-namespace options {
-
-/// @ref mongocxx::v_noabi::options::server_api
-class server_api {};
-
-}  // namespace options
-}  // namespace mongocxx
-
-#endif  // defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

@@ -40,16 +40,3 @@ using ::mongocxx::v_noabi::result::replace_one;
 /// @file
 /// Declares @ref mongocxx::v_noabi::result::replace_one.
 ///
-
-#if defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
-
-namespace mongocxx {
-namespace result {
-
-/// @ref mongocxx::v_noabi::result::replace_one
-class replace_one {};
-
-}  // namespace result
-}  // namespace mongocxx
-
-#endif  // defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

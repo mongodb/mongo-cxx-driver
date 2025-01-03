@@ -44,19 +44,3 @@ using ::mongocxx::v_noabi::gridfs::downloader;
 /// @file
 /// Declares utilities to download GridFS files.
 ///
-
-#if defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
-
-namespace mongocxx {
-namespace gridfs {
-
-/// @ref mongocxx::v_noabi::gridfs::chunks_and_bytes_offset
-struct chunks_and_bytes_offset {};
-
-/// @ref mongocxx::v_noabi::gridfs::downloader
-class downloader {};
-
-}  // namespace gridfs
-}  // namespace mongocxx
-
-#endif  // defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

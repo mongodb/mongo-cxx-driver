@@ -40,16 +40,3 @@ using ::bsoncxx::v_noabi::array::view;
 /// @file
 /// Declares @ref bsoncxx::v_noabi::array::view.
 ///
-
-#if defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
-
-namespace bsoncxx {
-namespace array {
-
-/// @ref bsoncxx::v_noabi::array::view
-class view {};
-
-}  // namespace array
-}  // namespace bsoncxx
-
-#endif  // defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

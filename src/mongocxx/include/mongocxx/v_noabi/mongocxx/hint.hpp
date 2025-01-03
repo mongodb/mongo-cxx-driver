@@ -152,29 +152,3 @@ using ::mongocxx::v_noabi::operator!=;
 /// @file
 /// Provides @ref mongocxx::v_noabi::hint.
 ///
-
-#if defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
-
-namespace mongocxx {
-
-/// @ref mongocxx::v_noabi::operator==(std::string index, const v_noabi::hint& index_hint)
-bool operator==(std::string index, const v_noabi::hint& index_hint);
-
-/// @ref mongocxx::v_noabi::operator!=(const v_noabi::hint& index_hint, std::string index)
-bool operator!=(const v_noabi::hint& index_hint, std::string index);
-
-/// @ref mongocxx::v_noabi::operator!=(std::string index, const v_noabi::hint& index_index)
-bool operator!=(std::string index, const v_noabi::hint& index_index);
-
-/// @ref mongocxx::v_noabi::operator==(bsoncxx::v_noabi::document::view index, const v_noabi::hint& index_hint)
-bool operator==(bsoncxx::v_noabi::document::view index, const v_noabi::hint& index_hint);
-
-/// @ref mongocxx::v_noabi::operator!=(const v_noabi::hint& index_hint, bsoncxx::v_noabi::document::view index)
-bool operator!=(const v_noabi::hint& index_hint, bsoncxx::v_noabi::document::view index);
-
-/// @ref mongocxx::v_noabi::operator!=(bsoncxx::v_noabi::document::view index, const v_noabi::hint& index_hint)
-bool operator!=(bsoncxx::v_noabi::document::view index, const v_noabi::hint& index_hint);
-
-}  // namespace mongocxx
-
-#endif  // defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

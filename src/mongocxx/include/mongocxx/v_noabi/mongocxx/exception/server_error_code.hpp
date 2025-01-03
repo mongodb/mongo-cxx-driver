@@ -25,8 +25,12 @@ namespace mongocxx {
 namespace v_noabi {
 
 ///
-/// Enum representing the various errors types that can be returned from the server. As this list
-/// changes over time, this is just a placeholder for an Int32 error code value from the server.
+/// Enum representing the various errors types that can be returned from the server.
+///
+/// As this list changes over time, this is just a placeholder for an Int32 error code value from
+/// the server.
+///
+/// @note `std::is_error_code_enum` is specialized for this type.
 ///
 enum class server_error_code : std::int32_t {
     // Intentionally empty at this time!
@@ -64,12 +68,10 @@ using ::mongocxx::v_noabi::server_error_category;
 
 namespace std {
 
-///
-/// Indicates @ref mongocxx::v_noabi::server_error_code is eligible for `std::error_code` implicit
-/// conversions.
-///
+// @cond DOXYGEN_DISABLE
 template <>
 struct is_error_code_enum<::mongocxx::v_noabi::server_error_code> : std::true_type {};
+// @endcond
 
 }  // namespace std
 
@@ -77,17 +79,3 @@ struct is_error_code_enum<::mongocxx::v_noabi::server_error_code> : std::true_ty
 /// @file
 /// Provides @ref mongocxx::v_noabi::server_error_code.
 ///
-
-#if defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
-
-namespace mongocxx {
-
-/// @ref mongocxx::v_noabi::server_error_category()
-const std::error_category& server_error_category();
-
-/// @ref mongocxx::v_noabi::make_error_code(v_noabi::server_error_code error)
-inline std::error_code make_error_code(v_noabi::server_error_code error);
-
-}  // namespace mongocxx
-
-#endif  // defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
