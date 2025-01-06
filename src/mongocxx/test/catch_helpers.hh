@@ -89,15 +89,15 @@ class mongocxx_exception_matcher : public Catch::Matchers::MatcherBase<mongocxx:
     auto client_destroy = libmongoc::client_destroy.create_instance();                                             \
     auto client_set_read_concern = libmongoc::client_set_read_concern.create_instance();                           \
     auto client_set_preference = libmongoc::client_set_read_prefs.create_instance();                               \
-    client_set_preference->interpose([](mongoc_client_t*, const mongoc_read_prefs_t*) {}).forever();               \
+    client_set_preference->interpose([](mongoc_client_t*, mongoc_read_prefs_t const*) {}).forever();               \
     auto client_get_preference = libmongoc::client_get_read_prefs.create_instance();                               \
-    client_get_preference->interpose([](const mongoc_client_t*) { return nullptr; }).forever();                    \
+    client_get_preference->interpose([](mongoc_client_t const*) { return nullptr; }).forever();                    \
     auto client_set_concern = libmongoc::client_set_write_concern.create_instance();                               \
-    client_set_concern->interpose([](mongoc_client_t*, const mongoc_write_concern_t*) {}).forever();               \
+    client_set_concern->interpose([](mongoc_client_t*, mongoc_write_concern_t const*) {}).forever();               \
     auto client_reset = libmongoc::client_reset.create_instance();                                                 \
-    client_reset->interpose([](const mongoc_client_t*) {}).forever();                                              \
+    client_reset->interpose([](mongoc_client_t const*) {}).forever();                                              \
     auto client_get_concern = libmongoc::client_get_write_concern.create_instance();                               \
-    client_get_concern->interpose([](const mongoc_client_t*) { return nullptr; }).forever();                       \
+    client_get_concern->interpose([](mongoc_client_t const*) { return nullptr; }).forever();                       \
     auto client_start_session = libmongoc::client_start_session.create_instance();                                 \
     auto client_find_databases_with_opts = mongocxx::libmongoc::client_find_databases_with_opts.create_instance(); \
     ((void)0)
@@ -114,27 +114,27 @@ class mongocxx_exception_matcher : public Catch::Matchers::MatcherBase<mongocxx:
 
 #define MOCK_DATABASE                                                                                                  \
     auto get_database = libmongoc::client_get_database.create_instance();                                              \
-    get_database->interpose([&](mongoc_client_t*, const char*) { return nullptr; });                                   \
+    get_database->interpose([&](mongoc_client_t*, char const*) { return nullptr; });                                   \
     auto database_set_read_concern = libmongoc::database_set_read_concern.create_instance();                           \
     auto database_set_preference = libmongoc::database_set_read_prefs.create_instance();                               \
-    database_set_preference->interpose([](mongoc_database_t*, const mongoc_read_prefs_t*) {}).forever();               \
+    database_set_preference->interpose([](mongoc_database_t*, mongoc_read_prefs_t const*) {}).forever();               \
     auto database_get_preference = libmongoc::database_get_read_prefs.create_instance();                               \
-    database_get_preference->interpose([](const mongoc_database_t*) { return nullptr; }).forever();                    \
+    database_get_preference->interpose([](mongoc_database_t const*) { return nullptr; }).forever();                    \
     auto database_set_concern = libmongoc::database_set_write_concern.create_instance();                               \
-    database_set_concern->interpose([](mongoc_database_t*, const mongoc_write_concern_t*) {}).forever();               \
+    database_set_concern->interpose([](mongoc_database_t*, mongoc_write_concern_t const*) {}).forever();               \
     auto database_get_concern = libmongoc::database_get_write_concern.create_instance();                               \
-    database_get_concern->interpose([](const mongoc_database_t*) { return nullptr; }).forever();                       \
+    database_get_concern->interpose([](mongoc_database_t const*) { return nullptr; }).forever();                       \
     auto database_destroy = libmongoc::database_destroy.create_instance();                                             \
     database_destroy->interpose([](mongoc_database_t*) {}).forever();                                                  \
     auto database_drop = libmongoc::database_drop.create_instance();                                                   \
     database_drop->interpose([](mongoc_database_t*, bson_error_t*) { return true; }).forever();                        \
     auto database_get_collection = libmongoc::database_get_collection.create_instance();                               \
-    database_get_collection->interpose([](mongoc_database_t*, const char*) { return nullptr; }).forever();             \
+    database_get_collection->interpose([](mongoc_database_t*, char const*) { return nullptr; }).forever();             \
     auto database_has_collection = libmongoc::database_has_collection.create_instance();                               \
     auto database_command_with_opts = libmongoc::database_command_with_opts.create_instance();                         \
     database_command_with_opts                                                                                         \
         ->interpose(                                                                                                   \
-            [](mongoc_database_t*, const bson_t*, const mongoc_read_prefs_t*, const bson_t*, bson_t*, bson_error_t*) { \
+            [](mongoc_database_t*, bson_t const*, mongoc_read_prefs_t const*, bson_t const*, bson_t*, bson_error_t*) { \
                 return true;                                                                                           \
             })                                                                                                         \
         .forever();                                                                                                    \
@@ -142,12 +142,12 @@ class mongocxx_exception_matcher : public Catch::Matchers::MatcherBase<mongocxx:
 
 #define MOCK_COLLECTION                                                                                            \
     auto collection_set_preference = libmongoc::collection_set_read_prefs.create_instance();                       \
-    collection_set_preference->interpose([](mongoc_collection_t*, const mongoc_read_prefs_t*) {}).forever();       \
+    collection_set_preference->interpose([](mongoc_collection_t*, mongoc_read_prefs_t const*) {}).forever();       \
     auto collection_get_preference = libmongoc::collection_get_read_prefs.create_instance();                       \
-    collection_get_preference->interpose([](const mongoc_collection_t*) { return nullptr; }).forever();            \
+    collection_get_preference->interpose([](mongoc_collection_t const*) { return nullptr; }).forever();            \
     auto collection_set_read_concern = libmongoc::collection_set_read_concern.create_instance();                   \
     auto collection_set_concern = libmongoc::collection_set_write_concern.create_instance();                       \
-    collection_set_concern->interpose([](mongoc_collection_t*, const mongoc_write_concern_t*) {}).forever();       \
+    collection_set_concern->interpose([](mongoc_collection_t*, mongoc_write_concern_t const*) {}).forever();       \
     auto collection_destroy = libmongoc::collection_destroy.create_instance();                                     \
     collection_destroy->interpose([](mongoc_collection_t*) {});                                                    \
     auto collection_drop = libmongoc::collection_drop.create_instance();                                           \
@@ -245,7 +245,7 @@ class mongocxx_exception_matcher : public Catch::Matchers::MatcherBase<mongocxx:
 
 #define MOCK_CONCERN                                                     \
     auto concern_copy = libmongoc::write_concern_copy.create_instance(); \
-    concern_copy->interpose([](const mongoc_write_concern_t*) { return nullptr; }).forever();
+    concern_copy->interpose([](mongoc_write_concern_t const*) { return nullptr; }).forever();
 
 #define MOCK_READ_PREFERENCE                                                                                       \
     auto read_prefs_get_hedge = libmongoc::read_prefs_get_hedge.create_instance();                                 \

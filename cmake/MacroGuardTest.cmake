@@ -73,7 +73,7 @@ function(add_macro_guard_test)
 
     # Implement as recursive algorithm for C++11 compatibility.
     string(APPEND MACRO_GUARD_TEST_PRELUDE
-        "static constexpr bool compare_equal(const char* lhs, const char* rhs) {\n"
+        "static constexpr bool compare_equal(char const* lhs, char const* rhs) {\n"
         "    return (*lhs == *rhs) && (*lhs == '\\0' || compare_equal(lhs + 1, rhs + 1));\n"
         "}\n"
         "\n"

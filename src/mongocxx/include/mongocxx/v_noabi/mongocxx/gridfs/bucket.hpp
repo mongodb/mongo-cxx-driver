@@ -544,7 +544,7 @@ class bucket {
         std::ostream* destination);
 
     ///
-    /// @copydoc download_to_stream(const client_session& session, bsoncxx::v_noabi::types::bson_value::view id, std::ostream* destination)
+    /// @copydoc download_to_stream(client_session const& session, bsoncxx::v_noabi::types::bson_value::view id, std::ostream* destination)
     ///
     /// @param start The byte offset to the beginning of content to download.
     /// @param end The byte offset to the end of content to download.

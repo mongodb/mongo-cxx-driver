@@ -501,7 +501,7 @@ class core {
     BSONCXX_ABI_EXPORT_CDECL(core&) append(stdx::string_view str);
 
     ///
-    /// Appends a char* or const char*.
+    /// Appends a char* or char const*.
     ///
     /// We disable all other pointer types to prevent the surprising implicit conversion to bool.
     ///

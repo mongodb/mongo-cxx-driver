@@ -52,7 +52,7 @@ view::view() noexcept : view(nullptr) {}
 #include <bsoncxx/enums/type.hpp>
 #undef BSONCXX_ENUM
 
-view::view(const view& rhs) noexcept {
+view::view(view const& rhs) noexcept {
     switch (static_cast<int>(rhs._type)) {
 #define BSONCXX_ENUM(type, val)                      \
     case val:                                        \
@@ -96,14 +96,14 @@ bsoncxx::v_noabi::type view::type() const {
 }
 
 #define BSONCXX_ENUM(type, val)                       \
-    const types::b_##type& view::get_##type() const { \
+    types::b_##type const& view::get_##type() const { \
         BSONCXX_TYPE_CHECK(type);                     \
         return _b_##type;                             \
     }
 #include <bsoncxx/enums/type.hpp>
 #undef BSONCXX_ENUM
 
-view::view(const std::uint8_t* raw, std::uint32_t length, std::uint32_t offset, std::uint32_t keylen) {
+view::view(std::uint8_t const* raw, std::uint32_t length, std::uint32_t offset, std::uint32_t keylen) {
     BSONCXX_CITER;
 
     auto value = bson_iter_value(&iter);

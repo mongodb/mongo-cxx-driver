@@ -33,11 +33,11 @@
             (void)(_expr);                                                     \
             INFO("expected an exception to be thrown: " #_expr);               \
             _assertion(false);                                                 \
-        } catch (const Catch::TestFailureException&) {                         \
+        } catch (Catch::TestFailureException const&) {                         \
             throw; /* Propagate Catch exceptions. */                           \
-        } catch (const Catch::TestSkipException&) {                            \
+        } catch (Catch::TestSkipException const&) {                            \
             throw; /* Propagate Catch exceptions. */                           \
-        } catch (const std::system_error& ex) {                                \
+        } catch (std::system_error const& ex) {                                \
             using std::make_error_code;                                        \
             (void)ex; /* Avoid unused variable warnings. */                    \
             _assertion(ex.code() == (_code));                                  \

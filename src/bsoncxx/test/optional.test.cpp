@@ -73,7 +73,7 @@ using arrow_t = decltype(std::declval<T>().operator->());
 template <typename T, typename Td = bsoncxx::detail::remove_const_t<T>>
 struct is_hashable : bsoncxx::detail::conjunction<
                          std::is_default_constructible<std::hash<Td>>,
-                         bsoncxx::detail::is_invocable<std::hash<Td>, const T&>> {};
+                         bsoncxx::detail::is_invocable<std::hash<Td>, T const&>> {};
 #else
 
 template <typename T>

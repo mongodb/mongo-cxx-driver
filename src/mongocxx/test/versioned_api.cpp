@@ -215,7 +215,7 @@ TEST_CASE("Versioned API, with insert-many for 'count' migration") {
     /// Don't delete me!
     // clang-format off
     // Begin Versioned API Example 6
-    } catch (const mongocxx::operation_exception& error) {
+    } catch (mongocxx::operation_exception const& error) {
         cerr << error.what();
         // Prints:
         //    Provided apiStrict:true, but the command count is not in API Version 1.

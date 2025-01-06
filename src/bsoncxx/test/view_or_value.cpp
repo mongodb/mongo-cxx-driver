@@ -164,7 +164,7 @@ TEST_CASE("string::document::view_or_value", "[bsoncxx::string::view_or_value]")
         string::view_or_value sally{std::move(name)};
     }
 
-    SECTION("can be constructed with a const std::string&") {
+    SECTION("can be constructed with a std::string const&") {
         std::string name{"Jonny"};
         string::view_or_value jonny{name};
 
@@ -175,7 +175,7 @@ TEST_CASE("string::document::view_or_value", "[bsoncxx::string::view_or_value]")
         }
     }
 
-    SECTION("can be constructed with a const char*") {
+    SECTION("can be constructed with a char const*") {
         std::string name = "Julia";
         string::view_or_value julia{name.c_str()};
 
@@ -209,7 +209,7 @@ TEST_CASE("string::document::view_or_value", "[bsoncxx::string::view_or_value]")
         REQUIRE(other_name != theo);
     }
 
-    SECTION("can be compared to a const char*") {
+    SECTION("can be compared to a char const*") {
         string::view_or_value bess{"Bess"};
 
         REQUIRE(bess == "Bess");

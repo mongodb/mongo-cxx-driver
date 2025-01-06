@@ -34,7 +34,7 @@ namespace string {
 /// - @ref bsoncxx::v_noabi::view_or_value<stdx::string_view, std::string>
 ///
 /// This class adds several string-specific methods to the bsoncxx::v_noabi::view_or_value template:
-/// - a constructor overload for const char*
+/// - a constructor overload for char const*
 /// - a constructor overload for std::string by l-value reference
 /// - a safe c_str() operation to return null-terminated c-style strings.
 ///
@@ -90,13 +90,13 @@ class view_or_value : public bsoncxx::v_noabi::view_or_value<stdx::string_view, 
     /// guaranteed to return a null-terminated string unless it is used in
     /// combination with terminated().
     ///
-    /// @return A const char* of this string.
+    /// @return A char const* of this string.
     ///
     BSONCXX_ABI_EXPORT_CDECL(char const*) data() const;
 };
 
 ///
-/// Comparison operators for comparing string::view_or_value directly with `const char*`.
+/// Comparison operators for comparing string::view_or_value directly with `char const*`.
 ///
 /// @{
 

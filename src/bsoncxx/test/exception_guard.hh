@@ -73,9 +73,9 @@ struct exception_guard_state {
             oss << __FILE__ << ":" << __LINE__ << ": exception guard ignored: "; \
             try {                                                                \
                 throw;                                                           \
-            } catch (const std::exception& exc) {                                \
+            } catch (std::exception const& exc) {                                \
                 oss << exc.what();                                               \
-            } catch (const Catch::TestFailureException&) {                       \
+            } catch (Catch::TestFailureException const&) {                       \
                 oss << "Catch::TestFailureException";                            \
             } catch (...) {                                                      \
                 oss << "unknown exception";                                      \

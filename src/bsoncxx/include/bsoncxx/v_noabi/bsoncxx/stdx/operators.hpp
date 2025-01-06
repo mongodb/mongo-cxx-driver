@@ -169,7 +169,7 @@ struct ordering_operators {
 #undef DEFOP
 #define DEFOP(Oper)                                             \
     template <typename L, typename R>                           \
-    constexpr friend auto operator Oper(const L& l, const R& r) \
+    constexpr friend auto operator Oper(L const& l, R const& r) \
         BSONCXX_RETURNS(ordering_operators::impl(l, r, rank<1>{}) Oper nullptr)
     DEFOP(<);
     DEFOP(>);

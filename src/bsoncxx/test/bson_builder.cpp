@@ -94,7 +94,7 @@ TEST_CASE("builder appends string", "[bsoncxx::builder::stream]") {
         bson_eq_stream(&expected, b);
     }
 
-    SECTION("works with const char*") {
+    SECTION("works with char const*") {
         char const* world = "world";
         b << "hello" << world;
 
@@ -1265,7 +1265,7 @@ TEST_CASE("list builder appends utf8", "[bsoncxx::builder::list]") {
         bson_eq_object(&expected, b.view().get_document().value);
     }
 
-    SECTION("works with const char*") {
+    SECTION("works with char const*") {
         char const* world = "world";
         builder::list b{"hello", world};
 
