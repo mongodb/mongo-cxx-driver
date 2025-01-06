@@ -27,7 +27,7 @@ namespace bsoncxx {
 namespace v_noabi {
 
 ///
-/// Represents a MongoDB BSON Decimal128 value.
+/// Represents a MongoDB BSON Decimal128.
 ///
 /// This type implements the Decimal Arithmetic Encodings (IEEE 754-2008) specification, _with certain
 /// exceptions_ around value integrity and the coefficient encoding. When a value cannot be represented exactly, the
