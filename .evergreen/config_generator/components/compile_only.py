@@ -26,8 +26,10 @@ MATRIX = [
     ('ubuntu2004', 'gcc',   ['Debug'], ['shared'],  [None]),
     ('ubuntu2004', 'clang', ['Debug'], ['shared'],  [None]),
 
-    ('windows-64-vs2015', 'vs2015x64', ['Debug'], ['shared'],  [None]),
-    ('windows-64-vs2015', 'vs2015x64', ['Release'], ['shared'],  [None]),
+    ('windows-64-vs2015', 'vs2015x64', ['Debug', 'Release'], ['shared'],  [None]),
+    ('windows-vsCurrent', 'vs2017x64', ['Debug', 'Release'], ['shared'],  [None]),
+    ('windows-vsCurrent', 'vs2019x64', ['Debug', 'Release'], ['shared'],  [None]),
+    ('windows-vsCurrent', 'vs2022x64', ['Debug', 'Release'], ['shared'],  [None]),
 ]
 # fmt: on
 # pylint: enable=line-too-long

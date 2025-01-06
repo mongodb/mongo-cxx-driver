@@ -257,6 +257,78 @@ tasks:
           build_type: Release
           generator: Visual Studio 14 2015
           platform: x64
+  - name: compile-only-windows-2019-vs2017-x64-debug-shared
+    run_on: windows-vsCurrent-large
+    tags: [compile-only, windows-vsCurrent, vs2017x64, debug, shared]
+    commands:
+      - func: setup
+      - func: fetch_c_driver_source
+      - func: install-uv
+      - func: compile
+        vars:
+          build_type: Debug
+          generator: Visual Studio 15 2017
+          platform: x64
+  - name: compile-only-windows-2019-vs2017-x64-release-shared
+    run_on: windows-vsCurrent-large
+    tags: [compile-only, windows-vsCurrent, vs2017x64, release, shared]
+    commands:
+      - func: setup
+      - func: fetch_c_driver_source
+      - func: install-uv
+      - func: compile
+        vars:
+          build_type: Release
+          generator: Visual Studio 15 2017
+          platform: x64
+  - name: compile-only-windows-2019-vs2019-x64-debug-shared
+    run_on: windows-vsCurrent-large
+    tags: [compile-only, windows-vsCurrent, vs2019x64, debug, shared]
+    commands:
+      - func: setup
+      - func: fetch_c_driver_source
+      - func: install-uv
+      - func: compile
+        vars:
+          build_type: Debug
+          generator: Visual Studio 16 2019
+          platform: x64
+  - name: compile-only-windows-2019-vs2019-x64-release-shared
+    run_on: windows-vsCurrent-large
+    tags: [compile-only, windows-vsCurrent, vs2019x64, release, shared]
+    commands:
+      - func: setup
+      - func: fetch_c_driver_source
+      - func: install-uv
+      - func: compile
+        vars:
+          build_type: Release
+          generator: Visual Studio 16 2019
+          platform: x64
+  - name: compile-only-windows-2019-vs2022-x64-debug-shared
+    run_on: windows-vsCurrent-large
+    tags: [compile-only, windows-vsCurrent, vs2022x64, debug, shared]
+    commands:
+      - func: setup
+      - func: fetch_c_driver_source
+      - func: install-uv
+      - func: compile
+        vars:
+          build_type: Debug
+          generator: Visual Studio 17 2022
+          platform: x64
+  - name: compile-only-windows-2019-vs2022-x64-release-shared
+    run_on: windows-vsCurrent-large
+    tags: [compile-only, windows-vsCurrent, vs2022x64, release, shared]
+    commands:
+      - func: setup
+      - func: fetch_c_driver_source
+      - func: install-uv
+      - func: compile
+        vars:
+          build_type: Release
+          generator: Visual Studio 17 2022
+          platform: x64
   - name: docker-build-ubuntu2204
     run_on: ubuntu2204-large
     tags: [docker-build, ubuntu2204]
