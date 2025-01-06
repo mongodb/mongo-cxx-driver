@@ -1,6 +1,7 @@
 from config_generator.components.funcs.compile import Compile
 from config_generator.components.funcs.fetch_det import FetchDET
 from config_generator.components.funcs.install_c_driver import InstallCDriver
+from config_generator.components.funcs.install_uv import InstallUV
 from config_generator.components.funcs.run_kms_servers import RunKMSServers
 from config_generator.components.funcs.setup import Setup
 from config_generator.components.funcs.start_mongod import StartMongod
@@ -78,6 +79,7 @@ def tasks():
                 Setup.call(),
                 StartMongod.call(mongodb_version=mongodb_version, topology=topology),
                 InstallCDriver.call(vars=icd_vars),
+                InstallUV.call(),
                 Compile.call(compiler=compiler, vars=compile_vars),
                 FetchDET.call(),
                 RunKMSServers.call(),

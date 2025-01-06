@@ -14,6 +14,7 @@ set -o pipefail
 : "${branch_name:?}"
 : "${build_type:?}"
 : "${distro_id:?}" # Required by find-cmake-latest.sh.
+: "${UV_INSTALL_DIR:?}"
 
 : "${BSON_EXTRA_ALIGNMENT:-}"
 : "${BSONCXX_POLYFILL:-}"
@@ -40,17 +41,6 @@ fi
 export cmake_binary
 cmake_binary="$(find_cmake_latest)"
 command -v "$cmake_binary"
-
-if [ ! -d ../drivers-evergreen-tools ]; then
-  git clone --depth 1 https://github.com/mongodb-labs/drivers-evergreen-tools.git ../drivers-evergreen-tools
-fi
-# shellcheck source=/dev/null
-. ../drivers-evergreen-tools/.evergreen/find-python3.sh
-# shellcheck source=/dev/null
-. ../drivers-evergreen-tools/.evergreen/venv-utils.sh
-
-venvcreate "$(find_python3)" venv
-python -m pip install GitPython
 
 if [[ "${build_type:?}" != "Debug" && "${build_type:?}" != "Release" ]]; then
   echo "$0: expected build_type environment variable to be set to 'Debug' or 'Release'" >&2
@@ -92,7 +82,7 @@ darwin* | linux*)
 esac
 
 # Create a VERSION_CURRENT file in the build directory to include in the dist tarball.
-python ./etc/calc_release_version.py >./build/VERSION_CURRENT
+PATH="${UV_INSTALL_DIR:?}:${PATH:-}" uv run --frozen python ./etc/calc_release_version.py >./build/VERSION_CURRENT
 cd build
 
 cmake_flags=(
