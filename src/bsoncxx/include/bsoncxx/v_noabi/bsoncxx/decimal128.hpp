@@ -29,6 +29,9 @@ namespace v_noabi {
 ///
 /// Represents an IEEE 754-2008 BSON Decimal128 value.
 ///
+/// @see
+/// - [BSON Types (MongoDB Manual)](https://www.mongodb.com/docs/manual/reference/bson-types/)
+///
 class decimal128 {
    public:
     ///
