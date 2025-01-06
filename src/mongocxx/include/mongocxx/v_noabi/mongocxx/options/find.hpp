@@ -35,7 +35,7 @@ namespace v_noabi {
 namespace options {
 
 ///
-/// Class representing the optional arguments to a MongoDB query.
+/// Used by MongoDB find operations.
 ///
 class find {
    public:

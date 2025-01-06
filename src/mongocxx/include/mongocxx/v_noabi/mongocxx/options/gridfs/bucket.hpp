@@ -32,7 +32,7 @@ namespace options {
 namespace gridfs {
 
 ///
-/// Class representing the optional arguments to a MongoDB GridFS bucket creation operation.
+/// Used by @ref mongocxx::v_noabi::gridfs::bucket.
 ///
 class bucket {
    public:

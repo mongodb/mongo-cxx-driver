@@ -25,10 +25,13 @@ namespace mongocxx {
 namespace v_noabi {
 
 ///
-/// Class representing criteria for document validation, to be applied to a collection.
+/// Supports creating validation rules for fields.
+///
+/// @deprecated To be removed in an upcoming major release. Set schema validation options as fields of a BSON
+/// document passed as an options argument to a MongoDB command instead.
 ///
 /// @see
-/// - https://www.mongodb.com/docs/manual/core/document-validation/
+/// - [Schema Validation](https://www.mongodb.com/docs/manual/core/schema-validation/)
 ///
 class validation_criteria {
    public:

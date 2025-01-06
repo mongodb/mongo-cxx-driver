@@ -28,7 +28,7 @@ namespace v_noabi {
 namespace options {
 
 ///
-/// Class representing the optional arguments to a MongoDB driver client (TLS)
+/// Used by @ref mongocxx::v_noabi::options::client::tls_opts.
 ///
 class tls {
    public:

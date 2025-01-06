@@ -30,8 +30,10 @@ namespace v_noabi {
 namespace events {
 
 ///
-/// Class representing what the driver knows about a topology of MongoDB servers: either a
-/// standalone, a replica set, or a sharded cluster.
+/// A description of the topology of one or more connected MongoDB servers.
+///
+/// @see
+/// - mongocxx::v_noabi::events::topology_changed_event
 ///
 class topology_description {
    public:

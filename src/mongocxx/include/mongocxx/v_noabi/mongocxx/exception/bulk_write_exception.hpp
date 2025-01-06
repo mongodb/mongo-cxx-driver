@@ -26,7 +26,7 @@ namespace mongocxx {
 namespace v_noabi {
 
 ///
-/// Class representing an exception during a bulk write operation.
+/// An exception thrown during a bulk write operation.
 ///
 /// @see
 /// - @ref mongocxx::v_noabi::operation_exception

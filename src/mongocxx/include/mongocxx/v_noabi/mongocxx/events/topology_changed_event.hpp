@@ -27,11 +27,10 @@ namespace v_noabi {
 namespace events {
 
 ///
-/// An event notification sent when the driver observes a change in any of the servers it is
-/// connected to or a change in the overall server topology.
+/// A change in the topology description (including its server descriptions).
 ///
 /// @see
-/// - "TopologyDescriptionChangedEvent" in https://github.com/mongodb/specifications/blob/master/source/server-discovery-and-monitoring/server-discovery-and-monitoring.md
+/// - [SDAM Logging and Monitoring Specification (MongoDB Specifications)](https://specifications.readthedocs.io/en/latest/server-discovery-and-monitoring/server-discovery-and-monitoring-logging-and-monitoring/)
 ///
 class topology_changed_event {
    public:

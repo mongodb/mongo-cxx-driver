@@ -28,11 +28,12 @@ namespace v_noabi {
 namespace events {
 
 ///
-/// An event notification sent when the driver stops monitoring a MongoDB server and removes it
-/// from the topology description.
+/// The closing of a connection to a shutdown MongoDB server.
+///
+/// The server is removed from the topology description and no longer monitored.
 ///
 /// @see
-/// - "ServerClosedEvent" in https://github.com/mongodb/specifications/blob/master/source/server-discovery-and-monitoring/server-discovery-and-monitoring.md
+/// - [SDAM Logging and Monitoring Specification (MongoDB Specifications)](https://specifications.readthedocs.io/en/latest/server-discovery-and-monitoring/server-discovery-and-monitoring-logging-and-monitoring/)
 ///
 class server_closed_event {
    public:

@@ -34,7 +34,7 @@ namespace v_noabi {
 namespace options {
 
 ///
-/// Class representing the optional arguments to mongocxx::v_noabi::collection::count_documents
+/// Used by @ref mongocxx::v_noabi::collection::count_documents.
 ///
 class count {
    public:

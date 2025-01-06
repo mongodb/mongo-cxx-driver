@@ -26,12 +26,11 @@ namespace mongocxx {
 namespace v_noabi {
 
 ///
-/// Class representing an exception during authentication.
+/// Unused. To be removed in an upcoming major release.
 ///
-/// @see
-/// - @ref mongocxx::v_noabi::operation_exception
+/// @deprecated To be removed in an upcoming major release.
 ///
-class authentication_exception : public operation_exception {
+class MONGOCXX_DEPRECATED authentication_exception : public operation_exception {
    public:
     ~authentication_exception() override;
 

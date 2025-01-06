@@ -28,7 +28,7 @@ namespace v_noabi {
 namespace model {
 
 ///
-/// Class representing a MongoDB delete operation that removes a single document.
+/// A MongoDB delete operation that removes a single document.
 ///
 class delete_one {
    public:

@@ -30,7 +30,7 @@ namespace v_noabi {
 namespace options {
 
 ///
-/// Class representing options for data key generation for encryption.
+/// Used by @ref mongocxx::v_noabi::client_encryption::create_data_key.
 ///
 class data_key {
    public:

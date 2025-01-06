@@ -33,7 +33,10 @@ namespace mongocxx {
 namespace v_noabi {
 
 ///
-/// A pool of @c client objects associated with a MongoDB deployment.
+/// A pool of reusable client objects connected to the same MongoDB topology.
+///
+/// @important This class does NOT implement [Connection Monitoring and Pooling (MongoDB
+/// Specifications)](https://specifications.readthedocs.io/en/latest/connection-monitoring-and-pooling/connection-monitoring-and-pooling/).
 ///
 /// For interoperability with other MongoDB drivers, the minimum and maximum number of connections
 /// in the pool is configured using the 'minPoolSize' and 'maxPoolSize' connection string options.
@@ -77,8 +80,9 @@ class pool {
     pool& operator=(pool const&) = delete;
 
     ///
-    /// An entry is a handle on a @c client object acquired via the pool. Similar to
-    /// std::unique_ptr.
+    /// An owning handle to a client obtained from a pool.
+    ///
+    /// Returns the client back to its original pool on destruction.
     ///
     /// @note The lifetime of any entry object must be a subset of the pool object
     ///  from which it was acquired.

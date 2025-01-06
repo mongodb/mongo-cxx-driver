@@ -31,7 +31,7 @@ BSONCXX_DISABLE_WARNING(MSVC(4251));
 BSONCXX_DISABLE_WARNING(MSVC(4275));
 
 ///
-/// A class to be used as the base class for all mongocxx exceptions.
+/// Base class for all exceptions thrown by the mongocxx library unless otherwise specified.
 ///
 class exception : public std::system_error {
    public:

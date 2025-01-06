@@ -72,8 +72,7 @@ validate(
     std::size_t* invalid_offset = nullptr);
 
 ///
-/// A validator is used to enable or disable specific checks that can be
-/// performed during BSON validation.
+/// Used to toggle checks which may be performed during BSON validation.
 ///
 class validator {
    public:

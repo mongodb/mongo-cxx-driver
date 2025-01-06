@@ -37,7 +37,7 @@ namespace mongocxx {
 namespace v_noabi {
 
 ///
-/// Class supporting operations for MongoDB Client-Side Field Level Encryption.
+/// Supports MongoDB Client-Side Field Level Encryption operations.
 ///
 class client_encryption {
    public:

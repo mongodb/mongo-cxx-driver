@@ -28,11 +28,10 @@ namespace v_noabi {
 namespace events {
 
 ///
-/// An event notification sent when the driver observes a change in the status of a server it is
-/// connected to.
+/// A change in the description of a connected MongoDB server.
 ///
 /// @see
-/// - "ServerDescriptionChangedEvent" in https://github.com/mongodb/specifications/blob/master/source/server-discovery-and-monitoring/server-discovery-and-monitoring.md
+/// - [SDAM Logging and Monitoring Specification (MongoDB Specifications)](https://specifications.readthedocs.io/en/latest/server-discovery-and-monitoring/server-discovery-and-monitoring-logging-and-monitoring/)
 ///
 class server_changed_event {
    public:

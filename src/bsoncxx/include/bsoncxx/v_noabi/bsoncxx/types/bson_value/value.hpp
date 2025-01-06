@@ -34,9 +34,10 @@ namespace types {
 namespace bson_value {
 
 ///
-/// A variant owning type that represents any BSON type. Owns its underlying
-/// buffer. When a bson_value::value goes out of scope, its underlying
-/// buffer is freed.
+/// An owning variant type that represents any BSON type.
+///
+/// Owns its underlying buffer. When a bson_value::value goes out of scope, its underlying buffer is
+/// freed.
 ///
 /// For accessors into this type and to extract the various BSON types out,
 /// please use bson_value::view.

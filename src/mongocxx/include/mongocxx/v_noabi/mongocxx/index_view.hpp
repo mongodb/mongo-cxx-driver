@@ -34,7 +34,10 @@ namespace mongocxx {
 namespace v_noabi {
 
 ///
-/// Class representing a MongoDB index view.
+/// A MongoDB index.
+///
+/// @note Not to be confused with a MongoDB Atlas Search Index (@ref
+/// mongocxx::v_noabi::search_index_view).
 ///
 class index_view {
    public:

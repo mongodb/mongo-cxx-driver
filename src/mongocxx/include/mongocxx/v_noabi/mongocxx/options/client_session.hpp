@@ -28,7 +28,7 @@ namespace v_noabi {
 namespace options {
 
 ///
-/// Class representing the optional arguments to mongocxx::v_noabi::client::start_session.
+/// Used by client sessions.
 ///
 class client_session {
    public:

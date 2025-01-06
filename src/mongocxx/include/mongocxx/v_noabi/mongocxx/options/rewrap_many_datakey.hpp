@@ -29,7 +29,7 @@ namespace v_noabi {
 namespace options {
 
 ///
-/// Class representing options for a rewrap many datakey operation.
+/// Used by @ref mongocxx::v_noabi::client_encryption::rewrap_many_datakey.
 ///
 class rewrap_many_datakey {
    public:

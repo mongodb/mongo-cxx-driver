@@ -41,7 +41,7 @@ namespace v_noabi {
 namespace gridfs {
 
 ///
-/// Class representing a GridFS bucket.
+/// A GridFS bucket.
 ///
 /// A GridFS bucket is used to store files that may be too large to store in a single document due
 /// to the 16 MB limit. The bucket comprises of two collections, `<bucketname>.files` and

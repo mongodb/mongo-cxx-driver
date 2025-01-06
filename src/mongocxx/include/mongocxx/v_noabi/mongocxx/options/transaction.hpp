@@ -32,7 +32,7 @@ namespace v_noabi {
 namespace options {
 
 ///
-/// Class representing the optional arguments for a transaction.
+/// Used by MongoDB transaction operations.
 ///
 class transaction {
    public:

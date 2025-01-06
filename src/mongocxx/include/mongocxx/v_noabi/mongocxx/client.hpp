@@ -41,7 +41,7 @@ namespace mongocxx {
 namespace v_noabi {
 
 ///
-/// Class representing a client connection to MongoDB.
+/// A client connection to a MongoDB server.
 ///
 /// Acts as a logical gateway for working with databases contained within a MongoDB server.
 ///

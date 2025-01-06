@@ -28,7 +28,7 @@ namespace v_noabi {
 namespace string {
 
 ///
-/// Class representing a view-or-value variant type for strings.
+/// A view-or-value variant type for strings.
 ///
 /// @par Derived From
 /// - @ref bsoncxx::v_noabi::view_or_value<stdx::string_view, std::string>

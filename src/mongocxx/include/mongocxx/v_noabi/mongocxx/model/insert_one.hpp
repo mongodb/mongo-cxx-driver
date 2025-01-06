@@ -25,7 +25,7 @@ namespace v_noabi {
 namespace model {
 
 ///
-/// Class representing a MongoDB insert operation that creates a single document.
+/// A MongoDB insert operation that creates a single document.
 ///
 class insert_one {
    public:

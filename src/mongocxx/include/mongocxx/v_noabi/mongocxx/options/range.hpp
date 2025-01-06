@@ -28,8 +28,10 @@ namespace v_noabi {
 namespace options {
 
 ///
-/// @brief `RangeOpts` specifies index options for a Queryable Encryption field supporting
-/// "range" queries.
+/// Used by @ref mongocxx::v_noabi::options::encrypt::range_opts.
+///
+/// Specifies index options (`RangeOpts`) for a Queryable Encryption field supporting "range"
+/// queries.
 ///
 /// @note `min`, `max`, `trimFactor`, `sparsity`, and `precision` must match the values set in the
 /// encryptedFields of the destination collection.

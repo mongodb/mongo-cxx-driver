@@ -33,7 +33,7 @@ namespace v_noabi {
 namespace options {
 
 ///
-/// Class representing MongoDB change stream options.
+/// Used by change streams.
 ///
 class change_stream {
    public:

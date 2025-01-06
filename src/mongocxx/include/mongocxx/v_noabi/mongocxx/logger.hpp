@@ -26,7 +26,7 @@ namespace mongocxx {
 namespace v_noabi {
 
 ///
-/// The log level of a message passed to a mongocxx::v_noabi::logger.
+/// The log level of a log message.
 ///
 enum class log_level {
     k_error,    ///< Log Level Error.
@@ -49,7 +49,10 @@ enum class log_level {
 MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::string_view) to_string(log_level level);
 
 ///
-/// The interface that all user-defined loggers must implement.
+/// The interface which user-defined loggers must implement.
+///
+/// @see
+/// - @ref mongocxx::v_noabi::instance
 ///
 class logger {
    public:

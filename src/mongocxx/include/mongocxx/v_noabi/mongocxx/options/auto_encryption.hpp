@@ -30,7 +30,7 @@ namespace v_noabi {
 namespace options {
 
 ///
-/// Class representing options for automatic client-side encryption.
+/// Used by @ref mongocxx::v_noabi::options::client::auto_encryption_opts.
 ///
 class auto_encryption {
    public:

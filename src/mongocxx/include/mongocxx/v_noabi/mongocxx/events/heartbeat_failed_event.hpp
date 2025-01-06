@@ -28,11 +28,10 @@ namespace v_noabi {
 namespace events {
 
 ///
-/// An event notification sent when the driver failed to send an "hello" command to check the
-/// status of a server.
+/// The failed execution of a heartbeat ("hello") command.
 ///
 /// @see
-/// - "ServerHeartbeatFailedEvent" in https://github.com/mongodb/specifications/blob/master/source/server-discovery-and-monitoring/server-discovery-and-monitoring.md
+/// - [SDAM Logging and Monitoring Specification (MongoDB Specifications)](https://specifications.readthedocs.io/en/latest/server-discovery-and-monitoring/server-discovery-and-monitoring-logging-and-monitoring/)
 ///
 class heartbeat_failed_event {
    public:

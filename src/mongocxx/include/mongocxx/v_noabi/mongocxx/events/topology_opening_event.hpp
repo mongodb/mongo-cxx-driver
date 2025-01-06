@@ -27,10 +27,10 @@ namespace v_noabi {
 namespace events {
 
 ///
-/// An event notification sent when the driver initializes a server topology.
+/// A new connection to a topology of MongoDB servers.
 ///
 /// @see
-/// - "TopologyOpeningEvent" in https://github.com/mongodb/specifications/blob/master/source/server-discovery-and-monitoring/server-discovery-and-monitoring.md
+/// - [SDAM Logging and Monitoring Specification (MongoDB Specifications)](https://specifications.readthedocs.io/en/latest/server-discovery-and-monitoring/server-discovery-and-monitoring-logging-and-monitoring/)
 ///
 class topology_opening_event {
    public:

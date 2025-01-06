@@ -30,7 +30,7 @@ namespace v_noabi {
 namespace options {
 
 ///
-/// Class representing optional arguments to IndexView operations
+/// Used by MongoDB index view operations.
 ///
 class index_view {
    public:

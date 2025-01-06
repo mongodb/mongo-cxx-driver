@@ -29,7 +29,9 @@ namespace mongocxx {
 namespace v_noabi {
 namespace result {
 
-/// Class representing the result of a MongoDB replace_one operation.
+///
+/// The result of a MongoDB replaceOne operation.
+///
 class replace_one {
    public:
     // This constructor is public for testing purposes only

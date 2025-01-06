@@ -35,18 +35,20 @@ namespace mongocxx {
 namespace v_noabi {
 
 ///
-/// Class representing a MongoDB connection string URI.
+/// A MongoDB connection string URI.
 ///
 /// @see
-/// - https://www.mongodb.com/docs/manual/reference/connection-string/
+/// - [Connection Strings (MongoDB Manual)](https://www.mongodb.com/docs/manual/reference/connection-string/)
 ///
 class uri {
    public:
+    ///
     /// A host.
+    ///
     struct host {
-        std::string name;
-        std::uint16_t port;
-        std::int32_t family;
+        std::string name;    ///< The host name.
+        std::uint16_t port;  ///< The port number.
+        std::int32_t family; ///< The address family.
     };
 
     ///

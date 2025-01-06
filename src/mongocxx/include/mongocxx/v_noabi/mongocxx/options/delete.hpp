@@ -30,7 +30,7 @@ namespace v_noabi {
 namespace options {
 
 ///
-/// Class representing the optional arguments to a MongoDB delete operation
+/// Used by MongoDB delete operations.
 ///
 class delete_options {
    public:

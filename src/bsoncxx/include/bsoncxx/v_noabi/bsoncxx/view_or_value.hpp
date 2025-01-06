@@ -26,7 +26,7 @@ namespace bsoncxx {
 namespace v_noabi {
 
 ///
-/// Class representing a view-or-value variant type.
+/// A view-or-value variant type.
 ///
 template <typename View, typename Value>
 class view_or_value {
@@ -35,12 +35,12 @@ class view_or_value {
     using value_type = Value;
 
     ///
-    /// Class View must be constructible from an instance of class Value.
+    /// View must be constructible from an instance of class Value.
     ///
     static_assert(std::is_constructible<View, Value>::value, "View type must be constructible from a Value");
 
     ///
-    /// Class View must be default constructible.
+    /// View must be default constructible.
     ///
     static_assert(std::is_default_constructible<View>::value, "View type must be default constructible");
 

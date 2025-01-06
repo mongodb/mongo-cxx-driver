@@ -23,8 +23,8 @@ namespace v_noabi {
 namespace options {
 
 ///
-/// Enum representing whether to return the old or new version of a document modified by a
-/// `findOneAndModify` operation.
+/// Indicates whether a `findOneAndModify` operation should return the old or new version of the
+/// modified document.
 ///
 enum class return_document {
     /// Return the version of the document before the modification takes place.

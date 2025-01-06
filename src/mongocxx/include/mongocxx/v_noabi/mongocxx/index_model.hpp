@@ -27,7 +27,7 @@ namespace mongocxx {
 namespace v_noabi {
 
 ///
-/// Class representing an index on a MongoDB server.
+/// Used by @ref mongocxx::v_noabi::index_view.
 ///
 class index_model {
    public:

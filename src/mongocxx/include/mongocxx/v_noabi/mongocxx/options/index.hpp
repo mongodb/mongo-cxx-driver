@@ -35,7 +35,7 @@ namespace v_noabi {
 namespace options {
 
 ///
-/// Class representing the optional arguments to a MongoDB create index operation.
+/// Used by MongoDB index creation operations.
 ///
 /// @see
 /// - https://www.mongodb.com/docs/manual/reference/command/createIndexes
@@ -67,7 +67,7 @@ class index {
     };
 
     ///
-    /// Class representing the optional WiredTiger storage engine options for indexes.
+    /// The optional WiredTiger storage engine options for indexes.
     ///
     class MONGOCXX_ABI_EXPORT wiredtiger_storage_options final : public base_storage_options {
        public:

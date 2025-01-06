@@ -24,7 +24,7 @@ namespace mongocxx {
 namespace v_noabi {
 
 ///
-/// Class representing an exception caused by using the mongocxx API improperly.
+/// An exception thrown due to incorrect use of mongocxx interfaces.
 ///
 /// @see
 /// - @ref mongocxx::v_noabi::exception

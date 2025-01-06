@@ -27,7 +27,7 @@ namespace v_noabi {
 namespace result {
 
 ///
-/// Class representing the result of a MongoDB delete operation.
+/// The result of a MongoDB delete operation.
 ///
 class delete_result {
    public:

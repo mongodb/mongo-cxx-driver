@@ -37,8 +37,11 @@ void value_append(core* core, T&& t);
 } // namespace impl
 
 ///
-/// An internal class of builder::basic.
-/// Users should almost always construct a builder::basic::document instead.
+/// Represents a document element being constructed during an append operation.
+///
+/// @see
+/// - @ref bsoncxx::v_noabi::builder::basic::array
+/// - @ref bsoncxx::v_noabi::builder::basic::document
 ///
 class sub_document {
    public:

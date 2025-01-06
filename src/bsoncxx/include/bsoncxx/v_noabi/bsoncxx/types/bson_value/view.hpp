@@ -44,8 +44,9 @@ namespace bsoncxx {
 namespace v_noabi {
 namespace types {
 namespace bson_value {
+
 ///
-/// A view-only variant that can contain any BSON type.
+/// A non-owning variant that can contain any BSON type.
 ///
 /// @warning
 ///   Calling the wrong get_<type> method will cause an exception

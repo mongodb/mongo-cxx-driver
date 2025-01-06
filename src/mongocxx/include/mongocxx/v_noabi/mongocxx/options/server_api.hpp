@@ -30,7 +30,7 @@ namespace v_noabi {
 namespace options {
 
 ///
-/// Class representing options for server API.
+/// Used by @ref mongocxx::v_noabi::options::client::server_api_opts.
 ///
 /// @see
 /// - [Stable API (MongoDB Manual)](https://www.mongodb.com/docs/manual/reference/stable-api/)

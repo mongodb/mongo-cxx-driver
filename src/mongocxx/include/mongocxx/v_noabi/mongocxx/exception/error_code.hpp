@@ -25,7 +25,7 @@ namespace mongocxx {
 namespace v_noabi {
 
 ///
-/// Enum representing the various error types that can occur during driver usage.
+/// Errors which may occur during mongocxx library usage.
 ///
 /// @note `std::is_error_code_enum` is specialized for this type.
 ///
