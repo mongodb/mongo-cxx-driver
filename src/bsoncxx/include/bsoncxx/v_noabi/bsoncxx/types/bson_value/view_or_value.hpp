@@ -51,18 +51,3 @@ using ::bsoncxx::v_noabi::types::bson_value::view_or_value;
 /// @file
 /// Provides @ref bsoncxx::v_noabi::types::bson_value::view_or_value.
 ///
-
-#if defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
-
-namespace bsoncxx {
-namespace types {
-namespace bson_value {
-
-/// @ref bsoncxx::v_noabi::types::bson_value::view_or_value
-class view_or_value {};
-
-} // namespace bson_value
-} // namespace types
-} // namespace bsoncxx
-
-#endif // defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

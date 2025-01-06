@@ -173,21 +173,3 @@ using ::bsoncxx::v_noabi::validate;
 /// @file
 /// Provides utilities to validate BSON document representations.
 ///
-
-#if defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
-
-namespace bsoncxx {
-
-/// @ref bsoncxx::v_noabi::validate(const std::uint8_t* data, std::size_t length)
-v_noabi::stdx::optional<v_noabi::document::view> validate(std::uint8_t const* data, std::size_t length);
-
-/// @ref bsoncxx::v_noabi::validate(const std::uint8_t* data, std::size_t length, const v_noabi::validator& validator, std::size_t* invalid_offset)
-v_noabi::stdx::optional<v_noabi::document::view> validate(
-    std::uint8_t const* data,
-    std::size_t length,
-    v_noabi::validator const& validator,
-    std::size_t* invalid_offset = nullptr);
-
-} // namespace bsoncxx
-
-#endif // defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

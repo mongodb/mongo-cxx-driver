@@ -36,14 +36,3 @@ using ::mongocxx::v_noabi::read_concern;
 /// @file
 /// Declares @ref mongocxx::v_noabi::read_concern.
 ///
-
-#if defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
-
-namespace mongocxx {
-
-/// @ref mongocxx::v_noabi::read_concern
-class read_concern {};
-
-} // namespace mongocxx
-
-#endif // defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

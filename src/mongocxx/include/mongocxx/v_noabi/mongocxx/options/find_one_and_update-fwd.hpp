@@ -40,16 +40,3 @@ using ::mongocxx::v_noabi::options::find_one_and_update;
 /// @file
 /// Declares @ref mongocxx::v_noabi::options::find_one_and_update.
 ///
-
-#if defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
-
-namespace mongocxx {
-namespace options {
-
-/// @ref mongocxx::v_noabi::options::find_one_and_update
-class find_one_and_update {};
-
-} // namespace options
-} // namespace mongocxx
-
-#endif // defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

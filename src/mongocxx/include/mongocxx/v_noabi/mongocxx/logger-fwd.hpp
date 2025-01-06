@@ -40,17 +40,3 @@ using ::mongocxx::v_noabi::logger;
 /// @file
 /// Declares utilities related to mongocxx logging.
 ///
-
-#if defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
-
-namespace mongocxx {
-
-/// @ref mongocxx::v_noabi::log_level
-enum class log_level {};
-
-/// @ref mongocxx::v_noabi::logger
-class logger {};
-
-} // namespace mongocxx
-
-#endif // defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

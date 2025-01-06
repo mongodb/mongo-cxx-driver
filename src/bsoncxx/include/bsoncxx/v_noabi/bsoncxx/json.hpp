@@ -102,24 +102,3 @@ using ::bsoncxx::v_noabi::operator"" _bson;
 /// @file
 /// Provides utilities to convert between BSON and JSON representations.
 ///
-
-#if defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
-
-namespace bsoncxx {
-
-/// @ref bsoncxx::v_noabi::to_json(v_noabi::document::view view, v_noabi::ExtendedJsonMode mode)
-std::string to_json(v_noabi::document::view view, v_noabi::ExtendedJsonMode mode = ExtendedJsonMode::k_legacy);
-
-/// @ref bsoncxx::v_noabi::to_json(v_noabi::array::view view, v_noabi::ExtendedJsonMode mode)
-std::string to_json(v_noabi::array::view view, v_noabi::ExtendedJsonMode mode = ExtendedJsonMode::k_legacy);
-
-/// @ref bsoncxx::v_noabi::from_json(v_noabi::stdx::string_view json)
-v_noabi::document::value from_json(v_noabi::stdx::string_view json);
-
-// Space is required between `operator` and `""` in @ref to avoid confusing Doxygen.
-/// @ref bsoncxx::v_noabi::operator ""_bson(const char* json, size_t len)
-v_noabi::document::value operator""_bson(char const* json, std::size_t len);
-
-} // namespace bsoncxx
-
-#endif // defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

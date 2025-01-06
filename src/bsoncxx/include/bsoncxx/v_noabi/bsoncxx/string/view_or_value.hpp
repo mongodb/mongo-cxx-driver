@@ -142,25 +142,3 @@ using ::bsoncxx::v_noabi::string::operator!=;
 /// @file
 /// Provides @ref bsoncxx::v_noabi::string::view_or_value.
 ///
-
-#if defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
-
-namespace bsoncxx {
-namespace string {
-
-/// @ref bsoncxx::v_noabi::string::operator==(const v_noabi::string::view_or_value& lhs, const char* rhs)
-inline bool operator==(v_noabi::string::view_or_value const& lhs, char const* rhs);
-
-/// @ref bsoncxx::v_noabi::string::operator!=(const v_noabi::string::view_or_value& lhs, const char* rhs)
-inline bool operator!=(v_noabi::string::view_or_value const& lhs, char const* rhs);
-
-/// @ref bsoncxx::v_noabi::string::operator==(const char* lhs, const v_noabi::string::view_or_value& rhs)
-inline bool operator==(char const* lhs, v_noabi::string::view_or_value const& rhs);
-
-/// @ref bsoncxx::v_noabi::string::operator!=(const char* lhs, const v_noabi::string::view_or_value& rhs)
-inline bool operator!=(char const* lhs, v_noabi::string::view_or_value const& rhs);
-
-} // namespace string
-} // namespace bsoncxx
-
-#endif // defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

@@ -40,16 +40,3 @@ using ::mongocxx::v_noabi::options::find_one_and_delete;
 /// @file
 /// Declares @ref mongocxx::v_noabi::options::find_one_and_delete.
 ///
-
-#if defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
-
-namespace mongocxx {
-namespace options {
-
-/// @ref mongocxx::v_noabi::options::find_one_and_delete
-class find_one_and_delete {};
-
-} // namespace options
-} // namespace mongocxx
-
-#endif // defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

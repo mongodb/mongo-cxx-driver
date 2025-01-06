@@ -36,14 +36,3 @@ using ::mongocxx::v_noabi::client;
 /// @file
 /// Declares @ref mongocxx::v_noabi::client.
 ///
-
-#if defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
-
-namespace mongocxx {
-
-/// @ref mongocxx::v_noabi::client
-class client {};
-
-} // namespace mongocxx
-
-#endif // defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

@@ -36,14 +36,3 @@ using ::bsoncxx::v_noabi::oid;
 /// @file
 /// Declares @ref bsoncxx::v_noabi::oid.
 ///
-
-#if defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
-
-namespace bsoncxx {
-
-/// @ref bsoncxx::v_noabi::oid
-class oid {};
-
-} // namespace bsoncxx
-
-#endif // defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

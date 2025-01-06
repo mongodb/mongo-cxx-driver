@@ -40,18 +40,3 @@ using ::bsoncxx::v_noabi::builder::basic::sub_array;
 /// @file
 /// Declares @ref bsoncxx::v_noabi::builder::basic::sub_array.
 ///
-
-#if defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
-
-namespace bsoncxx {
-namespace builder {
-namespace basic {
-
-/// @ref bsoncxx::v_noabi::builder::basic::sub_array
-class sub_array {};
-
-} // namespace basic
-} // namespace builder
-} // namespace bsoncxx
-
-#endif // defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

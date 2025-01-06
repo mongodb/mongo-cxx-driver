@@ -40,16 +40,3 @@ using ::mongocxx::v_noabi::options::auto_encryption;
 /// @file
 /// Declares @ref mongocxx::v_noabi::options::auto_encryption.
 ///
-
-#if defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
-
-namespace mongocxx {
-namespace options {
-
-/// @ref mongocxx::v_noabi::options::auto_encryption
-class auto_encryption {};
-
-} // namespace options
-} // namespace mongocxx
-
-#endif // defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

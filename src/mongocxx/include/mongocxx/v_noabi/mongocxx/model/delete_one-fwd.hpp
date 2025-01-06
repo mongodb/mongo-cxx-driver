@@ -40,16 +40,3 @@ using ::mongocxx::v_noabi::model::delete_one;
 /// @file
 /// Declares @ref mongocxx::v_noabi::model::delete_one.
 ///
-
-#if defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
-
-namespace mongocxx {
-namespace model {
-
-/// @ref mongocxx::v_noabi::model::delete_one
-class delete_one {};
-
-} // namespace model
-} // namespace mongocxx
-
-#endif // defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

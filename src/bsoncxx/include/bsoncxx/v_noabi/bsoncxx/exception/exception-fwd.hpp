@@ -36,14 +36,3 @@ using ::bsoncxx::v_noabi::exception;
 /// @file
 /// Declares @ref bsoncxx::v_noabi::exception.
 ///
-
-#if defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
-
-namespace bsoncxx {
-
-/// @ref bsoncxx::v_noabi::exception
-class exception {};
-
-} // namespace bsoncxx
-
-#endif // defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

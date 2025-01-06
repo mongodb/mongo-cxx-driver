@@ -36,14 +36,3 @@ using ::mongocxx::v_noabi::database;
 /// @file
 /// Declares @ref mongocxx::v_noabi::database.
 ///
-
-#if defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
-
-namespace mongocxx {
-
-/// @ref mongocxx::v_noabi::database
-class database {};
-
-} // namespace mongocxx
-
-#endif // defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

@@ -34,14 +34,3 @@ using ::bsoncxx::v_noabi::ExtendedJsonMode;
 /// @file
 /// Declares @ref bsoncxx::v_noabi::ExtendedJsonMode.
 ///
-
-#if defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
-
-namespace bsoncxx {
-
-/// @ref bsoncxx::v_noabi::ExtendedJsonMode
-enum class ExtendedJsonMode {};
-
-} // namespace bsoncxx
-
-#endif // defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

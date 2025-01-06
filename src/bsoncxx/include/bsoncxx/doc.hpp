@@ -85,11 +85,6 @@
 ///
 
 ///
-/// @namespace std
-/// The top-level namespace reserved for the C++ standard library.
-///
-
-///
 /// @page topic-bsoncxx The bsoncxx Library
 /// @brief Topics relating to the bsoncxx library.
 /// @li @subpage topic-bsoncxx-examples

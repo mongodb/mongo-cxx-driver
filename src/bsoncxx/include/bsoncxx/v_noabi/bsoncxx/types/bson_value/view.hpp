@@ -371,31 +371,3 @@ using ::bsoncxx::v_noabi::types::bson_value::operator!=;
 /// @file
 /// Provides @ref bsoncxx::v_noabi::types::bson_value::view.
 ///
-
-#if defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
-
-namespace bsoncxx {
-namespace types {
-namespace bson_value {
-
-/// @ref bsoncxx::v_noabi::types::bson_value::operator==(const v_noabi::types::bson_value::view& lhs, T&& rhs)
-template <typename T>
-bool operator==(v_noabi::types::bson_value::view const& lhs, T&& rhs);
-
-/// @ref bsoncxx::v_noabi::types::bson_value::operator==(T&& lhs, const v_noabi::types::bson_value::view& rhs)
-template <typename T>
-bool operator==(T&& lhs, v_noabi::types::bson_value::view const& rhs);
-
-/// @ref bsoncxx::v_noabi::types::bson_value::operator!=(const v_noabi::types::bson_value::view& lhs, T&& rhs)
-template <typename T>
-bool operator!=(v_noabi::types::bson_value::view const& lhs, T&& rhs);
-
-/// @ref bsoncxx::v_noabi::types::bson_value::operator!=(T&& lhs, const v_noabi::types::bson_value::view& rhs)
-template <typename T>
-bool operator!=(T&& lhs, v_noabi::types::bson_value::view const& rhs);
-
-} // namespace bson_value
-} // namespace types
-} // namespace bsoncxx
-
-#endif // defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

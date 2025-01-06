@@ -40,16 +40,3 @@ using ::bsoncxx::v_noabi::document::element;
 /// @file
 /// Declares @ref bsoncxx::v_noabi::document::element.
 ///
-
-#if defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
-
-namespace bsoncxx {
-namespace document {
-
-/// @ref bsoncxx::v_noabi::document::element
-class element {};
-
-} // namespace document
-} // namespace bsoncxx
-
-#endif // defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

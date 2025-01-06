@@ -139,19 +139,3 @@ using ::bsoncxx::v_noabi::builder::basic::make_document;
 /// @file
 /// Provides @ref bsoncxx::v_noabi::builder::basic::document.
 ///
-
-#if defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
-
-namespace bsoncxx {
-namespace builder {
-namespace basic {
-
-/// @ref bsoncxx::v_noabi::builder::basic::make_document
-template <typename... Args>
-v_noabi::document::value make_document(Args&&... args);
-
-} // namespace basic
-} // namespace builder
-} // namespace bsoncxx
-
-#endif // defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

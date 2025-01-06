@@ -97,14 +97,3 @@ using ::mongocxx::v_noabi::to_string;
 /// @file
 /// Provides utilities related to mongocxx logging.
 ///
-
-#if defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
-
-namespace mongocxx {
-
-/// @ref mongocxx::v_noabi::to_string(v_noabi::log_level level)
-bsoncxx::v_noabi::stdx::string_view to_string(v_noabi::log_level level);
-
-} // namespace mongocxx
-
-#endif // defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

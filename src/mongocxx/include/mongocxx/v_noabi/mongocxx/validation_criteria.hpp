@@ -184,17 +184,3 @@ using ::mongocxx::v_noabi::operator!=;
 /// @file
 /// Provides @ref mongocxx::v_noabi::validation_criteria.
 ///
-
-#if defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
-
-namespace mongocxx {
-
-/// @ref mongocxx::v_noabi::operator==(const v_noabi::validation_criteria& lhs, const v_noabi::validation_criteria& rhs)
-bool operator==(v_noabi::validation_criteria const& lhs, v_noabi::validation_criteria const& rhs);
-
-/// @ref mongocxx::v_noabi::operator!=(const v_noabi::validation_criteria& lhs, const v_noabi::validation_criteria& rhs)
-bool operator!=(v_noabi::validation_criteria const& lhs, v_noabi::validation_criteria const& rhs);
-
-} // namespace mongocxx
-
-#endif // defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

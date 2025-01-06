@@ -44,18 +44,3 @@ using ::bsoncxx::v_noabi::types::bson_value::view;
 /// @file
 /// Declares @ref bsoncxx::v_noabi::types::bson_value::view.
 ///
-
-#if defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
-
-namespace bsoncxx {
-namespace types {
-namespace bson_value {
-
-/// @ref bsoncxx::v_noabi::types::bson_value::view
-class view {};
-
-} // namespace bson_value
-} // namespace types
-} // namespace bsoncxx
-
-#endif // defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

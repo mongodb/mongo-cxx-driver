@@ -47,21 +47,3 @@ using ::bsoncxx::v_noabi::builder::basic::concatenate;
 /// Redeclares @ref bsoncxx::v_noabi::builder::concatenate in the @ref
 /// bsoncxx::v_noabi::builder::basic namespace.
 ///
-
-#if defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
-
-namespace bsoncxx {
-namespace builder {
-namespace basic {
-
-/// @ref bsoncxx::v_noabi::builder::concatenate(v_noabi::document::view_or_value doc)
-v_noabi::concatenate_doc concatenate(v_noabi::document::view_or_value doc);
-
-/// @ref bsoncxx::v_noabi::builder::concatenate(v_noabi::array::view_or_value array)
-v_noabi::concatenate_array concatenate(v_noabi::array::view_or_value array);
-
-} // namespace basic
-} // namespace builder
-} // namespace bsoncxx
-
-#endif // defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

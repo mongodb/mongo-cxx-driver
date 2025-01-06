@@ -414,25 +414,3 @@ using ::bsoncxx::v_noabi::document::operator!=;
 /// @file
 /// Provides @ref bsoncxx::v_noabi::document::element.
 ///
-
-#if defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
-
-namespace bsoncxx {
-namespace document {
-
-/// @ref bsoncxx::v_noabi::document::operator==(const v_noabi::document::element& elem, const v_noabi::types::bson_value::view& v)
-bool operator==(v_noabi::document::element const& elem, v_noabi::types::bson_value::view const& v);
-
-/// @ref bsoncxx::v_noabi::document::operator==(const v_noabi::types::bson_value::view& v, const v_noabi::document::element& elem)
-bool operator==(v_noabi::types::bson_value::view const& v, v_noabi::document::element const& elem);
-
-/// @ref bsoncxx::v_noabi::document::operator!=(const v_noabi::document::element& elem, const v_noabi::types::bson_value::view& v)
-bool operator!=(v_noabi::document::element const& elem, v_noabi::types::bson_value::view const& v);
-
-/// @ref bsoncxx::v_noabi::document::operator!=(const v_noabi::types::bson_value::view& v, const v_noabi::document::element& elem)
-bool operator!=(v_noabi::types::bson_value::view const& v, v_noabi::document::element const& elem);
-
-} // namespace document
-} // namespace bsoncxx
-
-#endif // defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

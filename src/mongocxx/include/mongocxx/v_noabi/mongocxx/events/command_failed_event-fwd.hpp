@@ -40,16 +40,3 @@ using ::mongocxx::v_noabi::events::command_failed_event;
 /// @file
 /// Declares @ref mongocxx::v_noabi::events::command_failed_event.
 ///
-
-#if defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
-
-namespace mongocxx {
-namespace events {
-
-/// @ref mongocxx::v_noabi::events::command_failed_event
-class command_failed_event {};
-
-} // namespace events
-} // namespace mongocxx
-
-#endif // defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

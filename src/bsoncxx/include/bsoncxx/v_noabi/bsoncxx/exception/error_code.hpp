@@ -27,6 +27,8 @@ namespace v_noabi {
 ///
 /// Enum representing the various error types that can occur while operating on BSON values.
 ///
+/// @note `std::is_error_code_enum` is specialized for this type.
+///
 enum class error_code : std::int32_t {
     /// A new key was appended while building a subarray.
     k_cannot_append_key_in_sub_array = 1,
@@ -175,12 +177,10 @@ using ::bsoncxx::v_noabi::make_error_code;
 
 namespace std {
 
-///
-/// Indicates @ref bsoncxx::v_noabi::error_code is eligible for `std::error_code` implicit
-/// conversions.
-///
+// @cond DOXYGEN_DISABLE
 template <>
 struct is_error_code_enum<bsoncxx::v_noabi::error_code> : public true_type {};
+// @endcond
 
 } // namespace std
 
@@ -188,17 +188,3 @@ struct is_error_code_enum<bsoncxx::v_noabi::error_code> : public true_type {};
 /// @file
 /// Provides @ref bsoncxx::v_noabi::error_code.
 ///
-
-#if defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
-
-namespace bsoncxx {
-
-/// @ref bsoncxx::v_noabi::error_category()
-std::error_category const& error_category();
-
-/// @ref bsoncxx::v_noabi::make_error_code(v_noabi::error_code error)
-std::error_code make_error_code(v_noabi::error_code error);
-
-} // namespace bsoncxx
-
-#endif // defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

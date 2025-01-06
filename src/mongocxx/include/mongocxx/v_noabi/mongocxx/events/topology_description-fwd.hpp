@@ -40,16 +40,3 @@ using ::mongocxx::v_noabi::events::topology_description;
 /// @file
 /// Declares @ref mongocxx::v_noabi::events::topology_description.
 ///
-
-#if defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
-
-namespace mongocxx {
-namespace events {
-
-/// @ref mongocxx::v_noabi::events::topology_description
-class topology_description {};
-
-} // namespace events
-} // namespace mongocxx
-
-#endif // defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

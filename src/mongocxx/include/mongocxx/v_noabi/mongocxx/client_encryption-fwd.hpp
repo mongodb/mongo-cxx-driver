@@ -36,14 +36,3 @@ using ::mongocxx::v_noabi::client_encryption;
 /// @file
 /// Declares @ref mongocxx::v_noabi::client_encryption.
 ///
-
-#if defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
-
-namespace mongocxx {
-
-/// @ref mongocxx::v_noabi::client_encryption
-class client_encryption {};
-
-} // namespace mongocxx
-
-#endif // defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

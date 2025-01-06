@@ -42,18 +42,3 @@ using ::bsoncxx::v_noabi::builder::stream::single_context;
 /// @file
 /// Declares @ref bsoncxx::v_noabi::builder::stream::single_context.
 ///
-
-#if defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
-
-namespace bsoncxx {
-namespace builder {
-namespace stream {
-
-/// @ref bsoncxx::v_noabi::builder::stream::single_context
-class single_context {};
-
-} // namespace stream
-} // namespace builder
-} // namespace bsoncxx
-
-#endif // defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

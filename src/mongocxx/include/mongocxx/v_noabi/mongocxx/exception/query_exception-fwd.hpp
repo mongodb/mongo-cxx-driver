@@ -36,14 +36,3 @@ using ::mongocxx::v_noabi::query_exception;
 /// @file
 /// Declares @ref mongocxx::v_noabi::query_exception.
 ///
-
-#if defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
-
-namespace mongocxx {
-
-/// @ref mongocxx::v_noabi::query_exception
-class query_exception {};
-
-} // namespace mongocxx
-
-#endif // defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

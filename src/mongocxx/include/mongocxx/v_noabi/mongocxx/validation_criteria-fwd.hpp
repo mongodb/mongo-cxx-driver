@@ -36,14 +36,3 @@ using ::mongocxx::v_noabi::validation_criteria;
 /// @file
 /// Declares @ref mongocxx::v_noabi::validation_criteria.
 ///
-
-#if defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
-
-namespace mongocxx {
-
-/// @ref mongocxx::v_noabi::validation_criteria
-class validation_criteria {};
-
-} // namespace mongocxx
-
-#endif // defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

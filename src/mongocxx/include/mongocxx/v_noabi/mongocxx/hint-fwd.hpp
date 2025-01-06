@@ -36,14 +36,3 @@ using ::mongocxx::v_noabi::hint;
 /// @file
 /// Declares @ref mongocxx::v_noabi::hint.
 ///
-
-#if defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
-
-namespace mongocxx {
-
-/// @ref mongocxx::v_noabi::hint
-class hint {};
-
-} // namespace mongocxx
-
-#endif // defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
