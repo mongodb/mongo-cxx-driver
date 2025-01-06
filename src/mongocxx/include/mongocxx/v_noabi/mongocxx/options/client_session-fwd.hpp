@@ -22,17 +22,17 @@ namespace options {
 
 class client_session;
 
-}  // namespace options
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace options
+} // namespace v_noabi
+} // namespace mongocxx
 
 namespace mongocxx {
 namespace options {
 
 using ::mongocxx::v_noabi::options::client_session;
 
-}  // namespace options
-}  // namespace mongocxx
+} // namespace options
+} // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
 

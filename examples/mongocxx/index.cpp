@@ -34,7 +34,7 @@ int EXAMPLES_CDECL main() {
     auto db = conn["test"];
     try {
         db["restaurants"].drop();
-    } catch (const std::exception&) {
+    } catch (std::exception const&) {
         // Collection did not exist.
     }
 
@@ -46,8 +46,7 @@ int EXAMPLES_CDECL main() {
     // Create a compound index.
     {
         db["restaurants"].drop();
-        db["restaurants"].create_index(make_document(kvp("cuisine", 1), kvp("address.zipcode", -1)),
-                                       {});
+        db["restaurants"].create_index(make_document(kvp("cuisine", 1), kvp("address.zipcode", -1)), {});
     }
 
     // Create a unique index.

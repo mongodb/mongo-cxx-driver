@@ -37,14 +37,12 @@ class view_or_value {
     ///
     /// Class View must be constructible from an instance of class Value.
     ///
-    static_assert(std::is_constructible<View, Value>::value,
-                  "View type must be constructible from a Value");
+    static_assert(std::is_constructible<View, Value>::value, "View type must be constructible from a Value");
 
     ///
     /// Class View must be default constructible.
     ///
-    static_assert(std::is_default_constructible<View>::value,
-                  "View type must be default constructible");
+    static_assert(std::is_default_constructible<View>::value, "View type must be default constructible");
 
     ///
     /// Destroys a view_or_value.
@@ -77,13 +75,12 @@ class view_or_value {
     ///
     /// Construct a view_or_value from a copied view_or_value.
     ///
-    view_or_value(const view_or_value& other)
-        : _value(other._value), _view(_value ? *_value : other._view) {}
+    view_or_value(view_or_value const& other) : _value(other._value), _view(_value ? *_value : other._view) {}
 
     ///
     /// Assign to this view_or_value from a copied view_or_value.
     ///
-    view_or_value& operator=(const view_or_value& other) {
+    view_or_value& operator=(view_or_value const& other) {
         _value = other._value;
         _view = _value ? *_value : other._view;
         return *this;
@@ -135,7 +132,7 @@ class view_or_value {
     ///
     /// @return a View into this view_or_value.
     ///
-    const View& view() const {
+    View const& view() const {
         return _view;
     }
 
@@ -151,13 +148,13 @@ class view_or_value {
 
 /// @relatesalso bsoncxx::v_noabi::view_or_value
 template <typename View, typename Value>
-bool operator==(const view_or_value<View, Value>& lhs, const view_or_value<View, Value>& rhs) {
+bool operator==(view_or_value<View, Value> const& lhs, view_or_value<View, Value> const& rhs) {
     return lhs.view() == rhs.view();
 }
 
 /// @relatesalso bsoncxx::v_noabi::view_or_value
 template <typename View, typename Value>
-bool operator!=(const view_or_value<View, Value>& lhs, const view_or_value<View, Value>& rhs) {
+bool operator!=(view_or_value<View, Value> const& lhs, view_or_value<View, Value> const& rhs) {
     return !(lhs == rhs);
 }
 
@@ -171,64 +168,64 @@ bool operator!=(const view_or_value<View, Value>& lhs, const view_or_value<View,
 
 /// @relatesalso bsoncxx::v_noabi::view_or_value
 template <typename View, typename Value>
-bool operator==(const view_or_value<View, Value>& lhs, View rhs) {
+bool operator==(view_or_value<View, Value> const& lhs, View rhs) {
     return lhs.view() == rhs;
 }
 
 /// @relatesalso bsoncxx::v_noabi::view_or_value
 template <typename View, typename Value>
-bool operator==(View lhs, const view_or_value<View, Value>& rhs) {
+bool operator==(View lhs, view_or_value<View, Value> const& rhs) {
     return rhs == lhs;
 }
 
 /// @relatesalso bsoncxx::v_noabi::view_or_value
 template <typename View, typename Value>
-bool operator!=(const view_or_value<View, Value>& lhs, View rhs) {
+bool operator!=(view_or_value<View, Value> const& lhs, View rhs) {
     return !(lhs == rhs);
 }
 
 /// @relatesalso bsoncxx::v_noabi::view_or_value
 template <typename View, typename Value>
-bool operator!=(View lhs, const view_or_value<View, Value>& rhs) {
+bool operator!=(View lhs, view_or_value<View, Value> const& rhs) {
     return !(rhs == lhs);
 }
 
 /// @relatesalso bsoncxx::v_noabi::view_or_value
 template <typename View, typename Value>
-bool operator==(const view_or_value<View, Value>& lhs, const Value& rhs) {
+bool operator==(view_or_value<View, Value> const& lhs, Value const& rhs) {
     return lhs.view() == View(rhs);
 }
 
 /// @relatesalso bsoncxx::v_noabi::view_or_value
 template <typename View, typename Value>
-bool operator==(const Value& lhs, const view_or_value<View, Value>& rhs) {
+bool operator==(Value const& lhs, view_or_value<View, Value> const& rhs) {
     return rhs == lhs;
 }
 
 /// @relatesalso bsoncxx::v_noabi::view_or_value
 template <typename View, typename Value>
-bool operator!=(const view_or_value<View, Value>& lhs, const Value& rhs) {
+bool operator!=(view_or_value<View, Value> const& lhs, Value const& rhs) {
     return !(lhs == rhs);
 }
 
 /// @relatesalso bsoncxx::v_noabi::view_or_value
 template <typename View, typename Value>
-bool operator!=(const Value& lhs, const view_or_value<View, Value>& rhs) {
+bool operator!=(Value const& lhs, view_or_value<View, Value> const& rhs) {
     return !(rhs == lhs);
 }
 
 /// @}
 ///
 
-}  // namespace v_noabi
-}  // namespace bsoncxx
+} // namespace v_noabi
+} // namespace bsoncxx
 
 namespace bsoncxx {
 
 using ::bsoncxx::v_noabi::operator==;
 using ::bsoncxx::v_noabi::operator!=;
 
-}  // namespace bsoncxx
+} // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>
 

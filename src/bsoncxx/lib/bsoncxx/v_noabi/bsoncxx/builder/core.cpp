@@ -51,8 +51,8 @@ class managed_bson_t {
     managed_bson_t(managed_bson_t&&) = delete;
     managed_bson_t& operator=(managed_bson_t&&) = delete;
 
-    managed_bson_t(const managed_bson_t&) = delete;
-    managed_bson_t& operator=(const managed_bson_t&) = delete;
+    managed_bson_t(managed_bson_t const&) = delete;
+    managed_bson_t& operator=(managed_bson_t const&) = delete;
 
     ~managed_bson_t() {
         bson_destroy(&bson);
@@ -66,7 +66,7 @@ class managed_bson_t {
     bson_t bson;
 };
 
-}  // namespace
+} // namespace
 
 class core::impl {
    public:
@@ -89,8 +89,7 @@ class core::impl {
     // Throws bsoncxx::v_noabi::exception if the top-level BSON datum is an array.
     bsoncxx::v_noabi::document::value steal_document() {
         if (_root_is_array) {
-            throw bsoncxx::v_noabi::exception{
-                error_code::k_cannot_perform_document_operation_on_array};
+            throw bsoncxx::v_noabi::exception{error_code::k_cannot_perform_document_operation_on_array};
         }
 
         uint32_t buf_len;
@@ -103,8 +102,7 @@ class core::impl {
     // Throws bsoncxx::v_noabi::exception if the top-level BSON datum is a document.
     bsoncxx::v_noabi::array::value steal_array() {
         if (!_root_is_array) {
-            throw bsoncxx::v_noabi::exception{
-                error_code::k_cannot_perform_array_operation_on_document};
+            throw bsoncxx::v_noabi::exception{error_code::k_cannot_perform_array_operation_on_document};
         }
 
         uint32_t buf_len;
@@ -122,12 +120,12 @@ class core::impl {
         }
     }
 
-    void push_back_document(const char* key, std::int32_t len) {
+    void push_back_document(char const* key, std::int32_t len) {
         _depth++;
         _stack.emplace_back(back(), key, len, false);
     }
 
-    void push_back_array(const char* key, std::int32_t len) {
+    void push_back_array(char const* key, std::int32_t len) {
         _depth++;
         _stack.emplace_back(back(), key, len, true);
     }
@@ -141,8 +139,8 @@ class core::impl {
     // for a key to be appended to start a new key/value pair.
     stdx::string_view next_key() {
         if (is_array()) {
-            _itoa_key = _stack.empty() ? static_cast<std::uint32_t>(_n++)
-                                       : static_cast<std::uint32_t>(_stack.back().n++);
+            _itoa_key =
+                _stack.empty() ? static_cast<std::uint32_t>(_n++) : static_cast<std::uint32_t>(_stack.back().n++);
             _user_key_view = stdx::string_view{_itoa_key.c_str(), _itoa_key.length()};
         } else if (!_has_user_key) {
             throw bsoncxx::v_noabi::exception{error_code::k_need_key};
@@ -175,8 +173,7 @@ class core::impl {
     // Throws bsoncxx::v_noabi::exception if the top-level BSON datum is an array.
     bson_t* root_document() {
         if (_root_is_array) {
-            throw bsoncxx::v_noabi::exception{
-                error_code::k_cannot_perform_document_operation_on_array};
+            throw bsoncxx::v_noabi::exception{error_code::k_cannot_perform_document_operation_on_array};
         }
 
         return _root.get();
@@ -185,8 +182,7 @@ class core::impl {
     // Throws bsoncxx::v_noabi::exception if the top-level BSON datum is a document.
     bson_t* root_array() {
         if (!_root_is_array) {
-            throw bsoncxx::v_noabi::exception{
-                error_code::k_cannot_perform_array_operation_on_document};
+            throw bsoncxx::v_noabi::exception{error_code::k_cannot_perform_array_operation_on_document};
         }
 
         return _root.get();
@@ -206,7 +202,7 @@ class core::impl {
 
    private:
     struct frame {
-        frame(bson_t* parent, const char* key, std::int32_t len, bool is_array)
+        frame(bson_t* parent, char const* key, std::int32_t len, bool is_array)
             : n(0), is_array(is_array), parent(parent) {
             if (is_array) {
                 if (!bson_append_array_begin(parent, key, len, &bson)) {
@@ -214,8 +210,7 @@ class core::impl {
                 }
             } else {
                 if (!bson_append_document_begin(parent, key, len, &bson)) {
-                    throw bsoncxx::v_noabi::exception{
-                        error_code::k_cannot_begin_appending_document};
+                    throw bsoncxx::v_noabi::exception{error_code::k_cannot_begin_appending_document};
                 }
             }
         }
@@ -281,119 +276,114 @@ core& core::key_owned(std::string key) {
     return *this;
 }
 
-core& core::append(const types::b_double& value) {
+core& core::append(types::b_double const& value) {
     stdx::string_view key = _impl->next_key();
 
-    if (!bson_append_double(
-            _impl->back(), key.data(), static_cast<std::int32_t>(key.length()), value.value)) {
+    if (!bson_append_double(_impl->back(), key.data(), static_cast<std::int32_t>(key.length()), value.value)) {
         throw bsoncxx::v_noabi::exception{error_code::k_cannot_append_double};
     }
 
     return *this;
 }
 
-core& core::append(const types::b_string& value) {
+core& core::append(types::b_string const& value) {
     stdx::string_view key = _impl->next_key();
 
-    if (!bson_append_utf8(_impl->back(),
-                          key.data(),
-                          static_cast<std::int32_t>(key.length()),
-                          value.value.data(),
-                          static_cast<std::int32_t>(value.value.length()))) {
+    if (!bson_append_utf8(
+            _impl->back(),
+            key.data(),
+            static_cast<std::int32_t>(key.length()),
+            value.value.data(),
+            static_cast<std::int32_t>(value.value.length()))) {
         throw bsoncxx::v_noabi::exception{error_code::k_cannot_append_string};
     }
 
     return *this;
 }
 
-core& core::append(const types::b_document& value) {
+core& core::append(types::b_document const& value) {
     stdx::string_view key = _impl->next_key();
     bson_t bson;
     bson_init_static(&bson, value.value.data(), value.value.length());
 
-    if (!bson_append_document(
-            _impl->back(), key.data(), static_cast<std::int32_t>(key.length()), &bson)) {
+    if (!bson_append_document(_impl->back(), key.data(), static_cast<std::int32_t>(key.length()), &bson)) {
         throw bsoncxx::v_noabi::exception{error_code::k_cannot_append_document};
     }
 
     return *this;
 }
 
-core& core::append(const types::b_array& value) {
+core& core::append(types::b_array const& value) {
     stdx::string_view key = _impl->next_key();
     bson_t bson;
     bson_init_static(&bson, value.value.data(), value.value.length());
 
-    if (!bson_append_array(
-            _impl->back(), key.data(), static_cast<std::int32_t>(key.length()), &bson)) {
+    if (!bson_append_array(_impl->back(), key.data(), static_cast<std::int32_t>(key.length()), &bson)) {
         throw bsoncxx::v_noabi::exception{error_code::k_cannot_append_array};
     }
 
     return *this;
 }
 
-core& core::append(const types::b_binary& value) {
+core& core::append(types::b_binary const& value) {
     stdx::string_view key = _impl->next_key();
 
-    if (!bson_append_binary(_impl->back(),
-                            key.data(),
-                            static_cast<std::int32_t>(key.length()),
-                            static_cast<bson_subtype_t>(value.sub_type),
-                            value.bytes,
-                            value.size)) {
+    if (!bson_append_binary(
+            _impl->back(),
+            key.data(),
+            static_cast<std::int32_t>(key.length()),
+            static_cast<bson_subtype_t>(value.sub_type),
+            value.bytes,
+            value.size)) {
         throw bsoncxx::v_noabi::exception{error_code::k_cannot_append_binary};
     }
 
     return *this;
 }
 
-core& core::append(const types::b_undefined&) {
+core& core::append(types::b_undefined const&) {
     stdx::string_view key = _impl->next_key();
 
-    if (!bson_append_undefined(
-            _impl->back(), key.data(), static_cast<std::int32_t>(key.length()))) {
+    if (!bson_append_undefined(_impl->back(), key.data(), static_cast<std::int32_t>(key.length()))) {
         throw bsoncxx::v_noabi::exception{error_code::k_cannot_append_undefined};
     }
 
     return *this;
 }
 
-core& core::append(const types::b_oid& value) {
+core& core::append(types::b_oid const& value) {
     stdx::string_view key = _impl->next_key();
     bson_oid_t oid;
     std::memcpy(&oid.bytes, value.value.bytes(), sizeof(oid.bytes));
 
-    if (!bson_append_oid(
-            _impl->back(), key.data(), static_cast<std::int32_t>(key.length()), &oid)) {
+    if (!bson_append_oid(_impl->back(), key.data(), static_cast<std::int32_t>(key.length()), &oid)) {
         throw bsoncxx::v_noabi::exception{error_code::k_cannot_append_oid};
     }
 
     return *this;
 }
 
-core& core::append(const types::b_bool& value) {
+core& core::append(types::b_bool const& value) {
     stdx::string_view key = _impl->next_key();
 
-    if (!bson_append_bool(
-            _impl->back(), key.data(), static_cast<std::int32_t>(key.length()), value.value)) {
+    if (!bson_append_bool(_impl->back(), key.data(), static_cast<std::int32_t>(key.length()), value.value)) {
         throw bsoncxx::v_noabi::exception{error_code::k_cannot_append_bool};
     }
 
     return *this;
 }
 
-core& core::append(const types::b_date& value) {
+core& core::append(types::b_date const& value) {
     stdx::string_view key = _impl->next_key();
 
-    if (!bson_append_date_time(
-            _impl->back(), key.data(), static_cast<std::int32_t>(key.length()), value.to_int64())) {
+    if (!bson_append_date_time(_impl->back(), key.data(), static_cast<std::int32_t>(key.length()), value.to_int64())) {
         throw bsoncxx::v_noabi::exception{error_code::k_cannot_append_date};
     }
 
     return *this;
 }
 
-core& core::append(const types::b_null&) {
+core& core::append(types::b_null const&) {
     stdx::string_view key = _impl->next_key();
 
     if (!bson_append_null(_impl->back(), key.data(), static_cast<std::int32_t>(key.length()))) {
@@ -403,132 +393,128 @@ core& core::append(const types::b_null&) {
     return *this;
 }
 
-core& core::append(const types::b_regex& value) {
+core& core::append(types::b_regex const& value) {
     stdx::string_view key = _impl->next_key();
 
-    if (!bson_append_regex(_impl->back(),
-                           key.data(),
-                           static_cast<std::int32_t>(key.length()),
-                           string::to_string(value.regex).data(),
-                           string::to_string(value.options).data())) {
+    if (!bson_append_regex(
+            _impl->back(),
+            key.data(),
+            static_cast<std::int32_t>(key.length()),
+            string::to_string(value.regex).data(),
+            string::to_string(value.options).data())) {
         throw bsoncxx::v_noabi::exception{error_code::k_cannot_append_regex};
     }
 
     return *this;
 }
 
-core& core::append(const types::b_dbpointer& value) {
+core& core::append(types::b_dbpointer const& value) {
     stdx::string_view key = _impl->next_key();
 
     bson_oid_t oid;
     std::memcpy(&oid.bytes, value.value.bytes(), sizeof(oid.bytes));
 
-    if (!bson_append_dbpointer(_impl->back(),
-                               key.data(),
-                               static_cast<std::int32_t>(key.length()),
-                               string::to_string(value.collection).data(),
-                               &oid)) {
+    if (!bson_append_dbpointer(
+            _impl->back(),
+            key.data(),
+            static_cast<std::int32_t>(key.length()),
+            string::to_string(value.collection).data(),
+            &oid)) {
         throw bsoncxx::v_noabi::exception{error_code::k_cannot_append_dbpointer};
     }
 
     return *this;
 }
 
-core& core::append(const types::b_code& value) {
+core& core::append(types::b_code const& value) {
     stdx::string_view key = _impl->next_key();
 
-    if (!bson_append_code(_impl->back(),
-                          key.data(),
-                          static_cast<std::int32_t>(key.length()),
-                          string::to_string(value.code).data())) {
+    if (!bson_append_code(
+            _impl->back(), key.data(), static_cast<std::int32_t>(key.length()), string::to_string(value.code).data())) {
         throw bsoncxx::v_noabi::exception{error_code::k_cannot_append_code};
     }
 
     return *this;
 }
 
-core& core::append(const types::b_symbol& value) {
+core& core::append(types::b_symbol const& value) {
     stdx::string_view key = _impl->next_key();
 
-    if (!bson_append_symbol(_impl->back(),
-                            key.data(),
-                            static_cast<std::int32_t>(key.length()),
-                            value.symbol.data(),
-                            static_cast<std::int32_t>(value.symbol.length()))) {
+    if (!bson_append_symbol(
+            _impl->back(),
+            key.data(),
+            static_cast<std::int32_t>(key.length()),
+            value.symbol.data(),
+            static_cast<std::int32_t>(value.symbol.length()))) {
         throw bsoncxx::v_noabi::exception{error_code::k_cannot_append_symbol};
     }
 
     return *this;
 }
 
-core& core::append(const types::b_codewscope& value) {
+core& core::append(types::b_codewscope const& value) {
     stdx::string_view key = _impl->next_key();
 
     bson_t bson;
     bson_init_static(&bson, value.scope.data(), value.scope.length());
 
-    if (!bson_append_code_with_scope(_impl->back(),
-                                     key.data(),
-                                     static_cast<std::int32_t>(key.length()),
-                                     string::to_string(value.code).data(),
-                                     &bson)) {
+    if (!bson_append_code_with_scope(
+            _impl->back(),
+            key.data(),
+            static_cast<std::int32_t>(key.length()),
+            string::to_string(value.code).data(),
+            &bson)) {
         throw bsoncxx::v_noabi::exception{error_code::k_cannot_append_codewscope};
     }
 
     return *this;
 }
 
-core& core::append(const types::b_int32& value) {
+core& core::append(types::b_int32 const& value) {
     stdx::string_view key = _impl->next_key();
 
-    if (!bson_append_int32(
-            _impl->back(), key.data(), static_cast<std::int32_t>(key.length()), value.value)) {
+    if (!bson_append_int32(_impl->back(), key.data(), static_cast<std::int32_t>(key.length()), value.value)) {
         throw bsoncxx::v_noabi::exception{error_code::k_cannot_append_int32};
     }
 
     return *this;
 }
 
-core& core::append(const types::b_timestamp& value) {
+core& core::append(types::b_timestamp const& value) {
     stdx::string_view key = _impl->next_key();
 
-    if (!bson_append_timestamp(_impl->back(),
-                               key.data(),
-                               static_cast<std::int32_t>(key.length()),
-                               value.timestamp,
-                               value.increment)) {
+    if (!bson_append_timestamp(
+            _impl->back(), key.data(), static_cast<std::int32_t>(key.length()), value.timestamp, value.increment)) {
         throw bsoncxx::v_noabi::exception{error_code::k_cannot_append_timestamp};
     }
 
     return *this;
 }
 
-core& core::append(const types::b_int64& value) {
+core& core::append(types::b_int64 const& value) {
     stdx::string_view key = _impl->next_key();
 
-    if (!bson_append_int64(
-            _impl->back(), key.data(), static_cast<std::int32_t>(key.length()), value.value)) {
+    if (!bson_append_int64(_impl->back(), key.data(), static_cast<std::int32_t>(key.length()), value.value)) {
         throw bsoncxx::v_noabi::exception{error_code::k_cannot_append_int64};
     }
 
     return *this;
 }
 
-core& core::append(const types::b_decimal128& value) {
+core& core::append(types::b_decimal128 const& value) {
     stdx::string_view key = _impl->next_key();
     bson_decimal128_t d128;
     d128.high = value.value.high();
     d128.low = value.value.low();
 
-    if (!bson_append_decimal128(
-            _impl->back(), key.data(), static_cast<std::int32_t>(key.length()), &d128)) {
+    if (!bson_append_decimal128(_impl->back(), key.data(), static_cast<std::int32_t>(key.length()), &d128)) {
         throw bsoncxx::v_noabi::exception{error_code::k_cannot_append_decimal128};
     }
 
     return *this;
 }
 
-core& core::append(const types::b_minkey&) {
+core& core::append(types::b_minkey const&) {
     stdx::string_view key = _impl->next_key();
 
     if (!bson_append_minkey(_impl->back(), key.data(), static_cast<std::int32_t>(key.length()))) {
@@ -538,7 +524,7 @@ core& core::append(const types::b_minkey&) {
     return *this;
 }
 
-core& core::append(const types::b_maxkey&) {
+core& core::append(types::b_maxkey const&) {
     stdx::string_view key = _impl->next_key();
 
     if (!bson_append_maxkey(_impl->back(), key.data(), static_cast<std::int32_t>(key.length()))) {
@@ -572,7 +558,7 @@ core& core::append(std::int32_t value) {
     return *this;
 }
 
-core& core::append(const oid& value) {
+core& core::append(oid const& value) {
     append(types::b_oid{value});
 
     return *this;
@@ -584,13 +570,13 @@ core& core::append(decimal128 value) {
     return *this;
 }
 
-core& core::append(const document::view view) {
+core& core::append(document::view const view) {
     append(types::b_document{view});
 
     return *this;
 }
 
-core& core::append(const array::view view) {
+core& core::append(array::view const view) {
     append(types::b_array{view});
 
     return *this;
@@ -624,7 +610,7 @@ core& core::open_array() {
     return *this;
 }
 
-core& core::concatenate(const bsoncxx::v_noabi::document::view& view) {
+core& core::concatenate(bsoncxx::v_noabi::document::view const& view) {
     if (_impl->is_array()) {
         bson_iter_t iter;
         if (!bson_iter_init_from_data(&iter, view.data(), view.length())) {
@@ -634,8 +620,7 @@ core& core::concatenate(const bsoncxx::v_noabi::document::view& view) {
         while (bson_iter_next(&iter)) {
             stdx::string_view key = _impl->next_key();
 
-            if (!bson_append_iter(
-                    _impl->back(), key.data(), static_cast<std::int32_t>(key.length()), &iter)) {
+            if (!bson_append_iter(_impl->back(), key.data(), static_cast<std::int32_t>(key.length()), &iter)) {
                 throw bsoncxx::v_noabi::exception{error_code::k_cannot_append_document};
             }
         }
@@ -649,7 +634,7 @@ core& core::concatenate(const bsoncxx::v_noabi::document::view& view) {
     return *this;
 }
 
-core& core::append(const types::bson_value::view& value) {
+core& core::append(types::bson_value::view const& value) {
     switch (static_cast<int>(value.type())) {
 #define BSONCXX_ENUM(type, val)     \
     case val:                       \
@@ -695,8 +680,7 @@ bsoncxx::v_noabi::document::view core::view_document() const {
         throw bsoncxx::v_noabi::exception{error_code::k_unmatched_key_in_builder};
     }
 
-    return bsoncxx::v_noabi::document::view(bson_get_data(_impl->root_document()),
-                                            _impl->root_document()->len);
+    return bsoncxx::v_noabi::document::view(bson_get_data(_impl->root_document()), _impl->root_document()->len);
 }
 
 bsoncxx::v_noabi::document::value core::extract_document() {
@@ -712,8 +696,7 @@ bsoncxx::v_noabi::array::view core::view_array() const {
         throw bsoncxx::v_noabi::exception{error_code::k_unmatched_key_in_builder};
     }
 
-    return bsoncxx::v_noabi::array::view(bson_get_data(_impl->root_array()),
-                                         _impl->root_array()->len);
+    return bsoncxx::v_noabi::array::view(bson_get_data(_impl->root_array()), _impl->root_array()->len);
 }
 
 bsoncxx::v_noabi::array::value core::extract_array() {
@@ -728,6 +711,6 @@ void core::clear() {
     _impl->reinit();
 }
 
-}  // namespace builder
-}  // namespace v_noabi
-}  // namespace bsoncxx
+} // namespace builder
+} // namespace v_noabi
+} // namespace bsoncxx

@@ -57,8 +57,7 @@ class update_many {
     ///   Document representing the modifications to be applied to matching documents.
     ///
     MONGOCXX_ABI_EXPORT_CDECL()
-    update_many(bsoncxx::v_noabi::document::view_or_value filter,
-                bsoncxx::v_noabi::document::view_or_value update);
+    update_many(bsoncxx::v_noabi::document::view_or_value filter, bsoncxx::v_noabi::document::view_or_value update);
 
     ///
     /// Constructs an update operation that will modify all documents matching the filter.
@@ -69,7 +68,7 @@ class update_many {
     ///   Pipeline representing the modifications to be applied to matching documents.
     ///
     MONGOCXX_ABI_EXPORT_CDECL()
-    update_many(bsoncxx::v_noabi::document::view_or_value filter, const pipeline& update);
+    update_many(bsoncxx::v_noabi::document::view_or_value filter, pipeline const& update);
 
     ///
     /// Constructs an update operation that will modify all documents matching the filter.
@@ -80,22 +79,21 @@ class update_many {
     ///   Supports the empty update {}.
     ///
     MONGOCXX_ABI_EXPORT_CDECL()
-    update_many(bsoncxx::v_noabi::document::view_or_value filter,
-                std::initializer_list<_empty_doc_tag> update);
+    update_many(bsoncxx::v_noabi::document::view_or_value filter, std::initializer_list<_empty_doc_tag> update);
 
     ///
     /// Gets the filter.
     ///
     /// @return The filter to be used for the update operation.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::document::view_or_value&) filter() const;
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::document::view_or_value const&) filter() const;
 
     ///
     /// Gets the update document.
     ///
     /// @return The modifications to be applied as part of the update.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::document::view_or_value&) update() const;
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::document::view_or_value const&) update() const;
 
     ///
     /// Sets the collation for this update operation.
@@ -118,8 +116,7 @@ class update_many {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/collation/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<
-                              bsoncxx::v_noabi::document::view_or_value>&)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const&)
     collation() const;
 
     /// Sets the index to use for this operation.
@@ -141,7 +138,7 @@ class update_many {
     ///
     /// @return The current hint, if one is set.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::hint>&)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::hint> const&)
     hint() const;
 
     ///
@@ -164,7 +161,7 @@ class update_many {
     ///
     /// @return The optional value of the upsert option.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<bool>&) upsert() const;
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bool> const&) upsert() const;
 
     ///
     /// Set array filters for this update operation.
@@ -187,8 +184,7 @@ class update_many {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/update/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<
-                              bsoncxx::v_noabi::array::view_or_value>&)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::array::view_or_value> const&)
     array_filters() const;
 
    private:
@@ -201,9 +197,9 @@ class update_many {
     bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::hint> _hint;
 };
 
-}  // namespace model
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace model
+} // namespace v_noabi
+} // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
 

@@ -22,8 +22,9 @@
 namespace {
 using namespace mongocxx;
 
-TEST_CASE("creation of write_concern passes universal parameters to c-driver's methods",
-          "[write_concern][base][c-driver]") {
+TEST_CASE(
+    "creation of write_concern passes universal parameters to c-driver's methods",
+    "[write_concern][base][c-driver]") {
     instance::current();
 
     SECTION("when journal is requested, mongoc_write_concern_set_journal is called with true") {
@@ -66,7 +67,7 @@ TEST_CASE("write_concern is called with w MAJORITY", "[write_concern][base][c-dr
     auto wtag_instance = libmongoc::write_concern_set_wtag.create_instance();
     w_instance->visit([&](mongoc_write_concern_t*, int) { w_called = true; });
     wmajority_instance->visit([&](mongoc_write_concern_t*, int) { wmajority_called = true; });
-    wtag_instance->visit([&](mongoc_write_concern_t*, const char*) { wtag_called = true; });
+    wtag_instance->visit([&](mongoc_write_concern_t*, char const*) { wtag_called = true; });
 
     write_concern wc{};
     wc.majority(std::chrono::milliseconds(100));
@@ -85,13 +86,12 @@ TEST_CASE("write_concern is called with w MAJORITY", "[write_concern][base][c-dr
     }
 }
 
-TEST_CASE("write_concern is called with a number of necessary confirmations",
-          "[write_concern][base][c-driver]") {
+TEST_CASE("write_concern is called with a number of necessary confirmations", "[write_concern][base][c-driver]") {
     instance::current();
 
     bool w_called = false, wmajority_called = false, wtag_called = false;
     int w_value = 0;
-    const int expected_w = 5;
+    int const expected_w = 5;
     auto w_instance = libmongoc::write_concern_set_w.create_instance();
     auto wmajority_instance = libmongoc::write_concern_set_wmajority.create_instance();
     auto wtag_instance = libmongoc::write_concern_set_wtag.create_instance();
@@ -100,7 +100,7 @@ TEST_CASE("write_concern is called with a number of necessary confirmations",
         w_value = w;
     });
     wmajority_instance->visit([&](mongoc_write_concern_t*, int) { wmajority_called = true; });
-    wtag_instance->visit([&](mongoc_write_concern_t*, const char*) { wtag_called = true; });
+    wtag_instance->visit([&](mongoc_write_concern_t*, char const*) { wtag_called = true; });
 
     write_concern wc{};
     wc.nodes(expected_w);
@@ -125,13 +125,13 @@ TEST_CASE("write_concern is called with a tag", "[write_concern][base][c-driver]
 
     bool w_called = false, wmajority_called = false, wtag_called = false;
     std::string wtag_value;
-    const std::string expected_wtag("MultiDataCenter");
+    std::string const expected_wtag("MultiDataCenter");
     auto w_instance = libmongoc::write_concern_set_w.create_instance();
     auto wmajority_instance = libmongoc::write_concern_set_wmajority.create_instance();
     auto wtag_instance = libmongoc::write_concern_set_wtag.create_instance();
     w_instance->visit([&](mongoc_write_concern_t*, int) { w_called = true; });
     wmajority_instance->visit([&](mongoc_write_concern_t*, int) { wmajority_called = true; });
-    wtag_instance->visit([&](mongoc_write_concern_t*, const char* wtag) {
+    wtag_instance->visit([&](mongoc_write_concern_t*, char const* wtag) {
         wtag_called = true;
         wtag_value = wtag;
     });
@@ -153,4 +153,4 @@ TEST_CASE("write_concern is called with a tag", "[write_concern][base][c-driver]
         REQUIRE(wtag_value == expected_wtag);
     }
 }
-}  // namespace
+} // namespace

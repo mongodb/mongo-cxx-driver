@@ -37,14 +37,14 @@ class bulk_write_exception : public operation_exception {
 
     bulk_write_exception(bulk_write_exception&&) = default;
     bulk_write_exception& operator=(bulk_write_exception&&) = default;
-    bulk_write_exception(const bulk_write_exception&) = default;
-    bulk_write_exception& operator=(const bulk_write_exception&) = default;
+    bulk_write_exception(bulk_write_exception const&) = default;
+    bulk_write_exception& operator=(bulk_write_exception const&) = default;
 
     using operation_exception::operation_exception;
 };
 
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace v_noabi
+} // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
 

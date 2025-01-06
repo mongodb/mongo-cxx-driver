@@ -29,24 +29,24 @@ void example() {
     }
 
     try {
-        mongocxx::instance instance;  // Throws.
+        mongocxx::instance instance; // Throws.
 
         EXPECT(false && "should not reach this point");
-    } catch (const mongocxx::exception& ex) {
+    } catch (mongocxx::exception const& ex) {
         EXPECT(ex.code() == mongocxx::error_code::k_cannot_recreate_instance);
     }
 
     try {
-        auto& instance = mongocxx::instance::current();  // Throws.
+        auto& instance = mongocxx::instance::current(); // Throws.
 
         EXPECT(false && "should not reach this point");
-    } catch (const mongocxx::exception& ex) {
+    } catch (mongocxx::exception const& ex) {
         EXPECT(ex.code() == mongocxx::error_code::k_instance_destroyed);
     }
 }
 // [Example]
 
-}  // namespace
+} // namespace
 
 RUNNER_REGISTER_FORKING_COMPONENT() {
     example();

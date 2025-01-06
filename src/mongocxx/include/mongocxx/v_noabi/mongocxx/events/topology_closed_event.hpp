@@ -33,7 +33,7 @@ namespace events {
 ///
 class topology_closed_event {
    public:
-    explicit topology_closed_event(const void* event);
+    explicit topology_closed_event(void const* event);
 
     ///
     /// Destroys a topology_closed_event.
@@ -43,8 +43,8 @@ class topology_closed_event {
     topology_closed_event(topology_closed_event&&) = default;
     topology_closed_event& operator=(topology_closed_event&&) = default;
 
-    topology_closed_event(const topology_closed_event&) = default;
-    topology_closed_event& operator=(const topology_closed_event&) = default;
+    topology_closed_event(topology_closed_event const&) = default;
+    topology_closed_event& operator=(topology_closed_event const&) = default;
 
     ///
     /// An opaque id, unique to this topology for this mongocxx::v_noabi::client or
@@ -55,12 +55,12 @@ class topology_closed_event {
     MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::oid) topology_id() const;
 
    private:
-    const void* _event;
+    void const* _event;
 };
 
-}  // namespace events
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace events
+} // namespace v_noabi
+} // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
 

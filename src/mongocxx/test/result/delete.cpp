@@ -43,8 +43,7 @@ TEST_CASE("delete", "[delete][result]") {
 TEST_CASE("delete equals", "[delete][result]") {
     mongocxx::instance::current();
 
-    auto doc =
-        make_document(kvp("_id", bsoncxx::oid{}), kvp("nRemoved", bsoncxx::types::b_int32{1}));
+    auto doc = make_document(kvp("_id", bsoncxx::oid{}), kvp("nRemoved", bsoncxx::types::b_int32{1}));
 
     mongocxx::result::bulk_write a{doc};
     mongocxx::result::bulk_write b{doc};
@@ -69,4 +68,4 @@ TEST_CASE("delete inequals", "[delete][result]") {
     REQUIRE(delete_result1 != delete_result2);
 }
 
-}  // namespace
+} // namespace

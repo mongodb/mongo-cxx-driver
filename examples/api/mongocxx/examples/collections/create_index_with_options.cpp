@@ -40,8 +40,7 @@ void example(mongocxx::collection coll) {
         auto opts = bsoncxx::from_json(R"({"name": "custom_name", "unique": true})");
         // ... other index options.
 
-        bsoncxx::document::value result =
-            coll.create_index(bsoncxx::from_json(R"({"key_a": 1})"), opts.view());
+        bsoncxx::document::value result = coll.create_index(bsoncxx::from_json(R"({"key_a": 1})"), opts.view());
 
         EXPECT(result["name"]);
         EXPECT(result["name"].get_string().value == "custom_name");
@@ -55,8 +54,7 @@ void example(mongocxx::collection coll) {
 
         // ... set create index options.
 
-        bsoncxx::document::value result =
-            coll.create_index(bsoncxx::from_json(R"({"key_b": 1})"), opts.view());
+        bsoncxx::document::value result = coll.create_index(bsoncxx::from_json(R"({"key_b": 1})"), opts.view());
 
         EXPECT(result["name"]);
         EXPECT(result["name"].get_string().value == "key_b_1");
@@ -64,7 +62,7 @@ void example(mongocxx::collection coll) {
 }
 // [Example]
 
-}  // namespace
+} // namespace
 
 RUNNER_REGISTER_COMPONENT_FOR_SINGLE() {
     mongocxx::client client{mongocxx::uri{}};

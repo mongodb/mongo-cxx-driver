@@ -34,15 +34,16 @@ TEST_CASE("bulk_write result", "[bulk_write][result]") {
     auto oid1 = types::b_oid{bsoncxx::oid{}};
     auto oid2 = types::b_oid{bsoncxx::oid{}};
 
-    auto arr = make_array(make_document(kvp("_id", oid1), kvp("index", 0)),
-                          make_document(kvp("_id", oid2), kvp("index", 1)));
+    auto arr =
+        make_array(make_document(kvp("_id", oid1), kvp("index", 0)), make_document(kvp("_id", oid2), kvp("index", 1)));
 
-    auto build = make_document(kvp("nInserted", 1),
-                               kvp("nMatched", 0),
-                               kvp("nModified", 3),
-                               kvp("nRemoved", 0),
-                               kvp("nUpserted", 2),
-                               kvp("upserted", arr.view()));
+    auto build = make_document(
+        kvp("nInserted", 1),
+        kvp("nMatched", 0),
+        kvp("nModified", 3),
+        kvp("nRemoved", 0),
+        kvp("nUpserted", 2),
+        kvp("upserted", arr.view()));
 
     mongocxx::result::bulk_write bulk_write_res{build};
 
@@ -58,11 +59,8 @@ TEST_CASE("bulk_write result", "[bulk_write][result]") {
 }
 
 TEST_CASE("bulk_write result equals", "[bulk_write][result]") {
-    auto build = make_document(kvp("nInserted", 1),
-                               kvp("nMatched", 0),
-                               kvp("nModified", 3),
-                               kvp("nRemoved", 0),
-                               kvp("nUpserted", 2));
+    auto build = make_document(
+        kvp("nInserted", 1), kvp("nMatched", 0), kvp("nModified", 3), kvp("nRemoved", 0), kvp("nUpserted", 2));
     mongocxx::result::bulk_write bw1{build};
     mongocxx::result::bulk_write bw2{build};
 
@@ -70,19 +68,13 @@ TEST_CASE("bulk_write result equals", "[bulk_write][result]") {
 }
 
 TEST_CASE("bulk_write result inequals", "[bulk_write][result]") {
-    auto build1 = make_document(kvp("nInserted", 1),
-                                kvp("nMatched", 0),
-                                kvp("nModified", 3),
-                                kvp("nRemoved", 0),
-                                kvp("nUpserted", 2));
-    auto build2 = make_document(kvp("nInserted", 0),
-                                kvp("nMatched", 2),
-                                kvp("nModified", 0),
-                                kvp("nRemoved", 2),
-                                kvp("nUpserted", 0));
+    auto build1 = make_document(
+        kvp("nInserted", 1), kvp("nMatched", 0), kvp("nModified", 3), kvp("nRemoved", 0), kvp("nUpserted", 2));
+    auto build2 = make_document(
+        kvp("nInserted", 0), kvp("nMatched", 2), kvp("nModified", 0), kvp("nRemoved", 2), kvp("nUpserted", 0));
     mongocxx::result::bulk_write bw1{build1};
     mongocxx::result::bulk_write bw2{build2};
 
     REQUIRE(bw1 != bw2);
 }
-}  // namespace
+} // namespace

@@ -49,19 +49,19 @@ void example(mongocxx::index_view indexes) {
         return std::distance(cursor.begin(), cursor.end());
     };
 
-    EXPECT(count_indexes() == 3);  // _id_, x_1, custom_name
+    EXPECT(count_indexes() == 3); // _id_, x_1, custom_name
 
     indexes.drop_one("custom_name");
 
-    EXPECT(count_indexes() == 2);  // _id_, x_1
+    EXPECT(count_indexes() == 2); // _id_, x_1
 
     indexes.drop_one(bsoncxx::from_json(R"({"x": 1})"));
 
-    EXPECT(count_indexes() == 1);  // _id_
+    EXPECT(count_indexes() == 1); // _id_
 }
 // [Example]
 
-}  // namespace
+} // namespace
 
 RUNNER_REGISTER_COMPONENT_FOR_SINGLE() {
     mongocxx::client client{mongocxx::uri{}};
@@ -72,8 +72,7 @@ RUNNER_REGISTER_COMPONENT_FOR_SINGLE() {
         auto coll = set_rw_concern_majority(guard.get().create_collection("coll"));
 
         (void)coll.create_index(bsoncxx::from_json(R"({"x": 1})"));
-        (void)coll.create_index(bsoncxx::from_json(R"({"y": 1})"),
-                                bsoncxx::from_json(R"({"name": "custom_name"})"));
+        (void)coll.create_index(bsoncxx::from_json(R"({"y": 1})"), bsoncxx::from_json(R"({"name": "custom_name"})"));
 
         example(coll.indexes());
     }

@@ -27,22 +27,22 @@ namespace {
 // [Example]
 void example() {
     bsoncxx::array::value::deleter_type deleter = [](std::uint8_t*) {};
-    std::uint8_t data[] = {0u};  // An invalid BSON array.
+    std::uint8_t data[] = {0u}; // An invalid BSON array.
 
     bsoncxx::array::value owner{data, sizeof(data), deleter};
     bsoncxx::array::view arr = owner.view();
 
     auto iter = arr.begin();
 
-    EXPECT(iter == arr.end());  // An invalid BSON document returns an end iterator.
+    EXPECT(iter == arr.end()); // An invalid BSON document returns an end iterator.
 
-    bsoncxx::array::element e = *iter;  // DO NOT DO THIS
+    bsoncxx::array::element e = *iter; // DO NOT DO THIS
 
-    EXPECT(!e);  // An end iterator returns an invalid element.
+    EXPECT(!e); // An end iterator returns an invalid element.
 }
 // [Example]
 
-}  // namespace
+} // namespace
 
 RUNNER_REGISTER_COMPONENT() {
     example();

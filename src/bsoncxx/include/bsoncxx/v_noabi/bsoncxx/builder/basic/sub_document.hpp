@@ -34,7 +34,7 @@ namespace impl {
 template <typename T>
 void value_append(core* core, T&& t);
 
-}  // namespace impl
+} // namespace impl
 
 ///
 /// An internal class of builder::basic.
@@ -81,7 +81,7 @@ class sub_document {
     // Appends a basic::kvp where the key is a string literal
     //
     template <std::size_t n, typename V>
-    void append_(std::tuple<const char (&)[n], V>&& t) {
+    void append_(std::tuple<char const (&)[n], V>&& t) {
         _core->key_view(stdx::string_view{std::get<0>(t), n - 1});
         impl::value_append(_core, std::forward<V>(std::get<1>(t)));
     }
@@ -96,10 +96,10 @@ class sub_document {
     core* _core;
 };
 
-}  // namespace basic
-}  // namespace builder
-}  // namespace v_noabi
-}  // namespace bsoncxx
+} // namespace basic
+} // namespace builder
+} // namespace v_noabi
+} // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>
 

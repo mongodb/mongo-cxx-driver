@@ -36,7 +36,7 @@ struct exception_guard_state {
     stdx::string_view file = {};
     std::size_t line = {};
     stdx::string_view func = {};
-    std::vector<std::string> ignored;  // Cannot use INFO() in guarded regions.
+    std::vector<std::string> ignored; // Cannot use INFO() in guarded regions.
 };
 
 #define BSONCXX_TEST_EXCEPTION_GUARD_RESET(e)          \
@@ -73,9 +73,9 @@ struct exception_guard_state {
             oss << __FILE__ << ":" << __LINE__ << ": exception guard ignored: "; \
             try {                                                                \
                 throw;                                                           \
-            } catch (const std::exception& exc) {                                \
+            } catch (std::exception const& exc) {                                \
                 oss << exc.what();                                               \
-            } catch (const Catch::TestFailureException&) {                       \
+            } catch (Catch::TestFailureException const&) {                       \
                 oss << "Catch::TestFailureException";                            \
             } catch (...) {                                                      \
                 oss << "unknown exception";                                      \
@@ -99,7 +99,7 @@ struct exception_guard_state {
     } else                                             \
         ((void)0)
 
-}  // namespace test
-}  // namespace bsoncxx
+} // namespace test
+} // namespace bsoncxx
 
 #include <bsoncxx/config/private/postlude.hh>

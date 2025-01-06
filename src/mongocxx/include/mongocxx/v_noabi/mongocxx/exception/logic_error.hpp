@@ -35,14 +35,14 @@ class logic_error : public exception {
 
     logic_error(logic_error&&) = default;
     logic_error& operator=(logic_error&&) = default;
-    logic_error(const logic_error&) = default;
-    logic_error& operator=(const logic_error&) = default;
+    logic_error(logic_error const&) = default;
+    logic_error& operator=(logic_error const&) = default;
 
     using exception::exception;
 };
 
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace v_noabi
+} // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
 

@@ -19,5 +19,5 @@ namespace v_noabi {
 
 logic_error::~logic_error() = default;
 
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace v_noabi
+} // namespace mongocxx

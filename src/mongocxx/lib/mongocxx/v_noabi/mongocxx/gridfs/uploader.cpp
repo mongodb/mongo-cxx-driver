@@ -37,14 +37,14 @@ std::size_t chunks_collection_documents_max_length(std::size_t chunk_size) {
     return 16 * 1000 * 1000 / chunk_size;
 }
 
-}  // namespace
+} // namespace
 
 namespace mongocxx {
 namespace v_noabi {
 namespace gridfs {
 
 uploader::uploader(
-    const client_session* session,
+    client_session const* session,
     bsoncxx::v_noabi::types::bson_value::view id,
     bsoncxx::v_noabi::stdx::string_view filename,
     collection files,
@@ -71,14 +71,13 @@ uploader::operator bool() const noexcept {
     return static_cast<bool>(_impl);
 }
 
-void uploader::write(const std::uint8_t* bytes, std::size_t length) {
+void uploader::write(std::uint8_t const* bytes, std::size_t length) {
     if (_get_impl().closed) {
         throw logic_error{error_code::k_gridfs_stream_not_open};
     }
 
     while (length > 0) {
-        std::size_t buffer_free_space =
-            static_cast<std::size_t>(_get_impl().chunk_size) - _get_impl().buffer_off;
+        std::size_t buffer_free_space = static_cast<std::size_t>(_get_impl().chunk_size) - _get_impl().buffer_off;
 
         if (buffer_free_space == 0) {
             finish_chunk();
@@ -103,8 +102,8 @@ result::gridfs::upload uploader::close() {
 
     bsoncxx::v_noabi::builder::basic::document file;
 
-    std::int64_t bytes_uploaded = static_cast<std::int64_t>(_get_impl().chunks_written) *
-                                  static_cast<std::int64_t>(_get_impl().chunk_size);
+    std::int64_t bytes_uploaded =
+        static_cast<std::int64_t>(_get_impl().chunks_written) * static_cast<std::int64_t>(_get_impl().chunk_size);
     std::int64_t leftover = static_cast<std::int64_t>(_get_impl().buffer_off);
 
     finish_chunk();
@@ -113,8 +112,7 @@ result::gridfs::upload uploader::close() {
     file.append(kvp("_id", _get_impl().result.id()));
     file.append(kvp("length", bytes_uploaded + leftover));
     file.append(kvp("chunkSize", _get_impl().chunk_size));
-    file.append(
-        kvp("uploadDate", bsoncxx::v_noabi::types::b_date{std::chrono::system_clock::now()}));
+    file.append(kvp("uploadDate", bsoncxx::v_noabi::types::b_date{std::chrono::system_clock::now()}));
     file.append(kvp("filename", _get_impl().filename));
 
     if (_get_impl().metadata) {
@@ -171,9 +169,10 @@ void uploader::finish_chunk() {
 
     ++_get_impl().chunks_written;
 
-    bsoncxx::v_noabi::types::b_binary data{bsoncxx::v_noabi::binary_sub_type::k_binary,
-                                           static_cast<std::uint32_t>(bytes_in_chunk),
-                                           _get_impl().buffer.get()};
+    bsoncxx::v_noabi::types::b_binary data{
+        bsoncxx::v_noabi::binary_sub_type::k_binary,
+        static_cast<std::uint32_t>(bytes_in_chunk),
+        _get_impl().buffer.get()};
 
     chunk.append(kvp("data", data));
     _get_impl().chunks_collection_documents.push_back(chunk.extract());
@@ -194,8 +193,7 @@ void uploader::flush_chunks() {
     }
 
     if (_get_impl().session) {
-        _get_impl().chunks.insert_many(*_get_impl().session,
-                                       _get_impl().chunks_collection_documents);
+        _get_impl().chunks.insert_many(*_get_impl().session, _get_impl().chunks_collection_documents);
     } else {
         _get_impl().chunks.insert_many(_get_impl().chunks_collection_documents);
     }
@@ -203,7 +201,7 @@ void uploader::flush_chunks() {
     _get_impl().chunks_collection_documents.clear();
 }
 
-const uploader::impl& uploader::_get_impl() const {
+uploader::impl const& uploader::_get_impl() const {
     if (!_impl) {
         throw logic_error{error_code::k_invalid_gridfs_uploader_object};
     }
@@ -211,10 +209,10 @@ const uploader::impl& uploader::_get_impl() const {
 }
 
 uploader::impl& uploader::_get_impl() {
-    auto cthis = const_cast<const uploader*>(this);
+    auto cthis = const_cast<uploader const*>(this);
     return const_cast<uploader::impl&>(cthis->_get_impl());
 }
 
-}  // namespace gridfs
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace gridfs
+} // namespace v_noabi
+} // namespace mongocxx

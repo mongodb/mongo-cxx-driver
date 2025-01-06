@@ -42,18 +42,17 @@ namespace bson_value {
 
 view::view() noexcept : view(nullptr) {}
 
-#define BSONCXX_ENUM(name, val)                                                                \
-    view::view(b_##name v) noexcept                                                            \
-        : _type(static_cast<bsoncxx::v_noabi::type>(val)), _b_##name(std::move(v)) {           \
-        static_assert(std::is_nothrow_copy_constructible<b_##name>::value, "Copy may throw");  \
-        static_assert(std::is_nothrow_copy_assignable<b_##name>::value, "Copy may throw");     \
-        static_assert(std::is_nothrow_destructible<b_##name>::value, "Destruction may throw"); \
+#define BSONCXX_ENUM(name, val)                                                                                  \
+    view::view(b_##name v) noexcept : _type(static_cast<bsoncxx::v_noabi::type>(val)), _b_##name(std::move(v)) { \
+        static_assert(std::is_nothrow_copy_constructible<b_##name>::value, "Copy may throw");                    \
+        static_assert(std::is_nothrow_copy_assignable<b_##name>::value, "Copy may throw");                       \
+        static_assert(std::is_nothrow_destructible<b_##name>::value, "Destruction may throw");                   \
     }
 
 #include <bsoncxx/enums/type.hpp>
 #undef BSONCXX_ENUM
 
-view::view(const view& rhs) noexcept {
+view::view(view const& rhs) noexcept {
     switch (static_cast<int>(rhs._type)) {
 #define BSONCXX_ENUM(type, val)                      \
     case val:                                        \
@@ -66,7 +65,7 @@ view::view(const view& rhs) noexcept {
     _type = rhs._type;
 }
 
-view& view::operator=(const view& rhs) noexcept {
+view& view::operator=(view const& rhs) noexcept {
     if (this == &rhs) {
         return *this;
     }
@@ -97,23 +96,20 @@ bsoncxx::v_noabi::type view::type() const {
 }
 
 #define BSONCXX_ENUM(type, val)                       \
-    const types::b_##type& view::get_##type() const { \
+    types::b_##type const& view::get_##type() const { \
         BSONCXX_TYPE_CHECK(type);                     \
         return _b_##type;                             \
     }
 #include <bsoncxx/enums/type.hpp>
 #undef BSONCXX_ENUM
 
-view::view(const std::uint8_t* raw,
-           std::uint32_t length,
-           std::uint32_t offset,
-           std::uint32_t keylen) {
+view::view(std::uint8_t const* raw, std::uint32_t length, std::uint32_t offset, std::uint32_t keylen) {
     BSONCXX_CITER;
 
     auto value = bson_iter_value(&iter);
 
     // ABI backward compatibility. Const is restored in `view::_init`.
-    _init(const_cast<void*>(static_cast<const void*>(value)));
+    _init(const_cast<void*>(static_cast<void const*>(value)));
 }
 
 view::view(void* internal_value) noexcept {
@@ -127,7 +123,7 @@ void view::_init(void* internal_value) noexcept {
         return;
     }
 
-    auto v = static_cast<const bson_value_t*>(internal_value);
+    auto v = static_cast<bson_value_t const*>(internal_value);
     _type = static_cast<bsoncxx::v_noabi::type>(v->value_type);
 
     switch (_type) {
@@ -143,7 +139,7 @@ void view::_init(void* internal_value) noexcept {
     }
 }
 
-bool operator==(const view& lhs, const view& rhs) {
+bool operator==(view const& lhs, view const& rhs) {
     if (lhs.type() != rhs.type()) {
         return false;
     }
@@ -160,7 +156,7 @@ bool operator==(const view& lhs, const view& rhs) {
     BSONCXX_UNREACHABLE;
 }
 
-bool operator!=(const view& lhs, const view& rhs) {
+bool operator!=(view const& lhs, view const& rhs) {
     return !(lhs == rhs);
 }
 
@@ -175,7 +171,7 @@ void view::destroy() noexcept {
     }
 }
 
-}  // namespace bson_value
-}  // namespace types
-}  // namespace v_noabi
-}  // namespace bsoncxx
+} // namespace bson_value
+} // namespace types
+} // namespace v_noabi
+} // namespace bsoncxx

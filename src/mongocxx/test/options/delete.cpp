@@ -37,4 +37,4 @@ TEST_CASE("delete_options", "[delete][option]") {
     CHECK_OPTIONAL_ARGUMENT(del, collation, collation.view());
     CHECK_OPTIONAL_ARGUMENT(del, write_concern, write_concern{});
 }
-}  // namespace
+} // namespace

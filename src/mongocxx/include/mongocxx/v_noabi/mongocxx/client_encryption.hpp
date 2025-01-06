@@ -67,8 +67,8 @@ class client_encryption {
     ///
     MONGOCXX_ABI_EXPORT_CDECL(client_encryption&) operator=(client_encryption&&) noexcept;
 
-    client_encryption(const client_encryption&) = delete;
-    client_encryption& operator=(const client_encryption&) = delete;
+    client_encryption(client_encryption const&) = delete;
+    client_encryption& operator=(client_encryption const&) = delete;
 
     ///
     /// Creates a new key document and inserts into the key vault collection.
@@ -88,7 +88,7 @@ class client_encryption {
     /// - https://www.mongodb.com/docs/ecosystem/use-cases/client-side-field-level-encryption-guide/#b-create-a-data-encryption-key
     ///
     MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::types::bson_value::value)
-    create_data_key(std::string kms_provider, const options::data_key& opts = {});
+    create_data_key(std::string kms_provider, options::data_key const& opts = {});
 
     /**
      * @brief Create a collection with client-side-encryption enabled, automatically filling any
@@ -106,12 +106,12 @@ class client_encryption {
      */
     MONGOCXX_ABI_EXPORT_CDECL(collection)
     create_encrypted_collection(
-        const database& db,
-        const std::string& coll_name,
-        const bsoncxx::v_noabi::document::view& options,
+        database const& db,
+        std::string const& coll_name,
+        bsoncxx::v_noabi::document::view const& options,
         bsoncxx::v_noabi::document::value& out_options,
-        const std::string& kms_provider,
-        const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view>& masterkey =
+        std::string const& kms_provider,
+        bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view> const& masterkey =
             bsoncxx::v_noabi::stdx::nullopt);
 
     ///
@@ -131,7 +131,7 @@ class client_encryption {
     /// https://www.mongodb.com/docs/manual/reference/method/ClientEncryption.encrypt/#ClientEncryption.encrypt
     ///
     MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::types::bson_value::value)
-    encrypt(bsoncxx::v_noabi::types::bson_value::view value, const options::encrypt& opts);
+    encrypt(bsoncxx::v_noabi::types::bson_value::view value, options::encrypt const& opts);
 
     ///
     /// Encrypts a Match Expression or Aggregate Expression to query a range index.
@@ -145,8 +145,7 @@ class client_encryption {
     /// @returns The encrypted expression.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::document::value)
-    encrypt_expression(bsoncxx::v_noabi::document::view_or_value expr,
-                       const options::encrypt& opts);
+    encrypt_expression(bsoncxx::v_noabi::document::view_or_value expr, options::encrypt const& opts);
 
     ///
     /// Decrypts an encrypted value (BSON binary of subtype 6).
@@ -186,8 +185,7 @@ class client_encryption {
     /// - https://www.mongodb.com/docs/manual/reference/method/KeyVault.rewrapManyDataKey/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(result::rewrap_many_datakey)
-    rewrap_many_datakey(bsoncxx::v_noabi::document::view_or_value filter,
-                        const options::rewrap_many_datakey& opts);
+    rewrap_many_datakey(bsoncxx::v_noabi::document::view_or_value filter, options::rewrap_many_datakey const& opts);
 
     ///
     /// Removes the key document with the given UUID (BSON binary subtype 0x04)
@@ -248,8 +246,9 @@ class client_encryption {
     /// - https://www.mongodb.com/docs/manual/reference/method/KeyVault.addKeyAlternateName/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::value>)
-    add_key_alt_name(bsoncxx::v_noabi::types::bson_value::view_or_value id,
-                     bsoncxx::v_noabi::string::view_or_value key_alt_name);
+    add_key_alt_name(
+        bsoncxx::v_noabi::types::bson_value::view_or_value id,
+        bsoncxx::v_noabi::string::view_or_value key_alt_name);
 
     ///
     /// Removes a keyAltName from the keyAltNames array of the key document in
@@ -267,8 +266,9 @@ class client_encryption {
     /// - https://www.mongodb.com/docs/manual/reference/method/KeyVault.removeKeyAlternateName/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::value>)
-    remove_key_alt_name(bsoncxx::v_noabi::types::bson_value::view_or_value id,
-                        bsoncxx::v_noabi::string::view_or_value key_alt_name);
+    remove_key_alt_name(
+        bsoncxx::v_noabi::types::bson_value::view_or_value id,
+        bsoncxx::v_noabi::string::view_or_value key_alt_name);
 
     ///
     /// Get the key document from the key vault collection with the provided name.
@@ -291,8 +291,8 @@ class client_encryption {
     std::unique_ptr<impl> _impl;
 };
 
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace v_noabi
+} // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
 

@@ -151,7 +151,7 @@ enum class error_code : std::int32_t {
 ///
 /// @return The bsoncxx error_category
 ///
-BSONCXX_ABI_EXPORT_CDECL(const std::error_category&) error_category();
+BSONCXX_ABI_EXPORT_CDECL(std::error_category const&) error_category();
 
 ///
 /// Translate a bsoncxx::v_noabi::error_code into a std::error_code.
@@ -163,15 +163,15 @@ inline std::error_code make_error_code(error_code error) {
     return {static_cast<int>(error), error_category()};
 }
 
-}  // namespace v_noabi
-}  // namespace bsoncxx
+} // namespace v_noabi
+} // namespace bsoncxx
 
 namespace bsoncxx {
 
 using ::bsoncxx::v_noabi::error_category;
 using ::bsoncxx::v_noabi::make_error_code;
 
-}  // namespace bsoncxx
+} // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>
 
@@ -182,7 +182,7 @@ template <>
 struct is_error_code_enum<bsoncxx::v_noabi::error_code> : public true_type {};
 // @endcond
 
-}  // namespace std
+} // namespace std
 
 ///
 /// @file

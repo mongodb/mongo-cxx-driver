@@ -46,7 +46,7 @@ using bsoncxx::types::bson_value::make_value;
 
 using namespace mongocxx;
 
-const int kKeyLength = 96;
+int const kKeyLength = 96;
 
 int EXAMPLES_CDECL main() {
     instance inst{};
@@ -54,14 +54,11 @@ int EXAMPLES_CDECL main() {
     // This must be the same master key that was used to create
     // the encryption key; here, we use a random key as a placeholder.
     std::uint8_t key_storage[kKeyLength];
-    std::generate_n(key_storage, kKeyLength, []() {
-        return static_cast<std::uint8_t>(std::rand() % UINT8_MAX);
-    });
-    bsoncxx::types::b_binary local_master_key{
-        bsoncxx::binary_sub_type::k_binary, kKeyLength, key_storage};
+    std::generate_n(key_storage, kKeyLength, []() { return static_cast<std::uint8_t>(std::rand() % UINT8_MAX); });
+    bsoncxx::types::b_binary local_master_key{bsoncxx::binary_sub_type::k_binary, kKeyLength, key_storage};
 
-    auto kms_providers = document{} << "local" << open_document << "key" << local_master_key
-                                    << close_document << finalize;
+    auto kms_providers = document{} << "local" << open_document << "key" << local_master_key << close_document
+                                    << finalize;
 
     // Setting bypass_auto_encryption to "true" on the options::auto_encryption
     // class will disable automatic encryption but keeps the automatic decryption
@@ -89,8 +86,7 @@ int EXAMPLES_CDECL main() {
 
     mongocxx::options::index index_options{};
     index_options.unique(true);
-    auto expression = document{} << "keyAltNames" << open_document << "$exists" << true
-                                 << close_document << finalize;
+    auto expression = document{} << "keyAltNames" << open_document << "$exists" << true << close_document << finalize;
     index_options.partial_filter_expression(expression.view());
     key_vault.create_index(make_document(kvp("keyAltNames", 1)), index_options);
 

@@ -42,7 +42,7 @@ class change_stream::impl {
     // no copy or move
     impl(impl&) = delete;
     impl(impl&&) = delete;
-    void operator=(const impl&) = delete;
+    void operator=(impl const&) = delete;
     void operator=(impl&&) = delete;
 
     ~impl() {
@@ -78,7 +78,7 @@ class change_stream::impl {
     }
 
     void advance_iterator() {
-        const bson_t* out;
+        bson_t const* out;
 
         // Happy-case.
         if (libmongoc::change_stream_next(this->change_stream_, &out)) {
@@ -120,7 +120,7 @@ class change_stream::impl {
     bool exhausted_;
 };
 
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace v_noabi
+} // namespace mongocxx
 
 #include <mongocxx/config/private/postlude.hh>

@@ -23,10 +23,10 @@ namespace gridfs {
 
 class upload;
 
-}  // namespace gridfs
-}  // namespace result
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace gridfs
+} // namespace result
+} // namespace v_noabi
+} // namespace mongocxx
 
 namespace mongocxx {
 namespace result {
@@ -34,9 +34,9 @@ namespace gridfs {
 
 using ::mongocxx::v_noabi::result::gridfs::upload;
 
-}  // namespace gridfs
-}  // namespace result
-}  // namespace mongocxx
+} // namespace gridfs
+} // namespace result
+} // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
 

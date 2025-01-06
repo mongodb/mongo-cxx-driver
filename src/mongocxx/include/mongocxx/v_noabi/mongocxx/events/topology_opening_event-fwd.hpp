@@ -22,17 +22,17 @@ namespace events {
 
 class topology_opening_event;
 
-}  // namespace events
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace events
+} // namespace v_noabi
+} // namespace mongocxx
 
 namespace mongocxx {
 namespace events {
 
 using ::mongocxx::v_noabi::events::topology_opening_event;
 
-}  // namespace events
-}  // namespace mongocxx
+} // namespace events
+} // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
 

@@ -36,7 +36,7 @@ using bsoncxx::builder::basic::kvp;
 using bsoncxx::builder::basic::make_document;
 using bsoncxx::string::to_string;
 
-void open_and_close_client(const uri& test_uri, const options::apm& apm_opts) {
+void open_and_close_client(uri const& test_uri, options::apm const& apm_opts) {
     // Apply listeners and trigger connection.
     options::client client_opts;
     client_opts.apm_opts(apm_opts);
@@ -69,7 +69,7 @@ TEST_CASE("SDAM Monitoring", "[sdam_monitoring]") {
         ///////////////////////////////////////////////////////////////////////
 
         // ServerOpeningEvent
-        apm_opts.on_server_opening([&](const events::server_opening_event& event) {
+        apm_opts.on_server_opening([&](events::server_opening_event const& event) {
             server_opening_events++;
             if (topology_id) {
                 // A previous server was opened first.
@@ -80,7 +80,7 @@ TEST_CASE("SDAM Monitoring", "[sdam_monitoring]") {
         });
 
         // ServerDescriptionChanged
-        apm_opts.on_server_changed([&](const events::server_changed_event& event) {
+        apm_opts.on_server_changed([&](events::server_changed_event const& event) {
             BSONCXX_TEST_EXCEPTION_GUARD_BEGIN(eguard);
 
             server_changed_events++;
@@ -140,7 +140,7 @@ TEST_CASE("SDAM Monitoring", "[sdam_monitoring]") {
         ///////////////////////////////////////////////////////////////////////
 
         // TopologyOpeningEvent
-        apm_opts.on_topology_opening([&](const events::topology_opening_event& event) {
+        apm_opts.on_topology_opening([&](events::topology_opening_event const& event) {
             topology_opening_events++;
             if (topology_id) {
                 // A previous server was opened first.
@@ -151,7 +151,7 @@ TEST_CASE("SDAM Monitoring", "[sdam_monitoring]") {
         });
 
         // TopologyDescriptionChanged
-        apm_opts.on_topology_changed([&](const events::topology_changed_event& event) {
+        apm_opts.on_topology_changed([&](events::topology_changed_event const& event) {
             BSONCXX_TEST_EXCEPTION_GUARD_BEGIN(eguard);
 
             topology_changed_events++;
@@ -203,7 +203,7 @@ TEST_CASE("SDAM Monitoring", "[sdam_monitoring]") {
         });
 
         // TopologyClosedEvent
-        apm_opts.on_topology_closed([&](const events::topology_closed_event& event) {
+        apm_opts.on_topology_closed([&](events::topology_closed_event const& event) {
             topology_closed_events++;
             CHECK(topology_id.value() == event.topology_id());
         });
@@ -223,26 +223,23 @@ TEST_CASE("SDAM Monitoring", "[sdam_monitoring]") {
     SECTION("Heartbeat Events") {
         int heartbeat_started_events = 0;
         int heartbeat_succeeded_events = 0;
-        auto mock_started_awaited =
-            libmongoc::apm_server_heartbeat_started_get_awaited.create_instance();
-        auto mock_succeeded_awaited =
-            libmongoc::apm_server_heartbeat_succeeded_get_awaited.create_instance();
+        auto mock_started_awaited = libmongoc::apm_server_heartbeat_started_get_awaited.create_instance();
+        auto mock_succeeded_awaited = libmongoc::apm_server_heartbeat_succeeded_get_awaited.create_instance();
         bool started_awaited_called = false;
         bool succeeded_awaited_called = false;
 
         mock_started_awaited->visit(
-            [&](const mongoc_apm_server_heartbeat_started_t*) { started_awaited_called = true; });
+            [&](mongoc_apm_server_heartbeat_started_t const*) { started_awaited_called = true; });
 
-        mock_succeeded_awaited->visit([&](const mongoc_apm_server_heartbeat_succeeded_t*) {
-            succeeded_awaited_called = true;
-        });
+        mock_succeeded_awaited->visit(
+            [&](mongoc_apm_server_heartbeat_succeeded_t const*) { succeeded_awaited_called = true; });
 
         ///////////////////////////////////////////////////////////////////////
         // Begin heartbeat listener lambdas
         ///////////////////////////////////////////////////////////////////////
 
         // ServerHeartbeatStartedEvent
-        apm_opts.on_heartbeat_started([&](const events::heartbeat_started_event& event) {
+        apm_opts.on_heartbeat_started([&](events::heartbeat_started_event const& event) {
             heartbeat_started_events++;
             CHECK_FALSE(event.host().empty());
             CHECK(event.port() != 0);
@@ -251,7 +248,7 @@ TEST_CASE("SDAM Monitoring", "[sdam_monitoring]") {
         });
 
         // ServerHeartbeatSucceededEvent
-        apm_opts.on_heartbeat_succeeded([&](const events::heartbeat_succeeded_event& event) {
+        apm_opts.on_heartbeat_succeeded([&](events::heartbeat_succeeded_event const& event) {
             heartbeat_succeeded_events++;
             CHECK_FALSE(event.host().empty());
             CHECK(event.port() != 0);
@@ -281,13 +278,12 @@ TEST_CASE("Heartbeat failed event", "[sdam_monitoring]") {
     bool failed_awaited_called = false;
     auto mock_failed_awaited = libmongoc::apm_server_heartbeat_failed_get_awaited.create_instance();
 
-    mock_failed_awaited->visit(
-        [&](const mongoc_apm_server_heartbeat_failed_t*) { failed_awaited_called = true; });
+    mock_failed_awaited->visit([&](mongoc_apm_server_heartbeat_failed_t const*) { failed_awaited_called = true; });
 
     int heartbeat_failed_events = 0;
 
     // ServerHeartbeatFailedEvent
-    apm_opts.on_heartbeat_failed([&](const events::heartbeat_failed_event& event) {
+    apm_opts.on_heartbeat_failed([&](events::heartbeat_failed_event const& event) {
         heartbeat_failed_events++;
         CHECK_FALSE(event.host().empty());
         CHECK_FALSE(event.message().empty());
@@ -296,10 +292,9 @@ TEST_CASE("Heartbeat failed event", "[sdam_monitoring]") {
     });
 
     REQUIRE_THROWS_AS(
-        open_and_close_client(uri{"mongodb://bad-host/?connectTimeoutMS=1"}, apm_opts),
-        mongocxx::exception);
+        open_and_close_client(uri{"mongodb://bad-host/?connectTimeoutMS=1"}, apm_opts), mongocxx::exception);
 
     REQUIRE(heartbeat_failed_events > 0);
     REQUIRE(failed_awaited_called);
 }
-}  // namespace
+} // namespace

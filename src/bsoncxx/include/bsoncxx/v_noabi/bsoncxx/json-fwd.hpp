@@ -21,14 +21,14 @@ namespace v_noabi {
 
 enum class ExtendedJsonMode : std::uint8_t;
 
-}  // namespace v_noabi
-}  // namespace bsoncxx
+} // namespace v_noabi
+} // namespace bsoncxx
 
 namespace bsoncxx {
 
 using ::bsoncxx::v_noabi::ExtendedJsonMode;
 
-}  // namespace bsoncxx
+} // namespace bsoncxx
 
 ///
 /// @file

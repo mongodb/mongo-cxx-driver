@@ -39,16 +39,16 @@ class exception : public std::system_error {
 
     exception(exception&&) = default;
     exception& operator=(exception&&) = default;
-    exception(const exception&) = default;
-    exception& operator=(const exception&) = default;
+    exception(exception const&) = default;
+    exception& operator=(exception const&) = default;
 
     using system_error::system_error;
 };
 
 BSONCXX_POP_WARNINGS();
 
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace v_noabi
+} // namespace mongocxx
 
 #include <bsoncxx/config/postlude.hpp>
 

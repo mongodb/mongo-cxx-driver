@@ -64,13 +64,13 @@ class read_concern {
     /// - [Default MongoDB Read Concerns/Write Concerns (MongoDB Manual)](https://www.mongodb.com/docs/manual/reference/mongodb-defaults/#read-concern)
     ///
     enum class level {
-        k_local,           ///< Represent read concern level "local".
-        k_majority,        ///< Represent read concern level "majority".
-        k_linearizable,    ///< Represent read concern level "linearizable".
-        k_server_default,  ///< Represent the server's default read concern level.
-        k_unknown,         ///< Represent an unknown read concern level.
-        k_available,       ///< Represent read concern level "available".
-        k_snapshot         ///< Represent read concern level "snapshot".
+        k_local,          ///< Represent read concern level "local".
+        k_majority,       ///< Represent read concern level "majority".
+        k_linearizable,   ///< Represent read concern level "linearizable".
+        k_server_default, ///< Represent the server's default read concern level.
+        k_unknown,        ///< Represent an unknown read concern level.
+        k_available,      ///< Represent read concern level "available".
+        k_snapshot        ///< Represent read concern level "snapshot".
     };
 
     ///
@@ -85,12 +85,12 @@ class read_concern {
     ///
     /// Copy constructs a read_concern.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL() read_concern(const read_concern&);
+    MONGOCXX_ABI_EXPORT_CDECL() read_concern(read_concern const&);
 
     ///
     /// Copy assigns a read_concern.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(read_concern&) operator=(const read_concern&);
+    MONGOCXX_ABI_EXPORT_CDECL(read_concern&) operator=(read_concern const&);
 
     ///
     /// Move constructs a read_concern.
@@ -165,8 +165,8 @@ class read_concern {
     /// Compares two read_concern objects for (in)-equality.
     ///
     /// @{
-    friend MONGOCXX_ABI_EXPORT_CDECL(bool) operator==(const read_concern&, const read_concern&);
-    friend MONGOCXX_ABI_EXPORT_CDECL(bool) operator!=(const read_concern&, const read_concern&);
+    friend MONGOCXX_ABI_EXPORT_CDECL(bool) operator==(read_concern const&, read_concern const&);
+    friend MONGOCXX_ABI_EXPORT_CDECL(bool) operator!=(read_concern const&, read_concern const&);
     /// @}
     ///
 
@@ -184,8 +184,8 @@ class read_concern {
     std::unique_ptr<impl> _impl;
 };
 
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace v_noabi
+} // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
 

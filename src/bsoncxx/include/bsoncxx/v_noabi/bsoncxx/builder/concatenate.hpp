@@ -119,17 +119,17 @@ inline concatenate_array concatenate(array::view_or_value array) {
     return {std::move(array)};
 }
 
-}  // namespace builder
-}  // namespace v_noabi
-}  // namespace bsoncxx
+} // namespace builder
+} // namespace v_noabi
+} // namespace bsoncxx
 
 namespace bsoncxx {
 namespace builder {
 
 using ::bsoncxx::v_noabi::builder::concatenate;
 
-}  // namespace builder
-}  // namespace bsoncxx
+} // namespace builder
+} // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>
 

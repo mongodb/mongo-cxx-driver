@@ -35,14 +35,13 @@ TEST_CASE("aggregate", "[aggregate][option]") {
 
     mongocxx::options::aggregate agg;
 
-    const auto collation = make_document(kvp("locale", "en_US"));
-    const auto comment = make_document(kvp("$comment", "some_comment"));
-    const auto hint = bsoncxx::document::view_or_value(make_document(kvp("_id", 1)));
-    const auto let = make_document(kvp("x", "foo"));
+    auto const collation = make_document(kvp("locale", "en_US"));
+    auto const comment = make_document(kvp("$comment", "some_comment"));
+    auto const hint = bsoncxx::document::view_or_value(make_document(kvp("_id", 1)));
+    auto const let = make_document(kvp("x", "foo"));
 
     // Avoid error: use of overloaded operator '==' is ambiguous.
-    const auto comment_value =
-        bsoncxx::types::bson_value::view_or_value(comment["$comment"].get_value());
+    auto const comment_value = bsoncxx::types::bson_value::view_or_value(comment["$comment"].get_value());
 
     CHECK_OPTIONAL_ARGUMENT(agg, allow_disk_use, true);
     CHECK_OPTIONAL_ARGUMENT(agg, batch_size, 500);
@@ -56,4 +55,4 @@ TEST_CASE("aggregate", "[aggregate][option]") {
     CHECK_OPTIONAL_ARGUMENT(agg, read_preference, mongocxx::read_preference());
     CHECK_OPTIONAL_ARGUMENT(agg, write_concern, mongocxx::write_concern());
 }
-}  // namespace
+} // namespace

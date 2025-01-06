@@ -22,17 +22,17 @@ namespace document {
 
 class value;
 
-}  // namespace document
-}  // namespace v_noabi
-}  // namespace bsoncxx
+} // namespace document
+} // namespace v_noabi
+} // namespace bsoncxx
 
 namespace bsoncxx {
 namespace document {
 
 using ::bsoncxx::v_noabi::document::value;
 
-}  // namespace document
-}  // namespace bsoncxx
+} // namespace document
+} // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>
 

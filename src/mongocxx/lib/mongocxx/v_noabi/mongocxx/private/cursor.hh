@@ -36,9 +36,9 @@ class cursor::impl {
         : cursor_t(cursor),
           status{cursor ? state::k_pending : state::k_dead},
           exhausted(!cursor),
-          tailable{cursor && cursor_type &&
-                   (*cursor_type == cursor::type::k_tailable ||
-                    *cursor_type == cursor::type::k_tailable_await)} {}
+          tailable{
+              cursor && cursor_type &&
+              (*cursor_type == cursor::type::k_tailable || *cursor_type == cursor::type::k_tailable_await)} {}
 
     ~impl() {
         libmongoc::cursor_destroy(cursor_t);
@@ -47,8 +47,8 @@ class cursor::impl {
     impl(impl&&) = delete;
     impl& operator=(impl&&) = delete;
 
-    impl(const impl&) = delete;
-    impl& operator=(const impl&) = delete;
+    impl(impl const&) = delete;
+    impl& operator=(impl const&) = delete;
 
     bool has_started() const {
         return status >= state::k_started;
@@ -89,7 +89,7 @@ class cursor::impl {
     bool tailable;
 };
 
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace v_noabi
+} // namespace mongocxx
 
 #include <mongocxx/config/private/postlude.hh>

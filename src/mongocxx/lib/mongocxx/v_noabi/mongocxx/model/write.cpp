@@ -23,33 +23,27 @@ namespace v_noabi {
 namespace model {
 
 write::write(insert_one value) : _type(write_type::k_insert_one), _insert_one(std::move(value)) {
-    static_assert(std::is_nothrow_move_constructible<insert_one>::value,
-                  "Move-construct may throw");
+    static_assert(std::is_nothrow_move_constructible<insert_one>::value, "Move-construct may throw");
     static_assert(std::is_nothrow_move_assignable<insert_one>::value, "Move-assign may throw");
 }
 write::write(delete_one value) : _type(write_type::k_delete_one), _delete_one(std::move(value)) {
-    static_assert(std::is_nothrow_move_constructible<delete_one>::value,
-                  "Move-construct may throw");
+    static_assert(std::is_nothrow_move_constructible<delete_one>::value, "Move-construct may throw");
     static_assert(std::is_nothrow_move_assignable<delete_one>::value, "Move-assign may throw");
 }
 write::write(delete_many value) : _type(write_type::k_delete_many), _delete_many(std::move(value)) {
-    static_assert(std::is_nothrow_move_constructible<delete_many>::value,
-                  "Move-construct may throw");
+    static_assert(std::is_nothrow_move_constructible<delete_many>::value, "Move-construct may throw");
     static_assert(std::is_nothrow_move_assignable<delete_many>::value, "Move-assign may throw");
 }
 write::write(update_one value) : _type(write_type::k_update_one), _update_one(std::move(value)) {
-    static_assert(std::is_nothrow_move_constructible<update_one>::value,
-                  "Move-construct may throw");
+    static_assert(std::is_nothrow_move_constructible<update_one>::value, "Move-construct may throw");
     static_assert(std::is_nothrow_move_assignable<update_one>::value, "Move-assign may throw");
 }
 write::write(update_many value) : _type(write_type::k_update_many), _update_many(std::move(value)) {
-    static_assert(std::is_nothrow_move_constructible<update_many>::value,
-                  "Move-construct may throw");
+    static_assert(std::is_nothrow_move_constructible<update_many>::value, "Move-construct may throw");
     static_assert(std::is_nothrow_move_assignable<update_many>::value, "Move-assign may throw");
 }
 write::write(replace_one value) : _type(write_type::k_replace_one), _replace_one(std::move(value)) {
-    static_assert(std::is_nothrow_move_constructible<replace_one>::value,
-                  "Move-construct may throw");
+    static_assert(std::is_nothrow_move_constructible<replace_one>::value, "Move-construct may throw");
     static_assert(std::is_nothrow_move_assignable<replace_one>::value, "Move-assign may throw");
 }
 
@@ -138,22 +132,22 @@ write_type write::type() const {
     return _type;
 }
 
-const insert_one& write::get_insert_one() const {
+insert_one const& write::get_insert_one() const {
     return _insert_one;
 }
-const update_one& write::get_update_one() const {
+update_one const& write::get_update_one() const {
     return _update_one;
 }
-const update_many& write::get_update_many() const {
+update_many const& write::get_update_many() const {
     return _update_many;
 }
-const delete_one& write::get_delete_one() const {
+delete_one const& write::get_delete_one() const {
     return _delete_one;
 }
-const delete_many& write::get_delete_many() const {
+delete_many const& write::get_delete_many() const {
     return _delete_many;
 }
-const replace_one& write::get_replace_one() const {
+replace_one const& write::get_replace_one() const {
     return _replace_one;
 }
 
@@ -161,6 +155,6 @@ write::~write() {
     destroy_member();
 }
 
-}  // namespace model
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace model
+} // namespace v_noabi
+} // namespace mongocxx

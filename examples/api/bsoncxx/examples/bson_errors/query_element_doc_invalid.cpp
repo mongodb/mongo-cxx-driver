@@ -31,34 +31,34 @@ namespace {
 // [Example]
 void example() {
     bsoncxx::document::value::deleter_type deleter = [](std::uint8_t*) {};
-    std::uint8_t data[] = {0u};  // An invalid BSON document.
+    std::uint8_t data[] = {0u}; // An invalid BSON document.
 
     bsoncxx::document::value owner{data, sizeof(data), deleter};
     bsoncxx::document::view doc = owner.view();
 
     bsoncxx::document::element e = doc["x"];
 
-    EXPECT(!e);  // An invalid BSON document returns an invalid element.
+    EXPECT(!e); // An invalid BSON document returns an invalid element.
 
     try {
-        bsoncxx::stdx::string_view key = e.key();  // Throws.
+        bsoncxx::stdx::string_view key = e.key(); // Throws.
 
         EXPECT(false && "should not reach this point");
-    } catch (const bsoncxx::exception& ex) {
+    } catch (bsoncxx::exception const& ex) {
         EXPECT(ex.code() == bsoncxx::error_code::k_unset_element);
     }
 
     try {
-        bsoncxx::type type = e.type();  // Throws.
+        bsoncxx::type type = e.type(); // Throws.
 
         EXPECT(false && "should not reach this point");
-    } catch (const bsoncxx::exception& ex) {
+    } catch (bsoncxx::exception const& ex) {
         EXPECT(ex.code() == bsoncxx::error_code::k_unset_element);
     }
 }
 // [Example]
 
-}  // namespace
+} // namespace
 
 RUNNER_REGISTER_COMPONENT() {
     example();

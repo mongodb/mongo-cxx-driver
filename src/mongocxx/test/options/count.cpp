@@ -43,4 +43,4 @@ TEST_CASE("count", "[count][option]") {
     CHECK_OPTIONAL_ARGUMENT(cnt, skip, 3);
 }
 
-}  // namespace
+} // namespace

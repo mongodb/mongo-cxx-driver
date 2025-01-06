@@ -79,12 +79,9 @@ class element : private document::element {
    private:
     friend ::bsoncxx::v_noabi::array::view;
 
-    explicit element(const std::uint8_t* raw,
-                     std::uint32_t length,
-                     std::uint32_t offset,
-                     std::uint32_t keylen);
+    explicit element(std::uint8_t const* raw, std::uint32_t length, std::uint32_t offset, std::uint32_t keylen);
 
-    explicit element(const stdx::string_view key);
+    explicit element(stdx::string_view const key);
 };
 
 ///
@@ -95,23 +92,23 @@ class element : private document::element {
 /// @{
 
 /// @relatesalso bsoncxx::v_noabi::array::element
-BSONCXX_ABI_EXPORT_CDECL(bool) operator==(const element& elem, const types::bson_value::view& v);
+BSONCXX_ABI_EXPORT_CDECL(bool) operator==(element const& elem, types::bson_value::view const& v);
 
 /// @relatesalso bsoncxx::v_noabi::array::element
-BSONCXX_ABI_EXPORT_CDECL(bool) operator==(const types::bson_value::view& v, const element& elem);
+BSONCXX_ABI_EXPORT_CDECL(bool) operator==(types::bson_value::view const& v, element const& elem);
 
 /// @relatesalso bsoncxx::v_noabi::array::element
-BSONCXX_ABI_EXPORT_CDECL(bool) operator!=(const element& elem, const types::bson_value::view& v);
+BSONCXX_ABI_EXPORT_CDECL(bool) operator!=(element const& elem, types::bson_value::view const& v);
 
 /// @relatesalso bsoncxx::v_noabi::array::element
-BSONCXX_ABI_EXPORT_CDECL(bool) operator!=(const types::bson_value::view& v, const element& elem);
+BSONCXX_ABI_EXPORT_CDECL(bool) operator!=(types::bson_value::view const& v, element const& elem);
 
 /// @}
 ///
 
-}  // namespace array
-}  // namespace v_noabi
-}  // namespace bsoncxx
+} // namespace array
+} // namespace v_noabi
+} // namespace bsoncxx
 
 namespace bsoncxx {
 namespace array {
@@ -119,8 +116,8 @@ namespace array {
 using ::bsoncxx::v_noabi::array::operator==;
 using ::bsoncxx::v_noabi::array::operator!=;
 
-}  // namespace array
-}  // namespace bsoncxx
+} // namespace array
+} // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>
 

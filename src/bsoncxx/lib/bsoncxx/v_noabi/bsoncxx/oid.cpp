@@ -31,7 +31,7 @@ oid::oid() {
     std::memcpy(_bytes.data(), oid.bytes, sizeof(oid.bytes));
 }
 
-oid::oid(const stdx::string_view& str) {
+oid::oid(stdx::string_view const& str) {
     if (!bson_oid_is_valid(str.data(), str.size())) {
         throw bsoncxx::v_noabi::exception{error_code::k_invalid_oid};
     }
@@ -40,7 +40,7 @@ oid::oid(const stdx::string_view& str) {
     memcpy(_bytes.data(), oid.bytes, _bytes.size());
 }
 
-oid::oid(const char* bytes, std::size_t len) {
+oid::oid(char const* bytes, std::size_t len) {
     if (len != this->size()) {
         throw bsoncxx::v_noabi::exception{error_code::k_invalid_oid};
     }
@@ -64,11 +64,11 @@ std::time_t oid::get_time_t() const {
     return bson_oid_get_time_t(&oid);
 }
 
-const char* oid::bytes() const {
+char const* oid::bytes() const {
     return _bytes.data();
 }
 
-int oid_compare(const oid& lhs, const oid& rhs) {
+int oid_compare(oid const& lhs, oid const& rhs) {
     bson_oid_t lhs_oid;
     bson_oid_t rhs_oid;
 
@@ -78,29 +78,29 @@ int oid_compare(const oid& lhs, const oid& rhs) {
     return bson_oid_compare(&lhs_oid, &rhs_oid);
 }
 
-bool operator<(const oid& lhs, const oid& rhs) {
+bool operator<(oid const& lhs, oid const& rhs) {
     return oid_compare(lhs, rhs) < 0;
 }
 
-bool operator>(const oid& lhs, const oid& rhs) {
+bool operator>(oid const& lhs, oid const& rhs) {
     return oid_compare(lhs, rhs) > 0;
 }
 
-bool operator<=(const oid& lhs, const oid& rhs) {
+bool operator<=(oid const& lhs, oid const& rhs) {
     return oid_compare(lhs, rhs) <= 0;
 }
 
-bool operator>=(const oid& lhs, const oid& rhs) {
+bool operator>=(oid const& lhs, oid const& rhs) {
     return oid_compare(lhs, rhs) >= 0;
 }
 
-bool operator==(const oid& lhs, const oid& rhs) {
+bool operator==(oid const& lhs, oid const& rhs) {
     return oid_compare(lhs, rhs) == 0;
 }
 
-bool operator!=(const oid& lhs, const oid& rhs) {
+bool operator!=(oid const& lhs, oid const& rhs) {
     return oid_compare(lhs, rhs) != 0;
 }
 
-}  // namespace v_noabi
-}  // namespace bsoncxx
+} // namespace v_noabi
+} // namespace bsoncxx

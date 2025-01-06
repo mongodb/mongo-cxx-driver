@@ -51,8 +51,7 @@ class validation_criteria {
     /// @return
     ///   Document representing a validation rule.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<
-                              bsoncxx::v_noabi::document::view_or_value>&)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const&)
     rule() const;
 
     ///
@@ -88,7 +87,7 @@ class validation_criteria {
     /// @return
     ///   The enumerated validation level.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<validation_level>&)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<validation_level> const&)
     level() const;
 
     ///
@@ -122,7 +121,7 @@ class validation_criteria {
     /// @return
     ///   The enumerated validation action.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<validation_action>&)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<validation_action> const&)
     action() const;
 
     ///
@@ -134,8 +133,7 @@ class validation_criteria {
     ///
     /// @return Validation criteria, as a document.
     ///
-    MONGOCXX_DEPRECATED MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::document::value) to_document()
-        const;
+    MONGOCXX_DEPRECATED MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::document::value) to_document() const;
 
     MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::document::value) to_document_deprecated() const;
 
@@ -162,23 +160,23 @@ class validation_criteria {
 
 /// @relatesalso mongocxx::v_noabi::validation_criteria
 MONGOCXX_ABI_EXPORT_CDECL(bool)
-operator==(const validation_criteria & lhs, const validation_criteria & rhs);
+operator==(validation_criteria const& lhs, validation_criteria const& rhs);
 
 /// @relatesalso mongocxx::v_noabi::validation_criteria
 MONGOCXX_ABI_EXPORT_CDECL(bool)
-operator!=(const validation_criteria & lhs, const validation_criteria & rhs);
+operator!=(validation_criteria const& lhs, validation_criteria const& rhs);
 /// @}
 ///
 
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace v_noabi
+} // namespace mongocxx
 
 namespace mongocxx {
 
 using ::mongocxx::v_noabi::operator==;
 using ::mongocxx::v_noabi::operator!=;
 
-}  // namespace mongocxx
+} // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
 

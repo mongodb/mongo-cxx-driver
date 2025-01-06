@@ -25,10 +25,10 @@ namespace basic {
 
 using ::bsoncxx::v_noabi::builder::concatenate;
 
-}  // namespace basic
-}  // namespace builder
-}  // namespace v_noabi
-}  // namespace bsoncxx
+} // namespace basic
+} // namespace builder
+} // namespace v_noabi
+} // namespace bsoncxx
 
 namespace bsoncxx {
 namespace builder {
@@ -36,9 +36,9 @@ namespace basic {
 
 using ::bsoncxx::v_noabi::builder::basic::concatenate;
 
-}  // namespace basic
-}  // namespace builder
-}  // namespace bsoncxx
+} // namespace basic
+} // namespace builder
+} // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>
 

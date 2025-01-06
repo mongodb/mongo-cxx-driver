@@ -25,8 +25,7 @@ namespace {
 using bsoncxx::v_noabi::builder::basic::kvp;
 
 // Convert validation levels to strings.
-std::string validation_level_to_string(
-    mongocxx::v_noabi::validation_criteria::validation_level level) {
+std::string validation_level_to_string(mongocxx::v_noabi::validation_criteria::validation_level level) {
     switch (level) {
         case mongocxx::v_noabi::validation_criteria::validation_level::k_off:
             return "off";
@@ -40,8 +39,7 @@ std::string validation_level_to_string(
 }
 
 // Convert validation actions to strings.
-std::string validation_action_to_string(
-    mongocxx::v_noabi::validation_criteria::validation_action action) {
+std::string validation_action_to_string(mongocxx::v_noabi::validation_criteria::validation_action action) {
     switch (action) {
         case mongocxx::v_noabi::validation_criteria::validation_action::k_warn:
             return "warn";
@@ -52,7 +50,7 @@ std::string validation_action_to_string(
     MONGOCXX_UNREACHABLE;
 }
 
-}  // namespace
+} // namespace
 
 namespace mongocxx {
 namespace v_noabi {
@@ -72,18 +70,15 @@ validation_criteria& validation_criteria::action(validation_criteria::validation
     return *this;
 }
 
-const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value>&
-validation_criteria::rule() const {
+bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const& validation_criteria::rule() const {
     return _rule;
 }
 
-const bsoncxx::v_noabi::stdx::optional<validation_criteria::validation_level>&
-validation_criteria::level() const {
+bsoncxx::v_noabi::stdx::optional<validation_criteria::validation_level> const& validation_criteria::level() const {
     return _level;
 }
 
-const bsoncxx::v_noabi::stdx::optional<validation_criteria::validation_action>&
-validation_criteria::action() const {
+bsoncxx::v_noabi::stdx::optional<validation_criteria::validation_action> const& validation_criteria::action() const {
     return _action;
 }
 
@@ -109,13 +104,12 @@ bsoncxx::v_noabi::document::value validation_criteria::to_document() const {
     return to_document_deprecated();
 }
 
-bool operator==(const validation_criteria& lhs, const validation_criteria& rhs) {
-    return ((lhs.rule() == rhs.rule()) && (lhs.level() == rhs.level()) &&
-            (lhs.action() == rhs.action()));
+bool operator==(validation_criteria const& lhs, validation_criteria const& rhs) {
+    return ((lhs.rule() == rhs.rule()) && (lhs.level() == rhs.level()) && (lhs.action() == rhs.action()));
 }
-bool operator!=(const validation_criteria& lhs, const validation_criteria& rhs) {
+bool operator!=(validation_criteria const& lhs, validation_criteria const& rhs) {
     return !(lhs == rhs);
 }
 
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace v_noabi
+} // namespace mongocxx

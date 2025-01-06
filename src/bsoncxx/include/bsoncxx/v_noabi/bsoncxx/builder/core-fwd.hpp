@@ -22,17 +22,17 @@ namespace builder {
 
 class core;
 
-}  // namespace builder
-}  // namespace v_noabi
-}  // namespace bsoncxx
+} // namespace builder
+} // namespace v_noabi
+} // namespace bsoncxx
 
 namespace bsoncxx {
 namespace builder {
 
 using ::bsoncxx::v_noabi::builder::core;
 
-}  // namespace builder
-}  // namespace bsoncxx
+} // namespace builder
+} // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>
 

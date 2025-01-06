@@ -27,9 +27,9 @@ namespace stdx {
 using ::std::basic_string_view;
 using ::std::string_view;
 
-}  // namespace stdx
-}  // namespace v_noabi
-}  // namespace bsoncxx
+} // namespace stdx
+} // namespace v_noabi
+} // namespace bsoncxx
 
 #elif defined(BSONCXX_POLY_USE_IMPLS)
 
@@ -52,7 +52,7 @@ template <typename Char, typename Traits = std::char_traits<Char>>
 class basic_string_view : bsoncxx::detail::equality_operators, bsoncxx::detail::ordering_operators {
    public:
     using pointer = Char*;
-    using const_pointer = const Char*;
+    using const_pointer = Char const*;
     using size_type = std::size_t;
     using difference_type = std::ptrdiff_t;
     using value_type = Char;
@@ -69,24 +69,22 @@ class basic_string_view : bsoncxx::detail::equality_operators, bsoncxx::detail::
    public:
     using traits_type = Traits;
     using reference = Char&;
-    using const_reference = const Char&;
+    using const_reference = Char const&;
     using const_iterator = const_pointer;
     using iterator = const_iterator;
     using const_reverse_iterator = std::reverse_iterator<const_iterator>;
     using reverse_iterator = const_reverse_iterator;
 
     constexpr basic_string_view() noexcept = default;
-    constexpr basic_string_view(const basic_string_view&) noexcept = default;
-    bsoncxx_cxx14_constexpr basic_string_view& operator=(const basic_string_view&) noexcept =
-        default;
+    constexpr basic_string_view(basic_string_view const&) noexcept = default;
+    bsoncxx_cxx14_constexpr basic_string_view& operator=(basic_string_view const&) noexcept = default;
 
     constexpr basic_string_view(const_pointer s, size_type count) : _begin(s), _size(count) {}
 
     constexpr basic_string_view(const_pointer s) : _begin(s), _size(traits_type::length(s)) {}
 
     template <typename Alloc>
-    constexpr basic_string_view(
-        const std::basic_string<value_type, traits_type, Alloc>& str) noexcept
+    constexpr basic_string_view(std::basic_string<value_type, traits_type, Alloc> const& str) noexcept
         : _begin(str.data()), _size(str.size()) {}
 
 #if defined(__cpp_lib_string_view)
@@ -187,8 +185,7 @@ class basic_string_view : bsoncxx::detail::equality_operators, bsoncxx::detail::
         return count;
     }
 
-    bsoncxx_cxx14_constexpr basic_string_view substr(size_type pos = 0,
-                                                     size_type count = npos) const {
+    bsoncxx_cxx14_constexpr basic_string_view substr(size_type pos = 0, size_type count = npos) const {
         if (pos > size()) {
             throw std::out_of_range{"bsoncxx::stdx::basic_string_view::substr()"};
         }
@@ -197,8 +194,7 @@ class basic_string_view : bsoncxx::detail::equality_operators, bsoncxx::detail::
 
     constexpr int compare(basic_string_view other) const noexcept {
         // Another level of indirection to support restricted C++11 constexpr.
-        return _compare2(Traits::compare(data(), other.data(), (std::min)(size(), other.size())),
-                         other);
+        return _compare2(Traits::compare(data(), other.data(), (std::min)(size(), other.size())), other);
     }
 
     constexpr int compare(const_pointer cstr) const {
@@ -213,23 +209,16 @@ class basic_string_view : bsoncxx::detail::equality_operators, bsoncxx::detail::
         return compare(pos1, count1, basic_string_view(cstr));
     }
 
-    constexpr int compare(size_type pos1,
-                          size_type count1,
-                          basic_string_view other,
-                          size_type pos2,
-                          size_type count2) const {
+    constexpr int compare(size_type pos1, size_type count1, basic_string_view other, size_type pos2, size_type count2)
+        const {
         return substr(pos1, count1).compare(other.substr(pos2, count2));
     }
 
-    constexpr int compare(size_type pos1,
-                          size_type count1,
-                          const_pointer str,
-                          size_type count2) const {
+    constexpr int compare(size_type pos1, size_type count1, const_pointer str, size_type count2) const {
         return substr(pos1, count1).compare(basic_string_view(str, count2));
     }
 
-    bsoncxx_cxx14_constexpr size_type find(basic_string_view infix,
-                                           size_type pos = 0) const noexcept {
+    bsoncxx_cxx14_constexpr size_type find(basic_string_view infix, size_type pos = 0) const noexcept {
         if (pos > size()) {
             return npos;
         }
@@ -245,10 +234,9 @@ class basic_string_view : bsoncxx::detail::equality_operators, bsoncxx::detail::
         return static_cast<size_type>(found - begin());
     }
 
-    bsoncxx_cxx14_constexpr size_type rfind(basic_string_view infix,
-                                            size_type pos = npos) const noexcept {
+    bsoncxx_cxx14_constexpr size_type rfind(basic_string_view infix, size_type pos = npos) const noexcept {
         // Calc the endpos where searching should begin, which includes the infix size.
-        const size_type substr_size = pos != npos ? pos + infix.size() : pos;
+        size_type const substr_size = pos != npos ? pos + infix.size() : pos;
         if (infix.empty()) {
             return (std::min)(pos, size());
         }
@@ -272,8 +260,7 @@ class basic_string_view : bsoncxx::detail::equality_operators, bsoncxx::detail::
         return _find_if(pos, [&](value_type chr) { return set.find(chr) == npos; });
     }
 
-    constexpr size_type find_last_not_of(basic_string_view set,
-                                         size_type pos = npos) const noexcept {
+    constexpr size_type find_last_not_of(basic_string_view set, size_type pos = npos) const noexcept {
         return _rfind_if(pos, [&](value_type chr) { return set.find(chr) == npos; });
     }
 
@@ -319,22 +306,18 @@ class basic_string_view : bsoncxx::detail::equality_operators, bsoncxx::detail::
     }
 
     // Implementation of equality comparison.
-    constexpr friend bool tag_invoke(bsoncxx::detail::equal_to,
-                                     basic_string_view left,
-                                     basic_string_view right) noexcept {
+    constexpr friend bool
+    tag_invoke(bsoncxx::detail::equal_to, basic_string_view left, basic_string_view right) noexcept {
         return left.size() == right.size() && left.compare(right) == 0;
     }
 
     // Implementation of a three-way-comparison.
-    constexpr friend bsoncxx::detail::strong_ordering tag_invoke(
-        bsoncxx::detail::compare_three_way cmp,
-        basic_string_view left,
-        basic_string_view right) noexcept {
+    constexpr friend bsoncxx::detail::strong_ordering
+    tag_invoke(bsoncxx::detail::compare_three_way cmp, basic_string_view left, basic_string_view right) noexcept {
         return cmp(left.compare(right), 0);
     }
 
-    friend std::basic_ostream<Char, Traits>& operator<<(std::basic_ostream<Char, Traits>& out,
-                                                        basic_string_view self) {
+    friend std::basic_ostream<Char, Traits>& operator<<(std::basic_ostream<Char, Traits>& out, basic_string_view self) {
         out << std::basic_string<Char, Traits>(self);
         return out;
     }
@@ -343,8 +326,8 @@ class basic_string_view : bsoncxx::detail::equality_operators, bsoncxx::detail::
     // returns true for substr(I). If no index exists, returns npos.
     template <typename F>
     bsoncxx_cxx14_constexpr size_type _find_if(size_type pos, F pred) const noexcept {
-        const auto sub = substr(pos);
-        const iterator found = std::find_if(sub.begin(), sub.end(), pred);
+        auto const sub = substr(pos);
+        iterator const found = std::find_if(sub.begin(), sub.end(), pred);
         if (found == end()) {
             return npos;
         }
@@ -356,10 +339,10 @@ class basic_string_view : bsoncxx::detail::equality_operators, bsoncxx::detail::
     template <typename F>
     bsoncxx_cxx14_constexpr size_type _rfind_if(size_type pos, F pred) const noexcept {
         // Adjust 'pos' for an inclusive range in substr()
-        const auto rpos = pos == npos ? npos : pos + 1;
+        auto const rpos = pos == npos ? npos : pos + 1;
         // The substring that will be searched:
-        const auto prefix = substr(0, rpos);
-        const const_reverse_iterator found = std::find_if(prefix.rbegin(), prefix.rend(), pred);
+        auto const prefix = substr(0, rpos);
+        const_reverse_iterator const found = std::find_if(prefix.rbegin(), prefix.rend(), pred);
         if (found == rend()) {
             return npos;
         }
@@ -375,23 +358,22 @@ constexpr std::size_t basic_string_view<C, Tr>::npos;
 
 using string_view = basic_string_view<char>;
 
-}  // namespace stdx
-}  // namespace v_noabi
-}  // namespace bsoncxx
+} // namespace stdx
+} // namespace v_noabi
+} // namespace bsoncxx
 
 namespace std {
 
 template <typename CharT, typename Traits>
 struct hash<bsoncxx::v_noabi::stdx::basic_string_view<CharT, Traits>>
     : private std::hash<std::basic_string<CharT, Traits>> {
-    std::size_t operator()(
-        const bsoncxx::v_noabi::stdx::basic_string_view<CharT, Traits>& str) const {
+    std::size_t operator()(bsoncxx::v_noabi::stdx::basic_string_view<CharT, Traits> const& str) const {
         return std::hash<std::basic_string<CharT, Traits>>::operator()(
             std::basic_string<CharT, Traits>(str.data(), str.size()));
     }
 };
 
-}  // namespace std
+} // namespace std
 
 #else
 #error "Cannot find a valid polyfill for string_view"
@@ -405,8 +387,8 @@ namespace stdx {
 using ::bsoncxx::v_noabi::stdx::basic_string_view;
 using ::bsoncxx::v_noabi::stdx::string_view;
 
-}  // namespace stdx
-}  // namespace bsoncxx
+} // namespace stdx
+} // namespace bsoncxx
 
 ///
 /// @file
@@ -435,8 +417,8 @@ namespace stdx {
 ///
 class string_view {};
 
-}  // namespace stdx
-}  // namespace v_noabi
-}  // namespace bsoncxx
+} // namespace stdx
+} // namespace v_noabi
+} // namespace bsoncxx
 
-#endif  // defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
+#endif // defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

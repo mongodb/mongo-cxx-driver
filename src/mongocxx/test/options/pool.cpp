@@ -33,4 +33,4 @@ TEST_CASE("pool", "[pool][option]") {
         REQUIRE(pool_opts.client_opts().tls_opts());
     }
 }
-}  // namespace
+} // namespace

@@ -35,8 +35,7 @@ auto_encryption& auto_encryption::key_vault_client(mongocxx::v_noabi::client* cl
     return *this;
 }
 
-const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::client*>&
-auto_encryption::key_vault_client() const {
+bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::client*> const& auto_encryption::key_vault_client() const {
     return _key_vault_client;
 }
 
@@ -45,8 +44,7 @@ auto_encryption& auto_encryption::key_vault_pool(mongocxx::v_noabi::pool* pool) 
     return *this;
 }
 
-const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::pool*>& auto_encryption::key_vault_pool()
-    const {
+bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::pool*> const& auto_encryption::key_vault_pool() const {
     return _key_vault_pool;
 }
 
@@ -55,19 +53,17 @@ auto_encryption& auto_encryption::key_vault_namespace(auto_encryption::ns_pair n
     return *this;
 }
 
-const bsoncxx::v_noabi::stdx::optional<auto_encryption::ns_pair>&
-auto_encryption::key_vault_namespace() const {
+bsoncxx::v_noabi::stdx::optional<auto_encryption::ns_pair> const& auto_encryption::key_vault_namespace() const {
     return _key_vault_namespace;
 }
 
-auto_encryption& auto_encryption::kms_providers(
-    bsoncxx::v_noabi::document::view_or_value kms_providers) {
+auto_encryption& auto_encryption::kms_providers(bsoncxx::v_noabi::document::view_or_value kms_providers) {
     _kms_providers = std::move(kms_providers);
     return *this;
 }
 
-const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value>&
-auto_encryption::kms_providers() const {
+bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const& auto_encryption::kms_providers()
+    const {
     return _kms_providers;
 }
 
@@ -76,8 +72,7 @@ auto_encryption& auto_encryption::tls_opts(bsoncxx::v_noabi::document::view_or_v
     return *this;
 }
 
-const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value>&
-auto_encryption::tls_opts() const {
+bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const& auto_encryption::tls_opts() const {
     return _tls_opts;
 }
 
@@ -86,18 +81,16 @@ auto_encryption& auto_encryption::schema_map(bsoncxx::v_noabi::document::view_or
     return *this;
 }
 
-const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value>&
-auto_encryption::schema_map() const {
+bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const& auto_encryption::schema_map() const {
     return _schema_map;
 }
 
-auto_encryption& auto_encryption::encrypted_fields_map(
-    bsoncxx::v_noabi::document::view_or_value encrypted_fields_map) {
+auto_encryption& auto_encryption::encrypted_fields_map(bsoncxx::v_noabi::document::view_or_value encrypted_fields_map) {
     _encrypted_fields_map = std::move(encrypted_fields_map);
     return *this;
 }
 
-const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value>&
+bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const&
 auto_encryption::encrypted_fields_map() const {
     return _encrypted_fields_map;
 }
@@ -125,8 +118,8 @@ auto_encryption& auto_encryption::extra_options(bsoncxx::v_noabi::document::view
     return *this;
 }
 
-const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value>&
-auto_encryption::extra_options() const {
+bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const& auto_encryption::extra_options()
+    const {
     return _extra_options;
 }
 
@@ -134,8 +127,8 @@ void* auto_encryption::convert() const {
     using libbson::scoped_bson_t;
 
     if (_key_vault_client && _key_vault_pool) {
-        throw exception{error_code::k_invalid_parameter,
-                        "cannot set both key vault client and key vault pool, please choose one"};
+        throw exception{
+            error_code::k_invalid_parameter, "cannot set both key vault client and key vault pool, please choose one"};
     }
 
     auto mongoc_auto_encrypt_opts = libmongoc::auto_encryption_opts_new();
@@ -161,8 +154,7 @@ void* auto_encryption::convert() const {
 
     if (_kms_providers) {
         scoped_bson_t kms_providers{*_kms_providers};
-        libmongoc::auto_encryption_opts_set_kms_providers(mongoc_auto_encrypt_opts,
-                                                          kms_providers.bson());
+        libmongoc::auto_encryption_opts_set_kms_providers(mongoc_auto_encrypt_opts, kms_providers.bson());
     }
 
     if (_tls_opts) {
@@ -177,8 +169,7 @@ void* auto_encryption::convert() const {
 
     if (_encrypted_fields_map) {
         scoped_bson_t encrypted_fields_map{*_encrypted_fields_map};
-        libmongoc::auto_encryption_opts_set_encrypted_fields_map(mongoc_auto_encrypt_opts,
-                                                                 encrypted_fields_map.bson());
+        libmongoc::auto_encryption_opts_set_encrypted_fields_map(mongoc_auto_encrypt_opts, encrypted_fields_map.bson());
     }
 
     if (_bypass) {
@@ -197,6 +188,6 @@ void* auto_encryption::convert() const {
     return mongoc_auto_encrypt_opts;
 }
 
-}  // namespace options
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace options
+} // namespace v_noabi
+} // namespace mongocxx

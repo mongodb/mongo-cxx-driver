@@ -41,27 +41,27 @@ namespace v_noabi {
 /// @showenumvalues
 ///
 enum class type : std::uint8_t {
-    k_double = 0x01,      ///< 64-bit binary floating point.
-    k_string = 0x02,      ///< UTF-8 string.
-    k_document = 0x03,    ///< Embedded document.
-    k_array = 0x04,       ///< Array.
-    k_binary = 0x05,      ///< Binary data.
-    k_undefined = 0x06,   ///< Undefined value. @deprecated
-    k_oid = 0x07,         ///< ObjectId.
-    k_bool = 0x08,        ///< Boolean.
-    k_date = 0x09,        ///< UTC datetime.
-    k_null = 0x0A,        ///< Null value.
-    k_regex = 0x0B,       ///< Regular expression.
-    k_dbpointer = 0x0C,   ///< DBPointer. @deprecated
-    k_code = 0x0D,        ///< JavaScript code.
-    k_symbol = 0x0E,      ///< Symbol. @deprecated
-    k_codewscope = 0x0F,  ///< JavaScript code with scope.
-    k_int32 = 0x10,       ///< 32-bit integer.
-    k_timestamp = 0x11,   ///< Timestamp.
-    k_int64 = 0x12,       ///< 64-bit integer.
-    k_decimal128 = 0x13,  ///< 128-bit decimal floating point.
-    k_maxkey = 0x7F,      ///< Min key.
-    k_minkey = 0xFF,      ///< Max key.
+    k_double = 0x01,     ///< 64-bit binary floating point.
+    k_string = 0x02,     ///< UTF-8 string.
+    k_document = 0x03,   ///< Embedded document.
+    k_array = 0x04,      ///< Array.
+    k_binary = 0x05,     ///< Binary data.
+    k_undefined = 0x06,  ///< Undefined value. @deprecated
+    k_oid = 0x07,        ///< ObjectId.
+    k_bool = 0x08,       ///< Boolean.
+    k_date = 0x09,       ///< UTC datetime.
+    k_null = 0x0A,       ///< Null value.
+    k_regex = 0x0B,      ///< Regular expression.
+    k_dbpointer = 0x0C,  ///< DBPointer. @deprecated
+    k_code = 0x0D,       ///< JavaScript code.
+    k_symbol = 0x0E,     ///< Symbol. @deprecated
+    k_codewscope = 0x0F, ///< JavaScript code with scope.
+    k_int32 = 0x10,      ///< 32-bit integer.
+    k_timestamp = 0x11,  ///< Timestamp.
+    k_int64 = 0x12,      ///< 64-bit integer.
+    k_decimal128 = 0x13, ///< 128-bit decimal floating point.
+    k_maxkey = 0x7F,     ///< Min key.
+    k_minkey = 0xFF,     ///< Max key.
 };
 
 ///
@@ -70,16 +70,16 @@ enum class type : std::uint8_t {
 /// @showenumvalues
 ///
 enum class binary_sub_type : std::uint8_t {
-    k_binary = 0x00,             ///< Generic binary subtype.
-    k_function = 0x01,           ///< Function.
-    k_binary_deprecated = 0x02,  ///< Binary (Old). @deprecated
-    k_uuid_deprecated = 0x03,    ///< UUID (Old). @deprecated
-    k_uuid = 0x04,               ///< UUID.
-    k_md5 = 0x05,                ///< MD5.
-    k_encrypted = 0x06,          ///< Encrypted BSON value.
-    k_column = 0x07,             ///< Compressed BSON column.
-    k_sensitive = 0x08,          ///< Sensitive.
-    k_user = 0x80,               ///< User defined.
+    k_binary = 0x00,            ///< Generic binary subtype.
+    k_function = 0x01,          ///< Function.
+    k_binary_deprecated = 0x02, ///< Binary (Old). @deprecated
+    k_uuid_deprecated = 0x03,   ///< UUID (Old). @deprecated
+    k_uuid = 0x04,              ///< UUID.
+    k_md5 = 0x05,               ///< MD5.
+    k_encrypted = 0x06,         ///< Encrypted BSON value.
+    k_column = 0x07,            ///< Compressed BSON column.
+    k_sensitive = 0x08,         ///< Sensitive.
+    k_user = 0x80,              ///< User defined.
 };
 
 ///
@@ -125,7 +125,7 @@ struct b_double {
 ///
 /// @relatesalso bsoncxx::v_noabi::types::b_double
 ///
-inline bool operator==(const b_double& lhs, const b_double& rhs) {
+inline bool operator==(b_double const& lhs, b_double const& rhs) {
     return lhs.value == rhs.value;
 }
 
@@ -159,7 +159,7 @@ struct b_string {
 ///
 /// @relatesalso bsoncxx::v_noabi::types::b_string
 ///
-inline bool operator==(const b_string& lhs, const b_string& rhs) {
+inline bool operator==(b_string const& lhs, b_string const& rhs) {
     return lhs.value == rhs.value;
 }
 
@@ -191,7 +191,7 @@ struct b_document {
 ///
 /// @relatesalso bsoncxx::v_noabi::types::b_document
 ///
-inline bool operator==(const b_document& lhs, const b_document& rhs) {
+inline bool operator==(b_document const& lhs, b_document const& rhs) {
     return lhs.value == rhs.value;
 }
 
@@ -216,7 +216,7 @@ struct b_array {
 ///
 /// @relatesalso bsoncxx::v_noabi::types::b_array
 ///
-inline bool operator==(const b_array& lhs, const b_array& rhs) {
+inline bool operator==(b_array const& lhs, b_array const& rhs) {
     return lhs.value == rhs.value;
 }
 
@@ -228,7 +228,7 @@ struct b_binary {
 
     binary_sub_type sub_type;
     uint32_t size;
-    const uint8_t* bytes;
+    uint8_t const* bytes;
 };
 
 ///
@@ -236,7 +236,7 @@ struct b_binary {
 ///
 /// @relatesalso bsoncxx::v_noabi::types::b_binary
 ///
-inline bool operator==(const b_binary& lhs, const b_binary& rhs) {
+inline bool operator==(b_binary const& lhs, b_binary const& rhs) {
     return lhs.sub_type == rhs.sub_type && lhs.size == rhs.size &&
            (!lhs.size || (std::memcmp(lhs.bytes, rhs.bytes, lhs.size) == 0));
 }
@@ -255,7 +255,7 @@ struct b_undefined {
 ///
 /// @relatesalso bsoncxx::v_noabi::types::b_undefined
 ///
-inline bool operator==(const b_undefined&, const b_undefined&) {
+inline bool operator==(b_undefined const&, b_undefined const&) {
     return true;
 }
 
@@ -273,7 +273,7 @@ struct b_oid {
 ///
 /// @relatesalso bsoncxx::v_noabi::types::b_oid
 ///
-inline bool operator==(const b_oid& lhs, const b_oid& rhs) {
+inline bool operator==(b_oid const& lhs, b_oid const& rhs) {
     return lhs.value == rhs.value;
 }
 
@@ -298,7 +298,7 @@ struct b_bool {
 ///
 /// @relatesalso bsoncxx::v_noabi::types::b_bool
 ///
-inline bool operator==(const b_bool& lhs, const b_bool& rhs) {
+inline bool operator==(b_bool const& lhs, b_bool const& rhs) {
     return lhs.value == rhs.value;
 }
 
@@ -322,7 +322,7 @@ struct b_date {
     /// @param tp
     ///   A system_clock time_point.
     ///
-    explicit b_date(const std::chrono::system_clock::time_point& tp)
+    explicit b_date(std::chrono::system_clock::time_point const& tp)
         : value(std::chrono::duration_cast<std::chrono::milliseconds>(tp.time_since_epoch())) {}
 
     std::chrono::milliseconds value;
@@ -355,7 +355,7 @@ struct b_date {
 ///
 /// @relatesalso bsoncxx::v_noabi::types::b_date
 ///
-inline bool operator==(const b_date& lhs, const b_date& rhs) {
+inline bool operator==(b_date const& lhs, b_date const& rhs) {
     return lhs.value == rhs.value;
 }
 
@@ -371,7 +371,7 @@ struct b_null {
 ///
 /// @relatesalso bsoncxx::v_noabi::types::b_null
 ///
-inline bool operator==(const b_null&, const b_null&) {
+inline bool operator==(b_null const&, b_null const&) {
     return true;
 }
 
@@ -390,11 +390,8 @@ struct b_regex {
     /// @param options
     ///   The regex options
     ///
-    template <typename T,
-              typename U = stdx::string_view,
-              detail::requires_not_t<int, detail::is_alike<b_regex, T>> = 0>
-    explicit b_regex(T&& regex, U&& options = U{})
-        : regex(std::forward<T>(regex)), options(std::forward<U>(options)) {}
+    template <typename T, typename U = stdx::string_view, detail::requires_not_t<int, detail::is_alike<b_regex, T>> = 0>
+    explicit b_regex(T&& regex, U&& options = U{}) : regex(std::forward<T>(regex)), options(std::forward<U>(options)) {}
 
     stdx::string_view regex;
     stdx::string_view options;
@@ -405,7 +402,7 @@ struct b_regex {
 ///
 /// @relatesalso bsoncxx::v_noabi::types::b_regex
 ///
-inline bool operator==(const b_regex& lhs, const b_regex& rhs) {
+inline bool operator==(b_regex const& lhs, b_regex const& rhs) {
     return lhs.regex == rhs.regex && lhs.options == rhs.options;
 }
 
@@ -426,7 +423,7 @@ struct b_dbpointer {
 ///
 /// @relatesalso bsoncxx::v_noabi::types::b_dbpointer
 ///
-inline bool operator==(const b_dbpointer& lhs, const b_dbpointer& rhs) {
+inline bool operator==(b_dbpointer const& lhs, b_dbpointer const& rhs) {
     return lhs.collection == rhs.collection && lhs.value == rhs.value;
 }
 
@@ -460,7 +457,7 @@ struct b_code {
 ///
 /// @relatesalso bsoncxx::v_noabi::types::b_code
 ///
-inline bool operator==(const b_code& lhs, const b_code& rhs) {
+inline bool operator==(b_code const& lhs, b_code const& rhs) {
     return lhs.code == rhs.code;
 }
 
@@ -496,7 +493,7 @@ struct b_symbol {
 ///
 /// @relatesalso bsoncxx::v_noabi::types::b_symbol
 ///
-inline bool operator==(const b_symbol& lhs, const b_symbol& rhs) {
+inline bool operator==(b_symbol const& lhs, b_symbol const& rhs) {
     return lhs.symbol == rhs.symbol;
 }
 
@@ -515,11 +512,8 @@ struct b_codewscope {
     /// @param scope
     ///   A bson document view holding the scope environment.
     ///
-    template <typename T,
-              typename U,
-              detail::requires_not_t<int, detail::is_alike<b_codewscope, T>> = 0>
-    explicit b_codewscope(T&& code, U&& scope)
-        : code(std::forward<T>(code)), scope(std::forward<U>(scope)) {}
+    template <typename T, typename U, detail::requires_not_t<int, detail::is_alike<b_codewscope, T>> = 0>
+    explicit b_codewscope(T&& code, U&& scope) : code(std::forward<T>(code)), scope(std::forward<U>(scope)) {}
 
     stdx::string_view code;
     document::view scope;
@@ -530,7 +524,7 @@ struct b_codewscope {
 ///
 /// @relatesalso bsoncxx::v_noabi::types::b_codewscope
 ///
-inline bool operator==(const b_codewscope& lhs, const b_codewscope& rhs) {
+inline bool operator==(b_codewscope const& lhs, b_codewscope const& rhs) {
     return lhs.code == rhs.code && lhs.scope == rhs.scope;
 }
 
@@ -555,7 +549,7 @@ struct b_int32 {
 ///
 /// @relatesalso bsoncxx::v_noabi::types::b_int32
 ///
-inline bool operator==(const b_int32& lhs, const b_int32& rhs) {
+inline bool operator==(b_int32 const& lhs, b_int32 const& rhs) {
     return lhs.value == rhs.value;
 }
 
@@ -574,7 +568,7 @@ struct b_timestamp {
 ///
 /// @relatesalso bsoncxx::v_noabi::types::b_timestamp
 ///
-inline bool operator==(const b_timestamp& lhs, const b_timestamp& rhs) {
+inline bool operator==(b_timestamp const& lhs, b_timestamp const& rhs) {
     return lhs.increment == rhs.increment && lhs.timestamp == rhs.timestamp;
 }
 
@@ -599,7 +593,7 @@ struct b_int64 {
 ///
 /// @relatesalso bsoncxx::v_noabi::types::b_int64
 ///
-inline bool operator==(const b_int64& lhs, const b_int64& rhs) {
+inline bool operator==(b_int64 const& lhs, b_int64 const& rhs) {
     return lhs.value == rhs.value;
 }
 
@@ -626,7 +620,7 @@ struct b_decimal128 {
 ///
 /// @relatesalso bsoncxx::v_noabi::types::b_decimal128
 ///
-inline bool operator==(const b_decimal128& lhs, const b_decimal128& rhs) {
+inline bool operator==(b_decimal128 const& lhs, b_decimal128 const& rhs) {
     return lhs.value == rhs.value;
 }
 
@@ -642,7 +636,7 @@ struct b_minkey {
 ///
 /// @relatesalso bsoncxx::v_noabi::types::b_minkey
 ///
-inline bool operator==(const b_minkey&, const b_minkey&) {
+inline bool operator==(b_minkey const&, b_minkey const&) {
     return true;
 }
 
@@ -658,7 +652,7 @@ struct b_maxkey {
 ///
 /// @relatesalso bsoncxx::v_noabi::types::b_maxkey
 ///
-inline bool operator==(const b_maxkey&, const b_maxkey&) {
+inline bool operator==(b_maxkey const&, b_maxkey const&) {
     return true;
 }
 
@@ -667,7 +661,7 @@ inline bool operator==(const b_maxkey&, const b_maxkey&) {
 ///
 /// free function comparator for b_double
 ///
-inline bool operator!=(const b_double& lhs, const b_double& rhs) {
+inline bool operator!=(b_double const& lhs, b_double const& rhs) {
     return !(lhs == rhs);
 }
 
@@ -676,7 +670,7 @@ inline bool operator!=(const b_double& lhs, const b_double& rhs) {
 ///
 /// free function comparator for b_string
 ///
-inline bool operator!=(const b_string& lhs, const b_string& rhs) {
+inline bool operator!=(b_string const& lhs, b_string const& rhs) {
     return !(lhs == rhs);
 }
 
@@ -685,7 +679,7 @@ inline bool operator!=(const b_string& lhs, const b_string& rhs) {
 ///
 /// free function comparator for b_document
 ///
-inline bool operator!=(const b_document& lhs, const b_document& rhs) {
+inline bool operator!=(b_document const& lhs, b_document const& rhs) {
     return !(lhs == rhs);
 }
 
@@ -694,7 +688,7 @@ inline bool operator!=(const b_document& lhs, const b_document& rhs) {
 ///
 /// free function comparator for b_array
 ///
-inline bool operator!=(const b_array& lhs, const b_array& rhs) {
+inline bool operator!=(b_array const& lhs, b_array const& rhs) {
     return !(lhs == rhs);
 }
 
@@ -703,7 +697,7 @@ inline bool operator!=(const b_array& lhs, const b_array& rhs) {
 ///
 /// free function comparator for b_binary
 ///
-inline bool operator!=(const b_binary& lhs, const b_binary& rhs) {
+inline bool operator!=(b_binary const& lhs, b_binary const& rhs) {
     return !(lhs == rhs);
 }
 
@@ -712,7 +706,7 @@ inline bool operator!=(const b_binary& lhs, const b_binary& rhs) {
 ///
 /// free function comparator for b_undefined
 ///
-inline bool operator!=(const b_undefined& lhs, const b_undefined& rhs) {
+inline bool operator!=(b_undefined const& lhs, b_undefined const& rhs) {
     return !(lhs == rhs);
 }
 
@@ -721,7 +715,7 @@ inline bool operator!=(const b_undefined& lhs, const b_undefined& rhs) {
 ///
 /// free function comparator for b_oid
 ///
-inline bool operator!=(const b_oid& lhs, const b_oid& rhs) {
+inline bool operator!=(b_oid const& lhs, b_oid const& rhs) {
     return !(lhs == rhs);
 }
 
@@ -730,7 +724,7 @@ inline bool operator!=(const b_oid& lhs, const b_oid& rhs) {
 ///
 /// free function comparator for b_bool
 ///
-inline bool operator!=(const b_bool& lhs, const b_bool& rhs) {
+inline bool operator!=(b_bool const& lhs, b_bool const& rhs) {
     return !(lhs == rhs);
 }
 
@@ -739,7 +733,7 @@ inline bool operator!=(const b_bool& lhs, const b_bool& rhs) {
 ///
 /// free function comparator for b_date
 ///
-inline bool operator!=(const b_date& lhs, const b_date& rhs) {
+inline bool operator!=(b_date const& lhs, b_date const& rhs) {
     return !(lhs == rhs);
 }
 
@@ -748,7 +742,7 @@ inline bool operator!=(const b_date& lhs, const b_date& rhs) {
 ///
 /// free function comparator for b_null
 ///
-inline bool operator!=(const b_null& lhs, const b_null& rhs) {
+inline bool operator!=(b_null const& lhs, b_null const& rhs) {
     return !(lhs == rhs);
 }
 
@@ -757,7 +751,7 @@ inline bool operator!=(const b_null& lhs, const b_null& rhs) {
 ///
 /// free function comparator for b_regex
 ///
-inline bool operator!=(const b_regex& lhs, const b_regex& rhs) {
+inline bool operator!=(b_regex const& lhs, b_regex const& rhs) {
     return !(lhs == rhs);
 }
 
@@ -766,7 +760,7 @@ inline bool operator!=(const b_regex& lhs, const b_regex& rhs) {
 ///
 /// free function comparator for b_dbpointer
 ///
-inline bool operator!=(const b_dbpointer& lhs, const b_dbpointer& rhs) {
+inline bool operator!=(b_dbpointer const& lhs, b_dbpointer const& rhs) {
     return !(lhs == rhs);
 }
 
@@ -775,7 +769,7 @@ inline bool operator!=(const b_dbpointer& lhs, const b_dbpointer& rhs) {
 ///
 /// free function comparator for b_code
 ///
-inline bool operator!=(const b_code& lhs, const b_code& rhs) {
+inline bool operator!=(b_code const& lhs, b_code const& rhs) {
     return !(lhs == rhs);
 }
 
@@ -784,7 +778,7 @@ inline bool operator!=(const b_code& lhs, const b_code& rhs) {
 ///
 /// free function comparator for b_symbol
 ///
-inline bool operator!=(const b_symbol& lhs, const b_symbol& rhs) {
+inline bool operator!=(b_symbol const& lhs, b_symbol const& rhs) {
     return !(lhs == rhs);
 }
 
@@ -793,7 +787,7 @@ inline bool operator!=(const b_symbol& lhs, const b_symbol& rhs) {
 ///
 /// free function comparator for b_codewscope
 ///
-inline bool operator!=(const b_codewscope& lhs, const b_codewscope& rhs) {
+inline bool operator!=(b_codewscope const& lhs, b_codewscope const& rhs) {
     return !(lhs == rhs);
 }
 
@@ -802,7 +796,7 @@ inline bool operator!=(const b_codewscope& lhs, const b_codewscope& rhs) {
 ///
 /// free function comparator for b_int32
 ///
-inline bool operator!=(const b_int32& lhs, const b_int32& rhs) {
+inline bool operator!=(b_int32 const& lhs, b_int32 const& rhs) {
     return !(lhs == rhs);
 }
 
@@ -811,7 +805,7 @@ inline bool operator!=(const b_int32& lhs, const b_int32& rhs) {
 ///
 /// free function comparator for b_timestamp
 ///
-inline bool operator!=(const b_timestamp& lhs, const b_timestamp& rhs) {
+inline bool operator!=(b_timestamp const& lhs, b_timestamp const& rhs) {
     return !(lhs == rhs);
 }
 
@@ -820,7 +814,7 @@ inline bool operator!=(const b_timestamp& lhs, const b_timestamp& rhs) {
 ///
 /// free function comparator for b_int64
 ///
-inline bool operator!=(const b_int64& lhs, const b_int64& rhs) {
+inline bool operator!=(b_int64 const& lhs, b_int64 const& rhs) {
     return !(lhs == rhs);
 }
 
@@ -829,7 +823,7 @@ inline bool operator!=(const b_int64& lhs, const b_int64& rhs) {
 ///
 /// free function comparator for b_decimal128
 ///
-inline bool operator!=(const b_decimal128& lhs, const b_decimal128& rhs) {
+inline bool operator!=(b_decimal128 const& lhs, b_decimal128 const& rhs) {
     return !(lhs == rhs);
 }
 
@@ -838,7 +832,7 @@ inline bool operator!=(const b_decimal128& lhs, const b_decimal128& rhs) {
 ///
 /// free function comparator for b_minkey
 ///
-inline bool operator!=(const b_minkey& lhs, const b_minkey& rhs) {
+inline bool operator!=(b_minkey const& lhs, b_minkey const& rhs) {
     return !(lhs == rhs);
 }
 
@@ -847,13 +841,13 @@ inline bool operator!=(const b_minkey& lhs, const b_minkey& rhs) {
 ///
 /// free function comparator for b_maxkey
 ///
-inline bool operator!=(const b_maxkey& lhs, const b_maxkey& rhs) {
+inline bool operator!=(b_maxkey const& lhs, b_maxkey const& rhs) {
     return !(lhs == rhs);
 }
 
-}  // namespace types
-}  // namespace v_noabi
-}  // namespace bsoncxx
+} // namespace types
+} // namespace v_noabi
+} // namespace bsoncxx
 
 BSONCXX_POP_WARNINGS();
 
@@ -861,7 +855,7 @@ namespace bsoncxx {
 
 using ::bsoncxx::v_noabi::to_string;
 
-}  // namespace bsoncxx
+} // namespace bsoncxx
 
 namespace bsoncxx {
 namespace types {
@@ -869,8 +863,8 @@ namespace types {
 using ::bsoncxx::v_noabi::types::operator==;
 using ::bsoncxx::v_noabi::types::operator!=;
 
-}  // namespace types
-}  // namespace bsoncxx
+} // namespace types
+} // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>
 

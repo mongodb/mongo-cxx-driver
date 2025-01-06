@@ -36,15 +36,15 @@ class client::impl {
     impl(impl&&) = delete;
     impl& operator=(impl&&) = delete;
 
-    impl(const impl&) = delete;
-    impl& operator=(const impl&) = delete;
+    impl(impl const&) = delete;
+    impl& operator=(impl const&) = delete;
 
     mongoc_client_t* client_t;
     std::list<bsoncxx::v_noabi::string::view_or_value> tls_options;
     options::apm listeners;
 };
 
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace v_noabi
+} // namespace mongocxx
 
 #include <mongocxx/config/private/postlude.hh>

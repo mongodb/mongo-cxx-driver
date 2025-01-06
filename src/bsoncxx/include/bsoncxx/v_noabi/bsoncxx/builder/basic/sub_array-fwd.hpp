@@ -21,10 +21,10 @@ namespace basic {
 
 class sub_array;
 
-}  // namespace basic
-}  // namespace builder
-}  // namespace v_noabi
-}  // namespace bsoncxx
+} // namespace basic
+} // namespace builder
+} // namespace v_noabi
+} // namespace bsoncxx
 
 namespace bsoncxx {
 namespace builder {
@@ -32,9 +32,9 @@ namespace basic {
 
 using ::bsoncxx::v_noabi::builder::basic::sub_array;
 
-}  // namespace basic
-}  // namespace builder
-}  // namespace bsoncxx
+} // namespace basic
+} // namespace builder
+} // namespace bsoncxx
 
 ///
 /// @file

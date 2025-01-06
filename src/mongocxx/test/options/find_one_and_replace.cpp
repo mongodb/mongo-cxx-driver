@@ -45,4 +45,4 @@ TEST_CASE("find_one_and_replace", "[find_one_and_replace][option]") {
     CHECK_OPTIONAL_ARGUMENT(opts, sort, sort.view());
     CHECK_OPTIONAL_ARGUMENT(opts, upsert, true);
 }
-}  // namespace
+} // namespace

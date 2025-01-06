@@ -62,8 +62,7 @@ class distinct {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/distinct/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<
-                              bsoncxx::v_noabi::document::view_or_value>&)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const&)
     collation() const;
 
     ///
@@ -89,7 +88,7 @@ class distinct {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/distinct/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<std::chrono::milliseconds>&)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<std::chrono::milliseconds> const&)
     max_time() const;
 
     ///
@@ -116,8 +115,8 @@ class distinct {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/distinct/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<
-                              bsoncxx::v_noabi::types::bson_value::view_or_value>&)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<
+                              bsoncxx::v_noabi::types::bson_value::view_or_value> const&)
     comment() const;
 
     ///
@@ -143,8 +142,7 @@ class distinct {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/distinct/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<
-                              mongocxx::v_noabi::read_preference>&)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::read_preference> const&)
     read_preference() const;
 
    private:
@@ -154,9 +152,9 @@ class distinct {
     bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::read_preference> _read_preference;
 };
 
-}  // namespace options
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace options
+} // namespace v_noabi
+} // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
 

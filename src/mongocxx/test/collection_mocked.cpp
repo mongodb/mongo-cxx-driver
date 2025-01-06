@@ -57,8 +57,8 @@ TEST_CASE("Collection", "[collection]") {
     instance::current();
 
     // dummy_collection is the name the mocked collection_get_name returns
-    const std::string collection_name("dummy_collection");
-    const std::string database_name("mocked_collection");
+    std::string const collection_name("dummy_collection");
+    std::string const database_name("mocked_collection");
 
     MOCK_CLIENT;
     MOCK_DATABASE;
@@ -79,10 +79,9 @@ TEST_CASE("Collection", "[collection]") {
         rc.acknowledge_level(read_concern::level::k_majority);
 
         collection_set_read_concern->interpose(
-            [&collection_set_rc_called](::mongoc_collection_t*,
-                                        const ::mongoc_read_concern_t* rc_t) {
+            [&collection_set_rc_called](::mongoc_collection_t*, ::mongoc_read_concern_t const* rc_t) {
                 REQUIRE(rc_t);
-                const auto result = libmongoc::read_concern_get_level(rc_t);
+                auto const result = libmongoc::read_concern_get_level(rc_t);
                 REQUIRE(result);
                 REQUIRE(strcmp(result, "majority") == 0);
                 collection_set_rc_called = true;
@@ -95,27 +94,25 @@ TEST_CASE("Collection", "[collection]") {
     auto filter_doc = make_document(kvp("_id", "wow"), kvp("foo", "bar"));
 
     SECTION("Aggregate", "[Collection::aggregate]") {
-        const auto expected_allow_disk_use = true;
-        const auto expected_batch_size = 5678;
-        const auto expected_bypass_document_validation = true;
-        const auto expected_collation = make_document(kvp("locale", "en_US"));
-        const auto expected_comment = make_document(kvp("$comment", "some_comment"));
-        const auto expected_hint = hint("some_hint");
-        const auto expected_let = make_document(kvp("x", "foo"));
-        const auto expected_max_time_ms = 1234;
-        const auto expected_read_preference =
-            read_preference{}.mode(read_preference::read_mode::k_secondary);
+        auto const expected_allow_disk_use = true;
+        auto const expected_batch_size = 5678;
+        auto const expected_bypass_document_validation = true;
+        auto const expected_collation = make_document(kvp("locale", "en_US"));
+        auto const expected_comment = make_document(kvp("$comment", "some_comment"));
+        auto const expected_hint = hint("some_hint");
+        auto const expected_let = make_document(kvp("x", "foo"));
+        auto const expected_max_time_ms = 1234;
+        auto const expected_read_preference = read_preference{}.mode(read_preference::read_mode::k_secondary);
 
-        const auto expected_read_concern = make_document(kvp("level", "majority"));
-        const auto read_concern = [] {
+        auto const expected_read_concern = make_document(kvp("level", "majority"));
+        auto const read_concern = [] {
             mongocxx::read_concern rc;
             rc.acknowledge_level(read_concern::level::k_majority);
             return rc;
         }();
 
-        const auto expected_write_concern =
-            make_document(kvp("w", "majority"), kvp("wtimeout", 100));
-        const auto write_concern = [] {
+        auto const expected_write_concern = make_document(kvp("w", "majority"), kvp("wtimeout", 100));
+        auto const write_concern = [] {
             mongocxx::write_concern wc;
             wc.majority(std::chrono::milliseconds(100));
             return wc;
@@ -129,9 +126,9 @@ TEST_CASE("Collection", "[collection]") {
         collection_aggregate->interpose(
             [&](mongoc_collection_t*,
                 mongoc_query_flags_t flags,
-                const bson_t* pipeline,
-                const bson_t* options,
-                const mongoc_read_prefs_t* read_preference) -> mongoc_cursor_t* {
+                bson_t const* pipeline,
+                bson_t const* options,
+                mongoc_read_prefs_t const* read_preference) -> mongoc_cursor_t* {
                 collection_aggregate_called = true;
                 REQUIRE(flags == MONGOC_QUERY_NONE);
 
@@ -140,8 +137,7 @@ TEST_CASE("Collection", "[collection]") {
 
                 bsoncxx::stdx::string_view bar(
                     p[0].get_document().value["$match"].get_document().value["foo"].get_string());
-                std::int32_t one(
-                    p[1].get_document().value["$sort"].get_document().value["foo"].get_int32());
+                std::int32_t one(p[1].get_document().value["$sort"].get_document().value["foo"].get_int32());
 
                 REQUIRE(bar == bsoncxx::stdx::string_view("bar"));
                 REQUIRE(one == 1);
@@ -159,8 +155,7 @@ TEST_CASE("Collection", "[collection]") {
                 }
 
                 if (opts.bypass_document_validation()) {
-                    REQUIRE(o["bypassDocumentValidation"].get_bool().value ==
-                            expected_bypass_document_validation);
+                    REQUIRE(o["bypassDocumentValidation"].get_bool().value == expected_bypass_document_validation);
                 } else {
                     REQUIRE(!o["bypassDocumentValidation"]);
                 }
@@ -202,12 +197,13 @@ TEST_CASE("Collection", "[collection]") {
                 }
 
                 if (opts.read_preference()) {
-                    REQUIRE(mongoc_read_prefs_get_mode(read_preference) ==
-                            static_cast<int>(opts.read_preference()->mode()));
+                    REQUIRE(
+                        mongoc_read_prefs_get_mode(read_preference) ==
+                        static_cast<int>(opts.read_preference()->mode()));
                 } else {
-                    REQUIRE(mongoc_read_prefs_get_mode(read_preference) ==
-                            libmongoc::conversions::read_mode_t_from_read_mode(
-                                mongo_coll.read_preference().mode()));
+                    REQUIRE(
+                        mongoc_read_prefs_get_mode(read_preference) ==
+                        libmongoc::conversions::read_mode_t_from_read_mode(mongo_coll.read_preference().mode()));
                 }
 
                 if (opts.write_concern()) {
@@ -248,12 +244,12 @@ TEST_CASE("Collection", "[collection]") {
         bool success = true;
         std::int64_t expected_skip = 0;
         std::int64_t expected_limit = 0;
-        const bson_t* expected_opts = nullptr;
+        bson_t const* expected_opts = nullptr;
 
         collection_count_documents->interpose([&](mongoc_collection_t*,
-                                                  const bson_t* filter,
-                                                  const bson_t* opts,
-                                                  const mongoc_read_prefs_t*,
+                                                  bson_t const* filter,
+                                                  bson_t const* opts,
+                                                  mongoc_read_prefs_t const*,
                                                   bson_t* reply,
                                                   bson_error_t* error) {
             collection_count_called = true;
@@ -270,8 +266,7 @@ TEST_CASE("Collection", "[collection]") {
             }
             if (expected_opts) {
                 bson_t opts_without_skip_or_limit = BSON_INITIALIZER;
-                bson_copy_to_excluding_noinit(
-                    opts, &opts_without_skip_or_limit, "skip", "limit", nullptr);
+                bson_copy_to_excluding_noinit(opts, &opts_without_skip_or_limit, "skip", "limit", nullptr);
                 REQUIRE(bson_equal(&opts_without_skip_or_limit, expected_opts));
                 bson_destroy(&opts_without_skip_or_limit);
             }
@@ -282,10 +277,7 @@ TEST_CASE("Collection", "[collection]") {
             // The caller expects the bson_error_t to have been
             // initialized by the call to count in the event of an
             // error.
-            bson_set_error(error,
-                           MONGOC_ERROR_COMMAND,
-                           MONGOC_ERROR_COMMAND_INVALID_ARG,
-                           "expected error from mock");
+            bson_set_error(error, MONGOC_ERROR_COMMAND, MONGOC_ERROR_COMMAND_INVALID_ARG, "expected error from mock");
 
             return -1;
         });
@@ -336,11 +328,11 @@ TEST_CASE("Collection", "[collection]") {
     SECTION("Estimated Document Count", "[collection::estimated_document_count]") {
         auto collection_estimated_document_count_called = false;
         bool success = true;
-        const bson_t* expected_opts = nullptr;
+        bson_t const* expected_opts = nullptr;
 
         collection_estimated_document_count->interpose([&](mongoc_collection_t*,
-                                                           const bson_t* opts,
-                                                           const mongoc_read_prefs_t*,
+                                                           bson_t const* opts,
+                                                           mongoc_read_prefs_t const*,
                                                            bson_t* reply,
                                                            bson_error_t* error) {
             collection_estimated_document_count_called = true;
@@ -355,10 +347,7 @@ TEST_CASE("Collection", "[collection]") {
             // The caller expects the bson_error_t to have been
             // initialized by the call to count in the event of an
             // error.
-            bson_set_error(error,
-                           MONGOC_ERROR_COMMAND,
-                           MONGOC_ERROR_COMMAND_INVALID_ARG,
-                           "expected error from mock");
+            bson_set_error(error, MONGOC_ERROR_COMMAND, MONGOC_ERROR_COMMAND_INVALID_ARG, "expected error from mock");
 
             return -1;
         });
@@ -402,64 +391,60 @@ TEST_CASE("Collection", "[collection]") {
         bsoncxx::stdx::optional<bsoncxx::document::view> expected_sort{};
         bsoncxx::stdx::optional<read_preference> expected_read_preference{};
 
-        collection_find_with_opts->interpose([&](mongoc_collection_t*,
-                                                 const bson_t* filter,
-                                                 const bson_t* opts,
-                                                 const mongoc_read_prefs_t* read_prefs) {
-            collection_find_called = true;
+        collection_find_with_opts->interpose(
+            [&](mongoc_collection_t*, bson_t const* filter, bson_t const* opts, mongoc_read_prefs_t const* read_prefs) {
+                collection_find_called = true;
 
-            bsoncxx::document::view filter_view{bson_get_data(filter), filter->len};
-            bsoncxx::document::view opts_view{bson_get_data(opts), opts->len};
+                bsoncxx::document::view filter_view{bson_get_data(filter), filter->len};
+                bsoncxx::document::view opts_view{bson_get_data(opts), opts->len};
 
-            REQUIRE(filter_view == doc);
+                REQUIRE(filter_view == doc);
 
-            if (expected_allow_partial_results) {
-                REQUIRE(opts_view["allowPartialResults"].get_bool().value ==
-                        *expected_allow_partial_results);
-            }
-            if (expected_comment) {
-                REQUIRE(opts_view["comment"].get_string().value == *expected_comment);
-            }
-            if (expected_cursor_type) {
-                bsoncxx::document::element tailable = opts_view["tailable"];
-                bsoncxx::document::element awaitData = opts_view["awaitData"];
-                switch (*expected_cursor_type) {
-                    case mongocxx::cursor::type::k_non_tailable:
-                        REQUIRE(!tailable);
-                        REQUIRE(!awaitData);
-                        break;
-                    case mongocxx::cursor::type::k_tailable:
-                        REQUIRE(tailable.get_bool().value);
-                        REQUIRE(!awaitData);
-                        break;
-                    case mongocxx::cursor::type::k_tailable_await:
-                        REQUIRE(tailable.get_bool().value);
-                        REQUIRE(awaitData.get_bool().value);
-                        break;
+                if (expected_allow_partial_results) {
+                    REQUIRE(opts_view["allowPartialResults"].get_bool().value == *expected_allow_partial_results);
                 }
-            }
-            if (expected_hint) {
-                REQUIRE(opts_view["hint"].get_string() == expected_hint->get_string());
-            }
-            if (expected_no_cursor_timeout) {
-                REQUIRE(opts_view["noCursorTimeout"].get_bool().value ==
-                        *expected_no_cursor_timeout);
-            }
-            if (expected_sort) {
-                REQUIRE(opts_view["sort"].get_document() == *expected_sort);
-            }
+                if (expected_comment) {
+                    REQUIRE(opts_view["comment"].get_string().value == *expected_comment);
+                }
+                if (expected_cursor_type) {
+                    bsoncxx::document::element tailable = opts_view["tailable"];
+                    bsoncxx::document::element awaitData = opts_view["awaitData"];
+                    switch (*expected_cursor_type) {
+                        case mongocxx::cursor::type::k_non_tailable:
+                            REQUIRE(!tailable);
+                            REQUIRE(!awaitData);
+                            break;
+                        case mongocxx::cursor::type::k_tailable:
+                            REQUIRE(tailable.get_bool().value);
+                            REQUIRE(!awaitData);
+                            break;
+                        case mongocxx::cursor::type::k_tailable_await:
+                            REQUIRE(tailable.get_bool().value);
+                            REQUIRE(awaitData.get_bool().value);
+                            break;
+                    }
+                }
+                if (expected_hint) {
+                    REQUIRE(opts_view["hint"].get_string() == expected_hint->get_string());
+                }
+                if (expected_no_cursor_timeout) {
+                    REQUIRE(opts_view["noCursorTimeout"].get_bool().value == *expected_no_cursor_timeout);
+                }
+                if (expected_sort) {
+                    REQUIRE(opts_view["sort"].get_document() == *expected_sort);
+                }
 
-            if (expected_read_preference)
-                REQUIRE(mongoc_read_prefs_get_mode(read_prefs) ==
-                        static_cast<int>(expected_read_preference->mode()));
-            else
-                REQUIRE(mongoc_read_prefs_get_mode(read_prefs) ==
-                        libmongoc::conversions::read_mode_t_from_read_mode(
-                            mongo_coll.read_preference().mode()));
+                if (expected_read_preference)
+                    REQUIRE(
+                        mongoc_read_prefs_get_mode(read_prefs) == static_cast<int>(expected_read_preference->mode()));
+                else
+                    REQUIRE(
+                        mongoc_read_prefs_get_mode(read_prefs) ==
+                        libmongoc::conversions::read_mode_t_from_read_mode(mongo_coll.read_preference().mode()));
 
-            mongoc_cursor_t* cursor = nullptr;
-            return cursor;
-        });
+                mongoc_cursor_t* cursor = nullptr;
+                return cursor;
+            });
 
         SECTION("find succeeds") {
             REQUIRE_NOTHROW(mongo_coll.find(doc));
@@ -542,14 +527,14 @@ TEST_CASE("Collection", "[collection]") {
 
         auto perform_checks = [&]() {
             REQUIRE(collection_create_bulk_operation_called);
-            REQUIRE(expect_set_bypass_document_validation_called ==
-                    bulk_operation_set_bypass_document_validation_called);
+            REQUIRE(
+                expect_set_bypass_document_validation_called == bulk_operation_set_bypass_document_validation_called);
             REQUIRE(bulk_operation_op_called);
             REQUIRE(bulk_operation_destroy_called);
         };
 
         collection_create_bulk_operation_with_opts->interpose(
-            [&](mongoc_collection_t*, const bson_t* opts) -> mongoc_bulk_operation_t* {
+            [&](mongoc_collection_t*, bson_t const* opts) -> mongoc_bulk_operation_t* {
                 bson_iter_t iter;
                 if (expected_order_setting) {
                     // If the write operation is expected to set "ordered": true, then it
@@ -564,26 +549,23 @@ TEST_CASE("Collection", "[collection]") {
                 return nullptr;
             });
 
-        bulk_operation_set_bypass_document_validation->interpose(
-            [&](mongoc_bulk_operation_t*, bool bypass) {
-                bulk_operation_set_bypass_document_validation_called = true;
-                REQUIRE(expected_bypass_document_validation == bypass);
-            });
+        bulk_operation_set_bypass_document_validation->interpose([&](mongoc_bulk_operation_t*, bool bypass) {
+            bulk_operation_set_bypass_document_validation_called = true;
+            REQUIRE(expected_bypass_document_validation == bypass);
+        });
 
-        bulk_operation_execute->interpose(
-            [&](mongoc_bulk_operation_t*, bson_t* reply, bson_error_t*) {
-                bulk_operation_execute_called = true;
-                bson_init(reply);
-                return 1;
-            });
+        bulk_operation_execute->interpose([&](mongoc_bulk_operation_t*, bson_t* reply, bson_error_t*) {
+            bulk_operation_execute_called = true;
+            bson_init(reply);
+            return 1;
+        });
 
-        bulk_operation_destroy->interpose(
-            [&](mongoc_bulk_operation_t*) { bulk_operation_destroy_called = true; });
+        bulk_operation_destroy->interpose([&](mongoc_bulk_operation_t*) { bulk_operation_destroy_called = true; });
 
         SECTION("Insert One", "[collection::insert_one]") {
             expected_order_setting = true;
             bulk_operation_insert_with_opts->interpose(
-                [&](mongoc_bulk_operation_t*, const bson_t* doc, const bson_t*, bson_error_t*) {
+                [&](mongoc_bulk_operation_t*, bson_t const* doc, bson_t const*, bson_error_t*) {
                     bulk_operation_op_called = true;
                     REQUIRE(bson_get_data(doc) == filter_doc.view().data());
                     return true;
@@ -596,7 +578,7 @@ TEST_CASE("Collection", "[collection]") {
         SECTION("Insert One Bypassing Validation", "[collection::insert_one]") {
             expected_order_setting = true;
             bulk_operation_insert_with_opts->interpose(
-                [&](mongoc_bulk_operation_t*, const bson_t* doc, const bson_t*, bson_error_t*) {
+                [&](mongoc_bulk_operation_t*, bson_t const* doc, bson_t const*, bson_error_t*) {
                     bulk_operation_op_called = true;
                     REQUIRE(bson_get_data(doc) == filter_doc.view().data());
                     return true;
@@ -617,7 +599,7 @@ TEST_CASE("Collection", "[collection]") {
 
         SECTION("Insert Many Ordered", "[collection::insert_many]") {
             bulk_operation_insert_with_opts->interpose(
-                [&](mongoc_bulk_operation_t*, const bson_t* doc, const bson_t*, bson_error_t*) {
+                [&](mongoc_bulk_operation_t*, bson_t const* doc, bson_t const*, bson_error_t*) {
                     bulk_operation_op_called = true;
                     REQUIRE(bson_get_data(doc) == filter_doc.view().data());
                     return true;
@@ -643,9 +625,9 @@ TEST_CASE("Collection", "[collection]") {
             expected_order_setting = true;
 
             bulk_operation_update_one_with_opts->interpose([&](mongoc_bulk_operation_t*,
-                                                               const bson_t* query,
-                                                               const bson_t* update,
-                                                               const bson_t* options,
+                                                               bson_t const* query,
+                                                               bson_t const* update,
+                                                               bson_t const* options,
                                                                bson_error_t*) {
                 bulk_operation_op_called = true;
                 REQUIRE(bson_get_data(query) == filter_doc.view().data());
@@ -717,7 +699,7 @@ TEST_CASE("Collection", "[collection]") {
         SECTION("Insert One Error", "[collection::insert_one]") {
             expected_order_setting = true;
             bulk_operation_insert_with_opts->interpose(
-                [&](mongoc_bulk_operation_t*, const bson_t*, const bson_t*, bson_error_t* err) {
+                [&](mongoc_bulk_operation_t*, bson_t const*, bson_t const*, bson_error_t* err) {
                     bulk_operation_op_called = true;
                     bson_set_error(err, MONGOC_ERROR_BSON, MONGOC_ERROR_BSON_INVALID, "err");
                     return false;
@@ -731,7 +713,7 @@ TEST_CASE("Collection", "[collection]") {
         SECTION("Insert Many Error", "[collection::insert_many]") {
             expected_order_setting = true;
             bulk_operation_insert_with_opts->interpose(
-                [&](mongoc_bulk_operation_t*, const bson_t*, const bson_t*, bson_error_t* err) {
+                [&](mongoc_bulk_operation_t*, bson_t const*, bson_t const*, bson_error_t* err) {
                     bulk_operation_op_called = true;
                     bson_set_error(err, MONGOC_ERROR_BSON, MONGOC_ERROR_BSON_INVALID, "err");
                     return false;
@@ -747,18 +729,14 @@ TEST_CASE("Collection", "[collection]") {
 
         SECTION("Update One Error", "[collection::update_one]") {
             expected_order_setting = true;
-            bulk_operation_update_one_with_opts->interpose([&](mongoc_bulk_operation_t*,
-                                                               const bson_t*,
-                                                               const bson_t*,
-                                                               const bson_t*,
-                                                               bson_error_t* err) {
-                bulk_operation_op_called = true;
-                bson_set_error(err, MONGOC_ERROR_BSON, MONGOC_ERROR_BSON_INVALID, "err");
-                return false;
-            });
+            bulk_operation_update_one_with_opts->interpose(
+                [&](mongoc_bulk_operation_t*, bson_t const*, bson_t const*, bson_t const*, bson_error_t* err) {
+                    bulk_operation_op_called = true;
+                    bson_set_error(err, MONGOC_ERROR_BSON, MONGOC_ERROR_BSON_INVALID, "err");
+                    return false;
+                });
 
-            REQUIRE_THROWS_AS(mongo_coll.update_one(filter_doc.view(), modification_doc.view()),
-                              mongocxx::logic_error);
+            REQUIRE_THROWS_AS(mongo_coll.update_one(filter_doc.view(), modification_doc.view()), mongocxx::logic_error);
             REQUIRE(!bulk_operation_execute_called);
             perform_checks();
         }
@@ -768,9 +746,9 @@ TEST_CASE("Collection", "[collection]") {
             expected_order_setting = true;
 
             bulk_operation_update_many_with_opts->interpose([&](mongoc_bulk_operation_t*,
-                                                                const bson_t* query,
-                                                                const bson_t* update,
-                                                                const bson_t* options,
+                                                                bson_t const* query,
+                                                                bson_t const* update,
+                                                                bson_t const* options,
                                                                 bson_error_t*) {
                 bulk_operation_op_called = true;
                 REQUIRE(bson_get_data(query) == filter_doc.view().data());
@@ -830,18 +808,15 @@ TEST_CASE("Collection", "[collection]") {
 
         SECTION("Update Many Error", "[collection::update_many]") {
             expected_order_setting = true;
-            bulk_operation_update_many_with_opts->interpose([&](mongoc_bulk_operation_t*,
-                                                                const bson_t*,
-                                                                const bson_t*,
-                                                                const bson_t*,
-                                                                bson_error_t* err) {
-                bulk_operation_op_called = true;
-                bson_set_error(err, MONGOC_ERROR_BSON, MONGOC_ERROR_BSON_INVALID, "err");
-                return false;
-            });
+            bulk_operation_update_many_with_opts->interpose(
+                [&](mongoc_bulk_operation_t*, bson_t const*, bson_t const*, bson_t const*, bson_error_t* err) {
+                    bulk_operation_op_called = true;
+                    bson_set_error(err, MONGOC_ERROR_BSON, MONGOC_ERROR_BSON_INVALID, "err");
+                    return false;
+                });
 
-            REQUIRE_THROWS_AS(mongo_coll.update_many(filter_doc.view(), modification_doc.view()),
-                              mongocxx::logic_error);
+            REQUIRE_THROWS_AS(
+                mongo_coll.update_many(filter_doc.view(), modification_doc.view()), mongocxx::logic_error);
             REQUIRE(!bulk_operation_execute_called);
             perform_checks();
         }
@@ -851,9 +826,9 @@ TEST_CASE("Collection", "[collection]") {
             expected_order_setting = true;
 
             bulk_operation_replace_one_with_opts->interpose([&](mongoc_bulk_operation_t*,
-                                                                const bson_t* query,
-                                                                const bson_t* update,
-                                                                const bson_t* options,
+                                                                bson_t const* query,
+                                                                bson_t const* update,
+                                                                bson_t const* options,
                                                                 bson_error_t*) {
                 bulk_operation_op_called = true;
                 REQUIRE(bson_get_data(query) == filter_doc.view().data());
@@ -913,40 +888,35 @@ TEST_CASE("Collection", "[collection]") {
 
         SECTION("Replace One Error", "[collection::update_one]") {
             expected_order_setting = true;
-            bulk_operation_replace_one_with_opts->interpose([&](mongoc_bulk_operation_t*,
-                                                                const bson_t*,
-                                                                const bson_t*,
-                                                                const bson_t*,
-                                                                bson_error_t* err) {
-                bulk_operation_op_called = true;
-                bson_set_error(err, MONGOC_ERROR_BSON, MONGOC_ERROR_BSON_INVALID, "err");
-                return false;
-            });
+            bulk_operation_replace_one_with_opts->interpose(
+                [&](mongoc_bulk_operation_t*, bson_t const*, bson_t const*, bson_t const*, bson_error_t* err) {
+                    bulk_operation_op_called = true;
+                    bson_set_error(err, MONGOC_ERROR_BSON, MONGOC_ERROR_BSON_INVALID, "err");
+                    return false;
+                });
 
-            REQUIRE_THROWS_AS(mongo_coll.replace_one(filter_doc.view(), modification_doc.view()),
-                              mongocxx::logic_error);
+            REQUIRE_THROWS_AS(
+                mongo_coll.replace_one(filter_doc.view(), modification_doc.view()), mongocxx::logic_error);
             REQUIRE(!bulk_operation_execute_called);
             perform_checks();
         }
 
         SECTION("Delete One", "[collection::delete_one]") {
             expected_order_setting = true;
-            bulk_operation_remove_one_with_opts->interpose([&](mongoc_bulk_operation_t*,
-                                                               const bson_t* doc,
-                                                               const bson_t* options,
-                                                               bson_error_t*) {
-                bulk_operation_op_called = true;
-                REQUIRE(bson_get_data(doc) == filter_doc.view().data());
+            bulk_operation_remove_one_with_opts->interpose(
+                [&](mongoc_bulk_operation_t*, bson_t const* doc, bson_t const* options, bson_error_t*) {
+                    bulk_operation_op_called = true;
+                    REQUIRE(bson_get_data(doc) == filter_doc.view().data());
 
-                bsoncxx::document::view options_view{bson_get_data(options), options->len};
-                if (expected_hint) {
-                    CAPTURE(to_json(options_view));
-                    REQUIRE(options_view["hint"].get_string() == expected_hint->get_string());
-                } else {
-                    REQUIRE(!options_view["hint"]);
-                }
-                return true;
-            });
+                    bsoncxx::document::view options_view{bson_get_data(options), options->len};
+                    if (expected_hint) {
+                        CAPTURE(to_json(options_view));
+                        REQUIRE(options_view["hint"].get_string() == expected_hint->get_string());
+                    } else {
+                        REQUIRE(!options_view["hint"]);
+                    }
+                    return true;
+                });
 
             options::delete_options options;
             SECTION("With hint") {
@@ -963,7 +933,7 @@ TEST_CASE("Collection", "[collection]") {
         SECTION("Delete One Error", "[collection::delete_one]") {
             expected_order_setting = true;
             bulk_operation_remove_one_with_opts->interpose(
-                [&](mongoc_bulk_operation_t*, const bson_t*, const bson_t*, bson_error_t* err) {
+                [&](mongoc_bulk_operation_t*, bson_t const*, bson_t const*, bson_error_t* err) {
                     bulk_operation_op_called = true;
                     bson_set_error(err, MONGOC_ERROR_BSON, MONGOC_ERROR_BSON_INVALID, "err");
                     return false;
@@ -976,22 +946,20 @@ TEST_CASE("Collection", "[collection]") {
 
         SECTION("Delete Many", "[collection::delete_many]") {
             expected_order_setting = true;
-            bulk_operation_remove_many_with_opts->interpose([&](mongoc_bulk_operation_t*,
-                                                                const bson_t* doc,
-                                                                const bson_t* options,
-                                                                bson_error_t*) {
-                bulk_operation_op_called = true;
-                REQUIRE(bson_get_data(doc) == filter_doc.view().data());
+            bulk_operation_remove_many_with_opts->interpose(
+                [&](mongoc_bulk_operation_t*, bson_t const* doc, bson_t const* options, bson_error_t*) {
+                    bulk_operation_op_called = true;
+                    REQUIRE(bson_get_data(doc) == filter_doc.view().data());
 
-                bsoncxx::document::view options_view{bson_get_data(options), options->len};
-                if (expected_hint) {
-                    CAPTURE(to_json(options_view));
-                    REQUIRE(options_view["hint"].get_string() == expected_hint->get_string());
-                } else {
-                    REQUIRE(!options_view["hint"]);
-                }
-                return true;
-            });
+                    bsoncxx::document::view options_view{bson_get_data(options), options->len};
+                    if (expected_hint) {
+                        CAPTURE(to_json(options_view));
+                        REQUIRE(options_view["hint"].get_string() == expected_hint->get_string());
+                    } else {
+                        REQUIRE(!options_view["hint"]);
+                    }
+                    return true;
+                });
 
             options::delete_options options;
             SECTION("With hint") {
@@ -1008,7 +976,7 @@ TEST_CASE("Collection", "[collection]") {
         SECTION("Delete Many Error", "[collection::delete_one]") {
             expected_order_setting = true;
             bulk_operation_remove_many_with_opts->interpose(
-                [&](mongoc_bulk_operation_t*, const bson_t*, const bson_t*, bson_error_t* err) {
+                [&](mongoc_bulk_operation_t*, bson_t const*, bson_t const*, bson_error_t* err) {
                     bulk_operation_op_called = true;
                     bson_set_error(err, MONGOC_ERROR_BSON, MONGOC_ERROR_BSON_INVALID, "err");
                     return false;
@@ -1020,4 +988,4 @@ TEST_CASE("Collection", "[collection]") {
         }
     }
 }
-}  // namespace
+} // namespace

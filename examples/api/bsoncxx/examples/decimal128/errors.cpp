@@ -24,16 +24,16 @@ namespace {
 // [Example]
 void example() {
     try {
-        bsoncxx::decimal128 d{"invalid"};  // Throws.
+        bsoncxx::decimal128 d{"invalid"}; // Throws.
 
         EXPECT(false && "should not reach this point");
-    } catch (const bsoncxx::exception& ex) {
+    } catch (bsoncxx::exception const& ex) {
         EXPECT(ex.code() == bsoncxx::error_code::k_invalid_decimal128);
     }
 }
 // [Example]
 
-}  // namespace
+} // namespace
 
 RUNNER_REGISTER_COMPONENT() {
     example();

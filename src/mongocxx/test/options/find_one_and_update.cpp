@@ -48,4 +48,4 @@ TEST_CASE("find_one_and_update", "[find_one_and_update][option]") {
     CHECK_OPTIONAL_ARGUMENT(opts, upsert, true);
     CHECK_OPTIONAL_ARGUMENT(opts, array_filters, array_filters.view());
 }
-}  // namespace
+} // namespace

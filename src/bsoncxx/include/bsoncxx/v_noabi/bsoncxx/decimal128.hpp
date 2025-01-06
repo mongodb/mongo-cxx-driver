@@ -70,8 +70,8 @@ class decimal128 {
     /// Relational operators for decimal128
     ///
     /// @{
-    friend BSONCXX_ABI_EXPORT_CDECL(bool) operator==(const decimal128& lhs, const decimal128& rhs);
-    friend BSONCXX_ABI_EXPORT_CDECL(bool) operator!=(const decimal128& lhs, const decimal128& rhs);
+    friend BSONCXX_ABI_EXPORT_CDECL(bool) operator==(decimal128 const& lhs, decimal128 const& rhs);
+    friend BSONCXX_ABI_EXPORT_CDECL(bool) operator!=(decimal128 const& lhs, decimal128 const& rhs);
     /// @}
     ///
 
@@ -94,8 +94,8 @@ class decimal128 {
     uint64_t _low = 0;
 };
 
-}  // namespace v_noabi
-}  // namespace bsoncxx
+} // namespace v_noabi
+} // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>
 

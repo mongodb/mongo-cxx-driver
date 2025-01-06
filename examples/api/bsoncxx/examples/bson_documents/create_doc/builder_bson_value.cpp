@@ -35,14 +35,14 @@ void example() {
         "three",
     };
 
-    bsoncxx::document::value doc = bsoncxx::builder::basic::make_document(
-        kvp("a", values[0]), kvp("b", values[1]), kvp("c", values[2]));
+    bsoncxx::document::value doc =
+        bsoncxx::builder::basic::make_document(kvp("a", values[0]), kvp("b", values[1]), kvp("c", values[2]));
 
     EXPECT(doc.view() == bsoncxx::from_json(R"({"a": 1, "b": 2.0, "c": "three"})"));
 }
 // [Example]
 
-}  // namespace
+} // namespace
 
 RUNNER_REGISTER_COMPONENT() {
     example();

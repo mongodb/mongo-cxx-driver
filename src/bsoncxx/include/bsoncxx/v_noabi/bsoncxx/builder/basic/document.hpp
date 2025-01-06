@@ -57,8 +57,8 @@ class document : public sub_document {
         return *this;
     }
 
-    document(const document&) = delete;
-    document& operator=(const document&) = delete;
+    document(document const&) = delete;
+    document& operator=(document const&) = delete;
 
     ///
     /// @return A view of the BSON document.
@@ -118,10 +118,10 @@ bsoncxx::v_noabi::document::value make_document(Args&&... args) {
     return document.extract();
 }
 
-}  // namespace basic
-}  // namespace builder
-}  // namespace v_noabi
-}  // namespace bsoncxx
+} // namespace basic
+} // namespace builder
+} // namespace v_noabi
+} // namespace bsoncxx
 
 namespace bsoncxx {
 namespace builder {
@@ -129,9 +129,9 @@ namespace basic {
 
 using ::bsoncxx::v_noabi::builder::basic::make_document;
 
-}  // namespace basic
-}  // namespace builder
-}  // namespace bsoncxx
+} // namespace basic
+} // namespace builder
+} // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>
 

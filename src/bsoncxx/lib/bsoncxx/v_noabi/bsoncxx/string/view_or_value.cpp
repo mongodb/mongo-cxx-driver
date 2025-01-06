@@ -32,10 +32,10 @@ view_or_value view_or_value::terminated() const {
     return {view()};
 }
 
-const char* view_or_value::data() const {
+char const* view_or_value::data() const {
     return view().data();
 }
 
-}  // namespace string
-}  // namespace v_noabi
-}  // namespace bsoncxx
+} // namespace string
+} // namespace v_noabi
+} // namespace bsoncxx

@@ -22,21 +22,21 @@ namespace v_noabi {
 
 enum class server_error_code : std::int32_t;
 
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace v_noabi
+} // namespace mongocxx
 
 namespace mongocxx {
 
 using ::mongocxx::v_noabi::server_error_code;
 
-}  // namespace mongocxx
+} // namespace mongocxx
 
 namespace std {
 
 template <>
 struct is_error_code_enum<::mongocxx::v_noabi::server_error_code>;
 
-}  // namespace std
+} // namespace std
 
 ///
 /// @file

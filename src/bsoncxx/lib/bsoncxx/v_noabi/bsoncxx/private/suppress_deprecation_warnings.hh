@@ -30,14 +30,12 @@
 
 #ifdef __clang__
 #define BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_BEGIN \
-    _Pragma("clang diagnostic push")                \
-        _Pragma("clang diagnostic ignored \"-Wdeprecated-declarations\"")
+    _Pragma("clang diagnostic push") _Pragma("clang diagnostic ignored \"-Wdeprecated-declarations\"")
 #elif defined __GNUC__
 #define BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_BEGIN \
     _Pragma("GCC diagnostic push") _Pragma("GCC diagnostic ignored \"-Wdeprecated-declarations\"")
 #elif defined _MSC_VER
-#define BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_BEGIN \
-    __pragma(warning(push)) __pragma(warning(disable : 4996))
+#define BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_BEGIN __pragma(warning(push)) __pragma(warning(disable : 4996))
 #endif
 
 #ifdef __clang__

@@ -38,4 +38,4 @@ TEST_CASE("options::gridfs::upload accessors/mutators", "[options::gridfs::uploa
     CHECK_OPTIONAL_ARGUMENT(upload_options, chunk_size_bytes, 100);
     CHECK_OPTIONAL_ARGUMENT(upload_options, metadata, document.view());
 }
-}  // namespace
+} // namespace

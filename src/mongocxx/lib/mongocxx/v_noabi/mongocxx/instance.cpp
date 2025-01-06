@@ -57,15 +57,17 @@ log_level convert_log_level(::mongoc_log_level_t mongoc_log_level) {
     }
 }
 
-void null_log_handler(::mongoc_log_level_t, const char*, const char*, void*) {}
+void null_log_handler(::mongoc_log_level_t, char const*, char const*, void*) {}
 
-void user_log_handler(::mongoc_log_level_t mongoc_log_level,
-                      const char* log_domain,
-                      const char* message,
-                      void* user_data) {
-    (*static_cast<logger*>(user_data))(convert_log_level(mongoc_log_level),
-                                       bsoncxx::v_noabi::stdx::string_view{log_domain},
-                                       bsoncxx::v_noabi::stdx::string_view{message});
+void user_log_handler(
+    ::mongoc_log_level_t mongoc_log_level,
+    char const* log_domain,
+    char const* message,
+    void* user_data) {
+    (*static_cast<logger*>(user_data))(
+        convert_log_level(mongoc_log_level),
+        bsoncxx::v_noabi::stdx::string_view{log_domain},
+        bsoncxx::v_noabi::stdx::string_view{message});
 }
 
 // A region of memory that acts as a sentintel value indicating that an instance object is being
@@ -73,12 +75,10 @@ void user_log_handler(::mongoc_log_level_t mongoc_log_level,
 typename std::aligned_storage<sizeof(instance), alignof(instance)>::type sentinel;
 
 std::atomic<instance*> current_instance{nullptr};
-static_assert(std::is_standard_layout<decltype(current_instance)>::value,
-              "Must be standard layout");
-static_assert(std::is_trivially_destructible<decltype(current_instance)>::value,
-              "Must be trivially destructible");
+static_assert(std::is_standard_layout<decltype(current_instance)>::value, "Must be standard layout");
+static_assert(std::is_trivially_destructible<decltype(current_instance)>::value, "Must be trivially destructible");
 
-}  // namespace
+} // namespace
 
 class instance::impl {
    public:
@@ -106,8 +106,7 @@ class instance::impl {
 #endif
         platform << "CXX=" << MONGOCXX_COMPILER_ID << " " << MONGOCXX_COMPILER_VERSION << " "
                  << "stdcxx=" << stdcxx << " / ";
-        libmongoc::handshake_data_append(
-            "mongocxx", MONGOCXX_VERSION_STRING, platform.str().c_str());
+        libmongoc::handshake_data_append("mongocxx", MONGOCXX_VERSION_STRING, platform.str().c_str());
     }
 
     ~impl() {
@@ -130,10 +129,10 @@ class instance::impl {
     impl(impl&&) noexcept = delete;
     impl& operator=(impl&&) noexcept = delete;
 
-    impl(const impl&) = delete;
-    impl& operator=(const impl&) = delete;
+    impl(impl const&) = delete;
+    impl& operator=(impl const&) = delete;
 
-    const std::unique_ptr<logger> _user_logger;
+    std::unique_ptr<logger> const _user_logger;
 };
 
 instance::instance() : instance(nullptr) {}
@@ -170,5 +169,5 @@ instance& instance::current() {
     return *curr;
 }
 
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace v_noabi
+} // namespace mongocxx

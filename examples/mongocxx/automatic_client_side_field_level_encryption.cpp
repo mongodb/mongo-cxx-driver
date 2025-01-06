@@ -51,12 +51,13 @@ using namespace mongocxx;
 
 namespace {
 
-const int kKeyLength = 96;
+int const kKeyLength = 96;
 
 using ns_pair = std::pair<std::string, std::string>;
-void create_json_schema_file(bsoncxx::document::view_or_value kms_providers,
-                             ns_pair key_vault_ns,
-                             class client* key_vault_client) {
+void create_json_schema_file(
+    bsoncxx::document::view_or_value kms_providers,
+    ns_pair key_vault_ns,
+    class client* key_vault_client) {
     options::client_encryption client_encryption_opts{};
     client_encryption_opts.key_vault_namespace(std::move(key_vault_ns));
     client_encryption_opts.kms_providers(kms_providers);
@@ -68,13 +69,12 @@ void create_json_schema_file(bsoncxx::document::view_or_value kms_providers,
     auto data_key_id = client_encryption.create_data_key("local");
 
     // Create a new json schema for the encryptedField.
-    auto json_schema = document{} << "properties" << open_document << "encryptedField"
-                                  << open_document << "encrypt" << open_document << "keyId"
-                                  << open_array << data_key_id << close_array << "bsonType"
+    auto json_schema = document{} << "properties" << open_document << "encryptedField" << open_document << "encrypt"
+                                  << open_document << "keyId" << open_array << data_key_id << close_array << "bsonType"
                                   << "string"
                                   << "algorithm"
-                                  << "AEAD_AES_256_CBC_HMAC_SHA_512-Deterministic" << close_document
-                                  << close_document << close_document << "bsonType"
+                                  << "AEAD_AES_256_CBC_HMAC_SHA_512-Deterministic" << close_document << close_document
+                                  << close_document << "bsonType"
                                   << "object" << finalize;
 
     // Write to a file.
@@ -90,13 +90,12 @@ bsoncxx::document::value doc_from_file(std::string path) {
         throw std::runtime_error("could not open file");
     }
 
-    std::string file_contents((std::istreambuf_iterator<char>(file)),
-                              std::istreambuf_iterator<char>());
+    std::string file_contents((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
 
     return bsoncxx::from_json(file_contents);
 }
 
-}  // namespace
+} // namespace
 
 int EXAMPLES_CDECL main() {
     instance inst{};
@@ -104,14 +103,11 @@ int EXAMPLES_CDECL main() {
     // This must be the same master key that was used to create
     // the encryption key; here, we use a random key as a placeholder.
     std::uint8_t key_storage[kKeyLength];
-    std::generate_n(key_storage, kKeyLength, []() {
-        return static_cast<std::uint8_t>(std::rand() % UINT8_MAX);
-    });
-    bsoncxx::types::b_binary local_master_key{
-        bsoncxx::binary_sub_type::k_binary, kKeyLength, key_storage};
+    std::generate_n(key_storage, kKeyLength, []() { return static_cast<std::uint8_t>(std::rand() % UINT8_MAX); });
+    bsoncxx::types::b_binary local_master_key{bsoncxx::binary_sub_type::k_binary, kKeyLength, key_storage};
 
-    auto kms_providers = document{} << "local" << open_document << "key" << local_master_key
-                                    << close_document << finalize;
+    auto kms_providers = document{} << "local" << open_document << "key" << local_master_key << close_document
+                                    << finalize;
 
     // The MongoClient used to access the key vault.
     class client key_vault_client{uri{}};
@@ -123,8 +119,7 @@ int EXAMPLES_CDECL main() {
 
     mongocxx::options::index index_options{};
     index_options.unique(true);
-    auto expression = document{} << "keyAltNames" << open_document << "$exists" << true
-                                 << close_document << finalize;
+    auto expression = document{} << "keyAltNames" << open_document << "$exists" << true << close_document << finalize;
     index_options.partial_filter_expression(expression.view());
     key_vault.create_index(make_document(kvp("keyAltNames", 1)), index_options);
 
@@ -151,12 +146,10 @@ int EXAMPLES_CDECL main() {
     coll.insert_one(make_document(kvp("encryptedField", "123456789")));
 
     auto res = coll.find_one({});
-    std::cout << "\nDocument retrieved with auto-encrypted client:\n"
-              << bsoncxx::to_json(*res) << std::endl;
+    std::cout << "\nDocument retrieved with auto-encrypted client:\n" << bsoncxx::to_json(*res) << std::endl;
 
     class client unencrypted_client{uri{}};
     auto unencrypted_coll = unencrypted_client["test"]["coll"];
     auto res2 = unencrypted_coll.find_one({});
-    std::cout << "\nDocument retrieved with unencrypted client:\n"
-              << bsoncxx::to_json(*res2) << std::endl;
+    std::cout << "\nDocument retrieved with unencrypted client:\n" << bsoncxx::to_json(*res2) << std::endl;
 }

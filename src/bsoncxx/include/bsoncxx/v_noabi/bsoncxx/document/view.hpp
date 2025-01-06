@@ -52,7 +52,7 @@ class view {
     /// @param length
     ///   The size of the buffer, in bytes.
     ///
-    BSONCXX_ABI_EXPORT_CDECL() view(const std::uint8_t* data, std::size_t length);
+    BSONCXX_ABI_EXPORT_CDECL() view(std::uint8_t const* data, std::size_t length);
 
     ///
     /// @returns A const_iterator to the first element of the document.
@@ -108,7 +108,7 @@ class view {
     ///
     /// @return A (non-owning) pointer to the view's buffer.
     ///
-    BSONCXX_ABI_EXPORT_CDECL(const std::uint8_t*) data() const;
+    BSONCXX_ABI_EXPORT_CDECL(std::uint8_t const*) data() const;
 
     ///
     /// Gets the length of the underlying buffer.
@@ -140,7 +140,7 @@ class view {
     ///
 
    private:
-    const std::uint8_t* _data;
+    std::uint8_t const* _data;
     std::size_t _length;
 };
 
@@ -162,7 +162,7 @@ class view::const_iterator {
     using difference_type = std::ptrdiff_t;
 
     BSONCXX_ABI_EXPORT_CDECL() const_iterator();
-    explicit BSONCXX_ABI_EXPORT_CDECL() const_iterator(const element& element);
+    explicit BSONCXX_ABI_EXPORT_CDECL() const_iterator(element const& element);
 
     BSONCXX_ABI_EXPORT_CDECL(reference) operator*();
     BSONCXX_ABI_EXPORT_CDECL(pointer) operator->();
@@ -176,8 +176,8 @@ class view::const_iterator {
     /// Compares two const_iterators for (in)-equality.
     ///
     /// @{
-    friend BSONCXX_ABI_EXPORT_CDECL(bool) operator==(const const_iterator&, const const_iterator&);
-    friend BSONCXX_ABI_EXPORT_CDECL(bool) operator!=(const const_iterator&, const const_iterator&);
+    friend BSONCXX_ABI_EXPORT_CDECL(bool) operator==(const_iterator const&, const_iterator const&);
+    friend BSONCXX_ABI_EXPORT_CDECL(bool) operator!=(const_iterator const&, const_iterator const&);
     /// @}
     ///
 
@@ -185,9 +185,9 @@ class view::const_iterator {
     element _element;
 };
 
-}  // namespace document
-}  // namespace v_noabi
-}  // namespace bsoncxx
+} // namespace document
+} // namespace v_noabi
+} // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>
 

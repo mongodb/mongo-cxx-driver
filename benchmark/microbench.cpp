@@ -21,8 +21,7 @@
 
 namespace benchmark {
 
-bool finished_running(const std::chrono::duration<std::uint32_t, std::milli>& curr_time,
-                      std::uint32_t iter) {
+bool finished_running(std::chrono::duration<std::uint32_t, std::milli> const& curr_time, std::uint32_t iter) {
     return (curr_time > maxtime || (curr_time > mintime && iter > max_iter));
 }
 
@@ -44,7 +43,7 @@ void microbench::run() {
     teardown();
 }
 
-std::vector<std::string> parse_json_file_to_strings(const std::string& json_file) {
+std::vector<std::string> parse_json_file_to_strings(std::string const& json_file) {
     std::vector<std::string> jsons;
     std::ifstream stream{"data/benchmark/" + json_file};
 
@@ -60,7 +59,7 @@ std::vector<std::string> parse_json_file_to_strings(const std::string& json_file
     return jsons;
 }
 
-std::vector<bsoncxx::document::value> parse_json_file_to_documents(const std::string& json_file) {
+std::vector<bsoncxx::document::value> parse_json_file_to_documents(std::string const& json_file) {
     std::vector<bsoncxx::document::value> docs;
     std::ifstream stream{"data/benchmark/" + json_file};
 
@@ -79,12 +78,11 @@ std::vector<bsoncxx::document::value> parse_json_file_to_documents(const std::st
     return docs;
 }
 
-std::vector<std::string> parse_documents_to_bson(
-    const std::vector<bsoncxx::document::value>& docs) {
+std::vector<std::string> parse_documents_to_bson(std::vector<bsoncxx::document::value> const& docs) {
     std::vector<std::string> bsons;
     for (std::uint32_t i = 0; i < docs.size(); i++) {
         bsons.push_back(bsoncxx::to_json(docs[i]));
     }
     return bsons;
 }
-}  // namespace benchmark
+} // namespace benchmark

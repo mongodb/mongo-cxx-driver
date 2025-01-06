@@ -36,7 +36,7 @@ namespace {
 
 using namespace bsoncxx;
 
-void bson_eq_stream(const bson_t* bson, const bsoncxx::builder::stream::document& builder) {
+void bson_eq_stream(bson_t const* bson, bsoncxx::builder::stream::document const& builder) {
     bsoncxx::document::view expected(bson_get_data(bson), bson->len);
     bsoncxx::document::view test(builder.view());
 
@@ -47,7 +47,7 @@ void bson_eq_stream(const bson_t* bson, const bsoncxx::builder::stream::document
 }
 
 template <typename T, typename U>
-void viewable_eq_viewable(const T& stream, const U& basic) {
+void viewable_eq_viewable(T const& stream, U const& basic) {
     bsoncxx::document::view expected(stream.view());
     bsoncxx::document::view test(basic.view());
 
@@ -58,7 +58,7 @@ void viewable_eq_viewable(const T& stream, const U& basic) {
 }
 
 template <typename T>
-void bson_eq_object(const bson_t* bson, const T actual) {
+void bson_eq_object(bson_t const* bson, T const actual) {
     T expected(bson_get_data(bson), bson->len);
 
     INFO("expected = " << to_json(expected));
@@ -94,8 +94,8 @@ TEST_CASE("builder appends string", "[bsoncxx::builder::stream]") {
         bson_eq_stream(&expected, b);
     }
 
-    SECTION("works with const char*") {
-        const char* world = "world";
+    SECTION("works with char const*") {
+        char const* world = "world";
         b << "hello" << world;
 
         bson_eq_stream(&expected, b);
@@ -145,14 +145,11 @@ TEST_CASE("builder appends binary", "[bsoncxx::builder::stream]") {
     bson_t expected;
     bson_init(&expected);
 
-    bson_append_binary(
-        &expected, "foo", -1, BSON_SUBTYPE_BINARY, reinterpret_cast<const uint8_t*>("deadbeef"), 8);
+    bson_append_binary(&expected, "foo", -1, BSON_SUBTYPE_BINARY, reinterpret_cast<uint8_t const*>("deadbeef"), 8);
 
     builder::stream::document b;
 
-    b << "foo"
-      << types::b_binary{
-             binary_sub_type::k_binary, 8, reinterpret_cast<const uint8_t*>("deadbeef")};
+    b << "foo" << types::b_binary{binary_sub_type::k_binary, 8, reinterpret_cast<uint8_t const*>("deadbeef")};
 
     bson_eq_stream(&expected, b);
 
@@ -186,13 +183,13 @@ TEST_CASE("builder appends oid", "[bsoncxx::builder::stream]") {
     builder::stream::document b;
 
     SECTION("b_oid works") {
-        b << "foo" << types::b_oid{bsoncxx::oid{reinterpret_cast<const char*>(oid.bytes), 12}};
+        b << "foo" << types::b_oid{bsoncxx::oid{reinterpret_cast<char const*>(oid.bytes), 12}};
 
         bson_eq_stream(&expected, b);
     }
 
     SECTION("raw oid works") {
-        b << "foo" << bsoncxx::oid{reinterpret_cast<const char*>(oid.bytes), 12};
+        b << "foo" << bsoncxx::oid{reinterpret_cast<char const*>(oid.bytes), 12};
 
         bson_eq_stream(&expected, b);
     }
@@ -583,8 +580,7 @@ TEST_CASE("builder appends concatenate", "[bsoncxx::builder::stream]") {
 
         {
             using namespace builder::stream;
-            b << "foo" << open_document << builder::concatenate(child_builder.view())
-              << close_document;
+            b << "foo" << open_document << builder::concatenate(child_builder.view()) << close_document;
         }
 
         bson_eq_stream(&expected, b);
@@ -603,8 +599,7 @@ TEST_CASE("builder appends concatenate", "[bsoncxx::builder::stream]") {
 
         {
             using namespace builder::stream;
-            b << "foo" << open_array << "bar" << builder::concatenate(child_builder.view())
-              << close_array;
+            b << "foo" << open_array << "bar" << builder::concatenate(child_builder.view()) << close_array;
         }
 
         bson_eq_stream(&expected, b);
@@ -663,8 +658,7 @@ TEST_CASE("document builder finalizes", "[bsoncxx::builder::stream]") {
 
     expected << "foo" << 999;
 
-    document::value value = builder::stream::document{} << "foo" << 999
-                                                        << bsoncxx::builder::stream::finalize;
+    document::value value = builder::stream::document{} << "foo" << 999 << bsoncxx::builder::stream::finalize;
 
     viewable_eq_viewable(expected, value);
 }
@@ -674,8 +668,7 @@ TEST_CASE("array builder finalizes", "[bsoncxx::builder::stream]") {
 
     expected << 1 << 2 << 3;
 
-    array::value value = builder::stream::array{} << 1 << 2 << 3
-                                                  << bsoncxx::builder::stream::finalize;
+    array::value value = builder::stream::array{} << 1 << 2 << 3 << bsoncxx::builder::stream::finalize;
 
     viewable_eq_viewable(expected, value);
 }
@@ -761,8 +754,7 @@ TEST_CASE("core builder open/close works", "[bsoncxx::builder::core]") {
     }
 }
 
-TEST_CASE("core view/extract methods throw when called with wrong top-level type",
-          "[bsoncxx::builder::core]") {
+TEST_CASE("core view/extract methods throw when called with wrong top-level type", "[bsoncxx::builder::core]") {
     builder::core core_array(true);
     builder::core core_document(false);
 
@@ -814,12 +806,7 @@ TEST_CASE("core builder throws on consecutive keys", "[bsoncxx::builder::core]")
 }
 
 TEST_CASE("core method chaining to build document works", "[bsoncxx::builder::core]") {
-    auto full_doc = builder::core{false}
-                        .key_owned("foo")
-                        .append(1)
-                        .key_owned("bar")
-                        .append(true)
-                        .extract_document();
+    auto full_doc = builder::core{false}.key_owned("foo").append(1).key_owned("bar").append(true).extract_document();
 
     REQUIRE(full_doc.view()["foo"].type() == types::b_int32::type_id);
     REQUIRE(full_doc.view()["foo"].get_int32() == 1);
@@ -889,10 +876,11 @@ TEST_CASE("basic document builder works", "[bsoncxx::builder::basic]") {
         {
             using namespace builder::basic;
 
-            basic.append(kvp("hello", "world"),
-                         kvp("foo", 35),
-                         kvp("bar", [](sub_document sd) { sd.append(kvp("que", "qux")); }),
-                         kvp("baz", [](sub_array sa) { sa.append(1, 2, 3); }));
+            basic.append(
+                kvp("hello", "world"),
+                kvp("foo", 35),
+                kvp("bar", [](sub_document sd) { sd.append(kvp("que", "qux")); }),
+                kvp("baz", [](sub_array sa) { sa.append(1, 2, 3); }));
         }
 
         viewable_eq_viewable(stream, basic);
@@ -1133,8 +1121,7 @@ TEST_CASE("basic document builder works with concat", "[bsoncxx::builder::basic]
     SECTION("variadic works") {
         stream << builder::concatenate(subdoc.view());
 
-        basic.append(builder::basic::concatenate(subdoc.view()),
-                     builder::basic::concatenate(subdoc.view()));
+        basic.append(builder::basic::concatenate(subdoc.view()), builder::basic::concatenate(subdoc.view()));
 
         viewable_eq_viewable(stream, basic);
     }
@@ -1160,8 +1147,7 @@ TEST_CASE("basic array builder works with concat", "[bsoncxx::builder::basic]") 
     SECTION("variadic works") {
         stream << builder::concatenate(array_view);
 
-        basic.append(builder::basic::concatenate(array_view),
-                     builder::basic::concatenate(array_view));
+        basic.append(builder::basic::concatenate(array_view), builder::basic::concatenate(array_view));
 
         viewable_eq_viewable(stream, basic);
     }
@@ -1203,8 +1189,7 @@ TEST_CASE("array::view works", "[bsoncxx::builder::array]") {
 }
 
 TEST_CASE("builder::basic::make_document works", "[bsoncxx::builder::basic::make_document]") {
-    auto full_doc = builder::basic::make_document(builder::basic::kvp("foo", 1),
-                                                  builder::basic::kvp("bar", true));
+    auto full_doc = builder::basic::make_document(builder::basic::kvp("foo", 1), builder::basic::kvp("bar", true));
 
     REQUIRE(full_doc.view()["foo"].type() == types::b_int32::type_id);
     REQUIRE(full_doc.view()["foo"].get_int32() == 1);
@@ -1249,8 +1234,9 @@ TEST_CASE("stream in an array::view works", "[bsoncxx::builder::stream]") {
 
 TEST_CASE("builder::stream::document throws on consecutive keys", "[bsoncxx::builder::core]") {
     builder::stream::document doc;
-    REQUIRE_NOTHROW(doc << "foo"
-                        << "bar");
+    REQUIRE_NOTHROW(
+        doc << "foo"
+            << "bar");
     REQUIRE_NOTHROW(doc << "far");
     REQUIRE_THROWS_AS(doc << "boo", bsoncxx::exception);
 }
@@ -1279,8 +1265,8 @@ TEST_CASE("list builder appends utf8", "[bsoncxx::builder::list]") {
         bson_eq_object(&expected, b.view().get_document().value);
     }
 
-    SECTION("works with const char*") {
-        const char* world = "world";
+    SECTION("works with char const*") {
+        char const* world = "world";
         builder::list b{"hello", world};
 
         bson_eq_object(&expected, b.view().get_document().value);
@@ -1321,12 +1307,9 @@ TEST_CASE("list builder appends binary", "[bsoncxx::builder::list]") {
     bson_t expected;
     bson_init(&expected);
 
-    bson_append_binary(
-        &expected, "foo", -1, BSON_SUBTYPE_BINARY, reinterpret_cast<const uint8_t*>("data"), 4);
+    bson_append_binary(&expected, "foo", -1, BSON_SUBTYPE_BINARY, reinterpret_cast<uint8_t const*>("data"), 4);
 
-    builder::list b{
-        "foo",
-        types::b_binary{binary_sub_type::k_binary, 4, reinterpret_cast<const uint8_t*>("data")}};
+    builder::list b{"foo", types::b_binary{binary_sub_type::k_binary, 4, reinterpret_cast<uint8_t const*>("data")}};
 
     bson_eq_object(&expected, b.view().get_document().value);
 
@@ -1356,14 +1339,13 @@ TEST_CASE("list builder appends oid", "[bsoncxx::builder::list]") {
     bson_append_oid(&expected, "foo", -1, &oid);
 
     SECTION("b_oid works") {
-        builder::list b{"foo",
-                        types::b_oid{bsoncxx::oid{reinterpret_cast<const char*>(oid.bytes), 12}}};
+        builder::list b{"foo", types::b_oid{bsoncxx::oid{reinterpret_cast<char const*>(oid.bytes), 12}}};
 
         bson_eq_object(&expected, b.view().get_document().value);
     }
 
     SECTION("raw oid works") {
-        builder::list b{"foo", bsoncxx::oid{reinterpret_cast<const char*>(oid.bytes), 12}};
+        builder::list b{"foo", bsoncxx::oid{reinterpret_cast<char const*>(oid.bytes), 12}};
 
         bson_eq_object(&expected, b.view().get_document().value);
     }
@@ -1724,12 +1706,10 @@ TEST_CASE("list builder with explicit type deduction", "[bsoncxx::builder::list]
 
     SECTION("document") {
         builder::list b;
-        auto kvp_regex = Catch::Matchers::Matches("(.*)must be list of key-value pairs(.*)",
-                                                  Catch::CaseSensitive::No);
+        auto kvp_regex = Catch::Matchers::Matches("(.*)must be list of key-value pairs(.*)", Catch::CaseSensitive::No);
         REQUIRE_THROWS_WITH((b = builder::document{"foo", 1, 2}), kvp_regex);
 
-        auto type_regex = Catch::Matchers::Matches("(.*)must be string type(.*)int32(.*)",
-                                                   Catch::CaseSensitive::No);
+        auto type_regex = Catch::Matchers::Matches("(.*)must be string type(.*)int32(.*)", Catch::CaseSensitive::No);
         REQUIRE_THROWS_WITH((b = builder::document{"foo", 1, 2, 4}), type_regex);
     }
 }
@@ -1747,4 +1727,4 @@ TEST_CASE("empty list builder", "[bsoncxx::builder::list]") {
     builder::array arr = {};
     bson_eq_object(&expected, arr.view().get_array().value);
 }
-}  // namespace
+} // namespace

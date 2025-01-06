@@ -42,7 +42,7 @@ namespace v_noabi {
 ///   an unengaged optional if the document is invalid.
 ///
 BSONCXX_ABI_EXPORT_CDECL(stdx::optional<document::view>)
-validate(const std::uint8_t* data, std::size_t length);
+validate(std::uint8_t const* data, std::size_t length);
 
 ///
 /// Validates a BSON document. This overload provides additional control over the
@@ -65,10 +65,11 @@ validate(const std::uint8_t* data, std::size_t length);
 ///   an unengaged optional if the document is invalid.
 ///
 BSONCXX_ABI_EXPORT_CDECL(stdx::optional<document::view>)
-validate(const std::uint8_t* data,
-         std::size_t length,
-         const validator& validator,
-         std::size_t* invalid_offset = nullptr);
+validate(
+    std::uint8_t const* data,
+    std::size_t length,
+    validator const& validator,
+    std::size_t* invalid_offset = nullptr);
 
 ///
 /// A validator is used to enable or disable specific checks that can be
@@ -157,14 +158,14 @@ class validator {
     std::unique_ptr<impl> _impl;
 };
 
-}  // namespace v_noabi
-}  // namespace bsoncxx
+} // namespace v_noabi
+} // namespace bsoncxx
 
 namespace bsoncxx {
 
 using ::bsoncxx::v_noabi::validate;
 
-}  // namespace bsoncxx
+} // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>
 

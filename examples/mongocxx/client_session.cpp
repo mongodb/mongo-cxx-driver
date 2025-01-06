@@ -32,8 +32,8 @@ using bsoncxx::builder::basic::make_document;
 using namespace mongocxx;
 
 int EXAMPLES_CDECL main() {
-    if (const char* const topology_env = std::getenv("MONGOCXX_TEST_TOPOLOGY")) {
-        const auto topology = std::string(topology_env);
+    if (char const* const topology_env = std::getenv("MONGOCXX_TEST_TOPOLOGY")) {
+        auto const topology = std::string(topology_env);
         if (topology != "replica") {
             std::cerr << "Skipping: client_session example requires a replica set" << std::endl;
             return 0;
@@ -51,9 +51,8 @@ int EXAMPLES_CDECL main() {
     // causal consistency.
     auto session = conn.start_session();
     auto coll = conn["db"]["collection"];
-    auto result = coll.update_one(session,
-                                  make_document(kvp("_id", 1)),
-                                  make_document(kvp("$inc", make_document(kvp("x", 1)))));
+    auto result =
+        coll.update_one(session, make_document(kvp("_id", 1)), make_document(kvp("$inc", make_document(kvp("x", 1)))));
 
     std::cout << "Updated " << result->modified_count() << " documents" << std::endl;
 

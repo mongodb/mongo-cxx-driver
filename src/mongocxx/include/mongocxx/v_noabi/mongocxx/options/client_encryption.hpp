@@ -57,7 +57,7 @@ class client_encryption {
     /// @return
     ///   An optional pointer to the key vault client.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::client*>&)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::client*> const&)
     key_vault_client() const;
 
     ///
@@ -91,7 +91,7 @@ class client_encryption {
     ///   An optional pair of strings representing the namespace of the
     ///   key vault collection.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<ns_pair>&)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<ns_pair> const&)
     key_vault_namespace() const;
 
     ///
@@ -147,8 +147,7 @@ class client_encryption {
     /// @return
     ///   An optional document containing the KMS providers.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<
-                              bsoncxx::v_noabi::document::view_or_value>&)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const&)
     kms_providers() const;
 
     ///
@@ -183,8 +182,7 @@ class client_encryption {
     /// @return
     ///   An optional document containing the TLS options.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<
-                              bsoncxx::v_noabi::document::view_or_value>&)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const&)
     tls_opts() const;
 
    private:
@@ -198,9 +196,9 @@ class client_encryption {
     bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> _tls_opts;
 };
 
-}  // namespace options
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace options
+} // namespace v_noabi
+} // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
 

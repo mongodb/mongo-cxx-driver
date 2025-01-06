@@ -55,7 +55,7 @@ namespace b64 {
     std::abort()
 
 const char Base64[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
-const char Pad64 = '=';
+char const Pad64 = '=';
 
 /* (From RFC1521 and draft-ietf-dnssec-secext-03.txt)
  * The following encoding technique is taken from RFC 1521 by Borenstein
@@ -119,10 +119,7 @@ const char Pad64 = '=';
  *    characters followed by one "=" padding character.
  */
 
-inline int ntop(const std::uint8_t* src,
-                std::size_t srclength,
-                char* target,
-                std::size_t targsize) {
+inline int ntop(std::uint8_t const* src, std::size_t srclength, char* target, std::size_t targsize) {
     std::size_t datalength = 0;
     std::uint8_t input[3];
     std::uint8_t output[4];
@@ -188,7 +185,7 @@ inline int ntop(const std::uint8_t* src,
     return static_cast<int>(datalength);
 }
 
-}  // namespace b64
-}  // namespace bsoncxx
+} // namespace b64
+} // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>

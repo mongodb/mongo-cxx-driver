@@ -24,21 +24,20 @@ namespace result {
 namespace gridfs {
 
 upload::upload(bsoncxx::v_noabi::types::bson_value::view id)
-    : _id_owned(bsoncxx::v_noabi::builder::basic::make_array(id)),
-      _id(_id_owned.view()[0].get_value()) {}
+    : _id_owned(bsoncxx::v_noabi::builder::basic::make_array(id)), _id(_id_owned.view()[0].get_value()) {}
 
-const bsoncxx::v_noabi::types::bson_value::view& upload::id() const {
+bsoncxx::v_noabi::types::bson_value::view const& upload::id() const {
     return _id;
 }
 
-bool operator==(const upload& lhs, const upload& rhs) {
+bool operator==(upload const& lhs, upload const& rhs) {
     return lhs.id() == rhs.id();
 }
-bool operator!=(const upload& lhs, const upload& rhs) {
+bool operator!=(upload const& lhs, upload const& rhs) {
     return !(lhs == rhs);
 }
 
-}  // namespace gridfs
-}  // namespace result
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace gridfs
+} // namespace result
+} // namespace v_noabi
+} // namespace mongocxx

@@ -35,20 +35,20 @@ namespace {
 [[noreturn]] void watch_forever(mongocxx::collection& collection) {
     mongocxx::options::change_stream options;
     // Wait up to 1 second before polling again.
-    const std::chrono::milliseconds await_time{1000};
+    std::chrono::milliseconds const await_time{1000};
     options.max_await_time(await_time);
 
     mongocxx::change_stream stream = collection.watch(options);
 
     while (true) {
-        for (const auto& event : stream) {
+        for (auto const& event : stream) {
             std::cout << bsoncxx::to_json(event) << std::endl;
         }
         std::cout << "No new notifications. Trying again..." << std::endl;
     }
 }
 
-}  // namespace
+} // namespace
 
 int EXAMPLES_CDECL main(int argc, char* argv[]) {
     if (std::getenv("MONGOCXX_TEST_TOPOLOGY")) {
@@ -97,8 +97,7 @@ int EXAMPLES_CDECL main(int argc, char* argv[]) {
         }
 
         std::cerr << "Unexpected argument: '" << arg << "'" << std::endl;
-        std::cerr << "Usage: " << argv[0] << " [--uri <uri>] [--db <db_name>] [--coll <coll_name>]"
-                  << std::endl;
+        std::cerr << "Usage: " << argv[0] << " [--uri <uri>] [--db <db_name>] [--coll <coll_name>]" << std::endl;
         return EXIT_FAILURE;
     }
 
@@ -108,13 +107,12 @@ int EXAMPLES_CDECL main(int argc, char* argv[]) {
         auto entry = pool.acquire();
         auto collection = (*entry)[db][coll];
 
-        std::cout << "Watching for notifications on the collection " << db << "." << coll
-                  << std::endl;
+        std::cout << "Watching for notifications on the collection " << db << "." << coll << std::endl;
         std::cout << "To observe a notification, try inserting a document." << std::endl;
         watch_forever(collection);
 
         return EXIT_SUCCESS;
-    } catch (const std::exception& exception) {
+    } catch (std::exception const& exception) {
         std::cerr << "Caught exception \"" << exception.what() << "\"" << std::endl;
     } catch (...) {
         std::cerr << "Caught unknown exception type" << std::endl;

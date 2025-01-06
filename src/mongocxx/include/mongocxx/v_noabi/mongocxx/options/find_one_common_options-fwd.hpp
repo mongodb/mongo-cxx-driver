@@ -22,17 +22,17 @@ namespace options {
 
 enum class return_document;
 
-}  // namespace options
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace options
+} // namespace v_noabi
+} // namespace mongocxx
 
 namespace mongocxx {
 namespace options {
 
 using ::mongocxx::v_noabi::options::return_document;
 
-}  // namespace options
-}  // namespace mongocxx
+} // namespace options
+} // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
 

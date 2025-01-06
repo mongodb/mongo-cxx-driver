@@ -23,10 +23,10 @@ namespace bson_value {
 
 class view;
 
-}  // namespace bson_value
-}  // namespace types
-}  // namespace v_noabi
-}  // namespace bsoncxx
+} // namespace bson_value
+} // namespace types
+} // namespace v_noabi
+} // namespace bsoncxx
 
 namespace bsoncxx {
 namespace types {
@@ -34,9 +34,9 @@ namespace bson_value {
 
 using ::bsoncxx::v_noabi::types::bson_value::view;
 
-}  // namespace bson_value
-}  // namespace types
-}  // namespace bsoncxx
+} // namespace bson_value
+} // namespace types
+} // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>
 

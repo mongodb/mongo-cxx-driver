@@ -55,7 +55,7 @@ void coverting_construction_test(T actual, U expected) {
     REQUIRE(_static_cast == expected);
 }
 
-}  // namespace
+} // namespace
 
 TEST_CASE("types::bson_value::value", "[bsoncxx::types::bson_value::value]") {
     SECTION("can be constructed from") {
@@ -78,7 +78,7 @@ TEST_CASE("types::bson_value::value", "[bsoncxx::types::bson_value::value]") {
             coverting_construction_test(b_string{value}, test_doc);
             coverting_construction_test(stdx::string_view{value}, test_doc);
 
-            const char raw_data[]{'s', 'u', 'p', 'e', 'r', ' ', 'd', 'u', 'p', 'e', 'r'};
+            char const raw_data[]{'s', 'u', 'p', 'e', 'r', ' ', 'd', 'u', 'p', 'e', 'r'};
             coverting_construction_test(stdx::string_view{raw_data, 11}, test_doc);
 
             auto test_empty = bson_value::make_value("");
@@ -253,11 +253,10 @@ TEST_CASE("types::bson_value::value", "[bsoncxx::types::bson_value::value]") {
             value_construction_test(test_doc.view());
 
             coverting_construction_test(bin, test_doc);
-            REQUIRE(bson_value::value(b_binary{binary_sub_type::k_binary,
-                                               static_cast<uint32_t>(bin.size()),
-                                               bin.data()}) == test_doc);
-            REQUIRE(bson_value::value(bin.data(), bin.size(), binary_sub_type::k_binary) ==
-                    test_doc);
+            REQUIRE(
+                bson_value::value(b_binary{binary_sub_type::k_binary, static_cast<uint32_t>(bin.size()), bin.data()}) ==
+                test_doc);
+            REQUIRE(bson_value::value(bin.data(), bin.size(), binary_sub_type::k_binary) == test_doc);
             REQUIRE(bson_value::value(bin.data(), bin.size()) == test_doc);
 
             auto empty = bson_value::make_value(b_binary{});
@@ -417,4 +416,4 @@ TEST_CASE("types::bson_value::value", "[bsoncxx::types::bson_value::value]") {
     }
 }
 
-}  // namespace
+} // namespace

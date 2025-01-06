@@ -22,17 +22,17 @@ namespace model {
 
 class insert_one;
 
-}  // namespace model
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace model
+} // namespace v_noabi
+} // namespace mongocxx
 
 namespace mongocxx {
 namespace model {
 
 using ::mongocxx::v_noabi::model::insert_one;
 
-}  // namespace model
-}  // namespace mongocxx
+} // namespace model
+} // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
 

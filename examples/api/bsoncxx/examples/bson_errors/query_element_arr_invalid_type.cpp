@@ -31,24 +31,24 @@ void example(bsoncxx::array::element e) {
     EXPECT(e.get_int32().value == 1);
 
     try {
-        bsoncxx::types::b_double d = e.get_double();  // Throws.
+        bsoncxx::types::b_double d = e.get_double(); // Throws.
 
         EXPECT(false && "should not reach this point");
-    } catch (const bsoncxx::exception& ex) {
+    } catch (bsoncxx::exception const& ex) {
         EXPECT(ex.code() == bsoncxx::error_code::k_need_element_type_k_double);
     }
 
     try {
-        bsoncxx::types::b_string str = e.get_string();  // Throws.
+        bsoncxx::types::b_string str = e.get_string(); // Throws.
 
         EXPECT(false && "should not reach this point");
-    } catch (const bsoncxx::exception& ex) {
+    } catch (bsoncxx::exception const& ex) {
         EXPECT(ex.code() == bsoncxx::error_code::k_need_element_type_k_string);
     }
 }
 // [Example]
 
-}  // namespace
+} // namespace
 
 RUNNER_REGISTER_COMPONENT() {
     example(bsoncxx::builder::basic::make_array(1).view()[0]);

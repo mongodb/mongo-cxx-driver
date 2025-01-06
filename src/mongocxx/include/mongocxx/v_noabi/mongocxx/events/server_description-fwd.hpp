@@ -22,17 +22,17 @@ namespace events {
 
 class server_description;
 
-}  // namespace events
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace events
+} // namespace v_noabi
+} // namespace mongocxx
 
 namespace mongocxx {
 namespace events {
 
 using ::mongocxx::v_noabi::events::server_description;
 
-}  // namespace events
-}  // namespace mongocxx
+} // namespace events
+} // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
 

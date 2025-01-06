@@ -87,7 +87,7 @@ void run_command_monitoring_tests_in_file(std::string test_path) {
         ///////////////////////////////////////////////////////////////////////
 
         // COMMAND STARTED
-        apm_opts.on_command_started([&](const events::command_started_event& event) {
+        apm_opts.on_command_started([&](events::command_started_event const& event) {
             BSONCXX_TEST_EXCEPTION_GUARD_BEGIN(eguard);
 
             if (event.command_name() == "endSessions") {
@@ -118,7 +118,7 @@ void run_command_monitoring_tests_in_file(std::string test_path) {
         });
 
         // COMMAND FAILED
-        apm_opts.on_command_failed([&](const events::command_failed_event& event) {
+        apm_opts.on_command_failed([&](events::command_failed_event const& event) {
             BSONCXX_TEST_EXCEPTION_GUARD_BEGIN(eguard);
 
             auto expected = (*events).get_document().value;
@@ -139,7 +139,7 @@ void run_command_monitoring_tests_in_file(std::string test_path) {
         });
 
         // COMMAND SUCCESS
-        apm_opts.on_command_succeeded([&](const events::command_succeeded_event& event) {
+        apm_opts.on_command_succeeded([&](events::command_succeeded_event const& event) {
             BSONCXX_TEST_EXCEPTION_GUARD_BEGIN(eguard);
 
             if (event.command_name() == "endSessions") {
@@ -213,4 +213,4 @@ TEST_CASE("Command Monitoring Spec Tests", "[command_monitoring_spec]") {
         run_command_monitoring_tests_in_file(path + "/" + test_file);
     }
 }
-}  // namespace
+} // namespace

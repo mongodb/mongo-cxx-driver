@@ -35,10 +35,10 @@ bson_value::value make_value(T&& t) {
     return doc.view()["v"].get_owning_value();
 }
 
-}  // namespace bson_value
-}  // namespace types
-}  // namespace v_noabi
-}  // namespace bsoncxx
+} // namespace bson_value
+} // namespace types
+} // namespace v_noabi
+} // namespace bsoncxx
 
 namespace bsoncxx {
 namespace types {
@@ -46,9 +46,9 @@ namespace bson_value {
 
 using ::bsoncxx::v_noabi::types::bson_value::make_value;
 
-}  // namespace bson_value
-}  // namespace types
-}  // namespace bsoncxx
+} // namespace bson_value
+} // namespace types
+} // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>
 

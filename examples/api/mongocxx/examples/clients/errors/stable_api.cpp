@@ -25,25 +25,25 @@ namespace {
 void example() {
     try {
         mongocxx::options::server_api::version version =
-            mongocxx::options::server_api::version_from_string("0");  // Throws.
+            mongocxx::options::server_api::version_from_string("0"); // Throws.
 
         EXPECT(false && "should not reach this point");
-    } catch (const mongocxx::exception& ex) {
+    } catch (mongocxx::exception const& ex) {
         EXPECT(ex.code() == mongocxx::error_code::k_invalid_parameter);
     }
 
     try {
         std::string version = mongocxx::options::server_api::version_to_string(
-            static_cast<mongocxx::options::server_api::version>(1));  // Throws.
+            static_cast<mongocxx::options::server_api::version>(1)); // Throws.
 
         EXPECT(false && "should not reach this point");
-    } catch (const mongocxx::exception& ex) {
+    } catch (mongocxx::exception const& ex) {
         EXPECT(ex.code() == mongocxx::error_code::k_invalid_parameter);
     }
 }
 // [Example]
 
-}  // namespace
+} // namespace
 
 RUNNER_REGISTER_COMPONENT_WITH_INSTANCE() {
     example();

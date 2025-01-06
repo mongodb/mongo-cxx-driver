@@ -36,14 +36,14 @@ class gridfs_exception : public exception {
 
     gridfs_exception(gridfs_exception&&) = default;
     gridfs_exception& operator=(gridfs_exception&&) = default;
-    gridfs_exception(const gridfs_exception&) = default;
-    gridfs_exception& operator=(const gridfs_exception&) = default;
+    gridfs_exception(gridfs_exception const&) = default;
+    gridfs_exception& operator=(gridfs_exception const&) = default;
 
     using exception::exception;
 };
 
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace v_noabi
+} // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
 

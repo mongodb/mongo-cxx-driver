@@ -31,9 +31,9 @@ namespace v_noabi {
 ///
 /// An enumeration of the types of Extended JSON that the to_json function accepts
 enum class ExtendedJsonMode : std::uint8_t {
-    k_legacy,     ///< to produce Legacy Extended JSON
-    k_canonical,  ///< to produce Canonical Extended JSON
-    k_relaxed,    ///< to produce Relaxed Extended JSON
+    k_legacy,    ///< to produce Legacy Extended JSON
+    k_canonical, ///< to produce Canonical Extended JSON
+    k_relaxed,   ///< to produce Relaxed Extended JSON
 };
 
 ///
@@ -82,10 +82,10 @@ BSONCXX_ABI_EXPORT_CDECL(document::value) from_json(stdx::string_view json);
 ///
 /// @throws bsoncxx::v_noabi::exception with error details if the conversion failed.
 ///
-BSONCXX_ABI_EXPORT_CDECL(document::value) operator"" _bson(const char* json, size_t len);
+BSONCXX_ABI_EXPORT_CDECL(document::value) operator"" _bson(char const* json, size_t len);
 
-}  // namespace v_noabi
-}  // namespace bsoncxx
+} // namespace v_noabi
+} // namespace bsoncxx
 
 namespace bsoncxx {
 
@@ -94,7 +94,7 @@ using ::bsoncxx::v_noabi::to_json;
 
 using ::bsoncxx::v_noabi::operator"" _bson;
 
-}  // namespace bsoncxx
+} // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>
 

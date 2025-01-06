@@ -22,17 +22,17 @@ namespace array {
 
 class value;
 
-}  // namespace array
-}  // namespace v_noabi
-}  // namespace bsoncxx
+} // namespace array
+} // namespace v_noabi
+} // namespace bsoncxx
 
 namespace bsoncxx {
 namespace array {
 
 using ::bsoncxx::v_noabi::array::value;
 
-}  // namespace array
-}  // namespace bsoncxx
+} // namespace array
+} // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>
 

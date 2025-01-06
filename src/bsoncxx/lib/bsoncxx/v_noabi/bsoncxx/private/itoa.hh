@@ -32,8 +32,8 @@ class itoa {
     itoa(itoa&& rhs) = delete;
     itoa& operator=(itoa&&) = delete;
 
-    itoa(const itoa& rhs) = delete;
-    itoa& operator=(const itoa&) = delete;
+    itoa(itoa const& rhs) = delete;
+    itoa& operator=(itoa const&) = delete;
 
     BSONCXX_ABI_EXPORT_CDECL_TESTING(itoa&) operator=(uint32_t new_value);
 
@@ -41,7 +41,7 @@ class itoa {
         return _val;
     }
 
-    const char* c_str() const {
+    char const* c_str() const {
         return _str;
     }
 
@@ -53,11 +53,11 @@ class itoa {
     void _init();
 
     uint32_t _val;
-    const char* _str;
+    char const* _str;
     uint8_t _len;
     char _buf[11];
 };
 
-}  // namespace bsoncxx
+} // namespace bsoncxx
 
 #include <bsoncxx/config/private/postlude.hh>

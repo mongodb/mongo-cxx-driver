@@ -71,9 +71,9 @@ using arrow_t = decltype(std::declval<T>().operator->());
 
 #ifndef NO_LWG_2543
 template <typename T, typename Td = bsoncxx::detail::remove_const_t<T>>
-struct is_hashable
-    : bsoncxx::detail::conjunction<std::is_default_constructible<std::hash<Td>>,
-                                   bsoncxx::detail::is_invocable<std::hash<Td>, const T&>> {};
+struct is_hashable : bsoncxx::detail::conjunction<
+                         std::is_default_constructible<std::hash<Td>>,
+                         bsoncxx::detail::is_invocable<std::hash<Td>, T const&>> {};
 #else
 
 template <typename T>
@@ -137,31 +137,26 @@ bool assert_alikeness() {
 
 template <typename From1, typename To1, typename From2, typename To2>
 bool check_convert_alike() {
-    STATIC_ASSERT_EXPR_ALIKE((std::is_convertible<From1, To1>::value),
-                             (std::is_convertible<From2, To2>::value));
-    STATIC_ASSERT_EXPR_ALIKE((std::is_convertible<From1&, To1>::value),
-                             (std::is_convertible<From2&, To2>::value));
-    STATIC_ASSERT_EXPR_ALIKE((std::is_convertible<const From1&, To1>::value),
-                             (std::is_convertible<const From2&, To2>::value));
-    STATIC_ASSERT_EXPR_ALIKE((std::is_convertible<From1&&, To1>::value),
-                             (std::is_convertible<From2&&, To2>::value));
-    STATIC_ASSERT_EXPR_ALIKE((std::is_convertible<const From1&&, To1>::value),
-                             (std::is_convertible<const From2&&, To2>::value));
+    STATIC_ASSERT_EXPR_ALIKE((std::is_convertible<From1, To1>::value), (std::is_convertible<From2, To2>::value));
+    STATIC_ASSERT_EXPR_ALIKE((std::is_convertible<From1&, To1>::value), (std::is_convertible<From2&, To2>::value));
+    STATIC_ASSERT_EXPR_ALIKE(
+        (std::is_convertible<From1 const&, To1>::value), (std::is_convertible<From2 const&, To2>::value));
+    STATIC_ASSERT_EXPR_ALIKE((std::is_convertible<From1&&, To1>::value), (std::is_convertible<From2&&, To2>::value));
+    STATIC_ASSERT_EXPR_ALIKE(
+        (std::is_convertible<From1 const&&, To1>::value), (std::is_convertible<From2 const&&, To2>::value));
     return true;
 }
 
 template <typename From1, typename To1, typename From2, typename To2>
 bool check_construct_alike() {
-    STATIC_ASSERT_EXPR_ALIKE((std::is_constructible<To1, From1>::value),
-                             (std::is_constructible<To2, From2>::value));
-    STATIC_ASSERT_EXPR_ALIKE((std::is_constructible<To1, From1&>::value),
-                             (std::is_constructible<To2, From2&>::value));
-    STATIC_ASSERT_EXPR_ALIKE((std::is_constructible<To1, const From1&>::value),
-                             (std::is_constructible<To2, const From2&>::value));
-    STATIC_ASSERT_EXPR_ALIKE((std::is_constructible<To1, From1&&>::value),
-                             (std::is_constructible<To2, From2&&>::value));
-    STATIC_ASSERT_EXPR_ALIKE((std::is_constructible<To1, const From1&&>::value),
-                             (std::is_constructible<To2, const From2&&>::value));
+    STATIC_ASSERT_EXPR_ALIKE((std::is_constructible<To1, From1>::value), (std::is_constructible<To2, From2>::value));
+    STATIC_ASSERT_EXPR_ALIKE((std::is_constructible<To1, From1&>::value), (std::is_constructible<To2, From2&>::value));
+    STATIC_ASSERT_EXPR_ALIKE(
+        (std::is_constructible<To1, From1 const&>::value), (std::is_constructible<To2, From2 const&>::value));
+    STATIC_ASSERT_EXPR_ALIKE(
+        (std::is_constructible<To1, From1&&>::value), (std::is_constructible<To2, From2&&>::value));
+    STATIC_ASSERT_EXPR_ALIKE(
+        (std::is_constructible<To1, From1 const&&>::value), (std::is_constructible<To2, From2 const&&>::value));
     return true;
 }
 
@@ -183,32 +178,33 @@ bool static_checks() {
     assert_alikeness<bsoncxx::detail::is_equality_comparable, T>();
     assert_alikeness<bsoncxx::detail::is_totally_ordered, T>();
     assert_alikeness<std::is_trivially_destructible, T>();
-    STATIC_ASSERT_EXPR_ALIKE((bsoncxx::detail::is_equality_comparable<T>::value),
-                             (bsoncxx::detail::is_equality_comparable<T, optional<T>>::value));
-    STATIC_ASSERT_EXPR_ALIKE((bsoncxx::detail::is_totally_ordered<T>::value),
-                             (bsoncxx::detail::is_totally_ordered_with<T, optional<T>>::value));
-    STATIC_ASSERT_EXPR_ALIKE((std::is_constructible<T, T>::value),
-                             (std::is_constructible<optional<T>, T>::value));
+    STATIC_ASSERT_EXPR_ALIKE(
+        (bsoncxx::detail::is_equality_comparable<T>::value),
+        (bsoncxx::detail::is_equality_comparable<T, optional<T>>::value));
+    STATIC_ASSERT_EXPR_ALIKE(
+        (bsoncxx::detail::is_totally_ordered<T>::value),
+        (bsoncxx::detail::is_totally_ordered_with<T, optional<T>>::value));
+    STATIC_ASSERT_EXPR_ALIKE((std::is_constructible<T, T>::value), (std::is_constructible<optional<T>, T>::value));
     STATIC_ASSERT_EXPR((std::is_constructible<optional<T>, bsoncxx::stdx::nullopt_t>::value));
     // Assert we return proper reference types
     STATIC_ASSERT_EXPR((std::is_same<deref_t<optional<T>>, T&&>::value));
-    STATIC_ASSERT_EXPR((std::is_same<deref_t<const optional<T>>, const T&&>::value));
-    STATIC_ASSERT_EXPR((std::is_same<deref_t<const optional<T>&>, const T&>::value));
+    STATIC_ASSERT_EXPR((std::is_same<deref_t<optional<T> const>, T const&&>::value));
+    STATIC_ASSERT_EXPR((std::is_same<deref_t<optional<T> const&>, T const&>::value));
     STATIC_ASSERT_EXPR((std::is_same<deref_t<optional<T>&>, T&>::value));
     // .value()
     STATIC_ASSERT_EXPR((std::is_same<value_t<optional<T>>, T&&>::value));
-    STATIC_ASSERT_EXPR((std::is_same<value_t<const optional<T>>, const T&&>::value));
-    STATIC_ASSERT_EXPR((std::is_same<value_t<const optional<T>&>, const T&>::value));
+    STATIC_ASSERT_EXPR((std::is_same<value_t<optional<T> const>, T const&&>::value));
+    STATIC_ASSERT_EXPR((std::is_same<value_t<optional<T> const&>, T const&>::value));
     STATIC_ASSERT_EXPR((std::is_same<value_t<optional<T>&>, T&>::value));
     // operator->
     STATIC_ASSERT_EXPR((std::is_same<arrow_t<optional<T>>, T*>::value));
-    STATIC_ASSERT_EXPR((std::is_same<arrow_t<const optional<T>>, const T*>::value));
-    STATIC_ASSERT_EXPR((std::is_same<arrow_t<const optional<T>&>, const T*>::value));
+    STATIC_ASSERT_EXPR((std::is_same<arrow_t<optional<T> const>, T const*>::value));
+    STATIC_ASSERT_EXPR((std::is_same<arrow_t<optional<T> const&>, T const*>::value));
     STATIC_ASSERT_EXPR((std::is_same<arrow_t<optional<T>&>, T*>::value));
     return check_conversions<T, T>();
 }
 
-}  // namespace
+} // namespace
 
 STATIC_ASSERT_EXPR(bsoncxx::detail::is_totally_ordered<std::string>::value);
 STATIC_ASSERT_EXPR(bsoncxx::detail::is_totally_ordered<int>::value);
@@ -227,29 +223,29 @@ STATIC_ASSERT_EXPR(bsoncxx::detail::is_totally_ordered<optional<int>>::value);
 
 TEST_CASE("Trait checks") {
     CHECK(static_checks<int>());
-    CHECK(static_checks<const int>());
+    CHECK(static_checks<int const>());
     CHECK(static_checks<std::string>());
-    CHECK(static_checks<const std::string>());
+    CHECK(static_checks<std::string const>());
     CHECK(static_checks<std::unique_ptr<int>>());
-    CHECK(static_checks<const std::unique_ptr<int>>());
+    CHECK(static_checks<std::unique_ptr<int> const>());
     CHECK(static_checks<immobile>());
-    CHECK(static_checks<const immobile>());
+    CHECK(static_checks<immobile const>());
     CHECK(static_checks<not_copyable>());
-    CHECK(static_checks<const not_copyable>());
+    CHECK(static_checks<not_copyable const>());
     CHECK(static_checks<not_default_constructible>());
-    CHECK(static_checks<const not_default_constructible>());
+    CHECK(static_checks<not_default_constructible const>());
     CHECK(static_checks<allows_moving_explicit_conversion>());
-    CHECK(static_checks<const allows_moving_explicit_conversion>());
+    CHECK(static_checks<allows_moving_explicit_conversion const>());
     CHECK(static_checks<allows_moving_implicit_conversion>());
-    CHECK(static_checks<const allows_moving_implicit_conversion>());
+    CHECK(static_checks<allows_moving_implicit_conversion const>());
     CHECK(check_conversions<int, int>());
-    CHECK(check_conversions<const int, int>());
-    CHECK(check_conversions<int, const int>());
+    CHECK(check_conversions<int const, int>());
+    CHECK(check_conversions<int, int const>());
     CHECK(check_conversions<int, double>());
     CHECK(check_conversions<double, std::string>());
     CHECK(check_conversions<std::string, double>());
-    CHECK(check_conversions<std::string, const char*>());
-    CHECK(check_conversions<const char*, std::string>());
+    CHECK(check_conversions<std::string, char const*>());
+    CHECK(check_conversions<char const*, std::string>());
     CHECK(check_conversions<int*, std::unique_ptr<int>>());
     CHECK(check_conversions<int, allows_moving_explicit_conversion>());
     CHECK(check_conversions<int, allows_moving_implicit_conversion>());
@@ -551,7 +547,7 @@ TEST_CASE("Comparisons") {
 }
 
 template <typename T, typename U>
-void check_ordered(const T& lesser, const U& greater, std::string desc) {
+void check_ordered(T const& lesser, U const& greater, std::string desc) {
     CAPTURE(__func__, desc);
     CHECK_VS2017(lesser < greater);
     CHECK_VS2017(greater > lesser);
@@ -564,7 +560,7 @@ void check_ordered(const T& lesser, const U& greater, std::string desc) {
 }
 
 template <typename T, typename U>
-void check_equivalent(const T& a, const U& b, std::string desc) {
+void check_equivalent(T const& a, U const& b, std::string desc) {
     CAPTURE(__func__, desc);
     CHECK_VS2017(a == b);
     CHECK_VS2017(b == a);
@@ -617,12 +613,12 @@ TEST_CASE("Optional: Cross-comparisons") {
 }
 
 template <typename T>
-std::size_t hashit(const T& what) {
+std::size_t hashit(T const& what) {
     return std::hash<T>{}(what);
 }
 
 TEST_CASE("Optional-of-const-T") {
-    optional<const int> a;
+    optional<int const> a;
     check_equivalent(a, nullopt, "Null of const");
     a.emplace(21);
     check_equivalent(a, 21, "Const 21");
@@ -637,10 +633,10 @@ TEST_CASE("Optional: Hashing") {
     CHECK_VS2017(hashit(a) == hashit(b));
     b.emplace(41);
     CHECK_VS2017(hashit(41) == hashit(b));
-    CHECK_VS2017(hashit(a) != hashit(b));  // (Extremely probable, but not certain)
+    CHECK_VS2017(hashit(a) != hashit(b)); // (Extremely probable, but not certain)
     a.emplace(41);
     CHECK_VS2017(hashit(a) == hashit(b));
-    optional<const int> c = b;
+    optional<int const> c = b;
     CHECK_VS2017(hashit(c) == hashit(a));
 }
 
@@ -654,7 +650,7 @@ TEST_CASE("optional<T> conversions") {
     // Some stdlib implementations do not forbid this ctor correctly.
 #if defined(BSONCXX_POLY_USE_IMPLS)
     STATIC_ASSERT_EXPR((!std::is_constructible<optional<bool>, optional<std::string>>::value));
-#endif  // defined(BSONCXX_POLY_USE_IMPLS)
+#endif // defined(BSONCXX_POLY_USE_IMPLS)
 
     optional<std::string> s1(bsoncxx::stdx::in_place);
     CHECK_VS2017(s1 == "");
@@ -663,11 +659,11 @@ TEST_CASE("optional<T> conversions") {
     REQUIRE(q.has_value());
     CHECK_FALSE(q->constructed_from_in_place);
 
-    optional<const char*> c_str = "foo";
+    optional<char const*> c_str = "foo";
     optional<std::string> string = c_str;
     optional<std::string> string2 = std::move(c_str);
     CHECK_VS2017(string == c_str);
     CHECK_VS2017(string2 == c_str);
 }
 
-#endif  // defined(BSONCXX_POLY_USE_IMPLS) || defined(BSONCXX_POLY_USE_STD)
+#endif // defined(BSONCXX_POLY_USE_IMPLS) || defined(BSONCXX_POLY_USE_STD)

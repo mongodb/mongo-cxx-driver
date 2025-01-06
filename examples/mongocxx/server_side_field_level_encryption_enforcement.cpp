@@ -48,7 +48,7 @@ using bsoncxx::types::bson_value::make_value;
 
 using namespace mongocxx;
 
-const int kKeyLength = 96;
+int const kKeyLength = 96;
 
 int EXAMPLES_CDECL main() {
     instance inst{};
@@ -56,14 +56,11 @@ int EXAMPLES_CDECL main() {
     // This must be the same master key that was used to create
     // the encryption key; here, we use a random key as a placeholder.
     std::uint8_t key_storage[kKeyLength];
-    std::generate_n(key_storage, kKeyLength, []() {
-        return static_cast<std::uint8_t>(std::rand() % UINT8_MAX);
-    });
-    bsoncxx::types::b_binary local_master_key{
-        bsoncxx::binary_sub_type::k_binary, kKeyLength, key_storage};
+    std::generate_n(key_storage, kKeyLength, []() { return static_cast<std::uint8_t>(std::rand() % UINT8_MAX); });
+    bsoncxx::types::b_binary local_master_key{bsoncxx::binary_sub_type::k_binary, kKeyLength, key_storage};
 
-    auto kms_providers = document{} << "local" << open_document << "key" << local_master_key
-                                    << close_document << finalize;
+    auto kms_providers = document{} << "local" << open_document << "key" << local_master_key << close_document
+                                    << finalize;
 
     class client key_vault_client{uri{}};
     auto key_vault = key_vault_client["keyvault"]["datakeys"];
@@ -74,8 +71,7 @@ int EXAMPLES_CDECL main() {
 
     mongocxx::options::index index_options{};
     index_options.unique(true);
-    auto expression = document{} << "keyAltNames" << open_document << "$exists" << true
-                                 << close_document << finalize;
+    auto expression = document{} << "keyAltNames" << open_document << "$exists" << true << close_document << finalize;
     index_options.partial_filter_expression(expression.view());
     key_vault.create_index(make_document(kvp("keyAltNames", 1)), index_options);
 
@@ -91,13 +87,12 @@ int EXAMPLES_CDECL main() {
     auto data_key_id = client_encryption.create_data_key("local");
 
     // Create a new json schema for the encryptedField.
-    auto json_schema = document{} << "properties" << open_document << "encryptedField"
-                                  << open_document << "encrypt" << open_document << "keyId"
-                                  << open_array << data_key_id << close_array << "bsonType"
+    auto json_schema = document{} << "properties" << open_document << "encryptedField" << open_document << "encrypt"
+                                  << open_document << "keyId" << open_array << data_key_id << close_array << "bsonType"
                                   << "string"
                                   << "algorithm"
-                                  << "AEAD_AES_256_CBC_HMAC_SHA_512-Deterministic" << close_document
-                                  << close_document << close_document << "bsonType"
+                                  << "AEAD_AES_256_CBC_HMAC_SHA_512-Deterministic" << close_document << close_document
+                                  << close_document << "bsonType"
                                   << "object" << finalize;
 
     // Set up auto encryption opts.
@@ -121,8 +116,8 @@ int EXAMPLES_CDECL main() {
     // Create the collection with the encryption JSON Schema.
     auto cmd = document{} << "create"
                           << "coll"
-                          << "validator" << open_document << "$jsonSchema" << json_schema.view()
-                          << close_document << finalize;
+                          << "validator" << open_document << "$jsonSchema" << json_schema.view() << close_document
+                          << finalize;
     db.run_command(cmd.view());
 
     auto coll = db["coll"];
@@ -143,7 +138,7 @@ int EXAMPLES_CDECL main() {
         // Inserting via the unencrypted client fails, because the server
         // requires that the encryptedField actually be encrypted.
         unencrypted_client["test"]["coll"].insert_one(to_insert.view());
-    } catch (const std::exception& e) {
+    } catch (std::exception const& e) {
         std::cout << "Unencrypted insert failed: " << e.what() << std::endl;
     }
 }

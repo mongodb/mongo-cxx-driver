@@ -22,17 +22,17 @@ namespace gridfs {
 
 class bucket;
 
-}  // namespace gridfs
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace gridfs
+} // namespace v_noabi
+} // namespace mongocxx
 
 namespace mongocxx {
 namespace gridfs {
 
 using ::mongocxx::v_noabi::gridfs::bucket;
 
-}  // namespace gridfs
-}  // namespace mongocxx
+} // namespace gridfs
+} // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
 

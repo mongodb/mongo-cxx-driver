@@ -47,11 +47,10 @@ client_session& client_session::default_transaction_opts(transaction default_tra
     return *this;
 }
 
-const bsoncxx::v_noabi::stdx::optional<transaction>& client_session::default_transaction_opts()
-    const {
+bsoncxx::v_noabi::stdx::optional<transaction> const& client_session::default_transaction_opts() const {
     return _default_transaction_opts;
 }
 
-}  // namespace options
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace options
+} // namespace v_noabi
+} // namespace mongocxx

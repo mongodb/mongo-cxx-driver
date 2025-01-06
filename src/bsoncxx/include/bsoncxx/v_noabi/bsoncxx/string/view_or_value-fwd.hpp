@@ -22,17 +22,17 @@ namespace string {
 
 class view_or_value;
 
-}  // namespace string
-}  // namespace v_noabi
-}  // namespace bsoncxx
+} // namespace string
+} // namespace v_noabi
+} // namespace bsoncxx
 
 namespace bsoncxx {
 namespace string {
 
 using ::bsoncxx::v_noabi::string::view_or_value;
 
-}  // namespace string
-}  // namespace bsoncxx
+} // namespace string
+} // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>
 

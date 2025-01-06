@@ -45,4 +45,4 @@ TEST_CASE("options::gridfs::bucket accessors/mutators", "[options::gridfs::bucke
     CHECK_OPTIONAL_ARGUMENT(bucket_options, read_preference, rp);
     CHECK_OPTIONAL_ARGUMENT(bucket_options, write_concern, wc);
 }
-}  // namespace
+} // namespace

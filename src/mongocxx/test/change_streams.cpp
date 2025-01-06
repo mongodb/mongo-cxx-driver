@@ -56,9 +56,9 @@ bsoncxx::document::value doc(std::string key, T val) {
 //
 // Phrased as a lambda instead of function because c++11 doesn't have decltype(auto) and the
 // return-type is haunting.
-const auto gen_next = [](bool has_next) {
+auto const gen_next = [](bool has_next) {
     static mongocxx::libbson::scoped_bson_t next_bson{make_document(kvp("some", "doc"))};
-    return [=](mongoc_change_stream_t*, const bson_t** bson) mutable -> bool {
+    return [=](mongoc_change_stream_t*, bson_t const** bson) mutable -> bool {
         if (has_next) {
             *bson = next_bson.bson();
         }
@@ -69,15 +69,12 @@ const auto gen_next = [](bool has_next) {
 bson_t err_doc;
 
 // Generates lambda/interpose for change_stream_error_document.
-const auto gen_error = [](bool has_error) {
-    bson_init(&err_doc);  // Will fit on stack.
+auto const gen_error = [](bool has_error) {
+    bson_init(&err_doc); // Will fit on stack.
     bson_append_int32(&err_doc, "ok", -1, 0);
-    return [=](const mongoc_change_stream_t*, bson_error_t* err, const bson_t** bson) -> bool {
+    return [=](mongoc_change_stream_t const*, bson_error_t* err, bson_t const** bson) -> bool {
         if (has_error) {
-            bson_set_error(err,
-                           MONGOC_ERROR_CURSOR,
-                           MONGOC_ERROR_CHANGE_STREAM_NO_RESUME_TOKEN,
-                           "expected error");
+            bson_set_error(err, MONGOC_ERROR_CURSOR, MONGOC_ERROR_CHANGE_STREAM_NO_RESUME_TOKEN, "expected error");
             *bson = &err_doc;
         } else {
             *bson = nullptr;
@@ -86,11 +83,11 @@ const auto gen_error = [](bool has_error) {
     };
 };
 
-const auto watch_interpose = [](const mongoc_collection_t*,
-                                const bson_t*,
-                                const bson_t*) -> mongoc_change_stream_t* { return nullptr; };
+auto const watch_interpose = [](mongoc_collection_t const*, bson_t const*, bson_t const*) -> mongoc_change_stream_t* {
+    return nullptr;
+};
 
-const auto destroy_interpose = [](mongoc_change_stream_t*) -> void {};
+auto const destroy_interpose = [](mongoc_change_stream_t*) -> void {};
 
 TEST_CASE("Change stream options") {
     instance::current();
@@ -328,48 +325,41 @@ TEST_CASE("Mock streams and error-handling") {
         cs_opts.full_document(full_document);
         cs_opts.resume_after(resume_after.view());
 
-        auto check_pipeline_and_opts = [&](const bson_t* passed_pipeline,
-                                           const bson_t* passed_opts) {
+        auto check_pipeline_and_opts = [&](bson_t const* passed_pipeline, bson_t const* passed_opts) {
             bsoncxx::document::view pipeline(bson_get_data(passed_pipeline), passed_pipeline->len);
-            bsoncxx::array::value expected =
-                make_array(make_document(kvp("$match", make_document(kvp("x", 1)))));
+            bsoncxx::array::value expected = make_array(make_document(kvp("$match", make_document(kvp("x", 1)))));
             REQUIRE(pipeline["pipeline"].get_array().value == expected);
             bsoncxx::document::view opts(bson_get_data(passed_opts), passed_opts->len);
             REQUIRE(opts["startAtOperationTime"].get_timestamp() == ts);
             REQUIRE(opts["batchSize"].get_int32() == batch_size);
             REQUIRE(opts["maxAwaitTimeMS"].get_int64() == 4);
             REQUIRE(opts["collation"].get_document().view() == collation);
-            REQUIRE(opts["fullDocument"].get_string().value ==
-                    bsoncxx::stdx::string_view{full_document});
+            REQUIRE(opts["fullDocument"].get_string().value == bsoncxx::stdx::string_view{full_document});
             REQUIRE(opts["resumeAfter"].get_document().view() == resume_after);
         };
 
-        collection_watch->interpose(
-            [&](const mongoc_collection_t* coll, const bson_t* pipeline, const bson_t* opts) {
-                std::string name =
-                    mongoc_collection_get_name(const_cast<mongoc_collection_t*>(coll));
-                REQUIRE(name == "collection");
-                check_pipeline_and_opts(pipeline, opts);
-                collection_watch_called = true;
-                return nullptr;
-            });
+        collection_watch->interpose([&](mongoc_collection_t const* coll, bson_t const* pipeline, bson_t const* opts) {
+            std::string name = mongoc_collection_get_name(const_cast<mongoc_collection_t*>(coll));
+            REQUIRE(name == "collection");
+            check_pipeline_and_opts(pipeline, opts);
+            collection_watch_called = true;
+            return nullptr;
+        });
 
-        database_watch->interpose(
-            [&](const mongoc_database_t* db, const bson_t* pipeline, const bson_t* opts) {
-                std::string name = mongoc_database_get_name(const_cast<mongoc_database_t*>(db));
-                REQUIRE(name == "db");
-                check_pipeline_and_opts(pipeline, opts);
-                database_watch_called = true;
-                return nullptr;
-            });
+        database_watch->interpose([&](mongoc_database_t const* db, bson_t const* pipeline, bson_t const* opts) {
+            std::string name = mongoc_database_get_name(const_cast<mongoc_database_t*>(db));
+            REQUIRE(name == "db");
+            check_pipeline_and_opts(pipeline, opts);
+            database_watch_called = true;
+            return nullptr;
+        });
 
-        client_watch->interpose(
-            [&](const mongoc_client_t* client, const bson_t* pipeline, const bson_t* opts) {
-                (void)client;
-                check_pipeline_and_opts(pipeline, opts);
-                client_watch_called = true;
-                return nullptr;
-            });
+        client_watch->interpose([&](mongoc_client_t const* client, bson_t const* pipeline, bson_t const* opts) {
+            (void)client;
+            check_pipeline_and_opts(pipeline, opts);
+            client_watch_called = true;
+            return nullptr;
+        });
 
         mongodb_client["db"]["collection"].watch(cs_pipeline, cs_opts);
         mongodb_client["db"].watch(cs_pipeline, cs_opts);
@@ -441,7 +431,7 @@ TEST_CASE("Documentation Examples", "[min36]") {
     }
 
     collection events = (*mongodb_client)["streams"]["events"];
-    collection inventory = events;  // doc examples use this name
+    collection inventory = events; // doc examples use this name
 
     std::atomic_bool insert_thread_done;
     insert_thread_done.store(false);
@@ -519,10 +509,10 @@ TEST_CASE("Documentation Examples", "[min36]") {
 
         // Start Changestream Example 4
         mongocxx::pipeline cs_pipeline;
-        cs_pipeline.match(
-            make_document(kvp("$or",
-                              make_array(make_document(kvp("fullDocument.username", "alice")),
-                                         make_document(kvp("operationType", "delete"))))));
+        cs_pipeline.match(make_document(kvp(
+            "$or",
+            make_array(
+                make_document(kvp("fullDocument.username", "alice")), make_document(kvp("operationType", "delete"))))));
 
         change_stream stream = inventory.watch(cs_pipeline);
         auto it = stream.begin();
@@ -728,7 +718,7 @@ TEST_CASE("Watch a Collection", "[min36]") {
 
         SECTION("A range-based for loop iterates twice") {
             int count = 0;
-            for (const auto& v : x) {
+            for (auto const& v : x) {
                 (void)v;
                 ++count;
             }
@@ -799,8 +789,7 @@ TEST_CASE("Watch a Collection", "[min36]") {
 
         // create a document and then update it
         events.insert_one(make_document(kvp("_id", "one"), kvp("a", "a")));
-        events.update_one(make_document(kvp("_id", "one")),
-                          make_document(kvp("$set", make_document(kvp("a", "A")))));
+        events.update_one(make_document(kvp("_id", "one")), make_document(kvp("$set", make_document(kvp("a", "A")))));
         events.delete_one(make_document(kvp("_id", "one")));
 
         SECTION("See single update and not updates or deletes") {
@@ -810,4 +799,4 @@ TEST_CASE("Watch a Collection", "[min36]") {
     }
 }
 
-}  // namespace
+} // namespace

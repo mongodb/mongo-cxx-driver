@@ -57,8 +57,7 @@ class scoped_bson_t {
     //
     // The internal bson_t is considered initialized.
     //
-    explicit MONGOCXX_ABI_EXPORT_CDECL_TESTING() scoped_bson_t(
-        bsoncxx::document::view_or_value doc);
+    explicit MONGOCXX_ABI_EXPORT_CDECL_TESTING() scoped_bson_t(bsoncxx::document::view_or_value doc);
 
     //
     // Initializes a bson_t from the provided document.
@@ -109,8 +108,7 @@ class scoped_bson_t {
     // The internal bson_t is initialized if the optional contains a document.
     //
     MONGOCXX_ABI_EXPORT_CDECL_TESTING(void)
-    init_from_static(
-        bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> doc);
+    init_from_static(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> doc);
 
     //
     // Initialize the internal bson_t.
@@ -131,8 +129,8 @@ class scoped_bson_t {
 
     MONGOCXX_ABI_EXPORT_CDECL_TESTING() ~scoped_bson_t();
 
-    scoped_bson_t(const scoped_bson_t& rhs) = delete;
-    scoped_bson_t& operator=(const scoped_bson_t& rhs) = delete;
+    scoped_bson_t(scoped_bson_t const& rhs) = delete;
+    scoped_bson_t& operator=(scoped_bson_t const& rhs) = delete;
     scoped_bson_t(scoped_bson_t&& rhs) = delete;
     scoped_bson_t& operator=(scoped_bson_t&& rhs) = delete;
 
@@ -161,7 +159,7 @@ class scoped_bson_t {
     bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> _doc;
 };
 
-}  // namespace libbson
-}  // namespace mongocxx
+} // namespace libbson
+} // namespace mongocxx
 
 #include <mongocxx/config/private/postlude.hh>

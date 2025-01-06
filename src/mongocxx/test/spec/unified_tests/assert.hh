@@ -23,13 +23,14 @@
 namespace mongocxx {
 namespace assert {
 
-void matches(bsoncxx::types::bson_value::view actual,
-             bsoncxx::types::bson_value::view expected,
-             mongocxx::entity::map& map,
-             bool is_root = true,
-             bool is_array_of_root_docs = false);
+void matches(
+    bsoncxx::types::bson_value::view actual,
+    bsoncxx::types::bson_value::view expected,
+    mongocxx::entity::map& map,
+    bool is_root = true,
+    bool is_array_of_root_docs = false);
 
-}  // namespace assert
-}  // namespace mongocxx
+} // namespace assert
+} // namespace mongocxx
 
 #include <mongocxx/config/private/postlude.hh>

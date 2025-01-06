@@ -39,4 +39,4 @@ struct big_string {
     }
 };
 
-}  // namespace examples
+} // namespace examples

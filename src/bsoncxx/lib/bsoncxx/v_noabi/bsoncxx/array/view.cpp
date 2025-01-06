@@ -33,11 +33,11 @@ bson_iter_t to_bson_iter_t(element e) {
     bson_iter_init_from_data_at_offset(&iter, e.raw(), e.length(), e.offset(), e.keylen());
     return iter;
 }
-}  // namespace
+} // namespace
 
 view::const_iterator::const_iterator() {}
 
-view::const_iterator::const_iterator(const element& element) : _element(element) {}
+view::const_iterator::const_iterator(element const& element) : _element(element) {}
 
 view::const_iterator::reference view::const_iterator::operator*() {
     return _element;
@@ -73,12 +73,12 @@ view::const_iterator view::const_iterator::operator++(int) {
     return before;
 }
 
-bool operator==(const view::const_iterator& lhs, const view::const_iterator& rhs) {
+bool operator==(view::const_iterator const& lhs, view::const_iterator const& rhs) {
     return std::forward_as_tuple(lhs._element.raw(), lhs._element.offset()) ==
            std::forward_as_tuple(rhs._element.raw(), rhs._element.offset());
 }
 
-bool operator!=(const view::const_iterator& lhs, const view::const_iterator& rhs) {
+bool operator!=(view::const_iterator const& lhs, view::const_iterator const& rhs) {
     return !(lhs == rhs);
 }
 
@@ -93,10 +93,8 @@ view::const_iterator view::cbegin() const {
         return cend();
     }
 
-    return const_iterator{element{data(),
-                                  static_cast<uint32_t>(length()),
-                                  bson_iter_offset(&iter),
-                                  bson_iter_key_len(&iter)}};
+    return const_iterator{
+        element{data(), static_cast<uint32_t>(length()), bson_iter_offset(&iter), bson_iter_key_len(&iter)}};
 }
 
 view::const_iterator view::cend() const {
@@ -129,21 +127,19 @@ view::const_iterator view::find(std::uint32_t i) const {
         return const_iterator(element(key.c_str()));
     }
 
-    return const_iterator(element(data(),
-                                  static_cast<uint32_t>(length()),
-                                  bson_iter_offset(&iter),
-                                  bson_iter_key_len(&iter)));
+    return const_iterator(
+        element(data(), static_cast<uint32_t>(length()), bson_iter_offset(&iter), bson_iter_key_len(&iter)));
 }
 
 element view::operator[](std::uint32_t i) const {
     return *(this->find(i));
 }
 
-view::view(const std::uint8_t* data, std::size_t length) : _view(data, length) {}
+view::view(std::uint8_t const* data, std::size_t length) : _view(data, length) {}
 
 view::view() : _view() {}
 
-const std::uint8_t* view::data() const {
+std::uint8_t const* view::data() const {
     return _view.data();
 }
 std::size_t view::length() const {
@@ -159,14 +155,13 @@ view::operator document::view() const {
 }
 
 bool operator==(view lhs, view rhs) {
-    return (lhs.length() == rhs.length()) &&
-           (std::memcmp(lhs.data(), rhs.data(), lhs.length()) == 0);
+    return (lhs.length() == rhs.length()) && (std::memcmp(lhs.data(), rhs.data(), lhs.length()) == 0);
 }
 
 bool operator!=(view lhs, view rhs) {
     return !(lhs == rhs);
 }
 
-}  // namespace array
-}  // namespace v_noabi
-}  // namespace bsoncxx
+} // namespace array
+} // namespace v_noabi
+} // namespace bsoncxx

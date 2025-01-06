@@ -20,8 +20,7 @@ namespace mongocxx {
 namespace v_noabi {
 namespace result {
 
-bulk_write::bulk_write(bsoncxx::v_noabi::document::value raw_response)
-    : _response(std::move(raw_response)) {}
+bulk_write::bulk_write(bsoncxx::v_noabi::document::value raw_response) : _response(std::move(raw_response)) {}
 
 std::int32_t bulk_write::inserted_count() const {
     return view()["nInserted"].get_int32();
@@ -60,13 +59,13 @@ bsoncxx::v_noabi::document::view bulk_write::view() const {
     return _response.view();
 }
 
-bool operator==(const bulk_write& lhs, const bulk_write& rhs) {
+bool operator==(bulk_write const& lhs, bulk_write const& rhs) {
     return lhs.view() == rhs.view();
 }
-bool operator!=(const bulk_write& lhs, const bulk_write& rhs) {
+bool operator!=(bulk_write const& lhs, bulk_write const& rhs) {
     return !(lhs == rhs);
 }
 
-}  // namespace result
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace result
+} // namespace v_noabi
+} // namespace mongocxx

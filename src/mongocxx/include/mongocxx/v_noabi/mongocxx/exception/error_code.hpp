@@ -121,7 +121,7 @@ enum class error_code : std::int32_t {
 ///
 /// @return The mongocxx error_category
 ///
-MONGOCXX_ABI_EXPORT_CDECL(const std::error_category&) error_category();
+MONGOCXX_ABI_EXPORT_CDECL(std::error_category const&) error_category();
 
 ///
 /// Translate a mongocxx::v_noabi::error_code into a std::error_code.
@@ -134,15 +134,15 @@ inline std::error_code make_error_code(error_code error) {
     return {static_cast<int>(error), error_category()};
 }
 
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace v_noabi
+} // namespace mongocxx
 
 namespace mongocxx {
 
 using ::mongocxx::v_noabi::error_category;
 using ::mongocxx::v_noabi::make_error_code;
 
-}  // namespace mongocxx
+} // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
 
@@ -153,7 +153,7 @@ template <>
 struct is_error_code_enum<::mongocxx::v_noabi::error_code> : std::true_type {};
 // @endcond
 
-}  // namespace std
+} // namespace std
 
 ///
 /// @file

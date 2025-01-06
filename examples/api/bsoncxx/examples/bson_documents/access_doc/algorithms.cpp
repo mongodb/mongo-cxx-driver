@@ -33,12 +33,9 @@ void example(bsoncxx::document::view doc) {
 
     std::vector<bsoncxx::document::element> elements;
 
-    std::copy_if(doc.begin(),
-                 doc.end(),
-                 std::back_inserter(elements),
-                 [](const bsoncxx::document::element& e) {
-                     return e.key() == "a" || e.type() == bsoncxx::type::k_string;
-                 });
+    std::copy_if(doc.begin(), doc.end(), std::back_inserter(elements), [](bsoncxx::document::element const& e) {
+        return e.key() == "a" || e.type() == bsoncxx::type::k_string;
+    });
 
     EXPECT(elements.size() == 2u);
     EXPECT(elements[0].key() == "a");
@@ -46,7 +43,7 @@ void example(bsoncxx::document::view doc) {
 }
 // [Example]
 
-}  // namespace
+} // namespace
 
 RUNNER_REGISTER_COMPONENT() {
     example(bsoncxx::from_json(R"({"a": 1, "b": 2.0, "c": "three"})"));

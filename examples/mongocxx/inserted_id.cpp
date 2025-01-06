@@ -51,7 +51,7 @@ int EXAMPLES_CDECL main() {
         } else {
             std::cout << "Inserted id was not an OID type" << std::endl;
         }
-    } catch (const mongocxx::exception& e) {
+    } catch (mongocxx::exception const& e) {
         std::cout << "An exception occurred: " << e.what() << std::endl;
         return EXIT_FAILURE;
     }

@@ -87,10 +87,10 @@ struct finalize_type {
 ///
 constexpr finalize_type finalize;
 
-}  // namespace stream
-}  // namespace builder
-}  // namespace v_noabi
-}  // namespace bsoncxx
+} // namespace stream
+} // namespace builder
+} // namespace v_noabi
+} // namespace bsoncxx
 
 namespace bsoncxx {
 namespace builder {
@@ -102,9 +102,9 @@ using ::bsoncxx::v_noabi::builder::stream::finalize;
 using ::bsoncxx::v_noabi::builder::stream::open_array;
 using ::bsoncxx::v_noabi::builder::stream::open_document;
 
-}  // namespace stream
-}  // namespace builder
-}  // namespace bsoncxx
+} // namespace stream
+} // namespace builder
+} // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>
 
