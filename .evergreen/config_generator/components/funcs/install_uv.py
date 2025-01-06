@@ -1,3 +1,5 @@
+from config_generator.components.funcs.set_cache_dir import SetCacheDir
+
 from config_generator.etc.function import Function
 from config_generator.etc.utils import bash_exec
 
@@ -6,7 +8,7 @@ from shrub.v3.evg_command import EvgCommandType, expansions_update
 
 class InstallUV(Function):
     name = 'install-uv'
-    commands = [
+    commands = SetCacheDir.commands + [
         bash_exec(
             command_type=EvgCommandType.SETUP,
             script='''\
@@ -18,15 +20,19 @@ class InstallUV(Function):
                     exit 1
                 fi
 
-                uv_install_dir="${MONGO_CXX_DRIVER_CACHE_DIR}/uv-0.5.9"
+                uv_install_dir="${MONGO_CXX_DRIVER_CACHE_DIR}/uv-0.5.14"
                 mkdir -p "$uv_install_dir"
 
-                if ! command -V "$uv_install_dir/uv" 2>/dev/null; then
+                if ! command -v "$uv_install_dir/uv" 2>/dev/null; then
                     env \\
                         UV_INSTALL_DIR="$uv_install_dir" \\
-                        UV_NO_MODIFY_PATH=1 \\
-                        mongo-cxx-driver/.evergreen/scripts/uv-installer.sh
+                        UV_UNMANAGED_INSTALL=1 \\
+                        INSTALLER_PRINT_VERBOSE=1 \\
+                        mongo-cxx-driver/.evergreen/scripts/uv-installer.sh --verbose
                 fi
+
+                PATH="$uv_install_dir:$PATH" command -V uv
+                PATH="$uv_install_dir:$PATH" uv --version
 
                 printf "UV_INSTALL_DIR: %s\\n" "$uv_install_dir" >|expansions.uv.yml
             ''',
