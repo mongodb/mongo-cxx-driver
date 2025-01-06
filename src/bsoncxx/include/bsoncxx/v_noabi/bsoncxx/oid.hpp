@@ -28,7 +28,7 @@ namespace bsoncxx {
 namespace v_noabi {
 
 ///
-/// Represents a MongoDB ObjectId.
+/// Represents a MongoDB BSON ObjectId.
 ///
 /// @see
 /// - [BSON Types (MongoDB Manual)](https://www.mongodb.com/docs/manual/reference/bson-types/)
