@@ -4759,9 +4759,9 @@ tasks:
           cc_compiler: gcc
           cxx_compiler: g++
       - func: uninstall-check
-  - name: uninstall-check-vs2015-x64-debug-shared
-    run_on: windows-64-vs2015-large
-    tags: [uninstall-check, windows-64-vs2015, vs2015x64, debug, shared]
+  - name: uninstall-check-windows-2019-vs2017-x64-debug-shared
+    run_on: windows-vsCurrent-large
+    tags: [uninstall-check, windows-vsCurrent, vs2017x64, debug, shared]
     commands:
       - func: setup
       - func: fetch_c_driver_source
@@ -4769,12 +4769,12 @@ tasks:
       - func: compile
         vars:
           build_type: Debug
-          generator: Visual Studio 14 2015
+          generator: Visual Studio 15 2017
           platform: x64
       - func: uninstall-check
-  - name: uninstall-check-vs2015-x64-release-shared
-    run_on: windows-64-vs2015-large
-    tags: [uninstall-check, windows-64-vs2015, vs2015x64, release, shared]
+  - name: uninstall-check-windows-2019-vs2017-x64-release-shared
+    run_on: windows-vsCurrent-large
+    tags: [uninstall-check, windows-vsCurrent, vs2017x64, release, shared]
     commands:
       - func: setup
       - func: fetch_c_driver_source
@@ -4782,7 +4782,7 @@ tasks:
       - func: compile
         vars:
           build_type: Release
-          generator: Visual Studio 14 2015
+          generator: Visual Studio 15 2017
           platform: x64
       - func: uninstall-check
   - name: valgrind-ubuntu1804-shared-5.0-single

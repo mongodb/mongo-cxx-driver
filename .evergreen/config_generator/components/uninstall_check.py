@@ -23,7 +23,7 @@ MATRIX = [
     ('debian10',          'gcc',       [         'Release'], ['shared']),
     ('debian11',          'gcc',       [         'Release'], ['shared']),
     ('debian12',          'gcc',       [         'Release'], ['shared']),
-    ('windows-64-vs2015', 'vs2015x64', ['Debug', 'Release'], ['shared']),
+    ('windows-vsCurrent', 'vs2017x64', ['Debug', 'Release'], ['shared']),
     ('ubuntu1804',        'gcc',       [         'Release'], ['shared']),
     ('ubuntu2004',        'gcc',       [         'Release'], ['shared']),
 ]
