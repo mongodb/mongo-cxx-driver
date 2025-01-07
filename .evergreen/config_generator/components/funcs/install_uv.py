@@ -28,7 +28,7 @@ class InstallUV(Function):
                         UV_INSTALL_DIR="$uv_install_dir" \\
                         UV_UNMANAGED_INSTALL=1 \\
                         INSTALLER_PRINT_VERBOSE=1 \\
-                        mongo-cxx-driver/.evergreen/scripts/uv-installer.sh --verbose
+                        mongo-cxx-driver/.evergreen/scripts/uv-installer.sh
                 fi
 
                 PATH="$uv_install_dir:$PATH" command -V uv
