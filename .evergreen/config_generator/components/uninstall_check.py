@@ -1,5 +1,6 @@
 from config_generator.components.funcs.compile import Compile
 from config_generator.components.funcs.fetch_c_driver_source import FetchCDriverSource
+from config_generator.components.funcs.install_uv import InstallUV
 from config_generator.components.funcs.setup import Setup
 
 from config_generator.etc.distros import find_large_distro, make_distro_str
@@ -22,7 +23,7 @@ MATRIX = [
     ('debian10',          'gcc',       [         'Release'], ['shared']),
     ('debian11',          'gcc',       [         'Release'], ['shared']),
     ('debian12',          'gcc',       [         'Release'], ['shared']),
-    ('windows-64-vs2015', 'vs2015x64', ['Debug', 'Release'], ['shared']),
+    ('windows-vsCurrent', 'vs2017x64', ['Debug', 'Release'], ['shared']),
     ('ubuntu1804',        'gcc',       [         'Release'], ['shared']),
     ('ubuntu2004',        'gcc',       [         'Release'], ['shared']),
 ]
@@ -65,6 +66,7 @@ def tasks():
                     commands=[
                         Setup.call(),
                         FetchCDriverSource.call(),
+                        InstallUV.call(),
                         Compile.call(
                             build_type=build_type,
                             compiler=compiler,

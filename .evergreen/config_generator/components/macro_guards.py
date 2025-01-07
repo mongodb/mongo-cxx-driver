@@ -1,5 +1,6 @@
 from config_generator.components.funcs.compile import Compile
 from config_generator.components.funcs.fetch_c_driver_source import FetchCDriverSource
+from config_generator.components.funcs.install_uv import InstallUV
 from config_generator.components.funcs.setup import Setup
 
 from config_generator.etc.distros import find_large_distro, make_distro_str
@@ -42,6 +43,7 @@ def tasks():
                 commands=[
                     Setup.call(),
                     FetchCDriverSource.call(),
+                    InstallUV.call(),
                     Compile.call(
                         build_type='Debug',
                         compiler=compiler,

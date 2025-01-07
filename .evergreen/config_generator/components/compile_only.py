@@ -1,10 +1,11 @@
 from config_generator.components.funcs.compile import Compile
+from config_generator.components.funcs.install_uv import InstallUV
 from config_generator.components.funcs.fetch_c_driver_source import FetchCDriverSource
 from config_generator.components.funcs.setup import Setup
 
 from config_generator.etc.distros import find_large_distro, make_distro_str
 
-from shrub.v3.evg_build_variant import BuildVariant, DisplayTask
+from shrub.v3.evg_build_variant import BuildVariant
 from shrub.v3.evg_task import EvgTask, EvgTaskRef
 
 from itertools import product
@@ -25,8 +26,10 @@ MATRIX = [
     ('ubuntu2004', 'gcc',   ['Debug'], ['shared'],  [None]),
     ('ubuntu2004', 'clang', ['Debug'], ['shared'],  [None]),
 
-    ('windows-64-vs2015', 'vs2015x64', ['Debug'], ['shared'],  [None]),
-    ('windows-64-vs2015', 'vs2015x64', ['Release'], ['shared'],  [None]),
+    ('windows-64-vs2015', 'vs2015x64', ['Debug', 'Release'], ['shared'],  [None]),
+    ('windows-vsCurrent', 'vs2017x64', ['Debug', 'Release'], ['shared'],  [None]),
+    ('windows-vsCurrent', 'vs2019x64', ['Debug', 'Release'], ['shared'],  [None]),
+    ('windows-vsCurrent', 'vs2022x64', ['Debug', 'Release'], ['shared'],  [None]),
 ]
 # fmt: on
 # pylint: enable=line-too-long
@@ -71,6 +74,7 @@ def generate_tasks():
                     commands=[
                         Setup.call(),
                         FetchCDriverSource.call(),
+                        InstallUV.call(),
                         Compile.call(
                             build_type=build_type,
                             compiler=compiler,

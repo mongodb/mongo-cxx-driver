@@ -124,6 +124,7 @@ tasks:
     tags: [atlas-search-indexes, ubuntu2004]
     commands:
       - func: install_c_driver
+      - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -134,6 +135,7 @@ tasks:
     tags: [atlas-search-indexes, ubuntu2004]
     commands:
       - func: install_c_driver
+      - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -170,6 +172,7 @@ tasks:
     commands:
       - func: setup
       - func: fetch_c_driver_source
+      - func: install-uv
       - func: compile
         vars:
           BSONCXX_POLYFILL: impls
@@ -181,6 +184,7 @@ tasks:
     commands:
       - func: setup
       - func: fetch_c_driver_source
+      - func: install-uv
       - func: compile
         vars:
           build_type: Release
@@ -191,6 +195,7 @@ tasks:
     commands:
       - func: setup
       - func: fetch_c_driver_source
+      - func: install-uv
       - func: compile
         vars:
           build_type: Release
@@ -200,6 +205,7 @@ tasks:
     commands:
       - func: setup
       - func: fetch_c_driver_source
+      - func: install-uv
       - func: compile
         vars:
           build_type: Debug
@@ -211,6 +217,7 @@ tasks:
     commands:
       - func: setup
       - func: fetch_c_driver_source
+      - func: install-uv
       - func: compile
         vars:
           build_type: Debug
@@ -220,6 +227,7 @@ tasks:
     commands:
       - func: setup
       - func: fetch_c_driver_source
+      - func: install-uv
       - func: compile
         vars:
           build_type: Debug
@@ -231,6 +239,7 @@ tasks:
     commands:
       - func: setup
       - func: fetch_c_driver_source
+      - func: install-uv
       - func: compile
         vars:
           build_type: Debug
@@ -242,10 +251,83 @@ tasks:
     commands:
       - func: setup
       - func: fetch_c_driver_source
+      - func: install-uv
       - func: compile
         vars:
           build_type: Release
           generator: Visual Studio 14 2015
+          platform: x64
+  - name: compile-only-windows-2019-vs2017-x64-debug-shared
+    run_on: windows-vsCurrent-large
+    tags: [compile-only, windows-vsCurrent, vs2017x64, debug, shared]
+    commands:
+      - func: setup
+      - func: fetch_c_driver_source
+      - func: install-uv
+      - func: compile
+        vars:
+          build_type: Debug
+          generator: Visual Studio 15 2017
+          platform: x64
+  - name: compile-only-windows-2019-vs2017-x64-release-shared
+    run_on: windows-vsCurrent-large
+    tags: [compile-only, windows-vsCurrent, vs2017x64, release, shared]
+    commands:
+      - func: setup
+      - func: fetch_c_driver_source
+      - func: install-uv
+      - func: compile
+        vars:
+          build_type: Release
+          generator: Visual Studio 15 2017
+          platform: x64
+  - name: compile-only-windows-2019-vs2019-x64-debug-shared
+    run_on: windows-vsCurrent-large
+    tags: [compile-only, windows-vsCurrent, vs2019x64, debug, shared]
+    commands:
+      - func: setup
+      - func: fetch_c_driver_source
+      - func: install-uv
+      - func: compile
+        vars:
+          build_type: Debug
+          generator: Visual Studio 16 2019
+          platform: x64
+  - name: compile-only-windows-2019-vs2019-x64-release-shared
+    run_on: windows-vsCurrent-large
+    tags: [compile-only, windows-vsCurrent, vs2019x64, release, shared]
+    commands:
+      - func: setup
+      - func: fetch_c_driver_source
+      - func: install-uv
+      - func: compile
+        vars:
+          build_type: Release
+          generator: Visual Studio 16 2019
+          platform: x64
+  - name: compile-only-windows-2019-vs2022-x64-debug-shared
+    run_on: windows-vsCurrent-large
+    tags: [compile-only, windows-vsCurrent, vs2022x64, debug, shared]
+    commands:
+      - func: setup
+      - func: fetch_c_driver_source
+      - func: install-uv
+      - func: compile
+        vars:
+          build_type: Debug
+          generator: Visual Studio 17 2022
+          platform: x64
+  - name: compile-only-windows-2019-vs2022-x64-release-shared
+    run_on: windows-vsCurrent-large
+    tags: [compile-only, windows-vsCurrent, vs2022x64, release, shared]
+    commands:
+      - func: setup
+      - func: fetch_c_driver_source
+      - func: install-uv
+      - func: compile
+        vars:
+          build_type: Release
+          generator: Visual Studio 17 2022
           platform: x64
   - name: docker-build-ubuntu2204
     run_on: ubuntu2204-large
@@ -273,6 +355,7 @@ tasks:
           TOPOLOGY: replica_set
           mongodb_version: "5.0"
       - func: fetch_c_driver_source
+      - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -296,6 +379,7 @@ tasks:
           TOPOLOGY: sharded_cluster
           mongodb_version: "5.0"
       - func: fetch_c_driver_source
+      - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -318,6 +402,7 @@ tasks:
         vars:
           mongodb_version: "5.0"
       - func: fetch_c_driver_source
+      - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -343,6 +428,7 @@ tasks:
         vars:
           BSON_EXTRA_ALIGNMENT: 1
           SKIP_INSTALL_LIBMONGOCRYPT: 1
+      - func: install-uv
       - func: compile
         vars:
           BSON_EXTRA_ALIGNMENT: 1
@@ -365,6 +451,7 @@ tasks:
         vars:
           mongodb_version: "5.0"
       - func: fetch_c_driver_source
+      - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -392,6 +479,7 @@ tasks:
         vars:
           BSON_EXTRA_ALIGNMENT: 1
           SKIP_INSTALL_LIBMONGOCRYPT: 1
+      - func: install-uv
       - func: compile
         vars:
           BSON_EXTRA_ALIGNMENT: 1
@@ -417,6 +505,7 @@ tasks:
           TOPOLOGY: replica_set
           mongodb_version: "5.0"
       - func: fetch_c_driver_source
+      - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -440,6 +529,7 @@ tasks:
           TOPOLOGY: sharded_cluster
           mongodb_version: "5.0"
       - func: fetch_c_driver_source
+      - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -462,6 +552,7 @@ tasks:
         vars:
           mongodb_version: "5.0"
       - func: fetch_c_driver_source
+      - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -484,6 +575,7 @@ tasks:
         vars:
           mongodb_version: "5.0"
       - func: fetch_c_driver_source
+      - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -512,6 +604,7 @@ tasks:
         vars:
           BSON_EXTRA_ALIGNMENT: 1
           SKIP_INSTALL_LIBMONGOCRYPT: 1
+      - func: install-uv
       - func: compile
         vars:
           BSON_EXTRA_ALIGNMENT: 1
@@ -540,6 +633,7 @@ tasks:
         vars:
           BSON_EXTRA_ALIGNMENT: 1
           SKIP_INSTALL_LIBMONGOCRYPT: 1
+      - func: install-uv
       - func: compile
         vars:
           BSON_EXTRA_ALIGNMENT: 1
@@ -562,6 +656,7 @@ tasks:
         vars:
           mongodb_version: "5.0"
       - func: fetch_c_driver_source
+      - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -589,6 +684,7 @@ tasks:
         vars:
           BSON_EXTRA_ALIGNMENT: 1
           SKIP_INSTALL_LIBMONGOCRYPT: 1
+      - func: install-uv
       - func: compile
         vars:
           BSON_EXTRA_ALIGNMENT: 1
@@ -614,6 +710,7 @@ tasks:
           TOPOLOGY: replica_set
           mongodb_version: latest
       - func: install_c_driver
+      - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -637,6 +734,7 @@ tasks:
           TOPOLOGY: sharded_cluster
           mongodb_version: latest
       - func: install_c_driver
+      - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -662,6 +760,7 @@ tasks:
         vars:
           BSON_EXTRA_ALIGNMENT: 1
           SKIP_INSTALL_LIBMONGOCRYPT: 1
+      - func: install-uv
       - func: compile
         vars:
           BSON_EXTRA_ALIGNMENT: 1
@@ -687,6 +786,7 @@ tasks:
         vars:
           mongodb_version: latest
       - func: fetch_c_driver_source
+      - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -715,6 +815,7 @@ tasks:
         vars:
           BSON_EXTRA_ALIGNMENT: 1
           SKIP_INSTALL_LIBMONGOCRYPT: 1
+      - func: install-uv
       - func: compile
         vars:
           BSON_EXTRA_ALIGNMENT: 1
@@ -737,6 +838,7 @@ tasks:
         vars:
           mongodb_version: latest
       - func: fetch_c_driver_source
+      - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -762,6 +864,7 @@ tasks:
         vars:
           BSON_EXTRA_ALIGNMENT: 1
           SKIP_INSTALL_LIBMONGOCRYPT: 1
+      - func: install-uv
       - func: compile
         vars:
           BSON_EXTRA_ALIGNMENT: 1
@@ -786,6 +889,7 @@ tasks:
         vars:
           mongodb_version: latest
       - func: fetch_c_driver_source
+      - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -813,6 +917,7 @@ tasks:
         vars:
           BSON_EXTRA_ALIGNMENT: 1
           SKIP_INSTALL_LIBMONGOCRYPT: 1
+      - func: install-uv
       - func: compile
         vars:
           BSON_EXTRA_ALIGNMENT: 1
@@ -835,6 +940,7 @@ tasks:
         vars:
           mongodb_version: latest
       - func: fetch_c_driver_source
+      - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -860,6 +966,7 @@ tasks:
         vars:
           BSON_EXTRA_ALIGNMENT: 1
           SKIP_INSTALL_LIBMONGOCRYPT: 1
+      - func: install-uv
       - func: compile
         vars:
           BSON_EXTRA_ALIGNMENT: 1
@@ -884,6 +991,7 @@ tasks:
         vars:
           mongodb_version: latest
       - func: fetch_c_driver_source
+      - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -911,6 +1019,7 @@ tasks:
         vars:
           BSON_EXTRA_ALIGNMENT: 1
           SKIP_INSTALL_LIBMONGOCRYPT: 1
+      - func: install-uv
       - func: compile
         vars:
           BSON_EXTRA_ALIGNMENT: 1
@@ -933,6 +1042,7 @@ tasks:
         vars:
           mongodb_version: latest
       - func: fetch_c_driver_source
+      - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -958,6 +1068,7 @@ tasks:
         vars:
           BSON_EXTRA_ALIGNMENT: 1
           SKIP_INSTALL_LIBMONGOCRYPT: 1
+      - func: install-uv
       - func: compile
         vars:
           BSON_EXTRA_ALIGNMENT: 1
@@ -982,6 +1093,7 @@ tasks:
         vars:
           mongodb_version: latest
       - func: fetch_c_driver_source
+      - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -1006,6 +1118,7 @@ tasks:
         vars:
           mongodb_version: "5.0"
       - func: fetch_c_driver_source
+      - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -1031,6 +1144,7 @@ tasks:
         vars:
           BSON_EXTRA_ALIGNMENT: 1
           SKIP_INSTALL_LIBMONGOCRYPT: 1
+      - func: install-uv
       - func: compile
         vars:
           BSON_EXTRA_ALIGNMENT: 1
@@ -1053,6 +1167,7 @@ tasks:
         vars:
           mongodb_version: "5.0"
       - func: fetch_c_driver_source
+      - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -1080,6 +1195,7 @@ tasks:
         vars:
           BSON_EXTRA_ALIGNMENT: 1
           SKIP_INSTALL_LIBMONGOCRYPT: 1
+      - func: install-uv
       - func: compile
         vars:
           BSON_EXTRA_ALIGNMENT: 1
@@ -1105,6 +1221,7 @@ tasks:
         vars:
           mongodb_version: "5.0"
       - func: fetch_c_driver_source
+      - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -1132,6 +1249,7 @@ tasks:
         vars:
           BSON_EXTRA_ALIGNMENT: 1
           SKIP_INSTALL_LIBMONGOCRYPT: 1
+      - func: install-uv
       - func: compile
         vars:
           BSON_EXTRA_ALIGNMENT: 1
@@ -1159,6 +1277,7 @@ tasks:
         vars:
           BSON_EXTRA_ALIGNMENT: 1
           SKIP_INSTALL_LIBMONGOCRYPT: 1
+      - func: install-uv
       - func: compile
         vars:
           BSON_EXTRA_ALIGNMENT: 1
@@ -1183,6 +1302,7 @@ tasks:
         vars:
           mongodb_version: latest
       - func: fetch_c_driver_source
+      - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -1207,6 +1327,7 @@ tasks:
         vars:
           mongodb_version: "5.0"
       - func: fetch_c_driver_source
+      - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -1236,6 +1357,7 @@ tasks:
         vars:
           BSON_EXTRA_ALIGNMENT: 1
           SKIP_INSTALL_LIBMONGOCRYPT: 1
+      - func: install-uv
       - func: compile
         vars:
           BSON_EXTRA_ALIGNMENT: 1
@@ -1265,6 +1387,7 @@ tasks:
         vars:
           BSON_EXTRA_ALIGNMENT: 1
           SKIP_INSTALL_LIBMONGOCRYPT: 1
+      - func: install-uv
       - func: compile
         vars:
           BSON_EXTRA_ALIGNMENT: 1
@@ -1291,6 +1414,7 @@ tasks:
         vars:
           mongodb_version: latest
       - func: fetch_c_driver_source
+      - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -1317,6 +1441,7 @@ tasks:
         vars:
           mongodb_version: "5.0"
       - func: fetch_c_driver_source
+      - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -1341,6 +1466,7 @@ tasks:
         vars:
           mongodb_version: "6.0"
       - func: fetch_c_driver_source
+      - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -1368,6 +1494,7 @@ tasks:
         vars:
           BSON_EXTRA_ALIGNMENT: 1
           SKIP_INSTALL_LIBMONGOCRYPT: 1
+      - func: install-uv
       - func: compile
         vars:
           BSON_EXTRA_ALIGNMENT: 1
@@ -1395,6 +1522,7 @@ tasks:
         vars:
           BSON_EXTRA_ALIGNMENT: 1
           SKIP_INSTALL_LIBMONGOCRYPT: 1
+      - func: install-uv
       - func: compile
         vars:
           BSON_EXTRA_ALIGNMENT: 1
@@ -1422,6 +1550,7 @@ tasks:
         vars:
           BSON_EXTRA_ALIGNMENT: 1
           SKIP_INSTALL_LIBMONGOCRYPT: 1
+      - func: install-uv
       - func: compile
         vars:
           BSON_EXTRA_ALIGNMENT: 1
@@ -1446,6 +1575,7 @@ tasks:
         vars:
           mongodb_version: latest
       - func: fetch_c_driver_source
+      - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -1470,6 +1600,7 @@ tasks:
         vars:
           mongodb_version: "5.0"
       - func: fetch_c_driver_source
+      - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -1496,6 +1627,7 @@ tasks:
         vars:
           mongodb_version: "6.0"
       - func: fetch_c_driver_source
+      - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -1525,6 +1657,7 @@ tasks:
         vars:
           BSON_EXTRA_ALIGNMENT: 1
           SKIP_INSTALL_LIBMONGOCRYPT: 1
+      - func: install-uv
       - func: compile
         vars:
           BSON_EXTRA_ALIGNMENT: 1
@@ -1554,6 +1687,7 @@ tasks:
         vars:
           BSON_EXTRA_ALIGNMENT: 1
           SKIP_INSTALL_LIBMONGOCRYPT: 1
+      - func: install-uv
       - func: compile
         vars:
           BSON_EXTRA_ALIGNMENT: 1
@@ -1583,6 +1717,7 @@ tasks:
         vars:
           BSON_EXTRA_ALIGNMENT: 1
           SKIP_INSTALL_LIBMONGOCRYPT: 1
+      - func: install-uv
       - func: compile
         vars:
           BSON_EXTRA_ALIGNMENT: 1
@@ -1609,6 +1744,7 @@ tasks:
         vars:
           mongodb_version: latest
       - func: fetch_c_driver_source
+      - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -1635,6 +1771,7 @@ tasks:
           TOPOLOGY: replica_set
           mongodb_version: latest
       - func: install_c_driver
+      - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -1659,6 +1796,7 @@ tasks:
           TOPOLOGY: sharded_cluster
           mongodb_version: latest
       - func: install_c_driver
+      - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -1685,6 +1823,7 @@ tasks:
         vars:
           BSON_EXTRA_ALIGNMENT: 1
           SKIP_INSTALL_LIBMONGOCRYPT: 1
+      - func: install-uv
       - func: compile
         vars:
           BSON_EXTRA_ALIGNMENT: 1
@@ -1711,6 +1850,7 @@ tasks:
         vars:
           mongodb_version: latest
       - func: fetch_c_driver_source
+      - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -1740,6 +1880,7 @@ tasks:
         vars:
           BSON_EXTRA_ALIGNMENT: 1
           SKIP_INSTALL_LIBMONGOCRYPT: 1
+      - func: install-uv
       - func: compile
         vars:
           BSON_EXTRA_ALIGNMENT: 1
@@ -1763,6 +1904,7 @@ tasks:
         vars:
           mongodb_version: latest
       - func: fetch_c_driver_source
+      - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -1789,6 +1931,7 @@ tasks:
         vars:
           BSON_EXTRA_ALIGNMENT: 1
           SKIP_INSTALL_LIBMONGOCRYPT: 1
+      - func: install-uv
       - func: compile
         vars:
           BSON_EXTRA_ALIGNMENT: 1
@@ -1814,6 +1957,7 @@ tasks:
         vars:
           mongodb_version: latest
       - func: fetch_c_driver_source
+      - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -1840,6 +1984,7 @@ tasks:
           TOPOLOGY: replica_set
           mongodb_version: latest
       - func: install_c_driver
+      - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -1864,6 +2009,7 @@ tasks:
           TOPOLOGY: sharded_cluster
           mongodb_version: latest
       - func: install_c_driver
+      - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -1890,6 +2036,7 @@ tasks:
         vars:
           BSON_EXTRA_ALIGNMENT: 1
           SKIP_INSTALL_LIBMONGOCRYPT: 1
+      - func: install-uv
       - func: compile
         vars:
           BSON_EXTRA_ALIGNMENT: 1
@@ -1916,6 +2063,7 @@ tasks:
         vars:
           mongodb_version: latest
       - func: fetch_c_driver_source
+      - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -1945,6 +2093,7 @@ tasks:
         vars:
           BSON_EXTRA_ALIGNMENT: 1
           SKIP_INSTALL_LIBMONGOCRYPT: 1
+      - func: install-uv
       - func: compile
         vars:
           BSON_EXTRA_ALIGNMENT: 1
@@ -1968,6 +2117,7 @@ tasks:
         vars:
           mongodb_version: latest
       - func: fetch_c_driver_source
+      - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -1994,6 +2144,7 @@ tasks:
         vars:
           BSON_EXTRA_ALIGNMENT: 1
           SKIP_INSTALL_LIBMONGOCRYPT: 1
+      - func: install-uv
       - func: compile
         vars:
           BSON_EXTRA_ALIGNMENT: 1
@@ -2019,6 +2170,7 @@ tasks:
         vars:
           mongodb_version: latest
       - func: fetch_c_driver_source
+      - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -2044,6 +2196,7 @@ tasks:
         vars:
           mongodb_version: "5.0"
       - func: fetch_c_driver_source
+      - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -2069,6 +2222,7 @@ tasks:
         vars:
           BSON_EXTRA_ALIGNMENT: 1
           SKIP_INSTALL_LIBMONGOCRYPT: 1
+      - func: install-uv
       - func: compile
         vars:
           BSON_EXTRA_ALIGNMENT: 1
@@ -2091,6 +2245,7 @@ tasks:
         vars:
           mongodb_version: "5.0"
       - func: fetch_c_driver_source
+      - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -2118,6 +2273,7 @@ tasks:
         vars:
           BSON_EXTRA_ALIGNMENT: 1
           SKIP_INSTALL_LIBMONGOCRYPT: 1
+      - func: install-uv
       - func: compile
         vars:
           BSON_EXTRA_ALIGNMENT: 1
@@ -2142,6 +2298,7 @@ tasks:
         vars:
           mongodb_version: "4.0"
       - func: fetch_c_driver_source
+      - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -2164,6 +2321,7 @@ tasks:
         vars:
           mongodb_version: "4.2"
       - func: fetch_c_driver_source
+      - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -2186,6 +2344,7 @@ tasks:
         vars:
           mongodb_version: "4.4"
       - func: fetch_c_driver_source
+      - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -2208,6 +2367,7 @@ tasks:
         vars:
           mongodb_version: "5.0"
       - func: fetch_c_driver_source
+      - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -2230,6 +2390,7 @@ tasks:
         vars:
           mongodb_version: "6.0"
       - func: fetch_c_driver_source
+      - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -2253,6 +2414,7 @@ tasks:
           TOPOLOGY: replica_set
           mongodb_version: "4.0"
       - func: install_c_driver
+      - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -2276,6 +2438,7 @@ tasks:
           TOPOLOGY: sharded_cluster
           mongodb_version: "4.0"
       - func: install_c_driver
+      - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -2299,6 +2462,7 @@ tasks:
           TOPOLOGY: replica_set
           mongodb_version: "4.2"
       - func: install_c_driver
+      - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -2322,6 +2486,7 @@ tasks:
           TOPOLOGY: replica_set
           mongodb_version: "4.2"
       - func: install_c_driver
+      - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -2346,6 +2511,7 @@ tasks:
           TOPOLOGY: sharded_cluster
           mongodb_version: "4.2"
       - func: install_c_driver
+      - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -2369,6 +2535,7 @@ tasks:
           TOPOLOGY: sharded_cluster
           mongodb_version: "4.2"
       - func: install_c_driver
+      - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -2393,6 +2560,7 @@ tasks:
           TOPOLOGY: replica_set
           mongodb_version: "4.4"
       - func: install_c_driver
+      - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -2416,6 +2584,7 @@ tasks:
           TOPOLOGY: replica_set
           mongodb_version: "4.4"
       - func: install_c_driver
+      - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -2440,6 +2609,7 @@ tasks:
           TOPOLOGY: sharded_cluster
           mongodb_version: "4.4"
       - func: install_c_driver
+      - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -2463,6 +2633,7 @@ tasks:
           TOPOLOGY: sharded_cluster
           mongodb_version: "4.4"
       - func: install_c_driver
+      - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -2487,6 +2658,7 @@ tasks:
           TOPOLOGY: replica_set
           mongodb_version: "5.0"
       - func: install_c_driver
+      - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -2510,6 +2682,7 @@ tasks:
           TOPOLOGY: replica_set
           mongodb_version: "5.0"
       - func: install_c_driver
+      - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -2534,6 +2707,7 @@ tasks:
           TOPOLOGY: sharded_cluster
           mongodb_version: "5.0"
       - func: install_c_driver
+      - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -2557,6 +2731,7 @@ tasks:
           TOPOLOGY: sharded_cluster
           mongodb_version: "5.0"
       - func: install_c_driver
+      - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -2581,6 +2756,7 @@ tasks:
           TOPOLOGY: replica_set
           mongodb_version: "6.0"
       - func: install_c_driver
+      - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -2604,6 +2780,7 @@ tasks:
           TOPOLOGY: sharded_cluster
           mongodb_version: "6.0"
       - func: install_c_driver
+      - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -2629,6 +2806,7 @@ tasks:
         vars:
           BSON_EXTRA_ALIGNMENT: 1
           SKIP_INSTALL_LIBMONGOCRYPT: 1
+      - func: install-uv
       - func: compile
         vars:
           BSON_EXTRA_ALIGNMENT: 1
@@ -2654,6 +2832,7 @@ tasks:
         vars:
           BSON_EXTRA_ALIGNMENT: 1
           SKIP_INSTALL_LIBMONGOCRYPT: 1
+      - func: install-uv
       - func: compile
         vars:
           BSON_EXTRA_ALIGNMENT: 1
@@ -2679,6 +2858,7 @@ tasks:
         vars:
           BSON_EXTRA_ALIGNMENT: 1
           SKIP_INSTALL_LIBMONGOCRYPT: 1
+      - func: install-uv
       - func: compile
         vars:
           BSON_EXTRA_ALIGNMENT: 1
@@ -2704,6 +2884,7 @@ tasks:
         vars:
           BSON_EXTRA_ALIGNMENT: 1
           SKIP_INSTALL_LIBMONGOCRYPT: 1
+      - func: install-uv
       - func: compile
         vars:
           BSON_EXTRA_ALIGNMENT: 1
@@ -2729,6 +2910,7 @@ tasks:
         vars:
           BSON_EXTRA_ALIGNMENT: 1
           SKIP_INSTALL_LIBMONGOCRYPT: 1
+      - func: install-uv
       - func: compile
         vars:
           BSON_EXTRA_ALIGNMENT: 1
@@ -2752,6 +2934,7 @@ tasks:
           TOPOLOGY: replica_set
           mongodb_version: "5.0"
       - func: fetch_c_driver_source
+      - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -2775,6 +2958,7 @@ tasks:
           TOPOLOGY: sharded_cluster
           mongodb_version: "5.0"
       - func: fetch_c_driver_source
+      - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -2800,6 +2984,7 @@ tasks:
         vars:
           BSON_EXTRA_ALIGNMENT: 1
           SKIP_INSTALL_LIBMONGOCRYPT: 1
+      - func: install-uv
       - func: compile
         vars:
           BSON_EXTRA_ALIGNMENT: 1
@@ -2822,6 +3007,7 @@ tasks:
         vars:
           mongodb_version: latest
       - func: fetch_c_driver_source
+      - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -2847,6 +3033,7 @@ tasks:
         vars:
           BSON_EXTRA_ALIGNMENT: 1
           SKIP_INSTALL_LIBMONGOCRYPT: 1
+      - func: install-uv
       - func: compile
         vars:
           BSON_EXTRA_ALIGNMENT: 1
@@ -2871,6 +3058,7 @@ tasks:
         vars:
           mongodb_version: latest
       - func: fetch_c_driver_source
+      - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -2895,6 +3083,7 @@ tasks:
         vars:
           mongodb_version: "7.0"
       - func: fetch_c_driver_source
+      - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -2917,6 +3106,7 @@ tasks:
         vars:
           mongodb_version: "8.0"
       - func: fetch_c_driver_source
+      - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -2940,6 +3130,7 @@ tasks:
           TOPOLOGY: replica_set
           mongodb_version: "7.0"
       - func: install_c_driver
+      - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -2963,6 +3154,7 @@ tasks:
           TOPOLOGY: sharded_cluster
           mongodb_version: "7.0"
       - func: install_c_driver
+      - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -2986,6 +3178,7 @@ tasks:
           TOPOLOGY: replica_set
           mongodb_version: "8.0"
       - func: install_c_driver
+      - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -3009,6 +3202,7 @@ tasks:
           TOPOLOGY: sharded_cluster
           mongodb_version: "8.0"
       - func: install_c_driver
+      - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -3032,6 +3226,7 @@ tasks:
           TOPOLOGY: replica_set
           mongodb_version: latest
       - func: install_c_driver
+      - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -3055,6 +3250,7 @@ tasks:
           TOPOLOGY: replica_set
           mongodb_version: latest
       - func: install_c_driver
+      - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -3079,6 +3275,7 @@ tasks:
           TOPOLOGY: sharded_cluster
           mongodb_version: latest
       - func: install_c_driver
+      - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -3102,6 +3299,7 @@ tasks:
           TOPOLOGY: sharded_cluster
           mongodb_version: latest
       - func: install_c_driver
+      - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -3128,6 +3326,7 @@ tasks:
         vars:
           BSON_EXTRA_ALIGNMENT: 1
           SKIP_INSTALL_LIBMONGOCRYPT: 1
+      - func: install-uv
       - func: compile
         vars:
           BSON_EXTRA_ALIGNMENT: 1
@@ -3153,6 +3352,7 @@ tasks:
         vars:
           BSON_EXTRA_ALIGNMENT: 1
           SKIP_INSTALL_LIBMONGOCRYPT: 1
+      - func: install-uv
       - func: compile
         vars:
           BSON_EXTRA_ALIGNMENT: 1
@@ -3178,6 +3378,7 @@ tasks:
         vars:
           BSON_EXTRA_ALIGNMENT: 1
           SKIP_INSTALL_LIBMONGOCRYPT: 1
+      - func: install-uv
       - func: compile
         vars:
           BSON_EXTRA_ALIGNMENT: 1
@@ -3200,6 +3401,7 @@ tasks:
         vars:
           mongodb_version: latest
       - func: fetch_c_driver_source
+      - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -3223,6 +3425,7 @@ tasks:
           TOPOLOGY: replica_set
           mongodb_version: "5.0"
       - func: fetch_c_driver_source
+      - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -3246,6 +3449,7 @@ tasks:
           TOPOLOGY: sharded_cluster
           mongodb_version: "5.0"
       - func: fetch_c_driver_source
+      - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -3268,6 +3472,7 @@ tasks:
         vars:
           mongodb_version: "5.0"
       - func: fetch_c_driver_source
+      - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -3291,6 +3496,7 @@ tasks:
           TOPOLOGY: replica_set
           mongodb_version: "5.0"
       - func: install_c_driver
+      - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -3314,6 +3520,7 @@ tasks:
           TOPOLOGY: sharded_cluster
           mongodb_version: "5.0"
       - func: install_c_driver
+      - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -3337,6 +3544,7 @@ tasks:
           TOPOLOGY: replica_set
           mongodb_version: latest
       - func: install_c_driver
+      - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -3360,6 +3568,7 @@ tasks:
           TOPOLOGY: sharded_cluster
           mongodb_version: latest
       - func: install_c_driver
+      - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -3385,6 +3594,7 @@ tasks:
         vars:
           BSON_EXTRA_ALIGNMENT: 1
           SKIP_INSTALL_LIBMONGOCRYPT: 1
+      - func: install-uv
       - func: compile
         vars:
           BSON_EXTRA_ALIGNMENT: 1
@@ -3410,6 +3620,7 @@ tasks:
         vars:
           BSON_EXTRA_ALIGNMENT: 1
           SKIP_INSTALL_LIBMONGOCRYPT: 1
+      - func: install-uv
       - func: compile
         vars:
           BSON_EXTRA_ALIGNMENT: 1
@@ -3432,6 +3643,7 @@ tasks:
         vars:
           mongodb_version: latest
       - func: fetch_c_driver_source
+      - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -3454,6 +3666,7 @@ tasks:
         vars:
           mongodb_version: "5.0"
       - func: fetch_c_driver_source
+      - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -3481,6 +3694,7 @@ tasks:
         vars:
           BSON_EXTRA_ALIGNMENT: 1
           SKIP_INSTALL_LIBMONGOCRYPT: 1
+      - func: install-uv
       - func: compile
         vars:
           BSON_EXTRA_ALIGNMENT: 1
@@ -3508,6 +3722,7 @@ tasks:
         vars:
           BSON_EXTRA_ALIGNMENT: 1
           SKIP_INSTALL_LIBMONGOCRYPT: 1
+      - func: install-uv
       - func: compile
         vars:
           BSON_EXTRA_ALIGNMENT: 1
@@ -3532,6 +3747,7 @@ tasks:
         vars:
           mongodb_version: latest
       - func: fetch_c_driver_source
+      - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -3558,6 +3774,7 @@ tasks:
         vars:
           mongodb_version: "4.0"
       - func: fetch_c_driver_source
+      - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -3583,6 +3800,7 @@ tasks:
         vars:
           mongodb_version: "4.2"
       - func: fetch_c_driver_source
+      - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -3608,6 +3826,7 @@ tasks:
         vars:
           mongodb_version: "4.4"
       - func: fetch_c_driver_source
+      - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -3633,6 +3852,7 @@ tasks:
         vars:
           mongodb_version: "5.0"
       - func: fetch_c_driver_source
+      - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -3658,6 +3878,7 @@ tasks:
         vars:
           mongodb_version: "6.0"
       - func: fetch_c_driver_source
+      - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -3683,6 +3904,7 @@ tasks:
         vars:
           mongodb_version: "7.0"
       - func: fetch_c_driver_source
+      - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -3708,6 +3930,7 @@ tasks:
         vars:
           mongodb_version: "8.0"
       - func: fetch_c_driver_source
+      - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -3736,6 +3959,7 @@ tasks:
         vars:
           BSON_EXTRA_ALIGNMENT: 1
           SKIP_INSTALL_LIBMONGOCRYPT: 1
+      - func: install-uv
       - func: compile
         vars:
           BSON_EXTRA_ALIGNMENT: 1
@@ -3764,6 +3988,7 @@ tasks:
         vars:
           BSON_EXTRA_ALIGNMENT: 1
           SKIP_INSTALL_LIBMONGOCRYPT: 1
+      - func: install-uv
       - func: compile
         vars:
           BSON_EXTRA_ALIGNMENT: 1
@@ -3792,6 +4017,7 @@ tasks:
         vars:
           BSON_EXTRA_ALIGNMENT: 1
           SKIP_INSTALL_LIBMONGOCRYPT: 1
+      - func: install-uv
       - func: compile
         vars:
           BSON_EXTRA_ALIGNMENT: 1
@@ -3820,6 +4046,7 @@ tasks:
         vars:
           BSON_EXTRA_ALIGNMENT: 1
           SKIP_INSTALL_LIBMONGOCRYPT: 1
+      - func: install-uv
       - func: compile
         vars:
           BSON_EXTRA_ALIGNMENT: 1
@@ -3848,6 +4075,7 @@ tasks:
         vars:
           BSON_EXTRA_ALIGNMENT: 1
           SKIP_INSTALL_LIBMONGOCRYPT: 1
+      - func: install-uv
       - func: compile
         vars:
           BSON_EXTRA_ALIGNMENT: 1
@@ -3876,6 +4104,7 @@ tasks:
         vars:
           BSON_EXTRA_ALIGNMENT: 1
           SKIP_INSTALL_LIBMONGOCRYPT: 1
+      - func: install-uv
       - func: compile
         vars:
           BSON_EXTRA_ALIGNMENT: 1
@@ -3904,6 +4133,7 @@ tasks:
         vars:
           BSON_EXTRA_ALIGNMENT: 1
           SKIP_INSTALL_LIBMONGOCRYPT: 1
+      - func: install-uv
       - func: compile
         vars:
           BSON_EXTRA_ALIGNMENT: 1
@@ -3932,6 +4162,7 @@ tasks:
         vars:
           BSON_EXTRA_ALIGNMENT: 1
           SKIP_INSTALL_LIBMONGOCRYPT: 1
+      - func: install-uv
       - func: compile
         vars:
           BSON_EXTRA_ALIGNMENT: 1
@@ -3957,6 +4188,7 @@ tasks:
         vars:
           mongodb_version: latest
       - func: fetch_c_driver_source
+      - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -3977,7 +4209,6 @@ tasks:
     tags: [lint]
     commands:
       - func: setup
-      - func: set-cache-dir
       - func: install-uv
       - func: lint
   - name: macro-guards-ubuntu2004
@@ -3986,6 +4217,7 @@ tasks:
     commands:
       - func: setup
       - func: fetch_c_driver_source
+      - func: install-uv
       - func: compile
         vars:
           COMPILE_MACRO_GUARD_TESTS: "ON"
@@ -3996,6 +4228,7 @@ tasks:
     commands:
       - func: setup
       - func: fetch_c_driver_source
+      - func: install-uv
       - func: compile
         vars:
           COMPILE_MACRO_GUARD_TESTS: "ON"
@@ -4008,6 +4241,7 @@ tasks:
     commands:
       - func: setup
       - func: fetch_c_driver_source
+      - func: install-uv
       - func: compile
         vars:
           COMPILE_MACRO_GUARD_TESTS: "ON"
@@ -4053,6 +4287,7 @@ tasks:
       - func: install_c_driver
         vars:
           SKIP_INSTALL_LIBMONGOCRYPT: 1
+      - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -4086,6 +4321,7 @@ tasks:
         vars:
           BSON_EXTRA_ALIGNMENT: 1
           SKIP_INSTALL_LIBMONGOCRYPT: 1
+      - func: install-uv
       - func: compile
         vars:
           BSON_EXTRA_ALIGNMENT: 1
@@ -4119,6 +4355,7 @@ tasks:
       - func: install_c_driver
         vars:
           SKIP_INSTALL_LIBMONGOCRYPT: 1
+      - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -4153,6 +4390,7 @@ tasks:
         vars:
           BSON_EXTRA_ALIGNMENT: 1
           SKIP_INSTALL_LIBMONGOCRYPT: 1
+      - func: install-uv
       - func: compile
         vars:
           BSON_EXTRA_ALIGNMENT: 1
@@ -4185,6 +4423,7 @@ tasks:
       - func: install_c_driver
         vars:
           SKIP_INSTALL_LIBMONGOCRYPT: 1
+      - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -4218,6 +4457,7 @@ tasks:
         vars:
           BSON_EXTRA_ALIGNMENT: 1
           SKIP_INSTALL_LIBMONGOCRYPT: 1
+      - func: install-uv
       - func: compile
         vars:
           BSON_EXTRA_ALIGNMENT: 1
@@ -4251,6 +4491,7 @@ tasks:
       - func: install_c_driver
         vars:
           SKIP_INSTALL_LIBMONGOCRYPT: 1
+      - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -4285,6 +4526,7 @@ tasks:
         vars:
           BSON_EXTRA_ALIGNMENT: 1
           SKIP_INSTALL_LIBMONGOCRYPT: 1
+      - func: install-uv
       - func: compile
         vars:
           BSON_EXTRA_ALIGNMENT: 1
@@ -4318,6 +4560,7 @@ tasks:
       - func: install_c_driver
         vars:
           SKIP_INSTALL_LIBMONGOCRYPT: 1
+      - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -4351,6 +4594,7 @@ tasks:
       - func: install_c_driver
         vars:
           SKIP_INSTALL_LIBMONGOCRYPT: 1
+      - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -4442,6 +4686,7 @@ tasks:
     commands:
       - func: setup
       - func: fetch_c_driver_source
+      - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -4455,6 +4700,7 @@ tasks:
     commands:
       - func: setup
       - func: fetch_c_driver_source
+      - func: install-uv
       - func: compile
         vars:
           build_type: Release
@@ -4467,6 +4713,7 @@ tasks:
     commands:
       - func: setup
       - func: fetch_c_driver_source
+      - func: install-uv
       - func: compile
         vars:
           build_type: Release
@@ -4479,6 +4726,7 @@ tasks:
     commands:
       - func: setup
       - func: fetch_c_driver_source
+      - func: install-uv
       - func: compile
         vars:
           build_type: Release
@@ -4491,6 +4739,7 @@ tasks:
     commands:
       - func: setup
       - func: fetch_c_driver_source
+      - func: install-uv
       - func: compile
         vars:
           build_type: Release
@@ -4503,34 +4752,37 @@ tasks:
     commands:
       - func: setup
       - func: fetch_c_driver_source
+      - func: install-uv
       - func: compile
         vars:
           build_type: Release
           cc_compiler: gcc
           cxx_compiler: g++
       - func: uninstall-check
-  - name: uninstall-check-vs2015-x64-debug-shared
-    run_on: windows-64-vs2015-large
-    tags: [uninstall-check, windows-64-vs2015, vs2015x64, debug, shared]
+  - name: uninstall-check-windows-2019-vs2017-x64-debug-shared
+    run_on: windows-vsCurrent-large
+    tags: [uninstall-check, windows-vsCurrent, vs2017x64, debug, shared]
     commands:
       - func: setup
       - func: fetch_c_driver_source
+      - func: install-uv
       - func: compile
         vars:
           build_type: Debug
-          generator: Visual Studio 14 2015
+          generator: Visual Studio 15 2017
           platform: x64
       - func: uninstall-check
-  - name: uninstall-check-vs2015-x64-release-shared
-    run_on: windows-64-vs2015-large
-    tags: [uninstall-check, windows-64-vs2015, vs2015x64, release, shared]
+  - name: uninstall-check-windows-2019-vs2017-x64-release-shared
+    run_on: windows-vsCurrent-large
+    tags: [uninstall-check, windows-vsCurrent, vs2017x64, release, shared]
     commands:
       - func: setup
       - func: fetch_c_driver_source
+      - func: install-uv
       - func: compile
         vars:
           build_type: Release
-          generator: Visual Studio 14 2015
+          generator: Visual Studio 15 2017
           platform: x64
       - func: uninstall-check
   - name: valgrind-ubuntu1804-shared-5.0-single
@@ -4548,6 +4800,7 @@ tasks:
       - func: install_c_driver
         vars:
           SKIP_INSTALL_LIBMONGOCRYPT: 1
+      - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -4576,6 +4829,7 @@ tasks:
         vars:
           BSON_EXTRA_ALIGNMENT: 1
           SKIP_INSTALL_LIBMONGOCRYPT: 1
+      - func: install-uv
       - func: compile
         vars:
           BSON_EXTRA_ALIGNMENT: 1
@@ -4604,6 +4858,7 @@ tasks:
       - func: install_c_driver
         vars:
           SKIP_INSTALL_LIBMONGOCRYPT: 1
+      - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -4633,6 +4888,7 @@ tasks:
         vars:
           BSON_EXTRA_ALIGNMENT: 1
           SKIP_INSTALL_LIBMONGOCRYPT: 1
+      - func: install-uv
       - func: compile
         vars:
           BSON_EXTRA_ALIGNMENT: 1
@@ -4661,6 +4917,7 @@ tasks:
         vars:
           BSON_EXTRA_ALIGNMENT: 1
           SKIP_INSTALL_LIBMONGOCRYPT: 1
+      - func: install-uv
       - func: compile
         vars:
           BSON_EXTRA_ALIGNMENT: 1
@@ -4688,6 +4945,7 @@ tasks:
       - func: install_c_driver
         vars:
           SKIP_INSTALL_LIBMONGOCRYPT: 1
+      - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -4717,6 +4975,7 @@ tasks:
         vars:
           BSON_EXTRA_ALIGNMENT: 1
           SKIP_INSTALL_LIBMONGOCRYPT: 1
+      - func: install-uv
       - func: compile
         vars:
           BSON_EXTRA_ALIGNMENT: 1
@@ -4745,6 +5004,7 @@ tasks:
       - func: install_c_driver
         vars:
           SKIP_INSTALL_LIBMONGOCRYPT: 1
+      - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -4768,6 +5028,7 @@ tasks:
           REQUIRE_API_VERSION: true
           mongodb_version: latest
       - func: fetch_c_driver_source
+      - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -4790,6 +5051,7 @@ tasks:
           REQUIRE_API_VERSION: true
           mongodb_version: latest
       - func: fetch_c_driver_source
+      - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -4812,6 +5074,7 @@ tasks:
           REQUIRE_API_VERSION: true
           mongodb_version: latest
       - func: fetch_c_driver_source
+      - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -4839,6 +5102,7 @@ tasks:
           ORCHESTRATION_FILE: versioned-api-testing.json
           mongodb_version: latest
       - func: fetch_c_driver_source
+      - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -4860,6 +5124,7 @@ tasks:
           ORCHESTRATION_FILE: versioned-api-testing.json
           mongodb_version: latest
       - func: fetch_c_driver_source
+      - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -4881,6 +5146,7 @@ tasks:
           ORCHESTRATION_FILE: versioned-api-testing.json
           mongodb_version: latest
       - func: fetch_c_driver_source
+      - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
