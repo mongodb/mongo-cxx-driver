@@ -358,7 +358,7 @@ Create and activate a fresh Python 3 virtual environment with required packages 
 export UV_PROJECT_ENVIRONMENT="$HOME/mongo-cxx-driver-release-venv"
 
 # Install required packages into a new virtual environment.
-uv sync --frozen
+uv sync --frozen --group make_release
 
 # Activate the virtual environment.
 source "$UV_PROJECT_ENVIRONMENT/bin/activate"
