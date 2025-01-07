@@ -35,7 +35,7 @@ inline std::error_code make_error_code(::bson_error_t const& error) {
 }
 
 inline void set_bson_error_message(bson_error_t* error, char const* msg) {
-    bson_strncpy(error->message, msg, std::min(strlen(msg) + 1, static_cast<size_t>(BSON_ERROR_BUFFER_SIZE)));
+    bson_strncpy(error->message, msg, BSON_ERROR_BUFFER_SIZE);
 }
 
 inline void make_bson_error(bson_error_t* error, operation_exception const& e) {
