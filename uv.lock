@@ -293,7 +293,6 @@ config-generator = [
     { name = "shrub-py" },
 ]
 dev = [
-    { name = "beautifulsoup4" },
     { name = "clang-format" },
     { name = "packaging" },
     { name = "pydantic" },
@@ -321,7 +320,6 @@ config-generator = [
     { name = "shrub-py", specifier = ">=3.6" },
 ]
 dev = [
-    { name = "beautifulsoup4", specifier = ">=4.12" },
     { name = "clang-format", specifier = "~=19.1" },
     { name = "packaging", specifier = ">=14.0" },
     { name = "pydantic", specifier = ">=2.8" },

@@ -7,7 +7,7 @@ dependencies = []
 
 [dependency-groups]
 dev = [
-    {include-group="apidocs"},
+    # {include-group="apidocs"},
     {include-group="clang_format"},
     {include-group="config_generator"},
     # {include-group="make_release"},
