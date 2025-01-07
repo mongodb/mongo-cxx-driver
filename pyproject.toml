@@ -30,8 +30,8 @@ clang_format = [
 config_generator = [
     # .evergreen/config_generator/generate.py
     "packaging>=14.0",
-    "pydantic>=2.7",
-    "shrub-py>=3.6.0",
+    "pydantic>=2.8",
+    "shrub-py>=3.6",
 ]
 
 make_release = [
@@ -40,5 +40,5 @@ make_release = [
     "gitpython>=3.1",
     "jira>=3.1",
     "looseversion>=1.3",
-    "pygithub>=2.0",
+    "pygithub>=2.1",
 ]
