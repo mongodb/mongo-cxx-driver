@@ -3,7 +3,7 @@
 # clang-format-all.sh
 #
 # Usage:
-#   uv run --frozen etc/clang-format-all
+#   uv run --frozen etc/clang-format-all.sh
 #
 # This script is meant to be run from the project root directory.
 
