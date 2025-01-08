@@ -17,7 +17,8 @@ install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/
     COMPONENT dev
     FILES_MATCHING
     PATTERN "*.hpp"
-    PATTERN "mongocxx/doc.hpp" EXCLUDE
+    PATTERN "mongocxx/docs/*" EXCLUDE
+    PATTERN "mongocxx/docs" EXCLUDE
 )
 
 file(GLOB_RECURSE mongocxx_include_headers
