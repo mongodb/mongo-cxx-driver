@@ -29,6 +29,11 @@
 ///
 
 ///
+/// @dir include/mongocxx/docs
+/// For documentation purposes only.
+///
+
+///
 /// @namespace mongocxx
 /// The top-level namespace within which all mongocxx library entities are declared.
 ///

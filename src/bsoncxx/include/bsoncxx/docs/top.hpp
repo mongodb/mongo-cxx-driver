@@ -29,6 +29,11 @@
 ///
 
 ///
+/// @dir include/bsoncxx/docs
+/// For documentation purposes only.
+///
+
+///
 /// @namespace bsoncxx
 /// The top-level namespace within which all bsoncxx library entities are declared.
 ///
