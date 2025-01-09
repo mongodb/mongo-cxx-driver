@@ -17,7 +17,8 @@ install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/
     COMPONENT dev
     FILES_MATCHING
     PATTERN "*.hpp"
-    PATTERN "bsoncxx/doc.hpp" EXCLUDE
+    PATTERN "bsoncxx/docs/*" EXCLUDE
+    PATTERN "bsoncxx/docs" EXCLUDE
 )
 
 file(GLOB_RECURSE bsoncxx_include_headers

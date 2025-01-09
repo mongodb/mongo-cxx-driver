@@ -318,7 +318,7 @@ if(ENABLE_MACRO_GUARD_TESTS)
         INCLUDE_PATTERNS
             "include/*.hpp" # Public headers.
         EXCLUDE_REGEXES
-            "include/mongocxx/doc\.hpp" # Doc header.
+            "include/mongocxx/docs/.*\.hpp" # Doc header.
             "include/.*/(prelude|postlude)\.hpp" # Macro guard headers.
             "include/mongocxx/v_noabi/mongocxx/config/.*\.hpp" # v_noabi config headers.
     )
