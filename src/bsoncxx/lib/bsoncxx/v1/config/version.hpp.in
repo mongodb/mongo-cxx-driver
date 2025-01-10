@@ -12,6 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#if !defined(BSONCXX_V1_CONFIG_VERSION_HPP)
+#define BSONCXX_V1_CONFIG_VERSION_HPP
+
 // clang-format off
 #define BSONCXX_VERSION_MAJOR @BSONCXX_VERSION_MAJOR@
 #define BSONCXX_VERSION_MINOR @BSONCXX_VERSION_MINOR@
@@ -22,8 +25,6 @@
 ///
 /// @file
 /// Provides macros describing the bsoncxx library version.
-///
-/// @warning This header is not standalone includable!
 ///
 
 ///
@@ -57,3 +58,5 @@
 ///
 /// This value is derived from the `BUILD_VERSION` variable during configuration.
 ///
+
+#endif // BSONCXX_V1_CONFIG_VERSION_HPP

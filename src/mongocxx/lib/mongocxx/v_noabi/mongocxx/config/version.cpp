@@ -12,21 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// prelude.hpp
-#undef MONGOCXX_UNREACHABLE
-#pragma pop_macro("MONGOCXX_UNREACHABLE")
+#include <mongocxx/config/version.hpp>
 
-#include <mongocxx/v1/detail/postlude.hpp>
+#if !defined(MONGOCXX_VERSION_MAJOR)
+#error "mongocxx/v_noabi/mongocxx/config/version.hpp should define MONGOCXX_VERSION_MAJOR"
+#endif
 
-///
-/// @file
-/// The mongocxx v_noabi macro guard postlude header.
-///
-/// @warning For internal use only!
-///
-/// @par Includes
-/// - @ref mongocxx/v1/detail/postlude.hpp
-///
-/// @see
-/// - @ref mongocxx/v1/detail/prelude.hpp
-///
+#if !defined(MONGOCXX_VERSION_MINOR)
+#error "mongocxx/v_noabi/mongocxx/config/version.hpp should define MONGOCXX_VERSION_MINOR"
+#endif
+
+#if !defined(MONGOCXX_VERSION_PATCH)
+#error "mongocxx/v_noabi/mongocxx/config/version.hpp should define MONGOCXX_VERSION_PATCH"
+#endif
+
+#if !defined(MONGOCXX_VERSION_EXTRA)
+#error "mongocxx/v_noabi/mongocxx/config/version.hpp should define MONGOCXX_VERSION_EXTRA"
+#endif

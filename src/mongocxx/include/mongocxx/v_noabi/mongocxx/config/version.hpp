@@ -12,21 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// prelude.hpp
-#undef MONGOCXX_UNREACHABLE
-#pragma pop_macro("MONGOCXX_UNREACHABLE")
-
-#include <mongocxx/v1/detail/postlude.hpp>
+// For backward compatibility.
+#include <mongocxx/v1/config/version.hpp>
 
 ///
 /// @file
-/// The mongocxx v_noabi macro guard postlude header.
-///
-/// @warning For internal use only!
+/// Provides macros describing the mongocxx library version.
 ///
 /// @par Includes
-/// - @ref mongocxx/v1/detail/postlude.hpp
-///
-/// @see
-/// - @ref mongocxx/v1/detail/prelude.hpp
+/// - @ref mongocxx/v1/config/version.hpp
 ///

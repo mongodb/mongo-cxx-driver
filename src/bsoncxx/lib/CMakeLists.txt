@@ -19,6 +19,7 @@ set(bsoncxx_sources_v_noabi
     bsoncxx/v_noabi/bsoncxx/builder/core.cpp
     bsoncxx/v_noabi/bsoncxx/config/config.cpp
     bsoncxx/v_noabi/bsoncxx/config/export.cpp
+    bsoncxx/v_noabi/bsoncxx/config/version.cpp
     bsoncxx/v_noabi/bsoncxx/decimal128.cpp
     bsoncxx/v_noabi/bsoncxx/document/element.cpp
     bsoncxx/v_noabi/bsoncxx/document/value.cpp
@@ -38,6 +39,7 @@ set(bsoncxx_sources_v_noabi
 set(bsoncxx_sources_v1
     bsoncxx/v1/config/config.cpp
     bsoncxx/v1/config/export.cpp
+    bsoncxx/v1/config/version.cpp
     bsoncxx/v1/detail/postlude.cpp
     bsoncxx/v1/detail/prelude.cpp
 )
@@ -65,18 +67,13 @@ if(1)
     )
 
     configure_file(
-        bsoncxx/v_noabi/bsoncxx/config/version.hpp.in
-        bsoncxx/v_noabi/bsoncxx/config/version.hpp
-    )
-
-    install(FILES
-        ${CMAKE_CURRENT_BINARY_DIR}/bsoncxx/v_noabi/bsoncxx/config/version.hpp
-        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/bsoncxx/v_noabi/bsoncxx/config
-        COMPONENT dev
+        bsoncxx/v1/config/version.hpp.in
+        bsoncxx/v1/config/version.hpp
     )
 
     install(FILES
         ${CMAKE_CURRENT_BINARY_DIR}/bsoncxx/v1/config/config.hpp
+        ${CMAKE_CURRENT_BINARY_DIR}/bsoncxx/v1/config/version.hpp
         DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/bsoncxx/v1/config
         COMPONENT dev
     )
@@ -89,7 +86,6 @@ set_dist_list(src_bsoncxx_lib_DIST
     bsoncxx/v_noabi/bsoncxx/config/private/config.hh.in
     bsoncxx/v_noabi/bsoncxx/config/private/postlude.hh
     bsoncxx/v_noabi/bsoncxx/config/private/prelude.hh
-    bsoncxx/v_noabi/bsoncxx/config/version.hpp.in
     bsoncxx/v_noabi/bsoncxx/private/b64_ntop.hh
     bsoncxx/v_noabi/bsoncxx/private/helpers.hh
     bsoncxx/v_noabi/bsoncxx/private/make_unique.hh
@@ -101,4 +97,5 @@ set_dist_list(src_bsoncxx_lib_DIST
     bsoncxx/v_noabi/bsoncxx/types/bson_value/private/value.hh
     bsoncxx/v_noabi/bsoncxx/types/private/convert.hh
     bsoncxx/v1/config/config.hpp.in
+    bsoncxx/v1/config/version.hpp.in
 )

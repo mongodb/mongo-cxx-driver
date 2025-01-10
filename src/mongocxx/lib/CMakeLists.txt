@@ -21,6 +21,7 @@ set(mongocxx_sources_v_noabi
     mongocxx/v_noabi/mongocxx/collection.cpp
     mongocxx/v_noabi/mongocxx/config/config.cpp
     mongocxx/v_noabi/mongocxx/config/export.cpp
+    mongocxx/v_noabi/mongocxx/config/version.cpp
     mongocxx/v_noabi/mongocxx/cursor.cpp
     mongocxx/v_noabi/mongocxx/database.cpp
     mongocxx/v_noabi/mongocxx/events/command_failed_event.cpp
@@ -119,6 +120,7 @@ set(mongocxx_sources_v_noabi
 set(mongocxx_sources_v1
     mongocxx/v1/config/config.cpp
     mongocxx/v1/config/export.cpp
+    mongocxx/v1/config/version.cpp
     mongocxx/v1/detail/postlude.cpp
     mongocxx/v1/detail/prelude.cpp
 )
@@ -153,23 +155,18 @@ endif()
 # Generate and install public headers.
 if(1)
     configure_file(
-        mongocxx/v_noabi/mongocxx/config/version.hpp.in
-        mongocxx/v_noabi/mongocxx/config/version.hpp
-    )
-
-    configure_file(
         mongocxx/v1/config/config.hpp.in
         mongocxx/v1/config/config.hpp
     )
 
-    install(FILES
-        ${CMAKE_CURRENT_BINARY_DIR}/mongocxx/v_noabi/mongocxx/config/version.hpp
-        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/mongocxx/v_noabi/mongocxx/config
-        COMPONENT dev
+    configure_file(
+        mongocxx/v1/config/version.hpp.in
+        mongocxx/v1/config/version.hpp
     )
 
     install(FILES
         ${CMAKE_CURRENT_BINARY_DIR}/mongocxx/v1/config/config.hpp
+        ${CMAKE_CURRENT_BINARY_DIR}/mongocxx/v1/config/version.hpp
         DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/mongocxx/v1/config
         COMPONENT dev
     )
@@ -182,7 +179,6 @@ set_dist_list(src_mongocxx_lib_DIST
     mongocxx/v_noabi/mongocxx/config/private/config.hh.in
     mongocxx/v_noabi/mongocxx/config/private/postlude.hh
     mongocxx/v_noabi/mongocxx/config/private/prelude.hh
-    mongocxx/v_noabi/mongocxx/config/version.hpp.in
     mongocxx/v_noabi/mongocxx/exception/private/mongoc_error.hh
     mongocxx/v_noabi/mongocxx/gridfs/private/bucket.hh
     mongocxx/v_noabi/mongocxx/gridfs/private/downloader.hh
@@ -218,4 +214,5 @@ set_dist_list(src_mongocxx_lib_DIST
     mongocxx/v_noabi/mongocxx/test_util/export_for_testing.hh
     mongocxx/v_noabi/mongocxx/test_util/mock.hh
     mongocxx/v1/config/config.hpp.in
+    mongocxx/v1/config/version.hpp.in
 )

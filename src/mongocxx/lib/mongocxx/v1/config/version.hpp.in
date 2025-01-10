@@ -12,6 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#if !defined(MONGOCXX_V1_CONFIG_VERSION_HPP)
+#define MONGOCXX_V1_CONFIG_VERSION_HPP
+
 // clang-format off
 #define MONGOCXX_VERSION_STRING "@MONGOCXX_VERSION@"
 #define MONGOCXX_VERSION_MAJOR @MONGOCXX_VERSION_MAJOR@
@@ -66,3 +69,5 @@
 ///
 /// This value is derived from the `BUILD_VERSION` variable during configuration.
 ///
+
+#endif // MONGOCXX_V1_CONFIG_VERSION_HPP
