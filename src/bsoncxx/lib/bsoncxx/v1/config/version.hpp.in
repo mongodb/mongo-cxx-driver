@@ -16,6 +16,7 @@
 #define BSONCXX_V1_CONFIG_VERSION_HPP
 
 // clang-format off
+#define BSONCXX_VERSION_STRING "@BSONCXX_VERSION@"
 #define BSONCXX_VERSION_MAJOR @BSONCXX_VERSION_MAJOR@
 #define BSONCXX_VERSION_MINOR @BSONCXX_VERSION_MINOR@
 #define BSONCXX_VERSION_PATCH @BSONCXX_VERSION_PATCH@
@@ -25,6 +26,14 @@
 ///
 /// @file
 /// Provides macros describing the bsoncxx library version.
+///
+
+///
+/// @def BSONCXX_VERSION_STRING
+/// @hideinitializer
+/// This library's full version number as a string literal (e.g. `"1.2.3-extra"`).
+///
+/// This value is derived from the `BUILD_VERSION` variable during configuration.
 ///
 
 ///
