@@ -25,7 +25,7 @@
 #include <mongocxx/private/write_concern.hh>
 #include <mongocxx/write_concern.hpp>
 
-#include <mongocxx/config/private/prelude.hh>
+#include <mongocxx/private/config/prelude.hh>
 
 namespace mongocxx {
 namespace v_noabi {

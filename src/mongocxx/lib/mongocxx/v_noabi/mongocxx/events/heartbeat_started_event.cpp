@@ -15,7 +15,7 @@
 #include <mongocxx/events/heartbeat_started_event.hpp>
 #include <mongocxx/private/libmongoc.hh>
 
-#include <mongocxx/config/private/prelude.hh>
+#include <mongocxx/private/config/prelude.hh>
 
 namespace mongocxx {
 namespace v_noabi {

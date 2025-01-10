@@ -22,7 +22,7 @@
 #include <mongocxx/client.hpp>
 #include <mongocxx/client_encryption.hpp>
 
-#include <mongocxx/config/private/prelude.hh>
+#include <mongocxx/private/config/prelude.hh>
 
 namespace mongocxx {
 namespace entity {
@@ -90,4 +90,4 @@ class map {
 } // namespace entity
 } // namespace mongocxx
 
-#include <mongocxx/config/private/postlude.hh>
+#include <mongocxx/private/config/postlude.hh>

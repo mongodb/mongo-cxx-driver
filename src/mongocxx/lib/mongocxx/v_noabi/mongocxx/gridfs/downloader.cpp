@@ -26,7 +26,7 @@
 #include <mongocxx/gridfs/private/downloader.hh>
 #include <mongocxx/private/numeric_casting.hh>
 
-#include <mongocxx/config/private/prelude.hh>
+#include <mongocxx/private/config/prelude.hh>
 
 namespace mongocxx {
 namespace v_noabi {

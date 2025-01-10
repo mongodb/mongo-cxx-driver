@@ -21,7 +21,7 @@
 #include <mongocxx/options/index_view.hpp>
 #include <mongocxx/private/index_view.hh>
 
-#include <mongocxx/config/private/prelude.hh>
+#include <mongocxx/private/config/prelude.hh>
 
 namespace mongocxx {
 namespace v_noabi {
