@@ -62,8 +62,8 @@ namespace stdx {
 template <typename T>
 class optional;
 
-BSONCXX_PUSH_WARNINGS();
-BSONCXX_DISABLE_WARNING(Clang("-Wweak-vtables"));
+BSONCXX_PRIVATE_WARNINGS_PUSH();
+BSONCXX_PRIVATE_WARNINGS_DISABLE(Clang("-Wweak-vtables"));
 // Exception type thrown upon attempted access to a value-less optional<T> via a throwing accessor
 // API.
 class bad_optional_access : public std::exception {
@@ -72,7 +72,7 @@ class bad_optional_access : public std::exception {
         return "bad_optional_access()";
     }
 };
-BSONCXX_POP_WARNINGS();
+BSONCXX_PRIVATE_WARNINGS_POP();
 
 // Tag type to represent an empty optional value.
 struct nullopt_t {
@@ -173,14 +173,15 @@ class optional : bsoncxx::detail::equality_operators,
     // In-place constructors
 
     template <typename... Args>
-    bsoncxx_cxx14_constexpr explicit optional(in_place_t, Args&&... args) noexcept(noexcept(T(BSONCXX_FWD(args)...))) {
-        this->emplace(BSONCXX_FWD(args)...);
+    BSONCXX_PRIVATE_CONSTEXPR_CXX14 explicit optional(in_place_t, Args&&... args) noexcept(
+        noexcept(T(BSONCXX_PRIVATE_FWD(args)...))) {
+        this->emplace(BSONCXX_PRIVATE_FWD(args)...);
     }
 
     template <typename U, typename... Args>
-    bsoncxx_cxx14_constexpr explicit optional(in_place_t, std::initializer_list<U> il, Args&&... args) noexcept(
-        noexcept(T(il, BSONCXX_FWD(args)...))) {
-        this->emplace(il, BSONCXX_FWD(args)...);
+    BSONCXX_PRIVATE_CONSTEXPR_CXX14 explicit optional(in_place_t, std::initializer_list<U> il, Args&&... args) noexcept(
+        noexcept(T(il, BSONCXX_PRIVATE_FWD(args)...))) {
+        this->emplace(il, BSONCXX_PRIVATE_FWD(args)...);
     }
 
     // Explicit converting constructor. Only available if implicit conversion is
@@ -191,16 +192,16 @@ class optional : bsoncxx::detail::equality_operators,
             int,
             detail::enable_opt_value_conversion<U&&, T>,
             bsoncxx::detail::negation<std::is_convertible<U&&, T>>> = 0>
-    bsoncxx_cxx14_constexpr explicit optional(U&& arg) noexcept(std::is_nothrow_constructible<T, U&&>::value)
-        : optional(in_place, BSONCXX_FWD(arg)) {}
+    BSONCXX_PRIVATE_CONSTEXPR_CXX14 explicit optional(U&& arg) noexcept(std::is_nothrow_constructible<T, U&&>::value)
+        : optional(in_place, BSONCXX_PRIVATE_FWD(arg)) {}
 
     // Implicit converting constructor. Only available if implicit conversion is
     // possible.
     template <
         typename U = T,
         bsoncxx::detail::requires_t<int, detail::enable_opt_value_conversion<U&&, T>, std::is_convertible<U&&, T>> = 0>
-    bsoncxx_cxx14_constexpr optional(U&& arg) noexcept(std::is_nothrow_constructible<T, U&&>::value)
-        : optional(in_place, BSONCXX_FWD(arg)) {}
+    BSONCXX_PRIVATE_CONSTEXPR_CXX14 optional(U&& arg) noexcept(std::is_nothrow_constructible<T, U&&>::value)
+        : optional(in_place, BSONCXX_PRIVATE_FWD(arg)) {}
 
     template <
         typename U,
@@ -208,7 +209,7 @@ class optional : bsoncxx::detail::equality_operators,
             int,
             detail::enable_opt_conversion<T, U const&, U>,
             bsoncxx::detail::negation<std::is_convertible<U const&, T>>> = 0>
-    bsoncxx_cxx14_constexpr explicit optional(optional<U> const& other) noexcept(
+    BSONCXX_PRIVATE_CONSTEXPR_CXX14 explicit optional(optional<U> const& other) noexcept(
         std::is_nothrow_constructible<T, bsoncxx::detail::add_lvalue_reference_t<U const>>::value) {
         if (other.has_value()) {
             this->emplace(*other);
@@ -221,7 +222,7 @@ class optional : bsoncxx::detail::equality_operators,
             int,
             detail::enable_opt_conversion<T, U const&, U>,
             std::is_convertible<U const&, T>> = 0>
-    bsoncxx_cxx14_constexpr optional(optional<U> const& other) noexcept(
+    BSONCXX_PRIVATE_CONSTEXPR_CXX14 optional(optional<U> const& other) noexcept(
         std::is_nothrow_constructible<T, bsoncxx::detail::add_lvalue_reference_t<U const>>::value) {
         if (other.has_value()) {
             this->emplace(*other);
@@ -234,20 +235,20 @@ class optional : bsoncxx::detail::equality_operators,
             int,
             detail::enable_opt_conversion<T, U&&, U>,
             bsoncxx::detail::negation<std::is_convertible<U&&, T>>> = 0>
-    bsoncxx_cxx14_constexpr explicit optional(optional<U>&& other) noexcept(
+    BSONCXX_PRIVATE_CONSTEXPR_CXX14 explicit optional(optional<U>&& other) noexcept(
         std::is_nothrow_constructible<T, bsoncxx::detail::add_lvalue_reference_t<U&&>>::value) {
         if (other.has_value()) {
-            this->emplace(*BSONCXX_FWD(other));
+            this->emplace(*BSONCXX_PRIVATE_FWD(other));
         }
     }
 
     template <
         typename U,
         bsoncxx::detail::requires_t<int, detail::enable_opt_conversion<T, U&&, U>, std::is_convertible<U&&, T>> = 0>
-    bsoncxx_cxx14_constexpr optional(optional<U>&& other) noexcept(
+    BSONCXX_PRIVATE_CONSTEXPR_CXX14 optional(optional<U>&& other) noexcept(
         std::is_nothrow_constructible<T, bsoncxx::detail::add_lvalue_reference_t<U&&>>::value) {
         if (other.has_value()) {
-            this->emplace(*BSONCXX_FWD(other));
+            this->emplace(*BSONCXX_PRIVATE_FWD(other));
         }
     }
 
@@ -260,49 +261,49 @@ class optional : bsoncxx::detail::equality_operators,
 
     // Unchecked dereference operators.
 
-    bsoncxx_cxx14_constexpr reference operator*() & noexcept {
+    BSONCXX_PRIVATE_CONSTEXPR_CXX14 reference operator*() & noexcept {
         _assert_has_value("operator*() &");
         return this->_storage.value;
     }
-    bsoncxx_cxx14_constexpr const_reference operator*() const& noexcept {
+    BSONCXX_PRIVATE_CONSTEXPR_CXX14 const_reference operator*() const& noexcept {
         _assert_has_value("operator*() const&");
         return this->_storage.value;
     }
-    bsoncxx_cxx14_constexpr rvalue_reference operator*() && noexcept {
+    BSONCXX_PRIVATE_CONSTEXPR_CXX14 rvalue_reference operator*() && noexcept {
         _assert_has_value("operator*() &&");
         return static_cast<rvalue_reference>(**this);
     }
-    bsoncxx_cxx14_constexpr const_rvalue_reference operator*() const&& noexcept {
+    BSONCXX_PRIVATE_CONSTEXPR_CXX14 const_rvalue_reference operator*() const&& noexcept {
         _assert_has_value("operator*() const&&");
         return static_cast<const_rvalue_reference>(**this);
     }
 
     // (Unchecked) member-access operators.
 
-    bsoncxx_cxx14_constexpr pointer operator->() noexcept {
+    BSONCXX_PRIVATE_CONSTEXPR_CXX14 pointer operator->() noexcept {
         _assert_has_value("operator->()");
         return std::addressof(**this);
     }
-    bsoncxx_cxx14_constexpr const_pointer operator->() const noexcept {
+    BSONCXX_PRIVATE_CONSTEXPR_CXX14 const_pointer operator->() const noexcept {
         _assert_has_value("operator->() const");
         return std::addressof(**this);
     }
 
     // Checked accessors.
 
-    bsoncxx_cxx14_constexpr reference value() & {
+    BSONCXX_PRIVATE_CONSTEXPR_CXX14 reference value() & {
         _throw_if_empty();
         return **this;
     }
-    bsoncxx_cxx14_constexpr const_reference value() const& {
+    BSONCXX_PRIVATE_CONSTEXPR_CXX14 const_reference value() const& {
         _throw_if_empty();
         return **this;
     }
-    bsoncxx_cxx14_constexpr rvalue_reference value() && {
+    BSONCXX_PRIVATE_CONSTEXPR_CXX14 rvalue_reference value() && {
         _throw_if_empty();
         return static_cast<rvalue_reference>(**this);
     }
-    bsoncxx_cxx14_constexpr const_rvalue_reference value() const&& {
+    BSONCXX_PRIVATE_CONSTEXPR_CXX14 const_rvalue_reference value() const&& {
         _throw_if_empty();
         return static_cast<const_rvalue_reference>(**this);
     }
@@ -310,31 +311,31 @@ class optional : bsoncxx::detail::equality_operators,
     // Checked value-or-alternative.
 
     template <typename U>
-    bsoncxx_cxx14_constexpr value_type value_or(U&& dflt) const& {
+    BSONCXX_PRIVATE_CONSTEXPR_CXX14 value_type value_or(U&& dflt) const& {
         if (has_value()) {
             return **this;
         } else {
-            return static_cast<value_type>(BSONCXX_FWD(dflt));
+            return static_cast<value_type>(BSONCXX_PRIVATE_FWD(dflt));
         }
     }
 
     template <typename U>
-    bsoncxx_cxx14_constexpr value_type value_or(U&& dflt) && {
+    BSONCXX_PRIVATE_CONSTEXPR_CXX14 value_type value_or(U&& dflt) && {
         if (has_value()) {
             return *std::move(*this);
         } else {
-            return static_cast<value_type>(BSONCXX_FWD(dflt));
+            return static_cast<value_type>(BSONCXX_PRIVATE_FWD(dflt));
         }
     }
 
    private:
-    bsoncxx_cxx14_constexpr void _assert_has_value(char const* msg) const noexcept {
+    BSONCXX_PRIVATE_CONSTEXPR_CXX14 void _assert_has_value(char const* msg) const noexcept {
         if (!this->has_value()) {
             detail::terminate_disengaged_optional(msg);
         }
     }
 
-    bsoncxx_cxx14_constexpr void _throw_if_empty() const {
+    BSONCXX_PRIVATE_CONSTEXPR_CXX14 void _throw_if_empty() const {
         if (!this->has_value()) {
             detail::throw_bad_optional();
         }
@@ -345,9 +346,9 @@ class optional : bsoncxx::detail::equality_operators,
 //
 // @param value The value being made into an optional.
 template <typename T>
-bsoncxx_cxx14_constexpr optional<bsoncxx::detail::decay_t<T>> make_optional(T&& value) noexcept(
+BSONCXX_PRIVATE_CONSTEXPR_CXX14 optional<bsoncxx::detail::decay_t<T>> make_optional(T&& value) noexcept(
     std::is_nothrow_constructible<bsoncxx::detail::decay_t<T>, T&&>::value) {
-    return optional<bsoncxx::detail::decay_t<T>>(BSONCXX_FWD(value));
+    return optional<bsoncxx::detail::decay_t<T>>(BSONCXX_PRIVATE_FWD(value));
 }
 
 // Emplace-construct a new optional of the given type with the given constructor arguments.
@@ -355,17 +356,17 @@ bsoncxx_cxx14_constexpr optional<bsoncxx::detail::decay_t<T>> make_optional(T&& 
 // @tparam T The type to be constructed
 // @param args Constructor arguments
 template <typename T, typename... Args>
-bsoncxx_cxx14_constexpr optional<T> make_optional(Args&&... args) noexcept(
+BSONCXX_PRIVATE_CONSTEXPR_CXX14 optional<T> make_optional(Args&&... args) noexcept(
     std::is_nothrow_constructible<T, Args&&...>::value) {
-    return optional<T>(in_place, BSONCXX_FWD(args)...);
+    return optional<T>(in_place, BSONCXX_PRIVATE_FWD(args)...);
 }
 
 // Emplace-construct a new optional of the given type with the given arguments (accepts an init-list
 // as the first argument).
 template <typename T, typename U, typename... Args>
-bsoncxx_cxx14_constexpr optional<T> make_optional(std::initializer_list<U> il, Args&&... args) noexcept(
+BSONCXX_PRIVATE_CONSTEXPR_CXX14 optional<T> make_optional(std::initializer_list<U> il, Args&&... args) noexcept(
     std::is_nothrow_constructible<T, std::initializer_list<U>, Args&&...>::value) {
-    return optional<T>(in_place, il, BSONCXX_FWD(args)...);
+    return optional<T>(in_place, il, BSONCXX_PRIVATE_FWD(args)...);
 }
 
 namespace detail {
@@ -457,11 +458,11 @@ struct optional_assign_base<T, movable> : optional_construct_base<T> {
 
     // Disallow copies.
 
-    bsoncxx_cxx14_constexpr optional_assign_base& operator=(optional_assign_base const&) = delete;
+    BSONCXX_PRIVATE_CONSTEXPR_CXX14 optional_assign_base& operator=(optional_assign_base const&) = delete;
 
     // Allow move-assignment.
 
-    bsoncxx_cxx14_constexpr optional_assign_base& operator=(optional_assign_base&&) = default;
+    BSONCXX_PRIVATE_CONSTEXPR_CXX14 optional_assign_base& operator=(optional_assign_base&&) = default;
 };
 
 template <typename T>
@@ -527,26 +528,26 @@ struct optional_destruct_helper<true /* Trivial */> {
 // Optional's ADL-only operators are defined here.
 struct optional_operators_base {
     template <typename T, typename U>
-    friend bsoncxx_cxx14_constexpr auto
+    friend BSONCXX_PRIVATE_CONSTEXPR_CXX14 auto
     tag_invoke(bsoncxx::detail::equal_to, optional<T> const& left, optional<U> const& right) noexcept
         -> bsoncxx::detail::requires_t<bool, bsoncxx::detail::is_equality_comparable<T, U>> {
         if (left.has_value() != right.has_value()) {
             return false;
         }
 
-        BSONCXX_PUSH_WARNINGS();
-        BSONCXX_DISABLE_WARNING(GNU("-Wfloat-equal"));
+        BSONCXX_PRIVATE_WARNINGS_PUSH();
+        BSONCXX_PRIVATE_WARNINGS_DISABLE(GNU("-Wfloat-equal"));
         return !left.has_value() || *left == *right;
-        BSONCXX_POP_WARNINGS();
+        BSONCXX_PRIVATE_WARNINGS_POP();
     }
 
     template <typename T, typename U>
     friend constexpr auto tag_invoke(bsoncxx::detail::equal_to, optional<T> const& left, U const& right) noexcept
         -> bsoncxx::detail::requires_t<bool, not_an_optional<U>, bsoncxx::detail::is_equality_comparable<T, U>> {
-        BSONCXX_PUSH_WARNINGS();
-        BSONCXX_DISABLE_WARNING(GNU("-Wfloat-equal"));
+        BSONCXX_PRIVATE_WARNINGS_PUSH();
+        BSONCXX_PRIVATE_WARNINGS_DISABLE(GNU("-Wfloat-equal"));
         return left.has_value() && *left == right;
-        BSONCXX_POP_WARNINGS();
+        BSONCXX_PRIVATE_WARNINGS_POP();
     }
 
     template <typename T>
@@ -555,7 +556,7 @@ struct optional_operators_base {
     }
 
     template <typename T, typename U>
-    bsoncxx_cxx14_constexpr friend auto
+    BSONCXX_PRIVATE_CONSTEXPR_CXX14 friend auto
     tag_invoke(bsoncxx::detail::compare_three_way compare, optional<T> const& left, optional<U> const& right)
         -> bsoncxx::detail::requires_t<
             bsoncxx::detail::strong_ordering,
@@ -579,7 +580,7 @@ struct optional_operators_base {
     }
 
     template <typename T, typename U>
-    bsoncxx_cxx14_constexpr friend auto
+    BSONCXX_PRIVATE_CONSTEXPR_CXX14 friend auto
     tag_invoke(bsoncxx::detail::compare_three_way compare, optional<T> const& left, U const& right)
         -> bsoncxx::detail::requires_t<
             bsoncxx::detail::strong_ordering,
@@ -605,7 +606,7 @@ struct optional_swap_mixin {};
 
 template <typename T>
 struct optional_swap_mixin<T, true> {
-    bsoncxx_cxx14_constexpr friend void swap(optional<T>& left, optional<T>& right) noexcept(
+    BSONCXX_PRIVATE_CONSTEXPR_CXX14 friend void swap(optional<T>& left, optional<T>& right) noexcept(
         std::is_nothrow_move_constructible<T>::value && bsoncxx::detail::is_nothrow_swappable<T>::value) {
         left.swap(right);
     }
@@ -634,12 +635,12 @@ class optional_common_base : optional_operators_base, optional_swap_mixin<T> {
 
     optional_common_base& operator=(optional_common_base const& other) noexcept(
         std::is_nothrow_copy_assignable<T>::value) {
-        this->_assign(BSONCXX_FWD(other));
+        this->_assign(BSONCXX_PRIVATE_FWD(other));
         return *this;
     }
 
     optional_common_base& operator=(optional_common_base&& other) noexcept(std::is_nothrow_move_assignable<T>::value) {
-        this->_assign(BSONCXX_FWD(other));
+        this->_assign(BSONCXX_PRIVATE_FWD(other));
         return *this;
     }
 
@@ -656,7 +657,7 @@ class optional_common_base : optional_operators_base, optional_swap_mixin<T> {
     template <typename... Args>
     T& emplace(Args&&... args) {
         this->reset();
-        this->_emplace_construct_anew(BSONCXX_FWD(args)...);
+        this->_emplace_construct_anew(BSONCXX_PRIVATE_FWD(args)...);
         return this->_storage.value;
     }
 
@@ -665,12 +666,12 @@ class optional_common_base : optional_operators_base, optional_swap_mixin<T> {
     template <typename U, typename... Args>
     T& emplace(std::initializer_list<U> il, Args&&... args) {
         this->reset();
-        this->_emplace_construct_anew(il, BSONCXX_FWD(args)...);
+        this->_emplace_construct_anew(il, BSONCXX_PRIVATE_FWD(args)...);
         return this->_storage.value;
     }
 
     // Special swap for optional values that removes need for a temporary.
-    bsoncxx_cxx14_constexpr void swap(optional_common_base& other) noexcept(
+    BSONCXX_PRIVATE_CONSTEXPR_CXX14 void swap(optional_common_base& other) noexcept(
         std::is_nothrow_move_constructible<T>::value && bsoncxx::detail::is_nothrow_swappable<T>::value) {
         if (other._has_value) {
             if (this->_has_value) {
@@ -699,7 +700,7 @@ class optional_common_base : optional_operators_base, optional_swap_mixin<T> {
     // have a live value.
     template <typename... Args>
     void _emplace_construct_anew(Args&&... args) noexcept(std::is_nothrow_constructible<T, Args&&...>::value) {
-        new (std::addressof(this->_storage.value)) T(BSONCXX_FWD(args)...);
+        new (std::addressof(this->_storage.value)) T(BSONCXX_PRIVATE_FWD(args)...);
         this->_has_value = true;
     }
 
@@ -710,10 +711,10 @@ class optional_common_base : optional_operators_base, optional_swap_mixin<T> {
             // We are receiving a value.
             if (this->_has_value) {
                 // We already have a value. Invoke the underlying assignment.
-                this->_storage.value = BSONCXX_FWD(other_storage)._storage.value;
+                this->_storage.value = BSONCXX_PRIVATE_FWD(other_storage)._storage.value;
             } else {
                 // We don't have a value. Use the constructor.
-                this->_emplace_construct_anew(BSONCXX_FWD(other_storage)._storage.value);
+                this->_emplace_construct_anew(BSONCXX_PRIVATE_FWD(other_storage)._storage.value);
             }
         } else {
             // We are receiving nullopt. Destroy our value, if present.

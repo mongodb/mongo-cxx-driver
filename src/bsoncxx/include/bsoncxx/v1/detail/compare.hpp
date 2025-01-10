@@ -29,13 +29,13 @@ namespace detail {
 template <typename L, typename R>
 auto is_equality_comparable_f(...) -> std::false_type;
 
-BSONCXX_PUSH_WARNINGS();
-BSONCXX_DISABLE_WARNING(GNU("-Wfloat-equal"));
+BSONCXX_PRIVATE_WARNINGS_PUSH();
+BSONCXX_PRIVATE_WARNINGS_DISABLE(GNU("-Wfloat-equal"));
 template <typename L, typename R>
 auto is_equality_comparable_f(int, bool b = false)
     -> true_t<
         decltype((std::declval<L const&>() == std::declval<R const&>()) ? 0 : 0, (std::declval<R const&>() == std::declval<L const&>()) ? 0 : 0, (std::declval<L const&>() != std::declval<R const&>()) ? 0 : 0, (std::declval<R const&>() != std::declval<L const&>()) ? 0 : 0)>;
-BSONCXX_POP_WARNINGS();
+BSONCXX_PRIVATE_WARNINGS_POP();
 
 // Detect whether two types are equality-comparable.
 //
@@ -55,21 +55,21 @@ struct equal_to {
 // an ADL-only tag_invoke(equal_to, l, r).
 class equality_operators {
     template <typename L, typename R>
-    constexpr static auto impl(rank<1>, L& l, R& r) BSONCXX_RETURNS(tag_invoke(equal_to{}, l, r));
+    constexpr static auto impl(rank<1>, L& l, R& r) BSONCXX_PRIVATE_RETURNS(tag_invoke(equal_to{}, l, r));
 
     template <typename L, typename R>
-    constexpr static auto impl(rank<0>, L& l, R& r) BSONCXX_RETURNS(tag_invoke(equal_to{}, r, l));
+    constexpr static auto impl(rank<0>, L& l, R& r) BSONCXX_PRIVATE_RETURNS(tag_invoke(equal_to{}, r, l));
 
     // @cond DOXYGEN_DISABLE "Found ';' while parsing initializer list!"
     template <typename Left, typename Other>
     constexpr friend auto operator==(Left const& self, Other const& other)
-        BSONCXX_RETURNS(equality_operators::impl(rank<1>{}, self, other));
+        BSONCXX_PRIVATE_RETURNS(equality_operators::impl(rank<1>{}, self, other));
     // @endcond
 
     // @cond DOXYGEN_DISABLE "Found ';' while parsing initializer list!"
     template <typename Left, typename Other>
     constexpr friend auto operator!=(Left const& self, Other const& other)
-        BSONCXX_RETURNS(!equality_operators::impl(rank<1>{}, self, other));
+        BSONCXX_PRIVATE_RETURNS(!equality_operators::impl(rank<1>{}, self, other));
     // @endcond
 };
 
@@ -117,9 +117,9 @@ class strong_ordering {
 
 #pragma push_macro("INLINE_VAR")
 #undef INLINE_VAR
-#define INLINE_VAR                     \
-    BSONCXX_IF_GNU_LIKE([[gnu::weak]]) \
-    BSONCXX_IF_MSVC(__declspec(selectany))
+#define INLINE_VAR                             \
+    BSONCXX_PRIVATE_IF_GNU_LIKE([[gnu::weak]]) \
+    BSONCXX_PRIVATE_IF_MSVC(__declspec(selectany))
 
 INLINE_VAR const strong_ordering strong_ordering::less = strong_ordering(strong_ordering::_construct{}, -1);
 INLINE_VAR const strong_ordering strong_ordering::greater = strong_ordering(strong_ordering::_construct{}, 1);
@@ -132,8 +132,8 @@ INLINE_VAR const strong_ordering strong_ordering::equal = strong_ordering(strong
 // a single operation, determine whether the left operand is less-than, greater-than,
 // or equal-to the right-hand operand.
 struct compare_three_way {
-    BSONCXX_PUSH_WARNINGS();
-    BSONCXX_DISABLE_WARNING(GNU("-Wfloat-equal"));
+    BSONCXX_PRIVATE_WARNINGS_PUSH();
+    BSONCXX_PRIVATE_WARNINGS_DISABLE(GNU("-Wfloat-equal"));
     template <
         typename L,
         typename R,
@@ -142,7 +142,7 @@ struct compare_three_way {
     constexpr static strong_ordering impl(L const& l, R const& r, rank<1>) {
         return (l < r) ? strong_ordering::less : (l == r ? strong_ordering::equal : strong_ordering::greater);
     }
-    BSONCXX_POP_WARNINGS();
+    BSONCXX_PRIVATE_WARNINGS_POP();
 
     template <
         typename L,
@@ -153,25 +153,26 @@ struct compare_three_way {
     }
 
     template <typename L, typename R>
-    constexpr auto operator()(L const& l, R const& r) const BSONCXX_RETURNS((impl)(l, r, rank<2>{}));
+    constexpr auto operator()(L const& l, R const& r) const BSONCXX_PRIVATE_RETURNS((impl)(l, r, rank<2>{}));
 };
 
 // Inherit to define ADL-visible ordering operators based on an ADL-visible
 // implementation of tag_invoke(compare_three_way, l, r).
 struct ordering_operators {
     template <typename L, typename R>
-    constexpr static auto impl(L const& l, R const& r, rank<1>) BSONCXX_RETURNS(tag_invoke(compare_three_way{}, l, r));
+    constexpr static auto impl(L const& l, R const& r, rank<1>)
+        BSONCXX_PRIVATE_RETURNS(tag_invoke(compare_three_way{}, l, r));
 
     template <typename L, typename R>
     constexpr static auto impl(L const& l, R const& r, rank<0>)
-        BSONCXX_RETURNS(tag_invoke(compare_three_way{}, r, l).inverted());
+        BSONCXX_PRIVATE_RETURNS(tag_invoke(compare_three_way{}, r, l).inverted());
 
 #pragma push_macro("DEFOP")
 #undef DEFOP
 #define DEFOP(Oper)                                             \
     template <typename L, typename R>                           \
     constexpr friend auto operator Oper(L const& l, R const& r) \
-        BSONCXX_RETURNS(ordering_operators::impl(l, r, rank<1>{}) Oper nullptr)
+        BSONCXX_PRIVATE_RETURNS(ordering_operators::impl(l, r, rank<1>{}) Oper nullptr)
     DEFOP(<);
     DEFOP(>);
     DEFOP(<=);

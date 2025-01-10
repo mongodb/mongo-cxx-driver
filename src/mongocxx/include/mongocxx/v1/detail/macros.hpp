@@ -16,7 +16,7 @@
 #if !defined(MONGOCXX_V1_DETAIL_MACROS_HPP)
 #define MONGOCXX_V1_DETAIL_MACROS_HPP
 
-#define MONGOCXX_UNREACHABLE std::abort()
+#define MONGOCXX_PRIVATE_UNREACHABLE std::abort()
 
 #endif // !defined(MONGOCXX_V1_DETAIL_MACROS_HPP)
 

@@ -271,7 +271,7 @@ void bucket::_upload_from_stream_with_id(
     if (source->bad() || (source->fail() && !source->eof())) {
         upload_stream.abort();
         source->exceptions(std::ios::failbit | std::ios::badbit);
-        MONGOCXX_UNREACHABLE;
+        MONGOCXX_PRIVATE_UNREACHABLE;
     }
 
     upload_stream.close();

@@ -80,7 +80,7 @@ class basic_string_view : bsoncxx::detail::equality_operators, bsoncxx::detail::
 
     constexpr basic_string_view() noexcept = default;
     constexpr basic_string_view(basic_string_view const&) noexcept = default;
-    bsoncxx_cxx14_constexpr basic_string_view& operator=(basic_string_view const&) noexcept = default;
+    BSONCXX_PRIVATE_CONSTEXPR_CXX14 basic_string_view& operator=(basic_string_view const&) noexcept = default;
 
     constexpr basic_string_view(const_pointer s, size_type count) : _begin(s), _size(count) {}
 
@@ -130,7 +130,7 @@ class basic_string_view : bsoncxx::detail::equality_operators, bsoncxx::detail::
         return _begin[offset];
     }
 
-    bsoncxx_cxx14_constexpr const_reference at(size_type pos) const {
+    BSONCXX_PRIVATE_CONSTEXPR_CXX14 const_reference at(size_type pos) const {
         if (pos >= size()) {
             throw std::out_of_range{"bsoncxx::stdx::basic_string_view::at()"};
         }
@@ -165,16 +165,16 @@ class basic_string_view : bsoncxx::detail::equality_operators, bsoncxx::detail::
         return static_cast<size_type>(std::numeric_limits<difference_type>::max());
     }
 
-    bsoncxx_cxx14_constexpr void remove_prefix(size_type n) {
+    BSONCXX_PRIVATE_CONSTEXPR_CXX14 void remove_prefix(size_type n) {
         _begin += n;
         _size -= n;
     }
 
-    bsoncxx_cxx14_constexpr void remove_suffix(size_type n) {
+    BSONCXX_PRIVATE_CONSTEXPR_CXX14 void remove_suffix(size_type n) {
         _size -= n;
     }
 
-    bsoncxx_cxx14_constexpr void swap(basic_string_view& other) {
+    BSONCXX_PRIVATE_CONSTEXPR_CXX14 void swap(basic_string_view& other) {
         std::swap(_begin, other._begin);
         std::swap(_size, other._size);
     }
@@ -188,7 +188,7 @@ class basic_string_view : bsoncxx::detail::equality_operators, bsoncxx::detail::
         return count;
     }
 
-    bsoncxx_cxx14_constexpr basic_string_view substr(size_type pos = 0, size_type count = npos) const {
+    BSONCXX_PRIVATE_CONSTEXPR_CXX14 basic_string_view substr(size_type pos = 0, size_type count = npos) const {
         if (pos > size()) {
             throw std::out_of_range{"bsoncxx::stdx::basic_string_view::substr()"};
         }
@@ -221,7 +221,7 @@ class basic_string_view : bsoncxx::detail::equality_operators, bsoncxx::detail::
         return substr(pos1, count1).compare(basic_string_view(str, count2));
     }
 
-    bsoncxx_cxx14_constexpr size_type find(basic_string_view infix, size_type pos = 0) const noexcept {
+    BSONCXX_PRIVATE_CONSTEXPR_CXX14 size_type find(basic_string_view infix, size_type pos = 0) const noexcept {
         if (pos > size()) {
             return npos;
         }
@@ -237,7 +237,7 @@ class basic_string_view : bsoncxx::detail::equality_operators, bsoncxx::detail::
         return static_cast<size_type>(found - begin());
     }
 
-    bsoncxx_cxx14_constexpr size_type rfind(basic_string_view infix, size_type pos = npos) const noexcept {
+    BSONCXX_PRIVATE_CONSTEXPR_CXX14 size_type rfind(basic_string_view infix, size_type pos = npos) const noexcept {
         // Calc the endpos where searching should begin, which includes the infix size.
         size_type const substr_size = pos != npos ? pos + infix.size() : pos;
         if (infix.empty()) {
@@ -279,7 +279,7 @@ class basic_string_view : bsoncxx::detail::equality_operators, bsoncxx::detail::
     constexpr size_type Name(const_pointer cstr, size_type pos = DefaultPos) const {      \
         return Name(basic_string_view(cstr), pos);                                        \
     }                                                                                     \
-    BSONCXX_FORCE_SEMICOLON
+    BSONCXX_PRIVATE_FORCE_SEMICOLON
 
     DECL_FINDERS(find, 0);
     DECL_FINDERS(rfind, npos);
@@ -328,7 +328,7 @@ class basic_string_view : bsoncxx::detail::equality_operators, bsoncxx::detail::
     // Find the first in-bounds index I in [pos, size()) where the given predicate
     // returns true for substr(I). If no index exists, returns npos.
     template <typename F>
-    bsoncxx_cxx14_constexpr size_type _find_if(size_type pos, F pred) const noexcept {
+    BSONCXX_PRIVATE_CONSTEXPR_CXX14 size_type _find_if(size_type pos, F pred) const noexcept {
         auto const sub = substr(pos);
         iterator const found = std::find_if(sub.begin(), sub.end(), pred);
         if (found == end()) {
@@ -340,7 +340,7 @@ class basic_string_view : bsoncxx::detail::equality_operators, bsoncxx::detail::
     // Find the LAST index I in [0, pos] where the given predicate returns true for
     // substr(0, I). If no such index exists, returns npos.
     template <typename F>
-    bsoncxx_cxx14_constexpr size_type _rfind_if(size_type pos, F pred) const noexcept {
+    BSONCXX_PRIVATE_CONSTEXPR_CXX14 size_type _rfind_if(size_type pos, F pred) const noexcept {
         // Adjust 'pos' for an inclusive range in substr()
         auto const rpos = pos == npos ? npos : pos + 1;
         // The substring that will be searched:

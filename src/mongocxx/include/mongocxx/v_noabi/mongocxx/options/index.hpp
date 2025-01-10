@@ -42,9 +42,9 @@ namespace options {
 ///
 class index {
    public:
-    BSONCXX_PUSH_WARNINGS();
-    BSONCXX_DISABLE_WARNING(MSVC(4251));
-    BSONCXX_DISABLE_WARNING(MSVC(4275));
+    BSONCXX_PRIVATE_WARNINGS_PUSH();
+    BSONCXX_PRIVATE_WARNINGS_DISABLE(MSVC(4251));
+    BSONCXX_PRIVATE_WARNINGS_DISABLE(MSVC(4275));
 
     ///
     /// Base class representing the optional storage engine options for indexes.
@@ -103,7 +103,7 @@ class index {
         bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value> _config_string;
     };
 
-    BSONCXX_POP_WARNINGS();
+    BSONCXX_PRIVATE_WARNINGS_POP();
 
     MONGOCXX_ABI_EXPORT_CDECL() index();
 

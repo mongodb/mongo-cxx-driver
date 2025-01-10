@@ -104,28 +104,28 @@ if(ENABLE_MACRO_GUARD_TESTS)
             BSONCXX_VERSION_PATCH
 
             # bsoncxx/v1/detail/macros.hpp
-            BSONCXX_CONCAT
-            BSONCXX_CONCAT_IMPL
-            BSONCXX_DISABLE_WARNING
-            BSONCXX_FORCE_SEMICOLON
-            BSONCXX_FWD
-            BSONCXX_IF_CLANG
-            BSONCXX_IF_GCC
-            BSONCXX_IF_GNU_LIKE
-            BSONCXX_IF_MSVC
-            BSONCXX_POP_WARNINGS
-            BSONCXX_PRAGMA
-            BSONCXX_PUSH_WARNINGS
-            BSONCXX_RETURNS
-            BSONCXX_STRINGIFY
-            BSONCXX_STRINGIFY_IMPL
-            BSONCXX_UNREACHABLE
-            _bsoncxxDisableWarningImpl_for_Clang
-            _bsoncxxDisableWarningImpl_for_GCC
-            _bsoncxxDisableWarningImpl_for_GNU
-            _bsoncxxDisableWarningImpl_for_MSVC
-            _bsoncxxPragma
-            bsoncxx_cxx14_constexpr
+            BSONCXX_PRIVATE_CONCAT
+            BSONCXX_PRIVATE_CONCAT_IMPL
+            BSONCXX_PRIVATE_CONSTEXPR_CXX14
+            BSONCXX_PRIVATE_FORCE_SEMICOLON
+            BSONCXX_PRIVATE_FWD
+            BSONCXX_PRIVATE_IF_CLANG
+            BSONCXX_PRIVATE_IF_GCC
+            BSONCXX_PRIVATE_IF_GNU_LIKE
+            BSONCXX_PRIVATE_IF_MSVC
+            BSONCXX_PRIVATE_PRAGMA
+            BSONCXX_PRIVATE_PRAGMA_IMPL
+            BSONCXX_PRIVATE_RETURNS
+            BSONCXX_PRIVATE_STRINGIFY
+            BSONCXX_PRIVATE_STRINGIFY_IMPL
+            BSONCXX_PRIVATE_UNREACHABLE
+            BSONCXX_PRIVATE_WARNINGS_DISABLE
+            BSONCXX_PRIVATE_WARNINGS_DISABLE_IMPL_FOR_Clang
+            BSONCXX_PRIVATE_WARNINGS_DISABLE_IMPL_FOR_GCC
+            BSONCXX_PRIVATE_WARNINGS_DISABLE_IMPL_FOR_GNU
+            BSONCXX_PRIVATE_WARNINGS_DISABLE_IMPL_FOR_MSVC
+            BSONCXX_PRIVATE_WARNINGS_POP
+            BSONCXX_PRIVATE_WARNINGS_PUSH
 
             # bsoncxx/v1/detail/prelude.hpp
             BSONCXX_PRIVATE_V1_INSIDE_MACRO_GUARD_SCOPE

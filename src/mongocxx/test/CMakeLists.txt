@@ -307,7 +307,7 @@ if(ENABLE_MACRO_GUARD_TESTS)
             MONGOCXX_VERSION_PATCH
 
             # mongocxx/v1/detail/macros.hpp
-            MONGOCXX_UNREACHABLE
+            MONGOCXX_PRIVATE_UNREACHABLE
 
             # mongocxx/v1/detail/prelude.hpp
             MONGOCXX_PRIVATE_V1_INSIDE_MACRO_GUARD_SCOPE

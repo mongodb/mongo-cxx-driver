@@ -135,7 +135,7 @@ void view::_init(void* internal_value) noexcept {
 #include <bsoncxx/enums/type.hpp>
 #undef BSONCXX_ENUM
         default:
-            BSONCXX_UNREACHABLE;
+            BSONCXX_PRIVATE_UNREACHABLE;
     }
 }
 
@@ -153,7 +153,7 @@ bool operator==(view const& lhs, view const& rhs) {
     }
 
     // Silence compiler warnings about failing to return a value.
-    BSONCXX_UNREACHABLE;
+    BSONCXX_PRIVATE_UNREACHABLE;
 }
 
 bool operator!=(view const& lhs, view const& rhs) {

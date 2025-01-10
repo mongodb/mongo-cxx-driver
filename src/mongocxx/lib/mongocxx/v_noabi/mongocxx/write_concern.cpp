@@ -129,7 +129,7 @@ write_concern::level write_concern::acknowledge_level() const {
         case MONGOC_WRITE_CONCERN_W_TAG:
             return write_concern::level::k_tag;
         default:
-            MONGOCXX_UNREACHABLE;
+            MONGOCXX_PRIVATE_UNREACHABLE;
     }
 }
 

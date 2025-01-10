@@ -55,7 +55,7 @@ log_level convert_log_level(::mongoc_log_level_t mongoc_log_level) {
         case MONGOC_LOG_LEVEL_TRACE:
             return log_level::k_trace;
         default:
-            MONGOCXX_UNREACHABLE;
+            MONGOCXX_PRIVATE_UNREACHABLE;
     }
 }
 

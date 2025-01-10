@@ -205,7 +205,7 @@ class client_session::impl {
             case MONGOC_TRANSACTION_ABORTED:
                 return transaction_state::k_transaction_aborted;
             default:
-                MONGOCXX_UNREACHABLE;
+                MONGOCXX_PRIVATE_UNREACHABLE;
         }
     }
 

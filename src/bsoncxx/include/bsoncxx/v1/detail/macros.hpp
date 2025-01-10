@@ -17,12 +17,12 @@
 #define BSONCXX_V1_DETAIL_MACROS_HPP
 
 // Convert the given macro argument to a string literal, after macro expansion.
-#define BSONCXX_STRINGIFY(...) BSONCXX_STRINGIFY_IMPL(__VA_ARGS__)
-#define BSONCXX_STRINGIFY_IMPL(...) #__VA_ARGS__
+#define BSONCXX_PRIVATE_STRINGIFY(...) BSONCXX_PRIVATE_STRINGIFY_IMPL(__VA_ARGS__)
+#define BSONCXX_PRIVATE_STRINGIFY_IMPL(...) #__VA_ARGS__
 
 // Token-paste two macro arguments, after macro expansion
-#define BSONCXX_CONCAT(A, ...) BSONCXX_CONCAT_IMPL(A, __VA_ARGS__)
-#define BSONCXX_CONCAT_IMPL(A, ...) A##__VA_ARGS__
+#define BSONCXX_PRIVATE_CONCAT(A, ...) BSONCXX_PRIVATE_CONCAT_IMPL(A, __VA_ARGS__)
+#define BSONCXX_PRIVATE_CONCAT_IMPL(A, ...) A##__VA_ARGS__
 
 // Expands to a _Pragma() preprocessor directive, after macro expansion
 //
@@ -31,24 +31,24 @@
 //
 // Example:
 //
-//      BSONCXX_PRAGMA(GCC diagnostic ignore "-Wconversion")
+//      BSONCXX_PRIVATE_PRAGMA(GCC diagnostic ignore "-Wconversion")
 //
 // will become:
 //
 //      _Pragma("GCC diagnostic ignore \"-Wconversion\"")
 //
-#define BSONCXX_PRAGMA(...) _bsoncxxPragma(__VA_ARGS__)
+#define BSONCXX_PRIVATE_PRAGMA(...) BSONCXX_PRIVATE_PRAGMA_IMPL(__VA_ARGS__)
 #ifdef _MSC_VER
 // Old MSVC doesn't recognize C++11 _Pragma(), but it always recognized __pragma
-#define _bsoncxxPragma(...) __pragma(__VA_ARGS__)
+#define BSONCXX_PRIVATE_PRAGMA_IMPL(...) __pragma(__VA_ARGS__)
 #else
-#define _bsoncxxPragma(...) _Pragma(BSONCXX_STRINGIFY(__VA_ARGS__))
+#define BSONCXX_PRIVATE_PRAGMA_IMPL(...) _Pragma(BSONCXX_PRIVATE_STRINGIFY(__VA_ARGS__))
 #endif
 
 // Use in a declaration position to force the appearence of a semicolon
 // as the next token. Use this for statement-like or declaration-like macros to
 // enforce that their call sites are followed by a semicolon
-#define BSONCXX_FORCE_SEMICOLON static_assert(true, "")
+#define BSONCXX_PRIVATE_FORCE_SEMICOLON static_assert(true, "")
 
 // Add a trailing noexcept, decltype-return, and return-body to a
 // function definition. (Not compatible with lambda expressions.)
@@ -56,7 +56,7 @@
 // Example:
 //
 //      template <typename T>
-//      auto foo(T x, T y) BSONCXX_RETURNS(x + y);
+//      auto foo(T x, T y) BSONCXX_PRIVATE_RETURNS(x + y);
 //
 // Becomes:
 //
@@ -65,11 +65,11 @@
 //          -> decltype(x + y)
 //      { return x + y };
 //
-#define BSONCXX_RETURNS(...)                                 \
+#define BSONCXX_PRIVATE_RETURNS(...)                         \
     noexcept(noexcept(__VA_ARGS__))->decltype(__VA_ARGS__) { \
         return __VA_ARGS__;                                  \
     }                                                        \
-    BSONCXX_FORCE_SEMICOLON
+    BSONCXX_PRIVATE_FORCE_SEMICOLON
 
 // @macro mongocxx_cxx14_constexpr
 // Expands to `constexpr` if compiling as c++14 or greater, otherwise
@@ -78,30 +78,30 @@
 // Use this on functions that can only be constexpr in C++14 or newer, including
 // non-const member functions.
 #if __cplusplus >= 201402L || (defined(_MSVC_LANG) && _MSVC_LANG >= 201402L && _MSC_VER > 1910)
-#define bsoncxx_cxx14_constexpr constexpr
+#define BSONCXX_PRIVATE_CONSTEXPR_CXX14 constexpr
 #else
-#define bsoncxx_cxx14_constexpr inline
+#define BSONCXX_PRIVATE_CONSTEXPR_CXX14 inline
 #endif
 
-#define BSONCXX_IF_MSVC(...)
-#define BSONCXX_IF_GCC(...)
-#define BSONCXX_IF_CLANG(...)
-#define BSONCXX_IF_GNU_LIKE(...) \
-    BSONCXX_IF_GCC(__VA_ARGS__)  \
-    BSONCXX_IF_CLANG(__VA_ARGS__)
+#define BSONCXX_PRIVATE_IF_MSVC(...)
+#define BSONCXX_PRIVATE_IF_GCC(...)
+#define BSONCXX_PRIVATE_IF_CLANG(...)
+#define BSONCXX_PRIVATE_IF_GNU_LIKE(...) \
+    BSONCXX_PRIVATE_IF_GCC(__VA_ARGS__)  \
+    BSONCXX_PRIVATE_IF_CLANG(__VA_ARGS__)
 
 // clang-format off
 #ifdef __GNUC__
     #ifdef __clang__
-        #undef BSONCXX_IF_CLANG
-        #define BSONCXX_IF_CLANG(...) __VA_ARGS__
+        #undef BSONCXX_PRIVATE_IF_CLANG
+        #define BSONCXX_PRIVATE_IF_CLANG(...) __VA_ARGS__
     #else
-        #undef BSONCXX_IF_GCC
-        #define BSONCXX_IF_GCC(...) __VA_ARGS__
+        #undef BSONCXX_PRIVATE_IF_GCC
+        #define BSONCXX_PRIVATE_IF_GCC(...) __VA_ARGS__
     #endif
 #elif defined(_MSC_VER)
-    #undef BSONCXX_IF_MSVC
-    #define BSONCXX_IF_MSVC(...) __VA_ARGS__
+    #undef BSONCXX_PRIVATE_IF_MSVC
+    #define BSONCXX_PRIVATE_IF_MSVC(...) __VA_ARGS__
 #endif
 // clang-format on
 
@@ -115,38 +115,42 @@
 // - MSVC(<id-integer-literal>)
 //
 // The "GNU" form applies to both GCC and Clang
-#define BSONCXX_DISABLE_WARNING(Spec)                     \
-    BSONCXX_CONCAT(_bsoncxxDisableWarningImpl_for_, Spec) \
-    BSONCXX_FORCE_SEMICOLON
+#define BSONCXX_PRIVATE_WARNINGS_DISABLE(Spec)                               \
+    BSONCXX_PRIVATE_CONCAT(BSONCXX_PRIVATE_WARNINGS_DISABLE_IMPL_FOR_, Spec) \
+    BSONCXX_PRIVATE_FORCE_SEMICOLON
 
 // Push the current compiler diagnostics settings state
-#define BSONCXX_PUSH_WARNINGS()                              \
-    BSONCXX_IF_GNU_LIKE(BSONCXX_PRAGMA(GCC diagnostic push)) \
-    BSONCXX_IF_MSVC(BSONCXX_PRAGMA(warning(push)))           \
-    BSONCXX_FORCE_SEMICOLON
+#define BSONCXX_PRIVATE_WARNINGS_PUSH()                                      \
+    BSONCXX_PRIVATE_IF_GNU_LIKE(BSONCXX_PRIVATE_PRAGMA(GCC diagnostic push)) \
+    BSONCXX_PRIVATE_IF_MSVC(BSONCXX_PRIVATE_PRAGMA(warning(push)))           \
+    BSONCXX_PRIVATE_FORCE_SEMICOLON
 
 // Restore prior compiler diagnostics settings from before the most
-// recent BSONCXX_PUSH_WARNINGS()
-#define BSONCXX_POP_WARNINGS()                              \
-    BSONCXX_IF_GNU_LIKE(BSONCXX_PRAGMA(GCC diagnostic pop)) \
-    BSONCXX_IF_MSVC(BSONCXX_PRAGMA(warning(pop)))           \
-    BSONCXX_FORCE_SEMICOLON
+// recent BSONCXX_PRIVATE_WARNINGS_PUSH()
+#define BSONCXX_PRIVATE_WARNINGS_POP()                                      \
+    BSONCXX_PRIVATE_IF_GNU_LIKE(BSONCXX_PRIVATE_PRAGMA(GCC diagnostic pop)) \
+    BSONCXX_PRIVATE_IF_MSVC(BSONCXX_PRIVATE_PRAGMA(warning(pop)))           \
+    BSONCXX_PRIVATE_FORCE_SEMICOLON
 
-#define _bsoncxxDisableWarningImpl_for_GCC(...) BSONCXX_IF_GCC(BSONCXX_PRAGMA(GCC diagnostic ignored __VA_ARGS__))
+#define BSONCXX_PRIVATE_WARNINGS_DISABLE_IMPL_FOR_GCC(...) \
+    BSONCXX_PRIVATE_IF_GCC(BSONCXX_PRIVATE_PRAGMA(GCC diagnostic ignored __VA_ARGS__))
 
-#define _bsoncxxDisableWarningImpl_for_Clang(...) BSONCXX_IF_CLANG(BSONCXX_PRAGMA(GCC diagnostic ignored __VA_ARGS__))
+#define BSONCXX_PRIVATE_WARNINGS_DISABLE_IMPL_FOR_Clang(...) \
+    BSONCXX_PRIVATE_IF_CLANG(BSONCXX_PRIVATE_PRAGMA(GCC diagnostic ignored __VA_ARGS__))
 
-#define _bsoncxxDisableWarningImpl_for_GNU(...) \
-    _bsoncxxDisableWarningImpl_for_GCC(__VA_ARGS__) _bsoncxxDisableWarningImpl_for_Clang(__VA_ARGS__)
+#define BSONCXX_PRIVATE_WARNINGS_DISABLE_IMPL_FOR_GNU(...)     \
+    BSONCXX_PRIVATE_WARNINGS_DISABLE_IMPL_FOR_GCC(__VA_ARGS__) \
+    BSONCXX_PRIVATE_WARNINGS_DISABLE_IMPL_FOR_Clang(__VA_ARGS__)
 
-#define _bsoncxxDisableWarningImpl_for_MSVC(...) BSONCXX_IF_MSVC(BSONCXX_PRAGMA(warning(disable : __VA_ARGS__)))
+#define BSONCXX_PRIVATE_WARNINGS_DISABLE_IMPL_FOR_MSVC(...) \
+    BSONCXX_PRIVATE_IF_MSVC(BSONCXX_PRIVATE_PRAGMA(warning(disable : __VA_ARGS__)))
 
-#define BSONCXX_FWD(...) static_cast<decltype(__VA_ARGS__)&&>(__VA_ARGS__)
+#define BSONCXX_PRIVATE_FWD(...) static_cast<decltype(__VA_ARGS__)&&>(__VA_ARGS__)
 
-#define BSONCXX_UNREACHABLE \
-    if (1) {                \
-        std::abort();       \
-    } else                  \
+#define BSONCXX_PRIVATE_UNREACHABLE \
+    if (1) {                        \
+        std::abort();               \
+    } else                          \
         ((void)0)
 
 #endif // BSONCXX_V1_DETAIL_MACROS_HPP

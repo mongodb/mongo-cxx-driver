@@ -49,8 +49,8 @@
 // mongocxx/v1/detail/macros.hpp
 #pragma push_macro("MONGOCXX_V1_DETAIL_MACROS_HPP")
 #if !defined(MONGOCXX_V1_DETAIL_MACROS_HPP)
-#pragma push_macro("MONGOCXX_UNREACHABLE")
-#undef MONGOCXX_UNREACHABLE
+#pragma push_macro("MONGOCXX_PRIVATE_UNREACHABLE")
+#undef MONGOCXX_PRIVATE_UNREACHABLE
 #endif
 
 ///
