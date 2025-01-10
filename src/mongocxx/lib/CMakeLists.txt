@@ -114,8 +114,14 @@ set(mongocxx_sources_v_noabi
     mongocxx/v_noabi/mongocxx/write_concern.cpp
 )
 
+set(mongocxx_sources_v1
+    mongocxx/v1/detail/postlude.cpp
+    mongocxx/v1/detail/prelude.cpp
+)
+
 list(APPEND mongocxx_sources
     ${mongocxx_sources_v_noabi}
+    ${mongocxx_sources_v1}
 )
 list(TRANSFORM mongocxx_sources PREPEND "${CMAKE_CURRENT_SOURCE_DIR}/")
 set(mongocxx_sources "${mongocxx_sources}" PARENT_SCOPE)
@@ -163,6 +169,7 @@ endif()
 set_dist_list(src_mongocxx_lib_DIST
     CMakeLists.txt
     ${mongocxx_sources_v_noabi}
+    ${mongocxx_sources_v1}
     mongocxx/v_noabi/mongocxx/config/config.hpp.in
     mongocxx/v_noabi/mongocxx/config/private/config.hh.in
     mongocxx/v_noabi/mongocxx/config/private/postlude.hh

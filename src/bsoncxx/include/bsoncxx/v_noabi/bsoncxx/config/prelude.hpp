@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <bsoncxx/v1/detail/prelude.hpp>
+
 // util.hpp
 #pragma push_macro("BSONCXX_CONCAT")
 #undef BSONCXX_CONCAT
@@ -101,19 +103,17 @@
 
 ///
 /// @file
-/// The bsoncxx macro guard prelude header.
+/// The bsoncxx v_noabi macro guard prelude header.
 ///
 /// @warning For internal use only!
 ///
 /// @par Includes
+/// - @ref bsoncxx/v1/detail/prelude.hpp
 /// - @ref bsoncxx/v_noabi/bsoncxx/config/compiler.hpp
 /// - @ref bsoncxx/v_noabi/bsoncxx/config/config.hpp
 /// - @ref bsoncxx/v_noabi/bsoncxx/config/export.hpp
 /// - @ref bsoncxx/v_noabi/bsoncxx/config/util.hpp
 /// - @ref bsoncxx/v_noabi/bsoncxx/config/version.hpp
-///
-/// This header uses macro pragmas to guard macros defined by the bsoncxx library for internal use
-/// by "pushing" their prior definition onto the stack before use by bsoncxx headers.
 ///
 /// @see
 /// - @ref bsoncxx/v_noabi/bsoncxx/config/postlude.hpp

@@ -22,3 +22,20 @@
 ///
 /// @note This header is not includable!
 ///
+
+///
+/// @dir mongocxx/v1
+/// Provides headers declaring entities in @ref mongocxx::v1.
+///
+
+///
+/// @dir mongocxx/v1/detail
+/// Provides headers for internal use only.
+///
+/// @warning For internal use only!
+///
+
+///
+/// @namespace mongocxx::v1
+/// Declares entities whose ABI stability is guaranteed for documented symbols.
+///

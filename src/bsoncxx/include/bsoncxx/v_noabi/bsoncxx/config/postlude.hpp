@@ -69,15 +69,17 @@
 
 #pragma pop_macro("BSONCXX_FWD")
 
+#include <bsoncxx/v1/detail/postlude.hpp>
+
 ///
 /// @file
-/// The bsoncxx macro guard postlude header.
+/// The bsoncxx v_noabi macro guard postlude header.
 ///
 /// @warning For internal use only!
 ///
-/// This header uses macro pragmas to guard macros defined by the bsoncxx library for internal use
-/// by "popping" their prior definition onto the stack after use by bsoncxx headers.
+/// @par Includes
+/// - @ref bsoncxx/v1/detail/postlude.hpp
 ///
 /// @see
-/// - @ref bsoncxx/v_noabi/bsoncxx/config/prelude.hpp
+/// - @ref bsoncxx/v1/detail/prelude.hpp
 ///

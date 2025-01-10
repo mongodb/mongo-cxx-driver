@@ -12,30 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#if !defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
-#error "This file is for documentation purposes only. It should not be included."
-#endif // !defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
+#if !defined(MONGOCXX_PRIVATE_V1_INSIDE_MACRO_GUARD_SCOPE)
+#error "postlude header included without a matching prelude header"
+#endif
+#pragma pop_macro("MONGOCXX_PRIVATE_V1_INSIDE_MACRO_GUARD_SCOPE")
 
 ///
 /// @file
-/// For documentation purposes only.
-///
-/// @note This header is not includable!
-///
-
-///
-/// @dir bsoncxx/v1
-/// Provides headers declaring entities in @ref bsoncxx::v1.
-///
-
-///
-/// @dir bsoncxx/v1/detail
-/// Provides headers for internal use only.
+/// The mongocxx v1 macro guard postlude header.
 ///
 /// @warning For internal use only!
 ///
-
+/// This header uses macro pragmas to guard macros defined by the mongocxx library for internal use
+/// by "popping" their prior definition onto the stack after use by mongocxx headers.
 ///
-/// @namespace bsoncxx::v1
-/// Declares entities whose ABI stability is guaranteed for documented symbols.
+/// @see
+/// - @ref mongocxx/v1/detail/prelude.hpp
 ///
