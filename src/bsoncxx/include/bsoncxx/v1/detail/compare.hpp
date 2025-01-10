@@ -26,23 +26,6 @@
 namespace bsoncxx {
 namespace detail {
 
-template <typename L, typename R>
-auto is_equality_comparable_f(...) -> std::false_type;
-
-BSONCXX_PRIVATE_WARNINGS_PUSH();
-BSONCXX_PRIVATE_WARNINGS_DISABLE(GNU("-Wfloat-equal"));
-template <typename L, typename R>
-auto is_equality_comparable_f(int, bool b = false)
-    -> true_t<
-        decltype((std::declval<L const&>() == std::declval<R const&>()) ? 0 : 0, (std::declval<R const&>() == std::declval<L const&>()) ? 0 : 0, (std::declval<L const&>() != std::declval<R const&>()) ? 0 : 0, (std::declval<R const&>() != std::declval<L const&>()) ? 0 : 0)>;
-BSONCXX_PRIVATE_WARNINGS_POP();
-
-// Detect whether two types are equality-comparable.
-//
-// Requires L == R, L != R, R == L, and R != L.
-template <typename L, typename R = L>
-struct is_equality_comparable : decltype(is_equality_comparable_f<L, R>(0)) {};
-
 // Callable object and tag type for equality comparison.
 struct equal_to {
     template <typename L, typename R>
@@ -179,33 +162,6 @@ struct ordering_operators {
     DEFOP(>=);
 #pragma pop_macro("DEFOP")
 };
-
-template <typename L, typename R>
-std::false_type is_partially_ordered_with_f(rank<0>);
-
-template <typename L, typename R>
-auto is_partially_ordered_with_f(rank<1>) -> true_t<
-    decltype(std::declval<L const&>() > std::declval<R const&>()),
-    decltype(std::declval<L const&>() < std::declval<R const&>()),
-    decltype(std::declval<L const&>() >= std::declval<R const&>()),
-    decltype(std::declval<L const&>() <= std::declval<R const&>()),
-    decltype(std::declval<R const&>() < std::declval<L const&>()),
-    decltype(std::declval<R const&>() > std::declval<L const&>()),
-    decltype(std::declval<R const&>() <= std::declval<L const&>()),
-    decltype(std::declval<R const&>() >= std::declval<L const&>())>;
-
-template <typename T, typename U>
-struct is_partially_ordered_with : decltype(is_partially_ordered_with_f<T, U>(rank<1>{})) {};
-
-template <typename T>
-struct is_totally_ordered : conjunction<is_equality_comparable<T>, is_partially_ordered_with<T, T>> {};
-
-template <typename T, typename U>
-struct is_totally_ordered_with : conjunction<
-                                     is_totally_ordered<T>,
-                                     is_totally_ordered<U>,
-                                     is_equality_comparable<T, U>,
-                                     is_partially_ordered_with<T, U>> {};
 
 } // namespace detail
 } // namespace bsoncxx
