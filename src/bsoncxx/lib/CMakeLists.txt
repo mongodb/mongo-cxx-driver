@@ -17,6 +17,7 @@ set(bsoncxx_sources_v_noabi
     bsoncxx/v_noabi/bsoncxx/array/value.cpp
     bsoncxx/v_noabi/bsoncxx/array/view.cpp
     bsoncxx/v_noabi/bsoncxx/builder/core.cpp
+    bsoncxx/v_noabi/bsoncxx/config/export.cpp
     bsoncxx/v_noabi/bsoncxx/decimal128.cpp
     bsoncxx/v_noabi/bsoncxx/document/element.cpp
     bsoncxx/v_noabi/bsoncxx/document/value.cpp
@@ -34,6 +35,7 @@ set(bsoncxx_sources_v_noabi
 )
 
 set(bsoncxx_sources_v1
+    bsoncxx/v1/config/export.cpp
     bsoncxx/v1/detail/postlude.cpp
     bsoncxx/v1/detail/prelude.cpp
 )

@@ -29,6 +29,11 @@
 ///
 
 ///
+/// @dir mongocxx/v1/config
+/// Provides headers related to mongocxx library configuration.
+///
+
+///
 /// @dir mongocxx/v1/detail
 /// Provides headers for internal use only.
 ///

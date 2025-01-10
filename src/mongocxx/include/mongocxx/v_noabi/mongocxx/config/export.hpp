@@ -12,35 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#if !defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
-#error "This file is for documentation purposes only. It should not be included."
-#endif // !defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
+// For backward compatibility.
+#include <mongocxx/v1/config/export.hpp>
 
 ///
 /// @file
-/// For documentation purposes only.
-///
-/// @note This header is not includable!
-///
-
-///
-/// @dir bsoncxx/v1
-/// Provides headers declaring entities in @ref bsoncxx::v1.
-///
-
-///
-/// @dir bsoncxx/v1/config
-/// Provides headers related to bsoncxx library configuration.
-///
-
-///
-/// @dir bsoncxx/v1/detail
-/// Provides headers for internal use only.
+/// Provides macros to control the set of symbols exported in the ABI.
 ///
 /// @warning For internal use only!
 ///
-
-///
-/// @namespace bsoncxx::v1
-/// Declares entities whose ABI stability is guaranteed for documented symbols.
+/// @par Includes
+/// - @ref mongocxx/v1/config/export.hpp
 ///

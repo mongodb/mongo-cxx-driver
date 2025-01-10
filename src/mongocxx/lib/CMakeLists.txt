@@ -19,6 +19,7 @@ set(mongocxx_sources_v_noabi
     mongocxx/v_noabi/mongocxx/client_session.cpp
     mongocxx/v_noabi/mongocxx/client.cpp
     mongocxx/v_noabi/mongocxx/collection.cpp
+    mongocxx/v_noabi/mongocxx/config/export.cpp
     mongocxx/v_noabi/mongocxx/cursor.cpp
     mongocxx/v_noabi/mongocxx/database.cpp
     mongocxx/v_noabi/mongocxx/events/command_failed_event.cpp
@@ -115,6 +116,7 @@ set(mongocxx_sources_v_noabi
 )
 
 set(mongocxx_sources_v1
+    mongocxx/v1/config/export.cpp
     mongocxx/v1/detail/postlude.cpp
     mongocxx/v1/detail/prelude.cpp
 )
