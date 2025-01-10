@@ -39,6 +39,33 @@
 #pragma pop_macro("BSONCXX_VERSION_EXTRA")
 #endif
 
+// bsoncxx/v1/detail/macros.hpp
+#pragma pop_macro("BSONCXX_V1_DETAIL_MACROS_HPP")
+#if !defined(BSONCXX_V1_DETAIL_MACROS_HPP)
+#pragma pop_macro("BSONCXX_CONCAT")
+#pragma pop_macro("BSONCXX_CONCAT_IMPL")
+#pragma pop_macro("BSONCXX_DISABLE_WARNING")
+#pragma pop_macro("BSONCXX_FORCE_SEMICOLON")
+#pragma pop_macro("BSONCXX_FWD")
+#pragma pop_macro("BSONCXX_IF_CLANG")
+#pragma pop_macro("BSONCXX_IF_GCC")
+#pragma pop_macro("BSONCXX_IF_GNU_LIKE")
+#pragma pop_macro("BSONCXX_IF_MSVC")
+#pragma pop_macro("BSONCXX_POP_WARNINGS")
+#pragma pop_macro("BSONCXX_PRAGMA")
+#pragma pop_macro("BSONCXX_PUSH_WARNINGS")
+#pragma pop_macro("BSONCXX_RETURNS")
+#pragma pop_macro("BSONCXX_STRINGIFY")
+#pragma pop_macro("BSONCXX_STRINGIFY_IMPL")
+#pragma pop_macro("BSONCXX_UNREACHABLE")
+#pragma pop_macro("_bsoncxxDisableWarningImpl_for_Clang")
+#pragma pop_macro("_bsoncxxDisableWarningImpl_for_GCC")
+#pragma pop_macro("_bsoncxxDisableWarningImpl_for_GNU")
+#pragma pop_macro("_bsoncxxDisableWarningImpl_for_MSVC")
+#pragma pop_macro("_bsoncxxPragma")
+#pragma pop_macro("bsoncxx_cxx14_constexpr")
+#endif
+
 #if !defined(BSONCXX_PRIVATE_V1_INSIDE_MACRO_GUARD_SCOPE)
 #error "postlude header included without a matching prelude header"
 #endif

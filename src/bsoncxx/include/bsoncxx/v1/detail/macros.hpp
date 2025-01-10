@@ -1,3 +1,21 @@
+// Copyright 2009-present MongoDB, Inc.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+// Traditional include guard is required to support v_noabi include-via-prelude.
+#if !defined(BSONCXX_V1_DETAIL_MACROS_HPP)
+#define BSONCXX_V1_DETAIL_MACROS_HPP
+
 // Convert the given macro argument to a string literal, after macro expansion.
 #define BSONCXX_STRINGIFY(...) BSONCXX_STRINGIFY_IMPL(__VA_ARGS__)
 #define BSONCXX_STRINGIFY_IMPL(...) #__VA_ARGS__
@@ -65,6 +83,28 @@
 #define bsoncxx_cxx14_constexpr inline
 #endif
 
+#define BSONCXX_IF_MSVC(...)
+#define BSONCXX_IF_GCC(...)
+#define BSONCXX_IF_CLANG(...)
+#define BSONCXX_IF_GNU_LIKE(...) \
+    BSONCXX_IF_GCC(__VA_ARGS__)  \
+    BSONCXX_IF_CLANG(__VA_ARGS__)
+
+// clang-format off
+#ifdef __GNUC__
+    #ifdef __clang__
+        #undef BSONCXX_IF_CLANG
+        #define BSONCXX_IF_CLANG(...) __VA_ARGS__
+    #else
+        #undef BSONCXX_IF_GCC
+        #define BSONCXX_IF_GCC(...) __VA_ARGS__
+    #endif
+#elif defined(_MSC_VER)
+    #undef BSONCXX_IF_MSVC
+    #define BSONCXX_IF_MSVC(...) __VA_ARGS__
+#endif
+// clang-format on
+
 // Disable a warning for a particular compiler.
 //
 // The argument should be of the form:
@@ -103,9 +143,17 @@
 
 #define BSONCXX_FWD(...) static_cast<decltype(__VA_ARGS__)&&>(__VA_ARGS__)
 
+#define BSONCXX_UNREACHABLE \
+    if (1) {                \
+        std::abort();       \
+    } else                  \
+        ((void)0)
+
+#endif // BSONCXX_V1_DETAIL_MACROS_HPP
+
 ///
 /// @file
-/// Provides macros for internal use.
+/// For internal use only!
 ///
 /// @warning For internal use only!
 ///

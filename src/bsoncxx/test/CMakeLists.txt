@@ -103,40 +103,40 @@ if(ENABLE_MACRO_GUARD_TESTS)
             BSONCXX_VERSION_MINOR
             BSONCXX_VERSION_PATCH
 
-            # bsoncxx/v1/detail/prelude.hpp
-            BSONCXX_PRIVATE_V1_INSIDE_MACRO_GUARD_SCOPE
-
-            # prelude.hpp
+            # bsoncxx/v1/detail/macros.hpp
+            BSONCXX_CONCAT
+            BSONCXX_CONCAT_IMPL
+            BSONCXX_DISABLE_WARNING
+            BSONCXX_FORCE_SEMICOLON
+            BSONCXX_FWD
+            BSONCXX_IF_CLANG
+            BSONCXX_IF_GCC
+            BSONCXX_IF_GNU_LIKE
+            BSONCXX_IF_MSVC
+            BSONCXX_POP_WARNINGS
+            BSONCXX_PRAGMA
+            BSONCXX_PUSH_WARNINGS
+            BSONCXX_RETURNS
+            BSONCXX_STRINGIFY
+            BSONCXX_STRINGIFY_IMPL
             BSONCXX_UNREACHABLE
-
-            # util.hpp
+            _bsoncxxDisableWarningImpl_for_Clang
             _bsoncxxDisableWarningImpl_for_GCC
             _bsoncxxDisableWarningImpl_for_GNU
             _bsoncxxDisableWarningImpl_for_MSVC
-            _bsoncxxDisableWarningImpl_for_Clang
-            BSONCXX_PUSH_WARNINGS
-            BSONCXX_POP_WARNINGS
-            BSONCXX_DISABLE_WARNING
-            BSONCXX_CONCAT
-            BSONCXX_CONCAT_IMPL
-            bsoncxx_cxx14_constexpr
-            BSONCXX_FORCE_SEMICOLON
-            BSONCXX_FWD
-            BSONCXX_PRAGMA
             _bsoncxxPragma
-            BSONCXX_STRINGIFY
-            BSONCXX_STRINGIFY_IMPL
-            BSONCXX_IF_MSVC
-            BSONCXX_IF_GCC
-            BSONCXX_IF_CLANG
-            BSONCXX_IF_GNU_LIKE
-            BSONCXX_RETURNS
+            bsoncxx_cxx14_constexpr
+
+            # bsoncxx/v1/detail/prelude.hpp
+            BSONCXX_PRIVATE_V1_INSIDE_MACRO_GUARD_SCOPE
+
         INCLUDE_PATTERNS
             "include/*.hpp" # Public headers.
         EXCLUDE_REGEXES
             "include/bsoncxx/docs/.*\.hpp" # Doc header.
             "include/.*/(prelude|postlude)\.hpp" # Macro guard headers.
-            "include/bsoncxx/v_noabi/bsoncxx/config/.*\.hpp" # v_noabi config headers.
+            "include/bsoncxx/v1/detail/macros\.hpp" # v1 private macros.
+            "include/bsoncxx/v_noabi/bsoncxx/config/.*\.hpp" # v_noabi include-via-prelude headers.
             "include/bsoncxx/v_noabi/bsoncxx/enums/.*\.hpp" # v_noabi X-macro headers.
     )
 endif()

@@ -14,6 +14,8 @@
 
 #pragma once
 
+#include <mongocxx/v1/detail/macros.hpp>
+
 #include <exception>
 
 #include <bsoncxx/private/helpers.hh>

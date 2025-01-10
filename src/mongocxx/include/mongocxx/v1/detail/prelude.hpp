@@ -46,6 +46,13 @@
 #undef MONGOCXX_VERSION_PATCH
 #endif
 
+// mongocxx/v1/detail/macros.hpp
+#pragma push_macro("MONGOCXX_V1_DETAIL_MACROS_HPP")
+#if !defined(MONGOCXX_V1_DETAIL_MACROS_HPP)
+#pragma push_macro("MONGOCXX_UNREACHABLE")
+#undef MONGOCXX_UNREACHABLE
+#endif
+
 ///
 /// @file
 /// The mongocxx v1 macro guard prelude header.

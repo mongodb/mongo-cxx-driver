@@ -14,13 +14,14 @@
 
 #pragma once
 
+#include <bsoncxx/v1/detail/prelude.hpp>
+
+#include <bsoncxx/v1/detail/macros.hpp>
+#include <bsoncxx/v1/detail/type_traits.hpp>
+
 #include <cstddef>
 #include <functional>
 #include <type_traits>
-
-#include <bsoncxx/stdx/type_traits.hpp>
-
-#include <bsoncxx/config/prelude.hpp>
 
 namespace bsoncxx {
 namespace detail {
@@ -208,11 +209,11 @@ struct is_totally_ordered_with : conjunction<
 } // namespace detail
 } // namespace bsoncxx
 
-#include <bsoncxx/config/postlude.hpp>
+#include <bsoncxx/v1/detail/postlude.hpp>
 
 ///
 /// @file
-/// Provides comparison-related utilities for internal use.
+/// For internal use only!
 ///
 /// @warning For internal use only!
 ///

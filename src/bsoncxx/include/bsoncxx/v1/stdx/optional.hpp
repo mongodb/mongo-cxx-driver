@@ -14,28 +14,34 @@
 
 #pragma once
 
-#include <bsoncxx/config/prelude.hpp>
+#include <bsoncxx/v1/detail/prelude.hpp>
+
+#include <bsoncxx/v1/config/config.hpp>
 
 #if defined(BSONCXX_POLY_USE_STD)
 
 #include <optional>
 
 namespace bsoncxx {
-namespace v_noabi {
+namespace v1 {
 namespace stdx {
 
-using ::std::in_place;
-using ::std::in_place_t;
-using ::std::make_optional;
-using ::std::nullopt;
-using ::std::nullopt_t;
-using ::std::optional;
+using std::in_place;
+using std::in_place_t;
+using std::make_optional;
+using std::nullopt;
+using std::nullopt_t;
+using std::optional;
 
 } // namespace stdx
-} // namespace v_noabi
+} // namespace v1
 } // namespace bsoncxx
 
 #elif defined(BSONCXX_POLY_USE_IMPLS)
+
+#include <bsoncxx/v1/detail/compare.hpp>
+#include <bsoncxx/v1/detail/macros.hpp>
+#include <bsoncxx/v1/detail/type_traits.hpp>
 
 #include <cstddef>
 #include <cstdio>
@@ -47,12 +53,9 @@ using ::std::optional;
 #include <type_traits>
 #include <utility>
 
-#include <bsoncxx/stdx/operators.hpp>
-#include <bsoncxx/stdx/type_traits.hpp>
-
 namespace bsoncxx {
 
-namespace v_noabi {
+namespace v1 {
 
 namespace stdx {
 
@@ -128,14 +131,13 @@ struct enable_opt_conversion : bsoncxx::detail::conjunction<
                                            std::is_convertible<optional<U> const&&, T>>>>> {};
 
 template <typename From, typename To>
-struct enable_opt_value_conversion //
-    : bsoncxx::detail::conjunction<
-          std::is_constructible<To, From&&>,
-          bsoncxx::detail::negation<bsoncxx::detail::is_alike<From, in_place_t>>,
-          bsoncxx::detail::negation<bsoncxx::detail::is_alike<From, optional<To>>>,
-          bsoncxx::detail::disjunction<
-              bsoncxx::detail::negation<bsoncxx::detail::is_alike<To, bool>>,
-              detail::not_an_optional<bsoncxx::detail::remove_cvref_t<From>>>> {};
+struct enable_opt_value_conversion : bsoncxx::detail::conjunction<
+                                         std::is_constructible<To, From&&>,
+                                         bsoncxx::detail::negation<bsoncxx::detail::is_alike<From, in_place_t>>,
+                                         bsoncxx::detail::negation<bsoncxx::detail::is_alike<From, optional<To>>>,
+                                         bsoncxx::detail::disjunction<
+                                             bsoncxx::detail::negation<bsoncxx::detail::is_alike<To, bool>>,
+                                             detail::not_an_optional<bsoncxx::detail::remove_cvref_t<From>>>> {};
 
 } // namespace detail
 
@@ -751,14 +753,14 @@ struct optional_hash<T, true> {
 
 } // namespace stdx
 
-} // namespace v_noabi
+} // namespace v1
 
 } // namespace bsoncxx
 
 namespace std {
 
 template <typename T>
-struct hash<bsoncxx::v_noabi::stdx::optional<T>> : bsoncxx::v_noabi::stdx::detail::optional_hash<T> {};
+struct hash<bsoncxx::v1::stdx::optional<T>> : bsoncxx::v1::stdx::detail::optional_hash<T> {};
 
 } // namespace std
 
@@ -766,20 +768,7 @@ struct hash<bsoncxx::v_noabi::stdx::optional<T>> : bsoncxx::v_noabi::stdx::detai
 #error "Cannot find a valid polyfill for optional"
 #endif
 
-#include <bsoncxx/config/postlude.hpp>
-
-namespace bsoncxx {
-namespace stdx {
-
-using ::bsoncxx::v_noabi::stdx::in_place;
-using ::bsoncxx::v_noabi::stdx::in_place_t;
-using ::bsoncxx::v_noabi::stdx::make_optional;
-using ::bsoncxx::v_noabi::stdx::nullopt;
-using ::bsoncxx::v_noabi::stdx::nullopt_t;
-using ::bsoncxx::v_noabi::stdx::optional;
-
-} // namespace stdx
-} // namespace bsoncxx
+#include <bsoncxx/v1/detail/postlude.hpp>
 
 ///
 /// @file
@@ -787,7 +776,7 @@ using ::bsoncxx::v_noabi::stdx::optional;
 ///
 /// @note The API and ABI compatibility of this polyfill is determined by polyfill build
 /// configuration variables and the `BSONCXX_POLY_USE_*` macros provided by @ref
-/// bsoncxx/v_noabi/bsoncxx/config/config.hpp.
+/// bsoncxx/v1/config/config.hpp.
 ///
 /// @see
 /// - [Choosing a C++17 Polyfill](https://www.mongodb.com/docs/languages/cpp/cpp-driver/current/polyfill-selection/)
@@ -796,7 +785,7 @@ using ::bsoncxx::v_noabi::stdx::optional;
 #if defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
 
 namespace bsoncxx {
-namespace v_noabi {
+namespace v1 {
 namespace stdx {
 
 ///
@@ -804,13 +793,13 @@ namespace stdx {
 ///
 /// @note The API and ABI compatibility of this polyfill is determined by polyfill build
 /// configuration variables and the `BSONCXX_POLY_USE_*` macros provided by @ref
-/// bsoncxx/v_noabi/bsoncxx/config/config.hpp.
+/// bsoncxx/v1/config/config.hpp.
 ///
 template <typename T>
 class optional {};
 
 } // namespace stdx
-} // namespace v_noabi
+} // namespace v1
 } // namespace bsoncxx
 
 #endif // defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

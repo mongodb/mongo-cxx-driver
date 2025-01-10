@@ -12,26 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <mongocxx/v1/detail/prelude.hpp>
+// Traditional include guard is required to support v_noabi include-via-prelude.
+#if !defined(MONGOCXX_V1_DETAIL_MACROS_HPP)
+#define MONGOCXX_V1_DETAIL_MACROS_HPP
 
-#include <mongocxx/config/compiler.hpp>
-#include <mongocxx/config/config.hpp>
-#include <mongocxx/config/export.hpp>
-#include <mongocxx/config/version.hpp>
+#define MONGOCXX_UNREACHABLE std::abort()
+
+#endif // !defined(MONGOCXX_V1_DETAIL_MACROS_HPP)
 
 ///
 /// @file
-/// The mongocxx v_noabi macro guard prelude header.
+/// For internal use only!
 ///
 /// @warning For internal use only!
-///
-/// @par Includes
-/// - @ref mongocxx/v1/detail/prelude.hpp
-/// - @ref mongocxx/v_noabi/mongocxx/config/compiler.hpp
-/// - @ref mongocxx/v_noabi/mongocxx/config/config.hpp
-/// - @ref mongocxx/v_noabi/mongocxx/config/export.hpp
-/// - @ref mongocxx/v_noabi/mongocxx/config/version.hpp
-///
-/// @see
-/// - @ref mongocxx/v_noabi/mongocxx/config/postlude.hpp
 ///

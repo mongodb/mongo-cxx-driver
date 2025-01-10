@@ -32,6 +32,12 @@
 #pragma pop_macro("MONGOCXX_VERSION_PATCH")
 #endif
 
+// mongocxx/v1/detail/macros.hpp
+#pragma push_macro("MONGOCXX_V1_DETAIL_MACROS_HPP")
+#if !defined(MONGOCXX_V1_DETAIL_MACROS_HPP)
+#pragma pop_macro("MONGOCXX_UNREACHABLE")
+#endif
+
 #if !defined(MONGOCXX_PRIVATE_V1_INSIDE_MACRO_GUARD_SCOPE)
 #error "postlude header included without a matching prelude header"
 #endif

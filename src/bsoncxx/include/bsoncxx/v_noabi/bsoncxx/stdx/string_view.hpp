@@ -12,26 +12,37 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <mongocxx/v1/detail/prelude.hpp>
+#pragma once
 
-#include <mongocxx/config/compiler.hpp>
-#include <mongocxx/config/config.hpp>
-#include <mongocxx/config/export.hpp>
-#include <mongocxx/config/version.hpp>
+#include <bsoncxx/v1/stdx/string_view.hpp>
+
+namespace bsoncxx {
+namespace v_noabi {
+namespace stdx {
+
+using v1::stdx::basic_string_view;
+using v1::stdx::string_view;
+
+} // namespace stdx
+} // namespace v_noabi
+} // namespace bsoncxx
+
+namespace bsoncxx {
+namespace stdx {
+
+using v_noabi::stdx::basic_string_view;
+using v_noabi::stdx::string_view;
+
+} // namespace stdx
+} // namespace bsoncxx
 
 ///
 /// @file
-/// The mongocxx v_noabi macro guard prelude header.
-///
-/// @warning For internal use only!
+/// Provides `std::string_view`-related polyfills for library API usage.
 ///
 /// @par Includes
-/// - @ref mongocxx/v1/detail/prelude.hpp
-/// - @ref mongocxx/v_noabi/mongocxx/config/compiler.hpp
-/// - @ref mongocxx/v_noabi/mongocxx/config/config.hpp
-/// - @ref mongocxx/v_noabi/mongocxx/config/export.hpp
-/// - @ref mongocxx/v_noabi/mongocxx/config/version.hpp
+/// - @ref bsoncxx/v1/stdx/string_view.hpp
 ///
 /// @see
-/// - @ref mongocxx/v_noabi/mongocxx/config/postlude.hpp
+/// - [Choosing a C++17 Polyfill](https://www.mongodb.com/docs/languages/cpp/cpp-driver/current/polyfill-selection/)
 ///

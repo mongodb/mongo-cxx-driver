@@ -14,10 +14,12 @@
 
 #pragma once
 
+#include <bsoncxx/v1/detail/prelude.hpp>
+
+#include <bsoncxx/v1/detail/macros.hpp>
+
 #include <type_traits>
 #include <utility>
-
-#include <bsoncxx/config/prelude.hpp>
 
 namespace bsoncxx {
 namespace detail {
@@ -433,12 +435,11 @@ template <typename T, typename U>
 auto is_swappable_f(rank<0>) -> std::false_type;
 
 template <typename T, typename U>
-auto is_swappable_f(rank<1>) //
-    noexcept(
-        noexcept(swap(std::declval<T>(), std::declval<U>())) && noexcept(swap(std::declval<U>(), std::declval<T>())))
-        -> true_t<
-            decltype(swap(std::declval<T>(), std::declval<U>())),
-            decltype(swap(std::declval<U>(), std::declval<T>()))>;
+auto is_swappable_f(rank<1>) noexcept(
+    noexcept(swap(std::declval<T>(), std::declval<U>())) && noexcept(swap(std::declval<U>(), std::declval<T>())))
+    -> true_t<
+        decltype(swap(std::declval<T>(), std::declval<U>())),
+        decltype(swap(std::declval<U>(), std::declval<T>()))>;
 
 template <typename T, typename U>
 auto is_nothrow_swappable_f(rank<0>) -> std::false_type;
@@ -464,11 +465,11 @@ struct is_nothrow_swappable : is_nothrow_swappable_with<T&, T&> {};
 } // namespace detail
 } // namespace bsoncxx
 
-#include <bsoncxx/config/postlude.hpp>
+#include <bsoncxx/v1/detail/postlude.hpp>
 
 ///
 /// @file
-/// Provides `<type_traits>`-related polyfills for internal use.
+/// For internal use only!
 ///
 /// @warning For internal use only!
 ///

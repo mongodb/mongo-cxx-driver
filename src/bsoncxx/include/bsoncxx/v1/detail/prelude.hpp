@@ -55,6 +55,55 @@
 #undef BSONCXX_VERSION_EXTRA
 #endif
 
+// bsoncxx/v1/detail/macros.hpp
+#pragma push_macro("BSONCXX_V1_DETAIL_MACROS_HPP")
+#if !defined(BSONCXX_V1_DETAIL_MACROS_HPP)
+#pragma push_macro("BSONCXX_CONCAT")
+#undef BSONCXX_CONCAT
+#pragma push_macro("BSONCXX_CONCAT_IMPL")
+#undef BSONCXX_CONCAT_IMPL
+#pragma push_macro("BSONCXX_DISABLE_WARNING")
+#undef BSONCXX_DISABLE_WARNING
+#pragma push_macro("BSONCXX_FORCE_SEMICOLON")
+#undef BSONCXX_FORCE_SEMICOLON
+#pragma push_macro("BSONCXX_FWD")
+#undef BSONCXX_FWD
+#pragma push_macro("BSONCXX_IF_CLANG")
+#undef BSONCXX_IF_CLANG
+#pragma push_macro("BSONCXX_IF_GCC")
+#undef BSONCXX_IF_GCC
+#pragma push_macro("BSONCXX_IF_GNU_LIKE")
+#undef BSONCXX_IF_GNU_LIKE
+#pragma push_macro("BSONCXX_IF_MSVC")
+#undef BSONCXX_IF_MSVC
+#pragma push_macro("BSONCXX_POP_WARNINGS")
+#undef BSONCXX_POP_WARNINGS
+#pragma push_macro("BSONCXX_PRAGMA")
+#undef BSONCXX_PRAGMA
+#pragma push_macro("BSONCXX_PUSH_WARNINGS")
+#undef BSONCXX_PUSH_WARNINGS
+#pragma push_macro("BSONCXX_RETURNS")
+#undef BSONCXX_RETURNS
+#pragma push_macro("BSONCXX_STRINGIFY")
+#undef BSONCXX_STRINGIFY
+#pragma push_macro("BSONCXX_STRINGIFY_IMPL")
+#undef BSONCXX_STRINGIFY_IMPL
+#pragma push_macro("BSONCXX_UNREACHABLE")
+#undef BSONCXX_UNREACHABLE
+#pragma push_macro("_bsoncxxDisableWarningImpl_for_Clang")
+#undef _bsoncxxDisableWarningImpl_for_Clang
+#pragma push_macro("_bsoncxxDisableWarningImpl_for_GCC")
+#undef _bsoncxxDisableWarningImpl_for_GCC
+#pragma push_macro("_bsoncxxDisableWarningImpl_for_GNU")
+#undef _bsoncxxDisableWarningImpl_for_GNU
+#pragma push_macro("_bsoncxxDisableWarningImpl_for_MSVC")
+#undef _bsoncxxDisableWarningImpl_for_MSVC
+#pragma push_macro("_bsoncxxPragma")
+#undef _bsoncxxPragma
+#pragma push_macro("bsoncxx_cxx14_constexpr")
+#undef bsoncxx_cxx14_constexpr
+#endif
+
 ///
 /// @file
 /// The bsoncxx v1 macro guard prelude header.

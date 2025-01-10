@@ -14,24 +14,30 @@
 
 #pragma once
 
-#include <bsoncxx/config/prelude.hpp>
+#include <bsoncxx/v1/detail/prelude.hpp>
+
+#include <bsoncxx/v1/config/config.hpp>
 
 #if defined(BSONCXX_POLY_USE_STD)
 
 #include <string_view>
 
 namespace bsoncxx {
-namespace v_noabi {
+namespace v1 {
 namespace stdx {
 
-using ::std::basic_string_view;
-using ::std::string_view;
+using std::basic_string_view;
+using std::string_view;
 
 } // namespace stdx
-} // namespace v_noabi
+} // namespace v1
 } // namespace bsoncxx
 
 #elif defined(BSONCXX_POLY_USE_IMPLS)
+
+#include <bsoncxx/v1/detail/compare.hpp>
+#include <bsoncxx/v1/detail/macros.hpp>
+#include <bsoncxx/v1/detail/type_traits.hpp>
 
 #include <algorithm>
 #include <cstddef>
@@ -41,11 +47,8 @@ using ::std::string_view;
 #include <string>
 #include <utility>
 
-#include <bsoncxx/stdx/operators.hpp>
-#include <bsoncxx/stdx/type_traits.hpp>
-
 namespace bsoncxx {
-namespace v_noabi {
+namespace v1 {
 namespace stdx {
 
 template <typename Char, typename Traits = std::char_traits<Char>>
@@ -359,15 +362,14 @@ constexpr std::size_t basic_string_view<C, Tr>::npos;
 using string_view = basic_string_view<char>;
 
 } // namespace stdx
-} // namespace v_noabi
+} // namespace v1
 } // namespace bsoncxx
 
 namespace std {
 
 template <typename CharT, typename Traits>
-struct hash<bsoncxx::v_noabi::stdx::basic_string_view<CharT, Traits>>
-    : private std::hash<std::basic_string<CharT, Traits>> {
-    std::size_t operator()(bsoncxx::v_noabi::stdx::basic_string_view<CharT, Traits> const& str) const {
+struct hash<bsoncxx::v1::stdx::basic_string_view<CharT, Traits>> : private std::hash<std::basic_string<CharT, Traits>> {
+    std::size_t operator()(bsoncxx::v1::stdx::basic_string_view<CharT, Traits> const& str) const {
         return std::hash<std::basic_string<CharT, Traits>>::operator()(
             std::basic_string<CharT, Traits>(str.data(), str.size()));
     }
@@ -379,16 +381,7 @@ struct hash<bsoncxx::v_noabi::stdx::basic_string_view<CharT, Traits>>
 #error "Cannot find a valid polyfill for string_view"
 #endif
 
-#include <bsoncxx/config/postlude.hpp>
-
-namespace bsoncxx {
-namespace stdx {
-
-using ::bsoncxx::v_noabi::stdx::basic_string_view;
-using ::bsoncxx::v_noabi::stdx::string_view;
-
-} // namespace stdx
-} // namespace bsoncxx
+#include <bsoncxx/v1/detail/postlude.hpp>
 
 ///
 /// @file
@@ -396,7 +389,7 @@ using ::bsoncxx::v_noabi::stdx::string_view;
 ///
 /// @note The API and ABI compatibility of this polyfill is determined by polyfill build
 /// configuration variables and the `BSONCXX_POLY_USE_*` macros provided by @ref
-/// bsoncxx/v_noabi/bsoncxx/config/config.hpp.
+/// bsoncxx/v1/config/config.hpp.
 ///
 /// @see
 /// - [Choosing a C++17 Polyfill](https://www.mongodb.com/docs/languages/cpp/cpp-driver/current/polyfill-selection/)
@@ -405,7 +398,7 @@ using ::bsoncxx::v_noabi::stdx::string_view;
 #if defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
 
 namespace bsoncxx {
-namespace v_noabi {
+namespace v1 {
 namespace stdx {
 
 ///
@@ -413,12 +406,12 @@ namespace stdx {
 ///
 /// @note The API and ABI compatibility of this polyfill is determined by polyfill build
 /// configuration variables and the `BSONCXX_POLY_USE_*` macros provided by @ref
-/// bsoncxx/v_noabi/bsoncxx/config/config.hpp.
+/// bsoncxx/v1/config/config.hpp.
 ///
 class string_view {};
 
 } // namespace stdx
-} // namespace v_noabi
+} // namespace v1
 } // namespace bsoncxx
 
 #endif // defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

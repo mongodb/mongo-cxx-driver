@@ -12,10 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// prelude.hpp
-#undef MONGOCXX_UNREACHABLE
-#pragma pop_macro("MONGOCXX_UNREACHABLE")
-
 #include <mongocxx/v1/detail/postlude.hpp>
 
 ///
