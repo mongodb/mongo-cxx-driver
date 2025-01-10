@@ -14,7 +14,7 @@
 
 #include <mongocxx/model/delete_one.hpp>
 
-#include <mongocxx/config/private/prelude.hh>
+#include <mongocxx/private/config/prelude.hh>
 
 namespace mongocxx {
 namespace v_noabi {

@@ -29,7 +29,7 @@
 #include <mongocxx/private/pool.hh>
 #include <mongocxx/private/uri.hh>
 
-#include <mongocxx/config/private/prelude.hh>
+#include <mongocxx/private/config/prelude.hh>
 
 namespace mongocxx {
 namespace v_noabi {

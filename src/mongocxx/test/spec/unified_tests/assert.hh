@@ -18,7 +18,7 @@
 
 #include <bsoncxx/types/bson_value/view_or_value.hpp>
 
-#include <mongocxx/config/private/prelude.hh>
+#include <mongocxx/private/config/prelude.hh>
 
 namespace mongocxx {
 namespace assert {
@@ -33,4 +33,4 @@ void matches(
 } // namespace assert
 } // namespace mongocxx
 
-#include <mongocxx/config/private/postlude.hh>
+#include <mongocxx/private/config/postlude.hh>

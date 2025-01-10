@@ -262,11 +262,11 @@ void assert::matches(
                 to_string(expected),
                 match_doc_current_path());
 
-            BSONCXX_PUSH_WARNINGS();
-            BSONCXX_DISABLE_WARNING(GNU("-Wfloat-equal"));
+            BSONCXX_PRIVATE_WARNINGS_PUSH();
+            BSONCXX_PRIVATE_WARNINGS_DISABLE(GNU("-Wfloat-equal"));
             REQUIRE(test_util::is_numeric(actual));
             REQUIRE(test_util::as_double(expected) == test_util::as_double(actual));
-            BSONCXX_POP_WARNINGS();
+            BSONCXX_PRIVATE_WARNINGS_POP();
             return;
         }
 

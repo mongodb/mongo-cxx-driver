@@ -39,7 +39,7 @@
 
 #include <bsoncxx/config/prelude.hpp>
 
-#include <mongocxx/config/private/prelude.hh>
+#include <mongocxx/private/config/prelude.hh>
 
 #include <bsoncxx/test/catch.hh>
 
@@ -381,8 +381,8 @@ bool matches(types::bson_value::view main, types::bson_value::view pattern, matc
         return t == main.type();
     }
 
-    BSONCXX_PUSH_WARNINGS();
-    BSONCXX_DISABLE_WARNING(GNU("-Wfloat-equal"));
+    BSONCXX_PRIVATE_WARNINGS_PUSH();
+    BSONCXX_PRIVATE_WARNINGS_DISABLE(GNU("-Wfloat-equal"));
 
     if (is_numeric(pattern) && as_double(pattern) == 42.0) {
         return true;
@@ -393,7 +393,7 @@ bool matches(types::bson_value::view main, types::bson_value::view pattern, matc
         return true;
     }
 
-    BSONCXX_POP_WARNINGS();
+    BSONCXX_PRIVATE_WARNINGS_POP();
 
     if (main.type() == type::k_document) {
         // the value '42' acts as placeholders for "any value"

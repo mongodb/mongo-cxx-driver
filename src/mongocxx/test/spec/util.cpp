@@ -41,7 +41,7 @@
 #include <mongocxx/result/delete.hpp>
 #include <mongocxx/result/insert_one.hpp>
 
-#include <mongocxx/config/private/prelude.hh>
+#include <mongocxx/private/config/prelude.hh>
 
 #include <bsoncxx/test/catch.hh>
 
@@ -1121,4 +1121,4 @@ void run_crud_tests_in_file(std::string const& test_path, uri test_uri) {
 } // namespace spec
 } // namespace mongocxx
 
-#include <mongocxx/config/private/postlude.hh>
+#include <mongocxx/private/config/postlude.hh>

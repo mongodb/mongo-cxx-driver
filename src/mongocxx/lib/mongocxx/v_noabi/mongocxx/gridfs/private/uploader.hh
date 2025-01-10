@@ -22,7 +22,7 @@
 
 #include <mongocxx/gridfs/uploader.hpp>
 
-#include <mongocxx/config/private/prelude.hh>
+#include <mongocxx/private/config/prelude.hh>
 
 namespace mongocxx {
 namespace v_noabi {
@@ -91,4 +91,4 @@ class uploader::impl {
 } // namespace v_noabi
 } // namespace mongocxx
 
-#include <mongocxx/config/private/postlude.hh>
+#include <mongocxx/private/config/postlude.hh>

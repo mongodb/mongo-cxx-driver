@@ -24,7 +24,7 @@
 #include <bsoncxx/types/bson_value/value.hpp>
 #include <bsoncxx/types/bson_value/view.hpp>
 
-#include <bsoncxx/config/private/prelude.hh>
+#include <bsoncxx/private/config/prelude.hh>
 
 #define BSONCXX_CITER                                                           \
     bson_iter_t iter;                                                           \
@@ -107,7 +107,7 @@ types::bson_value::view element::get_value() const {
 #undef BSONCXX_ENUM
     }
 
-    BSONCXX_UNREACHABLE;
+    BSONCXX_PRIVATE_UNREACHABLE;
 }
 
 types::bson_value::value element::get_owning_value() const {

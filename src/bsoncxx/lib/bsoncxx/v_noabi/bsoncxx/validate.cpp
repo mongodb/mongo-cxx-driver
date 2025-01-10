@@ -16,7 +16,7 @@
 #include <bsoncxx/private/make_unique.hh>
 #include <bsoncxx/validate.hpp>
 
-#include <bsoncxx/config/private/prelude.hh>
+#include <bsoncxx/private/config/prelude.hh>
 
 namespace bsoncxx {
 namespace v_noabi {

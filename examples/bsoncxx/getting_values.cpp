@@ -72,7 +72,7 @@ int EXAMPLES_CDECL main() {
     auto invalid1 = doc["name"]["middle"];
     auto invalid2 = doc["contribs"][1000];
     if (invalid1 || invalid2) {
-        BSONCXX_UNREACHABLE; // Not reached.
+        return EXIT_FAILURE; // Not reached.
     }
 
     // Similarly, indexed access (either by string or numeric index) into a type that is not
@@ -81,7 +81,7 @@ int EXAMPLES_CDECL main() {
     auto invalid3 = doc["_id"]["invalid"];
     auto invalid4 = doc["name"][3];
     if (invalid3 || invalid4) {
-        BSONCXX_UNREACHABLE; // Not reached.
+        return EXIT_FAILURE; // Not reached.
     }
 
     // Values are accessed through get_*() methods.

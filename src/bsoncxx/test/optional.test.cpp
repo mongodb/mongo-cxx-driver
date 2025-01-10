@@ -80,10 +80,10 @@ template <typename T>
 struct is_hashable : std::false_type {};
 #endif
 
-BSONCXX_PUSH_WARNINGS();
-BSONCXX_DISABLE_WARNING(GNU("-Wunused"));
-BSONCXX_DISABLE_WARNING(Clang("-Wunused-member-function"));
-BSONCXX_DISABLE_WARNING(Clang("-Wunneeded-member-function"));
+BSONCXX_PRIVATE_WARNINGS_PUSH();
+BSONCXX_PRIVATE_WARNINGS_DISABLE(GNU("-Wunused"));
+BSONCXX_PRIVATE_WARNINGS_DISABLE(Clang("-Wunused-member-function"));
+BSONCXX_PRIVATE_WARNINGS_DISABLE(Clang("-Wunneeded-member-function"));
 
 struct not_default_constructible {
     explicit not_default_constructible(int);
@@ -110,16 +110,16 @@ struct not_copyable {
     not_copyable& operator=(not_copyable&&) = default;
 };
 
-BSONCXX_POP_WARNINGS();
+BSONCXX_PRIVATE_WARNINGS_POP();
 
 // Improve quality of error messages on failure (in particular for MSVC).
 #define STATIC_ASSERT_EXPR(expr) static_assert((expr), "expected: " #expr)
 #define STATIC_ASSERT_EXPR_EQUAL(a, b) static_assert((a) == (b), "expected: " #a " == " #b)
 
-BSONCXX_PUSH_WARNINGS();
-BSONCXX_DISABLE_WARNING(GNU("-Wunused-macros"));
+BSONCXX_PRIVATE_WARNINGS_PUSH();
+BSONCXX_PRIVATE_WARNINGS_DISABLE(GNU("-Wunused-macros"));
 #define STATIC_ASSERT_EXPR_IMPLIES(a, b) static_assert((!(a) || (b)), "expected: " #a " -> " #b)
-BSONCXX_POP_WARNINGS();
+BSONCXX_PRIVATE_WARNINGS_POP();
 
 #if defined(BSONCXX_POLY_USE_STD)
 // Deliberately weaken assertions for stdlib implementations to accomodate for differences in

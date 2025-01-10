@@ -15,7 +15,7 @@
 #include <bsoncxx/string/to_string.hpp>
 #include <bsoncxx/string/view_or_value.hpp>
 
-#include <bsoncxx/config/private/prelude.hh>
+#include <bsoncxx/private/config/prelude.hh>
 
 namespace bsoncxx {
 namespace v_noabi {
