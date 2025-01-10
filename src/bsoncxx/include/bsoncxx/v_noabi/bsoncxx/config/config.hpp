@@ -12,7 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+// For backward compatibility.
+#include <bsoncxx/v1/config/config.hpp>
+
 ///
 /// @file
-/// Provides macros describing the mongocxx library configuration.
+/// Provides macros describing the bsoncxx library configuration.
+///
+/// @par Includes
+/// - @ref bsoncxx/v1/config/config.hpp
 ///

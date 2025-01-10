@@ -12,7 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-///
-/// @file
-/// Provides macros describing the mongocxx library configuration.
-///
+#include <bsoncxx/v1/config/config.hpp>
+
+#if !defined(BSONCXX_POLY_USE_IMPLS) && !defined(BSONCXX_POLY_USE_STD)
+#error "bsoncxx/v1/config/config.hpp should define a polyfill library macro"
+#endif

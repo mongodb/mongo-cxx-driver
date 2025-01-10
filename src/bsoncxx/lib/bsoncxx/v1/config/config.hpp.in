@@ -12,6 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#if !defined(BSONCXX_V1_CONFIG_CONFIG_HPP)
+#define BSONCXX_V1_CONFIG_CONFIG_HPP
+
 #cmakedefine BSONCXX_POLY_USE_IMPLS
 #cmakedefine BSONCXX_POLY_USE_STD
 
@@ -19,20 +22,18 @@
 /// @file
 /// Provides macros describing the bsoncxx library configuration.
 ///
-/// @warning This header is not standalone includable!
-///
 
 #if defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
 
 #if !defined(BSONCXX_POLY_USE_IMPLS)
 #define BSONCXX_POLY_USE_IMPLS
-#endif  // !defined(BSONCXX_POLY_USE_IMPLS)
+#endif // !defined(BSONCXX_POLY_USE_IMPLS)
 
 #if !defined(BSONCXX_POLY_USE_STD)
 #define BSONCXX_POLY_USE_STD
-#endif  // !defined(BSONCXX_POLY_USE_IMPLS)
+#endif // !defined(BSONCXX_POLY_USE_IMPLS)
 
-#endif  // BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR
+#endif // BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR
 
 ///
 /// @def BSONCXX_POLY_USE_IMPLS
@@ -43,3 +44,5 @@
 /// @def BSONCXX_POLY_USE_STD
 /// Defined when configured to use the C++ standard library for C++17 features.
 ///
+
+#endif // !defined(BSONCXX_V1_CONFIG_CONFIG_HPP)
