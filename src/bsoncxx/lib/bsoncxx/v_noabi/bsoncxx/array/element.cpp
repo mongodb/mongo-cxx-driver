@@ -17,7 +17,7 @@
 #include <bsoncxx/array/element.hpp>
 #include <bsoncxx/types/bson_value/view.hpp>
 
-#include <bsoncxx/private/config/prelude.hh>
+#include <bsoncxx/config/private/prelude.hh>
 
 namespace bsoncxx {
 namespace v_noabi {

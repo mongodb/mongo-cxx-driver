@@ -41,7 +41,7 @@
 #include <mongocxx/result/replace_one.hpp>
 #include <mongocxx/result/update.hpp>
 
-#include <mongocxx/private/config/prelude.hh>
+#include <mongocxx/config/private/prelude.hh>
 
 #include <bsoncxx/test/catch.hh>
 
@@ -1580,4 +1580,4 @@ document::value operation_runner::run(document::view operation) {
 } // namespace spec
 } // namespace mongocxx
 
-#include <mongocxx/private/config/postlude.hh>
+#include <mongocxx/config/private/postlude.hh>

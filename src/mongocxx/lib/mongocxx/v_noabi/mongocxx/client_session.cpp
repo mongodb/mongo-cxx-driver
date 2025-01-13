@@ -19,7 +19,7 @@
 #include <mongocxx/private/client.hh>
 #include <mongocxx/private/client_session.hh>
 
-#include <mongocxx/private/config/prelude.hh>
+#include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
 namespace v_noabi {

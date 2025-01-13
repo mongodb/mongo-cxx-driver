@@ -39,7 +39,7 @@
 
 #include <bsoncxx/config/prelude.hpp>
 
-#include <mongocxx/private/config/prelude.hh>
+#include <mongocxx/config/private/prelude.hh>
 
 #include <bsoncxx/test/catch.hh>
 

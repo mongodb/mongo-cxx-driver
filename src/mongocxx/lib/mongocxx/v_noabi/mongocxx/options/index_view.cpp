@@ -18,7 +18,7 @@
 
 #include <mongocxx/options/index_view.hpp>
 
-#include <mongocxx/private/config/prelude.hh>
+#include <mongocxx/config/private/prelude.hh>
 
 using bsoncxx::v_noabi::builder::basic::kvp;
 using bsoncxx::v_noabi::builder::basic::make_document;

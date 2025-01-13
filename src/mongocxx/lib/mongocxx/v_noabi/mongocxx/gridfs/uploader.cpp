@@ -27,7 +27,7 @@
 #include <mongocxx/gridfs/private/uploader.hh>
 #include <mongocxx/gridfs/uploader.hpp>
 
-#include <mongocxx/private/config/prelude.hh>
+#include <mongocxx/config/private/prelude.hh>
 
 namespace {
 

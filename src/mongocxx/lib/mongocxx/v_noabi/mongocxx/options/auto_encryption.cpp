@@ -22,7 +22,7 @@
 #include <mongocxx/private/libmongoc.hh>
 #include <mongocxx/private/pool.hh>
 
-#include <mongocxx/private/config/prelude.hh>
+#include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
 namespace v_noabi {

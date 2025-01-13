@@ -5,7 +5,7 @@
 #include <mongocxx/private/search_index_view.hh>
 #include <mongocxx/search_index_view.hpp>
 
-#include <mongocxx/private/config/prelude.hh>
+#include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
 namespace v_noabi {

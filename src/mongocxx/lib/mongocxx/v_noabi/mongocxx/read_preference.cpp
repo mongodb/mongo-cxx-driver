@@ -23,7 +23,7 @@
 #include <mongocxx/private/read_preference.hh>
 #include <mongocxx/read_preference.hpp>
 
-#include <mongocxx/private/config/prelude.hh>
+#include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
 namespace v_noabi {

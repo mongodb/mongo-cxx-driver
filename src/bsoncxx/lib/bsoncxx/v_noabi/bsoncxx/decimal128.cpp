@@ -19,7 +19,7 @@
 #include <bsoncxx/stdx/string_view.hpp>
 #include <bsoncxx/string/to_string.hpp>
 
-#include <bsoncxx/private/config/prelude.hh>
+#include <bsoncxx/config/private/prelude.hh>
 
 namespace bsoncxx {
 namespace v_noabi {

@@ -19,7 +19,7 @@
 #include <mongocxx/options/tls.hpp>
 #include <mongocxx/private/libmongoc.hh>
 
-#include <mongocxx/private/config/prelude.hh>
+#include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
 namespace v_noabi {
@@ -57,4 +57,4 @@ inline std::pair<::mongoc_ssl_opt_t, std::list<bsoncxx::v_noabi::string::view_or
 } // namespace v_noabi
 } // namespace mongocxx
 
-#include <mongocxx/private/config/postlude.hh>
+#include <mongocxx/config/private/postlude.hh>

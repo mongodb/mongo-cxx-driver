@@ -34,7 +34,7 @@
 #include <mongocxx/options/index.hpp>
 #include <mongocxx/private/numeric_casting.hh>
 
-#include <mongocxx/private/config/prelude.hh>
+#include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
 namespace v_noabi {

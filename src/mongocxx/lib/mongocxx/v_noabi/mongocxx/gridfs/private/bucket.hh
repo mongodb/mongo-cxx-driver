@@ -20,7 +20,7 @@
 #include <mongocxx/collection.hpp>
 #include <mongocxx/gridfs/bucket.hpp>
 
-#include <mongocxx/private/config/prelude.hh>
+#include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
 namespace v_noabi {
@@ -55,4 +55,4 @@ class bucket::impl {
 } // namespace v_noabi
 } // namespace mongocxx
 
-#include <mongocxx/private/config/postlude.hh>
+#include <mongocxx/config/private/postlude.hh>

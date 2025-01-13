@@ -26,7 +26,7 @@
 #include <bsoncxx/string/to_string.hpp>
 #include <bsoncxx/types/bson_value/view_or_value.hpp>
 
-#include <bsoncxx/private/config/prelude.hh>
+#include <bsoncxx/config/private/prelude.hh>
 
 namespace bsoncxx {
 
@@ -93,4 +93,4 @@ inline std::string to_string(bsoncxx::v_noabi::types::bson_value::view_or_value 
 
 } // namespace bsoncxx
 
-#include <bsoncxx/private/config/postlude.hh>
+#include <bsoncxx/config/private/postlude.hh>

@@ -20,7 +20,7 @@
 #include <bsoncxx/stdx/operators.hpp>
 #include <bsoncxx/stdx/optional.hpp>
 
-#include <bsoncxx/private/config/prelude.hh>
+#include <bsoncxx/config/private/prelude.hh>
 
 #include <bsoncxx/test/to_string.hh>
 
@@ -149,4 +149,4 @@ struct StringMaker<bsoncxx::detail::strong_ordering> {
 
 } // namespace Catch
 
-#include <bsoncxx/private/config/postlude.hh>
+#include <bsoncxx/config/private/postlude.hh>

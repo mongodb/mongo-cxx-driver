@@ -18,7 +18,7 @@
 #include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/options/private/transaction.hh>
 
-#include <mongocxx/private/config/prelude.hh>
+#include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
 namespace v_noabi {
@@ -91,4 +91,4 @@ transaction::impl& transaction::_get_impl() {
 } // namespace v_noabi
 } // namespace mongocxx
 
-#include <mongocxx/private/config/postlude.hh>
+#include <mongocxx/config/private/postlude.hh>

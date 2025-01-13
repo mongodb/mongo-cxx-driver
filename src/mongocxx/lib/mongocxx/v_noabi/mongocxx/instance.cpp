@@ -27,7 +27,7 @@
 #include <mongocxx/logger.hpp>
 #include <mongocxx/private/libmongoc.hh>
 
-#include <mongocxx/private/config/prelude.hh>
+#include <mongocxx/config/private/prelude.hh>
 
 #if !defined(__has_feature)
 #define __has_feature(x) 0

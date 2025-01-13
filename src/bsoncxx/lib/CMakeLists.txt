@@ -12,10 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-set(bsoncxx_sources_private
-    bsoncxx/private/itoa.cpp
-)
-
 set(bsoncxx_sources_v_noabi
     bsoncxx/v_noabi/bsoncxx/array/element.cpp
     bsoncxx/v_noabi/bsoncxx/array/value.cpp
@@ -32,6 +28,7 @@ set(bsoncxx_sources_v_noabi
     bsoncxx/v_noabi/bsoncxx/exception/exception.cpp
     bsoncxx/v_noabi/bsoncxx/json.cpp
     bsoncxx/v_noabi/bsoncxx/oid.cpp
+    bsoncxx/v_noabi/bsoncxx/private/itoa.cpp
     bsoncxx/v_noabi/bsoncxx/string/view_or_value.cpp
     bsoncxx/v_noabi/bsoncxx/types.cpp
     bsoncxx/v_noabi/bsoncxx/types/bson_value/value.cpp
@@ -48,7 +45,6 @@ set(bsoncxx_sources_v1
 )
 
 list(APPEND bsoncxx_sources
-    ${bsoncxx_sources_private}
     ${bsoncxx_sources_v_noabi}
     ${bsoncxx_sources_v1}
 )
@@ -58,8 +54,8 @@ set(bsoncxx_sources "${bsoncxx_sources}" PARENT_SCOPE)
 # Generate private headers.
 if(1)
     configure_file(
-        bsoncxx/private/config/config.hh.in
-        bsoncxx/private/config/config.hh
+        bsoncxx/v_noabi/bsoncxx/config/private/config.hh.in
+        bsoncxx/v_noabi/bsoncxx/config/private/config.hh
     )
 endif()
 
@@ -85,20 +81,19 @@ endif()
 
 set_dist_list(src_bsoncxx_lib_DIST
     CMakeLists.txt
-    ${bsoncxx_sources_private}
     ${bsoncxx_sources_v_noabi}
     ${bsoncxx_sources_v1}
-    bsoncxx/private/b64_ntop.hh
-    bsoncxx/private/config/config.hh.in
-    bsoncxx/private/config/postlude.hh
-    bsoncxx/private/config/prelude.hh
-    bsoncxx/private/helpers.hh
-    bsoncxx/private/itoa.hh
-    bsoncxx/private/libbson.hh
-    bsoncxx/private/make_unique.hh
-    bsoncxx/private/stack.hh
-    bsoncxx/private/suppress_deprecation_warnings.hh
-    bsoncxx/test_util/export_for_testing.hh
+    bsoncxx/v_noabi/bsoncxx/config/private/config.hh.in
+    bsoncxx/v_noabi/bsoncxx/config/private/postlude.hh
+    bsoncxx/v_noabi/bsoncxx/config/private/prelude.hh
+    bsoncxx/v_noabi/bsoncxx/private/b64_ntop.hh
+    bsoncxx/v_noabi/bsoncxx/private/helpers.hh
+    bsoncxx/v_noabi/bsoncxx/private/make_unique.hh
+    bsoncxx/v_noabi/bsoncxx/private/itoa.hh
+    bsoncxx/v_noabi/bsoncxx/private/libbson.hh
+    bsoncxx/v_noabi/bsoncxx/private/stack.hh
+    bsoncxx/v_noabi/bsoncxx/private/suppress_deprecation_warnings.hh
+    bsoncxx/v_noabi/bsoncxx/test_util/export_for_testing.hh
     bsoncxx/v_noabi/bsoncxx/types/bson_value/private/value.hh
     bsoncxx/v_noabi/bsoncxx/types/private/convert.hh
     bsoncxx/v1/config/config.hpp.in

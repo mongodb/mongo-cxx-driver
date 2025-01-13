@@ -19,7 +19,7 @@
 #include <bsoncxx/oid.hpp>
 #include <bsoncxx/private/libbson.hh>
 
-#include <bsoncxx/private/config/prelude.hh>
+#include <bsoncxx/config/private/prelude.hh>
 
 namespace bsoncxx {
 namespace v_noabi {

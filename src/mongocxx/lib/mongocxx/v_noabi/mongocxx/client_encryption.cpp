@@ -18,7 +18,7 @@
 #include <mongocxx/private/client_encryption.hh>
 #include <mongocxx/private/database.hh>
 
-#include <mongocxx/private/config/prelude.hh>
+#include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
 namespace v_noabi {

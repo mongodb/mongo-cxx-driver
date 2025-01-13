@@ -19,7 +19,7 @@
 #include <bsoncxx/types/bson_value/value.hpp>
 #include <bsoncxx/types/private/convert.hh>
 
-#include <bsoncxx/private/config/prelude.hh>
+#include <bsoncxx/config/private/prelude.hh>
 
 namespace bsoncxx {
 namespace v_noabi {

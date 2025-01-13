@@ -18,7 +18,7 @@
 #include <bsoncxx/types/bson_value/value.hpp>
 #include <bsoncxx/types/bson_value/view.hpp>
 
-#include <bsoncxx/private/config/prelude.hh>
+#include <bsoncxx/config/private/prelude.hh>
 
 namespace bsoncxx {
 namespace v_noabi {
@@ -65,4 +65,4 @@ inline bson_value::value make_owning_bson(void* internal_value) {
 } // namespace v_noabi
 } // namespace bsoncxx
 
-#include <bsoncxx/private/config/postlude.hh>
+#include <bsoncxx/config/private/postlude.hh>

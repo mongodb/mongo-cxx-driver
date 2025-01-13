@@ -12,13 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-set(mongocxx_sources_private
-    mongocxx/private/conversions.cpp
-    mongocxx/private/libbson.cpp
-    mongocxx/private/libmongoc.cpp
-    mongocxx/private/numeric_casting.cpp
-)
-
 set(mongocxx_sources_v_noabi
     mongocxx/v_noabi/mongocxx/bulk_write.cpp
     mongocxx/v_noabi/mongocxx/change_stream.cpp
@@ -103,6 +96,10 @@ set(mongocxx_sources_v_noabi
     mongocxx/v_noabi/mongocxx/options/update.cpp
     mongocxx/v_noabi/mongocxx/pipeline.cpp
     mongocxx/v_noabi/mongocxx/pool.cpp
+    mongocxx/v_noabi/mongocxx/private/conversions.cpp
+    mongocxx/v_noabi/mongocxx/private/libbson.cpp
+    mongocxx/v_noabi/mongocxx/private/libmongoc.cpp
+    mongocxx/v_noabi/mongocxx/private/numeric_casting.cpp
     mongocxx/v_noabi/mongocxx/read_concern.cpp
     mongocxx/v_noabi/mongocxx/read_preference.cpp
     mongocxx/v_noabi/mongocxx/result/bulk_write.cpp
@@ -129,7 +126,6 @@ set(mongocxx_sources_v1
 )
 
 list(APPEND mongocxx_sources
-    ${mongocxx_sources_private}
     ${mongocxx_sources_v_noabi}
     ${mongocxx_sources_v1}
 )
@@ -151,8 +147,8 @@ if(1)
     endif()
 
     configure_file(
-        mongocxx/private/config/config.hh.in
-        mongocxx/private/config/config.hh
+        mongocxx/v_noabi/mongocxx/config/private/config.hh.in
+        mongocxx/v_noabi/mongocxx/config/private/config.hh
     )
 endif()
 
@@ -178,38 +174,11 @@ endif()
 
 set_dist_list(src_mongocxx_lib_DIST
     CMakeLists.txt
-    ${mongocxx_sources_private}
     ${mongocxx_sources_v_noabi}
     ${mongocxx_sources_v1}
-    mongocxx/private/append_aggregate_options.hh
-    mongocxx/private/bulk_write.hh
-    mongocxx/private/change_stream.hh
-    mongocxx/private/client_encryption.hh
-    mongocxx/private/client_session.hh
-    mongocxx/private/client.hh
-    mongocxx/private/collection.hh
-    mongocxx/private/config/config.hh.in
-    mongocxx/private/config/postlude.hh
-    mongocxx/private/config/prelude.hh
-    mongocxx/private/conversions.hh
-    mongocxx/private/cursor.hh
-    mongocxx/private/database.hh
-    mongocxx/private/index_view.hh
-    mongocxx/private/libbson.hh
-    mongocxx/private/libmongoc_symbols.hh
-    mongocxx/private/libmongoc.hh
-    mongocxx/private/numeric_casting.hh
-    mongocxx/private/pipeline.hh
-    mongocxx/private/pool.hh
-    mongocxx/private/read_concern.hh
-    mongocxx/private/read_preference.hh
-    mongocxx/private/scoped_bson_value.hh
-    mongocxx/private/search_index_model.hh
-    mongocxx/private/search_index_view.hh
-    mongocxx/private/uri.hh
-    mongocxx/private/write_concern.hh
-    mongocxx/test_util/export_for_testing.hh
-    mongocxx/test_util/mock.hh
+    mongocxx/v_noabi/mongocxx/config/private/config.hh.in
+    mongocxx/v_noabi/mongocxx/config/private/postlude.hh
+    mongocxx/v_noabi/mongocxx/config/private/prelude.hh
     mongocxx/v_noabi/mongocxx/exception/private/mongoc_error.hh
     mongocxx/v_noabi/mongocxx/gridfs/private/bucket.hh
     mongocxx/v_noabi/mongocxx/gridfs/private/downloader.hh
@@ -218,6 +187,32 @@ set_dist_list(src_mongocxx_lib_DIST
     mongocxx/v_noabi/mongocxx/options/private/server_api.hh
     mongocxx/v_noabi/mongocxx/options/private/ssl.hh
     mongocxx/v_noabi/mongocxx/options/private/transaction.hh
+    mongocxx/v_noabi/mongocxx/private/append_aggregate_options.hh
+    mongocxx/v_noabi/mongocxx/private/bulk_write.hh
+    mongocxx/v_noabi/mongocxx/private/change_stream.hh
+    mongocxx/v_noabi/mongocxx/private/client_encryption.hh
+    mongocxx/v_noabi/mongocxx/private/client_session.hh
+    mongocxx/v_noabi/mongocxx/private/client.hh
+    mongocxx/v_noabi/mongocxx/private/collection.hh
+    mongocxx/v_noabi/mongocxx/private/conversions.hh
+    mongocxx/v_noabi/mongocxx/private/cursor.hh
+    mongocxx/v_noabi/mongocxx/private/database.hh
+    mongocxx/v_noabi/mongocxx/private/index_view.hh
+    mongocxx/v_noabi/mongocxx/private/libbson.hh
+    mongocxx/v_noabi/mongocxx/private/libmongoc_symbols.hh
+    mongocxx/v_noabi/mongocxx/private/libmongoc.hh
+    mongocxx/v_noabi/mongocxx/private/numeric_casting.hh
+    mongocxx/v_noabi/mongocxx/private/pipeline.hh
+    mongocxx/v_noabi/mongocxx/private/pool.hh
+    mongocxx/v_noabi/mongocxx/private/read_concern.hh
+    mongocxx/v_noabi/mongocxx/private/read_preference.hh
+    mongocxx/v_noabi/mongocxx/private/scoped_bson_value.hh
+    mongocxx/v_noabi/mongocxx/private/search_index_model.hh
+    mongocxx/v_noabi/mongocxx/private/search_index_view.hh
+    mongocxx/v_noabi/mongocxx/private/uri.hh
+    mongocxx/v_noabi/mongocxx/private/write_concern.hh
+    mongocxx/v_noabi/mongocxx/test_util/export_for_testing.hh
+    mongocxx/v_noabi/mongocxx/test_util/mock.hh
     mongocxx/v1/config/config.hpp.in
     mongocxx/v1/config/version.hpp.in
 )

@@ -15,7 +15,7 @@
 #include <mongocxx/hint.hpp>
 #include <mongocxx/options/delete.hpp>
 
-#include <mongocxx/private/config/prelude.hh>
+#include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
 namespace v_noabi {

@@ -35,7 +35,7 @@
 #include <mongocxx/private/read_concern.hh>
 #include <mongocxx/private/read_preference.hh>
 
-#include <mongocxx/private/config/prelude.hh>
+#include <mongocxx/config/private/prelude.hh>
 
 using bsoncxx::v_noabi::builder::concatenate;
 using bsoncxx::v_noabi::builder::basic::kvp;

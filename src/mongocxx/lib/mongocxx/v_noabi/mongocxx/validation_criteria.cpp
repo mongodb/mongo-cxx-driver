@@ -20,7 +20,7 @@
 
 #include <mongocxx/validation_criteria.hpp>
 
-#include <mongocxx/private/config/prelude.hh>
+#include <mongocxx/config/private/prelude.hh>
 
 namespace {
 
