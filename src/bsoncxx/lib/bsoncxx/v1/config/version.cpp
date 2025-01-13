@@ -14,6 +14,10 @@
 
 #include <bsoncxx/v1/config/version.hpp>
 
+#if !defined(BSONCXX_VERSION_STRING)
+#error "bsoncxx/v1/config/version.hpp should define BSONCXX_VERSION_STRING"
+#endif
+
 #if !defined(BSONCXX_VERSION_MAJOR)
 #error "bsoncxx/v1/config/version.hpp should define BSONCXX_VERSION_MAJOR"
 #endif

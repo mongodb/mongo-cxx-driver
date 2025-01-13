@@ -14,6 +14,10 @@
 
 #include <mongocxx/config/version.hpp>
 
+#if !defined(MONGOCXX_VERSION_STRING)
+#error "mongocxx/v_noabi/mongocxx/config/version.hpp should define MONGOCXX_VERSION_STRING"
+#endif
+
 #if !defined(MONGOCXX_VERSION_MAJOR)
 #error "mongocxx/v_noabi/mongocxx/config/version.hpp should define MONGOCXX_VERSION_MAJOR"
 #endif
