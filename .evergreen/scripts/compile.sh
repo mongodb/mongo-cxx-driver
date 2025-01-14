@@ -14,7 +14,6 @@ set -o pipefail
 : "${branch_name:?}"
 : "${build_type:?}"
 : "${distro_id:?}" # Required by find-cmake-latest.sh.
-: "${UV_INSTALL_DIR:?}"
 
 : "${BSON_EXTRA_ALIGNMENT:-}"
 : "${BSONCXX_POLYFILL:-}"
@@ -28,6 +27,7 @@ set -o pipefail
 : "${USE_SANITIZER_ASAN:-}"
 : "${USE_SANITIZER_UBSAN:-}"
 : "${USE_STATIC_LIBS:-}"
+: "${UV_INSTALL_DIR:-}" # Not on windows-64-vs2015.
 
 mongoc_prefix="$(pwd)/../mongoc"
 echo "mongoc_prefix=${mongoc_prefix:?}"
@@ -82,7 +82,14 @@ darwin* | linux*)
 esac
 
 # Create a VERSION_CURRENT file in the build directory to include in the dist tarball.
-PATH="${UV_INSTALL_DIR:?}:${PATH:-}" uv run --frozen python ./etc/calc_release_version.py >./build/VERSION_CURRENT
+if [[ "${distro_id:?}" == windows-64-vs2015* ]]; then
+  # DEVPROD-13875: Python 3.8+ is not available on this distro.
+  # Astral UV is not able to run properly on this OS+platform either.
+  # Manually fallback to Python 3.8 instead.
+  PATH="C:/python/Python38:${PATH:-}" python.exe ./etc/calc_release_version.py >./build/VERSION_CURRENT
+else
+  PATH="${UV_INSTALL_DIR:?}:${PATH:-}" uv run --frozen python ./etc/calc_release_version.py >./build/VERSION_CURRENT
+fi
 cd build
 
 cmake_flags=(
