@@ -148,9 +148,9 @@ IncludeCategories:
     Priority: 20
   - Regex: 'mongocxx/v1/.*/prelude\.hpp' # v1 preludes
     Priority: 21
-  - Regex: 'bsoncxx/v1/.*(-|\/)fwd\.hpp' # v1 forwarding headers
+  - Regex: 'bsoncxx/v1/.*(-|\/)fwd\.hpp' # v1 forward headers
     Priority: 22
-  - Regex: 'mongocxx/v1/.*(-|\/)fwd\.hpp' # v1 forwarding headers
+  - Regex: 'mongocxx/v1/.*(-|\/)fwd\.hpp' # v1 forward headers
     Priority: 23
   - Regex: 'bsoncxx/v1/.*\.hpp' # v1 public headers
     Priority: 24
@@ -170,13 +170,13 @@ IncludeCategories:
     Priority: 71
   - Regex: '<[[:alnum:]_.]+>' # system headers
     Priority: 30
-  - Regex: 'bsoncxx/.*(-|\/)fwd\.(hpp|hh)' # all driver forwarding headers
+  - Regex: 'bsoncxx/.*(-|\/)fwd\.(hpp|hh)' # all remaining forward headers
     Priority: 40
-  - Regex: 'mongocxx/.*(-|\/)fwd\.(hpp|hh)' # all driver forwarding headers
+  - Regex: 'mongocxx/.*(-|\/)fwd\.(hpp|hh)' # all remaining forward headers
     Priority: 41
-  - Regex: 'bsoncxx/.*' # all remaining (normal) driver headers
+  - Regex: 'bsoncxx/.*' # all remaining headers
     Priority: 50
-  - Regex: 'mongocxx/.*' # all remaining (normal) driver headers
+  - Regex: 'mongocxx/.*' # all remaining headers
     Priority: 51
   - Regex: '.*' # all other headers (third party)
     Priority: 90
