@@ -70,7 +70,10 @@ def generate_tasks():
                     commands=[
                         Setup.call(),
                         FetchCDriverSource.call(),
-                        InstallUV.call(),
+                    ] + (
+                        # DEVPROD-13875 + astral-sh/uv/issues/10231.
+                        [] if "vs2015" in distro_name else [InstallUV.call()]
+                    ) + [
                         Compile.call(
                             build_type=build_type,
                             compiler=compiler,
