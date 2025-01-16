@@ -60,6 +60,16 @@ replace_one& replace_one::hint(mongocxx::v_noabi::hint index_hint) {
 bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::hint> const& replace_one::hint() const {
     return _hint;
 }
+
+replace_one& replace_one::sort(bsoncxx::v_noabi::document::view_or_value sort) {
+    _sort = std::move(sort);
+    return *this;
+}
+
+bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const& replace_one::sort() const {
+    return _sort;
+}
+
 } // namespace model
 } // namespace v_noabi
 } // namespace mongocxx

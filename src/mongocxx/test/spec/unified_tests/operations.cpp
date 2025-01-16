@@ -333,6 +333,11 @@ void set_hint(Model& model, mongocxx::document::element const& hint) {
     }
 }
 
+template <typename Model>
+void set_sort(Model& model, mongocxx::document::element const& sort) {
+    model.sort(sort.get_document().value);
+}
+
 document::value run_bulk_write(collection& coll, client_session* session, document::view op) {
     using bsoncxx::builder::basic::kvp;
     using bsoncxx::builder::basic::make_document;
@@ -371,6 +376,10 @@ document::value run_bulk_write(collection& coll, client_session* session, docume
 
             if (auto const hint = request_arguments["hint"]) {
                 set_hint(update_one, hint);
+            }
+
+            if (auto const sort = request_arguments["sort"]) {
+                set_sort(update_one, sort);
             }
 
             if (request_arguments["upsert"]) {
@@ -417,6 +426,10 @@ document::value run_bulk_write(collection& coll, client_session* session, docume
 
             if (auto const hint = request_arguments["hint"]) {
                 set_hint(replace_one, hint);
+            }
+
+            if (auto const sort = request_arguments["sort"]) {
+                set_sort(replace_one, sort);
             }
 
             if (request_arguments["upsert"]) {
@@ -568,6 +581,10 @@ document::value replace_one(collection& coll, client_session* session, document:
 
     if (auto const let = arguments["let"]) {
         options.let(let.get_document().value);
+    }
+
+    if (auto const sort = arguments["sort"]) {
+        options.sort(sort.get_document().value);
     }
 
     if (auto const comment = arguments["comment"]) {
@@ -1335,6 +1352,10 @@ document::value update_one(collection& coll, client_session* session, document::
 
     if (auto const let = arguments["let"]) {
         options.let(let.get_document().value);
+    }
+
+    if (auto const sort = arguments["sort"]) {
+        options.sort(sort.get_document().value);
     }
 
     if (auto const comment = arguments["comment"]) {

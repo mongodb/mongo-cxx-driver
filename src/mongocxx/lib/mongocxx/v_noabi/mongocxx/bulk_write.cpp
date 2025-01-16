@@ -67,6 +67,9 @@ bulk_write& bulk_write::append(model::write const& operation) {
             if (auto const hint = operation.get_update_one().hint()) {
                 options_builder.append(kvp("hint", *hint));
             }
+            if (auto const sort = operation.get_update_one().sort()) {
+                options_builder.append(kvp("sort", *sort));
+            }
             if (auto const upsert = operation.get_update_one().upsert()) {
                 options_builder.append(kvp("upsert", *upsert));
             }
@@ -160,6 +163,9 @@ bulk_write& bulk_write::append(model::write const& operation) {
             }
             if (auto const hint = operation.get_replace_one().hint()) {
                 options_builder.append(kvp("hint", *hint));
+            }
+            if (auto const sort = operation.get_replace_one().sort()) {
+                options_builder.append(kvp("sort", *sort));
             }
             if (auto const upsert = operation.get_replace_one().upsert()) {
                 options_builder.append(kvp("upsert", *upsert));

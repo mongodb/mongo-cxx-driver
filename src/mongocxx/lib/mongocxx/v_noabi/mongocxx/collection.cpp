@@ -589,6 +589,10 @@ bsoncxx::v_noabi::stdx::optional<result::replace_one> collection::_replace_one(
         replace_op.hint(*hint);
     }
 
+    if (auto const& sort = options.sort()) {
+        replace_op.sort(*sort);
+    }
+
     if (auto const& upsert = options.upsert()) {
         replace_op.upsert(*upsert);
     }
@@ -734,6 +738,10 @@ bsoncxx::v_noabi::stdx::optional<result::update> collection::_update_one(
 
     if (auto const& hint = options.hint()) {
         update_op.hint(*hint);
+    }
+
+    if (auto const& sort = options.sort()) {
+        update_op.sort(*sort);
     }
 
     if (auto const& upsert = options.upsert()) {

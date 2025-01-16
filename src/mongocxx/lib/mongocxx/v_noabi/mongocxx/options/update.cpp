@@ -43,6 +43,11 @@ update& update::let(bsoncxx::v_noabi::document::view_or_value let) {
     return *this;
 }
 
+update& update::sort(bsoncxx::v_noabi::document::view_or_value sort) {
+    _sort = std::move(sort);
+    return *this;
+}
+
 update& update::comment(bsoncxx::v_noabi::types::bson_value::view_or_value comment) {
     _comment = std::move(comment);
     return *this;
@@ -72,6 +77,10 @@ bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::hint> const& update::hint() 
 
 bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const update::let() const {
     return _let;
+}
+
+bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const& update::sort() const {
+    return _sort;
 }
 
 bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value> const update::comment() const {

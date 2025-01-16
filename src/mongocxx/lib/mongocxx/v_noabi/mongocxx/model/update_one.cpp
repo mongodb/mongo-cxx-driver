@@ -59,6 +59,15 @@ bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::hint> const& update_one::hin
     return _hint;
 }
 
+update_one& update_one::sort(bsoncxx::v_noabi::document::view_or_value sort) {
+    _sort = std::move(sort);
+    return *this;
+}
+
+bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const& update_one::sort() const {
+    return _sort;
+}
+
 update_one& update_one::upsert(bool upsert) {
     _upsert = upsert;
     return *this;

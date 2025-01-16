@@ -14,7 +14,7 @@ from typing import Mapping
 # Only LIBMONGOC_DOWNLOAD_VERSION needs to be updated when pinning to an unreleased commit.
 # If pinning to an unreleased commit, create a "Blocked" JIRA ticket with
 # a "depends on" link to the appropriate C Driver version release ticket.
-MONGOC_VERSION_MINIMUM = '1.29.0'
+MONGOC_VERSION_MINIMUM = '2c5c9d923f704a628ca37a1a2d9ae2bf8932aab3'  # CXX-3208: bump to 1.30.0 once released.
 
 
 class InstallCDriver(Function):
