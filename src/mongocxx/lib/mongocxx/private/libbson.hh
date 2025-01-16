@@ -19,11 +19,10 @@
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/stdx/optional.hpp>
 
-#include <mongocxx/test_util/export_for_testing.hh>
-
 #include <bsoncxx/private/libbson.hh>
 
 #include <mongocxx/private/config/prelude.hh>
+#include <mongocxx/private/export.hh>
 
 namespace mongocxx {
 namespace libbson {

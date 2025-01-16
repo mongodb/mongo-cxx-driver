@@ -16,7 +16,7 @@
 
 #include <mongocxx/private/config/prelude.hh>
 
-// See src/bsoncxx/lib/bsoncxx/test_util/export_for_testing.hh for an explanation of
+// See src/bsoncxx/lib/bsoncxx/private/export.hh for an explanation of
 // the purpose of this header.
 
 #if defined(MONGOCXX_TESTING)

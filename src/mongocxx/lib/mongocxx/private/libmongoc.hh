@@ -34,10 +34,10 @@
 // TODO: CXX-1366 Disable MSVC warnings for libmongoc
 #endif
 
-#include <mongocxx/test_util/export_for_testing.hh>
 #include <mongocxx/test_util/mock.hh>
 
 #include <mongocxx/private/config/prelude.hh>
+#include <mongocxx/private/export.hh>
 
 namespace mongocxx {
 namespace libmongoc {

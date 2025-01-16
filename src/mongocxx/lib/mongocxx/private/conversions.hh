@@ -15,9 +15,9 @@
 #pragma once
 
 #include <mongocxx/read_preference.hpp>
-#include <mongocxx/test_util/export_for_testing.hh>
 
 #include <mongocxx/private/config/prelude.hh>
+#include <mongocxx/private/export.hh>
 #include <mongocxx/private/libmongoc.hh>
 
 namespace mongocxx {

@@ -17,9 +17,8 @@
 #include <cstddef>
 #include <cstdint>
 
-#include <mongocxx/test_util/export_for_testing.hh>
-
 #include <mongocxx/private/config/prelude.hh>
+#include <mongocxx/private/export.hh>
 
 namespace mongocxx {
 

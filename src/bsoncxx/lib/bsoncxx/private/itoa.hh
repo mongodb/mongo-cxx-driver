@@ -17,9 +17,8 @@
 #include <cstddef>
 #include <cstdint>
 
-#include <bsoncxx/test_util/export_for_testing.hh>
-
 #include <bsoncxx/private/config/prelude.hh>
+#include <bsoncxx/private/export.hh>
 
 namespace bsoncxx {
 
