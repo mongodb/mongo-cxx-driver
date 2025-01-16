@@ -14,6 +14,8 @@
 
 #pragma once
 
+#include <mongocxx/v1/config/export.hpp>
+
 #include <mongocxx/private/config/prelude.hh>
 
 // See src/bsoncxx/lib/bsoncxx/private/export.hh for an explanation of

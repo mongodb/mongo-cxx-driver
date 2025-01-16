@@ -14,6 +14,8 @@
 
 #pragma once
 
+#include <bsoncxx/v1/config/export.hpp>
+
 #include <bsoncxx/private/config/prelude.hh>
 
 // The BSONCXX_TESTING macro is intended to be used for exporting symbols for testing which are not
