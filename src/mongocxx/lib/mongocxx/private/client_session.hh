@@ -25,11 +25,11 @@
 #include <mongocxx/exception/private/mongoc_error.hh>
 #include <mongocxx/options/private/transaction.hh>
 
+#include <bsoncxx/private/bson.hh>
 #include <bsoncxx/private/helpers.hh>
-#include <bsoncxx/private/libbson.hh>
 
+#include <mongocxx/private/bson.hh>
 #include <mongocxx/private/client.hh>
-#include <mongocxx/private/libbson.hh>
 #include <mongocxx/private/libmongoc.hh>
 
 namespace mongocxx {

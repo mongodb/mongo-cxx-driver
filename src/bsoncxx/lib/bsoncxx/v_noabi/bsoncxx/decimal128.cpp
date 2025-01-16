@@ -18,7 +18,7 @@
 #include <bsoncxx/stdx/string_view.hpp>
 #include <bsoncxx/string/to_string.hpp>
 
-#include <bsoncxx/private/libbson.hh>
+#include <bsoncxx/private/bson.hh>
 
 namespace bsoncxx {
 namespace v_noabi {

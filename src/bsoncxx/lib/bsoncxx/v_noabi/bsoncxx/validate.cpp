@@ -14,7 +14,7 @@
 
 #include <bsoncxx/validate.hpp>
 
-#include <bsoncxx/private/libbson.hh>
+#include <bsoncxx/private/bson.hh>
 #include <bsoncxx/private/make_unique.hh>
 
 namespace bsoncxx {

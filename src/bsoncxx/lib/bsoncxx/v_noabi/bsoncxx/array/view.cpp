@@ -19,8 +19,8 @@
 #include <bsoncxx/types.hpp>
 #include <bsoncxx/types/bson_value/view.hpp>
 
+#include <bsoncxx/private/bson.hh>
 #include <bsoncxx/private/itoa.hh>
-#include <bsoncxx/private/libbson.hh>
 
 namespace bsoncxx {
 namespace v_noabi {

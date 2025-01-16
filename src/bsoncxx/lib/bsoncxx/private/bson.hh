@@ -14,22 +14,19 @@
 
 #pragma once
 
-#if defined(__clang__)
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wconversion"
-#elif defined(__GNUC__)
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wconversion"
-#elif (_MSC_VER)
-// TODO: CXX-1366 Disable MSVC warnings for libbson
-#endif
+#include <bsoncxx/v1/detail/macros.hpp>
+
+BSONCXX_PRIVATE_WARNINGS_PUSH();
+
+BSONCXX_PRIVATE_WARNINGS_DISABLE(GCC());
+BSONCXX_PRIVATE_WARNINGS_DISABLE(GCC("-Wall"));
+BSONCXX_PRIVATE_WARNINGS_DISABLE(GCC("-Wextra"));
+BSONCXX_PRIVATE_WARNINGS_DISABLE(GCC("-Wconversion"));
+
+BSONCXX_PRIVATE_WARNINGS_DISABLE(Clang("-Weverything"));
+
+BSONCXX_PRIVATE_IF_MSVC(BSONCXX_PRIVATE_PRAGMA(warning(push, 1)));
 
 #include <bson/bson.h>
 
-#if defined(__clang__)
-#pragma clang diagnostic pop
-#elif defined(__GNUC__)
-#pragma GCC diagnostic pop
-#elif (_MSC_VER)
-// TODO: CXX-1366 Disable MSVC warnings for libbson
-#endif
+BSONCXX_PRIVATE_WARNINGS_POP();

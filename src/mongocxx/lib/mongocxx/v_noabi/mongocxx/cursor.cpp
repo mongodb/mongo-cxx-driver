@@ -16,7 +16,7 @@
 #include <mongocxx/exception/private/mongoc_error.hh>
 #include <mongocxx/exception/query_exception.hpp>
 
-#include <bsoncxx/private/libbson.hh>
+#include <bsoncxx/private/bson.hh>
 #include <bsoncxx/private/make_unique.hh>
 
 #include <mongocxx/private/cursor.hh>

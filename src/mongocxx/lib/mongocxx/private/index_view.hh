@@ -29,8 +29,8 @@
 #include <mongocxx/index_view.hpp>
 #include <mongocxx/options/index_view.hpp>
 
+#include <mongocxx/private/bson.hh>
 #include <mongocxx/private/client_session.hh>
-#include <mongocxx/private/libbson.hh>
 #include <mongocxx/private/libmongoc.hh>
 
 namespace mongocxx {

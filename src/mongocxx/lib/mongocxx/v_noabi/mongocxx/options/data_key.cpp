@@ -14,7 +14,7 @@
 
 #include <mongocxx/options/data_key.hpp>
 
-#include <mongocxx/private/libbson.hh>
+#include <mongocxx/private/bson.hh>
 #include <mongocxx/private/libmongoc.hh>
 
 namespace mongocxx {

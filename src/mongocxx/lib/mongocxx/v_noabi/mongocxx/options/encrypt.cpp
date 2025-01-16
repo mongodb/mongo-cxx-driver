@@ -20,7 +20,7 @@
 #include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/options/encrypt.hpp>
 
-#include <mongocxx/private/libbson.hh>
+#include <mongocxx/private/bson.hh>
 #include <mongocxx/private/libmongoc.hh>
 #include <mongocxx/private/scoped_bson_value.hh>
 

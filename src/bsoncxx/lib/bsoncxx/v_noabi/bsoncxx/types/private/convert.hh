@@ -21,7 +21,7 @@
 #include <bsoncxx/types.hpp>
 #include <bsoncxx/types/bson_value/view.hpp>
 
-#include <bsoncxx/private/libbson.hh>
+#include <bsoncxx/private/bson.hh>
 #include <bsoncxx/private/suppress_deprecation_warnings.hh>
 
 namespace bsoncxx {

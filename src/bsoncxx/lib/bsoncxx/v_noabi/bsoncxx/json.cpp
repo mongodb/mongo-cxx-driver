@@ -30,7 +30,7 @@
 #include <bsoncxx/types/bson_value/view.hpp>
 
 #include <bsoncxx/private/b64_ntop.hh>
-#include <bsoncxx/private/libbson.hh>
+#include <bsoncxx/private/bson.hh>
 
 namespace bsoncxx {
 namespace v_noabi {

@@ -29,12 +29,12 @@
 #include <mongocxx/options/client_encryption.hpp>
 #include <mongocxx/result/bulk_write.hpp>
 
+#include <bsoncxx/private/bson.hh>
 #include <bsoncxx/private/helpers.hh>
-#include <bsoncxx/private/libbson.hh>
 
+#include <mongocxx/private/bson.hh>
 #include <mongocxx/private/client.hh>
 #include <mongocxx/private/cursor.hh>
-#include <mongocxx/private/libbson.hh>
 #include <mongocxx/private/libmongoc.hh>
 #include <mongocxx/private/scoped_bson_value.hh>
 

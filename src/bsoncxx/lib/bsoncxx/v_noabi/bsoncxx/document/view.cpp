@@ -18,7 +18,7 @@
 #include <bsoncxx/json.hpp>
 #include <bsoncxx/types.hpp>
 
-#include <bsoncxx/private/libbson.hh>
+#include <bsoncxx/private/bson.hh>
 
 namespace bsoncxx {
 namespace v_noabi {

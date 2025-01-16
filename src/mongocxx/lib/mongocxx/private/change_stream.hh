@@ -21,7 +21,7 @@
 #include <mongocxx/exception/private/mongoc_error.hh>
 #include <mongocxx/exception/query_exception.hpp>
 
-#include <mongocxx/private/libbson.hh>
+#include <mongocxx/private/bson.hh>
 #include <mongocxx/private/libmongoc.hh>
 
 namespace mongocxx {

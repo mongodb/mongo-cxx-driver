@@ -22,8 +22,8 @@
 
 #include <bsoncxx/private/helpers.hh>
 
+#include <mongocxx/private/bson.hh>
 #include <mongocxx/private/database.hh>
-#include <mongocxx/private/libbson.hh>
 #include <mongocxx/private/read_preference.hh>
 #include <mongocxx/private/write_concern.hh>
 

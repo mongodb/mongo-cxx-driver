@@ -42,7 +42,7 @@
 
 #include <bsoncxx/private/make_unique.hh>
 
-#include <mongocxx/private/libbson.hh>
+#include <mongocxx/private/bson.hh>
 
 #include <bsoncxx/test/catch.hh>
 

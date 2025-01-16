@@ -25,8 +25,8 @@
 #include <mongocxx/instance.hpp>
 #include <mongocxx/options/index_view.hpp>
 
+#include <mongocxx/private/bson.hh>
 #include <mongocxx/private/conversions.hh>
-#include <mongocxx/private/libbson.hh>
 #include <mongocxx/private/libmongoc.hh>
 
 #include <bsoncxx/test/catch.hh>

@@ -30,11 +30,11 @@
 #include <mongocxx/pipeline.hpp>
 #include <mongocxx/read_preference.hpp>
 
+#include <bsoncxx/private/bson.hh>
 #include <bsoncxx/private/helpers.hh>
-#include <bsoncxx/private/libbson.hh>
 
+#include <mongocxx/private/bson.hh>
 #include <mongocxx/private/conversions.hh>
-#include <mongocxx/private/libbson.hh>
 #include <mongocxx/private/libmongoc.hh>
 
 #include <bsoncxx/test/catch.hh>

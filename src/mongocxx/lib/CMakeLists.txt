@@ -13,8 +13,8 @@
 # limitations under the License.
 
 set(mongocxx_sources_private
+    mongocxx/private/bson.cpp
     mongocxx/private/conversions.cpp
-    mongocxx/private/libbson.cpp
     mongocxx/private/libmongoc.cpp
     mongocxx/private/numeric_casting.cpp
 )
@@ -182,6 +182,7 @@ set_dist_list(src_mongocxx_lib_DIST
     ${mongocxx_sources_v_noabi}
     ${mongocxx_sources_v1}
     mongocxx/private/append_aggregate_options.hh
+    mongocxx/private/bson.hh
     mongocxx/private/bulk_write.hh
     mongocxx/private/change_stream.hh
     mongocxx/private/client_encryption.hh
@@ -194,7 +195,6 @@ set_dist_list(src_mongocxx_lib_DIST
     mongocxx/private/database.hh
     mongocxx/private/export.hh
     mongocxx/private/index_view.hh
-    mongocxx/private/libbson.hh
     mongocxx/private/libmongoc_symbols.hh
     mongocxx/private/libmongoc.hh
     mongocxx/private/mock.hh

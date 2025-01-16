@@ -19,7 +19,7 @@
 #include <bsoncxx/types/bson_value/view.hpp>
 #include <bsoncxx/types/private/convert.hh>
 
-#include <bsoncxx/private/libbson.hh>
+#include <bsoncxx/private/bson.hh>
 #include <bsoncxx/private/suppress_deprecation_warnings.hh>
 
 #define BSONCXX_CITER                                                       \

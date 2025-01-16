@@ -27,9 +27,9 @@
 #include <mongocxx/pool.hpp>
 #include <mongocxx/write_concern.hpp>
 
-#include <bsoncxx/private/libbson.hh>
+#include <bsoncxx/private/bson.hh>
 
-#include <mongocxx/private/libbson.hh>
+#include <mongocxx/private/bson.hh>
 
 #include <bsoncxx/test/catch.hh>
 

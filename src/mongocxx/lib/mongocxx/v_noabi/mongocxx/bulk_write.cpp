@@ -23,10 +23,10 @@
 
 #include <bsoncxx/private/make_unique.hh>
 
+#include <mongocxx/private/bson.hh>
 #include <mongocxx/private/bulk_write.hh>
 #include <mongocxx/private/client_session.hh>
 #include <mongocxx/private/collection.hh>
-#include <mongocxx/private/libbson.hh>
 #include <mongocxx/private/libmongoc.hh>
 #include <mongocxx/private/write_concern.hh>
 

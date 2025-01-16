@@ -18,8 +18,8 @@
 #include <mongocxx/options/auto_encryption.hpp>
 #include <mongocxx/pool.hpp>
 
+#include <mongocxx/private/bson.hh>
 #include <mongocxx/private/client.hh>
-#include <mongocxx/private/libbson.hh>
 #include <mongocxx/private/libmongoc.hh>
 #include <mongocxx/private/pool.hh>
 

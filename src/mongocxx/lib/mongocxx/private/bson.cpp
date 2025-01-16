@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <mongocxx/private/libbson.hh>
+#include <mongocxx/private/bson.hh>
 
 namespace mongocxx {
 namespace libbson {

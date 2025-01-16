@@ -93,7 +93,7 @@ set_dist_list(src_bsoncxx_lib_DIST
     bsoncxx/private/export.hh
     bsoncxx/private/helpers.hh
     bsoncxx/private/itoa.hh
-    bsoncxx/private/libbson.hh
+    bsoncxx/private/bson.hh
     bsoncxx/private/make_unique.hh
     bsoncxx/private/stack.hh
     bsoncxx/private/suppress_deprecation_warnings.hh

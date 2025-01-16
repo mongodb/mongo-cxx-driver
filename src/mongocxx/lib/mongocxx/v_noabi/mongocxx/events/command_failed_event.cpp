@@ -17,8 +17,8 @@
 
 #include <mongocxx/events/command_failed_event.hpp>
 
+#include <bsoncxx/private/bson.hh>
 #include <bsoncxx/private/helpers.hh>
-#include <bsoncxx/private/libbson.hh>
 #include <bsoncxx/private/make_unique.hh>
 
 #include <mongocxx/private/libmongoc.hh>

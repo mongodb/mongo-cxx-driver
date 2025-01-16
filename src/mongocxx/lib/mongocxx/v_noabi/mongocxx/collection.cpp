@@ -45,15 +45,15 @@
 #include <mongocxx/result/update.hpp>
 #include <mongocxx/write_concern.hpp>
 
+#include <bsoncxx/private/bson.hh>
 #include <bsoncxx/private/helpers.hh>
-#include <bsoncxx/private/libbson.hh>
 #include <bsoncxx/private/make_unique.hh>
 
+#include <mongocxx/private/bson.hh>
 #include <mongocxx/private/bulk_write.hh>
 #include <mongocxx/private/client_session.hh>
 #include <mongocxx/private/collection.hh>
 #include <mongocxx/private/cursor.hh>
-#include <mongocxx/private/libbson.hh>
 #include <mongocxx/private/libmongoc.hh>
 #include <mongocxx/private/pipeline.hh>
 #include <mongocxx/private/read_concern.hh>

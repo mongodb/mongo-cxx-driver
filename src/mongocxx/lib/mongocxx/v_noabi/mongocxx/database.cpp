@@ -28,10 +28,10 @@
 
 #include <bsoncxx/private/make_unique.hh>
 
+#include <mongocxx/private/bson.hh>
 #include <mongocxx/private/client.hh>
 #include <mongocxx/private/client_session.hh>
 #include <mongocxx/private/database.hh>
-#include <mongocxx/private/libbson.hh>
 #include <mongocxx/private/libmongoc.hh>
 #include <mongocxx/private/pipeline.hh>
 #include <mongocxx/private/read_concern.hh>
