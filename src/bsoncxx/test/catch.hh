@@ -14,6 +14,8 @@
 
 #pragma once
 
+#include <bsoncxx/v1/detail/macros.hpp>
+
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/json.hpp>
 #include <bsoncxx/oid.hpp>

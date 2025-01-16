@@ -44,8 +44,6 @@
 
 #include <mongocxx/private/libbson.hh>
 
-#include <mongocxx/config/prelude.hpp>
-
 #include <bsoncxx/test/catch.hh>
 
 #include <mongocxx/test/catch_helpers.hh>

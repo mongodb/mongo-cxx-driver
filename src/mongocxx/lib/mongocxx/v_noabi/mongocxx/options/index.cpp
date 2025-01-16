@@ -319,5 +319,3 @@ int index::wiredtiger_storage_options::type() const {
 } // namespace options
 } // namespace v_noabi
 } // namespace mongocxx
-
-#include <mongocxx/config/postlude.hpp>

@@ -14,6 +14,8 @@
 
 #pragma once
 
+#include <bsoncxx/v1/detail/macros.hpp>
+
 #include <cstdlib>
 
 #include <bsoncxx/types.hpp>

@@ -17,8 +17,6 @@
 #include <mongocxx/private/libbson.hh>
 #include <mongocxx/private/libmongoc.hh>
 
-#include <mongocxx/config/prelude.hpp>
-
 namespace mongocxx {
 namespace v_noabi {
 namespace options {

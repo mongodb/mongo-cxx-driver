@@ -14,9 +14,9 @@
 
 #pragma once
 
-#include <memory>
+#include <bsoncxx/v1/config/export.hpp>
 
-#include <bsoncxx/config/prelude.hpp>
+#include <memory>
 
 #pragma push_macro("BSONCXX_DETAIL_USE_STD_MAKE_UNIQUE")
 #undef BSONCXX_DETAIL_USE_STD_MAKE_UNIQUE
@@ -168,5 +168,3 @@ std::unique_ptr<T> make_unique_for_overwrite(std::size_t count) {
 } // namespace bsoncxx
 
 #pragma pop_macro("BSONCXX_DETAIL_USE_STD_MAKE_UNIQUE")
-
-#include <bsoncxx/config/postlude.hpp>

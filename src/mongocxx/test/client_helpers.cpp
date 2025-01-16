@@ -36,9 +36,8 @@
 #include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/exception/operation_exception.hpp>
 
+#include <mongocxx/private/config/config.hh>
 #include <mongocxx/private/libmongoc.hh>
-
-#include <bsoncxx/config/prelude.hpp>
 
 #include <bsoncxx/test/catch.hh>
 

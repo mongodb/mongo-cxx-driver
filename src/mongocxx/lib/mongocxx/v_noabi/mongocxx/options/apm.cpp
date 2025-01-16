@@ -14,6 +14,10 @@
 
 #include <mongocxx/options/apm.hpp>
 
+//
+
+#include <mongocxx/v1/config/export.hpp>
+
 namespace mongocxx {
 namespace v_noabi {
 namespace options {

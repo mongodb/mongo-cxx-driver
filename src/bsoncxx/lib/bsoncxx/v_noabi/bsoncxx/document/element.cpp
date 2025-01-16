@@ -12,10 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <bsoncxx/document/element.hpp>
+
+//
+
+#include <bsoncxx/v1/detail/macros.hpp>
+
 #include <cstdlib>
 #include <string>
 
-#include <bsoncxx/document/element.hpp>
 #include <bsoncxx/exception/error_code.hpp>
 #include <bsoncxx/exception/exception.hpp>
 #include <bsoncxx/types.hpp>

@@ -45,8 +45,6 @@
 #include <cstdint>
 #include <cstdlib>
 
-#include <bsoncxx/config/prelude.hpp>
-
 namespace bsoncxx {
 namespace b64 {
 
@@ -187,5 +185,3 @@ inline int ntop(std::uint8_t const* src, std::size_t srclength, char* target, st
 
 } // namespace b64
 } // namespace bsoncxx
-
-#include <bsoncxx/config/postlude.hpp>

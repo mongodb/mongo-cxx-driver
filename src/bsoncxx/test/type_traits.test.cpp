@@ -3,8 +3,6 @@
 
 #include <bsoncxx/stdx/type_traits.hpp>
 
-#include <bsoncxx/config/prelude.hpp>
-
 #include <bsoncxx/test/catch.hh>
 
 // We declare variables that are only used for compilation checking

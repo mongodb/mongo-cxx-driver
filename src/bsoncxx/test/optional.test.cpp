@@ -12,8 +12,6 @@
 
 #include <bsoncxx/private/make_unique.hh>
 
-#include <bsoncxx/config/prelude.hpp>
-
 #include <bsoncxx/test/catch.hh>
 
 // Each polyfill library has some set of features that are not conformant with the standard
