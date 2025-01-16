@@ -1350,7 +1350,14 @@ TEST_CASE("session unified format spec automated tests", "[unified_format_specs]
 }
 
 TEST_CASE("CRUD unified format spec automated tests", "[unified_format_specs]") {
-    run_unified_format_tests_in_env_dir("CRUD_UNIFIED_TESTS_PATH");
+    std::set<bsoncxx::stdx::string_view> const unsupported_tests = {
+        // Waiting on CXX-2494.
+        "client-bulkWrite-replaceOne-sort.json",
+        // Waiting on CXX-2494.
+        "client-bulkWrite-updateOne-sort.json",
+    };
+
+    run_unified_format_tests_in_env_dir("CRUD_UNIFIED_TESTS_PATH", unsupported_tests);
 }
 
 TEST_CASE("change streams unified format spec automated tests", "[unified_format_specs]") {
