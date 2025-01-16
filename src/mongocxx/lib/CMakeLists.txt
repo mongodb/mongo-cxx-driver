@@ -199,6 +199,7 @@ set_dist_list(src_mongocxx_lib_DIST
     mongocxx/private/libbson.hh
     mongocxx/private/libmongoc_symbols.hh
     mongocxx/private/libmongoc.hh
+    mongocxx/private/mock.hh
     mongocxx/private/numeric_casting.hh
     mongocxx/private/pipeline.hh
     mongocxx/private/pool.hh
@@ -209,7 +210,6 @@ set_dist_list(src_mongocxx_lib_DIST
     mongocxx/private/search_index_view.hh
     mongocxx/private/uri.hh
     mongocxx/private/write_concern.hh
-    mongocxx/test_util/mock.hh
     mongocxx/v_noabi/mongocxx/exception/private/mongoc_error.hh
     mongocxx/v_noabi/mongocxx/gridfs/private/bucket.hh
     mongocxx/v_noabi/mongocxx/gridfs/private/downloader.hh
