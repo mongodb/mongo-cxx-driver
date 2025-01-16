@@ -14,34 +14,11 @@
 
 #pragma once
 
-// The macros BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_BEGIN and
-// BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_END are intended for the use of disabling deprecation
-// warnings for a given section of code.
-//
-// Example usage:
-//
-//     {
-//         some_function();
-//         BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_BEGIN;
-//         some_deprecated_function();
-//         BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_END;
-//         some_other_function();
-//     }
+#include <bsoncxx/v1/detail/macros.hpp>
 
-#ifdef __clang__
-#define BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_BEGIN \
-    _Pragma("clang diagnostic push") _Pragma("clang diagnostic ignored \"-Wdeprecated-declarations\"")
-#elif defined __GNUC__
-#define BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_BEGIN \
-    _Pragma("GCC diagnostic push") _Pragma("GCC diagnostic ignored \"-Wdeprecated-declarations\"")
-#elif defined _MSC_VER
-#define BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_BEGIN __pragma(warning(push)) __pragma(warning(disable : 4996))
-#endif
+#define BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_BEGIN                     \
+    BSONCXX_PRIVATE_WARNINGS_PUSH();                                    \
+    BSONCXX_PRIVATE_WARNINGS_DISABLE(GNU("-Wdeprecated-declarations")); \
+    BSONCXX_PRIVATE_WARNINGS_DISABLE(MSVC(4996));
 
-#ifdef __clang__
-#define BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_END _Pragma("clang diagnostic pop")
-#elif defined __GNUC__
-#define BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_END _Pragma("GCC diagnostic pop")
-#elif defined _MSC_VER
-#define BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_END __pragma(warning(pop))
-#endif
+#define BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_END BSONCXX_PRIVATE_WARNINGS_POP();
