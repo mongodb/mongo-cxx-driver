@@ -14,6 +14,8 @@
 
 #pragma once
 
+#include <mongocxx/v1/detail/macros.hpp>
+
 #include <exception>
 
 #include <bsoncxx/private/helpers.hh>
@@ -203,7 +205,7 @@ class client_session::impl {
             case MONGOC_TRANSACTION_ABORTED:
                 return transaction_state::k_transaction_aborted;
             default:
-                MONGOCXX_UNREACHABLE;
+                MONGOCXX_PRIVATE_UNREACHABLE;
         }
     }
 

@@ -194,7 +194,7 @@ inline void convert_to_libbson(bson_value_t* v, bson_value::view const& bson_vie
 #include <bsoncxx/enums/type.hpp>
 #undef BSONCXX_ENUM
         default:
-            BSONCXX_UNREACHABLE;
+            BSONCXX_PRIVATE_UNREACHABLE;
     }
 }
 

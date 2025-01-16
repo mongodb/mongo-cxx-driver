@@ -167,14 +167,14 @@ if(1)
             BASE_NAME MONGOCXX_ABI
             EXPORT_MACRO_NAME MONGOCXX_ABI_EXPORT
             DEPRECATED_MACRO_NAME MONGOCXX_DEPRECATED
-            EXPORT_FILE_NAME ${PROJECT_BINARY_DIR}/lib/mongocxx/v_noabi/mongocxx/config/export.hpp
+            EXPORT_FILE_NAME ${PROJECT_BINARY_DIR}/lib/mongocxx/v1/config/export.hpp
             STATIC_DEFINE MONGOCXX_STATIC
             CUSTOM_CONTENT_FROM_VARIABLE mongocxx_export_header_custom_content
         )
 
         install(FILES
-            ${PROJECT_BINARY_DIR}/lib/mongocxx/v_noabi/mongocxx/config/export.hpp
-            DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/mongocxx/v_noabi/mongocxx/config
+            ${PROJECT_BINARY_DIR}/lib/mongocxx/v1/config/export.hpp
+            DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/mongocxx/v1/config
             COMPONENT dev
         )
     endfunction()

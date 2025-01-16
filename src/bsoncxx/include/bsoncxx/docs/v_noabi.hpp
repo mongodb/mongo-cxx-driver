@@ -25,11 +25,10 @@
 
 ///
 /// @dir bsoncxx/v_noabi
-/// The directory relative to which headers declaring entities in @ref bsoncxx::v_noabi are
-/// typically included.
+/// Provides headers declaring entities in @ref bsoncxx::v_noabi.
 ///
-/// For backward compatibility, unstable ABI headers may be included using the syntax
-/// `<bsoncxx/foo.hpp>`, which is equivalent to `<bsoncxx/v_noabi/bsoncxx/foo.hpp>`.
+/// Unstable ABI headers may be included using the syntax `<bsoncxx/foo.hpp>`, which is equivalent to
+/// `<bsoncxx/v_noabi/bsoncxx/foo.hpp>`.
 ///
 
 ///

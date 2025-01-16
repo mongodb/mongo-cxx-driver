@@ -39,7 +39,7 @@
 ///
 /// In addition to declaring ABI namespaces (`v_noabi`, `v1`, etc.), this namespace also provides
 /// "redeclarations" of entities within ABI namespaces. These redeclarations are intended to be the
-/// preferred method for using bsoncxx library entities when ABI stability of the bsoncxx library is
+/// preferred method for using mongocxx library entities when ABI stability of the mongocxx library is
 /// NOT a requirement by the user. See [Root Namespace
 /// Redeclarations](https://www.mongodb.com/docs/languages/cpp/cpp-driver/current/api-abi-versioning/abi-versioning/#std-label-cpp-abi-root-namespace-redec).
 ///

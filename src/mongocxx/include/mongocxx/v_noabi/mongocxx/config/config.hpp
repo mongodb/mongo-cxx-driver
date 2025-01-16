@@ -12,9 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+// For backward compatibility.
+#include <mongocxx/v1/config/config.hpp>
+
 ///
 /// @file
 /// Provides macros describing the mongocxx library configuration.
 ///
-/// @warning This header is not standalone includable!
+/// @par Includes
+/// - @ref mongocxx/v1/config/config.hpp
 ///

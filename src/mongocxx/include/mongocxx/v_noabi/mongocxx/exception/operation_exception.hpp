@@ -30,9 +30,9 @@
 namespace mongocxx {
 namespace v_noabi {
 
-BSONCXX_PUSH_WARNINGS();
-BSONCXX_DISABLE_WARNING(MSVC(4251));
-BSONCXX_DISABLE_WARNING(MSVC(4275));
+BSONCXX_PRIVATE_WARNINGS_PUSH();
+BSONCXX_PRIVATE_WARNINGS_DISABLE(MSVC(4251));
+BSONCXX_PRIVATE_WARNINGS_DISABLE(MSVC(4275));
 
 ///
 /// An exception thrown during a MongoDB server operation.
@@ -91,7 +91,7 @@ class operation_exception : public exception {
     bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::value> _raw_server_error;
 };
 
-BSONCXX_POP_WARNINGS();
+BSONCXX_PRIVATE_WARNINGS_POP();
 
 } // namespace v_noabi
 } // namespace mongocxx

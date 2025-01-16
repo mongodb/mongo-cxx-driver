@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <mongocxx/v1/detail/macros.hpp>
+
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/private/make_unique.hh>
 #include <bsoncxx/string/to_string.hpp>
@@ -127,7 +129,7 @@ write_concern::level write_concern::acknowledge_level() const {
         case MONGOC_WRITE_CONCERN_W_TAG:
             return write_concern::level::k_tag;
         default:
-            MONGOCXX_UNREACHABLE;
+            MONGOCXX_PRIVATE_UNREACHABLE;
     }
 }
 

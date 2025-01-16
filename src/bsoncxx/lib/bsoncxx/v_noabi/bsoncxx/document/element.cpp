@@ -107,7 +107,7 @@ types::bson_value::view element::get_value() const {
 #undef BSONCXX_ENUM
     }
 
-    BSONCXX_UNREACHABLE;
+    BSONCXX_PRIVATE_UNREACHABLE;
 }
 
 types::bson_value::value element::get_owning_value() const {

@@ -12,23 +12,24 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#if !defined(BSONCXX_V1_CONFIG_VERSION_HPP)
+#define BSONCXX_V1_CONFIG_VERSION_HPP
+
 // clang-format off
-#define MONGOCXX_VERSION_STRING "@MONGOCXX_VERSION@"
-#define MONGOCXX_VERSION_MAJOR @MONGOCXX_VERSION_MAJOR@
-#define MONGOCXX_VERSION_MINOR @MONGOCXX_VERSION_MINOR@
-#define MONGOCXX_VERSION_PATCH @MONGOCXX_VERSION_PATCH@
-#define MONGOCXX_VERSION_EXTRA @MONGOCXX_VERSION_EXTRA@
+#define BSONCXX_VERSION_STRING "@BSONCXX_VERSION@"
+#define BSONCXX_VERSION_MAJOR @BSONCXX_VERSION_MAJOR@
+#define BSONCXX_VERSION_MINOR @BSONCXX_VERSION_MINOR@
+#define BSONCXX_VERSION_PATCH @BSONCXX_VERSION_PATCH@
+#define BSONCXX_VERSION_EXTRA @BSONCXX_VERSION_EXTRA@
 // clang-format on
 
 ///
 /// @file
-/// Provides macros describing the mongocxx library version.
-///
-/// @warning This header is not standalone includable!
+/// Provides macros describing the bsoncxx library version.
 ///
 
 ///
-/// @def MONGOCXX_VERSION_STRING
+/// @def BSONCXX_VERSION_STRING
 /// @hideinitializer
 /// This library's full version number as a string literal (e.g. `"1.2.3-extra"`).
 ///
@@ -36,7 +37,7 @@
 ///
 
 ///
-/// @def MONGOCXX_VERSION_MAJOR
+/// @def BSONCXX_VERSION_MAJOR
 /// @hideinitializer
 /// This library's API major version number as an integer literal (e.g. `1`).
 ///
@@ -44,7 +45,7 @@
 ///
 
 ///
-/// @def MONGOCXX_VERSION_MINOR
+/// @def BSONCXX_VERSION_MINOR
 /// @hideinitializer
 /// This library's API minor version number as an integer literal (e.g. `2`).
 ///
@@ -52,7 +53,7 @@
 ///
 
 ///
-/// @def MONGOCXX_VERSION_PATCH
+/// @def BSONCXX_VERSION_PATCH
 /// @hideinitializer
 /// This library's API patch version number as an integer literal (e.g. `3`).
 ///
@@ -60,9 +61,11 @@
 ///
 
 ///
-/// @def MONGOCXX_VERSION_EXTRA
+/// @def BSONCXX_VERSION_EXTRA
 /// @hideinitializer
 /// This library's API version number suffix if any as raw text (e.g. `-extra`).
 ///
 /// This value is derived from the `BUILD_VERSION` variable during configuration.
 ///
+
+#endif // BSONCXX_V1_CONFIG_VERSION_HPP

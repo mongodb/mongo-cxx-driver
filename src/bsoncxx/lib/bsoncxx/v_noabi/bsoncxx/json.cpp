@@ -70,7 +70,7 @@ std::string to_json(document::view view, ExtendedJsonMode mode) {
             return to_json_helper(view, bson_as_canonical_extended_json);
     }
 
-    BSONCXX_UNREACHABLE;
+    BSONCXX_PRIVATE_UNREACHABLE;
 }
 
 std::string to_json(array::view view, ExtendedJsonMode mode) {
@@ -85,7 +85,7 @@ std::string to_json(array::view view, ExtendedJsonMode mode) {
             return to_json_helper(view, bson_array_as_canonical_extended_json);
     }
 
-    BSONCXX_UNREACHABLE;
+    BSONCXX_PRIVATE_UNREACHABLE;
 }
 
 document::value from_json(stdx::string_view json) {

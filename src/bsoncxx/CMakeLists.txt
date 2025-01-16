@@ -192,14 +192,14 @@ if(1)
             BASE_NAME BSONCXX_ABI
             EXPORT_MACRO_NAME BSONCXX_ABI_EXPORT
             DEPRECATED_MACRO_NAME BSONCXX_DEPRECATED
-            EXPORT_FILE_NAME ${PROJECT_BINARY_DIR}/lib/bsoncxx/v_noabi/bsoncxx/config/export.hpp
+            EXPORT_FILE_NAME ${PROJECT_BINARY_DIR}/lib/bsoncxx/v1/config/export.hpp
             STATIC_DEFINE BSONCXX_STATIC
             CUSTOM_CONTENT_FROM_VARIABLE bsoncxx_export_header_custom_content
         )
 
         install(FILES
-            ${PROJECT_BINARY_DIR}/lib/bsoncxx/v_noabi/bsoncxx/config/export.hpp
-            DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/bsoncxx/v_noabi/bsoncxx/config
+            ${PROJECT_BINARY_DIR}/lib/bsoncxx/v1/config/export.hpp
+            DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/bsoncxx/v1/config
             COMPONENT dev
         )
     endfunction()

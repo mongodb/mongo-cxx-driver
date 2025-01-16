@@ -23,9 +23,9 @@
 namespace bsoncxx {
 namespace v_noabi {
 
-BSONCXX_PUSH_WARNINGS();
-BSONCXX_DISABLE_WARNING(MSVC(4251));
-BSONCXX_DISABLE_WARNING(MSVC(4275));
+BSONCXX_PRIVATE_WARNINGS_PUSH();
+BSONCXX_PRIVATE_WARNINGS_DISABLE(MSVC(4251));
+BSONCXX_PRIVATE_WARNINGS_DISABLE(MSVC(4275));
 
 ///
 /// Base class for all exceptions thrown by the bsoncxx library unless otherwise specified.
@@ -42,7 +42,7 @@ class exception : public std::system_error {
     using std::system_error::system_error;
 };
 
-BSONCXX_POP_WARNINGS();
+BSONCXX_PRIVATE_WARNINGS_POP();
 
 } // namespace v_noabi
 } // namespace bsoncxx
