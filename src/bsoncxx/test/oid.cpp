@@ -20,6 +20,7 @@
 #include <stdlib.h>
 
 #include <bsoncxx/oid.hpp>
+
 #include <bsoncxx/private/libbson.hh>
 
 #include <bsoncxx/test/catch.hh>

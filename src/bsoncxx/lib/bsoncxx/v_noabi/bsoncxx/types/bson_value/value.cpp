@@ -14,12 +14,12 @@
 
 #include <bsoncxx/exception/error_code.hpp>
 #include <bsoncxx/exception/exception.hpp>
-#include <bsoncxx/private/make_unique.hh>
 #include <bsoncxx/types/bson_value/private/value.hh>
 #include <bsoncxx/types/bson_value/value.hpp>
 #include <bsoncxx/types/private/convert.hh>
 
-#include <bsoncxx/config/private/prelude.hh>
+#include <bsoncxx/private/config/prelude.hh>
+#include <bsoncxx/private/make_unique.hh>
 
 namespace bsoncxx {
 namespace v_noabi {

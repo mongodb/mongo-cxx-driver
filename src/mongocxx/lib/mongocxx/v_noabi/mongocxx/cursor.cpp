@@ -12,16 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <bsoncxx/private/libbson.hh>
-#include <bsoncxx/private/make_unique.hh>
-
 #include <mongocxx/cursor.hpp>
 #include <mongocxx/exception/private/mongoc_error.hh>
 #include <mongocxx/exception/query_exception.hpp>
+
+#include <bsoncxx/private/libbson.hh>
+#include <bsoncxx/private/make_unique.hh>
+
+#include <mongocxx/private/config/prelude.hh>
 #include <mongocxx/private/cursor.hh>
 #include <mongocxx/private/libmongoc.hh>
-
-#include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
 namespace v_noabi {

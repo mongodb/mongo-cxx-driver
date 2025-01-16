@@ -14,11 +14,11 @@
 
 #pragma once
 
-#include <bsoncxx/private/libbson.hh>
 #include <bsoncxx/types/bson_value/value.hpp>
 #include <bsoncxx/types/bson_value/view.hpp>
 
-#include <bsoncxx/config/private/prelude.hh>
+#include <bsoncxx/private/config/prelude.hh>
+#include <bsoncxx/private/libbson.hh>
 
 namespace bsoncxx {
 namespace v_noabi {
@@ -65,4 +65,4 @@ inline bson_value::value make_owning_bson(void* internal_value) {
 } // namespace v_noabi
 } // namespace bsoncxx
 
-#include <bsoncxx/config/private/postlude.hh>
+#include <bsoncxx/private/config/postlude.hh>

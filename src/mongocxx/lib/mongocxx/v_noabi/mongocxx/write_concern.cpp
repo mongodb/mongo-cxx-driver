@@ -15,17 +15,18 @@
 #include <mongocxx/v1/detail/macros.hpp>
 
 #include <bsoncxx/builder/basic/document.hpp>
-#include <bsoncxx/private/make_unique.hh>
 #include <bsoncxx/string/to_string.hpp>
 
 #include <mongocxx/exception/error_code.hpp>
 #include <mongocxx/exception/exception.hpp>
 #include <mongocxx/exception/logic_error.hpp>
-#include <mongocxx/private/libmongoc.hh>
-#include <mongocxx/private/write_concern.hh>
 #include <mongocxx/write_concern.hpp>
 
-#include <mongocxx/config/private/prelude.hh>
+#include <bsoncxx/private/make_unique.hh>
+
+#include <mongocxx/private/config/prelude.hh>
+#include <mongocxx/private/libmongoc.hh>
+#include <mongocxx/private/write_concern.hh>
 
 namespace mongocxx {
 namespace v_noabi {

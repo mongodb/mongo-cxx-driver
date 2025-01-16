@@ -14,14 +14,15 @@
 
 #include <sstream>
 
-#include <bsoncxx/private/helpers.hh>
-#include <bsoncxx/private/make_unique.hh>
-
 #include <mongocxx/client.hpp>
 #include <mongocxx/exception/bulk_write_exception.hpp>
 #include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/exception/server_error_code.hpp>
 #include <mongocxx/instance.hpp>
+
+#include <bsoncxx/private/helpers.hh>
+#include <bsoncxx/private/make_unique.hh>
+
 #include <mongocxx/private/libmongoc.hh>
 
 #include <bsoncxx/test/catch.hh>

@@ -20,7 +20,6 @@
 
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/json.hpp>
-#include <bsoncxx/private/make_unique.hh>
 #include <bsoncxx/stdx/string_view.hpp>
 #include <bsoncxx/string/to_string.hpp>
 #include <bsoncxx/types.hpp>
@@ -34,10 +33,13 @@
 #include <mongocxx/exception/write_exception.hpp>
 #include <mongocxx/instance.hpp>
 #include <mongocxx/pipeline.hpp>
-#include <mongocxx/private/libbson.hh>
-#include <mongocxx/private/libmongoc.hh>
 #include <mongocxx/read_concern.hpp>
 #include <mongocxx/write_concern.hpp>
+
+#include <bsoncxx/private/make_unique.hh>
+
+#include <mongocxx/private/libbson.hh>
+#include <mongocxx/private/libmongoc.hh>
 
 #include <bsoncxx/test/catch.hh>
 #include <bsoncxx/test/exception_guard.hh>

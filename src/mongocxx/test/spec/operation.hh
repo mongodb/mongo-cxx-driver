@@ -22,9 +22,9 @@
 
 #include <mongocxx/client_session.hpp>
 #include <mongocxx/pipeline.hpp>
-#include <mongocxx/private/libmongoc.hh>
 
-#include <mongocxx/config/private/prelude.hh>
+#include <mongocxx/private/config/prelude.hh>
+#include <mongocxx/private/libmongoc.hh>
 
 namespace mongocxx {
 namespace spec {
@@ -88,4 +88,4 @@ class operation_runner {
 } // namespace spec
 } // namespace mongocxx
 
-#include <mongocxx/config/private/postlude.hh>
+#include <mongocxx/private/config/postlude.hh>

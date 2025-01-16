@@ -18,7 +18,7 @@
 
 #include <mongocxx/hint.hpp>
 
-#include <mongocxx/config/private/prelude.hh>
+#include <mongocxx/private/config/prelude.hh>
 
 using bsoncxx::v_noabi::builder::concatenate;
 using bsoncxx::v_noabi::builder::basic::kvp;

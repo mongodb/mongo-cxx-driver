@@ -18,9 +18,9 @@
 #include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/options/apm.hpp>
 #include <mongocxx/options/server_api.hpp>
-#include <mongocxx/private/libmongoc.hh>
 
-#include <mongocxx/config/private/prelude.hh>
+#include <mongocxx/private/config/prelude.hh>
+#include <mongocxx/private/libmongoc.hh>
 
 namespace mongocxx {
 namespace v_noabi {
@@ -60,4 +60,4 @@ inline unique_server_api make_server_api(server_api const& opts) {
 } // namespace v_noabi
 } // namespace mongocxx
 
-#include <mongocxx/config/private/postlude.hh>
+#include <mongocxx/private/config/postlude.hh>

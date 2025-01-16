@@ -14,10 +14,11 @@
 
 #include <vector>
 
-#include <bsoncxx/private/make_unique.hh>
-
 #include <mongocxx/instance.hpp>
 #include <mongocxx/logger.hpp>
+
+#include <bsoncxx/private/make_unique.hh>
+
 #include <mongocxx/private/libmongoc.hh>
 
 #include <bsoncxx/test/catch.hh>

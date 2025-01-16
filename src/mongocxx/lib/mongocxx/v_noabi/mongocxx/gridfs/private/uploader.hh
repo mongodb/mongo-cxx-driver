@@ -17,12 +17,13 @@
 #include <string>
 #include <vector>
 
-#include <bsoncxx/private/make_unique.hh>
 #include <bsoncxx/string/to_string.hpp>
 
 #include <mongocxx/gridfs/uploader.hpp>
 
-#include <mongocxx/config/private/prelude.hh>
+#include <bsoncxx/private/make_unique.hh>
+
+#include <mongocxx/private/config/prelude.hh>
 
 namespace mongocxx {
 namespace v_noabi {
@@ -91,4 +92,4 @@ class uploader::impl {
 } // namespace v_noabi
 } // namespace mongocxx
 
-#include <mongocxx/config/private/postlude.hh>
+#include <mongocxx/private/config/postlude.hh>

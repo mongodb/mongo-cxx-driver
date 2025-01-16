@@ -19,13 +19,13 @@
 #include <bsoncxx/exception/error_code.hpp>
 #include <bsoncxx/exception/exception.hpp>
 #include <bsoncxx/json.hpp>
-#include <bsoncxx/private/b64_ntop.hh>
-#include <bsoncxx/private/libbson.hh>
 #include <bsoncxx/stdx/string_view.hpp>
 #include <bsoncxx/types.hpp>
 #include <bsoncxx/types/bson_value/view.hpp>
 
-#include <bsoncxx/config/private/prelude.hh>
+#include <bsoncxx/private/b64_ntop.hh>
+#include <bsoncxx/private/config/prelude.hh>
+#include <bsoncxx/private/libbson.hh>
 
 namespace bsoncxx {
 namespace v_noabi {

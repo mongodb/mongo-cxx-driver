@@ -15,10 +15,10 @@
 #include <bsoncxx/builder/basic/document.hpp>
 
 #include <mongocxx/options/aggregate.hpp>
-#include <mongocxx/private/append_aggregate_options.hh>
-#include <mongocxx/private/read_preference.hh>
 
-#include <mongocxx/config/private/prelude.hh>
+#include <mongocxx/private/append_aggregate_options.hh>
+#include <mongocxx/private/config/prelude.hh>
+#include <mongocxx/private/read_preference.hh>
 
 namespace mongocxx {
 namespace v_noabi {

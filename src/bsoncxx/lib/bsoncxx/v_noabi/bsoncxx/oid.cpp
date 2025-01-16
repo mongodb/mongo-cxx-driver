@@ -17,9 +17,9 @@
 #include <bsoncxx/exception/error_code.hpp>
 #include <bsoncxx/exception/exception.hpp>
 #include <bsoncxx/oid.hpp>
-#include <bsoncxx/private/libbson.hh>
 
-#include <bsoncxx/config/private/prelude.hh>
+#include <bsoncxx/private/config/prelude.hh>
+#include <bsoncxx/private/libbson.hh>
 
 namespace bsoncxx {
 namespace v_noabi {

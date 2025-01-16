@@ -18,9 +18,9 @@
 
 #include <mongocxx/exception/operation_exception.hpp>
 #include <mongocxx/exception/server_error_code.hpp>
-#include <mongocxx/private/libmongoc.hh>
 
-#include <mongocxx/config/private/prelude.hh>
+#include <mongocxx/private/config/prelude.hh>
+#include <mongocxx/private/libmongoc.hh>
 
 namespace mongocxx {
 namespace v_noabi {
@@ -65,4 +65,4 @@ void throw_exception(bsoncxx::v_noabi::document::value raw_server_error, ::bson_
 } // namespace v_noabi
 } // namespace mongocxx
 
-#include <mongocxx/config/private/postlude.hh>
+#include <mongocxx/private/config/postlude.hh>

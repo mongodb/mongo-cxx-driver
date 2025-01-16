@@ -17,16 +17,17 @@
 #include <cstring>
 #include <sstream>
 
-#include <bsoncxx/private/make_unique.hh>
 #include <bsoncxx/types.hpp>
 
 #include <mongocxx/exception/error_code.hpp>
 #include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/gridfs/downloader.hpp>
 #include <mongocxx/gridfs/private/downloader.hh>
-#include <mongocxx/private/numeric_casting.hh>
 
-#include <mongocxx/config/private/prelude.hh>
+#include <bsoncxx/private/make_unique.hh>
+
+#include <mongocxx/private/config/prelude.hh>
+#include <mongocxx/private/numeric_casting.hh>
 
 namespace mongocxx {
 namespace v_noabi {

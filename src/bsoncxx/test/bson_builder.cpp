@@ -22,10 +22,11 @@
 #include <bsoncxx/builder/stream/document.hpp>
 #include <bsoncxx/exception/exception.hpp>
 #include <bsoncxx/json.hpp>
-#include <bsoncxx/private/libbson.hh>
 #include <bsoncxx/string/to_string.hpp>
 #include <bsoncxx/types.hpp>
 #include <bsoncxx/types/bson_value/view.hpp>
+
+#include <bsoncxx/private/libbson.hh>
 
 #include <bsoncxx/test/catch.hh>
 

@@ -24,9 +24,6 @@
 #include <bsoncxx/builder/concatenate.hpp>
 #include <bsoncxx/exception/error_code.hpp>
 #include <bsoncxx/exception/exception.hpp>
-#include <bsoncxx/private/helpers.hh>
-#include <bsoncxx/private/libbson.hh>
-#include <bsoncxx/private/make_unique.hh>
 #include <bsoncxx/stdx/optional.hpp>
 #include <bsoncxx/types.hpp>
 
@@ -41,16 +38,6 @@
 #include <mongocxx/exception/write_exception.hpp>
 #include <mongocxx/hint.hpp>
 #include <mongocxx/model/write.hpp>
-#include <mongocxx/private/bulk_write.hh>
-#include <mongocxx/private/client_session.hh>
-#include <mongocxx/private/collection.hh>
-#include <mongocxx/private/cursor.hh>
-#include <mongocxx/private/libbson.hh>
-#include <mongocxx/private/libmongoc.hh>
-#include <mongocxx/private/pipeline.hh>
-#include <mongocxx/private/read_concern.hh>
-#include <mongocxx/private/read_preference.hh>
-#include <mongocxx/private/write_concern.hh>
 #include <mongocxx/result/delete.hpp>
 #include <mongocxx/result/insert_many.hpp>
 #include <mongocxx/result/insert_one.hpp>
@@ -58,7 +45,21 @@
 #include <mongocxx/result/update.hpp>
 #include <mongocxx/write_concern.hpp>
 
-#include <mongocxx/config/private/prelude.hh>
+#include <bsoncxx/private/helpers.hh>
+#include <bsoncxx/private/libbson.hh>
+#include <bsoncxx/private/make_unique.hh>
+
+#include <mongocxx/private/bulk_write.hh>
+#include <mongocxx/private/client_session.hh>
+#include <mongocxx/private/collection.hh>
+#include <mongocxx/private/config/prelude.hh>
+#include <mongocxx/private/cursor.hh>
+#include <mongocxx/private/libbson.hh>
+#include <mongocxx/private/libmongoc.hh>
+#include <mongocxx/private/pipeline.hh>
+#include <mongocxx/private/read_concern.hh>
+#include <mongocxx/private/read_preference.hh>
+#include <mongocxx/private/write_concern.hh>
 
 using bsoncxx::v_noabi::builder::concatenate;
 using bsoncxx::v_noabi::builder::basic::kvp;

@@ -13,9 +13,9 @@
 // limitations under the License.
 
 #include <mongocxx/options/count.hpp>
-#include <mongocxx/private/read_preference.hh>
 
-#include <mongocxx/config/private/prelude.hh>
+#include <mongocxx/private/config/prelude.hh>
+#include <mongocxx/private/read_preference.hh>
 
 namespace mongocxx {
 namespace v_noabi {

@@ -16,12 +16,12 @@
 
 #include <bsoncxx/exception/error_code.hpp>
 #include <bsoncxx/exception/exception.hpp>
-#include <bsoncxx/private/libbson.hh>
-#include <bsoncxx/private/suppress_deprecation_warnings.hh>
 #include <bsoncxx/types/bson_value/view.hpp>
 #include <bsoncxx/types/private/convert.hh>
 
-#include <bsoncxx/config/private/prelude.hh>
+#include <bsoncxx/private/config/prelude.hh>
+#include <bsoncxx/private/libbson.hh>
+#include <bsoncxx/private/suppress_deprecation_warnings.hh>
 
 #define BSONCXX_CITER                                                       \
     bson_iter_t iter;                                                       \

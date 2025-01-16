@@ -19,11 +19,10 @@
 
 #include <bsoncxx/private/make_unique.hh>
 
+#include <mongocxx/private/config/prelude.hh>
 #include <mongocxx/private/read_concern.hh>
 #include <mongocxx/private/read_preference.hh>
 #include <mongocxx/private/write_concern.hh>
-
-#include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
 namespace v_noabi {
@@ -131,4 +130,4 @@ class transaction::impl {
 } // namespace v_noabi
 } // namespace mongocxx
 
-#include <mongocxx/config/private/postlude.hh>
+#include <mongocxx/private/config/postlude.hh>

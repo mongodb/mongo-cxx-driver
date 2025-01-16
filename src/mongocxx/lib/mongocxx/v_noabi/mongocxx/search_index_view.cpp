@@ -1,11 +1,11 @@
-#include <bsoncxx/private/make_unique.hh>
-
 #include <mongocxx/exception/error_code.hpp>
 #include <mongocxx/exception/logic_error.hpp>
-#include <mongocxx/private/search_index_view.hh>
 #include <mongocxx/search_index_view.hpp>
 
-#include <mongocxx/config/private/prelude.hh>
+#include <bsoncxx/private/make_unique.hh>
+
+#include <mongocxx/private/config/prelude.hh>
+#include <mongocxx/private/search_index_view.hh>
 
 namespace mongocxx {
 namespace v_noabi {
