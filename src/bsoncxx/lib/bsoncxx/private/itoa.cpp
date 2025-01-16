@@ -18,7 +18,7 @@ namespace bsoncxx {
 
 namespace {
 
-constexpr char kIndexTable[] =
+constexpr char k_index_table[] =
     "0\0"
     "1\0"
     "2\0"
@@ -1019,38 +1019,39 @@ constexpr char kIndexTable[] =
     "997\0"
     "998\0"
     "999\0";
+
 } // namespace
 
-itoa::itoa(uint32_t val) : _val(val) {
+itoa::itoa(std::uint32_t val) : _val(val) {
     _init();
 }
 
-itoa& itoa::operator=(uint32_t new_val) {
+itoa& itoa::operator=(std::uint32_t new_val) {
     _val = new_val;
     _init();
     return *this;
 }
 
 void itoa::_init() {
-    if (_val < 10) {
-        _str = kIndexTable + (2 * _val);
-        _len = 1;
-    } else if (_val < 100) {
-        _str = kIndexTable + (2 * 10) + (3 * (_val - 10));
-        _len = 2;
-    } else if (_val < 1000) {
-        _str = kIndexTable + (2 * 10) + (3 * 90) + (4 * (_val - 100));
-        _len = 3;
+    if (_val < 10u) {
+        _str = k_index_table + (2u * _val);
+        _len = 1u;
+    } else if (_val < 100u) {
+        _str = k_index_table + (2u * 10u) + (3u * (_val - 10u));
+        _len = 2u;
+    } else if (_val < 1000u) {
+        _str = k_index_table + (2u * 10u) + (3u * 90u) + (4 * (_val - 100u));
+        _len = 3u;
     } else {
-        int size = static_cast<std::int32_t>(sizeof(_buf) - 1);
+        int size = static_cast<std::int32_t>(sizeof(_buf) - 1u);
         int i = size;
 
         _buf[i] = '\0';
 
-        while (_val > 0) {
+        while (_val > 0u) {
             i--;
-            _buf[i] = static_cast<std::int8_t>((_val % 10) + '0');
-            _val = _val / 10;
+            _buf[i] = static_cast<std::int8_t>((_val % 10u) + '0');
+            _val = _val / 10u;
         }
 
         _str = _buf + i;
