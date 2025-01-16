@@ -27,8 +27,6 @@
 #include <mongocxx/gridfs/private/uploader.hh>
 #include <mongocxx/gridfs/uploader.hpp>
 
-#include <mongocxx/private/config/prelude.hh>
-
 namespace {
 
 std::size_t chunks_collection_documents_max_length(std::size_t chunk_size) {

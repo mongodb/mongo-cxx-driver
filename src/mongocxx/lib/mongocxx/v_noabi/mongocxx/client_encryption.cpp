@@ -17,7 +17,6 @@
 #include <bsoncxx/private/make_unique.hh>
 
 #include <mongocxx/private/client_encryption.hh>
-#include <mongocxx/private/config/prelude.hh>
 #include <mongocxx/private/database.hh>
 
 namespace mongocxx {

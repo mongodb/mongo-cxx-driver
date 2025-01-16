@@ -15,7 +15,6 @@
 #include <mongocxx/bulk_write.hpp>
 #include <mongocxx/result/rewrap_many_datakey.hpp>
 
-#include <mongocxx/private/config/prelude.hh>
 #include <mongocxx/private/libbson.hh>
 
 namespace mongocxx {

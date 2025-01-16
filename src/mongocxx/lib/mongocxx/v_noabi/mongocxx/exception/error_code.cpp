@@ -16,8 +16,6 @@
 
 #include <mongocxx/exception/error_code.hpp>
 
-#include <mongocxx/private/config/prelude.hh>
-
 namespace mongocxx {
 namespace v_noabi {
 

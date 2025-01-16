@@ -14,7 +14,6 @@
 
 #include <mongocxx/events/topology_description.hpp>
 
-#include <mongocxx/private/config/prelude.hh>
 #include <mongocxx/private/libmongoc.hh>
 #include <mongocxx/private/read_preference.hh>
 

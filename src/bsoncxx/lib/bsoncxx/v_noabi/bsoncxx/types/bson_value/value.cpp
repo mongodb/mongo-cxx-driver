@@ -18,7 +18,6 @@
 #include <bsoncxx/types/bson_value/value.hpp>
 #include <bsoncxx/types/private/convert.hh>
 
-#include <bsoncxx/private/config/prelude.hh>
 #include <bsoncxx/private/make_unique.hh>
 
 namespace bsoncxx {

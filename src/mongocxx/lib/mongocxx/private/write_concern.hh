@@ -16,7 +16,6 @@
 
 #include <mongocxx/write_concern.hpp>
 
-#include <mongocxx/private/config/prelude.hh>
 #include <mongocxx/private/libmongoc.hh>
 
 namespace mongocxx {
@@ -41,5 +40,3 @@ class write_concern::impl {
 
 } // namespace v_noabi
 } // namespace mongocxx
-
-#include <mongocxx/private/config/postlude.hh>

@@ -19,7 +19,6 @@
 
 #include <bsoncxx/private/make_unique.hh>
 
-#include <mongocxx/private/config/prelude.hh>
 #include <mongocxx/private/read_concern.hh>
 #include <mongocxx/private/read_preference.hh>
 #include <mongocxx/private/write_concern.hh>
@@ -129,5 +128,3 @@ class transaction::impl {
 } // namespace options
 } // namespace v_noabi
 } // namespace mongocxx
-
-#include <mongocxx/private/config/postlude.hh>

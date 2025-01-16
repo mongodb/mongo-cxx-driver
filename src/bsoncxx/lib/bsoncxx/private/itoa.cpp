@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <bsoncxx/private/config/prelude.hh>
 #include <bsoncxx/private/itoa.hh>
 
 namespace bsoncxx {

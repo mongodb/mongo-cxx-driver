@@ -19,7 +19,6 @@
 #include <bsoncxx/types/bson_value/view.hpp>
 #include <bsoncxx/types/private/convert.hh>
 
-#include <bsoncxx/private/config/prelude.hh>
 #include <bsoncxx/private/libbson.hh>
 #include <bsoncxx/private/suppress_deprecation_warnings.hh>
 

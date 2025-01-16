@@ -18,7 +18,6 @@
 
 #include <mongocxx/options/apm.hpp>
 
-#include <mongocxx/private/config/prelude.hh>
 #include <mongocxx/private/libmongoc.hh>
 
 namespace mongocxx {
@@ -168,5 +167,3 @@ inline apm_unique_callbacks make_apm_callbacks(apm const& apm_opts) {
 } // namespace options
 } // namespace v_noabi
 } // namespace mongocxx
-
-#include <mongocxx/private/config/postlude.hh>

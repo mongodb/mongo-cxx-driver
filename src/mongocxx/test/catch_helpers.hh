@@ -16,7 +16,6 @@
 
 #include <mongocxx/exception/exception.hpp>
 
-#include <mongocxx/private/config/prelude.hh>
 #include <mongocxx/private/libmongoc.hh>
 
 #include <bsoncxx/test/catch.hh>
@@ -257,5 +256,3 @@ class mongocxx_exception_matcher : public Catch::Matchers::MatcherBase<mongocxx:
     auto read_prefs_set_mode = libmongoc::read_prefs_set_mode.create_instance();                                   \
     auto read_prefs_set_tags = libmongoc::read_prefs_set_tags.create_instance();                                   \
     ((void)0)
-
-#include <mongocxx/private/config/postlude.hh>

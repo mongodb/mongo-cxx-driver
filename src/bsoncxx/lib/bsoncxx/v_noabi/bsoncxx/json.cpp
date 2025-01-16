@@ -24,7 +24,6 @@
 #include <bsoncxx/types/bson_value/view.hpp>
 
 #include <bsoncxx/private/b64_ntop.hh>
-#include <bsoncxx/private/config/prelude.hh>
 #include <bsoncxx/private/libbson.hh>
 
 namespace bsoncxx {

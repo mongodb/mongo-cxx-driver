@@ -18,7 +18,6 @@
 #include <bsoncxx/json.hpp>
 #include <bsoncxx/types.hpp>
 
-#include <bsoncxx/private/config/prelude.hh>
 #include <bsoncxx/private/libbson.hh>
 
 namespace bsoncxx {

@@ -14,8 +14,6 @@
 
 #include <mongocxx/result/replace_one.hpp>
 
-#include <mongocxx/private/config/prelude.hh>
-
 namespace mongocxx {
 namespace v_noabi {
 namespace result {

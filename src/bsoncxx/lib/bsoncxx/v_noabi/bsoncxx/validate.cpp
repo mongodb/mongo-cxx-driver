@@ -14,7 +14,6 @@
 
 #include <bsoncxx/validate.hpp>
 
-#include <bsoncxx/private/config/prelude.hh>
 #include <bsoncxx/private/libbson.hh>
 #include <bsoncxx/private/make_unique.hh>
 

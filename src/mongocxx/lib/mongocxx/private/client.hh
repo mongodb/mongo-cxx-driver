@@ -18,7 +18,6 @@
 
 #include <mongocxx/client.hpp>
 
-#include <mongocxx/private/config/prelude.hh>
 #include <mongocxx/private/libmongoc.hh>
 #include <mongocxx/private/write_concern.hh>
 
@@ -46,5 +45,3 @@ class client::impl {
 
 } // namespace v_noabi
 } // namespace mongocxx
-
-#include <mongocxx/private/config/postlude.hh>

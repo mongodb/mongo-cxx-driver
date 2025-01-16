@@ -19,7 +19,6 @@
 
 #include <mongocxx/exception/operation_exception.hpp>
 
-#include <mongocxx/private/config/prelude.hh>
 #include <mongocxx/private/libbson.hh>
 #include <mongocxx/private/libmongoc.hh>
 

@@ -21,8 +21,6 @@
 #include <mongocxx/exception/gridfs_exception.hpp>
 #include <mongocxx/gridfs/downloader.hpp>
 
-#include <mongocxx/private/config/prelude.hh>
-
 namespace mongocxx {
 namespace v_noabi {
 namespace gridfs {
@@ -116,5 +114,3 @@ class downloader::impl {
 } // namespace gridfs
 } // namespace v_noabi
 } // namespace mongocxx
-
-#include <mongocxx/private/config/postlude.hh>

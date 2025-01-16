@@ -18,7 +18,6 @@
 #include <bsoncxx/document/view.hpp>
 #include <bsoncxx/oid.hpp>
 
-#include <bsoncxx/private/config/prelude.hh>
 #include <bsoncxx/private/libbson.hh>
 
 namespace bsoncxx {
@@ -47,5 +46,3 @@ inline bsoncxx::v_noabi::oid make_oid(bson_oid_t const* bson_oid) {
 
 } // namespace helpers
 } // namespace bsoncxx
-
-#include <bsoncxx/private/config/postlude.hh>

@@ -20,8 +20,6 @@
 
 #include <mongocxx/exception/error_code.hpp>
 
-#include <mongocxx/private/config/prelude.hh>
-
 #include <bsoncxx/test/catch.hh>
 #include <bsoncxx/test/to_string.hh>
 
@@ -356,5 +354,3 @@ void apm_checker::clear() {
 
 } // namespace spec
 } // namespace mongocxx
-
-#include <mongocxx/private/config/postlude.hh>

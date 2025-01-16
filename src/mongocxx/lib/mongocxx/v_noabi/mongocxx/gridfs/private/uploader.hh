@@ -23,8 +23,6 @@
 
 #include <bsoncxx/private/make_unique.hh>
 
-#include <mongocxx/private/config/prelude.hh>
-
 namespace mongocxx {
 namespace v_noabi {
 namespace gridfs {
@@ -91,5 +89,3 @@ class uploader::impl {
 } // namespace gridfs
 } // namespace v_noabi
 } // namespace mongocxx
-
-#include <mongocxx/private/config/postlude.hh>

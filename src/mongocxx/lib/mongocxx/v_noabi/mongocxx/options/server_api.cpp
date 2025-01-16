@@ -20,7 +20,6 @@
 #include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/options/server_api.hpp>
 
-#include <mongocxx/private/config/prelude.hh>
 #include <mongocxx/private/libmongoc.hh>
 
 namespace mongocxx {

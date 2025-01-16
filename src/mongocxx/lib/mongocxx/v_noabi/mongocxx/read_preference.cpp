@@ -20,7 +20,6 @@
 
 #include <bsoncxx/private/make_unique.hh>
 
-#include <mongocxx/private/config/prelude.hh>
 #include <mongocxx/private/conversions.hh>
 #include <mongocxx/private/libbson.hh>
 #include <mongocxx/private/libmongoc.hh>

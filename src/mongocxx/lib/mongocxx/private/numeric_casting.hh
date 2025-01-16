@@ -17,7 +17,6 @@
 #include <cstddef>
 #include <cstdint>
 
-#include <mongocxx/private/config/prelude.hh>
 #include <mongocxx/private/export.hh>
 
 namespace mongocxx {
@@ -43,5 +42,3 @@ MONGOCXX_ABI_EXPORT_CDECL_TESTING(bool) int32_to_size_t_safe(int32_t const in, s
 MONGOCXX_ABI_EXPORT_CDECL_TESTING(bool) int64_to_size_t_safe(int64_t const in, std::size_t& out);
 
 } // namespace mongocxx
-
-#include <mongocxx/private/config/postlude.hh>

@@ -4,8 +4,6 @@
 
 #include <mongocxx/search_index_model.hpp>
 
-#include <mongocxx/private/config/prelude.hh>
-
 namespace mongocxx {
 namespace v_noabi {
 
@@ -22,5 +20,3 @@ class search_index_model::impl {
 
 } // namespace v_noabi
 } // namespace mongocxx
-
-#include <mongocxx/private/config/postlude.hh>

@@ -52,7 +52,6 @@
 #include <mongocxx/private/bulk_write.hh>
 #include <mongocxx/private/client_session.hh>
 #include <mongocxx/private/collection.hh>
-#include <mongocxx/private/config/prelude.hh>
 #include <mongocxx/private/cursor.hh>
 #include <mongocxx/private/libbson.hh>
 #include <mongocxx/private/libmongoc.hh>

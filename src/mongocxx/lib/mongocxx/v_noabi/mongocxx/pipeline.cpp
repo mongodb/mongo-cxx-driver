@@ -19,7 +19,6 @@
 
 #include <bsoncxx/private/make_unique.hh>
 
-#include <mongocxx/private/config/prelude.hh>
 #include <mongocxx/private/pipeline.hh>
 
 using bsoncxx::v_noabi::builder::basic::kvp;

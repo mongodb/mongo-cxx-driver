@@ -22,7 +22,6 @@
 
 #include <bsoncxx/private/helpers.hh>
 
-#include <mongocxx/private/config/prelude.hh>
 #include <mongocxx/private/database.hh>
 #include <mongocxx/private/libbson.hh>
 #include <mongocxx/private/read_preference.hh>
@@ -67,5 +66,3 @@ class collection::impl {
 
 } // namespace v_noabi
 } // namespace mongocxx
-
-#include <mongocxx/private/config/postlude.hh>

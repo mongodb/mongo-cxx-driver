@@ -14,8 +14,6 @@
 
 #include "libmongoc.hh"
 
-#include <mongocxx/private/config/prelude.hh>
-
 namespace mongocxx {
 namespace libmongoc {
 

@@ -18,8 +18,6 @@
 
 #include <bsoncxx/private/make_unique.hh>
 
-#include <mongocxx/private/config/prelude.hh>
-
 namespace mongocxx {
 namespace v_noabi {
 namespace options {
@@ -90,5 +88,3 @@ transaction::impl& transaction::_get_impl() {
 } // namespace options
 } // namespace v_noabi
 } // namespace mongocxx
-
-#include <mongocxx/private/config/postlude.hh>

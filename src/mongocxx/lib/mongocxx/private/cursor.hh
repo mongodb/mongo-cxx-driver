@@ -19,7 +19,6 @@
 
 #include <mongocxx/cursor.hpp>
 
-#include <mongocxx/private/config/prelude.hh>
 #include <mongocxx/private/libmongoc.hh>
 
 namespace mongocxx {
@@ -91,5 +90,3 @@ class cursor::impl {
 
 } // namespace v_noabi
 } // namespace mongocxx
-
-#include <mongocxx/private/config/postlude.hh>

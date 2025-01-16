@@ -20,7 +20,6 @@
 #include <mongocxx/pool.hpp>
 #include <mongocxx/uri.hpp>
 
-#include <mongocxx/private/config/prelude.hh>
 #include <mongocxx/private/conversions.hh>
 #include <mongocxx/private/libmongoc.hh>
 

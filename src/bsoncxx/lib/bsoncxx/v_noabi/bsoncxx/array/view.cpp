@@ -19,7 +19,6 @@
 #include <bsoncxx/types.hpp>
 #include <bsoncxx/types/bson_value/view.hpp>
 
-#include <bsoncxx/private/config/prelude.hh>
 #include <bsoncxx/private/itoa.hh>
 #include <bsoncxx/private/libbson.hh>
 

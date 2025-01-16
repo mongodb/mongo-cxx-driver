@@ -4,7 +4,6 @@
 
 #include <bsoncxx/private/make_unique.hh>
 
-#include <mongocxx/private/config/prelude.hh>
 #include <mongocxx/private/search_index_model.hh>
 
 namespace mongocxx {

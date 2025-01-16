@@ -4,8 +4,6 @@
 
 #include <mongocxx/options/aggregate.hpp>
 
-#include <mongocxx/private/config/prelude.hh>
-
 namespace mongocxx {
 namespace v_noabi {
 
@@ -56,5 +54,3 @@ inline void append_aggregate_options(
 }
 } // namespace v_noabi
 } // namespace mongocxx
-
-#include <mongocxx/private/config/postlude.hh>

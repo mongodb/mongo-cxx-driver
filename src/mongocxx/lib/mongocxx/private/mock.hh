@@ -28,8 +28,6 @@
 
 #include <bsoncxx/stdx/type_traits.hpp>
 
-#include <mongocxx/private/config/prelude.hh>
-
 namespace mongocxx {
 namespace test_util {
 
@@ -187,5 +185,3 @@ class mock<R(MONGOCXX_ABI_CDECL*)(Args...)> {
 
 } // namespace test_util
 } // namespace mongocxx
-
-#include <mongocxx/private/config/postlude.hh>

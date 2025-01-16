@@ -20,8 +20,6 @@
 #include <bsoncxx/stdx/operators.hpp>
 #include <bsoncxx/stdx/optional.hpp>
 
-#include <bsoncxx/private/config/prelude.hh>
-
 #include <bsoncxx/test/to_string.hh>
 
 #include <catch2/catch_test_macros.hpp> // TEST_CASE, SECTION, CHECK, etc.
@@ -148,5 +146,3 @@ struct StringMaker<bsoncxx::detail::strong_ordering> {
 };
 
 } // namespace Catch
-
-#include <bsoncxx/private/config/postlude.hh>

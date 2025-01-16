@@ -23,7 +23,6 @@
 #include <mongocxx/client_session.hpp>
 #include <mongocxx/pipeline.hpp>
 
-#include <mongocxx/private/config/prelude.hh>
 #include <mongocxx/private/libmongoc.hh>
 
 namespace mongocxx {
@@ -87,5 +86,3 @@ class operation_runner {
 
 } // namespace spec
 } // namespace mongocxx
-
-#include <mongocxx/private/config/postlude.hh>

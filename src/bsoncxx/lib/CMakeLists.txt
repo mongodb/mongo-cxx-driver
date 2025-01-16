@@ -90,8 +90,6 @@ set_dist_list(src_bsoncxx_lib_DIST
     ${bsoncxx_sources_v1}
     bsoncxx/private/b64_ntop.hh
     bsoncxx/private/config/config.hh.in
-    bsoncxx/private/config/postlude.hh
-    bsoncxx/private/config/prelude.hh
     bsoncxx/private/export.hh
     bsoncxx/private/helpers.hh
     bsoncxx/private/itoa.hh

@@ -30,7 +30,6 @@
 #include <mongocxx/options/index_view.hpp>
 
 #include <mongocxx/private/client_session.hh>
-#include <mongocxx/private/config/prelude.hh>
 #include <mongocxx/private/libbson.hh>
 #include <mongocxx/private/libmongoc.hh>
 
@@ -276,5 +275,3 @@ class index_view::impl {
 
 } // namespace v_noabi
 } // namespace mongocxx
-
-#include <mongocxx/private/config/postlude.hh>

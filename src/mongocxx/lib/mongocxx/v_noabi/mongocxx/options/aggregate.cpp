@@ -17,7 +17,6 @@
 #include <mongocxx/options/aggregate.hpp>
 
 #include <mongocxx/private/append_aggregate_options.hh>
-#include <mongocxx/private/config/prelude.hh>
 #include <mongocxx/private/read_preference.hh>
 
 namespace mongocxx {

@@ -21,7 +21,6 @@
 
 #include <bsoncxx/private/libbson.hh>
 
-#include <mongocxx/private/config/prelude.hh>
 #include <mongocxx/private/export.hh>
 
 namespace mongocxx {
@@ -161,5 +160,3 @@ class scoped_bson_t {
 
 } // namespace libbson
 } // namespace mongocxx
-
-#include <mongocxx/private/config/postlude.hh>

@@ -22,8 +22,6 @@
 #include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/options/change_stream.hpp>
 
-#include <mongocxx/private/config/prelude.hh>
-
 namespace mongocxx {
 namespace v_noabi {
 namespace options {

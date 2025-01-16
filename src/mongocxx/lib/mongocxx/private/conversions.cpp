@@ -14,7 +14,6 @@
 
 #include <mongocxx/v1/detail/macros.hpp>
 
-#include <mongocxx/private/config/prelude.hh>
 #include <mongocxx/private/conversions.hh>
 
 namespace mongocxx {

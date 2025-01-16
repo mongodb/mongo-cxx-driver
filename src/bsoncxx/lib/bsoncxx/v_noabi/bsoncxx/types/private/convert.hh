@@ -19,7 +19,6 @@
 #include <bsoncxx/types.hpp>
 #include <bsoncxx/types/bson_value/view.hpp>
 
-#include <bsoncxx/private/config/prelude.hh>
 #include <bsoncxx/private/libbson.hh>
 #include <bsoncxx/private/suppress_deprecation_warnings.hh>
 
@@ -326,5 +325,3 @@ inline void convert_from_libbson(bson_value_t const* v, b_array* out) {
 } // namespace types
 } // namespace v_noabi
 } // namespace bsoncxx
-
-#include <bsoncxx/private/config/postlude.hh>

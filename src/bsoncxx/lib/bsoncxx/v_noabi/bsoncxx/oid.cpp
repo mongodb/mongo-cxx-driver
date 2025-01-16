@@ -18,7 +18,6 @@
 #include <bsoncxx/exception/exception.hpp>
 #include <bsoncxx/oid.hpp>
 
-#include <bsoncxx/private/config/prelude.hh>
 #include <bsoncxx/private/libbson.hh>
 
 namespace bsoncxx {

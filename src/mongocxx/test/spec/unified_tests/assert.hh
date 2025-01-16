@@ -18,8 +18,6 @@
 
 #include <bsoncxx/types/bson_value/view_or_value.hpp>
 
-#include <mongocxx/private/config/prelude.hh>
-
 namespace mongocxx {
 namespace assert {
 
@@ -32,5 +30,3 @@ void matches(
 
 } // namespace assert
 } // namespace mongocxx
-
-#include <mongocxx/private/config/postlude.hh>

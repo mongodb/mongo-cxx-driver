@@ -18,8 +18,6 @@
 
 #include <mongocxx/hint.hpp>
 
-#include <mongocxx/private/config/prelude.hh>
-
 using bsoncxx::v_noabi::builder::concatenate;
 using bsoncxx::v_noabi::builder::basic::kvp;
 using bsoncxx::v_noabi::builder::basic::sub_document;

@@ -14,7 +14,6 @@
 
 #include <mongocxx/events/server_opening_event.hpp>
 
-#include <mongocxx/private/config/prelude.hh>
 #include <mongocxx/private/libmongoc.hh>
 
 namespace mongocxx {

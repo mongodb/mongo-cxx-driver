@@ -189,8 +189,6 @@ set_dist_list(src_mongocxx_lib_DIST
     mongocxx/private/client.hh
     mongocxx/private/collection.hh
     mongocxx/private/config/config.hh.in
-    mongocxx/private/config/postlude.hh
-    mongocxx/private/config/prelude.hh
     mongocxx/private/conversions.hh
     mongocxx/private/cursor.hh
     mongocxx/private/database.hh

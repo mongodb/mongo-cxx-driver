@@ -14,7 +14,6 @@
 
 #include <mongocxx/options/distinct.hpp>
 
-#include <mongocxx/private/config/prelude.hh>
 #include <mongocxx/private/read_preference.hh>
 
 namespace mongocxx {

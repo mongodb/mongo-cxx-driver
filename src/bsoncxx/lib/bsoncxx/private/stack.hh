@@ -18,8 +18,6 @@
 #include <memory>
 #include <type_traits>
 
-#include <bsoncxx/private/config/prelude.hh>
-
 namespace bsoncxx {
 
 // Note: This stack is only intended for use with the 'frame' type in
@@ -161,5 +159,3 @@ class stack {
 };
 
 } // namespace bsoncxx
-
-#include <bsoncxx/private/config/postlude.hh>

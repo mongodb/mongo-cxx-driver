@@ -23,8 +23,6 @@
 #include <mongocxx/client.hpp>
 #include <mongocxx/uri.hpp>
 
-#include <mongocxx/private/config/prelude.hh>
-
 #include <mongocxx/test/spec/operation.hh>
 
 namespace mongocxx {
@@ -126,5 +124,3 @@ void run_crud_tests_in_file(std::string const& test_path, uri test_uri = uri{});
 
 } // namespace spec
 } // namespace mongocxx
-
-#include <mongocxx/private/config/postlude.hh>

@@ -16,7 +16,6 @@
 
 #include <mongocxx/read_preference.hpp>
 
-#include <mongocxx/private/config/prelude.hh>
 #include <mongocxx/private/libmongoc.hh>
 
 namespace mongocxx {
@@ -41,5 +40,3 @@ class read_preference::impl {
 
 } // namespace v_noabi
 } // namespace mongocxx
-
-#include <mongocxx/private/config/postlude.hh>

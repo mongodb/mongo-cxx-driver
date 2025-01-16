@@ -18,8 +18,6 @@
 
 #include <mongocxx/pipeline.hpp>
 
-#include <mongocxx/private/config/prelude.hh>
-
 namespace mongocxx {
 namespace v_noabi {
 
@@ -46,5 +44,3 @@ class pipeline::impl {
 
 } // namespace v_noabi
 } // namespace mongocxx
-
-#include <mongocxx/private/config/postlude.hh>

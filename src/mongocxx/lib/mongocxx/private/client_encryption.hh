@@ -33,7 +33,6 @@
 #include <bsoncxx/private/libbson.hh>
 
 #include <mongocxx/private/client.hh>
-#include <mongocxx/private/config/prelude.hh>
 #include <mongocxx/private/cursor.hh>
 #include <mongocxx/private/libbson.hh>
 #include <mongocxx/private/libmongoc.hh>
@@ -364,5 +363,3 @@ class client_encryption::impl {
 
 } // namespace v_noabi
 } // namespace mongocxx
-
-#include <mongocxx/private/config/postlude.hh>

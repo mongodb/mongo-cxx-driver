@@ -23,8 +23,6 @@
 
 #include <bsoncxx/stdx/string_view.hpp>
 
-#include <bsoncxx/private/config/prelude.hh>
-
 #include <bsoncxx/test/catch.hh>
 
 namespace bsoncxx {
@@ -101,5 +99,3 @@ struct exception_guard_state {
 
 } // namespace test
 } // namespace bsoncxx
-
-#include <bsoncxx/private/config/postlude.hh>

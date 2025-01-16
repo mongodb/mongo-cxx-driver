@@ -11,7 +11,6 @@
 
 #include <mongocxx/private/append_aggregate_options.hh>
 #include <mongocxx/private/client_session.hh>
-#include <mongocxx/private/config/prelude.hh>
 #include <mongocxx/private/libbson.hh>
 #include <mongocxx/private/libmongoc.hh>
 
@@ -205,5 +204,3 @@ class search_index_view::impl {
 
 } // namespace v_noabi
 } // namespace mongocxx
-
-#include <mongocxx/private/config/postlude.hh>

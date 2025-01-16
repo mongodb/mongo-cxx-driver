@@ -34,7 +34,6 @@
 // TODO: CXX-1366 Disable MSVC warnings for libmongoc
 #endif
 
-#include <mongocxx/private/config/prelude.hh>
 #include <mongocxx/private/export.hh>
 #include <mongocxx/private/mock.hh>
 
@@ -82,5 +81,3 @@ constexpr auto log_set_handler = mongoc_log_set_handler;
 
 } // namespace libmongoc
 } // namespace mongocxx
-
-#include <mongocxx/private/config/postlude.hh>

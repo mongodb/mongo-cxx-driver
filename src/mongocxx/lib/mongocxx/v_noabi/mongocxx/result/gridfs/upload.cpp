@@ -16,8 +16,6 @@
 
 #include <mongocxx/result/gridfs/upload.hpp>
 
-#include <mongocxx/private/config/prelude.hh>
-
 namespace mongocxx {
 namespace v_noabi {
 namespace result {

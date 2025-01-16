@@ -17,7 +17,6 @@
 #include <cstddef>
 #include <cstdint>
 
-#include <bsoncxx/private/config/prelude.hh>
 #include <bsoncxx/private/export.hh>
 
 namespace bsoncxx {
@@ -58,5 +57,3 @@ class itoa {
 };
 
 } // namespace bsoncxx
-
-#include <bsoncxx/private/config/postlude.hh>

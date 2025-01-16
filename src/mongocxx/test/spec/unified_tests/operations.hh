@@ -22,8 +22,6 @@
 #include <bsoncxx/document/value.hpp>
 #include <bsoncxx/document/view.hpp>
 
-#include <mongocxx/private/config/prelude.hh>
-
 #include <mongocxx/test/spec/monitoring.hh>
 
 namespace mongocxx {
@@ -46,5 +44,3 @@ bsoncxx::stdx::optional<read_preference> lookup_read_preference(bsoncxx::documen
 
 } // namespace operations
 } // namespace mongocxx
-
-#include <mongocxx/private/config/postlude.hh>

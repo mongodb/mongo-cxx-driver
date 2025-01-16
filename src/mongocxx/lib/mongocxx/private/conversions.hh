@@ -16,7 +16,6 @@
 
 #include <mongocxx/read_preference.hpp>
 
-#include <mongocxx/private/config/prelude.hh>
 #include <mongocxx/private/export.hh>
 #include <mongocxx/private/libmongoc.hh>
 
@@ -33,5 +32,3 @@ read_mode_from_read_mode_t(mongoc_read_mode_t read_mode);
 } // namespace conversions
 } // namespace libmongoc
 } // namespace mongocxx
-
-#include <mongocxx/private/config/postlude.hh>

@@ -19,7 +19,6 @@
 #include <mongocxx/options/apm.hpp>
 #include <mongocxx/options/server_api.hpp>
 
-#include <mongocxx/private/config/prelude.hh>
 #include <mongocxx/private/libmongoc.hh>
 
 namespace mongocxx {
@@ -59,5 +58,3 @@ inline unique_server_api make_server_api(server_api const& opts) {
 } // namespace options
 } // namespace v_noabi
 } // namespace mongocxx
-
-#include <mongocxx/private/config/postlude.hh>

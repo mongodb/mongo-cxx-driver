@@ -32,7 +32,6 @@
 #include <mongocxx/collection.hpp>
 #include <mongocxx/options/client.hpp>
 
-#include <mongocxx/private/config/prelude.hh>
 #include <mongocxx/private/libmongoc.hh>
 
 #include <bsoncxx/test/catch.hh>
@@ -249,5 +248,3 @@ std::string getenv_or_fail(const std::string env_name);
 
 } // namespace test_util
 } // namespace mongocxx
-
-#include <mongocxx/private/config/postlude.hh>

@@ -27,7 +27,6 @@
 #include <bsoncxx/private/make_unique.hh>
 
 #include <mongocxx/private/client.hh>
-#include <mongocxx/private/config/prelude.hh>
 #include <mongocxx/private/pool.hh>
 #include <mongocxx/private/uri.hh>
 

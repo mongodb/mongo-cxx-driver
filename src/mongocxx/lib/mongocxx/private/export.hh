@@ -14,10 +14,6 @@
 
 #pragma once
 
-#include <mongocxx/v1/config/export.hpp>
-
-#include <mongocxx/private/config/prelude.hh>
-
 // See src/bsoncxx/lib/bsoncxx/private/export.hh for an explanation of
 // the purpose of this header.
 
@@ -28,5 +24,3 @@
 #define MONGOCXX_ABI_EXPORT_TESTING
 #define MONGOCXX_ABI_EXPORT_CDECL_TESTING(...) __VA_ARGS__
 #endif
-
-#include <mongocxx/private/config/postlude.hh>

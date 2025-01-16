@@ -14,10 +14,6 @@
 
 #pragma once
 
-#include <bsoncxx/v1/config/export.hpp>
-
-#include <bsoncxx/private/config/prelude.hh>
-
 // The BSONCXX_TESTING macro is intended to be used for exporting symbols for testing which are not
 // normally exported as part of the bsoncxx library.  We currently use this workaround in lieu of
 // linking standalone unit tests, in order to expose private symbols for unit testing when we build
@@ -30,5 +26,3 @@
 #define BSONCXX_ABI_EXPORT_TESTING
 #define BSONCXX_ABI_EXPORT_CDECL_TESTING(...) __VA_ARGS__
 #endif
-
-#include <bsoncxx/private/config/postlude.hh>
