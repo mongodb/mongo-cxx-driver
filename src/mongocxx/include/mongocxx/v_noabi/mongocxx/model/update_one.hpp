@@ -143,6 +143,17 @@ class update_one {
     hint() const;
 
     ///
+    /// Set the sort option.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(update_one&) sort(bsoncxx::v_noabi::document::view_or_value sort);
+
+    ///
+    /// Get the current value of the sort option.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const&)
+    sort() const;
+
+    ///
     /// Sets the upsert option.
     ///
     /// When upsert is @c false, if no document matches the filter, update does nothing.
@@ -196,6 +207,7 @@ class update_one {
     bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::array::view_or_value> _array_filters;
     bsoncxx::v_noabi::stdx::optional<bool> _upsert;
     bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::hint> _hint;
+    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> _sort;
 };
 
 } // namespace model
