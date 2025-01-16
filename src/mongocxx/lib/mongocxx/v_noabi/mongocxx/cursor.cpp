@@ -20,7 +20,7 @@
 #include <bsoncxx/private/make_unique.hh>
 
 #include <mongocxx/private/cursor.hh>
-#include <mongocxx/private/libmongoc.hh>
+#include <mongocxx/private/mongoc.hh>
 
 namespace mongocxx {
 namespace v_noabi {

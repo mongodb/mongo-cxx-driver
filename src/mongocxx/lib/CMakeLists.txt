@@ -15,7 +15,7 @@
 set(mongocxx_sources_private
     mongocxx/private/bson.cpp
     mongocxx/private/conversions.cpp
-    mongocxx/private/libmongoc.cpp
+    mongocxx/private/mongoc.cpp
     mongocxx/private/numeric_casting.cpp
 )
 
@@ -195,9 +195,8 @@ set_dist_list(src_mongocxx_lib_DIST
     mongocxx/private/database.hh
     mongocxx/private/export.hh
     mongocxx/private/index_view.hh
-    mongocxx/private/libmongoc_symbols.hh
-    mongocxx/private/libmongoc.hh
     mongocxx/private/mock.hh
+    mongocxx/private/mongoc.hh
     mongocxx/private/numeric_casting.hh
     mongocxx/private/pipeline.hh
     mongocxx/private/pool.hh

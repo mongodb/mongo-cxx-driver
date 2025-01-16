@@ -12,7 +12,7 @@
 #include <mongocxx/private/append_aggregate_options.hh>
 #include <mongocxx/private/bson.hh>
 #include <mongocxx/private/client_session.hh>
-#include <mongocxx/private/libmongoc.hh>
+#include <mongocxx/private/mongoc.hh>
 
 namespace mongocxx {
 namespace v_noabi {

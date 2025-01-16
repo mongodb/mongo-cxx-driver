@@ -39,7 +39,7 @@
 #include <bsoncxx/private/make_unique.hh>
 
 #include <mongocxx/private/bson.hh>
-#include <mongocxx/private/libmongoc.hh>
+#include <mongocxx/private/mongoc.hh>
 
 #include <bsoncxx/test/catch.hh>
 #include <bsoncxx/test/exception_guard.hh>

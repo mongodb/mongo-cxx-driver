@@ -19,7 +19,7 @@
 #include <mongocxx/exception/operation_exception.hpp>
 #include <mongocxx/exception/server_error_code.hpp>
 
-#include <mongocxx/private/libmongoc.hh>
+#include <mongocxx/private/mongoc.hh>
 
 namespace mongocxx {
 namespace v_noabi {

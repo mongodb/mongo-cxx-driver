@@ -20,7 +20,7 @@
 #include <mongocxx/instance.hpp>
 #include <mongocxx/write_concern.hpp>
 
-#include <mongocxx/private/libmongoc.hh>
+#include <mongocxx/private/mongoc.hh>
 
 #include <bsoncxx/test/catch.hh>
 

@@ -23,7 +23,7 @@
 #include <mongocxx/client_session.hpp>
 #include <mongocxx/pipeline.hpp>
 
-#include <mongocxx/private/libmongoc.hh>
+#include <mongocxx/private/mongoc.hh>
 
 namespace mongocxx {
 namespace spec {

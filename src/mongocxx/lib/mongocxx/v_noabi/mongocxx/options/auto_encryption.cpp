@@ -20,7 +20,7 @@
 
 #include <mongocxx/private/bson.hh>
 #include <mongocxx/private/client.hh>
-#include <mongocxx/private/libmongoc.hh>
+#include <mongocxx/private/mongoc.hh>
 #include <mongocxx/private/pool.hh>
 
 namespace mongocxx {

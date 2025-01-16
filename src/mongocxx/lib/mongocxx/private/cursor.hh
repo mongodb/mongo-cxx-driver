@@ -19,7 +19,7 @@
 
 #include <mongocxx/cursor.hpp>
 
-#include <mongocxx/private/libmongoc.hh>
+#include <mongocxx/private/mongoc.hh>
 
 namespace mongocxx {
 namespace v_noabi {

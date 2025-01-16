@@ -20,7 +20,7 @@
 
 #include <bsoncxx/private/make_unique.hh>
 
-#include <mongocxx/private/libmongoc.hh>
+#include <mongocxx/private/mongoc.hh>
 #include <mongocxx/private/read_concern.hh>
 #include <mongocxx/private/read_preference.hh>
 #include <mongocxx/private/uri.hh>

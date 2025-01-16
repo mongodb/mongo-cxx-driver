@@ -22,7 +22,7 @@
 
 #include <mongocxx/private/bson.hh>
 #include <mongocxx/private/conversions.hh>
-#include <mongocxx/private/libmongoc.hh>
+#include <mongocxx/private/mongoc.hh>
 #include <mongocxx/private/read_preference.hh>
 
 namespace mongocxx {

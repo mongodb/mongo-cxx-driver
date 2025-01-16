@@ -17,7 +17,7 @@
 #include <mongocxx/read_preference.hpp>
 
 #include <mongocxx/private/export.hh>
-#include <mongocxx/private/libmongoc.hh>
+#include <mongocxx/private/mongoc.hh>
 
 namespace mongocxx {
 namespace libmongoc {

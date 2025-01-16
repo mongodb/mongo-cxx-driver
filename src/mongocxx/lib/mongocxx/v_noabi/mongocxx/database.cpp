@@ -32,7 +32,7 @@
 #include <mongocxx/private/client.hh>
 #include <mongocxx/private/client_session.hh>
 #include <mongocxx/private/database.hh>
-#include <mongocxx/private/libmongoc.hh>
+#include <mongocxx/private/mongoc.hh>
 #include <mongocxx/private/pipeline.hh>
 #include <mongocxx/private/read_concern.hh>
 #include <mongocxx/private/read_preference.hh>

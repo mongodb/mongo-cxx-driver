@@ -21,7 +21,7 @@
 #include <mongocxx/options/encrypt.hpp>
 
 #include <mongocxx/private/bson.hh>
-#include <mongocxx/private/libmongoc.hh>
+#include <mongocxx/private/mongoc.hh>
 #include <mongocxx/private/scoped_bson_value.hh>
 
 namespace mongocxx {

@@ -12,30 +12,25 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "libmongoc.hh"
+#include <mongocxx/private/mongoc.hh>
 
 namespace mongocxx {
 namespace libmongoc {
 
 #ifdef MONGOCXX_TESTING
 
-#if defined(__GNUC__) && (__GNUC__ >= 6) && !defined(__clang__)
-// See libmongoc.hh for details on this diagnostic suppression
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wignored-attributes"
-#endif
+SILENCE_IGNORED_ATTRIBUTES_BEGIN();
 
-#define MONGOCXX_LIBMONGOC_SYMBOL(name) \
+#pragma push_macro("X")
+#define X(name) \
     test_util::mock<decltype(&mongoc_##name)>& name = *new test_util::mock<decltype(&mongoc_##name)>(mongoc_##name);
-#include "libmongoc_symbols.hh"
-#undef MONGOCXX_LIBMONGOC_SYMBOL
+MONGOC_SYMBOLS_XMACRO(X)
+#pragma pop_macro("X")
 
 mongocxx::test_util::mock<log_set_handler_cdecl_t>& log_set_handler =
     *new test_util::mock<log_set_handler_cdecl_t>(mongoc_log_set_handler);
 
-#if defined(__GNUC__) && (__GNUC__ >= 6) && !defined(__clang__)
-#pragma GCC diagnostic pop
-#endif
+SILENCE_IGNORED_ATTRIBUTES_END();
 
 #endif // MONGOCXX_TESTING
 

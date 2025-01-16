@@ -28,7 +28,7 @@
 #include <bsoncxx/private/make_unique.hh>
 
 #include <mongocxx/private/config/config.hh>
-#include <mongocxx/private/libmongoc.hh>
+#include <mongocxx/private/mongoc.hh>
 
 #if !defined(__has_feature)
 #define __has_feature(x) 0
