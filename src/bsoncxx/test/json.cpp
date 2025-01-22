@@ -62,7 +62,7 @@ TEST_CASE("empty array is converted correctly to json string") {
     using bsoncxx::to_json;
 
     auto doc = make_document(kvp("array", make_array()));
-    REQUIRE(to_json(doc.view()) == R"({ "array" : [  ] })");
+    REQUIRE(to_json(doc.view()) == R"({ "array" : [ ] })");
 }
 
 TEST_CASE("CXX-941 is resolved") {
