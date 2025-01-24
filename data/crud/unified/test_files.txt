@@ -18,6 +18,7 @@ bulkWrite-insertOne-dots_and_dollars.json
 bulkWrite-replaceOne-dots_and_dollars.json
 bulkWrite-replaceOne-hint-unacknowledged.json
 bulkWrite-replaceOne-let.json
+bulkWrite-replaceOne-sort.json
 bulkWrite-update-hint-clientError.json
 bulkWrite-update-hint-serverError.json
 bulkWrite-update-hint.json
@@ -28,6 +29,9 @@ bulkWrite-updateMany-let.json
 bulkWrite-updateOne-dots_and_dollars.json
 bulkWrite-updateOne-hint-unacknowledged.json
 bulkWrite-updateOne-let.json
+bulkWrite-updateOne-sort.json
+client-bulkWrite-replaceOne-sort.json
+client-bulkWrite-updateOne-sort.json
 countDocuments-comment.json
 db-aggregate-write-readPreference.json
 db-aggregate.json
@@ -81,6 +85,7 @@ replaceOne-dots_and_dollars.json
 replaceOne-hint-unacknowledged.json
 replaceOne-hint.json
 replaceOne-let.json
+replaceOne-sort.json
 replaceOne-validation.json
 updateMany-comment.json
 updateMany-dots_and_dollars.json
@@ -97,5 +102,6 @@ updateOne-hint-serverError.json
 updateOne-hint-unacknowledged.json
 updateOne-hint.json
 updateOne-let.json
+updateOne-sort.json
 updateOne-validation.json
 updateWithPipelines.json

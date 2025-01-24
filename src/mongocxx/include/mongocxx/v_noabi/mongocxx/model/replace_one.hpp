@@ -128,6 +128,17 @@ class replace_one {
     MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::hint> const&)
     hint() const;
 
+    ///
+    /// Set the sort option.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(replace_one&) sort(bsoncxx::v_noabi::document::view_or_value sort);
+
+    ///
+    /// Get the current value of the sort option.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const&)
+    sort() const;
+
    private:
     bsoncxx::v_noabi::document::view_or_value _filter;
     bsoncxx::v_noabi::document::view_or_value _replacement;
@@ -135,6 +146,7 @@ class replace_one {
     bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> _collation;
     bsoncxx::v_noabi::stdx::optional<bool> _upsert;
     bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::hint> _hint;
+    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> _sort;
 };
 
 } // namespace model

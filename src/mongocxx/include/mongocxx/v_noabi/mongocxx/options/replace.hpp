@@ -185,6 +185,17 @@ class replace {
     let() const;
 
     ///
+    /// Set the sort option.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(replace&) sort(bsoncxx::v_noabi::document::view_or_value sort);
+
+    ///
+    /// Get the current value of the sort option.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const&)
+    sort() const;
+
+    ///
     /// Set the value of the comment option.
     ///
     /// @param comment
@@ -214,6 +225,7 @@ class replace {
     bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern> _write_concern;
     bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::hint> _hint;
     bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> _let;
+    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> _sort;
     bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value> _comment;
 };
 
