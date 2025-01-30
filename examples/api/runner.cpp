@@ -179,26 +179,31 @@ class runner_type {
 
         run_with_jobs(components_with_instance, jobs);
 
+        mongocxx::client client{mongocxx::uri{"mongodb://localhost:27017/"}};
+
+        bsoncxx::stdx::optional<bsoncxx::document::value> reply_opt;
+
         try {
-            mongocxx::client client{mongocxx::uri{"mongodb://localhost:27017/"}};
-
-            auto const reply = client["admin"].run_command(bsoncxx::from_json(R"({"isMaster": 1})"));
-
-            if (reply["msg"]) {
-                std::cout << "Running API examples against a live sharded server" << std::endl;
-                run_with_jobs(components_for_sharded, jobs);
-                run_with_jobs(components_for_replica, jobs);
-                run_with_jobs(components_for_single, jobs);
-            } else if (reply["setName"]) {
-                std::cout << "Running API examples against a live replica server" << std::endl;
-                run_with_jobs(components_for_replica, jobs);
-                run_with_jobs(components_for_single, jobs);
-            } else {
-                std::cout << "Running API examples against a live single server" << std::endl;
-                run_with_jobs(components_for_single, jobs);
-            }
+            reply_opt.emplace(client["admin"].run_command(bsoncxx::from_json(R"({"isMaster": 1})")));
         } catch (mongocxx::exception const& ex) {
             std::cout << "Skipping API examples that require a live server: " << ex.what() << std::endl;
+            return;
+        }
+
+        auto const& reply = *reply_opt;
+
+        if (reply["msg"]) {
+            std::cout << "Running API examples against a live sharded server" << std::endl;
+            run_with_jobs(components_for_sharded, jobs);
+            run_with_jobs(components_for_replica, jobs);
+            run_with_jobs(components_for_single, jobs);
+        } else if (reply["setName"]) {
+            std::cout << "Running API examples against a live replica server" << std::endl;
+            run_with_jobs(components_for_replica, jobs);
+            run_with_jobs(components_for_single, jobs);
+        } else {
+            std::cout << "Running API examples against a live single server" << std::endl;
+            run_with_jobs(components_for_single, jobs);
         }
     }
 
