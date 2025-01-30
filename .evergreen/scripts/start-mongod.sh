@@ -35,6 +35,9 @@ export PATH="${MONGODB_BINARIES:?}:${PATH:-}"
 echo "{ \"releases\": { \"default\": \"${MONGODB_BINARIES:?}\" }}" >"${MONGO_ORCHESTRATION_HOME:?}/orchestration.config"
 ./.evergreen/run-orchestration.sh
 
+# MacOS needs some assistance to ensure executable permissions(?).
+chmod +x ${MONGODB_BINARIES:?}/*
+
 declare mongosh_binary
 if command -v mongosh >/dev/null; then
   mongosh_binary="mongosh"
@@ -45,6 +48,7 @@ else
   exit 1
 fi
 : "${mongosh_binary:?}"
+"${mongosh_binary:?}" --version
 
 # Ensure server on port 27017 is the primary server.
 if [[ "${TOPOLOGY:-}" == replica_set ]]; then
