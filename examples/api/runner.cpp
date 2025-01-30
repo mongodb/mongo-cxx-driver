@@ -482,7 +482,11 @@ void runner_register_forking_component(void (*fn)(), char const* name) {
     runner.add_forking_component(fn, name);
 }
 
-int EXAMPLES_CDECL main(int argc, char** argv) {
+int EXAMPLES_CDECL main(int argc, char** argv)
+#if defined(_MSC_VER)
+    try
+#endif
+{
     bool set_seed = false;
     bool set_jobs = false;
     bool set_use_fork = false;
@@ -534,3 +538,12 @@ int EXAMPLES_CDECL main(int argc, char** argv) {
 
     return runner.run(); // Return directly from forked processes.
 }
+#if defined(_MSC_VER)
+catch (std::exception const& ex) {
+    std::cerr << "API runner failed due to uncaught exception: " << ex.what() << std::endl;
+    return EXIT_FAILURE;
+} catch (...) {
+    std::cerr << "API runner failed due to an uncaught exception" << std::endl;
+    return EXIT_FAILURE;
+}
+#endif
