@@ -23,6 +23,12 @@ message(STATUS "bsoncxx version: ${BSONCXX_VERSION}")
 option(BSONCXX_POLY_USE_IMPLS "Use bsoncxx implementations for stdx polyfills" OFF)
 option(BSONCXX_POLY_USE_STD "Use C++17 std library for stdx polyfills" OFF)
 
+option(BSONCXX_API_OVERRIDE_DEFAULT_ABI "The default ABI namespace to use for root namespace redeclarations" OFF)
+mark_as_advanced(BSONCXX_API_OVERRIDE_DEFAULT_ABI)
+if(BSONCXX_API_OVERRIDE_DEFAULT_ABI)
+    message(WARNING "BSONCXX_API_OVERRIDE_DEFAULT_ABI is an experimental feature")
+endif()
+
 set(BSONCXX_OUTPUT_BASENAME "bsoncxx" CACHE STRING "Output bsoncxx library base name")
 
 # Count how many polyfill options are true-ish

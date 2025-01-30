@@ -117,6 +117,10 @@ function(bsoncxx_add_library TARGET OUTPUT_NAME LINK_TYPE)
         DEFINE_SYMBOL BSONCXX_EXPORT
     )
 
+    if(BSONCXX_API_OVERRIDE_DEFAULT_ABI)
+        target_compile_definitions(${TARGET} PUBLIC BSONCXX_API_OVERRIDE_DEFAULT_ABI)
+    endif()
+
     if(ENABLE_ABI_TAG_IN_LIBRARY_FILENAMES)
         set_target_properties(${TARGET} PROPERTIES OUTPUT_NAME ${OUTPUT_NAME}${abi_tag})
     else()
