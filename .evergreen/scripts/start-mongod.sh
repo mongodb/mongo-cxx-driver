@@ -16,12 +16,6 @@ if [ ! -d "drivers-evergreen-tools" ]; then
 fi
 cd drivers-evergreen-tools
 
-# The legacy shell is only present in server 5.0 builds and earlier,
-# but there is no 5.0 build for RHEL9, so we have to avoid it
-if [[ "${build_variant}" =~ "rhel9" ]]; then
-  export SKIP_LEGACY_SHELL=1
-fi
-
 DRIVERS_TOOLS="$(pwd)"
 if [ "Windows_NT" == "$OS" ]; then
   DRIVERS_TOOLS="$(cygpath -m "${DRIVERS_TOOLS:?}")"
@@ -40,6 +34,21 @@ export PATH="${MONGODB_BINARIES:?}:${PATH:-}"
 
 echo "{ \"releases\": { \"default\": \"${MONGODB_BINARIES:?}\" }}" >"${MONGO_ORCHESTRATION_HOME:?}/orchestration.config"
 ./.evergreen/run-orchestration.sh
+
+# MacOS needs some assistance to ensure executable permissions(?).
+chmod +x ${MONGODB_BINARIES:?}/*
+
+declare mongosh_binary
+if command -v mongosh >/dev/null; then
+  mongosh_binary="mongosh"
+elif command -v mongo >/dev/null; then
+  mongosh_binary="mongo"
+else
+  echo "could not find a MongoDB Shell binary to use" 1>&2
+  exit 1
+fi
+: "${mongosh_binary:?}"
+"${mongosh_binary:?}" --version
 
 # Ensure server on port 27017 is the primary server.
 if [[ "${TOPOLOGY:-}" == replica_set ]]; then
@@ -63,13 +72,12 @@ if [[ "${TOPOLOGY:-}" == replica_set ]]; then
     "let c = rs.conf()" \
     "c.members.find((m) => m.host.includes('27017')).priority = 10" \
     "rs.reconfig(c)"
-
-  mongosh --quiet "${uri:?}" --eval "${script:?}"
+  "${mongosh_binary:?}" --quiet "${uri:?}" --eval "${script:?}"
 
   # Wait up to a minute for member on port 27017 to become primary.
   wait_for_primary() {
     for _ in $(seq 60); do
-      if mongosh --quiet "${uri:?}" --eval "quit(rs.hello().primary.includes('27017') ? 0 : 1)"; then
+      if "${mongosh_binary:?}" --quiet "${uri:?}" --eval "quit(rs.hello().primary.includes('27017') ? 0 : 1)"; then
         return 0
       else
         sleep 1
