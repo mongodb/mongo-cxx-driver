@@ -23,6 +23,12 @@ message(STATUS "mongocxx version: ${MONGOCXX_VERSION}")
 option(MONGOCXX_ENABLE_SSL "Enable SSL - if the underlying C driver offers it" ON)
 option(MONGOCXX_ENABLE_SLOW_TESTS "Run slow tests when invoking the the test target" OFF)
 
+option(MONGOCXX_API_OVERRIDE_DEFAULT_ABI "The default ABI namespace to use for root namespace redeclarations" OFF)
+mark_as_advanced(MONGOCXX_API_OVERRIDE_DEFAULT_ABI)
+if(MONGOCXX_API_OVERRIDE_DEFAULT_ABI)
+    message(WARNING "MONGOCXX_API_OVERRIDE_DEFAULT_ABI is an experimental feature")
+endif ()
+
 set(MONGOCXX_OUTPUT_BASENAME "mongocxx" CACHE STRING "Output mongocxx library base name")
 
 set(MONGOCXX_PKG_DEP "") # Required by mongocxx-config.cmake.in.

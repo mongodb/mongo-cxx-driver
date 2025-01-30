@@ -34,12 +34,25 @@ using v1::stdx::optional;
 namespace bsoncxx {
 namespace stdx {
 
+#if defined(BSONCXX_API_OVERRIDE_DEFAULT_ABI)
+
+using v1::stdx::in_place;
+using v1::stdx::in_place_t;
+using v1::stdx::make_optional;
+using v1::stdx::nullopt;
+using v1::stdx::nullopt_t;
+using v1::stdx::optional;
+
+#else
+
 using v_noabi::stdx::in_place;
 using v_noabi::stdx::in_place_t;
 using v_noabi::stdx::make_optional;
 using v_noabi::stdx::nullopt;
 using v_noabi::stdx::nullopt_t;
 using v_noabi::stdx::optional;
+
+#endif // defined(BSONCXX_API_OVERRIDE_DEFAULT_ABI)
 
 } // namespace stdx
 } // namespace bsoncxx

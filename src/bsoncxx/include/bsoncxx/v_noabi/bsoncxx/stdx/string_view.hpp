@@ -30,8 +30,17 @@ using v1::stdx::string_view;
 namespace bsoncxx {
 namespace stdx {
 
+#if defined(BSONCXX_API_OVERRIDE_DEFAULT_ABI)
+
+using v1::stdx::basic_string_view;
+using v1::stdx::string_view;
+
+#else
+
 using v_noabi::stdx::basic_string_view;
 using v_noabi::stdx::string_view;
+
+#endif // defined(BSONCXX_API_OVERRIDE_DEFAULT_ABI)
 
 } // namespace stdx
 } // namespace bsoncxx
