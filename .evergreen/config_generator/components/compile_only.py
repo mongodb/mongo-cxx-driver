@@ -61,6 +61,13 @@ def generate_tasks():
             if any(pattern in distro_name for pattern in ['power8', 'zseries']):
                 patchable = False
 
+            # In etc/calc_release_version.py:
+            #   error: unknown option `format=...'
+            #   usage: git tag ...
+            #      or: ...
+            if distro_name == 'rhel79':
+                patchable = False
+
             res.append(
                 EvgTask(
                     name=name,

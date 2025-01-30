@@ -168,6 +168,7 @@ tasks:
   - name: compile-only-rhel79-release-shared-impls
     run_on: rhel79-large
     tags: [compile-only, rhel79, release, shared, impls]
+    patchable: false
     commands:
       - func: setup
       - func: fetch_c_driver_source
