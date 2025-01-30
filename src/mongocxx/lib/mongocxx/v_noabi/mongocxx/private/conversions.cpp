@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <mongocxx/v1/detail/macros.hpp>
+
 #include <mongocxx/private/conversions.hh>
 
 #include <mongocxx/config/private/prelude.hh>
@@ -34,7 +36,7 @@ mongoc_read_mode_t read_mode_t_from_read_mode(read_preference::read_mode read_mo
             return MONGOC_READ_NEAREST;
     }
 
-    MONGOCXX_UNREACHABLE;
+    MONGOCXX_PRIVATE_UNREACHABLE;
 }
 
 read_preference::read_mode read_mode_from_read_mode_t(mongoc_read_mode_t read_mode) {
@@ -51,7 +53,7 @@ read_preference::read_mode read_mode_from_read_mode_t(mongoc_read_mode_t read_mo
             return read_preference::read_mode::k_nearest;
     }
 
-    MONGOCXX_UNREACHABLE;
+    MONGOCXX_PRIVATE_UNREACHABLE;
 }
 
 } // namespace conversions

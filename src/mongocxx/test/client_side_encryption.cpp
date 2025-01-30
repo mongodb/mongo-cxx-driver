@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <mongocxx/v1/detail/macros.hpp>
+
 #include <fstream>
 #include <sstream>
 #include <string>
@@ -2808,7 +2810,7 @@ std::string to_type_str(RangeFieldType field_type) {
     }
 
     FAIL("unexpected field type " << static_cast<int>(field_type));
-    MONGOCXX_UNREACHABLE;
+    MONGOCXX_PRIVATE_UNREACHABLE;
 }
 
 bsoncxx::types::bson_value::value to_field_value(int test_value, RangeFieldType field_type) {
@@ -2828,7 +2830,7 @@ bsoncxx::types::bson_value::value to_field_value(int test_value, RangeFieldType 
     }
 
     FAIL("unexpected field type " << static_cast<int>(field_type));
-    MONGOCXX_UNREACHABLE;
+    MONGOCXX_PRIVATE_UNREACHABLE;
 }
 
 options::range to_range_opts(RangeFieldType field_type) {
@@ -2874,7 +2876,7 @@ options::range to_range_opts(RangeFieldType field_type) {
     }
 
     FAIL("unexpected field type " << static_cast<int>(field_type));
-    MONGOCXX_UNREACHABLE;
+    MONGOCXX_PRIVATE_UNREACHABLE;
 }
 
 struct field_type_values {

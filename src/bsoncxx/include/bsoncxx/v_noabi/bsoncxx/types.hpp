@@ -29,8 +29,8 @@
 
 #include <bsoncxx/config/prelude.hpp>
 
-BSONCXX_PUSH_WARNINGS();
-BSONCXX_DISABLE_WARNING(GNU("-Wfloat-equal"));
+BSONCXX_PRIVATE_WARNINGS_PUSH();
+BSONCXX_PRIVATE_WARNINGS_DISABLE(GNU("-Wfloat-equal"));
 
 namespace bsoncxx {
 namespace v_noabi {
@@ -849,7 +849,7 @@ inline bool operator!=(b_maxkey const& lhs, b_maxkey const& rhs) {
 } // namespace v_noabi
 } // namespace bsoncxx
 
-BSONCXX_POP_WARNINGS();
+BSONCXX_PRIVATE_WARNINGS_POP();
 
 namespace bsoncxx {
 

@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <mongocxx/v1/detail/macros.hpp>
+
 #include <string>
 
 #include <bsoncxx/builder/basic/document.hpp>
@@ -35,7 +37,7 @@ std::string validation_level_to_string(mongocxx::v_noabi::validation_criteria::v
             return "strict";
     }
 
-    MONGOCXX_UNREACHABLE;
+    MONGOCXX_PRIVATE_UNREACHABLE;
 }
 
 // Convert validation actions to strings.
@@ -47,7 +49,7 @@ std::string validation_action_to_string(mongocxx::v_noabi::validation_criteria::
             return "error";
     }
 
-    MONGOCXX_UNREACHABLE;
+    MONGOCXX_PRIVATE_UNREACHABLE;
 }
 
 } // namespace

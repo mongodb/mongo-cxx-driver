@@ -83,8 +83,8 @@ AttributeMacros:
   - BSONCXX_ABI_NO_EXPORT
   - BSONCXX_DEPRECATED
   - BSONCXX_ENUM
-  - BSONCXX_PRAGMA
-  - BSONCXX_RETURNS
+  - BSONCXX_PRIVATE_PRAGMA
+  - BSONCXX_PRIVATE_RETURNS
   - MONGOCXX_ABI_CDECL
   - MONGOCXX_ABI_EXPORT
   - MONGOCXX_ABI_NO_EXPORT
@@ -144,24 +144,40 @@ IncludeBlocks:   Regroup
 IncludeCategories:
   - Regex: '".*"' # relative headers
     Priority: 10
-  - Regex: 'bsoncxx/config(/private)?/prelude\.(hpp|hh)' # v_noabi preludes
-    Priority: 50
-  - Regex: 'mongocxx/config(/private)?/prelude\.(hpp|hh)' # v_noabi preludes
-    Priority: 51
-  - Regex: 'bsoncxx/test/.*' # test headers
-    Priority: 60
-  - Regex: 'mongocxx/test/.*' # test headers
-    Priority: 61
-  - Regex: '<[[:alnum:]_.]+>' # system headers
+  - Regex: 'bsoncxx/v1/.*/prelude\.hpp' # v1 preludes
     Priority: 20
-  - Regex: 'bsoncxx/.*(-|\/)fwd\.(hpp|hh)' # all driver forwarding headers
+  - Regex: 'mongocxx/v1/.*/prelude\.hpp' # v1 preludes
+    Priority: 21
+  - Regex: 'bsoncxx/v1/.*(-|\/)fwd\.hpp' # v1 forward headers
+    Priority: 22
+  - Regex: 'mongocxx/v1/.*(-|\/)fwd\.hpp' # v1 forward headers
+    Priority: 23
+  - Regex: 'bsoncxx/v1/.*\.hpp' # v1 public headers
+    Priority: 24
+  - Regex: 'mongocxx/v1/.*\.hpp' # v1 public headers
+    Priority: 25
+  - Regex: 'bsoncxx/v1/.*\.hh' # v1 private headers
+    Priority: 26
+  - Regex: 'mongocxx/v1/.*\.hh' # v1 private headers
+    Priority: 27
+  - Regex: 'bsoncxx/config(/private)?/prelude\.(hpp|hh)' # v_noabi preludes
+    Priority: 60
+  - Regex: 'mongocxx/config(/private)?/prelude\.(hpp|hh)' # v_noabi preludes
+    Priority: 61
+  - Regex: 'bsoncxx/test/.*' # test headers
+    Priority: 70
+  - Regex: 'mongocxx/test/.*' # test headers
+    Priority: 71
+  - Regex: '<[[:alnum:]_.]+>' # system headers
     Priority: 30
-  - Regex: 'mongocxx/.*(-|\/)fwd\.(hpp|hh)' # all driver forwarding headers
-    Priority: 31
-  - Regex: 'bsoncxx/.*' # all remaining (normal) driver headers
+  - Regex: 'bsoncxx/.*(-|\/)fwd\.(hpp|hh)' # all remaining forward headers
     Priority: 40
-  - Regex: 'mongocxx/.*' # all remaining (normal) driver headers
+  - Regex: 'mongocxx/.*(-|\/)fwd\.(hpp|hh)' # all remaining forward headers
     Priority: 41
+  - Regex: 'bsoncxx/.*' # all remaining headers
+    Priority: 50
+  - Regex: 'mongocxx/.*' # all remaining headers
+    Priority: 51
   - Regex: '.*' # all other headers (third party)
     Priority: 90
 IncludeIsMainRegex: '([-_](test|unittest))?$'
@@ -274,14 +290,14 @@ SpacesInSquareBrackets: false
 Standard:        Cpp11
 StatementAttributeLikeMacros: []
 StatementMacros:
-  - BSONCXX_DISABLE_WARNING
-  - BSONCXX_FORCE_SEMICOLON
-  - BSONCXX_IF_CLANG
-  - BSONCXX_IF_GCC
-  - BSONCXX_IF_GNU_LIKE
-  - BSONCXX_IF_MSVC
-  - BSONCXX_POP_WARNINGS
-  - BSONCXX_PUSH_WARNINGS
+  - BSONCXX_PRIVATE_FORCE_SEMICOLON
+  - BSONCXX_PRIVATE_IF_CLANG
+  - BSONCXX_PRIVATE_IF_GCC
+  - BSONCXX_PRIVATE_IF_GNU_LIKE
+  - BSONCXX_PRIVATE_IF_MSVC
+  - BSONCXX_PRIVATE_WARNINGS_DISABLE
+  - BSONCXX_PRIVATE_WARNINGS_POP
+  - BSONCXX_PRIVATE_WARNINGS_PUSH
   - BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_BEGIN
   - BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_END
 TableGenBreakInsideDAGArg: DontBreak

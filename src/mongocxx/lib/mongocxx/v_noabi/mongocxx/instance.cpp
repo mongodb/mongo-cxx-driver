@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <mongocxx/v1/detail/macros.hpp>
+
 #include <atomic>
 #include <sstream>
 #include <type_traits>
@@ -53,7 +55,7 @@ log_level convert_log_level(::mongoc_log_level_t mongoc_log_level) {
         case MONGOC_LOG_LEVEL_TRACE:
             return log_level::k_trace;
         default:
-            MONGOCXX_UNREACHABLE;
+            MONGOCXX_PRIVATE_UNREACHABLE;
     }
 }
 

@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <mongocxx/v1/detail/macros.hpp>
+
 #include <ios>
 #include <sstream>
 #include <string>
@@ -269,7 +271,7 @@ void bucket::_upload_from_stream_with_id(
     if (source->bad() || (source->fail() && !source->eof())) {
         upload_stream.abort();
         source->exceptions(std::ios::failbit | std::ios::badbit);
-        MONGOCXX_UNREACHABLE;
+        MONGOCXX_PRIVATE_UNREACHABLE;
     }
 
     upload_stream.close();
