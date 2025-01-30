@@ -38,29 +38,36 @@ curl -sS -o mongo-c-driver.tar.gz -L "https://api.github.com/repos/mongodb/mongo
 tar xzf mongo-c-driver.tar.gz --directory "${mongoc_dir}" --strip-components=1
 
 # C Driver needs VERSION_CURRENT to compute BUILD_VERSION.
-# RegEx pattern to match SemVer strings. See https://semver.org/.
-declare -r semver_regex="^(?P<major>0|[1-9]\d*)\.(?P<minor>0|[1-9]\d*)\.(?P<patch>0|[1-9]\d*)(?:-(?P<prerelease>(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+(?P<buildmetadata>[0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$"
-if echo "${mongoc_version}" | perl -ne "$(printf 'exit 1 unless /%s/' "${semver_regex}")"; then
-  # If $VERSION is already SemVer compliant, use as-is.
-  echo "${mongoc_version}" >|"${mongoc_dir}/VERSION_CURRENT"
+if [[ -f "${mongoc_dir}/VERSION_CURRENT" ]]; then
+  : # Use the existing VERSION_CURRENT bundled with the release tarball.
 else
-  # Otherwise, use the tag name of the latest release to construct a prerelease version string.
+  # RegEx pattern to match SemVer strings. See https://semver.org/.
+  declare -r semver_regex="^(?P<major>0|[1-9]\d*)\.(?P<minor>0|[1-9]\d*)\.(?P<patch>0|[1-9]\d*)(?:-(?P<prerelease>(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+(?P<buildmetadata>[0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$"
+  if echo "${mongoc_version}" | perl -ne "$(printf 'exit 1 unless /%s/' "${semver_regex}")"; then
+    # If $mongoc_version is already SemVer compliant, use as-is.
+    echo "${mongoc_version}" >|"${mongoc_dir}/VERSION_CURRENT"
+  else
+    # Otherwise, use the tag name of the latest release to construct a prerelease version string.
 
-  # Extract "tag_name" from latest Github release.
-  declare build_version
-  build_version=$(curl -sS -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/mongodb/mongo-c-driver/releases/latest | perl -ne 'print for /"tag_name": "(.+)"/')
+    # Extract "tag_name" from latest Github release.
+    declare build_version
+    build_version="$(curl -sS -H "Accept: application/vnd.github+json" https://api.github.com/repos/mongodb/mongo-c-driver/releases/latest | perl -ne 'print for /"tag_name": "(.+)"/')"
 
-  # Assert the tag name is a SemVer string via errexit.
-  echo "${build_version}" | perl -ne "$(printf 'exit 1 unless /%s/' "${semver_regex}")"
+    # Assert the tag name is a SemVer string via errexit.
+    echo "${build_version}" | perl -ne "exit 1 unless /${semver_regex}/" || {
+      echo "could not obtain a build version from the tag name of the latest release" 1>&2
+      exit 1
+    }
 
-  # Bump to the next minor version, e.g. 1.0.1 -> 1.1.0.
-  build_version="$(echo "${build_version}" | perl -ne "$(printf '/%s/; print $+{major} . "." . ($+{minor}+1) . ".0"' "${semver_regex}")")"
+    # Bump to the next minor version, e.g. 1.0.1 -> 1.1.0.
+    build_version="$(echo "${build_version}" | perl -ne "$(printf '/%s/; print $+{major} . "." . ($+{minor}+1) . ".0"' "${semver_regex}")")"
 
-  # Append a prerelease tag, e.g. 1.1.0-pre+<version>.
-  build_version="$(printf "%s-pre+%s" "${build_version}" "${mongoc_version}")"
+    # Append a prerelease tag, e.g. 1.1.0-pre+<version>.
+    build_version="$(printf "%s-pre+%s" "${build_version}" "${mongoc_version}")"
 
-  # Use the constructed prerelease build version when building the C driver.
-  echo "${build_version}" >|"${mongoc_dir}/VERSION_CURRENT"
+    # Use the constructed prerelease build version when building the C driver.
+    echo "${build_version}" >|"${mongoc_dir}/VERSION_CURRENT"
+  fi
 fi
 
 # shellcheck source=/dev/null
