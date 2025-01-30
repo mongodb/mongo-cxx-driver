@@ -539,6 +539,7 @@ int EXAMPLES_CDECL main(int argc, char** argv)
     return runner.run(); // Return directly from forked processes.
 }
 #if defined(_MSC_VER)
+// Avoid popup dialog boxes or completely-absent CLI error messages on Windows.
 catch (std::exception const& ex) {
     std::cerr << "API runner failed due to uncaught exception: " << ex.what() << std::endl;
     return EXIT_FAILURE;
