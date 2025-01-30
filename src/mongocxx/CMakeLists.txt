@@ -24,7 +24,7 @@ option(MONGOCXX_ENABLE_SSL "Enable SSL - if the underlying C driver offers it" O
 option(MONGOCXX_ENABLE_SLOW_TESTS "Run slow tests when invoking the the test target" OFF)
 
 option(MONGOCXX_API_OVERRIDE_DEFAULT_ABI "The default ABI namespace to use for root namespace redeclarations" OFF)
-mark_as_advanced(BSONCXX_API_OVERRIDE_DEFAULT_ABI)
+mark_as_advanced(MONGOCXX_API_OVERRIDE_DEFAULT_ABI)
 if(MONGOCXX_API_OVERRIDE_DEFAULT_ABI)
     message(WARNING "MONGOCXX_API_OVERRIDE_DEFAULT_ABI is an experimental feature")
 endif ()
