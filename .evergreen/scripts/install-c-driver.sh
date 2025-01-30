@@ -44,7 +44,7 @@ else
   # RegEx pattern to match SemVer strings. See https://semver.org/.
   declare -r semver_regex="^(?P<major>0|[1-9]\d*)\.(?P<minor>0|[1-9]\d*)\.(?P<patch>0|[1-9]\d*)(?:-(?P<prerelease>(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+(?P<buildmetadata>[0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$"
   if echo "${mongoc_version}" | perl -ne "$(printf 'exit 1 unless /%s/' "${semver_regex}")"; then
-    # If $VERSION is already SemVer compliant, use as-is.
+    # If $mongoc_version is already SemVer compliant, use as-is.
     echo "${mongoc_version}" >|"${mongoc_dir}/VERSION_CURRENT"
   else
     # Otherwise, use the tag name of the latest release to construct a prerelease version string.
