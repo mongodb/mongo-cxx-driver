@@ -18,10 +18,11 @@
 #include <mongocxx/exception/error_code.hpp>
 #include <mongocxx/exception/exception.hpp>
 #include <mongocxx/exception/operation_exception.hpp>
+#include <mongocxx/pool.hpp>
+
 #include <mongocxx/options/apm.hh>
 #include <mongocxx/options/server_api.hh>
 #include <mongocxx/options/tls.hh>
-#include <mongocxx/pool.hpp>
 
 #include <bsoncxx/private/make_unique.hh>
 

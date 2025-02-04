@@ -17,7 +17,6 @@
 #include <memory>
 #include <utility>
 
-#include <bsoncxx/types/bson_value/value.hh>
 #include <bsoncxx/types/bson_value/view.hpp>
 
 #include <mongocxx/client.hpp>
@@ -25,6 +24,8 @@
 #include <mongocxx/exception/operation_exception.hpp>
 #include <mongocxx/options/client_encryption.hpp>
 #include <mongocxx/result/bulk_write.hpp>
+
+#include <bsoncxx/types/bson_value/value.hh>
 
 #include <bsoncxx/private/bson.hh>
 #include <bsoncxx/private/convert.hh>

@@ -156,9 +156,9 @@ IncludeCategories:
     Priority: 24
   - Regex: 'mongocxx/v1/.*\.hpp' # v1 public headers
     Priority: 25
-  - Regex: 'bsoncxx/v1/.*\.hh' # v1 private headers
+  - Regex: 'bsoncxx/v1/.*\.hh' # v1 internal headers
     Priority: 26
-  - Regex: 'mongocxx/v1/.*\.hh' # v1 private headers
+  - Regex: 'mongocxx/v1/.*\.hh' # v1 internal headers
     Priority: 27
   - Regex: 'bsoncxx/config/prelude\.(hpp|hh)' # v_noabi preludes
     Priority: 62
@@ -178,10 +178,14 @@ IncludeCategories:
     Priority: 40
   - Regex: 'mongocxx/.*(-|\/)fwd\.(hpp|hh)' # all remaining forward headers
     Priority: 41
-  - Regex: 'bsoncxx/.*' # all remaining headers
+  - Regex: 'bsoncxx/.*\.hpp' # all remaining public headers
     Priority: 50
-  - Regex: 'mongocxx/.*' # all remaining headers
+  - Regex: 'mongocxx/.*\.hpp' # all remaining public headers
     Priority: 51
+  - Regex: 'bsoncxx/.*\.hh' # all remaining internal headers
+    Priority: 52
+  - Regex: 'mongocxx/.*\.hh' # all remaining internal headers
+    Priority: 53
   - Regex: '.*' # all other headers (third party)
     Priority: 90
 IncludeIsMainRegex: '([-_](test|unittest))?$'

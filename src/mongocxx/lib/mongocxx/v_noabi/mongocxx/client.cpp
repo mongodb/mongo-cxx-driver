@@ -18,8 +18,9 @@
 #include <mongocxx/exception/error_code.hpp>
 #include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/exception/operation_exception.hpp>
-#include <mongocxx/options/apm.hh>
 #include <mongocxx/options/auto_encryption.hpp>
+
+#include <mongocxx/options/apm.hh>
 #include <mongocxx/options/server_api.hh>
 #include <mongocxx/options/tls.hh>
 

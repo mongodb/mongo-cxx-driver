@@ -22,6 +22,7 @@
 #include <mongocxx/exception/error_code.hpp>
 #include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/exception/operation_exception.hpp>
+
 #include <mongocxx/options/transaction.hh>
 
 #include <bsoncxx/private/bson.hh>
