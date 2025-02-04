@@ -14,10 +14,13 @@
 
 #pragma once
 
+#include <mongocxx/options/server_api.hpp>
+
+//
+
 #include <mongocxx/exception/error_code.hpp>
 #include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/options/apm.hpp>
-#include <mongocxx/options/server_api.hpp>
 
 #include <mongocxx/private/mongoc.hh>
 

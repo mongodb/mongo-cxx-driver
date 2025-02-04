@@ -13,7 +13,6 @@
 // limitations under the License.
 
 #include <mongocxx/cursor.hpp>
-#include <mongocxx/exception/private/mongoc_error.hh>
 #include <mongocxx/exception/query_exception.hpp>
 
 #include <bsoncxx/private/bson.hh>
@@ -21,6 +20,7 @@
 
 #include <mongocxx/private/cursor.hh>
 #include <mongocxx/private/mongoc.hh>
+#include <mongocxx/private/mongoc_error.hh>
 
 namespace mongocxx {
 namespace v_noabi {

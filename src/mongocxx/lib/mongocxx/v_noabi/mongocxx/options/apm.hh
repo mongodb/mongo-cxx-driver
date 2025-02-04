@@ -14,9 +14,11 @@
 
 #pragma once
 
-#include <iostream>
-
 #include <mongocxx/options/apm.hpp>
+
+//
+
+#include <iostream>
 
 #include <mongocxx/private/mongoc.hh>
 

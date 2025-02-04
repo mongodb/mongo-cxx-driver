@@ -14,6 +14,10 @@
 
 #pragma once
 
+#include <mongocxx/options/transaction.hh>
+
+//
+
 #include <chrono>
 #include <memory>
 

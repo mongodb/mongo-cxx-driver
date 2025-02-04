@@ -22,8 +22,7 @@
 #include <mongocxx/exception/error_code.hpp>
 #include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/exception/operation_exception.hpp>
-#include <mongocxx/exception/private/mongoc_error.hh>
-#include <mongocxx/options/private/transaction.hh>
+#include <mongocxx/options/transaction.hh>
 
 #include <bsoncxx/private/bson.hh>
 #include <bsoncxx/private/helpers.hh>
@@ -31,6 +30,7 @@
 #include <mongocxx/private/bson.hh>
 #include <mongocxx/private/client.hh>
 #include <mongocxx/private/mongoc.hh>
+#include <mongocxx/private/mongoc_error.hh>
 
 namespace mongocxx {
 namespace v_noabi {

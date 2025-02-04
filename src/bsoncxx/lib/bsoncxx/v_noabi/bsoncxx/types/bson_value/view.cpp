@@ -17,9 +17,9 @@
 #include <bsoncxx/exception/error_code.hpp>
 #include <bsoncxx/exception/exception.hpp>
 #include <bsoncxx/types/bson_value/view.hpp>
-#include <bsoncxx/types/private/convert.hh>
 
 #include <bsoncxx/private/bson.hh>
+#include <bsoncxx/private/convert.hh>
 #include <bsoncxx/private/suppress_deprecation_warnings.hh>
 
 #define BSONCXX_CITER                                                       \

@@ -33,7 +33,6 @@
 #include <mongocxx/exception/error_code.hpp>
 #include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/exception/operation_exception.hpp>
-#include <mongocxx/exception/private/mongoc_error.hh>
 #include <mongocxx/exception/query_exception.hpp>
 #include <mongocxx/exception/write_exception.hpp>
 #include <mongocxx/hint.hpp>
@@ -55,6 +54,7 @@
 #include <mongocxx/private/collection.hh>
 #include <mongocxx/private/cursor.hh>
 #include <mongocxx/private/mongoc.hh>
+#include <mongocxx/private/mongoc_error.hh>
 #include <mongocxx/private/pipeline.hh>
 #include <mongocxx/private/read_concern.hh>
 #include <mongocxx/private/read_preference.hh>

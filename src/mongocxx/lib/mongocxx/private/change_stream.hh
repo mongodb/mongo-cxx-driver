@@ -18,11 +18,11 @@
 #include <bsoncxx/stdx/optional.hpp>
 
 #include <mongocxx/change_stream.hpp>
-#include <mongocxx/exception/private/mongoc_error.hh>
 #include <mongocxx/exception/query_exception.hpp>
 
 #include <mongocxx/private/bson.hh>
 #include <mongocxx/private/mongoc.hh>
+#include <mongocxx/private/mongoc_error.hh>
 
 namespace mongocxx {
 namespace v_noabi {

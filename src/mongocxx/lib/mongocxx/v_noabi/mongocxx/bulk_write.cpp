@@ -19,7 +19,6 @@
 #include <mongocxx/collection.hpp>
 #include <mongocxx/exception/bulk_write_exception.hpp>
 #include <mongocxx/exception/logic_error.hpp>
-#include <mongocxx/exception/private/mongoc_error.hh>
 
 #include <bsoncxx/private/make_unique.hh>
 
@@ -28,6 +27,7 @@
 #include <mongocxx/private/client_session.hh>
 #include <mongocxx/private/collection.hh>
 #include <mongocxx/private/mongoc.hh>
+#include <mongocxx/private/mongoc_error.hh>
 #include <mongocxx/private/write_concern.hh>
 
 namespace mongocxx {

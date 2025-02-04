@@ -13,12 +13,12 @@
 // limitations under the License.
 
 #include <mongocxx/exception/exception.hpp>
-#include <mongocxx/exception/private/mongoc_error.hh>
 
 #include <bsoncxx/private/make_unique.hh>
 
 #include <mongocxx/private/client.hh>
 #include <mongocxx/private/client_session.hh>
+#include <mongocxx/private/mongoc_error.hh>
 
 namespace mongocxx {
 namespace v_noabi {

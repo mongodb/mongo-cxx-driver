@@ -12,9 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <mongocxx/options/transaction.hh>
+
+//
+
 #include <mongocxx/exception/error_code.hpp>
 #include <mongocxx/exception/logic_error.hpp>
-#include <mongocxx/options/private/transaction.hh>
 
 #include <bsoncxx/private/make_unique.hh>
 

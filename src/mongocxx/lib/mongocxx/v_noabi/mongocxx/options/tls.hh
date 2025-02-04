@@ -14,9 +14,11 @@
 
 #pragma once
 
-#include <list>
-
 #include <mongocxx/options/tls.hpp>
+
+//
+
+#include <list>
 
 #include <mongocxx/private/mongoc.hh>
 

@@ -17,7 +17,8 @@
 #include <utility>
 
 #include <bsoncxx/types/bson_value/view.hpp>
-#include <bsoncxx/types/private/convert.hh>
+
+#include <bsoncxx/private/convert.hh>
 
 #include <mongocxx/private/bson.hh>
 

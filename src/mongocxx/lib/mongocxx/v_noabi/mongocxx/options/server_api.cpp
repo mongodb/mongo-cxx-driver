@@ -12,13 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <mongocxx/options/server_api.hh>
+
+//
+
 #include <system_error>
 
 #include <bsoncxx/stdx/string_view.hpp>
 
 #include <mongocxx/exception/error_code.hpp>
 #include <mongocxx/exception/logic_error.hpp>
-#include <mongocxx/options/server_api.hpp>
 
 #include <mongocxx/private/mongoc.hh>
 

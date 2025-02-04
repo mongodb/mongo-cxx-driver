@@ -196,6 +196,7 @@ set_dist_list(src_mongocxx_lib_DIST
     mongocxx/private/export.hh
     mongocxx/private/index_view.hh
     mongocxx/private/mock.hh
+    mongocxx/private/mongoc_error.hh
     mongocxx/private/mongoc.hh
     mongocxx/private/numeric_casting.hh
     mongocxx/private/pipeline.hh
@@ -207,14 +208,13 @@ set_dist_list(src_mongocxx_lib_DIST
     mongocxx/private/search_index_view.hh
     mongocxx/private/uri.hh
     mongocxx/private/write_concern.hh
-    mongocxx/v_noabi/mongocxx/exception/private/mongoc_error.hh
-    mongocxx/v_noabi/mongocxx/gridfs/private/bucket.hh
-    mongocxx/v_noabi/mongocxx/gridfs/private/downloader.hh
-    mongocxx/v_noabi/mongocxx/gridfs/private/uploader.hh
-    mongocxx/v_noabi/mongocxx/options/private/apm.hh
-    mongocxx/v_noabi/mongocxx/options/private/server_api.hh
-    mongocxx/v_noabi/mongocxx/options/private/ssl.hh
-    mongocxx/v_noabi/mongocxx/options/private/transaction.hh
+    mongocxx/v_noabi/mongocxx/gridfs/bucket.hh
+    mongocxx/v_noabi/mongocxx/gridfs/downloader.hh
+    mongocxx/v_noabi/mongocxx/gridfs/uploader.hh
+    mongocxx/v_noabi/mongocxx/options/apm.hh
+    mongocxx/v_noabi/mongocxx/options/server_api.hh
+    mongocxx/v_noabi/mongocxx/options/tls.hh
+    mongocxx/v_noabi/mongocxx/options/transaction.hh
     mongocxx/v1/config/config.hpp.in
     mongocxx/v1/config/version.hpp.in
 )

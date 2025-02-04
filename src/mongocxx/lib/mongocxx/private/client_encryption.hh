@@ -17,25 +17,24 @@
 #include <memory>
 #include <utility>
 
-#include <bsoncxx/types/bson_value/private/value.hh>
-#include <bsoncxx/types/bson_value/value.hpp>
+#include <bsoncxx/types/bson_value/value.hh>
 #include <bsoncxx/types/bson_value/view.hpp>
-#include <bsoncxx/types/private/convert.hh>
 
 #include <mongocxx/client.hpp>
 #include <mongocxx/client_encryption.hpp>
 #include <mongocxx/exception/operation_exception.hpp>
-#include <mongocxx/exception/private/mongoc_error.hh>
 #include <mongocxx/options/client_encryption.hpp>
 #include <mongocxx/result/bulk_write.hpp>
 
 #include <bsoncxx/private/bson.hh>
+#include <bsoncxx/private/convert.hh>
 #include <bsoncxx/private/helpers.hh>
 
 #include <mongocxx/private/bson.hh>
 #include <mongocxx/private/client.hh>
 #include <mongocxx/private/cursor.hh>
 #include <mongocxx/private/mongoc.hh>
+#include <mongocxx/private/mongoc_error.hh>
 #include <mongocxx/private/scoped_bson_value.hh>
 
 namespace mongocxx {
