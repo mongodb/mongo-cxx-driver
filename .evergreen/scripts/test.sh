@@ -52,12 +52,12 @@ else
   LIB_DIR="lib"
 fi
 
-# Use PATH / LD_LIBRARY_PATH / DYLD_LIBRARY_PATH to inform the tests where to find
+# Use PATH / LD_LIBRARY_PATH / DYLD_FALLBACK_LIBRARY_PATH to inform the tests where to find
 # mongoc library dependencies on Windows / Linux / Mac OS, respectively.
 # Additionally, on Windows, we also need to inform the tests where to find
 # mongocxx library dependencies.
-export LD_LIBRARY_PATH="${working_dir:?}/build:${mongoc_dir:?}/${LIB_DIR:?}/"
-export DYLD_LIBRARY_PATH="${working_dir:?}/build:${mongoc_dir:?}/${LIB_DIR:?}/"
+export LD_LIBRARY_PATH="${working_dir:?}/build:${mongoc_dir:?}/${LIB_DIR:?}"
+export DYLD_FALLBACK_LIBRARY_PATH="${working_dir:?}/build:${mongoc_dir:?}/${LIB_DIR:?}"
 PATH="${working_dir:?}/build/src/mongocxx/test/${build_type:?}:${PATH:-}"
 PATH="${working_dir:?}/build/src/bsoncxx/test/${build_type:?}:${PATH:-}"
 PATH="${working_dir:?}/build/src/mongocxx/${build_type:?}:${PATH:-}"
@@ -333,12 +333,14 @@ export CXX_STANDARD="${example_projects_cxx_standard}"
 
 if [[ "$OSTYPE" =~ cygwin ]]; then
   export MSVC=1
-elif [ "$(uname -s | tr '[:upper:]' '[:lower:]')" == "darwin" ]; then
-  DYLD_LIBRARY_PATH="$(pwd)/build/install/lib:${DYLD_LIBRARY_PATH:-}"
-  export DYLD_LIBRARY_PATH
 else
   LD_LIBRARY_PATH="${working_dir:?}/build/install/${LIB_DIR:?}:${LD_LIBRARY_PATH:-}"
-  export LD_LIBRARY_PATH
+  DYLD_FALLBACK_LIBRARY_PATH="$(pwd)/build/install/lib:${DYLD_FALLBACK_LIBRARY_PATH:-}"
+fi
+
+# MacOS needs some help finding dynamic libraries via rpath even with DYLD_FALLBACK_LIBRARY_PATH.
+if [[ "${OSTYPE:?}" == darwin* ]]; then
+  LDFLAGS+="-rpath $(pwd)/build/install/lib -rpath $(pwd)/../mongoc/lib ${LDFLAGS:-}"
 fi
 
 # The example projects never run under valgrind, since we haven't added execution

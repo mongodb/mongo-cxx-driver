@@ -38,12 +38,6 @@ endif()
 # was used as the argument to CMAKE_INSTALL_PREFIX when building libmongocxx.
 find_package(mongocxx REQUIRED)
 
-# We cannot rely on the DYLD_LIBRARY_PATH being propagated properly on OSX on
-# evergreen, so pass extra arguments to pkg-config with the path information.
-if (APPLE)
-  set(ENV{PKGCONFIG_EXTRA_OPTS} "-Wl,rpath $(pwd)/../mongoc/lib")
-endif()
-
 add_executable(hello_mongocxx ../../hello_mongocxx.cpp)
 
 target_link_libraries(hello_mongocxx
