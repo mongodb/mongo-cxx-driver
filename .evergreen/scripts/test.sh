@@ -275,6 +275,17 @@ else
     export UBSAN_OPTIONS="print_stacktrace=1"
     export PATH="/usr/lib/llvm-3.8/bin:${PATH:-}"
   elif [[ "${TEST_WITH_VALGRIND:-}" == "ON" ]]; then
+    if ! command -v valgrind >/dev/null; then
+      if command -v yum >/dev/null; then
+        sudo yum install -q -y valgrind
+      elif command -v apt-get >/dev/null; then
+        sudo apt-get install -q -y valgrind
+      else
+        echo "Unknown how to valgrind on this distro: ${distro_id:?}" 1>&2
+        exit 1
+      fi
+    fi
+    valgrind --version
     run_test() {
       valgrind --leak-check=full --track-origins=yes --num-callers=50 --error-exitcode=1 --error-limit=no --read-var-info=yes --suppressions=../etc/memcheck.suppressions "$@" "${test_args[@]:?}"
     }
