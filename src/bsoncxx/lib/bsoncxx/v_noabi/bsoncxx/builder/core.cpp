@@ -15,6 +15,7 @@
 #include <bsoncxx/v1/detail/macros.hpp>
 
 #include <cstring>
+#include <memory>
 
 #include <bsoncxx/builder/core.hpp>
 #include <bsoncxx/exception/error_code.hpp>
@@ -72,14 +73,33 @@ class managed_bson_t {
 
 class core::impl {
    public:
-    impl(bool is_array) : _depth(0), _root_is_array(is_array), _n(0), _has_user_key(false) {}
+    ~impl() {
+        _root_ptr->~managed_bson_t();
+    }
+
+    impl(impl&&) = delete;
+    impl& operator=(impl&&) = delete;
+
+    impl(impl const&) = delete;
+    impl& operator=(impl const&) = delete;
+
+    impl(bool is_array)
+        : _depth(0),
+          _root_is_array(is_array),
+          _n(0),
+          _root_ptr([this] {
+              void* ptr = _root_storage;
+              std::size_t space = sizeof(_root_storage);
+              return new (std::align(alignof(managed_bson_t), sizeof(managed_bson_t), ptr, space)) managed_bson_t();
+          }()),
+          _has_user_key(false) {}
 
     void reinit() {
         while (!_stack.empty()) {
             _stack.pop_back();
         }
 
-        bson_reinit(_root.get());
+        bson_reinit(_root_ptr->get());
 
         _depth = 0;
 
@@ -95,8 +115,8 @@ class core::impl {
         }
 
         uint32_t buf_len;
-        uint8_t* buf_ptr = bson_destroy_with_steal(_root.get(), true, &buf_len);
-        bson_init(_root.get());
+        uint8_t* buf_ptr = bson_destroy_with_steal(_root_ptr->get(), true, &buf_len);
+        bson_init(_root_ptr->get());
 
         return bsoncxx::v_noabi::document::value{buf_ptr, buf_len, bson_free_deleter};
     }
@@ -108,15 +128,15 @@ class core::impl {
         }
 
         uint32_t buf_len;
-        uint8_t* buf_ptr = bson_destroy_with_steal(_root.get(), true, &buf_len);
-        bson_init(_root.get());
+        uint8_t* buf_ptr = bson_destroy_with_steal(_root_ptr->get(), true, &buf_len);
+        bson_init(_root_ptr->get());
 
         return bsoncxx::v_noabi::array::value{buf_ptr, buf_len, bson_free_deleter};
     }
 
     bson_t* back() {
         if (_stack.empty()) {
-            return _root.get();
+            return _root_ptr->get();
         } else {
             return &_stack.back().bson;
         }
@@ -178,7 +198,7 @@ class core::impl {
             throw bsoncxx::v_noabi::exception{error_code::k_cannot_perform_document_operation_on_array};
         }
 
-        return _root.get();
+        return _root_ptr->get();
     }
 
     // Throws bsoncxx::v_noabi::exception if the top-level BSON datum is a document.
@@ -187,7 +207,7 @@ class core::impl {
             throw bsoncxx::v_noabi::exception{error_code::k_cannot_perform_array_operation_on_document};
         }
 
-        return _root.get();
+        return _root_ptr->get();
     }
 
     bool is_array() {
@@ -239,7 +259,9 @@ class core::impl {
 
     bool _root_is_array;
     std::size_t _n;
-    managed_bson_t _root;
+
+    unsigned char _root_storage[2u * sizeof(managed_bson_t)];
+    managed_bson_t* _root_ptr;
 
     // The bottom frame of _stack has _root as its parent.
     stack<frame, 4> _stack;
