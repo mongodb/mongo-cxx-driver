@@ -15522,32 +15522,9 @@ tasks:
           TEST_WITH_VALGRIND: "ON"
           disable_slow_tests: 1
           use_mongocryptd: true
-  - name: versioned-api-one-required-macos-14-arm64-release-shared
+  - name: versioned-api-one-required-macos-14-arm64-debug-shared
     run_on: macos-14-arm64
-    tags: [versioned-api, macos-14-arm64, release, shared]
-    commands:
-      - func: setup
-      - func: start_mongod
-        vars:
-          AUTH: noauth
-          REQUIRE_API_VERSION: true
-          mongodb_version: latest
-      - func: fetch_c_driver_source
-      - func: install-uv
-      - func: compile
-        vars:
-          ENABLE_TESTS: "ON"
-          build_type: Release
-      - func: fetch-det
-      - func: run_kms_servers
-      - func: test
-        vars:
-          MONGOCXX_TEST_TOPOLOGY: single
-          MONGODB_API_VERSION: 1
-          build_type: Release
-  - name: versioned-api-one-required-ubuntu2004-debug-shared
-    run_on: ubuntu2004-large
-    tags: [versioned-api, ubuntu2004, debug, shared]
+    tags: [versioned-api, macos-14-arm64, debug, shared]
     commands:
       - func: setup
       - func: start_mongod
@@ -15568,9 +15545,32 @@ tasks:
           MONGOCXX_TEST_TOPOLOGY: single
           MONGODB_API_VERSION: 1
           build_type: Debug
-  - name: versioned-api-one-required-windows-2019-vs2019-x64-debug-shared
+  - name: versioned-api-one-required-rhel80-debug-shared
+    run_on: rhel80-large
+    tags: [versioned-api, rhel80, debug, shared]
+    commands:
+      - func: setup
+      - func: start_mongod
+        vars:
+          AUTH: noauth
+          REQUIRE_API_VERSION: true
+          mongodb_version: latest
+      - func: fetch_c_driver_source
+      - func: install-uv
+      - func: compile
+        vars:
+          ENABLE_TESTS: "ON"
+          build_type: Debug
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+          MONGODB_API_VERSION: 1
+          build_type: Debug
+  - name: versioned-api-one-required-windows-2019-vs2022-x64-debug-shared
     run_on: windows-vsCurrent-large
-    tags: [versioned-api, windows-vsCurrent, vs2019x64, debug, shared]
+    tags: [versioned-api, windows-vsCurrent, vs2022x64, debug, shared]
     commands:
       - func: setup
       - func: start_mongod
@@ -15584,7 +15584,7 @@ tasks:
         vars:
           ENABLE_TESTS: "ON"
           build_type: Debug
-          generator: Visual Studio 16 2019
+          generator: Visual Studio 17 2022
           platform: x64
       - func: fetch-det
       - func: run_kms_servers
@@ -15594,33 +15594,11 @@ tasks:
           MONGODB_API_VERSION: 1
           build_type: Debug
           example_projects_cxx_standard: 17
-          generator: Visual Studio 16 2019
+          generator: Visual Studio 17 2022
           platform: x64
-  - name: versioned-api-two-accepted-macos-14-arm64-release-shared
+  - name: versioned-api-two-accepted-macos-14-arm64-debug-shared
     run_on: macos-14-arm64
-    tags: [versioned-api, macos-14-arm64, release, shared]
-    commands:
-      - func: setup
-      - func: start_mongod
-        vars:
-          AUTH: noauth
-          ORCHESTRATION_FILE: versioned-api-testing.json
-          mongodb_version: latest
-      - func: fetch_c_driver_source
-      - func: install-uv
-      - func: compile
-        vars:
-          ENABLE_TESTS: "ON"
-          build_type: Release
-      - func: fetch-det
-      - func: run_kms_servers
-      - func: test
-        vars:
-          MONGOCXX_TEST_TOPOLOGY: single
-          build_type: Release
-  - name: versioned-api-two-accepted-ubuntu2004-debug-shared
-    run_on: ubuntu2004-large
-    tags: [versioned-api, ubuntu2004, debug, shared]
+    tags: [versioned-api, macos-14-arm64, debug, shared]
     commands:
       - func: setup
       - func: start_mongod
@@ -15640,9 +15618,31 @@ tasks:
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
           build_type: Debug
-  - name: versioned-api-two-accepted-windows-2019-vs2019-x64-debug-shared
+  - name: versioned-api-two-accepted-rhel80-debug-shared
+    run_on: rhel80-large
+    tags: [versioned-api, rhel80, debug, shared]
+    commands:
+      - func: setup
+      - func: start_mongod
+        vars:
+          AUTH: noauth
+          ORCHESTRATION_FILE: versioned-api-testing.json
+          mongodb_version: latest
+      - func: fetch_c_driver_source
+      - func: install-uv
+      - func: compile
+        vars:
+          ENABLE_TESTS: "ON"
+          build_type: Debug
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+          build_type: Debug
+  - name: versioned-api-two-accepted-windows-2019-vs2022-x64-debug-shared
     run_on: windows-vsCurrent-large
-    tags: [versioned-api, windows-vsCurrent, vs2019x64, debug, shared]
+    tags: [versioned-api, windows-vsCurrent, vs2022x64, debug, shared]
     commands:
       - func: setup
       - func: start_mongod
@@ -15656,7 +15656,7 @@ tasks:
         vars:
           ENABLE_TESTS: "ON"
           build_type: Debug
-          generator: Visual Studio 16 2019
+          generator: Visual Studio 17 2022
           platform: x64
       - func: fetch-det
       - func: run_kms_servers
@@ -15665,5 +15665,5 @@ tasks:
           MONGOCXX_TEST_TOPOLOGY: single
           build_type: Debug
           example_projects_cxx_standard: 17
-          generator: Visual Studio 16 2019
+          generator: Visual Studio 17 2022
           platform: x64
