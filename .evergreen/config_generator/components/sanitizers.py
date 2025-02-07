@@ -22,11 +22,8 @@ TAG = 'sanitizers'
 # pylint: disable=line-too-long
 # fmt: off
 MATRIX = [
-    ('ubuntu1804', ['asan' ], ['shared', 'static'], [False, True], ['5.0'], ['single']),
-    ('ubuntu1804', ['ubsan'], [          'static'], [False,     ], ['5.0'], ['single']),
-
-    ('ubuntu2004', ['asan' ], ['shared', 'static'], [False, True], ['5.0'], ['single']),
-    ('ubuntu2004', ['ubsan'], [          'static'], [False,     ], ['5.0'], ['single']),
+    ('rhel80', ['asan',        ], ['shared', 'static'], [False, True], ['4.0', '8.0', 'latest'], ['single', 'replica', 'sharded']),
+    ('rhel80', [        'ubsan'], [          'static'], [False      ], ['4.0', '8.0', 'latest'], ['single', 'replica', 'sharded']),
 ]
 # fmt: on
 # pylint: enable=line-too-long

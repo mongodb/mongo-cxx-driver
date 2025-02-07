@@ -13490,9 +13490,9 @@ tasks:
     commands:
       - func: setup
       - func: build-package-rpm
-  - name: sanitizers-asan-ubuntu1804-clang-shared-5.0-single
-    run_on: ubuntu1804-large
-    tags: [sanitizers, asan, ubuntu1804, clang, shared, "5.0", single]
+  - name: sanitizers-asan-rhel80-clang-shared-4.0-replica
+    run_on: rhel80-large
+    tags: [sanitizers, asan, rhel80, clang, shared, "4.0", replica]
     commands:
       - command: expansions.update
         params:
@@ -13503,7 +13503,75 @@ tasks:
       - func: setup
       - func: start_mongod
         vars:
-          mongodb_version: "5.0"
+          TOPOLOGY: replica_set
+          mongodb_version: "4.0"
+      - func: install_c_driver
+        vars:
+          SKIP_INSTALL_LIBMONGOCRYPT: 1
+      - func: install-uv
+      - func: compile
+        vars:
+          ENABLE_TESTS: "ON"
+          RUN_DISTCHECK: 1
+          USE_SANITIZER_ASAN: "ON"
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: replica
+          TEST_WITH_ASAN: "ON"
+          example_projects_cc: clang
+          example_projects_cxx: clang++
+          example_projects_cxxflags: -D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=address -fno-omit-frame-pointer
+          example_projects_ldflags: -fsanitize=address
+  - name: sanitizers-asan-rhel80-clang-shared-4.0-sharded
+    run_on: rhel80-large
+    tags: [sanitizers, asan, rhel80, clang, shared, "4.0", sharded]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+            - { key: cc_compiler, value: clang }
+            - { key: cxx_compiler, value: clang++ }
+      - func: setup
+      - func: start_mongod
+        vars:
+          TOPOLOGY: sharded_cluster
+          mongodb_version: "4.0"
+      - func: install_c_driver
+        vars:
+          SKIP_INSTALL_LIBMONGOCRYPT: 1
+      - func: install-uv
+      - func: compile
+        vars:
+          ENABLE_TESTS: "ON"
+          RUN_DISTCHECK: 1
+          USE_SANITIZER_ASAN: "ON"
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: sharded
+          TEST_WITH_ASAN: "ON"
+          example_projects_cc: clang
+          example_projects_cxx: clang++
+          example_projects_cxxflags: -D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=address -fno-omit-frame-pointer
+          example_projects_ldflags: -fsanitize=address
+  - name: sanitizers-asan-rhel80-clang-shared-4.0-single
+    run_on: rhel80-large
+    tags: [sanitizers, asan, rhel80, clang, shared, "4.0", single]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+            - { key: cc_compiler, value: clang }
+            - { key: cxx_compiler, value: clang++ }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: "4.0"
       - func: install_c_driver
         vars:
           SKIP_INSTALL_LIBMONGOCRYPT: 1
@@ -13523,9 +13591,9 @@ tasks:
           example_projects_cxx: clang++
           example_projects_cxxflags: -D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=address -fno-omit-frame-pointer
           example_projects_ldflags: -fsanitize=address
-  - name: sanitizers-asan-ubuntu1804-clang-shared-extra_alignment-5.0-single
-    run_on: ubuntu1804-large
-    tags: [sanitizers, asan, ubuntu1804, clang, shared, extra_alignment, "5.0", single]
+  - name: sanitizers-asan-rhel80-clang-shared-8.0-replica
+    run_on: rhel80-large
+    tags: [sanitizers, asan, rhel80, clang, shared, "8.0", replica]
     commands:
       - command: expansions.update
         params:
@@ -13536,30 +13604,30 @@ tasks:
       - func: setup
       - func: start_mongod
         vars:
-          mongodb_version: "5.0"
+          TOPOLOGY: replica_set
+          mongodb_version: "8.0"
       - func: install_c_driver
         vars:
-          BSON_EXTRA_ALIGNMENT: 1
           SKIP_INSTALL_LIBMONGOCRYPT: 1
       - func: install-uv
       - func: compile
         vars:
-          BSON_EXTRA_ALIGNMENT: 1
           ENABLE_TESTS: "ON"
+          RUN_DISTCHECK: 1
           USE_SANITIZER_ASAN: "ON"
       - func: fetch-det
       - func: run_kms_servers
       - func: test
         vars:
-          MONGOCXX_TEST_TOPOLOGY: single
+          MONGOCXX_TEST_TOPOLOGY: replica
           TEST_WITH_ASAN: "ON"
           example_projects_cc: clang
           example_projects_cxx: clang++
           example_projects_cxxflags: -D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=address -fno-omit-frame-pointer
           example_projects_ldflags: -fsanitize=address
-  - name: sanitizers-asan-ubuntu1804-clang-static-5.0-single
-    run_on: ubuntu1804-large
-    tags: [sanitizers, asan, ubuntu1804, clang, static, "5.0", single]
+  - name: sanitizers-asan-rhel80-clang-shared-8.0-sharded
+    run_on: rhel80-large
+    tags: [sanitizers, asan, rhel80, clang, shared, "8.0", sharded]
     commands:
       - command: expansions.update
         params:
@@ -13567,11 +13635,44 @@ tasks:
             - { key: build_type, value: Debug }
             - { key: cc_compiler, value: clang }
             - { key: cxx_compiler, value: clang++ }
-            - { key: USE_STATIC_LIBS, value: "1" }
       - func: setup
       - func: start_mongod
         vars:
-          mongodb_version: "5.0"
+          TOPOLOGY: sharded_cluster
+          mongodb_version: "8.0"
+      - func: install_c_driver
+        vars:
+          SKIP_INSTALL_LIBMONGOCRYPT: 1
+      - func: install-uv
+      - func: compile
+        vars:
+          ENABLE_TESTS: "ON"
+          RUN_DISTCHECK: 1
+          USE_SANITIZER_ASAN: "ON"
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: sharded
+          TEST_WITH_ASAN: "ON"
+          example_projects_cc: clang
+          example_projects_cxx: clang++
+          example_projects_cxxflags: -D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=address -fno-omit-frame-pointer
+          example_projects_ldflags: -fsanitize=address
+  - name: sanitizers-asan-rhel80-clang-shared-8.0-single
+    run_on: rhel80-large
+    tags: [sanitizers, asan, rhel80, clang, shared, "8.0", single]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+            - { key: cc_compiler, value: clang }
+            - { key: cxx_compiler, value: clang++ }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: "8.0"
       - func: install_c_driver
         vars:
           SKIP_INSTALL_LIBMONGOCRYPT: 1
@@ -13591,9 +13692,9 @@ tasks:
           example_projects_cxx: clang++
           example_projects_cxxflags: -D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=address -fno-omit-frame-pointer
           example_projects_ldflags: -fsanitize=address
-  - name: sanitizers-asan-ubuntu1804-clang-static-extra_alignment-5.0-single
-    run_on: ubuntu1804-large
-    tags: [sanitizers, asan, ubuntu1804, clang, static, extra_alignment, "5.0", single]
+  - name: sanitizers-asan-rhel80-clang-shared-extra_alignment-4.0-replica
+    run_on: rhel80-large
+    tags: [sanitizers, asan, rhel80, clang, shared, extra_alignment, "4.0", replica]
     commands:
       - command: expansions.update
         params:
@@ -13601,11 +13702,80 @@ tasks:
             - { key: build_type, value: Debug }
             - { key: cc_compiler, value: clang }
             - { key: cxx_compiler, value: clang++ }
-            - { key: USE_STATIC_LIBS, value: "1" }
       - func: setup
       - func: start_mongod
         vars:
-          mongodb_version: "5.0"
+          TOPOLOGY: replica_set
+          mongodb_version: "4.0"
+      - func: install_c_driver
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+          SKIP_INSTALL_LIBMONGOCRYPT: 1
+      - func: install-uv
+      - func: compile
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+          ENABLE_TESTS: "ON"
+          USE_SANITIZER_ASAN: "ON"
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: replica
+          TEST_WITH_ASAN: "ON"
+          example_projects_cc: clang
+          example_projects_cxx: clang++
+          example_projects_cxxflags: -D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=address -fno-omit-frame-pointer
+          example_projects_ldflags: -fsanitize=address
+  - name: sanitizers-asan-rhel80-clang-shared-extra_alignment-4.0-sharded
+    run_on: rhel80-large
+    tags: [sanitizers, asan, rhel80, clang, shared, extra_alignment, "4.0", sharded]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+            - { key: cc_compiler, value: clang }
+            - { key: cxx_compiler, value: clang++ }
+      - func: setup
+      - func: start_mongod
+        vars:
+          TOPOLOGY: sharded_cluster
+          mongodb_version: "4.0"
+      - func: install_c_driver
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+          SKIP_INSTALL_LIBMONGOCRYPT: 1
+      - func: install-uv
+      - func: compile
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+          ENABLE_TESTS: "ON"
+          USE_SANITIZER_ASAN: "ON"
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: sharded
+          TEST_WITH_ASAN: "ON"
+          example_projects_cc: clang
+          example_projects_cxx: clang++
+          example_projects_cxxflags: -D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=address -fno-omit-frame-pointer
+          example_projects_ldflags: -fsanitize=address
+  - name: sanitizers-asan-rhel80-clang-shared-extra_alignment-4.0-single
+    run_on: rhel80-large
+    tags: [sanitizers, asan, rhel80, clang, shared, extra_alignment, "4.0", single]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+            - { key: cc_compiler, value: clang }
+            - { key: cxx_compiler, value: clang++ }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: "4.0"
       - func: install_c_driver
         vars:
           BSON_EXTRA_ALIGNMENT: 1
@@ -13626,9 +13796,9 @@ tasks:
           example_projects_cxx: clang++
           example_projects_cxxflags: -D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=address -fno-omit-frame-pointer
           example_projects_ldflags: -fsanitize=address
-  - name: sanitizers-asan-ubuntu2004-clang-shared-5.0-single
-    run_on: ubuntu2004-large
-    tags: [sanitizers, asan, ubuntu2004, clang, shared, "5.0", single]
+  - name: sanitizers-asan-rhel80-clang-shared-extra_alignment-8.0-replica
+    run_on: rhel80-large
+    tags: [sanitizers, asan, rhel80, clang, shared, extra_alignment, "8.0", replica]
     commands:
       - command: expansions.update
         params:
@@ -13639,7 +13809,283 @@ tasks:
       - func: setup
       - func: start_mongod
         vars:
-          mongodb_version: "5.0"
+          TOPOLOGY: replica_set
+          mongodb_version: "8.0"
+      - func: install_c_driver
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+          SKIP_INSTALL_LIBMONGOCRYPT: 1
+      - func: install-uv
+      - func: compile
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+          ENABLE_TESTS: "ON"
+          USE_SANITIZER_ASAN: "ON"
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: replica
+          TEST_WITH_ASAN: "ON"
+          example_projects_cc: clang
+          example_projects_cxx: clang++
+          example_projects_cxxflags: -D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=address -fno-omit-frame-pointer
+          example_projects_ldflags: -fsanitize=address
+  - name: sanitizers-asan-rhel80-clang-shared-extra_alignment-8.0-sharded
+    run_on: rhel80-large
+    tags: [sanitizers, asan, rhel80, clang, shared, extra_alignment, "8.0", sharded]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+            - { key: cc_compiler, value: clang }
+            - { key: cxx_compiler, value: clang++ }
+      - func: setup
+      - func: start_mongod
+        vars:
+          TOPOLOGY: sharded_cluster
+          mongodb_version: "8.0"
+      - func: install_c_driver
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+          SKIP_INSTALL_LIBMONGOCRYPT: 1
+      - func: install-uv
+      - func: compile
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+          ENABLE_TESTS: "ON"
+          USE_SANITIZER_ASAN: "ON"
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: sharded
+          TEST_WITH_ASAN: "ON"
+          example_projects_cc: clang
+          example_projects_cxx: clang++
+          example_projects_cxxflags: -D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=address -fno-omit-frame-pointer
+          example_projects_ldflags: -fsanitize=address
+  - name: sanitizers-asan-rhel80-clang-shared-extra_alignment-8.0-single
+    run_on: rhel80-large
+    tags: [sanitizers, asan, rhel80, clang, shared, extra_alignment, "8.0", single]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+            - { key: cc_compiler, value: clang }
+            - { key: cxx_compiler, value: clang++ }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: "8.0"
+      - func: install_c_driver
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+          SKIP_INSTALL_LIBMONGOCRYPT: 1
+      - func: install-uv
+      - func: compile
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+          ENABLE_TESTS: "ON"
+          USE_SANITIZER_ASAN: "ON"
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+          TEST_WITH_ASAN: "ON"
+          example_projects_cc: clang
+          example_projects_cxx: clang++
+          example_projects_cxxflags: -D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=address -fno-omit-frame-pointer
+          example_projects_ldflags: -fsanitize=address
+  - name: sanitizers-asan-rhel80-clang-shared-extra_alignment-latest-replica
+    run_on: rhel80-large
+    tags: [sanitizers, asan, rhel80, clang, shared, extra_alignment, latest, replica]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+            - { key: cc_compiler, value: clang }
+            - { key: cxx_compiler, value: clang++ }
+      - func: setup
+      - func: start_mongod
+        vars:
+          TOPOLOGY: replica_set
+          mongodb_version: latest
+      - func: install_c_driver
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+          SKIP_INSTALL_LIBMONGOCRYPT: 1
+      - func: install-uv
+      - func: compile
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+          ENABLE_TESTS: "ON"
+          USE_SANITIZER_ASAN: "ON"
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: replica
+          TEST_WITH_ASAN: "ON"
+          example_projects_cc: clang
+          example_projects_cxx: clang++
+          example_projects_cxxflags: -D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=address -fno-omit-frame-pointer
+          example_projects_ldflags: -fsanitize=address
+  - name: sanitizers-asan-rhel80-clang-shared-extra_alignment-latest-sharded
+    run_on: rhel80-large
+    tags: [sanitizers, asan, rhel80, clang, shared, extra_alignment, latest, sharded]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+            - { key: cc_compiler, value: clang }
+            - { key: cxx_compiler, value: clang++ }
+      - func: setup
+      - func: start_mongod
+        vars:
+          TOPOLOGY: sharded_cluster
+          mongodb_version: latest
+      - func: install_c_driver
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+          SKIP_INSTALL_LIBMONGOCRYPT: 1
+      - func: install-uv
+      - func: compile
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+          ENABLE_TESTS: "ON"
+          USE_SANITIZER_ASAN: "ON"
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: sharded
+          TEST_WITH_ASAN: "ON"
+          example_projects_cc: clang
+          example_projects_cxx: clang++
+          example_projects_cxxflags: -D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=address -fno-omit-frame-pointer
+          example_projects_ldflags: -fsanitize=address
+  - name: sanitizers-asan-rhel80-clang-shared-extra_alignment-latest-single
+    run_on: rhel80-large
+    tags: [sanitizers, asan, rhel80, clang, shared, extra_alignment, latest, single]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+            - { key: cc_compiler, value: clang }
+            - { key: cxx_compiler, value: clang++ }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: latest
+      - func: install_c_driver
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+          SKIP_INSTALL_LIBMONGOCRYPT: 1
+      - func: install-uv
+      - func: compile
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+          ENABLE_TESTS: "ON"
+          USE_SANITIZER_ASAN: "ON"
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+          TEST_WITH_ASAN: "ON"
+          example_projects_cc: clang
+          example_projects_cxx: clang++
+          example_projects_cxxflags: -D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=address -fno-omit-frame-pointer
+          example_projects_ldflags: -fsanitize=address
+  - name: sanitizers-asan-rhel80-clang-shared-latest-replica
+    run_on: rhel80-large
+    tags: [sanitizers, asan, rhel80, clang, shared, latest, replica]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+            - { key: cc_compiler, value: clang }
+            - { key: cxx_compiler, value: clang++ }
+      - func: setup
+      - func: start_mongod
+        vars:
+          TOPOLOGY: replica_set
+          mongodb_version: latest
+      - func: install_c_driver
+        vars:
+          SKIP_INSTALL_LIBMONGOCRYPT: 1
+      - func: install-uv
+      - func: compile
+        vars:
+          ENABLE_TESTS: "ON"
+          RUN_DISTCHECK: 1
+          USE_SANITIZER_ASAN: "ON"
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: replica
+          TEST_WITH_ASAN: "ON"
+          example_projects_cc: clang
+          example_projects_cxx: clang++
+          example_projects_cxxflags: -D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=address -fno-omit-frame-pointer
+          example_projects_ldflags: -fsanitize=address
+  - name: sanitizers-asan-rhel80-clang-shared-latest-sharded
+    run_on: rhel80-large
+    tags: [sanitizers, asan, rhel80, clang, shared, latest, sharded]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+            - { key: cc_compiler, value: clang }
+            - { key: cxx_compiler, value: clang++ }
+      - func: setup
+      - func: start_mongod
+        vars:
+          TOPOLOGY: sharded_cluster
+          mongodb_version: latest
+      - func: install_c_driver
+        vars:
+          SKIP_INSTALL_LIBMONGOCRYPT: 1
+      - func: install-uv
+      - func: compile
+        vars:
+          ENABLE_TESTS: "ON"
+          RUN_DISTCHECK: 1
+          USE_SANITIZER_ASAN: "ON"
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: sharded
+          TEST_WITH_ASAN: "ON"
+          example_projects_cc: clang
+          example_projects_cxx: clang++
+          example_projects_cxxflags: -D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=address -fno-omit-frame-pointer
+          example_projects_ldflags: -fsanitize=address
+  - name: sanitizers-asan-rhel80-clang-shared-latest-single
+    run_on: rhel80-large
+    tags: [sanitizers, asan, rhel80, clang, shared, latest, single]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+            - { key: cc_compiler, value: clang }
+            - { key: cxx_compiler, value: clang++ }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: latest
       - func: install_c_driver
         vars:
           SKIP_INSTALL_LIBMONGOCRYPT: 1
@@ -13659,43 +14105,9 @@ tasks:
           example_projects_cxx: clang++
           example_projects_cxxflags: -D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=address -fno-omit-frame-pointer
           example_projects_ldflags: -fsanitize=address
-  - name: sanitizers-asan-ubuntu2004-clang-shared-extra_alignment-5.0-single
-    run_on: ubuntu2004-large
-    tags: [sanitizers, asan, ubuntu2004, clang, shared, extra_alignment, "5.0", single]
-    commands:
-      - command: expansions.update
-        params:
-          updates:
-            - { key: build_type, value: Debug }
-            - { key: cc_compiler, value: clang }
-            - { key: cxx_compiler, value: clang++ }
-      - func: setup
-      - func: start_mongod
-        vars:
-          mongodb_version: "5.0"
-      - func: install_c_driver
-        vars:
-          BSON_EXTRA_ALIGNMENT: 1
-          SKIP_INSTALL_LIBMONGOCRYPT: 1
-      - func: install-uv
-      - func: compile
-        vars:
-          BSON_EXTRA_ALIGNMENT: 1
-          ENABLE_TESTS: "ON"
-          USE_SANITIZER_ASAN: "ON"
-      - func: fetch-det
-      - func: run_kms_servers
-      - func: test
-        vars:
-          MONGOCXX_TEST_TOPOLOGY: single
-          TEST_WITH_ASAN: "ON"
-          example_projects_cc: clang
-          example_projects_cxx: clang++
-          example_projects_cxxflags: -D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=address -fno-omit-frame-pointer
-          example_projects_ldflags: -fsanitize=address
-  - name: sanitizers-asan-ubuntu2004-clang-static-5.0-single
-    run_on: ubuntu2004-large
-    tags: [sanitizers, asan, ubuntu2004, clang, static, "5.0", single]
+  - name: sanitizers-asan-rhel80-clang-static-4.0-replica
+    run_on: rhel80-large
+    tags: [sanitizers, asan, rhel80, clang, static, "4.0", replica]
     commands:
       - command: expansions.update
         params:
@@ -13707,7 +14119,77 @@ tasks:
       - func: setup
       - func: start_mongod
         vars:
-          mongodb_version: "5.0"
+          TOPOLOGY: replica_set
+          mongodb_version: "4.0"
+      - func: install_c_driver
+        vars:
+          SKIP_INSTALL_LIBMONGOCRYPT: 1
+      - func: install-uv
+      - func: compile
+        vars:
+          ENABLE_TESTS: "ON"
+          RUN_DISTCHECK: 1
+          USE_SANITIZER_ASAN: "ON"
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: replica
+          TEST_WITH_ASAN: "ON"
+          example_projects_cc: clang
+          example_projects_cxx: clang++
+          example_projects_cxxflags: -D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=address -fno-omit-frame-pointer
+          example_projects_ldflags: -fsanitize=address
+  - name: sanitizers-asan-rhel80-clang-static-4.0-sharded
+    run_on: rhel80-large
+    tags: [sanitizers, asan, rhel80, clang, static, "4.0", sharded]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+            - { key: cc_compiler, value: clang }
+            - { key: cxx_compiler, value: clang++ }
+            - { key: USE_STATIC_LIBS, value: "1" }
+      - func: setup
+      - func: start_mongod
+        vars:
+          TOPOLOGY: sharded_cluster
+          mongodb_version: "4.0"
+      - func: install_c_driver
+        vars:
+          SKIP_INSTALL_LIBMONGOCRYPT: 1
+      - func: install-uv
+      - func: compile
+        vars:
+          ENABLE_TESTS: "ON"
+          RUN_DISTCHECK: 1
+          USE_SANITIZER_ASAN: "ON"
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: sharded
+          TEST_WITH_ASAN: "ON"
+          example_projects_cc: clang
+          example_projects_cxx: clang++
+          example_projects_cxxflags: -D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=address -fno-omit-frame-pointer
+          example_projects_ldflags: -fsanitize=address
+  - name: sanitizers-asan-rhel80-clang-static-4.0-single
+    run_on: rhel80-large
+    tags: [sanitizers, asan, rhel80, clang, static, "4.0", single]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+            - { key: cc_compiler, value: clang }
+            - { key: cxx_compiler, value: clang++ }
+            - { key: USE_STATIC_LIBS, value: "1" }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: "4.0"
       - func: install_c_driver
         vars:
           SKIP_INSTALL_LIBMONGOCRYPT: 1
@@ -13727,9 +14209,9 @@ tasks:
           example_projects_cxx: clang++
           example_projects_cxxflags: -D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=address -fno-omit-frame-pointer
           example_projects_ldflags: -fsanitize=address
-  - name: sanitizers-asan-ubuntu2004-clang-static-extra_alignment-5.0-single
-    run_on: ubuntu2004-large
-    tags: [sanitizers, asan, ubuntu2004, clang, static, extra_alignment, "5.0", single]
+  - name: sanitizers-asan-rhel80-clang-static-8.0-replica
+    run_on: rhel80-large
+    tags: [sanitizers, asan, rhel80, clang, static, "8.0", replica]
     commands:
       - command: expansions.update
         params:
@@ -13741,7 +14223,183 @@ tasks:
       - func: setup
       - func: start_mongod
         vars:
-          mongodb_version: "5.0"
+          TOPOLOGY: replica_set
+          mongodb_version: "8.0"
+      - func: install_c_driver
+        vars:
+          SKIP_INSTALL_LIBMONGOCRYPT: 1
+      - func: install-uv
+      - func: compile
+        vars:
+          ENABLE_TESTS: "ON"
+          RUN_DISTCHECK: 1
+          USE_SANITIZER_ASAN: "ON"
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: replica
+          TEST_WITH_ASAN: "ON"
+          example_projects_cc: clang
+          example_projects_cxx: clang++
+          example_projects_cxxflags: -D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=address -fno-omit-frame-pointer
+          example_projects_ldflags: -fsanitize=address
+  - name: sanitizers-asan-rhel80-clang-static-8.0-sharded
+    run_on: rhel80-large
+    tags: [sanitizers, asan, rhel80, clang, static, "8.0", sharded]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+            - { key: cc_compiler, value: clang }
+            - { key: cxx_compiler, value: clang++ }
+            - { key: USE_STATIC_LIBS, value: "1" }
+      - func: setup
+      - func: start_mongod
+        vars:
+          TOPOLOGY: sharded_cluster
+          mongodb_version: "8.0"
+      - func: install_c_driver
+        vars:
+          SKIP_INSTALL_LIBMONGOCRYPT: 1
+      - func: install-uv
+      - func: compile
+        vars:
+          ENABLE_TESTS: "ON"
+          RUN_DISTCHECK: 1
+          USE_SANITIZER_ASAN: "ON"
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: sharded
+          TEST_WITH_ASAN: "ON"
+          example_projects_cc: clang
+          example_projects_cxx: clang++
+          example_projects_cxxflags: -D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=address -fno-omit-frame-pointer
+          example_projects_ldflags: -fsanitize=address
+  - name: sanitizers-asan-rhel80-clang-static-8.0-single
+    run_on: rhel80-large
+    tags: [sanitizers, asan, rhel80, clang, static, "8.0", single]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+            - { key: cc_compiler, value: clang }
+            - { key: cxx_compiler, value: clang++ }
+            - { key: USE_STATIC_LIBS, value: "1" }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: "8.0"
+      - func: install_c_driver
+        vars:
+          SKIP_INSTALL_LIBMONGOCRYPT: 1
+      - func: install-uv
+      - func: compile
+        vars:
+          ENABLE_TESTS: "ON"
+          RUN_DISTCHECK: 1
+          USE_SANITIZER_ASAN: "ON"
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+          TEST_WITH_ASAN: "ON"
+          example_projects_cc: clang
+          example_projects_cxx: clang++
+          example_projects_cxxflags: -D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=address -fno-omit-frame-pointer
+          example_projects_ldflags: -fsanitize=address
+  - name: sanitizers-asan-rhel80-clang-static-extra_alignment-4.0-replica
+    run_on: rhel80-large
+    tags: [sanitizers, asan, rhel80, clang, static, extra_alignment, "4.0", replica]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+            - { key: cc_compiler, value: clang }
+            - { key: cxx_compiler, value: clang++ }
+            - { key: USE_STATIC_LIBS, value: "1" }
+      - func: setup
+      - func: start_mongod
+        vars:
+          TOPOLOGY: replica_set
+          mongodb_version: "4.0"
+      - func: install_c_driver
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+          SKIP_INSTALL_LIBMONGOCRYPT: 1
+      - func: install-uv
+      - func: compile
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+          ENABLE_TESTS: "ON"
+          USE_SANITIZER_ASAN: "ON"
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: replica
+          TEST_WITH_ASAN: "ON"
+          example_projects_cc: clang
+          example_projects_cxx: clang++
+          example_projects_cxxflags: -D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=address -fno-omit-frame-pointer
+          example_projects_ldflags: -fsanitize=address
+  - name: sanitizers-asan-rhel80-clang-static-extra_alignment-4.0-sharded
+    run_on: rhel80-large
+    tags: [sanitizers, asan, rhel80, clang, static, extra_alignment, "4.0", sharded]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+            - { key: cc_compiler, value: clang }
+            - { key: cxx_compiler, value: clang++ }
+            - { key: USE_STATIC_LIBS, value: "1" }
+      - func: setup
+      - func: start_mongod
+        vars:
+          TOPOLOGY: sharded_cluster
+          mongodb_version: "4.0"
+      - func: install_c_driver
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+          SKIP_INSTALL_LIBMONGOCRYPT: 1
+      - func: install-uv
+      - func: compile
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+          ENABLE_TESTS: "ON"
+          USE_SANITIZER_ASAN: "ON"
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: sharded
+          TEST_WITH_ASAN: "ON"
+          example_projects_cc: clang
+          example_projects_cxx: clang++
+          example_projects_cxxflags: -D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=address -fno-omit-frame-pointer
+          example_projects_ldflags: -fsanitize=address
+  - name: sanitizers-asan-rhel80-clang-static-extra_alignment-4.0-single
+    run_on: rhel80-large
+    tags: [sanitizers, asan, rhel80, clang, static, extra_alignment, "4.0", single]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+            - { key: cc_compiler, value: clang }
+            - { key: cxx_compiler, value: clang++ }
+            - { key: USE_STATIC_LIBS, value: "1" }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: "4.0"
       - func: install_c_driver
         vars:
           BSON_EXTRA_ALIGNMENT: 1
@@ -13762,9 +14420,9 @@ tasks:
           example_projects_cxx: clang++
           example_projects_cxxflags: -D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=address -fno-omit-frame-pointer
           example_projects_ldflags: -fsanitize=address
-  - name: sanitizers-ubsan-ubuntu1804-clang-static-5.0-single
-    run_on: ubuntu1804-large
-    tags: [sanitizers, ubsan, ubuntu1804, clang, static, "5.0", single]
+  - name: sanitizers-asan-rhel80-clang-static-extra_alignment-8.0-replica
+    run_on: rhel80-large
+    tags: [sanitizers, asan, rhel80, clang, static, extra_alignment, "8.0", replica]
     commands:
       - command: expansions.update
         params:
@@ -13776,7 +14434,395 @@ tasks:
       - func: setup
       - func: start_mongod
         vars:
-          mongodb_version: "5.0"
+          TOPOLOGY: replica_set
+          mongodb_version: "8.0"
+      - func: install_c_driver
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+          SKIP_INSTALL_LIBMONGOCRYPT: 1
+      - func: install-uv
+      - func: compile
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+          ENABLE_TESTS: "ON"
+          USE_SANITIZER_ASAN: "ON"
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: replica
+          TEST_WITH_ASAN: "ON"
+          example_projects_cc: clang
+          example_projects_cxx: clang++
+          example_projects_cxxflags: -D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=address -fno-omit-frame-pointer
+          example_projects_ldflags: -fsanitize=address
+  - name: sanitizers-asan-rhel80-clang-static-extra_alignment-8.0-sharded
+    run_on: rhel80-large
+    tags: [sanitizers, asan, rhel80, clang, static, extra_alignment, "8.0", sharded]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+            - { key: cc_compiler, value: clang }
+            - { key: cxx_compiler, value: clang++ }
+            - { key: USE_STATIC_LIBS, value: "1" }
+      - func: setup
+      - func: start_mongod
+        vars:
+          TOPOLOGY: sharded_cluster
+          mongodb_version: "8.0"
+      - func: install_c_driver
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+          SKIP_INSTALL_LIBMONGOCRYPT: 1
+      - func: install-uv
+      - func: compile
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+          ENABLE_TESTS: "ON"
+          USE_SANITIZER_ASAN: "ON"
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: sharded
+          TEST_WITH_ASAN: "ON"
+          example_projects_cc: clang
+          example_projects_cxx: clang++
+          example_projects_cxxflags: -D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=address -fno-omit-frame-pointer
+          example_projects_ldflags: -fsanitize=address
+  - name: sanitizers-asan-rhel80-clang-static-extra_alignment-8.0-single
+    run_on: rhel80-large
+    tags: [sanitizers, asan, rhel80, clang, static, extra_alignment, "8.0", single]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+            - { key: cc_compiler, value: clang }
+            - { key: cxx_compiler, value: clang++ }
+            - { key: USE_STATIC_LIBS, value: "1" }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: "8.0"
+      - func: install_c_driver
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+          SKIP_INSTALL_LIBMONGOCRYPT: 1
+      - func: install-uv
+      - func: compile
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+          ENABLE_TESTS: "ON"
+          USE_SANITIZER_ASAN: "ON"
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+          TEST_WITH_ASAN: "ON"
+          example_projects_cc: clang
+          example_projects_cxx: clang++
+          example_projects_cxxflags: -D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=address -fno-omit-frame-pointer
+          example_projects_ldflags: -fsanitize=address
+  - name: sanitizers-asan-rhel80-clang-static-extra_alignment-latest-replica
+    run_on: rhel80-large
+    tags: [sanitizers, asan, rhel80, clang, static, extra_alignment, latest, replica]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+            - { key: cc_compiler, value: clang }
+            - { key: cxx_compiler, value: clang++ }
+            - { key: USE_STATIC_LIBS, value: "1" }
+      - func: setup
+      - func: start_mongod
+        vars:
+          TOPOLOGY: replica_set
+          mongodb_version: latest
+      - func: install_c_driver
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+          SKIP_INSTALL_LIBMONGOCRYPT: 1
+      - func: install-uv
+      - func: compile
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+          ENABLE_TESTS: "ON"
+          USE_SANITIZER_ASAN: "ON"
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: replica
+          TEST_WITH_ASAN: "ON"
+          example_projects_cc: clang
+          example_projects_cxx: clang++
+          example_projects_cxxflags: -D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=address -fno-omit-frame-pointer
+          example_projects_ldflags: -fsanitize=address
+  - name: sanitizers-asan-rhel80-clang-static-extra_alignment-latest-sharded
+    run_on: rhel80-large
+    tags: [sanitizers, asan, rhel80, clang, static, extra_alignment, latest, sharded]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+            - { key: cc_compiler, value: clang }
+            - { key: cxx_compiler, value: clang++ }
+            - { key: USE_STATIC_LIBS, value: "1" }
+      - func: setup
+      - func: start_mongod
+        vars:
+          TOPOLOGY: sharded_cluster
+          mongodb_version: latest
+      - func: install_c_driver
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+          SKIP_INSTALL_LIBMONGOCRYPT: 1
+      - func: install-uv
+      - func: compile
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+          ENABLE_TESTS: "ON"
+          USE_SANITIZER_ASAN: "ON"
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: sharded
+          TEST_WITH_ASAN: "ON"
+          example_projects_cc: clang
+          example_projects_cxx: clang++
+          example_projects_cxxflags: -D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=address -fno-omit-frame-pointer
+          example_projects_ldflags: -fsanitize=address
+  - name: sanitizers-asan-rhel80-clang-static-extra_alignment-latest-single
+    run_on: rhel80-large
+    tags: [sanitizers, asan, rhel80, clang, static, extra_alignment, latest, single]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+            - { key: cc_compiler, value: clang }
+            - { key: cxx_compiler, value: clang++ }
+            - { key: USE_STATIC_LIBS, value: "1" }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: latest
+      - func: install_c_driver
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+          SKIP_INSTALL_LIBMONGOCRYPT: 1
+      - func: install-uv
+      - func: compile
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+          ENABLE_TESTS: "ON"
+          USE_SANITIZER_ASAN: "ON"
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+          TEST_WITH_ASAN: "ON"
+          example_projects_cc: clang
+          example_projects_cxx: clang++
+          example_projects_cxxflags: -D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=address -fno-omit-frame-pointer
+          example_projects_ldflags: -fsanitize=address
+  - name: sanitizers-asan-rhel80-clang-static-latest-replica
+    run_on: rhel80-large
+    tags: [sanitizers, asan, rhel80, clang, static, latest, replica]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+            - { key: cc_compiler, value: clang }
+            - { key: cxx_compiler, value: clang++ }
+            - { key: USE_STATIC_LIBS, value: "1" }
+      - func: setup
+      - func: start_mongod
+        vars:
+          TOPOLOGY: replica_set
+          mongodb_version: latest
+      - func: install_c_driver
+        vars:
+          SKIP_INSTALL_LIBMONGOCRYPT: 1
+      - func: install-uv
+      - func: compile
+        vars:
+          ENABLE_TESTS: "ON"
+          RUN_DISTCHECK: 1
+          USE_SANITIZER_ASAN: "ON"
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: replica
+          TEST_WITH_ASAN: "ON"
+          example_projects_cc: clang
+          example_projects_cxx: clang++
+          example_projects_cxxflags: -D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=address -fno-omit-frame-pointer
+          example_projects_ldflags: -fsanitize=address
+  - name: sanitizers-asan-rhel80-clang-static-latest-sharded
+    run_on: rhel80-large
+    tags: [sanitizers, asan, rhel80, clang, static, latest, sharded]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+            - { key: cc_compiler, value: clang }
+            - { key: cxx_compiler, value: clang++ }
+            - { key: USE_STATIC_LIBS, value: "1" }
+      - func: setup
+      - func: start_mongod
+        vars:
+          TOPOLOGY: sharded_cluster
+          mongodb_version: latest
+      - func: install_c_driver
+        vars:
+          SKIP_INSTALL_LIBMONGOCRYPT: 1
+      - func: install-uv
+      - func: compile
+        vars:
+          ENABLE_TESTS: "ON"
+          RUN_DISTCHECK: 1
+          USE_SANITIZER_ASAN: "ON"
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: sharded
+          TEST_WITH_ASAN: "ON"
+          example_projects_cc: clang
+          example_projects_cxx: clang++
+          example_projects_cxxflags: -D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=address -fno-omit-frame-pointer
+          example_projects_ldflags: -fsanitize=address
+  - name: sanitizers-asan-rhel80-clang-static-latest-single
+    run_on: rhel80-large
+    tags: [sanitizers, asan, rhel80, clang, static, latest, single]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+            - { key: cc_compiler, value: clang }
+            - { key: cxx_compiler, value: clang++ }
+            - { key: USE_STATIC_LIBS, value: "1" }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: latest
+      - func: install_c_driver
+        vars:
+          SKIP_INSTALL_LIBMONGOCRYPT: 1
+      - func: install-uv
+      - func: compile
+        vars:
+          ENABLE_TESTS: "ON"
+          RUN_DISTCHECK: 1
+          USE_SANITIZER_ASAN: "ON"
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+          TEST_WITH_ASAN: "ON"
+          example_projects_cc: clang
+          example_projects_cxx: clang++
+          example_projects_cxxflags: -D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=address -fno-omit-frame-pointer
+          example_projects_ldflags: -fsanitize=address
+  - name: sanitizers-ubsan-rhel80-clang-static-4.0-replica
+    run_on: rhel80-large
+    tags: [sanitizers, ubsan, rhel80, clang, static, "4.0", replica]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+            - { key: cc_compiler, value: clang }
+            - { key: cxx_compiler, value: clang++ }
+            - { key: USE_STATIC_LIBS, value: "1" }
+      - func: setup
+      - func: start_mongod
+        vars:
+          TOPOLOGY: replica_set
+          mongodb_version: "4.0"
+      - func: install_c_driver
+        vars:
+          SKIP_INSTALL_LIBMONGOCRYPT: 1
+      - func: install-uv
+      - func: compile
+        vars:
+          ENABLE_TESTS: "ON"
+          RUN_DISTCHECK: 1
+          USE_SANITIZER_UBSAN: "ON"
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: replica
+          TEST_WITH_UBSAN: "ON"
+          example_projects_cc: clang
+          example_projects_cxx: clang++
+          example_projects_cxxflags: -D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=undefined -fno-sanitize-recover=undefined -fno-omit-frame-pointer
+          example_projects_ldflags: -fsanitize=undefined -fno-sanitize-recover=undefined
+  - name: sanitizers-ubsan-rhel80-clang-static-4.0-sharded
+    run_on: rhel80-large
+    tags: [sanitizers, ubsan, rhel80, clang, static, "4.0", sharded]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+            - { key: cc_compiler, value: clang }
+            - { key: cxx_compiler, value: clang++ }
+            - { key: USE_STATIC_LIBS, value: "1" }
+      - func: setup
+      - func: start_mongod
+        vars:
+          TOPOLOGY: sharded_cluster
+          mongodb_version: "4.0"
+      - func: install_c_driver
+        vars:
+          SKIP_INSTALL_LIBMONGOCRYPT: 1
+      - func: install-uv
+      - func: compile
+        vars:
+          ENABLE_TESTS: "ON"
+          RUN_DISTCHECK: 1
+          USE_SANITIZER_UBSAN: "ON"
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: sharded
+          TEST_WITH_UBSAN: "ON"
+          example_projects_cc: clang
+          example_projects_cxx: clang++
+          example_projects_cxxflags: -D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=undefined -fno-sanitize-recover=undefined -fno-omit-frame-pointer
+          example_projects_ldflags: -fsanitize=undefined -fno-sanitize-recover=undefined
+  - name: sanitizers-ubsan-rhel80-clang-static-4.0-single
+    run_on: rhel80-large
+    tags: [sanitizers, ubsan, rhel80, clang, static, "4.0", single]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+            - { key: cc_compiler, value: clang }
+            - { key: cxx_compiler, value: clang++ }
+            - { key: USE_STATIC_LIBS, value: "1" }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: "4.0"
       - func: install_c_driver
         vars:
           SKIP_INSTALL_LIBMONGOCRYPT: 1
@@ -13796,9 +14842,9 @@ tasks:
           example_projects_cxx: clang++
           example_projects_cxxflags: -D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=undefined -fno-sanitize-recover=undefined -fno-omit-frame-pointer
           example_projects_ldflags: -fsanitize=undefined -fno-sanitize-recover=undefined
-  - name: sanitizers-ubsan-ubuntu2004-clang-static-5.0-single
-    run_on: ubuntu2004-large
-    tags: [sanitizers, ubsan, ubuntu2004, clang, static, "5.0", single]
+  - name: sanitizers-ubsan-rhel80-clang-static-8.0-replica
+    run_on: rhel80-large
+    tags: [sanitizers, ubsan, rhel80, clang, static, "8.0", replica]
     commands:
       - command: expansions.update
         params:
@@ -13810,7 +14856,181 @@ tasks:
       - func: setup
       - func: start_mongod
         vars:
-          mongodb_version: "5.0"
+          TOPOLOGY: replica_set
+          mongodb_version: "8.0"
+      - func: install_c_driver
+        vars:
+          SKIP_INSTALL_LIBMONGOCRYPT: 1
+      - func: install-uv
+      - func: compile
+        vars:
+          ENABLE_TESTS: "ON"
+          RUN_DISTCHECK: 1
+          USE_SANITIZER_UBSAN: "ON"
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: replica
+          TEST_WITH_UBSAN: "ON"
+          example_projects_cc: clang
+          example_projects_cxx: clang++
+          example_projects_cxxflags: -D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=undefined -fno-sanitize-recover=undefined -fno-omit-frame-pointer
+          example_projects_ldflags: -fsanitize=undefined -fno-sanitize-recover=undefined
+  - name: sanitizers-ubsan-rhel80-clang-static-8.0-sharded
+    run_on: rhel80-large
+    tags: [sanitizers, ubsan, rhel80, clang, static, "8.0", sharded]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+            - { key: cc_compiler, value: clang }
+            - { key: cxx_compiler, value: clang++ }
+            - { key: USE_STATIC_LIBS, value: "1" }
+      - func: setup
+      - func: start_mongod
+        vars:
+          TOPOLOGY: sharded_cluster
+          mongodb_version: "8.0"
+      - func: install_c_driver
+        vars:
+          SKIP_INSTALL_LIBMONGOCRYPT: 1
+      - func: install-uv
+      - func: compile
+        vars:
+          ENABLE_TESTS: "ON"
+          RUN_DISTCHECK: 1
+          USE_SANITIZER_UBSAN: "ON"
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: sharded
+          TEST_WITH_UBSAN: "ON"
+          example_projects_cc: clang
+          example_projects_cxx: clang++
+          example_projects_cxxflags: -D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=undefined -fno-sanitize-recover=undefined -fno-omit-frame-pointer
+          example_projects_ldflags: -fsanitize=undefined -fno-sanitize-recover=undefined
+  - name: sanitizers-ubsan-rhel80-clang-static-8.0-single
+    run_on: rhel80-large
+    tags: [sanitizers, ubsan, rhel80, clang, static, "8.0", single]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+            - { key: cc_compiler, value: clang }
+            - { key: cxx_compiler, value: clang++ }
+            - { key: USE_STATIC_LIBS, value: "1" }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: "8.0"
+      - func: install_c_driver
+        vars:
+          SKIP_INSTALL_LIBMONGOCRYPT: 1
+      - func: install-uv
+      - func: compile
+        vars:
+          ENABLE_TESTS: "ON"
+          RUN_DISTCHECK: 1
+          USE_SANITIZER_UBSAN: "ON"
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+          TEST_WITH_UBSAN: "ON"
+          example_projects_cc: clang
+          example_projects_cxx: clang++
+          example_projects_cxxflags: -D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=undefined -fno-sanitize-recover=undefined -fno-omit-frame-pointer
+          example_projects_ldflags: -fsanitize=undefined -fno-sanitize-recover=undefined
+  - name: sanitizers-ubsan-rhel80-clang-static-latest-replica
+    run_on: rhel80-large
+    tags: [sanitizers, ubsan, rhel80, clang, static, latest, replica]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+            - { key: cc_compiler, value: clang }
+            - { key: cxx_compiler, value: clang++ }
+            - { key: USE_STATIC_LIBS, value: "1" }
+      - func: setup
+      - func: start_mongod
+        vars:
+          TOPOLOGY: replica_set
+          mongodb_version: latest
+      - func: install_c_driver
+        vars:
+          SKIP_INSTALL_LIBMONGOCRYPT: 1
+      - func: install-uv
+      - func: compile
+        vars:
+          ENABLE_TESTS: "ON"
+          RUN_DISTCHECK: 1
+          USE_SANITIZER_UBSAN: "ON"
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: replica
+          TEST_WITH_UBSAN: "ON"
+          example_projects_cc: clang
+          example_projects_cxx: clang++
+          example_projects_cxxflags: -D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=undefined -fno-sanitize-recover=undefined -fno-omit-frame-pointer
+          example_projects_ldflags: -fsanitize=undefined -fno-sanitize-recover=undefined
+  - name: sanitizers-ubsan-rhel80-clang-static-latest-sharded
+    run_on: rhel80-large
+    tags: [sanitizers, ubsan, rhel80, clang, static, latest, sharded]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+            - { key: cc_compiler, value: clang }
+            - { key: cxx_compiler, value: clang++ }
+            - { key: USE_STATIC_LIBS, value: "1" }
+      - func: setup
+      - func: start_mongod
+        vars:
+          TOPOLOGY: sharded_cluster
+          mongodb_version: latest
+      - func: install_c_driver
+        vars:
+          SKIP_INSTALL_LIBMONGOCRYPT: 1
+      - func: install-uv
+      - func: compile
+        vars:
+          ENABLE_TESTS: "ON"
+          RUN_DISTCHECK: 1
+          USE_SANITIZER_UBSAN: "ON"
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: sharded
+          TEST_WITH_UBSAN: "ON"
+          example_projects_cc: clang
+          example_projects_cxx: clang++
+          example_projects_cxxflags: -D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=undefined -fno-sanitize-recover=undefined -fno-omit-frame-pointer
+          example_projects_ldflags: -fsanitize=undefined -fno-sanitize-recover=undefined
+  - name: sanitizers-ubsan-rhel80-clang-static-latest-single
+    run_on: rhel80-large
+    tags: [sanitizers, ubsan, rhel80, clang, static, latest, single]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+            - { key: cc_compiler, value: clang }
+            - { key: cxx_compiler, value: clang++ }
+            - { key: USE_STATIC_LIBS, value: "1" }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: latest
       - func: install_c_driver
         vars:
           SKIP_INSTALL_LIBMONGOCRYPT: 1
