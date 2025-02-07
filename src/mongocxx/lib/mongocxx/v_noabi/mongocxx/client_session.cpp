@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <bsoncxx/v1/detail/macros.hpp>
+
 #include <bsoncxx/private/make_unique.hh>
 
 #include <mongocxx/exception/exception.hpp>
@@ -25,10 +27,14 @@ namespace mongocxx {
 namespace v_noabi {
 
 // Private constructors.
+BSONCXX_PRIVATE_WARNINGS_PUSH();
+BSONCXX_PRIVATE_WARNINGS_DISABLE(Clang("-Wover-aligned"));
+BSONCXX_PRIVATE_WARNINGS_DISABLE(MSVC(4316));
 client_session::client_session(
     mongocxx::v_noabi::client const* client,
     mongocxx::v_noabi::options::client_session const& options)
     : _impl(bsoncxx::make_unique<impl>(client, options)) {}
+BSONCXX_PRIVATE_WARNINGS_POP();
 
 client_session::client_session(client_session&&) noexcept = default;
 
