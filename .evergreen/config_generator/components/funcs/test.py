@@ -29,7 +29,6 @@ class Test(Function):
             'example_projects_cxxflags',
             'example_projects_ldflags',
             'generator',
-            'lib_dir',
             'MONGOCXX_TEST_TOPOLOGY',
             'MONGODB_API_VERSION',
             'platform',

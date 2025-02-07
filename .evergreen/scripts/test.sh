@@ -22,7 +22,6 @@ set -o pipefail
 : "${example_projects_cxxflags:-}"
 : "${example_projects_ldflags:-}"
 : "${generator:-}"
-: "${lib_dir:-}"
 : "${MONGODB_API_VERSION:-}"
 : "${platform:-}"
 : "${TEST_WITH_ASAN:-}"
@@ -46,17 +45,19 @@ popd # ..
 mongoc_dir="${working_dir:?}/../mongoc"
 export mongoc_dir
 
+# Library directory differs on RHEL.
+if [[ "${distro_id:?}" == rhel* ]]; then
+  LIB_DIR="lib64"
+else
+  LIB_DIR="lib"
+fi
+
 # Use PATH / LD_LIBRARY_PATH / DYLD_LIBRARY_PATH to inform the tests where to find
 # mongoc library dependencies on Windows / Linux / Mac OS, respectively.
 # Additionally, on Windows, we also need to inform the tests where to find
 # mongocxx library dependencies.
-if [ -n "${lib_dir:-}" ]; then
-  export LD_LIBRARY_PATH="${working_dir:?}/build:${mongoc_dir:?}/${lib_dir:?}/"
-  export DYLD_LIBRARY_PATH="${working_dir:?}/build:${mongoc_dir:?}/${lib_dir:?}/"
-else
-  export LD_LIBRARY_PATH="${working_dir:?}/build:${mongoc_dir:?}/lib/"
-  export DYLD_LIBRARY_PATH="${working_dir:?}/build:${mongoc_dir:?}/lib/"
-fi
+export LD_LIBRARY_PATH="${working_dir:?}/build:${mongoc_dir:?}/${LIB_DIR:?}/"
+export DYLD_LIBRARY_PATH="${working_dir:?}/build:${mongoc_dir:?}/${LIB_DIR:?}/"
 PATH="${working_dir:?}/build/src/mongocxx/test/${build_type:?}:${PATH:-}"
 PATH="${working_dir:?}/build/src/bsoncxx/test/${build_type:?}:${PATH:-}"
 PATH="${working_dir:?}/build/src/mongocxx/${build_type:?}:${PATH:-}"
@@ -316,13 +317,8 @@ CMAKE_PREFIX_PATH="${mongoc_dir:?}:${working_dir:?}/build/install"
 export CMAKE_PREFIX_PATH
 
 PKG_CONFIG_PATH=""
-if [ -n "${lib_dir:-}" ]; then
-  PKG_CONFIG_PATH+=":${mongoc_dir:?}/${lib_dir:?}/pkgconfig"
-  PKG_CONFIG_PATH+=":${working_dir:?}/build/install/${lib_dir:?}/pkgconfig"
-else
-  PKG_CONFIG_PATH+=":${mongoc_dir:?}/lib/pkgconfig"
-  PKG_CONFIG_PATH+=":${working_dir:?}/build/install/lib/pkgconfig"
-fi
+PKG_CONFIG_PATH+=":${mongoc_dir:?}/${LIB_DIR:?}/pkgconfig"
+PKG_CONFIG_PATH+=":${working_dir:?}/build/install/${LIB_DIR:?}/pkgconfig"
 export PKG_CONFIG_PATH
 
 # Environment variables used by example projects.
@@ -341,11 +337,7 @@ elif [ "$(uname -s | tr '[:upper:]' '[:lower:]')" == "darwin" ]; then
   DYLD_LIBRARY_PATH="$(pwd)/build/install/lib:${DYLD_LIBRARY_PATH:-}"
   export DYLD_LIBRARY_PATH
 else
-  if [ -n "${lib_dir:-}" ]; then # only needed on Linux
-    LD_LIBRARY_PATH="${working_dir:?}/build/install/${lib_dir:?}:${LD_LIBRARY_PATH:-}"
-  else
-    LD_LIBRARY_PATH="${working_dir:?}/build/install/lib:${LD_LIBRARY_PATH:-}"
-  fi
+  LD_LIBRARY_PATH="${working_dir:?}/build/install/${LIB_DIR:?}:${LD_LIBRARY_PATH:-}"
   export LD_LIBRARY_PATH
 fi
 

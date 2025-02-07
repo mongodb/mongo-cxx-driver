@@ -20,5 +20,4 @@ $CXX $CXXFLAGS -Wall -Wextra -Werror -std="c++${CXX_STANDARD}" -c -o hello_mongo
 
 $CXX $LDFLAGS -std="c++${CXX_STANDARD}" -o hello_mongocxx hello_mongocxx.o $(pkg-config --libs libmongocxx) $PKGCONFIG_EXTRA_OPTS
 
-export DYLD_LIBRARY_PATH=$DYLD_LIBRARY_PATH:../../../../../../build/install/lib
 ./hello_mongocxx

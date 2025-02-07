@@ -13,7 +13,11 @@ class TestAtlasConnectivity(Function):
         script='''\
             export MONGOC_INSTALL_PREFIX=$(pwd)/../mongoc
             export MONGOCXX_INSTALL_PREFIX=$(pwd)/build/install
-            export LIB_DIR=${lib_dir}
+            if [[ "${distro_id}" == rhel* ]]; then
+                export LIB_DIR=lib64
+            else
+                export LIB_DIR=lib
+            fi
             export BUILD_TYPE=${build_type}
             export BUILD_DIR=$(pwd)/build
 

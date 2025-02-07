@@ -15,5 +15,4 @@ rm -rf build/*
 cd build
 $CXX $CXXFLAGS -Wall -Wextra -Werror -std="c++${CXX_STANDARD}" -c -o hello_bsoncxx.o ../../../hello_bsoncxx.cpp $(pkg-config --cflags libbsoncxx)
 $CXX $LDFLAGS -std="c++${CXX_STANDARD}" -o hello_bsoncxx hello_bsoncxx.o $(pkg-config --libs libbsoncxx)
-export DYLD_LIBRARY_PATH=$DYLD_LIBRARY_PATH:../../../../../../build/install/lib
 ./hello_bsoncxx

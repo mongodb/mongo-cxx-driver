@@ -36,6 +36,7 @@ class UninstallCheck(Function):
     commands = bash_exec(
         command_type=EvgCommandType.TEST,
         working_dir='mongo-cxx-driver',
+        include_expansions_in_env=['distro_id'],
         script='''\
             case "$OSTYPE" in
             darwin*|linux*) .evergreen/scripts/uninstall_check.sh ;;

@@ -130,9 +130,6 @@ def tasks():
             if build_type == 'Debug' and distro.os in ['ubuntu1804', 'ubuntu2004']:
                 updates += [KeyValueParam(key='ENABLE_CODE_COVERAGE', value='ON')]
 
-            if 'rhel' in distro.os:
-                test_vars |= {'lib_dir': 'lib64'}
-
             if link_type == 'static':
                 compile_vars |= {'USE_STATIC_LIBS': 1}
                 test_vars |= {'USE_STATIC_LIBS': 1}

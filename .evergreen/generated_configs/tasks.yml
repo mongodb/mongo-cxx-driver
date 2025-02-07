@@ -1231,7 +1231,6 @@ tasks:
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
-          lib_dir: lib64
   - name: integration-rhel81-power8-release-shared-extra_alignment-5.0-single
     run_on: rhel81-power8-large
     tags: [integration, rhel81-power8, release, shared, extra_alignment, "5.0", single]
@@ -1259,7 +1258,6 @@ tasks:
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
-          lib_dir: lib64
   - name: integration-rhel81-power8-release-shared-extra_alignment-latest-single
     run_on: rhel81-power8-large
     tags: [integration, rhel81-power8, release, shared, extra_alignment, latest, single]
@@ -1287,7 +1285,6 @@ tasks:
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
-          lib_dir: lib64
   - name: integration-rhel81-power8-release-shared-latest-single
     run_on: rhel81-power8-large
     tags: [integration, rhel81-power8, release, shared, latest, single]
@@ -1312,7 +1309,6 @@ tasks:
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
-          lib_dir: lib64
   - name: integration-rhel81-power8-release-static-5.0-single
     run_on: rhel81-power8-large
     tags: [integration, rhel81-power8, release, static, "5.0", single]
@@ -1339,7 +1335,6 @@ tasks:
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
           USE_STATIC_LIBS: 1
-          lib_dir: lib64
   - name: integration-rhel81-power8-release-static-extra_alignment-5.0-single
     run_on: rhel81-power8-large
     tags: [integration, rhel81-power8, release, static, extra_alignment, "5.0", single]
@@ -1369,7 +1364,6 @@ tasks:
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
           USE_STATIC_LIBS: 1
-          lib_dir: lib64
   - name: integration-rhel81-power8-release-static-extra_alignment-latest-single
     run_on: rhel81-power8-large
     tags: [integration, rhel81-power8, release, static, extra_alignment, latest, single]
@@ -1399,7 +1393,6 @@ tasks:
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
           USE_STATIC_LIBS: 1
-          lib_dir: lib64
   - name: integration-rhel81-power8-release-static-latest-single
     run_on: rhel81-power8-large
     tags: [integration, rhel81-power8, release, static, latest, single]
@@ -1426,7 +1419,6 @@ tasks:
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
           USE_STATIC_LIBS: 1
-          lib_dir: lib64
   - name: integration-rhel83-zseries-release-shared-5.0-single
     run_on: rhel83-zseries-large
     tags: [integration, rhel83-zseries, release, shared, "5.0", single]
@@ -1451,7 +1443,6 @@ tasks:
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
-          lib_dir: lib64
   - name: integration-rhel83-zseries-release-shared-6.0-single
     run_on: rhel83-zseries-large
     tags: [integration, rhel83-zseries, release, shared, "6.0", single]
@@ -1476,7 +1467,6 @@ tasks:
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
-          lib_dir: lib64
   - name: integration-rhel83-zseries-release-shared-extra_alignment-5.0-single
     run_on: rhel83-zseries-large
     tags: [integration, rhel83-zseries, release, shared, extra_alignment, "5.0", single]
@@ -1504,7 +1494,6 @@ tasks:
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
-          lib_dir: lib64
   - name: integration-rhel83-zseries-release-shared-extra_alignment-6.0-single
     run_on: rhel83-zseries-large
     tags: [integration, rhel83-zseries, release, shared, extra_alignment, "6.0", single]
@@ -1532,7 +1521,6 @@ tasks:
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
-          lib_dir: lib64
   - name: integration-rhel83-zseries-release-shared-extra_alignment-latest-single
     run_on: rhel83-zseries-large
     tags: [integration, rhel83-zseries, release, shared, extra_alignment, latest, single]
@@ -1560,7 +1548,6 @@ tasks:
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
-          lib_dir: lib64
   - name: integration-rhel83-zseries-release-shared-latest-single
     run_on: rhel83-zseries-large
     tags: [integration, rhel83-zseries, release, shared, latest, single]
@@ -1585,7 +1572,6 @@ tasks:
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
-          lib_dir: lib64
   - name: integration-rhel83-zseries-release-static-5.0-single
     run_on: rhel83-zseries-large
     tags: [integration, rhel83-zseries, release, static, "5.0", single]
@@ -1612,7 +1598,6 @@ tasks:
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
           USE_STATIC_LIBS: 1
-          lib_dir: lib64
   - name: integration-rhel83-zseries-release-static-6.0-single
     run_on: rhel83-zseries-large
     tags: [integration, rhel83-zseries, release, static, "6.0", single]
@@ -1639,7 +1624,6 @@ tasks:
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
           USE_STATIC_LIBS: 1
-          lib_dir: lib64
   - name: integration-rhel83-zseries-release-static-extra_alignment-5.0-single
     run_on: rhel83-zseries-large
     tags: [integration, rhel83-zseries, release, static, extra_alignment, "5.0", single]
@@ -1669,7 +1653,6 @@ tasks:
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
           USE_STATIC_LIBS: 1
-          lib_dir: lib64
   - name: integration-rhel83-zseries-release-static-extra_alignment-6.0-single
     run_on: rhel83-zseries-large
     tags: [integration, rhel83-zseries, release, static, extra_alignment, "6.0", single]
@@ -1699,7 +1682,6 @@ tasks:
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
           USE_STATIC_LIBS: 1
-          lib_dir: lib64
   - name: integration-rhel83-zseries-release-static-extra_alignment-latest-single
     run_on: rhel83-zseries-large
     tags: [integration, rhel83-zseries, release, static, extra_alignment, latest, single]
@@ -1729,7 +1711,6 @@ tasks:
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
           USE_STATIC_LIBS: 1
-          lib_dir: lib64
   - name: integration-rhel83-zseries-release-static-latest-single
     run_on: rhel83-zseries-large
     tags: [integration, rhel83-zseries, release, static, latest, single]
@@ -1756,7 +1737,6 @@ tasks:
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
           USE_STATIC_LIBS: 1
-          lib_dir: lib64
   - name: integration-rhel90-arm64-release-shared-csfle-latest-replica
     run_on: rhel90-arm64-large
     tags: [integration, rhel90-arm64, release, shared, csfle, latest, replica]
@@ -1782,7 +1762,6 @@ tasks:
         vars:
           MONGOCXX_TEST_TOPOLOGY: replica
           TEST_WITH_CSFLE: "ON"
-          lib_dir: lib64
   - name: integration-rhel90-arm64-release-shared-csfle-latest-sharded
     run_on: rhel90-arm64-large
     tags: [integration, rhel90-arm64, release, shared, csfle, latest, sharded]
@@ -1808,7 +1787,6 @@ tasks:
         vars:
           MONGOCXX_TEST_TOPOLOGY: sharded
           TEST_WITH_CSFLE: "ON"
-          lib_dir: lib64
   - name: integration-rhel90-arm64-release-shared-cxx20-extra_alignment-latest-single
     run_on: rhel90-arm64-large
     tags: [integration, rhel90-arm64, release, shared, cxx20, extra_alignment, latest, single]
@@ -1838,7 +1816,6 @@ tasks:
           MONGOCXX_TEST_TOPOLOGY: single
           REQUIRED_CXX_STANDARD: 20
           example_projects_cxx_standard: 20
-          lib_dir: lib64
   - name: integration-rhel90-arm64-release-shared-cxx20-latest-single
     run_on: rhel90-arm64-large
     tags: [integration, rhel90-arm64, release, shared, cxx20, latest, single]
@@ -1865,7 +1842,6 @@ tasks:
           MONGOCXX_TEST_TOPOLOGY: single
           REQUIRED_CXX_STANDARD: 20
           example_projects_cxx_standard: 20
-          lib_dir: lib64
   - name: integration-rhel90-arm64-release-shared-extra_alignment-latest-single
     run_on: rhel90-arm64-large
     tags: [integration, rhel90-arm64, release, shared, extra_alignment, latest, single]
@@ -1892,7 +1868,6 @@ tasks:
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
-          lib_dir: lib64
   - name: integration-rhel90-arm64-release-shared-latest-single
     run_on: rhel90-arm64-large
     tags: [integration, rhel90-arm64, release, shared, latest, single]
@@ -1916,7 +1891,6 @@ tasks:
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
-          lib_dir: lib64
   - name: integration-rhel90-arm64-release-static-extra_alignment-latest-single
     run_on: rhel90-arm64-large
     tags: [integration, rhel90-arm64, release, static, extra_alignment, latest, single]
@@ -1945,7 +1919,6 @@ tasks:
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
           USE_STATIC_LIBS: 1
-          lib_dir: lib64
   - name: integration-rhel90-arm64-release-static-latest-single
     run_on: rhel90-arm64-large
     tags: [integration, rhel90-arm64, release, static, latest, single]
@@ -1971,7 +1944,6 @@ tasks:
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
           USE_STATIC_LIBS: 1
-          lib_dir: lib64
   - name: integration-rhel90-release-shared-csfle-latest-replica
     run_on: rhel90-large
     tags: [integration, rhel90, release, shared, csfle, latest, replica]
@@ -1997,7 +1969,6 @@ tasks:
         vars:
           MONGOCXX_TEST_TOPOLOGY: replica
           TEST_WITH_CSFLE: "ON"
-          lib_dir: lib64
   - name: integration-rhel90-release-shared-csfle-latest-sharded
     run_on: rhel90-large
     tags: [integration, rhel90, release, shared, csfle, latest, sharded]
@@ -2023,7 +1994,6 @@ tasks:
         vars:
           MONGOCXX_TEST_TOPOLOGY: sharded
           TEST_WITH_CSFLE: "ON"
-          lib_dir: lib64
   - name: integration-rhel90-release-shared-cxx20-extra_alignment-latest-single
     run_on: rhel90-large
     tags: [integration, rhel90, release, shared, cxx20, extra_alignment, latest, single]
@@ -2053,7 +2023,6 @@ tasks:
           MONGOCXX_TEST_TOPOLOGY: single
           REQUIRED_CXX_STANDARD: 20
           example_projects_cxx_standard: 20
-          lib_dir: lib64
   - name: integration-rhel90-release-shared-cxx20-latest-single
     run_on: rhel90-large
     tags: [integration, rhel90, release, shared, cxx20, latest, single]
@@ -2080,7 +2049,6 @@ tasks:
           MONGOCXX_TEST_TOPOLOGY: single
           REQUIRED_CXX_STANDARD: 20
           example_projects_cxx_standard: 20
-          lib_dir: lib64
   - name: integration-rhel90-release-shared-extra_alignment-latest-single
     run_on: rhel90-large
     tags: [integration, rhel90, release, shared, extra_alignment, latest, single]
@@ -2107,7 +2075,6 @@ tasks:
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
-          lib_dir: lib64
   - name: integration-rhel90-release-shared-latest-single
     run_on: rhel90-large
     tags: [integration, rhel90, release, shared, latest, single]
@@ -2131,7 +2098,6 @@ tasks:
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
-          lib_dir: lib64
   - name: integration-rhel90-release-static-extra_alignment-latest-single
     run_on: rhel90-large
     tags: [integration, rhel90, release, static, extra_alignment, latest, single]
@@ -2160,7 +2126,6 @@ tasks:
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
           USE_STATIC_LIBS: 1
-          lib_dir: lib64
   - name: integration-rhel90-release-static-latest-single
     run_on: rhel90-large
     tags: [integration, rhel90, release, static, latest, single]
@@ -2186,7 +2151,6 @@ tasks:
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
           USE_STATIC_LIBS: 1
-          lib_dir: lib64
   - name: integration-ubuntu1804-arm64-release-shared-5.0-single
     run_on: ubuntu1804-arm64-large
     tags: [integration, ubuntu1804-arm64, release, shared, "5.0", single]
