@@ -718,6 +718,7 @@ tasks:
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: replica
+          TEST_WITH_CSFLE: "ON"
   - name: integration-debian12-release-shared-csfle-latest-sharded
     run_on: debian12-large
     tags: [integration, debian12, release, shared, csfle, latest, sharded]
@@ -742,6 +743,7 @@ tasks:
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: sharded
+          TEST_WITH_CSFLE: "ON"
   - name: integration-debian12-release-shared-cxx20-extra_alignment-latest-single
     run_on: debian12-large
     tags: [integration, debian12, release, shared, cxx20, extra_alignment, latest, single]
@@ -1779,6 +1781,7 @@ tasks:
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: replica
+          TEST_WITH_CSFLE: "ON"
           lib_dir: lib64
   - name: integration-rhel90-arm64-release-shared-csfle-latest-sharded
     run_on: rhel90-arm64-large
@@ -1804,6 +1807,7 @@ tasks:
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: sharded
+          TEST_WITH_CSFLE: "ON"
           lib_dir: lib64
   - name: integration-rhel90-arm64-release-shared-cxx20-extra_alignment-latest-single
     run_on: rhel90-arm64-large
@@ -1992,6 +1996,7 @@ tasks:
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: replica
+          TEST_WITH_CSFLE: "ON"
           lib_dir: lib64
   - name: integration-rhel90-release-shared-csfle-latest-sharded
     run_on: rhel90-large
@@ -2017,6 +2022,7 @@ tasks:
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: sharded
+          TEST_WITH_CSFLE: "ON"
           lib_dir: lib64
   - name: integration-rhel90-release-shared-cxx20-extra_alignment-latest-single
     run_on: rhel90-large
@@ -2422,6 +2428,7 @@ tasks:
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: replica
+          TEST_WITH_CSFLE: "ON"
   - name: integration-ubuntu1804-debug-shared-csfle-4.0-sharded
     run_on: ubuntu1804-large
     tags: [integration, ubuntu1804, debug, shared, csfle, "4.0", sharded]
@@ -2446,6 +2453,7 @@ tasks:
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: sharded
+          TEST_WITH_CSFLE: "ON"
   - name: integration-ubuntu1804-debug-shared-csfle-4.2-replica
     run_on: ubuntu1804-large
     tags: [integration, ubuntu1804, debug, shared, csfle, "4.2", replica]
@@ -2470,6 +2478,7 @@ tasks:
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: replica
+          TEST_WITH_CSFLE: "ON"
   - name: integration-ubuntu1804-debug-shared-csfle-4.2-replica-mongocryptd
     run_on: ubuntu1804-large
     tags: [integration, ubuntu1804, debug, shared, csfle, "4.2", replica, mongocryptd]
@@ -2494,6 +2503,7 @@ tasks:
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: replica
+          TEST_WITH_CSFLE: "ON"
           use_mongocryptd: true
   - name: integration-ubuntu1804-debug-shared-csfle-4.2-sharded
     run_on: ubuntu1804-large
@@ -2519,6 +2529,7 @@ tasks:
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: sharded
+          TEST_WITH_CSFLE: "ON"
   - name: integration-ubuntu1804-debug-shared-csfle-4.2-sharded-mongocryptd
     run_on: ubuntu1804-large
     tags: [integration, ubuntu1804, debug, shared, csfle, "4.2", sharded, mongocryptd]
@@ -2543,6 +2554,7 @@ tasks:
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: sharded
+          TEST_WITH_CSFLE: "ON"
           use_mongocryptd: true
   - name: integration-ubuntu1804-debug-shared-csfle-4.4-replica
     run_on: ubuntu1804-large
@@ -2568,6 +2580,7 @@ tasks:
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: replica
+          TEST_WITH_CSFLE: "ON"
   - name: integration-ubuntu1804-debug-shared-csfle-4.4-replica-mongocryptd
     run_on: ubuntu1804-large
     tags: [integration, ubuntu1804, debug, shared, csfle, "4.4", replica, mongocryptd]
@@ -2592,6 +2605,7 @@ tasks:
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: replica
+          TEST_WITH_CSFLE: "ON"
           use_mongocryptd: true
   - name: integration-ubuntu1804-debug-shared-csfle-4.4-sharded
     run_on: ubuntu1804-large
@@ -2617,6 +2631,7 @@ tasks:
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: sharded
+          TEST_WITH_CSFLE: "ON"
   - name: integration-ubuntu1804-debug-shared-csfle-4.4-sharded-mongocryptd
     run_on: ubuntu1804-large
     tags: [integration, ubuntu1804, debug, shared, csfle, "4.4", sharded, mongocryptd]
@@ -2641,6 +2656,7 @@ tasks:
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: sharded
+          TEST_WITH_CSFLE: "ON"
           use_mongocryptd: true
   - name: integration-ubuntu1804-debug-shared-csfle-5.0-replica
     run_on: ubuntu1804-large
@@ -2666,6 +2682,7 @@ tasks:
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: replica
+          TEST_WITH_CSFLE: "ON"
   - name: integration-ubuntu1804-debug-shared-csfle-5.0-replica-mongocryptd
     run_on: ubuntu1804-large
     tags: [integration, ubuntu1804, debug, shared, csfle, "5.0", replica, mongocryptd]
@@ -2690,6 +2707,7 @@ tasks:
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: replica
+          TEST_WITH_CSFLE: "ON"
           use_mongocryptd: true
   - name: integration-ubuntu1804-debug-shared-csfle-5.0-sharded
     run_on: ubuntu1804-large
@@ -2715,6 +2733,7 @@ tasks:
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: sharded
+          TEST_WITH_CSFLE: "ON"
   - name: integration-ubuntu1804-debug-shared-csfle-5.0-sharded-mongocryptd
     run_on: ubuntu1804-large
     tags: [integration, ubuntu1804, debug, shared, csfle, "5.0", sharded, mongocryptd]
@@ -2739,6 +2758,7 @@ tasks:
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: sharded
+          TEST_WITH_CSFLE: "ON"
           use_mongocryptd: true
   - name: integration-ubuntu1804-debug-shared-csfle-6.0-replica
     run_on: ubuntu1804-large
@@ -2764,6 +2784,7 @@ tasks:
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: replica
+          TEST_WITH_CSFLE: "ON"
   - name: integration-ubuntu1804-debug-shared-csfle-6.0-sharded
     run_on: ubuntu1804-large
     tags: [integration, ubuntu1804, debug, shared, csfle, "6.0", sharded]
@@ -2788,6 +2809,7 @@ tasks:
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: sharded
+          TEST_WITH_CSFLE: "ON"
   - name: integration-ubuntu1804-debug-shared-extra_alignment-4.0-single
     run_on: ubuntu1804-large
     tags: [integration, ubuntu1804, debug, shared, extra_alignment, "4.0", single]
@@ -3138,6 +3160,7 @@ tasks:
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: replica
+          TEST_WITH_CSFLE: "ON"
   - name: integration-ubuntu2004-debug-shared-csfle-7.0-sharded
     run_on: ubuntu2004-large
     tags: [integration, ubuntu2004, debug, shared, csfle, "7.0", sharded]
@@ -3162,6 +3185,7 @@ tasks:
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: sharded
+          TEST_WITH_CSFLE: "ON"
   - name: integration-ubuntu2004-debug-shared-csfle-8.0-replica
     run_on: ubuntu2004-large
     tags: [integration, ubuntu2004, debug, shared, csfle, "8.0", replica]
@@ -3186,6 +3210,7 @@ tasks:
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: replica
+          TEST_WITH_CSFLE: "ON"
   - name: integration-ubuntu2004-debug-shared-csfle-8.0-sharded
     run_on: ubuntu2004-large
     tags: [integration, ubuntu2004, debug, shared, csfle, "8.0", sharded]
@@ -3210,6 +3235,7 @@ tasks:
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: sharded
+          TEST_WITH_CSFLE: "ON"
   - name: integration-ubuntu2004-debug-shared-csfle-latest-replica
     run_on: ubuntu2004-large
     tags: [integration, ubuntu2004, debug, shared, csfle, latest, replica]
@@ -3234,6 +3260,7 @@ tasks:
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: replica
+          TEST_WITH_CSFLE: "ON"
   - name: integration-ubuntu2004-debug-shared-csfle-latest-replica-mongocryptd
     run_on: ubuntu2004-large
     tags: [integration, ubuntu2004, debug, shared, csfle, latest, replica, mongocryptd]
@@ -3258,6 +3285,7 @@ tasks:
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: replica
+          TEST_WITH_CSFLE: "ON"
           use_mongocryptd: true
   - name: integration-ubuntu2004-debug-shared-csfle-latest-sharded
     run_on: ubuntu2004-large
@@ -3283,6 +3311,7 @@ tasks:
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: sharded
+          TEST_WITH_CSFLE: "ON"
   - name: integration-ubuntu2004-debug-shared-csfle-latest-sharded-mongocryptd
     run_on: ubuntu2004-large
     tags: [integration, ubuntu2004, debug, shared, csfle, latest, sharded, mongocryptd]
@@ -3307,6 +3336,7 @@ tasks:
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: sharded
+          TEST_WITH_CSFLE: "ON"
           use_mongocryptd: true
   - name: integration-ubuntu2004-debug-shared-extra_alignment-7.0-single
     run_on: ubuntu2004-large
@@ -3504,6 +3534,7 @@ tasks:
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: replica
+          TEST_WITH_CSFLE: "ON"
   - name: integration-ubuntu2004-release-shared-csfle-5.0-sharded
     run_on: ubuntu2004-large
     tags: [integration, ubuntu2004, release, shared, csfle, "5.0", sharded]
@@ -3528,6 +3559,7 @@ tasks:
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: sharded
+          TEST_WITH_CSFLE: "ON"
   - name: integration-ubuntu2004-release-shared-csfle-latest-replica
     run_on: ubuntu2004-large
     tags: [integration, ubuntu2004, release, shared, csfle, latest, replica]
@@ -3552,6 +3584,7 @@ tasks:
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: replica
+          TEST_WITH_CSFLE: "ON"
   - name: integration-ubuntu2004-release-shared-csfle-latest-sharded
     run_on: ubuntu2004-large
     tags: [integration, ubuntu2004, release, shared, csfle, latest, sharded]
@@ -3576,6 +3609,7 @@ tasks:
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: sharded
+          TEST_WITH_CSFLE: "ON"
   - name: integration-ubuntu2004-release-shared-extra_alignment-5.0-single
     run_on: ubuntu2004-large
     tags: [integration, ubuntu2004, release, shared, extra_alignment, "5.0", single]

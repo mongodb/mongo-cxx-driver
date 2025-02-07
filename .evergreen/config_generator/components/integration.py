@@ -118,6 +118,9 @@ def tasks():
             else:
                 compile_vars |= {'RUN_DISTCHECK': 1}
 
+            if with_csfle != 'plain':
+                test_vars |= {'TEST_WITH_CSFLE': 'ON'}
+
             updates += [KeyValueParam(key='build_type', value=build_type)]
             updates += [KeyValueParam(key=key, value=value) for key, value in compiler_to_vars(compiler).items()]
 

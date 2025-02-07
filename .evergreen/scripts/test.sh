@@ -26,6 +26,7 @@ set -o pipefail
 : "${MONGODB_API_VERSION:-}"
 : "${platform:-}"
 : "${TEST_WITH_ASAN:-}"
+: "${TEST_WITH_CSFLE:-}"
 : "${TEST_WITH_UBSAN:-}"
 : "${TEST_WITH_VALGRIND:-}"
 : "${use_mongocryptd:-}"
@@ -105,7 +106,9 @@ command -v "${cmake_binary:?}"
 
 export MONGOCXX_TEST_TLS_CA_FILE="${DRIVERS_TOOLS:?}/.evergreen/x509gen/ca.pem"
 
-if [ "$(uname -m)" == "ppc64le" ]; then
+if [[ "${TEST_WITH_CSFLE:-}" != "ON" ]]; then
+  echo "Skipping CSFLE test setup (TEST_WITH_CSFLE is OFF)"
+elif [ "$(uname -m)" == "ppc64le" ]; then
   echo "Skipping CSFLE test setup (CDRIVER-4246/CXX-2423)"
 else
   # export environment variables for encryption tests
