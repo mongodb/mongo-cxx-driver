@@ -1,5 +1,4 @@
 from config_generator.components.funcs.compile import Compile
-from config_generator.components.funcs.fetch_c_driver_source import FetchCDriverSource
 from config_generator.components.funcs.fetch_det import FetchDET
 from config_generator.components.funcs.install_c_driver import InstallCDriver
 from config_generator.components.funcs.install_uv import InstallUV
@@ -10,7 +9,7 @@ from config_generator.components.funcs.test import Test
 
 from config_generator.etc.distros import compiler_to_vars, find_large_distro, make_distro_str
 
-from shrub.v3.evg_build_variant import BuildVariant, DisplayTask
+from shrub.v3.evg_build_variant import BuildVariant
 from shrub.v3.evg_command import KeyValueParam, expansions_update
 from shrub.v3.evg_task import EvgTask, EvgTaskRef
 
@@ -22,65 +21,78 @@ TAG = 'integration'
 
 # pylint: disable=line-too-long
 # fmt: off
-MATRIX = [
-    ('debian10', None, ['Release'], ['shared', 'static'], [None], [None], ['plain'], [False, True], ['5.0'], ['single',                     ]),
-    ('debian10', None, ['Release'], ['shared',         ], [None], [None], ['plain'], [False,     ], ['5.0'], [          'replica', 'sharded']),
+LINUX_MATRIX = [
+    # Linux x86_64 (full).
+    # RHEL 8 x86_64: 4.0+.
+    ('rhel80', None, ['Debug'], ['shared', 'static'], [11, 17], [None], ['plain', 'csfle'], [False], [       '4.2', '4.4', '5.0', '6.0', '7.0', '8.0', 'latest'], ['single', 'replica', 'sharded']),
+    ('rhel80', None, ['Debug'], ['shared', 'static'], [11, 17], [None], ['plain',        ], [False], ['4.0',                                                   ], ['single', 'replica', 'sharded']),  # CSFLE: 4.2+.
 
-    ('debian11', None, ['Release'], ['shared', 'static'], [None,   ], [None], ['plain'], [False, True], ['5.0'], ['single',                     ]),
-    ('debian11', None, ['Release'], ['shared',         ], [      20], [None], ['plain'], [False, True], ['5.0'], ['single',                     ]),
-    ('debian11', None, ['Release'], ['shared',         ], [None,   ], [None], ['plain'], [False,     ], ['5.0'], [          'replica', 'sharded']),
+    # Linux ARM64 (full).
+    # Linux ARM64: 4.4+.
+    ('ubuntu2004-arm64', None, ['Debug'], ['shared', 'static'], [11, 17], [None], ['plain', 'csfle'], [False], ['4.4', '5.0', '6.0', '7.0', '8.0', 'latest'], ['single', 'replica', 'sharded']),
 
-    ('debian12', None, ['Release'], ['shared', 'static'], [None,   ], [None], ['plain',        ], [False, True], ['latest'], ['single',                     ]),
-    ('debian12', None, ['Release'], ['shared',         ], [      20], [None], ['plain',        ], [False, True], ['latest'], ['single',                     ]),
-    ('debian12', None, ['Release'], ['shared',         ], [None,   ], [None], [         'csfle'], [False,     ], ['latest'], [          'replica', 'sharded']),
+    # Linux Power (shared only, C++11 only, min-max-latest).
+    # RHEL 8 Power: 4.2+.
+    ('rhel8-power', None, ['Debug'], ['shared'], [11], [None], ['plain', 'csfle'], [False], ['4.2', '8.0', 'latest'], ['single', 'replica', 'sharded']),
 
-    ('macos-11-arm64', None, ['Release'], ['shared', 'static'], [None], [None], ['plain'], [False, True], ['latest'], ['single']),
-
-    ('macos-14',       None, ['Release'], ['shared', 'static'], [None], [None], ['plain'], [False, True], ['5.0',         ], ['single']),
-    ('macos-14-arm64', None, ['Release'], ['shared', 'static'], [None], [None], ['plain'], [False, True], [       'latest'], ['single']),
-
-    ('rhel81-power8',  None, ['Release'], ['shared', 'static'], [None], [None], ['plain'], [False, True], ['5.0',        'latest'], ['single']),
-    ('rhel83-zseries', None, ['Release'], ['shared', 'static'], [None], [None], ['plain'], [False, True], ['5.0', '6.0', 'latest'], ['single']),
-
-    ('rhel90', None, ['Release'], ['shared', 'static'], [None,   ], [None], ['plain',        ], [False, True], ['latest'], ['single',                     ]),
-    ('rhel90', None, ['Release'], ['shared',         ], [      20], [None], ['plain',        ], [False, True], ['latest'], ['single',                     ]),
-    ('rhel90', None, ['Release'], ['shared',         ], [None,   ], [None], [         'csfle'], [False,     ], ['latest'], [          'replica', 'sharded']),
-
-    ('rhel90-arm64', None, ['Release'], ['shared', 'static'], [None,   ], [None], ['plain',        ], [False, True], ['latest'], ['single',                     ]),
-    ('rhel90-arm64', None, ['Release'], ['shared',         ], [      20], [None], ['plain',        ], [False, True], ['latest'], ['single',                     ]),
-    ('rhel90-arm64', None, ['Release'], ['shared',         ], [None,   ], [None], [         'csfle'], [False,     ], ['latest'], [          'replica', 'sharded']),
-
-    ('ubuntu1804', None, ['Debug',          ], ['shared'], [None], [None], ['plain',                 ], [False, True], ['4.0', '4.2', '4.4', '5.0', '6.0'], ['single',                     ]),
-    ('ubuntu1804', None, ['Debug',          ], ['shared'], [None], [None], [         'csfle',        ], [False,     ], ['4.0', '4.2', '4.4', '5.0', '6.0'], [          'replica', 'sharded']),
-    ('ubuntu1804', None, ['Debug',          ], ['shared'], [None], [None], [                  'crypt'], [False,     ], [       '4.2', '4.4', '5.0',      ], [          'replica', 'sharded']),
-    ('ubuntu1804', None, [         'Release'], ['shared'], [None], [None], ['plain',                 ], [False,     ], [                     '5.0',      ], [          'replica', 'sharded']),
-
-    ('ubuntu1804-arm64', None, ['Release'], ['shared', 'static'], [None], [None], ['plain'], [False, True], ['5.0'], ['single']),
-
-    ('ubuntu2004', None, ['Debug',          ], ['shared',         ], [None], [None], ['plain',                 ], [False, True], [              '7.0', '8.0', 'latest'], ['single',                     ]),
-    ('ubuntu2004', None, ['Debug',          ], ['shared',         ], [None], [None], [         'csfle',        ], [False,     ], [              '7.0', '8.0', 'latest'], [          'replica', 'sharded']),
-    ('ubuntu2004', None, ['Debug',          ], ['shared',         ], [None], [None], [                  'crypt'], [False,     ], [                            'latest'], [          'replica', 'sharded']),
-    ('ubuntu2004', None, [         'Release'], ['shared', 'static'], [None], [None], ['plain',                 ], [False, True], ['5.0',                      'latest'], ['single',                     ]),
-    ('ubuntu2004', None, [         'Release'], ['shared',         ], [None], [None], [         'csfle',        ], [False,     ], ['5.0',                      'latest'], [          'replica', 'sharded']),
-    ('ubuntu2004', None, [         'Release'], ['shared',         ], [None], [None], ['plain',                 ], [False,     ], ['5.0',                              ], [          'replica', 'sharded']),
-
-    ('ubuntu2004-arm64', None, ['Release'], ['shared', 'static'], [None], [None], ['plain'], [False, True], ['latest'], ['single']),
-
-    ('windows-vsCurrent', 'vs2019x64', ['Debug'], ['shared'], [None], [None], ['plain'], [False, True], ['4.0', '4.2', '4.4', '5.0', '6.0', '7.0', '8.0', 'latest'], ['single']),
+    # Linux zSeries (shared only, C++11 only, min-max-latest).
+    # RHEL 8 zSeries: 5.0+.
+    ('rhel8-zseries', None, ['Debug'], ['shared'], [11], [None], ['plain', 'csfle'], [False], ['5.0', '8.0', 'latest'], ['single', 'replica', 'sharded']),
 ]
+
+MACOS_MATRIX = [
+    # MacOS ARM64 (shared only, no extra alignment, min-max-latest).
+    # MacOS ARM64: 6.0+.
+    ('macos-14-arm64', None, ['Debug'], ['shared'], [11, 17], [None], ['plain', 'csfle'], [False], ['6.0', '8.0', 'latest'], ['single', 'replica', 'sharded']),
+
+    # MacOS x86_64 (shared only, C++11 only, no extra alignment, min-max-latest).
+    # MacOS x86_64: 4.2+.
+    ('macos-14', None, ['Debug'], ['shared'], [11], [None], ['plain', 'csfle'], [False], ['4.2', '8.0', 'latest'], ['single', 'replica', 'sharded']),
+
+]
+
+WINDOWS_MATRIX = [
+    # Windows x86_64 (min-max-latest).
+    # Windows x86_64: 4.2+.
+    ('windows-vsCurrent', 'vs2022x64', ['Debug'], ['shared'], [11, 17], [None], ['plain', 'csfle'], [False], ['4.2', '8.0', 'latest'], ['single', 'replica', 'sharded']),
+]
+
+MONGOCRYPTD_MATRIX = [
+    ('rhel80',            None,        ['Debug'], ['shared'], [11], [None], ['crypt'], [False], ['latest'], ['replica']),
+    ('ubuntu2004-arm64',  None,        ['Debug'], ['shared'], [11], [None], ['crypt'], [False], ['latest'], ['replica']),
+    ('rhel8-power',       None,        ['Debug'], ['shared'], [11], [None], ['crypt'], [False], ['latest'], ['replica']),
+    ('rhel8-zseries',     None,        ['Debug'], ['shared'], [11], [None], ['crypt'], [False], ['latest'], ['replica']),
+    ('macos-14-arm64',    None,        ['Debug'], ['shared'], [11], [None], ['crypt'], [False], ['latest'], ['replica']),
+    ('macos-14',          None,        ['Debug'], ['shared'], [11], [None], ['crypt'], [False], ['latest'], ['replica']),
+    ('windows-vsCurrent', 'vs2022x64', ['Debug'], ['shared'], [11], [None], ['crypt'], [False], ['latest'], ['replica']),
+]
+
+EXTRA_ALIGNMENT_MATRIX = [
+    ('rhel80',            None,        ['Debug'], ['shared'], [11], [None], ['csfle'], [True], ['latest'], ['replica']),
+    ('ubuntu2004-arm64',  None,        ['Debug'], ['shared'], [11], [None], ['csfle'], [True], ['latest'], ['replica']),
+    ('rhel8-power',       None,        ['Debug'], ['shared'], [11], [None], ['csfle'], [True], ['latest'], ['replica']),
+    ('rhel8-zseries',     None,        ['Debug'], ['shared'], [11], [None], ['csfle'], [True], ['latest'], ['replica']),
+    ('macos-14-arm64',    None,        ['Debug'], ['shared'], [11], [None], ['csfle'], [True], ['latest'], ['replica']),
+    ('macos-14',          None,        ['Debug'], ['shared'], [11], [None], ['csfle'], [True], ['latest'], ['replica']),
+    ('windows-vsCurrent', 'vs2022x64', ['Debug'], ['shared'], [11], [None], ['csfle'], [True], ['latest'], ['replica']),
+]
+
 # fmt: on
 # pylint: enable=line-too-long
 
 
-def tasks():
-    res = []
+ALL_MATRIX = LINUX_MATRIX + MACOS_MATRIX + WINDOWS_MATRIX + MONGOCRYPTD_MATRIX + EXTRA_ALIGNMENT_MATRIX
 
-    for distro_name, compiler, build_types, link_types, cxx_standards, polyfills, with_csfles, with_extra_aligns, mongodb_versions, topologies in MATRIX:
+
+def tasks():
+    for distro_name, compiler, build_types, link_types, cxx_standards, polyfills, with_csfles, with_extra_aligns, mongodb_versions, topologies in ALL_MATRIX:
         for build_type, link_type, cxx_standard, polyfill, with_csfle, with_extra_align, mongodb_version, topology in product(
             build_types, link_types, cxx_standards, polyfills, with_csfles, with_extra_aligns, mongodb_versions, topologies,
         ):
+            distro = find_large_distro(distro_name)
+
             name = f'{TAG}-{make_distro_str(distro_name, compiler, None)}-{build_type.lower()}-{link_type}'
-            tags = [TAG, distro_name, build_type.lower(), link_type]
+            tags = [TAG, distro_name, distro.os_type, build_type.lower(), link_type]
 
             if cxx_standard is not None:
                 name += f'-cxx{cxx_standard}'
@@ -105,8 +117,6 @@ def tasks():
                 name += '-mongocryptd'
                 tags += ['mongocryptd']
 
-            distro = find_large_distro(distro_name)
-
             updates = []
             icd_vars = {}
             compile_vars = {'ENABLE_TESTS': 'ON'}
@@ -127,7 +137,7 @@ def tasks():
             if distro.os_type == 'windows':
                 test_vars |= {'example_projects_cxx_standard': 17}
 
-            if build_type == 'Debug' and distro.os in ['ubuntu1804', 'ubuntu2004']:
+            if build_type == 'Debug' and distro.os in ['ubuntu1804', 'ubuntu2004', 'ubuntu2204']:
                 updates += [KeyValueParam(key='ENABLE_CODE_COVERAGE', value='ON')]
 
             if link_type == 'static':
@@ -142,68 +152,30 @@ def tasks():
                 }
 
             commands = [expansions_update(updates=updates)] if updates else []
-
-            match with_csfle:
-                case 'plain':
-                    if with_extra_align:
-                        commands += [
-                            Setup.call(),
-                            StartMongod.call(mongodb_version=mongodb_version, topology=topology),
-                            InstallCDriver.call(vars=icd_vars | {'SKIP_INSTALL_LIBMONGOCRYPT': 1}),
-                            InstallUV.call(),
-                            Compile.call(polyfill=polyfill, vars=compile_vars),
-                            FetchDET.call(),
-                            RunKMSServers.call(),
-                            Test.call(vars=test_vars),
-                        ]
-                    else:
-                        commands += [
-                            Setup.call(),
-                            StartMongod.call(mongodb_version=mongodb_version, topology=topology),
-                            FetchCDriverSource.call(),
-                            InstallUV.call(),
-                            Compile.call(polyfill=polyfill, vars=compile_vars),
-                            FetchDET.call(),
-                            RunKMSServers.call(),
-                            Test.call(vars=test_vars),
-                        ]
-                case 'csfle':
-                    commands += [
-                        Setup.call(),
-                        StartMongod.call(mongodb_version=mongodb_version, topology=topology),
-                        InstallCDriver.call(vars=icd_vars),
-                        InstallUV.call(),
-                        Compile.call(polyfill=polyfill, vars=compile_vars),
-                        FetchDET.call(),
-                        RunKMSServers.call(),
-                        Test.call(vars=test_vars),
-                    ]
-                case 'crypt':
-                    commands += [
-                        Setup.call(),
-                        StartMongod.call(mongodb_version=mongodb_version, topology=topology),
-                        InstallCDriver.call(vars=icd_vars),
-                        InstallUV.call(),
-                        Compile.call(polyfill=polyfill, vars=compile_vars),
-                        FetchDET.call(),
-                        RunKMSServers.call(),
-                        Test.call(vars=test_vars | {'use_mongocryptd': True}),
-                    ]
+            commands += [
+                Setup.call(),
+                StartMongod.call(mongodb_version=mongodb_version, topology=topology),
+            ] + [
+                InstallCDriver.call(vars=icd_vars | ({'SKIP_INSTALL_LIBMONGOCRYPT': 1} if with_extra_align else {})),
+            ] + [
+                InstallUV.call(),
+                Compile.call(polyfill=polyfill, vars=compile_vars),
+                FetchDET.call(),
+                RunKMSServers.call(),
+            ] + [
+                Test.call(vars=test_vars | ({'use_mongocryptd': True} if with_csfle == 'crypt' else {}))
+            ]
 
             # PowerPC and zSeries are limited resources.
-            patchable = False if any(pattern in distro_name for pattern in ['power8', 'zseries']) else None
+            patchable = False if any(pattern in distro_name for pattern in ['power', 'zseries']) else None
 
-            res.append(
-                EvgTask(
-                    name=name,
-                    tags=tags,
-                    run_on=distro.name,
-                    patchable=patchable,
-                    commands=commands,
-                )
+            yield EvgTask(
+                name=name,
+                tags=tags,
+                run_on=distro.name,
+                patchable=patchable,
+                commands=commands,
             )
-
-    return res
 
 
 def variants():
@@ -212,16 +184,31 @@ def variants():
     one_day = 1440  # Seconds.
 
     # PowerPC and zSeries are limited resources.
-    tasks = [
-        EvgTaskRef(name=f'.{TAG} .rhel81-power8', batchtime=one_day),
-        EvgTaskRef(name=f'.{TAG} .rhel83-zseries', batchtime=one_day),
-        EvgTaskRef(name=f'.{TAG} !.rhel81-power8 !.rhel83-zseries'),
+    limited_distros = [
+        'rhel8-power',
+        'rhel8-zseries',
+        'rhel7-zseries',
     ]
 
-    return [
-        BuildVariant(
-            name=f'{TAG}-matrix',
-            display_name=f'{TAG}-matrix',
-            tasks=tasks,
-        ),
+    matrices = [
+        ('linux', '.linux !.mongocryptd !.extra_alignment', LINUX_MATRIX),
+        ('macos', '.macos !.mongocryptd !.extra_alignment', MACOS_MATRIX),
+        ('windows', '.windows !.mongocryptd !.extra_alignment', WINDOWS_MATRIX),
+        ('mongocryptd', '.mongocryptd', MONGOCRYPTD_MATRIX),
+        ('extra_alignment', '.extra_alignment', EXTRA_ALIGNMENT_MATRIX),
     ]
+
+    for name, filter, matrix in matrices:
+        distros = sorted(list({entry[0] for entry in matrix}))
+        batched = [distro for distro in distros if distro in limited_distros]
+        tasks = [
+            EvgTaskRef(name=f'.{TAG} {filter} .{distro}', batchtime=one_day) for distro in batched
+        ] + [
+            EvgTaskRef(name=f'.{TAG} {filter}' + ''.join(f' !.{distro}' for distro in batched))
+        ]
+
+        yield BuildVariant(
+            name=f'{TAG}-matrix-{name}',
+            display_name=f'{TAG}-matrix-{name}',
+            tasks=tasks,
+        )

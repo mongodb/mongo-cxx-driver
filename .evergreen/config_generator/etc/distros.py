@@ -102,6 +102,9 @@ RHEL_POWER8_DISTROS = [
     Distro(name='rhel71-power8-small', os='rhel', os_type='linux', os_ver='7.1', size='small', arch='power8'),
     Distro(name='rhel81-power8-large', os='rhel', os_type='linux', os_ver='8.1', size='large', arch='power8'),
     Distro(name='rhel81-power8-small', os='rhel', os_type='linux', os_ver='8.1', size='small', arch='power8'),
+
+    Distro(name='rhel8-power-large', os='rhel', os_type='linux', os_ver='8', size='large', arch='power8'),
+    Distro(name='rhel8-power-small', os='rhel', os_type='linux', os_ver='8', size='small', arch='power8'),
 ]
 
 RHEL_ZSERIES_DISTROS = [
@@ -109,6 +112,11 @@ RHEL_ZSERIES_DISTROS = [
     Distro(name='rhel72-zseries-small', os='rhel', os_type='linux', os_ver='7.2', size='small', arch='zseries'),
     Distro(name='rhel83-zseries-large', os='rhel', os_type='linux', os_ver='8.3', size='large', arch='zseries'),
     Distro(name='rhel83-zseries-small', os='rhel', os_type='linux', os_ver='8.3', size='small', arch='zseries'),
+
+    Distro(name='rhel7-zseries-large', os='rhel', os_type='linux', os_ver='7', size='large', arch='zseries'),
+    Distro(name='rhel7-zseries-small', os='rhel', os_type='linux', os_ver='7', size='small', arch='zseries'),
+    Distro(name='rhel8-zseries-large', os='rhel', os_type='linux', os_ver='8', size='large', arch='zseries'),
+    Distro(name='rhel8-zseries-small', os='rhel', os_type='linux', os_ver='8', size='small', arch='zseries'),
 ]
 
 UBUNTU_DISTROS = [
