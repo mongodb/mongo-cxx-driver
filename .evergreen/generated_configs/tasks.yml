@@ -120,8 +120,8 @@ tasks:
           cxx_standard: "23"
           polyfill: stdlib
   - name: atlas-search-indexes-7.0
-    run_on: ubuntu2004-large
-    tags: [atlas-search-indexes, ubuntu2004]
+    run_on: rhel80-large
+    tags: [atlas-search-indexes, rhel80]
     commands:
       - func: install_c_driver
       - func: install-uv
@@ -131,8 +131,8 @@ tasks:
           build_type: Debug
       - func: test-search-index-helpers
   - name: atlas-search-indexes-8.0
-    run_on: ubuntu2004-large
-    tags: [atlas-search-indexes, ubuntu2004]
+    run_on: rhel80-large
+    tags: [atlas-search-indexes, rhel80]
     commands:
       - func: install_c_driver
       - func: install-uv
@@ -153,8 +153,8 @@ tasks:
       - func: benchmarks-compile
       - func: benchmarks-run
   - name: clang-tidy
-    run_on: ubuntu2004-small
-    tags: [clang-tidy, ubuntu2004]
+    run_on: rhel80-small
+    tags: [clang-tidy, rhel80]
     commands:
       - func: setup
       - func: install-uv
@@ -15590,20 +15590,15 @@ tasks:
           REQUIRED_CXX_STANDARD: 17
           example_projects_cxx_standard: 17
   - name: lint
-    run_on:
-      - ubuntu2204-small
-      - ubuntu2004-small
-      - debian12-small
-      - debian11-small
-      - debian10-small
+    run_on: rhel80-small
     tags: [lint]
     commands:
       - func: setup
       - func: install-uv
       - func: lint
-  - name: macro-guards-ubuntu2004
-    run_on: ubuntu2004-large
-    tags: [macro-guards, ubuntu2004]
+  - name: macro-guards-rhel80
+    run_on: rhel80-large
+    tags: [macro-guards, rhel80]
     commands:
       - func: setup
       - func: fetch_c_driver_source
@@ -15612,9 +15607,9 @@ tasks:
         vars:
           COMPILE_MACRO_GUARD_TESTS: "ON"
           build_type: Debug
-  - name: macro-guards-ubuntu2004-clang
-    run_on: ubuntu2004-large
-    tags: [macro-guards, ubuntu2004, clang]
+  - name: macro-guards-rhel80-clang
+    run_on: rhel80-large
+    tags: [macro-guards, rhel80, clang]
     commands:
       - func: setup
       - func: fetch_c_driver_source
@@ -15625,9 +15620,9 @@ tasks:
           build_type: Debug
           cc_compiler: clang
           cxx_compiler: clang++
-  - name: macro-guards-ubuntu2004-gcc
-    run_on: ubuntu2004-large
-    tags: [macro-guards, ubuntu2004, gcc]
+  - name: macro-guards-rhel80-gcc
+    run_on: rhel80-large
+    tags: [macro-guards, rhel80, gcc]
     commands:
       - func: setup
       - func: fetch_c_driver_source
@@ -17220,9 +17215,9 @@ tasks:
           example_projects_cxx: clang++
           example_projects_cxxflags: -D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=undefined -fno-sanitize-recover=undefined -fno-omit-frame-pointer
           example_projects_ldflags: -fsanitize=undefined -fno-sanitize-recover=undefined
-  - name: scan-build-ubuntu2204-std11-default
-    run_on: ubuntu2204-large
-    tags: [scan-build, ubuntu2204, std11]
+  - name: scan-build-rhel80-std11-default
+    run_on: rhel80-large
+    tags: [scan-build, rhel80, std11]
     commands:
       - func: setup
       - func: fetch_c_driver_source
@@ -17230,9 +17225,9 @@ tasks:
         vars:
           CXX_STANDARD: 11
       - func: upload scan artifacts
-  - name: scan-build-ubuntu2204-std11-impls
-    run_on: ubuntu2204-large
-    tags: [scan-build, ubuntu2204, std11, impls]
+  - name: scan-build-rhel80-std11-impls
+    run_on: rhel80-large
+    tags: [scan-build, rhel80, std11, impls]
     commands:
       - func: setup
       - func: fetch_c_driver_source
@@ -17241,9 +17236,9 @@ tasks:
           BSONCXX_POLYFILL: impls
           CXX_STANDARD: 11
       - func: upload scan artifacts
-  - name: scan-build-ubuntu2204-std14-default
-    run_on: ubuntu2204-large
-    tags: [scan-build, ubuntu2204, std14]
+  - name: scan-build-rhel80-std14-default
+    run_on: rhel80-large
+    tags: [scan-build, rhel80, std14]
     commands:
       - func: setup
       - func: fetch_c_driver_source
@@ -17251,9 +17246,9 @@ tasks:
         vars:
           CXX_STANDARD: 14
       - func: upload scan artifacts
-  - name: scan-build-ubuntu2204-std14-impls
-    run_on: ubuntu2204-large
-    tags: [scan-build, ubuntu2204, std14, impls]
+  - name: scan-build-rhel80-std14-impls
+    run_on: rhel80-large
+    tags: [scan-build, rhel80, std14, impls]
     commands:
       - func: setup
       - func: fetch_c_driver_source
@@ -17262,9 +17257,9 @@ tasks:
           BSONCXX_POLYFILL: impls
           CXX_STANDARD: 14
       - func: upload scan artifacts
-  - name: scan-build-ubuntu2204-std17-default
-    run_on: ubuntu2204-large
-    tags: [scan-build, ubuntu2204, std17]
+  - name: scan-build-rhel80-std17-default
+    run_on: rhel80-large
+    tags: [scan-build, rhel80, std17]
     commands:
       - func: setup
       - func: fetch_c_driver_source
@@ -17272,9 +17267,9 @@ tasks:
         vars:
           CXX_STANDARD: 17
       - func: upload scan artifacts
-  - name: scan-build-ubuntu2204-std17-impls
-    run_on: ubuntu2204-large
-    tags: [scan-build, ubuntu2204, std17, impls]
+  - name: scan-build-rhel80-std17-impls
+    run_on: rhel80-large
+    tags: [scan-build, rhel80, std17, impls]
     commands:
       - func: setup
       - func: fetch_c_driver_source

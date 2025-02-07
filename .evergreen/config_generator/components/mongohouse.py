@@ -63,7 +63,7 @@ def functions():
 
 
 def tasks():
-    distro_name = 'ubuntu2204'
+    distro_name = 'ubuntu2204'  # `docker` is not available on RHEL distros by default.
     distro = find_large_distro(distro_name)
 
     return [

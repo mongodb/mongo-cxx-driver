@@ -44,7 +44,7 @@ def functions():
 
 
 def tasks():
-    distro_name = 'ubuntu2004'
+    distro_name = 'rhel80'
     distro = find_small_distro(distro_name)
 
     return [
