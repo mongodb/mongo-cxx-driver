@@ -1051,7 +1051,7 @@ void itoa::_init() {
 
         while (_val > 0) {
             i--;
-            _buf[i] = static_cast<std::int8_t>((_val % 10) + '0');
+            _buf[i] = static_cast<char>((_val % 10) + '0');
             _val = _val / 10;
         }
 
