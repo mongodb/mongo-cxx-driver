@@ -99,7 +99,7 @@ class stack {
     }
 
    private:
-    typename std::aligned_storage<sizeof(T), alignof(T)>::type _object_memory[size];
+    alignas(T) unsigned char _object_memory[sizeof(T) * size];
 
     std::list<T*> _buckets;
 
