@@ -15134,9 +15134,87 @@ tasks:
       - func: build_mongohouse
       - func: run_mongohouse
       - func: test_mongohouse
-  - name: uninstall-check-debian10-gcc-release-shared
-    run_on: debian10-large
-    tags: [uninstall-check, debian10, gcc, release, shared]
+  - name: uninstall-check-macos-14-arm64-clang-debug-shared
+    run_on: macos-14-arm64
+    tags: [uninstall-check, macos-14-arm64, clang, debug, shared]
+    commands:
+      - func: setup
+      - func: fetch_c_driver_source
+      - func: install-uv
+      - func: compile
+        vars:
+          build_type: Debug
+          cc_compiler: clang
+          cxx_compiler: clang++
+      - func: uninstall-check
+  - name: uninstall-check-macos-14-arm64-clang-debug-static
+    run_on: macos-14-arm64
+    tags: [uninstall-check, macos-14-arm64, clang, debug, static]
+    commands:
+      - func: setup
+      - func: fetch_c_driver_source
+      - func: install-uv
+      - func: compile
+        vars:
+          build_type: Debug
+          cc_compiler: clang
+          cxx_compiler: clang++
+      - func: uninstall-check
+  - name: uninstall-check-macos-14-arm64-clang-release-shared
+    run_on: macos-14-arm64
+    tags: [uninstall-check, macos-14-arm64, clang, release, shared]
+    commands:
+      - func: setup
+      - func: fetch_c_driver_source
+      - func: install-uv
+      - func: compile
+        vars:
+          build_type: Release
+          cc_compiler: clang
+          cxx_compiler: clang++
+      - func: uninstall-check
+  - name: uninstall-check-macos-14-arm64-clang-release-static
+    run_on: macos-14-arm64
+    tags: [uninstall-check, macos-14-arm64, clang, release, static]
+    commands:
+      - func: setup
+      - func: fetch_c_driver_source
+      - func: install-uv
+      - func: compile
+        vars:
+          build_type: Release
+          cc_compiler: clang
+          cxx_compiler: clang++
+      - func: uninstall-check
+  - name: uninstall-check-rhel80-gcc-debug-shared
+    run_on: rhel80-large
+    tags: [uninstall-check, rhel80, gcc, debug, shared]
+    commands:
+      - func: setup
+      - func: fetch_c_driver_source
+      - func: install-uv
+      - func: compile
+        vars:
+          build_type: Debug
+          cc_compiler: gcc
+          cxx_compiler: g++
+      - func: uninstall-check
+  - name: uninstall-check-rhel80-gcc-debug-static
+    run_on: rhel80-large
+    tags: [uninstall-check, rhel80, gcc, debug, static]
+    commands:
+      - func: setup
+      - func: fetch_c_driver_source
+      - func: install-uv
+      - func: compile
+        vars:
+          build_type: Debug
+          cc_compiler: gcc
+          cxx_compiler: g++
+      - func: uninstall-check
+  - name: uninstall-check-rhel80-gcc-release-shared
+    run_on: rhel80-large
+    tags: [uninstall-check, rhel80, gcc, release, shared]
     commands:
       - func: setup
       - func: fetch_c_driver_source
@@ -15147,48 +15225,9 @@ tasks:
           cc_compiler: gcc
           cxx_compiler: g++
       - func: uninstall-check
-  - name: uninstall-check-debian11-gcc-release-shared
-    run_on: debian11-large
-    tags: [uninstall-check, debian11, gcc, release, shared]
-    commands:
-      - func: setup
-      - func: fetch_c_driver_source
-      - func: install-uv
-      - func: compile
-        vars:
-          build_type: Release
-          cc_compiler: gcc
-          cxx_compiler: g++
-      - func: uninstall-check
-  - name: uninstall-check-debian12-gcc-release-shared
-    run_on: debian12-large
-    tags: [uninstall-check, debian12, gcc, release, shared]
-    commands:
-      - func: setup
-      - func: fetch_c_driver_source
-      - func: install-uv
-      - func: compile
-        vars:
-          build_type: Release
-          cc_compiler: gcc
-          cxx_compiler: g++
-      - func: uninstall-check
-  - name: uninstall-check-ubuntu1804-gcc-release-shared
-    run_on: ubuntu1804-large
-    tags: [uninstall-check, ubuntu1804, gcc, release, shared]
-    commands:
-      - func: setup
-      - func: fetch_c_driver_source
-      - func: install-uv
-      - func: compile
-        vars:
-          build_type: Release
-          cc_compiler: gcc
-          cxx_compiler: g++
-      - func: uninstall-check
-  - name: uninstall-check-ubuntu2004-gcc-release-shared
-    run_on: ubuntu2004-large
-    tags: [uninstall-check, ubuntu2004, gcc, release, shared]
+  - name: uninstall-check-rhel80-gcc-release-static
+    run_on: rhel80-large
+    tags: [uninstall-check, rhel80, gcc, release, static]
     commands:
       - func: setup
       - func: fetch_c_driver_source
@@ -15212,9 +15251,35 @@ tasks:
           generator: Visual Studio 15 2017
           platform: x64
       - func: uninstall-check
+  - name: uninstall-check-windows-2019-vs2017-x64-debug-static
+    run_on: windows-vsCurrent-large
+    tags: [uninstall-check, windows-vsCurrent, vs2017x64, debug, static]
+    commands:
+      - func: setup
+      - func: fetch_c_driver_source
+      - func: install-uv
+      - func: compile
+        vars:
+          build_type: Debug
+          generator: Visual Studio 15 2017
+          platform: x64
+      - func: uninstall-check
   - name: uninstall-check-windows-2019-vs2017-x64-release-shared
     run_on: windows-vsCurrent-large
     tags: [uninstall-check, windows-vsCurrent, vs2017x64, release, shared]
+    commands:
+      - func: setup
+      - func: fetch_c_driver_source
+      - func: install-uv
+      - func: compile
+        vars:
+          build_type: Release
+          generator: Visual Studio 15 2017
+          platform: x64
+      - func: uninstall-check
+  - name: uninstall-check-windows-2019-vs2017-x64-release-static
+    run_on: windows-vsCurrent-large
+    tags: [uninstall-check, windows-vsCurrent, vs2017x64, release, static]
     commands:
       - func: setup
       - func: fetch_c_driver_source
