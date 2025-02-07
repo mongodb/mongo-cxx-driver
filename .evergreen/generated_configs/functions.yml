@@ -226,6 +226,7 @@ functions:
         - cc_compiler
         - cxx_compiler
         - distro_id
+        - UV_INSTALL_DIR
       args:
         - -c
         - etc/run-clang-tidy.sh

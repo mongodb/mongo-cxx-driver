@@ -157,6 +157,7 @@ tasks:
     tags: [clang-tidy, ubuntu2004]
     commands:
       - func: setup
+      - func: install-uv
       - func: install_c_driver
         vars:
           cc_compiler: clang
