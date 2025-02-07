@@ -31,11 +31,11 @@ buildvariants:
   - name: compile-only-matrix
     display_name: compile-only-matrix
     tasks:
-      - name: .compile-only .rhel81-power8
+      - name: .compile-only .rhel8-power
         batchtime: 1440
-      - name: .compile-only .rhel83-zseries
+      - name: .compile-only .rhel8-zseries
         batchtime: 1440
-      - name: .compile-only !.rhel81-power8 !.rhel83-zseries
+      - name: .compile-only !.rhel8-power !.rhel8-zseries
   - name: docker-build
     display_name: Docker Build
     tasks:
