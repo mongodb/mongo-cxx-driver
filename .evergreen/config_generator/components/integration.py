@@ -31,13 +31,13 @@ LINUX_MATRIX = [
     # Linux ARM64: 4.4+.
     ('ubuntu2004-arm64', None, ['Debug'], ['shared', 'static'], [11, 17], [None], ['plain', 'csfle'], [False], ['4.4', '5.0', '6.0', '7.0', '8.0', 'latest'], ['single', 'replica', 'sharded']),
 
-    # Linux Power (shared only, C++11 only, min-max-latest).
+    # Linux Power.
     # RHEL 8 Power: 4.2+.
-    ('rhel8-power', None, ['Debug'], ['shared'], [11], [None], ['plain', 'csfle'], [False], ['4.2', '8.0', 'latest'], ['single', 'replica', 'sharded']),
+    ('rhel8-power', None, ['Debug'], ['shared'], [11], [None], ['csfle'], [False], ['latest'], ['replica']),
 
-    # Linux zSeries (shared only, C++11 only, min-max-latest).
+    # Linux zSeries.
     # RHEL 8 zSeries: 5.0+.
-    ('rhel8-zseries', None, ['Debug'], ['shared'], [11], [None], ['plain', 'csfle'], [False], ['5.0', '8.0', 'latest'], ['single', 'replica', 'sharded']),
+    ('rhel8-zseries', None, ['Debug'], ['shared'], [11], [None], ['csfle'], [False], ['latest'], ['replica']),
 ]
 
 MACOS_MATRIX = [
