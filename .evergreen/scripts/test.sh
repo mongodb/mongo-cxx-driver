@@ -343,11 +343,11 @@ export PKG_CONFIG_PATH
 export CMAKE_GENERATOR="${generator:-}"
 export CMAKE_GENERATOR_PLATFORM="${platform:-}"
 export BUILD_TYPE="${build_type:?}"
-export CXXFLAGS="${example_projects_cxxflags}"
-export LDFLAGS="${example_projects_ldflags}"
-export CC="${example_projects_cc}"
-export CXX="${example_projects_cxx}"
-export CXX_STANDARD="${example_projects_cxx_standard}"
+export CXXFLAGS="${example_projects_cxxflags:-}"
+export LDFLAGS="${example_projects_ldflags:-}"
+export CC="${example_projects_cc:-"cc"}"
+export CXX="${example_projects_cxx:-"c++"}"
+export CXX_STANDARD="${example_projects_cxx_standard:-11}"
 
 if [[ "$OSTYPE" =~ cygwin ]]; then
   export MSVC=1
