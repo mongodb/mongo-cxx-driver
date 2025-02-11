@@ -17,7 +17,6 @@
 #include <mongocxx/v1/detail/macros.hpp>
 
 #include <exception>
-#include <memory>
 
 #include <bsoncxx/private/helpers.hh>
 #include <bsoncxx/private/libbson.hh>
@@ -74,11 +73,7 @@ bool with_transaction_cpp_cb(mongoc_client_session_t*, void* ctx, bson_t** reply
 class client_session::impl {
    public:
     impl(mongocxx::v_noabi::client const* client, options::client_session const& session_options)
-        : _client(client), _options(session_options), _session_t(nullptr, nullptr), _empty_cluster_time_ptr([this] {
-              void* ptr = const_cast<void*>(static_cast<void const*>(_empty_cluster_time_storage));
-              std::size_t space = sizeof(_empty_cluster_time_storage);
-              return new (std::align(alignof(bson_t), sizeof(bson_t), ptr, space)) bson_t BSON_INITIALIZER;
-          }()) {
+        : _client(client), _options(session_options), _session_t(nullptr, nullptr) {
         // Create a mongoc_session_opts_t from session_options.
         std::unique_ptr<mongoc_session_opt_t, decltype(libmongoc::session_opts_destroy)> opt_t{
             libmongoc::session_opts_new(), libmongoc::session_opts_destroy};
@@ -128,7 +123,7 @@ class client_session::impl {
             return bsoncxx::helpers::view_from_bson_t(ct);
         }
 
-        return bsoncxx::helpers::view_from_bson_t(_empty_cluster_time_ptr);
+        return bsoncxx::helpers::view_from_bson_t(&_empty_cluster_time);
     }
 
     bsoncxx::v_noabi::types::b_timestamp operation_time() const noexcept {
@@ -241,8 +236,7 @@ class client_session::impl {
 
     unique_session _session_t;
 
-    unsigned char _empty_cluster_time_storage[2u * sizeof(bson_t)];
-    bson_t const* _empty_cluster_time_ptr; // Just a long-lasting empty bson_t. Destruction is not required.
+    bson_t _empty_cluster_time = BSON_INITIALIZER;
 };
 
 } // namespace v_noabi
