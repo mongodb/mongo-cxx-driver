@@ -14,6 +14,13 @@ export cmake_binary
 cmake_binary="$(find_cmake_latest)"
 command -v "$cmake_binary"
 
+# Use ccache if available.
+if [[ -f "../mongoc/.evergreen/scripts/find-ccache.sh" ]]; then
+  # shellcheck source=/dev/null
+  . "../mongoc/.evergreen/scripts/find-ccache.sh"
+  find_ccache_and_export_vars "$(pwd)" || true
+fi
+
 # scan-build binary is available in different locations depending on the distro.
 # Search for a match in order of preference as listed.
 declare -a scan_build_directories

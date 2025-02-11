@@ -105,6 +105,13 @@ export cmake_binary
 cmake_binary="$(find_cmake_latest)"
 command -v "${cmake_binary:?}"
 
+# Use ccache if available.
+if [[ -f "${mongoc_dir:?}/.evergreen/scripts/find-ccache.sh" ]]; then
+  # shellcheck source=/dev/null
+  . "${mongoc_dir:?}/.evergreen/scripts/find-ccache.sh"
+  find_ccache_and_export_vars "$(pwd)" || true
+fi
+
 export MONGOCXX_TEST_TLS_CA_FILE="${DRIVERS_TOOLS:?}/.evergreen/x509gen/ca.pem"
 
 if [[ "${TEST_WITH_CSFLE:-}" != "ON" ]]; then

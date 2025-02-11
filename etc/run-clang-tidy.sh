@@ -24,6 +24,13 @@ uvx clang-tidy --version
 cmake_binary="$(find_cmake_latest)"
 command -v "${cmake_binary:?}"
 
+# Use ccache if available.
+if [[ -f "../mongoc/.evergreen/scripts/find-ccache.sh" ]]; then
+  # shellcheck source=/dev/null
+  . "../mongoc/.evergreen/scripts/find-ccache.sh"
+  find_ccache_and_export_vars "$(pwd)" || true
+fi
+
 cmake_config_flags=(
   -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
   -DCMAKE_BUILD_TYPE=Debug
