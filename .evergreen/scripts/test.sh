@@ -273,7 +273,7 @@ else
   if [[ "${TEST_WITH_ASAN:-}" == "ON" || "${TEST_WITH_UBSAN:-}" == "ON" ]]; then
     export ASAN_OPTIONS="detect_leaks=1"
     export UBSAN_OPTIONS="print_stacktrace=1"
-    export PATH="/usr/lib/llvm-3.8/bin:${PATH:-}"
+    export PATH="/opt/mongodbtoolchain/v4/bin:${PATH:-}" # llvm-symbolizer
   elif [[ "${TEST_WITH_VALGRIND:-}" == "ON" ]]; then
     if ! command -v valgrind >/dev/null; then
       if command -v yum >/dev/null; then
