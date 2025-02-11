@@ -14707,8 +14707,8 @@ tasks:
         params:
           updates:
             - { key: build_type, value: Debug }
-            - { key: cc_compiler, value: clang }
-            - { key: cxx_compiler, value: clang++ }
+            - { key: cc_compiler, value: /opt/mongodbtoolchain/v4/bin/clang }
+            - { key: cxx_compiler, value: /opt/mongodbtoolchain/v4/bin/clang++ }
       - func: setup
       - func: start_mongod
         vars:
@@ -14741,8 +14741,8 @@ tasks:
         params:
           updates:
             - { key: build_type, value: Debug }
-            - { key: cc_compiler, value: clang }
-            - { key: cxx_compiler, value: clang++ }
+            - { key: cc_compiler, value: /opt/mongodbtoolchain/v4/bin/clang }
+            - { key: cxx_compiler, value: /opt/mongodbtoolchain/v4/bin/clang++ }
       - func: setup
       - func: start_mongod
         vars:
@@ -14775,8 +14775,8 @@ tasks:
         params:
           updates:
             - { key: build_type, value: Debug }
-            - { key: cc_compiler, value: clang }
-            - { key: cxx_compiler, value: clang++ }
+            - { key: cc_compiler, value: /opt/mongodbtoolchain/v4/bin/clang }
+            - { key: cxx_compiler, value: /opt/mongodbtoolchain/v4/bin/clang++ }
       - func: setup
       - func: start_mongod
         vars:
@@ -14808,8 +14808,8 @@ tasks:
         params:
           updates:
             - { key: build_type, value: Debug }
-            - { key: cc_compiler, value: clang }
-            - { key: cxx_compiler, value: clang++ }
+            - { key: cc_compiler, value: /opt/mongodbtoolchain/v4/bin/clang }
+            - { key: cxx_compiler, value: /opt/mongodbtoolchain/v4/bin/clang++ }
       - func: setup
       - func: start_mongod
         vars:
@@ -14842,8 +14842,8 @@ tasks:
         params:
           updates:
             - { key: build_type, value: Debug }
-            - { key: cc_compiler, value: clang }
-            - { key: cxx_compiler, value: clang++ }
+            - { key: cc_compiler, value: /opt/mongodbtoolchain/v4/bin/clang }
+            - { key: cxx_compiler, value: /opt/mongodbtoolchain/v4/bin/clang++ }
       - func: setup
       - func: start_mongod
         vars:
@@ -14876,8 +14876,8 @@ tasks:
         params:
           updates:
             - { key: build_type, value: Debug }
-            - { key: cc_compiler, value: clang }
-            - { key: cxx_compiler, value: clang++ }
+            - { key: cc_compiler, value: /opt/mongodbtoolchain/v4/bin/clang }
+            - { key: cxx_compiler, value: /opt/mongodbtoolchain/v4/bin/clang++ }
       - func: setup
       - func: start_mongod
         vars:
@@ -14909,8 +14909,8 @@ tasks:
         params:
           updates:
             - { key: build_type, value: Debug }
-            - { key: cc_compiler, value: clang }
-            - { key: cxx_compiler, value: clang++ }
+            - { key: cc_compiler, value: /opt/mongodbtoolchain/v4/bin/clang }
+            - { key: cxx_compiler, value: /opt/mongodbtoolchain/v4/bin/clang++ }
       - func: setup
       - func: start_mongod
         vars:
@@ -14944,8 +14944,8 @@ tasks:
         params:
           updates:
             - { key: build_type, value: Debug }
-            - { key: cc_compiler, value: clang }
-            - { key: cxx_compiler, value: clang++ }
+            - { key: cc_compiler, value: /opt/mongodbtoolchain/v4/bin/clang }
+            - { key: cxx_compiler, value: /opt/mongodbtoolchain/v4/bin/clang++ }
       - func: setup
       - func: start_mongod
         vars:
@@ -14979,8 +14979,8 @@ tasks:
         params:
           updates:
             - { key: build_type, value: Debug }
-            - { key: cc_compiler, value: clang }
-            - { key: cxx_compiler, value: clang++ }
+            - { key: cc_compiler, value: /opt/mongodbtoolchain/v4/bin/clang }
+            - { key: cxx_compiler, value: /opt/mongodbtoolchain/v4/bin/clang++ }
       - func: setup
       - func: start_mongod
         vars:
@@ -15013,8 +15013,8 @@ tasks:
         params:
           updates:
             - { key: build_type, value: Debug }
-            - { key: cc_compiler, value: clang }
-            - { key: cxx_compiler, value: clang++ }
+            - { key: cc_compiler, value: /opt/mongodbtoolchain/v4/bin/clang }
+            - { key: cxx_compiler, value: /opt/mongodbtoolchain/v4/bin/clang++ }
       - func: setup
       - func: start_mongod
         vars:
@@ -15048,8 +15048,8 @@ tasks:
         params:
           updates:
             - { key: build_type, value: Debug }
-            - { key: cc_compiler, value: clang }
-            - { key: cxx_compiler, value: clang++ }
+            - { key: cc_compiler, value: /opt/mongodbtoolchain/v4/bin/clang }
+            - { key: cxx_compiler, value: /opt/mongodbtoolchain/v4/bin/clang++ }
       - func: setup
       - func: start_mongod
         vars:
@@ -15083,8 +15083,8 @@ tasks:
         params:
           updates:
             - { key: build_type, value: Debug }
-            - { key: cc_compiler, value: clang }
-            - { key: cxx_compiler, value: clang++ }
+            - { key: cc_compiler, value: /opt/mongodbtoolchain/v4/bin/clang }
+            - { key: cxx_compiler, value: /opt/mongodbtoolchain/v4/bin/clang++ }
       - func: setup
       - func: start_mongod
         vars:
@@ -15117,8 +15117,8 @@ tasks:
         params:
           updates:
             - { key: build_type, value: Debug }
-            - { key: cc_compiler, value: clang }
-            - { key: cxx_compiler, value: clang++ }
+            - { key: cc_compiler, value: /opt/mongodbtoolchain/v4/bin/clang }
+            - { key: cxx_compiler, value: /opt/mongodbtoolchain/v4/bin/clang++ }
       - func: setup
       - func: start_mongod
         vars:
@@ -15152,8 +15152,8 @@ tasks:
         params:
           updates:
             - { key: build_type, value: Debug }
-            - { key: cc_compiler, value: clang }
-            - { key: cxx_compiler, value: clang++ }
+            - { key: cc_compiler, value: /opt/mongodbtoolchain/v4/bin/clang }
+            - { key: cxx_compiler, value: /opt/mongodbtoolchain/v4/bin/clang++ }
       - func: setup
       - func: start_mongod
         vars:
@@ -15187,8 +15187,8 @@ tasks:
         params:
           updates:
             - { key: build_type, value: Debug }
-            - { key: cc_compiler, value: clang }
-            - { key: cxx_compiler, value: clang++ }
+            - { key: cc_compiler, value: /opt/mongodbtoolchain/v4/bin/clang }
+            - { key: cxx_compiler, value: /opt/mongodbtoolchain/v4/bin/clang++ }
       - func: setup
       - func: start_mongod
         vars:
@@ -15221,8 +15221,8 @@ tasks:
         params:
           updates:
             - { key: build_type, value: Debug }
-            - { key: cc_compiler, value: clang }
-            - { key: cxx_compiler, value: clang++ }
+            - { key: cc_compiler, value: /opt/mongodbtoolchain/v4/bin/clang }
+            - { key: cxx_compiler, value: /opt/mongodbtoolchain/v4/bin/clang++ }
       - func: setup
       - func: start_mongod
         vars:
@@ -15255,8 +15255,8 @@ tasks:
         params:
           updates:
             - { key: build_type, value: Debug }
-            - { key: cc_compiler, value: clang }
-            - { key: cxx_compiler, value: clang++ }
+            - { key: cc_compiler, value: /opt/mongodbtoolchain/v4/bin/clang }
+            - { key: cxx_compiler, value: /opt/mongodbtoolchain/v4/bin/clang++ }
       - func: setup
       - func: start_mongod
         vars:
@@ -15289,8 +15289,8 @@ tasks:
         params:
           updates:
             - { key: build_type, value: Debug }
-            - { key: cc_compiler, value: clang }
-            - { key: cxx_compiler, value: clang++ }
+            - { key: cc_compiler, value: /opt/mongodbtoolchain/v4/bin/clang }
+            - { key: cxx_compiler, value: /opt/mongodbtoolchain/v4/bin/clang++ }
       - func: setup
       - func: start_mongod
         vars:
@@ -15322,8 +15322,8 @@ tasks:
         params:
           updates:
             - { key: build_type, value: Debug }
-            - { key: cc_compiler, value: clang }
-            - { key: cxx_compiler, value: clang++ }
+            - { key: cc_compiler, value: /opt/mongodbtoolchain/v4/bin/clang }
+            - { key: cxx_compiler, value: /opt/mongodbtoolchain/v4/bin/clang++ }
             - { key: USE_STATIC_LIBS, value: "1" }
       - func: setup
       - func: start_mongod
@@ -15357,8 +15357,8 @@ tasks:
         params:
           updates:
             - { key: build_type, value: Debug }
-            - { key: cc_compiler, value: clang }
-            - { key: cxx_compiler, value: clang++ }
+            - { key: cc_compiler, value: /opt/mongodbtoolchain/v4/bin/clang }
+            - { key: cxx_compiler, value: /opt/mongodbtoolchain/v4/bin/clang++ }
             - { key: USE_STATIC_LIBS, value: "1" }
       - func: setup
       - func: start_mongod
@@ -15392,8 +15392,8 @@ tasks:
         params:
           updates:
             - { key: build_type, value: Debug }
-            - { key: cc_compiler, value: clang }
-            - { key: cxx_compiler, value: clang++ }
+            - { key: cc_compiler, value: /opt/mongodbtoolchain/v4/bin/clang }
+            - { key: cxx_compiler, value: /opt/mongodbtoolchain/v4/bin/clang++ }
             - { key: USE_STATIC_LIBS, value: "1" }
       - func: setup
       - func: start_mongod
@@ -15426,8 +15426,8 @@ tasks:
         params:
           updates:
             - { key: build_type, value: Debug }
-            - { key: cc_compiler, value: clang }
-            - { key: cxx_compiler, value: clang++ }
+            - { key: cc_compiler, value: /opt/mongodbtoolchain/v4/bin/clang }
+            - { key: cxx_compiler, value: /opt/mongodbtoolchain/v4/bin/clang++ }
             - { key: USE_STATIC_LIBS, value: "1" }
       - func: setup
       - func: start_mongod
@@ -15461,8 +15461,8 @@ tasks:
         params:
           updates:
             - { key: build_type, value: Debug }
-            - { key: cc_compiler, value: clang }
-            - { key: cxx_compiler, value: clang++ }
+            - { key: cc_compiler, value: /opt/mongodbtoolchain/v4/bin/clang }
+            - { key: cxx_compiler, value: /opt/mongodbtoolchain/v4/bin/clang++ }
             - { key: USE_STATIC_LIBS, value: "1" }
       - func: setup
       - func: start_mongod
@@ -15496,8 +15496,8 @@ tasks:
         params:
           updates:
             - { key: build_type, value: Debug }
-            - { key: cc_compiler, value: clang }
-            - { key: cxx_compiler, value: clang++ }
+            - { key: cc_compiler, value: /opt/mongodbtoolchain/v4/bin/clang }
+            - { key: cxx_compiler, value: /opt/mongodbtoolchain/v4/bin/clang++ }
             - { key: USE_STATIC_LIBS, value: "1" }
       - func: setup
       - func: start_mongod
@@ -15530,8 +15530,8 @@ tasks:
         params:
           updates:
             - { key: build_type, value: Debug }
-            - { key: cc_compiler, value: clang }
-            - { key: cxx_compiler, value: clang++ }
+            - { key: cc_compiler, value: /opt/mongodbtoolchain/v4/bin/clang }
+            - { key: cxx_compiler, value: /opt/mongodbtoolchain/v4/bin/clang++ }
             - { key: USE_STATIC_LIBS, value: "1" }
       - func: setup
       - func: start_mongod
@@ -15566,8 +15566,8 @@ tasks:
         params:
           updates:
             - { key: build_type, value: Debug }
-            - { key: cc_compiler, value: clang }
-            - { key: cxx_compiler, value: clang++ }
+            - { key: cc_compiler, value: /opt/mongodbtoolchain/v4/bin/clang }
+            - { key: cxx_compiler, value: /opt/mongodbtoolchain/v4/bin/clang++ }
             - { key: USE_STATIC_LIBS, value: "1" }
       - func: setup
       - func: start_mongod
@@ -15602,8 +15602,8 @@ tasks:
         params:
           updates:
             - { key: build_type, value: Debug }
-            - { key: cc_compiler, value: clang }
-            - { key: cxx_compiler, value: clang++ }
+            - { key: cc_compiler, value: /opt/mongodbtoolchain/v4/bin/clang }
+            - { key: cxx_compiler, value: /opt/mongodbtoolchain/v4/bin/clang++ }
             - { key: USE_STATIC_LIBS, value: "1" }
       - func: setup
       - func: start_mongod
@@ -15637,8 +15637,8 @@ tasks:
         params:
           updates:
             - { key: build_type, value: Debug }
-            - { key: cc_compiler, value: clang }
-            - { key: cxx_compiler, value: clang++ }
+            - { key: cc_compiler, value: /opt/mongodbtoolchain/v4/bin/clang }
+            - { key: cxx_compiler, value: /opt/mongodbtoolchain/v4/bin/clang++ }
             - { key: USE_STATIC_LIBS, value: "1" }
       - func: setup
       - func: start_mongod
@@ -15673,8 +15673,8 @@ tasks:
         params:
           updates:
             - { key: build_type, value: Debug }
-            - { key: cc_compiler, value: clang }
-            - { key: cxx_compiler, value: clang++ }
+            - { key: cc_compiler, value: /opt/mongodbtoolchain/v4/bin/clang }
+            - { key: cxx_compiler, value: /opt/mongodbtoolchain/v4/bin/clang++ }
             - { key: USE_STATIC_LIBS, value: "1" }
       - func: setup
       - func: start_mongod
@@ -15709,8 +15709,8 @@ tasks:
         params:
           updates:
             - { key: build_type, value: Debug }
-            - { key: cc_compiler, value: clang }
-            - { key: cxx_compiler, value: clang++ }
+            - { key: cc_compiler, value: /opt/mongodbtoolchain/v4/bin/clang }
+            - { key: cxx_compiler, value: /opt/mongodbtoolchain/v4/bin/clang++ }
             - { key: USE_STATIC_LIBS, value: "1" }
       - func: setup
       - func: start_mongod
@@ -15744,8 +15744,8 @@ tasks:
         params:
           updates:
             - { key: build_type, value: Debug }
-            - { key: cc_compiler, value: clang }
-            - { key: cxx_compiler, value: clang++ }
+            - { key: cc_compiler, value: /opt/mongodbtoolchain/v4/bin/clang }
+            - { key: cxx_compiler, value: /opt/mongodbtoolchain/v4/bin/clang++ }
             - { key: USE_STATIC_LIBS, value: "1" }
       - func: setup
       - func: start_mongod
@@ -15780,8 +15780,8 @@ tasks:
         params:
           updates:
             - { key: build_type, value: Debug }
-            - { key: cc_compiler, value: clang }
-            - { key: cxx_compiler, value: clang++ }
+            - { key: cc_compiler, value: /opt/mongodbtoolchain/v4/bin/clang }
+            - { key: cxx_compiler, value: /opt/mongodbtoolchain/v4/bin/clang++ }
             - { key: USE_STATIC_LIBS, value: "1" }
       - func: setup
       - func: start_mongod
@@ -15816,8 +15816,8 @@ tasks:
         params:
           updates:
             - { key: build_type, value: Debug }
-            - { key: cc_compiler, value: clang }
-            - { key: cxx_compiler, value: clang++ }
+            - { key: cc_compiler, value: /opt/mongodbtoolchain/v4/bin/clang }
+            - { key: cxx_compiler, value: /opt/mongodbtoolchain/v4/bin/clang++ }
             - { key: USE_STATIC_LIBS, value: "1" }
       - func: setup
       - func: start_mongod
@@ -15851,8 +15851,8 @@ tasks:
         params:
           updates:
             - { key: build_type, value: Debug }
-            - { key: cc_compiler, value: clang }
-            - { key: cxx_compiler, value: clang++ }
+            - { key: cc_compiler, value: /opt/mongodbtoolchain/v4/bin/clang }
+            - { key: cxx_compiler, value: /opt/mongodbtoolchain/v4/bin/clang++ }
             - { key: USE_STATIC_LIBS, value: "1" }
       - func: setup
       - func: start_mongod
@@ -15886,8 +15886,8 @@ tasks:
         params:
           updates:
             - { key: build_type, value: Debug }
-            - { key: cc_compiler, value: clang }
-            - { key: cxx_compiler, value: clang++ }
+            - { key: cc_compiler, value: /opt/mongodbtoolchain/v4/bin/clang }
+            - { key: cxx_compiler, value: /opt/mongodbtoolchain/v4/bin/clang++ }
             - { key: USE_STATIC_LIBS, value: "1" }
       - func: setup
       - func: start_mongod
@@ -15921,8 +15921,8 @@ tasks:
         params:
           updates:
             - { key: build_type, value: Debug }
-            - { key: cc_compiler, value: clang }
-            - { key: cxx_compiler, value: clang++ }
+            - { key: cc_compiler, value: /opt/mongodbtoolchain/v4/bin/clang }
+            - { key: cxx_compiler, value: /opt/mongodbtoolchain/v4/bin/clang++ }
             - { key: USE_STATIC_LIBS, value: "1" }
       - func: setup
       - func: start_mongod
@@ -15955,8 +15955,8 @@ tasks:
         params:
           updates:
             - { key: build_type, value: Debug }
-            - { key: cc_compiler, value: clang }
-            - { key: cxx_compiler, value: clang++ }
+            - { key: cc_compiler, value: /opt/mongodbtoolchain/v4/bin/clang }
+            - { key: cxx_compiler, value: /opt/mongodbtoolchain/v4/bin/clang++ }
             - { key: USE_STATIC_LIBS, value: "1" }
       - func: setup
       - func: start_mongod
@@ -15990,8 +15990,8 @@ tasks:
         params:
           updates:
             - { key: build_type, value: Debug }
-            - { key: cc_compiler, value: clang }
-            - { key: cxx_compiler, value: clang++ }
+            - { key: cc_compiler, value: /opt/mongodbtoolchain/v4/bin/clang }
+            - { key: cxx_compiler, value: /opt/mongodbtoolchain/v4/bin/clang++ }
             - { key: USE_STATIC_LIBS, value: "1" }
       - func: setup
       - func: start_mongod
@@ -16025,8 +16025,8 @@ tasks:
         params:
           updates:
             - { key: build_type, value: Debug }
-            - { key: cc_compiler, value: clang }
-            - { key: cxx_compiler, value: clang++ }
+            - { key: cc_compiler, value: /opt/mongodbtoolchain/v4/bin/clang }
+            - { key: cxx_compiler, value: /opt/mongodbtoolchain/v4/bin/clang++ }
             - { key: USE_STATIC_LIBS, value: "1" }
       - func: setup
       - func: start_mongod
@@ -16059,8 +16059,8 @@ tasks:
         params:
           updates:
             - { key: build_type, value: Debug }
-            - { key: cc_compiler, value: clang }
-            - { key: cxx_compiler, value: clang++ }
+            - { key: cc_compiler, value: /opt/mongodbtoolchain/v4/bin/clang }
+            - { key: cxx_compiler, value: /opt/mongodbtoolchain/v4/bin/clang++ }
             - { key: USE_STATIC_LIBS, value: "1" }
       - func: setup
       - func: start_mongod
@@ -16094,8 +16094,8 @@ tasks:
         params:
           updates:
             - { key: build_type, value: Debug }
-            - { key: cc_compiler, value: clang }
-            - { key: cxx_compiler, value: clang++ }
+            - { key: cc_compiler, value: /opt/mongodbtoolchain/v4/bin/clang }
+            - { key: cxx_compiler, value: /opt/mongodbtoolchain/v4/bin/clang++ }
             - { key: USE_STATIC_LIBS, value: "1" }
       - func: setup
       - func: start_mongod
@@ -16129,8 +16129,8 @@ tasks:
         params:
           updates:
             - { key: build_type, value: Debug }
-            - { key: cc_compiler, value: clang }
-            - { key: cxx_compiler, value: clang++ }
+            - { key: cc_compiler, value: /opt/mongodbtoolchain/v4/bin/clang }
+            - { key: cxx_compiler, value: /opt/mongodbtoolchain/v4/bin/clang++ }
             - { key: USE_STATIC_LIBS, value: "1" }
       - func: setup
       - func: start_mongod
@@ -16163,8 +16163,8 @@ tasks:
         params:
           updates:
             - { key: build_type, value: Debug }
-            - { key: cc_compiler, value: clang }
-            - { key: cxx_compiler, value: clang++ }
+            - { key: cc_compiler, value: /opt/mongodbtoolchain/v4/bin/clang }
+            - { key: cxx_compiler, value: /opt/mongodbtoolchain/v4/bin/clang++ }
             - { key: USE_STATIC_LIBS, value: "1" }
       - func: setup
       - func: start_mongod
@@ -16198,8 +16198,8 @@ tasks:
         params:
           updates:
             - { key: build_type, value: Debug }
-            - { key: cc_compiler, value: clang }
-            - { key: cxx_compiler, value: clang++ }
+            - { key: cc_compiler, value: /opt/mongodbtoolchain/v4/bin/clang }
+            - { key: cxx_compiler, value: /opt/mongodbtoolchain/v4/bin/clang++ }
             - { key: USE_STATIC_LIBS, value: "1" }
       - func: setup
       - func: start_mongod
@@ -16233,8 +16233,8 @@ tasks:
         params:
           updates:
             - { key: build_type, value: Debug }
-            - { key: cc_compiler, value: clang }
-            - { key: cxx_compiler, value: clang++ }
+            - { key: cc_compiler, value: /opt/mongodbtoolchain/v4/bin/clang }
+            - { key: cxx_compiler, value: /opt/mongodbtoolchain/v4/bin/clang++ }
             - { key: USE_STATIC_LIBS, value: "1" }
       - func: setup
       - func: start_mongod
