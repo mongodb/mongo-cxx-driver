@@ -12,8 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <bsoncxx/v1/detail/macros.hpp>
-
 #include <cstring>
 
 #include <bsoncxx/builder/core.hpp>
@@ -253,11 +251,7 @@ class core::impl {
 };
 
 core::core(bool is_array) {
-    BSONCXX_PRIVATE_WARNINGS_PUSH();
-    BSONCXX_PRIVATE_WARNINGS_DISABLE(Clang("-Wover-aligned"));
-    BSONCXX_PRIVATE_WARNINGS_DISABLE(MSVC(4316));
     _impl = make_unique<impl>(is_array);
-    BSONCXX_PRIVATE_WARNINGS_POP();
 }
 
 core::core(core&&) noexcept = default;

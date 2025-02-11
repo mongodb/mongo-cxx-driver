@@ -37,10 +37,6 @@
 namespace bsoncxx {
 namespace detail {
 
-BSONCXX_PRIVATE_WARNINGS_PUSH();
-BSONCXX_PRIVATE_WARNINGS_DISABLE(Clang("-Wover-aligned"));
-BSONCXX_PRIVATE_WARNINGS_DISABLE(MSVC(4316));
-
 // Switch backend of make_unique by the type we are creating.
 // It would be easier to 'if constexpr' on whether we are an array and whether to direct-init or
 // value-init, but we don't have if-constexpr and we need it to guard against an uterance of a
@@ -97,8 +93,6 @@ struct make_unique_impl<T&> {};
 // References are nonsense:
 template <typename T>
 struct make_unique_impl<T&&> {};
-
-BSONCXX_PRIVATE_WARNINGS_POP();
 
 } // namespace detail
 } // namespace bsoncxx
