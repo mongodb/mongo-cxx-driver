@@ -184,7 +184,6 @@ if [[ "${OSTYPE:?}" != cygwin ]]; then
   if [[ "${USE_SANITIZER_ASAN:-}" == "ON" ]]; then
     cxx_flags=(
       "${cxx_flags_init[@]}"
-      -D_GLIBCXX_USE_CXX11_ABI=0
       -fsanitize=address
       -O1 -g -fno-omit-frame-pointer
     )
@@ -194,7 +193,6 @@ if [[ "${OSTYPE:?}" != cygwin ]]; then
   if [[ "${USE_SANITIZER_UBSAN:-}" == "ON" ]]; then
     cxx_flags=(
       "${cxx_flags_init[@]}"
-      -D_GLIBCXX_USE_CXX11_ABI=0
       -fsanitize=undefined
       -fsanitize-blacklist="$(pwd)/../etc/ubsan.ignorelist"
       -fno-sanitize-recover=undefined

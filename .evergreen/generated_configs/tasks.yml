@@ -14731,7 +14731,7 @@ tasks:
           TEST_WITH_ASAN: "ON"
           example_projects_cc: clang
           example_projects_cxx: clang++
-          example_projects_cxxflags: -D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=address -fno-omit-frame-pointer
+          example_projects_cxxflags: -fsanitize=address -fno-omit-frame-pointer
           example_projects_ldflags: -fsanitize=address
   - name: sanitizers-asan-rhel80-clang-shared-4.0-sharded
     run_on: rhel80-large
@@ -14765,7 +14765,7 @@ tasks:
           TEST_WITH_ASAN: "ON"
           example_projects_cc: clang
           example_projects_cxx: clang++
-          example_projects_cxxflags: -D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=address -fno-omit-frame-pointer
+          example_projects_cxxflags: -fsanitize=address -fno-omit-frame-pointer
           example_projects_ldflags: -fsanitize=address
   - name: sanitizers-asan-rhel80-clang-shared-4.0-single
     run_on: rhel80-large
@@ -14798,7 +14798,7 @@ tasks:
           TEST_WITH_ASAN: "ON"
           example_projects_cc: clang
           example_projects_cxx: clang++
-          example_projects_cxxflags: -D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=address -fno-omit-frame-pointer
+          example_projects_cxxflags: -fsanitize=address -fno-omit-frame-pointer
           example_projects_ldflags: -fsanitize=address
   - name: sanitizers-asan-rhel80-clang-shared-8.0-replica
     run_on: rhel80-large
@@ -14832,7 +14832,7 @@ tasks:
           TEST_WITH_ASAN: "ON"
           example_projects_cc: clang
           example_projects_cxx: clang++
-          example_projects_cxxflags: -D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=address -fno-omit-frame-pointer
+          example_projects_cxxflags: -fsanitize=address -fno-omit-frame-pointer
           example_projects_ldflags: -fsanitize=address
   - name: sanitizers-asan-rhel80-clang-shared-8.0-sharded
     run_on: rhel80-large
@@ -14866,7 +14866,7 @@ tasks:
           TEST_WITH_ASAN: "ON"
           example_projects_cc: clang
           example_projects_cxx: clang++
-          example_projects_cxxflags: -D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=address -fno-omit-frame-pointer
+          example_projects_cxxflags: -fsanitize=address -fno-omit-frame-pointer
           example_projects_ldflags: -fsanitize=address
   - name: sanitizers-asan-rhel80-clang-shared-8.0-single
     run_on: rhel80-large
@@ -14899,7 +14899,7 @@ tasks:
           TEST_WITH_ASAN: "ON"
           example_projects_cc: clang
           example_projects_cxx: clang++
-          example_projects_cxxflags: -D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=address -fno-omit-frame-pointer
+          example_projects_cxxflags: -fsanitize=address -fno-omit-frame-pointer
           example_projects_ldflags: -fsanitize=address
   - name: sanitizers-asan-rhel80-clang-shared-extra_alignment-4.0-replica
     run_on: rhel80-large
@@ -14934,7 +14934,7 @@ tasks:
           TEST_WITH_ASAN: "ON"
           example_projects_cc: clang
           example_projects_cxx: clang++
-          example_projects_cxxflags: -D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=address -fno-omit-frame-pointer
+          example_projects_cxxflags: -fsanitize=address -fno-omit-frame-pointer
           example_projects_ldflags: -fsanitize=address
   - name: sanitizers-asan-rhel80-clang-shared-extra_alignment-4.0-sharded
     run_on: rhel80-large
@@ -14969,7 +14969,7 @@ tasks:
           TEST_WITH_ASAN: "ON"
           example_projects_cc: clang
           example_projects_cxx: clang++
-          example_projects_cxxflags: -D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=address -fno-omit-frame-pointer
+          example_projects_cxxflags: -fsanitize=address -fno-omit-frame-pointer
           example_projects_ldflags: -fsanitize=address
   - name: sanitizers-asan-rhel80-clang-shared-extra_alignment-4.0-single
     run_on: rhel80-large
@@ -15003,7 +15003,7 @@ tasks:
           TEST_WITH_ASAN: "ON"
           example_projects_cc: clang
           example_projects_cxx: clang++
-          example_projects_cxxflags: -D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=address -fno-omit-frame-pointer
+          example_projects_cxxflags: -fsanitize=address -fno-omit-frame-pointer
           example_projects_ldflags: -fsanitize=address
   - name: sanitizers-asan-rhel80-clang-shared-extra_alignment-8.0-replica
     run_on: rhel80-large
@@ -15038,7 +15038,7 @@ tasks:
           TEST_WITH_ASAN: "ON"
           example_projects_cc: clang
           example_projects_cxx: clang++
-          example_projects_cxxflags: -D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=address -fno-omit-frame-pointer
+          example_projects_cxxflags: -fsanitize=address -fno-omit-frame-pointer
           example_projects_ldflags: -fsanitize=address
   - name: sanitizers-asan-rhel80-clang-shared-extra_alignment-8.0-sharded
     run_on: rhel80-large
@@ -15073,7 +15073,7 @@ tasks:
           TEST_WITH_ASAN: "ON"
           example_projects_cc: clang
           example_projects_cxx: clang++
-          example_projects_cxxflags: -D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=address -fno-omit-frame-pointer
+          example_projects_cxxflags: -fsanitize=address -fno-omit-frame-pointer
           example_projects_ldflags: -fsanitize=address
   - name: sanitizers-asan-rhel80-clang-shared-extra_alignment-8.0-single
     run_on: rhel80-large
@@ -15107,7 +15107,7 @@ tasks:
           TEST_WITH_ASAN: "ON"
           example_projects_cc: clang
           example_projects_cxx: clang++
-          example_projects_cxxflags: -D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=address -fno-omit-frame-pointer
+          example_projects_cxxflags: -fsanitize=address -fno-omit-frame-pointer
           example_projects_ldflags: -fsanitize=address
   - name: sanitizers-asan-rhel80-clang-shared-extra_alignment-latest-replica
     run_on: rhel80-large
@@ -15142,7 +15142,7 @@ tasks:
           TEST_WITH_ASAN: "ON"
           example_projects_cc: clang
           example_projects_cxx: clang++
-          example_projects_cxxflags: -D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=address -fno-omit-frame-pointer
+          example_projects_cxxflags: -fsanitize=address -fno-omit-frame-pointer
           example_projects_ldflags: -fsanitize=address
   - name: sanitizers-asan-rhel80-clang-shared-extra_alignment-latest-sharded
     run_on: rhel80-large
@@ -15177,7 +15177,7 @@ tasks:
           TEST_WITH_ASAN: "ON"
           example_projects_cc: clang
           example_projects_cxx: clang++
-          example_projects_cxxflags: -D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=address -fno-omit-frame-pointer
+          example_projects_cxxflags: -fsanitize=address -fno-omit-frame-pointer
           example_projects_ldflags: -fsanitize=address
   - name: sanitizers-asan-rhel80-clang-shared-extra_alignment-latest-single
     run_on: rhel80-large
@@ -15211,7 +15211,7 @@ tasks:
           TEST_WITH_ASAN: "ON"
           example_projects_cc: clang
           example_projects_cxx: clang++
-          example_projects_cxxflags: -D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=address -fno-omit-frame-pointer
+          example_projects_cxxflags: -fsanitize=address -fno-omit-frame-pointer
           example_projects_ldflags: -fsanitize=address
   - name: sanitizers-asan-rhel80-clang-shared-latest-replica
     run_on: rhel80-large
@@ -15245,7 +15245,7 @@ tasks:
           TEST_WITH_ASAN: "ON"
           example_projects_cc: clang
           example_projects_cxx: clang++
-          example_projects_cxxflags: -D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=address -fno-omit-frame-pointer
+          example_projects_cxxflags: -fsanitize=address -fno-omit-frame-pointer
           example_projects_ldflags: -fsanitize=address
   - name: sanitizers-asan-rhel80-clang-shared-latest-sharded
     run_on: rhel80-large
@@ -15279,7 +15279,7 @@ tasks:
           TEST_WITH_ASAN: "ON"
           example_projects_cc: clang
           example_projects_cxx: clang++
-          example_projects_cxxflags: -D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=address -fno-omit-frame-pointer
+          example_projects_cxxflags: -fsanitize=address -fno-omit-frame-pointer
           example_projects_ldflags: -fsanitize=address
   - name: sanitizers-asan-rhel80-clang-shared-latest-single
     run_on: rhel80-large
@@ -15312,7 +15312,7 @@ tasks:
           TEST_WITH_ASAN: "ON"
           example_projects_cc: clang
           example_projects_cxx: clang++
-          example_projects_cxxflags: -D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=address -fno-omit-frame-pointer
+          example_projects_cxxflags: -fsanitize=address -fno-omit-frame-pointer
           example_projects_ldflags: -fsanitize=address
   - name: sanitizers-asan-rhel80-clang-static-4.0-replica
     run_on: rhel80-large
@@ -15347,7 +15347,7 @@ tasks:
           TEST_WITH_ASAN: "ON"
           example_projects_cc: clang
           example_projects_cxx: clang++
-          example_projects_cxxflags: -D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=address -fno-omit-frame-pointer
+          example_projects_cxxflags: -fsanitize=address -fno-omit-frame-pointer
           example_projects_ldflags: -fsanitize=address
   - name: sanitizers-asan-rhel80-clang-static-4.0-sharded
     run_on: rhel80-large
@@ -15382,7 +15382,7 @@ tasks:
           TEST_WITH_ASAN: "ON"
           example_projects_cc: clang
           example_projects_cxx: clang++
-          example_projects_cxxflags: -D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=address -fno-omit-frame-pointer
+          example_projects_cxxflags: -fsanitize=address -fno-omit-frame-pointer
           example_projects_ldflags: -fsanitize=address
   - name: sanitizers-asan-rhel80-clang-static-4.0-single
     run_on: rhel80-large
@@ -15416,7 +15416,7 @@ tasks:
           TEST_WITH_ASAN: "ON"
           example_projects_cc: clang
           example_projects_cxx: clang++
-          example_projects_cxxflags: -D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=address -fno-omit-frame-pointer
+          example_projects_cxxflags: -fsanitize=address -fno-omit-frame-pointer
           example_projects_ldflags: -fsanitize=address
   - name: sanitizers-asan-rhel80-clang-static-8.0-replica
     run_on: rhel80-large
@@ -15451,7 +15451,7 @@ tasks:
           TEST_WITH_ASAN: "ON"
           example_projects_cc: clang
           example_projects_cxx: clang++
-          example_projects_cxxflags: -D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=address -fno-omit-frame-pointer
+          example_projects_cxxflags: -fsanitize=address -fno-omit-frame-pointer
           example_projects_ldflags: -fsanitize=address
   - name: sanitizers-asan-rhel80-clang-static-8.0-sharded
     run_on: rhel80-large
@@ -15486,7 +15486,7 @@ tasks:
           TEST_WITH_ASAN: "ON"
           example_projects_cc: clang
           example_projects_cxx: clang++
-          example_projects_cxxflags: -D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=address -fno-omit-frame-pointer
+          example_projects_cxxflags: -fsanitize=address -fno-omit-frame-pointer
           example_projects_ldflags: -fsanitize=address
   - name: sanitizers-asan-rhel80-clang-static-8.0-single
     run_on: rhel80-large
@@ -15520,7 +15520,7 @@ tasks:
           TEST_WITH_ASAN: "ON"
           example_projects_cc: clang
           example_projects_cxx: clang++
-          example_projects_cxxflags: -D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=address -fno-omit-frame-pointer
+          example_projects_cxxflags: -fsanitize=address -fno-omit-frame-pointer
           example_projects_ldflags: -fsanitize=address
   - name: sanitizers-asan-rhel80-clang-static-extra_alignment-4.0-replica
     run_on: rhel80-large
@@ -15556,7 +15556,7 @@ tasks:
           TEST_WITH_ASAN: "ON"
           example_projects_cc: clang
           example_projects_cxx: clang++
-          example_projects_cxxflags: -D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=address -fno-omit-frame-pointer
+          example_projects_cxxflags: -fsanitize=address -fno-omit-frame-pointer
           example_projects_ldflags: -fsanitize=address
   - name: sanitizers-asan-rhel80-clang-static-extra_alignment-4.0-sharded
     run_on: rhel80-large
@@ -15592,7 +15592,7 @@ tasks:
           TEST_WITH_ASAN: "ON"
           example_projects_cc: clang
           example_projects_cxx: clang++
-          example_projects_cxxflags: -D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=address -fno-omit-frame-pointer
+          example_projects_cxxflags: -fsanitize=address -fno-omit-frame-pointer
           example_projects_ldflags: -fsanitize=address
   - name: sanitizers-asan-rhel80-clang-static-extra_alignment-4.0-single
     run_on: rhel80-large
@@ -15627,7 +15627,7 @@ tasks:
           TEST_WITH_ASAN: "ON"
           example_projects_cc: clang
           example_projects_cxx: clang++
-          example_projects_cxxflags: -D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=address -fno-omit-frame-pointer
+          example_projects_cxxflags: -fsanitize=address -fno-omit-frame-pointer
           example_projects_ldflags: -fsanitize=address
   - name: sanitizers-asan-rhel80-clang-static-extra_alignment-8.0-replica
     run_on: rhel80-large
@@ -15663,7 +15663,7 @@ tasks:
           TEST_WITH_ASAN: "ON"
           example_projects_cc: clang
           example_projects_cxx: clang++
-          example_projects_cxxflags: -D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=address -fno-omit-frame-pointer
+          example_projects_cxxflags: -fsanitize=address -fno-omit-frame-pointer
           example_projects_ldflags: -fsanitize=address
   - name: sanitizers-asan-rhel80-clang-static-extra_alignment-8.0-sharded
     run_on: rhel80-large
@@ -15699,7 +15699,7 @@ tasks:
           TEST_WITH_ASAN: "ON"
           example_projects_cc: clang
           example_projects_cxx: clang++
-          example_projects_cxxflags: -D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=address -fno-omit-frame-pointer
+          example_projects_cxxflags: -fsanitize=address -fno-omit-frame-pointer
           example_projects_ldflags: -fsanitize=address
   - name: sanitizers-asan-rhel80-clang-static-extra_alignment-8.0-single
     run_on: rhel80-large
@@ -15734,7 +15734,7 @@ tasks:
           TEST_WITH_ASAN: "ON"
           example_projects_cc: clang
           example_projects_cxx: clang++
-          example_projects_cxxflags: -D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=address -fno-omit-frame-pointer
+          example_projects_cxxflags: -fsanitize=address -fno-omit-frame-pointer
           example_projects_ldflags: -fsanitize=address
   - name: sanitizers-asan-rhel80-clang-static-extra_alignment-latest-replica
     run_on: rhel80-large
@@ -15770,7 +15770,7 @@ tasks:
           TEST_WITH_ASAN: "ON"
           example_projects_cc: clang
           example_projects_cxx: clang++
-          example_projects_cxxflags: -D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=address -fno-omit-frame-pointer
+          example_projects_cxxflags: -fsanitize=address -fno-omit-frame-pointer
           example_projects_ldflags: -fsanitize=address
   - name: sanitizers-asan-rhel80-clang-static-extra_alignment-latest-sharded
     run_on: rhel80-large
@@ -15806,7 +15806,7 @@ tasks:
           TEST_WITH_ASAN: "ON"
           example_projects_cc: clang
           example_projects_cxx: clang++
-          example_projects_cxxflags: -D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=address -fno-omit-frame-pointer
+          example_projects_cxxflags: -fsanitize=address -fno-omit-frame-pointer
           example_projects_ldflags: -fsanitize=address
   - name: sanitizers-asan-rhel80-clang-static-extra_alignment-latest-single
     run_on: rhel80-large
@@ -15841,7 +15841,7 @@ tasks:
           TEST_WITH_ASAN: "ON"
           example_projects_cc: clang
           example_projects_cxx: clang++
-          example_projects_cxxflags: -D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=address -fno-omit-frame-pointer
+          example_projects_cxxflags: -fsanitize=address -fno-omit-frame-pointer
           example_projects_ldflags: -fsanitize=address
   - name: sanitizers-asan-rhel80-clang-static-latest-replica
     run_on: rhel80-large
@@ -15876,7 +15876,7 @@ tasks:
           TEST_WITH_ASAN: "ON"
           example_projects_cc: clang
           example_projects_cxx: clang++
-          example_projects_cxxflags: -D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=address -fno-omit-frame-pointer
+          example_projects_cxxflags: -fsanitize=address -fno-omit-frame-pointer
           example_projects_ldflags: -fsanitize=address
   - name: sanitizers-asan-rhel80-clang-static-latest-sharded
     run_on: rhel80-large
@@ -15911,7 +15911,7 @@ tasks:
           TEST_WITH_ASAN: "ON"
           example_projects_cc: clang
           example_projects_cxx: clang++
-          example_projects_cxxflags: -D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=address -fno-omit-frame-pointer
+          example_projects_cxxflags: -fsanitize=address -fno-omit-frame-pointer
           example_projects_ldflags: -fsanitize=address
   - name: sanitizers-asan-rhel80-clang-static-latest-single
     run_on: rhel80-large
@@ -15945,7 +15945,7 @@ tasks:
           TEST_WITH_ASAN: "ON"
           example_projects_cc: clang
           example_projects_cxx: clang++
-          example_projects_cxxflags: -D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=address -fno-omit-frame-pointer
+          example_projects_cxxflags: -fsanitize=address -fno-omit-frame-pointer
           example_projects_ldflags: -fsanitize=address
   - name: sanitizers-ubsan-rhel80-clang-static-4.0-replica
     run_on: rhel80-large
@@ -15980,7 +15980,7 @@ tasks:
           TEST_WITH_UBSAN: "ON"
           example_projects_cc: clang
           example_projects_cxx: clang++
-          example_projects_cxxflags: -D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=undefined -fno-sanitize-recover=undefined -fno-omit-frame-pointer
+          example_projects_cxxflags: -fsanitize=undefined -fno-sanitize-recover=undefined -fno-omit-frame-pointer
           example_projects_ldflags: -fsanitize=undefined -fno-sanitize-recover=undefined
   - name: sanitizers-ubsan-rhel80-clang-static-4.0-sharded
     run_on: rhel80-large
@@ -16015,7 +16015,7 @@ tasks:
           TEST_WITH_UBSAN: "ON"
           example_projects_cc: clang
           example_projects_cxx: clang++
-          example_projects_cxxflags: -D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=undefined -fno-sanitize-recover=undefined -fno-omit-frame-pointer
+          example_projects_cxxflags: -fsanitize=undefined -fno-sanitize-recover=undefined -fno-omit-frame-pointer
           example_projects_ldflags: -fsanitize=undefined -fno-sanitize-recover=undefined
   - name: sanitizers-ubsan-rhel80-clang-static-4.0-single
     run_on: rhel80-large
@@ -16049,7 +16049,7 @@ tasks:
           TEST_WITH_UBSAN: "ON"
           example_projects_cc: clang
           example_projects_cxx: clang++
-          example_projects_cxxflags: -D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=undefined -fno-sanitize-recover=undefined -fno-omit-frame-pointer
+          example_projects_cxxflags: -fsanitize=undefined -fno-sanitize-recover=undefined -fno-omit-frame-pointer
           example_projects_ldflags: -fsanitize=undefined -fno-sanitize-recover=undefined
   - name: sanitizers-ubsan-rhel80-clang-static-8.0-replica
     run_on: rhel80-large
@@ -16084,7 +16084,7 @@ tasks:
           TEST_WITH_UBSAN: "ON"
           example_projects_cc: clang
           example_projects_cxx: clang++
-          example_projects_cxxflags: -D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=undefined -fno-sanitize-recover=undefined -fno-omit-frame-pointer
+          example_projects_cxxflags: -fsanitize=undefined -fno-sanitize-recover=undefined -fno-omit-frame-pointer
           example_projects_ldflags: -fsanitize=undefined -fno-sanitize-recover=undefined
   - name: sanitizers-ubsan-rhel80-clang-static-8.0-sharded
     run_on: rhel80-large
@@ -16119,7 +16119,7 @@ tasks:
           TEST_WITH_UBSAN: "ON"
           example_projects_cc: clang
           example_projects_cxx: clang++
-          example_projects_cxxflags: -D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=undefined -fno-sanitize-recover=undefined -fno-omit-frame-pointer
+          example_projects_cxxflags: -fsanitize=undefined -fno-sanitize-recover=undefined -fno-omit-frame-pointer
           example_projects_ldflags: -fsanitize=undefined -fno-sanitize-recover=undefined
   - name: sanitizers-ubsan-rhel80-clang-static-8.0-single
     run_on: rhel80-large
@@ -16153,7 +16153,7 @@ tasks:
           TEST_WITH_UBSAN: "ON"
           example_projects_cc: clang
           example_projects_cxx: clang++
-          example_projects_cxxflags: -D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=undefined -fno-sanitize-recover=undefined -fno-omit-frame-pointer
+          example_projects_cxxflags: -fsanitize=undefined -fno-sanitize-recover=undefined -fno-omit-frame-pointer
           example_projects_ldflags: -fsanitize=undefined -fno-sanitize-recover=undefined
   - name: sanitizers-ubsan-rhel80-clang-static-latest-replica
     run_on: rhel80-large
@@ -16188,7 +16188,7 @@ tasks:
           TEST_WITH_UBSAN: "ON"
           example_projects_cc: clang
           example_projects_cxx: clang++
-          example_projects_cxxflags: -D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=undefined -fno-sanitize-recover=undefined -fno-omit-frame-pointer
+          example_projects_cxxflags: -fsanitize=undefined -fno-sanitize-recover=undefined -fno-omit-frame-pointer
           example_projects_ldflags: -fsanitize=undefined -fno-sanitize-recover=undefined
   - name: sanitizers-ubsan-rhel80-clang-static-latest-sharded
     run_on: rhel80-large
@@ -16223,7 +16223,7 @@ tasks:
           TEST_WITH_UBSAN: "ON"
           example_projects_cc: clang
           example_projects_cxx: clang++
-          example_projects_cxxflags: -D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=undefined -fno-sanitize-recover=undefined -fno-omit-frame-pointer
+          example_projects_cxxflags: -fsanitize=undefined -fno-sanitize-recover=undefined -fno-omit-frame-pointer
           example_projects_ldflags: -fsanitize=undefined -fno-sanitize-recover=undefined
   - name: sanitizers-ubsan-rhel80-clang-static-latest-single
     run_on: rhel80-large
@@ -16257,7 +16257,7 @@ tasks:
           TEST_WITH_UBSAN: "ON"
           example_projects_cc: clang
           example_projects_cxx: clang++
-          example_projects_cxxflags: -D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=undefined -fno-sanitize-recover=undefined -fno-omit-frame-pointer
+          example_projects_cxxflags: -fsanitize=undefined -fno-sanitize-recover=undefined -fno-omit-frame-pointer
           example_projects_ldflags: -fsanitize=undefined -fno-sanitize-recover=undefined
   - name: scan-build-rhel80-std11-default
     run_on: rhel80-large

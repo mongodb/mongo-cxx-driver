@@ -89,7 +89,7 @@ def tasks():
 
                     test_vars |= {
                         'TEST_WITH_ASAN': 'ON',
-                        'example_projects_cxxflags': '-D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=address -fno-omit-frame-pointer',
+                        'example_projects_cxxflags': '-fsanitize=address -fno-omit-frame-pointer',
                         'example_projects_ldflags': '-fsanitize=address',
                     }
 
@@ -100,7 +100,7 @@ def tasks():
 
                     test_vars |= {
                         'TEST_WITH_UBSAN': 'ON',
-                        'example_projects_cxxflags': '-D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=undefined -fno-sanitize-recover=undefined -fno-omit-frame-pointer',
+                        'example_projects_cxxflags': '-fsanitize=undefined -fno-sanitize-recover=undefined -fno-omit-frame-pointer',
                         'example_projects_ldflags': '-fsanitize=undefined -fno-sanitize-recover=undefined',
                     }
 
