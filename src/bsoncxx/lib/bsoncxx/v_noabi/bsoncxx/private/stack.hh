@@ -94,7 +94,7 @@ class stack {
     }
 
    private:
-    typename std::aligned_storage<sizeof(T), alignof(T)>::type _object_memory[size];
+    typename std::aligned_storage<sizeof(T)>::type _object_memory[size];
 
     std::list<T*> _buckets;
 
