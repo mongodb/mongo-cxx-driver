@@ -281,7 +281,7 @@ else
       elif command -v apt-get >/dev/null; then
         sudo apt-get install -q -y valgrind
       else
-        echo "Unknown how to valgrind on this distro: ${distro_id:?}" 1>&2
+        echo "Unknown how to install valgrind on this distro: ${distro_id:?}" 1>&2
         exit 1
       fi
     fi
