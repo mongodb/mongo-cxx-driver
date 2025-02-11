@@ -77,12 +77,7 @@ class stack {
             _inc();
         }
 
-        // Alignment is handled by `_object_memory`.
-        BSONCXX_PRIVATE_WARNINGS_PUSH();
-        BSONCXX_PRIVATE_WARNINGS_DISABLE(Clang("-Wunknown-warning-option"));
-        BSONCXX_PRIVATE_WARNINGS_DISABLE(Clang("-Walign-mismatch"));
         new (_get_ptr()) T(std::forward<Args>(args)...);
-        BSONCXX_PRIVATE_WARNINGS_POP();
     }
 
     void pop_back() {
