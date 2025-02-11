@@ -74,7 +74,7 @@ void user_log_handler(
 
 // A region of memory that acts as a sentintel value indicating that an instance object is being
 // destroyed. We only care about the address of this object, never its contents.
-alignas(instance) unsigned char sentinel[sizeof(instance)];
+typename std::aligned_storage<sizeof(instance), alignof(instance)>::type sentinel;
 
 std::atomic<instance*> current_instance{nullptr};
 static_assert(std::is_standard_layout<decltype(current_instance)>::value, "Must be standard layout");
