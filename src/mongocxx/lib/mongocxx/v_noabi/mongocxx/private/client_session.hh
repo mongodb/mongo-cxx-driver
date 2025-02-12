@@ -238,7 +238,7 @@ class client_session::impl {
     unique_session _session_t;
 
     // Just a long-lasting empty bson_t. Destruction is not required.
-    bsoncxx::aligned_storage<sizeof(bson_t), alignof(bson_t)> _empty_cluster_time_storage; // -Wuninitialized
+    bsoncxx::aligned_storage<sizeof(bson_t), alignof(bson_t)> _empty_cluster_time_storage;
     bson_t const* _empty_cluster_time_ptr = new (_empty_cluster_time_storage.get()) bson_t BSON_INITIALIZER;
 };
 
