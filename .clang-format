@@ -160,14 +160,14 @@ IncludeCategories:
     Priority: 26
   - Regex: 'mongocxx/v1/.*\.hh' # v1 internal headers
     Priority: 27
-  - Regex: 'bsoncxx/config/prelude\.(hpp|hh)' # v_noabi preludes
-    Priority: 62
-  - Regex: 'mongocxx/config/prelude\.(hpp|hh)' # v_noabi preludes
-    Priority: 63
   - Regex: 'bsoncxx/private/.*' # private headers
     Priority: 60
   - Regex: 'mongocxx/private/.*' # private headers
     Priority: 61
+  - Regex: 'bsoncxx/config/prelude\.(hpp|hh)' # v_noabi preludes
+    Priority: 62
+  - Regex: 'mongocxx/config/prelude\.(hpp|hh)' # v_noabi preludes
+    Priority: 63
   - Regex: 'bsoncxx/test/.*' # test headers
     Priority: 70
   - Regex: 'mongocxx/test/.*' # test headers
