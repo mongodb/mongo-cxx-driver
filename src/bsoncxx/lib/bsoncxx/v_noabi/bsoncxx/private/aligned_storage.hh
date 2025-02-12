@@ -33,7 +33,8 @@ class aligned_storage {
     static_assert(size >= alignment, "sizeof(T) >= alignof(T) must be true");
 
    private:
-    unsigned char _storage[2u * size];
+    // We only need at most `alignment` additional bytes to guarantee enough space for alignment.
+    unsigned char _storage[size + alignment];
 
    public:
     void* get() BSONCXX_PRIVATE_IF_GNU_LIKE(__attribute__((assume_aligned(alignment))))
