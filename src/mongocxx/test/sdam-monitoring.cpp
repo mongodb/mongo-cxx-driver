@@ -63,6 +63,7 @@ TEST_CASE("SDAM Monitoring", "[sdam_monitoring]") {
     SECTION("Server Events") {
         int server_opening_events = 0;
         int server_changed_events = 0;
+        int server_closed_events = 0;
 
         ///////////////////////////////////////////////////////////////////////
         // Begin server description listener lambdas
@@ -117,7 +118,10 @@ TEST_CASE("SDAM Monitoring", "[sdam_monitoring]") {
             BSONCXX_TEST_EXCEPTION_GUARD_END(eguard);
         });
 
-        // We don't expect a ServerClosedEvent unless a replica set member is removed.
+        apm_opts.on_server_closed([&](events::server_closed_event const& event) {
+            server_closed_events++;
+            CHECK(topology_id.value() == event.topology_id());
+        });
 
         ///////////////////////////////////////////////////////////////////////
         // End server description listener lambdas
@@ -127,6 +131,7 @@ TEST_CASE("SDAM Monitoring", "[sdam_monitoring]") {
         BSONCXX_TEST_EXCEPTION_GUARD_CHECK(eguard);
         REQUIRE(server_opening_events > 0);
         REQUIRE(server_changed_events > 0);
+        REQUIRE(server_closed_events > 0);
     }
 
     SECTION("Topology Events") {
