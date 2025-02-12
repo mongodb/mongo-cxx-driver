@@ -15,11 +15,10 @@
 #include <bsoncxx/decimal128.hpp>
 #include <bsoncxx/exception/error_code.hpp>
 #include <bsoncxx/exception/exception.hpp>
-#include <bsoncxx/private/libbson.hh>
 #include <bsoncxx/stdx/string_view.hpp>
 #include <bsoncxx/string/to_string.hpp>
 
-#include <bsoncxx/config/private/prelude.hh>
+#include <bsoncxx/private/bson.hh>
 
 namespace bsoncxx {
 namespace v_noabi {

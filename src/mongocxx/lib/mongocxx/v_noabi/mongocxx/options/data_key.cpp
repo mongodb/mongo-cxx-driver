@@ -13,10 +13,9 @@
 // limitations under the License.
 
 #include <mongocxx/options/data_key.hpp>
-#include <mongocxx/private/libbson.hh>
-#include <mongocxx/private/libmongoc.hh>
 
-#include <mongocxx/config/prelude.hpp>
+#include <mongocxx/private/bson.hh>
+#include <mongocxx/private/mongoc.hh>
 
 namespace mongocxx {
 namespace v_noabi {

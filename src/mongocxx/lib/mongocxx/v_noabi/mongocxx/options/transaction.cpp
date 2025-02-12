@@ -12,13 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <bsoncxx/private/make_unique.hh>
+#include <mongocxx/options/transaction.hh>
+
+//
 
 #include <mongocxx/exception/error_code.hpp>
 #include <mongocxx/exception/logic_error.hpp>
-#include <mongocxx/options/private/transaction.hh>
 
-#include <mongocxx/config/private/prelude.hh>
+#include <bsoncxx/private/make_unique.hh>
 
 namespace mongocxx {
 namespace v_noabi {
@@ -90,5 +91,3 @@ transaction::impl& transaction::_get_impl() {
 } // namespace options
 } // namespace v_noabi
 } // namespace mongocxx
-
-#include <mongocxx/config/private/postlude.hh>

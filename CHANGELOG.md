@@ -13,6 +13,10 @@ Changes prior to 3.9.0 are documented as [release notes on GitHub](https://githu
 
 - Support for MacOS 11 (EOL since Nov 2020) and MacOS 12 (EOL since Oct 2021).
 
+### Changed
+
+- Bump the minimum required C Driver version to [1.30.0](https://github.com/mongodb/mongo-c-driver/releases/tag/1.30.0).
+
 ## 4.0.0
 
 ### Added

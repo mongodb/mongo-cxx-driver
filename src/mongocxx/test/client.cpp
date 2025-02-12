@@ -12,17 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <mongocxx/client.hpp>
+
+//
+
+#include <mongocxx/v1/config/version.hpp>
+
 #include <bsoncxx/string/to_string.hpp>
 
-#include <mongocxx/client.hpp>
 #include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/instance.hpp>
 #include <mongocxx/pool.hpp>
-#include <mongocxx/private/conversions.hh>
-#include <mongocxx/private/libmongoc.hh>
 #include <mongocxx/uri.hpp>
 
-#include <mongocxx/config/private/prelude.hh>
+#include <mongocxx/private/conversions.hh>
+#include <mongocxx/private/mongoc.hh>
 
 #include <bsoncxx/test/catch.hh>
 

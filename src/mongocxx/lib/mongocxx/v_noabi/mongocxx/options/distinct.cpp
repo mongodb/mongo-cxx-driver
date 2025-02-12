@@ -13,9 +13,8 @@
 // limitations under the License.
 
 #include <mongocxx/options/distinct.hpp>
-#include <mongocxx/private/read_preference.hh>
 
-#include <mongocxx/config/private/prelude.hh>
+#include <mongocxx/private/read_preference.hh>
 
 namespace mongocxx {
 namespace v_noabi {

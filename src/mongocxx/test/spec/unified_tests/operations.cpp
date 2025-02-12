@@ -25,8 +25,6 @@
 #include <mongocxx/collection.hpp>
 #include <mongocxx/exception/logic_error.hpp>
 
-#include <mongocxx/config/prelude.hpp>
-
 #include <bsoncxx/test/catch.hh>
 
 #include <mongocxx/test/spec/monitoring.hh>

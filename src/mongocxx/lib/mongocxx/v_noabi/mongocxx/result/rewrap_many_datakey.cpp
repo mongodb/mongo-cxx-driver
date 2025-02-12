@@ -13,10 +13,9 @@
 // limitations under the License.
 
 #include <mongocxx/bulk_write.hpp>
-#include <mongocxx/private/libbson.hh>
 #include <mongocxx/result/rewrap_many_datakey.hpp>
 
-#include <mongocxx/config/private/prelude.hh>
+#include <mongocxx/private/bson.hh>
 
 namespace mongocxx {
 namespace v_noabi {

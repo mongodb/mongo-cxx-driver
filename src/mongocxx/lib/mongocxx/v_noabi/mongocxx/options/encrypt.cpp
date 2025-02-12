@@ -14,16 +14,15 @@
 
 #include <utility>
 
-#include <bsoncxx/types/private/convert.hh>
-
 #include <mongocxx/exception/error_code.hpp>
 #include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/options/encrypt.hpp>
-#include <mongocxx/private/libbson.hh>
-#include <mongocxx/private/libmongoc.hh>
-#include <mongocxx/private/scoped_bson_value.hh>
 
-#include <mongocxx/config/private/prelude.hh>
+#include <bsoncxx/private/convert.hh>
+
+#include <mongocxx/private/bson.hh>
+#include <mongocxx/private/mongoc.hh>
+#include <mongocxx/private/scoped_bson_value.hh>
 
 namespace mongocxx {
 namespace v_noabi {

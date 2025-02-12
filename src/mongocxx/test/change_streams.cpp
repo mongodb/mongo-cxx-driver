@@ -17,7 +17,6 @@
 
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/document/value.hpp>
-#include <bsoncxx/private/libbson.hh>
 
 #include <mongocxx/client.hpp>
 #include <mongocxx/collection.hpp>
@@ -26,8 +25,11 @@
 #include <mongocxx/options/pool.hpp>
 #include <mongocxx/pipeline.hpp>
 #include <mongocxx/pool.hpp>
-#include <mongocxx/private/libbson.hh>
 #include <mongocxx/write_concern.hpp>
+
+#include <bsoncxx/private/bson.hh>
+
+#include <mongocxx/private/bson.hh>
 
 #include <bsoncxx/test/catch.hh>
 

@@ -13,11 +13,12 @@
 // limitations under the License.
 
 #include <bsoncxx/builder/basic/document.hpp>
-#include <bsoncxx/private/make_unique.hh>
 #include <bsoncxx/types.hpp>
 
 #include <mongocxx/instance.hpp>
 #include <mongocxx/options/index.hpp>
+
+#include <bsoncxx/private/make_unique.hh>
 
 #include <bsoncxx/test/catch.hh>
 

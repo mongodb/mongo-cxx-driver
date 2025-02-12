@@ -17,18 +17,17 @@
 #include <bsoncxx/builder/core.hpp>
 #include <bsoncxx/exception/error_code.hpp>
 #include <bsoncxx/exception/exception.hpp>
-#include <bsoncxx/private/aligned_storage.hh>
-#include <bsoncxx/private/itoa.hh>
-#include <bsoncxx/private/libbson.hh>
-#include <bsoncxx/private/make_unique.hh>
-#include <bsoncxx/private/stack.hh>
-#include <bsoncxx/private/suppress_deprecation_warnings.hh>
 #include <bsoncxx/stdx/string_view.hpp>
 #include <bsoncxx/string/to_string.hpp>
 #include <bsoncxx/types.hpp>
 #include <bsoncxx/types/bson_value/view.hpp>
 
-#include <bsoncxx/config/private/prelude.hh>
+#include <bsoncxx/private/aligned_storage.hh>
+#include <bsoncxx/private/bson.hh>
+#include <bsoncxx/private/itoa.hh>
+#include <bsoncxx/private/make_unique.hh>
+#include <bsoncxx/private/stack.hh>
+#include <bsoncxx/private/suppress_deprecation_warnings.hh>
 
 namespace bsoncxx {
 namespace v_noabi {

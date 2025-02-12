@@ -12,13 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <mongocxx/events/command_succeeded_event.hpp>
+
 #include <bsoncxx/private/helpers.hh>
 #include <bsoncxx/private/make_unique.hh>
 
-#include <mongocxx/events/command_succeeded_event.hpp>
-#include <mongocxx/private/libmongoc.hh>
-
-#include <mongocxx/config/private/prelude.hh>
+#include <mongocxx/private/mongoc.hh>
 
 namespace mongocxx {
 namespace v_noabi {

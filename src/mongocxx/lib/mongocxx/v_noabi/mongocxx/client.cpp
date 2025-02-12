@@ -13,27 +13,28 @@
 // limitations under the License.
 
 #include <bsoncxx/builder/basic/kvp.hpp>
-#include <bsoncxx/private/make_unique.hh>
 
 #include <mongocxx/client.hpp>
 #include <mongocxx/exception/error_code.hpp>
 #include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/exception/operation_exception.hpp>
-#include <mongocxx/exception/private/mongoc_error.hh>
 #include <mongocxx/options/auto_encryption.hpp>
-#include <mongocxx/options/private/apm.hh>
-#include <mongocxx/options/private/server_api.hh>
-#include <mongocxx/options/private/ssl.hh>
+
+#include <mongocxx/options/apm.hh>
+#include <mongocxx/options/server_api.hh>
+#include <mongocxx/options/tls.hh>
+
+#include <bsoncxx/private/make_unique.hh>
+
+#include <mongocxx/private/bson.hh>
 #include <mongocxx/private/client.hh>
 #include <mongocxx/private/client_session.hh>
-#include <mongocxx/private/libbson.hh>
+#include <mongocxx/private/mongoc_error.hh>
 #include <mongocxx/private/pipeline.hh>
 #include <mongocxx/private/read_concern.hh>
 #include <mongocxx/private/read_preference.hh>
 #include <mongocxx/private/uri.hh>
 #include <mongocxx/private/write_concern.hh>
-
-#include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
 namespace v_noabi {

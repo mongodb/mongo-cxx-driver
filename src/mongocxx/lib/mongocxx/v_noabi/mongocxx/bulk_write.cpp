@@ -14,21 +14,21 @@
 
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/builder/basic/kvp.hpp>
-#include <bsoncxx/private/make_unique.hh>
 
 #include <mongocxx/bulk_write.hpp>
 #include <mongocxx/collection.hpp>
 #include <mongocxx/exception/bulk_write_exception.hpp>
 #include <mongocxx/exception/logic_error.hpp>
-#include <mongocxx/exception/private/mongoc_error.hh>
+
+#include <bsoncxx/private/make_unique.hh>
+
+#include <mongocxx/private/bson.hh>
 #include <mongocxx/private/bulk_write.hh>
 #include <mongocxx/private/client_session.hh>
 #include <mongocxx/private/collection.hh>
-#include <mongocxx/private/libbson.hh>
-#include <mongocxx/private/libmongoc.hh>
+#include <mongocxx/private/mongoc.hh>
+#include <mongocxx/private/mongoc_error.hh>
 #include <mongocxx/private/write_concern.hh>
-
-#include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
 namespace v_noabi {

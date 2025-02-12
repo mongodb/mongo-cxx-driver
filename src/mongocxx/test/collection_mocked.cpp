@@ -18,8 +18,6 @@
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/document/element.hpp>
 #include <bsoncxx/json.hpp>
-#include <bsoncxx/private/helpers.hh>
-#include <bsoncxx/private/libbson.hh>
 #include <bsoncxx/stdx/optional.hpp>
 
 #include <mongocxx/client.hpp>
@@ -30,10 +28,14 @@
 #include <mongocxx/instance.hpp>
 #include <mongocxx/options/update.hpp>
 #include <mongocxx/pipeline.hpp>
-#include <mongocxx/private/conversions.hh>
-#include <mongocxx/private/libbson.hh>
-#include <mongocxx/private/libmongoc.hh>
 #include <mongocxx/read_preference.hpp>
+
+#include <bsoncxx/private/bson.hh>
+#include <bsoncxx/private/helpers.hh>
+
+#include <mongocxx/private/bson.hh>
+#include <mongocxx/private/conversions.hh>
+#include <mongocxx/private/mongoc.hh>
 
 #include <bsoncxx/test/catch.hh>
 

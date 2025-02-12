@@ -18,10 +18,9 @@
 #include <bsoncxx/string/to_string.hpp>
 
 #include <mongocxx/exception/operation_exception.hpp>
-#include <mongocxx/private/libbson.hh>
-#include <mongocxx/private/libmongoc.hh>
 
-#include <mongocxx/config/private/prelude.hh>
+#include <mongocxx/private/bson.hh>
+#include <mongocxx/private/mongoc.hh>
 
 namespace mongocxx {
 namespace v_noabi {

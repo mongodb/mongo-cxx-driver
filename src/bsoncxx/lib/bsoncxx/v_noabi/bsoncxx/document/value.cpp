@@ -16,8 +16,6 @@
 
 #include <bsoncxx/document/value.hpp>
 
-#include <bsoncxx/config/private/prelude.hh>
-
 namespace bsoncxx {
 namespace v_noabi {
 namespace document {

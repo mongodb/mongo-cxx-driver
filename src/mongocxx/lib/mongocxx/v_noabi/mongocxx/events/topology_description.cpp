@@ -13,10 +13,9 @@
 // limitations under the License.
 
 #include <mongocxx/events/topology_description.hpp>
-#include <mongocxx/private/libmongoc.hh>
-#include <mongocxx/private/read_preference.hh>
 
-#include <mongocxx/config/private/prelude.hh>
+#include <mongocxx/private/mongoc.hh>
+#include <mongocxx/private/read_preference.hh>
 
 namespace mongocxx {
 namespace v_noabi {

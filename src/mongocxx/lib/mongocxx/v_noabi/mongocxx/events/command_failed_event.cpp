@@ -13,15 +13,15 @@
 // limitations under the License.
 
 #include <bsoncxx/oid.hpp>
-#include <bsoncxx/private/helpers.hh>
-#include <bsoncxx/private/libbson.hh>
-#include <bsoncxx/private/make_unique.hh>
 #include <bsoncxx/stdx/optional.hpp>
 
 #include <mongocxx/events/command_failed_event.hpp>
-#include <mongocxx/private/libmongoc.hh>
 
-#include <mongocxx/config/private/prelude.hh>
+#include <bsoncxx/private/bson.hh>
+#include <bsoncxx/private/helpers.hh>
+#include <bsoncxx/private/make_unique.hh>
+
+#include <mongocxx/private/mongoc.hh>
 
 namespace mongocxx {
 namespace v_noabi {

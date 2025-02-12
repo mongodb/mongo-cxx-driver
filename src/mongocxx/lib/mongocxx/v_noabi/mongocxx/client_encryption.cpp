@@ -12,13 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <mongocxx/client_encryption.hpp>
+
 #include <bsoncxx/private/make_unique.hh>
 
-#include <mongocxx/client_encryption.hpp>
 #include <mongocxx/private/client_encryption.hh>
 #include <mongocxx/private/database.hh>
-
-#include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
 namespace v_noabi {
