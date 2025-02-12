@@ -56,12 +56,10 @@ list(TRANSFORM bsoncxx_sources PREPEND "${CMAKE_CURRENT_SOURCE_DIR}/")
 set(bsoncxx_sources "${bsoncxx_sources}" PARENT_SCOPE)
 
 # Generate private headers.
-if(1)
-    configure_file(
-        bsoncxx/private/config/config.hh.in
-        bsoncxx/private/config/config.hh
-    )
-endif()
+configure_file(
+    bsoncxx/private/config/config.hh.in
+    bsoncxx/private/config/config.hh
+)
 
 # Generate and install public headers.
 if(1)
