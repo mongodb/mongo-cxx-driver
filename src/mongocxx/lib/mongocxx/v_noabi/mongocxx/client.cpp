@@ -29,6 +29,8 @@
 #include <mongocxx/private/bson.hh>
 #include <mongocxx/private/client.hh>
 #include <mongocxx/private/client_session.hh>
+#include <mongocxx/private/config/config.hh>
+#include <mongocxx/private/mongoc.hh>
 #include <mongocxx/private/mongoc_error.hh>
 #include <mongocxx/private/pipeline.hh>
 #include <mongocxx/private/read_concern.hh>

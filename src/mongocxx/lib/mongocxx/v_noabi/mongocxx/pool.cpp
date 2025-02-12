@@ -27,6 +27,8 @@
 #include <bsoncxx/private/make_unique.hh>
 
 #include <mongocxx/private/client.hh>
+#include <mongocxx/private/config/config.hh>
+#include <mongocxx/private/mongoc.hh>
 #include <mongocxx/private/mongoc_error.hh>
 #include <mongocxx/private/pool.hh>
 #include <mongocxx/private/uri.hh>

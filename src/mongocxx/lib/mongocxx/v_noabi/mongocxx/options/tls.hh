@@ -20,6 +20,7 @@
 
 #include <list>
 
+#include <mongocxx/private/config/config.hh>
 #include <mongocxx/private/mongoc.hh>
 
 namespace mongocxx {
