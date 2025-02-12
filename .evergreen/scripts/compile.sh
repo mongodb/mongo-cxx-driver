@@ -144,6 +144,12 @@ cxx_flags=()
 case "${OSTYPE:?}" in
 cygwin)
   # Most compiler flags are not applicable to builds on Windows distros.
+
+  # Replace `/Zi`, which is incompatible with ccache, with `/Z7` while preserving other default debug flags.
+  cmake_flags+=(
+    "-DCMAKE_POLICY_DEFAULT_CMP0141=NEW"
+    "-DCMAKE_MSVC_DEBUG_INFORMATION_FORMAT=Embedded"
+  )
   ;;
 darwin*)
   cc_flags+=("${cc_flags_init[@]}")

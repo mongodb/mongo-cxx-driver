@@ -105,6 +105,13 @@ export cmake_binary
 cmake_binary="$(find_cmake_latest)"
 command -v "${cmake_binary:?}"
 
+# Use ccache if available.
+if [[ -f "${mongoc_dir:?}/.evergreen/scripts/find-ccache.sh" ]]; then
+  # shellcheck source=/dev/null
+  . "${mongoc_dir:?}/.evergreen/scripts/find-ccache.sh"
+  find_ccache_and_export_vars "$(pwd)" || true
+fi
+
 export MONGOCXX_TEST_TLS_CA_FILE="${DRIVERS_TOOLS:?}/.evergreen/x509gen/ca.pem"
 
 if [[ "${TEST_WITH_CSFLE:-}" != "ON" ]]; then
@@ -336,11 +343,11 @@ export PKG_CONFIG_PATH
 export CMAKE_GENERATOR="${generator:-}"
 export CMAKE_GENERATOR_PLATFORM="${platform:-}"
 export BUILD_TYPE="${build_type:?}"
-export CXXFLAGS="${example_projects_cxxflags}"
-export LDFLAGS="${example_projects_ldflags}"
-export CC="${example_projects_cc}"
-export CXX="${example_projects_cxx}"
-export CXX_STANDARD="${example_projects_cxx_standard}"
+export CXXFLAGS="${example_projects_cxxflags:-}"
+export LDFLAGS="${example_projects_ldflags:-}"
+export CC="${example_projects_cc:-"cc"}"
+export CXX="${example_projects_cxx:-"c++"}"
+export CXX_STANDARD="${example_projects_cxx_standard:-11}"
 
 if [[ "$OSTYPE" =~ cygwin ]]; then
   export MSVC=1
