@@ -171,14 +171,18 @@ TEST_CASE("SDAM Monitoring", "[sdam_monitoring]") {
                 REQUIRE_FALSE(old_td.has_writable_server());
             }
 
-            if (topology_type == "replicaset") {
-                if (new_td.has_writable_server()) {
-                    REQUIRE(new_type == "ReplicaSetWithPrimary");
+            // A topology_changed_event may also be triggered when server monitoring closes,
+            // which transitions the topology description into an "Unknown" state.
+            CHECKED_IF(new_type != "Unknown") {
+                if (topology_type == "replicaset") {
+                    if (new_td.has_writable_server()) {
+                        REQUIRE(new_type == "ReplicaSetWithPrimary");
+                    } else {
+                        REQUIRE(new_type == "ReplicaSetNoPrimary");
+                    }
                 } else {
-                    REQUIRE(new_type == "ReplicaSetNoPrimary");
+                    REQUIRE(new_type == "Single");
                 }
-            } else {
-                REQUIRE(new_type == "Single");
             }
 
             for (auto&& new_sd : new_servers) {
