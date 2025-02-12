@@ -30,6 +30,8 @@
 
 #include <bsoncxx/stdx/type_traits.hpp>
 
+#include <bsoncxx/private/bson.hh>
+
 namespace mongocxx {
 namespace test_util {
 
