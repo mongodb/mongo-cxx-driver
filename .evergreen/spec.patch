@@ -12,7 +12,7 @@
  Release:        1%{?dist}
  Summary:        A C++ Driver for MongoDB
  License:        ASL 2.0
-@@ -10,9 +12,8 @@
+@@ -10,14 +12,13 @@ URL:            https://github.com/mongodb/mongo-cxx-driver/wiki
  Source0:        https://github.com/mongodb/%{pkg_name}/archive/%{name}-r%{version}.tar.gz
  
  
@@ -24,7 +24,14 @@
  BuildRequires:  openssl-devel
  BuildRequires:  cmake
  BuildRequires:  cyrus-sasl-devel
-@@ -67,8 +68,6 @@
+-BuildRequires:  libbson-devel
+-BuildRequires:  mongo-c-driver-devel
++BuildRequires:  libbson-devel >= 1.30.0
++BuildRequires:  mongo-c-driver-devel >= 1.30.0
+ BuildRequires:  snappy-devel
+ BuildRequires:  gcc-c++
+ BuildRequires:  libzstd-devel
+@@ -67,8 +68,6 @@ This package provides the C++ header files for library for working with BSON.
  %prep
  %setup -q -n %{name}-r%{version}
  
@@ -33,7 +40,7 @@
  
  
  %build
-@@ -78,7 +77,8 @@
+@@ -78,7 +77,8 @@ export LDFLAGS="$LDFLAGS $RPM_LD_FLAGS"
  
  %cmake \
      -DCMAKE_BUILD_TYPE=Release \
