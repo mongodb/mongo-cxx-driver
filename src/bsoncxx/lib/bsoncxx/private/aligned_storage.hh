@@ -16,6 +16,7 @@
 
 #include <bsoncxx/v1/detail/macros.hpp>
 
+#include <cstddef>
 #include <memory>
 
 namespace bsoncxx {

@@ -18,6 +18,8 @@
 #include <memory>
 #include <type_traits>
 
+#include <bsoncxx/private/bson.hh>
+
 namespace bsoncxx {
 
 // Note: This stack is only intended for use with the 'frame' type in
