@@ -1050,7 +1050,7 @@ void itoa::_init() {
 
         while (_val > 0u) {
             i--;
-            _buf[i] = static_cast<char>(_val % 10u) + '0';
+            _buf[i] = static_cast<char>((_val % 10u) + '0');
             _val = _val / 10u;
         }
 
