@@ -6,7 +6,7 @@ Uploaders: Kevin Albertson <kevin.albertson@mongodb.com>,
 Build-Depends: debhelper (>= 11),
                cmake,
                pkgconf,
-               libmongoc-dev (>= 1.29.0),
+               libmongoc-dev (>= 1.30.0),
                libsasl2-dev,
                libutf8proc-dev,
                doxygen
