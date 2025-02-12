@@ -30,24 +30,72 @@ buildvariants:
       - name: .clang-tidy
   - name: compile-only-matrix
     display_name: compile-only-matrix
+    display_tasks:
+      - name: compile-only-matrix
+        execution_tasks:
+          - .compile-only !.rhel8-power !.rhel8-zseries
     tasks:
-      - name: .compile-only .rhel81-power8
+      - name: .compile-only .rhel8-power
         batchtime: 1440
-      - name: .compile-only .rhel83-zseries
+      - name: .compile-only .rhel8-zseries
         batchtime: 1440
-      - name: .compile-only !.rhel81-power8 !.rhel83-zseries
+      - name: .compile-only !.rhel8-power !.rhel8-zseries
   - name: docker-build
     display_name: Docker Build
     tasks:
       - name: .docker-build
-  - name: integration-matrix
-    display_name: integration-matrix
+  - name: integration-matrix-extra_alignment
+    display_name: integration-matrix-extra_alignment
+    display_tasks:
+      - name: integration-matrix-extra_alignment
+        execution_tasks:
+          - .integration !.rhel8-power !.rhel8-zseries
     tasks:
-      - name: .integration .rhel81-power8
+      - name: .integration .extra_alignment .rhel8-power
         batchtime: 1440
-      - name: .integration .rhel83-zseries
+      - name: .integration .extra_alignment .rhel8-zseries
         batchtime: 1440
-      - name: .integration !.rhel81-power8 !.rhel83-zseries
+      - name: .integration .extra_alignment !.rhel8-power !.rhel8-zseries
+  - name: integration-matrix-linux
+    display_name: integration-matrix-linux
+    display_tasks:
+      - name: integration-matrix-linux
+        execution_tasks:
+          - .integration !.rhel8-power !.rhel8-zseries
+    tasks:
+      - name: .integration .linux !.mongocryptd !.extra_alignment .rhel8-power
+        batchtime: 1440
+      - name: .integration .linux !.mongocryptd !.extra_alignment .rhel8-zseries
+        batchtime: 1440
+      - name: .integration .linux !.mongocryptd !.extra_alignment !.rhel8-power !.rhel8-zseries
+  - name: integration-matrix-macos
+    display_name: integration-matrix-macos
+    display_tasks:
+      - name: integration-matrix-macos
+        execution_tasks:
+          - .integration
+    tasks:
+      - name: .integration .macos !.mongocryptd !.extra_alignment
+  - name: integration-matrix-mongocryptd
+    display_name: integration-matrix-mongocryptd
+    display_tasks:
+      - name: integration-matrix-mongocryptd
+        execution_tasks:
+          - .integration !.rhel8-power !.rhel8-zseries
+    tasks:
+      - name: .integration .mongocryptd .rhel8-power
+        batchtime: 1440
+      - name: .integration .mongocryptd .rhel8-zseries
+        batchtime: 1440
+      - name: .integration .mongocryptd !.rhel8-power !.rhel8-zseries
+  - name: integration-matrix-windows
+    display_name: integration-matrix-windows
+    display_tasks:
+      - name: integration-matrix-windows
+        execution_tasks:
+          - .integration
+    tasks:
+      - name: .integration .windows !.mongocryptd !.extra_alignment
   - name: lint
     display_name: Lint
     tasks:

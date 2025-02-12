@@ -22,10 +22,10 @@ set -o pipefail
 : "${example_projects_cxxflags:-}"
 : "${example_projects_ldflags:-}"
 : "${generator:-}"
-: "${lib_dir:-}"
 : "${MONGODB_API_VERSION:-}"
 : "${platform:-}"
 : "${TEST_WITH_ASAN:-}"
+: "${TEST_WITH_CSFLE:-}"
 : "${TEST_WITH_UBSAN:-}"
 : "${TEST_WITH_VALGRIND:-}"
 : "${use_mongocryptd:-}"
@@ -45,17 +45,19 @@ popd # ..
 mongoc_dir="${working_dir:?}/../mongoc"
 export mongoc_dir
 
-# Use PATH / LD_LIBRARY_PATH / DYLD_LIBRARY_PATH to inform the tests where to find
+# Library directory differs on RHEL.
+if [[ "${distro_id:?}" == rhel* ]]; then
+  LIB_DIR="lib64"
+else
+  LIB_DIR="lib"
+fi
+
+# Use PATH / LD_LIBRARY_PATH / DYLD_FALLBACK_LIBRARY_PATH to inform the tests where to find
 # mongoc library dependencies on Windows / Linux / Mac OS, respectively.
 # Additionally, on Windows, we also need to inform the tests where to find
 # mongocxx library dependencies.
-if [ -n "${lib_dir:-}" ]; then
-  export LD_LIBRARY_PATH="${working_dir:?}/build:${mongoc_dir:?}/${lib_dir:?}/"
-  export DYLD_LIBRARY_PATH="${working_dir:?}/build:${mongoc_dir:?}/${lib_dir:?}/"
-else
-  export LD_LIBRARY_PATH="${working_dir:?}/build:${mongoc_dir:?}/lib/"
-  export DYLD_LIBRARY_PATH="${working_dir:?}/build:${mongoc_dir:?}/lib/"
-fi
+export LD_LIBRARY_PATH="${working_dir:?}/build:${mongoc_dir:?}/${LIB_DIR:?}"
+export DYLD_FALLBACK_LIBRARY_PATH="${working_dir:?}/build:${mongoc_dir:?}/${LIB_DIR:?}"
 PATH="${working_dir:?}/build/src/mongocxx/test/${build_type:?}:${PATH:-}"
 PATH="${working_dir:?}/build/src/bsoncxx/test/${build_type:?}:${PATH:-}"
 PATH="${working_dir:?}/build/src/mongocxx/${build_type:?}:${PATH:-}"
@@ -103,9 +105,18 @@ export cmake_binary
 cmake_binary="$(find_cmake_latest)"
 command -v "${cmake_binary:?}"
 
+# Use ccache if available.
+if [[ -f "${mongoc_dir:?}/.evergreen/scripts/find-ccache.sh" ]]; then
+  # shellcheck source=/dev/null
+  . "${mongoc_dir:?}/.evergreen/scripts/find-ccache.sh"
+  find_ccache_and_export_vars "$(pwd)" || true
+fi
+
 export MONGOCXX_TEST_TLS_CA_FILE="${DRIVERS_TOOLS:?}/.evergreen/x509gen/ca.pem"
 
-if [ "$(uname -m)" == "ppc64le" ]; then
+if [[ "${TEST_WITH_CSFLE:-}" != "ON" ]]; then
+  echo "Skipping CSFLE test setup (TEST_WITH_CSFLE is OFF)"
+elif [ "$(uname -m)" == "ppc64le" ]; then
   echo "Skipping CSFLE test setup (CDRIVER-4246/CXX-2423)"
 else
   # export environment variables for encryption tests
@@ -269,8 +280,19 @@ else
   if [[ "${TEST_WITH_ASAN:-}" == "ON" || "${TEST_WITH_UBSAN:-}" == "ON" ]]; then
     export ASAN_OPTIONS="detect_leaks=1"
     export UBSAN_OPTIONS="print_stacktrace=1"
-    export PATH="/usr/lib/llvm-3.8/bin:${PATH:-}"
+    export PATH="/opt/mongodbtoolchain/v4/bin:${PATH:-}" # llvm-symbolizer
   elif [[ "${TEST_WITH_VALGRIND:-}" == "ON" ]]; then
+    if ! command -v valgrind >/dev/null; then
+      if command -v yum >/dev/null; then
+        sudo yum install -q -y valgrind
+      elif command -v apt-get >/dev/null; then
+        sudo apt-get install -q -y valgrind
+      else
+        echo "Unknown how to install valgrind on this distro: ${distro_id:?}" 1>&2
+        exit 1
+      fi
+    fi
+    valgrind --version
     run_test() {
       valgrind --leak-check=full --track-origins=yes --num-callers=50 --error-exitcode=1 --error-limit=no --read-var-info=yes --suppressions=../etc/memcheck.suppressions "$@" "${test_args[@]:?}"
     }
@@ -313,37 +335,30 @@ CMAKE_PREFIX_PATH="${mongoc_dir:?}:${working_dir:?}/build/install"
 export CMAKE_PREFIX_PATH
 
 PKG_CONFIG_PATH=""
-if [ -n "${lib_dir:-}" ]; then
-  PKG_CONFIG_PATH+=":${mongoc_dir:?}/${lib_dir:?}/pkgconfig"
-  PKG_CONFIG_PATH+=":${working_dir:?}/build/install/${lib_dir:?}/pkgconfig"
-else
-  PKG_CONFIG_PATH+=":${mongoc_dir:?}/lib/pkgconfig"
-  PKG_CONFIG_PATH+=":${working_dir:?}/build/install/lib/pkgconfig"
-fi
+PKG_CONFIG_PATH+=":${mongoc_dir:?}/${LIB_DIR:?}/pkgconfig"
+PKG_CONFIG_PATH+=":${working_dir:?}/build/install/${LIB_DIR:?}/pkgconfig"
 export PKG_CONFIG_PATH
 
 # Environment variables used by example projects.
 export CMAKE_GENERATOR="${generator:-}"
 export CMAKE_GENERATOR_PLATFORM="${platform:-}"
 export BUILD_TYPE="${build_type:?}"
-export CXXFLAGS="${example_projects_cxxflags}"
-export LDFLAGS="${example_projects_ldflags}"
-export CC="${example_projects_cc}"
-export CXX="${example_projects_cxx}"
-export CXX_STANDARD="${example_projects_cxx_standard}"
+export CXXFLAGS="${example_projects_cxxflags:-}"
+export LDFLAGS="${example_projects_ldflags:-}"
+export CC="${example_projects_cc:-"cc"}"
+export CXX="${example_projects_cxx:-"c++"}"
+export CXX_STANDARD="${example_projects_cxx_standard:-11}"
 
 if [[ "$OSTYPE" =~ cygwin ]]; then
   export MSVC=1
-elif [ "$(uname -s | tr '[:upper:]' '[:lower:]')" == "darwin" ]; then
-  DYLD_LIBRARY_PATH="$(pwd)/build/install/lib:${DYLD_LIBRARY_PATH:-}"
-  export DYLD_LIBRARY_PATH
 else
-  if [ -n "${lib_dir:-}" ]; then # only needed on Linux
-    LD_LIBRARY_PATH="${working_dir:?}/build/install/${lib_dir:?}:${LD_LIBRARY_PATH:-}"
-  else
-    LD_LIBRARY_PATH="${working_dir:?}/build/install/lib:${LD_LIBRARY_PATH:-}"
-  fi
-  export LD_LIBRARY_PATH
+  LD_LIBRARY_PATH="${working_dir:?}/build/install/${LIB_DIR:?}:${LD_LIBRARY_PATH:-}"
+  DYLD_FALLBACK_LIBRARY_PATH="$(pwd)/build/install/lib:${DYLD_FALLBACK_LIBRARY_PATH:-}"
+fi
+
+# MacOS needs some help finding dynamic libraries via rpath even with DYLD_FALLBACK_LIBRARY_PATH.
+if [[ "${OSTYPE:?}" == darwin* ]]; then
+  LDFLAGS+="-rpath $(pwd)/build/install/lib -rpath $(pwd)/../mongoc/lib ${LDFLAGS:-}"
 fi
 
 # The example projects never run under valgrind, since we haven't added execution

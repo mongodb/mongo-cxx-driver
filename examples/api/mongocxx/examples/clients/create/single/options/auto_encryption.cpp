@@ -67,6 +67,8 @@ RUNNER_REGISTER_COMPONENT_WITH_INSTANCE() {
     } catch (mongocxx::exception const& ex) {
         if (std::strstr(ex.what(), "ENABLE_CLIENT_SIDE_ENCRYPTION") != nullptr) {
             // Library may not be configured with TLS/SSL support enabled.
+        } else if (std::strstr(ex.what(), "mongocryptd") != nullptr) {
+            // Environment may not support spawning mongocryptd.
         } else {
             throw;
         }

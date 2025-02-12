@@ -7,7 +7,7 @@ from config_generator.components.funcs.setup import Setup
 from config_generator.components.funcs.start_mongod import StartMongod
 from config_generator.components.funcs.test import Test
 
-from config_generator.etc.distros import compiler_to_vars, find_large_distro, make_distro_str
+from config_generator.etc.distros import find_large_distro, make_distro_str
 
 from shrub.v3.evg_build_variant import BuildVariant, DisplayTask
 from shrub.v3.evg_command import KeyValueParam, expansions_update
@@ -22,11 +22,8 @@ TAG = 'sanitizers'
 # pylint: disable=line-too-long
 # fmt: off
 MATRIX = [
-    ('ubuntu1804', ['asan' ], ['shared', 'static'], [False, True], ['5.0'], ['single']),
-    ('ubuntu1804', ['ubsan'], [          'static'], [False,     ], ['5.0'], ['single']),
-
-    ('ubuntu2004', ['asan' ], ['shared', 'static'], [False, True], ['5.0'], ['single']),
-    ('ubuntu2004', ['ubsan'], [          'static'], [False,     ], ['5.0'], ['single']),
+    ('rhel80', ['asan',        ], ['shared', 'static'], [False, True], ['4.0', '8.0', 'latest'], ['single', 'replica', 'sharded']),
+    ('rhel80', [        'ubsan'], [          'static'], [False      ], ['4.0', '8.0', 'latest'], ['single', 'replica', 'sharded']),
 ]
 # fmt: on
 # pylint: enable=line-too-long
@@ -36,6 +33,8 @@ def tasks():
     res = []
 
     compiler = 'clang'
+    cc_compiler = f'/opt/mongodbtoolchain/v4/bin/{compiler}'
+    cxx_compiler = f'/opt/mongodbtoolchain/v4/bin/{compiler}++'
 
     for distro_name, sanitizers, link_types, with_extra_aligns, mongodb_versions, topologies in MATRIX:
         for sanitizer, link_type, with_extra_align, mongodb_version, topology in product(
@@ -60,7 +59,8 @@ def tasks():
             tags += [mongodb_version, topology]
 
             updates = [KeyValueParam(key='build_type', value='Debug')]
-            updates += [KeyValueParam(key=key, value=value) for key, value in compiler_to_vars(compiler).items()]
+            updates += [KeyValueParam(key=key, value=value)
+                        for key, value in [('cc_compiler', cc_compiler), ('cxx_compiler', cxx_compiler)]]
 
             icd_vars = {'SKIP_INSTALL_LIBMONGOCRYPT': 1}
             compile_vars = {'ENABLE_TESTS': 'ON'}
@@ -89,7 +89,7 @@ def tasks():
 
                     test_vars |= {
                         'TEST_WITH_ASAN': 'ON',
-                        'example_projects_cxxflags': '-D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=address -fno-omit-frame-pointer',
+                        'example_projects_cxxflags': '-fsanitize=address -fno-omit-frame-pointer',
                         'example_projects_ldflags': '-fsanitize=address',
                     }
 
@@ -100,7 +100,7 @@ def tasks():
 
                     test_vars |= {
                         'TEST_WITH_UBSAN': 'ON',
-                        'example_projects_cxxflags': '-D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=undefined -fno-sanitize-recover=undefined -fno-omit-frame-pointer',
+                        'example_projects_cxxflags': '-fsanitize=undefined -fno-sanitize-recover=undefined -fno-omit-frame-pointer',
                         'example_projects_ldflags': '-fsanitize=undefined -fno-sanitize-recover=undefined',
                     }
 

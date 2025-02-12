@@ -29,10 +29,10 @@ PREFIX="$(pwd)/../../mongoc"
 
 # Use LD_LIBRARY_PATH to inform the tests where to find dependencies on Linux.
 # This task only runs on Linux.
-if [ -n "${lib_dir:-}" ]; then
-  export LD_LIBRARY_PATH=".:${PREFIX:?}/${lib_dir:?}/"
+if [[ "${distro_id:?}" == rhel* ]]; then
+  export LD_LIBRARY_PATH=".:${PREFIX:?}/lib64"
 else
-  export LD_LIBRARY_PATH=".:${PREFIX:?}/lib/"
+  export LD_LIBRARY_PATH=".:${PREFIX:?}/lib"
 fi
 
 export MONGOHOUSE_TESTS_PATH

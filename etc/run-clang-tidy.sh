@@ -3,26 +3,33 @@
 set -o errexit
 set -o pipefail
 
+: "${UV_INSTALL_DIR:?}" # Not on windows-64-vs2015.
+
 export CC="${cc_compiler:?}"
 export CXX="${cxx_compiler:?}"
 
-if [[ "${distro_id:?}" != ubuntu* ]]; then
-  echo "run-clang-tidy.sh expects to be run on an Ubuntu distro!" 1>&2
+if [[ "${distro_id:?}" != rhel* ]]; then
+  echo "run-clang-tidy.sh expects to be run on a RHEL distro!" 1>&2
   exit 1
 fi
 
 if ! command -V parallel >/dev/null; then
-  sudo apt-get install -q -y parallel
+  sudo yum install -q -y parallel
 fi
 
-if ! command -V clang-tidy >/dev/null; then
-  sudo apt-get install -q -y clang-tidy
-fi
-clang-tidy -version
+PATH="${UV_INSTALL_DIR:?}:${PATH:-}"
+uvx clang-tidy --version
 
 . ../mongoc/.evergreen/scripts/find-cmake-latest.sh
 cmake_binary="$(find_cmake_latest)"
 command -v "${cmake_binary:?}"
+
+# Use ccache if available.
+if [[ -f "../mongoc/.evergreen/scripts/find-ccache.sh" ]]; then
+  # shellcheck source=/dev/null
+  . "../mongoc/.evergreen/scripts/find-ccache.sh"
+  find_ccache_and_export_vars "$(pwd)" || true
+fi
 
 cmake_config_flags=(
   -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
@@ -53,7 +60,7 @@ CMAKE_BUILD_PARALLEL_LEVEL="$(nproc)" "${cmake_binary:?}" --build build
 #
 
 echo "Running clang-tidy with configuration:"
-clang-tidy -p=build -dump-config
+uvx clang-tidy -p=build -dump-config
 
 find_args=(
   -type f
@@ -68,5 +75,5 @@ find src "${find_args[@]}"
 
 # TODO: update clang-tidy config and address warnings.
 {
-  find src "${find_args[@]}" | parallel clang-tidy --quiet -p=build {} 2>/dev/null
+  find src "${find_args[@]}" | parallel uvx clang-tidy --quiet -p=build {} 2>/dev/null
 } || true

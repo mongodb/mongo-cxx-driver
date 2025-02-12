@@ -13,8 +13,8 @@ class StopMongod(Function):
             set -o pipefail
             if cd drivers-evergreen-tools/.evergreen/orchestration 2>/dev/null; then
                 . ../venv-utils.sh
-                if venvactivate venv; then
-                mongo-orchestration stop
+                if venvactivate venv 2>/dev/null; then
+                    mongo-orchestration stop
                 fi
             fi
         '''

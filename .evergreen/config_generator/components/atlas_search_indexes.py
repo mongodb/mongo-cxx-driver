@@ -46,7 +46,7 @@ def functions():
 
 
 def tasks():
-    distro_name = 'ubuntu2004'
+    distro_name = 'rhel80'
     distro = find_large_distro(distro_name)
 
     return [

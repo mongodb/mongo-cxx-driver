@@ -144,6 +144,12 @@ cxx_flags=()
 case "${OSTYPE:?}" in
 cygwin)
   # Most compiler flags are not applicable to builds on Windows distros.
+
+  # Replace `/Zi`, which is incompatible with ccache, with `/Z7` while preserving other default debug flags.
+  cmake_flags+=(
+    "-DCMAKE_POLICY_DEFAULT_CMP0141=NEW"
+    "-DCMAKE_MSVC_DEBUG_INFORMATION_FORMAT=Embedded"
+  )
   ;;
 darwin*)
   cc_flags+=("${cc_flags_init[@]}")
@@ -184,7 +190,6 @@ if [[ "${OSTYPE:?}" != cygwin ]]; then
   if [[ "${USE_SANITIZER_ASAN:-}" == "ON" ]]; then
     cxx_flags=(
       "${cxx_flags_init[@]}"
-      -D_GLIBCXX_USE_CXX11_ABI=0
       -fsanitize=address
       -O1 -g -fno-omit-frame-pointer
     )
@@ -194,7 +199,6 @@ if [[ "${OSTYPE:?}" != cygwin ]]; then
   if [[ "${USE_SANITIZER_UBSAN:-}" == "ON" ]]; then
     cxx_flags=(
       "${cxx_flags_init[@]}"
-      -D_GLIBCXX_USE_CXX11_ABI=0
       -fsanitize=undefined
       -fsanitize-blacklist="$(pwd)/../etc/ubsan.ignorelist"
       -fno-sanitize-recover=undefined

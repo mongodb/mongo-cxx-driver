@@ -62,8 +62,8 @@ class RpmPackageBuild(Function):
 # pylint: disable=line-too-long
 # fmt: off
 MATRIX = [
-    (DebianPackageBuild,        'debian12-latest'),
-    (RpmPackageBuild,           'rhel92-arm64'   ),
+    (DebianPackageBuild,        'debian12-latest'),  # Debian packaging.
+    (RpmPackageBuild,           'rhel92-arm64'   ),  # RHEL packaging.
 ]
 # fmt: on
 # pylint: enable=line-too-long

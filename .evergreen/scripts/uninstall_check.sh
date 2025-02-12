@@ -5,7 +5,13 @@ set -o errexit # Exit the script with error if any of the commands fail
 BUILD_DIR="$(pwd)/build"
 INSTALL_DIR="$BUILD_DIR/install"
 
-touch "$INSTALL_DIR/lib/canary.txt"
+if [[ "${distro_id:?}" == rhel* ]]; then
+  LIB_DIR="lib64"
+else
+  LIB_DIR="lib"
+fi
+
+touch "$INSTALL_DIR/$LIB_DIR/canary.txt"
 
 ls -l "$INSTALL_DIR/share/mongo-cxx-driver"
 
@@ -15,25 +21,25 @@ ls -l "$INSTALL_DIR/share/mongo-cxx-driver"
 
 ls -lR "$INSTALL_DIR"
 
-if test -f "$INSTALL_DIR/lib/pkgconfig/libbsoncxx.pc"; then
+if test -f "$INSTALL_DIR/$LIB_DIR/pkgconfig/libbsoncxx.pc"; then
   echo "libbsoncxx.pc found!"
   exit 1
 else
   echo "libbsoncxx.pc check ok"
 fi
-if test ! -f "$INSTALL_DIR/lib/canary.txt"; then
+if test ! -f "$INSTALL_DIR/$LIB_DIR/canary.txt"; then
   echo "canary.txt not found!"
   exit 1
 else
   echo "canary.txt check ok"
 fi
-if test ! -d "$INSTALL_DIR/lib"; then
-  echo "$INSTALL_DIR/lib not found!"
+if test ! -d "$INSTALL_DIR/$LIB_DIR"; then
+  echo "$INSTALL_DIR/$LIB_DIR not found!"
   exit 1
 else
-  echo "$INSTALL_DIR/lib check ok"
+  echo "$INSTALL_DIR/$LIB_DIR check ok"
 fi
-if test -f "$INSTALL_DIR/lib/pkgconfig/libmongocxx.pc"; then
+if test -f "$INSTALL_DIR/$LIB_DIR/pkgconfig/libmongocxx.pc"; then
   echo "libmongocxx.pc found!"
   exit 1
 else

@@ -226,6 +226,7 @@ functions:
         - cc_compiler
         - cxx_compiler
         - distro_id
+        - UV_INSTALL_DIR
       args:
         - -c
         - etc/run-clang-tidy.sh
@@ -548,8 +549,8 @@ functions:
           set -o pipefail
           if cd drivers-evergreen-tools/.evergreen/orchestration 2>/dev/null; then
               . ../venv-utils.sh
-              if venvactivate venv; then
-              mongo-orchestration stop
+              if venvactivate venv 2>/dev/null; then
+                  mongo-orchestration stop
               fi
           fi
   test:
@@ -576,7 +577,6 @@ functions:
         - example_projects_cxxflags
         - example_projects_ldflags
         - generator
-        - lib_dir
         - MONGOCXX_TEST_TOPOLOGY
         - MONGODB_API_VERSION
         - platform
@@ -600,7 +600,11 @@ functions:
         - |
           export MONGOC_INSTALL_PREFIX=$(pwd)/../mongoc
           export MONGOCXX_INSTALL_PREFIX=$(pwd)/build/install
-          export LIB_DIR=${lib_dir}
+          if [[ "${distro_id}" == rhel* ]]; then
+              export LIB_DIR=lib64
+          else
+              export LIB_DIR=lib
+          fi
           export BUILD_TYPE=${build_type}
           export BUILD_DIR=$(pwd)/build
 
@@ -619,7 +623,11 @@ functions:
         - |
           export MONGOC_INSTALL_PREFIX=$(pwd)/../mongoc
           export MONGOCXX_INSTALL_PREFIX=$(pwd)/build/install
-          export LIB_DIR=${lib_dir}
+          if [[ "${distro_id}" == rhel* ]]; then
+              export LIB_DIR=lib64
+          else
+              export LIB_DIR=lib
+          fi
           export BUILD_TYPE=${build_type}
           export BUILD_DIR=$(pwd)/build
           export URI="mongodb://bob:pwd123@localhost"
@@ -643,6 +651,8 @@ functions:
     params:
       binary: bash
       working_dir: mongo-cxx-driver
+      include_expansions_in_env:
+        - distro_id
       args:
         - -c
         - .evergreen/scripts/test-mongohouse.sh
@@ -652,6 +662,8 @@ functions:
     params:
       binary: bash
       working_dir: mongo-cxx-driver
+      include_expansions_in_env:
+        - distro_id
       args:
         - -c
         - |

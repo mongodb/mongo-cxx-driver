@@ -49,6 +49,7 @@ class TestMongohouse(Function):
     commands = bash_exec(
         command_type=EvgCommandType.TEST,
         working_dir='mongo-cxx-driver',
+        include_expansions_in_env=['distro_id'],
         script='.evergreen/scripts/test-mongohouse.sh'
     )
 
@@ -62,7 +63,7 @@ def functions():
 
 
 def tasks():
-    distro_name = 'ubuntu2204'
+    distro_name = 'ubuntu2204'  # `docker` is not available on RHEL distros by default.
     distro = find_large_distro(distro_name)
 
     return [

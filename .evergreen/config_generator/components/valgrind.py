@@ -22,8 +22,8 @@ TAG = 'valgrind'
 # pylint: disable=line-too-long
 # fmt: off
 MATRIX = [
-    ('ubuntu1804', None, ['shared', 'static'], [False, True], ['5.0'   ], ['single']),
-    ('ubuntu2004', None, ['shared', 'static'], [False, True], ['latest'], ['single']),
+    # min-max-latest
+    ('rhel80', None, ['shared'], [False, True], ['4.0', '8.0', 'latest'], ['single', 'replica', 'sharded']),
 ]
 # fmt: on
 # pylint: enable=line-too-long

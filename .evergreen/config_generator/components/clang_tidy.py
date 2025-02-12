@@ -1,4 +1,5 @@
 from config_generator.components.funcs.install_c_driver import InstallCDriver
+from config_generator.components.funcs.install_uv import InstallUV
 from config_generator.components.funcs.setup import Setup
 
 from config_generator.etc.distros import compiler_to_vars, find_small_distro
@@ -24,6 +25,7 @@ class ClangTidy(Function):
             'cc_compiler',
             'cxx_compiler',
             'distro_id',
+            'UV_INSTALL_DIR',
         ],
         script='etc/run-clang-tidy.sh',
     )
@@ -42,7 +44,7 @@ def functions():
 
 
 def tasks():
-    distro_name = 'ubuntu2004'
+    distro_name = 'rhel80'
     distro = find_small_distro(distro_name)
 
     return [
@@ -52,6 +54,7 @@ def tasks():
             run_on=distro.name,
             commands=[
                 Setup.call(),
+                InstallUV.call(),
                 InstallCDriver.call(compiler='clang'),
                 ClangTidy.call(compiler='clang'),
             ],

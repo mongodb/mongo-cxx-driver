@@ -100,7 +100,7 @@ def functions():
 def tasks():
     res = []
 
-    distro_name = 'ubuntu2204'
+    distro_name = 'rhel80'
     distro = find_large_distro(distro_name)
 
     for cxx_standard, polyfill in MATRIX:
