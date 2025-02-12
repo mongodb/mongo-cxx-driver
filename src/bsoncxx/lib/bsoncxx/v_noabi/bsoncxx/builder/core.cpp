@@ -45,7 +45,7 @@ void bson_free_deleter(std::uint8_t* ptr) {
 //
 class managed_bson_t {
    public:
-    managed_bson_t() : bson_ptr(new(bson_storage.get()) bson_t) {
+    managed_bson_t() {
         bson_init(bson_ptr);
     }
 
@@ -57,7 +57,6 @@ class managed_bson_t {
 
     ~managed_bson_t() {
         bson_destroy(bson_ptr);
-        bson_ptr->~bson_t();
     }
 
     bson_t* get() {
@@ -66,7 +65,7 @@ class managed_bson_t {
 
    private:
     bsoncxx::aligned_storage<sizeof(bson_t), alignof(bson_t)> bson_storage;
-    bson_t* bson_ptr;
+    bson_t* bson_ptr = new (bson_storage.get()) bson_t;
 };
 
 } // namespace
@@ -205,9 +204,7 @@ class core::impl {
 
    private:
     struct frame {
-        ~frame() {
-            bson_ptr->~bson_t();
-        }
+        ~frame() = default;
 
         frame(frame&&) = delete;
         frame& operator=(frame&&) = delete;
@@ -216,7 +213,7 @@ class core::impl {
         frame& operator=(frame const&) = delete;
 
         frame(bson_t* parent, char const* key, std::int32_t len, bool is_array)
-            : n(0), is_array(is_array), bson_ptr(new(bson_storage.get()) bson_t), parent(parent) {
+            : n(0), is_array(is_array), parent(parent) {
             if (is_array) {
                 if (!bson_append_array_begin(parent, key, len, bson_ptr)) {
                     throw bsoncxx::v_noabi::exception{error_code::k_cannot_begin_appending_array};
@@ -243,7 +240,7 @@ class core::impl {
         std::size_t n;
         bool is_array;
         bsoncxx::aligned_storage<sizeof(bson_t), alignof(bson_t)> bson_storage;
-        bson_t* bson_ptr;
+        bson_t* bson_ptr = new (bson_storage.get()) bson_t;
         bson_t* parent;
     };
 
