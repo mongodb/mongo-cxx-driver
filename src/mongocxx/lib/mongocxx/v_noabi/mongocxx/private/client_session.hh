@@ -74,11 +74,7 @@ bool with_transaction_cpp_cb(mongoc_client_session_t*, void* ctx, bson_t** reply
 class client_session::impl {
    public:
     impl(mongocxx::v_noabi::client const* client, options::client_session const& session_options)
-        : _client(client),
-          _options(session_options),
-          _session_t(nullptr, nullptr),
-          _empty_cluster_time_storage(), // -Wuninitialized
-          _empty_cluster_time_ptr(new(_empty_cluster_time_storage.get()) bson_t BSON_INITIALIZER) {
+        : _client(client), _options(session_options), _session_t(nullptr, nullptr) {
         // Create a mongoc_session_opts_t from session_options.
         std::unique_ptr<mongoc_session_opt_t, decltype(libmongoc::session_opts_destroy)> opt_t{
             libmongoc::session_opts_new(), libmongoc::session_opts_destroy};
@@ -241,8 +237,9 @@ class client_session::impl {
 
     unique_session _session_t;
 
-    bsoncxx::aligned_storage<sizeof(bson_t), alignof(bson_t)> _empty_cluster_time_storage;
-    bson_t const* _empty_cluster_time_ptr; // Just a long-lasting empty bson_t. Destruction is not required.
+    // Just a long-lasting empty bson_t. Destruction is not required.
+    bsoncxx::aligned_storage<sizeof(bson_t), alignof(bson_t)> _empty_cluster_time_storage; // -Wuninitialized
+    bson_t const* _empty_cluster_time_ptr = new (_empty_cluster_time_storage.get()) bson_t BSON_INITIALIZER;
 };
 
 } // namespace v_noabi
