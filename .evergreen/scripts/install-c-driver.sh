@@ -122,6 +122,12 @@ declare -a compile_flags
 case "${OSTYPE:?}" in
 cygwin)
   compile_flags+=("/maxcpucount:$(nproc)")
+
+  # Replace `/Zi`, which is incompatible with ccache, with `/Z7` while preserving other default debug flags.
+  cmake_flags+=(
+    "-DCMAKE_POLICY_DEFAULT_CMP0141=NEW"
+    "-DCMAKE_MSVC_DEBUG_INFORMATION_FORMAT=Embedded"
+  )
   ;;
 darwin*)
   configure_flags+=("-DCMAKE_C_FLAGS=-fPIC")
