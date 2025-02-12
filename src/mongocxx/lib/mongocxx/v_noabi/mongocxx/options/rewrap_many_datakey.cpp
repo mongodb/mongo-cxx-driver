@@ -12,15 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <bsoncxx/types/private/convert.hh>
-
 #include <mongocxx/exception/error_code.hpp>
 #include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/options/rewrap_many_datakey.hpp>
-#include <mongocxx/private/libbson.hh>
-#include <mongocxx/private/libmongoc.hh>
 
-#include <mongocxx/config/private/prelude.hh>
+#include <bsoncxx/private/convert.hh>
+
+#include <mongocxx/private/bson.hh>
+#include <mongocxx/private/mongoc.hh>
 
 namespace mongocxx {
 namespace v_noabi {

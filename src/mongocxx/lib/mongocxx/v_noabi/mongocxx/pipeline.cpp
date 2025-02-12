@@ -14,12 +14,12 @@
 
 #include <bsoncxx/builder/basic/kvp.hpp>
 #include <bsoncxx/builder/basic/sub_document.hpp>
-#include <bsoncxx/private/make_unique.hh>
 
 #include <mongocxx/pipeline.hpp>
-#include <mongocxx/private/pipeline.hh>
 
-#include <mongocxx/config/private/prelude.hh>
+#include <bsoncxx/private/make_unique.hh>
+
+#include <mongocxx/private/pipeline.hh>
 
 using bsoncxx::v_noabi::builder::basic::kvp;
 using bsoncxx::v_noabi::builder::basic::sub_document;

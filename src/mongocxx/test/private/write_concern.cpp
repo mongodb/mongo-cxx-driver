@@ -13,9 +13,10 @@
 // limitations under the License.
 
 #include <mongocxx/instance.hpp>
-#include <mongocxx/private/libmongoc.hh>
-#include <mongocxx/private/write_concern.hh>
 #include <mongocxx/write_concern.hpp>
+
+#include <mongocxx/private/mongoc.hh>
+#include <mongocxx/private/write_concern.hh>
 
 #include <bsoncxx/test/catch.hh>
 

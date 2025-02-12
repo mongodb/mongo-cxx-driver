@@ -20,8 +20,6 @@
 
 #include <mongocxx/validation_criteria.hpp>
 
-#include <mongocxx/config/private/prelude.hh>
-
 namespace {
 
 using bsoncxx::v_noabi::builder::basic::kvp;

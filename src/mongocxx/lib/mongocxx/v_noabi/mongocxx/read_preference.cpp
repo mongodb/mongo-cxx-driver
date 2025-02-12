@@ -12,18 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <bsoncxx/private/make_unique.hh>
 #include <bsoncxx/types.hpp>
 
 #include <mongocxx/exception/error_code.hpp>
 #include <mongocxx/exception/logic_error.hpp>
-#include <mongocxx/private/conversions.hh>
-#include <mongocxx/private/libbson.hh>
-#include <mongocxx/private/libmongoc.hh>
-#include <mongocxx/private/read_preference.hh>
 #include <mongocxx/read_preference.hpp>
 
-#include <mongocxx/config/private/prelude.hh>
+#include <bsoncxx/private/make_unique.hh>
+
+#include <mongocxx/private/bson.hh>
+#include <mongocxx/private/conversions.hh>
+#include <mongocxx/private/mongoc.hh>
+#include <mongocxx/private/read_preference.hh>
 
 namespace mongocxx {
 namespace v_noabi {

@@ -12,11 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <bsoncxx/private/libbson.hh>
-#include <bsoncxx/private/make_unique.hh>
 #include <bsoncxx/validate.hpp>
 
-#include <bsoncxx/config/private/prelude.hh>
+#include <bsoncxx/private/bson.hh>
+#include <bsoncxx/private/make_unique.hh>
 
 namespace bsoncxx {
 namespace v_noabi {

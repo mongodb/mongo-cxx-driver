@@ -12,8 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <mongocxx/private/conversions.hh>
 #include <mongocxx/read_preference.hpp>
+
+#include <mongocxx/private/conversions.hh>
 
 #include <bsoncxx/test/catch.hh>
 

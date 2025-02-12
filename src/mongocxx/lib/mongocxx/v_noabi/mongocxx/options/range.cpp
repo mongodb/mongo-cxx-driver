@@ -14,8 +14,6 @@
 
 #include <mongocxx/options/range.hpp>
 
-#include <mongocxx/config/prelude.hpp>
-
 namespace mongocxx {
 namespace v_noabi {
 namespace options {

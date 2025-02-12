@@ -23,7 +23,6 @@
 #include <bsoncxx/builder/stream/document.hpp>
 #include <bsoncxx/builder/stream/helpers.hpp>
 #include <bsoncxx/document/element.hpp>
-#include <bsoncxx/private/make_unique.hh>
 #include <bsoncxx/stdx/string_view.hpp>
 #include <bsoncxx/types.hpp>
 #include <bsoncxx/types/bson_value/make_value.hpp>
@@ -38,11 +37,12 @@
 #include <mongocxx/options/client.hpp>
 #include <mongocxx/options/client_encryption.hpp>
 #include <mongocxx/options/data_key.hpp>
-#include <mongocxx/private/libbson.hh>
 #include <mongocxx/uri.hpp>
 #include <mongocxx/write_concern.hpp>
 
-#include <mongocxx/config/prelude.hpp>
+#include <bsoncxx/private/make_unique.hh>
+
+#include <mongocxx/private/bson.hh>
 
 #include <bsoncxx/test/catch.hh>
 

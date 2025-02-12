@@ -16,8 +16,6 @@
 
 #include <bsoncxx/exception/error_code.hpp>
 
-#include <bsoncxx/config/private/prelude.hh>
-
 namespace bsoncxx {
 namespace v_noabi {
 

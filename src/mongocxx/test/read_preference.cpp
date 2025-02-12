@@ -18,8 +18,9 @@
 
 #include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/instance.hpp>
-#include <mongocxx/private/conversions.hh>
 #include <mongocxx/read_preference.hpp>
+
+#include <mongocxx/private/conversions.hh>
 
 #include <bsoncxx/test/catch.hh>
 

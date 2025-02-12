@@ -12,19 +12,23 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <bsoncxx/document/element.hpp>
+
+//
+
+#include <bsoncxx/v1/detail/macros.hpp>
+
 #include <cstdlib>
 #include <string>
 
-#include <bsoncxx/document/element.hpp>
 #include <bsoncxx/exception/error_code.hpp>
 #include <bsoncxx/exception/exception.hpp>
-#include <bsoncxx/private/libbson.hh>
-#include <bsoncxx/private/suppress_deprecation_warnings.hh>
 #include <bsoncxx/types.hpp>
 #include <bsoncxx/types/bson_value/value.hpp>
 #include <bsoncxx/types/bson_value/view.hpp>
 
-#include <bsoncxx/config/private/prelude.hh>
+#include <bsoncxx/private/bson.hh>
+#include <bsoncxx/private/suppress_deprecation_warnings.hh>
 
 #define BSONCXX_CITER                                                           \
     bson_iter_t iter;                                                           \

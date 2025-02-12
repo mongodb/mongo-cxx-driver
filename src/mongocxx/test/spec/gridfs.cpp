@@ -26,7 +26,6 @@
 #include <bsoncxx/document/value.hpp>
 #include <bsoncxx/document/view.hpp>
 #include <bsoncxx/oid.hpp>
-#include <bsoncxx/private/make_unique.hh>
 #include <bsoncxx/stdx/string_view.hpp>
 #include <bsoncxx/string/to_string.hpp>
 #include <bsoncxx/types/bson_value/view.hpp>
@@ -40,6 +39,8 @@
 #include <mongocxx/instance.hpp>
 #include <mongocxx/options/gridfs/upload.hpp>
 #include <mongocxx/result/gridfs/upload.hpp>
+
+#include <bsoncxx/private/make_unique.hh>
 
 #include <bsoncxx/test/catch.hh>
 

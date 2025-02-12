@@ -16,8 +16,6 @@
 
 #include <mongocxx/options/find_one_and_update.hpp>
 
-#include <mongocxx/config/private/prelude.hh>
-
 namespace mongocxx {
 namespace v_noabi {
 namespace options {

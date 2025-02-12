@@ -14,7 +14,9 @@
 
 #include <mongocxx/options/apm.hpp>
 
-#include <mongocxx/config/private/prelude.hh>
+//
+
+#include <mongocxx/v1/config/export.hpp>
 
 namespace mongocxx {
 namespace v_noabi {

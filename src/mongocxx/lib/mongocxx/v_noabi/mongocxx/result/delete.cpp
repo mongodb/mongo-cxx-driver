@@ -14,8 +14,6 @@
 
 #include <mongocxx/result/delete.hpp>
 
-#include <mongocxx/config/private/prelude.hh>
-
 namespace mongocxx {
 namespace v_noabi {
 namespace result {

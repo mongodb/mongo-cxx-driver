@@ -14,6 +14,10 @@
 
 #include "assert.hh"
 
+//
+
+#include <bsoncxx/v1/detail/macros.hpp>
+
 #include <iomanip>
 #include <numeric>
 #include <sstream>
@@ -23,8 +27,6 @@
 #include <bsoncxx/string/to_string.hpp>
 #include <bsoncxx/types.hpp>
 #include <bsoncxx/types/bson_value/value.hpp>
-
-#include <bsoncxx/config/prelude.hpp>
 
 #include <bsoncxx/test/catch.hh>
 #include <bsoncxx/test/to_string.hh>

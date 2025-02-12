@@ -19,8 +19,6 @@
 #include <mongocxx/read_preference.hpp>
 #include <mongocxx/write_concern.hpp>
 
-#include <mongocxx/config/private/prelude.hh>
-
 namespace mongocxx {
 namespace v_noabi {
 namespace options {

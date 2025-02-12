@@ -16,9 +16,9 @@
 
 //
 
-#include <system_error>
+#include <bsoncxx/v1/config/export.hpp>
 
-#include <bsoncxx/config/prelude.hpp>
+#include <system_error>
 
 #include <catch2/catch_session.hpp>
 

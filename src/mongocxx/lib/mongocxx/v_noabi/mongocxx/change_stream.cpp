@@ -14,13 +14,12 @@
 
 #include <string>
 
+#include <mongocxx/change_stream.hpp>
+
 #include <bsoncxx/private/make_unique.hh>
 
-#include <mongocxx/change_stream.hpp>
 #include <mongocxx/private/change_stream.hh>
-#include <mongocxx/private/libmongoc.hh>
-
-#include <mongocxx/config/private/prelude.hh>
+#include <mongocxx/private/mongoc.hh>
 
 namespace mongocxx {
 namespace v_noabi {

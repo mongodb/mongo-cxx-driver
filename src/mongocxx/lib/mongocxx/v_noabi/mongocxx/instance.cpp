@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <mongocxx/v1/config/version.hpp>
 #include <mongocxx/v1/detail/macros.hpp>
 
 #include <atomic>
@@ -19,15 +20,15 @@
 #include <type_traits>
 #include <utility>
 
-#include <bsoncxx/private/make_unique.hh>
-
 #include <mongocxx/exception/error_code.hpp>
 #include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/instance.hpp>
 #include <mongocxx/logger.hpp>
-#include <mongocxx/private/libmongoc.hh>
 
-#include <mongocxx/config/private/prelude.hh>
+#include <bsoncxx/private/make_unique.hh>
+
+#include <mongocxx/private/config/config.hh>
+#include <mongocxx/private/mongoc.hh>
 
 #if !defined(__has_feature)
 #define __has_feature(x) 0

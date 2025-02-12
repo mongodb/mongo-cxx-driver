@@ -21,7 +21,6 @@
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/builder/basic/kvp.hpp>
 #include <bsoncxx/oid.hpp>
-#include <bsoncxx/private/make_unique.hh>
 #include <bsoncxx/stdx/optional.hpp>
 
 #include <mongocxx/database.hpp>
@@ -29,12 +28,14 @@
 #include <mongocxx/exception/gridfs_exception.hpp>
 #include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/gridfs/bucket.hpp>
-#include <mongocxx/gridfs/private/bucket.hh>
 #include <mongocxx/options/delete.hpp>
 #include <mongocxx/options/index.hpp>
-#include <mongocxx/private/numeric_casting.hh>
 
-#include <mongocxx/config/private/prelude.hh>
+#include <mongocxx/gridfs/bucket.hh>
+
+#include <bsoncxx/private/make_unique.hh>
+
+#include <mongocxx/private/numeric_casting.hh>
 
 namespace mongocxx {
 namespace v_noabi {

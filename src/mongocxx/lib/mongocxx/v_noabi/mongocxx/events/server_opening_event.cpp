@@ -13,9 +13,8 @@
 // limitations under the License.
 
 #include <mongocxx/events/server_opening_event.hpp>
-#include <mongocxx/private/libmongoc.hh>
 
-#include <mongocxx/config/private/prelude.hh>
+#include <mongocxx/private/mongoc.hh>
 
 namespace mongocxx {
 namespace v_noabi {

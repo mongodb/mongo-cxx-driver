@@ -16,8 +16,6 @@
 
 #include <mongocxx/client.hpp>
 
-#include <mongocxx/config/private/prelude.hh>
-
 #include <mongocxx/test/client_helpers.hh>
 #include <mongocxx/test/spec/unified_tests/entity.hh>
 
@@ -87,5 +85,3 @@ class apm_checker {
 
 } // namespace spec
 } // namespace mongocxx
-
-#include <mongocxx/config/private/postlude.hh>

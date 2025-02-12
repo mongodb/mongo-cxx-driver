@@ -18,8 +18,9 @@
 #include <mongocxx/bulk_write.hpp>
 #include <mongocxx/client.hpp>
 #include <mongocxx/instance.hpp>
-#include <mongocxx/private/libmongoc.hh>
 #include <mongocxx/write_concern.hpp>
+
+#include <mongocxx/private/mongoc.hh>
 
 #include <bsoncxx/test/catch.hh>
 
