@@ -28,20 +28,14 @@ def functions():
 
 
 def tasks():
-    distro_names = [
-        'ubuntu2204',
-        'ubuntu2004',
-        'debian12',
-        'debian11',
-        'debian10',
-    ]
-    distros = [find_small_distro(name) for name in distro_names]
+    distro_name = 'rhel80'
+    distro = find_small_distro(distro_name)
 
     return [
         EvgTask(
             name=TAG,
             tags=[TAG],
-            run_on=[distro.name for distro in distros],
+            run_on=distro.name,
             commands=[
                 Setup.call(),
                 InstallUV.call(),

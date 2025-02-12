@@ -19,6 +19,7 @@
 #include <limits>
 #include <memory>
 
+#include <bsoncxx/stdx/optional.hpp>
 #include <bsoncxx/stdx/string_view.hpp>
 
 namespace examples {
@@ -38,5 +39,18 @@ struct big_string {
         return bsoncxx::stdx::string_view(data.get(), length);
     }
 };
+
+template <typename Fn>
+void with_big_string(Fn fn) {
+    bsoncxx::stdx::optional<big_string> big_string_opt;
+
+    try {
+        big_string_opt.emplace();
+    } catch (std::bad_alloc const&) {
+        return; // Some environments may not support big string allocation.
+    }
+
+    fn(big_string_opt->view());
+}
 
 } // namespace examples

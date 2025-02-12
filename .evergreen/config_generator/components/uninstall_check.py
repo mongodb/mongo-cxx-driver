@@ -20,12 +20,9 @@ TAG = 'uninstall-check'
 # pylint: disable=line-too-long
 # fmt: off
 MATRIX = [
-    ('debian10',          'gcc',       [         'Release'], ['shared']),
-    ('debian11',          'gcc',       [         'Release'], ['shared']),
-    ('debian12',          'gcc',       [         'Release'], ['shared']),
-    ('windows-vsCurrent', 'vs2017x64', ['Debug', 'Release'], ['shared']),
-    ('ubuntu1804',        'gcc',       [         'Release'], ['shared']),
-    ('ubuntu2004',        'gcc',       [         'Release'], ['shared']),
+    ('rhel80',            'gcc',       ['Debug', 'Release'], ['shared', 'static']),
+    ('macos-14-arm64',    'clang',     ['Debug', 'Release'], ['shared', 'static']),
+    ('windows-vsCurrent', 'vs2017x64', ['Debug', 'Release'], ['shared', 'static']),
 ]
 # fmt: on
 # pylint: enable=line-too-long
@@ -36,6 +33,7 @@ class UninstallCheck(Function):
     commands = bash_exec(
         command_type=EvgCommandType.TEST,
         working_dir='mongo-cxx-driver',
+        include_expansions_in_env=['distro_id'],
         script='''\
             case "$OSTYPE" in
             darwin*|linux*) .evergreen/scripts/uninstall_check.sh ;;

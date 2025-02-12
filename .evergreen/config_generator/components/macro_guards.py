@@ -15,9 +15,9 @@ TAG = 'macro-guards'
 # pylint: disable=line-too-long
 # fmt: off
 MATRIX = [
-    ('ubuntu2004', None   ),
-    ('ubuntu2004', 'gcc'  ),
-    ('ubuntu2004', 'clang'),
+    ('rhel80', None   ),
+    ('rhel80', 'gcc'  ),
+    ('rhel80', 'clang'),
 ]
 # fmt: on
 # pylint: enable=line-too-long

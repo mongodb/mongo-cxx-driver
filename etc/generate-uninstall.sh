@@ -98,7 +98,7 @@ printf "printf \"Removing file \\\"share/mongo-cxx-driver/uninstall.sh\\\"\"\n"
 printf "(rm -f \"share/mongo-cxx-driver/uninstall.sh\" && printf \"\\\n\") || printf \" ... not removed\\\n\"\n"
 dirs="${dirs}share/mongo-cxx-driver\nshare\n"
 
-echo "${dirs}" | sort -ru | while IFS= read -r dir; do
+printf "${dirs}" | sort -ru | while IFS= read -r dir; do
    if [ -n "${dir}" ]; then
       printf "printf \"Removing directory \\\"%s\\\"\"\n" "${dir}"
       printf "(rmdir \"%s\" 2>/dev/null && printf \"\\\n\") || printf \" ... not removed (probably not empty)\\\n\"\n" "${dir}"

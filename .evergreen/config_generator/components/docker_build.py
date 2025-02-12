@@ -15,8 +15,8 @@ TAG = 'docker-build'
 # pylint: disable=line-too-long
 # fmt: off
 MATRIX = [
-    ('ubuntu2204-arm64'),
-    ('ubuntu2204'),
+    ('ubuntu2204-arm64'), # `docker` is not available on RHEL distros by default.
+    ('ubuntu2204'),       # `docker` is not available on RHEL distros by default.
 ]
 # fmt: on
 # pylint: enable=line-too-long

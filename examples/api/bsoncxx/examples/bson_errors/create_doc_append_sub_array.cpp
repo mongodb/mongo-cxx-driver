@@ -75,5 +75,5 @@ void example(bsoncxx::stdx::string_view big_string) {
 } // namespace
 
 RUNNER_REGISTER_COMPONENT() {
-    example(examples::big_string().view());
+    examples::with_big_string(example);
 }
