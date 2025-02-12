@@ -80,13 +80,7 @@ class stack {
         new (_get_ptr()) T(std::forward<Args>(args)...);
     }
 
-    // Avoid -Walign-mismatch warnings due to the `bson_t*` argument losing
-    // its alignment attribute when specified as a template parameter.
-    BSONCXX_PRIVATE_WARNINGS_PUSH();
-    BSONCXX_PRIVATE_WARNINGS_DISABLE(GNU("-Wignored-attributes"));
-    template <
-        typename... Args,
-        typename std::enable_if<std::is_constructible<T, bson_t*, Args...>::value>::type* = nullptr>
+    template <typename... Args>
     void emplace_back(bson_t* bson, Args&&... args) {
         if (_is_empty) {
             _is_empty = false;
@@ -96,7 +90,6 @@ class stack {
 
         new (_get_ptr()) T(bson, std::forward<Args>(args)...);
     }
-    BSONCXX_PRIVATE_WARNINGS_POP();
 
     void pop_back() {
         _get_ptr()->close();
