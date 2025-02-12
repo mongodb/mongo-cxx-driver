@@ -86,6 +86,7 @@ set_dist_list(src_bsoncxx_lib_DIST
     bsoncxx/v_noabi/bsoncxx/config/private/config.hh.in
     bsoncxx/v_noabi/bsoncxx/config/private/postlude.hh
     bsoncxx/v_noabi/bsoncxx/config/private/prelude.hh
+    bsoncxx/v_noabi/bsoncxx/private/aligned_storage.hh
     bsoncxx/v_noabi/bsoncxx/private/b64_ntop.hh
     bsoncxx/v_noabi/bsoncxx/private/helpers.hh
     bsoncxx/v_noabi/bsoncxx/private/make_unique.hh
