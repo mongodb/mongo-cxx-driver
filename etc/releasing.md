@@ -139,13 +139,13 @@ If `etc/purls.txt` was updated, update the SBOM Lite document using the followin
 podman login --password-stdin --username "${ARTIFACTORY_USER:?}" artifactory.corp.mongodb.com <<<"${ARTIFACTORY_PASSWORD:?}"
 
 # Ensure latest version of SilkBomb is being used.
-podman pull artifactory.corp.mongodb.com/release-tools-container-registry-public-local/silkbomb:1.0
+podman pull artifactory.corp.mongodb.com/release-tools-container-registry-public-local/silkbomb:1.1
 
 # Output: "... writing sbom to file"
 podman run \
   --env-file "$HOME/.secrets/silk-creds.txt" \
   -it --rm -v "$(pwd):/pwd" \
-  artifactory.corp.mongodb.com/release-tools-container-registry-public-local/silkbomb:1.0 \
+  artifactory.corp.mongodb.com/release-tools-container-registry-public-local/silkbomb:1.1 \
   update -p "/pwd/etc/purls.txt" -i "/pwd/etc/cyclonedx.sbom.json" -o "/pwd/etc/cyclonedx.sbom.json"
 ```
 
@@ -173,13 +173,13 @@ Update the Augmented SBOM document using the following command(s):
 podman login --password-stdin --username "${ARTIFACTORY_USER:?}" artifactory.corp.mongodb.com <<<"${ARTIFACTORY_PASSWORD:?}"
 
 # Ensure latest version of SilkBomb is being used.
-podman pull artifactory.corp.mongodb.com/release-tools-container-registry-public-local/silkbomb:1.0
+podman pull artifactory.corp.mongodb.com/release-tools-container-registry-public-local/silkbomb:1.1
 
 # Output: "... writing sbom to file"
 podman run \
   --env-file "$HOME/.secrets/silk-creds.txt" \
   -it --rm -v "$(pwd):/pwd" \
-  artifactory.corp.mongodb.com/release-tools-container-registry-public-local/silkbomb:1.0 \
+  artifactory.corp.mongodb.com/release-tools-container-registry-public-local/silkbomb:1.1 \
   download --silk-asset-group "mongo-cxx-driver" -o "/pwd/etc/augmented.sbom.json"
 ```
 
@@ -201,26 +201,26 @@ If the Augmented SBOM has not yet been updated in time for a release, a temporar
 . $HOME/.secrets/silk-creds.txt
 
 # Name of the temporary Silk Asset Group. Do NOT use an existing Silk Asset Group!
-asset_group_id="mongo-cxx-driver-X.Y.Z-tmp"
+asset_group_id="mongo-cxx-driver-tmp-releasing"
 
 # Output: "Login succeeded!"
 podman login --password-stdin --username "${ARTIFACTORY_USER:?}" artifactory.corp.mongodb.com <<<"${ARTIFACTORY_PASSWORD:?}"
 
 # Ensure latest version of SilkBomb is being used.
-podman pull artifactory.corp.mongodb.com/release-tools-container-registry-public-local/silkbomb:1.0
+podman pull artifactory.corp.mongodb.com/release-tools-container-registry-public-local/silkbomb:1.1
 
 # Common flags to podman.
 silkbomb_flags=(
   --env-file "$HOME/.secrets/silk-creds.txt"
   -it --rm -v "$(pwd):/pwd"
-  artifactory.corp.mongodb.com/release-tools-container-registry-public-local/silkbomb:1.0
+  artifactory.corp.mongodb.com/release-tools-container-registry-public-local/silkbomb:1.1
 )
 
 # Create a new and temporary Silk Asset Group.
 podman run "${silkbomb_flags[@]:?}" asset-group --asset-cmd create --silk-asset-group "${asset_group_id:?}" --name "${asset_group_id:?}"
 
 # Upload the SBOM Lite.
-podman run "${silkbomb_flags[@]:?}" upload --silk-asset-group "${asset_group_id:?}" -i /pwd/etc/cyclonedx.sbom.json -o /pwd/etc/cyclonedx.sbom.json
+podman run "${silkbomb_flags[@]:?}" upload --silk-asset-group "${asset_group_id:?}" -i /pwd/etc/cyclonedx.sbom.json
 
 # Download the Augmented SBOM.
 podman run "${silkbomb_flags[@]:?}" download --silk-asset-group "${asset_group_id:?}" -o /pwd/etc/augmented.sbom.json
