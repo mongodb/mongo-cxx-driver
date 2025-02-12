@@ -16596,7 +16596,7 @@ tasks:
           example_projects_cc: clang
           example_projects_cxx: clang++
           example_projects_cxxflags: -fsanitize=undefined -fno-sanitize-recover=undefined -fno-omit-frame-pointer
-          example_projects_ldflags: -fsanitize=undefined -fno-sanitize-recover=undefined
+          example_projects_ldflags: -fsanitize=undefined -fno-sanitize-recover=undefined -static-libsan
   - name: sanitizers-ubsan-rhel80-clang-static-4.0-sharded
     run_on: rhel80-large
     tags: [sanitizers, ubsan, rhel80, clang, static, "4.0", sharded]
@@ -16631,7 +16631,7 @@ tasks:
           example_projects_cc: clang
           example_projects_cxx: clang++
           example_projects_cxxflags: -fsanitize=undefined -fno-sanitize-recover=undefined -fno-omit-frame-pointer
-          example_projects_ldflags: -fsanitize=undefined -fno-sanitize-recover=undefined
+          example_projects_ldflags: -fsanitize=undefined -fno-sanitize-recover=undefined -static-libsan
   - name: sanitizers-ubsan-rhel80-clang-static-4.0-single
     run_on: rhel80-large
     tags: [sanitizers, ubsan, rhel80, clang, static, "4.0", single]
@@ -16665,7 +16665,7 @@ tasks:
           example_projects_cc: clang
           example_projects_cxx: clang++
           example_projects_cxxflags: -fsanitize=undefined -fno-sanitize-recover=undefined -fno-omit-frame-pointer
-          example_projects_ldflags: -fsanitize=undefined -fno-sanitize-recover=undefined
+          example_projects_ldflags: -fsanitize=undefined -fno-sanitize-recover=undefined -static-libsan
   - name: sanitizers-ubsan-rhel80-clang-static-8.0-replica
     run_on: rhel80-large
     tags: [sanitizers, ubsan, rhel80, clang, static, "8.0", replica]
@@ -16700,7 +16700,7 @@ tasks:
           example_projects_cc: clang
           example_projects_cxx: clang++
           example_projects_cxxflags: -fsanitize=undefined -fno-sanitize-recover=undefined -fno-omit-frame-pointer
-          example_projects_ldflags: -fsanitize=undefined -fno-sanitize-recover=undefined
+          example_projects_ldflags: -fsanitize=undefined -fno-sanitize-recover=undefined -static-libsan
   - name: sanitizers-ubsan-rhel80-clang-static-8.0-sharded
     run_on: rhel80-large
     tags: [sanitizers, ubsan, rhel80, clang, static, "8.0", sharded]
@@ -16735,7 +16735,7 @@ tasks:
           example_projects_cc: clang
           example_projects_cxx: clang++
           example_projects_cxxflags: -fsanitize=undefined -fno-sanitize-recover=undefined -fno-omit-frame-pointer
-          example_projects_ldflags: -fsanitize=undefined -fno-sanitize-recover=undefined
+          example_projects_ldflags: -fsanitize=undefined -fno-sanitize-recover=undefined -static-libsan
   - name: sanitizers-ubsan-rhel80-clang-static-8.0-single
     run_on: rhel80-large
     tags: [sanitizers, ubsan, rhel80, clang, static, "8.0", single]
@@ -16769,7 +16769,7 @@ tasks:
           example_projects_cc: clang
           example_projects_cxx: clang++
           example_projects_cxxflags: -fsanitize=undefined -fno-sanitize-recover=undefined -fno-omit-frame-pointer
-          example_projects_ldflags: -fsanitize=undefined -fno-sanitize-recover=undefined
+          example_projects_ldflags: -fsanitize=undefined -fno-sanitize-recover=undefined -static-libsan
   - name: sanitizers-ubsan-rhel80-clang-static-extra_alignment-4.0-replica
     run_on: rhel80-large
     tags: [sanitizers, ubsan, rhel80, clang, static, extra_alignment, "4.0", replica]
@@ -16805,7 +16805,7 @@ tasks:
           example_projects_cc: clang
           example_projects_cxx: clang++
           example_projects_cxxflags: -fsanitize=undefined -fno-sanitize-recover=undefined -fno-omit-frame-pointer
-          example_projects_ldflags: -fsanitize=undefined -fno-sanitize-recover=undefined
+          example_projects_ldflags: -fsanitize=undefined -fno-sanitize-recover=undefined -static-libsan
   - name: sanitizers-ubsan-rhel80-clang-static-extra_alignment-4.0-sharded
     run_on: rhel80-large
     tags: [sanitizers, ubsan, rhel80, clang, static, extra_alignment, "4.0", sharded]
@@ -16841,7 +16841,7 @@ tasks:
           example_projects_cc: clang
           example_projects_cxx: clang++
           example_projects_cxxflags: -fsanitize=undefined -fno-sanitize-recover=undefined -fno-omit-frame-pointer
-          example_projects_ldflags: -fsanitize=undefined -fno-sanitize-recover=undefined
+          example_projects_ldflags: -fsanitize=undefined -fno-sanitize-recover=undefined -static-libsan
   - name: sanitizers-ubsan-rhel80-clang-static-extra_alignment-4.0-single
     run_on: rhel80-large
     tags: [sanitizers, ubsan, rhel80, clang, static, extra_alignment, "4.0", single]
@@ -16876,7 +16876,7 @@ tasks:
           example_projects_cc: clang
           example_projects_cxx: clang++
           example_projects_cxxflags: -fsanitize=undefined -fno-sanitize-recover=undefined -fno-omit-frame-pointer
-          example_projects_ldflags: -fsanitize=undefined -fno-sanitize-recover=undefined
+          example_projects_ldflags: -fsanitize=undefined -fno-sanitize-recover=undefined -static-libsan
   - name: sanitizers-ubsan-rhel80-clang-static-extra_alignment-8.0-replica
     run_on: rhel80-large
     tags: [sanitizers, ubsan, rhel80, clang, static, extra_alignment, "8.0", replica]
@@ -16912,7 +16912,7 @@ tasks:
           example_projects_cc: clang
           example_projects_cxx: clang++
           example_projects_cxxflags: -fsanitize=undefined -fno-sanitize-recover=undefined -fno-omit-frame-pointer
-          example_projects_ldflags: -fsanitize=undefined -fno-sanitize-recover=undefined
+          example_projects_ldflags: -fsanitize=undefined -fno-sanitize-recover=undefined -static-libsan
   - name: sanitizers-ubsan-rhel80-clang-static-extra_alignment-8.0-sharded
     run_on: rhel80-large
     tags: [sanitizers, ubsan, rhel80, clang, static, extra_alignment, "8.0", sharded]
@@ -16948,7 +16948,7 @@ tasks:
           example_projects_cc: clang
           example_projects_cxx: clang++
           example_projects_cxxflags: -fsanitize=undefined -fno-sanitize-recover=undefined -fno-omit-frame-pointer
-          example_projects_ldflags: -fsanitize=undefined -fno-sanitize-recover=undefined
+          example_projects_ldflags: -fsanitize=undefined -fno-sanitize-recover=undefined -static-libsan
   - name: sanitizers-ubsan-rhel80-clang-static-extra_alignment-8.0-single
     run_on: rhel80-large
     tags: [sanitizers, ubsan, rhel80, clang, static, extra_alignment, "8.0", single]
@@ -16983,7 +16983,7 @@ tasks:
           example_projects_cc: clang
           example_projects_cxx: clang++
           example_projects_cxxflags: -fsanitize=undefined -fno-sanitize-recover=undefined -fno-omit-frame-pointer
-          example_projects_ldflags: -fsanitize=undefined -fno-sanitize-recover=undefined
+          example_projects_ldflags: -fsanitize=undefined -fno-sanitize-recover=undefined -static-libsan
   - name: sanitizers-ubsan-rhel80-clang-static-extra_alignment-latest-replica
     run_on: rhel80-large
     tags: [sanitizers, ubsan, rhel80, clang, static, extra_alignment, latest, replica]
@@ -17019,7 +17019,7 @@ tasks:
           example_projects_cc: clang
           example_projects_cxx: clang++
           example_projects_cxxflags: -fsanitize=undefined -fno-sanitize-recover=undefined -fno-omit-frame-pointer
-          example_projects_ldflags: -fsanitize=undefined -fno-sanitize-recover=undefined
+          example_projects_ldflags: -fsanitize=undefined -fno-sanitize-recover=undefined -static-libsan
   - name: sanitizers-ubsan-rhel80-clang-static-extra_alignment-latest-sharded
     run_on: rhel80-large
     tags: [sanitizers, ubsan, rhel80, clang, static, extra_alignment, latest, sharded]
@@ -17055,7 +17055,7 @@ tasks:
           example_projects_cc: clang
           example_projects_cxx: clang++
           example_projects_cxxflags: -fsanitize=undefined -fno-sanitize-recover=undefined -fno-omit-frame-pointer
-          example_projects_ldflags: -fsanitize=undefined -fno-sanitize-recover=undefined
+          example_projects_ldflags: -fsanitize=undefined -fno-sanitize-recover=undefined -static-libsan
   - name: sanitizers-ubsan-rhel80-clang-static-extra_alignment-latest-single
     run_on: rhel80-large
     tags: [sanitizers, ubsan, rhel80, clang, static, extra_alignment, latest, single]
@@ -17090,7 +17090,7 @@ tasks:
           example_projects_cc: clang
           example_projects_cxx: clang++
           example_projects_cxxflags: -fsanitize=undefined -fno-sanitize-recover=undefined -fno-omit-frame-pointer
-          example_projects_ldflags: -fsanitize=undefined -fno-sanitize-recover=undefined
+          example_projects_ldflags: -fsanitize=undefined -fno-sanitize-recover=undefined -static-libsan
   - name: sanitizers-ubsan-rhel80-clang-static-latest-replica
     run_on: rhel80-large
     tags: [sanitizers, ubsan, rhel80, clang, static, latest, replica]
@@ -17125,7 +17125,7 @@ tasks:
           example_projects_cc: clang
           example_projects_cxx: clang++
           example_projects_cxxflags: -fsanitize=undefined -fno-sanitize-recover=undefined -fno-omit-frame-pointer
-          example_projects_ldflags: -fsanitize=undefined -fno-sanitize-recover=undefined
+          example_projects_ldflags: -fsanitize=undefined -fno-sanitize-recover=undefined -static-libsan
   - name: sanitizers-ubsan-rhel80-clang-static-latest-sharded
     run_on: rhel80-large
     tags: [sanitizers, ubsan, rhel80, clang, static, latest, sharded]
@@ -17160,7 +17160,7 @@ tasks:
           example_projects_cc: clang
           example_projects_cxx: clang++
           example_projects_cxxflags: -fsanitize=undefined -fno-sanitize-recover=undefined -fno-omit-frame-pointer
-          example_projects_ldflags: -fsanitize=undefined -fno-sanitize-recover=undefined
+          example_projects_ldflags: -fsanitize=undefined -fno-sanitize-recover=undefined -static-libsan
   - name: sanitizers-ubsan-rhel80-clang-static-latest-single
     run_on: rhel80-large
     tags: [sanitizers, ubsan, rhel80, clang, static, latest, single]
@@ -17194,7 +17194,7 @@ tasks:
           example_projects_cc: clang
           example_projects_cxx: clang++
           example_projects_cxxflags: -fsanitize=undefined -fno-sanitize-recover=undefined -fno-omit-frame-pointer
-          example_projects_ldflags: -fsanitize=undefined -fno-sanitize-recover=undefined
+          example_projects_ldflags: -fsanitize=undefined -fno-sanitize-recover=undefined -static-libsan
   - name: scan-build-rhel80-std11-default
     run_on: rhel80-large
     tags: [scan-build, rhel80, std11]

@@ -100,7 +100,7 @@ def tasks():
                     test_vars |= {
                         'TEST_WITH_UBSAN': 'ON',
                         'example_projects_cxxflags': '-fsanitize=undefined -fno-sanitize-recover=undefined -fno-omit-frame-pointer',
-                        'example_projects_ldflags': '-fsanitize=undefined -fno-sanitize-recover=undefined',
+                        'example_projects_ldflags': '-fsanitize=undefined -fno-sanitize-recover=undefined' + (' -static-libsan' if link_type == 'static' else ''),
                     }
 
             commands += [
