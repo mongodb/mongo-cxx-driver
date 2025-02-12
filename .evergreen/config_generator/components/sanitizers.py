@@ -22,8 +22,7 @@ TAG = 'sanitizers'
 # pylint: disable=line-too-long
 # fmt: off
 MATRIX = [
-    ('rhel80', ['asan',        ], ['shared', 'static'], [False, True], ['4.0', '8.0', 'latest'], ['single', 'replica', 'sharded']),
-    ('rhel80', [        'ubsan'], [          'static'], [False      ], ['4.0', '8.0', 'latest'], ['single', 'replica', 'sharded']),
+    ('rhel80', ['asan', 'ubsan'], ['shared', 'static'], [False, True], ['4.0', '8.0', 'latest'], ['single', 'replica', 'sharded']),
 ]
 # fmt: on
 # pylint: enable=line-too-long
