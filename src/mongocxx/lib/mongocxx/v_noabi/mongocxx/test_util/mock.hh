@@ -69,16 +69,14 @@ BSONCXX_PRIVATE_WARNINGS_DISABLE(GNU("-Wignored-attributes"));
 
 template <typename CRTP, typename... Args>
 struct mock_invoke<CRTP, bson_t const*(Args...)> {
-    bson_t const* operator()(Args... args) BSONCXX_PRIVATE_IF_GNU_LIKE(__attribute__((assume_aligned(alignof(bson_t)))))
-    {
+    bson_t const* operator()(Args... args) {
         return mock_invoke_fn<CRTP, bson_t const*>::invoke(this, args...);
     }
 };
 
 template <typename CRTP, typename... Args>
 struct mock_invoke<CRTP, bson_t*(Args...)> {
-    bson_t* operator()(Args... args) BSONCXX_PRIVATE_IF_GNU_LIKE(__attribute__((assume_aligned(alignof(bson_t)))))
-    {
+    bson_t* operator()(Args... args) {
         return mock_invoke_fn<CRTP, bson_t*>::invoke(this, args...);
     }
 };
