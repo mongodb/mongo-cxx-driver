@@ -21,6 +21,7 @@
 #include <mongocxx/options/tls.hpp>
 #include <mongocxx/pool.hpp>
 
+#include <mongocxx/private/mongoc.hh>
 #include <mongocxx/private/ssl.hh>
 
 #include <bsoncxx/test/catch.hh>
