@@ -17,6 +17,7 @@
 #include <mongocxx/exception/exception.hpp>
 
 #include <mongocxx/private/mongoc.hh>
+#include <mongocxx/private/ssl.hh>
 
 #include <bsoncxx/test/catch.hh>
 
@@ -73,7 +74,7 @@ class mongocxx_exception_matcher : public Catch::Matchers::MatcherBase<mongocxx:
     auto client_pool_try_pop = libmongoc::client_pool_try_pop.create_instance();               \
     ((void)0)
 
-#if defined(MONGOCXX_ENABLE_SSL) && defined(MONGOC_ENABLE_SSL)
+#if MONGOCXX_SSL_IS_ENABLED()
 #define MOCK_POOL                                                                                   \
     MOCK_POOL_NOSSL;                                                                                \
     auto client_pool_set_ssl_opts = libmongoc::client_pool_set_ssl_opts.create_instance();          \
@@ -101,7 +102,7 @@ class mongocxx_exception_matcher : public Catch::Matchers::MatcherBase<mongocxx:
     auto client_find_databases_with_opts = mongocxx::libmongoc::client_find_databases_with_opts.create_instance(); \
     ((void)0)
 
-#if defined(MONGOCXX_ENABLE_SSL) && defined(MONGOC_ENABLE_SSL)
+#if MONGOCXX_SSL_IS_ENABLED()
 #define MOCK_CLIENT                                                                       \
     MOCK_CLIENT_NOSSL;                                                                    \
     auto client_set_ssl_opts = libmongoc::client_set_ssl_opts.create_instance();          \

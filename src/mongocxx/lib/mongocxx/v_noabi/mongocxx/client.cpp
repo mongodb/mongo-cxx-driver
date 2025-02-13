@@ -33,6 +33,7 @@
 #include <mongocxx/private/pipeline.hh>
 #include <mongocxx/private/read_concern.hh>
 #include <mongocxx/private/read_preference.hh>
+#include <mongocxx/private/ssl.hh>
 #include <mongocxx/private/uri.hh>
 #include <mongocxx/private/write_concern.hh>
 
@@ -74,7 +75,7 @@ class database_names {
 client::client() noexcept = default;
 
 client::client(mongocxx::v_noabi::uri const& uri, options::client const& options) {
-#if defined(MONGOCXX_ENABLE_SSL) && defined(MONGOC_ENABLE_SSL)
+#if MONGOCXX_SSL_IS_ENABLED()
     if (options.tls_opts()) {
         if (!uri.tls())
             throw exception{error_code::k_invalid_parameter, "cannot set TLS options if 'tls=true' not in URI"};
@@ -127,7 +128,7 @@ client::client(mongocxx::v_noabi::uri const& uri, options::client const& options
         }
     }
 
-#if defined(MONGOCXX_ENABLE_SSL) && defined(MONGOC_ENABLE_SSL)
+#if MONGOCXX_SSL_IS_ENABLED()
     if (options.tls_opts()) {
         auto mongoc_opts = options::make_tls_opts(*options.tls_opts());
         _impl->tls_options = std::move(mongoc_opts.second);
