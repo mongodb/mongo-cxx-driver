@@ -34,6 +34,11 @@
 ///
 
 ///
+/// @dir bsoncxx/v1/document
+/// Provides headers declaring entities in @ref bsoncxx::v1::document.
+///
+
+///
 /// @dir bsoncxx/v1/config
 /// Provides headers related to bsoncxx library configuration.
 ///
@@ -58,6 +63,11 @@
 ///
 /// @namespace bsoncxx::v1::array
 /// @copydoc bsoncxx::array
+///
+
+///
+/// @namespace bsoncxx::v1::document
+/// @copydoc bsoncxx::document
 ///
 
 ///
