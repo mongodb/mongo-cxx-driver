@@ -52,6 +52,7 @@ set(bsoncxx_sources_v1
     bsoncxx/v1/document/value.cpp
     bsoncxx/v1/document/view.cpp
     bsoncxx/v1/types/element.cpp
+    bsoncxx/v1/types/value.cpp
 )
 
 list(APPEND bsoncxx_sources
