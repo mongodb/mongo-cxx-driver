@@ -206,6 +206,7 @@ set_dist_list(src_mongocxx_lib_DIST
     mongocxx/private/scoped_bson_value.hh
     mongocxx/private/search_index_model.hh
     mongocxx/private/search_index_view.hh
+    mongocxx/private/ssl.hh
     mongocxx/private/uri.hh
     mongocxx/private/write_concern.hh
     mongocxx/v_noabi/mongocxx/gridfs/bucket.hh
