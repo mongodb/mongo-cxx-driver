@@ -25,6 +25,7 @@
 
 #include <mongocxx/options/transaction.hh>
 
+#include <bsoncxx/private/aligned_storage.hh>
 #include <bsoncxx/private/bson.hh>
 #include <bsoncxx/private/helpers.hh>
 
@@ -123,7 +124,7 @@ class client_session::impl {
             return bsoncxx::helpers::view_from_bson_t(ct);
         }
 
-        return bsoncxx::helpers::view_from_bson_t(&_empty_cluster_time);
+        return bsoncxx::helpers::view_from_bson_t(_empty_cluster_time_ptr);
     }
 
     bsoncxx::v_noabi::types::b_timestamp operation_time() const noexcept {
@@ -236,7 +237,9 @@ class client_session::impl {
 
     unique_session _session_t;
 
-    bson_t _empty_cluster_time = BSON_INITIALIZER;
+    // Just a long-lasting empty bson_t. Destruction is not required.
+    bsoncxx::aligned_storage<sizeof(bson_t), alignof(bson_t)> _empty_cluster_time_storage;
+    bson_t const* _empty_cluster_time_ptr = new (_empty_cluster_time_storage.get()) bson_t BSON_INITIALIZER;
 };
 
 } // namespace v_noabi
