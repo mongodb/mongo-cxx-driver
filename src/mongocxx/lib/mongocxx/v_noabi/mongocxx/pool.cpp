@@ -27,10 +27,9 @@
 #include <bsoncxx/private/make_unique.hh>
 
 #include <mongocxx/private/client.hh>
-#include <mongocxx/private/config/config.hh>
-#include <mongocxx/private/mongoc.hh>
 #include <mongocxx/private/mongoc_error.hh>
 #include <mongocxx/private/pool.hh>
+#include <mongocxx/private/ssl.hh>
 #include <mongocxx/private/uri.hh>
 
 namespace mongocxx {
@@ -59,7 +58,7 @@ pool::~pool() = default;
 
 pool::pool(uri const& uri, options::pool const& options)
     : _impl{bsoncxx::make_unique<impl>(construct_client_pool(uri._impl->uri_t))} {
-#if defined(MONGOCXX_ENABLE_SSL) && defined(MONGOC_ENABLE_SSL)
+#if MONGOCXX_SSL_IS_ENABLED()
     if (options.client_opts().tls_opts()) {
         if (!uri.tls())
             throw exception{error_code::k_invalid_parameter, "cannot set TLS options if 'tls=true' not in URI"};

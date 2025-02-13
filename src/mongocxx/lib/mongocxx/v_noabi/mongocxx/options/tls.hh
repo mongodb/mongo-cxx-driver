@@ -20,14 +20,14 @@
 
 #include <list>
 
-#include <mongocxx/private/config/config.hh>
 #include <mongocxx/private/mongoc.hh>
+#include <mongocxx/private/ssl.hh>
 
 namespace mongocxx {
 namespace v_noabi {
 namespace options {
 
-#if defined(MONGOCXX_ENABLE_SSL) && defined(MONGOC_ENABLE_SSL)
+#if MONGOCXX_SSL_IS_ENABLED()
 inline std::pair<::mongoc_ssl_opt_t, std::list<bsoncxx::v_noabi::string::view_or_value>> make_tls_opts(
     tls const& tls_opts) {
     ::mongoc_ssl_opt_t out{};

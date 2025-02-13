@@ -25,9 +25,9 @@
 #include <mongocxx/pool.hpp>
 #include <mongocxx/uri.hpp>
 
-#include <mongocxx/private/config/config.hh>
 #include <mongocxx/private/conversions.hh>
 #include <mongocxx/private/mongoc.hh>
+#include <mongocxx/private/ssl.hh>
 
 #include <bsoncxx/test/catch.hh>
 
@@ -424,7 +424,7 @@ TEST_CASE("integration tests for client metadata handshake feature") {
     }
 }
 
-#if defined(MONGOCXX_ENABLE_SSL) && defined(MONGOC_ENABLE_SSL)
+#if MONGOCXX_SSL_IS_ENABLED()
 TEST_CASE("A client can be constructed with SSL options", "[client]") {
     MOCK_CLIENT;
 
