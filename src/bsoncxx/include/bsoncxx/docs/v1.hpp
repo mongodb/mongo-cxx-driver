@@ -71,6 +71,11 @@
 ///
 
 ///
+/// @namespace bsoncxx::v1::error
+/// Declares entities describing @ref bsoncxx::v1 errors.
+///
+
+///
 /// @namespace bsoncxx::v1::stdx
 /// @copydoc bsoncxx::stdx
 ///
