@@ -49,6 +49,7 @@ set(bsoncxx_sources_v1
     bsoncxx/v1/detail/postlude.cpp
     bsoncxx/v1/detail/prelude.cpp
     bsoncxx/v1/document/element.cpp
+    bsoncxx/v1/document/value.cpp
 )
 
 list(APPEND bsoncxx_sources
