@@ -40,6 +40,7 @@ set(bsoncxx_sources_v_noabi
 )
 
 set(bsoncxx_sources_v1
+    bsoncxx/v1/array/element.cpp
     bsoncxx/v1/config/config.cpp
     bsoncxx/v1/config/export.cpp
     bsoncxx/v1/config/version.cpp
