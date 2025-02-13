@@ -25,6 +25,7 @@
 #include <mongocxx/pool.hpp>
 #include <mongocxx/uri.hpp>
 
+#include <mongocxx/private/config/config.hh>
 #include <mongocxx/private/conversions.hh>
 #include <mongocxx/private/mongoc.hh>
 
