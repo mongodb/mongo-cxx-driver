@@ -56,6 +56,11 @@
 ///
 
 ///
+/// @dir bsoncxx/v1/types
+/// Provides headers declaring entities in @ref bsoncxx::v1::types.
+///
+
+///
 /// @namespace bsoncxx::v1
 /// Declares entities whose ABI stability is guaranteed for documented symbols.
 ///
@@ -78,4 +83,9 @@
 ///
 /// @namespace bsoncxx::v1::stdx
 /// @copydoc bsoncxx::stdx
+///
+
+///
+/// @namespace bsoncxx::v1::types
+/// @copydoc bsoncxx::types
 ///

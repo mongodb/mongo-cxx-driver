@@ -81,10 +81,10 @@
 
 ///
 /// @namespace bsoncxx::types
-/// Declares entities representing BSON value types.
+/// Declares entities representing a BSON type.
 ///
 
 ///
 /// @namespace bsoncxx::types::bson_value
-/// Declares entities representing any BSON value type.
+/// Declares entities representing a BSON type.
 ///
