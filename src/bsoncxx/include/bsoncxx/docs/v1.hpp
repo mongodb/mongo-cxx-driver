@@ -29,6 +29,16 @@
 ///
 
 ///
+/// @dir bsoncxx/v1/array
+/// Provides headers declaring entities in @ref bsoncxx::v1::array.
+///
+
+///
+/// @dir bsoncxx/v1/document
+/// Provides headers declaring entities in @ref bsoncxx::v1::document.
+///
+
+///
 /// @dir bsoncxx/v1/config
 /// Provides headers related to bsoncxx library configuration.
 ///
@@ -46,11 +56,36 @@
 ///
 
 ///
+/// @dir bsoncxx/v1/types
+/// Provides headers declaring entities in @ref bsoncxx::v1::types.
+///
+
+///
 /// @namespace bsoncxx::v1
 /// Declares entities whose ABI stability is guaranteed for documented symbols.
 ///
 
 ///
+/// @namespace bsoncxx::v1::array
+/// @copydoc bsoncxx::array
+///
+
+///
+/// @namespace bsoncxx::v1::document
+/// @copydoc bsoncxx::document
+///
+
+///
+/// @namespace bsoncxx::v1::error
+/// Declares entities describing @ref bsoncxx::v1 errors.
+///
+
+///
 /// @namespace bsoncxx::v1::stdx
 /// @copydoc bsoncxx::stdx
+///
+
+///
+/// @namespace bsoncxx::v1::types
+/// @copydoc bsoncxx::types
 ///
