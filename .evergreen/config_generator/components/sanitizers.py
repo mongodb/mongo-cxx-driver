@@ -22,8 +22,7 @@ TAG = 'sanitizers'
 # pylint: disable=line-too-long
 # fmt: off
 MATRIX = [
-    ('rhel80', ['asan',        ], ['shared', 'static'], [False, True], ['4.0', '8.0', 'latest'], ['single', 'replica', 'sharded']),
-    ('rhel80', [        'ubsan'], [          'static'], [False      ], ['4.0', '8.0', 'latest'], ['single', 'replica', 'sharded']),
+    ('rhel80', ['asan', 'ubsan'], ['shared', 'static'], [False, True], ['4.0', '8.0', 'latest'], ['single', 'replica', 'sharded']),
 ]
 # fmt: on
 # pylint: enable=line-too-long
@@ -101,7 +100,7 @@ def tasks():
                     test_vars |= {
                         'TEST_WITH_UBSAN': 'ON',
                         'example_projects_cxxflags': '-fsanitize=undefined -fno-sanitize-recover=undefined -fno-omit-frame-pointer',
-                        'example_projects_ldflags': '-fsanitize=undefined -fno-sanitize-recover=undefined',
+                        'example_projects_ldflags': '-fsanitize=undefined -fno-sanitize-recover=undefined' + (' -static-libsan' if link_type == 'static' else ''),
                     }
 
             commands += [

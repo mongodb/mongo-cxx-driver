@@ -18,6 +18,8 @@
 #include <memory>
 #include <type_traits>
 
+#include <bsoncxx/private/bson.hh>
+
 namespace bsoncxx {
 
 // Note: This stack is only intended for use with the 'frame' type in
@@ -78,6 +80,17 @@ class stack {
         new (_get_ptr()) T(std::forward<Args>(args)...);
     }
 
+    template <typename... Args>
+    void emplace_back(bson_t* bson, Args&&... args) {
+        if (_is_empty) {
+            _is_empty = false;
+        } else {
+            _inc();
+        }
+
+        new (_get_ptr()) T(bson, std::forward<Args>(args)...);
+    }
+
     void pop_back() {
         _get_ptr()->close();
         _dec();
@@ -92,7 +105,7 @@ class stack {
     }
 
    private:
-    typename std::aligned_storage<sizeof(T)>::type _object_memory[size];
+    alignas(T) unsigned char _object_memory[size * sizeof(T)];
 
     std::list<T*> _buckets;
 

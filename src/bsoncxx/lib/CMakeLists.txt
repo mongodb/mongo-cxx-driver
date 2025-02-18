@@ -86,6 +86,7 @@ set_dist_list(src_bsoncxx_lib_DIST
     ${bsoncxx_sources_private}
     ${bsoncxx_sources_v_noabi}
     ${bsoncxx_sources_v1}
+    bsoncxx/private/aligned_storage.hh
     bsoncxx/private/b64_ntop.hh
     bsoncxx/private/config/config.hh.in
     bsoncxx/private/convert.hh

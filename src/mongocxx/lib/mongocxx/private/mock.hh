@@ -14,6 +14,8 @@
 
 #pragma once
 
+#include <bsoncxx/v1/detail/macros.hpp>
+
 #include <array>
 #include <cassert>
 #include <functional>
@@ -28,14 +30,64 @@
 
 #include <bsoncxx/stdx/type_traits.hpp>
 
+#include <bsoncxx/private/bson.hh>
+
 namespace mongocxx {
 namespace test_util {
+
+template <typename CRTP, typename R>
+struct mock_invoke_fn {
+    template <typename Self, typename... Args>
+    static R invoke(Self self, Args... args) {
+        auto crtp = static_cast<CRTP*>(self);
+        auto instance = crtp->active_instance();
+        if (instance) {
+            while (!instance->_callbacks.empty()) {
+                if (instance->_callbacks.top()._conditional(args...)) {
+                    return instance->_callbacks.top()._callback(args...);
+                }
+                instance->_callbacks.pop();
+            }
+        }
+
+        return crtp->_func(args...);
+    }
+};
+
+template <typename CRTP, typename T>
+struct mock_invoke;
+
+template <typename CRTP, typename R, typename... Args>
+struct mock_invoke<CRTP, R(Args...)> {
+    R operator()(Args... args) {
+        return mock_invoke_fn<CRTP, R>::invoke(this, args...);
+    }
+};
+
+BSONCXX_PRIVATE_WARNINGS_PUSH();
+BSONCXX_PRIVATE_WARNINGS_DISABLE(GNU("-Wignored-attributes"));
+
+template <typename CRTP, typename... Args>
+struct mock_invoke<CRTP, bson_t const*(Args...)> {
+    bson_t const* operator()(Args... args) {
+        return mock_invoke_fn<CRTP, bson_t const*>::invoke(this, args...);
+    }
+};
+
+template <typename CRTP, typename... Args>
+struct mock_invoke<CRTP, bson_t*(Args...)> {
+    bson_t* operator()(Args... args) {
+        return mock_invoke_fn<CRTP, bson_t*>::invoke(this, args...);
+    }
+};
+
+BSONCXX_PRIVATE_WARNINGS_POP();
 
 template <typename T>
 class mock;
 
 template <typename R, typename... Args>
-class mock<R(MONGOCXX_ABI_CDECL*)(Args...)> {
+class mock<R(MONGOCXX_ABI_CDECL*)(Args...)> : public mock_invoke<mock<R(MONGOCXX_ABI_CDECL*)(Args...)>, R(Args...)> {
    public:
     using underlying_ptr = R (*)(Args...);
     using callback = std::function<R(Args...)>;
@@ -43,6 +95,7 @@ class mock<R(MONGOCXX_ABI_CDECL*)(Args...)> {
 
     class rule {
         friend mock;
+        friend mock_invoke_fn<mock<R(MONGOCXX_ABI_CDECL*)(Args...)>, R>;
 
        public:
         rule(callback callback) : _callback(std::move(callback)) {
@@ -68,6 +121,7 @@ class mock<R(MONGOCXX_ABI_CDECL*)(Args...)> {
 
     class instance {
         friend mock;
+        friend mock_invoke_fn<mock<R(MONGOCXX_ABI_CDECL*)(Args...)>, R>;
 
        public:
         instance(instance const&) = delete;
@@ -126,25 +180,12 @@ class mock<R(MONGOCXX_ABI_CDECL*)(Args...)> {
     };
 
     friend instance;
+    friend mock_invoke_fn<mock<R(MONGOCXX_ABI_CDECL*)(Args...)>, R>;
 
     mock(underlying_ptr func) : _func(std::move(func)) {}
     mock(mock&&) = delete;
     mock(mock const&) = delete;
     mock& operator=(mock const&) = delete;
-
-    R operator()(Args... args) {
-        auto instance = active_instance();
-        if (instance) {
-            while (!instance->_callbacks.empty()) {
-                if (instance->_callbacks.top()._conditional(args...)) {
-                    return instance->_callbacks.top()._callback(args...);
-                }
-                instance->_callbacks.pop();
-            }
-        }
-
-        return _func(args...);
-    }
 
     std::unique_ptr<instance> create_instance() {
         std::unique_ptr<instance> mock_instance(new instance(this));
