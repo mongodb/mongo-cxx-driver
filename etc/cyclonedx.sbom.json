@@ -2,6 +2,7 @@
   "components": [
     {
       "bom-ref": "pkg:github/mnmlstc/core@v1.1.0",
+      "copyright": "Copyright \u00a9 2013 - 2014 MNMLSTC",
       "externalReferences": [
         {
           "type": "distribution",
@@ -13,6 +14,13 @@
         }
       ],
       "group": "mnmlstc",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ],
       "name": "core",
       "purl": "pkg:github/mnmlstc/core@v1.1.0",
       "type": "library",
@@ -20,6 +28,7 @@
     },
     {
       "bom-ref": "pkg:github/mongodb/mongo-c-driver@v1.25.0",
+      "copyright": "Copyright 2009-present MongoDB, Inc.",
       "externalReferences": [
         {
           "type": "distribution",
@@ -31,6 +40,13 @@
         }
       ],
       "group": "mongodb",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ],
       "name": "mongo-c-driver",
       "purl": "pkg:github/mongodb/mongo-c-driver@v1.25.0",
       "type": "library",
