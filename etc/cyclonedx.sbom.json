@@ -2,7 +2,6 @@
   "components": [
     {
       "bom-ref": "pkg:github/mnmlstc/core@v1.1.0",
-      "copyright": "Copyright \u00a9 2013 - 2014 MNMLSTC",
       "externalReferences": [
         {
           "type": "distribution",
@@ -14,13 +13,6 @@
         }
       ],
       "group": "mnmlstc",
-      "licenses": [
-        {
-          "license": {
-            "id": "Apache-2.0"
-          }
-        }
-      ],
       "name": "core",
       "purl": "pkg:github/mnmlstc/core@v1.1.0",
       "type": "library",
@@ -28,7 +20,6 @@
     },
     {
       "bom-ref": "pkg:github/mongodb/mongo-c-driver@v1.28.0",
-      "copyright": "Copyright 2009-present MongoDB, Inc.",
       "externalReferences": [
         {
           "type": "distribution",
@@ -40,13 +31,6 @@
         }
       ],
       "group": "mongodb",
-      "licenses": [
-        {
-          "license": {
-            "id": "Apache-2.0"
-          }
-        }
-      ],
       "name": "mongo-c-driver",
       "purl": "pkg:github/mongodb/mongo-c-driver@v1.28.0",
       "type": "library",
@@ -62,7 +46,7 @@
     }
   ],
   "metadata": {
-    "timestamp": "2024-09-30T15:53:24.743787+00:00",
+    "timestamp": "2025-02-19T21:01:34.820453+00:00",
     "tools": [
       {
         "externalReferences": [
@@ -105,8 +89,8 @@
       }
     ]
   },
-  "serialNumber": "urn:uuid:dd68fbb0-f77c-4bb9-90cd-606dd854f301",
-  "version": 3,
+  "serialNumber": "urn:uuid:df96140b-11df-43e4-840f-c874b3468665",
+  "version": 1,
   "$schema": "http://cyclonedx.org/schema/bom-1.5.schema.json",
   "bomFormat": "CycloneDX",
   "specVersion": "1.5",
