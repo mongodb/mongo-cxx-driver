@@ -2,6 +2,7 @@
   "components": [
     {
       "bom-ref": "pkg:github/mongodb/mongo-c-driver@v1.29.0",
+      "copyright": "Copyright 2009-present MongoDB, Inc.",
       "externalReferences": [
         {
           "type": "distribution",
@@ -13,6 +14,13 @@
         }
       ],
       "group": "mongodb",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ],
       "name": "mongo-c-driver",
       "purl": "pkg:github/mongodb/mongo-c-driver@v1.29.0",
       "type": "library",
