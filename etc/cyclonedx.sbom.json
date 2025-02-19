@@ -2,7 +2,6 @@
   "components": [
     {
       "bom-ref": "pkg:github/mongodb/mongo-c-driver@v1.29.0",
-      "copyright": "Copyright 2009-present MongoDB, Inc.",
       "externalReferences": [
         {
           "type": "distribution",
@@ -14,13 +13,6 @@
         }
       ],
       "group": "mongodb",
-      "licenses": [
-        {
-          "license": {
-            "id": "Apache-2.0"
-          }
-        }
-      ],
       "name": "mongo-c-driver",
       "purl": "pkg:github/mongodb/mongo-c-driver@v1.29.0",
       "type": "library",
@@ -33,7 +25,7 @@
     }
   ],
   "metadata": {
-    "timestamp": "2024-11-19T18:14:12.160074+00:00",
+    "timestamp": "2025-02-19T20:52:33.466027+00:00",
     "tools": [
       {
         "externalReferences": [
@@ -76,8 +68,8 @@
       }
     ]
   },
-  "serialNumber": "urn:uuid:dd68fbb0-f77c-4bb9-90cd-606dd854f301",
-  "version": 5,
+  "serialNumber": "urn:uuid:f4ae2a30-521a-4d36-bf4e-f25a42bdbce8",
+  "version": 1,
   "$schema": "http://cyclonedx.org/schema/bom-1.5.schema.json",
   "bomFormat": "CycloneDX",
   "specVersion": "1.5",
