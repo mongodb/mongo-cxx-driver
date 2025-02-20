@@ -134,7 +134,7 @@ podman login --password-stdin --username "${ARTIFACTORY_USER:?}" artifactory.cor
 podman pull artifactory.corp.mongodb.com/release-tools-container-registry-public-local/silkbomb:2.0
 
 # Output: "... writing sbom to file"
-podman run -it --rm -v "$(pwd):/pwd" silkbomb:2.0 \
+podman run -it --rm -v "$(pwd):/pwd" artifactory.corp.mongodb.com/release-tools-container-registry-public-local/silkbomb:2.0 \
   update --refresh --no-update-sbom-version -p "/pwd/etc/purls.txt" -i "/pwd/etc/cyclonedx.sbom.json" -o "/pwd/etc/cyclonedx.sbom.json"
 ```
 
