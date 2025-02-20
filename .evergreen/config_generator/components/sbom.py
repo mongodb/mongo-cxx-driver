@@ -6,7 +6,7 @@ from config_generator.etc.utils import bash_exec
 
 from shrub.v3.evg_build_variant import BuildVariant
 from shrub.v3.evg_command import BuiltInCommand, EvgCommandType, expansions_update, s3_put
-from shrub.v3.evg_task import EvgTask, EvgTaskRef, EvgTaskDependency
+from shrub.v3.evg_task import EvgTask, EvgTaskRef
 
 from pydantic import ConfigDict
 from typing import Optional
