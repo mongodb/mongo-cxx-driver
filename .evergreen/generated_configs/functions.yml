@@ -777,43 +777,6 @@ functions:
         optional: true
         permissions: public-read
         remote_file: mongo-cxx-driver/${build_variant}/${revision}/${version_id}/${build_id}/logs/${task_id}-${execution}-mongodb-logs.tar.gz
-  upload sbom lite:
-    - command: ec2.assume_role
-      type: setup
-      params:
-        role_arn: ${KONDUKTO_ROLE_ARN}
-    - command: subprocess.exec
-      type: setup
-      params:
-        binary: bash
-        include_expansions_in_env:
-          - AWS_ACCESS_KEY_ID
-          - AWS_SECRET_ACCESS_KEY
-          - AWS_SESSION_TOKEN
-        args:
-          - -c
-          - |
-            set -o errexit
-            set -o pipefail
-            kondukto_token="$(aws secretsmanager get-secret-value --secret-id "kondukto-token" --region "us-east-1" --query 'SecretString' --output text)"
-            printf "KONDUKTO_TOKEN: %s\n" "$kondukto_token" >|expansions.kondukto.yml
-    - command: expansions.update
-      type: setup
-      params:
-        file: expansions.kondukto.yml
-    - command: subprocess.exec
-      type: test
-      params:
-        binary: bash
-        working_dir: mongo-cxx-driver
-        include_expansions_in_env:
-          - ARTIFACTORY_USER
-          - ARTIFACTORY_PASSWORD
-          - branch_name
-          - KONDUKTO_TOKEN
-        args:
-          - -c
-          - .evergreen/scripts/silk-upload-sbom-lite.sh
   upload scan artifacts:
     - command: subprocess.exec
       type: test

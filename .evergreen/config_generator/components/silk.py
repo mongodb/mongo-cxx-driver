@@ -37,48 +37,27 @@ def ec2_assume_role(
     )
 
 
-EC2_ASSUME_ROLE_COMMANDS = [
-    ec2_assume_role(
-        command_type=EvgCommandType.SETUP,
-        role_arn='${KONDUKTO_ROLE_ARN}',
-    ),
-    bash_exec(
-        command_type=EvgCommandType.SETUP,
-        include_expansions_in_env=['AWS_ACCESS_KEY_ID', 'AWS_SECRET_ACCESS_KEY', 'AWS_SESSION_TOKEN'],
-        script='''\
+class CheckAugmentedSBOM(Function):
+    name = 'check augmented sbom'
+    commands = [
+        ec2_assume_role(
+            command_type=EvgCommandType.SETUP,
+            role_arn='${KONDUKTO_ROLE_ARN}',
+        ),
+        bash_exec(
+            command_type=EvgCommandType.SETUP,
+            include_expansions_in_env=['AWS_ACCESS_KEY_ID', 'AWS_SECRET_ACCESS_KEY', 'AWS_SESSION_TOKEN'],
+            script='''\
             set -o errexit
             set -o pipefail
             kondukto_token="$(aws secretsmanager get-secret-value --secret-id "kondukto-token" --region "us-east-1" --query 'SecretString' --output text)"
             printf "KONDUKTO_TOKEN: %s\\n" "$kondukto_token" >|expansions.kondukto.yml
-        '''
-    ),
-    expansions_update(
-        command_type=EvgCommandType.SETUP,
-        file='expansions.kondukto.yml'
-    ),
-]
-
-
-class UploadSBOMLite(Function):
-    name = 'upload sbom lite'
-    commands = EC2_ASSUME_ROLE_COMMANDS + [
-        bash_exec(
-            command_type=EvgCommandType.TEST,
-            working_dir='mongo-cxx-driver',
-            include_expansions_in_env=[
-                'ARTIFACTORY_USER',
-                'ARTIFACTORY_PASSWORD',
-                'branch_name',
-                'KONDUKTO_TOKEN',
-            ],
-            script='.evergreen/scripts/silk-upload-sbom-lite.sh',
+        ''',
         ),
-    ]
-
-
-class CheckAugmentedSBOM(Function):
-    name = 'check augmented sbom'
-    commands = EC2_ASSUME_ROLE_COMMANDS + [
+        expansions_update(
+            command_type=EvgCommandType.SETUP,
+            file='expansions.kondukto.yml',
+        ),
         bash_exec(
             command_type=EvgCommandType.TEST,
             working_dir='mongo-cxx-driver',
@@ -149,7 +128,6 @@ class UploadAugmentedSBOM(Function):
 
 def functions():
     return merge_defns(
-        UploadSBOMLite.defn(),
         CheckAugmentedSBOM.defn(),
         UploadAugmentedSBOM.defn(),
     )
@@ -159,21 +137,9 @@ def tasks():
     distro_name = 'rhel80'
     distro = find_small_distro(distro_name)
 
-    upload_task = EvgTask(
-        name='silk-upload-sbom-lite',
-        tags=[TAG, distro_name],
-        run_on=distro.name,
-        commands=[
-            Setup.call(),
-            UploadSBOMLite.call(),
-        ],
-    )
-
-    yield upload_task
     yield EvgTask(
         name='silk-check-augmented-sbom',
         tags=[TAG, distro_name],
-        depends_on=[EvgTaskDependency(name=upload_task.name)],
         run_on=distro.name,
         commands=[
             Setup.call(),
