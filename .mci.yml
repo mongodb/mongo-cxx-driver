@@ -697,45 +697,7 @@ functions:
           content_type: text/html
           display_name: Scan Build Report
 
-    "upload sbom lite":
-      - command: ec2.assume_role
-        type: setup
-        params:
-          role_arn: ${KONDUKTO_ROLE_ARN}
-      - command: subprocess.exec
-        type: setup
-        params:
-          binary: bash
-          include_expansions_in_env:
-            - AWS_ACCESS_KEY_ID
-            - AWS_SECRET_ACCESS_KEY
-            - AWS_SESSION_TOKEN
-          args:
-            - -c
-            - |
-              set -o errexit
-              set -o pipefail
-              kondukto_token="$(aws secretsmanager get-secret-value --secret-id "kondukto-token" --region "us-east-1" --query 'SecretString' --output text)"
-              printf "KONDUKTO_TOKEN: %s\n" "$kondukto_token" >|expansions.kondukto.yml
-      - command: expansions.update
-        type: setup
-        params:
-          file: expansions.kondukto.yml
-      - command: subprocess.exec
-        type: test
-        params:
-          binary: bash
-          working_dir: mongo-cxx-driver
-          include_expansions_in_env:
-            - ARTIFACTORY_USER
-            - ARTIFACTORY_PASSWORD
-            - branch_name
-            - KONDUKTO_TOKEN
-          args:
-            - -c
-            - .evergreen/silk-upload-sbom-lite.sh
-
-    "check augmented sbom":
+    check augmented sbom:
       - command: ec2.assume_role
         type: setup
         params:
@@ -771,9 +733,9 @@ functions:
             - KONDUKTO_TOKEN
           args:
             - -c
-            - .evergreen/silk-check-augmented-sbom.sh
+            - .evergreen/sbom.sh
 
-    "upload augmented sbom":
+    upload augmented sbom:
       - command: s3.put
         type: system
         params:
@@ -784,7 +746,7 @@ functions:
           content_type: application/json
           local_file: mongo-cxx-driver/old.json
           permissions: public-read
-          remote_file: mongo-cxx-driver/${build_variant}/${revision}/${version_id}/${build_id}/silk/old.json
+          remote_file: mongo-cxx-driver/${build_variant}/${revision}/${version_id}/${build_id}/sbom/old.json
       - command: s3.put
         type: system
         params:
@@ -795,7 +757,7 @@ functions:
           content_type: application/json
           local_file: mongo-cxx-driver/new.json
           permissions: public-read
-          remote_file: mongo-cxx-driver/${build_variant}/${revision}/${version_id}/${build_id}/silk/new.json
+          remote_file: mongo-cxx-driver/${build_variant}/${revision}/${version_id}/${build_id}/sbom/new.json
       - command: s3.put
         type: system
         params:
@@ -806,7 +768,7 @@ functions:
           content_type: application/json
           local_file: mongo-cxx-driver/diff.txt
           permissions: public-read
-          remote_file: mongo-cxx-driver/${build_variant}/${revision}/${version_id}/${build_id}/silk/diff.txt
+          remote_file: mongo-cxx-driver/${build_variant}/${revision}/${version_id}/${build_id}/sbom/diff.txt
       - command: s3.put
         type: system
         params:
@@ -817,7 +779,7 @@ functions:
           content_type: application/json
           local_file: mongo-cxx-driver/etc/augmented.sbom.json.new
           permissions: public-read
-          remote_file: mongo-cxx-driver/${build_variant}/${revision}/${version_id}/${build_id}/silk/augmented.sbom.json
+          remote_file: mongo-cxx-driver/${build_variant}/${revision}/${version_id}/${build_id}/sbom/augmented.sbom.json
 
 #######################################
 #              Post Task              #
@@ -1349,17 +1311,9 @@ tasks:
             BSONCXX_POLYFILL: std
         - func: "upload scan artifacts"
 
-    - name: silk-upload-sbom-lite
+    - name: sbom
       run_on: rhel80-small
-      tags: [silk, rhel80]
-      commands:
-        - func: setup
-        - func: upload sbom lite
-
-    - name: silk-check-augmented-sbom
-      run_on: rhel80-small
-      tags: [silk, rhel80]
-      depends_on: [{ name: silk-upload-sbom-lite }]
+      tags: [sbom, rhel80]
       commands:
         - func: setup
         - func: check augmented sbom
@@ -2284,10 +2238,10 @@ buildvariants:
       tasks:
         - name: .scan-build-matrix
 
-    - name: silk
-      display_name: silk
+    - name: sbom
+      display_name: SBOM
       tasks:
-        - name: .silk
+        - name: .sbom
 
     - name: rhel79-compile
       display_name: "RHEL 7.9 (gcc 4.8.5)"
