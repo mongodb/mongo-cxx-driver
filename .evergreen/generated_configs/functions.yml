@@ -203,19 +203,42 @@ functions:
 
           .evergreen/atlas_data_lake/pull-mongohouse-image.sh
   check augmented sbom:
-    command: subprocess.exec
-    type: test
-    params:
-      binary: bash
-      working_dir: mongo-cxx-driver
-      include_expansions_in_env:
-        - ARTIFACTORY_USER
-        - ARTIFACTORY_PASSWORD
-        - SILK_CLIENT_ID
-        - SILK_CLIENT_SECRET
-      args:
-        - -c
-        - .evergreen/scripts/check-augmented-sbom.sh
+    - command: ec2.assume_role
+      type: setup
+      params:
+        role_arn: ${KONDUKTO_ROLE_ARN}
+    - command: subprocess.exec
+      type: setup
+      params:
+        binary: bash
+        include_expansions_in_env:
+          - AWS_ACCESS_KEY_ID
+          - AWS_SECRET_ACCESS_KEY
+          - AWS_SESSION_TOKEN
+        args:
+          - -c
+          - |
+            set -o errexit
+            set -o pipefail
+            kondukto_token="$(aws secretsmanager get-secret-value --secret-id "kondukto-token" --region "us-east-1" --query 'SecretString' --output text)"
+            printf "KONDUKTO_TOKEN: %s\n" "$kondukto_token" >|expansions.kondukto.yml
+    - command: expansions.update
+      type: setup
+      params:
+        file: expansions.kondukto.yml
+    - command: subprocess.exec
+      type: test
+      params:
+        binary: bash
+        working_dir: mongo-cxx-driver
+        include_expansions_in_env:
+          - ARTIFACTORY_PASSWORD
+          - ARTIFACTORY_USER
+          - branch_name
+          - KONDUKTO_TOKEN
+        args:
+          - -c
+          - .evergreen/scripts/silk-check-augmented-sbom.sh
   clang-tidy:
     command: subprocess.exec
     type: test
@@ -675,14 +698,25 @@ functions:
     - command: s3.put
       type: system
       params:
-        display_name: Augmented SBOM
+        display_name: Augmented SBOM (Old)
         aws_key: ${aws_key}
         aws_secret: ${aws_secret}
         bucket: mciuploads
         content_type: application/json
-        local_file: mongo-cxx-driver/etc/augmented.sbom.json.new
+        local_file: mongo-cxx-driver/old.json
         permissions: public-read
-        remote_file: mongo-cxx-driver/${build_variant}/${revision}/${version_id}/${build_id}/silk/augmented.sbom.json
+        remote_file: mongo-cxx-driver/${build_variant}/${revision}/${version_id}/${build_id}/silk/old.json
+    - command: s3.put
+      type: system
+      params:
+        display_name: Augmented SBOM (New)
+        aws_key: ${aws_key}
+        aws_secret: ${aws_secret}
+        bucket: mciuploads
+        content_type: application/json
+        local_file: mongo-cxx-driver/new.json
+        permissions: public-read
+        remote_file: mongo-cxx-driver/${build_variant}/${revision}/${version_id}/${build_id}/silk/new.json
     - command: s3.put
       type: system
       params:
@@ -693,7 +727,18 @@ functions:
         content_type: application/json
         local_file: mongo-cxx-driver/diff.txt
         permissions: public-read
-        remote_file: mongo-cxx-driver/${build_variant}/${revision}/${version_id}/${build_id}/silk/augmented.sbom.json.diff
+        remote_file: mongo-cxx-driver/${build_variant}/${revision}/${version_id}/${build_id}/silk/diff.txt
+    - command: s3.put
+      type: system
+      params:
+        display_name: Augmented SBOM (Updated)
+        aws_key: ${aws_key}
+        aws_secret: ${aws_secret}
+        bucket: mciuploads
+        content_type: application/json
+        local_file: mongo-cxx-driver/etc/augmented.sbom.json.new
+        permissions: public-read
+        remote_file: mongo-cxx-driver/${build_variant}/${revision}/${version_id}/${build_id}/silk/augmented.sbom.json
   upload code coverage:
     command: subprocess.exec
     type: system
@@ -732,6 +777,43 @@ functions:
         optional: true
         permissions: public-read
         remote_file: mongo-cxx-driver/${build_variant}/${revision}/${version_id}/${build_id}/logs/${task_id}-${execution}-mongodb-logs.tar.gz
+  upload sbom lite:
+    - command: ec2.assume_role
+      type: setup
+      params:
+        role_arn: ${KONDUKTO_ROLE_ARN}
+    - command: subprocess.exec
+      type: setup
+      params:
+        binary: bash
+        include_expansions_in_env:
+          - AWS_ACCESS_KEY_ID
+          - AWS_SECRET_ACCESS_KEY
+          - AWS_SESSION_TOKEN
+        args:
+          - -c
+          - |
+            set -o errexit
+            set -o pipefail
+            kondukto_token="$(aws secretsmanager get-secret-value --secret-id "kondukto-token" --region "us-east-1" --query 'SecretString' --output text)"
+            printf "KONDUKTO_TOKEN: %s\n" "$kondukto_token" >|expansions.kondukto.yml
+    - command: expansions.update
+      type: setup
+      params:
+        file: expansions.kondukto.yml
+    - command: subprocess.exec
+      type: test
+      params:
+        binary: bash
+        working_dir: mongo-cxx-driver
+        include_expansions_in_env:
+          - ARTIFACTORY_USER
+          - ARTIFACTORY_PASSWORD
+          - branch_name
+          - KONDUKTO_TOKEN
+        args:
+          - -c
+          - .evergreen/scripts/silk-upload-sbom-lite.sh
   upload scan artifacts:
     - command: subprocess.exec
       type: test
