@@ -74,13 +74,6 @@ Some release steps require one or more of the following secrets.
     GRS_CONFIG_USER1_USERNAME=<username>
     GRS_CONFIG_USER1_PASSWORD=<password>
     ```
-- Silk credentials.
-  - Location: `~/.secrets/silk-creds.txt`
-  - Format:
-    ```bash
-    SILK_CLIENT_ID=<client_id>
-    SILK_CLIENT_SECRET=<client_secret>
-    ```
 - Snyk credentials.
   - Location: `~/.secrets/snyk-creds.txt`
   - Format:
@@ -131,57 +124,27 @@ Ensure the list of bundled dependencies in `etc/purls.txt` is up-to-date. If not
 If `etc/purls.txt` was updated, update the SBOM Lite document using the following command(s):
 
 ```bash
-# Artifactory and Silk credentials.
+# Artifactory credentials.
 . $HOME/.secrets/artifactory-creds.txt
-. $HOME/.secrets/silk-creds.txt
 
 # Output: "Login succeeded!"
 podman login --password-stdin --username "${ARTIFACTORY_USER:?}" artifactory.corp.mongodb.com <<<"${ARTIFACTORY_PASSWORD:?}"
 
 # Ensure latest version of SilkBomb is being used.
-podman pull artifactory.corp.mongodb.com/release-tools-container-registry-public-local/silkbomb:1.1
+podman pull artifactory.corp.mongodb.com/release-tools-container-registry-public-local/silkbomb:2.0
 
 # Output: "... writing sbom to file"
-podman run \
-  --env-file "$HOME/.secrets/silk-creds.txt" \
-  -it --rm -v "$(pwd):/pwd" \
-  artifactory.corp.mongodb.com/release-tools-container-registry-public-local/silkbomb:1.1 \
-  update -p "/pwd/etc/purls.txt" -i "/pwd/etc/cyclonedx.sbom.json" -o "/pwd/etc/cyclonedx.sbom.json"
+podman run -it --rm -v "$(pwd):/pwd" artifactory.corp.mongodb.com/release-tools-container-registry-public-local/silkbomb:2.0 \
+  update --refresh --no-update-sbom-version -p "/pwd/etc/purls.txt" -i "/pwd/etc/cyclonedx.sbom.json" -o "/pwd/etc/cyclonedx.sbom.json"
 ```
 
-Commit the latest version of the SBOM Lite document into the repo as `etc/cyclonedx.sbom.json`. (This may just be a modification of the timestamp.)
+Run a patch build which executes the `sbom` task and, if necessary (when the task fails), download the "Augmented SBOM (Updated)" file as `etc/augmented.sbom.json` (see below).
 
-Generate an updated Augmented SBOM as described below.
-
-> [!IMPORTANT]
-> If the SBOM Lite was updated, generate an updated Augmented SBOM as described below even if the `silk-check-augmented-sbom` is currently passing on Evergreen!
+Commit the updated SBOM documents if there are any substantial changes.
 
 ### Augmented SBOM
 
-Ensure the `silk-check-augmented-sbom` task is passing on Evergreen for the relevant release branch. If it is passing, nothing needs to be done (unless the SBOM Lite was updated as described above).
-
-#### Regular Update
-
-Update the Augmented SBOM document using the following command(s):
-
-```bash
-# Artifactory and Silk credentials.
-. $HOME/.secrets/artifactory-creds.txt
-. $HOME/.secrets/silk-creds.txt
-
-# Output: "Login succeeded!"
-podman login --password-stdin --username "${ARTIFACTORY_USER:?}" artifactory.corp.mongodb.com <<<"${ARTIFACTORY_PASSWORD:?}"
-
-# Ensure latest version of SilkBomb is being used.
-podman pull artifactory.corp.mongodb.com/release-tools-container-registry-public-local/silkbomb:1.1
-
-# Output: "... writing sbom to file"
-podman run \
-  --env-file "$HOME/.secrets/silk-creds.txt" \
-  -it --rm -v "$(pwd):/pwd" \
-  artifactory.corp.mongodb.com/release-tools-container-registry-public-local/silkbomb:1.1 \
-  download --silk-asset-group "mongo-cxx-driver" -o "/pwd/etc/augmented.sbom.json"
-```
+Ensure the `sbom` task is passing on Evergreen for the relevant release branch.
 
 Review the contents of the new Augmented SBOM and ensure any new or known vulnerabilities with severity "Medium" or greater have a corresponding JIRA ticket (CXX or VULN) that is scheduled to be resolved within its remediation timeline.
 
@@ -189,45 +152,7 @@ Update the [SSDLC Report spreadsheet](https://docs.google.com/spreadsheets/d/1sp
 
 Update `etc/third_party_vulnerabilities.md` with any updates to new or known vulnerabilities for third party dependencies that have not yet been fixed by the upcoming release.
 
-Commit the latest version of the Augmented SBOM document into the repo as `etc/augmented.sbom.json`. The Augmented SBOM document does not need to be updated if the `silk-check-augmented-sbom` was not failing (in which case the only changes present would a version bump or timestamp update).
-
-#### Instant Update
-
-If the Augmented SBOM has not yet been updated in time for a release, a temporary Silk Asset Group may be used instead:
-
-```bash
-# Artifactory and Silk credentials.
-. $HOME/.secrets/artifactory-creds.txt
-. $HOME/.secrets/silk-creds.txt
-
-# Name of the temporary Silk Asset Group. Do NOT use an existing Silk Asset Group!
-asset_group_id="mongo-cxx-driver-tmp-releasing"
-
-# Output: "Login succeeded!"
-podman login --password-stdin --username "${ARTIFACTORY_USER:?}" artifactory.corp.mongodb.com <<<"${ARTIFACTORY_PASSWORD:?}"
-
-# Ensure latest version of SilkBomb is being used.
-podman pull artifactory.corp.mongodb.com/release-tools-container-registry-public-local/silkbomb:1.1
-
-# Common flags to podman.
-silkbomb_flags=(
-  --env-file "$HOME/.secrets/silk-creds.txt"
-  -it --rm -v "$(pwd):/pwd"
-  artifactory.corp.mongodb.com/release-tools-container-registry-public-local/silkbomb:1.1
-)
-
-# Create a new and temporary Silk Asset Group.
-podman run "${silkbomb_flags[@]:?}" asset-group --asset-cmd create --silk-asset-group "${asset_group_id:?}" --name "${asset_group_id:?}"
-
-# Upload the SBOM Lite.
-podman run "${silkbomb_flags[@]:?}" upload --silk-asset-group "${asset_group_id:?}" -i /pwd/etc/cyclonedx.sbom.json
-
-# Download the Augmented SBOM.
-podman run "${silkbomb_flags[@]:?}" download --silk-asset-group "${asset_group_id:?}" -o /pwd/etc/augmented.sbom.json
-
-# Remove the temporary Silk Asset Group.
-podman run "${silkbomb_flags[@]:?}" asset-group --asset-cmd delete --silk-asset-group "${asset_group_id:?}"
-```
+Download the "Augmented SBOM (Updated)" file from the latest EVG commit build in the `sbom` task and commit it into the repo as `etc/augmented.sbom.json` (even if the only notable change is the timestamp field).
 
 ### Check Snyk
 
@@ -532,41 +457,9 @@ git push upstream releases/vX.Y
 
 The new branch should be continuously tested on Evergreen. Update the "Display Name" and "Branch Name" of the [mongo-cxx-driver-latest-release Evergreen project](https://spruce.mongodb.com/project/mongo-cxx-driver-latest-release/settings/general) to refer to the new release branch.
 
-The new branch should be tracked by Silk. Use the [create-silk-asset-group.py script](https://github.com/mongodb/mongo-c-driver/blob/master/tools/create-silk-asset-group.py) in the C Driver to create a new Silk asset group:
+Update the `etc/cyclonedx.sbom.json` file with a new unique serial number for the next upcoming patch release (e.g. for `1.2.4` following the release of `1.2.3`). This can be done by running the `silkbomb:2.0 update` command described above in [SBOM Lite](#sbom-lite) without the `-i` flag, or by manually inserting the result of running the `uuidgen` CLI command. Ensure any existing `copyright`, `licenses`, and other manually inserted or modified fields are preserved during the update. Update `etc/augmented.sbom.json` as described above in [Augmented SBOM](#augmented-sbom).
 
-```bash
-# Snyk credentials. Ask for these from a team member.
-. ~/.secrets/silk-creds.txt
-
-# Ensure correct release version number!
-version="X.Y"
-
-create_args=(
-  --silk-client-id "${SILK_CLIENT_ID:?}"
-  --silk-client-secret "${SILK_CLIENT_SECRET:?}"
-  --asset-id "mongo-cxx-driver-${version:?}" # Avoid '/' in Asset ID field.
-  --project "mongo-cxx-driver-${version:?}"
-  --branch "releases/v${version:?}"
-  --code-repo-url "https://github.com/mongodb/mongo-cxx-driver"
-  --sbom-lite-path="etc/cyclonedx.sbom.json"
-)
-
-python path/to/tools/create-silk-asset-group.py "${create_args[@]:?}"
-```
-
-Verify the new asset group (`mongo-cxx-driver-X.Y`) is present in the [Silk Asset Inventory](https://us1.app.silk.security/inventory/all).
-
-Update the Silk asset group identifier in `.evergreen/scripts/check-augmented-sbom.sh` to refer to the new silk asset group created above:
-
-```bash
-silkbomb_download_flags=(
-  ...
-  --silk-asset-group mongo-cxx-driver-X.Y # <--
-  ...
-)
-```
-
-Commit and push this change on the `releases/vX.Y` branch.
+Commit and push these changes to the `releases/vX.Y` branch.
 
 ### Update Snyk
 
@@ -629,6 +522,8 @@ This branch will be used to create a PR later.
 In `etc/apidocmenu.md`, update the list of versions under "Driver Documentation By Version" and the table under "Driver Development Status" with a new entry corresponding to this release.
 
 In `README.md`, sync the "Driver Development Status" table with the updated table from `etc/apidocmenu.md`.
+
+Update the `etc/cyclonedx.sbom.json` file with a new unique serial number for the next upcoming non-patch release (e.g. for `1.3.0` or `2.0.0` following the release of `1.2.3`). This can be done by running the `silkbomb:2.0 update` command described above in [SBOM Lite](#sbom-lite) without the `-i` flag, or by manually inserting the result of running the `uuidgen` CLI command. Ensure any existing `copyright`, `licenses`, and other manually inserted or modified fields are preserved during the update. Update `etc/augmented.sbom.json` as described above in [Augmented SBOM](#augmented-sbom).
 
 Commit these changes to the `post-release-changes` branch:
 

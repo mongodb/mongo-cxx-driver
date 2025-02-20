@@ -64,7 +64,6 @@ MACOS_ARM64_DISTROS = [
 RHEL_DISTROS = [] + \
     ls_distro(name='rhel80', os='rhel', os_type='linux', os_ver='8.0') + \
     ls_distro(name='rhel95', os='rhel', os_type='linux', os_ver='9.5') + \
-    ls_distro(name='rhel8-latest', os='rhel', os_type='linux', os_ver='latest') + \
     []
 
 RHEL_ARM64_DISTROS = [] + \
