@@ -36,6 +36,10 @@ silkbomb_augment_flags=(
   --no-update-sbom-version
 )
 
+# First validate the SBOM Lite.
+podman run -it --rm -v "$(pwd):/pwd" "${silkbomb:?}" \
+  validate --purls /pwd/etc/purls.txt --sbom-in /pwd/etc/cyclonedx.sbom.json --exclude jira
+
 # Allow the timestamp to be updated in the Augmented SBOM for update purposes.
 podman run -it --rm -v "$(pwd):/pwd" --env 'KONDUKTO_TOKEN' "${silkbomb:?}" augment "${silkbomb_augment_flags[@]:?}"
 
