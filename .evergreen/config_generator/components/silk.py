@@ -12,7 +12,7 @@ from pydantic import ConfigDict
 from typing import Optional
 
 
-TAG = 'silk'
+TAG = 'sbom'
 
 
 class CustomCommand(BuiltInCommand):
@@ -67,7 +67,7 @@ class CheckAugmentedSBOM(Function):
                 'branch_name',
                 'KONDUKTO_TOKEN',
             ],
-            script='.evergreen/scripts/silk-check-augmented-sbom.sh',
+            script='.evergreen/scripts/sbom.sh',
         ),
     ]
 
@@ -85,7 +85,7 @@ class UploadAugmentedSBOM(Function):
             display_name='Augmented SBOM (Old)',
             local_file='mongo-cxx-driver/old.json',
             permissions='public-read',
-            remote_file='mongo-cxx-driver/${build_variant}/${revision}/${version_id}/${build_id}/silk/old.json',
+            remote_file='mongo-cxx-driver/${build_variant}/${revision}/${version_id}/${build_id}/sbom/old.json',
         ),
         # The updated Augmented SBOM, ignoring version and timestamp fields.
         s3_put(
@@ -97,7 +97,7 @@ class UploadAugmentedSBOM(Function):
             display_name='Augmented SBOM (New)',
             local_file='mongo-cxx-driver/new.json',
             permissions='public-read',
-            remote_file='mongo-cxx-driver/${build_variant}/${revision}/${version_id}/${build_id}/silk/new.json',
+            remote_file='mongo-cxx-driver/${build_variant}/${revision}/${version_id}/${build_id}/sbom/new.json',
         ),
         # The difference between the current and updated Augmented SBOM.
         s3_put(
@@ -109,7 +109,7 @@ class UploadAugmentedSBOM(Function):
             display_name='Augmented SBOM (Diff)',
             local_file='mongo-cxx-driver/diff.txt',
             permissions='public-read',
-            remote_file='mongo-cxx-driver/${build_variant}/${revision}/${version_id}/${build_id}/silk/diff.txt',
+            remote_file='mongo-cxx-driver/${build_variant}/${revision}/${version_id}/${build_id}/sbom/diff.txt',
         ),
         # The updated Augmented SBOM without any filtering or modifications.
         s3_put(
@@ -121,7 +121,7 @@ class UploadAugmentedSBOM(Function):
             display_name='Augmented SBOM (Updated)',
             local_file='mongo-cxx-driver/etc/augmented.sbom.json.new',
             permissions='public-read',
-            remote_file='mongo-cxx-driver/${build_variant}/${revision}/${version_id}/${build_id}/silk/augmented.sbom.json',
+            remote_file='mongo-cxx-driver/${build_variant}/${revision}/${version_id}/${build_id}/sbom/augmented.sbom.json',
         ),
     ]
 
@@ -138,7 +138,7 @@ def tasks():
     distro = find_small_distro(distro_name)
 
     yield EvgTask(
-        name='silk-check-augmented-sbom',
+        name='sbom',
         tags=[TAG, distro_name],
         run_on=distro.name,
         commands=[
@@ -153,7 +153,7 @@ def variants():
     return [
         BuildVariant(
             name=TAG,
-            display_name='Silk',
+            display_name='SBOM',
             tasks=[EvgTaskRef(name=f'.{TAG}')],
         ),
     ]

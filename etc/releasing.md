@@ -138,13 +138,13 @@ podman run -it --rm -v "$(pwd):/pwd" silkbomb:2.0 \
   update --refresh --no-update-sbom-version -p "/pwd/etc/purls.txt" -i "/pwd/etc/cyclonedx.sbom.json" -o "/pwd/etc/cyclonedx.sbom.json"
 ```
 
-Run a patch build which executes the `silk-check-augmented-sbom` task and, if necessary (when the task fails), download the "Augmented SBOM (Updated)" file as `etc/augmented.sbom.json` (see below).
+Run a patch build which executes the `sbom` task and, if necessary (when the task fails), download the "Augmented SBOM (Updated)" file as `etc/augmented.sbom.json` (see below).
 
 Commit the updated SBOM documents if there are any substantial changes.
 
 ### Augmented SBOM
 
-Ensure the `silk-check-augmented-sbom` task is passing on Evergreen for the relevant release branch.
+Ensure the `sbom` task is passing on Evergreen for the relevant release branch.
 
 Review the contents of the new Augmented SBOM and ensure any new or known vulnerabilities with severity "Medium" or greater have a corresponding JIRA ticket (CXX or VULN) that is scheduled to be resolved within its remediation timeline.
 
@@ -152,7 +152,7 @@ Update the [SSDLC Report spreadsheet](https://docs.google.com/spreadsheets/d/1sp
 
 Update `etc/third_party_vulnerabilities.md` with any updates to new or known vulnerabilities for third party dependencies that have not yet been fixed by the upcoming release.
 
-Download the "Augmented SBOM (Updated)" file from the latest EVG commit build in the `silk-sbom-check-augmented` task and commit it into the repo as `etc/augmented.sbom.json` (even if the only notable change is the timestamp field).
+Download the "Augmented SBOM (Updated)" file from the latest EVG commit build in the `sbom` task and commit it into the repo as `etc/augmented.sbom.json` (even if the only notable change is the timestamp field).
 
 ### Check Snyk
 

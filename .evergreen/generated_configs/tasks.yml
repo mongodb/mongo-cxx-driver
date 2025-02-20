@@ -17195,6 +17195,13 @@ tasks:
           example_projects_cxx: clang++
           example_projects_cxxflags: -fsanitize=undefined -fno-sanitize-recover=undefined -fno-omit-frame-pointer
           example_projects_ldflags: -fsanitize=undefined -fno-sanitize-recover=undefined -static-libsan
+  - name: sbom
+    run_on: rhel80-small
+    tags: [sbom, rhel80]
+    commands:
+      - func: setup
+      - func: check augmented sbom
+      - func: upload augmented sbom
   - name: scan-build-rhel80-std11-default
     run_on: rhel80-large
     tags: [scan-build, rhel80, std11]
@@ -17258,13 +17265,6 @@ tasks:
           BSONCXX_POLYFILL: impls
           CXX_STANDARD: 17
       - func: upload scan artifacts
-  - name: silk-check-augmented-sbom
-    run_on: rhel80-small
-    tags: [silk, rhel80]
-    commands:
-      - func: setup
-      - func: check augmented sbom
-      - func: upload augmented sbom
   - name: test_mongohouse
     run_on: ubuntu2204-large
     tags: [mongohouse, ubuntu2204]
