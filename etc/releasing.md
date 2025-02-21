@@ -138,7 +138,12 @@ podman run -it --rm -v "$(pwd):/pwd" artifactory.corp.mongodb.com/release-tools-
   update --refresh --no-update-sbom-version -p "/pwd/etc/purls.txt" -i "/pwd/etc/cyclonedx.sbom.json" -o "/pwd/etc/cyclonedx.sbom.json"
 ```
 
-Run a patch build which executes the `sbom` task and, if necessary (when the task fails), download the "Augmented SBOM (Updated)" file as `etc/augmented.sbom.json` (see below).
+Run a patch build which executes the `sbom` task and, if necessary (when the task fails), download the "Augmented SBOM (Updated)" file as `etc/augmented.sbom.json` (see below). Evergreen CLI may be used to schedule only the `sbom` task:
+
+```bash
+# Ensure `-p` matches the correct Evergreen project for the current branch!
+evergreen patch -y -p mongo-cxx-driver -t all -v sbom -f
+```
 
 Commit the updated SBOM documents if there are any substantial changes.
 
@@ -457,7 +462,24 @@ git push upstream releases/vX.Y
 
 The new branch should be continuously tested on Evergreen. Update the "Display Name" and "Branch Name" of the [mongo-cxx-driver-latest-release Evergreen project](https://spruce.mongodb.com/project/mongo-cxx-driver-latest-release/settings/general) to refer to the new release branch.
 
-Update the `etc/cyclonedx.sbom.json` file with a new unique serial number for the next upcoming patch release (e.g. for `1.2.4` following the release of `1.2.3`). This can be done by running the `silkbomb:2.0 update` command described above in [SBOM Lite](#sbom-lite) without the `-i` flag, or by manually inserting the result of running the `uuidgen` CLI command. Ensure any existing `copyright`, `licenses`, and other manually inserted or modified fields are preserved during the update. Update `etc/augmented.sbom.json` as described above in [Augmented SBOM](#augmented-sbom).
+Update `etc/cyclonedx.sbom.json` with a new unique serial number for the next upcoming patch release (e.g. for `1.3.1` following the release of `1.3.0`):
+
+```bash
+# Artifactory credentials.
+. $HOME/.secrets/artifactory-creds.txt
+
+# Output: "Login succeeded!"
+podman login --password-stdin --username "${ARTIFACTORY_USER:?}" artifactory.corp.mongodb.com <<<"${ARTIFACTORY_PASSWORD:?}"
+
+# Ensure latest version of SilkBomb is being used.
+podman pull artifactory.corp.mongodb.com/release-tools-container-registry-public-local/silkbomb:2.0
+
+# Output: "... writing sbom to file"
+podman run -it --rm -v "$(pwd):/pwd" artifactory.corp.mongodb.com/release-tools-container-registry-public-local/silkbomb:2.0 \
+  update --refresh --generate-new-serial-number -p "/pwd/etc/purls.txt" -i "/pwd/etc/cyclonedx.sbom.json" -o "/pwd/etc/cyclonedx.sbom.json"
+```
+
+Update `etc/augmented.sbom.json` by running a patch build which executes the `sbom` task as described above in [SBOM Lite](#sbom-lite).
 
 Commit and push these changes to the `releases/vX.Y` branch.
 
@@ -523,7 +545,24 @@ In `etc/apidocmenu.md`, update the list of versions under "Driver Documentation 
 
 In `README.md`, sync the "Driver Development Status" table with the updated table from `etc/apidocmenu.md`.
 
-Update the `etc/cyclonedx.sbom.json` file with a new unique serial number for the next upcoming non-patch release (e.g. for `1.3.0` or `2.0.0` following the release of `1.2.3`). This can be done by running the `silkbomb:2.0 update` command described above in [SBOM Lite](#sbom-lite) without the `-i` flag, or by manually inserting the result of running the `uuidgen` CLI command. Ensure any existing `copyright`, `licenses`, and other manually inserted or modified fields are preserved during the update. Update `etc/augmented.sbom.json` as described above in [Augmented SBOM](#augmented-sbom).
+Update `etc/cyclonedx.sbom.json` with a new unique serial number for the next upcoming patch release (e.g. for `1.4.0` following the release of `1.3.0`):
+
+```bash
+# Artifactory credentials.
+. $HOME/.secrets/artifactory-creds.txt
+
+# Output: "Login succeeded!"
+podman login --password-stdin --username "${ARTIFACTORY_USER:?}" artifactory.corp.mongodb.com <<<"${ARTIFACTORY_PASSWORD:?}"
+
+# Ensure latest version of SilkBomb is being used.
+podman pull artifactory.corp.mongodb.com/release-tools-container-registry-public-local/silkbomb:2.0
+
+# Output: "... writing sbom to file"
+podman run -it --rm -v "$(pwd):/pwd" artifactory.corp.mongodb.com/release-tools-container-registry-public-local/silkbomb:2.0 \
+  update --refresh --generate-new-serial-number -p "/pwd/etc/purls.txt" -i "/pwd/etc/cyclonedx.sbom.json" -o "/pwd/etc/cyclonedx.sbom.json"
+```
+
+Update `etc/augmented.sbom.json` by running a patch build which executes the `sbom` task as described above in [SBOM Lite](#sbom-lite).
 
 Commit these changes to the `post-release-changes` branch:
 
