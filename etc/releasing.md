@@ -138,7 +138,7 @@ podman run -it --rm -v "$(pwd):/pwd" artifactory.corp.mongodb.com/release-tools-
   update --refresh --no-update-sbom-version -p "/pwd/etc/purls.txt" -i "/pwd/etc/cyclonedx.sbom.json" -o "/pwd/etc/cyclonedx.sbom.json"
 ```
 
-Run a patch build which executes the `sbom` task and, if necessary (when the task fails), download the "Augmented SBOM (Updated)" file as `etc/augmented.sbom.json` (see below). Evergreen CLI may be used to schedule only the `sbom` task:
+Run a patch build which executes the `sbom` task and download the "Augmented SBOM (Updated)" file as `etc/augmented.sbom.json`. Evergreen CLI may be used to schedule only the `sbom` task:
 
 ```bash
 # Ensure `-p` matches the correct Evergreen project for the current branch!
