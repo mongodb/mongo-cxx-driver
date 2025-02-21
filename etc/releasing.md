@@ -545,7 +545,7 @@ In `etc/apidocmenu.md`, update the list of versions under "Driver Documentation 
 
 In `README.md`, sync the "Driver Development Status" table with the updated table from `etc/apidocmenu.md`.
 
-Update `etc/cyclonedx.sbom.json` with a new unique serial number for the next upcoming patch release (e.g. for `1.4.0` following the release of `1.3.0`):
+Update `etc/cyclonedx.sbom.json` with a new unique serial number for the next upcoming non-patch release (e.g. for `1.4.0` following the release of `1.3.0`):
 
 ```bash
 # Artifactory credentials.
