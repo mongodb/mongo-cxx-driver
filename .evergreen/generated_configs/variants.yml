@@ -88,6 +88,10 @@ buildvariants:
           - .sanitizers
     tasks:
       - name: .sanitizers
+  - name: sbom
+    display_name: SBOM
+    tasks:
+      - name: .sbom
   - name: scan-build-matrix
     display_name: scan-build-matrix
     display_tasks:
@@ -96,10 +100,6 @@ buildvariants:
           - .scan-build
     tasks:
       - name: .scan-build
-  - name: silk
-    display_name: Silk
-    tasks:
-      - name: .silk
   - name: uninstall-check
     display_name: Uninstall Check
     display_tasks:
