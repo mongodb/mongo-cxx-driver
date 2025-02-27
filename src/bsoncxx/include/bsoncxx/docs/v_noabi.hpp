@@ -138,7 +138,7 @@
 
 ///
 /// @namespace bsoncxx::v_noabi::types
-/// @copydoc bsoncxx::types
+/// Declares entities representing BSON value types.
 ///
 /// @see
 /// - @ref bsoncxx::v_noabi::types::bson_value
