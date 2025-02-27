@@ -46,12 +46,10 @@ def ls_distro(name, **kwargs):
         Distro(name=f'{name}-small', size='small', **kwargs),
     ]
 
-# See: https://evergreen.mongodb.com/distros
-# pylint: disable=line-too-long
-#fmt: off
-DEBIAN_DISTROS = [] + \
-    ls_distro(name='debian12-latest', os='debian', os_type='linux', os_ver='latest') + \
-    []
+
+DEBIAN_DISTROS = [
+    *ls_distro(name='debian12-latest', os='debian', os_type='linux', os_ver='latest'),
+]
 
 MACOS_DISTROS = [
     Distro(name='macos-14', os='macos', os_type='macos', os_ver='14'),
@@ -61,52 +59,52 @@ MACOS_ARM64_DISTROS = [
     Distro(name='macos-14-arm64', os='macos', os_type='macos', os_ver='14', arch='arm64'),
 ]
 
-RHEL_DISTROS = [] + \
-    ls_distro(name='rhel80', os='rhel', os_type='linux', os_ver='8.0') + \
-    ls_distro(name='rhel95', os='rhel', os_type='linux', os_ver='9.5') + \
-    []
+RHEL_DISTROS = [
+    *ls_distro(name='rhel80', os='rhel', os_type='linux', os_ver='8.0'),
+    *ls_distro(name='rhel95', os='rhel', os_type='linux', os_ver='9.5'),
+]
 
-RHEL_ARM64_DISTROS = [] + \
-    ls_distro(name='rhel92-arm64', os='rhel', os_type='linux', os_ver='9.2', arch='arm64') + \
-    []
+RHEL_ARM64_DISTROS = [
+    *ls_distro(name='rhel92-arm64', os='rhel', os_type='linux', os_ver='9.2', arch='arm64'),
+]
 
-RHEL_POWER8_DISTROS = [] + \
-    ls_distro(name='rhel8-power', os='rhel', os_type='linux', os_ver='8', arch='power8') + \
-    []
+RHEL_POWER8_DISTROS = [
+    *ls_distro(name='rhel8-power', os='rhel', os_type='linux', os_ver='8', arch='power8'),
+]
 
-RHEL_ZSERIES_DISTROS = [] + \
-    ls_distro(name='rhel7-zseries', os='rhel', os_type='linux', os_ver='7', arch='zseries') + \
-    ls_distro(name='rhel8-zseries', os='rhel', os_type='linux', os_ver='8', arch='zseries') + \
-    []
+RHEL_ZSERIES_DISTROS = [
+    *ls_distro(name='rhel7-zseries', os='rhel', os_type='linux', os_ver='7', arch='zseries'),
+    *ls_distro(name='rhel8-zseries', os='rhel', os_type='linux', os_ver='8', arch='zseries'),
+]
 
-UBUNTU_DISTROS = [] + \
-    ls_distro(name='ubuntu2204', os='ubuntu', os_type='linux', os_ver='22.04') + \
-    []
+UBUNTU_DISTROS = [
+    *ls_distro(name='ubuntu2204', os='ubuntu', os_type='linux', os_ver='22.04'),
+]
 
-UBUNTU_ARM64_DISTROS = [] + \
-    ls_distro(name='ubuntu2004-arm64', os='ubuntu', os_type='linux', os_ver='20.04', arch='arm64') + \
-    ls_distro(name='ubuntu2204-arm64', os='ubuntu', os_type='linux', os_ver='22.04', arch='arm64') + \
-    []
+UBUNTU_ARM64_DISTROS = [
+    *ls_distro(name='ubuntu2004-arm64', os='ubuntu', os_type='linux', os_ver='20.04', arch='arm64'),
+    *ls_distro(name='ubuntu2204-arm64', os='ubuntu', os_type='linux', os_ver='22.04', arch='arm64'),
+]
 
-WINDOWS_DISTROS = [] + \
-    ls_distro(name='windows-64-vs2015', os='windows', os_type='windows', vs_ver='2015') + \
-    ls_distro(name='windows-vsCurrent', os='windows', os_type='windows', vs_ver='vsCurrent') + \
-    []
-#fmt: on
-# pylint: enable=line-too-long
+WINDOWS_DISTROS = [
+    *ls_distro(name='windows-64-vs2015', os='windows', os_type='windows', vs_ver='2015'),
+    *ls_distro(name='windows-vsCurrent', os='windows', os_type='windows', vs_ver='vsCurrent'),
+]
 
+# See: https://evergreen.mongodb.com/distros
 # Ensure no-arch distros are ordered before arch-specific distros.
-ALL_DISTROS = [] + \
-    DEBIAN_DISTROS + \
-    MACOS_DISTROS + \
-    MACOS_ARM64_DISTROS + \
-    RHEL_DISTROS + \
-    RHEL_ARM64_DISTROS + \
-    RHEL_POWER8_DISTROS + \
-    RHEL_ZSERIES_DISTROS + \
-    UBUNTU_DISTROS + \
-    UBUNTU_ARM64_DISTROS + \
-    WINDOWS_DISTROS
+ALL_DISTROS = [
+    *DEBIAN_DISTROS,
+    *MACOS_DISTROS,
+    *MACOS_ARM64_DISTROS,
+    *RHEL_DISTROS,
+    *RHEL_ARM64_DISTROS,
+    *RHEL_POWER8_DISTROS,
+    *RHEL_ZSERIES_DISTROS,
+    *UBUNTU_DISTROS,
+    *UBUNTU_ARM64_DISTROS,
+    *WINDOWS_DISTROS,
+]
 
 
 def find_distro(name) -> Distro:
