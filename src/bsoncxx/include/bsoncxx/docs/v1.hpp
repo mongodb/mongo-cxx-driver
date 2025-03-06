@@ -34,11 +34,6 @@
 ///
 
 ///
-/// @dir bsoncxx/v1/document
-/// Provides headers declaring entities in @ref bsoncxx::v1::document.
-///
-
-///
 /// @dir bsoncxx/v1/config
 /// Provides headers related to bsoncxx library configuration.
 ///
@@ -48,6 +43,11 @@
 /// Provides headers for internal use only.
 ///
 /// @warning For internal use only!
+///
+
+///
+/// @dir bsoncxx/v1/document
+/// Provides headers declaring entities in @ref bsoncxx::v1::document.
 ///
 
 ///
