@@ -21,6 +21,10 @@
 ///
 /// X-macro over the name and value of BSON types.
 ///
+/// @important The addition of new expansions to this X-macro ARE NOT considered an API breaking change.
+/// The modification or removal of existing expansions to this X-macro ARE considered an API breaking change.
+/// This X-macro MUST used in a manner that is compatible with these API compatibility guidelines!
+///
 /// @par "Example"
 /// ```cpp
 /// #define EXAMPLE(name, value) std::cout << (#name) << ": " << (value) << '\n';
@@ -63,6 +67,10 @@
 
 ///
 /// X-macro over the name and value of BSON binary subtypes.
+///
+/// @important The addition of new expansions to this X-macro ARE NOT considered an API breaking change.
+/// The modification or removal of existing expansions to this X-macro ARE considered an API breaking change.
+/// This X-macro MUST used in a manner that is compatible with these API compatibility guidelines!
 ///
 /// @par "Example"
 /// ```cpp
