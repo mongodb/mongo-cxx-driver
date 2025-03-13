@@ -23,7 +23,7 @@
 ///
 /// @important The addition of new expansions to this X-macro ARE NOT considered an API breaking change.
 /// The modification or removal of existing expansions to this X-macro ARE considered an API breaking change.
-/// This X-macro MUST used in a manner that is compatible with these API compatibility guidelines!
+/// This X-macro MUST be used in a manner that is compatible with these API compatibility guidelines!
 ///
 /// @par "Example"
 /// ```cpp
@@ -70,7 +70,7 @@
 ///
 /// @important The addition of new expansions to this X-macro ARE NOT considered an API breaking change.
 /// The modification or removal of existing expansions to this X-macro ARE considered an API breaking change.
-/// This X-macro MUST used in a manner that is compatible with these API compatibility guidelines!
+/// This X-macro MUST be used in a manner that is compatible with these API compatibility guidelines!
 ///
 /// @par "Example"
 /// ```cpp
