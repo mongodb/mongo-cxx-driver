@@ -153,11 +153,6 @@ if(1)
 /// @warning For internal use only!
 ///
 
-// Doxygen `PREDEFINED` does not define the macro *in code* as required by `@def`.
-#if defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
-#define BSONCXX_ABI_EXPORT ...
-#endif
-
 ///
 /// @def BSONCXX_ABI_EXPORT
 /// @hideinitializer

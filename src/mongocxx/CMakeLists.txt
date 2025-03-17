@@ -121,11 +121,6 @@ if(1)
 
 #define MONGOCXX_ABI_EXPORT_CDECL(...) MONGOCXX_ABI_EXPORT __VA_ARGS__ MONGOCXX_ABI_CDECL
 
-// Doxygen `PREDEFINED` does not define the macro *in code* as required by `@def`.
-#if defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
-#define MONGOCXX_ABI_EXPORT ...
-#endif
-
 ///
 /// @file
 /// Provides macros to control the set of symbols exported in the ABI.
