@@ -27,7 +27,6 @@ set -o pipefail
 : "${USE_SANITIZER_ASAN:-}"
 : "${USE_SANITIZER_UBSAN:-}"
 : "${USE_STATIC_LIBS:-}"
-: "${UV_INSTALL_DIR:-}" # Not on windows-64-vs2015.
 
 mongoc_prefix="$(pwd)/../mongoc"
 echo "mongoc_prefix=${mongoc_prefix:?}"
@@ -82,14 +81,7 @@ darwin* | linux*)
 esac
 
 # Create a VERSION_CURRENT file in the build directory to include in the dist tarball.
-if [[ "${distro_id:?}" == windows-64-vs2015* ]]; then
-  # DEVPROD-13875: Python 3.9 and newer is not available on this distro.
-  # astral-sh/uv/issues/10231: Astral UV is not able to run properly on this OS+platform either.
-  # Manually use the Python 3.8 binary instead.
-  PATH="C:/python/Python38:${PATH:-}" python.exe ./etc/calc_release_version.py >./build/VERSION_CURRENT
-else
-  PATH="${UV_INSTALL_DIR:?}:${PATH:-}" uv run --frozen python ./etc/calc_release_version.py >./build/VERSION_CURRENT
-fi
+PATH="${UV_INSTALL_DIR:?}:${PATH:-}" uv run --frozen python ./etc/calc_release_version.py >./build/VERSION_CURRENT
 cd build
 
 cmake_flags=(

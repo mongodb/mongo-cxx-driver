@@ -30,7 +30,6 @@ MATRIX = [
     ('macos-14-arm64', None, ['Debug', 'Release'], ['shared', 'static'], [11, 17]),
     ('macos-14',       None, ['Debug', 'Release'], ['shared', 'static'], [11, 17]),
 
-    ('windows-64-vs2015', 'vs2015x64', ['Debug', 'Release'], ['shared', 'static'],  [11,           ]), # CXX-3215
     ('windows-vsCurrent', 'vs2017x64', ['Debug', 'Release'], ['shared', 'static'],  [11, 17,       ]),
     ('windows-vsCurrent', 'vs2019x64', ['Debug', 'Release'], ['shared', 'static'],  [11, 17, 20,   ]),
     ('windows-vsCurrent', 'vs2022x64', ['Debug', 'Release'], ['shared', 'static'],  [11, 17, 20, 23]),
@@ -76,10 +75,7 @@ def tasks():
             commands += [
                 Setup.call(),
                 InstallCDriver.call(),
-            ] + (
-                # DEVPROD-13875 + astral-sh/uv/issues/10231.
-                [] if "vs2015" in distro_name else [InstallUV.call()]
-            ) + [
+                InstallUV.call(),
                 Compile.call(
                     build_type=build_type,
                     compiler=compiler,
