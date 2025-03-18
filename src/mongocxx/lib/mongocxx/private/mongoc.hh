@@ -326,12 +326,16 @@ BSONCXX_PRIVATE_WARNINGS_POP();
     X(read_concern_set_level)                                             \
     X(read_prefs_copy)                                                    \
     X(read_prefs_destroy)                                                 \
-    X(read_prefs_get_hedge)                                               \
+    BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_BEGIN                           \
+    X(read_prefs_get_hedge) /* CXX-3241 */                                \
+    BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_END                             \
     X(read_prefs_get_max_staleness_seconds)                               \
     X(read_prefs_get_mode)                                                \
     X(read_prefs_get_tags)                                                \
     X(read_prefs_new)                                                     \
-    X(read_prefs_set_hedge)                                               \
+    BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_BEGIN                           \
+    X(read_prefs_set_hedge) /* CXX-3241 */                                \
+    BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_END                             \
     X(read_prefs_set_max_staleness_seconds)                               \
     X(read_prefs_set_mode)                                                \
     X(read_prefs_set_tags)                                                \
