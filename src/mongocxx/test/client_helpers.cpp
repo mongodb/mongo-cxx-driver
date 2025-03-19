@@ -55,18 +55,27 @@ using bsoncxx::builder::basic::make_document;
 
 namespace {
 // These frequently used network calls are cached to avoid bottlenecks during tests.
-document::value get_is_master(client const& client) {
-    static auto reply = client["admin"].run_command(make_document(kvp("isMaster", 1)));
+document::value get_is_master() {
+    static auto reply = []() {
+        auto client = mongocxx::client(mongocxx::uri());
+        return client["admin"].run_command(make_document(kvp("isMaster", 1)));
+    }();
     return reply;
 }
 
-document::value get_server_status(client const& client) {
-    static auto status = client["admin"].run_command(make_document(kvp("serverStatus", 1)));
+document::value get_server_status() {
+    static auto status = []() {
+        auto client = mongocxx::client(mongocxx::uri());
+        return client["admin"].run_command(make_document(kvp("serverStatus", 1)));
+    }();
     return status;
 }
 
-bsoncxx::stdx::optional<document::value> get_shards(client const& client) {
-    static auto shards = client["config"]["shards"].find_one({});
+bsoncxx::stdx::optional<document::value> get_shards() {
+    static auto shards = []() {
+        auto client = mongocxx::client(mongocxx::uri());
+        return client["config"]["shards"].find_one({});
+    }();
     return (shards) ? shards.value() : bsoncxx::stdx::optional<document::value>{};
 }
 } // namespace
@@ -221,8 +230,8 @@ std::int32_t compare_versions(std::string version1, std::string version2) {
     return 0;
 }
 
-bool newer_than(client const& client, std::string version) {
-    auto server_version = get_server_version(client);
+bool newer_than(std::string version) {
+    auto server_version = get_server_version();
     return (compare_versions(server_version, version) >= 0);
 }
 
@@ -248,8 +257,8 @@ options::client add_test_server_api(options::client opts) {
     return opts;
 }
 
-std::int32_t get_max_wire_version(client const& client) {
-    auto reply = get_is_master(client);
+std::int32_t get_max_wire_version() {
+    auto reply = get_is_master();
     auto max_wire_version = reply.view()["maxWireVersion"];
     if (!max_wire_version) {
         // If wire version is not available (i.e. server version too old), it is assumed to be
@@ -262,8 +271,8 @@ std::int32_t get_max_wire_version(client const& client) {
     return max_wire_version.get_int32().value;
 }
 
-std::string get_server_version(client const& client) {
-    auto output = get_server_status(client);
+std::string get_server_version() {
+    auto output = get_server_status();
     return bsoncxx::string::to_string(output.view()["version"].get_string().value);
 }
 
@@ -272,8 +281,8 @@ document::value get_server_params(client const& client) {
     return reply;
 }
 
-std::string replica_set_name(client const& client) {
-    auto reply = get_is_master(client);
+std::string replica_set_name() {
+    auto reply = get_is_master();
     auto name = reply.view()["setName"];
     if (name) {
         return bsoncxx::string::to_string(name.get_string().value);
@@ -286,8 +295,8 @@ static bool is_replica_set(document::view reply) {
     return static_cast<bool>(reply["setName"]);
 }
 
-bool is_replica_set(client const& client) {
-    return is_replica_set(get_is_master(client));
+bool is_replica_set() {
+    return is_replica_set(get_is_master());
 }
 
 static bool is_sharded_cluster(document::view reply) {
@@ -300,19 +309,19 @@ static bool is_sharded_cluster(document::view reply) {
     return msg.get_string().value == "isdbgrid";
 }
 
-bool is_sharded_cluster(client const& client) {
-    return is_sharded_cluster(get_is_master(client));
+bool is_sharded_cluster() {
+    return is_sharded_cluster(get_is_master());
 }
 
-std::string get_hosts(client const& client) {
-    auto shards = get_shards(client);
+std::string get_hosts() {
+    auto shards = get_shards();
     if (shards)
         return string::to_string(shards->view()["host"].get_string().value);
     return "";
 }
 
-std::string get_topology(client const& client) {
-    auto const reply = get_is_master(client);
+std::string get_topology() {
+    auto const reply = get_is_master();
 
     if (is_replica_set(reply)) {
         return "replicaset";
@@ -528,8 +537,8 @@ void check_outcome_collection(mongocxx::collection* coll, bsoncxx::document::vie
     REQUIRE(begin(actual) == end(actual));
 }
 
-bool server_has_sessions_impl(client const& conn) {
-    auto result = get_is_master(conn);
+bool server_has_sessions_impl() {
+    auto result = get_is_master();
     auto result_view = result.view();
 
     if (result_view["logicalSessionTimeoutMinutes"]) {
