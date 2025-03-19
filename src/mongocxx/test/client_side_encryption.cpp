@@ -342,7 +342,7 @@ TEST_CASE("Datakey and double encryption", "[client_side_encryption]") {
 
     mongocxx::client setup_client{uri{}, test_util::add_test_server_api(client_opts)};
 
-    if (test_util::get_max_wire_version(setup_client) < 8) {
+    if (test_util::get_max_wire_version() < 8) {
         // Automatic encryption requires wire version 8.
         SKIP("max wire version is < 8");
     }
@@ -578,7 +578,7 @@ TEST_CASE("External key vault", "[client_side_encryption]") {
         test_util::add_test_server_api(),
     };
 
-    if (test_util::get_max_wire_version(setup_client) < 8) {
+    if (test_util::get_max_wire_version() < 8) {
         // Automatic encryption requires wire version 8.
         SKIP("max wire version is < 8");
     }
@@ -598,7 +598,7 @@ TEST_CASE("BSON size limits and batch splitting", "[client_side_encryption]") {
         test_util::add_test_server_api(),
     };
 
-    if (test_util::get_max_wire_version(client) < 8) {
+    if (test_util::get_max_wire_version() < 8) {
         // Automatic encryption requires wire version 8.
         SKIP("max wire version is < 8");
     }
@@ -756,7 +756,7 @@ TEST_CASE("Views are prohibited", "[client_side_encryption]") {
         test_util::add_test_server_api(),
     };
 
-    if (test_util::get_max_wire_version(client) < 8) {
+    if (test_util::get_max_wire_version() < 8) {
         // Automatic encryption requires wire version 8.
         SKIP("max wire version is < 8");
     }
@@ -1096,7 +1096,7 @@ TEST_CASE("Corpus", "[client_side_encryption]") {
         test_util::add_test_server_api(),
     };
 
-    if (test_util::get_max_wire_version(setup_client) < 8) {
+    if (test_util::get_max_wire_version() < 8) {
         // Automatic encryption requires wire version 8.
         SKIP("max wire version is < 8");
     }
@@ -1216,7 +1216,7 @@ TEST_CASE("Custom endpoint", "[client_side_encryption]") {
         test_util::add_test_server_api(),
     };
 
-    if (test_util::get_max_wire_version(setup_client) < 8) {
+    if (test_util::get_max_wire_version() < 8) {
         // Automatic encryption requires wire version 8.
         SKIP("max wire version is < 8");
     }
@@ -1565,7 +1565,7 @@ TEST_CASE("Bypass spawning mongocryptd", "[client_side_encryption]") {
         test_util::add_test_server_api(),
     };
 
-    if (test_util::get_max_wire_version(setup_client) < 8) {
+    if (test_util::get_max_wire_version() < 8) {
         // Automatic encryption requires wire version 8.
         SKIP("max wire version is < 8");
     }
@@ -1708,7 +1708,7 @@ TEST_CASE("KMS TLS expired certificate", "[client_side_encryption]") {
         SKIP("KMS TLS tests disabled (BUILD-14068)");
     }
 
-    if (test_util::get_max_wire_version(setup_client) < 8) {
+    if (test_util::get_max_wire_version() < 8) {
         // Automatic encryption requires wire version 8.
         SKIP("max wire version is < 8");
     }
@@ -1764,7 +1764,7 @@ TEST_CASE("KMS TLS wrong host certificate", "[client_side_encryption]") {
         SKIP("KMS TLS tests disabled (BUILD-14068)");
     }
 
-    if (test_util::get_max_wire_version(setup_client) < 8) {
+    if (test_util::get_max_wire_version() < 8) {
         // Automatic encryption requires wire version 8.
         SKIP("max wire version is < 8");
     }
@@ -1873,7 +1873,7 @@ TEST_CASE("KMS TLS Options Tests", "[client_side_encryption][!mayfail]") {
         SKIP("KMS TLS tests disabled (BUILD-14068)");
     }
 
-    if (test_util::get_max_wire_version(setup_client) < 8) {
+    if (test_util::get_max_wire_version() < 8) {
         // Automatic encryption requires wire version 8.
         SKIP("max wire version is < 8");
     }
@@ -2125,11 +2125,11 @@ TEST_CASE("Explicit Encryption", "[client_side_encryption]") {
         test_util::add_test_server_api(),
     };
 
-    if (!test_util::newer_than(conn, "7.0")) {
+    if (!test_util::newer_than("7.0")) {
         SKIP("MongoDB server 7.0 or newer required");
     }
 
-    if (test_util::get_topology(conn) == "single") {
+    if (test_util::get_topology() == "single") {
         SKIP("must not run against a standalone server");
     }
 
@@ -2425,11 +2425,11 @@ TEST_CASE("Create Encrypted Collection", "[client_side_encryption]") {
 
     mongocxx::client conn{mongocxx::uri{}, test_util::add_test_server_api()};
 
-    if (!test_util::newer_than(conn, "7.0")) {
+    if (!test_util::newer_than("7.0")) {
         SKIP("Explicit Encryption tests require MongoDB server 7.0+.");
     }
 
-    if (test_util::get_topology(conn) == "single") {
+    if (test_util::get_topology() == "single") {
         SKIP("Explicit Encryption tests must not run against a standalone.");
     }
 
@@ -2554,7 +2554,7 @@ TEST_CASE("Unique Index on keyAltNames", "[client_side_encryption]") {
 
     CLIENT_SIDE_ENCRYPTION_ENABLED_OR_SKIP();
 
-    if (!test_util::newer_than(uri{}, "4.2")) {
+    if (!test_util::newer_than("4.2")) {
         SKIP("requires MongoDB server 4.2+");
     }
 
@@ -2692,7 +2692,7 @@ TEST_CASE("Custom Key Material Test", "[client_side_encryption]") {
 
     CLIENT_SIDE_ENCRYPTION_ENABLED_OR_SKIP();
 
-    if (!test_util::newer_than(uri{}, "4.2")) {
+    if (!test_util::newer_than("4.2")) {
         SKIP("MongoDB server 4.2 or newer required");
     }
 
@@ -3037,15 +3037,15 @@ TEST_CASE("Range Explicit Encryption", "[client_side_encryption]") {
     {
         auto client = mongocxx::client(mongocxx::uri(), test_util::add_test_server_api());
 
-        if (!test_util::newer_than(client, "8.0")) {
+        if (!test_util::newer_than("8.0")) {
             SKIP("MongoDB server 8.0 or newer required");
         }
 
-        if (test_util::get_topology(client) == "single") {
+        if (test_util::get_topology() == "single") {
             SKIP("must not run against a standalone server");
         }
 
-        is_replica_set = test_util::get_topology(client) == "replicaset";
+        is_replica_set = test_util::get_topology() == "replicaset";
     }
 
     RangeFieldType const field_types[] = {
@@ -3442,7 +3442,7 @@ TEST_CASE("Range Explicit Encryption applies defaults", "[client_side_encryption
         test_util::add_test_server_api(),
     };
 
-    if (!test_util::newer_than(key_vault_client, "8.0")) {
+    if (!test_util::newer_than("8.0")) {
         SKIP("MongoDB server 8.0 or newer required");
     }
 

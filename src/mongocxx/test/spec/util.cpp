@@ -136,9 +136,9 @@ bool check_if_skip_spec_test_impl(client const& client, document::view test, std
         }
     }
 
-    auto const server_version = test_util::get_server_version(client);
+    auto const server_version = test_util::get_server_version();
 
-    auto const topology = test_util::get_topology(client);
+    auto const topology = test_util::get_topology();
 
     if (test["ignore_if_server_version_greater_than"]) {
         auto const max_server_version =
@@ -337,7 +337,7 @@ void set_up_collection(
 
     // When testing against a sharded cluster run a `distinct` command on the newly created
     // collection on all mongoses.
-    if (test_util::is_sharded_cluster(client)) {
+    if (test_util::is_sharded_cluster()) {
         auto s0 = mongocxx::client(uri("mongodb://localhost:27017"));
         auto s1 = mongocxx::client(uri("mongodb://localhost:27018"));
 
