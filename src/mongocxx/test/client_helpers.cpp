@@ -276,8 +276,13 @@ std::string get_server_version() {
     return bsoncxx::string::to_string(output.view()["version"].get_string().value);
 }
 
-document::value get_server_params(client const& client) {
-    auto reply = client["admin"].run_command(make_document(kvp("getParameter", "*")));
+document::value get_server_params() {
+    // Cache reply.
+    static auto reply = []() {
+        auto client = mongocxx::client(mongocxx::uri());
+        return client["admin"].run_command(make_document(kvp("getParameter", "*")));
+    }();
+
     return reply;
 }
 

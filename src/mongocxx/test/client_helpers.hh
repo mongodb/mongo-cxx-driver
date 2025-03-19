@@ -90,9 +90,9 @@ std::int32_t get_max_wire_version();
 std::string get_server_version();
 
 ///
-/// Determines the setting of all server parameters by running "getParameter, *".
+/// Determines the setting of all server parameters by running "getParameter, *" with the default client.
 ///
-bsoncxx::document::value get_server_params(client const& client = {uri{}, add_test_server_api()});
+bsoncxx::document::value get_server_params();
 
 ///
 /// Returns the replica set name or an empty string using the default client.
