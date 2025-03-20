@@ -14,6 +14,7 @@
 
 #include <bsoncxx/v1/detail/macros.hpp>
 
+#include <algorithm>
 #include <array>
 
 #include <bsoncxx/builder/basic/document.hpp>
