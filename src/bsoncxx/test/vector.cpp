@@ -152,25 +152,18 @@ void iterator_operations(
     std::sort(begin, end);
     std::for_each(begin, end, [&](auto const& value) { REQUIRE(value == element_unit); });
 
-    BSONCXX_PRIVATE_WARNINGS_PUSH();
-    BSONCXX_PRIVATE_WARNINGS_DISABLE(GCC("-Wconversion"));
+    *(end - 1) = Element{0};
+    std::sort(begin, end);
+    REQUIRE(*begin == Element{0});
+    std::for_each(begin + 1, end, [&](auto const& value) { REQUIRE(value == element_unit); });
 
-    std::for_each(begin, end, [&](auto&& value) { value -= element_unit; });
-    std::for_each(begin, end, [&](auto&& value) { value *= element_unit; });
-    std::for_each(begin, end, [&](auto&& value) { value /= element_unit; });
+    std::for_each(begin, end, [&](auto&& value) { value = Element{0}; });
     std::for_each(begin, end, [&](auto const& value) { REQUIRE(value != element_unit); });
     std::for_each(begin, end, [&](auto const& value) { REQUIRE(value < element_unit); });
     std::for_each(begin, end, [&](auto const& value) { REQUIRE(value <= element_unit); });
     std::for_each(begin, end, [&](auto const& value) { REQUIRE_FALSE(value == element_unit); });
     std::for_each(begin, end, [&](auto const& value) { REQUIRE_FALSE(value > element_unit); });
     std::for_each(begin, end, [&](auto const& value) { REQUIRE_FALSE(value >= element_unit); });
-
-    std::for_each(begin, end, [&](auto&& value) { value += element_unit; });
-    std::for_each(begin, end, [&](auto&& value) { value *= element_unit; });
-    std::for_each(begin, end, [&](auto&& value) { value /= element_unit; });
-    std::for_each(begin, end, [&](auto const& value) { REQUIRE(value == element_unit); });
-
-    BSONCXX_PRIVATE_WARNINGS_POP();
 }
 
 TEMPLATE_TEST_CASE("all vector view formats", "[bsoncxx::vector::view]", ALL_VECTOR_FORMATS) {

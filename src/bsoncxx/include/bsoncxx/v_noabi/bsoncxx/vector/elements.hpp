@@ -131,42 +131,17 @@ class packed_bit_element {
         return *this = value_type(v);
     }
 
-    /// Operator +=, emulating number reference behavior
-    packed_bit_element const& operator+=(value_type const& other) const noexcept {
-        return *this = *this + other;
-    }
-
-    /// Operator -=, emulating number reference behavior
-    packed_bit_element const& operator-=(value_type const& other) const noexcept {
-        return *this = *this - other;
-    }
-
-    /// Operator *=, emulating number reference behavior
-    packed_bit_element const& operator*=(value_type const& other) const noexcept {
-        return *this = *this && other; // Avoid int-in-bool-context warning
-    }
-
-    /// Operator /=, emulating number reference behavior
-    packed_bit_element const& operator/=(value_type const& other) const noexcept {
-        return *this = *this / other;
-    }
-
-    /// Operator %=, emulating number reference behavior
-    packed_bit_element const& operator%=(value_type const& other) const noexcept {
-        return *this = *this % other;
-    }
-
-    /// Operator ^=, emulating number reference behavior
+    /// Operator ^=, emulating bool reference behavior
     packed_bit_element const& operator^=(value_type const& other) const noexcept {
         return *this = *this ^ other;
     }
 
-    /// Operator &=, emulating number reference behavior
+    /// Operator &=, emulating bool reference behavior
     packed_bit_element const& operator&=(value_type const& other) const noexcept {
         return *this = *this & other;
     }
 
-    /// Operator |=, emulating number reference behavior
+    /// Operator |=, emulating bool reference behavior
     packed_bit_element const& operator|=(value_type const& other) const noexcept {
         return *this = *this | other;
     }
@@ -254,6 +229,16 @@ class packed_bit_byte {
     /// Operator |=, emulating number reference behavior
     packed_bit_byte const& operator|=(std::uint8_t const& other) const noexcept {
         return *this = *this | other;
+    }
+
+    /// Operator <<=, emulating number reference behavior
+    packed_bit_byte const& operator<<=(unsigned other) const noexcept {
+        return *this = *this << other;
+    }
+
+    /// Operator >>=, emulating number reference behavior
+    packed_bit_byte const& operator>>=(unsigned other) const noexcept {
+        return *this = *this >> other;
     }
 
     constexpr packed_bit_byte(packed_bit_byte const& other) : byte(other.byte), mask(other.mask) {}
