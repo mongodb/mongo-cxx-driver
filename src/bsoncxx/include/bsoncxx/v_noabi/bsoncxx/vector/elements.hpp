@@ -14,6 +14,10 @@
 
 #pragma once
 
+#ifndef _WIN32
+#include <sys/param.h> // Endian detection
+#endif
+
 #include <cstdint>
 #include <cstring>
 
@@ -41,9 +45,11 @@ class float32 {
     /// @brief Construct a packed little-endian value from a float input in the local byte order.
     /// @param value Floating point value to convert
     float32(float value) noexcept {
-#if defined(__BYTE_ORDER__) && defined(__ORDER_LITTLE_ENDIAN__) && (__BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__)
+#if (defined(__BYTE_ORDER__) && defined(__ORDER_LITTLE_ENDIAN__) && (__BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__)) || \
+    defined(__BYTE_ORDER) && defined(__LITTLE_ENDIAN) && (__BYTE_ORDER == __LITTLE_ENDIAN)
         std::memcpy(bytes, &value, sizeof value);
-#elif defined(__BYTE_ORDER__) && defined(__ORDER_BIG_ENDIAN__) && (__BYTE_ORDER__ == __ORDER_BIG_ENDIAN__)
+#elif (defined(__BYTE_ORDER__) && defined(__ORDER_BIG_ENDIAN__) && (__BYTE_ORDER__ == __ORDER_BIG_ENDIAN__)) || \
+    defined(__BYTE_ORDER) && defined(__BIG_ENDIAN) && (__BYTE_ORDER == __BIG_ENDIAN)
         std::uint32_t u32;
         std::memcpy(&u32, &value, sizeof value);
         u32 = bswap32(u32);
@@ -56,9 +62,11 @@ class float32 {
     /// Convert a packed little-endian floating point value back to the local byte order.
     operator float() const noexcept {
         float value;
-#if defined(__BYTE_ORDER__) && defined(__ORDER_LITTLE_ENDIAN__) && (__BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__)
+#if (defined(__BYTE_ORDER__) && defined(__ORDER_LITTLE_ENDIAN__) && (__BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__)) || \
+    defined(__BYTE_ORDER) && defined(__LITTLE_ENDIAN) && (__BYTE_ORDER == __LITTLE_ENDIAN)
         std::memcpy(&value, bytes, sizeof value);
-#elif defined(__BYTE_ORDER__) && defined(__ORDER_BIG_ENDIAN__) && (__BYTE_ORDER__ == __ORDER_BIG_ENDIAN__)
+#elif (defined(__BYTE_ORDER__) && defined(__ORDER_BIG_ENDIAN__) && (__BYTE_ORDER__ == __ORDER_BIG_ENDIAN__)) || \
+    defined(__BYTE_ORDER) && defined(__BIG_ENDIAN) && (__BYTE_ORDER == __BIG_ENDIAN)
         std::uint32_t u32;
         std::memcpy(&u32, bytes, sizeof value);
         u32 = bswap32(u32);
