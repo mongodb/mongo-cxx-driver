@@ -29,15 +29,13 @@
 
 using namespace mongocxx;
 
-static bool has_api_version_1(
-    mongocxx::client const& client = mongocxx::client(uri(), test_util::add_test_server_api())) {
+static bool has_api_version_1() {
     // API Version 1 was introduced in 5.0.
     return test_util::get_max_wire_version() >= 13;
 }
 
-static bool has_api_version_1_with_count(
-    mongocxx::client const& client = mongocxx::client(uri(), test_util::add_test_server_api())) {
-    if (!has_api_version_1(client)) {
+static bool has_api_version_1_with_count() {
+    if (!has_api_version_1()) {
         return false;
     }
 
