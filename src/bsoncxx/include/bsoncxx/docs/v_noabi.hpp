@@ -148,3 +148,23 @@
 /// @namespace bsoncxx::v_noabi::types::bson_value
 /// Declares entities representing any BSON value type.
 ///
+
+///
+/// @namespace bsoncxx::v_noabi::vector
+/// Declarations related to BSON Binary Vector (@ref bsoncxx::v_noabi::binary_sub_type::k_vector) items.
+///
+
+///
+/// @namespace bsoncxx::v_noabi::vector::iterators
+/// Special-purpose iterator types for bsoncxx::vector
+///
+
+///
+/// @namespace bsoncxx::v_noabi::vector::elements
+/// Special-purpose element reference types for bsoncxx::vector
+///
+
+///
+/// @namespace bsoncxx::v_noabi::vector::formats
+/// Each type here is a supported format for bsoncxx::vector
+///
