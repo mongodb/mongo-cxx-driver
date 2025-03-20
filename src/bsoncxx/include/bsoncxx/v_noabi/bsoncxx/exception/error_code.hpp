@@ -143,6 +143,12 @@ enum class error_code : std::int32_t {
     k_cannot_append_minkey,
     /// @}
 
+    /// A BSON Binary Vector failed to parse in the requested format.
+    k_invalid_vector,
+
+    /// A BSON Binary Vector would be too large to represent.
+    k_vector_too_large,
+
     // Add new constant string message to error_code.cpp as well!
 };
 
