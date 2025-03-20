@@ -117,7 +117,7 @@ class packed_bit_element {
     /// Set the value of the element referenced
     packed_bit_element const& operator=(value_type const& v) const {
         if (v == 0) {
-            *byte &= ~mask;
+            *byte &= std::uint8_t(~mask);
         } else {
             *byte |= mask;
         }
@@ -141,7 +141,7 @@ class packed_bit_element {
 
     /// Operator *=, emulating number reference behavior
     packed_bit_element const& operator*=(value_type const& other) const noexcept {
-        return *this = *this * other;
+        return *this = *this && other; // Avoid int-in-bool-context warning
     }
 
     /// Operator /=, emulating number reference behavior
@@ -216,17 +216,17 @@ class packed_bit_byte {
 
     /// Operator +=, emulating number reference behavior
     packed_bit_byte const& operator+=(std::uint8_t const& other) const noexcept {
-        return *this = *this + other;
+        return *this = std::uint8_t(*this + other);
     }
 
     /// Operator -=, emulating number reference behavior
     packed_bit_byte const& operator-=(std::uint8_t const& other) const noexcept {
-        return *this = *this - other;
+        return *this = std::uint8_t(*this - other);
     }
 
     /// Operator *=, emulating number reference behavior
     packed_bit_byte const& operator*=(std::uint8_t const& other) const noexcept {
-        return *this = *this * other;
+        return *this = std::uint8_t(*this * other);
     }
 
     /// Operator /=, emulating number reference behavior

@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <bsoncxx/v1/detail/macros.hpp>
+
 #include <array>
 
 #include <bsoncxx/builder/basic/document.hpp>
@@ -150,6 +152,9 @@ void iterator_operations(
     std::sort(begin, end);
     std::for_each(begin, end, [&](auto const& value) { REQUIRE(value == element_unit); });
 
+    BSONCXX_PRIVATE_WARNINGS_PUSH();
+    BSONCXX_PRIVATE_WARNINGS_DISABLE(GCC("-Wconversion"));
+
     std::for_each(begin, end, [&](auto&& value) { value -= element_unit; });
     std::for_each(begin, end, [&](auto&& value) { value *= element_unit; });
     std::for_each(begin, end, [&](auto&& value) { value /= element_unit; });
@@ -164,6 +169,8 @@ void iterator_operations(
     std::for_each(begin, end, [&](auto&& value) { value *= element_unit; });
     std::for_each(begin, end, [&](auto&& value) { value /= element_unit; });
     std::for_each(begin, end, [&](auto const& value) { REQUIRE(value == element_unit); });
+
+    BSONCXX_PRIVATE_WARNINGS_POP();
 }
 
 TEMPLATE_TEST_CASE("all vector view formats", "[bsoncxx::vector::view]", ALL_VECTOR_FORMATS) {
@@ -218,7 +225,7 @@ TEMPLATE_TEST_CASE("all vector view formats", "[bsoncxx::vector::view]", ALL_VEC
     SECTION("reject empty vectors with any modified header bits") {
         for (unsigned bit_index = 0; bit_index < 16; bit_index++) {
             auto bytes = test_format_specific::bytes_empty();
-            bytes[bit_index >> 3u] ^= 1u << (bit_index & 7u);
+            bytes[bit_index >> 3u] ^= std::uint8_t(1u << (bit_index & 7u));
             types::b_binary const binary{binary_sub_type::k_vector, bytes.size(), bytes.data()};
             REQUIRE_THROWS_WITH(
                 vector::view<TestType const>(binary), Catch::Matchers::ContainsSubstring("invalid BSON vector"));

@@ -106,7 +106,7 @@ class view {
     /// @brief Count the bytes of element data
     /// @return Size of the vector data, not including any headers
     constexpr byte_count_type byte_size() const noexcept {
-        return impl_data.size - sizeof(impl::header::bytes);
+        return impl_data.size - byte_count_type(sizeof(impl::header::bytes));
     }
 
     /// @brief Count the number of elements
