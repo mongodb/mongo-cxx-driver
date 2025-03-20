@@ -16,6 +16,7 @@
 
 #include <bsoncxx/builder/basic/array.hpp>
 #include <bsoncxx/builder/basic/document.hpp>
+#include <bsoncxx/builder/basic/sub_binary.hpp>
 #include <bsoncxx/builder/core.hpp>
 #include <bsoncxx/builder/list.hpp>
 #include <bsoncxx/builder/stream/array.hpp>
@@ -885,6 +886,69 @@ TEST_CASE("basic document builder works", "[bsoncxx::builder::basic]") {
         }
 
         viewable_eq_viewable(stream, basic);
+    }
+    SECTION("b_binary works") {
+        {
+            using namespace builder::stream;
+            stream << "foo"
+                   << types::b_binary{binary_sub_type::k_binary, 8, reinterpret_cast<uint8_t const*>("deadbeef")};
+        }
+        {
+            using namespace builder::basic;
+            basic.append(
+                kvp("hello", "world"),
+                kvp("foo",
+                    types::b_binary{binary_sub_type::k_binary, 8, reinterpret_cast<uint8_t const*>("deadbeef")}));
+        }
+        viewable_eq_viewable(stream, basic);
+    }
+    SECTION("sub_binary builder works") {
+        {
+            using namespace builder::stream;
+            stream << "foo"
+                   << types::b_binary{binary_sub_type::k_binary, 8, reinterpret_cast<uint8_t const*>("deadbeef")};
+        }
+        {
+            using namespace builder::basic;
+            basic.append(kvp("hello", "world"), kvp("foo", [](sub_binary sb) {
+                             memcpy(sb.allocate(binary_sub_type::k_binary, 8), "deadbeef", 8);
+                         }));
+        }
+        viewable_eq_viewable(stream, basic);
+    }
+    SECTION("sub_binary can allocate and fill a larger memory region") {
+        using namespace builder::basic;
+        uint32_t const size = 32 * 1024 * 1024;
+        basic.append(
+            kvp("foo", [](sub_binary sb) { memset(sb.allocate(binary_sub_type::k_binary, size), 0x55, size); }));
+        REQUIRE(basic.view().length() > size);
+    }
+    SECTION("sub_binary builder can allocate with length zero") {
+        {
+            using namespace builder::stream;
+            stream << "foo" << types::b_binary{binary_sub_type::k_binary, 0, reinterpret_cast<uint8_t const*>("")};
+        }
+        {
+            using namespace builder::basic;
+            basic.append(
+                kvp("hello", "world"), kvp("foo", [](sub_binary sb) { sb.allocate(binary_sub_type::k_binary, 0); }));
+        }
+        viewable_eq_viewable(stream, basic);
+    }
+    SECTION("sub_binary throws on double allocation") {
+        using namespace builder::basic;
+        REQUIRE_THROWS_AS(
+            basic.append(
+                kvp("foo",
+                    [](sub_binary sb) {
+                        sb.allocate(binary_sub_type::k_binary, 0);
+                        sb.allocate(binary_sub_type::k_binary, 0);
+                    })),
+            bsoncxx::exception);
+    }
+    SECTION("sub_binary throws on missing allocation") {
+        using namespace builder::basic;
+        REQUIRE_THROWS_AS(basic.append(kvp("foo", [](sub_binary) {})), bsoncxx::exception);
     }
 }
 
