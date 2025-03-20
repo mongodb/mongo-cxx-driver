@@ -920,7 +920,7 @@ TEST_CASE("basic document builder works", "[bsoncxx::builder::basic]") {
         using namespace builder::basic;
         uint32_t const size = 32 * 1024 * 1024;
         basic.append(
-            kvp("foo", [](sub_binary sb) { memset(sb.allocate(binary_sub_type::k_binary, size), 0x55, size); }));
+            kvp("foo", [&](sub_binary sb) { memset(sb.allocate(binary_sub_type::k_binary, size), 0x55, size); }));
         REQUIRE(basic.view().length() > size);
     }
     SECTION("sub_binary builder can allocate with length zero") {
