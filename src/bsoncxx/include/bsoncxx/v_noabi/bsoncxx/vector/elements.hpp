@@ -45,14 +45,15 @@ class float32 {
     /// @brief Construct a packed little-endian value from a float input in the local byte order.
     /// @param value Floating point value to convert
     float32(float value) noexcept {
-#if (defined(__BYTE_ORDER__) && defined(__ORDER_LITTLE_ENDIAN__) && (__BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__)) || \
+#if defined(_WIN32) ||                                                                                              \
+    (defined(__BYTE_ORDER__) && defined(__ORDER_LITTLE_ENDIAN__) && (__BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__)) || \
     defined(__BYTE_ORDER) && defined(__LITTLE_ENDIAN) && (__BYTE_ORDER == __LITTLE_ENDIAN)
         std::memcpy(bytes, &value, sizeof value);
 #elif (defined(__BYTE_ORDER__) && defined(__ORDER_BIG_ENDIAN__) && (__BYTE_ORDER__ == __ORDER_BIG_ENDIAN__)) || \
     defined(__BYTE_ORDER) && defined(__BIG_ENDIAN) && (__BYTE_ORDER == __BIG_ENDIAN)
         std::uint32_t u32;
         std::memcpy(&u32, &value, sizeof value);
-        u32 = bswap32(u32);
+        u32 = __builtin_bswap32(u32);
         std::memcpy(bytes, &u32, sizeof value);
 #else
 #error No implementation for storing 32-bit little endian unaligned float
@@ -62,14 +63,15 @@ class float32 {
     /// Convert a packed little-endian floating point value back to the local byte order.
     operator float() const noexcept {
         float value;
-#if (defined(__BYTE_ORDER__) && defined(__ORDER_LITTLE_ENDIAN__) && (__BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__)) || \
+#if defined(_WIN32) ||                                                                                              \
+    (defined(__BYTE_ORDER__) && defined(__ORDER_LITTLE_ENDIAN__) && (__BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__)) || \
     defined(__BYTE_ORDER) && defined(__LITTLE_ENDIAN) && (__BYTE_ORDER == __LITTLE_ENDIAN)
         std::memcpy(&value, bytes, sizeof value);
 #elif (defined(__BYTE_ORDER__) && defined(__ORDER_BIG_ENDIAN__) && (__BYTE_ORDER__ == __ORDER_BIG_ENDIAN__)) || \
     defined(__BYTE_ORDER) && defined(__BIG_ENDIAN) && (__BYTE_ORDER == __BIG_ENDIAN)
         std::uint32_t u32;
         std::memcpy(&u32, bytes, sizeof value);
-        u32 = bswap32(u32);
+        u32 = __builtin_bswap32(u32);
         std::memcpy(&value, &u32, sizeof value);
 #else
 #error No implementation for loading 32-bit little endian unaligned float
@@ -98,14 +100,6 @@ class float32 {
     }
 
    private:
-    static std::uint32_t bswap32(std::uint32_t value) {
-#ifndef _WIN32
-        return __builtin_bswap32(value);
-#else
-        return _byteswap_ulong(value);
-#endif
-    }
-
     std::uint8_t bytes[4];
 };
 
