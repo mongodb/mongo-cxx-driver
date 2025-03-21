@@ -40,6 +40,9 @@ tar xzf mongo-c-driver.tar.gz --directory "${mongoc_dir}" --strip-components=1
 # C Driver needs VERSION_CURRENT to compute BUILD_VERSION.
 if [[ -f "${mongoc_dir}/VERSION_CURRENT" ]]; then
   : # Use the existing VERSION_CURRENT bundled with the release tarball.
+
+  # CXX-3103: overwrite incompatible build versions to support the upcoming 2.0.0 release.
+  echo "1.31.0-pre" >|"${mongoc_dir}/VERSION_CURRENT"
 else
   # RegEx pattern to match SemVer strings. See https://semver.org/.
   declare -r semver_regex="^(?P<major>0|[1-9]\d*)\.(?P<minor>0|[1-9]\d*)\.(?P<patch>0|[1-9]\d*)(?:-(?P<prerelease>(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+(?P<buildmetadata>[0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$"
