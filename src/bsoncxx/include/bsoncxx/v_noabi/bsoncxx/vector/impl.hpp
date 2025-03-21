@@ -14,6 +14,8 @@
 
 #pragma once
 
+#include <cstdint>
+
 #include <bsoncxx/types.hpp>
 #include <bsoncxx/vector/elements.hpp>
 #include <bsoncxx/vector/formats.hpp>
@@ -72,12 +74,12 @@ struct format_traits<formats::f_int8> : format_traits_base {
     using iterator = std::int8_t*;
     using const_iterator = std::int8_t const*;
 
-    static BSONCXX_ABI_EXPORT_CDECL(uint32_t) length_for_append(std::size_t element_count);
+    static BSONCXX_ABI_EXPORT_CDECL(std::uint32_t) length_for_append(std::size_t element_count);
     static BSONCXX_ABI_EXPORT_CDECL(header)
-    write_frame(uint8_t* binary_data, uint32_t binary_data_length, std::size_t element_count);
+    write_frame(std::uint8_t* binary_data, std::uint32_t binary_data_length, std::size_t element_count);
     static BSONCXX_ABI_EXPORT_CDECL(view_data<formats::f_int8 const>) const_validate(types::b_binary const& binary);
 
-    static constexpr std::size_t element_count(uint32_t binary_data_length, header) noexcept {
+    static constexpr std::size_t element_count(std::uint32_t binary_data_length, header) noexcept {
         return binary_data_length - sizeof(header::bytes);
     }
 
@@ -100,12 +102,12 @@ struct format_traits<formats::f_float32> : format_traits_base {
     using iterator = elements::float32*;
     using const_iterator = elements::float32 const*;
 
-    static BSONCXX_ABI_EXPORT_CDECL(uint32_t) length_for_append(std::size_t element_count);
+    static BSONCXX_ABI_EXPORT_CDECL(std::uint32_t) length_for_append(std::size_t element_count);
     static BSONCXX_ABI_EXPORT_CDECL(header)
-    write_frame(uint8_t* binary_data, uint32_t binary_data_length, std::size_t element_count);
+    write_frame(std::uint8_t* binary_data, std::uint32_t binary_data_length, std::size_t element_count);
     static BSONCXX_ABI_EXPORT_CDECL(view_data<formats::f_float32 const>) const_validate(types::b_binary const& binary);
 
-    static constexpr std::size_t element_count(uint32_t binary_data_length, header) noexcept {
+    static constexpr std::size_t element_count(std::uint32_t binary_data_length, header) noexcept {
         return (binary_data_length - sizeof(header::bytes)) / sizeof(float);
     }
 
@@ -136,13 +138,13 @@ struct format_traits<formats::f_packed_bit> : format_traits_base {
     using byte_difference_type = byte_iterator::difference_type;
     using element_difference_type = iterator::difference_type;
 
-    static BSONCXX_ABI_EXPORT_CDECL(uint32_t) length_for_append(std::size_t element_count);
+    static BSONCXX_ABI_EXPORT_CDECL(std::uint32_t) length_for_append(std::size_t element_count);
     static BSONCXX_ABI_EXPORT_CDECL(header)
-    write_frame(uint8_t* binary_data, uint32_t binary_data_length, std::size_t element_count);
+    write_frame(std::uint8_t* binary_data, std::uint32_t binary_data_length, std::size_t element_count);
     static BSONCXX_ABI_EXPORT_CDECL(view_data<formats::f_packed_bit const>) const_validate(
         types::b_binary const& binary);
 
-    static constexpr std::size_t element_count(uint32_t binary_data_length, header hdr) noexcept {
+    static constexpr std::size_t element_count(std::uint32_t binary_data_length, header hdr) noexcept {
         return std::size_t(binary_data_length - sizeof(hdr.bytes)) * std::size_t(8u) - std::size_t(hdr.bytes[1] & 7u);
     }
 

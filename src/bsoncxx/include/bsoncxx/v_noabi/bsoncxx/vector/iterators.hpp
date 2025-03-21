@@ -15,6 +15,7 @@
 #pragma once
 
 #include <iterator>
+#include <cstdint>
 
 #include <bsoncxx/vector/elements.hpp>
 #include <bsoncxx/vector/formats.hpp>
@@ -158,11 +159,11 @@ class packed_bit_element {
     friend class view<formats::f_packed_bit>;
     friend class view<formats::f_packed_bit const>;
 
-    constexpr packed_bit_element(Iterator byte_iter, uint8_t bit_index = 0) noexcept
+    constexpr packed_bit_element(Iterator byte_iter, std::uint8_t bit_index = 0) noexcept
         : byte(byte_iter), bit(bit_index) {}
 
     Iterator byte;
-    uint8_t bit;
+    std::uint8_t bit;
 };
 
 /// @brief Iterator for bytes within a packed_bit vector
