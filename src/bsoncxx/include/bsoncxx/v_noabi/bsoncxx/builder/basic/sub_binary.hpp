@@ -14,6 +14,8 @@
 
 #pragma once
 
+#include <cstdint>
+
 #include <bsoncxx/builder/basic/sub_binary-fwd.hpp>
 
 #include <bsoncxx/builder/core.hpp>
@@ -46,7 +48,7 @@ class sub_binary {
     ///      The caller must overwrite every byte if the resulting BSON document is to be used.
     /// @throws bsoncxx::v_noabi::exception if this sub_binary has already allocated.
     ///         bsoncxx::v_noabi::exception if the binary fails to append due to the BSON size limit.
-    uint8_t* allocate(binary_sub_type sub_type, uint32_t length) {
+    std::uint8_t* allocate(binary_sub_type sub_type, std::uint32_t length) {
         return _core->append(sub_type, length);
     }
 
@@ -61,8 +63,8 @@ class sub_binary {
     template <typename Format, typename SFINAE = typename vector::impl::format_traits<Format>::value_type>
     vector::view<Format> allocate(Format, std::size_t element_count) {
         using format_traits = typename vector::impl::format_traits<Format>;
-        uint32_t binary_data_length = format_traits::length_for_append(element_count);
-        uint8_t* binary_data = allocate(binary_sub_type::k_vector, binary_data_length);
+        std::uint32_t binary_data_length = format_traits::length_for_append(element_count);
+        std::uint8_t* binary_data = allocate(binary_sub_type::k_vector, binary_data_length);
         return {
             {binary_data,
              binary_data_length,

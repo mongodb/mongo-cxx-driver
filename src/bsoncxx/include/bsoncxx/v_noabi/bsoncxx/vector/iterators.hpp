@@ -14,8 +14,8 @@
 
 #pragma once
 
-#include <iterator>
 #include <cstdint>
+#include <iterator>
 
 #include <bsoncxx/vector/elements.hpp>
 #include <bsoncxx/vector/formats.hpp>
