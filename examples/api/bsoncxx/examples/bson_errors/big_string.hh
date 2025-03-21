@@ -27,7 +27,8 @@ namespace examples {
 // Used to trigger builder append failure.
 struct big_string {
     // BSON_SIZE_MAX == 0x7FFFFFFF
-    std::size_t length{static_cast<std::size_t>(std::numeric_limits<std::int32_t>::max())};
+    // Leave some room for CDRIVER-5732.
+    std::size_t length{static_cast<std::size_t>(std::numeric_limits<std::int32_t>::max() - 32u)};
 
     // Allocate an UNINITIALIZED blob of data that will not be accessed due to length checks.
     // Leaving memory unitialized (rather than zero-init) should hopefully avoid slow and expensive
