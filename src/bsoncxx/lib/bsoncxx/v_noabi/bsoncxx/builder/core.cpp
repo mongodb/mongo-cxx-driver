@@ -298,13 +298,14 @@ core& core::append(types::b_double const& value) {
 
 core& core::append(types::b_string const& value) {
     stdx::string_view key = _impl->next_key();
+    std::size_t value_length = value.value.length();
 
-    if (!bson_append_utf8(
-            _impl->back(),
-            key.data(),
-            static_cast<std::int32_t>(key.length()),
-            value.value.data(),
-            static_cast<std::int32_t>(value.value.length()))) {
+    if (value_length > std::size_t{INT32_MAX} || !bson_append_utf8(
+                                                     _impl->back(),
+                                                     key.data(),
+                                                     static_cast<std::int32_t>(key.length()),
+                                                     value.value.data(),
+                                                     static_cast<std::int32_t>(value_length))) {
         throw bsoncxx::v_noabi::exception{error_code::k_cannot_append_string};
     }
 
