@@ -79,6 +79,7 @@ enum class binary_sub_type : std::uint8_t {
     k_encrypted = 0x06,         ///< Encrypted BSON value.
     k_column = 0x07,            ///< Compressed BSON column.
     k_sensitive = 0x08,         ///< Sensitive.
+    k_vector = 0x09,            ///< BSON Binary Vector specification.
     k_user = 0x80,              ///< User defined.
 };
 

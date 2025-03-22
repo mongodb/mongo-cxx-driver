@@ -81,6 +81,10 @@ class error_category_impl final : public std::error_category {
         return {"unable to append " #name};
 #include <bsoncxx/enums/type.hpp>
 #undef BSONCXX_ENUM
+            case error_code::k_invalid_vector:
+                return "invalid BSON vector";
+            case error_code::k_vector_too_large:
+                return "BSON vector too large";
             default:
                 return "unknown bsoncxx error code";
         }

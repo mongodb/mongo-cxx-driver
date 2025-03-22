@@ -15,6 +15,7 @@
 #pragma once
 
 #include <bsoncxx/builder/basic/sub_array.hpp>
+#include <bsoncxx/builder/basic/sub_binary.hpp>
 #include <bsoncxx/builder/basic/sub_document.hpp>
 #include <bsoncxx/stdx/type_traits.hpp>
 
@@ -40,10 +41,19 @@ detail::requires_t<void, detail::is_invocable<T, sub_array>> generic_append(core
     core->close_array();
 }
 
+template <typename T>
+detail::requires_t<void, detail::is_invocable<T, sub_binary>> generic_append(core* core, T&& func) {
+    detail::invoke(std::forward<T>(func), sub_binary(core));
+    core->close_binary();
+}
+
 template <typename T, typename = void, typename = void>
-detail::requires_not_t<void, detail::is_invocable<T, sub_document>, detail::is_invocable<T, sub_array>> generic_append(
-    core* core,
-    T&& t) {
+detail::requires_not_t<
+    void,
+    detail::is_invocable<T, sub_document>,
+    detail::is_invocable<T, sub_array>,
+    detail::is_invocable<T, sub_binary>>
+generic_append(core* core, T&& t) {
     core->append(std::forward<T>(t));
 }
 
