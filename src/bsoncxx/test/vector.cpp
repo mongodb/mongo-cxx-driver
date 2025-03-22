@@ -29,8 +29,6 @@
 #include <catch2/generators/catch_generators.hpp>
 #include <catch2/matchers/catch_matchers_string.hpp>
 
-#define ALL_VECTOR_FORMATS vector::formats::f_float32, vector::formats::f_int8, vector::formats::f_packed_bit
-
 namespace {
 
 using namespace bsoncxx;
@@ -167,7 +165,12 @@ void iterator_operations(
     std::for_each(begin, end, [&](auto const& value) { REQUIRE_FALSE(value >= element_unit); });
 }
 
-TEMPLATE_TEST_CASE("all vector view formats", "[bsoncxx::vector::view]", ALL_VECTOR_FORMATS) {
+TEMPLATE_TEST_CASE(
+    "all vector view formats",
+    "[bsoncxx::vector::view]",
+    vector::formats::f_float32,
+    vector::formats::f_int8,
+    vector::formats::f_packed_bit) {
     using test_format_specific = format_specific<TestType>;
     using value_type = typename test_format_specific::value_type;
 
