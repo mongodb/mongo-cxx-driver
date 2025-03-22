@@ -151,7 +151,7 @@
 
 ///
 /// @namespace bsoncxx::v_noabi::vector
-/// Declarations related to BSON Binary Vector (@ref bsoncxx::v_noabi::binary_sub_type::k_vector) items.
+/// @copydoc bsoncxx::vector
 ///
 
 ///
