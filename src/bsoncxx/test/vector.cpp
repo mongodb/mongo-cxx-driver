@@ -81,7 +81,7 @@ struct format_specific<vector::formats::f_packed_bit> {
 template <typename Sequence>
 void binary_eq_bytes(types::b_binary const& binary, Sequence const& bytes) {
     REQUIRE(binary.size == bytes.size());
-    REQUIRE(std::memcmp(binary.bytes, bytes.data(), bytes.size()) == 0);
+    CHECK(std::memcmp(binary.bytes, bytes.data(), bytes.size()) == 0);
 }
 
 template <typename Iterator, typename Element>
@@ -90,79 +90,79 @@ void iterator_operations(
     Iterator const& end,
     std::ptrdiff_t expected_size,
     Element element_unit) {
-    REQUIRE(end - begin == expected_size);
+    CHECK(end - begin == expected_size);
 
     for (std::ptrdiff_t outer_index = 0; outer_index < 50; outer_index++) {
         Iterator outer_front = begin + outer_index;
         Iterator outer_back = end - outer_index;
 
-        REQUIRE(outer_front - begin == outer_index);
-        REQUIRE(begin - outer_front == -outer_index);
+        CHECK(outer_front - begin == outer_index);
+        CHECK(begin - outer_front == -outer_index);
 
-        REQUIRE(end - outer_back == outer_index);
-        REQUIRE(outer_back - end == -outer_index);
+        CHECK(end - outer_back == outer_index);
+        CHECK(outer_back - end == -outer_index);
 
         for (std::ptrdiff_t inner_index = 0; inner_index < 20; inner_index++) {
             Iterator inner_front = outer_front + inner_index;
             Iterator inner_back = outer_back - inner_index;
 
-            REQUIRE(inner_front - outer_front == inner_index);
-            REQUIRE(outer_front - inner_front == -inner_index);
+            CHECK(inner_front - outer_front == inner_index);
+            CHECK(outer_front - inner_front == -inner_index);
 
-            REQUIRE(outer_back - inner_back == inner_index);
-            REQUIRE(inner_back - outer_back == -inner_index);
+            CHECK(outer_back - inner_back == inner_index);
+            CHECK(inner_back - outer_back == -inner_index);
         }
     }
 
     Iterator iter_copy = begin;
-    REQUIRE(iter_copy == begin);
-    REQUIRE(iter_copy >= begin);
-    REQUIRE(iter_copy <= begin);
-    REQUIRE_FALSE(iter_copy != begin);
-    REQUIRE_FALSE(iter_copy < begin);
+    CHECK(iter_copy == begin);
+    CHECK(iter_copy >= begin);
+    CHECK(iter_copy <= begin);
+    CHECK_FALSE(iter_copy != begin);
+    CHECK_FALSE(iter_copy < begin);
 
-    REQUIRE(++iter_copy - begin == 1);
-    REQUIRE(iter_copy > begin);
-    REQUIRE(iter_copy >= begin);
-    REQUIRE(iter_copy != begin);
-    REQUIRE_FALSE(iter_copy == begin);
-    REQUIRE_FALSE(iter_copy <= begin);
-    REQUIRE_FALSE(iter_copy < begin);
+    CHECK(++iter_copy - begin == 1);
+    CHECK(iter_copy > begin);
+    CHECK(iter_copy >= begin);
+    CHECK(iter_copy != begin);
+    CHECK_FALSE(iter_copy == begin);
+    CHECK_FALSE(iter_copy <= begin);
+    CHECK_FALSE(iter_copy < begin);
 
-    REQUIRE(--iter_copy - begin == 0);
-    REQUIRE(iter_copy == begin);
+    CHECK(--iter_copy - begin == 0);
+    CHECK(iter_copy == begin);
 
-    REQUIRE(iter_copy++ - begin == 0);
-    REQUIRE(iter_copy-- - begin == 1);
-    REQUIRE(iter_copy == begin);
+    CHECK(iter_copy++ - begin == 0);
+    CHECK(iter_copy-- - begin == 1);
+    CHECK(iter_copy == begin);
 
     std::generate(begin, end, [&] { return element_unit; });
-    std::for_each(begin, end, [&](auto const& value) { REQUIRE(value == element_unit); });
+    std::for_each(begin, end, [&](auto const& value) { CHECK(value == element_unit); });
 
     std::copy(begin, begin + (expected_size / 2), begin + (expected_size / 2));
-    std::for_each(begin, end, [&](auto const& value) { REQUIRE(value == element_unit); });
+    std::for_each(begin, end, [&](auto const& value) { CHECK(value == element_unit); });
 
     std::for_each(begin, end, [&](auto&& value) { value = element_unit; });
-    std::for_each(begin, end, [&](auto const& value) { REQUIRE(value == element_unit); });
+    std::for_each(begin, end, [&](auto const& value) { CHECK(value == element_unit); });
 
     std::fill(begin, end, element_unit);
-    std::for_each(begin, end, [&](auto const& value) { REQUIRE(value == element_unit); });
+    std::for_each(begin, end, [&](auto const& value) { CHECK(value == element_unit); });
 
     std::sort(begin, end);
-    std::for_each(begin, end, [&](auto const& value) { REQUIRE(value == element_unit); });
+    std::for_each(begin, end, [&](auto const& value) { CHECK(value == element_unit); });
 
     *(end - 1) = Element{0};
     std::sort(begin, end);
-    REQUIRE(*begin == Element{0});
-    std::for_each(begin + 1, end, [&](auto const& value) { REQUIRE(value == element_unit); });
+    CHECK(*begin == Element{0});
+    std::for_each(begin + 1, end, [&](auto const& value) { CHECK(value == element_unit); });
 
     std::for_each(begin, end, [&](auto&& value) { value = Element{0}; });
-    std::for_each(begin, end, [&](auto const& value) { REQUIRE(value != element_unit); });
-    std::for_each(begin, end, [&](auto const& value) { REQUIRE(value < element_unit); });
-    std::for_each(begin, end, [&](auto const& value) { REQUIRE(value <= element_unit); });
-    std::for_each(begin, end, [&](auto const& value) { REQUIRE_FALSE(value == element_unit); });
-    std::for_each(begin, end, [&](auto const& value) { REQUIRE_FALSE(value > element_unit); });
-    std::for_each(begin, end, [&](auto const& value) { REQUIRE_FALSE(value >= element_unit); });
+    std::for_each(begin, end, [&](auto const& value) { CHECK(value != element_unit); });
+    std::for_each(begin, end, [&](auto const& value) { CHECK(value < element_unit); });
+    std::for_each(begin, end, [&](auto const& value) { CHECK(value <= element_unit); });
+    std::for_each(begin, end, [&](auto const& value) { CHECK_FALSE(value == element_unit); });
+    std::for_each(begin, end, [&](auto const& value) { CHECK_FALSE(value > element_unit); });
+    std::for_each(begin, end, [&](auto const& value) { CHECK_FALSE(value >= element_unit); });
 }
 
 TEMPLATE_TEST_CASE(
@@ -178,9 +178,9 @@ TEMPLATE_TEST_CASE(
         auto bytes = test_format_specific::bytes_empty();
         types::b_binary const binary{binary_sub_type::k_vector, bytes.size(), bytes.data()};
         vector::view<TestType const> view{binary};
-        REQUIRE(view.empty());
-        REQUIRE(view.size() == 0);
-        REQUIRE(view.byte_size() == 0);
+        CHECK(view.empty());
+        CHECK(view.size() == 0);
+        CHECK(view.byte_size() == 0);
         CHECK_THROWS_AS(view.at(0), std::out_of_range);
         CHECK_THROWS_AS(view.byte_at(0), std::out_of_range);
     }
@@ -190,13 +190,13 @@ TEMPLATE_TEST_CASE(
         auto element = test_format_specific::element_unit();
         types::b_binary const binary{binary_sub_type::k_vector, bytes.size(), bytes.data()};
         vector::view<TestType const> view{binary};
-        REQUIRE_FALSE(view.empty());
-        REQUIRE(view.size() == 1u);
-        REQUIRE(view.byte_size() == bytes.size() - 2u);
-        REQUIRE(view.at(0) == element);
-        REQUIRE(view[0] == element);
-        REQUIRE(view.byte_at(0) == bytes[2]);
-        REQUIRE(view.byte_at(bytes.size() - 3u) == bytes[bytes.size() - 1u]);
+        CHECK_FALSE(view.empty());
+        CHECK(view.size() == 1u);
+        CHECK(view.byte_size() == bytes.size() - 2u);
+        CHECK(view.at(0) == element);
+        CHECK(view[0] == element);
+        CHECK(view.byte_at(0) == bytes[2]);
+        CHECK(view.byte_at(bytes.size() - 3u) == bytes[bytes.size() - 1u]);
         CHECK_THROWS_AS(view.at(1), std::out_of_range);
         CHECK_THROWS_AS(view.byte_at(bytes.size() - 2u), std::out_of_range);
     }
@@ -206,7 +206,7 @@ TEMPLATE_TEST_CASE(
         auto invalid_type = GENERATE(
             binary_sub_type::k_binary, binary_sub_type::k_encrypted, binary_sub_type::k_uuid, binary_sub_type::k_user);
         types::b_binary const binary{invalid_type, bytes.size(), bytes.data()};
-        REQUIRE_THROWS_WITH(
+        CHECK_THROWS_WITH(
             vector::view<TestType const>(binary), Catch::Matchers::ContainsSubstring("invalid BSON vector"));
     }
 
@@ -215,7 +215,7 @@ TEMPLATE_TEST_CASE(
         auto bytes_to_remove = GENERATE(1u, 2u);
         REQUIRE(bytes.size() >= bytes_to_remove);
         types::b_binary const binary{binary_sub_type::k_vector, uint32_t(bytes.size() - bytes_to_remove), bytes.data()};
-        REQUIRE_THROWS_WITH(
+        CHECK_THROWS_WITH(
             vector::view<TestType const>(binary), Catch::Matchers::ContainsSubstring("invalid BSON vector"));
     }
 
@@ -224,7 +224,7 @@ TEMPLATE_TEST_CASE(
             auto bytes = test_format_specific::bytes_empty();
             bytes[bit_index >> 3u] ^= std::uint8_t(1u << (bit_index & 7u));
             types::b_binary const binary{binary_sub_type::k_vector, bytes.size(), bytes.data()};
-            REQUIRE_THROWS_WITH(
+            CHECK_THROWS_WITH(
                 vector::view<TestType const>(binary), Catch::Matchers::ContainsSubstring("invalid BSON vector"));
         }
     }
@@ -236,7 +236,7 @@ TEMPLATE_TEST_CASE(
         bsoncxx::document::value doc =
             make_document(kvp("vector", [&](sub_binary sbin) { sbin.allocate(TestType{}, 1u)[0u] = element; }));
         types::b_binary const& binary = doc.view()["vector"].get_binary();
-        REQUIRE(binary.sub_type == binary_sub_type::k_vector);
+        CHECK(binary.sub_type == binary_sub_type::k_vector);
         binary_eq_bytes(binary, expected_bytes);
         vector::view<TestType const> validate_encoded{binary};
     }
@@ -251,7 +251,7 @@ TEMPLATE_TEST_CASE(
         }));
         types::b_binary const& binary = doc.view()["vector"].get_binary();
         vector::view<TestType const> validate_encoded{binary};
-        REQUIRE(binary.size > 1000u);
+        CHECK(binary.size > 1000u);
     }
 
     SECTION("support algorithms and operators on byte iterators") {
@@ -263,7 +263,7 @@ TEMPLATE_TEST_CASE(
         }));
         types::b_binary const& binary = doc.view()["vector"].get_binary();
         vector::view<TestType const> validate_encoded{binary};
-        REQUIRE(binary.size > 1000u);
+        CHECK(binary.size > 1000u);
     }
 
     SECTION("support assignment between referenced elements") {
@@ -272,11 +272,11 @@ TEMPLATE_TEST_CASE(
             auto view = sbin.allocate(TestType{}, 2u);
             view[0] = test_format_specific::element_unit();
             view[1] = value_type{0};
-            REQUIRE(view.at(0) != view.at(1));
-            REQUIRE_FALSE(view.at(0) == view.at(1));
+            CHECK(view.at(0) != view.at(1));
+            CHECK_FALSE(view.at(0) == view.at(1));
             view[1] = view[0];
-            REQUIRE(view.at(0) == view.at(1));
-            REQUIRE_FALSE(view.at(0) != view.at(1));
+            CHECK(view.at(0) == view.at(1));
+            CHECK_FALSE(view.at(0) != view.at(1));
         }));
         types::b_binary const& binary = doc.view()["vector"].get_binary();
         vector::view<TestType const> validate_encoded{binary};
@@ -288,11 +288,11 @@ TEMPLATE_TEST_CASE(
             auto view = sbin.allocate(TestType{}, 16u);
             std::fill(view.begin(), view.end(), test_format_specific::element_unit());
             *(view.end() - 2) = value_type{0};
-            REQUIRE(view.byte_at(view.byte_size() - 2) != view.byte_at(view.byte_size() - 1));
-            REQUIRE_FALSE(view.byte_at(view.byte_size() - 2) == view.byte_at(view.byte_size() - 1));
+            CHECK(view.byte_at(view.byte_size() - 2) != view.byte_at(view.byte_size() - 1));
+            CHECK_FALSE(view.byte_at(view.byte_size() - 2) == view.byte_at(view.byte_size() - 1));
             view.byte_at(view.byte_size() - 2) = view.byte_at(view.byte_size() - 1);
-            REQUIRE(view.byte_at(view.byte_size() - 2) == view.byte_at(view.byte_size() - 1));
-            REQUIRE_FALSE(view.byte_at(view.byte_size() - 2) != view.byte_at(view.byte_size() - 1));
+            CHECK(view.byte_at(view.byte_size() - 2) == view.byte_at(view.byte_size() - 1));
+            CHECK_FALSE(view.byte_at(view.byte_size() - 2) != view.byte_at(view.byte_size() - 1));
         }));
         types::b_binary const& binary = doc.view()["vector"].get_binary();
         vector::view<TestType const> validate_encoded{binary};
@@ -302,7 +302,7 @@ TEMPLATE_TEST_CASE(
         using namespace builder::basic;
         // This checks that we can detect overlarge sizes and throw an exception.
         // Detailed checks for the size limit are delegated to Libbson (via libbson_length_for_append)
-        REQUIRE_THROWS_WITH(
+        CHECK_THROWS_WITH(
             make_document(kvp("vector", [&](sub_binary sbin) { sbin.allocate(TestType{}, SIZE_MAX); })),
             Catch::Matchers::ContainsSubstring("BSON vector too large"));
     }
@@ -313,20 +313,20 @@ TEMPLATE_TEST_CASE(
             auto view = sbin.allocate(TestType{}, 2u);
             std::fill(view.begin(), view.end(), test_format_specific::element_unit());
             *(view.end() - 1) = value_type{0};
-            REQUIRE(view.back() == value_type{0});
-            REQUIRE(view.back() == view[view.size() - 1u]);
-            REQUIRE(view.front() != view.back());
-            REQUIRE_FALSE(view.front() == view.back());
+            CHECK(view.back() == value_type{0});
+            CHECK(view.back() == view[view.size() - 1u]);
+            CHECK(view.front() != view.back());
+            CHECK_FALSE(view.front() == view.back());
             view.front() = view.back();
-            REQUIRE(view[0] == value_type{0});
-            REQUIRE(view.front() == view.back());
-            REQUIRE_FALSE(view.front() != view.back());
-            REQUIRE(view[view.size() - 1u] == value_type{0});
+            CHECK(view[0] == value_type{0});
+            CHECK(view.front() == view.back());
+            CHECK_FALSE(view.front() != view.back());
+            CHECK(view[view.size() - 1u] == value_type{0});
             view.back() = test_format_specific::element_unit();
-            REQUIRE(view[0] == value_type{0});
-            REQUIRE(view[view.size() - 1u] != value_type{0});
-            REQUIRE(view.front() != view.back());
-            REQUIRE_FALSE(view.front() == view.back());
+            CHECK(view[0] == value_type{0});
+            CHECK(view[view.size() - 1u] != value_type{0});
+            CHECK(view.front() != view.back());
+            CHECK_FALSE(view.front() == view.back());
         }));
         types::b_binary const& binary = doc.view()["vector"].get_binary();
         vector::view<TestType const> validate_encoded{binary};
@@ -337,17 +337,17 @@ TEMPLATE_TEST_CASE(
         bsoncxx::document::value doc = make_document(kvp("vector", [&](sub_binary sbin) {
             auto view = sbin.allocate(TestType{}, 16u);
             std::fill(view.begin(), view.end(), value_type{0});
-            REQUIRE(view.front() == view.back());
-            REQUIRE_FALSE(view.front() != view.back());
-            REQUIRE(view.byte_front() == view.byte_back());
-            REQUIRE_FALSE(view.byte_front() != view.byte_back());
+            CHECK(view.front() == view.back());
+            CHECK_FALSE(view.front() != view.back());
+            CHECK(view.byte_front() == view.byte_back());
+            CHECK_FALSE(view.byte_front() != view.byte_back());
             view.back() = test_format_specific::element_unit();
-            REQUIRE(view.byte_front() != view.byte_back());
-            REQUIRE_FALSE(view.byte_front() == view.byte_back());
+            CHECK(view.byte_front() != view.byte_back());
+            CHECK_FALSE(view.byte_front() == view.byte_back());
             view.byte_front() = UINT8_C(0);
             view.byte_back() = UINT8_C(0);
-            REQUIRE(view.byte_front() == view.byte_back());
-            REQUIRE_FALSE(view.byte_front() != view.byte_back());
+            CHECK(view.byte_front() == view.byte_back());
+            CHECK_FALSE(view.byte_front() != view.byte_back());
         }));
         types::b_binary const& binary = doc.view()["vector"].get_binary();
         vector::view<TestType const> validate_encoded{binary};
@@ -359,7 +359,7 @@ TEST_CASE("vector view float32", "[bsoncxx::vector::view]") {
         static uint8_t const bytes[] = {0x27, 0x00, 0x00, 0x00, 0x80, 0x3f, 0x00, 0x00, 0x00};
         auto invalid_length = GENERATE(0u, 1u, 3u, 4u, 5u, 7u, 8u, 9u);
         types::b_binary const binary{binary_sub_type::k_vector, uint32_t(invalid_length), bytes};
-        REQUIRE_THROWS_WITH(
+        CHECK_THROWS_WITH(
             vector::view<vector::formats::f_float32 const>(binary),
             Catch::Matchers::ContainsSubstring("invalid BSON vector"));
     }
@@ -369,7 +369,7 @@ TEST_CASE("vector view float32", "[bsoncxx::vector::view]") {
             format_specific<vector::formats::f_int8>::bytes_empty(),
             format_specific<vector::formats::f_packed_bit>::bytes_empty());
         types::b_binary const binary{binary_sub_type::k_vector, bytes.size(), bytes.data()};
-        REQUIRE_THROWS_WITH(
+        CHECK_THROWS_WITH(
             vector::view<vector::formats::f_float32 const>(binary),
             Catch::Matchers::ContainsSubstring("invalid BSON vector"));
     }
@@ -380,11 +380,11 @@ TEST_CASE("vector view float32", "[bsoncxx::vector::view]") {
         types::b_binary const binary{binary_sub_type::k_vector, sizeof bytes, bytes};
         vector::view<vector::formats::f_float32 const> view{binary};
         REQUIRE(view.size() == 3u);
-        REQUIRE(view[0] < 0.f);
-        REQUIRE(view[0] * 0.f != 0.f);
-        REQUIRE(view[1] == 0.f);
-        REQUIRE(view[2] > 0.f);
-        REQUIRE(view[2] * 0.f != 0.f);
+        CHECK(view[0] < 0.f);
+        CHECK(view[0] * 0.f != 0.f);
+        CHECK(view[1] == 0.f);
+        CHECK(view[2] > 0.f);
+        CHECK(view[2] * 0.f != 0.f);
     }
 }
 
@@ -394,7 +394,7 @@ TEST_CASE("vector view int8_t", "[bsoncxx::vector::view]") {
             format_specific<vector::formats::f_float32>::bytes_empty(),
             format_specific<vector::formats::f_packed_bit>::bytes_empty());
         types::b_binary const binary{binary_sub_type::k_vector, bytes.size(), bytes.data()};
-        REQUIRE_THROWS_WITH(
+        CHECK_THROWS_WITH(
             vector::view<vector::formats::f_int8 const>(binary),
             Catch::Matchers::ContainsSubstring("invalid BSON vector"));
     }
@@ -406,7 +406,7 @@ TEST_CASE("vector view packed_bit", "[bsoncxx::vector::view]") {
             auto bytes = format_specific<vector::formats::f_packed_bit>::bytes_empty();
             bytes[1] = uint8_t(byte_value);
             types::b_binary const binary{binary_sub_type::k_vector, bytes.size(), bytes.data()};
-            REQUIRE_THROWS_WITH(
+            CHECK_THROWS_WITH(
                 vector::view<vector::formats::f_packed_bit const>(binary),
                 Catch::Matchers::ContainsSubstring("invalid BSON vector"));
         }
@@ -416,7 +416,7 @@ TEST_CASE("vector view packed_bit", "[bsoncxx::vector::view]") {
         for (unsigned byte_value = 8u; byte_value <= UINT8_MAX; byte_value++) {
             uint8_t const bytes[] = {0x10, uint8_t(byte_value), 0x00};
             types::b_binary const binary{binary_sub_type::k_vector, sizeof bytes, bytes};
-            REQUIRE_THROWS_WITH(
+            CHECK_THROWS_WITH(
                 vector::view<vector::formats::f_packed_bit const>(binary),
                 Catch::Matchers::ContainsSubstring("invalid BSON vector"));
         }
@@ -426,13 +426,13 @@ TEST_CASE("vector view packed_bit", "[bsoncxx::vector::view]") {
         for (unsigned byte_value = 1u; byte_value <= 7u; byte_value++) {
             uint8_t bytes[] = {0x10, uint8_t(byte_value), 0xff};
             types::b_binary const binary{binary_sub_type::k_vector, sizeof bytes, bytes};
-            REQUIRE_THROWS_WITH(
+            CHECK_THROWS_WITH(
                 vector::view<vector::formats::f_packed_bit const>(binary),
                 Catch::Matchers::ContainsSubstring("invalid BSON vector"));
             // Succeeds when unused bits are then zeroed
             bytes[2] = 0;
             vector::view<vector::formats::f_packed_bit const> view{binary};
-            REQUIRE(view.size() == 8u - byte_value);
+            CHECK(view.size() == 8u - byte_value);
         }
     }
 
@@ -441,29 +441,29 @@ TEST_CASE("vector view packed_bit", "[bsoncxx::vector::view]") {
         bsoncxx::document::value doc = make_document(kvp("vector", [&](sub_binary sbin) {
             auto view = sbin.allocate(vector::formats::f_packed_bit{}, 9u);
             std::fill(view.begin(), view.end(), true);
-            REQUIRE(view.byte_size() == 2u);
-            REQUIRE(view.byte_at(0) == 0xff);
-            REQUIRE(view.byte_at(1) == 0x80);
+            CHECK(view.byte_size() == 2u);
+            CHECK(view.byte_at(0) == 0xff);
+            CHECK(view.byte_at(1) == 0x80);
             view.byte_at(1) = 0x7f;
-            REQUIRE(view.at(7) == true);
-            REQUIRE(view.at(8) == false);
-            REQUIRE(view.byte_at(1) == 0x00);
+            CHECK(view.at(7) == true);
+            CHECK(view.at(8) == false);
+            CHECK(view.byte_at(1) == 0x00);
             view.byte_at(1) = 0xff;
             view.byte_at(0) = 0xaa;
-            REQUIRE(view.at(0) == true);
-            REQUIRE(view.at(1) == false);
-            REQUIRE(view.at(2) == true);
-            REQUIRE(view.at(3) == false);
-            REQUIRE(view.at(4) == true);
-            REQUIRE(view.at(5) == false);
-            REQUIRE(view.at(6) == true);
-            REQUIRE(view.at(7) == false);
-            REQUIRE(view.at(8) == true);
-            REQUIRE(view.byte_at(0) == 0xaa);
-            REQUIRE(view.byte_at(1) == 0x80);
+            CHECK(view.at(0) == true);
+            CHECK(view.at(1) == false);
+            CHECK(view.at(2) == true);
+            CHECK(view.at(3) == false);
+            CHECK(view.at(4) == true);
+            CHECK(view.at(5) == false);
+            CHECK(view.at(6) == true);
+            CHECK(view.at(7) == false);
+            CHECK(view.at(8) == true);
+            CHECK(view.byte_at(0) == 0xaa);
+            CHECK(view.byte_at(1) == 0x80);
         }));
         types::b_binary const& binary = doc.view()["vector"].get_binary();
-        REQUIRE(binary.sub_type == binary_sub_type::k_vector);
+        CHECK(binary.sub_type == binary_sub_type::k_vector);
         std::array<std::uint8_t, 4> expected_bytes{0x10, 7, 0xaa, 0x80};
         binary_eq_bytes(binary, expected_bytes);
     }
@@ -473,7 +473,7 @@ TEST_CASE("vector view packed_bit", "[bsoncxx::vector::view]") {
             uint8_t const bytes[] = {0x10, uint8_t(byte_value), 0x00};
             types::b_binary const binary{binary_sub_type::k_vector, sizeof bytes, bytes};
             vector::view<vector::formats::f_packed_bit const> view{binary};
-            REQUIRE(view.size() == 8 - byte_value);
+            CHECK(view.size() == 8 - byte_value);
         }
     }
 
@@ -482,7 +482,7 @@ TEST_CASE("vector view packed_bit", "[bsoncxx::vector::view]") {
             format_specific<vector::formats::f_int8>::bytes_empty(),
             format_specific<vector::formats::f_float32>::bytes_empty());
         types::b_binary const binary{binary_sub_type::k_vector, bytes.size(), bytes.data()};
-        REQUIRE_THROWS_WITH(
+        CHECK_THROWS_WITH(
             vector::view<vector::formats::f_packed_bit const>(binary),
             Catch::Matchers::ContainsSubstring("invalid BSON vector"));
     }
@@ -495,28 +495,27 @@ TEST_CASE("vector view packed_bit", "[bsoncxx::vector::view]") {
                 REQUIRE(view.size() == element_count);
                 REQUIRE(view.byte_size() == (element_count + 7u) / 8);
                 std::fill(view.byte_begin(), view.byte_end(), UINT8_C(0xFF));
-                REQUIRE(view.empty() == (element_count == 0));
+                CHECK(view.empty() == (element_count == 0));
                 if (!view.empty()) {
                     std::for_each(view.byte_begin(), view.byte_end() - 1, [&](std::uint8_t value) {
-                        REQUIRE(value == UINT8_C(0xFF));
+                        CHECK(value == UINT8_C(0xFF));
                     });
                     std::size_t padding = view.byte_size() * std::size_t(8) - view.size();
-                    REQUIRE(view.byte_back() == std::uint8_t(0xFF << padding));
+                    CHECK(view.byte_back() == std::uint8_t(0xFF << padding));
                 }
             }));
             types::b_binary const& binary = doc.view()["vector"].get_binary();
-            REQUIRE(binary.sub_type == binary_sub_type::k_vector);
+            CHECK(binary.sub_type == binary_sub_type::k_vector);
             vector::view<vector::formats::f_packed_bit const> view{binary};
             REQUIRE(view.size() == element_count);
             REQUIRE(view.byte_size() == (element_count + 7u) / 8);
-            REQUIRE(view.empty() == (element_count == 0u));
+            CHECK(view.empty() == (element_count == 0u));
             if (!view.empty()) {
-                std::for_each(view.byte_begin(), view.byte_end() - 1, [&](std::uint8_t value) {
-                    REQUIRE(value == UINT8_C(0xFF));
-                });
+                std::for_each(
+                    view.byte_begin(), view.byte_end() - 1, [&](std::uint8_t value) { CHECK(value == UINT8_C(0xFF)); });
                 std::size_t padding = view.byte_size() * std::size_t(8) - view.size();
-                REQUIRE(padding == binary.bytes[1]);
-                REQUIRE(view.byte_back() == std::uint8_t(0xFF << padding));
+                CHECK(padding == binary.bytes[1]);
+                CHECK(view.byte_back() == std::uint8_t(0xFF << padding));
             }
         }
     }
