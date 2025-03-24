@@ -41,8 +41,5 @@ struct f_packed_bit {};
 
 ///
 /// @file
-/// Declares vector formats:
-/// @ref bsoncxx::v_noabi::vector::formats::f_float32
-/// @ref bsoncxx::v_noabi::vector::formats::f_int8
-/// @ref bsoncxx::v_noabi::vector::formats::f_packed_bit
+/// Declares entities in @ref bsoncxx::v_noabi::vector::formats.
 ///
