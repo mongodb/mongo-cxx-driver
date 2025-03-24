@@ -166,5 +166,5 @@
 
 ///
 /// @namespace bsoncxx::v_noabi::vector::formats
-/// Each type here is a supported format for bsoncxx::vector
+/// @copydoc bsoncxx::vector::formats
 ///
