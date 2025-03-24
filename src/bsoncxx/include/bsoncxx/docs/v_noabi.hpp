@@ -97,6 +97,11 @@
 ///
 
 ///
+/// @dir bsoncxx/v_noabi/bsoncxx/vector
+/// Provides headers declaring entities in @ref bsoncxx::v_noabi::vector.
+///
+
+///
 /// @namespace bsoncxx::v_noabi
 /// Declares entities whose ABI stability is NOT guaranteed.
 ///
@@ -156,12 +161,12 @@
 
 ///
 /// @namespace bsoncxx::v_noabi::vector::iterators
-/// Special-purpose iterator types for bsoncxx::vector
+/// @copydoc bsoncxx::vector::iterators
 ///
 
 ///
 /// @namespace bsoncxx::v_noabi::vector::elements
-/// Special-purpose element reference types for bsoncxx::vector
+/// @copydoc bsoncxx::vector::elements
 ///
 
 ///

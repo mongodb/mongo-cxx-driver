@@ -17,6 +17,7 @@
 #include <type_traits>
 
 #include <bsoncxx/vector/view-fwd.hpp>
+#include <bsoncxx/builder/basic/sub_binary-fwd.hpp>
 
 #include <bsoncxx/exception/error_code.hpp>
 #include <bsoncxx/exception/exception.hpp>
@@ -27,13 +28,6 @@
 
 namespace bsoncxx {
 namespace v_noabi {
-
-namespace builder {
-namespace basic {
-class sub_binary;
-} // namespace basic
-} // namespace builder
-
 namespace vector {
 
 /// @brief Accessor for the contents of a valid BSON Binary Vector

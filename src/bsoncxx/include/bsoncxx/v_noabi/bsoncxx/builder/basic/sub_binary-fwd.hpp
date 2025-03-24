@@ -38,5 +38,5 @@ using ::bsoncxx::v_noabi::builder::basic::sub_binary;
 
 ///
 /// @file
-/// Declares @ref bsoncxx::builder::basic::sub_binary, for constructing BSON Binary values in-place.
+/// Declares @ref bsoncxx::builder::basic::sub_binary
 ///

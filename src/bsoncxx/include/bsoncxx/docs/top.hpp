@@ -91,10 +91,20 @@
 
 ///
 /// @namespace bsoncxx::vector
-/// Declarations related to BSON Binary Vector (@ref bsoncxx::v_noabi::binary_sub_type::k_vector) items.
+/// Declarations related to the BSON Binary Vector subtype.
 ///
 
 ///
 /// @namespace bsoncxx::vector::formats
-/// Each type here is a supported format for bsoncxx::vector
+/// Declares supported BSON Binary Vector formats.
+///
+
+///
+/// @namespace bsoncxx::vector::elements
+/// Declares element accessor types for BSON Binary Vector.
+///
+
+///
+/// @namespace bsoncxx::vector::iterators
+/// Declares iterator types for BSON Binary Vector.
 ///
