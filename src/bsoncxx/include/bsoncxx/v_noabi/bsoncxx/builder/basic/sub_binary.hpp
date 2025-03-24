@@ -58,8 +58,8 @@ class sub_binary {
     /// @return A vector::view, valid during the lifetime of this sub_binary builder. Every element must be overwritten
     /// before that element is read or the resulting document is used.
     /// @throws bsoncxx::v_noabi::exception if this sub_binary has already allocated.
-    ///         bsoncxx::v_noabi::exception if the binary fails to append due to the BSON size limit.
-    ///         bsoncxx::v_noabi::exception if a vector of the requested size would be too large to represent.
+    /// @throws bsoncxx::v_noabi::exception if the binary fails to append due to the BSON size limit.
+    /// @throws bsoncxx::v_noabi::exception if a vector of the requested size would be too large to represent.
     template <typename Format, typename SFINAE = typename vector::impl::format_traits<Format>::value_type>
     vector::view<Format> allocate(Format, std::size_t element_count) {
         using format_traits = typename vector::impl::format_traits<Format>;
