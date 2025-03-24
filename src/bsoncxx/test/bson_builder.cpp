@@ -45,7 +45,7 @@ void bson_eq_stream(bson_t const* bson, bsoncxx::builder::stream::document const
     INFO("expected = " << to_json(expected));
     INFO("builder = " << to_json(test));
     REQUIRE(expected.length() == test.length());
-    REQUIRE(std::memcmp(expected.data(), test.data(), expected.length()) == 0);
+    CHECK(std::memcmp(expected.data(), test.data(), expected.length()) == 0);
 }
 
 template <typename T, typename U>
@@ -56,7 +56,7 @@ void viewable_eq_viewable(T const& stream, U const& basic) {
     INFO("expected = " << to_json(expected));
     INFO("basic = " << to_json(test));
     REQUIRE(expected.length() == test.length());
-    REQUIRE(std::memcmp(expected.data(), test.data(), expected.length()) == 0);
+    CHECK(std::memcmp(expected.data(), test.data(), expected.length()) == 0);
 }
 
 template <typename T>
@@ -66,7 +66,7 @@ void bson_eq_object(bson_t const* bson, T const actual) {
     INFO("expected = " << to_json(expected));
     INFO("actual = " << to_json(actual));
     REQUIRE(expected.length() == actual.length());
-    REQUIRE(std::memcmp(expected.data(), actual.data(), expected.length()) == 0);
+    CHECK(std::memcmp(expected.data(), actual.data(), expected.length()) == 0);
 }
 
 TEST_CASE("builder appends string", "[bsoncxx::builder::stream]") {
@@ -418,7 +418,7 @@ TEST_CASE("builder appends decimal128", "[bsoncxx::builder::stream]") {
         auto d = types::b_decimal128{"-1234E+999"};
         auto v = types::bson_value::view{d};
 
-        REQUIRE(v.get_decimal128() == d);
+        CHECK(v.get_decimal128() == d);
 
         b << "foo" << v;
 
@@ -686,8 +686,8 @@ TEST_CASE("document core builder ownership", "[bsoncxx::builder::core]") {
         b.append(types::b_int32{1});
         auto doc = b.view_document();
         auto ele = doc["falafel"];
-        REQUIRE(ele.type() == type::k_int32);
-        REQUIRE(ele.get_value() == types::b_int32{1});
+        CHECK(ele.type() == type::k_int32);
+        CHECK(ele.get_value() == types::b_int32{1});
     }
 
     SECTION("when passing a stdx::string_view, ownership handled by caller") {
@@ -702,13 +702,13 @@ TEST_CASE("document core builder throws on insufficient stack", "[bsoncxx::build
     builder::core b(false);
 
     b.key_view("hi");
-    REQUIRE_THROWS(b.close_document());
+    CHECK_THROWS(b.close_document());
 }
 
 TEST_CASE("array core builder throws on insufficient stack", "[bsoncxx::builder::core]") {
     builder::core b(true);
 
-    REQUIRE_THROWS(b.close_array());
+    CHECK_THROWS(b.close_array());
 }
 
 TEST_CASE("core builder open/close works", "[bsoncxx::builder::core]") {
@@ -728,26 +728,26 @@ TEST_CASE("core builder open/close works", "[bsoncxx::builder::core]") {
 
     SECTION("opening a document and closing an array throws") {
         b.open_document();
-        REQUIRE_THROWS(b.close_array());
+        CHECK_THROWS(b.close_array());
     }
 
     SECTION("opening an array and closing a document throws") {
         b.open_array();
-        REQUIRE_THROWS(b.close_document());
+        CHECK_THROWS(b.close_document());
     }
 
     SECTION("opening an array and viewing throws") {
         b.open_array();
-        REQUIRE_THROWS(b.view_document());
+        CHECK_THROWS(b.view_document());
     }
 
     SECTION("opening a document and viewing throws") {
         b.open_document();
-        REQUIRE_THROWS(b.view_document());
+        CHECK_THROWS(b.view_document());
     }
 
     SECTION("viewing with with only the key and no value fails") {
-        REQUIRE_THROWS(b.view_document());
+        CHECK_THROWS(b.view_document());
     }
 
     SECTION("viewing with with a key and value suceeds") {
@@ -761,72 +761,72 @@ TEST_CASE("core view/extract methods throw when called with wrong top-level type
     builder::core core_document(false);
 
     SECTION("view_array only throws when called on document") {
-        REQUIRE_NOTHROW(core_array.view_array());
-        REQUIRE_THROWS(core_document.view_array());
+        CHECK_NOTHROW(core_array.view_array());
+        CHECK_THROWS(core_document.view_array());
     }
 
     SECTION("extract_array only throws when called on document") {
-        REQUIRE_NOTHROW(core_array.extract_array());
-        REQUIRE_THROWS(core_document.extract_array());
+        CHECK_NOTHROW(core_array.extract_array());
+        CHECK_THROWS(core_document.extract_array());
     }
 
     SECTION("view_document only throws when called on array") {
-        REQUIRE_THROWS(core_array.view_document());
-        REQUIRE_NOTHROW(core_document.view_document());
+        CHECK_THROWS(core_array.view_document());
+        CHECK_NOTHROW(core_document.view_document());
     }
 
     SECTION("extract_document only throws when called on array") {
-        REQUIRE_THROWS(core_array.extract_document());
-        REQUIRE_NOTHROW(core_document.extract_document());
+        CHECK_THROWS(core_array.extract_document());
+        CHECK_NOTHROW(core_document.extract_document());
     }
 }
 
 TEST_CASE("core builder throws on consecutive keys", "[bsoncxx::builder::core]") {
     SECTION("appending key_view twice") {
         builder::core builder{false};
-        REQUIRE_NOTHROW(builder.key_view("foo"));
-        REQUIRE_THROWS_AS(builder.key_view("bar"), bsoncxx::exception);
+        CHECK_NOTHROW(builder.key_view("foo"));
+        CHECK_THROWS_AS(builder.key_view("bar"), bsoncxx::exception);
     }
 
     SECTION("appending key_view then key_owned") {
         builder::core builder{false};
-        REQUIRE_NOTHROW(builder.key_view("foo"));
-        REQUIRE_THROWS_AS(builder.key_owned("bar"), bsoncxx::exception);
+        CHECK_NOTHROW(builder.key_view("foo"));
+        CHECK_THROWS_AS(builder.key_owned("bar"), bsoncxx::exception);
     }
 
     SECTION("appending key_owned then key_view") {
         builder::core builder{false};
-        REQUIRE_NOTHROW(builder.key_owned("foo"));
-        REQUIRE_THROWS_AS(builder.key_view("bar"), bsoncxx::exception);
+        CHECK_NOTHROW(builder.key_owned("foo"));
+        CHECK_THROWS_AS(builder.key_view("bar"), bsoncxx::exception);
     }
 
     SECTION("appending key_owned twice") {
         builder::core builder{false};
-        REQUIRE_NOTHROW(builder.key_owned("foo"));
-        REQUIRE_THROWS_AS(builder.key_owned("bar"), bsoncxx::exception);
+        CHECK_NOTHROW(builder.key_owned("foo"));
+        CHECK_THROWS_AS(builder.key_owned("bar"), bsoncxx::exception);
     }
 }
 
 TEST_CASE("core method chaining to build document works", "[bsoncxx::builder::core]") {
     auto full_doc = builder::core{false}.key_owned("foo").append(1).key_owned("bar").append(true).extract_document();
 
-    REQUIRE(full_doc.view()["foo"].type() == types::b_int32::type_id);
-    REQUIRE(full_doc.view()["foo"].get_int32() == 1);
-    REQUIRE(full_doc.view()["bar"].type() == types::b_bool::type_id);
-    REQUIRE(full_doc.view()["bar"].get_bool() == true);
+    CHECK(full_doc.view()["foo"].type() == types::b_int32::type_id);
+    CHECK(full_doc.view()["foo"].get_int32() == 1);
+    CHECK(full_doc.view()["bar"].type() == types::b_bool::type_id);
+    CHECK(full_doc.view()["bar"].get_bool() == true);
 }
 
 TEST_CASE("core method chaining to build array works", "[bsoncxx::builder::core]") {
     auto array = builder::core{true}.append("foo").append(1).append(true).extract_array();
     auto array_view = array.view();
 
-    REQUIRE(std::distance(array_view.begin(), array_view.end()) == 3);
-    REQUIRE(array_view[0].type() == type::k_string);
-    REQUIRE(string::to_string(array_view[0].get_string().value) == "foo");
-    REQUIRE(array_view[1].type() == type::k_int32);
-    REQUIRE(array_view[1].get_int32().value == 1);
-    REQUIRE(array_view[2].type() == type::k_bool);
-    REQUIRE(array_view[2].get_bool().value == true);
+    CHECK(std::distance(array_view.begin(), array_view.end()) == 3);
+    CHECK(array_view[0].type() == type::k_string);
+    CHECK(string::to_string(array_view[0].get_string().value) == "foo");
+    CHECK(array_view[1].type() == type::k_int32);
+    CHECK(array_view[1].get_int32().value == 1);
+    CHECK(array_view[2].type() == type::k_bool);
+    CHECK(array_view[2].get_bool().value == true);
 }
 
 TEST_CASE("basic document builder works", "[bsoncxx::builder::basic]") {
@@ -921,7 +921,7 @@ TEST_CASE("basic document builder works", "[bsoncxx::builder::basic]") {
         uint32_t const size = 32 * 1024 * 1024;
         basic.append(
             kvp("foo", [&](sub_binary sb) { memset(sb.allocate(binary_sub_type::k_binary, size), 0x55, size); }));
-        REQUIRE(basic.view().length() > size);
+        CHECK(basic.view().length() > size);
     }
     SECTION("sub_binary builder can allocate with length zero") {
         {
@@ -937,7 +937,7 @@ TEST_CASE("basic document builder works", "[bsoncxx::builder::basic]") {
     }
     SECTION("sub_binary throws on double allocation") {
         using namespace builder::basic;
-        REQUIRE_THROWS_AS(
+        CHECK_THROWS_AS(
             basic.append(
                 kvp("foo",
                     [](sub_binary sb) {
@@ -948,7 +948,7 @@ TEST_CASE("basic document builder works", "[bsoncxx::builder::basic]") {
     }
     SECTION("sub_binary throws on missing allocation") {
         using namespace builder::basic;
-        REQUIRE_THROWS_AS(basic.append(kvp("foo", [](sub_binary) {})), bsoncxx::exception);
+        CHECK_THROWS_AS(basic.append(kvp("foo", [](sub_binary) {})), bsoncxx::exception);
     }
 }
 
@@ -1248,31 +1248,31 @@ TEST_CASE("array::view works", "[bsoncxx::builder::array]") {
 
     stream << 100 << 99 << 98;
 
-    REQUIRE(stream.view()[0].get_int32() == 100);
-    REQUIRE(stream.view()[1].get_int32() == 99);
-    REQUIRE(stream.view()[2].get_int32() == 98);
+    CHECK(stream.view()[0].get_int32() == 100);
+    CHECK(stream.view()[1].get_int32() == 99);
+    CHECK(stream.view()[2].get_int32() == 98);
 }
 
 TEST_CASE("builder::basic::make_document works", "[bsoncxx::builder::basic::make_document]") {
     auto full_doc = builder::basic::make_document(builder::basic::kvp("foo", 1), builder::basic::kvp("bar", true));
 
-    REQUIRE(full_doc.view()["foo"].type() == types::b_int32::type_id);
-    REQUIRE(full_doc.view()["foo"].get_int32() == 1);
-    REQUIRE(full_doc.view()["bar"].type() == types::b_bool::type_id);
-    REQUIRE(full_doc.view()["bar"].get_bool() == true);
+    CHECK(full_doc.view()["foo"].type() == types::b_int32::type_id);
+    CHECK(full_doc.view()["foo"].get_int32() == 1);
+    CHECK(full_doc.view()["bar"].type() == types::b_bool::type_id);
+    CHECK(full_doc.view()["bar"].get_bool() == true);
 }
 
 TEST_CASE("builder::basic::make_array works", "[bsoncxx::builder::basic::make_array]") {
     auto array = builder::basic::make_array("foo", 1, true);
     auto array_view = array.view();
 
-    REQUIRE(std::distance(array_view.begin(), array_view.end()) == 3);
-    REQUIRE(array_view[0].type() == type::k_string);
-    REQUIRE(string::to_string(array_view[0].get_string().value) == "foo");
-    REQUIRE(array_view[1].type() == type::k_int32);
-    REQUIRE(array_view[1].get_int32().value == 1);
-    REQUIRE(array_view[2].type() == type::k_bool);
-    REQUIRE(array_view[2].get_bool().value == true);
+    CHECK(std::distance(array_view.begin(), array_view.end()) == 3);
+    CHECK(array_view[0].type() == type::k_string);
+    CHECK(string::to_string(array_view[0].get_string().value) == "foo");
+    CHECK(array_view[1].type() == type::k_int32);
+    CHECK(array_view[1].get_int32().value == 1);
+    CHECK(array_view[2].type() == type::k_bool);
+    CHECK(array_view[2].get_bool().value == true);
 }
 
 TEST_CASE("stream in a document::view works", "[bsoncxx::builder::stream]") {
@@ -1281,9 +1281,9 @@ TEST_CASE("stream in a document::view works", "[bsoncxx::builder::stream]") {
     auto sub_doc = builder::stream::document{} << "b" << 1 << finalize;
     auto full_doc = builder::stream::document{} << "a" << sub_doc.view() << finalize;
 
-    REQUIRE(full_doc.view()["a"].type() == bsoncxx::types::b_document::type_id);
-    REQUIRE(full_doc.view()["a"]["b"].type() == bsoncxx::types::b_int32::type_id);
-    REQUIRE(full_doc.view()["a"]["b"].get_int32().value == 1);
+    CHECK(full_doc.view()["a"].type() == bsoncxx::types::b_document::type_id);
+    CHECK(full_doc.view()["a"]["b"].type() == bsoncxx::types::b_int32::type_id);
+    CHECK(full_doc.view()["a"]["b"].get_int32().value == 1);
 }
 
 TEST_CASE("stream in an array::view works", "[bsoncxx::builder::stream]") {
@@ -1292,18 +1292,18 @@ TEST_CASE("stream in an array::view works", "[bsoncxx::builder::stream]") {
     auto sub_array = builder::stream::array{} << 1 << 2 << 3 << finalize;
     auto full_doc = builder::stream::document{} << "a" << sub_array.view() << finalize;
 
-    REQUIRE(full_doc.view()["a"].type() == bsoncxx::types::b_array::type_id);
-    REQUIRE(full_doc.view()["a"][1].type() == bsoncxx::types::b_int32::type_id);
-    REQUIRE(full_doc.view()["a"][1].get_int32().value == 2);
+    CHECK(full_doc.view()["a"].type() == bsoncxx::types::b_array::type_id);
+    CHECK(full_doc.view()["a"][1].type() == bsoncxx::types::b_int32::type_id);
+    CHECK(full_doc.view()["a"][1].get_int32().value == 2);
 }
 
 TEST_CASE("builder::stream::document throws on consecutive keys", "[bsoncxx::builder::core]") {
     builder::stream::document doc;
-    REQUIRE_NOTHROW(
+    CHECK_NOTHROW(
         doc << "foo"
             << "bar");
-    REQUIRE_NOTHROW(doc << "far");
-    REQUIRE_THROWS_AS(doc << "boo", bsoncxx::exception);
+    CHECK_NOTHROW(doc << "far");
+    CHECK_THROWS_AS(doc << "boo", bsoncxx::exception);
 }
 
 TEST_CASE("list builder appends utf8", "[bsoncxx::builder::list]") {
@@ -1617,7 +1617,7 @@ TEST_CASE("list builder appends decimal128", "[bsoncxx::builder::list]") {
         auto d = types::b_decimal128{"-1234E+999"};
         auto v = types::bson_value::view{d};
 
-        REQUIRE(v.get_decimal128() == d);
+        CHECK(v.get_decimal128() == d);
 
         builder::list b{"foo", v};
         bson_eq_object(&expected, b.view().get_document().value);
@@ -1772,10 +1772,10 @@ TEST_CASE("list builder with explicit type deduction", "[bsoncxx::builder::list]
     SECTION("document") {
         builder::list b;
         auto kvp_regex = Catch::Matchers::Matches("(.*)must be list of key-value pairs(.*)", Catch::CaseSensitive::No);
-        REQUIRE_THROWS_WITH((b = builder::document{"foo", 1, 2}), kvp_regex);
+        CHECK_THROWS_WITH((b = builder::document{"foo", 1, 2}), kvp_regex);
 
         auto type_regex = Catch::Matchers::Matches("(.*)must be string type(.*)int32(.*)", Catch::CaseSensitive::No);
-        REQUIRE_THROWS_WITH((b = builder::document{"foo", 1, 2, 4}), type_regex);
+        CHECK_THROWS_WITH((b = builder::document{"foo", 1, 2, 4}), type_regex);
     }
 }
 
