@@ -181,8 +181,8 @@ TEMPLATE_TEST_CASE(
         CHECK(view.empty());
         CHECK(view.size() == 0);
         CHECK(view.byte_size() == 0);
-        CHECK_THROWS_AS(view.at(0), std::out_of_range);
-        CHECK_THROWS_AS(view.byte_at(0), std::out_of_range);
+        CHECK_THROWS_WITH(view.at(0), Catch::Matchers::ContainsSubstring("BSON vector access out of range"));
+        CHECK_THROWS_WITH(view.byte_at(0), Catch::Matchers::ContainsSubstring("BSON vector access out of range"));
     }
 
     SECTION("decode a valid vector with a single element") {
@@ -197,8 +197,9 @@ TEMPLATE_TEST_CASE(
         CHECK(view[0] == element);
         CHECK(view.byte_at(0) == bytes[2]);
         CHECK(view.byte_at(bytes.size() - 3u) == bytes[bytes.size() - 1u]);
-        CHECK_THROWS_AS(view.at(1), std::out_of_range);
-        CHECK_THROWS_AS(view.byte_at(bytes.size() - 2u), std::out_of_range);
+        CHECK_THROWS_WITH(view.at(1), Catch::Matchers::ContainsSubstring("BSON vector access out of range"));
+        CHECK_THROWS_WITH(
+            view.byte_at(bytes.size() - 2u), Catch::Matchers::ContainsSubstring("BSON vector access out of range"));
     }
 
     SECTION("reject binary data of the wrong sub_type") {

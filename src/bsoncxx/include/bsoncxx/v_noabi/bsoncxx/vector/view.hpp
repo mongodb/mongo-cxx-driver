@@ -18,6 +18,8 @@
 
 #include <bsoncxx/vector/view-fwd.hpp>
 
+#include <bsoncxx/exception/error_code.hpp>
+#include <bsoncxx/exception/exception.hpp>
 #include <bsoncxx/vector/formats.hpp>
 #include <bsoncxx/vector/impl.hpp>
 
@@ -96,8 +98,7 @@ class view {
 
     /// @brief Construct a const Vector view by validating a bsoncxx::v_noabi::types::b_binary reference.
     /// @param binary Non-owning reference to BSON binary data
-    /// @throws If the data can't be validated, throws bsoncxx::v_noabi::exception with
-    /// bsoncxx::v_noabi::error_code::k_invalid_vector, if the vector
+    /// @throws bsoncxx::v_noabi::exception with bsoncxx::v_noabi::error_code::k_invalid_vector, if validation fails.
     ///
     /// The Binary data is validated as a Vector of the templated Format. On success, a view is created which
     /// references the same data as the bsoncxx::v_noabi::types::b_binary pointer.
@@ -198,10 +199,11 @@ class view {
     /// @brief Obtain a reference to a numbered byte, with bounds checking
     /// @param index Index in the range 0 to byte_size()-1 inclusive.
     /// @return A byte reference
-    /// @throws std::out_of_range, if the index is outside the allowed range.
+    /// @throws bsoncxx::v_noabi::exception with bsoncxx::v_noabi::error_code::k_vector_out_of_range, if the index is
+    /// outside the allowed range.
     byte_reference byte_at(byte_count_type index) {
         if (index >= byte_size()) {
-            throw std::out_of_range{"bsoncxx::vector::view::byte_at()"};
+            throw bsoncxx::v_noabi::exception{error_code::k_vector_out_of_range};
         }
         return *(byte_begin() + byte_difference_type(index));
     }
@@ -209,10 +211,11 @@ class view {
     /// @brief Obtain a const reference to a numbered byte, with bounds checking
     /// @param index Index in the range 0 to byte_size()-1 inclusive.
     /// @return A byte reference
-    /// @throws std::out_of_range, if the index is outside the allowed range.
+    /// @throws bsoncxx::v_noabi::exception with bsoncxx::v_noabi::error_code::k_vector_out_of_range, if the index is
+    /// outside the allowed range.
     const_byte_reference byte_at(byte_count_type index) const {
         if (index >= byte_size()) {
-            throw std::out_of_range{"bsoncxx::vector::view::byte_at()"};
+            throw bsoncxx::v_noabi::exception{error_code::k_vector_out_of_range};
         }
         return *(byte_begin() + byte_difference_type(index));
     }
@@ -220,10 +223,11 @@ class view {
     /// @brief Obtain a reference to a numbered element, with bounds checking
     /// @param index Index in the range 0 to size()-1 inclusive.
     /// @return An element reference
-    /// @throws std::out_of_range, if the index is outside the allowed range.
+    /// @throws bsoncxx::v_noabi::exception with bsoncxx::v_noabi::error_code::k_vector_out_of_range, if the index is
+    /// outside the allowed range.
     reference at(element_count_type index) {
         if (index >= size()) {
-            throw std::out_of_range{"bsoncxx::vector::view::at()"};
+            throw bsoncxx::v_noabi::exception{error_code::k_vector_out_of_range};
         }
         return *(begin() + element_difference_type(index));
     }
@@ -231,10 +235,11 @@ class view {
     /// @brief Obtain a const reference to a numbered element, with bounds checking
     /// @param index Index in the range 0 to size()-1 inclusive.
     /// @return An element reference
-    /// @throws std::out_of_range, if the index is outside the allowed range.
+    /// @throws bsoncxx::v_noabi::exception with bsoncxx::v_noabi::error_code::k_vector_out_of_range, if the index is
+    /// outside the allowed range.
     const_reference at(element_count_type index) const {
         if (index >= size()) {
-            throw std::out_of_range{"bsoncxx::vector::view::at()"};
+            throw bsoncxx::v_noabi::exception{error_code::k_vector_out_of_range};
         }
         return *(begin() + element_difference_type(index));
     }
