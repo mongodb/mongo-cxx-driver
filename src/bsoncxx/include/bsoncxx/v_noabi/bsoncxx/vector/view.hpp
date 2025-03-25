@@ -96,24 +96,24 @@ class view {
     ///
     /// The Binary data is validated as a Vector of the templated Format. On success, a view is created which
     /// references the same data as the bsoncxx::v_noabi::types::b_binary pointer.
-    view(types::b_binary const& binary) : impl_data(format_traits::const_validate(binary)) {}
+    view(types::b_binary const& binary) : _data(format_traits::const_validate(binary)) {}
 
     /// @brief Count the bytes of element data
     /// @return Size of the vector data, not including any headers
     constexpr byte_count_type byte_size() const noexcept {
-        return impl_data.size - byte_count_type(sizeof(detail::header::bytes));
+        return _data.size - byte_count_type(sizeof(detail::header::bytes));
     }
 
     /// @brief Count the number of elements
     /// @return Number of elements
     constexpr element_count_type size() const noexcept {
-        return format_traits::element_count(impl_data.size, impl_data.header_copy);
+        return format_traits::element_count(_data.size, _data.header_copy);
     }
 
     /// @brief Obtain an iterator pointing to the beginning of the vector
     /// @return A per-element random access iterator, pointing at the first element if one exists
     constexpr iterator begin() const noexcept {
-        return iterator(impl_data.bytes + sizeof(detail::header::bytes));
+        return iterator(_data.bytes + sizeof(detail::header::bytes));
     }
 
     /// @brief Obtain an iterator pointing just past the end of the vector
@@ -263,9 +263,9 @@ class view {
    private:
     friend class bsoncxx::v_noabi::builder::basic::sub_binary;
 
-    view(detail::view_data<format> data) noexcept : impl_data(data) {}
+    view(detail::view_data<format> data) noexcept : _data(data) {}
 
-    detail::view_data<format> impl_data;
+    detail::view_data<format> _data;
 };
 
 } // namespace vector
