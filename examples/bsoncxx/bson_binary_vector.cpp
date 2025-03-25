@@ -23,8 +23,8 @@
 #include <bsoncxx/builder/basic/sub_binary.hpp>
 #include <bsoncxx/json.hpp>
 #include <bsoncxx/types.hpp>
+#include <bsoncxx/vector/accessor.hpp>
 #include <bsoncxx/vector/formats.hpp>
-#include <bsoncxx/vector/view.hpp>
 
 #include <examples/macros.hh>
 
@@ -42,97 +42,99 @@ int EXAMPLES_CDECL main() {
             }),
         kvp("vector_int8",
             [&](sub_binary sbin) {
-                auto view = sbin.allocate(bsoncxx::vector::formats::f_int8{}, 1000);
+                auto vec = sbin.allocate(bsoncxx::vector::formats::f_int8{}, 1000);
                 uint8_t i = 0;
-                std::generate(view.begin(), view.end(), [&] { return (int8_t)++i; });
+                std::generate(vec.begin(), vec.end(), [&] { return (int8_t)++i; });
             }),
         kvp("vector_float32",
             [&](sub_binary sbin) {
-                auto view = sbin.allocate(bsoncxx::vector::formats::f_float32{}, 1000);
-                view[0] = 0.f;
-                view[1] = 1e-38f;
-                for (size_t i = 2; i < view.size(); i++) {
-                    view[i] = view[i - 1] + view[i - 2];
+                auto vec = sbin.allocate(bsoncxx::vector::formats::f_float32{}, 1000);
+                vec[0] = 0.f;
+                vec[1] = 1e-38f;
+                for (size_t i = 2; i < vec.size(); i++) {
+                    vec[i] = vec[i - 1] + vec[i - 2];
                 }
-                for (auto i = view.begin(); i != view.end(); i++) {
+                for (auto i = vec.begin(); i != vec.end(); i++) {
                     if (!(*i * 0.f < *i)) {
-                        *i = float(std::sin(double(i - view.begin()) * 1e-3));
+                        *i = float(std::sin(double(i - vec.begin()) * 1e-3));
                     }
                 }
-                std::fill(view.end() - 10, view.end() - 7, std::numeric_limits<float>::infinity());
-                view[0] += 1.f;
-                view[1] *= 1e38f;
-                view[1] /= 2.f;
-                view[1] -= 1.f + view[0];
+                std::fill(vec.end() - 10, vec.end() - 7, std::numeric_limits<float>::infinity());
+                vec[0] += 1.f;
+                vec[1] *= 1e38f;
+                vec[1] /= 2.f;
+                vec[1] -= 1.f + vec[0];
             }),
         kvp("vector_packed_bit", [&](sub_binary sbin) {
-            auto view = sbin.allocate(bsoncxx::vector::formats::f_packed_bit{}, 61);
-            std::fill(view.begin(), view.end(), true);
-            view[5] = !view[5];
-            view[6] = view[1];
-            view[7] = view[5];
-            view[8] = 0;
-            view[60] = false;
-            std::fill(view.end() - 20, view.end() - 4, false);
-            std::fill(view.end() - 8, view.end() - 5, true);
-            for (auto i = view.byte_begin(); i != view.byte_end(); i++) {
+            auto vec = sbin.allocate(bsoncxx::vector::formats::f_packed_bit{}, 61);
+            std::fill(vec.begin(), vec.end(), true);
+            vec[5] = !vec[5];
+            vec[6] = vec[1];
+            vec[7] = vec[5];
+            vec[8] = 0;
+            vec[60] = false;
+            std::fill(vec.end() - 20, vec.end() - 4, false);
+            std::fill(vec.end() - 8, vec.end() - 5, true);
+            for (auto i = vec.byte_begin(); i != vec.byte_end(); i++) {
                 *i ^= 0xFF;
             }
-            std::copy(view.byte_begin(), view.byte_begin() + 2, view.byte_begin() + 2);
-            std::copy(view.begin() + 5, view.begin() + 9, view.begin() + 56);
+            std::copy(vec.byte_begin(), vec.byte_begin() + 2, vec.byte_begin() + 2);
+            std::copy(vec.begin() + 5, vec.begin() + 9, vec.begin() + 56);
         }));
 
     std::cout << bsoncxx::to_json(doc) << std::endl;
 
     {
-        bsoncxx::vector::view<bsoncxx::vector::formats::f_int8 const> v(doc["vector_int8"].get_binary());
-        std::cout << "int8: " << v.size() << std::endl;
-        for (auto i = v.begin(); i != v.end(); i++) {
+        bsoncxx::vector::accessor<bsoncxx::vector::formats::f_int8 const> vec(doc["vector_int8"].get_binary());
+        std::cout << "int8: " << vec.size() << std::endl;
+        for (auto i = vec.begin(); i != vec.end(); i++) {
             std::cout << int(*i) << " ";
         }
         std::cout << std::endl;
     }
 
     {
-        bsoncxx::vector::view<bsoncxx::vector::formats::f_int8 const> v(doc["vector_int8"].get_binary());
-        std::cout << "int8 bytes: " << v.byte_size() << std::hex << std::endl;
-        for (auto i = v.byte_begin(); i != v.byte_end(); i++) {
-            std::cout << int(*i) << " ";
-        }
-        std::cout << std::dec << std::endl;
-    }
-
-    {
-        bsoncxx::vector::view<bsoncxx::vector::formats::f_float32 const> v(doc["vector_float32"].get_binary());
-        std::cout << "float32: " << v.size() << std::endl;
-        for (auto i = v.begin(); i != v.end(); i++) {
-            std::cout << *i << " ";
-        }
-        std::cout << std::endl;
-    }
-
-    {
-        bsoncxx::vector::view<bsoncxx::vector::formats::f_float32 const> v(doc["vector_float32"].get_binary());
-        std::cout << "float32 bytes: " << v.byte_size() << std::hex << std::endl;
-        for (auto i = v.byte_begin(); i != v.byte_end(); i++) {
+        bsoncxx::vector::accessor<bsoncxx::vector::formats::f_int8 const> vec(doc["vector_int8"].get_binary());
+        std::cout << "int8 bytes: " << vec.byte_size() << std::hex << std::endl;
+        for (auto i = vec.byte_begin(); i != vec.byte_end(); i++) {
             std::cout << int(*i) << " ";
         }
         std::cout << std::dec << std::endl;
     }
 
     {
-        bsoncxx::vector::view<bsoncxx::vector::formats::f_packed_bit const> v(doc["vector_packed_bit"].get_binary());
-        std::cout << "packed_bit: " << v.size() << std::endl;
-        for (auto i = v.begin(); i != v.end(); i++) {
+        bsoncxx::vector::accessor<bsoncxx::vector::formats::f_float32 const> vec(doc["vector_float32"].get_binary());
+        std::cout << "float32: " << vec.size() << std::endl;
+        for (auto i = vec.begin(); i != vec.end(); i++) {
             std::cout << *i << " ";
         }
         std::cout << std::endl;
     }
 
     {
-        bsoncxx::vector::view<bsoncxx::vector::formats::f_packed_bit const> v(doc["vector_packed_bit"].get_binary());
-        std::cout << "packed_bit bytes: " << v.byte_size() << std::hex << std::endl;
-        for (auto i = v.byte_begin(); i != v.byte_end(); i++) {
+        bsoncxx::vector::accessor<bsoncxx::vector::formats::f_float32 const> vec(doc["vector_float32"].get_binary());
+        std::cout << "float32 bytes: " << vec.byte_size() << std::hex << std::endl;
+        for (auto i = vec.byte_begin(); i != vec.byte_end(); i++) {
+            std::cout << int(*i) << " ";
+        }
+        std::cout << std::dec << std::endl;
+    }
+
+    {
+        bsoncxx::vector::accessor<bsoncxx::vector::formats::f_packed_bit const> vec(
+            doc["vector_packed_bit"].get_binary());
+        std::cout << "packed_bit: " << vec.size() << std::endl;
+        for (auto i = vec.begin(); i != vec.end(); i++) {
+            std::cout << *i << " ";
+        }
+        std::cout << std::endl;
+    }
+
+    {
+        bsoncxx::vector::accessor<bsoncxx::vector::formats::f_packed_bit const> vec(
+            doc["vector_packed_bit"].get_binary());
+        std::cout << "packed_bit bytes: " << vec.byte_size() << std::hex << std::endl;
+        for (auto i = vec.byte_begin(); i != vec.byte_end(); i++) {
             std::cout << int(*i) << " ";
         }
         std::cout << std::dec << std::endl;

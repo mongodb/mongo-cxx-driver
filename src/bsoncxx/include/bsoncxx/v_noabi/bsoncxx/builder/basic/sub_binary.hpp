@@ -20,9 +20,9 @@
 
 #include <bsoncxx/builder/core.hpp>
 #include <bsoncxx/types.hpp>
+#include <bsoncxx/vector/accessor.hpp>
 #include <bsoncxx/vector/detail.hpp>
 #include <bsoncxx/vector/formats.hpp>
-#include <bsoncxx/vector/view.hpp>
 
 #include <bsoncxx/config/prelude.hpp>
 
@@ -55,13 +55,13 @@ class sub_binary {
     /// @brief Allocate and format space for a BSON Binary Vector with uninitialized elements.
     /// @param fmt Instance of a format type from @ref bsoncxx::v_noabi::vector::formats
     /// @param element_count Number of elements to allocate space for.
-    /// @return A vector::view, valid during the lifetime of this sub_binary builder. Every element must be overwritten
-    /// before that element is read or the resulting document is used.
+    /// @return A writable vector::accessor, valid during the lifetime of this sub_binary builder. Every element must be
+    /// overwritten before that element is read or the resulting document is used.
     /// @throws bsoncxx::v_noabi::exception if this sub_binary has already allocated.
     /// @throws bsoncxx::v_noabi::exception if the binary fails to append due to the BSON size limit.
     /// @throws bsoncxx::v_noabi::exception if a vector of the requested size would be too large to represent.
     template <typename Format, typename SFINAE = typename vector::detail::format_traits<Format>::value_type>
-    vector::view<Format> allocate(Format fmt, std::size_t element_count) {
+    vector::accessor<Format> allocate(Format fmt, std::size_t element_count) {
         (void)fmt;
         using format_traits = typename vector::detail::format_traits<Format>;
         std::uint32_t binary_data_length = format_traits::length_for_append(element_count);

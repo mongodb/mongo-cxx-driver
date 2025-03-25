@@ -28,15 +28,15 @@ namespace v_noabi {
 namespace vector {
 namespace detail {
 
-/// @brief Implementation detail. A copy of the validated BSON Binary Vector header, included in each view.
+/// @brief Implementation detail. A copy of the validated BSON Binary Vector header, included in each accessor.
 struct header {
     std::uint8_t bytes[2];
 };
 
-/// @brief Implementation detail. Common data for each view type.
-/// @tparam Format One of the @ref bsoncxx::v_noabi::vector::formats types.
+/// @brief Implementation detail. Common data for each accessor type.
+/// @tparam Format One of the @ref bsoncxx::v_noabi::vector::formats types, optionally const.
 template <typename Format>
-struct view_data {
+struct accessor_data {
     using byte_type = typename std::conditional<std::is_const<Format>::value, std::uint8_t const, std::uint8_t>::type;
     using byte_count_type = std::uint32_t;
 
@@ -60,7 +60,7 @@ struct format_traits_base {
 };
 
 /// @brief Implementation detail. Format traits, specialized by format.
-/// @tparam Format One of the @ref bsoncxx::v_noabi::vector::formats types.
+/// @tparam Format One of the @ref bsoncxx::v_noabi::vector::formats types, without qualifiers.
 template <typename Format>
 struct format_traits;
 
@@ -77,7 +77,7 @@ struct format_traits<formats::f_int8> : format_traits_base {
     static BSONCXX_ABI_EXPORT_CDECL(std::uint32_t) length_for_append(std::size_t element_count);
     static BSONCXX_ABI_EXPORT_CDECL(header)
     write_frame(std::uint8_t* binary_data, std::uint32_t binary_data_length, std::size_t element_count);
-    static BSONCXX_ABI_EXPORT_CDECL(view_data<formats::f_int8 const>) const_validate(types::b_binary const& binary);
+    static BSONCXX_ABI_EXPORT_CDECL(accessor_data<formats::f_int8 const>) const_validate(types::b_binary const& binary);
 
     static constexpr std::size_t element_count(std::uint32_t binary_data_length, header) noexcept {
         return binary_data_length - sizeof(header::bytes);
@@ -105,7 +105,8 @@ struct format_traits<formats::f_float32> : format_traits_base {
     static BSONCXX_ABI_EXPORT_CDECL(std::uint32_t) length_for_append(std::size_t element_count);
     static BSONCXX_ABI_EXPORT_CDECL(header)
     write_frame(std::uint8_t* binary_data, std::uint32_t binary_data_length, std::size_t element_count);
-    static BSONCXX_ABI_EXPORT_CDECL(view_data<formats::f_float32 const>) const_validate(types::b_binary const& binary);
+    static BSONCXX_ABI_EXPORT_CDECL(accessor_data<formats::f_float32 const>) const_validate(
+        types::b_binary const& binary);
 
     static constexpr std::size_t element_count(std::uint32_t binary_data_length, header) noexcept {
         return (binary_data_length - sizeof(header::bytes)) / sizeof(float);
@@ -141,7 +142,7 @@ struct format_traits<formats::f_packed_bit> : format_traits_base {
     static BSONCXX_ABI_EXPORT_CDECL(std::uint32_t) length_for_append(std::size_t element_count);
     static BSONCXX_ABI_EXPORT_CDECL(header)
     write_frame(std::uint8_t* binary_data, std::uint32_t binary_data_length, std::size_t element_count);
-    static BSONCXX_ABI_EXPORT_CDECL(view_data<formats::f_packed_bit const>) const_validate(
+    static BSONCXX_ABI_EXPORT_CDECL(accessor_data<formats::f_packed_bit const>) const_validate(
         types::b_binary const& binary);
 
     static constexpr std::size_t element_count(std::uint32_t binary_data_length, header hdr) noexcept {

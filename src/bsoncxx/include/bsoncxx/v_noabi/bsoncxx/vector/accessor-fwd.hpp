@@ -21,7 +21,7 @@ namespace v_noabi {
 namespace vector {
 
 template <typename Format>
-class view;
+class accessor;
 
 } // namespace vector
 } // namespace v_noabi
@@ -30,7 +30,7 @@ class view;
 namespace bsoncxx {
 namespace vector {
 
-using ::bsoncxx::v_noabi::vector::view;
+using ::bsoncxx::v_noabi::vector::accessor;
 
 } // namespace vector
 } // namespace bsoncxx
@@ -39,5 +39,5 @@ using ::bsoncxx::v_noabi::vector::view;
 
 ///
 /// @file
-/// Declares @ref bsoncxx::vector::view.
+/// Declares @ref bsoncxx::vector::accessor.
 ///

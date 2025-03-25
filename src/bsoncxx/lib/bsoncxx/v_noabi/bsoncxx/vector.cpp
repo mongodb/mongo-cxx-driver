@@ -92,24 +92,24 @@ header format_traits<formats::f_packed_bit>::write_frame(
 }
 
 template <typename Format, typename Impl>
-static view_data<Format> libbson_const_validate(bsoncxx::v_noabi::types::b_binary const& binary, Impl func) {
+static accessor_data<Format> libbson_const_validate(bsoncxx::v_noabi::types::b_binary const& binary, Impl func) {
     if (binary.sub_type != binary_sub_type::k_vector || !func(NULL, binary.bytes, binary.size)) {
         throw bsoncxx::v_noabi::exception{error_code::k_invalid_vector};
     }
     return {binary.bytes, binary.size, copy_header(binary.bytes)};
 }
 
-view_data<formats::f_int8 const> format_traits<formats::f_int8>::const_validate(
+accessor_data<formats::f_int8 const> format_traits<formats::f_int8>::const_validate(
     bsoncxx::v_noabi::types::b_binary const& binary) {
     return libbson_const_validate<formats::f_int8 const>(binary, bson_vector_int8_const_view_init);
 }
 
-view_data<formats::f_float32 const> format_traits<formats::f_float32>::const_validate(
+accessor_data<formats::f_float32 const> format_traits<formats::f_float32>::const_validate(
     bsoncxx::v_noabi::types::b_binary const& binary) {
     return libbson_const_validate<formats::f_float32 const>(binary, bson_vector_float32_const_view_init);
 }
 
-view_data<formats::f_packed_bit const> format_traits<formats::f_packed_bit>::const_validate(
+accessor_data<formats::f_packed_bit const> format_traits<formats::f_packed_bit>::const_validate(
     bsoncxx::v_noabi::types::b_binary const& binary) {
     return libbson_const_validate<formats::f_packed_bit const>(binary, bson_vector_packed_bit_const_view_init);
 }

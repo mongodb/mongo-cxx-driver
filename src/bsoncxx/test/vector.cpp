@@ -20,8 +20,8 @@
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/builder/basic/sub_binary.hpp>
 #include <bsoncxx/types.hpp>
+#include <bsoncxx/vector/accessor.hpp>
 #include <bsoncxx/vector/formats.hpp>
-#include <bsoncxx/vector/view.hpp>
 
 #include <bsoncxx/test/catch.hh>
 
@@ -166,8 +166,8 @@ void iterator_operations(
 }
 
 TEMPLATE_TEST_CASE(
-    "all vector view formats",
-    "[bsoncxx::vector::view]",
+    "all vector accessor formats",
+    "[bsoncxx::vector::accessor]",
     vector::formats::f_float32,
     vector::formats::f_int8,
     vector::formats::f_packed_bit) {
@@ -177,29 +177,29 @@ TEMPLATE_TEST_CASE(
     SECTION("accept a valid vector with no elements") {
         auto bytes = test_format_specific::bytes_empty();
         types::b_binary const binary{binary_sub_type::k_vector, bytes.size(), bytes.data()};
-        vector::view<TestType const> view{binary};
-        CHECK(view.empty());
-        CHECK(view.size() == 0);
-        CHECK(view.byte_size() == 0);
-        CHECK_THROWS_WITH(view.at(0), Catch::Matchers::ContainsSubstring("BSON vector access out of range"));
-        CHECK_THROWS_WITH(view.byte_at(0), Catch::Matchers::ContainsSubstring("BSON vector access out of range"));
+        vector::accessor<TestType const> vec{binary};
+        CHECK(vec.empty());
+        CHECK(vec.size() == 0);
+        CHECK(vec.byte_size() == 0);
+        CHECK_THROWS_WITH(vec.at(0), Catch::Matchers::ContainsSubstring("BSON vector access out of range"));
+        CHECK_THROWS_WITH(vec.byte_at(0), Catch::Matchers::ContainsSubstring("BSON vector access out of range"));
     }
 
     SECTION("decode a valid vector with a single element") {
         auto bytes = test_format_specific::bytes_unit();
         auto element = test_format_specific::element_unit();
         types::b_binary const binary{binary_sub_type::k_vector, bytes.size(), bytes.data()};
-        vector::view<TestType const> view{binary};
-        CHECK_FALSE(view.empty());
-        CHECK(view.size() == 1u);
-        CHECK(view.byte_size() == bytes.size() - 2u);
-        CHECK(view.at(0) == element);
-        CHECK(view[0] == element);
-        CHECK(view.byte_at(0) == bytes[2]);
-        CHECK(view.byte_at(bytes.size() - 3u) == bytes[bytes.size() - 1u]);
-        CHECK_THROWS_WITH(view.at(1), Catch::Matchers::ContainsSubstring("BSON vector access out of range"));
+        vector::accessor<TestType const> vec{binary};
+        CHECK_FALSE(vec.empty());
+        CHECK(vec.size() == 1u);
+        CHECK(vec.byte_size() == bytes.size() - 2u);
+        CHECK(vec.at(0) == element);
+        CHECK(vec[0] == element);
+        CHECK(vec.byte_at(0) == bytes[2]);
+        CHECK(vec.byte_at(bytes.size() - 3u) == bytes[bytes.size() - 1u]);
+        CHECK_THROWS_WITH(vec.at(1), Catch::Matchers::ContainsSubstring("BSON vector access out of range"));
         CHECK_THROWS_WITH(
-            view.byte_at(bytes.size() - 2u), Catch::Matchers::ContainsSubstring("BSON vector access out of range"));
+            vec.byte_at(bytes.size() - 2u), Catch::Matchers::ContainsSubstring("BSON vector access out of range"));
     }
 
     SECTION("reject binary data of the wrong sub_type") {
@@ -208,7 +208,7 @@ TEMPLATE_TEST_CASE(
             binary_sub_type::k_binary, binary_sub_type::k_encrypted, binary_sub_type::k_uuid, binary_sub_type::k_user);
         types::b_binary const binary{invalid_type, bytes.size(), bytes.data()};
         CHECK_THROWS_WITH(
-            vector::view<TestType const>(binary), Catch::Matchers::ContainsSubstring("invalid BSON vector"));
+            vector::accessor<TestType const>(binary), Catch::Matchers::ContainsSubstring("invalid BSON vector"));
     }
 
     SECTION("reject binary data that's too short to include a header") {
@@ -217,7 +217,7 @@ TEMPLATE_TEST_CASE(
         REQUIRE(bytes.size() >= bytes_to_remove);
         types::b_binary const binary{binary_sub_type::k_vector, uint32_t(bytes.size() - bytes_to_remove), bytes.data()};
         CHECK_THROWS_WITH(
-            vector::view<TestType const>(binary), Catch::Matchers::ContainsSubstring("invalid BSON vector"));
+            vector::accessor<TestType const>(binary), Catch::Matchers::ContainsSubstring("invalid BSON vector"));
     }
 
     SECTION("reject empty vectors with any modified header bits") {
@@ -226,7 +226,7 @@ TEMPLATE_TEST_CASE(
             bytes[bit_index >> 3u] ^= std::uint8_t(1u << (bit_index & 7u));
             types::b_binary const binary{binary_sub_type::k_vector, bytes.size(), bytes.data()};
             CHECK_THROWS_WITH(
-                vector::view<TestType const>(binary), Catch::Matchers::ContainsSubstring("invalid BSON vector"));
+                vector::accessor<TestType const>(binary), Catch::Matchers::ContainsSubstring("invalid BSON vector"));
         }
     }
 
@@ -239,19 +239,19 @@ TEMPLATE_TEST_CASE(
         types::b_binary const& binary = doc.view()["vector"].get_binary();
         CHECK(binary.sub_type == binary_sub_type::k_vector);
         binary_eq_bytes(binary, expected_bytes);
-        vector::view<TestType const> validate_encoded{binary};
+        vector::accessor<TestType const> validate_encoded{binary};
     }
 
     SECTION("support algorithms and operators on element iterators") {
         using namespace builder::basic;
         bsoncxx::document::value doc = make_document(kvp("vector", [&](sub_binary sbin) {
             // Avoid multiples of 8, to cover nonzero packed_bit 'padding'.
-            auto view = sbin.allocate(TestType{}, 8007u);
+            auto vec = sbin.allocate(TestType{}, 8007u);
             iterator_operations(
-                view.begin(), view.end(), std::ptrdiff_t(view.size()), test_format_specific::element_unit());
+                vec.begin(), vec.end(), std::ptrdiff_t(vec.size()), test_format_specific::element_unit());
         }));
         types::b_binary const& binary = doc.view()["vector"].get_binary();
-        vector::view<TestType const> validate_encoded{binary};
+        vector::accessor<TestType const> validate_encoded{binary};
         CHECK(binary.size > 1000u);
     }
 
@@ -259,44 +259,44 @@ TEMPLATE_TEST_CASE(
         using namespace builder::basic;
         bsoncxx::document::value doc = make_document(kvp("vector", [&](sub_binary sbin) {
             // Choose a multiple of 8, to avoid the effects of masking unused bits.
-            auto view = sbin.allocate(TestType{}, 8000u);
-            iterator_operations(view.byte_begin(), view.byte_end(), std::ptrdiff_t(view.byte_size()), uint8_t(1));
+            auto vec = sbin.allocate(TestType{}, 8000u);
+            iterator_operations(vec.byte_begin(), vec.byte_end(), std::ptrdiff_t(vec.byte_size()), uint8_t(1));
         }));
         types::b_binary const& binary = doc.view()["vector"].get_binary();
-        vector::view<TestType const> validate_encoded{binary};
+        vector::accessor<TestType const> validate_encoded{binary};
         CHECK(binary.size > 1000u);
     }
 
     SECTION("support assignment between referenced elements") {
         using namespace builder::basic;
         bsoncxx::document::value doc = make_document(kvp("vector", [&](sub_binary sbin) {
-            auto view = sbin.allocate(TestType{}, 2u);
-            view[0] = test_format_specific::element_unit();
-            view[1] = value_type{0};
-            CHECK(view.at(0) != view.at(1));
-            CHECK_FALSE(view.at(0) == view.at(1));
-            view[1] = view[0];
-            CHECK(view.at(0) == view.at(1));
-            CHECK_FALSE(view.at(0) != view.at(1));
+            auto vec = sbin.allocate(TestType{}, 2u);
+            vec[0] = test_format_specific::element_unit();
+            vec[1] = value_type{0};
+            CHECK(vec.at(0) != vec.at(1));
+            CHECK_FALSE(vec.at(0) == vec.at(1));
+            vec[1] = vec[0];
+            CHECK(vec.at(0) == vec.at(1));
+            CHECK_FALSE(vec.at(0) != vec.at(1));
         }));
         types::b_binary const& binary = doc.view()["vector"].get_binary();
-        vector::view<TestType const> validate_encoded{binary};
+        vector::accessor<TestType const> validate_encoded{binary};
     }
 
     SECTION("support assignment between referenced bytes") {
         using namespace builder::basic;
         bsoncxx::document::value doc = make_document(kvp("vector", [&](sub_binary sbin) {
-            auto view = sbin.allocate(TestType{}, 16u);
-            std::fill(view.begin(), view.end(), test_format_specific::element_unit());
-            *(view.end() - 2) = value_type{0};
-            CHECK(view.byte_at(view.byte_size() - 2) != view.byte_at(view.byte_size() - 1));
-            CHECK_FALSE(view.byte_at(view.byte_size() - 2) == view.byte_at(view.byte_size() - 1));
-            view.byte_at(view.byte_size() - 2) = view.byte_at(view.byte_size() - 1);
-            CHECK(view.byte_at(view.byte_size() - 2) == view.byte_at(view.byte_size() - 1));
-            CHECK_FALSE(view.byte_at(view.byte_size() - 2) != view.byte_at(view.byte_size() - 1));
+            auto vec = sbin.allocate(TestType{}, 16u);
+            std::fill(vec.begin(), vec.end(), test_format_specific::element_unit());
+            *(vec.end() - 2) = value_type{0};
+            CHECK(vec.byte_at(vec.byte_size() - 2) != vec.byte_at(vec.byte_size() - 1));
+            CHECK_FALSE(vec.byte_at(vec.byte_size() - 2) == vec.byte_at(vec.byte_size() - 1));
+            vec.byte_at(vec.byte_size() - 2) = vec.byte_at(vec.byte_size() - 1);
+            CHECK(vec.byte_at(vec.byte_size() - 2) == vec.byte_at(vec.byte_size() - 1));
+            CHECK_FALSE(vec.byte_at(vec.byte_size() - 2) != vec.byte_at(vec.byte_size() - 1));
         }));
         types::b_binary const& binary = doc.view()["vector"].get_binary();
-        vector::view<TestType const> validate_encoded{binary};
+        vector::accessor<TestType const> validate_encoded{binary};
     }
 
     SECTION("fail to allocate unrepresentably large vectors") {
@@ -311,57 +311,57 @@ TEMPLATE_TEST_CASE(
     SECTION("support front and back element references") {
         using namespace builder::basic;
         bsoncxx::document::value doc = make_document(kvp("vector", [&](sub_binary sbin) {
-            auto view = sbin.allocate(TestType{}, 2u);
-            std::fill(view.begin(), view.end(), test_format_specific::element_unit());
-            *(view.end() - 1) = value_type{0};
-            CHECK(view.back() == value_type{0});
-            CHECK(view.back() == view[view.size() - 1u]);
-            CHECK(view.front() != view.back());
-            CHECK_FALSE(view.front() == view.back());
-            view.front() = view.back();
-            CHECK(view[0] == value_type{0});
-            CHECK(view.front() == view.back());
-            CHECK_FALSE(view.front() != view.back());
-            CHECK(view[view.size() - 1u] == value_type{0});
-            view.back() = test_format_specific::element_unit();
-            CHECK(view[0] == value_type{0});
-            CHECK(view[view.size() - 1u] != value_type{0});
-            CHECK(view.front() != view.back());
-            CHECK_FALSE(view.front() == view.back());
+            auto vec = sbin.allocate(TestType{}, 2u);
+            std::fill(vec.begin(), vec.end(), test_format_specific::element_unit());
+            *(vec.end() - 1) = value_type{0};
+            CHECK(vec.back() == value_type{0});
+            CHECK(vec.back() == vec[vec.size() - 1u]);
+            CHECK(vec.front() != vec.back());
+            CHECK_FALSE(vec.front() == vec.back());
+            vec.front() = vec.back();
+            CHECK(vec[0] == value_type{0});
+            CHECK(vec.front() == vec.back());
+            CHECK_FALSE(vec.front() != vec.back());
+            CHECK(vec[vec.size() - 1u] == value_type{0});
+            vec.back() = test_format_specific::element_unit();
+            CHECK(vec[0] == value_type{0});
+            CHECK(vec[vec.size() - 1u] != value_type{0});
+            CHECK(vec.front() != vec.back());
+            CHECK_FALSE(vec.front() == vec.back());
         }));
         types::b_binary const& binary = doc.view()["vector"].get_binary();
-        vector::view<TestType const> validate_encoded{binary};
+        vector::accessor<TestType const> validate_encoded{binary};
     }
 
     SECTION("support front and back byte references") {
         using namespace builder::basic;
         bsoncxx::document::value doc = make_document(kvp("vector", [&](sub_binary sbin) {
-            auto view = sbin.allocate(TestType{}, 16u);
-            std::fill(view.begin(), view.end(), value_type{0});
-            CHECK(view.front() == view.back());
-            CHECK_FALSE(view.front() != view.back());
-            CHECK(view.byte_front() == view.byte_back());
-            CHECK_FALSE(view.byte_front() != view.byte_back());
-            view.back() = test_format_specific::element_unit();
-            CHECK(view.byte_front() != view.byte_back());
-            CHECK_FALSE(view.byte_front() == view.byte_back());
-            view.byte_front() = UINT8_C(0);
-            view.byte_back() = UINT8_C(0);
-            CHECK(view.byte_front() == view.byte_back());
-            CHECK_FALSE(view.byte_front() != view.byte_back());
+            auto vec = sbin.allocate(TestType{}, 16u);
+            std::fill(vec.begin(), vec.end(), value_type{0});
+            CHECK(vec.front() == vec.back());
+            CHECK_FALSE(vec.front() != vec.back());
+            CHECK(vec.byte_front() == vec.byte_back());
+            CHECK_FALSE(vec.byte_front() != vec.byte_back());
+            vec.back() = test_format_specific::element_unit();
+            CHECK(vec.byte_front() != vec.byte_back());
+            CHECK_FALSE(vec.byte_front() == vec.byte_back());
+            vec.byte_front() = UINT8_C(0);
+            vec.byte_back() = UINT8_C(0);
+            CHECK(vec.byte_front() == vec.byte_back());
+            CHECK_FALSE(vec.byte_front() != vec.byte_back());
         }));
         types::b_binary const& binary = doc.view()["vector"].get_binary();
-        vector::view<TestType const> validate_encoded{binary};
+        vector::accessor<TestType const> validate_encoded{binary};
     }
 }
 
-TEST_CASE("vector view float32", "[bsoncxx::vector::view]") {
+TEST_CASE("vector accessor float32", "[bsoncxx::vector::accessor]") {
     SECTION("rejects binary data with an incorrect length") {
         static uint8_t const bytes[] = {0x27, 0x00, 0x00, 0x00, 0x80, 0x3f, 0x00, 0x00, 0x00};
         auto invalid_length = GENERATE(0u, 1u, 3u, 4u, 5u, 7u, 8u, 9u);
         types::b_binary const binary{binary_sub_type::k_vector, uint32_t(invalid_length), bytes};
         CHECK_THROWS_WITH(
-            vector::view<vector::formats::f_float32 const>(binary),
+            vector::accessor<vector::formats::f_float32 const>(binary),
             Catch::Matchers::ContainsSubstring("invalid BSON vector"));
     }
 
@@ -371,7 +371,7 @@ TEST_CASE("vector view float32", "[bsoncxx::vector::view]") {
             format_specific<vector::formats::f_packed_bit>::bytes_empty());
         types::b_binary const binary{binary_sub_type::k_vector, bytes.size(), bytes.data()};
         CHECK_THROWS_WITH(
-            vector::view<vector::formats::f_float32 const>(binary),
+            vector::accessor<vector::formats::f_float32 const>(binary),
             Catch::Matchers::ContainsSubstring("invalid BSON vector"));
     }
 
@@ -379,36 +379,36 @@ TEST_CASE("vector view float32", "[bsoncxx::vector::view]") {
         static uint8_t const bytes[] = {
             0x27, 0x00, 0x00, 0x00, 0x80, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x80, 0x7F};
         types::b_binary const binary{binary_sub_type::k_vector, sizeof bytes, bytes};
-        vector::view<vector::formats::f_float32 const> view{binary};
-        REQUIRE(view.size() == 3u);
-        CHECK(view[0] < 0.f);
-        CHECK(view[0] * 0.f != 0.f);
-        CHECK(view[1] == 0.f);
-        CHECK(view[2] > 0.f);
-        CHECK(view[2] * 0.f != 0.f);
+        vector::accessor<vector::formats::f_float32 const> vec{binary};
+        REQUIRE(vec.size() == 3u);
+        CHECK(vec[0] < 0.f);
+        CHECK(vec[0] * 0.f != 0.f);
+        CHECK(vec[1] == 0.f);
+        CHECK(vec[2] > 0.f);
+        CHECK(vec[2] * 0.f != 0.f);
     }
 }
 
-TEST_CASE("vector view int8_t", "[bsoncxx::vector::view]") {
+TEST_CASE("vector accessor int8_t", "[bsoncxx::vector::accessor]") {
     SECTION("rejects binary data from other vector formats") {
         auto bytes = GENERATE(
             format_specific<vector::formats::f_float32>::bytes_empty(),
             format_specific<vector::formats::f_packed_bit>::bytes_empty());
         types::b_binary const binary{binary_sub_type::k_vector, bytes.size(), bytes.data()};
         CHECK_THROWS_WITH(
-            vector::view<vector::formats::f_int8 const>(binary),
+            vector::accessor<vector::formats::f_int8 const>(binary),
             Catch::Matchers::ContainsSubstring("invalid BSON vector"));
     }
 }
 
-TEST_CASE("vector view packed_bit", "[bsoncxx::vector::view]") {
+TEST_CASE("vector accessor packed_bit", "[bsoncxx::vector::accessor]") {
     SECTION("rejects empty vectors with nonzero padding") {
         for (unsigned byte_value = 1u; byte_value <= UINT8_MAX; byte_value++) {
             auto bytes = format_specific<vector::formats::f_packed_bit>::bytes_empty();
             bytes[1] = uint8_t(byte_value);
             types::b_binary const binary{binary_sub_type::k_vector, bytes.size(), bytes.data()};
             CHECK_THROWS_WITH(
-                vector::view<vector::formats::f_packed_bit const>(binary),
+                vector::accessor<vector::formats::f_packed_bit const>(binary),
                 Catch::Matchers::ContainsSubstring("invalid BSON vector"));
         }
     }
@@ -418,7 +418,7 @@ TEST_CASE("vector view packed_bit", "[bsoncxx::vector::view]") {
             uint8_t const bytes[] = {0x10, uint8_t(byte_value), 0x00};
             types::b_binary const binary{binary_sub_type::k_vector, sizeof bytes, bytes};
             CHECK_THROWS_WITH(
-                vector::view<vector::formats::f_packed_bit const>(binary),
+                vector::accessor<vector::formats::f_packed_bit const>(binary),
                 Catch::Matchers::ContainsSubstring("invalid BSON vector"));
         }
     }
@@ -428,40 +428,40 @@ TEST_CASE("vector view packed_bit", "[bsoncxx::vector::view]") {
             uint8_t bytes[] = {0x10, uint8_t(byte_value), 0xff};
             types::b_binary const binary{binary_sub_type::k_vector, sizeof bytes, bytes};
             CHECK_THROWS_WITH(
-                vector::view<vector::formats::f_packed_bit const>(binary),
+                vector::accessor<vector::formats::f_packed_bit const>(binary),
                 Catch::Matchers::ContainsSubstring("invalid BSON vector"));
             // Succeeds when unused bits are then zeroed
             bytes[2] = 0;
-            vector::view<vector::formats::f_packed_bit const> view{binary};
-            CHECK(view.size() == 8u - byte_value);
+            vector::accessor<vector::formats::f_packed_bit const> vec{binary};
+            CHECK(vec.size() == 8u - byte_value);
         }
     }
 
     SECTION("masks writes to unused portions of the last byte") {
         using namespace builder::basic;
         bsoncxx::document::value doc = make_document(kvp("vector", [&](sub_binary sbin) {
-            auto view = sbin.allocate(vector::formats::f_packed_bit{}, 9u);
-            std::fill(view.begin(), view.end(), true);
-            CHECK(view.byte_size() == 2u);
-            CHECK(view.byte_at(0) == 0xff);
-            CHECK(view.byte_at(1) == 0x80);
-            view.byte_at(1) = 0x7f;
-            CHECK(view.at(7) == true);
-            CHECK(view.at(8) == false);
-            CHECK(view.byte_at(1) == 0x00);
-            view.byte_at(1) = 0xff;
-            view.byte_at(0) = 0xaa;
-            CHECK(view.at(0) == true);
-            CHECK(view.at(1) == false);
-            CHECK(view.at(2) == true);
-            CHECK(view.at(3) == false);
-            CHECK(view.at(4) == true);
-            CHECK(view.at(5) == false);
-            CHECK(view.at(6) == true);
-            CHECK(view.at(7) == false);
-            CHECK(view.at(8) == true);
-            CHECK(view.byte_at(0) == 0xaa);
-            CHECK(view.byte_at(1) == 0x80);
+            auto vec = sbin.allocate(vector::formats::f_packed_bit{}, 9u);
+            std::fill(vec.begin(), vec.end(), true);
+            CHECK(vec.byte_size() == 2u);
+            CHECK(vec.byte_at(0) == 0xff);
+            CHECK(vec.byte_at(1) == 0x80);
+            vec.byte_at(1) = 0x7f;
+            CHECK(vec.at(7) == true);
+            CHECK(vec.at(8) == false);
+            CHECK(vec.byte_at(1) == 0x00);
+            vec.byte_at(1) = 0xff;
+            vec.byte_at(0) = 0xaa;
+            CHECK(vec.at(0) == true);
+            CHECK(vec.at(1) == false);
+            CHECK(vec.at(2) == true);
+            CHECK(vec.at(3) == false);
+            CHECK(vec.at(4) == true);
+            CHECK(vec.at(5) == false);
+            CHECK(vec.at(6) == true);
+            CHECK(vec.at(7) == false);
+            CHECK(vec.at(8) == true);
+            CHECK(vec.byte_at(0) == 0xaa);
+            CHECK(vec.byte_at(1) == 0x80);
         }));
         types::b_binary const& binary = doc.view()["vector"].get_binary();
         CHECK(binary.sub_type == binary_sub_type::k_vector);
@@ -473,8 +473,8 @@ TEST_CASE("vector view packed_bit", "[bsoncxx::vector::view]") {
         for (unsigned byte_value = 0; byte_value <= 7; byte_value++) {
             uint8_t const bytes[] = {0x10, uint8_t(byte_value), 0x00};
             types::b_binary const binary{binary_sub_type::k_vector, sizeof bytes, bytes};
-            vector::view<vector::formats::f_packed_bit const> view{binary};
-            CHECK(view.size() == 8 - byte_value);
+            vector::accessor<vector::formats::f_packed_bit const> vec{binary};
+            CHECK(vec.size() == 8 - byte_value);
         }
     }
 
@@ -484,7 +484,7 @@ TEST_CASE("vector view packed_bit", "[bsoncxx::vector::view]") {
             format_specific<vector::formats::f_float32>::bytes_empty());
         types::b_binary const binary{binary_sub_type::k_vector, bytes.size(), bytes.data()};
         CHECK_THROWS_WITH(
-            vector::view<vector::formats::f_packed_bit const>(binary),
+            vector::accessor<vector::formats::f_packed_bit const>(binary),
             Catch::Matchers::ContainsSubstring("invalid BSON vector"));
     }
 
@@ -492,31 +492,31 @@ TEST_CASE("vector view packed_bit", "[bsoncxx::vector::view]") {
         for (std::size_t element_count = 0; element_count < 1000; element_count++) {
             using namespace builder::basic;
             bsoncxx::document::value doc = make_document(kvp("vector", [&](sub_binary sbin) {
-                auto view = sbin.allocate(vector::formats::f_packed_bit{}, element_count);
-                REQUIRE(view.size() == element_count);
-                REQUIRE(view.byte_size() == (element_count + 7u) / 8);
-                std::fill(view.byte_begin(), view.byte_end(), UINT8_C(0xFF));
-                CHECK(view.empty() == (element_count == 0));
-                if (!view.empty()) {
-                    std::for_each(view.byte_begin(), view.byte_end() - 1, [&](std::uint8_t value) {
+                auto vec = sbin.allocate(vector::formats::f_packed_bit{}, element_count);
+                REQUIRE(vec.size() == element_count);
+                REQUIRE(vec.byte_size() == (element_count + 7u) / 8);
+                std::fill(vec.byte_begin(), vec.byte_end(), UINT8_C(0xFF));
+                CHECK(vec.empty() == (element_count == 0));
+                if (!vec.empty()) {
+                    std::for_each(vec.byte_begin(), vec.byte_end() - 1, [&](std::uint8_t value) {
                         CHECK(value == UINT8_C(0xFF));
                     });
-                    std::size_t padding = view.byte_size() * std::size_t(8) - view.size();
-                    CHECK(view.byte_back() == std::uint8_t(0xFF << padding));
+                    std::size_t padding = vec.byte_size() * std::size_t(8) - vec.size();
+                    CHECK(vec.byte_back() == std::uint8_t(0xFF << padding));
                 }
             }));
             types::b_binary const& binary = doc.view()["vector"].get_binary();
             CHECK(binary.sub_type == binary_sub_type::k_vector);
-            vector::view<vector::formats::f_packed_bit const> view{binary};
-            REQUIRE(view.size() == element_count);
-            REQUIRE(view.byte_size() == (element_count + 7u) / 8);
-            CHECK(view.empty() == (element_count == 0u));
-            if (!view.empty()) {
+            vector::accessor<vector::formats::f_packed_bit const> vec{binary};
+            REQUIRE(vec.size() == element_count);
+            REQUIRE(vec.byte_size() == (element_count + 7u) / 8);
+            CHECK(vec.empty() == (element_count == 0u));
+            if (!vec.empty()) {
                 std::for_each(
-                    view.byte_begin(), view.byte_end() - 1, [&](std::uint8_t value) { CHECK(value == UINT8_C(0xFF)); });
-                std::size_t padding = view.byte_size() * std::size_t(8) - view.size();
+                    vec.byte_begin(), vec.byte_end() - 1, [&](std::uint8_t value) { CHECK(value == UINT8_C(0xFF)); });
+                std::size_t padding = vec.byte_size() * std::size_t(8) - vec.size();
                 CHECK(padding == binary.bytes[1]);
-                CHECK(view.byte_back() == std::uint8_t(0xFF << padding));
+                CHECK(vec.byte_back() == std::uint8_t(0xFF << padding));
             }
         }
     }

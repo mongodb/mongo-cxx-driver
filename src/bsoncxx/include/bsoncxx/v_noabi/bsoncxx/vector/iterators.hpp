@@ -17,9 +17,9 @@
 #include <cstdint>
 #include <iterator>
 
+#include <bsoncxx/vector/accessor-fwd.hpp>
 #include <bsoncxx/vector/detail-fwd.hpp>
 #include <bsoncxx/vector/iterators-fwd.hpp>
-#include <bsoncxx/vector/view-fwd.hpp>
 
 #include <bsoncxx/vector/elements.hpp>
 #include <bsoncxx/vector/formats.hpp>
@@ -146,8 +146,8 @@ class packed_bit_element {
 
    private:
     friend class packed_bit_byte<Iterator>;
-    friend class view<formats::f_packed_bit>;
-    friend class view<formats::f_packed_bit const>;
+    friend class accessor<formats::f_packed_bit>;
+    friend class accessor<formats::f_packed_bit const>;
 
     constexpr packed_bit_element(Iterator byte_iter, std::uint8_t bit_index = 0) noexcept
         : byte(byte_iter), bit(bit_index) {}

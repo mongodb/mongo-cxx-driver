@@ -17,7 +17,7 @@
 #include <type_traits>
 
 #include <bsoncxx/builder/basic/sub_binary-fwd.hpp>
-#include <bsoncxx/vector/view-fwd.hpp>
+#include <bsoncxx/vector/accessor-fwd.hpp>
 
 #include <bsoncxx/exception/error_code.hpp>
 #include <bsoncxx/exception/exception.hpp>
@@ -34,8 +34,8 @@ namespace vector {
 /// @tparam Format One of the @ref bsoncxx::v_noabi::vector::formats types, optionally with a const qualifier.
 ///
 /// This accessor operates on data formatted for the bsoncxx::v_noabi::binary_sub_type::k_vector BSON binary
-/// subtype. A mutable view may be constructed only using bsoncxx::v_noabi::builder::basic::sub_binary. A const
-/// view may be constructed by validating a bsoncxx::v_noabi::types::b_binary.
+/// subtype. A mutable accessor may be constructed only using bsoncxx::v_noabi::builder::basic::sub_binary. A const
+/// accessor may be constructed by validating any bsoncxx::v_noabi::types::b_binary.
 ///
 /// The specific iterator and element types vary for each supported format. When possible,
 /// iterators are raw pointers.
@@ -48,7 +48,7 @@ namespace vector {
 /// bits.
 ///
 template <typename Format>
-class view {
+class accessor {
     using format_traits = typename detail::format_traits<typename std::remove_cv<Format>::type>;
 
    public:
@@ -72,8 +72,8 @@ class view {
         typename format_traits::const_iterator,
         typename format_traits::iterator>::type;
 
-    using byte_type = typename detail::view_data<format>::byte_type;
-    using byte_count_type = typename detail::view_data<format>::byte_count_type;
+    using byte_type = typename detail::accessor_data<format>::byte_type;
+    using byte_count_type = typename detail::accessor_data<format>::byte_count_type;
     using element_count_type = typename format_traits::element_count_type;
     using byte_difference_type = typename format_traits::byte_difference_type;
     using element_difference_type = typename format_traits::element_difference_type;
@@ -90,13 +90,13 @@ class view {
         typename format_traits::const_byte_iterator,
         typename format_traits::byte_iterator>::type;
 
-    /// @brief Construct a const Vector view by validating a bsoncxx::v_noabi::types::b_binary reference.
+    /// @brief Construct a const Vector accessor by validating a bsoncxx::v_noabi::types::b_binary reference.
     /// @param binary Non-owning reference to BSON binary data
     /// @throws bsoncxx::v_noabi::exception with bsoncxx::v_noabi::error_code::k_invalid_vector, if validation fails.
     ///
-    /// The Binary data is validated as a Vector of the templated Format. On success, a view is created which
+    /// The Binary data is validated as a Vector of the templated Format. On success, an accessor is created which
     /// references the same data as the bsoncxx::v_noabi::types::b_binary pointer.
-    view(types::b_binary const& binary) : _data(format_traits::const_validate(binary)) {}
+    accessor(types::b_binary const& binary) : _data(format_traits::const_validate(binary)) {}
 
     /// @brief Count the bytes of element data
     /// @return Size of the vector data, not including any headers
@@ -263,9 +263,9 @@ class view {
    private:
     friend class bsoncxx::v_noabi::builder::basic::sub_binary;
 
-    view(detail::view_data<format> data) noexcept : _data(data) {}
+    accessor(detail::accessor_data<format> data) noexcept : _data(data) {}
 
-    detail::view_data<format> _data;
+    detail::accessor_data<format> _data;
 };
 
 } // namespace vector
@@ -276,5 +276,5 @@ class view {
 
 ///
 /// @file
-/// Declares @ref bsoncxx::v_noabi::vector::view.
+/// Declares @ref bsoncxx::v_noabi::vector::accessor.
 ///
