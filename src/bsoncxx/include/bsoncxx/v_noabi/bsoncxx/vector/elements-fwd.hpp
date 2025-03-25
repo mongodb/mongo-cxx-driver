@@ -19,32 +19,24 @@
 namespace bsoncxx {
 namespace v_noabi {
 namespace vector {
-namespace formats {
+namespace elements {
 
-struct f_float32;
-struct f_int8;
-struct f_packed_bit;
+class float32;
 
-} // namespace formats
+template <typename Iterator>
+class packed_bit_element;
+
+template <typename Iterator>
+class packed_bit_byte;
+
+} // namespace elements
 } // namespace vector
 } // namespace v_noabi
-} // namespace bsoncxx
-
-namespace bsoncxx {
-namespace vector {
-namespace formats {
-
-using ::bsoncxx::v_noabi::vector::formats::f_float32;
-using ::bsoncxx::v_noabi::vector::formats::f_int8;
-using ::bsoncxx::v_noabi::vector::formats::f_packed_bit;
-
-} // namespace formats
-} // namespace vector
 } // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>
 
 ///
 /// @file
-/// Declares entities in @ref bsoncxx::vector::formats.
+/// Forward declarations for @ref bsoncxx::v_noabi::vector::elements.
 ///

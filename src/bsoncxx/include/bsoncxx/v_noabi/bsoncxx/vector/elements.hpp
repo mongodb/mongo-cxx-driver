@@ -21,22 +21,13 @@
 #include <cstdint>
 #include <cstring>
 
+#include <bsoncxx/vector/iterators-fwd.hpp>
+
 #include <bsoncxx/config/prelude.hpp>
 
 namespace bsoncxx {
 namespace v_noabi {
 namespace vector {
-
-namespace iterators {
-
-template <typename Iterator>
-class packed_bit_element;
-
-template <typename Iterator>
-class packed_bit_byte;
-
-} // namespace iterators
-
 namespace elements {
 
 /// @brief A 32-bit float value in packed little-endian format
@@ -270,5 +261,5 @@ void swap(packed_bit_byte<Iterator> a, packed_bit_byte<Iterator> b) noexcept {
 
 ///
 /// @file
-/// Special purpose element reference types for BSON Binary Vector access
+/// Declares entities in @ref bsoncxx::v_noabi::vector::elements.
 ///

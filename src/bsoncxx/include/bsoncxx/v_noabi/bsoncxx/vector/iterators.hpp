@@ -17,6 +17,10 @@
 #include <cstdint>
 #include <iterator>
 
+#include <bsoncxx/vector/detail-fwd.hpp>
+#include <bsoncxx/vector/iterators-fwd.hpp>
+#include <bsoncxx/vector/view-fwd.hpp>
+
 #include <bsoncxx/vector/elements.hpp>
 #include <bsoncxx/vector/formats.hpp>
 
@@ -25,21 +29,7 @@
 namespace bsoncxx {
 namespace v_noabi {
 namespace vector {
-
-template <typename Format>
-class view;
-
-namespace detail {
-
-template <typename Format>
-struct format_traits;
-
-} // namespace detail
-
 namespace iterators {
-
-template <typename Iterator>
-class packed_bit_byte;
 
 /// @brief Iterator for elements within a packed_bit vector
 /// @tparam Iterator Underlying byte iterator type
@@ -304,5 +294,5 @@ class packed_bit_byte {
 
 ///
 /// @file
-/// Special purpose iterator types for BSON Binary Vector access
+/// Declares entities in @ref bsoncxx::v_noabi::vector::iterators.
 ///

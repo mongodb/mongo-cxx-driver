@@ -19,32 +19,19 @@
 namespace bsoncxx {
 namespace v_noabi {
 namespace vector {
-namespace formats {
+namespace detail {
 
-struct f_float32;
-struct f_int8;
-struct f_packed_bit;
+template <typename Format>
+struct format_traits;
 
-} // namespace formats
+} // namespace detail
 } // namespace vector
 } // namespace v_noabi
-} // namespace bsoncxx
-
-namespace bsoncxx {
-namespace vector {
-namespace formats {
-
-using ::bsoncxx::v_noabi::vector::formats::f_float32;
-using ::bsoncxx::v_noabi::vector::formats::f_int8;
-using ::bsoncxx::v_noabi::vector::formats::f_packed_bit;
-
-} // namespace formats
-} // namespace vector
 } // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>
 
 ///
 /// @file
-/// Declares entities in @ref bsoncxx::vector::formats.
+/// For internal use only!
 ///
