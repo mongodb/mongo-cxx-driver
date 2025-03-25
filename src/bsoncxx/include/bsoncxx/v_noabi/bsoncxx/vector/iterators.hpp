@@ -29,12 +29,12 @@ namespace vector {
 template <typename Format>
 class view;
 
-namespace impl {
+namespace detail {
 
 template <typename Format>
 struct format_traits;
 
-} // namespace impl
+} // namespace detail
 
 namespace iterators {
 
@@ -279,8 +279,8 @@ class packed_bit_byte {
     }
 
    private:
-    friend struct impl::format_traits<formats::f_packed_bit>;
-    friend struct impl::format_traits<formats::f_packed_bit const>;
+    friend struct detail::format_traits<formats::f_packed_bit>;
+    friend struct detail::format_traits<formats::f_packed_bit const>;
 
     constexpr packed_bit_byte(packed_bit_element<Iterator> element, packed_bit_element<Iterator> element_end)
         : byte(element.byte),

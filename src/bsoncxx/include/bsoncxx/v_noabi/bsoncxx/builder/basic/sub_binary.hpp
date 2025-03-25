@@ -20,8 +20,8 @@
 
 #include <bsoncxx/builder/core.hpp>
 #include <bsoncxx/types.hpp>
+#include <bsoncxx/vector/detail.hpp>
 #include <bsoncxx/vector/formats.hpp>
-#include <bsoncxx/vector/impl.hpp>
 #include <bsoncxx/vector/view.hpp>
 
 #include <bsoncxx/config/prelude.hpp>
@@ -60,10 +60,10 @@ class sub_binary {
     /// @throws bsoncxx::v_noabi::exception if this sub_binary has already allocated.
     /// @throws bsoncxx::v_noabi::exception if the binary fails to append due to the BSON size limit.
     /// @throws bsoncxx::v_noabi::exception if a vector of the requested size would be too large to represent.
-    template <typename Format, typename SFINAE = typename vector::impl::format_traits<Format>::value_type>
+    template <typename Format, typename SFINAE = typename vector::detail::format_traits<Format>::value_type>
     vector::view<Format> allocate(Format fmt, std::size_t element_count) {
         (void)fmt;
-        using format_traits = typename vector::impl::format_traits<Format>;
+        using format_traits = typename vector::detail::format_traits<Format>;
         std::uint32_t binary_data_length = format_traits::length_for_append(element_count);
         std::uint8_t* binary_data = allocate(binary_sub_type::k_vector, binary_data_length);
         return {

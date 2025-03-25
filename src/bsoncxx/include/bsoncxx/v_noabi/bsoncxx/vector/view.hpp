@@ -16,13 +16,13 @@
 
 #include <type_traits>
 
-#include <bsoncxx/vector/view-fwd.hpp>
 #include <bsoncxx/builder/basic/sub_binary-fwd.hpp>
+#include <bsoncxx/vector/view-fwd.hpp>
 
 #include <bsoncxx/exception/error_code.hpp>
 #include <bsoncxx/exception/exception.hpp>
+#include <bsoncxx/vector/detail.hpp>
 #include <bsoncxx/vector/formats.hpp>
-#include <bsoncxx/vector/impl.hpp>
 
 #include <bsoncxx/config/prelude.hpp>
 
@@ -49,7 +49,7 @@ namespace vector {
 ///
 template <typename Format>
 class view {
-    using format_traits = typename impl::format_traits<typename std::remove_cv<Format>::type>;
+    using format_traits = typename detail::format_traits<typename std::remove_cv<Format>::type>;
 
    public:
     using format = Format;
@@ -72,8 +72,8 @@ class view {
         typename format_traits::const_iterator,
         typename format_traits::iterator>::type;
 
-    using byte_type = typename impl::view_data<format>::byte_type;
-    using byte_count_type = typename impl::view_data<format>::byte_count_type;
+    using byte_type = typename detail::view_data<format>::byte_type;
+    using byte_count_type = typename detail::view_data<format>::byte_count_type;
     using element_count_type = typename format_traits::element_count_type;
     using byte_difference_type = typename format_traits::byte_difference_type;
     using element_difference_type = typename format_traits::element_difference_type;
@@ -101,7 +101,7 @@ class view {
     /// @brief Count the bytes of element data
     /// @return Size of the vector data, not including any headers
     constexpr byte_count_type byte_size() const noexcept {
-        return impl_data.size - byte_count_type(sizeof(impl::header::bytes));
+        return impl_data.size - byte_count_type(sizeof(detail::header::bytes));
     }
 
     /// @brief Count the number of elements
@@ -113,7 +113,7 @@ class view {
     /// @brief Obtain an iterator pointing to the beginning of the vector
     /// @return A per-element random access iterator, pointing at the first element if one exists
     constexpr iterator begin() const noexcept {
-        return iterator(impl_data.bytes + sizeof(impl::header::bytes));
+        return iterator(impl_data.bytes + sizeof(detail::header::bytes));
     }
 
     /// @brief Obtain an iterator pointing just past the end of the vector
@@ -263,9 +263,9 @@ class view {
    private:
     friend class bsoncxx::v_noabi::builder::basic::sub_binary;
 
-    view(impl::view_data<format> data) noexcept : impl_data(data) {}
+    view(detail::view_data<format> data) noexcept : impl_data(data) {}
 
-    impl::view_data<format> impl_data;
+    detail::view_data<format> impl_data;
 };
 
 } // namespace vector

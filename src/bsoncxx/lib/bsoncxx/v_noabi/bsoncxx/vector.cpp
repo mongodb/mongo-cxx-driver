@@ -16,14 +16,14 @@
 
 #include <bsoncxx/exception/error_code.hpp>
 #include <bsoncxx/exception/exception.hpp>
-#include <bsoncxx/vector/impl.hpp>
+#include <bsoncxx/vector/detail.hpp>
 
 #include <bson/bson.h>
 
 namespace bsoncxx {
 namespace v_noabi {
 namespace vector {
-namespace impl {
+namespace detail {
 
 enum element_type : std::uint8_t {
     signed_integer = 0,
@@ -114,7 +114,7 @@ view_data<formats::f_packed_bit const> format_traits<formats::f_packed_bit>::con
     return libbson_const_validate<formats::f_packed_bit const>(binary, bson_vector_packed_bit_const_view_init);
 }
 
-} // namespace impl
+} // namespace detail
 } // namespace vector
 } // namespace v_noabi
 } // namespace bsoncxx

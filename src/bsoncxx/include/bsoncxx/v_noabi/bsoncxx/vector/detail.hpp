@@ -26,7 +26,7 @@
 namespace bsoncxx {
 namespace v_noabi {
 namespace vector {
-namespace impl {
+namespace detail {
 
 /// @brief Implementation detail. A copy of the validated BSON Binary Vector header, included in each view.
 struct header {
@@ -159,7 +159,7 @@ struct format_traits<formats::f_packed_bit> : format_traits_base {
     }
 };
 
-} // namespace impl
+} // namespace detail
 } // namespace vector
 } // namespace v_noabi
 } // namespace bsoncxx
