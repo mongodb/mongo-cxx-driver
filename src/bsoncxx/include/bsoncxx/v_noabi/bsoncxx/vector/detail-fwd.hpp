@@ -24,6 +24,9 @@ namespace detail {
 template <typename Format>
 struct format_traits;
 
+template <typename Format>
+struct accessor_data;
+
 } // namespace detail
 } // namespace vector
 } // namespace v_noabi

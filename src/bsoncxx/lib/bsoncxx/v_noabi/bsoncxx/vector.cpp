@@ -38,83 +38,78 @@ enum element_size : std::uint8_t {
 };
 
 static header make_header(element_type element_type, element_size element_size, std::uint8_t padding) {
-    return header{{(std::uint8_t)((std::uint8_t)element_type << 4 | (std::uint8_t)element_size), padding}};
+    return {{(std::uint8_t)((std::uint8_t)element_type << 4 | (std::uint8_t)element_size), padding}};
 }
 
-static header copy_header(std::uint8_t const* bytes) {
-    header result;
-    memcpy(&result.bytes, bytes, sizeof result.bytes);
-    return result;
+static void write_header(std::uint8_t* binary_data, header hdr) {
+    std::memcpy(binary_data, hdr.data(), header_size);
 }
+
+} // namespace detail
+
+namespace formats {
 
 template <typename Impl>
 static std::uint32_t libbson_length_for_append(std::size_t element_count, Impl func) {
     std::uint32_t result = func(element_count);
-    if (result < sizeof(header::bytes)) {
-        throw bsoncxx::v_noabi::exception{error_code::k_vector_too_large};
+    if (result < BSON_VECTOR_HEADER_LEN) {
+        throw exception{error_code::k_vector_too_large};
     }
     return result;
 }
 
-std::uint32_t format_traits<formats::f_int8>::length_for_append(std::size_t element_count) {
+std::uint32_t f_int8::length_for_append(std::size_t element_count) {
     return libbson_length_for_append(element_count, bson_vector_int8_binary_data_length);
 }
 
-std::uint32_t format_traits<formats::f_float32>::length_for_append(std::size_t element_count) {
+std::uint32_t f_float32::length_for_append(std::size_t element_count) {
     return libbson_length_for_append(element_count, bson_vector_float32_binary_data_length);
 }
 
-std::uint32_t format_traits<formats::f_packed_bit>::length_for_append(std::size_t element_count) {
+std::uint32_t f_packed_bit::length_for_append(std::size_t element_count) {
     return libbson_length_for_append(element_count, bson_vector_packed_bit_binary_data_length);
 }
 
-header format_traits<formats::f_int8>::write_frame(std::uint8_t* binary_data, std::uint32_t, std::size_t) {
-    header hdr = make_header(element_type::signed_integer, element_size::bits_8, 0);
-    memcpy(binary_data, &hdr, sizeof hdr);
-    return hdr;
+void f_int8::write_frame(std::uint8_t* binary_data, std::uint32_t, std::size_t) {
+    detail::write_header(
+        binary_data, detail::make_header(detail::element_type::signed_integer, detail::element_size::bits_8, 0));
 }
 
-header format_traits<formats::f_float32>::write_frame(std::uint8_t* binary_data, std::uint32_t, std::size_t) {
-    header hdr = make_header(element_type::floating_point, element_size::bits_32, 0);
-    memcpy(binary_data, &hdr, sizeof hdr);
-    return hdr;
+void f_float32::write_frame(std::uint8_t* binary_data, std::uint32_t, std::size_t) {
+    detail::write_header(
+        binary_data, detail::make_header(detail::element_type::floating_point, detail::element_size::bits_32, 0));
 }
 
-header format_traits<formats::f_packed_bit>::write_frame(
-    std::uint8_t* binary_data,
-    std::uint32_t binary_data_length,
-    std::size_t element_count) {
-    header hdr = make_header(
-        element_type::unsigned_integer, element_size::bits_1, std::uint8_t(std::size_t(7u) & -element_count));
+void f_packed_bit::write_frame(std::uint8_t* binary_data, std::uint32_t binary_data_length, std::size_t element_count) {
     binary_data[binary_data_length - 1] = UINT8_C(0);
-    memcpy(binary_data, &hdr, sizeof hdr);
-    return hdr;
+    detail::write_header(
+        binary_data,
+        detail::make_header(
+            detail::element_type::unsigned_integer,
+            detail::element_size::bits_1,
+            std::uint8_t(std::size_t(7u) & -element_count)));
 }
 
-template <typename Format, typename Impl>
-static accessor_data<Format> libbson_const_validate(bsoncxx::v_noabi::types::b_binary const& binary, Impl func) {
+template <typename Impl>
+static void libbson_validate(types::b_binary const& binary, Impl func) {
     if (binary.sub_type != binary_sub_type::k_vector || !func(NULL, binary.bytes, binary.size)) {
         throw bsoncxx::v_noabi::exception{error_code::k_invalid_vector};
     }
-    return {binary.bytes, binary.size, copy_header(binary.bytes)};
 }
 
-accessor_data<formats::f_int8 const> format_traits<formats::f_int8>::const_validate(
-    bsoncxx::v_noabi::types::b_binary const& binary) {
-    return libbson_const_validate<formats::f_int8 const>(binary, bson_vector_int8_const_view_init);
+void formats::f_int8::validate(types::b_binary const& binary) {
+    return libbson_validate(binary, bson_vector_int8_const_view_init);
 }
 
-accessor_data<formats::f_float32 const> format_traits<formats::f_float32>::const_validate(
-    bsoncxx::v_noabi::types::b_binary const& binary) {
-    return libbson_const_validate<formats::f_float32 const>(binary, bson_vector_float32_const_view_init);
+void formats::f_float32::validate(types::b_binary const& binary) {
+    return libbson_validate(binary, bson_vector_float32_const_view_init);
 }
 
-accessor_data<formats::f_packed_bit const> format_traits<formats::f_packed_bit>::const_validate(
-    bsoncxx::v_noabi::types::b_binary const& binary) {
-    return libbson_const_validate<formats::f_packed_bit const>(binary, bson_vector_packed_bit_const_view_init);
+void formats::f_packed_bit::validate(types::b_binary const& binary) {
+    return libbson_validate(binary, bson_vector_packed_bit_const_view_init);
 }
 
-} // namespace detail
+} // namespace formats
 } // namespace vector
 } // namespace v_noabi
 } // namespace bsoncxx

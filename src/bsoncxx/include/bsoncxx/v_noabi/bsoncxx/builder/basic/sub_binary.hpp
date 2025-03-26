@@ -17,12 +17,12 @@
 #include <cstdint>
 
 #include <bsoncxx/builder/basic/sub_binary-fwd.hpp>
+#include <bsoncxx/vector/accessor-fwd.hpp>
+#include <bsoncxx/vector/detail-fwd.hpp>
+#include <bsoncxx/vector/formats-fwd.hpp>
 
 #include <bsoncxx/builder/core.hpp>
 #include <bsoncxx/types.hpp>
-#include <bsoncxx/vector/accessor.hpp>
-#include <bsoncxx/vector/detail.hpp>
-#include <bsoncxx/vector/formats.hpp>
 
 #include <bsoncxx/config/prelude.hpp>
 
@@ -63,13 +63,10 @@ class sub_binary {
     template <typename Format, typename SFINAE = typename vector::detail::format_traits<Format>::value_type>
     vector::accessor<Format> allocate(Format fmt, std::size_t element_count) {
         (void)fmt;
-        using format_traits = typename vector::detail::format_traits<Format>;
-        std::uint32_t binary_data_length = format_traits::length_for_append(element_count);
+        std::uint32_t binary_data_length = Format::length_for_append(element_count);
         std::uint8_t* binary_data = allocate(binary_sub_type::k_vector, binary_data_length);
-        return {
-            {binary_data,
-             binary_data_length,
-             format_traits::write_frame(binary_data, binary_data_length, element_count)}};
+        Format::write_frame(binary_data, binary_data_length, element_count);
+        return {vector::detail::accessor_data<Format>(binary_data, binary_data_length)};
     }
 
    private:

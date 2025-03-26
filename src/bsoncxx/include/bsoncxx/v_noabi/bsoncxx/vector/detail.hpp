@@ -14,7 +14,9 @@
 
 #pragma once
 
+#include <array>
 #include <cstdint>
+#include <cstring>
 
 #include <bsoncxx/types.hpp>
 #include <bsoncxx/vector/elements.hpp>
@@ -28,13 +30,14 @@ namespace v_noabi {
 namespace vector {
 namespace detail {
 
-/// @brief Implementation detail. A copy of the validated BSON Binary Vector header, included in each accessor.
-struct header {
-    std::uint8_t bytes[2];
-};
+// Implementation detail. Size of the BSON Binary Vector header, in bytes.
+constexpr std::size_t header_size = 2;
 
-/// @brief Implementation detail. Common data for each accessor type.
-/// @tparam Format One of the @ref bsoncxx::v_noabi::vector::formats types, optionally const.
+// Implementation detail. Type for local copies of the vector header.
+typedef std::array<std::uint8_t, header_size> header;
+
+// @brief Implementation detail. Common data for each accessor type.
+// @tparam Format One of the @ref bsoncxx::v_noabi::vector::formats types, optionally const.
 template <typename Format>
 struct accessor_data {
     using byte_type = typename std::conditional<std::is_const<Format>::value, std::uint8_t const, std::uint8_t>::type;
@@ -43,9 +46,15 @@ struct accessor_data {
     byte_type* bytes;
     byte_count_type size;
     header header_copy;
+
+    accessor_data(types::b_binary const& binary) : accessor_data(binary.bytes, binary.size) {}
+
+    accessor_data(byte_type* bytes, byte_count_type size) : bytes(bytes), size(size) {
+        std::memcpy(header_copy.data(), bytes, header_size);
+    }
 };
 
-/// @brief Implementation detail. Default format traits.
+// @brief Implementation detail. Default format traits.
 struct format_traits_base {
     using element_count_type = std::size_t;
 
@@ -59,12 +68,12 @@ struct format_traits_base {
     using const_byte_iterator = std::uint8_t const*;
 };
 
-/// @brief Implementation detail. Format traits, specialized by format.
-/// @tparam Format One of the @ref bsoncxx::v_noabi::vector::formats types, without qualifiers.
+// @brief Implementation detail. Format traits, specialized by format.
+// @tparam Format One of the @ref bsoncxx::v_noabi::vector::formats types, without qualifiers.
 template <typename Format>
 struct format_traits;
 
-/// @brief Implementation detail. Format traits for bsoncxx::v_noabi::vector::formats::f_int8.
+// @brief Implementation detail. Format traits for bsoncxx::v_noabi::vector::formats::f_int8.
 template <>
 struct format_traits<formats::f_int8> : format_traits_base {
     using value_type = std::int8_t;
@@ -74,13 +83,8 @@ struct format_traits<formats::f_int8> : format_traits_base {
     using iterator = std::int8_t*;
     using const_iterator = std::int8_t const*;
 
-    static BSONCXX_ABI_EXPORT_CDECL(std::uint32_t) length_for_append(std::size_t element_count);
-    static BSONCXX_ABI_EXPORT_CDECL(header)
-    write_frame(std::uint8_t* binary_data, std::uint32_t binary_data_length, std::size_t element_count);
-    static BSONCXX_ABI_EXPORT_CDECL(accessor_data<formats::f_int8 const>) const_validate(types::b_binary const& binary);
-
     static constexpr std::size_t element_count(std::uint32_t binary_data_length, header) noexcept {
-        return binary_data_length - sizeof(header::bytes);
+        return binary_data_length - header_size;
     }
 
     static byte_iterator make_byte_iterator(iterator element, iterator) noexcept {
@@ -92,7 +96,7 @@ struct format_traits<formats::f_int8> : format_traits_base {
     }
 };
 
-/// @brief Implementation detail. Format traits for bsoncxx::v_noabi::vector::formats::f_float32.
+// @brief Implementation detail. Format traits for bsoncxx::v_noabi::vector::formats::f_float32.
 template <>
 struct format_traits<formats::f_float32> : format_traits_base {
     using value_type = float;
@@ -102,14 +106,8 @@ struct format_traits<formats::f_float32> : format_traits_base {
     using iterator = elements::float32*;
     using const_iterator = elements::float32 const*;
 
-    static BSONCXX_ABI_EXPORT_CDECL(std::uint32_t) length_for_append(std::size_t element_count);
-    static BSONCXX_ABI_EXPORT_CDECL(header)
-    write_frame(std::uint8_t* binary_data, std::uint32_t binary_data_length, std::size_t element_count);
-    static BSONCXX_ABI_EXPORT_CDECL(accessor_data<formats::f_float32 const>) const_validate(
-        types::b_binary const& binary);
-
     static constexpr std::size_t element_count(std::uint32_t binary_data_length, header) noexcept {
-        return (binary_data_length - sizeof(header::bytes)) / sizeof(float);
+        return (binary_data_length - header_size) / sizeof(float);
     }
 
     static byte_iterator make_byte_iterator(iterator element, iterator) noexcept {
@@ -121,7 +119,7 @@ struct format_traits<formats::f_float32> : format_traits_base {
     }
 };
 
-/// @brief Implementation detail. Format traits for bsoncxx::v_noabi::vector::formats::f_packed_bit.
+// @brief Implementation detail. Format traits for bsoncxx::v_noabi::vector::formats::f_packed_bit.
 template <>
 struct format_traits<formats::f_packed_bit> : format_traits_base {
     using value_type = bool;
@@ -139,14 +137,8 @@ struct format_traits<formats::f_packed_bit> : format_traits_base {
     using byte_difference_type = byte_iterator::difference_type;
     using element_difference_type = iterator::difference_type;
 
-    static BSONCXX_ABI_EXPORT_CDECL(std::uint32_t) length_for_append(std::size_t element_count);
-    static BSONCXX_ABI_EXPORT_CDECL(header)
-    write_frame(std::uint8_t* binary_data, std::uint32_t binary_data_length, std::size_t element_count);
-    static BSONCXX_ABI_EXPORT_CDECL(accessor_data<formats::f_packed_bit const>) const_validate(
-        types::b_binary const& binary);
-
     static constexpr std::size_t element_count(std::uint32_t binary_data_length, header hdr) noexcept {
-        return std::size_t(binary_data_length - sizeof(hdr.bytes)) * std::size_t(8u) - std::size_t(hdr.bytes[1] & 7u);
+        return std::size_t(binary_data_length - header_size) * std::size_t(8u) - std::size_t(hdr[1] & 7u);
     }
 
     static byte_iterator make_byte_iterator(iterator element, iterator element_end) noexcept {

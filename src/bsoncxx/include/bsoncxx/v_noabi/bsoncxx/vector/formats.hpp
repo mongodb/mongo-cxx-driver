@@ -14,6 +14,10 @@
 
 #pragma once
 
+#include <array>
+
+#include <bsoncxx/types-fwd.hpp>
+#include <bsoncxx/vector/accessor-fwd.hpp>
 #include <bsoncxx/vector/formats-fwd.hpp>
 
 #include <bsoncxx/config/prelude.hpp>
@@ -24,13 +28,28 @@ namespace vector {
 namespace formats {
 
 /// @brief Vector format for 32-bit floating point elements, packed least significant byte first.
-struct f_float32 {};
+struct f_float32 {
+    static BSONCXX_ABI_EXPORT_CDECL(std::uint32_t) length_for_append(std::size_t element_count);
+    static BSONCXX_ABI_EXPORT_CDECL(void)
+    write_frame(std::uint8_t* binary_data, std::uint32_t binary_data_length, std::size_t element_count);
+    static BSONCXX_ABI_EXPORT_CDECL(void) validate(types::b_binary const& binary);
+};
 
 /// @brief Vector format for signed 8-bit integer elements.
-struct f_int8 {};
+struct f_int8 {
+    static BSONCXX_ABI_EXPORT_CDECL(std::uint32_t) length_for_append(std::size_t element_count);
+    static BSONCXX_ABI_EXPORT_CDECL(void)
+    write_frame(std::uint8_t* binary_data, std::uint32_t binary_data_length, std::size_t element_count);
+    static BSONCXX_ABI_EXPORT_CDECL(void) validate(types::b_binary const& binary);
+};
 
 /// @brief Vector format for single bit elements, packed most significant bit first.
-struct f_packed_bit {};
+struct f_packed_bit {
+    static BSONCXX_ABI_EXPORT_CDECL(std::uint32_t) length_for_append(std::size_t element_count);
+    static BSONCXX_ABI_EXPORT_CDECL(void)
+    write_frame(std::uint8_t* binary_data, std::uint32_t binary_data_length, std::size_t element_count);
+    static BSONCXX_ABI_EXPORT_CDECL(void) validate(types::b_binary const& binary);
+};
 
 } // namespace formats
 } // namespace vector

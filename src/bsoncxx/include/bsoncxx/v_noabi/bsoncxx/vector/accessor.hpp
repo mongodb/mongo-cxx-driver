@@ -96,12 +96,12 @@ class accessor {
     ///
     /// The Binary data is validated as a Vector of the templated Format. On success, an accessor is created which
     /// references the same data as the bsoncxx::v_noabi::types::b_binary pointer.
-    accessor(types::b_binary const& binary) : _data(format_traits::const_validate(binary)) {}
+    accessor(types::b_binary const& binary) : _data((format::validate(binary), binary)) {}
 
     /// @brief Count the bytes of element data
     /// @return Size of the vector data, not including any headers
     constexpr byte_count_type byte_size() const noexcept {
-        return _data.size - byte_count_type(sizeof(detail::header::bytes));
+        return _data.size - byte_count_type(detail::header_size);
     }
 
     /// @brief Count the number of elements
@@ -113,7 +113,7 @@ class accessor {
     /// @brief Obtain an iterator pointing to the beginning of the vector
     /// @return A per-element random access iterator, pointing at the first element if one exists
     constexpr iterator begin() const noexcept {
-        return iterator(_data.bytes + sizeof(detail::header::bytes));
+        return iterator(_data.bytes + detail::header_size);
     }
 
     /// @brief Obtain an iterator pointing just past the end of the vector
