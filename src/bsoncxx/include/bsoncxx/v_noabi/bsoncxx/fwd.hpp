@@ -46,8 +46,11 @@
 #include <bsoncxx/types/bson_value/value-fwd.hpp>
 #include <bsoncxx/types/bson_value/view-fwd.hpp>
 #include <bsoncxx/validate-fwd.hpp>
+#include <bsoncxx/vector/accessor-fwd.hpp>
+#include <bsoncxx/vector/detail-fwd.hpp>
+#include <bsoncxx/vector/elements-fwd.hpp>
 #include <bsoncxx/vector/formats-fwd.hpp>
-#include <bsoncxx/vector/view-fwd.hpp>
+#include <bsoncxx/vector/iterators-fwd.hpp>
 #include <bsoncxx/view_or_value-fwd.hpp>
 
 ///
