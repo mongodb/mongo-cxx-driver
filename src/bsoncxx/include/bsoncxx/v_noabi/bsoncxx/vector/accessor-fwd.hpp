@@ -39,5 +39,5 @@ using ::bsoncxx::v_noabi::vector::accessor;
 
 ///
 /// @file
-/// Declares @ref bsoncxx::vector::accessor.
+/// Declares @ref bsoncxx::v_noabi::vector::accessor.
 ///
