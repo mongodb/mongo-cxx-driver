@@ -247,8 +247,9 @@ TEMPLATE_TEST_CASE(
         bsoncxx::document::value doc = make_document(kvp("vector", [&](sub_binary sbin) {
             // Avoid multiples of 8, to cover nonzero packed_bit 'padding'.
             auto vec = sbin.allocate(TestType{}, 8007u);
-            iterator_operations(
-                vec.begin(), vec.end(), std::ptrdiff_t(vec.size()), test_format_specific::element_unit());
+            auto const element_unit = test_format_specific::element_unit();
+            iterator_operations(vec.begin(), vec.end(), std::ptrdiff_t(vec.size()), element_unit);
+            std::for_each(vec.cbegin(), vec.cend(), [&](auto const& value) { CHECK_FALSE(value == element_unit); });
         }));
         types::b_binary const& binary = doc.view()["vector"].get_binary();
         vector::accessor<TestType const> validate_encoded{binary};
@@ -260,7 +261,10 @@ TEMPLATE_TEST_CASE(
         bsoncxx::document::value doc = make_document(kvp("vector", [&](sub_binary sbin) {
             // Choose a multiple of 8, to avoid the effects of masking unused bits.
             auto vec = sbin.allocate(TestType{}, 8000u);
-            iterator_operations(vec.byte_begin(), vec.byte_end(), std::ptrdiff_t(vec.byte_size()), uint8_t(1));
+            uint8_t const element_unit(1);
+            iterator_operations(vec.byte_begin(), vec.byte_end(), std::ptrdiff_t(vec.byte_size()), element_unit);
+            std::for_each(
+                vec.byte_cbegin(), vec.byte_cend(), [&](auto const& value) { CHECK_FALSE(value == element_unit); });
         }));
         types::b_binary const& binary = doc.view()["vector"].get_binary();
         vector::accessor<TestType const> validate_encoded{binary};
@@ -442,6 +446,8 @@ TEST_CASE("vector accessor packed_bit", "[bsoncxx::vector::accessor]") {
         bsoncxx::document::value doc = make_document(kvp("vector", [&](sub_binary sbin) {
             auto vec = sbin.allocate(vector::formats::f_packed_bit{}, 9u);
             std::fill(vec.begin(), vec.end(), true);
+            std::for_each(vec.begin(), vec.end(), [&](bool value) { CHECK(value == true); });
+            std::for_each(vec.cbegin(), vec.cend(), [&](bool value) { CHECK(value == true); });
             CHECK(vec.byte_size() == 2u);
             CHECK(vec.byte_at(0) == 0xff);
             CHECK(vec.byte_at(1) == 0x80);
@@ -501,6 +507,9 @@ TEST_CASE("vector accessor packed_bit", "[bsoncxx::vector::accessor]") {
                     std::for_each(vec.byte_begin(), vec.byte_end() - 1, [&](std::uint8_t value) {
                         CHECK(value == UINT8_C(0xFF));
                     });
+                    std::for_each(vec.byte_cbegin(), vec.byte_cend() - 1, [&](std::uint8_t value) {
+                        CHECK(value == UINT8_C(0xFF));
+                    });
                     std::size_t padding = vec.byte_size() * std::size_t(8) - vec.size();
                     CHECK(vec.byte_back() == std::uint8_t(0xFF << padding));
                 }
@@ -514,6 +523,8 @@ TEST_CASE("vector accessor packed_bit", "[bsoncxx::vector::accessor]") {
             if (!vec.empty()) {
                 std::for_each(
                     vec.byte_begin(), vec.byte_end() - 1, [&](std::uint8_t value) { CHECK(value == UINT8_C(0xFF)); });
+                std::for_each(
+                    vec.byte_cbegin(), vec.byte_cend() - 1, [&](std::uint8_t value) { CHECK(value == UINT8_C(0xFF)); });
                 std::size_t padding = vec.byte_size() * std::size_t(8) - vec.size();
                 CHECK(padding == binary.bytes[1]);
                 CHECK(vec.byte_back() == std::uint8_t(0xFF << padding));

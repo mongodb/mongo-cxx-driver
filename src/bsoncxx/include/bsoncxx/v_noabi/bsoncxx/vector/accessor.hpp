@@ -71,7 +71,8 @@ class accessor {
 
     /// Type for referencing vector elements in-place
     ///
-    /// For example: std::int8_t&, bsoncxx::v_noabi::vector::elements::float32&, bsoncxx::v_noabi::vector::elements::packed_bit_element
+    /// For example: std::int8_t&, bsoncxx::v_noabi::vector::elements::float32&,
+    /// bsoncxx::v_noabi::vector::elements::packed_bit_element
     using reference = typename std::conditional<
         std::is_const<Format>::value,
         typename format_traits::const_reference,
@@ -82,7 +83,8 @@ class accessor {
 
     /// Element iterator type
     ///
-    /// For example: std::int8_t*, bsoncxx::v_noabi::vector::elements::float32*, bsoncxx::v_noabi::vector::iterators::packed_bit_element
+    /// For example: std::int8_t*, bsoncxx::v_noabi::vector::elements::float32*,
+    /// bsoncxx::v_noabi::vector::iterators::packed_bit_element
     using iterator = typename std::conditional<
         std::is_const<Format>::value,
         typename format_traits::const_iterator,
@@ -167,6 +169,18 @@ class accessor {
         return begin() + element_difference_type(size());
     }
 
+    /// @brief Obtain a const iterator pointing to the beginning of the vector
+    /// @return A per-element random access const iterator, pointing at the first element if one exists
+    constexpr const_iterator cbegin() const noexcept {
+        return const_iterator(_data.bytes + detail::header_size);
+    }
+
+    /// @brief Obtain a const iterator pointing just past the end of the vector
+    /// @return A per-element random access const iterator, pointing just past the end of the vector
+    constexpr const_iterator cend() const noexcept {
+        return cbegin() + element_difference_type(size());
+    }
+
     /// @brief Obtain a reference to the first element
     /// @return An element reference
     /// Undefined behavior if the vector is empty.
@@ -205,6 +219,18 @@ class accessor {
     /// @return A per-byte random access iterator, pointing just past the end of the vector
     constexpr byte_iterator byte_end() const noexcept {
         return byte_begin() + byte_difference_type(byte_size());
+    }
+
+    /// @brief Obtain a const byte iterator pointing to the beginning of the vector
+    /// @return A per-byte random access const iterator, pointing at the first byte if one exists
+    constexpr const_byte_iterator byte_cbegin() const noexcept {
+        return format_traits::make_byte_iterator(cbegin(), cend());
+    }
+
+    /// @brief Obtain a const byte iterator pointing just past the end of the vector
+    /// @return A per-byte random access const iterator, pointing just past the end of the vector
+    constexpr const_byte_iterator byte_cend() const noexcept {
+        return byte_cbegin() + byte_difference_type(byte_size());
     }
 
     /// @brief Obtain a reference to the first byte
