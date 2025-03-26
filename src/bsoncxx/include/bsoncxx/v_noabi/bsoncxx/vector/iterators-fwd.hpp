@@ -14,12 +14,6 @@
 
 #pragma once
 
-#include <cstdint>
-#include <iterator>
-
-#include <bsoncxx/vector/elements.hpp>
-#include <bsoncxx/vector/formats.hpp>
-
 #include <bsoncxx/config/prelude.hpp>
 
 namespace bsoncxx {
