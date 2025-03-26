@@ -14,9 +14,12 @@
 
 #pragma once
 
+#include <bsoncxx/builder/basic/sub_binary-fwd.hpp>
+
+//
+
 #include <cstdint>
 
-#include <bsoncxx/builder/basic/sub_binary-fwd.hpp>
 #include <bsoncxx/vector/accessor-fwd.hpp>
 #include <bsoncxx/vector/detail-fwd.hpp>
 #include <bsoncxx/vector/formats-fwd.hpp>
