@@ -184,9 +184,8 @@ class accessor {
         return cbegin() + element_difference_type(size());
     }
 
-    /// @brief Obtain a reference to the first element
-    /// @return An element reference
-    /// Undefined behavior if the vector is empty.
+    /// Obtain a reference to the first element.
+    /// @warning Undefined behavior if the vector is empty.
     reference front() noexcept {
         return *begin();
     }
