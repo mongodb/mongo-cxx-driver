@@ -137,8 +137,7 @@ void iterator_operations(
     CHECK(iter_copy == begin);
 
     std::generate(begin, end, [&] { return element_unit; });
-    std::for_each(
-        begin, end, [&](auto const& value) { CHECK_THAT(value, Catch::Matchers::WithinAbs(element_unit, 0.0)); });
+    std::for_each(begin, end, [&](auto const& value) { CHECK(value == element_unit); });
 
     std::copy(begin, begin + (expected_size / 2), begin + (expected_size / 2));
     std::for_each(begin, end, [&](auto const& value) { CHECK(value == element_unit); });
