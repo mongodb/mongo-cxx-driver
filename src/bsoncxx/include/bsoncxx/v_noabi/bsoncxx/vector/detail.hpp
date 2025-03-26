@@ -47,8 +47,10 @@ struct accessor_data {
     byte_count_type size;
     header header_copy;
 
+    // Construct accessor_data around a b_binary that has already had its subtype and size validated.
     accessor_data(types::b_binary const& binary) : accessor_data(binary.bytes, binary.size) {}
 
+    // Construct accessor_data around binary data that has already been validated, and capture a header copy.
     accessor_data(byte_type* bytes, byte_count_type size) : bytes(bytes), size(size) {
         std::memcpy(header_copy.data(), bytes, header_size);
     }
