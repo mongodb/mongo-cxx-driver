@@ -43,7 +43,7 @@ detail::requires_t<void, detail::is_invocable<T, sub_array>> generic_append(core
 
 template <typename T>
 detail::requires_t<void, detail::is_invocable<T, sub_binary>> generic_append(core* core, T&& func) {
-    core->open_binary();
+    // Opened by the user invoking `sub_binary::allocate()` in `func`.
     detail::invoke(std::forward<T>(func), sub_binary(core));
     core->close_binary();
 }

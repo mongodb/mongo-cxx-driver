@@ -638,11 +638,6 @@ core& core::open_array() {
     return *this;
 }
 
-core& core::open_binary() {
-    // No effect currently. (Here for symmetry and possibly extensibility)
-    return *this;
-}
-
 core& core::concatenate(bsoncxx::v_noabi::document::view const& view) {
     if (_impl->is_array()) {
         bson_iter_t iter;
