@@ -98,13 +98,3 @@
 /// @namespace bsoncxx::vector::formats
 /// Declares supported BSON Binary Vector formats.
 ///
-
-///
-/// @namespace bsoncxx::vector::elements
-/// Declares element accessor types for BSON Binary Vector.
-///
-
-///
-/// @namespace bsoncxx::vector::iterators
-/// Declares iterator types for BSON Binary Vector.
-///

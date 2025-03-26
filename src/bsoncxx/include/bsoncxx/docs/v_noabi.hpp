@@ -160,16 +160,16 @@
 ///
 
 ///
-/// @namespace bsoncxx::v_noabi::vector::iterators
-/// @copydoc bsoncxx::vector::iterators
+/// @namespace bsoncxx::v_noabi::vector::formats
+/// @copydoc bsoncxx::vector::formats
 ///
 
 ///
 /// @namespace bsoncxx::v_noabi::vector::elements
-/// @copydoc bsoncxx::vector::elements
+/// Declares element accessor types for BSON Binary Vector.
 ///
 
 ///
-/// @namespace bsoncxx::v_noabi::vector::formats
-/// @copydoc bsoncxx::vector::formats
+/// @namespace bsoncxx::v_noabi::vector::iterators
+/// Declares iterator types for BSON Binary Vector.
 ///
