@@ -41,13 +41,9 @@ static header make_header(element_type element_type, element_size element_size, 
     return {{(std::uint8_t)((std::uint8_t)element_type << 4 | (std::uint8_t)element_size), padding}};
 }
 
-static void write_header(std::uint8_t* binary_data, header hdr) {
+static void write_header(std::uint8_t* binary_data, header const& hdr) {
     std::memcpy(binary_data, hdr.data(), header_size);
 }
-
-} // namespace detail
-
-namespace formats {
 
 template <typename Impl>
 static std::uint32_t libbson_length_for_append(std::size_t element_count, Impl func) {
@@ -58,16 +54,27 @@ static std::uint32_t libbson_length_for_append(std::size_t element_count, Impl f
     return result;
 }
 
+template <typename Impl>
+static void libbson_validate(types::b_binary const& binary, Impl func) {
+    if (binary.sub_type != binary_sub_type::k_vector || !func(NULL, binary.bytes, binary.size)) {
+        throw exception{error_code::k_invalid_vector};
+    }
+}
+
+} // namespace detail
+
+namespace formats {
+
 std::uint32_t f_int8::length_for_append(std::size_t element_count) {
-    return libbson_length_for_append(element_count, bson_vector_int8_binary_data_length);
+    return detail::libbson_length_for_append(element_count, bson_vector_int8_binary_data_length);
 }
 
 std::uint32_t f_float32::length_for_append(std::size_t element_count) {
-    return libbson_length_for_append(element_count, bson_vector_float32_binary_data_length);
+    return detail::libbson_length_for_append(element_count, bson_vector_float32_binary_data_length);
 }
 
 std::uint32_t f_packed_bit::length_for_append(std::size_t element_count) {
-    return libbson_length_for_append(element_count, bson_vector_packed_bit_binary_data_length);
+    return detail::libbson_length_for_append(element_count, bson_vector_packed_bit_binary_data_length);
 }
 
 void f_int8::write_frame(std::uint8_t* binary_data, std::uint32_t, std::size_t) {
@@ -90,23 +97,16 @@ void f_packed_bit::write_frame(std::uint8_t* binary_data, std::uint32_t binary_d
             std::uint8_t(std::size_t(7u) & -element_count)));
 }
 
-template <typename Impl>
-static void libbson_validate(types::b_binary const& binary, Impl func) {
-    if (binary.sub_type != binary_sub_type::k_vector || !func(NULL, binary.bytes, binary.size)) {
-        throw bsoncxx::v_noabi::exception{error_code::k_invalid_vector};
-    }
-}
-
 void formats::f_int8::validate(types::b_binary const& binary) {
-    return libbson_validate(binary, bson_vector_int8_const_view_init);
+    return detail::libbson_validate(binary, bson_vector_int8_const_view_init);
 }
 
 void formats::f_float32::validate(types::b_binary const& binary) {
-    return libbson_validate(binary, bson_vector_float32_const_view_init);
+    return detail::libbson_validate(binary, bson_vector_float32_const_view_init);
 }
 
 void formats::f_packed_bit::validate(types::b_binary const& binary) {
-    return libbson_validate(binary, bson_vector_packed_bit_const_view_init);
+    return detail::libbson_validate(binary, bson_vector_packed_bit_const_view_init);
 }
 
 } // namespace formats
