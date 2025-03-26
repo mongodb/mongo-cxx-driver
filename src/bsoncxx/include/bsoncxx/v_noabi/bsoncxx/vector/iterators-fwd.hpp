@@ -22,9 +22,6 @@ namespace vector {
 namespace iterators {
 
 template <typename Iterator>
-class packed_bit_byte;
-
-template <typename Iterator>
 class packed_bit_element;
 
 template <typename Iterator>
