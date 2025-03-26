@@ -14,10 +14,13 @@
 
 #pragma once
 
+#include <bsoncxx/vector/accessor-fwd.hpp>
+
+//
+
 #include <type_traits>
 
 #include <bsoncxx/builder/basic/sub_binary-fwd.hpp>
-#include <bsoncxx/vector/accessor-fwd.hpp>
 
 #include <bsoncxx/exception/error_code.hpp>
 #include <bsoncxx/exception/exception.hpp>

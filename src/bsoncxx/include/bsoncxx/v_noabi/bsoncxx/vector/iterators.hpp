@@ -14,12 +14,15 @@
 
 #pragma once
 
+#include <bsoncxx/vector/iterators-fwd.hpp>
+
+//
+
 #include <cstdint>
 #include <iterator>
 
 #include <bsoncxx/vector/accessor-fwd.hpp>
 #include <bsoncxx/vector/detail-fwd.hpp>
-#include <bsoncxx/vector/iterators-fwd.hpp>
 
 #include <bsoncxx/vector/elements.hpp>
 #include <bsoncxx/vector/formats.hpp>

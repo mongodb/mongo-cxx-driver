@@ -14,11 +14,14 @@
 
 #pragma once
 
+#include <bsoncxx/vector/formats-fwd.hpp>
+
+//
+
 #include <array>
 
 #include <bsoncxx/types-fwd.hpp>
 #include <bsoncxx/vector/accessor-fwd.hpp>
-#include <bsoncxx/vector/formats-fwd.hpp>
 
 #include <bsoncxx/config/prelude.hpp>
 
