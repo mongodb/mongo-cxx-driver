@@ -708,6 +708,15 @@ class core {
     BSONCXX_ABI_EXPORT_CDECL(void) clear();
 
     ///
+    /// Opens a sub-binary within this BSON datum.
+    ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
+    ///
+    BSONCXX_ABI_EXPORT_CDECL(core&) open_binary();
+
+    ///
     /// Closes the current sub-binary within this BSON datum.
     ///
     /// @return
