@@ -40,8 +40,7 @@ namespace vector {
 /// subtype. A mutable accessor may be constructed only using bsoncxx::v_noabi::builder::basic::sub_binary. A const
 /// accessor may be constructed by validating any bsoncxx::v_noabi::types::b_binary.
 ///
-/// The specific iterator and element types vary for each supported format. When possible,
-/// iterators are raw pointers.
+/// The specific iterator and element types vary for each supported format.
 ///
 /// bsoncxx::v_noabi::vector::formats::f_float32 uses a custom element type to support packed storage with a fixed byte
 /// order.
