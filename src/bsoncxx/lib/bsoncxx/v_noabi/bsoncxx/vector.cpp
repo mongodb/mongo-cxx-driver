@@ -39,7 +39,7 @@ enum element_size : std::uint8_t {
 };
 
 static header make_header(element_type element_type, element_size element_size, std::uint8_t padding) {
-    return {{(std::uint8_t)((std::uint8_t)element_type << 4 | (std::uint8_t)element_size), padding}};
+    return {{static_cast<std::uint8_t>((element_type << 4) | element_size), padding}};
 }
 
 static void write_header(std::uint8_t* binary_data, header const& hdr) {
