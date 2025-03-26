@@ -12,12 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <bsoncxx/vector/detail.hpp>
+#include <bsoncxx/vector/formats.hpp>
+
+//
+
 #include <cstdint>
 
 #include <bsoncxx/exception/error_code.hpp>
 #include <bsoncxx/exception/exception.hpp>
-#include <bsoncxx/vector/detail.hpp>
-#include <bsoncxx/vector/formats.hpp>
 
 #include <bson/bson.h>
 
