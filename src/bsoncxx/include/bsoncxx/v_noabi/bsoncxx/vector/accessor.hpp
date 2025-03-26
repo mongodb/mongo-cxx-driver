@@ -147,38 +147,32 @@ class accessor {
     /// references the same data as the bsoncxx::v_noabi::types::b_binary pointer.
     accessor(types::b_binary const& binary) : _data((format::validate(binary), binary)) {}
 
-    /// @brief Count the bytes of element data
-    /// @return Size of the vector data, not including any headers
+    /// Count the bytes of element data, not including any headers
     constexpr byte_count_type byte_size() const noexcept {
         return _data.size - byte_count_type(detail::header_size);
     }
 
-    /// @brief Count the number of elements
-    /// @return Number of elements
+    /// Count the number of elements
     constexpr element_count_type size() const noexcept {
         return format_traits::element_count(_data.size, _data.header_copy);
     }
 
-    /// @brief Obtain an iterator pointing to the beginning of the vector
-    /// @return A per-element random access iterator, pointing at the first element if one exists
+    /// Obtain a per-element iterator pointing to the beginning of the vector
     constexpr iterator begin() const noexcept {
         return iterator(_data.bytes + detail::header_size);
     }
 
-    /// @brief Obtain an iterator pointing just past the end of the vector
-    /// @return A per-element random access iterator, pointing just past the end of the vector
+    /// Obtain a per-element end iterator
     constexpr iterator end() const noexcept {
         return begin() + element_difference_type(size());
     }
 
-    /// @brief Obtain a const iterator pointing to the beginning of the vector
-    /// @return A per-element random access const iterator, pointing at the first element if one exists
+    /// Obtain a const per-element iterator pointing to the beginning of the vector
     constexpr const_iterator cbegin() const noexcept {
         return const_iterator(_data.bytes + detail::header_size);
     }
 
-    /// @brief Obtain a const iterator pointing just past the end of the vector
-    /// @return A per-element random access const iterator, pointing just past the end of the vector
+    /// Obtain a const per-element end iterator
     constexpr const_iterator cend() const noexcept {
         return cbegin() + element_difference_type(size());
     }
@@ -189,82 +183,70 @@ class accessor {
         return *begin();
     }
 
-    /// @brief Obtain a const reference to the first element
-    /// @return An element reference
-    /// Undefined behavior if the vector is empty.
+    /// Obtain a const reference to the first element
+    /// @warning Undefined behavior if the vector is empty.
     constexpr const_reference front() const noexcept {
         return *begin();
     }
 
-    /// @brief Obtain a reference to the last element
-    /// @return An element reference
-    /// Undefined behavior if the vector is empty.
+    /// Obtain a reference to the last element
+    /// @warning Undefined behavior if the vector is empty.
     reference back() noexcept {
         return *(begin() + element_difference_type(size() - 1u));
     }
 
-    /// @brief Obtain a const reference to the last element
-    /// @return An element reference
-    /// Undefined behavior if the vector is empty.
+    /// Obtain a const reference to the last element
+    /// @warning Undefined behavior if the vector is empty.
     constexpr const_reference back() const noexcept {
         return *(begin() + element_difference_type(size() - 1u));
     }
 
-    /// @brief Obtain a byte iterator pointing to the beginning of the vector
-    /// @return A per-byte random access iterator, pointing at the first byte if one exists
+    /// Obtain a per-byte iterator pointing to the beginning of the vector
     constexpr byte_iterator byte_begin() const noexcept {
         return format_traits::make_byte_iterator(begin(), end());
     }
 
-    /// @brief Obtain a byte iterator pointing just past the end of the vector
-    /// @return A per-byte random access iterator, pointing just past the end of the vector
+    /// Obtain a per-byte end iterator
     constexpr byte_iterator byte_end() const noexcept {
         return byte_begin() + byte_difference_type(byte_size());
     }
 
-    /// @brief Obtain a const byte iterator pointing to the beginning of the vector
-    /// @return A per-byte random access const iterator, pointing at the first byte if one exists
+    /// Obtain a const per-byte iterator pointing to the beginning of the vector
     constexpr const_byte_iterator byte_cbegin() const noexcept {
         return format_traits::make_byte_iterator(cbegin(), cend());
     }
 
-    /// @brief Obtain a const byte iterator pointing just past the end of the vector
-    /// @return A per-byte random access const iterator, pointing just past the end of the vector
+    /// Obtain a const per-byte end iterator
     constexpr const_byte_iterator byte_cend() const noexcept {
         return byte_cbegin() + byte_difference_type(byte_size());
     }
 
-    /// @brief Obtain a reference to the first byte
-    /// @return A byte reference
-    /// Undefined behavior if the vector is empty.
+    /// Obtain a reference to the first byte
+    /// @warning Undefined behavior if the vector is empty.
     byte_reference byte_front() noexcept {
         return *byte_begin();
     }
 
-    /// @brief Obtain a const reference to the first byte
-    /// @return A byte reference
-    /// Undefined behavior if the vector is empty.
+    /// Obtain a const reference to the first byte
+    /// @warning Undefined behavior if the vector is empty.
     constexpr const_byte_reference byte_front() const noexcept {
         return *byte_begin();
     }
 
-    /// @brief Obtain a reference to the last byte
-    /// @return A byte reference
-    /// Undefined behavior if the vector is empty.
+    /// Obtain a reference to the last byte
+    /// @warning Undefined behavior if the vector is empty.
     byte_reference byte_back() noexcept {
         return *(byte_begin() + byte_difference_type(byte_size() - 1u));
     }
 
-    /// @brief Obtain a const reference to the last byte
-    /// @return A byte reference
-    /// Undefined behavior if the vector is empty.
+    /// Obtain a const reference to the last byte
+    /// @warning Undefined behavior if the vector is empty.
     constexpr const_byte_reference byte_back() const noexcept {
         return *(byte_begin() + byte_difference_type(byte_size() - 1u));
     }
 
-    /// @brief Obtain a reference to a numbered byte, with bounds checking
+    /// Obtain a reference to a numbered byte, with bounds checking
     /// @param index Index in the range 0 to byte_size()-1 inclusive.
-    /// @return A byte reference
     /// @throws bsoncxx::v_noabi::exception with bsoncxx::v_noabi::error_code::k_vector_out_of_range, if the index is
     /// outside the allowed range.
     byte_reference byte_at(byte_count_type index) {
@@ -274,9 +256,8 @@ class accessor {
         return *(byte_begin() + byte_difference_type(index));
     }
 
-    /// @brief Obtain a const reference to a numbered byte, with bounds checking
+    /// Obtain a const reference to a numbered byte, with bounds checking
     /// @param index Index in the range 0 to byte_size()-1 inclusive.
-    /// @return A byte reference
     /// @throws bsoncxx::v_noabi::exception with bsoncxx::v_noabi::error_code::k_vector_out_of_range, if the index is
     /// outside the allowed range.
     const_byte_reference byte_at(byte_count_type index) const {
@@ -286,9 +267,8 @@ class accessor {
         return *(byte_begin() + byte_difference_type(index));
     }
 
-    /// @brief Obtain a reference to a numbered element, with bounds checking
+    /// Obtain a reference to a numbered element, with bounds checking
     /// @param index Index in the range 0 to size()-1 inclusive.
-    /// @return An element reference
     /// @throws bsoncxx::v_noabi::exception with bsoncxx::v_noabi::error_code::k_vector_out_of_range, if the index is
     /// outside the allowed range.
     reference at(element_count_type index) {
@@ -298,9 +278,8 @@ class accessor {
         return *(begin() + element_difference_type(index));
     }
 
-    /// @brief Obtain a const reference to a numbered element, with bounds checking
+    /// Obtain a const reference to a numbered element, with bounds checking
     /// @param index Index in the range 0 to size()-1 inclusive.
-    /// @return An element reference
     /// @throws bsoncxx::v_noabi::exception with bsoncxx::v_noabi::error_code::k_vector_out_of_range, if the index is
     /// outside the allowed range.
     const_reference at(element_count_type index) const {
@@ -310,24 +289,21 @@ class accessor {
         return *(begin() + element_difference_type(index));
     }
 
-    /// @brief Obtain a reference to a numbered element, without bounds checking
+    /// Obtain a reference to a numbered element, without bounds checking
     /// @param index Index in the range 0 to size()-1 inclusive.
-    /// @return An element reference
-    /// Undefined behavior if the index is out of bounds.
+    /// @warning Undefined behavior if the index is out of bounds.
     reference operator[](element_count_type index) noexcept {
         return *(begin() + element_difference_type(index));
     }
 
-    /// @brief Obtain a const reference to a numbered element, without bounds checking
+    /// Obtain a const reference to a numbered element, without bounds checking
     /// @param index Index in the range 0 to size()-1 inclusive.
-    /// @return An element reference
-    /// Undefined behavior if the index is out of bounds.
+    /// @warning Undefined behavior if the index is out of bounds.
     constexpr const_reference operator[](element_count_type index) const noexcept {
         return *(begin() + element_difference_type(index));
     }
 
-    /// @brief Test whether the vector is empty
-    /// @return True if the vector has a size() of zero.
+    /// Test whether the vector is empty
     constexpr bool empty() const noexcept {
         return size() == 0u;
     }
