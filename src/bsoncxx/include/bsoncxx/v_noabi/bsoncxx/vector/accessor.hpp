@@ -52,39 +52,84 @@ class accessor {
     using format_traits = typename detail::format_traits<typename std::remove_cv<Format>::type>;
 
    public:
+    /// The type from bsoncxx::v_noabi::vector::formats representing this vector's layout and element type
     using format = Format;
 
+    /// Const qualified version of @ref value_type
     using const_value_type = typename format_traits::value_type const;
+
+    /// A type suitable for holding element values.
+    ///
+    /// For example: std::int8_t, float, bool
     using value_type = typename std::conditional<
         std::is_const<Format>::value,
         typename format_traits::value_type const,
         typename format_traits::value_type>::type;
 
+    /// Type for referencing const-qualified vector elements in-place
     using const_reference = typename format_traits::const_reference;
+
+    /// Type for referencing vector elements in-place
+    ///
+    /// For example: std::int8_t&, bsoncxx::v_noabi::vector::elements::float32&, bsoncxx::v_noabi::vector::elements::packed_bit_element
     using reference = typename std::conditional<
         std::is_const<Format>::value,
         typename format_traits::const_reference,
         typename format_traits::reference>::type;
 
+    /// Iterator for const-qualified vector elements
     using const_iterator = typename format_traits::const_iterator;
+
+    /// Element iterator type
+    ///
+    /// For example: std::int8_t*, bsoncxx::v_noabi::vector::elements::float32*, bsoncxx::v_noabi::vector::iterators::packed_bit_element
     using iterator = typename std::conditional<
         std::is_const<Format>::value,
         typename format_traits::const_iterator,
         typename format_traits::iterator>::type;
 
+    /// Type for the underlying byte data
+    ///
+    /// For example: std::uint8_t, std::uint8_t const
     using byte_type = typename detail::accessor_data<format>::byte_type;
+
+    /// Type for byte counts
+    ///
+    /// For example: std::uint32_t, due to BSON size limits.
     using byte_count_type = typename detail::accessor_data<format>::byte_count_type;
+
+    /// Type for element counts
+    ///
+    /// For example: std::size_t
     using element_count_type = typename format_traits::element_count_type;
+
+    /// Type for signed differences between byte iterators
+    ///
+    /// For example: std::ptrdiff_t
     using byte_difference_type = typename format_traits::byte_difference_type;
+
+    /// Type for signed differences between element iterators
+    ///
+    /// For example: std::ptrdiff_t
     using element_difference_type = typename format_traits::element_difference_type;
 
+    /// Type for referencing const-qualified vector bytes in-place
     using const_byte_reference = typename format_traits::const_byte_reference;
+
+    /// Type for referencing vector bytes in-place
+    ///
+    /// For example: std::uint8_t&, std::uint8_t const&, bsoncxx::v_noabi::vector::elements::packed_bit_byte
     using byte_reference = typename std::conditional<
         std::is_const<Format>::value,
         typename format_traits::const_byte_reference,
         typename format_traits::byte_reference>::type;
 
+    /// Iterator for const-qualified vector bytes
     using const_byte_iterator = typename format_traits::const_byte_iterator;
+
+    /// Byte iterator type
+    ///
+    /// For example: std::uint8_t*, std::uint8_t const*, bsoncxx::v_noabi::vector::iterators::packed_bit_byte
     using byte_iterator = typename std::conditional<
         std::is_const<Format>::value,
         typename format_traits::const_byte_iterator,
