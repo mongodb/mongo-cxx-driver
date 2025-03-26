@@ -137,7 +137,7 @@ struct format_traits<formats::f_packed_bit> : format_traits_base {
     using byte_difference_type = byte_iterator::difference_type;
     using element_difference_type = iterator::difference_type;
 
-    static constexpr std::size_t element_count(std::uint32_t binary_data_length, header hdr) noexcept {
+    static std::size_t element_count(std::uint32_t binary_data_length, header hdr) noexcept {
         return std::size_t(binary_data_length - header_size) * std::size_t(8u) - std::size_t(hdr[1] & 7u);
     }
 
