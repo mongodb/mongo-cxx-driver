@@ -154,13 +154,19 @@ class accessor {
         typename format_traits::const_byte_iterator,
         typename format_traits::byte_iterator>::type;
 
-    /// @brief Construct a const Vector accessor by validating a bsoncxx::v_noabi::types::b_binary reference.
+    /// @brief Construct a const vector accessor by validating a bsoncxx::v_noabi::types::b_binary reference.
     /// @param binary Non-owning reference to BSON binary data
     /// @throws bsoncxx::v_noabi::exception with bsoncxx::v_noabi::error_code::k_invalid_vector, if validation fails.
     ///
-    /// The Binary data is validated as a Vector of the templated Format. On success, an accessor is created which
+    /// The Binary data is validated as a vector of the templated Format. On success, an accessor is created which
     /// references the same data as the bsoncxx::v_noabi::types::b_binary pointer.
     accessor(types::b_binary const& binary) : _data((format::validate(binary), binary)) {}
+
+    /// Obtain a const version of this vector accessor, without re-validating the vector data.
+    constexpr accessor<format const> as_const() const noexcept {
+        // Erase the template parameter from accessor_data to allow conversion from possibly-not-const to const.
+        return {{_data.bytes, _data.size, _data.header_copy}};
+    }
 
     /// Count the bytes of element data, not including any headers
     constexpr byte_count_type byte_size() const noexcept {
@@ -325,6 +331,7 @@ class accessor {
 
    private:
     friend class bsoncxx::v_noabi::builder::basic::sub_binary;
+    friend class accessor<typename std::remove_const<format>::type>;
 
     accessor(detail::accessor_data<format> data) noexcept : _data(data) {}
 

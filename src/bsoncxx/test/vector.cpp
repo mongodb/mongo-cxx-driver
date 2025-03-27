@@ -260,9 +260,13 @@ TEMPLATE_TEST_CASE(
             auto const element_unit = test_format_specific::element_unit();
             iterator_operations(vec.begin(), vec.end(), std::ptrdiff_t(vec.size()), element_unit);
 
+            // Two ways of iterating as const
             BSONCXX_PRIVATE_WARNINGS_PUSH();
             BSONCXX_PRIVATE_WARNINGS_DISABLE(GNU("-Wfloat-equal"));
             std::for_each(vec.cbegin(), vec.cend(), [&](auto const& value) { CHECK_FALSE(value == element_unit); });
+            std::for_each(vec.as_const().begin(), vec.as_const().end(), [&](auto const& value) {
+                CHECK_FALSE(value == element_unit);
+            });
             BSONCXX_PRIVATE_WARNINGS_POP();
         }));
         types::b_binary const& binary = doc.view()["vector"].get_binary();
@@ -277,8 +281,13 @@ TEMPLATE_TEST_CASE(
             auto vec = sbin.allocate(TestType{}, 8000u);
             uint8_t const element_unit(1);
             iterator_operations(vec.byte_begin(), vec.byte_end(), std::ptrdiff_t(vec.byte_size()), element_unit);
+
+            // Two ways of iterating as const
             std::for_each(
                 vec.byte_cbegin(), vec.byte_cend(), [&](auto const& value) { CHECK_FALSE(value == element_unit); });
+            std::for_each(vec.as_const().byte_begin(), vec.as_const().byte_end(), [&](auto const& value) {
+                CHECK_FALSE(value == element_unit);
+            });
         }));
         types::b_binary const& binary = doc.view()["vector"].get_binary();
         vector::accessor<TestType const> validate_encoded{binary};
