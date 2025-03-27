@@ -117,7 +117,7 @@ int EXAMPLES_CDECL main() {
             // Assignment of a packed_bit_element reference copies the referenced bit value
             vec[6] = vec[1];
             vec[7] = vec[5];
-            // Bits can be assigned using boolean expressions, initialized with 0.
+            // Bits can be assigned from boolean expressions, and from zero.
             vec[8] = 0;
             vec[60] = false;
             // Demonstrate addressing bits backward from the end of the vector
