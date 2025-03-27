@@ -36,6 +36,7 @@ enum element_type : std::uint8_t {
     floating_point = 2,
 };
 
+// Equivalent to bson_vector_element_size_t.
 enum element_size : std::uint8_t {
     bits_1 = 0,
     bits_8 = 3,
