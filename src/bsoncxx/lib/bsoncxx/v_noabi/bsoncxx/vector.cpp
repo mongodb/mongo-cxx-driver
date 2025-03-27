@@ -29,6 +29,7 @@ namespace v_noabi {
 namespace vector {
 namespace detail {
 
+// Equivalent to bson_vector_element_type_t.
 enum element_type : std::uint8_t {
     signed_integer = 0,
     unsigned_integer = 1,
