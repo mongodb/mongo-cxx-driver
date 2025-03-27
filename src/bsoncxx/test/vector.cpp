@@ -136,6 +136,9 @@ void iterator_operations(
     CHECK(iter_copy-- - begin == 1);
     CHECK(iter_copy == begin);
 
+    BSONCXX_PRIVATE_WARNINGS_PUSH();
+    BSONCXX_PRIVATE_WARNINGS_DISABLE(GNU("-Wfloat-equal"));
+
     std::generate(begin, end, [&] { return element_unit; });
     std::for_each(begin, end, [&](auto const& value) { CHECK(value == element_unit); });
 
@@ -163,6 +166,8 @@ void iterator_operations(
     std::for_each(begin, end, [&](auto const& value) { CHECK_FALSE(value == element_unit); });
     std::for_each(begin, end, [&](auto const& value) { CHECK_FALSE(value > element_unit); });
     std::for_each(begin, end, [&](auto const& value) { CHECK_FALSE(value >= element_unit); });
+
+    BSONCXX_PRIVATE_WARNINGS_POP();
 }
 
 TEMPLATE_TEST_CASE(
@@ -193,8 +198,15 @@ TEMPLATE_TEST_CASE(
         CHECK_FALSE(vec.empty());
         CHECK(vec.size() == 1u);
         CHECK(vec.byte_size() == bytes.size() - 2u);
+
+        BSONCXX_PRIVATE_WARNINGS_PUSH();
+        BSONCXX_PRIVATE_WARNINGS_DISABLE(GNU("-Wfloat-equal"));
+
         CHECK(vec.at(0) == element);
         CHECK(vec[0] == element);
+
+        BSONCXX_PRIVATE_WARNINGS_POP();
+
         CHECK(vec.byte_at(0) == bytes[2]);
         CHECK(vec.byte_at(bytes.size() - 3u) == bytes[bytes.size() - 1u]);
         CHECK_THROWS_WITH(vec.at(1), Catch::Matchers::ContainsSubstring("BSON vector access out of range"));
@@ -249,7 +261,11 @@ TEMPLATE_TEST_CASE(
             auto vec = sbin.allocate(TestType{}, 8007u);
             auto const element_unit = test_format_specific::element_unit();
             iterator_operations(vec.begin(), vec.end(), std::ptrdiff_t(vec.size()), element_unit);
+
+            BSONCXX_PRIVATE_WARNINGS_PUSH();
+            BSONCXX_PRIVATE_WARNINGS_DISABLE(GNU("-Wfloat-equal"));
             std::for_each(vec.cbegin(), vec.cend(), [&](auto const& value) { CHECK_FALSE(value == element_unit); });
+            BSONCXX_PRIVATE_WARNINGS_POP();
         }));
         types::b_binary const& binary = doc.view()["vector"].get_binary();
         vector::accessor<TestType const> validate_encoded{binary};
@@ -277,11 +293,17 @@ TEMPLATE_TEST_CASE(
             auto vec = sbin.allocate(TestType{}, 2u);
             vec[0] = test_format_specific::element_unit();
             vec[1] = value_type{0};
+
+            BSONCXX_PRIVATE_WARNINGS_PUSH();
+            BSONCXX_PRIVATE_WARNINGS_DISABLE(GNU("-Wfloat-equal"));
+
             CHECK(vec.at(0) != vec.at(1));
             CHECK_FALSE(vec.at(0) == vec.at(1));
             vec[1] = vec[0];
             CHECK(vec.at(0) == vec.at(1));
             CHECK_FALSE(vec.at(0) != vec.at(1));
+
+            BSONCXX_PRIVATE_WARNINGS_POP();
         }));
         types::b_binary const& binary = doc.view()["vector"].get_binary();
         vector::accessor<TestType const> validate_encoded{binary};
@@ -318,6 +340,10 @@ TEMPLATE_TEST_CASE(
             auto vec = sbin.allocate(TestType{}, 2u);
             std::fill(vec.begin(), vec.end(), test_format_specific::element_unit());
             *(vec.end() - 1) = value_type{0};
+
+            BSONCXX_PRIVATE_WARNINGS_PUSH();
+            BSONCXX_PRIVATE_WARNINGS_DISABLE(GNU("-Wfloat-equal"));
+
             CHECK(vec.back() == value_type{0});
             CHECK(vec.back() == vec[vec.size() - 1u]);
             CHECK(vec.front() != vec.back());
@@ -332,6 +358,8 @@ TEMPLATE_TEST_CASE(
             CHECK(vec[vec.size() - 1u] != value_type{0});
             CHECK(vec.front() != vec.back());
             CHECK_FALSE(vec.front() == vec.back());
+
+            BSONCXX_PRIVATE_WARNINGS_POP();
         }));
         types::b_binary const& binary = doc.view()["vector"].get_binary();
         vector::accessor<TestType const> validate_encoded{binary};
@@ -342,6 +370,10 @@ TEMPLATE_TEST_CASE(
         bsoncxx::document::value doc = make_document(kvp("vector", [&](sub_binary sbin) {
             auto vec = sbin.allocate(TestType{}, 16u);
             std::fill(vec.begin(), vec.end(), value_type{0});
+
+            BSONCXX_PRIVATE_WARNINGS_PUSH();
+            BSONCXX_PRIVATE_WARNINGS_DISABLE(GNU("-Wfloat-equal"));
+
             CHECK(vec.front() == vec.back());
             CHECK_FALSE(vec.front() != vec.back());
             CHECK(vec.byte_front() == vec.byte_back());
@@ -353,6 +385,8 @@ TEMPLATE_TEST_CASE(
             vec.byte_back() = UINT8_C(0);
             CHECK(vec.byte_front() == vec.byte_back());
             CHECK_FALSE(vec.byte_front() != vec.byte_back());
+
+            BSONCXX_PRIVATE_WARNINGS_POP();
         }));
         types::b_binary const& binary = doc.view()["vector"].get_binary();
         vector::accessor<TestType const> validate_encoded{binary};
@@ -385,11 +419,17 @@ TEST_CASE("vector accessor float32", "[bsoncxx::vector::accessor]") {
         types::b_binary const binary{binary_sub_type::k_vector, sizeof bytes, bytes};
         vector::accessor<vector::formats::f_float32 const> vec{binary};
         REQUIRE(vec.size() == 3u);
+
+        BSONCXX_PRIVATE_WARNINGS_PUSH();
+        BSONCXX_PRIVATE_WARNINGS_DISABLE(GNU("-Wfloat-equal"));
+
         CHECK(vec[0] < 0.f);
         CHECK(vec[0] * 0.f != 0.f);
         CHECK(vec[1] == 0.f);
         CHECK(vec[2] > 0.f);
         CHECK(vec[2] * 0.f != 0.f);
+
+        BSONCXX_PRIVATE_WARNINGS_POP();
     }
 }
 
