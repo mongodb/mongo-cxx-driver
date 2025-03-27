@@ -243,7 +243,9 @@ class packed_bit_byte {
     std::uint8_t mask;
 };
 
-/// packed_bit_byte is Swappable even when it's not an lvalue reference
+/// Swap the referenced values for `a` and `b`.
+///
+/// @note `packed_bit_byte<Iterator>` is a proxy reference and behaves like an lvalue reference.
 template <typename Iterator>
 void swap(packed_bit_byte<Iterator> a, packed_bit_byte<Iterator> b) noexcept {
     std::uint8_t a_value = a;
