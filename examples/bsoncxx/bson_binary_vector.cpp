@@ -28,9 +28,14 @@
 #include <examples/macros.hh>
 
 int EXAMPLES_CDECL main() {
+    using bsoncxx::binary_sub_type;
     using bsoncxx::builder::basic::kvp;
     using bsoncxx::builder::basic::make_document;
     using bsoncxx::builder::basic::sub_binary;
+    using bsoncxx::vector::accessor;
+    using bsoncxx::vector::formats::f_float32;
+    using bsoncxx::vector::formats::f_int8;
+    using bsoncxx::vector::formats::f_packed_bit;
 
     bsoncxx::document::value doc = make_document(
 
@@ -47,8 +52,8 @@ int EXAMPLES_CDECL main() {
         kvp("binary",
             [&](sub_binary sbin) {
                 uint32_t len = 10;
-                uint8_t* vec = sbin.allocate(bsoncxx::binary_sub_type::k_binary, len);
-                memset(vec, 0x55, len);
+                uint8_t* data = sbin.allocate(binary_sub_type::k_binary, len);
+                memset(data, 0x55, len);
             }),
 
         //
@@ -62,7 +67,7 @@ int EXAMPLES_CDECL main() {
         //
         kvp("vector_int8",
             [&](sub_binary sbin) {
-                auto vec = sbin.allocate(bsoncxx::vector::formats::f_int8{}, 10);
+                auto vec = sbin.allocate(f_int8{}, 10);
                 int8_t i = -5;
                 std::generate(vec.begin(), vec.end(), [&] { return ++i; });
             }),
@@ -82,7 +87,7 @@ int EXAMPLES_CDECL main() {
         //
         kvp("vector_float32",
             [&](sub_binary sbin) {
-                auto vec = sbin.allocate(bsoncxx::vector::formats::f_float32{}, 10);
+                auto vec = sbin.allocate(f_float32{}, 10);
                 // Calculate a fibonacci sequence starting near the smallest representable value
                 vec[0] = 0.f;
                 vec[1] = 1e-38f;
@@ -109,7 +114,7 @@ int EXAMPLES_CDECL main() {
         // accessing individual elements.
         //
         kvp("vector_packed_bit", [&](sub_binary sbin) {
-            auto vec = sbin.allocate(bsoncxx::vector::formats::f_packed_bit{}, 61);
+            auto vec = sbin.allocate(f_packed_bit{}, 61);
             // Start by setting all bits to 1
             std::fill(vec.begin(), vec.end(), true);
             // Flip a bit using a boolean expression
@@ -138,7 +143,7 @@ int EXAMPLES_CDECL main() {
 
     // Iterate over elements in the int8 vector
     {
-        bsoncxx::vector::accessor<bsoncxx::vector::formats::f_int8 const> vec(doc["vector_int8"].get_binary());
+        accessor<f_int8 const> vec(doc["vector_int8"].get_binary());
         std::cout << "int8: " << vec.size() << std::endl;
         for (auto&& i : vec) {
             std::cout << int(i) << " ";
@@ -148,7 +153,7 @@ int EXAMPLES_CDECL main() {
 
     // Iterate over bytes in the int8 vector
     {
-        bsoncxx::vector::accessor<bsoncxx::vector::formats::f_int8 const> vec(doc["vector_int8"].get_binary());
+        accessor<f_int8 const> vec(doc["vector_int8"].get_binary());
         std::cout << "int8 bytes: " << vec.byte_size() << std::hex << std::endl;
         for (auto i = vec.byte_begin(); i != vec.byte_end(); i++) {
             std::cout << int(*i) << " ";
@@ -158,7 +163,7 @@ int EXAMPLES_CDECL main() {
 
     // Iterate over elements in the float32 vector
     {
-        bsoncxx::vector::accessor<bsoncxx::vector::formats::f_float32 const> vec(doc["vector_float32"].get_binary());
+        accessor<f_float32 const> vec(doc["vector_float32"].get_binary());
         std::cout << "float32: " << vec.size() << std::endl;
         for (auto&& i : vec) {
             std::cout << i << " ";
@@ -168,7 +173,7 @@ int EXAMPLES_CDECL main() {
 
     // Iterate over bytes in the float32 vector
     {
-        bsoncxx::vector::accessor<bsoncxx::vector::formats::f_float32 const> vec(doc["vector_float32"].get_binary());
+        accessor<f_float32 const> vec(doc["vector_float32"].get_binary());
         std::cout << "float32 bytes: " << vec.byte_size() << std::hex << std::endl;
         for (auto i = vec.byte_begin(); i != vec.byte_end(); i++) {
             std::cout << int(*i) << " ";
@@ -178,8 +183,7 @@ int EXAMPLES_CDECL main() {
 
     // Iterate over elements in the packed_bit vector
     {
-        bsoncxx::vector::accessor<bsoncxx::vector::formats::f_packed_bit const> vec(
-            doc["vector_packed_bit"].get_binary());
+        accessor<f_packed_bit const> vec(doc["vector_packed_bit"].get_binary());
         std::cout << "packed_bit: " << vec.size() << std::endl;
         for (auto&& i : vec) {
             std::cout << i << " ";
@@ -189,8 +193,7 @@ int EXAMPLES_CDECL main() {
 
     // Iterate over bytes in the packed_bit vector
     {
-        bsoncxx::vector::accessor<bsoncxx::vector::formats::f_packed_bit const> vec(
-            doc["vector_packed_bit"].get_binary());
+        accessor<f_packed_bit const> vec(doc["vector_packed_bit"].get_binary());
         std::cout << "packed_bit bytes: " << vec.byte_size() << std::hex << std::endl;
         for (auto i = vec.byte_begin(); i != vec.byte_end(); i++) {
             std::cout << int(*i) << " ";
