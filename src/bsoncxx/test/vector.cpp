@@ -27,7 +27,6 @@
 
 #include <catch2/catch_template_test_macros.hpp>
 #include <catch2/generators/catch_generators.hpp>
-#include <catch2/matchers/catch_matchers_string.hpp>
 
 namespace {
 
@@ -187,7 +186,7 @@ TEMPLATE_TEST_CASE(
         CHECK(vec.size() == 0);
         CHECK(vec.byte_size() == 0);
         CHECK_THROWS_WITH_CODE(vec.at(0), bsoncxx::v_noabi::error_code::k_vector_out_of_range);
-        CHECK_THROWS_WITH(vec.byte_at(0), Catch::Matchers::ContainsSubstring("BSON vector access out of range"));
+        CHECK_THROWS_WITH_CODE(vec.byte_at(0), bsoncxx::v_noabi::error_code::k_vector_out_of_range);
     }
 
     SECTION("decode a valid vector with a single element") {
@@ -209,9 +208,8 @@ TEMPLATE_TEST_CASE(
 
         CHECK(vec.byte_at(0) == bytes[2]);
         CHECK(vec.byte_at(bytes.size() - 3u) == bytes[bytes.size() - 1u]);
-        CHECK_THROWS_WITH(vec.at(1), Catch::Matchers::ContainsSubstring("BSON vector access out of range"));
-        CHECK_THROWS_WITH(
-            vec.byte_at(bytes.size() - 2u), Catch::Matchers::ContainsSubstring("BSON vector access out of range"));
+        CHECK_THROWS_WITH_CODE(vec.at(1), bsoncxx::v_noabi::error_code::k_vector_out_of_range);
+        CHECK_THROWS_WITH_CODE(vec.byte_at(bytes.size() - 2u), bsoncxx::v_noabi::error_code::k_vector_out_of_range);
     }
 
     SECTION("reject binary data of the wrong sub_type") {
@@ -219,8 +217,8 @@ TEMPLATE_TEST_CASE(
         auto invalid_type = GENERATE(
             binary_sub_type::k_binary, binary_sub_type::k_encrypted, binary_sub_type::k_uuid, binary_sub_type::k_user);
         types::b_binary const binary{invalid_type, bytes.size(), bytes.data()};
-        CHECK_THROWS_WITH(
-            vector::accessor<TestType const>(binary), Catch::Matchers::ContainsSubstring("invalid BSON vector"));
+        CHECK_THROWS_WITH_CODE(
+            vector::accessor<TestType const>(binary), bsoncxx::v_noabi::error_code::k_invalid_vector);
     }
 
     SECTION("reject binary data that's too short to include a header") {
@@ -228,8 +226,8 @@ TEMPLATE_TEST_CASE(
         auto bytes_to_remove = GENERATE(1u, 2u);
         REQUIRE(bytes.size() >= bytes_to_remove);
         types::b_binary const binary{binary_sub_type::k_vector, uint32_t(bytes.size() - bytes_to_remove), bytes.data()};
-        CHECK_THROWS_WITH(
-            vector::accessor<TestType const>(binary), Catch::Matchers::ContainsSubstring("invalid BSON vector"));
+        CHECK_THROWS_WITH_CODE(
+            vector::accessor<TestType const>(binary), bsoncxx::v_noabi::error_code::k_invalid_vector);
     }
 
     SECTION("reject empty vectors with any modified header bits") {
@@ -237,8 +235,8 @@ TEMPLATE_TEST_CASE(
             auto bytes = test_format_specific::bytes_empty();
             bytes[bit_index >> 3u] ^= std::uint8_t(1u << (bit_index & 7u));
             types::b_binary const binary{binary_sub_type::k_vector, bytes.size(), bytes.data()};
-            CHECK_THROWS_WITH(
-                vector::accessor<TestType const>(binary), Catch::Matchers::ContainsSubstring("invalid BSON vector"));
+            CHECK_THROWS_WITH_CODE(
+                vector::accessor<TestType const>(binary), bsoncxx::v_noabi::error_code::k_invalid_vector);
         }
     }
 
@@ -329,9 +327,9 @@ TEMPLATE_TEST_CASE(
         using namespace builder::basic;
         // This checks that we can detect overlarge sizes and throw an exception.
         // Detailed checks for the size limit are delegated to Libbson (via libbson_length_for_append)
-        CHECK_THROWS_WITH(
+        CHECK_THROWS_WITH_CODE(
             make_document(kvp("vector", [&](sub_binary sbin) { sbin.allocate(TestType{}, SIZE_MAX); })),
-            Catch::Matchers::ContainsSubstring("BSON vector too large"));
+            bsoncxx::v_noabi::error_code::k_vector_too_large);
     }
 
     SECTION("support front and back element references") {
@@ -398,9 +396,8 @@ TEST_CASE("vector accessor float32", "[bsoncxx::vector::accessor]") {
         static uint8_t const bytes[] = {0x27, 0x00, 0x00, 0x00, 0x80, 0x3f, 0x00, 0x00, 0x00};
         auto invalid_length = GENERATE(0u, 1u, 3u, 4u, 5u, 7u, 8u, 9u);
         types::b_binary const binary{binary_sub_type::k_vector, uint32_t(invalid_length), bytes};
-        CHECK_THROWS_WITH(
-            vector::accessor<vector::formats::f_float32 const>(binary),
-            Catch::Matchers::ContainsSubstring("invalid BSON vector"));
+        CHECK_THROWS_WITH_CODE(
+            vector::accessor<vector::formats::f_float32 const>(binary), bsoncxx::v_noabi::error_code::k_invalid_vector);
     }
 
     SECTION("rejects binary data from other vector formats") {
@@ -408,9 +405,8 @@ TEST_CASE("vector accessor float32", "[bsoncxx::vector::accessor]") {
             format_specific<vector::formats::f_int8>::bytes_empty(),
             format_specific<vector::formats::f_packed_bit>::bytes_empty());
         types::b_binary const binary{binary_sub_type::k_vector, bytes.size(), bytes.data()};
-        CHECK_THROWS_WITH(
-            vector::accessor<vector::formats::f_float32 const>(binary),
-            Catch::Matchers::ContainsSubstring("invalid BSON vector"));
+        CHECK_THROWS_WITH_CODE(
+            vector::accessor<vector::formats::f_float32 const>(binary), bsoncxx::v_noabi::error_code::k_invalid_vector);
     }
 
     SECTION("accepts and correctly decodes elements with infinite value") {
@@ -439,9 +435,8 @@ TEST_CASE("vector accessor int8_t", "[bsoncxx::vector::accessor]") {
             format_specific<vector::formats::f_float32>::bytes_empty(),
             format_specific<vector::formats::f_packed_bit>::bytes_empty());
         types::b_binary const binary{binary_sub_type::k_vector, bytes.size(), bytes.data()};
-        CHECK_THROWS_WITH(
-            vector::accessor<vector::formats::f_int8 const>(binary),
-            Catch::Matchers::ContainsSubstring("invalid BSON vector"));
+        CHECK_THROWS_WITH_CODE(
+            vector::accessor<vector::formats::f_int8 const>(binary), bsoncxx::v_noabi::error_code::k_invalid_vector);
     }
 }
 
@@ -451,9 +446,9 @@ TEST_CASE("vector accessor packed_bit", "[bsoncxx::vector::accessor]") {
             auto bytes = format_specific<vector::formats::f_packed_bit>::bytes_empty();
             bytes[1] = uint8_t(byte_value);
             types::b_binary const binary{binary_sub_type::k_vector, bytes.size(), bytes.data()};
-            CHECK_THROWS_WITH(
+            CHECK_THROWS_WITH_CODE(
                 vector::accessor<vector::formats::f_packed_bit const>(binary),
-                Catch::Matchers::ContainsSubstring("invalid BSON vector"));
+                bsoncxx::v_noabi::error_code::k_invalid_vector);
         }
     }
 
@@ -461,9 +456,9 @@ TEST_CASE("vector accessor packed_bit", "[bsoncxx::vector::accessor]") {
         for (unsigned byte_value = 8u; byte_value <= UINT8_MAX; byte_value++) {
             uint8_t const bytes[] = {0x10, uint8_t(byte_value), 0x00};
             types::b_binary const binary{binary_sub_type::k_vector, sizeof bytes, bytes};
-            CHECK_THROWS_WITH(
+            CHECK_THROWS_WITH_CODE(
                 vector::accessor<vector::formats::f_packed_bit const>(binary),
-                Catch::Matchers::ContainsSubstring("invalid BSON vector"));
+                bsoncxx::v_noabi::error_code::k_invalid_vector);
         }
     }
 
@@ -471,9 +466,9 @@ TEST_CASE("vector accessor packed_bit", "[bsoncxx::vector::accessor]") {
         for (unsigned byte_value = 1u; byte_value <= 7u; byte_value++) {
             uint8_t bytes[] = {0x10, uint8_t(byte_value), 0xff};
             types::b_binary const binary{binary_sub_type::k_vector, sizeof bytes, bytes};
-            CHECK_THROWS_WITH(
+            CHECK_THROWS_WITH_CODE(
                 vector::accessor<vector::formats::f_packed_bit const>(binary),
-                Catch::Matchers::ContainsSubstring("invalid BSON vector"));
+                bsoncxx::v_noabi::error_code::k_invalid_vector);
             // Succeeds when unused bits are then zeroed
             bytes[2] = 0;
             vector::accessor<vector::formats::f_packed_bit const> vec{binary};
@@ -529,9 +524,9 @@ TEST_CASE("vector accessor packed_bit", "[bsoncxx::vector::accessor]") {
             format_specific<vector::formats::f_int8>::bytes_empty(),
             format_specific<vector::formats::f_float32>::bytes_empty());
         types::b_binary const binary{binary_sub_type::k_vector, bytes.size(), bytes.data()};
-        CHECK_THROWS_WITH(
+        CHECK_THROWS_WITH_CODE(
             vector::accessor<vector::formats::f_packed_bit const>(binary),
-            Catch::Matchers::ContainsSubstring("invalid BSON vector"));
+            bsoncxx::v_noabi::error_code::k_invalid_vector);
     }
 
     SECTION("writes and successfully re-validates vectors of any length") {
