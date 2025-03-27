@@ -186,7 +186,7 @@ TEMPLATE_TEST_CASE(
         CHECK(vec.empty());
         CHECK(vec.size() == 0);
         CHECK(vec.byte_size() == 0);
-        CHECK_THROWS_WITH(vec.at(0), Catch::Matchers::ContainsSubstring("BSON vector access out of range"));
+        CHECK_THROWS_WITH_CODE(vec.at(0), bsoncxx::v_noabi::error_code::k_vector_out_of_range);
         CHECK_THROWS_WITH(vec.byte_at(0), Catch::Matchers::ContainsSubstring("BSON vector access out of range"));
     }
 
