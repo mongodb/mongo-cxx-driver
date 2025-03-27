@@ -46,5 +46,5 @@ using ::bsoncxx::v_noabi::vector::formats::f_packed_bit;
 
 ///
 /// @file
-/// Declares entities in @ref bsoncxx::vector::formats.
+/// Declares entities in @ref bsoncxx::v_noabi::vector::formats.
 ///
