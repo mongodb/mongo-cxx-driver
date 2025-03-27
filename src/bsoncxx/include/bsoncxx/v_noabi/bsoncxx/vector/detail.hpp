@@ -14,6 +14,10 @@
 
 #pragma once
 
+#include <bsoncxx/vector/detail-fwd.hpp>
+
+//
+
 #include <array>
 #include <cstdint>
 #include <cstring>
