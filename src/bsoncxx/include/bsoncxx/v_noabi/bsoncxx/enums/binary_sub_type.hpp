@@ -26,6 +26,7 @@ BSONCXX_ENUM(md5,               0x05)
 BSONCXX_ENUM(encrypted,         0x06)
 BSONCXX_ENUM(column,            0x07)
 BSONCXX_ENUM(sensitive,         0x08)
+BSONCXX_ENUM(vector,            0x09)
 BSONCXX_ENUM(user,              0x80)
 // clang-format on
 

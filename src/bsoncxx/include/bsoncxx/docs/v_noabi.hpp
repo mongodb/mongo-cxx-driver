@@ -97,6 +97,11 @@
 ///
 
 ///
+/// @dir bsoncxx/v_noabi/bsoncxx/vector
+/// Provides headers declaring entities in @ref bsoncxx::v_noabi::vector.
+///
+
+///
 /// @namespace bsoncxx::v_noabi
 /// Declares entities whose ABI stability is NOT guaranteed.
 ///
@@ -147,4 +152,24 @@
 ///
 /// @namespace bsoncxx::v_noabi::types::bson_value
 /// Declares entities representing any BSON value type.
+///
+
+///
+/// @namespace bsoncxx::v_noabi::vector
+/// @copydoc bsoncxx::vector
+///
+
+///
+/// @namespace bsoncxx::v_noabi::vector::formats
+/// @copydoc bsoncxx::vector::formats
+///
+
+///
+/// @namespace bsoncxx::v_noabi::vector::elements
+/// Declares element accessor types for BSON Binary Vector.
+///
+
+///
+/// @namespace bsoncxx::v_noabi::vector::iterators
+/// Declares iterator types for BSON Binary Vector.
 ///

@@ -37,6 +37,7 @@ set(bsoncxx_sources_v_noabi
     bsoncxx/v_noabi/bsoncxx/types/bson_value/value.cpp
     bsoncxx/v_noabi/bsoncxx/types/bson_value/view.cpp
     bsoncxx/v_noabi/bsoncxx/validate.cpp
+    bsoncxx/v_noabi/bsoncxx/vector.cpp
 )
 
 set(bsoncxx_sources_v1
