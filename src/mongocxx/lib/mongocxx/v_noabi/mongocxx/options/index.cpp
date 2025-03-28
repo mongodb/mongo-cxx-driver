@@ -64,8 +64,13 @@ index& index::storage_options(std::unique_ptr<index::base_storage_options> stora
 }
 
 index& index::storage_options(std::unique_ptr<index::wiredtiger_storage_options> storage_options) {
-    _storage_options = std::unique_ptr<index::base_storage_options>(
-        static_cast<index::base_storage_options*>(storage_options.release()));
+    _storage_options = std::move(storage_options);
+    return *this;
+}
+
+index& index::storage_engine(
+    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> storage_engine) {
+    _storage_engine = std::move(storage_engine);
     return *this;
 }
 
@@ -154,6 +159,10 @@ bsoncxx::v_noabi::stdx::optional<bool> const& index::sparse() const {
 
 std::unique_ptr<index::base_storage_options> const& index::storage_options() const {
     return _storage_options;
+}
+
+bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const& index::storage_engine() const {
+    return _storage_engine;
 }
 
 bsoncxx::v_noabi::stdx::optional<std::chrono::seconds> const& index::expire_after() const {
@@ -286,7 +295,9 @@ index::operator bsoncxx::v_noabi::document::view_or_value() {
         root.append(kvp("collation", *_collation));
     }
 
-    if (_storage_options) {
+    if (_storage_engine) {
+        root.append(kvp("storageEngine", *_storage_engine));
+    } else if (_storage_options) {
         if (_storage_options->type() == MONGOC_INDEX_STORAGE_OPT_WIREDTIGER) {
             options::index::wiredtiger_storage_options const* wt_options =
                 static_cast<options::index::wiredtiger_storage_options const*>(_storage_options.get());
@@ -302,6 +313,7 @@ index::operator bsoncxx::v_noabi::document::view_or_value() {
             root.append(kvp("storageEngine", storage_doc));
         }
     }
+
     return root.extract();
 }
 
