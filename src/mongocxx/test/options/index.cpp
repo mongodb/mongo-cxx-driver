@@ -13,6 +13,7 @@
 // limitations under the License.
 
 #include <bsoncxx/builder/basic/document.hpp>
+#include <bsoncxx/json.hpp>
 #include <bsoncxx/types.hpp>
 
 #include <mongocxx/instance.hpp>
@@ -35,8 +36,7 @@ TEST_CASE("index", "[index][option]") {
     instance::current();
 
     options::index idx;
-    std::unique_ptr<options::index::wiredtiger_storage_options> storage =
-        bsoncxx::make_unique<options::index::wiredtiger_storage_options>();
+    auto storage = bsoncxx::from_json(R"({"wiredTiger": {"configString": null}})");
 
     auto collation = make_document(kvp("locale", "en_US"));
     auto partial_filter_expression = make_document(kvp("x", true));
@@ -59,7 +59,7 @@ TEST_CASE("index", "[index][option]") {
         CHECK_OPTIONAL_ARGUMENT(idx, haystack_bucket_size_deprecated, 90.0);
         CHECK_OPTIONAL_ARGUMENT(idx, weights, weights.view());
         CHECK_OPTIONAL_ARGUMENT(idx, partial_filter_expression, partial_filter_expression.view());
-        REQUIRE_NOTHROW(idx.storage_options(std::move(storage)));
+        CHECK_OPTIONAL_ARGUMENT(idx, storage_engine, storage.view());
     }
 
     SECTION("check cast to document") {
@@ -101,7 +101,7 @@ TEST_CASE("index", "[index][option]") {
         idx.twod_location_min(90.0);
         idx.haystack_bucket_size_deprecated(90.0);
         idx.weights(weights.view());
-        idx.storage_options(std::move(storage));
+        idx.storage_engine(storage.view());
 
         bsoncxx::document::view_or_value d = static_cast<bsoncxx::document::view_or_value>(idx);
 
