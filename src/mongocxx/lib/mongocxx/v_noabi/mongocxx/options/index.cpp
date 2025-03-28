@@ -68,8 +68,7 @@ index& index::storage_options(std::unique_ptr<index::wiredtiger_storage_options>
     return *this;
 }
 
-index& index::storage_engine(
-    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> storage_engine) {
+index& index::storage_engine(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view> storage_engine) {
     _storage_engine = std::move(storage_engine);
     return *this;
 }
@@ -161,7 +160,7 @@ std::unique_ptr<index::base_storage_options> const& index::storage_options() con
     return _storage_options;
 }
 
-bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const& index::storage_engine() const {
+bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view> const& index::storage_engine() const {
     return _storage_engine;
 }
 

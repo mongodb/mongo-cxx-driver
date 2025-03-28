@@ -298,12 +298,12 @@ class index {
     /// - [Storage Engines for Self-Managed Deployments (MongoDB Manual)](https://www.mongodb.com/docs/manual/core/storage-engines/)
     ///
     MONGOCXX_ABI_EXPORT_CDECL(index&)
-    storage_engine(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> storage_engine);
+    storage_engine(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view> storage_engine);
 
     ///
     /// The current storage engine options.
     ///
-    BSONCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const&)
+    BSONCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view> const&)
     storage_engine() const;
 
     ///
