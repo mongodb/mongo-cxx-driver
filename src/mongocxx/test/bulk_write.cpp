@@ -34,7 +34,7 @@ using bsoncxx::builder::basic::make_document;
 
 TEST_CASE("a bulk_write will setup a mongoc bulk operation", "[bulk_write]") {
     instance::current();
-    mongocxx::client client{mongocxx::uri{}};
+    mongocxx::client client{mongocxx::uri{}, test_util::add_test_server_api()};
     mongocxx::collection coll = client["db"]["coll"];
     CHECK_NOTHROW(coll.drop());
     auto construct = libmongoc::collection_create_bulk_operation_with_opts.create_instance();
@@ -74,7 +74,7 @@ TEST_CASE("a bulk_write will setup a mongoc bulk operation", "[bulk_write]") {
 }
 TEST_CASE("destruction of a bulk_write will destroy mongoc operation", "[bulk_write]") {
     instance::current();
-    mongocxx::client client{mongocxx::uri{}};
+    mongocxx::client client{mongocxx::uri{}, test_util::add_test_server_api()};
     mongocxx::collection coll = client["db"]["coll"];
     CHECK_NOTHROW(coll.drop());
     auto destruct = libmongoc::bulk_operation_destroy.create_instance();
@@ -185,7 +185,7 @@ class delete_functor {
 
 TEST_CASE("passing write operations to append calls corresponding C function", "[bulk_write]") {
     instance::current();
-    mongocxx::client client{mongocxx::uri{}};
+    mongocxx::client client{mongocxx::uri{}, test_util::add_test_server_api()};
     mongocxx::collection coll = client["db"]["coll"];
     CHECK_NOTHROW(coll.drop());
     auto bw = coll.create_bulk_write();
