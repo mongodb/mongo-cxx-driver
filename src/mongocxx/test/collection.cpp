@@ -2274,15 +2274,13 @@ TEST_CASE("create_index tests", "[collection]") {
 
         bsoncxx::stdx::string_view index_name{"storage_options_test"};
         bsoncxx::document::value keys = make_document(kvp("c", 1));
+        bsoncxx::document::value storage_engine =
+            from_json(R"({"wiredTiger": {"configString": "block_allocation=first"}})");
 
         options::index options{};
         options.name(index_name);
 
-        std::unique_ptr<options::index::wiredtiger_storage_options> wt_options =
-            bsoncxx::make_unique<options::index::wiredtiger_storage_options>();
-        wt_options->config_string("block_allocation=first");
-
-        REQUIRE_NOTHROW(options.storage_options(std::move(wt_options)));
+        REQUIRE_NOTHROW(options.storage_engine(storage_engine.view()));
         REQUIRE_NOTHROW(coll.create_index(keys.view(), options));
 
         auto validate = [](bsoncxx::document::view index) {

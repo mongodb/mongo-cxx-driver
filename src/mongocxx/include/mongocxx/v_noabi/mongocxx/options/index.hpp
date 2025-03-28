@@ -49,6 +49,8 @@ class index {
     ///
     /// Base class representing the optional storage engine options for indexes.
     ///
+    /// @deprecated Use @ref mongocxx::v_noabi::options::index::storage_engine instead.
+    ///
     class MONGOCXX_ABI_EXPORT base_storage_options {
        public:
         virtual ~base_storage_options();
@@ -68,6 +70,8 @@ class index {
 
     ///
     /// The optional WiredTiger storage engine options for indexes.
+    ///
+    /// @deprecated Use @ref mongocxx::v_noabi::options::index::storage_engine instead.
     ///
     class MONGOCXX_ABI_EXPORT wiredtiger_storage_options final : public base_storage_options {
        public:
@@ -247,8 +251,9 @@ class index {
     MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bool> const&) sparse() const;
 
     ///
-    /// Optionally used only in MongoDB 3.0.0 and higher. Specifies the storage engine options for
-    /// the index.
+    /// Specifies the storage engine options for the index.
+    ///
+    /// @important This option is overridden by `storage_engine` when set.
     ///
     /// @param storage_options
     ///   The storage engine options for the index.
@@ -257,18 +262,49 @@ class index {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(index&)
-    storage_options(std::unique_ptr<base_storage_options> storage_options);
+    /// @deprecated Use @ref mongocxx::v_noabi::options::index::storage_engine instead.
+    ///
+    MONGOCXX_DEPRECATED MONGOCXX_ABI_EXPORT_CDECL(index&) storage_options(
+        std::unique_ptr<base_storage_options> storage_options);
 
     ///
-    /// Optionally used only in MongoDB 3.0.0 and higher. Specifies the WiredTiger-specific storage
-    /// engine options for the index.
+    /// Specifies the WiredTiger-specific storage engine options for the index.
+    ///
+    /// @important This option is overridden by `storage_engine` when set.
     ///
     /// @param storage_options
     ///   The storage engine options for the index.
     ///
+    /// @deprecated Use @ref mongocxx::v_noabi::options::index::storage_engine instead.
+    ///
+    MONGOCXX_DEPRECATED MONGOCXX_ABI_EXPORT_CDECL(index&) storage_options(
+        std::unique_ptr<wiredtiger_storage_options> storage_options);
+
+    ///
+    /// Specifies the storage engine options for the index.
+    ///
+    /// @important This option overrides `storage_options` when set.
+    ///
+    /// The document must have the form `{ <storage-engine-name>: <options> }`, e.g.:
+    /// ```json
+    /// { "wiredTiger": {"configString": "block_compressor=zlib"} }
+    /// ```
+    ///
+    /// @param storage_engine
+    ///   The storage engine options for the index.
+    ///
+    /// @see
+    /// - [Specifying Storage Engine Options (MongoDB Manual)](https://www.mongodb.com/docs/manual/reference/method/db.createCollection/#std-label-create-collection-storage-engine-options)
+    /// - [Storage Engines for Self-Managed Deployments (MongoDB Manual)](https://www.mongodb.com/docs/manual/core/storage-engines/)
+    ///
     MONGOCXX_ABI_EXPORT_CDECL(index&)
-    storage_options(std::unique_ptr<wiredtiger_storage_options> storage_options);
+    storage_engine(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view> storage_engine);
+
+    ///
+    /// The current storage engine options.
+    ///
+    BSONCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view> const&)
+    storage_engine() const;
 
     ///
     /// Set a value, in seconds, as a TTL to control how long MongoDB retains documents in this
@@ -534,6 +570,7 @@ class index {
     bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view> _collation;
     bsoncxx::v_noabi::stdx::optional<bool> _sparse;
     std::unique_ptr<base_storage_options> _storage_options;
+    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view> _storage_engine;
     bsoncxx::v_noabi::stdx::optional<std::chrono::seconds> _expire_after;
     bsoncxx::v_noabi::stdx::optional<std::int32_t> _version;
     bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view> _weights;
