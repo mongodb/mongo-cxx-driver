@@ -42,7 +42,7 @@ class sub_binary {
     ///
     /// Default constructor
     ///
-    sub_binary(core* core) : _core(core) {}
+    sub_binary(core* core) : _core{core} {}
 
     /// @brief Allocate space for an un-initialized BSON Binary element of any subtype.
     /// @param sub_type BSON binary subtype code, identifying the format of the data within.

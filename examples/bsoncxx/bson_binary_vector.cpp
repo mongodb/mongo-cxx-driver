@@ -108,7 +108,7 @@ int EXAMPLES_CDECL main() {
         // bsoncxx::v_noabi::vector::elements::packed_bit_element and an iterator
         // bsoncxx::v_noabi::vector::iterators::packed_bit_element.
         //
-        // Every bsoncxx::vector:accessor can be accessed either in per-element
+        // Every bsoncxx::vector::accessor can be accessed either in per-element
         // or per-byte mode. Byte mode is particularly useful for applications that
         // may want to use packed_bit vectors in the serialized format without
         // accessing individual elements.
@@ -143,27 +143,27 @@ int EXAMPLES_CDECL main() {
 
     // Iterate over elements in the int8 vector
     {
-        accessor<f_int8 const> vec(doc["vector_int8"].get_binary());
+        accessor<f_int8 const> vec{doc["vector_int8"].get_binary()};
         std::cout << "int8: " << vec.size() << std::endl;
         for (auto&& i : vec) {
-            std::cout << int(i) << " ";
+            std::cout << int{i} << " ";
         }
         std::cout << std::endl;
     }
 
     // Iterate over bytes in the int8 vector
     {
-        accessor<f_int8 const> vec(doc["vector_int8"].get_binary());
+        accessor<f_int8 const> vec{doc["vector_int8"].get_binary()};
         std::cout << "int8 bytes: " << vec.byte_size() << std::hex << std::endl;
         for (auto i = vec.byte_begin(); i != vec.byte_end(); i++) {
-            std::cout << int(*i) << " ";
+            std::cout << int{*i} << " ";
         }
         std::cout << std::dec << std::endl;
     }
 
     // Iterate over elements in the float32 vector
     {
-        accessor<f_float32 const> vec(doc["vector_float32"].get_binary());
+        accessor<f_float32 const> vec{doc["vector_float32"].get_binary()};
         std::cout << "float32: " << vec.size() << std::endl;
         for (auto&& i : vec) {
             std::cout << i << " ";
@@ -173,17 +173,17 @@ int EXAMPLES_CDECL main() {
 
     // Iterate over bytes in the float32 vector
     {
-        accessor<f_float32 const> vec(doc["vector_float32"].get_binary());
+        accessor<f_float32 const> vec{doc["vector_float32"].get_binary()};
         std::cout << "float32 bytes: " << vec.byte_size() << std::hex << std::endl;
         for (auto i = vec.byte_begin(); i != vec.byte_end(); i++) {
-            std::cout << int(*i) << " ";
+            std::cout << int{*i} << " ";
         }
         std::cout << std::dec << std::endl;
     }
 
     // Iterate over elements in the packed_bit vector
     {
-        accessor<f_packed_bit const> vec(doc["vector_packed_bit"].get_binary());
+        accessor<f_packed_bit const> vec{doc["vector_packed_bit"].get_binary()};
         std::cout << "packed_bit: " << vec.size() << std::endl;
         for (auto&& i : vec) {
             std::cout << i << " ";
@@ -193,10 +193,10 @@ int EXAMPLES_CDECL main() {
 
     // Iterate over bytes in the packed_bit vector
     {
-        accessor<f_packed_bit const> vec(doc["vector_packed_bit"].get_binary());
+        accessor<f_packed_bit const> vec{doc["vector_packed_bit"].get_binary()};
         std::cout << "packed_bit bytes: " << vec.byte_size() << std::hex << std::endl;
         for (auto i = vec.byte_begin(); i != vec.byte_end(); i++) {
-            std::cout << int(*i) << " ";
+            std::cout << int{*i} << " ";
         }
         std::cout << std::dec << std::endl;
     }

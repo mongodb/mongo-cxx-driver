@@ -100,7 +100,7 @@ void f_packed_bit::write_frame(std::uint8_t* binary_data, std::uint32_t binary_d
         detail::make_header(
             detail::element_type::unsigned_integer,
             detail::element_size::bits_1,
-            std::uint8_t(std::size_t(7u) & -element_count)));
+            std::uint8_t(std::size_t{7u} & -element_count)));
 }
 
 void formats::f_int8::validate(types::b_binary const& binary) {

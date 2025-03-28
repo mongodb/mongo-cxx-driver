@@ -160,7 +160,7 @@ class accessor {
     ///
     /// The Binary data is validated as a vector of the templated Format. On success, an accessor is created which
     /// references the same data as the bsoncxx::v_noabi::types::b_binary pointer.
-    accessor(types::b_binary const& binary) : _data((format::validate(binary), binary)) {}
+    accessor(types::b_binary const& binary) : _data{(format::validate(binary), binary)} {}
 
     /// Obtain a const version of this vector accessor, without re-validating the vector data.
     constexpr accessor<format const> as_const() const noexcept {
@@ -333,7 +333,7 @@ class accessor {
     friend class bsoncxx::v_noabi::builder::basic::sub_binary;
     friend class accessor<typename std::remove_const<format>::type>;
 
-    accessor(detail::accessor_data<format> data) noexcept : _data(data) {}
+    accessor(detail::accessor_data<format> data) noexcept : _data{data} {}
 
     detail::accessor_data<format> _data;
 };

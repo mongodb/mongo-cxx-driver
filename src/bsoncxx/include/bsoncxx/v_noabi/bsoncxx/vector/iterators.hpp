@@ -96,7 +96,7 @@ class packed_bit_element {
     /// If the iterator goes out of range, behavior is undefined.
     constexpr packed_bit_element operator+(difference_type const& other) const noexcept {
         return {
-            byte + ((other >> 3) + ((difference_type(bit) + (other & 7)) >> 3)),
+            byte + ((other >> 3) + ((difference_type{bit} + (other & 7)) >> 3)),
             std::uint8_t((bit + unsigned(other)) & 7u)};
     }
 
@@ -110,7 +110,7 @@ class packed_bit_element {
     /// @brief Calculate the difference in position between two bit iterators
     /// If the two iterators do not point into the same vector, behavior is undefined.
     constexpr difference_type operator-(packed_bit_element const& other) const noexcept {
-        return {(byte - other.byte) * 8 + (difference_type(bit) - difference_type(other.bit))};
+        return {(byte - other.byte) * 8 + (difference_type{bit} - difference_type{other.bit})};
     }
 
     /// Advance this iterator forward by the indicated number of bits
@@ -125,12 +125,12 @@ class packed_bit_element {
 
     /// Pre-increment
     packed_bit_element& operator++() noexcept {
-        return *this += difference_type(1);
+        return *this += difference_type{1};
     }
 
     /// Pre-decrement
     packed_bit_element& operator--() noexcept {
-        return *this -= difference_type(1);
+        return *this -= difference_type{1};
     }
 
     /// Post-increment
@@ -153,7 +153,7 @@ class packed_bit_element {
     friend class accessor<formats::f_packed_bit const>;
 
     constexpr packed_bit_element(Iterator byte_iter, std::uint8_t bit_index = 0) noexcept
-        : byte(byte_iter), bit(bit_index) {}
+        : byte{byte_iter}, bit{bit_index} {}
 
     Iterator byte;
     std::uint8_t bit;
@@ -184,7 +184,7 @@ class packed_bit_byte {
     /// @brief Dereference the byte iterator
     /// @return A bsoncxx::v_noabi::elements::packed_bit_byte that can be used like a byte reference.
     constexpr reference operator*() const noexcept {
-        return {byte, (byte + 1) == byte_end ? last_byte_mask : value_type(0xFFu)};
+        return {byte, (byte + 1) == byte_end ? last_byte_mask : value_type{0xFFu}};
     }
 
     /// Compare two byte iterators
@@ -249,12 +249,12 @@ class packed_bit_byte {
 
     /// Pre-increment
     packed_bit_byte& operator++() noexcept {
-        return *this += difference_type(1);
+        return *this += difference_type{1};
     }
 
     /// Pre-decrement
     packed_bit_byte& operator--() noexcept {
-        return *this -= difference_type(1);
+        return *this -= difference_type{1};
     }
 
     /// Post-increment
@@ -276,12 +276,12 @@ class packed_bit_byte {
     friend struct detail::format_traits<formats::f_packed_bit const>;
 
     constexpr packed_bit_byte(packed_bit_element<Iterator> element, packed_bit_element<Iterator> element_end)
-        : byte(element.byte),
-          byte_end((element_end + 7u).byte),
-          last_byte_mask(value_type(0xFFu << (-element_end.bit & 7u))) {}
+        : byte{element.byte},
+          byte_end{(element_end + 7u).byte},
+          last_byte_mask{value_type(0xFFu << (-element_end.bit & 7u))} {}
 
     constexpr packed_bit_byte(Iterator byte, Iterator byte_end, value_type last_byte_mask)
-        : byte(byte), byte_end(byte_end), last_byte_mask(last_byte_mask) {}
+        : byte{byte}, byte_end{byte_end}, last_byte_mask{last_byte_mask} {}
 
     Iterator byte;
     Iterator byte_end;

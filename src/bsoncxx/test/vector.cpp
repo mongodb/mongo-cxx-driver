@@ -218,7 +218,7 @@ TEMPLATE_TEST_CASE(
             binary_sub_type::k_binary, binary_sub_type::k_encrypted, binary_sub_type::k_uuid, binary_sub_type::k_user);
         types::b_binary const binary{invalid_type, bytes.size(), bytes.data()};
         CHECK_THROWS_WITH_CODE(
-            vector::accessor<TestType const>(binary), bsoncxx::v_noabi::error_code::k_invalid_vector);
+            vector::accessor<TestType const>{binary}, bsoncxx::v_noabi::error_code::k_invalid_vector);
     }
 
     SECTION("reject binary data that's too short to include a header") {
@@ -227,7 +227,7 @@ TEMPLATE_TEST_CASE(
         REQUIRE(bytes.size() >= bytes_to_remove);
         types::b_binary const binary{binary_sub_type::k_vector, uint32_t(bytes.size() - bytes_to_remove), bytes.data()};
         CHECK_THROWS_WITH_CODE(
-            vector::accessor<TestType const>(binary), bsoncxx::v_noabi::error_code::k_invalid_vector);
+            vector::accessor<TestType const>{binary}, bsoncxx::v_noabi::error_code::k_invalid_vector);
     }
 
     SECTION("reject empty vectors with any modified header bits") {
@@ -236,7 +236,7 @@ TEMPLATE_TEST_CASE(
             bytes[bit_index >> 3u] ^= std::uint8_t(1u << (bit_index & 7u));
             types::b_binary const binary{binary_sub_type::k_vector, bytes.size(), bytes.data()};
             CHECK_THROWS_WITH_CODE(
-                vector::accessor<TestType const>(binary), bsoncxx::v_noabi::error_code::k_invalid_vector);
+                vector::accessor<TestType const>{binary}, bsoncxx::v_noabi::error_code::k_invalid_vector);
         }
     }
 
@@ -406,7 +406,7 @@ TEST_CASE("vector accessor float32", "[bsoncxx::vector::accessor]") {
         auto invalid_length = GENERATE(0u, 1u, 3u, 4u, 5u, 7u, 8u, 9u);
         types::b_binary const binary{binary_sub_type::k_vector, uint32_t(invalid_length), bytes};
         CHECK_THROWS_WITH_CODE(
-            vector::accessor<vector::formats::f_float32 const>(binary), bsoncxx::v_noabi::error_code::k_invalid_vector);
+            vector::accessor<vector::formats::f_float32 const>{binary}, bsoncxx::v_noabi::error_code::k_invalid_vector);
     }
 
     SECTION("rejects binary data from other vector formats") {
@@ -415,7 +415,7 @@ TEST_CASE("vector accessor float32", "[bsoncxx::vector::accessor]") {
             format_specific<vector::formats::f_packed_bit>::bytes_empty());
         types::b_binary const binary{binary_sub_type::k_vector, bytes.size(), bytes.data()};
         CHECK_THROWS_WITH_CODE(
-            vector::accessor<vector::formats::f_float32 const>(binary), bsoncxx::v_noabi::error_code::k_invalid_vector);
+            vector::accessor<vector::formats::f_float32 const>{binary}, bsoncxx::v_noabi::error_code::k_invalid_vector);
     }
 
     SECTION("accepts and correctly decodes elements with infinite value") {
@@ -445,7 +445,7 @@ TEST_CASE("vector accessor int8_t", "[bsoncxx::vector::accessor]") {
             format_specific<vector::formats::f_packed_bit>::bytes_empty());
         types::b_binary const binary{binary_sub_type::k_vector, bytes.size(), bytes.data()};
         CHECK_THROWS_WITH_CODE(
-            vector::accessor<vector::formats::f_int8 const>(binary), bsoncxx::v_noabi::error_code::k_invalid_vector);
+            vector::accessor<vector::formats::f_int8 const>{binary}, bsoncxx::v_noabi::error_code::k_invalid_vector);
     }
 }
 
@@ -456,7 +456,7 @@ TEST_CASE("vector accessor packed_bit", "[bsoncxx::vector::accessor]") {
             bytes[1] = uint8_t(byte_value);
             types::b_binary const binary{binary_sub_type::k_vector, bytes.size(), bytes.data()};
             CHECK_THROWS_WITH_CODE(
-                vector::accessor<vector::formats::f_packed_bit const>(binary),
+                vector::accessor<vector::formats::f_packed_bit const>{binary},
                 bsoncxx::v_noabi::error_code::k_invalid_vector);
         }
     }
@@ -466,7 +466,7 @@ TEST_CASE("vector accessor packed_bit", "[bsoncxx::vector::accessor]") {
             uint8_t const bytes[] = {0x10, uint8_t(byte_value), 0x00};
             types::b_binary const binary{binary_sub_type::k_vector, sizeof bytes, bytes};
             CHECK_THROWS_WITH_CODE(
-                vector::accessor<vector::formats::f_packed_bit const>(binary),
+                vector::accessor<vector::formats::f_packed_bit const>{binary},
                 bsoncxx::v_noabi::error_code::k_invalid_vector);
         }
     }
@@ -476,7 +476,7 @@ TEST_CASE("vector accessor packed_bit", "[bsoncxx::vector::accessor]") {
             uint8_t bytes[] = {0x10, uint8_t(byte_value), 0xff};
             types::b_binary const binary{binary_sub_type::k_vector, sizeof bytes, bytes};
             CHECK_THROWS_WITH_CODE(
-                vector::accessor<vector::formats::f_packed_bit const>(binary),
+                vector::accessor<vector::formats::f_packed_bit const>{binary},
                 bsoncxx::v_noabi::error_code::k_invalid_vector);
             // Succeeds when unused bits are then zeroed
             bytes[2] = 0;
@@ -534,7 +534,7 @@ TEST_CASE("vector accessor packed_bit", "[bsoncxx::vector::accessor]") {
             format_specific<vector::formats::f_float32>::bytes_empty());
         types::b_binary const binary{binary_sub_type::k_vector, bytes.size(), bytes.data()};
         CHECK_THROWS_WITH_CODE(
-            vector::accessor<vector::formats::f_packed_bit const>(binary),
+            vector::accessor<vector::formats::f_packed_bit const>{binary},
             bsoncxx::v_noabi::error_code::k_invalid_vector);
     }
 

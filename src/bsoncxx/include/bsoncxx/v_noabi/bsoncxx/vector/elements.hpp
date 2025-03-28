@@ -123,7 +123,7 @@ class packed_bit_element {
 
     /// Copy the referenced value from another reference of the same type
     packed_bit_element const& operator=(packed_bit_element const& v) const noexcept {
-        return *this = value_type(v);
+        return *this = value_type{v};
     }
 
     /// Operator ^=, emulating bool reference behavior
@@ -147,7 +147,7 @@ class packed_bit_element {
     friend class iterators::packed_bit_element<Iterator>;
 
     constexpr packed_bit_element(Iterator byte_iter, uint8_t bit_index) noexcept
-        : byte(byte_iter), mask(uint8_t(0x80u >> bit_index)) {}
+        : byte{byte_iter}, mask{uint8_t(0x80u >> bit_index)} {}
 
     Iterator byte;
     std::uint8_t mask;
@@ -236,12 +236,12 @@ class packed_bit_byte {
         return *this = *this >> other;
     }
 
-    constexpr packed_bit_byte(packed_bit_byte const& other) : byte(other.byte), mask(other.mask) {}
+    constexpr packed_bit_byte(packed_bit_byte const& other) : byte{other.byte}, mask{other.mask} {}
 
    private:
     friend class iterators::packed_bit_byte<Iterator>;
 
-    constexpr packed_bit_byte(Iterator byte_iter, uint8_t byte_mask) noexcept : byte(byte_iter), mask(byte_mask) {}
+    constexpr packed_bit_byte(Iterator byte_iter, uint8_t byte_mask) noexcept : byte{byte_iter}, mask{byte_mask} {}
 
     Iterator byte;
     std::uint8_t mask;
