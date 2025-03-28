@@ -204,6 +204,12 @@ bsoncxx::v_noabi::stdx::optional<double> const& index::haystack_bucket_size() co
     return haystack_bucket_size_deprecated();
 }
 
+// CDRIVER-5946: mongoc_index_storage_opt_type_t was removed in mongoc 2.0.
+enum mongoc_index_storage_opt_type_t {
+    MONGOC_INDEX_STORAGE_OPT_MMAPV1,
+    MONGOC_INDEX_STORAGE_OPT_WIREDTIGER,
+};
+
 index::operator bsoncxx::v_noabi::document::view_or_value() {
     using namespace bsoncxx;
     using builder::basic::kvp;

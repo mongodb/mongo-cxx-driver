@@ -314,9 +314,6 @@ BSONCXX_PRIVATE_WARNINGS_POP();
     X(find_and_modify_opts_set_sort)                                      \
     X(find_and_modify_opts_set_update)                                    \
     X(handshake_data_append)                                              \
-    X(index_opt_geo_init)                                                 \
-    X(index_opt_init)                                                     \
-    X(index_opt_wt_init)                                                  \
     X(init)                                                               \
     /* X(log_set_handler) CDRIVER-5678: not __cdecl. */                   \
     X(read_concern_copy)                                                  \
