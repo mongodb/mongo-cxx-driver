@@ -5,7 +5,7 @@ from config_generator.components.funcs.setup import Setup
 
 from config_generator.etc.distros import find_large_distro, make_distro_str
 
-from shrub.v3.evg_build_variant import BuildVariant, DisplayTask
+from shrub.v3.evg_build_variant import BuildVariant
 from shrub.v3.evg_task import EvgTask, EvgTaskRef
 
 
@@ -62,11 +62,5 @@ def variants():
             name=f'{TAG}-matrix',
             display_name=f'{TAG}-matrix',
             tasks=[EvgTaskRef(name=f'.{TAG}')],
-            display_tasks=[
-                DisplayTask(
-                    name=f'{TAG}-matrix',
-                    execution_tasks=[f'.{TAG}'],
-                )
-            ],
         ),
     ]
