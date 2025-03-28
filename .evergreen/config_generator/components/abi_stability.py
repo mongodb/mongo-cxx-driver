@@ -4,7 +4,7 @@ from config_generator.etc.distros import find_large_distro
 from config_generator.etc.function import Function, merge_defns
 from config_generator.etc.utils import bash_exec
 
-from shrub.v3.evg_build_variant import BuildVariant, DisplayTask
+from shrub.v3.evg_build_variant import BuildVariant
 from shrub.v3.evg_command import EvgCommandType, git_get_project, s3_put
 from shrub.v3.evg_task import EvgTask, EvgTaskRef
 from shrub.v3.evg_task_group import EvgTaskGroup
@@ -222,12 +222,6 @@ def variants():
             tasks=[
                 EvgTaskRef(name=f'tg-{TAG}-{polyfill}-cxx{cxx_standard}')
                 for polyfill, cxx_standard in MATRIX
-            ],
-            display_tasks=[
-                DisplayTask(
-                    name=f'ABI Stability Checks',
-                    execution_tasks=[f'.{TAG}'],
-                )
             ],
         )
     ]
