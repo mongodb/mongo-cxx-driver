@@ -32,26 +32,18 @@ buildvariants:
     display_name: Docker Build
     tasks:
       - name: .docker-build
-  - name: integration-matrix-extra_alignment
-    display_name: integration-matrix-extra_alignment
-    tasks:
-      - name: .integration .extra_alignment .rhel8-power
-        batchtime: 1440
-      - name: .integration .extra_alignment .rhel8-zseries
-        batchtime: 1440
-      - name: .integration .extra_alignment !.rhel8-power !.rhel8-zseries
   - name: integration-matrix-linux
     display_name: integration-matrix-linux
     tasks:
-      - name: .integration .linux !.mongocryptd !.extra_alignment .rhel8-power
+      - name: .integration .linux !.mongocryptd .rhel8-power
         batchtime: 1440
-      - name: .integration .linux !.mongocryptd !.extra_alignment .rhel8-zseries
+      - name: .integration .linux !.mongocryptd .rhel8-zseries
         batchtime: 1440
-      - name: .integration .linux !.mongocryptd !.extra_alignment !.rhel8-power !.rhel8-zseries
+      - name: .integration .linux !.mongocryptd !.rhel8-power !.rhel8-zseries
   - name: integration-matrix-macos
     display_name: integration-matrix-macos
     tasks:
-      - name: .integration .macos !.mongocryptd !.extra_alignment
+      - name: .integration .macos !.mongocryptd
   - name: integration-matrix-mongocryptd
     display_name: integration-matrix-mongocryptd
     tasks:
@@ -63,7 +55,7 @@ buildvariants:
   - name: integration-matrix-windows
     display_name: integration-matrix-windows
     tasks:
-      - name: .integration .windows !.mongocryptd !.extra_alignment
+      - name: .integration .windows !.mongocryptd
   - name: lint
     display_name: Lint
     tasks:

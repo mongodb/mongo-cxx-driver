@@ -23,7 +23,7 @@ TAG = 'valgrind'
 # fmt: off
 MATRIX = [
     # min-max-latest
-    ('rhel80', None, ['shared'], [False, True], ['4.0', '8.0', 'latest'], ['single', 'replica', 'sharded']),
+    ('rhel80', None, ['shared'], ['4.0', '8.0', 'latest'], ['single', 'replica', 'sharded']),
 ]
 # fmt: on
 # pylint: enable=line-too-long
@@ -32,9 +32,9 @@ MATRIX = [
 def tasks():
     res = []
 
-    for distro_name, compiler, link_types, with_extra_aligns, mongodb_versions, topologies in MATRIX:
-        for link_type, with_extra_align, mongodb_version, topology in product(
-            link_types, with_extra_aligns, mongodb_versions, topologies
+    for distro_name, compiler, link_types, mongodb_versions, topologies in MATRIX:
+        for link_type, mongodb_version, topology in product(
+            link_types, mongodb_versions, topologies
         ):
             distro = find_large_distro(distro_name)
 
@@ -47,16 +47,12 @@ def tasks():
             name += f'-{link_type}'
             tags += [link_type]
 
-            if with_extra_align:
-                name += f'-extra_alignment'
-                tags += ['extra_alignment']
-
             name += f'-{mongodb_version}-{topology}'
             tags += [mongodb_version, topology]
 
             updates = [KeyValueParam(key='build_type', value='Debug')]
             icd_vars = {'SKIP_INSTALL_LIBMONGOCRYPT': 1}
-            compile_vars = {'ENABLE_TESTS': 'ON'}
+            compile_vars = {'ENABLE_TESTS': 'ON', 'RUN_DISTCHECK': 1}
             test_vars = {
                 'MONGOCXX_TEST_TOPOLOGY': topology,
                 'TEST_WITH_VALGRIND': 'ON',
@@ -66,12 +62,6 @@ def tasks():
 
             if link_type == 'static':
                 updates.append(KeyValueParam(key='USE_STATIC_LIBS', value='1'))
-
-            if with_extra_align:
-                icd_vars |= {'BSON_EXTRA_ALIGNMENT': 1}
-                compile_vars |= {'BSON_EXTRA_ALIGNMENT': 1}
-            else:
-                compile_vars |= {'RUN_DISTCHECK': 1}
 
             commands = [expansions_update(updates=updates)] if updates else []
 
