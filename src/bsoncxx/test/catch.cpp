@@ -18,11 +18,41 @@
 
 #include <bsoncxx/v1/config/export.hpp>
 
+#include <cstdlib>
+#include <iostream>
 #include <system_error>
+
+#include <bsoncxx/private/bson.hh> // <winsock.h> via <bson/bson-compat.h>
 
 #include <catch2/catch_session.hpp>
 
+// Ensure the Winsock DLL is initialized prior to calling `gethostname` in `bsoncxx::oid::oid()`:
+//  - bson_oid_init -> bson_context_get_default -> ... -> _bson_context_init_random -> gethostname.
+struct WSAGuard {
+    ~WSAGuard() {
+#if defined(_WIN32)
+        (void)WSACleanup();
+#endif
+    }
+
+    WSAGuard(WSAGuard&&) = delete;
+    WSAGuard& operator=(WSAGuard&) = delete;
+    WSAGuard(WSAGuard const&) = delete;
+    WSAGuard& operator=(WSAGuard const&) = delete;
+
+    WSAGuard() {
+#if defined(_WIN32)
+        WSADATA wsaData;
+        if (WSAStartup((MAKEWORD(2, 2)), &wsaData) != 0) {
+            std::cerr << "WSAStartup failed: " << WSAGetLastError() << std::endl;
+            std::abort();
+        }
+#endif
+    }
+};
+
 int BSONCXX_ABI_CDECL main(int argc, char* argv[]) {
+    WSAGuard wsa_guard;
     return Catch::Session().run(argc, argv);
 }
 
