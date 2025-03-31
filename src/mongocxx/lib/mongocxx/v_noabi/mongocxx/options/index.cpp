@@ -64,8 +64,12 @@ index& index::storage_options(std::unique_ptr<index::base_storage_options> stora
 }
 
 index& index::storage_options(std::unique_ptr<index::wiredtiger_storage_options> storage_options) {
-    _storage_options = std::unique_ptr<index::base_storage_options>(
-        static_cast<index::base_storage_options*>(storage_options.release()));
+    _storage_options = std::move(storage_options);
+    return *this;
+}
+
+index& index::storage_engine(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view> storage_engine) {
+    _storage_engine = std::move(storage_engine);
     return *this;
 }
 
@@ -156,6 +160,10 @@ std::unique_ptr<index::base_storage_options> const& index::storage_options() con
     return _storage_options;
 }
 
+bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view> const& index::storage_engine() const {
+    return _storage_engine;
+}
+
 bsoncxx::v_noabi::stdx::optional<std::chrono::seconds> const& index::expire_after() const {
     return _expire_after;
 }
@@ -203,6 +211,12 @@ bsoncxx::v_noabi::stdx::optional<double> const& index::haystack_bucket_size_depr
 bsoncxx::v_noabi::stdx::optional<double> const& index::haystack_bucket_size() const {
     return haystack_bucket_size_deprecated();
 }
+
+// CDRIVER-5946: mongoc_index_storage_opt_type_t was removed in mongoc 2.0.
+enum mongoc_index_storage_opt_type_t {
+    MONGOC_INDEX_STORAGE_OPT_MMAPV1,
+    MONGOC_INDEX_STORAGE_OPT_WIREDTIGER,
+};
 
 index::operator bsoncxx::v_noabi::document::view_or_value() {
     using namespace bsoncxx;
@@ -280,7 +294,9 @@ index::operator bsoncxx::v_noabi::document::view_or_value() {
         root.append(kvp("collation", *_collation));
     }
 
-    if (_storage_options) {
+    if (_storage_engine) {
+        root.append(kvp("storageEngine", *_storage_engine));
+    } else if (_storage_options) {
         if (_storage_options->type() == MONGOC_INDEX_STORAGE_OPT_WIREDTIGER) {
             options::index::wiredtiger_storage_options const* wt_options =
                 static_cast<options::index::wiredtiger_storage_options const*>(_storage_options.get());
@@ -296,6 +312,7 @@ index::operator bsoncxx::v_noabi::document::view_or_value() {
             root.append(kvp("storageEngine", storage_doc));
         }
     }
+
     return root.extract();
 }
 
