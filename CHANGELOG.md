@@ -11,7 +11,7 @@ Changes prior to 3.9.0 are documented as [release notes on GitHub](https://githu
 
 ### Added
 
-- `storage_options()` in `mongocxx::v_noabi::options::index`.
+- `storage_engine()` in `mongocxx::v_noabi::options::index`.
 
 ### Deprecated
 
