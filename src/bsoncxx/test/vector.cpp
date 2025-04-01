@@ -153,6 +153,19 @@ void iterator_operations(
     std::sort(begin, end);
     std::for_each(begin, end, [&](auto const& value) { CHECK(value == element_unit); });
 
+    // Verify ADL chooses our swap() even when std::swap is in scope
+    *begin = Element{0};
+    CHECK(*begin < *(end - 1));
+    CHECK_FALSE(*(end - 1) < *begin);
+    {
+        using std::swap;
+        swap(*begin, *(end - 1));
+    }
+    CHECK(*(end - 1) < *begin);
+    CHECK_FALSE(*begin < *(end - 1));
+    *begin = element_unit;
+
+    // Sort, check that a 0 moves from the back to the front.
     *(end - 1) = Element{0};
     std::sort(begin, end);
     CHECK(*begin == Element{0});
