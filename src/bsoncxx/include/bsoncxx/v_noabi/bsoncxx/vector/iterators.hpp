@@ -96,8 +96,8 @@ class packed_bit_element {
     /// If the iterator goes out of range, behavior is undefined.
     constexpr packed_bit_element operator+(difference_type const& other) const noexcept {
         return {
-            byte + ((other >> 3) + ((difference_type{bit} + (other & 7)) >> 3)),
-            std::uint8_t((bit + unsigned(other)) & 7u)};
+            byte + ((difference_type{bit} + other - ((difference_type{bit} + other) & 7)) / 8),
+            std::uint8_t((difference_type{bit} + other) & 7)};
     }
 
     /// @brief Calculate a signed subtraction of a ptrdiff_t from this iterator, moving it backward or forward the
