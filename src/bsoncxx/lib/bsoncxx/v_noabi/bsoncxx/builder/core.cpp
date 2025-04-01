@@ -22,7 +22,6 @@
 #include <bsoncxx/types.hpp>
 #include <bsoncxx/types/bson_value/view.hpp>
 
-#include <bsoncxx/private/aligned_storage.hh>
 #include <bsoncxx/private/bson.hh>
 #include <bsoncxx/private/itoa.hh>
 #include <bsoncxx/private/make_unique.hh>
@@ -45,7 +44,7 @@ void bson_free_deleter(std::uint8_t* ptr) {
 class managed_bson_t {
    public:
     managed_bson_t() {
-        bson_init(bson_ptr);
+        bson_init(&bson);
     }
 
     managed_bson_t(managed_bson_t&&) = delete;
@@ -55,16 +54,15 @@ class managed_bson_t {
     managed_bson_t& operator=(managed_bson_t const&) = delete;
 
     ~managed_bson_t() {
-        bson_destroy(bson_ptr);
+        bson_destroy(&bson);
     }
 
     bson_t* get() {
-        return bson_ptr;
+        return &bson;
     }
 
    private:
-    bsoncxx::aligned_storage<sizeof(bson_t), alignof(bson_t)> bson_storage;
-    bson_t* bson_ptr = new (bson_storage.get()) bson_t;
+    bson_t bson;
 };
 
 } // namespace
@@ -117,7 +115,7 @@ class core::impl {
         if (_stack.empty()) {
             return _root.get();
         } else {
-            return _stack.back().bson_ptr;
+            return &_stack.back().bson;
         }
     }
 
@@ -214,11 +212,11 @@ class core::impl {
         frame(bson_t* parent, char const* key, std::int32_t len, bool is_array)
             : n(0), is_array(is_array), parent(parent) {
             if (is_array) {
-                if (!bson_append_array_begin(parent, key, len, bson_ptr)) {
+                if (!bson_append_array_begin(parent, key, len, &bson)) {
                     throw bsoncxx::v_noabi::exception{error_code::k_cannot_begin_appending_array};
                 }
             } else {
-                if (!bson_append_document_begin(parent, key, len, bson_ptr)) {
+                if (!bson_append_document_begin(parent, key, len, &bson)) {
                     throw bsoncxx::v_noabi::exception{error_code::k_cannot_begin_appending_document};
                 }
             }
@@ -226,11 +224,11 @@ class core::impl {
 
         void close() {
             if (is_array) {
-                if (!bson_append_array_end(parent, bson_ptr)) {
+                if (!bson_append_array_end(parent, &bson)) {
                     throw bsoncxx::v_noabi::exception{error_code::k_cannot_end_appending_array};
                 }
             } else {
-                if (!bson_append_document_end(parent, bson_ptr)) {
+                if (!bson_append_document_end(parent, &bson)) {
                     throw bsoncxx::v_noabi::exception{error_code::k_cannot_end_appending_document};
                 }
             }
@@ -238,8 +236,7 @@ class core::impl {
 
         std::size_t n;
         bool is_array;
-        bsoncxx::aligned_storage<sizeof(bson_t), alignof(bson_t)> bson_storage;
-        bson_t* bson_ptr = new (bson_storage.get()) bson_t;
+        bson_t bson;
         bson_t* parent;
     };
 

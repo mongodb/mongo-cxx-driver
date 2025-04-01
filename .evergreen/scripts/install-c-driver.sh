@@ -143,13 +143,6 @@ darwin*)
   ;;
 esac
 
-if [[ "${BSON_EXTRA_ALIGNMENT:-}" == "1" ]]; then
-  echo "Building C Driver with ENABLE_EXTRA_ALIGNMENT=ON"
-  configure_flags+=("-DENABLE_EXTRA_ALIGNMENT=ON")
-else
-  configure_flags+=("-DENABLE_EXTRA_ALIGNMENT=OFF")
-fi
-
 # Use ccache if available.
 if [[ -f "${mongoc_dir:?}/.evergreen/scripts/find-ccache.sh" ]]; then
   # shellcheck source=/dev/null
