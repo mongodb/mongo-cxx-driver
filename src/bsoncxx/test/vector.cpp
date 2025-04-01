@@ -474,7 +474,7 @@ TEST_CASE("vector accessor packed_bit", "[bsoncxx::vector::accessor]") {
         }
     }
 
-    SECTION("rejects nonempty vectors with reserved bits set in header padding byte") {
+    SECTION("rejects nonempty vectors with reserved values in header padding byte") {
         for (unsigned byte_value = 8u; byte_value <= UINT8_MAX; byte_value++) {
             uint8_t const bytes[] = {0x10, uint8_t(byte_value), 0x00};
             types::b_binary const binary{binary_sub_type::k_vector, sizeof bytes, bytes};
