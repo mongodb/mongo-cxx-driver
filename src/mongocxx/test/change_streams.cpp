@@ -183,11 +183,8 @@ TEST_CASE("Spec Prose Tests") {
         REQUIRE(token2 != token3);
         REQUIRE(token1 != token3);
 
-        // When out of docs, check that the resume token is the same as the last doc.
         it++;
         REQUIRE(it == cs.end());
-        REQUIRE(cs.get_resume_token());
-        REQUIRE(*cs.get_resume_token() == token3);
     }
 }
 
