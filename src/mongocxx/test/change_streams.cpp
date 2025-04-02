@@ -125,14 +125,8 @@ TEST_CASE("Spec Prose Tests") {
     auto coll = db["coll"];
     coll.drop();
 
-    read_concern rc_majority;
-    rc_majority.acknowledge_level(read_concern::level::k_majority);
-
     write_concern wc_majority;
     wc_majority.majority(std::chrono::seconds(30));
-
-    coll.read_concern(rc_majority);
-    coll.write_concern(wc_majority);
 
     // As a sanity check, we implement the first prose test. The behavior tested
     // by the prose tests is implemented and tested by the C driver, so we won't
@@ -142,25 +136,28 @@ TEST_CASE("Spec Prose Tests") {
         // Set the batch size to 1 so we read 1 doc at a time.
         options::change_stream opts;
         opts.batch_size(1);
-        auto cs = coll.watch(std::move(opts));
+        auto cs = client.watch(std::move(opts));
 
         // With WC majority, insert some documents to listen for.
         auto doc1 = make_document(kvp("a", 1));
         auto doc2 = make_document(kvp("b", 2));
         auto doc3 = make_document(kvp("c", 3));
 
+        options::insert insert_opts{};
+        insert_opts.write_concern(wc_majority);
+
         {
-            auto res = coll.insert_one(doc1.view());
+            auto res = coll.insert_one(doc1.view(), insert_opts);
             REQUIRE(res);
             REQUIRE(res->result().inserted_count() == 1);
         }
         {
-            auto res = coll.insert_one(doc2.view());
+            auto res = coll.insert_one(doc2.view(), insert_opts);
             REQUIRE(res);
             REQUIRE(res->result().inserted_count() == 1);
         }
         {
-            auto res = coll.insert_one(doc3.view());
+            auto res = coll.insert_one(doc3.view(), insert_opts);
             REQUIRE(res);
             REQUIRE(res->result().inserted_count() == 1);
         }
