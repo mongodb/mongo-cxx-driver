@@ -253,10 +253,6 @@ BSONCXX_PRIVATE_WARNINGS_POP();
     X(collection_command_simple)                                          \
     X(collection_copy)                                                    \
     X(collection_count_documents)                                         \
-    /* Remove these suppressions when CXX-1594 is done. */                \
-    BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_BEGIN                           \
-    X(collection_count_with_opts)                                         \
-    BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_END                             \
     X(collection_create_bulk_operation_with_opts)                         \
     X(collection_destroy)                                                 \
     X(collection_drop_index)                                              \
