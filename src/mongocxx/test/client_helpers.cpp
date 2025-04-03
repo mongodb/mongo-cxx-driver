@@ -279,7 +279,7 @@ std::string get_server_version() {
 document::value get_server_params() {
     // Cache reply.
     static auto reply = []() {
-        auto client = mongocxx::client(mongocxx::uri());
+        auto client = mongocxx::client{mongocxx::uri{}, test_util::add_test_server_api()};
         return client["admin"].run_command(make_document(kvp("getParameter", "*")));
     }();
 
