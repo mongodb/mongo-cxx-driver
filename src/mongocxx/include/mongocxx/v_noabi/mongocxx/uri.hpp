@@ -299,6 +299,14 @@ class uri {
     server_selection_try_once() const;
 
     ///
+    /// Sets the value of the option "serverSelectionTryOnce" in the uri.
+    ///
+    /// @param val The new value to apply to as "serverSelectionTryOnce".
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(void)
+    server_selection_try_once(bool val);
+
+    ///
     /// Returns the value of the option "socketTimeoutMS" if present in the uri.
     ///
     /// @return An optional std::int32_t
