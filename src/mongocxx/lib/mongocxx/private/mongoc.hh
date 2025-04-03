@@ -384,9 +384,6 @@ BSONCXX_PRIVATE_WARNINGS_POP();
     X(uri_get_read_concern)                                               \
     X(uri_get_read_prefs_t)                                               \
     X(uri_get_replica_set)                                                \
-    BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_BEGIN                           \
-    X(uri_get_ssl)                                                        \
-    BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_END                             \
     X(uri_get_string)                                                     \
     X(uri_get_tls)                                                        \
     X(uri_get_username)                                                   \
