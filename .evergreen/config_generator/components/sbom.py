@@ -134,7 +134,7 @@ def functions():
 
 
 def tasks():
-    distro_name = 'rhel8.8'
+    distro_name = 'rhel80'
     distro = find_small_distro(distro_name)
 
     yield EvgTask(
