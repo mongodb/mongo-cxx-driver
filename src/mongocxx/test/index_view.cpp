@@ -46,7 +46,7 @@ bool test_commands_enabled(client const& conn) {
         return false;
     }
 
-    auto server_version = test_util::get_server_version(conn);
+    auto server_version = test_util::get_server_version();
 
     if (test_util::compare_versions(server_version, "3.2") >= 0) {
         return result_view["enableTestCommands"].get_bool();
@@ -178,7 +178,7 @@ TEST_CASE("create_one", "[index_view]") {
     }
 
     SECTION("commitQuorum option") {
-        if (test_util::get_topology(mongodb_client) == "single") {
+        if (test_util::get_topology() == "single") {
             SKIP("commitQuorum option requires a replica set");
         }
 
@@ -193,7 +193,7 @@ TEST_CASE("create_one", "[index_view]") {
 
         auto commit_quorum_regex = Catch::Matchers::Matches("(.*)commit( )?quorum(.*)", Catch::CaseSensitive::No);
 
-        bool is_supported = test_util::get_max_wire_version(mongodb_client) >= 9;
+        bool is_supported = test_util::get_max_wire_version() >= 9;
         CAPTURE(is_supported);
 
         SECTION("works with int") {

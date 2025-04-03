@@ -194,7 +194,7 @@ void run_encryption_tests_in_file(std::string const& test_path) {
     auto tests = test_spec_view["tests"].get_array().value;
 
     /* we may not have a supported topology */
-    CHECK_IF_SKIP_SPEC_TEST((client{uri{}, test_util::add_test_server_api()}), test_spec_view);
+    CHECK_IF_SKIP_SPEC_TEST(test_spec_view);
 
     mongocxx::client setup_client{
         uri{},
@@ -208,7 +208,7 @@ void run_encryption_tests_in_file(std::string const& test_path) {
         auto const description = string::to_string(test["description"].get_string().value);
 
         DYNAMIC_SECTION(description) {
-            CHECK_IF_SKIP_SPEC_TEST((client{uri{}, test_util::add_test_server_api()}), test.get_document().value);
+            CHECK_IF_SKIP_SPEC_TEST(test.get_document().value);
 
             options::client client_opts;
 

@@ -36,15 +36,15 @@ using namespace mongocxx;
 ///
 uint32_t error_code_from_name(bsoncxx::stdx::string_view name);
 
-bool check_if_skip_spec_test_impl(client const& client, document::view test, std::string& reason);
+bool check_if_skip_spec_test_impl(document::view test, std::string& reason);
 
-#define CHECK_IF_SKIP_SPEC_TEST(client, test)                                     \
-    {                                                                             \
-        std::string reason;                                                       \
-        if (mongocxx::spec::check_if_skip_spec_test_impl(client, test, reason)) { \
-            SKIP(reason);                                                         \
-        }                                                                         \
-    }                                                                             \
+#define CHECK_IF_SKIP_SPEC_TEST(test)                                     \
+    {                                                                     \
+        std::string reason;                                               \
+        if (mongocxx::spec::check_if_skip_spec_test_impl(test, reason)) { \
+            SKIP(reason);                                                 \
+        }                                                                 \
+    }                                                                     \
     ((void)0)
 
 ///

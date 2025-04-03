@@ -52,10 +52,10 @@ namespace test_util {
 std::int32_t compare_versions(std::string version1, std::string version2);
 
 //
-// Returns 'true' if the server version for 'client' is at least 'version',
+// Returns 'true' if the server version for the default client is at least 'version',
 // returns 'false' otherwise.
 //
-bool newer_than(client const& client, std::string version);
+bool newer_than(std::string version);
 
 //
 // Converts a hexadecimal string to an string of bytes.
@@ -77,47 +77,47 @@ std::basic_string<std::uint8_t> convert_hex_string_to_bytes(bsoncxx::stdx::strin
 options::client add_test_server_api(options::client opts = {});
 
 //
-// Determines the max wire version associated with the given client, by running the "hello"
+// Determines the max wire version associated with the default client, by running the "hello"
 // command.
 //
 // Throws mongocxx::operation_exception if the operation fails, or the server reply is malformed.
 //
-std::int32_t get_max_wire_version(client const& client);
+std::int32_t get_max_wire_version();
 
 ///
-/// Determines the server version number by running "serverStatus".
+/// Determines the server version number by running "serverStatus" with the default client.
 ///
-std::string get_server_version(client const& client = {uri{}, add_test_server_api()});
+std::string get_server_version();
 
 ///
-/// Determines the setting of all server parameters by running "getParameter, *".
+/// Determines the setting of all server parameters by running "getParameter, *" with the default client.
 ///
-bsoncxx::document::value get_server_params(client const& client = {uri{}, add_test_server_api()});
+bsoncxx::document::value get_server_params();
 
 ///
-/// Get replica set name, or empty string.
+/// Returns the replica set name or an empty string using the default client.
 ///
-std::string replica_set_name(client const& client);
+std::string replica_set_name();
 
 ///
-/// Determines if the server is a replica set member.
+/// Determines if the server is a replica set member using the default client.
 ///
-bool is_replica_set(client const& client = {uri{}, add_test_server_api()});
+bool is_replica_set();
 
 ///
-/// Determines if the server is a sharded cluster member.
+/// Determines if the server is a sharded cluster member using the default client.
 ///
-bool is_sharded_cluster(client const& client = {uri{}, add_test_server_api()});
+bool is_sharded_cluster();
 
 ///
-/// Returns "standalone", "replicaset", or "sharded".
+/// Returns "standalone", "replicaset", or "sharded" using the default client.
 ///
-std::string get_topology(client const& client = {uri{}, add_test_server_api()});
+std::string get_topology();
 
 ///
-/// Returns the "host" field of the config.shards collection.
+/// Returns the "host" field of the config.shards collection using the default client.
 ///
-std::string get_hosts(client const& client = {uri{}, add_test_server_api()});
+std::string get_hosts();
 
 ///
 /// Parses a JSON file at a given path and return it as a BSON document value.
@@ -204,17 +204,14 @@ auto size(Container c) -> decltype(std::distance(std::begin(c), std::end(c))) {
 //
 // Require a topology that supports sessions (a post-3.6 replica set or cluster of them).
 //
-// @param client
-//   A connected client.
+// @return Whether sessions are supported by the default client's topology.
 //
-// @return Whether sessions are supported by the client's topology.
-//
-bool server_has_sessions_impl(client const& conn);
+bool server_has_sessions_impl();
 
-#define SERVER_HAS_SESSIONS_OR_SKIP(conn)                       \
-    if (!mongocxx::test_util::server_has_sessions_impl(conn)) { \
-        SKIP("server does not support session");                \
-    } else                                                      \
+#define SERVER_HAS_SESSIONS_OR_SKIP()                       \
+    if (!mongocxx::test_util::server_has_sessions_impl()) { \
+        SKIP("server does not support session");            \
+    } else                                                  \
         ((void)0)
 
 #if defined(MONGOC_ENABLE_CLIENT_SIDE_ENCRYPTION)

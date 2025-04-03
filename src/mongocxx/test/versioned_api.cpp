@@ -29,19 +29,17 @@
 
 using namespace mongocxx;
 
-static bool has_api_version_1(
-    mongocxx::client const& client = mongocxx::client(uri(), test_util::add_test_server_api())) {
+static bool has_api_version_1() {
     // API Version 1 was introduced in 5.0.
-    return test_util::get_max_wire_version(client) >= 13;
+    return test_util::get_max_wire_version() >= 13;
 }
 
-static bool has_api_version_1_with_count(
-    mongocxx::client const& client = mongocxx::client(uri(), test_util::add_test_server_api())) {
-    if (!has_api_version_1(client)) {
+static bool has_api_version_1_with_count() {
+    if (!has_api_version_1()) {
         return false;
     }
 
-    auto const version = test_util::get_server_version(client);
+    auto const version = test_util::get_server_version();
 
     // BACKPORT-12171: count command was backported to 5.0.9.
     if (test_util::compare_versions(version, "5.0") == 0 && test_util::compare_versions(version, "5.0.9") >= 0) {
@@ -54,7 +52,7 @@ static bool has_api_version_1_with_count(
     }
 
     // SERVER-63850: count command was added in 6.0.
-    return test_util::newer_than(client, "6.0");
+    return test_util::newer_than("6.0");
 }
 
 // We'll format many of these examples by hand

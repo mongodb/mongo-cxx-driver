@@ -334,7 +334,7 @@ TEST_CASE("Database integration tests", "[database]") {
         };
 
         SECTION("listLocalSessions") {
-            SERVER_HAS_SESSIONS_OR_SKIP(mongo_client);
+            SERVER_HAS_SESSIONS_OR_SKIP();
 
             // SERVER-79306: Ensure the database exists for consistent behavior with sharded
             // clusters.

@@ -46,7 +46,7 @@ TEST_CASE("session options", "[session]") {
 
     client c{uri{}, test_util::add_test_server_api()};
 
-    SERVER_HAS_SESSIONS_OR_SKIP(c);
+    SERVER_HAS_SESSIONS_OR_SKIP();
 
     SECTION("default") {
         // Make sure the defaults don't cause a client exception:
@@ -176,7 +176,7 @@ TEST_CASE("session", "[session]") {
 
     client c{uri{}, test_util::add_test_server_api()};
 
-    SERVER_HAS_SESSIONS_OR_SKIP(c);
+    SERVER_HAS_SESSIONS_OR_SKIP();
 
     auto s = c.start_session();
 
@@ -382,7 +382,7 @@ TEST_CASE("lsid", "[session]") {
 
     session_test test;
 
-    SERVER_HAS_SESSIONS_OR_SKIP(test.client);
+    SERVER_HAS_SESSIONS_OR_SKIP();
 
     auto s = test.client.start_session();
     auto db = test.client["lsid"];
@@ -669,7 +669,7 @@ TEST_CASE("lsid", "[session]") {
     }
 
     SECTION("collection::watch") {
-        if (!test_util::is_replica_set(test.client)) {
+        if (!test_util::is_replica_set()) {
             SKIP("watch() requires replica set");
         }
 
@@ -815,7 +815,7 @@ TEST_CASE("with_transaction", "[session]") {
 
     session_test test;
 
-    SERVER_HAS_SESSIONS_OR_SKIP(test.client);
+    SERVER_HAS_SESSIONS_OR_SKIP();
 
     auto session = test.client.start_session();
 
@@ -823,7 +823,7 @@ TEST_CASE("with_transaction", "[session]") {
     SECTION("prose tests for with_transaction") {
         SECTION("callback raises a custom error") {
             // Multi-document transactions require server 4.2+.
-            if (compare_versions(get_server_version(test.client), "4.2") < 0) {
+            if (compare_versions(get_server_version(), "4.2") < 0) {
                 SKIP("MongoDB server 4.2 or newer required");
             }
 
@@ -857,7 +857,7 @@ TEST_CASE("unacknowledged write in session", "[session]") {
 
     session_test test;
 
-    SERVER_HAS_SESSIONS_OR_SKIP(test.client);
+    SERVER_HAS_SESSIONS_OR_SKIP();
 
     auto s = test.client.start_session();
     auto db = test.client["lsid"];

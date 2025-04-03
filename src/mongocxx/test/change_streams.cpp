@@ -95,7 +95,7 @@ TEST_CASE("Change stream options") {
     instance::current();
     client mongodb_client{uri{}, test_util::add_test_server_api()};
 
-    if (!test_util::is_replica_set(mongodb_client)) {
+    if (!test_util::is_replica_set()) {
         SKIP("change streams require replica set");
     }
 
@@ -117,7 +117,7 @@ TEST_CASE("Spec Prose Tests") {
     instance::current();
     client client{uri{}, test_util::add_test_server_api()};
 
-    if (!test_util::is_replica_set(client)) {
+    if (!test_util::is_replica_set()) {
         SKIP("change streams require replica set");
     }
 
@@ -375,7 +375,7 @@ TEST_CASE("Mock streams and error-handling") {
 TEST_CASE("Create streams.events and assert we can read a single event", "[min36]") {
     instance::current();
     client mongodb_client{uri{}, test_util::add_test_server_api()};
-    if (!test_util::is_replica_set(mongodb_client)) {
+    if (!test_util::is_replica_set()) {
         SKIP("change streams require replica set");
     }
 
@@ -395,7 +395,7 @@ TEST_CASE("Create streams.events and assert we can read a single event", "[min36
 TEST_CASE("Give an invalid pipeline", "[min36]") {
     instance::current();
     client mongodb_client{uri{}, test_util::add_test_server_api()};
-    if (!test_util::is_replica_set(mongodb_client)) {
+    if (!test_util::is_replica_set()) {
         SKIP("change streams require replica set");
     }
 
@@ -425,7 +425,7 @@ TEST_CASE("Documentation Examples", "[min36]") {
     instance::current();
     mongocxx::pool pool{uri{}, options::pool(test_util::add_test_server_api())};
     auto mongodb_client = pool.acquire();
-    if (!test_util::is_replica_set(*mongodb_client)) {
+    if (!test_util::is_replica_set()) {
         SKIP("change streams require replica set");
     }
 
@@ -531,7 +531,7 @@ TEST_CASE("Documentation Examples", "[min36]") {
 TEST_CASE("Watch 2 collections", "[min36]") {
     instance::current();
     client mongodb_client{uri{}, test_util::add_test_server_api()};
-    if (!test_util::is_replica_set(mongodb_client)) {
+    if (!test_util::is_replica_set()) {
         SKIP("change streams require replica set");
     }
 
@@ -578,7 +578,7 @@ TEST_CASE("Watch 2 collections", "[min36]") {
 TEST_CASE("Watch a Collection", "[min36]") {
     instance::current();
     client mongodb_client{uri{}, test_util::add_test_server_api()};
-    if (!test_util::is_replica_set(mongodb_client)) {
+    if (!test_util::is_replica_set()) {
         SKIP("change streams require replica set");
     }
 

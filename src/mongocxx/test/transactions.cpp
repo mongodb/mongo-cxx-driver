@@ -36,9 +36,9 @@ TEST_CASE("Transaction tests", "[transactions]") {
     instance::current();
     client mongodb_client{uri{}, test_util::add_test_server_api()};
 
-    if (!test_util::is_replica_set(mongodb_client)) {
+    if (!test_util::is_replica_set()) {
         SKIP("transactions tests require replica set");
-    } else if (test_util::get_max_wire_version(mongodb_client) < 7) {
+    } else if (test_util::get_max_wire_version() < 7) {
         SKIP("transactions tests require max wire version is >= 7");
     }
 
@@ -218,9 +218,9 @@ TEST_CASE("Transactions Documentation Examples", "[transactions]") {
     instance::current();
     client client{uri{}, test_util::add_test_server_api()};
 
-    if (!test_util::is_replica_set(client)) {
+    if (!test_util::is_replica_set()) {
         SKIP("transactions tests require replica set");
-    } else if (test_util::get_max_wire_version(client) < 7) {
+    } else if (test_util::get_max_wire_version() < 7) {
         SKIP("transactions tests require max wire version is >= 7");
     }
 

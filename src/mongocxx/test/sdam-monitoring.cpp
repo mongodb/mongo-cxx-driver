@@ -49,10 +49,9 @@ TEST_CASE("SDAM Monitoring", "[sdam_monitoring]") {
     std::string rs_name;
     uri test_uri;
 
-    client discoverer{uri{}, test_util::add_test_server_api()};
-    auto topology_type = test_util::get_topology(discoverer);
+    auto topology_type = test_util::get_topology();
     if (topology_type == "replicaset") {
-        rs_name = test_util::replica_set_name(discoverer);
+        rs_name = test_util::replica_set_name();
         test_uri = uri{"mongodb://localhost/?replicaSet=" + rs_name};
     }
 
