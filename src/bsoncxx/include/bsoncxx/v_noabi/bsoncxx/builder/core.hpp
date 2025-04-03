@@ -238,6 +238,20 @@ class core {
     BSONCXX_ABI_EXPORT_CDECL(core&) append(types::b_binary const& value);
 
     ///
+    /// Appends a BSON binary datum by allocating space that the caller must fill with content.
+    ///
+    /// @return
+    ///   A pointer to the allocated binary data block. The caller must write to every
+    ///   byte or discard the builder.
+    ///
+    /// @throws
+    ///   bsoncxx::v_noabi::exception if the current BSON datum is a document that is waiting for a
+    ///   key to be appended to start a new key/value pair.
+    ///   bsoncxx::v_noabi::exception if the binary fails to append.
+    ///
+    BSONCXX_ABI_EXPORT_CDECL(uint8_t*) append(binary_sub_type sub_type, uint32_t length);
+
+    ///
     /// Appends a BSON undefined.
     ///
     /// @return
@@ -692,6 +706,22 @@ class core {
     /// class will be the same as it was immediately after construction.
     ///
     BSONCXX_ABI_EXPORT_CDECL(void) clear();
+
+    ///
+    /// A sub-binary must be opened by invoking @ref bsoncxx::v_noabi::builder::basic::sub_binary::allocate()
+    ///
+    core& open_binary() = delete;
+
+    ///
+    /// Closes the current sub-binary within this BSON datum.
+    ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
+    ///
+    /// @throws bsoncxx::v_noabi::exception if the binary contents were never allocated.
+    ///
+    BSONCXX_ABI_EXPORT_CDECL(core&) close_binary();
 
    private:
     std::unique_ptr<impl> _impl;

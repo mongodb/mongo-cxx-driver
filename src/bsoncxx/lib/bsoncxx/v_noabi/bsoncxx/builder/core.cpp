@@ -349,6 +349,23 @@ core& core::append(types::b_binary const& value) {
     return *this;
 }
 
+uint8_t* core::append(binary_sub_type sub_type, uint32_t length) {
+    stdx::string_view key = _impl->next_key();
+    uint8_t* allocated_bytes;
+
+    if (!bson_append_binary_uninit(
+            _impl->back(),
+            key.data(),
+            static_cast<std::int32_t>(key.length()),
+            static_cast<bson_subtype_t>(sub_type),
+            &allocated_bytes,
+            length)) {
+        throw bsoncxx::v_noabi::exception{error_code::k_cannot_append_binary};
+    }
+
+    return allocated_bytes;
+}
+
 core& core::append(types::b_undefined const&) {
     stdx::string_view key = _impl->next_key();
 
@@ -680,6 +697,13 @@ core& core::close_array() {
 
     _impl->pop_back();
 
+    return *this;
+}
+
+core& core::close_binary() {
+    if (!_impl->is_viewable()) {
+        throw bsoncxx::v_noabi::exception{error_code::k_unmatched_key_in_builder};
+    }
     return *this;
 }
 

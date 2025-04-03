@@ -40,6 +40,7 @@ add_executable(test_bson
     exception_guard.cpp
     json.cpp
     oid.cpp
+    vector.cpp
     optional.test.cpp
     view_or_value.cpp
     make_unique.test.cpp
@@ -158,6 +159,7 @@ set_dist_list(src_bsoncxx_test_DIST
     exception_guard.hh
     json.cpp
     oid.cpp
+    vector.cpp
     optional.test.cpp
     test_macro_guards.cpp.in
     to_string.hh
