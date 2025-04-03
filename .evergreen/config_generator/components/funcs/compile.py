@@ -17,7 +17,6 @@ class Compile(Function):
         },
         include_expansions_in_env=[
             'branch_name',
-            'BSON_EXTRA_ALIGNMENT',
             'BSONCXX_POLYFILL',
             'build_type',
             'COMPILE_MACRO_GUARD_TESTS',

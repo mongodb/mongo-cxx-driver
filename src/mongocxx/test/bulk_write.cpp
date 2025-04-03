@@ -34,8 +34,9 @@ using bsoncxx::builder::basic::make_document;
 
 TEST_CASE("a bulk_write will setup a mongoc bulk operation", "[bulk_write]") {
     instance::current();
-    mongocxx::client client{mongocxx::uri{}};
+    mongocxx::client client{mongocxx::uri{}, test_util::add_test_server_api()};
     mongocxx::collection coll = client["db"]["coll"];
+    CHECK_NOTHROW(coll.drop());
     auto construct = libmongoc::collection_create_bulk_operation_with_opts.create_instance();
     bool construct_called = false;
     bool ordered_value = false;
@@ -73,8 +74,9 @@ TEST_CASE("a bulk_write will setup a mongoc bulk operation", "[bulk_write]") {
 }
 TEST_CASE("destruction of a bulk_write will destroy mongoc operation", "[bulk_write]") {
     instance::current();
-    mongocxx::client client{mongocxx::uri{}};
+    mongocxx::client client{mongocxx::uri{}, test_util::add_test_server_api()};
     mongocxx::collection coll = client["db"]["coll"];
+    CHECK_NOTHROW(coll.drop());
     auto destruct = libmongoc::bulk_operation_destroy.create_instance();
     bool destruct_called = false;
 
@@ -183,8 +185,10 @@ class delete_functor {
 
 TEST_CASE("passing write operations to append calls corresponding C function", "[bulk_write]") {
     instance::current();
-    mongocxx::client client{mongocxx::uri{}};
-    auto bw = client["db"]["coll"].create_bulk_write();
+    mongocxx::client client{mongocxx::uri{}, test_util::add_test_server_api()};
+    mongocxx::collection coll = client["db"]["coll"];
+    CHECK_NOTHROW(coll.drop());
+    auto bw = coll.create_bulk_write();
     bsoncxx::builder::basic::document filter_builder, doc_builder, update_doc_builder, collation_builder;
     filter_builder.append(kvp("_id", 1));
     doc_builder.append(kvp("_id", 2));
@@ -358,7 +362,9 @@ TEST_CASE("passing write operations to append calls corresponding C function", "
 TEST_CASE("calling empty on a bulk write before and after appending", "[bulk_write]") {
     instance::current();
     mongocxx::client client{mongocxx::uri{}, test_util::add_test_server_api()};
-    auto bw = client["db"]["coll"].create_bulk_write();
+    mongocxx::collection coll = client["db"]["coll"];
+    CHECK_NOTHROW(coll.drop());
+    auto bw = coll.create_bulk_write();
 
     REQUIRE(bw.empty());
     bw.append(model::insert_one(make_document(kvp("_id", 1))));

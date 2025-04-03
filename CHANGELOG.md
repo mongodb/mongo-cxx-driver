@@ -9,9 +9,15 @@ Changes prior to 3.9.0 are documented as [release notes on GitHub](https://githu
 
 ## 4.1.0 [Unreleased]
 
+### Added
+
+- `storage_engine()` in `mongocxx::v_noabi::options::index`.
+
 ### Deprecated
 
 - Support for MacOS 11 (EOL since Nov 2020) and MacOS 12 (EOL since Oct 2021).
+- `storage_options()` in `mongocxx::v_noabi::options::index`: use `storage_engine()` instead.
+  - `base_storage_options` and `wiredtiger_storage_options` in `mongocxx::v_noabi::options::index` are also deprecated.
 
 ### Changed
 

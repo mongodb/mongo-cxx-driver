@@ -1,5 +1,9 @@
+change-streams-clusterTime.json
+change-streams-disambiguatedPaths.json
 change-streams-errors.json
+change-streams-nsType.json
 change-streams-pre_and_post_images.json
 change-streams-resume-allowlist.json
 change-streams-resume-errorLabels.json
+change-streams-showExpandedEvents.json
 change-streams.json

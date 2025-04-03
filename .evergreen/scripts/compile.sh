@@ -15,7 +15,6 @@ set -o pipefail
 : "${build_type:?}"
 : "${distro_id:?}" # Required by find-cmake-latest.sh.
 
-: "${BSON_EXTRA_ALIGNMENT:-}"
 : "${BSONCXX_POLYFILL:-}"
 : "${COMPILE_MACRO_GUARD_TESTS:-}"
 : "${ENABLE_CODE_COVERAGE:-}"
@@ -256,31 +255,10 @@ if [[ "${_RUN_DISTCHECK:-}" ]]; then
   "${cmake_binary}" --build . --config "${build_type:?}" --target distcheck
 fi
 
-# Ensure extra alignment is enabled or disabled as expected.
 if [[ -n "$(find "${mongoc_prefix:?}" -name 'bson-config.h')" ]]; then
-  if [[ "${BSON_EXTRA_ALIGNMENT:-}" == "1" ]]; then
-    grep -R "#define BSON_EXTRA_ALIGN 1" "${mongoc_prefix:?}" || {
-      echo "BSON_EXTRA_ALIGN is not 1 despite BSON_EXTRA_ALIGNMENT=1" 1>&2
-      exit 1
-    }
-  else
-    grep -R "#define BSON_EXTRA_ALIGN 0" "${mongoc_prefix:?}" || {
-      echo "BSON_EXTRA_ALIGN is not 0 despite BSON_EXTRA_ALIGNMENT=0" 1>&2
-      exit 1
-    }
-  fi
+  : # Used install-c-driver.sh.
 elif [[ -n "$(find install -name 'bson-config.h')" ]]; then
-  if [[ "${BSON_EXTRA_ALIGNMENT:-}" == "1" ]]; then
-    grep -R "#define BSON_EXTRA_ALIGN 1" install || {
-      echo "BSON_EXTRA_ALIGN is not 1 despite BSON_EXTRA_ALIGNMENT=1" 1>&2
-      exit 1
-    }
-  else
-    grep -R "#define BSON_EXTRA_ALIGN 0" install || {
-      echo "BSON_EXTRA_ALIGN is not 0 despite BSON_EXTRA_ALIGNMENT=0" 1>&2
-      exit 1
-    }
-  fi
+  : # Used auto-downloaded C Driver.
 else
   echo "unexpectedly compiled using a system libmongoc library" 1>&2
   exit 1

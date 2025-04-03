@@ -1,10 +1,6 @@
 buildvariants:
   - name: abi-stability
     display_name: ABI Stability Checks
-    display_tasks:
-      - name: ABI Stability Checks
-        execution_tasks:
-          - .abi-stability
     tasks:
       - name: tg-abi-stability-impls-cxx11
       - name: tg-abi-stability-impls-cxx17
@@ -13,10 +9,6 @@ buildvariants:
       - name: tg-abi-stability-stdlib-cxx23
   - name: atlas-search-indexes-matrix
     display_name: atlas-search-indexes-matrix
-    display_tasks:
-      - name: atlas-search-indexes-matrix
-        execution_tasks:
-          - .atlas-search-indexes
     tasks:
       - name: tg-atlas-search-indexes-7.0
       - name: tg-atlas-search-indexes-8.0
@@ -30,10 +22,6 @@ buildvariants:
       - name: .clang-tidy
   - name: compile-only-matrix
     display_name: compile-only-matrix
-    display_tasks:
-      - name: compile-only-matrix
-        execution_tasks:
-          - .compile-only !.rhel8-power !.rhel8-zseries
     tasks:
       - name: .compile-only .rhel8-power
         batchtime: 1440
@@ -44,44 +32,20 @@ buildvariants:
     display_name: Docker Build
     tasks:
       - name: .docker-build
-  - name: integration-matrix-extra_alignment
-    display_name: integration-matrix-extra_alignment
-    display_tasks:
-      - name: integration-matrix-extra_alignment
-        execution_tasks:
-          - .integration !.rhel8-power !.rhel8-zseries
-    tasks:
-      - name: .integration .extra_alignment .rhel8-power
-        batchtime: 1440
-      - name: .integration .extra_alignment .rhel8-zseries
-        batchtime: 1440
-      - name: .integration .extra_alignment !.rhel8-power !.rhel8-zseries
   - name: integration-matrix-linux
     display_name: integration-matrix-linux
-    display_tasks:
-      - name: integration-matrix-linux
-        execution_tasks:
-          - .integration !.rhel8-power !.rhel8-zseries
     tasks:
-      - name: .integration .linux !.mongocryptd !.extra_alignment .rhel8-power
+      - name: .integration .linux !.mongocryptd .rhel8-power
         batchtime: 1440
-      - name: .integration .linux !.mongocryptd !.extra_alignment .rhel8-zseries
+      - name: .integration .linux !.mongocryptd .rhel8-zseries
         batchtime: 1440
-      - name: .integration .linux !.mongocryptd !.extra_alignment !.rhel8-power !.rhel8-zseries
+      - name: .integration .linux !.mongocryptd !.rhel8-power !.rhel8-zseries
   - name: integration-matrix-macos
     display_name: integration-matrix-macos
-    display_tasks:
-      - name: integration-matrix-macos
-        execution_tasks:
-          - .integration
     tasks:
-      - name: .integration .macos !.mongocryptd !.extra_alignment
+      - name: .integration .macos !.mongocryptd
   - name: integration-matrix-mongocryptd
     display_name: integration-matrix-mongocryptd
-    display_tasks:
-      - name: integration-matrix-mongocryptd
-        execution_tasks:
-          - .integration !.rhel8-power !.rhel8-zseries
     tasks:
       - name: .integration .mongocryptd .rhel8-power
         batchtime: 1440
@@ -90,22 +54,14 @@ buildvariants:
       - name: .integration .mongocryptd !.rhel8-power !.rhel8-zseries
   - name: integration-matrix-windows
     display_name: integration-matrix-windows
-    display_tasks:
-      - name: integration-matrix-windows
-        execution_tasks:
-          - .integration
     tasks:
-      - name: .integration .windows !.mongocryptd !.extra_alignment
+      - name: .integration .windows !.mongocryptd
   - name: lint
     display_name: Lint
     tasks:
       - name: .lint
   - name: macro-guards-matrix
     display_name: macro-guards-matrix
-    display_tasks:
-      - name: macro-guards-matrix
-        execution_tasks:
-          - .macro-guards
     tasks:
       - name: .macro-guards
   - name: mongohouse
@@ -118,10 +74,6 @@ buildvariants:
       - name: .packaging
   - name: sanitizers-matrix
     display_name: sanitizers-matrix
-    display_tasks:
-      - name: sanitizers-matrix
-        execution_tasks:
-          - .sanitizers
     tasks:
       - name: .sanitizers
   - name: sbom
@@ -130,33 +82,17 @@ buildvariants:
       - name: .sbom
   - name: scan-build-matrix
     display_name: scan-build-matrix
-    display_tasks:
-      - name: scan-build-matrix
-        execution_tasks:
-          - .scan-build
     tasks:
       - name: .scan-build
   - name: uninstall-check
     display_name: Uninstall Check
-    display_tasks:
-      - name: uninstall-check
-        execution_tasks:
-          - .uninstall-check
     tasks:
       - name: .uninstall-check
   - name: valgrind-matrix
     display_name: valgrind-matrix
-    display_tasks:
-      - name: valgrind-matrix
-        execution_tasks:
-          - .valgrind
     tasks:
       - name: .valgrind
   - name: versioned-api-matrix
     display_name: versioned-api-matrix
-    display_tasks:
-      - name: versioned-api-matrix
-        execution_tasks:
-          - .versioned-api
     tasks:
       - name: .versioned-api

@@ -13,12 +13,14 @@
 // limitations under the License.
 
 #include <bsoncxx/builder/basic/document.hpp>
+#include <bsoncxx/json.hpp>
 #include <bsoncxx/types.hpp>
 
 #include <mongocxx/instance.hpp>
 #include <mongocxx/options/index.hpp>
 
 #include <bsoncxx/private/make_unique.hh>
+#include <bsoncxx/private/suppress_deprecation_warnings.hh>
 
 #include <bsoncxx/test/catch.hh>
 
@@ -35,8 +37,9 @@ TEST_CASE("index", "[index][option]") {
     instance::current();
 
     options::index idx;
-    std::unique_ptr<options::index::wiredtiger_storage_options> storage =
-        bsoncxx::make_unique<options::index::wiredtiger_storage_options>();
+    auto storage = bsoncxx::from_json(R"({"wiredTiger": {"configString": null}})");
+
+    auto idx_as_doc = [&idx] { return static_cast<bsoncxx::document::view_or_value>(idx); };
 
     auto collation = make_document(kvp("locale", "en_US"));
     auto partial_filter_expression = make_document(kvp("x", true));
@@ -59,7 +62,7 @@ TEST_CASE("index", "[index][option]") {
         CHECK_OPTIONAL_ARGUMENT(idx, haystack_bucket_size_deprecated, 90.0);
         CHECK_OPTIONAL_ARGUMENT(idx, weights, weights.view());
         CHECK_OPTIONAL_ARGUMENT(idx, partial_filter_expression, partial_filter_expression.view());
-        REQUIRE_NOTHROW(idx.storage_options(std::move(storage)));
+        CHECK_OPTIONAL_ARGUMENT(idx, storage_engine, storage.view());
     }
 
     SECTION("check cast to document") {
@@ -101,12 +104,29 @@ TEST_CASE("index", "[index][option]") {
         idx.twod_location_min(90.0);
         idx.haystack_bucket_size_deprecated(90.0);
         idx.weights(weights.view());
-        idx.storage_options(std::move(storage));
+        idx.storage_engine(storage.view());
 
-        bsoncxx::document::view_or_value d = static_cast<bsoncxx::document::view_or_value>(idx);
+        auto doc = idx_as_doc();
 
-        REQUIRE(d.view().length() == options_doc.view().length());
-        REQUIRE(d.view() == options_doc.view());
+        REQUIRE(doc.view().length() == options_doc.view().length());
+        REQUIRE(doc.view() == options_doc.view());
+    }
+
+    SECTION("storage_engine overrides storage_options when set") {
+        auto engine = bsoncxx::from_json(R"({"wiredTiger": {"configString": "override"}})");
+        auto options = bsoncxx::make_unique<options::index::wiredtiger_storage_options>(); // configString: null
+
+        CHECK(idx_as_doc() == bsoncxx::from_json(R"({})"));
+
+        BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_BEGIN
+        idx.storage_options(std::move(options));
+        BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_END
+
+        CHECK(idx_as_doc() == bsoncxx::from_json(R"({"storageEngine": {"wiredTiger": {"configString": null}}})"));
+
+        idx.storage_engine(engine.view());
+
+        CHECK(idx_as_doc() == make_document(kvp("storageEngine", engine.view())));
     }
 }
 } // namespace

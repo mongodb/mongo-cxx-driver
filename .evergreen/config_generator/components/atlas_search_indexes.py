@@ -8,7 +8,7 @@ from config_generator.etc.distros import find_large_distro
 from config_generator.etc.function import Function
 from config_generator.etc.utils import bash_exec
 
-from shrub.v3.evg_build_variant import BuildVariant, DisplayTask
+from shrub.v3.evg_build_variant import BuildVariant
 from shrub.v3.evg_command import EvgCommandType, expansions_update
 from shrub.v3.evg_task import EvgTask, EvgTaskRef
 from shrub.v3.evg_task_group import EvgTaskGroup
@@ -101,11 +101,5 @@ def variants():
             name=f'{TAG}-matrix',
             display_name=f'{TAG}-matrix',
             tasks=[EvgTaskRef(name=f'tg-{TAG}-{mongodb_version}') for mongodb_version in MATRIX],
-            display_tasks=[
-                DisplayTask(
-                    name=f'{TAG}-matrix',
-                    execution_tasks=[f'.{TAG}'],
-                )
-            ],
         ),
     ]

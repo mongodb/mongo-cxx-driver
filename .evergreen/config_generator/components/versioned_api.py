@@ -9,7 +9,7 @@ from config_generator.components.funcs.test import Test
 
 from config_generator.etc.distros import find_large_distro, make_distro_str
 
-from shrub.v3.evg_build_variant import BuildVariant, DisplayTask
+from shrub.v3.evg_build_variant import BuildVariant
 from shrub.v3.evg_task import EvgTask, EvgTaskRef
 
 from itertools import product
@@ -97,11 +97,5 @@ def variants():
             name=f'{TAG}-matrix',
             display_name=f'{TAG}-matrix',
             tasks=[EvgTaskRef(name=f'.{TAG}')],
-            display_tasks=[
-                DisplayTask(
-                    name=f'{TAG}-matrix',
-                    execution_tasks=[f'.{TAG}'],
-                )
-            ],
         ),
     ]
