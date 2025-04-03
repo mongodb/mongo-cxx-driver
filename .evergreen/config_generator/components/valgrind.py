@@ -23,7 +23,7 @@ TAG = 'valgrind'
 # fmt: off
 MATRIX = [
     # min-max-latest
-    ('rhel80', None, ['shared'], ['4.0', '8.0', 'latest'], ['single', 'replica', 'sharded']),
+    ('rhel8.8', None, ['shared'], ['4.0', '8.0', 'latest'], ['single', 'replica', 'sharded']),
 ]
 # fmt: on
 # pylint: enable=line-too-long
@@ -38,7 +38,8 @@ def tasks():
         ):
             distro = find_large_distro(distro_name)
 
-            name = f'{TAG}-{make_distro_str(distro_name, compiler, None)}'
+            distro_str = make_distro_str('rhel80', compiler, None)  # Avoid breaking task history.
+            name = f'{TAG}-{distro_str}'
             tags = [TAG, distro_name]
 
             if compiler:
