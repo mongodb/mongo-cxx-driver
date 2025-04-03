@@ -88,3 +88,13 @@
 /// @namespace bsoncxx::types::bson_value
 /// Declares entities representing any BSON value type.
 ///
+
+///
+/// @namespace bsoncxx::vector
+/// Declarations related to the BSON Binary Vector subtype.
+///
+
+///
+/// @namespace bsoncxx::vector::formats
+/// Declares supported BSON Binary Vector formats.
+///
