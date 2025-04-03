@@ -15641,8 +15641,8 @@ tasks:
           example_projects_cxxflags: -fsanitize=undefined -fno-sanitize-recover=undefined -fno-omit-frame-pointer
           example_projects_ldflags: -fsanitize=undefined -fno-sanitize-recover=undefined -static-libsan
   - name: sbom
-    run_on: rhel80-small
-    tags: [sbom, rhel80]
+    run_on: rhel8.8-small
+    tags: [sbom, rhel8.8]
     commands:
       - func: setup
       - func: check augmented sbom
@@ -15881,8 +15881,8 @@ tasks:
           platform: x64
       - func: uninstall-check
   - name: valgrind-rhel80-shared-4.0-replica
-    run_on: rhel80-large
-    tags: [valgrind, rhel80, shared, "4.0", replica]
+    run_on: rhel8.8-large
+    tags: [valgrind, rhel8.8, shared, "4.0", replica]
     commands:
       - command: expansions.update
         params:
@@ -15910,8 +15910,8 @@ tasks:
           disable_slow_tests: 1
           use_mongocryptd: true
   - name: valgrind-rhel80-shared-4.0-sharded
-    run_on: rhel80-large
-    tags: [valgrind, rhel80, shared, "4.0", sharded]
+    run_on: rhel8.8-large
+    tags: [valgrind, rhel8.8, shared, "4.0", sharded]
     commands:
       - command: expansions.update
         params:
@@ -15939,8 +15939,8 @@ tasks:
           disable_slow_tests: 1
           use_mongocryptd: true
   - name: valgrind-rhel80-shared-4.0-single
-    run_on: rhel80-large
-    tags: [valgrind, rhel80, shared, "4.0", single]
+    run_on: rhel8.8-large
+    tags: [valgrind, rhel8.8, shared, "4.0", single]
     commands:
       - command: expansions.update
         params:
@@ -15967,8 +15967,8 @@ tasks:
           disable_slow_tests: 1
           use_mongocryptd: true
   - name: valgrind-rhel80-shared-8.0-replica
-    run_on: rhel80-large
-    tags: [valgrind, rhel80, shared, "8.0", replica]
+    run_on: rhel8.8-large
+    tags: [valgrind, rhel8.8, shared, "8.0", replica]
     commands:
       - command: expansions.update
         params:
@@ -15996,8 +15996,8 @@ tasks:
           disable_slow_tests: 1
           use_mongocryptd: true
   - name: valgrind-rhel80-shared-8.0-sharded
-    run_on: rhel80-large
-    tags: [valgrind, rhel80, shared, "8.0", sharded]
+    run_on: rhel8.8-large
+    tags: [valgrind, rhel8.8, shared, "8.0", sharded]
     commands:
       - command: expansions.update
         params:
@@ -16025,8 +16025,8 @@ tasks:
           disable_slow_tests: 1
           use_mongocryptd: true
   - name: valgrind-rhel80-shared-8.0-single
-    run_on: rhel80-large
-    tags: [valgrind, rhel80, shared, "8.0", single]
+    run_on: rhel8.8-large
+    tags: [valgrind, rhel8.8, shared, "8.0", single]
     commands:
       - command: expansions.update
         params:
@@ -16053,8 +16053,8 @@ tasks:
           disable_slow_tests: 1
           use_mongocryptd: true
   - name: valgrind-rhel80-shared-latest-replica
-    run_on: rhel80-large
-    tags: [valgrind, rhel80, shared, latest, replica]
+    run_on: rhel8.8-large
+    tags: [valgrind, rhel8.8, shared, latest, replica]
     commands:
       - command: expansions.update
         params:
@@ -16082,8 +16082,8 @@ tasks:
           disable_slow_tests: 1
           use_mongocryptd: true
   - name: valgrind-rhel80-shared-latest-sharded
-    run_on: rhel80-large
-    tags: [valgrind, rhel80, shared, latest, sharded]
+    run_on: rhel8.8-large
+    tags: [valgrind, rhel8.8, shared, latest, sharded]
     commands:
       - command: expansions.update
         params:
@@ -16111,8 +16111,8 @@ tasks:
           disable_slow_tests: 1
           use_mongocryptd: true
   - name: valgrind-rhel80-shared-latest-single
-    run_on: rhel80-large
-    tags: [valgrind, rhel80, shared, latest, single]
+    run_on: rhel8.8-large
+    tags: [valgrind, rhel8.8, shared, latest, single]
     commands:
       - command: expansions.update
         params:
