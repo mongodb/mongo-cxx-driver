@@ -9,6 +9,10 @@ Changes prior to 3.9.0 are documented as [release notes on GitHub](https://githu
 
 ## 4.1.0 [Unreleased]
 
+### Fixed
+
+- The API version of auto-downloaded C Driver libraries no longer incorrectly inherits the C++ Driver's `BUILD_VERSION` value.
+
 ### Added
 
 - `storage_engine()` in `mongocxx::v_noabi::options::index`.
