@@ -387,7 +387,7 @@ TEST_CASE("integration tests for client metadata handshake feature") {
 
             found_op = true;
 
-            std::string server_version = test_util::get_server_version(client);
+            std::string server_version = test_util::get_server_version();
 
             REQUIRE(op_view["clientMetadata"]);
             auto metadata = op_view["clientMetadata"].get_document();

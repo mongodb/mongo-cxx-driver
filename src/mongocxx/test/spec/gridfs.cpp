@@ -474,7 +474,7 @@ TEST_CASE("GridFS spec automated tests", "[gridfs_spec]") {
 
     // Because the GridFS spec tests use write commands that were only added to MongoDB in version
     // 2.6, the tests will not run against any server versions older than that.
-    if (test_util::compare_versions(test_util::get_server_version(client), "2.6") < 0) {
+    if (test_util::compare_versions(test_util::get_server_version(), "2.6") < 0) {
         return;
     }
 

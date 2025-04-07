@@ -384,7 +384,7 @@ std::string get_hostnames(bsoncxx::document::view object) {
     static constexpr auto two = "localhost:27017,localhost:27018";
     static constexpr auto three = "localhost:27017,localhost:27018,localhost:27019";
 
-    auto const topology = test_util::get_topology(client0);
+    auto const topology = test_util::get_topology();
 
     if (topology == "single") {
         return one; // Single mongod.
