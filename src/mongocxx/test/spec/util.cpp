@@ -92,7 +92,7 @@ uint32_t error_code_from_name(string_view name) {
 }
 
 /* Called with the entire test file and individual tests. */
-bool check_if_skip_spec_test_impl(client const& client, document::view test, std::string& reason) {
+bool check_if_skip_spec_test_impl(document::view test, std::string& reason) {
     static std::set<std::string> const unsupported_tests = {
         "CreateIndex and dropIndex omits default write concern",
         "MapReduce omits default write concern",
@@ -136,9 +136,9 @@ bool check_if_skip_spec_test_impl(client const& client, document::view test, std
         }
     }
 
-    auto const server_version = test_util::get_server_version(client);
+    auto const server_version = test_util::get_server_version();
 
-    auto const topology = test_util::get_topology(client);
+    auto const topology = test_util::get_topology();
 
     if (test["ignore_if_server_version_greater_than"]) {
         auto const max_server_version =
@@ -337,7 +337,7 @@ void set_up_collection(
 
     // When testing against a sharded cluster run a `distinct` command on the newly created
     // collection on all mongoses.
-    if (test_util::is_sharded_cluster(client)) {
+    if (test_util::is_sharded_cluster()) {
         auto s0 = mongocxx::client(uri("mongodb://localhost:27017"));
         auto s1 = mongocxx::client(uri("mongodb://localhost:27018"));
 
@@ -854,7 +854,7 @@ void run_transactions_tests_in_file(std::string const& test_path) {
     auto const tests = test_spec_view["tests"].get_array().value;
 
     /* we may not have a supported topology */
-    CHECK_IF_SKIP_SPEC_TEST((client{uri{}, test_util::add_test_server_api()}), test_spec_view);
+    CHECK_IF_SKIP_SPEC_TEST(test_spec_view);
 
     for (auto&& test : tests) {
         auto const description = string::to_string(test["description"].get_string().value);
@@ -863,7 +863,7 @@ void run_transactions_tests_in_file(std::string const& test_path) {
             client setup_client{get_uri(test.get_document().value), test_util::add_test_server_api()};
 
             // Step 1: If the `skipReason` field is present, skip this test completely.
-            CHECK_IF_SKIP_SPEC_TEST(setup_client, test.get_document().value);
+            CHECK_IF_SKIP_SPEC_TEST(test.get_document().value);
 
             // Steps 2-8.
             test_setup(test.get_document().value, test_spec_view);
@@ -1007,13 +1007,13 @@ void run_crud_tests_in_file(std::string const& test_path, uri test_uri) {
     client client{std::move(test_uri), test_util::add_test_server_api(client_opts)};
 
     document::view test_spec_view = test_spec->view();
-    CHECK_IF_SKIP_SPEC_TEST(client, test_spec_view);
+    CHECK_IF_SKIP_SPEC_TEST(test_spec_view);
 
     for (auto&& test : test_spec_view["tests"].get_array().value) {
         auto description = test["description"].get_string().value;
 
         DYNAMIC_SECTION(to_string(description)) {
-            CHECK_IF_SKIP_SPEC_TEST(client, test.get_document());
+            CHECK_IF_SKIP_SPEC_TEST(test.get_document());
 
             auto get_value_or_default = [&](std::string key, std::string default_str) {
                 if (test_spec_view[key]) {
