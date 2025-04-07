@@ -254,7 +254,9 @@ bsoncxx::v_noabi::stdx::optional<bool> uri::server_selection_try_once() const {
 }
 
 void uri::server_selection_try_once(bool val) {
-    mongoc_uri_set_option_as_bool(_impl->uri_t, "serverSelectionTryOnce", val);
+    if (!mongoc_uri_set_option_as_bool(_impl->uri_t, "serverSelectionTryOnce", val)) {
+        throw exception{error_code::k_invalid_uri, "failed to set 'serverSelectionTryOnce' option"};
+    }
 }
 
 bsoncxx::v_noabi::stdx::optional<std::int32_t> uri::socket_timeout_ms() const {

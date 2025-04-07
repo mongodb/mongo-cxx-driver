@@ -303,6 +303,8 @@ class uri {
     ///
     /// @param val The new value to apply to as "serverSelectionTryOnce".
     ///
+    /// @throws mongocxx::v_noabi::exception if there is an error setting the option.
+    ///
     MONGOCXX_ABI_EXPORT_CDECL(void)
     server_selection_try_once(bool val);
 
