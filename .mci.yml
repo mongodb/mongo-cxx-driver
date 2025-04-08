@@ -368,6 +368,12 @@ functions:
     # fetch_c_driver_source may be used to fetch the C driver source without installing the C driver.
     # This can be used when only CI scripts are needed.
     "fetch_c_driver_source":
+      - command: expansions.update
+        type: setup
+        params:
+          updates:
+            - key: mongoc_version_minimum
+              value: *mongoc_version_minimum
       - command: shell.exec
         params:
             shell: bash
@@ -375,7 +381,7 @@ functions:
             script: |
                 set -o errexit
                 set -o pipefail
-                git clone --depth 1 https://github.com/mongodb/mongo-c-driver mongoc
+                git clone --depth 1 --branch ${mongoc_version_minimum} https://github.com/mongodb/mongo-c-driver mongoc
 
     "lint":
         - command: shell.exec
@@ -1082,6 +1088,12 @@ tasks:
       commands:
       - func: "setup"
       - func: "start_mongod"
+      - command: expansions.update
+        type: setup
+        params:
+          updates:
+            - key: mongoc_version_minimum
+              value: *mongoc_version_minimum
       - command: shell.exec
         type: test
         params:
@@ -1090,7 +1102,7 @@ tasks:
           script: |-
             set -o errexit
             cd examples/add_subdirectory
-            [ -d mongo-c-driver ] || git clone --depth 1 https://github.com/mongodb/mongo-c-driver
+            [ -d mongo-c-driver ] || git clone --depth 1 --branch ${mongoc_version_minimum} https://github.com/mongodb/mongo-c-driver
             rsync -aq --exclude='examples/add_subdirectory' $(readlink -f ../..) .
             [ -d build ] || mkdir build
             . ./mongo-c-driver/.evergreen/scripts/find-cmake-latest.sh
