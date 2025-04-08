@@ -107,7 +107,7 @@ export MONGOCXX_TEST_TLS_CA_FILE="${DRIVERS_TOOLS:?}/.evergreen/x509gen/ca.pem"
 
 if [ "$(uname -m)" == "ppc64le" ]; then
   echo "Skipping CSFLE test setup (CDRIVER-4246/CXX-2423)"
-elif [[ "${distro_id:?}" =~ windows-64-vs2015-* ]]; then
+elif [[ "${distro_id:?}" =~ windows64-vsMulti-* ]]; then
   # Python: ImportError: DLL load failed while importing _rust: The specified procedure could not be found.
   echo "Skipping CSFLE test setup (CXX-2628)"
 else
