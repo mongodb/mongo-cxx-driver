@@ -23,11 +23,7 @@ function(fetch_mongoc)
 
     if(NOT mongo-c-driver_POPULATED)
         # Must ensure BUILD_VERSION is not inherited either as a normal variable or as a cache variable.
-        unset(OLD_BUILD_VERSION)
-        if(DEFINED BUILD_VERSION)
-            set(OLD_BUILD_VERSION ${BUILD_VERSION})
-            unset(BUILD_VERSION)
-        endif()
+        unset(BUILD_VERSION)
         unset(OLD_CACHE_BUILD_VERSION)
         if(DEFINED CACHE{BUILD_VERSION})
             set(OLD_CACHE_BUILD_VERSION $CACHE{BUILD_VERSION})
@@ -42,10 +38,7 @@ function(fetch_mongoc)
 
         FetchContent_MakeAvailable(mongo-c-driver)
 
-        # Restore prior value of BUILD_VERSION only when they were previously set.
-        if(DEFINED OLD_BUILD_VERSION)
-            set(BUILD_VERSION ${OLD_BUILD_VERSION})
-        endif()
+        # Restore prior value of BUILD_VERSION cache variable only if was previously set.
         if(DEFINED OLD_CACHE_BUILD_VERSION)
             set(BUILD_VERSION ${OLD_CACHE_BUILD_VERSION} CACHE STRING "Library version (for both bsoncxx and mongocxx)")
         endif()
