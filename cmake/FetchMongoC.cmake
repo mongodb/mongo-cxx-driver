@@ -47,7 +47,7 @@ function(fetch_mongoc)
     message(STATUS "Downloading and configuring MongoDB C Driver ${MONGOC_DOWNLOAD_VERSION}... done.")
 endfunction()
 
-set(NEED_DOWNLOAD_C_DRIVER false CACHE INTERNAL "" FORCE)
+set(NEED_DOWNLOAD_C_DRIVER false CACHE INTERNAL "")
 
 # Only search for packages if targets are not already imported via add_subdirectory().
 if(NOT ((TARGET bson_shared OR TARGET bson_static) AND (TARGET mongoc_shared OR TARGET mongoc_static)))
@@ -63,7 +63,7 @@ if(NOT ((TARGET bson_shared OR TARGET bson_static) AND (TARGET mongoc_shared OR 
     endif()
 
     if(NOT bson_FOUND OR NOT mongoc_FOUND)
-        set(NEED_DOWNLOAD_C_DRIVER true CACHE INTERNAL "" FORCE)
+        set_property(CACHE NEED_DOWNLOAD_C_DRIVER PROPERTY VALUE true)
         message(STATUS "Required MongoDB C Driver libraries not found via find_package()")
     endif()
 endif()
