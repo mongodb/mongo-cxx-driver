@@ -100,7 +100,7 @@ def variants():
     return [
         BuildVariant(
             name=f'{TAG}-matrix',
-            display_name='CMake Version Matrix',
+            display_name='CMake Compatibility Matrix',
             tasks=[EvgTaskRef(name=f'.{TAG}')],
         ),
     ]

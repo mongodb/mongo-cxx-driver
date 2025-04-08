@@ -21,7 +21,7 @@ buildvariants:
     tasks:
       - name: .clang-tidy
   - name: cmake-compat-matrix
-    display_name: CMake Version Matrix
+    display_name: CMake Compatibility Matrix
     tasks:
       - name: .cmake-compat
   - name: compile-only-matrix
