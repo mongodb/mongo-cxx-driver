@@ -14,7 +14,7 @@ function(fetch_mongoc)
     FetchContent_Declare(
         mongo-c-driver
         GIT_REPOSITORY https://github.com/mongodb/mongo-c-driver.git
-        GIT_TAG ${MONGOC_DOWNLOAD_VERSION}
+        GIT_TAG ${LIBMONGOC_DOWNLOAD_VERSION}
 
         ${fetch_args}
     )
