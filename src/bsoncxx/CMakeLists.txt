@@ -16,9 +16,9 @@ project(BSONCXX)
 
 ParseVersion(${BUILD_VERSION} BSONCXX)
 
-set(BSONCXX_VERSION_NO_EXTRA ${BSONCXX_VERSION_MAJOR}.${BSONCXX_VERSION_MINOR}.${BSONCXX_VERSION_PATCH})
-set(BSONCXX_VERSION ${BSONCXX_VERSION_NO_EXTRA}${BSONCXX_VERSION_EXTRA})
-message(STATUS "bsoncxx version: ${BSONCXX_VERSION}")
+set(BSONCXX_VERSION_NO_EXTRA ${BSONCXX_VERSION_MAJOR}.${BSONCXX_VERSION_MINOR}.${BSONCXX_VERSION_PATCH} CACHE INTERNAL "")
+set(BSONCXX_VERSION $CACHE{BSONCXX_VERSION_NO_EXTRA}${BSONCXX_VERSION_EXTRA} CACHE INTERNAL "")
+message(STATUS "bsoncxx version: $CACHE{BSONCXX_VERSION}")
 
 option(BSONCXX_POLY_USE_IMPLS "Use bsoncxx implementations for stdx polyfills" OFF)
 option(BSONCXX_POLY_USE_STD "Use C++17 std library for stdx polyfills" OFF)
@@ -56,51 +56,23 @@ elseif(BSONCXX_POLY_OPTIONS_SET EQUAL 0)
     endif()
 endif()
 
-set(BSONCXX_PKG_DEP "") # Required by bsoncxx-config.cmake.in.
-
 if(TARGET bson_shared OR TARGET bson_static)
-    # If these targets exist, then libbson has already been included as a project
-    # sub-directory
-    message(STATUS "found libbson targets declared in current build scope; version not checked")
+    message(STATUS "Using bson targets imported via add_subdirectory() without version checks")
 
-    if(NOT BSONCXX_LINK_WITH_STATIC_MONGOC)
-        set(libbson_target bson_shared)
+    if(BSONCXX_LINK_WITH_STATIC_MONGOC)
+        set(bson_target bson_static)
     else()
-        set(libbson_target bson_static)
+        set(bson_target bson_shared)
     endif()
-
-    set(BSONCXX_PKG_DEP "find_dependency(bson-${LIBBSON_REQUIRED_ABI_VERSION} REQUIRED)")
 else()
-    # Attempt to find libbson by new package name (without lib).
-    find_package(bson-${LIBBSON_REQUIRED_ABI_VERSION} ${LIBBSON_REQUIRED_VERSION} QUIET)
+    find_package(bson ${BSON_REQUIRED_VERSION} REQUIRED)
 
-    if(bson-${LIBBSON_REQUIRED_ABI_VERSION}_FOUND)
-        message(STATUS "found libbson version ${bson-${LIBBSON_REQUIRED_ABI_VERSION}_VERSION}")
+    message(STATUS "Found bson: ${bson_DIR} (found version \"${bson_VERSION}\")")
 
-        if(NOT BSONCXX_LINK_WITH_STATIC_MONGOC)
-            set(libbson_target mongo::bson_shared)
-        else()
-            set(libbson_target mongo::bson_static)
-        endif()
-
-        set(BSONCXX_PKG_DEP "find_dependency(bson-${LIBBSON_REQUIRED_ABI_VERSION} REQUIRED)")
+    if(BSONCXX_LINK_WITH_STATIC_MONGOC)
+        set(bson_target bson::static)
     else()
-        # Require package of old libbson name (with lib).
-        if(NOT BSONCXX_LINK_WITH_STATIC_MONGOC)
-            find_package(libbson-${LIBBSON_REQUIRED_ABI_VERSION} ${LIBBSON_REQUIRED_VERSION} REQUIRED)
-            message(STATUS "found libbson version ${BSON_VERSION}")
-            set(libbson_target ${BSON_LIBRARIES})
-            set(libbson_include_directories ${BSON_INCLUDE_DIRS})
-            set(libbson_definitions ${BSON_DEFINITIONS})
-            set(BSONCXX_PKG_DEP "find_dependency(libbson-${LIBBSON_REQUIRED_ABI_VERSION} REQUIRED)")
-        else()
-            find_package(libbson-static-${LIBBSON_REQUIRED_ABI_VERSION} ${LIBBSON_REQUIRED_VERSION} REQUIRED)
-            message(STATUS "found libbson version ${BSON_STATIC_VERSION}")
-            set(libbson_target ${BSON_STATIC_LIBRARIES})
-            set(libbson_include_directories ${BSON_STATIC_INCLUDE_DIRS})
-            set(libbson_definitions ${BSON_STATIC_DEFINITIONS})
-            set(BSONCXX_PKG_DEP "find_dependency(libbson-static-${LIBBSON_REQUIRED_ABI_VERSION} REQUIRED)")
-        endif()
+        set(bson_target bson::shared)
     endif()
 endif()
 

@@ -13,20 +13,11 @@
 # limitations under the License.
 
 # Demonstrates how to use the CMake 'add_subdirectory' mechanism to locate and
-# build against the libmongoc and libmongocxx shared libraries.
+# build against the mongoc and mongocxx shared libraries.
 
-cmake_minimum_required(VERSION 3.2 FATAL_ERROR)
-
-if(POLICY CMP0025)
-    cmake_policy(SET CMP0025 NEW)
-endif()
+cmake_minimum_required(VERSION 3.15.0...4.0.0)
 
 project(HELLO_WORLD LANGUAGES C CXX)
-
-# Enforce the C++ standard, and disable extensions.
-if(NOT DEFINED CMAKE_CXX_STANDARD)
-    set(CMAKE_CXX_STANDARD 11)
-endif()
 
 set(CMAKE_CXX_EXTENSIONS OFF)
 

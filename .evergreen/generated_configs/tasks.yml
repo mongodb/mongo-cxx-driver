@@ -166,6 +166,366 @@ tasks:
         vars:
           cc_compiler: clang
           cxx_compiler: clang++
+  - name: cmake-compat-max-cxx11-add-c-add-cxx
+    run_on: rhel80-small
+    tags: [cmake-compat, cmake-max, cmake-add-c, cxx11, cmake-add-cxx]
+    commands:
+      - func: setup
+      - func: install-uv
+      - func: fetch_c_driver_source
+      - func: cmake-compat
+        vars:
+          CMAKE_MAJOR_VERSION: 4
+          CMAKE_MINOR_VERSION: 0
+          CMAKE_PATCH_VERSION: 0
+          INSTALL_C_DRIVER: 0
+          cxx_standard: 11
+          find_c_driver: 0
+  - name: cmake-compat-max-cxx11-add-c-find-cxx
+    run_on: rhel80-small
+    tags: [cmake-compat, cmake-max, cmake-add-c, cxx11, cmake-find-cxx]
+    commands:
+      - func: setup
+      - func: install-uv
+      - func: fetch_c_driver_source
+      - func: cmake-compat
+        vars:
+          CMAKE_MAJOR_VERSION: 4
+          CMAKE_MINOR_VERSION: 0
+          CMAKE_PATCH_VERSION: 0
+          INSTALL_C_DRIVER: 0
+          cxx_standard: 11
+          find_c_driver: 1
+  - name: cmake-compat-max-cxx11-find-c-add-cxx
+    run_on: rhel80-small
+    tags: [cmake-compat, cmake-max, cmake-find-c, cxx11, cmake-add-cxx]
+    commands:
+      - func: setup
+      - func: install-uv
+      - func: install_c_driver
+      - func: cmake-compat
+        vars:
+          CMAKE_MAJOR_VERSION: 4
+          CMAKE_MINOR_VERSION: 0
+          CMAKE_PATCH_VERSION: 0
+          INSTALL_C_DRIVER: 1
+          cxx_standard: 11
+          find_c_driver: 0
+  - name: cmake-compat-max-cxx11-find-c-find-cxx
+    run_on: rhel80-small
+    tags: [cmake-compat, cmake-max, cmake-find-c, cxx11, cmake-find-cxx]
+    commands:
+      - func: setup
+      - func: install-uv
+      - func: install_c_driver
+      - func: cmake-compat
+        vars:
+          CMAKE_MAJOR_VERSION: 4
+          CMAKE_MINOR_VERSION: 0
+          CMAKE_PATCH_VERSION: 0
+          INSTALL_C_DRIVER: 1
+          cxx_standard: 11
+          find_c_driver: 1
+  - name: cmake-compat-max-cxx17-add-c-add-cxx
+    run_on: rhel80-small
+    tags: [cmake-compat, cmake-max, cmake-add-c, cxx17, cmake-add-cxx]
+    commands:
+      - func: setup
+      - func: install-uv
+      - func: fetch_c_driver_source
+      - func: cmake-compat
+        vars:
+          CMAKE_MAJOR_VERSION: 4
+          CMAKE_MINOR_VERSION: 0
+          CMAKE_PATCH_VERSION: 0
+          INSTALL_C_DRIVER: 0
+          cxx_standard: 17
+          find_c_driver: 0
+  - name: cmake-compat-max-cxx17-add-c-find-cxx
+    run_on: rhel80-small
+    tags: [cmake-compat, cmake-max, cmake-add-c, cxx17, cmake-find-cxx]
+    commands:
+      - func: setup
+      - func: install-uv
+      - func: fetch_c_driver_source
+      - func: cmake-compat
+        vars:
+          CMAKE_MAJOR_VERSION: 4
+          CMAKE_MINOR_VERSION: 0
+          CMAKE_PATCH_VERSION: 0
+          INSTALL_C_DRIVER: 0
+          cxx_standard: 17
+          find_c_driver: 1
+  - name: cmake-compat-max-cxx17-find-c-add-cxx
+    run_on: rhel80-small
+    tags: [cmake-compat, cmake-max, cmake-find-c, cxx17, cmake-add-cxx]
+    commands:
+      - func: setup
+      - func: install-uv
+      - func: install_c_driver
+      - func: cmake-compat
+        vars:
+          CMAKE_MAJOR_VERSION: 4
+          CMAKE_MINOR_VERSION: 0
+          CMAKE_PATCH_VERSION: 0
+          INSTALL_C_DRIVER: 1
+          cxx_standard: 17
+          find_c_driver: 0
+  - name: cmake-compat-max-cxx17-find-c-find-cxx
+    run_on: rhel80-small
+    tags: [cmake-compat, cmake-max, cmake-find-c, cxx17, cmake-find-cxx]
+    commands:
+      - func: setup
+      - func: install-uv
+      - func: install_c_driver
+      - func: cmake-compat
+        vars:
+          CMAKE_MAJOR_VERSION: 4
+          CMAKE_MINOR_VERSION: 0
+          CMAKE_PATCH_VERSION: 0
+          INSTALL_C_DRIVER: 1
+          cxx_standard: 17
+          find_c_driver: 1
+  - name: cmake-compat-max-v3-cxx11-add-c-add-cxx
+    run_on: rhel80-small
+    tags: [cmake-compat, cmake-max-v3, cmake-add-c, cxx11, cmake-add-cxx]
+    commands:
+      - func: setup
+      - func: install-uv
+      - func: fetch_c_driver_source
+      - func: cmake-compat
+        vars:
+          CMAKE_MAJOR_VERSION: 3
+          CMAKE_MINOR_VERSION: 31
+          CMAKE_PATCH_VERSION: 6
+          INSTALL_C_DRIVER: 0
+          cxx_standard: 11
+          find_c_driver: 0
+  - name: cmake-compat-max-v3-cxx11-add-c-find-cxx
+    run_on: rhel80-small
+    tags: [cmake-compat, cmake-max-v3, cmake-add-c, cxx11, cmake-find-cxx]
+    commands:
+      - func: setup
+      - func: install-uv
+      - func: fetch_c_driver_source
+      - func: cmake-compat
+        vars:
+          CMAKE_MAJOR_VERSION: 3
+          CMAKE_MINOR_VERSION: 31
+          CMAKE_PATCH_VERSION: 6
+          INSTALL_C_DRIVER: 0
+          cxx_standard: 11
+          find_c_driver: 1
+  - name: cmake-compat-max-v3-cxx11-find-c-add-cxx
+    run_on: rhel80-small
+    tags: [cmake-compat, cmake-max-v3, cmake-find-c, cxx11, cmake-add-cxx]
+    commands:
+      - func: setup
+      - func: install-uv
+      - func: install_c_driver
+      - func: cmake-compat
+        vars:
+          CMAKE_MAJOR_VERSION: 3
+          CMAKE_MINOR_VERSION: 31
+          CMAKE_PATCH_VERSION: 6
+          INSTALL_C_DRIVER: 1
+          cxx_standard: 11
+          find_c_driver: 0
+  - name: cmake-compat-max-v3-cxx11-find-c-find-cxx
+    run_on: rhel80-small
+    tags: [cmake-compat, cmake-max-v3, cmake-find-c, cxx11, cmake-find-cxx]
+    commands:
+      - func: setup
+      - func: install-uv
+      - func: install_c_driver
+      - func: cmake-compat
+        vars:
+          CMAKE_MAJOR_VERSION: 3
+          CMAKE_MINOR_VERSION: 31
+          CMAKE_PATCH_VERSION: 6
+          INSTALL_C_DRIVER: 1
+          cxx_standard: 11
+          find_c_driver: 1
+  - name: cmake-compat-max-v3-cxx17-add-c-add-cxx
+    run_on: rhel80-small
+    tags: [cmake-compat, cmake-max-v3, cmake-add-c, cxx17, cmake-add-cxx]
+    commands:
+      - func: setup
+      - func: install-uv
+      - func: fetch_c_driver_source
+      - func: cmake-compat
+        vars:
+          CMAKE_MAJOR_VERSION: 3
+          CMAKE_MINOR_VERSION: 31
+          CMAKE_PATCH_VERSION: 6
+          INSTALL_C_DRIVER: 0
+          cxx_standard: 17
+          find_c_driver: 0
+  - name: cmake-compat-max-v3-cxx17-add-c-find-cxx
+    run_on: rhel80-small
+    tags: [cmake-compat, cmake-max-v3, cmake-add-c, cxx17, cmake-find-cxx]
+    commands:
+      - func: setup
+      - func: install-uv
+      - func: fetch_c_driver_source
+      - func: cmake-compat
+        vars:
+          CMAKE_MAJOR_VERSION: 3
+          CMAKE_MINOR_VERSION: 31
+          CMAKE_PATCH_VERSION: 6
+          INSTALL_C_DRIVER: 0
+          cxx_standard: 17
+          find_c_driver: 1
+  - name: cmake-compat-max-v3-cxx17-find-c-add-cxx
+    run_on: rhel80-small
+    tags: [cmake-compat, cmake-max-v3, cmake-find-c, cxx17, cmake-add-cxx]
+    commands:
+      - func: setup
+      - func: install-uv
+      - func: install_c_driver
+      - func: cmake-compat
+        vars:
+          CMAKE_MAJOR_VERSION: 3
+          CMAKE_MINOR_VERSION: 31
+          CMAKE_PATCH_VERSION: 6
+          INSTALL_C_DRIVER: 1
+          cxx_standard: 17
+          find_c_driver: 0
+  - name: cmake-compat-max-v3-cxx17-find-c-find-cxx
+    run_on: rhel80-small
+    tags: [cmake-compat, cmake-max-v3, cmake-find-c, cxx17, cmake-find-cxx]
+    commands:
+      - func: setup
+      - func: install-uv
+      - func: install_c_driver
+      - func: cmake-compat
+        vars:
+          CMAKE_MAJOR_VERSION: 3
+          CMAKE_MINOR_VERSION: 31
+          CMAKE_PATCH_VERSION: 6
+          INSTALL_C_DRIVER: 1
+          cxx_standard: 17
+          find_c_driver: 1
+  - name: cmake-compat-min-cxx11-add-c-add-cxx
+    run_on: rhel80-small
+    tags: [cmake-compat, cmake-min, cmake-add-c, cxx11, cmake-add-cxx]
+    commands:
+      - func: setup
+      - func: install-uv
+      - func: fetch_c_driver_source
+      - func: cmake-compat
+        vars:
+          CMAKE_MAJOR_VERSION: 3
+          CMAKE_MINOR_VERSION: 15
+          CMAKE_PATCH_VERSION: 0
+          INSTALL_C_DRIVER: 0
+          cxx_standard: 11
+          find_c_driver: 0
+  - name: cmake-compat-min-cxx11-add-c-find-cxx
+    run_on: rhel80-small
+    tags: [cmake-compat, cmake-min, cmake-add-c, cxx11, cmake-find-cxx]
+    commands:
+      - func: setup
+      - func: install-uv
+      - func: fetch_c_driver_source
+      - func: cmake-compat
+        vars:
+          CMAKE_MAJOR_VERSION: 3
+          CMAKE_MINOR_VERSION: 15
+          CMAKE_PATCH_VERSION: 0
+          INSTALL_C_DRIVER: 0
+          cxx_standard: 11
+          find_c_driver: 1
+  - name: cmake-compat-min-cxx11-find-c-add-cxx
+    run_on: rhel80-small
+    tags: [cmake-compat, cmake-min, cmake-find-c, cxx11, cmake-add-cxx]
+    commands:
+      - func: setup
+      - func: install-uv
+      - func: install_c_driver
+      - func: cmake-compat
+        vars:
+          CMAKE_MAJOR_VERSION: 3
+          CMAKE_MINOR_VERSION: 15
+          CMAKE_PATCH_VERSION: 0
+          INSTALL_C_DRIVER: 1
+          cxx_standard: 11
+          find_c_driver: 0
+  - name: cmake-compat-min-cxx11-find-c-find-cxx
+    run_on: rhel80-small
+    tags: [cmake-compat, cmake-min, cmake-find-c, cxx11, cmake-find-cxx]
+    commands:
+      - func: setup
+      - func: install-uv
+      - func: install_c_driver
+      - func: cmake-compat
+        vars:
+          CMAKE_MAJOR_VERSION: 3
+          CMAKE_MINOR_VERSION: 15
+          CMAKE_PATCH_VERSION: 0
+          INSTALL_C_DRIVER: 1
+          cxx_standard: 11
+          find_c_driver: 1
+  - name: cmake-compat-min-cxx17-add-c-add-cxx
+    run_on: rhel80-small
+    tags: [cmake-compat, cmake-min, cmake-add-c, cxx17, cmake-add-cxx]
+    commands:
+      - func: setup
+      - func: install-uv
+      - func: fetch_c_driver_source
+      - func: cmake-compat
+        vars:
+          CMAKE_MAJOR_VERSION: 3
+          CMAKE_MINOR_VERSION: 15
+          CMAKE_PATCH_VERSION: 0
+          INSTALL_C_DRIVER: 0
+          cxx_standard: 17
+          find_c_driver: 0
+  - name: cmake-compat-min-cxx17-add-c-find-cxx
+    run_on: rhel80-small
+    tags: [cmake-compat, cmake-min, cmake-add-c, cxx17, cmake-find-cxx]
+    commands:
+      - func: setup
+      - func: install-uv
+      - func: fetch_c_driver_source
+      - func: cmake-compat
+        vars:
+          CMAKE_MAJOR_VERSION: 3
+          CMAKE_MINOR_VERSION: 15
+          CMAKE_PATCH_VERSION: 0
+          INSTALL_C_DRIVER: 0
+          cxx_standard: 17
+          find_c_driver: 1
+  - name: cmake-compat-min-cxx17-find-c-add-cxx
+    run_on: rhel80-small
+    tags: [cmake-compat, cmake-min, cmake-find-c, cxx17, cmake-add-cxx]
+    commands:
+      - func: setup
+      - func: install-uv
+      - func: install_c_driver
+      - func: cmake-compat
+        vars:
+          CMAKE_MAJOR_VERSION: 3
+          CMAKE_MINOR_VERSION: 15
+          CMAKE_PATCH_VERSION: 0
+          INSTALL_C_DRIVER: 1
+          cxx_standard: 17
+          find_c_driver: 0
+  - name: cmake-compat-min-cxx17-find-c-find-cxx
+    run_on: rhel80-small
+    tags: [cmake-compat, cmake-min, cmake-find-c, cxx17, cmake-find-cxx]
+    commands:
+      - func: setup
+      - func: install-uv
+      - func: install_c_driver
+      - func: cmake-compat
+        vars:
+          CMAKE_MAJOR_VERSION: 3
+          CMAKE_MINOR_VERSION: 15
+          CMAKE_PATCH_VERSION: 0
+          INSTALL_C_DRIVER: 1
+          cxx_standard: 17
+          find_c_driver: 1
   - name: compile-only-macos-14-arm64-cxx11-debug-shared
     run_on: macos-14-arm64
     tags: [compile-only, macos-14-arm64, cxx11, debug, shared]

@@ -20,6 +20,10 @@ buildvariants:
     display_name: Clang Tidy
     tasks:
       - name: .clang-tidy
+  - name: cmake-compat-matrix
+    display_name: CMake Version Matrix
+    tasks:
+      - name: .cmake-compat
   - name: compile-only-matrix
     display_name: compile-only-matrix
     tasks:

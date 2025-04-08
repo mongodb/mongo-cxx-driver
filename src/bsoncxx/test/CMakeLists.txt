@@ -41,6 +41,7 @@ add_executable(test_bson
     json.cpp
     oid.cpp
     vector.cpp
+    version.cpp
     optional.test.cpp
     view_or_value.cpp
     make_unique.test.cpp
@@ -54,16 +55,11 @@ add_library(bsoncxx_test_properties INTERFACE)
 target_link_libraries(bsoncxx_test_properties INTERFACE Catch2::Catch2)
 target_compile_features(bsoncxx_test_properties INTERFACE cxx_std_14)
 
-target_link_libraries(bsoncxx_test_properties INTERFACE bsoncxx_testing ${libbson_target})
+target_link_libraries(bsoncxx_test_properties INTERFACE bsoncxx_testing ${bson_target})
 target_include_directories(bsoncxx_test_properties INTERFACE
-
-    # Allow `#include <bson/bson.h>`
-    ${libbson_include_directories}
-
     # Allow `#include <bsoncxx/test/...>`.
     ${CMAKE_CURRENT_SOURCE_DIR}/../..
 )
-target_compile_definitions(bsoncxx_test_properties INTERFACE ${libbson_definitions})
 # Use `__vectorcall` by default with MSVC to catch missing `__cdecl`.
 target_compile_options(bsoncxx_test_properties INTERFACE "$<$<CXX_COMPILER_ID:MSVC>:/Gv>")
 add_library(bsoncxx::test_properties ALIAS bsoncxx_test_properties)
@@ -164,6 +160,8 @@ set_dist_list(src_bsoncxx_test_DIST
     test_macro_guards.cpp.in
     to_string.hh
     view_or_value.cpp
+    version.cpp
+    version.hh
     make_unique.test.cpp
     string_view.test.cpp
     type_traits.test.cpp

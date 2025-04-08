@@ -16,9 +16,9 @@ project(MONGOCXX)
 
 ParseVersion(${BUILD_VERSION} MONGOCXX)
 
-set(MONGOCXX_VERSION_NO_EXTRA ${MONGOCXX_VERSION_MAJOR}.${MONGOCXX_VERSION_MINOR}.${MONGOCXX_VERSION_PATCH})
-set(MONGOCXX_VERSION ${MONGOCXX_VERSION_NO_EXTRA}${MONGOCXX_VERSION_EXTRA})
-message(STATUS "mongocxx version: ${MONGOCXX_VERSION}")
+set(MONGOCXX_VERSION_NO_EXTRA ${MONGOCXX_VERSION_MAJOR}.${MONGOCXX_VERSION_MINOR}.${MONGOCXX_VERSION_PATCH} CACHE INTERNAL "")
+set(MONGOCXX_VERSION ${MONGOCXX_VERSION_NO_EXTRA}${MONGOCXX_VERSION_EXTRA} CACHE INTERNAL "")
+message(STATUS "mongocxx version: $CACHE{MONGOCXX_VERSION}")
 
 option(MONGOCXX_ENABLE_SSL "Enable SSL - if the underlying C driver offers it" ON)
 option(MONGOCXX_ENABLE_SLOW_TESTS "Run slow tests when invoking the the test target" OFF)
@@ -31,49 +31,23 @@ endif ()
 
 set(MONGOCXX_OUTPUT_BASENAME "mongocxx" CACHE STRING "Output mongocxx library base name")
 
-set(MONGOCXX_PKG_DEP "") # Required by mongocxx-config.cmake.in.
-
 if(TARGET mongoc_shared OR TARGET mongoc_static)
-    # If these targets exist, then libmongoc has already been included as a project
-    # sub-directory
-    message(STATUS "found libmongoc targets declared in current build scope; version not checked")
+    message(STATUS "Using mongoc targets imported via add_subdirectory() without version checks")
 
-    if(NOT MONGOCXX_LINK_WITH_STATIC_MONGOC)
-        set(libmongoc_target mongoc_shared)
+    if(MONGOCXX_LINK_WITH_STATIC_MONGOC)
+        set(mongoc_target mongoc_static)
     else()
-        set(libmongoc_target mongoc_static)
+        set(mongoc_target mongoc_shared)
     endif()
-
-    set(MONGOCXX_PKG_DEP "find_dependency(mongoc-${LIBMONGOC_REQUIRED_ABI_VERSION} REQUIRED)")
 else()
-    # Attempt to find libmongoc by new package name (without lib).
-    find_package(mongoc-${LIBMONGOC_REQUIRED_ABI_VERSION} ${LIBMONGOC_REQUIRED_VERSION} QUIET)
+    find_package(mongoc ${MONGOC_REQUIRED_VERSION} REQUIRED)
 
-    if(mongoc-${LIBMONGOC_REQUIRED_ABI_VERSION}_FOUND)
-        message(STATUS "found libmongoc version ${mongoc-${LIBMONGOC_REQUIRED_ABI_VERSION}_VERSION}")
+    message(STATUS "Found mongoc: ${mongoc_DIR} (found version \"${mongoc_VERSION}\")")
 
-        if(NOT MONGOCXX_LINK_WITH_STATIC_MONGOC)
-            set(libmongoc_target mongo::mongoc_shared)
-        else()
-            set(libmongoc_target mongo::mongoc_static)
-        endif()
-
-        set(MONGOCXX_PKG_DEP "find_dependency(mongoc-${LIBMONGOC_REQUIRED_ABI_VERSION} REQUIRED)")
+    if(MONGOCXX_LINK_WITH_STATIC_MONGOC)
+        set(mongoc_target mongoc::static)
     else()
-        # Require package of old libmongoc name (with lib).
-        if(NOT MONGOCXX_LINK_WITH_STATIC_MONGOC)
-            find_package(libmongoc-${LIBMONGOC_REQUIRED_ABI_VERSION} ${LIBMONGOC_REQUIRED_VERSION} REQUIRED)
-            message(STATUS "found libmongoc version ${MONGOC_VERSION}")
-            set(libmongoc_target ${MONGOC_LIBRARIES})
-            set(libmongoc_definitions ${MONGOC_DEFINITIONS})
-            set(MONGOCXX_PKG_DEP "find_dependency(libmongoc-${LIBMONGOC_REQUIRED_ABI_VERSION} REQUIRED)")
-        else()
-            find_package(libmongoc-static-${LIBMONGOC_REQUIRED_ABI_VERSION} ${LIBMONGOC_REQUIRED_VERSION} REQUIRED)
-            message(STATUS "found libmongoc version ${MONGOC_STATIC_VERSION}")
-            set(libmongoc_target ${MONGOC_STATIC_LIBRARIES})
-            set(libmongoc_definitions ${MONGOC_STATIC_DEFINITIONS})
-            set(MONGOCXX_PKG_DEP "find_dependency(libmongoc-static-${LIBMONGOC_REQUIRED_ABI_VERSION} REQUIRED)")
-        endif()
+        set(mongoc_target mongoc::shared)
     endif()
 endif()
 

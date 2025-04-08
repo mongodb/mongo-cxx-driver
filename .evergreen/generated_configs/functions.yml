@@ -253,6 +253,35 @@ functions:
       args:
         - -c
         - etc/run-clang-tidy.sh
+  cmake-compat:
+    - command: subprocess.exec
+      type: test
+      params:
+        binary: bash
+        working_dir: mongo-cxx-driver
+        include_expansions_in_env:
+          - CMAKE_MAJOR_VERSION
+          - CMAKE_MINOR_VERSION
+          - CMAKE_PATCH_VERSION
+          - INSTALL_C_DRIVER
+          - cxx_standard
+        args:
+          - -c
+          - .evergreen/scripts/cmake-compat.sh
+    - command: subprocess.exec
+      type: test
+      params:
+        binary: bash
+        include_expansions_in_env:
+          - CMAKE_MAJOR_VERSION
+          - CMAKE_MINOR_VERSION
+          - CMAKE_PATCH_VERSION
+          - INSTALL_C_DRIVER
+          - cxx_standard
+          - find_c_driver
+        args:
+          - -c
+          - mongo-cxx-driver/.evergreen/scripts/cmake-compat-check.sh
   compile:
     command: subprocess.exec
     type: test
@@ -397,7 +426,7 @@ functions:
       type: setup
       params:
         updates:
-          - { key: mongoc_version_minimum, value: f1e2b54090ea28b169b7d9949bd318615188d81d }
+          - { key: mongoc_version_minimum, value: 2.0.0 }
     - command: subprocess.exec
       type: setup
       params:
