@@ -420,7 +420,7 @@ functions:
           script: |-
             set -o errexit
             echo "Preparing CSFLE venv environment..."
-            if [[ "${distro_id}" =~ windows-64-vs2015-* ]]; then
+            if [[ "${distro_id}" =~ windows64-vsMulti-* ]]; then
               # Python: ImportError: DLL load failed while importing _rust: The specified procedure could not be found.
               echo "Preparing CSFLE venv environment... skipped."
               exit 0
@@ -439,7 +439,7 @@ functions:
           script: |-
             set -o errexit
             echo "Starting mock KMS servers..."
-            if [[ "${distro_id}" =~ windows-64-vs2015-* ]]; then
+            if [[ "${distro_id}" =~ windows64-vsMulti-* ]]; then
               # Python: ImportError: DLL load failed while importing _rust: The specified procedure could not be found.
               echo "Starting mock KMS servers... skipped."
               exit 0
@@ -2184,6 +2184,7 @@ buildvariants:
           - name: test_versioned_api_accept_version_two
 
     - name: windows-2k8-release
+      disable: true # DEVPROD-16074
       display_name: "Windows (VS 2015) Release (MongoDB 4.2)"
       expansions:
           build_type: "Release"
@@ -2191,12 +2192,13 @@ buildvariants:
           generator: Visual Studio 14 2015
           platform: x64
       run_on:
-          - windows-64-vs2015-compile
+          - windows64-vsMulti-small
       tasks:
           - name: compile_without_tests
           - name: uninstall_check_windows
 
     - name: windows-2k8-debug
+      disable: true # DEVPROD-16074
       display_name: "Windows (VS 2015) Debug Static (MongoDB 4.2)"
       expansions:
           build_type: "Debug"
@@ -2204,12 +2206,13 @@ buildvariants:
           generator: Visual Studio 14 2015
           platform: x64
       run_on:
-          - windows-64-vs2015-compile
+          - windows64-vsMulti-small
       tasks:
           - name: compile_without_tests
           - name: uninstall_check_windows
 
     - name: windows-msvc2015-debug
+      disable: true # DEVPROD-16074
       display_name: "Windows (VS 2015) Debug (MongoDB 4.2)"
       expansions:
           build_type: "Debug"
@@ -2217,7 +2220,7 @@ buildvariants:
           platform: x64
           mongodb_version: "4.2"
       run_on:
-         - windows-64-vs2015-compile
+         - windows64-vsMulti-small
       tasks:
          - name: compile_without_tests
          - name: uninstall_check_windows
