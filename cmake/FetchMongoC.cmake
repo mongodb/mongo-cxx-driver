@@ -2,43 +2,49 @@
 
 include(FetchContent)
 
-message(STATUS "Download and configure C driver version ${LIBMONGOC_DOWNLOAD_VERSION} ... begin")
+function(fetch_mongoc)
+    message(STATUS "Download and configure C driver version ${LIBMONGOC_DOWNLOAD_VERSION} ... begin")
 
-set(fetch_args "")
-if (CMAKE_VERSION VERSION_GREATER_EQUAL "3.25.0")
-    set(fetch_args "SYSTEM")
-endif()
+    set(fetch_args "")
+    if (CMAKE_VERSION VERSION_GREATER_EQUAL "3.25.0")
+        list(APPEND fetch_args "SYSTEM")
+    endif()
 
-# Declare mongo-c-driver as a dependency
-FetchContent_Declare(
-    mongo-c-driver
-    GIT_REPOSITORY https://github.com/mongodb/mongo-c-driver.git
-    GIT_TAG ${LIBMONGOC_DOWNLOAD_VERSION}
+    # Declare mongo-c-driver as a dependency
+    FetchContent_Declare(
+        mongo-c-driver
+        GIT_REPOSITORY https://github.com/mongodb/mongo-c-driver.git
+        GIT_TAG ${LIBMONGOC_DOWNLOAD_VERSION}
 
-    ${fetch_args}
-)
+        ${fetch_args}
+    )
 
-FetchContent_GetProperties(mongo-c-driver)
+    FetchContent_GetProperties(mongo-c-driver)
 
-if(NOT mongo-c-driver_POPULATED)
-    set(OLD_ENABLE_TESTS ${ENABLE_TESTS})
-    set(OLD_BUILD_TESTING ${BUILD_TESTING})
-    set(OLD_CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS})
-    set(OLD_CMAKE_C_FLAGS ${CMAKE_C_FLAGS})
+    if(NOT mongo-c-driver_POPULATED)
+        # Must ensure BUILD_VERSION is not inherited either as a normal variable or as a cache variable.
+        unset(BUILD_VERSION)
+        unset(OLD_CACHE_BUILD_VERSION)
+        if(DEFINED CACHE{BUILD_VERSION})
+            set(OLD_CACHE_BUILD_VERSION $CACHE{BUILD_VERSION})
+            unset(BUILD_VERSION CACHE)
+        endif()
 
-    # Set ENABLE_TESTS to OFF to disable the test-libmongoc target in the C driver.
-    # This prevents the LoadTests.cmake script from attempting to execute test-libmongoc.
-    # test-libmongoc is not built with the "all" target.
-    # Attempting to execute test-libmongoc results in an error: "Unable to find executable: NOT_FOUND"
-    set(ENABLE_TESTS OFF)
-    set(BUILD_TESTING OFF)
-    string(REPLACE " -Werror" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
-    string(REPLACE " -Werror" "" CMAKE_C_FLAGS "${CMAKE_C_FLAGS}")
-    FetchContent_MakeAvailable(mongo-c-driver)
-    set(CMAKE_CXX_FLAGS ${OLD_CMAKE_CXX_FLAGS})
-    set(CMAKE_C_FLAGS ${OLD_CMAKE_C_FLAGS})
-    set(ENABLE_TESTS ${OLD_ENABLE_TESTS})
-    set(BUILD_TESTING ${OLD_BUILD_TESTING})
-endif()
+        # Disable unnecessary targets and potential conflicts with C++ Driver options.
+        set(ENABLE_TESTS OFF)
+        set(BUILD_TESTING OFF)
+        string(REPLACE " -Werror" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
+        string(REPLACE " -Werror" "" CMAKE_C_FLAGS "${CMAKE_C_FLAGS}")
 
-message(STATUS "Download and configure C driver version ${LIBMONGOC_DOWNLOAD_VERSION} ... end")
+        FetchContent_MakeAvailable(mongo-c-driver)
+
+        # Restore prior value of BUILD_VERSION cache variable only if was previously set.
+        if(DEFINED OLD_CACHE_BUILD_VERSION)
+            set(BUILD_VERSION ${OLD_CACHE_BUILD_VERSION} CACHE STRING "Library version (for both bsoncxx and mongocxx)")
+        endif()
+    endif()
+
+    message(STATUS "Download and configure C driver version ${LIBMONGOC_DOWNLOAD_VERSION} ... end")
+endfunction()
+
+fetch_mongoc()
