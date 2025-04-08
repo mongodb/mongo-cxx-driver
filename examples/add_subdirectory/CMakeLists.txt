@@ -19,6 +19,11 @@ cmake_minimum_required(VERSION 3.15.0...4.0.0)
 
 project(HELLO_WORLD LANGUAGES C CXX)
 
+# Enforce the C++ standard, and disable extensions.
+if(NOT DEFINED CMAKE_CXX_STANDARD)
+    set(CMAKE_CXX_STANDARD 11)
+endif()
+
 set(CMAKE_CXX_EXTENSIONS OFF)
 
 set(BUILD_SHARED_AND_STATIC_LIBS ON CACHE BOOL "" FORCE)
