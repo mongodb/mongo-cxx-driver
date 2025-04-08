@@ -161,7 +161,6 @@ set_dist_list(src_bsoncxx_test_DIST
     to_string.hh
     view_or_value.cpp
     version.cpp
-    version.hh
     make_unique.test.cpp
     string_view.test.cpp
     type_traits.test.cpp
