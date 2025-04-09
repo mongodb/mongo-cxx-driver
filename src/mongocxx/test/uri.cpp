@@ -331,4 +331,46 @@ TEST_CASE("uri::zlib_compression_level()", "[uri]") {
 
 // End special cases.
 
+TEST_CASE("can set server_selection_try_once", "[uri]") {
+    SECTION("URI with no option") {
+        auto uri = mongocxx::uri{"mongodb://host"};
+
+        SECTION("can set to true") {
+            CHECK(!uri.server_selection_try_once());
+            uri.server_selection_try_once(true);
+            CHECK(uri.server_selection_try_once());
+            CHECK(*uri.server_selection_try_once());
+        }
+
+        SECTION("can set to false") {
+            CHECK(!uri.server_selection_try_once());
+            uri.server_selection_try_once(false);
+            CHECK(uri.server_selection_try_once());
+            CHECK(!*uri.server_selection_try_once());
+        }
+    }
+
+    SECTION("URI with serverSelectionTryOnce=true") {
+        auto uri = mongocxx::uri{"mongodb://host/?serverSelectionTryOnce=true"};
+        SECTION("can overwrite to false") {
+            CHECK(uri.server_selection_try_once());
+            CHECK(*uri.server_selection_try_once());
+            uri.server_selection_try_once(false);
+            CHECK(uri.server_selection_try_once());
+            CHECK(!*uri.server_selection_try_once());
+        }
+    }
+
+    SECTION("Test URI with serverSelectionTryOnce=false") {
+        auto uri = mongocxx::uri{"mongodb://host/?serverSelectionTryOnce=false"};
+        SECTION("can overwrite to true") {
+            CHECK(uri.server_selection_try_once());
+            CHECK(!*uri.server_selection_try_once());
+            uri.server_selection_try_once(true);
+            CHECK(uri.server_selection_try_once());
+            CHECK(*uri.server_selection_try_once());
+        }
+    }
+}
+
 } // namespace
