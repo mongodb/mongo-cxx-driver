@@ -2340,12 +2340,26 @@ TEST_CASE("Cursor iteration", "[collection][cursor]") {
     client mongodb_client{uri{}, test_util::add_test_server_api()};
     database db = mongodb_client["collection_cursor_iteration"];
 
-    auto capped_name = std::string("mongo_cxx_driver_capped");
-    collection coll = db[capped_name];
+    // Drop and (re)create the capped collection with majority concern.
+    collection coll = [&db] {
+        write_concern wc_majority;
+        wc_majority.acknowledge_level(write_concern::level::k_majority);
 
-    // Drop and (re)create the capped collection.
-    coll.drop();
-    db.create_collection(capped_name, make_document(kvp("capped", true), kvp("size", 1024 * 1024)));
+        read_concern rc_majority;
+        rc_majority.acknowledge_level(read_concern::level::k_majority);
+
+        auto const capped_name = bsoncxx::stdx::string_view{"mongo_cxx_driver_capped"};
+
+        auto ret = db[capped_name];
+
+        ret.drop();
+        ret = db.create_collection(capped_name, make_document(kvp("capped", true), kvp("size", 1024 * 1024)));
+
+        ret.write_concern(wc_majority);
+        ret.read_concern(rc_majority);
+
+        return ret;
+    }(); // IILE
 
     // Tests will use all three cursor types.
     options::find opts;
