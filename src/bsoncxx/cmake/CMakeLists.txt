@@ -18,7 +18,7 @@ include(CMakePackageConfigHelpers)
 if(1)
     write_basic_package_version_file(
         bsoncxx-config-version.cmake
-        VERSION ${BSONCXX_VERSION}
+        VERSION $CACHE{BSONCXX_VERSION}
         COMPATIBILITY SameMajorVersion
     )
 
@@ -42,14 +42,14 @@ if(1)
     install(EXPORT bsoncxx_targets
         NAMESPACE mongo::
         FILE bsoncxx_targets.cmake
-        DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/bsoncxx-${BSONCXX_VERSION}
+        DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/bsoncxx-$CACHE{BSONCXX_VERSION}
     )
 
     install(
         FILES
         ${CMAKE_CURRENT_BINARY_DIR}/bsoncxx-config-version.cmake
         ${CMAKE_CURRENT_BINARY_DIR}/bsoncxx-config.cmake
-        DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/bsoncxx-${BSONCXX_VERSION}
+        DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/bsoncxx-$CACHE{BSONCXX_VERSION}
         COMPONENT Devel
     )
 endif()
@@ -76,10 +76,9 @@ if(1)
                 -D "includedir=${CMAKE_INSTALL_INCLUDEDIR}"
                 -D "libdir=${CMAKE_INSTALL_LIBDIR}"
                 -D "output_name=${output_name}"
-                -D "version=${BSONCXX_VERSION_NO_EXTRA}"
+                -D "version=$CACHE{BSONCXX_VERSION_NO_EXTRA}"
                 -D "is_static=${is_static}"
-                -D "libbson_req_abi_ver=${LIBBSON_REQUIRED_ABI_VERSION}"
-                -D "libbson_req_ver=${LIBBSON_REQUIRED_VERSION}"
+                -D "bson_req_ver=${BSON_REQUIRED_VERSION}"
                 -P ${CMAKE_CURRENT_SOURCE_DIR}/generate-pc.cmake
             MAIN_DEPENDENCY
                 ${CMAKE_CURRENT_SOURCE_DIR}/libbsoncxx.pc.in

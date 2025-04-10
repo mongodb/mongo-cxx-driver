@@ -1,6 +1,6 @@
 # As a Regular Exception
 
-@warning The @ref mongocxx::server_error_category error category is overloaded ([CXX-834](https://jira.mongodb.org/browse/CXX-834)). The error code value may belong to the server, libmongoc, or libmongocrypt depending on the context. Use error code values with caution.
+@warning The @ref mongocxx::server_error_category error category is overloaded ([CXX-834](https://jira.mongodb.org/browse/CXX-834)). The error code value may belong to the server, mongoc, or libmongocrypt depending on the context. Use error code values with caution.
 
 @snippet examples/api/mongocxx/examples/operation_exceptions/regular.cpp Example
 

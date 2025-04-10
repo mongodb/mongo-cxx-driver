@@ -103,6 +103,7 @@ add_executable(test_driver
     transactions.cpp
     uri.cpp
     validation_criteria.cpp
+    version.cpp
     write_concern.cpp
 )
 target_link_libraries(test_driver PRIVATE client_helpers)
@@ -147,12 +148,8 @@ add_library(mongocxx_test_properties INTERFACE)
 target_link_libraries(mongocxx_test_properties INTERFACE Catch2::Catch2)
 target_compile_features(mongocxx_test_properties INTERFACE cxx_std_14)
 
-target_link_libraries(mongocxx_test_properties INTERFACE mongocxx_mocked ${libmongoc_target})
+target_link_libraries(mongocxx_test_properties INTERFACE mongocxx_mocked ${mongoc_target})
 target_include_directories(mongocxx_test_properties INTERFACE
-
-    # Allow `#include <mongoc/mongoc.h>`
-    ${libmongoc_include_directories}
-
     # Allow `#include <mongocxx/test/...>`.
     ${CMAKE_CURRENT_SOURCE_DIR}/../..
 )
@@ -191,10 +188,6 @@ set_property(
     APPEND PROPERTY LINK_LIBRARIES
         mongocxx::test_properties_with_main
 )
-
-target_compile_definitions(test_driver PRIVATE ${libmongoc_definitions})
-target_compile_definitions(test_logging PRIVATE ${libmongoc_definitions})
-target_compile_definitions(test_instance PRIVATE ${libmongoc_definitions})
 
 if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
     target_compile_options(test_driver PRIVATE /bigobj)
@@ -413,6 +406,7 @@ set_dist_list(src_mongocxx_test_DIST
     transactions.cpp
     uri.cpp
     validation_criteria.cpp
+    version.cpp
     versioned_api.cpp
     write_concern.cpp
 )

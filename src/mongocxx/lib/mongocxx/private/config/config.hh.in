@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#define MONGOC_REQUIRED_VERSION() "@MONGOC_REQUIRED_VERSION@"
+
 #cmakedefine MONGOCXX_ENABLE_SSL
 #cmakedefine MONGOCXX_COMPILER_ID "${MONGOCXX_COMPILER_ID}"
 #cmakedefine MONGOCXX_COMPILER_VERSION "${MONGOCXX_COMPILER_VERSION}"

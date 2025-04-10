@@ -5,7 +5,7 @@ include(FetchContent)
 function(fetch_catch2)
     set(fetch_args "")
     if (CMAKE_VERSION VERSION_GREATER_EQUAL "3.25.0")
-        set(fetch_args "SYSTEM")
+        list(APPEND fetch_args "SYSTEM")
     endif()
 
     FetchContent_Declare(
@@ -17,8 +17,6 @@ function(fetch_catch2)
         LOG_DOWNLOAD ON
 
         ${fetch_args}
-
-        FETCHCONTENT_UPDATES_DISCONNECTED ON
     )
 
     FetchContent_GetProperties(EP_Catch2)

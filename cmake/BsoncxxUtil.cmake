@@ -2,10 +2,15 @@
 #
 # This function requires the following variables to be defined in its parent scope:
 # - bsoncxx_sources
-# - libbson_target
-# - libbson_definitions
-# - libbson_include_directories
+# - bson_target
 function(bsoncxx_add_library TARGET OUTPUT_NAME LINK_TYPE)
+    if(NOT DEFINED bsoncxx_sources)
+        message(FATAL_ERROR "expected bsoncxx_sources to be defined")
+    endif()
+    if(NOT DEFINED bson_target)
+        message(FATAL_ERROR "expected bson_target to be defined")
+    endif()
+
     add_library(${TARGET} ${LINK_TYPE}
         ${bsoncxx_sources}
     )
@@ -37,7 +42,7 @@ function(bsoncxx_add_library TARGET OUTPUT_NAME LINK_TYPE)
         # Compatibility is handled via CMake's IMPORTED_CONFIGURATIONS rather than interface properties.
         string(APPEND abi_tag "-$<IF:$<CONFIG:Debug>,d,$<IF:$<OR:$<CONFIG:Release>,$<CONFIG:RelWithDebInfo>,$<CONFIG:MinSizeRel>>,r,u>>")
 
-        # Link type with libmongoc.
+        # Link type with bson and mongoc libraries.
         # - 'h' for shared.
         # - 't' for static.
         if(1)
@@ -113,7 +118,7 @@ function(bsoncxx_add_library TARGET OUTPUT_NAME LINK_TYPE)
     endif()
 
     set_target_properties(${TARGET} PROPERTIES
-        VERSION ${BSONCXX_VERSION}
+        VERSION $CACHE{BSONCXX_VERSION}
         DEFINE_SYMBOL BSONCXX_EXPORT
     )
 
@@ -138,8 +143,7 @@ function(bsoncxx_add_library TARGET OUTPUT_NAME LINK_TYPE)
         target_compile_definitions(${TARGET} PUBLIC BSONCXX_STATIC)
     endif()
 
-    target_link_libraries(${TARGET} PRIVATE ${libbson_target})
-    target_include_directories(${TARGET} PRIVATE ${libbson_include_directories})
+    target_link_libraries(${TARGET} PRIVATE ${bson_target})
     target_include_directories(
         ${TARGET}
         PUBLIC
@@ -149,5 +153,4 @@ function(bsoncxx_add_library TARGET OUTPUT_NAME LINK_TYPE)
         $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/lib>
         $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/lib>
     )
-    target_compile_definitions(${TARGET} PRIVATE ${libbson_definitions})
 endfunction(bsoncxx_add_library)

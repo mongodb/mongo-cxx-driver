@@ -18,15 +18,19 @@ include(CMakePackageConfigHelpers)
 if(1)
     write_basic_package_version_file(
         mongocxx-config-version.cmake
-        VERSION ${MONGOCXX_VERSION}
+        VERSION $CACHE{MONGOCXX_VERSION}
         COMPATIBILITY SameMajorVersion
     )
 
-    configure_file(
-        mongocxx-config.cmake.in
-        mongocxx-config.cmake
-        @ONLY
-    )
+    function(configure_mongocxx_config_cmake)
+        set(BSONCXX_VERSION_NO_EXTRA $CACHE{BSONCXX_VERSION_NO_EXTRA})
+        configure_file(
+            mongocxx-config.cmake.in
+            mongocxx-config.cmake
+            @ONLY
+        )
+    endfunction()
+    configure_mongocxx_config_cmake()
 
     install(TARGETS
         ${mongocxx_target_list}
@@ -42,14 +46,14 @@ if(1)
     install(EXPORT mongocxx_targets
         NAMESPACE mongo::
         FILE mongocxx_targets.cmake
-        DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/mongocxx-${MONGOCXX_VERSION}
+        DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/mongocxx-$CACHE{MONGOCXX_VERSION}
     )
 
     install(
         FILES
         ${CMAKE_CURRENT_BINARY_DIR}/mongocxx-config-version.cmake
         ${CMAKE_CURRENT_BINARY_DIR}/mongocxx-config.cmake
-        DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/mongocxx-${MONGOCXX_VERSION}
+        DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/mongocxx-$CACHE{MONGOCXX_VERSION}
         COMPONENT Devel
     )
 endif()
@@ -88,11 +92,10 @@ if(1)
                 -D "includedir=${CMAKE_INSTALL_INCLUDEDIR}"
                 -D "libdir=${CMAKE_INSTALL_LIBDIR}"
                 -D "output_name=${output_name}"
-                -D "version=${MONGOCXX_VERSION_NO_EXTRA}"
+                -D "version=$CACHE{MONGOCXX_VERSION_NO_EXTRA}"
                 -D "is_static=${is_static}"
                 -D "bsoncxx_name=${bsoncxx_name}"
-                -D "libmongoc_req_abi_ver=${LIBMONGOC_REQUIRED_ABI_VERSION}"
-                -D "libmongoc_req_ver=${LIBMONGOC_REQUIRED_VERSION}"
+                -D "mongoc_req_ver=${MONGOC_REQUIRED_VERSION}"
                 -P ${CMAKE_CURRENT_SOURCE_DIR}/generate-pc.cmake
             MAIN_DEPENDENCY
                 ${CMAKE_CURRENT_SOURCE_DIR}/libmongocxx.pc.in

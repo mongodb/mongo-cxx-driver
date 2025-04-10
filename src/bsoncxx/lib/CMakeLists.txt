@@ -14,6 +14,7 @@
 
 set(bsoncxx_sources_private
     bsoncxx/private/itoa.cpp
+    bsoncxx/private/version.cpp
 )
 
 set(bsoncxx_sources_v_noabi
@@ -97,6 +98,7 @@ set_dist_list(src_bsoncxx_lib_DIST
     bsoncxx/private/make_unique.hh
     bsoncxx/private/stack.hh
     bsoncxx/private/suppress_deprecation_warnings.hh
+    bsoncxx/private/version.hh
     bsoncxx/v_noabi/bsoncxx/types/bson_value/value.hh
     bsoncxx/v1/config/config.hpp.in
     bsoncxx/v1/config/version.hpp.in

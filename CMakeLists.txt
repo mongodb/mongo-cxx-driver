@@ -12,11 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-cmake_minimum_required(VERSION 3.15)
-
-if(POLICY CMP0025)
-    cmake_policy(SET CMP0025 NEW)
-endif()
+cmake_minimum_required(VERSION 3.15.0...4.0.0)
 
 project(MONGO_CXX_DRIVER LANGUAGES CXX)
 
@@ -49,34 +45,11 @@ else()
 endif()
 
 # Also update etc/purls.txt.
-set(LIBBSON_REQUIRED_VERSION 1.30.0)
-set(LIBBSON_REQUIRED_ABI_VERSION 1.0)
+set(BSON_REQUIRED_VERSION 2.0.0)
+set(MONGOC_REQUIRED_VERSION 2.0.0)
+set(MONGOC_DOWNLOAD_VERSION 2.0.0)
 
-# Also update etc/purls.txt.
-set(LIBMONGOC_REQUIRED_VERSION 1.30.0)
-set(LIBMONGOC_DOWNLOAD_VERSION f1e2b54090ea28b169b7d9949bd318615188d81d) # CXX-3103: bump to 2.0.0 once released.
-set(LIBMONGOC_REQUIRED_ABI_VERSION 1.0)
-
-set(NEED_DOWNLOAD_C_DRIVER false)
-
-if(TARGET mongoc_shared OR TARGET mongoc_static)
-    # If these targets exist, then libmongoc has already been included as a project
-    # sub-directory
-    message(STATUS "Found libmongoc targets declared in current build scope; version not checked")
-else()
-    find_package(mongoc-${LIBMONGOC_REQUIRED_ABI_VERSION} ${LIBMONGOC_REQUIRED_VERSION} QUIET)
-
-    if(mongoc-${LIBMONGOC_REQUIRED_ABI_VERSION}_FOUND)
-        message(STATUS "Found libmongoc ${mongoc-${LIBMONGOC_REQUIRED_ABI_VERSION}_VERSION}, don't need to download it.")
-    else()
-        set(NEED_DOWNLOAD_C_DRIVER true CACHE INTERNAL "")
-    endif()
-endif()
-
-if(NEED_DOWNLOAD_C_DRIVER)
-    message(STATUS "No MongoDB C Driver path provided via CMAKE_PREFIX_PATH, will download C driver version ${LIBMONGOC_DOWNLOAD_VERSION} from the internet.")
-    include(FetchMongoC)
-endif()
+include(FetchMongoC)
 
 # All of our target compilers support the deprecated
 # attribute. Normally, we would just let the GenerateExportHeader
@@ -113,7 +86,7 @@ include(InstallRequiredSystemLibraries)
 
 # Allow the user to decide whether to build the shared libaries or the static libraries.
 option(BUILD_SHARED_LIBS "Build shared libraries" ON)
-set(BUILD_VERSION "0.0.0" CACHE STRING "Library version (for both libbsoncxx and libmongocxx)")
+set(BUILD_VERSION "0.0.0" CACHE STRING "Library version (for both bsoncxx and mongocxx)")
 
 # Allow the user to decide whether to also build static libraries
 option(BUILD_SHARED_AND_STATIC_LIBS "Build static libraries" OFF)
@@ -204,11 +177,11 @@ if(BUILD_VERSION STREQUAL "0.0.0")
         set(MONGOCXX_CURRENT_VERSION_FILE build/VERSION_CURRENT)
         file(STRINGS ${MONGOCXX_CURRENT_VERSION_FILE} BUILD_VERSION)
     else()
-        find_package(PythonInterp)
+        find_package(Python3 COMPONENTS Interpreter)
 
-        if(PYTHONINTERP_FOUND)
+        if(Python3_Interpreter_FOUND)
             execute_process(
-                COMMAND ${PYTHON_EXECUTABLE} etc/calc_release_version.py
+                COMMAND ${Python3_EXECUTABLE} etc/calc_release_version.py
                 WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
                 OUTPUT_VARIABLE CALC_RELEASE_VERSION
                 RESULT_VARIABLE CALC_RELEASE_VERSION_RESULT
