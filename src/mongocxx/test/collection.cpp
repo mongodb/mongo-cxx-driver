@@ -2359,7 +2359,7 @@ TEST_CASE("Cursor iteration", "[collection][cursor]") {
         ret.read_concern(rc_majority);
 
         return ret;
-    }(); // IILE
+    }();
 
     // Tests will use all three cursor types.
     options::find opts;
