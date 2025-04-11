@@ -30,6 +30,7 @@ MATRIX = [
     ('macos-14-arm64', None, ['Debug', 'Release'], ['shared', 'static'], [11, 17]),
     ('macos-14',       None, ['Debug', 'Release'], ['shared', 'static'], [11, 17]),
 
+    ('windows-vsCurrent', 'vs2015x64', ['Debug', 'Release'], ['shared', 'static'],  [11, 17,       ]),
     ('windows-vsCurrent', 'vs2017x64', ['Debug', 'Release'], ['shared', 'static'],  [11, 17,       ]),
     ('windows-vsCurrent', 'vs2019x64', ['Debug', 'Release'], ['shared', 'static'],  [11, 17, 20,   ]),
     ('windows-vsCurrent', 'vs2022x64', ['Debug', 'Release'], ['shared', 'static'],  [11, 17, 20, 23]),
