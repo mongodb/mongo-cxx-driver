@@ -79,7 +79,7 @@ if [[ "${find_c_driver:?}" == 1 ]]; then
   fi
 
   cat >CMakeLists.txt <<DOC
-cmake_minimum_required(VERSION ${CMAKE_MAJOR_VERSION:?}.${CMAKE_MINOR_VERSION:?}.${CMAKE_PATCH_VERSION:?})
+cmake_minimum_required(VERSION ${CMAKE_MAJOR_VERSION:?}.${CMAKE_MINOR_VERSION:?})
 project(cmake-compat)
 
 find_package(mongocxx REQUIRED)
@@ -90,7 +90,7 @@ DOC
 else
   # Test importing C++ Driver libraries using add_subdirectory().
   cat >CMakeLists.txt <<DOC
-cmake_minimum_required(VERSION ${CMAKE_MAJOR_VERSION:?}.${CMAKE_MINOR_VERSION:?}.${CMAKE_PATCH_VERSION:?})
+cmake_minimum_required(VERSION ${CMAKE_MAJOR_VERSION:?}.${CMAKE_MINOR_VERSION:?})
 project(cmake-compat)
 
 add_subdirectory(mongoc)
