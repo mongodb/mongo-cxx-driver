@@ -18,9 +18,9 @@ TAG = 'cmake-compat'
 # pylint: disable=line-too-long
 # fmt: off
 MATRIX = [
-    ("min",    [3, 15], [11, 17], [False, True], [False, True]),
-    ("max-v3", [3, 31], [11, 17], [False, True], [False, True]),
-    ("max",    [4,  0], [11, 17], [False, True], [False, True]),
+    ("min",    [3, 15, 4], [11, 17], [False, True], [False, True]),
+    ("max-v3", [3, 31, 7], [11, 17], [False, True], [False, True]),
+    ("max",    [4,  0, 1], [11, 17], [False, True], [False, True]),
 ]
 # fmt: on
 
@@ -72,6 +72,7 @@ def tasks():
                     vars={
                         'CMAKE_MAJOR_VERSION': version[0],
                         'CMAKE_MINOR_VERSION': version[1],
+                        'CMAKE_PATCH_VERSION': version[2],
                         'INSTALL_C_DRIVER': 1 if install_c_driver else 0,
                         'cxx_standard': cxx_standard,
                         'find_c_driver': 1 if find_c_driver else 0,

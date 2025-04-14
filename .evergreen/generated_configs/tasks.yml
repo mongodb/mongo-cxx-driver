@@ -177,6 +177,7 @@ tasks:
         vars:
           CMAKE_MAJOR_VERSION: 4
           CMAKE_MINOR_VERSION: 0
+          CMAKE_PATCH_VERSION: 1
           INSTALL_C_DRIVER: 0
           cxx_standard: 11
           find_c_driver: 0
@@ -191,6 +192,7 @@ tasks:
         vars:
           CMAKE_MAJOR_VERSION: 4
           CMAKE_MINOR_VERSION: 0
+          CMAKE_PATCH_VERSION: 1
           INSTALL_C_DRIVER: 0
           cxx_standard: 11
           find_c_driver: 1
@@ -205,6 +207,7 @@ tasks:
         vars:
           CMAKE_MAJOR_VERSION: 4
           CMAKE_MINOR_VERSION: 0
+          CMAKE_PATCH_VERSION: 1
           INSTALL_C_DRIVER: 1
           cxx_standard: 11
           find_c_driver: 0
@@ -219,6 +222,7 @@ tasks:
         vars:
           CMAKE_MAJOR_VERSION: 4
           CMAKE_MINOR_VERSION: 0
+          CMAKE_PATCH_VERSION: 1
           INSTALL_C_DRIVER: 1
           cxx_standard: 11
           find_c_driver: 1
@@ -233,6 +237,7 @@ tasks:
         vars:
           CMAKE_MAJOR_VERSION: 4
           CMAKE_MINOR_VERSION: 0
+          CMAKE_PATCH_VERSION: 1
           INSTALL_C_DRIVER: 0
           cxx_standard: 17
           find_c_driver: 0
@@ -247,6 +252,7 @@ tasks:
         vars:
           CMAKE_MAJOR_VERSION: 4
           CMAKE_MINOR_VERSION: 0
+          CMAKE_PATCH_VERSION: 1
           INSTALL_C_DRIVER: 0
           cxx_standard: 17
           find_c_driver: 1
@@ -261,6 +267,7 @@ tasks:
         vars:
           CMAKE_MAJOR_VERSION: 4
           CMAKE_MINOR_VERSION: 0
+          CMAKE_PATCH_VERSION: 1
           INSTALL_C_DRIVER: 1
           cxx_standard: 17
           find_c_driver: 0
@@ -275,6 +282,7 @@ tasks:
         vars:
           CMAKE_MAJOR_VERSION: 4
           CMAKE_MINOR_VERSION: 0
+          CMAKE_PATCH_VERSION: 1
           INSTALL_C_DRIVER: 1
           cxx_standard: 17
           find_c_driver: 1
@@ -289,6 +297,7 @@ tasks:
         vars:
           CMAKE_MAJOR_VERSION: 3
           CMAKE_MINOR_VERSION: 31
+          CMAKE_PATCH_VERSION: 7
           INSTALL_C_DRIVER: 0
           cxx_standard: 11
           find_c_driver: 0
@@ -303,6 +312,7 @@ tasks:
         vars:
           CMAKE_MAJOR_VERSION: 3
           CMAKE_MINOR_VERSION: 31
+          CMAKE_PATCH_VERSION: 7
           INSTALL_C_DRIVER: 0
           cxx_standard: 11
           find_c_driver: 1
@@ -317,6 +327,7 @@ tasks:
         vars:
           CMAKE_MAJOR_VERSION: 3
           CMAKE_MINOR_VERSION: 31
+          CMAKE_PATCH_VERSION: 7
           INSTALL_C_DRIVER: 1
           cxx_standard: 11
           find_c_driver: 0
@@ -331,6 +342,7 @@ tasks:
         vars:
           CMAKE_MAJOR_VERSION: 3
           CMAKE_MINOR_VERSION: 31
+          CMAKE_PATCH_VERSION: 7
           INSTALL_C_DRIVER: 1
           cxx_standard: 11
           find_c_driver: 1
@@ -345,6 +357,7 @@ tasks:
         vars:
           CMAKE_MAJOR_VERSION: 3
           CMAKE_MINOR_VERSION: 31
+          CMAKE_PATCH_VERSION: 7
           INSTALL_C_DRIVER: 0
           cxx_standard: 17
           find_c_driver: 0
@@ -359,6 +372,7 @@ tasks:
         vars:
           CMAKE_MAJOR_VERSION: 3
           CMAKE_MINOR_VERSION: 31
+          CMAKE_PATCH_VERSION: 7
           INSTALL_C_DRIVER: 0
           cxx_standard: 17
           find_c_driver: 1
@@ -373,6 +387,7 @@ tasks:
         vars:
           CMAKE_MAJOR_VERSION: 3
           CMAKE_MINOR_VERSION: 31
+          CMAKE_PATCH_VERSION: 7
           INSTALL_C_DRIVER: 1
           cxx_standard: 17
           find_c_driver: 0
@@ -387,6 +402,7 @@ tasks:
         vars:
           CMAKE_MAJOR_VERSION: 3
           CMAKE_MINOR_VERSION: 31
+          CMAKE_PATCH_VERSION: 7
           INSTALL_C_DRIVER: 1
           cxx_standard: 17
           find_c_driver: 1
@@ -401,6 +417,7 @@ tasks:
         vars:
           CMAKE_MAJOR_VERSION: 3
           CMAKE_MINOR_VERSION: 15
+          CMAKE_PATCH_VERSION: 4
           INSTALL_C_DRIVER: 0
           cxx_standard: 11
           find_c_driver: 0
@@ -415,6 +432,7 @@ tasks:
         vars:
           CMAKE_MAJOR_VERSION: 3
           CMAKE_MINOR_VERSION: 15
+          CMAKE_PATCH_VERSION: 4
           INSTALL_C_DRIVER: 0
           cxx_standard: 11
           find_c_driver: 1
@@ -429,6 +447,7 @@ tasks:
         vars:
           CMAKE_MAJOR_VERSION: 3
           CMAKE_MINOR_VERSION: 15
+          CMAKE_PATCH_VERSION: 4
           INSTALL_C_DRIVER: 1
           cxx_standard: 11
           find_c_driver: 0
@@ -443,6 +462,7 @@ tasks:
         vars:
           CMAKE_MAJOR_VERSION: 3
           CMAKE_MINOR_VERSION: 15
+          CMAKE_PATCH_VERSION: 4
           INSTALL_C_DRIVER: 1
           cxx_standard: 11
           find_c_driver: 1
@@ -457,6 +477,7 @@ tasks:
         vars:
           CMAKE_MAJOR_VERSION: 3
           CMAKE_MINOR_VERSION: 15
+          CMAKE_PATCH_VERSION: 4
           INSTALL_C_DRIVER: 0
           cxx_standard: 17
           find_c_driver: 0
@@ -471,6 +492,7 @@ tasks:
         vars:
           CMAKE_MAJOR_VERSION: 3
           CMAKE_MINOR_VERSION: 15
+          CMAKE_PATCH_VERSION: 4
           INSTALL_C_DRIVER: 0
           cxx_standard: 17
           find_c_driver: 1
@@ -485,6 +507,7 @@ tasks:
         vars:
           CMAKE_MAJOR_VERSION: 3
           CMAKE_MINOR_VERSION: 15
+          CMAKE_PATCH_VERSION: 4
           INSTALL_C_DRIVER: 1
           cxx_standard: 17
           find_c_driver: 0
@@ -499,6 +522,7 @@ tasks:
         vars:
           CMAKE_MAJOR_VERSION: 3
           CMAKE_MINOR_VERSION: 15
+          CMAKE_PATCH_VERSION: 4
           INSTALL_C_DRIVER: 1
           cxx_standard: 17
           find_c_driver: 1
