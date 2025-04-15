@@ -90,13 +90,14 @@ validate(std::uint8_t const* data, std::size_t length, validator const& validato
     ::bson_t bson;
     if (!::bson_init_static(&bson, data, length)) {
         // if we can't even initialize a bson_t we just say the error is at offset 0.
-        if (invalid_offset)
+        if (invalid_offset) {
             *invalid_offset = 0u;
-        return {};
+        }
+        return bsoncxx::v_noabi::stdx::nullopt;
     }
 
     if (!::bson_validate(&bson, flags, invalid_offset)) {
-        return {};
+        return bsoncxx::v_noabi::stdx::nullopt;
     }
 
     return document::view{data, length};
