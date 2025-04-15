@@ -11,16 +11,14 @@ from shrub.v3.evg_build_variant import BuildVariant
 from shrub.v3.evg_command import EvgCommandType
 from shrub.v3.evg_task import EvgTask, EvgTaskRef
 
-from itertools import product
-
 TAG = 'cmake-compat'
 
 # pylint: disable=line-too-long
 # fmt: off
 MATRIX = [
-    ("min",    [3, 15, 4], [11, 17]),
-    ("max-v3", [3, 31, 7], [11, 17]),
-    ("max",    [4,  0, 1], [11, 17]),
+    ("min",    [3, 15, 4]),
+    ("max-v3", [3, 31, 7]),
+    ("max",    [4,  0, 1]),
 ]
 # fmt: on
 
@@ -36,7 +34,6 @@ class CMakeCompat(Function):
                 'CMAKE_MINOR_VERSION',
                 'CMAKE_PATCH_VERSION',
                 'INSTALL_C_DRIVER',
-                'cxx_standard',
             ],
             script='.evergreen/scripts/cmake-compat.sh',
         ),
@@ -47,7 +44,6 @@ class CMakeCompat(Function):
                 'CMAKE_MINOR_VERSION',
                 'CMAKE_PATCH_VERSION',
                 'INSTALL_C_DRIVER',
-                'cxx_standard',
             ],
             script='mongo-cxx-driver/.evergreen/scripts/cmake-compat-check.sh',
         ),
@@ -65,8 +61,8 @@ def tasks():
     # Test importing C Driver libraries via both add_subdirectory() and find_package().
     install_c_driver_modes = [False, True]
 
-    for name, version, cxx_standards in MATRIX:
-        for cxx_standard, install_c_driver in product(cxx_standards, install_c_driver_modes):
+    for name, version in MATRIX:
+        for install_c_driver in install_c_driver_modes:
             commands = [
                 Setup.call(), InstallUV.call()
             ] + ([InstallCDriver.call() if install_c_driver else FetchCDriverSource.call()]) + [
@@ -76,7 +72,6 @@ def tasks():
                         'CMAKE_MINOR_VERSION': version[1],
                         'CMAKE_PATCH_VERSION': version[2],
                         'INSTALL_C_DRIVER': 1 if install_c_driver else 0,
-                        'cxx_standard': cxx_standard,
                     },
                 ),
             ]
@@ -87,8 +82,8 @@ def tasks():
                 c_mode = 'add-c'
 
             yield EvgTask(
-                name=f'{TAG}-{name}-cxx{cxx_standard}-{c_mode}',
-                tags=[TAG, f'cmake-{name}', f'cxx{cxx_standard}', f'cmake-{c_mode}'],
+                name=f'{TAG}-{name}-{c_mode}',
+                tags=[TAG, f'cmake-{name}', f'cmake-{c_mode}'],
                 run_on=distro.name,
                 commands=commands,
             )

@@ -264,7 +264,6 @@ functions:
           - CMAKE_MINOR_VERSION
           - CMAKE_PATCH_VERSION
           - INSTALL_C_DRIVER
-          - cxx_standard
         args:
           - -c
           - .evergreen/scripts/cmake-compat.sh
@@ -277,7 +276,6 @@ functions:
           - CMAKE_MINOR_VERSION
           - CMAKE_PATCH_VERSION
           - INSTALL_C_DRIVER
-          - cxx_standard
         args:
           - -c
           - mongo-cxx-driver/.evergreen/scripts/cmake-compat-check.sh

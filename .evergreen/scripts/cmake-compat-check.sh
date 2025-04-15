@@ -7,7 +7,6 @@ set -o pipefail
 : "${CMAKE_MINOR_VERSION:?}"
 : "${CMAKE_PATCH_VERSION:?}"
 : "${INSTALL_C_DRIVER:?}"
-: "${cxx_standard:?}"
 
 [[ -d mongoc ]] || {
   echo "missing mongoc directory"
@@ -47,7 +46,6 @@ cmake_flags=(
   "-Werror=deprecated"
   "-DCMAKE_BUILD_TYPE=Debug"
   "-DCMAKE_FIND_NO_INSTALL_PREFIX=ON"
-  "-DCMAKE_CXX_STANDARD=${cxx_standard:?}"
 )
 
 cat >main.cpp <<DOC
