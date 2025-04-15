@@ -216,7 +216,7 @@ if [[ "${ENABLE_CODE_COVERAGE:-}" == "ON" ]]; then
   cmake_flags+=("-DENABLE_CODE_COVERAGE=ON")
 fi
 
-if [ "${USE_STATIC_LIBS:-}" ]; then
+if [[ "${USE_STATIC_LIBS:-}" == 1 ]]; then
   cmake_flags+=("-DBUILD_SHARED_LIBS=OFF")
 fi
 
