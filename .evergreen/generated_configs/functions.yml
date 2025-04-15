@@ -278,7 +278,6 @@ functions:
           - CMAKE_PATCH_VERSION
           - INSTALL_C_DRIVER
           - cxx_standard
-          - find_c_driver
         args:
           - -c
           - mongo-cxx-driver/.evergreen/scripts/cmake-compat-check.sh

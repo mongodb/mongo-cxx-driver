@@ -18,9 +18,9 @@ TAG = 'cmake-compat'
 # pylint: disable=line-too-long
 # fmt: off
 MATRIX = [
-    ("min",    [3, 15, 4], [11, 17], [False, True], [False, True]),
-    ("max-v3", [3, 31, 7], [11, 17], [False, True], [False, True]),
-    ("max",    [4,  0, 1], [11, 17], [False, True], [False, True]),
+    ("min",    [3, 15, 4], [11, 17]),
+    ("max-v3", [3, 31, 7], [11, 17]),
+    ("max",    [4,  0, 1], [11, 17]),
 ]
 # fmt: on
 
@@ -48,7 +48,6 @@ class CMakeCompat(Function):
                 'CMAKE_PATCH_VERSION',
                 'INSTALL_C_DRIVER',
                 'cxx_standard',
-                'find_c_driver',
             ],
             script='mongo-cxx-driver/.evergreen/scripts/cmake-compat-check.sh',
         ),
@@ -63,8 +62,11 @@ def tasks():
     distro_name = 'rhel80'
     distro = find_small_distro(distro_name)
 
-    for name, version, cxx_standards, c_driver_mode, import_modes in MATRIX:
-        for cxx_standard, install_c_driver, find_c_driver in product(cxx_standards, c_driver_mode, import_modes):
+    # Test importing C Driver libraries via both add_subdirectory() and find_package().
+    install_c_driver_modes = [False, True]
+
+    for name, version, cxx_standards in MATRIX:
+        for cxx_standard, install_c_driver in product(cxx_standards, install_c_driver_modes):
             commands = [
                 Setup.call(), InstallUV.call()
             ] + ([InstallCDriver.call() if install_c_driver else FetchCDriverSource.call()]) + [
@@ -75,7 +77,6 @@ def tasks():
                         'CMAKE_PATCH_VERSION': version[2],
                         'INSTALL_C_DRIVER': 1 if install_c_driver else 0,
                         'cxx_standard': cxx_standard,
-                        'find_c_driver': 1 if find_c_driver else 0,
                     },
                 ),
             ]
@@ -85,14 +86,9 @@ def tasks():
             else:
                 c_mode = 'add-c'
 
-            if find_c_driver:
-                cxx_mode = 'find-cxx'
-            else:
-                cxx_mode = 'add-cxx'
-
             yield EvgTask(
-                name=f'{TAG}-{name}-cxx{cxx_standard}-{c_mode}-{cxx_mode}',
-                tags=[TAG, f'cmake-{name}', f'cmake-{c_mode}', f'cxx{cxx_standard}', f'cmake-{cxx_mode}'],
+                name=f'{TAG}-{name}-cxx{cxx_standard}-{c_mode}',
+                tags=[TAG, f'cmake-{name}', f'cxx{cxx_standard}', f'cmake-{c_mode}'],
                 run_on=distro.name,
                 commands=commands,
             )

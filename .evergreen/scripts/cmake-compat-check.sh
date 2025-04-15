@@ -8,7 +8,6 @@ set -o pipefail
 : "${CMAKE_PATCH_VERSION:?}"
 : "${INSTALL_C_DRIVER:?}"
 : "${cxx_standard:?}"
-: "${find_c_driver:?}"
 
 [[ -d mongoc ]] || {
   echo "missing mongoc directory"
@@ -67,18 +66,22 @@ int main() {
 }
 DOC
 
-if [[ "${find_c_driver:?}" == 1 ]]; then
-  # Test importing C++ Driver libraries using find_package().
+# Support C Driver libraries obtained via both add_subdirectory() and find_package().
+if [[ "${INSTALL_C_DRIVER:?}" == 1 ]]; then
+  # Different install prefixes.
+  cmake_flags+=("-DCMAKE_PREFIX_PATH=${mongocxx_prefix:?};${mongoc_prefix:?}")
+else
+  # Same install prefix.
+  cmake_flags+=("-DCMAKE_PREFIX_PATH=${mongocxx_prefix:?}")
+fi
 
-  if [[ "${INSTALL_C_DRIVER:?}" == 1 ]]; then
-    # Different install prefixes.
-    cmake_flags+=("-DCMAKE_PREFIX_PATH=${mongocxx_prefix:?};${mongoc_prefix:?}")
-  else
-    # Same install prefix.
-    cmake_flags+=("-DCMAKE_PREFIX_PATH=${mongocxx_prefix:?}")
-  fi
+echo "Configuring with CMake flags:"
+printf " - %s\n" "${cmake_flags[@]:?}"
 
-  cat >CMakeLists.txt <<DOC
+# Test importing C++ Driver libraries using find_package().
+echo "Importing C++ Driver via find_package()..."
+{
+  cat >|CMakeLists.txt <<DOC
 cmake_minimum_required(VERSION ${CMAKE_MAJOR_VERSION:?}.${CMAKE_MINOR_VERSION:?})
 project(cmake-compat)
 
@@ -87,9 +90,19 @@ find_package(mongocxx REQUIRED)
 add_executable(main main.cpp)
 target_link_libraries(main PRIVATE mongo::mongocxx_shared) # + mongo::bsoncxx_shared
 DOC
-else
-  # Test importing C++ Driver libraries using add_subdirectory().
-  cat >CMakeLists.txt <<DOC
+
+  "${cmake_binary:?}" -S . -B build-find "${cmake_flags[@]:?}"
+  "${cmake_binary:?}" --build build-find --target main
+  ./build-find/main
+} &>output.txt || {
+  cat output.txt >&2
+  exit 1
+}
+echo "Importing C++ Driver via find_package()... done."
+
+echo "Importing C++ Driver via add_subdirectory()..."
+{
+  cat >|CMakeLists.txt <<DOC
 cmake_minimum_required(VERSION ${CMAKE_MAJOR_VERSION:?}.${CMAKE_MINOR_VERSION:?})
 project(cmake-compat)
 
@@ -99,11 +112,12 @@ add_subdirectory(mongo-cxx-driver)
 add_executable(main main.cpp)
 target_link_libraries(main PRIVATE mongocxx_shared) # + bsoncxx_shared
 DOC
-fi
 
-echo "Configuring with CMake flags:"
-printf " - %s\n" "${cmake_flags[@]:?}"
-
-"${cmake_binary:?}" -S . -B build "${cmake_flags[@]:?}"
-"${cmake_binary:?}" --build build --target main
-./build/main
+  "${cmake_binary:?}" -S . -B build-add "${cmake_flags[@]:?}"
+  "${cmake_binary:?}" --build build-add --target main
+  ./build-add/main
+} &>output.txt || {
+  cat output.txt >&2
+  exit 1
+}
+echo "Importing C++ Driver via add_subdirectory()... done."
