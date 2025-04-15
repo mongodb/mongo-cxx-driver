@@ -26,6 +26,7 @@ set -o pipefail
 : "${USE_SANITIZER_ASAN:-}"
 : "${USE_SANITIZER_UBSAN:-}"
 : "${USE_STATIC_LIBS:-}"
+: "${USE_SHARED_AND_STATIC_LIBS:-}"
 
 mongoc_prefix="$(pwd)/../mongoc"
 echo "mongoc_prefix=${mongoc_prefix:?}"
@@ -121,6 +122,41 @@ esac
 export CMAKE_GENERATOR="${generator:?}"
 export CMAKE_GENERATOR_PLATFORM="${platform:-}"
 
+if [[ -n "${REQUIRED_CXX_STANDARD:-}" ]]; then
+  echo "Checking requested C++ standard is supported..."
+  pushd "$(mktemp -d)"
+  cat >CMakeLists.txt <<DOC
+cmake_minimum_required(VERSION 3.30)
+project(cxx_standard_latest LANGUAGES CXX)
+set(cxx_std_version "${REQUIRED_CXX_STANDARD:?}")
+if(cxx_std_version STREQUAL "latest") # Special-case MSVC's /std:c++latest flag.
+  include(CheckCXXCompilerFlag)
+  check_cxx_compiler_flag("/std:c++latest" cxxflag_std_cxxlatest)
+  if(cxxflag_std_cxxlatest)
+    message(NOTICE "/std:c++latest is supported")
+  else()
+    message(FATAL_ERROR "/std:c++latest is not supported")
+  endif()
+else()
+  macro(success)
+    message(NOTICE "Latest C++ standard \${CMAKE_CXX_STANDARD_LATEST} is newer than \${cxx_std_version}")
+  endmacro()
+  macro(failure)
+    message(FATAL_ERROR "Latest C++ standard \${CMAKE_CXX_STANDARD_LATEST} is older than \${cxx_std_version}")
+  endmacro()
+
+  if(CMAKE_CXX_STANDARD_LATEST GREATER_EQUAL cxx_std_version)
+    success() # Both are new: latest >= version.
+  else()
+    failure() # Both are new: latest < version.
+  endif()
+endif()
+DOC
+  "${cmake_binary:?}" -S . -B build --log-level=notice
+  popd # "$(tmpfile -d)"
+  echo "Checking requested C++ standard is supported... done."
+fi
+
 case "${BSONCXX_POLYFILL:-}" in
 impls) cmake_flags+=("-DBSONCXX_POLY_USE_IMPLS=ON") ;;
 std) cmake_flags+=("-DBSONCXX_POLY_USE_STD=ON") ;;
@@ -141,6 +177,15 @@ cygwin)
     "-DCMAKE_POLICY_DEFAULT_CMP0141=NEW"
     "-DCMAKE_MSVC_DEBUG_INFORMATION_FORMAT=Embedded"
   )
+
+  # Ensure default MSVC flags are preserved despite explicit compiler flags.
+  cc_flags+=(/DWIN32 /D_WINDOWS)
+  cxx_flags+=(/DWIN32 /D_WINDOWS /GR /EHsc)
+  if [[ "${build_type:?}" == "debug" ]]; then
+    cxx_flags+=(/Ob0 /Od /RTC1)
+  else
+    cxx_flags+=(/O2 /Ob2 /DNDEBUG)
+  fi
   ;;
 darwin*)
   cc_flags+=("${cc_flags_init[@]}")
@@ -200,12 +245,19 @@ if [[ "${OSTYPE:?}" != cygwin ]]; then
   fi
 fi
 
-if [[ "${#cc_flags[@]}" -gt 0 ]]; then
-  cmake_flags+=("-DCMAKE_C_FLAGS=${cc_flags[*]}")
-fi
+if [[ -n "${REQUIRED_CXX_STANDARD:-}" ]]; then
+  cmake_flags+=("-DCMAKE_CXX_STANDARD_REQUIRED=ON")
 
-if [[ "${#cxx_flags[@]}" -gt 0 ]]; then
-  cmake_flags+=("-DCMAKE_CXX_FLAGS=${cxx_flags[*]}")
+  if [[ "${REQUIRED_CXX_STANDARD:?}" == "latest" ]]; then
+    [[ "${CMAKE_GENERATOR:-}" =~ "Visual Studio" ]] || {
+      echo "REQUIRED_CXX_STANDARD=latest to enable /std:c++latest is only supported with Visual Studio generators" 1>&2
+      exit 1
+    }
+
+    cxx_flags+=("/std:c++latest") # CMake doesn't support "latest" as a C++ standard.
+  else
+    cmake_flags+=("-DCMAKE_CXX_STANDARD=${REQUIRED_CXX_STANDARD:?}")
+  fi
 fi
 
 if [[ "${ENABLE_CODE_COVERAGE:-}" == "ON" ]]; then
@@ -216,6 +268,10 @@ if [[ "${USE_STATIC_LIBS:-}" == 1 ]]; then
   cmake_flags+=("-DBUILD_SHARED_LIBS=OFF")
 fi
 
+if [[ "${USE_SHARED_AND_STATIC_LIBS:-}" == 1 ]]; then
+  cmake_flags+=("-DUSE_SHARED_AND_STATIC_LIBS=ON")
+fi
+
 if [ "${ENABLE_TESTS:-}" = "ON" ]; then
   cmake_flags+=(
     "-DENABLE_TESTS=ON"
@@ -223,13 +279,18 @@ if [ "${ENABLE_TESTS:-}" = "ON" ]; then
   )
 fi
 
-if [[ -n "${REQUIRED_CXX_STANDARD:-}" ]]; then
-  cmake_flags+=("-DCMAKE_CXX_STANDARD=${REQUIRED_CXX_STANDARD:?}")
-  cmake_flags+=("-DCMAKE_CXX_STANDARD_REQUIRED=ON")
-fi
-
 if [[ "${COMPILE_MACRO_GUARD_TESTS:-"OFF"}" == "ON" ]]; then
   cmake_flags+=("-DENABLE_MACRO_GUARD_TESTS=ON")
+fi
+
+# Must come after all cc_flags are set.
+if [[ "${#cc_flags[@]}" -gt 0 ]]; then
+  cmake_flags+=("-DCMAKE_C_FLAGS=${cc_flags[*]}")
+fi
+
+# Must come after all cxx_flags are set.
+if [[ "${#cxx_flags[@]}" -gt 0 ]]; then
+  cmake_flags+=("-DCMAKE_CXX_FLAGS=${cxx_flags[*]}")
 fi
 
 echo "Configuring with CMake flags:"

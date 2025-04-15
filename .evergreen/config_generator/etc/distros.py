@@ -47,6 +47,8 @@ def ls_distro(name, **kwargs):
 
 
 DEBIAN_DISTROS = [
+    *ls_distro(name='debian10', os='debian', os_type='linux', os_ver='10'),
+    *ls_distro(name='debian11', os='debian', os_type='linux', os_ver='10'),
     *ls_distro(name='debian12-latest', os='debian', os_type='linux', os_ver='latest'),
 ]
 
@@ -59,8 +61,16 @@ MACOS_ARM64_DISTROS = [
 ]
 
 RHEL_DISTROS = [
+    *ls_distro(name='rhel76', os='rhel', os_type='linux', os_ver='7.6'),
     *ls_distro(name='rhel80', os='rhel', os_type='linux', os_ver='8.0'),
+    *ls_distro(name='rhel84', os='rhel', os_type='linux', os_ver='8.4'),
+    *ls_distro(name='rhel90', os='rhel', os_type='linux', os_ver='9.0'),
+    *ls_distro(name='rhel91', os='rhel', os_type='linux', os_ver='9.1'),
+    *ls_distro(name='rhel92', os='rhel', os_type='linux', os_ver='9.2'),
+    *ls_distro(name='rhel93', os='rhel', os_type='linux', os_ver='9.3'),
+    *ls_distro(name='rhel94', os='rhel', os_type='linux', os_ver='9.4'),
     *ls_distro(name='rhel95', os='rhel', os_type='linux', os_ver='9.5'),
+    *ls_distro(name='rhel92', os='rhel', os_type='linux', os_ver='9.0'),
 ]
 
 RHEL_ARM64_DISTROS = [
@@ -77,6 +87,7 @@ RHEL_ZSERIES_DISTROS = [
 ]
 
 UBUNTU_DISTROS = [
+    *ls_distro(name='ubuntu2004', os='ubuntu', os_type='linux', os_ver='20.04'),
     *ls_distro(name='ubuntu2204', os='ubuntu', os_type='linux', os_ver='22.04'),
 ]
 
