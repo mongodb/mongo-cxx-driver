@@ -40,11 +40,12 @@ TEST_CASE("mongoc version numbers", "[mongocxx][test]") {
     CHECK(mongoc_get_major_version() == expect[0]);
 
     CHECKED_IF(expect.size() > 1) {
-        CHECK(mongoc_get_minor_version() >= expect[1]);
-    }
+        CHECK(bson_get_minor_version() >= expect[1]);
 
-    CHECKED_IF(expect.size() > 2) {
-        CHECK(mongoc_get_micro_version() >= expect[2]);
+        // Only when minor version number compares equal.
+        CHECKED_IF(expect.size() > 2) {
+            CHECK(bson_get_micro_version() >= expect[2]);
+        }
     }
 }
 
@@ -72,13 +73,14 @@ TEST_CASE(
 
         // Minor version number.
         CHECK(actual[1] >= expect[1]);
-    }
 
-    CHECKED_IF(expect.size() > 2) {
-        REQUIRE(actual.size() > 2);
+        // Only when minor version number compares equal.
+        CHECKED_IF(expect.size() > 2) {
+            REQUIRE(actual.size() > 2);
 
-        // Patch version number.
-        CHECK(actual[2] >= expect[2]);
+            // Patch version number.
+            CHECK(actual[2] >= expect[2]);
+        }
     }
 }
 
