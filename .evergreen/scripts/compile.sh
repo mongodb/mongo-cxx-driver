@@ -154,10 +154,6 @@ linux*)
   cc_flags+=("${cc_flags_init[@]}")
   cxx_flags+=("${cxx_flags_init[@]}" -Wno-missing-field-initializers)
 
-  if [[ "${CXX:-}" != "clang++" ]]; then
-    cxx_flags+=(-Wno-aligned-new)
-  fi
-
   if [[ "${distro_id:?}" != rhel7* ]]; then
     cxx_flags+=("-Wno-expansion-to-defined")
   else
