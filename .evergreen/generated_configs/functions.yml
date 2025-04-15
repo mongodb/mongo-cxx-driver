@@ -403,6 +403,9 @@ functions:
       params:
         binary: bash
         add_expansions_to_env: true
+        env:
+          CC: ${cc_compiler}
+          CXX: ${cxx_compiler}
         args:
           - -c
           - mongo-cxx-driver/.evergreen/scripts/install-c-driver.sh

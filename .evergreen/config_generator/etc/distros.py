@@ -188,24 +188,30 @@ def to_platform(compiler):
 
 
 def compiler_to_vars(compiler):
-    match compiler:
-        case 'gcc':
+    if compiler is None:
+        return {}
+
+    match compiler, compiler.split('-'):
+        case _, ['gcc', *rest]:
             return {
-                'cc_compiler': 'gcc',
-                'cxx_compiler': 'g++',
+                'cc_compiler': '-'.join(['gcc'] + rest),
+                'cxx_compiler': '-'.join(['g++'] + rest),
             }
 
-        case 'clang':
+        case _, ['clang', *rest]:
             return {
-                'cc_compiler': 'clang',
-                'cxx_compiler': 'clang++',
+                'cc_compiler': '-'.join(['clang'] + rest),
+                'cxx_compiler': '-'.join(['clang++'] + rest),
             }
 
-        case str(vs) if 'vs' in vs:
+        case str(vs), _ if 'vs' in vs:
             return {
                 'generator': to_cc(vs),
                 'platform': to_platform(vs),
             }
 
-        case _:
-            return {}
+        case compiler, _:
+            return {
+                'cc_compiler': compiler,
+                'cxx_compiler': compiler,
+            }
