@@ -80,8 +80,21 @@ darwin* | linux*)
   ;;
 esac
 
-# Create a VERSION_CURRENT file in the build directory to include in the dist tarball.
-PATH="${UV_INSTALL_DIR:?}:${PATH:-}" uv run --frozen python ./etc/calc_release_version.py >./build/VERSION_CURRENT
+mkdir -p build
+
+(
+  # calc_release_version.py is a standalone script.
+  uv_flags=(--no-project)
+
+  # Avoid "error: unknown option `format=...'" with CPython 3.11.
+  if [[ "${distro_id:?}" == rhel7* ]]; then
+    uv_flags+=(-p 3.12)
+  fi
+
+  # Create a VERSION_CURRENT file in the build directory to include in the dist tarball.
+  PATH="${UV_INSTALL_DIR:?}:${PATH:-}" uv run "${uv_flags[@]:?}" python ./etc/calc_release_version.py >./build/VERSION_CURRENT
+)
+
 cd build
 
 cmake_flags=(
