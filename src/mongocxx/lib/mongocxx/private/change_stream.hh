@@ -104,7 +104,8 @@ class change_stream::impl {
     }
 
     bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view> get_resume_token() {
-        auto token = libmongoc::change_stream_get_resume_token(this->change_stream_);
+        bson_t const* const token = libmongoc::change_stream_get_resume_token(this->change_stream_);
+
         if (!token) {
             return bsoncxx::v_noabi::stdx::nullopt;
         }

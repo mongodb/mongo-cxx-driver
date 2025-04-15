@@ -86,7 +86,7 @@ std::vector<uri::host> uri::hosts() const {
 }
 
 bsoncxx::v_noabi::document::view uri::options() const {
-    auto opts_bson = libmongoc::uri_get_options(_impl->uri_t);
+    bson_t const* const opts_bson = libmongoc::uri_get_options(_impl->uri_t);
     return bsoncxx::v_noabi::document::view{::bson_get_data(opts_bson), opts_bson->len};
 }
 

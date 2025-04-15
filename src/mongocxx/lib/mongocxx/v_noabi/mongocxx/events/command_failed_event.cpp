@@ -32,7 +32,7 @@ command_failed_event::command_failed_event(void const* event) : _failed_event(ev
 command_failed_event::~command_failed_event() = default;
 
 bsoncxx::v_noabi::document::view command_failed_event::failure() const {
-    auto failure =
+    bson_t const* const failure =
         libmongoc::apm_command_failed_get_reply(static_cast<mongoc_apm_command_failed_t const*>(_failed_event));
     return {bson_get_data(failure), failure->len};
 }

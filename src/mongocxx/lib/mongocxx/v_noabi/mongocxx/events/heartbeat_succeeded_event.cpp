@@ -26,7 +26,7 @@ heartbeat_succeeded_event::~heartbeat_succeeded_event() = default;
 
 bsoncxx::v_noabi::document::view heartbeat_succeeded_event::reply() const {
     auto casted = static_cast<mongoc_apm_server_heartbeat_succeeded_t const*>(_succeeded_event);
-    auto reply = libmongoc::apm_server_heartbeat_succeeded_get_reply(casted);
+    bson_t const* const reply = libmongoc::apm_server_heartbeat_succeeded_get_reply(casted);
     return {bson_get_data(reply), reply->len};
 }
 
