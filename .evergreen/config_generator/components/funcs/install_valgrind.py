@@ -24,8 +24,8 @@ class InstallValgrind(Function):
                 mkdir -p "$valgrind_install_dir"
 
                 if ! command -v "$valgrind_install_dir/bin/valgrind" 2>/dev/null; then
-                  env \
-                    install_prefix="${MONGO_CXX_DRIVER_CACHE_DIR}/valgrind-3.24.0" \
+                  env \\
+                    install_prefix="${MONGO_CXX_DRIVER_CACHE_DIR}/valgrind-3.24.0" \\
                     mongo-cxx-driver/.evergreen/scripts/valgrind-installer.sh
                 fi
 
