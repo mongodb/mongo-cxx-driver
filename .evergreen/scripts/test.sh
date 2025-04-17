@@ -30,6 +30,7 @@ set -o pipefail
 : "${TEST_WITH_VALGRIND:-}"
 : "${use_mongocryptd:-}"
 : "${USE_STATIC_LIBS:-}"
+: "${VALGRIND_INSTALL_DIR:-}" # Only when `TEST_WITH_VALGRIND` is set to "ON".
 
 working_dir="$(pwd)"
 
@@ -274,6 +275,8 @@ else
     export UBSAN_OPTIONS="print_stacktrace=1"
     export PATH="/usr/lib/llvm-3.8/bin:${PATH:-}"
   elif [[ "${TEST_WITH_VALGRIND:-}" == "ON" ]]; then
+    PATH="${VALGRIND_INSTALL_DIR:?}:${PATH:-}"
+    valgrind --version
     run_test() {
       valgrind --leak-check=full --track-origins=yes --num-callers=50 --error-exitcode=1 --error-limit=no --read-var-info=yes --suppressions=../etc/memcheck.suppressions "$@" "${test_args[@]:?}"
     }

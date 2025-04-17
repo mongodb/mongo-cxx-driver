@@ -38,6 +38,7 @@ class Test(Function):
             'TEST_WITH_VALGRIND',
             'use_mongocryptd',
             'USE_STATIC_LIBS',
+            'VALGRIND_INSTALL_DIR',
         ],
         working_dir='mongo-cxx-driver',
         script='.evergreen/scripts/test.sh',

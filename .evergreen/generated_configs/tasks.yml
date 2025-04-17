@@ -4322,6 +4322,7 @@ tasks:
           updates:
             - { key: build_type, value: Debug }
       - func: setup
+      - func: install-valgrind
       - func: start_mongod
         vars:
           mongodb_version: "5.0"
@@ -4349,6 +4350,7 @@ tasks:
           updates:
             - { key: build_type, value: Debug }
       - func: setup
+      - func: install-valgrind
       - func: start_mongod
         vars:
           mongodb_version: "5.0"
@@ -4378,6 +4380,7 @@ tasks:
             - { key: build_type, value: Debug }
             - { key: USE_STATIC_LIBS, value: "1" }
       - func: setup
+      - func: install-valgrind
       - func: start_mongod
         vars:
           mongodb_version: "5.0"
@@ -4406,6 +4409,7 @@ tasks:
             - { key: build_type, value: Debug }
             - { key: USE_STATIC_LIBS, value: "1" }
       - func: setup
+      - func: install-valgrind
       - func: start_mongod
         vars:
           mongodb_version: "5.0"
@@ -4434,6 +4438,7 @@ tasks:
           updates:
             - { key: build_type, value: Debug }
       - func: setup
+      - func: install-valgrind
       - func: start_mongod
         vars:
           mongodb_version: latest
@@ -4462,6 +4467,7 @@ tasks:
           updates:
             - { key: build_type, value: Debug }
       - func: setup
+      - func: install-valgrind
       - func: start_mongod
         vars:
           mongodb_version: latest
@@ -4490,6 +4496,7 @@ tasks:
             - { key: build_type, value: Debug }
             - { key: USE_STATIC_LIBS, value: "1" }
       - func: setup
+      - func: install-valgrind
       - func: start_mongod
         vars:
           mongodb_version: latest
@@ -4519,6 +4526,7 @@ tasks:
             - { key: build_type, value: Debug }
             - { key: USE_STATIC_LIBS, value: "1" }
       - func: setup
+      - func: install-valgrind
       - func: start_mongod
         vars:
           mongodb_version: latest
