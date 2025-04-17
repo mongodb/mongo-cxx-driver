@@ -1,6 +1,7 @@
 from config_generator.components.funcs.compile import Compile
 from config_generator.components.funcs.fetch_det import FetchDET
 from config_generator.components.funcs.install_c_driver import InstallCDriver
+from config_generator.components.funcs.install_valgrind import InstallValgrind
 from config_generator.components.funcs.install_uv import InstallUV
 from config_generator.components.funcs.run_kms_servers import RunKMSServers
 from config_generator.components.funcs.setup import Setup
@@ -67,6 +68,7 @@ def tasks():
 
             commands += [
                 Setup.call(),
+                InstallValgrind.call(),
                 StartMongod.call(mongodb_version=mongodb_version, topology=topology),
                 InstallCDriver.call(vars=icd_vars),
                 InstallUV.call(),

@@ -30,6 +30,7 @@ set -o pipefail
 : "${TEST_WITH_VALGRIND:-}"
 : "${use_mongocryptd:-}"
 : "${USE_STATIC_LIBS:-}"
+: "${VALGRIND_INSTALL_DIR:-}" # Only when `TEST_WITH_VALGRIND` is set to "ON".
 
 working_dir="$(pwd)"
 
@@ -282,16 +283,7 @@ else
     export UBSAN_OPTIONS="print_stacktrace=1"
     export PATH="/opt/mongodbtoolchain/v4/bin:${PATH:-}" # llvm-symbolizer
   elif [[ "${TEST_WITH_VALGRIND:-}" == "ON" ]]; then
-    if ! command -v valgrind >/dev/null; then
-      if command -v yum >/dev/null; then
-        sudo yum install -q -y valgrind
-      elif command -v apt-get >/dev/null; then
-        sudo apt-get install -q -y valgrind
-      else
-        echo "Unknown how to install valgrind on this distro: ${distro_id:?}" 1>&2
-        exit 1
-      fi
-    fi
+    PATH="${VALGRIND_INSTALL_DIR:?}:${PATH:-}"
     valgrind --version
     run_test() {
       valgrind --leak-check=full --track-origins=yes --num-callers=50 --error-exitcode=1 --error-limit=no --read-var-info=yes --suppressions=../etc/memcheck.suppressions "$@" "${test_args[@]:?}"
