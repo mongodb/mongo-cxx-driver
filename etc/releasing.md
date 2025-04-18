@@ -193,6 +193,12 @@ Verify there are no unexpected errors or issues.
 
 ## Release Steps
 
+### Branch Protection Rules
+
+The release process may require creating new branches, new tags, and directly pushing to development branches. These operations are normally restricted by branch protection rules.
+
+When assigned the responsibility of performing a release, submit a request to a repository administrator to be temporarily added to the `dbx-c-cxx-releases` team for the duration of the release process. Request to be removed from the team after the release process is complete.
+
 ### Update CHANGELOG...
 
 This step depends on the release type.
