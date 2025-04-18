@@ -25,7 +25,9 @@ Changes prior to 3.9.0 are documented as [release notes on GitHub](https://githu
 
 ### Changed
 
-- Bump the minimum required C Driver version to [1.30.0](https://github.com/mongodb/mongo-c-driver/releases/tag/1.30.0).
+- Bump the minimum required C Driver version to [2.0.0](https://github.com/mongodb/mongo-c-driver/releases/tag/2.0.0).
+- Set CMake maximum policy version to 4.0.
+  - The CMake minimum required version is still 3.15.
 
 ## 4.0.0
 

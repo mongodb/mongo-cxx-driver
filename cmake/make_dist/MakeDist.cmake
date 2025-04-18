@@ -65,8 +65,6 @@ function (MAKE_DIST PACKAGE_PREFIX MONGOCXX_SOURCE_DIR BUILD_SOURCE_DIR)
       endif ()
    endforeach ()
 
-   cmake_policy (SET CMP0012 NEW)
-
    # -- Create the tarball.
 
    execute_process_and_check_result (COMMAND
