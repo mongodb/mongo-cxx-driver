@@ -1,9 +1,9 @@
-# Use FetchContent to obtain libbson and libmongoc.
+# Use FetchContent to obtain bson and mongoc.
 
 include(FetchContent)
 
 function(fetch_mongoc)
-    message(STATUS "Download and configure C driver version ${LIBMONGOC_DOWNLOAD_VERSION} ... begin")
+    message(STATUS "Downloading and configuring MongoDB C Driver ${MONGOC_DOWNLOAD_VERSION}...")
 
     set(fetch_args "")
     if (CMAKE_VERSION VERSION_GREATER_EQUAL "3.25.0")
@@ -14,7 +14,7 @@ function(fetch_mongoc)
     FetchContent_Declare(
         mongo-c-driver
         GIT_REPOSITORY https://github.com/mongodb/mongo-c-driver.git
-        GIT_TAG ${LIBMONGOC_DOWNLOAD_VERSION}
+        GIT_TAG ${MONGOC_DOWNLOAD_VERSION}
 
         ${fetch_args}
     )
@@ -44,7 +44,31 @@ function(fetch_mongoc)
         endif()
     endif()
 
-    message(STATUS "Download and configure C driver version ${LIBMONGOC_DOWNLOAD_VERSION} ... end")
+    message(STATUS "Downloading and configuring MongoDB C Driver ${MONGOC_DOWNLOAD_VERSION}... done.")
 endfunction()
 
-fetch_mongoc()
+set(NEED_DOWNLOAD_C_DRIVER false CACHE INTERNAL "")
+
+# Only search for packages if targets are not already imported via add_subdirectory().
+if(NOT ((TARGET bson_shared OR TARGET bson_static) AND (TARGET mongoc_shared OR TARGET mongoc_static)))
+    # Both libraries are required.
+    find_package(bson ${BSON_REQUIRED_VERSION} QUIET)
+    if(NOT bson_FOUND)
+        message(STATUS "find_package(bson ${BSON_REQUIRED_VERSION}) did not succeed")
+    endif()
+
+    find_package(mongoc ${MONGOC_REQUIRED_VERSION} QUIET)
+    if(NOT mongoc_FOUND)
+        message(STATUS "find_package(mongoc ${MONGOC_REQUIRED_VERSION}) did not succeed")
+    endif()
+
+    if(NOT bson_FOUND OR NOT mongoc_FOUND)
+        set_property(CACHE NEED_DOWNLOAD_C_DRIVER PROPERTY VALUE true)
+        message(STATUS "Required MongoDB C Driver libraries not found via find_package()")
+    endif()
+endif()
+
+if($CACHE{NEED_DOWNLOAD_C_DRIVER})
+    message(STATUS "MongoDB C Driver library sources will be downloaded from GitHub")
+    fetch_mongoc()
+endif()

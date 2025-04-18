@@ -575,7 +575,7 @@ git commit -m "Post-release changes"
 (Stable Releases Only) Close the Jira ticket tracking this release with "Documentation Changes" set to "Needed". Fill the "Documentation Changes Summary" field with information requesting updates to:
 
   - the "Installing the MongoDB C Driver" section of the [Advanced Configuration and Installation Options](https://www.mongodb.com/docs/languages/cpp/cpp-driver/current/installation/advanced/#installing-the-mongodb-c-driver) page
-    with any new libmongoc version requirements,
+    with any new C Driver version requirements,
   - the "Driver Status by Family and Version" section of the [home
     page](https://www.mongodb.com/docs/languages/cpp/cpp-driver/current/#driver-status-by-family-and-version), and
   - the [full version](https://github.com/mongodb/docs-cpp/blob/master/snooty.toml) for the C++ Driver documentation pages.
@@ -585,7 +585,7 @@ This will generate a DOCSP ticket with instructions to update the C++ Driver doc
 Example (using Jira syntax formatting):
 
 ```
-* The [Advanced Installation|https://www.mongodb.com/docs/languages/cpp/cpp-driver/current/installation/advanced/#installing-the-mongodb-c-driver] page must be updated with a new requirement: "For mongocxx-X.Y.x, libmongoc A.B.C or later is required."
+* The [Advanced Installation|https://www.mongodb.com/docs/languages/cpp/cpp-driver/current/installation/advanced/#installing-the-mongodb-c-driver] page must be updated with a new requirement: "For mongocxx-X.Y.x, mongoc A.B.C or later is required."
 * The [MongoDB C++ Driver|https://www.mongodb.com/docs/languages/cpp/cpp-driver/current/#driver-status-by-family-and-version] page must be updated: {{{}mongocxx X.Y.x{}}} is now a previous stable release and no longer under active development; {{{}mongocxx X.Y+1.x{}}} is the new current stable release eligible for bug fixes.
 * the [full version|https://github.com/mongodb/docs-cpp/blob/master/snooty.toml] for C++ Driver documentation must be updated to {{{}X.Y.Z{}}}.
 ```

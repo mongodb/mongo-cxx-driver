@@ -92,7 +92,7 @@ cmake_flags=(
   -DENABLE_UNINSTALL=ON
 )
 
-# System-installed libmongoc must not prevent fetch-and-build of libmongoc.
+# System-installed mongoc must not prevent fetch-and-build of mongoc.
 if [[ -z "$(find "${mongoc_prefix:?}" -name 'bson-config.h')" ]]; then
   cmake_flags+=("-DCMAKE_DISABLE_FIND_PACKAGE_mongoc-1.0=ON")
 fi
@@ -174,7 +174,6 @@ cygwin)
 
   # Replace `/Zi`, which is incompatible with ccache, with `/Z7` while preserving other default debug flags.
   cmake_flags+=(
-    "-DCMAKE_POLICY_DEFAULT_CMP0141=NEW"
     "-DCMAKE_MSVC_DEBUG_INFORMATION_FORMAT=Embedded"
   )
 
@@ -317,6 +316,6 @@ if [[ -n "$(find "${mongoc_prefix:?}" -name 'bson-config.h')" ]]; then
 elif [[ -n "$(find install -name 'bson-config.h')" ]]; then
   : # Used auto-downloaded C Driver.
 else
-  echo "unexpectedly compiled using a system libmongoc library" 1>&2
+  echo "unexpectedly compiled using a system mongoc library" 1>&2
   exit 1
 fi
