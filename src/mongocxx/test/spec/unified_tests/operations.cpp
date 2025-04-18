@@ -2299,7 +2299,7 @@ bsoncxx::stdx::optional<read_concern> operations::lookup_read_concern(document::
         return rc;
     }
 
-    return {};
+    return bsoncxx::v_noabi::stdx::nullopt;
 }
 
 bsoncxx::stdx::optional<write_concern> operations::lookup_write_concern(document::view doc) {
@@ -2321,7 +2321,7 @@ bsoncxx::stdx::optional<write_concern> operations::lookup_write_concern(document
         return wc;
     }
 
-    return {};
+    return bsoncxx::v_noabi::stdx::nullopt;
 }
 
 bsoncxx::stdx::optional<read_preference> operations::lookup_read_preference(document::view doc) {
@@ -2342,7 +2342,7 @@ bsoncxx::stdx::optional<read_preference> operations::lookup_read_preference(docu
         return rp;
     }
 
-    return {};
+    return bsoncxx::v_noabi::stdx::nullopt;
 }
 
 } // namespace mongocxx

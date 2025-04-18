@@ -76,7 +76,7 @@ bsoncxx::stdx::optional<read_concern> lookup_read_concern(document::view doc) {
         return rc;
     }
 
-    return {};
+    return bsoncxx::v_noabi::stdx::nullopt;
 }
 
 bsoncxx::stdx::optional<write_concern> lookup_write_concern(document::view doc) {
@@ -98,7 +98,7 @@ bsoncxx::stdx::optional<write_concern> lookup_write_concern(document::view doc) 
         return wc;
     }
 
-    return {};
+    return bsoncxx::v_noabi::stdx::nullopt;
 }
 
 bsoncxx::stdx::optional<read_preference> lookup_read_preference(document::view doc) {
@@ -119,7 +119,7 @@ bsoncxx::stdx::optional<read_preference> lookup_read_preference(document::view d
         return rp;
     }
 
-    return {};
+    return bsoncxx::v_noabi::stdx::nullopt;
 }
 
 client_session* operation_runner::_lookup_session(bsoncxx::stdx::string_view key) {

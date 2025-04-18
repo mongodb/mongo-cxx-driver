@@ -29,6 +29,10 @@ class InstallCDriver(Function):
         bash_exec(
             command_type=EvgCommandType.SETUP,
             add_expansions_to_env=True,
+            env={
+                'CC': '${cc_compiler}',
+                'CXX': '${cxx_compiler}',
+            },
             script='mongo-cxx-driver/.evergreen/scripts/install-c-driver.sh'
         ),
     ]

@@ -119,13 +119,16 @@ bsoncxx::v_noabi::stdx::optional<std::chrono::seconds> read_preference::max_stal
 
 read_preference& read_preference::hedge(bsoncxx::v_noabi::document::view_or_value hedge) {
     libbson::scoped_bson_t hedge_bson{std::move(hedge)};
-
+    BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_BEGIN
     libmongoc::read_prefs_set_hedge(_impl->read_preference_t, hedge_bson.bson());
+    BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_END
     return *this;
 }
 
 bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view> const read_preference::hedge() const {
+    BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_BEGIN
     bson_t const* hedge_bson = libmongoc::read_prefs_get_hedge(_impl->read_preference_t);
+    BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_END
 
     if (!bson_empty(hedge_bson)) {
         return bsoncxx::v_noabi::document::view(bson_get_data(hedge_bson), hedge_bson->len);

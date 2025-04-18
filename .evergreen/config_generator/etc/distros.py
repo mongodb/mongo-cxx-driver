@@ -22,7 +22,6 @@ class Distro(BaseModel):
     os_type: Literal['linux', 'macos', 'windows'] | None = None
     os_ver: str | None = None
     vs_ver: Literal[
-        '2013',
         '2015',
         '2017',
         '2019',
@@ -48,6 +47,8 @@ def ls_distro(name, **kwargs):
 
 
 DEBIAN_DISTROS = [
+    *ls_distro(name='debian10', os='debian', os_type='linux', os_ver='10'),
+    *ls_distro(name='debian11', os='debian', os_type='linux', os_ver='10'),
     *ls_distro(name='debian12-latest', os='debian', os_type='linux', os_ver='latest'),
 ]
 
@@ -60,8 +61,16 @@ MACOS_ARM64_DISTROS = [
 ]
 
 RHEL_DISTROS = [
+    *ls_distro(name='rhel76', os='rhel', os_type='linux', os_ver='7.6'),
     *ls_distro(name='rhel80', os='rhel', os_type='linux', os_ver='8.0'),
+    *ls_distro(name='rhel84', os='rhel', os_type='linux', os_ver='8.4'),
+    *ls_distro(name='rhel90', os='rhel', os_type='linux', os_ver='9.0'),
+    *ls_distro(name='rhel91', os='rhel', os_type='linux', os_ver='9.1'),
+    *ls_distro(name='rhel92', os='rhel', os_type='linux', os_ver='9.2'),
+    *ls_distro(name='rhel93', os='rhel', os_type='linux', os_ver='9.3'),
+    *ls_distro(name='rhel94', os='rhel', os_type='linux', os_ver='9.4'),
     *ls_distro(name='rhel95', os='rhel', os_type='linux', os_ver='9.5'),
+    *ls_distro(name='rhel92', os='rhel', os_type='linux', os_ver='9.0'),
 ]
 
 RHEL_ARM64_DISTROS = [
@@ -78,6 +87,7 @@ RHEL_ZSERIES_DISTROS = [
 ]
 
 UBUNTU_DISTROS = [
+    *ls_distro(name='ubuntu2004', os='ubuntu', os_type='linux', os_ver='20.04'),
     *ls_distro(name='ubuntu2204', os='ubuntu', os_type='linux', os_ver='22.04'),
 ]
 
@@ -151,19 +161,6 @@ def make_distro_str(distro_name, compiler, arch) -> str:
                 distro_name[len('windows-vsCurrent-'):] + f'-{compiler_str}'
         else:
             distro_str = 'windows-2019' + f'-{compiler_str}'
-    elif distro_name.startswith('windows-64-vs'):
-        # Abbreviate 'windows-64-vs<type>' as 'vs<type>' and append '-<arch>' if
-        # given in compiler string as 'vs<type><arch>', e.g.:
-        #     ('windows-64-vs2017', 'vs2017x64', None) -> vs2017-x64
-        #     ('windows-64-vs2017', 'mingw',     None) -> vs2017-mingw
-        distro_str = distro_name[len('windows-64-'):] + {
-            'vs2017x64': '-x64',
-            'vs2017x86': '-x86',
-            'vs2019x64': '-x64',
-            'vs2019x86': '-x86',
-            'vs2022x64': '-x64',
-            'vs2022x86': '-x86',
-        }.get(compiler, f'-{compiler}')
     else:
         distro_str = distro_name
         if compiler:
@@ -177,6 +174,8 @@ def make_distro_str(distro_name, compiler, arch) -> str:
 
 def to_cc(compiler):
     return {
+        'vs2015x64': 'Visual Studio 14 2015',
+        'vs2015x86': 'Visual Studio 14 2015',
         'vs2017x64': 'Visual Studio 15 2017',
         'vs2017x86': 'Visual Studio 15 2017',
         'vs2019x64': 'Visual Studio 16 2019',
@@ -188,6 +187,8 @@ def to_cc(compiler):
 
 def to_platform(compiler):
     return {
+        'vs2015x64': 'x64',
+        'vs2015x86': 'Win32',
         'vs2017x64': 'x64',
         'vs2017x86': 'Win32',
         'vs2019x64': 'x64',
@@ -198,24 +199,30 @@ def to_platform(compiler):
 
 
 def compiler_to_vars(compiler):
-    match compiler:
-        case 'gcc':
+    if compiler is None:
+        return {}
+
+    match compiler, compiler.split('-'):
+        case _, ['gcc', *rest]:
             return {
-                'cc_compiler': 'gcc',
-                'cxx_compiler': 'g++',
+                'cc_compiler': '-'.join(['gcc'] + rest),
+                'cxx_compiler': '-'.join(['g++'] + rest),
             }
 
-        case 'clang':
+        case _, ['clang', *rest]:
             return {
-                'cc_compiler': 'clang',
-                'cxx_compiler': 'clang++',
+                'cc_compiler': '-'.join(['clang'] + rest),
+                'cxx_compiler': '-'.join(['clang++'] + rest),
             }
 
-        case str(vs) if 'vs' in vs:
+        case str(vs), _ if 'vs' in vs:
             return {
                 'generator': to_cc(vs),
                 'platform': to_platform(vs),
             }
 
-        case _:
-            return {}
+        case compiler, _:
+            return {
+                'cc_compiler': compiler,
+                'cxx_compiler': compiler,
+            }

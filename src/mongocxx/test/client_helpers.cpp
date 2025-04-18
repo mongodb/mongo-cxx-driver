@@ -344,7 +344,7 @@ bsoncxx::stdx::optional<bsoncxx::document::value> parse_test_file(std::string pa
     std::ifstream test_file{path};
 
     if (test_file.bad()) {
-        return {};
+        return bsoncxx::v_noabi::stdx::nullopt;
     }
 
     stream << test_file.rdbuf();
@@ -385,7 +385,7 @@ static bsoncxx::stdx::optional<type> is_type_operator(types::bson_value::view va
         }
         throw std::logic_error{"unsupported type for $$type"};
     }
-    return {};
+    return bsoncxx::v_noabi::stdx::nullopt;
 }
 
 bool matches(types::bson_value::view main, types::bson_value::view pattern, match_visitor visitor_fn) {

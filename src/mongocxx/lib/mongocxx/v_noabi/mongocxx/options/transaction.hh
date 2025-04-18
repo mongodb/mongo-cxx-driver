@@ -64,7 +64,7 @@ class transaction::impl {
     bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::read_concern> read_concern() const {
         auto rc = libmongoc::transaction_opts_get_read_concern(_transaction_opt_t.get());
         if (!rc) {
-            return {};
+            return bsoncxx::v_noabi::stdx::nullopt;
         }
         mongocxx::v_noabi::read_concern rci(bsoncxx::make_unique<read_concern::impl>(libmongoc::read_concern_copy(rc)));
         return bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::read_concern>(std::move(rci));
@@ -77,7 +77,7 @@ class transaction::impl {
     bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern> write_concern() const {
         auto wc = libmongoc::transaction_opts_get_write_concern(_transaction_opt_t.get());
         if (!wc) {
-            return {};
+            return bsoncxx::v_noabi::stdx::nullopt;
         }
         mongocxx::v_noabi::write_concern wci(
             bsoncxx::make_unique<write_concern::impl>(libmongoc::write_concern_copy(wc)));
@@ -91,7 +91,7 @@ class transaction::impl {
     bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::read_preference> read_preference() const {
         auto rp = libmongoc::transaction_opts_get_read_prefs(_transaction_opt_t.get());
         if (!rp) {
-            return {};
+            return bsoncxx::v_noabi::stdx::nullopt;
         }
         mongocxx::v_noabi::read_preference rpi(
             bsoncxx::make_unique<read_preference::impl>(libmongoc::read_prefs_copy(rp)));
@@ -105,15 +105,7 @@ class transaction::impl {
     bsoncxx::v_noabi::stdx::optional<std::chrono::milliseconds> max_commit_time_ms() const {
         auto ms = libmongoc::transaction_opts_get_max_commit_time_ms(_transaction_opt_t.get());
         if (!ms) {
-#if !defined(__clang__) && defined(__GNUC__) && (__cplusplus >= 201709L)
-// Silence false positive with g++ 10.2.1 on Debian 11.
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
-#endif
-            return {};
-#if !defined(__clang__) && defined(__GNUC__) && (__cplusplus >= 201709L)
-#pragma GCC diagnostic pop
-#endif
+            return bsoncxx::v_noabi::stdx::nullopt;
         }
         return {std::chrono::milliseconds{ms}};
     }

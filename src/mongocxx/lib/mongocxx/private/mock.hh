@@ -65,7 +65,9 @@ struct mock_invoke<CRTP, R(Args...)> {
 };
 
 BSONCXX_PRIVATE_WARNINGS_PUSH();
+#if defined(__GNUC__) && (__GNUC__ >= 6) && !defined(__clang__)
 BSONCXX_PRIVATE_WARNINGS_DISABLE(GNU("-Wignored-attributes"));
+#endif
 
 template <typename CRTP, typename... Args>
 struct mock_invoke<CRTP, bson_t const*(Args...)> {
