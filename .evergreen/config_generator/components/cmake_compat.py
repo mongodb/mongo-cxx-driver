@@ -71,7 +71,7 @@ def tasks():
                         'CMAKE_MAJOR_VERSION': version[0],
                         'CMAKE_MINOR_VERSION': version[1],
                         'CMAKE_PATCH_VERSION': version[2],
-                        'INSTALL_C_DRIVER': 1 if install_c_driver else 0,
+                        'INSTALL_C_DRIVER': int(install_c_driver),
                     },
                 ),
             ]
