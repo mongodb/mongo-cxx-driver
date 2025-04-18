@@ -856,7 +856,7 @@ Add an entry to the [C/C++ Release Info](https://docs.google.com/spreadsheets/d/
 
 ### Update Branch Protection Rules
 
-"Lock" the previous stable release (which will no longer recieve any further updates) by adding it to the list of branches in the "Restrict Branch Updates" ruleset.
+Notify a repository administrator that the previous stable release branch (which will no longer recieve any further updates) may now be "locked" by adding it to the list of branches in the "Restrict Branch Updates" ruleset.
 
 ## Packaging
 
