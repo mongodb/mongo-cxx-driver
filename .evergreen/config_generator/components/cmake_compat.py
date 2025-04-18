@@ -64,8 +64,9 @@ def tasks():
     for name, version in MATRIX:
         for install_c_driver in install_c_driver_modes:
             commands = [
-                Setup.call(), InstallUV.call()
-            ] + ([InstallCDriver.call() if install_c_driver else FetchCDriverSource.call()]) + [
+                Setup.call(),
+                InstallUV.call(),
+                (InstallCDriver.call() if install_c_driver else FetchCDriverSource.call()),
                 CMakeCompat.call(
                     vars={
                         'CMAKE_MAJOR_VERSION': version[0],
