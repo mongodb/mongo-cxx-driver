@@ -197,7 +197,7 @@ Verify there are no unexpected errors or issues.
 
 The release process may require creating new branches, new tags, and directly pushing to development branches. These operations are normally restricted by branch protection rules.
 
-When assigned the responsibility of performing a release, submit a request to a repository administrator to be temporarily added to the `dbx-c-cxx-releases` team for the duration of the release process. Request to be removed from the team after the release process is complete.
+When assigned the responsibility of performing a release, submit a request to a repository administrator to be temporarily added to the `dbx-c-cxx-releases` team for the duration of the release process. The team member must be added via [MANA](https://mana.corp.mongodb.com/) (the GitHub team is usually empty; no member has the maintainer role).
 
 ### Update CHANGELOG...
 
@@ -857,6 +857,8 @@ Add an entry to the [C/C++ Release Info](https://docs.google.com/spreadsheets/d/
 ### Update Branch Protection Rules
 
 Notify a repository administrator that the previous stable release branch (which will no longer recieve any further updates) may now be "locked" by adding it to the list of branches in the "Restrict Branch Updates" ruleset.
+
+Once the release process is complete, use [MANA](https://mana.corp.mongodb.com/) to leave the `dbx-c-cxx-releases` team or request a repository administrator to remove you instead.
 
 ## Packaging
 
