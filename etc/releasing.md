@@ -854,6 +854,10 @@ The C++ Driver Team
 
 Add an entry to the [C/C++ Release Info](https://docs.google.com/spreadsheets/d/1yHfGmDnbA5-Qt8FX4tKWC5xk9AhzYZx1SKF4AD36ecY) spreadsheet documenting the date, release version, author (of the release), and additional comments.
 
+### Update Branch Protection Rules
+
+"Lock" the previous stable release (which will no longer recieve any further updates) by adding it to the list of branches in the "Restrict Branch Updates" ruleset.
+
 ## Packaging
 
 ### vcpkg
