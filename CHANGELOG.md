@@ -22,6 +22,7 @@ Changes prior to 3.9.0 are documented as [release notes on GitHub](https://githu
 - Support for MacOS 11 (EOL since Nov 2020) and MacOS 12 (EOL since Oct 2021).
 - `storage_options()` in `mongocxx::v_noabi::options::index`: use `storage_engine()` instead.
   - `base_storage_options` and `wiredtiger_storage_options` in `mongocxx::v_noabi::options::index` are also deprecated.
+- `mongocxx::v_noabi::read_preference::hedge()`
 
 ### Changed
 
