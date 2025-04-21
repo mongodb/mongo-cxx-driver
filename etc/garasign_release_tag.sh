@@ -6,17 +6,15 @@
 set -o errexit
 set -o pipefail
 
-: "${1:?"missing dist_file as first argument"}"
+: "${1:?"missing tag name as first argument"}"
+
+release_tag="${1:?}"
 
 # Allow customization point to use docker in place of podman.
 launcher="${GARASIGN_LAUNCHER:-"podman"}"
 
 if ! command -v "${launcher:?}" >/dev/null; then
-  echo "${launcher:?} is required to sign distribution tarball" 1>&2
-fi
-
-if ! command -v gpg >/dev/null; then
-  echo "gpg is required to verify distribution tarball signature" 1>&2
+  echo "${launcher:?} is required to create a GPG-signed release tag" 1>&2
 fi
 
 artifactory_creds=~/.secrets/artifactory-creds.txt
@@ -34,29 +32,36 @@ unset GRS_CONFIG_USER1_USERNAME GRS_CONFIG_USER1_PASSWORD
 : "${GRS_CONFIG_USER1_USERNAME:?"missing GRS_CONFIG_USER1_USERNAME in ${garasign_creds:?}"}"
 : "${GRS_CONFIG_USER1_PASSWORD:?"missing GRS_CONFIG_USER1_PASSWORD in ${garasign_creds:?}"}"
 
-dist_file="${1:?}"
-dist_file_signed="${dist_file:?}.asc"
-
 "${launcher:?}" login --password-stdin --username "${ARTIFACTORY_USER:?}" artifactory.corp.mongodb.com <<<"${ARTIFACTORY_PASSWORD:?}"
 
 # Ensure latest version of Garasign is being used.
-"${launcher:?}" pull artifactory.corp.mongodb.com/release-tools-container-registry-local/garasign-gpg
+"${launcher:?}" pull artifactory.corp.mongodb.com/release-tools-container-registry-local/garasign-git
 
-plugin_commands=(
-  gpg --yes -v --armor -o "${dist_file_signed:?}" --detach-sign "${dist_file:?}"
+# Sign using "MongoDB C++ Release Signing Key <packaging@mongodb.com>" from https://pgp.mongodb.com/ (cpp-driver).
+git_tag_command=(
+  git
+  -c "user.name=\"MongoDB C++ Release Signing Key\""
+  -c "user.email=\"packaging@mongodb.com\""
+  tag
+  -u DC7F679B8A34DD606C1E54CAC4FC994D21532195
+  -m "\"${release_tag:?}\""
+  "\"${release_tag:?}\""
 )
+plugin_commands=""
+plugin_commands+="gpg --list-key DC7F679B8A34DD606C1E54CAC4FC994D21532195"
+plugin_commands+="&& ${git_tag_command[*]:?}"
 "${launcher:?}" run \
   --env-file="${garasign_creds:?}" \
-  -e "PLUGIN_COMMANDS=${plugin_commands[*]:?}" \
+  -e "PLUGIN_COMMANDS=${plugin_commands:?}" \
   --rm \
   -v "$(pwd):$(pwd)" \
   -w "$(pwd)" \
-  artifactory.corp.mongodb.com/release-tools-container-registry-local/garasign-gpg
+  artifactory.corp.mongodb.com/release-tools-container-registry-local/garasign-git
 
-# Validate the signature file works as intended.
+# Validate the release tag is signed as intended.
 (
   GNUPGHOME="$(mktemp -d)"
   export GNUPGHOME
   curl -sS https://pgp.mongodb.com/cpp-driver.pub | gpg -q --no-default-keyring --import -
-  gpgv "${dist_file_signed:?}" "${dist_file:?}"
+  git verify-tag "${release_tag:?}"
 )

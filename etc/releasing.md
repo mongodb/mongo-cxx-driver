@@ -287,6 +287,10 @@ git clone -o upstream git@github.com:mongodb/mongo-cxx-driver.git mongo-cxx-driv
 cd mongo-cxx-driver-release
 ```
 
+> [!WARNING]
+> The upcoming steps may modify the state of the current repository!
+> Cloning the updated repository in a new directory is highly recommended.
+
 Create and activate a fresh Python 3 virtual environment with required packages installed using [uv](https://docs.astral.sh/uv/getting-started/installation/):
 
 ```bash
@@ -300,29 +304,6 @@ uv sync --frozen --group apidocs --group make_release
 source "$UV_PROJECT_ENVIRONMENT/bin/activate"
 ```
 
-### Create a Release Tag...
-
-> [!IMPORTANT]
-> Do NOT push the release tag immediately after its creation!
-
-#### ... for a Patch Release
-
-Checkout the release branch (containing the changes from earlier steps) and create a tag for the release.
-
-```bash
-git checkout releases/vX.Y
-git tag rX.Y.Z
-```
-
-#### ... for a Non-Patch Release
-
-Checkout the `master` branch (containing the changes from earlier steps) and create a tag for the release:
-
-```bash
-git checkout master
-git tag rX.Y.0
-```
-
 > [!NOTE]
 > A new release branch `releases/vX.Y` will be created later as part of post-release steps.
 
@@ -330,6 +311,7 @@ git tag rX.Y.0
 
 This script performs the following steps:
 
+- create a GPG-signed release tag,
 - create the distribution tarball (e.g. `mongo-cxx-driver-r1.2.3.tar.gz`),
 - creates a signature file for the distribution tarball (e.g. `mongo-cxx-driver-r1.2.3.tar.gz.asc`),
 - query Jira for release and ticket statuses, and
@@ -348,7 +330,7 @@ The following secrets are required by this script:
 - Artifactory credentials.
 - Garasign credentials.
 
-Run the release script with the git tag created above as an argument and
+Run the release script with the name of the tag to be created as an argument and
 `--dry-run` to test for unexpected errors.
 
 ```bash
@@ -367,6 +349,7 @@ If an error occurs, inspect logs the script produces, and troubleshoot as
 follows:
 
 - Use `--dry-run` to prevent unrecoverable effects.
+- Use `--skip-release-tag` to skip creating the release tag when it already exists.
 - If building the C driver fails, use an existing C driver build (ensure it is
   the right version) with `--with-c-driver /path/to/c-driver/install`.
 - Use `--skip-distcheck` to bypass time consuming checks when building the
@@ -380,7 +363,7 @@ Verify the successful creation of the release draft on GitHub.
 
 ### Push the Release Tag
 
-Push the release tag (created earlier) to the remote repository:
+Push the newly-created GPG-signed release tag to the remote repository:
 
 ```bash
 git push upstream rX.Y.Z

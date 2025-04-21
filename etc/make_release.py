@@ -41,6 +41,7 @@ import textwrap
 import re
 from distutils.version import LooseVersion
 import os
+import glob
 import subprocess
 import sys
 import tempfile
@@ -68,6 +69,9 @@ ISSUE_TYPE_ID = {'Backport': '10300',
                 }
 
 @click.command()
+@click.option('--skip-release-tag',
+              is_flag=True,
+              help='Use an existing release tag instead of creating a new one')
 @click.option('--jira-creds-file',
               '-j',
               default='jira_creds.txt',
@@ -111,7 +115,8 @@ ISSUE_TYPE_ID = {'Backport': '10300',
               help='Produce fewer progress messages')
 @click.argument('git-revision', required=True)
 # pylint: disable=too-many-arguments,too-many-locals,too-many-branches,too-many-statements
-def release(jira_creds_file,
+def release(skip_release_tag,
+            jira_creds_file,
             github_token_file,
             allow_open_issues,
             remote,
@@ -147,6 +152,13 @@ def release(jira_creds_file,
         click.echo('DRY RUN! No remote modifications will be made!')
     if not quiet:
         print_banner(git_revision)
+
+    if skip_release_tag:
+        click.echo(f'Skipping creation of a new release tag')
+    else:
+        click.echo('Creating GPG-signed release tag...')
+        run_shell_script(f'./etc/garasign_release_tag.sh {git_revision}')
+        click.echo('Creating GPG-signed release tag... done.')
 
     release_tag, release_version = get_release_tag(git_revision)
 
@@ -384,9 +396,9 @@ def ensure_c_driver(c_driver_build_ref, with_c_driver, quiet):
     """
 
     if with_c_driver:
-        bson_h = os.path.join(with_c_driver, 'include/bson2/bson/bson.h')
-        mongoc_h = os.path.join(with_c_driver, 'include/mongoc2/mongoc/mongoc.h')
-        if os.path.exists(bson_h) and os.path.exists(mongoc_h):
+        bson_h = glob.glob('include/bson-2.*/bson/bson.h', root_dir=with_c_driver)
+        mongoc_h = glob.glob('include/mongoc-2.*/mongoc/mongoc.h', root_dir=with_c_driver)
+        if bson_h and mongoc_h:
             return with_c_driver
         if not quiet:
             click.echo('A required component of the C driver is missing!', err=True)
@@ -452,7 +464,7 @@ def build_distribution(release_tag, release_version, c_driver_dir, quiet, skip_d
 
     if not skip_distcheck:
         click.echo('Building C++ driver from tarball and running tests.')
-        click.echo('This may take several minutes. This may be skipped with --skip_distcheck')
+        click.echo('This may take several minutes. This may be skipped with --skip-distcheck')
         run_shell_script('cmake --build build --target distcheck')
     return dist_file
 
