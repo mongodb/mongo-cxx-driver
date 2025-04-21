@@ -41,6 +41,7 @@ import textwrap
 import re
 from distutils.version import LooseVersion
 import os
+import glob
 import subprocess
 import sys
 import tempfile
@@ -395,9 +396,9 @@ def ensure_c_driver(c_driver_build_ref, with_c_driver, quiet):
     """
 
     if with_c_driver:
-        bson_h = os.path.join(with_c_driver, 'include/bson2/bson/bson.h')
-        mongoc_h = os.path.join(with_c_driver, 'include/mongoc2/mongoc/mongoc.h')
-        if os.path.exists(bson_h) and os.path.exists(mongoc_h):
+        bson_h = glob.glob('include/bson-2.*/bson/bson.h', root_dir=with_c_driver)
+        mongoc_h = glob.glob('include/mongoc-2.*/mongoc/mongoc.h', root_dir=with_c_driver)
+        if bson_h and mongoc_h:
             return with_c_driver
         if not quiet:
             click.echo('A required component of the C driver is missing!', err=True)
