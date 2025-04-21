@@ -68,6 +68,9 @@ ISSUE_TYPE_ID = {'Backport': '10300',
                 }
 
 @click.command()
+@click.option('--skip-release-tag',
+              is_flag=True,
+              help='Use an existing release tag instead of creating a new one')
 @click.option('--jira-creds-file',
               '-j',
               default='jira_creds.txt',
@@ -111,7 +114,8 @@ ISSUE_TYPE_ID = {'Backport': '10300',
               help='Produce fewer progress messages')
 @click.argument('git-revision', required=True)
 # pylint: disable=too-many-arguments,too-many-locals,too-many-branches,too-many-statements
-def release(jira_creds_file,
+def release(skip_release_tag,
+            jira_creds_file,
             github_token_file,
             allow_open_issues,
             remote,
@@ -147,6 +151,13 @@ def release(jira_creds_file,
         click.echo('DRY RUN! No remote modifications will be made!')
     if not quiet:
         print_banner(git_revision)
+
+    if skip_release_tag:
+        click.echo(f'Skipping creation of a new release tag')
+    else:
+        click.echo('Creating GPG-signed release tag...')
+        run_shell_script(f'./etc/garasign_release_tag.sh {git_revision}')
+        click.echo('Creating GPG-signed release tag... done.')
 
     release_tag, release_version = get_release_tag(git_revision)
 
