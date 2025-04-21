@@ -464,7 +464,7 @@ def build_distribution(release_tag, release_version, c_driver_dir, quiet, skip_d
 
     if not skip_distcheck:
         click.echo('Building C++ driver from tarball and running tests.')
-        click.echo('This may take several minutes. This may be skipped with --skip_distcheck')
+        click.echo('This may take several minutes. This may be skipped with --skip-distcheck')
         run_shell_script('cmake --build build --target distcheck')
     return dist_file
 
