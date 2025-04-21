@@ -38,7 +38,7 @@ dist_file_signed="${dist_file:?}.asc"
 "${launcher:?}" login --password-stdin --username "${ARTIFACTORY_USER:?}" artifactory.corp.mongodb.com <<<"${ARTIFACTORY_PASSWORD:?}"
 
 # Ensure latest version of Garasign is being used.
-podman pull artifactory.corp.mongodb.com/release-tools-container-registry-local/garasign-gpg
+"${launcher:?}" pull artifactory.corp.mongodb.com/release-tools-container-registry-local/garasign-gpg
 
 plugin_commands=(
   gpg --yes -v --armor -o "${dist_file_signed:?}" --detach-sign "${dist_file:?}"

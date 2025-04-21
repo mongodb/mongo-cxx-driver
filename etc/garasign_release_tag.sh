@@ -33,7 +33,7 @@ unset GRS_CONFIG_USER1_USERNAME GRS_CONFIG_USER1_PASSWORD
 "${launcher:?}" login --password-stdin --username "${ARTIFACTORY_USER:?}" artifactory.corp.mongodb.com <<<"${ARTIFACTORY_PASSWORD:?}"
 
 # Ensure latest version of Garasign is being used.
-podman pull artifactory.corp.mongodb.com/release-tools-container-registry-local/garasign-git
+"${launcher:?}" pull artifactory.corp.mongodb.com/release-tools-container-registry-local/garasign-git
 
 # Sign using "MongoDB C++ Release Signing Key <packaging@mongodb.com>" from https://pgp.mongodb.com/ (cpp-driver).
 git_tag_command=(
