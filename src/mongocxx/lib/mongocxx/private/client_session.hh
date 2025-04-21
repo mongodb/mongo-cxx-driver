@@ -114,7 +114,8 @@ class client_session::impl {
 
     // Get session id, also known as "logical session id" or "lsid".
     bsoncxx::v_noabi::document::view id() const noexcept {
-        return bsoncxx::helpers::view_from_bson_t(libmongoc::client_session_get_lsid(_session_t.get()));
+        bson_t const* const bson = libmongoc::client_session_get_lsid(_session_t.get());
+        return bsoncxx::helpers::view_from_bson_t(bson);
     }
 
     bsoncxx::v_noabi::document::view cluster_time() const noexcept {

@@ -244,9 +244,129 @@ tasks:
           CMAKE_MINOR_VERSION: 15
           CMAKE_PATCH_VERSION: 4
           INSTALL_C_DRIVER: 1
-  - name: compile-only-macos-14-arm64-cxx11-debug-shared
+  - name: compile-only-debian10-gcc-8-cxx11-debug
+    run_on: debian10-large
+    tags: [compile-only, debian10, cxx11, gcc-8, debug]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+            - { key: cc_compiler, value: gcc-8 }
+            - { key: cxx_compiler, value: g++-8 }
+      - func: setup
+      - func: install_c_driver
+      - func: install-uv
+      - func: compile
+        vars:
+          BUILD_SHARED_AND_STATIC_LIBS: "ON"
+          REQUIRED_CXX_STANDARD: 11
+          build_type: Debug
+          cc_compiler: gcc-8
+          cxx_compiler: g++-8
+  - name: compile-only-debian10-gcc-8-cxx17-debug
+    run_on: debian10-large
+    tags: [compile-only, debian10, cxx17, gcc-8, debug]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+            - { key: cc_compiler, value: gcc-8 }
+            - { key: cxx_compiler, value: g++-8 }
+      - func: setup
+      - func: install_c_driver
+      - func: install-uv
+      - func: compile
+        vars:
+          BUILD_SHARED_AND_STATIC_LIBS: "ON"
+          REQUIRED_CXX_STANDARD: 17
+          build_type: Debug
+          cc_compiler: gcc-8
+          cxx_compiler: g++-8
+  - name: compile-only-debian10-gcc-8-cxx20-debug
+    run_on: debian10-large
+    tags: [compile-only, debian10, cxx20, gcc-8, debug]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+            - { key: cc_compiler, value: gcc-8 }
+            - { key: cxx_compiler, value: g++-8 }
+      - func: setup
+      - func: install_c_driver
+      - func: install-uv
+      - func: compile
+        vars:
+          BUILD_SHARED_AND_STATIC_LIBS: "ON"
+          REQUIRED_CXX_STANDARD: 20
+          build_type: Debug
+          cc_compiler: gcc-8
+          cxx_compiler: g++-8
+  - name: compile-only-debian11-gcc-10-cxx11-debug
+    run_on: debian11-large
+    tags: [compile-only, debian11, cxx11, gcc-10, debug]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+            - { key: cc_compiler, value: gcc-10 }
+            - { key: cxx_compiler, value: g++-10 }
+      - func: setup
+      - func: install_c_driver
+      - func: install-uv
+      - func: compile
+        vars:
+          BUILD_SHARED_AND_STATIC_LIBS: "ON"
+          REQUIRED_CXX_STANDARD: 11
+          build_type: Debug
+          cc_compiler: gcc-10
+          cxx_compiler: g++-10
+  - name: compile-only-debian11-gcc-10-cxx17-debug
+    run_on: debian11-large
+    tags: [compile-only, debian11, cxx17, gcc-10, debug]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+            - { key: cc_compiler, value: gcc-10 }
+            - { key: cxx_compiler, value: g++-10 }
+      - func: setup
+      - func: install_c_driver
+      - func: install-uv
+      - func: compile
+        vars:
+          BUILD_SHARED_AND_STATIC_LIBS: "ON"
+          REQUIRED_CXX_STANDARD: 17
+          build_type: Debug
+          cc_compiler: gcc-10
+          cxx_compiler: g++-10
+  - name: compile-only-debian11-gcc-10-cxx20-debug
+    run_on: debian11-large
+    tags: [compile-only, debian11, cxx20, gcc-10, debug]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+            - { key: cc_compiler, value: gcc-10 }
+            - { key: cxx_compiler, value: g++-10 }
+      - func: setup
+      - func: install_c_driver
+      - func: install-uv
+      - func: compile
+        vars:
+          BUILD_SHARED_AND_STATIC_LIBS: "ON"
+          REQUIRED_CXX_STANDARD: 20
+          build_type: Debug
+          cc_compiler: gcc-10
+          cxx_compiler: g++-10
+  - name: compile-only-macos-14-arm64-cxx11-debug
     run_on: macos-14-arm64
-    tags: [compile-only, macos-14-arm64, cxx11, debug, shared]
+    tags: [compile-only, macos-14-arm64, cxx11, debug]
     commands:
       - command: expansions.update
         params:
@@ -257,10 +377,12 @@ tasks:
       - func: install-uv
       - func: compile
         vars:
+          BUILD_SHARED_AND_STATIC_LIBS: "ON"
+          REQUIRED_CXX_STANDARD: 11
           build_type: Debug
-  - name: compile-only-macos-14-arm64-cxx11-debug-static
+  - name: compile-only-macos-14-arm64-cxx17-debug
     run_on: macos-14-arm64
-    tags: [compile-only, macos-14-arm64, cxx11, debug, static]
+    tags: [compile-only, macos-14-arm64, cxx17, debug]
     commands:
       - command: expansions.update
         params:
@@ -271,94 +393,12 @@ tasks:
       - func: install-uv
       - func: compile
         vars:
+          BUILD_SHARED_AND_STATIC_LIBS: "ON"
+          REQUIRED_CXX_STANDARD: 17
           build_type: Debug
-  - name: compile-only-macos-14-arm64-cxx11-release-shared
-    run_on: macos-14-arm64
-    tags: [compile-only, macos-14-arm64, cxx11, release, shared]
-    commands:
-      - command: expansions.update
-        params:
-          updates:
-            - { key: build_type, value: Release }
-      - func: setup
-      - func: install_c_driver
-      - func: install-uv
-      - func: compile
-        vars:
-          build_type: Release
-  - name: compile-only-macos-14-arm64-cxx11-release-static
-    run_on: macos-14-arm64
-    tags: [compile-only, macos-14-arm64, cxx11, release, static]
-    commands:
-      - command: expansions.update
-        params:
-          updates:
-            - { key: build_type, value: Release }
-      - func: setup
-      - func: install_c_driver
-      - func: install-uv
-      - func: compile
-        vars:
-          build_type: Release
-  - name: compile-only-macos-14-arm64-cxx17-debug-shared
-    run_on: macos-14-arm64
-    tags: [compile-only, macos-14-arm64, cxx17, debug, shared]
-    commands:
-      - command: expansions.update
-        params:
-          updates:
-            - { key: build_type, value: Debug }
-      - func: setup
-      - func: install_c_driver
-      - func: install-uv
-      - func: compile
-        vars:
-          build_type: Debug
-  - name: compile-only-macos-14-arm64-cxx17-debug-static
-    run_on: macos-14-arm64
-    tags: [compile-only, macos-14-arm64, cxx17, debug, static]
-    commands:
-      - command: expansions.update
-        params:
-          updates:
-            - { key: build_type, value: Debug }
-      - func: setup
-      - func: install_c_driver
-      - func: install-uv
-      - func: compile
-        vars:
-          build_type: Debug
-  - name: compile-only-macos-14-arm64-cxx17-release-shared
-    run_on: macos-14-arm64
-    tags: [compile-only, macos-14-arm64, cxx17, release, shared]
-    commands:
-      - command: expansions.update
-        params:
-          updates:
-            - { key: build_type, value: Release }
-      - func: setup
-      - func: install_c_driver
-      - func: install-uv
-      - func: compile
-        vars:
-          build_type: Release
-  - name: compile-only-macos-14-arm64-cxx17-release-static
-    run_on: macos-14-arm64
-    tags: [compile-only, macos-14-arm64, cxx17, release, static]
-    commands:
-      - command: expansions.update
-        params:
-          updates:
-            - { key: build_type, value: Release }
-      - func: setup
-      - func: install_c_driver
-      - func: install-uv
-      - func: compile
-        vars:
-          build_type: Release
-  - name: compile-only-macos-14-cxx11-debug-shared
+  - name: compile-only-macos-14-cxx11-debug
     run_on: macos-14
-    tags: [compile-only, macos-14, cxx11, debug, shared]
+    tags: [compile-only, macos-14, cxx11, debug]
     commands:
       - command: expansions.update
         params:
@@ -369,10 +409,12 @@ tasks:
       - func: install-uv
       - func: compile
         vars:
+          BUILD_SHARED_AND_STATIC_LIBS: "ON"
+          REQUIRED_CXX_STANDARD: 11
           build_type: Debug
-  - name: compile-only-macos-14-cxx11-debug-static
+  - name: compile-only-macos-14-cxx17-debug
     run_on: macos-14
-    tags: [compile-only, macos-14, cxx11, debug, static]
+    tags: [compile-only, macos-14, cxx17, debug]
     commands:
       - command: expansions.update
         params:
@@ -383,94 +425,52 @@ tasks:
       - func: install-uv
       - func: compile
         vars:
+          BUILD_SHARED_AND_STATIC_LIBS: "ON"
+          REQUIRED_CXX_STANDARD: 17
           build_type: Debug
-  - name: compile-only-macos-14-cxx11-release-shared
-    run_on: macos-14
-    tags: [compile-only, macos-14, cxx11, release, shared]
-    commands:
-      - command: expansions.update
-        params:
-          updates:
-            - { key: build_type, value: Release }
-      - func: setup
-      - func: install_c_driver
-      - func: install-uv
-      - func: compile
-        vars:
-          build_type: Release
-  - name: compile-only-macos-14-cxx11-release-static
-    run_on: macos-14
-    tags: [compile-only, macos-14, cxx11, release, static]
-    commands:
-      - command: expansions.update
-        params:
-          updates:
-            - { key: build_type, value: Release }
-      - func: setup
-      - func: install_c_driver
-      - func: install-uv
-      - func: compile
-        vars:
-          build_type: Release
-  - name: compile-only-macos-14-cxx17-debug-shared
-    run_on: macos-14
-    tags: [compile-only, macos-14, cxx17, debug, shared]
+  - name: compile-only-rhel76-gcc-cxx11-debug
+    run_on: rhel76-large
+    tags: [compile-only, rhel76, cxx11, gcc, debug]
     commands:
       - command: expansions.update
         params:
           updates:
             - { key: build_type, value: Debug }
+            - { key: cc_compiler, value: gcc }
+            - { key: cxx_compiler, value: g++ }
       - func: setup
       - func: install_c_driver
       - func: install-uv
       - func: compile
         vars:
+          BUILD_SHARED_AND_STATIC_LIBS: "ON"
+          REQUIRED_CXX_STANDARD: 11
           build_type: Debug
-  - name: compile-only-macos-14-cxx17-debug-static
-    run_on: macos-14
-    tags: [compile-only, macos-14, cxx17, debug, static]
+          cc_compiler: gcc
+          cxx_compiler: g++
+  - name: compile-only-rhel76-gcc-cxx14-debug
+    run_on: rhel76-large
+    tags: [compile-only, rhel76, cxx14, gcc, debug]
     commands:
       - command: expansions.update
         params:
           updates:
             - { key: build_type, value: Debug }
+            - { key: cc_compiler, value: gcc }
+            - { key: cxx_compiler, value: g++ }
       - func: setup
       - func: install_c_driver
       - func: install-uv
       - func: compile
         vars:
+          BUILD_SHARED_AND_STATIC_LIBS: "ON"
+          REQUIRED_CXX_STANDARD: 14
           build_type: Debug
-  - name: compile-only-macos-14-cxx17-release-shared
-    run_on: macos-14
-    tags: [compile-only, macos-14, cxx17, release, shared]
-    commands:
-      - command: expansions.update
-        params:
-          updates:
-            - { key: build_type, value: Release }
-      - func: setup
-      - func: install_c_driver
-      - func: install-uv
-      - func: compile
-        vars:
-          build_type: Release
-  - name: compile-only-macos-14-cxx17-release-static
-    run_on: macos-14
-    tags: [compile-only, macos-14, cxx17, release, static]
-    commands:
-      - command: expansions.update
-        params:
-          updates:
-            - { key: build_type, value: Release }
-      - func: setup
-      - func: install_c_driver
-      - func: install-uv
-      - func: compile
-        vars:
-          build_type: Release
-  - name: compile-only-rhel8-power-cxx11-debug-shared
+          cc_compiler: gcc
+          cxx_compiler: g++
+  - name: compile-only-rhel8-power-cxx11-debug
     run_on: rhel8-power-large
-    tags: [compile-only, rhel8-power, cxx11, debug, shared]
+    tags: [compile-only, rhel8-power, cxx11, debug]
     patchable: false
     commands:
       - command: expansions.update
@@ -482,10 +482,12 @@ tasks:
       - func: install-uv
       - func: compile
         vars:
+          BUILD_SHARED_AND_STATIC_LIBS: "ON"
+          REQUIRED_CXX_STANDARD: 11
           build_type: Debug
-  - name: compile-only-rhel8-power-cxx11-debug-static
+  - name: compile-only-rhel8-power-cxx17-debug
     run_on: rhel8-power-large
-    tags: [compile-only, rhel8-power, cxx11, debug, static]
+    tags: [compile-only, rhel8-power, cxx17, debug]
     patchable: false
     commands:
       - command: expansions.update
@@ -497,100 +499,12 @@ tasks:
       - func: install-uv
       - func: compile
         vars:
+          BUILD_SHARED_AND_STATIC_LIBS: "ON"
+          REQUIRED_CXX_STANDARD: 17
           build_type: Debug
-  - name: compile-only-rhel8-power-cxx11-release-shared
-    run_on: rhel8-power-large
-    tags: [compile-only, rhel8-power, cxx11, release, shared]
-    patchable: false
-    commands:
-      - command: expansions.update
-        params:
-          updates:
-            - { key: build_type, value: Release }
-      - func: setup
-      - func: install_c_driver
-      - func: install-uv
-      - func: compile
-        vars:
-          build_type: Release
-  - name: compile-only-rhel8-power-cxx11-release-static
-    run_on: rhel8-power-large
-    tags: [compile-only, rhel8-power, cxx11, release, static]
-    patchable: false
-    commands:
-      - command: expansions.update
-        params:
-          updates:
-            - { key: build_type, value: Release }
-      - func: setup
-      - func: install_c_driver
-      - func: install-uv
-      - func: compile
-        vars:
-          build_type: Release
-  - name: compile-only-rhel8-power-cxx17-debug-shared
-    run_on: rhel8-power-large
-    tags: [compile-only, rhel8-power, cxx17, debug, shared]
-    patchable: false
-    commands:
-      - command: expansions.update
-        params:
-          updates:
-            - { key: build_type, value: Debug }
-      - func: setup
-      - func: install_c_driver
-      - func: install-uv
-      - func: compile
-        vars:
-          build_type: Debug
-  - name: compile-only-rhel8-power-cxx17-debug-static
-    run_on: rhel8-power-large
-    tags: [compile-only, rhel8-power, cxx17, debug, static]
-    patchable: false
-    commands:
-      - command: expansions.update
-        params:
-          updates:
-            - { key: build_type, value: Debug }
-      - func: setup
-      - func: install_c_driver
-      - func: install-uv
-      - func: compile
-        vars:
-          build_type: Debug
-  - name: compile-only-rhel8-power-cxx17-release-shared
-    run_on: rhel8-power-large
-    tags: [compile-only, rhel8-power, cxx17, release, shared]
-    patchable: false
-    commands:
-      - command: expansions.update
-        params:
-          updates:
-            - { key: build_type, value: Release }
-      - func: setup
-      - func: install_c_driver
-      - func: install-uv
-      - func: compile
-        vars:
-          build_type: Release
-  - name: compile-only-rhel8-power-cxx17-release-static
-    run_on: rhel8-power-large
-    tags: [compile-only, rhel8-power, cxx17, release, static]
-    patchable: false
-    commands:
-      - command: expansions.update
-        params:
-          updates:
-            - { key: build_type, value: Release }
-      - func: setup
-      - func: install_c_driver
-      - func: install-uv
-      - func: compile
-        vars:
-          build_type: Release
-  - name: compile-only-rhel8-zseries-cxx11-debug-shared
+  - name: compile-only-rhel8-zseries-cxx11-debug
     run_on: rhel8-zseries-large
-    tags: [compile-only, rhel8-zseries, cxx11, debug, shared]
+    tags: [compile-only, rhel8-zseries, cxx11, debug]
     patchable: false
     commands:
       - command: expansions.update
@@ -602,10 +516,12 @@ tasks:
       - func: install-uv
       - func: compile
         vars:
+          BUILD_SHARED_AND_STATIC_LIBS: "ON"
+          REQUIRED_CXX_STANDARD: 11
           build_type: Debug
-  - name: compile-only-rhel8-zseries-cxx11-debug-static
+  - name: compile-only-rhel8-zseries-cxx17-debug
     run_on: rhel8-zseries-large
-    tags: [compile-only, rhel8-zseries, cxx11, debug, static]
+    tags: [compile-only, rhel8-zseries, cxx17, debug]
     patchable: false
     commands:
       - command: expansions.update
@@ -617,100 +533,12 @@ tasks:
       - func: install-uv
       - func: compile
         vars:
+          BUILD_SHARED_AND_STATIC_LIBS: "ON"
+          REQUIRED_CXX_STANDARD: 17
           build_type: Debug
-  - name: compile-only-rhel8-zseries-cxx11-release-shared
-    run_on: rhel8-zseries-large
-    tags: [compile-only, rhel8-zseries, cxx11, release, shared]
-    patchable: false
-    commands:
-      - command: expansions.update
-        params:
-          updates:
-            - { key: build_type, value: Release }
-      - func: setup
-      - func: install_c_driver
-      - func: install-uv
-      - func: compile
-        vars:
-          build_type: Release
-  - name: compile-only-rhel8-zseries-cxx11-release-static
-    run_on: rhel8-zseries-large
-    tags: [compile-only, rhel8-zseries, cxx11, release, static]
-    patchable: false
-    commands:
-      - command: expansions.update
-        params:
-          updates:
-            - { key: build_type, value: Release }
-      - func: setup
-      - func: install_c_driver
-      - func: install-uv
-      - func: compile
-        vars:
-          build_type: Release
-  - name: compile-only-rhel8-zseries-cxx17-debug-shared
-    run_on: rhel8-zseries-large
-    tags: [compile-only, rhel8-zseries, cxx17, debug, shared]
-    patchable: false
-    commands:
-      - command: expansions.update
-        params:
-          updates:
-            - { key: build_type, value: Debug }
-      - func: setup
-      - func: install_c_driver
-      - func: install-uv
-      - func: compile
-        vars:
-          build_type: Debug
-  - name: compile-only-rhel8-zseries-cxx17-debug-static
-    run_on: rhel8-zseries-large
-    tags: [compile-only, rhel8-zseries, cxx17, debug, static]
-    patchable: false
-    commands:
-      - command: expansions.update
-        params:
-          updates:
-            - { key: build_type, value: Debug }
-      - func: setup
-      - func: install_c_driver
-      - func: install-uv
-      - func: compile
-        vars:
-          build_type: Debug
-  - name: compile-only-rhel8-zseries-cxx17-release-shared
-    run_on: rhel8-zseries-large
-    tags: [compile-only, rhel8-zseries, cxx17, release, shared]
-    patchable: false
-    commands:
-      - command: expansions.update
-        params:
-          updates:
-            - { key: build_type, value: Release }
-      - func: setup
-      - func: install_c_driver
-      - func: install-uv
-      - func: compile
-        vars:
-          build_type: Release
-  - name: compile-only-rhel8-zseries-cxx17-release-static
-    run_on: rhel8-zseries-large
-    tags: [compile-only, rhel8-zseries, cxx17, release, static]
-    patchable: false
-    commands:
-      - command: expansions.update
-        params:
-          updates:
-            - { key: build_type, value: Release }
-      - func: setup
-      - func: install_c_driver
-      - func: install-uv
-      - func: compile
-        vars:
-          build_type: Release
-  - name: compile-only-rhel80-clang-cxx11-debug-shared
+  - name: compile-only-rhel80-clang-cxx11-debug
     run_on: rhel80-large
-    tags: [compile-only, rhel80, cxx11, clang, debug, shared]
+    tags: [compile-only, rhel80, cxx11, clang, debug]
     commands:
       - command: expansions.update
         params:
@@ -723,12 +551,14 @@ tasks:
       - func: install-uv
       - func: compile
         vars:
+          BUILD_SHARED_AND_STATIC_LIBS: "ON"
+          REQUIRED_CXX_STANDARD: 11
           build_type: Debug
           cc_compiler: clang
           cxx_compiler: clang++
-  - name: compile-only-rhel80-clang-cxx11-debug-static
+  - name: compile-only-rhel80-clang-cxx17-debug
     run_on: rhel80-large
-    tags: [compile-only, rhel80, cxx11, clang, debug, static]
+    tags: [compile-only, rhel80, cxx17, clang, debug]
     commands:
       - command: expansions.update
         params:
@@ -741,48 +571,14 @@ tasks:
       - func: install-uv
       - func: compile
         vars:
+          BUILD_SHARED_AND_STATIC_LIBS: "ON"
+          REQUIRED_CXX_STANDARD: 17
           build_type: Debug
           cc_compiler: clang
           cxx_compiler: clang++
-  - name: compile-only-rhel80-clang-cxx11-release-shared
+  - name: compile-only-rhel80-clang-cxx20-debug
     run_on: rhel80-large
-    tags: [compile-only, rhel80, cxx11, clang, release, shared]
-    commands:
-      - command: expansions.update
-        params:
-          updates:
-            - { key: build_type, value: Release }
-            - { key: cc_compiler, value: clang }
-            - { key: cxx_compiler, value: clang++ }
-      - func: setup
-      - func: install_c_driver
-      - func: install-uv
-      - func: compile
-        vars:
-          build_type: Release
-          cc_compiler: clang
-          cxx_compiler: clang++
-  - name: compile-only-rhel80-clang-cxx11-release-static
-    run_on: rhel80-large
-    tags: [compile-only, rhel80, cxx11, clang, release, static]
-    commands:
-      - command: expansions.update
-        params:
-          updates:
-            - { key: build_type, value: Release }
-            - { key: cc_compiler, value: clang }
-            - { key: cxx_compiler, value: clang++ }
-      - func: setup
-      - func: install_c_driver
-      - func: install-uv
-      - func: compile
-        vars:
-          build_type: Release
-          cc_compiler: clang
-          cxx_compiler: clang++
-  - name: compile-only-rhel80-clang-cxx17-debug-shared
-    run_on: rhel80-large
-    tags: [compile-only, rhel80, cxx17, clang, debug, shared]
+    tags: [compile-only, rhel80, cxx20, clang, debug]
     commands:
       - command: expansions.update
         params:
@@ -795,12 +591,74 @@ tasks:
       - func: install-uv
       - func: compile
         vars:
+          BUILD_SHARED_AND_STATIC_LIBS: "ON"
+          REQUIRED_CXX_STANDARD: 20
           build_type: Debug
           cc_compiler: clang
           cxx_compiler: clang++
-  - name: compile-only-rhel80-clang-cxx17-debug-static
+  - name: compile-only-rhel80-gcc-cxx11-debug
     run_on: rhel80-large
-    tags: [compile-only, rhel80, cxx17, clang, debug, static]
+    tags: [compile-only, rhel80, cxx11, gcc, debug]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+            - { key: cc_compiler, value: gcc }
+            - { key: cxx_compiler, value: g++ }
+      - func: setup
+      - func: install_c_driver
+      - func: install-uv
+      - func: compile
+        vars:
+          BUILD_SHARED_AND_STATIC_LIBS: "ON"
+          REQUIRED_CXX_STANDARD: 11
+          build_type: Debug
+          cc_compiler: gcc
+          cxx_compiler: g++
+  - name: compile-only-rhel80-gcc-cxx17-debug
+    run_on: rhel80-large
+    tags: [compile-only, rhel80, cxx17, gcc, debug]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+            - { key: cc_compiler, value: gcc }
+            - { key: cxx_compiler, value: g++ }
+      - func: setup
+      - func: install_c_driver
+      - func: install-uv
+      - func: compile
+        vars:
+          BUILD_SHARED_AND_STATIC_LIBS: "ON"
+          REQUIRED_CXX_STANDARD: 17
+          build_type: Debug
+          cc_compiler: gcc
+          cxx_compiler: g++
+  - name: compile-only-rhel80-gcc-cxx20-debug
+    run_on: rhel80-large
+    tags: [compile-only, rhel80, cxx20, gcc, debug]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+            - { key: cc_compiler, value: gcc }
+            - { key: cxx_compiler, value: g++ }
+      - func: setup
+      - func: install_c_driver
+      - func: install-uv
+      - func: compile
+        vars:
+          BUILD_SHARED_AND_STATIC_LIBS: "ON"
+          REQUIRED_CXX_STANDARD: 20
+          build_type: Debug
+          cc_compiler: gcc
+          cxx_compiler: g++
+  - name: compile-only-rhel84-clang-cxx11-debug
+    run_on: rhel84-large
+    tags: [compile-only, rhel84, cxx11, clang, debug]
     commands:
       - command: expansions.update
         params:
@@ -813,48 +671,14 @@ tasks:
       - func: install-uv
       - func: compile
         vars:
+          BUILD_SHARED_AND_STATIC_LIBS: "ON"
+          REQUIRED_CXX_STANDARD: 11
           build_type: Debug
           cc_compiler: clang
           cxx_compiler: clang++
-  - name: compile-only-rhel80-clang-cxx17-release-shared
-    run_on: rhel80-large
-    tags: [compile-only, rhel80, cxx17, clang, release, shared]
-    commands:
-      - command: expansions.update
-        params:
-          updates:
-            - { key: build_type, value: Release }
-            - { key: cc_compiler, value: clang }
-            - { key: cxx_compiler, value: clang++ }
-      - func: setup
-      - func: install_c_driver
-      - func: install-uv
-      - func: compile
-        vars:
-          build_type: Release
-          cc_compiler: clang
-          cxx_compiler: clang++
-  - name: compile-only-rhel80-clang-cxx17-release-static
-    run_on: rhel80-large
-    tags: [compile-only, rhel80, cxx17, clang, release, static]
-    commands:
-      - command: expansions.update
-        params:
-          updates:
-            - { key: build_type, value: Release }
-            - { key: cc_compiler, value: clang }
-            - { key: cxx_compiler, value: clang++ }
-      - func: setup
-      - func: install_c_driver
-      - func: install-uv
-      - func: compile
-        vars:
-          build_type: Release
-          cc_compiler: clang
-          cxx_compiler: clang++
-  - name: compile-only-rhel80-clang-cxx20-debug-shared
-    run_on: rhel80-large
-    tags: [compile-only, rhel80, cxx20, clang, debug, shared]
+  - name: compile-only-rhel84-clang-cxx17-debug
+    run_on: rhel84-large
+    tags: [compile-only, rhel84, cxx17, clang, debug]
     commands:
       - command: expansions.update
         params:
@@ -867,12 +691,14 @@ tasks:
       - func: install-uv
       - func: compile
         vars:
+          BUILD_SHARED_AND_STATIC_LIBS: "ON"
+          REQUIRED_CXX_STANDARD: 17
           build_type: Debug
           cc_compiler: clang
           cxx_compiler: clang++
-  - name: compile-only-rhel80-clang-cxx20-debug-static
-    run_on: rhel80-large
-    tags: [compile-only, rhel80, cxx20, clang, debug, static]
+  - name: compile-only-rhel84-clang-cxx20-debug
+    run_on: rhel84-large
+    tags: [compile-only, rhel84, cxx20, clang, debug]
     commands:
       - command: expansions.update
         params:
@@ -885,120 +711,14 @@ tasks:
       - func: install-uv
       - func: compile
         vars:
+          BUILD_SHARED_AND_STATIC_LIBS: "ON"
+          REQUIRED_CXX_STANDARD: 20
           build_type: Debug
           cc_compiler: clang
           cxx_compiler: clang++
-  - name: compile-only-rhel80-clang-cxx20-release-shared
-    run_on: rhel80-large
-    tags: [compile-only, rhel80, cxx20, clang, release, shared]
-    commands:
-      - command: expansions.update
-        params:
-          updates:
-            - { key: build_type, value: Release }
-            - { key: cc_compiler, value: clang }
-            - { key: cxx_compiler, value: clang++ }
-      - func: setup
-      - func: install_c_driver
-      - func: install-uv
-      - func: compile
-        vars:
-          build_type: Release
-          cc_compiler: clang
-          cxx_compiler: clang++
-  - name: compile-only-rhel80-clang-cxx20-release-static
-    run_on: rhel80-large
-    tags: [compile-only, rhel80, cxx20, clang, release, static]
-    commands:
-      - command: expansions.update
-        params:
-          updates:
-            - { key: build_type, value: Release }
-            - { key: cc_compiler, value: clang }
-            - { key: cxx_compiler, value: clang++ }
-      - func: setup
-      - func: install_c_driver
-      - func: install-uv
-      - func: compile
-        vars:
-          build_type: Release
-          cc_compiler: clang
-          cxx_compiler: clang++
-  - name: compile-only-rhel80-clang-cxx23-debug-shared
-    run_on: rhel80-large
-    tags: [compile-only, rhel80, cxx23, clang, debug, shared]
-    commands:
-      - command: expansions.update
-        params:
-          updates:
-            - { key: build_type, value: Debug }
-            - { key: cc_compiler, value: clang }
-            - { key: cxx_compiler, value: clang++ }
-      - func: setup
-      - func: install_c_driver
-      - func: install-uv
-      - func: compile
-        vars:
-          build_type: Debug
-          cc_compiler: clang
-          cxx_compiler: clang++
-  - name: compile-only-rhel80-clang-cxx23-debug-static
-    run_on: rhel80-large
-    tags: [compile-only, rhel80, cxx23, clang, debug, static]
-    commands:
-      - command: expansions.update
-        params:
-          updates:
-            - { key: build_type, value: Debug }
-            - { key: cc_compiler, value: clang }
-            - { key: cxx_compiler, value: clang++ }
-      - func: setup
-      - func: install_c_driver
-      - func: install-uv
-      - func: compile
-        vars:
-          build_type: Debug
-          cc_compiler: clang
-          cxx_compiler: clang++
-  - name: compile-only-rhel80-clang-cxx23-release-shared
-    run_on: rhel80-large
-    tags: [compile-only, rhel80, cxx23, clang, release, shared]
-    commands:
-      - command: expansions.update
-        params:
-          updates:
-            - { key: build_type, value: Release }
-            - { key: cc_compiler, value: clang }
-            - { key: cxx_compiler, value: clang++ }
-      - func: setup
-      - func: install_c_driver
-      - func: install-uv
-      - func: compile
-        vars:
-          build_type: Release
-          cc_compiler: clang
-          cxx_compiler: clang++
-  - name: compile-only-rhel80-clang-cxx23-release-static
-    run_on: rhel80-large
-    tags: [compile-only, rhel80, cxx23, clang, release, static]
-    commands:
-      - command: expansions.update
-        params:
-          updates:
-            - { key: build_type, value: Release }
-            - { key: cc_compiler, value: clang }
-            - { key: cxx_compiler, value: clang++ }
-      - func: setup
-      - func: install_c_driver
-      - func: install-uv
-      - func: compile
-        vars:
-          build_type: Release
-          cc_compiler: clang
-          cxx_compiler: clang++
-  - name: compile-only-rhel80-gcc-cxx11-debug-shared
-    run_on: rhel80-large
-    tags: [compile-only, rhel80, cxx11, gcc, debug, shared]
+  - name: compile-only-rhel84-gcc-cxx11-debug
+    run_on: rhel84-large
+    tags: [compile-only, rhel84, cxx11, gcc, debug]
     commands:
       - command: expansions.update
         params:
@@ -1011,12 +731,14 @@ tasks:
       - func: install-uv
       - func: compile
         vars:
+          BUILD_SHARED_AND_STATIC_LIBS: "ON"
+          REQUIRED_CXX_STANDARD: 11
           build_type: Debug
           cc_compiler: gcc
           cxx_compiler: g++
-  - name: compile-only-rhel80-gcc-cxx11-debug-static
-    run_on: rhel80-large
-    tags: [compile-only, rhel80, cxx11, gcc, debug, static]
+  - name: compile-only-rhel84-gcc-cxx17-debug
+    run_on: rhel84-large
+    tags: [compile-only, rhel84, cxx17, gcc, debug]
     commands:
       - command: expansions.update
         params:
@@ -1029,48 +751,14 @@ tasks:
       - func: install-uv
       - func: compile
         vars:
+          BUILD_SHARED_AND_STATIC_LIBS: "ON"
+          REQUIRED_CXX_STANDARD: 17
           build_type: Debug
           cc_compiler: gcc
           cxx_compiler: g++
-  - name: compile-only-rhel80-gcc-cxx11-release-shared
-    run_on: rhel80-large
-    tags: [compile-only, rhel80, cxx11, gcc, release, shared]
-    commands:
-      - command: expansions.update
-        params:
-          updates:
-            - { key: build_type, value: Release }
-            - { key: cc_compiler, value: gcc }
-            - { key: cxx_compiler, value: g++ }
-      - func: setup
-      - func: install_c_driver
-      - func: install-uv
-      - func: compile
-        vars:
-          build_type: Release
-          cc_compiler: gcc
-          cxx_compiler: g++
-  - name: compile-only-rhel80-gcc-cxx11-release-static
-    run_on: rhel80-large
-    tags: [compile-only, rhel80, cxx11, gcc, release, static]
-    commands:
-      - command: expansions.update
-        params:
-          updates:
-            - { key: build_type, value: Release }
-            - { key: cc_compiler, value: gcc }
-            - { key: cxx_compiler, value: g++ }
-      - func: setup
-      - func: install_c_driver
-      - func: install-uv
-      - func: compile
-        vars:
-          build_type: Release
-          cc_compiler: gcc
-          cxx_compiler: g++
-  - name: compile-only-rhel80-gcc-cxx17-debug-shared
-    run_on: rhel80-large
-    tags: [compile-only, rhel80, cxx17, gcc, debug, shared]
+  - name: compile-only-rhel84-gcc-cxx20-debug
+    run_on: rhel84-large
+    tags: [compile-only, rhel84, cxx20, gcc, debug]
     commands:
       - command: expansions.update
         params:
@@ -1083,210 +771,14 @@ tasks:
       - func: install-uv
       - func: compile
         vars:
+          BUILD_SHARED_AND_STATIC_LIBS: "ON"
+          REQUIRED_CXX_STANDARD: 20
           build_type: Debug
           cc_compiler: gcc
           cxx_compiler: g++
-  - name: compile-only-rhel80-gcc-cxx17-debug-static
-    run_on: rhel80-large
-    tags: [compile-only, rhel80, cxx17, gcc, debug, static]
-    commands:
-      - command: expansions.update
-        params:
-          updates:
-            - { key: build_type, value: Debug }
-            - { key: cc_compiler, value: gcc }
-            - { key: cxx_compiler, value: g++ }
-      - func: setup
-      - func: install_c_driver
-      - func: install-uv
-      - func: compile
-        vars:
-          build_type: Debug
-          cc_compiler: gcc
-          cxx_compiler: g++
-  - name: compile-only-rhel80-gcc-cxx17-release-shared
-    run_on: rhel80-large
-    tags: [compile-only, rhel80, cxx17, gcc, release, shared]
-    commands:
-      - command: expansions.update
-        params:
-          updates:
-            - { key: build_type, value: Release }
-            - { key: cc_compiler, value: gcc }
-            - { key: cxx_compiler, value: g++ }
-      - func: setup
-      - func: install_c_driver
-      - func: install-uv
-      - func: compile
-        vars:
-          build_type: Release
-          cc_compiler: gcc
-          cxx_compiler: g++
-  - name: compile-only-rhel80-gcc-cxx17-release-static
-    run_on: rhel80-large
-    tags: [compile-only, rhel80, cxx17, gcc, release, static]
-    commands:
-      - command: expansions.update
-        params:
-          updates:
-            - { key: build_type, value: Release }
-            - { key: cc_compiler, value: gcc }
-            - { key: cxx_compiler, value: g++ }
-      - func: setup
-      - func: install_c_driver
-      - func: install-uv
-      - func: compile
-        vars:
-          build_type: Release
-          cc_compiler: gcc
-          cxx_compiler: g++
-  - name: compile-only-rhel80-gcc-cxx20-debug-shared
-    run_on: rhel80-large
-    tags: [compile-only, rhel80, cxx20, gcc, debug, shared]
-    commands:
-      - command: expansions.update
-        params:
-          updates:
-            - { key: build_type, value: Debug }
-            - { key: cc_compiler, value: gcc }
-            - { key: cxx_compiler, value: g++ }
-      - func: setup
-      - func: install_c_driver
-      - func: install-uv
-      - func: compile
-        vars:
-          build_type: Debug
-          cc_compiler: gcc
-          cxx_compiler: g++
-  - name: compile-only-rhel80-gcc-cxx20-debug-static
-    run_on: rhel80-large
-    tags: [compile-only, rhel80, cxx20, gcc, debug, static]
-    commands:
-      - command: expansions.update
-        params:
-          updates:
-            - { key: build_type, value: Debug }
-            - { key: cc_compiler, value: gcc }
-            - { key: cxx_compiler, value: g++ }
-      - func: setup
-      - func: install_c_driver
-      - func: install-uv
-      - func: compile
-        vars:
-          build_type: Debug
-          cc_compiler: gcc
-          cxx_compiler: g++
-  - name: compile-only-rhel80-gcc-cxx20-release-shared
-    run_on: rhel80-large
-    tags: [compile-only, rhel80, cxx20, gcc, release, shared]
-    commands:
-      - command: expansions.update
-        params:
-          updates:
-            - { key: build_type, value: Release }
-            - { key: cc_compiler, value: gcc }
-            - { key: cxx_compiler, value: g++ }
-      - func: setup
-      - func: install_c_driver
-      - func: install-uv
-      - func: compile
-        vars:
-          build_type: Release
-          cc_compiler: gcc
-          cxx_compiler: g++
-  - name: compile-only-rhel80-gcc-cxx20-release-static
-    run_on: rhel80-large
-    tags: [compile-only, rhel80, cxx20, gcc, release, static]
-    commands:
-      - command: expansions.update
-        params:
-          updates:
-            - { key: build_type, value: Release }
-            - { key: cc_compiler, value: gcc }
-            - { key: cxx_compiler, value: g++ }
-      - func: setup
-      - func: install_c_driver
-      - func: install-uv
-      - func: compile
-        vars:
-          build_type: Release
-          cc_compiler: gcc
-          cxx_compiler: g++
-  - name: compile-only-rhel80-gcc-cxx23-debug-shared
-    run_on: rhel80-large
-    tags: [compile-only, rhel80, cxx23, gcc, debug, shared]
-    commands:
-      - command: expansions.update
-        params:
-          updates:
-            - { key: build_type, value: Debug }
-            - { key: cc_compiler, value: gcc }
-            - { key: cxx_compiler, value: g++ }
-      - func: setup
-      - func: install_c_driver
-      - func: install-uv
-      - func: compile
-        vars:
-          build_type: Debug
-          cc_compiler: gcc
-          cxx_compiler: g++
-  - name: compile-only-rhel80-gcc-cxx23-debug-static
-    run_on: rhel80-large
-    tags: [compile-only, rhel80, cxx23, gcc, debug, static]
-    commands:
-      - command: expansions.update
-        params:
-          updates:
-            - { key: build_type, value: Debug }
-            - { key: cc_compiler, value: gcc }
-            - { key: cxx_compiler, value: g++ }
-      - func: setup
-      - func: install_c_driver
-      - func: install-uv
-      - func: compile
-        vars:
-          build_type: Debug
-          cc_compiler: gcc
-          cxx_compiler: g++
-  - name: compile-only-rhel80-gcc-cxx23-release-shared
-    run_on: rhel80-large
-    tags: [compile-only, rhel80, cxx23, gcc, release, shared]
-    commands:
-      - command: expansions.update
-        params:
-          updates:
-            - { key: build_type, value: Release }
-            - { key: cc_compiler, value: gcc }
-            - { key: cxx_compiler, value: g++ }
-      - func: setup
-      - func: install_c_driver
-      - func: install-uv
-      - func: compile
-        vars:
-          build_type: Release
-          cc_compiler: gcc
-          cxx_compiler: g++
-  - name: compile-only-rhel80-gcc-cxx23-release-static
-    run_on: rhel80-large
-    tags: [compile-only, rhel80, cxx23, gcc, release, static]
-    commands:
-      - command: expansions.update
-        params:
-          updates:
-            - { key: build_type, value: Release }
-            - { key: cc_compiler, value: gcc }
-            - { key: cxx_compiler, value: g++ }
-      - func: setup
-      - func: install_c_driver
-      - func: install-uv
-      - func: compile
-        vars:
-          build_type: Release
-          cc_compiler: gcc
-          cxx_compiler: g++
-  - name: compile-only-ubuntu2004-arm64-clang-cxx11-debug-shared
-    run_on: ubuntu2004-arm64-large
-    tags: [compile-only, ubuntu2004-arm64, cxx11, clang, debug, shared]
+  - name: compile-only-rhel90-clang-cxx11-debug
+    run_on: rhel90-large
+    tags: [compile-only, rhel90, cxx11, clang, debug]
     commands:
       - command: expansions.update
         params:
@@ -1299,12 +791,14 @@ tasks:
       - func: install-uv
       - func: compile
         vars:
+          BUILD_SHARED_AND_STATIC_LIBS: "ON"
+          REQUIRED_CXX_STANDARD: 11
           build_type: Debug
           cc_compiler: clang
           cxx_compiler: clang++
-  - name: compile-only-ubuntu2004-arm64-clang-cxx11-debug-static
-    run_on: ubuntu2004-arm64-large
-    tags: [compile-only, ubuntu2004-arm64, cxx11, clang, debug, static]
+  - name: compile-only-rhel90-clang-cxx17-debug
+    run_on: rhel90-large
+    tags: [compile-only, rhel90, cxx17, clang, debug]
     commands:
       - command: expansions.update
         params:
@@ -1317,48 +811,14 @@ tasks:
       - func: install-uv
       - func: compile
         vars:
+          BUILD_SHARED_AND_STATIC_LIBS: "ON"
+          REQUIRED_CXX_STANDARD: 17
           build_type: Debug
           cc_compiler: clang
           cxx_compiler: clang++
-  - name: compile-only-ubuntu2004-arm64-clang-cxx11-release-shared
-    run_on: ubuntu2004-arm64-large
-    tags: [compile-only, ubuntu2004-arm64, cxx11, clang, release, shared]
-    commands:
-      - command: expansions.update
-        params:
-          updates:
-            - { key: build_type, value: Release }
-            - { key: cc_compiler, value: clang }
-            - { key: cxx_compiler, value: clang++ }
-      - func: setup
-      - func: install_c_driver
-      - func: install-uv
-      - func: compile
-        vars:
-          build_type: Release
-          cc_compiler: clang
-          cxx_compiler: clang++
-  - name: compile-only-ubuntu2004-arm64-clang-cxx11-release-static
-    run_on: ubuntu2004-arm64-large
-    tags: [compile-only, ubuntu2004-arm64, cxx11, clang, release, static]
-    commands:
-      - command: expansions.update
-        params:
-          updates:
-            - { key: build_type, value: Release }
-            - { key: cc_compiler, value: clang }
-            - { key: cxx_compiler, value: clang++ }
-      - func: setup
-      - func: install_c_driver
-      - func: install-uv
-      - func: compile
-        vars:
-          build_type: Release
-          cc_compiler: clang
-          cxx_compiler: clang++
-  - name: compile-only-ubuntu2004-arm64-clang-cxx17-debug-shared
-    run_on: ubuntu2004-arm64-large
-    tags: [compile-only, ubuntu2004-arm64, cxx17, clang, debug, shared]
+  - name: compile-only-rhel90-clang-cxx20-debug
+    run_on: rhel90-large
+    tags: [compile-only, rhel90, cxx20, clang, debug]
     commands:
       - command: expansions.update
         params:
@@ -1371,12 +831,14 @@ tasks:
       - func: install-uv
       - func: compile
         vars:
+          BUILD_SHARED_AND_STATIC_LIBS: "ON"
+          REQUIRED_CXX_STANDARD: 20
           build_type: Debug
           cc_compiler: clang
           cxx_compiler: clang++
-  - name: compile-only-ubuntu2004-arm64-clang-cxx17-debug-static
-    run_on: ubuntu2004-arm64-large
-    tags: [compile-only, ubuntu2004-arm64, cxx17, clang, debug, static]
+  - name: compile-only-rhel90-clang-cxx23-debug
+    run_on: rhel90-large
+    tags: [compile-only, rhel90, cxx23, clang, debug]
     commands:
       - command: expansions.update
         params:
@@ -1389,120 +851,94 @@ tasks:
       - func: install-uv
       - func: compile
         vars:
+          BUILD_SHARED_AND_STATIC_LIBS: "ON"
+          REQUIRED_CXX_STANDARD: 23
           build_type: Debug
           cc_compiler: clang
           cxx_compiler: clang++
-  - name: compile-only-ubuntu2004-arm64-clang-cxx17-release-shared
-    run_on: ubuntu2004-arm64-large
-    tags: [compile-only, ubuntu2004-arm64, cxx17, clang, release, shared]
-    commands:
-      - command: expansions.update
-        params:
-          updates:
-            - { key: build_type, value: Release }
-            - { key: cc_compiler, value: clang }
-            - { key: cxx_compiler, value: clang++ }
-      - func: setup
-      - func: install_c_driver
-      - func: install-uv
-      - func: compile
-        vars:
-          build_type: Release
-          cc_compiler: clang
-          cxx_compiler: clang++
-  - name: compile-only-ubuntu2004-arm64-clang-cxx17-release-static
-    run_on: ubuntu2004-arm64-large
-    tags: [compile-only, ubuntu2004-arm64, cxx17, clang, release, static]
-    commands:
-      - command: expansions.update
-        params:
-          updates:
-            - { key: build_type, value: Release }
-            - { key: cc_compiler, value: clang }
-            - { key: cxx_compiler, value: clang++ }
-      - func: setup
-      - func: install_c_driver
-      - func: install-uv
-      - func: compile
-        vars:
-          build_type: Release
-          cc_compiler: clang
-          cxx_compiler: clang++
-  - name: compile-only-ubuntu2004-arm64-clang-cxx20-debug-shared
-    run_on: ubuntu2004-arm64-large
-    tags: [compile-only, ubuntu2004-arm64, cxx20, clang, debug, shared]
+  - name: compile-only-rhel90-gcc-cxx11-debug
+    run_on: rhel90-large
+    tags: [compile-only, rhel90, cxx11, gcc, debug]
     commands:
       - command: expansions.update
         params:
           updates:
             - { key: build_type, value: Debug }
-            - { key: cc_compiler, value: clang }
-            - { key: cxx_compiler, value: clang++ }
+            - { key: cc_compiler, value: gcc }
+            - { key: cxx_compiler, value: g++ }
       - func: setup
       - func: install_c_driver
       - func: install-uv
       - func: compile
         vars:
+          BUILD_SHARED_AND_STATIC_LIBS: "ON"
+          REQUIRED_CXX_STANDARD: 11
           build_type: Debug
-          cc_compiler: clang
-          cxx_compiler: clang++
-  - name: compile-only-ubuntu2004-arm64-clang-cxx20-debug-static
-    run_on: ubuntu2004-arm64-large
-    tags: [compile-only, ubuntu2004-arm64, cxx20, clang, debug, static]
+          cc_compiler: gcc
+          cxx_compiler: g++
+  - name: compile-only-rhel90-gcc-cxx17-debug
+    run_on: rhel90-large
+    tags: [compile-only, rhel90, cxx17, gcc, debug]
     commands:
       - command: expansions.update
         params:
           updates:
             - { key: build_type, value: Debug }
-            - { key: cc_compiler, value: clang }
-            - { key: cxx_compiler, value: clang++ }
+            - { key: cc_compiler, value: gcc }
+            - { key: cxx_compiler, value: g++ }
       - func: setup
       - func: install_c_driver
       - func: install-uv
       - func: compile
         vars:
+          BUILD_SHARED_AND_STATIC_LIBS: "ON"
+          REQUIRED_CXX_STANDARD: 17
           build_type: Debug
-          cc_compiler: clang
-          cxx_compiler: clang++
-  - name: compile-only-ubuntu2004-arm64-clang-cxx20-release-shared
-    run_on: ubuntu2004-arm64-large
-    tags: [compile-only, ubuntu2004-arm64, cxx20, clang, release, shared]
+          cc_compiler: gcc
+          cxx_compiler: g++
+  - name: compile-only-rhel90-gcc-cxx20-debug
+    run_on: rhel90-large
+    tags: [compile-only, rhel90, cxx20, gcc, debug]
     commands:
       - command: expansions.update
         params:
           updates:
-            - { key: build_type, value: Release }
-            - { key: cc_compiler, value: clang }
-            - { key: cxx_compiler, value: clang++ }
+            - { key: build_type, value: Debug }
+            - { key: cc_compiler, value: gcc }
+            - { key: cxx_compiler, value: g++ }
       - func: setup
       - func: install_c_driver
       - func: install-uv
       - func: compile
         vars:
-          build_type: Release
-          cc_compiler: clang
-          cxx_compiler: clang++
-  - name: compile-only-ubuntu2004-arm64-clang-cxx20-release-static
-    run_on: ubuntu2004-arm64-large
-    tags: [compile-only, ubuntu2004-arm64, cxx20, clang, release, static]
+          BUILD_SHARED_AND_STATIC_LIBS: "ON"
+          REQUIRED_CXX_STANDARD: 20
+          build_type: Debug
+          cc_compiler: gcc
+          cxx_compiler: g++
+  - name: compile-only-rhel90-gcc-cxx23-debug
+    run_on: rhel90-large
+    tags: [compile-only, rhel90, cxx23, gcc, debug]
     commands:
       - command: expansions.update
         params:
           updates:
-            - { key: build_type, value: Release }
-            - { key: cc_compiler, value: clang }
-            - { key: cxx_compiler, value: clang++ }
+            - { key: build_type, value: Debug }
+            - { key: cc_compiler, value: gcc }
+            - { key: cxx_compiler, value: g++ }
       - func: setup
       - func: install_c_driver
       - func: install-uv
       - func: compile
         vars:
-          build_type: Release
-          cc_compiler: clang
-          cxx_compiler: clang++
-  - name: compile-only-ubuntu2004-arm64-clang-cxx23-debug-shared
-    run_on: ubuntu2004-arm64-large
-    tags: [compile-only, ubuntu2004-arm64, cxx23, clang, debug, shared]
+          BUILD_SHARED_AND_STATIC_LIBS: "ON"
+          REQUIRED_CXX_STANDARD: 23
+          build_type: Debug
+          cc_compiler: gcc
+          cxx_compiler: g++
+  - name: compile-only-rhel91-clang-cxx11-debug
+    run_on: rhel91-large
+    tags: [compile-only, rhel91, cxx11, clang, debug]
     commands:
       - command: expansions.update
         params:
@@ -1515,12 +951,14 @@ tasks:
       - func: install-uv
       - func: compile
         vars:
+          BUILD_SHARED_AND_STATIC_LIBS: "ON"
+          REQUIRED_CXX_STANDARD: 11
           build_type: Debug
           cc_compiler: clang
           cxx_compiler: clang++
-  - name: compile-only-ubuntu2004-arm64-clang-cxx23-debug-static
-    run_on: ubuntu2004-arm64-large
-    tags: [compile-only, ubuntu2004-arm64, cxx23, clang, debug, static]
+  - name: compile-only-rhel91-clang-cxx17-debug
+    run_on: rhel91-large
+    tags: [compile-only, rhel91, cxx17, clang, debug]
     commands:
       - command: expansions.update
         params:
@@ -1533,17 +971,19 @@ tasks:
       - func: install-uv
       - func: compile
         vars:
+          BUILD_SHARED_AND_STATIC_LIBS: "ON"
+          REQUIRED_CXX_STANDARD: 17
           build_type: Debug
           cc_compiler: clang
           cxx_compiler: clang++
-  - name: compile-only-ubuntu2004-arm64-clang-cxx23-release-shared
-    run_on: ubuntu2004-arm64-large
-    tags: [compile-only, ubuntu2004-arm64, cxx23, clang, release, shared]
+  - name: compile-only-rhel91-clang-cxx20-debug
+    run_on: rhel91-large
+    tags: [compile-only, rhel91, cxx20, clang, debug]
     commands:
       - command: expansions.update
         params:
           updates:
-            - { key: build_type, value: Release }
+            - { key: build_type, value: Debug }
             - { key: cc_compiler, value: clang }
             - { key: cxx_compiler, value: clang++ }
       - func: setup
@@ -1551,17 +991,19 @@ tasks:
       - func: install-uv
       - func: compile
         vars:
-          build_type: Release
+          BUILD_SHARED_AND_STATIC_LIBS: "ON"
+          REQUIRED_CXX_STANDARD: 20
+          build_type: Debug
           cc_compiler: clang
           cxx_compiler: clang++
-  - name: compile-only-ubuntu2004-arm64-clang-cxx23-release-static
-    run_on: ubuntu2004-arm64-large
-    tags: [compile-only, ubuntu2004-arm64, cxx23, clang, release, static]
+  - name: compile-only-rhel91-clang-cxx23-debug
+    run_on: rhel91-large
+    tags: [compile-only, rhel91, cxx23, clang, debug]
     commands:
       - command: expansions.update
         params:
           updates:
-            - { key: build_type, value: Release }
+            - { key: build_type, value: Debug }
             - { key: cc_compiler, value: clang }
             - { key: cxx_compiler, value: clang++ }
       - func: setup
@@ -1569,12 +1011,94 @@ tasks:
       - func: install-uv
       - func: compile
         vars:
-          build_type: Release
+          BUILD_SHARED_AND_STATIC_LIBS: "ON"
+          REQUIRED_CXX_STANDARD: 23
+          build_type: Debug
           cc_compiler: clang
           cxx_compiler: clang++
-  - name: compile-only-ubuntu2004-arm64-gcc-cxx11-debug-shared
-    run_on: ubuntu2004-arm64-large
-    tags: [compile-only, ubuntu2004-arm64, cxx11, gcc, debug, shared]
+  - name: compile-only-rhel92-clang-cxx11-debug
+    run_on: rhel92-large
+    tags: [compile-only, rhel92, cxx11, clang, debug]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+            - { key: cc_compiler, value: clang }
+            - { key: cxx_compiler, value: clang++ }
+      - func: setup
+      - func: install_c_driver
+      - func: install-uv
+      - func: compile
+        vars:
+          BUILD_SHARED_AND_STATIC_LIBS: "ON"
+          REQUIRED_CXX_STANDARD: 11
+          build_type: Debug
+          cc_compiler: clang
+          cxx_compiler: clang++
+  - name: compile-only-rhel92-clang-cxx17-debug
+    run_on: rhel92-large
+    tags: [compile-only, rhel92, cxx17, clang, debug]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+            - { key: cc_compiler, value: clang }
+            - { key: cxx_compiler, value: clang++ }
+      - func: setup
+      - func: install_c_driver
+      - func: install-uv
+      - func: compile
+        vars:
+          BUILD_SHARED_AND_STATIC_LIBS: "ON"
+          REQUIRED_CXX_STANDARD: 17
+          build_type: Debug
+          cc_compiler: clang
+          cxx_compiler: clang++
+  - name: compile-only-rhel92-clang-cxx20-debug
+    run_on: rhel92-large
+    tags: [compile-only, rhel92, cxx20, clang, debug]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+            - { key: cc_compiler, value: clang }
+            - { key: cxx_compiler, value: clang++ }
+      - func: setup
+      - func: install_c_driver
+      - func: install-uv
+      - func: compile
+        vars:
+          BUILD_SHARED_AND_STATIC_LIBS: "ON"
+          REQUIRED_CXX_STANDARD: 20
+          build_type: Debug
+          cc_compiler: clang
+          cxx_compiler: clang++
+  - name: compile-only-rhel92-clang-cxx23-debug
+    run_on: rhel92-large
+    tags: [compile-only, rhel92, cxx23, clang, debug]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+            - { key: cc_compiler, value: clang }
+            - { key: cxx_compiler, value: clang++ }
+      - func: setup
+      - func: install_c_driver
+      - func: install-uv
+      - func: compile
+        vars:
+          BUILD_SHARED_AND_STATIC_LIBS: "ON"
+          REQUIRED_CXX_STANDARD: 23
+          build_type: Debug
+          cc_compiler: clang
+          cxx_compiler: clang++
+  - name: compile-only-rhel92-gcc-cxx11-debug
+    run_on: rhel92-large
+    tags: [compile-only, rhel92, cxx11, gcc, debug]
     commands:
       - command: expansions.update
         params:
@@ -1587,12 +1111,14 @@ tasks:
       - func: install-uv
       - func: compile
         vars:
+          BUILD_SHARED_AND_STATIC_LIBS: "ON"
+          REQUIRED_CXX_STANDARD: 11
           build_type: Debug
           cc_compiler: gcc
           cxx_compiler: g++
-  - name: compile-only-ubuntu2004-arm64-gcc-cxx11-debug-static
-    run_on: ubuntu2004-arm64-large
-    tags: [compile-only, ubuntu2004-arm64, cxx11, gcc, debug, static]
+  - name: compile-only-rhel92-gcc-cxx17-debug
+    run_on: rhel92-large
+    tags: [compile-only, rhel92, cxx17, gcc, debug]
     commands:
       - command: expansions.update
         params:
@@ -1605,48 +1131,14 @@ tasks:
       - func: install-uv
       - func: compile
         vars:
+          BUILD_SHARED_AND_STATIC_LIBS: "ON"
+          REQUIRED_CXX_STANDARD: 17
           build_type: Debug
           cc_compiler: gcc
           cxx_compiler: g++
-  - name: compile-only-ubuntu2004-arm64-gcc-cxx11-release-shared
-    run_on: ubuntu2004-arm64-large
-    tags: [compile-only, ubuntu2004-arm64, cxx11, gcc, release, shared]
-    commands:
-      - command: expansions.update
-        params:
-          updates:
-            - { key: build_type, value: Release }
-            - { key: cc_compiler, value: gcc }
-            - { key: cxx_compiler, value: g++ }
-      - func: setup
-      - func: install_c_driver
-      - func: install-uv
-      - func: compile
-        vars:
-          build_type: Release
-          cc_compiler: gcc
-          cxx_compiler: g++
-  - name: compile-only-ubuntu2004-arm64-gcc-cxx11-release-static
-    run_on: ubuntu2004-arm64-large
-    tags: [compile-only, ubuntu2004-arm64, cxx11, gcc, release, static]
-    commands:
-      - command: expansions.update
-        params:
-          updates:
-            - { key: build_type, value: Release }
-            - { key: cc_compiler, value: gcc }
-            - { key: cxx_compiler, value: g++ }
-      - func: setup
-      - func: install_c_driver
-      - func: install-uv
-      - func: compile
-        vars:
-          build_type: Release
-          cc_compiler: gcc
-          cxx_compiler: g++
-  - name: compile-only-ubuntu2004-arm64-gcc-cxx17-debug-shared
-    run_on: ubuntu2004-arm64-large
-    tags: [compile-only, ubuntu2004-arm64, cxx17, gcc, debug, shared]
+  - name: compile-only-rhel92-gcc-cxx20-debug
+    run_on: rhel92-large
+    tags: [compile-only, rhel92, cxx20, gcc, debug]
     commands:
       - command: expansions.update
         params:
@@ -1659,12 +1151,14 @@ tasks:
       - func: install-uv
       - func: compile
         vars:
+          BUILD_SHARED_AND_STATIC_LIBS: "ON"
+          REQUIRED_CXX_STANDARD: 20
           build_type: Debug
           cc_compiler: gcc
           cxx_compiler: g++
-  - name: compile-only-ubuntu2004-arm64-gcc-cxx17-debug-static
-    run_on: ubuntu2004-arm64-large
-    tags: [compile-only, ubuntu2004-arm64, cxx17, gcc, debug, static]
+  - name: compile-only-rhel92-gcc-cxx23-debug
+    run_on: rhel92-large
+    tags: [compile-only, rhel92, cxx23, gcc, debug]
     commands:
       - command: expansions.update
         params:
@@ -1677,48 +1171,174 @@ tasks:
       - func: install-uv
       - func: compile
         vars:
+          BUILD_SHARED_AND_STATIC_LIBS: "ON"
+          REQUIRED_CXX_STANDARD: 23
           build_type: Debug
           cc_compiler: gcc
           cxx_compiler: g++
-  - name: compile-only-ubuntu2004-arm64-gcc-cxx17-release-shared
-    run_on: ubuntu2004-arm64-large
-    tags: [compile-only, ubuntu2004-arm64, cxx17, gcc, release, shared]
+  - name: compile-only-rhel93-clang-cxx11-debug
+    run_on: rhel93-large
+    tags: [compile-only, rhel93, cxx11, clang, debug]
     commands:
       - command: expansions.update
         params:
           updates:
-            - { key: build_type, value: Release }
-            - { key: cc_compiler, value: gcc }
-            - { key: cxx_compiler, value: g++ }
+            - { key: build_type, value: Debug }
+            - { key: cc_compiler, value: clang }
+            - { key: cxx_compiler, value: clang++ }
       - func: setup
       - func: install_c_driver
       - func: install-uv
       - func: compile
         vars:
-          build_type: Release
-          cc_compiler: gcc
-          cxx_compiler: g++
-  - name: compile-only-ubuntu2004-arm64-gcc-cxx17-release-static
-    run_on: ubuntu2004-arm64-large
-    tags: [compile-only, ubuntu2004-arm64, cxx17, gcc, release, static]
+          BUILD_SHARED_AND_STATIC_LIBS: "ON"
+          REQUIRED_CXX_STANDARD: 11
+          build_type: Debug
+          cc_compiler: clang
+          cxx_compiler: clang++
+  - name: compile-only-rhel93-clang-cxx17-debug
+    run_on: rhel93-large
+    tags: [compile-only, rhel93, cxx17, clang, debug]
     commands:
       - command: expansions.update
         params:
           updates:
-            - { key: build_type, value: Release }
-            - { key: cc_compiler, value: gcc }
-            - { key: cxx_compiler, value: g++ }
+            - { key: build_type, value: Debug }
+            - { key: cc_compiler, value: clang }
+            - { key: cxx_compiler, value: clang++ }
       - func: setup
       - func: install_c_driver
       - func: install-uv
       - func: compile
         vars:
-          build_type: Release
-          cc_compiler: gcc
-          cxx_compiler: g++
-  - name: compile-only-ubuntu2004-arm64-gcc-cxx20-debug-shared
-    run_on: ubuntu2004-arm64-large
-    tags: [compile-only, ubuntu2004-arm64, cxx20, gcc, debug, shared]
+          BUILD_SHARED_AND_STATIC_LIBS: "ON"
+          REQUIRED_CXX_STANDARD: 17
+          build_type: Debug
+          cc_compiler: clang
+          cxx_compiler: clang++
+  - name: compile-only-rhel93-clang-cxx20-debug
+    run_on: rhel93-large
+    tags: [compile-only, rhel93, cxx20, clang, debug]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+            - { key: cc_compiler, value: clang }
+            - { key: cxx_compiler, value: clang++ }
+      - func: setup
+      - func: install_c_driver
+      - func: install-uv
+      - func: compile
+        vars:
+          BUILD_SHARED_AND_STATIC_LIBS: "ON"
+          REQUIRED_CXX_STANDARD: 20
+          build_type: Debug
+          cc_compiler: clang
+          cxx_compiler: clang++
+  - name: compile-only-rhel93-clang-cxx23-debug
+    run_on: rhel93-large
+    tags: [compile-only, rhel93, cxx23, clang, debug]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+            - { key: cc_compiler, value: clang }
+            - { key: cxx_compiler, value: clang++ }
+      - func: setup
+      - func: install_c_driver
+      - func: install-uv
+      - func: compile
+        vars:
+          BUILD_SHARED_AND_STATIC_LIBS: "ON"
+          REQUIRED_CXX_STANDARD: 23
+          build_type: Debug
+          cc_compiler: clang
+          cxx_compiler: clang++
+  - name: compile-only-rhel94-clang-cxx11-debug
+    run_on: rhel94-large
+    tags: [compile-only, rhel94, cxx11, clang, debug]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+            - { key: cc_compiler, value: clang }
+            - { key: cxx_compiler, value: clang++ }
+      - func: setup
+      - func: install_c_driver
+      - func: install-uv
+      - func: compile
+        vars:
+          BUILD_SHARED_AND_STATIC_LIBS: "ON"
+          REQUIRED_CXX_STANDARD: 11
+          build_type: Debug
+          cc_compiler: clang
+          cxx_compiler: clang++
+  - name: compile-only-rhel94-clang-cxx17-debug
+    run_on: rhel94-large
+    tags: [compile-only, rhel94, cxx17, clang, debug]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+            - { key: cc_compiler, value: clang }
+            - { key: cxx_compiler, value: clang++ }
+      - func: setup
+      - func: install_c_driver
+      - func: install-uv
+      - func: compile
+        vars:
+          BUILD_SHARED_AND_STATIC_LIBS: "ON"
+          REQUIRED_CXX_STANDARD: 17
+          build_type: Debug
+          cc_compiler: clang
+          cxx_compiler: clang++
+  - name: compile-only-rhel94-clang-cxx20-debug
+    run_on: rhel94-large
+    tags: [compile-only, rhel94, cxx20, clang, debug]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+            - { key: cc_compiler, value: clang }
+            - { key: cxx_compiler, value: clang++ }
+      - func: setup
+      - func: install_c_driver
+      - func: install-uv
+      - func: compile
+        vars:
+          BUILD_SHARED_AND_STATIC_LIBS: "ON"
+          REQUIRED_CXX_STANDARD: 20
+          build_type: Debug
+          cc_compiler: clang
+          cxx_compiler: clang++
+  - name: compile-only-rhel94-clang-cxx23-debug
+    run_on: rhel94-large
+    tags: [compile-only, rhel94, cxx23, clang, debug]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+            - { key: cc_compiler, value: clang }
+            - { key: cxx_compiler, value: clang++ }
+      - func: setup
+      - func: install_c_driver
+      - func: install-uv
+      - func: compile
+        vars:
+          BUILD_SHARED_AND_STATIC_LIBS: "ON"
+          REQUIRED_CXX_STANDARD: 23
+          build_type: Debug
+          cc_compiler: clang
+          cxx_compiler: clang++
+  - name: compile-only-rhel94-gcc-cxx11-debug
+    run_on: rhel94-large
+    tags: [compile-only, rhel94, cxx11, gcc, debug]
     commands:
       - command: expansions.update
         params:
@@ -1731,12 +1351,14 @@ tasks:
       - func: install-uv
       - func: compile
         vars:
+          BUILD_SHARED_AND_STATIC_LIBS: "ON"
+          REQUIRED_CXX_STANDARD: 11
           build_type: Debug
           cc_compiler: gcc
           cxx_compiler: g++
-  - name: compile-only-ubuntu2004-arm64-gcc-cxx20-debug-static
-    run_on: ubuntu2004-arm64-large
-    tags: [compile-only, ubuntu2004-arm64, cxx20, gcc, debug, static]
+  - name: compile-only-rhel94-gcc-cxx17-debug
+    run_on: rhel94-large
+    tags: [compile-only, rhel94, cxx17, gcc, debug]
     commands:
       - command: expansions.update
         params:
@@ -1749,48 +1371,14 @@ tasks:
       - func: install-uv
       - func: compile
         vars:
+          BUILD_SHARED_AND_STATIC_LIBS: "ON"
+          REQUIRED_CXX_STANDARD: 17
           build_type: Debug
           cc_compiler: gcc
           cxx_compiler: g++
-  - name: compile-only-ubuntu2004-arm64-gcc-cxx20-release-shared
-    run_on: ubuntu2004-arm64-large
-    tags: [compile-only, ubuntu2004-arm64, cxx20, gcc, release, shared]
-    commands:
-      - command: expansions.update
-        params:
-          updates:
-            - { key: build_type, value: Release }
-            - { key: cc_compiler, value: gcc }
-            - { key: cxx_compiler, value: g++ }
-      - func: setup
-      - func: install_c_driver
-      - func: install-uv
-      - func: compile
-        vars:
-          build_type: Release
-          cc_compiler: gcc
-          cxx_compiler: g++
-  - name: compile-only-ubuntu2004-arm64-gcc-cxx20-release-static
-    run_on: ubuntu2004-arm64-large
-    tags: [compile-only, ubuntu2004-arm64, cxx20, gcc, release, static]
-    commands:
-      - command: expansions.update
-        params:
-          updates:
-            - { key: build_type, value: Release }
-            - { key: cc_compiler, value: gcc }
-            - { key: cxx_compiler, value: g++ }
-      - func: setup
-      - func: install_c_driver
-      - func: install-uv
-      - func: compile
-        vars:
-          build_type: Release
-          cc_compiler: gcc
-          cxx_compiler: g++
-  - name: compile-only-ubuntu2004-arm64-gcc-cxx23-debug-shared
-    run_on: ubuntu2004-arm64-large
-    tags: [compile-only, ubuntu2004-arm64, cxx23, gcc, debug, shared]
+  - name: compile-only-rhel94-gcc-cxx20-debug
+    run_on: rhel94-large
+    tags: [compile-only, rhel94, cxx20, gcc, debug]
     commands:
       - command: expansions.update
         params:
@@ -1803,12 +1391,14 @@ tasks:
       - func: install-uv
       - func: compile
         vars:
+          BUILD_SHARED_AND_STATIC_LIBS: "ON"
+          REQUIRED_CXX_STANDARD: 20
           build_type: Debug
           cc_compiler: gcc
           cxx_compiler: g++
-  - name: compile-only-ubuntu2004-arm64-gcc-cxx23-debug-static
-    run_on: ubuntu2004-arm64-large
-    tags: [compile-only, ubuntu2004-arm64, cxx23, gcc, debug, static]
+  - name: compile-only-rhel94-gcc-cxx23-debug
+    run_on: rhel94-large
+    tags: [compile-only, rhel94, cxx23, gcc, debug]
     commands:
       - command: expansions.update
         params:
@@ -1821,17 +1411,99 @@ tasks:
       - func: install-uv
       - func: compile
         vars:
+          BUILD_SHARED_AND_STATIC_LIBS: "ON"
+          REQUIRED_CXX_STANDARD: 23
           build_type: Debug
           cc_compiler: gcc
           cxx_compiler: g++
-  - name: compile-only-ubuntu2004-arm64-gcc-cxx23-release-shared
-    run_on: ubuntu2004-arm64-large
-    tags: [compile-only, ubuntu2004-arm64, cxx23, gcc, release, shared]
+  - name: compile-only-rhel95-clang-cxx11-debug
+    run_on: rhel95-large
+    tags: [compile-only, rhel95, cxx11, clang, debug]
     commands:
       - command: expansions.update
         params:
           updates:
-            - { key: build_type, value: Release }
+            - { key: build_type, value: Debug }
+            - { key: cc_compiler, value: clang }
+            - { key: cxx_compiler, value: clang++ }
+      - func: setup
+      - func: install_c_driver
+      - func: install-uv
+      - func: compile
+        vars:
+          BUILD_SHARED_AND_STATIC_LIBS: "ON"
+          REQUIRED_CXX_STANDARD: 11
+          build_type: Debug
+          cc_compiler: clang
+          cxx_compiler: clang++
+  - name: compile-only-rhel95-clang-cxx17-debug
+    run_on: rhel95-large
+    tags: [compile-only, rhel95, cxx17, clang, debug]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+            - { key: cc_compiler, value: clang }
+            - { key: cxx_compiler, value: clang++ }
+      - func: setup
+      - func: install_c_driver
+      - func: install-uv
+      - func: compile
+        vars:
+          BUILD_SHARED_AND_STATIC_LIBS: "ON"
+          REQUIRED_CXX_STANDARD: 17
+          build_type: Debug
+          cc_compiler: clang
+          cxx_compiler: clang++
+  - name: compile-only-rhel95-clang-cxx20-debug
+    run_on: rhel95-large
+    tags: [compile-only, rhel95, cxx20, clang, debug]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+            - { key: cc_compiler, value: clang }
+            - { key: cxx_compiler, value: clang++ }
+      - func: setup
+      - func: install_c_driver
+      - func: install-uv
+      - func: compile
+        vars:
+          BUILD_SHARED_AND_STATIC_LIBS: "ON"
+          REQUIRED_CXX_STANDARD: 20
+          build_type: Debug
+          cc_compiler: clang
+          cxx_compiler: clang++
+  - name: compile-only-rhel95-clang-cxx23-debug
+    run_on: rhel95-large
+    tags: [compile-only, rhel95, cxx23, clang, debug]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+            - { key: cc_compiler, value: clang }
+            - { key: cxx_compiler, value: clang++ }
+      - func: setup
+      - func: install_c_driver
+      - func: install-uv
+      - func: compile
+        vars:
+          BUILD_SHARED_AND_STATIC_LIBS: "ON"
+          REQUIRED_CXX_STANDARD: 23
+          build_type: Debug
+          cc_compiler: clang
+          cxx_compiler: clang++
+  - name: compile-only-rhel95-gcc-cxx11-debug
+    run_on: rhel95-large
+    tags: [compile-only, rhel95, cxx11, gcc, debug]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
             - { key: cc_compiler, value: gcc }
             - { key: cxx_compiler, value: g++ }
       - func: setup
@@ -1839,17 +1511,19 @@ tasks:
       - func: install-uv
       - func: compile
         vars:
-          build_type: Release
+          BUILD_SHARED_AND_STATIC_LIBS: "ON"
+          REQUIRED_CXX_STANDARD: 11
+          build_type: Debug
           cc_compiler: gcc
           cxx_compiler: g++
-  - name: compile-only-ubuntu2004-arm64-gcc-cxx23-release-static
-    run_on: ubuntu2004-arm64-large
-    tags: [compile-only, ubuntu2004-arm64, cxx23, gcc, release, static]
+  - name: compile-only-rhel95-gcc-cxx17-debug
+    run_on: rhel95-large
+    tags: [compile-only, rhel95, cxx17, gcc, debug]
     commands:
       - command: expansions.update
         params:
           updates:
-            - { key: build_type, value: Release }
+            - { key: build_type, value: Debug }
             - { key: cc_compiler, value: gcc }
             - { key: cxx_compiler, value: g++ }
       - func: setup
@@ -1857,12 +1531,394 @@ tasks:
       - func: install-uv
       - func: compile
         vars:
-          build_type: Release
+          BUILD_SHARED_AND_STATIC_LIBS: "ON"
+          REQUIRED_CXX_STANDARD: 17
+          build_type: Debug
           cc_compiler: gcc
           cxx_compiler: g++
-  - name: compile-only-windows-2019-vs2017-x64-cxx11-debug-shared
+  - name: compile-only-rhel95-gcc-cxx20-debug
+    run_on: rhel95-large
+    tags: [compile-only, rhel95, cxx20, gcc, debug]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+            - { key: cc_compiler, value: gcc }
+            - { key: cxx_compiler, value: g++ }
+      - func: setup
+      - func: install_c_driver
+      - func: install-uv
+      - func: compile
+        vars:
+          BUILD_SHARED_AND_STATIC_LIBS: "ON"
+          REQUIRED_CXX_STANDARD: 20
+          build_type: Debug
+          cc_compiler: gcc
+          cxx_compiler: g++
+  - name: compile-only-rhel95-gcc-cxx23-debug
+    run_on: rhel95-large
+    tags: [compile-only, rhel95, cxx23, gcc, debug]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+            - { key: cc_compiler, value: gcc }
+            - { key: cxx_compiler, value: g++ }
+      - func: setup
+      - func: install_c_driver
+      - func: install-uv
+      - func: compile
+        vars:
+          BUILD_SHARED_AND_STATIC_LIBS: "ON"
+          REQUIRED_CXX_STANDARD: 23
+          build_type: Debug
+          cc_compiler: gcc
+          cxx_compiler: g++
+  - name: compile-only-ubuntu2004-arm64-clang-cxx11-debug
+    run_on: ubuntu2004-arm64-large
+    tags: [compile-only, ubuntu2004-arm64, cxx11, clang, debug]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+            - { key: cc_compiler, value: clang }
+            - { key: cxx_compiler, value: clang++ }
+      - func: setup
+      - func: install_c_driver
+      - func: install-uv
+      - func: compile
+        vars:
+          BUILD_SHARED_AND_STATIC_LIBS: "ON"
+          REQUIRED_CXX_STANDARD: 11
+          build_type: Debug
+          cc_compiler: clang
+          cxx_compiler: clang++
+  - name: compile-only-ubuntu2004-arm64-clang-cxx17-debug
+    run_on: ubuntu2004-arm64-large
+    tags: [compile-only, ubuntu2004-arm64, cxx17, clang, debug]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+            - { key: cc_compiler, value: clang }
+            - { key: cxx_compiler, value: clang++ }
+      - func: setup
+      - func: install_c_driver
+      - func: install-uv
+      - func: compile
+        vars:
+          BUILD_SHARED_AND_STATIC_LIBS: "ON"
+          REQUIRED_CXX_STANDARD: 17
+          build_type: Debug
+          cc_compiler: clang
+          cxx_compiler: clang++
+  - name: compile-only-ubuntu2004-arm64-gcc-cxx11-debug
+    run_on: ubuntu2004-arm64-large
+    tags: [compile-only, ubuntu2004-arm64, cxx11, gcc, debug]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+            - { key: cc_compiler, value: gcc }
+            - { key: cxx_compiler, value: g++ }
+      - func: setup
+      - func: install_c_driver
+      - func: install-uv
+      - func: compile
+        vars:
+          BUILD_SHARED_AND_STATIC_LIBS: "ON"
+          REQUIRED_CXX_STANDARD: 11
+          build_type: Debug
+          cc_compiler: gcc
+          cxx_compiler: g++
+  - name: compile-only-ubuntu2004-arm64-gcc-cxx17-debug
+    run_on: ubuntu2004-arm64-large
+    tags: [compile-only, ubuntu2004-arm64, cxx17, gcc, debug]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+            - { key: cc_compiler, value: gcc }
+            - { key: cxx_compiler, value: g++ }
+      - func: setup
+      - func: install_c_driver
+      - func: install-uv
+      - func: compile
+        vars:
+          BUILD_SHARED_AND_STATIC_LIBS: "ON"
+          REQUIRED_CXX_STANDARD: 17
+          build_type: Debug
+          cc_compiler: gcc
+          cxx_compiler: g++
+  - name: compile-only-ubuntu2004-clang-10-cxx11-debug
+    run_on: ubuntu2004-large
+    tags: [compile-only, ubuntu2004, cxx11, clang-10, debug]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+            - { key: cc_compiler, value: clang-10 }
+            - { key: cxx_compiler, value: clang++-10 }
+      - func: setup
+      - func: install_c_driver
+      - func: install-uv
+      - func: compile
+        vars:
+          BUILD_SHARED_AND_STATIC_LIBS: "ON"
+          REQUIRED_CXX_STANDARD: 11
+          build_type: Debug
+          cc_compiler: clang-10
+          cxx_compiler: clang++-10
+  - name: compile-only-ubuntu2004-clang-10-cxx17-debug
+    run_on: ubuntu2004-large
+    tags: [compile-only, ubuntu2004, cxx17, clang-10, debug]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+            - { key: cc_compiler, value: clang-10 }
+            - { key: cxx_compiler, value: clang++-10 }
+      - func: setup
+      - func: install_c_driver
+      - func: install-uv
+      - func: compile
+        vars:
+          BUILD_SHARED_AND_STATIC_LIBS: "ON"
+          REQUIRED_CXX_STANDARD: 17
+          build_type: Debug
+          cc_compiler: clang-10
+          cxx_compiler: clang++-10
+  - name: compile-only-ubuntu2004-clang-10-cxx20-debug
+    run_on: ubuntu2004-large
+    tags: [compile-only, ubuntu2004, cxx20, clang-10, debug]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+            - { key: cc_compiler, value: clang-10 }
+            - { key: cxx_compiler, value: clang++-10 }
+      - func: setup
+      - func: install_c_driver
+      - func: install-uv
+      - func: compile
+        vars:
+          BUILD_SHARED_AND_STATIC_LIBS: "ON"
+          REQUIRED_CXX_STANDARD: 20
+          build_type: Debug
+          cc_compiler: clang-10
+          cxx_compiler: clang++-10
+  - name: compile-only-ubuntu2004-gcc-9-cxx11-debug
+    run_on: ubuntu2004-large
+    tags: [compile-only, ubuntu2004, cxx11, gcc-9, debug]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+            - { key: cc_compiler, value: gcc-9 }
+            - { key: cxx_compiler, value: g++-9 }
+      - func: setup
+      - func: install_c_driver
+      - func: install-uv
+      - func: compile
+        vars:
+          BUILD_SHARED_AND_STATIC_LIBS: "ON"
+          REQUIRED_CXX_STANDARD: 11
+          build_type: Debug
+          cc_compiler: gcc-9
+          cxx_compiler: g++-9
+  - name: compile-only-ubuntu2004-gcc-9-cxx17-debug
+    run_on: ubuntu2004-large
+    tags: [compile-only, ubuntu2004, cxx17, gcc-9, debug]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+            - { key: cc_compiler, value: gcc-9 }
+            - { key: cxx_compiler, value: g++-9 }
+      - func: setup
+      - func: install_c_driver
+      - func: install-uv
+      - func: compile
+        vars:
+          BUILD_SHARED_AND_STATIC_LIBS: "ON"
+          REQUIRED_CXX_STANDARD: 17
+          build_type: Debug
+          cc_compiler: gcc-9
+          cxx_compiler: g++-9
+  - name: compile-only-ubuntu2004-gcc-9-cxx20-debug
+    run_on: ubuntu2004-large
+    tags: [compile-only, ubuntu2004, cxx20, gcc-9, debug]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+            - { key: cc_compiler, value: gcc-9 }
+            - { key: cxx_compiler, value: g++-9 }
+      - func: setup
+      - func: install_c_driver
+      - func: install-uv
+      - func: compile
+        vars:
+          BUILD_SHARED_AND_STATIC_LIBS: "ON"
+          REQUIRED_CXX_STANDARD: 20
+          build_type: Debug
+          cc_compiler: gcc-9
+          cxx_compiler: g++-9
+  - name: compile-only-ubuntu2204-clang-12-cxx11-debug
+    run_on: ubuntu2204-large
+    tags: [compile-only, ubuntu2204, cxx11, clang-12, debug]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+            - { key: cc_compiler, value: clang-12 }
+            - { key: cxx_compiler, value: clang++-12 }
+      - func: setup
+      - func: install_c_driver
+      - func: install-uv
+      - func: compile
+        vars:
+          BUILD_SHARED_AND_STATIC_LIBS: "ON"
+          REQUIRED_CXX_STANDARD: 11
+          build_type: Debug
+          cc_compiler: clang-12
+          cxx_compiler: clang++-12
+  - name: compile-only-ubuntu2204-clang-12-cxx17-debug
+    run_on: ubuntu2204-large
+    tags: [compile-only, ubuntu2204, cxx17, clang-12, debug]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+            - { key: cc_compiler, value: clang-12 }
+            - { key: cxx_compiler, value: clang++-12 }
+      - func: setup
+      - func: install_c_driver
+      - func: install-uv
+      - func: compile
+        vars:
+          BUILD_SHARED_AND_STATIC_LIBS: "ON"
+          REQUIRED_CXX_STANDARD: 17
+          build_type: Debug
+          cc_compiler: clang-12
+          cxx_compiler: clang++-12
+  - name: compile-only-ubuntu2204-clang-12-cxx20-debug
+    run_on: ubuntu2204-large
+    tags: [compile-only, ubuntu2204, cxx20, clang-12, debug]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+            - { key: cc_compiler, value: clang-12 }
+            - { key: cxx_compiler, value: clang++-12 }
+      - func: setup
+      - func: install_c_driver
+      - func: install-uv
+      - func: compile
+        vars:
+          BUILD_SHARED_AND_STATIC_LIBS: "ON"
+          REQUIRED_CXX_STANDARD: 20
+          build_type: Debug
+          cc_compiler: clang-12
+          cxx_compiler: clang++-12
+  - name: compile-only-ubuntu2204-clang-12-cxx23-debug
+    run_on: ubuntu2204-large
+    tags: [compile-only, ubuntu2204, cxx23, clang-12, debug]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+            - { key: cc_compiler, value: clang-12 }
+            - { key: cxx_compiler, value: clang++-12 }
+      - func: setup
+      - func: install_c_driver
+      - func: install-uv
+      - func: compile
+        vars:
+          BUILD_SHARED_AND_STATIC_LIBS: "ON"
+          REQUIRED_CXX_STANDARD: 23
+          build_type: Debug
+          cc_compiler: clang-12
+          cxx_compiler: clang++-12
+  - name: compile-only-windows-2019-vs2015-x64-cxx11-debug
     run_on: windows-vsCurrent-large
-    tags: [compile-only, windows-vsCurrent, cxx11, vs2017x64, debug, shared]
+    tags: [compile-only, windows-vsCurrent, cxx11, vs2015x64, debug]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+            - { key: generator, value: Visual Studio 14 2015 }
+            - { key: platform, value: x64 }
+      - func: setup
+      - func: install_c_driver
+      - func: install-uv
+      - func: compile
+        vars:
+          BUILD_SHARED_AND_STATIC_LIBS: "ON"
+          REQUIRED_CXX_STANDARD: 11
+          build_type: Debug
+          generator: Visual Studio 14 2015
+          platform: x64
+  - name: compile-only-windows-2019-vs2015-x64-cxx14-debug
+    run_on: windows-vsCurrent-large
+    tags: [compile-only, windows-vsCurrent, cxx14, vs2015x64, debug]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+            - { key: generator, value: Visual Studio 14 2015 }
+            - { key: platform, value: x64 }
+      - func: setup
+      - func: install_c_driver
+      - func: install-uv
+      - func: compile
+        vars:
+          BUILD_SHARED_AND_STATIC_LIBS: "ON"
+          REQUIRED_CXX_STANDARD: 14
+          build_type: Debug
+          generator: Visual Studio 14 2015
+          platform: x64
+  - name: compile-only-windows-2019-vs2015-x64-cxxlatest-debug
+    run_on: windows-vsCurrent-large
+    tags: [compile-only, windows-vsCurrent, cxxlatest, vs2015x64, debug]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+            - { key: generator, value: Visual Studio 14 2015 }
+            - { key: platform, value: x64 }
+      - func: setup
+      - func: install_c_driver
+      - func: install-uv
+      - func: compile
+        vars:
+          BUILD_SHARED_AND_STATIC_LIBS: "ON"
+          REQUIRED_CXX_STANDARD: latest
+          build_type: Debug
+          generator: Visual Studio 14 2015
+          platform: x64
+  - name: compile-only-windows-2019-vs2017-x64-cxx11-debug
+    run_on: windows-vsCurrent-large
+    tags: [compile-only, windows-vsCurrent, cxx11, vs2017x64, debug]
     commands:
       - command: expansions.update
         params:
@@ -1875,12 +1931,14 @@ tasks:
       - func: install-uv
       - func: compile
         vars:
+          BUILD_SHARED_AND_STATIC_LIBS: "ON"
+          REQUIRED_CXX_STANDARD: 11
           build_type: Debug
           generator: Visual Studio 15 2017
           platform: x64
-  - name: compile-only-windows-2019-vs2017-x64-cxx11-debug-static
+  - name: compile-only-windows-2019-vs2017-x64-cxx14-debug
     run_on: windows-vsCurrent-large
-    tags: [compile-only, windows-vsCurrent, cxx11, vs2017x64, debug, static]
+    tags: [compile-only, windows-vsCurrent, cxx14, vs2017x64, debug]
     commands:
       - command: expansions.update
         params:
@@ -1893,48 +1951,14 @@ tasks:
       - func: install-uv
       - func: compile
         vars:
+          BUILD_SHARED_AND_STATIC_LIBS: "ON"
+          REQUIRED_CXX_STANDARD: 14
           build_type: Debug
           generator: Visual Studio 15 2017
           platform: x64
-  - name: compile-only-windows-2019-vs2017-x64-cxx11-release-shared
+  - name: compile-only-windows-2019-vs2017-x64-cxx17-debug
     run_on: windows-vsCurrent-large
-    tags: [compile-only, windows-vsCurrent, cxx11, vs2017x64, release, shared]
-    commands:
-      - command: expansions.update
-        params:
-          updates:
-            - { key: build_type, value: Release }
-            - { key: generator, value: Visual Studio 15 2017 }
-            - { key: platform, value: x64 }
-      - func: setup
-      - func: install_c_driver
-      - func: install-uv
-      - func: compile
-        vars:
-          build_type: Release
-          generator: Visual Studio 15 2017
-          platform: x64
-  - name: compile-only-windows-2019-vs2017-x64-cxx11-release-static
-    run_on: windows-vsCurrent-large
-    tags: [compile-only, windows-vsCurrent, cxx11, vs2017x64, release, static]
-    commands:
-      - command: expansions.update
-        params:
-          updates:
-            - { key: build_type, value: Release }
-            - { key: generator, value: Visual Studio 15 2017 }
-            - { key: platform, value: x64 }
-      - func: setup
-      - func: install_c_driver
-      - func: install-uv
-      - func: compile
-        vars:
-          build_type: Release
-          generator: Visual Studio 15 2017
-          platform: x64
-  - name: compile-only-windows-2019-vs2017-x64-cxx17-debug-shared
-    run_on: windows-vsCurrent-large
-    tags: [compile-only, windows-vsCurrent, cxx17, vs2017x64, debug, shared]
+    tags: [compile-only, windows-vsCurrent, cxx17, vs2017x64, debug]
     commands:
       - command: expansions.update
         params:
@@ -1947,12 +1971,14 @@ tasks:
       - func: install-uv
       - func: compile
         vars:
+          BUILD_SHARED_AND_STATIC_LIBS: "ON"
+          REQUIRED_CXX_STANDARD: 17
           build_type: Debug
           generator: Visual Studio 15 2017
           platform: x64
-  - name: compile-only-windows-2019-vs2017-x64-cxx17-debug-static
+  - name: compile-only-windows-2019-vs2017-x64-cxx20-debug
     run_on: windows-vsCurrent-large
-    tags: [compile-only, windows-vsCurrent, cxx17, vs2017x64, debug, static]
+    tags: [compile-only, windows-vsCurrent, cxx20, vs2017x64, debug]
     commands:
       - command: expansions.update
         params:
@@ -1965,17 +1991,19 @@ tasks:
       - func: install-uv
       - func: compile
         vars:
+          BUILD_SHARED_AND_STATIC_LIBS: "ON"
+          REQUIRED_CXX_STANDARD: 20
           build_type: Debug
           generator: Visual Studio 15 2017
           platform: x64
-  - name: compile-only-windows-2019-vs2017-x64-cxx17-release-shared
+  - name: compile-only-windows-2019-vs2017-x64-cxxlatest-debug
     run_on: windows-vsCurrent-large
-    tags: [compile-only, windows-vsCurrent, cxx17, vs2017x64, release, shared]
+    tags: [compile-only, windows-vsCurrent, cxxlatest, vs2017x64, debug]
     commands:
       - command: expansions.update
         params:
           updates:
-            - { key: build_type, value: Release }
+            - { key: build_type, value: Debug }
             - { key: generator, value: Visual Studio 15 2017 }
             - { key: platform, value: x64 }
       - func: setup
@@ -1983,30 +2011,14 @@ tasks:
       - func: install-uv
       - func: compile
         vars:
-          build_type: Release
+          BUILD_SHARED_AND_STATIC_LIBS: "ON"
+          REQUIRED_CXX_STANDARD: latest
+          build_type: Debug
           generator: Visual Studio 15 2017
           platform: x64
-  - name: compile-only-windows-2019-vs2017-x64-cxx17-release-static
+  - name: compile-only-windows-2019-vs2019-x64-cxx11-debug
     run_on: windows-vsCurrent-large
-    tags: [compile-only, windows-vsCurrent, cxx17, vs2017x64, release, static]
-    commands:
-      - command: expansions.update
-        params:
-          updates:
-            - { key: build_type, value: Release }
-            - { key: generator, value: Visual Studio 15 2017 }
-            - { key: platform, value: x64 }
-      - func: setup
-      - func: install_c_driver
-      - func: install-uv
-      - func: compile
-        vars:
-          build_type: Release
-          generator: Visual Studio 15 2017
-          platform: x64
-  - name: compile-only-windows-2019-vs2019-x64-cxx11-debug-shared
-    run_on: windows-vsCurrent-large
-    tags: [compile-only, windows-vsCurrent, cxx11, vs2019x64, debug, shared]
+    tags: [compile-only, windows-vsCurrent, cxx11, vs2019x64, debug]
     commands:
       - command: expansions.update
         params:
@@ -2019,12 +2031,14 @@ tasks:
       - func: install-uv
       - func: compile
         vars:
+          BUILD_SHARED_AND_STATIC_LIBS: "ON"
+          REQUIRED_CXX_STANDARD: 11
           build_type: Debug
           generator: Visual Studio 16 2019
           platform: x64
-  - name: compile-only-windows-2019-vs2019-x64-cxx11-debug-static
+  - name: compile-only-windows-2019-vs2019-x64-cxx14-debug
     run_on: windows-vsCurrent-large
-    tags: [compile-only, windows-vsCurrent, cxx11, vs2019x64, debug, static]
+    tags: [compile-only, windows-vsCurrent, cxx14, vs2019x64, debug]
     commands:
       - command: expansions.update
         params:
@@ -2037,48 +2051,14 @@ tasks:
       - func: install-uv
       - func: compile
         vars:
+          BUILD_SHARED_AND_STATIC_LIBS: "ON"
+          REQUIRED_CXX_STANDARD: 14
           build_type: Debug
           generator: Visual Studio 16 2019
           platform: x64
-  - name: compile-only-windows-2019-vs2019-x64-cxx11-release-shared
+  - name: compile-only-windows-2019-vs2019-x64-cxx17-debug
     run_on: windows-vsCurrent-large
-    tags: [compile-only, windows-vsCurrent, cxx11, vs2019x64, release, shared]
-    commands:
-      - command: expansions.update
-        params:
-          updates:
-            - { key: build_type, value: Release }
-            - { key: generator, value: Visual Studio 16 2019 }
-            - { key: platform, value: x64 }
-      - func: setup
-      - func: install_c_driver
-      - func: install-uv
-      - func: compile
-        vars:
-          build_type: Release
-          generator: Visual Studio 16 2019
-          platform: x64
-  - name: compile-only-windows-2019-vs2019-x64-cxx11-release-static
-    run_on: windows-vsCurrent-large
-    tags: [compile-only, windows-vsCurrent, cxx11, vs2019x64, release, static]
-    commands:
-      - command: expansions.update
-        params:
-          updates:
-            - { key: build_type, value: Release }
-            - { key: generator, value: Visual Studio 16 2019 }
-            - { key: platform, value: x64 }
-      - func: setup
-      - func: install_c_driver
-      - func: install-uv
-      - func: compile
-        vars:
-          build_type: Release
-          generator: Visual Studio 16 2019
-          platform: x64
-  - name: compile-only-windows-2019-vs2019-x64-cxx17-debug-shared
-    run_on: windows-vsCurrent-large
-    tags: [compile-only, windows-vsCurrent, cxx17, vs2019x64, debug, shared]
+    tags: [compile-only, windows-vsCurrent, cxx17, vs2019x64, debug]
     commands:
       - command: expansions.update
         params:
@@ -2091,12 +2071,14 @@ tasks:
       - func: install-uv
       - func: compile
         vars:
+          BUILD_SHARED_AND_STATIC_LIBS: "ON"
+          REQUIRED_CXX_STANDARD: 17
           build_type: Debug
           generator: Visual Studio 16 2019
           platform: x64
-  - name: compile-only-windows-2019-vs2019-x64-cxx17-debug-static
+  - name: compile-only-windows-2019-vs2019-x64-cxx20-debug
     run_on: windows-vsCurrent-large
-    tags: [compile-only, windows-vsCurrent, cxx17, vs2019x64, debug, static]
+    tags: [compile-only, windows-vsCurrent, cxx20, vs2019x64, debug]
     commands:
       - command: expansions.update
         params:
@@ -2109,48 +2091,14 @@ tasks:
       - func: install-uv
       - func: compile
         vars:
+          BUILD_SHARED_AND_STATIC_LIBS: "ON"
+          REQUIRED_CXX_STANDARD: 20
           build_type: Debug
           generator: Visual Studio 16 2019
           platform: x64
-  - name: compile-only-windows-2019-vs2019-x64-cxx17-release-shared
+  - name: compile-only-windows-2019-vs2019-x64-cxx23-debug
     run_on: windows-vsCurrent-large
-    tags: [compile-only, windows-vsCurrent, cxx17, vs2019x64, release, shared]
-    commands:
-      - command: expansions.update
-        params:
-          updates:
-            - { key: build_type, value: Release }
-            - { key: generator, value: Visual Studio 16 2019 }
-            - { key: platform, value: x64 }
-      - func: setup
-      - func: install_c_driver
-      - func: install-uv
-      - func: compile
-        vars:
-          build_type: Release
-          generator: Visual Studio 16 2019
-          platform: x64
-  - name: compile-only-windows-2019-vs2019-x64-cxx17-release-static
-    run_on: windows-vsCurrent-large
-    tags: [compile-only, windows-vsCurrent, cxx17, vs2019x64, release, static]
-    commands:
-      - command: expansions.update
-        params:
-          updates:
-            - { key: build_type, value: Release }
-            - { key: generator, value: Visual Studio 16 2019 }
-            - { key: platform, value: x64 }
-      - func: setup
-      - func: install_c_driver
-      - func: install-uv
-      - func: compile
-        vars:
-          build_type: Release
-          generator: Visual Studio 16 2019
-          platform: x64
-  - name: compile-only-windows-2019-vs2019-x64-cxx20-debug-shared
-    run_on: windows-vsCurrent-large
-    tags: [compile-only, windows-vsCurrent, cxx20, vs2019x64, debug, shared]
+    tags: [compile-only, windows-vsCurrent, cxx23, vs2019x64, debug]
     commands:
       - command: expansions.update
         params:
@@ -2163,12 +2111,14 @@ tasks:
       - func: install-uv
       - func: compile
         vars:
+          BUILD_SHARED_AND_STATIC_LIBS: "ON"
+          REQUIRED_CXX_STANDARD: 23
           build_type: Debug
           generator: Visual Studio 16 2019
           platform: x64
-  - name: compile-only-windows-2019-vs2019-x64-cxx20-debug-static
+  - name: compile-only-windows-2019-vs2019-x64-cxxlatest-debug
     run_on: windows-vsCurrent-large
-    tags: [compile-only, windows-vsCurrent, cxx20, vs2019x64, debug, static]
+    tags: [compile-only, windows-vsCurrent, cxxlatest, vs2019x64, debug]
     commands:
       - command: expansions.update
         params:
@@ -2181,48 +2131,14 @@ tasks:
       - func: install-uv
       - func: compile
         vars:
+          BUILD_SHARED_AND_STATIC_LIBS: "ON"
+          REQUIRED_CXX_STANDARD: latest
           build_type: Debug
           generator: Visual Studio 16 2019
           platform: x64
-  - name: compile-only-windows-2019-vs2019-x64-cxx20-release-shared
+  - name: compile-only-windows-2019-vs2022-x64-cxx11-debug
     run_on: windows-vsCurrent-large
-    tags: [compile-only, windows-vsCurrent, cxx20, vs2019x64, release, shared]
-    commands:
-      - command: expansions.update
-        params:
-          updates:
-            - { key: build_type, value: Release }
-            - { key: generator, value: Visual Studio 16 2019 }
-            - { key: platform, value: x64 }
-      - func: setup
-      - func: install_c_driver
-      - func: install-uv
-      - func: compile
-        vars:
-          build_type: Release
-          generator: Visual Studio 16 2019
-          platform: x64
-  - name: compile-only-windows-2019-vs2019-x64-cxx20-release-static
-    run_on: windows-vsCurrent-large
-    tags: [compile-only, windows-vsCurrent, cxx20, vs2019x64, release, static]
-    commands:
-      - command: expansions.update
-        params:
-          updates:
-            - { key: build_type, value: Release }
-            - { key: generator, value: Visual Studio 16 2019 }
-            - { key: platform, value: x64 }
-      - func: setup
-      - func: install_c_driver
-      - func: install-uv
-      - func: compile
-        vars:
-          build_type: Release
-          generator: Visual Studio 16 2019
-          platform: x64
-  - name: compile-only-windows-2019-vs2022-x64-cxx11-debug-shared
-    run_on: windows-vsCurrent-large
-    tags: [compile-only, windows-vsCurrent, cxx11, vs2022x64, debug, shared]
+    tags: [compile-only, windows-vsCurrent, cxx11, vs2022x64, debug]
     commands:
       - command: expansions.update
         params:
@@ -2235,12 +2151,14 @@ tasks:
       - func: install-uv
       - func: compile
         vars:
+          BUILD_SHARED_AND_STATIC_LIBS: "ON"
+          REQUIRED_CXX_STANDARD: 11
           build_type: Debug
           generator: Visual Studio 17 2022
           platform: x64
-  - name: compile-only-windows-2019-vs2022-x64-cxx11-debug-static
+  - name: compile-only-windows-2019-vs2022-x64-cxx14-debug
     run_on: windows-vsCurrent-large
-    tags: [compile-only, windows-vsCurrent, cxx11, vs2022x64, debug, static]
+    tags: [compile-only, windows-vsCurrent, cxx14, vs2022x64, debug]
     commands:
       - command: expansions.update
         params:
@@ -2253,48 +2171,14 @@ tasks:
       - func: install-uv
       - func: compile
         vars:
+          BUILD_SHARED_AND_STATIC_LIBS: "ON"
+          REQUIRED_CXX_STANDARD: 14
           build_type: Debug
           generator: Visual Studio 17 2022
           platform: x64
-  - name: compile-only-windows-2019-vs2022-x64-cxx11-release-shared
+  - name: compile-only-windows-2019-vs2022-x64-cxx17-debug
     run_on: windows-vsCurrent-large
-    tags: [compile-only, windows-vsCurrent, cxx11, vs2022x64, release, shared]
-    commands:
-      - command: expansions.update
-        params:
-          updates:
-            - { key: build_type, value: Release }
-            - { key: generator, value: Visual Studio 17 2022 }
-            - { key: platform, value: x64 }
-      - func: setup
-      - func: install_c_driver
-      - func: install-uv
-      - func: compile
-        vars:
-          build_type: Release
-          generator: Visual Studio 17 2022
-          platform: x64
-  - name: compile-only-windows-2019-vs2022-x64-cxx11-release-static
-    run_on: windows-vsCurrent-large
-    tags: [compile-only, windows-vsCurrent, cxx11, vs2022x64, release, static]
-    commands:
-      - command: expansions.update
-        params:
-          updates:
-            - { key: build_type, value: Release }
-            - { key: generator, value: Visual Studio 17 2022 }
-            - { key: platform, value: x64 }
-      - func: setup
-      - func: install_c_driver
-      - func: install-uv
-      - func: compile
-        vars:
-          build_type: Release
-          generator: Visual Studio 17 2022
-          platform: x64
-  - name: compile-only-windows-2019-vs2022-x64-cxx17-debug-shared
-    run_on: windows-vsCurrent-large
-    tags: [compile-only, windows-vsCurrent, cxx17, vs2022x64, debug, shared]
+    tags: [compile-only, windows-vsCurrent, cxx17, vs2022x64, debug]
     commands:
       - command: expansions.update
         params:
@@ -2307,12 +2191,14 @@ tasks:
       - func: install-uv
       - func: compile
         vars:
+          BUILD_SHARED_AND_STATIC_LIBS: "ON"
+          REQUIRED_CXX_STANDARD: 17
           build_type: Debug
           generator: Visual Studio 17 2022
           platform: x64
-  - name: compile-only-windows-2019-vs2022-x64-cxx17-debug-static
+  - name: compile-only-windows-2019-vs2022-x64-cxx20-debug
     run_on: windows-vsCurrent-large
-    tags: [compile-only, windows-vsCurrent, cxx17, vs2022x64, debug, static]
+    tags: [compile-only, windows-vsCurrent, cxx20, vs2022x64, debug]
     commands:
       - command: expansions.update
         params:
@@ -2325,48 +2211,14 @@ tasks:
       - func: install-uv
       - func: compile
         vars:
+          BUILD_SHARED_AND_STATIC_LIBS: "ON"
+          REQUIRED_CXX_STANDARD: 20
           build_type: Debug
           generator: Visual Studio 17 2022
           platform: x64
-  - name: compile-only-windows-2019-vs2022-x64-cxx17-release-shared
+  - name: compile-only-windows-2019-vs2022-x64-cxx23-debug
     run_on: windows-vsCurrent-large
-    tags: [compile-only, windows-vsCurrent, cxx17, vs2022x64, release, shared]
-    commands:
-      - command: expansions.update
-        params:
-          updates:
-            - { key: build_type, value: Release }
-            - { key: generator, value: Visual Studio 17 2022 }
-            - { key: platform, value: x64 }
-      - func: setup
-      - func: install_c_driver
-      - func: install-uv
-      - func: compile
-        vars:
-          build_type: Release
-          generator: Visual Studio 17 2022
-          platform: x64
-  - name: compile-only-windows-2019-vs2022-x64-cxx17-release-static
-    run_on: windows-vsCurrent-large
-    tags: [compile-only, windows-vsCurrent, cxx17, vs2022x64, release, static]
-    commands:
-      - command: expansions.update
-        params:
-          updates:
-            - { key: build_type, value: Release }
-            - { key: generator, value: Visual Studio 17 2022 }
-            - { key: platform, value: x64 }
-      - func: setup
-      - func: install_c_driver
-      - func: install-uv
-      - func: compile
-        vars:
-          build_type: Release
-          generator: Visual Studio 17 2022
-          platform: x64
-  - name: compile-only-windows-2019-vs2022-x64-cxx20-debug-shared
-    run_on: windows-vsCurrent-large
-    tags: [compile-only, windows-vsCurrent, cxx20, vs2022x64, debug, shared]
+    tags: [compile-only, windows-vsCurrent, cxx23, vs2022x64, debug]
     commands:
       - command: expansions.update
         params:
@@ -2379,12 +2231,14 @@ tasks:
       - func: install-uv
       - func: compile
         vars:
+          BUILD_SHARED_AND_STATIC_LIBS: "ON"
+          REQUIRED_CXX_STANDARD: 23
           build_type: Debug
           generator: Visual Studio 17 2022
           platform: x64
-  - name: compile-only-windows-2019-vs2022-x64-cxx20-debug-static
+  - name: compile-only-windows-2019-vs2022-x64-cxxlatest-debug
     run_on: windows-vsCurrent-large
-    tags: [compile-only, windows-vsCurrent, cxx20, vs2022x64, debug, static]
+    tags: [compile-only, windows-vsCurrent, cxxlatest, vs2022x64, debug]
     commands:
       - command: expansions.update
         params:
@@ -2397,115 +2251,9 @@ tasks:
       - func: install-uv
       - func: compile
         vars:
+          BUILD_SHARED_AND_STATIC_LIBS: "ON"
+          REQUIRED_CXX_STANDARD: latest
           build_type: Debug
-          generator: Visual Studio 17 2022
-          platform: x64
-  - name: compile-only-windows-2019-vs2022-x64-cxx20-release-shared
-    run_on: windows-vsCurrent-large
-    tags: [compile-only, windows-vsCurrent, cxx20, vs2022x64, release, shared]
-    commands:
-      - command: expansions.update
-        params:
-          updates:
-            - { key: build_type, value: Release }
-            - { key: generator, value: Visual Studio 17 2022 }
-            - { key: platform, value: x64 }
-      - func: setup
-      - func: install_c_driver
-      - func: install-uv
-      - func: compile
-        vars:
-          build_type: Release
-          generator: Visual Studio 17 2022
-          platform: x64
-  - name: compile-only-windows-2019-vs2022-x64-cxx20-release-static
-    run_on: windows-vsCurrent-large
-    tags: [compile-only, windows-vsCurrent, cxx20, vs2022x64, release, static]
-    commands:
-      - command: expansions.update
-        params:
-          updates:
-            - { key: build_type, value: Release }
-            - { key: generator, value: Visual Studio 17 2022 }
-            - { key: platform, value: x64 }
-      - func: setup
-      - func: install_c_driver
-      - func: install-uv
-      - func: compile
-        vars:
-          build_type: Release
-          generator: Visual Studio 17 2022
-          platform: x64
-  - name: compile-only-windows-2019-vs2022-x64-cxx23-debug-shared
-    run_on: windows-vsCurrent-large
-    tags: [compile-only, windows-vsCurrent, cxx23, vs2022x64, debug, shared]
-    commands:
-      - command: expansions.update
-        params:
-          updates:
-            - { key: build_type, value: Debug }
-            - { key: generator, value: Visual Studio 17 2022 }
-            - { key: platform, value: x64 }
-      - func: setup
-      - func: install_c_driver
-      - func: install-uv
-      - func: compile
-        vars:
-          build_type: Debug
-          generator: Visual Studio 17 2022
-          platform: x64
-  - name: compile-only-windows-2019-vs2022-x64-cxx23-debug-static
-    run_on: windows-vsCurrent-large
-    tags: [compile-only, windows-vsCurrent, cxx23, vs2022x64, debug, static]
-    commands:
-      - command: expansions.update
-        params:
-          updates:
-            - { key: build_type, value: Debug }
-            - { key: generator, value: Visual Studio 17 2022 }
-            - { key: platform, value: x64 }
-      - func: setup
-      - func: install_c_driver
-      - func: install-uv
-      - func: compile
-        vars:
-          build_type: Debug
-          generator: Visual Studio 17 2022
-          platform: x64
-  - name: compile-only-windows-2019-vs2022-x64-cxx23-release-shared
-    run_on: windows-vsCurrent-large
-    tags: [compile-only, windows-vsCurrent, cxx23, vs2022x64, release, shared]
-    commands:
-      - command: expansions.update
-        params:
-          updates:
-            - { key: build_type, value: Release }
-            - { key: generator, value: Visual Studio 17 2022 }
-            - { key: platform, value: x64 }
-      - func: setup
-      - func: install_c_driver
-      - func: install-uv
-      - func: compile
-        vars:
-          build_type: Release
-          generator: Visual Studio 17 2022
-          platform: x64
-  - name: compile-only-windows-2019-vs2022-x64-cxx23-release-static
-    run_on: windows-vsCurrent-large
-    tags: [compile-only, windows-vsCurrent, cxx23, vs2022x64, release, static]
-    commands:
-      - command: expansions.update
-        params:
-          updates:
-            - { key: build_type, value: Release }
-            - { key: generator, value: Visual Studio 17 2022 }
-            - { key: platform, value: x64 }
-      - func: setup
-      - func: install_c_driver
-      - func: install-uv
-      - func: compile
-        vars:
-          build_type: Release
           generator: Visual Studio 17 2022
           platform: x64
   - name: docker-build-ubuntu2204

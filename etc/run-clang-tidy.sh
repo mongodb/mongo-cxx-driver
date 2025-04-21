@@ -3,7 +3,7 @@
 set -o errexit
 set -o pipefail
 
-: "${UV_INSTALL_DIR:?}" # Not on windows-64-vs2015.
+: "${UV_INSTALL_DIR:?}"
 
 export CC="${cc_compiler:?}"
 export CXX="${cxx_compiler:?}"

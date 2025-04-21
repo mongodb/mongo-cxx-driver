@@ -28,7 +28,7 @@ command_started_event::command_started_event(void const* event) : _started_event
 command_started_event::~command_started_event() = default;
 
 bsoncxx::v_noabi::document::view command_started_event::command() const {
-    auto command =
+    bson_t const* const command =
         libmongoc::apm_command_started_get_command(static_cast<mongoc_apm_command_started_t const*>(_started_event));
     return {bson_get_data(command), command->len};
 }

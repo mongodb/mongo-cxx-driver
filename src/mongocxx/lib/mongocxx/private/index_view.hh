@@ -149,7 +149,7 @@ class index_view::impl {
             if (!server_description.sd)
                 throw_exception<write_exception>(error);
 
-            auto hello = libmongoc::server_description_hello_response(server_description.sd);
+            bson_t const* const hello = libmongoc::server_description_hello_response(server_description.sd);
 
             bson_iter_t iter;
             if (!bson_iter_init_find(&iter, hello, "maxWireVersion") || bson_iter_int32(&iter) < 9) {

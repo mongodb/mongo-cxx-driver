@@ -86,7 +86,7 @@ std::vector<uri::host> uri::hosts() const {
 }
 
 bsoncxx::v_noabi::document::view uri::options() const {
-    auto opts_bson = libmongoc::uri_get_options(_impl->uri_t);
+    bson_t const* const opts_bson = libmongoc::uri_get_options(_impl->uri_t);
     return bsoncxx::v_noabi::document::view{::bson_get_data(opts_bson), opts_bson->len};
 }
 
@@ -138,7 +138,7 @@ static bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::stdx::string_view> _st
 
     value = libmongoc::uri_get_option_as_utf8(uri, opt_name.c_str(), nullptr);
     if (!value) {
-        return {};
+        return bsoncxx::v_noabi::stdx::nullopt;
     }
 
     return bsoncxx::v_noabi::stdx::string_view{value};
@@ -149,7 +149,7 @@ static bsoncxx::v_noabi::stdx::optional<std::int32_t> _int32_option(mongoc_uri_t
     bson_t const* options_bson = libmongoc::uri_get_options(uri);
 
     if (!bson_iter_init_find_case(&iter, options_bson, opt_name.c_str()) || !BSON_ITER_HOLDS_INT32(&iter)) {
-        return {};
+        return bsoncxx::v_noabi::stdx::nullopt;
     }
     return bson_iter_int32(&iter);
 }
@@ -159,7 +159,7 @@ static bsoncxx::v_noabi::stdx::optional<bool> _bool_option(mongoc_uri_t* uri, st
     bson_t const* options_bson = libmongoc::uri_get_options(uri);
 
     if (!bson_iter_init_find_case(&iter, options_bson, opt_name.c_str()) || !BSON_ITER_HOLDS_BOOL(&iter)) {
-        return {};
+        return bsoncxx::v_noabi::stdx::nullopt;
     }
     return bson_iter_bool(&iter);
 }
@@ -184,7 +184,7 @@ static bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view> _crede
     bson_t const* options_bson = libmongoc::uri_get_credentials(uri);
 
     if (!bson_iter_init_find_case(&iter, options_bson, opt_name.c_str()) || !BSON_ITER_HOLDS_DOCUMENT(&iter)) {
-        return {};
+        return bsoncxx::v_noabi::stdx::nullopt;
     }
     bson_iter_document(&iter, &len, &data);
     return bsoncxx::v_noabi::document::view(data, len);

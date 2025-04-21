@@ -28,7 +28,7 @@ command_succeeded_event::command_succeeded_event(void const* event) : _succeeded
 command_succeeded_event::~command_succeeded_event() = default;
 
 bsoncxx::v_noabi::document::view command_succeeded_event::reply() const {
-    auto reply = libmongoc::apm_command_succeeded_get_reply(
+    bson_t const* const reply = libmongoc::apm_command_succeeded_get_reply(
         static_cast<mongoc_apm_command_succeeded_t const*>(_succeeded_event));
     return {bson_get_data(reply), reply->len};
 }
