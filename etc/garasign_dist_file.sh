@@ -52,6 +52,9 @@ plugin_commands=(
   artifactory.corp.mongodb.com/release-tools-container-registry-local/garasign-gpg
 
 # Validate the signature file works as intended.
-keyring="$(mktemp)"
-curl -sS https://pgp.mongodb.com/cpp-driver.pub | gpg -q --no-default-keyring --keyring "${keyring:?}" --import -
-gpgv --keyring "${keyring:?}" "${dist_file_signed:?}" "${dist_file:?}"
+(
+  GNUPGHOME="$(mktemp -d)"
+  export GNUPGHOME
+  curl -sS https://pgp.mongodb.com/cpp-driver.pub | gpg -q --no-default-keyring --import -
+  gpgv "${dist_file_signed:?}" "${dist_file:?}"
+)
