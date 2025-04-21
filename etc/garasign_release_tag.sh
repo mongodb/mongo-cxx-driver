@@ -42,8 +42,8 @@ git_tag_command=(
   -c "user.email=\"packaging@mongodb.com\""
   tag
   -u DC7F679B8A34DD606C1E54CAC4FC994D21532195
-  -m \"${release_tag:?}\"
-  \"${release_tag:?}\"
+  -m "\"${release_tag:?}\""
+  "\"${release_tag:?}\""
 )
 plugin_commands=""
 plugin_commands+="gpg --list-key DC7F679B8A34DD606C1E54CAC4FC994D21532195"
