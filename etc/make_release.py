@@ -39,7 +39,7 @@ When editing this file, consider running `test_make_release.py` to validate chan
 
 import textwrap
 import re
-from distutils.version import LooseVersion
+from looseversion import LooseVersion
 import os
 import glob
 import subprocess
