@@ -274,18 +274,23 @@ class read_preference {
     /// @param hedge
     ///   The hedge document to set. For example, the document { enabled: true }.
     ///
+    /// @deprecated Hedged reads are deprecated in MongoDB Server version 8.0.
+    ///
     /// @return A reference to the object on which this member function is being called. This
     /// facilitates method chaining.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(read_preference&)
-    hedge(bsoncxx::v_noabi::document::view_or_value hedge);
+    MONGOCXX_DEPRECATED MONGOCXX_ABI_EXPORT_CDECL(read_preference&) hedge(
+        bsoncxx::v_noabi::document::view_or_value hedge);
 
     ///
     /// Gets the current hedge document to be used for the read preference.
     ///
+    /// @deprecated Hedged reads are deprecated in MongoDB Server version 8.0.
+    ///
     /// @return A hedge document if one was set.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view> const)
+    MONGOCXX_DEPRECATED MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<
+                                                  bsoncxx::v_noabi::document::view> const)
     hedge() const;
 
     ///
