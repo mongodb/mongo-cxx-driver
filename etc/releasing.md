@@ -48,18 +48,13 @@ Some release steps require one or more of the following secrets.
   (classic) token with the "repo" scope selected.
 
     Configure SSO to authorize this token for the `mongodb` organization. (Do not forget this step!)
-- Jira OAuth credentials.
-  - Location: `~/.secrets/jira-creds.txt`
+- A Jira Personal Access Token (PAT)
+  - Location: `~/.secrets/jira-token.txt`
   - Format:
     ```
-    Username: evergreen.jirareleases@mongodb.com
-
-    access_token : <access_token>
-    access_token_secret : <access_token_secret>
-    consumer_key : <consumer_key>
-    key_cert: -----BEGIN RSA PRIVATE KEY-----\n...\n-----END RSA PRIVATE KEY-----
+    <jira_token>
     ```
-    Note the `"\n"` strings must be preserved as-is in the key_cert value.
+  - See [Jira: Personal Access Tokens (PATs)](https://wiki.corp.mongodb.com/spaces/TOGETHER/pages/218995581/Jira+Personal+Access+Tokens+PATs) for steps to create a token.
 - Artifactory credentials.
   - Location: `~/.secrets/artifactory-creds.txt`:
   - Format:
@@ -326,7 +321,7 @@ python ./etc/make_release.py --help
 The following secrets are required by this script:
 
 - GitHub Personal Access Token.
-- Jira OAuth credentials.
+- Jira Personal Access Token.
 - Artifactory credentials.
 - Garasign credentials.
 
@@ -336,7 +331,7 @@ Run the release script with the name of the tag to be created as an argument and
 ```bash
 make_release_args=(
     -r upstream
-    --jira-creds-file ~/.secrets/jira-creds.txt
+    --jira-token-file ~/.secrets/jira-token.txt
     --github-token-file ~/.secrets/github-token.txt
 )
 python ./etc/make_release.py "${make_release_args[@]:?}" --dry-run rX.Y.Z
