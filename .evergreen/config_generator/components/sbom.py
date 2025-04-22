@@ -5,7 +5,7 @@ from config_generator.etc.function import Function, merge_defns
 from config_generator.etc.utils import bash_exec
 
 from shrub.v3.evg_build_variant import BuildVariant
-from shrub.v3.evg_command import BuiltInCommand, EvgCommandType, expansions_update, s3_put
+from shrub.v3.evg_command import BuiltInCommand, EvgCommandType, ec2_assume_role, expansions_update, s3_put
 from shrub.v3.evg_task import EvgTask, EvgTaskRef
 
 from pydantic import ConfigDict
@@ -18,23 +18,6 @@ TAG = 'sbom'
 class CustomCommand(BuiltInCommand):
     command: str
     model_config = ConfigDict(arbitrary_types_allowed=True)
-
-
-def ec2_assume_role(
-    role_arn: Optional[str] = None,
-    policy: Optional[str] = None,
-    duration_seconds: Optional[int] = None,
-    command_type: Optional[EvgCommandType] = None,
-) -> CustomCommand:
-    return CustomCommand(
-        command="ec2.assume_role",
-        params={
-            "role_arn": role_arn,
-            "policy": policy,
-            "duration_seconds": duration_seconds,
-        },
-        type=command_type,
-    )
 
 
 class CheckAugmentedSBOM(Function):
