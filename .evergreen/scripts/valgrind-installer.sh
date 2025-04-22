@@ -8,7 +8,9 @@ set -o pipefail
 cd "$(mktemp -d)"
 
 # https://valgrind.org/downloads/current.html
-curl -sSL -m 60 --retry 5 -o valgrind-3.24.0.tar.bz2 https://sourceware.org/pub/valgrind/valgrind-3.24.0.tar.bz2
+for _ in $(seq 5); do
+    curl -L -m 60 -o valgrind-3.24.0.tar.bz2 https://sourceware.org/pub/valgrind/valgrind-3.24.0.tar.bz2 && break
+done
 cat >checksum.txt <<<'6fc0470fedc0d85dae3e042297cabd13c6100749 *valgrind-3.24.0.tar.bz2'
 sha1sum -c checksum.txt >/dev/null
 
