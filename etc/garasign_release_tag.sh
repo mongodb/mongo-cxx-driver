@@ -48,8 +48,9 @@ git_tag_command=(
   "\"${release_tag:?}\""
 )
 plugin_commands=""
-plugin_commands+="gpg --list-key DC7F679B8A34DD606C1E54CAC4FC994D21532195"
-plugin_commands+="&& ${git_tag_command[*]:?}"
+plugin_commands+="gpg -q --update-trustdb"
+plugin_commands+=" && gpg --list-key DC7F679B8A34DD606C1E54CAC4FC994D21532195"
+plugin_commands+=" && ${git_tag_command[*]:?}"
 "${launcher:?}" run \
   --env-file="${garasign_creds:?}" \
   -e "PLUGIN_COMMANDS=${plugin_commands:?}" \
@@ -63,5 +64,7 @@ plugin_commands+="&& ${git_tag_command[*]:?}"
   GNUPGHOME="$(mktemp -d)"
   export GNUPGHOME
   curl -sS https://pgp.mongodb.com/cpp-driver.pub | gpg -q --no-default-keyring --import -
+  gpg -q --import-ownertrust <<<"DC7F679B8A34DD606C1E54CAC4FC994D21532195:6:" # Set trust to "ultimate".
+  gpg -q --update-trustdb
   git verify-tag "${release_tag:?}"
 )

@@ -58,5 +58,7 @@ plugin_commands=(
   GNUPGHOME="$(mktemp -d)"
   export GNUPGHOME
   curl -sS https://pgp.mongodb.com/cpp-driver.pub | gpg -q --no-default-keyring --import -
-  gpgv "${dist_file_signed:?}" "${dist_file:?}"
+  gpg -q --import-ownertrust <<<"DC7F679B8A34DD606C1E54CAC4FC994D21532195:6:" # Set trust to "ultimate".
+  gpg -q --update-trustdb
+  gpg -q --verify "${dist_file_signed:?}" "${dist_file:?}"
 )
