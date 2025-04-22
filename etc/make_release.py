@@ -51,7 +51,6 @@ import click # pip install Click
 from git import Repo # pip install GitPython
 from github import Github # pip install PyGithub
 from jira import JIRA # pip install jira
-import oauthlib.oauth1
 
 if sys.version_info < (3, 0, 0):
     raise RuntimeError("This script requires Python 3 or higher")
@@ -72,11 +71,11 @@ ISSUE_TYPE_ID = {'Backport': '10300',
 @click.option('--skip-release-tag',
               is_flag=True,
               help='Use an existing release tag instead of creating a new one')
-@click.option('--jira-creds-file',
+@click.option('--jira-token-file',
               '-j',
-              default='jira_creds.txt',
+              default='jira_token.txt',
               show_default=True,
-              help='Jira OAuth credentials file')
+              help='Jira token file. Contains a Personal Access Token. See https://wiki.corp.mongodb.com/spaces/TOGETHER/pages/218995581/Jira+Personal+Access+Tokens+PATs')
 @click.option('--github-token-file',
               '-g',
               default='github_token.txt',
@@ -116,7 +115,7 @@ ISSUE_TYPE_ID = {'Backport': '10300',
 @click.argument('git-revision', required=True)
 # pylint: disable=too-many-arguments,too-many-locals,too-many-branches,too-many-statements
 def release(skip_release_tag,
-            jira_creds_file,
+            jira_token_file,
             github_token_file,
             allow_open_issues,
             remote,
@@ -137,8 +136,8 @@ def release(skip_release_tag,
     # Read Jira credentials and GitHub token first, to check that
     # user has proper credentials before embarking on lengthy builds.
     jira_options = {'server': 'https://jira.mongodb.org'}
-    jira_oauth_dict = read_jira_oauth_creds(jira_creds_file)
-    auth_jira = JIRA(jira_options, oauth=jira_oauth_dict)
+    jira_token = pathlib.Path(jira_token_file).read_text().rstrip()
+    auth_jira = JIRA(jira_options, token_auth=jira_token)
 
     github_token = read_github_creds(github_token_file)
     auth_gh = Github(github_token)
@@ -467,36 +466,6 @@ def build_distribution(release_tag, release_version, c_driver_dir, quiet, skip_d
         click.echo('This may take several minutes. This may be skipped with --skip-distcheck')
         run_shell_script('cmake --build build --target distcheck')
     return dist_file
-
-def read_jira_oauth_creds(jira_creds_file):
-    """
-    Read the Jira Oauth credentials file and return a dictionary containing the
-    credentials.
-    """
-
-    creds_re = re.compile(
-        r'^[\s\S]*access_token\s*:\s*(\S+)\s*'
-        r'access_token_secret\s*:\s*(\S+)\s*'
-        r'consumer_key\s*:\s*(\S+)\s*'
-        r'key_cert\s*:\s*(-.*-)[\s\S]*$')
-
-    oauth_dict = {}
-    with open(jira_creds_file, 'rb') as creds_stream:
-        creds_data = creds_stream.read().decode('ascii')
-        creds_match = creds_re.match(creds_data)
-        if creds_match:
-            oauth_dict['access_token'] = creds_match.group(1)
-            oauth_dict['access_token_secret'] = creds_match.group(2)
-            oauth_dict['consumer_key'] = creds_match.group(3)
-            # Fix the double-backslash created by the decode() call above
-            oauth_dict['key_cert'] = creds_match.group(4).replace("\\n", "\n")
-            # Use signature algorithm `SIGNATURE_RSA` to override `jira` default of `SIGNATURE_HMAC_SHA1`.
-            # `jira` 3.5.1 changed the default signature algorithm to `SIGNATURE_HMAC_SHA1`.
-            # MongoDB Jira servers do not appear to support `SIGNATURE_HMAC_SHA1`. Using `SIGNATURE_HMAC_SHA1` results in `signature_method_rejected`` error.
-            # See https://github.com/pycontribs/jira/pull/1664
-            oauth_dict["signature_method"] = oauthlib.oauth1.SIGNATURE_RSA
-
-    return oauth_dict
 
 def get_jira_project_versions(auth_jira):
     """
