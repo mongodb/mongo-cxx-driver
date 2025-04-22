@@ -199,7 +199,9 @@ TEST_CASE("Read preference methods call underlying mongoc methods", "[read_prefe
 
     SECTION("hedge() calls mongoc_read_prefs_set_hedge") {
         /* No hedge should return a disengaged optional. */
+        BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_BEGIN
         REQUIRE(!rp.hedge());
+        BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_END
 
         read_prefs_set_hedge->visit([&](mongoc_read_prefs_t*, bson_t const* doc) {
             bson_iter_t iter;
@@ -209,8 +211,10 @@ TEST_CASE("Read preference methods call underlying mongoc methods", "[read_prefe
             called = true;
         });
 
+        BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_BEGIN
         rp.hedge(make_document(kvp("hedge", true)));
         REQUIRE((*rp.hedge())["hedge"].get_bool().value == true);
+        BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_END
         REQUIRE(called);
     }
 }
