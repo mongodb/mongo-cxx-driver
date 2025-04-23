@@ -31,7 +31,7 @@ config_generator = [
     # .evergreen/config_generator/generate.py
     "packaging>=14.0",
     "pydantic>=2.8",
-    "shrub-py>=3.6",
+    "shrub-py>=3.7",
 ]
 
 make_release = [

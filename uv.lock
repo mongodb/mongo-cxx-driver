@@ -375,13 +375,13 @@ clang-format = [{ name = "clang-format", specifier = "~=19.1" }]
 config-generator = [
     { name = "packaging", specifier = ">=14.0" },
     { name = "pydantic", specifier = ">=2.8" },
-    { name = "shrub-py", specifier = ">=3.6" },
+    { name = "shrub-py", specifier = ">=3.7" },
 ]
 dev = [
     { name = "clang-format", specifier = "~=19.1" },
     { name = "packaging", specifier = ">=14.0" },
     { name = "pydantic", specifier = ">=2.8" },
-    { name = "shrub-py", specifier = ">=3.6" },
+    { name = "shrub-py", specifier = ">=3.7" },
 ]
 make-release = [
     { name = "click", specifier = ">=6.0" },
