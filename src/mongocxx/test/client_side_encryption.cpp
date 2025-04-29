@@ -1276,22 +1276,16 @@ TEST_CASE("Custom endpoint", "[client_side_encryption]") {
         _run_endpoint_test(&setup_client, endpoint_masterkey2.view(), "aws");
     }
 
-    // Call client_encryption.createDataKey() with "aws" as the provider and the following
+    // Call client_encryption.createDataKey() with "kmip" as the provider and the following
     // masterKey:
     // {
-    //   region: "us-east-1",
-    //   key: "arn:aws:kms:us-east-1:579766882180:key/89fcc2c4-08b0-4bd9-9f25-e30687b580d0",
-    //   endpoint: "kms.us-east-1.amazonaws.com:12345"
+    //   "keyId": "1",
+    //   "endpoint": "localhost:12345"
     // }
     // Expect this to fail with a socket connection error.
     SECTION("Test Case 4") {
-        auto socket_error_masterkey = document{}
-                                      << "region"
-                                      << "us-east-1"
-                                      << "key"
-                                      << "arn:aws:kms:us-east-1:579766882180:key/89fcc2c4-08b0-4bd9-9f25-e30687b580d0"
-                                      << "endpoint"
-                                      << "kms.us-east-1.amazonaws.com:12345" << finalize;
+        auto socket_error_masterkey = document{} << "keyId" << 1 << "endpoing"
+                                                 << "localhost:12345" << finalize;
         _run_endpoint_test(&setup_client, socket_error_masterkey.view(), "aws", {{"error"}});
     }
 
