@@ -1,5 +1,0 @@
-var searchData=
-[
-  ['iterator_0',['iterator',['../classbsoncxx_1_1v__noabi_1_1vector_1_1accessor.html#a80c39edfb3893708f0d6129f2d0dd6cf',1,'bsoncxx::v_noabi::vector::accessor::iterator'],['../classmongocxx_1_1v__noabi_1_1events_1_1topology__description_1_1server__descriptions.html#a6d96628f55f6ee3e9c88f3436232ccc3',1,'mongocxx::v_noabi::events::topology_description::server_descriptions::iterator'],['../classbsoncxx_1_1vector_1_1accessor.html#a80c39edfb3893708f0d6129f2d0dd6cf',1,'bsoncxx::vector::accessor::iterator'],['../classmongocxx_1_1events_1_1topology__description_1_1server__descriptions.html#a6d96628f55f6ee3e9c88f3436232ccc3',1,'mongocxx::events::topology_description::server_descriptions::iterator']]],
-  ['iterator_5fcategory_1',['iterator_category',['../classbsoncxx_1_1v__noabi_1_1vector_1_1iterators_1_1packed__bit__element.html#a6db2695b6fa0386f6ff207b6c306f3db',1,'bsoncxx::v_noabi::vector::iterators::packed_bit_element::iterator_category'],['../classbsoncxx_1_1v__noabi_1_1vector_1_1iterators_1_1packed__bit__byte.html#a8aba452099235ad87fe2a16a6af410af',1,'bsoncxx::v_noabi::vector::iterators::packed_bit_byte::iterator_category']]]
-];
