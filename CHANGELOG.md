@@ -7,15 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Changes prior to 3.9.0 are documented as [release notes on GitHub](https://github.com/mongodb/mongo-cxx-driver/releases).
 
-## 4.1.0 [Unreleased]
+## 4.1.0
 
 ### Fixed
 
 - The API version of auto-downloaded C Driver libraries no longer incorrectly inherits the C++ Driver's `BUILD_VERSION` value.
+- Possible narrowing conversion in `core::append()` in `bsoncxx::v_noabi::builder`.
 
 ### Added
 
 - `storage_engine()` in `mongocxx::v_noabi::options::index`.
+- Support for sort option with replaceOne and updateOne operations.
+- Support for BSON Binary Vector.
+- Support $lookup in CSFLE and QE.
 
 ### Deprecated
 
