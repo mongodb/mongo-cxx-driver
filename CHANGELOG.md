@@ -12,7 +12,7 @@ Changes prior to 3.9.0 are documented as [release notes on GitHub](https://githu
 ### Fixed
 
 - The API version of auto-downloaded C Driver libraries no longer incorrectly inherits the C++ Driver's `BUILD_VERSION` value.
-- Possible narrowing conversion in `core::append()` in `bsoncxx::v_noabi::builder`.
+- Potentially unchecked narrowing conversion in `bsoncxx::v_noabi::builder::core::append()` now throws an exception with error code `k_cannot_append_string`.
 
 ### Added
 
