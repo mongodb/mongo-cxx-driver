@@ -33,6 +33,10 @@ Changes prior to 3.9.0 are documented as [release notes on GitHub](https://githu
 - Bump the minimum required C Driver version to [2.0.0](https://github.com/mongodb/mongo-c-driver/releases/tag/2.0.0).
 - Set CMake maximum policy version to 4.0.
   - The CMake minimum required version is still 3.15.
+- C++17 polyfill implementations for `optional<T>` and `string_view` are now declared in the `bsoncxx::v1::stdx` namespace.
+  - The `bsoncxx::v_noabi::stdx` namespace now contains type aliases to their `v1` equivalents.
+  - This is an ABI breaking change for all symbols which reference `bsoncxx::v_noabi::stdx` in their declaration (including mongocxx library symbols).
+    - This does not affect users who compile with C++17 or newer and have not set `BSONCXX_POLY_USE_IMPLS=ON`.
 
 ## 4.0.0
 
