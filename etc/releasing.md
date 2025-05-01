@@ -493,13 +493,14 @@ snyk auth "${SNYK_API_TOKEN:?}"
 
 # Verify third party dependency sources listed in etc/purls.txt are detected by Snyk.
 # If not, see: https://support.snyk.io/hc/en-us/requests/new
+# Use --exclude=extras until CXX-3042 is resolved
 snyk_args=(
   --org=dev-prod
   --remote-repo-url=https://github.com/mongodb/mongo-cxx-driver/
   --target-reference="${release_tag:?}"
   --unmanaged
   --all-projects
-  --exclude=extras # CXX-3042
+  --exclude=extras
 )
 snyk test "${snyk_args[@]:?}" --print-deps
 
