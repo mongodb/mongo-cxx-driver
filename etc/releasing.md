@@ -630,8 +630,6 @@ cmake --build build --target doxygen-latest
 
 Verify that the `build/docs/api/mongocxx-X.Y.Z` directory is present and populated. Verify the resulting API doc looks as expected.
 
-Remove all contents of `build/docs/api` before running the next commands.
-
 > [!IMPORTANT]
 > Remove all contents of `build/docs/api` before running the next commands.
 
