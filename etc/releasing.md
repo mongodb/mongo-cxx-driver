@@ -148,8 +148,6 @@ Ensure the `sbom` task is passing on Evergreen for the relevant release branch.
 
 Review the contents of the new Augmented SBOM and ensure any new or known vulnerabilities with severity "Medium" or greater have a corresponding JIRA ticket (CXX or VULN) that is scheduled to be resolved within its remediation timeline.
 
-Update the [SSDLC Report spreadsheet](https://docs.google.com/spreadsheets/d/1sp0bLjj29xO9T8BwDIxUk5IPJ493QkBVCJKIgptxEPc/edit?usp=sharing) with any updates to new or known vulnerabilities.
-
 Update `etc/third_party_vulnerabilities.md` with any updates to new or known vulnerabilities for third party dependencies that have not yet been fixed by the upcoming release.
 
 Download the "Augmented SBOM (Updated)" file from the latest EVG commit build in the `sbom` task and commit it into the repo as `etc/augmented.sbom.json` (even if the only notable change is the timestamp field).
@@ -207,6 +205,8 @@ git fetch upstream
 git checkout releases/vX.Y
 ```
 
+In `etc/apidocmenu.md`, update the list of versions under "Driver Documentation By Version" and the table under "Driver Development Status" with a new entry corresponding to this release.
+
 Update `CHANGELOG.md` with a summary of important changes in this release. Consult the list of related Jira tickets (updated ealier) as well as the list of commits since the last release.
 
 Remove the `[Unreleased]` tag from the relevant patch release section, e.g. for release `1.2.3`:
@@ -222,7 +222,7 @@ Remove the `[Unreleased]` tag from the relevant patch release section, e.g. for 
 
 ```
 
-Commit and push the updates to `CHANGELOG.md` to `releases/vX.Y` (a PR is not required):
+Commit and push the updates to `etc/apidocmenu.md` and `CHANGELOG.md` to `releases/vX.Y` (a PR is not required):
 
 ```bash
 git commit -m 'Update CHANGELOG for X.Y.Z'
@@ -237,6 +237,8 @@ Create a new branch named `pre-release-changes` on `master`. This branch will be
 git fetch upstream
 git checkout -b pre-release-changes upstream/master
 ```
+
+In `etc/apidocmenu.md`, update the list of versions under "Driver Documentation By Version" and the table under "Driver Development Status" with a new entry corresponding to this release.
 
 Update `CHANGELOG.md` with a summary of important changes in this release. Consult the list of related Jira tickets (updated earlier) as well as the list of commits since the last release.
 
@@ -256,7 +258,7 @@ Remove the `[Unreleased]` tag from the relevant non-patch release section, e.g. 
 > [!IMPORTANT]
 > If there are entries under an unreleased patch release section with the old minor release number, move the entries into this release's section and remove the unreleased patch release section. For example, for a `1.3.0` minor release, move entries from `1.2.3 [Unreleased]` to `1.3.0` and remove `1.2.3 [Unreleased]`. Due to cherry-picking, a non-patch release should always (already) contain the changes targeting a patch release with a prior minor version number. (This is analogous to updating the fix version of Jira tickets, as done earlier.)
 
-Commit the updates to `CHANGELOG.md`.
+Commit the updates to `etc/apidocmenu.md` and `CHANGELOG.md`.
 
 ```bash
 git commit -m 'Update CHANGELOG for X.Y.Z'
@@ -495,13 +497,14 @@ snyk auth "${SNYK_API_TOKEN:?}"
 
 # Verify third party dependency sources listed in etc/purls.txt are detected by Snyk.
 # If not, see: https://support.snyk.io/hc/en-us/requests/new
+# Use --exclude=extras until CXX-3042 is resolved
 snyk_args=(
   --org=dev-prod
   --remote-repo-url=https://github.com/mongodb/mongo-cxx-driver/
   --target-reference="${release_tag:?}"
   --unmanaged
   --all-projects
-  --exclude=extras # CXX-3042
+  --exclude=extras
 )
 snyk test "${snyk_args[@]:?}" --print-deps
 
@@ -525,7 +528,7 @@ This branch will be used to create a PR later.
 > [!IMPORTANT]
 > Make sure the `post-release-changes` branch is created on `master`, not `rX.Y.Z` or `releases/vX.Y`!
 
-In `etc/apidocmenu.md`, update the list of versions under "Driver Documentation By Version" and the table under "Driver Development Status" with a new entry corresponding to this release.
+For a patch release, in `etc/apidocmenu.md`, update the list of versions under "Driver Documentation By Version" and the table under "Driver Development Status" with a new entry corresponding to this release.
 
 In `README.md`, sync the "Driver Development Status" table with the updated table from `etc/apidocmenu.md`.
 
@@ -626,8 +629,6 @@ cmake --build build --target doxygen-latest
 ```
 
 Verify that the `build/docs/api/mongocxx-X.Y.Z` directory is present and populated. Verify the resulting API doc looks as expected.
-
-Remove all contents of `build/docs/api` before running the next commands.
 
 > [!IMPORTANT]
 > Remove all contents of `build/docs/api` before running the next commands.
