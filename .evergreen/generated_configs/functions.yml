@@ -142,11 +142,24 @@ functions:
         args:
           - -c
           - build/benchmark/microbenchmarks all
-    - command: perf.send
+    - command: subprocess.exec
       type: system
       params:
-        name: perf
-        file: mongo-cxx-driver/results.json
+        binary: bash
+        working_dir: mongo-cxx-driver
+        include_expansions_in_env:
+          - project_id
+          - version_id
+          - build_variant
+          - parsed_order_id
+          - task_name
+          - task_id
+          - execution
+          - requester
+          - revision_order_id
+        args:
+          - -c
+          - .evergreen/scripts/send-perf-data.sh
   build-package-debian:
     - command: subprocess.exec
       type: test
