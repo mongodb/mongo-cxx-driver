@@ -283,7 +283,7 @@ else
     export UBSAN_OPTIONS="print_stacktrace=1"
     export PATH="/opt/mongodbtoolchain/v4/bin:${PATH:-}" # llvm-symbolizer
   elif [[ "${TEST_WITH_VALGRIND:-}" == "ON" ]]; then
-    PATH="${VALGRIND_INSTALL_DIR:?}:${PATH:-}"
+    command -V valgrind
     valgrind --version
     run_test() {
       valgrind --leak-check=full --track-origins=yes --num-callers=50 --error-exitcode=1 --error-limit=no --read-var-info=yes --suppressions=../etc/memcheck.suppressions "$@" "${test_args[@]:?}"
