@@ -15715,7 +15715,6 @@ tasks:
           updates:
             - { key: build_type, value: Debug }
       - func: setup
-      - func: install-valgrind
       - func: start_mongod
         vars:
           TOPOLOGY: replica_set
@@ -15745,7 +15744,6 @@ tasks:
           updates:
             - { key: build_type, value: Debug }
       - func: setup
-      - func: install-valgrind
       - func: start_mongod
         vars:
           TOPOLOGY: sharded_cluster
@@ -15775,7 +15773,6 @@ tasks:
           updates:
             - { key: build_type, value: Debug }
       - func: setup
-      - func: install-valgrind
       - func: start_mongod
         vars:
           mongodb_version: "4.0"
@@ -15804,7 +15801,6 @@ tasks:
           updates:
             - { key: build_type, value: Debug }
       - func: setup
-      - func: install-valgrind
       - func: start_mongod
         vars:
           TOPOLOGY: replica_set
@@ -15834,7 +15830,6 @@ tasks:
           updates:
             - { key: build_type, value: Debug }
       - func: setup
-      - func: install-valgrind
       - func: start_mongod
         vars:
           TOPOLOGY: sharded_cluster
@@ -15864,7 +15859,6 @@ tasks:
           updates:
             - { key: build_type, value: Debug }
       - func: setup
-      - func: install-valgrind
       - func: start_mongod
         vars:
           mongodb_version: "8.0"
@@ -15893,7 +15887,6 @@ tasks:
           updates:
             - { key: build_type, value: Debug }
       - func: setup
-      - func: install-valgrind
       - func: start_mongod
         vars:
           TOPOLOGY: replica_set
@@ -15923,7 +15916,6 @@ tasks:
           updates:
             - { key: build_type, value: Debug }
       - func: setup
-      - func: install-valgrind
       - func: start_mongod
         vars:
           TOPOLOGY: sharded_cluster
@@ -15953,7 +15945,6 @@ tasks:
           updates:
             - { key: build_type, value: Debug }
       - func: setup
-      - func: install-valgrind
       - func: start_mongod
         vars:
           mongodb_version: latest
