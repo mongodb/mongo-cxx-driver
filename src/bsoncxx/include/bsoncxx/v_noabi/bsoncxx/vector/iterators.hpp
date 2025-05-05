@@ -278,7 +278,7 @@ class packed_bit_byte {
     constexpr packed_bit_byte(packed_bit_element<Iterator> element, packed_bit_element<Iterator> element_end)
         : byte{element.byte},
           byte_end{(element_end + 7u).byte},
-          last_byte_mask{value_type(0xFFu << (-element_end.bit & 7u))} {}
+          last_byte_mask{value_type(0xFFu << (-element_end.bit & 7))} {}
 
     constexpr packed_bit_byte(Iterator byte, Iterator byte_end, value_type last_byte_mask)
         : byte{byte}, byte_end{byte_end}, last_byte_mask{last_byte_mask} {}
