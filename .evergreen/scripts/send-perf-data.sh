@@ -10,7 +10,7 @@ else
     is_mainline=false
 fi
 
-# We parse the username out of the order_id as patches append that in and the raw perf results end point does not need that information
+# Parse the username out of the order_id. Patches append the username. The raw perf results end point does not need the other information.
 parsed_order_id=$(echo "${revision_order_id}" | awk -F'_' '{print $NF}')
 
 response=$(curl -s -w "\nHTTP_STATUS:%{http_code}" -X 'POST' \
