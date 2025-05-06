@@ -41,8 +41,36 @@
 ///
 
 ///
+/// @dir bsoncxx/v1/array
+/// Provides headers declaring entities in @ref bsoncxx::v1::array.
+///
+/// @warning For internal use only!
+///
+
+///
+/// @dir bsoncxx/v1/document
+/// Provides headers declaring entities in @ref bsoncxx::v1::document.
+///
+/// @warning For internal use only!
+///
+
+///
+/// @dir bsoncxx/v1/element
+/// Provides headers declaring entities in @ref bsoncxx::v1::element.
+///
+/// @warning For internal use only!
+///
+
+///
 /// @dir bsoncxx/v1/stdx
 /// Provides headers declaring entities in @ref bsoncxx::v1::stdx.
+///
+
+///
+/// @dir bsoncxx/v1/types
+/// Provides headers declaring entities in @ref bsoncxx::v1::types.
+///
+/// @warning For internal use only!
 ///
 
 ///
@@ -51,6 +79,28 @@
 ///
 
 ///
+/// @namespace bsoncxx::v1::array
+/// @copydoc bsoncxx::array
+///
+
+///
+/// @namespace bsoncxx::v1::document
+/// @copydoc bsoncxx::array
+///
+
+///
+/// @namespace bsoncxx::v1::element
+/// Declares entities representing a BSON element.
+///
+
+///
 /// @namespace bsoncxx::v1::stdx
 /// @copydoc bsoncxx::stdx
+///
+
+///
+/// @namespace bsoncxx::v1::types
+/// Declares entities representing a BSON type value.
+///
+/// @note A "BSON type value" refers to the value of a BSON element without its key.
 ///
