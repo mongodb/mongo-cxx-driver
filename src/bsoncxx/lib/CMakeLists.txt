@@ -42,11 +42,22 @@ set(bsoncxx_sources_v_noabi
 )
 
 set(bsoncxx_sources_v1
+    bsoncxx/v1/array/value.cpp
+    bsoncxx/v1/array/view.cpp
     bsoncxx/v1/config/config.cpp
     bsoncxx/v1/config/export.cpp
     bsoncxx/v1/config/version.cpp
+    bsoncxx/v1/decimal128.cpp
     bsoncxx/v1/detail/postlude.cpp
     bsoncxx/v1/detail/prelude.cpp
+    bsoncxx/v1/document/value.cpp
+    bsoncxx/v1/document/view.cpp
+    bsoncxx/v1/element/view.cpp
+    bsoncxx/v1/exception.cpp
+    bsoncxx/v1/oid.cpp
+    bsoncxx/v1/types/id.cpp
+    bsoncxx/v1/types/value.cpp
+    bsoncxx/v1/types/view.cpp
 )
 
 list(APPEND bsoncxx_sources
