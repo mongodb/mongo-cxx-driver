@@ -104,11 +104,13 @@ set_dist_list(src_bsoncxx_lib_DIST
     bsoncxx/private/convert.hh
     bsoncxx/private/export.hh
     bsoncxx/private/helpers.hh
+    bsoncxx/private/immortal.hh
     bsoncxx/private/itoa.hh
     bsoncxx/private/bson.hh
     bsoncxx/private/make_unique.hh
     bsoncxx/private/stack.hh
     bsoncxx/private/suppress_deprecation_warnings.hh
+    bsoncxx/private/type_traits.hh
     bsoncxx/private/version.hh
     bsoncxx/v_noabi/bsoncxx/types/bson_value/value.hh
     bsoncxx/v1/config/config.hpp.in
