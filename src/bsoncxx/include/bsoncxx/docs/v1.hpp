@@ -85,7 +85,7 @@
 
 ///
 /// @namespace bsoncxx::v1::document
-/// @copydoc bsoncxx::array
+/// @copydoc bsoncxx::document
 ///
 
 ///
