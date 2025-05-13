@@ -54,6 +54,13 @@
 namespace Catch {
 
 template <>
+struct StringMaker<std::error_category> {
+    static std::string convert(std::error_category const& value) {
+        return value.name();
+    }
+};
+
+template <>
 struct StringMaker<std::error_condition> {
     static std::string convert(std::error_condition const& value) {
         std::string res;
