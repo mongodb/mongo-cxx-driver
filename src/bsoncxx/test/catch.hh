@@ -24,6 +24,8 @@
 #include <bsoncxx/stdx/operators.hpp>
 #include <bsoncxx/stdx/optional.hpp>
 
+#include <bsoncxx/test/stringify.hh>
+
 #include <catch2/catch_test_macros.hpp> // TEST_CASE, SECTION, CHECK, etc.
 #include <catch2/catch_tostring.hpp>    // Catch::StringMaker
 
@@ -67,7 +69,7 @@ struct StringMaker<std::error_condition> {
 
         res += value.category().name();
         res += ':';
-        res += Catch::StringMaker<int>::convert(value.value());
+        res += bsoncxx::test::stringify(value.value());
 
         return res;
     }
@@ -90,14 +92,14 @@ struct StringMaker<bsoncxx::document::view> {
 template <>
 struct StringMaker<bsoncxx::document::view_or_value> {
     static std::string convert(bsoncxx::document::view_or_value const& value) {
-        return StringMaker<bsoncxx::document::view>::convert(value.view());
+        return bsoncxx::test::stringify(value.view());
     }
 };
 
 template <>
 struct StringMaker<bsoncxx::document::value> {
     static std::string convert(bsoncxx::document::value const& value) {
-        return StringMaker<bsoncxx::document::view>::convert(value.view());
+        return bsoncxx::test::stringify(value.view());
     }
 };
 
@@ -112,14 +114,14 @@ struct StringMaker<bsoncxx::types::bson_value::view> {
 template <>
 struct StringMaker<bsoncxx::types::bson_value::value> {
     static std::string convert(bsoncxx::types::bson_value::value const& value) {
-        return StringMaker<bsoncxx::types::bson_value::view>::convert(value.view());
+        return bsoncxx::test::stringify(value.view());
     }
 };
 
 template <>
 struct StringMaker<bsoncxx::types::bson_value::view_or_value> {
     static std::string convert(bsoncxx::types::bson_value::view_or_value const& value) {
-        return StringMaker<bsoncxx::types::bson_value::view>::convert(value.view());
+        return bsoncxx::test::stringify(value.view());
     }
 };
 
@@ -127,7 +129,7 @@ template <typename T>
 struct StringMaker<bsoncxx::stdx::optional<T>> {
     static std::string convert(bsoncxx::stdx::optional<T> const& value) {
         if (value) {
-            return StringMaker<T>::convert(value.value());
+            return bsoncxx::test::stringify(value.value());
         }
 
         return "{nullopt}";
