@@ -18,6 +18,10 @@
 
 #include <bsoncxx/v1/detail/macros.hpp>
 
+#include <bsoncxx/test/v_noabi/to_string.hh>
+
+#include <mongocxx/test/v_noabi/client_helpers.hh>
+
 #include <iomanip>
 #include <numeric>
 #include <sstream>
@@ -29,9 +33,6 @@
 #include <bsoncxx/types/bson_value/value.hpp>
 
 #include <bsoncxx/test/catch.hh>
-#include <bsoncxx/test/to_string.hh>
-
-#include <mongocxx/test/client_helpers.hh>
 
 using namespace bsoncxx;
 using namespace mongocxx;

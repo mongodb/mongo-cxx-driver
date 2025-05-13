@@ -31,9 +31,71 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
     target_compile_options(mongocxx_mocked PRIVATE /bigobj)
 endif()
 
-add_library(client_helpers OBJECT client_helpers.cpp)
+set(mongocxx_test_sources_private
+    private/numeric_casting.cpp
+    private/scoped_bson_t.cpp
+    private/write_concern.cpp
+    private/mongoc_version.cpp
+)
 
-add_library(spec_test_common OBJECT
+set(mongocxx_test_sources_v_noabi
+    v_noabi/bulk_write.cpp
+    v_noabi/change_streams.cpp
+    v_noabi/client_session.cpp
+    v_noabi/client_side_encryption.cpp
+    v_noabi/client.cpp
+    v_noabi/collection_mocked.cpp
+    v_noabi/collection.cpp
+    v_noabi/conversions.cpp
+    v_noabi/database.cpp
+    v_noabi/gridfs/bucket.cpp
+    v_noabi/gridfs/downloader.cpp
+    v_noabi/gridfs/uploader.cpp
+    v_noabi/hint.cpp
+    v_noabi/index_view.cpp
+    v_noabi/instance.cpp
+    v_noabi/logging.cpp
+    v_noabi/model/delete_many.cpp
+    v_noabi/model/delete_one.cpp
+    v_noabi/model/insert_one.cpp
+    v_noabi/model/replace_one.cpp
+    v_noabi/model/update_many.cpp
+    v_noabi/model/update_one.cpp
+    v_noabi/options/aggregate.cpp
+    v_noabi/options/bulk_write.cpp
+    v_noabi/options/client_session.cpp
+    v_noabi/options/count.cpp
+    v_noabi/options/delete.cpp
+    v_noabi/options/distinct.cpp
+    v_noabi/options/find_one_and_delete.cpp
+    v_noabi/options/find_one_and_replace.cpp
+    v_noabi/options/find_one_and_update.cpp
+    v_noabi/options/find.cpp
+    v_noabi/options/gridfs
+    v_noabi/options/index.cpp
+    v_noabi/options/insert.cpp
+    v_noabi/options/pool.cpp
+    v_noabi/options/replace.cpp
+    v_noabi/options/update.cpp
+    v_noabi/pool.cpp
+    v_noabi/read_concern.cpp
+    v_noabi/read_preference.cpp
+    v_noabi/result/bulk_write.cpp
+    v_noabi/result/delete.cpp
+    v_noabi/result/gridfs
+    v_noabi/result/insert_one.cpp
+    v_noabi/result/replace_one.cpp
+    v_noabi/result/update.cpp
+    v_noabi/sdam-monitoring.cpp
+    v_noabi/search_index_view.cpp
+    v_noabi/transactions.cpp
+    v_noabi/uri.cpp
+    v_noabi/validation_criteria.cpp
+    v_noabi/versioned_api.cpp
+    v_noabi/write_concern.cpp
+)
+
+set(mongocxx_test_sources_spec
     spec/monitoring.cpp
     spec/operation.cpp
     spec/unified_tests/assert.cpp
@@ -41,76 +103,45 @@ add_library(spec_test_common OBJECT
     spec/util.cpp
 )
 
-add_executable(test_driver
-    bulk_write.cpp
-    catch_helpers.cpp
-    change_streams.cpp
-    client_session.cpp
-    client_side_encryption.cpp
-    client.cpp
-    collection_mocked.cpp
-    collection.cpp
-    conversions.cpp
-    database.cpp
-    gridfs/bucket.cpp
-    gridfs/downloader.cpp
-    gridfs/uploader.cpp
-    hint.cpp
-    index_view.cpp
-    model/delete_many.cpp
-    model/delete_one.cpp
-    model/insert_one.cpp
-    model/replace_one.cpp
-    model/update_many.cpp
-    model/update_one.cpp
-    options/aggregate.cpp
-    options/bulk_write.cpp
-    options/client_session.cpp
-    options/count.cpp
-    options/delete.cpp
-    options/distinct.cpp
-    options/find_one_and_delete.cpp
-    options/find_one_and_replace.cpp
-    options/find_one_and_update.cpp
-    options/find.cpp
-    options/gridfs/bucket.cpp
-    options/gridfs/upload.cpp
-    options/index.cpp
-    options/insert.cpp
-    options/pool.cpp
-    options/replace.cpp
-    options/update.cpp
-    pool.cpp
-    private/numeric_casting.cpp
-    private/scoped_bson_t.cpp
-    private/write_concern.cpp
-    read_concern.cpp
-    read_preference.cpp
-    result/bulk_write.cpp
-    result/delete.cpp
-    result/gridfs/upload.cpp
-    result/insert_one.cpp
-    result/replace_one.cpp
-    result/update.cpp
-    sdam-monitoring.cpp
-    search_index_view.cpp
-    spec/initial_dns_seedlist_discovery.cpp
-    spec/monitoring.cpp
-    spec/monitoring.hh
-    spec/unified_tests/assert.cpp
-    spec/unified_tests/entity.cpp
-    spec/uri_options.cpp
-    transactions.cpp
-    uri.cpp
-    validation_criteria.cpp
-    version.cpp
-    write_concern.cpp
+set(mongocxx_test_sources_extra
+    catch.cpp
+    spec/client_side_encryption.cpp
+    spec/command_monitoring.cpp
+    spec/crud.cpp
+    spec/gridfs.cpp
+    spec/mongohouse.cpp
+    spec/read_write_concern.cpp
+    spec/retryable-reads.cpp
+    spec/transactions.cpp
+    spec/unified_tests/operations.cpp
+    spec/unified_tests/runner.cpp
+    v_noabi/catch_helpers.cpp
+    v_noabi/client_helpers.cpp
+    v_noabi/instance.cpp
+    v_noabi/logging.cpp
+    v_noabi/versioned_api.cpp
 )
-target_link_libraries(test_driver PRIVATE client_helpers)
 
-add_executable(test_logging logging.cpp)
+file(GLOB_RECURSE mongocxx_test_headers
+    RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
+    CONFIGURE_DEPENDS
+    "*.hh"
+)
 
-add_executable(test_instance instance.cpp)
+add_library(client_helpers OBJECT v_noabi/client_helpers.cpp)
+
+add_library(spec_test_common OBJECT ${mongocxx_test_sources_spec})
+
+add_executable(test_driver
+    ${mongocxx_test_sources_private}
+    ${mongocxx_test_sources_v_noabi}
+    v_noabi/catch_helpers.cpp
+)
+target_link_libraries(test_driver PRIVATE spec_test_common client_helpers)
+
+add_executable(test_logging v_noabi/logging.cpp)
+
+add_executable(test_instance v_noabi/instance.cpp)
 
 add_executable(test_crud_specs spec/crud.cpp)
 target_link_libraries(test_crud_specs PRIVATE spec_test_common client_helpers)
@@ -139,7 +170,7 @@ target_link_libraries(test_mongohouse_specs PRIVATE spec_test_common client_help
 add_executable(test_unified_format_specs spec/unified_tests/operations.cpp spec/unified_tests/runner.cpp)
 target_link_libraries(test_unified_format_specs PRIVATE spec_test_common client_helpers)
 
-add_executable(test_versioned_api versioned_api.cpp)
+add_executable(test_versioned_api v_noabi/versioned_api.cpp)
 target_link_libraries(test_versioned_api PRIVATE spec_test_common client_helpers)
 
 # Common target properties for test executables.
@@ -321,92 +352,9 @@ endif()
 
 set_dist_list(src_mongocxx_test_DIST
     CMakeLists.txt
-    bulk_write.cpp
-    catch_helpers.cpp
-    catch_helpers.hh
-    catch.cpp
-    change_streams.cpp
-    client_helpers.cpp
-    client_helpers.hh
-    client_session.cpp
-    client_side_encryption.cpp
-    client.cpp
-    collection_mocked.cpp
-    collection.cpp
-    conversions.cpp
-    database.cpp
-    gridfs/bucket.cpp
-    gridfs/downloader.cpp
-    gridfs/uploader.cpp
-    hint.cpp
-    index_view.cpp
-    instance.cpp
-    logging.cpp
-    model/delete_many.cpp
-    model/delete_one.cpp
-    model/insert_one.cpp
-    model/replace_one.cpp
-    model/update_many.cpp
-    model/update_one.cpp
-    options/aggregate.cpp
-    options/bulk_write.cpp
-    options/client_session.cpp
-    options/count.cpp
-    options/delete.cpp
-    options/distinct.cpp
-    options/find_one_and_delete.cpp
-    options/find_one_and_replace.cpp
-    options/find_one_and_update.cpp
-    options/find.cpp
-    options/gridfs/bucket.cpp
-    options/gridfs/upload.cpp
-    options/index.cpp
-    options/insert.cpp
-    options/pool.cpp
-    options/replace.cpp
-    options/update.cpp
-    pool.cpp
-    private/numeric_casting.cpp
-    private/scoped_bson_t.cpp
-    private/write_concern.cpp
-    read_concern.cpp
-    read_preference.cpp
-    result/bulk_write.cpp
-    result/delete.cpp
-    result/gridfs/upload.cpp
-    result/insert_one.cpp
-    result/replace_one.cpp
-    result/update.cpp
-    sdam-monitoring.cpp
-    search_index_view.cpp
-    spec/client_side_encryption.cpp
-    spec/command_monitoring.cpp
-    spec/crud.cpp
-    spec/gridfs.cpp
-    spec/initial_dns_seedlist_discovery.cpp
-    spec/mongohouse.cpp
-    spec/monitoring.cpp
-    spec/monitoring.hh
-    spec/operation.cpp
-    spec/operation.hh
-    spec/read_write_concern.cpp
-    spec/retryable-reads.cpp
-    spec/transactions.cpp
-    spec/unified_tests/assert.cpp
-    spec/unified_tests/assert.hh
-    spec/unified_tests/entity.cpp
-    spec/unified_tests/entity.hh
-    spec/unified_tests/operations.cpp
-    spec/unified_tests/operations.hh
-    spec/unified_tests/runner.cpp
-    spec/uri_options.cpp
-    spec/util.cpp
-    spec/util.hh
-    test_macro_guards.cpp.in
-    transactions.cpp
-    uri.cpp
-    validation_criteria.cpp
-    version.cpp
-    versioned_api.cpp
-    write_concern.cpp
+    ${mongocxx_test_sources_private}
+    ${mongocxx_test_sources_v_noabi}
+    ${mongocxx_test_sources_spec}
+    ${mongocxx_test_sources_extra}
+    ${mongocxx_test_headers}
 )

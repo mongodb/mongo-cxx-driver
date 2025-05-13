@@ -26,49 +26,71 @@ endif()
 
 target_compile_definitions(bsoncxx_testing PUBLIC BSONCXX_TESTING)
 
-add_executable(test_bson
-    array.cpp
-    bson_b_date.cpp
-    bson_builder.cpp
-    bson_get_values.cpp
-    bson_serialization.cpp
-    bson_types.cpp
-    bson_util_itoa.cpp
-    bson_validate.cpp
-    bson_value.cpp
+set(bsoncxx_test_sources_private
+    private/make_unique.test.cpp
+    private/bson_version.cpp
+)
+
+set(bsoncxx_test_sources_v_noabi
+    v_noabi/array.cpp
+    v_noabi/bson_b_date.cpp
+    v_noabi/bson_builder.cpp
+    v_noabi/bson_get_values.cpp
+    v_noabi/bson_serialization.cpp
+    v_noabi/bson_types.cpp
+    v_noabi/bson_util_itoa.cpp
+    v_noabi/bson_validate.cpp
+    v_noabi/bson_value.cpp
+    v_noabi/json.cpp
+    v_noabi/oid.cpp
+    v_noabi/vector.cpp
+    v_noabi/view_or_value.cpp
+)
+
+set(bsoncxx_test_sources_v1
+    v1/stdx/optional.test.cpp
+    v1/stdx/string_view.test.cpp
+    v1/stdx/type_traits.test.cpp
+)
+
+set(bsoncxx_test_sources
+    ${bsoncxx_test_sources_private}
+    ${bsoncxx_test_sources_v_noabi}
+    ${bsoncxx_test_sources_v1}
     catch.cpp
     exception_guard.cpp
-    json.cpp
-    oid.cpp
-    vector.cpp
-    version.cpp
-    optional.test.cpp
-    view_or_value.cpp
-    make_unique.test.cpp
-    string_view.test.cpp
-    type_traits.test.cpp
+)
+
+file(GLOB_RECURSE bsoncxx_test_headers
+    RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
+    CONFIGURE_DEPENDS
+    "*.hh"
+)
+
+add_executable(test_bson
+    ${bsoncxx_test_sources}
 )
 
 # Common target properties for test executables.
-add_library(bsoncxx_test_properties INTERFACE)
+add_library(bsoncxx_test_sources_properties INTERFACE)
 
-target_link_libraries(bsoncxx_test_properties INTERFACE Catch2::Catch2)
-target_compile_features(bsoncxx_test_properties INTERFACE cxx_std_14)
+target_link_libraries(bsoncxx_test_sources_properties INTERFACE Catch2::Catch2)
+target_compile_features(bsoncxx_test_sources_properties INTERFACE cxx_std_14)
 
-target_link_libraries(bsoncxx_test_properties INTERFACE bsoncxx_testing ${bson_target})
-target_include_directories(bsoncxx_test_properties INTERFACE
+target_link_libraries(bsoncxx_test_sources_properties INTERFACE bsoncxx_testing ${bson_target})
+target_include_directories(bsoncxx_test_sources_properties INTERFACE
     # Allow `#include <bsoncxx/test/...>`.
     ${CMAKE_CURRENT_SOURCE_DIR}/../..
 )
 # Use `__vectorcall` by default with MSVC to catch missing `__cdecl`.
-target_compile_options(bsoncxx_test_properties INTERFACE "$<$<CXX_COMPILER_ID:MSVC>:/Gv>")
-add_library(bsoncxx::test_properties ALIAS bsoncxx_test_properties)
+target_compile_options(bsoncxx_test_sources_properties INTERFACE "$<$<CXX_COMPILER_ID:MSVC>:/Gv>")
+add_library(bsoncxx::test_properties ALIAS bsoncxx_test_sources_properties)
 
 # Avoid redundant recompilation of catch/main.cpp.
-add_library(bsoncxx_test_properties_with_main INTERFACE)
-target_link_libraries(bsoncxx_test_properties_with_main INTERFACE bsoncxx::test_properties)
-target_sources(bsoncxx_test_properties INTERFACE catch.cpp)
-add_library(bsoncxx::test_properties_with_main ALIAS bsoncxx_test_properties_with_main)
+add_library(bsoncxx_test_sources_properties_with_main INTERFACE)
+target_link_libraries(bsoncxx_test_sources_properties_with_main INTERFACE bsoncxx::test_properties)
+target_sources(bsoncxx_test_sources_properties INTERFACE catch.cpp)
+add_library(bsoncxx::test_properties_with_main ALIAS bsoncxx_test_sources_properties_with_main)
 
 target_link_libraries (test_bson PRIVATE bsoncxx::test_properties_with_main)
 
@@ -140,28 +162,7 @@ endif()
 
 set_dist_list(src_bsoncxx_test_DIST
     CMakeLists.txt
-    array.cpp
-    bson_b_date.cpp
-    bson_builder.cpp
-    bson_get_values.cpp
-    bson_serialization.cpp
-    bson_types.cpp
-    bson_util_itoa.cpp
-    bson_validate.cpp
-    bson_value.cpp
-    catch.cpp
-    catch.hh
-    exception_guard.cpp
-    exception_guard.hh
-    json.cpp
-    oid.cpp
-    vector.cpp
-    optional.test.cpp
+    ${bsoncxx_test_sources}
+    ${bsoncxx_test_headers}
     test_macro_guards.cpp.in
-    to_string.hh
-    view_or_value.cpp
-    version.cpp
-    make_unique.test.cpp
-    string_view.test.cpp
-    type_traits.test.cpp
 )

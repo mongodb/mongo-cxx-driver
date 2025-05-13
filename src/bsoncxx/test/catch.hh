@@ -16,13 +16,13 @@
 
 #include <bsoncxx/v1/detail/macros.hpp>
 
+#include <bsoncxx/test/v_noabi/to_string.hh>
+
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/json.hpp>
 #include <bsoncxx/oid.hpp>
 #include <bsoncxx/stdx/operators.hpp>
 #include <bsoncxx/stdx/optional.hpp>
-
-#include <bsoncxx/test/to_string.hh>
 
 #include <catch2/catch_test_macros.hpp> // TEST_CASE, SECTION, CHECK, etc.
 #include <catch2/catch_tostring.hpp>    // Catch::StringMaker

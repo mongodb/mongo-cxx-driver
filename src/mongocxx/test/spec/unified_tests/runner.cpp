@@ -16,6 +16,8 @@
 #include "entity.hh"
 #include "operations.hh"
 
+#include <mongocxx/test/v_noabi/client_helpers.hh>
+
 #include <fstream>
 #include <numeric>
 #include <regex>
@@ -37,7 +39,6 @@
 
 #include <bsoncxx/test/catch.hh>
 
-#include <mongocxx/test/client_helpers.hh>
 #include <mongocxx/test/spec/monitoring.hh>
 #include <mongocxx/test/spec/util.hh>
 

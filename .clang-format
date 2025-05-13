@@ -161,31 +161,35 @@ IncludeCategories:
   - Regex: 'mongocxx/v1/.*\.hh' # v1 internal headers
     Priority: 27
   - Regex: 'bsoncxx/private/.*' # private headers
-    Priority: 60
-  - Regex: 'mongocxx/private/.*' # private headers
-    Priority: 61
-  - Regex: 'bsoncxx/config/prelude\.(hpp|hh)' # v_noabi preludes
-    Priority: 62
-  - Regex: 'mongocxx/config/prelude\.(hpp|hh)' # v_noabi preludes
-    Priority: 63
-  - Regex: 'bsoncxx/test/.*' # test headers
     Priority: 70
-  - Regex: 'mongocxx/test/.*' # test headers
+  - Regex: 'mongocxx/private/.*' # private headers
     Priority: 71
-  - Regex: '<[[:alnum:]_.]+>' # system headers
+  - Regex: 'bsoncxx/config/prelude\.(hpp|hh)' # v_noabi preludes
+    Priority: 72
+  - Regex: 'mongocxx/config/prelude\.(hpp|hh)' # v_noabi preludes
+    Priority: 73
+  - Regex: 'bsoncxx/test/(v.*|private)' # library test headers
     Priority: 30
-  - Regex: 'bsoncxx/.*(-|\/)fwd\.(hpp|hh)' # all remaining forward headers
+  - Regex: 'mongocxx/test/(v.*|private)' # library test headers
+    Priority: 31
+  - Regex: 'bsoncxx/test/.*' # test headers
+    Priority: 84
+  - Regex: 'mongocxx/test/.*' # test headers
+    Priority: 85
+  - Regex: '<[[:alnum:]_.]+>' # system headers
     Priority: 40
-  - Regex: 'mongocxx/.*(-|\/)fwd\.(hpp|hh)' # all remaining forward headers
-    Priority: 41
-  - Regex: 'bsoncxx/.*\.hpp' # all remaining public headers
+  - Regex: 'bsoncxx/.*(-|\/)fwd\.(hpp|hh)' # all remaining forward headers
     Priority: 50
-  - Regex: 'mongocxx/.*\.hpp' # all remaining public headers
+  - Regex: 'mongocxx/.*(-|\/)fwd\.(hpp|hh)' # all remaining forward headers
     Priority: 51
+  - Regex: 'bsoncxx/.*\.hpp' # all remaining public headers
+    Priority: 60
+  - Regex: 'mongocxx/.*\.hpp' # all remaining public headers
+    Priority: 61
   - Regex: 'bsoncxx/.*\.hh' # all remaining internal headers
-    Priority: 52
+    Priority: 62
   - Regex: 'mongocxx/.*\.hh' # all remaining internal headers
-    Priority: 53
+    Priority: 63
   - Regex: '.*' # all other headers (third party)
     Priority: 90
 IncludeIsMainRegex: '([-_](test|unittest))?$'
