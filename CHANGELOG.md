@@ -9,7 +9,9 @@ Changes prior to 3.9.0 are documented as [release notes on GitHub](https://githu
 
 ## 4.2.0 [Unreleased]
 
-<!-- Will contain entries for the next minor release. -->
+### Changed
+
+- CMake 3.16.0 or newer is required when `ENABLE_TESTS=ON` for compatibility with the updated Catch2 library version (3.7.0 -> 3.8.1).
 
 ## 4.1.0
 
