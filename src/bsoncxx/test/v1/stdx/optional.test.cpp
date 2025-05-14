@@ -1,5 +1,25 @@
-#include <bsoncxx/stdx/optional.hpp>
+// Copyright 2009-present MongoDB, Inc.
 //
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+#include <bsoncxx/test/v1/stdx/optional.hh>
+
+//
+
+#include <bsoncxx/v1/detail/macros.hpp>
+
+#include <bsoncxx/test/v1/stdx/string_view.hh>
+
 #include <cstddef>
 #include <memory>
 #include <mutex>
@@ -7,20 +27,19 @@
 #include <type_traits>
 
 #include <bsoncxx/stdx/operators.hpp>
-#include <bsoncxx/stdx/string_view.hpp>
 #include <bsoncxx/stdx/type_traits.hpp>
 
 #include <bsoncxx/private/make_unique.hh>
 
 #include <bsoncxx/test/catch.hh>
 
-// Each polyfill library has some set of features that are not conformant with the standard
-// specification (inconsistent, missing, etc.). Limit testing to bsoncxx implementation and stdlib.
-#if defined(BSONCXX_POLY_USE_IMPLS) || defined(BSONCXX_POLY_USE_STD)
+#include <catch2/catch_template_test_macros.hpp>
 
-using bsoncxx::stdx::in_place;
-using bsoncxx::stdx::nullopt;
-using bsoncxx::stdx::optional;
+namespace {
+
+using bsoncxx::v1::stdx::in_place;
+using bsoncxx::v1::stdx::nullopt;
+using bsoncxx::v1::stdx::optional;
 
 #if defined(_MSC_VER) && _MSC_VER < 1910 || defined(__apple_build_version__)
 /// ! Prior to LWG 2543, uttering the name of an invalid std::hash is ill-formed.
@@ -56,8 +75,6 @@ using bsoncxx::stdx::optional;
 #define CHECK_VS2017(...) CHECK(__VA_ARGS__)
 #define CHECK_FALSE_VS2017(...) CHECK_FALSE(__VA_ARGS__)
 #endif
-
-namespace {
 
 template <typename T>
 using deref_t = decltype(*std::declval<T>());
@@ -184,7 +201,7 @@ bool static_checks() {
         (bsoncxx::detail::is_totally_ordered<T>::value),
         (bsoncxx::detail::is_totally_ordered_with<T, optional<T>>::value));
     STATIC_ASSERT_EXPR_ALIKE((std::is_constructible<T, T>::value), (std::is_constructible<optional<T>, T>::value));
-    STATIC_ASSERT_EXPR((std::is_constructible<optional<T>, bsoncxx::stdx::nullopt_t>::value));
+    STATIC_ASSERT_EXPR((std::is_constructible<optional<T>, bsoncxx::v1::stdx::nullopt_t>::value));
     // Assert we return proper reference types
     STATIC_ASSERT_EXPR((std::is_same<deref_t<optional<T>>, T&&>::value));
     STATIC_ASSERT_EXPR((std::is_same<deref_t<optional<T> const>, T const&&>::value));
@@ -202,8 +219,6 @@ bool static_checks() {
     STATIC_ASSERT_EXPR((std::is_same<arrow_t<optional<T>&>, T*>::value));
     return check_conversions<T, T>();
 }
-
-} // namespace
 
 STATIC_ASSERT_EXPR(bsoncxx::detail::is_totally_ordered<std::string>::value);
 STATIC_ASSERT_EXPR(bsoncxx::detail::is_totally_ordered<int>::value);
@@ -473,7 +488,7 @@ TEST_CASE("optional emplace()") {
 }
 
 TEST_CASE("make_optional") {
-    auto opt = bsoncxx::stdx::make_optional(123);
+    auto opt = bsoncxx::v1::stdx::make_optional(123);
     CHECK(opt);
     CHECK_VS2017(*opt == 123);
 }
@@ -499,7 +514,7 @@ TEST_CASE("optional: Nontrivial contents") {
 
     optional<std::unique_ptr<int>> aptr;
     CHECK_VS2017(aptr != nullptr);
-    CHECK_VS2017(aptr == bsoncxx::stdx::nullopt);
+    CHECK_VS2017(aptr == bsoncxx::v1::stdx::nullopt);
     {
         auto dup = std::move(aptr);
         CHECK_VS2017(aptr == dup);
@@ -607,8 +622,8 @@ TEST_CASE("Optional: Cross-comparisons") {
     regular_cases<double>(2, 4.0);
     regular_cases(std::string("abc"), std::string("xyz"));
     regular_cases(std::string("abc"), "xyz");
-    regular_cases(std::string("abc"), bsoncxx::stdx::string_view("xyz"));
-    regular_cases(bsoncxx::stdx::string_view("abc"), std::string("xyz"));
+    regular_cases(std::string("abc"), bsoncxx::v1::stdx::string_view("xyz"));
+    regular_cases(bsoncxx::v1::stdx::string_view("abc"), std::string("xyz"));
 }
 
 template <typename T>
@@ -642,7 +657,7 @@ TEST_CASE("Optional: Hashing") {
 struct in_place_convertible {
     bool constructed_from_in_place = false;
     in_place_convertible() = default;
-    in_place_convertible(bsoncxx::stdx::in_place_t) : constructed_from_in_place(true) {}
+    in_place_convertible(bsoncxx::v1::stdx::in_place_t) : constructed_from_in_place(true) {}
 };
 
 TEST_CASE("optional<T> conversions") {
@@ -651,10 +666,10 @@ TEST_CASE("optional<T> conversions") {
     STATIC_ASSERT_EXPR((!std::is_constructible<optional<bool>, optional<std::string>>::value));
 #endif // defined(BSONCXX_POLY_USE_IMPLS)
 
-    optional<std::string> s1(bsoncxx::stdx::in_place);
+    optional<std::string> s1(bsoncxx::v1::stdx::in_place);
     CHECK_VS2017(s1 == "");
 
-    optional<in_place_convertible> q(bsoncxx::stdx::in_place);
+    optional<in_place_convertible> q(bsoncxx::v1::stdx::in_place);
     REQUIRE(q.has_value());
     CHECK_FALSE(q->constructed_from_in_place);
 
@@ -665,4 +680,15 @@ TEST_CASE("optional<T> conversions") {
     CHECK_VS2017(string2 == c_str);
 }
 
-#endif // defined(BSONCXX_POLY_USE_IMPLS) || defined(BSONCXX_POLY_USE_STD)
+TEMPLATE_TEST_CASE("StringMaker", "[bsoncxx][test][v1][stdx][optional]", int, std::string, optional<int>) {
+    TestType v = {};
+    optional<TestType> o;
+
+    CHECK(bsoncxx::test::stringify(o) == "nullopt");
+
+    o.emplace();
+
+    CHECK(bsoncxx::test::stringify(o) == bsoncxx::test::stringify(v));
+}
+
+} // namespace

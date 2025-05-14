@@ -1,3 +1,21 @@
+// Copyright 2009-present MongoDB, Inc.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+#include <bsoncxx/test/v1/stdx/string_view.hh>
+
+//
+
 #include <initializer_list>
 #include <list>
 #include <stdexcept>
@@ -14,13 +32,14 @@
 #include <string_view>
 #endif
 
-#include <bsoncxx/stdx/operators.hpp>
-#include <bsoncxx/stdx/string_view.hpp>
-#include <bsoncxx/stdx/type_traits.hpp>
+#include <bsoncxx/v1/detail/compare.hpp>
+#include <bsoncxx/v1/detail/type_traits.hpp>
 
 #include <bsoncxx/test/catch.hh>
 
-namespace stdx = bsoncxx::stdx;
+namespace {
+
+namespace stdx = bsoncxx::v1::stdx;
 using stdx::string_view;
 
 static_assert(!std::is_constructible<string_view, std::vector<int>>::value, "fail");
@@ -28,10 +47,6 @@ static_assert(!std::is_constructible<string_view, double>::value, "fail");
 static_assert(std::is_constructible<string_view, std::string>::value, "fail");
 static_assert(std::is_convertible<std::string, string_view>::value, "fail");
 static_assert(std::is_constructible<std::string, string_view>::value, "fail");
-
-// Each polyfill library has some set of features that are not conformant with the standard
-// specification (inconsistent, missing, etc.). Limit testing to bsoncxx implementation and stdlib.
-#if defined(BSONCXX_POLY_USE_IMPLS) || defined(BSONCXX_POLY_USE_STD)
 
 TEST_CASE("string_view: Default constructor") {
     (void)string_view();
@@ -221,4 +236,14 @@ TEST_CASE("Convert to/from std::string_view") {
 }
 #endif
 
-#endif // defined(BSONCXX_POLY_USE_IMPLS) || defined(BSONCXX_POLY_USE_STD)
+TEST_CASE("StringMaker", "[bsoncxx][test][v1][stdx][string_view]") {
+    string_view sv;
+
+    CHECK(bsoncxx::test::stringify(sv) == R"("")");
+
+    sv = "abc";
+
+    CHECK(bsoncxx::test::stringify(sv) == R"("abc")");
+}
+
+} // namespace
