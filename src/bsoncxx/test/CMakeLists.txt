@@ -72,25 +72,25 @@ add_executable(test_bson
 )
 
 # Common target properties for test executables.
-add_library(bsoncxx_test_sources_properties INTERFACE)
+add_library(bsoncxx_test_properties INTERFACE)
 
-target_link_libraries(bsoncxx_test_sources_properties INTERFACE Catch2::Catch2)
-target_compile_features(bsoncxx_test_sources_properties INTERFACE cxx_std_14)
+target_link_libraries(bsoncxx_test_properties INTERFACE Catch2::Catch2)
+target_compile_features(bsoncxx_test_properties INTERFACE cxx_std_14)
 
-target_link_libraries(bsoncxx_test_sources_properties INTERFACE bsoncxx_testing ${bson_target})
-target_include_directories(bsoncxx_test_sources_properties INTERFACE
+target_link_libraries(bsoncxx_test_properties INTERFACE bsoncxx_testing ${bson_target})
+target_include_directories(bsoncxx_test_properties INTERFACE
     # Allow `#include <bsoncxx/test/...>`.
     ${CMAKE_CURRENT_SOURCE_DIR}/../..
 )
 # Use `__vectorcall` by default with MSVC to catch missing `__cdecl`.
-target_compile_options(bsoncxx_test_sources_properties INTERFACE "$<$<CXX_COMPILER_ID:MSVC>:/Gv>")
-add_library(bsoncxx::test_properties ALIAS bsoncxx_test_sources_properties)
+target_compile_options(bsoncxx_test_properties INTERFACE "$<$<CXX_COMPILER_ID:MSVC>:/Gv>")
+add_library(bsoncxx::test_properties ALIAS bsoncxx_test_properties)
 
 # Avoid redundant recompilation of catch/main.cpp.
-add_library(bsoncxx_test_sources_properties_with_main INTERFACE)
-target_link_libraries(bsoncxx_test_sources_properties_with_main INTERFACE bsoncxx::test_properties)
-target_sources(bsoncxx_test_sources_properties INTERFACE catch.cpp)
-add_library(bsoncxx::test_properties_with_main ALIAS bsoncxx_test_sources_properties_with_main)
+add_library(bsoncxx_test_properties_with_main INTERFACE)
+target_link_libraries(bsoncxx_test_properties_with_main INTERFACE bsoncxx::test_properties)
+target_sources(bsoncxx_test_properties INTERFACE catch.cpp)
+add_library(bsoncxx::test_properties_with_main ALIAS bsoncxx_test_properties_with_main)
 
 target_link_libraries (test_bson PRIVATE bsoncxx::test_properties_with_main)
 
