@@ -18,6 +18,8 @@
 
 //
 
+#include <bsoncxx/v1/config/config.hpp>
+
 #include <string>
 
 #include <bsoncxx/test/stringify.hh>
