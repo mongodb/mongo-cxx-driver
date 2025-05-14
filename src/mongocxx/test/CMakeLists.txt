@@ -53,8 +53,6 @@ set(mongocxx_test_sources_v_noabi
     v_noabi/gridfs/uploader.cpp
     v_noabi/hint.cpp
     v_noabi/index_view.cpp
-    v_noabi/instance.cpp
-    v_noabi/logging.cpp
     v_noabi/model/delete_many.cpp
     v_noabi/model/delete_one.cpp
     v_noabi/model/insert_one.cpp
@@ -91,7 +89,6 @@ set(mongocxx_test_sources_v_noabi
     v_noabi/transactions.cpp
     v_noabi/uri.cpp
     v_noabi/validation_criteria.cpp
-    v_noabi/versioned_api.cpp
     v_noabi/write_concern.cpp
 )
 
