@@ -24,9 +24,13 @@
 
 #include <catch2/catch_tostring.hpp>
 
+#if defined(BSONCXX_POLY_USE_IMPLS)
+
 template <>
 struct Catch::StringMaker<bsoncxx::v1::stdx::string_view> {
     static std::string convert(bsoncxx::v1::stdx::string_view const& value) {
         return bsoncxx::test::stringify(std::string{value});
     }
 };
+
+#endif
