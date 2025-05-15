@@ -29,7 +29,6 @@ function(fetch_mongoc)
             set(OLD_CACHE_BUILD_VERSION $CACHE{BUILD_VERSION})
             unset(BUILD_VERSION CACHE)
         endif()
-        set(OLD_ENABLE_TESTS $CACHE{ENABLE_TESTS})
 
         # Disable unnecessary targets and potential conflicts with C++ Driver options.
         set(ENABLE_TESTS OFF)
@@ -43,9 +42,6 @@ function(fetch_mongoc)
         if(DEFINED OLD_CACHE_BUILD_VERSION)
             set(BUILD_VERSION ${OLD_CACHE_BUILD_VERSION} CACHE STRING "Library version (for both bsoncxx and mongocxx)")
         endif()
-
-        # Restore prior value of ENABLE_TESTS cache variable after possibly being overwritten by C Driver configuration.
-        set_property(CACHE ENABLE_TESTS PROPERTY VALUE "${OLD_ENABLE_TESTS}")
     endif()
 
     message(STATUS "Downloading and configuring MongoDB C Driver ${MONGOC_DOWNLOAD_VERSION}... done.")
