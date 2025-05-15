@@ -69,7 +69,8 @@ set(mongocxx_test_sources_v_noabi
     v_noabi/options/find_one_and_replace.cpp
     v_noabi/options/find_one_and_update.cpp
     v_noabi/options/find.cpp
-    v_noabi/options/gridfs
+    v_noabi/options/gridfs/bucket.cpp
+    v_noabi/options/gridfs/upload.cpp
     v_noabi/options/index.cpp
     v_noabi/options/insert.cpp
     v_noabi/options/pool.cpp
@@ -80,7 +81,7 @@ set(mongocxx_test_sources_v_noabi
     v_noabi/read_preference.cpp
     v_noabi/result/bulk_write.cpp
     v_noabi/result/delete.cpp
-    v_noabi/result/gridfs
+    v_noabi/result/gridfs/upload.cpp
     v_noabi/result/insert_one.cpp
     v_noabi/result/replace_one.cpp
     v_noabi/result/update.cpp
