@@ -9,6 +9,10 @@ Changes prior to 3.9.0 are documented as [release notes on GitHub](https://githu
 
 ## 4.2.0 [Unreleased]
 
+### Fixed
+
+- CMake option `ENABLE_TESTS` (`OFF` by default) is no longer overwritten by the auto-downloaded C Driver (`ON` by default) during CMake configuration.
+
 ### Changed
 
 - CMake 3.16.0 or newer is required when `ENABLE_TESTS=ON` for compatibility with the updated Catch2 library version (3.7.0 -> 3.8.1).

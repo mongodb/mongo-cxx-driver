@@ -49,8 +49,6 @@ set(BSON_REQUIRED_VERSION 2.0.0)
 set(MONGOC_REQUIRED_VERSION 2.0.0)
 set(MONGOC_DOWNLOAD_VERSION 2.0.0)
 
-include(FetchMongoC)
-
 # All of our target compilers support the deprecated
 # attribute. Normally, we would just let the GenerateExportHeader
 # subsystem do this via configure check, but there appears to be a
@@ -320,6 +318,8 @@ endif()
 if(ENABLE_TESTS)
     enable_testing()
 endif()
+
+include(FetchMongoC)
 
 add_subdirectory(src)
 
