@@ -14187,7 +14187,6 @@ tasks:
       - func: compile
         vars:
           COMPILE_MACRO_GUARD_TESTS: "ON"
-          ENABLE_TESTS: "ON"
           build_type: Debug
   - name: macro-guards-rhel80-clang
     run_on: rhel80-large
@@ -14199,7 +14198,6 @@ tasks:
       - func: compile
         vars:
           COMPILE_MACRO_GUARD_TESTS: "ON"
-          ENABLE_TESTS: "ON"
           build_type: Debug
           cc_compiler: clang
           cxx_compiler: clang++
@@ -14213,7 +14211,6 @@ tasks:
       - func: compile
         vars:
           COMPILE_MACRO_GUARD_TESTS: "ON"
-          ENABLE_TESTS: "ON"
           build_type: Debug
           cc_compiler: gcc
           cxx_compiler: g++
