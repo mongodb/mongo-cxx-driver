@@ -9,7 +9,9 @@ Changes prior to 3.9.0 are documented as [release notes on GitHub](https://githu
 
 ## 4.2.0 [Unreleased]
 
-<!-- Will contain entries for the next minor release. -->
+### Fixed
+
+- CMake option `ENABLE_TESTS` (`OFF` by default) is no longer overwritten by the auto-downloaded C Driver (`ON` by default) during CMake configuration.
 
 ## 4.1.0
 
