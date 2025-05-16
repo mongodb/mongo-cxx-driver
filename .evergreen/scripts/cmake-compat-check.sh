@@ -104,6 +104,9 @@ echo "Importing C++ Driver via add_subdirectory()..."
 cmake_minimum_required(VERSION ${CMAKE_MAJOR_VERSION:?}.${CMAKE_MINOR_VERSION:?})
 project(cmake-compat)
 
+set(ENABLE_EXAMPLES OFF)
+set(ENABLE_TESTS OFF)
+
 add_subdirectory(mongoc)
 add_subdirectory(mongo-cxx-driver)
 

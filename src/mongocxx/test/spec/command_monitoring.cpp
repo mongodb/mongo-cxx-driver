@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <mongocxx/test/v_noabi/client_helpers.hh>
+
 #include <fstream>
 
 #include <bsoncxx/document/view.hpp>
@@ -24,7 +26,6 @@
 #include <bsoncxx/test/catch.hh>
 #include <bsoncxx/test/exception_guard.hh>
 
-#include <mongocxx/test/client_helpers.hh>
 #include <mongocxx/test/spec/operation.hh>
 #include <mongocxx/test/spec/util.hh>
 
