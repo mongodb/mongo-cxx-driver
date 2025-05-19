@@ -16,17 +16,10 @@ set -o pipefail
     exit 1
   )
 
-# Sanity-check that static libbson/libmongoc is required. Regression test for CXX-3290.
+# Sanity-check that static libmongoc is required. Regression test for CXX-3290.
 (pkg-config --print-requires libmongocxx-static | grep -- mongoc2-static || (
   (
     echo "Expected mongoc2-static to be required" >&2
-    exit 1
-  )
-))
-
-(pkg-config --print-requires libmongocxx-static | grep -- bson2-static || (
-  (
-    echo "Expected bson2-static to be required" >&2
     exit 1
   )
 ))
