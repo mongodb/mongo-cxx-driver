@@ -20,6 +20,19 @@
 
 namespace bsoncxx {
 
+//
+// Used to construct an object whose destructor is never invoked (hence, "immortal").
+//
+// This is primarily to avoid generating exit-time destructors for error category objects:
+//
+// ```cpp
+// std::error_category const& name() noexcept {
+//     class type final : public std::error_category { ... };
+//     static bsoncxx::immortal<type> const instance;
+//     return instance.value();
+// }
+// ```
+//
 template <typename T>
 class immortal {
    private:
