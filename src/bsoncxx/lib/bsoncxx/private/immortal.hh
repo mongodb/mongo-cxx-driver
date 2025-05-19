@@ -46,7 +46,7 @@ class immortal {
     immortal& operator=(immortal const&) = delete;
 
     template <typename... Args>
-    immortal(Args&&... args) {
+    explicit immortal(Args&&... args) {
         new (_storage) T(BSONCXX_PRIVATE_FWD(args)...);
     }
 
