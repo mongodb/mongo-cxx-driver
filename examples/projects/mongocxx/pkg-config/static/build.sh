@@ -16,6 +16,21 @@ set -o pipefail
     exit 1
   )
 
+# Sanity-check that static libbson/libmongoc is required. Regression test for CXX-3290.
+(pkg-config --print-requires libmongocxx-static | grep -- mongoc2-static || (
+  (
+    echo "Expected mongoc2-static to be required" >&2
+    exit 1
+  )
+))
+
+(pkg-config --print-requires libmongocxx-static | grep -- bson2-static || (
+  (
+    echo "Expected bson2-static to be required" >&2
+    exit 1
+  )
+))
+
 rm -rf build/*
 cd build
 "${CXX:?}" $CXXFLAGS -Wall -Wextra -Werror -std="c++${CXX_STANDARD:?}" -c -o hello_mongocxx.o ../../../hello_mongocxx.cpp $(pkg-config --cflags libmongocxx-static)

@@ -11,6 +11,14 @@ set -o pipefail
     exit 1
   )
 
+# Sanity-check that static libbson is required. Regression test for CXX-3290.
+(pkg-config --print-requires libbsoncxx-static | grep -- bson2-static || (
+  (
+    echo "Expected bson2-static to be required" >&2
+    exit 1
+  )
+))
+
 rm -rf build/*
 cd build
 "${CXX:?}" $CXXFLAGS -Wall -Wextra -Werror -std="c++${CXX_STANDARD:?}" -c -o hello_bsoncxx.o ../../../hello_bsoncxx.cpp $(pkg-config --cflags libbsoncxx-static)
