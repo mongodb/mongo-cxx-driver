@@ -316,23 +316,15 @@ int EXAMPLES_CDECL main() {
     // must remain alive for as long as the driver is in use.
     mongocxx::instance const inst{};
 
-    mongocxx::client client{mongocxx::uri{}};
-
-    std::function<void()> const examples[] = {
-
-    };
-
-    for (auto const& example : examples) {
-        try {
-            versioned_api_example_1();
-            versioned_api_example_2();
-            versioned_api_example_3();
-            versioned_api_example_4();
-            versioned_api_example_5();
-        } catch (std::logic_error const& e) {
-            std::cerr << e.what() << std::endl;
-            return EXIT_FAILURE;
-        }
+    try {
+        versioned_api_example_1();
+        versioned_api_example_2();
+        versioned_api_example_3();
+        versioned_api_example_4();
+        versioned_api_example_5();
+    } catch (std::logic_error const& e) {
+        std::cerr << e.what() << std::endl;
+        return EXIT_FAILURE;
     }
 
     return EXIT_SUCCESS;
