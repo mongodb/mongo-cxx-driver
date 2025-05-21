@@ -176,12 +176,9 @@ int EXAMPLES_CDECL main() {
         change_streams_example_4,
     };
 
+    mongocxx::pool pool{mongocxx::uri{}};
+
     for (auto const& example : examples) {
-        mongocxx::pool pool{mongocxx::uri{}};
-
-        mongocxx::client const conn{mongocxx::uri{}};
-
-        auto const db = conn["documentation_examples"];
         auto client = pool.acquire();
 
         collection inventory = make_test_coll(*client, "streams", "events");
