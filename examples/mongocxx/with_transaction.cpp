@@ -64,7 +64,7 @@ int EXAMPLES_CDECL main() {
     // 'mongodb://mongodb0.example.com:27017,mongodb1.example.com:27017/?replicaSet=myRepl'
     // For a sharded cluster, connect to the mongos instances; e.g.
     // uriString = 'mongodb://mongos0.example.com:27017,mongos1.example.com:27017/'
-    mongocxx::client client{mongocxx::uri{"mongodb://localhost/?replicaSet=repl0"}};
+    mongocxx::client client{mongocxx::uri{}};
 
     // Prepare to set majority write explicitly. Note: on Atlas deployments this won't always be
     // needed. The suggested Atlas connection string includes majority write concern by default.
