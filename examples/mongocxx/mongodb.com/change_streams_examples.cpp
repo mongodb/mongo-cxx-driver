@@ -202,13 +202,18 @@ int EXAMPLES_CDECL main() {
 
         try {
             example(std::move(inventory));
+            insert_thread_done = true;
+            insert_thread.join();
         } catch (std::logic_error const& e) {
             std::cerr << e.what() << std::endl;
+            insert_thread_done = true;
+            insert_thread.detach();
             return EXIT_FAILURE;
+        } catch (...) {
+            insert_thread_done = true;
+            insert_thread.detach();
+            throw;
         }
-
-        insert_thread_done = true;
-        insert_thread.join();
     }
 
     return EXIT_SUCCESS;
