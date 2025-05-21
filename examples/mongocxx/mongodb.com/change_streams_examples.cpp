@@ -64,9 +64,7 @@ make_test_coll(mongocxx::client& client, bsoncxx::stdx::string_view db_name, bso
     return coll;
 }
 
-void change_streams_example_1(mongocxx::client& client) {
-    collection inventory = make_test_coll(client, "streams", "events");
-
+void change_streams_example_1(mongocxx::collection inventory) {
     // Start Changestream Example 1
     change_stream stream = inventory.watch();
     auto it = stream.begin();
@@ -82,9 +80,7 @@ void change_streams_example_1(mongocxx::client& client) {
     }
 }
 
-void change_streams_example_2(mongocxx::client& client) {
-    collection inventory = make_test_coll(client, "streams", "events");
-
+void change_streams_example_2(mongocxx::collection inventory) {
     // Start Changestream Example 2
     options::change_stream options;
     options.full_document(bsoncxx::string::view_or_value{"updateLookup"});
@@ -102,9 +98,7 @@ void change_streams_example_2(mongocxx::client& client) {
     }
 }
 
-void change_streams_example_3(mongocxx::client& client) {
-    collection inventory = make_test_coll(client, "streams", "events");
-
+void change_streams_example_3(mongocxx::collection inventory) {
     bsoncxx::stdx::optional<bsoncxx::document::value> next;
 
     // Get one notification to set `next`.
@@ -135,9 +129,7 @@ void change_streams_example_3(mongocxx::client& client) {
     }
 }
 
-void change_streams_example_4(mongocxx::client& client) {
-    collection inventory = make_test_coll(client, "streams", "events");
-
+void change_streams_example_4(mongocxx::collection inventory) {
     // Create a pipeline with
     //  [{"$match": {"$or": [{"fullDocument.username": "alice"}, {"operationType": "delete"}]}}]
 
@@ -177,7 +169,7 @@ int EXAMPLES_CDECL main() {
     // must remain alive for as long as the driver is in use.
     mongocxx::instance const inst{};
 
-    std::function<void(mongocxx::client&)> const examples[] = {
+    std::function<void(mongocxx::collection)> const examples[] = {
         change_streams_example_1,
         change_streams_example_2,
         change_streams_example_3,
@@ -212,7 +204,7 @@ int EXAMPLES_CDECL main() {
         }};
 
         try {
-            example(*client);
+            example(std::move(inventory));
         } catch (std::logic_error const& e) {
             std::cerr << e.what() << std::endl;
             return EXIT_FAILURE;
