@@ -457,7 +457,6 @@ TEST_CASE("Documentation Examples", "[change_stream]") {
     }};
 
     SECTION("Example 1") {
-        // Start Changestream Example 1
         change_stream stream = inventory.watch();
         auto it = stream.begin();
         while (it == stream.end()) {
@@ -465,12 +464,10 @@ TEST_CASE("Documentation Examples", "[change_stream]") {
             it = stream.begin();
         }
         bsoncxx::document::view next = *it;
-        // End Changestream Example 1
         REQUIRE(next["operationType"].get_string().value == "insert");
     }
 
     SECTION("Example 2") {
-        // Start Changestream Example 2
         options::change_stream options;
         options.full_document(bsoncxx::string::view_or_value{"updateLookup"});
         change_stream stream = inventory.watch(options);
@@ -480,7 +477,6 @@ TEST_CASE("Documentation Examples", "[change_stream]") {
             it = stream.begin();
         }
         bsoncxx::document::view next = *it;
-        // End Changestream Example 2
         REQUIRE(next["operationType"].get_string().value == "insert");
     }
 
@@ -496,7 +492,6 @@ TEST_CASE("Documentation Examples", "[change_stream]") {
             }
             next = bsoncxx::document::value(*it);
         }
-        // Start Changestream Example 3
         auto resume_token = (*next)["_id"].get_document().value;
         options::change_stream options;
         options.resume_after(resume_token);
@@ -506,7 +501,6 @@ TEST_CASE("Documentation Examples", "[change_stream]") {
             // Server returned no new notifications. Restart iteration to poll server.
             it = stream.begin();
         }
-        // End Changestream Example 3
         REQUIRE((*it)["operationType"].get_string().value == "insert");
     }
 
@@ -514,7 +508,6 @@ TEST_CASE("Documentation Examples", "[change_stream]") {
         // Create a pipeline with
         //  [{"$match": {"$or": [{"fullDocument.username": "alice"}, {"operationType": "delete"}]}}]
 
-        // Start Changestream Example 4
         mongocxx::pipeline cs_pipeline;
         cs_pipeline.match(make_document(kvp(
             "$or",
@@ -527,7 +520,6 @@ TEST_CASE("Documentation Examples", "[change_stream]") {
             // Server returned no new notifications. Restart iteration to poll server.
             it = stream.begin();
         }
-        // End Changestream Example 4
         REQUIRE((*it)["operationType"].get_string().value == "insert");
     }
 

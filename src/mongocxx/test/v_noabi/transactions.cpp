@@ -231,7 +231,6 @@ TEST_CASE("Transactions Documentation Examples", "[transactions]") {
     client["reporting"]["events"].insert_one(make_document(kvp("employee", 3), kvp("status", "Active")));
 
     SECTION("Intro Example 1") {
-        // Start Transactions Intro Example 1
         auto update_employee_info = [](client_session& session) {
             auto& client = session.client();
             auto employees = client["hr"]["employees"];
@@ -275,13 +274,11 @@ TEST_CASE("Transactions Documentation Examples", "[transactions]") {
                 }
             }
         };
-        // End Transactions Intro Example 1
         auto session = client.start_session();
         update_employee_info(session);
     }
 
     SECTION("Retry Example 1") {
-        // Start Transactions Retry Example 1
         using transaction_func = std::function<void(client_session & session)>;
         auto run_transaction_with_retry = [](transaction_func txn_func, client_session& session) {
             while (true) {
@@ -300,7 +297,6 @@ TEST_CASE("Transactions Documentation Examples", "[transactions]") {
                 }
             }
         };
-        // End Transactions Retry Example 1
         auto session = client.start_session();
         run_transaction_with_retry(
             [&client](client_session& session) {
@@ -313,7 +309,6 @@ TEST_CASE("Transactions Documentation Examples", "[transactions]") {
     }
 
     SECTION("Retry Example 2") {
-        // Start Transactions Retry Example 2
         auto commit_with_retry = [](client_session& session) {
             while (true) {
                 try {
@@ -332,7 +327,6 @@ TEST_CASE("Transactions Documentation Examples", "[transactions]") {
                 }
             }
         };
-        // End Transactions Retry Example 2
         auto session = client.start_session();
         session.start_transaction();
         auto coll = client["test"]["coll"];
@@ -341,7 +335,6 @@ TEST_CASE("Transactions Documentation Examples", "[transactions]") {
     }
 
     SECTION("Retry Example 3") {
-        // Start Transactions Retry Example 3
         using transaction_func = std::function<void(client_session & session)>;
         auto run_transaction_with_retry = [](transaction_func txn_func, client_session& session) {
             while (true) {
@@ -418,7 +411,6 @@ TEST_CASE("Transactions Documentation Examples", "[transactions]") {
             // Do something with error.
             throw oe;
         }
-        // End Transactions Retry Example 3
     }
 }
 
