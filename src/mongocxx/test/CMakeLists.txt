@@ -117,7 +117,6 @@ set(mongocxx_test_sources_extra
     v_noabi/client_helpers.cpp
     v_noabi/instance.cpp
     v_noabi/logging.cpp
-    v_noabi/versioned_api.cpp
 )
 
 file(GLOB_RECURSE mongocxx_test_headers
@@ -168,9 +167,6 @@ target_link_libraries(test_mongohouse_specs PRIVATE spec_test_common client_help
 add_executable(test_unified_format_specs spec/unified_tests/operations.cpp spec/unified_tests/runner.cpp)
 target_link_libraries(test_unified_format_specs PRIVATE spec_test_common client_helpers)
 
-add_executable(test_versioned_api v_noabi/versioned_api.cpp)
-target_link_libraries(test_versioned_api PRIVATE spec_test_common client_helpers)
-
 # Common target properties for test executables.
 add_library(mongocxx_test_properties INTERFACE)
 
@@ -213,7 +209,6 @@ set_property(
         test_retryable_reads_specs
         test_transactions_specs
         test_unified_format_specs
-        test_versioned_api
     APPEND PROPERTY LINK_LIBRARIES
         mongocxx::test_properties_with_main
 )
@@ -243,7 +238,6 @@ foreach(test_name
     retryable_reads_specs
     transactions_specs
     unified_format_specs
-    versioned_api
 )
     add_test(NAME ${test_name} COMMAND test_${test_name} --reporter compact --allow-running-no-tests)
 endforeach()
