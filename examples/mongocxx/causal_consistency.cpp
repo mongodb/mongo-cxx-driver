@@ -51,7 +51,7 @@ int EXAMPLES_CDECL main() {
     using namespace mongocxx;
 
     instance inst{};
-    client client{mongocxx::uri{"mongodb://localhost/?replicaSet=repl0"}};
+    client client{mongocxx::uri{}};
 
     // Start Causal Consistency Example 1
 
