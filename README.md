@@ -35,7 +35,7 @@ git clone -b releases/stable https://github.com/mongodb/mongo-cxx-driver.git
 | ...         | ...             | ...                         | ...                |
 | 3.0.0       | None            | Ready for Use               | Not Supported      |
 
-The MongoDB C++ driver follows [semantic versioning](https://semver.org/) for its releases.
+This project uses [Semantic Versioning](https://semver.org/).
 
 ## MongoDB Server Compatibility
 
