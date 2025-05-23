@@ -28,7 +28,7 @@ if(1)
 
     if(is_static)
         list(APPEND requires "lib${bsoncxx_name} >= ${version}")
-        list(APPEND requires "mongoc2 >= ${mongoc_req_ver}")
+        list(APPEND requires "mongoc2-static >= ${mongoc_req_ver}")
     else()
         list(APPEND requires "lib${bsoncxx_name} >= ${version}")
     endif()

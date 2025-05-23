@@ -5,11 +5,10 @@ set -o pipefail
 
 # Sanity-check that static library macros are not set when building against the shared library.
 # Users don't need to include this section in their projects.
-(pkg-config --cflags libbsoncxx | grep -v -- -DBSONCXX_STATIC) ||
-  (
-    echo "Expected BSONCXX_STATIC to not be set" >&2
-    exit 1
-  )
+if ! pkg-config --cflags libbsoncxx | grep -v -q -- -DBSONCXX_STATIC; then
+  echo "Expected BSONCXX_STATIC to not be set" >&2
+  exit 1
+fi
 
 rm -rf build/*
 cd build
