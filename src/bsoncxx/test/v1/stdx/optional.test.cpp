@@ -133,7 +133,7 @@ BSONCXX_PRIVATE_WARNINGS_POP();
 #define STATIC_ASSERT_EXPR_EQUAL(a, b) static_assert((a) == (b), "expected: " #a " == " #b)
 
 BSONCXX_PRIVATE_WARNINGS_PUSH();
-BSONCXX_PRIVATE_WARNINGS_DISABLE_FOR_GNU("-Wunused-macros")
+BSONCXX_PRIVATE_WARNINGS_DISABLE_FOR_GNU("-Wunused-macros");
 #define STATIC_ASSERT_EXPR_IMPLIES(a, b) static_assert((!(a) || (b)), "expected: " #a " -> " #b)
 BSONCXX_PRIVATE_WARNINGS_POP();
 
