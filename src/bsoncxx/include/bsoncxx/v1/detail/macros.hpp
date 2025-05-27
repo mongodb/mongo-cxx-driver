@@ -105,20 +105,6 @@
 #endif
 // clang-format on
 
-// Disable a warning for a particular compiler.
-//
-// The argument should be of the form:
-//
-// - Clang(<flag-string-literal>)
-// - GCC(<flag-string-literal>)
-// - GNU(<flag-string-literal>)
-// - MSVC(<id-integer-literal>)
-//
-// The "GNU" form applies to both GCC and Clang
-#define BSONCXX_PRIVATE_WARNINGS_DISABLE(Spec)                               \
-    BSONCXX_PRIVATE_CONCAT(BSONCXX_PRIVATE_WARNINGS_DISABLE_IMPL_FOR_, Spec) \
-    BSONCXX_PRIVATE_FORCE_SEMICOLON
-
 // Push the current compiler diagnostics settings state
 #define BSONCXX_PRIVATE_WARNINGS_PUSH()                                      \
     BSONCXX_PRIVATE_IF_GNU_LIKE(BSONCXX_PRIVATE_PRAGMA(GCC diagnostic push)) \
