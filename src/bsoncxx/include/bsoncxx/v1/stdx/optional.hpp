@@ -536,7 +536,7 @@ struct optional_operators_base {
         }
 
         BSONCXX_PRIVATE_WARNINGS_PUSH();
-        BSONCXX_PRIVATE_WARNINGS_DISABLE(GNU("-Wfloat-equal"));
+        BSONCXX_PRIVATE_WARNINGS_DISABLE_IMPL_FOR_GNU("-Wfloat-equal");
         return !left.has_value() || *left == *right;
         BSONCXX_PRIVATE_WARNINGS_POP();
     }
@@ -545,7 +545,7 @@ struct optional_operators_base {
     friend constexpr auto tag_invoke(bsoncxx::detail::equal_to, optional<T> const& left, U const& right) noexcept
         -> bsoncxx::detail::requires_t<bool, not_an_optional<U>, bsoncxx::detail::is_equality_comparable<T, U>> {
         BSONCXX_PRIVATE_WARNINGS_PUSH();
-        BSONCXX_PRIVATE_WARNINGS_DISABLE(GNU("-Wfloat-equal"));
+        BSONCXX_PRIVATE_WARNINGS_DISABLE_IMPL_FOR_GNU("-Wfloat-equal");
         return left.has_value() && *left == right;
         BSONCXX_PRIVATE_WARNINGS_POP();
     }

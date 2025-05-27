@@ -136,7 +136,7 @@ void iterator_operations(
     CHECK(iter_copy == begin);
 
     BSONCXX_PRIVATE_WARNINGS_PUSH();
-    BSONCXX_PRIVATE_WARNINGS_DISABLE(GNU("-Wfloat-equal"));
+    BSONCXX_PRIVATE_WARNINGS_DISABLE_IMPL_FOR_GNU("-Wfloat-equal");
 
     std::generate(begin, end, [&] { return element_unit; });
     std::for_each(begin, end, [&](auto const& value) { CHECK(value == element_unit); });
@@ -212,7 +212,7 @@ TEMPLATE_TEST_CASE(
         CHECK(vec.byte_size() == bytes.size() - 2u);
 
         BSONCXX_PRIVATE_WARNINGS_PUSH();
-        BSONCXX_PRIVATE_WARNINGS_DISABLE(GNU("-Wfloat-equal"));
+        BSONCXX_PRIVATE_WARNINGS_DISABLE_IMPL_FOR_GNU("-Wfloat-equal")
 
         CHECK(vec.at(0) == element);
         CHECK(vec[0] == element);
@@ -275,7 +275,7 @@ TEMPLATE_TEST_CASE(
 
             // Two ways of iterating as const
             BSONCXX_PRIVATE_WARNINGS_PUSH();
-            BSONCXX_PRIVATE_WARNINGS_DISABLE(GNU("-Wfloat-equal"));
+            BSONCXX_PRIVATE_WARNINGS_DISABLE_IMPL_FOR_GNU("-Wfloat-equal")
             std::for_each(vec.cbegin(), vec.cend(), [&](auto const& value) { CHECK_FALSE(value == element_unit); });
             std::for_each(vec.as_const().begin(), vec.as_const().end(), [&](auto const& value) {
                 CHECK_FALSE(value == element_unit);
@@ -315,7 +315,7 @@ TEMPLATE_TEST_CASE(
             vec[1] = value_type{0};
 
             BSONCXX_PRIVATE_WARNINGS_PUSH();
-            BSONCXX_PRIVATE_WARNINGS_DISABLE(GNU("-Wfloat-equal"));
+            BSONCXX_PRIVATE_WARNINGS_DISABLE_IMPL_FOR_GNU("-Wfloat-equal")
 
             CHECK(vec.at(0) != vec.at(1));
             CHECK_FALSE(vec.at(0) == vec.at(1));
@@ -362,7 +362,7 @@ TEMPLATE_TEST_CASE(
             *(vec.end() - 1) = value_type{0};
 
             BSONCXX_PRIVATE_WARNINGS_PUSH();
-            BSONCXX_PRIVATE_WARNINGS_DISABLE(GNU("-Wfloat-equal"));
+            BSONCXX_PRIVATE_WARNINGS_DISABLE_IMPL_FOR_GNU("-Wfloat-equal")
 
             CHECK(vec.back() == value_type{0});
             CHECK(vec.back() == vec[vec.size() - 1u]);
@@ -392,7 +392,7 @@ TEMPLATE_TEST_CASE(
             std::fill(vec.begin(), vec.end(), value_type{0});
 
             BSONCXX_PRIVATE_WARNINGS_PUSH();
-            BSONCXX_PRIVATE_WARNINGS_DISABLE(GNU("-Wfloat-equal"));
+            BSONCXX_PRIVATE_WARNINGS_DISABLE_IMPL_FOR_GNU("-Wfloat-equal")
 
             CHECK(vec.front() == vec.back());
             CHECK_FALSE(vec.front() != vec.back());
@@ -439,7 +439,7 @@ TEST_CASE("vector accessor float32", "[bsoncxx::vector::accessor]") {
         REQUIRE(vec.size() == 3u);
 
         BSONCXX_PRIVATE_WARNINGS_PUSH();
-        BSONCXX_PRIVATE_WARNINGS_DISABLE(GNU("-Wfloat-equal"));
+        BSONCXX_PRIVATE_WARNINGS_DISABLE_IMPL_FOR_GNU("-Wfloat-equal")
 
         CHECK(vec[0] < 0.f);
         CHECK(vec[0] * 0.f != 0.f);

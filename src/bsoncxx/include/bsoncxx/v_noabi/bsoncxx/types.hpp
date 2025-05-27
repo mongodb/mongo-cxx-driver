@@ -30,7 +30,7 @@
 #include <bsoncxx/config/prelude.hpp>
 
 BSONCXX_PRIVATE_WARNINGS_PUSH();
-BSONCXX_PRIVATE_WARNINGS_DISABLE(GNU("-Wfloat-equal"));
+BSONCXX_PRIVATE_WARNINGS_DISABLE_IMPL_FOR_GNU("-Wfloat-equal");
 
 namespace bsoncxx {
 namespace v_noabi {

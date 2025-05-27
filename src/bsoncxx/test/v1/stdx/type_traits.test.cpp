@@ -6,7 +6,7 @@
 #include <bsoncxx/test/catch.hh>
 
 // We declare variables that are only used for compilation checking
-BSONCXX_PRIVATE_WARNINGS_DISABLE(GNU("-Wunused"));
+BSONCXX_PRIVATE_WARNINGS_DISABLE_IMPL_FOR_GNU("-Wunused");
 BSONCXX_PRIVATE_WARNINGS_DISABLE(Clang("-Wunused-template"));
 BSONCXX_PRIVATE_WARNINGS_DISABLE(Clang("-Wunneeded-member-function"));
 
