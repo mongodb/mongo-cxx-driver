@@ -63,7 +63,7 @@ template <typename T>
 class optional;
 
 BSONCXX_PRIVATE_WARNINGS_PUSH();
-BSONCXX_PRIVATE_WARNINGS_DISABLE(Clang("-Wweak-vtables"));
+BSONCXX_PRIVATE_WARNINGS_DISABLE_IMPL_FOR_Clang("-Wweak-vtables");
 // Exception type thrown upon attempted access to a value-less optional<T> via a throwing accessor
 // API.
 class bad_optional_access : public std::exception {
