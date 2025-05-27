@@ -97,9 +97,9 @@ struct is_hashable : std::false_type {};
 #endif
 
 BSONCXX_PRIVATE_WARNINGS_PUSH();
-BSONCXX_PRIVATE_WARNINGS_DISABLE_IMPL_FOR_GNU("-Wunused");
-BSONCXX_PRIVATE_WARNINGS_DISABLE_IMPL_FOR_Clang("-Wunused-member-function");
-BSONCXX_PRIVATE_WARNINGS_DISABLE_IMPL_FOR_Clang("-Wunneeded-member-function");
+BSONCXX_PRIVATE_WARNINGS_DISABLE_FOR_GNU("-Wunused");
+BSONCXX_PRIVATE_WARNINGS_DISABLE_FOR_Clang("-Wunused-member-function");
+BSONCXX_PRIVATE_WARNINGS_DISABLE_FOR_Clang("-Wunneeded-member-function");
 
 struct not_default_constructible {
     explicit not_default_constructible(int);
@@ -133,7 +133,7 @@ BSONCXX_PRIVATE_WARNINGS_POP();
 #define STATIC_ASSERT_EXPR_EQUAL(a, b) static_assert((a) == (b), "expected: " #a " == " #b)
 
 BSONCXX_PRIVATE_WARNINGS_PUSH();
-BSONCXX_PRIVATE_WARNINGS_DISABLE_IMPL_FOR_GNU("-Wunused-macros");
+BSONCXX_PRIVATE_WARNINGS_DISABLE_FOR_GNU("-Wunused-macros")
 #define STATIC_ASSERT_EXPR_IMPLIES(a, b) static_assert((!(a) || (b)), "expected: " #a " -> " #b)
 BSONCXX_PRIVATE_WARNINGS_POP();
 

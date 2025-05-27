@@ -16,9 +16,9 @@
 
 #include <bsoncxx/v1/detail/macros.hpp>
 
-#define BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_BEGIN                             \
-    BSONCXX_PRIVATE_WARNINGS_PUSH();                                            \
-    BSONCXX_PRIVATE_WARNINGS_DISABLE_IMPL_FOR_GNU("-Wdeprecated-declarations"); \
-    BSONCXX_PRIVATE_WARNINGS_DISABLE_IMPL_FOR_MSVC(4996);
+#define BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_BEGIN                        \
+    BSONCXX_PRIVATE_WARNINGS_PUSH();                                       \
+    BSONCXX_PRIVATE_WARNINGS_DISABLE_FOR_GNU("-Wdeprecated-declarations"); \
+    BSONCXX_PRIVATE_WARNINGS_DISABLE_FOR_MSVC(4996);
 
 #define BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_END BSONCXX_PRIVATE_WARNINGS_POP();

@@ -116,7 +116,7 @@ INLINE_VAR const strong_ordering strong_ordering::equal = strong_ordering(strong
 // or equal-to the right-hand operand.
 struct compare_three_way {
     BSONCXX_PRIVATE_WARNINGS_PUSH();
-    BSONCXX_PRIVATE_WARNINGS_DISABLE_IMPL_FOR_GNU("-Wfloat-equal");
+    BSONCXX_PRIVATE_WARNINGS_DISABLE_FOR_GNU("-Wfloat-equal");
     template <
         typename L,
         typename R,
