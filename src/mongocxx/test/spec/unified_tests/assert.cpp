@@ -266,7 +266,7 @@ void assert::matches(
                 match_doc_current_path());
 
             BSONCXX_PRIVATE_WARNINGS_PUSH();
-            BSONCXX_PRIVATE_WARNINGS_DISABLE_FOR_GNU("-Wfloat-equal");
+            BSONCXX_PRIVATE_WARNINGS_DISABLE(GNU("-Wfloat-equal"));
             REQUIRE(test_util::is_numeric(actual));
             REQUIRE(test_util::as_double(expected) == test_util::as_double(actual));
             BSONCXX_PRIVATE_WARNINGS_POP();

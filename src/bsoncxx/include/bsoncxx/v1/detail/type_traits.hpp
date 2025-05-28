@@ -466,7 +466,7 @@ template <typename L, typename R>
 auto is_equality_comparable_f(...) -> std::false_type;
 
 BSONCXX_PRIVATE_WARNINGS_PUSH();
-BSONCXX_PRIVATE_WARNINGS_DISABLE_FOR_GNU("-Wfloat-equal");
+BSONCXX_PRIVATE_WARNINGS_DISABLE(GNU("-Wfloat-equal"));
 template <typename L, typename R>
 auto is_equality_comparable_f(int, bool b = false)
     -> true_t<

@@ -105,6 +105,20 @@
 #endif
 // clang-format on
 
+// Disable a warning for a particular compiler.
+//
+// The argument should be of the form:
+//
+// - Clang(<flag-string-literal>)
+// - GCC(<flag-string-literal>)
+// - GNU(<flag-string-literal>)
+// - MSVC(<id-integer-literal>)
+//
+// The "GNU" form applies to both GCC and Clang
+#define BSONCXX_PRIVATE_WARNINGS_DISABLE(Spec)                               \
+    BSONCXX_PRIVATE_CONCAT(BSONCXX_PRIVATE_WARNINGS_DISABLE_IMPL_FOR_, Spec) \
+    BSONCXX_PRIVATE_FORCE_SEMICOLON
+
 // Push the current compiler diagnostics settings state
 #define BSONCXX_PRIVATE_WARNINGS_PUSH()                                      \
     BSONCXX_PRIVATE_IF_GNU_LIKE(BSONCXX_PRIVATE_PRAGMA(GCC diagnostic push)) \
@@ -118,22 +132,18 @@
     BSONCXX_PRIVATE_IF_MSVC(BSONCXX_PRIVATE_PRAGMA(warning(pop)))           \
     BSONCXX_PRIVATE_FORCE_SEMICOLON
 
-#define BSONCXX_PRIVATE_WARNINGS_DISABLE_FOR_GCC(...)                                  \
-    BSONCXX_PRIVATE_IF_GCC(BSONCXX_PRIVATE_PRAGMA(GCC diagnostic ignored __VA_ARGS__)) \
-    BSONCXX_PRIVATE_FORCE_SEMICOLON
+#define BSONCXX_PRIVATE_WARNINGS_DISABLE_IMPL_FOR_GCC(...) \
+    BSONCXX_PRIVATE_IF_GCC(BSONCXX_PRIVATE_PRAGMA(GCC diagnostic ignored __VA_ARGS__))
 
-#define BSONCXX_PRIVATE_WARNINGS_DISABLE_FOR_Clang(...)                                  \
-    BSONCXX_PRIVATE_IF_CLANG(BSONCXX_PRIVATE_PRAGMA(GCC diagnostic ignored __VA_ARGS__)) \
-    BSONCXX_PRIVATE_FORCE_SEMICOLON
+#define BSONCXX_PRIVATE_WARNINGS_DISABLE_IMPL_FOR_Clang(...) \
+    BSONCXX_PRIVATE_IF_CLANG(BSONCXX_PRIVATE_PRAGMA(GCC diagnostic ignored __VA_ARGS__))
 
-#define BSONCXX_PRIVATE_WARNINGS_DISABLE_FOR_GNU(...)        \
-    BSONCXX_PRIVATE_WARNINGS_DISABLE_FOR_GCC(__VA_ARGS__);   \
-    BSONCXX_PRIVATE_WARNINGS_DISABLE_FOR_Clang(__VA_ARGS__); \
-    BSONCXX_PRIVATE_FORCE_SEMICOLON
+#define BSONCXX_PRIVATE_WARNINGS_DISABLE_IMPL_FOR_GNU(...)     \
+    BSONCXX_PRIVATE_WARNINGS_DISABLE_IMPL_FOR_GCC(__VA_ARGS__) \
+    BSONCXX_PRIVATE_WARNINGS_DISABLE_IMPL_FOR_Clang(__VA_ARGS__)
 
-#define BSONCXX_PRIVATE_WARNINGS_DISABLE_FOR_MSVC(...)                              \
-    BSONCXX_PRIVATE_IF_MSVC(BSONCXX_PRIVATE_PRAGMA(warning(disable : __VA_ARGS__))) \
-    BSONCXX_PRIVATE_FORCE_SEMICOLON
+#define BSONCXX_PRIVATE_WARNINGS_DISABLE_IMPL_FOR_MSVC(...) \
+    BSONCXX_PRIVATE_IF_MSVC(BSONCXX_PRIVATE_PRAGMA(warning(disable : __VA_ARGS__)))
 
 #define BSONCXX_PRIVATE_FWD(...) static_cast<decltype(__VA_ARGS__)&&>(__VA_ARGS__)
 

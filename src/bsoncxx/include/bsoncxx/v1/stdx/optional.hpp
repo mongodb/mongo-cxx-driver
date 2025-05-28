@@ -63,7 +63,7 @@ template <typename T>
 class optional;
 
 BSONCXX_PRIVATE_WARNINGS_PUSH();
-BSONCXX_PRIVATE_WARNINGS_DISABLE_FOR_Clang("-Wweak-vtables");
+BSONCXX_PRIVATE_WARNINGS_DISABLE(Clang("-Wweak-vtables"));
 // Exception type thrown upon attempted access to a value-less optional<T> via a throwing accessor
 // API.
 class bad_optional_access : public std::exception {
@@ -536,7 +536,7 @@ struct optional_operators_base {
         }
 
         BSONCXX_PRIVATE_WARNINGS_PUSH();
-        BSONCXX_PRIVATE_WARNINGS_DISABLE_FOR_GNU("-Wfloat-equal");
+        BSONCXX_PRIVATE_WARNINGS_DISABLE(GNU("-Wfloat-equal"));
         return !left.has_value() || *left == *right;
         BSONCXX_PRIVATE_WARNINGS_POP();
     }
@@ -545,7 +545,7 @@ struct optional_operators_base {
     friend constexpr auto tag_invoke(bsoncxx::detail::equal_to, optional<T> const& left, U const& right) noexcept
         -> bsoncxx::detail::requires_t<bool, not_an_optional<U>, bsoncxx::detail::is_equality_comparable<T, U>> {
         BSONCXX_PRIVATE_WARNINGS_PUSH();
-        BSONCXX_PRIVATE_WARNINGS_DISABLE_FOR_GNU("-Wfloat-equal");
+        BSONCXX_PRIVATE_WARNINGS_DISABLE(GNU("-Wfloat-equal"));
         return left.has_value() && *left == right;
         BSONCXX_PRIVATE_WARNINGS_POP();
     }

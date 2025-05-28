@@ -182,7 +182,7 @@ class value {
     document::view view() const noexcept {
         // Silence false positive with g++ 10.2.1 on Debian 11.
         BSONCXX_PRIVATE_WARNINGS_PUSH();
-        BSONCXX_PRIVATE_WARNINGS_DISABLE_FOR_GCC("-Wmaybe-uninitialized");
+        BSONCXX_PRIVATE_WARNINGS_DISABLE(GCC("-Wmaybe-uninitialized"));
         return document::view{static_cast<uint8_t*>(_data.get()), _length};
         BSONCXX_PRIVATE_WARNINGS_POP();
     }

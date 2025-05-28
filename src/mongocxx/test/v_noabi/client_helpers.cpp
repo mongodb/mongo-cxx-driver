@@ -394,7 +394,7 @@ bool matches(types::bson_value::view main, types::bson_value::view pattern, matc
     }
 
     BSONCXX_PRIVATE_WARNINGS_PUSH();
-    BSONCXX_PRIVATE_WARNINGS_DISABLE_FOR_GNU("-Wfloat-equal");
+    BSONCXX_PRIVATE_WARNINGS_DISABLE(GNU("-Wfloat-equal"));
 
     if (is_numeric(pattern) && as_double(pattern) == 42.0) {
         return true;
