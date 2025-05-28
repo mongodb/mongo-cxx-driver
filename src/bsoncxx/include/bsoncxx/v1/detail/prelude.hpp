@@ -102,6 +102,14 @@
 #undef BSONCXX_PRIVATE_WARNINGS_PUSH
 #pragma push_macro("BSONCXX_PRIVATE_UNREACHABLE")
 #undef BSONCXX_PRIVATE_UNREACHABLE
+#pragma push_macro("Clang") // Guard since BSONCXX_PRIVATE_WARNINGS_DISABLE(Clang(...)) assumes Clang is not defined.
+#undef Clang
+#pragma push_macro("GCC") // Guard since BSONCXX_PRIVATE_WARNINGS_DISABLE(GCC(...)) assumes GCC is not defined.
+#undef GCC
+#pragma push_macro("GNU") // Guard since BSONCXX_PRIVATE_WARNINGS_DISABLE(GNU(...)) assumes GNU is not defined.
+#undef GNU
+#pragma push_macro("MSVC") // Guard since BSONCXX_PRIVATE_WARNINGS_DISABLE(MSVC(...)) assumes MSVC is not defined.
+#undef MSVC
 #endif
 
 ///

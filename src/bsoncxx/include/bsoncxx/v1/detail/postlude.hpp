@@ -64,6 +64,10 @@
 #pragma pop_macro("BSONCXX_PRIVATE_WARNINGS_DISABLE")
 #pragma pop_macro("BSONCXX_PRIVATE_WARNINGS_POP")
 #pragma pop_macro("BSONCXX_PRIVATE_WARNINGS_PUSH")
+#pragma pop_macro("Clang")
+#pragma pop_macro("GCC")
+#pragma pop_macro("GNU")
+#pragma pop_macro("MSVC")
 #endif
 
 #if !defined(BSONCXX_PRIVATE_V1_INSIDE_MACRO_GUARD_SCOPE)
