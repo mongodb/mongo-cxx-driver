@@ -16,6 +16,8 @@
 
 #include <bsoncxx/v1/detail/prelude.hpp>
 
+#include <bsoncxx/v1/config/export.hpp>
+
 namespace bsoncxx {
 namespace v1 {
 namespace error {
@@ -31,7 +33,7 @@ enum class type;
 namespace bsoncxx {
 namespace v1 {
 
-class exception;
+class BSONCXX_ABI_EXPORT exception;
 
 } // namespace v1
 } // namespace bsoncxx

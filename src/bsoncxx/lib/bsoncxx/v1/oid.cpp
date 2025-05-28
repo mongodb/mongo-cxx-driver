@@ -13,3 +13,16 @@
 // limitations under the License.
 
 #include <bsoncxx/v1/oid.hpp>
+
+//
+
+#include <bsoncxx/private/type_traits.hh>
+
+namespace bsoncxx {
+namespace v1 {
+
+static_assert(is_regular<oid>::value, "bsoncxx::v1::oid must be regular");
+static_assert(is_semitrivial<oid>::value, "bsoncxx::v1::oid must be semitrivial");
+
+} // namespace v1
+} // namespace bsoncxx

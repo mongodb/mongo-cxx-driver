@@ -13,3 +13,16 @@
 // limitations under the License.
 
 #include <bsoncxx/v1/decimal128.hpp>
+
+//
+
+#include <bsoncxx/private/type_traits.hh>
+
+namespace bsoncxx {
+namespace v1 {
+
+static_assert(is_regular<decimal128>::value, "bsoncxx::v1::decimal128 must be regular");
+static_assert(is_semitrivial<decimal128>::value, "bsoncxx::v1::decimal128 must be semitrivial");
+
+} // namespace v1
+} // namespace bsoncxx

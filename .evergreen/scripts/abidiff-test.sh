@@ -54,7 +54,11 @@ echo "---" >>cxx-noabi/mongocxx.txt
 
 # Allow task to upload the diff reports despite failed status.
 echo "Comparing stable ABI for bsoncxx..."
-if ! abidiff "${abi_flags[@]:?}" install/old/lib/libbsoncxx.so install/new/lib/libbsoncxx.so >>cxx-abi/bsoncxx.txt; then
+abidiff "${abi_flags[@]:?}" install/old/lib/libbsoncxx.so install/new/lib/libbsoncxx.so >>cxx-abi/bsoncxx.txt && ret="$?" || ret="$?"
+if (("$ret" & 0x03)); then # ABIDIFF_ERROR (1) | ABIDIFF_USAGE_ERROR (2)
+  echo "abidiff error" >&2
+  exit 1
+elif (("$ret" & 0x08)); then # ABIDIFF_ABI_INCOMPATIBLE_CHANGE (8).
   declare status
   status='{"status":"failed", "type":"test", "should_continue":true, "desc":"abidiff returned an error for bsoncxx (stable)"}'
   curl -sS -d "${status:?}" -H "Content-Type: application/json" -X POST localhost:2285/task_status || true
@@ -63,7 +67,11 @@ echo "Comparing stable ABI for bsoncxx... done."
 
 # Allow task to upload the diff reports despite failed status.
 echo "Comparing stable ABI for mongocxx..."
-if ! abidiff "${abi_flags[@]:?}" install/old/lib/libmongocxx.so install/new/lib/libmongocxx.so >>cxx-abi/mongocxx.txt; then
+abidiff "${abi_flags[@]:?}" install/old/lib/libmongocxx.so install/new/lib/libmongocxx.so >>cxx-abi/mongocxx.txt && ret="$?" || ret="$?"
+if (("$ret" & 0x03)); then # ABIDIFF_ERROR (1) | ABIDIFF_USAGE_ERROR (2)
+  echo "abidiff error" >&2
+  exit 1
+elif (("$ret" & 0x08)); then # ABIDIFF_ABI_INCOMPATIBLE_CHANGE (8)
   declare status
   status='{"status":"failed", "type":"test", "should_continue":true, "desc":"abidiff returned an error for mongocxx (stable)"}'
   curl -sS -d "${status:?}" -H "Content-Type: application/json" -X POST localhost:2285/task_status || true

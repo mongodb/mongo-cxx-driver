@@ -20,26 +20,36 @@
 
 #include <bsoncxx/v1/detail/prelude.hpp>
 
+#include <bsoncxx/v1/config/export.hpp>
+#include <bsoncxx/v1/detail/macros.hpp>
+
 #include <system_error>
+#include <type_traits>
 
 namespace bsoncxx {
 namespace v1 {
 namespace error {
 
 ///
-/// Enumeration identifying the source of a @ref bsoncxx::v1 error.
+/// Declares error categories for error codes and error conditions declared in @ref bsoncxx::v1::error.
+///
+namespace category {
+
+///
+/// The error category for @ref bsoncxx::v1::error::source.
 ///
 /// @attention This feature is experimental! It is not ready for use!
 ///
-enum class source {};
+BSONCXX_ABI_EXPORT_CDECL(std::error_category const&) source();
 
 ///
-/// Enumeration identifying the type (cause) of a @ref bsoncxx::v1 error.
+/// The error category for @ref bsoncxx::v1::error::type.
 ///
 /// @attention This feature is experimental! It is not ready for use!
 ///
-enum class type {};
+BSONCXX_ABI_EXPORT_CDECL(std::error_category const&) type();
 
+} // namespace category
 } // namespace error
 } // namespace v1
 } // namespace bsoncxx
@@ -48,11 +58,92 @@ namespace bsoncxx {
 namespace v1 {
 
 ///
-/// Base class for all exceptions thrown by @ref bsoncxx::v1.
+/// Declares error codes and error conditions returned by @ref bsoncxx::v1 interfaces.
+///
+namespace error {
+
+///
+/// Enumeration identifying the source of a @ref bsoncxx::v1 error.
 ///
 /// @attention This feature is experimental! It is not ready for use!
 ///
-class exception {};
+enum class source {
+    zero,    ///< Zero.
+    bsoncxx, ///< From the bsoncxx library.
+    bson,    ///< From the bson library.
+};
+
+///
+/// Support implicit conversion to `std::error_condition`.
+///
+/// @attention This feature is experimental! It is not ready for use!
+///
+inline std::error_condition make_error_condition(source code) {
+    return {static_cast<int>(code), v1::error::category::source()};
+}
+
+///
+/// Enumeration identifying the type (cause) of a @ref bsoncxx::v1 error.
+///
+/// @attention This feature is experimental! It is not ready for use!
+///
+enum class type {
+    zero,             ///< Zero.
+    invalid_argument, ///< An invalid argument passed to the throwing function.
+    runtime_error,    ///< An erroneous condition was detected at runtime.
+};
+
+///
+/// Support implicit conversion to `std::error_condition`.
+///
+/// @attention This feature is experimental! It is not ready for use!
+///
+inline std::error_condition make_error_condition(type code) {
+    return {static_cast<int>(code), v1::error::category::type()};
+}
+
+} // namespace error
+} // namespace v1
+} // namespace bsoncxx
+
+namespace std {
+
+template <>
+struct is_error_condition_enum<bsoncxx::v1::error::source> : true_type {};
+
+template <>
+struct is_error_condition_enum<bsoncxx::v1::error::type> : true_type {};
+
+} // namespace std
+
+namespace bsoncxx {
+namespace v1 {
+
+BSONCXX_PRIVATE_WARNINGS_PUSH();
+BSONCXX_PRIVATE_WARNINGS_DISABLE(MSVC(4251));
+BSONCXX_PRIVATE_WARNINGS_DISABLE(MSVC(4275));
+
+///
+/// Base class for all exceptions thrown by @ref bsoncxx::v1.
+///
+/// @par Inherits:
+/// - `std::system_error`
+///
+/// @attention This feature is experimental! It is not ready for use!
+///
+class exception : public std::system_error {
+   public:
+    ~exception() override;
+
+    exception(exception&&) = default;
+    exception& operator=(exception&&) = default;
+    exception(exception const&) = default;
+    exception& operator=(exception const&) = default;
+
+    using std::system_error::system_error;
+};
+
+BSONCXX_PRIVATE_WARNINGS_POP();
 
 } // namespace v1
 } // namespace bsoncxx
