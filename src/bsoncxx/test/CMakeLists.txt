@@ -123,6 +123,10 @@ if(ENABLE_MACRO_GUARD_TESTS)
             BSONCXX_PRIVATE_WARNINGS_DISABLE_IMPL_FOR_MSVC
             BSONCXX_PRIVATE_WARNINGS_POP
             BSONCXX_PRIVATE_WARNINGS_PUSH
+            Clang
+            GCC
+            GNU
+            MSVC
 
             # bsoncxx/v1/detail/prelude.hpp
             BSONCXX_PRIVATE_V1_INSIDE_MACRO_GUARD_SCOPE
