@@ -49,14 +49,10 @@ namespace array {
 ///
 class view {
    public:
-    ///
-    /// Equivalent to @ref const_iterator.
-    ///
+    /// @copydoc v1::document::view::const_iterator
     using const_iterator = v1::document::view::const_iterator;
 
-    ///
-    /// Equivalent to @ref const_iterator.
-    ///
+    /// @copydoc v1::document::view::iterator
     using iterator = const_iterator;
 
    private:
