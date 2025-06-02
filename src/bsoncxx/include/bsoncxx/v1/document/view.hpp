@@ -245,9 +245,9 @@ class view {
 ///
 /// A const iterator over the elements of a view.
 ///
-/// @note This iterator almost satisfies LegacyForwardIterator, but `std::iterator_traits<T>::reference` is defined as
+/// @note This iterator almost satisfies Cpp17ForwardIterator, but `std::iterator_traits<T>::reference` is defined as
 /// `value_type`, similar to `std::vector<bool>::iterator` and `std::istreambuf_iterator<T>`. Therefore, this iterator
-/// only fully satisfies LegacyInputIterator.
+/// only fully satisfies Cpp17InputIterator.
 ///
 /// @attention This feature is experimental! It is not ready for use!
 ///
