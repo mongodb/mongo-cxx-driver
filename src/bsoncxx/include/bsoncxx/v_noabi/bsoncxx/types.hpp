@@ -147,7 +147,7 @@ namespace types {
 /// A BSON double value.
 ///
 struct b_double {
-    static constexpr BSONCXX_ABI_EXPORT auto type_id = type::k_double;
+    static constexpr auto type_id = type::k_double;
 
     double value;
 
@@ -175,7 +175,7 @@ inline bool operator==(b_double const& lhs, b_double const& rhs) {
 /// A BSON UTF-8 encoded string value.
 ///
 struct b_string {
-    static constexpr BSONCXX_ABI_EXPORT auto type_id = type::k_string;
+    static constexpr auto type_id = type::k_string;
 
     ///
     /// Constructor for b_string.
@@ -209,7 +209,7 @@ inline bool operator==(b_string const& lhs, b_string const& rhs) {
 /// A BSON document value.
 ///
 struct b_document {
-    static constexpr BSONCXX_ABI_EXPORT auto type_id = type::k_document;
+    static constexpr auto type_id = type::k_document;
 
     document::view value;
 
@@ -241,7 +241,7 @@ inline bool operator==(b_document const& lhs, b_document const& rhs) {
 /// A BSON array value.
 ///
 struct b_array {
-    static constexpr BSONCXX_ABI_EXPORT auto type_id = type::k_array;
+    static constexpr auto type_id = type::k_array;
 
     array::view value;
 
@@ -266,7 +266,7 @@ inline bool operator==(b_array const& lhs, b_array const& rhs) {
 /// A BSON binary data value.
 ///
 struct b_binary {
-    static constexpr BSONCXX_ABI_EXPORT auto type_id = type::k_binary;
+    static constexpr auto type_id = type::k_binary;
 
     binary_sub_type sub_type;
     uint32_t size;
@@ -289,7 +289,7 @@ inline bool operator==(b_binary const& lhs, b_binary const& rhs) {
 /// @deprecated This BSON type is deprecated. Usage is discouraged.
 ///
 struct b_undefined {
-    static constexpr BSONCXX_ABI_EXPORT auto type_id = type::k_undefined;
+    static constexpr auto type_id = type::k_undefined;
 };
 
 ///
@@ -305,7 +305,7 @@ inline bool operator==(b_undefined const&, b_undefined const&) {
 /// A BSON ObjectId value.
 ///
 struct b_oid {
-    static constexpr BSONCXX_ABI_EXPORT auto type_id = type::k_oid;
+    static constexpr auto type_id = type::k_oid;
 
     oid value;
 };
@@ -323,7 +323,7 @@ inline bool operator==(b_oid const& lhs, b_oid const& rhs) {
 /// A BSON boolean value.
 ///
 struct b_bool {
-    static constexpr BSONCXX_ABI_EXPORT auto type_id = type::k_bool;
+    static constexpr auto type_id = type::k_bool;
 
     bool value;
 
@@ -348,7 +348,7 @@ inline bool operator==(b_bool const& lhs, b_bool const& rhs) {
 /// A BSON date value.
 ///
 struct b_date {
-    static constexpr BSONCXX_ABI_EXPORT auto type_id = type::k_date;
+    static constexpr auto type_id = type::k_date;
 
     ///
     /// Constructor for b_date
@@ -405,7 +405,7 @@ inline bool operator==(b_date const& lhs, b_date const& rhs) {
 /// A BSON null value.
 ///
 struct b_null {
-    static constexpr BSONCXX_ABI_EXPORT auto type_id = type::k_null;
+    static constexpr auto type_id = type::k_null;
 };
 
 ///
@@ -421,7 +421,7 @@ inline bool operator==(b_null const&, b_null const&) {
 /// A BSON regex value.
 ///
 struct b_regex {
-    static constexpr BSONCXX_ABI_EXPORT auto type_id = type::k_regex;
+    static constexpr auto type_id = type::k_regex;
 
     ///
     /// Constructor for b_regex
@@ -454,7 +454,7 @@ inline bool operator==(b_regex const& lhs, b_regex const& rhs) {
 /// @deprecated This BSON type is deprecated. Usage is discouraged.
 ///
 struct b_dbpointer {
-    static constexpr BSONCXX_ABI_EXPORT auto type_id = type::k_dbpointer;
+    static constexpr auto type_id = type::k_dbpointer;
 
     stdx::string_view collection;
     oid value;
@@ -473,7 +473,7 @@ inline bool operator==(b_dbpointer const& lhs, b_dbpointer const& rhs) {
 /// A BSON JavaScript code value.
 ///
 struct b_code {
-    static constexpr BSONCXX_ABI_EXPORT auto type_id = type::k_code;
+    static constexpr auto type_id = type::k_code;
 
     ///
     /// Constructor for b_code.
@@ -509,7 +509,7 @@ inline bool operator==(b_code const& lhs, b_code const& rhs) {
 /// @deprecated This BSON type is deprecated. Usage is discouraged.
 ///
 struct b_symbol {
-    static constexpr BSONCXX_ABI_EXPORT auto type_id = type::k_symbol;
+    static constexpr auto type_id = type::k_symbol;
 
     ///
     /// Constructor for b_symbol.
@@ -543,7 +543,7 @@ inline bool operator==(b_symbol const& lhs, b_symbol const& rhs) {
 /// A BSON JavaScript code with scope value.
 ///
 struct b_codewscope {
-    static constexpr BSONCXX_ABI_EXPORT auto type_id = type::k_codewscope;
+    static constexpr auto type_id = type::k_codewscope;
 
     ///
     /// Constructor for b_codewscope.
@@ -574,7 +574,7 @@ inline bool operator==(b_codewscope const& lhs, b_codewscope const& rhs) {
 /// A BSON signed 32-bit integer value.
 ///
 struct b_int32 {
-    static constexpr BSONCXX_ABI_EXPORT auto type_id = type::k_int32;
+    static constexpr auto type_id = type::k_int32;
 
     int32_t value;
 
@@ -599,7 +599,7 @@ inline bool operator==(b_int32 const& lhs, b_int32 const& rhs) {
 /// A BSON replication timestamp value.
 ///
 struct b_timestamp {
-    static constexpr BSONCXX_ABI_EXPORT auto type_id = type::k_timestamp;
+    static constexpr auto type_id = type::k_timestamp;
 
     uint32_t increment;
     uint32_t timestamp;
@@ -618,7 +618,7 @@ inline bool operator==(b_timestamp const& lhs, b_timestamp const& rhs) {
 /// A BSON 64-bit signed integer value.
 ///
 struct b_int64 {
-    static constexpr BSONCXX_ABI_EXPORT auto type_id = type::k_int64;
+    static constexpr auto type_id = type::k_int64;
 
     int64_t value;
 
@@ -643,7 +643,7 @@ inline bool operator==(b_int64 const& lhs, b_int64 const& rhs) {
 /// A BSON Decimal128 value.
 ///
 struct b_decimal128 {
-    static constexpr BSONCXX_ABI_EXPORT auto type_id = type::k_decimal128;
+    static constexpr auto type_id = type::k_decimal128;
 
     decimal128 value;
 
@@ -670,7 +670,7 @@ inline bool operator==(b_decimal128 const& lhs, b_decimal128 const& rhs) {
 /// A BSON min-key value.
 ///
 struct b_minkey {
-    static constexpr BSONCXX_ABI_EXPORT auto type_id = type::k_minkey;
+    static constexpr auto type_id = type::k_minkey;
 };
 
 ///
@@ -686,7 +686,7 @@ inline bool operator==(b_minkey const&, b_minkey const&) {
 /// A BSON max-key value.
 ///
 struct b_maxkey {
-    static constexpr BSONCXX_ABI_EXPORT auto type_id = type::k_maxkey;
+    static constexpr auto type_id = type::k_maxkey;
 };
 
 ///
@@ -886,6 +886,12 @@ inline bool operator!=(b_minkey const& lhs, b_minkey const& rhs) {
 inline bool operator!=(b_maxkey const& lhs, b_maxkey const& rhs) {
     return !(lhs == rhs);
 }
+
+#pragma push_macro("X")
+#undef X
+#define X(_name, _val) BSONCXX_PRIVATE_INLINE_CXX17 constexpr type b_##_name::type_id;
+BSONCXX_V1_TYPES_XMACRO(X)
+#pragma pop_macro("X")
 
 } // namespace types
 

@@ -85,6 +85,31 @@
 
 #define BSONCXX_PRIVATE_MAX_ALIGN_T std::max_align_t
 
+// Use this on variables that can only be inline in C++17 or newer, such as static constexpr data members.
+//
+// GCC does not allow __inline__ (even with __extension__) given -std=c++11 and -pedantic-errors (unconditional
+// compilation error until GCC 12 which added -Wc++17-extensions suppression), but supports [[gnu::weak]] even with
+// constant-evaluation and constant-folding on all currently-supported GCC versions (GCC 4.8.x and newer).
+//
+// Clang: does not allow using [[gnu::weak]] with constexpr, but supports __inline__ as a language extension even with
+// -std=c++11 and -pedantic-errors via diagnostic suppression on all currently-supported Clang versions
+// (-Wc++1z-extensions suppression since Clang 3.9 and -Wc++17-extensions suppression since Clang 5.0).
+//
+// MSVC: supports inline variables since 19.12 (with /std:c++latest), but behavior is broken for static data members
+// (multiple definitions) until 19.20 even when __cpp_inline_variables is defined.
+#if (                                                                                                      \
+    !defined(_MSC_VER) &&                                                                                  \
+    (__cplusplus >= 201703L || (defined(__cpp_inline_variables) && __cpp_inline_variables >= 201606L))) || \
+    (defined(_MSC_VER) && _MSC_VER >= 1920 && defined(_MSVC_LANG) && _MSVC_LANG >= 201703L)
+#define BSONCXX_PRIVATE_INLINE_CXX17 inline
+#else
+#define BSONCXX_PRIVATE_INLINE_CXX17                                                                   \
+    BSONCXX_PRIVATE_IF_GCC([[gnu::weak]])                                                              \
+    BSONCXX_PRIVATE_IF_CLANG(_Pragma("clang diagnostic push") _Pragma(                                 \
+        "clang diagnostic ignored \"-Wc++17-extensions\"") __inline__ _Pragma("clang diagnostic pop")) \
+    BSONCXX_PRIVATE_IF_MSVC(__declspec(selectany))
+#endif
+
 #define BSONCXX_PRIVATE_IF_MSVC(...)
 #define BSONCXX_PRIVATE_IF_GCC(...)
 #define BSONCXX_PRIVATE_IF_CLANG(...)
