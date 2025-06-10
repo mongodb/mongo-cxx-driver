@@ -110,6 +110,7 @@ def tasks():
                 run_on=distro.name,
                 patchable=patchable,
                 commands=commands,
+                disable=(True if distro_name == 'rhel7.9' else None), # DEVPROD-18187
             )
 
 

@@ -431,6 +431,7 @@ tasks:
   - name: compile-only-rhel7.9-gcc-cxx11-debug
     run_on: rhel7.9-large
     tags: [compile-only, rhel7.9, cxx11, gcc, debug]
+    disable: true
     commands:
       - command: expansions.update
         params:
@@ -451,6 +452,7 @@ tasks:
   - name: compile-only-rhel7.9-gcc-cxx14-debug
     run_on: rhel7.9-large
     tags: [compile-only, rhel7.9, cxx14, gcc, debug]
+    disable: true
     commands:
       - command: expansions.update
         params:
