@@ -1,16 +1,16 @@
 {
   "components": [
     {
-      "bom-ref": "pkg:github/mongodb/mongo-c-driver@v2.0.0",
+      "bom-ref": "pkg:github/mongodb/mongo-c-driver@v2.0.2",
       "copyright": "Copyright 2009-present MongoDB, Inc.",
       "externalReferences": [
         {
           "type": "distribution",
-          "url": "https://github.com/mongodb/mongo-c-driver/archive/refs/tags/v2.0.0.tar.gz"
+          "url": "https://github.com/mongodb/mongo-c-driver/archive/refs/tags/v2.0.2.tar.gz"
         },
         {
           "type": "website",
-          "url": "https://github.com/mongodb/mongo-c-driver/tree/v2.0.0"
+          "url": "https://github.com/mongodb/mongo-c-driver/tree/v2.0.2"
         }
       ],
       "group": "mongodb",
@@ -22,18 +22,18 @@
         }
       ],
       "name": "mongo-c-driver",
-      "purl": "pkg:github/mongodb/mongo-c-driver@v2.0.0",
+      "purl": "pkg:github/mongodb/mongo-c-driver@v2.0.2",
       "type": "library",
-      "version": "v2.0.0"
+      "version": "v2.0.2"
     }
   ],
   "dependencies": [
     {
-      "ref": "pkg:github/mongodb/mongo-c-driver@v2.0.0"
+      "ref": "pkg:github/mongodb/mongo-c-driver@v2.0.2"
     }
   ],
   "metadata": {
-    "timestamp": "2025-04-02T19:47:45.682404+00:00",
+    "timestamp": "2025-06-12T17:36:20.890153+00:00",
     "tools": [
       {
         "externalReferences": [
