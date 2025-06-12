@@ -61,8 +61,8 @@ void example() {
 
         EXPECT(bsoncxx::validate(data, length) == bsoncxx::validate(data, length, options, &offset));
 
-        // Not set when valid.
-        EXPECT(offset == 123u);
+        // Set to 0 when valid.
+        EXPECT(offset == 0u);
     }
 }
 // [Example]
