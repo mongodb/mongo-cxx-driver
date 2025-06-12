@@ -55,11 +55,15 @@ TEST_CASE("bson version numbers", "[bsoncxx][test]") {
     CHECK(bson_get_major_version() == expect[0]);
 
     CHECKED_IF(expect.size() > 1) {
-        CHECK(bson_get_minor_version() >= expect[1]);
+        auto const minor = bson_get_minor_version();
 
-        // Only when minor version number compares equal.
-        CHECKED_IF(expect.size() > 2) {
-            CHECK(bson_get_micro_version() >= expect[2]);
+        CHECK(minor >= expect[1]);
+
+        // Only compare patch version number when minor version number compares equal.
+        CHECKED_IF(minor == expect[1]) {
+            CHECKED_IF(expect.size() > 2) {
+                CHECK(bson_get_micro_version() >= expect[2]);
+            }
         }
     }
 }
@@ -89,12 +93,14 @@ TEST_CASE(
         // Minor version number.
         CHECK(actual[1] >= expect[1]);
 
-        // Only when minor version number compares equal.
-        CHECKED_IF(expect.size() > 2) {
-            REQUIRE(actual.size() > 2);
+        // Only compare patch version number when minor version number compares equal.
+        CHECKED_IF(actual[1] == expect[1]) {
+            CHECKED_IF(expect.size() > 2) {
+                REQUIRE(actual.size() > 2);
 
-            // Patch version number.
-            CHECK(actual[2] >= expect[2]);
+                // Patch version number.
+                CHECK(actual[2] >= expect[2]);
+            }
         }
     }
 }
