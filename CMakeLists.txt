@@ -25,20 +25,32 @@ set(CMAKE_MODULE_PATH
 option(BUILD_TESTING "When ENABLE_TESTS=ON, include test targets in the \"all\" target")
 
 if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-    if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS "4.8.2")
-        message(FATAL_ERROR "Insufficient GCC version - GCC 4.8.2+ required")
+    # https://gcc.gnu.org/onlinedocs/libstdc++/manual/status.html
+    # https://gcc.gnu.org/projects/cxx-status.html
+    # https://gcc.gnu.org/releases.html
+    if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS "8.1")
+        message(FATAL_ERROR "GCC 8.1 or newer is required")
     endif()
 elseif(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
-    if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS "19.0.23506")
-        message(FATAL_ERROR "Insufficient Microsoft Visual C++ version - MSVC 2015 Update 1+ required")
+    # https://en.wikipedia.org/wiki/Microsoft_Visual_C%2B%2B#Internal_version_numbering
+    # https://learn.microsoft.com/en-us/cpp/overview/compiler-versions
+    # https://learn.microsoft.com/en-us/cpp/overview/visual-cpp-language-conformance
+    if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS "19.0.24210")
+        message(FATAL_ERROR "Visual Studio 13 2015 Update 3 or newer is required")
     endif()
 elseif(CMAKE_CXX_COMPILER_ID STREQUAL "AppleClang")
-    if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS "5.1")
-        message(FATAL_ERROR "Insufficient Apple clang version - XCode 5.1+ required")
+    # https://developer.apple.com/xcode/cpp/
+    # https://en.wikipedia.org/wiki/Xcode#Version_comparison_table
+    # https://trac.macports.org/wiki/XcodeVersionInfo
+    if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS "13.1")
+        message(FATAL_ERROR "Xcode 13.4.1 or newer is required")
     endif()
 elseif(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
-    if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS "3.5")
-        message(FATAL_ERROR "Insufficient clang version - clang 3.5+ required")
+    # https://releases.llvm.org/
+    # https://clang.llvm.org/cxx_status.html
+    # https://libcxx.llvm.org/#c-standards-conformance
+    if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS "3.8")
+        message(FATAL_ERROR "Clang 3.8 or newer is required")
     endif()
 else()
     message(WARNING "Unknown compiler... recklessly proceeding without a version check")
