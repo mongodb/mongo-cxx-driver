@@ -201,20 +201,27 @@ functions:
         permissions: public-read
         remote_file: mongo-cxx-driver/${branch_name}/${revision}/${version_id}/${build_id}/${execution}/rpm-packages.tar.gz
   build_mongohouse:
-    command: subprocess.exec
-    type: setup
-    params:
-      binary: bash
-      args:
-        - -c
-        - |
-          if [ ! -d "drivers-evergreen-tools" ]; then
-              git clone https://github.com/mongodb-labs/drivers-evergreen-tools.git
-          fi
-          cd drivers-evergreen-tools
-          export DRIVERS_TOOLS=$(pwd)
+    - command: ec2.assume_role
+      params:
+        role_arn: ${aws_test_secrets_role}
+    - command: subprocess.exec
+      type: setup
+      params:
+        binary: bash
+        include_expansions_in_env:
+          - AWS_ACCESS_KEY_ID
+          - AWS_SECRET_ACCESS_KEY
+          - AWS_SESSION_TOKEN
+        args:
+          - -c
+          - |
+            if [ ! -d "drivers-evergreen-tools" ]; then
+                git clone https://github.com/mongodb-labs/drivers-evergreen-tools.git
+            fi
+            cd drivers-evergreen-tools
+            export DRIVERS_TOOLS=$(pwd)
 
-          .evergreen/atlas_data_lake/pull-mongohouse-image.sh
+            .evergreen/atlas_data_lake/pull-mongohouse-image.sh
   check augmented sbom:
     - command: ec2.assume_role
       type: setup
@@ -436,7 +443,7 @@ functions:
       type: setup
       params:
         updates:
-          - { key: mongoc_version_minimum, value: 2.0.0 }
+          - { key: mongoc_version_minimum, value: 2.0.2 }
     - command: subprocess.exec
       type: setup
       params:
