@@ -111,7 +111,10 @@ class view {
     ///
     /// Return a const iterator to the element within the represented BSON array at index `i`.
     ///
-    /// If this view is invalid, returns an end iterator.
+    /// If this view is invalid or the requested field is not found, returns an end iterator.
+    ///
+    /// @par Complexity
+    /// Linear.
     ///
     /// @exception bsoncxx::v1::exception with @ref bsoncxx::v1::error::document::view::invalid_data if this operation
     /// failed due to invalid BSON bytes.
