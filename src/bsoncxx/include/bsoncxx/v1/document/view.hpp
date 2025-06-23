@@ -326,7 +326,7 @@ class view::const_iterator {
     }
 
     ///
-    /// Compare equal when `lhs` and `rhs` represent the same element within the same range of BSON bytes.
+    /// Compare equal when `lhs` and `rhs` point to the same element within the same range of BSON bytes.
     ///
     /// An end iterator only compares equal to another end iterator. The underlying BSON bytes (if any) is ignored
     /// for an end iterator.
