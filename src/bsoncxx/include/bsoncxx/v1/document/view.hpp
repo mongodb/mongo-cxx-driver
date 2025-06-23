@@ -106,9 +106,9 @@ namespace document {
 /// - @ref data() is not null, and
 /// - @ref size() is not less than `5` (the minimum size of a BSON document).
 ///
-/// The BSON binary data being represented is only validated as minimally required to satisfy a requested operation.
-/// When an operation is not satisfiable due to invalid data, the operation will throw an @ref bsoncxx::v1::exception
-/// with @ref bsoncxx::v1::error::document::view::invalid_data.
+/// The BSON bytes being represented is only validated as minimally required to satisfy a requested operation. When an
+/// operation is not satisfiable due to invalid data, the operation will throw an @ref bsoncxx::v1::exception with @ref
+/// bsoncxx::v1::error::document::view::invalid_data.
 ///
 /// @attention This feature is experimental! It is not ready for use!
 ///
@@ -139,7 +139,7 @@ class view {
     BSONCXX_ABI_EXPORT_CDECL() view();
 
     ///
-    /// Initialize with the given BSON binary data.
+    /// Initialize with the given BSON bytes.
     ///
     /// @par Preconditions:
     /// - `length` must be less than or equal to the storage region pointed to by `data`.
@@ -147,17 +147,17 @@ class view {
     view(std::uint8_t const* data, std::size_t length) : _data(data), _length(length) {}
 
     ///
-    /// Return a pointer to the BSON binary data being represented.
+    /// Return a pointer to the BSON bytes being represented.
     ///
     std::uint8_t const* data() const {
         return _data;
     }
 
     ///
-    /// Return the length of the BSON binary data being represented.
+    /// Return the length of the BSON bytes being represented.
     ///
-    /// @note This returns the length as specified during initialization, not the length of the BSON binary data as
-    /// indicated by the BSON binary data itself.
+    /// @note This returns the length as specified during initialization, not the length of the BSON bytes as
+    /// indicated by the BSON bytes itself.
     ///
     std::size_t size() const {
         return _length;
@@ -169,7 +169,7 @@ class view {
     }
 
     ///
-    /// Return true when the BSON binary data represents an empty view.
+    /// Return true when the BSON bytes represents an empty view.
     ///
     /// @note This does not return true when this view is invalid.
     ///
@@ -180,7 +180,7 @@ class view {
     ///
     /// Return true when this view is valid.
     ///
-    /// @note This does not validate the BSON binary data being represented.
+    /// @note This does not validate the BSON bytes being represented.
     ///
     explicit operator bool() const {
         return _data && _length >= _empty_length;
@@ -192,7 +192,7 @@ class view {
     /// If this view is invalid, returns an end iterator.
     ///
     /// @exception bsoncxx::v1::exception with @ref bsoncxx::v1::error::document::view::invalid_data if this operation
-    /// failed due to invalid BSON binary data.
+    /// failed due to invalid BSON bytes.
     ///
     BSONCXX_ABI_EXPORT_CDECL(const_iterator) cbegin() const;
 
@@ -213,7 +213,7 @@ class view {
     /// If this view is invalid, returns an end iterator.
     ///
     /// @exception bsoncxx::v1::exception with @ref bsoncxx::v1::error::document::view::invalid_data if this operation
-    /// failed due to invalid BSON binary data.
+    /// failed due to invalid BSON bytes.
     ///
     BSONCXX_ABI_EXPORT_CDECL(const_iterator) find(v1::stdx::string_view key) const;
 
@@ -221,9 +221,9 @@ class view {
     v1::element::view operator[](v1::stdx::string_view key) const;
 
     ///
-    /// Compare equal when the BSON binary data represented by `lhs` and `rhs` compare equal.
+    /// Compare equal when the BSON bytes represented by `lhs` and `rhs` compare equal.
     ///
-    /// An invalid view only compares equal to another invalid view. The underlying BSON binary data (if any) is ignored
+    /// An invalid view only compares equal to another invalid view. The underlying BSON bytes (if any) is ignored
     /// for an invalid document.
     ///
     /// @{

@@ -44,7 +44,7 @@ namespace document {
 class value {
    public:
     ///
-    /// The type of the deleter used to free the underlying BSON binary data.
+    /// The type of the deleter used to free the underlying BSON bytes.
     ///
     /// A deleter `D` that is wrapped by @ref deleter_type must:
     ///
@@ -62,12 +62,12 @@ class value {
     using deleter_type = std::function<void BSONCXX_ABI_CDECL(std::uint8_t*)>;
 
     ///
-    /// The deleter used to free copied BSON binary data when a user-provided deleter is not specified.
+    /// The deleter used to free copied BSON bytes when a user-provided deleter is not specified.
     ///
     using default_deleter_type = std::default_delete<std::uint8_t[]>;
 
     ///
-    /// The type of the unique pointer used to manage the underlying BSON binary data.
+    /// The type of the unique pointer used to manage the underlying BSON bytes.
     ///
     using unique_ptr_type = std::unique_ptr<std::uint8_t[], deleter_type>;
 
@@ -161,7 +161,7 @@ class value {
     }
 
     ///
-    /// Initialize without any underlying BSON binary data or deleter.
+    /// Initialize without any underlying BSON bytes or deleter.
     ///
     /// @par Postconditions:
     /// - `this->data() == nullptr`
@@ -201,7 +201,7 @@ class value {
     value(unique_ptr_type ptr, std::size_t length) : _data{std::move(ptr)}, _length{length} {}
 
     ///
-    /// Initialize with a copy of the BSON binary data referenced by `view`.
+    /// Initialize with a copy of the BSON bytes referenced by `view`.
     ///
     /// If `view` is invalid, this value is default-initialized.
     ///
@@ -278,7 +278,7 @@ class value {
     }
 
     ///
-    /// Release ownership of the underlying BSON binary data.
+    /// Release ownership of the underlying BSON bytes.
     ///
     unique_ptr_type release() {
         _length = 0u;
@@ -286,14 +286,14 @@ class value {
     }
 
     ///
-    /// Replace the underlying BSON binary data with `v`.
+    /// Replace the underlying BSON bytes with `v`.
     ///
     void reset(value v) {
         *this = std::move(v);
     }
 
     ///
-    /// Replace the underlying BSON binary data with a copy of `v`.
+    /// Replace the underlying BSON bytes with a copy of `v`.
     ///
     /// If `v` is invalid, reset to a default-initialized value.
     ///
@@ -305,7 +305,7 @@ class value {
     }
 
     ///
-    /// Return a view of the BSON binary data as a document.
+    /// Return a view of the BSON bytes as a document.
     ///
     v1::document::view view() const {
         return {_data.get(), _length};

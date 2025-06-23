@@ -121,7 +121,7 @@ class value {
     }
 
     ///
-    /// Return a view of the BSON binary data as an array.
+    /// Return a view of the BSON bytes as an array.
     ///
     v1::array::view view() const {
         return {_value.data(), _value.size()};

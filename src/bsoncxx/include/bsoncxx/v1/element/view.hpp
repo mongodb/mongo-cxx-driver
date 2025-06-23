@@ -139,7 +139,7 @@ namespace element {
 /// else               {} // Field "x" is missing.
 /// ```
 ///
-/// The BSON binary data being represented is only validated as minimally required to satisfy a requested operation.
+/// The BSON bytes being represented is only validated as minimally required to satisfy a requested operation.
 /// When an operation is not satisfiable due to invalid data, the operation will throw an @ref bsoncxx::v1::exception
 /// with @ref bsoncxx::v1::error::document::view::invalid_data.
 ///
@@ -174,40 +174,40 @@ class view {
     BSONCXX_ABI_EXPORT_CDECL(view&) operator=(view const& other) noexcept;
 
     ///
-    /// Initialize as an invalid element without any associated BSON binary data.
+    /// Initialize as an invalid element without any associated BSON bytes.
     ///
     BSONCXX_ABI_EXPORT_CDECL() view();
 
     ///
     /// Return true when this is a valid element.
     ///
-    /// @note This does not validate the BSON binary data being represented.
+    /// @note This does not validate the BSON bytes being represented.
     ///
     explicit BSONCXX_ABI_EXPORT_CDECL() operator bool() const;
 
     ///
-    /// Return the "raw" component of the underlying BSON binary data.
+    /// Return the "raw" component of the underlying BSON bytes.
     ///
     /// The value is unspecified when this element is invalid.
     ///
     BSONCXX_ABI_EXPORT_CDECL(std::uint8_t const*) raw() const;
 
     ///
-    /// Return the "length" component of the underlying BSON binary data.
+    /// Return the "length" component of the underlying BSON bytes.
     ///
     /// The value is unspecified when this element is invalid.
     ///
     BSONCXX_ABI_EXPORT_CDECL(std::uint32_t) length() const;
 
     ///
-    /// Return the "offset" component of the underlying BSON binary data.
+    /// Return the "offset" component of the underlying BSON bytes.
     ///
     /// The value is unspecified when this element is invalid.
     ///
     BSONCXX_ABI_EXPORT_CDECL(std::uint32_t) offset() const;
 
     ///
-    /// Return the "keylen" component of the underlying BSON binary data.
+    /// Return the "keylen" component of the underlying BSON bytes.
     ///
     /// The value is unspecified when this element is invalid.
     ///
@@ -269,7 +269,7 @@ class view {
     /// @returns An invalid element if the requested field does not exist.
     ///
     /// @exception bsoncxx::v1::exception with @ref bsoncxx::v1::error::element::view::invalid_data if this operation
-    /// failed due to invalid BSON binary data.
+    /// failed due to invalid BSON bytes.
     ///
     /// @{
     BSONCXX_ABI_EXPORT_CDECL(v1::element::view) operator[](v1::stdx::string_view key) const;
@@ -278,10 +278,10 @@ class view {
     ///
 
     ///
-    /// Compare equal when `lhs` and `rhs` represent the same field within the same BSON binary data.
+    /// Compare equal when `lhs` and `rhs` represent the same field within the same BSON bytes.
     ///
-    /// An invalid element only compares equal to another invalid element. The underlying BSON binary data (if any) is
-    /// ignored for an invalid element.
+    /// An invalid element only compares equal to another invalid element. The underlying BSON bytes (if any) is ignored
+    /// for an invalid element.
     ///
     friend bool operator==(view const& lhs, view const& rhs) {
         if (!lhs != !rhs) {

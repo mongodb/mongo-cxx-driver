@@ -41,9 +41,9 @@ namespace array {
 /// - @ref data() is not null, and
 /// - @ref size() is not less than `5` (the minimum size of a BSON document).
 ///
-/// The BSON binary data being represented is only validated as minimally required to satisfy a requested operation.
-/// When an operation is not satisfiable due to invalid data, the operation will throw an @ref bsoncxx::v1::exception
-/// with @ref bsoncxx::v1::error::document::view::invalid_data.
+/// The BSON bytes being represented is only validated as minimally required to satisfy a requested operation. When an
+/// operation is not satisfiable due to invalid data, the operation will throw an @ref bsoncxx::v1::exception with @ref
+/// bsoncxx::v1::error::document::view::invalid_data.
 ///
 /// @attention This feature is experimental! It is not ready for use!
 ///
@@ -114,7 +114,7 @@ class view {
     /// If this view is invalid, returns an end iterator.
     ///
     /// @exception bsoncxx::v1::exception with @ref bsoncxx::v1::error::document::view::invalid_data if this operation
-    /// failed due to invalid BSON binary data.
+    /// failed due to invalid BSON bytes.
     ///
     BSONCXX_ABI_EXPORT_CDECL(const_iterator) find(std::uint32_t i) const;
 
