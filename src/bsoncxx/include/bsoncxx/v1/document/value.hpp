@@ -177,7 +177,7 @@ class value {
     /// - `Deleter` must satisfy the requirements described by @ref deleter_type.
     ///
     /// @par Preconditions:
-    /// - `length` must be less than or equal to the storage region pointed to by `data`.
+    /// - `length` must be less than or equal to the size of the storage region pointed to by `data`.
     /// - `deleter` must be capable of freeing the storage region pointed to by `data`.
     ///
     template <typename Deleter, detail::enable_if_t<is_valid_deleter<Deleter>::value>* = nullptr>
@@ -187,7 +187,7 @@ class value {
     /// Initialize as owning `data` which will be freed with @ref default_deleter_type.
     ///
     /// @par Preconditions:
-    /// - `length` must be less than or equal to the storage region pointed to by `data`.
+    /// - `length` must be less than or equal to the size of the storage region pointed to by `data`.
     /// - `deleter` must be capable of freeing the storage region pointed to by `data`.
     ///
     value(std::uint8_t* data, std::size_t length) : value{data, length, default_deleter_type{}} {}
@@ -196,7 +196,7 @@ class value {
     /// Initialize as owning `ptr`.
     ///
     /// @par Preconditions:
-    /// - `length` must be less than or equal to the storage region pointed to by `data`.
+    /// - `length` must be less than or equal to the size of the storage region pointed to by `data`.
     ///
     value(unique_ptr_type ptr, std::size_t length) : _data{std::move(ptr)}, _length{length} {}
 

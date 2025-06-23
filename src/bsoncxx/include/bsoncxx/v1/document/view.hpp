@@ -142,7 +142,7 @@ class view {
     /// Initialize with the given BSON bytes.
     ///
     /// @par Preconditions:
-    /// - `length` must be less than or equal to the storage region pointed to by `data`.
+    /// - `length` must be less than or equal to the size of the storage region pointed to by `data`.
     ///
     view(std::uint8_t const* data, std::size_t length) : _data(data), _length(length) {}
 
