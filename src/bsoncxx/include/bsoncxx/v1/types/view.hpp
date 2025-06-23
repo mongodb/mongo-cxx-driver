@@ -1147,8 +1147,8 @@ class view {
     /// where `get_type` is the correct name for the underlying BSON type values (e.g. `get_double()` when
     /// `type_id() == bsoncxx::v1::types::id::k_double`).
     ///
-    /// When the type of `lhs` and `rhs` compare equal but are not a supported value (not defined by @ref
-    /// BSONCXX_V1_TYPES_XMACRO), the result is always `true`.
+    /// When either `lhs.type_id()` or `rhs.type_id()` return an unsupported value (not defined by @ref
+    /// bsoncxx::v1::types::id or handled by @ref BSONCXX_V1_TYPES_XMACRO), the result is unspecified.
     ///
     friend bool operator==(view const& lhs, view const& rhs) {
         if (lhs.type_id() != rhs.type_id()) {
