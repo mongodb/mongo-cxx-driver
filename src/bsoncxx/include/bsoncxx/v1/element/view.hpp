@@ -277,27 +277,6 @@ class view {
     /// @}
     ///
 
-    ///
-    /// Compare equal when `lhs` and `rhs` represent the same field within the same BSON bytes.
-    ///
-    /// An invalid element only compares equal to another invalid element. The underlying BSON bytes (if any) is ignored
-    /// for an invalid element.
-    ///
-    friend bool operator==(view const& lhs, view const& rhs) {
-        if (!lhs != !rhs) {
-            return false;
-        }
-
-        return !lhs || (lhs.raw() == rhs.raw() && lhs.offset() == rhs.offset());
-    }
-
-    ///
-    /// Equivalent to `!(lhs == rhs)`.
-    ///
-    friend bool operator!=(view const& lhs, view const& rhs) {
-        return !(lhs == rhs);
-    }
-
     class internal;
 
    private:

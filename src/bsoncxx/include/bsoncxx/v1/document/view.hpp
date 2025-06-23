@@ -325,12 +325,24 @@ class view::const_iterator {
         return tmp;
     }
 
-    /// @copydoc v1::element::view::operator==(v1::element::view const& lhs, v1::element::view const& rhs)
+    ///
+    /// Compare equal when `lhs` and `rhs` represent the same element within the same range of BSON bytes.
+    ///
+    /// An end iterator only compares equal to another end iterator. The underlying BSON bytes (if any) is ignored
+    /// for an end iterator.
+    ///
     friend bool operator==(const_iterator const& lhs, const_iterator const& rhs) {
-        return lhs._element == rhs._element;
+        if (!lhs._element != !rhs._element) {
+            return false;
+        }
+
+        return !lhs._element ||
+               (lhs._element.raw() == rhs._element.raw() && lhs._element.offset() == rhs._element.offset());
     }
 
-    /// @copydoc v1::element::view::operator!=(v1::element::view const& lhs, v1::element::view const& rhs)
+    ///
+    /// Equivalent to `!(lhs == rhs)`.
+    ///
     friend bool operator!=(const_iterator const& lhs, const_iterator const& rhs) {
         return !(lhs == rhs);
     }
