@@ -97,7 +97,7 @@ class value {
     /// @copydoc v1::document::value::value(v1::document::value::unique_ptr_type ptr, std::size_t length)
     value(unique_ptr_type ptr, std::size_t length) : _value{std::move(ptr), length} {}
 
-    /// @copydoc v1::document::value::value(v1::document::view const& view)
+    /// @copydoc v1::document::value::value(v1::document::view view)
     explicit value(v1::array::view view) : _value{view} {}
 
     /// @copydoc v1::document::value::get_deleter() const
@@ -115,7 +115,7 @@ class value {
         _value = std::move(v._value);
     }
 
-    /// @copydoc v1::document::value::reset(v1::document::view const& v)
+    /// @copydoc v1::document::value::reset(v1::document::view v)
     void reset(v1::array::view v) {
         *this = value{v};
     }
@@ -189,12 +189,12 @@ class value {
         return this->view().operator bool();
     }
 
-    /// @copydoc v1::array::view::operator==(v1::array::view const& lhs, v1::array::view const& rhs)
+    /// @copydoc v1::array::view::operator==(v1::array::view lhs, v1::array::view rhs)
     friend bool operator==(value const& lhs, value const& rhs) {
         return lhs.view() == rhs.view();
     }
 
-    /// @copydoc v1::array::view::operator!=(v1::array::view const& lhs, v1::array::view const& rhs)
+    /// @copydoc v1::array::view::operator!=(v1::array::view lhs, v1::array::view rhs)
     friend bool operator!=(value const& lhs, value const& rhs) {
         return !(lhs == rhs);
     }

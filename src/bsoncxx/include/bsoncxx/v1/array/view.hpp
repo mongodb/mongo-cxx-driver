@@ -130,13 +130,13 @@ class view {
         return _view;
     }
 
-    /// @copydoc v1::document::view::operator==(v1::document::view const& lhs, v1::document::view const& rhs)
-    friend bool operator==(view const& lhs, view const& rhs) {
+    /// @copydoc v1::document::view::operator==(v1::document::view lhs, v1::document::view rhs)
+    friend bool operator==(view lhs, view rhs) {
         return lhs._view == rhs._view;
     }
 
-    /// @copydoc v1::document::view::operator!=(v1::document::view const& lhs, v1::document::view const& rhs)
-    friend bool operator!=(view const& lhs, view const& rhs) {
+    /// @copydoc v1::document::view::operator!=(v1::document::view lhs, v1::document::view rhs)
+    friend bool operator!=(view lhs, view rhs) {
         return !(lhs == rhs);
     }
 };

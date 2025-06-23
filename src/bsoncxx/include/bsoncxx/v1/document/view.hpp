@@ -227,7 +227,7 @@ class view {
     /// for an invalid document.
     ///
     /// @{
-    friend bool operator==(view const& lhs, view const& rhs) {
+    friend bool operator==(view lhs, view rhs) {
         if (!lhs != !rhs) {
             return false;
         }
@@ -235,7 +235,7 @@ class view {
         return !lhs || (lhs.length() == rhs.length() && std::memcmp(lhs.data(), rhs.data(), lhs.length()) == 0);
     }
 
-    friend bool operator!=(view const& lhs, view const& rhs) {
+    friend bool operator!=(view lhs, view rhs) {
         return !(lhs == rhs);
     }
     /// @}

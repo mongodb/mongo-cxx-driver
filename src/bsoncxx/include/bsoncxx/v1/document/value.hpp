@@ -85,7 +85,7 @@ class value {
     struct has_to_bson : detail::conjunction<detail::negation<is_value<T>>, detail::is_detected<to_bson_expr, T>> {};
 
     template <typename T>
-    using from_bson_expr = decltype(from_bson(std::declval<T&>(), std::declval<v1::document::view const&>()));
+    using from_bson_expr = decltype(from_bson(std::declval<T&>(), std::declval<v1::document::view>()));
 
     template <typename T>
     struct has_from_bson : detail::conjunction<detail::negation<is_value<T>>, detail::is_detected<from_bson_expr, T>> {
@@ -208,7 +208,7 @@ class value {
     /// The copied value is allocated using `operator new[]` and the deleter is set to @ref
     /// default_deleter_type.
     ///
-    explicit value(v1::document::view const& view)
+    explicit value(v1::document::view view)
         : _data{view ? unique_ptr_type{new std::uint8_t[view.size()], default_deleter_type{}} : unique_ptr_type{}},
           _length{view ? view.size() : 0u} {
         if (view) {
@@ -300,7 +300,7 @@ class value {
     /// The copied value is allocated using `operator new[]` and the deleter is set to @ref
     /// default_deleter_type.
     ///
-    void reset(v1::document::view const& v) {
+    void reset(v1::document::view v) {
         *this = value{v};
     }
 
@@ -373,12 +373,12 @@ class value {
         return this->view().operator bool();
     }
 
-    /// @copydoc v1::document::view::operator==(v1::document::view const& lhs, v1::document::view const& rhs)
+    /// @copydoc v1::document::view::operator==(v1::document::view lhs, v1::document::view rhs)
     friend bool operator==(value const& lhs, value const& rhs) {
         return lhs.view() == rhs.view();
     }
 
-    /// @copydoc v1::document::view::operator!=(v1::document::view const& lhs, v1::document::view const& rhs)
+    /// @copydoc v1::document::view::operator!=(v1::document::view lhs, v1::document::view rhs)
     friend bool operator!=(value const& lhs, value const& rhs) {
         return !(lhs == rhs);
     }
