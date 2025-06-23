@@ -213,5 +213,4 @@ class value {
 /// @par Includes
 /// - @ref bsoncxx/v1/array/view.hpp
 /// - @ref bsoncxx/v1/document/value.hpp
-/// - @ref bsoncxx/v1/element/view.hpp
 ///
