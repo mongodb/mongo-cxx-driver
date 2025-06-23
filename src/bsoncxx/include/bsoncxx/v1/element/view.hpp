@@ -112,8 +112,8 @@ namespace element {
 ///
 /// ```cpp
 /// a = doc["a"]; // If "a" exists, `a` is valid. Otherwise, `a` is invalid.
-/// b = a["2"];   // If "a.b" exists and is a document, `b` is valid. Otherwise, `b` is invalid.
-/// c = b[3];     // If "a.b.c" exists and is an array, `c` is valid. Otherwise, `c` is invalid.
+/// b = a["b"];   // If "a" is a document and "a.b" exists, `b` is valid. Otherwise, `b` is invalid.
+/// c = b[3];     // If "a.b" is an array and "a.b[3]" exists, `c` is valid. Otherwise, `c` is invalid.
 ///
 /// a.key();       // Throws an exception if invalid.
 /// b.type_id();   // Throws an exception if invalid.
