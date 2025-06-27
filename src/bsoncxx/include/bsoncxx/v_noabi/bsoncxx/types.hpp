@@ -60,8 +60,8 @@ enum class type : std::uint8_t {
     k_timestamp = 0x11,  ///< Timestamp.
     k_int64 = 0x12,      ///< 64-bit integer.
     k_decimal128 = 0x13, ///< 128-bit decimal floating point.
-    k_maxkey = 0x7F,     ///< Min key.
-    k_minkey = 0xFF,     ///< Max key.
+    k_maxkey = 0x7F,     ///< Max key.
+    k_minkey = 0xFF,     ///< Min key.
 };
 
 ///
