@@ -168,7 +168,22 @@ class value {
     /// - `static_cast<bool>(this->get_deleter()) == false`
     /// - `this->size() == 0`
     ///
-    value() = default;
+    /// @note @parblock This constructor is explicit to support initialization as an empty BSON document via the @ref
+    /// bsoncxx::v1::document::value::value(bsoncxx::v1::document::view view) constructor using list-initialization
+    /// syntax:
+    ///
+    /// ```cpp
+    /// bsoncxx::v1::document::value doc({});
+    ///
+    /// auto v = doc.view();
+    ///
+    /// assert(v);         // Valid.
+    /// assert(v.empty()); // Empty.
+    /// assert(v.data());  // Not null.
+    /// ```
+    /// @endparblock
+    ///
+    explicit value() = default;
 
     ///
     /// Initialize as owning `data` which will be freed with `deleter`.
