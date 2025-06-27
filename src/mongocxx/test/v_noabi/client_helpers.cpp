@@ -177,8 +177,9 @@ bsoncxx::document::value transform_document_recursive(
         // transform.  Otherwise, append the transformed key and value.
         switch (v.type()) {
             case bsoncxx::type::k_document:
-                builder.append(bsoncxx::builder::basic::kvp(
-                    k, transform_document_recursive(v.get_document().value, fcn, context)));
+                builder.append(
+                    bsoncxx::builder::basic::kvp(
+                        k, transform_document_recursive(v.get_document().value, fcn, context)));
                 break;
 
             case bsoncxx::type::k_array:

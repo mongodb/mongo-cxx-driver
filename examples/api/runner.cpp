@@ -300,11 +300,12 @@ class runner_type {
         if (verbose) {
             std::vector<bsoncxx::stdx::string_view> names;
 
-            names.reserve(std::accumulate(
-                std::begin(all_components),
-                std::end(all_components),
-                std::size_t{0},
-                [](std::size_t n, std::vector<component> const* cptr) { return n + cptr->size(); }));
+            names.reserve(
+                std::accumulate(
+                    std::begin(all_components),
+                    std::end(all_components),
+                    std::size_t{0},
+                    [](std::size_t n, std::vector<component> const* cptr) { return n + cptr->size(); }));
 
             for (auto cptr : all_components) {
                 for (auto c : *cptr) {

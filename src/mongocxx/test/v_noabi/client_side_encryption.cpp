@@ -2435,14 +2435,15 @@ TEST_CASE("Create Encrypted Collection", "[client_side_encryption]") {
         bsoncxx::stdx::optional<bsoncxx::document::value> master_key;
     };
 
-    which w = GENERATE(Catch::Generators::values<which>({
-        {"aws",
-         make_document(
-             kvp("region", "us-east-1"),
-             kvp("key", "arn:aws:kms:us-east-1:579766882180:key/89fcc2c4-08b0-4bd9-9f25-e30687b580d0"))},
-        // When testing 'local', use master_key of 'null'
-        {"local", bsoncxx::stdx::nullopt},
-    }));
+    which w = GENERATE(
+        Catch::Generators::values<which>({
+            {"aws",
+             make_document(
+                 kvp("region", "us-east-1"),
+                 kvp("key", "arn:aws:kms:us-east-1:579766882180:key/89fcc2c4-08b0-4bd9-9f25-e30687b580d0"))},
+            // When testing 'local', use master_key of 'null'
+            {"local", bsoncxx::stdx::nullopt},
+        }));
 
     options::client_encryption cse_opts;
     _add_cse_opts(&cse_opts, &conn, true);
@@ -2614,10 +2615,11 @@ TEST_CASE("Unique Index on keyAltNames", "[client_side_encryption]") {
             try {
                 client_encryption.create_data_key("local", mongocxx::options::data_key().key_alt_names({"abc"}));
             } catch (mongocxx::operation_exception& e) {
-                REQUIRE(std::strstr(
-                    e.what(),
-                    "E11000 duplicate key error collection: keyvault.datakeys index: keyAltNames_1 "
-                    "dup key: { keyAltNames: \"abc\" }: generic server error"));
+                REQUIRE(
+                    std::strstr(
+                        e.what(),
+                        "E11000 duplicate key error collection: keyvault.datakeys index: keyAltNames_1 "
+                        "dup key: { keyAltNames: \"abc\" }: generic server error"));
                 exception_thrown = true;
             }
             REQUIRE(exception_thrown);
@@ -2630,10 +2632,11 @@ TEST_CASE("Unique Index on keyAltNames", "[client_side_encryption]") {
             try {
                 client_encryption.create_data_key("local", mongocxx::options::data_key().key_alt_names({"def"}));
             } catch (mongocxx::operation_exception& e) {
-                REQUIRE(std::strstr(
-                    e.what(),
-                    "E11000 duplicate key error collection: keyvault.datakeys index: keyAltNames_1 "
-                    "dup key: { keyAltNames: \"def\" }: generic server error"));
+                REQUIRE(
+                    std::strstr(
+                        e.what(),
+                        "E11000 duplicate key error collection: keyvault.datakeys index: keyAltNames_1 "
+                        "dup key: { keyAltNames: \"def\" }: generic server error"));
                 exception_thrown = true;
             }
             REQUIRE(exception_thrown);
@@ -2663,10 +2666,11 @@ TEST_CASE("Unique Index on keyAltNames", "[client_side_encryption]") {
             try {
                 client_encryption.add_key_alt_name(key_doc.view(), "def");
             } catch (mongocxx::operation_exception& e) {
-                REQUIRE(std::strstr(
-                    e.what(),
-                    "E11000 duplicate key error collection: keyvault.datakeys index: keyAltNames_1 "
-                    "dup key: { keyAltNames: \"def\" }: generic server error"));
+                REQUIRE(
+                    std::strstr(
+                        e.what(),
+                        "E11000 duplicate key error collection: keyvault.datakeys index: keyAltNames_1 "
+                        "dup key: { keyAltNames: \"def\" }: generic server error"));
                 exception_thrown = true;
             }
             REQUIRE(exception_thrown);
@@ -2975,10 +2979,11 @@ range_explicit_encryption_objects range_explicit_encryption_setup(
     auto& encrypted_client =
         *(res.encrypted_client_ptr = bsoncxx::make_unique<mongocxx::client>(
               uri(),
-              test_util::add_test_server_api().auto_encryption_opts(options::auto_encryption()
-                                                                        .key_vault_namespace({"keyvault", "datakeys"})
-                                                                        .kms_providers(kms_providers.view())
-                                                                        .bypass_query_analysis(true))));
+              test_util::add_test_server_api().auto_encryption_opts(
+                  options::auto_encryption()
+                      .key_vault_namespace({"keyvault", "datakeys"})
+                      .kms_providers(kms_providers.view())
+                      .bypass_query_analysis(true))));
 
     // Ensure the type matches with the type of the encrypted field.
     auto const& field_values = *(res.field_values_ptr = bsoncxx::make_unique<field_type_values>(field_type));
@@ -3408,11 +3413,12 @@ TEST_CASE("Range Explicit Encryption", "[client_side_encryption]") {
                             client_encryption.encrypt(
                                 field_values.v6,
                                 options::encrypt()
-                                    .range_opts(options::range()
-                                                    .min(to_field_value(0, field_type))
-                                                    .max(to_field_value(200, field_type))
-                                                    .sparsity(1)
-                                                    .precision(2))
+                                    .range_opts(
+                                        options::range()
+                                            .min(to_field_value(0, field_type))
+                                            .max(to_field_value(200, field_type))
+                                            .sparsity(1)
+                                            .precision(2))
                                     .key_id(key1_id)
                                     .algorithm(options::encrypt::encryption_algorithm::k_range)
                                     .contention_factor(0)),
@@ -3448,10 +3454,11 @@ TEST_CASE("Range Explicit Encryption applies defaults", "[client_side_encryption
     //      kmsProviders: { "local": { "key": <base64 decoding of LOCAL_MASTERKEY> } }
     //   }
     auto const kms_providers = _make_kms_doc(false);
-    mongocxx::client_encryption client_encryption(options::client_encryption()
-                                                      .key_vault_client(&key_vault_client)
-                                                      .key_vault_namespace({"keyvault", "datakeys"})
-                                                      .kms_providers(kms_providers.view()));
+    mongocxx::client_encryption client_encryption(
+        options::client_encryption()
+            .key_vault_client(&key_vault_client)
+            .key_vault_namespace({"keyvault", "datakeys"})
+            .kms_providers(kms_providers.view()));
 
     // Create a key with `clientEncryption.createDataKey`. Store the returned key ID in a variable
     // named `keyId`.
@@ -3475,9 +3482,10 @@ TEST_CASE("Range Explicit Encryption applies defaults", "[client_side_encryption
             .key_id(keyId.view())
             .algorithm(options::encrypt::encryption_algorithm::k_range)
             .contention_factor(0)
-            .range_opts(options::range()
-                            .min(to_field_value(0, RangeFieldType::Int))
-                            .max(to_field_value(1000, RangeFieldType::Int))));
+            .range_opts(
+                options::range()
+                    .min(to_field_value(0, RangeFieldType::Int))
+                    .max(to_field_value(1000, RangeFieldType::Int))));
 
     SECTION("Case 1: Uses libmongocrypt defaults") {
         // Call `clientEncryption.encrypt` to encrypt the int32 value `123` with these options:
@@ -3499,11 +3507,12 @@ TEST_CASE("Range Explicit Encryption applies defaults", "[client_side_encryption
                 .key_id(keyId.view())
                 .algorithm(options::encrypt::encryption_algorithm::k_range)
                 .contention_factor(0)
-                .range_opts(options::range()
-                                .min(to_field_value(0, RangeFieldType::Int))
-                                .max(to_field_value(1000, RangeFieldType::Int))
-                                .sparsity(2)
-                                .trim_factor(6)));
+                .range_opts(
+                    options::range()
+                        .min(to_field_value(0, RangeFieldType::Int))
+                        .max(to_field_value(1000, RangeFieldType::Int))
+                        .sparsity(2)
+                        .trim_factor(6)));
 
         REQUIRE_NOTHROW(
             payload_defaults.view().get_binary().size == payload_libmongocrypt_defaults.view().get_binary().size);
@@ -3528,10 +3537,11 @@ TEST_CASE("Range Explicit Encryption applies defaults", "[client_side_encryption
                 .key_id(keyId.view())
                 .algorithm(options::encrypt::encryption_algorithm::k_range)
                 .contention_factor(0)
-                .range_opts(options::range()
-                                .min(to_field_value(0, RangeFieldType::Int))
-                                .max(to_field_value(1000, RangeFieldType::Int))
-                                .trim_factor(0)));
+                .range_opts(
+                    options::range()
+                        .min(to_field_value(0, RangeFieldType::Int))
+                        .max(to_field_value(1000, RangeFieldType::Int))
+                        .trim_factor(0)));
 
         REQUIRE_NOTHROW(payload_defaults.view().get_binary().size < payload_trim_factor_0.view().get_binary().size);
     }

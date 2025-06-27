@@ -172,8 +172,9 @@ void client::read_preference(mongocxx::v_noabi::read_preference rp) {
 }
 
 mongocxx::v_noabi::read_preference client::read_preference() const {
-    mongocxx::v_noabi::read_preference rp(bsoncxx::make_unique<read_preference::impl>(
-        libmongoc::read_prefs_copy(libmongoc::client_get_read_prefs(_get_impl().client_t))));
+    mongocxx::v_noabi::read_preference rp(
+        bsoncxx::make_unique<read_preference::impl>(
+            libmongoc::read_prefs_copy(libmongoc::client_get_read_prefs(_get_impl().client_t))));
     return rp;
 }
 
@@ -192,8 +193,9 @@ void client::write_concern(mongocxx::v_noabi::write_concern wc) {
 }
 
 mongocxx::v_noabi::write_concern client::write_concern() const {
-    mongocxx::v_noabi::write_concern wc(bsoncxx::make_unique<write_concern::impl>(
-        libmongoc::write_concern_copy(libmongoc::client_get_write_concern(_get_impl().client_t))));
+    mongocxx::v_noabi::write_concern wc(
+        bsoncxx::make_unique<write_concern::impl>(
+            libmongoc::write_concern_copy(libmongoc::client_get_write_concern(_get_impl().client_t))));
     return wc;
 }
 

@@ -85,8 +85,7 @@ class estimated_document_count {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/count/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<
-                              bsoncxx::v_noabi::types::bson_value::view_or_value> const&)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value> const&)
     comment() const;
 
     ///

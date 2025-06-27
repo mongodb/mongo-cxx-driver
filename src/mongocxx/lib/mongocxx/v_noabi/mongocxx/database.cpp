@@ -86,10 +86,11 @@ database& database::operator=(database&&) noexcept = default;
 database::~database() = default;
 
 database::database(mongocxx::v_noabi::client const& client, bsoncxx::v_noabi::string::view_or_value name)
-    : _impl(bsoncxx::make_unique<impl>(
-          libmongoc::client_get_database(client._get_impl().client_t, name.terminated().data()),
-          &client._get_impl(),
-          name.terminated().data())) {}
+    : _impl(
+          bsoncxx::make_unique<impl>(
+              libmongoc::client_get_database(client._get_impl().client_t, name.terminated().data()),
+              &client._get_impl(),
+              name.terminated().data())) {}
 
 database::database(database const& d) {
     if (d) {
@@ -362,8 +363,9 @@ bool database::has_collection(bsoncxx::v_noabi::string::view_or_value name) cons
 }
 
 mongocxx::v_noabi::read_preference database::read_preference() const {
-    mongocxx::v_noabi::read_preference rp(bsoncxx::make_unique<read_preference::impl>(
-        libmongoc::read_prefs_copy(libmongoc::database_get_read_prefs(_get_impl().database_t))));
+    mongocxx::v_noabi::read_preference rp(
+        bsoncxx::make_unique<read_preference::impl>(
+            libmongoc::read_prefs_copy(libmongoc::database_get_read_prefs(_get_impl().database_t))));
     return rp;
 }
 
@@ -372,8 +374,9 @@ void database::write_concern(mongocxx::v_noabi::write_concern wc) {
 }
 
 mongocxx::v_noabi::write_concern database::write_concern() const {
-    mongocxx::v_noabi::write_concern wc(bsoncxx::make_unique<write_concern::impl>(
-        libmongoc::write_concern_copy(libmongoc::database_get_write_concern(_get_impl().database_t))));
+    mongocxx::v_noabi::write_concern wc(
+        bsoncxx::make_unique<write_concern::impl>(
+            libmongoc::write_concern_copy(libmongoc::database_get_write_concern(_get_impl().database_t))));
     return wc;
 }
 
