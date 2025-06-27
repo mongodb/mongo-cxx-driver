@@ -24,7 +24,7 @@ apidocs = [
 
 clang_format = [
     # etc/clang-format-all.sh
-    "clang-format~=19.1",
+    "clang-format~=20.1.0",
 ]
 
 config_generator = [
