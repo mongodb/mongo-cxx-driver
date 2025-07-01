@@ -44,14 +44,16 @@ read_preference::read_preference(std::unique_ptr<impl>&& implementation) {
 }
 
 read_preference::read_preference()
-    : _impl(bsoncxx::make_unique<impl>(
-          libmongoc::read_prefs_new(libmongoc::conversions::read_mode_t_from_read_mode(read_mode::k_primary)))) {}
+    : _impl(
+          bsoncxx::make_unique<impl>(
+              libmongoc::read_prefs_new(libmongoc::conversions::read_mode_t_from_read_mode(read_mode::k_primary)))) {}
 
 read_preference::read_preference(read_mode mode) : read_preference(mode, deprecated_tag{}) {}
 
 read_preference::read_preference(read_mode mode, deprecated_tag)
-    : _impl(bsoncxx::make_unique<impl>(
-          libmongoc::read_prefs_new(libmongoc::conversions::read_mode_t_from_read_mode(mode)))) {}
+    : _impl(
+          bsoncxx::make_unique<impl>(
+              libmongoc::read_prefs_new(libmongoc::conversions::read_mode_t_from_read_mode(mode)))) {}
 
 read_preference::read_preference(read_mode mode, bsoncxx::v_noabi::document::view_or_value tags)
     : read_preference(mode, std::move(tags), deprecated_tag{}) {}

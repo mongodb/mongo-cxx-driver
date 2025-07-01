@@ -372,13 +372,15 @@ TEST_CASE("document uninitialized element throws exceptions", "") {
     REQUIRE_THROWS_WITH(
         doc["doesnotexist"].get_string().value,
 
-        Catch::Matchers::ContainsSubstring("cannot get string from an uninitialized element with key "
-                                           "\"doesnotexist\": unset document::element"));
+        Catch::Matchers::ContainsSubstring(
+            "cannot get string from an uninitialized element with key "
+            "\"doesnotexist\": unset document::element"));
 
     REQUIRE_THROWS_WITH(
         doc["alsodoesnotexist"].get_value(),
-        Catch::Matchers::ContainsSubstring("cannot return the type of uninitialized element with key "
-                                           "\"alsodoesnotexist\": unset document::element"));
+        Catch::Matchers::ContainsSubstring(
+            "cannot return the type of uninitialized element with key "
+            "\"alsodoesnotexist\": unset document::element"));
 
     // Ensure a non-existing element evaluates to false.
     REQUIRE(!doc["doesnotexist"]);
@@ -387,8 +389,9 @@ TEST_CASE("document uninitialized element throws exceptions", "") {
     // Ensure getting a key from a non-existing element results in an exception.
     REQUIRE_THROWS_WITH(
         doc["doesnotexist"].key(),
-        Catch::Matchers::ContainsSubstring("cannot return the key from an uninitialized element with key "
-                                           "\"doesnotexist\": unset document::element"));
+        Catch::Matchers::ContainsSubstring(
+            "cannot return the key from an uninitialized element with key "
+            "\"doesnotexist\": unset document::element"));
 }
 
 TEST_CASE("array uninitialized element throws exceptions", "") {
@@ -398,8 +401,9 @@ TEST_CASE("array uninitialized element throws exceptions", "") {
 
     REQUIRE_THROWS_WITH(
         arr.view()[3].get_string().value,
-        Catch::Matchers::ContainsSubstring("cannot get string from an uninitialized element with key "
-                                           "\"3\": unset document::element"));
+        Catch::Matchers::ContainsSubstring(
+            "cannot get string from an uninitialized element with key "
+            "\"3\": unset document::element"));
     // Ensure a non-existing element evaluates to false.
     REQUIRE(!arr.view()[3]);
     // Ensure finding a non-existing element results in an end iterator.
@@ -407,7 +411,8 @@ TEST_CASE("array uninitialized element throws exceptions", "") {
     // Ensure getting a key from a non-existing element results in an exception.
     REQUIRE_THROWS_WITH(
         arr.view()[3].key(),
-        Catch::Matchers::ContainsSubstring("cannot return the key from an uninitialized element with key "
-                                           "\"3\": unset document::element"));
+        Catch::Matchers::ContainsSubstring(
+            "cannot return the key from an uninitialized element with key "
+            "\"3\": unset document::element"));
 }
 } // namespace

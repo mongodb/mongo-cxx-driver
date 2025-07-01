@@ -259,16 +259,18 @@ void collection::rename(
 }
 
 collection::collection(database const& database, bsoncxx::v_noabi::string::view_or_value collection_name)
-    : _impl(bsoncxx::make_unique<impl>(
-          libmongoc::database_get_collection(database._get_impl().database_t, collection_name.terminated().data()),
-          database.name(),
-          database._get_impl().client_impl)) {}
+    : _impl(
+          bsoncxx::make_unique<impl>(
+              libmongoc::database_get_collection(database._get_impl().database_t, collection_name.terminated().data()),
+              database.name(),
+              database._get_impl().client_impl)) {}
 
 collection::collection(database const& database, void* collection)
-    : _impl(bsoncxx::make_unique<impl>(
-          static_cast<mongoc_collection_t*>(collection),
-          database.name(),
-          database._get_impl().client_impl)) {}
+    : _impl(
+          bsoncxx::make_unique<impl>(
+              static_cast<mongoc_collection_t*>(collection),
+              database.name(),
+              database._get_impl().client_impl)) {}
 
 collection::collection(collection const& c) {
     if (c) {
@@ -472,8 +474,13 @@ collection::_aggregate(client_session const* session, pipeline const& pipeline, 
         rp_ptr = options.read_preference()->_impl->read_preference_t;
     }
 
-    return cursor(libmongoc::collection_aggregate(
-        _get_impl().collection_t, static_cast<::mongoc_query_flags_t>(0), stages.bson(), options_bson.bson(), rp_ptr));
+    return cursor(
+        libmongoc::collection_aggregate(
+            _get_impl().collection_t,
+            static_cast<::mongoc_query_flags_t>(0),
+            stages.bson(),
+            options_bson.bson(),
+            rp_ptr));
 }
 
 cursor collection::aggregate(pipeline const& pipeline, options::aggregate const& options) {
@@ -1327,8 +1334,9 @@ void collection::read_preference(mongocxx::v_noabi::read_preference rp) {
 }
 
 mongocxx::v_noabi::read_preference collection::read_preference() const {
-    mongocxx::v_noabi::read_preference rp(bsoncxx::make_unique<read_preference::impl>(
-        libmongoc::read_prefs_copy(libmongoc::collection_get_read_prefs(_get_impl().collection_t))));
+    mongocxx::v_noabi::read_preference rp(
+        bsoncxx::make_unique<read_preference::impl>(
+            libmongoc::read_prefs_copy(libmongoc::collection_get_read_prefs(_get_impl().collection_t))));
     return rp;
 }
 
@@ -1337,8 +1345,9 @@ void collection::write_concern(mongocxx::v_noabi::write_concern wc) {
 }
 
 mongocxx::v_noabi::write_concern collection::write_concern() const {
-    mongocxx::v_noabi::write_concern wc(bsoncxx::make_unique<write_concern::impl>(
-        libmongoc::write_concern_copy(libmongoc::collection_get_write_concern(_get_impl().collection_t))));
+    mongocxx::v_noabi::write_concern wc(
+        bsoncxx::make_unique<write_concern::impl>(
+            libmongoc::write_concern_copy(libmongoc::collection_get_write_concern(_get_impl().collection_t))));
     return wc;
 }
 

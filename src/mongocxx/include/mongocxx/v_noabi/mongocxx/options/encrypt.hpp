@@ -62,8 +62,7 @@ class encrypt {
     /// @return
     ///   An optional owning bson_value containing the key_id.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<
-                              bsoncxx::v_noabi::types::bson_value::view_or_value> const&)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value> const&)
     key_id() const;
 
     ///

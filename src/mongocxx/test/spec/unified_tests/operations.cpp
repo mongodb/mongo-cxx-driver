@@ -618,20 +618,22 @@ document::value replace_one(collection& coll, client_session* session, document:
     }
 
     auto result = builder::basic::document{};
-    result.append(builder::basic::kvp(
-        "result", [matched_count, modified_count, upserted_count, upserted_id](builder::basic::sub_document subdoc) {
-            subdoc.append(builder::basic::kvp("matchedCount", matched_count));
+    result.append(
+        builder::basic::kvp(
+            "result",
+            [matched_count, modified_count, upserted_count, upserted_id](builder::basic::sub_document subdoc) {
+                subdoc.append(builder::basic::kvp("matchedCount", matched_count));
 
-            if (modified_count) {
-                subdoc.append(builder::basic::kvp("modifiedCount", *modified_count));
-            }
+                if (modified_count) {
+                    subdoc.append(builder::basic::kvp("modifiedCount", *modified_count));
+                }
 
-            subdoc.append(builder::basic::kvp("upsertedCount", upserted_count));
+                subdoc.append(builder::basic::kvp("upsertedCount", upserted_count));
 
-            if (upserted_id) {
-                subdoc.append(builder::basic::kvp("upsertedId", *upserted_id));
-            }
-        }));
+                if (upserted_id) {
+                    subdoc.append(builder::basic::kvp("upsertedId", *upserted_id));
+                }
+            }));
 
     return result.extract();
 }

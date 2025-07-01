@@ -67,8 +67,9 @@ class client_encryption::impl {
 
         bson_error_t error;
 
-        _client_encryption.reset(libmongoc::client_encryption_new(
-            encryption_opts_ptr(static_cast<opts_type*>(_opts.convert())).get(), &error));
+        _client_encryption.reset(
+            libmongoc::client_encryption_new(
+                encryption_opts_ptr(static_cast<opts_type*>(_opts.convert())).get(), &error));
 
         if (!_client_encryption) {
             throw_exception<operation_exception>(error);
