@@ -7,12 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Changes prior to 3.9.0 are documented as [release notes on GitHub](https://github.com/mongodb/mongo-cxx-driver/releases).
 
-## 4.1.1 [Unreleased]
+## 4.1.1
 
 ### Fixed
 
 - CMake option `ENABLE_TESTS` (`OFF` by default) is no longer overwritten by the auto-downloaded C Driver (`ON` by default) during CMake configuration.
 - Static pkg-config files are updated to depend on the static (not shared) libbson / libmongoc packages.
+- Fix build if macros `GCC`/`GNU`/`Clang`/`MSVC` are already defined.
 
 ## 4.1.0
 
