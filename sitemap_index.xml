@@ -8,7 +8,11 @@
   <sitemap>
     <loc>https://mongocxx.org/api/current/sitemap.xml</loc>
     <priority>1.0</priority>
-    <lastmod>2025-05-01</lastmod>
+    <lastmod>2025-07-01</lastmod>
+  </sitemap>
+  <sitemap>
+    <loc>https://mongocxx.org/api/mongocxx-4.1.1/sitemap.xml</loc>
+    <lastmod>2025-07-01</lastmod>
   </sitemap>
   <sitemap>
     <loc>https://mongocxx.org/api/mongocxx-4.1.0/sitemap.xml</loc>
