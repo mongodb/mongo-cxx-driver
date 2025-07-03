@@ -144,7 +144,7 @@ class oid {
     ///
     /// Return @ref k_oid_length.
     ///
-    std::size_t size() const {
+    static std::size_t size() {
         return k_oid_length;
     }
 
