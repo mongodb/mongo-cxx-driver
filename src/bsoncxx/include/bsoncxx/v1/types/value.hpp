@@ -181,7 +181,7 @@ class value {
 #define X(_name, _value) explicit BSONCXX_ABI_EXPORT_CDECL() value(v1::types::b_##_name v);
 
     ///
-    /// Implicitly convert `v` as a deep copy.
+    /// Convert `v` as a deep copy.
     ///
     /// The copied value is allocated (when necessary) using
     /// [`bson_malloc`](https://mongoc.org/libbson/current/bson_malloc.html).
