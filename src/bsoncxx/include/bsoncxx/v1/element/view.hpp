@@ -28,6 +28,7 @@
 #include <bsoncxx/v1/detail/macros.hpp>
 #include <bsoncxx/v1/stdx/string_view.hpp>
 
+#include <array>
 #include <cstddef>
 #include <cstdint>
 #include <memory>
@@ -149,7 +150,7 @@ class view {
    private:
     class impl;
 
-    alignas(BSONCXX_PRIVATE_MAX_ALIGN_T) unsigned char _storage[32];
+    alignas(BSONCXX_PRIVATE_MAX_ALIGN_T) std::array<unsigned char, 32> _storage;
 
    public:
     ///

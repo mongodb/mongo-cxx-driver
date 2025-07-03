@@ -31,6 +31,7 @@
 #include <bsoncxx/v1/stdx/string_view.hpp>
 #include <bsoncxx/v1/types/view.hpp>
 
+#include <array>
 #include <chrono>
 #include <cstddef>
 #include <cstdint>
@@ -117,7 +118,7 @@ class value {
    private:
     class impl;
 
-    alignas(BSONCXX_PRIVATE_MAX_ALIGN_T) unsigned char _storage[32];
+    alignas(BSONCXX_PRIVATE_MAX_ALIGN_T) std::array<unsigned char, 32> _storage;
 
    public:
     ///
