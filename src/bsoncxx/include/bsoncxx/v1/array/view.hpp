@@ -26,7 +26,6 @@
 
 #include <cstddef>
 #include <cstdint>
-#include <iterator>
 
 namespace bsoncxx {
 namespace v1 {

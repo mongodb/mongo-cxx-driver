@@ -25,9 +25,6 @@
 #include <bsoncxx/v1/document/value.hpp>
 
 #include <cstdint>
-#include <cstring>
-#include <functional>
-#include <memory>
 #include <type_traits>
 #include <utility>
 
