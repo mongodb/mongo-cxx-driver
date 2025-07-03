@@ -1215,12 +1215,12 @@ class view {
     /// @{
     template <typename T, detail::enable_if_t<is_equality_comparable_with<T>::value>* = nullptr>
     friend bool operator==(view const& v, T const& value) {
-        return v == view{BSONCXX_PRIVATE_FWD(value)};
+        return v == view{value};
     }
 
     template <typename T, detail::enable_if_t<is_equality_comparable_with<T>::value>* = nullptr>
     friend bool operator==(T const& value, view const& v) {
-        return v == view{BSONCXX_PRIVATE_FWD(value)};
+        return v == view{value};
     }
     /// @}
     ///
