@@ -67,7 +67,7 @@ mkdir -p "${working_dir}/install"
 # For latest Clang versions supporting recent C++ standards.
 export CC CXX
 case "${distro_id:?}" in
-rhel95)
+rhel95*)
   CC="clang-19"
   CXX="clang++-19"
   ;;
