@@ -108,7 +108,7 @@ class view {
     }
 
     ///
-    /// Return a const iterator to the element within the represented BSON array at index `i`.
+    /// Return a const iterator to the element within the represented BSON array at index `i` via key string comparison.
     ///
     /// If this view is invalid or the requested field is not found, returns an end iterator.
     ///
@@ -120,7 +120,17 @@ class view {
     ///
     BSONCXX_ABI_EXPORT_CDECL(const_iterator) find(std::uint32_t i) const;
 
-    /// @copydoc find(std::uint32_t i) const
+    ///
+    /// Return the first element within the represented BSON array at index `i` via key string comparison.
+    ///
+    /// If this view is invalid or the requested field is not found, returns an invalid element.
+    ///
+    /// @par Complexity
+    /// Linear.
+    ///
+    /// @exception bsoncxx::v1::exception with @ref bsoncxx::v1::error::document::view::invalid_data if this operation
+    /// failed due to invalid BSON bytes.
+    ///
     v1::element::view operator[](std::uint32_t i) const {
         return *(this->find(i));
     }

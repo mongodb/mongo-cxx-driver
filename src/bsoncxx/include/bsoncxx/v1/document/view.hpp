@@ -220,7 +220,17 @@ class view {
     ///
     BSONCXX_ABI_EXPORT_CDECL(const_iterator) find(v1::stdx::string_view key) const;
 
-    /// @copydoc find(v1::stdx::string_view key) const
+    ///
+    /// Return the first element within the represented BSON document whose key compares equal to `key`.
+    ///
+    /// If this view is invalid or the requested field is not found, returns an invalid element.
+    ///
+    /// @par Complexity
+    /// Linear.
+    ///
+    /// @exception bsoncxx::v1::exception with @ref bsoncxx::v1::error::document::view::invalid_data if this operation
+    /// failed due to invalid BSON bytes.
+    ///
     v1::element::view operator[](v1::stdx::string_view key) const;
 
     ///
