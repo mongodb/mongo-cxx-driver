@@ -67,6 +67,11 @@ class value {
     using default_deleter_type = std::default_delete<std::uint8_t[]>;
 
     ///
+    /// The deleter used to avoid freeing preallocated storage representing an empty BSON document.
+    ///
+    static BSONCXX_ABI_EXPORT_CDECL(void) noop_deleter(std::uint8_t*);
+
+    ///
     /// The type of the unique pointer used to manage the underlying BSON bytes.
     ///
     using unique_ptr_type = std::unique_ptr<std::uint8_t[], deleter_type>;
@@ -151,12 +156,12 @@ class value {
     }
 
     ///
-    /// Initialize without any underlying BSON bytes or deleter.
+    /// Initialize as an empty document (or array).
     ///
-    /// @par Postconditions:
-    /// - `this->data() == nullptr`
-    /// - `static_cast<bool>(this->get_deleter()) == false`
-    /// - `this->size() == 0`
+    /// The value is equivalent to a default-initialized @ref bsoncxx::v1::document::view and the deleter is set to @ref
+    /// bsoncxx::v1::document::value::noop_deleter.
+    ///
+    /// @warning Modifying the pointed-to data after default construction is undefined behavior.
     ///
     /// @note This constructor is explicit to support initialization as an empty BSON document via the @ref
     /// bsoncxx::v1::document::value::value(bsoncxx::v1::document::view view) constructor using list-initialization
@@ -171,7 +176,7 @@ class value {
     /// assert(v.data());  // Not null.
     /// ```
     ///
-    explicit value() = default;
+    explicit value() : _data{const_cast<std::uint8_t*>(v1::document::view{}.data()), &noop_deleter} {}
 
     ///
     /// Initialize as owning `data` which will be freed with `deleter`.
@@ -212,15 +217,20 @@ class value {
     ///
     /// Initialize with a copy of the BSON bytes referenced by `view`.
     ///
-    /// If `view` is invalid, this value is default-initialized.
+    /// If `view` is invalid or equivalent to a default-initialized @ref bsoncxx::v1::document::view, this value is
+    /// default-initialized.
     ///
     /// The copied value is allocated using `operator new[]` and the deleter is set to @ref
     /// default_deleter_type.
     ///
-    explicit value(v1::document::view view)
-        : _data{view ? unique_ptr_type{new std::uint8_t[view.size()], default_deleter_type{}} : unique_ptr_type{}} {
-        if (view) {
+    explicit value(v1::document::view view) {
+        v1::document::view const empty;
+
+        if (view && view.data() != empty.data()) {
+            _data = unique_ptr_type{new std::uint8_t[view.size()], default_deleter_type{}};
             std::memcpy(_data.get(), view.data(), view.size());
+        } else {
+            _data = unique_ptr_type{const_cast<std::uint8_t*>(empty.data()), &noop_deleter};
         }
     }
 
