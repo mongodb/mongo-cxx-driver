@@ -61,8 +61,8 @@ class view {
     /// @copydoc v1::document::view::view()
     view() = default;
 
-    /// @copydoc v1::document::view::view(std::uint8_t const* data, std::size_t length)
-    view(std::uint8_t const* data, std::size_t length) : _view{data, length} {}
+    /// @copydoc v1::document::view::view(std::uint8_t const* data)
+    explicit view(std::uint8_t const* data) : _view{data} {}
 
     /// @copydoc v1::document::view::data() const
     std::uint8_t const* data() const {

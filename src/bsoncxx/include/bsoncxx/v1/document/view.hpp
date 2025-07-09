@@ -21,6 +21,7 @@
 #include <bsoncxx/v1/detail/prelude.hpp>
 
 #include <bsoncxx/v1/config/export.hpp>
+#include <bsoncxx/v1/detail/bit.hpp>
 #include <bsoncxx/v1/element/view.hpp>
 #include <bsoncxx/v1/stdx/string_view.hpp>
 
@@ -125,7 +126,9 @@ class view {
     enum : std::size_t { _empty_length = 5u };
 
     std::uint8_t const* _data;
-    std::size_t _length;
+
+    template <detail::endian e = detail::endian::native>
+    std::int32_t raw_size() const;
 
    public:
     ///
@@ -142,9 +145,11 @@ class view {
     /// Initialize with the given BSON bytes.
     ///
     /// @par Preconditions:
-    /// - `length` must be less than or equal to the size of the storage region pointed to by `data`.
+    /// - If `data` is not null, the size of the storage region pointed to by `data` must be greater than or equal to 5.
+    /// - The "total number of bytes comprising the document" as indicated by the BSON bytes pointed-to by `data` must
+    ///   be less than or equal to the size of the storage region pointed to by `data`.
     ///
-    view(std::uint8_t const* data, std::size_t length) : _data(data), _length(length) {}
+    view(std::uint8_t const* data) : _data(data) {}
 
     ///
     /// Return a pointer to the BSON bytes being represented.
@@ -156,25 +161,29 @@ class view {
     ///
     /// Return the length of the BSON bytes being represented.
     ///
-    /// @note This returns the length as specified during initialization, not the length of the BSON bytes as
-    /// indicated by the BSON bytes itself.
+    /// If `this->data()` is null, returns `0`.
     ///
-    std::size_t size() const {
-        return _length;
-    }
+    /// @note This returns the length as indicated by the pointed to BSON bytes. The result is always within the range
+    /// [0, INT32_MAX] when preconditions are satisfied.
+    ///
+    std::size_t size() const;
 
     /// @copydoc size() const
     std::size_t length() const {
-        return _length;
+        return this->size();
     }
 
     ///
-    /// Return true when the BSON bytes represents an empty view.
+    /// Return true when the BSON bytes represents an empty view:
+    ///
+    /// - @ref data() is not null,
+    /// - @ref size() is equal to 5, and
+    /// - the pointed-to BSON bytes are terminated with a null byte.
     ///
     /// @note This does not return true when this view is invalid.
     ///
     bool empty() const {
-        return this->operator bool() && _data[4] == 0u;
+        return this->size() == _empty_length && _data[4] == 0u;
     }
 
     ///
@@ -183,7 +192,7 @@ class view {
     /// @note This does not validate the BSON bytes being represented.
     ///
     explicit operator bool() const {
-        return _data && _length >= _empty_length;
+        return this->size() >= _empty_length;
     }
 
     ///
@@ -254,6 +263,28 @@ class view {
     /// @}
     ///
 };
+
+template <>
+inline std::int32_t view::raw_size<detail::endian::little>() const {
+    std::int32_t res;
+    std::memcpy(&res, _data, sizeof(res));
+    return res;
+}
+
+template <>
+inline std::int32_t view::raw_size<detail::endian::big>() const {
+    std::int32_t res;
+    auto const bytes = reinterpret_cast<unsigned char*>(&res);
+    bytes[0] = _data[3];
+    bytes[1] = _data[2];
+    bytes[2] = _data[1];
+    bytes[3] = _data[0];
+    return res;
+}
+
+inline std::size_t view::size() const {
+    return _data ? static_cast<std::uint32_t>(this->raw_size()) : 0u;
+}
 
 ///
 /// A const iterator over the elements of a view.

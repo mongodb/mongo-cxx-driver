@@ -42,7 +42,7 @@ class value {
     v1::document::value _value;
 
     template <typename T>
-    struct is_valid_deleter : std::is_constructible<v1::document::value, std::uint8_t*, std::size_t, T> {};
+    struct is_valid_deleter : std::is_constructible<v1::document::value, std::uint8_t*, T> {};
 
    public:
     /// @copydoc v1::document::value::deleter_type
@@ -64,13 +64,10 @@ class value {
     ~value() = default;
 
     /// @copydoc v1::document::value::value(v1::document::value&& other) noexcept
-    value(value&& other) noexcept : _value{std::move(other._value)} {}
+    value(value&& other) noexcept = default;
 
     /// @copydoc v1::document::value::operator=(v1::document::value&& other) noexcept
-    value& operator=(value&& other) noexcept {
-        _value = std::move(other._value);
-        return *this;
-    }
+    value& operator=(value&& other) noexcept = default;
 
     /// @copydoc v1::document::value::value(v1::document::value const& other)
     value(value const& other) : _value(other._value) {}
@@ -84,15 +81,15 @@ class value {
     /// @copydoc v1::document::value::value()
     value() = default;
 
-    /// @copydoc v1::document::value::value(std::uint8_t* data, std::size_t length, Deleter deleter)
+    /// @copydoc v1::document::value::value(std::uint8_t* data, Deleter deleter)
     template <typename Deleter, detail::enable_if_t<is_valid_deleter<Deleter>::value>* = nullptr>
-    value(std::uint8_t* data, std::size_t length, Deleter deleter) : _value{data, length, std::move(deleter)} {}
+    value(std::uint8_t* data, Deleter deleter) : _value{data, std::move(deleter)} {}
 
-    /// @copydoc v1::document::value::value(std::uint8_t* data, std::size_t length)
-    value(std::uint8_t* data, std::size_t length) : _value{data, length} {}
+    /// @copydoc v1::document::value::value(std::uint8_t* data)
+    explicit value(std::uint8_t* data) : _value{data} {}
 
-    /// @copydoc v1::document::value::value(v1::document::value::unique_ptr_type ptr, std::size_t length)
-    value(unique_ptr_type ptr, std::size_t length) : _value{std::move(ptr), length} {}
+    /// @copydoc v1::document::value::value(v1::document::value::unique_ptr_type ptr)
+    explicit value(unique_ptr_type ptr) : _value{std::move(ptr)} {}
 
     /// @copydoc v1::document::value::value(v1::document::view view)
     explicit value(v1::array::view view) : _value{view} {}
@@ -121,7 +118,7 @@ class value {
     /// Return a view of the BSON bytes as an array.
     ///
     v1::array::view view() const {
-        return {_value.data(), _value.size()};
+        return v1::array::view{_value.data()};
     }
 
     ///

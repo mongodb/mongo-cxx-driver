@@ -73,7 +73,6 @@ class value {
 
    private:
     unique_ptr_type _data;
-    std::size_t _length = 0u;
 
     template <typename T>
     using is_value = detail::is_alike<T, value>;
@@ -122,9 +121,7 @@ class value {
     /// @par Postconditions:
     /// - `other` is equivalent to a default-initialized value.
     ///
-    value(value&& other) noexcept : _data{std::move(other._data)}, _length{other._length} {
-        other._length = 0u;
-    }
+    value(value&& other) noexcept = default;
 
     ///
     /// Move assignment.
@@ -132,14 +129,7 @@ class value {
     /// @par Postconditions:
     /// - `other` is equivalent to a default-initialized value.
     ///
-    value& operator=(value&& other) noexcept {
-        _data = std::move(other._data);
-
-        _length = other._length;
-        other._length = 0u;
-
-        return *this;
-    }
+    value& operator=(value&& other) noexcept = default;
 
     ///
     /// Copy construction.
@@ -190,28 +180,34 @@ class value {
     /// - `Deleter` must satisfy the requirements described by @ref deleter_type.
     ///
     /// @par Preconditions:
-    /// - `length` must be less than or equal to the size of the storage region pointed to by `data`.
+    /// - If `data` is not null, the size of the storage region pointed to by `data` must be greater than or equal to 5.
+    /// - The "total number of bytes comprising the document" as indicated by the BSON bytes pointed-to by `data` must
+    ///   be less than or equal to the size of the storage region pointed to by `data`.
     /// - `deleter` must be capable of freeing the storage region pointed to by `data`.
     ///
     template <typename Deleter, detail::enable_if_t<is_valid_deleter<Deleter>::value>* = nullptr>
-    value(std::uint8_t* data, std::size_t length, Deleter deleter) : _data{data, std::move(deleter)}, _length{length} {}
+    value(std::uint8_t* data, Deleter deleter) : _data{data, std::move(deleter)} {}
 
     ///
     /// Initialize as owning `data` which will be freed with @ref default_deleter_type.
     ///
     /// @par Preconditions:
-    /// - `length` must be less than or equal to the size of the storage region pointed to by `data`.
+    /// - If `data` is not null, the size of the storage region pointed to by `data` must be greater than or equal to 5.
+    /// - The "total number of bytes comprising the document" as indicated by the BSON bytes pointed-to by `data` must
+    ///   be less than or equal to the size of the storage region pointed to by `data`.
     /// - `deleter` must be capable of freeing the storage region pointed to by `data`.
     ///
-    value(std::uint8_t* data, std::size_t length) : value{data, length, default_deleter_type{}} {}
+    explicit value(std::uint8_t* data) : value{data, default_deleter_type{}} {}
 
     ///
     /// Initialize as owning `ptr`.
     ///
     /// @par Preconditions:
-    /// - `length` must be less than or equal to the size of the storage region pointed to by `data`.
+    /// - If `data` is not null, the size of the storage region pointed to by `data` must be greater than or equal to 5.
+    /// - The "total number of bytes comprising the document" as indicated by the BSON bytes pointed-to by `data` must
+    ///   be less than or equal to the size of the storage region pointed to by `data`.
     ///
-    value(unique_ptr_type ptr, std::size_t length) : _data{std::move(ptr)}, _length{length} {}
+    explicit value(unique_ptr_type ptr) : _data{std::move(ptr)} {}
 
     ///
     /// Initialize with a copy of the BSON bytes referenced by `view`.
@@ -222,8 +218,7 @@ class value {
     /// default_deleter_type.
     ///
     explicit value(v1::document::view view)
-        : _data{view ? unique_ptr_type{new std::uint8_t[view.size()], default_deleter_type{}} : unique_ptr_type{}},
-          _length{view ? view.size() : 0u} {
+        : _data{view ? unique_ptr_type{new std::uint8_t[view.size()], default_deleter_type{}} : unique_ptr_type{}} {
         if (view) {
             std::memcpy(_data.get(), view.data(), view.size());
         }
@@ -294,7 +289,6 @@ class value {
     /// Release ownership of the underlying BSON bytes.
     ///
     unique_ptr_type release() {
-        _length = 0u;
         return std::move(_data);
     }
 
@@ -321,7 +315,7 @@ class value {
     /// Return a view of the BSON bytes as a document.
     ///
     v1::document::view view() const {
-        return {_data.get(), _length};
+        return v1::document::view{_data.get()};
     }
 
     ///
