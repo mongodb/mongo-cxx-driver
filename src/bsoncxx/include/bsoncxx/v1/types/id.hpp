@@ -35,7 +35,8 @@ namespace types {
 ///
 /// @showenumvalues
 ///
-enum class id : std::uint8_t {
+enum class id : std::int8_t {
+    k_minkey = -0x01,    ///< Min key.
     k_double = 0x01,     ///< 64-bit binary floating point.
     k_string = 0x02,     ///< UTF-8 string.
     k_document = 0x03,   ///< Embedded document.
@@ -56,7 +57,6 @@ enum class id : std::uint8_t {
     k_int64 = 0x12,      ///< 64-bit integer.
     k_decimal128 = 0x13, ///< 128-bit decimal floating point.
     k_maxkey = 0x7F,     ///< Max key.
-    k_minkey = 0xFF,     ///< Min key.
 };
 
 ///
