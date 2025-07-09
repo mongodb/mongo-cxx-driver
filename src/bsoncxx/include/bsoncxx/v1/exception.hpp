@@ -135,8 +135,8 @@ class exception : public std::system_error {
    public:
     ~exception() override;
 
-    exception(exception&&) = default;
-    exception& operator=(exception&&) = default;
+    exception(exception&&) noexcept = default;
+    exception& operator=(exception&&) noexcept = default;
     exception(exception const&) = default;
     exception& operator=(exception const&) = default;
 
