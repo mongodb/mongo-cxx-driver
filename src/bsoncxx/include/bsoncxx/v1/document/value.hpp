@@ -163,20 +163,7 @@ class value {
     ///
     /// @warning Modifying the pointed-to data after default construction is undefined behavior.
     ///
-    /// @note This constructor is explicit to support initialization as an empty BSON document via the @ref
-    /// bsoncxx::v1::document::value::value(bsoncxx::v1::document::view view) constructor using list-initialization
-    /// syntax:
-    /// ```cpp
-    /// bsoncxx::v1::document::value doc({});
-    ///
-    /// auto v = doc.view();
-    ///
-    /// assert(v);         // Valid.
-    /// assert(v.empty()); // Empty.
-    /// assert(v.data());  // Not null.
-    /// ```
-    ///
-    explicit value() : _data{const_cast<std::uint8_t*>(v1::document::view{}.data()), &noop_deleter} {}
+    value() : _data{const_cast<std::uint8_t*>(v1::document::view{}.data()), &noop_deleter} {}
 
     ///
     /// Initialize as owning `data` which will be freed with `deleter`.
