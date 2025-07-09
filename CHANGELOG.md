@@ -24,6 +24,15 @@ Changes prior to 3.9.0 are documented as [release notes on GitHub](https://githu
   - Apple Clang 13.1 with Xcode 13.4.1 (from Apple Clang 5.1 with Xcode 5.1).
   - MSVC 19.0.24210 with Visual Studio 2015 Update 3 (from MSVC 19.0.23506 with Visual Studio 2015 Update 1).
 
+## 4.1.1
+
+### Fixed
+
+- CMake option `ENABLE_TESTS` (`OFF` by default) is no longer overwritten by the auto-downloaded C Driver (`ON` by default) during CMake configuration.
+- Static pkg-config files are updated to depend on the static (not shared) libbson / libmongoc packages.
+- Fix build if macros `GCC`/`GNU`/`Clang`/`MSVC` are already defined.
+
+
 ## 4.1.0
 
 ### Fixed
