@@ -67,9 +67,9 @@ mkdir -p "${working_dir}/install"
 # For latest Clang versions supporting recent C++ standards.
 export CC CXX
 case "${distro_id:?}" in
-rhel9*)
-  CC="clang-18"
-  CXX="clang++-18"
+rhel95*)
+  CC="clang-19"
+  CXX="clang++-19"
   ;;
 ubuntu22*)
   CC="clang-12"

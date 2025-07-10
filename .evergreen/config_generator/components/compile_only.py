@@ -18,16 +18,16 @@ TAG = 'compile-only'
 MATRIX = [
     # C++ standard and compiler coverage
 
-    ('rhel80',     'clang',    [11, 17, 20,   ]), # Clang  7.0 (max: C++20)
-    ('ubuntu2004', 'clang-10', [11, 17, 20,   ]), # Clang 10.0 (max: C++20)
-    ('rhel84',     'clang',    [11, 17, 20,   ]), # Clang 11.0 (max: C++20)
-    ('ubuntu2204', 'clang-12', [11, 17, 20, 23]), # Clang 12.0 (max: C++23)
-    ('rhel90',     'clang',    [11, 17, 20, 23]), # Clang 13.0 (max: C++23)
-    ('rhel91',     'clang',    [11, 17, 20, 23]), # Clang 14.0 (max: C++23)
-    ('rhel92',     'clang',    [11, 17, 20, 23]), # Clang 15.0 (max: C++23)
-    ('rhel93',     'clang',    [11, 17, 20, 23]), # Clang 16.0 (max: C++23)
-    ('rhel94',     'clang',    [11, 17, 20, 23]), # Clang 17.0 (max: C++23)
-    ('rhel95',     'clang',    [11, 17, 20, 23]), # Clang 18.0 (max: C++23)
+    ('rhel80',     'clang',    [11, 17, 20,   ]), # Clang  7 (max: C++20)
+    ('ubuntu2004', 'clang-10', [11, 17, 20,   ]), # Clang 10 (max: C++20)
+    ('rhel84',     'clang',    [11, 17, 20,   ]), # Clang 11 (max: C++20)
+    ('ubuntu2204', 'clang-12', [11, 17, 20, 23]), # Clang 12 (max: C++23)
+    ('rhel90',     'clang',    [11, 17, 20, 23]), # Clang 13 (max: C++23)
+    ('rhel91',     'clang',    [11, 17, 20, 23]), # Clang 14 (max: C++23)
+    ('rhel92',     'clang',    [11, 17, 20, 23]), # Clang 15 (max: C++23)
+    ('rhel93',     'clang',    [11, 17, 20, 23]), # Clang 16 (max: C++23)
+    ('rhel94',     'clang',    [11, 17, 20, 23]), # Clang 17 (max: C++23)
+    ('rhel95',     'clang',    [11, 17, 20, 23]), # Clang 19 (max: C++23)
 
     ('rhel7.9',    'gcc',    [11, 14,       ]), # GCC  4.8 (max: C++14)
     ('rhel80',     'gcc',    [11, 17, 20,   ]), # GCC  8.2 (max: C++20)
