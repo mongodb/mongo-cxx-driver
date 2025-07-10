@@ -232,7 +232,7 @@ class view {
     ///
     /// Return the first element within the represented BSON document whose key compares equal to `key`.
     ///
-    /// If this view is invalid or the requested field is not found, returns an invalid element.
+    /// @returns An invalid element if this view is invalid or the requested field is not found.
     ///
     /// @par Complexity
     /// Linear.

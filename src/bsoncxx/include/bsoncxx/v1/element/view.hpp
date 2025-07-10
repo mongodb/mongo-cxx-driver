@@ -265,18 +265,32 @@ class view {
     BSONCXX_ABI_EXPORT_CDECL(v1::types::value) type_value() const;
 
     ///
-    /// Return an element representing the requested field.
+    /// Return the first element within the represented BSON document whose key compares equal to `key`.
     ///
-    /// @returns An invalid element if the requested field does not exist.
+    /// @returns An invalid element if this view is invalid, this element does not represent a BSON document, or the
+    /// requested field is not found.
+    ///
+    /// @par Complexity
+    /// Linear.
     ///
     /// @exception bsoncxx::v1::exception with @ref bsoncxx::v1::error::element::view::invalid_data if this operation
     /// failed due to invalid BSON bytes.
     ///
-    /// @{
     BSONCXX_ABI_EXPORT_CDECL(v1::element::view) operator[](v1::stdx::string_view key) const;
-    BSONCXX_ABI_EXPORT_CDECL(v1::element::view) operator[](std::uint32_t idx) const;
-    /// @}
+
     ///
+    /// Return the first element within the represented BSON array whose key compares equal to `i`.
+    ///
+    /// @returns An invalid element if this view is invalid, this element does not represent a BSON array, or the
+    /// requested field is not found.
+    ///
+    /// @par Complexity
+    /// Linear.
+    ///
+    /// @exception bsoncxx::v1::exception with @ref bsoncxx::v1::error::element::view::invalid_data if this operation
+    /// failed due to invalid BSON bytes.
+    ///
+    BSONCXX_ABI_EXPORT_CDECL(v1::element::view) operator[](std::uint32_t idx) const;
 
     class internal;
 

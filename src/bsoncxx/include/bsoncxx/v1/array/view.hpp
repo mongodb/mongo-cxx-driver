@@ -121,9 +121,9 @@ class view {
     BSONCXX_ABI_EXPORT_CDECL(const_iterator) find(std::uint32_t i) const;
 
     ///
-    /// Return the first element within the represented BSON array at index `i` via key string comparison.
+    /// Return the first element within the represented BSON array whose key compares equal to `i`.
     ///
-    /// If this view is invalid or the requested field is not found, returns an invalid element.
+    /// @returns An invalid element if this view is invalid or the requested field is not found.
     ///
     /// @par Complexity
     /// Linear.
