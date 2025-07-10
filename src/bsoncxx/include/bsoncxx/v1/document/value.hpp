@@ -67,6 +67,11 @@ class value {
     using default_deleter_type = std::default_delete<std::uint8_t[]>;
 
     ///
+    /// The type of a pointer to @ref noop_deleter.
+    ///
+    using noop_deleter_type = void(BSONCXX_ABI_CDECL*)(std::uint8_t*);
+
+    ///
     /// The deleter used to avoid freeing preallocated storage representing an empty BSON document.
     ///
     static BSONCXX_ABI_EXPORT_CDECL(void) noop_deleter(std::uint8_t*);
