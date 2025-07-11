@@ -479,6 +479,8 @@ struct is_equality_comparable : decltype(is_equality_comparable_f<L, R>(0)) {};
 template <typename L, typename R>
 std::false_type is_partially_ordered_with_f(rank<0>);
 
+BSONCXX_PRIVATE_WARNINGS_PUSH();
+BSONCXX_PRIVATE_WARNINGS_DISABLE(Clang("-Wordered-compare-function-pointers"));
 template <typename L, typename R>
 auto is_partially_ordered_with_f(rank<1>) -> true_t<
     decltype(std::declval<L const&>() > std::declval<R const&>()),
@@ -489,6 +491,7 @@ auto is_partially_ordered_with_f(rank<1>) -> true_t<
     decltype(std::declval<R const&>() > std::declval<L const&>()),
     decltype(std::declval<R const&>() <= std::declval<L const&>()),
     decltype(std::declval<R const&>() >= std::declval<L const&>())>;
+BSONCXX_PRIVATE_WARNINGS_POP();
 
 template <typename T, typename U>
 struct is_partially_ordered_with : decltype(is_partially_ordered_with_f<T, U>(rank<1>{})) {};

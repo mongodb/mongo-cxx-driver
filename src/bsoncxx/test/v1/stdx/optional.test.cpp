@@ -16,7 +16,9 @@
 
 //
 
+#include <bsoncxx/v1/detail/compare.hpp>
 #include <bsoncxx/v1/detail/macros.hpp>
+#include <bsoncxx/v1/detail/type_traits.hpp>
 
 #include <bsoncxx/test/v1/stdx/string_view.hh>
 
@@ -25,9 +27,6 @@
 #include <mutex>
 #include <string>
 #include <type_traits>
-
-#include <bsoncxx/stdx/operators.hpp>
-#include <bsoncxx/stdx/type_traits.hpp>
 
 #include <bsoncxx/private/make_unique.hh>
 
@@ -654,11 +653,14 @@ TEST_CASE("Optional: Hashing") {
     CHECK_VS2017(hashit(c) == hashit(a));
 }
 
+BSONCXX_PRIVATE_WARNINGS_PUSH();
+BSONCXX_PRIVATE_WARNINGS_DISABLE(Clang("-Wunneeded-member-function"));
 struct in_place_convertible {
     bool constructed_from_in_place = false;
     in_place_convertible() = default;
     in_place_convertible(bsoncxx::v1::stdx::in_place_t) : constructed_from_in_place(true) {}
 };
+BSONCXX_PRIVATE_WARNINGS_POP();
 
 TEST_CASE("optional<T> conversions") {
     // Some stdlib implementations do not forbid this ctor correctly.

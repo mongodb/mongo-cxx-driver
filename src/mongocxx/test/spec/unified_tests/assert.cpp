@@ -162,7 +162,7 @@ void special_operator(types::bson_value::view actual, document::view expected, e
         REQUIRE(actual.type() == bsoncxx::type::k_binary);
 
         auto expected_bytes = test_util::convert_hex_string_to_bytes(op.get_value().get_string());
-        decltype(expected_bytes) actual_bytes(actual.get_binary().bytes, actual.get_binary().size);
+        decltype(expected_bytes) actual_bytes(actual.get_binary().bytes, actual.get_binary().bytes + actual.get_binary().size);
 
         REQUIRE(actual_bytes == expected_bytes);
     } else {
