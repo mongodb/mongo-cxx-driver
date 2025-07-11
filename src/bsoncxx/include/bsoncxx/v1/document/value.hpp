@@ -209,20 +209,26 @@ class value {
     ///
     /// Initialize with a copy of the BSON bytes referenced by `view`.
     ///
-    /// If `view` is invalid or equivalent to a default-initialized @ref bsoncxx::v1::document::view, this value is
-    /// default-initialized.
+    /// If `view` is equivalent to a default-initialized @ref bsoncxx::v1::document::view, this value is
+    /// equivalent to `value()`.
     ///
-    /// The copied value is allocated using `operator new[]` and the deleter is set to @ref
+    /// If `view` is invalid, this value is equivalent to `value{nullptr}`.
+    ///
+    /// Otherwise, the copied value is allocated using `operator new[]` and the deleter is set to @ref
     /// default_deleter_type.
     ///
     explicit value(v1::document::view view) {
+        if (!view) {
+            return;
+        }
+
         v1::document::view const empty;
 
-        if (view && view.data() != empty.data()) {
+        if (view.data() == empty.data()) {
+            _data = unique_ptr_type{const_cast<std::uint8_t*>(empty.data()), &noop_deleter};
+        } else {
             _data = unique_ptr_type{new std::uint8_t[view.size()], default_deleter_type{}};
             std::memcpy(_data.get(), view.data(), view.size());
-        } else {
-            _data = unique_ptr_type{const_cast<std::uint8_t*>(empty.data()), &noop_deleter};
         }
     }
 
