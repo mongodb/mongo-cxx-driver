@@ -85,11 +85,21 @@ class value {
     template <typename Deleter, detail::enable_if_t<is_valid_deleter<Deleter>::value>* = nullptr>
     value(std::uint8_t* data, Deleter deleter) : _value{data, std::move(deleter)} {}
 
+    /// @copydoc v1::document::value::value(std::uint8_t* data, std::size_t length, Deleter deleter)
+    template <typename Deleter, detail::enable_if_t<is_valid_deleter<Deleter>::value>* = nullptr>
+    value(std::uint8_t* data, std::size_t length, Deleter deleter) : _value{data, length, std::move(deleter)} {}
+
     /// @copydoc v1::document::value::value(std::uint8_t* data)
     explicit value(std::uint8_t* data) : _value{data} {}
 
+    /// @copydoc v1::document::value::value(std::uint8_t* data, std::size_t length)
+    value(std::uint8_t* data, std::size_t length) : _value{data, length} {}
+
     /// @copydoc v1::document::value::value(v1::document::value::unique_ptr_type ptr)
     explicit value(unique_ptr_type ptr) : _value{std::move(ptr)} {}
+
+    /// @copydoc v1::document::value::value(v1::document::value::unique_ptr_type ptr, std::size_t length)
+    value(unique_ptr_type ptr, std::size_t length) : _value{std::move(ptr), length} {}
 
     /// @copydoc v1::document::value::value(v1::document::view view)
     explicit value(v1::array::view view) : _value{view} {}

@@ -69,8 +69,9 @@ namespace document {
 /// @attention This feature is experimental! It is not ready for use!
 ///
 enum class view {
-    zero,         ///< Zero.
-    invalid_data, ///< Data is invalid.
+    zero,           ///< Zero.
+    invalid_length, ///< Length is invalid.
+    invalid_data,   ///< Data is invalid.
 };
 
 ///
@@ -146,10 +147,21 @@ class view {
     ///
     /// @par Preconditions:
     /// - If `data` is not null, the size of the storage region pointed to by `data` must be greater than or equal to 5.
-    /// - The "total number of bytes comprising the document" as indicated by the BSON bytes pointed-to by `data` must
-    ///   be less than or equal to the size of the storage region pointed to by `data`.
+    /// - The embedded length must be less than or equal to the size of the storage region pointed to by `data`.
     ///
-    explicit view(std::uint8_t const* data) : _data(data) {}
+    explicit view(std::uint8_t const* data) : _data{data} {}
+
+    ///
+    /// Equivalent to @ref view(std::uint8_t const* data), but validates the embedded length against `length`.
+    ///
+    /// @par Preconditions:
+    /// - If `data` is not null, the size of the storage region pointed to by `data` must be greater than or equal to
+    ///   `length`.
+    ///
+    /// @exception bsoncxx::v1::exception with @ref bsoncxx::v1::error::document::view::invalid_length if `length` is
+    /// less than `5` or less than `this->size()`.
+    ///
+    BSONCXX_ABI_EXPORT view(std::uint8_t const* data, std::size_t length);
 
     ///
     /// Return a pointer to the BSON bytes being represented.
@@ -163,7 +175,7 @@ class view {
     ///
     /// If `this->data()` is null, returns `0`.
     ///
-    /// @note This returns the length as indicated by the pointed to BSON bytes. The result is always within the range
+    /// @note This returns the embedded length as indicated by the pointed-to BSON bytes. The result is always within the range
     /// [0, INT32_MAX] when preconditions are satisfied.
     ///
     std::size_t size() const;

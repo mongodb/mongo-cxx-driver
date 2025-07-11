@@ -178,33 +178,74 @@ class value {
     ///
     /// @par Preconditions:
     /// - If `data` is not null, the size of the storage region pointed to by `data` must be greater than or equal to 5.
-    /// - The "total number of bytes comprising the document" as indicated by the BSON bytes pointed-to by `data` must
-    ///   be less than or equal to the size of the storage region pointed to by `data`.
+    /// - The embedded length must be less than or equal to the size of the storage region pointed to by `data`.
     /// - `deleter` must be capable of freeing the storage region pointed to by `data`.
     ///
     template <typename Deleter, detail::enable_if_t<is_valid_deleter<Deleter>::value>* = nullptr>
     value(std::uint8_t* data, Deleter deleter) : _data{data, std::move(deleter)} {}
 
     ///
+    /// Equivalent to @ref value(std::uint8_t* data, Deleter deleter), but validates the embedded length against
+    /// `length`.
+    ///
+    /// @par Preconditions:
+    /// - If `data` is not null, the size of the storage region pointed to by `data` must be greater than or equal to
+    ///   `length`.
+    ///
+    /// @exception bsoncxx::v1::exception with @ref bsoncxx::v1::error::document::view::invalid_length if `length` is
+    /// less than `5` or less than `this->size()`.
+    ///
+    template <typename Deleter, detail::enable_if_t<is_valid_deleter<Deleter>::value>* = nullptr>
+    value(std::uint8_t* data, std::size_t length, Deleter deleter) : value{data, std::move(deleter)} {
+        (void)v1::document::view{data, length}; // May throw.
+    }
+
+    ///
     /// Initialize as owning `data` which will be freed with @ref default_deleter_type.
     ///
     /// @par Preconditions:
     /// - If `data` is not null, the size of the storage region pointed to by `data` must be greater than or equal to 5.
-    /// - The "total number of bytes comprising the document" as indicated by the BSON bytes pointed-to by `data` must
-    ///   be less than or equal to the size of the storage region pointed to by `data`.
+    /// - The embedded length must be less than or equal to the size of the storage region pointed to by `data`.
     /// - `deleter` must be capable of freeing the storage region pointed to by `data`.
     ///
     explicit value(std::uint8_t* data) : value{data, default_deleter_type{}} {}
+
+    ///
+    /// Equivalent to @ref value(std::uint8_t* data), but validates the embedded length against `length`.
+    ///
+    /// @par Preconditions:
+    /// - If `data` is not null, the size of the storage region pointed to by `data` must be greater than or equal to
+    ///   `length`.
+    ///
+    /// @exception bsoncxx::v1::exception with @ref bsoncxx::v1::error::document::view::invalid_length if `length` is
+    /// less than `5` or less than `this->size()`.
+    ///
+    explicit value(std::uint8_t* data, std::size_t length) : value{data} {
+        (void)v1::document::view{data, length}; // May throw.
+    }
 
     ///
     /// Initialize as owning `ptr`.
     ///
     /// @par Preconditions:
     /// - If `data` is not null, the size of the storage region pointed to by `data` must be greater than or equal to 5.
-    /// - The "total number of bytes comprising the document" as indicated by the BSON bytes pointed-to by `data` must
-    ///   be less than or equal to the size of the storage region pointed to by `data`.
+    /// - The embedded length must be less than or equal to the size of the storage region pointed to by `data`.
     ///
     explicit value(unique_ptr_type ptr) : _data{std::move(ptr)} {}
+
+    ///
+    /// Equivalent to @ref value(unique_ptr_type ptr), but validates the embedded length against `length`.
+    ///
+    /// @par Preconditions:
+    /// - If `ptr` is not null, the size of the storage region pointed to by `data` must be greater than or equal to
+    ///   `length`.
+    ///
+    /// @exception bsoncxx::v1::exception with @ref bsoncxx::v1::error::document::view::invalid_length if `length` is
+    /// less than `5` or less than `this->size()`.
+    ///
+    explicit value(unique_ptr_type ptr, std::size_t length) : value{std::move(ptr)} {
+        (void)v1::document::view{_data.get(), length}; // May throw.
+    }
 
     ///
     /// Initialize with a copy of the BSON bytes referenced by `view`.
