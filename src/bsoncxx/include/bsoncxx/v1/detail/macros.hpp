@@ -83,12 +83,7 @@
 #define BSONCXX_PRIVATE_CONSTEXPR_CXX14 inline
 #endif
 
-// https://gcc.gnu.org/bugzilla/show_bug.cgi?id=56019
-#if defined(__GNUC__) && (__GNUC__ < 5) && !defined(__clang__)
-#define BSONCXX_PRIVATE_MAX_ALIGN_T max_align_t
-#else
 #define BSONCXX_PRIVATE_MAX_ALIGN_T std::max_align_t
-#endif
 
 #define BSONCXX_PRIVATE_IF_MSVC(...)
 #define BSONCXX_PRIVATE_IF_GCC(...)

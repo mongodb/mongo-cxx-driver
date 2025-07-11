@@ -68,19 +68,11 @@ struct is_regular : detail::conjunction<is_semiregular<T>, detail::is_equality_c
 
 // Equivalent to `is_trivial` without requiring trivial default constructibility.
 template <typename T>
-struct is_semitrivial
-// https://gcc.gnu.org/onlinedocs/gcc-4.9.0/libstdc++/manual/manual/status.html
-#if defined(__GNUC__) && (__GNUC__ < 5) && !defined(__clang__)
-    : std::true_type
-#else
-    : detail::conjunction<
-          std::is_trivially_destructible<T>,
-          std::is_trivially_move_constructible<T>,
-          std::is_trivially_move_assignable<T>,
-          std::is_trivially_copy_constructible<T>,
-          std::is_trivially_copy_assignable<T>>
-#endif
-{
-};
+struct is_semitrivial : detail::conjunction<
+                            std::is_trivially_destructible<T>,
+                            std::is_trivially_move_constructible<T>,
+                            std::is_trivially_move_assignable<T>,
+                            std::is_trivially_copy_constructible<T>,
+                            std::is_trivially_copy_assignable<T>> {};
 
 } // namespace bsoncxx

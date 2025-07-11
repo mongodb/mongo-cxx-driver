@@ -1101,9 +1101,8 @@ class view {
 
 #pragma push_macro("X")
 #undef X
-    // GCC 4.X misinterprets list-initialization of _b_##_name: "too many initializers".
 #define X(_name, _value) \
-    /* explicit(false) */ view(b_##_name v) : _id{v.type_id}, _b_##_name(v) {}
+    /* explicit(false) */ view(b_##_name v) : _id{v.type_id}, _b_##_name{v} {}
 
     ///
     /// Implicitly convert `v`.
