@@ -13,3 +13,18 @@
 // limitations under the License.
 
 #include <bsoncxx/v1/types/value.hpp>
+
+//
+
+#include <bsoncxx/private/type_traits.hh>
+
+namespace bsoncxx {
+namespace v1 {
+namespace types {
+
+static_assert(is_regular<value>::value, "bsoncxx::v1::types::value must be regular");
+static_assert(is_nothrow_moveable<value>::value, "bsoncxx::v1::types::value must be nothrow moveable");
+
+} // namespace types
+} // namespace v1
+} // namespace bsoncxx

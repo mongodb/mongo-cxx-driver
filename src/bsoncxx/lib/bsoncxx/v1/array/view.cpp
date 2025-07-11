@@ -13,3 +13,23 @@
 // limitations under the License.
 
 #include <bsoncxx/v1/array/view.hpp>
+
+//
+
+#include <bsoncxx/private/type_traits.hh>
+
+namespace bsoncxx {
+namespace v1 {
+namespace array {
+
+static_assert(is_regular<view>::value, "bsoncxx::v1::array::view must be regular");
+static_assert(is_semitrivial<view>::value, "bsoncxx::v1::array::view must be semitrivial");
+
+static_assert(is_regular<view::const_iterator>::value, "bsoncxx::v1::array::view::const_iterator must be regular");
+static_assert(
+    is_nothrow_moveable<view::const_iterator>::value,
+    "bsoncxx::v1::array::view::const_iterator must be nothrow moveable");
+
+} // namespace array
+} // namespace v1
+} // namespace bsoncxx
