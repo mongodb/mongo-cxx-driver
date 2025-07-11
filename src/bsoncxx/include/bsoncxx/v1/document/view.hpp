@@ -175,8 +175,8 @@ class view {
     ///
     /// If `this->data()` is null, returns `0`.
     ///
-    /// @note This returns the embedded length as indicated by the pointed-to BSON bytes. The result is always within the range
-    /// [0, INT32_MAX] when preconditions are satisfied.
+    /// @note This returns the embedded length as indicated by the pointed-to BSON bytes. The result is always within
+    /// the range [0, INT32_MAX] when preconditions are satisfied.
     ///
     std::size_t size() const;
 
