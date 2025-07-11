@@ -149,7 +149,7 @@ class view {
     /// - The "total number of bytes comprising the document" as indicated by the BSON bytes pointed-to by `data` must
     ///   be less than or equal to the size of the storage region pointed to by `data`.
     ///
-    view(std::uint8_t const* data) : _data(data) {}
+    explicit view(std::uint8_t const* data) : _data(data) {}
 
     ///
     /// Return a pointer to the BSON bytes being represented.
