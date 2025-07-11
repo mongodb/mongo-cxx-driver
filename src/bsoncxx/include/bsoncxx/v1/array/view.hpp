@@ -90,7 +90,7 @@ class view {
     }
 
     /// @copydoc v1::document::view::cbegin() const
-    BSONCXX_ABI_EXPORT_CDECL(const_iterator) cbegin() const;
+    BSONCXX_ABI_EXPORT const_iterator cbegin() const;
 
     /// @copydoc v1::document::view::cend() const
     const_iterator cend() const {
@@ -118,7 +118,7 @@ class view {
     /// @exception bsoncxx::v1::exception with @ref bsoncxx::v1::error::document::view::invalid_data if this operation
     /// failed due to invalid BSON bytes.
     ///
-    BSONCXX_ABI_EXPORT_CDECL(const_iterator) find(std::uint32_t i) const;
+    BSONCXX_ABI_EXPORT const_iterator find(std::uint32_t i) const;
 
     ///
     /// Return the first element within the represented BSON array whose key compares equal to `i`.

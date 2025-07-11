@@ -50,7 +50,7 @@ namespace element {
 ///
 /// @attention This feature is experimental! It is not ready for use!
 ///
-BSONCXX_ABI_EXPORT_CDECL(std::error_category const&) view();
+BSONCXX_ABI_EXPORT std::error_category const& view();
 
 } // namespace element
 } // namespace category
@@ -156,7 +156,7 @@ class view {
     ///
     /// Destroy this object.
     ///
-    BSONCXX_ABI_EXPORT_CDECL() ~view();
+    BSONCXX_ABI_EXPORT ~view();
 
     // Handled by the nothrow copy constructor.
     // view(view&& other) noexcept;
@@ -167,52 +167,52 @@ class view {
     ///
     /// Copy (or move) construction.
     ///
-    BSONCXX_ABI_EXPORT_CDECL() view(view const& other) noexcept;
+    BSONCXX_ABI_EXPORT view(view const& other) noexcept;
 
     ///
     /// Copy (or move) assignment.
     ///
-    BSONCXX_ABI_EXPORT_CDECL(view&) operator=(view const& other) noexcept;
+    BSONCXX_ABI_EXPORT view& operator=(view const& other) noexcept;
 
     ///
     /// Initialize as an invalid element without any associated BSON bytes.
     ///
-    BSONCXX_ABI_EXPORT_CDECL() view();
+    BSONCXX_ABI_EXPORT view();
 
     ///
     /// Return true when this is a valid element.
     ///
     /// @note This does not validate the BSON bytes being represented.
     ///
-    explicit BSONCXX_ABI_EXPORT_CDECL() operator bool() const;
+    explicit BSONCXX_ABI_EXPORT operator bool() const;
 
     ///
     /// Return the "raw" component of the underlying BSON bytes.
     ///
     /// The value is unspecified when this element is invalid.
     ///
-    BSONCXX_ABI_EXPORT_CDECL(std::uint8_t const*) raw() const;
+    BSONCXX_ABI_EXPORT std::uint8_t const* raw() const;
 
     ///
     /// Return the "length" component of the underlying BSON bytes.
     ///
     /// The value is unspecified when this element is invalid.
     ///
-    BSONCXX_ABI_EXPORT_CDECL(std::uint32_t) length() const;
+    BSONCXX_ABI_EXPORT std::uint32_t length() const;
 
     ///
     /// Return the "offset" component of the underlying BSON bytes.
     ///
     /// The value is unspecified when this element is invalid.
     ///
-    BSONCXX_ABI_EXPORT_CDECL(std::uint32_t) offset() const;
+    BSONCXX_ABI_EXPORT std::uint32_t offset() const;
 
     ///
     /// Return the "keylen" component of the underlying BSON bytes.
     ///
     /// The value is unspecified when this element is invalid.
     ///
-    BSONCXX_ABI_EXPORT_CDECL(std::uint32_t) keylen() const;
+    BSONCXX_ABI_EXPORT std::uint32_t keylen() const;
 
     ///
     /// Return the type.
@@ -220,7 +220,7 @@ class view {
     /// @exception bsoncxx::v1::exception with @ref bsoncxx::v1::error::element::view::invalid_view if this element is
     /// invalid.
     ///
-    BSONCXX_ABI_EXPORT_CDECL(v1::types::id) type_id() const;
+    BSONCXX_ABI_EXPORT v1::types::id type_id() const;
 
     ///
     /// Return the key.
@@ -228,11 +228,11 @@ class view {
     /// @exception bsoncxx::v1::exception with @ref bsoncxx::v1::error::element::view::invalid_view if this element is
     /// invalid.
     ///
-    BSONCXX_ABI_EXPORT_CDECL(v1::stdx::string_view) key() const;
+    BSONCXX_ABI_EXPORT v1::stdx::string_view key() const;
 
 #pragma push_macro("X")
 #undef X
-#define X(_name, _value) BSONCXX_ABI_EXPORT_CDECL(v1::types::b_##_name) get_##_name() const;
+#define X(_name, _value) BSONCXX_ABI_EXPORT v1::types::b_##_name get_##_name() const;
 
     ///
     /// Return the underlying BSON type value.
@@ -254,7 +254,7 @@ class view {
     /// @exception bsoncxx::v1::exception with @ref bsoncxx::v1::error::element::view::invalid_view if this element is
     /// invalid.
     ///
-    BSONCXX_ABI_EXPORT_CDECL(v1::types::view) type_view() const;
+    BSONCXX_ABI_EXPORT v1::types::view type_view() const;
 
     ///
     /// Return a deep copy of the underlying BSON type value.
@@ -262,7 +262,7 @@ class view {
     /// @exception bsoncxx::v1::exception with @ref bsoncxx::v1::error::element::view::invalid_view if this element is
     /// invalid.
     ///
-    BSONCXX_ABI_EXPORT_CDECL(v1::types::value) type_value() const;
+    BSONCXX_ABI_EXPORT v1::types::value type_value() const;
 
     ///
     /// Return the first element within the represented BSON document whose key compares equal to `key`.
@@ -276,7 +276,7 @@ class view {
     /// @exception bsoncxx::v1::exception with @ref bsoncxx::v1::error::element::view::invalid_data if this operation
     /// failed due to invalid BSON bytes.
     ///
-    BSONCXX_ABI_EXPORT_CDECL(v1::element::view) operator[](v1::stdx::string_view key) const;
+    BSONCXX_ABI_EXPORT v1::element::view operator[](v1::stdx::string_view key) const;
 
     ///
     /// Return the first element within the represented BSON array whose key compares equal to `i`.
@@ -290,7 +290,7 @@ class view {
     /// @exception bsoncxx::v1::exception with @ref bsoncxx::v1::error::element::view::invalid_data if this operation
     /// failed due to invalid BSON bytes.
     ///
-    BSONCXX_ABI_EXPORT_CDECL(v1::element::view) operator[](std::uint32_t idx) const;
+    BSONCXX_ABI_EXPORT v1::element::view operator[](std::uint32_t idx) const;
 
     class internal;
 

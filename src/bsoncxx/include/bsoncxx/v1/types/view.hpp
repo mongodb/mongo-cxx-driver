@@ -49,7 +49,7 @@ namespace types {
 ///
 /// @attention This feature is experimental! It is not ready for use!
 ///
-BSONCXX_ABI_EXPORT_CDECL(std::error_category const&) view();
+BSONCXX_ABI_EXPORT std::error_category const& view();
 
 } // namespace types
 } // namespace category
@@ -1123,7 +1123,7 @@ class view {
 
 #pragma push_macro("X")
 #undef X
-#define X(_name, _value) BSONCXX_ABI_EXPORT_CDECL(b_##_name) get_##_name() const;
+#define X(_name, _value) BSONCXX_ABI_EXPORT b_##_name get_##_name() const;
 
     ///
     /// Return the requested underlying BSON type value.

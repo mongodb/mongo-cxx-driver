@@ -54,7 +54,7 @@ namespace types {
 ///
 /// @attention This feature is experimental! It is not ready for use!
 ///
-BSONCXX_ABI_EXPORT_CDECL(std::error_category const&) value();
+BSONCXX_ABI_EXPORT std::error_category const& value();
 
 } // namespace types
 } // namespace category
@@ -124,7 +124,7 @@ class value {
     ///
     /// Destroy this object.
     ///
-    BSONCXX_ABI_EXPORT_CDECL() ~value();
+    BSONCXX_ABI_EXPORT ~value();
 
     ///
     /// Move construction.
@@ -132,7 +132,7 @@ class value {
     /// @par Postconditions:
     /// - `other` is equivalent to a default-initialized value.
     ///
-    BSONCXX_ABI_EXPORT_CDECL() value(value&& other) noexcept;
+    BSONCXX_ABI_EXPORT value(value&& other) noexcept;
 
     ///
     /// Move assignment.
@@ -140,7 +140,7 @@ class value {
     /// @par Postconditions:
     /// - `other` is equivalent to a default-initialized value.
     ///
-    BSONCXX_ABI_EXPORT_CDECL(value&) operator=(value&& other) noexcept;
+    BSONCXX_ABI_EXPORT value& operator=(value&& other) noexcept;
 
     ///
     /// Copy construction.
@@ -148,7 +148,7 @@ class value {
     /// The copied BSON type value is allocated (when necessary) using
     /// [`bson_value_copy`](https://mongoc.org/libbson/current/bson_value_copy.html).
     ///
-    BSONCXX_ABI_EXPORT_CDECL() value(value const& other);
+    BSONCXX_ABI_EXPORT value(value const& other);
 
     ///
     /// Copy assignment.
@@ -156,7 +156,7 @@ class value {
     /// The copied value is allocated (when necessary) using
     /// [`bson_value_copy`](https://mongoc.org/libbson/current/bson_value_copy.html).
     ///
-    BSONCXX_ABI_EXPORT_CDECL(value&) operator=(value const& other);
+    BSONCXX_ABI_EXPORT value& operator=(value const& other);
 
     ///
     /// Initialize with @ref bsoncxx::v1::types::b_null.
@@ -174,11 +174,11 @@ class value {
     /// @exception bsoncxx::v1::exception with @ref bsoncxx::v1::error::types::value::invalid_length_u32 if the length
     /// of any underlying BSON type value component is not representable as an `std::uint32_t`.
     ///
-    explicit BSONCXX_ABI_EXPORT_CDECL() value(v1::types::view const& v);
+    explicit BSONCXX_ABI_EXPORT value(v1::types::view const& v);
 
 #pragma push_macro("X")
 #undef X
-#define X(_name, _value) explicit BSONCXX_ABI_EXPORT_CDECL() value(v1::types::b_##_name v);
+#define X(_name, _value) explicit BSONCXX_ABI_EXPORT value(v1::types::b_##_name v);
 
     ///
     /// Convert `v` as a deep copy.
@@ -301,18 +301,18 @@ class value {
     ///
     /// Initialize as a @ref bsoncxx::v1::types::b_binary with `subtype`.
     ///
-    explicit BSONCXX_ABI_EXPORT_CDECL()
+    explicit BSONCXX_ABI_EXPORT
     value(std::uint8_t const* data, std::size_t size, v1::types::binary_subtype const sub_type);
 
     ///
     /// Return the type of the underlying BSON type value.
     ///
-    BSONCXX_ABI_EXPORT_CDECL(v1::types::id) type_id() const;
+    BSONCXX_ABI_EXPORT v1::types::id type_id() const;
 
     ///
     /// Return a view of the underlying BSON type value.
     ///
-    BSONCXX_ABI_EXPORT_CDECL(v1::types::view) view() const;
+    BSONCXX_ABI_EXPORT v1::types::view view() const;
 
     ///
     /// Implicitly convert to `this->view()`.

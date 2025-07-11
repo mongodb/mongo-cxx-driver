@@ -59,7 +59,7 @@ class value {
     /// `std::move_only_function<T>`. That is, it is assumed to be nothrow destructible, nothrow move constructible, and
     /// nothrow move assignable.
     ///
-    using deleter_type = std::function<void BSONCXX_ABI_CDECL(std::uint8_t*)>;
+    using deleter_type = std::function<void(std::uint8_t*)>;
 
     ///
     /// The deleter used to free copied BSON bytes when a user-provided deleter is not specified.
@@ -69,12 +69,12 @@ class value {
     ///
     /// The type of a pointer to @ref noop_deleter.
     ///
-    using noop_deleter_type = void(BSONCXX_ABI_CDECL*)(std::uint8_t*);
+    using noop_deleter_type = void (*)(std::uint8_t*);
 
     ///
     /// The deleter used to avoid freeing preallocated storage representing an empty BSON document.
     ///
-    static BSONCXX_ABI_EXPORT_CDECL(void) noop_deleter(std::uint8_t*);
+    static BSONCXX_ABI_EXPORT void noop_deleter(std::uint8_t*);
 
     ///
     /// The type of the unique pointer used to manage the underlying BSON bytes.

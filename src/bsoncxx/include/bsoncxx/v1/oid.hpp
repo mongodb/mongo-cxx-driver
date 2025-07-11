@@ -41,7 +41,7 @@ namespace category {
 ///
 /// @attention This feature is experimental! It is not ready for use!
 ///
-BSONCXX_ABI_EXPORT_CDECL(std::error_category const&) oid();
+BSONCXX_ABI_EXPORT std::error_category const& oid();
 
 } // namespace category
 } // namespace error
@@ -117,7 +117,7 @@ class oid {
     /// on failure to initialize the Winsock library with
     /// [`WSAStartup()`](https://learn.microsoft.com/en-us/windows/win32/api/winsock/nf-winsock-wsastartup).
     ///
-    BSONCXX_ABI_EXPORT_CDECL() oid();
+    BSONCXX_ABI_EXPORT oid();
 
     ///
     /// Initialize with the given ObjectID byte representation.
@@ -129,7 +129,7 @@ class oid {
     /// @throws bsoncxx::v1::exception with @ref bsoncxx::v1::error::oid::invalid_length if `len` is not equal to @ref
     /// k_oid_length.
     ///
-    BSONCXX_ABI_EXPORT_CDECL() oid(std::uint8_t const* bytes, std::size_t len);
+    BSONCXX_ABI_EXPORT oid(std::uint8_t const* bytes, std::size_t len);
 
     ///
     /// Initialize with the given ObjectID hexadecimal string representation.
@@ -139,7 +139,7 @@ class oid {
     /// @throws bsoncxx::v1::exception with @ref bsoncxx::v1::error::oid::empty_string if `str` is empty.
     /// @throws bsoncxx::v1::exception with @ref bsoncxx::v1::error::oid::invalid_string if `str` is invalid.
     ///
-    explicit BSONCXX_ABI_EXPORT_CDECL() oid(v1::stdx::string_view str);
+    explicit BSONCXX_ABI_EXPORT oid(v1::stdx::string_view str);
 
     ///
     /// Return @ref k_oid_length.
@@ -158,17 +158,17 @@ class oid {
     ///
     /// Return the hexadecimal representation.
     ///
-    BSONCXX_ABI_EXPORT_CDECL(std::string) to_string() const;
+    BSONCXX_ABI_EXPORT std::string to_string() const;
 
     ///
     /// Return the timestamp component.
     ///
-    BSONCXX_ABI_EXPORT_CDECL(std::time_t) get_time_t() const;
+    BSONCXX_ABI_EXPORT std::time_t get_time_t() const;
 
     ///
     /// Equivalent to [`bson_oid_compare`](https://mongoc.org/libbson/current/bson_oid_compare.html).
     ///
-    BSONCXX_ABI_EXPORT_CDECL(int) compare(oid const& other) const;
+    BSONCXX_ABI_EXPORT int compare(oid const& other) const;
 
     ///
     /// Equivalent to `lhs.compare(rhs) == 0`.

@@ -40,14 +40,14 @@ namespace category {
 ///
 /// @attention This feature is experimental! It is not ready for use!
 ///
-BSONCXX_ABI_EXPORT_CDECL(std::error_category const&) source();
+BSONCXX_ABI_EXPORT std::error_category const& source();
 
 ///
 /// The error category for @ref bsoncxx::v1::error::type.
 ///
 /// @attention This feature is experimental! It is not ready for use!
 ///
-BSONCXX_ABI_EXPORT_CDECL(std::error_category const&) type();
+BSONCXX_ABI_EXPORT std::error_category const& type();
 
 } // namespace category
 } // namespace error

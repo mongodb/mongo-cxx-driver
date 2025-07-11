@@ -64,7 +64,7 @@ enum class id : std::int8_t {
 ///
 /// @attention This feature is experimental! It is not ready for use!
 ///
-BSONCXX_ABI_EXPORT_CDECL(std::string) to_string(id rhs);
+BSONCXX_ABI_EXPORT std::string to_string(id rhs);
 
 ///
 /// Enumeration identifying a BSON binary subtype.
@@ -92,7 +92,7 @@ enum class binary_subtype : std::uint8_t {
 ///
 /// @attention This feature is experimental! It is not ready for use!
 ///
-BSONCXX_ABI_EXPORT_CDECL(std::string) to_string(binary_subtype rhs);
+BSONCXX_ABI_EXPORT std::string to_string(binary_subtype rhs);
 
 } // namespace types
 } // namespace v1
