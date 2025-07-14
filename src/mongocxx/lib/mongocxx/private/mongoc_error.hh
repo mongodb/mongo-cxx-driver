@@ -52,12 +52,12 @@ inline void make_generic_bson_error(bson_error_t* error) {
 }
 
 template <typename exception_type>
-void throw_exception(::bson_error_t const& error) {
+[[noreturn]] void throw_exception(::bson_error_t const& error) {
     throw exception_type{make_error_code(error), error.message};
 }
 
 template <typename exception_type>
-void throw_exception(bsoncxx::v_noabi::document::value raw_server_error, ::bson_error_t const& error) {
+[[noreturn]] void throw_exception(bsoncxx::v_noabi::document::value raw_server_error, ::bson_error_t const& error) {
     throw exception_type{make_error_code(error), std::move(raw_server_error), error.message};
 }
 

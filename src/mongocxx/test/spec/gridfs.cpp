@@ -89,7 +89,7 @@ bsoncxx::stdx::optional<test_util::item_t> transform_hex(test_util::item_t pair,
         return {pair};
     }
 
-    std::basic_string<std::uint8_t> bytes = test_util::convert_hex_string_to_bytes(data["$hex"].get_string().value);
+    std::vector<std::uint8_t> bytes = test_util::convert_hex_string_to_bytes(data["$hex"].get_string().value);
     types::b_binary binary_data = {binary_sub_type::k_binary, static_cast<std::uint32_t>(bytes.size()), bytes.data()};
 
     context->append(binary_data);
@@ -230,7 +230,7 @@ void test_download(database db, gridfs::bucket bucket, document::view operation,
     // string>" }, which needs to be converted to an array of bytes.
     REQUIRE(result["$hex"]);
     std::string hex = bsoncxx::string::to_string(result["$hex"].get_string().value);
-    std::basic_string<std::uint8_t> expected = test_util::convert_hex_string_to_bytes(hex);
+    std::vector<std::uint8_t> expected = test_util::convert_hex_string_to_bytes(hex);
 
     REQUIRE(actual_size == expected.size());
 
@@ -267,7 +267,7 @@ void test_upload(database db, gridfs::bucket bucket, document::view operation, d
 
     REQUIRE(source["$hex"]);
     std::string hex = bsoncxx::string::to_string(source["$hex"].get_string().value);
-    std::basic_string<std::uint8_t> source_bytes = test_util::convert_hex_string_to_bytes(hex);
+    std::vector<std::uint8_t> source_bytes = test_util::convert_hex_string_to_bytes(hex);
 
     uploader.write(source_bytes.data(), source_bytes.size());
     result::gridfs::upload upload_result = uploader.close();

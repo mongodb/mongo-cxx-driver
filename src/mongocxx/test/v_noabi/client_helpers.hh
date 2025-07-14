@@ -18,6 +18,7 @@
 #include <functional>
 #include <string>
 #include <utility>
+#include <vector>
 
 #include <bsoncxx/builder/basic/array.hpp>
 #include <bsoncxx/document/element.hpp>
@@ -63,7 +64,7 @@ bool newer_than(std::string version);
 // This function assumes that `hex` has an even length and that all characters in the string are
 // valid hexadecimal digits.
 //
-std::basic_string<std::uint8_t> convert_hex_string_to_bytes(bsoncxx::stdx::string_view hex);
+std::vector<std::uint8_t> convert_hex_string_to_bytes(bsoncxx::stdx::string_view hex);
 
 //
 // Adds server API options to passed-in options if MONGODB_API_VERSION
