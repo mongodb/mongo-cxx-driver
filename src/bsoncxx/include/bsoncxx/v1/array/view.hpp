@@ -93,7 +93,9 @@ class view {
     }
 
     /// @copydoc v1::document::view::cbegin() const
-    BSONCXX_ABI_EXPORT_CDECL(const_iterator) cbegin() const;
+    const_iterator cbegin() const {
+        return _view.cbegin();
+    }
 
     /// @copydoc v1::document::view::cend() const
     const_iterator cend() const {
