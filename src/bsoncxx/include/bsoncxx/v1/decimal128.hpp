@@ -36,7 +36,7 @@ namespace category {
 ///
 /// @attention This feature is experimental! It is not ready for use!
 ///
-BSONCXX_ABI_EXPORT std::error_category const& decimal128();
+BSONCXX_ABI_EXPORT_CDECL(std::error_category const&) decimal128();
 
 } // namespace category
 } // namespace error
@@ -114,12 +114,12 @@ class decimal128 {
     /// @throws bsoncxx::v1::exception with @ref bsoncxx::v1::error::decimal128::invalid_string_data if `str` is not a
     /// valid Decimal128 string representation.
     ///
-    explicit BSONCXX_ABI_EXPORT decimal128(v1::stdx::string_view str);
+    explicit BSONCXX_ABI_EXPORT_CDECL() decimal128(v1::stdx::string_view str);
 
     ///
     /// Return the string representation.
     ///
-    BSONCXX_ABI_EXPORT std::string to_string() const;
+    BSONCXX_ABI_EXPORT_CDECL(std::string) to_string() const;
 
     ///
     /// Return the high-order bytes.

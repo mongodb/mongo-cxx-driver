@@ -46,7 +46,7 @@ namespace document {
 ///
 /// @attention This feature is experimental! It is not ready for use!
 ///
-BSONCXX_ABI_EXPORT std::error_category const& view();
+BSONCXX_ABI_EXPORT_CDECL(std::error_category const&) view();
 
 } // namespace document
 } // namespace category
@@ -140,7 +140,7 @@ class view {
     /// - `this->size() == 5`
     /// - `this->empty() == true`
     ///
-    BSONCXX_ABI_EXPORT view();
+    BSONCXX_ABI_EXPORT_CDECL() view();
 
     ///
     /// Initialize with the given BSON bytes.
@@ -215,7 +215,7 @@ class view {
     /// @exception bsoncxx::v1::exception with @ref bsoncxx::v1::error::document::view::invalid_data if this operation
     /// failed due to invalid BSON bytes.
     ///
-    BSONCXX_ABI_EXPORT const_iterator cbegin() const;
+    BSONCXX_ABI_EXPORT_CDECL(const_iterator) cbegin() const;
 
     ///
     /// Return a const iterator to the end of the range of BSON elements within this view.
@@ -239,7 +239,7 @@ class view {
     /// @exception bsoncxx::v1::exception with @ref bsoncxx::v1::error::document::view::invalid_data if this operation
     /// failed due to invalid BSON bytes.
     ///
-    BSONCXX_ABI_EXPORT const_iterator find(v1::stdx::string_view key) const;
+    BSONCXX_ABI_EXPORT_CDECL(const_iterator) find(v1::stdx::string_view key) const;
 
     ///
     /// Return the first element within the represented BSON document whose key compares equal to `key`.
@@ -365,7 +365,7 @@ class view::const_iterator {
     ///
     /// If this is an end iterator, it remains an end iterator.
     ///
-    BSONCXX_ABI_EXPORT const_iterator& operator++();
+    BSONCXX_ABI_EXPORT_CDECL(const_iterator&) operator++();
 
     ///
     /// Post-increment this iterator.
@@ -403,7 +403,7 @@ class view::const_iterator {
     class internal;
 
    private:
-    explicit BSONCXX_ABI_EXPORT const_iterator(v1::element::view element);
+    explicit BSONCXX_ABI_EXPORT_CDECL() const_iterator(v1::element::view element);
 };
 
 inline view::const_iterator view::cend() const {
