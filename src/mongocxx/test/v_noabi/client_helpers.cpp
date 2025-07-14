@@ -236,8 +236,8 @@ bool newer_than(std::string version) {
     return (compare_versions(server_version, version) >= 0);
 }
 
-std::basic_string<std::uint8_t> convert_hex_string_to_bytes(bsoncxx::stdx::string_view hex) {
-    std::basic_string<std::uint8_t> bytes;
+std::vector<std::uint8_t> convert_hex_string_to_bytes(bsoncxx::stdx::string_view hex) {
+    std::vector<std::uint8_t> bytes;
 
     // Convert each pair of hexadecimal digits into a number and store it in the array.
     for (std::size_t i = 0; i < hex.size(); i += 2) {
