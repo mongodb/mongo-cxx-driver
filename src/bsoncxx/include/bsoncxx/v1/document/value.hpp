@@ -286,6 +286,14 @@ class value {
     }
 
     ///
+    /// Equivalent to `this->reset(view)`.
+    ///
+    value& operator=(v1::document::view view) {
+        this->reset(view);
+        return *this;
+    }
+
+    ///
     /// Equivalent to `*this = value{v}`.
     ///
     /// @par Constraints:

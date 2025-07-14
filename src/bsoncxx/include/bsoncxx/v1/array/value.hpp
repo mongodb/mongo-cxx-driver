@@ -72,6 +72,12 @@ class value {
     /// @copydoc v1::document::value::value(v1::document::value const& other)
     value(value const& other) : _value(other._value) {}
 
+    /// @copydoc v1::document::value::operator=(v1::document::view view)
+    value& operator=(v1::array::view view) {
+        this->reset(view);
+        return *this;
+    }
+
     /// @copydoc v1::document::value::operator=(v1::document::value const& other)
     value& operator=(value const& other) {
         _value = other._value;
