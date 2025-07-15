@@ -264,7 +264,7 @@ Commit the updates to `etc/apidocmenu.md` and `CHANGELOG.md`.
 git commit -m 'Update CHANGELOG for X.Y.Z'
 ```
 
-### Pre-Release Changes PR
+##### Pre-Release Changes PR
 
 Push the `pre-release-changes` branch to a fork repository and create a PR to merge `pre-release-changes` onto `master`:
 
