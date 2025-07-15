@@ -302,7 +302,7 @@ source "$UV_PROJECT_ENVIRONMENT/bin/activate"
 ```
 
 > [!NOTE]
-> A new release branch `releases/vX.Y` will be created later as part of post-release steps.
+> A new release branch `releases/vX.Y` may be created later as part of post-release steps.
 
 ### Run etc/make_release.py
 
