@@ -736,10 +736,6 @@ Sync the entries in the patch release section to be consistent with the entries 
 <!-- Will contain entries for the next minor release. -->
 <!-- Ensure any existing entries are not removed during the sync. -->
 
-## 1.2.4 [Unreleased]
-
-<!-- Will contain entries for the next patch release. -->
-
 ## 1.2.3 <!-- Just released. -->
 
 <!-- Ensure these entries match those in the release. -->
