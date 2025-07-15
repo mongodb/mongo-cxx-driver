@@ -264,8 +264,6 @@ Commit the updates to `etc/apidocmenu.md` and `CHANGELOG.md`.
 git commit -m 'Update CHANGELOG for X.Y.Z'
 ```
 
-### Pre-Release Changes PR
-
 Push the `pre-release-changes` branch to a fork repository and create a PR to merge `pre-release-changes` onto `master`:
 
 ```bash
@@ -302,7 +300,7 @@ source "$UV_PROJECT_ENVIRONMENT/bin/activate"
 ```
 
 > [!NOTE]
-> A new release branch `releases/vX.Y` will be created later as part of post-release steps.
+> A new release branch `releases/vX.Y` may be created later as part of post-release steps.
 
 ### Run etc/make_release.py
 
@@ -561,8 +559,7 @@ git commit -m "Post-release changes"
 
 (Stable Releases Only) Close the Jira ticket tracking this release with "Documentation Changes" set to "Needed". Fill the "Documentation Changes Summary" field with information requesting updates to:
 
-  - the "Installing the MongoDB C Driver" section of the [Advanced Configuration and Installation Options](https://www.mongodb.com/docs/languages/cpp/cpp-driver/current/installation/advanced/#installing-the-mongodb-c-driver) page
-    with any new C Driver version requirements,
+  - the tables on the [Compatibility](https://www.mongodb.com/docs/languages/cpp/cpp-driver/current/compatibility/) page,
   - the "Driver Status by Family and Version" section of the [home
     page](https://www.mongodb.com/docs/languages/cpp/cpp-driver/current/#driver-status-by-family-and-version), and
   - the [full version](https://github.com/mongodb/docs-cpp/blob/master/snooty.toml) for the C++ Driver documentation pages.
@@ -572,7 +569,9 @@ This will generate a DOCSP ticket with instructions to update the C++ Driver doc
 Example (using Jira syntax formatting):
 
 ```
-* The [Advanced Installation|https://www.mongodb.com/docs/languages/cpp/cpp-driver/current/installation/advanced/#installing-the-mongodb-c-driver] page must be updated with a new requirement: "For mongocxx-X.Y.x, mongoc A.B.C or later is required."
+* The [Compatibility|https://www.mongodb.com/docs/languages/cpp/cpp-driver/current/compatibility/] page must be updated:
+  - mongocxx-X.Y.Z may change "libmongoc Compatibility" by requiring mongoc-A.B.C or later.
+  - mongocxx-X.Y.Z should have the same "MongoDB Compatibility", "Language Compatibility", and "Compiler Compatibility" as version mongocxx-X.Y.(Z-1)
 * The [MongoDB C++ Driver|https://www.mongodb.com/docs/languages/cpp/cpp-driver/current/#driver-status-by-family-and-version] page must be updated: {{{}mongocxx X.Y.x{}}} is now a previous stable release and no longer under active development; {{{}mongocxx X.Y+1.x{}}} is the new current stable release eligible for bug fixes.
 * the [full version|https://github.com/mongodb/docs-cpp/blob/master/snooty.toml] for C++ Driver documentation must be updated to {{{}X.Y.Z{}}}.
 ```
@@ -735,10 +734,6 @@ Sync the entries in the patch release section to be consistent with the entries 
 <!-- Will contain entries for the next minor release. -->
 <!-- Ensure any existing entries are not removed during the sync. -->
 
-## 1.2.4 [Unreleased]
-
-<!-- Will contain entries for the next patch release. -->
-
 ## 1.2.3 <!-- Just released. -->
 
 <!-- Ensure these entries match those in the release. -->
@@ -820,7 +815,7 @@ Please note that this version of mongocxx requires [MongoDB C Driver A.B.C](http
 
 See the [MongoDB C++ Driver Manual](https://www.mongodb.com/docs/languages/cpp/cpp-driver/current/) and the [Driver Installation Instructions](https://www.mongodb.com/docs/languages/cpp/cpp-driver/current/installation/) for more details on downloading, installing, and using this driver.
 
-NOTE: The mongocxx 3.10.x series does not promise API or ABI stability across patch releases.
+NOTE: The mongocxx X.Y.x series does not promise API or ABI stability across patch releases.
 
 Please feel free to post any questions on the MongoDB Community forum in the [Drivers](https://www.mongodb.com/community/forums/c/data/drivers/7) category tagged with [cxx](https://www.mongodb.com/community/forums/tag/cxx). Bug reports should be filed against the [CXX](https://jira.mongodb.org/projects/CXX) project in the MongoDB JIRA. Your feedback on the C++11 driver is greatly appreciated.
 
