@@ -1,5 +1,12 @@
 #!/usr/bin/env python3
 
+# /// script
+# requires-python = ">=3.8"
+# dependencies = [
+#   "jinja2",
+# ]
+# ///
+
 from jinja2 import Environment
 from jinja2 import FileSystemLoader
 
