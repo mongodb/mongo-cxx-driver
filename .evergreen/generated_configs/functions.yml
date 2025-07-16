@@ -246,6 +246,25 @@ functions:
       type: setup
       params:
         file: expansions.kondukto.yml
+    - command: expansions.update
+      params:
+        updates:
+          - { key: DOCKER_CONFIG, value: "${workdir}/.docker" }
+    - command: ec2.assume_role
+      params:
+        role_arn: arn:aws:iam::901841024863:role/ecr-role-evergreen-ro
+    - command: subprocess.exec
+      type: setup
+      params:
+        binary: bash
+        include_expansions_in_env:
+          - AWS_ACCESS_KEY_ID
+          - AWS_SECRET_ACCESS_KEY
+          - AWS_SESSION_TOKEN
+          - DOCKER_CONFIG
+        args:
+          - -c
+          - aws ecr get-login-password --region us-east-1 | podman login --username AWS --password-stdin 901841024863.dkr.ecr.us-east-1.amazonaws.com
     - command: subprocess.exec
       type: test
       params:
@@ -255,6 +274,7 @@ functions:
           - ARTIFACTORY_PASSWORD
           - ARTIFACTORY_USER
           - branch_name
+          - DOCKER_CONFIG
           - KONDUKTO_TOKEN
         args:
           - -c
@@ -328,26 +348,48 @@ functions:
         - -c
         - .evergreen/scripts/compile.sh
   docker-image-build:
-    command: subprocess.exec
-    type: test
-    params:
-      binary: bash
-      working_dir: mongo-cxx-driver
-      args:
-        - -c
-        - |
-          set -o errexit
-          set -o pipefail
-          docker login -u "${ARTIFACTORY_USER}" --password-stdin artifactory.corp.mongodb.com <<<"${ARTIFACTORY_PASSWORD}"
-          set -x
-          echo "Building Alpine Docker image"
-          make -C extras/docker/alpine3.19 nocachebuild test
-          echo "Building Debian Docker image"
-          make -C extras/docker/bookworm nocachebuild test
-          echo "Building Red Hat UBI Docker image"
-          make -C extras/docker/redhat-ubi-9.4 nocachebuild test
-          echo "Building Ubuntu Docker image"
-          make -C extras/docker/noble nocachebuild test
+    - command: expansions.update
+      params:
+        updates:
+          - { key: DOCKER_CONFIG, value: "${workdir}/.docker" }
+    - command: ec2.assume_role
+      params:
+        role_arn: arn:aws:iam::901841024863:role/ecr-role-evergreen-ro
+    - command: subprocess.exec
+      type: setup
+      params:
+        binary: bash
+        include_expansions_in_env:
+          - AWS_ACCESS_KEY_ID
+          - AWS_SECRET_ACCESS_KEY
+          - AWS_SESSION_TOKEN
+          - DOCKER_CONFIG
+        args:
+          - -c
+          - aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 901841024863.dkr.ecr.us-east-1.amazonaws.com
+    - command: subprocess.exec
+      type: test
+      params:
+        binary: bash
+        working_dir: mongo-cxx-driver
+        env:
+          DEFAULT_SEARCH_REGISTRY: 901841024863.dkr.ecr.us-east-1.amazonaws.com/dockerhub
+        include_expansions_in_env:
+          - DOCKER_CONFIG
+        args:
+          - -c
+          - |
+            set -o errexit
+            set -o pipefail
+            set -x
+            echo "Building Alpine Docker image"
+            make -C extras/docker/alpine3.19 nocachebuild test
+            echo "Building Debian Docker image"
+            make -C extras/docker/bookworm nocachebuild test
+            echo "Building Red Hat UBI Docker image"
+            make -C extras/docker/redhat-ubi-9.4 nocachebuild test
+            echo "Building Ubuntu Docker image"
+            make -C extras/docker/noble nocachebuild test
   fetch-det:
     - command: subprocess.exec
       type: setup
