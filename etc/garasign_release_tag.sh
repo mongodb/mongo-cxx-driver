@@ -17,14 +17,7 @@ if ! command -v "${launcher:?}" >/dev/null; then
   echo "${launcher:?} is required to create a GPG-signed release tag" 1>&2
 fi
 
-artifactory_creds=~/.secrets/artifactory-creds.txt
 garasign_creds=~/.secrets/garasign-creds.txt
-
-unset ARTIFACTORY_USER ARTIFACTORY_PASSWORD
-# shellcheck source=/dev/null
-. "${artifactory_creds:?}"
-: "${ARTIFACTORY_USER:?"missing ARTIFACTORY_USER in ${artifactory_creds:?}"}"
-: "${ARTIFACTORY_PASSWORD:?"missing ARTIFACTORY_PASSWORD in ${artifactory_creds:?}"}"
 
 unset GRS_CONFIG_USER1_USERNAME GRS_CONFIG_USER1_PASSWORD
 # shellcheck source=/dev/null
@@ -32,10 +25,8 @@ unset GRS_CONFIG_USER1_USERNAME GRS_CONFIG_USER1_PASSWORD
 : "${GRS_CONFIG_USER1_USERNAME:?"missing GRS_CONFIG_USER1_USERNAME in ${garasign_creds:?}"}"
 : "${GRS_CONFIG_USER1_PASSWORD:?"missing GRS_CONFIG_USER1_PASSWORD in ${garasign_creds:?}"}"
 
-"${launcher:?}" login --password-stdin --username "${ARTIFACTORY_USER:?}" artifactory.corp.mongodb.com <<<"${ARTIFACTORY_PASSWORD:?}"
-
 # Ensure latest version of Garasign is being used.
-"${launcher:?}" pull artifactory.corp.mongodb.com/release-tools-container-registry-local/garasign-git
+"${launcher:?}" pull 901841024863.dkr.ecr.us-east-1.amazonaws.com/release-infrastructure/garasign-git
 
 # Sign using "MongoDB C++ Release Signing Key <packaging@mongodb.com>" from https://pgp.mongodb.com/ (cpp-driver).
 git_tag_command=(
@@ -57,7 +48,7 @@ plugin_commands+=" && ${git_tag_command[*]:?}"
   --rm \
   -v "$(pwd):$(pwd)" \
   -w "$(pwd)" \
-  artifactory.corp.mongodb.com/release-tools-container-registry-local/garasign-git
+  901841024863.dkr.ecr.us-east-1.amazonaws.com/release-infrastructure/garasign-git
 
 # Validate the release tag is signed as intended.
 (
