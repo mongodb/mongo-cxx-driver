@@ -71,8 +71,6 @@ class CheckAugmentedSBOM(Function):
             command_type=EvgCommandType.TEST,
             working_dir='mongo-cxx-driver',
             include_expansions_in_env=[
-                'ARTIFACTORY_PASSWORD',
-                'ARTIFACTORY_USER',
                 'branch_name',
                 'DOCKER_CONFIG',
                 'KONDUKTO_TOKEN',

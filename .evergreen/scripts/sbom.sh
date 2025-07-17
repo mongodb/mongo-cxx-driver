@@ -3,8 +3,6 @@
 set -o errexit
 set -o pipefail
 
-: "${ARTIFACTORY_USER:?}"
-: "${ARTIFACTORY_PASSWORD:?}"
 : "${branch_name:?}"
 : "${DOCKER_CONFIG:?}"
 : "${KONDUKTO_TOKEN:?}"
