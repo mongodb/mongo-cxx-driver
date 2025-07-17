@@ -55,13 +55,19 @@ Some release steps require one or more of the following secrets.
     <jira_token>
     ```
   - See [Jira: Personal Access Tokens (PATs)](https://wiki.corp.mongodb.com/spaces/TOGETHER/pages/218995581/Jira+Personal+Access+Tokens+PATs) for steps to create a token.
-- Artifactory credentials.
-  - Location: `~/.secrets/artifactory-creds.txt`:
-  - Format:
-    ```bash
-    ARTIFACTORY_USER=<username>
-    ARTIFACTORY_PASSWORD=<password>
-    ```
+- Amazon ECR credentials
+  - Description: use [Amazon CLI v2](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html) to obtain [short-term credentials](https://docs.aws.amazon.com/cli/latest/userguide/cli-authentication-short-term.html) with [AWS IAM Identity Center](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-sso.html):
+  - Instructions:
+    - Configure a `<profile>` (e.g. "amazon-ecr") with the following options using `aws configure sso` or modifying `$HOME/.aws/config`:
+      - `sso_session`: `<session-name>` (e.g. username, purpose, etc.)
+      - `sso_account_id`: `901841024863` (aka `devprod-platforms-ecr`)
+      - `sso_region`: `us-east-1`
+      - `sso_registration_scopes`: `sso:account:access` (default)
+      - `sso_role_name`: `ECRScopedAccess` (default)
+      - `sso_start_url`: `https://d-9067613a84.awsapps.com/start#/`
+    - (Re-)authenticate by running `aws sso login --profile <profile>` or `aws sso login --sso-session <session-name>`.
+    - Forward the short-term credentials to `podman` or `docker`:
+      - `aws ecr get-login-password --profile <profile> | podman login --username AWS --password-stdin 901841024863.dkr.ecr.us-east-1.amazonaws.com`
 - Garasign credentials
   - Location: `~/.secrets/garasign-creds.txt`
   - Format:
@@ -114,22 +120,18 @@ All issues with an Impact level of "Medium" or greater which do not have a "Mong
 
 ### SBOM Lite
 
+Ensure the container engine (e.g. `podman` or `docker`) is authenticated with the DevProd-provided Amazon ECR instance.
+
 Ensure the list of bundled dependencies in `etc/purls.txt` is up-to-date. If not, update `etc/purls.txt`.
 
 If `etc/purls.txt` was updated, update the SBOM Lite document using the following command(s):
 
 ```bash
-# Artifactory credentials.
-. $HOME/.secrets/artifactory-creds.txt
-
-# Output: "Login succeeded!"
-podman login --password-stdin --username "${ARTIFACTORY_USER:?}" artifactory.corp.mongodb.com <<<"${ARTIFACTORY_PASSWORD:?}"
-
 # Ensure latest version of SilkBomb is being used.
-podman pull artifactory.corp.mongodb.com/release-tools-container-registry-public-local/silkbomb:2.0
+podman pull 901841024863.dkr.ecr.us-east-1.amazonaws.com/release-infrastructure/silkbomb:2.0
 
 # Output: "... writing sbom to file"
-podman run -it --rm -v "$(pwd):/pwd" artifactory.corp.mongodb.com/release-tools-container-registry-public-local/silkbomb:2.0 \
+podman run -it --rm -v "$(pwd):/pwd" 901841024863.dkr.ecr.us-east-1.amazonaws.com/release-infrastructure/silkbomb:2.0 \
   update --refresh --no-update-sbom-version -p "/pwd/etc/purls.txt" -i "/pwd/etc/cyclonedx.sbom.json" -o "/pwd/etc/cyclonedx.sbom.json"
 ```
 
@@ -322,7 +324,7 @@ The following secrets are required by this script:
 
 - GitHub Personal Access Token.
 - Jira Personal Access Token.
-- Artifactory credentials.
+- Amazon ECR credentials.
 - Garasign credentials.
 
 Run the release script with the name of the tag to be created as an argument and
@@ -449,17 +451,11 @@ The new branch should be continuously tested on Evergreen. Update the "Display N
 Update `etc/cyclonedx.sbom.json` with a new unique serial number for the next upcoming patch release (e.g. for `1.3.1` following the release of `1.3.0`):
 
 ```bash
-# Artifactory credentials.
-. $HOME/.secrets/artifactory-creds.txt
-
-# Output: "Login succeeded!"
-podman login --password-stdin --username "${ARTIFACTORY_USER:?}" artifactory.corp.mongodb.com <<<"${ARTIFACTORY_PASSWORD:?}"
-
 # Ensure latest version of SilkBomb is being used.
-podman pull artifactory.corp.mongodb.com/release-tools-container-registry-public-local/silkbomb:2.0
+podman pull 901841024863.dkr.ecr.us-east-1.amazonaws.com/release-infrastructure/silkbomb:2.0
 
 # Output: "... writing sbom to file"
-podman run -it --rm -v "$(pwd):/pwd" artifactory.corp.mongodb.com/release-tools-container-registry-public-local/silkbomb:2.0 \
+podman run -it --rm -v "$(pwd):/pwd" 901841024863.dkr.ecr.us-east-1.amazonaws.com/release-infrastructure/silkbomb:2.0 \
   update --refresh --generate-new-serial-number -p "/pwd/etc/purls.txt" -i "/pwd/etc/cyclonedx.sbom.json" -o "/pwd/etc/cyclonedx.sbom.json"
 ```
 
@@ -533,17 +529,11 @@ In `README.md`, sync the "Driver Development Status" table with the updated tabl
 Update `etc/cyclonedx.sbom.json` with a new unique serial number for the next upcoming non-patch release (e.g. for `1.4.0` following the release of `1.3.0`):
 
 ```bash
-# Artifactory credentials.
-. $HOME/.secrets/artifactory-creds.txt
-
-# Output: "Login succeeded!"
-podman login --password-stdin --username "${ARTIFACTORY_USER:?}" artifactory.corp.mongodb.com <<<"${ARTIFACTORY_PASSWORD:?}"
-
 # Ensure latest version of SilkBomb is being used.
-podman pull artifactory.corp.mongodb.com/release-tools-container-registry-public-local/silkbomb:2.0
+podman pull 901841024863.dkr.ecr.us-east-1.amazonaws.com/release-infrastructure/silkbomb:2.0
 
 # Output: "... writing sbom to file"
-podman run -it --rm -v "$(pwd):/pwd" artifactory.corp.mongodb.com/release-tools-container-registry-public-local/silkbomb:2.0 \
+podman run -it --rm -v "$(pwd):/pwd" 901841024863.dkr.ecr.us-east-1.amazonaws.com/release-infrastructure/silkbomb:2.0 \
   update --refresh --generate-new-serial-number -p "/pwd/etc/purls.txt" -i "/pwd/etc/cyclonedx.sbom.json" -o "/pwd/etc/cyclonedx.sbom.json"
 ```
 

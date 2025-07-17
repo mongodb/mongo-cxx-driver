@@ -1,14 +1,15 @@
 MONGOCXX_VERSION={{ mongocxx_version }}
 DOCKER=docker
+DEFAULT_SEARCH_REGISTRY?=docker.io
 
 .PHONY: build
 build:
-	$(DOCKER) build . \
+	$(DOCKER) build --build-arg default_search_registry=$(DEFAULT_SEARCH_REGISTRY) . \
 		-t mongodb/mongo-cxx-driver:$(MONGOCXX_VERSION)-{{ distro }}
 
 .PHONY: nocachebuild
 nocachebuild:
-	$(DOCKER) build . \
+	$(DOCKER) build --build-arg default_search_registry=$(DEFAULT_SEARCH_REGISTRY) . \
 		--no-cache \
 		-t mongodb/mongo-cxx-driver:$(MONGOCXX_VERSION)-{{ distro }}
 
@@ -18,6 +19,6 @@ run: | $(filter nocachebuild build, $(MAKECMDGOALS))
 
 .PHONY: test
 test: | $(filter nocachebuild build, $(MAKECMDGOALS))
-	$(DOCKER) build . --no-cache -f TestDockerfile -t test-mongocxx-driver-image:$(MONGOCXX_VERSION)-{{ distro }}
+	$(DOCKER) build --build-arg default_search_registry=$(DEFAULT_SEARCH_REGISTRY) . \
+		--no-cache -f TestDockerfile -t test-mongocxx-driver-image:$(MONGOCXX_VERSION)-{{ distro }}
 	$(DOCKER) run test-mongocxx-driver-image:$(MONGOCXX_VERSION)-{{ distro }}
-

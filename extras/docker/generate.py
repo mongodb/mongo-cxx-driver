@@ -1,5 +1,12 @@
 #!/usr/bin/env python3
 
+# /// script
+# requires-python = ">=3.8"
+# dependencies = [
+#   "jinja2",
+# ]
+# ///
+
 from jinja2 import Environment
 from jinja2 import FileSystemLoader
 
@@ -11,6 +18,9 @@ MONGOCRYPT_VERSION = "1.10.0"
 
 def render_template(template_filename, context):
     env = Environment(loader=FileSystemLoader("."))
+    env.trim_blocks = True
+    env.lstrip_blocks = True
+    env.keep_trailing_newline = True
     template = env.get_template(template_filename)
     rendered = template.render(context)
     return rendered
@@ -30,9 +40,9 @@ if __name__ == "__main__":
         "redhat-ubi-9.4",
     ]
     base_image = {
-        "alpine3.19": "artifactory.corp.mongodb.com/dockerhub/library/alpine:3.19",
-        "bookworm": "artifactory.corp.mongodb.com/dockerhub/library/debian:12-slim",
-        "noble": "artifactory.corp.mongodb.com/dockerhub/library/ubuntu:24.04",
+        "alpine3.19": "${default_search_registry}/library/alpine:3.19",
+        "bookworm": "${default_search_registry}/library/debian:12-slim",
+        "noble": "${default_search_registry}/library/ubuntu:24.04",
         "redhat-ubi-9.4": "registry.access.redhat.com/ubi9/ubi-minimal:9.4",
     }
     test_dependency_install_command = {
@@ -54,14 +64,14 @@ if __name__ == "__main__":
         "redhat-ubi-9.4": "microdnf upgrade -y && microdnf install -y openssl",
     }
     post_install_commands = {
-        "alpine3.19": "",
-        "bookworm": "\nRUN ldconfig\n",
-        "noble": "\nRUN ldconfig\n",
+        "alpine3.19": "\nRUN true",
+        "bookworm": "\nRUN ldconfig",
+        "noble": "\nRUN ldconfig",
         "redhat-ubi-9.4": (
             "\n"
             "RUN ldconfig\n"
             "\n"
-            'ENV LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:/usr/local/lib64/"\n'
+            'ENV LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:/usr/local/lib64/"'
         ),
     }
     for template, output_filename in templates:
