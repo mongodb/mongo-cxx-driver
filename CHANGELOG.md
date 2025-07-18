@@ -9,7 +9,9 @@ Changes prior to 3.9.0 are documented as [release notes on GitHub](https://githu
 
 ## 4.1.2 [Unreleased]
 
-<!-- Will contain entries for the next patch release. -->
+### Fixed
+
+- `storage_engine() const` in `mongocxx::v_noabi::options::index` is correctly exported using mongocxx export macros instead of bsoncxx export macros.
 
 ## 4.1.1
 
