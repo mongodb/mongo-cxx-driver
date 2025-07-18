@@ -42,6 +42,7 @@
 ///
 // clang-format off
 #define BSONCXX_V1_TYPES_XMACRO(X) \
+    X(minkey,    -0x01) \
     X(double,     0x01) \
     X(string,     0x02) \
     X(document,   0x03) \
@@ -61,8 +62,7 @@
     X(timestamp,  0x11) \
     X(int64,      0x12) \
     X(decimal128, 0x13) \
-    X(maxkey,     0x7F) \
-    X(minkey,     0xFF)
+    X(maxkey,     0x7F)
 // clang-format on
 
 ///
@@ -106,7 +106,7 @@ namespace bsoncxx {
 namespace v1 {
 namespace types {
 
-enum class id : std::uint8_t;
+enum class id : std::int8_t;
 enum class binary_subtype : std::uint8_t;
 
 } // namespace types

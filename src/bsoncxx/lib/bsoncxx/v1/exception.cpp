@@ -13,3 +13,13 @@
 // limitations under the License.
 
 #include <bsoncxx/v1/exception.hpp>
+
+//
+
+namespace bsoncxx {
+namespace v1 {
+
+exception::~exception() = default;
+
+} // namespace v1
+} // namespace bsoncxx

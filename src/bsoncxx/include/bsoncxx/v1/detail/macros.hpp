@@ -83,6 +83,8 @@
 #define BSONCXX_PRIVATE_CONSTEXPR_CXX14 inline
 #endif
 
+#define BSONCXX_PRIVATE_MAX_ALIGN_T std::max_align_t
+
 #define BSONCXX_PRIVATE_IF_MSVC(...)
 #define BSONCXX_PRIVATE_IF_GCC(...)
 #define BSONCXX_PRIVATE_IF_CLANG(...)
