@@ -303,7 +303,7 @@ class index {
     ///
     /// The current storage engine options.
     ///
-    BSONCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view> const&)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view> const&)
     storage_engine() const;
 
     ///
