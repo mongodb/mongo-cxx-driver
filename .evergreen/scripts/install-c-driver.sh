@@ -48,15 +48,15 @@ echo "ninja version: $(ninja --version)"
 # Default CMake generator to use if not already provided.
 declare CMAKE_GENERATOR CMAKE_GENERATOR_PLATFORM
 if [[ "${OSTYPE:?}" == "cygwin" ]]; then
-  # MSBuild parallelism.
+  # MSBuild task-based parallelism (VS 2019 16.3 and newer).
   export UseMultiToolTask=true
-  export EnforceProcessCountAcrossBuilds=true
+  export EnforceProcessCountAcrossBuilds=trusted
+  # MSBuild inter-project parallelism via CMake (3.26 and newer).
+  export CMAKE_BUILD_PARALLEL_LEVEL
+  CMAKE_BUILD_PARALLEL_LEVEL="$(nproc)" # /maxcpucount
 
   CMAKE_GENERATOR="${generator:-"Visual Studio 14 2015"}"
   CMAKE_GENERATOR_PLATFORM="${platform:-"x64"}"
-
-  export CMAKE_BUILD_PARALLEL_LEVEL
-  CMAKE_BUILD_PARALLEL_LEVEL="$(nproc)"
 else
   CMAKE_GENERATOR="Ninja"
   CMAKE_GENERATOR_PLATFORM="${platform:-""}"
@@ -96,8 +96,6 @@ declare -a compile_flags
 
 case "${OSTYPE:?}" in
 cygwin)
-  compile_flags+=("/maxcpucount:$(nproc)")
-
   # Replace `/Zi`, which is incompatible with ccache, with `/Z7` while preserving other default debug flags.
   cmake_flags+=(
     "-DCMAKE_MSVC_DEBUG_INFORMATION_FORMAT=Embedded"

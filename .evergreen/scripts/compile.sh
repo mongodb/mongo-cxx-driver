@@ -58,7 +58,14 @@ build_targets=()
 cmake_build_opts=()
 case "${OSTYPE:?}" in
 cygwin)
-  cmake_build_opts+=("/verbosity:minimal" "/maxcpucount:$(nproc)")
+  # MSBuild task-based parallelism (VS 2019 16.3 and newer).
+  export UseMultiToolTask=true
+  export EnforceProcessCountAcrossBuilds=true
+  # MSBuild inter-project parallelism via CMake (3.26 and newer).
+  export CMAKE_BUILD_PARALLEL_LEVEL
+  CMAKE_BUILD_PARALLEL_LEVEL="$(nproc)" # /maxcpucount
+
+  cmake_build_opts+=("/verbosity:minimal")
   build_targets+=(--target ALL_BUILD --target examples/examples)
   ;;
 
