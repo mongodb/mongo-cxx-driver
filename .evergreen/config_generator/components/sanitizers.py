@@ -61,8 +61,8 @@ def tasks():
             compile_vars = {'ENABLE_TESTS': 'ON', 'RUN_DISTCHECK': 1}
             test_vars = {
                 'MONGOCXX_TEST_TOPOLOGY': topology,
-                'example_projects_cc': 'clang',
-                'example_projects_cxx': 'clang++',
+                'example_projects_cc': cc_compiler,
+                'example_projects_cxx': cxx_compiler,
             }
 
             if link_type == 'static':
@@ -96,8 +96,8 @@ def tasks():
             commands += [
                 Setup.call(),
                 StartMongod.call(mongodb_version=mongodb_version, topology=topology),
-                InstallCDriver.call(vars=icd_vars),
                 InstallUV.call(),
+                InstallCDriver.call(vars=icd_vars),
                 Compile.call(vars=compile_vars),
                 FetchDET.call(),
                 RunKMSServers.call(),

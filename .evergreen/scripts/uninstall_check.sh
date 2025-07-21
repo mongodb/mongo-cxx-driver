@@ -5,19 +5,7 @@ set -o errexit # Exit the script with error if any of the commands fail
 BUILD_DIR="$(pwd)/build"
 INSTALL_DIR="$BUILD_DIR/install"
 
-if [[ "${distro_id:?}" == rhel* ]]; then
-  LIB_DIR="lib64"
-else
-  LIB_DIR="lib"
-fi
-
 touch "$INSTALL_DIR/$LIB_DIR/canary.txt"
-
-ls -l "$INSTALL_DIR/share/mongo-cxx-driver"
-
-. .evergreen/scripts/find-cmake-old.sh
-
-"$CMAKE" --build "$BUILD_DIR" --target uninstall
 
 ls -lR "$INSTALL_DIR"
 

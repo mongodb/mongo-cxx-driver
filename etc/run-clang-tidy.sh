@@ -17,12 +17,16 @@ if ! command -V parallel >/dev/null; then
   sudo yum install -q -y parallel
 fi
 
+# Obtain preferred build tools.
 PATH="${UV_INSTALL_DIR:?}:${PATH:-}"
-uvx clang-tidy --version
+PATH="${PATH:-}:/opt/mongodbtoolchain/v4/bin" # For ninja.
+export CMAKE_GENERATOR
+CMAKE_GENERATOR="Ninja"
+clang_tidy_binary="$(uv run --no-project --isolated --with clang-tidy bash -c "command -v clang-tidy")"
 
-. ../mongoc/.evergreen/scripts/find-cmake-latest.sh
-cmake_binary="$(find_cmake_latest)"
-command -v "${cmake_binary:?}"
+uvx cmake --version | head -n 1
+echo "ninja version: $("{ninja_binary:?}" --version)"
+"${clang_tidy_binary:?}" --version
 
 # Use ccache if available.
 if [[ -f "../mongoc/.evergreen/scripts/find-ccache.sh" ]]; then
@@ -34,15 +38,15 @@ fi
 cmake_config_flags=(
   -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
   -DCMAKE_BUILD_TYPE=Debug
-  -DCMAKE_PREFIX_PATH="$(pwd)/../mongoc" # Avoid downloading C Driver.
+  "-DCMAKE_PREFIX_PATH=$(pwd)/../mongoc" # Avoid downloading C Driver.
   -DCMAKE_CXX_STANDARD=17
 )
 
 # Generate the compilation database file.
-"${cmake_binary:?}" -S . -B build "${cmake_config_flags[@]}"
+uvx cmake -S . -B build "${cmake_config_flags[@]}"
 
 # Some files (i.e. headers) may need to be generated during the build step.
-CMAKE_BUILD_PARALLEL_LEVEL="$(nproc)" "${cmake_binary:?}" --build build
+uvx cmake --build build
 
 #
 # Each check has a name and the checks to run can be chosen using the -checks= option, which specifies a comma-separated
@@ -60,7 +64,7 @@ CMAKE_BUILD_PARALLEL_LEVEL="$(nproc)" "${cmake_binary:?}" --build build
 #
 
 echo "Running clang-tidy with configuration:"
-uvx clang-tidy -p=build -dump-config
+"${clang_tidy_binary:?}" -p=build -dump-config
 
 find_args=(
   -type f
@@ -75,5 +79,5 @@ find src "${find_args[@]}"
 
 # TODO: update clang-tidy config and address warnings.
 {
-  find src "${find_args[@]}" | parallel uvx clang-tidy --quiet -p=build {} 2>/dev/null
+  find src "${find_args[@]}" | parallel "${clang_tidy_binary:?}" --quiet -p=build {} 2>/dev/null
 } || true

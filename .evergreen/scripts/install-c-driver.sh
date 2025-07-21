@@ -37,38 +37,47 @@ mkdir "${mongoc_dir}"
 curl -sS -o mongo-c-driver.tar.gz -L "https://api.github.com/repos/mongodb/mongo-c-driver/tarball/${mongoc_version}"
 tar xzf mongo-c-driver.tar.gz --directory "${mongoc_dir}" --strip-components=1
 
-# shellcheck source=/dev/null
-. "${mongoc_dir}/.evergreen/scripts/find-cmake-latest.sh"
-declare cmake_binary
-cmake_binary="$(find_cmake_latest)"
-command -v "${cmake_binary:?}"
+# Obtain preferred build tools.
+PATH="${UV_INSTALL_DIR:?}:${PATH:-}"
+PATH="${PATH:-}:/opt/mongodbtoolchain/v4/bin" # For ninja.
+cmake_binary="$(uv run --no-project --isolated --with cmake bash -c "command -v cmake")"
+
+"${cmake_binary:?}" --version | head -n 1
+echo "ninja version: $(ninja --version)"
+
+# Default CMake generator to use if not already provided.
+declare CMAKE_GENERATOR CMAKE_GENERATOR_PLATFORM
+if [[ "${OSTYPE:?}" == "cygwin" ]]; then
+  # MSBuild parallelism.
+  export UseMultiToolTask=true
+  export EnforceProcessCountAcrossBuilds=true
+
+  CMAKE_GENERATOR="${generator:-"Visual Studio 14 2015"}"
+  CMAKE_GENERATOR_PLATFORM="${platform:-"x64"}"
+
+  export CMAKE_BUILD_PARALLEL_LEVEL
+  CMAKE_BUILD_PARALLEL_LEVEL="$(nproc)"
+else
+  CMAKE_GENERATOR="Ninja"
+  CMAKE_GENERATOR_PLATFORM="${platform:-""}"
+fi
+export CMAKE_GENERATOR CMAKE_GENERATOR_PLATFORM
+
+# Use ccache if available.
+if [[ -f "${mongoc_dir:?}/.evergreen/scripts/find-ccache.sh" ]]; then
+  # shellcheck source=/dev/null
+  . "${mongoc_dir:?}/.evergreen/scripts/find-ccache.sh"
+  find_ccache_and_export_vars "$(pwd)" || true
+fi
 
 # Install libmongocrypt.
 if [[ "${SKIP_INSTALL_LIBMONGOCRYPT:-}" != "1" ]]; then
   {
     echo "Installing libmongocrypt into ${mongoc_dir}..." 1>&2
-    "${mongoc_dir}/.evergreen/scripts/compile-libmongocrypt.sh" "${cmake_binary}" "${mongoc_idir}" "${mongoc_install_idir}"
+    "${mongoc_dir}/.evergreen/scripts/compile-libmongocrypt.sh" "${cmake_binary:?}" "${mongoc_idir}" "${mongoc_install_idir}"
     echo "Installing libmongocrypt into ${mongoc_dir}... done." 1>&2
   } >/dev/null
 fi
-
-if [[ "${OSTYPE}" == darwin* ]]; then
-  # MacOS does not have nproc.
-  nproc() {
-    sysctl -n hw.logicalcpu
-  }
-fi
-
-# Default CMake generator to use if not already provided.
-declare CMAKE_GENERATOR CMAKE_GENERATOR_PLATFORM
-if [[ "${OSTYPE:?}" == "cygwin" ]]; then
-  CMAKE_GENERATOR="${generator:-"Visual Studio 14 2015"}"
-  CMAKE_GENERATOR_PLATFORM="${platform:-"x64"}"
-else
-  CMAKE_GENERATOR="${generator:-"Unix Makefiles"}"
-  CMAKE_GENERATOR_PLATFORM="${platform:-""}"
-fi
-export CMAKE_GENERATOR CMAKE_GENERATOR_PLATFORM
 
 declare -a configure_flags=(
   "-DCMAKE_BUILD_TYPE=Debug"
@@ -97,25 +106,16 @@ cygwin)
 darwin*)
   configure_flags+=("-DCMAKE_C_FLAGS=-fPIC")
   configure_flags+=("-DCMAKE_MACOSX_RPATH=ON")
-  compile_flags+=("-j" "$(nproc)")
   ;;
 *)
   configure_flags+=("-DCMAKE_C_FLAGS=-fPIC")
-  compile_flags+=("-j" "$(nproc)")
   ;;
 esac
-
-# Use ccache if available.
-if [[ -f "${mongoc_dir:?}/.evergreen/scripts/find-ccache.sh" ]]; then
-  # shellcheck source=/dev/null
-  . "${mongoc_dir:?}/.evergreen/scripts/find-ccache.sh"
-  find_ccache_and_export_vars "$(pwd)" || true
-fi
 
 # Install C Driver libraries.
 {
   echo "Installing C Driver into ${mongoc_dir}..." 1>&2
-  "${cmake_binary}" -S "${mongoc_idir}" -B "${mongoc_idir}" "${configure_flags[@]}"
-  "${cmake_binary}" --build "${mongoc_idir}" --config Debug --target install -- "${compile_flags[@]}"
+  "${cmake_binary:?}" -S "${mongoc_idir}" -B "${mongoc_idir}" "${configure_flags[@]}"
+  "${cmake_binary:?}" --build "${mongoc_idir}" --config Debug --target install -- "${compile_flags[@]}"
   echo "Installing C Driver into ${mongoc_dir}... done." 1>&2
 } >/dev/null

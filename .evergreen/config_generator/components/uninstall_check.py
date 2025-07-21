@@ -33,11 +33,28 @@ class UninstallCheck(Function):
     commands = bash_exec(
         command_type=EvgCommandType.TEST,
         working_dir='mongo-cxx-driver',
-        include_expansions_in_env=['distro_id'],
         script='''\
+            set -o errexit
+            set -o pipefail
+
+            # lib vs. lib64 (i.e. RHEL).
+            for p in build/install/lib*; do
+                touch "$p/canary.txt"
+            done
+
+            ls -l "build/install/share/mongo-cxx-driver"
+
             case "$OSTYPE" in
-            darwin*|linux*) .evergreen/scripts/uninstall_check.sh ;;
-            cygwin) cmd.exe /c ".evergreen\\\\scripts\\\\uninstall_check_windows.cmd" ;;
+            darwin*|linux*)
+                # Ninja generator.
+                uvx cmake --build build --target uninstall
+                .evergreen/scripts/uninstall_check.sh
+                ;;
+            cygwin)
+                # Visual Studio generator.
+                uvx cmake --build build --config Debug --target uninstall
+                cmd.exe /c ".evergreen\\\\scripts\\\\uninstall_check_windows.cmd"
+                ;;
             esac
         '''
     )

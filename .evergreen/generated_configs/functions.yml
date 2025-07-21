@@ -298,10 +298,10 @@ functions:
         binary: bash
         working_dir: mongo-cxx-driver
         include_expansions_in_env:
-          - CMAKE_MAJOR_VERSION
-          - CMAKE_MINOR_VERSION
-          - CMAKE_PATCH_VERSION
+          - CMAKE_VERSION
+          - distro_id
           - INSTALL_C_DRIVER
+          - UV_INSTALL_DIR
         args:
           - -c
           - .evergreen/scripts/cmake-compat.sh
@@ -310,10 +310,10 @@ functions:
       params:
         binary: bash
         include_expansions_in_env:
-          - CMAKE_MAJOR_VERSION
-          - CMAKE_MINOR_VERSION
-          - CMAKE_PATCH_VERSION
+          - CMAKE_VERSION
+          - distro_id
           - INSTALL_C_DRIVER
+          - UV_INSTALL_DIR
         args:
           - -c
           - mongo-cxx-driver/.evergreen/scripts/cmake-compat-check.sh
@@ -505,7 +505,8 @@ functions:
         DRYRUN: "1"
       args:
         - -c
-        - ${UV_INSTALL_DIR}/uv run --frozen etc/clang-format-all.sh
+        - |
+          PATH="${UV_INSTALL_DIR}:$PATH" uv run --frozen etc/clang-format-all.sh
   run scan build:
     - command: subprocess.exec
       type: test
@@ -597,38 +598,9 @@ functions:
       params:
         file: expansions.set-cache-dir.yml
   setup:
-    - command: subprocess.exec
-      type: setup
-      params:
-        binary: bash
-        args:
-          - -c
-          - |
-            set -o errexit
-            set -o pipefail
-            rm -rf "mongo-cxx-driver"
-            rm -fr "mongo-c-driver"
-            rm -fr mongod
-            rm -fr drivers-evergreen-tools
-    - command: git.get_project
-      params:
-        directory: mongo-cxx-driver
-    - command: subprocess.exec
-      type: setup
-      params:
-        binary: bash
-        args:
-          - -c
-          - |
-            set -o errexit
-            set -o pipefail
-            cc --version || true
-            c++ --version || true
-            gcc --version || true
-            g++ --version || true
-            clang --version || true
-            cmake --version || true
-            openssl version || true
+    command: git.get_project
+    params:
+      directory: mongo-cxx-driver
   start_mongod:
     - command: subprocess.exec
       type: setup
@@ -696,6 +668,7 @@ functions:
         - TEST_WITH_VALGRIND
         - use_mongocryptd
         - USE_STATIC_LIBS
+        - UV_INSTALL_DIR
         - VALGRIND_INSTALL_DIR
       args:
         - -c
@@ -774,14 +747,30 @@ functions:
     params:
       binary: bash
       working_dir: mongo-cxx-driver
-      include_expansions_in_env:
-        - distro_id
       args:
         - -c
         - |
+          set -o errexit
+          set -o pipefail
+
+          # lib vs. lib64 (i.e. RHEL).
+          for p in build/install/lib*; do
+              touch "$p/canary.txt"
+          done
+
+          ls -l "build/install/share/mongo-cxx-driver"
+
           case "$OSTYPE" in
-          darwin*|linux*) .evergreen/scripts/uninstall_check.sh ;;
-          cygwin) cmd.exe /c ".evergreen\\scripts\\uninstall_check_windows.cmd" ;;
+          darwin*|linux*)
+              # Ninja generator.
+              uvx cmake --build build --target uninstall
+              .evergreen/scripts/uninstall_check.sh
+              ;;
+          cygwin)
+              # Visual Studio generator.
+              uvx cmake --build build --config Debug --target uninstall
+              cmd.exe /c ".evergreen\\scripts\\uninstall_check_windows.cmd"
+              ;;
           esac
   upload augmented sbom:
     - command: s3.put

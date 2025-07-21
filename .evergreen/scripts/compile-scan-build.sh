@@ -5,14 +5,19 @@ set -o pipefail
 
 : "${BSONCXX_POLYFILL:-}"
 : "${CXX_STANDARD:?}"
+: "${UV_INSTALL_DIR:?}"
 
 mongoc_prefix="$(pwd)/../mongoc"
 
-# shellcheck source=/dev/null
-. "${mongoc_prefix:?}/.evergreen/scripts/find-cmake-latest.sh"
-export cmake_binary
-cmake_binary="$(find_cmake_latest)"
-command -v "$cmake_binary"
+# Obtain preferred build tools.
+PATH="${UV_INSTALL_DIR:?}:${PATH:-}"
+PATH="${PATH:-}:/opt/mongodbtoolchain/v4/bin" # For ninja.
+export CMAKE_GENERATOR
+CMAKE_GENERATOR="Ninja"
+cmake_binary="$(uv run --no-project --isolated --with cmake bash -c "command -v cmake")"
+
+"${cmake_binary:?}" --version
+echo "ninja version: $(ninja --version)"
 
 # Use ccache if available.
 if [[ -f "../mongoc/.evergreen/scripts/find-ccache.sh" ]]; then
@@ -49,15 +54,6 @@ done
 : "${scan_build_binary:?"could not find a scan-build binary!"}"
 export CC
 export CXX
-
-if [[ "${OSTYPE}" == darwin* ]]; then
-  # MacOS does not have nproc.
-  nproc() {
-    sysctl -n hw.logicalcpu
-  }
-fi
-CMAKE_BUILD_PARALLEL_LEVEL="$(nproc)"
-export CMAKE_BUILD_PARALLEL_LEVEL
 
 cmake_flags=(
   "-DCMAKE_BUILD_TYPE=Debug"

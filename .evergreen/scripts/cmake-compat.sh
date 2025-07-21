@@ -3,10 +3,9 @@
 set -o errexit
 set -o pipefail
 
-: "${CMAKE_MAJOR_VERSION:?}"
-: "${CMAKE_MINOR_VERSION:?}"
-: "${CMAKE_PATCH_VERSION:?}"
+: "${CMAKE_VERSION:?}"
 : "${INSTALL_C_DRIVER:?}"
+: "${UV_INSTALL_DIR:?}"
 
 [[ -d ../mongoc ]] || {
   echo "missing mongoc directory"
@@ -18,14 +17,15 @@ if [[ "${OSTYPE:?}" =~ cygwin ]]; then
   mongoc_prefix="$(cygpath -m "${mongoc_prefix:?}")"
 fi
 
-# shellcheck source=/dev/null
-. "${mongoc_prefix:?}/.evergreen/scripts/find-cmake-version.sh"
-export cmake_binary
-cmake_binary="$(find_cmake_version "${CMAKE_MAJOR_VERSION:?}" "${CMAKE_MINOR_VERSION:?}" "${CMAKE_PATCH_VERSION:?}")"
-"${cmake_binary:?}" --version
+# Obtain preferred build tools.
+PATH="${UV_INSTALL_DIR:?}:${PATH:-}"
+PATH="${PATH:-}:/opt/mongodbtoolchain/v4/bin" # For ninja.
+export CMAKE_GENERATOR
+CMAKE_GENERATOR="Ninja"
+cmake_binary="$(uv run --no-project --isolated --with "cmake~=${CMAKE_VERSION:?}" bash -c "command -v cmake")"
 
-CMAKE_BUILD_PARALLEL_LEVEL="$(nproc)"
-export CMAKE_BUILD_PARALLEL_LEVEL
+"${cmake_binary:?}" --version
+echo "ninja version: $(ninja --version)"
 
 # Use ccache if available.
 if [[ -f "${mongoc_prefix:?}/.evergreen/scripts/find-ccache.sh" ]]; then
