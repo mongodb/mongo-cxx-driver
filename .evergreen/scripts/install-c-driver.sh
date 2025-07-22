@@ -50,7 +50,7 @@ declare CMAKE_GENERATOR CMAKE_GENERATOR_PLATFORM
 if [[ "${OSTYPE:?}" == "cygwin" ]]; then
   # MSBuild task-based parallelism (VS 2019 16.3 and newer).
   export UseMultiToolTask=true
-  export EnforceProcessCountAcrossBuilds=trusted
+  export EnforceProcessCountAcrossBuilds=true
   # MSBuild inter-project parallelism via CMake (3.26 and newer).
   export CMAKE_BUILD_PARALLEL_LEVEL
   CMAKE_BUILD_PARALLEL_LEVEL="$(nproc)" # /maxcpucount
