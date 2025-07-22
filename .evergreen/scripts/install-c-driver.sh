@@ -63,13 +63,6 @@ else
 fi
 export CMAKE_GENERATOR CMAKE_GENERATOR_PLATFORM
 
-# Use ccache if available.
-if [[ -f "${mongoc_dir:?}/.evergreen/scripts/find-ccache.sh" ]]; then
-  # shellcheck source=/dev/null
-  . "${mongoc_dir:?}/.evergreen/scripts/find-ccache.sh"
-  find_ccache_and_export_vars "$(pwd)" || true
-fi
-
 # Install libmongocrypt.
 if [[ "${SKIP_INSTALL_LIBMONGOCRYPT:-}" != "1" ]]; then
   {
@@ -109,6 +102,13 @@ darwin*)
   configure_flags+=("-DCMAKE_C_FLAGS=-fPIC")
   ;;
 esac
+
+# Use ccache if available.
+if [[ -f "${mongoc_dir:?}/.evergreen/scripts/find-ccache.sh" ]]; then
+  # shellcheck source=/dev/null
+  . "${mongoc_dir:?}/.evergreen/scripts/find-ccache.sh"
+  find_ccache_and_export_vars "$(pwd)" || true
+fi
 
 # Install C Driver libraries.
 {
