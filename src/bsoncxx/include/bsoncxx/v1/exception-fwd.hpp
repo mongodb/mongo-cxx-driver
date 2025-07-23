@@ -20,18 +20,10 @@
 
 namespace bsoncxx {
 namespace v1 {
-namespace error {
 
-enum class source;
+enum class source_errc;
 
-enum class type;
-
-} // namespace error
-} // namespace v1
-} // namespace bsoncxx
-
-namespace bsoncxx {
-namespace v1 {
+enum class type_errc;
 
 class BSONCXX_ABI_EXPORT exception;
 

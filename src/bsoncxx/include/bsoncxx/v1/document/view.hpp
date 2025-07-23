@@ -33,70 +33,6 @@
 
 namespace bsoncxx {
 namespace v1 {
-namespace error {
-namespace category {
-
-///
-/// Declares error categories for error codes declared in @ref bsoncxx::v1::error::document.
-///
-namespace document {
-
-///
-/// The error category for @ref bsoncxx::v1::error::document::view.
-///
-/// @attention This feature is experimental! It is not ready for use!
-///
-BSONCXX_ABI_EXPORT_CDECL(std::error_category const&) view();
-
-} // namespace document
-} // namespace category
-} // namespace error
-} // namespace v1
-} // namespace bsoncxx
-
-namespace bsoncxx {
-namespace v1 {
-namespace error {
-
-///
-/// Declares error codes returned by @ref bsoncxx::v1::document interfaces.
-///
-namespace document {
-
-///
-/// Errors codes which may be returned by @ref bsoncxx::v1::document::view.
-///
-/// @attention This feature is experimental! It is not ready for use!
-///
-enum class view {
-    zero,           ///< Zero.
-    invalid_length, ///< Length is invalid.
-    invalid_data,   ///< Data is invalid.
-};
-
-///
-/// Support implicit conversion to `std::error_code`.
-///
-/// @attention This feature is experimental! It is not ready for use!
-///
-inline std::error_code make_error_code(view v) {
-    return {static_cast<int>(v), v1::error::category::document::view()};
-}
-
-} // namespace document
-} // namespace error
-} // namespace v1
-} // namespace bsoncxx
-
-namespace std {
-
-template <>
-struct is_error_code_enum<bsoncxx::v1::error::document::view> : true_type {};
-
-} // namespace std
-
-namespace bsoncxx {
-namespace v1 {
 namespace document {
 
 ///
@@ -110,7 +46,7 @@ namespace document {
 ///
 /// The BSON bytes being represented is only validated as minimally required to satisfy a requested operation. When an
 /// operation is not satisfiable due to invalid data, the operation will throw an @ref bsoncxx::v1::exception with @ref
-/// bsoncxx::v1::error::document::view::invalid_data.
+/// bsoncxx::v1::document::view::errc::invalid_data.
 ///
 /// @attention This feature is experimental! It is not ready for use!
 ///
@@ -158,7 +94,7 @@ class view {
     /// - If `data` is not null, the size of the storage region pointed to by `data` must be greater than or equal to
     ///   `length`.
     ///
-    /// @exception bsoncxx::v1::exception with @ref bsoncxx::v1::error::document::view::invalid_length if `length` is
+    /// @exception bsoncxx::v1::exception with @ref bsoncxx::v1::document::view::errc::invalid_length if `length` is
     /// less than `5` or less than `this->size()`.
     ///
     BSONCXX_ABI_EXPORT view(std::uint8_t const* data, std::size_t length);
@@ -212,7 +148,7 @@ class view {
     ///
     /// If this view is invalid, returns an end iterator.
     ///
-    /// @exception bsoncxx::v1::exception with @ref bsoncxx::v1::error::document::view::invalid_data if this operation
+    /// @exception bsoncxx::v1::exception with @ref bsoncxx::v1::document::view::errc::invalid_data if this operation
     /// failed due to invalid BSON bytes.
     ///
     BSONCXX_ABI_EXPORT_CDECL(const_iterator) cbegin() const;
@@ -236,7 +172,7 @@ class view {
     /// @par Complexity
     /// Linear.
     ///
-    /// @exception bsoncxx::v1::exception with @ref bsoncxx::v1::error::document::view::invalid_data if this operation
+    /// @exception bsoncxx::v1::exception with @ref bsoncxx::v1::document::view::errc::invalid_data if this operation
     /// failed due to invalid BSON bytes.
     ///
     BSONCXX_ABI_EXPORT_CDECL(const_iterator) find(v1::stdx::string_view key) const;
@@ -249,7 +185,7 @@ class view {
     /// @par Complexity
     /// Linear.
     ///
-    /// @exception bsoncxx::v1::exception with @ref bsoncxx::v1::error::document::view::invalid_data if this operation
+    /// @exception bsoncxx::v1::exception with @ref bsoncxx::v1::document::view::errc::invalid_data if this operation
     /// failed due to invalid BSON bytes.
     ///
     v1::element::view operator[](v1::stdx::string_view key) const;
@@ -274,6 +210,33 @@ class view {
     }
     /// @}
     ///
+
+    ///
+    /// Errors codes which may be returned by @ref bsoncxx::v1::document::view.
+    ///
+    /// @attention This feature is experimental! It is not ready for use!
+    ///
+    enum class errc {
+        zero,           ///< Zero.
+        invalid_length, ///< Length is invalid.
+        invalid_data,   ///< Data is invalid.
+    };
+
+    ///
+    /// The error category for @ref bsoncxx::v1::document::view::errc.
+    ///
+    /// @attention This feature is experimental! It is not ready for use!
+    ///
+    static BSONCXX_ABI_EXPORT_CDECL(std::error_category const&) error_category();
+
+    ///
+    /// Support implicit conversion to `std::error_code`.
+    ///
+    /// @attention This feature is experimental! It is not ready for use!
+    ///
+    friend std::error_code make_error_code(errc v) {
+        return {static_cast<int>(v), error_category()};
+    }
 };
 
 template <>
@@ -425,6 +388,13 @@ inline v1::element::view view::operator[](v1::stdx::string_view key) const {
 } // namespace document
 } // namespace v1
 } // namespace bsoncxx
+
+namespace std {
+
+template <>
+struct is_error_code_enum<bsoncxx::v1::document::view::errc> : true_type {};
+
+} // namespace std
 
 #include <bsoncxx/v1/detail/postlude.hpp>
 

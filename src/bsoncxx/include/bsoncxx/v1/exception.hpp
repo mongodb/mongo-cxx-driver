@@ -28,58 +28,32 @@
 
 namespace bsoncxx {
 namespace v1 {
-namespace error {
-
-///
-/// Declares error categories for error codes and error conditions declared in @ref bsoncxx::v1::error.
-///
-namespace category {
-
-///
-/// The error category for @ref bsoncxx::v1::error::source.
-///
-/// @attention This feature is experimental! It is not ready for use!
-///
-BSONCXX_ABI_EXPORT_CDECL(std::error_category const&) source();
-
-///
-/// The error category for @ref bsoncxx::v1::error::type.
-///
-/// @attention This feature is experimental! It is not ready for use!
-///
-BSONCXX_ABI_EXPORT_CDECL(std::error_category const&) type();
-
-} // namespace category
-} // namespace error
-} // namespace v1
-} // namespace bsoncxx
-
-namespace bsoncxx {
-namespace v1 {
-
-///
-/// Declares error codes and error conditions returned by @ref bsoncxx::v1 interfaces.
-///
-namespace error {
 
 ///
 /// Enumeration identifying the source of a @ref bsoncxx::v1 error.
 ///
 /// @attention This feature is experimental! It is not ready for use!
 ///
-enum class source {
+enum class source_errc {
     zero,    ///< Zero.
     bsoncxx, ///< From the bsoncxx library.
     bson,    ///< From the bson library.
 };
 
 ///
+/// The error category for @ref bsoncxx::v1::source_errc.
+///
+/// @attention This feature is experimental! It is not ready for use!
+///
+BSONCXX_ABI_EXPORT_CDECL(std::error_category const&) source_error_category();
+
+///
 /// Support implicit conversion to `std::error_condition`.
 ///
 /// @attention This feature is experimental! It is not ready for use!
 ///
-inline std::error_condition make_error_condition(source code) {
-    return {static_cast<int>(code), v1::error::category::source()};
+inline std::error_condition make_error_condition(source_errc code) {
+    return {static_cast<int>(code), v1::source_error_category()};
 }
 
 ///
@@ -87,37 +61,27 @@ inline std::error_condition make_error_condition(source code) {
 ///
 /// @attention This feature is experimental! It is not ready for use!
 ///
-enum class type {
+enum class type_errc {
     zero,             ///< Zero.
     invalid_argument, ///< An invalid argument passed to the throwing function.
     runtime_error,    ///< An erroneous condition was detected at runtime.
 };
 
 ///
+/// The error category for @ref bsoncxx::v1::type_errc.
+///
+/// @attention This feature is experimental! It is not ready for use!
+///
+BSONCXX_ABI_EXPORT_CDECL(std::error_category const&) type_error_category();
+
+///
 /// Support implicit conversion to `std::error_condition`.
 ///
 /// @attention This feature is experimental! It is not ready for use!
 ///
-inline std::error_condition make_error_condition(type code) {
-    return {static_cast<int>(code), v1::error::category::type()};
+inline std::error_condition make_error_condition(type_errc code) {
+    return {static_cast<int>(code), v1::type_error_category()};
 }
-
-} // namespace error
-} // namespace v1
-} // namespace bsoncxx
-
-namespace std {
-
-template <>
-struct is_error_condition_enum<bsoncxx::v1::error::source> : true_type {};
-
-template <>
-struct is_error_condition_enum<bsoncxx::v1::error::type> : true_type {};
-
-} // namespace std
-
-namespace bsoncxx {
-namespace v1 {
 
 BSONCXX_PRIVATE_WARNINGS_PUSH();
 BSONCXX_PRIVATE_WARNINGS_DISABLE(MSVC(4251));
@@ -147,6 +111,16 @@ BSONCXX_PRIVATE_WARNINGS_POP();
 
 } // namespace v1
 } // namespace bsoncxx
+
+namespace std {
+
+template <>
+struct is_error_condition_enum<bsoncxx::v1::source_errc> : true_type {};
+
+template <>
+struct is_error_condition_enum<bsoncxx::v1::type_errc> : true_type {};
+
+} // namespace std
 
 #include <bsoncxx/v1/detail/postlude.hpp>
 

@@ -28,59 +28,6 @@
 
 namespace bsoncxx {
 namespace v1 {
-namespace error {
-namespace category {
-
-///
-/// The error category for @ref bsoncxx::v1::error::decimal128.
-///
-/// @attention This feature is experimental! It is not ready for use!
-///
-BSONCXX_ABI_EXPORT_CDECL(std::error_category const&) decimal128();
-
-} // namespace category
-} // namespace error
-} // namespace v1
-} // namespace bsoncxx
-
-namespace bsoncxx {
-namespace v1 {
-namespace error {
-
-///
-/// Errors codes which may be returned by @ref bsoncxx::v1::decimal128.
-///
-/// @attention This feature is experimental! It is not ready for use!
-///
-enum class decimal128 {
-    zero,                  ///< Zero.
-    empty_string,          ///< String must not be empty.
-    invalid_string_length, ///< Length of string is too long (exceeds `INT_MAX`).
-    invalid_string_data,   ///< String is not a valid Decimal128 representation.
-};
-
-///
-/// Support implicit conversion to `std::error_code`.
-///
-/// @attention This feature is experimental! It is not ready for use!
-///
-inline std::error_code make_error_code(decimal128 v) {
-    return {static_cast<int>(v), v1::error::category::decimal128()};
-}
-
-} // namespace error
-} // namespace v1
-} // namespace bsoncxx
-
-namespace std {
-
-template <>
-struct is_error_code_enum<bsoncxx::v1::error::decimal128> : true_type {};
-
-} // namespace std
-
-namespace bsoncxx {
-namespace v1 {
 
 ///
 /// A BSON Decimal128.
@@ -108,10 +55,10 @@ class decimal128 {
     ///
     /// Initialize with the given Decimal128 string representation.
     ///
-    /// @throws bsoncxx::v1::exception with @ref bsoncxx::v1::error::decimal128::empty_string if `str` is null.
-    /// @throws bsoncxx::v1::exception with @ref bsoncxx::v1::error::decimal128::invalid_string_length if the length of
+    /// @throws bsoncxx::v1::exception with @ref bsoncxx::v1::decimal128::errc::empty_string if `str` is null.
+    /// @throws bsoncxx::v1::exception with @ref bsoncxx::v1::decimal128::errc::invalid_string_length if the length of
     /// `str` exceeds `INT_MAX`.
-    /// @throws bsoncxx::v1::exception with @ref bsoncxx::v1::error::decimal128::invalid_string_data if `str` is not a
+    /// @throws bsoncxx::v1::exception with @ref bsoncxx::v1::decimal128::errc::invalid_string_data if `str` is not a
     /// valid Decimal128 string representation.
     ///
     explicit BSONCXX_ABI_EXPORT_CDECL() decimal128(v1::stdx::string_view str);
@@ -148,10 +95,45 @@ class decimal128 {
     }
     /// @}
     ///
+
+    ///
+    /// Errors codes which may be returned by @ref bsoncxx::v1::decimal128.
+    ///
+    /// @attention This feature is experimental! It is not ready for use!
+    ///
+    enum class errc {
+        zero,                  ///< Zero.
+        empty_string,          ///< String must not be empty.
+        invalid_string_length, ///< Length of string is too long (exceeds `INT_MAX`).
+        invalid_string_data,   ///< String is not a valid Decimal128 representation.
+    };
+
+    ///
+    /// The error category for @ref bsoncxx::v1::decimal128::errc.
+    ///
+    /// @attention This feature is experimental! It is not ready for use!
+    ///
+    static BSONCXX_ABI_EXPORT_CDECL(std::error_category const&) error_category();
+
+    ///
+    /// Support implicit conversion to `std::error_code`.
+    ///
+    /// @attention This feature is experimental! It is not ready for use!
+    ///
+    friend std::error_code make_error_code(errc v) {
+        return {static_cast<int>(v), error_category()};
+    }
 };
 
 } // namespace v1
 } // namespace bsoncxx
+
+namespace std {
+
+template <>
+struct is_error_code_enum<bsoncxx::v1::decimal128::errc> : true_type {};
+
+} // namespace std
 
 #include <bsoncxx/v1/detail/postlude.hpp>
 

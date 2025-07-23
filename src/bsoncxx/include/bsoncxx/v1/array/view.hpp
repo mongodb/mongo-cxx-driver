@@ -42,7 +42,7 @@ namespace array {
 ///
 /// The BSON bytes being represented is only validated as minimally required to satisfy a requested operation. When an
 /// operation is not satisfiable due to invalid data, the operation will throw an @ref bsoncxx::v1::exception with @ref
-/// bsoncxx::v1::error::document::view::invalid_data.
+/// bsoncxx::v1::document::view::errc::invalid_data.
 ///
 /// @attention This feature is experimental! It is not ready for use!
 ///
@@ -120,7 +120,7 @@ class view {
     /// @par Complexity
     /// Linear.
     ///
-    /// @exception bsoncxx::v1::exception with @ref bsoncxx::v1::error::document::view::invalid_data if this operation
+    /// @exception bsoncxx::v1::exception with @ref bsoncxx::v1::document::view::errc::invalid_data if this operation
     /// failed due to invalid BSON bytes.
     ///
     BSONCXX_ABI_EXPORT_CDECL(const_iterator) find(std::uint32_t i) const;
@@ -133,7 +133,7 @@ class view {
     /// @par Complexity
     /// Linear.
     ///
-    /// @exception bsoncxx::v1::exception with @ref bsoncxx::v1::error::document::view::invalid_data if this operation
+    /// @exception bsoncxx::v1::exception with @ref bsoncxx::v1::document::view::errc::invalid_data if this operation
     /// failed due to invalid BSON bytes.
     ///
     v1::element::view operator[](std::uint32_t i) const {

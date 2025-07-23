@@ -37,70 +37,6 @@
 
 namespace bsoncxx {
 namespace v1 {
-namespace error {
-namespace category {
-
-///
-/// Declares error categories for error codes declared in @ref bsoncxx::v1::error::element.
-///
-namespace element {
-
-///
-/// The error category for @ref bsoncxx::v1::error::element::view.
-///
-/// @attention This feature is experimental! It is not ready for use!
-///
-BSONCXX_ABI_EXPORT_CDECL(std::error_category const&) view();
-
-} // namespace element
-} // namespace category
-} // namespace error
-} // namespace v1
-} // namespace bsoncxx
-
-namespace bsoncxx {
-namespace v1 {
-namespace error {
-
-///
-/// Declares error codes returned by @ref bsoncxx::v1::element interfaces.
-///
-namespace element {
-
-///
-/// Errors codes which may be returned by @ref bsoncxx::v1::element::view.
-///
-/// @attention This feature is experimental! It is not ready for use!
-///
-enum class view {
-    zero,         ///< Zero.
-    invalid_view, ///< View is invalid.
-    invalid_data, ///< Data is invalid.
-};
-
-///
-/// Support implicit conversion to `std::error_code`.
-///
-/// @attention This feature is experimental! It is not ready for use!
-///
-inline std::error_code make_error_code(view v) {
-    return {static_cast<int>(v), v1::error::category::element::view()};
-}
-
-} // namespace element
-} // namespace error
-} // namespace v1
-} // namespace bsoncxx
-
-namespace std {
-
-template <>
-struct is_error_code_enum<bsoncxx::v1::error::element::view> : true_type {};
-
-} // namespace std
-
-namespace bsoncxx {
-namespace v1 {
 namespace element {
 
 ///
@@ -142,7 +78,7 @@ namespace element {
 ///
 /// The BSON bytes being represented is only validated as minimally required to satisfy a requested operation.
 /// When an operation is not satisfiable due to invalid data, the operation will throw an @ref bsoncxx::v1::exception
-/// with @ref bsoncxx::v1::error::document::view::invalid_data.
+/// with @ref bsoncxx::v1::document::view::errc::invalid_data.
 ///
 /// @attention This feature is experimental! It is not ready for use!
 ///
@@ -217,7 +153,7 @@ class view {
     ///
     /// Return the type.
     ///
-    /// @exception bsoncxx::v1::exception with @ref bsoncxx::v1::error::element::view::invalid_view if this element is
+    /// @exception bsoncxx::v1::exception with @ref bsoncxx::v1::element::view::errc::invalid_view if this element is
     /// invalid.
     ///
     BSONCXX_ABI_EXPORT_CDECL(v1::types::id) type_id() const;
@@ -225,7 +161,7 @@ class view {
     ///
     /// Return the key.
     ///
-    /// @exception bsoncxx::v1::exception with @ref bsoncxx::v1::error::element::view::invalid_view if this element is
+    /// @exception bsoncxx::v1::exception with @ref bsoncxx::v1::element::view::errc::invalid_view if this element is
     /// invalid.
     ///
     BSONCXX_ABI_EXPORT_CDECL(v1::stdx::string_view) key() const;
@@ -237,9 +173,9 @@ class view {
     ///
     /// Return the underlying BSON type value.
     ///
-    /// @exception bsoncxx::v1::exception with @ref bsoncxx::v1::error::element::view::invalid_view if this element is
+    /// @exception bsoncxx::v1::exception with @ref bsoncxx::v1::element::view::errc::invalid_view if this element is
     /// invalid.
-    /// @exception bsoncxx::v1::exception with @ref bsoncxx::v1::error::types::view::type_mismatch if the BSON type
+    /// @exception bsoncxx::v1::exception with @ref bsoncxx::v1::types::view::errc::type_mismatch if the BSON type
     /// value does not match the requested type.
     ///
     /// @{
@@ -251,7 +187,7 @@ class view {
     ///
     /// Return a view of the underlying BSON type value.
     ///
-    /// @exception bsoncxx::v1::exception with @ref bsoncxx::v1::error::element::view::invalid_view if this element is
+    /// @exception bsoncxx::v1::exception with @ref bsoncxx::v1::element::view::errc::invalid_view if this element is
     /// invalid.
     ///
     BSONCXX_ABI_EXPORT_CDECL(v1::types::view) type_view() const;
@@ -259,7 +195,7 @@ class view {
     ///
     /// Return a deep copy of the underlying BSON type value.
     ///
-    /// @exception bsoncxx::v1::exception with @ref bsoncxx::v1::error::element::view::invalid_view if this element is
+    /// @exception bsoncxx::v1::exception with @ref bsoncxx::v1::element::view::errc::invalid_view if this element is
     /// invalid.
     ///
     BSONCXX_ABI_EXPORT_CDECL(v1::types::value) type_value() const;
@@ -273,7 +209,7 @@ class view {
     /// @par Complexity
     /// Linear.
     ///
-    /// @exception bsoncxx::v1::exception with @ref bsoncxx::v1::error::element::view::invalid_data if this operation
+    /// @exception bsoncxx::v1::exception with @ref bsoncxx::v1::element::view::errc::invalid_data if this operation
     /// failed due to invalid BSON bytes.
     ///
     BSONCXX_ABI_EXPORT_CDECL(v1::element::view) operator[](v1::stdx::string_view key) const;
@@ -287,10 +223,37 @@ class view {
     /// @par Complexity
     /// Linear.
     ///
-    /// @exception bsoncxx::v1::exception with @ref bsoncxx::v1::error::element::view::invalid_data if this operation
+    /// @exception bsoncxx::v1::exception with @ref bsoncxx::v1::element::view::errc::invalid_data if this operation
     /// failed due to invalid BSON bytes.
     ///
     BSONCXX_ABI_EXPORT_CDECL(v1::element::view) operator[](std::uint32_t idx) const;
+
+    ///
+    /// Errors codes which may be returned by @ref bsoncxx::v1::element::view.
+    ///
+    /// @attention This feature is experimental! It is not ready for use!
+    ///
+    enum class errc {
+        zero,         ///< Zero.
+        invalid_view, ///< View is invalid.
+        invalid_data, ///< Data is invalid.
+    };
+
+    ///
+    /// The error category for @ref bsoncxx::v1::element::view::errc.
+    ///
+    /// @attention This feature is experimental! It is not ready for use!
+    ///
+    static BSONCXX_ABI_EXPORT_CDECL(std::error_category const&) error_category();
+
+    ///
+    /// Support implicit conversion to `std::error_code`.
+    ///
+    /// @attention This feature is experimental! It is not ready for use!
+    ///
+    friend std::error_code make_error_code(errc v) {
+        return {static_cast<int>(v), error_category()};
+    }
 
     class internal;
 
@@ -301,6 +264,13 @@ class view {
 } // namespace element
 } // namespace v1
 } // namespace bsoncxx
+
+namespace std {
+
+template <>
+struct is_error_code_enum<bsoncxx::v1::element::view::errc> : true_type {};
+
+} // namespace std
 
 #include <bsoncxx/v1/detail/postlude.hpp>
 

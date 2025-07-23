@@ -192,7 +192,7 @@ class value {
     /// - If `data` is not null, the size of the storage region pointed to by `data` must be greater than or equal to
     ///   `length`.
     ///
-    /// @exception bsoncxx::v1::exception with @ref bsoncxx::v1::error::document::view::invalid_length if `length` is
+    /// @exception bsoncxx::v1::exception with @ref bsoncxx::v1::document::view::errc::invalid_length if `length` is
     /// less than `5` or less than `this->size()`.
     ///
     template <typename Deleter, detail::enable_if_t<is_valid_deleter<Deleter>::value>* = nullptr>
@@ -216,7 +216,7 @@ class value {
     /// - If `data` is not null, the size of the storage region pointed to by `data` must be greater than or equal to
     ///   `length`.
     ///
-    /// @exception bsoncxx::v1::exception with @ref bsoncxx::v1::error::document::view::invalid_length if `length` is
+    /// @exception bsoncxx::v1::exception with @ref bsoncxx::v1::document::view::errc::invalid_length if `length` is
     /// less than `5` or less than `this->size()`.
     ///
     explicit value(std::uint8_t* data, std::size_t length) : value{data} {
@@ -239,7 +239,7 @@ class value {
     /// - If `ptr` is not null, the size of the storage region pointed to by `data` must be greater than or equal to
     ///   `length`.
     ///
-    /// @exception bsoncxx::v1::exception with @ref bsoncxx::v1::error::document::view::invalid_length if `length` is
+    /// @exception bsoncxx::v1::exception with @ref bsoncxx::v1::document::view::errc::invalid_length if `length` is
     /// less than `5` or less than `this->size()`.
     ///
     explicit value(unique_ptr_type ptr, std::size_t length) : value{std::move(ptr)} {

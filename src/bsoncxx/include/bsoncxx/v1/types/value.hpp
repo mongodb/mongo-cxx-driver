@@ -41,70 +41,6 @@
 
 namespace bsoncxx {
 namespace v1 {
-namespace error {
-namespace category {
-
-///
-/// Declares error categories for error codes declared in @ref bsoncxx::v1::error::types.
-///
-namespace types {
-
-///
-/// The error category for @ref bsoncxx::v1::error::types::value.
-///
-/// @attention This feature is experimental! It is not ready for use!
-///
-BSONCXX_ABI_EXPORT_CDECL(std::error_category const&) value();
-
-} // namespace types
-} // namespace category
-} // namespace error
-} // namespace v1
-} // namespace bsoncxx
-
-namespace bsoncxx {
-namespace v1 {
-namespace error {
-
-///
-/// Declares error codes returned by @ref bsoncxx::v1::types interfaces.
-///
-namespace types {
-
-///
-/// Errors codes which may be returned by @ref bsoncxx::v1::types::value.
-///
-/// @attention This feature is experimental! It is not ready for use!
-///
-enum class value {
-    zero,               ///< Zero.
-    invalid_type,       ///< Requested BSON type is not supported.
-    invalid_length_u32, ///< Length is too long (exceeds `UINT32_MAX`).
-};
-
-///
-/// Support implicit conversion to `std::error_code`.
-///
-/// @attention This feature is experimental! It is not ready for use!
-///
-inline std::error_code make_error_code(value v) {
-    return {static_cast<int>(v), v1::error::category::types::value()};
-}
-
-} // namespace types
-} // namespace error
-} // namespace v1
-} // namespace bsoncxx
-
-namespace std {
-
-template <>
-struct is_error_code_enum<bsoncxx::v1::error::types::value> : true_type {};
-
-} // namespace std
-
-namespace bsoncxx {
-namespace v1 {
 namespace types {
 
 ///
@@ -169,9 +105,9 @@ class value {
     /// The copied value is allocated (when necessary) using
     /// [`bson_malloc`](https://mongoc.org/libbson/current/bson_malloc.html).
     ///
-    /// @exception bsoncxx::v1::exception with @ref bsoncxx::v1::error::types::value::invalid_type if `v.type_id()` is
+    /// @exception bsoncxx::v1::exception with @ref bsoncxx::v1::types::value::errc::invalid_type if `v.type_id()` is
     /// not a supported value (not defined by @ref BSONCXX_V1_TYPES_XMACRO).
-    /// @exception bsoncxx::v1::exception with @ref bsoncxx::v1::error::types::value::invalid_length_u32 if the length
+    /// @exception bsoncxx::v1::exception with @ref bsoncxx::v1::types::value::errc::invalid_length_u32 if the length
     /// of any underlying BSON type value component is not representable as an `std::uint32_t`.
     ///
     explicit BSONCXX_ABI_EXPORT_CDECL() value(v1::types::view const& v);
@@ -186,7 +122,7 @@ class value {
     /// The copied value is allocated (when necessary) using
     /// [`bson_malloc`](https://mongoc.org/libbson/current/bson_malloc.html).
     ///
-    /// @exception bsoncxx::v1::exception with @ref bsoncxx::v1::error::types::value::invalid_length_u32 if the length
+    /// @exception bsoncxx::v1::exception with @ref bsoncxx::v1::types::value::errc::invalid_length_u32 if the length
     /// of any underlying BSON type value component is not representable as an `std::uint32_t` as required by the
     /// corresponding `bsoncxx::v1::types::b_<type>`.
     ///
@@ -332,7 +268,7 @@ class value {
     /// Equivalent to `this->view().get_type()` where `get_type` is the correct name for the requested BSON type value
     /// (e.g. `this->view().get_double()` given `this->get_double()`).
     ///
-    /// @exception bsoncxx::v1::exception with @ref bsoncxx::v1::error::types::view::type_mismatch if the underlying
+    /// @exception bsoncxx::v1::exception with @ref bsoncxx::v1::types::view::errc::type_mismatch if the underlying
     /// BSON type value does not match the requested type.
     ///
     /// @{
@@ -355,12 +291,46 @@ class value {
         return !(lhs == rhs);
     }
 
+    ///
+    /// Errors codes which may be returned by @ref bsoncxx::v1::types::value.
+    ///
+    /// @attention This feature is experimental! It is not ready for use!
+    ///
+    enum class errc {
+        zero,               ///< Zero.
+        invalid_type,       ///< Requested BSON type is not supported.
+        invalid_length_u32, ///< Length is too long (exceeds `UINT32_MAX`).
+    };
+
+    ///
+    /// The error category for @ref bsoncxx::v1::types::value::errc.
+    ///
+    /// @attention This feature is experimental! It is not ready for use!
+    ///
+    static BSONCXX_ABI_EXPORT_CDECL(std::error_category const&) error_category();
+
+    ///
+    /// Support implicit conversion to `std::error_code`.
+    ///
+    /// @attention This feature is experimental! It is not ready for use!
+    ///
+    friend std::error_code make_error_code(errc v) {
+        return {static_cast<int>(v), error_category()};
+    }
+
     class internal;
 };
 
 } // namespace types
 } // namespace v1
 } // namespace bsoncxx
+
+namespace std {
+
+template <>
+struct is_error_code_enum<bsoncxx::v1::types::value::errc> : true_type {};
+
+} // namespace std
 
 #include <bsoncxx/v1/detail/postlude.hpp>
 

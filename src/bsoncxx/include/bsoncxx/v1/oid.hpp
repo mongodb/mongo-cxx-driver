@@ -30,61 +30,6 @@
 #include <ctime>
 #include <string>
 #include <system_error>
-
-namespace bsoncxx {
-namespace v1 {
-namespace error {
-namespace category {
-
-///
-/// The error category for @ref bsoncxx::v1::error::oid.
-///
-/// @attention This feature is experimental! It is not ready for use!
-///
-BSONCXX_ABI_EXPORT_CDECL(std::error_category const&) oid();
-
-} // namespace category
-} // namespace error
-} // namespace v1
-} // namespace bsoncxx
-
-namespace bsoncxx {
-namespace v1 {
-namespace error {
-
-///
-/// Errors codes may be returned by @ref bsoncxx::v1::oid.
-///
-/// @attention This feature is experimental! It is not ready for use!
-///
-enum class oid {
-    zero,           ///< Zero.
-    null_bytes_ptr, ///< Bytes pointer must not be null.
-    invalid_length, ///< Byte length must equal @ref bsoncxx::v1::oid::k_oid_length.
-    empty_string,   ///< String must not be empty.
-    invalid_string, ///< String is not a valid ObjectID representation.
-};
-
-///
-/// Support implicit conversion to `std::error_code`.
-///
-/// @attention This feature is experimental! It is not ready for use!
-///
-inline std::error_code make_error_code(oid v) {
-    return {static_cast<int>(v), v1::error::category::oid()};
-}
-
-} // namespace error
-} // namespace v1
-} // namespace bsoncxx
-
-namespace std {
-
-template <>
-struct is_error_code_enum<bsoncxx::v1::error::oid> : true_type {};
-
-} // namespace std
-
 namespace bsoncxx {
 namespace v1 {
 
@@ -125,8 +70,8 @@ class oid {
     /// @param bytes A pointer to the ObjectID byte representation.
     /// @param len The length of the array pointed to by `bytes`.
     ///
-    /// @throws bsoncxx::v1::exception with @ref bsoncxx::v1::error::oid::null_bytes_ptr if `bytes` is null.
-    /// @throws bsoncxx::v1::exception with @ref bsoncxx::v1::error::oid::invalid_length if `len` is not equal to @ref
+    /// @throws bsoncxx::v1::exception with @ref bsoncxx::v1::oid::errc::null_bytes_ptr if `bytes` is null.
+    /// @throws bsoncxx::v1::exception with @ref bsoncxx::v1::oid::errc::invalid_length if `len` is not equal to @ref
     /// k_oid_length.
     ///
     BSONCXX_ABI_EXPORT_CDECL() oid(std::uint8_t const* bytes, std::size_t len);
@@ -136,8 +81,8 @@ class oid {
     ///
     /// @param str A valid ObjectID represented.
     ///
-    /// @throws bsoncxx::v1::exception with @ref bsoncxx::v1::error::oid::empty_string if `str` is empty.
-    /// @throws bsoncxx::v1::exception with @ref bsoncxx::v1::error::oid::invalid_string if `str` is invalid.
+    /// @throws bsoncxx::v1::exception with @ref bsoncxx::v1::oid::errc::empty_string if `str` is empty.
+    /// @throws bsoncxx::v1::exception with @ref bsoncxx::v1::oid::errc::invalid_string if `str` is invalid.
     ///
     explicit BSONCXX_ABI_EXPORT_CDECL() oid(v1::stdx::string_view str);
 
@@ -211,10 +156,46 @@ class oid {
     friend bool operator>=(oid const& lhs, oid const& rhs) {
         return lhs.compare(rhs) >= 0;
     }
+
+    ///
+    /// Errors codes may be returned by @ref bsoncxx::v1::oid.
+    ///
+    /// @attention This feature is experimental! It is not ready for use!
+    ///
+    enum class errc {
+        zero,           ///< Zero.
+        null_bytes_ptr, ///< Bytes pointer must not be null.
+        invalid_length, ///< Byte length must equal @ref bsoncxx::v1::oid::k_oid_length.
+        empty_string,   ///< String must not be empty.
+        invalid_string, ///< String is not a valid ObjectID representation.
+    };
+
+    ///
+    /// The error category for @ref bsoncxx::v1::oid::errc.
+    ///
+    /// @attention This feature is experimental! It is not ready for use!
+    ///
+    static BSONCXX_ABI_EXPORT_CDECL(std::error_category const&) error_category();
+
+    ///
+    /// Support implicit conversion to `std::error_code`.
+    ///
+    /// @attention This feature is experimental! It is not ready for use!
+    ///
+    friend std::error_code make_error_code(errc v) {
+        return {static_cast<int>(v), error_category()};
+    }
 };
 
 } // namespace v1
 } // namespace bsoncxx
+
+namespace std {
+
+template <>
+struct is_error_code_enum<bsoncxx::v1::oid::errc> : true_type {};
+
+} // namespace std
 
 #include <bsoncxx/v1/detail/postlude.hpp>
 

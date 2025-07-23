@@ -36,69 +36,6 @@
 
 namespace bsoncxx {
 namespace v1 {
-namespace error {
-namespace category {
-
-///
-/// Declares error categories for error codes declared in @ref bsoncxx::v1::error::types.
-///
-namespace types {
-
-///
-/// The error category for @ref bsoncxx::v1::error::types::view.
-///
-/// @attention This feature is experimental! It is not ready for use!
-///
-BSONCXX_ABI_EXPORT_CDECL(std::error_category const&) view();
-
-} // namespace types
-} // namespace category
-} // namespace error
-} // namespace v1
-} // namespace bsoncxx
-
-namespace bsoncxx {
-namespace v1 {
-namespace error {
-
-///
-/// Declares error codes returned by @ref bsoncxx::v1::types interfaces.
-///
-namespace types {
-
-///
-/// Errors codes which may be returned by @ref bsoncxx::v1::types::view.
-///
-/// @attention This feature is experimental! It is not ready for use!
-///
-enum class view {
-    zero,          ///< Zero.
-    type_mismatch, ///< Requested type does not match the underlying type.
-};
-
-///
-/// Support implicit conversion to `std::error_code`.
-///
-/// @attention This feature is experimental! It is not ready for use!
-///
-inline std::error_code make_error_code(view v) {
-    return {static_cast<int>(v), v1::error::category::types::view()};
-}
-
-} // namespace types
-} // namespace error
-} // namespace v1
-} // namespace bsoncxx
-
-namespace std {
-
-template <>
-struct is_error_code_enum<bsoncxx::v1::error::types::view> : true_type {};
-
-} // namespace std
-
-namespace bsoncxx {
-namespace v1 {
 namespace types {
 
 // BSONCXX_V1_TYPES_XMACRO: update below.
@@ -1127,7 +1064,7 @@ class view {
     ///
     /// Return the requested underlying BSON type value.
     ///
-    /// @exception bsoncxx::v1::exception with @ref bsoncxx::v1::error::types::view::type_mismatch if the underlying
+    /// @exception bsoncxx::v1::exception with @ref bsoncxx::v1::types::view::errc::type_mismatch if the underlying
     /// BSON type value does not match the requested type.
     ///
     /// @{
@@ -1240,12 +1177,45 @@ class view {
     /// @}
     ///
 
+    ///
+    /// Errors codes which may be returned by @ref bsoncxx::v1::types::view.
+    ///
+    /// @attention This feature is experimental! It is not ready for use!
+    ///
+    enum class errc {
+        zero,          ///< Zero.
+        type_mismatch, ///< Requested type does not match the underlying type.
+    };
+
+    ///
+    /// The error category for @ref bsoncxx::v1::types::view::errc.
+    ///
+    /// @attention This feature is experimental! It is not ready for use!
+    ///
+    static BSONCXX_ABI_EXPORT_CDECL(std::error_category const&) error_category();
+
+    ///
+    /// Support implicit conversion to `std::error_code`.
+    ///
+    /// @attention This feature is experimental! It is not ready for use!
+    ///
+    friend std::error_code make_error_code(errc v) {
+        return {static_cast<int>(v), error_category()};
+    }
+
     class internal;
 };
 
 } // namespace types
 } // namespace v1
 } // namespace bsoncxx
+
+namespace std {
+
+template <>
+struct is_error_code_enum<bsoncxx::v1::types::view::errc> : true_type {};
+
+} // namespace std
 
 #include <bsoncxx/v1/detail/postlude.hpp>
 
