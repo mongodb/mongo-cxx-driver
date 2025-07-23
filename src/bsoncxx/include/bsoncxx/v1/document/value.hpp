@@ -206,7 +206,6 @@ class value {
     /// @par Preconditions:
     /// - If `data` is not null, the size of the storage region pointed to by `data` must be greater than or equal to 5.
     /// - The embedded length must be less than or equal to the size of the storage region pointed to by `data`.
-    /// - `deleter` must be capable of freeing the storage region pointed to by `data`.
     ///
     explicit value(std::uint8_t* data) : value{data, default_deleter_type{}} {}
 
