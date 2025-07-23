@@ -55,13 +55,19 @@ Some release steps require one or more of the following secrets.
     <jira_token>
     ```
   - See [Jira: Personal Access Tokens (PATs)](https://wiki.corp.mongodb.com/spaces/TOGETHER/pages/218995581/Jira+Personal+Access+Tokens+PATs) for steps to create a token.
-- Artifactory credentials.
-  - Location: `~/.secrets/artifactory-creds.txt`:
-  - Format:
-    ```bash
-    ARTIFACTORY_USER=<username>
-    ARTIFACTORY_PASSWORD=<password>
-    ```
+- Amazon ECR credentials
+  - Description: use [Amazon CLI v2](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html) to obtain [short-term credentials](https://docs.aws.amazon.com/cli/latest/userguide/cli-authentication-short-term.html) with [AWS IAM Identity Center](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-sso.html):
+  - Instructions:
+    - Configure a `<profile>` (e.g. "amazon-ecr") with the following options using `aws configure sso` or modifying `$HOME/.aws/config`:
+      - `sso_session`: `<session-name>` (e.g. username, purpose, etc.)
+      - `sso_account_id`: `901841024863` (aka `devprod-platforms-ecr`)
+      - `sso_region`: `us-east-1`
+      - `sso_registration_scopes`: `sso:account:access` (default)
+      - `sso_role_name`: `ECRScopedAccess` (default)
+      - `sso_start_url`: `https://d-9067613a84.awsapps.com/start#/`
+    - (Re-)authenticate by running `aws sso login --profile <profile>` or `aws sso login --sso-session <session-name>`.
+    - Forward the short-term credentials to `podman` or `docker`:
+      - `aws ecr get-login-password --profile <profile> | podman login --username AWS --password-stdin 901841024863.dkr.ecr.us-east-1.amazonaws.com`
 - Garasign credentials
   - Location: `~/.secrets/garasign-creds.txt`
   - Format:
@@ -114,22 +120,18 @@ All issues with an Impact level of "Medium" or greater which do not have a "Mong
 
 ### SBOM Lite
 
+Ensure the container engine (e.g. `podman` or `docker`) is authenticated with the DevProd-provided Amazon ECR instance.
+
 Ensure the list of bundled dependencies in `etc/purls.txt` is up-to-date. If not, update `etc/purls.txt`.
 
 If `etc/purls.txt` was updated, update the SBOM Lite document using the following command(s):
 
 ```bash
-# Artifactory credentials.
-. $HOME/.secrets/artifactory-creds.txt
-
-# Output: "Login succeeded!"
-podman login --password-stdin --username "${ARTIFACTORY_USER:?}" artifactory.corp.mongodb.com <<<"${ARTIFACTORY_PASSWORD:?}"
-
 # Ensure latest version of SilkBomb is being used.
-podman pull artifactory.corp.mongodb.com/release-tools-container-registry-public-local/silkbomb:2.0
+podman pull 901841024863.dkr.ecr.us-east-1.amazonaws.com/release-infrastructure/silkbomb:2.0
 
 # Output: "... writing sbom to file"
-podman run -it --rm -v "$(pwd):/pwd" artifactory.corp.mongodb.com/release-tools-container-registry-public-local/silkbomb:2.0 \
+podman run -it --rm -v "$(pwd):/pwd" 901841024863.dkr.ecr.us-east-1.amazonaws.com/release-infrastructure/silkbomb:2.0 \
   update --refresh --no-update-sbom-version -p "/pwd/etc/purls.txt" -i "/pwd/etc/cyclonedx.sbom.json" -o "/pwd/etc/cyclonedx.sbom.json"
 ```
 
@@ -264,8 +266,6 @@ Commit the updates to `etc/apidocmenu.md` and `CHANGELOG.md`.
 git commit -m 'Update CHANGELOG for X.Y.Z'
 ```
 
-### Pre-Release Changes PR
-
 Push the `pre-release-changes` branch to a fork repository and create a PR to merge `pre-release-changes` onto `master`:
 
 ```bash
@@ -302,7 +302,7 @@ source "$UV_PROJECT_ENVIRONMENT/bin/activate"
 ```
 
 > [!NOTE]
-> A new release branch `releases/vX.Y` will be created later as part of post-release steps.
+> A new release branch `releases/vX.Y` may be created later as part of post-release steps.
 
 ### Run etc/make_release.py
 
@@ -324,7 +324,7 @@ The following secrets are required by this script:
 
 - GitHub Personal Access Token.
 - Jira Personal Access Token.
-- Artifactory credentials.
+- Amazon ECR credentials.
 - Garasign credentials.
 
 Run the release script with the name of the tag to be created as an argument and
@@ -451,17 +451,11 @@ The new branch should be continuously tested on Evergreen. Update the "Display N
 Update `etc/cyclonedx.sbom.json` with a new unique serial number for the next upcoming patch release (e.g. for `1.3.1` following the release of `1.3.0`):
 
 ```bash
-# Artifactory credentials.
-. $HOME/.secrets/artifactory-creds.txt
-
-# Output: "Login succeeded!"
-podman login --password-stdin --username "${ARTIFACTORY_USER:?}" artifactory.corp.mongodb.com <<<"${ARTIFACTORY_PASSWORD:?}"
-
 # Ensure latest version of SilkBomb is being used.
-podman pull artifactory.corp.mongodb.com/release-tools-container-registry-public-local/silkbomb:2.0
+podman pull 901841024863.dkr.ecr.us-east-1.amazonaws.com/release-infrastructure/silkbomb:2.0
 
 # Output: "... writing sbom to file"
-podman run -it --rm -v "$(pwd):/pwd" artifactory.corp.mongodb.com/release-tools-container-registry-public-local/silkbomb:2.0 \
+podman run -it --rm -v "$(pwd):/pwd" 901841024863.dkr.ecr.us-east-1.amazonaws.com/release-infrastructure/silkbomb:2.0 \
   update --refresh --generate-new-serial-number -p "/pwd/etc/purls.txt" -i "/pwd/etc/cyclonedx.sbom.json" -o "/pwd/etc/cyclonedx.sbom.json"
 ```
 
@@ -535,17 +529,11 @@ In `README.md`, sync the "Driver Development Status" table with the updated tabl
 Update `etc/cyclonedx.sbom.json` with a new unique serial number for the next upcoming non-patch release (e.g. for `1.4.0` following the release of `1.3.0`):
 
 ```bash
-# Artifactory credentials.
-. $HOME/.secrets/artifactory-creds.txt
-
-# Output: "Login succeeded!"
-podman login --password-stdin --username "${ARTIFACTORY_USER:?}" artifactory.corp.mongodb.com <<<"${ARTIFACTORY_PASSWORD:?}"
-
 # Ensure latest version of SilkBomb is being used.
-podman pull artifactory.corp.mongodb.com/release-tools-container-registry-public-local/silkbomb:2.0
+podman pull 901841024863.dkr.ecr.us-east-1.amazonaws.com/release-infrastructure/silkbomb:2.0
 
 # Output: "... writing sbom to file"
-podman run -it --rm -v "$(pwd):/pwd" artifactory.corp.mongodb.com/release-tools-container-registry-public-local/silkbomb:2.0 \
+podman run -it --rm -v "$(pwd):/pwd" 901841024863.dkr.ecr.us-east-1.amazonaws.com/release-infrastructure/silkbomb:2.0 \
   update --refresh --generate-new-serial-number -p "/pwd/etc/purls.txt" -i "/pwd/etc/cyclonedx.sbom.json" -o "/pwd/etc/cyclonedx.sbom.json"
 ```
 
@@ -561,8 +549,7 @@ git commit -m "Post-release changes"
 
 (Stable Releases Only) Close the Jira ticket tracking this release with "Documentation Changes" set to "Needed". Fill the "Documentation Changes Summary" field with information requesting updates to:
 
-  - the "Installing the MongoDB C Driver" section of the [Advanced Configuration and Installation Options](https://www.mongodb.com/docs/languages/cpp/cpp-driver/current/installation/advanced/#installing-the-mongodb-c-driver) page
-    with any new C Driver version requirements,
+  - the tables on the [Compatibility](https://www.mongodb.com/docs/languages/cpp/cpp-driver/current/compatibility/) page,
   - the "Driver Status by Family and Version" section of the [home
     page](https://www.mongodb.com/docs/languages/cpp/cpp-driver/current/#driver-status-by-family-and-version), and
   - the [full version](https://github.com/mongodb/docs-cpp/blob/master/snooty.toml) for the C++ Driver documentation pages.
@@ -572,7 +559,9 @@ This will generate a DOCSP ticket with instructions to update the C++ Driver doc
 Example (using Jira syntax formatting):
 
 ```
-* The [Advanced Installation|https://www.mongodb.com/docs/languages/cpp/cpp-driver/current/installation/advanced/#installing-the-mongodb-c-driver] page must be updated with a new requirement: "For mongocxx-X.Y.x, mongoc A.B.C or later is required."
+* The [Compatibility|https://www.mongodb.com/docs/languages/cpp/cpp-driver/current/compatibility/] page must be updated:
+  - mongocxx-X.Y.Z may change "libmongoc Compatibility" by requiring mongoc-A.B.C or later.
+  - mongocxx-X.Y.Z should have the same "MongoDB Compatibility", "Language Compatibility", and "Compiler Compatibility" as version mongocxx-X.Y.(Z-1)
 * The [MongoDB C++ Driver|https://www.mongodb.com/docs/languages/cpp/cpp-driver/current/#driver-status-by-family-and-version] page must be updated: {{{}mongocxx X.Y.x{}}} is now a previous stable release and no longer under active development; {{{}mongocxx X.Y+1.x{}}} is the new current stable release eligible for bug fixes.
 * the [full version|https://github.com/mongodb/docs-cpp/blob/master/snooty.toml] for C++ Driver documentation must be updated to {{{}X.Y.Z{}}}.
 ```
@@ -735,10 +724,6 @@ Sync the entries in the patch release section to be consistent with the entries 
 <!-- Will contain entries for the next minor release. -->
 <!-- Ensure any existing entries are not removed during the sync. -->
 
-## 1.2.4 [Unreleased]
-
-<!-- Will contain entries for the next patch release. -->
-
 ## 1.2.3 <!-- Just released. -->
 
 <!-- Ensure these entries match those in the release. -->
@@ -820,7 +805,7 @@ Please note that this version of mongocxx requires [MongoDB C Driver A.B.C](http
 
 See the [MongoDB C++ Driver Manual](https://www.mongodb.com/docs/languages/cpp/cpp-driver/current/) and the [Driver Installation Instructions](https://www.mongodb.com/docs/languages/cpp/cpp-driver/current/installation/) for more details on downloading, installing, and using this driver.
 
-NOTE: The mongocxx 3.10.x series does not promise API or ABI stability across patch releases.
+NOTE: The mongocxx X.Y.x series does not promise API or ABI stability across patch releases.
 
 Please feel free to post any questions on the MongoDB Community forum in the [Drivers](https://www.mongodb.com/community/forums/c/data/drivers/7) category tagged with [cxx](https://www.mongodb.com/community/forums/tag/cxx). Bug reports should be filed against the [CXX](https://jira.mongodb.org/projects/CXX) project in the MongoDB JIRA. Your feedback on the C++11 driver is greatly appreciated.
 
