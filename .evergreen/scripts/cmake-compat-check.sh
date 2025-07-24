@@ -39,7 +39,7 @@ uv tool install -q cmake
 export CMAKE_GENERATOR
 CMAKE_GENERATOR="Ninja"
 
-cmake --version
+cmake --version | head -n 1
 echo "ninja version: $(ninja --version)"
 
 # Use ccache if available.
