@@ -20,7 +20,7 @@ class InstallUV(Function):
                     exit 1
                 fi
 
-                uv_install_dir="${MONGO_CXX_DRIVER_CACHE_DIR}/uv-0.8.0"
+                uv_install_dir="${MONGO_CXX_DRIVER_CACHE_DIR}/uv-0.8.2"
                 mkdir -p "$uv_install_dir"
 
                 if ! command -v "$uv_install_dir/uv" 2>/dev/null; then

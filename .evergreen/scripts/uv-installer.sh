@@ -23,7 +23,7 @@ has_local 2>/dev/null || alias local=typeset
 set -u
 
 APP_NAME="uv"
-APP_VERSION="0.8.0"
+APP_VERSION="0.8.2"
 # Look for GitHub Enterprise-style base URL first
 if [ -n "${UV_INSTALLER_GHE_BASE_URL:-}" ]; then
     INSTALLER_BASE_URL="$UV_INSTALLER_GHE_BASE_URL"
@@ -33,7 +33,7 @@ fi
 if [ -n "${INSTALLER_DOWNLOAD_URL:-}" ]; then
     ARTIFACT_DOWNLOAD_URL="$INSTALLER_DOWNLOAD_URL"
 else
-    ARTIFACT_DOWNLOAD_URL="${INSTALLER_BASE_URL}/astral-sh/uv/releases/download/0.8.0"
+    ARTIFACT_DOWNLOAD_URL="${INSTALLER_BASE_URL}/astral-sh/uv/releases/download/0.8.2"
 fi
 PRINT_VERBOSE=${INSTALLER_PRINT_VERBOSE:-0}
 PRINT_QUIET=${INSTALLER_PRINT_QUIET:-0}
@@ -55,7 +55,7 @@ fi
 AUTH_TOKEN="${UV_GITHUB_TOKEN:-}"
 
 read -r RECEIPT <<EORECEIPT
-{"binaries":["CARGO_DIST_BINS"],"binary_aliases":{},"cdylibs":["CARGO_DIST_DYLIBS"],"cstaticlibs":["CARGO_DIST_STATICLIBS"],"install_layout":"unspecified","install_prefix":"AXO_INSTALL_PREFIX","modify_path":true,"provider":{"source":"cargo-dist","version":"0.28.7-prerelease.1"},"source":{"app_name":"uv","name":"uv","owner":"astral-sh","release_type":"github"},"version":"0.8.0"}
+{"binaries":["CARGO_DIST_BINS"],"binary_aliases":{},"cdylibs":["CARGO_DIST_DYLIBS"],"cstaticlibs":["CARGO_DIST_STATICLIBS"],"install_layout":"unspecified","install_prefix":"AXO_INSTALL_PREFIX","modify_path":true,"provider":{"source":"cargo-dist","version":"0.28.7-prerelease.1"},"source":{"app_name":"uv","name":"uv","owner":"astral-sh","release_type":"github"},"version":"0.8.2"}
 EORECEIPT
 
 # Some Linux distributions don't set HOME
@@ -90,10 +90,10 @@ usage() {
     cat <<EOF
 uv-installer.sh
 
-The installer for uv 0.8.0
+The installer for uv 0.8.2
 
 This script detects what platform you're on and fetches an appropriate archive from
-https://github.com/astral-sh/uv/releases/download/0.8.0
+https://github.com/astral-sh/uv/releases/download/0.8.2
 then unpacks the binaries and installs them to the first of the following locations
 
     \$XDG_BIN_HOME
@@ -192,13 +192,6 @@ download_binary_and_run_installer() {
     local _checksum_style
     local _checksum_value
 
-    # Validate checksums according to GitHub release assets for version 0.8.0.
-    # Obtain checksums by running (requires curl and jq in Bash):
-    #    for checksum in $(curl -sSL https://github.com/astral-sh/uv/releases/download/0.8.0/dist-manifest.json | jq -r '.releases[0].artifacts.[] | select(startswith("uv-") and (endswith(".zip.sha256") or endswith(".tar.gz.sha256")))'); do
-    #      curl -sSL "https://github.com/astral-sh/uv/releases/download/0.8.0/${checksum}"
-    #    done
-    _checksum_style="sha256"
-
     # destructure selected archive info into locals
     case "$_artifact_name" in 
         "uv-aarch64-apple-darwin.tar.gz")
@@ -206,7 +199,6 @@ download_binary_and_run_installer() {
             _zip_ext=".tar.gz"
             _bins="uv uvx"
             _bins_js_array='"uv","uvx"'
-            _checksum_value="5a5ca58e3999d4f440632da87a56f7030eaaa3a13d3896561eec5fd51cb9ad45"
             _libs=""
             _libs_js_array=""
             _staticlibs=""
@@ -219,7 +211,6 @@ download_binary_and_run_installer() {
             _zip_ext=".zip"
             _bins="uv.exe uvx.exe uvw.exe"
             _bins_js_array='"uv.exe","uvx.exe","uvw.exe"'
-            _checksum_value="2fc83c9e2de30c1de8e9461188ffdac75ad41ac1e2227fd158d46b6cd09501d3"
             _libs=""
             _libs_js_array=""
             _staticlibs=""
@@ -232,7 +223,6 @@ download_binary_and_run_installer() {
             _zip_ext=".tar.gz"
             _bins="uv uvx"
             _bins_js_array='"uv","uvx"'
-            _checksum_value="61f136a187150624c10ec7025137fdf5391ef083a4cab0eba4fbdb2a928de16b"
             _libs=""
             _libs_js_array=""
             _staticlibs=""
@@ -245,7 +235,6 @@ download_binary_and_run_installer() {
             _zip_ext=".tar.gz"
             _bins="uv uvx"
             _bins_js_array='"uv","uvx"'
-            _checksum_value="c5a7c042e40a9acb693c5ee01f26db047b07e4f3f301470b38ee4a2f3e0e831b"
             _libs=""
             _libs_js_array=""
             _staticlibs=""
@@ -258,7 +247,6 @@ download_binary_and_run_installer() {
             _zip_ext=".tar.gz"
             _bins="uv uvx"
             _bins_js_array='"uv","uvx"'
-            _checksum_value="94c54815e371c93ce08ba5d4b95e7d847d11bdc1ba5af5e15656e6d1be521f74"
             _libs=""
             _libs_js_array=""
             _staticlibs=""
@@ -271,7 +259,6 @@ download_binary_and_run_installer() {
             _zip_ext=".tar.gz"
             _bins="uv uvx"
             _bins_js_array='"uv","uvx"'
-            _checksum_value="57c891ebe985ef1c4e83bbc60b9d2fce40fd6e383db451ac1fc04d60a415022d"
             _libs=""
             _libs_js_array=""
             _staticlibs=""
@@ -284,7 +271,6 @@ download_binary_and_run_installer() {
             _zip_ext=".tar.gz"
             _bins="uv uvx"
             _bins_js_array='"uv","uvx"'
-            _checksum_value="fa8a3f50c1ffeb7013a7fb9d9dbba54ff0a1e5d2c4c758ec6fe785c37426ae7f"
             _libs=""
             _libs_js_array=""
             _staticlibs=""
@@ -297,7 +283,6 @@ download_binary_and_run_installer() {
             _zip_ext=".zip"
             _bins="uv.exe uvx.exe uvw.exe"
             _bins_js_array='"uv.exe","uvx.exe","uvw.exe"'
-            _checksum_value="cd03e12986765e48297228678dbeada0c284c552884910bcb3f0ea3ceeec8ee4"
             _libs=""
             _libs_js_array=""
             _staticlibs=""
@@ -310,7 +295,6 @@ download_binary_and_run_installer() {
             _zip_ext=".tar.gz"
             _bins="uv uvx"
             _bins_js_array='"uv","uvx"'
-            _checksum_value="ebb52595b6b5a0b6805a50c5d5dc06fd632bbfcce5854228e1e426784e7813b6"
             _libs=""
             _libs_js_array=""
             _staticlibs=""
@@ -323,7 +307,6 @@ download_binary_and_run_installer() {
             _zip_ext=".tar.gz"
             _bins="uv uvx"
             _bins_js_array='"uv","uvx"'
-            _checksum_value="b9a44b22bb0605f8413d84a811346696b79e624aed850c0087fbea389074d401"
             _libs=""
             _libs_js_array=""
             _staticlibs=""
@@ -336,7 +319,6 @@ download_binary_and_run_installer() {
             _zip_ext=".tar.gz"
             _bins="uv uvx"
             _bins_js_array='"uv","uvx"'
-            _checksum_value="7b65a08c8ac4a2fae9f466d94e29896fb5f49f92d72a7c6ac315031b94d43857"
             _libs=""
             _libs_js_array=""
             _staticlibs=""
@@ -349,7 +331,6 @@ download_binary_and_run_installer() {
             _zip_ext=".tar.gz"
             _bins="uv uvx"
             _bins_js_array='"uv","uvx"'
-            _checksum_value="698bc873422f261ec7e9da3ddb3a1b2b2d96be3f4aa6abe566c9d4a315b9d9d4"
             _libs=""
             _libs_js_array=""
             _staticlibs=""
@@ -362,7 +343,6 @@ download_binary_and_run_installer() {
             _zip_ext=".tar.gz"
             _bins="uv uvx"
             _bins_js_array='"uv","uvx"'
-            _checksum_value="c508d286c64d34933f06e6ce04e2aada129e039692a57f6d8adf0bf9bbb90186"
             _libs=""
             _libs_js_array=""
             _staticlibs=""
@@ -375,7 +355,6 @@ download_binary_and_run_installer() {
             _zip_ext=".tar.gz"
             _bins="uv uvx"
             _bins_js_array='"uv","uvx"'
-            _checksum_value="756f55e2567585f1e62522b3e25bfae8c1b7f8a856d2e7ec85b48fcf5abbe9a8"
             _libs=""
             _libs_js_array=""
             _staticlibs=""
@@ -388,7 +367,6 @@ download_binary_and_run_installer() {
             _zip_ext=".tar.gz"
             _bins="uv uvx"
             _bins_js_array='"uv","uvx"'
-            _checksum_value="828917cad79aae8327811c59fcc625ff3861bfe21d2cbb77c206737d41117ff2"
             _libs=""
             _libs_js_array=""
             _staticlibs=""
@@ -401,7 +379,6 @@ download_binary_and_run_installer() {
             _zip_ext=".zip"
             _bins="uv.exe uvx.exe uvw.exe"
             _bins_js_array='"uv.exe","uvx.exe","uvw.exe"'
-            _checksum_value="bad5afed0c18bd7f6c5125f5c7ab89ac830a3db7340c96d50a50527e9880cdfe"
             _libs=""
             _libs_js_array=""
             _staticlibs=""
@@ -414,7 +391,6 @@ download_binary_and_run_installer() {
             _zip_ext=".tar.gz"
             _bins="uv uvx"
             _bins_js_array='"uv","uvx"'
-            _checksum_value="a7d74ee5c5ff3069b9d88236a05f293cc4e2809bad872f3a88a384489ba3675e"
             _libs=""
             _libs_js_array=""
             _staticlibs=""
@@ -427,7 +403,6 @@ download_binary_and_run_installer() {
             _zip_ext=".tar.gz"
             _bins="uv uvx"
             _bins_js_array='"uv","uvx"'
-            _checksum_value="0208cbcb3850bfc69277c9a16c2b0399218b075dc923aca7e4b576ee4228c570"
             _libs=""
             _libs_js_array=""
             _staticlibs=""
