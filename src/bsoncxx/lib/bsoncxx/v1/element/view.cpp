@@ -13,3 +13,18 @@
 // limitations under the License.
 
 #include <bsoncxx/v1/element/view.hpp>
+
+//
+
+#include <bsoncxx/private/type_traits.hh>
+
+namespace bsoncxx {
+namespace v1 {
+namespace element {
+
+static_assert(is_semiregular<view>::value, "bsoncxx::v1::element::view must be semiregular");
+static_assert(is_nothrow_moveable<view>::value, "bsoncxx::v1::element::view must be nothrow moveable");
+
+} // namespace element
+} // namespace v1
+} // namespace bsoncxx

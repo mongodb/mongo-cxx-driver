@@ -13,3 +13,27 @@
 // limitations under the License.
 
 #include <bsoncxx/v1/types/view.hpp>
+
+//
+
+#include <bsoncxx/private/type_traits.hh>
+
+namespace bsoncxx {
+namespace v1 {
+namespace types {
+
+#pragma push_macro("X")
+#undef X
+#define X(_name, _value)                                                                             \
+    static_assert(is_regular<b_##_name>::value, "bsoncxx::v1::types::b_" #_name " must be regular"); \
+    static_assert(is_semitrivial<b_##_name>::value, "bsoncxx::v1::types::b_" #_name " must be semitrivial");
+
+BSONCXX_V1_TYPES_XMACRO(X)
+#pragma pop_macro("X")
+
+static_assert(is_regular<view>::value, "bsoncxx::v1::types::view must be regular");
+static_assert(is_semitrivial<view>::value, "bsoncxx::v1::types::view must be semitrivial");
+
+} // namespace types
+} // namespace v1
+} // namespace bsoncxx
