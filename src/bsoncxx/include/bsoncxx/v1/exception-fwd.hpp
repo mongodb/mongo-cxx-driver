@@ -16,22 +16,16 @@
 
 #include <bsoncxx/v1/detail/prelude.hpp>
 
-namespace bsoncxx {
-namespace v1 {
-namespace error {
-
-enum class source;
-
-enum class type;
-
-} // namespace error
-} // namespace v1
-} // namespace bsoncxx
+#include <bsoncxx/v1/config/export.hpp>
 
 namespace bsoncxx {
 namespace v1 {
 
-class exception;
+enum class source_errc;
+
+enum class type_errc;
+
+class BSONCXX_ABI_EXPORT exception;
 
 } // namespace v1
 } // namespace bsoncxx
