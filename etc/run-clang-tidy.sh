@@ -18,15 +18,24 @@ if ! command -V parallel >/dev/null; then
 fi
 
 # Obtain preferred build tools.
-PATH="${UV_INSTALL_DIR:?}:${PATH:-}"
-PATH="${PATH:-}:/opt/mongodbtoolchain/v4/bin" # For ninja.
+export UV_TOOL_DIR UV_TOOL_BIN_DIR
+if [[ "${OSTYPE:?}" == cygwin ]]; then
+  UV_TOOL_DIR="$(cygpath -aw "$(pwd)/uv-tool")"
+  UV_TOOL_BIN_DIR="$(cygpath -aw "$(pwd)/uv-bin")"
+else
+  UV_TOOL_DIR="$(pwd)/uv-tool"
+  UV_TOOL_BIN_DIR="$(pwd)/uv-bin"
+fi
+PATH="${UV_TOOL_BIN_DIR:?}:${UV_INSTALL_DIR:?}:${PATH:-}"
+uv tool install -q cmake
+uv tool install -q clang-tidy
+[[ "${distro_id:?}" == rhel* ]] && PATH="${PATH:-}:/opt/mongodbtoolchain/v4/bin" || uv tool install -q ninja
 export CMAKE_GENERATOR
 CMAKE_GENERATOR="Ninja"
-clang_tidy_binary="$(uv run --no-project --isolated --with clang-tidy bash -c "command -v clang-tidy")"
 
-uvx cmake --version | head -n 1
-echo "ninja version: $("{ninja_binary:?}" --version)"
-"${clang_tidy_binary:?}" --version
+cmake --version | head -n 1
+echo "ninja version: $(ninja --version)"
+clang-tidy --version
 
 # Use ccache if available.
 if [[ -f "../mongoc/.evergreen/scripts/find-ccache.sh" ]]; then
@@ -43,10 +52,10 @@ cmake_config_flags=(
 )
 
 # Generate the compilation database file.
-uvx cmake -S . -B build "${cmake_config_flags[@]}"
+cmake -S . -B build "${cmake_config_flags[@]}"
 
 # Some files (i.e. headers) may need to be generated during the build step.
-uvx cmake --build build
+cmake --build build
 
 #
 # Each check has a name and the checks to run can be chosen using the -checks= option, which specifies a comma-separated
@@ -64,7 +73,7 @@ uvx cmake --build build
 #
 
 echo "Running clang-tidy with configuration:"
-"${clang_tidy_binary:?}" -p=build -dump-config
+clang-tidy -p=build -dump-config
 
 find_args=(
   -type f
@@ -79,5 +88,5 @@ find src "${find_args[@]}"
 
 # TODO: update clang-tidy config and address warnings.
 {
-  find src "${find_args[@]}" | parallel "${clang_tidy_binary:?}" --quiet -p=build {} 2>/dev/null
+  find src "${find_args[@]}" | parallel clang-tidy --quiet -p=build {} 2>/dev/null
 } || true

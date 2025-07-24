@@ -41,12 +41,21 @@ declare working_dir
 working_dir="$(pwd)"
 
 # Obtain preferred build tools.
-PATH="${UV_INSTALL_DIR:?}:${PATH:-}"
-PATH="${PATH:-}:/opt/mongodbtoolchain/v4/bin" # For ninja.
+export UV_TOOL_DIR UV_TOOL_BIN_DIR
+if [[ "${OSTYPE:?}" == cygwin ]]; then
+  UV_TOOL_DIR="$(cygpath -aw "$(pwd)/uv-tool")"
+  UV_TOOL_BIN_DIR="$(cygpath -aw "$(pwd)/uv-bin")"
+else
+  UV_TOOL_DIR="$(pwd)/uv-tool"
+  UV_TOOL_BIN_DIR="$(pwd)/uv-bin"
+fi
+PATH="${UV_TOOL_BIN_DIR:?}:${UV_INSTALL_DIR:?}:${PATH:-}"
+uv tool install -q cmake
+[[ "${distro_id:?}" == rhel* ]] && PATH="${PATH:-}:/opt/mongodbtoolchain/v4/bin" || uv tool install -q ninja
 export CMAKE_GENERATOR
 CMAKE_GENERATOR="Ninja"
 
-uvx cmake --version | head -n 1
+cmake --version | head -n 1
 echo "ninja version: $(ninja --version)"
 
 # Use ccache if available.
@@ -105,14 +114,14 @@ git -C mongo-cxx-driver reset --hard "${base:?}"
 # Install old (base) to install/old.
 echo "Building old libraries..."
 (
-  uvx cmake \
+  cmake \
     -S mongo-cxx-driver \
     -B build/old \
     -DCMAKE_INSTALL_PREFIX=install/old \
     -DBUILD_VERSION="${old_ver:?}-base" \
     "${configure_flags[@]:?}" || exit
-  uvx cmake --build build/old || exit
-  uvx cmake --install build/old || exit
+  cmake --build build/old || exit
+  cmake --install build/old || exit
 ) &>old.log || {
   cat old.log 1>&2
   exit 1
@@ -126,14 +135,14 @@ git -C mongo-cxx-driver stash pop -q || true # Only patch builds have stashed ch
 # Install new (current) to install/new.
 echo "Building new libraries..."
 (
-  uvx cmake \
+  cmake \
     -S mongo-cxx-driver \
     -B build/new \
     -DCMAKE_INSTALL_PREFIX=install/new \
     -DBUILD_VERSION="${new_ver:?}-current" \
     "${configure_flags[@]:?}" || exit
-  uvx cmake --build build/new || exit
-  uvx cmake --install build/new || exit
+  cmake --build build/new || exit
+  cmake --install build/new || exit
 ) &>new.log || {
   cat new.log 1>&2
   exit 1

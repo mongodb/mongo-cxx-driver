@@ -101,10 +101,20 @@ export DRIVERS_TOOLS
 popd # "${working_dir:?}/../drivers-evergreen-tools"
 
 # Obtain preferred build tools.
-PATH="${UV_INSTALL_DIR:?}:${PATH:-}"
+export UV_TOOL_DIR UV_TOOL_BIN_DIR
+if [[ "${OSTYPE:?}" == cygwin ]]; then
+  UV_TOOL_DIR="$(cygpath -aw "$(pwd)/uv-tool")"
+  UV_TOOL_BIN_DIR="$(cygpath -aw "$(pwd)/uv-bin")"
+else
+  UV_TOOL_DIR="$(pwd)/uv-tool"
+  UV_TOOL_BIN_DIR="$(pwd)/uv-bin"
+fi
+PATH="${UV_TOOL_BIN_DIR:?}:${UV_INSTALL_DIR:?}:${PATH:-}"
+uv tool install -q cmake
+[[ "${distro_id:?}" == rhel* ]] && PATH="${PATH:-}:/opt/mongodbtoolchain/v4/bin" || uv tool install -q ninja
 PATH="${PATH:-}:/opt/mongodbtoolchain/v4/bin" # For ninja and llvm-symbolizer.
 
-uvx cmake --version | head -n 1
+cmake --version | head -n 1
 echo "ninja version: $(ninja --version)"
 
 # Use ccache if available.
@@ -239,10 +249,10 @@ fi
 pushd "${working_dir:?}/build"
 
 if [[ "${OSTYPE:?}" =~ cygwin ]]; then
-  CTEST_OUTPUT_ON_FAILURE=1 uvx cmake --build . --config "${build_type:?}" --target RUN_TESTS -- /verbosity:minimal
+  CTEST_OUTPUT_ON_FAILURE=1 cmake --build . --config "${build_type:?}" --target RUN_TESTS -- /verbosity:minimal
 
   echo "Building examples..."
-  uvx cmake --build . --config "${build_type:?}" --target examples/examples
+  cmake --build . --config "${build_type:?}" --target examples/examples
   echo "Building examples... done."
 
   # Only run examples if MONGODB_API_VERSION is unset. We do not append
@@ -250,7 +260,7 @@ if [[ "${OSTYPE:?}" =~ cygwin ]]; then
   # is true.
   if [[ -z "$MONGODB_API_VERSION" ]]; then
     echo "Running examples..."
-    if ! uvx cmake --build . --config "${build_type:?}" --target examples/run-examples --parallel 1 -- /verbosity:minimal >|output.txt 2>&1; then
+    if ! cmake --build . --config "${build_type:?}" --target examples/run-examples --parallel 1 -- /verbosity:minimal >|output.txt 2>&1; then
       # Only emit output on failure.
       cat output.txt
       exit 1
@@ -312,7 +322,7 @@ else
     export OBJC_DISABLE_INITIALIZE_FORK_SAFETY=YES
 
     echo "Running examples..."
-    if ! uvx cmake --build . --target run-examples --parallel 1 >|output.txt 2>&1; then
+    if ! cmake --build . --target run-examples --parallel 1 >|output.txt 2>&1; then
       # Only emit output on failure.
       cat output.txt
       exit 1

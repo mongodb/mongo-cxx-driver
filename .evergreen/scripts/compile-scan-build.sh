@@ -10,13 +10,21 @@ set -o pipefail
 mongoc_prefix="$(pwd)/../mongoc"
 
 # Obtain preferred build tools.
-PATH="${UV_INSTALL_DIR:?}:${PATH:-}"
-PATH="${PATH:-}:/opt/mongodbtoolchain/v4/bin" # For ninja.
+export UV_TOOL_DIR UV_TOOL_BIN_DIR
+if [[ "${OSTYPE:?}" == cygwin ]]; then
+  UV_TOOL_DIR="$(cygpath -aw "$(pwd)/uv-tool")"
+  UV_TOOL_BIN_DIR="$(cygpath -aw "$(pwd)/uv-bin")"
+else
+  UV_TOOL_DIR="$(pwd)/uv-tool"
+  UV_TOOL_BIN_DIR="$(pwd)/uv-bin"
+fi
+PATH="${UV_TOOL_BIN_DIR:?}:${UV_INSTALL_DIR:?}:${PATH:-}"
+uv tool install -q cmake
+[[ "${distro_id:?}" == rhel* ]] && PATH="${PATH:-}:/opt/mongodbtoolchain/v4/bin" || uv tool install -q ninja
 export CMAKE_GENERATOR
 CMAKE_GENERATOR="Ninja"
-cmake_binary="$(uv run --no-project --isolated --with cmake bash -c "command -v cmake")"
 
-"${cmake_binary:?}" --version
+cmake --version
 echo "ninja version: $(ninja --version)"
 
 # Use ccache if available.
@@ -77,11 +85,11 @@ echo "Configuring with CMake flags:"
 printf " - %s\n" "${cmake_flags[@]}"
 
 # Configure via scan-build for consistency.
-CCCACHE_DISABLE=1 "${scan_build_binary}" "${scan_build_flags[@]}" "${cmake_binary:?}" -S . -B build "${cmake_flags[@]}"
+CCCACHE_DISABLE=1 "${scan_build_binary}" "${scan_build_flags[@]}" cmake -S . -B build "${cmake_flags[@]}"
 
 # If scan-build emits warnings, continue the task and upload scan results before marking task as a failure.
 declare -r continue_command='{"status":"failed", "type":"test", "should_continue":true, "desc":"scan-build emitted one or more warnings or errors"}'
 
 # Put clang static analyzer results in scan/ and fail build if warnings found.
-"${scan_build_binary}" "${scan_build_flags[@]}" -o scan --status-bugs "${cmake_binary:?}" --build build ||
+"${scan_build_binary}" "${scan_build_flags[@]}" -o scan --status-bugs cmake --build build ||
   curl -sS -d "${continue_command}" -H "Content-Type: application/json" -X POST localhost:2285/task_status

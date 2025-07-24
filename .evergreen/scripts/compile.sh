@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Runs uvx cmake and compiles the standard build targets (all, install, examples).  Any arguments passed
+# Runs cmake and compiles the standard build targets (all, install, examples).  Any arguments passed
 # to this script will be forwarded on as flags passed to cmake.
 #
 # This script should be run from the root of the repository.  This script will run the build from
@@ -36,10 +36,19 @@ if [[ "${OSTYPE:?}" =~ cygwin ]]; then
 fi
 
 # Obtain preferred build tools.
-PATH="${UV_INSTALL_DIR:?}:${PATH:-}"
-PATH="${PATH:-}:/opt/mongodbtoolchain/v4/bin" # For ninja.
+export UV_TOOL_DIR UV_TOOL_BIN_DIR
+if [[ "${OSTYPE:?}" == cygwin ]]; then
+  UV_TOOL_DIR="$(cygpath -aw "$(pwd)/uv-tool")"
+  UV_TOOL_BIN_DIR="$(cygpath -aw "$(pwd)/uv-bin")"
+else
+  UV_TOOL_DIR="$(pwd)/uv-tool"
+  UV_TOOL_BIN_DIR="$(pwd)/uv-bin"
+fi
+PATH="${UV_TOOL_BIN_DIR:?}:${UV_INSTALL_DIR:?}:${PATH:-}"
+uv tool install -q cmake
+[[ "${distro_id:?}" == rhel* ]] && PATH="${PATH:-}:/opt/mongodbtoolchain/v4/bin" || uv tool install -q ninja
 
-uvx cmake --version | head -n 1
+cmake --version | head -n 1
 echo "ninja version: $(ninja --version)"
 
 if [[ "${build_type:?}" != "Debug" && "${build_type:?}" != "Release" ]]; then
@@ -155,7 +164,7 @@ else()
   endif()
 endif()
 DOC
-  uvx cmake -S . -B build --log-level=notice
+  cmake -S . -B build --log-level=notice
   popd # "$(tmpfile -d)"
   echo "Checking requested C++ standard is supported... done."
 fi
@@ -298,20 +307,20 @@ fi
 echo "Configuring with CMake flags:"
 printf " - %s\n" "${cmake_flags[@]}"
 
-uvx cmake "${cmake_flags[@]}" ..
+cmake "${cmake_flags[@]}" ..
 
 if [[ "${COMPILE_MACRO_GUARD_TESTS:-"OFF"}" == "ON" ]]; then
   # We only need to compile the macro guard tests.
-  uvx cmake --build . --config "${build_type:?}" --target test_bsoncxx_macro_guards test_mongocxx_macro_guards -- "${cmake_build_opts[@]}"
+  cmake --build . --config "${build_type:?}" --target test_bsoncxx_macro_guards test_mongocxx_macro_guards -- "${cmake_build_opts[@]}"
   exit # Nothing else to be done.
 fi
 
 # Regular build and install routine.
-uvx cmake --build . --config "${build_type:?}" "${build_targets[@]:?}" -- "${cmake_build_opts[@]}"
-uvx cmake --install . --config "${build_type:?}"
+cmake --build . --config "${build_type:?}" "${build_targets[@]:?}" -- "${cmake_build_opts[@]}"
+cmake --install . --config "${build_type:?}"
 
 if [[ "${_RUN_DISTCHECK:-}" ]]; then
-  uvx cmake --build . --config "${build_type:?}" --target distcheck
+  cmake --build . --config "${build_type:?}" --target distcheck
 fi
 
 if [[ -n "$(find "${mongoc_prefix:?}" -name 'bson-config.h')" ]]; then
