@@ -5,6 +5,12 @@ set -o errexit # Exit the script with error if any of the commands fail
 BUILD_DIR="$(pwd)/build"
 INSTALL_DIR="$BUILD_DIR/install"
 
+if [[ "${distro_id:?}" == rhel* ]]; then
+  LIB_DIR="lib64"
+else
+  LIB_DIR="lib"
+fi
+
 ls -lR "$INSTALL_DIR"
 
 if test -f "$INSTALL_DIR/$LIB_DIR/pkgconfig/libbsoncxx.pc"; then
