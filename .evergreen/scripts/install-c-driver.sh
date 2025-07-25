@@ -6,13 +6,6 @@ set -o pipefail
 declare -r mongoc_version="${mongoc_version:-"${mongoc_version_minimum:?"missing mongoc version"}"}"
 : "${mongoc_version:?}"
 
-# Usage:
-#   to_windows_path "./some/unix/style/path"
-#   to_windows_path "/some/unix/style/path"
-to_windows_path() {
-  cygpath -aw "${1:?"to_windows_path requires a path to convert"}"
-}
-
 declare mongoc_dir
 mongoc_dir="$(pwd)/mongoc"
 
@@ -20,8 +13,8 @@ mongoc_dir="$(pwd)/mongoc"
 declare mongoc_idir mongoc_install_idir
 if [[ "${OSTYPE:?}" == "cygwin" ]]; then
   # CMake requires Windows paths for configuration variables on Windows.
-  mongoc_idir="$(to_windows_path "${mongoc_dir}")"
-  mongoc_install_idir="$(to_windows_path "${mongoc_dir}")"
+  mongoc_idir="$(cygpath -aw "${mongoc_dir}")"
+  mongoc_install_idir="$(cygpath -aw "${mongoc_dir}")"
 else
   mongoc_idir="${mongoc_dir}"
   mongoc_install_idir="${mongoc_dir}"

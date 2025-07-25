@@ -19,13 +19,8 @@ fi
 
 # Obtain preferred build tools.
 export UV_TOOL_DIR UV_TOOL_BIN_DIR
-if [[ "${OSTYPE:?}" == cygwin ]]; then
-  UV_TOOL_DIR="$(cygpath -aw "$(pwd)/uv-tool")"
-  UV_TOOL_BIN_DIR="$(cygpath -aw "$(pwd)/uv-bin")"
-else
-  UV_TOOL_DIR="$(pwd)/uv-tool"
-  UV_TOOL_BIN_DIR="$(pwd)/uv-bin"
-fi
+UV_TOOL_DIR="$(pwd)/uv-tool"
+UV_TOOL_BIN_DIR="$(pwd)/uv-bin"
 PATH="${UV_TOOL_BIN_DIR:?}:${UV_INSTALL_DIR:?}:${PATH:-}"
 uv tool install -q cmake
 uv tool install -q clang-tidy
