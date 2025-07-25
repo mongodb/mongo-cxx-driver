@@ -38,9 +38,13 @@ class UninstallCheck(Function):
             set -o pipefail
 
             # lib vs. lib64 (i.e. RHEL).
-            for p in build/install/lib*; do
-                touch "$p/canary.txt"
-            done
+            if [[ "${distro_id}" == rhel* ]]; then
+                LIB_DIR="lib64"
+            else
+                LIB_DIR="lib"
+            fi
+
+            touch "build/install/$LIB_DIR/canary.txt"
 
             ls -l "build/install/share/mongo-cxx-driver"
 
@@ -48,7 +52,7 @@ class UninstallCheck(Function):
             darwin*|linux*)
                 # Ninja generator.
                 uvx cmake --build build --target uninstall
-                .evergreen/scripts/uninstall_check.sh
+                env LIB_DIR="$LIB_DIR" .evergreen/scripts/uninstall_check.sh
                 ;;
             cygwin)
                 # Visual Studio generator.
