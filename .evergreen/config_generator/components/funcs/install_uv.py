@@ -15,7 +15,7 @@ class InstallUV(Function):
                 set -o errexit
                 set -o pipefail
 
-                version="0.8.2"
+                version="0.8.3"
 
                 if [[ ! -n "${MONGO_CXX_DRIVER_CACHE_DIR}" ]]; then
                     echo "MONGO_CXX_DRIVER_CACHE_DIR is not defined!" 1>&2
