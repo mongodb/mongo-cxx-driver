@@ -12,31 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <bsoncxx/v1/types/view.hpp>
+#pragma once
+
+#include <bsoncxx/v1/detail/bit.hpp>
 
 //
 
-#include <bsoncxx/v1/stdx/optional.hpp>
+#include <catch2/catch_tostring.hpp>
 
-#include <cstdint>
-
-#include <bsoncxx/private/bson.hh>
-#include <bsoncxx/private/export.hh>
-
-namespace bsoncxx {
-namespace v1 {
-namespace types {
-
-class view::internal {
-   public:
-    static view make(bson_value_t const& v);
-
-    static v1::stdx::optional<view>
-    make(std::uint8_t const* raw, std::uint32_t length, std::uint32_t offset, std::uint32_t keylen);
-
-    static BSONCXX_ABI_EXPORT_CDECL_TESTING(void) type_id(view& v, v1::types::id id);
-};
-
-} // namespace types
-} // namespace v1
-} // namespace bsoncxx
+CATCH_REGISTER_ENUM(
+    bsoncxx::detail::endian,
+    bsoncxx::detail::endian::little,
+    bsoncxx::detail::endian::big,
+    bsoncxx::detail::endian::native)

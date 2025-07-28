@@ -242,6 +242,10 @@ view::internal::make(std::uint8_t const* raw, std::uint32_t length, std::uint32_
     return v1::stdx::nullopt;
 }
 
+void view::internal::type_id(view& v, v1::types::id id) {
+    v._id = id;
+}
+
 } // namespace types
 } // namespace v1
 } // namespace bsoncxx
