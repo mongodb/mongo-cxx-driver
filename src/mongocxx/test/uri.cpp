@@ -25,6 +25,8 @@
 
 #include <bsoncxx/test/catch.hh>
 
+#include <catch2/matchers/catch_matchers_string.hpp>
+
 namespace {
 TEST_CASE("URI", "[uri]") {
     SECTION("Default URI") {
@@ -72,9 +74,16 @@ TEST_CASE("URI", "[uri]") {
         } catch (mongocxx::logic_error const& e) {
             REQUIRE(e.code() == mongocxx::error_code::k_invalid_uri);
 
-            std::string invalid_schema = "Invalid URI Schema, expecting 'mongodb://' or 'mongodb+srv://': ";
-
-            REQUIRE(e.what() == invalid_schema + e.code().message());
+            // Message format slightly changes between mongoc 2.0.0 and 2.1.0. (CDRIVER-5983)
+            //     Invalid URI Schema, expecting 'mongodb://' or 'mongodb+srv://': ...
+            // ->
+            //     Invalid URI scheme "mongo://". Expected one of "mongodb://" or "mongodb+srv://": ...
+            // https://github.com/mongodb/mongo-c-driver/commit/e388c29bc12b9d9568cde4fca6f95f6fba3289aa#diff-dbe89a1dfeb43b78de3fd2a755697ea837b1e6f6cc8fd589476e64d4fb873700R1985-R1987
+            REQUIRE_THAT(
+                e.what(),
+                Catch::Matchers::ContainsSubstring("Invalid URI") && Catch::Matchers::ContainsSubstring("mongodb://") &&
+                    Catch::Matchers::ContainsSubstring("mongodb+srv://") &&
+                    Catch::Matchers::ContainsSubstring(e.code().message()));
         }
     }
 
