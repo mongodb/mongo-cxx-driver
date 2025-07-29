@@ -30,7 +30,17 @@ class RunBenchmarks(Function):
             command_type=EvgCommandType.SYSTEM,
             working_dir='mongo-cxx-driver',
             script='.evergreen/scripts/send-perf-data.sh',
-            include_expansions_in_env=['project_id', 'version_id', 'build_variant', 'parsed_order_id', 'task_name', 'task_id', 'execution', 'requester', 'revision_order_id'],
+            include_expansions_in_env=[
+                'build_variant',
+                'execution',
+                'parsed_order_id',
+                'project_id',
+                'requester',
+                'revision_order_id',
+                'task_id',
+                'task_name',
+                'version_id',
+            ],
         ),
     ]
 
