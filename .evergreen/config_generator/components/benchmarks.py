@@ -26,14 +26,21 @@ class RunBenchmarks(Function):
             working_dir='mongo-cxx-driver',
             script='build/benchmark/microbenchmarks all',
         ),
-
-        BuiltInCommand(
-            command='perf.send',
-            type=EvgCommandType.SYSTEM,
-            params={
-                'name': 'perf',
-                'file': 'mongo-cxx-driver/results.json',
-            }
+        bash_exec(
+            command_type=EvgCommandType.SYSTEM,
+            working_dir='mongo-cxx-driver',
+            script='.evergreen/scripts/send-perf-data.sh',
+            include_expansions_in_env=[
+                'build_variant',
+                'execution',
+                'parsed_order_id',
+                'project_id',
+                'requester',
+                'revision_order_id',
+                'task_id',
+                'task_name',
+                'version_id',
+            ],
         ),
     ]
 
