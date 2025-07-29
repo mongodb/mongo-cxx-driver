@@ -4,7 +4,7 @@ set -o errexit
 set -o pipefail
 
 # We use the requester expansion to determine whether the data is from a mainline evergreen run or not
-if [ "${requester}" == "commit" ]; then
+if [ "${requester:?}" == "commit" ]; then
     is_mainline=true
 else
     is_mainline=false
