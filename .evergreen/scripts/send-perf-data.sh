@@ -21,10 +21,10 @@ response=$(curl -s -w "\nHTTP_STATUS:%{http_code}" -X 'POST' \
 http_status=$(echo "$response" | grep "HTTP_STATUS" | awk -F':' '{print $2}')
 response_body=$(echo "$response" | sed '/HTTP_STATUS/d')
 # We want to throw an error if the data was not successfully submitted
-if [ "$http_status" -ne 200 ]; then
+[[ "${http_status:?}" -eq 200 ]] || {
     echo "Error: Received HTTP status $http_status"
     echo "Response Body: $response_body"
     exit 1
-fi
+} >&2
 echo "Response Body: $response_body"
 echo "HTTP Status: $http_status"
