@@ -3853,86 +3853,6 @@ tasks:
           TEST_WITH_CSFLE: "ON"
           example_projects_cxx_standard: 11
           use_mongocryptd: true
-  - name: integration-rhel80-debug-shared-cxx11-4.0-replica
-    run_on: rhel80-large
-    tags: [integration, rhel80, linux, debug, shared, cxx11, "4.0", replica]
-    commands:
-      - command: expansions.update
-        params:
-          updates:
-            - { key: build_type, value: Debug }
-      - func: setup
-      - func: start_mongod
-        vars:
-          TOPOLOGY: replica_set
-          mongodb_version: "4.0"
-      - func: install_c_driver
-      - func: install-uv
-      - func: compile
-        vars:
-          ENABLE_TESTS: "ON"
-          REQUIRED_CXX_STANDARD: 11
-          RUN_DISTCHECK: 1
-      - func: fetch-det
-      - func: run_kms_servers
-      - func: test
-        vars:
-          MONGOCXX_TEST_TOPOLOGY: replica
-          REQUIRED_CXX_STANDARD: 11
-          example_projects_cxx_standard: 11
-  - name: integration-rhel80-debug-shared-cxx11-4.0-sharded
-    run_on: rhel80-large
-    tags: [integration, rhel80, linux, debug, shared, cxx11, "4.0", sharded]
-    commands:
-      - command: expansions.update
-        params:
-          updates:
-            - { key: build_type, value: Debug }
-      - func: setup
-      - func: start_mongod
-        vars:
-          TOPOLOGY: sharded_cluster
-          mongodb_version: "4.0"
-      - func: install_c_driver
-      - func: install-uv
-      - func: compile
-        vars:
-          ENABLE_TESTS: "ON"
-          REQUIRED_CXX_STANDARD: 11
-          RUN_DISTCHECK: 1
-      - func: fetch-det
-      - func: run_kms_servers
-      - func: test
-        vars:
-          MONGOCXX_TEST_TOPOLOGY: sharded
-          REQUIRED_CXX_STANDARD: 11
-          example_projects_cxx_standard: 11
-  - name: integration-rhel80-debug-shared-cxx11-4.0-single
-    run_on: rhel80-large
-    tags: [integration, rhel80, linux, debug, shared, cxx11, "4.0", single]
-    commands:
-      - command: expansions.update
-        params:
-          updates:
-            - { key: build_type, value: Debug }
-      - func: setup
-      - func: start_mongod
-        vars:
-          mongodb_version: "4.0"
-      - func: install_c_driver
-      - func: install-uv
-      - func: compile
-        vars:
-          ENABLE_TESTS: "ON"
-          REQUIRED_CXX_STANDARD: 11
-          RUN_DISTCHECK: 1
-      - func: fetch-det
-      - func: run_kms_servers
-      - func: test
-        vars:
-          MONGOCXX_TEST_TOPOLOGY: single
-          REQUIRED_CXX_STANDARD: 11
-          example_projects_cxx_standard: 11
   - name: integration-rhel80-debug-shared-cxx11-4.2-replica
     run_on: rhel80-large
     tags: [integration, rhel80, linux, debug, shared, cxx11, "4.2", replica]
@@ -5103,86 +5023,6 @@ tasks:
           MONGOCXX_TEST_TOPOLOGY: single
           REQUIRED_CXX_STANDARD: 11
           example_projects_cxx_standard: 11
-  - name: integration-rhel80-debug-shared-cxx17-4.0-replica
-    run_on: rhel80-large
-    tags: [integration, rhel80, linux, debug, shared, cxx17, "4.0", replica]
-    commands:
-      - command: expansions.update
-        params:
-          updates:
-            - { key: build_type, value: Debug }
-      - func: setup
-      - func: start_mongod
-        vars:
-          TOPOLOGY: replica_set
-          mongodb_version: "4.0"
-      - func: install_c_driver
-      - func: install-uv
-      - func: compile
-        vars:
-          ENABLE_TESTS: "ON"
-          REQUIRED_CXX_STANDARD: 17
-          RUN_DISTCHECK: 1
-      - func: fetch-det
-      - func: run_kms_servers
-      - func: test
-        vars:
-          MONGOCXX_TEST_TOPOLOGY: replica
-          REQUIRED_CXX_STANDARD: 17
-          example_projects_cxx_standard: 17
-  - name: integration-rhel80-debug-shared-cxx17-4.0-sharded
-    run_on: rhel80-large
-    tags: [integration, rhel80, linux, debug, shared, cxx17, "4.0", sharded]
-    commands:
-      - command: expansions.update
-        params:
-          updates:
-            - { key: build_type, value: Debug }
-      - func: setup
-      - func: start_mongod
-        vars:
-          TOPOLOGY: sharded_cluster
-          mongodb_version: "4.0"
-      - func: install_c_driver
-      - func: install-uv
-      - func: compile
-        vars:
-          ENABLE_TESTS: "ON"
-          REQUIRED_CXX_STANDARD: 17
-          RUN_DISTCHECK: 1
-      - func: fetch-det
-      - func: run_kms_servers
-      - func: test
-        vars:
-          MONGOCXX_TEST_TOPOLOGY: sharded
-          REQUIRED_CXX_STANDARD: 17
-          example_projects_cxx_standard: 17
-  - name: integration-rhel80-debug-shared-cxx17-4.0-single
-    run_on: rhel80-large
-    tags: [integration, rhel80, linux, debug, shared, cxx17, "4.0", single]
-    commands:
-      - command: expansions.update
-        params:
-          updates:
-            - { key: build_type, value: Debug }
-      - func: setup
-      - func: start_mongod
-        vars:
-          mongodb_version: "4.0"
-      - func: install_c_driver
-      - func: install-uv
-      - func: compile
-        vars:
-          ENABLE_TESTS: "ON"
-          REQUIRED_CXX_STANDARD: 17
-          RUN_DISTCHECK: 1
-      - func: fetch-det
-      - func: run_kms_servers
-      - func: test
-        vars:
-          MONGOCXX_TEST_TOPOLOGY: single
-          REQUIRED_CXX_STANDARD: 17
-          example_projects_cxx_standard: 17
   - name: integration-rhel80-debug-shared-cxx17-4.2-replica
     run_on: rhel80-large
     tags: [integration, rhel80, linux, debug, shared, cxx17, "4.2", replica]
@@ -6324,92 +6164,6 @@ tasks:
           MONGOCXX_TEST_TOPOLOGY: single
           REQUIRED_CXX_STANDARD: 17
           example_projects_cxx_standard: 17
-  - name: integration-rhel80-debug-static-cxx11-4.0-replica
-    run_on: rhel80-large
-    tags: [integration, rhel80, linux, debug, static, cxx11, "4.0", replica]
-    commands:
-      - command: expansions.update
-        params:
-          updates:
-            - { key: build_type, value: Debug }
-      - func: setup
-      - func: start_mongod
-        vars:
-          TOPOLOGY: replica_set
-          mongodb_version: "4.0"
-      - func: install_c_driver
-      - func: install-uv
-      - func: compile
-        vars:
-          ENABLE_TESTS: "ON"
-          REQUIRED_CXX_STANDARD: 11
-          RUN_DISTCHECK: 1
-          USE_STATIC_LIBS: 1
-      - func: fetch-det
-      - func: run_kms_servers
-      - func: test
-        vars:
-          MONGOCXX_TEST_TOPOLOGY: replica
-          REQUIRED_CXX_STANDARD: 11
-          USE_STATIC_LIBS: 1
-          example_projects_cxx_standard: 11
-  - name: integration-rhel80-debug-static-cxx11-4.0-sharded
-    run_on: rhel80-large
-    tags: [integration, rhel80, linux, debug, static, cxx11, "4.0", sharded]
-    commands:
-      - command: expansions.update
-        params:
-          updates:
-            - { key: build_type, value: Debug }
-      - func: setup
-      - func: start_mongod
-        vars:
-          TOPOLOGY: sharded_cluster
-          mongodb_version: "4.0"
-      - func: install_c_driver
-      - func: install-uv
-      - func: compile
-        vars:
-          ENABLE_TESTS: "ON"
-          REQUIRED_CXX_STANDARD: 11
-          RUN_DISTCHECK: 1
-          USE_STATIC_LIBS: 1
-      - func: fetch-det
-      - func: run_kms_servers
-      - func: test
-        vars:
-          MONGOCXX_TEST_TOPOLOGY: sharded
-          REQUIRED_CXX_STANDARD: 11
-          USE_STATIC_LIBS: 1
-          example_projects_cxx_standard: 11
-  - name: integration-rhel80-debug-static-cxx11-4.0-single
-    run_on: rhel80-large
-    tags: [integration, rhel80, linux, debug, static, cxx11, "4.0", single]
-    commands:
-      - command: expansions.update
-        params:
-          updates:
-            - { key: build_type, value: Debug }
-      - func: setup
-      - func: start_mongod
-        vars:
-          mongodb_version: "4.0"
-      - func: install_c_driver
-      - func: install-uv
-      - func: compile
-        vars:
-          ENABLE_TESTS: "ON"
-          REQUIRED_CXX_STANDARD: 11
-          RUN_DISTCHECK: 1
-          USE_STATIC_LIBS: 1
-      - func: fetch-det
-      - func: run_kms_servers
-      - func: test
-        vars:
-          MONGOCXX_TEST_TOPOLOGY: single
-          REQUIRED_CXX_STANDARD: 11
-          USE_STATIC_LIBS: 1
-          example_projects_cxx_standard: 11
   - name: integration-rhel80-debug-static-cxx11-4.2-replica
     run_on: rhel80-large
     tags: [integration, rhel80, linux, debug, static, cxx11, "4.2", replica]
@@ -7635,92 +7389,6 @@ tasks:
           REQUIRED_CXX_STANDARD: 11
           USE_STATIC_LIBS: 1
           example_projects_cxx_standard: 11
-  - name: integration-rhel80-debug-static-cxx17-4.0-replica
-    run_on: rhel80-large
-    tags: [integration, rhel80, linux, debug, static, cxx17, "4.0", replica]
-    commands:
-      - command: expansions.update
-        params:
-          updates:
-            - { key: build_type, value: Debug }
-      - func: setup
-      - func: start_mongod
-        vars:
-          TOPOLOGY: replica_set
-          mongodb_version: "4.0"
-      - func: install_c_driver
-      - func: install-uv
-      - func: compile
-        vars:
-          ENABLE_TESTS: "ON"
-          REQUIRED_CXX_STANDARD: 17
-          RUN_DISTCHECK: 1
-          USE_STATIC_LIBS: 1
-      - func: fetch-det
-      - func: run_kms_servers
-      - func: test
-        vars:
-          MONGOCXX_TEST_TOPOLOGY: replica
-          REQUIRED_CXX_STANDARD: 17
-          USE_STATIC_LIBS: 1
-          example_projects_cxx_standard: 17
-  - name: integration-rhel80-debug-static-cxx17-4.0-sharded
-    run_on: rhel80-large
-    tags: [integration, rhel80, linux, debug, static, cxx17, "4.0", sharded]
-    commands:
-      - command: expansions.update
-        params:
-          updates:
-            - { key: build_type, value: Debug }
-      - func: setup
-      - func: start_mongod
-        vars:
-          TOPOLOGY: sharded_cluster
-          mongodb_version: "4.0"
-      - func: install_c_driver
-      - func: install-uv
-      - func: compile
-        vars:
-          ENABLE_TESTS: "ON"
-          REQUIRED_CXX_STANDARD: 17
-          RUN_DISTCHECK: 1
-          USE_STATIC_LIBS: 1
-      - func: fetch-det
-      - func: run_kms_servers
-      - func: test
-        vars:
-          MONGOCXX_TEST_TOPOLOGY: sharded
-          REQUIRED_CXX_STANDARD: 17
-          USE_STATIC_LIBS: 1
-          example_projects_cxx_standard: 17
-  - name: integration-rhel80-debug-static-cxx17-4.0-single
-    run_on: rhel80-large
-    tags: [integration, rhel80, linux, debug, static, cxx17, "4.0", single]
-    commands:
-      - command: expansions.update
-        params:
-          updates:
-            - { key: build_type, value: Debug }
-      - func: setup
-      - func: start_mongod
-        vars:
-          mongodb_version: "4.0"
-      - func: install_c_driver
-      - func: install-uv
-      - func: compile
-        vars:
-          ENABLE_TESTS: "ON"
-          REQUIRED_CXX_STANDARD: 17
-          RUN_DISTCHECK: 1
-          USE_STATIC_LIBS: 1
-      - func: fetch-det
-      - func: run_kms_servers
-      - func: test
-        vars:
-          MONGOCXX_TEST_TOPOLOGY: single
-          REQUIRED_CXX_STANDARD: 17
-          USE_STATIC_LIBS: 1
-          example_projects_cxx_standard: 17
   - name: integration-rhel80-debug-static-cxx17-4.2-replica
     run_on: rhel80-large
     tags: [integration, rhel80, linux, debug, static, cxx17, "4.2", replica]
@@ -14181,9 +13849,9 @@ tasks:
     commands:
       - func: setup
       - func: build-package-rpm
-  - name: sanitizers-asan-rhel80-clang-static-4.0-replica
+  - name: sanitizers-asan-rhel80-clang-static-4.2-replica
     run_on: rhel80-large
-    tags: [sanitizers, asan, rhel80, clang, static, "4.0", replica]
+    tags: [sanitizers, asan, rhel80, clang, static, "4.2", replica]
     commands:
       - command: expansions.update
         params:
@@ -14196,7 +13864,7 @@ tasks:
       - func: start_mongod
         vars:
           TOPOLOGY: replica_set
-          mongodb_version: "4.0"
+          mongodb_version: "4.2"
       - func: install_c_driver
       - func: install-uv
       - func: compile
@@ -14214,9 +13882,9 @@ tasks:
           example_projects_cxx: clang++
           example_projects_cxxflags: -fsanitize=address -fno-omit-frame-pointer
           example_projects_ldflags: -fsanitize=address
-  - name: sanitizers-asan-rhel80-clang-static-4.0-sharded
+  - name: sanitizers-asan-rhel80-clang-static-4.2-sharded
     run_on: rhel80-large
-    tags: [sanitizers, asan, rhel80, clang, static, "4.0", sharded]
+    tags: [sanitizers, asan, rhel80, clang, static, "4.2", sharded]
     commands:
       - command: expansions.update
         params:
@@ -14229,7 +13897,7 @@ tasks:
       - func: start_mongod
         vars:
           TOPOLOGY: sharded_cluster
-          mongodb_version: "4.0"
+          mongodb_version: "4.2"
       - func: install_c_driver
       - func: install-uv
       - func: compile
@@ -14247,9 +13915,9 @@ tasks:
           example_projects_cxx: clang++
           example_projects_cxxflags: -fsanitize=address -fno-omit-frame-pointer
           example_projects_ldflags: -fsanitize=address
-  - name: sanitizers-asan-rhel80-clang-static-4.0-single
+  - name: sanitizers-asan-rhel80-clang-static-4.2-single
     run_on: rhel80-large
-    tags: [sanitizers, asan, rhel80, clang, static, "4.0", single]
+    tags: [sanitizers, asan, rhel80, clang, static, "4.2", single]
     commands:
       - command: expansions.update
         params:
@@ -14261,7 +13929,7 @@ tasks:
       - func: setup
       - func: start_mongod
         vars:
-          mongodb_version: "4.0"
+          mongodb_version: "4.2"
       - func: install_c_driver
       - func: install-uv
       - func: compile
@@ -14475,9 +14143,9 @@ tasks:
           example_projects_cxx: clang++
           example_projects_cxxflags: -fsanitize=address -fno-omit-frame-pointer
           example_projects_ldflags: -fsanitize=address
-  - name: sanitizers-ubsan-rhel80-clang-static-4.0-replica
+  - name: sanitizers-ubsan-rhel80-clang-static-4.2-replica
     run_on: rhel80-large
-    tags: [sanitizers, ubsan, rhel80, clang, static, "4.0", replica]
+    tags: [sanitizers, ubsan, rhel80, clang, static, "4.2", replica]
     commands:
       - command: expansions.update
         params:
@@ -14490,7 +14158,7 @@ tasks:
       - func: start_mongod
         vars:
           TOPOLOGY: replica_set
-          mongodb_version: "4.0"
+          mongodb_version: "4.2"
       - func: install_c_driver
       - func: install-uv
       - func: compile
@@ -14508,9 +14176,9 @@ tasks:
           example_projects_cxx: clang++
           example_projects_cxxflags: -fsanitize=undefined -fno-sanitize-recover=undefined -fno-omit-frame-pointer
           example_projects_ldflags: -fsanitize=undefined -fno-sanitize-recover=undefined -static-libsan
-  - name: sanitizers-ubsan-rhel80-clang-static-4.0-sharded
+  - name: sanitizers-ubsan-rhel80-clang-static-4.2-sharded
     run_on: rhel80-large
-    tags: [sanitizers, ubsan, rhel80, clang, static, "4.0", sharded]
+    tags: [sanitizers, ubsan, rhel80, clang, static, "4.2", sharded]
     commands:
       - command: expansions.update
         params:
@@ -14523,7 +14191,7 @@ tasks:
       - func: start_mongod
         vars:
           TOPOLOGY: sharded_cluster
-          mongodb_version: "4.0"
+          mongodb_version: "4.2"
       - func: install_c_driver
       - func: install-uv
       - func: compile
@@ -14541,9 +14209,9 @@ tasks:
           example_projects_cxx: clang++
           example_projects_cxxflags: -fsanitize=undefined -fno-sanitize-recover=undefined -fno-omit-frame-pointer
           example_projects_ldflags: -fsanitize=undefined -fno-sanitize-recover=undefined -static-libsan
-  - name: sanitizers-ubsan-rhel80-clang-static-4.0-single
+  - name: sanitizers-ubsan-rhel80-clang-static-4.2-single
     run_on: rhel80-large
-    tags: [sanitizers, ubsan, rhel80, clang, static, "4.0", single]
+    tags: [sanitizers, ubsan, rhel80, clang, static, "4.2", single]
     commands:
       - command: expansions.update
         params:
@@ -14555,7 +14223,7 @@ tasks:
       - func: setup
       - func: start_mongod
         vars:
-          mongodb_version: "4.0"
+          mongodb_version: "4.2"
       - func: install_c_driver
       - func: install-uv
       - func: compile
@@ -15009,9 +14677,9 @@ tasks:
           generator: Visual Studio 15 2017
           platform: x64
       - func: uninstall-check
-  - name: valgrind-rhel80-shared-4.0-replica
+  - name: valgrind-rhel80-shared-4.2-replica
     run_on: rhel80-large
-    tags: [valgrind, rhel80, shared, "4.0", replica]
+    tags: [valgrind, rhel80, shared, "4.2", replica]
     commands:
       - command: expansions.update
         params:
@@ -15021,7 +14689,7 @@ tasks:
       - func: start_mongod
         vars:
           TOPOLOGY: replica_set
-          mongodb_version: "4.0"
+          mongodb_version: "4.2"
       - func: install_c_driver
         vars:
           SKIP_INSTALL_LIBMONGOCRYPT: 1
@@ -15038,9 +14706,9 @@ tasks:
           TEST_WITH_VALGRIND: "ON"
           disable_slow_tests: 1
           use_mongocryptd: true
-  - name: valgrind-rhel80-shared-4.0-sharded
+  - name: valgrind-rhel80-shared-4.2-sharded
     run_on: rhel80-large
-    tags: [valgrind, rhel80, shared, "4.0", sharded]
+    tags: [valgrind, rhel80, shared, "4.2", sharded]
     commands:
       - command: expansions.update
         params:
@@ -15050,7 +14718,7 @@ tasks:
       - func: start_mongod
         vars:
           TOPOLOGY: sharded_cluster
-          mongodb_version: "4.0"
+          mongodb_version: "4.2"
       - func: install_c_driver
         vars:
           SKIP_INSTALL_LIBMONGOCRYPT: 1
@@ -15067,9 +14735,9 @@ tasks:
           TEST_WITH_VALGRIND: "ON"
           disable_slow_tests: 1
           use_mongocryptd: true
-  - name: valgrind-rhel80-shared-4.0-single
+  - name: valgrind-rhel80-shared-4.2-single
     run_on: rhel80-large
-    tags: [valgrind, rhel80, shared, "4.0", single]
+    tags: [valgrind, rhel80, shared, "4.2", single]
     commands:
       - command: expansions.update
         params:
@@ -15078,7 +14746,7 @@ tasks:
       - func: setup
       - func: start_mongod
         vars:
-          mongodb_version: "4.0"
+          mongodb_version: "4.2"
       - func: install_c_driver
         vars:
           SKIP_INSTALL_LIBMONGOCRYPT: 1
