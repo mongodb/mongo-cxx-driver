@@ -20,6 +20,7 @@
 #include <cstdlib>
 #include <fstream>
 #include <functional>
+#include <memory>
 #include <numeric>
 #include <sstream>
 #include <vector>
@@ -525,22 +526,21 @@ TEST_CASE("mongocxx::gridfs::downloader::read with arbitrary sizes", "[gridfs::d
     std::int32_t read_size = 0;
 
     auto run_test = [&]() {
-        REQUIRE(read_size != 0);
+        REQUIRE(read_size > 0);
 
         bsoncxx::types::bson_value::view id{bsoncxx::types::b_oid{bsoncxx::oid{}}};
         std::vector<std::uint8_t> expected = manual_gridfs_initialize(db, file_length, chunk_size, id);
 
         // Allocate a buffer large enough to fit the data read from the downloader.
-        std::vector<std::uint8_t> buffer;
-        buffer.reserve(static_cast<std::size_t>(read_size));
+        std::unique_ptr<std::uint8_t[]> buffer{new std::uint8_t[static_cast<std::size_t>(read_size)]};
 
         std::size_t total_bytes_read = 0;
         auto downloader = bucket.open_download_stream(bsoncxx::types::bson_value::view{id});
 
-        while (std::size_t bytes_read = downloader.read(buffer.data(), static_cast<std::size_t>(read_size))) {
+        while (std::size_t bytes_read = downloader.read(buffer.get(), static_cast<std::size_t>(read_size))) {
             std::vector<std::uint8_t> expected_bytes{
                 expected.data() + total_bytes_read, expected.data() + total_bytes_read + bytes_read};
-            std::vector<std::uint8_t> actual_bytes{buffer.data(), buffer.data() + bytes_read};
+            std::vector<std::uint8_t> actual_bytes{buffer.get(), buffer.get() + bytes_read};
 
             REQUIRE(expected_bytes == actual_bytes);
 

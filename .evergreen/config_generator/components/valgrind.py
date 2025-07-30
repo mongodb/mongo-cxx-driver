@@ -23,7 +23,7 @@ TAG = 'valgrind'
 # fmt: off
 MATRIX = [
     # min-max-latest
-    ('rhel80', None, ['shared'], ['4.0', '8.0', 'latest'], ['single', 'replica', 'sharded']),
+    ('rhel80', None, ['shared'], ['4.2', '8.0', 'latest'], ['single', 'replica', 'sharded']),
 ]
 # fmt: on
 # pylint: enable=line-too-long

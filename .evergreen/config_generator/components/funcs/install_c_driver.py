@@ -7,14 +7,13 @@ from shrub.v3.evg_command import EvgCommandType, KeyValueParam, expansions_updat
 from typing import Mapping
 
 
-# If updating mongoc_version_minimum, also update:
+# If updating mongoc_version_minimum to a new release (not pinning to an unreleased commit), also update:
 # - BSON_REQUIRED_VERSION and MONGOC_REQUIRED_VERSION in CMakeLists.txt
 # - the version of pkg:github/mongodb/mongo-c-driver in etc/purls.txt
 # - the default value of --c-driver-build-ref in etc/make_release.py
-# Only MONGOC_DOWNLOAD_VERSION needs to be updated when pinning to an unreleased commit.
 # If pinning to an unreleased commit, create a "Blocked" JIRA ticket with
 # a "depends on" link to the appropriate C Driver version release ticket.
-MONGOC_VERSION_MINIMUM = '2.0.2'
+MONGOC_VERSION_MINIMUM = '912209d5dc985758bc3d70b105dc5166e3ded7c3'  # TODO: bump to 2.1.0 once released.
 
 
 class InstallCDriver(Function):
