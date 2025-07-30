@@ -492,7 +492,7 @@ functions:
       type: setup
       params:
         updates:
-          - { key: mongoc_version_minimum, value: 2.0.2 }
+          - { key: mongoc_version_minimum, value: 912209d5dc985758bc3d70b105dc5166e3ded7c3 }
     - command: subprocess.exec
       type: setup
       params:
@@ -673,6 +673,7 @@ functions:
         - MONGODB_API_VERSION
         - platform
         - TEST_WITH_ASAN
+        - TEST_WITH_CSFLE
         - TEST_WITH_UBSAN
         - TEST_WITH_VALGRIND
         - use_mongocryptd

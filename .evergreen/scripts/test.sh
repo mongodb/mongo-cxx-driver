@@ -287,7 +287,11 @@ else
     --allow-running-no-tests
   )
 
-  run_test() { "$@" "${test_args[@]:?}"; }
+  run_test() {
+    echo "Running $@..."
+    "$@" "${test_args[@]:?}" || return
+    echo "Running $@... done."
+  }
 
   if [[ "${TEST_WITH_ASAN:-}" == "ON" || "${TEST_WITH_UBSAN:-}" == "ON" ]]; then
     export ASAN_OPTIONS="detect_leaks=1"
@@ -296,7 +300,9 @@ else
     command -V valgrind
     valgrind --version
     run_test() {
-      valgrind --leak-check=full --track-origins=yes --num-callers=50 --error-exitcode=1 --error-limit=no --read-var-info=yes --suppressions=../etc/memcheck.suppressions "$@" "${test_args[@]:?}"
+      echo "Running $@..."
+      valgrind --leak-check=full --track-origins=yes --num-callers=50 --error-exitcode=1 --error-limit=no --read-var-info=yes --suppressions=../etc/memcheck.suppressions "$@" "${test_args[@]:?}" || return
+      echo "Running $@... done."
     }
   fi
 

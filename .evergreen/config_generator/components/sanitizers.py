@@ -22,7 +22,7 @@ TAG = 'sanitizers'
 # pylint: disable=line-too-long
 # fmt: off
 MATRIX = [
-    ('rhel80', ['asan', 'ubsan'], ['shared', 'static'], ['4.0', '8.0', 'latest'], ['single', 'replica', 'sharded']),
+    ('rhel80', ['asan', 'ubsan'], ['static'], ['4.2', '8.0', 'latest'], ['single', 'replica', 'sharded']),
 ]
 # fmt: on
 # pylint: enable=line-too-long
@@ -57,9 +57,9 @@ def tasks():
             updates += [KeyValueParam(key=key, value=value)
                         for key, value in [('cc_compiler', cc_compiler), ('cxx_compiler', cxx_compiler)]]
 
-            icd_vars = {'SKIP_INSTALL_LIBMONGOCRYPT': 1}
-            compile_vars = {'ENABLE_TESTS': 'ON', 'RUN_DISTCHECK': 1}
+            compile_vars = {'ENABLE_TESTS': 'ON'}
             test_vars = {
+                'TEST_WITH_CSFLE': 'ON',
                 'MONGOCXX_TEST_TOPOLOGY': topology,
                 'example_projects_cc': cc_compiler,
                 'example_projects_cxx': cxx_compiler,
@@ -97,7 +97,7 @@ def tasks():
                 Setup.call(),
                 StartMongod.call(mongodb_version=mongodb_version, topology=topology),
                 InstallUV.call(),
-                InstallCDriver.call(vars=icd_vars),
+                InstallCDriver.call(),
                 Compile.call(vars=compile_vars),
                 FetchDET.call(),
                 RunKMSServers.call(),

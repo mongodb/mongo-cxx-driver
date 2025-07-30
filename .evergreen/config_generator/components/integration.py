@@ -24,8 +24,7 @@ TAG = 'integration'
 LINUX_MATRIX = [
     # Linux x86_64 (full).
     # RHEL 8 x86_64: 4.0+.
-    ('rhel80', None, ['Debug'], ['shared', 'static'], [11, 17], [None], ['plain', 'csfle'], [       '4.2', '4.4', '5.0', '6.0', '7.0', '8.0', 'latest'], ['single', 'replica', 'sharded']),
-    ('rhel80', None, ['Debug'], ['shared', 'static'], [11, 17], [None], ['plain',        ], ['4.0',                                                   ], ['single', 'replica', 'sharded']),  # CSFLE: 4.2+.
+    ('rhel80', None, ['Debug'], ['shared', 'static'], [11, 17], [None], ['plain', 'csfle'], ['4.2', '4.4', '5.0', '6.0', '7.0', '8.0', 'latest'], ['single', 'replica', 'sharded']),
 
     # Linux ARM64 (full).
     # Linux ARM64: 4.4+.
