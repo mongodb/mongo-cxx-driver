@@ -692,6 +692,7 @@ functions:
         - MONGODB_API_VERSION
         - platform
         - TEST_WITH_ASAN
+        - TEST_WITH_CSFLE
         - TEST_WITH_UBSAN
         - TEST_WITH_VALGRIND
         - use_mongocryptd

@@ -14197,13 +14197,10 @@ tasks:
           TOPOLOGY: replica_set
           mongodb_version: "4.0"
       - func: install_c_driver
-        vars:
-          SKIP_INSTALL_LIBMONGOCRYPT: 1
       - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
-          RUN_DISTCHECK: 1
           USE_SANITIZER_ASAN: "ON"
       - func: fetch-det
       - func: run_kms_servers
@@ -14211,6 +14208,7 @@ tasks:
         vars:
           MONGOCXX_TEST_TOPOLOGY: replica
           TEST_WITH_ASAN: "ON"
+          TEST_WITH_CSFLE: "ON"
           example_projects_cc: clang
           example_projects_cxx: clang++
           example_projects_cxxflags: -fsanitize=address -fno-omit-frame-pointer
@@ -14231,13 +14229,10 @@ tasks:
           TOPOLOGY: sharded_cluster
           mongodb_version: "4.0"
       - func: install_c_driver
-        vars:
-          SKIP_INSTALL_LIBMONGOCRYPT: 1
       - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
-          RUN_DISTCHECK: 1
           USE_SANITIZER_ASAN: "ON"
       - func: fetch-det
       - func: run_kms_servers
@@ -14245,6 +14240,7 @@ tasks:
         vars:
           MONGOCXX_TEST_TOPOLOGY: sharded
           TEST_WITH_ASAN: "ON"
+          TEST_WITH_CSFLE: "ON"
           example_projects_cc: clang
           example_projects_cxx: clang++
           example_projects_cxxflags: -fsanitize=address -fno-omit-frame-pointer
@@ -14264,13 +14260,10 @@ tasks:
         vars:
           mongodb_version: "4.0"
       - func: install_c_driver
-        vars:
-          SKIP_INSTALL_LIBMONGOCRYPT: 1
       - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
-          RUN_DISTCHECK: 1
           USE_SANITIZER_ASAN: "ON"
       - func: fetch-det
       - func: run_kms_servers
@@ -14278,6 +14271,7 @@ tasks:
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
           TEST_WITH_ASAN: "ON"
+          TEST_WITH_CSFLE: "ON"
           example_projects_cc: clang
           example_projects_cxx: clang++
           example_projects_cxxflags: -fsanitize=address -fno-omit-frame-pointer
@@ -14298,13 +14292,10 @@ tasks:
           TOPOLOGY: replica_set
           mongodb_version: "8.0"
       - func: install_c_driver
-        vars:
-          SKIP_INSTALL_LIBMONGOCRYPT: 1
       - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
-          RUN_DISTCHECK: 1
           USE_SANITIZER_ASAN: "ON"
       - func: fetch-det
       - func: run_kms_servers
@@ -14312,6 +14303,7 @@ tasks:
         vars:
           MONGOCXX_TEST_TOPOLOGY: replica
           TEST_WITH_ASAN: "ON"
+          TEST_WITH_CSFLE: "ON"
           example_projects_cc: clang
           example_projects_cxx: clang++
           example_projects_cxxflags: -fsanitize=address -fno-omit-frame-pointer
@@ -14332,13 +14324,10 @@ tasks:
           TOPOLOGY: sharded_cluster
           mongodb_version: "8.0"
       - func: install_c_driver
-        vars:
-          SKIP_INSTALL_LIBMONGOCRYPT: 1
       - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
-          RUN_DISTCHECK: 1
           USE_SANITIZER_ASAN: "ON"
       - func: fetch-det
       - func: run_kms_servers
@@ -14346,6 +14335,7 @@ tasks:
         vars:
           MONGOCXX_TEST_TOPOLOGY: sharded
           TEST_WITH_ASAN: "ON"
+          TEST_WITH_CSFLE: "ON"
           example_projects_cc: clang
           example_projects_cxx: clang++
           example_projects_cxxflags: -fsanitize=address -fno-omit-frame-pointer
@@ -14365,13 +14355,10 @@ tasks:
         vars:
           mongodb_version: "8.0"
       - func: install_c_driver
-        vars:
-          SKIP_INSTALL_LIBMONGOCRYPT: 1
       - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
-          RUN_DISTCHECK: 1
           USE_SANITIZER_ASAN: "ON"
       - func: fetch-det
       - func: run_kms_servers
@@ -14379,6 +14366,7 @@ tasks:
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
           TEST_WITH_ASAN: "ON"
+          TEST_WITH_CSFLE: "ON"
           example_projects_cc: clang
           example_projects_cxx: clang++
           example_projects_cxxflags: -fsanitize=address -fno-omit-frame-pointer
@@ -14399,13 +14387,10 @@ tasks:
           TOPOLOGY: replica_set
           mongodb_version: latest
       - func: install_c_driver
-        vars:
-          SKIP_INSTALL_LIBMONGOCRYPT: 1
       - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
-          RUN_DISTCHECK: 1
           USE_SANITIZER_ASAN: "ON"
       - func: fetch-det
       - func: run_kms_servers
@@ -14413,6 +14398,7 @@ tasks:
         vars:
           MONGOCXX_TEST_TOPOLOGY: replica
           TEST_WITH_ASAN: "ON"
+          TEST_WITH_CSFLE: "ON"
           example_projects_cc: clang
           example_projects_cxx: clang++
           example_projects_cxxflags: -fsanitize=address -fno-omit-frame-pointer
@@ -14433,13 +14419,10 @@ tasks:
           TOPOLOGY: sharded_cluster
           mongodb_version: latest
       - func: install_c_driver
-        vars:
-          SKIP_INSTALL_LIBMONGOCRYPT: 1
       - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
-          RUN_DISTCHECK: 1
           USE_SANITIZER_ASAN: "ON"
       - func: fetch-det
       - func: run_kms_servers
@@ -14447,6 +14430,7 @@ tasks:
         vars:
           MONGOCXX_TEST_TOPOLOGY: sharded
           TEST_WITH_ASAN: "ON"
+          TEST_WITH_CSFLE: "ON"
           example_projects_cc: clang
           example_projects_cxx: clang++
           example_projects_cxxflags: -fsanitize=address -fno-omit-frame-pointer
@@ -14466,13 +14450,10 @@ tasks:
         vars:
           mongodb_version: latest
       - func: install_c_driver
-        vars:
-          SKIP_INSTALL_LIBMONGOCRYPT: 1
       - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
-          RUN_DISTCHECK: 1
           USE_SANITIZER_ASAN: "ON"
       - func: fetch-det
       - func: run_kms_servers
@@ -14480,6 +14461,7 @@ tasks:
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
           TEST_WITH_ASAN: "ON"
+          TEST_WITH_CSFLE: "ON"
           example_projects_cc: clang
           example_projects_cxx: clang++
           example_projects_cxxflags: -fsanitize=address -fno-omit-frame-pointer
@@ -14501,13 +14483,10 @@ tasks:
           TOPOLOGY: replica_set
           mongodb_version: "4.0"
       - func: install_c_driver
-        vars:
-          SKIP_INSTALL_LIBMONGOCRYPT: 1
       - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
-          RUN_DISTCHECK: 1
           USE_SANITIZER_ASAN: "ON"
       - func: fetch-det
       - func: run_kms_servers
@@ -14515,6 +14494,7 @@ tasks:
         vars:
           MONGOCXX_TEST_TOPOLOGY: replica
           TEST_WITH_ASAN: "ON"
+          TEST_WITH_CSFLE: "ON"
           example_projects_cc: clang
           example_projects_cxx: clang++
           example_projects_cxxflags: -fsanitize=address -fno-omit-frame-pointer
@@ -14536,13 +14516,10 @@ tasks:
           TOPOLOGY: sharded_cluster
           mongodb_version: "4.0"
       - func: install_c_driver
-        vars:
-          SKIP_INSTALL_LIBMONGOCRYPT: 1
       - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
-          RUN_DISTCHECK: 1
           USE_SANITIZER_ASAN: "ON"
       - func: fetch-det
       - func: run_kms_servers
@@ -14550,6 +14527,7 @@ tasks:
         vars:
           MONGOCXX_TEST_TOPOLOGY: sharded
           TEST_WITH_ASAN: "ON"
+          TEST_WITH_CSFLE: "ON"
           example_projects_cc: clang
           example_projects_cxx: clang++
           example_projects_cxxflags: -fsanitize=address -fno-omit-frame-pointer
@@ -14570,13 +14548,10 @@ tasks:
         vars:
           mongodb_version: "4.0"
       - func: install_c_driver
-        vars:
-          SKIP_INSTALL_LIBMONGOCRYPT: 1
       - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
-          RUN_DISTCHECK: 1
           USE_SANITIZER_ASAN: "ON"
       - func: fetch-det
       - func: run_kms_servers
@@ -14584,6 +14559,7 @@ tasks:
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
           TEST_WITH_ASAN: "ON"
+          TEST_WITH_CSFLE: "ON"
           example_projects_cc: clang
           example_projects_cxx: clang++
           example_projects_cxxflags: -fsanitize=address -fno-omit-frame-pointer
@@ -14605,13 +14581,10 @@ tasks:
           TOPOLOGY: replica_set
           mongodb_version: "8.0"
       - func: install_c_driver
-        vars:
-          SKIP_INSTALL_LIBMONGOCRYPT: 1
       - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
-          RUN_DISTCHECK: 1
           USE_SANITIZER_ASAN: "ON"
       - func: fetch-det
       - func: run_kms_servers
@@ -14619,6 +14592,7 @@ tasks:
         vars:
           MONGOCXX_TEST_TOPOLOGY: replica
           TEST_WITH_ASAN: "ON"
+          TEST_WITH_CSFLE: "ON"
           example_projects_cc: clang
           example_projects_cxx: clang++
           example_projects_cxxflags: -fsanitize=address -fno-omit-frame-pointer
@@ -14640,13 +14614,10 @@ tasks:
           TOPOLOGY: sharded_cluster
           mongodb_version: "8.0"
       - func: install_c_driver
-        vars:
-          SKIP_INSTALL_LIBMONGOCRYPT: 1
       - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
-          RUN_DISTCHECK: 1
           USE_SANITIZER_ASAN: "ON"
       - func: fetch-det
       - func: run_kms_servers
@@ -14654,6 +14625,7 @@ tasks:
         vars:
           MONGOCXX_TEST_TOPOLOGY: sharded
           TEST_WITH_ASAN: "ON"
+          TEST_WITH_CSFLE: "ON"
           example_projects_cc: clang
           example_projects_cxx: clang++
           example_projects_cxxflags: -fsanitize=address -fno-omit-frame-pointer
@@ -14674,13 +14646,10 @@ tasks:
         vars:
           mongodb_version: "8.0"
       - func: install_c_driver
-        vars:
-          SKIP_INSTALL_LIBMONGOCRYPT: 1
       - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
-          RUN_DISTCHECK: 1
           USE_SANITIZER_ASAN: "ON"
       - func: fetch-det
       - func: run_kms_servers
@@ -14688,6 +14657,7 @@ tasks:
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
           TEST_WITH_ASAN: "ON"
+          TEST_WITH_CSFLE: "ON"
           example_projects_cc: clang
           example_projects_cxx: clang++
           example_projects_cxxflags: -fsanitize=address -fno-omit-frame-pointer
@@ -14709,13 +14679,10 @@ tasks:
           TOPOLOGY: replica_set
           mongodb_version: latest
       - func: install_c_driver
-        vars:
-          SKIP_INSTALL_LIBMONGOCRYPT: 1
       - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
-          RUN_DISTCHECK: 1
           USE_SANITIZER_ASAN: "ON"
       - func: fetch-det
       - func: run_kms_servers
@@ -14723,6 +14690,7 @@ tasks:
         vars:
           MONGOCXX_TEST_TOPOLOGY: replica
           TEST_WITH_ASAN: "ON"
+          TEST_WITH_CSFLE: "ON"
           example_projects_cc: clang
           example_projects_cxx: clang++
           example_projects_cxxflags: -fsanitize=address -fno-omit-frame-pointer
@@ -14744,13 +14712,10 @@ tasks:
           TOPOLOGY: sharded_cluster
           mongodb_version: latest
       - func: install_c_driver
-        vars:
-          SKIP_INSTALL_LIBMONGOCRYPT: 1
       - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
-          RUN_DISTCHECK: 1
           USE_SANITIZER_ASAN: "ON"
       - func: fetch-det
       - func: run_kms_servers
@@ -14758,6 +14723,7 @@ tasks:
         vars:
           MONGOCXX_TEST_TOPOLOGY: sharded
           TEST_WITH_ASAN: "ON"
+          TEST_WITH_CSFLE: "ON"
           example_projects_cc: clang
           example_projects_cxx: clang++
           example_projects_cxxflags: -fsanitize=address -fno-omit-frame-pointer
@@ -14778,13 +14744,10 @@ tasks:
         vars:
           mongodb_version: latest
       - func: install_c_driver
-        vars:
-          SKIP_INSTALL_LIBMONGOCRYPT: 1
       - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
-          RUN_DISTCHECK: 1
           USE_SANITIZER_ASAN: "ON"
       - func: fetch-det
       - func: run_kms_servers
@@ -14792,6 +14755,7 @@ tasks:
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
           TEST_WITH_ASAN: "ON"
+          TEST_WITH_CSFLE: "ON"
           example_projects_cc: clang
           example_projects_cxx: clang++
           example_projects_cxxflags: -fsanitize=address -fno-omit-frame-pointer
@@ -14812,19 +14776,17 @@ tasks:
           TOPOLOGY: replica_set
           mongodb_version: "4.0"
       - func: install_c_driver
-        vars:
-          SKIP_INSTALL_LIBMONGOCRYPT: 1
       - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
-          RUN_DISTCHECK: 1
           USE_SANITIZER_UBSAN: "ON"
       - func: fetch-det
       - func: run_kms_servers
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: replica
+          TEST_WITH_CSFLE: "ON"
           TEST_WITH_UBSAN: "ON"
           example_projects_cc: clang
           example_projects_cxx: clang++
@@ -14846,19 +14808,17 @@ tasks:
           TOPOLOGY: sharded_cluster
           mongodb_version: "4.0"
       - func: install_c_driver
-        vars:
-          SKIP_INSTALL_LIBMONGOCRYPT: 1
       - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
-          RUN_DISTCHECK: 1
           USE_SANITIZER_UBSAN: "ON"
       - func: fetch-det
       - func: run_kms_servers
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: sharded
+          TEST_WITH_CSFLE: "ON"
           TEST_WITH_UBSAN: "ON"
           example_projects_cc: clang
           example_projects_cxx: clang++
@@ -14879,19 +14839,17 @@ tasks:
         vars:
           mongodb_version: "4.0"
       - func: install_c_driver
-        vars:
-          SKIP_INSTALL_LIBMONGOCRYPT: 1
       - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
-          RUN_DISTCHECK: 1
           USE_SANITIZER_UBSAN: "ON"
       - func: fetch-det
       - func: run_kms_servers
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
+          TEST_WITH_CSFLE: "ON"
           TEST_WITH_UBSAN: "ON"
           example_projects_cc: clang
           example_projects_cxx: clang++
@@ -14913,19 +14871,17 @@ tasks:
           TOPOLOGY: replica_set
           mongodb_version: "8.0"
       - func: install_c_driver
-        vars:
-          SKIP_INSTALL_LIBMONGOCRYPT: 1
       - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
-          RUN_DISTCHECK: 1
           USE_SANITIZER_UBSAN: "ON"
       - func: fetch-det
       - func: run_kms_servers
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: replica
+          TEST_WITH_CSFLE: "ON"
           TEST_WITH_UBSAN: "ON"
           example_projects_cc: clang
           example_projects_cxx: clang++
@@ -14947,19 +14903,17 @@ tasks:
           TOPOLOGY: sharded_cluster
           mongodb_version: "8.0"
       - func: install_c_driver
-        vars:
-          SKIP_INSTALL_LIBMONGOCRYPT: 1
       - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
-          RUN_DISTCHECK: 1
           USE_SANITIZER_UBSAN: "ON"
       - func: fetch-det
       - func: run_kms_servers
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: sharded
+          TEST_WITH_CSFLE: "ON"
           TEST_WITH_UBSAN: "ON"
           example_projects_cc: clang
           example_projects_cxx: clang++
@@ -14980,19 +14934,17 @@ tasks:
         vars:
           mongodb_version: "8.0"
       - func: install_c_driver
-        vars:
-          SKIP_INSTALL_LIBMONGOCRYPT: 1
       - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
-          RUN_DISTCHECK: 1
           USE_SANITIZER_UBSAN: "ON"
       - func: fetch-det
       - func: run_kms_servers
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
+          TEST_WITH_CSFLE: "ON"
           TEST_WITH_UBSAN: "ON"
           example_projects_cc: clang
           example_projects_cxx: clang++
@@ -15014,19 +14966,17 @@ tasks:
           TOPOLOGY: replica_set
           mongodb_version: latest
       - func: install_c_driver
-        vars:
-          SKIP_INSTALL_LIBMONGOCRYPT: 1
       - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
-          RUN_DISTCHECK: 1
           USE_SANITIZER_UBSAN: "ON"
       - func: fetch-det
       - func: run_kms_servers
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: replica
+          TEST_WITH_CSFLE: "ON"
           TEST_WITH_UBSAN: "ON"
           example_projects_cc: clang
           example_projects_cxx: clang++
@@ -15048,19 +14998,17 @@ tasks:
           TOPOLOGY: sharded_cluster
           mongodb_version: latest
       - func: install_c_driver
-        vars:
-          SKIP_INSTALL_LIBMONGOCRYPT: 1
       - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
-          RUN_DISTCHECK: 1
           USE_SANITIZER_UBSAN: "ON"
       - func: fetch-det
       - func: run_kms_servers
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: sharded
+          TEST_WITH_CSFLE: "ON"
           TEST_WITH_UBSAN: "ON"
           example_projects_cc: clang
           example_projects_cxx: clang++
@@ -15081,19 +15029,17 @@ tasks:
         vars:
           mongodb_version: latest
       - func: install_c_driver
-        vars:
-          SKIP_INSTALL_LIBMONGOCRYPT: 1
       - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
-          RUN_DISTCHECK: 1
           USE_SANITIZER_UBSAN: "ON"
       - func: fetch-det
       - func: run_kms_servers
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
+          TEST_WITH_CSFLE: "ON"
           TEST_WITH_UBSAN: "ON"
           example_projects_cc: clang
           example_projects_cxx: clang++
@@ -15116,19 +15062,17 @@ tasks:
           TOPOLOGY: replica_set
           mongodb_version: "4.0"
       - func: install_c_driver
-        vars:
-          SKIP_INSTALL_LIBMONGOCRYPT: 1
       - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
-          RUN_DISTCHECK: 1
           USE_SANITIZER_UBSAN: "ON"
       - func: fetch-det
       - func: run_kms_servers
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: replica
+          TEST_WITH_CSFLE: "ON"
           TEST_WITH_UBSAN: "ON"
           example_projects_cc: clang
           example_projects_cxx: clang++
@@ -15151,19 +15095,17 @@ tasks:
           TOPOLOGY: sharded_cluster
           mongodb_version: "4.0"
       - func: install_c_driver
-        vars:
-          SKIP_INSTALL_LIBMONGOCRYPT: 1
       - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
-          RUN_DISTCHECK: 1
           USE_SANITIZER_UBSAN: "ON"
       - func: fetch-det
       - func: run_kms_servers
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: sharded
+          TEST_WITH_CSFLE: "ON"
           TEST_WITH_UBSAN: "ON"
           example_projects_cc: clang
           example_projects_cxx: clang++
@@ -15185,19 +15127,17 @@ tasks:
         vars:
           mongodb_version: "4.0"
       - func: install_c_driver
-        vars:
-          SKIP_INSTALL_LIBMONGOCRYPT: 1
       - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
-          RUN_DISTCHECK: 1
           USE_SANITIZER_UBSAN: "ON"
       - func: fetch-det
       - func: run_kms_servers
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
+          TEST_WITH_CSFLE: "ON"
           TEST_WITH_UBSAN: "ON"
           example_projects_cc: clang
           example_projects_cxx: clang++
@@ -15220,19 +15160,17 @@ tasks:
           TOPOLOGY: replica_set
           mongodb_version: "8.0"
       - func: install_c_driver
-        vars:
-          SKIP_INSTALL_LIBMONGOCRYPT: 1
       - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
-          RUN_DISTCHECK: 1
           USE_SANITIZER_UBSAN: "ON"
       - func: fetch-det
       - func: run_kms_servers
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: replica
+          TEST_WITH_CSFLE: "ON"
           TEST_WITH_UBSAN: "ON"
           example_projects_cc: clang
           example_projects_cxx: clang++
@@ -15255,19 +15193,17 @@ tasks:
           TOPOLOGY: sharded_cluster
           mongodb_version: "8.0"
       - func: install_c_driver
-        vars:
-          SKIP_INSTALL_LIBMONGOCRYPT: 1
       - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
-          RUN_DISTCHECK: 1
           USE_SANITIZER_UBSAN: "ON"
       - func: fetch-det
       - func: run_kms_servers
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: sharded
+          TEST_WITH_CSFLE: "ON"
           TEST_WITH_UBSAN: "ON"
           example_projects_cc: clang
           example_projects_cxx: clang++
@@ -15289,19 +15225,17 @@ tasks:
         vars:
           mongodb_version: "8.0"
       - func: install_c_driver
-        vars:
-          SKIP_INSTALL_LIBMONGOCRYPT: 1
       - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
-          RUN_DISTCHECK: 1
           USE_SANITIZER_UBSAN: "ON"
       - func: fetch-det
       - func: run_kms_servers
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
+          TEST_WITH_CSFLE: "ON"
           TEST_WITH_UBSAN: "ON"
           example_projects_cc: clang
           example_projects_cxx: clang++
@@ -15324,19 +15258,17 @@ tasks:
           TOPOLOGY: replica_set
           mongodb_version: latest
       - func: install_c_driver
-        vars:
-          SKIP_INSTALL_LIBMONGOCRYPT: 1
       - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
-          RUN_DISTCHECK: 1
           USE_SANITIZER_UBSAN: "ON"
       - func: fetch-det
       - func: run_kms_servers
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: replica
+          TEST_WITH_CSFLE: "ON"
           TEST_WITH_UBSAN: "ON"
           example_projects_cc: clang
           example_projects_cxx: clang++
@@ -15359,19 +15291,17 @@ tasks:
           TOPOLOGY: sharded_cluster
           mongodb_version: latest
       - func: install_c_driver
-        vars:
-          SKIP_INSTALL_LIBMONGOCRYPT: 1
       - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
-          RUN_DISTCHECK: 1
           USE_SANITIZER_UBSAN: "ON"
       - func: fetch-det
       - func: run_kms_servers
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: sharded
+          TEST_WITH_CSFLE: "ON"
           TEST_WITH_UBSAN: "ON"
           example_projects_cc: clang
           example_projects_cxx: clang++
@@ -15393,19 +15323,17 @@ tasks:
         vars:
           mongodb_version: latest
       - func: install_c_driver
-        vars:
-          SKIP_INSTALL_LIBMONGOCRYPT: 1
       - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
-          RUN_DISTCHECK: 1
           USE_SANITIZER_UBSAN: "ON"
       - func: fetch-det
       - func: run_kms_servers
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
+          TEST_WITH_CSFLE: "ON"
           TEST_WITH_UBSAN: "ON"
           example_projects_cc: clang
           example_projects_cxx: clang++

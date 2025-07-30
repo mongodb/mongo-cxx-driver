@@ -57,9 +57,9 @@ def tasks():
             updates += [KeyValueParam(key=key, value=value)
                         for key, value in [('cc_compiler', cc_compiler), ('cxx_compiler', cxx_compiler)]]
 
-            icd_vars = {'SKIP_INSTALL_LIBMONGOCRYPT': 1}
-            compile_vars = {'ENABLE_TESTS': 'ON', 'RUN_DISTCHECK': 1}
+            compile_vars = {'ENABLE_TESTS': 'ON'}
             test_vars = {
+                'TEST_WITH_CSFLE': 'ON',
                 'MONGOCXX_TEST_TOPOLOGY': topology,
                 'example_projects_cc': 'clang',
                 'example_projects_cxx': 'clang++',
@@ -96,7 +96,7 @@ def tasks():
             commands += [
                 Setup.call(),
                 StartMongod.call(mongodb_version=mongodb_version, topology=topology),
-                InstallCDriver.call(vars=icd_vars),
+                InstallCDriver.call(),
                 InstallUV.call(),
                 Compile.call(vars=compile_vars),
                 FetchDET.call(),
