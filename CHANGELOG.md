@@ -16,14 +16,20 @@ Changes prior to 3.9.0 are documented as [release notes on GitHub](https://githu
 
 ### Changed
 
+- Bump the minimum required C Driver version to [2.1.0](https://github.com/mongodb/mongo-c-driver/releases/tag/2.1.0).
 - CMake 3.16.0 or newer is required when `ENABLE_TESTS=ON` for compatibility with the updated Catch2 library version (3.7.0 -> 3.8.1).
-- Bump the minimum required C Driver version to [2.0.2](https://github.com/mongodb/mongo-c-driver/releases/tag/2.0.2).
 - Minimum supported compiler versions to build from source are updated to the following:
   - GCC 8.1 (from GCC 4.8.2).
     - Users on RHEL 7 may consult Red Hat's ["Hello World - installing GCC on RHEL 7"](https://developers.redhat.com/HW/gcc-RHEL-7) or ["How to install GCC 8 and Clang/LLVM 6 on Red Hat Enterprise Linux 7"](https://developers.redhat.com/blog/2019/03/05/yum-install-gcc-8-clang-6) for instructions on how to obtain GCC 8 or newer.
   - Clang 3.8 (from Clang 3.5).
   - Apple Clang 13.1 with Xcode 13.4.1 (from Apple Clang 5.1 with Xcode 5.1).
   - MSVC 19.0.24210 with Visual Studio 2015 Update 3 (from MSVC 19.0.23506 with Visual Studio 2015 Update 1).
+
+### Removed
+
+- Support for MongoDB Server 4.2.
+  - See: [MongoDB Software Lifecycle Schedules](https://www.mongodb.com/legal/support-policy/lifecycles).
+  - See: [MongoDB C Driver 2.1.0 Release Notes](https://github.com/mongodb/mongo-c-driver/releases/tag/2.1.0).
 
 ## 4.1.1
 
