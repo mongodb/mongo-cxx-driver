@@ -35,7 +35,8 @@
 #include <bsoncxx/v1/detail/compare.hpp>
 #include <bsoncxx/v1/detail/type_traits.hpp>
 
-#include <bsoncxx/test/catch.hh>
+#include <bsoncxx/test/stringify.hh>
+#include <bsoncxx/test/system_error.hh>
 
 namespace {
 

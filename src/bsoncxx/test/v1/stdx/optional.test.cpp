@@ -30,7 +30,8 @@
 
 #include <bsoncxx/private/make_unique.hh>
 
-#include <bsoncxx/test/catch.hh>
+#include <bsoncxx/test/stringify.hh>
+#include <bsoncxx/test/system_error.hh>
 
 #include <catch2/catch_template_test_macros.hpp>
 

@@ -12,47 +12,34 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <bsoncxx/v1/types/id.hpp>
+#include <bsoncxx/v1/types/value.hpp>
 
 //
 
-#include <string>
+#include <bsoncxx/v1/stdx/optional.hpp>
+
+#include <cstdint>
+
+#include <bsoncxx/private/bson.hh>
 
 namespace bsoncxx {
 namespace v1 {
 namespace types {
 
-std::string to_string(id rhs) {
-#pragma push_macro("X")
-#undef X
-#define X(_name, _value) \
-    case id::k_##_name:  \
-        return #_name;
+class value::internal {
+   public:
+    static v1::stdx::optional<value>
+    make(std::uint8_t const* raw, std::uint32_t length, std::uint32_t offset, std::uint32_t keylen);
 
-    switch (rhs) {
-        BSONCXX_V1_TYPES_XMACRO(X)
+   private:
+    friend value;
 
-        default:
-            return "?";
-    }
-#pragma pop_macro("X")
-}
+    static value::impl const& impl(value const& self);
+    static value::impl const* impl(value const* self);
 
-std::string to_string(binary_subtype rhs) {
-#pragma push_macro("X")
-#undef X
-#define X(_name, _value)            \
-    case binary_subtype::k_##_name: \
-        return #_name;
-
-    switch (rhs) {
-        BSONCXX_V1_BINARY_SUBTYPES_XMACRO(X)
-
-        default:
-            return "?";
-    }
-#pragma pop_macro("X")
-}
+    static value::impl& impl(value& self);
+    static value::impl* impl(value* self);
+};
 
 } // namespace types
 } // namespace v1

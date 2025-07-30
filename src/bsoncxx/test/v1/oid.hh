@@ -12,21 +12,29 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <bsoncxx/v1/document/value.hpp>
+#pragma once
+
+#include <bsoncxx/v1/oid.hpp>
 
 //
 
-#include <bsoncxx/private/type_traits.hh>
+#include <catch2/catch_tostring.hpp>
 
-namespace bsoncxx {
-namespace v1 {
-namespace document {
+CATCH_REGISTER_ENUM(
+    bsoncxx::v1::oid::errc,
+    bsoncxx::v1::oid::errc::zero,
+    bsoncxx::v1::oid::errc::null_bytes_ptr,
+    bsoncxx::v1::oid::errc::invalid_length,
+    bsoncxx::v1::oid::errc::empty_string,
+    bsoncxx::v1::oid::errc::invalid_string)
 
-static_assert(is_regular<value>::value, "bsoncxx::v1::document::value must be regular");
-static_assert(is_nothrow_moveable<value>::value, "bsoncxx::v1::document::value must be nothrow moveable");
+namespace Catch {
 
-void value::noop_deleter(std::uint8_t*) { /* noop */ }
+template <>
+struct StringMaker<bsoncxx::v1::oid> {
+    static std::string convert(bsoncxx::v1::oid const& value) {
+        return value.to_string();
+    }
+};
 
-} // namespace document
-} // namespace v1
-} // namespace bsoncxx
+} // namespace Catch

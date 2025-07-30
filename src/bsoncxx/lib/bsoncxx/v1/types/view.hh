@@ -12,47 +12,30 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <bsoncxx/v1/types/id.hpp>
+#include <bsoncxx/v1/types/view.hpp>
 
 //
 
-#include <string>
+#include <bsoncxx/v1/stdx/optional.hpp>
+
+#include <cstdint>
+
+#include <bsoncxx/private/bson.hh>
+#include <bsoncxx/private/export.hh>
 
 namespace bsoncxx {
 namespace v1 {
 namespace types {
 
-std::string to_string(id rhs) {
-#pragma push_macro("X")
-#undef X
-#define X(_name, _value) \
-    case id::k_##_name:  \
-        return #_name;
+class view::internal {
+   public:
+    static view make(bson_value_t const& v);
 
-    switch (rhs) {
-        BSONCXX_V1_TYPES_XMACRO(X)
+    static v1::stdx::optional<view>
+    make(std::uint8_t const* raw, std::uint32_t length, std::uint32_t offset, std::uint32_t keylen);
 
-        default:
-            return "?";
-    }
-#pragma pop_macro("X")
-}
-
-std::string to_string(binary_subtype rhs) {
-#pragma push_macro("X")
-#undef X
-#define X(_name, _value)            \
-    case binary_subtype::k_##_name: \
-        return #_name;
-
-    switch (rhs) {
-        BSONCXX_V1_BINARY_SUBTYPES_XMACRO(X)
-
-        default:
-            return "?";
-    }
-#pragma pop_macro("X")
-}
+    static BSONCXX_ABI_EXPORT_CDECL_TESTING(void) type_id(view& v, v1::types::id id);
+};
 
 } // namespace types
 } // namespace v1

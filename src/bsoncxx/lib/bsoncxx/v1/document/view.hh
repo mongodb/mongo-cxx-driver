@@ -12,20 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <bsoncxx/v1/document/value.hpp>
+#include <bsoncxx/v1/document/view.hpp>
 
 //
 
-#include <bsoncxx/private/type_traits.hh>
+#include <cstdint>
 
 namespace bsoncxx {
 namespace v1 {
 namespace document {
 
-static_assert(is_regular<value>::value, "bsoncxx::v1::document::value must be regular");
-static_assert(is_nothrow_moveable<value>::value, "bsoncxx::v1::document::value must be nothrow moveable");
-
-void value::noop_deleter(std::uint8_t*) { /* noop */ }
+class view::const_iterator::internal {
+   public:
+    static const_iterator
+    make_const_iterator(std::uint8_t const* raw, std::size_t length, std::uint32_t offset, std::uint32_t keylen);
+};
 
 } // namespace document
 } // namespace v1
