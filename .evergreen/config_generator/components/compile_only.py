@@ -94,8 +94,8 @@ def tasks():
             commands = [expansions_update(updates=updates)] if updates else []
             commands += [
                 Setup.call(),
-                InstallCDriver.call(),
                 InstallUV.call(),
+                InstallCDriver.call(),
                 Compile.call(
                     build_type=build_type,
                     compiler=compiler,

@@ -5,14 +5,22 @@ set -o pipefail
 
 : "${BSONCXX_POLYFILL:-}"
 : "${CXX_STANDARD:?}"
+: "${UV_INSTALL_DIR:?}"
 
 mongoc_prefix="$(pwd)/../mongoc"
 
-# shellcheck source=/dev/null
-. "${mongoc_prefix:?}/.evergreen/scripts/find-cmake-latest.sh"
-export cmake_binary
-cmake_binary="$(find_cmake_latest)"
-command -v "$cmake_binary"
+# Obtain preferred build tools.
+export UV_TOOL_DIR UV_TOOL_BIN_DIR
+UV_TOOL_DIR="$(pwd)/uv-tool"
+UV_TOOL_BIN_DIR="$(pwd)/uv-bin"
+PATH="${UV_TOOL_BIN_DIR:?}:${UV_INSTALL_DIR:?}:${PATH:-}"
+uv tool install -q cmake
+[[ "${distro_id:?}" == rhel* ]] && PATH="${PATH:-}:/opt/mongodbtoolchain/v4/bin" || uv tool install -q ninja
+export CMAKE_GENERATOR
+CMAKE_GENERATOR="Ninja"
+
+cmake --version | head -n 1
+echo "ninja version: $(ninja --version)"
 
 # Use ccache if available.
 if [[ -f "../mongoc/.evergreen/scripts/find-ccache.sh" ]]; then
@@ -50,15 +58,6 @@ done
 export CC
 export CXX
 
-if [[ "${OSTYPE}" == darwin* ]]; then
-  # MacOS does not have nproc.
-  nproc() {
-    sysctl -n hw.logicalcpu
-  }
-fi
-CMAKE_BUILD_PARALLEL_LEVEL="$(nproc)"
-export CMAKE_BUILD_PARALLEL_LEVEL
-
 cmake_flags=(
   "-DCMAKE_BUILD_TYPE=Debug"
   "-DCMAKE_CXX_STANDARD=${CXX_STANDARD:?}"
@@ -81,11 +80,11 @@ echo "Configuring with CMake flags:"
 printf " - %s\n" "${cmake_flags[@]}"
 
 # Configure via scan-build for consistency.
-CCCACHE_DISABLE=1 "${scan_build_binary}" "${scan_build_flags[@]}" "${cmake_binary:?}" -S . -B build "${cmake_flags[@]}"
+CCCACHE_DISABLE=1 "${scan_build_binary}" "${scan_build_flags[@]}" cmake -S . -B build "${cmake_flags[@]}"
 
 # If scan-build emits warnings, continue the task and upload scan results before marking task as a failure.
 declare -r continue_command='{"status":"failed", "type":"test", "should_continue":true, "desc":"scan-build emitted one or more warnings or errors"}'
 
 # Put clang static analyzer results in scan/ and fail build if warnings found.
-"${scan_build_binary}" "${scan_build_flags[@]}" -o scan --status-bugs "${cmake_binary:?}" --build build ||
+"${scan_build_binary}" "${scan_build_flags[@]}" -o scan --status-bugs cmake --build build ||
   curl -sS -d "${continue_command}" -H "Content-Type: application/json" -X POST localhost:2285/task_status

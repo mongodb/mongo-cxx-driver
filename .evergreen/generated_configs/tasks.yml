@@ -123,8 +123,8 @@ tasks:
     run_on: rhel80-large
     tags: [atlas-search-indexes, rhel80]
     commands:
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -134,8 +134,8 @@ tasks:
     run_on: rhel80-large
     tags: [atlas-search-indexes, rhel80]
     commands:
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -175,9 +175,7 @@ tasks:
       - func: fetch_c_driver_source
       - func: cmake-compat
         vars:
-          CMAKE_MAJOR_VERSION: 4
-          CMAKE_MINOR_VERSION: 0
-          CMAKE_PATCH_VERSION: 1
+          CMAKE_VERSION: 4.0.0
           INSTALL_C_DRIVER: 0
   - name: cmake-compat-max-find-c
     run_on: rhel80-small
@@ -188,9 +186,7 @@ tasks:
       - func: install_c_driver
       - func: cmake-compat
         vars:
-          CMAKE_MAJOR_VERSION: 4
-          CMAKE_MINOR_VERSION: 0
-          CMAKE_PATCH_VERSION: 1
+          CMAKE_VERSION: 4.0.0
           INSTALL_C_DRIVER: 1
   - name: cmake-compat-max-v3-add-c
     run_on: rhel80-small
@@ -201,9 +197,7 @@ tasks:
       - func: fetch_c_driver_source
       - func: cmake-compat
         vars:
-          CMAKE_MAJOR_VERSION: 3
-          CMAKE_MINOR_VERSION: 31
-          CMAKE_PATCH_VERSION: 7
+          CMAKE_VERSION: "3.0"
           INSTALL_C_DRIVER: 0
   - name: cmake-compat-max-v3-find-c
     run_on: rhel80-small
@@ -214,9 +208,7 @@ tasks:
       - func: install_c_driver
       - func: cmake-compat
         vars:
-          CMAKE_MAJOR_VERSION: 3
-          CMAKE_MINOR_VERSION: 31
-          CMAKE_PATCH_VERSION: 7
+          CMAKE_VERSION: "3.0"
           INSTALL_C_DRIVER: 1
   - name: cmake-compat-min-add-c
     run_on: rhel80-small
@@ -227,9 +219,7 @@ tasks:
       - func: fetch_c_driver_source
       - func: cmake-compat
         vars:
-          CMAKE_MAJOR_VERSION: 3
-          CMAKE_MINOR_VERSION: 15
-          CMAKE_PATCH_VERSION: 4
+          CMAKE_VERSION: 3.15.0
           INSTALL_C_DRIVER: 0
   - name: cmake-compat-min-find-c
     run_on: rhel80-small
@@ -240,9 +230,7 @@ tasks:
       - func: install_c_driver
       - func: cmake-compat
         vars:
-          CMAKE_MAJOR_VERSION: 3
-          CMAKE_MINOR_VERSION: 15
-          CMAKE_PATCH_VERSION: 4
+          CMAKE_VERSION: 3.15.0
           INSTALL_C_DRIVER: 1
   - name: compile-only-debian11-gcc-10-cxx11-debug
     run_on: debian11-large
@@ -255,8 +243,8 @@ tasks:
             - { key: cc_compiler, value: gcc-10 }
             - { key: cxx_compiler, value: g++-10 }
       - func: setup
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           BUILD_SHARED_AND_STATIC_LIBS: "ON"
@@ -275,8 +263,8 @@ tasks:
             - { key: cc_compiler, value: gcc-10 }
             - { key: cxx_compiler, value: g++-10 }
       - func: setup
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           BUILD_SHARED_AND_STATIC_LIBS: "ON"
@@ -295,8 +283,8 @@ tasks:
             - { key: cc_compiler, value: gcc-10 }
             - { key: cxx_compiler, value: g++-10 }
       - func: setup
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           BUILD_SHARED_AND_STATIC_LIBS: "ON"
@@ -313,8 +301,8 @@ tasks:
           updates:
             - { key: build_type, value: Debug }
       - func: setup
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           BUILD_SHARED_AND_STATIC_LIBS: "ON"
@@ -329,8 +317,8 @@ tasks:
           updates:
             - { key: build_type, value: Debug }
       - func: setup
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           BUILD_SHARED_AND_STATIC_LIBS: "ON"
@@ -345,8 +333,8 @@ tasks:
           updates:
             - { key: build_type, value: Debug }
       - func: setup
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           BUILD_SHARED_AND_STATIC_LIBS: "ON"
@@ -361,8 +349,8 @@ tasks:
           updates:
             - { key: build_type, value: Debug }
       - func: setup
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           BUILD_SHARED_AND_STATIC_LIBS: "ON"
@@ -380,8 +368,8 @@ tasks:
             - { key: cc_compiler, value: gcc }
             - { key: cxx_compiler, value: g++ }
       - func: setup
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           BUILD_SHARED_AND_STATIC_LIBS: "ON"
@@ -401,8 +389,8 @@ tasks:
             - { key: cc_compiler, value: gcc }
             - { key: cxx_compiler, value: g++ }
       - func: setup
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           BUILD_SHARED_AND_STATIC_LIBS: "ON"
@@ -420,8 +408,8 @@ tasks:
           updates:
             - { key: build_type, value: Debug }
       - func: setup
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           BUILD_SHARED_AND_STATIC_LIBS: "ON"
@@ -437,8 +425,8 @@ tasks:
           updates:
             - { key: build_type, value: Debug }
       - func: setup
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           BUILD_SHARED_AND_STATIC_LIBS: "ON"
@@ -454,8 +442,8 @@ tasks:
           updates:
             - { key: build_type, value: Debug }
       - func: setup
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           BUILD_SHARED_AND_STATIC_LIBS: "ON"
@@ -471,8 +459,8 @@ tasks:
           updates:
             - { key: build_type, value: Debug }
       - func: setup
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           BUILD_SHARED_AND_STATIC_LIBS: "ON"
@@ -489,8 +477,8 @@ tasks:
             - { key: cc_compiler, value: clang }
             - { key: cxx_compiler, value: clang++ }
       - func: setup
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           BUILD_SHARED_AND_STATIC_LIBS: "ON"
@@ -509,8 +497,8 @@ tasks:
             - { key: cc_compiler, value: clang }
             - { key: cxx_compiler, value: clang++ }
       - func: setup
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           BUILD_SHARED_AND_STATIC_LIBS: "ON"
@@ -529,8 +517,8 @@ tasks:
             - { key: cc_compiler, value: clang }
             - { key: cxx_compiler, value: clang++ }
       - func: setup
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           BUILD_SHARED_AND_STATIC_LIBS: "ON"
@@ -549,8 +537,8 @@ tasks:
             - { key: cc_compiler, value: gcc }
             - { key: cxx_compiler, value: g++ }
       - func: setup
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           BUILD_SHARED_AND_STATIC_LIBS: "ON"
@@ -569,8 +557,8 @@ tasks:
             - { key: cc_compiler, value: gcc }
             - { key: cxx_compiler, value: g++ }
       - func: setup
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           BUILD_SHARED_AND_STATIC_LIBS: "ON"
@@ -589,8 +577,8 @@ tasks:
             - { key: cc_compiler, value: gcc }
             - { key: cxx_compiler, value: g++ }
       - func: setup
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           BUILD_SHARED_AND_STATIC_LIBS: "ON"
@@ -609,8 +597,8 @@ tasks:
             - { key: cc_compiler, value: clang }
             - { key: cxx_compiler, value: clang++ }
       - func: setup
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           BUILD_SHARED_AND_STATIC_LIBS: "ON"
@@ -629,8 +617,8 @@ tasks:
             - { key: cc_compiler, value: clang }
             - { key: cxx_compiler, value: clang++ }
       - func: setup
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           BUILD_SHARED_AND_STATIC_LIBS: "ON"
@@ -649,8 +637,8 @@ tasks:
             - { key: cc_compiler, value: clang }
             - { key: cxx_compiler, value: clang++ }
       - func: setup
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           BUILD_SHARED_AND_STATIC_LIBS: "ON"
@@ -669,8 +657,8 @@ tasks:
             - { key: cc_compiler, value: gcc }
             - { key: cxx_compiler, value: g++ }
       - func: setup
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           BUILD_SHARED_AND_STATIC_LIBS: "ON"
@@ -689,8 +677,8 @@ tasks:
             - { key: cc_compiler, value: gcc }
             - { key: cxx_compiler, value: g++ }
       - func: setup
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           BUILD_SHARED_AND_STATIC_LIBS: "ON"
@@ -709,8 +697,8 @@ tasks:
             - { key: cc_compiler, value: gcc }
             - { key: cxx_compiler, value: g++ }
       - func: setup
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           BUILD_SHARED_AND_STATIC_LIBS: "ON"
@@ -729,8 +717,8 @@ tasks:
             - { key: cc_compiler, value: clang }
             - { key: cxx_compiler, value: clang++ }
       - func: setup
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           BUILD_SHARED_AND_STATIC_LIBS: "ON"
@@ -749,8 +737,8 @@ tasks:
             - { key: cc_compiler, value: clang }
             - { key: cxx_compiler, value: clang++ }
       - func: setup
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           BUILD_SHARED_AND_STATIC_LIBS: "ON"
@@ -769,8 +757,8 @@ tasks:
             - { key: cc_compiler, value: clang }
             - { key: cxx_compiler, value: clang++ }
       - func: setup
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           BUILD_SHARED_AND_STATIC_LIBS: "ON"
@@ -789,8 +777,8 @@ tasks:
             - { key: cc_compiler, value: clang }
             - { key: cxx_compiler, value: clang++ }
       - func: setup
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           BUILD_SHARED_AND_STATIC_LIBS: "ON"
@@ -809,8 +797,8 @@ tasks:
             - { key: cc_compiler, value: gcc }
             - { key: cxx_compiler, value: g++ }
       - func: setup
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           BUILD_SHARED_AND_STATIC_LIBS: "ON"
@@ -829,8 +817,8 @@ tasks:
             - { key: cc_compiler, value: gcc }
             - { key: cxx_compiler, value: g++ }
       - func: setup
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           BUILD_SHARED_AND_STATIC_LIBS: "ON"
@@ -849,8 +837,8 @@ tasks:
             - { key: cc_compiler, value: gcc }
             - { key: cxx_compiler, value: g++ }
       - func: setup
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           BUILD_SHARED_AND_STATIC_LIBS: "ON"
@@ -869,8 +857,8 @@ tasks:
             - { key: cc_compiler, value: gcc }
             - { key: cxx_compiler, value: g++ }
       - func: setup
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           BUILD_SHARED_AND_STATIC_LIBS: "ON"
@@ -889,8 +877,8 @@ tasks:
             - { key: cc_compiler, value: clang }
             - { key: cxx_compiler, value: clang++ }
       - func: setup
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           BUILD_SHARED_AND_STATIC_LIBS: "ON"
@@ -909,8 +897,8 @@ tasks:
             - { key: cc_compiler, value: clang }
             - { key: cxx_compiler, value: clang++ }
       - func: setup
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           BUILD_SHARED_AND_STATIC_LIBS: "ON"
@@ -929,8 +917,8 @@ tasks:
             - { key: cc_compiler, value: clang }
             - { key: cxx_compiler, value: clang++ }
       - func: setup
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           BUILD_SHARED_AND_STATIC_LIBS: "ON"
@@ -949,8 +937,8 @@ tasks:
             - { key: cc_compiler, value: clang }
             - { key: cxx_compiler, value: clang++ }
       - func: setup
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           BUILD_SHARED_AND_STATIC_LIBS: "ON"
@@ -969,8 +957,8 @@ tasks:
             - { key: cc_compiler, value: clang }
             - { key: cxx_compiler, value: clang++ }
       - func: setup
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           BUILD_SHARED_AND_STATIC_LIBS: "ON"
@@ -989,8 +977,8 @@ tasks:
             - { key: cc_compiler, value: clang }
             - { key: cxx_compiler, value: clang++ }
       - func: setup
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           BUILD_SHARED_AND_STATIC_LIBS: "ON"
@@ -1009,8 +997,8 @@ tasks:
             - { key: cc_compiler, value: clang }
             - { key: cxx_compiler, value: clang++ }
       - func: setup
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           BUILD_SHARED_AND_STATIC_LIBS: "ON"
@@ -1029,8 +1017,8 @@ tasks:
             - { key: cc_compiler, value: clang }
             - { key: cxx_compiler, value: clang++ }
       - func: setup
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           BUILD_SHARED_AND_STATIC_LIBS: "ON"
@@ -1049,8 +1037,8 @@ tasks:
             - { key: cc_compiler, value: gcc }
             - { key: cxx_compiler, value: g++ }
       - func: setup
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           BUILD_SHARED_AND_STATIC_LIBS: "ON"
@@ -1069,8 +1057,8 @@ tasks:
             - { key: cc_compiler, value: gcc }
             - { key: cxx_compiler, value: g++ }
       - func: setup
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           BUILD_SHARED_AND_STATIC_LIBS: "ON"
@@ -1089,8 +1077,8 @@ tasks:
             - { key: cc_compiler, value: gcc }
             - { key: cxx_compiler, value: g++ }
       - func: setup
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           BUILD_SHARED_AND_STATIC_LIBS: "ON"
@@ -1109,8 +1097,8 @@ tasks:
             - { key: cc_compiler, value: gcc }
             - { key: cxx_compiler, value: g++ }
       - func: setup
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           BUILD_SHARED_AND_STATIC_LIBS: "ON"
@@ -1129,8 +1117,8 @@ tasks:
             - { key: cc_compiler, value: clang }
             - { key: cxx_compiler, value: clang++ }
       - func: setup
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           BUILD_SHARED_AND_STATIC_LIBS: "ON"
@@ -1149,8 +1137,8 @@ tasks:
             - { key: cc_compiler, value: clang }
             - { key: cxx_compiler, value: clang++ }
       - func: setup
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           BUILD_SHARED_AND_STATIC_LIBS: "ON"
@@ -1169,8 +1157,8 @@ tasks:
             - { key: cc_compiler, value: clang }
             - { key: cxx_compiler, value: clang++ }
       - func: setup
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           BUILD_SHARED_AND_STATIC_LIBS: "ON"
@@ -1189,8 +1177,8 @@ tasks:
             - { key: cc_compiler, value: clang }
             - { key: cxx_compiler, value: clang++ }
       - func: setup
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           BUILD_SHARED_AND_STATIC_LIBS: "ON"
@@ -1209,8 +1197,8 @@ tasks:
             - { key: cc_compiler, value: clang }
             - { key: cxx_compiler, value: clang++ }
       - func: setup
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           BUILD_SHARED_AND_STATIC_LIBS: "ON"
@@ -1229,8 +1217,8 @@ tasks:
             - { key: cc_compiler, value: clang }
             - { key: cxx_compiler, value: clang++ }
       - func: setup
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           BUILD_SHARED_AND_STATIC_LIBS: "ON"
@@ -1249,8 +1237,8 @@ tasks:
             - { key: cc_compiler, value: clang }
             - { key: cxx_compiler, value: clang++ }
       - func: setup
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           BUILD_SHARED_AND_STATIC_LIBS: "ON"
@@ -1269,8 +1257,8 @@ tasks:
             - { key: cc_compiler, value: clang }
             - { key: cxx_compiler, value: clang++ }
       - func: setup
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           BUILD_SHARED_AND_STATIC_LIBS: "ON"
@@ -1289,8 +1277,8 @@ tasks:
             - { key: cc_compiler, value: gcc }
             - { key: cxx_compiler, value: g++ }
       - func: setup
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           BUILD_SHARED_AND_STATIC_LIBS: "ON"
@@ -1309,8 +1297,8 @@ tasks:
             - { key: cc_compiler, value: gcc }
             - { key: cxx_compiler, value: g++ }
       - func: setup
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           BUILD_SHARED_AND_STATIC_LIBS: "ON"
@@ -1329,8 +1317,8 @@ tasks:
             - { key: cc_compiler, value: gcc }
             - { key: cxx_compiler, value: g++ }
       - func: setup
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           BUILD_SHARED_AND_STATIC_LIBS: "ON"
@@ -1349,8 +1337,8 @@ tasks:
             - { key: cc_compiler, value: gcc }
             - { key: cxx_compiler, value: g++ }
       - func: setup
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           BUILD_SHARED_AND_STATIC_LIBS: "ON"
@@ -1369,8 +1357,8 @@ tasks:
             - { key: cc_compiler, value: clang }
             - { key: cxx_compiler, value: clang++ }
       - func: setup
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           BUILD_SHARED_AND_STATIC_LIBS: "ON"
@@ -1389,8 +1377,8 @@ tasks:
             - { key: cc_compiler, value: clang }
             - { key: cxx_compiler, value: clang++ }
       - func: setup
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           BUILD_SHARED_AND_STATIC_LIBS: "ON"
@@ -1409,8 +1397,8 @@ tasks:
             - { key: cc_compiler, value: clang }
             - { key: cxx_compiler, value: clang++ }
       - func: setup
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           BUILD_SHARED_AND_STATIC_LIBS: "ON"
@@ -1429,8 +1417,8 @@ tasks:
             - { key: cc_compiler, value: clang }
             - { key: cxx_compiler, value: clang++ }
       - func: setup
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           BUILD_SHARED_AND_STATIC_LIBS: "ON"
@@ -1449,8 +1437,8 @@ tasks:
             - { key: cc_compiler, value: gcc }
             - { key: cxx_compiler, value: g++ }
       - func: setup
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           BUILD_SHARED_AND_STATIC_LIBS: "ON"
@@ -1469,8 +1457,8 @@ tasks:
             - { key: cc_compiler, value: gcc }
             - { key: cxx_compiler, value: g++ }
       - func: setup
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           BUILD_SHARED_AND_STATIC_LIBS: "ON"
@@ -1489,8 +1477,8 @@ tasks:
             - { key: cc_compiler, value: gcc }
             - { key: cxx_compiler, value: g++ }
       - func: setup
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           BUILD_SHARED_AND_STATIC_LIBS: "ON"
@@ -1509,8 +1497,8 @@ tasks:
             - { key: cc_compiler, value: gcc }
             - { key: cxx_compiler, value: g++ }
       - func: setup
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           BUILD_SHARED_AND_STATIC_LIBS: "ON"
@@ -1529,8 +1517,8 @@ tasks:
             - { key: cc_compiler, value: clang }
             - { key: cxx_compiler, value: clang++ }
       - func: setup
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           BUILD_SHARED_AND_STATIC_LIBS: "ON"
@@ -1549,8 +1537,8 @@ tasks:
             - { key: cc_compiler, value: clang }
             - { key: cxx_compiler, value: clang++ }
       - func: setup
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           BUILD_SHARED_AND_STATIC_LIBS: "ON"
@@ -1569,8 +1557,8 @@ tasks:
             - { key: cc_compiler, value: gcc }
             - { key: cxx_compiler, value: g++ }
       - func: setup
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           BUILD_SHARED_AND_STATIC_LIBS: "ON"
@@ -1589,8 +1577,8 @@ tasks:
             - { key: cc_compiler, value: gcc }
             - { key: cxx_compiler, value: g++ }
       - func: setup
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           BUILD_SHARED_AND_STATIC_LIBS: "ON"
@@ -1609,8 +1597,8 @@ tasks:
             - { key: cc_compiler, value: clang-10 }
             - { key: cxx_compiler, value: clang++-10 }
       - func: setup
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           BUILD_SHARED_AND_STATIC_LIBS: "ON"
@@ -1629,8 +1617,8 @@ tasks:
             - { key: cc_compiler, value: clang-10 }
             - { key: cxx_compiler, value: clang++-10 }
       - func: setup
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           BUILD_SHARED_AND_STATIC_LIBS: "ON"
@@ -1649,8 +1637,8 @@ tasks:
             - { key: cc_compiler, value: clang-10 }
             - { key: cxx_compiler, value: clang++-10 }
       - func: setup
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           BUILD_SHARED_AND_STATIC_LIBS: "ON"
@@ -1669,8 +1657,8 @@ tasks:
             - { key: cc_compiler, value: gcc-9 }
             - { key: cxx_compiler, value: g++-9 }
       - func: setup
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           BUILD_SHARED_AND_STATIC_LIBS: "ON"
@@ -1689,8 +1677,8 @@ tasks:
             - { key: cc_compiler, value: gcc-9 }
             - { key: cxx_compiler, value: g++-9 }
       - func: setup
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           BUILD_SHARED_AND_STATIC_LIBS: "ON"
@@ -1709,8 +1697,8 @@ tasks:
             - { key: cc_compiler, value: gcc-9 }
             - { key: cxx_compiler, value: g++-9 }
       - func: setup
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           BUILD_SHARED_AND_STATIC_LIBS: "ON"
@@ -1729,8 +1717,8 @@ tasks:
             - { key: cc_compiler, value: clang-12 }
             - { key: cxx_compiler, value: clang++-12 }
       - func: setup
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           BUILD_SHARED_AND_STATIC_LIBS: "ON"
@@ -1749,8 +1737,8 @@ tasks:
             - { key: cc_compiler, value: clang-12 }
             - { key: cxx_compiler, value: clang++-12 }
       - func: setup
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           BUILD_SHARED_AND_STATIC_LIBS: "ON"
@@ -1769,8 +1757,8 @@ tasks:
             - { key: cc_compiler, value: clang-12 }
             - { key: cxx_compiler, value: clang++-12 }
       - func: setup
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           BUILD_SHARED_AND_STATIC_LIBS: "ON"
@@ -1789,8 +1777,8 @@ tasks:
             - { key: cc_compiler, value: clang-12 }
             - { key: cxx_compiler, value: clang++-12 }
       - func: setup
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           BUILD_SHARED_AND_STATIC_LIBS: "ON"
@@ -1809,8 +1797,8 @@ tasks:
             - { key: generator, value: Visual Studio 14 2015 }
             - { key: platform, value: x64 }
       - func: setup
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           BUILD_SHARED_AND_STATIC_LIBS: "ON"
@@ -1829,8 +1817,8 @@ tasks:
             - { key: generator, value: Visual Studio 14 2015 }
             - { key: platform, value: x64 }
       - func: setup
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           BUILD_SHARED_AND_STATIC_LIBS: "ON"
@@ -1849,8 +1837,8 @@ tasks:
             - { key: generator, value: Visual Studio 14 2015 }
             - { key: platform, value: x64 }
       - func: setup
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           BUILD_SHARED_AND_STATIC_LIBS: "ON"
@@ -1869,8 +1857,8 @@ tasks:
             - { key: generator, value: Visual Studio 15 2017 }
             - { key: platform, value: x64 }
       - func: setup
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           BUILD_SHARED_AND_STATIC_LIBS: "ON"
@@ -1889,8 +1877,8 @@ tasks:
             - { key: generator, value: Visual Studio 15 2017 }
             - { key: platform, value: x64 }
       - func: setup
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           BUILD_SHARED_AND_STATIC_LIBS: "ON"
@@ -1909,8 +1897,8 @@ tasks:
             - { key: generator, value: Visual Studio 15 2017 }
             - { key: platform, value: x64 }
       - func: setup
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           BUILD_SHARED_AND_STATIC_LIBS: "ON"
@@ -1929,8 +1917,8 @@ tasks:
             - { key: generator, value: Visual Studio 15 2017 }
             - { key: platform, value: x64 }
       - func: setup
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           BUILD_SHARED_AND_STATIC_LIBS: "ON"
@@ -1949,8 +1937,8 @@ tasks:
             - { key: generator, value: Visual Studio 15 2017 }
             - { key: platform, value: x64 }
       - func: setup
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           BUILD_SHARED_AND_STATIC_LIBS: "ON"
@@ -1969,8 +1957,8 @@ tasks:
             - { key: generator, value: Visual Studio 16 2019 }
             - { key: platform, value: x64 }
       - func: setup
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           BUILD_SHARED_AND_STATIC_LIBS: "ON"
@@ -1989,8 +1977,8 @@ tasks:
             - { key: generator, value: Visual Studio 16 2019 }
             - { key: platform, value: x64 }
       - func: setup
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           BUILD_SHARED_AND_STATIC_LIBS: "ON"
@@ -2009,8 +1997,8 @@ tasks:
             - { key: generator, value: Visual Studio 16 2019 }
             - { key: platform, value: x64 }
       - func: setup
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           BUILD_SHARED_AND_STATIC_LIBS: "ON"
@@ -2029,8 +2017,8 @@ tasks:
             - { key: generator, value: Visual Studio 16 2019 }
             - { key: platform, value: x64 }
       - func: setup
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           BUILD_SHARED_AND_STATIC_LIBS: "ON"
@@ -2049,8 +2037,8 @@ tasks:
             - { key: generator, value: Visual Studio 16 2019 }
             - { key: platform, value: x64 }
       - func: setup
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           BUILD_SHARED_AND_STATIC_LIBS: "ON"
@@ -2069,8 +2057,8 @@ tasks:
             - { key: generator, value: Visual Studio 16 2019 }
             - { key: platform, value: x64 }
       - func: setup
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           BUILD_SHARED_AND_STATIC_LIBS: "ON"
@@ -2089,8 +2077,8 @@ tasks:
             - { key: generator, value: Visual Studio 17 2022 }
             - { key: platform, value: x64 }
       - func: setup
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           BUILD_SHARED_AND_STATIC_LIBS: "ON"
@@ -2109,8 +2097,8 @@ tasks:
             - { key: generator, value: Visual Studio 17 2022 }
             - { key: platform, value: x64 }
       - func: setup
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           BUILD_SHARED_AND_STATIC_LIBS: "ON"
@@ -2129,8 +2117,8 @@ tasks:
             - { key: generator, value: Visual Studio 17 2022 }
             - { key: platform, value: x64 }
       - func: setup
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           BUILD_SHARED_AND_STATIC_LIBS: "ON"
@@ -2149,8 +2137,8 @@ tasks:
             - { key: generator, value: Visual Studio 17 2022 }
             - { key: platform, value: x64 }
       - func: setup
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           BUILD_SHARED_AND_STATIC_LIBS: "ON"
@@ -2169,8 +2157,8 @@ tasks:
             - { key: generator, value: Visual Studio 17 2022 }
             - { key: platform, value: x64 }
       - func: setup
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           BUILD_SHARED_AND_STATIC_LIBS: "ON"
@@ -2189,8 +2177,8 @@ tasks:
             - { key: generator, value: Visual Studio 17 2022 }
             - { key: platform, value: x64 }
       - func: setup
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           BUILD_SHARED_AND_STATIC_LIBS: "ON"
@@ -2223,8 +2211,8 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: "6.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -2250,8 +2238,8 @@ tasks:
         vars:
           TOPOLOGY: sharded_cluster
           mongodb_version: "6.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -2276,8 +2264,8 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: "6.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -2303,8 +2291,8 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: "8.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -2330,8 +2318,8 @@ tasks:
         vars:
           TOPOLOGY: sharded_cluster
           mongodb_version: "8.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -2356,8 +2344,8 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: "8.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -2383,8 +2371,8 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: "6.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -2411,8 +2399,8 @@ tasks:
         vars:
           TOPOLOGY: sharded_cluster
           mongodb_version: "6.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -2438,8 +2426,8 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: "6.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -2466,8 +2454,8 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: "8.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -2494,8 +2482,8 @@ tasks:
         vars:
           TOPOLOGY: sharded_cluster
           mongodb_version: "8.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -2521,8 +2509,8 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: "8.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -2549,8 +2537,8 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: latest
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -2577,8 +2565,8 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: latest
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -2606,8 +2594,8 @@ tasks:
         vars:
           TOPOLOGY: sharded_cluster
           mongodb_version: latest
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -2633,8 +2621,8 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: latest
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -2661,8 +2649,8 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: latest
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -2688,8 +2676,8 @@ tasks:
         vars:
           TOPOLOGY: sharded_cluster
           mongodb_version: latest
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -2714,8 +2702,8 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: latest
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -2741,8 +2729,8 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: "6.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -2768,8 +2756,8 @@ tasks:
         vars:
           TOPOLOGY: sharded_cluster
           mongodb_version: "6.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -2794,8 +2782,8 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: "6.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -2821,8 +2809,8 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: "8.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -2848,8 +2836,8 @@ tasks:
         vars:
           TOPOLOGY: sharded_cluster
           mongodb_version: "8.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -2874,8 +2862,8 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: "8.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -2901,8 +2889,8 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: "6.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -2929,8 +2917,8 @@ tasks:
         vars:
           TOPOLOGY: sharded_cluster
           mongodb_version: "6.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -2956,8 +2944,8 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: "6.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -2984,8 +2972,8 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: "8.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -3012,8 +3000,8 @@ tasks:
         vars:
           TOPOLOGY: sharded_cluster
           mongodb_version: "8.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -3039,8 +3027,8 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: "8.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -3067,8 +3055,8 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: latest
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -3095,8 +3083,8 @@ tasks:
         vars:
           TOPOLOGY: sharded_cluster
           mongodb_version: latest
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -3122,8 +3110,8 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: latest
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -3150,8 +3138,8 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: latest
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -3177,8 +3165,8 @@ tasks:
         vars:
           TOPOLOGY: sharded_cluster
           mongodb_version: latest
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -3203,8 +3191,8 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: latest
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -3230,8 +3218,8 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: "4.2"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -3257,8 +3245,8 @@ tasks:
         vars:
           TOPOLOGY: sharded_cluster
           mongodb_version: "4.2"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -3283,8 +3271,8 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: "4.2"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -3310,8 +3298,8 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: "8.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -3337,8 +3325,8 @@ tasks:
         vars:
           TOPOLOGY: sharded_cluster
           mongodb_version: "8.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -3363,8 +3351,8 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: "8.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -3390,8 +3378,8 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: "4.2"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -3418,8 +3406,8 @@ tasks:
         vars:
           TOPOLOGY: sharded_cluster
           mongodb_version: "4.2"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -3445,8 +3433,8 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: "4.2"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -3473,8 +3461,8 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: "8.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -3501,8 +3489,8 @@ tasks:
         vars:
           TOPOLOGY: sharded_cluster
           mongodb_version: "8.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -3528,8 +3516,8 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: "8.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -3556,8 +3544,8 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: latest
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -3584,8 +3572,8 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: latest
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -3613,8 +3601,8 @@ tasks:
         vars:
           TOPOLOGY: sharded_cluster
           mongodb_version: latest
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -3640,8 +3628,8 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: latest
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -3668,8 +3656,8 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: latest
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -3695,8 +3683,8 @@ tasks:
         vars:
           TOPOLOGY: sharded_cluster
           mongodb_version: latest
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -3721,8 +3709,8 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: latest
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -3749,8 +3737,8 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: latest
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -3778,8 +3766,8 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: latest
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -3808,8 +3796,8 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: latest
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -3837,8 +3825,8 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: latest
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -3866,8 +3854,8 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: "4.2"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -3893,8 +3881,8 @@ tasks:
         vars:
           TOPOLOGY: sharded_cluster
           mongodb_version: "4.2"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -3919,8 +3907,8 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: "4.2"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -3946,8 +3934,8 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: "4.4"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -3973,8 +3961,8 @@ tasks:
         vars:
           TOPOLOGY: sharded_cluster
           mongodb_version: "4.4"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -3999,8 +3987,8 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: "4.4"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -4026,8 +4014,8 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: "5.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -4053,8 +4041,8 @@ tasks:
         vars:
           TOPOLOGY: sharded_cluster
           mongodb_version: "5.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -4079,8 +4067,8 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: "5.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -4106,8 +4094,8 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: "6.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -4133,8 +4121,8 @@ tasks:
         vars:
           TOPOLOGY: sharded_cluster
           mongodb_version: "6.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -4159,8 +4147,8 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: "6.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -4186,8 +4174,8 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: "7.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -4213,8 +4201,8 @@ tasks:
         vars:
           TOPOLOGY: sharded_cluster
           mongodb_version: "7.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -4239,8 +4227,8 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: "7.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -4266,8 +4254,8 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: "8.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -4293,8 +4281,8 @@ tasks:
         vars:
           TOPOLOGY: sharded_cluster
           mongodb_version: "8.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -4319,8 +4307,8 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: "8.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -4346,8 +4334,8 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: "4.2"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -4374,8 +4362,8 @@ tasks:
         vars:
           TOPOLOGY: sharded_cluster
           mongodb_version: "4.2"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -4401,8 +4389,8 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: "4.2"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -4429,8 +4417,8 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: "4.4"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -4457,8 +4445,8 @@ tasks:
         vars:
           TOPOLOGY: sharded_cluster
           mongodb_version: "4.4"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -4484,8 +4472,8 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: "4.4"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -4512,8 +4500,8 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: "5.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -4540,8 +4528,8 @@ tasks:
         vars:
           TOPOLOGY: sharded_cluster
           mongodb_version: "5.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -4567,8 +4555,8 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: "5.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -4595,8 +4583,8 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: "6.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -4623,8 +4611,8 @@ tasks:
         vars:
           TOPOLOGY: sharded_cluster
           mongodb_version: "6.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -4650,8 +4638,8 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: "6.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -4678,8 +4666,8 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: "7.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -4706,8 +4694,8 @@ tasks:
         vars:
           TOPOLOGY: sharded_cluster
           mongodb_version: "7.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -4733,8 +4721,8 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: "7.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -4761,8 +4749,8 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: "8.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -4789,8 +4777,8 @@ tasks:
         vars:
           TOPOLOGY: sharded_cluster
           mongodb_version: "8.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -4816,8 +4804,8 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: "8.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -4844,8 +4832,8 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: latest
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -4872,8 +4860,8 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: latest
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -4901,8 +4889,8 @@ tasks:
         vars:
           TOPOLOGY: sharded_cluster
           mongodb_version: latest
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -4928,8 +4916,8 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: latest
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -4956,8 +4944,8 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: latest
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -4983,8 +4971,8 @@ tasks:
         vars:
           TOPOLOGY: sharded_cluster
           mongodb_version: latest
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -5009,8 +4997,8 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: latest
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -5036,8 +5024,8 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: "4.2"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -5063,8 +5051,8 @@ tasks:
         vars:
           TOPOLOGY: sharded_cluster
           mongodb_version: "4.2"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -5089,8 +5077,8 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: "4.2"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -5116,8 +5104,8 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: "4.4"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -5143,8 +5131,8 @@ tasks:
         vars:
           TOPOLOGY: sharded_cluster
           mongodb_version: "4.4"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -5169,8 +5157,8 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: "4.4"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -5196,8 +5184,8 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: "5.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -5223,8 +5211,8 @@ tasks:
         vars:
           TOPOLOGY: sharded_cluster
           mongodb_version: "5.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -5249,8 +5237,8 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: "5.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -5276,8 +5264,8 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: "6.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -5303,8 +5291,8 @@ tasks:
         vars:
           TOPOLOGY: sharded_cluster
           mongodb_version: "6.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -5329,8 +5317,8 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: "6.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -5356,8 +5344,8 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: "7.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -5383,8 +5371,8 @@ tasks:
         vars:
           TOPOLOGY: sharded_cluster
           mongodb_version: "7.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -5409,8 +5397,8 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: "7.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -5436,8 +5424,8 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: "8.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -5463,8 +5451,8 @@ tasks:
         vars:
           TOPOLOGY: sharded_cluster
           mongodb_version: "8.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -5489,8 +5477,8 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: "8.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -5516,8 +5504,8 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: "4.2"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -5544,8 +5532,8 @@ tasks:
         vars:
           TOPOLOGY: sharded_cluster
           mongodb_version: "4.2"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -5571,8 +5559,8 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: "4.2"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -5599,8 +5587,8 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: "4.4"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -5627,8 +5615,8 @@ tasks:
         vars:
           TOPOLOGY: sharded_cluster
           mongodb_version: "4.4"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -5654,8 +5642,8 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: "4.4"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -5682,8 +5670,8 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: "5.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -5710,8 +5698,8 @@ tasks:
         vars:
           TOPOLOGY: sharded_cluster
           mongodb_version: "5.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -5737,8 +5725,8 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: "5.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -5765,8 +5753,8 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: "6.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -5793,8 +5781,8 @@ tasks:
         vars:
           TOPOLOGY: sharded_cluster
           mongodb_version: "6.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -5820,8 +5808,8 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: "6.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -5848,8 +5836,8 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: "7.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -5876,8 +5864,8 @@ tasks:
         vars:
           TOPOLOGY: sharded_cluster
           mongodb_version: "7.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -5903,8 +5891,8 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: "7.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -5931,8 +5919,8 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: "8.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -5959,8 +5947,8 @@ tasks:
         vars:
           TOPOLOGY: sharded_cluster
           mongodb_version: "8.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -5986,8 +5974,8 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: "8.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -6014,8 +6002,8 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: latest
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -6042,8 +6030,8 @@ tasks:
         vars:
           TOPOLOGY: sharded_cluster
           mongodb_version: latest
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -6069,8 +6057,8 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: latest
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -6097,8 +6085,8 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: latest
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -6124,8 +6112,8 @@ tasks:
         vars:
           TOPOLOGY: sharded_cluster
           mongodb_version: latest
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -6150,8 +6138,8 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: latest
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -6177,8 +6165,8 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: "4.2"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -6206,8 +6194,8 @@ tasks:
         vars:
           TOPOLOGY: sharded_cluster
           mongodb_version: "4.2"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -6234,8 +6222,8 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: "4.2"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -6263,8 +6251,8 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: "4.4"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -6292,8 +6280,8 @@ tasks:
         vars:
           TOPOLOGY: sharded_cluster
           mongodb_version: "4.4"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -6320,8 +6308,8 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: "4.4"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -6349,8 +6337,8 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: "5.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -6378,8 +6366,8 @@ tasks:
         vars:
           TOPOLOGY: sharded_cluster
           mongodb_version: "5.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -6406,8 +6394,8 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: "5.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -6435,8 +6423,8 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: "6.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -6464,8 +6452,8 @@ tasks:
         vars:
           TOPOLOGY: sharded_cluster
           mongodb_version: "6.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -6492,8 +6480,8 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: "6.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -6521,8 +6509,8 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: "7.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -6550,8 +6538,8 @@ tasks:
         vars:
           TOPOLOGY: sharded_cluster
           mongodb_version: "7.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -6578,8 +6566,8 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: "7.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -6607,8 +6595,8 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: "8.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -6636,8 +6624,8 @@ tasks:
         vars:
           TOPOLOGY: sharded_cluster
           mongodb_version: "8.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -6664,8 +6652,8 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: "8.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -6693,8 +6681,8 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: "4.2"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -6723,8 +6711,8 @@ tasks:
         vars:
           TOPOLOGY: sharded_cluster
           mongodb_version: "4.2"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -6752,8 +6740,8 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: "4.2"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -6782,8 +6770,8 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: "4.4"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -6812,8 +6800,8 @@ tasks:
         vars:
           TOPOLOGY: sharded_cluster
           mongodb_version: "4.4"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -6841,8 +6829,8 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: "4.4"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -6871,8 +6859,8 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: "5.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -6901,8 +6889,8 @@ tasks:
         vars:
           TOPOLOGY: sharded_cluster
           mongodb_version: "5.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -6930,8 +6918,8 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: "5.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -6960,8 +6948,8 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: "6.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -6990,8 +6978,8 @@ tasks:
         vars:
           TOPOLOGY: sharded_cluster
           mongodb_version: "6.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -7019,8 +7007,8 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: "6.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -7049,8 +7037,8 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: "7.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -7079,8 +7067,8 @@ tasks:
         vars:
           TOPOLOGY: sharded_cluster
           mongodb_version: "7.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -7108,8 +7096,8 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: "7.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -7138,8 +7126,8 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: "8.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -7168,8 +7156,8 @@ tasks:
         vars:
           TOPOLOGY: sharded_cluster
           mongodb_version: "8.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -7197,8 +7185,8 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: "8.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -7227,8 +7215,8 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: latest
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -7257,8 +7245,8 @@ tasks:
         vars:
           TOPOLOGY: sharded_cluster
           mongodb_version: latest
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -7286,8 +7274,8 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: latest
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -7316,8 +7304,8 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: latest
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -7345,8 +7333,8 @@ tasks:
         vars:
           TOPOLOGY: sharded_cluster
           mongodb_version: latest
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -7373,8 +7361,8 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: latest
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -7402,8 +7390,8 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: "4.2"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -7431,8 +7419,8 @@ tasks:
         vars:
           TOPOLOGY: sharded_cluster
           mongodb_version: "4.2"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -7459,8 +7447,8 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: "4.2"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -7488,8 +7476,8 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: "4.4"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -7517,8 +7505,8 @@ tasks:
         vars:
           TOPOLOGY: sharded_cluster
           mongodb_version: "4.4"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -7545,8 +7533,8 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: "4.4"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -7574,8 +7562,8 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: "5.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -7603,8 +7591,8 @@ tasks:
         vars:
           TOPOLOGY: sharded_cluster
           mongodb_version: "5.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -7631,8 +7619,8 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: "5.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -7660,8 +7648,8 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: "6.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -7689,8 +7677,8 @@ tasks:
         vars:
           TOPOLOGY: sharded_cluster
           mongodb_version: "6.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -7717,8 +7705,8 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: "6.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -7746,8 +7734,8 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: "7.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -7775,8 +7763,8 @@ tasks:
         vars:
           TOPOLOGY: sharded_cluster
           mongodb_version: "7.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -7803,8 +7791,8 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: "7.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -7832,8 +7820,8 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: "8.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -7861,8 +7849,8 @@ tasks:
         vars:
           TOPOLOGY: sharded_cluster
           mongodb_version: "8.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -7889,8 +7877,8 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: "8.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -7918,8 +7906,8 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: "4.2"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -7948,8 +7936,8 @@ tasks:
         vars:
           TOPOLOGY: sharded_cluster
           mongodb_version: "4.2"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -7977,8 +7965,8 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: "4.2"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -8007,8 +7995,8 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: "4.4"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -8037,8 +8025,8 @@ tasks:
         vars:
           TOPOLOGY: sharded_cluster
           mongodb_version: "4.4"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -8066,8 +8054,8 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: "4.4"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -8096,8 +8084,8 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: "5.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -8126,8 +8114,8 @@ tasks:
         vars:
           TOPOLOGY: sharded_cluster
           mongodb_version: "5.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -8155,8 +8143,8 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: "5.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -8185,8 +8173,8 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: "6.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -8215,8 +8203,8 @@ tasks:
         vars:
           TOPOLOGY: sharded_cluster
           mongodb_version: "6.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -8244,8 +8232,8 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: "6.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -8274,8 +8262,8 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: "7.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -8304,8 +8292,8 @@ tasks:
         vars:
           TOPOLOGY: sharded_cluster
           mongodb_version: "7.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -8333,8 +8321,8 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: "7.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -8363,8 +8351,8 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: "8.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -8393,8 +8381,8 @@ tasks:
         vars:
           TOPOLOGY: sharded_cluster
           mongodb_version: "8.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -8422,8 +8410,8 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: "8.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -8452,8 +8440,8 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: latest
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -8482,8 +8470,8 @@ tasks:
         vars:
           TOPOLOGY: sharded_cluster
           mongodb_version: latest
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -8511,8 +8499,8 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: latest
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -8541,8 +8529,8 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: latest
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -8570,8 +8558,8 @@ tasks:
         vars:
           TOPOLOGY: sharded_cluster
           mongodb_version: latest
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -8598,8 +8586,8 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: latest
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -8627,8 +8615,8 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: "4.4"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -8654,8 +8642,8 @@ tasks:
         vars:
           TOPOLOGY: sharded_cluster
           mongodb_version: "4.4"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -8680,8 +8668,8 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: "4.4"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -8707,8 +8695,8 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: "5.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -8734,8 +8722,8 @@ tasks:
         vars:
           TOPOLOGY: sharded_cluster
           mongodb_version: "5.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -8760,8 +8748,8 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: "5.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -8787,8 +8775,8 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: "6.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -8814,8 +8802,8 @@ tasks:
         vars:
           TOPOLOGY: sharded_cluster
           mongodb_version: "6.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -8840,8 +8828,8 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: "6.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -8867,8 +8855,8 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: "7.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -8894,8 +8882,8 @@ tasks:
         vars:
           TOPOLOGY: sharded_cluster
           mongodb_version: "7.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -8920,8 +8908,8 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: "7.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -8947,8 +8935,8 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: "8.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -8974,8 +8962,8 @@ tasks:
         vars:
           TOPOLOGY: sharded_cluster
           mongodb_version: "8.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -9000,8 +8988,8 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: "8.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -9027,8 +9015,8 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: "4.4"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -9055,8 +9043,8 @@ tasks:
         vars:
           TOPOLOGY: sharded_cluster
           mongodb_version: "4.4"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -9082,8 +9070,8 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: "4.4"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -9110,8 +9098,8 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: "5.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -9138,8 +9126,8 @@ tasks:
         vars:
           TOPOLOGY: sharded_cluster
           mongodb_version: "5.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -9165,8 +9153,8 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: "5.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -9193,8 +9181,8 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: "6.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -9221,8 +9209,8 @@ tasks:
         vars:
           TOPOLOGY: sharded_cluster
           mongodb_version: "6.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -9248,8 +9236,8 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: "6.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -9276,8 +9264,8 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: "7.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -9304,8 +9292,8 @@ tasks:
         vars:
           TOPOLOGY: sharded_cluster
           mongodb_version: "7.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -9331,8 +9319,8 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: "7.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -9359,8 +9347,8 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: "8.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -9387,8 +9375,8 @@ tasks:
         vars:
           TOPOLOGY: sharded_cluster
           mongodb_version: "8.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -9414,8 +9402,8 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: "8.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -9442,8 +9430,8 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: latest
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -9470,8 +9458,8 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: latest
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -9499,8 +9487,8 @@ tasks:
         vars:
           TOPOLOGY: sharded_cluster
           mongodb_version: latest
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -9526,8 +9514,8 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: latest
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -9554,8 +9542,8 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: latest
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -9581,8 +9569,8 @@ tasks:
         vars:
           TOPOLOGY: sharded_cluster
           mongodb_version: latest
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -9607,8 +9595,8 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: latest
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -9634,8 +9622,8 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: "4.4"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -9661,8 +9649,8 @@ tasks:
         vars:
           TOPOLOGY: sharded_cluster
           mongodb_version: "4.4"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -9687,8 +9675,8 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: "4.4"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -9714,8 +9702,8 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: "5.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -9741,8 +9729,8 @@ tasks:
         vars:
           TOPOLOGY: sharded_cluster
           mongodb_version: "5.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -9767,8 +9755,8 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: "5.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -9794,8 +9782,8 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: "6.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -9821,8 +9809,8 @@ tasks:
         vars:
           TOPOLOGY: sharded_cluster
           mongodb_version: "6.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -9847,8 +9835,8 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: "6.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -9874,8 +9862,8 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: "7.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -9901,8 +9889,8 @@ tasks:
         vars:
           TOPOLOGY: sharded_cluster
           mongodb_version: "7.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -9927,8 +9915,8 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: "7.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -9954,8 +9942,8 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: "8.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -9981,8 +9969,8 @@ tasks:
         vars:
           TOPOLOGY: sharded_cluster
           mongodb_version: "8.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -10007,8 +9995,8 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: "8.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -10034,8 +10022,8 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: "4.4"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -10062,8 +10050,8 @@ tasks:
         vars:
           TOPOLOGY: sharded_cluster
           mongodb_version: "4.4"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -10089,8 +10077,8 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: "4.4"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -10117,8 +10105,8 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: "5.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -10145,8 +10133,8 @@ tasks:
         vars:
           TOPOLOGY: sharded_cluster
           mongodb_version: "5.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -10172,8 +10160,8 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: "5.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -10200,8 +10188,8 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: "6.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -10228,8 +10216,8 @@ tasks:
         vars:
           TOPOLOGY: sharded_cluster
           mongodb_version: "6.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -10255,8 +10243,8 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: "6.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -10283,8 +10271,8 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: "7.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -10311,8 +10299,8 @@ tasks:
         vars:
           TOPOLOGY: sharded_cluster
           mongodb_version: "7.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -10338,8 +10326,8 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: "7.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -10366,8 +10354,8 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: "8.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -10394,8 +10382,8 @@ tasks:
         vars:
           TOPOLOGY: sharded_cluster
           mongodb_version: "8.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -10421,8 +10409,8 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: "8.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -10449,8 +10437,8 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: latest
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -10477,8 +10465,8 @@ tasks:
         vars:
           TOPOLOGY: sharded_cluster
           mongodb_version: latest
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -10504,8 +10492,8 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: latest
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -10532,8 +10520,8 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: latest
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -10559,8 +10547,8 @@ tasks:
         vars:
           TOPOLOGY: sharded_cluster
           mongodb_version: latest
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -10585,8 +10573,8 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: latest
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -10612,8 +10600,8 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: "4.4"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -10641,8 +10629,8 @@ tasks:
         vars:
           TOPOLOGY: sharded_cluster
           mongodb_version: "4.4"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -10669,8 +10657,8 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: "4.4"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -10698,8 +10686,8 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: "5.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -10727,8 +10715,8 @@ tasks:
         vars:
           TOPOLOGY: sharded_cluster
           mongodb_version: "5.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -10755,8 +10743,8 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: "5.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -10784,8 +10772,8 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: "6.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -10813,8 +10801,8 @@ tasks:
         vars:
           TOPOLOGY: sharded_cluster
           mongodb_version: "6.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -10841,8 +10829,8 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: "6.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -10870,8 +10858,8 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: "7.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -10899,8 +10887,8 @@ tasks:
         vars:
           TOPOLOGY: sharded_cluster
           mongodb_version: "7.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -10927,8 +10915,8 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: "7.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -10956,8 +10944,8 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: "8.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -10985,8 +10973,8 @@ tasks:
         vars:
           TOPOLOGY: sharded_cluster
           mongodb_version: "8.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -11013,8 +11001,8 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: "8.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -11042,8 +11030,8 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: "4.4"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -11072,8 +11060,8 @@ tasks:
         vars:
           TOPOLOGY: sharded_cluster
           mongodb_version: "4.4"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -11101,8 +11089,8 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: "4.4"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -11131,8 +11119,8 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: "5.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -11161,8 +11149,8 @@ tasks:
         vars:
           TOPOLOGY: sharded_cluster
           mongodb_version: "5.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -11190,8 +11178,8 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: "5.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -11220,8 +11208,8 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: "6.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -11250,8 +11238,8 @@ tasks:
         vars:
           TOPOLOGY: sharded_cluster
           mongodb_version: "6.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -11279,8 +11267,8 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: "6.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -11309,8 +11297,8 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: "7.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -11339,8 +11327,8 @@ tasks:
         vars:
           TOPOLOGY: sharded_cluster
           mongodb_version: "7.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -11368,8 +11356,8 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: "7.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -11398,8 +11386,8 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: "8.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -11428,8 +11416,8 @@ tasks:
         vars:
           TOPOLOGY: sharded_cluster
           mongodb_version: "8.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -11457,8 +11445,8 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: "8.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -11487,8 +11475,8 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: latest
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -11517,8 +11505,8 @@ tasks:
         vars:
           TOPOLOGY: sharded_cluster
           mongodb_version: latest
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -11546,8 +11534,8 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: latest
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -11576,8 +11564,8 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: latest
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -11605,8 +11593,8 @@ tasks:
         vars:
           TOPOLOGY: sharded_cluster
           mongodb_version: latest
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -11633,8 +11621,8 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: latest
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -11662,8 +11650,8 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: "4.4"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -11691,8 +11679,8 @@ tasks:
         vars:
           TOPOLOGY: sharded_cluster
           mongodb_version: "4.4"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -11719,8 +11707,8 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: "4.4"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -11748,8 +11736,8 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: "5.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -11777,8 +11765,8 @@ tasks:
         vars:
           TOPOLOGY: sharded_cluster
           mongodb_version: "5.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -11805,8 +11793,8 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: "5.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -11834,8 +11822,8 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: "6.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -11863,8 +11851,8 @@ tasks:
         vars:
           TOPOLOGY: sharded_cluster
           mongodb_version: "6.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -11891,8 +11879,8 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: "6.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -11920,8 +11908,8 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: "7.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -11949,8 +11937,8 @@ tasks:
         vars:
           TOPOLOGY: sharded_cluster
           mongodb_version: "7.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -11977,8 +11965,8 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: "7.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -12006,8 +11994,8 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: "8.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -12035,8 +12023,8 @@ tasks:
         vars:
           TOPOLOGY: sharded_cluster
           mongodb_version: "8.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -12063,8 +12051,8 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: "8.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -12092,8 +12080,8 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: "4.4"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -12122,8 +12110,8 @@ tasks:
         vars:
           TOPOLOGY: sharded_cluster
           mongodb_version: "4.4"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -12151,8 +12139,8 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: "4.4"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -12181,8 +12169,8 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: "5.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -12211,8 +12199,8 @@ tasks:
         vars:
           TOPOLOGY: sharded_cluster
           mongodb_version: "5.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -12240,8 +12228,8 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: "5.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -12270,8 +12258,8 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: "6.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -12300,8 +12288,8 @@ tasks:
         vars:
           TOPOLOGY: sharded_cluster
           mongodb_version: "6.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -12329,8 +12317,8 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: "6.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -12359,8 +12347,8 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: "7.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -12389,8 +12377,8 @@ tasks:
         vars:
           TOPOLOGY: sharded_cluster
           mongodb_version: "7.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -12418,8 +12406,8 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: "7.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -12448,8 +12436,8 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: "8.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -12478,8 +12466,8 @@ tasks:
         vars:
           TOPOLOGY: sharded_cluster
           mongodb_version: "8.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -12507,8 +12495,8 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: "8.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -12537,8 +12525,8 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: latest
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -12567,8 +12555,8 @@ tasks:
         vars:
           TOPOLOGY: sharded_cluster
           mongodb_version: latest
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -12596,8 +12584,8 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: latest
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -12626,8 +12614,8 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: latest
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -12655,8 +12643,8 @@ tasks:
         vars:
           TOPOLOGY: sharded_cluster
           mongodb_version: latest
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -12683,8 +12671,8 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: latest
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -12714,8 +12702,8 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: "4.2"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -12743,8 +12731,8 @@ tasks:
         vars:
           TOPOLOGY: sharded_cluster
           mongodb_version: "4.2"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -12771,8 +12759,8 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: "4.2"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -12800,8 +12788,8 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: "8.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -12829,8 +12817,8 @@ tasks:
         vars:
           TOPOLOGY: sharded_cluster
           mongodb_version: "8.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -12857,8 +12845,8 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: "8.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -12886,8 +12874,8 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: "4.2"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -12916,8 +12904,8 @@ tasks:
         vars:
           TOPOLOGY: sharded_cluster
           mongodb_version: "4.2"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -12945,8 +12933,8 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: "4.2"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -12975,8 +12963,8 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: "8.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -13005,8 +12993,8 @@ tasks:
         vars:
           TOPOLOGY: sharded_cluster
           mongodb_version: "8.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -13034,8 +13022,8 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: "8.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -13064,8 +13052,8 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: latest
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -13094,8 +13082,8 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: latest
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -13125,8 +13113,8 @@ tasks:
         vars:
           TOPOLOGY: sharded_cluster
           mongodb_version: latest
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -13154,8 +13142,8 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: latest
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -13184,8 +13172,8 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: latest
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -13213,8 +13201,8 @@ tasks:
         vars:
           TOPOLOGY: sharded_cluster
           mongodb_version: latest
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -13241,8 +13229,8 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: latest
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -13270,8 +13258,8 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: "4.2"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -13299,8 +13287,8 @@ tasks:
         vars:
           TOPOLOGY: sharded_cluster
           mongodb_version: "4.2"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -13327,8 +13315,8 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: "4.2"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -13356,8 +13344,8 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: "8.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -13385,8 +13373,8 @@ tasks:
         vars:
           TOPOLOGY: sharded_cluster
           mongodb_version: "8.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -13413,8 +13401,8 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: "8.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -13442,8 +13430,8 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: "4.2"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -13472,8 +13460,8 @@ tasks:
         vars:
           TOPOLOGY: sharded_cluster
           mongodb_version: "4.2"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -13501,8 +13489,8 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: "4.2"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -13531,8 +13519,8 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: "8.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -13561,8 +13549,8 @@ tasks:
         vars:
           TOPOLOGY: sharded_cluster
           mongodb_version: "8.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -13590,8 +13578,8 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: "8.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -13620,8 +13608,8 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: latest
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -13650,8 +13638,8 @@ tasks:
         vars:
           TOPOLOGY: sharded_cluster
           mongodb_version: latest
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -13679,8 +13667,8 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: latest
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -13709,8 +13697,8 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: latest
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -13738,8 +13726,8 @@ tasks:
         vars:
           TOPOLOGY: sharded_cluster
           mongodb_version: latest
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -13766,8 +13754,8 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: latest
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -13865,8 +13853,8 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: "4.2"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -13878,8 +13866,8 @@ tasks:
           MONGOCXX_TEST_TOPOLOGY: replica
           TEST_WITH_ASAN: "ON"
           TEST_WITH_CSFLE: "ON"
-          example_projects_cc: clang
-          example_projects_cxx: clang++
+          example_projects_cc: /opt/mongodbtoolchain/v4/bin/clang
+          example_projects_cxx: /opt/mongodbtoolchain/v4/bin/clang++
           example_projects_cxxflags: -fsanitize=address -fno-omit-frame-pointer
           example_projects_ldflags: -fsanitize=address
   - name: sanitizers-asan-rhel80-clang-static-4.2-sharded
@@ -13898,8 +13886,8 @@ tasks:
         vars:
           TOPOLOGY: sharded_cluster
           mongodb_version: "4.2"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -13911,8 +13899,8 @@ tasks:
           MONGOCXX_TEST_TOPOLOGY: sharded
           TEST_WITH_ASAN: "ON"
           TEST_WITH_CSFLE: "ON"
-          example_projects_cc: clang
-          example_projects_cxx: clang++
+          example_projects_cc: /opt/mongodbtoolchain/v4/bin/clang
+          example_projects_cxx: /opt/mongodbtoolchain/v4/bin/clang++
           example_projects_cxxflags: -fsanitize=address -fno-omit-frame-pointer
           example_projects_ldflags: -fsanitize=address
   - name: sanitizers-asan-rhel80-clang-static-4.2-single
@@ -13930,8 +13918,8 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: "4.2"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -13943,8 +13931,8 @@ tasks:
           MONGOCXX_TEST_TOPOLOGY: single
           TEST_WITH_ASAN: "ON"
           TEST_WITH_CSFLE: "ON"
-          example_projects_cc: clang
-          example_projects_cxx: clang++
+          example_projects_cc: /opt/mongodbtoolchain/v4/bin/clang
+          example_projects_cxx: /opt/mongodbtoolchain/v4/bin/clang++
           example_projects_cxxflags: -fsanitize=address -fno-omit-frame-pointer
           example_projects_ldflags: -fsanitize=address
   - name: sanitizers-asan-rhel80-clang-static-8.0-replica
@@ -13963,8 +13951,8 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: "8.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -13976,8 +13964,8 @@ tasks:
           MONGOCXX_TEST_TOPOLOGY: replica
           TEST_WITH_ASAN: "ON"
           TEST_WITH_CSFLE: "ON"
-          example_projects_cc: clang
-          example_projects_cxx: clang++
+          example_projects_cc: /opt/mongodbtoolchain/v4/bin/clang
+          example_projects_cxx: /opt/mongodbtoolchain/v4/bin/clang++
           example_projects_cxxflags: -fsanitize=address -fno-omit-frame-pointer
           example_projects_ldflags: -fsanitize=address
   - name: sanitizers-asan-rhel80-clang-static-8.0-sharded
@@ -13996,8 +13984,8 @@ tasks:
         vars:
           TOPOLOGY: sharded_cluster
           mongodb_version: "8.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -14009,8 +13997,8 @@ tasks:
           MONGOCXX_TEST_TOPOLOGY: sharded
           TEST_WITH_ASAN: "ON"
           TEST_WITH_CSFLE: "ON"
-          example_projects_cc: clang
-          example_projects_cxx: clang++
+          example_projects_cc: /opt/mongodbtoolchain/v4/bin/clang
+          example_projects_cxx: /opt/mongodbtoolchain/v4/bin/clang++
           example_projects_cxxflags: -fsanitize=address -fno-omit-frame-pointer
           example_projects_ldflags: -fsanitize=address
   - name: sanitizers-asan-rhel80-clang-static-8.0-single
@@ -14028,8 +14016,8 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: "8.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -14041,8 +14029,8 @@ tasks:
           MONGOCXX_TEST_TOPOLOGY: single
           TEST_WITH_ASAN: "ON"
           TEST_WITH_CSFLE: "ON"
-          example_projects_cc: clang
-          example_projects_cxx: clang++
+          example_projects_cc: /opt/mongodbtoolchain/v4/bin/clang
+          example_projects_cxx: /opt/mongodbtoolchain/v4/bin/clang++
           example_projects_cxxflags: -fsanitize=address -fno-omit-frame-pointer
           example_projects_ldflags: -fsanitize=address
   - name: sanitizers-asan-rhel80-clang-static-latest-replica
@@ -14061,8 +14049,8 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: latest
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -14074,8 +14062,8 @@ tasks:
           MONGOCXX_TEST_TOPOLOGY: replica
           TEST_WITH_ASAN: "ON"
           TEST_WITH_CSFLE: "ON"
-          example_projects_cc: clang
-          example_projects_cxx: clang++
+          example_projects_cc: /opt/mongodbtoolchain/v4/bin/clang
+          example_projects_cxx: /opt/mongodbtoolchain/v4/bin/clang++
           example_projects_cxxflags: -fsanitize=address -fno-omit-frame-pointer
           example_projects_ldflags: -fsanitize=address
   - name: sanitizers-asan-rhel80-clang-static-latest-sharded
@@ -14094,8 +14082,8 @@ tasks:
         vars:
           TOPOLOGY: sharded_cluster
           mongodb_version: latest
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -14107,8 +14095,8 @@ tasks:
           MONGOCXX_TEST_TOPOLOGY: sharded
           TEST_WITH_ASAN: "ON"
           TEST_WITH_CSFLE: "ON"
-          example_projects_cc: clang
-          example_projects_cxx: clang++
+          example_projects_cc: /opt/mongodbtoolchain/v4/bin/clang
+          example_projects_cxx: /opt/mongodbtoolchain/v4/bin/clang++
           example_projects_cxxflags: -fsanitize=address -fno-omit-frame-pointer
           example_projects_ldflags: -fsanitize=address
   - name: sanitizers-asan-rhel80-clang-static-latest-single
@@ -14126,8 +14114,8 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: latest
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -14139,8 +14127,8 @@ tasks:
           MONGOCXX_TEST_TOPOLOGY: single
           TEST_WITH_ASAN: "ON"
           TEST_WITH_CSFLE: "ON"
-          example_projects_cc: clang
-          example_projects_cxx: clang++
+          example_projects_cc: /opt/mongodbtoolchain/v4/bin/clang
+          example_projects_cxx: /opt/mongodbtoolchain/v4/bin/clang++
           example_projects_cxxflags: -fsanitize=address -fno-omit-frame-pointer
           example_projects_ldflags: -fsanitize=address
   - name: sanitizers-ubsan-rhel80-clang-static-4.2-replica
@@ -14159,8 +14147,8 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: "4.2"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -14172,8 +14160,8 @@ tasks:
           MONGOCXX_TEST_TOPOLOGY: replica
           TEST_WITH_CSFLE: "ON"
           TEST_WITH_UBSAN: "ON"
-          example_projects_cc: clang
-          example_projects_cxx: clang++
+          example_projects_cc: /opt/mongodbtoolchain/v4/bin/clang
+          example_projects_cxx: /opt/mongodbtoolchain/v4/bin/clang++
           example_projects_cxxflags: -fsanitize=undefined -fno-sanitize-recover=undefined -fno-omit-frame-pointer
           example_projects_ldflags: -fsanitize=undefined -fno-sanitize-recover=undefined -static-libsan
   - name: sanitizers-ubsan-rhel80-clang-static-4.2-sharded
@@ -14192,8 +14180,8 @@ tasks:
         vars:
           TOPOLOGY: sharded_cluster
           mongodb_version: "4.2"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -14205,8 +14193,8 @@ tasks:
           MONGOCXX_TEST_TOPOLOGY: sharded
           TEST_WITH_CSFLE: "ON"
           TEST_WITH_UBSAN: "ON"
-          example_projects_cc: clang
-          example_projects_cxx: clang++
+          example_projects_cc: /opt/mongodbtoolchain/v4/bin/clang
+          example_projects_cxx: /opt/mongodbtoolchain/v4/bin/clang++
           example_projects_cxxflags: -fsanitize=undefined -fno-sanitize-recover=undefined -fno-omit-frame-pointer
           example_projects_ldflags: -fsanitize=undefined -fno-sanitize-recover=undefined -static-libsan
   - name: sanitizers-ubsan-rhel80-clang-static-4.2-single
@@ -14224,8 +14212,8 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: "4.2"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -14237,8 +14225,8 @@ tasks:
           MONGOCXX_TEST_TOPOLOGY: single
           TEST_WITH_CSFLE: "ON"
           TEST_WITH_UBSAN: "ON"
-          example_projects_cc: clang
-          example_projects_cxx: clang++
+          example_projects_cc: /opt/mongodbtoolchain/v4/bin/clang
+          example_projects_cxx: /opt/mongodbtoolchain/v4/bin/clang++
           example_projects_cxxflags: -fsanitize=undefined -fno-sanitize-recover=undefined -fno-omit-frame-pointer
           example_projects_ldflags: -fsanitize=undefined -fno-sanitize-recover=undefined -static-libsan
   - name: sanitizers-ubsan-rhel80-clang-static-8.0-replica
@@ -14257,8 +14245,8 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: "8.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -14270,8 +14258,8 @@ tasks:
           MONGOCXX_TEST_TOPOLOGY: replica
           TEST_WITH_CSFLE: "ON"
           TEST_WITH_UBSAN: "ON"
-          example_projects_cc: clang
-          example_projects_cxx: clang++
+          example_projects_cc: /opt/mongodbtoolchain/v4/bin/clang
+          example_projects_cxx: /opt/mongodbtoolchain/v4/bin/clang++
           example_projects_cxxflags: -fsanitize=undefined -fno-sanitize-recover=undefined -fno-omit-frame-pointer
           example_projects_ldflags: -fsanitize=undefined -fno-sanitize-recover=undefined -static-libsan
   - name: sanitizers-ubsan-rhel80-clang-static-8.0-sharded
@@ -14290,8 +14278,8 @@ tasks:
         vars:
           TOPOLOGY: sharded_cluster
           mongodb_version: "8.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -14303,8 +14291,8 @@ tasks:
           MONGOCXX_TEST_TOPOLOGY: sharded
           TEST_WITH_CSFLE: "ON"
           TEST_WITH_UBSAN: "ON"
-          example_projects_cc: clang
-          example_projects_cxx: clang++
+          example_projects_cc: /opt/mongodbtoolchain/v4/bin/clang
+          example_projects_cxx: /opt/mongodbtoolchain/v4/bin/clang++
           example_projects_cxxflags: -fsanitize=undefined -fno-sanitize-recover=undefined -fno-omit-frame-pointer
           example_projects_ldflags: -fsanitize=undefined -fno-sanitize-recover=undefined -static-libsan
   - name: sanitizers-ubsan-rhel80-clang-static-8.0-single
@@ -14322,8 +14310,8 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: "8.0"
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -14335,8 +14323,8 @@ tasks:
           MONGOCXX_TEST_TOPOLOGY: single
           TEST_WITH_CSFLE: "ON"
           TEST_WITH_UBSAN: "ON"
-          example_projects_cc: clang
-          example_projects_cxx: clang++
+          example_projects_cc: /opt/mongodbtoolchain/v4/bin/clang
+          example_projects_cxx: /opt/mongodbtoolchain/v4/bin/clang++
           example_projects_cxxflags: -fsanitize=undefined -fno-sanitize-recover=undefined -fno-omit-frame-pointer
           example_projects_ldflags: -fsanitize=undefined -fno-sanitize-recover=undefined -static-libsan
   - name: sanitizers-ubsan-rhel80-clang-static-latest-replica
@@ -14355,8 +14343,8 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: latest
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -14368,8 +14356,8 @@ tasks:
           MONGOCXX_TEST_TOPOLOGY: replica
           TEST_WITH_CSFLE: "ON"
           TEST_WITH_UBSAN: "ON"
-          example_projects_cc: clang
-          example_projects_cxx: clang++
+          example_projects_cc: /opt/mongodbtoolchain/v4/bin/clang
+          example_projects_cxx: /opt/mongodbtoolchain/v4/bin/clang++
           example_projects_cxxflags: -fsanitize=undefined -fno-sanitize-recover=undefined -fno-omit-frame-pointer
           example_projects_ldflags: -fsanitize=undefined -fno-sanitize-recover=undefined -static-libsan
   - name: sanitizers-ubsan-rhel80-clang-static-latest-sharded
@@ -14388,8 +14376,8 @@ tasks:
         vars:
           TOPOLOGY: sharded_cluster
           mongodb_version: latest
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -14401,8 +14389,8 @@ tasks:
           MONGOCXX_TEST_TOPOLOGY: sharded
           TEST_WITH_CSFLE: "ON"
           TEST_WITH_UBSAN: "ON"
-          example_projects_cc: clang
-          example_projects_cxx: clang++
+          example_projects_cc: /opt/mongodbtoolchain/v4/bin/clang
+          example_projects_cxx: /opt/mongodbtoolchain/v4/bin/clang++
           example_projects_cxxflags: -fsanitize=undefined -fno-sanitize-recover=undefined -fno-omit-frame-pointer
           example_projects_ldflags: -fsanitize=undefined -fno-sanitize-recover=undefined -static-libsan
   - name: sanitizers-ubsan-rhel80-clang-static-latest-single
@@ -14420,8 +14408,8 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: latest
-      - func: install_c_driver
       - func: install-uv
+      - func: install_c_driver
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -14433,8 +14421,8 @@ tasks:
           MONGOCXX_TEST_TOPOLOGY: single
           TEST_WITH_CSFLE: "ON"
           TEST_WITH_UBSAN: "ON"
-          example_projects_cc: clang
-          example_projects_cxx: clang++
+          example_projects_cc: /opt/mongodbtoolchain/v4/bin/clang
+          example_projects_cxx: /opt/mongodbtoolchain/v4/bin/clang++
           example_projects_cxxflags: -fsanitize=undefined -fno-sanitize-recover=undefined -fno-omit-frame-pointer
           example_projects_ldflags: -fsanitize=undefined -fno-sanitize-recover=undefined -static-libsan
   - name: sbom
@@ -14450,6 +14438,7 @@ tasks:
     commands:
       - func: setup
       - func: fetch_c_driver_source
+      - func: install-uv
       - func: run scan build
         vars:
           CXX_STANDARD: 11
@@ -14460,6 +14449,7 @@ tasks:
     commands:
       - func: setup
       - func: fetch_c_driver_source
+      - func: install-uv
       - func: run scan build
         vars:
           BSONCXX_POLYFILL: impls
@@ -14471,6 +14461,7 @@ tasks:
     commands:
       - func: setup
       - func: fetch_c_driver_source
+      - func: install-uv
       - func: run scan build
         vars:
           CXX_STANDARD: 14
@@ -14481,6 +14472,7 @@ tasks:
     commands:
       - func: setup
       - func: fetch_c_driver_source
+      - func: install-uv
       - func: run scan build
         vars:
           BSONCXX_POLYFILL: impls
@@ -14492,6 +14484,7 @@ tasks:
     commands:
       - func: setup
       - func: fetch_c_driver_source
+      - func: install-uv
       - func: run scan build
         vars:
           CXX_STANDARD: 17
@@ -14502,6 +14495,7 @@ tasks:
     commands:
       - func: setup
       - func: fetch_c_driver_source
+      - func: install-uv
       - func: run scan build
         vars:
           BSONCXX_POLYFILL: impls
@@ -14690,10 +14684,10 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: "4.2"
+      - func: install-uv
       - func: install_c_driver
         vars:
           SKIP_INSTALL_LIBMONGOCRYPT: 1
-      - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -14719,10 +14713,10 @@ tasks:
         vars:
           TOPOLOGY: sharded_cluster
           mongodb_version: "4.2"
+      - func: install-uv
       - func: install_c_driver
         vars:
           SKIP_INSTALL_LIBMONGOCRYPT: 1
-      - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -14747,10 +14741,10 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: "4.2"
+      - func: install-uv
       - func: install_c_driver
         vars:
           SKIP_INSTALL_LIBMONGOCRYPT: 1
-      - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -14776,10 +14770,10 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: "8.0"
+      - func: install-uv
       - func: install_c_driver
         vars:
           SKIP_INSTALL_LIBMONGOCRYPT: 1
-      - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -14805,10 +14799,10 @@ tasks:
         vars:
           TOPOLOGY: sharded_cluster
           mongodb_version: "8.0"
+      - func: install-uv
       - func: install_c_driver
         vars:
           SKIP_INSTALL_LIBMONGOCRYPT: 1
-      - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -14833,10 +14827,10 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: "8.0"
+      - func: install-uv
       - func: install_c_driver
         vars:
           SKIP_INSTALL_LIBMONGOCRYPT: 1
-      - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -14862,10 +14856,10 @@ tasks:
         vars:
           TOPOLOGY: replica_set
           mongodb_version: latest
+      - func: install-uv
       - func: install_c_driver
         vars:
           SKIP_INSTALL_LIBMONGOCRYPT: 1
-      - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -14891,10 +14885,10 @@ tasks:
         vars:
           TOPOLOGY: sharded_cluster
           mongodb_version: latest
+      - func: install-uv
       - func: install_c_driver
         vars:
           SKIP_INSTALL_LIBMONGOCRYPT: 1
-      - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
@@ -14919,10 +14913,10 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: latest
+      - func: install-uv
       - func: install_c_driver
         vars:
           SKIP_INSTALL_LIBMONGOCRYPT: 1
-      - func: install-uv
       - func: compile
         vars:
           ENABLE_TESTS: "ON"

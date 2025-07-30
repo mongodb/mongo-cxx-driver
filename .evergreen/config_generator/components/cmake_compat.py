@@ -16,9 +16,10 @@ TAG = 'cmake-compat'
 # pylint: disable=line-too-long
 # fmt: off
 MATRIX = [
-    ("min",    [3, 15, 4]),
-    ("max-v3", [3, 31, 7]),
-    ("max",    [4,  0, 1]),
+    # As-if `cmake~=<version>` (PEP 0440).
+    ("min",    "3.15.0"),
+    ("max-v3", "3.0"   ),
+    ("max",    "4.0.0" ),
 ]
 # fmt: on
 
@@ -30,20 +31,20 @@ class CMakeCompat(Function):
             command_type=EvgCommandType.TEST,
             working_dir='mongo-cxx-driver',
             include_expansions_in_env=[
-                'CMAKE_MAJOR_VERSION',
-                'CMAKE_MINOR_VERSION',
-                'CMAKE_PATCH_VERSION',
+                'CMAKE_VERSION',
+                'distro_id',
                 'INSTALL_C_DRIVER',
+                'UV_INSTALL_DIR',
             ],
             script='.evergreen/scripts/cmake-compat.sh',
         ),
         bash_exec(
             command_type=EvgCommandType.TEST,
             include_expansions_in_env=[
-                'CMAKE_MAJOR_VERSION',
-                'CMAKE_MINOR_VERSION',
-                'CMAKE_PATCH_VERSION',
+                'CMAKE_VERSION',
+                'distro_id',
                 'INSTALL_C_DRIVER',
+                'UV_INSTALL_DIR',
             ],
             script='mongo-cxx-driver/.evergreen/scripts/cmake-compat-check.sh',
         ),
@@ -69,9 +70,7 @@ def tasks():
                 (InstallCDriver.call() if install_c_driver else FetchCDriverSource.call()),
                 CMakeCompat.call(
                     vars={
-                        'CMAKE_MAJOR_VERSION': version[0],
-                        'CMAKE_MINOR_VERSION': version[1],
-                        'CMAKE_PATCH_VERSION': version[2],
+                        'CMAKE_VERSION': version,
                         'INSTALL_C_DRIVER': int(install_c_driver),
                     },
                 ),

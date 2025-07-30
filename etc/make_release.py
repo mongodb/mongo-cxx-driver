@@ -449,13 +449,12 @@ def build_distribution(release_tag, release_version, c_driver_dir, quiet, skip_d
         click.echo('Clear ./build with "git clean -xdf ./build"', err=True)
         return None
 
-    run_shell_script('. .evergreen/scripts/find-cmake-old.sh;'
-                     'cd build;'
+    run_shell_script('cd build;'
                      'echo ' + release_version + ' > VERSION_CURRENT;'
-                     '${CMAKE} -DCMAKE_BUILD_TYPE=Release -DENABLE_TESTS=ON '
+                     'uvx cmake -DCMAKE_BUILD_TYPE=Release -DENABLE_TESTS=ON '
                      '-DCMAKE_PREFIX_PATH="' + c_driver_dir + '" '
                      '-DENABLE_UNINSTALL=ON ..;'
-                     'cmake --build . --target dist')
+                     'uvx cmake --build . --target dist')
 
     if not quiet:
         click.echo('C++ Driver build was successful.')
@@ -464,7 +463,7 @@ def build_distribution(release_tag, release_version, c_driver_dir, quiet, skip_d
     if not skip_distcheck:
         click.echo('Building C++ driver from tarball and running tests.')
         click.echo('This may take several minutes. This may be skipped with --skip-distcheck')
-        run_shell_script('cmake --build build --target distcheck')
+        run_shell_script('uvx cmake --build build --target distcheck')
     return dist_file
 
 def get_jira_project_versions(auth_jira):

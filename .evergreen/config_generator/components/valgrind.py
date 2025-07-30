@@ -68,8 +68,8 @@ def tasks():
             commands += [
                 Setup.call(),
                 StartMongod.call(mongodb_version=mongodb_version, topology=topology),
-                InstallCDriver.call(vars=icd_vars),
                 InstallUV.call(),
+                InstallCDriver.call(vars=icd_vars),
                 Compile.call(compiler=compiler, vars=compile_vars),
                 FetchDET.call(),
                 RunKMSServers.call(),

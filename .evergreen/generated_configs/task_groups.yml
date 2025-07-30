@@ -1,13 +1,14 @@
 task_groups:
   - name: tg-abi-stability-impls-cxx11
     max_hosts: -1
-    setup_group_can_fail_task: true
     setup_task:
       - command: git.get_project
         params:
           directory: mongo-cxx-driver
+      - func: install-uv
       - func: install_c_driver
       - command: subprocess.exec
+        type: setup
         params:
           binary: bash
           env:
@@ -15,6 +16,7 @@ task_groups:
             polyfill: impls
           include_expansions_in_env:
             - distro_id
+            - UV_INSTALL_DIR
           args:
             - -c
             - mongo-cxx-driver/.evergreen/scripts/abi-stability-setup.sh
@@ -29,6 +31,7 @@ task_groups:
           local_files_include_filter: "*.log"
           permissions: public-read
           remote_file: mongo-cxx-driver/${branch_name}/${revision}/${version_id}/${build_id}/${task_id}/${execution}/abi-stability-setup/
+    setup_task_can_fail_task: true
     tasks:
       - abi-compliance-check-impls-cxx11
       - abidiff-impls-cxx11
@@ -43,13 +46,14 @@ task_groups:
     teardown_task_can_fail_task: true
   - name: tg-abi-stability-impls-cxx17
     max_hosts: -1
-    setup_group_can_fail_task: true
     setup_task:
       - command: git.get_project
         params:
           directory: mongo-cxx-driver
+      - func: install-uv
       - func: install_c_driver
       - command: subprocess.exec
+        type: setup
         params:
           binary: bash
           env:
@@ -57,6 +61,7 @@ task_groups:
             polyfill: impls
           include_expansions_in_env:
             - distro_id
+            - UV_INSTALL_DIR
           args:
             - -c
             - mongo-cxx-driver/.evergreen/scripts/abi-stability-setup.sh
@@ -71,6 +76,7 @@ task_groups:
           local_files_include_filter: "*.log"
           permissions: public-read
           remote_file: mongo-cxx-driver/${branch_name}/${revision}/${version_id}/${build_id}/${task_id}/${execution}/abi-stability-setup/
+    setup_task_can_fail_task: true
     tasks:
       - abi-compliance-check-impls-cxx17
       - abidiff-impls-cxx17
@@ -85,13 +91,14 @@ task_groups:
     teardown_task_can_fail_task: true
   - name: tg-abi-stability-stdlib-cxx17
     max_hosts: -1
-    setup_group_can_fail_task: true
     setup_task:
       - command: git.get_project
         params:
           directory: mongo-cxx-driver
+      - func: install-uv
       - func: install_c_driver
       - command: subprocess.exec
+        type: setup
         params:
           binary: bash
           env:
@@ -99,6 +106,7 @@ task_groups:
             polyfill: stdlib
           include_expansions_in_env:
             - distro_id
+            - UV_INSTALL_DIR
           args:
             - -c
             - mongo-cxx-driver/.evergreen/scripts/abi-stability-setup.sh
@@ -113,6 +121,7 @@ task_groups:
           local_files_include_filter: "*.log"
           permissions: public-read
           remote_file: mongo-cxx-driver/${branch_name}/${revision}/${version_id}/${build_id}/${task_id}/${execution}/abi-stability-setup/
+    setup_task_can_fail_task: true
     tasks:
       - abi-compliance-check-stdlib-cxx17
       - abidiff-stdlib-cxx17
@@ -127,13 +136,14 @@ task_groups:
     teardown_task_can_fail_task: true
   - name: tg-abi-stability-stdlib-cxx20
     max_hosts: -1
-    setup_group_can_fail_task: true
     setup_task:
       - command: git.get_project
         params:
           directory: mongo-cxx-driver
+      - func: install-uv
       - func: install_c_driver
       - command: subprocess.exec
+        type: setup
         params:
           binary: bash
           env:
@@ -141,6 +151,7 @@ task_groups:
             polyfill: stdlib
           include_expansions_in_env:
             - distro_id
+            - UV_INSTALL_DIR
           args:
             - -c
             - mongo-cxx-driver/.evergreen/scripts/abi-stability-setup.sh
@@ -155,6 +166,7 @@ task_groups:
           local_files_include_filter: "*.log"
           permissions: public-read
           remote_file: mongo-cxx-driver/${branch_name}/${revision}/${version_id}/${build_id}/${task_id}/${execution}/abi-stability-setup/
+    setup_task_can_fail_task: true
     tasks:
       - abi-compliance-check-stdlib-cxx20
       - abidiff-stdlib-cxx20
@@ -169,13 +181,14 @@ task_groups:
     teardown_task_can_fail_task: true
   - name: tg-abi-stability-stdlib-cxx23
     max_hosts: -1
-    setup_group_can_fail_task: true
     setup_task:
       - command: git.get_project
         params:
           directory: mongo-cxx-driver
+      - func: install-uv
       - func: install_c_driver
       - command: subprocess.exec
+        type: setup
         params:
           binary: bash
           env:
@@ -183,6 +196,7 @@ task_groups:
             polyfill: stdlib
           include_expansions_in_env:
             - distro_id
+            - UV_INSTALL_DIR
           args:
             - -c
             - mongo-cxx-driver/.evergreen/scripts/abi-stability-setup.sh
@@ -197,6 +211,7 @@ task_groups:
           local_files_include_filter: "*.log"
           permissions: public-read
           remote_file: mongo-cxx-driver/${branch_name}/${revision}/${version_id}/${build_id}/${task_id}/${execution}/abi-stability-setup/
+    setup_task_can_fail_task: true
     tasks:
       - abi-compliance-check-stdlib-cxx23
       - abidiff-stdlib-cxx23
