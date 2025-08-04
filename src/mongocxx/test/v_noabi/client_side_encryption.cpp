@@ -2070,7 +2070,7 @@ TEST_CASE("Explicit Encryption", "[client_side_encryption]") {
         test_util::add_test_server_api(),
     };
 
-    if (!test_util::newer_than("7.0")) {
+    if (!test_util::server_version_is_at_least("7.0")) {
         SKIP("MongoDB server 7.0 or newer required");
     }
 
@@ -2370,7 +2370,7 @@ TEST_CASE("Create Encrypted Collection", "[client_side_encryption]") {
 
     mongocxx::client conn{mongocxx::uri{}, test_util::add_test_server_api()};
 
-    if (!test_util::newer_than("7.0")) {
+    if (!test_util::server_version_is_at_least("7.0")) {
         SKIP("Explicit Encryption tests require MongoDB server 7.0+.");
     }
 
@@ -2979,7 +2979,7 @@ TEST_CASE("Range Explicit Encryption", "[client_side_encryption]") {
     {
         auto client = mongocxx::client(mongocxx::uri(), test_util::add_test_server_api());
 
-        if (!test_util::newer_than("8.0")) {
+        if (!test_util::server_version_is_at_least("8.0")) {
             SKIP("MongoDB server 8.0 or newer required");
         }
 
@@ -3385,7 +3385,7 @@ TEST_CASE("Range Explicit Encryption applies defaults", "[client_side_encryption
         test_util::add_test_server_api(),
     };
 
-    if (!test_util::newer_than("8.0")) {
+    if (!test_util::server_version_is_at_least("8.0")) {
         SKIP("MongoDB server 8.0 or newer required");
     }
 

@@ -536,7 +536,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
     }
 
     SECTION("update_one can take a pipeline", "[collection]") {
-        if (!test_util::newer_than("4.1.11")) {
+        if (!test_util::server_version_is_at_least("4.1.11")) {
             SKIP("pipeline updates require 4.1.11");
         }
 
@@ -2215,7 +2215,7 @@ TEST_CASE("create_index tests", "[collection]") {
 
         options::index options{};
         options.unique(true);
-        if (test_util::newer_than("4.4"))
+        if (test_util::server_version_is_at_least("4.4"))
             options.hidden(true);
         options.expire_after(std::chrono::seconds(500));
         options.name(index_name);
@@ -2232,7 +2232,7 @@ TEST_CASE("create_index tests", "[collection]") {
             REQUIRE(unique_ele.type() == type::k_bool);
             REQUIRE(unique_ele.get_bool() == options.unique().value());
 
-            if (test_util::newer_than("4.4")) {
+            if (test_util::server_version_is_at_least("4.4")) {
                 auto hidden_ele = index["hidden"];
                 REQUIRE(hidden_ele);
                 REQUIRE(hidden_ele.type() == type::k_bool);
@@ -2649,7 +2649,7 @@ TEST_CASE("expose writeErrors[].errInfo", "[collection]") {
 
     auto mongodb_client = mongocxx::client(uri{}, client_opts);
 
-    if (!test_util::newer_than("5.0")) {
+    if (!test_util::server_version_is_at_least("5.0")) {
         SKIP("test requires MongoDB server 5.0 or newer");
     }
 
