@@ -2500,10 +2500,6 @@ TEST_CASE("Unique Index on keyAltNames", "[client_side_encryption]") {
 
     CLIENT_SIDE_ENCRYPTION_ENABLED_OR_SKIP();
 
-    if (!test_util::newer_than("4.2")) {
-        SKIP("requires MongoDB server 4.2+");
-    }
-
     // 1. Create a MongoClient object (referred to as client).
     mongocxx::client client{mongocxx::uri{}, test_util::add_test_server_api()};
 
@@ -2640,10 +2636,6 @@ TEST_CASE("Custom Key Material Test", "[client_side_encryption]") {
     instance::current();
 
     CLIENT_SIDE_ENCRYPTION_ENABLED_OR_SKIP();
-
-    if (!test_util::newer_than("4.2")) {
-        SKIP("MongoDB server 4.2 or newer required");
-    }
 
     // 1. Create a MongoClient object (referred to as client).
     mongocxx::client client{mongocxx::uri{}, test_util::add_test_server_api()};
