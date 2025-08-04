@@ -265,10 +265,6 @@ int EXAMPLES_CDECL main() {
         if (max_wire_version.type() != bsoncxx::type::k_int32) {
             throw std::logic_error{"max wire version is not int32"};
         }
-        if (max_wire_version.get_int32().value < 7) {
-            std::cerr << "Skipping: transactions example requires max wire version is >= 7" << std::endl;
-            return EXIT_SUCCESS;
-        }
     }
 
     for (auto const& example : examples) {

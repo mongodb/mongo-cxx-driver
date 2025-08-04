@@ -536,7 +536,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
     }
 
     SECTION("update_one can take a pipeline", "[collection]") {
-        if (!test_util::newer_than("4.1.11")) {
+        if (!test_util::server_version_is_at_least("4.1.11")) {
             SKIP("pipeline updates require 4.1.11");
         }
 
@@ -1686,13 +1686,6 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
         }
 
         SECTION("merge") {
-            auto merge_version = "4.1.11";
-            auto server_version = test_util::get_server_version();
-            if (test_util::compare_versions(server_version, merge_version) < 0) {
-                // The server does not support $merge.
-                return;
-            }
-
             collection coll = db["aggregation_merge"];
             collection coll_out = db["aggregation_merge_out"];
             coll.drop();
@@ -2222,7 +2215,7 @@ TEST_CASE("create_index tests", "[collection]") {
 
         options::index options{};
         options.unique(true);
-        if (test_util::newer_than("4.4"))
+        if (test_util::server_version_is_at_least("4.4"))
             options.hidden(true);
         options.expire_after(std::chrono::seconds(500));
         options.name(index_name);
@@ -2239,7 +2232,7 @@ TEST_CASE("create_index tests", "[collection]") {
             REQUIRE(unique_ele.type() == type::k_bool);
             REQUIRE(unique_ele.get_bool() == options.unique().value());
 
-            if (test_util::newer_than("4.4")) {
+            if (test_util::server_version_is_at_least("4.4")) {
                 auto hidden_ele = index["hidden"];
                 REQUIRE(hidden_ele);
                 REQUIRE(hidden_ele.type() == type::k_bool);
@@ -2558,11 +2551,6 @@ TEST_CASE("Ensure that the WriteConcernError 'errInfo' object is propagated", "[
 
     client mongodb_client{uri{}, test_util::add_test_server_api()};
 
-    if (test_util::get_topology() == "sharded" &&
-        test_util::compare_versions(test_util::get_server_version(), "4.1.0") < 0) {
-        SKIP("failCommand on mongos requires 4.1+");
-    }
-
     using bsoncxx::builder::basic::sub_document;
     auto err_info = builder::basic::document{};
     err_info.append(kvp("writeConcern", [](sub_document sub_doc) {
@@ -2661,7 +2649,7 @@ TEST_CASE("expose writeErrors[].errInfo", "[collection]") {
 
     auto mongodb_client = mongocxx::client(uri{}, client_opts);
 
-    if (!test_util::newer_than("5.0")) {
+    if (!test_util::server_version_is_at_least("5.0")) {
         SKIP("test requires MongoDB server 5.0 or newer");
     }
 
