@@ -59,8 +59,6 @@ class bulk_write {
     ///
     /// @return The number of documents that were modified.
     ///
-    /// @throws with server versions below 2.6 due to the field `nModified` not being returned.
-    ///
     MONGOCXX_ABI_EXPORT_CDECL(std::int32_t) modified_count() const;
 
     ///

@@ -1297,12 +1297,8 @@ void collection::_drop(
     scoped_bson_t opts_bson{opts_doc.view()};
     auto result = libmongoc::collection_drop_with_opts(_get_impl().collection_t, opts_bson.bson(), &error);
 
-    // Throw an exception if the command failed, unless the failure was due to a non-existent
-    // collection. We check for this failure using 'code', but we fall back to checking 'message'
-    // for old server versions (3.0 and earlier) that do not send a code with the command response.
-    if (!result &&
-        !(error.code == ::MONGOC_ERROR_COLLECTION_DOES_NOT_EXIST ||
-          bsoncxx::v_noabi::stdx::string_view{error.message} == bsoncxx::v_noabi::stdx::string_view{"ns not found"})) {
+    // Throw an exception if the command failed, unless the failure was due to a non-existent collection.
+    if (!result && error.code != MONGOC_ERROR_COLLECTION_DOES_NOT_EXIST) {
         throw_exception<operation_exception>(error);
     }
 }

@@ -822,11 +822,6 @@ TEST_CASE("with_transaction", "[session]") {
     // The following three tests are prose tests from the with_transaction spec.
     SECTION("prose tests for with_transaction") {
         SECTION("callback raises a custom error") {
-            // Multi-document transactions require server 4.2+.
-            if (compare_versions(get_server_version(), "4.2") < 0) {
-                SKIP("MongoDB server 4.2 or newer required");
-            }
-
             // Test an operation_exception
             REQUIRE_THROWS_MATCHES(
                 session.with_transaction([](client_session*) { throw operation_exception{{}, "The meaning of life"}; }),

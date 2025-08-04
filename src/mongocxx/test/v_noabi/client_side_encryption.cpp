@@ -343,11 +343,6 @@ TEST_CASE("Datakey and double encryption", "[client_side_encryption]") {
 
     mongocxx::client setup_client{uri{}, test_util::add_test_server_api(client_opts)};
 
-    if (test_util::get_max_wire_version() < 8) {
-        // Automatic encryption requires wire version 8.
-        SKIP("max wire version is < 8");
-    }
-
     // 2. Drop keyvault.datakeys and db.coll
     _setup_drop_collections(setup_client);
 
@@ -579,11 +574,6 @@ TEST_CASE("External key vault", "[client_side_encryption]") {
         test_util::add_test_server_api(),
     };
 
-    if (test_util::get_max_wire_version() < 8) {
-        // Automatic encryption requires wire version 8.
-        SKIP("max wire version is < 8");
-    }
-
     run_external_key_vault_test(true);
     run_external_key_vault_test(false);
 }
@@ -598,11 +588,6 @@ TEST_CASE("BSON size limits and batch splitting", "[client_side_encryption]") {
         uri{},
         test_util::add_test_server_api(),
     };
-
-    if (test_util::get_max_wire_version() < 8) {
-        // Automatic encryption requires wire version 8.
-        SKIP("max wire version is < 8");
-    }
 
     // Load in json schema limits/limits-schema.json and limits/limits-key.json
     auto limits_schema = _doc_from_file("/limits/limits-schema.json");
@@ -756,11 +741,6 @@ TEST_CASE("Views are prohibited", "[client_side_encryption]") {
         uri{},
         test_util::add_test_server_api(),
     };
-
-    if (test_util::get_max_wire_version() < 8) {
-        // Automatic encryption requires wire version 8.
-        SKIP("max wire version is < 8");
-    }
 
     // Using client, drop and create a view named db.view with an empty pipeline.
     // E.g. using the command { "create": "view", "viewOn": "coll" }.
@@ -1096,11 +1076,6 @@ TEST_CASE("Corpus", "[client_side_encryption]") {
         uri{},
         test_util::add_test_server_api(),
     };
-
-    if (test_util::get_max_wire_version() < 8) {
-        // Automatic encryption requires wire version 8.
-        SKIP("max wire version is < 8");
-    }
     _run_corpus_test(true);
     _run_corpus_test(false);
 }
@@ -1216,11 +1191,6 @@ TEST_CASE("Custom endpoint", "[client_side_encryption]") {
         uri{},
         test_util::add_test_server_api(),
     };
-
-    if (test_util::get_max_wire_version() < 8) {
-        // Automatic encryption requires wire version 8.
-        SKIP("max wire version is < 8");
-    }
 
     // Call client_encryption.createDataKey() with "aws" as the provider and the following
     // masterKey:
@@ -1560,11 +1530,6 @@ TEST_CASE("Bypass spawning mongocryptd", "[client_side_encryption]") {
         test_util::add_test_server_api(),
     };
 
-    if (test_util::get_max_wire_version() < 8) {
-        // Automatic encryption requires wire version 8.
-        SKIP("max wire version is < 8");
-    }
-
     auto shared_lib_path = getenv("CRYPT_SHARED_LIB_PATH");
 
     auto external_schema_file = _doc_from_file("/external/external-schema.json");
@@ -1703,11 +1668,6 @@ TEST_CASE("KMS TLS expired certificate", "[client_side_encryption]") {
         SKIP("KMS TLS tests disabled (BUILD-14068)");
     }
 
-    if (test_util::get_max_wire_version() < 8) {
-        // Automatic encryption requires wire version 8.
-        SKIP("max wire version is < 8");
-    }
-
     options::client_encryption cse_opts;
     _add_cse_opts(&cse_opts, &setup_client);
     client_encryption client_encryption{std::move(cse_opts)};
@@ -1757,11 +1717,6 @@ TEST_CASE("KMS TLS wrong host certificate", "[client_side_encryption]") {
     // Required CA certificates may not be registered on system. See BUILD-14068.
     if (std::getenv("MONGOCXX_TEST_SKIP_KMS_TLS_TESTS")) {
         SKIP("KMS TLS tests disabled (BUILD-14068)");
-    }
-
-    if (test_util::get_max_wire_version() < 8) {
-        // Automatic encryption requires wire version 8.
-        SKIP("max wire version is < 8");
     }
 
     options::client_encryption cse_opts;
@@ -1866,11 +1821,6 @@ TEST_CASE("KMS TLS Options Tests", "[client_side_encryption][!mayfail]") {
     // Required CA certificates may not be registered on system. See BUILD-14068.
     if (std::getenv("MONGOCXX_TEST_SKIP_KMS_TLS_TESTS")) {
         SKIP("KMS TLS tests disabled (BUILD-14068)");
-    }
-
-    if (test_util::get_max_wire_version() < 8) {
-        // Automatic encryption requires wire version 8.
-        SKIP("max wire version is < 8");
     }
 
     auto client_encryption_no_client_cert =

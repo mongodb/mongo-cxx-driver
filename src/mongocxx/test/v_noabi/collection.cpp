@@ -1686,13 +1686,6 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
         }
 
         SECTION("merge") {
-            auto merge_version = "4.1.11";
-            auto server_version = test_util::get_server_version();
-            if (test_util::compare_versions(server_version, merge_version) < 0) {
-                // The server does not support $merge.
-                return;
-            }
-
             collection coll = db["aggregation_merge"];
             collection coll_out = db["aggregation_merge_out"];
             coll.drop();
@@ -2557,11 +2550,6 @@ TEST_CASE("Ensure that the WriteConcernError 'errInfo' object is propagated", "[
     instance::current();
 
     client mongodb_client{uri{}, test_util::add_test_server_api()};
-
-    if (test_util::get_topology() == "sharded" &&
-        test_util::compare_versions(test_util::get_server_version(), "4.1.0") < 0) {
-        SKIP("failCommand on mongos requires 4.1+");
-    }
 
     using bsoncxx::builder::basic::sub_document;
     auto err_info = builder::basic::document{};
