@@ -57,14 +57,15 @@ DOC
   {
     cat <<DOC
 <skip_including>
-  bsoncxx/v_noabi/bsoncxx/enums/
-  bsoncxx/v_noabi/bsoncxx/config/
+  /v_noabi/bsoncxx/enums/
+  /v_noabi/bsoncxx/config/
+  /v_noabi/mongocxx/config/
+  /v1/detail/prelude.hpp
+  /v1/detail/postlude.hpp
 </skip_including>
 
 <skip_namespaces>
-  bsoncxx::detail
-  bsoncxx::v_noabi::detail
-  bsoncxx::v_noabi::stdx::detail
+  detail
 </skip_namespaces>
 
 DOC
@@ -117,11 +118,16 @@ fi
 # Allow task to upload the HTML report despite failed status.
 echo "Generating stable ABI report..."
 pushd cxx-abi
-if ! abi-compliance-checker -lib mongo-cxx-driver -old old.xml -new new.xml 2>&1; then
-  : # CXX-2812: enable code below once stable ABI symbols exist in the base commit libraries.
-  # declare status
-  # status='{"status":"failed", "type":"test", "should_continue":true, "desc":"abi-compliance-checker emitted one or more errors"}'
-  # curl -sS -d "${status:?}" -H "Content-Type: application/json" -X POST localhost:2285/task_status || true
+declare ret
+abi-compliance-checker -lib mongo-cxx-driver -old old.xml -new new.xml 2>&1 && ret="$?" || ret="$?"
+if [[ "${ret:?}" -gt 0 ]]; then
+  declare status
+  status='{"status":"failed", "type":"test", "should_continue":true, "desc":"detected stable ABI incompatibility"}'
+  curl -sS -d "${status:?}" -H "Content-Type: application/json" -X POST localhost:2285/task_status || true
+elif [[ "${ret:?}" -gt 1 ]]; then
+  declare status
+  status='{"status":"failed", "type":"test", "should_continue":true, "desc":"abi-compliance-checker emitted one or more errors"}'
+  curl -sS -d "${status:?}" -H "Content-Type: application/json" -X POST localhost:2285/task_status || true
 fi
 popd # cxx-abi
 echo "Generating stable ABI report... done."
@@ -129,6 +135,12 @@ echo "Generating stable ABI report... done."
 # Also create a report for the unstable ABI. Errors are expected and OK.
 echo "Generating unstable ABI report..."
 pushd cxx-noabi
-abi-compliance-checker -lib mongo-cxx-driver -old old.xml -new new.xml 2>&1 || true
+declare ret
+abi-compliance-checker -lib mongo-cxx-driver -old old.xml -new new.xml 2>&1 && ret="$?" || ret="$?"
+if [[ "${ret:?}" -gt 1 ]]; then
+  declare status
+  status='{"status":"failed", "type":"test", "should_continue":true, "desc":"abi-compliance-checker emitted one or more errors"}'
+  curl -sS -d "${status:?}" -H "Content-Type: application/json" -X POST localhost:2285/task_status || true
+fi
 popd # cxx-noabi
 echo "Generating unstable ABI report... done."
