@@ -53,7 +53,6 @@ TEST_CASE("exceptions", "[bsoncxx][v1][array][value]") {
     SECTION("invalid_length") {
         SECTION("value(std::uint8_t*, std::size_t, Deleter)") {
             auto const deleter = [](std::uint8_t* p) { delete[] p; };
-            using deleter_type = std::reference_wrapper<decltype(deleter)>;
 
             auto const expr = [&](std::size_t length) {
                 return value{make_ptr().release(), length, std::ref(deleter)};
@@ -62,8 +61,8 @@ TEST_CASE("exceptions", "[bsoncxx][v1][array][value]") {
             CHECK_THROWS_WITH_CODE(expr(0u), code::invalid_length);
             CHECK_THROWS_WITH_CODE(expr(sizeof(data) - 1u), code::invalid_length);
 
-            CHECK(get_deleter<deleter_type>(expr(sizeof(data))).has_value());
-            CHECK(get_deleter<deleter_type>(expr(sizeof(data) + 1u)).has_value());
+            CHECK(expr(sizeof(data)).size() == sizeof(data));
+            CHECK(expr(sizeof(data) + 1u).size() == sizeof(data));
 
             auto ptr = make_ptr();
             ++ptr[0];
