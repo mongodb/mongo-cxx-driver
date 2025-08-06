@@ -120,13 +120,13 @@ echo "Generating stable ABI report..."
 pushd cxx-abi
 declare ret
 abi-compliance-checker -lib mongo-cxx-driver -old old.xml -new new.xml 2>&1 && ret="$?" || ret="$?"
-if [[ "${ret:?}" -gt 0 ]]; then
-  declare status
-  status='{"status":"failed", "type":"test", "should_continue":true, "desc":"detected stable ABI incompatibility"}'
-  curl -sS -d "${status:?}" -H "Content-Type: application/json" -X POST localhost:2285/task_status || true
-elif [[ "${ret:?}" -gt 1 ]]; then
+if [[ "${ret:?}" -gt 1 ]]; then
   declare status
   status='{"status":"failed", "type":"test", "should_continue":true, "desc":"abi-compliance-checker emitted one or more errors"}'
+  curl -sS -d "${status:?}" -H "Content-Type: application/json" -X POST localhost:2285/task_status || true
+elif [[ "${ret:?}" -gt 0 ]]; then
+  declare status
+  status='{"status":"failed", "type":"test", "should_continue":true, "desc":"detected stable ABI incompatibility"}'
   curl -sS -d "${status:?}" -H "Content-Type: application/json" -X POST localhost:2285/task_status || true
 fi
 popd # cxx-abi
