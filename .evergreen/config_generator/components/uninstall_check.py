@@ -37,6 +37,8 @@ class UninstallCheck(Function):
             set -o errexit
             set -o pipefail
 
+            PATH="${UV_INSTALL_DIR}:$PATH"
+
             # lib vs. lib64 (i.e. RHEL).
             if [[ "${distro_id}" == rhel* ]]; then
                 LIB_DIR="lib64"
