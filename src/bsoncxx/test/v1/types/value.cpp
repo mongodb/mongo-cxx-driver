@@ -487,12 +487,12 @@ namespace btype_vs_value {
 
 template <typename BType, typename... Args>
 struct overload {
-    // Prerequisite: Args is not BType or view.
+    // Prerequisite: Args is not BType or value.
     static_assert(
         IMPLIES(
             (sizeof...(Args) == 1),
-            !(bsoncxx::detail::disjunction<std::is_same<BType, Args>..., std::is_same<view, Args>...>::value)),
-        "Arg must not be BType or view");
+            !(bsoncxx::detail::disjunction<std::is_same<BType, Args>..., std::is_same<value, Args>...>::value)),
+        "Arg must not be BType or value");
 
     // Prerequisite: BType(Args...) is valid.
     static_assert(std::is_constructible<BType, Args...>::value, "BType(Args...) must be valid");
