@@ -19,6 +19,7 @@
 #include <bsoncxx/v1/detail/type_traits.hpp>
 
 #include <bsoncxx/test/v1/document/view.hh>
+#include <bsoncxx/test/v1/types/view.hh>
 
 #include <cstdint>
 #include <cstring>
@@ -497,6 +498,13 @@ TEST_CASE("basic", "[bsoncxx][v1][document][value]") {
         CHECK(v.end() == v.end());
         CHECK(v.end() == v.cend());
         CHECK(v.begin() != v.end());
+
+        CHECK(v.find("x") != v.end());
+        CHECK(v.find("x")->get_int32().value == 1);
+        CHECK(v.find("y") == v.end());
+
+        CHECK(v["x"].get_int32().value == 1);
+        CHECK_FALSE(v["y"]);
 
         CHECK(v == v);
         CHECK_FALSE(v != v);

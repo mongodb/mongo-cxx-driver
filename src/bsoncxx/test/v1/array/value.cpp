@@ -16,6 +16,8 @@
 
 //
 
+#include <bsoncxx/test/v1/types/view.hh>
+
 #include <cstdint>
 
 #include <bsoncxx/test/catch.hh>
@@ -463,20 +465,20 @@ TEST_CASE("basic", "[bsoncxx][v1][array][value]") {
     }
 
     SECTION("valid") {
-        std::uint8_t const xdoc[] = {12, 0, 0, 0, 16, 'x', '\0', 1, 0, 0, 0, 0}; // { 'x': 1 }
+        std::uint8_t const xarr[] = {12, 0, 0, 0, 16, '0', '\0', 1, 0, 0, 0, 0}; // { '0': 1 }
 
-        auto xdoc_owner = std::unique_ptr<std::uint8_t[]>(new std::uint8_t[sizeof(xdoc)]);
-        std::memcpy(xdoc_owner.get(), xdoc, sizeof(xdoc));
-        auto const data_ptr = xdoc_owner.get();
+        auto xarr_owner = std::unique_ptr<std::uint8_t[]>(new std::uint8_t[sizeof(xarr)]);
+        std::memcpy(xarr_owner.get(), xarr, sizeof(xarr));
+        auto const data_ptr = xarr_owner.get();
 
-        value const v{std::move(xdoc_owner)};
+        value const v{std::move(xarr_owner)};
 
         REQUIRE(v);
 
         CHECK(v != value{});
 
         CHECK(v.data() == data_ptr);
-        CHECK(v.size() == sizeof(xdoc));
+        CHECK(v.size() == sizeof(xarr));
         CHECK(v.size() == v.length());
         CHECK_FALSE(v.empty());
 
@@ -485,6 +487,13 @@ TEST_CASE("basic", "[bsoncxx][v1][array][value]") {
         CHECK(v.end() == v.end());
         CHECK(v.end() == v.cend());
         CHECK(v.begin() != v.end());
+
+        CHECK(v.find(0) != v.end());
+        CHECK(v.find(0)->get_int32().value == 1);
+        CHECK(v.find(1) == v.end());
+
+        CHECK(v[0].get_int32().value == 1);
+        CHECK_FALSE(v[1]);
 
         CHECK(v == v);
         CHECK_FALSE(v != v);
