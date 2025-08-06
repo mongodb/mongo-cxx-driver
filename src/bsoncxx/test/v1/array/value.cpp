@@ -44,8 +44,9 @@ TEST_CASE("exceptions", "[bsoncxx][v1][array][value]") {
     REQUIRE(data[0] == sizeof(data));
 
     auto const make_ptr = [&data] {
-        auto res = std::unique_ptr<std::uint8_t[]>(new std::uint8_t[sizeof(data)]);
-        std::memcpy(res.get(), data, sizeof(data));
+        // Reserve an extra byte to support the `sizeof(data) + 1` test cases.
+        auto res = std::unique_ptr<std::uint8_t[]>(new std::uint8_t[sizeof(data) + 1u]);
+        std::memcpy(res.get(), data, sizeof(data)); // Leave extra byte uninitialized.
         return res;
     };
 
