@@ -234,8 +234,8 @@ v1::stdx::string_view view::key() const {
 
 #pragma push_macro("X")
 #undef X
-#define X(_name, _value)                                       \
-    v1::types::b_##_name view::get_##_name() const {           \
+#define X(_name, _value)                                    \
+    v1::types::b_##_name view::get_##_name() const {        \
         return impl::with(this)->type_view().get_##_name(); \
     }
 BSONCXX_V1_TYPES_XMACRO(X)
