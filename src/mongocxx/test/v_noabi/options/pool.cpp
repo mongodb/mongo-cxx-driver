@@ -21,8 +21,6 @@ namespace {
 using namespace mongocxx;
 
 TEST_CASE("pool", "[pool][option]") {
-    instance::current();
-
     {
         options::pool pool_opts{};
         REQUIRE(!pool_opts.client_opts().tls_opts());

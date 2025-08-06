@@ -56,15 +56,11 @@ using bsoncxx::builder::basic::make_document;
 using namespace mongocxx;
 
 TEST_CASE("A default constructed collection cannot perform operations", "[collection]") {
-    instance::current();
-
     collection c;
     REQUIRE_THROWS_AS(c.name(), mongocxx::logic_error);
 }
 
 TEST_CASE("mongocxx::collection copy constructor", "[collection]") {
-    instance::current();
-
     client client{uri{}, test_util::add_test_server_api()};
     database db = client["collection_copy_constructor"];
 
@@ -83,8 +79,6 @@ TEST_CASE("mongocxx::collection copy constructor", "[collection]") {
 }
 
 TEST_CASE("mongocxx::collection copy assignment operator", "[collection]") {
-    instance::current();
-
     client client{uri{}, test_util::add_test_server_api()};
     database db = client["collection_copy_assignment"];
 
@@ -120,8 +114,6 @@ TEST_CASE("mongocxx::collection copy assignment operator", "[collection]") {
 }
 
 TEST_CASE("collection renaming", "[collection]") {
-    instance::current();
-
     client mongodb_client{uri{}, test_util::add_test_server_api()};
     database db = mongodb_client["collection_renaming"];
 
@@ -156,8 +148,6 @@ TEST_CASE("collection renaming", "[collection]") {
 }
 
 TEST_CASE("collection dropping") {
-    instance::current();
-
     client mongodb_client{uri{}, test_util::add_test_server_api()};
     database db = mongodb_client["collection_dropping"];
 
@@ -169,8 +159,6 @@ TEST_CASE("collection dropping") {
 }
 
 TEST_CASE("CRUD functionality", "[driver::collection]") {
-    instance::current();
-
     client mongodb_client{uri{}, test_util::add_test_server_api()};
     database db = mongodb_client["collection_crud_functionality"];
 
@@ -2136,8 +2124,6 @@ void find_index_and_validate(
 TEST_CASE("create_index tests", "[collection]") {
     using namespace bsoncxx;
 
-    instance::current();
-
     client mongodb_client{uri{}, test_util::add_test_server_api()};
     database db = mongodb_client["collection_create_index"];
 
@@ -2288,8 +2274,6 @@ TEST_CASE("create_index tests", "[collection]") {
 }
 
 TEST_CASE("list_indexes", "[collection]") {
-    instance::current();
-
     client mongodb_client{uri{}, test_util::add_test_server_api()};
     database db = mongodb_client["collection_list_indexes"];
 
@@ -2329,7 +2313,6 @@ TEST_CASE("list_indexes", "[collection]") {
 // We use a capped collection for this test case so we can
 // use it with all three cursor types.
 TEST_CASE("Cursor iteration", "[collection][cursor]") {
-    instance::current();
     client mongodb_client{uri{}, test_util::add_test_server_api()};
     database db = mongodb_client["collection_cursor_iteration"];
 
@@ -2469,7 +2452,6 @@ TEST_CASE("Cursor iteration", "[collection][cursor]") {
 }
 
 TEST_CASE("regressions", "CXX-986") {
-    instance::current();
     mongocxx::uri mongo_uri{"mongodb://non-existent-host.invalid/"};
     mongocxx::client client{mongo_uri, test_util::add_test_server_api()};
     REQUIRE_THROWS(client.database("irrelevant")["irrelevant"].find_one_and_update(
@@ -2477,7 +2459,6 @@ TEST_CASE("regressions", "CXX-986") {
 }
 
 TEST_CASE("bulk_write with container", "[collection]") {
-    instance::current();
     mongocxx::client client{uri{}, test_util::add_test_server_api()};
 
     std::vector<model::write> vec;
@@ -2496,7 +2477,6 @@ TEST_CASE("bulk_write with container", "[collection]") {
 
 /* Regression test for CXX-2028. */
 TEST_CASE("find_and_x operations append write concern correctly", "[collection]") {
-    instance::current();
     mongocxx::client client{uri{}, test_util::add_test_server_api()};
     mongocxx::write_concern wc;
     wc.acknowledge_level(mongocxx::write_concern::level::k_acknowledged);
@@ -2547,7 +2527,6 @@ TEST_CASE("find_and_x operations append write concern correctly", "[collection]"
 
 TEST_CASE("Ensure that the WriteConcernError 'errInfo' object is propagated", "[collection]") {
     using namespace bsoncxx;
-    instance::current();
 
     client mongodb_client{uri{}, test_util::add_test_server_api()};
 
@@ -2616,7 +2595,6 @@ TEST_CASE("expose writeErrors[].errInfo", "[collection]") {
     };
 
     // Set up our test environment:
-    instance::current();
 
     bsoncxx::test::exception_guard_state eguard;
     mongocxx::options::apm apm_opts;

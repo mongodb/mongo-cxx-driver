@@ -28,8 +28,6 @@ using namespace bsoncxx::builder::basic;
 using namespace mongocxx;
 
 TEST_CASE("delete_options", "[delete][option]") {
-    instance::current();
-
     options::delete_options del;
 
     auto collation = make_document(kvp("locale", "en_US"));

@@ -24,8 +24,6 @@ using bsoncxx::builder::basic::kvp;
 using bsoncxx::builder::basic::make_document;
 
 TEST_CASE("update", "[update][result]") {
-    mongocxx::instance::current();
-
     bsoncxx::builder::basic::document build;
     build.append(
         kvp("_id", bsoncxx::oid{}),
@@ -43,8 +41,6 @@ TEST_CASE("update", "[update][result]") {
 }
 
 TEST_CASE("update result equals", "[update][result]") {
-    mongocxx::instance::current();
-
     auto doc = make_document(
         kvp("_id", bsoncxx::oid{}),
         kvp("nMatched", bsoncxx::types::b_int32{2}),
@@ -60,8 +56,6 @@ TEST_CASE("update result equals", "[update][result]") {
 }
 
 TEST_CASE("update result inequals", "[update][result]") {
-    mongocxx::instance::current();
-
     mongocxx::result::bulk_write a{make_document(
         kvp("_id", bsoncxx::oid{}),
         kvp("nMatched", bsoncxx::types::b_int32{2}),

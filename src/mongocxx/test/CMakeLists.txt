@@ -137,8 +137,10 @@ add_executable(test_driver
 target_link_libraries(test_driver PRIVATE spec_test_common client_helpers)
 
 add_executable(test_logging v_noabi/logging.cpp)
+target_compile_definitions(test_logging PRIVATE MONGOCXX_TEST_DISABLE_MAIN_INSTANCE)
 
 add_executable(test_instance v_noabi/instance.cpp)
+target_compile_definitions(test_instance PRIVATE MONGOCXX_TEST_DISABLE_MAIN_INSTANCE)
 
 add_executable(test_crud_specs spec/crud.cpp)
 target_link_libraries(test_crud_specs PRIVATE spec_test_common client_helpers)

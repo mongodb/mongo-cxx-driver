@@ -1309,8 +1309,6 @@ void run_unified_format_tests_in_env_dir(
         FAIL("unable to find/open test_files.txt in path \"" << test_file_set_path << '\"');
     }
 
-    instance::current();
-
     for (std::string file; std::getline(files, file);) {
         DYNAMIC_SECTION(file) {
             if (unsupported_tests.find(file) != unsupported_tests.end()) {

@@ -112,7 +112,6 @@ auto const watch_interpose = [](mongoc_collection_t const*, bson_t const*, bson_
 auto const destroy_interpose = [](mongoc_change_stream_t*) -> void {};
 
 TEST_CASE("Change stream options", "[change_stream]") {
-    instance::current();
     client client{uri{}, test_util::add_test_server_api()};
 
     if (!test_util::is_replica_set()) {
@@ -134,7 +133,6 @@ TEST_CASE("Change stream options", "[change_stream]") {
 }
 
 TEST_CASE("Spec Prose Tests", "[change_stream]") {
-    instance::current();
     client client{uri{}, test_util::add_test_server_api()};
 
     if (!test_util::is_replica_set()) {
@@ -202,8 +200,6 @@ TEST_CASE("Spec Prose Tests", "[change_stream]") {
 
 TEST_CASE("Mock streams and error-handling", "[change_stream]") {
     MOCK_CHANGE_STREAM;
-
-    instance::current();
     client client{uri{}, test_util::add_test_server_api()};
     options::change_stream options{};
     collection events = make_test_coll(client, "streams", "events");
@@ -384,7 +380,6 @@ TEST_CASE("Mock streams and error-handling", "[change_stream]") {
 
 // Put this before other tests which assume the collections already exists.
 TEST_CASE("Create streams.events and assert we can read a single event", "[change_stream]") {
-    instance::current();
     client client{uri{}, test_util::add_test_server_api()};
     if (!test_util::is_replica_set()) {
         SKIP("change streams require replica set");
@@ -402,7 +397,6 @@ TEST_CASE("Create streams.events and assert we can read a single event", "[chang
 }
 
 TEST_CASE("Give an invalid pipeline", "[change_stream]") {
-    instance::current();
     client client{uri{}, test_util::add_test_server_api()};
     if (!test_util::is_replica_set()) {
         SKIP("change streams require replica set");
@@ -431,7 +425,6 @@ TEST_CASE("Give an invalid pipeline", "[change_stream]") {
 }
 
 TEST_CASE("Watch 2 collections", "[change_stream]") {
-    instance::current();
     client client{uri{}, test_util::add_test_server_api()};
     if (!test_util::is_replica_set()) {
         SKIP("change streams require replica set");
@@ -478,7 +471,6 @@ TEST_CASE("Watch 2 collections", "[change_stream]") {
 }
 
 TEST_CASE("Watch a Collection", "[change_stream]") {
-    instance::current();
     client client{uri{}, test_util::add_test_server_api()};
     if (!test_util::is_replica_set()) {
         SKIP("change streams require replica set");

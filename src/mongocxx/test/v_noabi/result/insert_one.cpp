@@ -27,8 +27,6 @@ using bsoncxx::builder::basic::kvp;
 using bsoncxx::builder::basic::make_document;
 
 TEST_CASE("insert_one", "[insert_one][result]") {
-    mongocxx::instance::current();
-
     bsoncxx::builder::basic::document build;
     auto oid = types::b_oid{bsoncxx::oid{}};
     build.append(kvp("_id", oid), kvp("x", 1));
@@ -43,8 +41,6 @@ TEST_CASE("insert_one", "[insert_one][result]") {
 }
 
 TEST_CASE("insert_one equals", "[insert_one][result]") {
-    mongocxx::instance::current();
-
     auto oid = types::b_oid{bsoncxx::oid{}};
     auto build = make_document(kvp("_id", oid), kvp("x", 1));
 
@@ -58,8 +54,6 @@ TEST_CASE("insert_one equals", "[insert_one][result]") {
 }
 
 TEST_CASE("insert_one inequals", "[insert_one][result]") {
-    mongocxx::instance::current();
-
     auto oid = types::b_oid{bsoncxx::oid{}};
 
     mongocxx::result::bulk_write a{make_document(kvp("_id", oid), kvp("x", 1))};

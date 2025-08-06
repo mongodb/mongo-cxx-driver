@@ -111,19 +111,7 @@ class instance {
     instance& operator=(instance const&) = delete;
 
     ///
-    /// Returns the current unique instance of the driver. If an instance was explicitly created,
-    /// that will be returned. If no instance has yet been created, a default instance will be
-    /// constructed and returned. If a default instance is constructed, its destruction will be
-    /// sequenced according to the rules for the destruction of static local variables at program
-    /// exit (see http://en.cppreference.com/w/cpp/utility/program/exit).
-    ///
-    /// Note that, if you need to configure the instance in any way (e.g. with a logger), you cannot
-    /// use this method to cause the instance to be constructed. You must explicitly create an
-    /// properly configured instance object. You can, however, use this method to obtain that
-    /// configured instance object.
-    ///
-    /// @note This method is intended primarily for test authors, where managing the lifetime of the
-    /// instance w.r.t. the test framework can be problematic.
+    /// @warning For internal use only!
     ///
     static MONGOCXX_ABI_EXPORT_CDECL(instance&) current();
 

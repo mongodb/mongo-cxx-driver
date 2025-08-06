@@ -331,8 +331,6 @@ void run_datakey_and_double_encryption(
 }
 
 TEST_CASE("Datakey and double encryption", "[client_side_encryption]") {
-    instance::current();
-
     CLIENT_SIDE_ENCRYPTION_ENABLED_OR_SKIP();
 
     // Setup
@@ -565,8 +563,6 @@ void run_external_key_vault_test(bool with_external_key_vault) {
 }
 
 TEST_CASE("External key vault", "[client_side_encryption]") {
-    instance::current();
-
     CLIENT_SIDE_ENCRYPTION_ENABLED_OR_SKIP();
 
     mongocxx::client setup_client{
@@ -579,8 +575,6 @@ TEST_CASE("External key vault", "[client_side_encryption]") {
 }
 
 TEST_CASE("BSON size limits and batch splitting", "[client_side_encryption]") {
-    instance::current();
-
     CLIENT_SIDE_ENCRYPTION_ENABLED_OR_SKIP();
 
     // Create a MongoClient without encryption enabled (referred to as client).
@@ -732,8 +726,6 @@ TEST_CASE("BSON size limits and batch splitting", "[client_side_encryption]") {
 }
 
 TEST_CASE("Views are prohibited", "[client_side_encryption]") {
-    instance::current();
-
     CLIENT_SIDE_ENCRYPTION_ENABLED_OR_SKIP();
 
     // Create a MongoClient without encryption enabled (referred to as client).
@@ -1065,8 +1057,6 @@ void _run_corpus_test(bool use_schema_map) {
 }
 
 TEST_CASE("Corpus", "[client_side_encryption]") {
-    instance::current();
-
     CLIENT_SIDE_ENCRYPTION_ENABLED_OR_SKIP();
 
     // Data keys created with AWS KMS may specify a custom endpoint to contact
@@ -1180,8 +1170,6 @@ void _run_endpoint_test(
 }
 
 TEST_CASE("Custom endpoint", "[client_side_encryption]") {
-    instance::current();
-
     CLIENT_SIDE_ENCRYPTION_ENABLED_OR_SKIP();
 
     // Data keys created with AWS KMS may specify a custom endpoint to contact
@@ -1521,8 +1509,6 @@ void bypass_mongocrypt_via_shared_library(
 }
 
 TEST_CASE("Bypass spawning mongocryptd", "[client_side_encryption]") {
-    instance::current();
-
     CLIENT_SIDE_ENCRYPTION_ENABLED_OR_SKIP();
 
     mongocxx::client setup_client{
@@ -1648,8 +1634,6 @@ class kms_tls_expired_cert_matcher : public Catch::Matchers::MatcherBase<mongocx
 };
 
 TEST_CASE("KMS TLS expired certificate", "[client_side_encryption]") {
-    instance::current();
-
     CLIENT_SIDE_ENCRYPTION_ENABLED_OR_SKIP();
 
     // Create a mongoclient without encryption.
@@ -1699,8 +1683,6 @@ class kms_tls_wrong_host_cert_matcher : public Catch::Matchers::MatcherBase<mong
 };
 
 TEST_CASE("KMS TLS wrong host certificate", "[client_side_encryption]") {
-    instance::current();
-
     CLIENT_SIDE_ENCRYPTION_ENABLED_OR_SKIP();
 
     // Create a mongoclient without encryption.
@@ -1806,8 +1788,6 @@ client_encryption make_prose_test_11_ce(
 // CDRIVER-4181: may fail due to unexpected invalid hostname errors if C Driver was built with VS
 // 2015 and uses Secure Channel (ENABLE_SSL=WINDOWS).
 TEST_CASE("KMS TLS Options Tests", "[client_side_encryption][!mayfail]") {
-    instance::current();
-
     CLIENT_SIDE_ENCRYPTION_ENABLED_OR_SKIP();
 
     auto setup_client = client(uri(), test_util::add_test_server_api());
@@ -2061,8 +2041,6 @@ std::tuple<mongocxx::client_encryption, mongocxx::client> _setup_explicit_encryp
 
 // https://github.com/mongodb/specifications/blob/master/source/client-side-encryption/tests/README.md
 TEST_CASE("Explicit Encryption", "[client_side_encryption]") {
-    instance::current();
-
     CLIENT_SIDE_ENCRYPTION_ENABLED_OR_SKIP();
 
     mongocxx::client conn{
@@ -2364,8 +2342,6 @@ TEST_CASE("Explicit Encryption", "[client_side_encryption]") {
 }
 
 TEST_CASE("Create Encrypted Collection", "[client_side_encryption]") {
-    instance::current();
-
     CLIENT_SIDE_ENCRYPTION_ENABLED_OR_SKIP();
 
     mongocxx::client conn{mongocxx::uri{}, test_util::add_test_server_api()};
@@ -2496,8 +2472,6 @@ TEST_CASE("Create Encrypted Collection", "[client_side_encryption]") {
 }
 
 TEST_CASE("Unique Index on keyAltNames", "[client_side_encryption]") {
-    instance::current();
-
     CLIENT_SIDE_ENCRYPTION_ENABLED_OR_SKIP();
 
     // 1. Create a MongoClient object (referred to as client).
@@ -2633,8 +2607,6 @@ TEST_CASE("Unique Index on keyAltNames", "[client_side_encryption]") {
 }
 
 TEST_CASE("Custom Key Material Test", "[client_side_encryption]") {
-    instance::current();
-
     CLIENT_SIDE_ENCRYPTION_ENABLED_OR_SKIP();
 
     // 1. Create a MongoClient object (referred to as client).
@@ -2969,8 +2941,6 @@ range_explicit_encryption_objects range_explicit_encryption_setup(
 
 // Prose Test 22
 TEST_CASE("Range Explicit Encryption", "[client_side_encryption]") {
-    instance::current();
-
     CLIENT_SIDE_ENCRYPTION_ENABLED_OR_SKIP();
 
     // Tests for `DecimalNoPrecision` must only run against a replica set.
@@ -3375,8 +3345,6 @@ TEST_CASE("Range Explicit Encryption", "[client_side_encryption]") {
 
 // Prose Test 23
 TEST_CASE("Range Explicit Encryption applies defaults", "[client_side_encryption]") {
-    instance::current();
-
     CLIENT_SIDE_ENCRYPTION_ENABLED_OR_SKIP();
 
     // Create a MongoClient named `keyVaultClient`.
@@ -3490,8 +3458,6 @@ TEST_CASE("Range Explicit Encryption applies defaults", "[client_side_encryption
 }
 
 TEST_CASE("16. Rewrap. Case 2: RewrapManyDataKeyOpts.provider is not optional", "[client_side_encryption]") {
-    instance::current();
-
     CLIENT_SIDE_ENCRYPTION_ENABLED_OR_SKIP();
 
     auto keyvault_client = mongocxx::client(mongocxx::uri(), test_util::add_test_server_api());

@@ -25,6 +25,10 @@ Changes prior to 3.9.0 are documented as [release notes on GitHub](https://githu
   - Apple Clang 13.1 with Xcode 13.4.1 (from Apple Clang 5.1 with Xcode 5.1).
   - MSVC 19.0.24210 with Visual Studio 2015 Update 3 (from MSVC 19.0.23506 with Visual Studio 2015 Update 1).
 
+### Deprecated
+
+- `mongocxx::v_noabi::instance::current()` is designed as "for internal use only". Please use one of the instance constructors instead.
+
 ### Removed
 
 - Support for MongoDB Server 4.2.

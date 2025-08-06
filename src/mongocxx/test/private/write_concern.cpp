@@ -26,8 +26,6 @@ using namespace mongocxx;
 TEST_CASE(
     "creation of write_concern passes universal parameters to c-driver's methods",
     "[write_concern][base][c-driver]") {
-    instance::current();
-
     SECTION("when journal is requested, mongoc_write_concern_set_journal is called with true") {
         bool journal_called = false;
         bool journal_value = false;
@@ -60,8 +58,6 @@ TEST_CASE(
 }
 
 TEST_CASE("write_concern is called with w MAJORITY", "[write_concern][base][c-driver]") {
-    instance::current();
-
     bool w_called = false, wmajority_called = false, wtag_called = false;
     auto w_instance = libmongoc::write_concern_set_w.create_instance();
     auto wmajority_instance = libmongoc::write_concern_set_wmajority.create_instance();
@@ -88,8 +84,6 @@ TEST_CASE("write_concern is called with w MAJORITY", "[write_concern][base][c-dr
 }
 
 TEST_CASE("write_concern is called with a number of necessary confirmations", "[write_concern][base][c-driver]") {
-    instance::current();
-
     bool w_called = false, wmajority_called = false, wtag_called = false;
     int w_value = 0;
     int const expected_w = 5;
@@ -122,8 +116,6 @@ TEST_CASE("write_concern is called with a number of necessary confirmations", "[
 }
 
 TEST_CASE("write_concern is called with a tag", "[write_concern][base][c-driver]") {
-    instance::current();
-
     bool w_called = false, wmajority_called = false, wtag_called = false;
     std::string wtag_value;
     std::string const expected_wtag("MultiDataCenter");

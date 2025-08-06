@@ -28,8 +28,6 @@ using namespace bsoncxx::builder::basic;
 using namespace mongocxx;
 
 TEST_CASE("find", "[find][option]") {
-    instance::current();
-
     options::find find_opts{};
 
     auto collation = make_document(kvp("locale", "en_US"));

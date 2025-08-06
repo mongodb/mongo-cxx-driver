@@ -25,8 +25,6 @@ namespace {
 using namespace bsoncxx::builder::basic;
 
 TEST_CASE("replace_one model tests", "[replace_one][model]") {
-    mongocxx::instance::current();
-
     auto filter = make_document(kvp("a", 1));
     auto replacement = make_document(kvp("b", 1));
     auto collation = make_document(kvp("locale", "en_US"));

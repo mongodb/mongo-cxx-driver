@@ -22,8 +22,6 @@ namespace {
 using namespace mongocxx;
 
 TEST_CASE("mongocxx::gridfs::downloader default constructor makes invalid downloader", "[gridfs::downloader]") {
-    instance::current();
-
     gridfs::downloader downloader;
     REQUIRE(!downloader);
     std::uint8_t c;

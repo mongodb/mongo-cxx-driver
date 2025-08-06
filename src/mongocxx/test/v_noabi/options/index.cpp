@@ -34,8 +34,6 @@ TEST_CASE("index", "[index][option]") {
     using bsoncxx::builder::basic::kvp;
     using bsoncxx::builder::basic::make_document;
 
-    instance::current();
-
     options::index idx;
     auto storage = bsoncxx::from_json(R"({"wiredTiger": {"configString": null}})");
 

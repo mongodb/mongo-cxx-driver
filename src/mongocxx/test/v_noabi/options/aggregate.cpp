@@ -31,8 +31,6 @@ using bsoncxx::builder::basic::kvp;
 using bsoncxx::builder::basic::make_document;
 
 TEST_CASE("aggregate", "[aggregate][option]") {
-    mongocxx::instance::current();
-
     mongocxx::options::aggregate agg;
 
     auto const collation = make_document(kvp("locale", "en_US"));

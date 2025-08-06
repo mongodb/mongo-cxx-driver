@@ -24,8 +24,6 @@ using namespace mongocxx;
 using namespace spec;
 
 TEST_CASE("Transactions spec automated tests", "[transactions_spec]") {
-    instance::current();
-
     // Tests that use operations that the C++ driver does not have.
     std::set<std::string> unsupported_transaction_tests = {
         // C Driver does not support count helper.

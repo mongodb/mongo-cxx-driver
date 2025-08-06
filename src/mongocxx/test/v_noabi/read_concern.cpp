@@ -23,8 +23,6 @@ namespace {
 using namespace mongocxx;
 
 TEST_CASE("valid read concern settings", "[read_concern]") {
-    instance::current();
-
     read_concern rc{};
 
     read_concern::level level_setting = read_concern::level::k_server_default;
@@ -108,8 +106,6 @@ TEST_CASE("valid read concern settings", "[read_concern]") {
 }
 
 TEST_CASE("setting the string to an unknown value changes the level to unknown", "[read_concern]") {
-    instance::current();
-
     read_concern rc{};
 
     rc.acknowledge_string("futureCompatible");
@@ -117,16 +113,12 @@ TEST_CASE("setting the string to an unknown value changes the level to unknown",
 }
 
 TEST_CASE("read_concern throws when trying to set level to k_unknown", "[read_concern]") {
-    instance::current();
-
     read_concern rc{};
 
     REQUIRE_THROWS(rc.acknowledge_level(read_concern::level::k_unknown));
 }
 
 TEST_CASE("read_concern equality operator works", "[read_concern]") {
-    instance::current();
-
     read_concern rc_a{};
     read_concern rc_b{};
 
@@ -152,8 +144,6 @@ TEST_CASE("read_concern equality operator works", "[read_concern]") {
 }
 
 TEST_CASE("read_concern inequality operator works", "[read_concern]") {
-    instance::current();
-
     read_concern rc_a{};
     read_concern rc_b{};
 
