@@ -27,7 +27,7 @@ Changes prior to 3.9.0 are documented as [release notes on GitHub](https://githu
 
 ### Deprecated
 
-- `mongocxx::v_noabi::instance::current()` is designed as "for internal use only". Please use one of the instance constructors instead.
+- `mongocxx::v_noabi::instance::current()` is "for internal use only". The `instance` constructor(s) should be used instead.
 
 ### Removed
 
