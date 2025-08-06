@@ -544,7 +544,7 @@ TEST_CASE("StringMaker", "[bsoncxx][test][v1][array][value]") {
     }
 
     SECTION("two") {
-        // {"x": 1, "y": 2}
+        // {"0": 1, "1": 2}
         std::uint8_t const bytes[] = {
             // clang-format off
             19, 0, 0, 0,
@@ -564,7 +564,7 @@ TEST_CASE("StringMaker", "[bsoncxx][test][v1][array][value]") {
     }
 
     SECTION("three") {
-        // {"x": 1, "y": 2, "z": 3}
+        // {"0": 1, "1": 2, "2": 3}
         std::uint8_t bytes[] = {
             // clang-format off
             26, 0, 0, 0,
