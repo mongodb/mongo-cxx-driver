@@ -36,14 +36,6 @@ class view::internal {
         bool is_valid = true);
 
     static v1::stdx::optional<bson_iter_t> to_bson_iter(view const& v);
-
-   private:
-    friend view;
-
-    static view::impl const& impl(view const& v);
-
-    static view::impl const* impl(view const* v);
-    static view::impl* impl(view* v);
 };
 
 v1::stdx::optional<bson_iter_t> to_bson_iter(view const& v);

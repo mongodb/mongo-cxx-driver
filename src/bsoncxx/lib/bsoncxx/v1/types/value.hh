@@ -30,15 +30,6 @@ class value::internal {
    public:
     static v1::stdx::optional<value>
     make(std::uint8_t const* raw, std::uint32_t length, std::uint32_t offset, std::uint32_t keylen);
-
-   private:
-    friend value;
-
-    static value::impl const& impl(value const& self);
-    static value::impl const* impl(value const* self);
-
-    static value::impl& impl(value& self);
-    static value::impl* impl(value* self);
 };
 
 } // namespace types

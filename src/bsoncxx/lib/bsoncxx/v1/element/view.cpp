@@ -149,6 +149,18 @@ class alignas(BSONCXX_PRIVATE_MAX_ALIGN_T) view::impl {
         }
         throw v1::exception{code::invalid_data};
     }
+
+    static impl const& with(view const& v) {
+        return *reinterpret_cast<view::impl const*>(v._storage.data());
+    }
+
+    static impl const* with(view const* v) {
+        return reinterpret_cast<view::impl const*>(v->_storage.data());
+    }
+
+    static impl* with(view* v) {
+        return reinterpret_cast<view::impl*>(v->_storage.data());
+    }
 };
 
 void view::impl::check() const {
@@ -175,11 +187,11 @@ void view::impl::check() const {
 view::~view() = default;
 
 view::view(view const& other) noexcept {
-    new (internal::impl(this)) impl{internal::impl(other)};
+    new (impl::with(this)) impl{impl::with(other)};
 }
 
 view& view::operator=(view const& other) noexcept {
-    *internal::impl(this) = internal::impl(other);
+    *impl::with(this) = impl::with(other);
     return *this;
 }
 
@@ -192,53 +204,53 @@ view::view(impl i) {
 }
 
 view::operator bool() const {
-    return internal::impl(this)->is_valid();
+    return impl::with(this)->is_valid();
 }
 
 std::uint8_t const* view::raw() const {
-    return internal::impl(this)->raw();
+    return impl::with(this)->raw();
 }
 
 std::uint32_t view::length() const {
-    return internal::impl(this)->length();
+    return impl::with(this)->length();
 }
 
 std::uint32_t view::offset() const {
-    return internal::impl(this)->offset();
+    return impl::with(this)->offset();
 }
 
 std::uint32_t view::keylen() const {
-    return internal::impl(this)->keylen();
+    return impl::with(this)->keylen();
 }
 
 v1::types::id view::type_id() const {
-    return internal::impl(this)->type_id();
+    return impl::with(this)->type_id();
 }
 
 v1::stdx::string_view view::key() const {
-    auto const iter = internal::impl(this)->iter();
+    auto const iter = impl::with(this)->iter();
     return bson_iter_key(&iter);
 }
 
 #pragma push_macro("X")
 #undef X
-#define X(_name, _value)                                        \
-    v1::types::b_##_name view::get_##_name() const {            \
-        return internal::impl(this)->type_view().get_##_name(); \
+#define X(_name, _value)                                       \
+    v1::types::b_##_name view::get_##_name() const {           \
+        return impl::with(this)->type_view().get_##_name(); \
     }
 BSONCXX_V1_TYPES_XMACRO(X)
 #pragma pop_macro("X")
 
 v1::types::view view::type_view() const {
-    return internal::impl(this)->type_view();
+    return impl::with(this)->type_view();
 }
 
 v1::types::value view::type_value() const {
-    return internal::impl(this)->type_value();
+    return impl::with(this)->type_value();
 }
 
 v1::element::view view::operator[](v1::stdx::string_view key) const {
-    auto& impl = internal::impl(*this);
+    auto& impl = impl::with(*this);
     if (!impl.is_valid() || impl.type_id_unchecked() != v1::types::id::k_document) {
         return v1::element::view{impl.to_invalid()};
     }
@@ -246,7 +258,7 @@ v1::element::view view::operator[](v1::stdx::string_view key) const {
 }
 
 v1::element::view view::operator[](std::uint32_t idx) const {
-    auto& impl = internal::impl(*this);
+    auto& impl = impl::with(*this);
     if (!impl.is_valid() || impl.type_id_unchecked() != v1::types::id::k_array) {
         return view{impl.to_invalid()};
     }
@@ -324,19 +336,7 @@ view view::internal::make(
 }
 
 v1::stdx::optional<bson_iter_t> view::internal::to_bson_iter(view const& v) {
-    return internal::impl(v).iter_unchecked();
-}
-
-view::impl const& view::internal::impl(view const& self) {
-    return *reinterpret_cast<view::impl const*>(self._storage.data());
-}
-
-view::impl const* view::internal::impl(view const* self) {
-    return reinterpret_cast<view::impl const*>(self->_storage.data());
-}
-
-view::impl* view::internal::impl(view* self) {
-    return reinterpret_cast<view::impl*>(self->_storage.data());
+    return impl::with(v).iter_unchecked();
 }
 
 v1::stdx::optional<bson_iter_t> to_bson_iter(view const& v) {

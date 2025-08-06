@@ -105,6 +105,22 @@ class alignas(BSONCXX_PRIVATE_MAX_ALIGN_T) value::impl {
     auto v() -> decltype((_value.value)) {
         return _value.value;
     }
+
+    static impl const& with(value const& self) {
+        return *reinterpret_cast<value::impl const*>(self._storage.data());
+    }
+
+    static impl const* with(value const* self) {
+        return reinterpret_cast<value::impl const*>(self->_storage.data());
+    }
+
+    static impl& with(value& self) {
+        return *reinterpret_cast<value::impl*>(self._storage.data());
+    }
+
+    static impl* with(value* self) {
+        return reinterpret_cast<value::impl*>(self->_storage.data());
+    }
 };
 
 value::impl::~impl() {
@@ -118,24 +134,24 @@ value::impl::~impl() {
 }
 
 value::~value() {
-    internal::impl(this)->~impl();
+    impl::with(this)->~impl();
 }
 
 value::value(value&& other) noexcept {
-    new (internal::impl(this)) impl{std::move(internal::impl(other))};
+    new (impl::with(this)) impl{std::move(impl::with(other))};
 }
 
 value& value::operator=(value&& other) noexcept {
-    *internal::impl(this) = std::move(internal::impl(other));
+    *impl::with(this) = std::move(impl::with(other));
     return *this;
 }
 
 value::value(value const& other) {
-    new (internal::impl(this)) impl{internal::impl(other)};
+    new (impl::with(this)) impl{impl::with(other)};
 }
 
 value& value::operator=(value const& other) {
-    *internal::impl(this) = internal::impl(other);
+    *impl::with(this) = impl::with(other);
     return *this;
 }
 
@@ -186,8 +202,8 @@ value::value(v1::types::view const& v) : value{} {
 // BSONCXX_V1_TYPES_XMACRO: update below.
 
 value::value(v1::types::b_double const v) : value{} {
-    internal::impl(this)->t() = BSON_TYPE_DOUBLE;
-    internal::impl(this)->v().v_double = v;
+    impl::with(this)->t() = BSON_TYPE_DOUBLE;
+    impl::with(this)->v().v_double = v;
 }
 
 value::value(v1::types::b_string const v) : value{} {
@@ -196,9 +212,9 @@ value::value(v1::types::b_string const v) : value{} {
     }
     auto const len = static_cast<std::uint32_t>(v.value.size());
 
-    internal::impl(this)->t() = BSON_TYPE_UTF8;
+    impl::with(this)->t() = BSON_TYPE_UTF8;
 
-    auto& v_utf8 = internal::impl(this)->v().v_utf8;
+    auto& v_utf8 = impl::with(this)->v().v_utf8;
 
     v_utf8.str = to_bson_copy(v.value);
     v_utf8.len = len;
@@ -208,9 +224,9 @@ value::value(v1::types::b_document const v) : value{} {
     // Range is guaranteed by bsoncxx::v1::document::view::raw_size().
     auto const data_len = static_cast<std::uint32_t>(v.value.size());
 
-    internal::impl(this)->t() = BSON_TYPE_DOCUMENT;
+    impl::with(this)->t() = BSON_TYPE_DOCUMENT;
 
-    auto& v_doc = internal::impl(this)->v().v_doc;
+    auto& v_doc = impl::with(this)->v().v_doc;
 
     v_doc.data = to_bson_copy(v.value.data(), v.value.size());
     v_doc.data_len = data_len;
@@ -220,18 +236,18 @@ value::value(v1::types::b_array const v) : value{} {
     // Range is guaranteed by bsoncxx::v1::document::view::raw_size().
     auto const data_len = static_cast<std::uint32_t>(v.value.size());
 
-    internal::impl(this)->t() = BSON_TYPE_ARRAY;
+    impl::with(this)->t() = BSON_TYPE_ARRAY;
 
-    auto& v_doc = internal::impl(this)->v().v_doc;
+    auto& v_doc = impl::with(this)->v().v_doc;
 
     v_doc.data = to_bson_copy(v.value.data(), v.value.size());
     v_doc.data_len = data_len;
 }
 
 value::value(v1::types::b_binary const v) : value{} {
-    internal::impl(this)->t() = BSON_TYPE_BINARY;
+    impl::with(this)->t() = BSON_TYPE_BINARY;
 
-    auto& v_binary = internal::impl(this)->v().v_binary;
+    auto& v_binary = impl::with(this)->v().v_binary;
 
     v_binary.subtype = static_cast<bson_subtype_t>(v.subtype);
     v_binary.data = to_bson_copy(v.bytes, v.size);
@@ -239,32 +255,32 @@ value::value(v1::types::b_binary const v) : value{} {
 }
 
 value::value(v1::types::b_undefined) : value{} {
-    internal::impl(this)->t() = BSON_TYPE_UNDEFINED;
+    impl::with(this)->t() = BSON_TYPE_UNDEFINED;
 }
 
 value::value(v1::types::b_oid const v) : value{} {
-    internal::impl(this)->t() = BSON_TYPE_OID;
-    std::memcpy(internal::impl(this)->v().v_oid.bytes, v.value.bytes(), v.value.size());
+    impl::with(this)->t() = BSON_TYPE_OID;
+    std::memcpy(impl::with(this)->v().v_oid.bytes, v.value.bytes(), v.value.size());
 }
 
 value::value(v1::types::b_bool const v) : value{} {
-    internal::impl(this)->t() = BSON_TYPE_BOOL;
-    internal::impl(this)->v().v_bool = v.value;
+    impl::with(this)->t() = BSON_TYPE_BOOL;
+    impl::with(this)->v().v_bool = v.value;
 }
 
 value::value(v1::types::b_date const v) : value{} {
-    internal::impl(this)->t() = BSON_TYPE_DATE_TIME;
-    internal::impl(this)->v().v_datetime = v.value.count();
+    impl::with(this)->t() = BSON_TYPE_DATE_TIME;
+    impl::with(this)->v().v_datetime = v.value.count();
 }
 
 value::value(v1::types::b_null) {
-    (new (internal::impl(this)) impl{})->t() = BSON_TYPE_NULL;
+    (new (impl::with(this)) impl{})->t() = BSON_TYPE_NULL;
 }
 
 value::value(v1::types::b_regex const v) : value{} {
-    internal::impl(this)->t() = BSON_TYPE_REGEX;
+    impl::with(this)->t() = BSON_TYPE_REGEX;
 
-    auto& v_regex = internal::impl(this)->v().v_regex;
+    auto& v_regex = impl::with(this)->v().v_regex;
 
     v_regex.regex = to_bson_copy(v.regex);
     v_regex.options = v.options.empty() ? nullptr : to_bson_copy(v.options);
@@ -276,9 +292,9 @@ value::value(v1::types::b_dbpointer const v) : value{} {
     }
     auto const collection_len = static_cast<std::uint32_t>(v.collection.size());
 
-    internal::impl(this)->t() = BSON_TYPE_DBPOINTER;
+    impl::with(this)->t() = BSON_TYPE_DBPOINTER;
 
-    auto& v_dbpointer = internal::impl(this)->v().v_dbpointer;
+    auto& v_dbpointer = impl::with(this)->v().v_dbpointer;
 
     v_dbpointer.collection = to_bson_copy(v.collection);
     v_dbpointer.collection_len = collection_len;
@@ -291,9 +307,9 @@ value::value(v1::types::b_code const v) : value{} {
     }
     auto const code_len = static_cast<std::uint32_t>(v.code.size());
 
-    internal::impl(this)->t() = BSON_TYPE_CODE;
+    impl::with(this)->t() = BSON_TYPE_CODE;
 
-    auto& v_code = internal::impl(this)->v().v_code;
+    auto& v_code = impl::with(this)->v().v_code;
 
     v_code.code = to_bson_copy(v.code);
     v_code.code_len = code_len;
@@ -305,9 +321,9 @@ value::value(v1::types::b_symbol const v) : value{} {
     }
     auto const len = static_cast<std::uint32_t>(v.symbol.size());
 
-    internal::impl(this)->t() = BSON_TYPE_SYMBOL;
+    impl::with(this)->t() = BSON_TYPE_SYMBOL;
 
-    auto& v_symbol = internal::impl(this)->v().v_symbol;
+    auto& v_symbol = impl::with(this)->v().v_symbol;
 
     v_symbol.symbol = to_bson_copy(v.symbol);
     v_symbol.len = len;
@@ -322,9 +338,9 @@ value::value(v1::types::b_codewscope const v) : value{} {
     // Range is guaranteed by bsoncxx::v1::document::view::raw_size().
     auto const scope_len = static_cast<std::uint32_t>(v.scope.size());
 
-    internal::impl(this)->t() = BSON_TYPE_CODEWSCOPE;
+    impl::with(this)->t() = BSON_TYPE_CODEWSCOPE;
 
-    auto& v_codewscope = internal::impl(this)->v().v_codewscope;
+    auto& v_codewscope = impl::with(this)->v().v_codewscope;
 
     v_codewscope.code = to_bson_copy(v.code);
     v_codewscope.code_len = code_len;
@@ -333,39 +349,39 @@ value::value(v1::types::b_codewscope const v) : value{} {
 }
 
 value::value(v1::types::b_int32 const v) : value{} {
-    internal::impl(this)->t() = BSON_TYPE_INT32;
-    internal::impl(this)->v().v_int32 = v.value;
+    impl::with(this)->t() = BSON_TYPE_INT32;
+    impl::with(this)->v().v_int32 = v.value;
 }
 
 value::value(v1::types::b_timestamp const v) : value{} {
-    internal::impl(this)->t() = BSON_TYPE_TIMESTAMP;
+    impl::with(this)->t() = BSON_TYPE_TIMESTAMP;
 
-    auto& v_timestamp = internal::impl(this)->v().v_timestamp;
+    auto& v_timestamp = impl::with(this)->v().v_timestamp;
 
     v_timestamp.timestamp = v.timestamp;
     v_timestamp.increment = v.increment;
 }
 
 value::value(v1::types::b_int64 const v) : value{} {
-    internal::impl(this)->t() = BSON_TYPE_INT64;
-    internal::impl(this)->v().v_int64 = v.value;
+    impl::with(this)->t() = BSON_TYPE_INT64;
+    impl::with(this)->v().v_int64 = v.value;
 }
 
 value::value(v1::types::b_decimal128 const v) : value{} {
-    internal::impl(this)->t() = BSON_TYPE_DECIMAL128;
+    impl::with(this)->t() = BSON_TYPE_DECIMAL128;
 
-    auto& v_decimal128 = internal::impl(this)->v().v_decimal128;
+    auto& v_decimal128 = impl::with(this)->v().v_decimal128;
 
     v_decimal128.high = v.value.high();
     v_decimal128.low = v.value.low();
 }
 
 value::value(v1::types::b_maxkey) : value{} {
-    internal::impl(this)->t() = BSON_TYPE_MAXKEY;
+    impl::with(this)->t() = BSON_TYPE_MAXKEY;
 }
 
 value::value(v1::types::b_minkey) : value{} {
-    internal::impl(this)->t() = BSON_TYPE_MINKEY;
+    impl::with(this)->t() = BSON_TYPE_MINKEY;
 }
 
 // BSONCXX_V1_TYPES_XMACRO: update above.
@@ -379,11 +395,11 @@ value::value(std::uint8_t const* data, std::size_t size, v1::types::binary_subty
 }
 
 v1::types::id value::type_id() const {
-    return static_cast<v1::types::id>(internal::impl(this)->t());
+    return static_cast<v1::types::id>(impl::with(this)->t());
 }
 
 v1::types::view value::view() const {
-    return v1::types::view::internal::make(internal::impl(this)->_value);
+    return v1::types::view::internal::make(impl::with(this)->_value);
 }
 
 std::error_category const& value::error_category() {
@@ -456,24 +472,8 @@ value::internal::make(std::uint8_t const* raw, std::uint32_t length, std::uint32
     }
 
     value ret;
-    bson_value_copy(bson_iter_value(&iter), &internal::impl(ret)._value);
+    bson_value_copy(bson_iter_value(&iter), &impl::with(ret)._value);
     return ret;
-}
-
-value::impl const& value::internal::impl(value const& self) {
-    return *reinterpret_cast<value::impl const*>(self._storage.data());
-}
-
-value::impl const* value::internal::impl(value const* self) {
-    return reinterpret_cast<value::impl const*>(self->_storage.data());
-}
-
-value::impl& value::internal::impl(value& self) {
-    return *reinterpret_cast<value::impl*>(self._storage.data());
-}
-
-value::impl* value::internal::impl(value* self) {
-    return reinterpret_cast<value::impl*>(self->_storage.data());
 }
 
 } // namespace types
