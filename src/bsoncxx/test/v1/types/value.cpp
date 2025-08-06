@@ -110,13 +110,6 @@ TEST_CASE("exceptions", "[bsoncxx][v1][types][value]") {
     }
 
     SECTION("invalid_length_u32") {
-#pragma push_macro("X")
-#undef X
-#define X(_name, _value) value{b_##_name{}},
-
-        value values[] = {BSONCXX_V1_TYPES_XMACRO(X)};
-#pragma pop_macro("X")
-
         try {
             auto const size = std::size_t{UINT32_MAX} + 1u;
             std::unique_ptr<unsigned char[]> data{new unsigned char[size]}; // make_unique_for_overwrite.
