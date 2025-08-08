@@ -38,8 +38,6 @@ TEST_CASE("Transaction tests", "[transactions]") {
 
     if (!test_util::is_replica_set()) {
         SKIP("transactions tests require replica set");
-    } else if (test_util::get_max_wire_version() < 7) {
-        SKIP("transactions tests require max wire version is >= 7");
     }
 
     // The test run in first 3 SECTIONs below
@@ -216,10 +214,6 @@ TEST_CASE("Transaction tests", "[transactions]") {
 
 TEST_CASE("Transactions Mongos Pinning Prose Tests", "[transactions]") {
     instance::current();
-
-    if (test_util::compare_versions(test_util::get_server_version(), "4.1.6") < 0) {
-        SKIP("requires server 4.1.6+");
-    }
 
     if (test_util::get_topology() != "sharded") {
         SKIP("requires sharded cluster topology");

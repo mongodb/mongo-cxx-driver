@@ -231,7 +231,7 @@ std::int32_t compare_versions(std::string version1, std::string version2) {
     return 0;
 }
 
-bool newer_than(std::string version) {
+bool server_version_is_at_least(std::string version) {
     auto server_version = get_server_version();
     return (compare_versions(server_version, version) >= 0);
 }
