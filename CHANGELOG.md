@@ -28,6 +28,22 @@ Changes prior to 3.9.0 are documented as [release notes on GitHub](https://githu
 ### Deprecated
 
 - `mongocxx::v_noabi::instance::current()` is "for internal use only". The `instance` constructor(s) should be used instead.
+  - Creating an `instance` object in the scope of `main()`, or in an appropriate (non-global) scope such that its (non-static) lifetime is valid for the duration of all other mongocxx library operations, is recommended over the following workarounds.
+  - If only one call to `current()` is present within an application, it may be replaced with a static local variable:
+    ```cpp
+    // Before:
+    mongocxx::instance::current();
+
+    // After:
+    static mongocxx::instance instance;
+    ```
+  - If there are calls to `current()` present within an application, they may be replaced with a call to a user-defined function equivalent to `current()`:
+    ```cpp
+    void user_provided::mongocxx_instance() {
+      static mongocxx::instance instance;
+      (void)instance; // or return.
+    }
+    ```
 
 ### Removed
 
