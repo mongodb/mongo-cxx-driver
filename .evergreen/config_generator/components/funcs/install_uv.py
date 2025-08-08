@@ -15,7 +15,7 @@ class InstallUV(Function):
                 set -o errexit
                 set -o pipefail
 
-                version="0.8.3"
+                version="0.8.6"
 
                 if [[ ! -n "${MONGO_CXX_DRIVER_CACHE_DIR}" ]]; then
                     echo "MONGO_CXX_DRIVER_CACHE_DIR is not defined!" 1>&2
@@ -25,10 +25,12 @@ class InstallUV(Function):
                 uv_install_dir="${MONGO_CXX_DRIVER_CACHE_DIR}/uv-$version"
                 mkdir -p "$uv_install_dir"
 
-                if ! command -v "$uv_install_dir/uv" 2>/dev/null; then
+                # Install if the binary is missing or the incorrect version.
+                if ! (command -v "$uv_install_dir/uv" >/dev/null && "$uv_install_dir/uv" --version 2>/dev/null | grep "$version"); then
                     script="$(mktemp)"
                     cp -f mongo-cxx-driver/.evergreen/scripts/uv-installer.sh "$script"
                     chmod +x "$script"
+                    # Always patch the install script so it validates checksums.
                     (
                       . mongo-cxx-driver/.evergreen/scripts/patch-uv-installer.sh
                       patch_uv_installer "$script" "$version"

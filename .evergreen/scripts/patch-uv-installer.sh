@@ -34,24 +34,24 @@ patch_uv_installer() {
 
     # The output of the `download_checksums` helper function.
     checksums=(
-        9ebfe9f3b51187932ef97270b689da48261acacadd6ea7018d2cc62719c86ffe  uv-aarch64-apple-darwin.tar.gz
-        6e0692b817c5d6cfddad13ad177e866e36d95e8d32b4a296a49d937fdcda18d3 *uv-aarch64-pc-windows-msvc.zip
-        e82b5a3eb19e5087a6ea92800b0402f60378bd395e3483acd0b46124128ab71f  uv-aarch64-unknown-linux-gnu.tar.gz
-        05707835aadb8d0dfacf64a50dc31eb77fb11d1773b13ddd78d2404d43be3b7f  uv-aarch64-unknown-linux-musl.tar.gz
-        63f09a167470e40f5a7afce7ba726fa31d700042107215a8f46572a617b2ba64  uv-arm-unknown-linux-musleabihf.tar.gz
-        ca3ab5110a248febf3af56ca8e417add5a164228d8861d2f6439d6c77654ad24  uv-armv7-unknown-linux-gnueabihf.tar.gz
-        79b9f2f8abf64b93aaf48f87b159bc34e73b92428c6424a9e633f481449bc8be  uv-armv7-unknown-linux-musleabihf.tar.gz
-        5d272849a94b7ad36711f336d745e08ed3732042fc51f5c7f28bfc4e95463615 *uv-i686-pc-windows-msvc.zip
-        5ca9dcdd8aba4c59266536c00453f3815ccf4852a1bef78f181f4ae43726e742  uv-i686-unknown-linux-gnu.tar.gz
-        7a7eb903b673c0a0fa8282e12d2130fb63c1f0e574b1b8eb24ac63503db5db9e  uv-i686-unknown-linux-musl.tar.gz
-        ad94079c0aa352730e5656246ecb8fd6cb5c7c1bbcc100954020f32128d6b0de  uv-powerpc64-unknown-linux-gnu.tar.gz
-        27ccd00f3c617b59d6977e48612dc5fe49d15c1181bf995863350e78002e54ac  uv-powerpc64le-unknown-linux-gnu.tar.gz
-        897257393ca612058bb22691fab3a45480d3f7fc1df5bb968696576d7d98d6c1  uv-riscv64gc-unknown-linux-gnu.tar.gz
-        d148aebfc019aa14c686713fb0a391bb700290ecdf2903c2fdab0009182d880b  uv-s390x-unknown-linux-gnu.tar.gz
-        77eac9622f76ad89a8c59b31a96277aa61eb290d2949c69ab2061076471aeda2  uv-x86_64-apple-darwin.tar.gz
-        4ca84e28b08f48255f95156c5987d61a5e4c51a43372708bc6d84e994eeb7bdb *uv-x86_64-pc-windows-msvc.zip
-        427c27ed5f87bf91aa045cf459ea34d348ed6377c62c3c054f1b4046b2f83fe2  uv-x86_64-unknown-linux-gnu.tar.gz
-        bfbe34caae328355b720ad0f667be99990b1b93721c8cb726e4a502796eb6d68  uv-x86_64-unknown-linux-musl.tar.gz
+        15269226c753f01137b5a35c79e59ab46d8aab25a242641fdc4003a6d0a831ff  uv-aarch64-apple-darwin.tar.gz
+        a2891f1f1c56e717115579da655951007e2e5e498535b473d9f7cbffe7369e1a *uv-aarch64-pc-windows-msvc.zip
+        6fd314ca589788265ff99ec754bd2fa2a5d090ef592ddbbe8ded6b141615a491  uv-aarch64-unknown-linux-gnu.tar.gz
+        d78076c7e0dfcd3580736c11e009ef856bd13015f00406e3ded1fc895e2104ba  uv-aarch64-unknown-linux-musl.tar.gz
+        87d33a579cc2ee986e3163bb5de1791c6052ef8716d5fb8d8bf73aa2e5f1bf66  uv-arm-unknown-linux-musleabihf.tar.gz
+        4139d74dfe3192bc71dacd3cf0cdf6a006d121db2c4d841e08f369761baaf00e  uv-armv7-unknown-linux-gnueabihf.tar.gz
+        5d4d117cebddc7dbdbf6e1410c65868f113a75700acac77eed28dfdc0411c113  uv-armv7-unknown-linux-musleabihf.tar.gz
+        4eaa185b61f9cfe73ab7534de7282e51cc0f6bf47361429bdcbb6a5f3264f6e4 *uv-i686-pc-windows-msvc.zip
+        7fb9324cfb0c57a9b9145e73598794c7bc4df01f50730bd926d4ab10d4fc59ff  uv-i686-unknown-linux-gnu.tar.gz
+        3c2e2d69e8da093df76ffffa9758669c33ae47624f73d06ec2a83a363f17fbd4  uv-i686-unknown-linux-musl.tar.gz
+        264dbfddd58cdbd35b33ea24dd802a3409eae1d4516d057bdff88df2e257eaa2  uv-powerpc64-unknown-linux-gnu.tar.gz
+        d34c6d7df2ed9e9739bc0313875e602a943b17fccbf1127f824a5ff9a3253bb5  uv-powerpc64le-unknown-linux-gnu.tar.gz
+        6bcd5a72977a4362f042cc2568960b5a42c1f13240ada6b1cce6aa2f6d6a3e42  uv-riscv64gc-unknown-linux-gnu.tar.gz
+        8b4372280249038ea5824937d6e1ca7e2192061bd38f3362200133ff55cbb9c3  uv-s390x-unknown-linux-gnu.tar.gz
+        4b1da363d8913a85a4a40df6620ae800b16c62beb54f60b1d336432644cb12bb  uv-x86_64-apple-darwin.tar.gz
+        f7ed402ea1e4d7fb2b2490e1a097e9849bfdaaa689521d290bdce5478db0428f *uv-x86_64-pc-windows-msvc.zip
+        5429c9b96cab65198c2e5bfe83e933329aa16303a0369d5beedc71785a4a2f36  uv-x86_64-unknown-linux-gnu.tar.gz
+        0d89cffae3ad1c4ae2d4da06f71ad4539974185a31f7c196a6151b400bf84039  uv-x86_64-unknown-linux-musl.tar.gz
     )
 
     # Substitution:
