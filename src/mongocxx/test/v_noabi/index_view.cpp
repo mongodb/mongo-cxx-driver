@@ -360,7 +360,7 @@ TEST_CASE("drop_one", "[index_view]") {
         REQUIRE(std::distance(cursor.begin(), cursor.end()) == 1);
 
         // SERVER-90152: "dropIndex should be idempotent"
-        if (!server_version_is_at_least("8.3")) {
+        if (!test_util::server_version_is_at_least("8.3")) {
             REQUIRE_THROWS_AS(indexes.drop_one("foo"), operation_exception);
         }
     }
