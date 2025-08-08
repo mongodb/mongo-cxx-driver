@@ -100,22 +100,8 @@ fi
 export DRIVERS_TOOLS
 popd # "${working_dir:?}/../drivers-evergreen-tools"
 
-# Obtain preferred build tools.
-export UV_TOOL_DIR UV_TOOL_BIN_DIR
-if [[ "${OSTYPE:?}" == cygwin ]]; then
-  UV_TOOL_DIR="$(cygpath -aw "$(pwd)/uv-tool")"
-  UV_TOOL_BIN_DIR="$(cygpath -aw "$(pwd)/uv-bin")"
-else
-  UV_TOOL_DIR="$(pwd)/uv-tool"
-  UV_TOOL_BIN_DIR="$(pwd)/uv-bin"
-fi
-PATH="${UV_TOOL_BIN_DIR:?}:${UV_INSTALL_DIR:?}:${PATH:-}"
-uv tool install -q cmake
-[[ "${distro_id:?}" == rhel* ]] && PATH="${PATH:-}:/opt/mongodbtoolchain/v4/bin" || uv tool install -q ninja
-PATH="${PATH:-}:/opt/mongodbtoolchain/v4/bin" # For ninja and llvm-symbolizer.
-
-cmake --version | head -n 1
-echo "ninja version: $(ninja --version)"
+. .evergreen/scripts/install-build-tools.sh
+install_build_tools
 
 # Use ccache if available.
 if [[ -f "${mongoc_dir:?}/.evergreen/scripts/find-ccache.sh" ]]; then

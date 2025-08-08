@@ -9,18 +9,8 @@ set -o pipefail
 
 mongoc_prefix="$(pwd)/../mongoc"
 
-# Obtain preferred build tools.
-export UV_TOOL_DIR UV_TOOL_BIN_DIR
-UV_TOOL_DIR="$(pwd)/uv-tool"
-UV_TOOL_BIN_DIR="$(pwd)/uv-bin"
-PATH="${UV_TOOL_BIN_DIR:?}:${UV_INSTALL_DIR:?}:${PATH:-}"
-uv tool install -q cmake
-[[ "${distro_id:?}" == rhel* ]] && PATH="${PATH:-}:/opt/mongodbtoolchain/v4/bin" || uv tool install -q ninja
-export CMAKE_GENERATOR
-CMAKE_GENERATOR="Ninja"
-
-cmake --version | head -n 1
-echo "ninja version: $(ninja --version)"
+. .evergreen/scripts/install-build-tools.sh
+install_build_tools
 
 # Use ccache if available.
 if [[ -f "../mongoc/.evergreen/scripts/find-ccache.sh" ]]; then

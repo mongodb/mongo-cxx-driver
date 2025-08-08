@@ -30,21 +30,8 @@ mkdir "${mongoc_dir}"
 curl -sS -o mongo-c-driver.tar.gz -L "https://api.github.com/repos/mongodb/mongo-c-driver/tarball/${mongoc_version}"
 tar xzf mongo-c-driver.tar.gz --directory "${mongoc_dir}" --strip-components=1
 
-# Obtain preferred build tools.
-export UV_TOOL_DIR UV_TOOL_BIN_DIR
-if [[ "${OSTYPE:?}" == cygwin ]]; then
-  UV_TOOL_DIR="$(cygpath -aw "$(pwd)/uv-tool")"
-  UV_TOOL_BIN_DIR="$(cygpath -aw "$(pwd)/uv-bin")"
-else
-  UV_TOOL_DIR="$(pwd)/uv-tool"
-  UV_TOOL_BIN_DIR="$(pwd)/uv-bin"
-fi
-PATH="${UV_TOOL_BIN_DIR:?}:${UV_INSTALL_DIR:?}:${PATH:-}"
-uv tool install -q cmake
-[[ "${distro_id:?}" == rhel* ]] && PATH="${PATH:-}:/opt/mongodbtoolchain/v4/bin" || uv tool install -q ninja
-
-cmake --version | head -n 1
-echo "ninja version: $(ninja --version)"
+. mongo-cxx-driver/.evergreen/scripts/install-build-tools.sh
+install_build_tools
 
 # Default CMake generator to use if not already provided.
 declare CMAKE_GENERATOR CMAKE_GENERATOR_PLATFORM

@@ -17,19 +17,12 @@ if ! command -V parallel >/dev/null; then
   sudo yum install -q -y parallel
 fi
 
-# Obtain preferred build tools.
-export UV_TOOL_DIR UV_TOOL_BIN_DIR
-UV_TOOL_DIR="$(pwd)/uv-tool"
-UV_TOOL_BIN_DIR="$(pwd)/uv-bin"
-PATH="${UV_TOOL_BIN_DIR:?}:${UV_INSTALL_DIR:?}:${PATH:-}"
-uv tool install -q cmake
-uv tool install -q clang-tidy
-[[ "${distro_id:?}" == rhel* ]] && PATH="${PATH:-}:/opt/mongodbtoolchain/v4/bin" || uv tool install -q ninja
-export CMAKE_GENERATOR
-CMAKE_GENERATOR="Ninja"
+# shellcheck source=/dev/null
+. .evergreen/scripts/install-build-tools.sh
+install_build_tools
+export CMAKE_GENERATOR="Ninja"
 
-cmake --version | head -n 1
-echo "ninja version: $(ninja --version)"
+uv tool install -q clang-tidy
 clang-tidy --version
 
 # Use ccache if available.
