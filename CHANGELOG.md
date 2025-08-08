@@ -37,11 +37,11 @@ Changes prior to 3.9.0 are documented as [release notes on GitHub](https://githu
     // After:
     static mongocxx::instance instance;
     ```
-  - If there are _multiple_ calls to `current()` present within an application, they may be replaced with a call to a user-defined function whose behavior is equivalent to `current()`:
+  - If there are _multiple_ calls to `current()` present within an application, they may be replaced with a call to a user-defined function containing the `instance` static local variable:
     ```cpp
-    void user_provided::mongocxx_instance() {
+    mongocxx::instance& user_defined::mongocxx_instance_fn() {
       static mongocxx::instance instance;
-      (void)instance; // or return.
+      return instance;
     }
     ```
 
