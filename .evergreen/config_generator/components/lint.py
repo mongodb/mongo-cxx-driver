@@ -19,7 +19,9 @@ class Lint(Function):
         command_type=EvgCommandType.TEST,
         working_dir='mongo-cxx-driver',
         env={'DRYRUN': '1'},
-        script='${UV_INSTALL_DIR}/uv run --frozen etc/clang-format-all.sh',
+        script='''\
+            PATH="${UV_INSTALL_DIR}:$PATH" uv run --frozen etc/clang-format-all.sh
+        ''',
     )
 
 

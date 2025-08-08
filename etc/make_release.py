@@ -449,10 +449,9 @@ def build_distribution(release_tag, release_version, c_driver_dir, quiet, skip_d
         click.echo('Clear ./build with "git clean -xdf ./build"', err=True)
         return None
 
-    run_shell_script('. .evergreen/scripts/find-cmake-old.sh;'
-                     'cd build;'
+    run_shell_script('cd build;'
                      'echo ' + release_version + ' > VERSION_CURRENT;'
-                     '${CMAKE} -DCMAKE_BUILD_TYPE=Release -DENABLE_TESTS=ON '
+                     'cmake -DCMAKE_BUILD_TYPE=Release -DENABLE_TESTS=ON '
                      '-DCMAKE_PREFIX_PATH="' + c_driver_dir + '" '
                      '-DENABLE_UNINSTALL=ON ..;'
                      'cmake --build . --target dist')

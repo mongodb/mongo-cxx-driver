@@ -55,8 +55,8 @@ def tasks():
             tags=[TAG, distro_name],
             run_on=distro.name,
             commands=[
-                InstallCDriver.call(),
                 InstallUV.call(),
+                InstallCDriver.call(),
                 Compile.call(build_type='Debug', vars={'ENABLE_TESTS': 'ON'}),
                 TestSearchIndexHelpers.call(),
             ],
