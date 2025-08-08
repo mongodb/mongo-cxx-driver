@@ -3,18 +3,7 @@ echo
 
 set INSTALL_DIR=%CD%\build\install
 
-echo > %INSTALL_DIR%\lib\canary.txt
-
 dir %INSTALL_DIR%\share\mongo-cxx-driver
-
-set CMAKE="C:\cmake\bin\cmake.exe"
-
-pushd build
-%CMAKE% --build . --target uninstall
-if errorlevel 1 (
-  exit /B 1
-)
-popd
 
 dir %INSTALL_DIR% /s
 
