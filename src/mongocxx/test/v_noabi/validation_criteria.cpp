@@ -31,8 +31,6 @@ using builder::basic::kvp;
 using builder::basic::make_document;
 
 TEST_CASE("validation_criteria accessors/mutators", "[validation_criteria]") {
-    instance::current();
-
     validation_criteria criteria;
 
     auto doc = make_document(kvp("email", make_document(kvp("$exists", true))));
@@ -43,8 +41,6 @@ TEST_CASE("validation_criteria accessors/mutators", "[validation_criteria]") {
 }
 
 TEST_CASE("validation_criteria equals", "[validation_criteria]") {
-    instance::current();
-
     validation_criteria criteria1;
     validation_criteria criteria2;
 
@@ -52,8 +48,6 @@ TEST_CASE("validation_criteria equals", "[validation_criteria]") {
 }
 
 TEST_CASE("validation_criteria inequals", "[validation_criteria]") {
-    instance::current();
-
     validation_criteria criteria1;
     criteria1.level(validation_criteria::validation_level::k_strict);
     validation_criteria criteria2;
@@ -62,8 +56,6 @@ TEST_CASE("validation_criteria inequals", "[validation_criteria]") {
 }
 
 TEST_CASE("validation_criteria can be exported to a document", "[validation_criteria]") {
-    instance::current();
-
     validation_criteria criteria;
 
     auto doc = make_document(kvp("email", make_document(kvp("$exists", true))));

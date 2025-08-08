@@ -25,6 +25,26 @@ Changes prior to 3.9.0 are documented as [release notes on GitHub](https://githu
   - Apple Clang 13.1 with Xcode 13.4.1 (from Apple Clang 5.1 with Xcode 5.1).
   - MSVC 19.0.24210 with Visual Studio 2015 Update 3 (from MSVC 19.0.23506 with Visual Studio 2015 Update 1).
 
+### Deprecated
+
+- `mongocxx::v_noabi::instance::current()` is "for internal use only". The `instance` constructor(s) should be used instead.
+  - Creating the `instance` object in the scope of `main()`, or in an appropriate (non-global) scope such that its (non-static) lifetime is valid for the duration of all other mongocxx library operations, is recommended over the following workarounds.
+  - If there is only _one_ call to `current()` present within an application, it may be replaced with a static local variable:
+    ```cpp
+    // Before:
+    mongocxx::instance::current();
+
+    // After:
+    static mongocxx::instance instance; // Only ONE instance object!
+    ```
+  - If there are _multiple_ calls to `current()` present within an application, they may be replaced with a call to a user-defined function containing the static local variable:
+    ```cpp
+    mongocxx::instance& mongocxx_instance() {
+      static mongocxx::instance instance; // Only ONE instance object!
+      return instance;
+    }
+    ```
+
 ### Removed
 
 - Support for MongoDB Server 4.2.

@@ -28,8 +28,6 @@ using namespace bsoncxx::builder::basic;
 using namespace mongocxx;
 
 TEST_CASE("count", "[count][option]") {
-    instance::current();
-
     options::count cnt;
 
     auto collation = make_document(kvp("locale", "en_US"));

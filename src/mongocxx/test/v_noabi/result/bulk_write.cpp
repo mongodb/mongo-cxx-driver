@@ -29,8 +29,6 @@ using bsoncxx::builder::basic::make_array;
 using bsoncxx::builder::basic::make_document;
 
 TEST_CASE("bulk_write result", "[bulk_write][result]") {
-    mongocxx::instance::current();
-
     auto oid1 = types::b_oid{bsoncxx::oid{}};
     auto oid2 = types::b_oid{bsoncxx::oid{}};
 

@@ -26,8 +26,6 @@ using bsoncxx::builder::basic::kvp;
 using bsoncxx::builder::basic::make_document;
 
 TEST_CASE("delete", "[delete][result]") {
-    mongocxx::instance::current();
-
     bsoncxx::builder::basic::document build;
     build.append(kvp("_id", bsoncxx::oid{}), kvp("nRemoved", bsoncxx::types::b_int32{1}));
 
@@ -41,8 +39,6 @@ TEST_CASE("delete", "[delete][result]") {
 }
 
 TEST_CASE("delete equals", "[delete][result]") {
-    mongocxx::instance::current();
-
     auto doc = make_document(kvp("_id", bsoncxx::oid{}), kvp("nRemoved", bsoncxx::types::b_int32{1}));
 
     mongocxx::result::bulk_write a{doc};
@@ -55,8 +51,6 @@ TEST_CASE("delete equals", "[delete][result]") {
 }
 
 TEST_CASE("delete inequals", "[delete][result]") {
-    mongocxx::instance::current();
-
     mongocxx::result::bulk_write a{
         make_document(kvp("_id", bsoncxx::oid{}), kvp("nRemoved", bsoncxx::types::b_int32{1}))};
     mongocxx::result::bulk_write b{

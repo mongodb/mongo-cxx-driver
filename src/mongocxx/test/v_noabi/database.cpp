@@ -63,22 +63,16 @@ bool check_for_collections(cursor cursor, std::set<std::string> expected_colls) 
 }
 
 TEST_CASE("A default constructed database is false-ish", "[database]") {
-    instance::current();
-
     database d;
     REQUIRE(!d);
 }
 
 TEST_CASE("A default constructed database cannot perform operations", "[database]") {
-    instance::current();
-
     database d;
     REQUIRE_THROWS_AS(d.name(), mongocxx::logic_error);
 }
 
 TEST_CASE("mongocxx::database copy constructor", "[database]") {
-    instance::current();
-
     client client{uri{}, test_util::add_test_server_api()};
 
     SECTION("constructing from valid") {
@@ -96,8 +90,6 @@ TEST_CASE("mongocxx::database copy constructor", "[database]") {
 }
 
 TEST_CASE("mongocxx::database copy assignment operator", "[database]") {
-    instance::current();
-
     client client{uri{}, test_util::add_test_server_api()};
 
     SECTION("assigning valid to valid") {
@@ -135,8 +127,6 @@ TEST_CASE("A database", "[database]") {
     bsoncxx::stdx::string_view database_name{"database"};
     MOCK_CLIENT;
     MOCK_DATABASE;
-
-    instance::current();
 
     client mongo_client{uri{}, test_util::add_test_server_api()};
 
@@ -314,8 +304,6 @@ TEST_CASE("A database", "[database]") {
 }
 
 TEST_CASE("Database integration tests", "[database]") {
-    instance::current();
-
     client mongo_client{uri{}, test_util::add_test_server_api()};
     bsoncxx::stdx::string_view database_name{"database"};
     database database = mongo_client[database_name];
@@ -504,8 +492,6 @@ struct check_service_id {
 TEST_CASE("serviceId presence depends on load-balancing mode") {
     // Repeat this test case for a situation in which service_id should and should not be returned:
     auto expect_service_id = GENERATE(true, false);
-
-    instance::current();
 
     auto client_opts = test_util::add_test_server_api();
 

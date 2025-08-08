@@ -25,8 +25,6 @@ namespace {
 using namespace bsoncxx::builder::basic;
 
 TEST_CASE("delete_many model tests", "[delete_many][model]") {
-    mongocxx::instance::current();
-
     auto filter = make_document(kvp("a", 1));
     auto collation = make_document(kvp("locale", "en_US"));
 

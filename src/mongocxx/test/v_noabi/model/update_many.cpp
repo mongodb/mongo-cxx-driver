@@ -26,8 +26,6 @@ namespace {
 using namespace bsoncxx::builder::basic;
 
 TEST_CASE("update_many model tests", "[update_many][model]") {
-    mongocxx::instance::current();
-
     auto filter = make_document(kvp("a", 1));
     auto update = make_document(kvp("$set", make_document(kvp("b", 1))));
     auto collation = make_document(kvp("locale", "en_US"));

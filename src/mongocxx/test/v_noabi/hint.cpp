@@ -31,8 +31,6 @@ using bsoncxx::builder::basic::kvp;
 using bsoncxx::builder::basic::make_document;
 
 TEST_CASE("Hint", "[hint]") {
-    instance::current();
-
     SECTION("Can be constructed with index name") {
         std::string index_name = "a_1";
         hint index_hint{index_name};

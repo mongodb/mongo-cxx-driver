@@ -14,8 +14,14 @@
 
 #include <mongocxx/v1/config/export.hpp>
 
+#include <mongocxx/instance.hpp>
+
 #include <catch2/catch_session.hpp>
 
 int MONGOCXX_ABI_CDECL main(int argc, char* argv[]) {
+#if defined(MONGOCXX_TEST_DISABLE_MAIN_INSTANCE)
     return Catch::Session().run(argc, argv);
+#else
+    return ((void)mongocxx::instance(), Catch::Session().run(argc, argv));
+#endif
 }

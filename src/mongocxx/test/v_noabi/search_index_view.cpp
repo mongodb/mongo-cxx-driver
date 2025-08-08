@@ -73,8 +73,6 @@ void assert_soon(std::function<bool()> fn) {
 }
 
 TEST_CASE("atlas search indexes prose tests", "[atlas][search_indexes]") {
-    instance::current();
-
     auto uri_getenv = std::getenv("MONGODB_URI");
     if (!uri_getenv) {
         SKIP("Test requires the environment variable: MONGODB_URI");
@@ -386,8 +384,6 @@ TEST_CASE("atlas search indexes prose tests", "[atlas][search_indexes]") {
 }
 
 TEST_CASE("atlas search indexes tests", "[atlas][search_indexes]") {
-    instance::current();
-
     auto uri_getenv = std::getenv("MONGODB_URI");
     if (!uri_getenv) {
         SKIP("Test requires the environment variable: MONGODB_URI");

@@ -42,8 +42,6 @@ using bsoncxx::types::b_timestamp;
 using namespace mongocxx;
 
 TEST_CASE("session options", "[session]") {
-    instance::current();
-
     client c{uri{}, test_util::add_test_server_api()};
 
     SERVER_HAS_SESSIONS_OR_SKIP();
@@ -155,8 +153,6 @@ TEST_CASE("start_session failure", "[session]") {
 
     MOCK_CLIENT;
 
-    instance::current();
-
     client_start_session
         ->interpose([](mongoc_client_t*, mongoc_session_opt_t const*, bson_error_t* error) -> mongoc_client_session_t* {
             bson_set_error(error, MONGOC_ERROR_CLIENT, MONGOC_ERROR_CLIENT_SESSION_FAILURE, "foo");
@@ -171,8 +167,6 @@ TEST_CASE("start_session failure", "[session]") {
 
 TEST_CASE("session", "[session]") {
     using namespace mongocxx::test_util;
-
-    instance::current();
 
     client c{uri{}, test_util::add_test_server_api()};
 
@@ -378,8 +372,6 @@ class session_test {
 };
 
 TEST_CASE("lsid", "[session]") {
-    instance::current();
-
     session_test test;
 
     SERVER_HAS_SESSIONS_OR_SKIP();
@@ -811,8 +803,6 @@ TEST_CASE("lsid", "[session]") {
 TEST_CASE("with_transaction", "[session]") {
     using namespace mongocxx::test_util;
 
-    instance::current();
-
     session_test test;
 
     SERVER_HAS_SESSIONS_OR_SKIP();
@@ -847,8 +837,6 @@ TEST_CASE("with_transaction", "[session]") {
 
 TEST_CASE("unacknowledged write in session", "[session]") {
     using namespace mongocxx::test_util;
-
-    instance::current();
 
     session_test test;
 

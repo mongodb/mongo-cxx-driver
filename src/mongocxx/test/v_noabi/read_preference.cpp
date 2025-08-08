@@ -35,8 +35,6 @@ using builder::basic::make_array;
 using builder::basic::make_document;
 
 TEST_CASE("Read preference", "[read_preference]") {
-    instance::current();
-
     read_preference rp;
 
     SECTION("Defaults to mode primary, empty tags, and no max staleness") {
@@ -84,15 +82,12 @@ TEST_CASE("Read preference", "[read_preference]") {
 }
 
 TEST_CASE("Read preference can be constructed with another read_mode", "[read_preference]") {
-    instance::current();
-
     read_preference rp(read_preference::read_mode::k_secondary, read_preference::deprecated_tag{});
     REQUIRE(rp.mode() == read_preference::read_mode::k_secondary);
     REQUIRE_FALSE(rp.tags());
 }
 
 TEST_CASE("Read preference can be constructed with a read_mode and tags", "[read_preference]") {
-    instance::current();
     auto tags = make_document(kvp("tag_key", "tag_value"));
 
     read_preference rp(read_preference::read_mode::k_secondary, tags.view(), read_preference::deprecated_tag{});
@@ -101,8 +96,6 @@ TEST_CASE("Read preference can be constructed with a read_mode and tags", "[read
 }
 
 TEST_CASE("Read preference equality operator works", "[read_preference]") {
-    instance::current();
-
     read_preference rp_a;
     read_preference rp_b;
 
@@ -135,8 +128,6 @@ TEST_CASE("Read preference equality operator works", "[read_preference]") {
 }
 
 TEST_CASE("Read preference inequality operator works", "[read_preference]") {
-    instance::current();
-
     read_preference rp_a;
     read_preference rp_b;
 
@@ -146,7 +137,6 @@ TEST_CASE("Read preference inequality operator works", "[read_preference]") {
 }
 
 TEST_CASE("Read preference methods call underlying mongoc methods", "[read_preference]") {
-    instance::current();
     MOCK_READ_PREFERENCE;
 
     read_preference rp;

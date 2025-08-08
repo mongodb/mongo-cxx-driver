@@ -299,8 +299,6 @@ void run_encryption_tests_in_file(std::string const& test_path) {
 }
 
 TEST_CASE("Client side encryption spec automated tests", "[client_side_encryption_spec]") {
-    instance::current();
-
     CLIENT_SIDE_ENCRYPTION_ENABLED_OR_SKIP();
 
     std::set<std::string> unsupported_tests = {"badQueries.json", "count.json", "unsupportedCommand.json"};

@@ -62,8 +62,6 @@ void disable_fail_point(client const& conn) {
 }
 
 TEST_CASE("create_one", "[index_view]") {
-    instance::current();
-
     client mongodb_client{uri{}, test_util::add_test_server_api()};
     database db = mongodb_client["index_view_create_one"];
 
@@ -206,8 +204,6 @@ TEST_CASE("create_one", "[index_view]") {
 }
 
 TEST_CASE("create_many", "[index_view]") {
-    instance::current();
-
     client mongodb_client{uri{}, test_util::add_test_server_api()};
     database db = mongodb_client["index_view_create_many"];
 
@@ -269,8 +265,6 @@ TEST_CASE("create_many", "[index_view]") {
 }
 
 TEST_CASE("drop_one", "[index_view]") {
-    instance::current();
-
     client mongodb_client{uri{}, test_util::add_test_server_api()};
     database db = mongodb_client["index_view_drop_one"];
 
@@ -367,8 +361,6 @@ TEST_CASE("drop_one", "[index_view]") {
 }
 
 TEST_CASE("drop_all", "[index_view]") {
-    instance::current();
-
     client mongodb_client{uri{}, test_util::add_test_server_api()};
     database db = mongodb_client["index_view_drop_all"];
 
@@ -444,8 +436,6 @@ TEST_CASE("drop_all", "[index_view]") {
 }
 
 TEST_CASE("index creation and deletion with different collation") {
-    instance::current();
-
     client mongodb_client{uri{}, test_util::add_test_server_api()};
 
     database db = mongodb_client["index_view_collation"];

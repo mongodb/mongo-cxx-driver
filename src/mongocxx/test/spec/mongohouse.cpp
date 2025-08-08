@@ -46,8 +46,6 @@ void run_mongohouse_tests_in_file(std::string test_path) {
 
 // Test that the driver properly constructs and issues a killCursors command to Atlas Data Lake.
 void test_kill_cursors() {
-    instance::current();
-
     options::client client_opts;
     apm_checker apm_checker;
     client_opts.apm_opts(apm_checker.get_apm_opts(false));
@@ -158,8 +156,6 @@ void test_kill_cursors() {
 // For these tests, create a MongoClient using a valid connection string without auth
 // credentials and execute a ping command.
 void test_connection_without_auth() {
-    instance::current();
-
     client client{uri{}, test_util::add_test_server_api()};
     client["admin"].run_command(make_document(kvp("ping", 1)));
 }
@@ -169,8 +165,6 @@ void test_connection_without_auth() {
 // and credentials from the drivers-evergreen-tools ADL configuration and execute a ping
 // command. Repeat this test using SCRAM-SHA-256.
 void test_auth_with_scram_sha() {
-    instance::current();
-
     client client1{uri{"mongodb://mhuser:pencil@localhost/?authMechanism=SCRAM-SHA-1"}};
     client1["admin"].run_command(make_document(kvp("ping", 1)));
 
@@ -179,8 +173,6 @@ void test_auth_with_scram_sha() {
 }
 
 TEST_CASE("Test mongohouse", "[mongohouse]") {
-    instance::current();
-
     run_tests_in_suite("MONGOHOUSE_TESTS_PATH", &run_mongohouse_tests_in_file);
 
     // Run prose tests
