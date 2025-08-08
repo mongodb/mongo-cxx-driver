@@ -48,9 +48,20 @@ set(bsoncxx_test_sources_v_noabi
 )
 
 set(bsoncxx_test_sources_v1
+    v1/array/value.cpp
+    v1/array/view.cpp
+    v1/decimal128.cpp
+    v1/document/value.cpp
+    v1/document/view.cpp
+    v1/element/view.cpp
+    v1/exception.cpp
+    v1/oid.cpp
     v1/stdx/optional.test.cpp
     v1/stdx/string_view.test.cpp
     v1/stdx/type_traits.test.cpp
+    v1/types/id.cpp
+    v1/types/value.cpp
+    v1/types/view.cpp
 )
 
 set(bsoncxx_test_sources

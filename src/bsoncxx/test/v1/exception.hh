@@ -12,21 +12,22 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <bsoncxx/v1/document/value.hpp>
+#pragma once
+
+#include <bsoncxx/v1/exception.hpp>
 
 //
 
-#include <bsoncxx/private/type_traits.hh>
+#include <catch2/catch_tostring.hpp>
 
-namespace bsoncxx {
-namespace v1 {
-namespace document {
+CATCH_REGISTER_ENUM(
+    bsoncxx::v1::source_errc,
+    bsoncxx::v1::source_errc::zero,
+    bsoncxx::v1::source_errc::bsoncxx,
+    bsoncxx::v1::source_errc::bson)
 
-static_assert(is_regular<value>::value, "bsoncxx::v1::document::value must be regular");
-static_assert(is_nothrow_moveable<value>::value, "bsoncxx::v1::document::value must be nothrow moveable");
-
-void value::noop_deleter(std::uint8_t*) { /* noop */ }
-
-} // namespace document
-} // namespace v1
-} // namespace bsoncxx
+CATCH_REGISTER_ENUM(
+    bsoncxx::v1::type_errc,
+    bsoncxx::v1::type_errc::zero,
+    bsoncxx::v1::type_errc::invalid_argument,
+    bsoncxx::v1::type_errc::runtime_error)

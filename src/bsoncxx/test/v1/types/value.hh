@@ -12,21 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <bsoncxx/v1/document/value.hpp>
+#pragma once
+
+#include <bsoncxx/v1/types/value.hpp>
 
 //
 
-#include <bsoncxx/private/type_traits.hh>
+#include <bsoncxx/test/v1/types/view.hh>
 
-namespace bsoncxx {
-namespace v1 {
-namespace document {
+#include <catch2/catch_tostring.hpp>
 
-static_assert(is_regular<value>::value, "bsoncxx::v1::document::value must be regular");
-static_assert(is_nothrow_moveable<value>::value, "bsoncxx::v1::document::value must be nothrow moveable");
+CATCH_REGISTER_ENUM(
+    bsoncxx::v1::types::value::errc,
+    bsoncxx::v1::types::value::errc::zero,
+    bsoncxx::v1::types::value::errc::invalid_length_u32)
 
-void value::noop_deleter(std::uint8_t*) { /* noop */ }
-
-} // namespace document
-} // namespace v1
-} // namespace bsoncxx
+template <>
+struct Catch::StringMaker<bsoncxx::v1::types::value> : StringMaker<bsoncxx::v1::types::view> {};
