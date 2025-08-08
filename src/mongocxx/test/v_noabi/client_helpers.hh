@@ -56,7 +56,7 @@ std::int32_t compare_versions(std::string version1, std::string version2);
 // Returns 'true' if the server version for the default client is at least 'version',
 // returns 'false' otherwise.
 //
-bool newer_than(std::string version);
+bool server_version_is_at_least(std::string version);
 
 //
 // Converts a hexadecimal string to an string of bytes.

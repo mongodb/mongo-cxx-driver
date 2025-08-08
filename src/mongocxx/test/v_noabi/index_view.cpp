@@ -39,20 +39,9 @@ using bsoncxx::builder::basic::make_document;
 using namespace mongocxx;
 
 bool test_commands_enabled(client const& conn) {
-    auto result = conn["admin"].run_command(make_document(kvp("getParameter", 1), kvp("enableTestCommands", 1)));
-    auto result_view = result.view();
-
-    if (!result_view["enableTestCommands"]) {
-        return false;
-    }
-
-    auto server_version = test_util::get_server_version();
-
-    if (test_util::compare_versions(server_version, "3.2") >= 0) {
-        return result_view["enableTestCommands"].get_bool();
-    }
-
-    return result_view["enableTestCommands"].get_int32() == 1;
+    auto const result = conn["admin"].run_command(make_document(kvp("getParameter", 1), kvp("enableTestCommands", 1)));
+    auto const enable_test_commands = result.view()["enableTestCommands"];
+    return enable_test_commands ? enable_test_commands.get_bool() : false;
 }
 
 bool fail_with_max_timeout(client const& conn) {
@@ -370,7 +359,10 @@ TEST_CASE("drop_one", "[index_view]") {
         auto cursor = indexes.list();
         REQUIRE(std::distance(cursor.begin(), cursor.end()) == 1);
 
-        REQUIRE_THROWS_AS(indexes.drop_one("foo"), operation_exception);
+        // SERVER-90152: "dropIndex should be idempotent"
+        if (!test_util::server_version_is_at_least("8.3")) {
+            REQUIRE_THROWS_AS(indexes.drop_one("foo"), operation_exception);
+        }
     }
 }
 
