@@ -107,7 +107,7 @@ document::value from_json(stdx::string_view json) {
     return document::value{buf, length, bson_free_deleter};
 }
 
-document::value operator"" _bson(char const* str, size_t len) {
+document::value operator""_bson(char const* str, size_t len) {
     return from_json(stdx::string_view{str, len});
 }
 
