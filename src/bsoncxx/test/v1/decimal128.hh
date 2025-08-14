@@ -12,21 +12,28 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <bsoncxx/v1/document/value.hpp>
+#pragma once
+
+#include <bsoncxx/v1/decimal128.hpp>
 
 //
 
-#include <bsoncxx/private/type_traits.hh>
+#include <catch2/catch_tostring.hpp>
 
-namespace bsoncxx {
-namespace v1 {
-namespace document {
+CATCH_REGISTER_ENUM(
+    bsoncxx::v1::decimal128::errc,
+    bsoncxx::v1::decimal128::errc::zero,
+    bsoncxx::v1::decimal128::errc::empty_string,
+    bsoncxx::v1::decimal128::errc::invalid_string_length,
+    bsoncxx::v1::decimal128::errc::invalid_string_data)
 
-static_assert(is_regular<value>::value, "bsoncxx::v1::document::value must be regular");
-static_assert(is_nothrow_moveable<value>::value, "bsoncxx::v1::document::value must be nothrow moveable");
+namespace Catch {
 
-void value::noop_deleter(std::uint8_t*) { /* noop */ }
+template <>
+struct StringMaker<bsoncxx::v1::decimal128> {
+    static std::string convert(bsoncxx::v1::decimal128 const& value) {
+        return value.to_string();
+    }
+};
 
-} // namespace document
-} // namespace v1
-} // namespace bsoncxx
+} // namespace Catch

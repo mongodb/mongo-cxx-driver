@@ -16,6 +16,71 @@
 
 //
 
+#include <string>
+
+#include <bsoncxx/private/immortal.hh>
+#include <bsoncxx/private/type_traits.hh>
+
+namespace bsoncxx {
+namespace v1 {
+
+std::error_category const& source_error_category() {
+    class type final : public std::error_category {
+        char const* name() const noexcept override {
+            return "bsoncxx::v1::source_errc";
+        }
+
+        std::string message(int e) const noexcept override {
+            using code = v1::source_errc;
+
+            switch (static_cast<code>(e)) {
+                case code::zero:
+                    return "zero";
+                case code::bsoncxx:
+                    return "bsoncxx";
+                case code::bson:
+                    return "bson";
+                default:
+                    return "unknown: " + std::to_string(e);
+            }
+        }
+    };
+
+    static bsoncxx::immortal<type> const instance;
+
+    return instance.value();
+}
+
+std::error_category const& type_error_category() {
+    class type final : public std::error_category {
+        char const* name() const noexcept override {
+            return "bsoncxx::v1::type_errc";
+        }
+
+        std::string message(int e) const noexcept override {
+            using code = v1::type_errc;
+
+            switch (static_cast<code>(e)) {
+                case code::zero:
+                    return "zero";
+                case code::invalid_argument:
+                    return "invalid argument";
+                case code::runtime_error:
+                    return "runtime error";
+                default:
+                    return "unknown: " + std::to_string(e);
+            }
+        }
+    };
+
+    static bsoncxx::immortal<type> const instance;
+
+    return instance.value();
+}
+
+} // namespace v1
+} // namespace bsoncxx
+
 namespace bsoncxx {
 namespace v1 {
 

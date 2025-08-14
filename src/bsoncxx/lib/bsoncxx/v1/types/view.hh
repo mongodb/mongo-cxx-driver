@@ -12,21 +12,31 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <bsoncxx/v1/document/value.hpp>
+#include <bsoncxx/v1/types/view.hpp>
 
 //
 
-#include <bsoncxx/private/type_traits.hh>
+#include <bsoncxx/v1/stdx/optional.hpp>
+
+#include <cstdint>
+
+#include <bsoncxx/private/bson.hh>
+#include <bsoncxx/private/export.hh>
 
 namespace bsoncxx {
 namespace v1 {
-namespace document {
+namespace types {
 
-static_assert(is_regular<value>::value, "bsoncxx::v1::document::value must be regular");
-static_assert(is_nothrow_moveable<value>::value, "bsoncxx::v1::document::value must be nothrow moveable");
+class view::internal {
+   public:
+    static view make(bson_value_t const& v);
 
-void value::noop_deleter(std::uint8_t*) { /* noop */ }
+    static v1::stdx::optional<view>
+    make(std::uint8_t const* raw, std::uint32_t length, std::uint32_t offset, std::uint32_t keylen);
 
-} // namespace document
+    static BSONCXX_ABI_EXPORT_CDECL_TESTING(void) type_id(view& v, v1::types::id id);
+};
+
+} // namespace types
 } // namespace v1
 } // namespace bsoncxx

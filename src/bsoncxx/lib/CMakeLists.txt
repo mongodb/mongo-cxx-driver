@@ -115,4 +115,8 @@ set_dist_list(src_bsoncxx_lib_DIST
     bsoncxx/v_noabi/bsoncxx/types/bson_value/value.hh
     bsoncxx/v1/config/config.hpp.in
     bsoncxx/v1/config/version.hpp.in
+    bsoncxx/v1/document/view.hh
+    bsoncxx/v1/element/view.hh
+    bsoncxx/v1/types/value.hh
+    bsoncxx/v1/types/view.hh
 )

@@ -56,6 +56,10 @@ class oid {
     /// [`bson_oid_init`](https://mongoc.org/libbson/current/bson_oid_init.html) function with the default
     /// [`bson_context_t`](https://mongoc.org/libbson/current/bson_context_t.html).
     ///
+    /// @important On Windows only, the first call to this function initializes a static local variable which loads the
+    /// Winsock DLL by calling `WSAStartup()`. The Winsock DLL is unloaded by calling `WSACleanup()` when the static
+    /// local variable is destroyed.
+    ///
     /// @throws bsoncxx::v1::exception (on Windows only) with a `std::system_category()` error code
     /// (as returned by
     /// [`WSAGetLastError()`](https://learn.microsoft.com/en-us/windows/win32/api/winsock/nf-winsock-wsagetlasterror))

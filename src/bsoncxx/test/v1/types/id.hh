@@ -12,21 +12,24 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <bsoncxx/v1/document/value.hpp>
+#pragma once
+
+#include <bsoncxx/v1/types/id.hpp>
 
 //
 
-#include <bsoncxx/private/type_traits.hh>
+#include <bsoncxx/test/stringify.hh>
 
-namespace bsoncxx {
-namespace v1 {
-namespace document {
+template <>
+struct Catch::StringMaker<bsoncxx::v1::types::id> {
+    static std::string convert(bsoncxx::v1::types::id const& value) {
+        return "k_" + to_string(value);
+    }
+};
 
-static_assert(is_regular<value>::value, "bsoncxx::v1::document::value must be regular");
-static_assert(is_nothrow_moveable<value>::value, "bsoncxx::v1::document::value must be nothrow moveable");
-
-void value::noop_deleter(std::uint8_t*) { /* noop */ }
-
-} // namespace document
-} // namespace v1
-} // namespace bsoncxx
+template <>
+struct Catch::StringMaker<bsoncxx::v1::types::binary_subtype> {
+    static std::string convert(bsoncxx::v1::types::binary_subtype const& value) {
+        return "k_" + to_string(value);
+    }
+};

@@ -12,21 +12,26 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <bsoncxx/v1/document/value.hpp>
+#include <bsoncxx/v1/types/value.hpp>
 
 //
 
-#include <bsoncxx/private/type_traits.hh>
+#include <bsoncxx/v1/stdx/optional.hpp>
+
+#include <cstdint>
+
+#include <bsoncxx/private/bson.hh>
 
 namespace bsoncxx {
 namespace v1 {
-namespace document {
+namespace types {
 
-static_assert(is_regular<value>::value, "bsoncxx::v1::document::value must be regular");
-static_assert(is_nothrow_moveable<value>::value, "bsoncxx::v1::document::value must be nothrow moveable");
+class value::internal {
+   public:
+    static v1::stdx::optional<value>
+    make(std::uint8_t const* raw, std::uint32_t length, std::uint32_t offset, std::uint32_t keylen);
+};
 
-void value::noop_deleter(std::uint8_t*) { /* noop */ }
-
-} // namespace document
+} // namespace types
 } // namespace v1
 } // namespace bsoncxx
