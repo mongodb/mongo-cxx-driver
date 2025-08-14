@@ -50,7 +50,7 @@ TEST_CASE("error code", "[bsoncxx][v1][decimal128][error]") {
         CHECK(ec.category() == category);
         CHECK(ec.value() == -1);
         CHECK(ec);
-        CHECK(ec.message() == "unknown: -1");
+        CHECK(ec.message() == std::string(category.name()) + ":-1");
     }
 
     SECTION("zero") {

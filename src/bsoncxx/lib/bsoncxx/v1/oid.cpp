@@ -133,7 +133,7 @@ std::error_category const& oid::error_category() {
                 case code::invalid_string:
                     return "string is not a valid ObjectID representation";
                 default:
-                    return "unknown: " + std::to_string(v);
+                    return std::string(this->name()) + ':' + std::to_string(v);
             }
         }
 

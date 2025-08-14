@@ -80,7 +80,7 @@ std::error_category const& decimal128::error_category() {
                 case code::invalid_string_data:
                     return "string is not a valid Decimal128 representation";
                 default:
-                    return "unknown: " + std::to_string(v);
+                    return std::string(this->name()) + ':' + std::to_string(v);
             }
         }
 

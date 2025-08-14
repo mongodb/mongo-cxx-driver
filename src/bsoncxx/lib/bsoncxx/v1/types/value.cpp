@@ -418,7 +418,7 @@ std::error_category const& value::error_category() {
                 case code::invalid_length_u32:
                     return "length is too long (exceeds UINT32_MAX)";
                 default:
-                    return "unknown: " + std::to_string(v);
+                    return std::string(this->name()) + ':' + std::to_string(v);
             }
         }
 

@@ -85,7 +85,7 @@ std::error_category const& view::error_category() {
                 case code::type_mismatch:
                     return "requested type does not match the underlying type";
                 default:
-                    return "unknown: " + std::to_string(v);
+                    return std::string(this->name()) + ':' + std::to_string(v);
             }
         }
 

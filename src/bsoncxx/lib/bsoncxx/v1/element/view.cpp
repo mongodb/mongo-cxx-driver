@@ -280,7 +280,7 @@ std::error_category const& view::error_category() {
                 case code::invalid_data:
                     return "data is invalid";
                 default:
-                    return "unknown: " + std::to_string(v);
+                    return std::string(this->name()) + ':' + std::to_string(v);
             }
         }
 
