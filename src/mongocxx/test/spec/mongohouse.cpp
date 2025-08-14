@@ -138,7 +138,7 @@ void test_kill_cursors() {
 
             auto cursors_killed_elem = event["command_succeeded_event"]["reply"]["cursorsKilled"];
             auto cursors_killed_val = cursors_killed_elem.get_value();
-            auto cursors_killed_arr = cursors_killed_elem.get_array();
+            auto cursors_killed_arr = cursors_killed_val.get_array();
             auto cursors_killed = cursors_killed_arr.value;
 
             if (std::find(cursors_killed.cbegin(), cursors_killed.cend(), cursor_id_val.view()) !=
