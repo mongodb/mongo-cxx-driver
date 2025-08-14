@@ -84,11 +84,13 @@ enum class binary_subtype : std::uint8_t {
     k_column = 0x07,            ///< Compressed BSON column.
     k_sensitive = 0x08,         ///< Sensitive.
     k_vector = 0x09,            ///< Vector.
-    k_user = 0x80,              ///< User defined.
+    k_user = 0x80,              ///< User defined (up to 0xFF, inclusive).
 };
 
 ///
 /// Return the name of the enumerator (e.g. `"binary"` given `k_binary`).
+///
+/// @note Values in the range [0x80, 0xFF] are all equivalent to "k_user".
 ///
 /// @attention This feature is experimental! It is not ready for use!
 ///

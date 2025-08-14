@@ -63,7 +63,29 @@ TEST_CASE("to_string", "[bsoncxx][v1][types][id]") {
 
 TEST_CASE("to_string", "[bsoncxx][v1][types][binary_subtype]") {
     SECTION("unknown") {
-        CHECK(to_string(static_cast<binary_subtype>(UINT8_MAX)) == "?"); // 0xFF
+        for (int i = 0; i < int{UINT8_MAX} + 1; ++i) {
+            CAPTURE(i);
+
+#pragma push_macro("X")
+#undef X
+#define X(_name, _value)            \
+    case binary_subtype::k_##_name: \
+        break;
+
+            switch (static_cast<binary_subtype>(i)) {
+                // Ignore named enumerators: handled by the "values" section.
+                BSONCXX_V1_BINARY_SUBTYPES_XMACRO(X)
+
+                default:
+                    // All BSON binary subtype values in the range [0x80, 0xFF] are "user defined".
+                    if (i >= static_cast<int>(binary_subtype::k_user)) {
+                        CHECK(to_string(static_cast<binary_subtype>(i)) == "user");
+                    } else {
+                        CHECK(to_string(static_cast<binary_subtype>(i)) == "?");
+                    }
+            }
+#pragma pop_macro("X")
+        }
     }
 
     SECTION("values") {

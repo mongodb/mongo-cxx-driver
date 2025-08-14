@@ -49,7 +49,12 @@ std::string to_string(binary_subtype rhs) {
         BSONCXX_V1_BINARY_SUBTYPES_XMACRO(X)
 
         default:
-            return "?";
+            // All BSON binary subtype values in the range [0x80, 0xFF] are "user defined".
+            if (rhs >= binary_subtype::k_user) {
+                return "user";
+            } else {
+                return "?";
+            }
     }
 #pragma pop_macro("X")
 }
