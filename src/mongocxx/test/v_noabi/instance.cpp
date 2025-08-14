@@ -18,28 +18,28 @@
 #include <bsoncxx/test/catch.hh>
 
 namespace {
-using namespace mongocxx;
 
-instance* inst;
+TEST_CASE("instance", "[mongocxx][v_noabi][instance]") {
+    using namespace mongocxx;
 
-TEST_CASE("instance::current creates instance when one has not already been created") {
+    instance* inst = nullptr;
+
+    // instance::current creates instance when one has not already been created
     REQUIRE_NOTHROW(inst = &instance::current());
-}
 
-TEST_CASE("multiple instances cannot be created") {
+    // multiple instances cannot be created"
     REQUIRE_THROWS_AS(instance{}, logic_error);
-}
 
-TEST_CASE("instance::current works when instance is alive") {
+    // instance::current works when instance is alive
     REQUIRE_NOTHROW(instance::current());
-}
 
-TEST_CASE("an instance cannot be created after one has been destroyed") {
+    // an instance cannot be created after one has been destroyed
     inst->~instance();
+    inst = nullptr;
     REQUIRE_THROWS_AS(instance{}, logic_error);
-}
 
-TEST_CASE("instance::current throws if an instance has already been destroyed") {
+    // instance::current throws if an instance has already been destroyed
     REQUIRE_THROWS_AS(instance::current(), logic_error);
 }
+
 } // namespace

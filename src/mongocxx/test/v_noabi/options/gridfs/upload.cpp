@@ -29,8 +29,6 @@ using namespace mongocxx;
 using bsoncxx::builder::basic::kvp;
 
 TEST_CASE("options::gridfs::upload accessors/mutators", "[options::gridfs::upload]") {
-    instance::current();
-
     options::gridfs::upload upload_options;
 
     auto document = builder::basic::make_document(kvp("foo", 1));

@@ -40,15 +40,11 @@ using namespace mongocxx;
 TEST_CASE("A default constructed client is false-ish", "[client]") {
     MOCK_CLIENT;
 
-    instance::current();
-
     client a;
     REQUIRE(!a);
 }
 
 TEST_CASE("A default constructed client cannot perform operations", "[client]") {
-    instance::current();
-
     client a;
     REQUIRE_THROWS_AS(a.list_databases(), mongocxx::logic_error);
 }
@@ -58,7 +54,6 @@ TEST_CASE("A client lists its databases with a filter applied", "[client]") {
     using bsoncxx::builder::basic::make_document;
 
     MOCK_CLIENT;
-    instance::current();
 
     auto client_list_databases_called = false;
     auto filter_doc = make_document(kvp("filter", make_document(kvp("name", "admin"))));
@@ -122,16 +117,12 @@ TEST_CASE("list databases passes authorizedDatabases option", "[client]") {
 TEST_CASE("A client constructed with a URI is truthy", "[client]") {
     MOCK_CLIENT;
 
-    instance::current();
-
     client a{uri{}, test_util::add_test_server_api()};
     REQUIRE(a);
 }
 
 TEST_CASE("A client connects to a provided mongodb uri", "[client]") {
     MOCK_CLIENT;
-
-    instance::current();
 
     std::string expected_url("mongodb://mongodb.example.com:9999");
     uri mongodb_uri(expected_url);
@@ -148,8 +139,6 @@ TEST_CASE("A client connects to a provided mongodb uri", "[client]") {
 TEST_CASE("A client throws if its underlying mongoc client is NULL", "[client]") {
     MOCK_CLIENT;
 
-    instance::current();
-
     client_new->interpose([](mongoc_uri_t const*) -> mongoc_client_t* { return nullptr; });
 
     REQUIRE_THROWS_AS(client{uri{}}, mongocxx::exception);
@@ -157,8 +146,6 @@ TEST_CASE("A client throws if its underlying mongoc client is NULL", "[client]")
 
 TEST_CASE("A client cleans up its underlying mongoc client on destruction", "[client]") {
     MOCK_CLIENT;
-
-    instance::current();
 
     bool destroy_called = false;
     client_destroy->visit([&](mongoc_client_t*) { destroy_called = true; });
@@ -174,8 +161,6 @@ TEST_CASE("A client cleans up its underlying mongoc client on destruction", "[cl
 TEST_CASE("A client supports move operations", "[client]") {
     MOCK_CLIENT;
 
-    instance::current();
-
     client a{uri{}, test_util::add_test_server_api()};
 
     bool called = false;
@@ -190,8 +175,6 @@ TEST_CASE("A client supports move operations", "[client]") {
 
 TEST_CASE("A client has a settable Read Concern", "[client]") {
     MOCK_CLIENT;
-
-    instance::current();
 
     client mongo_client{uri{}, test_util::add_test_server_api()};
 
@@ -214,8 +197,6 @@ TEST_CASE("A client has a settable Read Concern", "[client]") {
 
 TEST_CASE("A client's read preferences may be set and obtained", "[client]") {
     MOCK_CLIENT;
-
-    instance::current();
 
     client mongo_client{uri{}, test_util::add_test_server_api()};
     read_preference preference{};
@@ -242,8 +223,6 @@ TEST_CASE("A client's read preferences may be set and obtained", "[client]") {
 }
 
 TEST_CASE("A client may not change apm callbacks after they are set", "[client]") {
-    instance::current();
-
     bool triggered = false;
 
     options::apm apm_opts;
@@ -270,8 +249,6 @@ TEST_CASE("A client may not change apm callbacks after they are set", "[client]"
 }
 
 TEST_CASE("A client can delete apm options and the callbacks will still work properly", "[client]") {
-    instance::current();
-
     bool triggered = false;
 
     options::client client_opts;
@@ -294,8 +271,6 @@ TEST_CASE("A client can delete apm options and the callbacks will still work pro
 
 TEST_CASE("A client's write concern may be set and obtained", "[client]") {
     MOCK_CLIENT;
-
-    instance::current();
 
     client mongo_client{uri{}, test_util::add_test_server_api()};
     write_concern concern;
@@ -336,8 +311,6 @@ TEST_CASE("A client's write concern may be set and obtained", "[client]") {
 TEST_CASE("A client can be reset", "[client]") {
     MOCK_CLIENT;
 
-    instance::current();
-
     bool reset_called = false;
     client_reset->interpose([&](mongoc_client_t const*) { reset_called = true; });
 
@@ -349,8 +322,6 @@ TEST_CASE("A client can be reset", "[client]") {
 
 TEST_CASE("A client can create a named database object", "[client]") {
     MOCK_CLIENT;
-
-    instance::current();
 
     auto database_get = libmongoc::client_get_database.create_instance();
     database_get->interpose([](mongoc_client_t*, char const*) { return nullptr; }).forever();
@@ -374,7 +345,6 @@ TEST_CASE("integration tests for client metadata handshake feature") {
 
     std::string app_name{"xyz"};
     uri uri{"mongodb://localhost/?appName=" + app_name};
-    instance::current();
 
     auto run_test = [app_name](client const& client) {
         mongocxx::database db = client["admin"];
@@ -425,8 +395,6 @@ TEST_CASE("integration tests for client metadata handshake feature") {
 #if MONGOCXX_SSL_IS_ENABLED()
 TEST_CASE("A client can be constructed with SSL options", "[client]") {
     MOCK_CLIENT;
-
-    instance::current();
 
     std::string const pem_file = "foo";
     std::string const pem_password = "bar";

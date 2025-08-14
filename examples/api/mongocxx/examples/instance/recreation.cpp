@@ -26,8 +26,6 @@ void example() {
     {
         mongocxx::instance instance;
 
-        EXPECT(&mongocxx::instance::current() == &instance);
-
         try {
             mongocxx::instance another_instance; // Throws.
 
@@ -35,8 +33,6 @@ void example() {
         } catch (mongocxx::exception const& ex) {
             EXPECT(ex.code() == mongocxx::error_code::k_cannot_recreate_instance);
         }
-
-        EXPECT(&mongocxx::instance::current() == &instance);
     }
 }
 // [Example]

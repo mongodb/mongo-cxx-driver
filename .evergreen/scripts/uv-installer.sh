@@ -1,36 +1,52 @@
 #!/bin/sh
 # shellcheck shell=dash
+# shellcheck disable=SC2039  # local is non-POSIX
 #
 # Licensed under the MIT license
 # <LICENSE-MIT or https://opensource.org/licenses/MIT>, at your
 # option. This file may not be copied, modified, or distributed
 # except according to those terms.
 
-if [ "$KSH_VERSION" = 'Version JM 93t+ 2010-03-05' ]; then
-    # The version of ksh93 that ships with many illumos systems does not
-    # support the "local" extension.  Print a message rather than fail in
-    # subtle ways later on:
-    echo 'this installer does not work with this ksh93 version; please try bash!' >&2
-    exit 1
-fi
+# This runs on Unix shells like bash/dash/ksh/zsh. It uses the common `local`
+# extension. Note: Most shells limit `local` to 1 var per line, contra bash.
+
+# Some versions of ksh have no `local` keyword. Alias it to `typeset`, but
+# beware this makes variables global with f()-style function syntax in ksh93.
+# mksh has this alias by default.
+has_local() {
+    # shellcheck disable=SC2034  # deliberately unused
+    local _has_local
+}
+
+has_local 2>/dev/null || alias local=typeset
 
 set -u
 
 APP_NAME="uv"
-APP_VERSION="0.5.14"
+APP_VERSION="0.8.6"
 # Look for GitHub Enterprise-style base URL first
 if [ -n "${UV_INSTALLER_GHE_BASE_URL:-}" ]; then
     INSTALLER_BASE_URL="$UV_INSTALLER_GHE_BASE_URL"
 else
     INSTALLER_BASE_URL="${UV_INSTALLER_GITHUB_BASE_URL:-https://github.com}"
 fi
-if [ -n "${INSTALLER_DOWNLOAD_URL:-}" ]; then
+if [ -n "${UV_DOWNLOAD_URL:-}" ]; then
+    ARTIFACT_DOWNLOAD_URL="$UV_DOWNLOAD_URL"
+elif [ -n "${INSTALLER_DOWNLOAD_URL:-}" ]; then
     ARTIFACT_DOWNLOAD_URL="$INSTALLER_DOWNLOAD_URL"
 else
-    ARTIFACT_DOWNLOAD_URL="${INSTALLER_BASE_URL}/astral-sh/uv/releases/download/0.5.14"
+    ARTIFACT_DOWNLOAD_URL="${INSTALLER_BASE_URL}/astral-sh/uv/releases/download/0.8.6"
 fi
-PRINT_VERBOSE=${INSTALLER_PRINT_VERBOSE:-0}
-PRINT_QUIET=${INSTALLER_PRINT_QUIET:-0}
+if [ -n "${UV_PRINT_VERBOSE:-}" ]; then
+    PRINT_VERBOSE="$UV_PRINT_VERBOSE"
+else
+    PRINT_VERBOSE=${INSTALLER_PRINT_VERBOSE:-0}
+fi
+if [ -n "${UV_PRINT_QUIET:-}" ]; then
+    PRINT_QUIET="$UV_PRINT_QUIET"
+else
+    PRINT_QUIET=${INSTALLER_PRINT_QUIET:-0}
+fi
 if [ -n "${UV_NO_MODIFY_PATH:-}" ]; then
     NO_MODIFY_PATH="$UV_NO_MODIFY_PATH"
 else
@@ -46,21 +62,48 @@ if [ -n "${UNMANAGED_INSTALL}" ]; then
     NO_MODIFY_PATH=1
     INSTALL_UPDATER=0
 fi
+AUTH_TOKEN="${UV_GITHUB_TOKEN:-}"
 
 read -r RECEIPT <<EORECEIPT
-{"binaries":["CARGO_DIST_BINS"],"binary_aliases":{},"cdylibs":["CARGO_DIST_DYLIBS"],"cstaticlibs":["CARGO_DIST_STATICLIBS"],"install_layout":"unspecified","install_prefix":"AXO_INSTALL_PREFIX","modify_path":true,"provider":{"source":"cargo-dist","version":"0.27.0"},"source":{"app_name":"uv","name":"uv","owner":"astral-sh","release_type":"github"},"version":"0.5.14"}
+{"binaries":["CARGO_DIST_BINS"],"binary_aliases":{},"cdylibs":["CARGO_DIST_DYLIBS"],"cstaticlibs":["CARGO_DIST_STATICLIBS"],"install_layout":"unspecified","install_prefix":"AXO_INSTALL_PREFIX","modify_path":true,"provider":{"source":"cargo-dist","version":"0.28.7"},"source":{"app_name":"uv","name":"uv","owner":"astral-sh","release_type":"github"},"version":"0.8.6"}
 EORECEIPT
-RECEIPT_HOME="${XDG_CONFIG_HOME:-$HOME/.config}/uv"
+
+# Some Linux distributions don't set HOME
+# https://github.com/astral-sh/uv/issues/6965#issuecomment-2915796022
+get_home() {
+    if [ -n "${HOME:-}" ]; then
+        echo "$HOME"
+    elif [ -n "${USER:-}" ]; then
+        getent passwd "$USER" | cut -d: -f6
+    else
+        getent passwd "$(id -un)" | cut -d: -f6
+    fi
+}
+# The HOME reference to show in user output. If `$HOME` isn't set, we show the absolute path instead.
+get_home_expression() {
+    if [ -n "${HOME:-}" ]; then
+        # shellcheck disable=SC2016
+        echo '$HOME'
+    elif [ -n "${USER:-}" ]; then
+        getent passwd "$USER" | cut -d: -f6
+    else
+        getent passwd "$(id -un)" | cut -d: -f6
+    fi
+}
+INFERRED_HOME=$(get_home)
+# shellcheck disable=SC2034
+INFERRED_HOME_EXPRESSION=$(get_home_expression)
+RECEIPT_HOME="${XDG_CONFIG_HOME:-$INFERRED_HOME/.config}/uv"
 
 usage() {
     # print help (this cat/EOF stuff is a "heredoc" string)
     cat <<EOF
 uv-installer.sh
 
-The installer for uv 0.5.14
+The installer for uv 0.8.6
 
 This script detects what platform you're on and fetches an appropriate archive from
-https://github.com/astral-sh/uv/releases/download/0.5.14
+https://github.com/astral-sh/uv/releases/download/0.8.6
 then unpacks the binaries and installs them to the first of the following locations
 
     \$XDG_BIN_HOME
@@ -159,9 +202,6 @@ download_binary_and_run_installer() {
     local _checksum_style
     local _checksum_value
 
-    # validate checksum according to GitHub release assets for version 0.5.9
-    _checksum_style="sha256"
-
     # destructure selected archive info into locals
     case "$_artifact_name" in 
         "uv-aarch64-apple-darwin.tar.gz")
@@ -169,7 +209,18 @@ download_binary_and_run_installer() {
             _zip_ext=".tar.gz"
             _bins="uv uvx"
             _bins_js_array='"uv","uvx"'
-            _checksum_value="d548dffc256014c4c8c693e148140a3a21bcc2bf066a35e1d5f0d24c91d32112"
+            _libs=""
+            _libs_js_array=""
+            _staticlibs=""
+            _staticlibs_js_array=""
+            _updater_name=""
+            _updater_bin=""
+            ;;
+        "uv-aarch64-pc-windows-msvc.zip")
+            _arch="aarch64-pc-windows-msvc"
+            _zip_ext=".zip"
+            _bins="uv.exe uvx.exe uvw.exe"
+            _bins_js_array='"uv.exe","uvx.exe","uvw.exe"'
             _libs=""
             _libs_js_array=""
             _staticlibs=""
@@ -182,7 +233,6 @@ download_binary_and_run_installer() {
             _zip_ext=".tar.gz"
             _bins="uv uvx"
             _bins_js_array='"uv","uvx"'
-            _checksum_value="1c9cdb265b0c24ce2e74b7795a00842dc6d487c11ba49aa6c9ca1c784b82755a"
             _libs=""
             _libs_js_array=""
             _staticlibs=""
@@ -195,7 +245,6 @@ download_binary_and_run_installer() {
             _zip_ext=".tar.gz"
             _bins="uv uvx"
             _bins_js_array='"uv","uvx"'
-            _checksum_value="64c5321f5141db39e04209d170db34fcef5c8de3f561346dc0c1d132801c4f88"
             _libs=""
             _libs_js_array=""
             _staticlibs=""
@@ -208,7 +257,6 @@ download_binary_and_run_installer() {
             _zip_ext=".tar.gz"
             _bins="uv uvx"
             _bins_js_array='"uv","uvx"'
-            _checksum_value="903f87c609479099c87c229429f2a25f451689d862ee19170f6d87ab656815a0"
             _libs=""
             _libs_js_array=""
             _staticlibs=""
@@ -221,7 +269,6 @@ download_binary_and_run_installer() {
             _zip_ext=".tar.gz"
             _bins="uv uvx"
             _bins_js_array='"uv","uvx"'
-            _checksum_value="c33a4caa441c770ca720d301059eeb6af5473ceb22b69adf08b99043c3e4a854"
             _libs=""
             _libs_js_array=""
             _staticlibs=""
@@ -234,7 +281,6 @@ download_binary_and_run_installer() {
             _zip_ext=".tar.gz"
             _bins="uv uvx"
             _bins_js_array='"uv","uvx"'
-            _checksum_value="c3b1bbe0d70e916abdd557092bf94c4830f98c471fe7d45b23d4dec8546251f3"
             _libs=""
             _libs_js_array=""
             _staticlibs=""
@@ -245,9 +291,8 @@ download_binary_and_run_installer() {
         "uv-i686-pc-windows-msvc.zip")
             _arch="i686-pc-windows-msvc"
             _zip_ext=".zip"
-            _bins="uv.exe uvx.exe"
-            _bins_js_array='"uv.exe","uvx.exe"'
-            _checksum_value="2ea709cf816b70661c6aa43d6aff7526faebafc2d45f7167d3192c5b9bb0a28f"
+            _bins="uv.exe uvx.exe uvw.exe"
+            _bins_js_array='"uv.exe","uvx.exe","uvw.exe"'
             _libs=""
             _libs_js_array=""
             _staticlibs=""
@@ -260,7 +305,6 @@ download_binary_and_run_installer() {
             _zip_ext=".tar.gz"
             _bins="uv uvx"
             _bins_js_array='"uv","uvx"'
-            _checksum_value="74fd05a1e04bb8c591cb4531d517848d1e2cdc05762ccd291429c165e2a19aa1"
             _libs=""
             _libs_js_array=""
             _staticlibs=""
@@ -273,7 +317,6 @@ download_binary_and_run_installer() {
             _zip_ext=".tar.gz"
             _bins="uv uvx"
             _bins_js_array='"uv","uvx"'
-            _checksum_value="a616553164336a57fc154a424d44cd75eb06104bc4e69f3d757e3da90a90d31f"
             _libs=""
             _libs_js_array=""
             _staticlibs=""
@@ -286,7 +329,6 @@ download_binary_and_run_installer() {
             _zip_ext=".tar.gz"
             _bins="uv uvx"
             _bins_js_array='"uv","uvx"'
-            _checksum_value="4b675ac963f4d90034f8b8de8b03e0691b7e48eb8ce7bf5449ea65774750dfd4"
             _libs=""
             _libs_js_array=""
             _staticlibs=""
@@ -299,7 +341,18 @@ download_binary_and_run_installer() {
             _zip_ext=".tar.gz"
             _bins="uv uvx"
             _bins_js_array='"uv","uvx"'
-            _checksum_value="2a7bb1d27a6a057cbd5f62a5bc2ec77175c71224de8fb1bb5107acb1a07cc02a"
+            _libs=""
+            _libs_js_array=""
+            _staticlibs=""
+            _staticlibs_js_array=""
+            _updater_name=""
+            _updater_bin=""
+            ;;
+        "uv-riscv64gc-unknown-linux-gnu.tar.gz")
+            _arch="riscv64gc-unknown-linux-gnu"
+            _zip_ext=".tar.gz"
+            _bins="uv uvx"
+            _bins_js_array='"uv","uvx"'
             _libs=""
             _libs_js_array=""
             _staticlibs=""
@@ -312,7 +365,6 @@ download_binary_and_run_installer() {
             _zip_ext=".tar.gz"
             _bins="uv uvx"
             _bins_js_array='"uv","uvx"'
-            _checksum_value="68acbfadd9e100b69b31f4995265b716465df909a7d110bba76d93e8adc3a76b"
             _libs=""
             _libs_js_array=""
             _staticlibs=""
@@ -325,7 +377,6 @@ download_binary_and_run_installer() {
             _zip_ext=".tar.gz"
             _bins="uv uvx"
             _bins_js_array='"uv","uvx"'
-            _checksum_value="8caf91b936ede1167abaebae07c2a1cbb22473355fa0ad7ebb2580307e84fb47"
             _libs=""
             _libs_js_array=""
             _staticlibs=""
@@ -336,9 +387,8 @@ download_binary_and_run_installer() {
         "uv-x86_64-pc-windows-msvc.zip")
             _arch="x86_64-pc-windows-msvc"
             _zip_ext=".zip"
-            _bins="uv.exe uvx.exe"
-            _bins_js_array='"uv.exe","uvx.exe"'
-            _checksum_value="ee2468e40320a0a2a36435e66bbd0d861228c4c06767f22d97876528138f4ba0"
+            _bins="uv.exe uvx.exe uvw.exe"
+            _bins_js_array='"uv.exe","uvx.exe","uvw.exe"'
             _libs=""
             _libs_js_array=""
             _staticlibs=""
@@ -351,7 +401,6 @@ download_binary_and_run_installer() {
             _zip_ext=".tar.gz"
             _bins="uv uvx"
             _bins_js_array='"uv","uvx"'
-            _checksum_value="22034760075b92487b326da5aa1a2a3e1917e2e766c12c0fd466fccda77013c7"
             _libs=""
             _libs_js_array=""
             _staticlibs=""
@@ -364,7 +413,6 @@ download_binary_and_run_installer() {
             _zip_ext=".tar.gz"
             _bins="uv uvx"
             _bins_js_array='"uv","uvx"'
-            _checksum_value="e1ccdfe1691c1f791d84bb6e1697e49416ca4b62103dcdf3b63772f03834f113"
             _libs=""
             _libs_js_array=""
             _staticlibs=""
@@ -485,6 +533,9 @@ json_binary_aliases() {
     "aarch64-apple-darwin")
         echo '{}'
         ;;
+    "aarch64-pc-windows-gnu")
+        echo '{}'
+        ;;
     "aarch64-unknown-linux-gnu")
         echo '{}'
         ;;
@@ -528,6 +579,9 @@ json_binary_aliases() {
         echo '{}'
         ;;
     "powerpc64le-unknown-linux-gnu")
+        echo '{}'
+        ;;
+    "riscv64gc-unknown-linux-gnu")
         echo '{}'
         ;;
     "s390x-unknown-linux-gnu")
@@ -566,6 +620,13 @@ aliases_for_binary() {
             ;;
         esac
         ;;
+    "aarch64-pc-windows-gnu")
+        case "$_bin" in
+        *)
+            echo ""
+            ;;
+        esac
+        ;;
     "aarch64-unknown-linux-gnu")
         case "$_bin" in
         *)
@@ -665,6 +726,13 @@ aliases_for_binary() {
         esac
         ;;
     "powerpc64le-unknown-linux-gnu")
+        case "$_bin" in
+        *)
+            echo ""
+            ;;
+        esac
+        ;;
+    "riscv64gc-unknown-linux-gnu")
         case "$_bin" in
         *)
             echo ""
@@ -738,7 +806,19 @@ select_archive_for_arch() {
                 return 0
             fi
             ;;
+        "aarch64-pc-windows-gnu")
+            _archive="uv-aarch64-pc-windows-msvc.zip"
+            if [ -n "$_archive" ]; then
+                echo "$_archive"
+                return 0
+            fi
+            ;;
         "aarch64-pc-windows-msvc")
+            _archive="uv-aarch64-pc-windows-msvc.zip"
+            if [ -n "$_archive" ]; then
+                echo "$_archive"
+                return 0
+            fi
             _archive="uv-x86_64-pc-windows-msvc.zip"
             if [ -n "$_archive" ]; then
                 echo "$_archive"
@@ -892,6 +972,16 @@ select_archive_for_arch() {
                 return 0
             fi
             ;;
+        "riscv64gc-unknown-linux-gnu")
+            _archive="uv-riscv64gc-unknown-linux-gnu.tar.gz"
+            if ! check_glibc "2" "31"; then
+                _archive=""
+            fi
+            if [ -n "$_archive" ]; then
+                echo "$_archive"
+                return 0
+            fi
+            ;;
         "s390x-unknown-linux-gnu")
             _archive="uv-s390x-unknown-linux-gnu.tar.gz"
             if ! check_glibc "2" "17"; then
@@ -1016,7 +1106,7 @@ install() {
     # * Create a shell script at $HOME/.cargo/env that:
     #   * Checks if $HOME/.cargo/bin/ is on PATH
     #   * and if not prepends it to PATH
-    # * Edits $HOME/.profile to run $HOME/.cargo/env (if the line doesn't exist)
+    # * Edits $INFERRED_HOME/.profile to run $HOME/.cargo/env (if the line doesn't exist)
     #
     # To do this we need these 4 values:
 
@@ -1039,6 +1129,8 @@ install() {
     local _force_install_dir
     # Which install layout to use - "flat" or "hierarchical"
     local _install_layout="unspecified"
+    # A list of binaries which are shadowed in the PATH
+    local _shadowed_bins=""
 
     # Check the newer app-specific variable before falling back
     # to the older generic one
@@ -1059,7 +1151,7 @@ install() {
         if [ "$_install_layout" = "flat" ]; then
             # If the install directory is targeting the Cargo home directory, then
             # we assume this application was previously installed that layout
-            if [ "$_force_install_dir" = "${CARGO_HOME:-${HOME:-}/.cargo}" ]; then
+            if [ "$_force_install_dir" = "${CARGO_HOME:-${INFERRED_HOME:-}/.cargo}" ]; then
                 _install_layout="cargo-home"
             fi
         fi
@@ -1125,13 +1217,13 @@ install() {
     if [ -z "${_install_dir:-}" ]; then
         _install_layout="flat"
         # Install to $HOME/.local/bin
-        if [ -n "${HOME:-}" ]; then
-            _install_dir="$HOME/.local/bin"
-            _lib_install_dir="$HOME/.local/bin"
+        if [ -n "${INFERRED_HOME:-}" ]; then
+            _install_dir="$INFERRED_HOME/.local/bin"
+            _lib_install_dir="$INFERRED_HOME/.local/bin"
             _receipt_install_dir="$_install_dir"
-            _env_script_path="$HOME/.local/bin/env"
-            _install_dir_expr='$HOME/.local/bin'
-            _env_script_path_expr='$HOME/.local/bin/env'
+            _env_script_path="$INFERRED_HOME/.local/bin/env"
+            _install_dir_expr="$INFERRED_HOME_EXPRESSION/.local/bin"
+            _env_script_path_expr="$INFERRED_HOME_EXPRESSION/.local/bin/env"
         fi
     fi
 
@@ -1208,7 +1300,7 @@ install() {
         add_install_dir_to_path "$_install_dir_expr" "$_env_script_path" "$_env_script_path_expr" ".zshrc .zshenv" "sh"
         exit3=$?
         # This path may not exist by default
-        ensure mkdir -p "$HOME/.config/fish/conf.d"
+        ensure mkdir -p "$INFERRED_HOME/.config/fish/conf.d"
         exit4=$?
         add_install_dir_to_path "$_install_dir_expr" "$_fish_env_script_path" "$_fish_env_script_path_expr" ".config/fish/conf.d/$APP_NAME.env.fish" "fish"
         exit5=$?
@@ -1221,6 +1313,26 @@ install() {
             say "    source $_fish_env_script_path_expr (fish)"
         fi
     fi
+
+    _shadowed_bins="$(check_for_shadowed_bins "$_install_dir" "$_bins")"
+    if [ -n "$_shadowed_bins" ]; then
+        warn "The following commands are shadowed by other commands in your PATH:$_shadowed_bins"
+    fi
+}
+
+check_for_shadowed_bins() {
+    local _install_dir="$1"
+    local _bins="$2"
+    local _shadow
+
+    for _bin_name in $_bins; do
+        _shadow="$(command -v "$_bin_name")"
+        if [ -n "$_shadow" ] && [ "$_shadow" != "$_install_dir/$_bin_name" ]; then
+            _shadowed_bins="$_shadowed_bins $_bin_name"
+        fi
+    done
+
+    echo "$_shadowed_bins"
 }
 
 print_home_for_script() {
@@ -1234,11 +1346,11 @@ print_home_for_script() {
             if [ -n "${ZDOTDIR:-}" ]; then
                 _home="$ZDOTDIR"
             else
-                _home="$HOME"
+                _home="$INFERRED_HOME"
             fi
             ;;
         *)
-            _home="$HOME"
+            _home="$INFERRED_HOME"
             ;;
     esac
 
@@ -1275,7 +1387,7 @@ add_install_dir_to_path() {
     local _rcfiles="$4"
     local _shell="$5"
 
-    if [ -n "${HOME:-}" ]; then
+    if [ -n "${INFERRED_HOME:-}" ]; then
         local _target
         local _home
 
@@ -1367,7 +1479,7 @@ shotgun_install_dir_to_path() {
     local _rcfiles="$4"
     local _shell="$5"
 
-    if [ -n "${HOME:-}" ]; then
+    if [ -n "${INFERRED_HOME:-}" ]; then
         local _found=false
         local _home
 
@@ -1419,12 +1531,23 @@ end
 EOF
 }
 
-check_proc() {
-    # Check for /proc by looking for the /proc/self/exe link
+get_current_exe() {
+    # Returns the executable used for system architecture detection
     # This is only run on Linux
-    if ! test -L /proc/self/exe ; then
-        err "fatal: Unable to find /proc/self/exe.  Is /proc mounted?  Installation cannot proceed without /proc."
+    local _current_exe
+    if test -L /proc/self/exe ; then
+        _current_exe=/proc/self/exe
+    else
+        warn "Unable to find /proc/self/exe. System architecture detection might be inaccurate."
+        if test -n "$SHELL" ; then
+            _current_exe=$SHELL
+        else
+            need_cmd /bin/sh
+            _current_exe=/bin/sh
+        fi
+        warn "Falling back to $_current_exe."
     fi
+    echo "$_current_exe"
 }
 
 get_bitness() {
@@ -1435,8 +1558,9 @@ get_bitness() {
     #   0x02 for 64-bit.
     # The printf builtin on some shells like dash only supports octal
     # escape sequences, so we use those.
+    local _current_exe=$1
     local _current_exe_head
-    _current_exe_head=$(head -c 5 /proc/self/exe )
+    _current_exe_head=$(head -c 5 "$_current_exe")
     if [ "$_current_exe_head" = "$(printf '\177ELF\001')" ]; then
         echo 32
     elif [ "$_current_exe_head" = "$(printf '\177ELF\002')" ]; then
@@ -1447,27 +1571,30 @@ get_bitness() {
 }
 
 is_host_amd64_elf() {
+    local _current_exe=$1
+
     need_cmd head
     need_cmd tail
     # ELF e_machine detection without dependencies beyond coreutils.
     # Two-byte field at offset 0x12 indicates the CPU,
     # but we're interested in it being 0x3E to indicate amd64, or not that.
     local _current_exe_machine
-    _current_exe_machine=$(head -c 19 /proc/self/exe | tail -c 1)
+    _current_exe_machine=$(head -c 19 "$_current_exe" | tail -c 1)
     [ "$_current_exe_machine" = "$(printf '\076')" ]
 }
 
 get_endianness() {
-    local cputype=$1
-    local suffix_eb=$2
-    local suffix_el=$3
+    local _current_exe=$1
+    local cputype=$2
+    local suffix_eb=$3
+    local suffix_el=$4
 
     # detect endianness without od/hexdump, like get_bitness() does.
     need_cmd head
     need_cmd tail
 
     local _current_exe_endianness
-    _current_exe_endianness="$(head -c 6 /proc/self/exe | tail -c 1)"
+    _current_exe_endianness="$(head -c 6 "$_current_exe" | tail -c 1)"
     if [ "$_current_exe_endianness" = "$(printf '\001')" ]; then
         echo "${cputype}${suffix_el}"
     elif [ "$_current_exe_endianness" = "$(printf '\002')" ]; then
@@ -1475,6 +1602,60 @@ get_endianness() {
     else
         err "unknown platform endianness"
     fi
+}
+
+# Detect the Linux/LoongArch UAPI flavor, with all errors being non-fatal.
+# Returns 0 or 234 in case of successful detection, 1 otherwise (/tmp being
+# noexec, or other causes).
+check_loongarch_uapi() {
+    need_cmd base64
+
+    local _tmp
+    if ! _tmp="$(ensure mktemp)"; then
+        return 1
+    fi
+
+    # Minimal Linux/LoongArch UAPI detection, exiting with 0 in case of
+    # upstream ("new world") UAPI, and 234 (-EINVAL truncated) in case of
+    # old-world (as deployed on several early commercial Linux distributions
+    # for LoongArch).
+    #
+    # See https://gist.github.com/xen0n/5ee04aaa6cecc5c7794b9a0c3b65fc7f for
+    # source to this helper binary.
+    ignore base64 -d > "$_tmp" <<EOF
+f0VMRgIBAQAAAAAAAAAAAAIAAgEBAAAAeAAgAAAAAABAAAAAAAAAAAAAAAAAAAAAQQAAAEAAOAAB
+AAAAAAAAAAEAAAAFAAAAAAAAAAAAAAAAACAAAAAAAAAAIAAAAAAAJAAAAAAAAAAkAAAAAAAAAAAA
+AQAAAAAABCiAAwUAFQAGABUAByCAAwsYggMAACsAC3iBAwAAKwAxen0n
+EOF
+
+    ignore chmod u+x "$_tmp"
+    if [ ! -x "$_tmp" ]; then
+        ignore rm "$_tmp"
+        return 1
+    fi
+
+    "$_tmp"
+    local _retval=$?
+
+    ignore rm "$_tmp"
+    return "$_retval"
+}
+
+ensure_loongarch_uapi() {
+    check_loongarch_uapi
+    case $? in
+        0)
+            return 0
+            ;;
+        234)
+            err 'Your Linux kernel does not provide the ABI required by this distribution.'
+            ;;
+        *)
+            warn "Cannot determine current system's ABI flavor, continuing anyway."
+            warn 'Note that the official distribution only works with the upstream kernel ABI.'
+            warn 'Installation will fail if your running kernel happens to be incompatible.'
+            ;;
+    esac
 }
 
 get_architecture() {
@@ -1497,17 +1678,30 @@ get_architecture() {
         fi
     fi
 
-    if [ "$_ostype" = Darwin ] && [ "$_cputype" = i386 ]; then
-        # Darwin `uname -m` lies
-        if sysctl hw.optional.x86_64 | grep -q ': 1'; then
-            _cputype=x86_64
-        fi
-    fi
+    if [ "$_ostype" = Darwin ]; then
+        # Darwin `uname -m` can lie due to Rosetta shenanigans. If you manage to
+        # invoke a native shell binary and then a native uname binary, you can
+        # get the real answer, but that's hard to ensure, so instead we use
+        # `sysctl` (which doesn't lie) to check for the actual architecture.
+        if [ "$_cputype" = i386 ]; then
+            # Handling i386 compatibility mode in older macOS versions (<10.15)
+            # running on x86_64-based Macs.
+            # Starting from 10.15, macOS explicitly bans all i386 binaries from running.
+            # See: <https://support.apple.com/en-us/HT208436>
 
-    if [ "$_ostype" = Darwin ] && [ "$_cputype" = x86_64 ]; then
-        # Rosetta on aarch64
-        if [ "$(sysctl -n hw.optional.arm64 2>/dev/null)" = "1" ]; then
-            _cputype=aarch64
+            # Avoid `sysctl: unknown oid` stderr output and/or non-zero exit code.
+            if sysctl hw.optional.x86_64 2> /dev/null || true | grep -q ': 1'; then
+                _cputype=x86_64
+            fi
+        elif [ "$_cputype" = x86_64 ]; then
+            # Handling x86-64 compatibility mode (a.k.a. Rosetta 2)
+            # in newer macOS versions (>=11) running on arm64-based Macs.
+            # Rosetta 2 is built exclusively for x86-64 and cannot run i386 binaries.
+
+            # Avoid `sysctl: unknown oid` stderr output and/or non-zero exit code.
+            if sysctl hw.optional.arm64 2> /dev/null || true | grep -q ': 1'; then
+                _cputype=arm64
+            fi
         fi
     fi
 
@@ -1529,6 +1723,7 @@ get_architecture() {
         fi
     fi
 
+    local _current_exe
     case "$_ostype" in
 
         Android)
@@ -1536,9 +1731,9 @@ get_architecture() {
             ;;
 
         Linux)
-            check_proc
+            _current_exe=$(get_current_exe)
             _ostype=unknown-linux-$_clibtype
-            _bitness=$(get_bitness)
+            _bitness=$(get_bitness "$_current_exe")
             ;;
 
         FreeBSD)
@@ -1611,14 +1806,14 @@ get_architecture() {
             ;;
 
         mips)
-            _cputype=$(get_endianness mips '' el)
+            _cputype=$(get_endianness "$_current_exe" mips '' el)
             ;;
 
         mips64)
             if [ "$_bitness" -eq 64 ]; then
                 # only n64 ABI is supported for now
                 _ostype="${_ostype}abi64"
-                _cputype=$(get_endianness mips64 '' el)
+                _cputype=$(get_endianness "$_current_exe" mips64 '' el)
             fi
             ;;
 
@@ -1642,6 +1837,7 @@ get_architecture() {
             ;;
         loongarch64)
             _cputype=loongarch64
+            ensure_loongarch_uapi
             ;;
         *)
             err "unknown CPU type: $_cputype"
@@ -1653,14 +1849,14 @@ get_architecture() {
         case $_cputype in
             x86_64)
                 # 32-bit executable for amd64 = x32
-                if is_host_amd64_elf; then {
+                if is_host_amd64_elf "$_current_exe"; then {
                     err "x32 linux unsupported"
                 }; else
                     _cputype=i686
                 fi
                 ;;
             mips64)
-                _cputype=$(get_endianness mips '' el)
+                _cputype=$(get_endianness "$_current_exe" mips '' el)
                 ;;
             powerpc64)
                 _cputype=powerpc
@@ -1679,10 +1875,12 @@ get_architecture() {
         esac
     fi
 
-    # treat armv7 systems without neon as plain arm
+    # Detect armv7 but without the CPU features Rust needs in that build,
+    # and fall back to arm.
     if [ "$_ostype" = "unknown-linux-gnueabihf" ] && [ "$_cputype" = armv7 ]; then
-        if ensure grep '^Features' /proc/cpuinfo | grep -q -v neon; then
-            # At least one processor does not have NEON.
+        if ! (ensure grep '^Features' /proc/cpuinfo | grep -E -q 'neon|simd') ; then
+            # Either `/proc/cpuinfo` is malformed or unavailable, or
+            # at least one processor does not have NEON (which is asimd on armv8+).
             _cputype=arm
         fi
     fi
@@ -1701,6 +1899,16 @@ say() {
 say_verbose() {
     if [ "1" = "$PRINT_VERBOSE" ]; then
         echo "$1"
+    fi
+}
+
+warn() {
+    if [ "0" = "$PRINT_QUIET" ]; then
+        local red
+        local reset
+        red=$(tput setaf 1 2>/dev/null || echo '')
+        reset=$(tput sgr0 2>/dev/null || echo '')
+        say "${red}WARN${reset}: $1" >&2
     fi
 }
 
@@ -1747,19 +1955,47 @@ ignore() {
 # This wraps curl or wget. Try curl first, if not installed,
 # use wget instead.
 downloader() {
-    if check_cmd curl
+    # Check if we have a broken snap curl
+    # https://github.com/boukendesho/curl-snap/issues/1
+    _snap_curl=0
+    if command -v curl > /dev/null 2>&1; then
+      _curl_path=$(command -v curl)
+      if echo "$_curl_path" | grep "/snap/" > /dev/null 2>&1; then
+        _snap_curl=1
+      fi
+    fi
+
+    # Check if we have a working (non-snap) curl
+    if check_cmd curl && [ "$_snap_curl" = "0" ]
     then _dld=curl
+    # Try wget for both no curl and the broken snap curl
     elif check_cmd wget
     then _dld=wget
+    # If we can't fall back from broken snap curl to wget, report the broken snap curl
+    elif [ "$_snap_curl" = "1" ]
+    then
+      say "curl installed with snap cannot be used to install $APP_NAME"
+      say "due to missing permissions. Please uninstall it and"
+      say "reinstall curl with a different package manager (e.g., apt)."
+      say "See https://github.com/boukendesho/curl-snap/issues/1"
+      exit 1
     else _dld='curl or wget' # to be used in error message of need_cmd
     fi
 
     if [ "$1" = --check ]
     then need_cmd "$_dld"
-    elif [ "$_dld" = curl ]
-    then curl -sSfL "$1" -o "$2"
-    elif [ "$_dld" = wget ]
-    then wget "$1" -O "$2"
+    elif [ "$_dld" = curl ]; then
+        if [ -n "${AUTH_TOKEN:-}" ]; then
+            curl -sSfL --header "Authorization: Bearer ${AUTH_TOKEN}" "$1" -o "$2"
+        else
+            curl -sSfL "$1" -o "$2"
+        fi
+    elif [ "$_dld" = wget ]; then
+        if [ -n "${AUTH_TOKEN:-}" ]; then
+            wget --header "Authorization: Bearer ${AUTH_TOKEN}" "$1" -O "$2"
+        else
+            wget "$1" -O "$2"
+        fi
     else err "Unknown downloader"   # should not reach here
     fi
 }

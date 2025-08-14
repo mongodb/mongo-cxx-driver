@@ -49,15 +49,11 @@ using builder::basic::kvp;
 using builder::basic::make_document;
 
 TEST_CASE("A default constructed collection is false-ish", "[collection]") {
-    instance::current();
-
     collection c;
     REQUIRE(!c);
 }
 
 TEST_CASE("Collection", "[collection]") {
-    instance::current();
-
     // dummy_collection is the name the mocked collection_get_name returns
     std::string const collection_name("dummy_collection");
     std::string const database_name("mocked_collection");

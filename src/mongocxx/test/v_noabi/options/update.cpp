@@ -26,8 +26,6 @@ using namespace bsoncxx::builder::basic;
 using namespace mongocxx;
 
 TEST_CASE("update opts", "[update][option]") {
-    instance::current();
-
     options::update updt;
 
     auto collation = make_document(kvp("locale", "en_US"));

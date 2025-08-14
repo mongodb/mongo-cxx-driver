@@ -469,8 +469,6 @@ void run_gridfs_tests_in_file(std::string test_path, client* client) {
 }
 
 TEST_CASE("GridFS spec automated tests", "[gridfs_spec]") {
-    instance::current();
-
     client client{uri{}, test_util::add_test_server_api()};
 
     auto cb = [&](std::string const& test_file) { run_gridfs_tests_in_file(test_file, &client); };

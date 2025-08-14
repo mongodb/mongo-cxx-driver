@@ -216,16 +216,12 @@ void manual_gridfs_initialize(
 }
 
 TEST_CASE("mongocxx::gridfs::bucket default constructor makes invalid bucket", "[gridfs::bucket]") {
-    instance::current();
-
     gridfs::bucket bucket;
     REQUIRE(!bucket);
     REQUIRE_THROWS_AS(bucket.bucket_name(), logic_error);
 }
 
 TEST_CASE("mongocxx::gridfs::bucket copy constructor", "[gridfs::bucket]") {
-    instance::current();
-
     client client{uri{}, test_util::add_test_server_api()};
     database db = client["gridfs_bucket_copy_constructor"];
 
@@ -244,8 +240,6 @@ TEST_CASE("mongocxx::gridfs::bucket copy constructor", "[gridfs::bucket]") {
 }
 
 TEST_CASE("mongocxx::gridfs::bucket copy assignment operator", "[gridfs::bucket]") {
-    instance::current();
-
     client client{uri{}, test_util::add_test_server_api()};
     database db = client["gridfs_bucket_copy_assignment"];
 
@@ -281,8 +275,6 @@ TEST_CASE("mongocxx::gridfs::bucket copy assignment operator", "[gridfs::bucket]
 }
 
 TEST_CASE("database::gridfs_bucket() throws error when options are invalid", "[gridfs::bucket]") {
-    instance::current();
-
     client client{uri{}, test_util::add_test_server_api()};
     database db = client["gridfs_bucket_error_invalid_options"];
 
@@ -303,8 +295,6 @@ TEST_CASE("database::gridfs_bucket() throws error when options are invalid", "[g
 }
 
 TEST_CASE("uploading throws error when options are invalid", "[gridfs::bucket]") {
-    instance::current();
-
     client client{uri{}, test_util::add_test_server_api()};
     database db = client["gridfs_upload_error_invalid_options"];
     gridfs::bucket bucket = db.gridfs_bucket();
@@ -337,8 +327,6 @@ TEST_CASE("uploading throws error when options are invalid", "[gridfs::bucket]")
 }
 
 TEST_CASE("downloading throws error when files document is corrupt", "[gridfs::bucket]") {
-    instance::current();
-
     client client{uri{}, test_util::add_test_server_api()};
     database db = client["gridfs_files_doc_corrupt"];
     gridfs::bucket bucket = db.gridfs_bucket();
@@ -432,8 +420,6 @@ TEST_CASE("downloading throws error when files document is corrupt", "[gridfs::b
 }
 
 TEST_CASE("downloading throws error when chunks document is corrupt", "[gridfs::bucket]") {
-    instance::current();
-
     client client{uri{}, test_util::add_test_server_api()};
     database db = client["gridfs_chunk_doc_corrupt"];
     gridfs::bucket bucket = db.gridfs_bucket();
@@ -512,8 +498,6 @@ TEST_CASE("downloading throws error when chunks document is corrupt", "[gridfs::
 }
 
 TEST_CASE("mongocxx::gridfs::downloader::read with arbitrary sizes", "[gridfs::downloader]") {
-    instance::current();
-
     client client{uri{}, test_util::add_test_server_api()};
     database db = client["gridfs_download_read_test"];
     gridfs::bucket bucket = db.gridfs_bucket();
@@ -587,8 +571,6 @@ TEST_CASE("mongocxx::gridfs::downloader::read with arbitrary sizes", "[gridfs::d
 }
 
 TEST_CASE("mongocxx::gridfs::uploader::abort works", "[gridfs::uploader]") {
-    instance::current();
-
     client client{uri{}, test_util::add_test_server_api()};
     database db = client["gridfs_upload_abort_test"];
     gridfs::bucket bucket = db.gridfs_bucket();
@@ -619,8 +601,6 @@ TEST_CASE("mongocxx::gridfs::uploader::abort works", "[gridfs::uploader]") {
 }
 
 TEST_CASE("mongocxx::gridfs::uploader::write with arbitrary sizes", "[gridfs::uploader]") {
-    instance::current();
-
     client client{uri{}, test_util::add_test_server_api()};
     database db = client["gridfs_upload_write_test"];
     gridfs::bucket bucket = db.gridfs_bucket();
@@ -692,8 +672,6 @@ TEST_CASE("mongocxx::gridfs::uploader::write with arbitrary sizes", "[gridfs::up
 }
 
 TEST_CASE("gridfs upload/download round trip", "[gridfs::uploader] [gridfs::downloader]") {
-    instance::current();
-
     client client{uri{}, test_util::add_test_server_api()};
     database db = client["gridfs_upload_download_round_trip_test"];
     gridfs::bucket bucket = db.gridfs_bucket();
@@ -725,8 +703,6 @@ TEST_CASE("gridfs upload/download round trip", "[gridfs::uploader] [gridfs::down
 }
 
 TEST_CASE("gridfs::bucket::open_upload_stream_with_id works", "[gridfs::bucket]") {
-    instance::current();
-
     client client{uri{}, test_util::add_test_server_api()};
     auto db = client["gridfs_bucket_open_upload_stream_with_id"];
     gridfs::bucket bucket = db.gridfs_bucket();
@@ -750,8 +726,6 @@ TEST_CASE("gridfs::bucket::open_upload_stream_with_id works", "[gridfs::bucket]"
 }
 
 TEST_CASE("gridfs::bucket::upload_from_stream works", "[gridfs::bucket]") {
-    instance::current();
-
     client client{uri{}, test_util::add_test_server_api()};
     auto db = client["gridfs_bucket_upload_from_stream_works"];
     gridfs::bucket bucket = db.gridfs_bucket();
@@ -786,8 +760,6 @@ TEST_CASE("gridfs::bucket::upload_from_stream works", "[gridfs::bucket]") {
 }
 
 TEST_CASE("gridfs::bucket::upload_from_stream doesn't infinite loop when passed bad ifstream", "[gridfs::bucket]") {
-    instance::current();
-
     client client{uri{}, test_util::add_test_server_api()};
     database db = client["gridfs_upload_from_stream_no_infinite_loop_ifstream"];
     gridfs::bucket bucket = db.gridfs_bucket();
@@ -805,8 +777,6 @@ TEST_CASE("gridfs::bucket::upload_from_stream doesn't infinite loop when passed 
 }
 
 TEST_CASE("gridfs upload_from_stream aborts on failure", "[gridfs::bucket]") {
-    instance::current();
-
     client client{uri{}, test_util::add_test_server_api()};
     database db = client["gridfs_upload_from_stream_abort_on_failure"];
     gridfs::bucket bucket = db.gridfs_bucket();
@@ -826,8 +796,6 @@ TEST_CASE("gridfs upload_from_stream aborts on failure", "[gridfs::bucket]") {
 }
 
 TEST_CASE("gridfs::bucket::download_to_stream works", "[gridfs::bucket]") {
-    instance::current();
-
     client client{uri{}, test_util::add_test_server_api()};
     database db = client["gridfs_download_to_stream_works"];
     gridfs::bucket bucket = db.gridfs_bucket();
@@ -946,8 +914,6 @@ TEST_CASE("gridfs::bucket::download_to_stream works", "[gridfs::bucket]") {
 }
 
 TEST_CASE("gridfs::bucket::delete_file works", "[gridfs::bucket]") {
-    instance::current();
-
     client client{uri{}, test_util::add_test_server_api()};
     database db = client["gridfs_delete_file_works"];
     gridfs::bucket bucket = db.gridfs_bucket();
@@ -967,8 +933,6 @@ TEST_CASE("gridfs::bucket::delete_file works", "[gridfs::bucket]") {
 }
 
 TEST_CASE("gridfs::bucket::find works", "[gridfs::bucket]") {
-    instance::current();
-
     client client{uri{}, test_util::add_test_server_api()};
     database db = client["gridfs_find_works"];
     gridfs::bucket bucket = db.gridfs_bucket();
@@ -1007,8 +971,6 @@ TEST_CASE("gridfs::bucket::find works", "[gridfs::bucket]") {
 }
 
 TEST_CASE("gridfs upload large file", "[gridfs::bucket]") {
-    instance::current();
-
     char* enable_slow_tests = std::getenv("MONGOCXX_ENABLE_SLOW_TESTS");
 
     if (!enable_slow_tests || bsoncxx::stdx::string_view{enable_slow_tests}.empty()) {
@@ -1062,8 +1024,6 @@ TEST_CASE("gridfs upload large file", "[gridfs::bucket]") {
 }
 
 TEST_CASE("gridfs download large file", "[gridfs::bucket]") {
-    instance::current();
-
     char* enable_slow_tests = std::getenv("MONGOCXX_ENABLE_SLOW_TESTS");
 
     if (!enable_slow_tests || bsoncxx::stdx::string_view{enable_slow_tests}.empty()) {
@@ -1134,8 +1094,6 @@ std::string _gen_database_name(std::string name) {
 TEST_CASE("gridfs does not create additional indexes", "[gridfs::uploader] [gridfs::downloader]") {
     using bsoncxx::builder::basic::document;
     using bsoncxx::builder::basic::sub_array;
-
-    instance::current();
     client client{uri{}, test_util::add_test_server_api()};
     auto db_name = _gen_database_name("gridfs_index_creation");
     database db = client[db_name];

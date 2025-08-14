@@ -26,8 +26,6 @@ namespace {
 using namespace mongocxx;
 
 TEST_CASE("a default write_concern", "[write_concern]") {
-    instance::current();
-
     write_concern wc{};
 
     SECTION("doesn't require the server to journal") {
@@ -49,8 +47,6 @@ TEST_CASE("a default write_concern", "[write_concern]") {
 }
 
 TEST_CASE("write_concern fields may be set and retrieved", "[write_concern]") {
-    instance::current();
-
     write_concern wc{};
 
     SECTION("journal may be configured") {
@@ -103,7 +99,6 @@ TEST_CASE("write_concern fields may be set and retrieved", "[write_concern]") {
 }
 
 TEST_CASE("acknowledge_level responds to changes in nodes, majority, tag", "[write_concern]") {
-    instance::current();
     write_concern wc{};
 
     SECTION("nodes") {
@@ -134,8 +129,6 @@ TEST_CASE("acknowledge_level responds to changes in nodes, majority, tag", "[wri
 }
 
 TEST_CASE("confirmation from tags, a repl-member count, and majority are mutually exclusive", "[write_concern]") {
-    instance::current();
-
     SECTION("setting the confirmation number unsets the confirmation tag") {
         write_concern wc{};
         wc.tag("MultipleDC");
@@ -186,8 +179,6 @@ TEST_CASE("confirmation from tags, a repl-member count, and majority are mutuall
 }
 
 TEST_CASE("write_concern equality operator works", "[write_concern]") {
-    instance::current();
-
     write_concern wc_a{};
     write_concern wc_b{};
 
@@ -239,8 +230,6 @@ TEST_CASE("write_concern equality operator works", "[write_concern]") {
 }
 
 TEST_CASE("write_concern inequality operator works", "[write_concern]") {
-    instance::current();
-
     write_concern wc_a{};
     write_concern wc_b{};
 

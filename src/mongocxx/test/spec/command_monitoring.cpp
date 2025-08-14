@@ -191,7 +191,6 @@ void run_command_monitoring_tests_in_file(std::string test_path) {
 }
 
 TEST_CASE("Command Monitoring Spec Tests", "[command_monitoring_spec]") {
-    instance::current();
     char* command_monitoring_tests_path = std::getenv("COMMAND_MONITORING_TESTS_PATH");
     REQUIRE(command_monitoring_tests_path);
 

@@ -46,7 +46,6 @@ void open_and_close_client(uri const& test_uri, options::apm const& apm_opts) {
 }
 
 TEST_CASE("SDAM Monitoring", "[sdam_monitoring]") {
-    instance::current();
     std::string rs_name;
     uri test_uri;
 
@@ -282,7 +281,6 @@ TEST_CASE("SDAM Monitoring", "[sdam_monitoring]") {
 }
 
 TEST_CASE("Heartbeat failed event", "[sdam_monitoring]") {
-    instance::current();
     options::apm apm_opts;
     bool failed_awaited_called = false;
     auto mock_failed_awaited = libmongoc::apm_server_heartbeat_failed_get_awaited.create_instance();

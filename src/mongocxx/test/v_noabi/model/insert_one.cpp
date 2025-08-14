@@ -23,8 +23,6 @@ namespace {
 using namespace bsoncxx::builder::basic;
 
 TEST_CASE("insert_one model tests", "[insert_one][model]") {
-    mongocxx::instance::current();
-
     auto doc = make_document(kvp("a", 1));
 
     mongocxx::model::insert_one io(doc.view());

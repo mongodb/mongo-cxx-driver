@@ -33,7 +33,6 @@ using bsoncxx::builder::basic::kvp;
 using bsoncxx::builder::basic::make_document;
 
 TEST_CASE("a bulk_write will setup a mongoc bulk operation", "[bulk_write]") {
-    instance::current();
     mongocxx::client client{mongocxx::uri{}, test_util::add_test_server_api()};
     mongocxx::collection coll = client["db"]["coll"];
     CHECK_NOTHROW(coll.drop());
@@ -73,7 +72,6 @@ TEST_CASE("a bulk_write will setup a mongoc bulk operation", "[bulk_write]") {
     }
 }
 TEST_CASE("destruction of a bulk_write will destroy mongoc operation", "[bulk_write]") {
-    instance::current();
     mongocxx::client client{mongocxx::uri{}, test_util::add_test_server_api()};
     mongocxx::collection coll = client["db"]["coll"];
     CHECK_NOTHROW(coll.drop());
@@ -184,7 +182,6 @@ class delete_functor {
 };
 
 TEST_CASE("passing write operations to append calls corresponding C function", "[bulk_write]") {
-    instance::current();
     mongocxx::client client{mongocxx::uri{}, test_util::add_test_server_api()};
     mongocxx::collection coll = client["db"]["coll"];
     CHECK_NOTHROW(coll.drop());
@@ -360,7 +357,6 @@ TEST_CASE("passing write operations to append calls corresponding C function", "
 }
 
 TEST_CASE("calling empty on a bulk write before and after appending", "[bulk_write]") {
-    instance::current();
     mongocxx::client client{mongocxx::uri{}, test_util::add_test_server_api()};
     mongocxx::collection coll = client["db"]["coll"];
     CHECK_NOTHROW(coll.drop());

@@ -55,8 +55,6 @@ TEST_CASE("a user-provided log handler will be used for logging output", "[insta
     std::vector<test_log_handler::event> events;
     mongocxx::instance driver{bsoncxx::make_unique<test_log_handler>(&events)};
 
-    REQUIRE(&mongocxx::instance::current() == &driver);
-
     // The libmongoc namespace mocking system doesn't play well with varargs
     // functions, so we use a bare mongoc_log call here.
     mongoc_log(::MONGOC_LOG_LEVEL_ERROR, "foo", "bar");

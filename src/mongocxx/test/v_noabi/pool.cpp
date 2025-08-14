@@ -35,8 +35,6 @@ using namespace mongocxx;
 TEST_CASE("a pool is created with the correct MongoDB URI", "[pool]") {
     MOCK_POOL;
 
-    instance::current();
-
     bool destroy_called = false;
     client_pool_destroy->visit([&](::mongoc_client_pool_t*) { destroy_called = true; });
 
@@ -71,8 +69,6 @@ TEST_CASE(
     "underlying mongoc pool",
     "[pool]") {
     MOCK_POOL;
-
-    instance::current();
 
     std::string const pem_file = "foo";
     std::string const pem_password = "bar";
@@ -111,8 +107,6 @@ TEST_CASE(
 
 TEST_CASE("calling acquire on a pool returns an entry that manages its client", "[pool]") {
     MOCK_POOL;
-
-    instance::current();
 
     bool pop_called = false;
     client_pool_pop->visit([&](::mongoc_client_pool_t*) {
@@ -154,7 +148,6 @@ TEST_CASE("calling acquire on a pool returns an entry that manages its client", 
 }
 
 TEST_CASE("try_acquire returns an engaged bsoncxx::stdx::optional<entry>", "[pool]") {
-    instance::current();
     pool p{};
     auto client = p.try_acquire();
     REQUIRE(!!client);
@@ -166,8 +159,6 @@ TEST_CASE(
     "[pool]") {
     MOCK_POOL;
 
-    instance::current();
-
     client_pool_try_pop->interpose([](::mongoc_client_pool_t*) { return nullptr; });
 
     {
@@ -178,14 +169,12 @@ TEST_CASE(
 }
 
 TEST_CASE("a pool is created with an invalid connection string", "[pool]") {
-    instance::current();
     std::string uristr = "mongodb+srv://foo.bar.baz";
 
     REQUIRE_THROWS_AS(pool{mongocxx::uri(uristr)}, operation_exception);
 }
 
 TEST_CASE("acquiring a client throws if waitQueueTimeoutMS expires", "[pool]") {
-    instance::current();
     mongocxx::pool pool{
         mongocxx::uri{"mongodb://localhost:27017/?waitQueueTimeoutMS=1&maxPoolSize=1"},
         options::pool(test_util::add_test_server_api())};

@@ -21,8 +21,6 @@ namespace {
 using namespace mongocxx;
 
 TEST_CASE("session option", "[session][option]") {
-    instance::current();
-
     options::client_session opts;
 
     // Causal consistency is enabled by default.

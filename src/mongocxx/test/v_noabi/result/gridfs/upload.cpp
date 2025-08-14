@@ -32,8 +32,6 @@ using bsoncxx::builder::basic::kvp;
 using bsoncxx::builder::basic::make_document;
 
 TEST_CASE("result::gridfs::upload", "[result::gridfs::upload]") {
-    instance::current();
-
     auto oid = types::b_oid{bsoncxx::oid{}};
     result::gridfs::upload upload_result{types::bson_value::view{oid}};
 
@@ -63,8 +61,6 @@ TEST_CASE("result::gridfs::upload owns id", "[result::gridfs::upload]") {
 }
 
 TEST_CASE("result::gridfs::upload equals", "[result::gridfs::upload]") {
-    instance::current();
-
     auto oid = types::b_oid{bsoncxx::oid{}};
     result::gridfs::upload upload_result1{types::bson_value::view{oid}};
     result::gridfs::upload upload_result2{types::bson_value::view{oid}};
@@ -73,8 +69,6 @@ TEST_CASE("result::gridfs::upload equals", "[result::gridfs::upload]") {
 }
 
 TEST_CASE("result::gridfs::upload inequals", "[result::gridfs::upload]") {
-    instance::current();
-
     result::gridfs::upload upload_result1{types::bson_value::view{types::b_oid{bsoncxx::oid{}}}};
     result::gridfs::upload upload_result2{types::bson_value::view{types::b_string{"baz"}}};
 

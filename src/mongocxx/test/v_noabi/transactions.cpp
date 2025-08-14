@@ -33,7 +33,6 @@ using bsoncxx::builder::basic::make_document;
 
 // Run on replica set with 1 node
 TEST_CASE("Transaction tests", "[transactions]") {
-    instance::current();
     client mongodb_client{uri{}, test_util::add_test_server_api()};
 
     if (!test_util::is_replica_set()) {
@@ -213,8 +212,6 @@ TEST_CASE("Transaction tests", "[transactions]") {
 }
 
 TEST_CASE("Transactions Mongos Pinning Prose Tests", "[transactions]") {
-    instance::current();
-
     if (test_util::get_topology() != "sharded") {
         SKIP("requires sharded cluster topology");
     }

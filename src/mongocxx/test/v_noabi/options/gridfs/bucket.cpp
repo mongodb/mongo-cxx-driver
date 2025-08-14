@@ -26,8 +26,6 @@ namespace {
 using namespace mongocxx;
 
 TEST_CASE("options::gridfs::bucket accessors/mutators", "[options::gridfs::bucket]") {
-    instance::current();
-
     options::gridfs::bucket bucket_options;
 
     read_concern rc;

@@ -28,8 +28,6 @@ using namespace bsoncxx::builder::basic;
 using namespace mongocxx;
 
 TEST_CASE("distinct", "[distinct][option]") {
-    instance::current();
-
     options::distinct dist;
 
     auto collation = make_document(kvp("locale", "en_US"));

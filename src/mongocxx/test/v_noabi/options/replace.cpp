@@ -26,8 +26,6 @@ using namespace bsoncxx::builder::basic;
 using namespace mongocxx;
 
 TEST_CASE("replace opts", "[replace][option]") {
-    instance::current();
-
     options::replace repl;
 
     auto collation = make_document(kvp("locale", "en_US"));
