@@ -111,6 +111,7 @@ int EXAMPLES_CDECL main() {
         // usually we don't need to actually use a switch statement, because we can also
         // get a variant 'value' that can hold any BSON type.
         types::bson_value::view doc_ele_val{doc_ele.get_value()};
+        (void)doc_ele_val;
     }
 
     // If we want to search for an element we can use operator[]
