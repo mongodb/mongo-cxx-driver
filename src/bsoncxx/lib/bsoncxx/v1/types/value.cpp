@@ -62,8 +62,9 @@ class alignas(BSONCXX_PRIVATE_MAX_ALIGN_T) value::impl {
 
     ~impl();
 
-    impl(impl&& other) noexcept {
-        _value = other._value; // Ownership transfer.
+    impl(impl&& other) noexcept
+        : _value{other._value} // Ownership transfer.
+    {
         other._value = {BSON_TYPE_NULL, {}, {}};
     }
 
