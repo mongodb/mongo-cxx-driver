@@ -18,7 +18,6 @@
 
 #include <bsoncxx/test/v1/exception.hh>
 
-#include <climits>
 #include <ctime>
 #include <system_error>
 #include <vector>

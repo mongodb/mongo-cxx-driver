@@ -24,10 +24,8 @@
 #include <bsoncxx/test/v1/types/value.hh>
 #include <bsoncxx/test/v1/types/view.hh>
 
-#include <climits>
 #include <string>
 #include <system_error>
-#include <utility>
 
 #include <bsoncxx/test/stringify.hh>
 #include <bsoncxx/test/system_error.hh>
