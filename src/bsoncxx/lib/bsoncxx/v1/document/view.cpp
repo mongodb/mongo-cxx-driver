@@ -20,6 +20,7 @@
 
 #include <bsoncxx/v1/element/view.hh>
 
+#include <array>
 #include <cstdint>
 #include <string>
 #include <system_error>
@@ -45,11 +46,11 @@ static_assert(
 
 namespace {
 
-constexpr std::uint8_t k_default_view[5] = {5u, 0u, 0u, 0u, 0u};
+constexpr std::array<std::uint8_t, 5> k_default_view = {{5u, 0u, 0u, 0u, 0u}};
 
 } // namespace
 
-view::view() : view{k_default_view} {}
+view::view() : view{k_default_view.data()} {}
 
 view::view(std::uint8_t const* data, std::size_t length) : view{data} {
     if (length < _empty_length || length < this->size()) {

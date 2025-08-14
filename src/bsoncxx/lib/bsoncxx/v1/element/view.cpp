@@ -58,7 +58,7 @@ class alignas(BSONCXX_PRIVATE_MAX_ALIGN_T) view::impl {
 
     BSONCXX_PRIVATE_WARNINGS_PUSH();
     BSONCXX_PRIVATE_WARNINGS_DISABLE(GNU("-Wunused"));
-    unsigned char _padding[_padding_size]; // Reserved.
+    std::array<unsigned char, _padding_size> _padding = {}; // Reserved.
     BSONCXX_PRIVATE_WARNINGS_POP();
 
     bool _is_valid = {}; // Last byte.
