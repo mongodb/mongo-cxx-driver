@@ -68,12 +68,16 @@ view::const_iterator view::cbegin() const {
         throw v1::exception{code::invalid_data};
     }
 
-    if (!bson_iter_next(&iter)) {
-        return this->cend();
+    if (bson_iter_next(&iter)) {
+        return const_iterator::internal::make_const_iterator(
+            _data, this->size(), bson_iter_offset(&iter), bson_iter_key_len(&iter));
     }
 
-    return const_iterator::internal::make_const_iterator(
-        _data, this->size(), bson_iter_offset(&iter), bson_iter_key_len(&iter));
+    if (iter.err_off != 0) {
+        throw v1::exception{code::invalid_data};
+    }
+
+    return this->cend();
 }
 
 view::const_iterator view::find(v1::stdx::string_view key) const {
@@ -98,12 +102,16 @@ view::const_iterator view::find(v1::stdx::string_view key) const {
 
     bson_iter_t iter;
 
-    if (!bson_iter_init_find_w_len(&iter, &bson, key.data(), static_cast<int>(key.size()))) {
-        return this->end();
+    if (bson_iter_init_find_w_len(&iter, &bson, key.data(), static_cast<int>(key.size()))) {
+        return const_iterator::internal::make_const_iterator(
+            _data, this->size(), bson_iter_offset(&iter), bson_iter_key_len(&iter));
     }
 
-    return const_iterator::internal::make_const_iterator(
-        _data, this->size(), bson_iter_offset(&iter), bson_iter_key_len(&iter));
+    if (iter.err_off != 0) {
+        throw v1::exception{code::invalid_data};
+    }
+
+    return this->end();
 }
 
 std::error_category const& view::error_category() {
@@ -183,9 +191,14 @@ view::const_iterator& view::const_iterator::operator++() {
     if (bson_iter_next(&iter)) {
         _element = v1::element::view::internal::make(
             _element.raw(), _element.length(), bson_iter_offset(&iter), bson_iter_key_len(&iter));
-    } else {
-        _element = {};
+        return *this;
     }
+
+    if (iter.err_off != 0) {
+        throw v1::exception{code::invalid_data};
+    }
+
+    _element = {};
 
     return *this;
 }
