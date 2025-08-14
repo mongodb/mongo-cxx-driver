@@ -36,10 +36,10 @@ static_assert(is_semitrivial<oid>::value, "bsoncxx::v1::oid must be semitrivial"
 constexpr std::size_t oid::k_oid_length;
 
 oid::oid() {
+#if defined(_WIN32)
     // Ensure the Winsock DLL is initialized prior to calling `gethostname` in `bsoncxx::v1::oid::oid()`:
     //  - bson_oid_init -> bson_context_get_default -> ... -> _bson_context_init_random -> gethostname.
-    struct WSAGuard {
-#if defined(_WIN32)
+    static struct WSAGuard {
         ~WSAGuard() {
             (void)WSACleanup();
         }
@@ -56,11 +56,11 @@ oid::oid() {
                     WSAGetLastError(), std::system_category(), "WSAStartup() failed in bsoncxx::v1::oid::oid()"};
             }
         }
+    } wsa_guard;
 #endif
-    };
 
     bson_oid_t oid;
-    ((void)WSAGuard{}, bson_oid_init(&oid, nullptr));
+    bson_oid_init(&oid, nullptr);
     std::memcpy(_bytes.data(), oid.bytes, sizeof(oid.bytes));
 }
 
