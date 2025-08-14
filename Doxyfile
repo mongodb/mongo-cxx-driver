@@ -1066,7 +1066,8 @@ EXCLUDE_PATTERNS       =
 EXCLUDE_SYMBOLS        = bsoncxx::detail \
                          bsoncxx::*::detail \
                          mongocxx::detail \
-                         mongocxx::*::detail
+                         mongocxx::*::detail \
+                         std::*
 
 # The EXAMPLE_PATH tag can be used to specify one or more files or directories
 # that contain example code fragments that are included (see the \include
