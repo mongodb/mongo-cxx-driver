@@ -23,6 +23,8 @@
 #include <string>
 #include <system_error>
 
+#include <bsoncxx/private/make_unique.hh>
+
 #include <bsoncxx/test/stringify.hh>
 #include <bsoncxx/test/system_error.hh>
 
@@ -100,7 +102,7 @@ TEST_CASE("exceptions", "[bsoncxx][v1][decimal128]") {
     SECTION("invalid_string_length") {
         try {
             auto const size = std::size_t{INT_MAX} + 1u;
-            std::unique_ptr<char[]> data{new char[size]}; // make_unique_for_overwrite
+            auto const data = bsoncxx::make_unique_for_overwrite<char[]>(size);
             auto const big_string = bsoncxx::v1::stdx::string_view{data.get(), size};
 
             auto const expr = [&] { decimal128 d128{big_string}; };

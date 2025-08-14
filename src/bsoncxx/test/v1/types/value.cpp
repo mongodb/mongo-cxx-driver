@@ -33,6 +33,8 @@
 #include <type_traits>
 #include <utility>
 
+#include <bsoncxx/private/make_unique.hh>
+
 #include <bsoncxx/test/stringify.hh>
 #include <bsoncxx/test/system_error.hh>
 
@@ -112,7 +114,7 @@ TEST_CASE("exceptions", "[bsoncxx][v1][types][value]") {
     SECTION("invalid_length_u32") {
         try {
             auto const size = std::size_t{UINT32_MAX} + 1u;
-            std::unique_ptr<unsigned char[]> data{new unsigned char[size]}; // make_unique_for_overwrite.
+            auto const data = bsoncxx::make_unique_for_overwrite<unsigned char[]>(size);
 
             auto const big_string = bsoncxx::v1::stdx::string_view{reinterpret_cast<char const*>(data.get()), size};
 
