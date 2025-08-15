@@ -44,8 +44,6 @@ element::element() : element(nullptr, 0, 0, 0) {}
 element::element(std::uint8_t const* raw, std::uint32_t length, std::uint32_t offset, std::uint32_t keylen)
     : _raw(raw), _length(length), _offset(offset), _keylen(keylen) {}
 
-element::element(stdx::string_view const key) : _raw(nullptr), _length(0), _offset(0), _keylen(0), _key(key) {}
-
 std::uint8_t const* element::raw() const {
     return _raw;
 }
@@ -64,9 +62,7 @@ std::uint32_t element::keylen() const {
 bsoncxx::v_noabi::type element::type() const {
     if (_raw == nullptr) {
         throw bsoncxx::v_noabi::exception{
-            error_code::k_unset_element,
-            "cannot return the type of uninitialized element" +
-                std::string(_key ? " with key \"" + std::string(_key.value().data()) + "\"" : "")};
+            error_code::k_unset_element, "cannot return the type of uninitialized element"};
     }
 
     BSONCXX_CITER;
@@ -76,9 +72,7 @@ bsoncxx::v_noabi::type element::type() const {
 stdx::string_view element::key() const {
     if (_raw == nullptr) {
         throw bsoncxx::v_noabi::exception{
-            error_code::k_unset_element,
-            "cannot return the key from an uninitialized element" +
-                std::string(_key ? " with key \"" + std::string(_key.value().data()) + "\"" : "")};
+            error_code::k_unset_element, "cannot return the key from an uninitialized element"};
     }
 
     BSONCXX_CITER;
@@ -88,16 +82,14 @@ stdx::string_view element::key() const {
     return stdx::string_view{key};
 }
 
-#define BSONCXX_ENUM(name, val)                                                                         \
-    types::b_##name element::get_##name() const {                                                       \
-        if (_raw == nullptr) {                                                                          \
-            throw bsoncxx::v_noabi::exception{                                                          \
-                error_code::k_unset_element,                                                            \
-                "cannot get " #name " from an uninitialized element" +                                  \
-                    std::string(_key ? " with key \"" + std::string(_key.value().data()) + "\"" : "")}; \
-        }                                                                                               \
-        types::bson_value::view v{_raw, _length, _offset, _keylen};                                     \
-        return v.get_##name();                                                                          \
+#define BSONCXX_ENUM(name, val)                                                                     \
+    types::b_##name element::get_##name() const {                                                   \
+        if (_raw == nullptr) {                                                                      \
+            throw bsoncxx::v_noabi::exception{                                                      \
+                error_code::k_unset_element, "cannot get " #name " from an uninitialized element"}; \
+        }                                                                                           \
+        types::bson_value::view v{_raw, _length, _offset, _keylen};                                 \
+        return v.get_##name();                                                                      \
     }
 #include <bsoncxx/enums/type.hpp>
 #undef BSONCXX_ENUM

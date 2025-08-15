@@ -111,8 +111,7 @@ view::const_iterator view::end() const {
 view::const_iterator view::find(stdx::string_view key) const {
     bson_t b;
     if (!bson_init_static(&b, _data, _length)) {
-        // return invalid element with key to provide more helpful exception message.
-        return const_iterator(element(key));
+        return const_iterator();
     }
 
     bson_iter_t iter;
@@ -132,8 +131,7 @@ view::const_iterator view::find(stdx::string_view key) const {
 
     if (!bson_iter_init_find_w_len(&iter, &b, key.data(), static_cast<int>(key.size()))) {
         // returning `cend()` returns an element without a key or value.
-        // return invalid element with key to provide more helpful exception
-        return const_iterator(element(key));
+        return const_iterator();
     }
 
     return const_iterator(
