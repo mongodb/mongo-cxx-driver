@@ -357,9 +357,6 @@ class element {
     ///
     explicit element(std::uint8_t const* raw, std::uint32_t length, std::uint32_t offset, std::uint32_t keylen);
 
-    // Construct an invalid element with a key. Useful for exceptions.
-    explicit element(stdx::string_view const key);
-
     friend ::bsoncxx::v_noabi::array::element;
     friend ::bsoncxx::v_noabi::document::view;
 
@@ -367,10 +364,6 @@ class element {
     std::uint32_t _length;
     std::uint32_t _offset;
     std::uint32_t _keylen;
-    // _key will only exist when a caller attempts to find a key in the BSON but is unsuccessful.
-    // The key is stored for a more helpful error message if the user tries to access the value of
-    // a key that does not exist.
-    stdx::optional<stdx::string_view> _key;
 };
 
 ///

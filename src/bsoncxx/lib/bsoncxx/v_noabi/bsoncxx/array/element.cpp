@@ -26,8 +26,6 @@ element::element() : document::element() {}
 element::element(std::uint8_t const* raw, std::uint32_t length, std::uint32_t offset, std::uint32_t keylen)
     : document::element(raw, length, offset, keylen) {}
 
-element::element(stdx::string_view const key) : document::element(key) {}
-
 bool operator==(element const& elem, types::bson_value::view const& v) {
     return elem.get_value() == v;
 }
