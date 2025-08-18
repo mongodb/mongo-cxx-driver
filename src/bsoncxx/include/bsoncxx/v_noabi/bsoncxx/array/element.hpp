@@ -80,8 +80,6 @@ class element : private document::element {
     friend ::bsoncxx::v_noabi::array::view;
 
     explicit element(std::uint8_t const* raw, std::uint32_t length, std::uint32_t offset, std::uint32_t keylen);
-
-    explicit element(stdx::string_view const key);
 };
 
 ///

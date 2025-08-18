@@ -115,15 +115,15 @@ view::const_iterator view::find(std::uint32_t i) const {
     bson_iter_t iter;
 
     if (!bson_init_static(&b, data(), length())) {
-        return const_iterator(element(key.c_str()));
+        return const_iterator();
     }
 
     if (!bson_iter_init(&iter, &b)) {
-        return const_iterator(element(key.c_str()));
+        return const_iterator();
     }
 
     if (!bson_iter_init_find(&iter, &b, key.c_str())) {
-        return const_iterator(element(key.c_str()));
+        return const_iterator();
     }
 
     return const_iterator(
