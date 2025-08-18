@@ -14,11 +14,15 @@
 
 #pragma once
 
+#include <bsoncxx/document/value-fwd.hpp>
+
+//
+
+#include <bsoncxx/v1/document/value.hpp>
+
 #include <cstdlib>
 #include <memory>
 #include <type_traits>
-
-#include <bsoncxx/document/value-fwd.hpp>
 
 #include <bsoncxx/array/view.hpp>
 #include <bsoncxx/document/view.hpp>
@@ -37,9 +41,38 @@ namespace document {
 /// should be used sparingly; document::view should be used instead wherever possible.
 ///
 class value {
+   private:
+    v1::document::value _value;
+    std::size_t _length;
+
    public:
+    ///
+    /// The type of the deleter used to free the underlying BSON binary data.
+    ///
     using deleter_type = void(BSONCXX_ABI_CDECL*)(std::uint8_t*);
-    using unique_ptr_type = std::unique_ptr<uint8_t[], deleter_type>;
+
+    ///
+    /// The type of the unique pointer used to manage the underlying BSON binary data.
+    ///
+    using unique_ptr_type = std::unique_ptr<std::uint8_t[], deleter_type>;
+
+    /// @copydoc v_noabi::document::view::const_iterator
+    using const_iterator = v_noabi::document::view::const_iterator;
+
+    /// @copydoc v_noabi::document::view::iterator
+    using iterator = const_iterator;
+
+    ~value() = default;
+
+    value(value&&) = default;
+    value& operator=(value&&) = default;
+
+    value(value const& other) : value{other.view()} {}
+
+    value& operator=(value const& other) {
+        *this = value{other.view()};
+        return *this;
+    }
 
     ///
     /// Constructs a value from a buffer.
@@ -50,10 +83,11 @@ class value {
     ///   A pointer to a buffer containing a valid BSON document.
     /// @param length
     ///   The length of the document.
-    /// @param dtor
+    /// @param deleter
     ///   A user provided deleter.
     ///
-    BSONCXX_ABI_EXPORT_CDECL() value(std::uint8_t* data, std::size_t length, deleter_type dtor);
+    value(std::uint8_t* data, std::size_t length, deleter_type deleter)
+        : _value{data, std::move(deleter)}, _length{length} {}
 
     ///
     /// Constructs a value from a std::unique_ptr to a buffer. The ownership
@@ -64,7 +98,7 @@ class value {
     /// @param length
     ///   The length of the document.
     ///
-    BSONCXX_ABI_EXPORT_CDECL() value(unique_ptr_type ptr, std::size_t length);
+    value(unique_ptr_type ptr, std::size_t length) : _value{std::move(ptr)}, _length{length} {}
 
     ///
     /// Constructs a value from a view of a document. The data referenced
@@ -74,20 +108,15 @@ class value {
     /// @param view
     ///   A view of another document to copy.
     ///
-    explicit BSONCXX_ABI_EXPORT_CDECL() value(document::view view);
-
-    ~value() = default;
-
-    BSONCXX_ABI_EXPORT_CDECL() value(value const&);
-    BSONCXX_ABI_EXPORT_CDECL(value&) operator=(value const&);
-
-    value(value&&) = default;
-    value& operator=(value&&) = default;
+    explicit BSONCXX_ABI_EXPORT_CDECL() value(v_noabi::document::view view);
 
     ///
     /// Constructor used for serialization of user objects. This uses argument-dependent lookup
     /// to find the function declaration
     /// `void to_bson(T& t, bsoncxx::v_noabi::document::value doc)`.
+    ///
+    /// @par Constraints:
+    /// - `T` is not @ref bsoncxx::v_noabi::array::view.
     ///
     /// @param t
     ///   A user-defined object to serialize into a BSON object.
@@ -96,6 +125,17 @@ class value {
     explicit value(T const& t) : value({}) {
         to_bson(t, *this);
     }
+
+    ///
+    /// Assignment used for serialization of user objects. This uses argument-dependent lookup
+    /// to find the function declaration
+    /// `void to_bson(T& t, bsoncxx::v_noabi::document::value doc)`.
+    ///
+    /// @note `T` is not constrained!
+    ///
+    /// @param t
+    ///   A user-defined object to serialize into a BSON object.
+    ///
     template <typename T>
     value& operator=(T const& t) {
         *this = value{t};
@@ -103,41 +143,68 @@ class value {
     }
 
     ///
+    /// Convert to the @ref bsoncxx::v1 equivalent.
+    ///
+    /// @par Preconditions:
+    /// - If `this->data()` is not null, the size of the storage region pointed to by `data` must be greater than or
+    ///   equal to 5.
+    /// - The "total number of bytes comprising the document" as indicated by the BSON bytes pointed-to by
+    ///   `this->data()` must be less than or equal to the size of the storage region pointed to by `data`.
+    ///
+    /// @note `this->size()` is ignored.
+    ///
+    explicit operator v1::document::value() const& {
+        return _value;
+    }
+
+    ///
+    /// Convert to the @ref bsoncxx::v1 equivalent.
+    ///
+    /// @par Preconditions:
+    /// - If `this->data()` is not null, the size of the storage region pointed to by `data` must be greater than or
+    ///   equal to 5.
+    /// - The "total number of bytes comprising the document" as indicated by the BSON bytes pointed-to by
+    ///   `this->data()` must be less than or equal to the size of the storage region pointed to by `data`.
+    ///
+    /// @note `this->size()` is ignored.
+    ///
+    explicit operator v1::document::value() && {
+        _length = 0u;
+        return std::move(_value);
+    }
+
+    ///
     /// @returns A const_iterator to the first element of the document.
     ///
-    BSONCXX_ABI_EXPORT_CDECL(document::view::const_iterator) cbegin() const;
+    const_iterator cbegin() const {
+        return this->view().cbegin();
+    }
 
     ///
     /// @returns A const_iterator to the past-the-end element of the document.
     ///
-    BSONCXX_ABI_EXPORT_CDECL(document::view::const_iterator) cend() const;
+    const_iterator cend() const {
+        return this->view().cend();
+    }
 
     ///
     /// @returns A const_iterator to the first element of the document.
     ///
-    BSONCXX_ABI_EXPORT_CDECL(document::view::const_iterator) begin() const;
+    const_iterator begin() const {
+        return this->view().begin();
+    }
 
     ///
     /// @returns A const_iterator to the past-the-end element of the document.
     ///
-    BSONCXX_ABI_EXPORT_CDECL(document::view::const_iterator) end() const;
+    const_iterator end() const {
+        return this->view().end();
+    }
 
-    ///
-    /// Finds the first element of the document with the provided key. If there is
-    /// no such element, the past-the-end iterator will be returned. The runtime of
-    /// find() is linear in the length of the document. This method only searches
-    /// the top-level document, and will not recurse to any subdocuments.
-    ///
-    /// @remark In BSON, keys are not required to be unique. If there are multiple
-    /// elements with a matching key in the document, the first matching element from
-    /// the start will be returned.
-    ///
-    /// @param key
-    ///   The key to search for.
-    ///
-    /// @return An iterator to the matching element, if found, or the past-the-end iterator.
-    ///
-    BSONCXX_ABI_EXPORT_CDECL(document::view::const_iterator) find(stdx::string_view key) const;
+    /// @copydoc bsoncxx::v_noabi::document::view::find(bsoncxx::v1::stdx::string_view key) const
+    const_iterator find(v1::stdx::string_view key) const {
+        return const_iterator{*_value.find(key)};
+    }
 
     ///
     /// Finds the first element of the document with the provided key. If there is no
@@ -149,14 +216,18 @@ class value {
     ///
     /// @return The matching element, if found, or the invalid element.
     ///
-    BSONCXX_ABI_EXPORT_CDECL(element) operator[](stdx::string_view key) const;
+    v_noabi::document::element operator[](v1::stdx::string_view key) const {
+        return _value.operator[](key);
+    }
 
     ///
     /// Access the raw bytes of the underlying document.
     ///
     /// @return A pointer to the value's buffer.
     ///
-    BSONCXX_ABI_EXPORT_CDECL(std::uint8_t const*) data() const;
+    std::uint8_t const* data() const {
+        return _value.data();
+    }
 
     ///
     /// Gets the length of the underlying buffer.
@@ -166,25 +237,30 @@ class value {
     ///
     /// @return The length of the document, in bytes.
     ///
-    BSONCXX_ABI_EXPORT_CDECL(std::size_t) length() const;
+    std::size_t size() const {
+        return _length; // Do NOT use _value.size().
+    }
+
+    /// @copydoc size() const
+    std::size_t length() const {
+        return _length; // Do NOT use _value.length().
+    }
 
     ///
-    /// Checks if the underlying document is empty, i.e. it is equivalent to
-    /// the trivial document '{}'.
+    /// Return true when `this->length() == 5`.
     ///
-    /// @return true if the underlying document is empty.
+    /// @warning For backward compatibility, this function does NOT check if the underlying BSON bytes represent a valid
+    /// empty document.
     ///
-    BSONCXX_ABI_EXPORT_CDECL(bool) empty() const;
+    bool empty() const {
+        return _length == 5; // Do NOT use _value.empty().
+    }
 
     ///
     /// Get a view over the document owned by this value.
     ///
-    document::view view() const noexcept {
-        // Silence false positive with g++ 10.2.1 on Debian 11.
-        BSONCXX_PRIVATE_WARNINGS_PUSH();
-        BSONCXX_PRIVATE_WARNINGS_DISABLE(GCC("-Wmaybe-uninitialized"));
-        return document::view{static_cast<uint8_t*>(_data.get()), _length};
-        BSONCXX_PRIVATE_WARNINGS_POP();
+    v_noabi::document::view view() const noexcept {
+        return {_value.data(), _length}; // Do NOT use _value.view().
     }
 
     ///
@@ -192,8 +268,8 @@ class value {
     ///
     /// @return A view over the value.
     ///
-    operator document::view() const noexcept {
-        return view();
+    /* explicit(false) */ operator v_noabi::document::view() const noexcept {
+        return this->view();
     }
 
     ///
@@ -231,19 +307,25 @@ class value {
     ///   After calling release() it is illegal to call any methods
     ///   on this class, unless it is subsequently moved into.
     ///
-    /// @return A std::unique_ptr with ownership of the buffer.
+    /// @return A std::unique_ptr with ownership of the buffer. If the pointer is null, the deleter may also be null.
     ///
-    BSONCXX_ABI_EXPORT_CDECL(unique_ptr_type) release();
+    unique_ptr_type release() {
+        auto ptr = _value.release();
+
+        // Invariant: the underlying deleter type MUST be `deleter_type`.
+        auto const deleter_ptr = ptr.get_deleter().target<deleter_type>();
+
+        // Invariant: `ptr` implies `deleter_ptr`, but not the reverse.
+        return {ptr.release(), deleter_ptr ? *deleter_ptr : nullptr};
+    }
 
     ///
     /// Replace the formerly-owned buffer with the new view.
     /// This will make a copy of the passed-in view.
     ///
-    BSONCXX_ABI_EXPORT_CDECL(void) reset(document::view view);
-
-   private:
-    unique_ptr_type _data;
-    std::size_t _length{0};
+    void reset(v_noabi::document::view view) {
+        _value.reset(to_v1(view));
+    }
 };
 
 ///
@@ -269,10 +351,35 @@ inline bool operator!=(value const& lhs, value const& rhs) {
 } // namespace bsoncxx
 
 namespace bsoncxx {
+namespace v_noabi {
+
+///
+/// Convert from the @ref bsoncxx::v1 equivalent of `v`.
+///
+inline v_noabi::document::value from_v1(v1::document::value const& v) {
+    return v_noabi::document::value{from_v1(v.view())};
+}
+
+///
+/// Convert from the @ref bsoncxx::v1 equivalent of `v`.
+///
+BSONCXX_ABI_EXPORT_CDECL(v_noabi::document::value) from_v1(v1::document::value&& v);
+
+///
+/// Convert to the @ref bsoncxx::v1 equivalent of `v`.
+///
+inline v1::document::value to_v1(v_noabi::document::value v) {
+    return v1::document::value{std::move(v)};
+}
+
+} // namespace v_noabi
+} // namespace bsoncxx
+
+namespace bsoncxx {
 namespace document {
 
-using ::bsoncxx::v_noabi::document::operator==;
-using ::bsoncxx::v_noabi::document::operator!=;
+using v_noabi::document::operator==;
+using v_noabi::document::operator!=;
 
 } // namespace document
 } // namespace bsoncxx
@@ -282,4 +389,7 @@ using ::bsoncxx::v_noabi::document::operator!=;
 ///
 /// @file
 /// Provides @ref bsoncxx::v_noabi::document::value.
+///
+/// @par Includes
+/// - @ref bsoncxx/v1/document/value.hpp
 ///

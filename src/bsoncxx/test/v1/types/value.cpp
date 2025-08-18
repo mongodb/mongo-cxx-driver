@@ -18,6 +18,7 @@
 
 #include <bsoncxx/v1/detail/type_traits.hpp>
 
+#include <bsoncxx/v1/types/value.hh>
 #include <bsoncxx/v1/types/view.hh>
 
 #include <bsoncxx/test/v1/detail/bit.hh>
@@ -311,6 +312,38 @@ TEST_CASE("b_types", "[bsoncxx][v1][types][value]") {
         }
     }
 #pragma pop_macro("X")
+}
+
+TEST_CASE("get_bson_value", "[bsoncxx][v1][types][value][internal]") {
+    SECTION("empty string") {
+        value v{b_string{}};
+
+        REQUIRE(v.type_id() == id::k_string);
+        CHECK(v.get_string().value.empty());
+        CHECK(v.get_string().value.data() == nullptr);
+
+        auto& bson_value = value::internal::get_bson_value(v);
+
+        REQUIRE(bson_value.value_type == BSON_TYPE_UTF8);
+        CHECK(bson_value.value.v_utf8.len == 0u);
+        CHECK(bson_value.value.v_utf8.str == nullptr);
+    }
+
+    SECTION("empty binary") {
+        value v{b_binary{}};
+
+        REQUIRE(v.type_id() == id::k_binary);
+        CHECK(v.get_binary().subtype == binary_subtype::k_binary);
+        CHECK(v.get_binary().size == 0u);
+        CHECK(v.get_binary().bytes == nullptr);
+
+        auto& bson_value = value::internal::get_bson_value(v);
+
+        REQUIRE(bson_value.value_type == BSON_TYPE_BINARY);
+        CHECK(bson_value.value.v_binary.subtype == BSON_SUBTYPE_BINARY);
+        CHECK(bson_value.value.v_binary.data_len == 0u);
+        CHECK(bson_value.value.v_binary.data == nullptr);
+    }
 }
 
 TEST_CASE("constructors", "[bsoncxx][v1][types][value]") {

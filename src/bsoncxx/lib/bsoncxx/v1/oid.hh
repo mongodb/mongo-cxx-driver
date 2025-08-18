@@ -12,32 +12,28 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#pragma once
+#include <bsoncxx/v1/oid.hpp>
 
-#include <bsoncxx/v1/exception-fwd.hpp>
+//
 
-#include <bsoncxx/config/prelude.hpp>
-
-namespace bsoncxx {
-namespace v_noabi {
-
-class BSONCXX_ABI_EXPORT exception;
-
-} // namespace v_noabi
-} // namespace bsoncxx
+#include <array>
+#include <cstdint>
 
 namespace bsoncxx {
+namespace v1 {
 
-using v_noabi::exception;
+class oid::internal {
+   public:
+    // Required by bsoncxx::v_noabi::oid::oid().
+    static std::array<std::uint8_t, k_oid_length>& bytes(oid& o) {
+        return o._bytes;
+    }
 
+    // Required by bsoncxx::v_noabi::oid::oid().
+    static oid make_oid_without_init() {
+        return {oid::uninit_type{}};
+    }
+};
+
+} // namespace v1
 } // namespace bsoncxx
-
-#include <bsoncxx/config/postlude.hpp>
-
-///
-/// @file
-/// Declares @ref bsoncxx::v_noabi::exception.
-///
-/// @par Includes
-/// - @ref bsoncxx/v1/exception-fwd.hpp
-///

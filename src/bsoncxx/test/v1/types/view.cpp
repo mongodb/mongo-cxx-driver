@@ -16,8 +16,6 @@
 
 //
 
-#include <bsoncxx/v1/detail/type_traits.hpp>
-
 #include <bsoncxx/test/v1/document/view.hh>
 #include <bsoncxx/test/v1/exception.hh>
 #include <bsoncxx/test/v1/types/id.hh>
@@ -26,6 +24,8 @@
 
 #include <string>
 #include <system_error>
+
+#include <bsoncxx/private/type_traits.hh>
 
 #include <bsoncxx/test/stringify.hh>
 #include <bsoncxx/test/system_error.hh>
@@ -474,17 +474,8 @@ namespace single_value_types {
 // BType -> Value is implicit, but Value -> BType is explicit.
 template <typename BType, typename Value>
 struct one_way_implicit_convertible {
-    template <typename From, typename To>
-    struct is_explicitly_convertible : bsoncxx::detail::conjunction<
-                                           std::is_constructible<To, From>,
-                                           bsoncxx::detail::negation<std::is_convertible<From, To>>> {};
-
-    template <typename From, typename To>
-    struct is_implicitly_convertible
-        : bsoncxx::detail::conjunction<std::is_constructible<To, From>, std::is_convertible<From, To>> {};
-
-    static_assert(is_explicitly_convertible<Value, BType>::value, "must be explicit");
-    static_assert(is_implicitly_convertible<BType, Value>::value, "must be implicit");
+    static_assert(bsoncxx::is_explicitly_convertible<Value, BType>::value, "must be explicit");
+    static_assert(bsoncxx::is_implicitly_convertible<BType, Value>::value, "must be implicit");
 };
 
 // b_minkey

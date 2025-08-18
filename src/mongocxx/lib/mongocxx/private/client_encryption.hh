@@ -25,10 +25,7 @@
 #include <mongocxx/options/client_encryption.hpp>
 #include <mongocxx/result/bulk_write.hpp>
 
-#include <bsoncxx/types/bson_value/value.hh>
-
 #include <bsoncxx/private/bson.hh>
-#include <bsoncxx/private/convert.hh>
 #include <bsoncxx/private/helpers.hh>
 
 #include <mongocxx/private/bson.hh>
@@ -99,7 +96,7 @@ class client_encryption::impl {
             throw_exception<operation_exception>(error);
         }
 
-        return bsoncxx::v_noabi::types::bson_value::make_owning_bson(keyid.get());
+        return bsoncxx::v1::types::value{std::move(keyid)};
     }
 
     bsoncxx::v_noabi::types::bson_value::value encrypt(
@@ -120,7 +117,7 @@ class client_encryption::impl {
             throw_exception<operation_exception>(error);
         }
 
-        return bsoncxx::v_noabi::types::bson_value::make_owning_bson(ciphertext.get());
+        return bsoncxx::v1::types::value{std::move(ciphertext)};
     }
 
     bsoncxx::v_noabi::document::value encrypt_expression(
@@ -156,7 +153,7 @@ class client_encryption::impl {
             throw_exception<operation_exception>(error);
         }
 
-        return bsoncxx::v_noabi::types::bson_value::make_owning_bson(decrypted_value.get());
+        return bsoncxx::v1::types::value{std::move(decrypted_value)};
     }
 
     result::rewrap_many_datakey rewrap_many_datakey(

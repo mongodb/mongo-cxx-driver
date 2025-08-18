@@ -14,10 +14,15 @@
 
 #pragma once
 
+#include <bsoncxx/array/element-fwd.hpp>
+
+//
+
+#include <bsoncxx/v1/element/view.hpp>
+
 #include <cstddef>
 #include <cstdint>
 
-#include <bsoncxx/array/element-fwd.hpp>
 #include <bsoncxx/array/view-fwd.hpp>
 #include <bsoncxx/types/bson_value/view-fwd.hpp>
 
@@ -36,50 +41,41 @@ namespace array {
 /// interrogated by calling type() and a specific value can be extracted through
 /// get_X() accessors.
 ///
-class element : private document::element {
+class element : private v_noabi::document::element {
    public:
-    BSONCXX_ABI_EXPORT_CDECL() element();
+    element() : v_noabi::document::element() {}
 
-    using document::element::operator bool;
+    /* explicit(false) */ element(v1::element::view const& v) : v_noabi::document::element{v} {}
 
-    using document::element::type;
+    using v_noabi::document::element::operator v1::element::view;
 
-    using document::element::get_array;
-    using document::element::get_binary;
-    using document::element::get_bool;
-    using document::element::get_code;
-    using document::element::get_codewscope;
-    using document::element::get_date;
-    using document::element::get_dbpointer;
-    using document::element::get_decimal128;
-    using document::element::get_document;
-    using document::element::get_double;
-    using document::element::get_int32;
-    using document::element::get_int64;
-    using document::element::get_maxkey;
-    using document::element::get_minkey;
-    using document::element::get_null;
-    using document::element::get_oid;
-    using document::element::get_regex;
-    using document::element::get_string;
-    using document::element::get_symbol;
-    using document::element::get_timestamp;
-    using document::element::get_undefined;
+    using v_noabi::document::element::operator bool;
 
-    using document::element::get_value;
+    using v_noabi::document::element::raw;
 
-    using document::element::operator[];
+    using v_noabi::document::element::length;
 
-    using document::element::key;
-    using document::element::keylen;
-    using document::element::length;
-    using document::element::offset;
-    using document::element::raw;
+    using v_noabi::document::element::offset;
 
-   private:
-    friend ::bsoncxx::v_noabi::array::view;
+    using v_noabi::document::element::keylen;
 
-    explicit element(std::uint8_t const* raw, std::uint32_t length, std::uint32_t offset, std::uint32_t keylen);
+    using v_noabi::document::element::type;
+
+    using v_noabi::document::element::key;
+
+#pragma push_macro("X")
+#undef X
+#define X(_name, _value) using v_noabi::document::element::get_##_name;
+    BSONCXX_V1_TYPES_XMACRO(X)
+#pragma pop_macro("X")
+
+    using v_noabi::document::element::get_value;
+
+    using v_noabi::document::element::get_owning_value;
+
+    using v_noabi::document::element::operator[];
+
+    friend bool operator==(element const& lhs, v_noabi::types::bson_value::view const& rhs);
 };
 
 ///
@@ -90,16 +86,24 @@ class element : private document::element {
 /// @{
 
 /// @relatesalso bsoncxx::v_noabi::array::element
-BSONCXX_ABI_EXPORT_CDECL(bool) operator==(element const& elem, types::bson_value::view const& v);
+inline bool operator==(element const& lhs, v_noabi::types::bson_value::view const& rhs) {
+    return static_cast<v_noabi::document::element const&>(lhs) == rhs;
+}
 
 /// @relatesalso bsoncxx::v_noabi::array::element
-BSONCXX_ABI_EXPORT_CDECL(bool) operator==(types::bson_value::view const& v, element const& elem);
+inline bool operator==(v_noabi::types::bson_value::view const& lhs, element const& rhs) {
+    return rhs == lhs;
+}
 
 /// @relatesalso bsoncxx::v_noabi::array::element
-BSONCXX_ABI_EXPORT_CDECL(bool) operator!=(element const& elem, types::bson_value::view const& v);
+inline bool operator!=(element const& lhs, v_noabi::types::bson_value::view const& rhs) {
+    return !(lhs == rhs);
+}
 
 /// @relatesalso bsoncxx::v_noabi::array::element
-BSONCXX_ABI_EXPORT_CDECL(bool) operator!=(types::bson_value::view const& v, element const& elem);
+inline bool operator!=(v_noabi::types::bson_value::view const& lhs, element const& rhs) {
+    return !(lhs == rhs);
+}
 
 /// @}
 ///
@@ -109,10 +113,26 @@ BSONCXX_ABI_EXPORT_CDECL(bool) operator!=(types::bson_value::view const& v, elem
 } // namespace bsoncxx
 
 namespace bsoncxx {
+namespace v_noabi {
+
+// Ambiguous whether `v1::element::view` should be converted to `v1::array::element` or `v1::document::element.`
+// v_noabi::array::element from_v1(v1::element::view const& v);
+
+///
+/// Convert to the @ref bsoncxx::v1 equivalent of `v`.
+///
+inline v1::element::view to_v1(v_noabi::array::element const& v) {
+    return v1::element::view{v};
+}
+
+} // namespace v_noabi
+} // namespace bsoncxx
+
+namespace bsoncxx {
 namespace array {
 
-using ::bsoncxx::v_noabi::array::operator==;
-using ::bsoncxx::v_noabi::array::operator!=;
+using v_noabi::array::operator==;
+using v_noabi::array::operator!=;
 
 } // namespace array
 } // namespace bsoncxx
@@ -122,4 +142,8 @@ using ::bsoncxx::v_noabi::array::operator!=;
 ///
 /// @file
 /// Provides @ref bsoncxx::v_noabi::array::element.
+///
+/// @par Includes
+/// - @ref bsoncxx/document/element.hpp
+/// - @ref bsoncxx/v1/element/view.hpp
 ///

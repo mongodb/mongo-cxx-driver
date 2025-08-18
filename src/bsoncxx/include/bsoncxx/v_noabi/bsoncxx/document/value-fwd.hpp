@@ -14,6 +14,8 @@
 
 #pragma once
 
+#include <bsoncxx/v1/document/value-fwd.hpp>
+
 #include <bsoncxx/config/prelude.hpp>
 
 namespace bsoncxx {
@@ -29,7 +31,7 @@ class value;
 namespace bsoncxx {
 namespace document {
 
-using ::bsoncxx::v_noabi::document::value;
+using v_noabi::document::value;
 
 } // namespace document
 } // namespace bsoncxx
@@ -39,4 +41,7 @@ using ::bsoncxx::v_noabi::document::value;
 ///
 /// @file
 /// Declares @ref bsoncxx::v_noabi::document::value.
+///
+/// @par Includes
+/// - @ref bsoncxx/v1/document/value-fwd.hpp
 ///

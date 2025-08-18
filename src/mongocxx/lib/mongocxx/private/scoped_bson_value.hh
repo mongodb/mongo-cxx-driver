@@ -14,11 +14,11 @@
 
 #pragma once
 
+#include <bsoncxx/v1/types/value.hh>
+
 #include <utility>
 
 #include <bsoncxx/types/bson_value/view.hpp>
-
-#include <bsoncxx/private/convert.hh>
 
 #include <mongocxx/private/bson.hh>
 
@@ -26,49 +26,48 @@ namespace mongocxx {
 namespace detail {
 
 struct scoped_bson_value {
-    bson_value_t value = {};
+    bsoncxx::v1::types::value value;
 
     // Allow obtaining a pointer to this->value even in rvalue expressions.
     bson_value_t* get() noexcept {
-        return &value;
+        auto& v = bsoncxx::v1::types::value::internal::get_bson_value(value);
+
+        // CSFLE API requires empty strings to be not-null.
+        if (v.value_type == BSON_TYPE_UTF8 && v.value.v_utf8.str == nullptr) {
+            v.value.v_utf8.str = static_cast<char*>(bson_malloc0(1u));
+        }
+
+        return &v;
     }
 
     // Communicate this->value is to be initialized via the resulting pointer.
     bson_value_t* value_for_init() noexcept {
-        return &this->value;
+        return &bsoncxx::v1::types::value::internal::get_bson_value(value);
     }
 
-    template <typename T>
-    auto convert(T const& value)
-        // Use trailing return type syntax to SFINAE without triggering GCC -Wignored-attributes
-        // warnings due to using decltype within template parameters.
-        -> decltype(bsoncxx::v_noabi::types::convert_to_libbson(
-            std::declval<T const&>(),
-            std::declval<bson_value_t*>())) {
-        bsoncxx::v_noabi::types::convert_to_libbson(value, &this->value);
+    explicit operator bsoncxx::v1::types::value() && {
+        return std::move(value);
     }
 
-    template <typename T>
-    explicit scoped_bson_value(T const& value) {
-        convert(value);
+    explicit operator bsoncxx::v1::types::value() const& {
+        return value;
     }
 
-    explicit scoped_bson_value(bsoncxx::v_noabi::types::bson_value::view const& view) {
-        // Argument order is reversed for bsoncxx::v_noabi::types::bson_value::view.
-        bsoncxx::v_noabi::types::convert_to_libbson(&this->value, view);
-    }
-
-    ~scoped_bson_value() {
-        bson_value_destroy(&value);
-    }
-
-    // Expectation is that value_for_init() will be used to initialize this->value.
     scoped_bson_value() = default;
 
-    scoped_bson_value(scoped_bson_value const&) = delete;
-    scoped_bson_value(scoped_bson_value&&) = delete;
-    scoped_bson_value& operator=(scoped_bson_value const&) = delete;
-    scoped_bson_value& operator=(scoped_bson_value&&) = delete;
+    template <typename T>
+    explicit scoped_bson_value(T const& v) : value{convert(v)} {}
+
+    explicit scoped_bson_value(bsoncxx::v1::types::view const& v) : value{v} {}
+
+    explicit scoped_bson_value(bsoncxx::v_noabi::types::bson_value::view const& v)
+        : scoped_bson_value{bsoncxx::v_noabi::to_v1(v)} {}
+
+   private:
+    template <typename BType>
+    auto convert(BType const& v) -> decltype(bsoncxx::v1::types::value{bsoncxx::v_noabi::to_v1(v)}) {
+        return bsoncxx::v1::types::value{bsoncxx::v_noabi::to_v1(v)};
+    }
 };
 
 } // namespace detail

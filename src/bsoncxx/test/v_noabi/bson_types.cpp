@@ -370,13 +370,20 @@ TEST_CASE("document uninitialized element throws exceptions", "") {
     bsoncxx::document::value doc = make_document(kvp("foo", "bar"));
 
     REQUIRE_THROWS_WITH(
+        doc["foo"]["doesnotexist"].get_value(),
+        Catch::Matchers::Equals(
+            R"(cannot return the type of uninitialized element: last known element key "foo": view is invalid: unset document::element)"));
+
+    REQUIRE_THROWS_WITH(
         doc["doesnotexist"].get_string().value,
 
-        Catch::Matchers::Equals("cannot get string from an uninitialized element: unset document::element"));
+        Catch::Matchers::Equals(
+            "cannot get string from an uninitialized element: view is invalid: expected element type k_string"));
 
     REQUIRE_THROWS_WITH(
         doc["alsodoesnotexist"].get_value(),
-        Catch::Matchers::Equals("cannot return the type of uninitialized element: unset document::element"));
+        Catch::Matchers::Equals(
+            "cannot return the type of uninitialized element: view is invalid: unset document::element"));
 
     // Ensure a non-existing element evaluates to false.
     REQUIRE(!doc["doesnotexist"]);
@@ -385,7 +392,8 @@ TEST_CASE("document uninitialized element throws exceptions", "") {
     // Ensure getting a key from a non-existing element results in an exception.
     REQUIRE_THROWS_WITH(
         doc["doesnotexist"].key(),
-        Catch::Matchers::Equals("cannot return the key from an uninitialized element: unset document::element"));
+        Catch::Matchers::Equals(
+            "cannot return the key from an uninitialized element: view is invalid: unset document::element"));
 }
 
 TEST_CASE("array uninitialized element throws exceptions", "") {
@@ -394,8 +402,14 @@ TEST_CASE("array uninitialized element throws exceptions", "") {
     bsoncxx::array::value arr = make_array("a", "b", "c");
 
     REQUIRE_THROWS_WITH(
+        arr.view()[0]["doesnotexist"].get_value(),
+        Catch::Matchers::Equals(
+            R"(cannot return the type of uninitialized element: last known element key "0": view is invalid: unset document::element)"));
+
+    REQUIRE_THROWS_WITH(
         arr.view()[3].get_string().value,
-        Catch::Matchers::Equals("cannot get string from an uninitialized element: unset document::element"));
+        Catch::Matchers::Equals(
+            "cannot get string from an uninitialized element: view is invalid: expected element type k_string"));
     // Ensure a non-existing element evaluates to false.
     REQUIRE(!arr.view()[3]);
     // Ensure finding a non-existing element results in an end iterator.
@@ -403,7 +417,8 @@ TEST_CASE("array uninitialized element throws exceptions", "") {
     // Ensure getting a key from a non-existing element results in an exception.
     REQUIRE_THROWS_WITH(
         arr.view()[3].key(),
-        Catch::Matchers::Equals("cannot return the key from an uninitialized element: unset document::element"));
+        Catch::Matchers::Equals(
+            "cannot return the key from an uninitialized element: view is invalid: unset document::element"));
 }
 
 } // namespace

@@ -14,6 +14,12 @@
 
 #pragma once
 
+#include <bsoncxx/document/element-fwd.hpp>
+
+//
+
+#include <bsoncxx/v1/element/view.hpp>
+
 #include <cstddef>
 #include <cstdint>
 
@@ -44,6 +50,9 @@ namespace document {
 /// - @ref bsoncxx::v_noabi::array::element
 ///
 class element {
+   private:
+    v1::element::view _view;
+
    public:
     ///
     /// Construct an invalid element.
@@ -51,34 +60,63 @@ class element {
     /// This is useful when mapping the end iterator of a document or array
     /// view.
     ///
-    BSONCXX_ABI_EXPORT_CDECL() element();
+    element() = default;
+
+    ///
+    /// Construct with the @ref bsoncxx::v1 equivalent.
+    ///
+    /* explicit(false) */ element(v1::element::view const& v) : _view{v} {}
+
+    ///
+    /// Convert to the @ref bsoncxx::v1 equivalent.
+    ///
+    explicit operator v1::element::view() const {
+        return _view;
+    }
 
     ///
     /// Conversion operator to bool which is true for valid elements
     /// and false for invalid elements.
     ///
-    explicit BSONCXX_ABI_EXPORT_CDECL() operator bool() const;
+    explicit operator bool() const {
+        return _view.operator bool();
+    }
 
     ///
     /// Getter for the raw bson bytes the element points to.
     ///
     /// @return a pointer to the raw bson bytes.
     ///
-    BSONCXX_ABI_EXPORT_CDECL(std::uint8_t const*) raw() const;
+    std::uint8_t const* raw() const {
+        return _view.raw();
+    }
 
     ///
     /// Getter for length of the raw bson bytes the element points to.
     ///
     /// @return a pointer to the length of the raw bson bytes.
     ///
-    BSONCXX_ABI_EXPORT_CDECL(std::uint32_t) length() const;
+    std::uint32_t length() const {
+        return _view.length();
+    }
 
     ///
     /// Getter for the offset into the raw bson bytes the element points to.
     ///
     /// @return the offset into the raw bson bytes.
     ///
-    BSONCXX_ABI_EXPORT_CDECL(std::uint32_t) offset() const;
+    std::uint32_t offset() const {
+        return _view.offset();
+    }
+
+    ///
+    /// Getter for the element's key length.
+    ///
+    /// @return the element's key length.
+    ///
+    std::uint32_t keylen() const {
+        return _view.keylen();
+    }
 
     ///
     /// Getter for the type of the element.
@@ -87,7 +125,7 @@ class element {
     ///
     /// @throws bsoncxx::v_noabi::exception if this element is invalid.
     ///
-    BSONCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::type) type() const;
+    BSONCXX_ABI_EXPORT_CDECL(v_noabi::type) type() const;
 
     ///
     /// Getter for the element's key.
@@ -96,203 +134,22 @@ class element {
     ///
     /// @throws bsoncxx::v_noabi::exception if this element is invalid.
     ///
-    BSONCXX_ABI_EXPORT_CDECL(stdx::string_view) key() const;
+    BSONCXX_ABI_EXPORT_CDECL(v1::stdx::string_view) key() const;
+
+#pragma push_macro("X")
+#undef X
+#define X(_name, _value) BSONCXX_ABI_EXPORT_CDECL(v_noabi::types::b_##_name) get_##_name() const;
 
     ///
-    /// Getter for the element's key length.
+    /// Return the BSON type value of this element.
     ///
-    /// @return the element's key length.
+    /// @throws bsoncxx::v_noabi::exception if this element is not the requested type.
     ///
-    BSONCXX_ABI_EXPORT_CDECL(std::uint32_t) keylen() const;
-
+    /// @{
+    BSONCXX_V1_TYPES_XMACRO(X)
+    /// @}
     ///
-    /// Getter for elements of the b_double type.
-    ///
-    /// @throws bsoncxx::v_noabi::exception if this element is not a b_double.
-    ///
-    /// @return the element's value.
-    ///
-    BSONCXX_ABI_EXPORT_CDECL(types::b_double) get_double() const;
-
-    ///
-    /// Getter for elements of the b_string type.
-    ///
-    /// @throws bsoncxx::v_noabi::exception if this element is not a b_string.
-    ///
-    /// @return the element's value.
-    ///
-    BSONCXX_ABI_EXPORT_CDECL(types::b_string) get_string() const;
-
-    ///
-    /// Getter for elements of the b_document type.
-    ///
-    /// @throws bsoncxx::v_noabi::exception if this element is not a b_document.
-    ///
-    /// @return the element's value.
-    ///
-    BSONCXX_ABI_EXPORT_CDECL(types::b_document) get_document() const;
-
-    ///
-    /// Getter for elements of the b_array type.
-    ///
-    /// @throws bsoncxx::v_noabi::exception if this element is not a b_array.
-    ///
-    /// @return the element's value.
-    ///
-    BSONCXX_ABI_EXPORT_CDECL(types::b_array) get_array() const;
-
-    ///
-    /// Getter for elements of the b_binary type.
-    ///
-    /// @throws bsoncxx::v_noabi::exception if this element is not a b_binary.
-    ///
-    /// @return the element's value.
-    ///
-    BSONCXX_ABI_EXPORT_CDECL(types::b_binary) get_binary() const;
-
-    ///
-    /// Getter for elements of the b_undefined type.
-    ///
-    /// @throws bsoncxx::v_noabi::exception if this element is not a b_undefined.
-    ///
-    /// @return the element's value.
-    ///
-    BSONCXX_ABI_EXPORT_CDECL(types::b_undefined) get_undefined() const;
-
-    ///
-    /// Getter for elements of the b_oid type.
-    ///
-    /// @throws bsoncxx::v_noabi::exception if this element is not a b_oid.
-    ///
-    /// @return the element's value.
-    ///
-    BSONCXX_ABI_EXPORT_CDECL(types::b_oid) get_oid() const;
-
-    ///
-    /// Getter for elements of the b_bool type.
-    ///
-    /// @throws bsoncxx::v_noabi::exception if this element is not a b_bool.
-    ///
-    /// @return the element's value.
-    ///
-    BSONCXX_ABI_EXPORT_CDECL(types::b_bool) get_bool() const;
-
-    ///
-    /// Getter for elements of the b_date type.
-    ///
-    /// @throws bsoncxx::v_noabi::exception if this element is not a b_date.
-    ///
-    /// @return the element's value.
-    ///
-    BSONCXX_ABI_EXPORT_CDECL(types::b_date) get_date() const;
-
-    ///
-    /// Getter for elements of the b_null type.
-    ///
-    /// @throws bsoncxx::v_noabi::exception if this element is not a b_null.
-    ///
-    /// @return the element's value.
-    ///
-    BSONCXX_ABI_EXPORT_CDECL(types::b_null) get_null() const;
-
-    ///
-    /// Getter for elements of the b_regex type.
-    ///
-    /// @throws bsoncxx::v_noabi::exception if this element is not a b_regex.
-    ///
-    /// @return the element's value.
-    ///
-    BSONCXX_ABI_EXPORT_CDECL(types::b_regex) get_regex() const;
-
-    ///
-    /// Getter for elements of the b_dbpointer type.
-    ///
-    /// @throws bsoncxx::v_noabi::exception if this element is not a b_dbpointer.
-    ///
-    /// @return the element's value.
-    ///
-    BSONCXX_ABI_EXPORT_CDECL(types::b_dbpointer) get_dbpointer() const;
-
-    ///
-    /// Getter for elements of the b_code type.
-    ///
-    /// @throws bsoncxx::v_noabi::exception if this element is not a b_code.
-    ///
-    /// @return the element's value.
-    ///
-    BSONCXX_ABI_EXPORT_CDECL(types::b_code) get_code() const;
-
-    ///
-    /// Getter for elements of the b_symbol type.
-    ///
-    /// @throws bsoncxx::v_noabi::exception if this element is not a b_symbol.
-    ///
-    /// @return the element's value.
-    ///
-    BSONCXX_ABI_EXPORT_CDECL(types::b_symbol) get_symbol() const;
-
-    ///
-    /// Getter for elements of the b_codewscope type.
-    ///
-    /// @throws bsoncxx::v_noabi::exception if this element is not a b_codewscope.
-    ///
-    /// @return the element's value.
-    ///
-    BSONCXX_ABI_EXPORT_CDECL(types::b_codewscope) get_codewscope() const;
-
-    ///
-    /// Getter for elements of the b_int32 type.
-    ///
-    /// @throws bsoncxx::v_noabi::exception if this element is not a b_int32.
-    ///
-    /// @return the element's value.
-    ///
-    BSONCXX_ABI_EXPORT_CDECL(types::b_int32) get_int32() const;
-
-    ///
-    /// Getter for elements of the b_timestamp type.
-    ///
-    /// @throws bsoncxx::v_noabi::exception if this element is not a b_timestamp.
-    ///
-    /// @return the element's value.
-    ///
-    BSONCXX_ABI_EXPORT_CDECL(types::b_timestamp) get_timestamp() const;
-
-    ///
-    /// Getter for elements of the b_int64 type.
-    ///
-    /// @throws bsoncxx::v_noabi::exception if this element is not a b_int64.
-    ///
-    /// @return the element's value.
-    ///
-    BSONCXX_ABI_EXPORT_CDECL(types::b_int64) get_int64() const;
-
-    ///
-    /// Getter for elements of the b_decimal128 type.
-    ///
-    /// @throws bsoncxx::v_noabi::exception if this element is not a b_decimal128.
-    ///
-    /// @return the element's value.
-    ///
-    BSONCXX_ABI_EXPORT_CDECL(types::b_decimal128) get_decimal128() const;
-
-    ///
-    /// Getter for elements of the b_minkey type.
-    ///
-    /// @throws bsoncxx::v_noabi::exception if this element is not a b_minkey.
-    ///
-    /// @return the element's value.
-    ///
-    BSONCXX_ABI_EXPORT_CDECL(types::b_minkey) get_minkey() const;
-
-    ///
-    /// Getter for elements of the b_maxkey type.
-    ///
-    /// @throws bsoncxx::v_noabi::exception if this element is not a b_maxkey.
-    ///
-    /// @return the element's value.
-    ///
-    BSONCXX_ABI_EXPORT_CDECL(types::b_maxkey) get_maxkey() const;
+#pragma pop_macro("X")
 
     ///
     /// Getter for a types::bson_value::view variant wrapper of the value portion of the
@@ -300,7 +157,7 @@ class element {
     ///
     /// @return the element's value.
     ///
-    BSONCXX_ABI_EXPORT_CDECL(types::bson_value::view) get_value() const;
+    BSONCXX_ABI_EXPORT_CDECL(v_noabi::types::bson_value::view) get_value() const;
 
     ///
     /// Getter for a types::bson_value::value variant wrapper of the value portion of
@@ -308,7 +165,7 @@ class element {
     ///
     /// @return an owning version of the element's value.
     ///
-    BSONCXX_ABI_EXPORT_CDECL(types::bson_value::value) get_owning_value() const;
+    BSONCXX_ABI_EXPORT_CDECL(v_noabi::types::bson_value::value) get_owning_value() const;
 
     ///
     /// If this element is a document, finds the first element of the document
@@ -324,7 +181,7 @@ class element {
     ///
     /// @return The matching element, if found, or an invalid element.
     ///
-    BSONCXX_ABI_EXPORT_CDECL(element) operator[](stdx::string_view key) const;
+    BSONCXX_ABI_EXPORT_CDECL(element) operator[](v1::stdx::string_view key) const;
 
     ///
     /// If this element is an array, indexes into this BSON array. If the
@@ -340,30 +197,7 @@ class element {
     ///
     /// @return The element if it exists, or an invalid element.
     ///
-    BSONCXX_ABI_EXPORT_CDECL(array::element) operator[](std::uint32_t i) const;
-
-   private:
-    ///
-    /// Construct an element as an offset into a buffer of bson bytes.
-    ///
-    /// @param raw
-    ///   A pointer to the raw bson bytes.
-    ///
-    /// @param length
-    ///   The size of the bson buffer.
-    ///
-    /// @param offset
-    ///   The element's offset into the buffer.
-    ///
-    explicit element(std::uint8_t const* raw, std::uint32_t length, std::uint32_t offset, std::uint32_t keylen);
-
-    friend ::bsoncxx::v_noabi::array::element;
-    friend ::bsoncxx::v_noabi::document::view;
-
-    std::uint8_t const* _raw;
-    std::uint32_t _length;
-    std::uint32_t _offset;
-    std::uint32_t _keylen;
+    BSONCXX_ABI_EXPORT_CDECL(v_noabi::array::element) operator[](std::uint32_t i) const;
 };
 
 ///
@@ -374,16 +208,22 @@ class element {
 /// @{
 
 /// @relatesalso bsoncxx::v_noabi::document::element
-BSONCXX_ABI_EXPORT_CDECL(bool) operator==(element const& elem, types::bson_value::view const& v);
+BSONCXX_ABI_EXPORT_CDECL(bool) operator==(element const& lhs, v_noabi::types::bson_value::view const& rhs);
 
 /// @relatesalso bsoncxx::v_noabi::document::element
-BSONCXX_ABI_EXPORT_CDECL(bool) operator==(types::bson_value::view const& v, element const& elem);
+inline bool operator==(v_noabi::types::bson_value::view const& lhs, element const& rhs) {
+    return rhs == lhs;
+}
 
 /// @relatesalso bsoncxx::v_noabi::document::element
-BSONCXX_ABI_EXPORT_CDECL(bool) operator!=(element const& elem, types::bson_value::view const& v);
+inline bool operator!=(element const& lhs, v_noabi::types::bson_value::view const& rhs) {
+    return !(lhs == rhs);
+}
 
 /// @relatesalso bsoncxx::v_noabi::document::element
-BSONCXX_ABI_EXPORT_CDECL(bool) operator!=(types::bson_value::view const& v, element const& elem);
+inline bool operator!=(v_noabi::types::bson_value::view const& lhs, element const& rhs) {
+    return !(lhs == rhs);
+}
 
 /// @}
 ///
@@ -393,10 +233,26 @@ BSONCXX_ABI_EXPORT_CDECL(bool) operator!=(types::bson_value::view const& v, elem
 } // namespace bsoncxx
 
 namespace bsoncxx {
+namespace v_noabi {
+
+// Ambiguous whether `v1::element::view` should be converted to `v1::array::element` or `v1::document::element.`
+// v_noabi::document::element from_v1(v1::element::view const& v);
+
+///
+/// Convert to the @ref bsoncxx::v1 equivalent of `v`.
+///
+inline v1::element::view to_v1(v_noabi::document::element const& v) {
+    return v1::element::view{v};
+}
+
+} // namespace v_noabi
+} // namespace bsoncxx
+
+namespace bsoncxx {
 namespace document {
 
-using ::bsoncxx::v_noabi::document::operator==;
-using ::bsoncxx::v_noabi::document::operator!=;
+using v_noabi::document::operator==;
+using v_noabi::document::operator!=;
 
 } // namespace document
 } // namespace bsoncxx
@@ -406,4 +262,7 @@ using ::bsoncxx::v_noabi::document::operator!=;
 ///
 /// @file
 /// Provides @ref bsoncxx::v_noabi::document::element.
+///
+/// @par Includes
+/// - @ref bsoncxx/v1/element/view.hpp
 ///

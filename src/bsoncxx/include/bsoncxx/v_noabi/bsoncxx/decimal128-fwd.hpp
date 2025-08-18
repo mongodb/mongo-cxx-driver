@@ -14,6 +14,8 @@
 
 #pragma once
 
+#include <bsoncxx/v1/decimal128-fwd.hpp>
+
 #include <bsoncxx/config/prelude.hpp>
 
 namespace bsoncxx {
@@ -26,7 +28,7 @@ class decimal128;
 
 namespace bsoncxx {
 
-using ::bsoncxx::v_noabi::decimal128;
+using v_noabi::decimal128;
 
 } // namespace bsoncxx
 
@@ -35,4 +37,7 @@ using ::bsoncxx::v_noabi::decimal128;
 ///
 /// @file
 /// Declares @ref bsoncxx::v_noabi::decimal128.
+///
+/// @par Includes
+/// - @ref bsoncxx/v1/decimal128-fwd.hpp
 ///

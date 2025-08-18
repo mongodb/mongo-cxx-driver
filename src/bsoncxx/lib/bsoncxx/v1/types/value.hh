@@ -16,6 +16,7 @@
 
 //
 
+#include <bsoncxx/v1/config/export.hpp>
 #include <bsoncxx/v1/stdx/optional.hpp>
 
 #include <cstdint>
@@ -30,6 +31,9 @@ class value::internal {
    public:
     static v1::stdx::optional<value>
     make(std::uint8_t const* raw, std::uint32_t length, std::uint32_t offset, std::uint32_t keylen);
+
+    // Required by mongocxx::detail::scoped_bson_value.
+    static BSONCXX_ABI_EXPORT_CDECL(bson_value_t&) get_bson_value(value& v);
 };
 
 } // namespace types

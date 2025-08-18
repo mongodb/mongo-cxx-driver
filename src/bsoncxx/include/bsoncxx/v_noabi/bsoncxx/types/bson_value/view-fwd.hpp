@@ -14,6 +14,8 @@
 
 #pragma once
 
+#include <bsoncxx/v1/types/view-fwd.hpp>
+
 #include <bsoncxx/config/prelude.hpp>
 
 namespace bsoncxx {
@@ -24,6 +26,9 @@ namespace bson_value {
 class view;
 
 } // namespace bson_value
+
+using bson_value::view;
+
 } // namespace types
 } // namespace v_noabi
 } // namespace bsoncxx
@@ -32,9 +37,12 @@ namespace bsoncxx {
 namespace types {
 namespace bson_value {
 
-using ::bsoncxx::v_noabi::types::bson_value::view;
+using v_noabi::types::bson_value::view;
 
 } // namespace bson_value
+
+using bson_value::view;
+
 } // namespace types
 } // namespace bsoncxx
 
@@ -43,4 +51,7 @@ using ::bsoncxx::v_noabi::types::bson_value::view;
 ///
 /// @file
 /// Declares @ref bsoncxx::v_noabi::types::bson_value::view.
+///
+/// @par Includes
+/// - @ref bsoncxx/v1/types/view-fwd.hpp
 ///
