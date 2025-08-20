@@ -59,6 +59,7 @@ def tasks():
 
             compile_vars = {'ENABLE_TESTS': 'ON'}
             test_vars = {
+                'ASAN_SYMBOLIZER_PATH': '/opt/mongodbtoolchain/v4/bin/llvm-symbolizer',
                 'TEST_WITH_CSFLE': 'ON',
                 'MONGOCXX_TEST_TOPOLOGY': topology,
                 'example_projects_cc': cc_compiler,
