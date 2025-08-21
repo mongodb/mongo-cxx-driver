@@ -32,7 +32,7 @@ bypass_dlclose() (
     echo "int dlclose (void *handle) {(void) handle; return 0; }" \
       >|"${tmp:?}/bypass_dlclose.c" || return
 
-    "${CC}" -o "${tmp:?}/bypass_dlclose.so" \
+    "${CC:?}" -o "${tmp:?}/bypass_dlclose.so" \
       -shared "${tmp:?}/bypass_dlclose.c" || return
 
     ld_preload="${tmp:?}/bypass_dlclose.so"
