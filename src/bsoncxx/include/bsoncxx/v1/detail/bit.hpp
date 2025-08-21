@@ -19,10 +19,10 @@
 #include <bsoncxx/v1/config/config.hpp>
 
 #if defined(__has_include)
-#if __has_include(<bit>)
+#if __has_include(<bit>) && (!defined(_MSVC_LANG) || _MSVC_LANG >= 202002L)
 // Prioritize using std::endian from C++20.
 #include <bit>
-#endif // __has_include(<bit>)
+#endif // __has_include(<bit>) && (!defined(_MSVC_LANG) || _MSVC_LANG >= 202002L)
 #elif defined(_WIN32)
 // Forward-compatibility with STL: https://github.com/microsoft/STL/blob/vs-2019-16.5/stl/inc/bit#L26
 #elif defined(__BYTE_ORDER__) && defined(__ORDER_LITTLE_ENDIAN__) && defined(__ORDER_BIG_ENDIAN__)
