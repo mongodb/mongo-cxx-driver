@@ -30,10 +30,6 @@
 #include <mongocxx/private/config/config.hh>
 #include <mongocxx/private/mongoc.hh>
 
-#if !defined(__has_feature)
-#define __has_feature(x) 0
-#endif
-
 namespace mongocxx {
 namespace v_noabi {
 
@@ -119,14 +115,7 @@ class instance::impl {
             libmongoc::log_set_handler(null_log_handler, nullptr);
         }
 
-// Under ASAN, we don't want to clean up libmongoc, because it causes libraries to become
-// unloaded, and then ASAN sees non-rooted allocations that it consideres leaks. These are
-// also inscrutable, because the stack refers into an unloaded library, which ASAN can't
-// report. Note that this only works if we have built mongoc so that it doesn't do its
-// unfortunate automatic invocation of 'cleanup'.
-#if !__has_feature(address_sanitizer)
         libmongoc::cleanup();
-#endif
     }
 
     impl(impl&&) noexcept = delete;

@@ -30,10 +30,10 @@ std::error_category const& source_error_category() {
             return "bsoncxx::v1::source_errc";
         }
 
-        std::string message(int e) const noexcept override {
+        std::string message(int v) const noexcept override {
             using code = v1::source_errc;
 
-            switch (static_cast<code>(e)) {
+            switch (static_cast<code>(v)) {
                 case code::zero:
                     return "zero";
                 case code::bsoncxx:
@@ -41,7 +41,7 @@ std::error_category const& source_error_category() {
                 case code::bson:
                     return "bson";
                 default:
-                    return "unknown: " + std::to_string(e);
+                    return std::string(this->name()) + ':' + std::to_string(v);
             }
         }
     };
@@ -57,10 +57,10 @@ std::error_category const& type_error_category() {
             return "bsoncxx::v1::type_errc";
         }
 
-        std::string message(int e) const noexcept override {
+        std::string message(int v) const noexcept override {
             using code = v1::type_errc;
 
-            switch (static_cast<code>(e)) {
+            switch (static_cast<code>(v)) {
                 case code::zero:
                     return "zero";
                 case code::invalid_argument:
@@ -68,7 +68,7 @@ std::error_category const& type_error_category() {
                 case code::runtime_error:
                     return "runtime error";
                 default:
-                    return "unknown: " + std::to_string(e);
+                    return std::string(this->name()) + ':' + std::to_string(v);
             }
         }
     };

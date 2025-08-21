@@ -141,7 +141,7 @@ if(1)
 ///
 /// @warning For internal use only!
 ///
-        ]]
+]]
         )
         generate_export_header(${TARGET}
             BASE_NAME MONGOCXX_ABI

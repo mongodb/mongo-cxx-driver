@@ -14,6 +14,7 @@ set -o pipefail
 : "${MONGOCXX_TEST_TOPOLOGY:?}"
 : "${UV_INSTALL_DIR:?}"
 
+: "${ASAN_SYMBOLIZER_PATH:-}"
 : "${CRYPT_SHARED_LIB_PATH:-}"
 : "${disable_slow_tests:-}"
 : "${example_projects_cc:-}"
@@ -100,6 +101,7 @@ fi
 export DRIVERS_TOOLS
 popd # "${working_dir:?}/../drivers-evergreen-tools"
 
+. .evergreen/scripts/bypass-dlclose.sh
 . .evergreen/scripts/install-build-tools.sh
 install_build_tools
 
@@ -274,21 +276,23 @@ else
   )
 
   run_test() {
-    echo "Running $@..."
-    "$@" "${test_args[@]:?}" || return
-    echo "Running $@... done."
+    echo "Running ${1:?}..."
+    LD_PRELOAD="${ld_preload:-}" "${1:?}" "${test_args[@]:?}" || return
+    echo "Running ${1:?}... done."
   }
 
+  declare ld_preload="${LD_PRELOAD:-}"
   if [[ "${TEST_WITH_ASAN:-}" == "ON" || "${TEST_WITH_UBSAN:-}" == "ON" ]]; then
     export ASAN_OPTIONS="detect_leaks=1"
     export UBSAN_OPTIONS="print_stacktrace=1"
+    ld_preload="$(bypass_dlclose):${ld_preload:-}"
   elif [[ "${TEST_WITH_VALGRIND:-}" == "ON" ]]; then
     command -V valgrind
     valgrind --version
     run_test() {
-      echo "Running $@..."
-      valgrind --leak-check=full --track-origins=yes --num-callers=50 --error-exitcode=1 --error-limit=no --read-var-info=yes --suppressions=../etc/memcheck.suppressions "$@" "${test_args[@]:?}" || return
-      echo "Running $@... done."
+      echo "Running ${1:?}..."
+      valgrind --leak-check=full --track-origins=yes --num-callers=50 --error-exitcode=1 --error-limit=no --read-var-info=yes --suppressions=../etc/memcheck.suppressions "${1:?}" "${test_args[@]:?}" || return
+      echo "Running ${1:?}... done."
     }
   fi
 
