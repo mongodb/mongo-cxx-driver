@@ -24,6 +24,8 @@ Changes prior to 3.9.0 are documented as [release notes on GitHub](https://githu
   - Clang 3.8 (from Clang 3.5).
   - Apple Clang 13.1 with Xcode 13.4.1 (from Apple Clang 5.1 with Xcode 5.1).
   - MSVC 19.0.24210 with Visual Studio 2015 Update 3 (from MSVC 19.0.23506 with Visual Studio 2015 Update 1).
+- `mongocxx::v_noabi::instance::~instance()` no longer skips calling `mongoc_cleanup()` when compiled with ASAN enabled.
+  - See https://github.com/google/sanitizers/issues/89 for context.
 
 ### Deprecated
 
