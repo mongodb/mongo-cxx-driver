@@ -654,6 +654,7 @@ functions:
       binary: bash
       working_dir: mongo-cxx-driver
       include_expansions_in_env:
+        - ASAN_SYMBOLIZER_PATH
         - build_type
         - CRYPT_SHARED_LIB_PATH
         - cse_aws_access_key_id
