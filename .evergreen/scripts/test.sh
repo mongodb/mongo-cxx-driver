@@ -277,7 +277,7 @@ else
 
   run_test() {
     echo "Running ${1:?}..."
-    "${1:?}" "${test_args[@]:?}" || return
+    LD_PRELOAD="${ld_preload:-}" "${1:?}" "${test_args[@]:?}" || return
     echo "Running ${1:?}... done."
   }
 
