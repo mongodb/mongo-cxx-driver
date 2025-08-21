@@ -31,11 +31,11 @@ TEST_CASE("source", "[bsoncxx][v1][error]") {
     }
 
     SECTION("message") {
-        CHECK(c.message(-1) == "unknown: -1");
+        CHECK(c.message(-1) == "bsoncxx::v1::source_errc:-1");
         CHECK(c.message(0) == "zero");
         CHECK(c.message(1) == "bsoncxx");
         CHECK(c.message(2) == "bson");
-        CHECK(c.message(3) == "unknown: 3");
+        CHECK(c.message(3) == "bsoncxx::v1::source_errc:3");
     }
 }
 
@@ -47,11 +47,11 @@ TEST_CASE("type", "[bsoncxx][v1][error]") {
     }
 
     SECTION("message") {
-        CHECK(c.message(-1) == "unknown: -1");
+        CHECK(c.message(-1) == "bsoncxx::v1::type_errc:-1");
         CHECK(c.message(0) == "zero");
         CHECK(c.message(1) == "invalid argument");
         CHECK(c.message(2) == "runtime error");
-        CHECK(c.message(3) == "unknown: 3");
+        CHECK(c.message(3) == "bsoncxx::v1::type_errc:3");
     }
 }
 
