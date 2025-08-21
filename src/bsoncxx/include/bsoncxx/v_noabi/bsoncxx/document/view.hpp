@@ -44,6 +44,10 @@ class view {
 
    public:
     class const_iterator;
+
+    ///
+    /// Equivalent to @ref const_iterator.
+    ///
     using iterator = const_iterator;
 
     ///
