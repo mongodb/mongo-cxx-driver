@@ -12,93 +12,53 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <bsoncxx/oid.hpp>
+
+//
+
+#include <bsoncxx/v1/exception.hpp>
+
+#include <bsoncxx/v1/oid.hh>
+
 #include <cstring>
 
 #include <bsoncxx/exception/error_code.hpp>
 #include <bsoncxx/exception/exception.hpp>
-#include <bsoncxx/oid.hpp>
 
 #include <bsoncxx/private/bson.hh>
+#include <bsoncxx/private/type_traits.hh>
 
 namespace bsoncxx {
 namespace v_noabi {
 
-oid::oid() {
-    bson_oid_t oid;
-    bson_oid_init(&oid, nullptr);
+static_assert(is_explicitly_convertible<oid&&, v1::oid>::value, "v_noabi -> v1 must be explicit");
+static_assert(is_explicitly_convertible<oid const&, v1::oid>::value, "v_noabi -> v1 must be explicit");
+static_assert(is_implicitly_convertible<v1::oid&&, oid>::value, "v1 -> v_noabi must be implicit");
+static_assert(is_implicitly_convertible<v1::oid const&, oid>::value, "v1 -> v_noabi must be implicit");
 
-    std::memcpy(_bytes.data(), oid.bytes, sizeof(oid.bytes));
-}
+constexpr std::size_t oid::k_oid_length;
 
-oid::oid(stdx::string_view const& str) {
-    if (!bson_oid_is_valid(str.data(), str.size())) {
-        throw bsoncxx::v_noabi::exception{error_code::k_invalid_oid};
+oid::oid() : _oid{v1::oid::internal::make_oid_without_init()} {
+    try {
+        _oid = v1::oid{};
+    } catch (...) {
+        // For backward compatibility, ignore any exceptions and initialize anyways.
+        bson_oid_t oid;
+        bson_oid_init(&oid, nullptr);
+
+        auto& _bytes = v1::oid::internal::bytes(_oid);
+        std::memcpy(_bytes.data(), oid.bytes, sizeof(oid.bytes));
     }
-    bson_oid_t oid;
-    bson_oid_init_from_string(&oid, str.data());
-    memcpy(_bytes.data(), oid.bytes, _bytes.size());
 }
 
-oid::oid(char const* bytes, std::size_t len) {
-    if (len != this->size()) {
-        throw bsoncxx::v_noabi::exception{error_code::k_invalid_oid};
-    }
-    std::memcpy(_bytes.data(), bytes, _bytes.size());
+oid::oid(stdx::string_view const& str) try : _oid{str} {
+} catch (v1::exception const&) {
+    throw v_noabi::exception{v_noabi::error_code::k_invalid_oid};
 }
 
-std::string oid::to_string() const {
-    bson_oid_t oid;
-    std::memcpy(oid.bytes, _bytes.data(), sizeof(oid.bytes));
-    char str[25];
-
-    bson_oid_to_string(&oid, str);
-
-    return std::string(str);
-}
-
-std::time_t oid::get_time_t() const {
-    bson_oid_t oid;
-    std::memcpy(oid.bytes, _bytes.data(), sizeof(oid.bytes));
-
-    return bson_oid_get_time_t(&oid);
-}
-
-char const* oid::bytes() const {
-    return _bytes.data();
-}
-
-int oid_compare(oid const& lhs, oid const& rhs) {
-    bson_oid_t lhs_oid;
-    bson_oid_t rhs_oid;
-
-    std::memcpy(lhs_oid.bytes, lhs.bytes(), sizeof(lhs_oid.bytes));
-    std::memcpy(rhs_oid.bytes, rhs.bytes(), sizeof(rhs_oid.bytes));
-
-    return bson_oid_compare(&lhs_oid, &rhs_oid);
-}
-
-bool operator<(oid const& lhs, oid const& rhs) {
-    return oid_compare(lhs, rhs) < 0;
-}
-
-bool operator>(oid const& lhs, oid const& rhs) {
-    return oid_compare(lhs, rhs) > 0;
-}
-
-bool operator<=(oid const& lhs, oid const& rhs) {
-    return oid_compare(lhs, rhs) <= 0;
-}
-
-bool operator>=(oid const& lhs, oid const& rhs) {
-    return oid_compare(lhs, rhs) >= 0;
-}
-
-bool operator==(oid const& lhs, oid const& rhs) {
-    return oid_compare(lhs, rhs) == 0;
-}
-
-bool operator!=(oid const& lhs, oid const& rhs) {
-    return oid_compare(lhs, rhs) != 0;
+oid::oid(char const* bytes, std::size_t len) try : _oid{reinterpret_cast<std::uint8_t const*>(bytes), len} {
+} catch (v1::exception const&) {
+    throw v_noabi::exception{v_noabi::error_code::k_invalid_oid};
 }
 
 } // namespace v_noabi

@@ -75,4 +75,15 @@ struct is_semitrivial : detail::conjunction<
                             std::is_trivially_copy_constructible<T>,
                             std::is_trivially_copy_assignable<T>> {};
 
+// Equivalent to `is_constructible_v<To, From> && !is_convertible_v<From, To>`.
+template <typename From, typename To>
+struct is_explicitly_convertible : bsoncxx::detail::conjunction<
+                                       std::is_constructible<To, From>,
+                                       bsoncxx::detail::negation<std::is_convertible<From, To>>> {};
+
+// Equivalent to `is_constructible_v<To, From> && is_convertible_v<From, To>`.
+template <typename From, typename To>
+struct is_implicitly_convertible
+    : bsoncxx::detail::conjunction<std::is_constructible<To, From>, std::is_convertible<From, To>> {};
+
 } // namespace bsoncxx

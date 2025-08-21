@@ -12,17 +12,33 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <bsoncxx/document/value.hpp>
+
+//
+
+#include <cstdint>
 #include <utility>
 
-#include <bsoncxx/document/value.hpp>
+#include <bsoncxx/private/type_traits.hh>
 
 namespace bsoncxx {
 namespace v_noabi {
 namespace document {
 
-value::value(std::uint8_t* data, std::size_t length, deleter_type dtor) : _data(data, dtor), _length(length) {}
+static_assert(is_explicitly_convertible<value&&, v1::document::value>::value, "v_noabi -> v1 must be explicit");
+static_assert(is_explicitly_convertible<value const&, v1::document::value>::value, "v_noabi -> v1 must be explicit");
 
-value::value(unique_ptr_type ptr, std::size_t length) : _data(std::move(ptr)), _length(length) {}
+// Unconstrained template parameters for value(T const& t)` and `operator=(T const& t)` result in the following lies.
+static_assert(is_explicitly_convertible<v1::document::value&&, value>::value, "v1 -> v_noabi: this is a lie!");
+static_assert(is_explicitly_convertible<v1::document::value const&, value>::value, "v1 -> v_noabi: this is a lie!");
+
+// Backward compatibility with unconstrained `operator=(T const&)` permits the following.
+static_assert(std::is_assignable<value, v1::document::value&&>::value, "v1 -> v_noabi: assignment is supported");
+static_assert(std::is_assignable<value, v1::document::value const&>::value, "v1 -> v_noabi: assignment is supported");
+
+// Backward compatibility with lack of default destructor and `value({})` prevent implicit conversions.
+static_assert(!is_implicitly_convertible<v1::document::value&&, value>::value, "v1 -> v_noabi is not supported");
+static_assert(!is_implicitly_convertible<v1::document::value const&, value>::value, "v1 -> v_noabi is not supported");
 
 namespace {
 
@@ -32,66 +48,33 @@ void uint8_t_deleter(std::uint8_t* ptr) {
 
 } // namespace
 
-value::value(document::view view)
-    : _data(new std::uint8_t[static_cast<std::size_t>(view.length())], uint8_t_deleter), _length(view.length()) {
-    std::copy(view.data(), view.data() + view.length(), _data.get());
-}
-
-value::value(value const& rhs) : value(rhs.view()) {}
-
-value& value::operator=(value const& rhs) {
-    *this = value{rhs.view()};
-    return *this;
-}
-
-document::view::const_iterator value::cbegin() const {
-    return this->view().cbegin();
-}
-
-document::view::const_iterator value::cend() const {
-    return this->view().cend();
-}
-
-document::view::const_iterator value::begin() const {
-    return cbegin();
-}
-
-document::view::const_iterator value::end() const {
-    return cend();
-}
-
-document::view::const_iterator value::find(stdx::string_view key) const {
-    return this->view().find(key);
-}
-
-element value::operator[](stdx::string_view key) const {
-    auto view = this->view();
-    return view[key];
-}
-
-std::uint8_t const* value::data() const {
-    return _data.get();
-}
-
-std::size_t value::length() const {
-    return _length;
-}
-
-bool value::empty() const {
-    return _length == 5;
-}
-
-value::unique_ptr_type value::release() {
-    _length = 0;
-    return std::move(_data);
-}
-
-void value::reset(document::view view) {
-    _data.reset(new std::uint8_t[static_cast<std::size_t>(view.length())]);
-    _length = view.length();
-    std::copy(view.data(), view.data() + view.length(), _data.get());
-}
+value::value(v_noabi::document::view view)
+    : _value{[&]() -> unique_ptr_type {
+          auto res = unique_ptr_type{new std::uint8_t[view.size()], uint8_t_deleter};
+          std::memcpy(res.get(), view.data(), view.size());
+          return res;
+      }()},
+      _length{view.size()} {}
 
 } // namespace document
+} // namespace v_noabi
+} // namespace bsoncxx
+
+namespace bsoncxx {
+namespace v_noabi {
+
+v_noabi::document::value from_v1(v1::document::value&& v) {
+    auto const deleter_ptr = v.get_deleter().target<v_noabi::document::value::deleter_type>();
+
+    if (!deleter_ptr || *deleter_ptr == &v1::document::value::noop_deleter) {
+        return from_v1(static_cast<v1::document::value const&>(v)); // Fallback to copy.
+    }
+
+    auto const length = v.length();
+    auto const deleter = *deleter_ptr;
+
+    return {v.release().release(), length, deleter};
+}
+
 } // namespace v_noabi
 } // namespace bsoncxx

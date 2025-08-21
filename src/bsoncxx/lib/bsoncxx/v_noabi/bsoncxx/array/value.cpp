@@ -12,17 +12,24 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <bsoncxx/array/value.hpp>
+
+//
+
 #include <cstring>
 
-#include <bsoncxx/array/value.hpp>
+#include <bsoncxx/private/type_traits.hh>
 
 namespace bsoncxx {
 namespace v_noabi {
 namespace array {
 
-value::value(std::uint8_t* data, std::size_t length, deleter_type dtor) : _data(data, dtor), _length(length) {}
+static_assert(is_explicitly_convertible<value&&, v1::array::value>::value, "v_noabi -> v1 must be explicit");
+static_assert(is_explicitly_convertible<value const&, v1::array::value>::value, "v_noabi -> v1 must be explicit");
 
-value::value(unique_ptr_type ptr, std::size_t length) : _data(std::move(ptr)), _length(length) {}
+// Backward compatibility with lack of default destructor and `value({})` prevents the following conversions.
+static_assert(!is_explicitly_convertible<v1::array::value&&, value>::value, "v1 -> v_noabi is not supported");
+static_assert(!is_explicitly_convertible<v1::array::value const&, value>::value, "v1 -> v_noabi is not supported");
 
 namespace {
 
@@ -32,23 +39,33 @@ void uint8_t_deleter(std::uint8_t* ptr) {
 
 } // namespace
 
-value::value(array::view view)
-    : _data(new std::uint8_t[static_cast<std::size_t>(view.length())], uint8_t_deleter), _length(view.length()) {
-    std::copy(view.data(), view.data() + view.length(), _data.get());
-}
-
-value::value(value const& rhs) : value(rhs.view()) {}
-
-value& value::operator=(value const& rhs) {
-    *this = value{rhs.view()};
-    return *this;
-}
-
-value::unique_ptr_type value::release() {
-    _length = 0;
-    return std::move(_data);
-}
+value::value(v_noabi::array::view view)
+    : _value{[&]() -> unique_ptr_type {
+          auto res = unique_ptr_type{new std::uint8_t[view.size()], uint8_t_deleter};
+          std::memcpy(res.get(), view.data(), view.size());
+          return res;
+      }()},
+      _length{view.size()} {}
 
 } // namespace array
+} // namespace v_noabi
+} // namespace bsoncxx
+
+namespace bsoncxx {
+namespace v_noabi {
+
+v_noabi::array::value from_v1(v1::array::value&& v) {
+    auto const deleter_ptr = v.get_deleter().target<v_noabi::array::value::deleter_type>();
+
+    if (!deleter_ptr || *deleter_ptr == &v1::document::value::noop_deleter) {
+        return from_v1(static_cast<v1::array::value const&>(v)); // Fallback to copy.
+    }
+
+    auto const length = v.length();
+    auto const deleter = *deleter_ptr;
+
+    return {v.release().release(), length, deleter};
+}
+
 } // namespace v_noabi
 } // namespace bsoncxx
