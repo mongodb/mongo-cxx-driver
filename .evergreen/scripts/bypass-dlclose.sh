@@ -41,9 +41,9 @@ bypass_dlclose() (
     if [[ "${CC:?}" =~ clang ]]; then
       declare asan_path
       asan_path="$("${CC:?}" -print-file-name=libasan.so)" || return
-      ld_preload="${asan_path}:${ld_preload}"
+      ld_preload="${asan_path:?}:${ld_preload:?}"
     fi
   } 1>&2
 
-  printf "%s" "${ld_preload}"
+  printf "%s" "${ld_preload:?}"
 )
