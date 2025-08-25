@@ -251,8 +251,8 @@ def iter_tag_lines():
     """
     output = check_output(['git', 'for-each-ref', '--format=%(*objectname)|%(objectname)|%(refname)', 'refs/tags/*'])
     lines = output.splitlines()
-    for l in lines:
-        obj, tagobj, rawtag = l.split('|', 2)
+    for line in lines:
+        obj, tagobj, rawtag = line.split('|', 2)
 
         # Support Git 1.x which does not have `%(refname:lstrip=2)`.
         tag = str('/').join(rawtag.split('/')[:2])
