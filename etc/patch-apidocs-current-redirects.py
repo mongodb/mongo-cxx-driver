@@ -19,13 +19,13 @@ Patches HTML files within the latest API doc directory (under APIDOCSPATH) to
 redirect users from `/api/current` to canonical URLs under `/api/mongocxx-X.Y.Z`.
 """
 
+import os
+import re
 from concurrent.futures import ProcessPoolExecutor
-from packaging.version import Version, InvalidVersion
 from pathlib import Path
 from typing import List, Tuple
 
-import re
-import os
+from packaging.version import InvalidVersion, Version
 
 
 def find_api_docs_path() -> str:
@@ -83,7 +83,7 @@ def patch_redirect_current_pages(apidocspath, latest):
 
     pages: List[Path] = []
 
-    for (dirpath, _, filenames) in os.walk(os.path.join(apidocspath, latest)):
+    for dirpath, _, filenames in os.walk(os.path.join(apidocspath, latest)):
         for filename in filenames:
             page = Path(os.path.join(dirpath, filename))
             if page.suffix == '.html':
@@ -112,7 +112,7 @@ def insert_current_redirect(apidocspath, page, latest):
     is_patched = re.compile(patch_tag)
     end_of_head_re = re.compile(r'^(\s*)</head>$')
 
-    with open(page, "r+") as file:
+    with open(page, 'r+') as file:
         lines = [line for line in file]
 
         idx = None
@@ -138,9 +138,7 @@ def insert_current_redirect(apidocspath, page, latest):
         end_of_head += 1
 
         # Canonical URL. Inform search engines about the redirect.
-        lines.insert(
-            end_of_head,
-            indent + f'<link rel="canonical" href="https://mongocxx.org/api/{latest}/{path}"/>\n')
+        lines.insert(end_of_head, indent + f'<link rel="canonical" href="https://mongocxx.org/api/{latest}/{path}"/>\n')
         end_of_head += 1
 
         # Redirect script. Avoid generating history for the `/current` page during the redirect.

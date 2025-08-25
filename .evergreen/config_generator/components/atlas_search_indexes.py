@@ -1,18 +1,16 @@
-from config_generator.components.funcs.compile import Compile
-from config_generator.components.funcs.fetch_det import FetchDET
-from config_generator.components.funcs.install_c_driver import InstallCDriver
-from config_generator.components.funcs.install_uv import InstallUV
-from config_generator.components.funcs.setup import Setup
-
-from config_generator.etc.distros import find_large_distro
-from config_generator.etc.function import Function
-from config_generator.etc.utils import bash_exec
-
 from shrub.v3.evg_build_variant import BuildVariant
 from shrub.v3.evg_command import EvgCommandType, expansions_update
 from shrub.v3.evg_task import EvgTask, EvgTaskRef
 from shrub.v3.evg_task_group import EvgTaskGroup
 
+from config_generator.components.funcs.compile import Compile
+from config_generator.components.funcs.fetch_det import FetchDET
+from config_generator.components.funcs.install_c_driver import InstallCDriver
+from config_generator.components.funcs.install_uv import InstallUV
+from config_generator.components.funcs.setup import Setup
+from config_generator.etc.distros import find_large_distro
+from config_generator.etc.function import Function
+from config_generator.etc.utils import bash_exec
 
 TAG = 'atlas-search-indexes'
 
@@ -32,12 +30,12 @@ class TestSearchIndexHelpers(Function):
     commands = bash_exec(
         command_type=EvgCommandType.TEST,
         working_dir='mongo-cxx-driver',
-        script='''\
+        script="""\
             export MONGODB_URI=${MONGODB_URI}
             export LD_LIBRARY_PATH=$(pwd)/../mongoc/lib
 
             ./build/src/mongocxx/test/test_driver "atlas search indexes prose tests"
-        '''
+        """,
     )
 
 
@@ -87,9 +85,9 @@ def task_groups():
                 bash_exec(
                     working_dir='mongo-cxx-driver',
                     add_expansions_to_env=True,
-                    script='${DRIVERS_TOOLS}/.evergreen/atlas/teardown-atlas-cluster.sh'
+                    script='${DRIVERS_TOOLS}/.evergreen/atlas/teardown-atlas-cluster.sh',
                 )
-            ]
+            ],
         )
         for mongodb_version in MATRIX
     ]

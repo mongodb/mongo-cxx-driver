@@ -1,9 +1,8 @@
-from config_generator.components.funcs.set_cache_dir import SetCacheDir
+from shrub.v3.evg_command import EvgCommandType, expansions_update
 
+from config_generator.components.funcs.set_cache_dir import SetCacheDir
 from config_generator.etc.function import Function
 from config_generator.etc.utils import bash_exec
-
-from shrub.v3.evg_command import EvgCommandType, expansions_update
 
 
 class InstallUV(Function):
@@ -11,7 +10,7 @@ class InstallUV(Function):
     commands = SetCacheDir.commands + [
         bash_exec(
             command_type=EvgCommandType.SETUP,
-            script='''\
+            script="""\
                 set -o errexit
                 set -o pipefail
 
@@ -46,7 +45,7 @@ class InstallUV(Function):
                 PATH="$uv_install_dir:$PATH" uv --version
 
                 printf "UV_INSTALL_DIR: %s\\n" "$uv_install_dir" >|expansions.uv.yml
-            ''',
+            """,
         ),
         expansions_update(
             command_type=EvgCommandType.SETUP,

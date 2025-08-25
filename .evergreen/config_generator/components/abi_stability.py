@@ -1,17 +1,15 @@
-from config_generator.components.funcs.install_c_driver import InstallCDriver
-from config_generator.components.funcs.install_uv import InstallUV
-
-from config_generator.etc.distros import find_large_distro
-from config_generator.etc.function import Function, merge_defns
-from config_generator.etc.utils import bash_exec
+from itertools import product
 
 from shrub.v3.evg_build_variant import BuildVariant
 from shrub.v3.evg_command import EvgCommandType, git_get_project, s3_put
 from shrub.v3.evg_task import EvgTask, EvgTaskRef
 from shrub.v3.evg_task_group import EvgTaskGroup
 
-from itertools import product
-
+from config_generator.components.funcs.install_c_driver import InstallCDriver
+from config_generator.components.funcs.install_uv import InstallUV
+from config_generator.etc.distros import find_large_distro
+from config_generator.etc.function import Function, merge_defns
+from config_generator.etc.utils import bash_exec
 
 TAG = 'abi-stability'
 
@@ -34,11 +32,10 @@ class AbiComplianceCheck(Function):
     commands = [
         bash_exec(
             command_type=EvgCommandType.SETUP,
-            script='mongo-cxx-driver/.evergreen/scripts/abi-compliance-check-setup.sh'
+            script='mongo-cxx-driver/.evergreen/scripts/abi-compliance-check-setup.sh',
         ),
         bash_exec(
-            command_type=EvgCommandType.TEST,
-            script='mongo-cxx-driver/.evergreen/scripts/abi-compliance-check-test.sh'
+            command_type=EvgCommandType.TEST, script='mongo-cxx-driver/.evergreen/scripts/abi-compliance-check-test.sh'
         ),
         s3_put(
             command_type=EvgCommandType.SYSTEM,
@@ -92,11 +89,11 @@ class Abidiff(Function):
     commands = [
         bash_exec(
             command_type=EvgCommandType.SETUP,
-            script='mongo-cxx-driver/.evergreen/scripts/abidiff-setup.sh'
+            script='mongo-cxx-driver/.evergreen/scripts/abidiff-setup.sh',
         ),
         bash_exec(
             command_type=EvgCommandType.TEST,
-            script='mongo-cxx-driver/.evergreen/scripts/abidiff-test.sh'
+            script='mongo-cxx-driver/.evergreen/scripts/abidiff-test.sh',
         ),
         s3_put(
             command_type=EvgCommandType.SYSTEM,
@@ -127,7 +124,7 @@ class AbiProhibitedSymbols(Function):
     name = 'abi-prohibited-symbols'
     commands = bash_exec(
         command_type=EvgCommandType.TEST,
-        script='mongo-cxx-driver/.evergreen/scripts/abi-prohibited-symbols-test.sh'
+        script='mongo-cxx-driver/.evergreen/scripts/abi-prohibited-symbols-test.sh',
     )
 
 
@@ -198,7 +195,7 @@ def task_groups():
                         'distro_id',
                         'UV_INSTALL_DIR',
                     ],
-                    script='mongo-cxx-driver/.evergreen/scripts/abi-stability-setup.sh'
+                    script='mongo-cxx-driver/.evergreen/scripts/abi-stability-setup.sh',
                 ),
                 s3_put(
                     command_type=EvgCommandType.SETUP,
@@ -214,7 +211,9 @@ def task_groups():
             ],
             tasks=[task.name for task in TASKS if polyfill in task.name and f'cxx{cxx_standard}' in task.name],
             teardown_task_can_fail_task=True,
-            teardown_task=[bash_exec(script='rm -rf *'),],
+            teardown_task=[
+                bash_exec(script='rm -rf *'),
+            ],
         )
         for polyfill, cxx_standard in MATRIX
     ]
@@ -225,9 +224,6 @@ def variants():
         BuildVariant(
             name=f'abi-stability',
             display_name=f'ABI Stability Checks',
-            tasks=[
-                EvgTaskRef(name=f'tg-{TAG}-{polyfill}-cxx{cxx_standard}')
-                for polyfill, cxx_standard in MATRIX
-            ],
+            tasks=[EvgTaskRef(name=f'tg-{TAG}-{polyfill}-cxx{cxx_standard}') for polyfill, cxx_standard in MATRIX],
         )
     ]

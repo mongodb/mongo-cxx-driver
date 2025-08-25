@@ -46,8 +46,8 @@ make_release = [
 
 [tool.ruff]
 line-length = 120
+src = [".evergreen", "etc"]
 
 [tool.ruff.format]
 quote-style = "single"
 indent-style = "space"
-docstring-code-format = true

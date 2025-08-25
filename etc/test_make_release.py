@@ -1,7 +1,9 @@
-import make_release
-import unittest
 import textwrap
+import unittest
+
 import click
+
+import make_release
 
 
 class TestMakeRelease(unittest.TestCase):
@@ -46,22 +48,19 @@ class TestMakeRelease(unittest.TestCase):
         - Click `Create`.
         """).lstrip()
 
-        got = make_release.generate_release_notes("3.9.0", changelog)
+        got = make_release.generate_release_notes('3.9.0', changelog)
         self.assertEqual(got, expected_release_notes)
 
         # Test exception occurs if CHANGELOG includes extra characters in title.
         with self.assertRaises(click.ClickException) as ctx:
-            make_release.generate_release_notes(
-                "3.9.0", "## 3.9.0 [Unreleased]")
-        self.assertIn("Unexpected extra characters",
-                      str(ctx.exception.message))
+            make_release.generate_release_notes('3.9.0', '## 3.9.0 [Unreleased]')
+        self.assertIn('Unexpected extra characters', str(ctx.exception.message))
 
         # Test exception occurs if CHANGELOG does not include matching entry.
         with self.assertRaises(click.ClickException) as ctx:
-            make_release.generate_release_notes(
-                "3.9.0", "## 3.8.0")
-        self.assertIn("Failed to find", str(ctx.exception.message))
+            make_release.generate_release_notes('3.9.0', '## 3.8.0')
+        self.assertIn('Failed to find', str(ctx.exception.message))
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     unittest.main()

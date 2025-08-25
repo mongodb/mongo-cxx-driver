@@ -9,7 +9,7 @@ class UploadMongoOrchestrationArtifacts(Function):
     commands = [
         bash_exec(
             command_type=EvgCommandType.SYSTEM,
-            script='''\
+            script="""\
                 set -o errexit
                 for log in $(find . -name '*.log'); do
                   tar rf mongodb-logs.tar "$log"
@@ -17,7 +17,7 @@ class UploadMongoOrchestrationArtifacts(Function):
                 if [[ -f mongodb-logs.tar ]]; then
                   gzip mongodb-logs.tar
                 fi
-            ''',
+            """,
         ),
         s3_put(
             command_type=EvgCommandType.SYSTEM,
