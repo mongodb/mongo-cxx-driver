@@ -222,8 +222,8 @@ def task_groups():
 def variants():
     return [
         BuildVariant(
-            name=f'abi-stability',
-            display_name=f'ABI Stability Checks',
+            name='abi-stability',
+            display_name='ABI Stability Checks',
             tasks=[EvgTaskRef(name=f'tg-{TAG}-{polyfill}-cxx{cxx_standard}') for polyfill, cxx_standard in MATRIX],
         )
     ]

@@ -177,7 +177,7 @@ def release(
         print_banner(git_revision)
 
     if skip_release_tag:
-        click.echo(f'Skipping creation of a new release tag')
+        click.echo('Skipping creation of a new release tag')
     else:
         click.echo('Creating GPG-signed release tag...')
         run_shell_script(f'./etc/garasign_release_tag.sh {git_revision}')
@@ -448,7 +448,7 @@ def build_c_driver(c_driver_build_ref, quiet):
     """
 
     if not quiet:
-        click.echo(f'Building C Driver (this could take several minutes)')
+        click.echo('Building C Driver (this could take several minutes)')
         click.echo('Pass --with-c-driver to use an existing installation')
 
     env = os.environ.copy()
@@ -554,7 +554,7 @@ def generate_release_notes(release_version: str, changelog_contents: str) -> str
     adding_to_lines = False
     for line in changelog_contents.splitlines(keepends=True):
         # Check for a version title. Example: `## 3.9.0`.
-        match = re.match(r'^## (.*?)\s(.*)$'.format(release_version), line)
+        match = re.match(r'^## (.*?)\s(.*)$', line)
         if match:
             matched_version = match.group(1)
             if matched_version == release_version:

@@ -167,7 +167,7 @@ def main():
     print('Finding API docs...')
     api_docs = find_api_docs(api_docs_path)
     if len(api_docs) == 0:
-        raise RuntimeError(f'no API docs found: APIDOCSPATH may not be correct!')
+        raise RuntimeError('no API docs found: APIDOCSPATH may not be correct!')
     print('Finding API docs... done.')
 
     print(f' - Found {len(api_docs)} API docs: {api_docs[0]} ... {api_docs[-1]}')

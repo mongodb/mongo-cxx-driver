@@ -1,5 +1,5 @@
 from shrub.v3.evg_build_variant import BuildVariant
-from shrub.v3.evg_command import BuiltInCommand, EvgCommandType
+from shrub.v3.evg_command import EvgCommandType
 from shrub.v3.evg_task import EvgTask, EvgTaskRef
 
 from config_generator.components.funcs.fetch_c_driver_source import FetchCDriverSource
