@@ -12,9 +12,6 @@
 set -o errexit
 set -o pipefail
 
-clang_format_binary="${CLANG_FORMAT_BINARY:-clang-format}"
-"${clang_format_binary:?}" --version
-
 source_dirs=(
   src
   benchmark
@@ -26,7 +23,7 @@ mapfile -t source_files < <(
 )
 
 if [[ -n "${DRYRUN:-}" ]]; then
-  "$clang_format_binary" --dry-run -Werror "${source_files[@]:?}"
+  clang-format --dry-run -Werror "${source_files[@]:?}"
 else
-  "$clang_format_binary" --verbose -i "${source_files[@]:?}"
+  clang-format --verbose -i "${source_files[@]:?}"
 fi
