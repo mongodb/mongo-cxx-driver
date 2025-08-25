@@ -541,7 +541,10 @@ def all_issues_closed(issues):
         msg = 'Open tickets found.  Cannot release!'
         msg += '\nThe following open tickets were found:'
         click.echo(msg, err=True)
-        open_filter = lambda x: x.fields.status.name != 'Closed'
+
+        def open_filter(x):
+            return x.fields.status.name != 'Closed'
+
         open_issues = [i.key for i in filter(open_filter, issues)]
         click.echo('{}'.format(', '.join(open_issues)), err=True)
         return False
