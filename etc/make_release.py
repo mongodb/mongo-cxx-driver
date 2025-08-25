@@ -569,7 +569,10 @@ def generate_release_notes(release_version: str, changelog_contents: str) -> str
                     )
                 if adding_to_lines:
                     raise click.ClickException(
-                        'Unexpected second changelog entry matching version: {}: {}'.format(release_version), line
+                        'Unexpected second changelog entry matching version: {}: {}'.format(
+                            matched_version, release_version
+                        ),
+                        line,
                     )
                 # Begin adding lines to `lines` list.
                 adding_to_lines = True
