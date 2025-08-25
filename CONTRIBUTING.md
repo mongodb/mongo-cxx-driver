@@ -38,5 +38,5 @@ Refer to Chris Beams' guidelines for
 Format files with [ClangFormat](https://clang.llvm.org/docs/ClangFormat.html) by running:
 
 ```bash
-uv run --frozen etc/clang-format-all.sh
+uv run --frozen etc/format.py
 ```
