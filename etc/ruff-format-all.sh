@@ -12,5 +12,5 @@ set -o pipefail
 
 # Python scripts.
 # https://github.com/astral-sh/ruff/issues/8232
-uv run --frozen ruff check --select I --fix
-uv run --frozen ruff format
+uv run --frozen --group format-scripts ruff check --select I --fix
+uv run --frozen --group format-scripts ruff format

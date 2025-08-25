@@ -9,6 +9,7 @@ dependencies = []
 dev = [
     # {include-group="apidocs"},
     {include-group="format"},
+    # {include-group="format-scripts"},
     {include-group="config_generator"},
     # {include-group="make_release"},
 ]
@@ -23,8 +24,15 @@ apidocs = [
 ]
 
 format = [
+    # etc/format.py
     "clang-format~=20.1.0",
+]
+
+format-scripts = [
+    # etc/ruff-format-all.sh
     "ruff>=0.12.10",
+
+    # etc/shfmt-format-all.sh
     "shfmt-py>=3.12.0.2",
 ]
 

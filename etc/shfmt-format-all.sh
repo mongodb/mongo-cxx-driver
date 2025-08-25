@@ -28,5 +28,5 @@ exclude=(
 mapfile -t files < <(find "${include[@]:?}" -name '*.sh' -type f | grep -v "${exclude[@]:?}")
 
 for file in "${files[@]:?}"; do
-  uv run --frozen shfmt -i 2 -w "${file:?}"
+  uv run --frozen --group format-scripts shfmt -i 2 -w "${file:?}"
 done
