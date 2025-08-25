@@ -25,6 +25,7 @@ apidocs = [
 format = [
     "clang-format~=20.1.0",
     "ruff>=0.12.10",
+    "shfmt-py>=3.12.0.2",
 ]
 
 config_generator = [

@@ -373,11 +373,13 @@ dev = [
     { name = "packaging" },
     { name = "pydantic" },
     { name = "ruff" },
+    { name = "shfmt-py" },
     { name = "shrub-py" },
 ]
 format = [
     { name = "clang-format" },
     { name = "ruff" },
+    { name = "shfmt-py" },
 ]
 make-release = [
     { name = "click" },
@@ -405,11 +407,13 @@ dev = [
     { name = "packaging", specifier = ">=14.0" },
     { name = "pydantic", specifier = ">=2.8" },
     { name = "ruff", specifier = ">=0.12.10" },
+    { name = "shfmt-py", specifier = ">=3.12.0.2" },
     { name = "shrub-py", specifier = ">=3.7" },
 ]
 format = [
     { name = "clang-format", specifier = "~=20.1.0" },
     { name = "ruff", specifier = ">=0.12.10" },
+    { name = "shfmt-py", specifier = ">=3.12.0.2" },
 ]
 make-release = [
     { name = "click", specifier = ">=6.0" },
@@ -720,6 +724,12 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/ad/14/2ad38fd4037daab9e023456a4a40ed0154e9971f8d6aed41bdea390aabd9/ruff-0.12.10-py3-none-win_amd64.whl", hash = "sha256:7837eca8787f076f67aba2ca559cefd9c5cbc3a9852fd66186f4201b87c1563e", size = 13004616, upload-time = "2025-08-21T18:23:17.422Z" },
     { url = "https://files.pythonhosted.org/packages/24/3c/21cf283d67af33a8e6ed242396863af195a8a6134ec581524fd22b9811b6/ruff-0.12.10-py3-none-win_arm64.whl", hash = "sha256:cc138cc06ed9d4bfa9d667a65af7172b47840e1a98b02ce7011c391e54635ffc", size = 12074225, upload-time = "2025-08-21T18:23:20.137Z" },
 ]
+
+[[package]]
+name = "shfmt-py"
+version = "3.12.0.2"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/af/d9/a1ea26749bd19467e9fbfe7b34e6c8df517e01de4028a45b954eebe8c03b/shfmt_py-3.12.0.2.tar.gz", hash = "sha256:6a0dc675b37d000eb236609cf15aedd9e7a538927ea02c57b617908b6f237e9c", size = 4467, upload-time = "2025-07-08T06:54:40.396Z" }
 
 [[package]]
 name = "shrub-py"
