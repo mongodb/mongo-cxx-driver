@@ -8,7 +8,7 @@ dependencies = []
 [dependency-groups]
 dev = [
     # {include-group="apidocs"},
-    {include-group="clang_format"},
+    {include-group="format"},
     {include-group="config_generator"},
     # {include-group="make_release"},
 ]
@@ -22,8 +22,7 @@ apidocs = [
     "packaging>=14.0",
 ]
 
-clang_format = [
-    # etc/clang-format-all.sh
+format = [
     "clang-format~=20.1.0",
 ]
 

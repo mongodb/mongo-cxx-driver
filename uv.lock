@@ -363,9 +363,6 @@ apidocs = [
     { name = "beautifulsoup4" },
     { name = "packaging" },
 ]
-clang-format = [
-    { name = "clang-format" },
-]
 config-generator = [
     { name = "packaging" },
     { name = "pydantic" },
@@ -376,6 +373,9 @@ dev = [
     { name = "packaging" },
     { name = "pydantic" },
     { name = "shrub-py" },
+]
+format = [
+    { name = "clang-format" },
 ]
 make-release = [
     { name = "click" },
@@ -393,7 +393,6 @@ apidocs = [
     { name = "beautifulsoup4", specifier = ">=4.12" },
     { name = "packaging", specifier = ">=14.0" },
 ]
-clang-format = [{ name = "clang-format", specifier = "~=20.1.0" }]
 config-generator = [
     { name = "packaging", specifier = ">=14.0" },
     { name = "pydantic", specifier = ">=2.8" },
@@ -405,6 +404,7 @@ dev = [
     { name = "pydantic", specifier = ">=2.8" },
     { name = "shrub-py", specifier = ">=3.7" },
 ]
+format = [{ name = "clang-format", specifier = "~=20.1.0" }]
 make-release = [
     { name = "click", specifier = ">=6.0" },
     { name = "cmake", specifier = ">=4.0" },
