@@ -76,8 +76,13 @@ class value {
 
     ///
     /// Constructs a value from a buffer.
+    ///
     /// This constructor transfers ownership of the buffer to the resulting
     /// value. A user-provided deleter is used to destroy the buffer.
+    ///
+    /// @warning For backward compatibility, `length` is NOT validated. When `length` is inconsistent with the embedded
+    /// length as indicated by the BSON bytes, the BSON bytes may be parsed as "invalid" despite the BSON bytes
+    /// themselves being valid.
     ///
     /// @param data
     ///   A pointer to a buffer containing a valid BSON document.
@@ -92,6 +97,10 @@ class value {
     ///
     /// Constructs a value from a std::unique_ptr to a buffer. The ownership
     /// of the buffer is transferred to the constructed value.
+    ///
+    /// @warning For backward compatibility, `length` is NOT validated. When `length` is inconsistent with the embedded
+    /// length as indicated by the BSON bytes, the BSON bytes may be parsed as "invalid" despite the BSON bytes
+    /// themselves being valid.
     ///
     /// @param ptr
     ///   A pointer to a buffer containing a valid BSON document.

@@ -65,6 +65,10 @@ class view {
     /// Constructs a view from a buffer. The caller is responsible for ensuring that
     /// the lifetime of the resulting view is a subset of the buffer's.
     ///
+    /// @warning For backward compatibility, `length` is NOT validated. When `length` is inconsistent with the embedded
+    /// length as indicated by the BSON bytes, the BSON bytes may be parsed as "invalid" despite the BSON bytes
+    /// themselves being valid.
+    ///
     /// @param data
     ///   A buffer containing a valid BSON array.
     /// @param length
