@@ -14,9 +14,13 @@
 
 #pragma once
 
-#include <system_error>
-
 #include <bsoncxx/exception/exception-fwd.hpp>
+
+//
+
+#include <bsoncxx/v1/exception.hpp>
+
+#include <system_error>
 
 #include <bsoncxx/config/prelude.hpp>
 
@@ -52,4 +56,7 @@ BSONCXX_PRIVATE_WARNINGS_POP();
 ///
 /// @file
 /// Provides @ref bsoncxx::v_noabi::exception.
+///
+/// @par Includes
+/// - @ref bsoncxx/v1/exception.hpp
 ///

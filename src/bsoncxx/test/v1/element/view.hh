@@ -18,9 +18,11 @@
 
 //
 
+#include <bsoncxx/private/export.hh>
+
 #include <catch2/catch_tostring.hpp>
 
 template <>
 struct Catch::StringMaker<bsoncxx::v1::element::view> {
-    static std::string convert(bsoncxx::v1::element::view const& value);
+    static std::string BSONCXX_ABI_CDECL convert(bsoncxx::v1::element::view const& value);
 };

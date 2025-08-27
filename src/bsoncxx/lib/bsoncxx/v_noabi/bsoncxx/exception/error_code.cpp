@@ -12,9 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <bsoncxx/exception/error_code.hpp>
+
+//
+
 #include <string>
 
-#include <bsoncxx/exception/error_code.hpp>
+#include <bsoncxx/private/immortal.hh>
 
 namespace bsoncxx {
 namespace v_noabi {
@@ -96,8 +100,8 @@ class error_category_impl final : public std::error_category {
 } // namespace
 
 std::error_category const& error_category() {
-    static error_category_impl const instance{};
-    return instance;
+    static bsoncxx::immortal<error_category_impl> const instance;
+    return instance.value();
 }
 
 } // namespace v_noabi

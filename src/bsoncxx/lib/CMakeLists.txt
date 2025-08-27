@@ -101,7 +101,6 @@ set_dist_list(src_bsoncxx_lib_DIST
     ${bsoncxx_sources_v1}
     bsoncxx/private/b64_ntop.hh
     bsoncxx/private/config/config.hh.in
-    bsoncxx/private/convert.hh
     bsoncxx/private/export.hh
     bsoncxx/private/helpers.hh
     bsoncxx/private/immortal.hh
@@ -112,11 +111,11 @@ set_dist_list(src_bsoncxx_lib_DIST
     bsoncxx/private/suppress_deprecation_warnings.hh
     bsoncxx/private/type_traits.hh
     bsoncxx/private/version.hh
-    bsoncxx/v_noabi/bsoncxx/types/bson_value/value.hh
     bsoncxx/v1/config/config.hpp.in
     bsoncxx/v1/config/version.hpp.in
     bsoncxx/v1/document/view.hh
     bsoncxx/v1/element/view.hh
+    bsoncxx/v1/oid.hh
     bsoncxx/v1/types/value.hh
     bsoncxx/v1/types/view.hh
 )

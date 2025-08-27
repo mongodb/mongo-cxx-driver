@@ -12,6 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <bsoncxx/test/v1/document/value.hh>
+#include <bsoncxx/test/v1/document/view.hh>
+
 #include <utility>
 
 #include <bsoncxx/builder/basic/array.hpp>
@@ -384,6 +387,245 @@ TEST_CASE("document::values have a superset of document::view's methods") {
         REQUIRE(empty_view.empty());
         REQUIRE(!doc.empty());
         REQUIRE(!view.empty());
+    }
+}
+
+TEST_CASE("v1", "[bsoncxx][v_noabi][document][element]") {
+    using v1 = v1::element::view;
+    using v_noabi = v_noabi::document::element;
+    using bsoncxx::v_noabi::from_v1;
+    using bsoncxx::v_noabi::to_v1;
+
+    auto const owner = bsoncxx::from_json(R"({"x": 1})");
+    auto const doc = owner.view();
+    auto const e = doc["x"];
+
+    SECTION("from_v1") {
+        v1 from{e};
+        v_noabi const to = from;
+
+        CHECK(to.raw() == to_v1(to).raw());
+        CHECK(to.raw() == from.raw());
+        CHECK(to.raw() != v1{}.raw());
+    }
+
+    SECTION("to_v1") {
+        v_noabi from{e};
+        v1 const to{from};
+
+        CHECK(to.raw() == v_noabi{to}.raw()); // No from_v1().
+        CHECK(to.raw() == from.raw());
+        CHECK(to.raw() != v_noabi{}.raw());
+    }
+}
+
+TEST_CASE("v1", "[bsoncxx][v_noabi][document][view]") {
+    using v1 = v1::document::view;
+    using v_noabi = v_noabi::document::view;
+    using bsoncxx::v_noabi::from_v1;
+    using bsoncxx::v_noabi::to_v1;
+
+    auto const owner = bsoncxx::from_json(R"({"x": 1})");
+    auto const doc = owner.view();
+
+    SECTION("from_v1") {
+        v1 from{doc.data()};
+        v_noabi const to = from;
+
+        CHECK(to == to_v1(to));
+        CHECK(to == from);
+        CHECK(to != v1{});
+    }
+
+    SECTION("to_v1") {
+        v_noabi from{doc.data(), doc.size()};
+        v1 const to{from};
+
+        CHECK(to == from_v1(to));
+        CHECK(to == from);
+        CHECK(to != v_noabi{});
+    }
+}
+
+template <typename Deleter, typename T>
+bsoncxx::v1::stdx::optional<Deleter> get_deleter(T const& v) {
+    if (auto const deleter_ptr = v.get_deleter().template target<Deleter>()) {
+        return *deleter_ptr;
+    }
+    return {};
+}
+
+TEST_CASE("v1", "[bsoncxx][v_noabi][document][value]") {
+    using v1 = v1::document::value;
+    using v_noabi = v_noabi::document::value;
+    using bsoncxx::v_noabi::from_v1;
+    using bsoncxx::v_noabi::to_v1;
+
+    auto tmp = bsoncxx::from_json(R"({"x": 1})");
+
+    auto const bson_free_deleter = bsoncxx::from_json("{}").release().get_deleter();
+    auto const uint8_t_deleter = v_noabi{{}}.release().get_deleter();
+    auto const noop_deleter = &v1::noop_deleter;
+
+    REQUIRE(bson_free_deleter);
+    REQUIRE(uint8_t_deleter);
+    REQUIRE(noop_deleter);
+
+    CAPTURE(bson_free_deleter);
+    CAPTURE(uint8_t_deleter);
+    CAPTURE(noop_deleter);
+
+    SECTION("from_v1") {
+        auto const size = tmp.size();
+        auto ptr = tmp.release();
+        auto const data = ptr.release();
+        auto const deleter = ptr.get_deleter(); // bson_free_deleter
+
+        SECTION("default") {
+            (void)v_noabi{data, size, deleter}; // Unused.
+
+            bsoncxx::v1::document::view const empty;
+
+            v1 from;
+
+            CHECK(from.data() == empty.data());
+            CHECK(from.size() == empty.size());
+            CHECK(get_deleter<v_noabi::deleter_type>(from) == noop_deleter);
+
+            SECTION("copy") {
+                v_noabi to = from_v1(from); // noop_deleter -> uint8_t_deleter (copy)
+
+                CHECK(to.data() != empty.data());
+                CHECK(to.size() == empty.size());
+                CHECK(to.release().get_deleter() == uint8_t_deleter);
+            }
+
+            SECTION("move") {
+                v_noabi to = from_v1(std::move(from)); // noop_deleter -> uint8_t_deleter (fallback to copy)
+
+                CHECK(from.data() == empty.data());
+                CHECK(from.size() == empty.size());
+                CHECK(get_deleter<v_noabi::deleter_type>(from) == noop_deleter);
+
+                CHECK(to.data() != empty.data());
+                CHECK(to.size() == empty.size());
+                CHECK(to.release().get_deleter() == uint8_t_deleter);
+            }
+        }
+
+        SECTION("copy") {
+            v1 const from{data, deleter};
+
+            CHECK(from.data() == data);
+            CHECK(from.size() == size);
+            CHECK(get_deleter<v_noabi::deleter_type>(from) == bson_free_deleter);
+
+            v_noabi to = from_v1(from); // bson_free_deleter -> uint8_t_deleter (copy)
+
+            CHECK(from.data() == data);
+            CHECK(from.size() == size);
+            CHECK(get_deleter<v_noabi::deleter_type>(from) == bson_free_deleter);
+
+            CHECK(to.data() != data);
+            CHECK(to.size() == size);
+            CHECK(to.release().get_deleter() == uint8_t_deleter);
+        }
+
+        SECTION("move") {
+            v1 from{data, deleter};
+
+            CHECK(from.data() == data);
+            CHECK(from.size() == size);
+            CHECK(get_deleter<v_noabi::deleter_type>(from) == bson_free_deleter);
+
+            v_noabi to = from_v1(std::move(from)); // bson_free_deleter (move)
+
+            CHECK(from.data() == nullptr);
+            CHECK(from.size() == 0u);
+
+            // A moved-from std::function<T> is in "a valid with an unspecified value".
+            CHECK_NOFAIL(get_deleter<v_noabi::deleter_type>(from) == nullptr);
+
+            CHECK(to.data() == data);
+            CHECK(to.size() == size);
+            CHECK(to.release().get_deleter() == bson_free_deleter);
+        }
+
+        SECTION("invalid deleter type") {
+            v1 const owner{data, deleter};
+            v1 from = owner; // bson_free_deleter -> default_deleter_type (copy)
+
+            CHECK(from.data() != data);
+            CHECK(from.size() == size);
+            CHECK(get_deleter<v1::default_deleter_type>(from).has_value());
+
+            auto const from_data = from.data();
+
+            SECTION("copy") {
+                v_noabi to = from_v1(from); // default_deleter_type -> uint8_t_deleter (copy)
+
+                CHECK(from.data() == from_data);
+                CHECK(from.size() == size);
+                CHECK(get_deleter<v1::default_deleter_type>(from).has_value());
+
+                CHECK(to.data() != from_data);
+                CHECK(to.size() == size);
+                CHECK(to.release().get_deleter() == uint8_t_deleter);
+            }
+
+            SECTION("move") {
+                v_noabi to = from_v1(std::move(from)); // default_deleter_type -> uint8_t_deleter (fallback to copy)
+
+                CHECK(from.data() == from_data);
+                CHECK(from.size() == size);
+                CHECK(get_deleter<v1::default_deleter_type>(from).has_value());
+
+                CHECK(to.data() != from_data);
+                CHECK(to.size() == size);
+                CHECK(to.release().get_deleter() == uint8_t_deleter);
+            }
+        }
+    }
+
+    SECTION("to_v1") {
+        auto const size = tmp.size();
+        auto ptr = tmp.release();
+        auto const data = ptr.release();
+        auto const deleter = ptr.get_deleter();
+
+        v_noabi from{data, size, deleter};
+
+        SECTION("copy") {
+            CHECK(from.data() == data);
+            CHECK(from.size() == size);
+
+            v1 const to = to_v1(from); // bson_free_deleter -> uint8_t_deleter (copy)
+
+            CHECK(from.data() == data);
+            CHECK(from.size() == size);
+            CHECK(from.release().get_deleter() == bson_free_deleter);
+
+            CHECK(to.data() != data);
+            CHECK(to.size() == size);
+            CHECK(get_deleter<v_noabi::deleter_type>(to) == uint8_t_deleter);
+        }
+
+        SECTION("move") {
+            CHECK(from.data() == data);
+            CHECK(from.size() == size);
+
+            v1 const to = to_v1(std::move(from)); // bson_free_deleter (move)
+
+            CHECK(from.data() == nullptr);
+            CHECK(from.size() == size);
+
+            // A moved-from std::function<T> is in "a valid with an unspecified value".
+            CHECK_NOFAIL(from.release().get_deleter() == nullptr);
+
+            CHECK(to.data() == data);
+            CHECK(to.size() == size);
+            CHECK(get_deleter<v_noabi::deleter_type>(to) == bson_free_deleter);
+        }
     }
 }
 

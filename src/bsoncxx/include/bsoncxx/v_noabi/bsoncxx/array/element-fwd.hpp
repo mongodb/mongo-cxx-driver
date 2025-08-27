@@ -14,6 +14,8 @@
 
 #pragma once
 
+#include <bsoncxx/v1/element/view-fwd.hpp>
+
 #include <bsoncxx/config/prelude.hpp>
 
 namespace bsoncxx {
@@ -29,7 +31,7 @@ class element;
 namespace bsoncxx {
 namespace array {
 
-using ::bsoncxx::v_noabi::array::element;
+using v_noabi::array::element;
 
 } // namespace array
 } // namespace bsoncxx
@@ -39,4 +41,7 @@ using ::bsoncxx::v_noabi::array::element;
 ///
 /// @file
 /// Declares @ref bsoncxx::v_noabi::array::element.
+///
+/// @par Includes
+/// - @ref bsoncxx/v1/element/view-fwd.hpp
 ///
