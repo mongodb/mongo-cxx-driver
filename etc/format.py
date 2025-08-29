@@ -247,26 +247,5 @@ def _format_files(files: Iterable[Path], *, mode: RunMode, clang_format: str) ->
     return res.returncode == 0
 
 
-def _get_files_matching(pat: str) -> Sequence[Path]:
-    """
-    Obtain files according to a globbing pattern. Checks that at least one file
-    matches.
-    """
-
-    try:
-        if os.path.isabs(pat):
-            # Given an absolute path, glob relative to the root directory
-            root = Path(pat).root
-            ret = tuple(Path(root).glob(str(Path(pat).relative_to(root))))
-        else:
-            # None-relative path, glob relative to CWD
-            ret = tuple(Path.cwd().glob(pat))
-    except Exception as e:
-        raise RuntimeError(f'Failed to collect files for globbing pattern: “{pat}” (See above)') from e
-    if not ret:
-        raise RuntimeError(f'Globbing pattern “{pat}” did not match any files')
-    return ret
-
-
 if __name__ == '__main__':
     sys.exit(main(sys.argv[1:]))
