@@ -12,9 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "assert.hh"
-#include "entity.hh"
-#include "operations.hh"
+#include "./assert.hh"
+#include "./entity.hh"
+#include "./operations.hh"
 
 #include <mongocxx/test/v_noabi/client_helpers.hh>
 

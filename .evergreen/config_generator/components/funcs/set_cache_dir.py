@@ -1,7 +1,7 @@
+from shrub.v3.evg_command import EvgCommandType, expansions_update
+
 from config_generator.etc.function import Function
 from config_generator.etc.utils import bash_exec
-
-from shrub.v3.evg_command import EvgCommandType, expansions_update
 
 
 class SetCacheDir(Function):
@@ -9,7 +9,7 @@ class SetCacheDir(Function):
     commands = [
         bash_exec(
             command_type=EvgCommandType.SETUP,
-            script='''\
+            script="""\
                 if [[ -n "$XDG_CACHE_DIR" ]]; then
                     cache_dir="$XDG_CACHE_DIR" # XDG Base Directory specification.
                 elif [[ -n "$LOCALAPPDATA" ]]; then
@@ -30,12 +30,9 @@ class SetCacheDir(Function):
                 cache_dir="$(cd "$cache_dir/mongo-cxx-driver" && pwd)" || exit
 
                 printf "MONGO_CXX_DRIVER_CACHE_DIR: %s\\n" "$cache_dir" >|expansions.set-cache-dir.yml
-            ''',
+            """,
         ),
-        expansions_update(
-            command_type=EvgCommandType.SETUP,
-            file='expansions.set-cache-dir.yml'
-        ),
+        expansions_update(command_type=EvgCommandType.SETUP, file='expansions.set-cache-dir.yml'),
     ]
 
 

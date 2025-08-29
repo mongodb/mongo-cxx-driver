@@ -1,3 +1,9 @@
+from itertools import product
+
+from shrub.v3.evg_build_variant import BuildVariant
+from shrub.v3.evg_command import KeyValueParam, expansions_update
+from shrub.v3.evg_task import EvgTask, EvgTaskRef
+
 from config_generator.components.funcs.compile import Compile
 from config_generator.components.funcs.fetch_det import FetchDET
 from config_generator.components.funcs.install_c_driver import InstallCDriver
@@ -6,15 +12,7 @@ from config_generator.components.funcs.run_kms_servers import RunKMSServers
 from config_generator.components.funcs.setup import Setup
 from config_generator.components.funcs.start_mongod import StartMongod
 from config_generator.components.funcs.test import Test
-
 from config_generator.etc.distros import find_large_distro, make_distro_str
-
-from shrub.v3.evg_build_variant import BuildVariant
-from shrub.v3.evg_command import KeyValueParam, expansions_update
-from shrub.v3.evg_task import EvgTask, EvgTaskRef
-
-from itertools import product
-
 
 TAG = 'valgrind'
 
@@ -33,9 +31,7 @@ def tasks():
     res = []
 
     for distro_name, compiler, link_types, mongodb_versions, topologies in MATRIX:
-        for link_type, mongodb_version, topology in product(
-            link_types, mongodb_versions, topologies
-        ):
+        for link_type, mongodb_version, topology in product(link_types, mongodb_versions, topologies):
             distro = find_large_distro(distro_name)
 
             name = f'{TAG}-{make_distro_str(distro_name, compiler, None)}'

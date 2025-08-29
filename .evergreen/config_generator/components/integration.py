@@ -1,3 +1,9 @@
+from itertools import product
+
+from shrub.v3.evg_build_variant import BuildVariant
+from shrub.v3.evg_command import KeyValueParam, expansions_update
+from shrub.v3.evg_task import EvgTask, EvgTaskRef
+
 from config_generator.components.funcs.compile import Compile
 from config_generator.components.funcs.fetch_det import FetchDET
 from config_generator.components.funcs.install_c_driver import InstallCDriver
@@ -6,15 +12,7 @@ from config_generator.components.funcs.run_kms_servers import RunKMSServers
 from config_generator.components.funcs.setup import Setup
 from config_generator.components.funcs.start_mongod import StartMongod
 from config_generator.components.funcs.test import Test
-
 from config_generator.etc.distros import compiler_to_vars, find_large_distro, make_distro_str
-
-from shrub.v3.evg_build_variant import BuildVariant
-from shrub.v3.evg_command import KeyValueParam, expansions_update
-from shrub.v3.evg_task import EvgTask, EvgTaskRef
-
-from itertools import product
-
 
 TAG = 'integration'
 
@@ -74,9 +72,25 @@ ALL_MATRIX = LINUX_MATRIX + MACOS_MATRIX + WINDOWS_MATRIX + MONGOCRYPTD_MATRIX
 
 
 def tasks():
-    for distro_name, compiler, build_types, link_types, cxx_standards, polyfills, with_csfles, mongodb_versions, topologies in ALL_MATRIX:
+    for (
+        distro_name,
+        compiler,
+        build_types,
+        link_types,
+        cxx_standards,
+        polyfills,
+        with_csfles,
+        mongodb_versions,
+        topologies,
+    ) in ALL_MATRIX:
         for build_type, link_type, cxx_standard, polyfill, with_csfle, mongodb_version, topology in product(
-            build_types, link_types, cxx_standards, polyfills, with_csfles, mongodb_versions, topologies,
+            build_types,
+            link_types,
+            cxx_standards,
+            polyfills,
+            with_csfles,
+            mongodb_versions,
+            topologies,
         ):
             distro = find_large_distro(distro_name)
 
@@ -176,9 +190,7 @@ def variants():
     for name, filter, matrix in matrices:
         distros = sorted(list({entry[0] for entry in matrix}))
         batched = [distro for distro in distros if distro in limited_distros]
-        tasks = [
-            EvgTaskRef(name=f'.{TAG} {filter} .{distro}', batchtime=one_day) for distro in batched
-        ] + [
+        tasks = [EvgTaskRef(name=f'.{TAG} {filter} .{distro}', batchtime=one_day) for distro in batched] + [
             EvgTaskRef(name=f'.{TAG} {filter}' + ''.join(f' !.{distro}' for distro in batched))
         ]
 

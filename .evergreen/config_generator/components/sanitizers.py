@@ -1,3 +1,9 @@
+from itertools import product
+
+from shrub.v3.evg_build_variant import BuildVariant
+from shrub.v3.evg_command import KeyValueParam, expansions_update
+from shrub.v3.evg_task import EvgTask, EvgTaskRef
+
 from config_generator.components.funcs.compile import Compile
 from config_generator.components.funcs.fetch_det import FetchDET
 from config_generator.components.funcs.install_c_driver import InstallCDriver
@@ -6,15 +12,7 @@ from config_generator.components.funcs.run_kms_servers import RunKMSServers
 from config_generator.components.funcs.setup import Setup
 from config_generator.components.funcs.start_mongod import StartMongod
 from config_generator.components.funcs.test import Test
-
 from config_generator.etc.distros import find_large_distro, make_distro_str
-
-from shrub.v3.evg_build_variant import BuildVariant
-from shrub.v3.evg_command import KeyValueParam, expansions_update
-from shrub.v3.evg_task import EvgTask, EvgTaskRef
-
-from itertools import product
-
 
 TAG = 'sanitizers'
 
@@ -54,8 +52,10 @@ def tasks():
             tags += [mongodb_version, topology]
 
             updates = [KeyValueParam(key='build_type', value='Debug')]
-            updates += [KeyValueParam(key=key, value=value)
-                        for key, value in [('cc_compiler', cc_compiler), ('cxx_compiler', cxx_compiler)]]
+            updates += [
+                KeyValueParam(key=key, value=value)
+                for key, value in [('cc_compiler', cc_compiler), ('cxx_compiler', cxx_compiler)]
+            ]
 
             compile_vars = {'ENABLE_TESTS': 'ON'}
             test_vars = {
@@ -91,7 +91,8 @@ def tasks():
                     test_vars |= {
                         'TEST_WITH_UBSAN': 'ON',
                         'example_projects_cxxflags': '-fsanitize=undefined -fno-sanitize-recover=undefined -fno-omit-frame-pointer',
-                        'example_projects_ldflags': '-fsanitize=undefined -fno-sanitize-recover=undefined' + (' -static-libsan' if link_type == 'static' else ''),
+                        'example_projects_ldflags': '-fsanitize=undefined -fno-sanitize-recover=undefined'
+                        + (' -static-libsan' if link_type == 'static' else ''),
                     }
 
             commands += [

@@ -1,15 +1,13 @@
-from config_generator.components.funcs.fetch_c_driver_source import FetchCDriverSource
-from config_generator.components.funcs.install_uv import InstallUV
-from config_generator.components.funcs.setup import Setup
-
-from config_generator.etc.distros import find_large_distro
-from config_generator.etc.function import Function, merge_defns
-from config_generator.etc.utils import bash_exec
-
 from shrub.v3.evg_build_variant import BuildVariant
 from shrub.v3.evg_command import EvgCommandType, s3_put
 from shrub.v3.evg_task import EvgTask, EvgTaskRef
 
+from config_generator.components.funcs.fetch_c_driver_source import FetchCDriverSource
+from config_generator.components.funcs.install_uv import InstallUV
+from config_generator.components.funcs.setup import Setup
+from config_generator.etc.distros import find_large_distro
+from config_generator.etc.function import Function, merge_defns
+from config_generator.etc.utils import bash_exec
 
 TAG = 'scan-build'
 
@@ -58,14 +56,14 @@ class UploadScanArtifacts(Function):
         bash_exec(
             command_type=EvgCommandType.TEST,
             working_dir='mongo-cxx-driver',
-            script='''\
+            script="""\
                 set -o errexit
                 if find scan -name \\*.html | grep -q html; then
                     (cd scan && find . -name index.html -exec echo "<li><a href='{}'>{}</a></li>" \\;) >> scan.html
                 else
                     echo "No issues found" > scan.html
                 fi
-            '''
+            """,
         ),
         bash_exec(
             command_type=EvgCommandType.TEST,

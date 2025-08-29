@@ -1,14 +1,11 @@
-from config_generator.components.funcs.setup import Setup
+from shrub.v3.evg_build_variant import BuildVariant
+from shrub.v3.evg_command import EvgCommandType, KeyValueParam, ec2_assume_role, expansions_update
+from shrub.v3.evg_task import EvgTask, EvgTaskRef
 
+from config_generator.components.funcs.setup import Setup
 from config_generator.etc.distros import find_large_distro
 from config_generator.etc.function import Function
 from config_generator.etc.utils import bash_exec
-
-from shrub.v3.evg_build_variant import BuildVariant
-from shrub.v3.evg_command import EvgCommandType
-from shrub.v3.evg_task import EvgTask, EvgTaskRef
-from shrub.v3.evg_command import KeyValueParam, ec2_assume_role, expansions_update
-
 
 TAG = 'docker-build'
 
@@ -32,10 +29,10 @@ class DockerImageBuild(Function):
         bash_exec(
             command_type=EvgCommandType.SETUP,
             include_expansions_in_env=[
-                "AWS_ACCESS_KEY_ID",
-                "AWS_SECRET_ACCESS_KEY",
-                "AWS_SESSION_TOKEN",
-                "DOCKER_CONFIG",
+                'AWS_ACCESS_KEY_ID',
+                'AWS_SECRET_ACCESS_KEY',
+                'AWS_SESSION_TOKEN',
+                'DOCKER_CONFIG',
             ],
             script='aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 901841024863.dkr.ecr.us-east-1.amazonaws.com',
         ),
@@ -44,10 +41,10 @@ class DockerImageBuild(Function):
             working_dir='mongo-cxx-driver',
             env={
                 # Use Amazon ECR as pull-through cache for DockerHub to avoid rate limits.
-                "DEFAULT_SEARCH_REGISTRY": "901841024863.dkr.ecr.us-east-1.amazonaws.com/dockerhub",
+                'DEFAULT_SEARCH_REGISTRY': '901841024863.dkr.ecr.us-east-1.amazonaws.com/dockerhub',
             },
             include_expansions_in_env=['DOCKER_CONFIG'],
-            script='''\
+            script="""\
                 set -o errexit
                 set -o pipefail
                 set -x
@@ -59,7 +56,7 @@ class DockerImageBuild(Function):
                 make -C extras/docker/redhat-ubi-9.4 nocachebuild test
                 echo "Building Ubuntu Docker image"
                 make -C extras/docker/noble nocachebuild test
-            ''',
+            """,
         ),
     ]
 

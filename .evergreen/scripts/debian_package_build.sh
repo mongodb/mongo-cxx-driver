@@ -8,7 +8,7 @@
 
 set -o errexit
 
-on_exit () {
+on_exit() {
   if [ -e ./unstable-chroot/debootstrap/debootstrap.log ]; then
     echo "Dumping debootstrap.log"
     cat ./unstable-chroot/debootstrap/debootstrap.log
@@ -17,14 +17,14 @@ on_exit () {
 trap on_exit EXIT
 
 if [ ! -z "${DEB_BUILD_PROFILES}" ]; then
-   echo "DEB_BUILD_PROFILES was set; building with profiles: ${DEB_BUILD_PROFILES}"
+  echo "DEB_BUILD_PROFILES was set; building with profiles: ${DEB_BUILD_PROFILES}"
 fi
 
 git config user.email "evergreen-build@example.com"
 git config user.name "Evergreen Build"
 
 if [ "${IS_PATCH}" = "true" ]; then
-  git diff HEAD > ../upstream.patch
+  git diff HEAD >../upstream.patch
   git clean -fdx
   git reset --hard HEAD
   git remote add upstream https://github.com/mongodb/mongo-cxx-driver
@@ -36,7 +36,7 @@ if [ "${IS_PATCH}" = "true" ]; then
   if [ -s ../upstream.patch ]; then
     [ -d debian/patches ] || mkdir debian/patches
     mv ../upstream.patch debian/patches/
-    echo upstream.patch >> debian/patches/series
+    echo upstream.patch >>debian/patches/series
     git add debian/patches/*
     git commit -m 'Evergreen patch build - upstream changes'
     git log -n1 -p
@@ -48,7 +48,7 @@ export CURRENT_BRANCH="$(git rev-parse --abbrev-ref HEAD)"
 cd ..
 
 git clone https://salsa.debian.org/installer-team/debootstrap.git debootstrap.git
-export DEBOOTSTRAP_DIR=`pwd`/debootstrap.git
+export DEBOOTSTRAP_DIR=$(pwd)/debootstrap.git
 sudo -E ./debootstrap.git/debootstrap --variant=buildd unstable ./unstable-chroot/ http://cdn-aws.deb.debian.org/debian
 cp -a mongo-cxx-driver ./unstable-chroot/tmp/
 sudo DEB_BUILD_PROFILES="${DEB_BUILD_PROFILES}" chroot ./unstable-chroot /bin/bash -c "
@@ -79,8 +79,23 @@ sudo DEB_BUILD_PROFILES="${DEB_BUILD_PROFILES}" chroot ./unstable-chroot /bin/ba
   /usr/bin/g++ -I/usr/include/bsoncxx/v_noabi -I/usr/include/mongocxx/v_noabi -I. -o index_examples examples/mongocxx/mongodb.com/index_examples.cpp -lmongocxx -lbsoncxx && \
   /usr/bin/g++ -I/usr/include/bsoncxx/v_noabi -I/usr/include/mongocxx/v_noabi -I. -o documentation_examples examples/mongocxx/mongodb.com/documentation_examples.cpp -lmongocxx -lbsoncxx )"
 
-[ -e ./unstable-chroot/tmp/mongo-cxx-driver/runcommand_examples ] || (echo "Example 'runcommand_examples' was not built!" ; exit 1)
-[ -e ./unstable-chroot/tmp/mongo-cxx-driver/aggregation_examples ] || (echo "Example 'aggregation_examples' was not built!" ; exit 1)
-[ -e ./unstable-chroot/tmp/mongo-cxx-driver/index_examples ] || (echo "Example 'index_examples' was not built!" ; exit 1)
-[ -e ./unstable-chroot/tmp/mongo-cxx-driver/documentation_examples ] || (echo "Example 'documentation_examples' was not built!" ; exit 1)
-(cd ./unstable-chroot/tmp/ ; tar zcvf ../../deb.tar.gz *.dsc *.orig.tar.gz *.debian.tar.xz *.build *.deb)
+[ -e ./unstable-chroot/tmp/mongo-cxx-driver/runcommand_examples ] || (
+  echo "Example 'runcommand_examples' was not built!"
+  exit 1
+)
+[ -e ./unstable-chroot/tmp/mongo-cxx-driver/aggregation_examples ] || (
+  echo "Example 'aggregation_examples' was not built!"
+  exit 1
+)
+[ -e ./unstable-chroot/tmp/mongo-cxx-driver/index_examples ] || (
+  echo "Example 'index_examples' was not built!"
+  exit 1
+)
+[ -e ./unstable-chroot/tmp/mongo-cxx-driver/documentation_examples ] || (
+  echo "Example 'documentation_examples' was not built!"
+  exit 1
+)
+(
+  cd ./unstable-chroot/tmp/
+  tar zcvf ../../deb.tar.gz *.dsc *.orig.tar.gz *.debian.tar.xz *.build *.deb
+)
