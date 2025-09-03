@@ -535,6 +535,9 @@ podman pull 901841024863.dkr.ecr.us-east-1.amazonaws.com/release-infrastructure/
 # Output: "... writing sbom to file"
 podman run -it --rm -v "$(pwd):/pwd" 901841024863.dkr.ecr.us-east-1.amazonaws.com/release-infrastructure/silkbomb:2.0 \
   update --refresh --generate-new-serial-number -p "/pwd/etc/purls.txt" -i "/pwd/etc/cyclonedx.sbom.json" -o "/pwd/etc/cyclonedx.sbom.json"
+
+git add etc/cyclonedx.sbom.json
+git commit -m "update SBOM serial number"
 ```
 
 Update `etc/augmented.sbom.json` by running a patch build which executes the `sbom` task as described above in [SBOM Lite](#sbom-lite).
