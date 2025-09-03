@@ -107,7 +107,11 @@ document::value from_json(stdx::string_view json) {
     return document::value{buf, length, bson_free_deleter};
 }
 
+#if defined(__GNUC__) && (__GNUC__ < 4 || (__GNUC__ == 4 && __GNUC_MINOR__ <= 8)) && !defined(__clang__)
+document::value operator"" _bson(char const* str, size_t len) {
+#else
 document::value operator""_bson(char const* str, size_t len) {
+#endif // GCC <= 4.8
     return from_json(stdx::string_view{str, len});
 }
 

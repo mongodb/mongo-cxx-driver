@@ -82,7 +82,11 @@ BSONCXX_ABI_EXPORT_CDECL(document::value) from_json(stdx::string_view json);
 ///
 /// @throws bsoncxx::v_noabi::exception with error details if the conversion failed.
 ///
+#if defined(__GNUC__) && (__GNUC__ < 4 || (__GNUC__ == 4 && __GNUC_MINOR__ <= 8)) && !defined(__clang__)
+BSONCXX_ABI_EXPORT_CDECL(document::value) operator"" _bson(char const* json, size_t len);
+#else
 BSONCXX_ABI_EXPORT_CDECL(document::value) operator""_bson(char const* json, size_t len);
+#endif // GCC <= 4.8
 
 } // namespace v_noabi
 } // namespace bsoncxx
@@ -92,7 +96,11 @@ namespace bsoncxx {
 using ::bsoncxx::v_noabi::from_json;
 using ::bsoncxx::v_noabi::to_json;
 
+#if defined(__GNUC__) && (__GNUC__ < 4 || (__GNUC__ == 4 && __GNUC_MINOR__ <= 8)) && !defined(__clang__)
+using ::bsoncxx::v_noabi::operator"" _bson;
+#else
 using ::bsoncxx::v_noabi::operator""_bson;
+#endif // GCC <= 4.8
 
 } // namespace bsoncxx
 

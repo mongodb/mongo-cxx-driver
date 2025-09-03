@@ -12,6 +12,7 @@ Changes prior to 3.9.0 are documented as [release notes on GitHub](https://githu
 ### Fixed
 
 - `storage_engine() const` in `mongocxx::v_noabi::options::index` is correctly exported using mongocxx export macros instead of bsoncxx export macros.
+- Fix `-Wdeprecated-literal-operator` warning.
 
 ## 4.1.1
 
