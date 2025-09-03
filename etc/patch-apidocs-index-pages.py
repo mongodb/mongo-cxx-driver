@@ -18,11 +18,11 @@
 Patches the root-level index.html file in each API doc site to match the state of the latest API doc site.
 """
 
-from packaging.version import Version, InvalidVersion
+import os
 from typing import List, Tuple
 
 import bs4
-import os
+from packaging.version import InvalidVersion, Version
 
 
 def find_api_docs_path() -> str:
@@ -91,10 +91,10 @@ def format_latest_index_page(latest: str) -> None:
     """
     Format the latest index page to improve readability of future patch diffs.
     """
-    with open(latest, "r+") as file:
+    with open(latest, 'r+') as file:
         html = bs4.BeautifulSoup(file, 'html.parser')
         file.seek(0)
-        file.write(html.prettify(formatter="html"))
+        file.write(html.prettify(formatter='html'))
         file.truncate()
 
 
@@ -104,20 +104,20 @@ def extract_latest_contents(latest) -> bs4.PageElement:
     """
     with open(latest) as file:
         html = bs4.BeautifulSoup(file, 'html.parser')
-        return html.find("div", class_='contents')
+        return html.find('div', class_='contents')
 
 
 def patch_index_page(latest_contents: bs4.PageElement, index_page: str):
     """
     Replace the contents of the index page with the latest contents.
     """
-    with open(index_page, "r+") as file:
+    with open(index_page, 'r+') as file:
         html = bs4.BeautifulSoup(file, 'html.parser')
-        contents = html.find("div", class_="contents")
+        contents = html.find('div', class_='contents')
         contents.replace_with(latest_contents)
 
         file.seek(0)
-        file.write(html.prettify(formatter="html"))
+        file.write(html.prettify(formatter='html'))
         file.truncate()
 
 
@@ -129,7 +129,7 @@ def main():
     print('Finding API docs...')
     api_docs = find_api_docs(api_docs_path)
     if len(api_docs) == 0:
-        raise RuntimeError(f'no API docs found: APIDOCSPATH may not be correct!')
+        raise RuntimeError('no API docs found: APIDOCSPATH may not be correct!')
     print('Finding API docs... done.')
 
     print(f' - Found {len(api_docs)} API docs: {api_docs[0]} ... {api_docs[-1]}')

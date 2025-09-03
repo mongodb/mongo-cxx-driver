@@ -10,7 +10,7 @@ class TestAtlasConnectivity(Function):
         command_type=EvgCommandType.TEST,
         silent=True,
         working_dir='mongo-cxx-driver',
-        script='''\
+        script="""\
             export MONGOC_INSTALL_PREFIX=$(pwd)/../mongoc
             export MONGOCXX_INSTALL_PREFIX=$(pwd)/build/install
             if [[ "${distro_id}" == rhel* ]]; then
@@ -25,7 +25,7 @@ class TestAtlasConnectivity(Function):
             export URI="${atlas_serverless_uri}"
 
             ./.evergreen/scripts/connect.sh
-        '''
+        """,
     )
 
 

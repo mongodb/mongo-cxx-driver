@@ -1,11 +1,10 @@
-from config_generator.etc.distros import compiler_to_vars
-from config_generator.etc.function import Function
-from config_generator.etc.utils import bash_exec
+from typing import Mapping
 
 from shrub.v3.evg_command import EvgCommandType, KeyValueParam, expansions_update
 
-from typing import Mapping
-
+from config_generator.etc.distros import compiler_to_vars
+from config_generator.etc.function import Function
+from config_generator.etc.utils import bash_exec
 
 # If updating mongoc_version_minimum to a new release (not pinning to an unreleased commit), also update:
 # - BSON_REQUIRED_VERSION and MONGOC_REQUIRED_VERSION in CMakeLists.txt
@@ -21,9 +20,7 @@ class InstallCDriver(Function):
     commands = [
         expansions_update(
             command_type=EvgCommandType.SETUP,
-            updates=[
-                KeyValueParam(key='mongoc_version_minimum', value=MONGOC_VERSION_MINIMUM)
-            ]
+            updates=[KeyValueParam(key='mongoc_version_minimum', value=MONGOC_VERSION_MINIMUM)],
         ),
         bash_exec(
             command_type=EvgCommandType.SETUP,
@@ -32,7 +29,7 @@ class InstallCDriver(Function):
                 'CC': '${cc_compiler}',
                 'CXX': '${cxx_compiler}',
             },
-            script='mongo-cxx-driver/.evergreen/scripts/install-c-driver.sh'
+            script='mongo-cxx-driver/.evergreen/scripts/install-c-driver.sh',
         ),
     ]
 

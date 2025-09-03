@@ -1,6 +1,6 @@
-from config_generator.etc.function import Function
-
 from shrub.v3.evg_command import git_get_project
+
+from config_generator.etc.function import Function
 
 
 class Setup(Function):

@@ -1,10 +1,10 @@
+from typing import Mapping
+
 from shrub.v3.evg_command import EvgCommandType
 
 from config_generator.etc.distros import compiler_to_vars
 from config_generator.etc.function import Function
 from config_generator.etc.utils import bash_exec
-
-from typing import Mapping
 
 
 class Compile(Function):
@@ -42,7 +42,7 @@ class Compile(Function):
         build_type: str | None = None,
         compiler: str | None = None,
         polyfill: str | None = None,
-        vars: Mapping[str, str] = {}
+        vars: Mapping[str, str] = {},
     ):
         vars = vars if vars else {}
 
