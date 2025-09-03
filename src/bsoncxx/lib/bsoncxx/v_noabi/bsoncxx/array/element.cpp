@@ -12,35 +12,27 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <stdexcept>
-
 #include <bsoncxx/array/element.hpp>
+
+//
+
+#include <bsoncxx/v1/element/view.hh>
+
 #include <bsoncxx/types/bson_value/view.hpp>
+
+#include <bsoncxx/private/type_traits.hh>
 
 namespace bsoncxx {
 namespace v_noabi {
 namespace array {
 
-element::element() : document::element() {}
-
-element::element(std::uint8_t const* raw, std::uint32_t length, std::uint32_t offset, std::uint32_t keylen)
-    : document::element(raw, length, offset, keylen) {}
-
-bool operator==(element const& elem, types::bson_value::view const& v) {
-    return elem.get_value() == v;
-}
-
-bool operator==(types::bson_value::view const& v, element const& elem) {
-    return elem == v;
-}
-
-bool operator!=(element const& elem, types::bson_value::view const& v) {
-    return !(elem == v);
-}
-
-bool operator!=(types::bson_value::view const& v, element const& elem) {
-    return !(elem == v);
-}
+// MSVC: `std::is_constructible<T, Args...>` does not work with using-declared conversion functions to class type...?
+#if !defined(_MSC_VER)
+static_assert(is_explicitly_convertible<element&&, v1::element::view>::value, "v_noabi -> v1 must be explicit");
+static_assert(is_explicitly_convertible<element const&, v1::element::view>::value, "v_noabi -> v1 must be explicit");
+static_assert(is_implicitly_convertible<v1::element::view&&, element>::value, "v1 -> v_noabi must be implicit");
+static_assert(is_implicitly_convertible<v1::element::view const&, element>::value, "v1 -> v_noabi must be implicit");
+#endif // !defined(_MSC_VER)
 
 } // namespace array
 } // namespace v_noabi
