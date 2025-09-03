@@ -54,6 +54,13 @@ Changes prior to 3.9.0 are documented as [release notes on GitHub](https://githu
   - See: [MongoDB C Driver 2.1.0 Release Notes](https://github.com/mongodb/mongo-c-driver/releases/tag/2.1.0).
 - Support for macOS 11 and macOS 12 (deprecated in 4.1.0).
 
+## 4.1.2
+
+### Fixed
+
+- `storage_engine() const` in `mongocxx::v_noabi::options::index` is correctly exported using mongocxx export macros instead of bsoncxx export macros.
+- Fix `-Wdeprecated-literal-operator` warning.
+
 ## 4.1.1
 
 ### Fixed
