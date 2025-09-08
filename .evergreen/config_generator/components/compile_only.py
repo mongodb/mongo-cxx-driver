@@ -1,14 +1,12 @@
-from config_generator.components.funcs.compile import Compile
-from config_generator.components.funcs.install_uv import InstallUV
-from config_generator.components.funcs.install_c_driver import InstallCDriver
-from config_generator.components.funcs.setup import Setup
-
-from config_generator.etc.distros import compiler_to_vars, find_large_distro, make_distro_str
-
 from shrub.v3.evg_build_variant import BuildVariant
 from shrub.v3.evg_command import KeyValueParam, expansions_update
 from shrub.v3.evg_task import EvgTask, EvgTaskRef
 
+from config_generator.components.funcs.compile import Compile
+from config_generator.components.funcs.install_c_driver import InstallCDriver
+from config_generator.components.funcs.install_uv import InstallUV
+from config_generator.components.funcs.setup import Setup
+from config_generator.etc.distros import compiler_to_vars, find_large_distro, make_distro_str
 
 TAG = 'compile-only'
 
@@ -100,7 +98,7 @@ def tasks():
                     build_type=build_type,
                     compiler=compiler,
                     vars=compile_vars,
-                )
+                ),
             ]
 
             yield EvgTask(
@@ -109,7 +107,7 @@ def tasks():
                 run_on=distro.name,
                 patchable=patchable,
                 commands=commands,
-                disable=(True if distro_name == 'rhel7.9' else None), # DEVPROD-18187
+                disable=(True if distro_name == 'rhel7.9' else None),  # DEVPROD-18187
             )
 
 
@@ -126,9 +124,7 @@ def variants():
 
     distros = sorted(list({entry[0] for entry in MATRIX}))
     batched = [distro for distro in distros if distro in limited_distros]
-    tasks = [
-        EvgTaskRef(name=f'.{TAG} .{distro}', batchtime=one_day) for distro in batched
-    ] + [
+    tasks = [EvgTaskRef(name=f'.{TAG} .{distro}', batchtime=one_day) for distro in batched] + [
         EvgTaskRef(name=f'.{TAG}' + ''.join(f' !.{distro}' for distro in batched))
     ]
 

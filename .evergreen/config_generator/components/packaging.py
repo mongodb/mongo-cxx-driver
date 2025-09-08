@@ -1,13 +1,11 @@
-from config_generator.components.funcs.setup import Setup
-
-from config_generator.etc.distros import find_large_distro
-from config_generator.etc.function import Function, merge_defns
-from config_generator.etc.utils import Task, bash_exec
-
 from shrub.v3.evg_build_variant import BuildVariant
 from shrub.v3.evg_command import EvgCommandType, s3_put
 from shrub.v3.evg_task import EvgTaskRef
 
+from config_generator.components.funcs.setup import Setup
+from config_generator.etc.distros import find_large_distro
+from config_generator.etc.function import Function, merge_defns
+from config_generator.etc.utils import Task, bash_exec
 
 TAG = 'packaging'
 
@@ -19,11 +17,11 @@ class DebianPackageBuild(Function):
         bash_exec(
             command_type=EvgCommandType.TEST,
             working_dir='mongo-cxx-driver',
-            script='''\
+            script="""\
                 set -o errexit
                 export IS_PATCH="${is_patch}"
                 .evergreen/scripts/debian_package_build.sh
-            ''',
+            """,
         ),
         s3_put(
             aws_key='${aws_key}',
@@ -94,7 +92,7 @@ def tasks():
             commands=[
                 Setup.call(),
                 fn.call(),
-            ]
+            ],
         )
         for fn, distro_name in MATRIX
     ]

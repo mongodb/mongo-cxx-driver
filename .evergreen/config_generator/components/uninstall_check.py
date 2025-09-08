@@ -1,18 +1,16 @@
-from config_generator.components.funcs.compile import Compile
-from config_generator.components.funcs.fetch_c_driver_source import FetchCDriverSource
-from config_generator.components.funcs.install_uv import InstallUV
-from config_generator.components.funcs.setup import Setup
-
-from config_generator.etc.distros import find_large_distro, make_distro_str
-from config_generator.etc.function import Function
-from config_generator.etc.utils import bash_exec
+from itertools import product
 
 from shrub.v3.evg_build_variant import BuildVariant
 from shrub.v3.evg_command import EvgCommandType
 from shrub.v3.evg_task import EvgTask, EvgTaskRef
 
-from itertools import product
-
+from config_generator.components.funcs.compile import Compile
+from config_generator.components.funcs.fetch_c_driver_source import FetchCDriverSource
+from config_generator.components.funcs.install_uv import InstallUV
+from config_generator.components.funcs.setup import Setup
+from config_generator.etc.distros import find_large_distro, make_distro_str
+from config_generator.etc.function import Function
+from config_generator.etc.utils import bash_exec
 
 TAG = 'uninstall-check'
 
@@ -33,7 +31,7 @@ class UninstallCheck(Function):
     commands = bash_exec(
         command_type=EvgCommandType.TEST,
         working_dir='mongo-cxx-driver',
-        script='''\
+        script="""\
             set -o errexit
             set -o pipefail
 
@@ -62,7 +60,7 @@ class UninstallCheck(Function):
                 cmd.exe /c ".evergreen\\\\scripts\\\\uninstall_check_windows.cmd"
                 ;;
             esac
-        '''
+        """,
     )
 
 

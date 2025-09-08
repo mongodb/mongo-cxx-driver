@@ -1,10 +1,10 @@
+from typing import Mapping
+
 from shrub.v3.evg_command import EvgCommandType
 
 from config_generator.etc.distros import compiler_to_vars
 from config_generator.etc.function import Function
 from config_generator.etc.utils import bash_exec
-
-from typing import Mapping
 
 
 class Test(Function):

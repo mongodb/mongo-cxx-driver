@@ -9,7 +9,7 @@ class RunKMSServers(Function):
     commands = [
         bash_exec(
             command_type=EvgCommandType.SETUP,
-            script='''\
+            script="""\
                 set -o errexit
                 echo "Preparing CSFLE venv environment..."
                 cd ./drivers-evergreen-tools/.evergreen/csfle
@@ -19,12 +19,12 @@ class RunKMSServers(Function):
                 # functions invoke 'activate-kmstlsvenv.sh' simultaneously.
                 . ./activate-kmstlsvenv.sh && deactivate
                 echo "Preparing CSFLE venv environment... done."
-            ''',
+            """,
         ),
         bash_exec(
             command_type=EvgCommandType.SETUP,
             background=True,
-            script='''\
+            script="""\
                 set -o errexit
                 echo "Starting mock KMS servers..."
                 cd ./drivers-evergreen-tools/.evergreen/csfle
@@ -35,7 +35,7 @@ class RunKMSServers(Function):
                 python -u kms_http_server.py --ca_file ../x509gen/ca.pem --cert_file ../x509gen/server.pem --port 9002 --require_client_cert &
                 python -u kms_kmip_server.py &
                 echo "Starting mock KMS servers... done."
-            ''',
+            """,
         ),
     ]
 
