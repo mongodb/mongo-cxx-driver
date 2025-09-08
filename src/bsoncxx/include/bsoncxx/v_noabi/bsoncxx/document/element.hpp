@@ -235,7 +235,9 @@ inline bool operator!=(v_noabi::types::bson_value::view const& lhs, element cons
 namespace bsoncxx {
 namespace v_noabi {
 
-// Ambiguous whether `v1::element::view` should be converted to `v1::array::element` or `v1::document::element.`
+// Ambiguous whether `v1::element::view` should be converted to `v_noabi::array::element` or
+// `v_noabi::document::element.` Require users to explicitly cast to the expected type instead.
+//
 // v_noabi::document::element from_v1(v1::element::view const& v);
 
 ///
