@@ -88,29 +88,29 @@ enum class binary_sub_type : std::uint8_t {
 ///
 /// Convert from the @ref bsoncxx::v1 equivalent of `v`.
 ///
-inline type from_v1(v1::types::id value) {
-    return static_cast<type>(value);
+inline type from_v1(v1::types::id v) {
+    return static_cast<type>(v);
 }
 
 ///
 /// Convert to the @ref bsoncxx::v1 equivalent of `v`.
 ///
-inline v1::types::id to_v1(type value) {
-    return static_cast<v1::types::id>(value);
+inline v1::types::id to_v1(type v) {
+    return static_cast<v1::types::id>(v);
 }
 
 ///
 /// Convert from the @ref bsoncxx::v1 equivalent of `v`.
 ///
-inline binary_sub_type from_v1(v1::types::binary_subtype value) {
-    return static_cast<binary_sub_type>(value);
+inline binary_sub_type from_v1(v1::types::binary_subtype v) {
+    return static_cast<binary_sub_type>(v);
 }
 
 ///
 /// Convert to the @ref bsoncxx::v1 equivalent of `v`.
 ///
-inline v1::types::binary_subtype to_v1(binary_sub_type value) {
-    return static_cast<v1::types::binary_subtype>(value);
+inline v1::types::binary_subtype to_v1(binary_sub_type v) {
+    return static_cast<v1::types::binary_subtype>(v);
 }
 
 ///
