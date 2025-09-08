@@ -74,7 +74,7 @@ class view {
     /// themselves being valid.
     ///
     /// @param data
-    ///   A pointer to valid BSON data or `nullptr`.
+    ///   A pointer to valid BSON data.
     /// @param length
     ///   The size of the BSON data in bytes.
     ///
