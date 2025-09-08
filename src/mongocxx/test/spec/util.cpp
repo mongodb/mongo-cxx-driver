@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "mongocxx/test/v_noabi/client_helpers.hh"
+#include <mongocxx/test/v_noabi/client_helpers.hh>
 
 #include <fstream>
 #include <set>

@@ -1,7 +1,7 @@
 from typing import Literal
 
-from pydantic import BaseModel, validator
 from packaging.version import Version
+from pydantic import BaseModel, validator
 
 
 class Distro(BaseModel):
@@ -21,15 +21,18 @@ class Distro(BaseModel):
     os: str | None = None
     os_type: Literal['linux', 'macos', 'windows'] | None = None
     os_ver: str | None = None
-    vs_ver: Literal[
-        '2015',
-        '2017',
-        '2019',
-        '2022',
-        'vsCurrent',
-        'vsCurrent2',
-        'vsMulti',
-    ] | None = None
+    vs_ver: (
+        Literal[
+            '2015',
+            '2017',
+            '2019',
+            '2022',
+            'vsCurrent',
+            'vsCurrent2',
+            'vsMulti',
+        ]
+        | None
+    ) = None
     size: Literal['small', 'large'] | None = None
     arch: Literal['arm64', 'power8', 'zseries'] | None = None
 
@@ -150,14 +153,13 @@ def make_distro_str(distro_name, compiler, arch) -> str:
         #     ('windows-vsCurrent-2022', 'mingw',     None) -> windows-2022-mingw
         #     ('windows-vsCurrent',      'vs2017x64', None) -> windows-2019-vs2017-x64
         #     ('windows-vsCurrent',      'mingw',     None) -> windows-2019-mingw
-        maybe_arch = compiler[len('vs20XY'):]
+        maybe_arch = compiler[len('vs20XY') :]
         if maybe_arch in ('x86', 'x64'):
-            compiler_str = compiler[:-len(maybe_arch)] + '-' + maybe_arch
+            compiler_str = compiler[: -len(maybe_arch)] + '-' + maybe_arch
         else:
             compiler_str = compiler
         if distro_name.startswith('windows-vsCurrent-'):
-            distro_str = 'windows-' + \
-                distro_name[len('windows-vsCurrent-'):] + f'-{compiler_str}'
+            distro_str = 'windows-' + distro_name[len('windows-vsCurrent-') :] + f'-{compiler_str}'
         else:
             distro_str = 'windows-2019' + f'-{compiler_str}'
     else:

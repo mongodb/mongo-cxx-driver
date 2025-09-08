@@ -1,9 +1,4 @@
-from config_generator.components.funcs.setup import Setup
-
-from config_generator.etc.distros import find_small_distro
-from config_generator.etc.function import Function, merge_defns
-from config_generator.etc.utils import bash_exec
-
+from pydantic import ConfigDict
 from shrub.v3.evg_build_variant import BuildVariant
 from shrub.v3.evg_command import (
     BuiltInCommand,
@@ -15,8 +10,10 @@ from shrub.v3.evg_command import (
 )
 from shrub.v3.evg_task import EvgTask, EvgTaskRef
 
-from pydantic import ConfigDict
-
+from config_generator.components.funcs.setup import Setup
+from config_generator.etc.distros import find_small_distro
+from config_generator.etc.function import Function, merge_defns
+from config_generator.etc.utils import bash_exec
 
 TAG = 'sbom'
 
@@ -38,12 +35,12 @@ class CheckAugmentedSBOM(Function):
             bash_exec(
                 command_type=EvgCommandType.SETUP,
                 include_expansions_in_env=['AWS_ACCESS_KEY_ID', 'AWS_SECRET_ACCESS_KEY', 'AWS_SESSION_TOKEN'],
-                script='''\
+                script="""\
                     set -o errexit
                     set -o pipefail
                     kondukto_token="$(aws secretsmanager get-secret-value --secret-id "kondukto-token" --region "us-east-1" --query 'SecretString' --output text)"
                     printf "KONDUKTO_TOKEN: %s\\n" "$kondukto_token" >|expansions.kondukto.yml
-                ''',
+                """,
             ),
             expansions_update(
                 command_type=EvgCommandType.SETUP,

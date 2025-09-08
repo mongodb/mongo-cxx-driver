@@ -1,9 +1,7 @@
-from typing import ClassVar
-from typing import Mapping
 from collections import ChainMap
+from typing import ClassVar, Mapping
 
-from shrub.v3.evg_command import EvgCommand
-from shrub.v3.evg_command import FunctionCall
+from shrub.v3.evg_command import EvgCommand, FunctionCall
 
 
 class Function:

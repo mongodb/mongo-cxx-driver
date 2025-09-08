@@ -37,96 +37,118 @@ When editing this file, consider running `test_make_release.py` to validate chan
 # | Task        | 3      |
 # ------------------------
 
-import textwrap
-import re
-from looseversion import LooseVersion
-import os
 import glob
+import os
+import pathlib
+import re
 import subprocess
 import sys
 import tempfile
-import pathlib
+import textwrap
 
-import click # pip install Click
-from git import Repo # pip install GitPython
-from github import Github # pip install PyGithub
-from jira import JIRA # pip install jira
+import click  # pip install Click
+from git import Repo  # pip install GitPython
+from github import Github  # pip install PyGithub
+from jira import JIRA  # pip install jira
+from looseversion import LooseVersion
 
 if sys.version_info < (3, 0, 0):
-    raise RuntimeError("This script requires Python 3 or higher")
+    raise RuntimeError('This script requires Python 3 or higher')
 
-RELEASE_TAG_RE = re.compile('r(?P<ver>(?P<vermaj>[0-9]+)\\.(?P<vermin>[0-9]+)'
-                            '\\.(?P<verpatch>[0-9]+)(?:-(?P<verpre>.*))?)')
+RELEASE_TAG_RE = re.compile(
+    'r(?P<ver>(?P<vermaj>[0-9]+)\\.(?P<vermin>[0-9]+)\\.(?P<verpatch>[0-9]+)(?:-(?P<verpre>.*))?)'
+)
 CXX_PROJ_ID = 11980
-ISSUE_TYPE_ID = {'Backport': '10300',
-                 'Bug': '1',
-                 'Epic': '11',
-                 'Improvement': '4',
-                 'New Feature': '2',
-                 'Story': '12',
-                 'Task': '3'
-                }
+ISSUE_TYPE_ID = {
+    'Backport': '10300',
+    'Bug': '1',
+    'Epic': '11',
+    'Improvement': '4',
+    'New Feature': '2',
+    'Story': '12',
+    'Task': '3',
+}
+
 
 @click.command()
-@click.option('--skip-release-tag',
-              is_flag=True,
-              help='Use an existing release tag instead of creating a new one')
-@click.option('--jira-token-file',
-              '-j',
-              default='jira_token.txt',
-              show_default=True,
-              help='Jira token file. Contains a Personal Access Token. See https://wiki.corp.mongodb.com/spaces/TOGETHER/pages/218995581/Jira+Personal+Access+Tokens+PATs')
-@click.option('--github-token-file',
-              '-g',
-              default='github_token.txt',
-              show_default=True,
-              help='GitHub token file')
-@click.option('--allow-open-issues',
-              '-a',
-              is_flag=True,
-              help='Allow open issues; NOT RECOMMENDED')
-@click.option('--remote',
-              '-r',
-              default='origin',
-              show_default=True,
-              help='The remote reference which points to the mongodb/mongo-cxx-driver repo')
-@click.option('--c-driver-build-ref',
-              default='2.0.2',
-              show_default=True,
-              help='When building the C driver, build at this Git reference')
-@click.option('--with-c-driver',
-              help='Instead of building the C driver, use the one installed at this path')
-@click.option('--dist-file',
-              help='Don\'t build anything; use this C++ driver distribution tarball')
-@click.option('--skip-distcheck',
-              is_flag=True,
-              help="Only build the distribution tarball (do not build the driver or run tests)")
-@click.option('--output-file',
-              '-o',
-              help='Send release announcement draft output to the specified file')
-@click.option('--dry-run',
-              '-n',
-              is_flag=True,
-              help='Do not perform any actions which modify remote resources')
-@click.option('--quiet',
-              '-q',
-              is_flag=True,
-              help='Produce fewer progress messages')
+@click.option(
+    '--skip-release-tag',
+    is_flag=True,
+    help='Use an existing release tag instead of creating a new one',
+)
+@click.option(
+    '--jira-token-file',
+    '-j',
+    default='jira_token.txt',
+    show_default=True,
+    help='Jira token file. Contains a Personal Access Token. See https://wiki.corp.mongodb.com/spaces/TOGETHER/pages/218995581/Jira+Personal+Access+Tokens+PATs',
+)
+@click.option(
+    '--github-token-file',
+    '-g',
+    default='github_token.txt',
+    show_default=True,
+    help='GitHub token file',
+)
+@click.option('--allow-open-issues', '-a', is_flag=True, help='Allow open issues; NOT RECOMMENDED')
+@click.option(
+    '--remote',
+    '-r',
+    default='origin',
+    show_default=True,
+    help='The remote reference which points to the mongodb/mongo-cxx-driver repo',
+)
+@click.option(
+    '--c-driver-build-ref',
+    default='2.0.2',
+    show_default=True,
+    help='When building the C driver, build at this Git reference',
+)
+@click.option(
+    '--with-c-driver',
+    help='Instead of building the C driver, use the one installed at this path',
+)
+@click.option(
+    '--dist-file',
+    help="Don't build anything; use this C++ driver distribution tarball",
+)
+@click.option(
+    '--skip-distcheck', is_flag=True, help='Only build the distribution tarball (do not build the driver or run tests)'
+)
+@click.option(
+    '--output-file',
+    '-o',
+    help='Send release announcement draft output to the specified file',
+)
+@click.option(
+    '--dry-run',
+    '-n',
+    is_flag=True,
+    help='Do not perform any actions which modify remote resources',
+)
+@click.option(
+    '--quiet',
+    '-q',
+    is_flag=True,
+    help='Produce fewer progress messages',
+)
 @click.argument('git-revision', required=True)
 # pylint: disable=too-many-arguments,too-many-locals,too-many-branches,too-many-statements
-def release(skip_release_tag,
-            jira_token_file,
-            github_token_file,
-            allow_open_issues,
-            remote,
-            c_driver_build_ref,
-            with_c_driver,
-            dist_file,
-            skip_distcheck,
-            output_file,
-            git_revision,
-            dry_run,
-            quiet):
+def release(
+    skip_release_tag,
+    jira_token_file,
+    github_token_file,
+    allow_open_issues,
+    remote,
+    c_driver_build_ref,
+    with_c_driver,
+    dist_file,
+    skip_distcheck,
+    output_file,
+    git_revision,
+    dry_run,
+    quiet,
+):
     """
     Perform the steps associated with the release.
     """
@@ -143,8 +165,10 @@ def release(skip_release_tag,
     auth_gh = Github(github_token)
 
     if not is_valid_remote(remote):
-        click.echo('The the remote "{}" does not point to the mongodb/mongo-cxx-driver '
-                   'repo...exiting!'.format(remote), err=True)
+        click.echo(
+            'The the remote "{}" does not point to the mongodb/mongo-cxx-driver repo...exiting!'.format(remote),
+            err=True,
+        )
         sys.exit(1)
 
     if dry_run:
@@ -153,7 +177,7 @@ def release(skip_release_tag,
         print_banner(git_revision)
 
     if skip_release_tag:
-        click.echo(f'Skipping creation of a new release tag')
+        click.echo('Skipping creation of a new release tag')
     else:
         click.echo('Creating GPG-signed release tag...')
         run_shell_script(f'./etc/garasign_release_tag.sh {git_revision}')
@@ -192,8 +216,7 @@ def release(skip_release_tag,
             click.echo('C driver not built or not found...exiting!', err=True)
             sys.exit(1)
 
-        dist_file = build_distribution(release_tag, release_version, c_driver_dir, quiet,
-                                       skip_distcheck)
+        dist_file = build_distribution(release_tag, release_version, c_driver_dir, quiet, skip_distcheck)
         if not dist_file:
             click.echo('C++ driver distribution not built or not found...exiting!', err=True)
             sys.exit(1)
@@ -205,12 +228,10 @@ def release(skip_release_tag,
     jira_vers_dict = get_jira_project_versions(auth_jira)
 
     if release_version not in jira_vers_dict.keys():
-        click.echo('Version "{}" not found in Jira.  Cannot release!'
-                   .format(release_version), err=True)
+        click.echo('Version "{}" not found in Jira.  Cannot release!'.format(release_version), err=True)
         sys.exit(1)
     if jira_vers_dict[release_version].released:
-        click.echo('Version "{}" already released in Jira.  Cannot release again!'
-                   .format(release_version), err=True)
+        click.echo('Version "{}" already released in Jira.  Cannot release again!'.format(release_version), err=True)
         sys.exit(1)
 
     issues = get_all_issues_for_version(auth_jira, release_version)
@@ -219,7 +240,7 @@ def release(skip_release_tag,
         # all_issues_closed() has already produced an error message
         sys.exit(1)
 
-    with open ("CHANGELOG.md", "r") as changelog:
+    with open('CHANGELOG.md', 'r') as changelog:
         changelog_contents = changelog.read()
     release_notes_text = generate_release_notes(release_version, changelog_contents)
 
@@ -227,8 +248,7 @@ def release(skip_release_tag,
     gh_release_dict = get_github_releases(gh_repo)
 
     if release_tag in gh_release_dict.keys():
-        click.echo('Version "{}" already released in GitHub.  Cannot release again!'
-                   .format(release_tag), err=True)
+        click.echo('Version "{}" already released in GitHub.  Cannot release again!'.format(release_tag), err=True)
         sys.exit(1)
 
     if dry_run:
@@ -240,47 +260,53 @@ def release(skip_release_tag,
             with open(output_file, 'w') as output_stream:
                 output_stream.write(release_notes_text)
     else:
-        create_github_release_draft(gh_repo, release_tag, is_pre_release, dist_file,
-                                    release_notes_text, output_file, quiet)
+        create_github_release_draft(
+            gh_repo, release_tag, is_pre_release, dist_file, release_notes_text, output_file, quiet
+        )
 
 
 def check_mongoc_version():
     got_MONGOC_REQUIRED_VERSION = None
     got_MONGOC_DOWNLOAD_VERSION = None
-    with open("CMakeLists.txt", "r") as cmakelists:
+    with open('CMakeLists.txt', 'r') as cmakelists:
         for line in cmakelists:
-            match = re.match(
-                r"set\(MONGOC_REQUIRED_VERSION\s+(.*?)\)", line)
+            match = re.match(r'set\(MONGOC_REQUIRED_VERSION\s+(.*?)\)', line)
             if match:
                 if 'TODO' in line:
-                    click.echo(
-                        'Found TODO on MONGOC_REQUIRED_VERSION line in CMakeLists.txt: {}'.format(line))
+                    click.echo('Found TODO on MONGOC_REQUIRED_VERSION line in CMakeLists.txt: {}'.format(line))
                     sys.exit(1)
                 got_MONGOC_REQUIRED_VERSION = match.group(1)
                 continue
-            match = re.match(
-                r"set\(MONGOC_DOWNLOAD_VERSION\s+(.*?)\)", line)
+            match = re.match(r'set\(MONGOC_DOWNLOAD_VERSION\s+(.*?)\)', line)
             if match:
                 if 'TODO' in line:
-                    click.echo(
-                        'Found TODO on MONGOC_DOWNLOAD_VERSION line in CMakeLists.txt: {}'.format(line))
+                    click.echo('Found TODO on MONGOC_DOWNLOAD_VERSION line in CMakeLists.txt: {}'.format(line))
                     sys.exit(1)
                 got_MONGOC_DOWNLOAD_VERSION = match.group(1)
                 continue
     assert got_MONGOC_DOWNLOAD_VERSION
     assert got_MONGOC_REQUIRED_VERSION
     mongoc_version_pattern = r'[0-9]+\.[0-9]+\.[0-9]+'
-    if not re.match (mongoc_version_pattern, got_MONGOC_DOWNLOAD_VERSION):
-        click.echo("Expected MONGOC_DOWNLOAD_VERSION to match: {}, got: {}".format(
-            mongoc_version_pattern, got_MONGOC_DOWNLOAD_VERSION))
+    if not re.match(mongoc_version_pattern, got_MONGOC_DOWNLOAD_VERSION):
+        click.echo(
+            'Expected MONGOC_DOWNLOAD_VERSION to match: {}, got: {}'.format(
+                mongoc_version_pattern, got_MONGOC_DOWNLOAD_VERSION
+            )
+        )
         sys.exit(1)
-    if not re.match (mongoc_version_pattern, got_MONGOC_REQUIRED_VERSION):
-        click.echo("Expected MONGOC_REQUIRED_VERSION to match: {}, got: {}".format(
-            mongoc_version_pattern, got_MONGOC_REQUIRED_VERSION))
+    if not re.match(mongoc_version_pattern, got_MONGOC_REQUIRED_VERSION):
+        click.echo(
+            'Expected MONGOC_REQUIRED_VERSION to match: {}, got: {}'.format(
+                mongoc_version_pattern, got_MONGOC_REQUIRED_VERSION
+            )
+        )
         sys.exit(1)
     if got_MONGOC_DOWNLOAD_VERSION != got_MONGOC_REQUIRED_VERSION:
-        click.echo("Expected MONGOC_DOWNLOAD_VERSION ({}) to match MONGOC_REQUIRED_VERSION ({})".format(
-            got_MONGOC_DOWNLOAD_VERSION, got_MONGOC_REQUIRED_VERSION))
+        click.echo(
+            'Expected MONGOC_DOWNLOAD_VERSION ({}) to match MONGOC_REQUIRED_VERSION ({})'.format(
+                got_MONGOC_DOWNLOAD_VERSION, got_MONGOC_REQUIRED_VERSION
+            )
+        )
         sys.exit(1)
 
 
@@ -292,23 +318,24 @@ def is_valid_remote(remote):
     comparison is made against the first URL of the "origin" remote.
     """
 
-    remote_re = re.compile('^(https://github.com/|git@github.com:)'
-                           'mongodb/mongo-cxx-driver(\\.git)?$')
+    remote_re = re.compile('^(https://github.com/|git@github.com:)mongodb/mongo-cxx-driver(\\.git)?$')
     repo = Repo('.')
 
     return bool(remote_re.match(list(repo.remote(remote).urls)[0]))
+
 
 def print_banner(git_revision):
     """
     Print a nice looking banner.
     """
 
-    banner = "**************************************************************\n"
-    banner += "*********** C R E A T I N G ***** R E L E A S E **************\n"
-    banner += "**************************************************************\n"
-    banner += "This build is for Git revision {}".format(git_revision)
+    banner = '**************************************************************\n'
+    banner += '*********** C R E A T I N G ***** R E L E A S E **************\n'
+    banner += '**************************************************************\n'
+    banner += 'This build is for Git revision {}'.format(git_revision)
 
     click.echo(banner)
+
 
 def get_release_tag(git_revision):
     """
@@ -337,6 +364,7 @@ def get_release_tag(git_revision):
 
     return (best_tag.name, version_loose.vstring) if best_tag else (None, None)
 
+
 def working_dir_on_valid_branch(release_version):
     """
     Checks that the current branch in the working directory matches the expected
@@ -356,10 +384,14 @@ def working_dir_on_valid_branch(release_version):
     if repo.active_branch.name == exp_branch:
         return True
 
-    click.echo('Expected branch "{}" for release version "{}", but working '
-               'directory is on branch "{}"...exiting!'
-               .format(exp_branch, release_version, repo.active_branch.name), err=True)
+    click.echo(
+        'Expected branch "{}" for release version "{}", but working directory is on branch "{}"...exiting!'.format(
+            exp_branch, release_version, repo.active_branch.name
+        ),
+        err=True,
+    )
     return False
+
 
 def release_tag_points_to_head(release_tag):
     """
@@ -371,6 +403,7 @@ def release_tag_points_to_head(release_tag):
     tag_commit = repo.commit(release_tag)
 
     return tag_commit == repo.head.commit
+
 
 def check_pre_release(tag_name):
     """
@@ -384,6 +417,7 @@ def check_pre_release(tag_name):
     release_re = re.compile('^r[0-9]+\\.[0-9]+\\.[0-9]+')
 
     return not bool(release_re.match(tag_name))
+
 
 def ensure_c_driver(c_driver_build_ref, with_c_driver, quiet):
     """
@@ -405,6 +439,7 @@ def ensure_c_driver(c_driver_build_ref, with_c_driver, quiet):
 
     return build_c_driver(c_driver_build_ref, quiet)
 
+
 def build_c_driver(c_driver_build_ref, quiet):
     """
     Build the C driver and install to the mongoc directory.  If the build is
@@ -413,7 +448,7 @@ def build_c_driver(c_driver_build_ref, quiet):
     """
 
     if not quiet:
-        click.echo(f'Building C Driver (this could take several minutes)')
+        click.echo('Building C Driver (this could take several minutes)')
         click.echo('Pass --with-c-driver to use an existing installation')
 
     env = os.environ.copy()
@@ -424,6 +459,7 @@ def build_c_driver(c_driver_build_ref, quiet):
         click.echo('Build of C Driver version "{}" was successful.'.format(c_driver_build_ref))
 
     return './mongoc'
+
 
 def build_distribution(release_tag, release_version, c_driver_dir, quiet, skip_distcheck):
     """
@@ -449,12 +485,14 @@ def build_distribution(release_tag, release_version, c_driver_dir, quiet, skip_d
         click.echo('Clear ./build with "git clean -xdf ./build"', err=True)
         return None
 
-    run_shell_script('cd build;'
-                     'echo ' + release_version + ' > VERSION_CURRENT;'
-                     'cmake -DCMAKE_BUILD_TYPE=Release -DENABLE_TESTS=ON '
-                     '-DCMAKE_PREFIX_PATH="' + c_driver_dir + '" '
-                     '-DENABLE_UNINSTALL=ON ..;'
-                     'cmake --build . --target dist')
+    run_shell_script(
+        'cd build;'
+        'echo ' + release_version + ' > VERSION_CURRENT;'
+        'cmake -DCMAKE_BUILD_TYPE=Release -DENABLE_TESTS=ON '
+        '-DCMAKE_PREFIX_PATH="' + c_driver_dir + '" '
+        '-DENABLE_UNINSTALL=ON ..;'
+        'cmake --build . --target dist'
+    )
 
     if not quiet:
         click.echo('C++ Driver build was successful.')
@@ -465,6 +503,7 @@ def build_distribution(release_tag, release_version, c_driver_dir, quiet, skip_d
         click.echo('This may take several minutes. This may be skipped with --skip-distcheck')
         run_shell_script('cmake --build build --target distcheck')
     return dist_file
+
 
 def get_jira_project_versions(auth_jira):
     """
@@ -477,15 +516,18 @@ def get_jira_project_versions(auth_jira):
     # (keyed by release version name)
     return dict(zip([v.name for v in jira_vers], jira_vers))
 
+
 def get_all_issues_for_version(auth_jira, release_version):
     """
     Return a list of all issues in the project assigned to the given release.
     Excludes the ticket created to track the release itself.
     """
 
-    jql_query = 'project={} and fixVersion={} and (labels IS EMPTY OR labels != release) ORDER BY issueKey ASC'\
-            .format(str(CXX_PROJ_ID), release_version)
+    jql_query = 'project={} and fixVersion={} and (labels IS EMPTY OR labels != release) ORDER BY issueKey ASC'.format(
+        str(CXX_PROJ_ID), release_version
+    )
     return auth_jira.search_issues(jql_query, maxResults=0)
+
 
 def all_issues_closed(issues):
     """
@@ -499,30 +541,39 @@ def all_issues_closed(issues):
         msg = 'Open tickets found.  Cannot release!'
         msg += '\nThe following open tickets were found:'
         click.echo(msg, err=True)
-        open_filter = lambda x: x.fields.status.name != 'Closed'
+
+        def open_filter(x):
+            return x.fields.status.name != 'Closed'
+
         open_issues = [i.key for i in filter(open_filter, issues)]
-        click.echo('{}'.format(", ".join(open_issues)), err=True)
+        click.echo('{}'.format(', '.join(open_issues)), err=True)
         return False
 
     return True
+
 
 def generate_release_notes(release_version: str, changelog_contents: str) -> str:
     lines = []
     adding_to_lines = False
     for line in changelog_contents.splitlines(keepends=True):
         # Check for a version title. Example: `## 3.9.0`.
-        match = re.match(r"^## (.*?)\s(.*)$".format(release_version), line)
+        match = re.match(r'^## (.*?)\s(.*)$', line)
         if match:
             matched_version = match.group(1)
             if matched_version == release_version:
                 # Found matching version.
                 extra = match.group(2)
-                if extra != "":
+                if extra != '':
                     raise click.ClickException(
-                        "Unexpected extra characters in CHANGELOG: {}. Is the CHANGELOG updated?".format(extra))
+                        'Unexpected extra characters in CHANGELOG: {}. Is the CHANGELOG updated?'.format(extra)
+                    )
                 if adding_to_lines:
                     raise click.ClickException(
-                        "Unexpected second changelog entry matching version: {}: {}".format(release_version), line)
+                        'Unexpected second changelog entry matching version: {}: {}'.format(
+                            matched_version, release_version
+                        ),
+                        line,
+                    )
                 # Begin adding lines to `lines` list.
                 adding_to_lines = True
                 continue
@@ -533,22 +584,21 @@ def generate_release_notes(release_version: str, changelog_contents: str) -> str
 
         if adding_to_lines:
             # Reduce title by one.
-            if line.startswith("#"):
+            if line.startswith('#'):
                 lines.append(line[1:])
             else:
                 lines.append(line)
 
     # Removing beginning empty lines.
-    while len(lines) > 0 and lines[0] == "\n":
+    while len(lines) > 0 and lines[0] == '\n':
         lines = lines[1:]
 
     # Remove trailing empty lines.
-    while len(lines) > 0 and lines[-1] == "\n":
+    while len(lines) > 0 and lines[-1] == '\n':
         lines = lines[0:-1]
 
     if lines == []:
-        raise click.ClickException(
-            "Failed to find changelog contents for {}".format(release_version))
+        raise click.ClickException('Failed to find changelog contents for {}'.format(release_version))
 
     footer = textwrap.dedent("""
     ## Feedback
@@ -562,12 +612,14 @@ def generate_release_notes(release_version: str, changelog_contents: str) -> str
     Release artifacts may be verified by using the accompanying detached signature (.asc) and the cpp-driver public key obtained from https://pgp.mongodb.com.
     """).lstrip()
 
-    release_notes = "".join(lines) + "\n"
-    release_notes += "See the [full list of changes in Jira](https://jira.mongodb.org/issues/?jql=project%20%3D%20CXX%20AND%20fixVersion%20%3D%20{}).\n\n".format(
-        release_version)
+    release_notes = ''.join(lines) + '\n'
+    release_notes += 'See the [full list of changes in Jira](https://jira.mongodb.org/issues/?jql=project%20%3D%20CXX%20AND%20fixVersion%20%3D%20{}).\n\n'.format(
+        release_version
+    )
     release_notes += footer
 
     return release_notes
+
 
 def print_issues(issues):
     """
@@ -578,11 +630,11 @@ def print_issues(issues):
     text = ''
     for issue in issues:
         text += '<li>'
-        text += '[<a href="{}">{}</a>] - {}'\
-                .format(issue.permalink(), issue.key, issue.fields.summary)
+        text += '[<a href="{}">{}</a>] - {}'.format(issue.permalink(), issue.key, issue.fields.summary)
         text += '</li>\n'
 
     return text
+
 
 def read_github_creds(github_token_file):
     """
@@ -598,10 +650,10 @@ def read_github_creds(github_token_file):
         if token_match:
             github_token = token_match.group('tok')
         else:
-            click.echo('No Github token found in file "{}"'
-                       .format(github_token_file), err=True)
+            click.echo('No Github token found in file "{}"'.format(github_token_file), err=True)
 
     return github_token
+
 
 def get_github_releases(gh_repo):
     """
@@ -613,14 +665,11 @@ def get_github_releases(gh_repo):
     # (keyed by release tag name)
     return dict(zip([r.tag_name for r in gh_releases], gh_releases))
 
+
 # pylint: disable=too-many-arguments
-def create_github_release_draft(gh_repo,
-                                release_tag,
-                                is_pre_release,
-                                dist_file,
-                                release_notes_text,
-                                output_file,
-                                quiet):
+def create_github_release_draft(
+    gh_repo, release_tag, is_pre_release, dist_file, release_notes_text, output_file, quiet
+):
     """
     Create a GitHub release in DRAFT state and attach release artifacts.
     """
@@ -634,28 +683,27 @@ def create_github_release_draft(gh_repo,
         with open(output_file, 'w') as output_stream:
             output_stream.write(release_notes_text)
 
-    gh_release = gh_repo.create_git_release(tag=release_tag, name=release_name,
-                                            message=release_notes_text, draft=True,
-                                            prerelease=is_pre_release)
+    gh_release = gh_repo.create_git_release(
+        tag=release_tag, name=release_name, message=release_notes_text, draft=True, prerelease=is_pre_release
+    )
 
     gh_release.upload_asset(dist_file)
-    gh_release.upload_asset(dist_file + ".asc")
+    gh_release.upload_asset(dist_file + '.asc')
 
-    click.echo('Github release has been created.  Review and publish here: {}'
-               .format(gh_release.html_url))
+    click.echo('Github release has been created.  Review and publish here: {}'.format(gh_release.html_url))
     click.echo('Mark the version as released in Jira.')
     click.echo('Then generate and publish documentation.')
 
+
 # pylint: enable=too-many-arguments
+
 
 def run_shell_script(script, env=None):
     """
     Execute a shell process, and returns contents of stdout. Raise an error on failure.
     """
 
-    proc = subprocess.Popen(script,
-                            stdout=subprocess.PIPE, stderr=subprocess.PIPE, env=env,
-                            shell=True)
+    proc = subprocess.Popen(script, stdout=subprocess.PIPE, stderr=subprocess.PIPE, env=env, shell=True)
     outs, errs = proc.communicate()
     if proc.returncode == 0:
         return outs
@@ -668,10 +716,8 @@ def run_shell_script(script, env=None):
         tmpfp.write(errs)
         stderr_path = tmpfp.name
 
-    raise RuntimeError(f'Script failed: {script}\n'
-                       'Consult output logs:\n'
-                       f'stdout: {stdout_path}\n'
-                       f'stderr: {stderr_path}\n')
+    raise RuntimeError(f'Script failed: {script}\nConsult output logs:\nstdout: {stdout_path}\nstderr: {stderr_path}\n')
+
 
 if __name__ == '__main__':
     release()

@@ -516,8 +516,7 @@ functions:
         DRYRUN: "1"
       args:
         - -c
-        - |
-          PATH="${UV_INSTALL_DIR}:$PATH" uv run --frozen etc/clang-format-all.sh
+        - PATH="${UV_INSTALL_DIR}:$PATH" uv run --frozen etc/format.py --mode check
   run scan build:
     - command: subprocess.exec
       type: test

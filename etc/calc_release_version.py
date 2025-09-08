@@ -36,9 +36,9 @@ includes RHEL 6, which uses Python 2.6!
 
 import datetime
 import errno
+import optparse  # No 'argparse' on Python 2.6
 import re
 import subprocess
-import optparse  # No 'argparse' on Python 2.6
 import sys
 
 
@@ -46,9 +46,8 @@ class Version:
     def __init__(self, s):
         pat = r'(\d+)\.(\d+)\.(\d+)(\-\S+)?'
         match = re.match(pat, s)
-        assert match, "Unrecognized version string %s" % s
-        self.major, self.minor, self.micro = (
-            map(int, (match.group(1), match.group(2), match.group(3))))
+        assert match, 'Unrecognized version string %s' % s
+        self.major, self.minor, self.micro = map(int, (match.group(1), match.group(2), match.group(3)))
 
         if match.group(4):
             self.prerelease = match.group(4)[1:]
@@ -83,10 +82,10 @@ def parse_version(ver):
 
 
 parser = optparse.OptionParser(description=__doc__)
-parser.add_option("--debug", "-d", action="store_true", help="Enable debug output")
-parser.add_option("--next-minor", action="store_true", help="Calculate the next minor version instead of the current")
+parser.add_option('--debug', '-d', action='store_true', help='Enable debug output')
+parser.add_option('--next-minor', action='store_true', help='Calculate the next minor version instead of the current')
 args, pos = parser.parse_args()
-assert not pos, "No positional arguments are expected"
+assert not pos, 'No positional arguments are expected'
 
 
 _DEBUG = args.debug  # type: bool
@@ -95,11 +94,11 @@ _DEBUG = args.debug  # type: bool
 def debug(msg):  # type: (str) -> None
     if _DEBUG:
         sys.stderr.write(msg)
-        sys.stderr.write("\n")
+        sys.stderr.write('\n')
         sys.stderr.flush()
 
 
-debug("Debugging output enabled.")
+debug('Debugging output enabled.')
 
 # This options indicates to output the next minor release version
 NEXT_MINOR = args.next_minor  # type: bool
@@ -252,8 +251,8 @@ def iter_tag_lines():
     """
     output = check_output(['git', 'for-each-ref', '--format=%(*objectname)|%(objectname)|%(refname)', 'refs/tags/*'])
     lines = output.splitlines()
-    for l in lines:
-        obj, tagobj, rawtag = l.split('|', 2)
+    for line in lines:
+        obj, tagobj, rawtag = line.split('|', 2)
 
         # Support Git 1.x which does not have `%(refname:lstrip=2)`.
         tag = str('/').join(rawtag.split('/')[:2])

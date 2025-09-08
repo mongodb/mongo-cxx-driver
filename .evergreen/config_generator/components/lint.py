@@ -1,14 +1,12 @@
-from config_generator.components.funcs.install_uv import InstallUV
-from config_generator.components.funcs.setup import Setup
-
-from config_generator.etc.distros import find_small_distro
-from config_generator.etc.function import Function
-from config_generator.etc.utils import bash_exec
-
 from shrub.v3.evg_build_variant import BuildVariant
 from shrub.v3.evg_command import EvgCommandType
 from shrub.v3.evg_task import EvgTask, EvgTaskRef
 
+from config_generator.components.funcs.install_uv import InstallUV
+from config_generator.components.funcs.setup import Setup
+from config_generator.etc.distros import find_small_distro
+from config_generator.etc.function import Function
+from config_generator.etc.utils import bash_exec
 
 TAG = 'lint'
 
@@ -19,9 +17,7 @@ class Lint(Function):
         command_type=EvgCommandType.TEST,
         working_dir='mongo-cxx-driver',
         env={'DRYRUN': '1'},
-        script='''\
-            PATH="${UV_INSTALL_DIR}:$PATH" uv run --frozen etc/clang-format-all.sh
-        ''',
+        script='PATH="${UV_INSTALL_DIR}:$PATH" uv run --frozen etc/format.py --mode check',
     )
 
 
