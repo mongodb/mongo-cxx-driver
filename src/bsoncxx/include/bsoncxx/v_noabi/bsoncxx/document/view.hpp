@@ -51,8 +51,12 @@ class view {
     using iterator = const_iterator;
 
     ///
-    /// Default constructs a view. The resulting view will be initialized to point at
-    /// an empty BSON document.
+    /// Default constructs a view.
+    ///
+    /// @par Postconditions:
+    /// - `this->data() != nullptr`
+    /// - `this->size() == 5`
+    /// - `this->empty() == true`
     ///
     view() : _view{}, _length{_view.length()} {}
 
@@ -70,9 +74,9 @@ class view {
     /// themselves being valid.
     ///
     /// @param data
-    ///   A buffer containing a valid BSON document.
+    ///   A pointer to valid BSON data or `nullptr`.
     /// @param length
-    ///   The size of the buffer, in bytes.
+    ///   The size of the BSON data in bytes.
     ///
     view(std::uint8_t const* data, std::size_t length) : _view{data}, _length{length} {}
 
@@ -150,10 +154,9 @@ class view {
     }
 
     ///
-    /// Gets the length of the underlying buffer.
+    /// Gets the length of the underlying buffer in bytes.
     ///
-    /// @remark This is not the number of elements in the document.
-    /// To compute the number of elements, use std::distance.
+    /// @remark This is not the number of BSON elements. To compute the number of elements, use `std::distance`.
     ///
     /// @return The length of the document, in bytes.
     ///

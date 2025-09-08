@@ -50,10 +50,7 @@ class view {
     ///
     using iterator = const_iterator;
 
-    ///
-    /// Default constructs a view. The resulting view will be initialized to point at
-    /// an empty BSON array.
-    ///
+    /// @copydoc bsoncxx::v_noabi::document::view::view()
     view() = default;
 
     ///
@@ -61,19 +58,7 @@ class view {
     ///
     /* explicit(false) */ view(v1::array::view const& v) : _view{v} {}
 
-    ///
-    /// Constructs a view from a buffer. The caller is responsible for ensuring that
-    /// the lifetime of the resulting view is a subset of the buffer's.
-    ///
-    /// @warning For backward compatibility, `length` is NOT validated. When `length` is inconsistent with the embedded
-    /// length as indicated by the BSON bytes, the BSON bytes may be parsed as "invalid" despite the BSON bytes
-    /// themselves being valid.
-    ///
-    /// @param data
-    ///   A buffer containing a valid BSON array.
-    /// @param length
-    ///   The size of the buffer, in bytes.
-    ///
+    /// @copydoc bsoncxx::v_noabi::document::view::view(std::uint8_t const* data, std::size_t length)
     view(std::uint8_t const* data, std::size_t length) : _view{data, length} {}
 
     ///
@@ -91,24 +76,16 @@ class view {
         return v1::array::view{_view.data()};
     }
 
-    ///
-    /// @returns A const_iterator to the first element of the array.
-    ///
+    /// @copydoc bsoncxx::v_noabi::document::view::cbegin() const
     BSONCXX_ABI_EXPORT_CDECL(const_iterator) cbegin() const;
 
-    ///
-    /// @returns A const_iterator to the past-the-end element of the array.
-    ///
+    /// @copydoc bsoncxx::v_noabi::document::view::cend() const
     const_iterator cend() const;
 
-    ///
-    /// @returns A const_iterator to the first element of the array.
-    ///
+    /// @copydoc bsoncxx::v_noabi::document::view::begin() const
     const_iterator begin() const;
 
-    ///
-    /// @returns A const_iterator to the past-the-end element of the array.
-    ///
+    /// @copydoc bsoncxx::v_noabi::document::view::end() const
     const_iterator end() const;
 
     ///
@@ -144,14 +121,7 @@ class view {
         return _view.data();
     }
 
-    ///
-    /// Gets the length of the underlying buffer.
-    ///
-    /// @remark This is not the number of elements in the array.
-    /// To compute the number of elements, use std::distance.
-    ///
-    /// @return The length of the array, in bytes.
-    ///
+    /// @copydoc bsoncxx::v_noabi::document::view::size() const
     std::size_t size() const {
         return _view.size();
     }
@@ -161,12 +131,7 @@ class view {
         return _view.length();
     }
 
-    ///
-    /// Checks if the underlying buffer is empty, i.e. it is equivalent to
-    /// the trivial array '[]'.
-    ///
-    /// @return true if the underlying document is empty.
-    ///
+    /// @copydoc bsoncxx::v_noabi::document::view::empty() const
     bool empty() const {
         return _view.empty();
     }
