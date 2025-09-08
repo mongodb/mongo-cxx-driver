@@ -131,7 +131,12 @@ class view {
         return _view.length();
     }
 
-    /// @copydoc bsoncxx::v_noabi::document::view::empty() const
+    ///
+    /// Return true when `this->length() == 5`.
+    ///
+    /// @warning For backward compatibility, this function does NOT check if the underlying BSON bytes represent a valid
+    /// empty document.
+    ///
     bool empty() const {
         return _view.empty();
     }

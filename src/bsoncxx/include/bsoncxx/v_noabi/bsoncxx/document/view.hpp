@@ -170,10 +170,10 @@ class view {
     }
 
     ///
-    /// Checks if the underlying document is empty, i.e. it is equivalent to
-    /// the trivial document '{}'.
+    /// Return true when `this->length() == 5`.
     ///
-    /// @return true if the underlying document is empty.
+    /// @warning For backward compatibility, this function does NOT check if the underlying BSON bytes represent a valid
+    /// empty document.
     ///
     bool empty() const {
         return _length == 5u; // Do NOT use _view.empty().
