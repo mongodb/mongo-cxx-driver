@@ -194,9 +194,11 @@ TEST_CASE("getting types from an uninitialized element throws", "[bsoncxx::docum
     element elem{};
     REQUIRE_THROWS(elem.get_value());
 
-#define BSONCXX_ENUM(name, val) REQUIRE_THROWS(elem.get_##name());
-#include <bsoncxx/enums/type.hpp>
-#undef BSONCXX_ENUM
+#pragma push_macro("X")
+#undef X
+#define X(_name, _value) REQUIRE_THROWS(elem.get_##_name());
+    BSONCXX_V1_TYPES_XMACRO(X)
+#pragma pop_macro("X")
 }
 
 TEST_CASE("bson_value::view returns correct type", "[bsoncxx::types::bson_value::view]") {

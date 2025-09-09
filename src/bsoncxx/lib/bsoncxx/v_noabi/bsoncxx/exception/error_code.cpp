@@ -16,6 +16,8 @@
 
 //
 
+#include <bsoncxx/v1/types/id-fwd.hpp>
+
 #include <string>
 
 #include <bsoncxx/private/immortal.hh>
@@ -43,11 +45,15 @@ class error_category_impl final : public std::error_category {
                 return "tried to operate on document, but this is an array";
             case error_code::k_cannot_perform_document_operation_on_array:
                 return "tried to operate on array, but this is a document";
-#define BSONCXX_ENUM(name, value)                  \
-    case error_code::k_need_element_type_k_##name: \
-        return {"expected element type k_" #name};
-#include <bsoncxx/enums/type.hpp>
-#undef BSONCXX_ENUM
+
+#pragma push_macro("X")
+#undef X
+#define X(_name, _value)                            \
+    case error_code::k_need_element_type_k_##_name: \
+        return {"expected element type k_" #_name};
+                BSONCXX_V1_TYPES_XMACRO(X)
+#pragma pop_macro("X")
+
             case error_code::k_need_key:
                 return "expected a key but found none";
             case error_code::k_no_array_to_close:
@@ -80,11 +86,15 @@ class error_category_impl final : public std::error_category {
                 return "invalid BSON binary subtype";
             case error_code::k_invalid_bson_type_id:
                 return "invalid BSON type identifier";
-#define BSONCXX_ENUM(name, value)            \
-    case error_code::k_cannot_append_##name: \
-        return {"unable to append " #name};
-#include <bsoncxx/enums/type.hpp>
-#undef BSONCXX_ENUM
+
+#pragma push_macro("X")
+#undef X
+#define X(_name, _value)                      \
+    case error_code::k_cannot_append_##_name: \
+        return {"unable to append " #_name};
+                BSONCXX_V1_TYPES_XMACRO(X)
+#pragma pop_macro("X")
+
             case error_code::k_invalid_vector:
                 return "invalid BSON vector";
             case error_code::k_vector_too_large:

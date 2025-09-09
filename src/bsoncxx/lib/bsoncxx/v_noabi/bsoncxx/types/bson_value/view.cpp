@@ -16,6 +16,8 @@
 
 //
 
+#include <bsoncxx/v1/types/id-fwd.hpp>
+
 #include <bsoncxx/v1/detail/macros.hpp>
 
 #include <bsoncxx/exception/error_code.hpp>
@@ -55,7 +57,7 @@ BSONCXX_V1_TYPES_XMACRO(X)
 #pragma pop_macro("X")
 
 bool operator==(view const& lhs, view const& rhs) {
-    if (lhs.type() != rhs.type()) {
+    if (lhs._id != rhs._id) {
         return false;
     }
 
@@ -71,9 +73,7 @@ bool operator==(view const& lhs, view const& rhs) {
             // Silence compiler warnings about failing to return a value.
             BSONCXX_PRIVATE_UNREACHABLE;
     }
-
-    // Silence compiler warnings about failing to return a value.
-    BSONCXX_PRIVATE_UNREACHABLE;
+#pragma pop_macro("X")
 }
 
 } // namespace bson_value
