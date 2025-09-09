@@ -86,7 +86,7 @@ class value {
 #pragma push_macro("X")
 #undef X
 #define X(_name, _unused) \
-    value(v_noabi::types::b_##_name const& v) : _value{to_v1(v)} {}
+    /* explicit(false) */ value(v_noabi::types::b_##_name v) : _value{to_v1(v)} {}
 
     ///
     /// Construct a bson_value::value from the provided BSON type.
