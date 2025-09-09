@@ -59,24 +59,43 @@ namespace bson_value {
 ///
 class view {
    private:
-    v1::types::view _view;
+    v_noabi::type _id;
+
+#pragma push_macro("X")
+#undef X
+#define X(_name, _value) b_##_name _b_##_name;
+
+    union {
+        BSONCXX_V1_TYPES_XMACRO(X)
+    };
+#pragma pop_macro("X")
 
    public:
     ///
     /// Default constructs a bson_value::view. The resulting view will be initialized
     /// to point at a bson_value of type k_null.
     ///
-    view() noexcept : _view{} {}
+    view() noexcept : _id{v_noabi::type::k_null}, _b_null{} {}
 
     ///
     /// Construct with the @ref bsoncxx::v1 equivalent.
     ///
-    /* explicit(false) */ view(v1::types::view const& v) : _view{v} {}
+    /* explicit(false) */ view(v1::types::view const& v) : _id{from_v1(v.type_id())} {
+#pragma push_macro("X")
+#undef X
+#define X(_name, _value)                       \
+    case v_noabi::type::k_##_name:             \
+        _b_##_name = from_v1(v.get_##_name()); \
+        break;
+
+        switch (_id) { BSONCXX_V1_TYPES_XMACRO(X) }
+#pragma pop_macro("X")
+    }
 
 #pragma push_macro("X")
 #undef X
 #define X(_name, _value) \
-    explicit view(v_noabi::types::b_##_name v) noexcept : _view{to_v1(v)} {}
+    explicit view(v_noabi::types::b_##_name v) noexcept : _id{v.type_id}, _b_##_name{v} {}
 
     ///
     /// Construct a bson_value::view from the provided BSON type.
@@ -91,19 +110,31 @@ class view {
     /// Convert to the @ref bsoncxx::v1 equivalent.
     ///
     explicit operator v1::types::view() const {
-        return _view;
+#pragma push_macro("X")
+#undef X
+#define X(_name, _value)           \
+    case v_noabi::type::k_##_name: \
+        return {to_v1(_b_##_name)};
+
+        switch (_id) {
+            BSONCXX_V1_TYPES_XMACRO(X)
+
+            default:
+                return {}; // Unreachable.
+        }
+#pragma pop_macro("X")
     }
 
     ///
     /// Returns the type of the underlying BSON value stored in this object.
     ///
     v_noabi::type type() const {
-        return from_v1(_view.type_id());
+        return _id;
     }
 
 #pragma push_macro("X")
 #undef X
-#define X(_name, _value) BSONCXX_ABI_EXPORT_CDECL(v_noabi::types::b_##_name) get_##_name() const;
+#define X(_name, _value) BSONCXX_ABI_EXPORT_CDECL(v_noabi::types::b_##_name const&) get_##_name() const;
 
     ///
     /// Return the underlying BSON type value.

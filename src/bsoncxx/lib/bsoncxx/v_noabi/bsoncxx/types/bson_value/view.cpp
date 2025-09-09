@@ -35,11 +35,12 @@ static_assert(is_implicitly_convertible<v1::types::view const&, view>::value, "v
 
 #pragma push_macro("X")
 #undef X
-#define X(_name, _value)                                                                         \
-    v_noabi::types::b_##_name view::get_##_name() const try {                                    \
-        return from_v1(_view.get_##_name());                                                     \
-    } catch (v1::exception const& ex) {                                                          \
-        throw v_noabi::exception{v_noabi::error_code::k_need_element_type_k_##_name, ex.what()}; \
+#define X(_name, _value)                                                                  \
+    v_noabi::types::b_##_name const& view::get_##_name() const {                          \
+        if (_id != type::k_##_name) {                                                     \
+            throw v_noabi::exception{v_noabi::error_code::k_need_element_type_k_##_name}; \
+        }                                                                                 \
+        return _b_##_name;                                                                \
     }
 
 ///
@@ -58,12 +59,17 @@ bool operator==(view const& lhs, view const& rhs) {
         return false;
     }
 
-    switch (static_cast<int>(lhs.type())) {
-#define BSONCXX_ENUM(type, val) \
-    case val:                   \
-        return lhs.get_##type() == rhs.get_##type();
-#include <bsoncxx/enums/type.hpp>
-#undef BSONCXX_ENUM
+#pragma push_macro("X")
+#undef X
+#define X(_name, _value)           \
+    case v_noabi::type::k_##_name: \
+        return lhs._b_##_name == rhs._b_##_name;
+
+    switch (lhs._id) {
+        BSONCXX_V1_TYPES_XMACRO(X)
+        default:
+            // Silence compiler warnings about failing to return a value.
+            BSONCXX_PRIVATE_UNREACHABLE;
     }
 
     // Silence compiler warnings about failing to return a value.
