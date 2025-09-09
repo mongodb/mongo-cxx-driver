@@ -153,6 +153,9 @@ class oid {
     }
     /// @}
     ///
+
+   private:
+    friend BSONCXX_ABI_EXPORT_CDECL(int) oid_compare(oid const& lhs, oid const& rhs);
 };
 
 ///

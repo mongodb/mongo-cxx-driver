@@ -61,5 +61,9 @@ oid::oid(char const* bytes, std::size_t len) try : _oid{reinterpret_cast<std::ui
     throw v_noabi::exception{v_noabi::error_code::k_invalid_oid};
 }
 
+int oid_compare(oid const& lhs, oid const& rhs) {
+    return lhs._oid.compare(rhs._oid);
+}
+
 } // namespace v_noabi
 } // namespace bsoncxx
