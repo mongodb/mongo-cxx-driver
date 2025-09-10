@@ -37,6 +37,14 @@ if true; then
   ../install/old/include/
 </add_include_paths>
 
+<skip_including>
+  /v_noabi/bsoncxx/enums/
+  /v_noabi/bsoncxx/config/
+  /v_noabi/mongocxx/config/
+  /v1/detail/prelude.hpp
+  /v1/detail/postlude.hpp
+</skip_including>
+
 DOC
 
   cat >new.xml <<DOC
@@ -52,10 +60,6 @@ DOC
   ../install/new/include/
 </add_include_paths>
 
-DOC
-
-  {
-    cat <<DOC
 <skip_including>
   /v_noabi/bsoncxx/enums/
   /v_noabi/bsoncxx/config/
@@ -64,12 +68,7 @@ DOC
   /v1/detail/postlude.hpp
 </skip_including>
 
-<skip_namespaces>
-  detail
-</skip_namespaces>
-
 DOC
-  } | tee -a old.xml new.xml >/dev/null
 
   tee cxx-abi/old.xml cxx-noabi/old.xml <old.xml >/dev/null
   tee cxx-abi/new.xml cxx-noabi/new.xml <new.xml >/dev/null
@@ -87,13 +86,11 @@ if true; then
 <skip_headers>
   /v_noabi/
 </skip_headers>
-DOC
 
-  cat >>cxx-noabi/old.xml <<DOC
-<headers>
-  ../install/old/include/bsoncxx/v_noabi
-  ../install/old/include/mongocxx/v_noabi
-</headers>
+<skip_namespaces>
+  bsoncxx::detail
+  mongocxx::detail
+</skip_namespaces>
 DOC
 
   cat >>cxx-abi/new.xml <<DOC
@@ -105,6 +102,25 @@ DOC
 <skip_headers>
   /v_noabi/
 </skip_headers>
+
+<skip_namespaces>
+  bsoncxx::detail
+  mongocxx::detail
+</skip_headers>
+DOC
+
+  cat >>cxx-noabi/old.xml <<DOC
+<headers>
+  ../install/old/include/bsoncxx/v_noabi
+  ../install/old/include/mongocxx/v_noabi
+</headers>
+
+<skip_namespaces>
+  bsoncxx::detail
+  mongocxx::detail
+  bsoncxx::v1
+  mongocxx::v1
+</skip_namespaces>
 DOC
 
   cat >>cxx-noabi/new.xml <<DOC
@@ -112,14 +128,27 @@ DOC
   ../install/new/include/bsoncxx/v_noabi
   ../install/new/include/mongocxx/v_noabi
 </headers>
+
+<skip_namespaces>
+  bsoncxx::detail
+  mongocxx::detail
+  bsoncxx::v1
+  mongocxx::v1
+</skip_namespaces>
 DOC
 fi
+
+args=(
+  -lib mongo-cxx-driver
+  -old old.xml
+  -new new.xml
+)
 
 # Allow task to upload the HTML report despite failed status.
 echo "Generating stable ABI report..."
 pushd cxx-abi
 declare ret
-abi-compliance-checker -lib mongo-cxx-driver -old old.xml -new new.xml 2>&1 && ret="$?" || ret="$?"
+abi-compliance-checker "${args[@]}" 2>&1 && ret="$?" || ret="$?"
 if [[ "${ret:?}" -gt 1 ]]; then
   declare status
   status='{"status":"failed", "type":"test", "should_continue":true, "desc":"abi-compliance-checker emitted one or more errors"}'
@@ -136,7 +165,7 @@ echo "Generating stable ABI report... done."
 echo "Generating unstable ABI report..."
 pushd cxx-noabi
 declare ret
-abi-compliance-checker -lib mongo-cxx-driver -old old.xml -new new.xml 2>&1 && ret="$?" || ret="$?"
+abi-compliance-checker "${args[@]}" 2>&1 && ret="$?" || ret="$?"
 if [[ "${ret:?}" -gt 1 ]]; then
   declare status
   status='{"status":"failed", "type":"test", "should_continue":true, "desc":"abi-compliance-checker emitted one or more errors"}'
