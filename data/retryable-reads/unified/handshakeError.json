@@ -429,11 +429,6 @@
     },
     {
       "description": "client.createChangeStream succeeds after retryable handshake network error",
-      "runOnRequirements": [
-        {
-          "serverless": "forbid"
-        }
-      ],
       "operations": [
         {
           "name": "failPoint",
@@ -528,11 +523,6 @@
     },
     {
       "description": "client.createChangeStream succeeds after retryable handshake server error (ShutdownInProgress)",
-      "runOnRequirements": [
-        {
-          "serverless": "forbid"
-        }
-      ],
       "operations": [
         {
           "name": "failPoint",
@@ -627,11 +617,6 @@
     },
     {
       "description": "database.aggregate succeeds after retryable handshake network error",
-      "runOnRequirements": [
-        {
-          "serverless": "forbid"
-        }
-      ],
       "operations": [
         {
           "name": "failPoint",
@@ -732,11 +717,6 @@
     },
     {
       "description": "database.aggregate succeeds after retryable handshake server error (ShutdownInProgress)",
-      "runOnRequirements": [
-        {
-          "serverless": "forbid"
-        }
-      ],
       "operations": [
         {
           "name": "failPoint",
@@ -1209,11 +1189,6 @@
     },
     {
       "description": "database.createChangeStream succeeds after retryable handshake network error",
-      "runOnRequirements": [
-        {
-          "serverless": "forbid"
-        }
-      ],
       "operations": [
         {
           "name": "failPoint",
@@ -1308,11 +1283,6 @@
     },
     {
       "description": "database.createChangeStream succeeds after retryable handshake server error (ShutdownInProgress)",
-      "runOnRequirements": [
-        {
-          "serverless": "forbid"
-        }
-      ],
       "operations": [
         {
           "name": "failPoint",
@@ -2879,11 +2849,6 @@
     },
     {
       "description": "collection.createChangeStream succeeds after retryable handshake network error",
-      "runOnRequirements": [
-        {
-          "serverless": "forbid"
-        }
-      ],
       "operations": [
         {
           "name": "failPoint",
@@ -2978,11 +2943,6 @@
     },
     {
       "description": "collection.createChangeStream succeeds after retryable handshake server error (ShutdownInProgress)",
-      "runOnRequirements": [
-        {
-          "serverless": "forbid"
-        }
-      ],
       "operations": [
         {
           "name": "failPoint",
