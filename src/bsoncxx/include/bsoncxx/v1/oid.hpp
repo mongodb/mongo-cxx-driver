@@ -193,9 +193,9 @@ class oid {
     class internal;
 
    private:
-    struct uninit_type {};
+    struct for_overwrite_tag {};
 
-    oid(uninit_type) : _bytes{} {} // Required by bsoncxx::v_noabi::oid::oid().
+    /* explicit(false) */ oid(for_overwrite_tag) : _bytes{} {}
 };
 
 } // namespace v1

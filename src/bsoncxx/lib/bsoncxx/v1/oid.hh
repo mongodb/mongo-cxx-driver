@@ -30,8 +30,8 @@ class oid::internal {
     }
 
     // Required by bsoncxx::v_noabi::oid::oid().
-    static oid make_oid_without_init() {
-        return {oid::uninit_type{}};
+    static oid make_oid_for_overwrite() {
+        return {oid::for_overwrite_tag{}};
     }
 };
 

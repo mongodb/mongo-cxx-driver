@@ -38,7 +38,7 @@ static_assert(is_implicitly_convertible<v1::oid const&, oid>::value, "v1 -> v_no
 
 constexpr std::size_t oid::k_oid_length;
 
-oid::oid() : _oid{v1::oid::internal::make_oid_without_init()} {
+oid::oid() : _oid{v1::oid::internal::make_oid_for_overwrite()} {
     try {
         _oid = v1::oid{};
     } catch (...) {
