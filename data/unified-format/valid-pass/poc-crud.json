@@ -323,8 +323,7 @@
           "topologies": [
             "replicaset",
             "sharded"
-          ],
-          "serverless": "forbid"
+          ]
         }
       ],
       "operations": [
@@ -409,8 +408,7 @@
       "description": "Aggregate with $listLocalSessions",
       "runOnRequirements": [
         {
-          "minServerVersion": "3.6.0",
-          "serverless": "forbid"
+          "minServerVersion": "3.6.0"
         }
       ],
       "operations": [

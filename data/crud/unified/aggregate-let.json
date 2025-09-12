@@ -207,8 +207,7 @@
       "description": "Aggregate to collection with let option",
       "runOnRequirements": [
         {
-          "minServerVersion": "5.0",
-          "serverless": "forbid"
+          "minServerVersion": "5.0"
         }
       ],
       "operations": [

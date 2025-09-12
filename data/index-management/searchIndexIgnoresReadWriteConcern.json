@@ -37,8 +37,7 @@
         "replicaset",
         "load-balanced",
         "sharded"
-      ],
-      "serverless": "forbid"
+      ]
     }
   ],
   "tests": [

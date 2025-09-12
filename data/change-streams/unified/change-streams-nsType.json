@@ -7,8 +7,7 @@
       "topologies": [
         "replicaset",
         "sharded"
-      ],
-      "serverless": "forbid"
+      ]
     }
   ],
   "createEntities": [
