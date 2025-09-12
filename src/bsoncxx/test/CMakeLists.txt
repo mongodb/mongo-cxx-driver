@@ -41,6 +41,7 @@ set(bsoncxx_test_sources_v_noabi
     v_noabi/bson_util_itoa.cpp
     v_noabi/bson_validate.cpp
     v_noabi/bson_value.cpp
+    v_noabi/decimal128.cpp
     v_noabi/json.cpp
     v_noabi/oid.cpp
     v_noabi/vector.cpp

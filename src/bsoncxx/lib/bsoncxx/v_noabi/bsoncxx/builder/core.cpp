@@ -660,14 +660,15 @@ core& core::concatenate(bsoncxx::v_noabi::document::view const& view) {
 }
 
 core& core::append(types::bson_value::view const& value) {
-    switch (static_cast<int>(value.type())) {
-#define BSONCXX_ENUM(type, val)     \
-    case val:                       \
-        append(value.get_##type()); \
+#pragma push_macro("X")
+#undef X
+#define X(_name, _value)             \
+    case type::k_##_name:            \
+        append(value.get_##_name()); \
         break;
-#include <bsoncxx/enums/type.hpp>
-#undef BSONCXX_ENUM
-    }
+
+    switch (value.type()) { BSONCXX_V1_TYPES_XMACRO(X) }
+#pragma pop_macro("X")
 
     return *this;
 }

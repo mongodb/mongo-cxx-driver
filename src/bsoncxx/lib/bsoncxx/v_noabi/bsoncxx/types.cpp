@@ -14,38 +14,20 @@
 
 #include <bsoncxx/types.hpp>
 
+//
+
+#include <bsoncxx/v1/detail/macros.hpp>
+
 namespace bsoncxx {
 namespace v_noabi {
+namespace types {
 
-#define BSONCXX_ENUM(name, val) constexpr type types::b_##name::type_id;
-#include <bsoncxx/enums/type.hpp>
-#undef BSONCXX_ENUM
+#pragma push_macro("X")
+#undef X
+#define X(_name, _value) constexpr v_noabi::type b_##_name::type_id;
+BSONCXX_V1_TYPES_XMACRO(X)
+#pragma pop_macro("X")
 
-std::string to_string(type rhs) {
-    switch (static_cast<uint8_t>(rhs)) {
-#define BSONCXX_ENUM(name, val) \
-    case val:                   \
-        return (#name);         \
-        break;
-#include <bsoncxx/enums/type.hpp>
-#undef BSONCXX_ENUM
-        default:
-            return "?";
-    }
-}
-
-std::string to_string(binary_sub_type rhs) {
-    switch (static_cast<uint8_t>(rhs)) {
-#define BSONCXX_ENUM(name, val) \
-    case val:                   \
-        return (#name);         \
-        break;
-#include <bsoncxx/enums/binary_sub_type.hpp>
-#undef BSONCXX_ENUM
-        default:
-            return "?";
-    }
-}
-
+} // namespace types
 } // namespace v_noabi
 } // namespace bsoncxx
