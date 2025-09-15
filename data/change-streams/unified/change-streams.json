@@ -6,7 +6,8 @@
       "minServerVersion": "3.6",
       "topologies": [
         "replicaset"
-      ]
+      ],
+      "serverless": "forbid"
     }
   ],
   "createEntities": [

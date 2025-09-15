@@ -9,6 +9,7 @@
         "sharded",
         "load-balanced"
       ],
+      "serverless": "forbid",
       "auth": true
     }
   ],

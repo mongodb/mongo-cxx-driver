@@ -6,7 +6,8 @@
       "minServerVersion": "4.9",
       "serverParameters": {
         "enableTestCommands": true
-      }
+      },
+      "serverless": "forbid"
     }
   ],
   "createEntities": [
