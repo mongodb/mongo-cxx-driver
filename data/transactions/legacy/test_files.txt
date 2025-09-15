@@ -24,6 +24,8 @@ read-pref.json
 reads.json
 retryable-abort-errorLabels.json
 retryable-abort.json
+retryable-commit-errorLabels-forbid_serverless.json
+retryable-commit-forbid_serverless.json
 retryable-commit-errorLabels.json
 retryable-commit.json
 retryable-writes.json
