@@ -13,40 +13,28 @@
 // limitations under the License.
 
 #include <bsoncxx/decimal128.hpp>
+
+//
+
+#include <bsoncxx/v1/decimal128.hpp>
+#include <bsoncxx/v1/exception.hpp>
+
 #include <bsoncxx/exception/error_code.hpp>
 #include <bsoncxx/exception/exception.hpp>
-#include <bsoncxx/stdx/string_view.hpp>
-#include <bsoncxx/string/to_string.hpp>
 
-#include <bsoncxx/private/bson.hh>
+#include <bsoncxx/private/type_traits.hh>
 
 namespace bsoncxx {
 namespace v_noabi {
 
-decimal128::decimal128(stdx::string_view str) {
-    bson_decimal128_t d128;
-    if (!bson_decimal128_from_string(string::to_string(str).c_str(), &d128)) {
-        throw bsoncxx::v_noabi::exception{error_code::k_invalid_decimal128};
-    }
-    _high = d128.high;
-    _low = d128.low;
-}
+static_assert(is_explicitly_convertible<decimal128&&, v1::decimal128>::value, "v_noabi -> v1 must be explicit");
+static_assert(is_explicitly_convertible<decimal128 const&, v1::decimal128>::value, "v_noabi -> v1 must be explicit");
+static_assert(is_implicitly_convertible<v1::decimal128&&, decimal128>::value, "v1 -> v_noabi must be implicit");
+static_assert(is_implicitly_convertible<v1::decimal128 const&, decimal128>::value, "v1 -> v_noabi must be implicit");
 
-std::string decimal128::to_string() const {
-    bson_decimal128_t d128;
-    d128.high = _high;
-    d128.low = _low;
-    char str[BSON_DECIMAL128_STRING];
-    bson_decimal128_to_string(&d128, str);
-    return {str};
-}
-
-bool operator==(decimal128 const& lhs, decimal128 const& rhs) {
-    return lhs._high == rhs._high && lhs._low == rhs._low;
-}
-
-bool operator!=(decimal128 const& lhs, decimal128 const& rhs) {
-    return !(lhs == rhs);
+decimal128::decimal128(v1::stdx::string_view str) try : _d128{str} {
+} catch (v1::exception const&) {
+    throw v_noabi::exception{v_noabi::error_code::k_invalid_decimal128};
 }
 
 } // namespace v_noabi

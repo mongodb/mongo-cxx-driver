@@ -477,6 +477,10 @@ value::internal::make(std::uint8_t const* raw, std::uint32_t length, std::uint32
     return ret;
 }
 
+bson_value_t& value::internal::get_bson_value(value& v) {
+    return impl::with(v)._value;
+}
+
 } // namespace types
 } // namespace v1
 } // namespace bsoncxx

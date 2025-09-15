@@ -14,11 +14,16 @@
 
 #pragma once
 
+#include <bsoncxx/document/view-fwd.hpp>
+
+//
+
+#include <bsoncxx/v1/document/view.hpp>
+
 #include <cstddef>
 #include <cstdint>
+#include <cstring>
 #include <iterator>
-
-#include <bsoncxx/document/view-fwd.hpp>
 
 #include <bsoncxx/document/element.hpp>
 #include <bsoncxx/stdx/string_view.hpp>
@@ -33,26 +38,62 @@ namespace document {
 /// A read-only, non-owning view of a BSON document.
 ///
 class view {
+   private:
+    v1::document::view _view;
+    std::size_t _length;
+
    public:
     class const_iterator;
+
+    ///
+    /// Equivalent to @ref const_iterator.
+    ///
     using iterator = const_iterator;
 
     ///
-    /// Default constructs a view. The resulting view will be initialized to point at
-    /// an empty BSON document.
+    /// Default constructs a view.
     ///
-    BSONCXX_ABI_EXPORT_CDECL() view();
+    /// @par Postconditions:
+    /// - `this->data() != nullptr`
+    /// - `this->size() == 5`
+    /// - `this->empty() == true`
+    ///
+    view() : _view{}, _length{_view.length()} {}
+
+    ///
+    /// Construct with the @ref bsoncxx::v1 equivalent.
+    ///
+    /* explicit(false) */ view(v1::document::view const& v) : _view{v}, _length{v.length()} {}
 
     ///
     /// Constructs a view from a buffer. The caller is responsible for ensuring that
     /// the lifetime of the resulting view is a subset of the buffer's.
     ///
-    /// @param data
-    ///   A buffer containing a valid BSON document.
-    /// @param length
-    ///   The size of the buffer, in bytes.
+    /// @warning For backward compatibility, `length` is NOT validated. When `length` is inconsistent with the embedded
+    /// length as indicated by the BSON bytes, the BSON bytes may be parsed as "invalid" despite the BSON bytes
+    /// themselves being valid.
     ///
-    BSONCXX_ABI_EXPORT_CDECL() view(std::uint8_t const* data, std::size_t length);
+    /// @param data
+    ///   A pointer to valid BSON data.
+    /// @param length
+    ///   The size of the BSON data in bytes.
+    ///
+    view(std::uint8_t const* data, std::size_t length) : _view{data}, _length{length} {}
+
+    ///
+    /// Convert to the @ref bsoncxx::v1 equivalent.
+    ///
+    /// @par Preconditions:
+    /// - If `this->data()` is not null, the size of the storage region pointed to by `data` must be greater than or
+    ///   equal to 5.
+    /// - The "total number of bytes comprising the document" as indicated by the BSON bytes pointed-to by
+    ///   `this->data()` must be less than or equal to the size of the storage region pointed to by `data`.
+    ///
+    /// @note `this->size()` is ignored.
+    ///
+    explicit operator v1::document::view() const {
+        return _view;
+    }
 
     ///
     /// @returns A const_iterator to the first element of the document.
@@ -62,17 +103,17 @@ class view {
     ///
     /// @returns A const_iterator to the past-the-end element of the document.
     ///
-    BSONCXX_ABI_EXPORT_CDECL(const_iterator) cend() const;
+    const_iterator cend() const;
 
     ///
     /// @returns A const_iterator to the first element of the document.
     ///
-    BSONCXX_ABI_EXPORT_CDECL(const_iterator) begin() const;
+    const_iterator begin() const;
 
     ///
     /// @returns A const_iterator to the past-the-end element of the document.
     ///
-    BSONCXX_ABI_EXPORT_CDECL(const_iterator) end() const;
+    const_iterator end() const;
 
     ///
     /// Finds the first element of the document with the provided key. If there is
@@ -89,7 +130,7 @@ class view {
     ///
     /// @return An iterator to the matching element, if found, or the past-the-end iterator.
     ///
-    BSONCXX_ABI_EXPORT_CDECL(const_iterator) find(stdx::string_view key) const;
+    BSONCXX_ABI_EXPORT_CDECL(const_iterator) find(v1::stdx::string_view key) const;
 
     ///
     /// Finds the first element of the document with the provided key. If there is no
@@ -101,32 +142,42 @@ class view {
     ///
     /// @return The matching element, if found, or the invalid element.
     ///
-    BSONCXX_ABI_EXPORT_CDECL(element) operator[](stdx::string_view key) const;
+    v_noabi::document::element operator[](v1::stdx::string_view key) const;
 
     ///
     /// Access the raw bytes of the underlying document.
     ///
     /// @return A (non-owning) pointer to the view's buffer.
     ///
-    BSONCXX_ABI_EXPORT_CDECL(std::uint8_t const*) data() const;
+    std::uint8_t const* data() const {
+        return _view.data();
+    }
 
     ///
-    /// Gets the length of the underlying buffer.
+    /// Gets the length of the underlying buffer in bytes.
     ///
-    /// @remark This is not the number of elements in the document.
-    /// To compute the number of elements, use std::distance.
+    /// @remark This is not the number of BSON elements. To compute the number of elements, use `std::distance`.
     ///
     /// @return The length of the document, in bytes.
     ///
-    BSONCXX_ABI_EXPORT_CDECL(std::size_t) length() const;
+    std::size_t size() const {
+        return _length; // Do NOT use _view.size().
+    }
+
+    /// @copydoc size() const
+    std::size_t length() const {
+        return _length; // Do NOT use _view.length().
+    }
 
     ///
-    /// Checks if the underlying document is empty, i.e. it is equivalent to
-    /// the trivial document '{}'.
+    /// Return true when `this->length() == 5`.
     ///
-    /// @return true if the underlying document is empty.
+    /// @warning For backward compatibility, this function does NOT check if the underlying BSON bytes represent a valid
+    /// empty document.
     ///
-    BSONCXX_ABI_EXPORT_CDECL(bool) empty() const;
+    bool empty() const {
+        return _length == 5u; // Do NOT use _view.empty().
+    }
 
     ///
     /// @relates bsoncxx::v_noabi::document::view
@@ -134,14 +185,15 @@ class view {
     /// Compare two document views for (in)-equality.
     ///
     /// @{
-    friend BSONCXX_ABI_EXPORT_CDECL(bool) operator==(view, view);
-    friend BSONCXX_ABI_EXPORT_CDECL(bool) operator!=(view, view);
+    friend bool operator==(view lhs, view rhs) {
+        return (lhs._length == rhs._length) && (std::memcmp(lhs.data(), rhs.data(), lhs._length) == 0);
+    }
+
+    friend bool operator!=(view lhs, view rhs) {
+        return !(lhs == rhs);
+    }
     /// @}
     ///
-
-   private:
-    std::uint8_t const* _data;
-    std::size_t _length;
 };
 
 ///
@@ -151,6 +203,9 @@ class view {
 /// view elements.
 ///
 class view::const_iterator {
+   private:
+    v_noabi::document::element _element;
+
    public:
     ///
     /// std::iterator_traits
@@ -161,14 +216,25 @@ class view::const_iterator {
     using iterator_category = std::forward_iterator_tag;
     using difference_type = std::ptrdiff_t;
 
-    BSONCXX_ABI_EXPORT_CDECL() const_iterator();
-    explicit BSONCXX_ABI_EXPORT_CDECL() const_iterator(element const& element);
+    const_iterator() = default;
 
-    BSONCXX_ABI_EXPORT_CDECL(reference) operator*();
-    BSONCXX_ABI_EXPORT_CDECL(pointer) operator->();
+    explicit const_iterator(v_noabi::document::element const& element) : _element(element) {}
+
+    reference operator*() {
+        return _element;
+    }
+
+    pointer operator->() {
+        return &_element;
+    }
 
     BSONCXX_ABI_EXPORT_CDECL(const_iterator&) operator++();
-    BSONCXX_ABI_EXPORT_CDECL(const_iterator) operator++(int);
+
+    const_iterator operator++(int) {
+        const_iterator before(*this);
+        operator++();
+        return before;
+    }
 
     ///
     /// @relates bsoncxx::v_noabi::document::view::const_iterator
@@ -176,16 +242,54 @@ class view::const_iterator {
     /// Compares two const_iterators for (in)-equality.
     ///
     /// @{
-    friend BSONCXX_ABI_EXPORT_CDECL(bool) operator==(const_iterator const&, const_iterator const&);
-    friend BSONCXX_ABI_EXPORT_CDECL(bool) operator!=(const_iterator const&, const_iterator const&);
+    friend bool operator==(const_iterator const& lhs, const_iterator const& rhs) {
+        return lhs._element.raw() == rhs._element.raw() && lhs._element.offset() == rhs._element.offset();
+    }
+
+    friend bool operator!=(const_iterator const& lhs, const_iterator const& rhs) {
+        return !(lhs == rhs);
+    }
     /// @}
     ///
-
-   private:
-    element _element;
 };
 
+inline v_noabi::document::element view::operator[](v1::stdx::string_view key) const {
+    return *(this->find(key));
+}
+
+inline view::const_iterator view::cend() const {
+    return {};
+}
+
+inline view::const_iterator view::begin() const {
+    return this->cbegin();
+}
+
+inline view::const_iterator view::end() const {
+    return this->cend();
+}
+
 } // namespace document
+} // namespace v_noabi
+} // namespace bsoncxx
+
+namespace bsoncxx {
+namespace v_noabi {
+
+///
+/// Convert to the @ref bsoncxx::v_noabi equivalent of `v`.
+///
+inline v_noabi::document::view from_v1(v1::document::view const& v) {
+    return {v};
+}
+
+///
+/// Convert to the @ref bsoncxx::v1 equivalent of `v`.
+///
+inline v1::document::view to_v1(v_noabi::document::view const& v) {
+    return v1::document::view{v};
+}
+
 } // namespace v_noabi
 } // namespace bsoncxx
 
@@ -194,4 +298,7 @@ class view::const_iterator {
 ///
 /// @file
 /// Provides @ref bsoncxx::v_noabi::document::view.
+///
+/// @par Includes
+/// - @ref bsoncxx/v1/document/view.hpp
 ///

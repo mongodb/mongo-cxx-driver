@@ -74,4 +74,62 @@ TEST_CASE("array element lookup with std::find", "[bsoncxx::array::view]") {
         REQUIRE(*it == val);
     }
 }
+
+TEST_CASE("v1", "[bsoncxx][v_noabi][array][element]") {
+    using v1 = v1::element::view;
+    using v_noabi = v_noabi::array::element;
+    using bsoncxx::v_noabi::from_v1;
+    using bsoncxx::v_noabi::to_v1;
+
+    auto const owner = bsoncxx::builder::basic::make_array(1);
+    auto const arr = owner.view();
+    auto const e = arr[0];
+
+    SECTION("from_v1") {
+        v1 from{e};
+        v_noabi const to = from;
+
+        CHECK(to.raw() == to_v1(to).raw());
+        CHECK(to.raw() == from.raw());
+        CHECK(to.raw() != v1{}.raw());
+    }
+
+    SECTION("to_v1") {
+        v_noabi from{e};
+        v1 const to{from};
+
+        CHECK(to.raw() == v_noabi{to}.raw()); // No from_v1().
+        CHECK(to.raw() == from.raw());
+        CHECK(to.raw() != v_noabi{}.raw());
+    }
+}
+
+TEST_CASE("v1", "[bsoncxx][v_noabi][array][view]") {
+    using v1 = v1::array::view;
+    using v_noabi = v_noabi::array::view;
+    using bsoncxx::v_noabi::from_v1;
+    using bsoncxx::v_noabi::to_v1;
+
+    auto const owner = bsoncxx::builder::basic::make_array(1);
+    auto const arr = owner.view();
+
+    SECTION("from_v1") {
+        v1 from{arr.data()};
+        v_noabi const to = from;
+
+        CHECK(to == to_v1(to));
+        CHECK(to == from);
+        CHECK(to != v1{});
+    }
+
+    SECTION("to_v1") {
+        v_noabi from{arr.data(), arr.size()};
+        v1 const to{from};
+
+        CHECK(to == from_v1(to));
+        CHECK(to == from);
+        CHECK(to != v_noabi{});
+    }
+}
+
 } // namespace

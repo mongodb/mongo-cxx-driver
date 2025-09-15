@@ -12,39 +12,39 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <cstring>
-#include <tuple>
-
 #include <bsoncxx/array/view.hpp>
+
+//
+
+#include <bsoncxx/v1/array/view.hpp>
+
+#include <bsoncxx/v1/element/view.hh>
+
 #include <bsoncxx/types.hpp>
 #include <bsoncxx/types/bson_value/view.hpp>
 
 #include <bsoncxx/private/bson.hh>
 #include <bsoncxx/private/itoa.hh>
+#include <bsoncxx/private/type_traits.hh>
 
 namespace bsoncxx {
 namespace v_noabi {
 namespace array {
 
+static_assert(is_explicitly_convertible<view&&, v1::array::view>::value, "v_noabi -> v1 must be explicit");
+static_assert(is_explicitly_convertible<view const&, v1::array::view>::value, "v_noabi -> v1 must be explicit");
+static_assert(is_implicitly_convertible<v1::array::view&&, view>::value, "v1 -> v_noabi must be implicit");
+static_assert(is_implicitly_convertible<v1::array::view const&, view>::value, "v1 -> v_noabi must be implicit");
+
 namespace {
-bson_iter_t to_bson_iter_t(element e) {
+
+bson_iter_t to_bson_iter_t(v_noabi::array::element e) {
     bson_iter_t iter{};
-    bson_iter_init_from_data_at_offset(&iter, e.raw(), e.length(), e.offset(), e.keylen());
+    (void)bson_iter_init_from_data_at_offset(&iter, e.raw(), e.length(), e.offset(), e.keylen());
     return iter;
 }
+
 } // namespace
-
-view::const_iterator::const_iterator() {}
-
-view::const_iterator::const_iterator(element const& element) : _element(element) {}
-
-view::const_iterator::reference view::const_iterator::operator*() {
-    return _element;
-}
-
-view::const_iterator::pointer view::const_iterator::operator->() {
-    return &_element;
-}
 
 view::const_iterator& view::const_iterator::operator++() {
     if (!_element) {
@@ -58,107 +58,50 @@ view::const_iterator& view::const_iterator::operator++() {
     bson_iter_t iter = to_bson_iter_t(_element);
 
     if (!bson_iter_next(&iter)) {
-        _element = element{};
+        _element = {};
     } else {
-        _element = element{raw, len, bson_iter_offset(&iter), bson_iter_key_len(&iter)};
+        _element = v1::element::view::internal::make(raw, len, bson_iter_offset(&iter), bson_iter_key_len(&iter));
     }
 
     return *this;
 }
 
-view::const_iterator view::const_iterator::operator++(int) {
-    const_iterator before(*this);
-    operator++();
-    return before;
-}
-
-bool operator==(view::const_iterator const& lhs, view::const_iterator const& rhs) {
-    return std::forward_as_tuple(lhs._element.raw(), lhs._element.offset()) ==
-           std::forward_as_tuple(rhs._element.raw(), rhs._element.offset());
-}
-
-bool operator!=(view::const_iterator const& lhs, view::const_iterator const& rhs) {
-    return !(lhs == rhs);
-}
-
 view::const_iterator view::cbegin() const {
     bson_iter_t iter;
 
-    if (!bson_iter_init_from_data(&iter, data(), length())) {
-        return cend();
+    if (!bson_iter_init_from_data(&iter, this->data(), this->length())) {
+        return this->cend();
     }
 
     if (!bson_iter_next(&iter)) {
-        return cend();
+        return this->cend();
     }
 
-    return const_iterator{
-        element{data(), static_cast<uint32_t>(length()), bson_iter_offset(&iter), bson_iter_key_len(&iter)}};
-}
-
-view::const_iterator view::cend() const {
-    return const_iterator{};
-}
-
-view::const_iterator view::begin() const {
-    return cbegin();
-}
-
-view::const_iterator view::end() const {
-    return cend();
+    return const_iterator{v1::element::view::internal::make(
+        this->data(), static_cast<std::uint32_t>(this->length()), bson_iter_offset(&iter), bson_iter_key_len(&iter))};
 }
 
 view::const_iterator view::find(std::uint32_t i) const {
-    itoa key(i);
+    itoa key{i};
 
-    bson_t b;
+    bson_t bson;
+
+    if (!bson_init_static(&bson, this->data(), this->length())) {
+        return this->cend();
+    }
+
     bson_iter_t iter;
 
-    if (!bson_init_static(&b, data(), length())) {
-        return const_iterator();
+    if (!bson_iter_init(&iter, &bson)) {
+        return this->cend();
     }
 
-    if (!bson_iter_init(&iter, &b)) {
-        return const_iterator();
+    if (!bson_iter_init_find(&iter, &bson, key.c_str())) {
+        return this->cend();
     }
 
-    if (!bson_iter_init_find(&iter, &b, key.c_str())) {
-        return const_iterator();
-    }
-
-    return const_iterator(
-        element(data(), static_cast<uint32_t>(length()), bson_iter_offset(&iter), bson_iter_key_len(&iter)));
-}
-
-element view::operator[](std::uint32_t i) const {
-    return *(this->find(i));
-}
-
-view::view(std::uint8_t const* data, std::size_t length) : _view(data, length) {}
-
-view::view() : _view() {}
-
-std::uint8_t const* view::data() const {
-    return _view.data();
-}
-std::size_t view::length() const {
-    return _view.length();
-}
-
-bool view::empty() const {
-    return _view.empty();
-}
-
-view::operator document::view() const {
-    return _view;
-}
-
-bool operator==(view lhs, view rhs) {
-    return (lhs.length() == rhs.length()) && (std::memcmp(lhs.data(), rhs.data(), lhs.length()) == 0);
-}
-
-bool operator!=(view lhs, view rhs) {
-    return !(lhs == rhs);
+    return const_iterator{v1::element::view::internal::make(
+        this->data(), static_cast<std::uint32_t>(this->length()), bson_iter_offset(&iter), bson_iter_key_len(&iter))};
 }
 
 } // namespace array

@@ -18,9 +18,7 @@
 
 //
 
-#ifndef _WIN32
-#include <sys/param.h> // Endian detection
-#endif
+#include <bsoncxx/v1/detail/bit.hpp>
 
 #include <cstdint>
 #include <cstring>
@@ -36,43 +34,19 @@ namespace elements {
 
 /// @brief A 32-bit float value in packed little-endian format
 class float32 {
+    template <bsoncxx::detail::endian = bsoncxx::detail::endian::native>
+    void construct(float value);
+
+    template <bsoncxx::detail::endian = bsoncxx::detail::endian::native>
+    float convert() const;
+
    public:
     /// @brief Construct a packed little-endian value from a float input in the local byte order.
     /// @param value Floating point value to convert
-    float32(float value) noexcept {
-#if defined(_WIN32) ||                                                                                              \
-    (defined(__BYTE_ORDER__) && defined(__ORDER_LITTLE_ENDIAN__) && (__BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__)) || \
-    defined(__BYTE_ORDER) && defined(__LITTLE_ENDIAN) && (__BYTE_ORDER == __LITTLE_ENDIAN)
-        std::memcpy(bytes, &value, sizeof value);
-#elif (defined(__BYTE_ORDER__) && defined(__ORDER_BIG_ENDIAN__) && (__BYTE_ORDER__ == __ORDER_BIG_ENDIAN__)) || \
-    defined(__BYTE_ORDER) && defined(__BIG_ENDIAN) && (__BYTE_ORDER == __BIG_ENDIAN)
-        std::uint32_t u32;
-        std::memcpy(&u32, &value, sizeof value);
-        u32 = __builtin_bswap32(u32);
-        std::memcpy(bytes, &u32, sizeof value);
-#else
-#error No implementation for storing 32-bit little endian unaligned float
-#endif
-    }
+    float32(float value) noexcept;
 
     /// Convert a packed little-endian floating point value back to the local byte order.
-    operator float() const noexcept {
-        float value;
-#if defined(_WIN32) ||                                                                                              \
-    (defined(__BYTE_ORDER__) && defined(__ORDER_LITTLE_ENDIAN__) && (__BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__)) || \
-    defined(__BYTE_ORDER) && defined(__LITTLE_ENDIAN) && (__BYTE_ORDER == __LITTLE_ENDIAN)
-        std::memcpy(&value, bytes, sizeof value);
-#elif (defined(__BYTE_ORDER__) && defined(__ORDER_BIG_ENDIAN__) && (__BYTE_ORDER__ == __ORDER_BIG_ENDIAN__)) || \
-    defined(__BYTE_ORDER) && defined(__BIG_ENDIAN) && (__BYTE_ORDER == __BIG_ENDIAN)
-        std::uint32_t u32;
-        std::memcpy(&u32, bytes, sizeof value);
-        u32 = __builtin_bswap32(u32);
-        std::memcpy(&value, &u32, sizeof value);
-#else
-#error No implementation for loading 32-bit little endian unaligned float
-#endif
-        return value;
-    }
+    operator float() const noexcept;
 
     /// Operator +=, emulating normal float behavior
     float32& operator+=(float const& other) noexcept {
@@ -97,6 +71,46 @@ class float32 {
    private:
     std::uint8_t bytes[4];
 };
+
+template <>
+inline void float32::construct<bsoncxx::detail::endian::little>(float value) {
+    std::memcpy(bytes, &value, sizeof value);
+}
+
+template <>
+inline void float32::construct<bsoncxx::detail::endian::big>(float value) {
+    auto const ptr = reinterpret_cast<unsigned char const*>(&value);
+    bytes[0] = ptr[3];
+    bytes[1] = ptr[2];
+    bytes[2] = ptr[1];
+    bytes[3] = ptr[0];
+}
+
+template <>
+inline float float32::convert<bsoncxx::detail::endian::little>() const {
+    float value;
+    std::memcpy(&value, bytes, sizeof value);
+    return value;
+}
+
+template <>
+inline float float32::convert<bsoncxx::detail::endian::big>() const {
+    float value;
+    auto const ptr = reinterpret_cast<unsigned char*>(&value);
+    ptr[0] = bytes[3];
+    ptr[1] = bytes[2];
+    ptr[2] = bytes[1];
+    ptr[3] = bytes[0];
+    return value;
+}
+
+inline float32::float32(float value) noexcept {
+    this->construct(value);
+}
+
+inline float32::operator float() const noexcept {
+    return this->convert();
+}
 
 /// @brief Reference to a single element in a packed_bit vector.
 /// @tparam Iterator Underlying byte iterator type, optionally const.

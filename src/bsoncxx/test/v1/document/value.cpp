@@ -16,8 +16,6 @@
 
 //
 
-#include <bsoncxx/v1/detail/type_traits.hpp>
-
 #include <bsoncxx/test/v1/document/view.hh>
 #include <bsoncxx/test/v1/types/view.hh>
 
@@ -26,6 +24,8 @@
 #include <functional>
 #include <sstream>
 #include <utility>
+
+#include <bsoncxx/private/type_traits.hh>
 
 #include <bsoncxx/test/catch.hh>
 #include <bsoncxx/test/stringify.hh>
@@ -723,7 +723,7 @@ static_assert(
     !bsoncxx::detail::is_detected<get_ns_expr, value, Q>::value,
     "Q does not have a valid from_bson() overload");
 
-static_assert(!std::is_convertible<S, value>::value, "to_bson() ctor must be explicit");
+static_assert(bsoncxx::is_explicitly_convertible<S, value>::value, "to_bson() ctor must be explicit");
 static_assert(std::is_constructible<value, S>::value, "S::to_bson() must be found via ADL");
 static_assert(std::is_assignable<value, S>::value, "S::to_bson() must be found via ADL");
 

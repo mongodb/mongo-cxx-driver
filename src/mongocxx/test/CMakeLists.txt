@@ -34,6 +34,7 @@ endif()
 set(mongocxx_test_sources_private
     private/numeric_casting.cpp
     private/scoped_bson_t.cpp
+    private/scoped_bson_value.cpp
     private/write_concern.cpp
     private/mongoc_version.cpp
 )

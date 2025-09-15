@@ -20,13 +20,15 @@
 
 #include <bsoncxx/test/v1/element/view.hh> // StringMaker<bsoncxx::v1::element::view>
 
+#include <bsoncxx/private/export.hh>
+
 #include <bsoncxx/test/stringify.hh>
 
 #include <catch2/catch_tostring.hpp>
 
 template <>
 struct Catch::StringMaker<bsoncxx::v1::document::view> {
-    static std::string convert(bsoncxx::v1::document::view const& value);
+    static std::string BSONCXX_ABI_CDECL convert(bsoncxx::v1::document::view const& value);
 };
 
 template <>
