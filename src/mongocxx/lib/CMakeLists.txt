@@ -121,11 +121,84 @@ set(mongocxx_sources_v_noabi
 )
 
 set(mongocxx_sources_v1
+    mongocxx/v1/aggregate_options.cpp
+    mongocxx/v1/apm.cpp
+    mongocxx/v1/auto_encryption.cpp
+    mongocxx/v1/bulk_write.cpp
+    mongocxx/v1/change_stream.cpp
+    mongocxx/v1/client_encryption.cpp
+    mongocxx/v1/client_session.cpp
+    mongocxx/v1/client.cpp
+    mongocxx/v1/collection.cpp
     mongocxx/v1/config/config.cpp
     mongocxx/v1/config/export.cpp
     mongocxx/v1/config/version.cpp
+    mongocxx/v1/count_options.cpp
+    mongocxx/v1/cursor.cpp
+    mongocxx/v1/data_key.cpp
+    mongocxx/v1/database.cpp
+    mongocxx/v1/delete_many_options.cpp
+    mongocxx/v1/delete_many_result.cpp
+    mongocxx/v1/delete_one_options.cpp
+    mongocxx/v1/delete_one_result.cpp
     mongocxx/v1/detail/postlude.cpp
     mongocxx/v1/detail/prelude.cpp
+    mongocxx/v1/distinct_options.cpp
+    mongocxx/v1/encrypt.cpp
+    mongocxx/v1/estimated_document_count_options.cpp
+    mongocxx/v1/events/command_failed.cpp
+    mongocxx/v1/events/command_started.cpp
+    mongocxx/v1/events/command_succeeded.cpp
+    mongocxx/v1/events/server_closed.cpp
+    mongocxx/v1/events/server_description_changed.cpp
+    mongocxx/v1/events/server_description.cpp
+    mongocxx/v1/events/server_heartbeat_failed.cpp
+    mongocxx/v1/events/server_heartbeat_started.cpp
+    mongocxx/v1/events/server_heartbeat_succeeded.cpp
+    mongocxx/v1/events/server_opening.cpp
+    mongocxx/v1/events/topology_closed.cpp
+    mongocxx/v1/events/topology_description_changed.cpp
+    mongocxx/v1/events/topology_description.cpp
+    mongocxx/v1/events/topology_opening.cpp
+    mongocxx/v1/exception.cpp
+    mongocxx/v1/find_one_and_delete_options.cpp
+    mongocxx/v1/find_one_and_replace_options.cpp
+    mongocxx/v1/find_one_and_update_options.cpp
+    mongocxx/v1/find_options.cpp
+    mongocxx/v1/gridfs/bucket.cpp
+    mongocxx/v1/gridfs/downloader.cpp
+    mongocxx/v1/gridfs/upload_options.cpp
+    mongocxx/v1/gridfs/upload_result.cpp
+    mongocxx/v1/gridfs/uploader.cpp
+    mongocxx/v1/hint.cpp
+    mongocxx/v1/indexes.cpp
+    mongocxx/v1/insert_many_options.cpp
+    mongocxx/v1/insert_many_result.cpp
+    mongocxx/v1/insert_one_options.cpp
+    mongocxx/v1/insert_one_result.cpp
+    mongocxx/v1/instance.cpp
+    mongocxx/v1/logger.cpp
+    mongocxx/v1/pipeline.cpp
+    mongocxx/v1/pool.cpp
+    mongocxx/v1/range.cpp
+    mongocxx/v1/read_concern.cpp
+    mongocxx/v1/read_preference.cpp
+    mongocxx/v1/replace_one_options.cpp
+    mongocxx/v1/replace_one_result.cpp
+    mongocxx/v1/return_document.cpp
+    mongocxx/v1/rewrap_many_datakey_options.cpp
+    mongocxx/v1/rewrap_many_datakey_result.cpp
+    mongocxx/v1/search_indexes.cpp
+    mongocxx/v1/server_error.cpp
+    mongocxx/v1/stable_api.cpp
+    mongocxx/v1/tls.cpp
+    mongocxx/v1/transaction.cpp
+    mongocxx/v1/update_many_options.cpp
+    mongocxx/v1/update_many_result.cpp
+    mongocxx/v1/update_one_options.cpp
+    mongocxx/v1/update_one_result.cpp
+    mongocxx/v1/uri.cpp
+    mongocxx/v1/write_concern.cpp
 )
 
 list(APPEND mongocxx_sources
