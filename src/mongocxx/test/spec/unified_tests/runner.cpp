@@ -271,8 +271,7 @@ bool compatible_with_server(bsoncxx::array::element const& requirement) {
         return equals_server_topology(topologies);
 
     if (auto const server_params = requirement["serverParameters"]) {
-        document::value actual = make_document();
-        actual = test_util::get_server_params();
+        document::value const actual = test_util::get_server_params();
 
         for (auto const& kvp : server_params.get_document().view()) {
             auto const param = kvp.key();
