@@ -126,16 +126,6 @@ bool check_if_skip_spec_test_impl(document::view test, std::string& reason) {
         return true;
     }
 
-    {
-        auto const run_mongohouse_tests = std::getenv("RUN_MONGOHOUSE_TESTS");
-
-        if (run_mongohouse_tests && std::string(run_mongohouse_tests) == "ON") {
-            // mongohoused does not return `version` field in response to serverStatus.
-            // Exit early to run the test.
-            return false;
-        }
-    }
-
     auto const server_version = test_util::get_server_version();
 
     auto const topology = test_util::get_topology();
