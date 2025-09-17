@@ -53,6 +53,8 @@ namespace bson_value {
 ///
 /// A non-owning variant that can contain any BSON type.
 ///
+/// @deprecated Use @ref bsoncxx::v_noabi::types::view instead (renamed).
+///
 /// @warning
 ///   Calling the wrong get_<type> method will cause an exception
 ///   to be thrown.
@@ -128,7 +130,18 @@ class view {
     ///
     /// Returns the type of the underlying BSON value stored in this object.
     ///
+    /// @deprecated Use @ref type_id() const instead (renamed).
+    ///
     v_noabi::type type() const {
+        return _id;
+    }
+
+    ///
+    /// Equivalent to @ref type() const.
+    ///
+    /// To support incremental migration to @ref bsoncxx::v1::types::view.
+    ///
+    v_noabi::type type_id() const {
         return _id;
     }
 
@@ -239,6 +252,8 @@ using v_noabi::types::bson_value::operator!=;
 ///
 /// @file
 /// Provides @ref bsoncxx::v_noabi::types::bson_value::view.
+///
+/// @deprecated Use @ref bsoncxx/types/view.hpp instead (renamed).
 ///
 /// @par Includes
 /// - @ref bsoncxx/v1/types/view.hpp
