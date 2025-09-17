@@ -123,6 +123,13 @@ class oid {
     }
 
     ///
+    /// Equivalent to [`bson_oid_compare`](https://mongoc.org/libbson/current/bson_oid_compare.html).
+    ///
+    int compare(oid const& other) const {
+        return _oid.compare(other._oid);
+    }
+
+    ///
     /// @relates bsoncxx::v_noabi::oid
     ///
     /// Relational comparison operator.

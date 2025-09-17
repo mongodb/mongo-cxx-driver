@@ -49,6 +49,8 @@ namespace bson_value {
 /// For accessors into this type and to extract the various BSON types out,
 /// please use bson_value::view.
 ///
+/// @deprecated Use @ref bsoncxx::v_noabi::types::value instead (renamed).
+///
 /// @see
 /// - @ref bsoncxx::v_noabi::types::bson_value::view
 ///
@@ -298,6 +300,24 @@ class value {
     }
 
     ///
+    /// Returns the type of the underlying BSON value stored in this object.
+    ///
+    /// @deprecated Use @ref type_id() const instead (renamed).
+    ///
+    v_noabi::type type() const {
+        return this->view().type();
+    }
+
+    ///
+    /// Equivalent to @ref type() const.
+    ///
+    /// To support incremental migration to @ref bsoncxx::v1::types::view.
+    ///
+    v_noabi::type type_id() const {
+        return this->view().type_id();
+    }
+
+    ///
     /// Get a view over the bson_value owned by this object.
     ///
     v_noabi::types::bson_value::view view() const noexcept {
@@ -310,6 +330,25 @@ class value {
     /* explicit(false) */ operator v_noabi::types::bson_value::view() const noexcept {
         return _value.view();
     }
+
+#pragma push_macro("X")
+#undef X
+#define X(_name, _value)                                   \
+    v_noabi::types::b_##_name const& get_##_name() const { \
+        return this->view().get_##_name();                 \
+    }
+
+    ///
+    /// Return the underlying BSON type value.
+    ///
+    /// @warning
+    ///   Calling the wrong get_<type> method will cause an exception to be thrown.
+    ///
+    /// @{
+    BSONCXX_V1_TYPES_XMACRO(X)
+    /// @}
+    ///
+#pragma pop_macro("X")
 };
 
 ///
@@ -399,6 +438,8 @@ using v_noabi::types::bson_value::operator!=;
 ///
 /// @file
 /// Provides @ref bsoncxx::v_noabi::types::bson_value::value.
+///
+/// @deprecated Use @ref bsoncxx/types/value.hpp instead (renamed).
 ///
 /// @par Includes
 /// - @ref bsoncxx/v1/types/value.hpp

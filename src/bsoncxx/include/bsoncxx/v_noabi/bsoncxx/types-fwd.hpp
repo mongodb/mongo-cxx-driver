@@ -33,6 +33,20 @@ namespace bsoncxx {
 namespace v_noabi {
 namespace types {
 
+///
+/// Equivalent to @ref bsoncxx::v_noabi::type.
+///
+/// To support incremental migration to @ref bsoncxx::v1::types::id.
+///
+using id = v_noabi::type;
+
+///
+/// Equivalent to @ref bsoncxx::v_noabi::binary_sub_type.
+///
+/// To support incremental migration to @ref bsoncxx::v1::types::binary_subtype.
+///
+using binary_subtype = v_noabi::binary_sub_type;
+
 struct b_double;
 struct b_string;
 struct b_document;
@@ -69,6 +83,9 @@ using v_noabi::type;
 namespace bsoncxx {
 namespace types {
 
+using v_noabi::types::binary_subtype;
+using v_noabi::types::id;
+
 using v_noabi::types::b_array;
 using v_noabi::types::b_binary;
 using v_noabi::types::b_bool;
@@ -99,6 +116,8 @@ using v_noabi::types::b_undefined;
 ///
 /// @file
 /// Declares entities used to represent BSON types.
+///
+/// @deprecated Use @ref bsoncxx/types/id-fwd.hpp or @ref bsoncxx/types/view-fwd.hpp instead.
 ///
 /// @par Includes
 /// - @ref bsoncxx/v1/types/view-fwd.hpp

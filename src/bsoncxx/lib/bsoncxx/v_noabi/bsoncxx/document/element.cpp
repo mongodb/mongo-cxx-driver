@@ -94,6 +94,14 @@ v_noabi::types::bson_value::value element::get_owning_value() const {
     return {std::move(*value_opt)};
 }
 
+v_noabi::types::bson_value::view element::type_view() const {
+    return this->get_value();
+}
+
+v_noabi::types::bson_value::value element::type_value() const {
+    return this->get_owning_value();
+}
+
 element element::operator[](stdx::string_view key) const try { return _view[key]; } catch (v1::exception const&) {
     // For backward compatibility, convert any exceptions into an invalid element.
     return {};

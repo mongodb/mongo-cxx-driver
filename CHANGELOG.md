@@ -9,6 +9,16 @@ Changes prior to 3.9.0 are documented as [release notes on GitHub](https://githu
 
 ## 4.2.0 [Unreleased]
 
+### Added
+
+* To support incremental migration, the following entities are defined as equivalent to their renamed counterparts.
+  - `bsoncxx::types::id`: equivalent to `bsoncxx::type`.
+  - `bsoncxx::types::binary_subtype`: equivalent to `bsoncxx::binary_sub_type`.
+  - `bsoncxx::types::view`: equivalent to `bsoncxx::types::bson_value::view`.
+  - `bsoncxx::types::value`: equivalent to `bsoncxx::types::bson_value::value`.
+  - `type_view()` in `bsoncxx::document::element` and `bsoncxx::array::element`: equivalent to `get_value()`.
+  - `type_value()` in `bsoncxx::document::element` and `bsoncxx::document::element`: equivalent to `get_owning_value()`.
+
 ### Fixed
 
 - CMake option `ENABLE_TESTS` (`OFF` by default) is no longer overwritten by the auto-downloaded C Driver (`ON` by default) during CMake configuration.
@@ -46,6 +56,13 @@ Changes prior to 3.9.0 are documented as [release notes on GitHub](https://githu
       return instance;
     }
     ```
+- These following entities will be renamed (and removed) in an upcoming major release. To support incremental migration, both old and new names are still provided.
+  - `bsoncxx::type` -> `bsoncxx::types::id`.
+  - `bsoncxx::binary_sub_type` -> `bsoncxx::types::binary_subtype`.
+  - `bsoncxx::types::bson_value::view` -> `bsoncxx::types::view`
+  - `bsoncxx::types::bson_value::value` -> `bsoncxx::types::value`
+  - `get_value()` -> `type_view()` in `bsoncxx::document::element` and `bsoncxx::array::element`.
+  - `get_owning_value()` -> `type_value()` in `bsoncxx::document::element` and `bsoncxx::document::element`.
 
 ### Removed
 
@@ -68,7 +85,6 @@ Changes prior to 3.9.0 are documented as [release notes on GitHub](https://githu
 - CMake option `ENABLE_TESTS` (`OFF` by default) is no longer overwritten by the auto-downloaded C Driver (`ON` by default) during CMake configuration.
 - Static pkg-config files are updated to depend on the static (not shared) libbson / libmongoc packages.
 - Fix build if macros `GCC`/`GNU`/`Clang`/`MSVC` are already defined.
-
 
 ## 4.1.0
 
