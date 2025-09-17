@@ -155,6 +155,8 @@ class element {
     /// Getter for a types::bson_value::view variant wrapper of the value portion of the
     /// element.
     ///
+    /// @deprecated Use @ref type_view() const instead (renamed).
+    ///
     /// @return the element's value.
     ///
     BSONCXX_ABI_EXPORT_CDECL(v_noabi::types::bson_value::view) get_value() const;
@@ -163,9 +165,25 @@ class element {
     /// Getter for a types::bson_value::value variant wrapper of the value portion of
     /// the element. The returned object will make a copy of the buffer from this object.
     ///
+    /// @deprecated Use @ref type_value() const instead (renamed).
+    ///
     /// @return an owning version of the element's value.
     ///
     BSONCXX_ABI_EXPORT_CDECL(v_noabi::types::bson_value::value) get_owning_value() const;
+
+    ///
+    /// Equivalent to @ref get_value() const.
+    ///
+    /// To support incremental migration to @ref bsoncxx::v1::element::view::type_view() const.
+    ///
+    BSONCXX_ABI_EXPORT_CDECL(v_noabi::types::bson_value::view) type_view() const;
+
+    ///
+    /// Equivalent to @ref get_owning_value() const.
+    ///
+    /// To support incremental migration to @ref bsoncxx::v1::element::view::type_value() const.
+    ///
+    BSONCXX_ABI_EXPORT_CDECL(v_noabi::types::bson_value::value) type_value() const;
 
     ///
     /// If this element is a document, finds the first element of the document

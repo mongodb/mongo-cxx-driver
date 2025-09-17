@@ -95,6 +95,8 @@
 /// @dir bsoncxx/v_noabi/bsoncxx/types/bson_value
 /// Provides headers declaring entities in @ref bsoncxx::v_noabi::types::bson_value.
 ///
+/// @deprecated Use @ref bsoncxx/types/view.hpp or @ref bsoncxx/types/value.hpp instead.
+///
 
 ///
 /// @dir bsoncxx/v_noabi/bsoncxx/vector
@@ -152,6 +154,8 @@
 ///
 /// @namespace bsoncxx::v_noabi::types::bson_value
 /// Declares entities representing any BSON value type.
+///
+/// @deprecated Use @ref bsoncxx::v_noabi::types instead (renamed).
 ///
 
 ///

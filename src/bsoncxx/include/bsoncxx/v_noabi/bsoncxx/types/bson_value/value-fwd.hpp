@@ -27,7 +27,12 @@ class value;
 
 } // namespace bson_value
 
-using bson_value::value;
+///
+/// Equivalent to @ref bsoncxx::v_noabi::types::bson_value::value.
+///
+/// To support incremental migration to @ref bsoncxx::v1::types::value.
+///
+using value = bson_value::value;
 
 } // namespace types
 } // namespace v_noabi
@@ -41,7 +46,7 @@ using v_noabi::types::bson_value::value;
 
 } // namespace bson_value
 
-using bson_value::value;
+using v_noabi::types::value;
 
 } // namespace types
 } // namespace bsoncxx
@@ -51,6 +56,8 @@ using bson_value::value;
 ///
 /// @file
 /// Declares @ref bsoncxx::v_noabi::types::bson_value::value.
+///
+/// @deprecated Use @ref bsoncxx/types/value-fwd.hpp instead (renamed).
 ///
 /// @par Includes
 /// - @ref bsoncxx/v1/types/value-fwd.hpp
