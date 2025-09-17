@@ -311,7 +311,7 @@ class value {
     ///
     /// Equivalent to @ref type() const.
     ///
-    /// To support incremental migration to @ref bsoncxx::v1::types::view.
+    /// To support incremental migration to @ref bsoncxx::v1::types::value.
     ///
     v_noabi::type type_id() const {
         return this->view().type_id();

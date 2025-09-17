@@ -17,7 +17,7 @@ Changes prior to 3.9.0 are documented as [release notes on GitHub](https://githu
   - `bsoncxx::types::view`: equivalent to `bsoncxx::types::bson_value::view`.
   - `bsoncxx::types::value`: equivalent to `bsoncxx::types::bson_value::value`.
   - `type_view()` in `bsoncxx::document::element` and `bsoncxx::array::element`: equivalent to `get_value()`.
-  - `type_value()` in `bsoncxx::document::element` and `bsoncxx::document::element`: equivalent to `get_owning_value()`.
+  - `type_value()` in `bsoncxx::document::element` and `bsoncxx::array::element`: equivalent to `get_owning_value()`.
 
 ### Fixed
 
@@ -62,7 +62,7 @@ Changes prior to 3.9.0 are documented as [release notes on GitHub](https://githu
   - `bsoncxx::types::bson_value::view` -> `bsoncxx::types::view`
   - `bsoncxx::types::bson_value::value` -> `bsoncxx::types::value`
   - `get_value()` -> `type_view()` in `bsoncxx::document::element` and `bsoncxx::array::element`.
-  - `get_owning_value()` -> `type_value()` in `bsoncxx::document::element` and `bsoncxx::document::element`.
+  - `get_owning_value()` -> `type_value()` in `bsoncxx::document::element` and `bsoncxx::array::element`.
 
 ### Removed
 
