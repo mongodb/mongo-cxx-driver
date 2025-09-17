@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include <bsoncxx/v1/types-fwd.hpp>
+#include <bsoncxx/types-fwd.hpp>
 
 ///
 /// @file
