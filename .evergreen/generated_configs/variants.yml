@@ -68,10 +68,6 @@ buildvariants:
     display_name: macro-guards-matrix
     tasks:
       - name: .macro-guards
-  - name: mongohouse
-    display_name: Mongohouse
-    tasks:
-      - name: .mongohouse
   - name: packaging
     display_name: Linux Distro Packaging
     tasks:

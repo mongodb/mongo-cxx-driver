@@ -14519,20 +14519,6 @@ tasks:
           BSONCXX_POLYFILL: impls
           CXX_STANDARD: 17
       - func: upload scan artifacts
-  - name: test_mongohouse
-    run_on: ubuntu2204-large
-    tags: [mongohouse, ubuntu2204]
-    commands:
-      - func: setup
-      - func: fetch_c_driver_source
-      - func: install-uv
-      - func: compile
-        vars:
-          ENABLE_TESTS: "ON"
-          build_type: Release
-      - func: build_mongohouse
-      - func: run_mongohouse
-      - func: test_mongohouse
   - name: uninstall-check-macos-14-arm64-clang-debug-shared
     run_on: macos-14-arm64
     tags: [uninstall-check, macos-14-arm64, clang, debug, shared]
