@@ -256,7 +256,7 @@ class value {
     /// @throws bsoncxx::v_noabi::exception if the type's value is not k_maxkey, k_minkey, or
     /// k_undefined.
     ///
-    /* explicit(false) */ BSONCXX_ABI_EXPORT_CDECL() value(type const id);
+    /* explicit(false) */ BSONCXX_ABI_EXPORT_CDECL() value(v_noabi::type const id);
 
     ///
     /// Constructs one of the following BSON values (each specified by the parenthesized type):
