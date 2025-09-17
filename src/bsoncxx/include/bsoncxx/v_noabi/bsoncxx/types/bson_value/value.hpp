@@ -299,14 +299,14 @@ class value {
         return _value;
     }
 
-    ///
-    /// Returns the type of the underlying BSON value stored in this object.
-    ///
-    /// @deprecated Use @ref type_id() const instead (renamed).
-    ///
-    v_noabi::type type() const {
-        return this->view().type();
-    }
+    // Cannot declare this member function due to GCC compatibility (-fpermissive):
+    //    error: declaration of 'bsoncxx::v_noabi::type bsoncxx::v_noabi::types::bson_value::value::type() const'
+    //    error: changes meaning of 'type' from 'enum class bsoncxx::v_noabi::type'
+    // Unclear why this does not seem to be a problem for `v_noabi::types::view::type() const`.
+    //
+    // v_noabi::type type() const {
+    //     return this->view().type();
+    // }
 
     ///
     /// Equivalent to @ref type() const.
