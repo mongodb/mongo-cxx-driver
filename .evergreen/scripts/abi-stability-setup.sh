@@ -6,7 +6,6 @@ set -o pipefail
 : "${cxx_standard:?}"
 : "${distro_id:?}"
 : "${polyfill:?}"
-: "${UV_INSTALL_DIR:?}"
 
 command -V git >/dev/null
 

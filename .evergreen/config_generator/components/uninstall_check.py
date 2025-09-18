@@ -6,7 +6,6 @@ from shrub.v3.evg_task import EvgTask, EvgTaskRef
 
 from config_generator.components.funcs.compile import Compile
 from config_generator.components.funcs.fetch_c_driver_source import FetchCDriverSource
-from config_generator.components.funcs.install_uv import InstallUV
 from config_generator.components.funcs.setup import Setup
 from config_generator.etc.distros import find_large_distro, make_distro_str
 from config_generator.etc.function import Function
@@ -34,8 +33,6 @@ class UninstallCheck(Function):
         script="""\
             set -o errexit
             set -o pipefail
-
-            PATH="${UV_INSTALL_DIR}:$PATH"
 
             # lib vs. lib64 (i.e. RHEL).
             if [[ "${distro_id}" == rhel* ]]; then
@@ -85,7 +82,6 @@ def tasks():
                     commands=[
                         Setup.call(),
                         FetchCDriverSource.call(),
-                        InstallUV.call(),
                         Compile.call(
                             build_type=build_type,
                             compiler=compiler,
