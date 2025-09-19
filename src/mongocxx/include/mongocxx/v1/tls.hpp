@@ -27,7 +27,7 @@ namespace v1 {
 /// Options related to TLS configuration.
 ///
 /// @see
-/// - [`tls` (database command) (MongoDB Manual)](https://www.mongodb.com/docs/manual/reference/command/tls/)
+/// - [TLS/SSL (Transport Encryption) (MongoDB Manual)](https://www.mongodb.com/docs/manual/core/security-transport-encryption/)
 ///
 class tls {};
 
