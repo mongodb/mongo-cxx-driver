@@ -1,0 +1,73 @@
+// Copyright 2009-present MongoDB, Inc.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+#pragma once
+
+#include <mongocxx/v1/indexes-fwd.hpp>
+
+//
+
+#include <mongocxx/v1/detail/prelude.hpp>
+
+namespace mongocxx {
+namespace v1 {
+
+///
+/// Support for MongoDB indexes.
+///
+/// @note Not to be confused with Atlas Search indexes or Atlas Vector Search indexes.
+///
+/// @see
+/// - [Indexes (MongoDB Manual)](https://www.mongodb.com/docs/manual/indexes/)
+///
+/// @attention This feature is experimental! It is not ready for use!
+///
+class indexes {
+    // This class implements `IndexView` ("Index View API"):
+    //  - https://specifications.readthedocs.io/en/latest/index-management/index-management/
+
+   public:
+    ///
+    /// A description of a MongoDB index.
+    ///
+    /// @see
+    /// - [Indexes (MongoDB Manual)](https://www.mongodb.com/docs/manual/indexes/)
+    ///
+    /// @attention This feature is experimental! It is not ready for use!
+    ///
+    class model {
+        // This class implements `IndexModel` ("Index View API"):
+        //  - https://specifications.readthedocs.io/en/latest/index-management/index-management/
+    };
+
+    ///
+    /// Options for @ref mongocxx::v1::indexes.
+    ///
+    /// @attention This feature is experimental! It is not ready for use!
+    ///
+    class options {
+        // This class implements `IndexOptions` ("Index View API"):
+        //  - https://specifications.readthedocs.io/en/latest/index-management/index-management/
+    };
+};
+
+} // namespace v1
+} // namespace mongocxx
+
+#include <mongocxx/v1/detail/postlude.hpp>
+
+///
+/// @file
+/// Provides @ref mongocxx::v1::indexes.
+///
