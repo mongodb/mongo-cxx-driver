@@ -28,8 +28,8 @@ namespace v1 {
 ///
 /// @attention This feature is experimental! It is not ready for use!
 ///
-/// All mongocxx API **MUST** be used within the lifetime of the instance object, with special exemptions listed  below.
-/// Only **ONE** instance object may exist for the lifetime of a given process. It is undefined behavior to use  the
+/// All mongocxx API **MUST** be used within the lifetime of the instance object, with special exemptions listed below.
+/// Only **ONE** instance object may exist for the lifetime of a given process. It is undefined behavior to use the
 /// mongocxx API _before_ the instance object is initialized or _after_ the instance object is destroyed. It is
 /// undefined behavior to create more than one instance object.
 ///

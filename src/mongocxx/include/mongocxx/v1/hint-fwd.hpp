@@ -28,5 +28,5 @@ class hint;
 
 ///
 /// @file
-/// Declares @ref mongocxx::v1::read_concern.
+/// Declares @ref mongocxx::v1::hint.
 ///
