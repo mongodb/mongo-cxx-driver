@@ -27,6 +27,7 @@ namespace v1 {
 /// Options related to Application Performance Monitoring (APM) configuration.
 ///
 /// @see
+/// - [Application Performance Monitoring (mongoc)](https://mongoc.org/libmongoc/current/application-performance-monitoring.html)
 /// - [Command Logging and Monitoring (MongoDB Specifications)](https://specifications.readthedocs.io/en/latest/command-logging-and-monitoring/command-logging-and-monitoring/)
 /// - [SDAM Logging and Monitoring Specification (MongoDB Specifications)](https://specifications.readthedocs.io/en/latest/server-discovery-and-monitoring/server-discovery-and-monitoring-logging-and-monitoring/)
 ///
