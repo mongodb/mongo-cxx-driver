@@ -12,4 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <mongocxx/v1/stable_api.hpp>
+#pragma once
+
+#include <mongocxx/v1/detail/prelude.hpp>
+
+namespace mongocxx {
+namespace v1 {
+
+class server_api;
+
+} // namespace v1
+} // namespace mongocxx
+
+#include <mongocxx/v1/detail/postlude.hpp>
+
+///
+/// @file
+/// Declares @ref mongocxx::v1::server_api.
+///

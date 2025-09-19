@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include <mongocxx/v1/stable_api-fwd.hpp>
+#include <mongocxx/v1/server_api-fwd.hpp>
 
 //
 
@@ -29,7 +29,7 @@ namespace v1 {
 /// @see
 /// - [Stable API (MongoDB Manual)](https://www.mongodb.com/docs/manual/reference/stable-api/)
 ///
-class stable_api {
+class server_api {
     // This class implements `ServerApi`:
     //  - https://specifications.readthedocs.io/en/latest/versioned-api/versioned-api/
 };
@@ -41,5 +41,5 @@ class stable_api {
 
 ///
 /// @file
-/// Provides @ref mongocxx::v1::stable_api.
+/// Provides @ref mongocxx::v1::server_api.
 ///
