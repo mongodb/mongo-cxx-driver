@@ -24,7 +24,7 @@ namespace mongocxx {
 namespace v1 {
 
 ///
-/// Options related to field encryption for CSFLE and Queryable Encryption.
+/// Options related to explicit encryption for In-Use Encryption.
 ///
 /// @see
 /// - [Fields and Encryption Types (MongoDB Manual)](https://www.mongodb.com/docs/manual/core/csfle/fundamentals/encryption-algorithms/)

@@ -24,7 +24,7 @@ namespace mongocxx {
 namespace v1 {
 
 ///
-/// Options related Queryable Encryption configuration.
+/// Options related In-Use Encryption configuration.
 ///
 /// @see
 /// - [MongoClient Options for Queryable Encryption (MongoDB Manual)](https://www.mongodb.com/docs/manual/core/queryable-encryption/reference/qe-options-clients/)

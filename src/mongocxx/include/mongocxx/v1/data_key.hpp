@@ -24,7 +24,7 @@ namespace mongocxx {
 namespace v1 {
 
 ///
-/// A Data Encryption Key (DEK) for CSFLE and Queryable Encryption.
+/// A Data Encryption Key (DEK) for In-Use Encryption.
 ///
 /// @see
 /// - [Encryption Keys and Key Vaults (MongoDB Manual)](https://www.mongodb.com/docs/manual/core/queryable-encryption/fundamentals/keys-key-vaults/)
