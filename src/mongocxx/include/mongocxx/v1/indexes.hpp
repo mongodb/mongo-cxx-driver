@@ -34,6 +34,9 @@ namespace v1 {
 /// @attention This feature is experimental! It is not ready for use!
 ///
 class indexes {
+    // This class implements `IndexView` ("Index View API"):
+    //  - https://specifications.readthedocs.io/en/latest/index-management/index-management/
+
    public:
     ///
     /// A description of a MongoDB index.
@@ -43,14 +46,20 @@ class indexes {
     ///
     /// @attention This feature is experimental! It is not ready for use!
     ///
-    class model {};
+    class model {
+        // This class implements `IndexModel` ("Index View API"):
+        //  - https://specifications.readthedocs.io/en/latest/index-management/index-management/
+    };
 
     ///
     /// Options for @ref mongocxx::v1::indexes.
     ///
     /// @attention This feature is experimental! It is not ready for use!
     ///
-    class options {};
+    class options {
+        // This class implements `IndexOptions` ("Index View API"):
+        //  - https://specifications.readthedocs.io/en/latest/index-management/index-management/
+    };
 };
 
 } // namespace v1

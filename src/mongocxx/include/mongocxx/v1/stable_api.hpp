@@ -29,7 +29,10 @@ namespace v1 {
 /// @see
 /// - [Stable API (MongoDB Manual)](https://www.mongodb.com/docs/manual/reference/stable-api/)
 ///
-class stable_api {};
+class stable_api {
+    // This class implements `ServerApi`:
+    //  - https://specifications.readthedocs.io/en/latest/versioned-api/versioned-api/
+};
 
 } // namespace v1
 } // namespace mongocxx

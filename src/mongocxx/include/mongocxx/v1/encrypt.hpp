@@ -33,7 +33,10 @@ namespace v1 {
 ///
 /// @attention This feature is experimental! It is not ready for use!
 ///
-class encrypt {};
+class encrypt {
+    // This class implements `EncryptOpts`:
+    //  - https://specifications.readthedocs.io/en/latest/client-side-encryption/client-side-encryption/
+};
 
 } // namespace v1
 } // namespace mongocxx
