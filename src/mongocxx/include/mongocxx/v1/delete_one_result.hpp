@@ -24,7 +24,7 @@ namespace mongocxx {
 namespace v1 {
 
 ///
-/// The result of a "deleteOne" command.
+/// The result of a "deleteOne" operation.
 ///
 /// @see
 /// - [Delete Methods (MongoDB Manual)](https://www.mongodb.com/docs/manual/reference/delete-methods/)

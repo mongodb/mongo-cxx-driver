@@ -24,7 +24,7 @@ namespace mongocxx {
 namespace v1 {
 
 ///
-/// The result of a "rewrapManyDataKey" command.
+/// The result of a "rewrapManyDataKey" operation.
 ///
 /// @see
 /// - [Rotate and Rewrap Encryption Keys (MongoDB Manual)](https://www.mongodb.com/docs/manual/core/queryable-encryption/fundamentals/manage-keys/)

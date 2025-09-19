@@ -27,7 +27,7 @@ namespace v1 {
 /// Options for a "find" command.
 ///
 /// @see
-/// - [Query Documents (MongoDB Manual)](https://www.mongodb.com/docs/manual/tutorial/query-documents/)
+/// - [`find` (database command) (MongoDB Manual)](https://www.mongodb.com/docs/manual/reference/command/find/)
 ///
 /// @attention This feature is experimental! It is not ready for use!
 ///

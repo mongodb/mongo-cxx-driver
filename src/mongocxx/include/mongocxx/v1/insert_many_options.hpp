@@ -24,7 +24,7 @@ namespace mongocxx {
 namespace v1 {
 
 ///
-/// Options for an "insertMany" command.
+/// Options for an "insertMany" operation.
 ///
 /// @see
 /// - [Insert Methods (MongoDB Manual)](https://www.mongodb.com/docs/manual/reference/insert-methods/)

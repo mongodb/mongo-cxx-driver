@@ -24,7 +24,7 @@ namespace mongocxx {
 namespace v1 {
 
 ///
-/// Options for a "findOneAndDelete" command.
+/// Options for a "findOneAndDelete" operation.
 ///
 /// @see
 /// - [Query Documents (MongoDB Manual)](https://www.mongodb.com/docs/manual/tutorial/query-documents/)

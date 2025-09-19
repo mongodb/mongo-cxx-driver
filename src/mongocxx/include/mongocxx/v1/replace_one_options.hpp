@@ -24,7 +24,7 @@ namespace mongocxx {
 namespace v1 {
 
 ///
-/// Options for a "replaceOne" command.
+/// Options for a "replaceOne" operation.
 ///
 /// @see
 /// - [Update Methods (MongoDB Manual)](https://www.mongodb.com/docs/manual/reference/update-methods/)
