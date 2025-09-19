@@ -7,7 +7,6 @@ from shrub.v3.evg_task import EvgTask, EvgTaskRef
 from config_generator.components.funcs.compile import Compile
 from config_generator.components.funcs.fetch_det import FetchDET
 from config_generator.components.funcs.install_c_driver import InstallCDriver
-from config_generator.components.funcs.install_uv import InstallUV
 from config_generator.components.funcs.run_kms_servers import RunKMSServers
 from config_generator.components.funcs.setup import Setup
 from config_generator.components.funcs.start_mongod import StartMongod
@@ -25,8 +24,8 @@ LINUX_MATRIX = [
     ('rhel80', None, ['Debug'], ['shared', 'static'], [11, 17], [None], ['plain', 'csfle'], ['4.2', '4.4', '5.0', '6.0', '7.0', '8.0', 'latest'], ['single', 'replica', 'sharded']),
 
     # Linux ARM64 (full).
-    # Linux ARM64: 4.4+.
-    ('ubuntu2004-arm64', None, ['Debug'], ['shared', 'static'], [11, 17], [None], ['plain', 'csfle'], ['4.4', '5.0', '6.0', '7.0', '8.0', 'latest'], ['single', 'replica', 'sharded']),
+    # RHEL 8 ARM64: 4.4+.
+    ('rhel8-arm64-latest', None, ['Debug'], ['shared', 'static'], [11, 17], [None], ['plain', 'csfle'], ['4.4', '5.0', '6.0', '7.0', '8.0', 'latest'], ['single', 'replica', 'sharded']),
 
     # Linux Power.
     # RHEL 8 Power: 4.2+.
@@ -55,13 +54,13 @@ WINDOWS_MATRIX = [
 ]
 
 MONGOCRYPTD_MATRIX = [
-    ('rhel80',            None,        ['Debug'], ['shared'], [11], [None], ['crypt'], ['latest'], ['replica']),
-    ('ubuntu2004-arm64',  None,        ['Debug'], ['shared'], [11], [None], ['crypt'], ['latest'], ['replica']),
-    ('rhel8-power',       None,        ['Debug'], ['shared'], [11], [None], ['crypt'], ['latest'], ['replica']),
-    ('rhel8-zseries',     None,        ['Debug'], ['shared'], [11], [None], ['crypt'], ['latest'], ['replica']),
-    ('macos-14-arm64',    None,        ['Debug'], ['shared'], [11], [None], ['crypt'], ['latest'], ['replica']),
-    ('macos-14',          None,        ['Debug'], ['shared'], [11], [None], ['crypt'], ['latest'], ['replica']),
-    ('windows-vsCurrent', 'vs2022x64', ['Debug'], ['shared'], [11], [None], ['crypt'], ['latest'], ['replica']),
+    ('rhel80',             None,        ['Debug'], ['shared'], [11], [None], ['crypt'], ['latest'], ['replica']),
+    ('rhel8-arm64-latest', None,        ['Debug'], ['shared'], [11], [None], ['crypt'], ['latest'], ['replica']),
+    ('rhel8-power',        None,        ['Debug'], ['shared'], [11], [None], ['crypt'], ['latest'], ['replica']),
+    ('rhel8-zseries',      None,        ['Debug'], ['shared'], [11], [None], ['crypt'], ['latest'], ['replica']),
+    ('macos-14-arm64',     None,        ['Debug'], ['shared'], [11], [None], ['crypt'], ['latest'], ['replica']),
+    ('macos-14',           None,        ['Debug'], ['shared'], [11], [None], ['crypt'], ['latest'], ['replica']),
+    ('windows-vsCurrent',  'vs2022x64', ['Debug'], ['shared'], [11], [None], ['crypt'], ['latest'], ['replica']),
 ]
 
 # fmt: on
@@ -130,7 +129,7 @@ def tasks():
             if distro.os_type == 'windows':
                 test_vars |= {'example_projects_cxx_standard': 17}
 
-            if build_type == 'Debug' and distro.os in ['ubuntu1804', 'ubuntu2004', 'ubuntu2204']:
+            if build_type == 'Debug' and distro.os in ['ubuntu2204', 'ubuntu2404']:
                 updates += [KeyValueParam(key='ENABLE_CODE_COVERAGE', value='ON')]
 
             if link_type == 'static':
@@ -148,7 +147,6 @@ def tasks():
             commands += [
                 Setup.call(),
                 StartMongod.call(mongodb_version=mongodb_version, topology=topology),
-                InstallUV.call(),
                 InstallCDriver.call(vars=icd_vars),
                 Compile.call(polyfill=polyfill, vars=compile_vars),
                 FetchDET.call(),

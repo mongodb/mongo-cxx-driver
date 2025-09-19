@@ -3,8 +3,6 @@
 set -o errexit
 set -o pipefail
 
-: "${UV_INSTALL_DIR:?}"
-
 export CC="${cc_compiler:?}"
 export CXX="${cxx_compiler:?}"
 

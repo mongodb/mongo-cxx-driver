@@ -129,7 +129,8 @@ class value {
     /// Move construction.
     ///
     /// @par Postconditions:
-    /// - `other` is equivalent to a default-initialized value.
+    /// - `this->data() == nullptr`
+    /// - `this->get_deleter()` is in a valid but unspecified state.
     ///
     value(value&& other) noexcept = default;
 
@@ -137,7 +138,8 @@ class value {
     /// Move assignment.
     ///
     /// @par Postconditions:
-    /// - `other` is equivalent to a default-initialized value.
+    /// - `this->data() == nullptr`
+    /// - `this->get_deleter()` is in a valid but unspecified state.
     ///
     value& operator=(value&& other) noexcept = default;
 
