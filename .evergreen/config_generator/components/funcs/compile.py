@@ -30,7 +30,6 @@ class Compile(Function):
             'USE_SANITIZER_ASAN',
             'USE_SANITIZER_UBSAN',
             'USE_STATIC_LIBS',
-            'UV_INSTALL_DIR',
         ],
         working_dir='mongo-cxx-driver',
         script='.evergreen/scripts/compile.sh',

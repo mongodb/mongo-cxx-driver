@@ -6,7 +6,6 @@ from shrub.v3.evg_task import EvgTask, EvgTaskRef
 from shrub.v3.evg_task_group import EvgTaskGroup
 
 from config_generator.components.funcs.install_c_driver import InstallCDriver
-from config_generator.components.funcs.install_uv import InstallUV
 from config_generator.etc.distros import find_large_distro
 from config_generator.etc.function import Function, merge_defns
 from config_generator.etc.utils import bash_exec
@@ -183,7 +182,6 @@ def task_groups():
             setup_task_can_fail_task=True,
             setup_task=[
                 git_get_project(directory='mongo-cxx-driver'),
-                InstallUV.call(),
                 InstallCDriver.call(),
                 bash_exec(
                     command_type=EvgCommandType.SETUP,
@@ -191,10 +189,7 @@ def task_groups():
                         'cxx_standard': f'{cxx_standard}',
                         'polyfill': polyfill,
                     },
-                    include_expansions_in_env=[
-                        'distro_id',
-                        'UV_INSTALL_DIR',
-                    ],
+                    include_expansions_in_env=['distro_id'],
                     script='mongo-cxx-driver/.evergreen/scripts/abi-stability-setup.sh',
                 ),
                 s3_put(

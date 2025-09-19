@@ -5,7 +5,6 @@ task_groups:
       - command: git.get_project
         params:
           directory: mongo-cxx-driver
-      - func: install-uv
       - func: install_c_driver
       - command: subprocess.exec
         type: setup
@@ -16,7 +15,6 @@ task_groups:
             polyfill: impls
           include_expansions_in_env:
             - distro_id
-            - UV_INSTALL_DIR
           args:
             - -c
             - mongo-cxx-driver/.evergreen/scripts/abi-stability-setup.sh
@@ -50,7 +48,6 @@ task_groups:
       - command: git.get_project
         params:
           directory: mongo-cxx-driver
-      - func: install-uv
       - func: install_c_driver
       - command: subprocess.exec
         type: setup
@@ -61,7 +58,6 @@ task_groups:
             polyfill: impls
           include_expansions_in_env:
             - distro_id
-            - UV_INSTALL_DIR
           args:
             - -c
             - mongo-cxx-driver/.evergreen/scripts/abi-stability-setup.sh
@@ -95,7 +91,6 @@ task_groups:
       - command: git.get_project
         params:
           directory: mongo-cxx-driver
-      - func: install-uv
       - func: install_c_driver
       - command: subprocess.exec
         type: setup
@@ -106,7 +101,6 @@ task_groups:
             polyfill: stdlib
           include_expansions_in_env:
             - distro_id
-            - UV_INSTALL_DIR
           args:
             - -c
             - mongo-cxx-driver/.evergreen/scripts/abi-stability-setup.sh
@@ -140,7 +134,6 @@ task_groups:
       - command: git.get_project
         params:
           directory: mongo-cxx-driver
-      - func: install-uv
       - func: install_c_driver
       - command: subprocess.exec
         type: setup
@@ -151,7 +144,6 @@ task_groups:
             polyfill: stdlib
           include_expansions_in_env:
             - distro_id
-            - UV_INSTALL_DIR
           args:
             - -c
             - mongo-cxx-driver/.evergreen/scripts/abi-stability-setup.sh
@@ -185,7 +177,6 @@ task_groups:
       - command: git.get_project
         params:
           directory: mongo-cxx-driver
-      - func: install-uv
       - func: install_c_driver
       - command: subprocess.exec
         type: setup
@@ -196,7 +187,6 @@ task_groups:
             polyfill: stdlib
           include_expansions_in_env:
             - distro_id
-            - UV_INSTALL_DIR
           args:
             - -c
             - mongo-cxx-driver/.evergreen/scripts/abi-stability-setup.sh

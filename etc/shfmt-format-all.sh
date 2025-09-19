@@ -21,11 +21,7 @@ include=(
   "${root_dir:?}/examples"
 )
 
-exclude=(
-  "${root_dir:?}/.evergreen/scripts/uv-installer.sh"
-)
-
-mapfile -t files < <(find "${include[@]:?}" -name '*.sh' -type f | grep -v "${exclude[@]:?}")
+mapfile -t files < <(find "${include[@]:?}" -name '*.sh' -type f)
 
 for file in "${files[@]:?}"; do
   uv run --frozen --group format-scripts shfmt -i 2 -w "${file:?}"

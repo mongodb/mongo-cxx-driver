@@ -13,7 +13,6 @@ set -o pipefail
 
 : "${branch_name:?}"
 : "${build_type:?}"
-: "${UV_INSTALL_DIR:?}"
 
 : "${BSONCXX_POLYFILL:-}"
 : "${COMPILE_MACRO_GUARD_TESTS:-}"

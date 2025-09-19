@@ -3,7 +3,6 @@ from shrub.v3.evg_command import EvgCommandType, s3_put
 from shrub.v3.evg_task import EvgTask, EvgTaskRef
 
 from config_generator.components.funcs.fetch_c_driver_source import FetchCDriverSource
-from config_generator.components.funcs.install_uv import InstallUV
 from config_generator.components.funcs.setup import Setup
 from config_generator.etc.distros import find_large_distro
 from config_generator.etc.function import Function, merge_defns
@@ -120,7 +119,6 @@ def tasks():
                 commands=[
                     Setup.call(),
                     FetchCDriverSource.call(),
-                    InstallUV.call(),
                     RunScanBuild.call(cxx_standard, polyfill),
                     UploadScanArtifacts.call(),
                 ],
