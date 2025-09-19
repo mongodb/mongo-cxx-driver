@@ -12,4 +12,4 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <mongocxx/v1/rewrap_many_datakey_options.hpp>
+#include <mongocxx/v1/rewrap_many_datakey_result.hpp>
