@@ -27,8 +27,6 @@ namespace events {
 ///
 /// `CommandFailedEvent` from the Command Logging and Monitoring specification.
 ///
-/// @important This interface does NOT fully conform to the CMAP specification!
-///
 /// @see
 /// - [Command Logging and Monitoring (MongoDB Specifications)](https://specifications.readthedocs.io/en/latest/command-logging-and-monitoring/command-logging-and-monitoring/)
 ///
