@@ -24,10 +24,10 @@ namespace mongocxx {
 namespace v1 {
 
 ///
-/// Options for a "count" command.
+/// Options for a "countDocuments" operation.
 ///
 /// @see
-/// - [`count` (database command) (MongoDB Manual)](https://www.mongodb.com/docs/manual/reference/command/count/)
+/// - [CRUD API (MongoDB Specifications)](https://specifications.readthedocs.io/en/latest/crud/crud/)
 ///
 /// @attention This feature is experimental! It is not ready for use!
 ///

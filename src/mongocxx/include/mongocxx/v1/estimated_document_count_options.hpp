@@ -24,10 +24,11 @@ namespace mongocxx {
 namespace v1 {
 
 ///
-/// Options for an "estimatedDocumentCount" command.
+/// Options for an "estimatedDocumentCount" operation.
 ///
 /// @see
-/// - [`count` (database stage) (MongoDB Manual)](https://www.mongodb.com/docs/manual/reference/command/count/)
+/// - [CRUD API (MongoDB Specifications)](https://specifications.readthedocs.io/en/latest/crud/crud/)
+/// - [`count` (database command) (MongoDB Manual)](https://www.mongodb.com/docs/manual/reference/command/count/)
 ///
 class estimated_document_count_options {};
 
