@@ -31,12 +31,12 @@ namespace v1 {
 class bulk_write {
    public:
     ///
-    /// Enumeration identifying the type of a bulk write operation.
+    /// Enumeration identifying the type of a write operation.
     ///
     enum class type {};
 
     ///
-    /// A single "Insert One" bulk write operation.
+    /// A single "Insert One" write operation.
     ///
     /// @see
     /// - [Bulk Write Operations (MongoDB Manual)](https://www.mongodb.com/docs/manual/core/bulk-write-operations/)
@@ -46,7 +46,7 @@ class bulk_write {
     class insert_one {};
 
     ///
-    /// A single "Update One" bulk write operation.
+    /// A single "Update One" write operation.
     ///
     /// @see
     /// - [Bulk Write Operations (MongoDB Manual)](https://www.mongodb.com/docs/manual/core/bulk-write-operations/)
@@ -56,7 +56,7 @@ class bulk_write {
     class update_one {};
 
     ///
-    /// A single "Update Many" bulk write operation.
+    /// A single "Update Many" write operation.
     ///
     /// @see
     /// - [Bulk Write Operations (MongoDB Manual)](https://www.mongodb.com/docs/manual/core/bulk-write-operations/)
@@ -66,7 +66,7 @@ class bulk_write {
     class update_many {};
 
     ///
-    /// A single "Replace One" bulk write operation.
+    /// A single "Replace One" write operation.
     ///
     /// @see
     /// - [Bulk Write Operations (MongoDB Manual)](https://www.mongodb.com/docs/manual/core/bulk-write-operations/)
@@ -76,7 +76,7 @@ class bulk_write {
     class replace_one {};
 
     ///
-    /// A single "Delete One" bulk write operation.
+    /// A single "Delete One" write operation.
     ///
     /// @see
     /// - [Bulk Write Operations (MongoDB Manual)](https://www.mongodb.com/docs/manual/core/bulk-write-operations/)
@@ -86,7 +86,7 @@ class bulk_write {
     class delete_one {};
 
     ///
-    /// A single "Delete Many" bulk write operation.
+    /// A single "Delete Many" write operation.
     ///
     /// @see
     /// - [Bulk Write Operations (MongoDB Manual)](https://www.mongodb.com/docs/manual/core/bulk-write-operations/)
@@ -96,7 +96,7 @@ class bulk_write {
     class delete_many {};
 
     ///
-    /// A single bulk write operation.
+    /// A single write operation.
     ///
     /// @see
     /// - [Bulk Write Operations (MongoDB Manual)](https://www.mongodb.com/docs/manual/core/bulk-write-operations/)
@@ -107,7 +107,7 @@ class bulk_write {
     class single {};
 
     ///
-    /// Options for a bulk write operation.
+    /// Options for a write operation.
     ///
     /// @see
     /// - [Bulk Write Operations (MongoDB Manual)](https://www.mongodb.com/docs/manual/core/bulk-write-operations/)
@@ -118,7 +118,7 @@ class bulk_write {
     class options {};
 
     ///
-    /// The result of a bulk write operation.
+    /// The result of a write operation.
     ///
     /// @see
     /// - [Bulk Write Operations (MongoDB Manual)](https://www.mongodb.com/docs/manual/core/bulk-write-operations/)
@@ -134,5 +134,5 @@ class bulk_write {
 
 ///
 /// @file
-/// Provides entities related to bulk write operations.
+/// Provides entities related to write operations.
 ///
