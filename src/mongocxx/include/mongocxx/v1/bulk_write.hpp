@@ -20,7 +20,7 @@ namespace mongocxx {
 namespace v1 {
 
 ///
-/// An ordered list of bulk write operations.
+/// A list of bulk write operations.
 ///
 /// @see
 /// - [Bulk Write Operations (MongoDB Manual)](https://www.mongodb.com/docs/manual/core/bulk-write-operations/)
