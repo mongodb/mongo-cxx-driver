@@ -5,7 +5,6 @@ set -o pipefail
 
 : "${BSONCXX_POLYFILL:-}"
 : "${CXX_STANDARD:?}"
-: "${UV_INSTALL_DIR:?}"
 
 mongoc_prefix="$(pwd)/../mongoc"
 

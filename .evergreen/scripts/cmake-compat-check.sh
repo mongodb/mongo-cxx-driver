@@ -5,7 +5,6 @@ set -o pipefail
 
 : "${CMAKE_VERSION:?}"
 : "${INSTALL_C_DRIVER:?}"
-: "${UV_INSTALL_DIR:?}"
 
 [[ -d mongoc ]] || {
   echo "missing mongoc directory"

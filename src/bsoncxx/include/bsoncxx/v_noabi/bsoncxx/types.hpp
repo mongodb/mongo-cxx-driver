@@ -42,6 +42,8 @@ namespace v_noabi {
 ///
 /// @showenumvalues
 ///
+/// @deprecated Use @ref bsoncxx::v_noabi::types::id instead (renamed).
+///
 enum class type : std::uint8_t {
     k_double = 0x01,     ///< 64-bit binary floating point.
     k_string = 0x02,     ///< UTF-8 string.
@@ -70,6 +72,8 @@ enum class type : std::uint8_t {
 /// An enumeration of each BSON binary sub type.
 ///
 /// @showenumvalues
+///
+/// @deprecated Use @ref bsoncxx::v_noabi::types::binary_subtype instead (renamed).
 ///
 enum class binary_sub_type : std::uint8_t {
     k_binary = 0x00,            ///< Generic binary subtype.
@@ -1104,6 +1108,8 @@ using v_noabi::types::operator!=;
 ///
 /// @file
 /// Provides entities used to represent BSON types.
+///
+/// @deprecated Use @ref bsoncxx/types/id.hpp or @ref bsoncxx/types/view.hpp instead.
 ///
 /// @par Includes
 /// - @ref bsoncxx/v1/types/view.hpp

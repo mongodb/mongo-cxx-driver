@@ -88,6 +88,8 @@
 /// @namespace bsoncxx::types::bson_value
 /// Declares entities representing any BSON value type.
 ///
+/// @deprecated Use @ref bsoncxx::types instead (renamed).
+///
 
 ///
 /// @namespace bsoncxx::vector

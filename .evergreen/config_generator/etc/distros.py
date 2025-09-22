@@ -51,6 +51,7 @@ def ls_distro(name, **kwargs):
 
 DEBIAN_DISTROS = [
     *ls_distro(name='debian11', os='debian', os_type='linux', os_ver='11'),
+    *ls_distro(name='debian12', os='debian', os_type='linux', os_ver='12'),
     *ls_distro(name='debian12-latest', os='debian', os_type='linux', os_ver='latest'),
 ]
 
@@ -76,6 +77,7 @@ RHEL_DISTROS = [
 ]
 
 RHEL_ARM64_DISTROS = [
+    *ls_distro(name='rhel8-arm64-latest', os='rhel', os_type='linux', os_ver='8', arch='arm64'),
     *ls_distro(name='rhel92-arm64', os='rhel', os_type='linux', os_ver='9.2', arch='arm64'),
 ]
 
@@ -89,13 +91,13 @@ RHEL_ZSERIES_DISTROS = [
 ]
 
 UBUNTU_DISTROS = [
-    *ls_distro(name='ubuntu2004', os='ubuntu', os_type='linux', os_ver='20.04'),
     *ls_distro(name='ubuntu2204', os='ubuntu', os_type='linux', os_ver='22.04'),
+    *ls_distro(name='ubuntu2404', os='ubuntu', os_type='linux', os_ver='24.04'),
 ]
 
 UBUNTU_ARM64_DISTROS = [
-    *ls_distro(name='ubuntu2004-arm64', os='ubuntu', os_type='linux', os_ver='20.04', arch='arm64'),
     *ls_distro(name='ubuntu2204-arm64', os='ubuntu', os_type='linux', os_ver='22.04', arch='arm64'),
+    *ls_distro(name='ubuntu2404-arm64', os='ubuntu', os_type='linux', os_ver='24.04', arch='arm64'),
 ]
 
 WINDOWS_DISTROS = [

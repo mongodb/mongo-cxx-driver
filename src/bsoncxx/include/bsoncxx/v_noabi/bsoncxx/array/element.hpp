@@ -73,6 +73,10 @@ class element : private v_noabi::document::element {
 
     using v_noabi::document::element::get_owning_value;
 
+    using v_noabi::document::element::type_view;
+
+    using v_noabi::document::element::type_value;
+
     using v_noabi::document::element::operator[];
 
     friend bool operator==(element const& lhs, v_noabi::types::bson_value::view const& rhs);
