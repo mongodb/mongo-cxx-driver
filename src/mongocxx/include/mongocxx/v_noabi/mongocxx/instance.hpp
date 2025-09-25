@@ -14,9 +14,14 @@
 
 #pragma once
 
+#include <mongocxx/instance-fwd.hpp>
+
+//
+
+#include <mongocxx/v1/instance.hpp>
+
 #include <memory>
 
-#include <mongocxx/instance-fwd.hpp>
 #include <mongocxx/logger-fwd.hpp>
 
 #include <mongocxx/config/prelude.hpp>
@@ -24,59 +29,7 @@
 namespace mongocxx {
 namespace v_noabi {
 
-///
-/// An instance of the MongoDB driver.
-///
-/// The constructor and destructor initialize and shut down the driver, respectively. Therefore, an
-/// instance must be created before using the driver and must remain alive until all other mongocxx
-/// objects are destroyed. After the instance destructor runs, the driver may not be used.
-///
-/// Exactly one instance must be created in a given program. Not constructing an instance or
-/// constructing more than one instance in a program are errors, even if the multiple instances have
-/// non-overlapping lifetimes.
-///
-/// The following is a correct example of using an instance in a program, as the instance is kept
-/// alive for as long as the driver is in use:
-///
-/// \code
-///
-/// #include <mongocxx/client.hpp>
-/// #include <mongocxx/instance.hpp>
-/// #include <mongocxx/uri.hpp>
-///
-/// int main() {
-///     mongocxx::v_noabi::instance inst{};
-///     mongocxx::v_noabi::client conn{mongocxx::v_noabi::uri{}};
-///     ...
-/// }
-///
-/// \endcode
-///
-/// An example of using instance incorrectly might look as follows:
-///
-/// \code
-///
-/// #include <mongocxx/client.hpp>
-/// #include <mongocxx/instance.hpp>
-/// #include <mongocxx/uri.hpp>
-///
-/// client get_client() {
-///     mongocxx::v_noabi::instance inst{};
-///     mongocxx::v_noabi::client conn{mongocxx::v_noabi::uri{}};
-///
-///     return client;
-/// } // ERROR! The instance is no longer alive after this function returns.
-///
-/// int main() {
-///     mongocxx::v_noabi::client conn = get_client();
-///     ...
-/// }
-///
-/// \endcode
-///
-/// For examples of more advanced usage of instance, see
-/// `examples/mongocxx/instance_management.cpp`.
-///
+/// @copydoc mongocxx::v1::instance
 class instance {
    public:
     ///
@@ -90,7 +43,7 @@ class instance {
     ///
     /// @throws mongocxx::v_noabi::logic_error if an instance already exists.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL() instance(std::unique_ptr<logger> logger);
+    MONGOCXX_ABI_EXPORT_CDECL() instance(std::unique_ptr<v_noabi::logger> logger);
 
     ///
     /// Move constructs an instance of the driver.
@@ -128,4 +81,7 @@ class instance {
 ///
 /// @file
 /// Provides @ref mongocxx::v_noabi::instance.
+///
+/// @par Includes
+/// - @ref mongocxx/v1/instance.hpp
 ///

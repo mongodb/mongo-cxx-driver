@@ -94,6 +94,11 @@ set(mongocxx_test_sources_v_noabi
     v_noabi/write_concern.cpp
 )
 
+set(mongocxx_test_sources_v1
+    v1/exception.cpp
+    v1/logger.cpp
+)
+
 set(mongocxx_test_sources_spec
     spec/monitoring.cpp
     spec/operation.cpp
@@ -113,10 +118,12 @@ set(mongocxx_test_sources_extra
     spec/transactions.cpp
     spec/unified_tests/operations.cpp
     spec/unified_tests/runner.cpp
+    subprocess.cpp
     v_noabi/catch_helpers.cpp
     v_noabi/client_helpers.cpp
     v_noabi/instance.cpp
     v_noabi/logging.cpp
+    v1/instance.cpp
 )
 
 file(GLOB_RECURSE mongocxx_test_headers
@@ -132,14 +139,17 @@ add_library(spec_test_common OBJECT ${mongocxx_test_sources_spec})
 add_executable(test_driver
     ${mongocxx_test_sources_private}
     ${mongocxx_test_sources_v_noabi}
+    ${mongocxx_test_sources_v1}
     v_noabi/catch_helpers.cpp
 )
 target_link_libraries(test_driver PRIVATE spec_test_common client_helpers)
 
-add_executable(test_logging v_noabi/logging.cpp)
-target_compile_definitions(test_logging PRIVATE MONGOCXX_TEST_DISABLE_MAIN_INSTANCE)
-
-add_executable(test_instance v_noabi/instance.cpp)
+add_executable(test_instance
+    subprocess.cpp
+    v_noabi/instance.cpp
+    v_noabi/logging.cpp
+    v1/instance.cpp
+)
 target_compile_definitions(test_instance PRIVATE MONGOCXX_TEST_DISABLE_MAIN_INSTANCE)
 
 add_executable(test_crud_specs spec/crud.cpp)
@@ -202,7 +212,6 @@ set_property(
         test_driver
         test_gridfs_specs
         test_instance
-        test_logging
         test_read_write_concern_specs
         test_retryable_reads_specs
         test_transactions_specs
@@ -231,7 +240,6 @@ foreach(test_name
     driver
     gridfs_specs
     instance
-    logging
     read_write_concern_specs
     retryable_reads_specs
     transactions_specs
@@ -338,6 +346,7 @@ set_dist_list(src_mongocxx_test_DIST
     CMakeLists.txt
     ${mongocxx_test_sources_private}
     ${mongocxx_test_sources_v_noabi}
+    ${mongocxx_test_sources_v1}
     ${mongocxx_test_sources_spec}
     ${mongocxx_test_sources_extra}
     ${mongocxx_test_headers}

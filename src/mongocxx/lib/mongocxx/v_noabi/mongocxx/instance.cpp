@@ -12,22 +12,24 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <mongocxx/v1/config/version.hpp>
-#include <mongocxx/v1/detail/macros.hpp>
+#include <mongocxx/instance.hpp>
+
+//
+
+#include <mongocxx/v1/exception.hpp>
+#include <mongocxx/v1/instance.hpp>
+#include <mongocxx/v1/logger.hpp>
 
 #include <atomic>
-#include <sstream>
-#include <type_traits>
+#include <stdexcept>
 #include <utility>
 
 #include <mongocxx/exception/error_code.hpp>
 #include <mongocxx/exception/logic_error.hpp>
-#include <mongocxx/instance.hpp>
 #include <mongocxx/logger.hpp>
 
 #include <bsoncxx/private/make_unique.hh>
 
-#include <mongocxx/private/config/config.hh>
 #include <mongocxx/private/mongoc.hh>
 
 namespace mongocxx {
@@ -35,130 +37,80 @@ namespace v_noabi {
 
 namespace {
 
-log_level convert_log_level(::mongoc_log_level_t mongoc_log_level) {
-    switch (mongoc_log_level) {
-        case MONGOC_LOG_LEVEL_ERROR:
-            return log_level::k_error;
-        case MONGOC_LOG_LEVEL_CRITICAL:
-            return log_level::k_critical;
-        case MONGOC_LOG_LEVEL_WARNING:
-            return log_level::k_warning;
-        case MONGOC_LOG_LEVEL_MESSAGE:
-            return log_level::k_message;
-        case MONGOC_LOG_LEVEL_INFO:
-            return log_level::k_info;
-        case MONGOC_LOG_LEVEL_DEBUG:
-            return log_level::k_debug;
-        case MONGOC_LOG_LEVEL_TRACE:
-            return log_level::k_trace;
-        default:
-            MONGOCXX_PRIVATE_UNREACHABLE;
-    }
-}
-
-void null_log_handler(::mongoc_log_level_t, char const*, char const*, void*) {}
-
-void user_log_handler(
-    ::mongoc_log_level_t mongoc_log_level,
-    char const* log_domain,
-    char const* message,
-    void* user_data) {
-    (*static_cast<logger*>(user_data))(
-        convert_log_level(mongoc_log_level),
-        bsoncxx::v_noabi::stdx::string_view{log_domain},
-        bsoncxx::v_noabi::stdx::string_view{message});
-}
-
-// A region of memory that acts as a sentintel value indicating that an instance object is being
-// destroyed. We only care about the address of this object, never its contents.
-alignas(instance) unsigned char sentinel[sizeof(instance)];
-
+// To support mongocxx::v_noabi::instance::current().
 std::atomic<instance*> current_instance{nullptr};
-static_assert(std::is_standard_layout<decltype(current_instance)>::value, "Must be standard layout");
-static_assert(std::is_trivially_destructible<decltype(current_instance)>::value, "Must be trivially destructible");
+
+// Sentinel value denoting the current instance has been destroyed.
+instance* sentinel() {
+    alignas(instance) static unsigned char value[sizeof(instance)];
+    return reinterpret_cast<instance*>(value);
+}
+
+void custom_log_handler(
+    mongoc_log_level_t log_level,
+    char const* domain,
+    char const* message,
+    void* user_data) noexcept {
+    (*static_cast<v_noabi::logger*>(user_data))(
+        static_cast<v_noabi::log_level>(log_level),
+        bsoncxx::v1::stdx::string_view(domain),
+        bsoncxx::v1::stdx::string_view(message));
+}
 
 } // namespace
 
 class instance::impl {
    public:
-    impl(std::unique_ptr<logger> logger) : _user_logger(std::move(logger)) {
-        libmongoc::init();
-        if (_user_logger) {
-            libmongoc::log_set_handler(user_log_handler, _user_logger.get());
-            // The libmongoc namespace mocking system doesn't play well with varargs
-            // functions, so we use a bare mongoc_log call here.
-            mongoc_log(MONGOC_LOG_LEVEL_INFO, "mongocxx", "libmongoc logging callback enabled");
-        } else {
-            libmongoc::log_set_handler(null_log_handler, nullptr);
-        }
+    v1::instance _instance;
+    std::unique_ptr<logger> _handler;
 
-        // Despite the name, mongoc_handshake_data_append *prepends* the platform string.
-        // mongoc_handshake_data_append does not add a delimitter, so include the " / " in the
-        // argument for consistency with the driver_name, and driver_version.
-        std::stringstream platform;
-        long stdcxx = __cplusplus;
-#ifdef _MSVC_LANG
-        // Prefer _MSVC_LANG to report the supported C++ standard with MSVC.
-        // The __cplusplus macro may be incorrect. See:
-        // https://devblogs.microsoft.com/cppblog/msvc-now-correctly-reports-__cplusplus/
-        stdcxx = _MSVC_LANG;
-#endif
-        platform << "CXX=" << MONGOCXX_COMPILER_ID << " " << MONGOCXX_COMPILER_VERSION << " "
-                 << "stdcxx=" << stdcxx << " / ";
-        libmongoc::handshake_data_append("mongocxx", MONGOCXX_VERSION_STRING, platform.str().c_str());
-    }
-
-    ~impl() {
-        // If we had a user logger, remove it so that it can't be used by the driver after it goes
-        // out of scope
-        if (_user_logger) {
-            libmongoc::log_set_handler(null_log_handler, nullptr);
-        }
-
-        libmongoc::cleanup();
-    }
-
-    impl(impl&&) noexcept = delete;
-    impl& operator=(impl&&) noexcept = delete;
-
+    impl(impl&&) = delete;
+    impl& operator=(impl&&) = delete;
     impl(impl const&) = delete;
     impl& operator=(impl const&) = delete;
 
-    std::unique_ptr<logger> const _user_logger;
+    impl(std::unique_ptr<logger> handler) try : _instance{v1::default_logger{}}, _handler{std::move(handler)} {
+        // For backward compatibility, allow v1::instance to initialize mongoc with the default log handler, then set
+        // the custom logger AFTER initialization has already completed.
+        if (_handler) {
+            libmongoc::log_set_handler(&custom_log_handler, _handler.get());
+
+            // Inform the user that a custom log handler has been registered.
+            // Cannot use mocked `libmongoc::log()` due to varargs.
+            mongoc_log(MONGOC_LOG_LEVEL_INFO, "mongocxx", "libmongoc logging callback enabled");
+        } else {
+            libmongoc::log_set_handler(nullptr, nullptr);
+        }
+    } catch (v1::exception const&) {
+        throw v_noabi::logic_error{error_code::k_cannot_recreate_instance};
+    }
 };
 
 instance::instance() : instance(nullptr) {}
 
-instance::instance(std::unique_ptr<logger> logger) {
-    instance* expected = nullptr;
-
-    if (!current_instance.compare_exchange_strong(expected, this)) {
-        throw logic_error{error_code::k_cannot_recreate_instance};
-    }
-
-    _impl = bsoncxx::make_unique<impl>(std::move(logger));
+instance::instance(std::unique_ptr<v_noabi::logger> logger) : _impl{bsoncxx::make_unique<impl>(std::move(logger))} {
+    current_instance.store(this, std::memory_order_relaxed);
 }
 
 instance::instance(instance&&) noexcept = default;
 instance& instance::operator=(instance&&) noexcept = default;
 
 instance::~instance() {
-    current_instance.store(reinterpret_cast<instance*>(&sentinel));
-    _impl.reset();
+    current_instance.store(sentinel(), std::memory_order_relaxed);
 }
 
 instance& instance::current() {
-    if (!current_instance.load()) {
+    if (auto const p = current_instance.load(std::memory_order_relaxed)) {
+        if (p == sentinel()) {
+            throw v_noabi::logic_error{error_code::k_instance_destroyed};
+        } else {
+            return *p;
+        }
+
+    } else {
         static instance the_instance;
+        return the_instance;
     }
-
-    instance* curr = current_instance.load();
-
-    if (curr == reinterpret_cast<instance*>(&sentinel)) {
-        throw logic_error{error_code::k_instance_destroyed};
-    }
-
-    return *curr;
 }
 
 } // namespace v_noabi

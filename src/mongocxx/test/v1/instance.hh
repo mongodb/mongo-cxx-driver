@@ -14,27 +14,19 @@
 
 #pragma once
 
-#include <mongocxx/v1/detail/prelude.hpp>
+#include <mongocxx/v1/instance.hpp>
 
 //
 
-#include <mongocxx/v1/config/export.hpp>
+#include <catch2/catch_tostring.hpp>
 
-namespace mongocxx {
-namespace v1 {
+namespace Catch {
 
-enum class log_level;
+template <>
+struct StringMaker<mongocxx::v1::instance> {
+    static std::string convert(mongocxx::v1::instance const&) {
+        return "mongocxx::v1::instance";
+    }
+};
 
-class MONGOCXX_ABI_EXPORT logger;
-
-class default_logger;
-
-} // namespace v1
-} // namespace mongocxx
-
-#include <mongocxx/v1/detail/postlude.hpp>
-
-///
-/// @file
-/// Declares @ref mongocxx::v1::logger.
-///
+} // namespace Catch
