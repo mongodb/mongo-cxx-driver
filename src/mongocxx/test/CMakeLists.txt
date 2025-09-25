@@ -108,7 +108,6 @@ set(mongocxx_test_sources_extra
     spec/command_monitoring.cpp
     spec/crud.cpp
     spec/gridfs.cpp
-    spec/mongohouse.cpp
     spec/read_write_concern.cpp
     spec/retryable-reads.cpp
     spec/transactions.cpp
@@ -164,9 +163,6 @@ target_link_libraries(test_retryable_reads_specs PRIVATE spec_test_common client
 add_executable(test_read_write_concern_specs spec/read_write_concern.cpp)
 target_link_libraries(test_read_write_concern_specs PRIVATE spec_test_common client_helpers)
 
-add_executable(test_mongohouse_specs spec/mongohouse.cpp)
-target_link_libraries(test_mongohouse_specs PRIVATE spec_test_common client_helpers)
-
 add_executable(test_unified_format_specs spec/unified_tests/operations.cpp spec/unified_tests/runner.cpp)
 target_link_libraries(test_unified_format_specs PRIVATE spec_test_common client_helpers)
 
@@ -207,7 +203,6 @@ set_property(
         test_gridfs_specs
         test_instance
         test_logging
-        test_mongohouse_specs
         test_read_write_concern_specs
         test_retryable_reads_specs
         test_transactions_specs
@@ -244,12 +239,6 @@ foreach(test_name
 )
     add_test(NAME ${test_name} COMMAND test_${test_name} --reporter compact --allow-running-no-tests)
 endforeach()
-
-# Adding this as a test will run it as part of the RUN_TESTS command in MSVC.
-# Do not add, since we only test mongohouse on Linux.
-if(0)
-    add_test(NAME mongohouse_specs COMMAND test_mongohouse_specs ${test_args})
-endif()
 
 set_property(TEST crud_specs APPEND PROPERTY ENVIRONMENT
     "CRUD_LEGACY_TESTS_PATH=${DATA_SOURCE_DIR}/crud/legacy"

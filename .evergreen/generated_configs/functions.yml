@@ -200,28 +200,6 @@ functions:
         local_file: rpm.tar.gz
         permissions: public-read
         remote_file: mongo-cxx-driver/${branch_name}/${revision}/${version_id}/${build_id}/${execution}/rpm-packages.tar.gz
-  build_mongohouse:
-    - command: ec2.assume_role
-      params:
-        role_arn: ${aws_test_secrets_role}
-    - command: subprocess.exec
-      type: setup
-      params:
-        binary: bash
-        include_expansions_in_env:
-          - AWS_ACCESS_KEY_ID
-          - AWS_SECRET_ACCESS_KEY
-          - AWS_SESSION_TOKEN
-        args:
-          - -c
-          - |
-            if [ ! -d "drivers-evergreen-tools" ]; then
-                git clone https://github.com/mongodb-labs/drivers-evergreen-tools.git
-            fi
-            cd drivers-evergreen-tools
-            export DRIVERS_TOOLS=$(pwd)
-
-            .evergreen/atlas_data_lake/pull-mongohouse-image.sh
   check augmented sbom:
     - command: ec2.assume_role
       type: setup
@@ -482,18 +460,6 @@ functions:
             python -u kms_http_server.py --ca_file ../x509gen/ca.pem --cert_file ../x509gen/server.pem --port 9002 --require_client_cert &
             python -u kms_kmip_server.py &
             echo "Starting mock KMS servers... done."
-  run_mongohouse:
-    command: subprocess.exec
-    type: setup
-    params:
-      binary: bash
-      args:
-        - -c
-        - |
-          cd drivers-evergreen-tools
-          export DRIVERS_TOOLS=$(pwd)
-
-          .evergreen/atlas_data_lake/run-mongohouse-image.sh
   set-cache-dir:
     - command: subprocess.exec
       type: setup
@@ -619,17 +585,6 @@ functions:
           export LD_LIBRARY_PATH=$(pwd)/../mongoc/lib
 
           ./build/src/mongocxx/test/test_driver "atlas search indexes prose tests"
-  test_mongohouse:
-    command: subprocess.exec
-    type: test
-    params:
-      binary: bash
-      working_dir: mongo-cxx-driver
-      include_expansions_in_env:
-        - distro_id
-      args:
-        - -c
-        - .evergreen/scripts/test-mongohouse.sh
   uninstall-check:
     command: subprocess.exec
     type: test
