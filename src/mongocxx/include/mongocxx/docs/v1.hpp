@@ -41,6 +41,26 @@
 ///
 
 ///
+/// @dir mongocxx/v1/events
+/// Provide headers related to APM events.
+///
+
+///
+/// @dir mongocxx/v1/gridfs
+/// Provide headers related to GridFS.
+///
+
+///
 /// @namespace mongocxx::v1
 /// Declares entities whose ABI stability is guaranteed for documented symbols.
+///
+
+///
+/// @namespace mongocxx::v1::gridfs
+/// @copydoc mongocxx::gridfs
+///
+
+///
+/// @namespace mongocxx::v1::events
+/// @copydoc mongocxx::events
 ///
