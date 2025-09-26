@@ -25,13 +25,7 @@
 namespace mongocxx {
 namespace v_noabi {
 
-using v1::log_level;
-
 using v1::to_string;
-
-using v1::logger;
-
-using v1::default_logger;
 
 } // namespace v_noabi
 } // namespace mongocxx
