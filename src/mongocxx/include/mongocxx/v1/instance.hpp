@@ -143,14 +143,6 @@ class instance {
     explicit MONGOCXX_ABI_EXPORT_CDECL() instance(v1::default_logger tag);
 
     ///
-    /// Equivalent to @ref instance(std::unique_ptr<v1::logger> handler) when `handler == nullptr`.
-    ///
-    /// @see
-    /// - [Custom Log Handlers (mongoc)](https://mongoc.org/libmongoc/current/unstructured_log.html#custom-log-handlers)
-    ///
-    explicit MONGOCXX_ABI_EXPORT_CDECL() instance(std::nullptr_t);
-
-    ///
     /// Errors codes which may be returned by @ref mongocxx::v1::instance.
     ///
     /// @attention This feature is experimental! It is not ready for use!

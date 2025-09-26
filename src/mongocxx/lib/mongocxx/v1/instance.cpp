@@ -142,8 +142,6 @@ instance::instance(v1::default_logger tag) : _impl{bsoncxx::make_unique<impl>(ta
     (void)tag;
 }
 
-instance::instance(std::nullptr_t) : instance{std::unique_ptr<v1::logger>{}} {}
-
 std::error_category const& instance::error_category() {
     class type final : public std::error_category {
         char const* name() const noexcept override {
