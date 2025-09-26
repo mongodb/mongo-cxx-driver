@@ -24,11 +24,11 @@
 #include <mongocxx/exception/operation_exception.hpp>
 
 #include <mongocxx/options/transaction.hh>
+#include <mongocxx/scoped_bson.hh>
 
 #include <bsoncxx/private/bson.hh>
 #include <bsoncxx/private/helpers.hh>
 
-#include <mongocxx/private/bson.hh>
 #include <mongocxx/private/client.hh>
 #include <mongocxx/private/mongoc.hh>
 #include <mongocxx/private/mongoc_error.hh>
@@ -56,9 +56,8 @@ bool with_transaction_cpp_cb(mongoc_client_session_t*, void* ctx, bson_t** reply
         return true;
     } catch (operation_exception const& e) {
         make_bson_error(error, e);
-        if (e.raw_server_error()) {
-            libbson::scoped_bson_t raw{e.raw_server_error()->view()};
-            *reply = bson_copy(raw.bson());
+        if (auto const& raw = e.raw_server_error()) {
+            *reply = to_scoped_bson_view(*raw).copy();
         }
         return false;
     } catch (...) {
@@ -158,10 +157,10 @@ class client_session::impl {
     }
 
     void commit_transaction() {
-        libbson::scoped_bson_t reply;
+        scoped_bson reply;
         bson_error_t error;
-        if (!libmongoc::client_session_commit_transaction(_session_t.get(), reply.bson_for_init(), &error)) {
-            throw_exception<operation_exception>(reply.steal(), error);
+        if (!libmongoc::client_session_commit_transaction(_session_t.get(), reply.out_ptr(), &error)) {
+            throw_exception<operation_exception>(from_v1(std::move(reply)), error);
         }
     }
 
@@ -178,18 +177,18 @@ class client_session::impl {
 
         with_transaction_ctx ctx{parent, std::move(cb), nullptr};
 
-        libbson::scoped_bson_t reply;
         bson_error_t error;
 
+        scoped_bson reply;
         auto res = libmongoc::client_session_with_transaction(
-            session_t, &with_transaction_cpp_cb, opts_t, &ctx, reply.bson_for_init(), &error);
+            session_t, &with_transaction_cpp_cb, opts_t, &ctx, reply.out_ptr(), &error);
 
         if (!res) {
             if (ctx.eptr) {
                 std::rethrow_exception(ctx.eptr);
             }
 
-            throw_exception<operation_exception>(reply.steal(), error);
+            throw_exception<operation_exception>(from_v1(std::move(reply)), error);
         }
     }
 

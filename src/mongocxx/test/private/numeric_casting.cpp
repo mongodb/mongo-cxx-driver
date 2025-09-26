@@ -14,7 +14,6 @@
 
 #include <bsoncxx/builder/basic/document.hpp>
 
-#include <mongocxx/private/bson.hh>
 #include <mongocxx/private/numeric_casting.hh>
 
 #include <bsoncxx/test/catch.hh>

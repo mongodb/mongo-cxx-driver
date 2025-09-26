@@ -25,10 +25,11 @@
 #include <mongocxx/options/client_encryption.hpp>
 #include <mongocxx/result/bulk_write.hpp>
 
+#include <mongocxx/scoped_bson.hh>
+
 #include <bsoncxx/private/bson.hh>
 #include <bsoncxx/private/helpers.hh>
 
-#include <mongocxx/private/bson.hh>
 #include <mongocxx/private/client.hh>
 #include <mongocxx/private/cursor.hh>
 #include <mongocxx/private/mongoc.hh>
@@ -40,8 +41,6 @@ namespace v_noabi {
 
 class client_encryption::impl {
    private:
-    using scoped_bson_t = mongocxx::libbson::scoped_bson_t;
-
     struct encrypt_opts_deleter {
         void operator()(mongoc_client_encryption_encrypt_opts_t* ptr) noexcept {
             libmongoc::client_encryption_encrypt_opts_destroy(ptr);
@@ -126,19 +125,14 @@ class client_encryption::impl {
         auto const encrypt_opts =
             encrypt_opts_ptr(static_cast<mongoc_client_encryption_encrypt_opts_t*>(opts.convert()));
 
-        scoped_bson_t encrypted;
         bson_error_t error = {};
 
+        scoped_bson encrypted;
         if (!libmongoc::client_encryption_encrypt_expression(
-                _client_encryption.get(),
-                scoped_bson_t(expr).bson(),
-                encrypt_opts.get(),
-                encrypted.bson_for_init(),
-                &error)) {
+                _client_encryption.get(), to_scoped_bson_view(expr), encrypt_opts.get(), encrypted.out_ptr(), &error)) {
             throw_exception<operation_exception>(error);
         }
-
-        return encrypted.steal();
+        return from_v1(std::move(encrypted));
     }
 
     bsoncxx::v_noabi::types::bson_value::value decrypt(bsoncxx::v_noabi::types::bson_value::view value) {
@@ -173,19 +167,19 @@ class client_encryption::impl {
 
         auto const provider_terminated = opts.provider().terminated();
 
-        scoped_bson_t bson_master_key;
+        scoped_bson_view bson_master_key{nullptr};
 
-        if (auto const master_key_opt = opts.master_key()) {
-            bson_master_key.init_from_static(master_key_opt->view());
+        if (auto const& master_key_opt = opts.master_key()) {
+            bson_master_key = to_scoped_bson_view(master_key_opt->view());
         }
 
         bson_error_t error;
 
         if (!libmongoc::client_encryption_rewrap_many_datakey(
                 _client_encryption.get(),
-                scoped_bson_t(filter).bson(),
+                to_scoped_bson_view(filter),
                 provider_terminated.view().empty() ? nullptr : provider_terminated.data(),
-                bson_master_key.bson(),
+                bson_master_key,
                 result.get(),
                 &error)) {
             throw_exception<operation_exception>(error);
@@ -206,11 +200,11 @@ class client_encryption::impl {
         using bsoncxx::v_noabi::builder::basic::kvp;
         using bsoncxx::v_noabi::builder::basic::make_document;
 
-        scoped_bson_t reply;
         bson_error_t error;
 
+        scoped_bson reply;
         if (!libmongoc::client_encryption_delete_key(
-                _client_encryption.get(), detail::scoped_bson_value(id.view()).get(), reply.bson_for_init(), &error)) {
+                _client_encryption.get(), detail::scoped_bson_value(id.view()).get(), reply.out_ptr(), &error)) {
             throw_exception<operation_exception>(error);
         }
 
@@ -228,20 +222,19 @@ class client_encryption::impl {
 
     bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::value> get_key(
         bsoncxx::v_noabi::types::bson_value::view_or_value id) {
-        libbson::scoped_bson_t key_doc;
         bson_error_t error;
 
+        scoped_bson key;
         if (!libmongoc::client_encryption_get_key(
-                _client_encryption.get(),
-                detail::scoped_bson_value(id.view()).get(),
-                key_doc.bson_for_init(),
-                &error)) {
+                _client_encryption.get(), detail::scoped_bson_value(id.view()).get(), key.out_ptr(), &error)) {
             throw_exception<operation_exception>(error);
         }
 
-        return key_doc.view().empty()
-                   ? bsoncxx::v_noabi::stdx::nullopt
-                   : bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::value>{key_doc.steal()};
+        if (key.view().empty()) {
+            return {};
+        }
+
+        return from_v1(std::move(key));
     }
 
     mongocxx::v_noabi::cursor get_keys() {
@@ -259,56 +252,62 @@ class client_encryption::impl {
     bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::value> add_key_alt_name(
         bsoncxx::v_noabi::types::bson_value::view_or_value id,
         bsoncxx::v_noabi::string::view_or_value key_alt_name) {
-        scoped_bson_t key_doc;
         bson_error_t error;
 
+        scoped_bson key;
         if (!libmongoc::client_encryption_add_key_alt_name(
                 _client_encryption.get(),
                 detail::scoped_bson_value(id.view()).get(),
                 key_alt_name.terminated().data(),
-                key_doc.bson_for_init(),
+                key.out_ptr(),
                 &error)) {
             throw_exception<operation_exception>(error);
         }
 
-        return key_doc.view().empty()
-                   ? bsoncxx::v_noabi::stdx::nullopt
-                   : bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::value>{key_doc.steal()};
+        if (key.view().empty()) {
+            return {};
+        }
+
+        return from_v1(std::move(key));
     }
 
     bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::value> get_key_by_alt_name(
         bsoncxx::v_noabi::string::view_or_value key_alt_name) {
-        scoped_bson_t key_doc;
         bson_error_t error;
 
+        scoped_bson key;
         if (!libmongoc::client_encryption_get_key_by_alt_name(
-                _client_encryption.get(), key_alt_name.terminated().data(), key_doc.bson_for_init(), &error)) {
+                _client_encryption.get(), key_alt_name.terminated().data(), key.out_ptr(), &error)) {
             throw_exception<operation_exception>(error);
         }
 
-        return key_doc.view().empty()
-                   ? bsoncxx::v_noabi::stdx::nullopt
-                   : bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::value>{key_doc.steal()};
+        if (key.view().empty()) {
+            return {};
+        }
+
+        return from_v1(std::move(key));
     }
 
     bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::value> remove_key_alt_name(
         bsoncxx::v_noabi::types::bson_value::view_or_value id,
         bsoncxx::v_noabi::string::view_or_value key_alt_name) {
-        scoped_bson_t key_doc;
         bson_error_t error;
 
+        scoped_bson key;
         if (!libmongoc::client_encryption_remove_key_alt_name(
                 _client_encryption.get(),
                 detail::scoped_bson_value(id.view()).get(),
                 key_alt_name.terminated().data(),
-                key_doc.bson_for_init(),
+                key.out_ptr(),
                 &error)) {
             throw_exception<operation_exception>(error);
         }
 
-        return key_doc.view().empty()
-                   ? bsoncxx::v_noabi::stdx::nullopt
-                   : bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::value>{key_doc.steal()};
+        if (key.view().empty()) {
+            return {};
+        }
+
+        return from_v1(std::move(key));
     }
 
     collection create_encrypted_collection(
@@ -320,28 +319,23 @@ class client_encryption::impl {
         std::string const& kms_provider,
         bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view> const& masterkey) {
         bson_error_t error = {};
-        scoped_bson_t out_opts;
-        out_opts.init();
 
-        bson_t* opt_mkey_ptr = nullptr;
-        scoped_bson_t opt_mkey;
+        scoped_bson_view opt_mkey{nullptr};
         if (masterkey) {
-            opt_mkey.init_from_static(*masterkey);
-            opt_mkey_ptr = opt_mkey.bson();
+            opt_mkey = to_scoped_bson_view(*masterkey);
         }
 
-        scoped_bson_t coll_opts{opts};
-
+        scoped_bson out;
         auto coll_ptr = libmongoc::client_encryption_create_encrypted_collection(
             _client_encryption.get(),
             db,
             coll_name.data(),
-            coll_opts.bson(),
-            out_opts.bson(),
+            to_scoped_bson_view(opts),
+            out.out_ptr(),
             kms_provider.data(),
-            opt_mkey_ptr,
+            opt_mkey,
             &error);
-        out_options = bsoncxx::helpers::value_from_bson_t(out_opts.bson());
+        out_options = bsoncxx::helpers::value_from_bson_t(out);
         if (!coll_ptr) {
             throw_exception<operation_exception>(error);
         }

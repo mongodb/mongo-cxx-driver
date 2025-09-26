@@ -15,7 +15,8 @@
 #include <mongocxx/client.hpp>
 #include <mongocxx/options/client_encryption.hpp>
 
-#include <mongocxx/private/bson.hh>
+#include <mongocxx/scoped_bson.hh>
+
 #include <mongocxx/private/client.hh>
 #include <mongocxx/private/mongoc.hh>
 
@@ -74,13 +75,11 @@ void* client_encryption::convert() const {
     }
 
     if (_kms_providers) {
-        libbson::scoped_bson_t kms_providers{*_kms_providers};
-        libmongoc::client_encryption_opts_set_kms_providers(opts_t, kms_providers.bson());
+        libmongoc::client_encryption_opts_set_kms_providers(opts_t, to_scoped_bson_view(*_kms_providers));
     }
 
     if (_tls_opts) {
-        libbson::scoped_bson_t tls_opts{*_tls_opts};
-        libmongoc::client_encryption_opts_set_tls_opts(opts_t, tls_opts.bson());
+        libmongoc::client_encryption_opts_set_tls_opts(opts_t, to_scoped_bson_view(*_tls_opts));
     }
 
     return opts_t;
