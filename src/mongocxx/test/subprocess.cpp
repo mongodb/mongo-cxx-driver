@@ -42,21 +42,21 @@ int subprocess(std::function<void()> fn, bool* is_signal_ptr) {
 
     // Child: do nothing more than call `fn`.
     if (pid == 0) {
-        // Use `std::exit()` and `std::terminate()` to prevent continued execution of the Catch2 test suite.
+        // Use `std::_Exit()` and `std::terminate()` to prevent continued execution of the Catch2 test suite.
         try {
             fn();
-            std::exit(EXIT_SUCCESS);
+            std::_Exit(EXIT_SUCCESS);
         } catch (Catch::TestFailureException) {
             // Assertion failure already output its diagnostic message.
-            std::exit(EXIT_FAILURE);
+            std::_Exit(EXIT_FAILURE);
         } catch (Catch::TestSkipException) {
             // SKIP() already output its diagnostic message.
             // Don't try to propagate the "skip", just treat as equivalent to success.
-            std::exit(EXIT_SUCCESS);
+            std::_Exit(EXIT_SUCCESS);
         } catch (std::exception const& ex) {
             // Trigger output of Catch2 diagnostic messages.
             FAIL_CHECK("uncaught exception in subprocess: " << ex.what());
-            std::exit(EXIT_FAILURE);
+            std::_Exit(EXIT_FAILURE);
         } catch (...) {
             // Allow default termination handler to translate the unknown exception type.
             // This should also trigger the output of Catch2 diagnostic messages.
