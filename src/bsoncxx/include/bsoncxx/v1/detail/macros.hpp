@@ -85,6 +85,28 @@
 
 #define BSONCXX_PRIVATE_MAX_ALIGN_T std::max_align_t
 
+#define BSONCXX_PRIVATE_IF_MSVC(...)
+#define BSONCXX_PRIVATE_IF_GCC(...)
+#define BSONCXX_PRIVATE_IF_CLANG(...)
+#define BSONCXX_PRIVATE_IF_GNU_LIKE(...) \
+    BSONCXX_PRIVATE_IF_GCC(__VA_ARGS__)  \
+    BSONCXX_PRIVATE_IF_CLANG(__VA_ARGS__)
+
+// clang-format off
+#ifdef __GNUC__
+    #ifdef __clang__
+        #undef BSONCXX_PRIVATE_IF_CLANG
+        #define BSONCXX_PRIVATE_IF_CLANG(...) __VA_ARGS__
+    #else
+        #undef BSONCXX_PRIVATE_IF_GCC
+        #define BSONCXX_PRIVATE_IF_GCC(...) __VA_ARGS__
+    #endif
+#elif defined(_MSC_VER)
+    #undef BSONCXX_PRIVATE_IF_MSVC
+    #define BSONCXX_PRIVATE_IF_MSVC(...) __VA_ARGS__
+#endif
+// clang-format on
+
 // Use this on variables that can only be inline in C++17 or newer, such as static constexpr data members.
 //
 // GCC does not allow __inline__ (even with __extension__) given -std=c++11 and -pedantic-errors (unconditional
@@ -109,28 +131,6 @@
         "clang diagnostic ignored \"-Wc++17-extensions\"") __inline__ _Pragma("clang diagnostic pop")) \
     BSONCXX_PRIVATE_IF_MSVC(__declspec(selectany))
 #endif
-
-#define BSONCXX_PRIVATE_IF_MSVC(...)
-#define BSONCXX_PRIVATE_IF_GCC(...)
-#define BSONCXX_PRIVATE_IF_CLANG(...)
-#define BSONCXX_PRIVATE_IF_GNU_LIKE(...) \
-    BSONCXX_PRIVATE_IF_GCC(__VA_ARGS__)  \
-    BSONCXX_PRIVATE_IF_CLANG(__VA_ARGS__)
-
-// clang-format off
-#ifdef __GNUC__
-    #ifdef __clang__
-        #undef BSONCXX_PRIVATE_IF_CLANG
-        #define BSONCXX_PRIVATE_IF_CLANG(...) __VA_ARGS__
-    #else
-        #undef BSONCXX_PRIVATE_IF_GCC
-        #define BSONCXX_PRIVATE_IF_GCC(...) __VA_ARGS__
-    #endif
-#elif defined(_MSC_VER)
-    #undef BSONCXX_PRIVATE_IF_MSVC
-    #define BSONCXX_PRIVATE_IF_MSVC(...) __VA_ARGS__
-#endif
-// clang-format on
 
 // Disable a warning for a particular compiler.
 //
