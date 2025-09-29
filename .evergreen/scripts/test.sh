@@ -299,11 +299,9 @@ else
         "--suppressions=../etc/memcheck.suppressions"
       )
 
-      # Prevent mongocxx::test::subprocess termination from confusing valgrind.
+      # Avoid noisy diagnostics caused by deliberate subprocess termination.
       if [[ "${1:?}" =~ test_instance ]]; then
-        valgrind_args+=(
-          "--trace-children=no"
-        )
+        valgrind_args+=("--trace-children=no")
       fi
 
       echo "Running ${1:?}..."
