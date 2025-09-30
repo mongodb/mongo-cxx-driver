@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Changes prior to 3.9.0 are documented as [release notes on GitHub](https://github.com/mongodb/mongo-cxx-driver/releases).
 
+## 4.1.4 [Unreleased]
+
+<!-- Will contain entries for next patch release -->
+
 ## 4.1.3
 
 ### Changed
