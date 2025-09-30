@@ -36,8 +36,6 @@ static_assert(is_explicitly_convertible<oid const&, v1::oid>::value, "v_noabi ->
 static_assert(is_implicitly_convertible<v1::oid&&, oid>::value, "v1 -> v_noabi must be implicit");
 static_assert(is_implicitly_convertible<v1::oid const&, oid>::value, "v1 -> v_noabi must be implicit");
 
-constexpr std::size_t oid::k_oid_length;
-
 oid::oid() : _oid{v1::oid::internal::make_oid_for_overwrite()} {
     try {
         _oid = v1::oid{};

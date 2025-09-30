@@ -33,8 +33,6 @@ using code = v1::oid::errc;
 static_assert(is_regular<oid>::value, "bsoncxx::v1::oid must be regular");
 static_assert(is_semitrivial<oid>::value, "bsoncxx::v1::oid must be semitrivial");
 
-constexpr std::size_t oid::k_oid_length;
-
 oid::oid() {
 #if defined(_WIN32)
     // Ensure the Winsock DLL is initialized prior to calling `gethostname` in `bsoncxx::v1::oid::oid()`:

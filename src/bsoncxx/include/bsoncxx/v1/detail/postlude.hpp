@@ -51,6 +51,7 @@
 #pragma pop_macro("BSONCXX_PRIVATE_IF_GCC")
 #pragma pop_macro("BSONCXX_PRIVATE_IF_GNU_LIKE")
 #pragma pop_macro("BSONCXX_PRIVATE_IF_MSVC")
+#pragma pop_macro("BSONCXX_PRIVATE_INLINE_CXX17")
 #pragma pop_macro("BSONCXX_PRIVATE_PRAGMA_IMPL")
 #pragma pop_macro("BSONCXX_PRIVATE_PRAGMA")
 #pragma pop_macro("BSONCXX_PRIVATE_RETURNS")
