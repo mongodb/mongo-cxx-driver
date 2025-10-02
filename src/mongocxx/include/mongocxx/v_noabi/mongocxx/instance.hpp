@@ -48,12 +48,18 @@ class instance {
     ///
     /// Move constructs an instance of the driver.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL() instance(instance&&) noexcept;
+    /// @par Postconditions:
+    /// - `other` is in an assign-or-destroy-only state.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL() instance(instance&& other) noexcept;
 
     ///
     /// Move assigns an instance of the driver.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(instance&) operator=(instance&&) noexcept;
+    /// @par Postconditions:
+    /// - `other` is in an assign-or-destroy-only state.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(instance&) operator=(instance&& other) noexcept;
 
     ///
     /// Destroys an instance of the driver.

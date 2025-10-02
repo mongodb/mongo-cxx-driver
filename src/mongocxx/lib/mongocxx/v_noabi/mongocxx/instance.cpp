@@ -64,8 +64,8 @@ instance::instance(std::unique_ptr<v_noabi::logger> logger) : _impl{bsoncxx::mak
     current_instance.store(this, std::memory_order_relaxed);
 }
 
-instance::instance(instance&&) noexcept = default;
-instance& instance::operator=(instance&&) noexcept = default;
+instance::instance(instance&& other) noexcept = default;
+instance& instance::operator=(instance&& other) noexcept = default;
 
 instance::~instance() {
     current_instance.store(sentinel(), std::memory_order_relaxed);
