@@ -140,13 +140,15 @@ TEST_CASE("failure", "[mongocxx][test][subprocess]") {
 
 TEST_CASE("skip", "[mongocxx][test][subprocess]") {
     auto is_signal = false;
-    CHECK_SUBPROCESS([] {
-        // Try to silence noisy Catch2 output.
-        (void)::close(1); // stdout
-        (void)::close(2); // stderr
+    CHECK_SUBPROCESS(
+        [] {
+            // Try to silence noisy Catch2 output.
+            (void)::close(1); // stdout
+            (void)::close(2); // stderr
 
-        SKIP("subprocess");
-    }, &is_signal);
+            SKIP("subprocess");
+        },
+        &is_signal);
     CHECK_FALSE(is_signal);
 }
 
