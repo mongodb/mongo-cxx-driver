@@ -146,7 +146,7 @@ TEST_CASE("skip", "[mongocxx][test][subprocess]") {
         (void)::close(2); // stderr
 
         SKIP("subprocess");
-    });
+    }, &is_signal);
     CHECK_FALSE(is_signal);
 }
 
