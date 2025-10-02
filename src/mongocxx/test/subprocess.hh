@@ -29,8 +29,8 @@ namespace test {
 // @param is_signal_ptr When not null, `*is_signal_ptr` is set to `true` if the return value is a signal rather than an
 // exit code.
 //
-// @returns The exit code of the subprocess (`*is_signal` is `false`) or the signal used to kill the subprocess
-// (`*is_signal` is `true`) .
+// @returns The exit code of the subprocess (`*is_signal_ptr` is `false`) or the signal used to kill the subprocess
+// (`*is_signal_ptr` is `true`) .
 int subprocess(std::function<void()> fn, bool* is_signal_ptr = nullptr);
 
 #if !defined(_MSC_VER)

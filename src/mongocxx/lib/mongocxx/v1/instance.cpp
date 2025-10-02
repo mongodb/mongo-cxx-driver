@@ -37,8 +37,8 @@ namespace v1 {
 
 using code = v1::instance::errc;
 
-static_assert(!std::is_move_constructible<instance>::value, "bsoncxx::v1::instance must be non-moveable");
-static_assert(!std::is_copy_constructible<instance>::value, "bsoncxx::v1::instance must be non-copyable");
+static_assert(!std::is_move_constructible<instance>::value, "mongocxx::v1::instance must be non-moveable");
+static_assert(!std::is_copy_constructible<instance>::value, "mongocxx::v1::instance must be non-copyable");
 
 namespace {
 

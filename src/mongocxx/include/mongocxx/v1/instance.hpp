@@ -72,7 +72,7 @@ class instance {
     ///
     /// Cleanup the mongocxx (and mongoc) library.
     ///
-    /// Calls [`mongoc_init()`](https://mongoc.org/libmongoc/current/mongoc_cleanup.html).
+    /// Calls [`mongoc_cleanup()`](https://mongoc.org/libmongoc/current/mongoc_cleanup.html).
     ///
     MONGOCXX_ABI_EXPORT_CDECL() ~instance();
 

@@ -38,7 +38,7 @@ struct custom_logger : logger {
 
 } // namespace
 
-// mongocxx::v1::logger must not unnecessarily mpose special requirements on derived classes.
+// mongocxx::v1::logger must not unnecessarily impose special requirements on derived classes.
 static_assert(std::is_nothrow_destructible<custom_logger>::value, "");
 static_assert(std::is_nothrow_move_constructible<custom_logger>::value, "");
 static_assert(std::is_copy_constructible<custom_logger>::value, "");
