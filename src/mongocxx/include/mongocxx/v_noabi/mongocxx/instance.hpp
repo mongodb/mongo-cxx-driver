@@ -66,7 +66,14 @@ class instance {
     ///
     MONGOCXX_ABI_EXPORT_CDECL() ~instance();
 
+    ///
+    /// This class is not copyable.
+    ///
     instance(instance const&) = delete;
+
+    ///
+    /// This class is not copyable.
+    ///
     instance& operator=(instance const&) = delete;
 
     ///
