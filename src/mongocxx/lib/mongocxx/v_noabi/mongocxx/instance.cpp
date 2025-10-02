@@ -52,13 +52,19 @@ class instance::impl {
    public:
     v1::instance _instance;
 
-    impl(std::unique_ptr<logger> handler) try : _instance{std::move(handler)} {
-        // Inform the user that a custom log handler has been registered.
-        // Cannot use `libmongoc::*` mock due to varargs.
-        mongoc_log(MONGOC_LOG_LEVEL_INFO, "mongocxx", "libmongoc logging callback enabled");
+    // mongoc does not expose the state of registered custom log handlers. A bit of indirection is needed to
+    // condition the informational "enabled" message even after `handler` is moved-from.
+    impl(std::unique_ptr<logger>&& handler, bool set_custom_handler) try : _instance{std::move(handler)} {
+        if (set_custom_handler) {
+            // Inform the user that a custom log handler has been registered.
+            // Cannot use `libmongoc::*` mock due to varargs.
+            mongoc_log(MONGOC_LOG_LEVEL_INFO, "mongocxx", "libmongoc logging callback enabled");
+        }
     } catch (v1::exception const&) {
         throw v_noabi::logic_error{error_code::k_cannot_recreate_instance};
     }
+
+    explicit impl(std::unique_ptr<logger> handler) : impl{std::move(handler), static_cast<bool>(handler)} {}
 };
 
 instance::instance() : instance(nullptr) {}
