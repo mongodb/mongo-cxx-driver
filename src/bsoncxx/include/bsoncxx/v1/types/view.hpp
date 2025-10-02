@@ -49,7 +49,7 @@ struct b_double {
     ///
     /// The type represented by this BSON type value.
     ///
-    static constexpr BSONCXX_ABI_EXPORT id type_id = id::k_double;
+    static constexpr id type_id = id::k_double;
 
     ///
     /// The represented value.
@@ -100,7 +100,7 @@ struct b_string {
     ///
     /// The type represented by this BSON type value.
     ///
-    static constexpr BSONCXX_ABI_EXPORT id type_id = id::k_string;
+    static constexpr id type_id = id::k_string;
 
     ///
     /// The represented value.
@@ -148,7 +148,7 @@ struct b_document {
     ///
     /// The type represented by this BSON type value.
     ///
-    static constexpr BSONCXX_ABI_EXPORT id type_id = id::k_document;
+    static constexpr id type_id = id::k_document;
 
     ///
     /// The represented value.
@@ -200,7 +200,7 @@ struct b_array {
     ///
     /// The type represented by this BSON type value.
     ///
-    static constexpr BSONCXX_ABI_EXPORT id type_id = id::k_array;
+    static constexpr id type_id = id::k_array;
 
     ///
     /// The represented value.
@@ -248,7 +248,7 @@ struct b_binary {
     ///
     /// The type represented by this BSON type value.
     ///
-    static constexpr BSONCXX_ABI_EXPORT id type_id = id::k_binary;
+    static constexpr id type_id = id::k_binary;
 
     ///
     /// The represented value's binary subtype component.
@@ -317,7 +317,7 @@ struct b_undefined {
     ///
     /// The type represented by this BSON type value.
     ///
-    static constexpr BSONCXX_ABI_EXPORT id type_id = id::k_undefined;
+    static constexpr id type_id = id::k_undefined;
 
     ///
     /// Return true.
@@ -343,7 +343,7 @@ struct b_oid {
     ///
     /// The type represented by this BSON type value.
     ///
-    static constexpr BSONCXX_ABI_EXPORT id type_id = id::k_oid;
+    static constexpr id type_id = id::k_oid;
 
     ///
     /// The represented value.
@@ -391,7 +391,7 @@ struct b_bool {
     ///
     /// The type represented by this BSON type value.
     ///
-    static constexpr BSONCXX_ABI_EXPORT id type_id = id::k_bool;
+    static constexpr id type_id = id::k_bool;
 
     ///
     /// The represented value.
@@ -439,7 +439,7 @@ struct b_date {
     ///
     /// The type represented by this BSON type value.
     ///
-    static constexpr BSONCXX_ABI_EXPORT id type_id = id::k_date;
+    static constexpr id type_id = id::k_date;
 
     ///
     /// The represented value (milliseconds relative to the Unix epoch).
@@ -498,7 +498,7 @@ struct b_null {
     ///
     /// The type represented by this BSON type value.
     ///
-    static constexpr BSONCXX_ABI_EXPORT id type_id = id::k_null;
+    static constexpr id type_id = id::k_null;
 
     ///
     /// Return true.
@@ -524,7 +524,7 @@ struct b_regex {
     ///
     /// The type represented by this BSON type value.
     ///
-    static constexpr BSONCXX_ABI_EXPORT id type_id = id::k_regex;
+    static constexpr id type_id = id::k_regex;
 
     ///
     /// The represented value's "pattern" component.
@@ -577,7 +577,7 @@ struct b_dbpointer {
     ///
     /// The type represented by this BSON type value.
     ///
-    static constexpr BSONCXX_ABI_EXPORT id type_id = id::k_dbpointer;
+    static constexpr id type_id = id::k_dbpointer;
 
     ///
     /// The represented value's "$ref" (namespace) component.
@@ -623,7 +623,7 @@ struct b_code {
     ///
     /// The type represented by this BSON type value.
     ///
-    static constexpr BSONCXX_ABI_EXPORT id type_id = id::k_code;
+    static constexpr id type_id = id::k_code;
 
     ///
     /// The represented value.
@@ -673,7 +673,7 @@ struct b_symbol {
     ///
     /// The type represented by this BSON type value.
     ///
-    static constexpr BSONCXX_ABI_EXPORT id type_id = id::k_symbol;
+    static constexpr id type_id = id::k_symbol;
 
     ///
     /// The represented value.
@@ -723,7 +723,7 @@ struct b_codewscope {
     ///
     /// The type represented by this BSON type value.
     ///
-    static constexpr BSONCXX_ABI_EXPORT id type_id = id::k_codewscope;
+    static constexpr id type_id = id::k_codewscope;
 
     ///
     /// The represented value's "$code" component.
@@ -769,7 +769,7 @@ struct b_int32 {
     ///
     /// The type represented by this BSON type value.
     ///
-    static constexpr BSONCXX_ABI_EXPORT id type_id = id::k_int32;
+    static constexpr id type_id = id::k_int32;
 
     ///
     /// The represented value.
@@ -817,7 +817,7 @@ struct b_timestamp {
     ///
     /// The type represented by this BSON type value.
     ///
-    static constexpr BSONCXX_ABI_EXPORT id type_id = id::k_timestamp;
+    static constexpr id type_id = id::k_timestamp;
 
     ///
     /// The represented value's "i" component.
@@ -863,7 +863,7 @@ struct b_int64 {
     ///
     /// The type represented by this BSON type value.
     ///
-    static constexpr BSONCXX_ABI_EXPORT id type_id = id::k_int64;
+    static constexpr id type_id = id::k_int64;
 
     ///
     /// The represented value.
@@ -911,7 +911,7 @@ struct b_decimal128 {
     ///
     /// The type represented by this BSON type value.
     ///
-    static constexpr BSONCXX_ABI_EXPORT id type_id = id::k_decimal128;
+    static constexpr id type_id = id::k_decimal128;
 
     ///
     /// The represented value.
@@ -959,7 +959,7 @@ struct b_maxkey {
     ///
     /// The type represented by this BSON type value.
     ///
-    static constexpr BSONCXX_ABI_EXPORT id type_id = id::k_maxkey;
+    static constexpr id type_id = id::k_maxkey;
 
     ///
     /// Return true.
@@ -985,7 +985,7 @@ struct b_minkey {
     ///
     /// The type represented by this BSON type value.
     ///
-    static constexpr BSONCXX_ABI_EXPORT id type_id = id::k_minkey;
+    static constexpr id type_id = id::k_minkey;
 
     ///
     /// Return true.
@@ -1003,6 +1003,12 @@ struct b_minkey {
 };
 
 // BSONCXX_V1_TYPES_XMACRO: update above.
+
+#pragma push_macro("X")
+#undef X
+#define X(_name, _val) BSONCXX_PRIVATE_INLINE_CXX17 constexpr id b_##_name::type_id;
+BSONCXX_V1_TYPES_XMACRO(X)
+#pragma pop_macro("X")
 
 ///
 /// A non-owning, read-only union of BSON type values.

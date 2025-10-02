@@ -93,23 +93,22 @@ class strong_ordering {
 #pragma pop_macro("DEFOP")
 
     // nonstd: Swap greater/less values
-    constexpr strong_ordering inverted() const noexcept {
-        return *this < nullptr ? greater : *this > nullptr ? less : *this;
-    }
+    constexpr strong_ordering inverted() const noexcept;
 };
 
-#pragma push_macro("INLINE_VAR")
-#undef INLINE_VAR
-#define INLINE_VAR                             \
-    BSONCXX_PRIVATE_IF_GNU_LIKE([[gnu::weak]]) \
-    BSONCXX_PRIVATE_IF_MSVC(__declspec(selectany))
+BSONCXX_PRIVATE_INLINE_CXX17 strong_ordering const strong_ordering::less =
+    strong_ordering(strong_ordering::_construct{}, -1);
+BSONCXX_PRIVATE_INLINE_CXX17 strong_ordering const strong_ordering::greater =
+    strong_ordering(strong_ordering::_construct{}, 1);
+BSONCXX_PRIVATE_INLINE_CXX17 strong_ordering const strong_ordering::equivalent =
+    strong_ordering(strong_ordering::_construct{}, 0);
+BSONCXX_PRIVATE_INLINE_CXX17 strong_ordering const strong_ordering::equal =
+    strong_ordering(strong_ordering::_construct{}, 0);
 
-INLINE_VAR const strong_ordering strong_ordering::less = strong_ordering(strong_ordering::_construct{}, -1);
-INLINE_VAR const strong_ordering strong_ordering::greater = strong_ordering(strong_ordering::_construct{}, 1);
-INLINE_VAR const strong_ordering strong_ordering::equivalent = strong_ordering(strong_ordering::_construct{}, 0);
-INLINE_VAR const strong_ordering strong_ordering::equal = strong_ordering(strong_ordering::_construct{}, 0);
-
-#pragma pop_macro("INLINE_VAR")
+// Define out-of-line to avoid GCC error: ‘bsoncxx::detail::strong_ordering::*’ declared weak after being used
+inline constexpr strong_ordering strong_ordering::inverted() const noexcept {
+    return *this < nullptr ? greater : *this > nullptr ? less : *this;
+}
 
 // Implements a three-way comparison between two objects. That is, in
 // a single operation, determine whether the left operand is less-than, greater-than,

@@ -43,7 +43,7 @@ class oid {
     v1::oid _oid;
 
    public:
-    static constexpr BSONCXX_ABI_EXPORT std::size_t k_oid_length = v1::oid::k_oid_length;
+    static constexpr std::size_t k_oid_length = v1::oid::k_oid_length;
 
     ///
     /// Constructs an oid and initializes it to a newly generated ObjectId.
@@ -164,6 +164,8 @@ class oid {
    private:
     friend BSONCXX_ABI_EXPORT_CDECL(int) oid_compare(oid const& lhs, oid const& rhs);
 };
+
+BSONCXX_PRIVATE_INLINE_CXX17 constexpr std::size_t oid::k_oid_length;
 
 ///
 /// Convert to the @ref bsoncxx::v_noabi equivalent of `v`.
