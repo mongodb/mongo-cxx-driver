@@ -53,6 +53,9 @@ class instance::impl {
     v1::instance _instance;
 
     impl(std::unique_ptr<logger> handler) try : _instance{std::move(handler)} {
+        // Inform the user that a custom log handler has been registered.
+        // Cannot use `libmongoc::*` mock due to varargs.
+        mongoc_log(MONGOC_LOG_LEVEL_INFO, "mongocxx", "libmongoc logging callback enabled");
     } catch (v1::exception const&) {
         throw v_noabi::logic_error{error_code::k_cannot_recreate_instance};
     }
