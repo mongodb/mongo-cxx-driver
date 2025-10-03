@@ -28,7 +28,8 @@
 #include <mongocxx/instance.hpp>
 #include <mongocxx/options/index_view.hpp>
 
-#include <mongocxx/private/bson.hh>
+#include <mongocxx/scoped_bson.hh>
+
 #include <mongocxx/private/conversions.hh>
 #include <mongocxx/private/mongoc.hh>
 
@@ -282,7 +283,6 @@ TEST_CASE("A database", "[database]") {
         bool called = false;
 
         bsoncxx::document::value doc = make_document(kvp("foo", 5));
-        libbson::scoped_bson_t bson_doc{doc.view()};
 
         database_command_with_opts->interpose([&](mongoc_database_t*,
                                                   bson_t const*,
@@ -291,7 +291,7 @@ TEST_CASE("A database", "[database]") {
                                                   bson_t* reply,
                                                   bson_error_t*) {
             called = true;
-            ::bson_copy_to(bson_doc.bson(), reply);
+            ::bson_copy_to(to_scoped_bson_view(doc), reply);
             return true;
         });
 

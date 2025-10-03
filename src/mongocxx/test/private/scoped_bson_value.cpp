@@ -23,8 +23,6 @@
 
 #include <bsoncxx/stdx/string_view.hpp>
 
-#include <mongocxx/private/bson.hh>
-
 #include <bsoncxx/test/catch.hh>
 
 namespace {

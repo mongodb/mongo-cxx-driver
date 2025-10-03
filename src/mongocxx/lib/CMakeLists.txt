@@ -13,10 +13,10 @@
 # limitations under the License.
 
 set(mongocxx_sources_private
-    mongocxx/private/bson.cpp
     mongocxx/private/conversions.cpp
     mongocxx/private/mongoc.cpp
     mongocxx/private/numeric_casting.cpp
+    mongocxx/private/scoped_bson.cpp
 )
 
 set(mongocxx_sources_v_noabi
@@ -255,7 +255,6 @@ set_dist_list(src_mongocxx_lib_DIST
     ${mongocxx_sources_v_noabi}
     ${mongocxx_sources_v1}
     mongocxx/private/append_aggregate_options.hh
-    mongocxx/private/bson.hh
     mongocxx/private/bulk_write.hh
     mongocxx/private/change_stream.hh
     mongocxx/private/client_encryption.hh
@@ -277,6 +276,7 @@ set_dist_list(src_mongocxx_lib_DIST
     mongocxx/private/read_concern.hh
     mongocxx/private/read_preference.hh
     mongocxx/private/scoped_bson_value.hh
+    mongocxx/private/scoped_bson.hh
     mongocxx/private/search_index_model.hh
     mongocxx/private/search_index_view.hh
     mongocxx/private/ssl.hh
@@ -289,6 +289,7 @@ set_dist_list(src_mongocxx_lib_DIST
     mongocxx/v_noabi/mongocxx/options/server_api.hh
     mongocxx/v_noabi/mongocxx/options/tls.hh
     mongocxx/v_noabi/mongocxx/options/transaction.hh
+    mongocxx/v_noabi/mongocxx/scoped_bson.hh
     mongocxx/v1/config/config.hpp.in
     mongocxx/v1/config/version.hpp.in
 )

@@ -9,8 +9,9 @@
 
 #include <mongocxx/search_index_view.hpp>
 
+#include <mongocxx/scoped_bson.hh>
+
 #include <mongocxx/private/append_aggregate_options.hh>
-#include <mongocxx/private/bson.hh>
 #include <mongocxx/private/client_session.hh>
 #include <mongocxx/private/mongoc.hh>
 
@@ -65,7 +66,6 @@ class search_index_view::impl {
 
     cursor list(client_session const* session, pipeline const& pipeline, options::aggregate const& options) {
         bsoncxx::v_noabi::builder::basic::document opts_doc;
-        libbson::scoped_bson_t stages(bsoncxx::v_noabi::document::view(pipeline.view_array()));
 
         append_aggregate_options(opts_doc, options);
 
@@ -76,11 +76,13 @@ class search_index_view::impl {
         mongoc_read_prefs_t const* const rp_ptr =
             options.read_preference() ? options.read_preference()->_impl->read_preference_t : nullptr;
 
-        libbson::scoped_bson_t opts_bson(opts_doc.view());
-
         auto coll_copy = copy_and_apply_default_rw_concerns(_coll);
         return libmongoc::collection_aggregate(
-            coll_copy.get(), mongoc_query_flags_t(), stages.bson(), opts_bson.bson(), rp_ptr);
+            coll_copy.get(),
+            mongoc_query_flags_t(),
+            to_scoped_bson_view(pipeline.view_array()),
+            to_scoped_bson_view(opts_doc),
+            rp_ptr);
     }
 
     std::string create_one(client_session const* session, search_index_model const& model) {
@@ -115,7 +117,6 @@ class search_index_view::impl {
         document::view_or_value command = make_document(
             kvp("createSearchIndexes", libmongoc::collection_get_name(_coll)), kvp("indexes", search_index_arr.view()));
 
-        libbson::scoped_bson_t reply;
         bson_error_t error;
 
         builder::basic::document opts_doc;
@@ -124,18 +125,17 @@ class search_index_view::impl {
             opts_doc.append(bsoncxx::v_noabi::builder::concatenate_doc{session->_get_impl().to_document()});
         }
 
-        libbson::scoped_bson_t command_bson{command};
-        libbson::scoped_bson_t opts_bson{opts_doc.view()};
-
         auto coll_copy = copy_and_apply_default_rw_concerns(_coll);
+
+        scoped_bson reply;
         auto result = libmongoc::collection_write_command_with_opts(
-            coll_copy.get(), command_bson.bson(), opts_bson.bson(), reply.bson_for_init(), &error);
+            coll_copy.get(), to_scoped_bson_view(command), to_scoped_bson_view(opts_doc), reply.out_ptr(), &error);
 
         if (!result) {
-            throw_exception<operation_exception>(reply.steal(), error);
+            throw_exception<operation_exception>(from_v1(std::move(reply)), error);
         }
 
-        return reply.steal();
+        return from_v1(std::move(reply));
     }
 
     void drop_one(client_session const* session, bsoncxx::v_noabi::string::view_or_value name) {
@@ -148,14 +148,13 @@ class search_index_view::impl {
             opts_doc.append(bsoncxx::v_noabi::builder::concatenate_doc{session->_get_impl().to_document()});
         }
 
-        libbson::scoped_bson_t reply;
-        libbson::scoped_bson_t command_bson{command.view()};
-        libbson::scoped_bson_t opts_bson{opts_doc.view()};
         bson_error_t error;
 
         auto coll_copy = copy_and_apply_default_rw_concerns(_coll);
+
+        scoped_bson reply;
         bool result = libmongoc::collection_write_command_with_opts(
-            coll_copy.get(), command_bson.bson(), opts_bson.bson(), reply.bson_for_init(), &error);
+            coll_copy.get(), to_scoped_bson_view(command), to_scoped_bson_view(opts_doc), reply.out_ptr(), &error);
 
         uint32_t const serverErrorNamespaceNotFound = 26;
         if (error.domain == MONGOC_ERROR_QUERY && error.code == serverErrorNamespaceNotFound) {
@@ -166,7 +165,7 @@ class search_index_view::impl {
         }
 
         if (!result) {
-            throw_exception<operation_exception>(reply.steal(), error);
+            throw_exception<operation_exception>(from_v1(std::move(reply)), error);
         }
     }
 
@@ -184,17 +183,16 @@ class search_index_view::impl {
             opts_doc.append(bsoncxx::v_noabi::builder::concatenate_doc{session->_get_impl().to_document()});
         }
 
-        libbson::scoped_bson_t reply;
-        libbson::scoped_bson_t command_bson{command.view()};
-        libbson::scoped_bson_t opts_bson{opts_doc.view()};
         bson_error_t error;
 
         auto coll_copy = copy_and_apply_default_rw_concerns(_coll);
+
+        scoped_bson reply;
         bool result = libmongoc::collection_write_command_with_opts(
-            coll_copy.get(), command_bson.bson(), opts_bson.bson(), reply.bson_for_init(), &error);
+            coll_copy.get(), to_scoped_bson_view(command), to_scoped_bson_view(opts_doc), reply.out_ptr(), &error);
 
         if (!result) {
-            throw_exception<operation_exception>(reply.steal(), error);
+            throw_exception<operation_exception>(from_v1(std::move(reply)), error);
         }
     }
 

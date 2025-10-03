@@ -15,8 +15,6 @@
 #include <mongocxx/bulk_write.hpp>
 #include <mongocxx/result/rewrap_many_datakey.hpp>
 
-#include <mongocxx/private/bson.hh>
-
 namespace mongocxx {
 namespace v_noabi {
 namespace result {

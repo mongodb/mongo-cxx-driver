@@ -19,7 +19,8 @@
 
 #include <mongocxx/exception/operation_exception.hpp>
 
-#include <mongocxx/private/bson.hh>
+#include <mongocxx/scoped_bson.hh>
+
 #include <mongocxx/private/mongoc.hh>
 
 namespace mongocxx {
@@ -47,9 +48,7 @@ bool operation_exception::has_error_label(bsoncxx::v_noabi::stdx::string_view la
         return false;
     }
 
-    libbson::scoped_bson_t error(_raw_server_error->view());
-    std::string label_str{label.data(), label.size()};
-    return libmongoc::error_has_label(error.bson(), label_str.c_str());
+    return libmongoc::error_has_label(to_scoped_bson_view(*_raw_server_error).bson(), std::string{label}.c_str());
 }
 
 } // namespace v_noabi

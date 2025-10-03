@@ -26,6 +26,7 @@
 #include <bsoncxx/builder/stream/document.hpp>
 #include <bsoncxx/builder/stream/helpers.hpp>
 #include <bsoncxx/document/element.hpp>
+#include <bsoncxx/document/view.hpp>
 #include <bsoncxx/stdx/string_view.hpp>
 #include <bsoncxx/types.hpp>
 #include <bsoncxx/types/bson_value/make_value.hpp>
@@ -43,9 +44,9 @@
 #include <mongocxx/uri.hpp>
 #include <mongocxx/write_concern.hpp>
 
-#include <bsoncxx/private/make_unique.hh>
+#include <mongocxx/scoped_bson.hh>
 
-#include <mongocxx/private/bson.hh>
+#include <bsoncxx/private/make_unique.hh>
 
 #include <bsoncxx/test/catch.hh>
 
@@ -2651,12 +2652,9 @@ TEST_CASE("Custom Key Material Test", "[client_side_encryption]") {
     bsoncxx::types::b_binary id_bin{bsoncxx::binary_sub_type::k_uuid, static_cast<std::uint32_t>(id.size()), id.data()};
     auto key_doc = make_document(kvp("_id", id_bin));
 
-    mongocxx::libbson::scoped_bson_t bson_doc;
-    bson_doc.init_from_static(doc);
-    mongocxx::libbson::scoped_bson_t doc_without_id;
-    bson_copy_to_excluding_noinit(bson_doc.bson(), doc_without_id.bson_for_init(), "_id", nullptr);
-
-    bsoncxx::document::value new_doc(doc_without_id.steal());
+    scoped_bson doc_without_id;
+    bson_copy_to_excluding_noinit(to_scoped_bson_view(doc), doc_without_id.out_ptr(), "_id", nullptr);
+    bsoncxx::document::value new_doc{from_v1(std::move(doc_without_id))};
 
     bsoncxx::builder::basic::document builder;
     builder.append(concatenate(key_doc.view()));

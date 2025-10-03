@@ -20,7 +20,8 @@
 #include <mongocxx/change_stream.hpp>
 #include <mongocxx/exception/query_exception.hpp>
 
-#include <mongocxx/private/bson.hh>
+#include <mongocxx/scoped_bson.hh>
+
 #include <mongocxx/private/mongoc.hh>
 #include <mongocxx/private/mongoc_error.hh>
 
@@ -77,22 +78,20 @@ class change_stream::impl {
     }
 
     void advance_iterator() {
-        bson_t const* out;
+        scoped_bson_view doc;
 
         // Happy-case.
-        if (libmongoc::change_stream_next(this->change_stream_, &out)) {
-            this->doc_ = bsoncxx::v_noabi::document::view{bson_get_data(out), out->len};
+        if (libmongoc::change_stream_next(this->change_stream_, doc.out_ptr())) {
+            this->doc_ = doc.view();
             return;
         }
 
         // Check for errors or just nothing left.
         bson_error_t error;
-        if (libmongoc::change_stream_error_document(this->change_stream_, &error, &out)) {
+        if (libmongoc::change_stream_error_document(this->change_stream_, &error, doc.out_ptr())) {
             this->mark_dead();
             this->doc_ = bsoncxx::v_noabi::document::view{};
-            mongocxx::libbson::scoped_bson_t scoped_error_reply{};
-            bson_copy_to(out, scoped_error_reply.bson_for_init());
-            throw_exception<query_exception>(scoped_error_reply.steal(), error);
+            throw_exception<query_exception>(bsoncxx::v_noabi::from_v1(doc.value()), error);
         }
 
         // Just nothing left.

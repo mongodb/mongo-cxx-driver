@@ -30,9 +30,9 @@
 #include <mongocxx/pool.hpp>
 #include <mongocxx/write_concern.hpp>
 
-#include <bsoncxx/private/bson.hh>
+#include <mongocxx/scoped_bson.hh>
 
-#include <mongocxx/private/bson.hh>
+#include <bsoncxx/private/bson.hh>
 
 #include <bsoncxx/test/catch.hh>
 
@@ -79,7 +79,7 @@ bsoncxx::document::value doc(std::string key, T val) {
 // Phrased as a lambda instead of function because c++11 doesn't have decltype(auto) and the
 // return-type is haunting.
 auto const gen_next = [](bool has_next) {
-    static mongocxx::libbson::scoped_bson_t next_bson{make_document(kvp("some", "doc"))};
+    static scoped_bson next_bson{to_scoped_bson(make_document(kvp("some", "doc")))};
     return [=](mongoc_change_stream_t*, bson_t const** bson) mutable -> bool {
         if (has_next) {
             *bson = next_bson.bson();

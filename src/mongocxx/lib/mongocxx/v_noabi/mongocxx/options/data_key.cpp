@@ -14,7 +14,8 @@
 
 #include <mongocxx/options/data_key.hpp>
 
-#include <mongocxx/private/bson.hh>
+#include <mongocxx/scoped_bson.hh>
+
 #include <mongocxx/private/mongoc.hh>
 
 namespace mongocxx {
@@ -44,8 +45,7 @@ void* data_key::convert() const {
     mongoc_client_encryption_datakey_opts_t* opts_t = libmongoc::client_encryption_datakey_opts_new();
 
     if (_master_key) {
-        libbson::scoped_bson_t master_key{*_master_key};
-        libmongoc::client_encryption_datakey_opts_set_masterkey(opts_t, master_key.bson());
+        libmongoc::client_encryption_datakey_opts_set_masterkey(opts_t, to_scoped_bson_view(_master_key->view()));
     }
 
     if (!_key_alt_names.empty()) {
