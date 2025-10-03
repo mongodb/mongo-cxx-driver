@@ -64,7 +64,6 @@ scoped_bson& scoped_bson::operator+=(scoped_bson_view other) {
 
         // Ownership transfer failed.
         if (!bson) {
-            bson_destroy(bson);
             _value = bsoncxx::v1::document::value{std::move(ptr)}; // Strong exception safety.
             throw std::logic_error{"mongocxx::scoped_bson::operator+=: bson_new_from_buffer failed"};
         }
