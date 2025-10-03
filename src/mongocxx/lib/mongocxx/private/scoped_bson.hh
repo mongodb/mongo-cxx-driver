@@ -38,16 +38,16 @@ class scoped_bson_view {
     ~scoped_bson_view() = default;
 
     // Handled by the copy constructor.
-    // scoped_bson_view(scoped_bson_view&& other) = default;
+    // scoped_bson_view(scoped_bson_view&& other) noexcept = default;
 
     // Handled by the copy assignment operator.
-    // scoped_bson_view& operator=(scoped_bson_view&& other) = default;
+    // scoped_bson_view& operator=(scoped_bson_view&& other) noexcept = default;
 
-    scoped_bson_view(scoped_bson_view const& other) : _view{other._view} {
+    scoped_bson_view(scoped_bson_view const& other) noexcept : _view{other._view} {
         this->sync_bson();
     }
 
-    scoped_bson_view& operator=(scoped_bson_view const& other) {
+    scoped_bson_view& operator=(scoped_bson_view const& other) noexcept {
         _view = other._view;
         this->sync_bson();
         return *this;
