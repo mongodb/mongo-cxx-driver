@@ -24,6 +24,7 @@
 #include <bsoncxx/private/make_unique.hh>
 
 #include <catch2/catch_test_macros.hpp>
+#include <catch2/matchers/catch_matchers_exception.hpp>
 
 namespace mongocxx {
 
@@ -405,14 +406,20 @@ TEST_CASE("concat", "[mongocxx][private][scoped_bson]") {
             scoped_bson lhs{nullptr};
             scoped_bson rhs;
 
-            CHECK_THROWS_AS(lhs += rhs, std::logic_error);
+            CHECK_THROWS_MATCHES(
+                lhs += rhs,
+                std::logic_error,
+                Catch::Matchers::Message("mongocxx::scoped_bson::operator+=: this->data() == nullptr"));
         }
 
         SECTION("rhs") {
             scoped_bson lhs;
             scoped_bson rhs{nullptr};
 
-            CHECK_THROWS_AS(lhs += rhs, std::logic_error);
+            CHECK_THROWS_MATCHES(
+                lhs += rhs,
+                std::logic_error,
+                Catch::Matchers::Message("mongocxx::scoped_bson::operator+=: other.data() == nullptr"));
         }
 
         SECTION("concat") {
@@ -429,7 +436,10 @@ TEST_CASE("concat", "[mongocxx][private][scoped_bson]") {
             REQUIRE(lhs.data() != nullptr);
             REQUIRE(rhs.data() != nullptr);
 
-            CHECK_THROWS_AS(lhs += rhs, std::logic_error);
+            CHECK_THROWS_MATCHES(
+                lhs += rhs,
+                std::logic_error,
+                Catch::Matchers::Message("mongocxx::scoped_bson::operator+=: bson_concat failed"));
         }
     }
 

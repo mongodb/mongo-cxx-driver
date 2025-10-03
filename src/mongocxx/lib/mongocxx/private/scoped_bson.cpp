@@ -25,11 +25,11 @@ namespace mongocxx {
 
 scoped_bson& scoped_bson::operator+=(scoped_bson_view other) {
     if (!_value) {
-        throw std::logic_error{"mongocxx::scoped_bson::inout_ptr: this->data() == nullptr"};
+        throw std::logic_error{"mongocxx::scoped_bson::operator+=: this->data() == nullptr"};
     }
 
     if (!other) {
-        throw std::logic_error{"mongocxx::scoped_bson::inout_ptr: other.data() == nullptr"};
+        throw std::logic_error{"mongocxx::scoped_bson::operator+=: other.data() == nullptr"};
     }
 
     auto const is_self_assignment = _value.data() == other.data();
