@@ -55,12 +55,6 @@ static_assert(is_semitrivial<view>::value, "bsoncxx::v1::types::view must be sem
 
 #pragma push_macro("X")
 #undef X
-#define X(_name, _value) constexpr id b_##_name::type_id;
-BSONCXX_V1_TYPES_XMACRO(X)
-#pragma pop_macro("X")
-
-#pragma push_macro("X")
-#undef X
 #define X(_name, _value)                              \
     b_##_name view::get_##_name() const {             \
         if (_id != id::k_##_name) {                   \

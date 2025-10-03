@@ -43,7 +43,7 @@ class oid {
     ///
     /// The number of bytes required to represent an ObjectID.
     ///
-    static constexpr BSONCXX_ABI_EXPORT std::size_t k_oid_length = 12;
+    static constexpr std::size_t k_oid_length = 12;
 
    private:
     std::array<std::uint8_t, k_oid_length> _bytes;
@@ -197,6 +197,8 @@ class oid {
 
     /* explicit(false) */ oid(for_overwrite_tag) : _bytes{} {}
 };
+
+BSONCXX_PRIVATE_INLINE_CXX17 constexpr std::size_t oid::k_oid_length;
 
 } // namespace v1
 } // namespace bsoncxx

@@ -13,21 +13,3 @@
 // limitations under the License.
 
 #include <bsoncxx/types.hpp>
-
-//
-
-#include <bsoncxx/v1/detail/macros.hpp>
-
-namespace bsoncxx {
-namespace v_noabi {
-namespace types {
-
-#pragma push_macro("X")
-#undef X
-#define X(_name, _value) constexpr v_noabi::type b_##_name::type_id;
-BSONCXX_V1_TYPES_XMACRO(X)
-#pragma pop_macro("X")
-
-} // namespace types
-} // namespace v_noabi
-} // namespace bsoncxx
