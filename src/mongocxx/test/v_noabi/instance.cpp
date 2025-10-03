@@ -12,34 +12,50 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/instance.hpp>
 
-#include <bsoncxx/test/catch.hh>
+//
+
+#include <mongocxx/exception/error_code.hpp>
+#include <mongocxx/exception/logic_error.hpp>
+
+#include <bsoncxx/test/system_error.hh>
+
+#include <mongocxx/test/subprocess.hh>
 
 namespace {
 
-TEST_CASE("instance", "[mongocxx][v_noabi][instance]") {
-    using namespace mongocxx;
+using mongocxx::v_noabi::instance;
 
-    instance* inst = nullptr;
+using code = mongocxx::v_noabi::error_code;
 
-    // instance::current creates instance when one has not already been created
-    REQUIRE_NOTHROW(inst = &instance::current());
+TEST_CASE("basic", "[mongocxx][v_noabi][instance]") {
+    auto const ret = mongocxx::test::subprocess([] {
+        using mongocxx::v_noabi::logic_error;
 
-    // multiple instances cannot be created"
-    REQUIRE_THROWS_AS(instance{}, logic_error);
+        instance* inst = nullptr;
 
-    // instance::current works when instance is alive
-    REQUIRE_NOTHROW(instance::current());
+        // instance::current creates instance when one has not already been created
+        REQUIRE_NOTHROW(inst = &instance::current());
 
-    // an instance cannot be created after one has been destroyed
-    inst->~instance();
-    inst = nullptr;
-    REQUIRE_THROWS_AS(instance{}, logic_error);
+        // multiple instances cannot be created"
+        REQUIRE_THROWS_WITH_CODE(instance{}, code::k_cannot_recreate_instance);
+        REQUIRE_THROWS_AS(instance{}, logic_error);
 
-    // instance::current throws if an instance has already been destroyed
-    REQUIRE_THROWS_AS(instance::current(), logic_error);
+        // instance::current works when instance is alive
+        REQUIRE_NOTHROW(instance::current());
+
+        // an instance cannot be created after one has been destroyed
+        inst->~instance();
+        inst = nullptr;
+        REQUIRE_THROWS_WITH_CODE(instance{}, code::k_cannot_recreate_instance);
+        REQUIRE_THROWS_AS(instance{}, logic_error);
+
+        // instance::current throws if an instance has already been destroyed
+        REQUIRE_THROWS_WITH_CODE(instance::current(), code::k_instance_destroyed);
+        REQUIRE_THROWS_AS(instance::current(), logic_error);
+    });
+    REQUIRE(ret == 0);
 }
 
 } // namespace
