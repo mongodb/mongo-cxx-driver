@@ -43,11 +43,11 @@ scoped_bson& scoped_bson::operator+=(scoped_bson_view other) {
         bson_t bson = BSON_INITIALIZER;
 
         if (bson_concat(&bson, this->bson()) && bson_concat(&bson, other.bson())) {
-            *this = scoped_bson{&bson}; // Ownership transfer.
-        } else {
-            bson_destroy(&bson);
-            throw std::logic_error{"mongocxx::scoped_bson::operator+=: bson_new_from_data failed"};
+            return *this = scoped_bson{&bson}; // Ownership transfer.
         }
+
+        bson_destroy(&bson);
+        throw std::logic_error{"mongocxx::scoped_bson::operator+=: bson_new_from_data failed"};
     }
 
     // Compatible allocator: avoid an unnecessary copy by reusing the underlying BSON data.
@@ -78,12 +78,12 @@ scoped_bson& scoped_bson::operator+=(scoped_bson_view other) {
 
         *this = scoped_bson{bson}; // Ownership transfer (success) + strong exception safety (failure).
 
-        if (!ret) {
-            throw std::logic_error{"mongocxx::scoped_bson::operator+=: bson_concat failed"};
+        if (ret) {
+            return *this;
         }
-    }
 
-    return *this;
+        throw std::logic_error{"mongocxx::scoped_bson::operator+=: bson_concat failed"};
+    }
 }
 
 } // namespace mongocxx
