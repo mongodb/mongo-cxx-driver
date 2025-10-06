@@ -223,9 +223,66 @@ tasks:
         vars:
           CMAKE_VERSION: 3.15.0
           INSTALL_C_DRIVER: 1
-  - name: compile-only-debian12-gcc-cxx11-debug
-    run_on: debian12-large
-    tags: [compile-only, debian12, cxx11, gcc, debug]
+  - name: compile-only-debian11-latest-gcc-10-cxx11-debug
+    run_on: debian11-latest-large
+    tags: [compile-only, debian11-latest, cxx11, gcc-10, debug]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+            - { key: cc_compiler, value: gcc-10 }
+            - { key: cxx_compiler, value: g++-10 }
+      - func: setup
+      - func: install_c_driver
+      - func: compile
+        vars:
+          BUILD_SHARED_AND_STATIC_LIBS: "ON"
+          REQUIRED_CXX_STANDARD: 11
+          build_type: Debug
+          cc_compiler: gcc-10
+          cxx_compiler: g++-10
+  - name: compile-only-debian11-latest-gcc-10-cxx17-debug
+    run_on: debian11-latest-large
+    tags: [compile-only, debian11-latest, cxx17, gcc-10, debug]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+            - { key: cc_compiler, value: gcc-10 }
+            - { key: cxx_compiler, value: g++-10 }
+      - func: setup
+      - func: install_c_driver
+      - func: compile
+        vars:
+          BUILD_SHARED_AND_STATIC_LIBS: "ON"
+          REQUIRED_CXX_STANDARD: 17
+          build_type: Debug
+          cc_compiler: gcc-10
+          cxx_compiler: g++-10
+  - name: compile-only-debian11-latest-gcc-10-cxx20-debug
+    run_on: debian11-latest-large
+    tags: [compile-only, debian11-latest, cxx20, gcc-10, debug]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+            - { key: cc_compiler, value: gcc-10 }
+            - { key: cxx_compiler, value: g++-10 }
+      - func: setup
+      - func: install_c_driver
+      - func: compile
+        vars:
+          BUILD_SHARED_AND_STATIC_LIBS: "ON"
+          REQUIRED_CXX_STANDARD: 20
+          build_type: Debug
+          cc_compiler: gcc-10
+          cxx_compiler: g++-10
+  - name: compile-only-debian12-latest-gcc-cxx11-debug
+    run_on: debian12-latest-large
+    tags: [compile-only, debian12-latest, cxx11, gcc, debug]
     commands:
       - command: expansions.update
         params:
@@ -242,9 +299,9 @@ tasks:
           build_type: Debug
           cc_compiler: gcc
           cxx_compiler: g++
-  - name: compile-only-debian12-gcc-cxx17-debug
-    run_on: debian12-large
-    tags: [compile-only, debian12, cxx17, gcc, debug]
+  - name: compile-only-debian12-latest-gcc-cxx17-debug
+    run_on: debian12-latest-large
+    tags: [compile-only, debian12-latest, cxx17, gcc, debug]
     commands:
       - command: expansions.update
         params:
@@ -261,9 +318,9 @@ tasks:
           build_type: Debug
           cc_compiler: gcc
           cxx_compiler: g++
-  - name: compile-only-debian12-gcc-cxx20-debug
-    run_on: debian12-large
-    tags: [compile-only, debian12, cxx20, gcc, debug]
+  - name: compile-only-debian12-latest-gcc-cxx20-debug
+    run_on: debian12-latest-large
+    tags: [compile-only, debian12-latest, cxx20, gcc, debug]
     commands:
       - command: expansions.update
         params:
@@ -542,6 +599,120 @@ tasks:
   - name: compile-only-rhel80-gcc-cxx20-debug
     run_on: rhel80-large
     tags: [compile-only, rhel80, cxx20, gcc, debug]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+            - { key: cc_compiler, value: gcc }
+            - { key: cxx_compiler, value: g++ }
+      - func: setup
+      - func: install_c_driver
+      - func: compile
+        vars:
+          BUILD_SHARED_AND_STATIC_LIBS: "ON"
+          REQUIRED_CXX_STANDARD: 20
+          build_type: Debug
+          cc_compiler: gcc
+          cxx_compiler: g++
+  - name: compile-only-rhel84-clang-cxx11-debug
+    run_on: rhel84-large
+    tags: [compile-only, rhel84, cxx11, clang, debug]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+            - { key: cc_compiler, value: clang }
+            - { key: cxx_compiler, value: clang++ }
+      - func: setup
+      - func: install_c_driver
+      - func: compile
+        vars:
+          BUILD_SHARED_AND_STATIC_LIBS: "ON"
+          REQUIRED_CXX_STANDARD: 11
+          build_type: Debug
+          cc_compiler: clang
+          cxx_compiler: clang++
+  - name: compile-only-rhel84-clang-cxx17-debug
+    run_on: rhel84-large
+    tags: [compile-only, rhel84, cxx17, clang, debug]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+            - { key: cc_compiler, value: clang }
+            - { key: cxx_compiler, value: clang++ }
+      - func: setup
+      - func: install_c_driver
+      - func: compile
+        vars:
+          BUILD_SHARED_AND_STATIC_LIBS: "ON"
+          REQUIRED_CXX_STANDARD: 17
+          build_type: Debug
+          cc_compiler: clang
+          cxx_compiler: clang++
+  - name: compile-only-rhel84-clang-cxx20-debug
+    run_on: rhel84-large
+    tags: [compile-only, rhel84, cxx20, clang, debug]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+            - { key: cc_compiler, value: clang }
+            - { key: cxx_compiler, value: clang++ }
+      - func: setup
+      - func: install_c_driver
+      - func: compile
+        vars:
+          BUILD_SHARED_AND_STATIC_LIBS: "ON"
+          REQUIRED_CXX_STANDARD: 20
+          build_type: Debug
+          cc_compiler: clang
+          cxx_compiler: clang++
+  - name: compile-only-rhel84-gcc-cxx11-debug
+    run_on: rhel84-large
+    tags: [compile-only, rhel84, cxx11, gcc, debug]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+            - { key: cc_compiler, value: gcc }
+            - { key: cxx_compiler, value: g++ }
+      - func: setup
+      - func: install_c_driver
+      - func: compile
+        vars:
+          BUILD_SHARED_AND_STATIC_LIBS: "ON"
+          REQUIRED_CXX_STANDARD: 11
+          build_type: Debug
+          cc_compiler: gcc
+          cxx_compiler: g++
+  - name: compile-only-rhel84-gcc-cxx17-debug
+    run_on: rhel84-large
+    tags: [compile-only, rhel84, cxx17, gcc, debug]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+            - { key: cc_compiler, value: gcc }
+            - { key: cxx_compiler, value: g++ }
+      - func: setup
+      - func: install_c_driver
+      - func: compile
+        vars:
+          BUILD_SHARED_AND_STATIC_LIBS: "ON"
+          REQUIRED_CXX_STANDARD: 17
+          build_type: Debug
+          cc_compiler: gcc
+          cxx_compiler: g++
+  - name: compile-only-rhel84-gcc-cxx20-debug
+    run_on: rhel84-large
+    tags: [compile-only, rhel84, cxx20, gcc, debug]
     commands:
       - command: expansions.update
         params:
