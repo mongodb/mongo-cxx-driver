@@ -18,9 +18,10 @@
 #include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/read_preference.hpp>
 
+#include <mongocxx/scoped_bson.hh>
+
 #include <bsoncxx/private/make_unique.hh>
 
-#include <mongocxx/private/bson.hh>
 #include <mongocxx/private/conversions.hh>
 #include <mongocxx/private/mongoc.hh>
 #include <mongocxx/private/read_preference.hh>
@@ -72,16 +73,12 @@ read_preference& read_preference::mode(read_mode mode) {
 }
 
 read_preference& read_preference::tags(bsoncxx::v_noabi::document::view_or_value tag_set_list) {
-    libbson::scoped_bson_t scoped_bson_tags(std::move(tag_set_list));
-    libmongoc::read_prefs_set_tags(_impl->read_preference_t, scoped_bson_tags.bson());
-
+    libmongoc::read_prefs_set_tags(_impl->read_preference_t, to_scoped_bson_view(tag_set_list));
     return *this;
 }
 
 read_preference& read_preference::tags(bsoncxx::v_noabi::array::view_or_value tag_set_list) {
-    libbson::scoped_bson_t scoped_bson_tags(bsoncxx::v_noabi::document::view(tag_set_list.view()));
-    libmongoc::read_prefs_set_tags(_impl->read_preference_t, scoped_bson_tags.bson());
-
+    libmongoc::read_prefs_set_tags(_impl->read_preference_t, to_scoped_bson_view(tag_set_list));
     return *this;
 }
 
@@ -120,9 +117,8 @@ bsoncxx::v_noabi::stdx::optional<std::chrono::seconds> read_preference::max_stal
 }
 
 read_preference& read_preference::hedge(bsoncxx::v_noabi::document::view_or_value hedge) {
-    libbson::scoped_bson_t hedge_bson{std::move(hedge)};
     BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_BEGIN
-    libmongoc::read_prefs_set_hedge(_impl->read_preference_t, hedge_bson.bson());
+    libmongoc::read_prefs_set_hedge(_impl->read_preference_t, to_scoped_bson_view(hedge));
     BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_END
     return *this;
 }

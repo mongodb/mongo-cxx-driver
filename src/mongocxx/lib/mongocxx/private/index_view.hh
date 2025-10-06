@@ -29,7 +29,8 @@
 #include <mongocxx/index_view.hpp>
 #include <mongocxx/options/index_view.hpp>
 
-#include <mongocxx/private/bson.hh>
+#include <mongocxx/scoped_bson.hh>
+
 #include <mongocxx/private/client_session.hh>
 #include <mongocxx/private/mongoc.hh>
 
@@ -44,9 +45,7 @@ class index_view::impl {
     impl(mongoc_collection_t* collection, mongoc_client_t* client) : _coll{collection}, _client{client} {}
 
     std::string get_index_name_from_keys(bsoncxx::v_noabi::document::view_or_value keys) {
-        libbson::scoped_bson_t keys_bson{keys};
-
-        auto name_from_keys = libmongoc::collection_keys_to_index_string(keys_bson.bson());
+        auto name_from_keys = libmongoc::collection_keys_to_index_string(to_scoped_bson_view(keys));
         std::string result{name_from_keys};
         bson_free(name_from_keys);
 
@@ -57,8 +56,7 @@ class index_view::impl {
         if (session) {
             bsoncxx::v_noabi::builder::basic::document options_builder;
             options_builder.append(bsoncxx::v_noabi::builder::concatenate_doc{session->_get_impl().to_document()});
-            libbson::scoped_bson_t bson_options(options_builder.extract());
-            return libmongoc::collection_find_indexes_with_opts(_coll, bson_options.bson());
+            return libmongoc::collection_find_indexes_with_opts(_coll, to_scoped_bson_view(options_builder));
         }
 
         return libmongoc::collection_find_indexes_with_opts(_coll, nullptr);
@@ -126,7 +124,6 @@ class index_view::impl {
         document::view_or_value command = make_document(
             kvp("createIndexes", libmongoc::collection_get_name(_coll)), kvp("indexes", index_arr.view()));
 
-        libbson::scoped_bson_t reply;
         bson_error_t error;
 
         builder::basic::document opts_doc;
@@ -161,17 +158,15 @@ class index_view::impl {
             command = make_document(concatenate(command), concatenate(options.commit_quorum()->view()));
         }
 
-        libbson::scoped_bson_t command_bson{command};
-        libbson::scoped_bson_t opts_bson{opts_doc.view()};
-
+        scoped_bson reply;
         auto result = libmongoc::collection_write_command_with_opts(
-            _coll, command_bson.bson(), opts_bson.bson(), reply.bson_for_init(), &error);
+            _coll, to_scoped_bson_view(command), to_scoped_bson_view(opts_doc), reply.out_ptr(), &error);
 
         if (!result) {
-            throw_exception<operation_exception>(reply.steal(), error);
+            throw_exception<operation_exception>(from_v1(std::move(reply)), error);
         }
 
-        return reply.steal();
+        return from_v1(std::move(reply));
     }
 
     void drop_one(
@@ -199,16 +194,14 @@ class index_view::impl {
         bsoncxx::v_noabi::document::value command =
             make_document(kvp("dropIndexes", libmongoc::collection_get_name(_coll)), kvp("index", name));
 
-        libbson::scoped_bson_t reply;
-        libbson::scoped_bson_t command_bson{command.view()};
-        libbson::scoped_bson_t opts_bson{opts_doc.view()};
         bson_error_t error;
 
+        scoped_bson reply;
         bool result = libmongoc::collection_write_command_with_opts(
-            _coll, command_bson.bson(), opts_bson.bson(), reply.bson_for_init(), &error);
+            _coll, to_scoped_bson_view(command), to_scoped_bson_view(opts_doc), reply.out_ptr(), &error);
 
         if (!result) {
-            throw_exception<operation_exception>(reply.steal(), error);
+            throw_exception<operation_exception>(from_v1(std::move(reply)), error);
         }
     }
 
@@ -216,10 +209,7 @@ class index_view::impl {
         bsoncxx::v_noabi::document::value command =
             make_document(kvp("dropIndexes", libmongoc::collection_get_name(_coll)), kvp("index", "*"));
 
-        libbson::scoped_bson_t reply;
         bson_error_t error;
-
-        libbson::scoped_bson_t command_bson{command.view()};
 
         bsoncxx::v_noabi::builder::basic::document opts_doc;
 
@@ -235,13 +225,12 @@ class index_view::impl {
             opts_doc.append(bsoncxx::v_noabi::builder::concatenate_doc{session->_get_impl().to_document()});
         }
 
-        libbson::scoped_bson_t opts_bson{opts_doc.view()};
-
+        scoped_bson reply;
         bool result = libmongoc::collection_write_command_with_opts(
-            _coll, command_bson.bson(), opts_bson.bson(), reply.bson_for_init(), &error);
+            _coll, to_scoped_bson_view(command), to_scoped_bson_view(opts_doc), reply.out_ptr(), &error);
 
         if (!result) {
-            throw_exception<operation_exception>(reply.steal(), error);
+            throw_exception<operation_exception>(from_v1(std::move(reply)), error);
         }
     }
 

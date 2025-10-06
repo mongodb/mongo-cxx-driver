@@ -32,10 +32,11 @@
 #include <mongocxx/pipeline.hpp>
 #include <mongocxx/read_preference.hpp>
 
+#include <mongocxx/scoped_bson.hh>
+
 #include <bsoncxx/private/bson.hh>
 #include <bsoncxx/private/helpers.hh>
 
-#include <mongocxx/private/bson.hh>
 #include <mongocxx/private/conversions.hh>
 #include <mongocxx/private/mongoc.hh>
 
@@ -299,8 +300,7 @@ TEST_CASE("Collection", "[collection]") {
             opts.hint(index_hint);
 
             // set our expected_opts so we check against that
-            bsoncxx::document::value doc = make_document(kvp("hint", index_hint.to_value()));
-            libbson::scoped_bson_t cmd_opts{std::move(doc)};
+            scoped_bson const cmd_opts{to_scoped_bson(make_document(kvp("hint", index_hint.to_value())))};
             expected_opts = cmd_opts.bson();
 
             REQUIRE_NOTHROW(mongo_coll.count_documents(filter_doc.view(), opts));

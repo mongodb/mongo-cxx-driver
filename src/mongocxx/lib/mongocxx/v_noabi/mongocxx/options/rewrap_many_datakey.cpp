@@ -16,7 +16,6 @@
 #include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/options/rewrap_many_datakey.hpp>
 
-#include <mongocxx/private/bson.hh>
 #include <mongocxx/private/mongoc.hh>
 
 namespace mongocxx {

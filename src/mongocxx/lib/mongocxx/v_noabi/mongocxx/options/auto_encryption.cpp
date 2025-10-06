@@ -18,7 +18,8 @@
 #include <mongocxx/options/auto_encryption.hpp>
 #include <mongocxx/pool.hpp>
 
-#include <mongocxx/private/bson.hh>
+#include <mongocxx/scoped_bson.hh>
+
 #include <mongocxx/private/client.hh>
 #include <mongocxx/private/mongoc.hh>
 #include <mongocxx/private/pool.hh>
@@ -123,8 +124,6 @@ bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> cons
 }
 
 void* auto_encryption::convert() const {
-    using libbson::scoped_bson_t;
-
     if (_key_vault_client && _key_vault_pool) {
         throw exception{
             error_code::k_invalid_parameter, "cannot set both key vault client and key vault pool, please choose one"};
@@ -152,23 +151,21 @@ void* auto_encryption::convert() const {
     }
 
     if (_kms_providers) {
-        scoped_bson_t kms_providers{*_kms_providers};
-        libmongoc::auto_encryption_opts_set_kms_providers(mongoc_auto_encrypt_opts, kms_providers.bson());
+        libmongoc::auto_encryption_opts_set_kms_providers(
+            mongoc_auto_encrypt_opts, to_scoped_bson_view(*_kms_providers));
     }
 
     if (_tls_opts) {
-        scoped_bson_t tls_opts{*_tls_opts};
-        libmongoc::auto_encryption_opts_set_tls_opts(mongoc_auto_encrypt_opts, tls_opts.bson());
+        libmongoc::auto_encryption_opts_set_tls_opts(mongoc_auto_encrypt_opts, to_scoped_bson_view(*_tls_opts));
     }
 
     if (_schema_map) {
-        scoped_bson_t schema_map{*_schema_map};
-        libmongoc::auto_encryption_opts_set_schema_map(mongoc_auto_encrypt_opts, schema_map.bson());
+        libmongoc::auto_encryption_opts_set_schema_map(mongoc_auto_encrypt_opts, to_scoped_bson_view(*_schema_map));
     }
 
     if (_encrypted_fields_map) {
-        scoped_bson_t encrypted_fields_map{*_encrypted_fields_map};
-        libmongoc::auto_encryption_opts_set_encrypted_fields_map(mongoc_auto_encrypt_opts, encrypted_fields_map.bson());
+        libmongoc::auto_encryption_opts_set_encrypted_fields_map(
+            mongoc_auto_encrypt_opts, to_scoped_bson_view(*_encrypted_fields_map));
     }
 
     if (_bypass) {
@@ -180,8 +177,7 @@ void* auto_encryption::convert() const {
     }
 
     if (_extra_options) {
-        scoped_bson_t extra{*_extra_options};
-        libmongoc::auto_encryption_opts_set_extra(mongoc_auto_encrypt_opts, extra.bson());
+        libmongoc::auto_encryption_opts_set_extra(mongoc_auto_encrypt_opts, to_scoped_bson_view(*_extra_options));
     }
 
     return mongoc_auto_encrypt_opts;

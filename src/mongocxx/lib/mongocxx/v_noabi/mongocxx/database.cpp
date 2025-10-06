@@ -25,9 +25,10 @@
 #include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/exception/operation_exception.hpp>
 
+#include <mongocxx/scoped_bson.hh>
+
 #include <bsoncxx/private/make_unique.hh>
 
-#include <mongocxx/private/bson.hh>
 #include <mongocxx/private/client.hh>
 #include <mongocxx/private/client_session.hh>
 #include <mongocxx/private/database.hh>
@@ -76,8 +77,6 @@ class collection_names {
 
 } // namespace
 
-using namespace libbson;
-
 database::database() noexcept = default;
 
 database::database(database&&) noexcept = default;
@@ -116,8 +115,6 @@ database::operator bool() const noexcept {
 
 cursor
 database::_aggregate(client_session const* session, pipeline const& pipeline, options::aggregate const& options) {
-    scoped_bson_t stages(bsoncxx::v_noabi::document::view(pipeline._impl->view_array()));
-
     bsoncxx::v_noabi::builder::basic::document b;
 
     options.append(b);
@@ -126,15 +123,15 @@ database::_aggregate(client_session const* session, pipeline const& pipeline, op
         b.append(bsoncxx::v_noabi::builder::concatenate_doc{session->_get_impl().to_document()});
     }
 
-    scoped_bson_t options_bson(b.view());
-
     ::mongoc_read_prefs_t const* rp_ptr = nullptr;
 
     if (options.read_preference()) {
         rp_ptr = options.read_preference()->_impl->read_preference_t;
     }
 
-    return cursor(libmongoc::database_aggregate(_get_impl().database_t, stages.bson(), options_bson.bson(), rp_ptr));
+    return cursor(
+        libmongoc::database_aggregate(
+            _get_impl().database_t, to_scoped_bson_view(pipeline._impl->view_array()), to_scoped_bson_view(b), rp_ptr));
 }
 
 cursor database::aggregate(pipeline const& pipeline, options::aggregate const& options) {
@@ -153,9 +150,7 @@ cursor database::_list_collections(client_session const* session, bsoncxx::v_noa
         options_builder.append(bsoncxx::v_noabi::builder::concatenate_doc{session->_get_impl().to_document()});
     }
 
-    scoped_bson_t options_bson(options_builder.extract());
-
-    return libmongoc::database_find_collections_with_opts(_get_impl().database_t, options_bson.bson());
+    return libmongoc::database_find_collections_with_opts(_get_impl().database_t, to_scoped_bson_view(options_builder));
 }
 
 cursor database::list_collections(bsoncxx::v_noabi::document::view_or_value filter) {
@@ -176,11 +171,10 @@ std::vector<std::string> database::_list_collection_names(
         options_builder.append(bsoncxx::v_noabi::builder::concatenate_doc{session->_get_impl().to_document()});
     }
 
-    scoped_bson_t options_bson(options_builder.extract());
-
     bson_error_t error;
     collection_names names(
-        libmongoc::database_get_collection_names_with_opts(_get_impl().database_t, options_bson.bson(), &error));
+        libmongoc::database_get_collection_names_with_opts(
+            _get_impl().database_t, to_scoped_bson_view(options_builder), &error));
 
     if (!names) {
         throw_exception<operation_exception>(error);
@@ -211,8 +205,6 @@ bsoncxx::v_noabi::stdx::string_view database::name() const {
 bsoncxx::v_noabi::document::value database::_run_command(
     client_session const* session,
     bsoncxx::v_noabi::document::view_or_value command) {
-    libbson::scoped_bson_t command_bson{command};
-    libbson::scoped_bson_t reply_bson;
     bson_error_t error;
 
     bsoncxx::v_noabi::builder::basic::document options_builder;
@@ -220,15 +212,20 @@ bsoncxx::v_noabi::document::value database::_run_command(
         options_builder.append(bsoncxx::v_noabi::builder::concatenate_doc{session->_get_impl().to_document()});
     }
 
-    scoped_bson_t options_bson(options_builder.extract());
+    scoped_bson reply;
     auto result = libmongoc::database_command_with_opts(
-        _get_impl().database_t, command_bson.bson(), nullptr, options_bson.bson(), reply_bson.bson_for_init(), &error);
+        _get_impl().database_t,
+        to_scoped_bson_view(command),
+        nullptr,
+        to_scoped_bson_view(options_builder),
+        reply.out_ptr(),
+        &error);
 
     if (!result) {
-        throw_exception<operation_exception>(reply_bson.steal(), error);
+        throw_exception<operation_exception>(from_v1(std::move(reply)), error);
     }
 
-    return reply_bson.steal();
+    return from_v1(std::move(reply));
 }
 
 bsoncxx::v_noabi::document::value database::run_command(bsoncxx::v_noabi::document::view_or_value command) {
@@ -244,24 +241,23 @@ bsoncxx::v_noabi::document::value database::run_command(
 bsoncxx::v_noabi::document::value database::run_command(
     bsoncxx::v_noabi::document::view_or_value command,
     uint32_t server_id) {
-    libbson::scoped_bson_t command_bson{command};
-    libbson::scoped_bson_t reply_bson;
     bson_error_t error;
 
+    scoped_bson reply;
     auto result = libmongoc::client_command_simple_with_server_id(
         _get_impl().client_impl->client_t,
         _get_impl().name.c_str(),
-        command_bson.bson(),
+        to_scoped_bson_view(command.view()),
         read_preference()._impl->read_preference_t,
         server_id,
-        reply_bson.bson_for_init(),
+        reply.out_ptr(),
         &error);
 
     if (!result) {
-        throw_exception<operation_exception>(reply_bson.steal(), error);
+        throw_exception<operation_exception>(from_v1(std::move(reply)), error);
     }
 
-    return reply_bson.steal();
+    return from_v1(std::move(reply));
 }
 
 collection database::_create_collection(
@@ -282,9 +278,11 @@ collection database::_create_collection(
         options_builder.append(bsoncxx::v_noabi::builder::concatenate_doc{session->_get_impl().to_document()});
     }
 
-    libbson::scoped_bson_t opts_bson{options_builder.view()};
     auto result = libmongoc::database_create_collection(
-        _get_impl().database_t, bsoncxx::v_noabi::string::to_string(name).c_str(), opts_bson.bson(), &error);
+        _get_impl().database_t,
+        bsoncxx::v_noabi::string::to_string(name).c_str(),
+        to_scoped_bson_view(options_builder),
+        &error);
 
     if (!result) {
         throw_exception<operation_exception>(error);
@@ -322,9 +320,7 @@ void database::_drop(
         opts_doc.append(bsoncxx::v_noabi::builder::concatenate_doc{session->_get_impl().to_document()});
     }
 
-    libbson::scoped_bson_t opts_bson{opts_doc.view()};
-
-    if (!libmongoc::database_drop_with_opts(_get_impl().database_t, opts_bson.bson(), &error)) {
+    if (!libmongoc::database_drop_with_opts(_get_impl().database_t, to_scoped_bson_view(opts_doc), &error)) {
         throw_exception<operation_exception>(error);
     }
 }
@@ -409,7 +405,6 @@ change_stream
 database::_watch(client_session const* session, pipeline const& pipe, options::change_stream const& options) {
     bsoncxx::v_noabi::builder::basic::document container;
     container.append(kvp("pipeline", pipe._impl->view_array()));
-    scoped_bson_t pipeline_bson{container.view()};
 
     bsoncxx::v_noabi::builder::basic::document options_builder;
     options_builder.append(bsoncxx::v_noabi::builder::concatenate(options.as_bson()));
@@ -417,9 +412,8 @@ database::_watch(client_session const* session, pipeline const& pipe, options::c
         options_builder.append(bsoncxx::v_noabi::builder::concatenate_doc{session->_get_impl().to_document()});
     }
 
-    scoped_bson_t options_bson{options_builder.extract()};
-
-    return change_stream{libmongoc::database_watch(_get_impl().database_t, pipeline_bson.bson(), options_bson.bson())};
+    return change_stream{libmongoc::database_watch(
+        _get_impl().database_t, to_scoped_bson_view(container), to_scoped_bson_view(options_builder))};
 }
 
 database::impl const& database::_get_impl() const {

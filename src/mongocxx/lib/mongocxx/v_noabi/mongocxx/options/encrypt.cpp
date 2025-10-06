@@ -18,7 +18,6 @@
 #include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/options/encrypt.hpp>
 
-#include <mongocxx/private/bson.hh>
 #include <mongocxx/private/mongoc.hh>
 #include <mongocxx/private/scoped_bson_value.hh>
 
@@ -81,8 +80,6 @@ bsoncxx::v_noabi::stdx::optional<options::range> const& encrypt::range_opts() co
 }
 
 void* encrypt::convert() const {
-    using libbson::scoped_bson_t;
-
     struct encrypt_opts_deleter {
         void operator()(mongoc_client_encryption_encrypt_opts_t* ptr) noexcept {
             libmongoc::client_encryption_encrypt_opts_destroy(ptr);
