@@ -391,7 +391,7 @@ functions:
       type: setup
       params:
         updates:
-          - { key: mongoc_version_minimum, value: 912209d5dc985758bc3d70b105dc5166e3ded7c3 }
+          - { key: mongoc_version_minimum, value: 2.1.2 }
     - command: subprocess.exec
       type: setup
       params:
