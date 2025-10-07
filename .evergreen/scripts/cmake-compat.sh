@@ -61,13 +61,13 @@ printf " - %s\n" "${cmake_flags[@]:?}"
 "${cmake_binary:?}" -S . -B build "${cmake_flags[@]:?}"
 "${cmake_binary:?}" --build build --target install
 
-# Use generated header bson-config.h to detect installation of C Driver libraries.
-bson_config_h="$(find install -name 'bson-config.h')"
-if [[ "${INSTALL_C_DRIVER:?}" == 1 ]] && [[ -n "${bson_config_h:-}" ]]; then
-  echo "bson-config.h SHOULD NOT be present in $(pwd)/install" >&2
+# Use header bson.h to detect installation of C Driver libraries.
+bson_h="$(find install -name 'bson.h')"
+if [[ "${INSTALL_C_DRIVER:?}" == 1 ]] && [[ -n "${bson_h:-}" ]]; then
+  echo "bson.h SHOULD NOT be present in $(pwd)/install" >&2
   exit 1
 fi
-if [[ "${INSTALL_C_DRIVER:?}" != 1 ]] && [[ -z "${bson_config_h:-}" ]]; then
-  echo "bson-config.h SHOULD be present in $(pwd)/install" >&2
+if [[ "${INSTALL_C_DRIVER:?}" != 1 ]] && [[ -z "${bson_h:-}" ]]; then
+  echo "bson.h SHOULD be present in $(pwd)/install" >&2
   exit 1
 fi
