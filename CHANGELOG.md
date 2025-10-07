@@ -13,6 +13,10 @@ Changes prior to 3.9.0 are documented as [release notes on GitHub](https://githu
 
 - The API version of auto-downloaded C Driver libraries no longer incorrectly inherits the C++ Driver's `BUILD_VERSION` value.
 
+### Changed
+
+- Bump the minimum required C Driver version to [1.30.6](https://github.com/mongodb/mongo-c-driver/releases/tag/1.30.6).
+
 ## 3.11.0
 
 ### Added
