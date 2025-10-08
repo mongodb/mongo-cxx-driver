@@ -1167,16 +1167,6 @@ tasks:
           local_file: rpm.tar.gz
           content_type: ${content_type|application/x-gzip}
 
-
-    - name: test_mongohouse
-      commands:
-        - func: "setup"
-        - func: "fetch_c_driver_source"
-        - func: "compile"
-        - func: "build_mongohouse"
-        - func: "run_mongohouse"
-        - func: "test_mongohouse"
-
     - name: test_versioned_api
       commands:
         - func: "setup"
@@ -2010,14 +2000,6 @@ buildvariants:
         - name: clang-tidy
         - name: compile_without_tests
         - name: compile_macro_guard_tests
-
-    - name: mongohouse-ubuntu
-      display_name: "Mongohouse Test"
-      expansions:
-          build_type: "Release"
-      run_on: ubuntu2204-small
-      tasks:
-          - name: test_mongohouse
 
     - name: zseries-rhel83-latest
       display_name: "zSeries RHEL 8.3 (MongoDB Latest)"
