@@ -70,8 +70,8 @@ else
   #  - set OUTPUT_DIRECTORY to `build/docs/api/mongocxx-<version>`.
   #  - set PROJECT_NUMBER to `<version>`.
   sed_in_place \
-    -e "s|^OUTPUT_DIRECTORY\s*=\s*.*$|OUTPUT_DIRECTORY = ${output_directory:?}|g" \
-    -e "s|^PROJECT_NUMBER\s*=\s*.*$|PROJECT_NUMBER = ${LATEST_VERSION:?}|g" \
+    -e "s|^OUTPUT_DIRECTORY[[:space:]]*=[[:space:]]*.*$|OUTPUT_DIRECTORY = ${output_directory:?}|g" \
+    -e "s|^PROJECT_NUMBER[[:space:]]*=[[:space:]]*.*$|PROJECT_NUMBER = ${LATEST_VERSION:?}|g" \
     "${scratch_dir:?}/Doxyfile"
 fi
 
