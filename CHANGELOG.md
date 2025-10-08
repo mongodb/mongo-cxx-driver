@@ -72,12 +72,6 @@ Changes prior to 3.9.0 are documented as [release notes on GitHub](https://githu
 
 - Bump the auto-downloaded C Driver version to [2.1.2](https://github.com/mongodb/mongo-c-driver/releases/tag/2.1.2).
 
-## 3.11.1
-
-### Fixed
-
-- The API version of auto-downloaded C Driver libraries no longer incorrectly inherits the C++ Driver's `BUILD_VERSION` value.
-
 ### Changed
 
 - Bump the minimum required C Driver version to [1.30.6](https://github.com/mongodb/mongo-c-driver/releases/tag/1.30.6).
@@ -181,6 +175,12 @@ Changes prior to 3.9.0 are documented as [release notes on GitHub](https://githu
   - `bsoncxx::builder::types` in `<bsoncxx/builder/list.hpp>`. Use `bsoncxx::types` in `<bsoncxx/types.hpp>` instead.
   - `bsoncxx::builder::stream::concatenate` in `<bsoncxx/builder/stream/helpers.hpp>`. Use `bsoncxx::builder::concatenate` in `<bsoncxx/builder/concatenate.hpp>` instead.
   - `mongocxx::events::read_preference` in `<mongocxx/events/topology_description.hpp>`. Use `mongocxx::read_preference` in `<mongocxx/read_preference.hpp>` instead.
+
+## 3.11.1
+
+### Fixed
+
+- The API version of auto-downloaded C Driver libraries no longer incorrectly inherits the C++ Driver's `BUILD_VERSION` value.
 
 ## 3.11.0
 
