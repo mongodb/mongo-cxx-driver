@@ -62,8 +62,9 @@ void example() {
         ASSERT(bsoncxx::validate(data, length) ==
                bsoncxx::validate(data, length, options, &offset));
 
-        // Not set when valid.
-        ASSERT(offset == 123u);
+        // [libbson  < 1.30.5] Not set when valid.
+        // [libbson >= 1.30.5] Set to 0 when valid.
+        ASSERT(offset == 123u || offset == 0u);
     }
 }
 // [Example]
