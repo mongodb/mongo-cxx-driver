@@ -428,6 +428,10 @@ git push upstream releases/vX.Y
 
 The new branch should be continuously tested on Evergreen. Update the "Display Name" and "Branch Name" of the [mongo-cxx-driver-latest-release Evergreen project](https://spruce.mongodb.com/project/mongo-cxx-driver-latest-release/settings/general) to refer to the new release branch.
 
+### Update SBOM serial number
+
+Check out the release branch `releases/vX.Y`.
+
 Update `etc/cyclonedx.sbom.json` with a new unique serial number for the next upcoming patch release (e.g. for `1.3.1` following the release of `1.3.0`):
 
 ```bash
