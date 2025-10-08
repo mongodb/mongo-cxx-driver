@@ -22,10 +22,6 @@ DOXYGEN_VERSION_REQUIRED="1.13.2"
 # Permit using any Doxygen version.
 : "${DOXYGEN_ANY_VERSION:=0}"
 
-command -v git >/dev/null
-command -v mktemp >/dev/null
-command -v sed >/dev/null
-
 if [[ ! -d build ]]; then
   echo "missing build directory: this script must be run from the project root directory" 1>&2
   exit 1
@@ -50,6 +46,11 @@ if [[ "${DOXYGEN_USE_CURRENT:?}" == 1 ]]; then
   output_directory="${apidocspath:?}/current"
   scratch_dir="$(pwd)"
 else
+  # Check required tools exist.
+  command -V git >/dev/null
+  command -V mktemp >/dev/null
+  command -V sed >/dev/null
+
   # Use a clean copy of the repository.
   output_directory="${apidocspath:?}/mongocxx-${LATEST_VERSION:?}"
   scratch_dir="$(mktemp -d)"
