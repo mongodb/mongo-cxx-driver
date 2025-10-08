@@ -131,7 +131,13 @@ TEST_CASE("SDAM Monitoring", "[sdam_monitoring]") {
         BSONCXX_TEST_EXCEPTION_GUARD_CHECK(eguard);
         REQUIRE(server_opening_events > 0);
         REQUIRE(server_changed_events > 0);
-        REQUIRE(server_closed_events > 0);
+
+        if (mongoc_get_major_version() == 1 && mongoc_get_minor_version() < 30) {
+            // C driver versions prior to 1.30 do not send a serverClosed event.
+            REQUIRE(server_closed_events == 0);
+        } else {
+            REQUIRE(server_closed_events > 0);
+        }
     }
 
     SECTION("Topology Events") {
