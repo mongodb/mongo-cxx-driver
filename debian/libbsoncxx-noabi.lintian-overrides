@@ -3,4 +3,4 @@
 libbsoncxx-noabi: no-symbols-control-file
 
 # False positive on the spelling error
-libbsoncxx-noabi: spelling-error-in-binary ment meant [usr/lib/x86_64-linux-gnu/libbsoncxx.so.4.0.0]
+libbsoncxx-noabi: spelling-error-in-binary ment meant [usr/lib/x86_64-linux-gnu/libbsoncxx.so.4.1.4]
