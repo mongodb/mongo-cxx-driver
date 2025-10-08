@@ -26,7 +26,6 @@ Changes prior to 3.9.0 are documented as [release notes on GitHub](https://githu
 
 ### Changed
 
-- Bump the minimum required C Driver version to [2.1.0](https://github.com/mongodb/mongo-c-driver/releases/tag/2.1.0).
 - CMake 3.16.0 or newer is required when `ENABLE_TESTS=ON` for compatibility with the updated Catch2 library version (3.7.0 -> 3.8.1).
 - Minimum supported compiler versions to build from source are updated to the following:
   - GCC 8.1 (from GCC 4.8.2).
