@@ -72,6 +72,16 @@ Changes prior to 3.9.0 are documented as [release notes on GitHub](https://githu
   - See: [MongoDB C Driver 2.1.0 Release Notes](https://github.com/mongodb/mongo-c-driver/releases/tag/2.1.0).
 - Support for macOS 11 and macOS 12 (deprecated in 4.1.0).
 
+## 3.11.1
+
+### Fixed
+
+- The API version of auto-downloaded C Driver libraries no longer incorrectly inherits the C++ Driver's `BUILD_VERSION` value.
+
+### Changed
+
+- Bump the minimum required C Driver version to [1.30.6](https://github.com/mongodb/mongo-c-driver/releases/tag/1.30.6).
+
 ## 4.1.3
 
 ### Changed
