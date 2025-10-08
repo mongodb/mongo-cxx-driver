@@ -377,6 +377,8 @@ Review the contents of the release draft, then publish the release.
 Navigate to the
 [fixVersions page on Jira](https://jira.mongodb.com/plugins/servlet/project-config/CXX/versions?status=unreleased).
 
+Close the Jira ticket tracking this release with "Documentation Changes" set to "Not Needed". A DOCSP ticket is generated later.
+
 Click the "..." next to the relevant version and select "Release".
 
 ### Update GitHub Webhook
@@ -532,25 +534,25 @@ Commit these changes to the `post-release-changes` branch:
 git commit -m "Post-release changes"
 ```
 
-### Create Documentation Tickets
+### Update Documentation Ticket
 
-(Stable Releases Only) Close the Jira ticket tracking this release with "Documentation Changes" set to "Needed". Fill the "Documentation Changes Summary" field with information requesting updates to:
+When the Jira fixVersion is released, a DOCSP ticket is created and e-mailed to the `dbx-c-cxx` group with subject "Action Required: Relay Compatibility Updates to Docs Team".
 
-  - the tables on the [Compatibility](https://www.mongodb.com/docs/languages/cpp/cpp-driver/current/compatibility/) page,
-  - the "Driver Status by Family and Version" section of the [home
+Add a comment requesting updates to:
+
+  - (if applicable) the tables on the [Compatibility](https://www.mongodb.com/docs/languages/cpp/cpp-driver/current/compatibility/) page,
+  - (if applicable) the "Driver Status by Family and Version" section of the [home
     page](https://www.mongodb.com/docs/languages/cpp/cpp-driver/current/#driver-status-by-family-and-version), and
   - the [full version](https://github.com/mongodb/docs-cpp/blob/master/snooty.toml) for the C++ Driver documentation pages.
-
-This will generate a DOCSP ticket with instructions to update the C++ Driver docs.
 
 Example (using Jira syntax formatting):
 
 ```
 * The [Compatibility|https://www.mongodb.com/docs/languages/cpp/cpp-driver/current/compatibility/] page must be updated:
-  - mongocxx-X.Y.Z may change "libmongoc Compatibility" by requiring mongoc-A.B.C or later.
-  - mongocxx-X.Y.Z should have the same "MongoDB Compatibility", "Language Compatibility", and "Compiler Compatibility" as version mongocxx-X.Y.(Z-1)
+** mongocxx-X.Y.Z may change "libmongoc Compatibility" by requiring mongoc-A.B.C or later.
+** mongocxx-X.Y.Z should have the same "MongoDB Compatibility", "Language Compatibility", and "Compiler Compatibility" as version mongocxx-X.Y.(Z-1)
 * The [MongoDB C++ Driver|https://www.mongodb.com/docs/languages/cpp/cpp-driver/current/#driver-status-by-family-and-version] page must be updated: {{{}mongocxx X.Y.x{}}} is now a previous stable release and no longer under active development; {{{}mongocxx X.Y+1.x{}}} is the new current stable release eligible for bug fixes.
-* the [full version|https://github.com/mongodb/docs-cpp/blob/master/snooty.toml] for C++ Driver documentation must be updated to {{{}X.Y.Z{}}}.
+* The [full version|https://github.com/mongodb/docs-cpp/blob/master/snooty.toml] for C++ Driver documentation must be updated to {{{}X.Y.Z{}}}.
 ```
 
 ### Publish Updated Documentation
