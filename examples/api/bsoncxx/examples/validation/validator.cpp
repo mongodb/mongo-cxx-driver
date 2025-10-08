@@ -77,8 +77,10 @@ void example(const std::uint8_t* bytes, std::size_t length) {
 
         ASSERT(!bsoncxx::validate(bytes, length, options, &offset));
 
-        // Offset of `"$numberInt": "123"` relative to start of the sub-document. (CDRIVER-5710)
-        ASSERT(offset == 4u);
+        // [libbson  < 1.30.5] Offset of `"$numberInt": "123"` relative to start of the
+        //                     sub-document. (CDRIVER-5710)
+        // [libbson >= 1.30.5] Offset of `"$numberInt": "123"` relative to start of the document.
+        ASSERT(offset == 31u || offset == 4u);
     }
 }
 // [Example]

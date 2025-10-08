@@ -63,6 +63,7 @@ TEST_CASE("SDAM Monitoring", "[sdam_monitoring]") {
     SECTION("Server Events") {
         int server_opening_events = 0;
         int server_changed_events = 0;
+        int server_closed_events = 0;
 
         ///////////////////////////////////////////////////////////////////////
         // Begin server description listener lambdas
@@ -117,7 +118,10 @@ TEST_CASE("SDAM Monitoring", "[sdam_monitoring]") {
             BSONCXX_TEST_EXCEPTION_GUARD_END(eguard);
         });
 
-        // We don't expect a ServerClosedEvent unless a replica set member is removed.
+        apm_opts.on_server_closed([&](events::server_closed_event const& event) {
+            server_closed_events++;
+            CHECK(topology_id.value() == event.topology_id());
+        });
 
         ///////////////////////////////////////////////////////////////////////
         // End server description listener lambdas
@@ -127,6 +131,13 @@ TEST_CASE("SDAM Monitoring", "[sdam_monitoring]") {
         BSONCXX_TEST_EXCEPTION_GUARD_CHECK(eguard);
         REQUIRE(server_opening_events > 0);
         REQUIRE(server_changed_events > 0);
+
+        if (mongoc_get_major_version() == 1 && mongoc_get_minor_version() < 30) {
+            // C driver versions prior to 1.30 do not send a serverClosed event.
+            REQUIRE(server_closed_events == 0);
+        } else {
+            REQUIRE(server_closed_events > 0);
+        }
     }
 
     SECTION("Topology Events") {
@@ -171,14 +182,18 @@ TEST_CASE("SDAM Monitoring", "[sdam_monitoring]") {
                 REQUIRE_FALSE(old_td.has_writable_server());
             }
 
-            if (topology_type == "replicaset") {
-                if (new_td.has_writable_server()) {
-                    REQUIRE(new_type == "ReplicaSetWithPrimary");
+            // A topology_changed_event may also be triggered when server monitoring closes,
+            // which transitions the topology description into an "Unknown" state.
+            CHECKED_IF(new_type != "Unknown") {
+                if (topology_type == "replicaset") {
+                    if (new_td.has_writable_server()) {
+                        REQUIRE(new_type == "ReplicaSetWithPrimary");
+                    } else {
+                        REQUIRE(new_type == "ReplicaSetNoPrimary");
+                    }
                 } else {
-                    REQUIRE(new_type == "ReplicaSetNoPrimary");
+                    REQUIRE(new_type == "Single");
                 }
-            } else {
-                REQUIRE(new_type == "Single");
             }
 
             for (auto&& new_sd : new_servers) {

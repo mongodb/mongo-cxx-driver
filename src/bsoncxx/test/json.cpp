@@ -62,7 +62,12 @@ TEST_CASE("empty array is converted correctly to json string") {
     using bsoncxx::to_json;
 
     auto doc = make_document(kvp("array", make_array()));
-    REQUIRE(0 == to_json(doc.view()).compare(R"({ "array" : [  ] })"));
+    if (bson_get_major_version() == 1 && bson_get_minor_version() < 30) {
+        // C driver versions prior to 1.30 have an extra space. Refer: mongoc-c-driver@f2c1bb79
+        REQUIRE(0 == to_json(doc.view()).compare(R"({ "array" : [  ] })"));
+    } else {
+        REQUIRE(0 == to_json(doc.view()).compare(R"({ "array" : [ ] })"));
+    }
 }
 
 TEST_CASE("CXX-941 is resolved") {
