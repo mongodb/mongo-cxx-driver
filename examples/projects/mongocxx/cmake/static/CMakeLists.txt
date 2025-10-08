@@ -15,11 +15,7 @@
 # Demonstrates how to use the CMake 'find_package' mechanism to locate build against the libmongocxx
 # static library.
 
-cmake_minimum_required(VERSION 3.2 FATAL_ERROR)
-
-if(POLICY CMP0025)
-    cmake_policy(SET CMP0025 NEW)
-endif()
+cmake_minimum_required(VERSION 3.15...4.0)
 
 project(HELLO_WORLD LANGUAGES C CXX)
 
@@ -37,12 +33,6 @@ endif()
 # NOTE: For this to work, the CMAKE_PREFIX_PATH variable must be set to point to the directory that
 # was used as the argument to CMAKE_INSTALL_PREFIX when building libmongocxx.
 find_package(mongocxx REQUIRED)
-
-# We cannot rely on the DYLD_LIBRARY_PATH being propagated properly on OSX on
-# evergreen, so pass extra arguments to pkg-config with the path information.
-if (APPLE)
-  set(ENV{PKGCONFIG_EXTRA_OPTS} "-Wl,rpath $(pwd)/../mongoc/lib")
-endif()
 
 add_executable(hello_mongocxx ../../hello_mongocxx.cpp)
 

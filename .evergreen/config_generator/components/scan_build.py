@@ -5,7 +5,7 @@ from config_generator.etc.distros import find_large_distro
 from config_generator.etc.function import Function, merge_defns
 from config_generator.etc.utils import bash_exec
 
-from shrub.v3.evg_build_variant import BuildVariant, DisplayTask
+from shrub.v3.evg_build_variant import BuildVariant
 from shrub.v3.evg_command import EvgCommandType, s3_put
 from shrub.v3.evg_task import EvgTask, EvgTaskRef
 
@@ -100,7 +100,7 @@ def functions():
 def tasks():
     res = []
 
-    distro_name = 'ubuntu2204'
+    distro_name = 'rhel80'
     distro = find_large_distro(distro_name)
 
     for cxx_standard, polyfill in MATRIX:
@@ -136,11 +136,5 @@ def variants():
             name=f'{TAG}-matrix',
             display_name=f'{TAG}-matrix',
             tasks=[EvgTaskRef(name=f'.{TAG}')],
-            display_tasks=[
-                DisplayTask(
-                    name=f'{TAG}-matrix',
-                    execution_tasks=[f'.{TAG}'],
-                )
-            ],
         ),
     ]

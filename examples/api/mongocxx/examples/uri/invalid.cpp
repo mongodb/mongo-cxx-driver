@@ -28,7 +28,7 @@ void example() {
         mongocxx::uri invalid_uri{"invalid"};
 
         EXPECT(false && "should not reach this point");
-    } catch (const mongocxx::exception& ex) {
+    } catch (mongocxx::exception const& ex) {
         EXPECT(ex.code() == mongocxx::error_code::k_invalid_uri);
     }
 
@@ -37,7 +37,7 @@ void example() {
         mongocxx::uri invalid_uri{"mongodb://localhost:27017/?tls"};
 
         EXPECT(false && "should not reach this point");
-    } catch (const mongocxx::exception& ex) {
+    } catch (mongocxx::exception const& ex) {
         EXPECT(ex.code() == mongocxx::error_code::k_invalid_uri);
     }
 
@@ -46,13 +46,13 @@ void example() {
         mongocxx::uri invalid_uri{"mongodb://localhost:27017/?authMechanism=SCRAM-SHA-256"};
 
         EXPECT(false && "should not reach this point");
-    } catch (const mongocxx::exception& ex) {
+    } catch (mongocxx::exception const& ex) {
         EXPECT(ex.code() == mongocxx::error_code::k_invalid_uri);
     }
 }
 // [Example]
 
-}  // namespace
+} // namespace
 
 RUNNER_REGISTER_COMPONENT_WITH_INSTANCE() {
     example();

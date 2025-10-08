@@ -36,6 +36,8 @@ namespace mongocxx {
 namespace v_noabi {
 
 ///
+/// Supports MongoDB client session operations.
+///
 /// Use a session for a sequence of operations, optionally with either causal consistency
 /// or snapshots.
 ///
@@ -65,8 +67,8 @@ class client_session {
     ///
     MONGOCXX_ABI_EXPORT_CDECL(client_session&) operator=(client_session&&) noexcept;
 
-    client_session(const client_session&) = delete;
-    MONGOCXX_ABI_EXPORT_CDECL(client_session&) operator=(const client_session&) = delete;
+    client_session(client_session const&) = delete;
+    MONGOCXX_ABI_EXPORT_CDECL(client_session&) operator=(client_session const&) = delete;
 
     ///
     /// Ends and destroys the session.
@@ -76,12 +78,12 @@ class client_session {
     ///
     /// Gets the client that started this session.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const mongocxx::v_noabi::client&) client() const noexcept;
+    MONGOCXX_ABI_EXPORT_CDECL(mongocxx::v_noabi::client const&) client() const noexcept;
 
     ///
     /// Gets the options this session was created with.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const options::client_session&) options() const noexcept;
+    MONGOCXX_ABI_EXPORT_CDECL(options::client_session const&) options() const noexcept;
 
     ///
     /// Get the server-side "logical session ID" associated with this session, as a BSON document.
@@ -129,7 +131,7 @@ class client_session {
     /// causally consistent with the last operation in the other session.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(void)
-    advance_cluster_time(const bsoncxx::v_noabi::document::view& cluster_time);
+    advance_cluster_time(bsoncxx::v_noabi::document::view const& cluster_time);
 
     ///
     /// Advance the session's operation time, expressed as a BSON timestamp. Has an effect only if
@@ -140,7 +142,7 @@ class client_session {
     /// causally consistent with the last operation in the other session.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(void)
-    advance_operation_time(const bsoncxx::v_noabi::types::b_timestamp& operation_time);
+    advance_operation_time(bsoncxx::v_noabi::types::b_timestamp const& operation_time);
 
     ///
     /// Starts a transaction on the current client session.
@@ -153,8 +155,7 @@ class client_session {
     /// a transaction already in progress.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(void)
-    start_transaction(
-        const bsoncxx::v_noabi::stdx::optional<options::transaction>& transaction_opts = {});
+    start_transaction(bsoncxx::v_noabi::stdx::optional<options::transaction> const& transaction_opts = {});
 
     ///
     /// Commits a transaction on the current client session.
@@ -220,16 +221,16 @@ class client_session {
 
     class impl;
 
-    client_session(const mongocxx::v_noabi::client* client, const options::client_session& options);
+    client_session(mongocxx::v_noabi::client const* client, options::client_session const& options);
 
     impl& _get_impl();
-    const impl& _get_impl() const;
+    impl const& _get_impl() const;
 
     std::unique_ptr<impl> _impl;
 };
 
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace v_noabi
+} // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
 

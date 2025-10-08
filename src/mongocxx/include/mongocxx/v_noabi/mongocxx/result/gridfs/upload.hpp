@@ -26,7 +26,7 @@ namespace v_noabi {
 namespace result {
 namespace gridfs {
 
-/// Class representing the result of a GridFS upload operation.
+/// The result of a GridFS upload operation.
 class upload {
    public:
     MONGOCXX_ABI_EXPORT_CDECL() upload(bsoncxx::v_noabi::types::bson_value::view id);
@@ -36,10 +36,10 @@ class upload {
     ///
     /// @return The id of the uploaded file.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::types::bson_value::view&) id() const;
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::types::bson_value::view const&) id() const;
 
-    friend MONGOCXX_ABI_EXPORT_CDECL(bool) operator==(const upload&, const upload&);
-    friend MONGOCXX_ABI_EXPORT_CDECL(bool) operator!=(const upload&, const upload&);
+    friend MONGOCXX_ABI_EXPORT_CDECL(bool) operator==(upload const&, upload const&);
+    friend MONGOCXX_ABI_EXPORT_CDECL(bool) operator!=(upload const&, upload const&);
 
    private:
     // Array with a single element, containing the value of the _id field for the inserted files
@@ -50,10 +50,10 @@ class upload {
     bsoncxx::v_noabi::types::bson_value::view _id;
 };
 
-}  // namespace gridfs
-}  // namespace result
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace gridfs
+} // namespace result
+} // namespace v_noabi
+} // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
 

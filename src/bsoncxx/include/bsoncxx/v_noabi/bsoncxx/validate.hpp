@@ -42,7 +42,7 @@ namespace v_noabi {
 ///   an unengaged optional if the document is invalid.
 ///
 BSONCXX_ABI_EXPORT_CDECL(stdx::optional<document::view>)
-validate(const std::uint8_t* data, std::size_t length);
+validate(std::uint8_t const* data, std::size_t length);
 
 ///
 /// Validates a BSON document. This overload provides additional control over the
@@ -65,14 +65,14 @@ validate(const std::uint8_t* data, std::size_t length);
 ///   an unengaged optional if the document is invalid.
 ///
 BSONCXX_ABI_EXPORT_CDECL(stdx::optional<document::view>)
-validate(const std::uint8_t* data,
-         std::size_t length,
-         const validator& validator,
-         std::size_t* invalid_offset = nullptr);
+validate(
+    std::uint8_t const* data,
+    std::size_t length,
+    validator const& validator,
+    std::size_t* invalid_offset = nullptr);
 
 ///
-/// A validator is used to enable or disable specific checks that can be
-/// performed during BSON validation.
+/// Used to toggle checks which may be performed during BSON validation.
 ///
 class validator {
    public:
@@ -157,14 +157,14 @@ class validator {
     std::unique_ptr<impl> _impl;
 };
 
-}  // namespace v_noabi
-}  // namespace bsoncxx
+} // namespace v_noabi
+} // namespace bsoncxx
 
 namespace bsoncxx {
 
 using ::bsoncxx::v_noabi::validate;
 
-}  // namespace bsoncxx
+} // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>
 
@@ -172,21 +172,3 @@ using ::bsoncxx::v_noabi::validate;
 /// @file
 /// Provides utilities to validate BSON document representations.
 ///
-
-#if defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
-
-namespace bsoncxx {
-
-/// @ref bsoncxx::v_noabi::validate(const std::uint8_t* data, std::size_t length)
-v_noabi::stdx::optional<v_noabi::document::view> validate(const std::uint8_t* data,
-                                                          std::size_t length);
-
-/// @ref bsoncxx::v_noabi::validate(const std::uint8_t* data, std::size_t length, const v_noabi::validator& validator, std::size_t* invalid_offset)
-v_noabi::stdx::optional<v_noabi::document::view> validate(const std::uint8_t* data,
-                                                          std::size_t length,
-                                                          const v_noabi::validator& validator,
-                                                          std::size_t* invalid_offset = nullptr);
-
-}  // namespace bsoncxx
-
-#endif  // defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

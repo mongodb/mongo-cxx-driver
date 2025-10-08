@@ -16,8 +16,6 @@
 
 #include <bsoncxx/exception/error_code.hpp>
 
-#include <bsoncxx/config/private/prelude.hh>
-
 namespace bsoncxx {
 namespace v_noabi {
 
@@ -25,7 +23,7 @@ namespace {
 
 class error_category_impl final : public std::error_category {
    public:
-    const char* name() const noexcept override {
+    char const* name() const noexcept override {
         return "bsoncxx";
     }
 
@@ -83,18 +81,24 @@ class error_category_impl final : public std::error_category {
         return {"unable to append " #name};
 #include <bsoncxx/enums/type.hpp>
 #undef BSONCXX_ENUM
+            case error_code::k_invalid_vector:
+                return "invalid BSON vector";
+            case error_code::k_vector_too_large:
+                return "BSON vector too large";
+            case error_code::k_vector_out_of_range:
+                return "BSON vector access out of range";
             default:
                 return "unknown bsoncxx error code";
         }
     }
 };
 
-}  // namespace
+} // namespace
 
-const std::error_category& error_category() {
-    static const error_category_impl instance{};
+std::error_category const& error_category() {
+    static error_category_impl const instance{};
     return instance;
 }
 
-}  // namespace v_noabi
-}  // namespace bsoncxx
+} // namespace v_noabi
+} // namespace bsoncxx

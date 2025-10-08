@@ -7,8 +7,7 @@ set(input_vars
     output_name
     version
     is_static
-    libbson_req_abi_ver
-    libbson_req_ver
+    bson_req_ver
 )
 
 foreach(var ${input_vars})
@@ -27,7 +26,7 @@ if(1)
     set(requires "")
 
     if(is_static)
-        list(APPEND requires "libbson-static-${libbson_req_abi_ver} >= ${libbson_req_ver}")
+        list(APPEND requires "bson2-static >= ${bson_req_ver}")
     endif()
 
     list(JOIN requires ", " requires)

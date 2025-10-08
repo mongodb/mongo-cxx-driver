@@ -15,8 +15,10 @@
 #pragma once
 
 #include "../microbench.hpp"
+
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/builder/basic/kvp.hpp>
+
 #include <mongocxx/client.hpp>
 #include <mongocxx/instance.hpp>
 #include <mongocxx/uri.hpp>
@@ -31,10 +33,7 @@ class find_one_by_id : public microbench {
    public:
     // The task size comes from the Driver Perfomance Benchmarking Reference Doc.
     find_one_by_id(std::string json_file)
-        : microbench{"TestFindOneById",
-                     16.22,
-                     std::set<benchmark_type>{benchmark_type::single_bench,
-                                              benchmark_type::read_bench}},
+        : microbench{"TestFindOneById", 16.22, std::set<benchmark_type>{benchmark_type::single_bench, benchmark_type::read_bench}},
           _conn{mongocxx::uri{}},
           _json_file{std::move(json_file)} {}
 
@@ -76,4 +75,4 @@ void find_one_by_id::task() {
 void find_one_by_id::teardown() {
     _conn["perftest"].drop();
 }
-}  // namespace benchmark
+} // namespace benchmark

@@ -16,12 +16,18 @@ project(BSONCXX)
 
 ParseVersion(${BUILD_VERSION} BSONCXX)
 
-set(BSONCXX_VERSION_NO_EXTRA ${BSONCXX_VERSION_MAJOR}.${BSONCXX_VERSION_MINOR}.${BSONCXX_VERSION_PATCH})
-set(BSONCXX_VERSION ${BSONCXX_VERSION_NO_EXTRA}${BSONCXX_VERSION_EXTRA})
-message(STATUS "bsoncxx version: ${BSONCXX_VERSION}")
+set(BSONCXX_VERSION_NO_EXTRA ${BSONCXX_VERSION_MAJOR}.${BSONCXX_VERSION_MINOR}.${BSONCXX_VERSION_PATCH} CACHE INTERNAL "")
+set(BSONCXX_VERSION $CACHE{BSONCXX_VERSION_NO_EXTRA}${BSONCXX_VERSION_EXTRA} CACHE INTERNAL "")
+message(STATUS "bsoncxx version: $CACHE{BSONCXX_VERSION}")
 
 option(BSONCXX_POLY_USE_IMPLS "Use bsoncxx implementations for stdx polyfills" OFF)
 option(BSONCXX_POLY_USE_STD "Use C++17 std library for stdx polyfills" OFF)
+
+option(BSONCXX_API_OVERRIDE_DEFAULT_ABI "The default ABI namespace to use for root namespace redeclarations" OFF)
+mark_as_advanced(BSONCXX_API_OVERRIDE_DEFAULT_ABI)
+if(BSONCXX_API_OVERRIDE_DEFAULT_ABI)
+    message(WARNING "BSONCXX_API_OVERRIDE_DEFAULT_ABI is an experimental feature")
+endif()
 
 set(BSONCXX_OUTPUT_BASENAME "bsoncxx" CACHE STRING "Output bsoncxx library base name")
 
@@ -50,51 +56,23 @@ elseif(BSONCXX_POLY_OPTIONS_SET EQUAL 0)
     endif()
 endif()
 
-set(BSONCXX_PKG_DEP "") # Required by bsoncxx-config.cmake.in.
-
 if(TARGET bson_shared OR TARGET bson_static)
-    # If these targets exist, then libbson has already been included as a project
-    # sub-directory
-    message(STATUS "found libbson targets declared in current build scope; version not checked")
+    message(STATUS "Using bson targets imported via add_subdirectory() without version checks")
 
-    if(NOT BSONCXX_LINK_WITH_STATIC_MONGOC)
-        set(libbson_target bson_shared)
+    if(BSONCXX_LINK_WITH_STATIC_MONGOC)
+        set(bson_target bson::static)
     else()
-        set(libbson_target bson_static)
+        set(bson_target bson::shared)
     endif()
-
-    set(BSONCXX_PKG_DEP "find_dependency(bson-${LIBBSON_REQUIRED_ABI_VERSION} REQUIRED)")
 else()
-    # Attempt to find libbson by new package name (without lib).
-    find_package(bson-${LIBBSON_REQUIRED_ABI_VERSION} ${LIBBSON_REQUIRED_VERSION} QUIET)
+    find_package(bson ${BSON_REQUIRED_VERSION} REQUIRED)
 
-    if(bson-${LIBBSON_REQUIRED_ABI_VERSION}_FOUND)
-        message(STATUS "found libbson version ${bson-${LIBBSON_REQUIRED_ABI_VERSION}_VERSION}")
+    message(STATUS "Found bson: ${bson_DIR} (found version \"${bson_VERSION}\")")
 
-        if(NOT BSONCXX_LINK_WITH_STATIC_MONGOC)
-            set(libbson_target mongo::bson_shared)
-        else()
-            set(libbson_target mongo::bson_static)
-        endif()
-
-        set(BSONCXX_PKG_DEP "find_dependency(bson-${LIBBSON_REQUIRED_ABI_VERSION} REQUIRED)")
+    if(BSONCXX_LINK_WITH_STATIC_MONGOC)
+        set(bson_target bson::static)
     else()
-        # Require package of old libbson name (with lib).
-        if(NOT BSONCXX_LINK_WITH_STATIC_MONGOC)
-            find_package(libbson-${LIBBSON_REQUIRED_ABI_VERSION} ${LIBBSON_REQUIRED_VERSION} REQUIRED)
-            message(STATUS "found libbson version ${BSON_VERSION}")
-            set(libbson_target ${BSON_LIBRARIES})
-            set(libbson_include_directories ${BSON_INCLUDE_DIRS})
-            set(libbson_definitions ${BSON_DEFINITIONS})
-            set(BSONCXX_PKG_DEP "find_dependency(libbson-${LIBBSON_REQUIRED_ABI_VERSION} REQUIRED)")
-        else()
-            find_package(libbson-static-${LIBBSON_REQUIRED_ABI_VERSION} ${LIBBSON_REQUIRED_VERSION} REQUIRED)
-            message(STATUS "found libbson version ${BSON_STATIC_VERSION}")
-            set(libbson_target ${BSON_STATIC_LIBRARIES})
-            set(libbson_include_directories ${BSON_STATIC_INCLUDE_DIRS})
-            set(libbson_definitions ${BSON_STATIC_DEFINITIONS})
-            set(BSONCXX_PKG_DEP "find_dependency(libbson-static-${LIBBSON_REQUIRED_ABI_VERSION} REQUIRED)")
-        endif()
+        set(bson_target bson::shared)
     endif()
 endif()
 
@@ -127,31 +105,79 @@ endif()
 if(1)
     function(bsoncxx_install_export_header TARGET)
         set(bsoncxx_export_header_custom_content "")
-        string(APPEND bsoncxx_export_header_custom_content
-            "\n"
-            "#undef BSONCXX_DEPRECATED_EXPORT\n"
-            "#undef BSONCXX_DEPRECATED_NO_EXPORT\n"
-            "\n"
-            "#if defined(_MSC_VER)\n"
-            "#define BSONCXX_ABI_CDECL __cdecl\n"
-            "#else\n"
-            "#define BSONCXX_ABI_CDECL\n"
-            "#endif\n"
-            "\n"
-            "#define BSONCXX_ABI_EXPORT_CDECL(...) BSONCXX_ABI_EXPORT __VA_ARGS__ BSONCXX_ABI_CDECL\n"
+        string(APPEND bsoncxx_export_header_custom_content [[
+
+#undef BSONCXX_DEPRECATED_EXPORT
+#undef BSONCXX_DEPRECATED_NO_EXPORT
+
+#if defined(_MSC_VER)
+#define BSONCXX_ABI_CDECL __cdecl
+#else
+#define BSONCXX_ABI_CDECL
+#endif
+
+#define BSONCXX_ABI_EXPORT_CDECL(...) BSONCXX_ABI_EXPORT __VA_ARGS__ BSONCXX_ABI_CDECL
+
+///
+/// @file
+/// Provides macros to control the set of symbols exported in the ABI.
+///
+/// @warning For internal use only!
+///
+
+///
+/// @def BSONCXX_ABI_EXPORT
+/// @hideinitializer
+/// Exports the associated entity as part of the ABI.
+///
+/// @warning For internal use only!
+///
+
+///
+/// @def BSONCXX_ABI_NO_EXPORT
+/// @hideinitializer
+/// Excludes the associated entity from being part of the ABI.
+///
+/// @warning For internal use only!
+///
+
+///
+/// @def BSONCXX_ABI_CDECL
+/// @hideinitializer
+/// Expands to `__cdecl` when built with MSVC on Windows.
+///
+/// @warning For internal use only!
+///
+
+///
+/// @def BSONCXX_ABI_EXPORT_CDECL
+/// @hideinitializer
+/// Equivalent to @ref BSONCXX_ABI_EXPORT with @ref BSONCXX_ABI_CDECL.
+///
+/// @warning For internal use only!
+///
+
+///
+/// @def BSONCXX_DEPRECATED
+/// @hideinitializer
+/// Declares the associated entity as deprecated.
+///
+/// @warning For internal use only!
+///
+]]
         )
         generate_export_header(${TARGET}
             BASE_NAME BSONCXX_ABI
             EXPORT_MACRO_NAME BSONCXX_ABI_EXPORT
             DEPRECATED_MACRO_NAME BSONCXX_DEPRECATED
-            EXPORT_FILE_NAME ${PROJECT_BINARY_DIR}/lib/bsoncxx/v_noabi/bsoncxx/config/export.hpp
+            EXPORT_FILE_NAME ${PROJECT_BINARY_DIR}/lib/bsoncxx/v1/config/export.hpp
             STATIC_DEFINE BSONCXX_STATIC
             CUSTOM_CONTENT_FROM_VARIABLE bsoncxx_export_header_custom_content
         )
 
         install(FILES
-            ${PROJECT_BINARY_DIR}/lib/bsoncxx/v_noabi/bsoncxx/config/export.hpp
-            DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/bsoncxx/v_noabi/bsoncxx/config
+            ${PROJECT_BINARY_DIR}/lib/bsoncxx/v1/config/export.hpp
+            DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/bsoncxx/v1/config
             COMPONENT dev
         )
     endfunction()

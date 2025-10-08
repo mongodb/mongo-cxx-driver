@@ -17,8 +17,6 @@
 
 #include <mongocxx/options/update.hpp>
 
-#include <mongocxx/config/private/prelude.hh>
-
 namespace mongocxx {
 namespace v_noabi {
 namespace options {
@@ -43,6 +41,11 @@ update& update::let(bsoncxx::v_noabi::document::view_or_value let) {
     return *this;
 }
 
+update& update::sort(bsoncxx::v_noabi::document::view_or_value sort) {
+    _sort = std::move(sort);
+    return *this;
+}
+
 update& update::comment(bsoncxx::v_noabi::types::bson_value::view_or_value comment) {
     _comment = std::move(comment);
     return *this;
@@ -58,35 +61,35 @@ update& update::write_concern(mongocxx::v_noabi::write_concern wc) {
     return *this;
 }
 
-const bsoncxx::v_noabi::stdx::optional<bool>& update::bypass_document_validation() const {
+bsoncxx::v_noabi::stdx::optional<bool> const& update::bypass_document_validation() const {
     return _bypass_document_validation;
 }
 
-const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value>&
-update::collation() const {
+bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const& update::collation() const {
     return _collation;
 }
 
-const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::hint>& update::hint() const {
+bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::hint> const& update::hint() const {
     return _hint;
 }
 
-const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> update::let()
-    const {
+bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const update::let() const {
     return _let;
 }
 
-const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value>
-update::comment() const {
+bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const& update::sort() const {
+    return _sort;
+}
+
+bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value> const update::comment() const {
     return _comment;
 }
 
-const bsoncxx::v_noabi::stdx::optional<bool>& update::upsert() const {
+bsoncxx::v_noabi::stdx::optional<bool> const& update::upsert() const {
     return _upsert;
 }
 
-const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern>& update::write_concern()
-    const {
+bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern> const& update::write_concern() const {
     return _write_concern;
 }
 
@@ -95,11 +98,10 @@ update& update::array_filters(bsoncxx::v_noabi::array::view_or_value array_filte
     return *this;
 }
 
-const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::array::view_or_value>&
-update::array_filters() const {
+bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::array::view_or_value> const& update::array_filters() const {
     return _array_filters;
 }
 
-}  // namespace options
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace options
+} // namespace v_noabi
+} // namespace mongocxx

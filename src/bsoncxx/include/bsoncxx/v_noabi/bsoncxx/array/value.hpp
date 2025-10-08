@@ -29,9 +29,10 @@ namespace v_noabi {
 namespace array {
 
 ///
-/// A read-only BSON array that owns its underlying buffer. When a array::value goes
-/// out of scope, the underlying buffer is freed. Generally this class should be used
-/// sparingly; array::view should be used instead wherever possible.
+/// A read-only BSON array that owns its underlying buffer.
+///
+/// When a array::value goes out of scope, the underlying buffer is freed. Generally this class
+/// should be used sparingly; array::view should be used instead wherever possible.
 ///
 class value {
    public:
@@ -73,8 +74,8 @@ class value {
     ///
     explicit BSONCXX_ABI_EXPORT_CDECL() value(array::view view);
 
-    BSONCXX_ABI_EXPORT_CDECL() value(const value&);
-    BSONCXX_ABI_EXPORT_CDECL(value&) operator=(const value&);
+    BSONCXX_ABI_EXPORT_CDECL() value(value const&);
+    BSONCXX_ABI_EXPORT_CDECL(value&) operator=(value const&);
 
     value(value&&) = default;
     value& operator=(value&&) = default;
@@ -111,9 +112,9 @@ class value {
     std::size_t _length{0};
 };
 
-}  // namespace array
-}  // namespace v_noabi
-}  // namespace bsoncxx
+} // namespace array
+} // namespace v_noabi
+} // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>
 

@@ -49,14 +49,14 @@ void example(mongocxx::index_view indexes) {
     EXPECT(result["ok"].get_double().value == 1.0);
 
     EXPECT(result["numIndexesBefore"]);
-    EXPECT(result["numIndexesBefore"].get_int32().value == 1);  // _id_
+    EXPECT(result["numIndexesBefore"].get_int32().value == 1); // _id_
 
     EXPECT(result["numIndexesAfter"]);
-    EXPECT(result["numIndexesAfter"].get_int32().value == 3);  // _id_, x_1, y_1
+    EXPECT(result["numIndexesAfter"].get_int32().value == 3); // _id_, x_1, y_1
 }
 // [Example]
 
-}  // namespace
+} // namespace
 
 RUNNER_REGISTER_COMPONENT_FOR_SINGLE() {
     mongocxx::client client{mongocxx::uri{}};

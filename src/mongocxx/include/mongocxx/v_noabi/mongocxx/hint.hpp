@@ -30,7 +30,7 @@ namespace mongocxx {
 namespace v_noabi {
 
 ///
-/// Class representing a hint to be passed to a database operation.
+/// The index to "hint" or force a MongoDB server to use when performing a query.
 ///
 class hint {
    public:
@@ -60,7 +60,7 @@ class hint {
     ///
     /// Compares equal if the hint contains a matching index name. Otherwise, compares unequal.
     ///
-    friend MONGOCXX_ABI_EXPORT_CDECL(bool) operator==(const hint& index_hint, std::string index);
+    friend MONGOCXX_ABI_EXPORT_CDECL(bool) operator==(hint const& index_hint, std::string index);
 
     ///
     /// @relates mongocxx::v_noabi::hint
@@ -69,8 +69,7 @@ class hint {
     ///
     /// Compares equal if the hint contains a matching index document. Otherwise, compares unequal.
     ///
-    friend MONGOCXX_ABI_EXPORT_CDECL(bool) operator==(const hint& index_hint,
-                                                      bsoncxx::v_noabi::document::view index);
+    friend MONGOCXX_ABI_EXPORT_CDECL(bool) operator==(hint const& index_hint, bsoncxx::v_noabi::document::view index);
 
     ///
     /// Returns a types::bson_value::view representing this hint.
@@ -105,13 +104,13 @@ class hint {
 /// @{
 
 /// @relatesalso mongocxx::v_noabi::hint
-MONGOCXX_ABI_EXPORT_CDECL(bool) operator==(std::string index, const hint& index_hint);
+MONGOCXX_ABI_EXPORT_CDECL(bool) operator==(std::string index, hint const& index_hint);
 
 /// @relatesalso mongocxx::v_noabi::hint
-MONGOCXX_ABI_EXPORT_CDECL(bool) operator!=(const hint& index_hint, std::string index);
+MONGOCXX_ABI_EXPORT_CDECL(bool) operator!=(hint const& index_hint, std::string index);
 
 /// @relatesalso mongocxx::v_noabi::hint
-MONGOCXX_ABI_EXPORT_CDECL(bool) operator!=(std::string index, const hint& index_index);
+MONGOCXX_ABI_EXPORT_CDECL(bool) operator!=(std::string index, hint const& index_index);
 
 /// @}
 ///
@@ -125,26 +124,26 @@ MONGOCXX_ABI_EXPORT_CDECL(bool) operator!=(std::string index, const hint& index_
 
 /// @relatesalso mongocxx::v_noabi::hint
 MONGOCXX_ABI_EXPORT_CDECL(bool)
-operator==(bsoncxx::v_noabi::document::view index, const hint& index_hint);
+operator==(bsoncxx::v_noabi::document::view index, hint const& index_hint);
 /// @relatesalso mongocxx::v_noabi::hint
 MONGOCXX_ABI_EXPORT_CDECL(bool)
-operator!=(const hint& index_hint, bsoncxx::v_noabi::document::view index);
+operator!=(hint const& index_hint, bsoncxx::v_noabi::document::view index);
 /// @relatesalso mongocxx::v_noabi::hint
 MONGOCXX_ABI_EXPORT_CDECL(bool)
-operator!=(bsoncxx::v_noabi::document::view index, const hint& index_hint);
+operator!=(bsoncxx::v_noabi::document::view index, hint const& index_hint);
 
 /// @}
 ///
 
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace v_noabi
+} // namespace mongocxx
 
 namespace mongocxx {
 
 using ::mongocxx::v_noabi::operator==;
 using ::mongocxx::v_noabi::operator!=;
 
-}  // namespace mongocxx
+} // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
 
@@ -152,29 +151,3 @@ using ::mongocxx::v_noabi::operator!=;
 /// @file
 /// Provides @ref mongocxx::v_noabi::hint.
 ///
-
-#if defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
-
-namespace mongocxx {
-
-/// @ref mongocxx::v_noabi::operator==(std::string index, const v_noabi::hint& index_hint)
-bool operator==(std::string index, const v_noabi::hint& index_hint);
-
-/// @ref mongocxx::v_noabi::operator!=(const v_noabi::hint& index_hint, std::string index)
-bool operator!=(const v_noabi::hint& index_hint, std::string index);
-
-/// @ref mongocxx::v_noabi::operator!=(std::string index, const v_noabi::hint& index_index)
-bool operator!=(std::string index, const v_noabi::hint& index_index);
-
-/// @ref mongocxx::v_noabi::operator==(bsoncxx::v_noabi::document::view index, const v_noabi::hint& index_hint)
-bool operator==(bsoncxx::v_noabi::document::view index, const v_noabi::hint& index_hint);
-
-/// @ref mongocxx::v_noabi::operator!=(const v_noabi::hint& index_hint, bsoncxx::v_noabi::document::view index)
-bool operator!=(const v_noabi::hint& index_hint, bsoncxx::v_noabi::document::view index);
-
-/// @ref mongocxx::v_noabi::operator!=(bsoncxx::v_noabi::document::view index, const v_noabi::hint& index_hint)
-bool operator!=(bsoncxx::v_noabi::document::view index, const v_noabi::hint& index_hint);
-
-}  // namespace mongocxx
-
-#endif  // defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

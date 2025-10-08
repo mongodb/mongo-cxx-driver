@@ -14,7 +14,7 @@
 
 #include <bsoncxx/builder/basic/document.hpp>
 
-#include <mongocxx/private/libbson.hh>
+#include <mongocxx/private/bson.hh>
 #include <mongocxx/private/numeric_casting.hh>
 
 #include <bsoncxx/test/catch.hh>
@@ -40,10 +40,10 @@ TEST_CASE("can do basic numeric_casting", "[numeric_casting]") {
         REQUIRE(i32 == 123);
         REQUIRE_FALSE(mongocxx::int64_to_int32_safe(std::numeric_limits<int64_t>::max(), i32));
         REQUIRE_FALSE(mongocxx::int64_to_int32_safe(std::numeric_limits<int64_t>::min(), i32));
-        REQUIRE_FALSE(mongocxx::int64_to_int32_safe(
-            static_cast<int64_t>(std::numeric_limits<int32_t>::max()) + 1, i32));
-        REQUIRE_FALSE(mongocxx::int64_to_int32_safe(
-            static_cast<int64_t>(std::numeric_limits<int32_t>::min()) - 1, i32));
+        REQUIRE_FALSE(
+            mongocxx::int64_to_int32_safe(static_cast<int64_t>(std::numeric_limits<int32_t>::max()) + 1, i32));
+        REQUIRE_FALSE(
+            mongocxx::int64_to_int32_safe(static_cast<int64_t>(std::numeric_limits<int32_t>::min()) - 1, i32));
     }
 
     SECTION("int32_to_size_t_safe") {
@@ -62,4 +62,4 @@ TEST_CASE("can do basic numeric_casting", "[numeric_casting]") {
         REQUIRE_FALSE(mongocxx::int64_to_size_t_safe(-1, sz));
     }
 }
-}  // namespace
+} // namespace

@@ -18,8 +18,9 @@
 
 #include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/instance.hpp>
-#include <mongocxx/private/conversions.hh>
 #include <mongocxx/read_preference.hpp>
+
+#include <mongocxx/private/conversions.hh>
 
 #include <bsoncxx/test/catch.hh>
 
@@ -46,14 +47,13 @@ TEST_CASE("Read preference", "[read_preference]") {
 
     SECTION("Can have mode changed") {
         rp.mode(read_preference::read_mode::k_nearest);
-        REQUIRE(libmongoc::conversions::read_mode_t_from_read_mode(rp.mode()) ==
-                MONGOC_READ_NEAREST);
+        REQUIRE(libmongoc::conversions::read_mode_t_from_read_mode(rp.mode()) == MONGOC_READ_NEAREST);
     }
 
     {
-        const auto tag_set_1 = make_document(kvp("a", "1"), kvp("b", "2"));
-        const auto tag_set_2 = make_document(kvp("c", "3"), kvp("d", "4"));
-        const auto tag_set_list = make_document(kvp("0", tag_set_1), kvp("1", tag_set_2));
+        auto const tag_set_1 = make_document(kvp("a", "1"), kvp("b", "2"));
+        auto const tag_set_2 = make_document(kvp("c", "3"), kvp("d", "4"));
+        auto const tag_set_list = make_document(kvp("0", tag_set_1), kvp("1", tag_set_2));
 
         SECTION("Can provide tag set list as a document") {
             rp.tags(tag_set_list.view());
@@ -95,8 +95,7 @@ TEST_CASE("Read preference can be constructed with a read_mode and tags", "[read
     instance::current();
     auto tags = make_document(kvp("tag_key", "tag_value"));
 
-    read_preference rp(
-        read_preference::read_mode::k_secondary, tags.view(), read_preference::deprecated_tag{});
+    read_preference rp(read_preference::read_mode::k_secondary, tags.view(), read_preference::deprecated_tag{});
     REQUIRE(rp.mode() == read_preference::read_mode::k_secondary);
     REQUIRE(rp.tags().value() == tags);
 }
@@ -164,12 +163,12 @@ TEST_CASE("Read preference methods call underlying mongoc methods", "[read_prefe
     }
 
     {
-        const auto tag_set_1 = make_document(kvp("foo", "abc"));
-        const auto tag_set_2 = make_document(kvp("bar", "def"));
+        auto const tag_set_1 = make_document(kvp("foo", "abc"));
+        auto const tag_set_2 = make_document(kvp("bar", "def"));
 
         SECTION("tags(document) calls mongoc_read_prefs_set_tags()") {
-            const auto tag_set_list = make_document(kvp("0", tag_set_1), kvp("1", tag_set_2));
-            read_prefs_set_tags->interpose([&](mongoc_read_prefs_t*, const bson_t* arg) {
+            auto const tag_set_list = make_document(kvp("0", tag_set_1), kvp("1", tag_set_2));
+            read_prefs_set_tags->interpose([&](mongoc_read_prefs_t*, bson_t const* arg) {
                 called = true;
                 REQUIRE(bson_get_data(arg) == tag_set_list.view().data());
             });
@@ -178,8 +177,8 @@ TEST_CASE("Read preference methods call underlying mongoc methods", "[read_prefe
         }
 
         SECTION("tags(array) calls _mongoc_read_prefs_set_tags()") {
-            const auto tag_set_list = make_array(tag_set_1, tag_set_2);
-            read_prefs_set_tags->interpose([&](mongoc_read_prefs_t*, const bson_t* arg) {
+            auto const tag_set_list = make_array(tag_set_1, tag_set_2);
+            read_prefs_set_tags->interpose([&](mongoc_read_prefs_t*, bson_t const* arg) {
                 called = true;
                 REQUIRE(bson_get_data(arg) == tag_set_list.view().data());
             });
@@ -190,20 +189,21 @@ TEST_CASE("Read preference methods call underlying mongoc methods", "[read_prefe
 
     SECTION("max_staleness() calls mongoc_read_prefs_set_max_staleness_seconds()") {
         std::chrono::seconds expected_max_staleness_sec{150};
-        read_prefs_set_max_staleness_seconds->interpose(
-            [&](mongoc_read_prefs_t*, int64_t max_staleness_sec) {
-                called = true;
-                REQUIRE(std::chrono::seconds{max_staleness_sec} == expected_max_staleness_sec);
-            });
+        read_prefs_set_max_staleness_seconds->interpose([&](mongoc_read_prefs_t*, int64_t max_staleness_sec) {
+            called = true;
+            REQUIRE(std::chrono::seconds{max_staleness_sec} == expected_max_staleness_sec);
+        });
         rp.max_staleness(expected_max_staleness_sec);
         REQUIRE(called);
     }
 
     SECTION("hedge() calls mongoc_read_prefs_set_hedge") {
         /* No hedge should return a disengaged optional. */
+        BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_BEGIN
         REQUIRE(!rp.hedge());
+        BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_END
 
-        read_prefs_set_hedge->visit([&](mongoc_read_prefs_t*, const bson_t* doc) {
+        read_prefs_set_hedge->visit([&](mongoc_read_prefs_t*, bson_t const* doc) {
             bson_iter_t iter;
 
             REQUIRE(bson_iter_init_find(&iter, doc, "hedge"));
@@ -211,9 +211,11 @@ TEST_CASE("Read preference methods call underlying mongoc methods", "[read_prefe
             called = true;
         });
 
+        BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_BEGIN
         rp.hedge(make_document(kvp("hedge", true)));
         REQUIRE((*rp.hedge())["hedge"].get_bool().value == true);
+        BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_END
         REQUIRE(called);
     }
 }
-}  // namespace
+} // namespace

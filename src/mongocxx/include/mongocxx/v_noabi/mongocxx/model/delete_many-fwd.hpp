@@ -22,17 +22,17 @@ namespace model {
 
 class delete_many;
 
-}  // namespace model
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace model
+} // namespace v_noabi
+} // namespace mongocxx
 
 namespace mongocxx {
 namespace model {
 
 using ::mongocxx::v_noabi::model::delete_many;
 
-}  // namespace model
-}  // namespace mongocxx
+} // namespace model
+} // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
 
@@ -40,16 +40,3 @@ using ::mongocxx::v_noabi::model::delete_many;
 /// @file
 /// Declares @ref mongocxx::v_noabi::model::delete_many.
 ///
-
-#if defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
-
-namespace mongocxx {
-namespace model {
-
-/// @ref mongocxx::v_noabi::model::delete_many
-class delete_many {};
-
-}  // namespace model
-}  // namespace mongocxx
-
-#endif  // defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

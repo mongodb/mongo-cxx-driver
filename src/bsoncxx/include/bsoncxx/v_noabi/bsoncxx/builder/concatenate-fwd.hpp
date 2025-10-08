@@ -21,9 +21,9 @@ namespace builder {
 struct concatenate_doc;
 struct concatenate_array;
 
-}  // namespace builder
-}  // namespace v_noabi
-}  // namespace bsoncxx
+} // namespace builder
+} // namespace v_noabi
+} // namespace bsoncxx
 
 namespace bsoncxx {
 namespace builder {
@@ -31,26 +31,10 @@ namespace builder {
 using ::bsoncxx::v_noabi::builder::concatenate_array;
 using ::bsoncxx::v_noabi::builder::concatenate_doc;
 
-}  // namespace builder
-}  // namespace bsoncxx
+} // namespace builder
+} // namespace bsoncxx
 
 ///
 /// @file
 /// Provides concatenators for use with "streaming" BSON builder syntax.
 ///
-
-#if defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
-
-namespace bsoncxx {
-namespace builder {
-
-/// @ref bsoncxx::v_noabi::builder::concatenate_doc
-struct concatenate_doc {};
-
-/// @ref bsoncxx::v_noabi::builder::concatenate_array
-struct concatenate_array {};
-
-}  // namespace builder
-}  // namespace bsoncxx
-
-#endif  // defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

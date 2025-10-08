@@ -22,17 +22,17 @@ namespace document {
 
 class value;
 
-}  // namespace document
-}  // namespace v_noabi
-}  // namespace bsoncxx
+} // namespace document
+} // namespace v_noabi
+} // namespace bsoncxx
 
 namespace bsoncxx {
 namespace document {
 
 using ::bsoncxx::v_noabi::document::value;
 
-}  // namespace document
-}  // namespace bsoncxx
+} // namespace document
+} // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>
 
@@ -40,16 +40,3 @@ using ::bsoncxx::v_noabi::document::value;
 /// @file
 /// Declares @ref bsoncxx::v_noabi::document::value.
 ///
-
-#if defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
-
-namespace bsoncxx {
-namespace document {
-
-/// @ref bsoncxx::v_noabi::document::value
-class value {};
-
-}  // namespace document
-}  // namespace bsoncxx
-
-#endif  // defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

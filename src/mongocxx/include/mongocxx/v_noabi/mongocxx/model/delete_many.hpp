@@ -28,7 +28,7 @@ namespace v_noabi {
 namespace model {
 
 ///
-/// Class representing a MongoDB delete operation that removes multiple documents.
+/// A MongoDB delete operation that removes multiple documents.
 ///
 class delete_many {
    public:
@@ -38,15 +38,14 @@ class delete_many {
     /// @param filter
     ///   Document representing the criteria for deletion.
     ///
-    explicit MONGOCXX_ABI_EXPORT_CDECL()
-        delete_many(bsoncxx::v_noabi::document::view_or_value filter);
+    explicit MONGOCXX_ABI_EXPORT_CDECL() delete_many(bsoncxx::v_noabi::document::view_or_value filter);
 
     ///
     /// Gets the filter for this delete operation.
     ///
     /// @return The filter to be used for the delete operation.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::document::view_or_value&) filter() const;
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::document::view_or_value const&) filter() const;
 
     ///
     /// Sets the collation for this delete operation.
@@ -73,8 +72,7 @@ class delete_many {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/collation/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(
-        const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value>&)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const&)
     collation() const;
 
     /// Sets the index to use for this operation.
@@ -96,7 +94,7 @@ class delete_many {
     ///
     /// @return The current hint, if one is set.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::hint>&)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::hint> const&)
     hint() const;
 
    private:
@@ -106,9 +104,9 @@ class delete_many {
     bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::hint> _hint;
 };
 
-}  // namespace model
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace model
+} // namespace v_noabi
+} // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
 

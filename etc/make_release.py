@@ -39,8 +39,9 @@ When editing this file, consider running `test_make_release.py` to validate chan
 
 import textwrap
 import re
-from distutils.version import LooseVersion
+from looseversion import LooseVersion
 import os
+import glob
 import subprocess
 import sys
 import tempfile
@@ -50,7 +51,6 @@ import click # pip install Click
 from git import Repo # pip install GitPython
 from github import Github # pip install PyGithub
 from jira import JIRA # pip install jira
-import oauthlib.oauth1
 
 if sys.version_info < (3, 0, 0):
     raise RuntimeError("This script requires Python 3 or higher")
@@ -68,11 +68,14 @@ ISSUE_TYPE_ID = {'Backport': '10300',
                 }
 
 @click.command()
-@click.option('--jira-creds-file',
+@click.option('--skip-release-tag',
+              is_flag=True,
+              help='Use an existing release tag instead of creating a new one')
+@click.option('--jira-token-file',
               '-j',
-              default='jira_creds.txt',
+              default='jira_token.txt',
               show_default=True,
-              help='Jira OAuth credentials file')
+              help='Jira token file. Contains a Personal Access Token. See https://wiki.corp.mongodb.com/spaces/TOGETHER/pages/218995581/Jira+Personal+Access+Tokens+PATs')
 @click.option('--github-token-file',
               '-g',
               default='github_token.txt',
@@ -88,7 +91,7 @@ ISSUE_TYPE_ID = {'Backport': '10300',
               show_default=True,
               help='The remote reference which points to the mongodb/mongo-cxx-driver repo')
 @click.option('--c-driver-build-ref',
-              default='1.29.0',
+              default='2.0.0',
               show_default=True,
               help='When building the C driver, build at this Git reference')
 @click.option('--with-c-driver',
@@ -111,7 +114,8 @@ ISSUE_TYPE_ID = {'Backport': '10300',
               help='Produce fewer progress messages')
 @click.argument('git-revision', required=True)
 # pylint: disable=too-many-arguments,too-many-locals,too-many-branches,too-many-statements
-def release(jira_creds_file,
+def release(skip_release_tag,
+            jira_token_file,
             github_token_file,
             allow_open_issues,
             remote,
@@ -127,13 +131,13 @@ def release(jira_creds_file,
     Perform the steps associated with the release.
     """
 
-    check_libmongoc_version()
+    check_mongoc_version()
 
     # Read Jira credentials and GitHub token first, to check that
     # user has proper credentials before embarking on lengthy builds.
     jira_options = {'server': 'https://jira.mongodb.org'}
-    jira_oauth_dict = read_jira_oauth_creds(jira_creds_file)
-    auth_jira = JIRA(jira_options, oauth=jira_oauth_dict)
+    jira_token = pathlib.Path(jira_token_file).read_text().rstrip()
+    auth_jira = JIRA(jira_options, token_auth=jira_token)
 
     github_token = read_github_creds(github_token_file)
     auth_gh = Github(github_token)
@@ -147,6 +151,13 @@ def release(jira_creds_file,
         click.echo('DRY RUN! No remote modifications will be made!')
     if not quiet:
         print_banner(git_revision)
+
+    if skip_release_tag:
+        click.echo(f'Skipping creation of a new release tag')
+    else:
+        click.echo('Creating GPG-signed release tag...')
+        run_shell_script(f'./etc/garasign_release_tag.sh {git_revision}')
+        click.echo('Creating GPG-signed release tag... done.')
 
     release_tag, release_version = get_release_tag(git_revision)
 
@@ -233,43 +244,43 @@ def release(jira_creds_file,
                                     release_notes_text, output_file, quiet)
 
 
-def check_libmongoc_version():
-    got_LIBMONGOC_REQUIRED_VERSION = None
-    got_LIBMONGOC_DOWNLOAD_VERSION = None
+def check_mongoc_version():
+    got_MONGOC_REQUIRED_VERSION = None
+    got_MONGOC_DOWNLOAD_VERSION = None
     with open("CMakeLists.txt", "r") as cmakelists:
         for line in cmakelists:
             match = re.match(
-                r"set\(LIBMONGOC_REQUIRED_VERSION\s+(.*?)\)", line)
+                r"set\(MONGOC_REQUIRED_VERSION\s+(.*?)\)", line)
             if match:
                 if 'TODO' in line:
                     click.echo(
-                        'Found TODO on LIBMONGOC_REQUIRED_VERSION line in CMakeLists.txt: {}'.format(line))
+                        'Found TODO on MONGOC_REQUIRED_VERSION line in CMakeLists.txt: {}'.format(line))
                     sys.exit(1)
-                got_LIBMONGOC_REQUIRED_VERSION = match.group(1)
+                got_MONGOC_REQUIRED_VERSION = match.group(1)
                 continue
             match = re.match(
-                r"set\(LIBMONGOC_DOWNLOAD_VERSION\s+(.*?)\)", line)
+                r"set\(MONGOC_DOWNLOAD_VERSION\s+(.*?)\)", line)
             if match:
                 if 'TODO' in line:
                     click.echo(
-                        'Found TODO on LIBMONGOC_DOWNLOAD_VERSION line in CMakeLists.txt: {}'.format(line))
+                        'Found TODO on MONGOC_DOWNLOAD_VERSION line in CMakeLists.txt: {}'.format(line))
                     sys.exit(1)
-                got_LIBMONGOC_DOWNLOAD_VERSION = match.group(1)
+                got_MONGOC_DOWNLOAD_VERSION = match.group(1)
                 continue
-    assert got_LIBMONGOC_DOWNLOAD_VERSION
-    assert got_LIBMONGOC_REQUIRED_VERSION
-    libmongoc_version_pattern = r'[0-9]+\.[0-9]+\.[0-9]+'
-    if not re.match (libmongoc_version_pattern, got_LIBMONGOC_DOWNLOAD_VERSION):
-        click.echo("Expected LIBMONGOC_DOWNLOAD_VERSION to match: {}, got: {}".format(
-            libmongoc_version_pattern, got_LIBMONGOC_DOWNLOAD_VERSION))
+    assert got_MONGOC_DOWNLOAD_VERSION
+    assert got_MONGOC_REQUIRED_VERSION
+    mongoc_version_pattern = r'[0-9]+\.[0-9]+\.[0-9]+'
+    if not re.match (mongoc_version_pattern, got_MONGOC_DOWNLOAD_VERSION):
+        click.echo("Expected MONGOC_DOWNLOAD_VERSION to match: {}, got: {}".format(
+            mongoc_version_pattern, got_MONGOC_DOWNLOAD_VERSION))
         sys.exit(1)
-    if not re.match (libmongoc_version_pattern, got_LIBMONGOC_REQUIRED_VERSION):
-        click.echo("Expected LIBMONGOC_REQUIRED_VERSION to match: {}, got: {}".format(
-            libmongoc_version_pattern, got_LIBMONGOC_REQUIRED_VERSION))
+    if not re.match (mongoc_version_pattern, got_MONGOC_REQUIRED_VERSION):
+        click.echo("Expected MONGOC_REQUIRED_VERSION to match: {}, got: {}".format(
+            mongoc_version_pattern, got_MONGOC_REQUIRED_VERSION))
         sys.exit(1)
-    if got_LIBMONGOC_DOWNLOAD_VERSION != got_LIBMONGOC_REQUIRED_VERSION:
-        click.echo("Expected LIBMONGOC_DOWNLOAD_VERSION ({}) to match LIBMONGOC_REQUIRED_VERSION ({})".format(
-            got_LIBMONGOC_DOWNLOAD_VERSION, got_LIBMONGOC_REQUIRED_VERSION))
+    if got_MONGOC_DOWNLOAD_VERSION != got_MONGOC_REQUIRED_VERSION:
+        click.echo("Expected MONGOC_DOWNLOAD_VERSION ({}) to match MONGOC_REQUIRED_VERSION ({})".format(
+            got_MONGOC_DOWNLOAD_VERSION, got_MONGOC_REQUIRED_VERSION))
         sys.exit(1)
 
 
@@ -384,9 +395,9 @@ def ensure_c_driver(c_driver_build_ref, with_c_driver, quiet):
     """
 
     if with_c_driver:
-        bson_h = os.path.join(with_c_driver, 'include/libbson-1.0/bson/bson.h')
-        mongoc_h = os.path.join(with_c_driver, 'include/libmongoc-1.0/mongoc/mongoc.h')
-        if os.path.exists(bson_h) and os.path.exists(mongoc_h):
+        bson_h = glob.glob('include/bson-2.*/bson/bson.h', root_dir=with_c_driver)
+        mongoc_h = glob.glob('include/mongoc-2.*/mongoc/mongoc.h', root_dir=with_c_driver)
+        if bson_h and mongoc_h:
             return with_c_driver
         if not quiet:
             click.echo('A required component of the C driver is missing!', err=True)
@@ -452,39 +463,9 @@ def build_distribution(release_tag, release_version, c_driver_dir, quiet, skip_d
 
     if not skip_distcheck:
         click.echo('Building C++ driver from tarball and running tests.')
-        click.echo('This may take several minutes. This may be skipped with --skip_distcheck')
+        click.echo('This may take several minutes. This may be skipped with --skip-distcheck')
         run_shell_script('cmake --build build --target distcheck')
     return dist_file
-
-def read_jira_oauth_creds(jira_creds_file):
-    """
-    Read the Jira Oauth credentials file and return a dictionary containing the
-    credentials.
-    """
-
-    creds_re = re.compile(
-        r'^[\s\S]*access_token\s*:\s*(\S+)\s*'
-        r'access_token_secret\s*:\s*(\S+)\s*'
-        r'consumer_key\s*:\s*(\S+)\s*'
-        r'key_cert\s*:\s*(-.*-)[\s\S]*$')
-
-    oauth_dict = {}
-    with open(jira_creds_file, 'rb') as creds_stream:
-        creds_data = creds_stream.read().decode('ascii')
-        creds_match = creds_re.match(creds_data)
-        if creds_match:
-            oauth_dict['access_token'] = creds_match.group(1)
-            oauth_dict['access_token_secret'] = creds_match.group(2)
-            oauth_dict['consumer_key'] = creds_match.group(3)
-            # Fix the double-backslash created by the decode() call above
-            oauth_dict['key_cert'] = creds_match.group(4).replace("\\n", "\n")
-            # Use signature algorithm `SIGNATURE_RSA` to override `jira` default of `SIGNATURE_HMAC_SHA1`.
-            # `jira` 3.5.1 changed the default signature algorithm to `SIGNATURE_HMAC_SHA1`.
-            # MongoDB Jira servers do not appear to support `SIGNATURE_HMAC_SHA1`. Using `SIGNATURE_HMAC_SHA1` results in `signature_method_rejected`` error.
-            # See https://github.com/pycontribs/jira/pull/1664
-            oauth_dict["signature_method"] = oauthlib.oauth1.SIGNATURE_RSA
-
-    return oauth_dict
 
 def get_jira_project_versions(auth_jira):
     """
@@ -609,7 +590,7 @@ def read_github_creds(github_token_file):
     Read the GitHub token from the specified file and return it as a string.
     """
 
-    token_re = re.compile('^(?:Token - )?(?P<tok>\w{40}).*$')
+    token_re = re.compile(r'^(?:Token - )?(?P<tok>\w{40}).*$')
     github_token = None
 
     with open(github_token_file, 'rb') as token_stream:

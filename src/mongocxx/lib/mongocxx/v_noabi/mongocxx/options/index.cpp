@@ -13,14 +13,14 @@
 // limitations under the License.
 
 #include <bsoncxx/builder/basic/document.hpp>
-#include <bsoncxx/private/make_unique.hh>
 
 #include <mongocxx/exception/error_code.hpp>
 #include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/options/index.hpp>
-#include <mongocxx/private/libmongoc.hh>
 
-#include <mongocxx/config/private/prelude.hh>
+#include <bsoncxx/private/make_unique.hh>
+
+#include <mongocxx/private/mongoc.hh>
 
 namespace mongocxx {
 namespace v_noabi {
@@ -64,8 +64,12 @@ index& index::storage_options(std::unique_ptr<index::base_storage_options> stora
 }
 
 index& index::storage_options(std::unique_ptr<index::wiredtiger_storage_options> storage_options) {
-    _storage_options = std::unique_ptr<index::base_storage_options>(
-        static_cast<index::base_storage_options*>(storage_options.release()));
+    _storage_options = std::move(storage_options);
+    return *this;
+}
+
+index& index::storage_engine(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view> storage_engine) {
+    _storage_engine = std::move(storage_engine);
     return *this;
 }
 
@@ -94,8 +98,7 @@ index& index::language_override(bsoncxx::v_noabi::string::view_or_value language
     return *this;
 }
 
-index& index::partial_filter_expression(
-    bsoncxx::v_noabi::document::view partial_filter_expression) {
+index& index::partial_filter_expression(bsoncxx::v_noabi::document::view partial_filter_expression) {
     _partial_filter_expression = partial_filter_expression;
     return *this;
 }
@@ -129,85 +132,91 @@ index& index::haystack_bucket_size(double haystack_bucket_size) {
     return haystack_bucket_size_deprecated(haystack_bucket_size);
 }
 
-const bsoncxx::v_noabi::stdx::optional<bool>& index::background() const {
+bsoncxx::v_noabi::stdx::optional<bool> const& index::background() const {
     return _background;
 }
 
-const bsoncxx::v_noabi::stdx::optional<bool>& index::unique() const {
+bsoncxx::v_noabi::stdx::optional<bool> const& index::unique() const {
     return _unique;
 }
 
-const bsoncxx::v_noabi::stdx::optional<bool>& index::hidden() const {
+bsoncxx::v_noabi::stdx::optional<bool> const& index::hidden() const {
     return _hidden;
 }
 
-const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value>& index::name()
-    const {
+bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value> const& index::name() const {
     return _name;
 }
 
-const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view>& index::collation() const {
+bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view> const& index::collation() const {
     return _collation;
 }
 
-const bsoncxx::v_noabi::stdx::optional<bool>& index::sparse() const {
+bsoncxx::v_noabi::stdx::optional<bool> const& index::sparse() const {
     return _sparse;
 }
 
-const std::unique_ptr<index::base_storage_options>& index::storage_options() const {
+std::unique_ptr<index::base_storage_options> const& index::storage_options() const {
     return _storage_options;
 }
 
-const bsoncxx::v_noabi::stdx::optional<std::chrono::seconds>& index::expire_after() const {
+bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view> const& index::storage_engine() const {
+    return _storage_engine;
+}
+
+bsoncxx::v_noabi::stdx::optional<std::chrono::seconds> const& index::expire_after() const {
     return _expire_after;
 }
 
-const bsoncxx::v_noabi::stdx::optional<std::int32_t>& index::version() const {
+bsoncxx::v_noabi::stdx::optional<std::int32_t> const& index::version() const {
     return _version;
 }
 
-const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view>& index::weights() const {
+bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view> const& index::weights() const {
     return _weights;
 }
 
-const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value>&
-index::default_language() const {
+bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value> const& index::default_language() const {
     return _default_language;
 }
 
-const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value>&
-index::language_override() const {
+bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value> const& index::language_override() const {
     return _language_override;
 }
 
-const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view>&
-index::partial_filter_expression() const {
+bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view> const& index::partial_filter_expression() const {
     return _partial_filter_expression;
 }
 
-const bsoncxx::v_noabi::stdx::optional<std::uint8_t>& index::twod_sphere_version() const {
+bsoncxx::v_noabi::stdx::optional<std::uint8_t> const& index::twod_sphere_version() const {
     return _twod_sphere_version;
 }
 
-const bsoncxx::v_noabi::stdx::optional<std::uint8_t>& index::twod_bits_precision() const {
+bsoncxx::v_noabi::stdx::optional<std::uint8_t> const& index::twod_bits_precision() const {
     return _twod_bits_precision;
 }
 
-const bsoncxx::v_noabi::stdx::optional<double>& index::twod_location_min() const {
+bsoncxx::v_noabi::stdx::optional<double> const& index::twod_location_min() const {
     return _twod_location_min;
 }
 
-const bsoncxx::v_noabi::stdx::optional<double>& index::twod_location_max() const {
+bsoncxx::v_noabi::stdx::optional<double> const& index::twod_location_max() const {
     return _twod_location_max;
 }
 
-const bsoncxx::v_noabi::stdx::optional<double>& index::haystack_bucket_size_deprecated() const {
+bsoncxx::v_noabi::stdx::optional<double> const& index::haystack_bucket_size_deprecated() const {
     return _haystack_bucket_size;
 }
 
-const bsoncxx::v_noabi::stdx::optional<double>& index::haystack_bucket_size() const {
+bsoncxx::v_noabi::stdx::optional<double> const& index::haystack_bucket_size() const {
     return haystack_bucket_size_deprecated();
 }
+
+// CDRIVER-5946: mongoc_index_storage_opt_type_t was removed in mongoc 2.0.
+enum mongoc_index_storage_opt_type_t {
+    MONGOC_INDEX_STORAGE_OPT_MMAPV1,
+    MONGOC_INDEX_STORAGE_OPT_WIREDTIGER,
+};
 
 index::operator bsoncxx::v_noabi::document::view_or_value() {
     using namespace bsoncxx;
@@ -241,7 +250,7 @@ index::operator bsoncxx::v_noabi::document::view_or_value() {
     }
 
     if (_expire_after) {
-        const auto count = _expire_after->count();
+        auto const count = _expire_after->count();
         if ((count < 0) || (count > std::numeric_limits<std::int32_t>::max())) {
             throw logic_error{error_code::k_invalid_parameter};
         }
@@ -285,25 +294,25 @@ index::operator bsoncxx::v_noabi::document::view_or_value() {
         root.append(kvp("collation", *_collation));
     }
 
-    if (_storage_options) {
+    if (_storage_engine) {
+        root.append(kvp("storageEngine", *_storage_engine));
+    } else if (_storage_options) {
         if (_storage_options->type() == MONGOC_INDEX_STORAGE_OPT_WIREDTIGER) {
-            const options::index::wiredtiger_storage_options* wt_options =
-                static_cast<const options::index::wiredtiger_storage_options*>(
-                    _storage_options.get());
+            options::index::wiredtiger_storage_options const* wt_options =
+                static_cast<options::index::wiredtiger_storage_options const*>(_storage_options.get());
 
             bsoncxx::v_noabi::document::view_or_value storage_doc;
             if (wt_options->config_string()) {
-                storage_doc = make_document(
-                    kvp("wiredTiger",
-                        make_document(kvp("configString", *wt_options->config_string()))));
+                storage_doc =
+                    make_document(kvp("wiredTiger", make_document(kvp("configString", *wt_options->config_string()))));
             } else {
-                storage_doc = make_document(
-                    kvp("wiredTiger", make_document(kvp("configString", types::b_null{}))));
+                storage_doc = make_document(kvp("wiredTiger", make_document(kvp("configString", types::b_null{}))));
             }
 
             root.append(kvp("storageEngine", storage_doc));
         }
     }
+
     return root.extract();
 }
 
@@ -311,12 +320,11 @@ index::base_storage_options::~base_storage_options() = default;
 
 index::wiredtiger_storage_options::~wiredtiger_storage_options() = default;
 
-void index::wiredtiger_storage_options::config_string(
-    bsoncxx::v_noabi::string::view_or_value config_string) {
+void index::wiredtiger_storage_options::config_string(bsoncxx::v_noabi::string::view_or_value config_string) {
     _config_string = std::move(config_string);
 }
 
-const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value>&
+bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value> const&
 index::wiredtiger_storage_options::config_string() const {
     return _config_string;
 }
@@ -325,8 +333,6 @@ int index::wiredtiger_storage_options::type() const {
     return mongoc_index_storage_opt_type_t::MONGOC_INDEX_STORAGE_OPT_WIREDTIGER;
 }
 
-}  // namespace options
-}  // namespace v_noabi
-}  // namespace mongocxx
-
-#include <mongocxx/config/postlude.hpp>
+} // namespace options
+} // namespace v_noabi
+} // namespace mongocxx

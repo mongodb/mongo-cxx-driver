@@ -25,20 +25,20 @@ namespace builder {
 namespace stream {
 
 ///
-/// The closed_context, when used as a template parameter for array_context,
-/// value_context or key_context, indicates that the document cannot be closed
-/// further. This could indicate that the document is the root, or that the type
-/// stack has been intentionally erased, as is the case when using callbacks in
-/// the stream api.
+/// Indicates the document being constructed cannot be closed further.
+///
+/// Used as a template parameter for array_context, value_context or key_context. This could
+/// indicate that the document is the root, or that the type stack has been intentionally erased, as
+/// is the case when using callbacks in the stream api.
 ///
 struct closed_context {
     closed_context(core*) {}
 };
 
-}  // namespace stream
-}  // namespace builder
-}  // namespace v_noabi
-}  // namespace bsoncxx
+} // namespace stream
+} // namespace builder
+} // namespace v_noabi
+} // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>
 

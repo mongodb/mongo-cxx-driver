@@ -44,7 +44,7 @@ class score_recorder {
     // @return
     //  The cumulative execution time.
     //
-    const std::chrono::milliseconds& get_execution_time() const;
+    std::chrono::milliseconds const& get_execution_time() const;
 
     //
     // Gets the nth percentile sample runtime.
@@ -58,7 +58,7 @@ class score_recorder {
     // @note
     //   This method should only be called after all samples are completed.
     //
-    const std::chrono::milliseconds& get_percentile(unsigned long n);
+    std::chrono::milliseconds const& get_percentile(unsigned long n);
 
     //
     // Gets the score for this benchmark.
@@ -85,4 +85,4 @@ class score_recorder {
 
     std::vector<std::chrono::milliseconds> _samples;
 };
-}  // namespace benchmark
+} // namespace benchmark

@@ -25,15 +25,17 @@ namespace v_noabi {
 namespace options {
 
 ///
-/// @copydoc mongocxx::v_noabi::options::tls
+/// Equivalent to @ref mongocxx::v_noabi::options::tls.
+///
+/// To be removed in an upcoming major release.
 ///
 /// @deprecated Use @ref mongocxx::v_noabi::options::tls instead.
 ///
 MONGOCXX_DEPRECATED typedef tls ssl;
 
-}  // namespace options
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace options
+} // namespace v_noabi
+} // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
 

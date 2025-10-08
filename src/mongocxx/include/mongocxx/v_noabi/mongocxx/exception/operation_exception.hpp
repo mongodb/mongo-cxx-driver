@@ -30,13 +30,12 @@
 namespace mongocxx {
 namespace v_noabi {
 
-BSONCXX_PUSH_WARNINGS();
-BSONCXX_DISABLE_WARNING(MSVC(4251));
-BSONCXX_DISABLE_WARNING(MSVC(4275));
+BSONCXX_PRIVATE_WARNINGS_PUSH();
+BSONCXX_PRIVATE_WARNINGS_DISABLE(MSVC(4251));
+BSONCXX_PRIVATE_WARNINGS_DISABLE(MSVC(4275));
 
 ///
-/// Class representing an exception received from a MongoDB server.  It includes the server-provided
-/// error code, if one was available.
+/// An exception thrown during a MongoDB server operation.
 ///
 /// @see
 /// - @ref mongocxx::v_noabi::exception
@@ -47,8 +46,8 @@ class operation_exception : public exception {
 
     operation_exception(operation_exception&&) = default;
     operation_exception& operator=(operation_exception&&) = default;
-    operation_exception(const operation_exception&) = default;
-    operation_exception& operator=(const operation_exception&) = default;
+    operation_exception(operation_exception const&) = default;
+    operation_exception& operator=(operation_exception const&) = default;
 
     using exception::exception;
 
@@ -62,9 +61,10 @@ class operation_exception : public exception {
     /// @param what_arg
     ///   An optional message to be returned by `what`.
     ///
-    operation_exception(std::error_code ec,
-                        bsoncxx::v_noabi::document::value&& raw_server_error,
-                        std::string what_arg = "");
+    operation_exception(
+        std::error_code ec,
+        bsoncxx::v_noabi::document::value&& raw_server_error,
+        std::string what_arg = "");
 
     ///
     /// The optional raw bson error document from the server.
@@ -72,8 +72,7 @@ class operation_exception : public exception {
     /// @returns The raw server error, if it is available.
     ///
     /// @{
-    const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::value>& raw_server_error()
-        const;
+    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::value> const& raw_server_error() const;
     bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::value>& raw_server_error();
     /// @}
     ///
@@ -92,10 +91,10 @@ class operation_exception : public exception {
     bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::value> _raw_server_error;
 };
 
-BSONCXX_POP_WARNINGS();
+BSONCXX_PRIVATE_WARNINGS_POP();
 
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace v_noabi
+} // namespace mongocxx
 
 #include <bsoncxx/config/postlude.hpp>
 

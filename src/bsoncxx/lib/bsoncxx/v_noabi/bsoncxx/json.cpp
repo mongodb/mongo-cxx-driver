@@ -12,6 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <bsoncxx/json.hpp>
+
+//
+
+#include <bsoncxx/v1/detail/macros.hpp>
+
 #include <memory>
 #include <vector>
 
@@ -19,13 +25,12 @@
 #include <bsoncxx/exception/error_code.hpp>
 #include <bsoncxx/exception/exception.hpp>
 #include <bsoncxx/json.hpp>
-#include <bsoncxx/private/b64_ntop.hh>
-#include <bsoncxx/private/libbson.hh>
 #include <bsoncxx/stdx/string_view.hpp>
 #include <bsoncxx/types.hpp>
 #include <bsoncxx/types/bson_value/view.hpp>
 
-#include <bsoncxx/config/private/prelude.hh>
+#include <bsoncxx/private/b64_ntop.hh>
+#include <bsoncxx/private/bson.hh>
 
 namespace bsoncxx {
 namespace v_noabi {
@@ -50,13 +55,13 @@ std::string to_json_helper(document::view view, decltype(bson_as_legacy_extended
         throw exception(error_code::k_failed_converting_bson_to_json);
     }
 
-    const auto deleter = [](char* result) { bson_free(result); };
-    const std::unique_ptr<char[], decltype(deleter)> cleanup(result, deleter);
+    auto const deleter = [](char* result) { bson_free(result); };
+    std::unique_ptr<char[], decltype(deleter)> const cleanup(result, deleter);
 
     return {result, size};
 }
 
-}  // namespace
+} // namespace
 
 std::string to_json(document::view view, ExtendedJsonMode mode) {
     switch (mode) {
@@ -70,7 +75,7 @@ std::string to_json(document::view view, ExtendedJsonMode mode) {
             return to_json_helper(view, bson_as_canonical_extended_json);
     }
 
-    BSONCXX_UNREACHABLE;
+    BSONCXX_PRIVATE_UNREACHABLE;
 }
 
 std::string to_json(array::view view, ExtendedJsonMode mode) {
@@ -85,14 +90,13 @@ std::string to_json(array::view view, ExtendedJsonMode mode) {
             return to_json_helper(view, bson_array_as_canonical_extended_json);
     }
 
-    BSONCXX_UNREACHABLE;
+    BSONCXX_PRIVATE_UNREACHABLE;
 }
 
 document::value from_json(stdx::string_view json) {
     bson_error_t error;
-    bson_t* result = bson_new_from_json(reinterpret_cast<const uint8_t*>(json.data()),
-                                        static_cast<std::int32_t>(json.size()),
-                                        &error);
+    bson_t* result = bson_new_from_json(
+        reinterpret_cast<uint8_t const*>(json.data()), static_cast<std::int32_t>(json.size()), &error);
 
     if (!result)
         throw exception(error_code::k_json_parse_failure, error.message);
@@ -103,9 +107,13 @@ document::value from_json(stdx::string_view json) {
     return document::value{buf, length, bson_free_deleter};
 }
 
-document::value operator"" _bson(const char* str, size_t len) {
+#if defined(__GNUC__) && (__GNUC__ < 4 || (__GNUC__ == 4 && __GNUC_MINOR__ <= 8)) && !defined(__clang__)
+document::value operator"" _bson(char const* str, size_t len) {
+#else
+document::value operator""_bson(char const* str, size_t len) {
+#endif // GCC <= 4.8
     return from_json(stdx::string_view{str, len});
 }
 
-}  // namespace v_noabi
-}  // namespace bsoncxx
+} // namespace v_noabi
+} // namespace bsoncxx

@@ -2,11 +2,11 @@ from config_generator.components.funcs.setup import Setup
 
 from config_generator.etc.distros import find_large_distro
 from config_generator.etc.function import Function, merge_defns
-from config_generator.etc.utils import bash_exec
+from config_generator.etc.utils import Task, bash_exec
 
 from shrub.v3.evg_build_variant import BuildVariant
 from shrub.v3.evg_command import EvgCommandType, s3_put
-from shrub.v3.evg_task import EvgTask, EvgTaskRef
+from shrub.v3.evg_task import EvgTaskRef
 
 
 TAG = 'packaging'
@@ -62,8 +62,8 @@ class RpmPackageBuild(Function):
 # pylint: disable=line-too-long
 # fmt: off
 MATRIX = [
-    (DebianPackageBuild,        'debian12-latest'),
-    (RpmPackageBuild,           'rhel92-arm64'   ),
+    (DebianPackageBuild,        'debian12-latest'),  # Debian packaging.
+    (RpmPackageBuild,           'rhel92-arm64'   ),  # RHEL packaging.
 ]
 # fmt: on
 # pylint: enable=line-too-long
@@ -78,10 +78,19 @@ def functions():
 
 def tasks():
     return [
-        EvgTask(
+        Task(
             name=f'{TAG}-{fn.desc}',
             tags=[TAG, distro_name],
             run_on=find_large_distro(distro_name).name,
+            allowed_requesters=[
+                'ad_hoc',
+                'commit',
+                # 'github_merge_queue'
+                # 'github_pr',
+                # 'github_tag',
+                'patch',
+                'trigger',
+            ],
             commands=[
                 Setup.call(),
                 fn.call(),

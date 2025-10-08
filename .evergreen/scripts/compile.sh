@@ -15,7 +15,6 @@ set -o pipefail
 : "${build_type:?}"
 : "${distro_id:?}" # Required by find-cmake-latest.sh.
 
-: "${BSON_EXTRA_ALIGNMENT:-}"
 : "${BSONCXX_POLYFILL:-}"
 : "${COMPILE_MACRO_GUARD_TESTS:-}"
 : "${ENABLE_CODE_COVERAGE:-}"
@@ -27,6 +26,7 @@ set -o pipefail
 : "${USE_SANITIZER_ASAN:-}"
 : "${USE_SANITIZER_UBSAN:-}"
 : "${USE_STATIC_LIBS:-}"
+: "${USE_SHARED_AND_STATIC_LIBS:-}"
 
 mongoc_prefix="$(pwd)/../mongoc"
 echo "mongoc_prefix=${mongoc_prefix:?}"
@@ -40,17 +40,6 @@ fi
 export cmake_binary
 cmake_binary="$(find_cmake_latest)"
 command -v "$cmake_binary"
-
-if [ ! -d ../drivers-evergreen-tools ]; then
-  git clone --depth 1 https://github.com/mongodb-labs/drivers-evergreen-tools.git ../drivers-evergreen-tools
-fi
-# shellcheck source=/dev/null
-. ../drivers-evergreen-tools/.evergreen/find-python3.sh
-# shellcheck source=/dev/null
-. ../drivers-evergreen-tools/.evergreen/venv-utils.sh
-
-venvcreate "$(find_python3)" venv
-python -m pip install GitPython
 
 if [[ "${build_type:?}" != "Debug" && "${build_type:?}" != "Release" ]]; then
   echo "$0: expected build_type environment variable to be set to 'Debug' or 'Release'" >&2
@@ -92,7 +81,7 @@ darwin* | linux*)
 esac
 
 # Create a VERSION_CURRENT file in the build directory to include in the dist tarball.
-python ./etc/calc_release_version.py >./build/VERSION_CURRENT
+PATH="${UV_INSTALL_DIR:?}:${PATH:-}" uv run --frozen python ./etc/calc_release_version.py >./build/VERSION_CURRENT
 cd build
 
 cmake_flags=(
@@ -102,6 +91,11 @@ cmake_flags=(
   -DCMAKE_INSTALL_PREFIX=install
   -DENABLE_UNINSTALL=ON
 )
+
+# System-installed mongoc must not prevent fetch-and-build of mongoc.
+if [[ -z "$(find "${mongoc_prefix:?}" -name 'bson-config.h')" ]]; then
+  cmake_flags+=("-DCMAKE_DISABLE_FIND_PACKAGE_mongoc-1.0=ON")
+fi
 
 _RUN_DISTCHECK=""
 case "${OSTYPE:?}" in
@@ -128,6 +122,41 @@ esac
 export CMAKE_GENERATOR="${generator:?}"
 export CMAKE_GENERATOR_PLATFORM="${platform:-}"
 
+if [[ -n "${REQUIRED_CXX_STANDARD:-}" ]]; then
+  echo "Checking requested C++ standard is supported..."
+  pushd "$(mktemp -d)"
+  cat >CMakeLists.txt <<DOC
+cmake_minimum_required(VERSION 3.30)
+project(cxx_standard_latest LANGUAGES CXX)
+set(cxx_std_version "${REQUIRED_CXX_STANDARD:?}")
+if(cxx_std_version STREQUAL "latest") # Special-case MSVC's /std:c++latest flag.
+  include(CheckCXXCompilerFlag)
+  check_cxx_compiler_flag("/std:c++latest" cxxflag_std_cxxlatest)
+  if(cxxflag_std_cxxlatest)
+    message(NOTICE "/std:c++latest is supported")
+  else()
+    message(FATAL_ERROR "/std:c++latest is not supported")
+  endif()
+else()
+  macro(success)
+    message(NOTICE "Latest C++ standard \${CMAKE_CXX_STANDARD_LATEST} is newer than \${cxx_std_version}")
+  endmacro()
+  macro(failure)
+    message(FATAL_ERROR "Latest C++ standard \${CMAKE_CXX_STANDARD_LATEST} is older than \${cxx_std_version}")
+  endmacro()
+
+  if(CMAKE_CXX_STANDARD_LATEST GREATER_EQUAL cxx_std_version)
+    success() # Both are new: latest >= version.
+  else()
+    failure() # Both are new: latest < version.
+  endif()
+endif()
+DOC
+  "${cmake_binary:?}" -S . -B build --log-level=notice
+  popd # "$(tmpfile -d)"
+  echo "Checking requested C++ standard is supported... done."
+fi
+
 case "${BSONCXX_POLYFILL:-}" in
 impls) cmake_flags+=("-DBSONCXX_POLY_USE_IMPLS=ON") ;;
 std) cmake_flags+=("-DBSONCXX_POLY_USE_STD=ON") ;;
@@ -142,18 +171,32 @@ cxx_flags=()
 case "${OSTYPE:?}" in
 cygwin)
   # Most compiler flags are not applicable to builds on Windows distros.
+
+  # Replace `/Zi`, which is incompatible with ccache, with `/Z7` while preserving other default debug flags.
+  cmake_flags+=(
+    "-DCMAKE_MSVC_DEBUG_INFORMATION_FORMAT=Embedded"
+  )
+
+  # Ensure default MSVC flags are preserved despite explicit compiler flags.
+  cc_flags+=(/DWIN32 /D_WINDOWS)
+  cxx_flags+=(/DWIN32 /D_WINDOWS /GR /EHsc)
+  if [[ "${build_type:?}" == "debug" ]]; then
+    cxx_flags+=(/Ob0 /Od /RTC1)
+  else
+    cxx_flags+=(/O2 /Ob2 /DNDEBUG)
+  fi
   ;;
 darwin*)
   cc_flags+=("${cc_flags_init[@]}")
   cxx_flags+=("${cxx_flags_init[@]}" -stdlib=libc++)
+
+  if [[ "${distro_id:?}" == macos-14* ]]; then
+    cxx_flags+=(-Wno-align-mismatch)
+  fi
   ;;
 linux*)
   cc_flags+=("${cc_flags_init[@]}")
   cxx_flags+=("${cxx_flags_init[@]}" -Wno-missing-field-initializers)
-
-  if [[ "${CXX:-}" != "clang++" ]]; then
-    cxx_flags+=(-Wno-aligned-new)
-  fi
 
   if [[ "${distro_id:?}" != rhel7* ]]; then
     cxx_flags+=("-Wno-expansion-to-defined")
@@ -178,7 +221,6 @@ if [[ "${OSTYPE:?}" != cygwin ]]; then
   if [[ "${USE_SANITIZER_ASAN:-}" == "ON" ]]; then
     cxx_flags=(
       "${cxx_flags_init[@]}"
-      -D_GLIBCXX_USE_CXX11_ABI=0
       -fsanitize=address
       -O1 -g -fno-omit-frame-pointer
     )
@@ -188,7 +230,6 @@ if [[ "${OSTYPE:?}" != cygwin ]]; then
   if [[ "${USE_SANITIZER_UBSAN:-}" == "ON" ]]; then
     cxx_flags=(
       "${cxx_flags_init[@]}"
-      -D_GLIBCXX_USE_CXX11_ABI=0
       -fsanitize=undefined
       -fsanitize-blacklist="$(pwd)/../etc/ubsan.ignorelist"
       -fno-sanitize-recover=undefined
@@ -203,20 +244,31 @@ if [[ "${OSTYPE:?}" != cygwin ]]; then
   fi
 fi
 
-if [[ "${#cc_flags[@]}" -gt 0 ]]; then
-  cmake_flags+=("-DCMAKE_C_FLAGS=${cc_flags[*]}")
-fi
+if [[ -n "${REQUIRED_CXX_STANDARD:-}" ]]; then
+  cmake_flags+=("-DCMAKE_CXX_STANDARD_REQUIRED=ON")
 
-if [[ "${#cxx_flags[@]}" -gt 0 ]]; then
-  cmake_flags+=("-DCMAKE_CXX_FLAGS=${cxx_flags[*]}")
+  if [[ "${REQUIRED_CXX_STANDARD:?}" == "latest" ]]; then
+    [[ "${CMAKE_GENERATOR:-}" =~ "Visual Studio" ]] || {
+      echo "REQUIRED_CXX_STANDARD=latest to enable /std:c++latest is only supported with Visual Studio generators" 1>&2
+      exit 1
+    }
+
+    cxx_flags+=("/std:c++latest") # CMake doesn't support "latest" as a C++ standard.
+  else
+    cmake_flags+=("-DCMAKE_CXX_STANDARD=${REQUIRED_CXX_STANDARD:?}")
+  fi
 fi
 
 if [[ "${ENABLE_CODE_COVERAGE:-}" == "ON" ]]; then
   cmake_flags+=("-DENABLE_CODE_COVERAGE=ON")
 fi
 
-if [ "${USE_STATIC_LIBS:-}" ]; then
+if [[ "${USE_STATIC_LIBS:-}" == 1 ]]; then
   cmake_flags+=("-DBUILD_SHARED_LIBS=OFF")
+fi
+
+if [[ "${USE_SHARED_AND_STATIC_LIBS:-}" == 1 ]]; then
+  cmake_flags+=("-DUSE_SHARED_AND_STATIC_LIBS=ON")
 fi
 
 if [ "${ENABLE_TESTS:-}" = "ON" ]; then
@@ -226,13 +278,18 @@ if [ "${ENABLE_TESTS:-}" = "ON" ]; then
   )
 fi
 
-if [[ -n "${REQUIRED_CXX_STANDARD:-}" ]]; then
-  cmake_flags+=("-DCMAKE_CXX_STANDARD=${REQUIRED_CXX_STANDARD:?}")
-  cmake_flags+=("-DCMAKE_CXX_STANDARD_REQUIRED=ON")
-fi
-
 if [[ "${COMPILE_MACRO_GUARD_TESTS:-"OFF"}" == "ON" ]]; then
   cmake_flags+=("-DENABLE_MACRO_GUARD_TESTS=ON")
+fi
+
+# Must come after all cc_flags are set.
+if [[ "${#cc_flags[@]}" -gt 0 ]]; then
+  cmake_flags+=("-DCMAKE_C_FLAGS=${cc_flags[*]}")
+fi
+
+# Must come after all cxx_flags are set.
+if [[ "${#cxx_flags[@]}" -gt 0 ]]; then
+  cmake_flags+=("-DCMAKE_CXX_FLAGS=${cxx_flags[*]}")
 fi
 
 echo "Configuring with CMake flags:"
@@ -254,29 +311,11 @@ if [[ "${_RUN_DISTCHECK:-}" ]]; then
   "${cmake_binary}" --build . --config "${build_type:?}" --target distcheck
 fi
 
-# Ensure extra alignment is enabled or disabled as expected.
 if [[ -n "$(find "${mongoc_prefix:?}" -name 'bson-config.h')" ]]; then
-  if [[ "${BSON_EXTRA_ALIGNMENT:-}" == "1" ]]; then
-    grep -R "#define BSON_EXTRA_ALIGN 1" "${mongoc_prefix:?}" || {
-      echo "BSON_EXTRA_ALIGN is not 1 despite BSON_EXTRA_ALIGNMENT=1" 1>&2
-      exit 1
-    }
-  else
-    grep -R "#define BSON_EXTRA_ALIGN 0" "${mongoc_prefix:?}" || {
-      echo "BSON_EXTRA_ALIGN is not 0 despite BSON_EXTRA_ALIGNMENT=0" 1>&2
-      exit 1
-    }
-  fi
+  : # Used install-c-driver.sh.
+elif [[ -n "$(find install -name 'bson-config.h')" ]]; then
+  : # Used auto-downloaded C Driver.
 else
-  if [[ "${BSON_EXTRA_ALIGNMENT:-}" == "1" ]]; then
-    grep -R "#define BSON_EXTRA_ALIGN 1" install || {
-      echo "BSON_EXTRA_ALIGN is not 1 despite BSON_EXTRA_ALIGNMENT=1" 1>&2
-      exit 1
-    }
-  else
-    grep -R "#define BSON_EXTRA_ALIGN 0" install || {
-      echo "BSON_EXTRA_ALIGN is not 0 despite BSON_EXTRA_ALIGNMENT=0" 1>&2
-      exit 1
-    }
-  fi
+  echo "unexpectedly compiled using a system mongoc library" 1>&2
+  exit 1
 fi

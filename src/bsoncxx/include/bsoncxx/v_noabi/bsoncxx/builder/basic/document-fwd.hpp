@@ -21,10 +21,10 @@ namespace basic {
 
 class document;
 
-}  // namespace basic
-}  // namespace builder
-}  // namespace v_noabi
-}  // namespace bsoncxx
+} // namespace basic
+} // namespace builder
+} // namespace v_noabi
+} // namespace bsoncxx
 
 namespace bsoncxx {
 namespace builder {
@@ -32,26 +32,11 @@ namespace basic {
 
 using ::bsoncxx::v_noabi::builder::basic::document;
 
-}  // namespace basic
-}  // namespace builder
-}  // namespace bsoncxx
+} // namespace basic
+} // namespace builder
+} // namespace bsoncxx
 
 ///
 /// @file
 /// Declares @ref bsoncxx::v_noabi::builder::basic::document.
 ///
-
-#if defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
-
-namespace bsoncxx {
-namespace builder {
-namespace basic {
-
-/// @ref bsoncxx::v_noabi::builder::basic::document
-class document {};
-
-}  // namespace basic
-}  // namespace builder
-}  // namespace bsoncxx
-
-#endif  // defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

@@ -29,14 +29,14 @@ namespace v_noabi {
 namespace events {
 
 ///
-/// An event notification sent when the driver fails to execute a MongoDB command.
+/// The failed execution of a MongoDB command.
 ///
 /// @see
-/// - "CommandFailedEvent" in https://github.com/mongodb/specifications/blob/master/source/command-logging-and-monitoring/command-logging-and-monitoring.md
+/// - [Command Logging and Monitoring (MongoDB Specifications)](https://specifications.readthedocs.io/en/latest/command-logging-and-monitoring/command-logging-and-monitoring/)
 ///
 class command_failed_event {
    public:
-    explicit command_failed_event(const void* event);
+    explicit command_failed_event(void const* event);
 
     ///
     /// Destroys a command_failed_event.
@@ -46,8 +46,8 @@ class command_failed_event {
     command_failed_event(command_failed_event&&) = default;
     command_failed_event& operator=(command_failed_event&&) = default;
 
-    command_failed_event(const command_failed_event&) = default;
-    command_failed_event& operator=(const command_failed_event&) = default;
+    command_failed_event(command_failed_event const&) = default;
+    command_failed_event& operator=(command_failed_event const&) = default;
 
     ///
     /// Returns the server’s reply to the failed operation.
@@ -107,12 +107,12 @@ class command_failed_event {
     MONGOCXX_ABI_EXPORT_CDECL(std::uint16_t) port() const;
 
    private:
-    const void* _failed_event;
+    void const* _failed_event;
 };
 
-}  // namespace events
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace events
+} // namespace v_noabi
+} // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
 

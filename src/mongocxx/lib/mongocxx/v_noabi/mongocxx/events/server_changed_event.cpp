@@ -13,48 +13,42 @@
 // limitations under the License.
 
 #include <mongocxx/events/server_changed_event.hpp>
-#include <mongocxx/private/libmongoc.hh>
 
-#include <mongocxx/config/private/prelude.hh>
+#include <mongocxx/private/mongoc.hh>
 
 namespace mongocxx {
 namespace v_noabi {
 namespace events {
 
-server_changed_event::server_changed_event(const void* event) : _event(event) {}
+server_changed_event::server_changed_event(void const* event) : _event(event) {}
 
 server_changed_event::~server_changed_event() = default;
 
 bsoncxx::v_noabi::stdx::string_view server_changed_event::host() const {
-    return libmongoc::apm_server_changed_get_host(
-               static_cast<const mongoc_apm_server_changed_t*>(_event))
-        ->host;
+    return libmongoc::apm_server_changed_get_host(static_cast<mongoc_apm_server_changed_t const*>(_event))->host;
 }
 
 std::uint16_t server_changed_event::port() const {
-    return libmongoc::apm_server_changed_get_host(
-               static_cast<const mongoc_apm_server_changed_t*>(_event))
-        ->port;
+    return libmongoc::apm_server_changed_get_host(static_cast<mongoc_apm_server_changed_t const*>(_event))->port;
 }
 
-const bsoncxx::v_noabi::oid server_changed_event::topology_id() const {
+bsoncxx::v_noabi::oid const server_changed_event::topology_id() const {
     bson_oid_t boid;
-    libmongoc::apm_server_changed_get_topology_id(
-        static_cast<const mongoc_apm_server_changed_t*>(_event), &boid);
+    libmongoc::apm_server_changed_get_topology_id(static_cast<mongoc_apm_server_changed_t const*>(_event), &boid);
 
-    return bsoncxx::v_noabi::oid{reinterpret_cast<const char*>(boid.bytes), sizeof(boid.bytes)};
+    return bsoncxx::v_noabi::oid{reinterpret_cast<char const*>(boid.bytes), sizeof(boid.bytes)};
 }
 
-const server_description server_changed_event::previous_description() const {
+server_description const server_changed_event::previous_description() const {
     return server_description{libmongoc::apm_server_changed_get_previous_description(
-        static_cast<const mongoc_apm_server_changed_t*>(_event))};
+        static_cast<mongoc_apm_server_changed_t const*>(_event))};
 }
 
-const server_description server_changed_event::new_description() const {
-    return server_description{libmongoc::apm_server_changed_get_new_description(
-        static_cast<const mongoc_apm_server_changed_t*>(_event))};
+server_description const server_changed_event::new_description() const {
+    return server_description{
+        libmongoc::apm_server_changed_get_new_description(static_cast<mongoc_apm_server_changed_t const*>(_event))};
 }
 
-}  // namespace events
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace events
+} // namespace v_noabi
+} // namespace mongocxx

@@ -12,20 +12,23 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <mongocxx/v1/config/version.hpp>
+#include <mongocxx/v1/detail/macros.hpp>
+
 #include <atomic>
 #include <sstream>
 #include <type_traits>
 #include <utility>
 
-#include <bsoncxx/private/make_unique.hh>
-
 #include <mongocxx/exception/error_code.hpp>
 #include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/instance.hpp>
 #include <mongocxx/logger.hpp>
-#include <mongocxx/private/libmongoc.hh>
 
-#include <mongocxx/config/private/prelude.hh>
+#include <bsoncxx/private/make_unique.hh>
+
+#include <mongocxx/private/config/config.hh>
+#include <mongocxx/private/mongoc.hh>
 
 #if !defined(__has_feature)
 #define __has_feature(x) 0
@@ -53,32 +56,32 @@ log_level convert_log_level(::mongoc_log_level_t mongoc_log_level) {
         case MONGOC_LOG_LEVEL_TRACE:
             return log_level::k_trace;
         default:
-            MONGOCXX_UNREACHABLE;
+            MONGOCXX_PRIVATE_UNREACHABLE;
     }
 }
 
-void null_log_handler(::mongoc_log_level_t, const char*, const char*, void*) {}
+void null_log_handler(::mongoc_log_level_t, char const*, char const*, void*) {}
 
-void user_log_handler(::mongoc_log_level_t mongoc_log_level,
-                      const char* log_domain,
-                      const char* message,
-                      void* user_data) {
-    (*static_cast<logger*>(user_data))(convert_log_level(mongoc_log_level),
-                                       bsoncxx::v_noabi::stdx::string_view{log_domain},
-                                       bsoncxx::v_noabi::stdx::string_view{message});
+void user_log_handler(
+    ::mongoc_log_level_t mongoc_log_level,
+    char const* log_domain,
+    char const* message,
+    void* user_data) {
+    (*static_cast<logger*>(user_data))(
+        convert_log_level(mongoc_log_level),
+        bsoncxx::v_noabi::stdx::string_view{log_domain},
+        bsoncxx::v_noabi::stdx::string_view{message});
 }
 
 // A region of memory that acts as a sentintel value indicating that an instance object is being
 // destroyed. We only care about the address of this object, never its contents.
-typename std::aligned_storage<sizeof(instance), alignof(instance)>::type sentinel;
+alignas(instance) unsigned char sentinel[sizeof(instance)];
 
 std::atomic<instance*> current_instance{nullptr};
-static_assert(std::is_standard_layout<decltype(current_instance)>::value,
-              "Must be standard layout");
-static_assert(std::is_trivially_destructible<decltype(current_instance)>::value,
-              "Must be trivially destructible");
+static_assert(std::is_standard_layout<decltype(current_instance)>::value, "Must be standard layout");
+static_assert(std::is_trivially_destructible<decltype(current_instance)>::value, "Must be trivially destructible");
 
-}  // namespace
+} // namespace
 
 class instance::impl {
    public:
@@ -106,8 +109,7 @@ class instance::impl {
 #endif
         platform << "CXX=" << MONGOCXX_COMPILER_ID << " " << MONGOCXX_COMPILER_VERSION << " "
                  << "stdcxx=" << stdcxx << " / ";
-        libmongoc::handshake_data_append(
-            "mongocxx", MONGOCXX_VERSION_STRING, platform.str().c_str());
+        libmongoc::handshake_data_append("mongocxx", MONGOCXX_VERSION_STRING, platform.str().c_str());
     }
 
     ~impl() {
@@ -130,10 +132,10 @@ class instance::impl {
     impl(impl&&) noexcept = delete;
     impl& operator=(impl&&) noexcept = delete;
 
-    impl(const impl&) = delete;
-    impl& operator=(const impl&) = delete;
+    impl(impl const&) = delete;
+    impl& operator=(impl const&) = delete;
 
-    const std::unique_ptr<logger> _user_logger;
+    std::unique_ptr<logger> const _user_logger;
 };
 
 instance::instance() : instance(nullptr) {}
@@ -170,5 +172,5 @@ instance& instance::current() {
     return *curr;
 }
 
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace v_noabi
+} // namespace mongocxx

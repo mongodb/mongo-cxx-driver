@@ -25,8 +25,12 @@ namespace mongocxx {
 namespace v_noabi {
 
 ///
-/// Enum representing the various errors types that can be returned from the server. As this list
-/// changes over time, this is just a placeholder for an Int32 error code value from the server.
+/// Errors which may be returned by the server.
+///
+/// This type is used to represent Int32 server error codeswithout defining the error codes
+/// themselves.
+///
+/// @note `std::is_error_code_enum` is specialized for this type.
 ///
 enum class server_error_code : std::int32_t {
     // Intentionally empty at this time!
@@ -37,7 +41,7 @@ enum class server_error_code : std::int32_t {
 ///
 /// @return The mongocxx error_category
 ///
-MONGOCXX_ABI_EXPORT_CDECL(const std::error_category&) server_error_category();
+MONGOCXX_ABI_EXPORT_CDECL(std::error_category const&) server_error_category();
 
 ///
 /// Translate a mongocxx::v_noabi::server_error_code into a std::error_code.
@@ -50,44 +54,28 @@ inline std::error_code make_error_code(server_error_code error) {
     return {static_cast<int>(error), server_error_category()};
 }
 
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace v_noabi
+} // namespace mongocxx
 
 namespace mongocxx {
 
 using ::mongocxx::v_noabi::make_error_code;
 using ::mongocxx::v_noabi::server_error_category;
 
-}  // namespace mongocxx
+} // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
 
 namespace std {
 
-///
-/// Indicates @ref mongocxx::v_noabi::server_error_code is eligible for `std::error_code` implicit
-/// conversions.
-///
+// @cond DOXYGEN_DISABLE
 template <>
 struct is_error_code_enum<::mongocxx::v_noabi::server_error_code> : std::true_type {};
+// @endcond
 
-}  // namespace std
+} // namespace std
 
 ///
 /// @file
 /// Provides @ref mongocxx::v_noabi::server_error_code.
 ///
-
-#if defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
-
-namespace mongocxx {
-
-/// @ref mongocxx::v_noabi::server_error_category()
-const std::error_category& server_error_category();
-
-/// @ref mongocxx::v_noabi::make_error_code(v_noabi::server_error_code error)
-inline std::error_code make_error_code(v_noabi::server_error_code error);
-
-}  // namespace mongocxx
-
-#endif  // defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

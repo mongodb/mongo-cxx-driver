@@ -33,7 +33,7 @@ using namespace mongocxx;
 
 namespace {
 
-void aggregation_examples(const mongocxx::database& db) {
+void aggregation_examples(mongocxx::database const& db) {
     {
         // Start Aggregation Example 1
         using namespace bsoncxx::builder::basic;
@@ -61,8 +61,7 @@ void aggregation_examples(const mongocxx::database& db) {
         p.group(make_document(
             kvp("_id", make_document(kvp("day", make_document(kvp("$dayOfWeek", "$date"))))),
             kvp("count", make_document(kvp("$sum", "$items.quantity")))));
-        p.project(make_document(
-            kvp("dayOfWeek", "$_id.day"), kvp("numberSold", "$count"), kvp("_id", 0)));
+        p.project(make_document(kvp("dayOfWeek", "$_id.day"), kvp("numberSold", "$count"), kvp("_id", 0)));
         p.sort(make_document(kvp("numberSold", 1)));
 
         auto cursor = db["sales"].aggregate(p, mongocxx::options::aggregate{});
@@ -85,9 +84,7 @@ void aggregation_examples(const mongocxx::database& db) {
             kvp("items_sold", make_document(kvp("$sum", "$items.quantity"))),
             kvp("revenue",
                 make_document(
-                    kvp("$sum",
-                        make_document(
-                            kvp("$multiply", make_array("$items.quantity", "$items.price"))))))));
+                    kvp("$sum", make_document(kvp("$multiply", make_array("$items.quantity", "$items.price"))))))));
         p.project(make_document(
             kvp("day", "$_id.day"),
             kvp("revenue", 1),
@@ -117,23 +114,20 @@ void aggregation_examples(const mongocxx::database& db) {
             kvp("from", "air_airlines"),
             kvp("let", make_document(kvp("constituents", "$airlines"))),
             kvp("pipeline",
-                make_array(make_document(
-                    kvp("$match",
-                        make_document(kvp(
-                            "$expr",
-                            make_document(kvp("$in", make_array("$name", "$$constituents"))))))))),
+                make_array(make_document(kvp(
+                    "$match",
+                    make_document(kvp("$expr", make_document(kvp("$in", make_array("$name", "$$constituents"))))))))),
             kvp("as", "airlines")));
         p.project(make_document(
             kvp("_id", 0),
             kvp("name", 1),
             kvp("airlines",
-                make_document(kvp(
-                    "$filter",
-                    make_document(kvp("input", "$airlines"),
-                                  kvp("as", "airline"),
-                                  kvp("cond",
-                                      make_document(kvp(
-                                          "$eq", make_array("$$airline.country", "Canada"))))))))));
+                make_document(
+                    kvp("$filter",
+                        make_document(
+                            kvp("input", "$airlines"),
+                            kvp("as", "airline"),
+                            kvp("cond", make_document(kvp("$eq", make_array("$$airline.country", "Canada"))))))))));
 
         auto cursor = db["air_alliances"].aggregate(p, mongocxx::options::aggregate{});
         // End Aggregation Example 4
@@ -145,15 +139,15 @@ void aggregation_examples(const mongocxx::database& db) {
     }
 }
 
-}  // namespace
+} // namespace
 
 int EXAMPLES_CDECL main() {
     // The mongocxx::instance constructor and destructor initialize and shut down the driver,
     // respectively. Therefore, a mongocxx::instance must be created before using the driver and
     // must remain alive for as long as the driver is in use.
-    const mongocxx::instance inst{};
+    mongocxx::instance const inst{};
 
-    const mongocxx::client conn{mongocxx::uri{}};
+    mongocxx::client const conn{mongocxx::uri{}};
     auto const db = conn["documentation_examples"];
 
     // SERVER-79306: Ensure the database exists for consistent behavior with sharded clusters.
@@ -161,7 +155,7 @@ int EXAMPLES_CDECL main() {
 
     try {
         aggregation_examples(db);
-    } catch (const std::logic_error& e) {
+    } catch (std::logic_error const& e) {
         std::cerr << e.what() << std::endl;
         return EXIT_FAILURE;
     }

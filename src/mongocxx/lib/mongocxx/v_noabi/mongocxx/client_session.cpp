@@ -12,21 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <mongocxx/exception/exception.hpp>
+
 #include <bsoncxx/private/make_unique.hh>
 
-#include <mongocxx/exception/exception.hpp>
-#include <mongocxx/exception/private/mongoc_error.hh>
 #include <mongocxx/private/client.hh>
 #include <mongocxx/private/client_session.hh>
-
-#include <mongocxx/config/private/prelude.hh>
+#include <mongocxx/private/mongoc_error.hh>
 
 namespace mongocxx {
 namespace v_noabi {
 
 // Private constructors.
-client_session::client_session(const mongocxx::v_noabi::client* client,
-                               const mongocxx::v_noabi::options::client_session& options)
+client_session::client_session(
+    mongocxx::v_noabi::client const* client,
+    mongocxx::v_noabi::options::client_session const& options)
     : _impl(bsoncxx::make_unique<impl>(client, options)) {}
 
 client_session::client_session(client_session&&) noexcept = default;
@@ -35,11 +35,11 @@ client_session& client_session::operator=(client_session&&) noexcept = default;
 
 client_session::~client_session() noexcept = default;
 
-const mongocxx::v_noabi::client& client_session::client() const noexcept {
+mongocxx::v_noabi::client const& client_session::client() const noexcept {
     return _impl->client();
 }
 
-const mongocxx::v_noabi::options::client_session& client_session::options() const noexcept {
+mongocxx::v_noabi::options::client_session const& client_session::options() const noexcept {
     return _impl->options();
 }
 
@@ -59,17 +59,15 @@ bsoncxx::v_noabi::types::b_timestamp client_session::operation_time() const noex
     return _impl->operation_time();
 }
 
-void client_session::advance_cluster_time(const bsoncxx::v_noabi::document::view& cluster_time) {
+void client_session::advance_cluster_time(bsoncxx::v_noabi::document::view const& cluster_time) {
     _impl->advance_cluster_time(cluster_time);
 }
 
-void client_session::advance_operation_time(
-    const bsoncxx::v_noabi::types::b_timestamp& operation_time) {
+void client_session::advance_operation_time(bsoncxx::v_noabi::types::b_timestamp const& operation_time) {
     _impl->advance_operation_time(operation_time);
 }
 
-void client_session::start_transaction(
-    const bsoncxx::v_noabi::stdx::optional<options::transaction>& transaction_opts) {
+void client_session::start_transaction(bsoncxx::v_noabi::stdx::optional<options::transaction> const& transaction_opts) {
     _impl->start_transaction(transaction_opts);
 }
 
@@ -93,15 +91,15 @@ bool client_session::get_dirty() const noexcept {
     return _impl->get_dirty();
 }
 
-const client_session::impl& client_session::_get_impl() const {
+client_session::impl const& client_session::_get_impl() const {
     // Never null.
     return *_impl;
 }
 
 client_session::impl& client_session::_get_impl() {
-    auto cthis = const_cast<const client_session*>(this);
+    auto cthis = const_cast<client_session const*>(this);
     return const_cast<client_session::impl&>(cthis->_get_impl());
 }
 
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace v_noabi
+} // namespace mongocxx

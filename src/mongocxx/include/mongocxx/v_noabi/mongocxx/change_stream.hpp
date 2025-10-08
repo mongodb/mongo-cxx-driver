@@ -30,7 +30,7 @@ namespace mongocxx {
 namespace v_noabi {
 
 ///
-/// Class representing a MongoDB change stream.
+/// A MongoDB change stream.
 ///
 class change_stream {
    public:
@@ -124,13 +124,13 @@ class change_stream {
 };
 
 ///
-/// Class representing a MongoDB change stream iterator.
+/// A MongoDB change stream iterator.
 ///
 class change_stream::iterator {
    public:
     // Support input-iterator (caveat of post-increment returning void)
     using difference_type = std::int64_t;
-    using value_type = const bsoncxx::v_noabi::document::view;
+    using value_type = bsoncxx::v_noabi::document::view const;
     using pointer = std::add_pointer<value_type>::type;
     using reference = std::add_lvalue_reference<value_type>::type;
     using iterator_category = std::input_iterator_tag;
@@ -148,7 +148,7 @@ class change_stream::iterator {
     /// The returned document::view is valid until the iterator is incremented. The value may be
     /// copied to extend its lifetime.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::document::view&) operator*() const;
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::document::view const&) operator*() const;
 
     ///
     /// Accesses a member of the dereferenced document currently being pointed to.
@@ -156,7 +156,7 @@ class change_stream::iterator {
     /// The returned document::view is valid until the iterator is incremented. The value may be
     /// copied to extend its lifetime.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::document::view*) operator->() const;
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::document::view const*) operator->() const;
 
     ///
     /// Pre-increments the iterator to move to the next document.
@@ -197,11 +197,13 @@ class change_stream::iterator {
     /// exhausted.
     ///
     /// @{
-    friend MONGOCXX_ABI_EXPORT_CDECL(bool) operator==(const change_stream::iterator&,
-                                                      const change_stream::iterator&) noexcept;
+    friend MONGOCXX_ABI_EXPORT_CDECL(bool) operator==(
+        change_stream::iterator const&,
+        change_stream::iterator const&) noexcept;
 
-    friend MONGOCXX_ABI_EXPORT_CDECL(bool) operator!=(const change_stream::iterator&,
-                                                      const change_stream::iterator&) noexcept;
+    friend MONGOCXX_ABI_EXPORT_CDECL(bool) operator!=(
+        change_stream::iterator const&,
+        change_stream::iterator const&) noexcept;
     /// @}
     ///
 
@@ -210,17 +212,17 @@ class change_stream::iterator {
 
     enum class iter_type { k_tracking, k_default_constructed, k_end };
 
-    explicit iterator(iter_type type, const change_stream* change_stream);
+    explicit iterator(iter_type type, change_stream const* change_stream);
 
     bool is_exhausted() const;
 
     // iter_type==k_default_constructed is equivalent to _change_stream==nullptr
     iter_type _type;
-    const change_stream* _change_stream;
+    change_stream const* _change_stream;
 };
 
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace v_noabi
+} // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
 

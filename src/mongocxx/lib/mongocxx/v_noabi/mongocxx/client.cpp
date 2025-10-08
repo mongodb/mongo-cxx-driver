@@ -13,27 +13,29 @@
 // limitations under the License.
 
 #include <bsoncxx/builder/basic/kvp.hpp>
-#include <bsoncxx/private/make_unique.hh>
 
 #include <mongocxx/client.hpp>
 #include <mongocxx/exception/error_code.hpp>
 #include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/exception/operation_exception.hpp>
-#include <mongocxx/exception/private/mongoc_error.hh>
 #include <mongocxx/options/auto_encryption.hpp>
-#include <mongocxx/options/private/apm.hh>
-#include <mongocxx/options/private/server_api.hh>
-#include <mongocxx/options/private/ssl.hh>
+
+#include <mongocxx/options/apm.hh>
+#include <mongocxx/options/server_api.hh>
+#include <mongocxx/options/tls.hh>
+
+#include <bsoncxx/private/make_unique.hh>
+
+#include <mongocxx/private/bson.hh>
 #include <mongocxx/private/client.hh>
 #include <mongocxx/private/client_session.hh>
-#include <mongocxx/private/libbson.hh>
+#include <mongocxx/private/mongoc_error.hh>
 #include <mongocxx/private/pipeline.hh>
 #include <mongocxx/private/read_concern.hh>
 #include <mongocxx/private/read_preference.hh>
+#include <mongocxx/private/ssl.hh>
 #include <mongocxx/private/uri.hh>
 #include <mongocxx/private/write_concern.hh>
-
-#include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
 namespace v_noabi {
@@ -54,10 +56,10 @@ class database_names {
 
     database_names(database_names&&) = delete;
     database_names& operator=(database_names&&) = delete;
-    database_names(const database_names&) = delete;
-    database_names& operator=(const database_names&) = delete;
+    database_names(database_names const&) = delete;
+    database_names& operator=(database_names const&) = delete;
 
-    const char* operator[](const std::size_t i) const {
+    char const* operator[](std::size_t const i) const {
         return _names[i];
     }
 
@@ -68,16 +70,15 @@ class database_names {
    private:
     char** _names;
 };
-}  // namespace
+} // namespace
 
 client::client() noexcept = default;
 
-client::client(const mongocxx::v_noabi::uri& uri, const options::client& options) {
-#if defined(MONGOCXX_ENABLE_SSL) && defined(MONGOC_ENABLE_SSL)
+client::client(mongocxx::v_noabi::uri const& uri, options::client const& options) {
+#if MONGOCXX_SSL_IS_ENABLED()
     if (options.tls_opts()) {
         if (!uri.tls())
-            throw exception{error_code::k_invalid_parameter,
-                            "cannot set TLS options if 'tls=true' not in URI"};
+            throw exception{error_code::k_invalid_parameter, "cannot set TLS options if 'tls=true' not in URI"};
     }
 #else
     if (uri.tls() || options.tls_opts()) {
@@ -102,13 +103,11 @@ client::client(const mongocxx::v_noabi::uri& uri, const options::client& options
     }
 
     if (options.auto_encryption_opts()) {
-        const auto& auto_encrypt_opts = *options.auto_encryption_opts();
-        auto mongoc_auto_encrypt_opts =
-            static_cast<mongoc_auto_encryption_opts_t*>(auto_encrypt_opts.convert());
+        auto const& auto_encrypt_opts = *options.auto_encryption_opts();
+        auto mongoc_auto_encrypt_opts = static_cast<mongoc_auto_encryption_opts_t*>(auto_encrypt_opts.convert());
 
         bson_error_t error;
-        auto r = libmongoc::client_enable_auto_encryption(
-            _get_impl().client_t, mongoc_auto_encrypt_opts, &error);
+        auto r = libmongoc::client_enable_auto_encryption(_get_impl().client_t, mongoc_auto_encrypt_opts, &error);
 
         libmongoc::auto_encryption_opts_destroy(mongoc_auto_encrypt_opts);
 
@@ -118,19 +117,18 @@ client::client(const mongocxx::v_noabi::uri& uri, const options::client& options
     }
 
     if (options.server_api_opts()) {
-        const auto& server_api_opts = *options.server_api_opts();
+        auto const& server_api_opts = *options.server_api_opts();
         auto mongoc_server_api_opts = options::make_server_api(server_api_opts);
 
         bson_error_t error;
-        auto result = libmongoc::client_set_server_api(
-            _get_impl().client_t, mongoc_server_api_opts.get(), &error);
+        auto result = libmongoc::client_set_server_api(_get_impl().client_t, mongoc_server_api_opts.get(), &error);
 
         if (!result) {
             throw_exception<operation_exception>(error);
         }
     }
 
-#if defined(MONGOCXX_ENABLE_SSL) && defined(MONGOC_ENABLE_SSL)
+#if MONGOCXX_SSL_IS_ENABLED()
     if (options.tls_opts()) {
         auto mongoc_opts = options::make_tls_opts(*options.tls_opts());
         _impl->tls_options = std::move(mongoc_opts.second);
@@ -180,8 +178,8 @@ mongocxx::v_noabi::read_preference client::read_preference() const {
 }
 
 mongocxx::v_noabi::uri client::uri() const {
-    mongocxx::v_noabi::uri connection_string(bsoncxx::make_unique<uri::impl>(
-        libmongoc::uri_copy(libmongoc::client_get_uri(_get_impl().client_t))));
+    mongocxx::v_noabi::uri connection_string(
+        bsoncxx::make_unique<uri::impl>(libmongoc::uri_copy(libmongoc::client_get_uri(_get_impl().client_t))));
     return connection_string;
 }
 
@@ -207,31 +205,28 @@ cursor client::list_databases() const {
     return libmongoc::client_find_databases_with_opts(_get_impl().client_t, nullptr);
 }
 
-cursor client::list_databases(const client_session& session) const {
+cursor client::list_databases(client_session const& session) const {
     bsoncxx::v_noabi::builder::basic::document options_doc;
-    options_doc.append(
-        bsoncxx::v_noabi::builder::concatenate_doc{session._get_impl().to_document()});
+    options_doc.append(bsoncxx::v_noabi::builder::concatenate_doc{session._get_impl().to_document()});
     scoped_bson_t options_bson(options_doc.extract());
     return libmongoc::client_find_databases_with_opts(_get_impl().client_t, options_bson.bson());
 }
 
-cursor client::list_databases(const bsoncxx::v_noabi::document::view_or_value opts) const {
+cursor client::list_databases(bsoncxx::v_noabi::document::view_or_value const opts) const {
     scoped_bson_t opts_bson{opts.view()};
     return libmongoc::client_find_databases_with_opts(_get_impl().client_t, opts_bson.bson());
 }
 
-cursor client::list_databases(const client_session& session,
-                              const bsoncxx::v_noabi::document::view_or_value opts) const {
+cursor client::list_databases(client_session const& session, bsoncxx::v_noabi::document::view_or_value const opts)
+    const {
     bsoncxx::v_noabi::builder::basic::document options_doc;
-    options_doc.append(
-        bsoncxx::v_noabi::builder::concatenate_doc{session._get_impl().to_document()});
+    options_doc.append(bsoncxx::v_noabi::builder::concatenate_doc{session._get_impl().to_document()});
     options_doc.append(bsoncxx::v_noabi::builder::concatenate_doc{opts});
     mongocxx::libbson::scoped_bson_t opts_bson(options_doc.extract());
     return libmongoc::client_find_databases_with_opts(_get_impl().client_t, opts_bson.bson());
 }
 
-std::vector<std::string> client::list_database_names(
-    bsoncxx::v_noabi::document::view_or_value filter) const {
+std::vector<std::string> client::list_database_names(bsoncxx::v_noabi::document::view_or_value filter) const {
     bsoncxx::v_noabi::builder::basic::document options_builder;
 
     options_builder.append(kvp("filter", filter));
@@ -239,8 +234,8 @@ std::vector<std::string> client::list_database_names(
     scoped_bson_t options_bson(options_builder.extract());
     bson_error_t error;
 
-    const database_names names(libmongoc::client_get_database_names_with_opts(
-        _get_impl().client_t, options_bson.bson(), &error));
+    database_names const names(
+        libmongoc::client_get_database_names_with_opts(_get_impl().client_t, options_bson.bson(), &error));
 
     if (!names) {
         throw_exception<operation_exception>(error);
@@ -255,18 +250,18 @@ std::vector<std::string> client::list_database_names(
 }
 
 std::vector<std::string> client::list_database_names(
-    const client_session& session, const bsoncxx::v_noabi::document::view_or_value filter) const {
+    client_session const& session,
+    bsoncxx::v_noabi::document::view_or_value const filter) const {
     bsoncxx::v_noabi::builder::basic::document options_builder;
 
-    options_builder.append(
-        bsoncxx::v_noabi::builder::concatenate_doc{session._get_impl().to_document()});
+    options_builder.append(bsoncxx::v_noabi::builder::concatenate_doc{session._get_impl().to_document()});
     options_builder.append(kvp("filter", filter));
 
     mongocxx::libbson::scoped_bson_t opts_bson(options_builder.extract());
     bson_error_t error;
 
-    const database_names names(libmongoc::client_get_database_names_with_opts(
-        _get_impl().client_t, opts_bson.bson(), &error));
+    database_names const names(
+        libmongoc::client_get_database_names_with_opts(_get_impl().client_t, opts_bson.bson(), &error));
 
     if (!names) {
         throw_exception<operation_exception>(error);
@@ -280,8 +275,7 @@ std::vector<std::string> client::list_database_names(
     return res;
 }
 
-mongocxx::v_noabi::client_session client::start_session(
-    const mongocxx::v_noabi::options::client_session& options) {
+mongocxx::v_noabi::client_session client::start_session(mongocxx::v_noabi::options::client_session const& options) {
     return client_session(this, options);
 }
 
@@ -289,27 +283,25 @@ void client::reset() {
     libmongoc::client_reset(_get_impl().client_t);
 }
 
-change_stream client::watch(const options::change_stream& options) {
+change_stream client::watch(options::change_stream const& options) {
     return watch(pipeline{}, options);
 }
 
-change_stream client::watch(const client_session& session, const options::change_stream& options) {
+change_stream client::watch(client_session const& session, options::change_stream const& options) {
     return _watch(&session, pipeline{}, options);
 }
 
-change_stream client::watch(const pipeline& pipe, const options::change_stream& options) {
+change_stream client::watch(pipeline const& pipe, options::change_stream const& options) {
     return _watch(nullptr, pipe, options);
 }
 
-change_stream client::watch(const client_session& session,
-                            const pipeline& pipe,
-                            const options::change_stream& options) {
+change_stream
+client::watch(client_session const& session, pipeline const& pipe, options::change_stream const& options) {
     return _watch(&session, pipe, options);
 }
 
-change_stream client::_watch(const client_session* session,
-                             const pipeline& pipe,
-                             const options::change_stream& options) {
+change_stream
+client::_watch(client_session const* session, pipeline const& pipe, options::change_stream const& options) {
     bsoncxx::v_noabi::builder::basic::document container;
     container.append(bsoncxx::v_noabi::builder::basic::kvp("pipeline", pipe._impl->view_array()));
     scoped_bson_t pipeline_bson{container.view()};
@@ -317,17 +309,15 @@ change_stream client::_watch(const client_session* session,
     bsoncxx::v_noabi::builder::basic::document options_builder;
     options_builder.append(bsoncxx::v_noabi::builder::concatenate(options.as_bson()));
     if (session) {
-        options_builder.append(
-            bsoncxx::v_noabi::builder::concatenate_doc{session->_get_impl().to_document()});
+        options_builder.append(bsoncxx::v_noabi::builder::concatenate_doc{session->_get_impl().to_document()});
     }
 
     scoped_bson_t options_bson{options_builder.extract()};
 
-    return change_stream{
-        libmongoc::client_watch(_get_impl().client_t, pipeline_bson.bson(), options_bson.bson())};
+    return change_stream{libmongoc::client_watch(_get_impl().client_t, pipeline_bson.bson(), options_bson.bson())};
 }
 
-const client::impl& client::_get_impl() const {
+client::impl const& client::_get_impl() const {
     if (!_impl) {
         throw logic_error{error_code::k_invalid_client_object};
     }
@@ -335,9 +325,9 @@ const client::impl& client::_get_impl() const {
 }
 
 client::impl& client::_get_impl() {
-    auto cthis = const_cast<const client*>(this);
+    auto cthis = const_cast<client const*>(this);
     return const_cast<client::impl&>(cthis->_get_impl());
 }
 
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace v_noabi
+} // namespace mongocxx

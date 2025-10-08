@@ -71,4 +71,4 @@ TEST_CASE("insert_one inequals", "[insert_one][result]") {
     REQUIRE(insert_one1 != insert_one2);
 }
 
-}  // namespace
+} // namespace

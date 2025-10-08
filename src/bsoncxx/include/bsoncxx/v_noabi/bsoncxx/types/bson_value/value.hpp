@@ -34,9 +34,10 @@ namespace types {
 namespace bson_value {
 
 ///
-/// A variant owning type that represents any BSON type. Owns its underlying
-/// buffer. When a bson_value::value goes out of scope, its underlying
-/// buffer is freed.
+/// An owning variant type that represents any BSON type.
+///
+/// Owns its underlying buffer. When a bson_value::value goes out of scope, its underlying buffer is
+/// freed.
 ///
 /// For accessors into this type and to extract the various BSON types out,
 /// please use bson_value::view.
@@ -77,7 +78,7 @@ class value {
     ///
     /// Constructs a BSON UTF-8 string value.
     ///
-    BSONCXX_ABI_EXPORT_CDECL() value(const char* v);
+    BSONCXX_ABI_EXPORT_CDECL() value(char const* v);
 
     ///
     /// Constructs a BSON UTF-8 string value.
@@ -148,7 +149,7 @@ class value {
     ///     an optional binary sub type. Defaults to type::k_binary
     ///
     BSONCXX_ABI_EXPORT_CDECL()
-    value(std::vector<unsigned char> v, const binary_sub_type sub_type = {});
+    value(std::vector<unsigned char> v, binary_sub_type const sub_type = {});
 
     ///
     /// Constructs a BSON binary data value.
@@ -161,7 +162,7 @@ class value {
     ///     an optional binary sub type. Defaults to type::k_binary
     ///
     BSONCXX_ABI_EXPORT_CDECL()
-    value(const uint8_t* data, size_t size, const binary_sub_type sub_type = {});
+    value(uint8_t const* data, size_t size, binary_sub_type const sub_type = {});
 
     ///
     /// Constructs a BSON DBPointer value.
@@ -213,7 +214,7 @@ class value {
     /// @warning The Symbol BSON type is deprecated. Usage is discouraged.
     /// @warning The Undefined BSON type is deprecated. Usage is discouraged.
     ///
-    BSONCXX_ABI_EXPORT_CDECL() value(const type id, stdx::string_view v);
+    BSONCXX_ABI_EXPORT_CDECL() value(type const id, stdx::string_view v);
 
     ///
     /// Constructs one of the following BSON values (each specified by the parenthesized type):
@@ -227,7 +228,7 @@ class value {
     /// @throws bsoncxx::v_noabi::exception if the type's value is not k_maxkey, k_minkey, or
     /// k_undefined.
     ///
-    BSONCXX_ABI_EXPORT_CDECL() value(const type id);
+    BSONCXX_ABI_EXPORT_CDECL() value(type const id);
 
     ///
     /// Constructs one of the following BSON values (each specified by the parenthesized type):
@@ -249,12 +250,12 @@ class value {
     ///   The BSON timestamp type is used internally by the MongoDB server - use by clients
     ///   is discouraged.
     ///
-    BSONCXX_ABI_EXPORT_CDECL() value(const type id, uint64_t a, uint64_t b);
+    BSONCXX_ABI_EXPORT_CDECL() value(type const id, uint64_t a, uint64_t b);
 
     BSONCXX_ABI_EXPORT_CDECL() ~value();
 
-    BSONCXX_ABI_EXPORT_CDECL() value(const value&);
-    BSONCXX_ABI_EXPORT_CDECL(value&) operator=(const value&);
+    BSONCXX_ABI_EXPORT_CDECL() value(value const&);
+    BSONCXX_ABI_EXPORT_CDECL(value&) operator=(value const&);
 
     BSONCXX_ABI_EXPORT_CDECL() value(value&&) noexcept;
     BSONCXX_ABI_EXPORT_CDECL(value&) operator=(value&&) noexcept;
@@ -262,7 +263,7 @@ class value {
     ///
     /// Create an owning copy of a bson_value::view.
     ///
-    explicit BSONCXX_ABI_EXPORT_CDECL() value(const view&);
+    explicit BSONCXX_ABI_EXPORT_CDECL() value(bson_value::view const&);
 
     ///
     /// Get a view over the bson_value owned by this object.
@@ -277,10 +278,7 @@ class value {
    private:
     friend ::bsoncxx::v_noabi::document::element;
 
-    value(const std::uint8_t* raw,
-          std::uint32_t length,
-          std::uint32_t offset,
-          std::uint32_t keylen);
+    value(std::uint8_t const* raw, std::uint32_t length, std::uint32_t offset, std::uint32_t keylen);
 
     // Makes a copy of 'internal_value' and owns the copy.
     // Export is required by mongocxx via make_owning_bson.
@@ -298,12 +296,12 @@ class value {
 /// @{
 
 /// @relatesalso bsoncxx::v_noabi::types::bson_value::value
-inline bool operator==(const value& lhs, const value& rhs) {
+inline bool operator==(value const& lhs, value const& rhs) {
     return (lhs.view() == rhs.view());
 }
 
 /// @relatesalso bsoncxx::v_noabi::types::bson_value::value
-inline bool operator!=(const value& lhs, const value& rhs) {
+inline bool operator!=(value const& lhs, value const& rhs) {
     return !(lhs == rhs);
 }
 
@@ -316,32 +314,32 @@ inline bool operator!=(const value& lhs, const value& rhs) {
 /// @{
 
 /// @relatesalso bsoncxx::v_noabi::types::bson_value::value
-inline bool operator==(const value& lhs, const view& rhs) {
+inline bool operator==(value const& lhs, view const& rhs) {
     return (lhs.view() == rhs);
 }
 
 /// @relatesalso bsoncxx::v_noabi::types::bson_value::value
-inline bool operator==(const view& lhs, const value& rhs) {
+inline bool operator==(view const& lhs, value const& rhs) {
     return (rhs == lhs);
 }
 
 /// @relatesalso bsoncxx::v_noabi::types::bson_value::value
-inline bool operator!=(const value& lhs, const view& rhs) {
+inline bool operator!=(value const& lhs, view const& rhs) {
     return !(lhs == rhs);
 }
 
 /// @relatesalso bsoncxx::v_noabi::types::bson_value::value
-inline bool operator!=(const view& lhs, const value& rhs) {
+inline bool operator!=(view const& lhs, value const& rhs) {
     return !(lhs == rhs);
 }
 
 /// @}
 ///
 
-}  // namespace bson_value
-}  // namespace types
-}  // namespace v_noabi
-}  // namespace bsoncxx
+} // namespace bson_value
+} // namespace types
+} // namespace v_noabi
+} // namespace bsoncxx
 
 namespace bsoncxx {
 namespace types {
@@ -350,9 +348,9 @@ namespace bson_value {
 using ::bsoncxx::v_noabi::types::bson_value::operator==;
 using ::bsoncxx::v_noabi::types::bson_value::operator!=;
 
-}  // namespace bson_value
-}  // namespace types
-}  // namespace bsoncxx
+} // namespace bson_value
+} // namespace types
+} // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>
 
@@ -360,39 +358,3 @@ using ::bsoncxx::v_noabi::types::bson_value::operator!=;
 /// @file
 /// Provides @ref bsoncxx::v_noabi::types::bson_value::value.
 ///
-
-#if defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
-
-namespace bsoncxx {
-namespace types {
-namespace bson_value {
-
-/// @ref bsoncxx::v_noabi::types::bson_value::operator==(const v_noabi::types::bson_value::value& lhs, const v_noabi::types::bson_value::value& rhs)
-inline bool operator==(const v_noabi::types::bson_value::value& lhs,
-                       const v_noabi::types::bson_value::value& rhs);
-
-/// @ref bsoncxx::v_noabi::types::bson_value::operator!=(const v_noabi::types::bson_value::value& lhs, const v_noabi::types::bson_value::value& rhs)
-inline bool operator!=(const v_noabi::types::bson_value::value& lhs,
-                       const v_noabi::types::bson_value::value& rhs);
-
-/// @ref bsoncxx::v_noabi::types::bson_value::operator==(const v_noabi::types::bson_value::value& lhs, const v_noabi::types::bson_value::view& rhs)
-inline bool operator==(const v_noabi::types::bson_value::value& lhs,
-                       const v_noabi::types::bson_value::view& rhs);
-
-/// @ref bsoncxx::v_noabi::types::bson_value::operator==(const v_noabi::types::bson_value::view& lhs, const v_noabi::types::bson_value::value& rhs)
-inline bool operator==(const v_noabi::types::bson_value::view& lhs,
-                       const v_noabi::types::bson_value::value& rhs);
-
-/// @ref bsoncxx::v_noabi::types::bson_value::operator!=(const v_noabi::types::bson_value::value& lhs, const v_noabi::types::bson_value::view& rhs)
-inline bool operator!=(const v_noabi::types::bson_value::value& lhs,
-                       const v_noabi::types::bson_value::view& rhs);
-
-/// @ref bsoncxx::v_noabi::types::bson_value::operator!=(const v_noabi::types::bson_value::view& lhs, const v_noabi::types::bson_value::value& rhs)
-inline bool operator!=(const v_noabi::types::bson_value::view& lhs,
-                       const v_noabi::types::bson_value::value& rhs);
-
-}  // namespace bson_value
-}  // namespace types
-}  // namespace bsoncxx
-
-#endif  // defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

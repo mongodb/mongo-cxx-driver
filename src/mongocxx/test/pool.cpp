@@ -20,9 +20,9 @@
 #include <mongocxx/instance.hpp>
 #include <mongocxx/options/tls.hpp>
 #include <mongocxx/pool.hpp>
-#include <mongocxx/private/libmongoc.hh>
 
-#include <mongocxx/config/private/prelude.hh>
+#include <mongocxx/private/mongoc.hh>
+#include <mongocxx/private/ssl.hh>
 
 #include <bsoncxx/test/catch.hh>
 
@@ -46,7 +46,7 @@ TEST_CASE("a pool is created with the correct MongoDB URI", "[pool]") {
     std::string actual_uri{};
     bool new_called = false;
 
-    client_pool_new_with_error->visit([&](const mongoc_uri_t* uri, bson_error_t* error) {
+    client_pool_new_with_error->visit([&](mongoc_uri_t const* uri, bson_error_t* error) {
         new_called = true;
         actual_uri = mongoc_uri_get_string(uri);
         error->code = 0;
@@ -65,7 +65,7 @@ TEST_CASE("a pool is created with the correct MongoDB URI", "[pool]") {
     REQUIRE(destroy_called);
 }
 
-#if defined(MONGOCXX_ENABLE_SSL) && defined(MONGOC_ENABLE_SSL)
+#if MONGOCXX_SSL_IS_ENABLED()
 TEST_CASE(
     "If we pass an engaged SSL options struct to the pool class, we will use it to configure the "
     "underlying mongoc pool",
@@ -74,12 +74,12 @@ TEST_CASE(
 
     instance::current();
 
-    const std::string pem_file = "foo";
-    const std::string pem_password = "bar";
-    const std::string ca_file = "baz";
-    const std::string ca_dir = "garply";
-    const std::string crl_file = "crl_file";
-    const bool allow_invalid_certificates = true;
+    std::string const pem_file = "foo";
+    std::string const pem_password = "bar";
+    std::string const ca_file = "baz";
+    std::string const ca_dir = "garply";
+    std::string const crl_file = "crl_file";
+    bool const allow_invalid_certificates = true;
 
     bool set_tls_opts_called = false;
     options::tls tls_opts;
@@ -92,13 +92,12 @@ TEST_CASE(
 
     ::mongoc_ssl_opt_t interposed = {};
 
-    client_pool_set_ssl_opts->visit([&](::mongoc_client_pool_t*, const ::mongoc_ssl_opt_t* opts) {
+    client_pool_set_ssl_opts->visit([&](::mongoc_client_pool_t*, ::mongoc_ssl_opt_t const* opts) {
         set_tls_opts_called = true;
         interposed = *opts;
     });
 
-    pool p{uri{"mongodb://mongodb.example.com:9999/?tls=true"},
-           options::client().tls_opts(tls_opts)};
+    pool p{uri{"mongodb://mongodb.example.com:9999/?tls=true"}, options::client().tls_opts(tls_opts)};
 
     REQUIRE(set_tls_opts_called);
     REQUIRE(interposed.pem_file == pem_file);
@@ -122,8 +121,7 @@ TEST_CASE("calling acquire on a pool returns an entry that manages its client", 
     });
 
     bool push_called = false;
-    client_pool_push->visit(
-        [&](::mongoc_client_pool_t*, ::mongoc_client_t*) { push_called = true; });
+    client_pool_push->visit([&](::mongoc_client_pool_t*, ::mongoc_client_t*) { push_called = true; });
 
     SECTION("entry releases its client at end of scope") {
         {
@@ -195,8 +193,7 @@ TEST_CASE("acquiring a client throws if waitQueueTimeoutMS expires", "[pool]") {
     auto client = pool.acquire();
     CHECK(client);
     // Try to acquire again. Expect timeout:
-    REQUIRE_THROWS_WITH(pool.acquire(),
-                        Catch::Matchers::ContainsSubstring("failed to acquire client"));
+    REQUIRE_THROWS_WITH(pool.acquire(), Catch::Matchers::ContainsSubstring("failed to acquire client"));
 }
 
-}  // namespace
+} // namespace

@@ -19,10 +19,9 @@
 
 namespace benchmark {
 
-score_recorder::score_recorder(double task_size)
-    : _execution_time{0}, _sorted{false}, _task_size{task_size} {}
+score_recorder::score_recorder(double task_size) : _execution_time{0}, _sorted{false}, _task_size{task_size} {}
 
-const std::chrono::milliseconds& score_recorder::get_execution_time() const {
+std::chrono::milliseconds const& score_recorder::get_execution_time() const {
     return _execution_time;
 }
 
@@ -31,17 +30,15 @@ void benchmark::score_recorder::start_sample() {
 }
 
 void score_recorder::end_sample() {
-    std::chrono::time_point<std::chrono::high_resolution_clock> end =
-        std::chrono::high_resolution_clock::now();
-    std::chrono::milliseconds duration =
-        std::chrono::duration_cast<std::chrono::milliseconds>(end - _last_start);
+    std::chrono::time_point<std::chrono::high_resolution_clock> end = std::chrono::high_resolution_clock::now();
+    std::chrono::milliseconds duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - _last_start);
 
     _samples.push_back(duration);
     _sorted = false;
     _execution_time += duration;
 }
 
-const std::chrono::milliseconds& score_recorder::get_percentile(unsigned long n) {
+std::chrono::milliseconds const& score_recorder::get_percentile(unsigned long n) {
     if (_samples.empty()) {
         throw std::runtime_error("No samples recorded yet");
     }
@@ -61,4 +58,4 @@ const std::chrono::milliseconds& score_recorder::get_percentile(unsigned long n)
 double score_recorder::get_score() {
     return _task_size / (static_cast<double>(get_percentile(50).count()) * .001);
 }
-}  // namespace benchmark
+} // namespace benchmark

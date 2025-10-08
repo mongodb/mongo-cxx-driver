@@ -35,7 +35,7 @@ namespace v_noabi {
 namespace options {
 
 ///
-/// Class representing the optional arguments to a MongoDB query.
+/// Used by MongoDB find operations.
 ///
 class find {
    public:
@@ -66,7 +66,7 @@ class find {
     ///
     /// @return Whether disk use on the server is allowed.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<bool>&) allow_disk_use() const;
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bool> const&) allow_disk_use() const;
 
     ///
     /// Sets whether to allow partial results from a mongos if some shards are down (instead of
@@ -92,7 +92,7 @@ class find {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/find/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<bool>&)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bool> const&)
     allow_partial_results() const;
 
     ///
@@ -118,7 +118,7 @@ class find {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/find/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<std::int32_t>&)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<std::int32_t> const&)
     batch_size() const;
 
     ///
@@ -145,8 +145,7 @@ class find {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/find/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(
-        const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value>&)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const&)
     collation() const;
 
     ///
@@ -177,8 +176,7 @@ class find {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/find/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(
-        const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value>&)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value> const&)
     comment() const;
 
     ///
@@ -204,7 +202,7 @@ class find {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/find/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<cursor::type>&)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<cursor::type> const&)
     cursor_type() const;
 
     ///
@@ -233,7 +231,7 @@ class find {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/find/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::hint>&)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::hint> const&)
     hint() const;
 
     ///
@@ -260,8 +258,7 @@ class find {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/find/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(
-        const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value>)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const)
     let() const;
 
     ///
@@ -293,8 +290,8 @@ class find {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/find/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(
-        const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value>&)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<
+                              bsoncxx::v_noabi::types::bson_value::view_or_value> const&)
     comment_option() const;
 
     ///
@@ -319,7 +316,7 @@ class find {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/find/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<std::int64_t>&) limit() const;
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<std::int64_t> const&) limit() const;
 
     ///
     /// Gets the current exclusive upper bound for a specific index.
@@ -344,8 +341,7 @@ class find {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/find/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(
-        const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value>&)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const&)
     max() const;
 
     ///
@@ -377,7 +373,7 @@ class find {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/find/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<std::chrono::milliseconds>&)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<std::chrono::milliseconds> const&)
     max_await_time() const;
 
     ///
@@ -403,7 +399,7 @@ class find {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/find/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<std::chrono::milliseconds>&)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<std::chrono::milliseconds> const&)
     max_time() const;
 
     ///
@@ -429,8 +425,7 @@ class find {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/find/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(
-        const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value>&)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const&)
     min() const;
 
     ///
@@ -457,7 +452,7 @@ class find {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/find/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<bool>&)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bool> const&)
     no_cursor_timeout() const;
 
     ///
@@ -484,8 +479,7 @@ class find {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/find/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(
-        const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value>&)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const&)
     projection() const;
 
     ///
@@ -512,8 +506,7 @@ class find {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/find/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(
-        const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::read_preference>&)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::read_preference> const&)
     read_preference() const;
 
     ///
@@ -544,7 +537,7 @@ class find {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/find/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<bool>&) return_key() const;
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bool> const&) return_key() const;
 
     ///
     /// Sets whether to include the record identifier for each document in the query results.
@@ -571,7 +564,7 @@ class find {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/find/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<bool>&) show_record_id() const;
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bool> const&) show_record_id() const;
 
     ///
     /// Sets the number of documents to skip before returning results.
@@ -596,7 +589,7 @@ class find {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/find/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<std::int64_t>&) skip() const;
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<std::int64_t> const&) skip() const;
 
     ///
     /// The order in which to return matching documents. If $orderby also exists in the modifiers
@@ -622,8 +615,7 @@ class find {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/find/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(
-        const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value>&)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const&)
     sort() const;
 
    private:
@@ -635,8 +627,7 @@ class find {
     bsoncxx::v_noabi::stdx::optional<cursor::type> _cursor_type;
     bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::hint> _hint;
     bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> _let;
-    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value>
-        _comment_option;
+    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value> _comment_option;
     bsoncxx::v_noabi::stdx::optional<std::int64_t> _limit;
     bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> _max;
     bsoncxx::v_noabi::stdx::optional<std::chrono::milliseconds> _max_await_time;
@@ -651,9 +642,9 @@ class find {
     bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> _ordering;
 };
 
-}  // namespace options
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace options
+} // namespace v_noabi
+} // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
 

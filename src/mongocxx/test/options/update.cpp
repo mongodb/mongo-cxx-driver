@@ -37,4 +37,4 @@ TEST_CASE("update opts", "[update][option]") {
     CHECK_OPTIONAL_ARGUMENT(updt, upsert, true);
     CHECK_OPTIONAL_ARGUMENT(updt, write_concern, write_concern{});
 }
-}  // namespace
+} // namespace

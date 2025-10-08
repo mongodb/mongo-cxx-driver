@@ -30,7 +30,7 @@ namespace v_noabi {
 namespace model {
 
 ///
-/// Class representing a MongoDB update operation that modifies a single document.
+/// A MongoDB update operation that modifies a single document.
 ///
 class update_one {
     //
@@ -57,8 +57,7 @@ class update_one {
     ///   Document representing the modifications to be applied to the matching document.
     ///
     MONGOCXX_ABI_EXPORT_CDECL()
-    update_one(bsoncxx::v_noabi::document::view_or_value filter,
-               bsoncxx::v_noabi::document::view_or_value update);
+    update_one(bsoncxx::v_noabi::document::view_or_value filter, bsoncxx::v_noabi::document::view_or_value update);
 
     ///
     /// Constructs an update operation that will modify a single document matching the filter.
@@ -69,7 +68,7 @@ class update_one {
     ///   Pipeline representing the modifications to be applied to the matching document.
     ///
     MONGOCXX_ABI_EXPORT_CDECL()
-    update_one(bsoncxx::v_noabi::document::view_or_value filter, const pipeline& update);
+    update_one(bsoncxx::v_noabi::document::view_or_value filter, pipeline const& update);
 
     ///
     /// Constructs an update operation that will modify a single document matching the filter.
@@ -80,22 +79,21 @@ class update_one {
     ///   Supports the empty update {}.
     ///
     MONGOCXX_ABI_EXPORT_CDECL()
-    update_one(bsoncxx::v_noabi::document::view_or_value filter,
-               std::initializer_list<_empty_doc_tag> update);
+    update_one(bsoncxx::v_noabi::document::view_or_value filter, std::initializer_list<_empty_doc_tag> update);
 
     ///
     /// Gets the filter
     ///
     /// @return The filter to be used for the update operation.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::document::view_or_value&) filter() const;
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::document::view_or_value const&) filter() const;
 
     ///
     /// Gets the update document.
     ///
     /// @return The modifications to be applied as part of the update.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::document::view_or_value&) update() const;
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::document::view_or_value const&) update() const;
 
     ///
     /// Sets the collation for this update operation.
@@ -118,8 +116,7 @@ class update_one {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/collation/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(
-        const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value>&)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const&)
     collation() const;
 
     ///
@@ -142,8 +139,19 @@ class update_one {
     ///
     /// @return The current hint, if one is set.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::hint>&)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::hint> const&)
     hint() const;
+
+    ///
+    /// Set the sort option.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(update_one&) sort(bsoncxx::v_noabi::document::view_or_value sort);
+
+    ///
+    /// Get the current value of the sort option.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const&)
+    sort() const;
 
     ///
     /// Sets the upsert option.
@@ -165,7 +173,7 @@ class update_one {
     ///
     /// @return The optional value of the upsert option.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<bool>&) upsert() const;
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bool> const&) upsert() const;
 
     ///
     /// Set array filters for this update operation.
@@ -188,8 +196,7 @@ class update_one {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/update/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(
-        const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::array::view_or_value>&)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::array::view_or_value> const&)
     array_filters() const;
 
    private:
@@ -200,11 +207,12 @@ class update_one {
     bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::array::view_or_value> _array_filters;
     bsoncxx::v_noabi::stdx::optional<bool> _upsert;
     bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::hint> _hint;
+    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> _sort;
 };
 
-}  // namespace model
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace model
+} // namespace v_noabi
+} // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
 

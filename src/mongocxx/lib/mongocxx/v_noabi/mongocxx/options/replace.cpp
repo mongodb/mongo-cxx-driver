@@ -16,8 +16,6 @@
 
 #include <mongocxx/options/replace.hpp>
 
-#include <mongocxx/config/private/prelude.hh>
-
 namespace mongocxx {
 namespace v_noabi {
 namespace options {
@@ -34,6 +32,11 @@ replace& replace::hint(mongocxx::v_noabi::hint index_hint) {
 
 replace& replace::let(bsoncxx::v_noabi::document::view_or_value let) {
     _let = let;
+    return *this;
+}
+
+replace& replace::sort(bsoncxx::v_noabi::document::view_or_value sort) {
+    _sort = std::move(sort);
     return *this;
 }
 
@@ -57,38 +60,38 @@ replace& replace::write_concern(mongocxx::v_noabi::write_concern wc) {
     return *this;
 }
 
-const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::hint>& replace::hint() const {
+bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::hint> const& replace::hint() const {
     return _hint;
 }
 
-const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> replace::let()
-    const {
+bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const replace::let() const {
     return _let;
 }
 
-const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value>
-replace::comment() const {
+bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const& replace::sort() const {
+    return _sort;
+}
+
+bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value> const replace::comment() const {
     return _comment;
 }
 
-const bsoncxx::v_noabi::stdx::optional<bool>& replace::bypass_document_validation() const {
+bsoncxx::v_noabi::stdx::optional<bool> const& replace::bypass_document_validation() const {
     return _bypass_document_validation;
 }
 
-const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value>&
-replace::collation() const {
+bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const& replace::collation() const {
     return _collation;
 }
 
-const bsoncxx::v_noabi::stdx::optional<bool>& replace::upsert() const {
+bsoncxx::v_noabi::stdx::optional<bool> const& replace::upsert() const {
     return _upsert;
 }
 
-const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern>& replace::write_concern()
-    const {
+bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern> const& replace::write_concern() const {
     return _write_concern;
 }
 
-}  // namespace options
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace options
+} // namespace v_noabi
+} // namespace mongocxx

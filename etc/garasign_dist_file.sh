@@ -23,11 +23,13 @@ artifactory_creds=~/.secrets/artifactory-creds.txt
 garasign_creds=~/.secrets/garasign-creds.txt
 
 unset ARTIFACTORY_USER ARTIFACTORY_PASSWORD
+# shellcheck source=/dev/null
 . "${artifactory_creds:?}"
 : "${ARTIFACTORY_USER:?"missing ARTIFACTORY_USER in ${artifactory_creds:?}"}"
 : "${ARTIFACTORY_PASSWORD:?"missing ARTIFACTORY_PASSWORD in ${artifactory_creds:?}"}"
 
 unset GRS_CONFIG_USER1_USERNAME GRS_CONFIG_USER1_PASSWORD
+# shellcheck source=/dev/null
 . "${garasign_creds:?}"
 : "${GRS_CONFIG_USER1_USERNAME:?"missing GRS_CONFIG_USER1_USERNAME in ${garasign_creds:?}"}"
 : "${GRS_CONFIG_USER1_PASSWORD:?"missing GRS_CONFIG_USER1_PASSWORD in ${garasign_creds:?}"}"
@@ -36,6 +38,9 @@ dist_file="${1:?}"
 dist_file_signed="${dist_file:?}.asc"
 
 "${launcher:?}" login --password-stdin --username "${ARTIFACTORY_USER:?}" artifactory.corp.mongodb.com <<<"${ARTIFACTORY_PASSWORD:?}"
+
+# Ensure latest version of Garasign is being used.
+"${launcher:?}" pull artifactory.corp.mongodb.com/release-tools-container-registry-local/garasign-gpg
 
 plugin_commands=(
   gpg --yes -v --armor -o "${dist_file_signed:?}" --detach-sign "${dist_file:?}"
@@ -49,6 +54,11 @@ plugin_commands=(
   artifactory.corp.mongodb.com/release-tools-container-registry-local/garasign-gpg
 
 # Validate the signature file works as intended.
-keyring="$(mktemp)"
-curl -sS https://pgp.mongodb.com/cpp-driver.pub | gpg -q --no-default-keyring --keyring "${keyring:?}" --import -
-gpgv --keyring "${keyring:?}" "${dist_file_signed:?}" "${dist_file:?}"
+(
+  GNUPGHOME="$(mktemp -d)"
+  export GNUPGHOME
+  curl -sS https://pgp.mongodb.com/cpp-driver.pub | gpg -q --no-default-keyring --import -
+  gpg -q --import-ownertrust <<<"DC7F679B8A34DD606C1E54CAC4FC994D21532195:6:" # Set trust to "ultimate".
+  gpg -q --update-trustdb
+  gpg -q --verify "${dist_file_signed:?}" "${dist_file:?}"
+)

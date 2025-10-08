@@ -30,7 +30,7 @@ namespace v_noabi {
 namespace options {
 
 ///
-/// Class representing options for server API.
+/// Used by @ref mongocxx::v_noabi::options::client::server_api_opts.
 ///
 /// @see
 /// - [Stable API (MongoDB Manual)](https://www.mongodb.com/docs/manual/reference/stable-api/)
@@ -41,7 +41,7 @@ class server_api {
     /// Enum representing the possible values for server API version.
     ///
     enum class version {
-        k_version_1,  ///< Stable API Version 1.
+        k_version_1, ///< Stable API Version 1.
     };
 
     ///
@@ -81,8 +81,7 @@ class server_api {
     /// @return
     ///   The enum value of the given string.
     ///
-    static MONGOCXX_ABI_EXPORT_CDECL(version)
-        version_from_string(bsoncxx::v_noabi::stdx::string_view version);
+    static MONGOCXX_ABI_EXPORT_CDECL(version) version_from_string(bsoncxx::v_noabi::stdx::string_view version);
 
     ///
     /// Sets the strict option, specifying whether the server should return
@@ -102,7 +101,7 @@ class server_api {
     /// @return
     ///   The optional value of the strict option.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<bool>&) strict() const;
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bool> const&) strict() const;
 
     ///
     /// Sets the deprecation errors option, specifying whether the server should
@@ -122,7 +121,7 @@ class server_api {
     /// @return
     ///   The optional value of the deprecation errors option.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<bool>&)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bool> const&)
     deprecation_errors() const;
 
     ///
@@ -142,9 +141,9 @@ class server_api {
     bsoncxx::v_noabi::stdx::optional<bool> _deprecation_errors;
 };
 
-}  // namespace options
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace options
+} // namespace v_noabi
+} // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
 

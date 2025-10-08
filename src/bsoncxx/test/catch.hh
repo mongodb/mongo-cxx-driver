@@ -14,54 +14,89 @@
 
 #pragma once
 
+#include <bsoncxx/v1/detail/macros.hpp>
+
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/json.hpp>
 #include <bsoncxx/oid.hpp>
 #include <bsoncxx/stdx/operators.hpp>
 #include <bsoncxx/stdx/optional.hpp>
 
-#include <bsoncxx/config/private/prelude.hh>
-
 #include <bsoncxx/test/to_string.hh>
 
-#include <catch2/catch_test_macros.hpp>  // TEST_CASE, SECTION, CHECK, etc.
-#include <catch2/catch_tostring.hpp>     // Catch::StringMaker
+#include <catch2/catch_test_macros.hpp> // TEST_CASE, SECTION, CHECK, etc.
+#include <catch2/catch_tostring.hpp>    // Catch::StringMaker
+
+#define THROWS_WITH_CODE_IMPL(_assertion, _expr, _code)                               \
+    if (1) {                                                                          \
+        try {                                                                         \
+            (void)(_expr);                                                            \
+            INFO("expected an exception to be thrown: " #_expr);                      \
+            _assertion(false);                                                        \
+        } catch (Catch::TestFailureException const&) {                                \
+            throw; /* Propagate Catch exceptions. */                                  \
+        } catch (Catch::TestSkipException const&) {                                   \
+            throw; /* Propagate Catch exceptions. */                                  \
+        } catch (std::system_error const& ex) {                                       \
+            using std::make_error_code;                                               \
+            (void)ex; /* Avoid unused variable warnings. */                           \
+            _assertion(ex.code() == (_code));                                         \
+        } catch (...) {                                                               \
+            /* Reuse `*_THROWS_AS` to handle the unexpected exception type. */        \
+            BSONCXX_PRIVATE_CONCAT(_assertion, _THROWS_AS)(throw, std::system_error); \
+        }                                                                             \
+    } else                                                                            \
+        ((void)0)
+
+#define CHECK_THROWS_WITH_CODE(_expr, _code) THROWS_WITH_CODE_IMPL(CHECK, _expr, _code)
+#define REQUIRE_THROWS_WITH_CODE(_expr, _code) THROWS_WITH_CODE_IMPL(REQUIRE, _expr, _code)
 
 namespace Catch {
 
-// Catch2 must be able to stringify documents, optionals, etc. if they're used in Catch2 macros.
+template <>
+struct StringMaker<std::error_condition> {
+    static std::string convert(std::error_condition const& value) {
+        std::string res;
+
+        res += value.category().name();
+        res += ':';
+        res += Catch::StringMaker<int>::convert(value.value());
+
+        return res;
+    }
+};
 
 template <>
 struct StringMaker<bsoncxx::oid> {
-    static std::string convert(const bsoncxx::oid& value) {
+    static std::string convert(bsoncxx::oid const& value) {
         return value.to_string();
     }
 };
 
 template <>
 struct StringMaker<bsoncxx::document::view> {
-    static std::string convert(const bsoncxx::document::view& value) {
+    static std::string convert(bsoncxx::document::view const& value) {
         return bsoncxx::to_json(value, bsoncxx::ExtendedJsonMode::k_relaxed);
     }
 };
 
 template <>
 struct StringMaker<bsoncxx::document::view_or_value> {
-    static std::string convert(const bsoncxx::document::view_or_value& value) {
+    static std::string convert(bsoncxx::document::view_or_value const& value) {
         return StringMaker<bsoncxx::document::view>::convert(value.view());
     }
 };
 
 template <>
 struct StringMaker<bsoncxx::document::value> {
-    static std::string convert(const bsoncxx::document::value& value) {
+    static std::string convert(bsoncxx::document::value const& value) {
         return StringMaker<bsoncxx::document::view>::convert(value.view());
     }
 };
 
 template <>
 struct StringMaker<bsoncxx::types::bson_value::view> {
-    static std::string convert(const bsoncxx::types::bson_value::view& value) {
+    static std::string convert(bsoncxx::types::bson_value::view const& value) {
         using bsoncxx::to_string;
         return '{' + to_string(value.type()) + ": " + to_string(value) + '}';
     }
@@ -69,21 +104,21 @@ struct StringMaker<bsoncxx::types::bson_value::view> {
 
 template <>
 struct StringMaker<bsoncxx::types::bson_value::value> {
-    static std::string convert(const bsoncxx::types::bson_value::value& value) {
+    static std::string convert(bsoncxx::types::bson_value::value const& value) {
         return StringMaker<bsoncxx::types::bson_value::view>::convert(value.view());
     }
 };
 
 template <>
 struct StringMaker<bsoncxx::types::bson_value::view_or_value> {
-    static std::string convert(const bsoncxx::types::bson_value::view_or_value& value) {
+    static std::string convert(bsoncxx::types::bson_value::view_or_value const& value) {
         return StringMaker<bsoncxx::types::bson_value::view>::convert(value.view());
     }
 };
 
 template <typename T>
 struct StringMaker<bsoncxx::stdx::optional<T>> {
-    static std::string convert(const bsoncxx::stdx::optional<T>& value) {
+    static std::string convert(bsoncxx::stdx::optional<T> const& value) {
         if (value) {
             return StringMaker<T>::convert(value.value());
         }
@@ -94,7 +129,7 @@ struct StringMaker<bsoncxx::stdx::optional<T>> {
 
 template <>
 struct StringMaker<bsoncxx::stdx::optional<bsoncxx::stdx::nullopt_t>> {
-    static std::string convert(const bsoncxx::stdx::optional<bsoncxx::stdx::nullopt_t>&) {
+    static std::string convert(bsoncxx::stdx::optional<bsoncxx::stdx::nullopt_t> const&) {
         return "{nullopt}";
     }
 };
@@ -112,6 +147,4 @@ struct StringMaker<bsoncxx::detail::strong_ordering> {
     }
 };
 
-}  // namespace Catch
-
-#include <bsoncxx/config/private/postlude.hh>
+} // namespace Catch

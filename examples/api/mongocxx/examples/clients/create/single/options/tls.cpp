@@ -47,7 +47,7 @@ mongocxx::client example() {
 }
 // [Example]
 
-}  // namespace
+} // namespace
 
 RUNNER_REGISTER_COMPONENT_FOR_SINGLE() {
     try {
@@ -56,7 +56,7 @@ RUNNER_REGISTER_COMPONENT_FOR_SINGLE() {
         auto reply = client["admin"].run_command(bsoncxx::from_json(R"({"ping": 1})"));
 
         EXPECT(reply["ok"] && reply["ok"].get_double().value == 1.0);
-    } catch (const mongocxx::exception& ex) {
+    } catch (mongocxx::exception const& ex) {
         if (ex.code() == mongocxx::error_code::k_ssl_not_supported) {
             // Library may not be configured with TLS/SSL support enabled.
         } else if (std::strstr(ex.what(), "suitable server") != nullptr) {

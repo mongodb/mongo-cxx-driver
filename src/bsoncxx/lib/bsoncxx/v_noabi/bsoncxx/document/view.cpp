@@ -16,10 +16,9 @@
 
 #include <bsoncxx/document/view.hpp>
 #include <bsoncxx/json.hpp>
-#include <bsoncxx/private/libbson.hh>
 #include <bsoncxx/types.hpp>
 
-#include <bsoncxx/config/private/prelude.hh>
+#include <bsoncxx/private/bson.hh>
 
 namespace bsoncxx {
 namespace v_noabi {
@@ -33,11 +32,11 @@ bson_iter_t to_bson_iter_t(element e) {
     return iter;
 }
 
-}  // namespace
+} // namespace
 
 view::const_iterator::const_iterator() {}
 
-view::const_iterator::const_iterator(const element& element) : _element(element) {}
+view::const_iterator::const_iterator(element const& element) : _element(element) {}
 
 view::const_iterator::reference view::const_iterator::operator*() {
     return _element;
@@ -73,12 +72,12 @@ view::const_iterator view::const_iterator::operator++(int) {
     return before;
 }
 
-bool operator==(const view::const_iterator& lhs, const view::const_iterator& rhs) {
+bool operator==(view::const_iterator const& lhs, view::const_iterator const& rhs) {
     return std::forward_as_tuple(lhs._element.raw(), lhs._element.offset()) ==
            std::forward_as_tuple(rhs._element.raw(), rhs._element.offset());
 }
 
-bool operator!=(const view::const_iterator& lhs, const view::const_iterator& rhs) {
+bool operator!=(view::const_iterator const& lhs, view::const_iterator const& rhs) {
     return !(lhs == rhs);
 }
 
@@ -93,10 +92,8 @@ view::const_iterator view::cbegin() const {
         return cend();
     }
 
-    return const_iterator{element{data(),
-                                  static_cast<uint32_t>(length()),
-                                  bson_iter_offset(&iter),
-                                  bson_iter_key_len(&iter)}};
+    return const_iterator{
+        element{data(), static_cast<uint32_t>(length()), bson_iter_offset(&iter), bson_iter_key_len(&iter)}};
 }
 
 view::const_iterator view::cend() const {
@@ -139,23 +136,23 @@ view::const_iterator view::find(stdx::string_view key) const {
         return const_iterator(element(key));
     }
 
-    return const_iterator(element(
-        _data, static_cast<uint32_t>(_length), bson_iter_offset(&iter), bson_iter_key_len(&iter)));
+    return const_iterator(
+        element(_data, static_cast<uint32_t>(_length), bson_iter_offset(&iter), bson_iter_key_len(&iter)));
 }
 
 element view::operator[](stdx::string_view key) const {
     return *(this->find(key));
 }
 
-view::view(const std::uint8_t* data, std::size_t length) : _data(data), _length(length) {}
+view::view(std::uint8_t const* data, std::size_t length) : _data(data), _length(length) {}
 
 namespace {
-const uint8_t k_default_view[5] = {5, 0, 0, 0, 0};
-}
+uint8_t const k_default_view[5] = {5, 0, 0, 0, 0};
+} // namespace
 
 view::view() : _data(k_default_view), _length(sizeof(k_default_view)) {}
 
-const std::uint8_t* view::data() const {
+std::uint8_t const* view::data() const {
     return _data;
 }
 std::size_t view::length() const {
@@ -167,14 +164,13 @@ bool view::empty() const {
 }
 
 bool operator==(view lhs, view rhs) {
-    return (lhs.length() == rhs.length()) &&
-           (std::memcmp(lhs.data(), rhs.data(), lhs.length()) == 0);
+    return (lhs.length() == rhs.length()) && (std::memcmp(lhs.data(), rhs.data(), lhs.length()) == 0);
 }
 
 bool operator!=(view lhs, view rhs) {
     return !(lhs == rhs);
 }
 
-}  // namespace document
-}  // namespace v_noabi
-}  // namespace bsoncxx
+} // namespace document
+} // namespace v_noabi
+} // namespace bsoncxx

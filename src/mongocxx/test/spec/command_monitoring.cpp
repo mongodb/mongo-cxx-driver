@@ -70,10 +70,7 @@ void run_command_monitoring_tests_in_file(std::string test_path) {
         INFO("Test description: " << description);
         array::view expectations = test["expectations"].get_array().value;
 
-        // Use a separate client to check version info, so as not to interfere with APM
-        client temp_client{uri{}, test_util::add_test_server_api()};
-
-        CHECK_IF_SKIP_SPEC_TEST(temp_client, test.get_document().value);
+        CHECK_IF_SKIP_SPEC_TEST(test.get_document().value);
 
         // Used by the listeners
         auto events = expectations.begin();
@@ -87,7 +84,7 @@ void run_command_monitoring_tests_in_file(std::string test_path) {
         ///////////////////////////////////////////////////////////////////////
 
         // COMMAND STARTED
-        apm_opts.on_command_started([&](const events::command_started_event& event) {
+        apm_opts.on_command_started([&](events::command_started_event const& event) {
             BSONCXX_TEST_EXCEPTION_GUARD_BEGIN(eguard);
 
             if (event.command_name() == "endSessions") {
@@ -118,7 +115,7 @@ void run_command_monitoring_tests_in_file(std::string test_path) {
         });
 
         // COMMAND FAILED
-        apm_opts.on_command_failed([&](const events::command_failed_event& event) {
+        apm_opts.on_command_failed([&](events::command_failed_event const& event) {
             BSONCXX_TEST_EXCEPTION_GUARD_BEGIN(eguard);
 
             auto expected = (*events).get_document().value;
@@ -139,7 +136,7 @@ void run_command_monitoring_tests_in_file(std::string test_path) {
         });
 
         // COMMAND SUCCESS
-        apm_opts.on_command_succeeded([&](const events::command_succeeded_event& event) {
+        apm_opts.on_command_succeeded([&](events::command_succeeded_event const& event) {
             BSONCXX_TEST_EXCEPTION_GUARD_BEGIN(eguard);
 
             if (event.command_name() == "endSessions") {
@@ -213,4 +210,4 @@ TEST_CASE("Command Monitoring Spec Tests", "[command_monitoring_spec]") {
         run_command_monitoring_tests_in_file(path + "/" + test_file);
     }
 }
-}  // namespace
+} // namespace

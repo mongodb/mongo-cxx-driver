@@ -22,17 +22,17 @@ namespace result {
 
 class insert_many;
 
-}  // namespace result
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace result
+} // namespace v_noabi
+} // namespace mongocxx
 
 namespace mongocxx {
 namespace result {
 
 using ::mongocxx::v_noabi::result::insert_many;
 
-}  // namespace result
-}  // namespace mongocxx
+} // namespace result
+} // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
 
@@ -40,16 +40,3 @@ using ::mongocxx::v_noabi::result::insert_many;
 /// @file
 /// Declares @ref mongocxx::v_noabi::result::insert_many.
 ///
-
-#if defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
-
-namespace mongocxx {
-namespace result {
-
-/// @ref mongocxx::v_noabi::result::insert_many
-class insert_many {};
-
-}  // namespace result
-}  // namespace mongocxx
-
-#endif  // defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

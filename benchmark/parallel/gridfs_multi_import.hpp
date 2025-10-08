@@ -22,6 +22,7 @@
 #include <vector>
 
 #include <bsoncxx/string/to_string.hpp>
+
 #include <mongocxx/gridfs/bucket.hpp>
 #include <mongocxx/instance.hpp>
 #include <mongocxx/pool.hpp>
@@ -34,17 +35,13 @@ using bsoncxx::builder::basic::make_document;
 
 class gridfs_multi_import : public microbench {
    public:
-    static const std::uint32_t TOTAL_FILES{50};
+    static std::uint32_t const TOTAL_FILES{50};
 
     gridfs_multi_import() = delete;
 
     // The task size comes from the Driver Perfomance Benchmarking Reference Doc.
-    gridfs_multi_import(std::string dir,
-                        std::uint32_t thread_num = std::thread::hardware_concurrency() * 2)
-        : microbench{"TestGridFsMultiImport",
-                     262.144,
-                     std::set<benchmark_type>{benchmark_type::parallel_bench,
-                                              benchmark_type::write_bench}},
+    gridfs_multi_import(std::string dir, std::uint32_t thread_num = std::thread::hardware_concurrency() * 2)
+        : microbench{"TestGridFsMultiImport", 262.144, std::set<benchmark_type>{benchmark_type::parallel_bench, benchmark_type::write_bench}},
           _directory{std::move(dir)},
           _pool{mongocxx::uri{}},
           _thread_num{thread_num} {}
@@ -90,8 +87,7 @@ void gridfs_multi_import::teardown() {
 }
 
 void gridfs_multi_import::task() {
-    std::div_t result =
-        std::div(static_cast<std::int32_t>(TOTAL_FILES), static_cast<std::int32_t>(_thread_num));
+    std::div_t result = std::div(static_cast<std::int32_t>(TOTAL_FILES), static_cast<std::int32_t>(_thread_num));
     std::uint32_t num_each = static_cast<std::uint32_t>(result.quot);
     if (result.rem != 0) {
         num_each++;
@@ -99,8 +95,8 @@ void gridfs_multi_import::task() {
 
     std::vector<std::thread> threads;
     for (std::uint32_t i = 0; i < TOTAL_FILES; i += num_each) {
-        threads.push_back(std::thread{
-            [i, num_each, this] { concurrency_task(i, std::min(TOTAL_FILES - i, num_each)); }});
+        threads.push_back(
+            std::thread{[i, num_each, this] { concurrency_task(i, std::min(TOTAL_FILES - i, num_each)); }});
     }
     for (std::uint32_t i = 0; i < threads.size(); i++) {
         threads[i].join();
@@ -119,4 +115,4 @@ void gridfs_multi_import::concurrency_task(std::uint32_t start_file, std::uint32
         auto uploader = bucket.upload_from_stream(file_name, &stream);
     }
 }
-}  // namespace benchmark
+} // namespace benchmark

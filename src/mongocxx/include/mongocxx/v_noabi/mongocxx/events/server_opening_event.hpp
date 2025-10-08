@@ -27,15 +27,14 @@ namespace v_noabi {
 namespace events {
 
 ///
-/// An event notification sent when the driver adds a MongoDB server to the topology description
-/// and begins monitoring it.
+/// The addition of a new MongoDB server to the topology description.
 ///
 /// @see
-/// - "ServerOpeningEvent" in https://github.com/mongodb/specifications/blob/master/source/server-discovery-and-monitoring/server-discovery-and-monitoring.md
+/// - [SDAM Logging and Monitoring Specification (MongoDB Specifications)](https://specifications.readthedocs.io/en/latest/server-discovery-and-monitoring/server-discovery-and-monitoring-logging-and-monitoring/)
 ///
 class server_opening_event {
    public:
-    explicit server_opening_event(const void* event);
+    explicit server_opening_event(void const* event);
 
     ///
     /// Destroys a server_opening_event.
@@ -45,8 +44,8 @@ class server_opening_event {
     server_opening_event(server_opening_event&&) = default;
     server_opening_event& operator=(server_opening_event&&) = default;
 
-    server_opening_event(const server_opening_event&) = default;
-    server_opening_event& operator=(const server_opening_event&) = default;
+    server_opening_event(server_opening_event const&) = default;
+    server_opening_event& operator=(server_opening_event const&) = default;
 
     ///
     /// Returns the server host name.
@@ -68,15 +67,15 @@ class server_opening_event {
     ///
     /// @return The id.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::oid) topology_id() const;
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::oid const) topology_id() const;
 
    private:
-    const void* _event;
+    void const* _event;
 };
 
-}  // namespace events
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace events
+} // namespace v_noabi
+} // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
 

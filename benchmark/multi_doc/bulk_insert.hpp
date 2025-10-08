@@ -21,6 +21,7 @@
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/builder/basic/kvp.hpp>
 #include <bsoncxx/stdx/optional.hpp>
+
 #include <mongocxx/client.hpp>
 #include <mongocxx/instance.hpp>
 #include <mongocxx/uri.hpp>
@@ -35,10 +36,7 @@ class bulk_insert : public microbench {
     bulk_insert() = delete;
 
     bulk_insert(std::string name, double task_size, std::int32_t doc_num, std::string json_file)
-        : microbench{std::move(name),
-                     task_size,
-                     std::set<benchmark_type>{benchmark_type::multi_bench,
-                                              benchmark_type::write_bench}},
+        : microbench{std::move(name), task_size, std::set<benchmark_type>{benchmark_type::multi_bench, benchmark_type::write_bench}},
           _conn{mongocxx::uri{}},
           _doc_num{doc_num},
           _file_name{std::move(json_file)} {}
@@ -84,4 +82,4 @@ void bulk_insert::teardown() {
 void bulk_insert::task() {
     _coll.insert_many(_docs);
 }
-}  // namespace benchmark
+} // namespace benchmark

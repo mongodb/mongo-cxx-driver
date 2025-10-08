@@ -29,7 +29,7 @@ namespace v_noabi {
 namespace options {
 
 ///
-/// Class representing options for a rewrap many datakey operation.
+/// Used by @ref mongocxx::v_noabi::client_encryption::rewrap_many_datakey.
 ///
 class rewrap_many_datakey {
    public:
@@ -98,8 +98,7 @@ class rewrap_many_datakey {
     /// @see
     /// - https://www.mongodb.com/docs/manual/core/csfle/reference/kms-providers/#std-label-csfle-reference-kms-providers-create-and-store
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(
-        const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value>&)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const&)
     master_key() const;
 
    private:
@@ -109,9 +108,9 @@ class rewrap_many_datakey {
     bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> _master_key;
 };
 
-}  // namespace options
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace options
+} // namespace v_noabi
+} // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
 

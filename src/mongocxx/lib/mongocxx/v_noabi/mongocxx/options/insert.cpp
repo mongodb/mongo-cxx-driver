@@ -14,8 +14,6 @@
 
 #include <mongocxx/options/insert.hpp>
 
-#include <mongocxx/config/private/prelude.hh>
-
 namespace mongocxx {
 namespace v_noabi {
 namespace options {
@@ -40,24 +38,22 @@ insert& insert::comment(bsoncxx::v_noabi::types::bson_value::view_or_value comme
     return *this;
 }
 
-const bsoncxx::v_noabi::stdx::optional<bool>& insert::bypass_document_validation() const {
+bsoncxx::v_noabi::stdx::optional<bool> const& insert::bypass_document_validation() const {
     return _bypass_document_validation;
 }
 
-const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern>& insert::write_concern()
-    const {
+bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern> const& insert::write_concern() const {
     return _write_concern;
 }
 
-const bsoncxx::v_noabi::stdx::optional<bool>& insert::ordered() const {
+bsoncxx::v_noabi::stdx::optional<bool> const& insert::ordered() const {
     return _ordered;
 }
 
-const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value>&
-insert::comment() const {
+bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value> const& insert::comment() const {
     return _comment;
 }
 
-}  // namespace options
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace options
+} // namespace v_noabi
+} // namespace mongocxx

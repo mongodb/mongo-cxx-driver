@@ -22,14 +22,14 @@ namespace v_noabi {
 template <typename View, typename Value>
 class view_or_value;
 
-}  // namespace v_noabi
-}  // namespace bsoncxx
+} // namespace v_noabi
+} // namespace bsoncxx
 
 namespace bsoncxx {
 
 using ::bsoncxx::v_noabi::view_or_value;
 
-}  // namespace bsoncxx
+} // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>
 
@@ -37,14 +37,3 @@ using ::bsoncxx::v_noabi::view_or_value;
 /// @file
 /// Declares @ref bsoncxx::v_noabi::view_or_value.
 ///
-
-#if defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
-
-namespace bsoncxx {
-
-/// @ref bsoncxx::v_noabi::view_or_value
-class view_or_value {};
-
-}  // namespace bsoncxx
-
-#endif  // defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

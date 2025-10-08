@@ -41,10 +41,10 @@ void example(bsoncxx::stdx::string_view big_string) {
     bsoncxx::document::value original{builder.view()};
 
     try {
-        builder.append(kvp("too big", big_string));  // Throws.
+        builder.append(kvp("too big", big_string)); // Throws.
 
         EXPECT(false && "should not reach this point");
-    } catch (const bsoncxx::exception& ex) {
+    } catch (bsoncxx::exception const& ex) {
         EXPECT(ex.code() == bsoncxx::error_code::k_cannot_append_string);
     }
 
@@ -52,8 +52,8 @@ void example(bsoncxx::stdx::string_view big_string) {
 }
 // [Example]
 
-}  // namespace
+} // namespace
 
 RUNNER_REGISTER_COMPONENT() {
-    example(examples::big_string().view());
+    examples::with_big_string(example);
 }

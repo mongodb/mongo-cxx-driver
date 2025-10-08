@@ -15,7 +15,7 @@ namespace mongocxx {
 namespace v_noabi {
 
 ///
-/// Class representing a search index on a MongoDB server.
+/// Used by @ref mongocxx::v_noabi::search_index_view.
 ///
 class search_index_model {
    public:
@@ -26,8 +26,9 @@ class search_index_model {
     search_index_model(bsoncxx::v_noabi::document::view_or_value definition);
 
     MONGOCXX_ABI_EXPORT_CDECL()
-    search_index_model(bsoncxx::v_noabi::string::view_or_value name,
-                       bsoncxx::v_noabi::document::view_or_value definition);
+    search_index_model(
+        bsoncxx::v_noabi::string::view_or_value name,
+        bsoncxx::v_noabi::document::view_or_value definition);
 
     search_index_model() = delete;
 
@@ -44,12 +45,12 @@ class search_index_model {
     ///
     /// Copy constructs a search_index_model.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL() search_index_model(const search_index_model&);
+    MONGOCXX_ABI_EXPORT_CDECL() search_index_model(search_index_model const&);
 
     ///
     /// Copy assigns a search_index_model.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(search_index_model&) operator=(const search_index_model&);
+    MONGOCXX_ABI_EXPORT_CDECL(search_index_model&) operator=(search_index_model const&);
 
     ///
     /// Destroys a search_index_model.
@@ -59,8 +60,7 @@ class search_index_model {
     ///
     /// Retrieves name of a search_index_model.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(
-        bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value>)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value>)
     name() const;
 
     ///
@@ -71,8 +71,7 @@ class search_index_model {
     ///
     /// Retrieves type of a search_index_model.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(
-        bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value>)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value>)
     type() const;
 
     ///
@@ -87,7 +86,7 @@ class search_index_model {
    private:
     class impl;
 
-    const impl& _get_impl() const;
+    impl const& _get_impl() const;
 
     impl& _get_impl();
 
@@ -95,8 +94,8 @@ class search_index_model {
     std::unique_ptr<impl> _impl;
 };
 
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace v_noabi
+} // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
 

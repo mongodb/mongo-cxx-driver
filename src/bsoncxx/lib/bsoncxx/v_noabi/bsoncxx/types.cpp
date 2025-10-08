@@ -14,8 +14,6 @@
 
 #include <bsoncxx/types.hpp>
 
-#include <bsoncxx/config/private/prelude.hh>
-
 namespace bsoncxx {
 namespace v_noabi {
 
@@ -49,5 +47,5 @@ std::string to_string(binary_sub_type rhs) {
     }
 }
 
-}  // namespace v_noabi
-}  // namespace bsoncxx
+} // namespace v_noabi
+} // namespace bsoncxx

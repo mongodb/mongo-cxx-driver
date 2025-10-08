@@ -28,15 +28,10 @@ namespace bsoncxx {
 namespace v_noabi {
 
 ///
-/// Represents a MongoDB ObjectId. As this BSON type is used within the MongoDB server
-/// as a primary key for each document, it is useful for representing a 'pointer'
-/// to another document.
-///
-/// @note we use 'oid' to refer to this concrete class. We use 'ObjectId' to refer
-/// to the BSON type.
+/// Represents a MongoDB BSON ObjectId.
 ///
 /// @see
-/// - https://www.mongodb.com/docs/manual/reference/object-id/
+/// - [BSON Types (MongoDB Manual)](https://www.mongodb.com/docs/manual/reference/bson-types/)
 ///
 class oid {
    public:
@@ -57,7 +52,7 @@ class oid {
     ///
     /// @throws bsoncxx::v_noabi::exception if the length is not equal to oid::size().
     ///
-    explicit BSONCXX_ABI_EXPORT_CDECL() oid(const char* bytes, std::size_t len);
+    explicit BSONCXX_ABI_EXPORT_CDECL() oid(char const* bytes, std::size_t len);
 
     ///
     /// Constructs an oid and initializes it from the provided hex string.
@@ -68,7 +63,7 @@ class oid {
     /// @throws bsoncxx::v_noabi::exception if the string isn't an OID-sized hex
     /// string.
     ///
-    explicit BSONCXX_ABI_EXPORT_CDECL() oid(const stdx::string_view& str);
+    explicit BSONCXX_ABI_EXPORT_CDECL() oid(stdx::string_view const& str);
 
     ///
     /// Converts this oid to a hexadecimal string.
@@ -92,12 +87,12 @@ class oid {
     /// Relational operators for OIDs.
     ///
     /// @{
-    friend BSONCXX_ABI_EXPORT_CDECL(bool) operator<(const oid& lhs, const oid& rhs);
-    friend BSONCXX_ABI_EXPORT_CDECL(bool) operator>(const oid& lhs, const oid& rhs);
-    friend BSONCXX_ABI_EXPORT_CDECL(bool) operator<=(const oid& lhs, const oid& rhs);
-    friend BSONCXX_ABI_EXPORT_CDECL(bool) operator>=(const oid& lhs, const oid& rhs);
-    friend BSONCXX_ABI_EXPORT_CDECL(bool) operator==(const oid& lhs, const oid& rhs);
-    friend BSONCXX_ABI_EXPORT_CDECL(bool) operator!=(const oid& lhs, const oid& rhs);
+    friend BSONCXX_ABI_EXPORT_CDECL(bool) operator<(oid const& lhs, oid const& rhs);
+    friend BSONCXX_ABI_EXPORT_CDECL(bool) operator>(oid const& lhs, oid const& rhs);
+    friend BSONCXX_ABI_EXPORT_CDECL(bool) operator<=(oid const& lhs, oid const& rhs);
+    friend BSONCXX_ABI_EXPORT_CDECL(bool) operator>=(oid const& lhs, oid const& rhs);
+    friend BSONCXX_ABI_EXPORT_CDECL(bool) operator==(oid const& lhs, oid const& rhs);
+    friend BSONCXX_ABI_EXPORT_CDECL(bool) operator!=(oid const& lhs, oid const& rhs);
     /// @}
     ///
 
@@ -114,16 +109,16 @@ class oid {
     ///
     /// @return A pointer to the internal buffer holding the oid bytes.
     ///
-    BSONCXX_ABI_EXPORT_CDECL(const char*) bytes() const;
+    BSONCXX_ABI_EXPORT_CDECL(char const*) bytes() const;
 
    private:
-    friend int oid_compare(const oid& lhs, const oid& rhs);
+    friend int oid_compare(oid const& lhs, oid const& rhs);
 
     std::array<char, k_oid_length> _bytes;
 };
 
-}  // namespace v_noabi
-}  // namespace bsoncxx
+} // namespace v_noabi
+} // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>
 

@@ -14,8 +14,11 @@
 
 #pragma once
 
-#include <bsoncxx/builder/basic/array-fwd.hpp>
 #include <bsoncxx/builder/basic/document-fwd.hpp>
+
+//
+
+#include <bsoncxx/builder/basic/array-fwd.hpp>
 
 #include <bsoncxx/builder/basic/impl.hpp>
 #include <bsoncxx/builder/basic/kvp.hpp>
@@ -57,8 +60,8 @@ class document : public sub_document {
         return *this;
     }
 
-    document(const document&) = delete;
-    document& operator=(const document&) = delete;
+    document(document const&) = delete;
+    document& operator=(document const&) = delete;
 
     ///
     /// @return A view of the BSON document.
@@ -118,10 +121,10 @@ bsoncxx::v_noabi::document::value make_document(Args&&... args) {
     return document.extract();
 }
 
-}  // namespace basic
-}  // namespace builder
-}  // namespace v_noabi
-}  // namespace bsoncxx
+} // namespace basic
+} // namespace builder
+} // namespace v_noabi
+} // namespace bsoncxx
 
 namespace bsoncxx {
 namespace builder {
@@ -129,9 +132,9 @@ namespace basic {
 
 using ::bsoncxx::v_noabi::builder::basic::make_document;
 
-}  // namespace basic
-}  // namespace builder
-}  // namespace bsoncxx
+} // namespace basic
+} // namespace builder
+} // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>
 
@@ -139,19 +142,3 @@ using ::bsoncxx::v_noabi::builder::basic::make_document;
 /// @file
 /// Provides @ref bsoncxx::v_noabi::builder::basic::document.
 ///
-
-#if defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
-
-namespace bsoncxx {
-namespace builder {
-namespace basic {
-
-/// @ref bsoncxx::v_noabi::builder::basic::make_document
-template <typename... Args>
-v_noabi::document::value make_document(Args&&... args);
-
-}  // namespace basic
-}  // namespace builder
-}  // namespace bsoncxx
-
-#endif  // defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

@@ -15,11 +15,10 @@
 #include <bsoncxx/decimal128.hpp>
 #include <bsoncxx/exception/error_code.hpp>
 #include <bsoncxx/exception/exception.hpp>
-#include <bsoncxx/private/libbson.hh>
 #include <bsoncxx/stdx/string_view.hpp>
 #include <bsoncxx/string/to_string.hpp>
 
-#include <bsoncxx/config/private/prelude.hh>
+#include <bsoncxx/private/bson.hh>
 
 namespace bsoncxx {
 namespace v_noabi {
@@ -42,13 +41,13 @@ std::string decimal128::to_string() const {
     return {str};
 }
 
-bool operator==(const decimal128& lhs, const decimal128& rhs) {
+bool operator==(decimal128 const& lhs, decimal128 const& rhs) {
     return lhs._high == rhs._high && lhs._low == rhs._low;
 }
 
-bool operator!=(const decimal128& lhs, const decimal128& rhs) {
+bool operator!=(decimal128 const& lhs, decimal128 const& rhs) {
     return !(lhs == rhs);
 }
 
-}  // namespace v_noabi
-}  // namespace bsoncxx
+} // namespace v_noabi
+} // namespace bsoncxx

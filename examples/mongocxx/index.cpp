@@ -14,6 +14,7 @@
 
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/builder/basic/kvp.hpp>
+#include <bsoncxx/json.hpp>
 
 #include <mongocxx/client.hpp>
 #include <mongocxx/instance.hpp>
@@ -34,18 +35,19 @@ int EXAMPLES_CDECL main() {
     auto db = conn["test"];
     try {
         db["restaurants"].drop();
-    } catch (const std::exception&) {
+    } catch (std::exception const&) {
         // Collection did not exist.
     }
 
     // Create a single field index.
-    { db["restaurants"].create_index(make_document(kvp("cuisine", 1)), {}); }
+    {
+        db["restaurants"].create_index(make_document(kvp("cuisine", 1)), {});
+    }
 
     // Create a compound index.
     {
         db["restaurants"].drop();
-        db["restaurants"].create_index(make_document(kvp("cuisine", 1), kvp("address.zipcode", -1)),
-                                       {});
+        db["restaurants"].create_index(make_document(kvp("cuisine", 1), kvp("address.zipcode", -1)), {});
     }
 
     // Create a unique index.
@@ -58,15 +60,10 @@ int EXAMPLES_CDECL main() {
 
     // Create an index with storage engine options
     {
+        auto storage_engine = bsoncxx::from_json(R"({"wiredTiger": {"configString": "block_allocation=first"}})");
         db["restaurants"].drop();
         mongocxx::options::index index_options{};
-
-        // Use `std::make_unique` with C++14 and newer.
-        std::unique_ptr<mongocxx::options::index::wiredtiger_storage_options> wt_options{
-            new mongocxx::options::index::wiredtiger_storage_options()};
-
-        wt_options->config_string("block_allocation=first");
-        index_options.storage_options(std::move(wt_options));
+        index_options.storage_engine(storage_engine.view());
         db["restaurants"].create_index(make_document(kvp("cuisine", 1)), index_options);
     }
 }

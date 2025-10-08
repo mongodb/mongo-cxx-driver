@@ -28,7 +28,7 @@ namespace v_noabi {
 namespace options {
 
 ///
-/// Class representing the optional arguments to a MongoDB driver client (TLS)
+/// Used by @ref mongocxx::v_noabi::options::client::tls_opts.
 ///
 class tls {
    public:
@@ -50,8 +50,7 @@ class tls {
     ///
     /// @return The path to the .pem file.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(
-        const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value>&)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value> const&)
     pem_file() const;
 
     ///
@@ -72,8 +71,7 @@ class tls {
     ///
     /// @return The pass phrase.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(
-        const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value>&)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value> const&)
     pem_password() const;
 
     ///
@@ -94,8 +92,7 @@ class tls {
     ///
     /// @return The path to the CA file.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(
-        const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value>&)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value> const&)
     ca_file() const;
 
     ///
@@ -115,8 +112,7 @@ class tls {
     ///
     /// @return The path to the CA directory.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(
-        const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value>&)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value> const&)
     ca_dir() const;
 
     ///
@@ -136,8 +132,7 @@ class tls {
     ///
     /// @return The path to the revoked certificates file.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(
-        const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value>&)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value> const&)
     crl_file() const;
 
     ///
@@ -157,7 +152,7 @@ class tls {
     ///
     /// @return Whether or not the driver will check the server's CA file.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<bool>&)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bool> const&)
     allow_invalid_certificates() const;
 
    private:
@@ -169,9 +164,9 @@ class tls {
     bsoncxx::v_noabi::stdx::optional<bool> _allow_invalid_certificates;
 };
 
-}  // namespace options
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace options
+} // namespace v_noabi
+} // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
 

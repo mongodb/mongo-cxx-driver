@@ -26,16 +26,16 @@ namespace mongocxx {
 namespace v_noabi {
 
 ///
-/// The log level of a message passed to a mongocxx::v_noabi::logger.
+/// The log level of a log message.
 ///
 enum class log_level {
-    k_error,     ///< Log Level Error.
-    k_critical,  ///< Log Level Critical.
-    k_warning,   ///< Log Level Warning.
-    k_message,   ///< Log Level Message.
-    k_info,      ///< Log Level Info.
-    k_debug,     ///< Log Level Debug.
-    k_trace,     ///< Log Level Trace.
+    k_error,    ///< Log Level Error.
+    k_critical, ///< Log Level Critical.
+    k_warning,  ///< Log Level Warning.
+    k_message,  ///< Log Level Message.
+    k_info,     ///< Log Level Info.
+    k_debug,    ///< Log Level Debug.
+    k_trace,    ///< Log Level Trace.
 };
 
 ///
@@ -49,7 +49,10 @@ enum class log_level {
 MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::string_view) to_string(log_level level);
 
 ///
-/// The interface that all user-defined loggers must implement.
+/// The interface which user-defined loggers must implement.
+///
+/// @see
+/// - @ref mongocxx::v_noabi::instance
 ///
 class logger {
    public:
@@ -57,8 +60,8 @@ class logger {
 
     logger(logger&&) = default;
     logger& operator=(logger&&) = default;
-    logger(const logger&) = default;
-    logger& operator=(const logger&) = default;
+    logger(logger const&) = default;
+    logger& operator=(logger const&) = default;
 
     ///
     /// Handles a log message. User defined logger implementations may do whatever they wish when
@@ -70,9 +73,10 @@ class logger {
     ///   The domain of the current log message, such as 'client'
     /// @param message
     ///   The text of the current log message.
-    virtual void operator()(log_level level,
-                            bsoncxx::v_noabi::stdx::string_view domain,
-                            bsoncxx::v_noabi::stdx::string_view message) noexcept = 0;
+    virtual void operator()(
+        log_level level,
+        bsoncxx::v_noabi::stdx::string_view domain,
+        bsoncxx::v_noabi::stdx::string_view message) noexcept = 0;
 
    protected:
     ///
@@ -81,14 +85,14 @@ class logger {
     logger();
 };
 
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace v_noabi
+} // namespace mongocxx
 
 namespace mongocxx {
 
 using ::mongocxx::v_noabi::to_string;
 
-}  // namespace mongocxx
+} // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
 
@@ -96,14 +100,3 @@ using ::mongocxx::v_noabi::to_string;
 /// @file
 /// Provides utilities related to mongocxx logging.
 ///
-
-#if defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
-
-namespace mongocxx {
-
-/// @ref mongocxx::v_noabi::to_string(v_noabi::log_level level)
-bsoncxx::v_noabi::stdx::string_view to_string(v_noabi::log_level level);
-
-}  // namespace mongocxx
-
-#endif  // defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

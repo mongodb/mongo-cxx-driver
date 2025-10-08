@@ -14,10 +14,12 @@
 
 #pragma once
 
+#include "microbench.hpp"
+
 #include <chrono>
 
-#include "microbench.hpp"
 #include <bsoncxx/stdx/optional.hpp>
+
 #include <mongocxx/instance.hpp>
 
 namespace benchmark {
@@ -52,4 +54,4 @@ class benchmark_runner {
     std::vector<std::unique_ptr<microbench>> _microbenches;
     std::set<benchmark_type> _types;
 };
-}  // namespace benchmark
+} // namespace benchmark

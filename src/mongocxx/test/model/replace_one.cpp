@@ -41,4 +41,4 @@ TEST_CASE("replace_one model tests", "[replace_one][model]") {
     CHECK_OPTIONAL_ARGUMENT(ro, upsert, true);
     CHECK_OPTIONAL_ARGUMENT(ro, collation, collation.view());
 }
-}  // namespace
+} // namespace

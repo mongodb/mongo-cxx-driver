@@ -14,12 +14,14 @@
 
 static_assert(__cplusplus >= 201703L, "requires C++17 or higher");
 
+#include "benchmark_runner.hpp"
+
 #include <chrono>
 #include <iostream>
 #include <stdexcept>
 
-#include "benchmark_runner.hpp"
 #include <bsoncxx/stdx/string_view.hpp>
+
 #include <mongocxx/instance.hpp>
 
 using namespace benchmark;
@@ -30,7 +32,7 @@ int main(int argc, char* argv[]) {
 
     if (argc > 1) {
         if (bsoncxx::stdx::string_view(argv[1]) == "all") {
-            for (const auto& [name, type] : names_types) {
+            for (auto const& [name, type] : names_types) {
                 types.insert(type);
             }
         } else {

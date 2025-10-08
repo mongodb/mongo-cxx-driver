@@ -12,11 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <bsoncxx/private/libbson.hh>
-#include <bsoncxx/private/make_unique.hh>
 #include <bsoncxx/validate.hpp>
 
-#include <bsoncxx/config/private/prelude.hh>
+#include <bsoncxx/private/bson.hh>
+#include <bsoncxx/private/make_unique.hh>
 
 namespace bsoncxx {
 namespace v_noabi {
@@ -64,18 +63,16 @@ bool validator::check_dot_keys() const {
     return _impl->_check_dot_keys;
 }
 
-stdx::optional<document::view> validate(const std::uint8_t* data, std::size_t length) {
-    const validator vtor{};
+stdx::optional<document::view> validate(std::uint8_t const* data, std::size_t length) {
+    validator const vtor{};
     return validate(data, length, vtor);
 }
 
-stdx::optional<document::view> validate(const std::uint8_t* data,
-                                        std::size_t length,
-                                        const validator& validator,
-                                        std::size_t* invalid_offset) {
+stdx::optional<document::view>
+validate(std::uint8_t const* data, std::size_t length, validator const& validator, std::size_t* invalid_offset) {
     ::bson_validate_flags_t flags = BSON_VALIDATE_NONE;
 
-    const auto flip_if = [&flags](bool cond, ::bson_validate_flags_t flag) {
+    auto const flip_if = [&flags](bool cond, ::bson_validate_flags_t flag) {
         if (cond) {
             // this static cast needed to get around invalid conversion warnings...
             flags = static_cast<::bson_validate_flags_t>(flags | flag);
@@ -93,17 +90,18 @@ stdx::optional<document::view> validate(const std::uint8_t* data,
     ::bson_t bson;
     if (!::bson_init_static(&bson, data, length)) {
         // if we can't even initialize a bson_t we just say the error is at offset 0.
-        if (invalid_offset)
+        if (invalid_offset) {
             *invalid_offset = 0u;
-        return {};
+        }
+        return bsoncxx::v_noabi::stdx::nullopt;
     }
 
     if (!::bson_validate(&bson, flags, invalid_offset)) {
-        return {};
+        return bsoncxx::v_noabi::stdx::nullopt;
     }
 
     return document::view{data, length};
 }
 
-}  // namespace v_noabi
-}  // namespace bsoncxx
+} // namespace v_noabi
+} // namespace bsoncxx

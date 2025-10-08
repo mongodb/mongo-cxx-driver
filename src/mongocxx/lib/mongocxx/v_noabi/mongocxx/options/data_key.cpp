@@ -13,10 +13,9 @@
 // limitations under the License.
 
 #include <mongocxx/options/data_key.hpp>
-#include <mongocxx/private/libbson.hh>
-#include <mongocxx/private/libmongoc.hh>
 
-#include <mongocxx/config/prelude.hpp>
+#include <mongocxx/private/bson.hh>
+#include <mongocxx/private/mongoc.hh>
 
 namespace mongocxx {
 namespace v_noabi {
@@ -27,8 +26,7 @@ data_key& data_key::master_key(bsoncxx::v_noabi::document::view_or_value master_
     return *this;
 }
 
-const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value>&
-data_key::master_key() const {
+bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const& data_key::master_key() const {
     return _master_key;
 }
 
@@ -38,13 +36,12 @@ data_key& data_key::key_alt_names(std::vector<std::string> key_alt_names) {
     return *this;
 }
 
-const std::vector<std::string>& data_key::key_alt_names() const {
+std::vector<std::string> const& data_key::key_alt_names() const {
     return _key_alt_names;
 }
 
 void* data_key::convert() const {
-    mongoc_client_encryption_datakey_opts_t* opts_t =
-        libmongoc::client_encryption_datakey_opts_new();
+    mongoc_client_encryption_datakey_opts_t* opts_t = libmongoc::client_encryption_datakey_opts_new();
 
     if (_master_key) {
         libbson::scoped_bson_t master_key{*_master_key};
@@ -67,8 +64,7 @@ void* data_key::convert() const {
 
     if (_key_material) {
         uint32_t size = static_cast<uint32_t>(_key_material->size());
-        libmongoc::client_encryption_datakey_opts_set_keymaterial(
-            opts_t, _key_material->data(), size);
+        libmongoc::client_encryption_datakey_opts_set_keymaterial(opts_t, _key_material->data(), size);
     }
 
     return opts_t;
@@ -79,10 +75,10 @@ data_key& data_key::key_material(data_key::key_material_type key_material) {
     return *this;
 }
 
-const bsoncxx::v_noabi::stdx::optional<data_key::key_material_type>& data_key::key_material() {
+bsoncxx::v_noabi::stdx::optional<data_key::key_material_type> const& data_key::key_material() {
     return _key_material;
 }
 
-}  // namespace options
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace options
+} // namespace v_noabi
+} // namespace mongocxx

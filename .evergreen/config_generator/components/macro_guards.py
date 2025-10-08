@@ -1,10 +1,11 @@
 from config_generator.components.funcs.compile import Compile
 from config_generator.components.funcs.fetch_c_driver_source import FetchCDriverSource
+from config_generator.components.funcs.install_uv import InstallUV
 from config_generator.components.funcs.setup import Setup
 
 from config_generator.etc.distros import find_large_distro, make_distro_str
 
-from shrub.v3.evg_build_variant import BuildVariant, DisplayTask
+from shrub.v3.evg_build_variant import BuildVariant
 from shrub.v3.evg_task import EvgTask, EvgTaskRef
 
 
@@ -14,9 +15,9 @@ TAG = 'macro-guards'
 # pylint: disable=line-too-long
 # fmt: off
 MATRIX = [
-    ('ubuntu2004', None   ),
-    ('ubuntu2004', 'gcc'  ),
-    ('ubuntu2004', 'clang'),
+    ('rhel80', None   ),
+    ('rhel80', 'gcc'  ),
+    ('rhel80', 'clang'),
 ]
 # fmt: on
 # pylint: enable=line-too-long
@@ -42,11 +43,12 @@ def tasks():
                 commands=[
                     Setup.call(),
                     FetchCDriverSource.call(),
+                    InstallUV.call(),
                     Compile.call(
                         build_type='Debug',
                         compiler=compiler,
-                        vars={'COMPILE_MACRO_GUARD_TESTS': 'ON'},
-                    )
+                        vars={'COMPILE_MACRO_GUARD_TESTS': 'ON', 'ENABLE_TESTS': 'ON'},
+                    ),
                 ],
             )
         )
@@ -60,11 +62,5 @@ def variants():
             name=f'{TAG}-matrix',
             display_name=f'{TAG}-matrix',
             tasks=[EvgTaskRef(name=f'.{TAG}')],
-            display_tasks=[
-                DisplayTask(
-                    name=f'{TAG}-matrix',
-                    execution_tasks=[f'.{TAG}'],
-                )
-            ],
         ),
     ]

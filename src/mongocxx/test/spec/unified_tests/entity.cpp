@@ -18,91 +18,89 @@
 
 #include <bsoncxx/string/to_string.hpp>
 
-#include <mongocxx/config/prelude.hpp>
-
 namespace mongocxx {
 namespace entity {
 
 template <typename Key, typename Entity, typename Map>
-bool _insert(const Key& k, Entity&& e, Map& m) {
+bool _insert(Key const& k, Entity&& e, Map& m) {
     bool result{};
     std::tie(std::ignore, result) = m.emplace(k, std::forward<Entity>(e));
     return result;
 }
 
-bool map::insert(const key_type& key, client&& c) {
+bool map::insert(key_type const& key, client&& c) {
     return _insert(key, std::move(c), _client_map);
 }
 
-bool map::insert(const key_type& key, mongocxx::database&& db) {
+bool map::insert(key_type const& key, mongocxx::database&& db) {
     return _insert(key, std::move(db), _database_map);
 }
 
-bool map::insert(const key_type& key, mongocxx::collection&& coll) {
+bool map::insert(key_type const& key, mongocxx::collection&& coll) {
     return _insert(key, std::move(coll), _collection_map);
 }
 
-bool map::insert(const key_type& key, mongocxx::client_session&& session) {
+bool map::insert(key_type const& key, mongocxx::client_session&& session) {
     return _insert(key, std::move(session), _session_map);
 }
 
-bool map::insert(const key_type& key, mongocxx::gridfs::bucket&& bucket) {
+bool map::insert(key_type const& key, mongocxx::gridfs::bucket&& bucket) {
     return _insert(key, std::move(bucket), _bucket_map);
 }
 
-bool map::insert(const key_type& key, mongocxx::change_stream&& stream) {
+bool map::insert(key_type const& key, mongocxx::change_stream&& stream) {
     return _insert(key, std::move(stream), _stream_map);
 }
 
-bool map::insert(const key_type& key, bsoncxx::types::bson_value::value&& value) {
+bool map::insert(key_type const& key, bsoncxx::types::bson_value::value&& value) {
     return _insert(key, std::move(value), _value_map);
 }
 
-bool map::insert(const key_type& key, mongocxx::cursor&& value) {
+bool map::insert(key_type const& key, mongocxx::cursor&& value) {
     return _insert(key, std::move(value), _cursor_map);
 }
 
-bool map::insert(const key_type& key, mongocxx::client_encryption&& value) {
+bool map::insert(key_type const& key, mongocxx::client_encryption&& value) {
     return _insert(key, std::move(value), _client_encryption_map);
 }
 
-client& map::get_client(const key_type& key) {
+client& map::get_client(key_type const& key) {
     return _client_map.at(key);
 }
 
-database& map::get_database(const key_type& key) {
+database& map::get_database(key_type const& key) {
     return _database_map.at(key);
 }
 
-collection& map::get_collection(const key_type& key) {
+collection& map::get_collection(key_type const& key) {
     return _collection_map.at(key);
 }
 
-client_session& map::get_client_session(const key_type& key) {
+client_session& map::get_client_session(key_type const& key) {
     return _session_map.at(key);
 }
 
-gridfs::bucket& map::get_bucket(const key_type& key) {
+gridfs::bucket& map::get_bucket(key_type const& key) {
     return _bucket_map.at(key);
 }
 
-change_stream& map::get_change_stream(const key_type& key) {
+change_stream& map::get_change_stream(key_type const& key) {
     return _stream_map.at(key);
 }
 
-bsoncxx::types::bson_value::value& map::get_value(const key_type& key) {
+bsoncxx::types::bson_value::value& map::get_value(key_type const& key) {
     return _value_map.at(key);
 }
 
-mongocxx::cursor& map::get_cursor(const key_type& key) {
+mongocxx::cursor& map::get_cursor(key_type const& key) {
     return _cursor_map.at(key);
 }
 
-mongocxx::client_encryption& map::get_client_encryption(const key_type& key) {
+mongocxx::client_encryption& map::get_client_encryption(key_type const& key) {
     return _client_encryption_map.at(key);
 }
 
-const std::type_info& map::type(const key_type& key) {
+std::type_info const& map::type(key_type const& key) {
     if (_client_encryption_map.find(key) != _client_encryption_map.end())
         return typeid(mongocxx::client_encryption);
     if (_database_map.find(key) != _database_map.end())
@@ -145,11 +143,11 @@ void map::clear() noexcept {
     _client_encryption_map.clear();
 }
 
-void map::erase(const key_type& key) {
-    _database_map.erase(key) || _collection_map.erase(key) || _session_map.erase(key) ||
-        _bucket_map.erase(key) || _stream_map.erase(key) || _value_map.erase(key) ||
-        _client_map.erase(key) || _cursor_map.erase(key) || _client_encryption_map.erase(key);
+void map::erase(key_type const& key) {
+    _database_map.erase(key) || _collection_map.erase(key) || _session_map.erase(key) || _bucket_map.erase(key) ||
+        _stream_map.erase(key) || _value_map.erase(key) || _client_map.erase(key) || _cursor_map.erase(key) ||
+        _client_encryption_map.erase(key);
 }
 
-}  // namespace entity
-}  // namespace mongocxx
+} // namespace entity
+} // namespace mongocxx

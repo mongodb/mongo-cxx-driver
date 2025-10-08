@@ -12,18 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <bsoncxx/private/make_unique.hh>
 #include <bsoncxx/types.hpp>
 
 #include <mongocxx/exception/error_code.hpp>
 #include <mongocxx/exception/logic_error.hpp>
-#include <mongocxx/private/conversions.hh>
-#include <mongocxx/private/libbson.hh>
-#include <mongocxx/private/libmongoc.hh>
-#include <mongocxx/private/read_preference.hh>
 #include <mongocxx/read_preference.hpp>
 
-#include <mongocxx/config/private/prelude.hh>
+#include <bsoncxx/private/make_unique.hh>
+
+#include <mongocxx/private/bson.hh>
+#include <mongocxx/private/conversions.hh>
+#include <mongocxx/private/mongoc.hh>
+#include <mongocxx/private/read_preference.hh>
 
 namespace mongocxx {
 namespace v_noabi {
@@ -31,14 +31,11 @@ namespace v_noabi {
 read_preference::read_preference(read_preference&&) noexcept = default;
 read_preference& read_preference::operator=(read_preference&&) noexcept = default;
 
-read_preference::read_preference(const read_preference& other)
-    : _impl(
-          bsoncxx::make_unique<impl>(libmongoc::read_prefs_copy(other._impl->read_preference_t))) {}
+read_preference::read_preference(read_preference const& other)
+    : _impl(bsoncxx::make_unique<impl>(libmongoc::read_prefs_copy(other._impl->read_preference_t))) {}
 
-read_preference& read_preference::operator=(const read_preference& other) {
-    _impl.reset(
-        bsoncxx::make_unique<impl>(libmongoc::read_prefs_copy(other._impl->read_preference_t))
-            .release());
+read_preference& read_preference::operator=(read_preference const& other) {
+    _impl.reset(bsoncxx::make_unique<impl>(libmongoc::read_prefs_copy(other._impl->read_preference_t)).release());
     return *this;
 }
 
@@ -47,8 +44,8 @@ read_preference::read_preference(std::unique_ptr<impl>&& implementation) {
 }
 
 read_preference::read_preference()
-    : _impl(bsoncxx::make_unique<impl>(libmongoc::read_prefs_new(
-          libmongoc::conversions::read_mode_t_from_read_mode(read_mode::k_primary)))) {}
+    : _impl(bsoncxx::make_unique<impl>(
+          libmongoc::read_prefs_new(libmongoc::conversions::read_mode_t_from_read_mode(read_mode::k_primary)))) {}
 
 read_preference::read_preference(read_mode mode) : read_preference(mode, deprecated_tag{}) {}
 
@@ -59,9 +56,7 @@ read_preference::read_preference(read_mode mode, deprecated_tag)
 read_preference::read_preference(read_mode mode, bsoncxx::v_noabi::document::view_or_value tags)
     : read_preference(mode, std::move(tags), deprecated_tag{}) {}
 
-read_preference::read_preference(read_mode mode,
-                                 bsoncxx::v_noabi::document::view_or_value tags,
-                                 deprecated_tag)
+read_preference::read_preference(read_mode mode, bsoncxx::v_noabi::document::view_or_value tags, deprecated_tag)
     : read_preference(mode, deprecated_tag{}) {
     read_preference::tags(std::move(tags));
 }
@@ -69,8 +64,7 @@ read_preference::read_preference(read_mode mode,
 read_preference::~read_preference() = default;
 
 read_preference& read_preference::mode(read_mode mode) {
-    libmongoc::read_prefs_set_mode(_impl->read_preference_t,
-                                   libmongoc::conversions::read_mode_t_from_read_mode(mode));
+    libmongoc::read_prefs_set_mode(_impl->read_preference_t, libmongoc::conversions::read_mode_t_from_read_mode(mode));
 
     return *this;
 }
@@ -90,12 +84,11 @@ read_preference& read_preference::tags(bsoncxx::v_noabi::array::view_or_value ta
 }
 
 read_preference::read_mode read_preference::mode() const {
-    return libmongoc::conversions::read_mode_from_read_mode_t(
-        libmongoc::read_prefs_get_mode(_impl->read_preference_t));
+    return libmongoc::conversions::read_mode_from_read_mode_t(libmongoc::read_prefs_get_mode(_impl->read_preference_t));
 }
 
 bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view> read_preference::tags() const {
-    const bson_t* bson_tags = libmongoc::read_prefs_get_tags(_impl->read_preference_t);
+    bson_t const* bson_tags = libmongoc::read_prefs_get_tags(_impl->read_preference_t);
 
     if (bson_count_keys(bson_tags))
         return bsoncxx::v_noabi::document::view(bson_get_data(bson_tags), bson_tags->len);
@@ -126,14 +119,16 @@ bsoncxx::v_noabi::stdx::optional<std::chrono::seconds> read_preference::max_stal
 
 read_preference& read_preference::hedge(bsoncxx::v_noabi::document::view_or_value hedge) {
     libbson::scoped_bson_t hedge_bson{std::move(hedge)};
-
+    BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_BEGIN
     libmongoc::read_prefs_set_hedge(_impl->read_preference_t, hedge_bson.bson());
+    BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_END
     return *this;
 }
 
-const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view> read_preference::hedge()
-    const {
-    const bson_t* hedge_bson = libmongoc::read_prefs_get_hedge(_impl->read_preference_t);
+bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view> const read_preference::hedge() const {
+    BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_BEGIN
+    bson_t const* hedge_bson = libmongoc::read_prefs_get_hedge(_impl->read_preference_t);
+    BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_END
 
     if (!bson_empty(hedge_bson)) {
         return bsoncxx::v_noabi::document::view(bson_get_data(hedge_bson), hedge_bson->len);
@@ -142,14 +137,13 @@ const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view> read_pr
     return bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view>{};
 }
 
-bool operator==(const read_preference& lhs, const read_preference& rhs) {
-    return (lhs.mode() == rhs.mode()) && (lhs.tags() == rhs.tags()) &&
-           (lhs.max_staleness() == rhs.max_staleness());
+bool operator==(read_preference const& lhs, read_preference const& rhs) {
+    return (lhs.mode() == rhs.mode()) && (lhs.tags() == rhs.tags()) && (lhs.max_staleness() == rhs.max_staleness());
 }
 
-bool operator!=(const read_preference& lhs, const read_preference& rhs) {
+bool operator!=(read_preference const& lhs, read_preference const& rhs) {
     return !(lhs == rhs);
 }
 
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace v_noabi
+} // namespace mongocxx

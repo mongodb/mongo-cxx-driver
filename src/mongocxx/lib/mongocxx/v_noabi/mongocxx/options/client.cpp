@@ -14,8 +14,6 @@
 
 #include <mongocxx/options/client.hpp>
 
-#include <mongocxx/config/private/prelude.hh>
-
 namespace mongocxx {
 namespace v_noabi {
 namespace options {
@@ -25,7 +23,7 @@ client& client::tls_opts(tls tls_opts) {
     return *this;
 }
 
-const bsoncxx::v_noabi::stdx::optional<tls>& client::tls_opts() const {
+bsoncxx::v_noabi::stdx::optional<tls> const& client::tls_opts() const {
     return _tls_opts;
 }
 
@@ -33,7 +31,7 @@ client& client::ssl_opts(tls ssl_opts) {
     return tls_opts(std::move(ssl_opts));
 }
 
-const bsoncxx::v_noabi::stdx::optional<tls>& client::ssl_opts() const {
+bsoncxx::v_noabi::stdx::optional<tls> const& client::ssl_opts() const {
     return tls_opts();
 }
 
@@ -42,7 +40,7 @@ client& client::apm_opts(apm apm_opts) {
     return *this;
 }
 
-const bsoncxx::v_noabi::stdx::optional<apm>& client::apm_opts() const {
+bsoncxx::v_noabi::stdx::optional<apm> const& client::apm_opts() const {
     return _apm_opts;
 }
 
@@ -51,7 +49,7 @@ client& client::auto_encryption_opts(auto_encryption auto_encryption_opts) {
     return *this;
 }
 
-const bsoncxx::v_noabi::stdx::optional<auto_encryption>& client::auto_encryption_opts() const {
+bsoncxx::v_noabi::stdx::optional<auto_encryption> const& client::auto_encryption_opts() const {
     return _auto_encrypt_opts;
 }
 
@@ -60,10 +58,10 @@ client& client::server_api_opts(server_api server_api_opts) {
     return *this;
 }
 
-const bsoncxx::v_noabi::stdx::optional<server_api>& client::server_api_opts() const {
+bsoncxx::v_noabi::stdx::optional<server_api> const& client::server_api_opts() const {
     return _server_api_opts;
 }
 
-}  // namespace options
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace options
+} // namespace v_noabi
+} // namespace mongocxx

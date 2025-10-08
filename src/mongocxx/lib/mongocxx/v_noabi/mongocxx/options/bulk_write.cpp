@@ -14,8 +14,6 @@
 
 #include <mongocxx/options/bulk_write.hpp>
 
-#include <mongocxx/config/private/prelude.hh>
-
 namespace mongocxx {
 namespace v_noabi {
 namespace options {
@@ -36,8 +34,7 @@ bulk_write& bulk_write::write_concern(mongocxx::v_noabi::write_concern wc) {
     return *this;
 }
 
-const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern>&
-bulk_write::write_concern() const {
+bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern> const& bulk_write::write_concern() const {
     return _write_concern;
 }
 
@@ -46,7 +43,7 @@ bulk_write& bulk_write::bypass_document_validation(bool bypass_document_validati
     return *this;
 }
 
-const bsoncxx::v_noabi::stdx::optional<bool> bulk_write::bypass_document_validation() const {
+bsoncxx::v_noabi::stdx::optional<bool> const bulk_write::bypass_document_validation() const {
     return _bypass_document_validation;
 }
 
@@ -55,8 +52,7 @@ bulk_write& bulk_write::let(bsoncxx::v_noabi::document::view_or_value let) {
     return *this;
 }
 
-const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> bulk_write::let()
-    const {
+bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const bulk_write::let() const {
     return _let;
 }
 
@@ -65,11 +61,10 @@ bulk_write& bulk_write::comment(bsoncxx::v_noabi::types::bson_value::view_or_val
     return *this;
 }
 
-const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value>
-bulk_write::comment() const {
+bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value> const bulk_write::comment() const {
     return _comment;
 }
 
-}  // namespace options
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace options
+} // namespace v_noabi
+} // namespace mongocxx

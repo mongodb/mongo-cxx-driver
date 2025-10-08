@@ -1,6 +1,7 @@
+from config_generator.components.funcs.install_uv import InstallUV
 from config_generator.components.funcs.setup import Setup
 
-from config_generator.etc.distros import find_large_distro
+from config_generator.etc.distros import find_small_distro
 from config_generator.etc.function import Function
 from config_generator.etc.utils import bash_exec
 
@@ -17,7 +18,8 @@ class Lint(Function):
     commands = bash_exec(
         command_type=EvgCommandType.TEST,
         working_dir='mongo-cxx-driver',
-        script='python etc/clang_format.py lint',
+        env={'DRYRUN': '1'},
+        script='${UV_INSTALL_DIR}/uv run --frozen etc/clang-format-all.sh',
     )
 
 
@@ -26,16 +28,17 @@ def functions():
 
 
 def tasks():
-    distro_name = 'ubuntu1804'
-    distro = find_large_distro(distro_name)
+    distro_name = 'rhel80'
+    distro = find_small_distro(distro_name)
 
     return [
         EvgTask(
             name=TAG,
-            tags=[TAG, distro_name],
+            tags=[TAG],
             run_on=distro.name,
             commands=[
                 Setup.call(),
+                InstallUV.call(),
                 Lint.call(),
             ],
         ),

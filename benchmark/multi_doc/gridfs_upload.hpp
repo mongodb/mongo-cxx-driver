@@ -19,6 +19,7 @@
 #include <vector>
 
 #include <bsoncxx/string/to_string.hpp>
+
 #include <mongocxx/client.hpp>
 #include <mongocxx/gridfs/bucket.hpp>
 #include <mongocxx/instance.hpp>
@@ -33,10 +34,7 @@ class gridfs_upload : public microbench {
    public:
     // The task size comes from the Driver Perfomance Benchmarking Reference Doc.
     gridfs_upload(std::string file_name)
-        : microbench{"TestGridFsUpload",
-                     52.43,
-                     std::set<benchmark_type>{benchmark_type::multi_bench,
-                                              benchmark_type::write_bench}},
+        : microbench{"TestGridFsUpload", 52.43, std::set<benchmark_type>{benchmark_type::multi_bench, benchmark_type::write_bench}},
           _conn{mongocxx::uri{}},
           _file_name{file_name} {}
 
@@ -59,8 +57,8 @@ class gridfs_upload : public microbench {
 void gridfs_upload::setup() {
     std::ifstream stream{_file_name};
     stream >> std::noskipws;
-    _gridfs_file = std::vector<std::uint8_t>{(std::istream_iterator<unsigned char>{stream}),
-                                             (std::istream_iterator<unsigned char>{})};
+    _gridfs_file = std::vector<std::uint8_t>{
+        (std::istream_iterator<unsigned char>{stream}), (std::istream_iterator<unsigned char>{})};
 
     mongocxx::database db = _conn["perftest"];
     db.drop();
@@ -86,4 +84,4 @@ void gridfs_upload::task() {
     uploader.write(_gridfs_file.data(), _gridfs_file.size());
     uploader.close();
 }
-}  // namespace benchmark
+} // namespace benchmark

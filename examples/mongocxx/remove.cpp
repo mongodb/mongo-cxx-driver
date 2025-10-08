@@ -34,14 +34,22 @@ int EXAMPLES_CDECL main() {
     auto db = conn["test"];
 
     // Remove all documents that match a condition.
-    { db["restaurants"].delete_many(make_document(kvp("borough", "Manhattan"))); }
+    {
+        db["restaurants"].delete_many(make_document(kvp("borough", "Manhattan")));
+    }
 
     // Remove one document that matches a condition.
-    { db["restaurants"].delete_one(make_document(kvp("borough", "Queens"))); }
+    {
+        db["restaurants"].delete_one(make_document(kvp("borough", "Queens")));
+    }
 
     // Remove all documents in a collection.
-    { db["restaurants"].delete_many({}); }
+    {
+        db["restaurants"].delete_many({});
+    }
 
     // Drop a collection.
-    { db["restaurants"].drop(); }
+    {
+        db["restaurants"].drop();
+    }
 }

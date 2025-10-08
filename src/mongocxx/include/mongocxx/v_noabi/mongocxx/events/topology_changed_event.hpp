@@ -27,15 +27,14 @@ namespace v_noabi {
 namespace events {
 
 ///
-/// An event notification sent when the driver observes a change in any of the servers it is
-/// connected to or a change in the overall server topology.
+/// A change in the topology description (including its server descriptions).
 ///
 /// @see
-/// - "TopologyDescriptionChangedEvent" in https://github.com/mongodb/specifications/blob/master/source/server-discovery-and-monitoring/server-discovery-and-monitoring.md
+/// - [SDAM Logging and Monitoring Specification (MongoDB Specifications)](https://specifications.readthedocs.io/en/latest/server-discovery-and-monitoring/server-discovery-and-monitoring-logging-and-monitoring/)
 ///
 class topology_changed_event {
    public:
-    explicit topology_changed_event(const void* event);
+    explicit topology_changed_event(void const* event);
 
     ///
     /// Destroys a topology_changed_event.
@@ -45,8 +44,8 @@ class topology_changed_event {
     topology_changed_event(topology_changed_event&&) = default;
     topology_changed_event& operator=(topology_changed_event&&) = default;
 
-    topology_changed_event(const topology_changed_event&) = default;
-    topology_changed_event& operator=(const topology_changed_event&) = default;
+    topology_changed_event(topology_changed_event const&) = default;
+    topology_changed_event& operator=(topology_changed_event const&) = default;
 
     ///
     /// An opaque id, unique to this topology for this mongocxx::v_noabi::client or
@@ -71,12 +70,12 @@ class topology_changed_event {
     MONGOCXX_ABI_EXPORT_CDECL(topology_description) new_description() const;
 
    private:
-    const void* _event;
+    void const* _event;
 };
 
-}  // namespace events
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace events
+} // namespace v_noabi
+} // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
 

@@ -15,10 +15,9 @@
 #include <bsoncxx/builder/basic/document.hpp>
 
 #include <mongocxx/options/aggregate.hpp>
+
 #include <mongocxx/private/append_aggregate_options.hh>
 #include <mongocxx/private/read_preference.hh>
-
-#include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
 namespace v_noabi {
@@ -85,56 +84,50 @@ aggregate& aggregate::comment(bsoncxx::v_noabi::types::bson_value::view_or_value
     return *this;
 }
 
-const bsoncxx::v_noabi::stdx::optional<bool>& aggregate::allow_disk_use() const {
+bsoncxx::v_noabi::stdx::optional<bool> const& aggregate::allow_disk_use() const {
     return _allow_disk_use;
 }
 
-const bsoncxx::v_noabi::stdx::optional<std::int32_t>& aggregate::batch_size() const {
+bsoncxx::v_noabi::stdx::optional<std::int32_t> const& aggregate::batch_size() const {
     return _batch_size;
 }
 
-const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value>&
-aggregate::collation() const {
+bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const& aggregate::collation() const {
     return _collation;
 }
 
-const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value>& aggregate::let()
-    const {
+bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const& aggregate::let() const {
     return _let;
 }
 
-const bsoncxx::v_noabi::stdx::optional<std::chrono::milliseconds>& aggregate::max_time() const {
+bsoncxx::v_noabi::stdx::optional<std::chrono::milliseconds> const& aggregate::max_time() const {
     return _max_time;
 }
 
-const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::read_preference>&
-aggregate::read_preference() const {
+bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::read_preference> const& aggregate::read_preference() const {
     return _read_preference;
 }
 
-const bsoncxx::v_noabi::stdx::optional<bool>& aggregate::bypass_document_validation() const {
+bsoncxx::v_noabi::stdx::optional<bool> const& aggregate::bypass_document_validation() const {
     return _bypass_document_validation;
 }
 
-const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::hint>& aggregate::hint() const {
+bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::hint> const& aggregate::hint() const {
     return _hint;
 }
 
-const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::read_concern>& aggregate::read_concern()
-    const {
+bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::read_concern> const& aggregate::read_concern() const {
     return _read_concern;
 }
 
-const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern>& aggregate::write_concern()
-    const {
+bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern> const& aggregate::write_concern() const {
     return _write_concern;
 }
 
-const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value>&
-aggregate::comment() const {
+bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value> const& aggregate::comment() const {
     return _comment;
 }
 
-}  // namespace options
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace options
+} // namespace v_noabi
+} // namespace mongocxx

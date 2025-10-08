@@ -24,8 +24,7 @@ namespace mongocxx {
 namespace v_noabi {
 
 ///
-/// Class representing an error encountered when attempting to perform the requested GridFS
-/// operation.
+/// An exception thrown during a GridFS operation.
 ///
 /// @see
 /// - @ref mongocxx::v_noabi::exception
@@ -36,14 +35,14 @@ class gridfs_exception : public exception {
 
     gridfs_exception(gridfs_exception&&) = default;
     gridfs_exception& operator=(gridfs_exception&&) = default;
-    gridfs_exception(const gridfs_exception&) = default;
-    gridfs_exception& operator=(const gridfs_exception&) = default;
+    gridfs_exception(gridfs_exception const&) = default;
+    gridfs_exception& operator=(gridfs_exception const&) = default;
 
     using exception::exception;
 };
 
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace v_noabi
+} // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
 

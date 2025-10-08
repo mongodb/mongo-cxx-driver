@@ -26,7 +26,6 @@
 #include <bsoncxx/document/value.hpp>
 #include <bsoncxx/document/view.hpp>
 #include <bsoncxx/oid.hpp>
-#include <bsoncxx/private/make_unique.hh>
 #include <bsoncxx/stdx/string_view.hpp>
 #include <bsoncxx/string/to_string.hpp>
 #include <bsoncxx/types/bson_value/view.hpp>
@@ -40,6 +39,8 @@
 #include <mongocxx/instance.hpp>
 #include <mongocxx/options/gridfs/upload.hpp>
 #include <mongocxx/result/gridfs/upload.hpp>
+
+#include <bsoncxx/private/make_unique.hh>
 
 #include <bsoncxx/test/catch.hh>
 
@@ -69,8 +70,7 @@ std::int64_t get_length_of_gridfs_file(gridfs::bucket bucket, types::bson_value:
     return (doc["length"].get_int64().value);
 }
 
-bsoncxx::stdx::optional<test_util::item_t> transform_hex(test_util::item_t pair,
-                                                         builder::basic::array* context) {
+bsoncxx::stdx::optional<test_util::item_t> transform_hex(test_util::item_t pair, builder::basic::array* context) {
     if (!pair.first) {
         return {pair};
     }
@@ -88,18 +88,17 @@ bsoncxx::stdx::optional<test_util::item_t> transform_hex(test_util::item_t pair,
         return {pair};
     }
 
-    std::basic_string<std::uint8_t> bytes =
-        test_util::convert_hex_string_to_bytes(data["$hex"].get_string().value);
-    types::b_binary binary_data = {
-        binary_sub_type::k_binary, static_cast<std::uint32_t>(bytes.size()), bytes.data()};
+    std::basic_string<std::uint8_t> bytes = test_util::convert_hex_string_to_bytes(data["$hex"].get_string().value);
+    types::b_binary binary_data = {binary_sub_type::k_binary, static_cast<std::uint32_t>(bytes.size()), bytes.data()};
 
     context->append(binary_data);
 
     auto view = context->view();
     auto length = std::distance(view.cbegin(), view.cend());
 
-    return {std::make_pair(bsoncxx::stdx::optional<bsoncxx::stdx::string_view>("data"),
-                           view[static_cast<std::uint32_t>(length - 1)].get_value())};
+    return {std::make_pair(
+        bsoncxx::stdx::optional<bsoncxx::stdx::string_view>("data"),
+        view[static_cast<std::uint32_t>(length - 1)].get_value())};
 }
 
 // The GridFS spec specifies the expected binary data in the form of { $hex: "<hexadecimal string>"
@@ -109,8 +108,7 @@ document::value convert_hex_data_to_binary(document::view document) {
     return test_util::transform_document(document, transform_hex);
 }
 
-bsoncxx::stdx::optional<test_util::item_t> convert_length_to_int64(test_util::item_t pair,
-                                                                   builder::basic::array*) {
+bsoncxx::stdx::optional<test_util::item_t> convert_length_to_int64(test_util::item_t pair, builder::basic::array*) {
     if (!pair.first) {
         return {pair};
     }
@@ -124,18 +122,16 @@ bsoncxx::stdx::optional<test_util::item_t> convert_length_to_int64(test_util::it
 
     types::b_int64 length = {value.get_int32()};
 
-    return {std::make_pair(bsoncxx::stdx::optional<bsoncxx::stdx::string_view>("length"),
-                           types::bson_value::view{length})};
+    return {
+        std::make_pair(bsoncxx::stdx::optional<bsoncxx::stdx::string_view>("length"), types::bson_value::view{length})};
 }
 
 void compare_collections(database db) {
     cursor expected_files_cursor = db["expected.files"].find({});
     cursor actual_files_cursor = db["fs.files"].find({});
 
-    std::vector<document::view> expected_files{expected_files_cursor.begin(),
-                                               expected_files_cursor.end()};
-    std::vector<document::view> actual_files{actual_files_cursor.begin(),
-                                             actual_files_cursor.end()};
+    std::vector<document::view> expected_files{expected_files_cursor.begin(), expected_files_cursor.end()};
+    std::vector<document::view> actual_files{actual_files_cursor.begin(), actual_files_cursor.end()};
 
     REQUIRE(expected_files.size() == actual_files.size());
 
@@ -163,10 +159,8 @@ void compare_collections(database db) {
     cursor expected_chunks_cursor = db["expected.chunks"].find({});
     cursor actual_chunks_cursor = db["fs.chunks"].find({});
 
-    std::vector<document::view> expected_chunks{expected_chunks_cursor.begin(),
-                                                expected_chunks_cursor.end()};
-    std::vector<document::view> actual_chunks{actual_chunks_cursor.begin(),
-                                              actual_chunks_cursor.end()};
+    std::vector<document::view> expected_chunks{expected_chunks_cursor.begin(), expected_chunks_cursor.end()};
+    std::vector<document::view> actual_chunks{actual_chunks_cursor.begin(), actual_chunks_cursor.end()};
 
     REQUIRE(expected_chunks.size() == actual_chunks.size());
 
@@ -189,11 +183,8 @@ void compare_collections(database db) {
 }
 
 // Run the download tests from the GridFS spec.
-void test_download(database db,
-                   gridfs::bucket bucket,
-                   document::view operation,
-                   document::view assert_doc) {
-    static_cast<void>(db);  // Unused.
+void test_download(database db, gridfs::bucket bucket, document::view operation, document::view assert_doc) {
+    static_cast<void>(db); // Unused.
 
     REQUIRE(operation["arguments"]);
     document::view arguments = operation["arguments"].get_document().value;
@@ -221,8 +212,7 @@ void test_download(database db,
 
         // Otherwise, an error should occur when reading from the stream.
         gridfs::downloader downloader = bucket.open_download_stream(id);
-        REQUIRE_THROWS_AS(downloader.read(actual.get(), static_cast<std::size_t>(length)),
-                          std::exception);
+        REQUIRE_THROWS_AS(downloader.read(actual.get(), static_cast<std::size_t>(length)), std::exception);
 
         return;
     }
@@ -249,10 +239,7 @@ void test_download(database db,
 }
 
 // Run the download tests from the GridFS spec.
-void test_upload(database db,
-                 gridfs::bucket bucket,
-                 document::view operation,
-                 document::view assert_doc) {
+void test_upload(database db, gridfs::bucket bucket, document::view operation, document::view assert_doc) {
     REQUIRE(operation["arguments"]);
     document::view arguments = operation["arguments"].get_document().value;
 
@@ -294,8 +281,7 @@ void test_upload(database db,
 
         bsoncxx::document::value transformed_data = test_util::transform_document(
             array_element.get_document().value,
-            [id](test_util::item_t pair,
-                 builder::basic::array* context) -> bsoncxx::stdx::optional<test_util::item_t> {
+            [id](test_util::item_t pair, builder::basic::array* context) -> bsoncxx::stdx::optional<test_util::item_t> {
                 if (!pair.first) {
                     return {pair};
                 }
@@ -305,8 +291,7 @@ void test_upload(database db,
 
                 std::string key_string = bsoncxx::string::to_string(key);
 
-                if ((key_string != "_id" && key_string != "files_id") ||
-                    value.type() != type::k_string) {
+                if ((key_string != "_id" && key_string != "files_id") || value.type() != type::k_string) {
                     auto new_pair = transform_hex(pair, context);
 
                     if (!new_pair) {
@@ -339,10 +324,7 @@ void test_upload(database db,
     compare_collections(db);
 }
 
-void test_delete(database db,
-                 gridfs::bucket bucket,
-                 document::view operation,
-                 document::view assert_doc) {
+void test_delete(database db, gridfs::bucket bucket, document::view operation, document::view assert_doc) {
     REQUIRE(operation["arguments"]);
     document::view arguments = operation["arguments"].get_document().value;
 
@@ -370,12 +352,12 @@ void test_delete(database db,
 // function is used as a placeholder for the harness to call instead of actually running the tests.
 void test_download_by_name(database, gridfs::bucket, document::view, document::view) {}
 
-std::map<std::string,
-         std::function<void(database db, gridfs::bucket, document::view, document::view)>>
-    gridfs_test_runners = {{"delete", test_delete},
-                           {"download", test_download},
-                           {"download_by_name", test_download_by_name},
-                           {"upload", test_upload}};
+std::map<std::string, std::function<void(database db, gridfs::bucket, document::view, document::view)>>
+    gridfs_test_runners = {
+        {"delete", test_delete},
+        {"download", test_download},
+        {"download_by_name", test_download_by_name},
+        {"upload", test_upload}};
 
 // Clears the collections and initializes them as the spec describes.
 void initialize_collections(database db, document::view data) {
@@ -398,9 +380,8 @@ void initialize_collections(database db, document::view data) {
     REQUIRE(data["files"]);
     REQUIRE(data["chunks"]);
 
-    auto sanitize =
-        [](test_util::item_t pair,
-           builder::basic::array* context) -> bsoncxx::stdx::optional<test_util::item_t> {
+    auto sanitize = [](test_util::item_t pair,
+                       builder::basic::array* context) -> bsoncxx::stdx::optional<test_util::item_t> {
         auto new_pair = transform_hex(pair, context);
 
         if (!new_pair) {
@@ -417,15 +398,13 @@ void initialize_collections(database db, document::view data) {
     for (auto&& document : data["files"].get_array().value) {
         // Any instances of { $hex: "..." } are converted to bsoncxx::types::b_binary values before
         // insertion.
-        files_documents.push_back(
-            test_util::transform_document(document.get_document().value, sanitize));
+        files_documents.push_back(test_util::transform_document(document.get_document().value, sanitize));
     }
 
     for (auto&& document : data["chunks"].get_array().value) {
         // Any instances of { $hex: "..." } are converted to bsoncxx::types::b_binary values before
         // insertion.
-        chunks_documents.push_back(
-            test_util::transform_document(document.get_document().value, sanitize));
+        chunks_documents.push_back(test_util::transform_document(document.get_document().value, sanitize));
     }
 
     if (!files_documents.empty()) {
@@ -467,8 +446,7 @@ void run_gridfs_tests_in_file(std::string test_path, client* client) {
     gridfs::bucket bucket = db.gridfs_bucket();
 
     for (auto&& test : tests) {
-        std::string description =
-            bsoncxx::string::to_string(test["description"].get_string().value);
+        std::string description = bsoncxx::string::to_string(test["description"].get_string().value);
         INFO("Test description: " << description);
         initialize_collections(db, test_spec_view["data"].get_document().value);
 
@@ -484,8 +462,7 @@ void run_gridfs_tests_in_file(std::string test_path, client* client) {
         document::view assert_doc = test["assert"].get_document().value;
 
         REQUIRE(act["operation"]);
-        auto test_runner =
-            gridfs_test_runners[bsoncxx::string::to_string(act["operation"].get_string().value)];
+        auto test_runner = gridfs_test_runners[bsoncxx::string::to_string(act["operation"].get_string().value)];
         test_runner(db, bucket, act, assert_doc);
     }
 }
@@ -497,12 +474,12 @@ TEST_CASE("GridFS spec automated tests", "[gridfs_spec]") {
 
     // Because the GridFS spec tests use write commands that were only added to MongoDB in version
     // 2.6, the tests will not run against any server versions older than that.
-    if (test_util::compare_versions(test_util::get_server_version(client), "2.6") < 0) {
+    if (test_util::compare_versions(test_util::get_server_version(), "2.6") < 0) {
         return;
     }
 
-    auto cb = [&](const std::string& test_file) { run_gridfs_tests_in_file(test_file, &client); };
+    auto cb = [&](std::string const& test_file) { run_gridfs_tests_in_file(test_file, &client); };
 
     mongocxx::spec::run_tests_in_suite("GRIDFS_TESTS_PATH", cb);
 }
-}  // namespace
+} // namespace

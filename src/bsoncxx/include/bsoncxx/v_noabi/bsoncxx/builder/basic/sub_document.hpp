@@ -34,11 +34,14 @@ namespace impl {
 template <typename T>
 void value_append(core* core, T&& t);
 
-}  // namespace impl
+} // namespace impl
 
 ///
-/// An internal class of builder::basic.
-/// Users should almost always construct a builder::basic::document instead.
+/// Represents a document element being constructed during an append operation.
+///
+/// @see
+/// - @ref bsoncxx::v_noabi::builder::basic::array
+/// - @ref bsoncxx::v_noabi::builder::basic::document
 ///
 class sub_document {
    public:
@@ -63,8 +66,7 @@ class sub_document {
     // Appends a basic::kvp where the key is a non-owning string view.
     //
     template <typename K, typename V>
-    detail::requires_t<void, detail::is_alike<K, stdx::string_view>>  //
-    append_(std::tuple<K, V>&& t) {
+    detail::requires_t<void, detail::is_alike<K, stdx::string_view>> append_(std::tuple<K, V>&& t) {
         _core->key_view(std::forward<K>(std::get<0>(t)));
         impl::value_append(_core, std::forward<V>(std::get<1>(t)));
     }
@@ -73,8 +75,7 @@ class sub_document {
     // Appends a basic::kvp where the key is an owning STL string.
     //
     template <typename K, typename V>
-    detail::requires_t<void, detail::is_alike<K, std::string>>  //
-    append_(std::tuple<K, V>&& t) {
+    detail::requires_t<void, detail::is_alike<K, std::string>> append_(std::tuple<K, V>&& t) {
         _core->key_owned(std::forward<K>(std::get<0>(t)));
         impl::value_append(_core, std::forward<V>(std::get<1>(t)));
     }
@@ -83,7 +84,7 @@ class sub_document {
     // Appends a basic::kvp where the key is a string literal
     //
     template <std::size_t n, typename V>
-    void append_(std::tuple<const char (&)[n], V>&& t) {
+    void append_(std::tuple<char const (&)[n], V>&& t) {
         _core->key_view(stdx::string_view{std::get<0>(t), n - 1});
         impl::value_append(_core, std::forward<V>(std::get<1>(t)));
     }
@@ -98,10 +99,10 @@ class sub_document {
     core* _core;
 };
 
-}  // namespace basic
-}  // namespace builder
-}  // namespace v_noabi
-}  // namespace bsoncxx
+} // namespace basic
+} // namespace builder
+} // namespace v_noabi
+} // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>
 

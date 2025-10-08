@@ -32,7 +32,7 @@ namespace v_noabi {
 namespace options {
 
 ///
-/// Class representing options for explicit client-side encryption.
+/// Used by @ref mongocxx::v_noabi::client_encryption.
 ///
 class encrypt {
    public:
@@ -62,8 +62,8 @@ class encrypt {
     /// @return
     ///   An optional owning bson_value containing the key_id.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(
-        const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value>&)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<
+                              bsoncxx::v_noabi::types::bson_value::view_or_value> const&)
     key_id() const;
 
     ///
@@ -87,7 +87,7 @@ class encrypt {
     /// @return
     ///   An optional key name.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<std::string>&)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<std::string> const&)
     key_alt_name() const;
 
     ///
@@ -159,7 +159,7 @@ class encrypt {
     /// @return
     ///   An optional algorithm.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<encryption_algorithm>&)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<encryption_algorithm> const&)
     algorithm() const;
 
     ///
@@ -178,7 +178,7 @@ class encrypt {
     /// @return
     ///   An optional contention factor.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<int64_t>&)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<int64_t> const&)
     contention_factor() const;
 
     ///
@@ -197,7 +197,7 @@ class encrypt {
     /// @return
     ///   A query type.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<encryption_query_type>&)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<encryption_query_type> const&)
     query_type() const;
 
     ///
@@ -211,7 +211,7 @@ class encrypt {
     /// @return
     ///   An optional range options.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<options::range>&)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<options::range> const&)
     range_opts() const;
 
    private:
@@ -227,9 +227,9 @@ class encrypt {
     bsoncxx::v_noabi::stdx::optional<options::range> _range_opts;
 };
 
-}  // namespace options
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace options
+} // namespace v_noabi
+} // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
 

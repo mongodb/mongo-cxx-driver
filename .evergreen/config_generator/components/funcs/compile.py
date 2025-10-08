@@ -17,7 +17,6 @@ class Compile(Function):
         },
         include_expansions_in_env=[
             'branch_name',
-            'BSON_EXTRA_ALIGNMENT',
             'BSONCXX_POLYFILL',
             'build_type',
             'COMPILE_MACRO_GUARD_TESTS',
@@ -31,6 +30,7 @@ class Compile(Function):
             'USE_SANITIZER_ASAN',
             'USE_SANITIZER_UBSAN',
             'USE_STATIC_LIBS',
+            'UV_INSTALL_DIR',
         ],
         working_dir='mongo-cxx-driver',
         script='.evergreen/scripts/compile.sh',

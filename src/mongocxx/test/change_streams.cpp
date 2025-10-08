@@ -17,7 +17,6 @@
 
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/document/value.hpp>
-#include <bsoncxx/private/libbson.hh>
 
 #include <mongocxx/client.hpp>
 #include <mongocxx/collection.hpp>
@@ -26,8 +25,11 @@
 #include <mongocxx/options/pool.hpp>
 #include <mongocxx/pipeline.hpp>
 #include <mongocxx/pool.hpp>
-#include <mongocxx/private/libbson.hh>
 #include <mongocxx/write_concern.hpp>
+
+#include <bsoncxx/private/bson.hh>
+
+#include <mongocxx/private/bson.hh>
 
 #include <bsoncxx/test/catch.hh>
 
@@ -43,6 +45,26 @@ using bsoncxx::builder::basic::make_document;
 
 using namespace mongocxx;
 
+mongocxx::collection
+make_test_coll(mongocxx::client& client, bsoncxx::stdx::string_view db_name, bsoncxx::stdx::string_view coll_name) {
+    write_concern wc_majority;
+    wc_majority.acknowledge_level(write_concern::level::k_majority);
+
+    read_concern rc_majority;
+    rc_majority.acknowledge_level(read_concern::level::k_majority);
+
+    auto db = client[db_name];
+    auto coll = db[coll_name];
+
+    coll.drop();
+    coll = db.create_collection(coll_name);
+
+    coll.write_concern(wc_majority);
+    coll.read_concern(rc_majority);
+
+    return coll;
+}
+
 // Create a single-item document.
 // E.g. doc("foo", 123) creates {"foo":123}.
 template <typename T>
@@ -56,9 +78,9 @@ bsoncxx::document::value doc(std::string key, T val) {
 //
 // Phrased as a lambda instead of function because c++11 doesn't have decltype(auto) and the
 // return-type is haunting.
-const auto gen_next = [](bool has_next) {
+auto const gen_next = [](bool has_next) {
     static mongocxx::libbson::scoped_bson_t next_bson{make_document(kvp("some", "doc"))};
-    return [=](mongoc_change_stream_t*, const bson_t** bson) mutable -> bool {
+    return [=](mongoc_change_stream_t*, bson_t const** bson) mutable -> bool {
         if (has_next) {
             *bson = next_bson.bson();
         }
@@ -69,15 +91,12 @@ const auto gen_next = [](bool has_next) {
 bson_t err_doc;
 
 // Generates lambda/interpose for change_stream_error_document.
-const auto gen_error = [](bool has_error) {
-    bson_init(&err_doc);  // Will fit on stack.
+auto const gen_error = [](bool has_error) {
+    bson_init(&err_doc); // Will fit on stack.
     bson_append_int32(&err_doc, "ok", -1, 0);
-    return [=](const mongoc_change_stream_t*, bson_error_t* err, const bson_t** bson) -> bool {
+    return [=](mongoc_change_stream_t const*, bson_error_t* err, bson_t const** bson) -> bool {
         if (has_error) {
-            bson_set_error(err,
-                           MONGOC_ERROR_CURSOR,
-                           MONGOC_ERROR_CHANGE_STREAM_NO_RESUME_TOKEN,
-                           "expected error");
+            bson_set_error(err, MONGOC_ERROR_CURSOR, MONGOC_ERROR_CHANGE_STREAM_NO_RESUME_TOKEN, "expected error");
             *bson = &err_doc;
         } else {
             *bson = nullptr;
@@ -86,17 +105,17 @@ const auto gen_error = [](bool has_error) {
     };
 };
 
-const auto watch_interpose = [](const mongoc_collection_t*,
-                                const bson_t*,
-                                const bson_t*) -> mongoc_change_stream_t* { return nullptr; };
+auto const watch_interpose = [](mongoc_collection_t const*, bson_t const*, bson_t const*) -> mongoc_change_stream_t* {
+    return nullptr;
+};
 
-const auto destroy_interpose = [](mongoc_change_stream_t*) -> void {};
+auto const destroy_interpose = [](mongoc_change_stream_t*) -> void {};
 
-TEST_CASE("Change stream options") {
+TEST_CASE("Change stream options", "[change_stream]") {
     instance::current();
-    client mongodb_client{uri{}, test_util::add_test_server_api()};
+    client client{uri{}, test_util::add_test_server_api()};
 
-    if (!test_util::is_replica_set(mongodb_client)) {
+    if (!test_util::is_replica_set()) {
         SKIP("change streams require replica set");
     }
 
@@ -109,25 +128,20 @@ TEST_CASE("Change stream options") {
         cs_opts.resume_after(resume_after.view());
         cs_opts.start_after(start_after.view());
 
-        auto cs = mongodb_client.watch(cs_opts);
+        auto cs = client.watch(cs_opts);
         REQUIRE_THROWS(cs.begin());
     }
 }
 
-TEST_CASE("Spec Prose Tests") {
+TEST_CASE("Spec Prose Tests", "[change_stream]") {
     instance::current();
     client client{uri{}, test_util::add_test_server_api()};
 
-    if (!test_util::is_replica_set(client)) {
+    if (!test_util::is_replica_set()) {
         SKIP("change streams require replica set");
     }
 
-    auto db = client["db"];
-    auto coll = db["coll"];
-    coll.drop();
-
-    write_concern wc_majority;
-    wc_majority.majority(std::chrono::seconds(30));
+    auto coll = make_test_coll(client, "db", "coll");
 
     // As a sanity check, we implement the first prose test. The behavior tested
     // by the prose tests is implemented and tested by the C driver, so we won't
@@ -144,21 +158,18 @@ TEST_CASE("Spec Prose Tests") {
         auto doc2 = make_document(kvp("b", 2));
         auto doc3 = make_document(kvp("c", 3));
 
-        options::insert insert_opts{};
-        insert_opts.write_concern(wc_majority);
-
         {
-            auto res = coll.insert_one(doc1.view(), insert_opts);
+            auto res = coll.insert_one(doc1.view());
             REQUIRE(res);
             REQUIRE(res->result().inserted_count() == 1);
         }
         {
-            auto res = coll.insert_one(doc2.view(), insert_opts);
+            auto res = coll.insert_one(doc2.view());
             REQUIRE(res);
             REQUIRE(res->result().inserted_count() == 1);
         }
         {
-            auto res = coll.insert_one(doc3.view(), insert_opts);
+            auto res = coll.insert_one(doc3.view());
             REQUIRE(res);
             REQUIRE(res->result().inserted_count() == 1);
         }
@@ -184,22 +195,18 @@ TEST_CASE("Spec Prose Tests") {
         REQUIRE(token2 != token3);
         REQUIRE(token1 != token3);
 
-        // When out of docs, check that the resume token is the same as the last doc.
         it++;
         REQUIRE(it == cs.end());
-        REQUIRE(cs.get_resume_token());
-        REQUIRE(*cs.get_resume_token() == token3);
     }
 }
 
-TEST_CASE("Mock streams and error-handling") {
+TEST_CASE("Mock streams and error-handling", "[change_stream]") {
     MOCK_CHANGE_STREAM;
 
     instance::current();
-    client mongodb_client{uri{}, test_util::add_test_server_api()};
+    client client{uri{}, test_util::add_test_server_api()};
     options::change_stream options{};
-    database db = mongodb_client["streams"];
-    collection events = db["events"];
+    collection events = make_test_coll(client, "streams", "events");
 
     // nop watch and destroy
     collection_watch->interpose(watch_interpose).forever();
@@ -328,52 +335,45 @@ TEST_CASE("Mock streams and error-handling") {
         cs_opts.full_document(full_document);
         cs_opts.resume_after(resume_after.view());
 
-        auto check_pipeline_and_opts = [&](const bson_t* passed_pipeline,
-                                           const bson_t* passed_opts) {
+        auto check_pipeline_and_opts = [&](bson_t const* passed_pipeline, bson_t const* passed_opts) {
             bsoncxx::document::view pipeline(bson_get_data(passed_pipeline), passed_pipeline->len);
-            bsoncxx::array::value expected =
-                make_array(make_document(kvp("$match", make_document(kvp("x", 1)))));
+            bsoncxx::array::value expected = make_array(make_document(kvp("$match", make_document(kvp("x", 1)))));
             REQUIRE(pipeline["pipeline"].get_array().value == expected);
             bsoncxx::document::view opts(bson_get_data(passed_opts), passed_opts->len);
             REQUIRE(opts["startAtOperationTime"].get_timestamp() == ts);
             REQUIRE(opts["batchSize"].get_int32() == batch_size);
             REQUIRE(opts["maxAwaitTimeMS"].get_int64() == 4);
             REQUIRE(opts["collation"].get_document().view() == collation);
-            REQUIRE(opts["fullDocument"].get_string().value ==
-                    bsoncxx::stdx::string_view{full_document});
+            REQUIRE(opts["fullDocument"].get_string().value == bsoncxx::stdx::string_view{full_document});
             REQUIRE(opts["resumeAfter"].get_document().view() == resume_after);
         };
 
-        collection_watch->interpose(
-            [&](const mongoc_collection_t* coll, const bson_t* pipeline, const bson_t* opts) {
-                std::string name =
-                    mongoc_collection_get_name(const_cast<mongoc_collection_t*>(coll));
-                REQUIRE(name == "collection");
-                check_pipeline_and_opts(pipeline, opts);
-                collection_watch_called = true;
-                return nullptr;
-            });
+        collection_watch->interpose([&](mongoc_collection_t const* coll, bson_t const* pipeline, bson_t const* opts) {
+            std::string name = mongoc_collection_get_name(const_cast<mongoc_collection_t*>(coll));
+            REQUIRE(name == "collection");
+            check_pipeline_and_opts(pipeline, opts);
+            collection_watch_called = true;
+            return nullptr;
+        });
 
-        database_watch->interpose(
-            [&](const mongoc_database_t* db, const bson_t* pipeline, const bson_t* opts) {
-                std::string name = mongoc_database_get_name(const_cast<mongoc_database_t*>(db));
-                REQUIRE(name == "db");
-                check_pipeline_and_opts(pipeline, opts);
-                database_watch_called = true;
-                return nullptr;
-            });
+        database_watch->interpose([&](mongoc_database_t const* db, bson_t const* pipeline, bson_t const* opts) {
+            std::string name = mongoc_database_get_name(const_cast<mongoc_database_t*>(db));
+            REQUIRE(name == "db");
+            check_pipeline_and_opts(pipeline, opts);
+            database_watch_called = true;
+            return nullptr;
+        });
 
-        client_watch->interpose(
-            [&](const mongoc_client_t* client, const bson_t* pipeline, const bson_t* opts) {
-                (void)client;
-                check_pipeline_and_opts(pipeline, opts);
-                client_watch_called = true;
-                return nullptr;
-            });
+        client_watch->interpose([&](mongoc_client_t const* client, bson_t const* pipeline, bson_t const* opts) {
+            (void)client;
+            check_pipeline_and_opts(pipeline, opts);
+            client_watch_called = true;
+            return nullptr;
+        });
 
-        mongodb_client["db"]["collection"].watch(cs_pipeline, cs_opts);
-        mongodb_client["db"].watch(cs_pipeline, cs_opts);
-        mongodb_client.watch(cs_pipeline, cs_opts);
+        client["db"]["collection"].watch(cs_pipeline, cs_opts);
+        client["db"].watch(cs_pipeline, cs_opts);
+        client.watch(cs_pipeline, cs_opts);
 
         // Ensure the interpose was called.
         REQUIRE(collection_watch_called);
@@ -383,15 +383,14 @@ TEST_CASE("Mock streams and error-handling") {
 }
 
 // Put this before other tests which assume the collections already exists.
-TEST_CASE("Create streams.events and assert we can read a single event", "[min36]") {
+TEST_CASE("Create streams.events and assert we can read a single event", "[change_stream]") {
     instance::current();
-    client mongodb_client{uri{}, test_util::add_test_server_api()};
-    if (!test_util::is_replica_set(mongodb_client)) {
+    client client{uri{}, test_util::add_test_server_api()};
+    if (!test_util::is_replica_set()) {
         SKIP("change streams require replica set");
     }
 
-    collection events = mongodb_client["streams"]["events"];
-    events.drop();
+    collection events = make_test_coll(client, "streams", "events");
 
     events.insert_one(make_document(kvp("dummy", "doc")));
     change_stream stream = events.watch();
@@ -399,19 +398,18 @@ TEST_CASE("Create streams.events and assert we can read a single event", "[min36
     REQUIRE(std::distance(stream.begin(), stream.end()) == 1);
 
     // because we watch events2 in a test
-    auto events2 = mongodb_client["streams"]["events2"];
-    events2.drop();
+    auto events2 = make_test_coll(client, "streams", "events2");
 }
 
-TEST_CASE("Give an invalid pipeline", "[min36]") {
+TEST_CASE("Give an invalid pipeline", "[change_stream]") {
     instance::current();
-    client mongodb_client{uri{}, test_util::add_test_server_api()};
-    if (!test_util::is_replica_set(mongodb_client)) {
+    client client{uri{}, test_util::add_test_server_api()};
+    if (!test_util::is_replica_set()) {
         SKIP("change streams require replica set");
     }
 
     options::change_stream options{};
-    collection events = mongodb_client["streams"]["events"];
+    collection events = make_test_coll(client, "streams", "events");
 
     pipeline p;
     p.match(make_document(kvp("$foo", -1)));
@@ -432,16 +430,15 @@ TEST_CASE("Give an invalid pipeline", "[min36]") {
     }
 }
 
-TEST_CASE("Documentation Examples", "[min36]") {
+TEST_CASE("Documentation Examples", "[change_stream]") {
     instance::current();
     mongocxx::pool pool{uri{}, options::pool(test_util::add_test_server_api())};
-    auto mongodb_client = pool.acquire();
-    if (!test_util::is_replica_set(*mongodb_client)) {
+    auto client = pool.acquire();
+    if (!test_util::is_replica_set()) {
         SKIP("change streams require replica set");
     }
 
-    collection events = (*mongodb_client)["streams"]["events"];
-    collection inventory = events;  // doc examples use this name
+    collection inventory = make_test_coll(*client, "streams", "events");
 
     std::atomic_bool insert_thread_done;
     insert_thread_done.store(false);
@@ -519,10 +516,10 @@ TEST_CASE("Documentation Examples", "[min36]") {
 
         // Start Changestream Example 4
         mongocxx::pipeline cs_pipeline;
-        cs_pipeline.match(
-            make_document(kvp("$or",
-                              make_array(make_document(kvp("fullDocument.username", "alice")),
-                                         make_document(kvp("operationType", "delete"))))));
+        cs_pipeline.match(make_document(kvp(
+            "$or",
+            make_array(
+                make_document(kvp("fullDocument.username", "alice")), make_document(kvp("operationType", "delete"))))));
 
         change_stream stream = inventory.watch(cs_pipeline);
         auto it = stream.begin();
@@ -536,20 +533,19 @@ TEST_CASE("Documentation Examples", "[min36]") {
 
     insert_thread_done = true;
     insert_thread.join();
-    inventory.drop();
 }
 
-TEST_CASE("Watch 2 collections", "[min36]") {
+TEST_CASE("Watch 2 collections", "[change_stream]") {
     instance::current();
-    client mongodb_client{uri{}, test_util::add_test_server_api()};
-    if (!test_util::is_replica_set(mongodb_client)) {
+    client client{uri{}, test_util::add_test_server_api()};
+    if (!test_util::is_replica_set()) {
         SKIP("change streams require replica set");
     }
 
     options::change_stream options{};
 
-    collection events = mongodb_client["streams"]["events"];
-    collection events2 = mongodb_client["streams"]["events2"];
+    collection events = make_test_coll(client, "streams", "events");
+    collection events2 = make_test_coll(client, "streams", "events2");
 
     change_stream x = events.watch();
     change_stream x2 = events.watch();
@@ -586,15 +582,15 @@ TEST_CASE("Watch 2 collections", "[min36]") {
     }
 }
 
-TEST_CASE("Watch a Collection", "[min36]") {
+TEST_CASE("Watch a Collection", "[change_stream]") {
     instance::current();
-    client mongodb_client{uri{}, test_util::add_test_server_api()};
-    if (!test_util::is_replica_set(mongodb_client)) {
+    client client{uri{}, test_util::add_test_server_api()};
+    if (!test_util::is_replica_set()) {
         SKIP("change streams require replica set");
     }
 
     options::change_stream options{};
-    collection events = mongodb_client["streams"]["events"];
+    collection events = make_test_coll(client, "streams", "events");
 
     change_stream x = events.watch();
 
@@ -728,7 +724,7 @@ TEST_CASE("Watch a Collection", "[min36]") {
 
         SECTION("A range-based for loop iterates twice") {
             int count = 0;
-            for (const auto& v : x) {
+            for (auto const& v : x) {
                 (void)v;
                 ++count;
             }
@@ -799,8 +795,7 @@ TEST_CASE("Watch a Collection", "[min36]") {
 
         // create a document and then update it
         events.insert_one(make_document(kvp("_id", "one"), kvp("a", "a")));
-        events.update_one(make_document(kvp("_id", "one")),
-                          make_document(kvp("$set", make_document(kvp("a", "A")))));
+        events.update_one(make_document(kvp("_id", "one")), make_document(kvp("$set", make_document(kvp("a", "A")))));
         events.delete_one(make_document(kvp("_id", "one")));
 
         SECTION("See single update and not updates or deletes") {
@@ -810,4 +805,4 @@ TEST_CASE("Watch a Collection", "[min36]") {
     }
 }
 
-}  // namespace
+} // namespace

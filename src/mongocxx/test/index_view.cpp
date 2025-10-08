@@ -38,16 +38,15 @@ using bsoncxx::builder::basic::kvp;
 using bsoncxx::builder::basic::make_document;
 using namespace mongocxx;
 
-bool test_commands_enabled(const client& conn) {
-    auto result = conn["admin"].run_command(
-        make_document(kvp("getParameter", 1), kvp("enableTestCommands", 1)));
+bool test_commands_enabled(client const& conn) {
+    auto result = conn["admin"].run_command(make_document(kvp("getParameter", 1), kvp("enableTestCommands", 1)));
     auto result_view = result.view();
 
     if (!result_view["enableTestCommands"]) {
         return false;
     }
 
-    auto server_version = test_util::get_server_version(conn);
+    auto server_version = test_util::get_server_version();
 
     if (test_util::compare_versions(server_version, "3.2") >= 0) {
         return result_view["enableTestCommands"].get_bool();
@@ -56,7 +55,7 @@ bool test_commands_enabled(const client& conn) {
     return result_view["enableTestCommands"].get_int32() == 1;
 }
 
-bool fail_with_max_timeout(const client& conn) {
+bool fail_with_max_timeout(client const& conn) {
     if (!test_commands_enabled(conn)) {
         return false;
     }
@@ -67,10 +66,9 @@ bool fail_with_max_timeout(const client& conn) {
     return true;
 }
 
-void disable_fail_point(const client& conn) {
+void disable_fail_point(client const& conn) {
     if (test_commands_enabled(conn)) {
-        conn["admin"].run_command(
-            make_document(kvp("configureFailPoint", "maxTimeAlwaysTimeOut"), kvp("mode", "off")));
+        conn["admin"].run_command(make_document(kvp("configureFailPoint", "maxTimeAlwaysTimeOut"), kvp("mode", "off")));
     }
 }
 
@@ -83,13 +81,12 @@ TEST_CASE("create_one", "[index_view]") {
     SECTION("works with document and options") {
         collection coll = db["index_view_create_one_doc_and_opts"];
         coll.drop();
-        coll.insert_one({});  // Ensure that the collection exists.
+        coll.insert_one({}); // Ensure that the collection exists.
         index_view indexes = coll.indexes();
 
         auto key = make_document(kvp("a", 1));
         auto options = make_document(kvp("name", "myIndex"));
-        bsoncxx::stdx::optional<std::string> result =
-            indexes.create_one(key.view(), options.view());
+        bsoncxx::stdx::optional<std::string> result = indexes.create_one(key.view(), options.view());
 
         REQUIRE(result);
         REQUIRE(*result == "myIndex");
@@ -98,7 +95,7 @@ TEST_CASE("create_one", "[index_view]") {
     SECTION("works with document and no options") {
         collection coll = db["index_view_create_one_doc"];
         coll.drop();
-        coll.insert_one({});  // Ensure that the collection exists.
+        coll.insert_one({}); // Ensure that the collection exists.
         index_view indexes = coll.indexes();
 
         auto key = make_document(kvp("a", 1), kvp("b", -1));
@@ -111,7 +108,7 @@ TEST_CASE("create_one", "[index_view]") {
     SECTION("with index_model and options") {
         collection coll = db["index_view_create_one_index_model_opts"];
         coll.drop();
-        coll.insert_one({});  // Ensure that the collection exists.
+        coll.insert_one({}); // Ensure that the collection exists.
         index_view indexes = coll.indexes();
 
         auto key = make_document(kvp("a", 1));
@@ -126,7 +123,7 @@ TEST_CASE("create_one", "[index_view]") {
     SECTION("with index_model and no options") {
         collection coll = db["index_view_create_one_index_model"];
         coll.drop();
-        coll.insert_one({});  // Ensure that the collection exists.
+        coll.insert_one({}); // Ensure that the collection exists.
         index_view indexes = coll.indexes();
 
         auto key = make_document(kvp("a", 1), kvp("b", -1));
@@ -140,7 +137,7 @@ TEST_CASE("create_one", "[index_view]") {
     SECTION("tests maxTimeMS option works") {
         collection coll = db["index_view_create_one_maxTimeMS"];
         coll.drop();
-        coll.insert_one({});  // Ensure that the collection exists.
+        coll.insert_one({}); // Ensure that the collection exists.
         index_view indexes = coll.indexes();
 
         auto key = make_document(kvp("aaa", 1));
@@ -157,7 +154,7 @@ TEST_CASE("create_one", "[index_view]") {
     SECTION("fails for same keys and options") {
         collection coll = db["index_view_create_one_exists_fail"];
         coll.drop();
-        coll.insert_one({});  // Ensure that the collection exists.
+        coll.insert_one({}); // Ensure that the collection exists.
         index_view indexes = coll.indexes();
 
         auto keys = make_document(kvp("a", 1));
@@ -169,7 +166,7 @@ TEST_CASE("create_one", "[index_view]") {
     SECTION("fails for same name") {
         collection coll = db["index_view_create_one_same_name_fail"];
         coll.drop();
-        coll.insert_one({});  // Ensure that the collection exists.
+        coll.insert_one({}); // Ensure that the collection exists.
         index_view indexes = coll.indexes();
 
         auto keys1 = make_document(kvp("a", 1));
@@ -181,23 +178,22 @@ TEST_CASE("create_one", "[index_view]") {
     }
 
     SECTION("commitQuorum option") {
-        if (test_util::get_topology(mongodb_client) == "single") {
+        if (test_util::get_topology() == "single") {
             SKIP("commitQuorum option requires a replica set");
         }
 
         collection coll = db["index_view_create_one_commit_quorum"];
         coll.drop();
-        coll.insert_one({});  // Ensure that the collection exists.
+        coll.insert_one({}); // Ensure that the collection exists.
         index_view indexes = coll.indexes();
 
         auto key = make_document(kvp("a", 1));
         index_model model(key.view());
         options::index_view options;
 
-        auto commit_quorum_regex =
-            Catch::Matchers::Matches("(.*)commit( )?quorum(.*)", Catch::CaseSensitive::No);
+        auto commit_quorum_regex = Catch::Matchers::Matches("(.*)commit( )?quorum(.*)", Catch::CaseSensitive::No);
 
-        bool is_supported = test_util::get_max_wire_version(mongodb_client) >= 9;
+        bool is_supported = test_util::get_max_wire_version() >= 9;
         CAPTURE(is_supported);
 
         SECTION("works with int") {
@@ -226,14 +222,15 @@ TEST_CASE("create_many", "[index_view]") {
     client mongodb_client{uri{}, test_util::add_test_server_api()};
     database db = mongodb_client["index_view_create_many"];
 
-    std::vector<index_model> models{index_model(make_document(kvp("a", 1))),
-                                    index_model(make_document(kvp("b", 1), kvp("c", -1))),
-                                    index_model(make_document(kvp("c", -1)))};
+    std::vector<index_model> models{
+        index_model(make_document(kvp("a", 1))),
+        index_model(make_document(kvp("b", 1), kvp("c", -1))),
+        index_model(make_document(kvp("c", -1)))};
 
     SECTION("test maxTimeMS option") {
         collection coll = db["index_view_create_many_maxTimeMS"];
         coll.drop();
-        coll.insert_one({});  // Ensure that the collection exists.
+        coll.insert_one({}); // Ensure that the collection exists.
 
         index_view indexes = coll.indexes();
 
@@ -249,7 +246,7 @@ TEST_CASE("create_many", "[index_view]") {
     SECTION("create three") {
         collection coll = db["index_view_create_many"];
         coll.drop();
-        coll.insert_one({});  // Ensure that the collection exists.
+        coll.insert_one({}); // Ensure that the collection exists.
 
         index_view indexes = coll.indexes();
 
@@ -258,14 +255,13 @@ TEST_CASE("create_many", "[index_view]") {
 
         // SERVER-78611: sharded clusters may place fields in a raw response document instead of in
         // the top-level document.
-        if (const auto raw = result_view["raw"]) {
-            for (const auto& shard_response : raw.get_document().view()) {
+        if (auto const raw = result_view["raw"]) {
+            for (auto const& shard_response : raw.get_document().view()) {
                 result_view = shard_response.get_document().view();
             }
         }
 
-        REQUIRE((result_view["numIndexesAfter"].get_int32() -
-                 result_view["numIndexesBefore"].get_int32()) == 3);
+        REQUIRE((result_view["numIndexesAfter"].get_int32() - result_view["numIndexesBefore"].get_int32()) == 3);
 
         std::vector<std::string> expected_names{"a_1", "b_1_c_-1", "c_-1"};
         std::int8_t found = 0;
@@ -292,7 +288,7 @@ TEST_CASE("drop_one", "[index_view]") {
     SECTION("drops index by name") {
         collection coll = db["index_view_drop_one_by_name"];
         coll.drop();
-        coll.insert_one({});  // Ensure that the collection exists.
+        coll.insert_one({}); // Ensure that the collection exists.
 
         index_view indexes = coll.indexes();
         auto cursor = indexes.list();
@@ -313,7 +309,7 @@ TEST_CASE("drop_one", "[index_view]") {
     SECTION("drops index by key and options") {
         collection coll = db["index_view_drop_one_by_key_and_opts"];
         coll.drop();
-        coll.insert_one({});  // Ensure that the collection exists.
+        coll.insert_one({}); // Ensure that the collection exists.
 
         index_view indexes = coll.indexes();
         auto cursor = indexes.list();
@@ -334,7 +330,7 @@ TEST_CASE("drop_one", "[index_view]") {
     SECTION("drops index by index_model") {
         collection coll = db["index_view_drop_one_by_index_model"];
         coll.drop();
-        coll.insert_one({});  // Ensure that the collection exists.
+        coll.insert_one({}); // Ensure that the collection exists.
 
         index_view indexes = coll.indexes();
         auto cursor = indexes.list();
@@ -356,7 +352,7 @@ TEST_CASE("drop_one", "[index_view]") {
     SECTION("fails for drop_one on *") {
         collection coll = db["index_view_drop_one_*_fail"];
         coll.drop();
-        coll.insert_one({});  // Ensure that the collection exists.
+        coll.insert_one({}); // Ensure that the collection exists.
 
         index_view indexes = coll.indexes();
         auto cursor = indexes.list();
@@ -368,13 +364,16 @@ TEST_CASE("drop_one", "[index_view]") {
     SECTION("fails for index that doesn't exist") {
         collection coll = db["index_view_drop_one_nonexistant_fail"];
         coll.drop();
-        coll.insert_one({});  // Ensure that the collection exists.
+        coll.insert_one({}); // Ensure that the collection exists.
 
         index_view indexes = coll.indexes();
         auto cursor = indexes.list();
         REQUIRE(std::distance(cursor.begin(), cursor.end()) == 1);
 
-        REQUIRE_THROWS_AS(indexes.drop_one("foo"), operation_exception);
+        // SERVER-90152: "dropIndex should be idempotent"
+        if (!test_util::newer_than("8.3")) {
+            REQUIRE_THROWS_AS(indexes.drop_one("foo"), operation_exception);
+        }
     }
 }
 
@@ -384,14 +383,15 @@ TEST_CASE("drop_all", "[index_view]") {
     client mongodb_client{uri{}, test_util::add_test_server_api()};
     database db = mongodb_client["index_view_drop_all"];
 
-    std::vector<index_model> models{index_model{make_document(kvp("a", 1))},
-                                    index_model{make_document(kvp("b", 1), kvp("c", -1))},
-                                    index_model{make_document(kvp("c", -1))}};
+    std::vector<index_model> models{
+        index_model{make_document(kvp("a", 1))},
+        index_model{make_document(kvp("b", 1), kvp("c", -1))},
+        index_model{make_document(kvp("c", -1))}};
 
     SECTION("drop normally") {
         collection coll = db["index_view_drop_all"];
         coll.drop();
-        coll.insert_one({});  // Ensure that the collection exists.
+        coll.insert_one({}); // Ensure that the collection exists.
 
         index_view indexes = coll.indexes();
 
@@ -400,18 +400,18 @@ TEST_CASE("drop_all", "[index_view]") {
 
         // SERVER-78611: sharded clusters may place fields in a raw response document instead of
         // in the top-level document.
-        if (const auto raw = result_view["raw"]) {
-            for (const auto& shard_response : raw.get_document().view()) {
+        if (auto const raw = result_view["raw"]) {
+            for (auto const& shard_response : raw.get_document().view()) {
                 result_view = shard_response.get_document().view();
             }
         }
 
         auto cursor1 = indexes.list();
-        REQUIRE(static_cast<std::size_t>(std::distance(cursor1.begin(), cursor1.end())) ==
-                models.size() + 1);
-        REQUIRE(static_cast<std::size_t>(result_view["numIndexesAfter"].get_int32() -
-                                         result_view["numIndexesBefore"].get_int32()) ==
-                models.size());
+        REQUIRE(static_cast<std::size_t>(std::distance(cursor1.begin(), cursor1.end())) == models.size() + 1);
+        REQUIRE(
+            static_cast<std::size_t>(
+                result_view["numIndexesAfter"].get_int32() - result_view["numIndexesBefore"].get_int32()) ==
+            models.size());
 
         indexes.drop_all();
         auto cursor2 = indexes.list();
@@ -422,7 +422,7 @@ TEST_CASE("drop_all", "[index_view]") {
     SECTION("test maxTimeMS option") {
         collection coll = db["index_view_drop_all_maxTimeMS"];
         coll.drop();
-        coll.insert_one({});  // Ensure that the collection exists.
+        coll.insert_one({}); // Ensure that the collection exists.
 
         index_view indexes = coll.indexes();
 
@@ -431,18 +431,18 @@ TEST_CASE("drop_all", "[index_view]") {
 
         // SERVER-78611: sharded clusters may place fields in a raw response document instead of
         // in the top-level document.
-        if (const auto raw = result_view["raw"]) {
-            for (const auto& shard_response : raw.get_document().view()) {
+        if (auto const raw = result_view["raw"]) {
+            for (auto const& shard_response : raw.get_document().view()) {
                 result_view = shard_response.get_document().view();
             }
         }
 
         auto cursor1 = indexes.list();
-        REQUIRE(static_cast<std::size_t>(std::distance(cursor1.begin(), cursor1.end())) ==
-                models.size() + 1u);
-        REQUIRE(static_cast<std::size_t>(result_view["numIndexesAfter"].get_int32() -
-                                         result_view["numIndexesBefore"].get_int32()) ==
-                models.size());
+        REQUIRE(static_cast<std::size_t>(std::distance(cursor1.begin(), cursor1.end())) == models.size() + 1u);
+        REQUIRE(
+            static_cast<std::size_t>(
+                result_view["numIndexesAfter"].get_int32() - result_view["numIndexesBefore"].get_int32()) ==
+            models.size());
 
         options::index_view options;
         options.max_time(std::chrono::milliseconds(1));
@@ -462,13 +462,12 @@ TEST_CASE("index creation and deletion with different collation") {
     database db = mongodb_client["index_view_collation"];
     collection coll = db["index_view_collation"];
     coll.drop();
-    coll.insert_one({});  // Ensure that the collection exists.
+    coll.insert_one({}); // Ensure that the collection exists.
 
     bsoncxx::document::value keys = make_document(kvp("a", 1), kvp("bcd", -1), kvp("d", 1));
-    bsoncxx::document::value us_collation =
-        make_document(kvp("collation", make_document(kvp("locale", "en_US"))));
-    bsoncxx::document::value ko_collation = make_document(
-        kvp("name", "custom_index_name"), kvp("collation", make_document(kvp("locale", "ko"))));
+    bsoncxx::document::value us_collation = make_document(kvp("collation", make_document(kvp("locale", "en_US"))));
+    bsoncxx::document::value ko_collation =
+        make_document(kvp("name", "custom_index_name"), kvp("collation", make_document(kvp("locale", "ko"))));
 
     index_model index_us{keys.view(), us_collation.view()};
     index_model index_ko{keys.view(), ko_collation.view()};
@@ -497,4 +496,4 @@ TEST_CASE("index creation and deletion with different collation") {
     coll.drop();
     db.drop();
 }
-}  // namespace
+} // namespace

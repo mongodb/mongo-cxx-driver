@@ -250,10 +250,16 @@ def iter_tag_lines():
     the second is a tag that is associated with that commit. Duplicate commits
     are possible.
     """
-    output = check_output(['git', 'tag', '--list', '--format=%(*objectname)|%(objectname)|%(refname:strip=2)'])
+    output = check_output(['git', 'for-each-ref', '--format=%(*objectname)|%(objectname)|%(refname)', 'refs/tags/*'])
     lines = output.splitlines()
     for l in lines:
-        obj, tagobj, tag = l.split('|', 2)
+        obj, tagobj, rawtag = l.split('|', 2)
+
+        # Support Git 1.x which does not have `%(refname:lstrip=2)`.
+        tag = str('/').join(rawtag.split('/')[:2])
+
+        if not tag.startswith('r'):
+            continue # We only care about "rX.Y.Z" release tags.
         if re.match(r'r\d+\.\d+', tag):
             yield obj, tagobj, tag
 

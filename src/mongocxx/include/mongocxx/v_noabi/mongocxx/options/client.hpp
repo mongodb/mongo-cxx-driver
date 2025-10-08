@@ -31,10 +31,8 @@ namespace mongocxx {
 namespace v_noabi {
 namespace options {
 
-// NOTE: client options interface still evolving
-
 ///
-/// Class representing the optional arguments to a MongoDB driver client object.
+/// Used by clients.
 ///
 class client {
    public:
@@ -72,15 +70,14 @@ class client {
     ///
     /// @deprecated Please use tls_opts instead.
     ///
-    MONGOCXX_DEPRECATED MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<tls>&)
-        ssl_opts() const;
+    MONGOCXX_DEPRECATED MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<tls> const&) ssl_opts() const;
 
     ///
     /// The current TLS-related options.
     ///
     /// @return The TLS-related options.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<tls>&) tls_opts() const;
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<tls> const&) tls_opts() const;
 
     ///
     /// Sets the automatic encryption options.
@@ -100,7 +97,7 @@ class client {
     /// @return
     ///   The automatic encryption opts.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<auto_encryption>&)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<auto_encryption> const&)
     auto_encryption_opts() const;
 
     ///
@@ -120,7 +117,7 @@ class client {
     ///
     /// @return The APM-related options.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<apm>&) apm_opts() const;
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<apm> const&) apm_opts() const;
 
     ///
     /// Sets the server API options.
@@ -141,7 +138,7 @@ class client {
     /// @return
     ///   The server API options.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<server_api>&)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<server_api> const&)
     server_api_opts() const;
 
    private:
@@ -151,9 +148,9 @@ class client {
     bsoncxx::v_noabi::stdx::optional<server_api> _server_api_opts;
 };
 
-}  // namespace options
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace options
+} // namespace v_noabi
+} // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
 

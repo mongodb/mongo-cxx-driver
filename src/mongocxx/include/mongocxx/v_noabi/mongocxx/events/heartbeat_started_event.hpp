@@ -27,15 +27,14 @@ namespace v_noabi {
 namespace events {
 
 ///
-/// An event notification sent when the driver begins executing a "hello" command to check the
-/// status of a server.
+/// The start of the execution of a heartbeat ("hello") command.
 ///
 /// @see
-/// - "ServerHeartbeatStartedEvent" in https://github.com/mongodb/specifications/blob/master/source/server-discovery-and-monitoring/server-discovery-and-monitoring.md
+/// - [SDAM Logging and Monitoring Specification (MongoDB Specifications)](https://specifications.readthedocs.io/en/latest/server-discovery-and-monitoring/server-discovery-and-monitoring-logging-and-monitoring/)
 ///
 class heartbeat_started_event {
    public:
-    explicit heartbeat_started_event(const void* event);
+    explicit heartbeat_started_event(void const* event);
 
     ///
     /// Destroys a heartbeat_started_event.
@@ -45,8 +44,8 @@ class heartbeat_started_event {
     heartbeat_started_event(heartbeat_started_event&&) = default;
     heartbeat_started_event& operator=(heartbeat_started_event&&) noexcept = default;
 
-    heartbeat_started_event(const heartbeat_started_event&) = default;
-    heartbeat_started_event& operator=(const heartbeat_started_event&) = default;
+    heartbeat_started_event(heartbeat_started_event const&) = default;
+    heartbeat_started_event& operator=(heartbeat_started_event const&) = default;
 
     ///
     /// Returns the host name.
@@ -70,12 +69,12 @@ class heartbeat_started_event {
     MONGOCXX_ABI_EXPORT_CDECL(bool) awaited() const;
 
    private:
-    const void* _started_event;
+    void const* _started_event;
 };
 
-}  // namespace events
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace events
+} // namespace v_noabi
+} // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
 

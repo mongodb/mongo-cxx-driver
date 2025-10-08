@@ -28,7 +28,7 @@ namespace mongocxx {
 namespace v_noabi {
 
 ///
-/// Class representing a batch of write operations that can be sent to the server as a group.
+/// A batch of write operations that can be sent to the server as a group.
 ///
 /// If you have a lot of write operations to execute, it can be more efficient to send them as
 /// part of a bulk_write in order to avoid unnecessary network-level round trips between the driver
@@ -88,7 +88,7 @@ class bulk_write {
     ///
     /// @throws mongocxx::v_noabi::logic_error if the given operation is invalid.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bulk_write&) append(const model::write& operation);
+    MONGOCXX_ABI_EXPORT_CDECL(bulk_write&) append(model::write const& operation);
 
     ///
     /// Executes a bulk write.
@@ -107,16 +107,14 @@ class bulk_write {
 
     class impl;
 
-    bulk_write(const collection& coll,
-               const options::bulk_write& options,
-               const client_session* session = nullptr);
+    bulk_write(collection const& coll, options::bulk_write const& options, client_session const* session = nullptr);
 
     bool _created_from_collection;
     std::unique_ptr<impl> _impl;
 };
 
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace v_noabi
+} // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
 

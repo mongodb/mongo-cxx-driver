@@ -64,7 +64,7 @@ class element {
     ///
     /// @return a pointer to the raw bson bytes.
     ///
-    BSONCXX_ABI_EXPORT_CDECL(const std::uint8_t*) raw() const;
+    BSONCXX_ABI_EXPORT_CDECL(std::uint8_t const*) raw() const;
 
     ///
     /// Getter for length of the raw bson bytes the element points to.
@@ -355,18 +355,15 @@ class element {
     /// @param offset
     ///   The element's offset into the buffer.
     ///
-    explicit element(const std::uint8_t* raw,
-                     std::uint32_t length,
-                     std::uint32_t offset,
-                     std::uint32_t keylen);
+    explicit element(std::uint8_t const* raw, std::uint32_t length, std::uint32_t offset, std::uint32_t keylen);
 
     // Construct an invalid element with a key. Useful for exceptions.
-    explicit element(const stdx::string_view key);
+    explicit element(stdx::string_view const key);
 
     friend ::bsoncxx::v_noabi::array::element;
     friend ::bsoncxx::v_noabi::document::view;
 
-    const std::uint8_t* _raw;
+    std::uint8_t const* _raw;
     std::uint32_t _length;
     std::uint32_t _offset;
     std::uint32_t _keylen;
@@ -384,23 +381,23 @@ class element {
 /// @{
 
 /// @relatesalso bsoncxx::v_noabi::document::element
-BSONCXX_ABI_EXPORT_CDECL(bool) operator==(const element& elem, const types::bson_value::view& v);
+BSONCXX_ABI_EXPORT_CDECL(bool) operator==(element const& elem, types::bson_value::view const& v);
 
 /// @relatesalso bsoncxx::v_noabi::document::element
-BSONCXX_ABI_EXPORT_CDECL(bool) operator==(const types::bson_value::view& v, const element& elem);
+BSONCXX_ABI_EXPORT_CDECL(bool) operator==(types::bson_value::view const& v, element const& elem);
 
 /// @relatesalso bsoncxx::v_noabi::document::element
-BSONCXX_ABI_EXPORT_CDECL(bool) operator!=(const element& elem, const types::bson_value::view& v);
+BSONCXX_ABI_EXPORT_CDECL(bool) operator!=(element const& elem, types::bson_value::view const& v);
 
 /// @relatesalso bsoncxx::v_noabi::document::element
-BSONCXX_ABI_EXPORT_CDECL(bool) operator!=(const types::bson_value::view& v, const element& elem);
+BSONCXX_ABI_EXPORT_CDECL(bool) operator!=(types::bson_value::view const& v, element const& elem);
 
 /// @}
 ///
 
-}  // namespace document
-}  // namespace v_noabi
-}  // namespace bsoncxx
+} // namespace document
+} // namespace v_noabi
+} // namespace bsoncxx
 
 namespace bsoncxx {
 namespace document {
@@ -408,8 +405,8 @@ namespace document {
 using ::bsoncxx::v_noabi::document::operator==;
 using ::bsoncxx::v_noabi::document::operator!=;
 
-}  // namespace document
-}  // namespace bsoncxx
+} // namespace document
+} // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>
 
@@ -417,25 +414,3 @@ using ::bsoncxx::v_noabi::document::operator!=;
 /// @file
 /// Provides @ref bsoncxx::v_noabi::document::element.
 ///
-
-#if defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
-
-namespace bsoncxx {
-namespace document {
-
-/// @ref bsoncxx::v_noabi::document::operator==(const v_noabi::document::element& elem, const v_noabi::types::bson_value::view& v)
-bool operator==(const v_noabi::document::element& elem, const v_noabi::types::bson_value::view& v);
-
-/// @ref bsoncxx::v_noabi::document::operator==(const v_noabi::types::bson_value::view& v, const v_noabi::document::element& elem)
-bool operator==(const v_noabi::types::bson_value::view& v, const v_noabi::document::element& elem);
-
-/// @ref bsoncxx::v_noabi::document::operator!=(const v_noabi::document::element& elem, const v_noabi::types::bson_value::view& v)
-bool operator!=(const v_noabi::document::element& elem, const v_noabi::types::bson_value::view& v);
-
-/// @ref bsoncxx::v_noabi::document::operator!=(const v_noabi::types::bson_value::view& v, const v_noabi::document::element& elem)
-bool operator!=(const v_noabi::types::bson_value::view& v, const v_noabi::document::element& elem);
-
-}  // namespace document
-}  // namespace bsoncxx
-
-#endif  // defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

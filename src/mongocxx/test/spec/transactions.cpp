@@ -33,9 +33,8 @@ TEST_CASE("Transactions spec automated tests", "[transactions_spec]") {
     };
 
     SECTION("Legacy") {
-        run_tests_in_suite("TRANSACTIONS_LEGACY_TESTS_PATH",
-                           &run_transactions_tests_in_file,
-                           unsupported_transaction_tests);
+        run_tests_in_suite(
+            "TRANSACTIONS_LEGACY_TESTS_PATH", &run_transactions_tests_in_file, unsupported_transaction_tests);
     }
 
     SECTION("Convenient API") {
@@ -43,4 +42,4 @@ TEST_CASE("Transactions spec automated tests", "[transactions_spec]") {
     }
 }
 
-}  // namespace
+} // namespace

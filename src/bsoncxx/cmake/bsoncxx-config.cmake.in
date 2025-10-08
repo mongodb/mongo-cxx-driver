@@ -1,3 +1,3 @@
 include(CMakeFindDependencyMacro)
-@BSONCXX_PKG_DEP@
+find_dependency(bson @BSON_REQUIRED_VERSION@)
 include("${CMAKE_CURRENT_LIST_DIR}/bsoncxx_targets.cmake")

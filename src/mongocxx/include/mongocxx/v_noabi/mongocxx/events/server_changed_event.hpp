@@ -28,15 +28,14 @@ namespace v_noabi {
 namespace events {
 
 ///
-/// An event notification sent when the driver observes a change in the status of a server it is
-/// connected to.
+/// A change in the description of a connected MongoDB server.
 ///
 /// @see
-/// - "ServerDescriptionChangedEvent" in https://github.com/mongodb/specifications/blob/master/source/server-discovery-and-monitoring/server-discovery-and-monitoring.md
+/// - [SDAM Logging and Monitoring Specification (MongoDB Specifications)](https://specifications.readthedocs.io/en/latest/server-discovery-and-monitoring/server-discovery-and-monitoring-logging-and-monitoring/)
 ///
 class server_changed_event {
    public:
-    explicit server_changed_event(const void* event);
+    explicit server_changed_event(void const* event);
 
     ///
     /// Destroys a server_changed_event.
@@ -46,8 +45,8 @@ class server_changed_event {
     server_changed_event(server_changed_event&&) = default;
     server_changed_event& operator=(server_changed_event&&) = default;
 
-    server_changed_event(const server_changed_event&) = default;
-    server_changed_event& operator=(const server_changed_event&) = default;
+    server_changed_event(server_changed_event const&) = default;
+    server_changed_event& operator=(server_changed_event const&) = default;
 
     ///
     /// Returns the server host name.
@@ -69,29 +68,29 @@ class server_changed_event {
     ///
     /// @return The id.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::oid) topology_id() const;
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::oid const) topology_id() const;
 
     ///
     /// The server's description before it changed.
     ///
     /// @return The server_description.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const server_description) previous_description() const;
+    MONGOCXX_ABI_EXPORT_CDECL(server_description const) previous_description() const;
 
     ///
     /// The server's description after it changed.
     ///
     /// @return The server_description.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const server_description) new_description() const;
+    MONGOCXX_ABI_EXPORT_CDECL(server_description const) new_description() const;
 
    private:
-    const void* _event;
+    void const* _event;
 };
 
-}  // namespace events
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace events
+} // namespace v_noabi
+} // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
 

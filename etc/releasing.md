@@ -48,18 +48,13 @@ Some release steps require one or more of the following secrets.
   (classic) token with the "repo" scope selected.
 
     Configure SSO to authorize this token for the `mongodb` organization. (Do not forget this step!)
-- Jira OAuth credentials.
-  - Location: `~/.secrets/jira-creds.txt`
+- A Jira Personal Access Token (PAT)
+  - Location: `~/.secrets/jira-token.txt`
   - Format:
     ```
-    Username: evergreen.jirareleases@mongodb.com
-
-    access_token : <access_token>
-    access_token_secret : <access_token_secret>
-    consumer_key : <consumer_key>
-    key_cert: -----BEGIN RSA PRIVATE KEY-----\n...\n-----END RSA PRIVATE KEY-----
+    <jira_token>
     ```
-    Note the `"\n"` strings must be preserved as-is in the key_cert value.
+  - See [Jira: Personal Access Tokens (PATs)](https://wiki.corp.mongodb.com/spaces/TOGETHER/pages/218995581/Jira+Personal+Access+Tokens+PATs) for steps to create a token.
 - Artifactory credentials.
   - Location: `~/.secrets/artifactory-creds.txt`:
   - Format:
@@ -73,13 +68,6 @@ Some release steps require one or more of the following secrets.
     ```bash
     GRS_CONFIG_USER1_USERNAME=<username>
     GRS_CONFIG_USER1_PASSWORD=<password>
-    ```
-- Silk credentials.
-  - Location: `~/.secrets/silk-creds.txt`
-  - Format:
-    ```bash
-    SILK_CLIENT_ID=<client_id>
-    SILK_CLIENT_SECRET=<client_secret>
     ```
 - Snyk credentials.
   - Location: `~/.secrets/snyk-creds.txt`
@@ -131,57 +119,32 @@ Ensure the list of bundled dependencies in `etc/purls.txt` is up-to-date. If not
 If `etc/purls.txt` was updated, update the SBOM Lite document using the following command(s):
 
 ```bash
-# Artifactory and Silk credentials.
+# Artifactory credentials.
 . $HOME/.secrets/artifactory-creds.txt
-. $HOME/.secrets/silk-creds.txt
 
 # Output: "Login succeeded!"
 podman login --password-stdin --username "${ARTIFACTORY_USER:?}" artifactory.corp.mongodb.com <<<"${ARTIFACTORY_PASSWORD:?}"
 
 # Ensure latest version of SilkBomb is being used.
-podman pull artifactory.corp.mongodb.com/release-tools-container-registry-public-local/silkbomb:1.0
+podman pull artifactory.corp.mongodb.com/release-tools-container-registry-public-local/silkbomb:2.0
 
 # Output: "... writing sbom to file"
-podman run \
-  --env-file "$HOME/.secrets/silk-creds.txt" \
-  -it --rm -v "$(pwd):/pwd" \
-  artifactory.corp.mongodb.com/release-tools-container-registry-public-local/silkbomb:1.0 \
-  update -p "/pwd/etc/purls.txt" -i "/pwd/etc/cyclonedx.sbom.json" -o "/pwd/etc/cyclonedx.sbom.json"
+podman run -it --rm -v "$(pwd):/pwd" artifactory.corp.mongodb.com/release-tools-container-registry-public-local/silkbomb:2.0 \
+  update --refresh --no-update-sbom-version -p "/pwd/etc/purls.txt" -i "/pwd/etc/cyclonedx.sbom.json" -o "/pwd/etc/cyclonedx.sbom.json"
 ```
 
-Commit the latest version of the SBOM Lite document into the repo as `etc/cyclonedx.sbom.json`. (This may just be a modification of the timestamp.)
+Run a patch build which executes the `sbom` task and download the "Augmented SBOM (Updated)" file as `etc/augmented.sbom.json`. Evergreen CLI may be used to schedule only the `sbom` task:
 
-Generate an updated Augmented SBOM as described below.
+```bash
+# Ensure `-p` matches the correct Evergreen project for the current branch!
+evergreen patch -y -p mongo-cxx-driver -t all -v sbom -f
+```
 
-> [!IMPORTANT]
-> If the SBOM Lite was updated, generate an updated Augmented SBOM as described below even if the `silk-check-augmented-sbom` is currently passing on Evergreen!
+Commit the updated SBOM documents if there are any substantial changes.
 
 ### Augmented SBOM
 
-Ensure the `silk-check-augmented-sbom` task is passing on Evergreen for the relevant release branch. If it is passing, nothing needs to be done (unless the SBOM Lite was updated as described above).
-
-#### Regular Update
-
-Update the Augmented SBOM document using the following command(s):
-
-```bash
-# Artifactory and Silk credentials.
-. $HOME/.secrets/artifactory-creds.txt
-. $HOME/.secrets/silk-creds.txt
-
-# Output: "Login succeeded!"
-podman login --password-stdin --username "${ARTIFACTORY_USER:?}" artifactory.corp.mongodb.com <<<"${ARTIFACTORY_PASSWORD:?}"
-
-# Ensure latest version of SilkBomb is being used.
-podman pull artifactory.corp.mongodb.com/release-tools-container-registry-public-local/silkbomb:1.0
-
-# Output: "... writing sbom to file"
-podman run \
-  --env-file "$HOME/.secrets/silk-creds.txt" \
-  -it --rm -v "$(pwd):/pwd" \
-  artifactory.corp.mongodb.com/release-tools-container-registry-public-local/silkbomb:1.0 \
-  download --silk-asset-group "mongo-cxx-driver" -o "/pwd/etc/augmented.sbom.json"
-```
+Ensure the `sbom` task is passing on Evergreen for the relevant release branch.
 
 Review the contents of the new Augmented SBOM and ensure any new or known vulnerabilities with severity "Medium" or greater have a corresponding JIRA ticket (CXX or VULN) that is scheduled to be resolved within its remediation timeline.
 
@@ -189,45 +152,7 @@ Update the [SSDLC Report spreadsheet](https://docs.google.com/spreadsheets/d/1sp
 
 Update `etc/third_party_vulnerabilities.md` with any updates to new or known vulnerabilities for third party dependencies that have not yet been fixed by the upcoming release.
 
-Commit the latest version of the Augmented SBOM document into the repo as `etc/augmented.sbom.json`. The Augmented SBOM document does not need to be updated if the `silk-check-augmented-sbom` was not failing (in which case the only changes present would a version bump or timestamp update).
-
-#### Instant Update
-
-If the Augmented SBOM has not yet been updated in time for a release, a temporary Silk Asset Group may be used instead:
-
-```bash
-# Artifactory and Silk credentials.
-. $HOME/.secrets/artifactory-creds.txt
-. $HOME/.secrets/silk-creds.txt
-
-# Name of the temporary Silk Asset Group. Do NOT use an existing Silk Asset Group!
-asset_group_id="mongo-cxx-driver-X.Y.Z-tmp"
-
-# Output: "Login succeeded!"
-podman login --password-stdin --username "${ARTIFACTORY_USER:?}" artifactory.corp.mongodb.com <<<"${ARTIFACTORY_PASSWORD:?}"
-
-# Ensure latest version of SilkBomb is being used.
-podman pull artifactory.corp.mongodb.com/release-tools-container-registry-public-local/silkbomb:1.0
-
-# Common flags to podman.
-silkbomb_flags=(
-  --env-file "$HOME/.secrets/silk-creds.txt"
-  -it --rm -v "$(pwd):/pwd"
-  artifactory.corp.mongodb.com/release-tools-container-registry-public-local/silkbomb:1.0
-)
-
-# Create a new and temporary Silk Asset Group.
-podman run "${silkbomb_flags[@]:?}" asset-group --asset-cmd create --silk-asset-group "${asset_group_id:?}" --name "${asset_group_id:?}"
-
-# Upload the SBOM Lite.
-podman run "${silkbomb_flags[@]:?}" upload --silk-asset-group "${asset_group_id:?}" -i /pwd/etc/cyclonedx.sbom.json -o /pwd/etc/cyclonedx.sbom.json
-
-# Download the Augmented SBOM.
-podman run "${silkbomb_flags[@]:?}" download --silk-asset-group "${asset_group_id:?}" -o /pwd/etc/augmented.sbom.json
-
-# Remove the temporary Silk Asset Group.
-podman run "${silkbomb_flags[@]:?}" asset-group --asset-cmd delete --silk-asset-group "${asset_group_id:?}"
-```
+Download the "Augmented SBOM (Updated)" file from the latest EVG commit build in the `sbom` task and commit it into the repo as `etc/augmented.sbom.json` (even if the only notable change is the timestamp field).
 
 ### Check Snyk
 
@@ -262,6 +187,12 @@ Perform a dry-run of the "Run etc/make_release.py" steps described below.
 Verify there are no unexpected errors or issues.
 
 ## Release Steps
+
+### Branch Protection Rules
+
+The release process may require creating new branches, new tags, and directly pushing to development branches. These operations are normally restricted by branch protection rules.
+
+When assigned the responsibility of performing a release, submit a request to a repository administrator to be temporarily added to the [dbx-c-cxx-releases](https://github.com/orgs/mongodb/teams/dbx-c-cxx-releases/) team for the duration of the release process. The team member must be added via [MANA](https://mana.corp.mongodb.com/resources/68029673d39aa9f7de6399f9) (the GitHub team is usually empty; no member has the maintainer role).
 
 ### Update CHANGELOG...
 
@@ -351,6 +282,10 @@ git clone -o upstream git@github.com:mongodb/mongo-cxx-driver.git mongo-cxx-driv
 cd mongo-cxx-driver-release
 ```
 
+> [!WARNING]
+> The upcoming steps may modify the state of the current repository!
+> Cloning the updated repository in a new directory is highly recommended.
+
 Create and activate a fresh Python 3 virtual environment with required packages installed using [uv](https://docs.astral.sh/uv/getting-started/installation/):
 
 ```bash
@@ -358,33 +293,10 @@ Create and activate a fresh Python 3 virtual environment with required packages 
 export UV_PROJECT_ENVIRONMENT="$HOME/mongo-cxx-driver-release-venv"
 
 # Install required packages into a new virtual environment.
-uv sync --frozen
+uv sync --frozen --group apidocs --group make_release
 
 # Activate the virtual environment.
 source "$UV_PROJECT_ENVIRONMENT/bin/activate"
-```
-
-### Create a Release Tag...
-
-> [!IMPORTANT]
-> Do NOT push the release tag immediately after its creation!
-
-#### ... for a Patch Release
-
-Checkout the release branch (containing the changes from earlier steps) and create a tag for the release.
-
-```bash
-git checkout releases/vX.Y
-git tag rX.Y.Z
-```
-
-#### ... for a Non-Patch Release
-
-Checkout the `master` branch (containing the changes from earlier steps) and create a tag for the release:
-
-```bash
-git checkout master
-git tag rX.Y.0
 ```
 
 > [!NOTE]
@@ -394,6 +306,7 @@ git tag rX.Y.0
 
 This script performs the following steps:
 
+- create a GPG-signed release tag,
 - create the distribution tarball (e.g. `mongo-cxx-driver-r1.2.3.tar.gz`),
 - creates a signature file for the distribution tarball (e.g. `mongo-cxx-driver-r1.2.3.tar.gz.asc`),
 - query Jira for release and ticket statuses, and
@@ -408,17 +321,17 @@ python ./etc/make_release.py --help
 The following secrets are required by this script:
 
 - GitHub Personal Access Token.
-- Jira OAuth credentials.
+- Jira Personal Access Token.
 - Artifactory credentials.
 - Garasign credentials.
 
-Run the release script with the git tag created above as an argument and
+Run the release script with the name of the tag to be created as an argument and
 `--dry-run` to test for unexpected errors.
 
 ```bash
 make_release_args=(
     -r upstream
-    --jira-creds-file ~/.secrets/jira-creds.txt
+    --jira-token-file ~/.secrets/jira-token.txt
     --github-token-file ~/.secrets/github-token.txt
 )
 python ./etc/make_release.py "${make_release_args[@]:?}" --dry-run rX.Y.Z
@@ -431,6 +344,7 @@ If an error occurs, inspect logs the script produces, and troubleshoot as
 follows:
 
 - Use `--dry-run` to prevent unrecoverable effects.
+- Use `--skip-release-tag` to skip creating the release tag when it already exists.
 - If building the C driver fails, use an existing C driver build (ensure it is
   the right version) with `--with-c-driver /path/to/c-driver/install`.
 - Use `--skip-distcheck` to bypass time consuming checks when building the
@@ -444,7 +358,7 @@ Verify the successful creation of the release draft on GitHub.
 
 ### Push the Release Tag
 
-Push the release tag (created earlier) to the remote repository:
+Push the newly-created GPG-signed release tag to the remote repository:
 
 ```bash
 git push upstream rX.Y.Z
@@ -462,6 +376,16 @@ Navigate to the
 [fixVersions page on Jira](https://jira.mongodb.com/plugins/servlet/project-config/CXX/versions?status=unreleased).
 
 Click the "..." next to the relevant version and select "Release".
+
+### Update GitHub Webhook
+
+For a non-patch release, update the [Github Webhook](https://wiki.corp.mongodb.com/display/INTX/Githook) to include the new branch.
+
+Navigate to the [Webhook Settings](https://github.com/mongodb/mongo-cxx-driver/settings/hooks)
+
+Click `Edit` on the hook for `https://githook.mongodb.com/`.
+
+Add the new release branch to the `Payload URL`. Remove unmaintained release branches.
 
 ### Update releases/stable
 
@@ -482,11 +406,11 @@ git push -f upstream releases/stable
 
 ### Coverity Report
 
-Export the `Issues: By Snapshot | SSDLC Report (v2)` view as a CSV named `static_analysis-X.Y.Z.csv`.
+Export the `Issues: By Snapshot | SSDLC Report (v2)` view as a CSV named `static_analysis_report-X.Y.Z.csv`.
 
 ### Upload SSDLC Reports
 
-Upload a copy of the `static_analysis-X.Y.Z.csv`, `etc/ssdlc_compliance_report.md`, `etc/third_party_vulnerabilities.md`, and `etc/augmented.sbom.json` files. Rename the files with the version number `-X.Y.Z` suffix in their filenames as already done for other files in this folder.
+Upload a copy of the `static_analysis_report-X.Y.Z.csv`, `etc/ssdlc_compliance_report.md`, `etc/third_party_vulnerabilities.md`, and `etc/augmented.sbom.json` files. Rename the files with the version number `-X.Y.Z` suffix in their filenames as already done for other files in this folder.
 
 > [!WARNING]
 > Uploading a file into the SSDLC Compliance Files folder is an irreversible action! However, the files may still be renamed. If necessary, rename any accidentally uploaded files to "(Delete Me)" or similar.
@@ -496,7 +420,7 @@ Four new files should be present in the [SSDLC Compliance Files](https://drive.g
 ```
 augmented.sbom-X.Y.Z.json
 ssdlc_compliance_report-X.Y.Z.md
-static_analysis-X.Y.Z.csv
+static_analysis_report-X.Y.Z.csv
 third_party_vulnerabilities-X.Y.Z.md
 ```
 
@@ -522,29 +446,26 @@ git push upstream releases/vX.Y
 
 The new branch should be continuously tested on Evergreen. Update the "Display Name" and "Branch Name" of the [mongo-cxx-driver-latest-release Evergreen project](https://spruce.mongodb.com/project/mongo-cxx-driver-latest-release/settings/general) to refer to the new release branch.
 
-The new branch should be tracked by Silk. Use the [create-silk-asset-group.py script](https://github.com/mongodb/mongo-c-driver/blob/master/tools/create-silk-asset-group.py) in the C Driver to create a new Silk asset group:
+Update `etc/cyclonedx.sbom.json` with a new unique serial number for the next upcoming patch release (e.g. for `1.3.1` following the release of `1.3.0`):
 
 ```bash
-# Snyk credentials. Ask for these from a team member.
-. ~/.secrets/silk-creds.txt
+# Artifactory credentials.
+. $HOME/.secrets/artifactory-creds.txt
 
-# Ensure correct release version number!
-version="X.Y"
+# Output: "Login succeeded!"
+podman login --password-stdin --username "${ARTIFACTORY_USER:?}" artifactory.corp.mongodb.com <<<"${ARTIFACTORY_PASSWORD:?}"
 
-create_args=(
-  --silk-client-id "${SILK_CLIENT_ID:?}"
-  --silk-client-secret "${SILK_CLIENT_SECRET:?}"
-  --asset-id "mongo-cxx-driver-${version:?}" # Avoid '/' in Asset ID field.
-  --project "mongo-cxx-driver-${version:?}"
-  --branch "releases/v${version:?}"
-  --code-repo-url "https://github.com/mongodb/mongo-cxx-driver"
-  --sbom-lite-path="etc/cyclonedx.sbom.json"
-)
+# Ensure latest version of SilkBomb is being used.
+podman pull artifactory.corp.mongodb.com/release-tools-container-registry-public-local/silkbomb:2.0
 
-python path/to/tools/create-silk-asset-group.py "${create_args[@]:?}"
+# Output: "... writing sbom to file"
+podman run -it --rm -v "$(pwd):/pwd" artifactory.corp.mongodb.com/release-tools-container-registry-public-local/silkbomb:2.0 \
+  update --refresh --generate-new-serial-number -p "/pwd/etc/purls.txt" -i "/pwd/etc/cyclonedx.sbom.json" -o "/pwd/etc/cyclonedx.sbom.json"
 ```
 
-Verify the new asset group (`mongo-cxx-driver-X.Y`) is present in the [Silk Asset Inventory](https://us1.app.silk.security/inventory/all).
+Update `etc/augmented.sbom.json` by running a patch build which executes the `sbom` task as described above in [SBOM Lite](#sbom-lite).
+
+Commit and push these changes to the `releases/vX.Y` branch.
 
 ### Update Snyk
 
@@ -604,9 +525,28 @@ This branch will be used to create a PR later.
 > [!IMPORTANT]
 > Make sure the `post-release-changes` branch is created on `master`, not `rX.Y.Z` or `releases/vX.Y`!
 
-Update the tables in `etc/apidocmenu.md` with entries for the new release.
+In `etc/apidocmenu.md`, update the list of versions under "Driver Documentation By Version" and the table under "Driver Development Status" with a new entry corresponding to this release.
 
-Edit `README.md` to match the updated `etc/apidocmenu.md`.
+In `README.md`, sync the "Driver Development Status" table with the updated table from `etc/apidocmenu.md`.
+
+Update `etc/cyclonedx.sbom.json` with a new unique serial number for the next upcoming non-patch release (e.g. for `1.4.0` following the release of `1.3.0`):
+
+```bash
+# Artifactory credentials.
+. $HOME/.secrets/artifactory-creds.txt
+
+# Output: "Login succeeded!"
+podman login --password-stdin --username "${ARTIFACTORY_USER:?}" artifactory.corp.mongodb.com <<<"${ARTIFACTORY_PASSWORD:?}"
+
+# Ensure latest version of SilkBomb is being used.
+podman pull artifactory.corp.mongodb.com/release-tools-container-registry-public-local/silkbomb:2.0
+
+# Output: "... writing sbom to file"
+podman run -it --rm -v "$(pwd):/pwd" artifactory.corp.mongodb.com/release-tools-container-registry-public-local/silkbomb:2.0 \
+  update --refresh --generate-new-serial-number -p "/pwd/etc/purls.txt" -i "/pwd/etc/cyclonedx.sbom.json" -o "/pwd/etc/cyclonedx.sbom.json"
+```
+
+Update `etc/augmented.sbom.json` by running a patch build which executes the `sbom` task as described above in [SBOM Lite](#sbom-lite).
 
 Commit these changes to the `post-release-changes` branch:
 
@@ -619,7 +559,7 @@ git commit -m "Post-release changes"
 (Stable Releases Only) Close the Jira ticket tracking this release with "Documentation Changes" set to "Needed". Fill the "Documentation Changes Summary" field with information requesting updates to:
 
   - the "Installing the MongoDB C Driver" section of the [Advanced Configuration and Installation Options](https://www.mongodb.com/docs/languages/cpp/cpp-driver/current/installation/advanced/#installing-the-mongodb-c-driver) page
-    with any new libmongoc version requirements,
+    with any new C Driver version requirements,
   - the "Driver Status by Family and Version" section of the [home
     page](https://www.mongodb.com/docs/languages/cpp/cpp-driver/current/#driver-status-by-family-and-version), and
   - the [full version](https://github.com/mongodb/docs-cpp/blob/master/snooty.toml) for the C++ Driver documentation pages.
@@ -629,7 +569,7 @@ This will generate a DOCSP ticket with instructions to update the C++ Driver doc
 Example (using Jira syntax formatting):
 
 ```
-* The [Advanced Installation|https://www.mongodb.com/docs/languages/cpp/cpp-driver/current/installation/advanced/#installing-the-mongodb-c-driver] page must be updated with a new requirement: "For mongocxx-X.Y.x, libmongoc A.B.C or later is required."
+* The [Advanced Installation|https://www.mongodb.com/docs/languages/cpp/cpp-driver/current/installation/advanced/#installing-the-mongodb-c-driver] page must be updated with a new requirement: "For mongocxx-X.Y.x, mongoc A.B.C or later is required."
 * The [MongoDB C++ Driver|https://www.mongodb.com/docs/languages/cpp/cpp-driver/current/#driver-status-by-family-and-version] page must be updated: {{{}mongocxx X.Y.x{}}} is now a previous stable release and no longer under active development; {{{}mongocxx X.Y+1.x{}}} is the new current stable release eligible for bug fixes.
 * the [full version|https://github.com/mongodb/docs-cpp/blob/master/snooty.toml] for C++ Driver documentation must be updated to {{{}X.Y.Z{}}}.
 ```
@@ -639,7 +579,7 @@ Example (using Jira syntax formatting):
 > [!NOTE]
 > Some of these commands may take a while to complete.
 
-Set `$LATEST_DOC_TAG` in `etc/generate-latest-apidocs.pl` to the latest release tag.
+Set `$LATEST_VERSION` in `etc/generate-latest-apidocs.sh` to the latest release version.
 
 Change the version number for `SITEMAP_URL` in `Doxyfile` to the latest release version.
 
@@ -656,7 +596,7 @@ command -V doxygen hugo
 ```
 
 > [!IMPORTANT]
-> The required Doxygen version is defined in `etc/generate-apidocs-from-tag.pl` as `$doxygen_version_required`. If not already present, download the required version from [Doxygen Releases](https://www.doxygen.nl/download.html). Use the `DOXYGEN_BINARY` environment variable to override the default `doxygen` command with a path to a specific Doxygen binary.
+> The required Doxygen version is defined in `etc/generate-latest-apidocs.sh` as `$DOXYGEN_VERSION_REQUIRED`. If not already present, download the required version from [Doxygen Releases](https://www.doxygen.nl/download.html). Use the `DOXYGEN_BINARY` environment variable to override the default `doxygen` command with a path to a specific Doxygen binary.
 
 Run `git clean -dfx` to restore the repository to a clean state.
 
@@ -669,16 +609,19 @@ Configure CMake using `build` as the binary directory. Leave all other configura
 cmake -S . -B build
 ```
 
-Test generating Hugo and Doxygen docs locally by building the `docs` target (this command DOES NOT check for the required Doxygen version):
-
-```bash
-cmake --build build --target docs
-```
-
-Test generating the latest versioned Doxygen docs by building the `doxygen-latest` target (this command DOES checks for the required Doxygen version):
+Test generating both Hugo and Doxygen docs locally by building the `docs` target:
 
 ```bash
 export DOXYGEN_BINARY=<path/to/doxygen> # Optional. For binary version compatibility.
+
+cmake --build build --target docs
+```
+
+Test generating the latest versioned Doxygen docs by building the `doxygen-latest` target:
+
+```bash
+export DOXYGEN_BINARY=<path/to/doxygen> # Optional. For binary version compatibility.
+
 cmake --build build --target doxygen-latest
 ```
 
@@ -713,19 +656,20 @@ git checkout gh-pages
 git pull
 ```
 
-Update the `api/mongocxx-v3` symlink to refer to the new release version:
+Update the `api/mongocxx-vX` symlink to refer to the new release version, e.g.:
 
 ```bash
 cd api
-rm mongocxx-v3
-ln -s mongocxx-X.Y.Z mongocxx-v3
+rm mongocxx-vX
+ln -s mongocxx-X.Y.Z mongocxx-vX
 ```
 
-Double-check that the `current` symlink is pointing to the symlink tracking the latest stable release:
+Double-check that the `current` symlink is valid and points to the symlink tracking the latest stable release of the most recent major release version, e.g.:
 
 ```
-current     -> mongocxx-v3
-mongocxx-v3 -> mongocxx-X.Y.Z
+current     -> mongocxx-v4
+mongocxx-v4 -> mongocxx-4.Y.Z
+mongocxx-v3 -> mongocxx-3.Y.Z
 ```
 
 Add a new entry to the `sitemap_index.xml` file referencing the sitemap for `api/mongocxx-X.Y.Z`.
@@ -806,6 +750,27 @@ Sync the entries in the patch release section to be consistent with the entries 
 
 #### ... for a Non-Patch Release
 
+Checkout the `releases/vX.Y` release branch.
+
+```bash
+git checkout releases/vX.Y
+git pull
+```
+
+Add a section for the next patch release, e.g. following a `1.2.0` release:
+
+```md
+## 1.2.1 [Unreleased]
+
+<!-- Will contain entries for the next patch release. -->
+
+## 1.2.0 <!-- Just released. -->
+
+## 1.1.0 <!-- Prior release. -->
+```
+
+Commit the changes to the `releases/vX.Y` branch and push the branch to the remote repository (a PR is not required for this step).
+
 Checkout the `post-release-changes` branch.
 
 Add a section for the next minor release, e.g. following a `1.3.0` release:
@@ -866,6 +831,12 @@ The C++ Driver Team
 ### Update the Release Info Spreadsheet
 
 Add an entry to the [C/C++ Release Info](https://docs.google.com/spreadsheets/d/1yHfGmDnbA5-Qt8FX4tKWC5xk9AhzYZx1SKF4AD36ecY) spreadsheet documenting the date, release version, author (of the release), and additional comments.
+
+### Update Branch Protection Rules
+
+Notify a repository administrator that the previous stable release branch (which will no longer recieve any further updates) may now be "locked" by adding it to the list of branches in the "Restrict Branch Updates" ruleset.
+
+Once the release process is complete, use [MANA](https://mana.corp.mongodb.com/resources/68029673d39aa9f7de6399f9) to remove yourself from the [dbx-c-cxx-releases](https://github.com/orgs/mongodb/teams/dbx-c-cxx-releases/) team or request a repository administrator to remove you instead.
 
 ## Packaging
 

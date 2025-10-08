@@ -17,38 +17,33 @@
 #include <bsoncxx/array/element.hpp>
 #include <bsoncxx/types/bson_value/view.hpp>
 
-#include <bsoncxx/config/private/prelude.hh>
-
 namespace bsoncxx {
 namespace v_noabi {
 namespace array {
 
 element::element() : document::element() {}
 
-element::element(const std::uint8_t* raw,
-                 std::uint32_t length,
-                 std::uint32_t offset,
-                 std::uint32_t keylen)
+element::element(std::uint8_t const* raw, std::uint32_t length, std::uint32_t offset, std::uint32_t keylen)
     : document::element(raw, length, offset, keylen) {}
 
-element::element(const stdx::string_view key) : document::element(key) {}
+element::element(stdx::string_view const key) : document::element(key) {}
 
-bool operator==(const element& elem, const types::bson_value::view& v) {
+bool operator==(element const& elem, types::bson_value::view const& v) {
     return elem.get_value() == v;
 }
 
-bool operator==(const types::bson_value::view& v, const element& elem) {
+bool operator==(types::bson_value::view const& v, element const& elem) {
     return elem == v;
 }
 
-bool operator!=(const element& elem, const types::bson_value::view& v) {
+bool operator!=(element const& elem, types::bson_value::view const& v) {
     return !(elem == v);
 }
 
-bool operator!=(const types::bson_value::view& v, const element& elem) {
+bool operator!=(types::bson_value::view const& v, element const& elem) {
     return !(elem == v);
 }
 
-}  // namespace array
-}  // namespace v_noabi
-}  // namespace bsoncxx
+} // namespace array
+} // namespace v_noabi
+} // namespace bsoncxx

@@ -16,8 +16,6 @@
 
 #include <mongocxx/client.hpp>
 
-#include <mongocxx/config/private/prelude.hh>
-
 #include <mongocxx/test/client_helpers.hh>
 #include <mongocxx/test/spec/unified_tests/entity.hh>
 
@@ -32,19 +30,18 @@ class apm_checker {
     options::apm get_apm_opts(bool command_started_events_only = false);
 
     // Check that the apm checker's events exactly match our expected events, in order.
-    void compare(bsoncxx::array::view expected,
-                 bool allow_extra = false,
-                 const test_util::match_visitor& match_visitor = {});
+    void compare(
+        bsoncxx::array::view expected,
+        bool allow_extra = false,
+        test_util::match_visitor const& match_visitor = {});
 
-    void compare_unified(bsoncxx::array::view expectations,
-                         entity::map& map,
-                         bool ignore_extra_events = false);
+    void compare_unified(bsoncxx::array::view expectations, entity::map& map, bool ignore_extra_events = false);
 
     // Check that the apm checker has all expected events, ignore ordering and extra events.
     void has(bsoncxx::array::view expected);
 
     // True if we should not process the given command:
-    bool should_ignore(const bsoncxx::stdx::string_view command_name) const;
+    bool should_ignore(bsoncxx::stdx::string_view const command_name) const;
 
     void clear();
     void clear_events();
@@ -72,7 +69,7 @@ class apm_checker {
     void set_command_started(options::apm& apm);
     void set_command_failed(options::apm& apm);
     void set_command_succeeded(options::apm& apm);
-    void set_ignore_command_monitoring_event(const std::string& event);
+    void set_ignore_command_monitoring_event(std::string const& event);
 
     void set_command_started_unified(options::apm& apm);
     void set_command_failed_unified(options::apm& apm);
@@ -86,7 +83,5 @@ class apm_checker {
     std::vector<std::string> _ignore;
 };
 
-}  // namespace spec
-}  // namespace mongocxx
-
-#include <mongocxx/config/private/postlude.hh>
+} // namespace spec
+} // namespace mongocxx

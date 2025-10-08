@@ -35,18 +35,20 @@ namespace mongocxx {
 namespace v_noabi {
 
 ///
-/// Class representing a MongoDB connection string URI.
+/// A MongoDB connection string URI.
 ///
 /// @see
-/// - https://www.mongodb.com/docs/manual/reference/connection-string/
+/// - [Connection Strings (MongoDB Manual)](https://www.mongodb.com/docs/manual/reference/connection-string/)
 ///
 class uri {
    public:
+    ///
     /// A host.
+    ///
     struct host {
-        std::string name;
-        std::uint16_t port;
-        std::int32_t family;
+        std::string name;    ///< The host name.
+        std::uint16_t port;  ///< The port number.
+        std::int32_t family; ///< The address family.
     };
 
     ///
@@ -82,8 +84,8 @@ class uri {
     ///
     MONGOCXX_ABI_EXPORT_CDECL() ~uri();
 
-    uri(const uri&) = delete;
-    uri& operator=(const uri&) = delete;
+    uri(uri const&) = delete;
+    uri& operator=(uri const&) = delete;
 
     ///
     /// Returns the authentication mechanism from the uri.
@@ -297,6 +299,16 @@ class uri {
     server_selection_try_once() const;
 
     ///
+    /// Sets the value of the option "serverSelectionTryOnce" in the uri.
+    ///
+    /// @param val The new value to apply to as "serverSelectionTryOnce".
+    ///
+    /// @throws mongocxx::v_noabi::exception if there is an error setting the option.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(void)
+    server_selection_try_once(bool val);
+
+    ///
     /// Returns the value of the option "socketTimeoutMS" if present in the uri.
     ///
     /// @return An optional std::int32_t
@@ -395,8 +407,8 @@ class uri {
     std::unique_ptr<impl> _impl;
 };
 
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace v_noabi
+} // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
 

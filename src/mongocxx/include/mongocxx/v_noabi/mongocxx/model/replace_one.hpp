@@ -28,7 +28,7 @@ namespace v_noabi {
 namespace model {
 
 ///
-/// Class representing a MongoDB update operation that replaces a single document.
+/// A MongoDB update operation that replaces a single document.
 ///
 class replace_one {
    public:
@@ -41,22 +41,23 @@ class replace_one {
     ///   Document that will serve as the replacement.
     ///
     MONGOCXX_ABI_EXPORT_CDECL()
-    replace_one(bsoncxx::v_noabi::document::view_or_value filter,
-                bsoncxx::v_noabi::document::view_or_value replacement);
+    replace_one(
+        bsoncxx::v_noabi::document::view_or_value filter,
+        bsoncxx::v_noabi::document::view_or_value replacement);
 
     ///
     /// Gets the filter for replacement.
     ///
     /// @return The filter to be used for the replacement operation.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::document::view_or_value&) filter() const;
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::document::view_or_value const&) filter() const;
 
     ///
     /// Gets the replacement document.
     ///
     /// @return The document that will replace the original selected document.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::document::view_or_value&) replacement() const;
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::document::view_or_value const&) replacement() const;
 
     ///
     /// Sets the collation for this replacement operation.
@@ -79,8 +80,7 @@ class replace_one {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/collation/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(
-        const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value>&)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const&)
     collation() const;
 
     ///
@@ -103,7 +103,7 @@ class replace_one {
     ///
     /// @return The optional value of the upsert option.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<bool>&) upsert() const;
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bool> const&) upsert() const;
 
     ///
     /// Sets the index to use for this operation.
@@ -125,8 +125,19 @@ class replace_one {
     ///
     /// @return The current hint, if one is set.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::hint>&)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::hint> const&)
     hint() const;
+
+    ///
+    /// Set the sort option.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(replace_one&) sort(bsoncxx::v_noabi::document::view_or_value sort);
+
+    ///
+    /// Get the current value of the sort option.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const&)
+    sort() const;
 
    private:
     bsoncxx::v_noabi::document::view_or_value _filter;
@@ -135,11 +146,12 @@ class replace_one {
     bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> _collation;
     bsoncxx::v_noabi::stdx::optional<bool> _upsert;
     bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::hint> _hint;
+    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> _sort;
 };
 
-}  // namespace model
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace model
+} // namespace v_noabi
+} // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
 

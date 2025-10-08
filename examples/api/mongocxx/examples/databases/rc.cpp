@@ -49,7 +49,7 @@ void example(mongocxx::database db) {
 }
 // [Example]
 
-}  // namespace
+} // namespace
 
 RUNNER_REGISTER_COMPONENT_WITH_INSTANCE() {
     mongocxx::client client{mongocxx::uri{}};

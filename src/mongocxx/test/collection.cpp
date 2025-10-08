@@ -20,7 +20,6 @@
 
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/json.hpp>
-#include <bsoncxx/private/make_unique.hh>
 #include <bsoncxx/stdx/string_view.hpp>
 #include <bsoncxx/string/to_string.hpp>
 #include <bsoncxx/types.hpp>
@@ -34,10 +33,13 @@
 #include <mongocxx/exception/write_exception.hpp>
 #include <mongocxx/instance.hpp>
 #include <mongocxx/pipeline.hpp>
-#include <mongocxx/private/libbson.hh>
-#include <mongocxx/private/libmongoc.hh>
 #include <mongocxx/read_concern.hpp>
 #include <mongocxx/write_concern.hpp>
+
+#include <bsoncxx/private/make_unique.hh>
+
+#include <mongocxx/private/bson.hh>
+#include <mongocxx/private/mongoc.hh>
 
 #include <bsoncxx/test/catch.hh>
 #include <bsoncxx/test/exception_guard.hh>
@@ -134,7 +136,7 @@ TEST_CASE("collection renaming", "[collection]") {
     coll.drop();
     other_coll.drop();
 
-    coll.insert_one(filter.view());  // Ensure that the collection exists.
+    coll.insert_one(filter.view()); // Ensure that the collection exists.
     other_coll.insert_one({});
 
     REQUIRE(coll.name() == bsoncxx::stdx::string_view(collname));
@@ -161,7 +163,7 @@ TEST_CASE("collection dropping") {
 
     std::string collname{"mongo_cxx_driver"};
     collection coll = db[collname];
-    coll.insert_one({});  // Ensure that the collection exists.
+    coll.insert_one({}); // Ensure that the collection exists.
 
     REQUIRE_NOTHROW(coll.drop());
 }
@@ -218,7 +220,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
         }
 
         SECTION("unacknowledged write concern returns disengaged optional", "[collection]") {
-            if (test_util::get_max_wire_version(mongodb_client) > 13) {
+            if (test_util::get_max_wire_version() > 13) {
                 SKIP("getLastError removed in SERVER-57390");
             }
             collection coll = db["insert_one_unack_write"];
@@ -242,9 +244,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             std::string collname = "insert_one_bypass_document_validation";
             db[collname].drop();
             collection coll = db.create_collection(
-                collname,
-                make_document(
-                    kvp("validator", make_document(kvp("_id", make_document(kvp("$eq", "baz")))))));
+                collname, make_document(kvp("validator", make_document(kvp("_id", make_document(kvp("$eq", "baz")))))));
 
             options::insert options;
             options.bypass_document_validation(true);
@@ -343,12 +343,11 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             REQUIRE(second_inserted_doc);
             REQUIRE(second_inserted_doc->view()["_id"]);
             REQUIRE(second_inserted_doc->view()["_id"].type() == bsoncxx::type::k_oid);
-            REQUIRE(id_map[1].get_oid().value ==
-                    second_inserted_doc->view()["_id"].get_oid().value);
+            REQUIRE(id_map[1].get_oid().value == second_inserted_doc->view()["_id"].get_oid().value);
         }
 
         SECTION("unacknowledged write concern returns disengaged optional") {
-            if (test_util::get_max_wire_version(mongodb_client) > 13) {
+            if (test_util::get_max_wire_version() > 13) {
                 SKIP("getLastError removed in SERVER-57390");
             }
             collection coll = db["insert_many_unack_write"];
@@ -369,16 +368,16 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             // Verify that two id->value maps have the same underlying content,
             // but are not pointing at the same memory.
             using id_map = mongocxx::result::insert_many::id_map;
-            const auto verifyEquivalentNotIdentical = [](const id_map& lhs, const id_map& rhs) {
+            auto const verifyEquivalentNotIdentical = [](id_map const& lhs, id_map const& rhs) {
                 REQUIRE(lhs.size() == rhs.size());
-                for (const auto& lhsIdVal : lhs) {
-                    const auto& rhsIdVal = rhs.find(lhsIdVal.first);
+                for (auto const& lhsIdVal : lhs) {
+                    auto const& rhsIdVal = rhs.find(lhsIdVal.first);
 
                     // copyIds[idx] doesn't exist, but ids[idx] does.
                     REQUIRE(rhsIdVal != rhs.end());
 
-                    const auto& lhsVal = lhsIdVal.second;
-                    const auto& rhsVal = rhsIdVal->second;
+                    auto const& lhsVal = lhsIdVal.second;
+                    auto const& rhsVal = rhsIdVal->second;
 
                     // The element wasn't duplicated.
                     REQUIRE(lhsVal.raw() != rhsVal.raw());
@@ -392,18 +391,18 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             std::string collname("result_insert_many_stale_references");
             db[collname].drop();
             auto coll = db.create_collection(collname);
-            const auto result = coll.insert_many(docs);
+            auto const result = coll.insert_many(docs);
             REQUIRE(result);
 
-            const auto& ids = result->inserted_ids();
+            auto const& ids = result->inserted_ids();
             REQUIRE(!ids.empty());
 
             mongocxx::result::insert_many resultCopy(*result);
-            const auto& copyIds = resultCopy.inserted_ids();
+            auto const& copyIds = resultCopy.inserted_ids();
             verifyEquivalentNotIdentical(ids, copyIds);
 
             auto resultAssign = *result;
-            const auto& assignIds = resultAssign.inserted_ids();
+            auto const& assignIds = resultAssign.inserted_ids();
             verifyEquivalentNotIdentical(ids, assignIds);
 
             verifyEquivalentNotIdentical(copyIds, assignIds);
@@ -413,9 +412,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             std::string collname = "insert_many_bypass_document_validation";
             db[collname].drop();
             collection coll = db.create_collection(
-                collname,
-                make_document(
-                    kvp("validator", make_document(kvp("x", make_document(kvp("$eq", 1)))))));
+                collname, make_document(kvp("validator", make_document(kvp("x", make_document(kvp("$eq", 1)))))));
 
             options::insert options;
             options.bypass_document_validation(true);
@@ -440,8 +437,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             REQUIRE(second_inserted_doc);
             REQUIRE(second_inserted_doc->view()["_id"]);
             REQUIRE(second_inserted_doc->view()["_id"].type() == bsoncxx::type::k_oid);
-            REQUIRE(id_map[1].get_oid().value ==
-                    second_inserted_doc->view()["_id"].get_oid().value);
+            REQUIRE(id_map[1].get_oid().value == second_inserted_doc->view()["_id"].get_oid().value);
         }
     }
 
@@ -540,7 +536,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
     }
 
     SECTION("update_one can take a pipeline", "[collection]") {
-        if (!test_util::newer_than(mongodb_client, "4.1.11")) {
+        if (!test_util::newer_than("4.1.11")) {
             SKIP("pipeline updates require 4.1.11");
         }
 
@@ -563,8 +559,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
 
         auto result = coll.find_one(bson.view());
         REQUIRE(result);
-        REQUIRE(result->view()["name"].get_string().value ==
-                bsoncxx::stdx::string_view("Charlotte"));
+        REQUIRE(result->view()["name"].get_string().value == bsoncxx::stdx::string_view("Charlotte"));
 
         // Try adding stages with append_stage(s) instead
         pipeline array_update;
@@ -588,10 +583,8 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
 
         result = coll.find_one(bson.view());
         REQUIRE(result);
-        REQUIRE(result->view()["lastname"].get_string().value ==
-                bsoncxx::stdx::string_view("Krause"));
-        REQUIRE(result->view()["department"].get_string().value ==
-                bsoncxx::stdx::string_view("VIS"));
+        REQUIRE(result->view()["lastname"].get_string().value == bsoncxx::stdx::string_view("Krause"));
+        REQUIRE(result->view()["department"].get_string().value == bsoncxx::stdx::string_view("VIS"));
         REQUIRE(result->view()["count"].get_int32().value == 1);
     }
 
@@ -613,7 +606,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
         }
 
         SECTION("unacknowledged write concern returns disengaged optional") {
-            if (test_util::get_max_wire_version(mongodb_client) > 13) {
+            if (test_util::get_max_wire_version() > 13) {
                 SKIP("getLastError removed in SERVER-57390");
             }
             collection coll = db["update_one_unack_write"];
@@ -637,8 +630,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             db[collname].drop();
             collection coll = db.create_collection(
                 collname,
-                make_document(kvp(
-                    "validator", make_document(kvp("changed", make_document(kvp("$eq", false)))))));
+                make_document(kvp("validator", make_document(kvp("changed", make_document(kvp("$eq", false)))))));
 
             options::update options;
             options.bypass_document_validation(true);
@@ -669,8 +661,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
         auto update_opts = options::update{}.collation(case_insensitive_collation.view());
         INFO("unacknowledged write concern fails");
         update_opts.write_concern(noack);
-        REQUIRE_THROWS_AS(coll.update_one(predicate.view(), update_doc.view(), update_opts),
-                          operation_exception);
+        REQUIRE_THROWS_AS(coll.update_one(predicate.view(), update_doc.view(), update_opts), operation_exception);
 
         INFO("default write concern succeeds");
         update_opts.write_concern(default_wc);
@@ -724,7 +715,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
         }
 
         SECTION("unacknowledged write concern returns disengaged optional") {
-            if (test_util::get_max_wire_version(mongodb_client) > 13) {
+            if (test_util::get_max_wire_version() > 13) {
                 SKIP("getLastError removed in SERVER-57390");
             }
             collection coll = db["update_many_unack_write"];
@@ -749,8 +740,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             db[collname].drop();
             collection coll = db.create_collection(
                 collname,
-                make_document(kvp(
-                    "validator", make_document(kvp("changed", make_document(kvp("$eq", false)))))));
+                make_document(kvp("validator", make_document(kvp("changed", make_document(kvp("$eq", false)))))));
 
             options::update options;
             options.bypass_document_validation(true);
@@ -782,8 +772,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
         auto update_opts = options::update{}.collation(case_insensitive_collation.view());
         INFO("unacknowledged write concern fails");
         update_opts.write_concern(noack);
-        REQUIRE_THROWS_AS(coll.update_many(predicate.view(), update_doc.view(), update_opts),
-                          operation_exception);
+        REQUIRE_THROWS_AS(coll.update_many(predicate.view(), update_doc.view(), update_opts), operation_exception);
 
         INFO("default write concern succeeds");
         update_opts.write_concern(default_wc);
@@ -895,7 +884,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
         }
 
         SECTION("unacknowledged write concern returns disengaged optional") {
-            if (test_util::get_max_wire_version(mongodb_client) > 13) {
+            if (test_util::get_max_wire_version() > 13) {
                 SKIP("getLastError removed in SERVER-57390");
             }
             collection coll = db["replace_one_unack_write"];
@@ -918,9 +907,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             std::string collname = "replace_one_bypass_document_validation";
             db[collname].drop();
             collection coll = db.create_collection(
-                collname,
-                make_document(
-                    kvp("validator", make_document(kvp("x", make_document(kvp("$eq", 1)))))));
+                collname, make_document(kvp("validator", make_document(kvp("x", make_document(kvp("$eq", 1)))))));
 
             options::replace options;
             options.bypass_document_validation(true);
@@ -950,8 +937,8 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
         auto replace_opts = options::replace{}.collation(case_insensitive_collation.view());
         INFO("unacknowledged write concern fails");
         replace_opts.write_concern(noack);
-        REQUIRE_THROWS_AS(coll.replace_one(predicate.view(), replacement_doc.view(), replace_opts),
-                          operation_exception);
+        REQUIRE_THROWS_AS(
+            coll.replace_one(predicate.view(), replacement_doc.view(), replace_opts), operation_exception);
 
         INFO("default write concern succeeds");
         replace_opts.write_concern(default_wc);
@@ -1030,7 +1017,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
         }
 
         SECTION("unacknowledged write concern returns disengaged optional") {
-            if (test_util::get_max_wire_version(mongodb_client) > 13) {
+            if (test_util::get_max_wire_version() > 13) {
                 SKIP("getLastError removed in SERVER-57390");
             }
             collection coll = db["delete_one_unack_write"];
@@ -1130,7 +1117,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
         }
 
         SECTION("unacknowledged write concern returns disengaged optional") {
-            if (test_util::get_max_wire_version(mongodb_client) > 13) {
+            if (test_util::get_max_wire_version() > 13) {
                 SKIP("getLastError removed in SERVER-57390");
             }
             collection coll = db["delete_many_unack_write"];
@@ -1267,13 +1254,11 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             INFO("unacknowledged write concern fails");
             options.write_concern(noack);
             REQUIRE_THROWS_AS(
-                coll.find_one_and_replace(collation_criteria.view(), replacement.view(), options),
-                logic_error);
+                coll.find_one_and_replace(collation_criteria.view(), replacement.view(), options), logic_error);
 
             INFO("default write concern succeeds");
             options.write_concern(default_wc);
-            auto doc =
-                coll.find_one_and_replace(collation_criteria.view(), replacement.view(), options);
+            auto doc = coll.find_one_and_replace(collation_criteria.view(), replacement.view(), options);
             REQUIRE(doc);
             REQUIRE(doc->view()["x"].get_string().value == bsoncxx::stdx::string_view{"foo"});
         }
@@ -1298,9 +1283,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             std::string collname = "find_one_and_replace_bypass_document_validation";
             db[collname].drop();
             collection coll = db.create_collection(
-                collname,
-                make_document(
-                    kvp("validator", make_document(kvp("x", make_document(kvp("$eq", "foo")))))));
+                collname, make_document(kvp("validator", make_document(kvp("x", make_document(kvp("$eq", "foo")))))));
 
             coll.insert_one(b1.view());
 
@@ -1309,8 +1292,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             options.bypass_document_validation(true);
 
             bsoncxx::stdx::optional<bsoncxx::document::value> doc;
-            REQUIRE_NOTHROW(
-                doc = coll.find_one_and_replace(criteria.view(), replacement.view(), options));
+            REQUIRE_NOTHROW(doc = coll.find_one_and_replace(criteria.view(), replacement.view(), options));
             REQUIRE(doc);
             REQUIRE(doc->view()["x"].get_string().value == bsoncxx::stdx::string_view{"bar"});
         }
@@ -1369,9 +1351,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
 
             INFO("unacknowledged write concern fails");
             options.write_concern(noack);
-            REQUIRE_THROWS_AS(
-                coll.find_one_and_update(collation_criteria.view(), update.view(), options),
-                logic_error);
+            REQUIRE_THROWS_AS(coll.find_one_and_update(collation_criteria.view(), update.view(), options), logic_error);
 
             INFO("default write concern succeeds");
             options.write_concern(default_wc);
@@ -1400,9 +1380,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             std::string collname = "find_one_and_update_bypass_document_validation";
             db[collname].drop();
             collection coll = db.create_collection(
-                collname,
-                make_document(
-                    kvp("validator", make_document(kvp("x", make_document(kvp("$eq", "foo")))))));
+                collname, make_document(kvp("validator", make_document(kvp("x", make_document(kvp("$eq", "foo")))))));
 
             coll.insert_one(b1.view());
 
@@ -1411,8 +1389,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             options.bypass_document_validation(true);
 
             bsoncxx::stdx::optional<bsoncxx::document::value> doc;
-            REQUIRE_NOTHROW(doc =
-                                coll.find_one_and_update(criteria.view(), update.view(), options));
+            REQUIRE_NOTHROW(doc = coll.find_one_and_update(criteria.view(), update.view(), options));
             REQUIRE(doc);
             REQUIRE(doc->view()["x"].get_string().value == bsoncxx::stdx::string_view{"bar"});
         }
@@ -1455,8 +1432,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
 
             INFO("unacknowledged write concern fails");
             options.write_concern(noack);
-            REQUIRE_THROWS_AS(coll.find_one_and_delete(collation_criteria.view(), options),
-                              logic_error);
+            REQUIRE_THROWS_AS(coll.find_one_and_delete(collation_criteria.view(), options), logic_error);
 
             INFO("default write concern succeeds");
             options.write_concern(default_wc);
@@ -1471,10 +1447,9 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
 
         auto get_results = [](cursor&& cursor) {
             std::vector<bsoncxx::document::value> results;
-            std::transform(cursor.begin(),
-                           cursor.end(),
-                           std::back_inserter(results),
-                           [](bsoncxx::document::view v) { return bsoncxx::document::value{v}; });
+            std::transform(cursor.begin(), cursor.end(), std::back_inserter(results), [](bsoncxx::document::view v) {
+                return bsoncxx::document::value{v};
+            });
             return results;
         };
 
@@ -1500,8 +1475,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             coll.insert_one(make_document(kvp("x", 3)));
             coll.insert_one(make_document(kvp("x", 5)));
 
-            pipeline.bucket(
-                make_document(kvp("groupBy", "$x"), kvp("boundaries", make_array(0, 2, 6))));
+            pipeline.bucket(make_document(kvp("groupBy", "$x"), kvp("boundaries", make_array(0, 2, 6))));
             auto cursor = coll.aggregate(pipeline);
 
             auto results = get_results(std::move(cursor));
@@ -1590,8 +1564,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             coll.insert_one(make_document(kvp("_id", 1), kvp("x", make_array(1, 1))));
             coll.create_index(make_document(kvp("x", "2d")));
 
-            pipeline.geo_near(
-                make_document(kvp("near", make_array(0, 0)), kvp("distanceField", "d")));
+            pipeline.geo_near(make_document(kvp("near", make_array(0, 0)), kvp("distanceField", "d")));
             auto cursor = coll.aggregate(pipeline);
 
             auto results = get_results(std::move(cursor));
@@ -1609,11 +1582,12 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             coll.insert_one(make_document(kvp("x", "bar")));
             coll.insert_one(make_document(kvp("x", "foo"), kvp("y", "bar")));
 
-            pipeline.graph_lookup(make_document(kvp("from", coll.name()),
-                                                kvp("startWith", "$y"),
-                                                kvp("connectFromField", "y"),
-                                                kvp("connectToField", "x"),
-                                                kvp("as", "z")));
+            pipeline.graph_lookup(make_document(
+                kvp("from", coll.name()),
+                kvp("startWith", "$y"),
+                kvp("connectFromField", "y"),
+                kvp("connectToField", "x"),
+                kvp("as", "z")));
             // Add a sort to the pipeline, so below tests can make assumptions about result order.
             pipeline.sort(make_document(kvp("x", 1)));
             auto cursor = coll.aggregate(pipeline);
@@ -1684,10 +1658,8 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             coll.insert_one(make_document(kvp("x", 0)));
             coll.insert_one(make_document(kvp("x", 1), kvp("y", 0)));
 
-            pipeline.lookup(make_document(kvp("from", coll.name()),
-                                          kvp("localField", "x"),
-                                          kvp("foreignField", "y"),
-                                          kvp("as", "z")));
+            pipeline.lookup(make_document(
+                kvp("from", coll.name()), kvp("localField", "x"), kvp("foreignField", "y"), kvp("as", "z")));
             // Add a sort to the pipeline, so below tests can make assumptions about result order.
             pipeline.sort(make_document(kvp("x", 1)));
             auto cursor = coll.aggregate(pipeline);
@@ -1715,7 +1687,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
 
         SECTION("merge") {
             auto merge_version = "4.1.11";
-            auto server_version = test_util::get_server_version(mongodb_client);
+            auto server_version = test_util::get_server_version();
             if (test_util::compare_versions(server_version, merge_version) < 0) {
                 // The server does not support $merge.
                 return;
@@ -1768,9 +1740,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             std::string collname = "aggregation_out_bypass_document_validation_out";
             db[collname].drop();
             collection coll_out = db.create_collection(
-                collname,
-                make_document(
-                    kvp("validator", make_document(kvp("x", make_document(kvp("$eq", 2)))))));
+                collname, make_document(kvp("validator", make_document(kvp("x", make_document(kvp("$eq", 2)))))));
 
             options::aggregate options;
             options.bypass_document_validation(true);
@@ -1824,9 +1794,10 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
 
             pipeline.redact(make_document(
                 kvp("$cond",
-                    make_document(kvp("if", make_document(kvp("$eq", make_array("$secret", 1)))),
-                                  kvp("then", "$$PRUNE"),
-                                  kvp("else", "$$DESCEND")))));
+                    make_document(
+                        kvp("if", make_document(kvp("$eq", make_array("$secret", 1)))),
+                        kvp("then", "$$PRUNE"),
+                        kvp("else", "$$DESCEND")))));
             auto cursor = coll.aggregate(pipeline);
 
             // The server supports redact().
@@ -2004,7 +1975,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
         }
 
         SECTION("unacknowledged write concern returns disengaged optional", "[collection]") {
-            if (test_util::get_max_wire_version(mongodb_client) > 13) {
+            if (test_util::get_max_wire_version() > 13) {
                 SKIP("getLastError removed in SERVER-57390");
             }
             collection coll = db["bulk_write_unack_write"];
@@ -2038,9 +2009,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             std::string collname = "bulk_write_bypass_document_validation";
             db[collname].drop();
             collection coll = db.create_collection(
-                collname,
-                make_document(
-                    kvp("validator", make_document(kvp("foo", make_document(kvp("$eq", 1)))))));
+                collname, make_document(kvp("validator", make_document(kvp("foo", make_document(kvp("$eq", 1)))))));
 
             bulk_opts.bypass_document_validation(true);
             auto cbulk = coll.create_bulk_write(bulk_opts);
@@ -2094,7 +2063,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             distinct_values.push_back(value.get_string().value);
         }
 
-        const auto assert_contains_one = [&](bsoncxx::stdx::string_view val) {
+        auto const assert_contains_one = [&](bsoncxx::stdx::string_view val) {
             REQUIRE(std::count(distinct_values.begin(), distinct_values.end(), val) == 1);
         };
 
@@ -2150,10 +2119,10 @@ TEST_CASE("read_concern is inherited from parent", "[collection]") {
     }
 }
 
-void find_index_and_validate(collection& coll,
-                             bsoncxx::stdx::string_view index_name,
-                             const std::function<void(bsoncxx::document::view)>& validate =
-                                 [](bsoncxx::document::view) {}) {
+void find_index_and_validate(
+    collection& coll,
+    bsoncxx::stdx::string_view index_name,
+    std::function<void(bsoncxx::document::view)> const& validate = [](bsoncxx::document::view) {}) {
     auto cursor = coll.list_indexes();
 
     for (auto&& index : cursor) {
@@ -2168,7 +2137,7 @@ void find_index_and_validate(collection& coll,
         validate(index);
         return;
     }
-    REQUIRE(false);  // index of given name not found
+    REQUIRE(false); // index of given name not found
 }
 
 TEST_CASE("create_index tests", "[collection]") {
@@ -2182,7 +2151,7 @@ TEST_CASE("create_index tests", "[collection]") {
     SECTION("returns index name") {
         collection coll = db["create_index_return_name"];
         coll.drop();
-        coll.insert_one({});  // Ensure that the collection exists.
+        coll.insert_one({}); // Ensure that the collection exists.
 
         bsoncxx::document::value index = make_document(kvp("a", 1));
 
@@ -2191,16 +2160,14 @@ TEST_CASE("create_index tests", "[collection]") {
         options.name(indexName);
 
         auto response = coll.create_index(index.view(), options);
-        REQUIRE(response.view()["name"].get_string().value ==
-                bsoncxx::stdx::string_view(indexName));
+        REQUIRE(response.view()["name"].get_string().value == bsoncxx::stdx::string_view(indexName));
 
         find_index_and_validate(coll, indexName);
 
         bsoncxx::document::value index2 = make_document(kvp("b", 1), kvp("c", -1));
 
         auto response2 = coll.create_index(index2.view(), options::index{});
-        REQUIRE(response2.view()["name"].get_string().value ==
-                bsoncxx::stdx::string_view{"b_1_c_-1"});
+        REQUIRE(response2.view()["name"].get_string().value == bsoncxx::stdx::string_view{"b_1_c_-1"});
 
         find_index_and_validate(coll, "b_1_c_-1");
     }
@@ -2208,7 +2175,7 @@ TEST_CASE("create_index tests", "[collection]") {
     SECTION("with collation") {
         collection coll = db["create_index_with_collation"];
         coll.drop();
-        coll.insert_one({});  // Ensure that the collection exists.
+        coll.insert_one({}); // Ensure that the collection exists.
 
         bsoncxx::document::value keys = make_document(kvp("a", 1));
         auto collation = make_document(kvp("locale", "en_US"));
@@ -2232,7 +2199,7 @@ TEST_CASE("create_index tests", "[collection]") {
     SECTION("fails") {
         collection coll = db["create_index_fails"];
         coll.drop();
-        coll.insert_one({});  // Ensure that the collection exists.
+        coll.insert_one({}); // Ensure that the collection exists.
 
         bsoncxx::document::value keys1 = make_document(kvp("a", 1));
         bsoncxx::document::value keys2 = make_document(kvp("a", -1));
@@ -2247,7 +2214,7 @@ TEST_CASE("create_index tests", "[collection]") {
     SECTION("succeeds with options") {
         collection coll = db["create_index_with_options"];
         coll.drop();
-        coll.insert_one({});  // Ensure that the collection exists.
+        coll.insert_one({}); // Ensure that the collection exists.
 
         bsoncxx::stdx::string_view index_name{"succeeds_with_options"};
 
@@ -2255,7 +2222,7 @@ TEST_CASE("create_index tests", "[collection]") {
 
         options::index options{};
         options.unique(true);
-        if (test_util::newer_than(mongodb_client, "4.4"))
+        if (test_util::newer_than("4.4"))
             options.hidden(true);
         options.expire_after(std::chrono::seconds(500));
         options.name(index_name);
@@ -2272,7 +2239,7 @@ TEST_CASE("create_index tests", "[collection]") {
             REQUIRE(unique_ele.type() == type::k_bool);
             REQUIRE(unique_ele.get_bool() == options.unique().value());
 
-            if (test_util::newer_than(mongodb_client, "4.4")) {
+            if (test_util::newer_than("4.4")) {
                 auto hidden_ele = index["hidden"];
                 REQUIRE(hidden_ele);
                 REQUIRE(hidden_ele.type() == type::k_bool);
@@ -2286,13 +2253,12 @@ TEST_CASE("create_index tests", "[collection]") {
     SECTION("fails with options") {
         collection coll = db["create_index_fails_with_options"];
         coll.drop();
-        coll.insert_one({});  // Ensure that the collection exists.
+        coll.insert_one({}); // Ensure that the collection exists.
 
         bsoncxx::document::value keys = make_document(kvp("c", 1));
         options::index options{};
 
-        auto expire_after =
-            std::chrono::seconds(static_cast<int64_t>(std::numeric_limits<int32_t>::max()) + 1);
+        auto expire_after = std::chrono::seconds(static_cast<int64_t>(std::numeric_limits<int32_t>::max()) + 1);
         options.expire_after(expire_after);
         REQUIRE_THROWS_AS(coll.create_index(keys.view(), options), logic_error);
 
@@ -2304,19 +2270,17 @@ TEST_CASE("create_index tests", "[collection]") {
     SECTION("succeeds with storage engine options") {
         collection coll = db["create_index_succeeds_with_storage_options"];
         coll.drop();
-        coll.insert_one({});  // Ensure that the collection exists.
+        coll.insert_one({}); // Ensure that the collection exists.
 
         bsoncxx::stdx::string_view index_name{"storage_options_test"};
         bsoncxx::document::value keys = make_document(kvp("c", 1));
+        bsoncxx::document::value storage_engine =
+            from_json(R"({"wiredTiger": {"configString": "block_allocation=first"}})");
 
         options::index options{};
         options.name(index_name);
 
-        std::unique_ptr<options::index::wiredtiger_storage_options> wt_options =
-            bsoncxx::make_unique<options::index::wiredtiger_storage_options>();
-        wt_options->config_string("block_allocation=first");
-
-        REQUIRE_NOTHROW(options.storage_options(std::move(wt_options)));
+        REQUIRE_NOTHROW(options.storage_engine(storage_engine.view()));
         REQUIRE_NOTHROW(coll.create_index(keys.view(), options));
 
         auto validate = [](bsoncxx::document::view index) {
@@ -2338,7 +2302,7 @@ TEST_CASE("list_indexes", "[collection]") {
 
     collection coll = db["list_indexes_works"];
     coll.drop();
-    coll.insert_one({});  // Ensure that the collection exists.
+    coll.insert_one({}); // Ensure that the collection exists.
 
     options::index options{};
     options.unique(true);
@@ -2376,12 +2340,26 @@ TEST_CASE("Cursor iteration", "[collection][cursor]") {
     client mongodb_client{uri{}, test_util::add_test_server_api()};
     database db = mongodb_client["collection_cursor_iteration"];
 
-    auto capped_name = std::string("mongo_cxx_driver_capped");
-    collection coll = db[capped_name];
+    // Drop and (re)create the capped collection with majority concern.
+    collection coll = [&db] {
+        write_concern wc_majority;
+        wc_majority.acknowledge_level(write_concern::level::k_majority);
 
-    // Drop and (re)create the capped collection.
-    coll.drop();
-    db.create_collection(capped_name, make_document(kvp("capped", true), kvp("size", 1024 * 1024)));
+        read_concern rc_majority;
+        rc_majority.acknowledge_level(read_concern::level::k_majority);
+
+        auto const capped_name = bsoncxx::stdx::string_view{"mongo_cxx_driver_capped"};
+
+        auto ret = db[capped_name];
+
+        ret.drop();
+        ret = db.create_collection(capped_name, make_document(kvp("capped", true), kvp("size", 1024 * 1024)));
+
+        ret.write_concern(wc_majority);
+        ret.read_concern(rc_majority);
+
+        return ret;
+    }();
 
     // Tests will use all three cursor types.
     options::find opts;
@@ -2546,8 +2524,7 @@ TEST_CASE("find_and_x operations append write concern correctly", "[collection]"
     /* find_one_and_replace */
     mongocxx::options::find_one_and_replace find_one_and_replace_opts;
     find_one_and_replace_opts.write_concern(wc);
-    doc = collection.find_one_and_replace(
-        make_document(), make_document(kvp("x", 2)), find_one_and_replace_opts);
+    doc = collection.find_one_and_replace(make_document(), make_document(kvp("x", 2)), find_one_and_replace_opts);
     REQUIRE(doc);
 
     /* find_one_and_delete */
@@ -2560,9 +2537,8 @@ TEST_CASE("find_and_x operations append write concern correctly", "[collection]"
      * manually. */
     bool called = false;
     auto visitor = libmongoc::find_and_modify_opts_append.create_instance();
-    visitor->visit([&](mongoc_find_and_modify_opts_t*, const bson_t* extra) {
-        bsoncxx::document::value expected =
-            make_document(kvp("writeConcern", make_document(kvp("w", 1))));
+    visitor->visit([&](mongoc_find_and_modify_opts_t*, bson_t const* extra) {
+        bsoncxx::document::value expected = make_document(kvp("writeConcern", make_document(kvp("w", 1))));
         bsoncxx::document::view extra_view{bson_get_data(extra), extra->len};
 
         called = true;
@@ -2582,8 +2558,8 @@ TEST_CASE("Ensure that the WriteConcernError 'errInfo' object is propagated", "[
 
     client mongodb_client{uri{}, test_util::add_test_server_api()};
 
-    if (test_util::get_topology(mongodb_client) == "sharded" &&
-        test_util::compare_versions(test_util::get_server_version(mongodb_client), "4.1.0") < 0) {
+    if (test_util::get_topology() == "sharded" &&
+        test_util::compare_versions(test_util::get_server_version(), "4.1.0") < 0) {
         SKIP("failCommand on mongos requires 4.1+");
     }
 
@@ -2609,8 +2585,7 @@ TEST_CASE("Ensure that the WriteConcernError 'errInfo' object is propagated", "[
         }));
     }));
 
-    fail_point.append(
-        kvp("mode", [](sub_document sub_doc) { sub_doc.append(kvp("times", types::b_int32{1})); }));
+    fail_point.append(kvp("mode", [](sub_document sub_doc) { sub_doc.append(kvp("times", types::b_int32{1})); }));
 
     mongodb_client["admin"].run_command(fail_point.view());
     collection coll = mongodb_client["test"]["errInfo"];
@@ -2621,7 +2596,7 @@ TEST_CASE("Ensure that the WriteConcernError 'errInfo' object is propagated", "[
     bool contains_err_info{false};
     try {
         coll.insert_one(doc.view());
-    } catch (const operation_exception& e) {
+    } catch (operation_exception const& e) {
         auto error = e.raw_server_error()->view();
         auto result = error["writeConcernErrors"][0]["errInfo"];
         contains_err_info = (err_info == result.get_document().view());
@@ -2632,12 +2607,12 @@ TEST_CASE("Ensure that the WriteConcernError 'errInfo' object is propagated", "[
 
 TEST_CASE("expose writeErrors[].errInfo", "[collection]") {
     // A helper for checking that an error document is well-formed according to our requirements:
-    auto writeErrors_well_formed = [](const bsoncxx::document::view& reply_view) {
+    auto writeErrors_well_formed = [](bsoncxx::document::view const& reply_view) {
         if (!reply_view["writeErrors"]) {
             FAIL(R"(missing "writeError" field in reply)");
         }
 
-        const auto& errdoc = reply_view["writeErrors"][0];
+        auto const& errdoc = reply_view["writeErrors"][0];
 
         auto error_code = errdoc["code"].get_int32();
 
@@ -2666,33 +2641,33 @@ TEST_CASE("expose writeErrors[].errInfo", "[collection]") {
 
     // Listen to the insertion-failed event: we want to get a copy of the server's
     // response so that we can compare it to the thrown exception later:
-    apm_opts.on_command_succeeded([&writeErrors_well_formed, &insert_succeeded, &eguard](
-                                      const mongocxx::events::command_succeeded_event& ev) {
-        BSONCXX_TEST_EXCEPTION_GUARD_BEGIN(eguard);
+    apm_opts.on_command_succeeded(
+        [&writeErrors_well_formed, &insert_succeeded, &eguard](mongocxx::events::command_succeeded_event const& ev) {
+            BSONCXX_TEST_EXCEPTION_GUARD_BEGIN(eguard);
 
-        if (ev.command_name() != "insert") {
-            return;
-        }
+            if (ev.command_name() != "insert") {
+                return;
+            }
 
-        writeErrors_well_formed(ev.reply());
+            writeErrors_well_formed(ev.reply());
 
-        // Make sure that "we" were actually called:
-        insert_succeeded = true;
+            // Make sure that "we" were actually called:
+            insert_succeeded = true;
 
-        BSONCXX_TEST_EXCEPTION_GUARD_END(eguard);
-    });
+            BSONCXX_TEST_EXCEPTION_GUARD_END(eguard);
+        });
 
     client_opts.apm_opts(apm_opts);
 
     auto mongodb_client = mongocxx::client(uri{}, client_opts);
 
-    if (!test_util::newer_than(mongodb_client, "5.0")) {
+    if (!test_util::newer_than("5.0")) {
         SKIP("test requires MongoDB server 5.0 or newer");
     }
 
     database db = mongodb_client["prose_test_expose_details"];
 
-    const std::string collname{"mongo_cxx_driver-expose_details"};
+    std::string const collname{"mongo_cxx_driver-expose_details"};
 
     // Drop the existing collection, if any:
     db[collname].drop();
@@ -2700,8 +2675,7 @@ TEST_CASE("expose writeErrors[].errInfo", "[collection]") {
     // Make a new collection with validation checking:
     collection coll = db.create_collection(
         collname,
-        make_document(kvp("validator",
-                          make_document(kvp("field_x", make_document(kvp("$type", "string")))))));
+        make_document(kvp("validator", make_document(kvp("field_x", make_document(kvp("$type", "string")))))));
 
     SECTION("cause a type violation on insert") {
         bsoncxx::builder::basic::document entry;
@@ -2713,7 +2687,7 @@ TEST_CASE("expose writeErrors[].errInfo", "[collection]") {
 
             FAIL("We should not make it here");
 
-        } catch (const operation_exception& e) {
+        } catch (operation_exception const& e) {
             BSONCXX_TEST_EXCEPTION_GUARD_CHECK(eguard);
 
             auto rse = e.raw_server_error();
@@ -2731,4 +2705,4 @@ TEST_CASE("expose writeErrors[].errInfo", "[collection]") {
     }
 }
 
-}  // namespace
+} // namespace

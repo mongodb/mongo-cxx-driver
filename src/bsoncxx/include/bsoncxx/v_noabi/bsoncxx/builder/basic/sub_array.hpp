@@ -32,11 +32,14 @@ namespace impl {
 template <typename T>
 void value_append(core* core, T&& t);
 
-}  // namespace impl
+} // namespace impl
 
 ///
-/// An internal class of builder::basic.
-/// Users should almost always construct a builder::basic::array instead.
+/// Represents an array element being constructed during an append operation.
+///
+/// @see
+/// - @ref bsoncxx::v_noabi::builder::basic::array
+/// - @ref bsoncxx::v_noabi::builder::basic::document
 ///
 class sub_array {
    public:
@@ -78,10 +81,10 @@ class sub_array {
     core* _core;
 };
 
-}  // namespace basic
-}  // namespace builder
-}  // namespace v_noabi
-}  // namespace bsoncxx
+} // namespace basic
+} // namespace builder
+} // namespace v_noabi
+} // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>
 

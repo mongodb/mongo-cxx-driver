@@ -1,13 +1,14 @@
 from config_generator.components.funcs.compile import Compile
 from config_generator.components.funcs.fetch_det import FetchDET
 from config_generator.components.funcs.install_c_driver import InstallCDriver
+from config_generator.components.funcs.install_uv import InstallUV
 from config_generator.components.funcs.setup import Setup
 
 from config_generator.etc.distros import find_large_distro
 from config_generator.etc.function import Function
 from config_generator.etc.utils import bash_exec
 
-from shrub.v3.evg_build_variant import BuildVariant, DisplayTask
+from shrub.v3.evg_build_variant import BuildVariant
 from shrub.v3.evg_command import EvgCommandType, expansions_update
 from shrub.v3.evg_task import EvgTask, EvgTaskRef
 from shrub.v3.evg_task_group import EvgTaskGroup
@@ -45,7 +46,7 @@ def functions():
 
 
 def tasks():
-    distro_name = 'ubuntu2004'
+    distro_name = 'rhel80'
     distro = find_large_distro(distro_name)
 
     return [
@@ -55,6 +56,7 @@ def tasks():
             run_on=distro.name,
             commands=[
                 InstallCDriver.call(),
+                InstallUV.call(),
                 Compile.call(build_type='Debug', vars={'ENABLE_TESTS': 'ON'}),
                 TestSearchIndexHelpers.call(),
             ],
@@ -99,11 +101,5 @@ def variants():
             name=f'{TAG}-matrix',
             display_name=f'{TAG}-matrix',
             tasks=[EvgTaskRef(name=f'tg-{TAG}-{mongodb_version}') for mongodb_version in MATRIX],
-            display_tasks=[
-                DisplayTask(
-                    name=f'{TAG}-matrix',
-                    execution_tasks=[f'.{TAG}'],
-                )
-            ],
         ),
     ]

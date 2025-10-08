@@ -14,22 +14,23 @@
 
 #include <utility>
 
-#include <bsoncxx/private/make_unique.hh>
-
 #include <mongocxx/client.hpp>
 #include <mongocxx/exception/error_code.hpp>
 #include <mongocxx/exception/exception.hpp>
 #include <mongocxx/exception/operation_exception.hpp>
-#include <mongocxx/exception/private/mongoc_error.hh>
-#include <mongocxx/options/private/apm.hh>
-#include <mongocxx/options/private/server_api.hh>
-#include <mongocxx/options/private/ssl.hh>
 #include <mongocxx/pool.hpp>
-#include <mongocxx/private/client.hh>
-#include <mongocxx/private/pool.hh>
-#include <mongocxx/private/uri.hh>
 
-#include <mongocxx/config/private/prelude.hh>
+#include <mongocxx/options/apm.hh>
+#include <mongocxx/options/server_api.hh>
+#include <mongocxx/options/tls.hh>
+
+#include <bsoncxx/private/make_unique.hh>
+
+#include <mongocxx/private/client.hh>
+#include <mongocxx/private/mongoc_error.hh>
+#include <mongocxx/private/pool.hh>
+#include <mongocxx/private/ssl.hh>
+#include <mongocxx/private/uri.hh>
 
 namespace mongocxx {
 namespace v_noabi {
@@ -55,13 +56,12 @@ void pool::_release(client* client) {
 
 pool::~pool() = default;
 
-pool::pool(const uri& uri, const options::pool& options)
+pool::pool(uri const& uri, options::pool const& options)
     : _impl{bsoncxx::make_unique<impl>(construct_client_pool(uri._impl->uri_t))} {
-#if defined(MONGOCXX_ENABLE_SSL) && defined(MONGOC_ENABLE_SSL)
+#if MONGOCXX_SSL_IS_ENABLED()
     if (options.client_opts().tls_opts()) {
         if (!uri.tls())
-            throw exception{error_code::k_invalid_parameter,
-                            "cannot set TLS options if 'tls=true' not in URI"};
+            throw exception{error_code::k_invalid_parameter, "cannot set TLS options if 'tls=true' not in URI"};
 
         auto mongoc_opts = options::make_tls_opts(*options.client_opts().tls_opts());
         _impl->tls_options = std::move(mongoc_opts.second);
@@ -73,13 +73,11 @@ pool::pool(const uri& uri, const options::pool& options)
 #endif
 
     if (options.client_opts().auto_encryption_opts()) {
-        const auto& auto_encrypt_opts = *(options.client_opts().auto_encryption_opts());
-        auto mongoc_auto_encrypt_opts =
-            static_cast<mongoc_auto_encryption_opts_t*>(auto_encrypt_opts.convert());
+        auto const& auto_encrypt_opts = *(options.client_opts().auto_encryption_opts());
+        auto mongoc_auto_encrypt_opts = static_cast<mongoc_auto_encryption_opts_t*>(auto_encrypt_opts.convert());
 
         bson_error_t error;
-        auto r = libmongoc::client_pool_enable_auto_encryption(
-            _impl->client_pool_t, mongoc_auto_encrypt_opts, &error);
+        auto r = libmongoc::client_pool_enable_auto_encryption(_impl->client_pool_t, mongoc_auto_encrypt_opts, &error);
 
         libmongoc::auto_encryption_opts_destroy(mongoc_auto_encrypt_opts);
 
@@ -98,12 +96,11 @@ pool::pool(const uri& uri, const options::pool& options)
     }
 
     if (options.client_opts().server_api_opts()) {
-        const auto& server_api_opts = *options.client_opts().server_api_opts();
+        auto const& server_api_opts = *options.client_opts().server_api_opts();
         auto mongoc_server_api_opts = options::make_server_api(server_api_opts);
 
         bson_error_t error;
-        auto result = libmongoc::client_pool_set_server_api(
-            _impl->client_pool_t, mongoc_server_api_opts.get(), &error);
+        auto result = libmongoc::client_pool_set_server_api(_impl->client_pool_t, mongoc_server_api_opts.get(), &error);
 
         if (!result) {
             throw_exception<operation_exception>(error);
@@ -138,8 +135,7 @@ pool::entry pool::acquire() {
             error_code::k_pool_wait_queue_timeout,
             "failed to acquire client, possibly due to parameter 'waitQueueTimeoutMS' limits."};
 
-    return entry(
-        entry::unique_client(new client(cli), [this](client* client) { _release(client); }));
+    return entry(entry::unique_client(new client(cli), [this](client* client) { _release(client); }));
 }
 
 bsoncxx::v_noabi::stdx::optional<pool::entry> pool::try_acquire() {
@@ -147,9 +143,8 @@ bsoncxx::v_noabi::stdx::optional<pool::entry> pool::try_acquire() {
     if (!cli)
         return bsoncxx::v_noabi::stdx::nullopt;
 
-    return entry(
-        entry::unique_client(new client(cli), [this](client* client) { _release(client); }));
+    return entry(entry::unique_client(new client(cli), [this](client* client) { _release(client); }));
 }
 
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace v_noabi
+} // namespace mongocxx

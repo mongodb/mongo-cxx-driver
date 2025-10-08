@@ -15,8 +15,6 @@
 #include <bsoncxx/string/to_string.hpp>
 #include <bsoncxx/string/view_or_value.hpp>
 
-#include <bsoncxx/config/private/prelude.hh>
-
 namespace bsoncxx {
 namespace v_noabi {
 namespace string {
@@ -32,10 +30,10 @@ view_or_value view_or_value::terminated() const {
     return {view()};
 }
 
-const char* view_or_value::data() const {
+char const* view_or_value::data() const {
     return view().data();
 }
 
-}  // namespace string
-}  // namespace v_noabi
-}  // namespace bsoncxx
+} // namespace string
+} // namespace v_noabi
+} // namespace bsoncxx

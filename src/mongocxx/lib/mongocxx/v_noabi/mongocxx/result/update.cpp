@@ -14,15 +14,13 @@
 
 #include <mongocxx/result/update.hpp>
 
-#include <mongocxx/config/private/prelude.hh>
-
 namespace mongocxx {
 namespace v_noabi {
 namespace result {
 
 update::update(result::bulk_write result) : _result(std::move(result)) {}
 
-const result::bulk_write& update::result() const {
+result::bulk_write const& update::result() const {
     return _result;
 }
 std::int32_t update::matched_count() const {
@@ -44,13 +42,13 @@ bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::element> update::up
     return _result.upserted_ids()[0];
 }
 
-bool operator==(const update& lhs, const update& rhs) {
+bool operator==(update const& lhs, update const& rhs) {
     return lhs.result() == rhs.result();
 }
-bool operator!=(const update& lhs, const update& rhs) {
+bool operator!=(update const& lhs, update const& rhs) {
     return !(lhs == rhs);
 }
 
-}  // namespace result
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace result
+} // namespace v_noabi
+} // namespace mongocxx

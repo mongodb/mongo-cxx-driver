@@ -14,13 +14,12 @@
 
 #include <string>
 
+#include <mongocxx/change_stream.hpp>
+
 #include <bsoncxx/private/make_unique.hh>
 
-#include <mongocxx/change_stream.hpp>
 #include <mongocxx/private/change_stream.hh>
-#include <mongocxx/private/libmongoc.hh>
-
-#include <mongocxx/config/private/prelude.hh>
+#include <mongocxx/private/mongoc.hh>
 
 namespace mongocxx {
 namespace v_noabi {
@@ -55,8 +54,7 @@ change_stream::iterator change_stream::end() const {
     return iterator{change_stream::iterator::iter_type::k_end, this};
 }
 
-bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view> change_stream::get_resume_token()
-    const {
+bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view> change_stream::get_resume_token() const {
     return _impl->get_resume_token();
 }
 
@@ -64,14 +62,13 @@ bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view> change_stream
 change_stream::change_stream(void* change_stream_ptr)
     : _impl(bsoncxx::make_unique<impl>(static_cast<mongoc_change_stream_t*>(change_stream_ptr))) {}
 
-change_stream::iterator::iterator()
-    : change_stream::iterator::iterator{iter_type::k_default_constructed, nullptr} {}
+change_stream::iterator::iterator() : change_stream::iterator::iterator{iter_type::k_default_constructed, nullptr} {}
 
-const bsoncxx::v_noabi::document::view& change_stream::iterator::operator*() const {
+bsoncxx::v_noabi::document::view const& change_stream::iterator::operator*() const {
     return _change_stream->_impl->doc();
 }
 
-const bsoncxx::v_noabi::document::view* change_stream::iterator::operator->() const {
+bsoncxx::v_noabi::document::view const* change_stream::iterator::operator->() const {
     return std::addressof(_change_stream->_impl->doc());
 }
 
@@ -86,7 +83,7 @@ void change_stream::iterator::operator++(int) {
     operator++();
 }
 
-change_stream::iterator::iterator(const iter_type type, const change_stream* change_stream)
+change_stream::iterator::iterator(iter_type const type, change_stream const* change_stream)
     : _type{type}, _change_stream{change_stream} {
     if (type != iter_type::k_tracking || _change_stream->_impl->has_started()) {
         return;
@@ -100,7 +97,7 @@ change_stream::iterator::iterator(const iter_type type, const change_stream* cha
 // Care about the underlying change_stream being the same so we can
 // support a collection of iterators for change streams from different
 // collections.
-bool operator==(const change_stream::iterator& lhs, const change_stream::iterator& rhs) noexcept {
+bool operator==(change_stream::iterator const& lhs, change_stream::iterator const& rhs) noexcept {
     // Tracking different streams never equal.
     if (lhs._change_stream != rhs._change_stream) {
         return false;
@@ -119,7 +116,7 @@ bool operator==(const change_stream::iterator& lhs, const change_stream::iterato
         ((rhs._type == change_stream::iterator::iter_type::k_end) && lhs.is_exhausted());
 }
 
-bool operator!=(const change_stream::iterator& lhs, const change_stream::iterator& rhs) noexcept {
+bool operator!=(change_stream::iterator const& lhs, change_stream::iterator const& rhs) noexcept {
     return !(lhs == rhs);
 }
 
@@ -127,5 +124,5 @@ bool change_stream::iterator::is_exhausted() const {
     return _change_stream->_impl->is_exhausted();
 }
 
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace v_noabi
+} // namespace mongocxx

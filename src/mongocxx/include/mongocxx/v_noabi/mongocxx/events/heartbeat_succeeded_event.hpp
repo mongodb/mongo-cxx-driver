@@ -26,15 +26,14 @@ namespace v_noabi {
 namespace events {
 
 ///
-/// An event notification sent when the driver completes a "hello" command to check the status
-/// of a server.
+/// The successful execution of a heartbeat ("hello") command.
 ///
 /// @see
-/// - "ServerHeartbeatSucceededEvent" in https://github.com/mongodb/specifications/blob/master/source/server-discovery-and-monitoring/server-discovery-and-monitoring.md
+/// - [SDAM Logging and Monitoring Specification (MongoDB Specifications)](https://specifications.readthedocs.io/en/latest/server-discovery-and-monitoring/server-discovery-and-monitoring-logging-and-monitoring/)
 ///
 class heartbeat_succeeded_event {
    public:
-    explicit heartbeat_succeeded_event(const void* event);
+    explicit heartbeat_succeeded_event(void const* event);
 
     ///
     /// Destroys a heartbeat_succeeded_event.
@@ -44,8 +43,8 @@ class heartbeat_succeeded_event {
     heartbeat_succeeded_event(heartbeat_succeeded_event&&) = default;
     heartbeat_succeeded_event& operator=(heartbeat_succeeded_event&&) = default;
 
-    heartbeat_succeeded_event(const heartbeat_succeeded_event&) = default;
-    heartbeat_succeeded_event& operator=(const heartbeat_succeeded_event&) = default;
+    heartbeat_succeeded_event(heartbeat_succeeded_event const&) = default;
+    heartbeat_succeeded_event& operator=(heartbeat_succeeded_event const&) = default;
 
     ///
     /// Returns the server reply for the succeeded operation.
@@ -83,12 +82,12 @@ class heartbeat_succeeded_event {
     MONGOCXX_ABI_EXPORT_CDECL(bool) awaited() const;
 
    private:
-    const void* _succeeded_event;
+    void const* _succeeded_event;
 };
 
-}  // namespace events
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace events
+} // namespace v_noabi
+} // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
 

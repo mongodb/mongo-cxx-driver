@@ -12,6 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <bsoncxx/private/suppress_deprecation_warnings.hh>
+
+//
+
+BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_BEGIN
+
+//
+
 #include <mongocxx/exception/authentication_exception.hpp>
 
 namespace mongocxx {
@@ -19,5 +27,7 @@ namespace v_noabi {
 
 authentication_exception::~authentication_exception() = default;
 
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace v_noabi
+} // namespace mongocxx
+
+BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_END

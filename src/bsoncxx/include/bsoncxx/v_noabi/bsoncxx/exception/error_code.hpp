@@ -27,6 +27,8 @@ namespace v_noabi {
 ///
 /// Enum representing the various error types that can occur while operating on BSON values.
 ///
+/// @note `std::is_error_code_enum` is specialized for this type.
+///
 enum class error_code : std::int32_t {
     /// A new key was appended while building a subarray.
     k_cannot_append_key_in_sub_array = 1,
@@ -141,6 +143,15 @@ enum class error_code : std::int32_t {
     k_cannot_append_minkey,
     /// @}
 
+    /// A BSON Binary Vector failed to parse in the requested format.
+    k_invalid_vector,
+
+    /// A BSON Binary Vector would be too large to represent.
+    k_vector_too_large,
+
+    /// Attempted out-of-range access to a BSON Binary Vector element.
+    k_vector_out_of_range,
+
     // Add new constant string message to error_code.cpp as well!
 };
 
@@ -149,7 +160,7 @@ enum class error_code : std::int32_t {
 ///
 /// @return The bsoncxx error_category
 ///
-BSONCXX_ABI_EXPORT_CDECL(const std::error_category&) error_category();
+BSONCXX_ABI_EXPORT_CDECL(std::error_category const&) error_category();
 
 ///
 /// Translate a bsoncxx::v_noabi::error_code into a std::error_code.
@@ -161,44 +172,28 @@ inline std::error_code make_error_code(error_code error) {
     return {static_cast<int>(error), error_category()};
 }
 
-}  // namespace v_noabi
-}  // namespace bsoncxx
+} // namespace v_noabi
+} // namespace bsoncxx
 
 namespace bsoncxx {
 
 using ::bsoncxx::v_noabi::error_category;
 using ::bsoncxx::v_noabi::make_error_code;
 
-}  // namespace bsoncxx
+} // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>
 
 namespace std {
 
-///
-/// Indicates @ref bsoncxx::v_noabi::error_code is eligible for `std::error_code` implicit
-/// conversions.
-///
+// @cond DOXYGEN_DISABLE
 template <>
 struct is_error_code_enum<bsoncxx::v_noabi::error_code> : public true_type {};
+// @endcond
 
-}  // namespace std
+} // namespace std
 
 ///
 /// @file
 /// Provides @ref bsoncxx::v_noabi::error_code.
 ///
-
-#if defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
-
-namespace bsoncxx {
-
-/// @ref bsoncxx::v_noabi::error_category()
-const std::error_category& error_category();
-
-/// @ref bsoncxx::v_noabi::make_error_code(v_noabi::error_code error)
-std::error_code make_error_code(v_noabi::error_code error);
-
-}  // namespace bsoncxx
-
-#endif  // defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

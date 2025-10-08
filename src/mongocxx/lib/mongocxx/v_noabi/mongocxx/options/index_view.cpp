@@ -18,8 +18,6 @@
 
 #include <mongocxx/options/index_view.hpp>
 
-#include <mongocxx/config/private/prelude.hh>
-
 using bsoncxx::v_noabi::builder::basic::kvp;
 using bsoncxx::v_noabi::builder::basic::make_document;
 
@@ -29,17 +27,15 @@ namespace options {
 
 index_view::index_view() : _max_time(), _write_concern(), _commit_quorum() {}
 
-const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern>&
-index_view::write_concern() const {
+bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern> const& index_view::write_concern() const {
     return _write_concern;
 }
 
-const bsoncxx::v_noabi::stdx::optional<std::chrono::milliseconds>& index_view::max_time() const {
+bsoncxx::v_noabi::stdx::optional<std::chrono::milliseconds> const& index_view::max_time() const {
     return _max_time;
 }
 
-const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::value>
-index_view::commit_quorum() const {
+bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::value> const index_view::commit_quorum() const {
     return _commit_quorum;
 }
 
@@ -65,6 +61,6 @@ index_view& index_view::commit_quorum(std::string commit_quorum) {
     return *this;
 }
 
-}  // namespace options
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace options
+} // namespace v_noabi
+} // namespace mongocxx

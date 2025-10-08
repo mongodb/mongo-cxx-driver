@@ -25,15 +25,14 @@ namespace v_noabi {
 namespace events {
 
 ///
-/// An event notification sent when the driver stops monitoring a server topology and destroys its
-/// description.
+/// The closing of connections to a topology of shutdown MongoDB servers.
 ///
 /// @see
-/// - "TopologyClosedEvent" in https://github.com/mongodb/specifications/blob/master/source/server-discovery-and-monitoring/server-discovery-and-monitoring.md
+/// - [SDAM Logging and Monitoring Specification (MongoDB Specifications)](https://specifications.readthedocs.io/en/latest/server-discovery-and-monitoring/server-discovery-and-monitoring-logging-and-monitoring/)
 ///
 class topology_closed_event {
    public:
-    explicit topology_closed_event(const void* event);
+    explicit topology_closed_event(void const* event);
 
     ///
     /// Destroys a topology_closed_event.
@@ -43,8 +42,8 @@ class topology_closed_event {
     topology_closed_event(topology_closed_event&&) = default;
     topology_closed_event& operator=(topology_closed_event&&) = default;
 
-    topology_closed_event(const topology_closed_event&) = default;
-    topology_closed_event& operator=(const topology_closed_event&) = default;
+    topology_closed_event(topology_closed_event const&) = default;
+    topology_closed_event& operator=(topology_closed_event const&) = default;
 
     ///
     /// An opaque id, unique to this topology for this mongocxx::v_noabi::client or
@@ -55,12 +54,12 @@ class topology_closed_event {
     MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::oid) topology_id() const;
 
    private:
-    const void* _event;
+    void const* _event;
 };
 
-}  // namespace events
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace events
+} // namespace v_noabi
+} // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
 

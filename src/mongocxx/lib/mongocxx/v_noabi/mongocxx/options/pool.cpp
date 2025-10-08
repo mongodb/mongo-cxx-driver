@@ -14,18 +14,16 @@
 
 #include <mongocxx/options/pool.hpp>
 
-#include <mongocxx/config/private/prelude.hh>
-
 namespace mongocxx {
 namespace v_noabi {
 namespace options {
 
 pool::pool(client client_opts) : _client_opts(std::move(client_opts)) {}
 
-const client& pool::client_opts() const {
+client const& pool::client_opts() const {
     return _client_opts;
 }
 
-}  // namespace options
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace options
+} // namespace v_noabi
+} // namespace mongocxx

@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <mongocxx/config/prelude.hpp>
+#include <mongocxx/v1/config/export.hpp>
 
 #include <catch2/catch_session.hpp>
 

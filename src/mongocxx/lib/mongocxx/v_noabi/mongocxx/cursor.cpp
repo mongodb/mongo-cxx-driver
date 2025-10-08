@@ -12,16 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <bsoncxx/private/libbson.hh>
+#include <mongocxx/cursor.hpp>
+#include <mongocxx/exception/query_exception.hpp>
+
+#include <bsoncxx/private/bson.hh>
 #include <bsoncxx/private/make_unique.hh>
 
-#include <mongocxx/cursor.hpp>
-#include <mongocxx/exception/private/mongoc_error.hh>
-#include <mongocxx/exception/query_exception.hpp>
 #include <mongocxx/private/cursor.hh>
-#include <mongocxx/private/libmongoc.hh>
-
-#include <mongocxx/config/private/prelude.hh>
+#include <mongocxx/private/mongoc.hh>
+#include <mongocxx/private/mongoc_error.hh>
 
 namespace mongocxx {
 namespace v_noabi {
@@ -39,18 +38,17 @@ void cursor::iterator::operator++(int) {
 }
 
 cursor::iterator& cursor::iterator::operator++() {
-    const bson_t* out;
-    const bson_t* error_document;
+    bson_t const* out;
+    bson_t const* error_document;
     bson_error_t error;
 
     if (libmongoc::cursor_next(_cursor->_impl->cursor_t, &out)) {
         _cursor->_impl->doc = bsoncxx::v_noabi::document::view{bson_get_data(out), out->len};
-    } else if (libmongoc::cursor_error_document(
-                   _cursor->_impl->cursor_t, &error, &error_document)) {
+    } else if (libmongoc::cursor_error_document(_cursor->_impl->cursor_t, &error, &error_document)) {
         _cursor->_impl->mark_dead();
         if (error_document) {
-            bsoncxx::v_noabi::document::value error_doc{bsoncxx::v_noabi::document::view{
-                bson_get_data(error_document), error_document->len}};
+            bsoncxx::v_noabi::document::value error_doc{
+                bsoncxx::v_noabi::document::view{bson_get_data(error_document), error_document->len}};
             throw_exception<query_exception>(error_doc, error);
         } else {
             throw_exception<query_exception>(error);
@@ -89,11 +87,11 @@ bool cursor::iterator::is_exhausted() const {
     return !_cursor || _cursor->_impl->is_exhausted();
 }
 
-const bsoncxx::v_noabi::document::view& cursor::iterator::operator*() const {
+bsoncxx::v_noabi::document::view const& cursor::iterator::operator*() const {
     return _cursor->_impl->doc;
 }
 
-const bsoncxx::v_noabi::document::view* cursor::iterator::operator->() const {
+bsoncxx::v_noabi::document::view const* cursor::iterator::operator->() const {
     return &_cursor->_impl->doc;
 }
 
@@ -102,13 +100,13 @@ const bsoncxx::v_noabi::document::view* cursor::iterator::operator->() const {
 // both are "at the end".  We check for exhaustion first because the most
 // common check is `iter != cursor.end()`.
 //
-bool operator==(const cursor::iterator& lhs, const cursor::iterator& rhs) {
+bool operator==(cursor::iterator const& lhs, cursor::iterator const& rhs) {
     return ((rhs.is_exhausted() && lhs.is_exhausted()) || (lhs._cursor == rhs._cursor));
 }
 
-bool operator!=(const cursor::iterator& lhs, const cursor::iterator& rhs) {
+bool operator!=(cursor::iterator const& lhs, cursor::iterator const& rhs) {
     return !(lhs == rhs);
 }
 
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace v_noabi
+} // namespace mongocxx

@@ -27,7 +27,7 @@ namespace v_noabi {
 namespace result {
 
 ///
-/// Class representing the result of a MongoDB delete operation.
+/// The result of a MongoDB delete operation.
 ///
 class delete_result {
    public:
@@ -39,7 +39,7 @@ class delete_result {
     ///
     /// @return The raw bulk write result.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const result::bulk_write&) result() const;
+    MONGOCXX_ABI_EXPORT_CDECL(result::bulk_write const&) result() const;
 
     ///
     /// Gets the number of documents that were deleted during this operation.
@@ -48,16 +48,16 @@ class delete_result {
     ///
     MONGOCXX_ABI_EXPORT_CDECL(std::int32_t) deleted_count() const;
 
-    friend MONGOCXX_ABI_EXPORT_CDECL(bool) operator==(const delete_result&, const delete_result&);
-    friend MONGOCXX_ABI_EXPORT_CDECL(bool) operator!=(const delete_result&, const delete_result&);
+    friend MONGOCXX_ABI_EXPORT_CDECL(bool) operator==(delete_result const&, delete_result const&);
+    friend MONGOCXX_ABI_EXPORT_CDECL(bool) operator!=(delete_result const&, delete_result const&);
 
    private:
     result::bulk_write _result;
 };
 
-}  // namespace result
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace result
+} // namespace v_noabi
+} // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
 

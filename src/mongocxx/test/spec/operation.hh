@@ -22,9 +22,8 @@
 
 #include <mongocxx/client_session.hpp>
 #include <mongocxx/pipeline.hpp>
-#include <mongocxx/private/libmongoc.hh>
 
-#include <mongocxx/config/private/prelude.hh>
+#include <mongocxx/private/mongoc.hh>
 
 namespace mongocxx {
 namespace spec {
@@ -40,11 +39,12 @@ bsoncxx::stdx::optional<read_preference> lookup_read_preference(document::view d
 class operation_runner {
    public:
     explicit operation_runner(collection* coll);
-    operation_runner(database* db,
-                     collection* coll,
-                     client_session* session0 = nullptr,
-                     client_session* session1 = nullptr,
-                     client* client = nullptr);
+    operation_runner(
+        database* db,
+        collection* coll,
+        client_session* session0 = nullptr,
+        client_session* session1 = nullptr,
+        client* client = nullptr);
     document::value run(document::view operation);
 
    private:
@@ -80,11 +80,9 @@ class operation_runner {
     document::value _run_abort_transaction(document::view operation);
     document::value _run_run_command(document::view operation);
     document::value _run_find_one(document::view operation);
-    document::value _create_index(const document::view& operation);
+    document::value _create_index(document::view const& operation);
     void _set_collection_options(document::view operation);
 };
 
-}  // namespace spec
-}  // namespace mongocxx
-
-#include <mongocxx/config/private/postlude.hh>
+} // namespace spec
+} // namespace mongocxx

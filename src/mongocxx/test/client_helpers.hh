@@ -31,9 +31,8 @@
 #include <mongocxx/client.hpp>
 #include <mongocxx/collection.hpp>
 #include <mongocxx/options/client.hpp>
-#include <mongocxx/private/libmongoc.hh>
 
-#include <mongocxx/config/private/prelude.hh>
+#include <mongocxx/private/mongoc.hh>
 
 #include <bsoncxx/test/catch.hh>
 
@@ -53,10 +52,10 @@ namespace test_util {
 std::int32_t compare_versions(std::string version1, std::string version2);
 
 //
-// Returns 'true' if the server version for 'client' is at least 'version',
+// Returns 'true' if the server version for the default client is at least 'version',
 // returns 'false' otherwise.
 //
-bool newer_than(const client& client, std::string version);
+bool newer_than(std::string version);
 
 //
 // Converts a hexadecimal string to an string of bytes.
@@ -78,47 +77,47 @@ std::basic_string<std::uint8_t> convert_hex_string_to_bytes(bsoncxx::stdx::strin
 options::client add_test_server_api(options::client opts = {});
 
 //
-// Determines the max wire version associated with the given client, by running the "hello"
+// Determines the max wire version associated with the default client, by running the "hello"
 // command.
 //
 // Throws mongocxx::operation_exception if the operation fails, or the server reply is malformed.
 //
-std::int32_t get_max_wire_version(const client& client);
+std::int32_t get_max_wire_version();
 
 ///
-/// Determines the server version number by running "serverStatus".
+/// Determines the server version number by running "serverStatus" with the default client.
 ///
-std::string get_server_version(const client& client = {uri{}, add_test_server_api()});
+std::string get_server_version();
 
 ///
-/// Determines the setting of all server parameters by running "getParameter, *".
+/// Determines the setting of all server parameters by running "getParameter, *" with the default client.
 ///
-bsoncxx::document::value get_server_params(const client& client = {uri{}, add_test_server_api()});
+bsoncxx::document::value get_server_params();
 
 ///
-/// Get replica set name, or empty string.
+/// Returns the replica set name or an empty string using the default client.
 ///
-std::string replica_set_name(const client& client);
+std::string replica_set_name();
 
 ///
-/// Determines if the server is a replica set member.
+/// Determines if the server is a replica set member using the default client.
 ///
-bool is_replica_set(const client& client = {uri{}, add_test_server_api()});
+bool is_replica_set();
 
 ///
-/// Determines if the server is a sharded cluster member.
+/// Determines if the server is a sharded cluster member using the default client.
 ///
-bool is_sharded_cluster(const client& client = {uri{}, add_test_server_api()});
+bool is_sharded_cluster();
 
 ///
-/// Returns "standalone", "replicaset", or "sharded".
+/// Returns "standalone", "replicaset", or "sharded" using the default client.
 ///
-std::string get_topology(const client& client = {uri{}, add_test_server_api()});
+std::string get_topology();
 
 ///
-/// Returns the "host" field of the config.shards collection.
+/// Returns the "host" field of the config.shards collection using the default client.
 ///
-std::string get_hosts(const client& client = {uri{}, add_test_server_api()});
+std::string get_hosts();
 
 ///
 /// Parses a JSON file at a given path and return it as a BSON document value.
@@ -127,10 +126,8 @@ std::string get_hosts(const client& client = {uri{}, add_test_server_api()});
 ///
 bsoncxx::stdx::optional<bsoncxx::document::value> parse_test_file(std::string path);
 
-using item_t = std::pair<bsoncxx::stdx::optional<bsoncxx::stdx::string_view>,
-                         bsoncxx::types::bson_value::view>;
-using xformer_t =
-    std::function<bsoncxx::stdx::optional<item_t>(item_t, bsoncxx::builder::basic::array*)>;
+using item_t = std::pair<bsoncxx::stdx::optional<bsoncxx::stdx::string_view>, bsoncxx::types::bson_value::view>;
+using xformer_t = std::function<bsoncxx::stdx::optional<item_t>(item_t, bsoncxx::builder::basic::array*)>;
 
 //
 // Transforms a document and returns a copy of it.
@@ -162,25 +159,24 @@ using xformer_t =
 // @throws a logic_error{error_code::k_invalid_parameter} if fcn returns no key when a key is
 // passed in.
 //
-bsoncxx::document::value transform_document(bsoncxx::document::view view, const xformer_t& fcn);
+bsoncxx::document::value transform_document(bsoncxx::document::view view, xformer_t const& fcn);
 
 double as_double(bsoncxx::types::bson_value::view value);
 
 bool is_numeric(bsoncxx::types::bson_value::view value);
 
 enum class match_action { k_skip, k_proceed, k_not_equal };
-using match_visitor =
-    std::function<match_action(bsoncxx::stdx::string_view key,
-                               bsoncxx::stdx::optional<bsoncxx::types::bson_value::view> main,
-                               bsoncxx::types::bson_value::view pattern)>;
+using match_visitor = std::function<match_action(
+    bsoncxx::stdx::string_view key,
+    bsoncxx::stdx::optional<bsoncxx::types::bson_value::view> main,
+    bsoncxx::types::bson_value::view pattern)>;
 
-bool matches(bsoncxx::types::bson_value::view main,
-             bsoncxx::types::bson_value::view pattern,
-             match_visitor visitor_fn = {});
+bool matches(
+    bsoncxx::types::bson_value::view main,
+    bsoncxx::types::bson_value::view pattern,
+    match_visitor visitor_fn = {});
 
-bool matches(bsoncxx::document::view doc,
-             bsoncxx::document::view pattern,
-             match_visitor visitor_fn = {});
+bool matches(bsoncxx::document::view doc, bsoncxx::document::view pattern, match_visitor visitor_fn = {});
 
 #define REQUIRE_BSON_MATCHES(_main, _pattern)                                                      \
     do {                                                                                           \
@@ -208,17 +204,14 @@ auto size(Container c) -> decltype(std::distance(std::begin(c), std::end(c))) {
 //
 // Require a topology that supports sessions (a post-3.6 replica set or cluster of them).
 //
-// @param client
-//   A connected client.
+// @return Whether sessions are supported by the default client's topology.
 //
-// @return Whether sessions are supported by the client's topology.
-//
-bool server_has_sessions_impl(const client& conn);
+bool server_has_sessions_impl();
 
-#define SERVER_HAS_SESSIONS_OR_SKIP(conn)                       \
-    if (!mongocxx::test_util::server_has_sessions_impl(conn)) { \
-        SKIP("server does not support session");                \
-    } else                                                      \
+#define SERVER_HAS_SESSIONS_OR_SKIP()                       \
+    if (!mongocxx::test_util::server_has_sessions_impl()) { \
+        SKIP("server does not support session");            \
+    } else                                                  \
         ((void)0)
 
 #if defined(MONGOC_ENABLE_CLIENT_SIDE_ENCRYPTION)
@@ -245,13 +238,10 @@ cseeos_result client_side_encryption_enabled_or_skip_impl();
     } else                                                                            \
         ((void)0)
 #else
-#define CLIENT_SIDE_ENCRYPTION_ENABLED_OR_SKIP() \
-    SKIP("linked libmongoc does not support client side encryption")
-#endif  // defined(MONGOC_ENABLE_CLIENT_SIDE_ENCRYPTION)
+#define CLIENT_SIDE_ENCRYPTION_ENABLED_OR_SKIP() SKIP("linked libmongoc does not support client side encryption")
+#endif // defined(MONGOC_ENABLE_CLIENT_SIDE_ENCRYPTION)
 
 std::string getenv_or_fail(const std::string env_name);
 
-}  // namespace test_util
-}  // namespace mongocxx
-
-#include <mongocxx/config/private/postlude.hh>
+} // namespace test_util
+} // namespace mongocxx

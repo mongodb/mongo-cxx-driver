@@ -25,16 +25,16 @@ namespace {
 // [Example]
 void example() {
     try {
-        bsoncxx::types::bson_value::value value{bsoncxx::type::k_null};  // Throws.
+        bsoncxx::types::bson_value::value value{bsoncxx::type::k_null}; // Throws.
 
         EXPECT(false && "should not reach this point");
-    } catch (const bsoncxx::exception& ex) {
+    } catch (bsoncxx::exception const& ex) {
         EXPECT(ex.code() == bsoncxx::error_code::k_invalid_bson_type_id);
     }
 }
 // [Example]
 
-}  // namespace
+} // namespace
 
 RUNNER_REGISTER_COMPONENT() {
     example();

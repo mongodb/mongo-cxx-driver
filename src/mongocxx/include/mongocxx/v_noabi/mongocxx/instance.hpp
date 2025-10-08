@@ -25,7 +25,7 @@ namespace mongocxx {
 namespace v_noabi {
 
 ///
-/// Class representing an instance of the MongoDB driver.
+/// An instance of the MongoDB driver.
 ///
 /// The constructor and destructor initialize and shut down the driver, respectively. Therefore, an
 /// instance must be created before using the driver and must remain alive until all other mongocxx
@@ -107,8 +107,8 @@ class instance {
     ///
     MONGOCXX_ABI_EXPORT_CDECL() ~instance();
 
-    instance(const instance&) = delete;
-    instance& operator=(const instance&) = delete;
+    instance(instance const&) = delete;
+    instance& operator=(instance const&) = delete;
 
     ///
     /// Returns the current unique instance of the driver. If an instance was explicitly created,
@@ -132,8 +132,8 @@ class instance {
     std::unique_ptr<impl> _impl;
 };
 
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace v_noabi
+} // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
 

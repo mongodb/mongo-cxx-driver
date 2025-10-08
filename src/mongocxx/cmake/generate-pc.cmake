@@ -8,8 +8,7 @@ set(input_vars
     version
     is_static
     bsoncxx_name
-    libmongoc_req_abi_ver
-    libmongoc_req_ver
+    mongoc_req_ver
 )
 
 foreach(var ${input_vars})
@@ -29,7 +28,7 @@ if(1)
 
     if(is_static)
         list(APPEND requires "lib${bsoncxx_name} >= ${version}")
-        list(APPEND requires "libmongoc-static-${libmongoc_req_abi_ver} >= ${libmongoc_req_ver}")
+        list(APPEND requires "mongoc2-static >= ${mongoc_req_ver}")
     else()
         list(APPEND requires "lib${bsoncxx_name} >= ${version}")
     endif()

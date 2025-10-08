@@ -22,8 +22,6 @@
 #include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/options/change_stream.hpp>
 
-#include <mongocxx/config/private/prelude.hh>
-
 namespace mongocxx {
 namespace v_noabi {
 namespace options {
@@ -35,8 +33,7 @@ change_stream& change_stream::full_document(bsoncxx::v_noabi::string::view_or_va
     return *this;
 }
 
-const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value>&
-change_stream::full_document() const {
+bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value> const& change_stream::full_document() const {
     return _full_document;
 }
 
@@ -46,7 +43,7 @@ change_stream& change_stream::full_document_before_change(
     return *this;
 }
 
-const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value>&
+bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value> const&
 change_stream::full_document_before_change() const {
     return _full_document_before_change;
 }
@@ -56,7 +53,7 @@ change_stream& change_stream::batch_size(std::int32_t batch_size) {
     return *this;
 }
 
-const bsoncxx::v_noabi::stdx::optional<std::int32_t>& change_stream::batch_size() const {
+bsoncxx::v_noabi::stdx::optional<std::int32_t> const& change_stream::batch_size() const {
     return _batch_size;
 }
 
@@ -65,8 +62,8 @@ change_stream& change_stream::comment(bsoncxx::v_noabi::types::bson_value::view_
     return *this;
 }
 
-const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value>&
-change_stream::comment() const {
+bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value> const& change_stream::comment()
+    const {
     return _comment;
 }
 
@@ -75,8 +72,7 @@ change_stream& change_stream::resume_after(bsoncxx::v_noabi::document::view_or_v
     return *this;
 }
 
-const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value>&
-change_stream::resume_after() const {
+bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const& change_stream::resume_after() const {
     return _resume_after;
 }
 
@@ -85,8 +81,7 @@ change_stream& change_stream::start_after(bsoncxx::v_noabi::document::view_or_va
     return *this;
 }
 
-const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value>&
-change_stream::start_after() const {
+bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const& change_stream::start_after() const {
     return _start_after;
 }
 
@@ -95,8 +90,7 @@ change_stream& change_stream::collation(bsoncxx::v_noabi::document::view_or_valu
     return *this;
 }
 
-const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value>&
-change_stream::collation() const {
+bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const& change_stream::collation() const {
     return _collation;
 }
 
@@ -105,32 +99,30 @@ change_stream& change_stream::max_await_time(std::chrono::milliseconds max_time)
     return *this;
 }
 
-const bsoncxx::v_noabi::stdx::optional<std::chrono::milliseconds>& change_stream::max_await_time()
-    const {
+bsoncxx::v_noabi::stdx::optional<std::chrono::milliseconds> const& change_stream::max_await_time() const {
     return _max_await_time;
 }
 
-change_stream& change_stream::start_at_operation_time(
-    bsoncxx::v_noabi::types::b_timestamp timestamp) {
+change_stream& change_stream::start_at_operation_time(bsoncxx::v_noabi::types::b_timestamp timestamp) {
     _start_at_operation_time = std::move(timestamp);
     return *this;
 }
 
-const bsoncxx::stdx::optional<bsoncxx::v_noabi::types::b_timestamp>&
-change_stream::start_at_operation_time() const {
+bsoncxx::stdx::optional<bsoncxx::v_noabi::types::b_timestamp> const& change_stream::start_at_operation_time() const {
     return _start_at_operation_time;
 }
 
 namespace {
 template <typename T>
-inline void append_if(bsoncxx::v_noabi::builder::basic::document& doc,
-                      const std::string& key,
-                      const bsoncxx::v_noabi::stdx::optional<T>& opt) {
+inline void append_if(
+    bsoncxx::v_noabi::builder::basic::document& doc,
+    std::string const& key,
+    bsoncxx::v_noabi::stdx::optional<T> const& opt) {
     if (opt) {
         doc.append(bsoncxx::v_noabi::builder::basic::kvp(key, opt.value()));
     }
 }
-}  // namespace
+} // namespace
 
 bsoncxx::v_noabi::document::value change_stream::as_bson() const {
     // Construct new bson rep each time since values may change after this is called.
@@ -148,16 +140,14 @@ bsoncxx::v_noabi::document::value change_stream::as_bson() const {
     if (max_await_time()) {
         auto count = max_await_time().value().count();
         if ((count < 0) || (count >= std::numeric_limits<std::uint32_t>::max())) {
-            throw mongocxx::v_noabi::logic_error{
-                mongocxx::v_noabi::error_code::k_invalid_parameter};
+            throw mongocxx::v_noabi::logic_error{mongocxx::v_noabi::error_code::k_invalid_parameter};
         }
-        out.append(bsoncxx::v_noabi::builder::basic::kvp("maxAwaitTimeMS",
-                                                         static_cast<std::int64_t>(count)));
+        out.append(bsoncxx::v_noabi::builder::basic::kvp("maxAwaitTimeMS", static_cast<std::int64_t>(count)));
     }
 
     return out.extract();
 }
 
-}  // namespace options
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace options
+} // namespace v_noabi
+} // namespace mongocxx

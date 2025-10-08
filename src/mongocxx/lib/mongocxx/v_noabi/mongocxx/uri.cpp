@@ -12,19 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <bsoncxx/private/make_unique.hh>
 #include <bsoncxx/types.hpp>
 
 #include <mongocxx/exception/error_code.hpp>
 #include <mongocxx/exception/logic_error.hpp>
-#include <mongocxx/private/libmongoc.hh>
+#include <mongocxx/uri.hpp>
+
+#include <bsoncxx/private/make_unique.hh>
+
+#include <mongocxx/private/mongoc.hh>
 #include <mongocxx/private/read_concern.hh>
 #include <mongocxx/private/read_preference.hh>
 #include <mongocxx/private/uri.hh>
 #include <mongocxx/private/write_concern.hh>
-#include <mongocxx/uri.hpp>
-
-#include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
 namespace v_noabi {
@@ -33,16 +33,16 @@ namespace {
 
 // Some of the 'uri_get_*' string accessors may return nullptr.  Check for this case and convert to
 // the empty string.
-std::string to_string_null_safe(const char* str) {
+std::string to_string_null_safe(char const* str) {
     if (str == nullptr) {
         return std::string{};
     }
     return str;
 }
 
-}  // namespace
+} // namespace
 
-const std::string uri::k_default_uri = "mongodb://localhost:27017";
+std::string const uri::k_default_uri = "mongodb://localhost:27017";
 
 uri::uri(std::unique_ptr<impl>&& implementation) {
     _impl.reset(implementation.release());
@@ -51,8 +51,7 @@ uri::uri(std::unique_ptr<impl>&& implementation) {
 uri::uri(bsoncxx::v_noabi::string::view_or_value uri_string) {
     bson_error_t error;
 
-    _impl = bsoncxx::make_unique<impl>(
-        libmongoc::uri_new_with_error(uri_string.terminated().data(), &error));
+    _impl = bsoncxx::make_unique<impl>(libmongoc::uri_new_with_error(uri_string.terminated().data(), &error));
 
     if (_impl->uri_t == nullptr) {
         throw logic_error{error_code::k_invalid_uri, error.message};
@@ -79,8 +78,7 @@ std::string uri::database() const {
 std::vector<uri::host> uri::hosts() const {
     std::vector<host> result;
 
-    for (auto host_list = libmongoc::uri_get_hosts(_impl->uri_t); host_list;
-         host_list = host_list->next) {
+    for (auto host_list = libmongoc::uri_get_hosts(_impl->uri_t); host_list; host_list = host_list->next) {
         result.push_back(host{host_list->host, host_list->port, host_list->family});
     }
 
@@ -88,7 +86,7 @@ std::vector<uri::host> uri::hosts() const {
 }
 
 bsoncxx::v_noabi::document::view uri::options() const {
-    auto opts_bson = libmongoc::uri_get_options(_impl->uri_t);
+    bson_t const* const opts_bson = libmongoc::uri_get_options(_impl->uri_t);
     return bsoncxx::v_noabi::document::view{::bson_get_data(opts_bson), opts_bson->len};
 }
 
@@ -98,8 +96,7 @@ std::string uri::password() const {
 
 mongocxx::v_noabi::read_concern uri::read_concern() const {
     auto rc = libmongoc::uri_get_read_concern(_impl->uri_t);
-    return mongocxx::v_noabi::read_concern(
-        bsoncxx::make_unique<read_concern::impl>(libmongoc::read_concern_copy(rc)));
+    return mongocxx::v_noabi::read_concern(bsoncxx::make_unique<read_concern::impl>(libmongoc::read_concern_copy(rc)));
 }
 
 mongocxx::v_noabi::read_preference uri::read_preference() const {
@@ -135,44 +132,41 @@ mongocxx::v_noabi::write_concern uri::write_concern() const {
 }
 
 static bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::stdx::string_view> _string_option(
-    mongoc_uri_t* uri, std::string opt_name) {
-    const char* value;
+    mongoc_uri_t* uri,
+    std::string opt_name) {
+    char const* value;
 
     value = libmongoc::uri_get_option_as_utf8(uri, opt_name.c_str(), nullptr);
     if (!value) {
-        return {};
+        return bsoncxx::v_noabi::stdx::nullopt;
     }
 
     return bsoncxx::v_noabi::stdx::string_view{value};
 }
 
-static bsoncxx::v_noabi::stdx::optional<std::int32_t> _int32_option(mongoc_uri_t* uri,
-                                                                    std::string opt_name) {
+static bsoncxx::v_noabi::stdx::optional<std::int32_t> _int32_option(mongoc_uri_t* uri, std::string opt_name) {
     bson_iter_t iter;
-    const bson_t* options_bson = libmongoc::uri_get_options(uri);
+    bson_t const* options_bson = libmongoc::uri_get_options(uri);
 
-    if (!bson_iter_init_find_case(&iter, options_bson, opt_name.c_str()) ||
-        !BSON_ITER_HOLDS_INT32(&iter)) {
-        return {};
+    if (!bson_iter_init_find_case(&iter, options_bson, opt_name.c_str()) || !BSON_ITER_HOLDS_INT32(&iter)) {
+        return bsoncxx::v_noabi::stdx::nullopt;
     }
     return bson_iter_int32(&iter);
 }
 
-static bsoncxx::v_noabi::stdx::optional<bool> _bool_option(mongoc_uri_t* uri,
-                                                           std::string opt_name) {
+static bsoncxx::v_noabi::stdx::optional<bool> _bool_option(mongoc_uri_t* uri, std::string opt_name) {
     bson_iter_t iter;
-    const bson_t* options_bson = libmongoc::uri_get_options(uri);
+    bson_t const* options_bson = libmongoc::uri_get_options(uri);
 
-    if (!bson_iter_init_find_case(&iter, options_bson, opt_name.c_str()) ||
-        !BSON_ITER_HOLDS_BOOL(&iter)) {
-        return {};
+    if (!bson_iter_init_find_case(&iter, options_bson, opt_name.c_str()) || !BSON_ITER_HOLDS_BOOL(&iter)) {
+        return bsoncxx::v_noabi::stdx::nullopt;
     }
     return bson_iter_bool(&iter);
 }
 
 bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view> uri::credentials() {
-    const bson_t* options_bson = libmongoc::uri_get_credentials(_impl->uri_t);
-    const uint8_t* data = bson_get_data(options_bson);
+    bson_t const* options_bson = libmongoc::uri_get_credentials(_impl->uri_t);
+    uint8_t const* data = bson_get_data(options_bson);
 
     return bsoncxx::v_noabi::document::view(data, options_bson->len);
 }
@@ -181,16 +175,16 @@ bsoncxx::v_noabi::stdx::optional<std::int32_t> uri::srv_max_hosts() const {
     return _int32_option(_impl->uri_t, MONGOC_URI_SRVMAXHOSTS);
 }
 
-static bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view>
-_credential_document_option(mongoc_uri_t* uri, std::string opt_name) {
+static bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view> _credential_document_option(
+    mongoc_uri_t* uri,
+    std::string opt_name) {
     bson_iter_t iter;
-    const uint8_t* data;
+    uint8_t const* data;
     uint32_t len;
-    const bson_t* options_bson = libmongoc::uri_get_credentials(uri);
+    bson_t const* options_bson = libmongoc::uri_get_credentials(uri);
 
-    if (!bson_iter_init_find_case(&iter, options_bson, opt_name.c_str()) ||
-        !BSON_ITER_HOLDS_DOCUMENT(&iter)) {
-        return {};
+    if (!bson_iter_init_find_case(&iter, options_bson, opt_name.c_str()) || !BSON_ITER_HOLDS_DOCUMENT(&iter)) {
+        return bsoncxx::v_noabi::stdx::nullopt;
     }
     bson_iter_document(&iter, &len, &data);
     return bsoncxx::v_noabi::document::view(data, len);
@@ -201,13 +195,12 @@ bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::stdx::string_view> uri::appna
 }
 
 // Special case. authMechanismProperties are stored as part of libmongoc's credentials.
-bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view> uri::auth_mechanism_properties()
-    const {
+bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view> uri::auth_mechanism_properties() const {
     return _credential_document_option(_impl->uri_t, "authMechanismProperties");
 }
 
 std::vector<bsoncxx::v_noabi::stdx::string_view> uri::compressors() const {
-    const bson_t* compressors;
+    bson_t const* compressors;
     std::vector<bsoncxx::v_noabi::stdx::string_view> result;
     bson_iter_t iter;
 
@@ -219,8 +212,7 @@ std::vector<bsoncxx::v_noabi::stdx::string_view> uri::compressors() const {
     }
     bson_iter_init(&iter, compressors);
     while (bson_iter_next(&iter)) {
-        result.push_back(
-            bsoncxx::v_noabi::stdx::string_view{bson_iter_key(&iter), bson_iter_key_len(&iter)});
+        result.push_back(bsoncxx::v_noabi::stdx::string_view{bson_iter_key(&iter), bson_iter_key_len(&iter)});
     }
     return result;
 }
@@ -261,6 +253,12 @@ bsoncxx::v_noabi::stdx::optional<bool> uri::server_selection_try_once() const {
     return _bool_option(_impl->uri_t, "serverSelectionTryOnce");
 }
 
+void uri::server_selection_try_once(bool val) {
+    if (!mongoc_uri_set_option_as_bool(_impl->uri_t, "serverSelectionTryOnce", val)) {
+        throw exception{error_code::k_invalid_uri, "failed to set 'serverSelectionTryOnce' option"};
+    }
+}
+
 bsoncxx::v_noabi::stdx::optional<std::int32_t> uri::socket_timeout_ms() const {
     return _int32_option(_impl->uri_t, "socketTimeoutMS");
 }
@@ -277,13 +275,11 @@ bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::stdx::string_view> uri::tls_c
     return _string_option(_impl->uri_t, "tlsCAFile");
 }
 
-bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::stdx::string_view>
-uri::tls_certificate_key_file() const {
+bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::stdx::string_view> uri::tls_certificate_key_file() const {
     return _string_option(_impl->uri_t, "tlsCertificateKeyFile");
 }
 
-bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::stdx::string_view>
-uri::tls_certificate_key_file_password() const {
+bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::stdx::string_view> uri::tls_certificate_key_file_password() const {
     return _string_option(_impl->uri_t, "tlsCertificateKeyFilePassword");
 }
 
@@ -307,5 +303,5 @@ bsoncxx::v_noabi::stdx::optional<std::int32_t> uri::zlib_compression_level() con
     return _int32_option(_impl->uri_t, "zlibCompressionLevel");
 }
 
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace v_noabi
+} // namespace mongocxx

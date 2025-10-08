@@ -22,34 +22,23 @@ namespace v_noabi {
 
 enum class error_code : std::int32_t;
 
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace v_noabi
+} // namespace mongocxx
 
 namespace mongocxx {
 
 using ::mongocxx::v_noabi::error_code;
 
-}  // namespace mongocxx
+} // namespace mongocxx
 
 namespace std {
 
 template <>
 struct is_error_code_enum<::mongocxx::v_noabi::error_code>;
 
-}  // namespace std
+} // namespace std
 
 ///
 /// @file
 /// Declares @ref mongocxx::v_noabi::error_code.
 ///
-
-#if defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
-
-namespace mongocxx {
-
-/// @ref mongocxx::v_noabi::error_code
-class error_code {};
-
-}  // namespace mongocxx
-
-#endif  // defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

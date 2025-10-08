@@ -1,12 +1,13 @@
 from config_generator.components.funcs.compile import Compile
 from config_generator.components.funcs.fetch_c_driver_source import FetchCDriverSource
+from config_generator.components.funcs.install_uv import InstallUV
 from config_generator.components.funcs.setup import Setup
 
 from config_generator.etc.distros import find_large_distro, make_distro_str
 from config_generator.etc.function import Function
 from config_generator.etc.utils import bash_exec
 
-from shrub.v3.evg_build_variant import BuildVariant, DisplayTask
+from shrub.v3.evg_build_variant import BuildVariant
 from shrub.v3.evg_command import EvgCommandType
 from shrub.v3.evg_task import EvgTask, EvgTaskRef
 
@@ -19,12 +20,9 @@ TAG = 'uninstall-check'
 # pylint: disable=line-too-long
 # fmt: off
 MATRIX = [
-    ('debian10',          'gcc',       [         'Release'], ['shared']),
-    ('debian11',          'gcc',       [         'Release'], ['shared']),
-    ('debian12',          'gcc',       [         'Release'], ['shared']),
-    ('windows-64-vs2015', 'vs2015x64', ['Debug', 'Release'], ['shared']),
-    ('ubuntu1804',        'gcc',       [         'Release'], ['shared']),
-    ('ubuntu2004',        'gcc',       [         'Release'], ['shared']),
+    ('rhel80',            'gcc',       ['Debug', 'Release'], ['shared', 'static']),
+    ('macos-14-arm64',    'clang',     ['Debug', 'Release'], ['shared', 'static']),
+    ('windows-vsCurrent', 'vs2017x64', ['Debug', 'Release'], ['shared', 'static']),
 ]
 # fmt: on
 # pylint: enable=line-too-long
@@ -35,6 +33,7 @@ class UninstallCheck(Function):
     commands = bash_exec(
         command_type=EvgCommandType.TEST,
         working_dir='mongo-cxx-driver',
+        include_expansions_in_env=['distro_id'],
         script='''\
             case "$OSTYPE" in
             darwin*|linux*) .evergreen/scripts/uninstall_check.sh ;;
@@ -65,6 +64,7 @@ def tasks():
                     commands=[
                         Setup.call(),
                         FetchCDriverSource.call(),
+                        InstallUV.call(),
                         Compile.call(
                             build_type=build_type,
                             compiler=compiler,
@@ -83,11 +83,5 @@ def variants():
             name=TAG,
             display_name='Uninstall Check',
             tasks=[EvgTaskRef(name=f'.{TAG}')],
-            display_tasks=[
-                DisplayTask(
-                    name=f'uninstall-check',
-                    execution_tasks=[f'.{TAG}'],
-                )
-            ],
         ),
     ]

@@ -54,8 +54,7 @@ int EXAMPLES_CDECL main() {
             bsoncxx::types::b_int64 index = {j};
             coll.insert_one(bsoncxx::builder::basic::make_document(kvp("x", index)));
 
-            if (auto doc =
-                    client["test"][collection_names[static_cast<std::size_t>(j)]].find_one({})) {
+            if (auto doc = client["test"][collection_names[static_cast<std::size_t>(j)]].find_one({})) {
                 // In order to ensure that the newline is printed immediately after the document,
                 // they need to be streamed to std::cout as a single string.
                 std::stringstream ss;

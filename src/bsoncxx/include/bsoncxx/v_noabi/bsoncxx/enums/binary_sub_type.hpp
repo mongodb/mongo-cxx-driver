@@ -16,16 +16,19 @@
 #error "This header is only meant to be included as an X-macro over BSONCXX_ENUM"
 #endif
 
-BSONCXX_ENUM(binary, 0x00)
-BSONCXX_ENUM(function, 0x01)
+// clang-format off
+BSONCXX_ENUM(binary,            0x00)
+BSONCXX_ENUM(function,          0x01)
 BSONCXX_ENUM(binary_deprecated, 0x02)
-BSONCXX_ENUM(uuid_deprecated, 0x03)
-BSONCXX_ENUM(uuid, 0x04)
-BSONCXX_ENUM(md5, 0x05)
-BSONCXX_ENUM(encrypted, 0x06)
-BSONCXX_ENUM(column, 0x07)
-BSONCXX_ENUM(sensitive, 0x08)
-BSONCXX_ENUM(user, 0x80)
+BSONCXX_ENUM(uuid_deprecated,   0x03)
+BSONCXX_ENUM(uuid,              0x04)
+BSONCXX_ENUM(md5,               0x05)
+BSONCXX_ENUM(encrypted,         0x06)
+BSONCXX_ENUM(column,            0x07)
+BSONCXX_ENUM(sensitive,         0x08)
+BSONCXX_ENUM(vector,            0x09)
+BSONCXX_ENUM(user,              0x80)
+// clang-format on
 
 ///
 /// @file

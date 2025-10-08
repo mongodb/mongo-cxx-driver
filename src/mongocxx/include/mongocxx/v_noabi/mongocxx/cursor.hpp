@@ -33,7 +33,7 @@ namespace mongocxx {
 namespace v_noabi {
 
 ///
-/// Class representing a pointer to the result set of a query on a MongoDB server.
+/// A cursor over the documents returned by a query to a MongoDB server.
 ///
 /// Clients can iterate through a cursor::iterator to retrieve results.
 ///
@@ -60,8 +60,8 @@ class cursor {
     ///
     MONGOCXX_ABI_EXPORT_CDECL() ~cursor();
 
-    cursor(const cursor&) = delete;
-    cursor& operator=(const cursor&) = delete;
+    cursor(cursor const&) = delete;
+    cursor& operator=(cursor const&) = delete;
 
     ///
     /// A cursor::iterator that points to the beginning of any available
@@ -97,15 +97,14 @@ class cursor {
 
     friend ::mongocxx::v_noabi::cursor::iterator;
 
-    cursor(void* cursor_ptr,
-           bsoncxx::v_noabi::stdx::optional<type> cursor_type = bsoncxx::v_noabi::stdx::nullopt);
+    cursor(void* cursor_ptr, bsoncxx::v_noabi::stdx::optional<type> cursor_type = bsoncxx::v_noabi::stdx::nullopt);
 
     class impl;
     std::unique_ptr<impl> _impl;
 };
 
 ///
-/// Class representing an input iterator of documents in a MongoDB cursor
+/// An input iterator of documents in a MongoDB cursor
 /// result set.
 ///
 /// All non-end iterators derived from the same mongocxx::v_noabi::cursor move in
@@ -136,12 +135,12 @@ class cursor::iterator {
     ///
     /// Dereferences the view for the document currently being pointed to.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::document::view&) operator*() const;
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::document::view const&) operator*() const;
 
     ///
     /// Accesses a member of the dereferenced document currently being pointed to.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::document::view*) operator->() const;
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::document::view const*) operator->() const;
 
     ///
     /// Pre-increments the iterator to move to the next document.
@@ -167,8 +166,8 @@ class cursor::iterator {
     /// they point to the same underlying cursor or if both are exhausted.
     ///
     /// @{
-    friend MONGOCXX_ABI_EXPORT_CDECL(bool) operator==(const iterator&, const iterator&);
-    friend MONGOCXX_ABI_EXPORT_CDECL(bool) operator!=(const iterator&, const iterator&);
+    friend MONGOCXX_ABI_EXPORT_CDECL(bool) operator==(iterator const&, iterator const&);
+    friend MONGOCXX_ABI_EXPORT_CDECL(bool) operator!=(iterator const&, iterator const&);
     /// @}
     ///
 
@@ -180,8 +179,8 @@ class cursor::iterator {
     cursor* _cursor;
 };
 
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace v_noabi
+} // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
 

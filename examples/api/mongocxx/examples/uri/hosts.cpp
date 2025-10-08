@@ -29,25 +29,25 @@ void example() {
 
     EXPECT(hosts.size() == 3u);
 
-    const mongocxx::uri::host& first = hosts[0];
-    const mongocxx::uri::host& second = hosts[1];
-    const mongocxx::uri::host& third = hosts[2];
+    mongocxx::uri::host const& first = hosts[0];
+    mongocxx::uri::host const& second = hosts[1];
+    mongocxx::uri::host const& third = hosts[2];
 
     EXPECT(first.name == "127.0.0.1");
     EXPECT(first.port == 27017u);
-    EXPECT(first.family == 0);  // AF_UNSPEC (AP_INET).
+    EXPECT(first.family == 0); // AF_UNSPEC (AP_INET).
 
     EXPECT(second.name == "::1");
     EXPECT(second.port == 27018u);
-    EXPECT(second.family != 0);  // AF_INET6.
+    EXPECT(second.family != 0); // AF_INET6.
 
     EXPECT(third.name == "/path/to.socket");
     EXPECT(third.port == 27019u);
-    EXPECT(third.family != 0);  // AF_UNIX.
+    EXPECT(third.family != 0); // AF_UNIX.
 }
 // [Example]
 
-}  // namespace
+} // namespace
 
 RUNNER_REGISTER_COMPONENT_WITH_INSTANCE() {
     example();

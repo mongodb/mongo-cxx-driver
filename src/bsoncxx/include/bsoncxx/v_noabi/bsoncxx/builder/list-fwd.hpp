@@ -22,9 +22,9 @@ class list;
 class document;
 class array;
 
-}  // namespace builder
-}  // namespace v_noabi
-}  // namespace bsoncxx
+} // namespace builder
+} // namespace v_noabi
+} // namespace bsoncxx
 
 namespace bsoncxx {
 namespace builder {
@@ -33,29 +33,10 @@ using ::bsoncxx::v_noabi::builder::array;
 using ::bsoncxx::v_noabi::builder::document;
 using ::bsoncxx::v_noabi::builder::list;
 
-}  // namespace builder
-}  // namespace bsoncxx
+} // namespace builder
+} // namespace bsoncxx
 
 ///
 /// @file
 /// Provides entities for use with "list" BSON builder syntax.
 ///
-
-#if defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
-
-namespace bsoncxx {
-namespace builder {
-
-/// @ref bsoncxx::v_noabi::builder::array
-class array {};
-
-/// @ref bsoncxx::v_noabi::builder::document
-class document {};
-
-/// @ref bsoncxx::v_noabi::builder::list
-class list {};
-
-}  // namespace builder
-}  // namespace bsoncxx
-
-#endif  // defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

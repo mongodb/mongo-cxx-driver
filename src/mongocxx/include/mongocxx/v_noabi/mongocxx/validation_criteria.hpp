@@ -25,10 +25,13 @@ namespace mongocxx {
 namespace v_noabi {
 
 ///
-/// Class representing criteria for document validation, to be applied to a collection.
+/// Supports creating validation rules for fields.
+///
+/// @deprecated To be removed in an upcoming major release. Set schema validation options as fields of a BSON
+/// document passed as an options argument to a MongoDB command instead.
 ///
 /// @see
-/// - https://www.mongodb.com/docs/manual/core/document-validation/
+/// - [Schema Validation](https://www.mongodb.com/docs/manual/core/schema-validation/)
 ///
 class validation_criteria {
    public:
@@ -51,8 +54,7 @@ class validation_criteria {
     /// @return
     ///   Document representing a validation rule.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(
-        const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value>&)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const&)
     rule() const;
 
     ///
@@ -88,7 +90,7 @@ class validation_criteria {
     /// @return
     ///   The enumerated validation level.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<validation_level>&)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<validation_level> const&)
     level() const;
 
     ///
@@ -122,7 +124,7 @@ class validation_criteria {
     /// @return
     ///   The enumerated validation action.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<validation_action>&)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<validation_action> const&)
     action() const;
 
     ///
@@ -134,8 +136,7 @@ class validation_criteria {
     ///
     /// @return Validation criteria, as a document.
     ///
-    MONGOCXX_DEPRECATED MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::document::value)
-        to_document() const;
+    MONGOCXX_DEPRECATED MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::document::value) to_document() const;
 
     MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::document::value) to_document_deprecated() const;
 
@@ -162,23 +163,23 @@ class validation_criteria {
 
 /// @relatesalso mongocxx::v_noabi::validation_criteria
 MONGOCXX_ABI_EXPORT_CDECL(bool)
-operator==(const validation_criteria& lhs, const validation_criteria& rhs);
+operator==(validation_criteria const& lhs, validation_criteria const& rhs);
 
 /// @relatesalso mongocxx::v_noabi::validation_criteria
 MONGOCXX_ABI_EXPORT_CDECL(bool)
-operator!=(const validation_criteria& lhs, const validation_criteria& rhs);
+operator!=(validation_criteria const& lhs, validation_criteria const& rhs);
 /// @}
 ///
 
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace v_noabi
+} // namespace mongocxx
 
 namespace mongocxx {
 
 using ::mongocxx::v_noabi::operator==;
 using ::mongocxx::v_noabi::operator!=;
 
-}  // namespace mongocxx
+} // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
 
@@ -186,17 +187,3 @@ using ::mongocxx::v_noabi::operator!=;
 /// @file
 /// Provides @ref mongocxx::v_noabi::validation_criteria.
 ///
-
-#if defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
-
-namespace mongocxx {
-
-/// @ref mongocxx::v_noabi::operator==(const v_noabi::validation_criteria& lhs, const v_noabi::validation_criteria& rhs)
-bool operator==(const v_noabi::validation_criteria& lhs, const v_noabi::validation_criteria& rhs);
-
-/// @ref mongocxx::v_noabi::operator!=(const v_noabi::validation_criteria& lhs, const v_noabi::validation_criteria& rhs)
-bool operator!=(const v_noabi::validation_criteria& lhs, const v_noabi::validation_criteria& rhs);
-
-}  // namespace mongocxx
-
-#endif  // defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

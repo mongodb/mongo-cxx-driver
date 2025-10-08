@@ -29,7 +29,7 @@ namespace {
 //         "$numberInt": "123"
 //     }
 // }
-void example(const std::uint8_t* bytes, std::size_t length) {
+void example(std::uint8_t const* bytes, std::size_t length) {
     // Default options.
     {
         bsoncxx::validator options;
@@ -77,13 +77,13 @@ void example(const std::uint8_t* bytes, std::size_t length) {
 
         EXPECT(!bsoncxx::validate(bytes, length, options, &offset));
 
-        // Offset of `"$numberInt": "123"` relative to start of the sub-document. (CDRIVER-5710)
-        EXPECT(offset == 4u);
+        // Offset of `"$numberInt": "123"` relative to start of the document.
+        EXPECT(offset == 31u);
     }
 }
 // [Example]
 
-}  // namespace
+} // namespace
 
 RUNNER_REGISTER_COMPONENT() {
     // clang-format off

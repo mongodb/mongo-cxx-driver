@@ -24,7 +24,7 @@ TEST_CASE("Create a unique_ptr") {
 }
 
 TEST_CASE("Create a unique_ptr<T[]>") {
-    const unsigned length = 12;
+    unsigned const length = 12;
     auto ptr = bsoncxx::make_unique<int[]>(length);
     REQUIRE(ptr);
     // All elements are direct-initialized, which produces '0' for `int`
@@ -38,4 +38,4 @@ TEST_CASE("Create a unique_ptr<T[]>") {
     CHECK(std::all_of(ptr.get(), ptr.get() + length, [](int n) { return n == 42; }));
 }
 
-}  // namespace
+} // namespace

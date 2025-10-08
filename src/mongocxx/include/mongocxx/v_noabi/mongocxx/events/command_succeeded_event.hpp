@@ -29,14 +29,14 @@ namespace v_noabi {
 namespace events {
 
 ///
-/// An event notification sent when the driver successfully executes a MongoDB command.
+/// The successful execution of a MongoDB command.
 ///
 /// @see
-/// - "CommandSucceededEvent" in https://github.com/mongodb/specifications/blob/master/source/command-logging-and-monitoring/command-logging-and-monitoring.md
+/// - [Command Logging and Monitoring (MongoDB Specifications)](https://specifications.readthedocs.io/en/latest/command-logging-and-monitoring/command-logging-and-monitoring/)
 ///
 class command_succeeded_event {
    public:
-    explicit command_succeeded_event(const void* event);
+    explicit command_succeeded_event(void const* event);
     ///
     /// Destroys a command_succeeded_event.
     ///
@@ -45,8 +45,8 @@ class command_succeeded_event {
     command_succeeded_event(command_succeeded_event&&) = default;
     command_succeeded_event& operator=(command_succeeded_event&&) = default;
 
-    command_succeeded_event(const command_succeeded_event&) = default;
-    command_succeeded_event& operator=(const command_succeeded_event&) = default;
+    command_succeeded_event(command_succeeded_event const&) = default;
+    command_succeeded_event& operator=(command_succeeded_event const&) = default;
 
     ///
     /// Returns the server reply for the succeeded operation.
@@ -106,12 +106,12 @@ class command_succeeded_event {
     MONGOCXX_ABI_EXPORT_CDECL(std::uint16_t) port() const;
 
    private:
-    const void* _succeeded_event;
+    void const* _succeeded_event;
 };
 
-}  // namespace events
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace events
+} // namespace v_noabi
+} // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
 

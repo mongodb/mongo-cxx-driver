@@ -40,19 +40,7 @@ namespace mongocxx {
 namespace v_noabi {
 
 ///
-/// Class representing the server-side requirement for reporting the success of a write
-/// operation. The strength of the write concern setting determines the level of guarantees
-/// that you will receive from MongoDB regarding write durability.
-///
-/// Weaker requirements that provide fewer guarantees report on success quickly while stronger
-/// requirements that provide greater guarantees will take longer (or potentially forever, if
-/// the write_concern's requirements are not satisfied and no timeout is set).
-///
-/// MongoDB drivers allow for different levels of write concern to better address the specific
-/// needs of applications. Clients may adjust write concern to ensure that the most important
-/// operations persist successfully to an entire MongoDB deployment. However, for other less
-/// critical operations, clients can adjust the write concern to ensure better performance
-/// rather than persistence to the entire deployment.
+/// The level of acknowledgment requested for write operations to a MongoDB server.
 ///
 /// @see
 /// - [Write Concern (MongoDB Manual)](https://www.mongodb.com/docs/manual/core/write-concern/)
@@ -67,11 +55,11 @@ class write_concern {
     /// - [Default MongoDB Read Concerns/Write Concerns](https://www.mongodb.com/docs/manual/reference/mongodb-defaults/#write-concern)
     ///
     enum class level {
-        k_default,         ///< Represent the implicit default write concern.
-        k_majority,        ///< Represent write concern with `w: "majority"`.
-        k_tag,             ///< Represent write concern with `w: <custom write concern name>`.
-        k_unacknowledged,  ///< Represent write concern with `w: 0`.
-        k_acknowledged,    ///< Represent write concern with `w: 1`.
+        k_default,        ///< Represent the implicit default write concern.
+        k_majority,       ///< Represent write concern with `w: "majority"`.
+        k_tag,            ///< Represent write concern with `w: <custom write concern name>`.
+        k_unacknowledged, ///< Represent write concern with `w: 0`.
+        k_acknowledged,   ///< Represent write concern with `w: 1`.
     };
 
     ///
@@ -82,12 +70,12 @@ class write_concern {
     ///
     /// Copy constructs a write_concern.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL() write_concern(const write_concern&);
+    MONGOCXX_ABI_EXPORT_CDECL() write_concern(write_concern const&);
 
     ///
     /// Copy assigns a write_concern.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(write_concern&) operator=(const write_concern&);
+    MONGOCXX_ABI_EXPORT_CDECL(write_concern&) operator=(write_concern const&);
 
     ///
     /// Move constructs a write_concern.
@@ -264,8 +252,8 @@ class write_concern {
     /// Compares two write_concern objects for (in)-equality.
     ///
     /// @{
-    friend MONGOCXX_ABI_EXPORT_CDECL(bool) operator==(const write_concern&, const write_concern&);
-    friend MONGOCXX_ABI_EXPORT_CDECL(bool) operator!=(const write_concern&, const write_concern&);
+    friend MONGOCXX_ABI_EXPORT_CDECL(bool) operator==(write_concern const&, write_concern const&);
+    friend MONGOCXX_ABI_EXPORT_CDECL(bool) operator!=(write_concern const&, write_concern const&);
     /// @}
     ///
 
@@ -284,8 +272,8 @@ class write_concern {
     std::unique_ptr<impl> _impl;
 };
 
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace v_noabi
+} // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
 

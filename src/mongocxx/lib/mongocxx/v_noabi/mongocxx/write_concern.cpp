@@ -12,24 +12,25 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <mongocxx/v1/detail/macros.hpp>
+
 #include <bsoncxx/builder/basic/document.hpp>
-#include <bsoncxx/private/make_unique.hh>
 #include <bsoncxx/string/to_string.hpp>
 
 #include <mongocxx/exception/error_code.hpp>
 #include <mongocxx/exception/exception.hpp>
 #include <mongocxx/exception/logic_error.hpp>
-#include <mongocxx/private/libmongoc.hh>
-#include <mongocxx/private/write_concern.hh>
 #include <mongocxx/write_concern.hpp>
 
-#include <mongocxx/config/private/prelude.hh>
+#include <bsoncxx/private/make_unique.hh>
+
+#include <mongocxx/private/mongoc.hh>
+#include <mongocxx/private/write_concern.hh>
 
 namespace mongocxx {
 namespace v_noabi {
 
-write_concern::write_concern()
-    : _impl{bsoncxx::make_unique<impl>(libmongoc::write_concern_new())} {}
+write_concern::write_concern() : _impl{bsoncxx::make_unique<impl>(libmongoc::write_concern_new())} {}
 
 write_concern::write_concern(std::unique_ptr<impl>&& implementation) {
     _impl.reset(implementation.release());
@@ -38,15 +39,11 @@ write_concern::write_concern(std::unique_ptr<impl>&& implementation) {
 write_concern::write_concern(write_concern&&) noexcept = default;
 write_concern& write_concern::operator=(write_concern&&) noexcept = default;
 
-write_concern::write_concern(const write_concern& other)
-    : _impl(
-          bsoncxx::make_unique<impl>(libmongoc::write_concern_copy(other._impl->write_concern_t))) {
-}
+write_concern::write_concern(write_concern const& other)
+    : _impl(bsoncxx::make_unique<impl>(libmongoc::write_concern_copy(other._impl->write_concern_t))) {}
 
-write_concern& write_concern::operator=(const write_concern& other) {
-    _impl.reset(
-        bsoncxx::make_unique<impl>(libmongoc::write_concern_copy(other._impl->write_concern_t))
-            .release());
+write_concern& write_concern::operator=(write_concern const& other) {
+    _impl.reset(bsoncxx::make_unique<impl>(libmongoc::write_concern_copy(other._impl->write_concern_t)).release());
     return *this;
 }
 
@@ -80,8 +77,7 @@ void write_concern::acknowledge_level(write_concern::level confirm_level) {
             break;
         case write_concern::level::k_tag:
             // no exception for setting tag if it's set
-            if (libmongoc::write_concern_get_w(_impl->write_concern_t) !=
-                MONGOC_WRITE_CONCERN_W_TAG) {
+            if (libmongoc::write_concern_get_w(_impl->write_concern_t) != MONGOC_WRITE_CONCERN_W_TAG) {
                 throw exception{error_code::k_unknown_write_concern};
             } else {
                 return;
@@ -91,21 +87,19 @@ void write_concern::acknowledge_level(write_concern::level confirm_level) {
 }
 
 void write_concern::tag(bsoncxx::v_noabi::stdx::string_view confirm_from) {
-    libmongoc::write_concern_set_wtag(_impl->write_concern_t,
-                                      bsoncxx::v_noabi::string::to_string(confirm_from).data());
+    libmongoc::write_concern_set_wtag(_impl->write_concern_t, bsoncxx::v_noabi::string::to_string(confirm_from).data());
 }
 
 void write_concern::majority(std::chrono::milliseconds timeout) {
-    const auto count = timeout.count();
+    auto const count = timeout.count();
     if ((count < 0) || (count >= std::numeric_limits<std::int32_t>::max()))
         throw logic_error{error_code::k_invalid_parameter};
 
-    libmongoc::write_concern_set_wmajority(_impl->write_concern_t,
-                                           static_cast<std::int32_t>(count));
+    libmongoc::write_concern_set_wmajority(_impl->write_concern_t, static_cast<std::int32_t>(count));
 }
 
 void write_concern::timeout(std::chrono::milliseconds timeout) {
-    const auto count = timeout.count();
+    auto const count = timeout.count();
     if ((count < 0) || (count >= std::numeric_limits<std::int32_t>::max()))
         throw logic_error{error_code::k_invalid_parameter};
 
@@ -118,8 +112,7 @@ bool write_concern::journal() const {
 
 bsoncxx::v_noabi::stdx::optional<std::int32_t> write_concern::nodes() const {
     std::int32_t w = libmongoc::write_concern_get_w(_impl->write_concern_t);
-    return w >= 0 ? bsoncxx::v_noabi::stdx::optional<std::int32_t>{w}
-                  : bsoncxx::v_noabi::stdx::nullopt;
+    return w >= 0 ? bsoncxx::v_noabi::stdx::optional<std::int32_t>{w} : bsoncxx::v_noabi::stdx::nullopt;
 }
 
 write_concern::level write_concern::acknowledge_level() const {
@@ -136,14 +129,13 @@ write_concern::level write_concern::acknowledge_level() const {
         case MONGOC_WRITE_CONCERN_W_TAG:
             return write_concern::level::k_tag;
         default:
-            MONGOCXX_UNREACHABLE;
+            MONGOCXX_PRIVATE_UNREACHABLE;
     }
 }
 
 bsoncxx::v_noabi::stdx::optional<std::string> write_concern::tag() const {
-    const char* tag_str = libmongoc::write_concern_get_wtag(_impl->write_concern_t);
-    return tag_str ? bsoncxx::v_noabi::stdx::make_optional<std::string>(tag_str)
-                   : bsoncxx::v_noabi::stdx::nullopt;
+    char const* tag_str = libmongoc::write_concern_get_wtag(_impl->write_concern_t);
+    return tag_str ? bsoncxx::v_noabi::stdx::make_optional<std::string>(tag_str) : bsoncxx::v_noabi::stdx::nullopt;
 }
 
 bool write_concern::majority() const {
@@ -205,23 +197,16 @@ bsoncxx::v_noabi::document::value write_concern::to_document() const {
     return doc.extract();
 }
 
-bool operator==(const write_concern& lhs, const write_concern& rhs) {
-    return std::forward_as_tuple(lhs.journal(),
-                                 lhs.nodes(),
-                                 lhs.acknowledge_level(),
-                                 lhs.tag(),
-                                 lhs.majority(),
-                                 lhs.timeout()) == std::forward_as_tuple(rhs.journal(),
-                                                                         rhs.nodes(),
-                                                                         rhs.acknowledge_level(),
-                                                                         rhs.tag(),
-                                                                         rhs.majority(),
-                                                                         rhs.timeout());
+bool operator==(write_concern const& lhs, write_concern const& rhs) {
+    return std::forward_as_tuple(
+               lhs.journal(), lhs.nodes(), lhs.acknowledge_level(), lhs.tag(), lhs.majority(), lhs.timeout()) ==
+           std::forward_as_tuple(
+               rhs.journal(), rhs.nodes(), rhs.acknowledge_level(), rhs.tag(), rhs.majority(), rhs.timeout());
 }
 
-bool operator!=(const write_concern& lhs, const write_concern& rhs) {
+bool operator!=(write_concern const& lhs, write_concern const& rhs) {
     return !(lhs == rhs);
 }
 
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace v_noabi
+} // namespace mongocxx

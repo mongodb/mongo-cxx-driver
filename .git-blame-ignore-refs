@@ -1,0 +1,5 @@
+# CXX-3198 upgrade to ClangFormat 19 and replace clang_format.py with clang-format-all.sh (#1299)
+f1ad6b63d33672b6875e096765ee782046b515a8
+
+# CXX-3198 modernize ClangFormat configuration options (#1306)
+2f53a561afa7ff06c12b7c6ec7a7f3bd6a5e135b

@@ -25,7 +25,7 @@ namespace v_noabi {
 namespace model {
 
 ///
-/// Class representing a MongoDB insert operation that creates a single document.
+/// A MongoDB insert operation that creates a single document.
 ///
 class insert_one {
    public:
@@ -42,15 +42,15 @@ class insert_one {
     ///
     /// @return The document to be inserted.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::document::view_or_value&) document() const;
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::document::view_or_value const&) document() const;
 
    private:
     bsoncxx::v_noabi::document::view_or_value _document;
 };
 
-}  // namespace model
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace model
+} // namespace v_noabi
+} // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
 

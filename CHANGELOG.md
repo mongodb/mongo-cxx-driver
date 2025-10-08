@@ -7,6 +7,64 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Changes prior to 3.9.0 are documented as [release notes on GitHub](https://github.com/mongodb/mongo-cxx-driver/releases).
 
+## 4.1.4
+
+### Changed
+
+- Bump the auto-downloaded C Driver version to [2.1.2](https://github.com/mongodb/mongo-c-driver/releases/tag/2.1.2).
+
+## 4.1.3
+
+### Changed
+
+- Bump the auto-downloaded C Driver version to [2.0.2](https://github.com/mongodb/mongo-c-driver/releases/tag/2.0.2).
+
+## 4.1.2
+
+### Fixed
+
+- `storage_engine() const` in `mongocxx::v_noabi::options::index` is correctly exported using mongocxx export macros instead of bsoncxx export macros.
+- Fix `-Wdeprecated-literal-operator` warning.
+
+## 4.1.1
+
+### Fixed
+
+- CMake option `ENABLE_TESTS` (`OFF` by default) is no longer overwritten by the auto-downloaded C Driver (`ON` by default) during CMake configuration.
+- Static pkg-config files are updated to depend on the static (not shared) libbson / libmongoc packages.
+- Fix build if macros `GCC`/`GNU`/`Clang`/`MSVC` are already defined.
+
+## 4.1.0
+
+### Fixed
+
+- The API version of auto-downloaded C Driver libraries no longer incorrectly inherits the C++ Driver's `BUILD_VERSION` value.
+- Potentially unchecked narrowing conversion in `bsoncxx::v_noabi::builder::core::append()` now throws an exception with error code `k_cannot_append_string`.
+
+### Added
+
+- `storage_engine()` in `mongocxx::v_noabi::options::index`.
+- Support for sort option with replaceOne and updateOne operations.
+- Support for BSON Binary Vector.
+- Support $lookup in CSFLE and QE.
+
+### Deprecated
+
+- Support for MacOS 11 (EOL since Nov 2020) and MacOS 12 (EOL since Oct 2021).
+- `storage_options()` in `mongocxx::v_noabi::options::index`: use `storage_engine()` instead.
+  - `base_storage_options` and `wiredtiger_storage_options` in `mongocxx::v_noabi::options::index` are also deprecated.
+- `hedge()` in `mongocxx::v_noabi::read_preference`: hedged reads will no longer be supported by MongoDB.
+
+### Changed
+
+- Bump the minimum required C Driver version to [2.0.0](https://github.com/mongodb/mongo-c-driver/releases/tag/2.0.0).
+- Set CMake maximum policy version to 4.0.
+  - The CMake minimum required version is still 3.15.
+- C++17 polyfill implementations for `optional<T>` and `string_view` are now declared in the `bsoncxx::v1::stdx` namespace.
+  - The `bsoncxx::v_noabi::stdx` namespace now contains type aliases to their `v1` equivalents.
+  - This is an ABI breaking change for all symbols which reference `bsoncxx::v_noabi::stdx` in their declaration (including mongocxx library symbols).
+    - This does not affect users who compile with C++17 or newer and have not set `BSONCXX_POLY_USE_IMPLS=ON`.
+
 ## 4.0.0
 
 ### Added
@@ -17,7 +75,7 @@ Changes prior to 3.9.0 are documented as [release notes on GitHub](https://githu
 
 - Bump the minimum required C Driver version to [1.29.0](https://github.com/mongodb/mongo-c-driver/releases/tag/1.29.0).
 - CMake option `ENABLE_TESTS` is now `OFF` by default.
-  - Set `ENABLE_TEST=ON` to re-enable building test targets.
+  - Set `ENABLE_TESTS=ON` to re-enable building test targets.
   - Set `BUILD_TESTING=ON` to include test targets in the "all" target when `ENABLE_TESTS=ON` (since 3.9.0, `OFF` by default).
 - Layout of `mongocxx::v_noabi::options::change_stream` to support the new optional `start_at_operation_time` accessor.
 

@@ -35,19 +35,21 @@ namespace v_noabi {
 namespace options {
 
 ///
-/// Class representing the optional arguments to a MongoDB create index operation.
+/// Used by MongoDB index creation operations.
 ///
 /// @see
 /// - https://www.mongodb.com/docs/manual/reference/command/createIndexes
 ///
 class index {
    public:
-    BSONCXX_PUSH_WARNINGS();
-    BSONCXX_DISABLE_WARNING(MSVC(4251));
-    BSONCXX_DISABLE_WARNING(MSVC(4275));
+    BSONCXX_PRIVATE_WARNINGS_PUSH();
+    BSONCXX_PRIVATE_WARNINGS_DISABLE(MSVC(4251));
+    BSONCXX_PRIVATE_WARNINGS_DISABLE(MSVC(4275));
 
     ///
     /// Base class representing the optional storage engine options for indexes.
+    ///
+    /// @deprecated Use @ref mongocxx::v_noabi::options::index::storage_engine instead.
     ///
     class MONGOCXX_ABI_EXPORT base_storage_options {
        public:
@@ -55,8 +57,8 @@ class index {
 
         base_storage_options(base_storage_options&&) = default;
         base_storage_options& operator=(base_storage_options&&) = default;
-        base_storage_options(const base_storage_options&) = default;
-        base_storage_options& operator=(const base_storage_options&) = default;
+        base_storage_options(base_storage_options const&) = default;
+        base_storage_options& operator=(base_storage_options const&) = default;
 
         base_storage_options() = default;
 
@@ -67,7 +69,9 @@ class index {
     };
 
     ///
-    /// Class representing the optional WiredTiger storage engine options for indexes.
+    /// The optional WiredTiger storage engine options for indexes.
+    ///
+    /// @deprecated Use @ref mongocxx::v_noabi::options::index::storage_engine instead.
     ///
     class MONGOCXX_ABI_EXPORT wiredtiger_storage_options final : public base_storage_options {
        public:
@@ -75,8 +79,8 @@ class index {
 
         wiredtiger_storage_options(wiredtiger_storage_options&&) = default;
         wiredtiger_storage_options& operator=(wiredtiger_storage_options&&) = default;
-        wiredtiger_storage_options(const wiredtiger_storage_options&) = default;
-        wiredtiger_storage_options& operator=(const wiredtiger_storage_options&) = default;
+        wiredtiger_storage_options(wiredtiger_storage_options const&) = default;
+        wiredtiger_storage_options& operator=(wiredtiger_storage_options const&) = default;
 
         wiredtiger_storage_options() = default;
 
@@ -93,8 +97,7 @@ class index {
         ///
         /// @return The current config_string.
         ///
-        const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value>&
-        config_string() const;
+        bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value> const& config_string() const;
 
        private:
         friend ::mongocxx::v_noabi::collection;
@@ -104,7 +107,7 @@ class index {
         bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value> _config_string;
     };
 
-    BSONCXX_POP_WARNINGS();
+    BSONCXX_PRIVATE_WARNINGS_POP();
 
     MONGOCXX_ABI_EXPORT_CDECL() index();
 
@@ -129,7 +132,7 @@ class index {
     ///
     /// @return The current background.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<bool>&) background() const;
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bool> const&) background() const;
 
     ///
     /// Whether or not to create a unique index so that the collection will not accept insertion of
@@ -152,7 +155,7 @@ class index {
     ///
     /// @return The current unique.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<bool>&) unique() const;
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bool> const&) unique() const;
 
     ///
     /// Whether or not the index is hidden from the query planner. A hidden index is not evaluated
@@ -175,7 +178,7 @@ class index {
     ///
     /// @return The current hidden.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<bool>&) hidden() const;
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bool> const&) hidden() const;
 
     ///
     /// The name of the index.
@@ -194,8 +197,7 @@ class index {
     ///
     /// @return The current name.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(
-        const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value>&)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value> const&)
     name() const;
 
     ///
@@ -222,8 +224,7 @@ class index {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/collation/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(
-        const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view>&)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view> const&)
     collation() const;
 
     ///
@@ -247,11 +248,12 @@ class index {
     ///
     /// @return The current sparse setting.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<bool>&) sparse() const;
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bool> const&) sparse() const;
 
     ///
-    /// Optionally used only in MongoDB 3.0.0 and higher. Specifies the storage engine options for
-    /// the index.
+    /// Specifies the storage engine options for the index.
+    ///
+    /// @important This option is overridden by `storage_engine` when set.
     ///
     /// @param storage_options
     ///   The storage engine options for the index.
@@ -260,18 +262,49 @@ class index {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(index&)
-    storage_options(std::unique_ptr<base_storage_options> storage_options);
+    /// @deprecated Use @ref mongocxx::v_noabi::options::index::storage_engine instead.
+    ///
+    MONGOCXX_DEPRECATED MONGOCXX_ABI_EXPORT_CDECL(index&) storage_options(
+        std::unique_ptr<base_storage_options> storage_options);
 
     ///
-    /// Optionally used only in MongoDB 3.0.0 and higher. Specifies the WiredTiger-specific storage
-    /// engine options for the index.
+    /// Specifies the WiredTiger-specific storage engine options for the index.
+    ///
+    /// @important This option is overridden by `storage_engine` when set.
     ///
     /// @param storage_options
     ///   The storage engine options for the index.
     ///
+    /// @deprecated Use @ref mongocxx::v_noabi::options::index::storage_engine instead.
+    ///
+    MONGOCXX_DEPRECATED MONGOCXX_ABI_EXPORT_CDECL(index&) storage_options(
+        std::unique_ptr<wiredtiger_storage_options> storage_options);
+
+    ///
+    /// Specifies the storage engine options for the index.
+    ///
+    /// @important This option overrides `storage_options` when set.
+    ///
+    /// The document must have the form `{ <storage-engine-name>: <options> }`, e.g.:
+    /// ```json
+    /// { "wiredTiger": {"configString": "block_compressor=zlib"} }
+    /// ```
+    ///
+    /// @param storage_engine
+    ///   The storage engine options for the index.
+    ///
+    /// @see
+    /// - [Specifying Storage Engine Options (MongoDB Manual)](https://www.mongodb.com/docs/manual/reference/method/db.createCollection/#std-label-create-collection-storage-engine-options)
+    /// - [Storage Engines for Self-Managed Deployments (MongoDB Manual)](https://www.mongodb.com/docs/manual/core/storage-engines/)
+    ///
     MONGOCXX_ABI_EXPORT_CDECL(index&)
-    storage_options(std::unique_ptr<wiredtiger_storage_options> storage_options);
+    storage_engine(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view> storage_engine);
+
+    ///
+    /// The current storage engine options.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view> const&)
+    storage_engine() const;
 
     ///
     /// Set a value, in seconds, as a TTL to control how long MongoDB retains documents in this
@@ -294,7 +327,7 @@ class index {
     ///
     /// @return The current expire_after value.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<std::chrono::seconds>&)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<std::chrono::seconds> const&)
     expire_after() const;
 
     ///
@@ -314,7 +347,7 @@ class index {
     ///
     /// @return The current index version.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<std::int32_t>&)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<std::int32_t> const&)
     version() const;
 
     ///
@@ -335,8 +368,7 @@ class index {
     ///
     /// @return The current weights.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(
-        const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view>&)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view> const&)
     weights() const;
 
     ///
@@ -358,8 +390,7 @@ class index {
     ///
     /// @return The current default_language.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(
-        const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value>&)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value> const&)
     default_language() const;
 
     ///
@@ -381,8 +412,7 @@ class index {
     ///
     /// @return The name of the field that contains the override language for text indexes.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(
-        const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value>&)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value> const&)
     language_override() const;
 
     ///
@@ -403,8 +433,7 @@ class index {
     ///
     /// @return The current partial_filter_expression.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(
-        const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view>&)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view> const&)
     partial_filter_expression() const;
 
     ///
@@ -424,7 +453,7 @@ class index {
     ///
     /// @return The current twod_sphere_version.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<std::uint8_t>&)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<std::uint8_t> const&)
     twod_sphere_version() const;
 
     ///
@@ -444,7 +473,7 @@ class index {
     ///
     /// @return The precision of the stored geohash value of the location data.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<std::uint8_t>&)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<std::uint8_t> const&)
     twod_bits_precision() const;
 
     ///
@@ -464,7 +493,7 @@ class index {
     ///
     /// @return The lower inclusive boundary for the longitude and latitude values.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<double>&)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<double> const&)
     twod_location_min() const;
 
     ///
@@ -484,7 +513,7 @@ class index {
     ///
     /// @return The upper inclusive boundary for the longitude and latitude values.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<double>&)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<double> const&)
     twod_location_max() const;
 
     ///
@@ -505,8 +534,7 @@ class index {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    MONGOCXX_DEPRECATED MONGOCXX_ABI_EXPORT_CDECL(index&)
-        haystack_bucket_size(double haystack_bucket_size);
+    MONGOCXX_DEPRECATED MONGOCXX_ABI_EXPORT_CDECL(index&) haystack_bucket_size(double haystack_bucket_size);
     MONGOCXX_ABI_EXPORT_CDECL(index&) haystack_bucket_size_deprecated(double haystack_bucket_size);
 
     ///
@@ -517,9 +545,9 @@ class index {
     /// @deprecated
     ///   This method is deprecated.
     ///
-    MONGOCXX_DEPRECATED MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<double>&)
-        haystack_bucket_size() const;
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<double>&)
+    MONGOCXX_DEPRECATED MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<double> const&)
+    haystack_bucket_size() const;
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<double> const&)
     haystack_bucket_size_deprecated() const;
 
     ///
@@ -542,6 +570,7 @@ class index {
     bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view> _collation;
     bsoncxx::v_noabi::stdx::optional<bool> _sparse;
     std::unique_ptr<base_storage_options> _storage_options;
+    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view> _storage_engine;
     bsoncxx::v_noabi::stdx::optional<std::chrono::seconds> _expire_after;
     bsoncxx::v_noabi::stdx::optional<std::int32_t> _version;
     bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view> _weights;
@@ -557,12 +586,12 @@ class index {
     //
     // Return the current storage_options setting.
     //
-    const std::unique_ptr<base_storage_options>& storage_options() const;
+    std::unique_ptr<base_storage_options> const& storage_options() const;
 };
 
-}  // namespace options
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace options
+} // namespace v_noabi
+} // namespace mongocxx
 
 #include <bsoncxx/config/postlude.hpp>
 

@@ -22,8 +22,6 @@
 #include <bsoncxx/document/value.hpp>
 #include <bsoncxx/document/view.hpp>
 
-#include <mongocxx/config/private/prelude.hh>
-
 #include <mongocxx/test/spec/monitoring.hh>
 
 namespace mongocxx {
@@ -34,16 +32,15 @@ struct state {
     std::unordered_map<mongocxx::change_stream*, mongocxx::change_stream::iterator> stream_iters;
 };
 
-bsoncxx::document::value run(entity::map& map,
-                             std::unordered_map<std::string, spec::apm_checker>& apm,
-                             const bsoncxx::array::element& op,
-                             state& state);
+bsoncxx::document::value run(
+    entity::map& map,
+    std::unordered_map<std::string, spec::apm_checker>& apm,
+    bsoncxx::array::element const& op,
+    state& state);
 
 bsoncxx::stdx::optional<read_concern> lookup_read_concern(bsoncxx::document::view doc);
 bsoncxx::stdx::optional<write_concern> lookup_write_concern(bsoncxx::document::view doc);
 bsoncxx::stdx::optional<read_preference> lookup_read_preference(bsoncxx::document::view doc);
 
-}  // namespace operations
-}  // namespace mongocxx
-
-#include <mongocxx/config/private/postlude.hh>
+} // namespace operations
+} // namespace mongocxx

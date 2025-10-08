@@ -30,14 +30,14 @@ namespace {
 void example() {
     using bsoncxx::ExtendedJsonMode;
 
-    std::uint8_t data[]{"three"};  // Base64: dGhyZWU=
-    std::uint32_t data_len{5u};    // Exclude null terminator.
+    std::uint8_t data[]{"three"}; // Base64: dGhyZWU=
+    std::uint32_t data_len{5u};   // Exclude null terminator.
     bsoncxx::types::b_binary binary{bsoncxx::binary_sub_type::k_binary, data_len, data};
 
     bsoncxx::array::value owner = bsoncxx::builder::basic::make_array(
-        std::int32_t{1},  // "$numberInt": "1"
-        std::int64_t{2},  // "$numberLong": "2"
-        binary            // "$binary": { "$base64": "dGhyZWU=", "subType": 00 }
+        std::int32_t{1}, // "$numberInt": "1"
+        std::int64_t{2}, // "$numberLong": "2"
+        binary           // "$binary": { "$base64": "dGhyZWU=", "subType": 00 }
     );
     bsoncxx::array::view arr = owner.view();
 
@@ -98,7 +98,7 @@ void example() {
 }
 // [Example]
 
-}  // namespace
+} // namespace
 
 RUNNER_REGISTER_COMPONENT() {
     example();

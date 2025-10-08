@@ -14,11 +14,12 @@
 
 #include <vector>
 
-#include <bsoncxx/private/make_unique.hh>
-
 #include <mongocxx/instance.hpp>
 #include <mongocxx/logger.hpp>
-#include <mongocxx/private/libmongoc.hh>
+
+#include <bsoncxx/private/make_unique.hh>
+
+#include <mongocxx/private/mongoc.hh>
 
 #include <bsoncxx/test/catch.hh>
 
@@ -31,9 +32,8 @@ class test_log_handler : public logger {
 
     test_log_handler(std::vector<event>* events) : _events(events) {}
 
-    void operator()(log_level level,
-                    bsoncxx::stdx::string_view domain,
-                    bsoncxx::stdx::string_view message) noexcept final {
+    void operator()(log_level level, bsoncxx::stdx::string_view domain, bsoncxx::stdx::string_view message) noexcept
+        final {
         if (level == log_level::k_error)
             _events->emplace_back(level, std::string(domain), std::string(message));
     }
@@ -65,4 +65,4 @@ TEST_CASE("a user-provided log handler will be used for logging output", "[insta
     REQUIRE(events[0] == std::make_tuple(log_level::k_error, "foo", "bar"));
 }
 
-}  // namespace
+} // namespace

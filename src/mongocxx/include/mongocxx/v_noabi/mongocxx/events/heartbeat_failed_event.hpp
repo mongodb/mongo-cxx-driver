@@ -28,15 +28,14 @@ namespace v_noabi {
 namespace events {
 
 ///
-/// An event notification sent when the driver failed to send an "hello" command to check the
-/// status of a server.
+/// The failed execution of a heartbeat ("hello") command.
 ///
 /// @see
-/// - "ServerHeartbeatFailedEvent" in https://github.com/mongodb/specifications/blob/master/source/server-discovery-and-monitoring/server-discovery-and-monitoring.md
+/// - [SDAM Logging and Monitoring Specification (MongoDB Specifications)](https://specifications.readthedocs.io/en/latest/server-discovery-and-monitoring/server-discovery-and-monitoring-logging-and-monitoring/)
 ///
 class heartbeat_failed_event {
    public:
-    explicit heartbeat_failed_event(const void* event);
+    explicit heartbeat_failed_event(void const* event);
 
     ///
     /// Destroys a heartbeat_failed_event.
@@ -46,8 +45,8 @@ class heartbeat_failed_event {
     heartbeat_failed_event(heartbeat_failed_event&&) = default;
     heartbeat_failed_event& operator=(heartbeat_failed_event&&) = default;
 
-    heartbeat_failed_event(const heartbeat_failed_event&) = default;
-    heartbeat_failed_event& operator=(const heartbeat_failed_event&) = default;
+    heartbeat_failed_event(heartbeat_failed_event const&) = default;
+    heartbeat_failed_event& operator=(heartbeat_failed_event const&) = default;
 
     ///
     /// Returns the failed operation's error message.
@@ -85,12 +84,12 @@ class heartbeat_failed_event {
     MONGOCXX_ABI_EXPORT_CDECL(bool) awaited() const;
 
    private:
-    const void* _failed_event;
+    void const* _failed_event;
 };
 
-}  // namespace events
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace events
+} // namespace v_noabi
+} // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
 

@@ -26,11 +26,14 @@ namespace v_noabi {
 namespace events {
 
 ///
-/// Class representing what the driver knows about a MongoDB server.
+/// The description of a connected MongoDB server.
+///
+/// @see
+/// - @ref mongocxx::v_noabi::events::topology_description
 ///
 class server_description {
    public:
-    explicit server_description(const void* event);
+    explicit server_description(void const* event);
 
     ///
     /// Destroys a server_description.
@@ -40,8 +43,8 @@ class server_description {
     server_description(server_description&&) = default;
     server_description& operator=(server_description&&) = default;
 
-    server_description(const server_description&) = default;
-    server_description& operator=(const server_description&) = default;
+    server_description(server_description const&) = default;
+    server_description& operator=(server_description const&) = default;
 
     ///
     /// An opaque id, unique to this server for this mongocxx::v_noabi::client or
@@ -71,8 +74,7 @@ class server_description {
     ///
     /// @deprecated use hello instead.
     ///
-    MONGOCXX_DEPRECATED MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::document::view)
-        is_master() const;
+    MONGOCXX_DEPRECATED MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::document::view) is_master() const;
 
     ///
     /// The server's last response to the "hello" command, or an empty document if the driver
@@ -97,12 +99,12 @@ class server_description {
     MONGOCXX_ABI_EXPORT_CDECL(std::uint16_t) port() const;
 
    private:
-    const void* _sd;
+    void const* _sd;
 };
 
-}  // namespace events
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace events
+} // namespace v_noabi
+} // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
 

@@ -27,7 +27,7 @@ namespace options {
 namespace gridfs {
 
 ///
-/// Class representing the optional arguments to a MongoDB GridFS upload operation.
+/// Used by @ref mongocxx::v_noabi::gridfs::bucket.
 ///
 class upload {
    public:
@@ -50,7 +50,7 @@ class upload {
     /// @return
     ///   The chunk size of the GridFS file being uploaded in bytes.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<std::int32_t>&)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<std::int32_t> const&)
     chunk_size_bytes() const;
 
     ///
@@ -72,8 +72,7 @@ class upload {
     /// @return
     ///   The metadata document of the GridFS file.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(
-        const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value>&)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const&)
     metadata() const;
 
    private:
@@ -81,10 +80,10 @@ class upload {
     bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> _metadata;
 };
 
-}  // namespace gridfs
-}  // namespace options
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace gridfs
+} // namespace options
+} // namespace v_noabi
+} // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
 

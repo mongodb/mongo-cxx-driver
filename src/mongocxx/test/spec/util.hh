@@ -23,8 +23,6 @@
 #include <mongocxx/client.hpp>
 #include <mongocxx/uri.hpp>
 
-#include <mongocxx/config/private/prelude.hh>
-
 #include <mongocxx/test/spec/operation.hh>
 
 namespace mongocxx {
@@ -38,39 +36,41 @@ using namespace mongocxx;
 ///
 uint32_t error_code_from_name(bsoncxx::stdx::string_view name);
 
-bool check_if_skip_spec_test_impl(const client& client, document::view test, std::string& reason);
+bool check_if_skip_spec_test_impl(document::view test, std::string& reason);
 
-#define CHECK_IF_SKIP_SPEC_TEST(client, test)                                     \
-    {                                                                             \
-        std::string reason;                                                       \
-        if (mongocxx::spec::check_if_skip_spec_test_impl(client, test, reason)) { \
-            SKIP(reason);                                                         \
-        }                                                                         \
-    }                                                                             \
+#define CHECK_IF_SKIP_SPEC_TEST(test)                                     \
+    {                                                                     \
+        std::string reason;                                               \
+        if (mongocxx::spec::check_if_skip_spec_test_impl(test, reason)) { \
+            SKIP(reason);                                                 \
+        }                                                                 \
+    }                                                                     \
     ((void)0)
 
 ///
 /// Configures the fail point described by test["failPoint"].
 ///
-void configure_fail_point(const client& client, document::view test);
+void configure_fail_point(client const& client, document::view test);
 
 ///
 /// Disables fail points set by tests.
 ///
-void disable_fail_point(const client& client, bsoncxx::stdx::string_view failpoint = "failCommand");
-void disable_fail_point(std::string uri_string,
-                        options::client client_opts,
-                        bsoncxx::stdx::string_view failpoint = "failCommand");
+void disable_fail_point(client const& client, bsoncxx::stdx::string_view failpoint = "failCommand");
+void disable_fail_point(
+    std::string uri_string,
+    options::client client_opts,
+    bsoncxx::stdx::string_view failpoint = "failCommand");
 
 ///
 /// Drops the given collection, then recreates it using the jsonSchema
 /// from the test, if there is one, and inserts any documents listed
 /// in test["data"] into the new collection.
 ///
-void set_up_collection(const client& client,
-                       document::view test,
-                       bsoncxx::stdx::string_view database_name = "database_name",
-                       bsoncxx::stdx::string_view collection_name = "collection_name");
+void set_up_collection(
+    client const& client,
+    document::view test,
+    bsoncxx::stdx::string_view database_name = "database_name",
+    bsoncxx::stdx::string_view collection_name = "collection_name");
 
 ///
 /// Deletes all existing documents in the given collection, then inserts
@@ -108,21 +108,19 @@ uri get_uri(document::view test);
 // Uses the given environment variable to load all tests in a test suite
 // and run them with the provided callback function.
 //
-using test_runner = std::function<void(const std::string& file)>;
+using test_runner = std::function<void(std::string const& file)>;
 void run_tests_in_suite(std::string ev, test_runner cb, std::set<std::string> unsupported_tests);
 void run_tests_in_suite(std::string ev, test_runner cb);
 
 //
 // The transactions spec test runner, also used by other spec tests.
 //
-void run_transactions_tests_in_file(const std::string& test_path);
+void run_transactions_tests_in_file(std::string const& test_path);
 
 //
 // The crud spec test runner, also used by other spec tests.
 //
-void run_crud_tests_in_file(const std::string& test_path, uri test_uri = uri{});
+void run_crud_tests_in_file(std::string const& test_path, uri test_uri = uri{});
 
-}  // namespace spec
-}  // namespace mongocxx
-
-#include <mongocxx/config/private/postlude.hh>
+} // namespace spec
+} // namespace mongocxx

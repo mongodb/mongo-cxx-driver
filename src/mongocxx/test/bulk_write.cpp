@@ -18,8 +18,9 @@
 #include <mongocxx/bulk_write.hpp>
 #include <mongocxx/client.hpp>
 #include <mongocxx/instance.hpp>
-#include <mongocxx/private/libmongoc.hh>
 #include <mongocxx/write_concern.hpp>
+
+#include <mongocxx/private/mongoc.hh>
 
 #include <bsoncxx/test/catch.hh>
 
@@ -33,13 +34,14 @@ using bsoncxx::builder::basic::make_document;
 
 TEST_CASE("a bulk_write will setup a mongoc bulk operation", "[bulk_write]") {
     instance::current();
-    mongocxx::client client{mongocxx::uri{}};
+    mongocxx::client client{mongocxx::uri{}, test_util::add_test_server_api()};
     mongocxx::collection coll = client["db"]["coll"];
+    CHECK_NOTHROW(coll.drop());
     auto construct = libmongoc::collection_create_bulk_operation_with_opts.create_instance();
     bool construct_called = false;
     bool ordered_value = false;
 
-    construct->visit([&](mongoc_collection_t*, const bson_t* opts) {
+    construct->visit([&](mongoc_collection_t*, bson_t const* opts) {
         construct_called = true;
         bson_iter_t iter;
         bson_iter_init(&iter, opts);
@@ -53,7 +55,9 @@ TEST_CASE("a bulk_write will setup a mongoc bulk operation", "[bulk_write]") {
     });
 
     SECTION("with an ordered bulk write") {
-        { auto bw = coll.create_bulk_write(); }
+        {
+            auto bw = coll.create_bulk_write();
+        }
         REQUIRE(construct_called);
         REQUIRE(ordered_value);
     }
@@ -61,32 +65,33 @@ TEST_CASE("a bulk_write will setup a mongoc bulk operation", "[bulk_write]") {
     SECTION("with an unordered bulk write") {
         options::bulk_write bw_opts;
         bw_opts.ordered(false);
-        { auto bw = coll.create_bulk_write(bw_opts); }
+        {
+            auto bw = coll.create_bulk_write(bw_opts);
+        }
         REQUIRE(construct_called);
         REQUIRE(!ordered_value);
     }
 }
 TEST_CASE("destruction of a bulk_write will destroy mongoc operation", "[bulk_write]") {
     instance::current();
-    mongocxx::client client{mongocxx::uri{}};
+    mongocxx::client client{mongocxx::uri{}, test_util::add_test_server_api()};
     mongocxx::collection coll = client["db"]["coll"];
+    CHECK_NOTHROW(coll.drop());
     auto destruct = libmongoc::bulk_operation_destroy.create_instance();
     bool destruct_called = false;
 
     destruct->visit([&destruct_called](mongoc_bulk_operation_t*) { destruct_called = true; });
 
-    { auto bw = coll.create_bulk_write(); }
+    {
+        auto bw = coll.create_bulk_write();
+    }
     REQUIRE(destruct_called);
 }
 class insert_functor {
    public:
-    insert_functor(bool* called, bsoncxx::document::view document)
-        : _called{called}, _document{document} {}
+    insert_functor(bool* called, bsoncxx::document::view document) : _called{called}, _document{document} {}
 
-    void operator()(mongoc_bulk_operation_t*,
-                    const bson_t* document,
-                    const bson_t*,
-                    bson_error_t*) {
+    void operator()(mongoc_bulk_operation_t*, bson_t const* document, bson_t const*, bson_error_t*) {
         *_called = true;
         REQUIRE(bson_get_data(document) == _document.data());
     }
@@ -101,11 +106,12 @@ class update_functor {
     update_functor(bool* called, bsoncxx::document::view filter, bsoncxx::document::view update)
         : _called{called}, _filter{filter}, _update{update} {}
 
-    void operator()(mongoc_bulk_operation_t*,
-                    const bson_t* filter,
-                    const bson_t* update,
-                    const bson_t* options,
-                    bson_error_t*) {
+    void operator()(
+        mongoc_bulk_operation_t*,
+        bson_t const* filter,
+        bson_t const* update,
+        bson_t const* options,
+        bson_error_t*) {
         *_called = true;
         REQUIRE(bson_get_data(filter) == _filter.data());
         REQUIRE(bson_get_data(update) == _update.data());
@@ -149,13 +155,9 @@ class update_functor {
 
 class delete_functor {
    public:
-    delete_functor(bool* called, bsoncxx::document::view filter)
-        : _called{called}, _filter{filter} {}
+    delete_functor(bool* called, bsoncxx::document::view filter) : _called{called}, _filter{filter} {}
 
-    void operator()(mongoc_bulk_operation_t*,
-                    const bson_t* filter,
-                    const bson_t* options,
-                    bson_error_t*) {
+    void operator()(mongoc_bulk_operation_t*, bson_t const* filter, bson_t const* options, bson_error_t*) {
         *_called = true;
         REQUIRE(bson_get_data(filter) == _filter.data());
 
@@ -183,10 +185,11 @@ class delete_functor {
 
 TEST_CASE("passing write operations to append calls corresponding C function", "[bulk_write]") {
     instance::current();
-    mongocxx::client client{mongocxx::uri{}};
-    auto bw = client["db"]["coll"].create_bulk_write();
-    bsoncxx::builder::basic::document filter_builder, doc_builder, update_doc_builder,
-        collation_builder;
+    mongocxx::client client{mongocxx::uri{}, test_util::add_test_server_api()};
+    mongocxx::collection coll = client["db"]["coll"];
+    CHECK_NOTHROW(coll.drop());
+    auto bw = coll.create_bulk_write();
+    bsoncxx::builder::basic::document filter_builder, doc_builder, update_doc_builder, collation_builder;
     filter_builder.append(kvp("_id", 1));
     doc_builder.append(kvp("_id", 2));
     update_doc_builder.append(kvp("$set", make_document(kvp("_id", 2))));
@@ -359,7 +362,9 @@ TEST_CASE("passing write operations to append calls corresponding C function", "
 TEST_CASE("calling empty on a bulk write before and after appending", "[bulk_write]") {
     instance::current();
     mongocxx::client client{mongocxx::uri{}, test_util::add_test_server_api()};
-    auto bw = client["db"]["coll"].create_bulk_write();
+    mongocxx::collection coll = client["db"]["coll"];
+    CHECK_NOTHROW(coll.drop());
+    auto bw = coll.create_bulk_write();
 
     REQUIRE(bw.empty());
     bw.append(model::insert_one(make_document(kvp("_id", 1))));
@@ -367,4 +372,4 @@ TEST_CASE("calling empty on a bulk write before and after appending", "[bulk_wri
     bw.execute();
     REQUIRE_FALSE(bw.empty());
 }
-}  // namespace
+} // namespace

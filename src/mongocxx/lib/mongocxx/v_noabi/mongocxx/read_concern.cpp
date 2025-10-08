@@ -13,33 +13,31 @@
 // limitations under the License.
 
 #include <bsoncxx/builder/basic/document.hpp>
-#include <bsoncxx/private/make_unique.hh>
 #include <bsoncxx/string/to_string.hpp>
 
 #include <mongocxx/exception/error_code.hpp>
 #include <mongocxx/exception/exception.hpp>
-#include <mongocxx/private/libmongoc.hh>
-#include <mongocxx/private/read_concern.hh>
 #include <mongocxx/read_concern.hpp>
 
-#include <mongocxx/config/private/prelude.hh>
+#include <bsoncxx/private/make_unique.hh>
+
+#include <mongocxx/private/mongoc.hh>
+#include <mongocxx/private/read_concern.hh>
 
 namespace mongocxx {
 namespace v_noabi {
 
 read_concern::read_concern() : _impl{bsoncxx::make_unique<impl>(libmongoc::read_concern_new())} {}
 
-read_concern::read_concern(std::unique_ptr<impl>&& implementation)
-    : _impl{std::move(implementation)} {}
+read_concern::read_concern(std::unique_ptr<impl>&& implementation) : _impl{std::move(implementation)} {}
 
 read_concern::read_concern(read_concern&&) noexcept = default;
 read_concern& read_concern::operator=(read_concern&&) noexcept = default;
 
-read_concern::read_concern(const read_concern& other)
-    : _impl(bsoncxx::make_unique<impl>(libmongoc::read_concern_copy(other._impl->read_concern_t))) {
-}
+read_concern::read_concern(read_concern const& other)
+    : _impl(bsoncxx::make_unique<impl>(libmongoc::read_concern_copy(other._impl->read_concern_t))) {}
 
-read_concern& read_concern::operator=(const read_concern& other) {
+read_concern& read_concern::operator=(read_concern const& other) {
     _impl = bsoncxx::make_unique<impl>(libmongoc::read_concern_copy(other._impl->read_concern_t));
     return *this;
 }
@@ -49,28 +47,23 @@ read_concern::~read_concern() = default;
 void read_concern::acknowledge_level(read_concern::level rc_level) {
     switch (rc_level) {
         case read_concern::level::k_local:
-            libmongoc::read_concern_set_level(_impl->read_concern_t,
-                                              MONGOC_READ_CONCERN_LEVEL_LOCAL);
+            libmongoc::read_concern_set_level(_impl->read_concern_t, MONGOC_READ_CONCERN_LEVEL_LOCAL);
             break;
         case read_concern::level::k_majority:
-            libmongoc::read_concern_set_level(_impl->read_concern_t,
-                                              MONGOC_READ_CONCERN_LEVEL_MAJORITY);
+            libmongoc::read_concern_set_level(_impl->read_concern_t, MONGOC_READ_CONCERN_LEVEL_MAJORITY);
             break;
         case read_concern::level::k_linearizable:
-            libmongoc::read_concern_set_level(_impl->read_concern_t,
-                                              MONGOC_READ_CONCERN_LEVEL_LINEARIZABLE);
+            libmongoc::read_concern_set_level(_impl->read_concern_t, MONGOC_READ_CONCERN_LEVEL_LINEARIZABLE);
             break;
         case read_concern::level::k_server_default:
             // libmongoc uses a NULL level to mean "use the server's default read_concern."
             libmongoc::read_concern_set_level(_impl->read_concern_t, nullptr);
             break;
         case read_concern::level::k_available:
-            libmongoc::read_concern_set_level(_impl->read_concern_t,
-                                              MONGOC_READ_CONCERN_LEVEL_AVAILABLE);
+            libmongoc::read_concern_set_level(_impl->read_concern_t, MONGOC_READ_CONCERN_LEVEL_AVAILABLE);
             break;
         case read_concern::level::k_snapshot:
-            libmongoc::read_concern_set_level(_impl->read_concern_t,
-                                              MONGOC_READ_CONCERN_LEVEL_SNAPSHOT);
+            libmongoc::read_concern_set_level(_impl->read_concern_t, MONGOC_READ_CONCERN_LEVEL_SNAPSHOT);
             break;
 
         case read_concern::level::k_unknown:
@@ -82,8 +75,7 @@ void read_concern::acknowledge_level(read_concern::level rc_level) {
 void read_concern::acknowledge_string(bsoncxx::v_noabi::stdx::string_view rc_string) {
     // libmongoc uses a NULL level to mean "use the server's default read_concern."
     libmongoc::read_concern_set_level(
-        _impl->read_concern_t,
-        rc_string.empty() ? nullptr : bsoncxx::v_noabi::string::to_string(rc_string).data());
+        _impl->read_concern_t, rc_string.empty() ? nullptr : bsoncxx::v_noabi::string::to_string(rc_string).data());
 }
 
 read_concern::level read_concern::acknowledge_level() const {
@@ -127,13 +119,13 @@ bsoncxx::v_noabi::document::value read_concern::to_document() const {
     return doc.extract();
 }
 
-bool operator==(const read_concern& lhs, const read_concern& rhs) {
+bool operator==(read_concern const& lhs, read_concern const& rhs) {
     return lhs.acknowledge_level() == rhs.acknowledge_level();
 }
 
-bool operator!=(const read_concern& lhs, const read_concern& rhs) {
+bool operator!=(read_concern const& lhs, read_concern const& rhs) {
     return !(lhs == rhs);
 }
 
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace v_noabi
+} // namespace mongocxx

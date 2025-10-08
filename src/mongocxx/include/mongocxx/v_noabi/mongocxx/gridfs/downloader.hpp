@@ -35,7 +35,7 @@ namespace v_noabi {
 namespace gridfs {
 
 ///
-/// Class used to specify the offset from which to start reading the chunks of the file.
+/// Used to specify the offset from which to start reading the chunks of the file.
 ///
 struct chunks_and_bytes_offset {
     std::int32_t chunks_offset = 0;
@@ -43,7 +43,7 @@ struct chunks_and_bytes_offset {
 };
 
 ///
-/// Class used to download a GridFS file.
+/// Used to download a GridFS file.
 ///
 class downloader {
    public:
@@ -64,9 +64,9 @@ class downloader {
     ///
     MONGOCXX_ABI_EXPORT_CDECL(downloader&) operator=(downloader&&) noexcept;
 
-    downloader(const downloader&) = delete;
+    downloader(downloader const&) = delete;
 
-    downloader& operator=(const downloader&) = delete;
+    downloader& operator=(downloader const&) = delete;
 
     ///
     /// Destroys a downloader.
@@ -154,25 +154,26 @@ class downloader {
     // @param files_doc
     //   The files collection document of the file being downloaded.
     //
-    downloader(bsoncxx::v_noabi::stdx::optional<cursor> chunks,
-               chunks_and_bytes_offset start,
-               std::int32_t chunk_size,
-               std::int64_t file_len,
-               bsoncxx::v_noabi::document::value files_doc);
+    downloader(
+        bsoncxx::v_noabi::stdx::optional<cursor> chunks,
+        chunks_and_bytes_offset start,
+        std::int32_t chunk_size,
+        std::int64_t file_len,
+        bsoncxx::v_noabi::document::value files_doc);
 
     void fetch_chunk();
 
     class impl;
 
     impl& _get_impl();
-    const impl& _get_impl() const;
+    impl const& _get_impl() const;
 
     std::unique_ptr<impl> _impl;
 };
 
-}  // namespace gridfs
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace gridfs
+} // namespace v_noabi
+} // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
 

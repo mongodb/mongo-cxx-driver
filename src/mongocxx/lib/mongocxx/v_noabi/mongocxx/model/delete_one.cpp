@@ -14,16 +14,13 @@
 
 #include <mongocxx/model/delete_one.hpp>
 
-#include <mongocxx/config/private/prelude.hh>
-
 namespace mongocxx {
 namespace v_noabi {
 namespace model {
 
-delete_one::delete_one(bsoncxx::v_noabi::document::view_or_value filter)
-    : _filter(std::move(filter)) {}
+delete_one::delete_one(bsoncxx::v_noabi::document::view_or_value filter) : _filter(std::move(filter)) {}
 
-const bsoncxx::v_noabi::document::view_or_value& delete_one::filter() const {
+bsoncxx::v_noabi::document::view_or_value const& delete_one::filter() const {
     return _filter;
 }
 
@@ -32,8 +29,7 @@ delete_one& delete_one::collation(bsoncxx::v_noabi::document::view_or_value coll
     return *this;
 }
 
-const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value>&
-delete_one::collation() const {
+bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const& delete_one::collation() const {
     return _collation;
 }
 
@@ -42,10 +38,10 @@ delete_one& delete_one::hint(mongocxx::v_noabi::hint index_hint) {
     return *this;
 }
 
-const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::hint>& delete_one::hint() const {
+bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::hint> const& delete_one::hint() const {
     return _hint;
 }
 
-}  // namespace model
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace model
+} // namespace v_noabi
+} // namespace mongocxx

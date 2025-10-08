@@ -16,7 +16,7 @@
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/stdx/optional.hpp>
 
-#include <mongocxx/private/libbson.hh>
+#include <mongocxx/private/bson.hh>
 
 #include <bsoncxx/test/catch.hh>
 
@@ -117,4 +117,4 @@ TEST_CASE("scoped_bson_t", "[private]") {
         }
     }
 }
-}  // namespace
+} // namespace

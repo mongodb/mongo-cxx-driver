@@ -1,6 +1,7 @@
 from config_generator.components.funcs.compile import Compile
 from config_generator.components.funcs.fetch_c_driver_source import FetchCDriverSource
 from config_generator.components.funcs.fetch_det import FetchDET
+from config_generator.components.funcs.install_uv import InstallUV
 from config_generator.components.funcs.run_kms_servers import RunKMSServers
 from config_generator.components.funcs.setup import Setup
 from config_generator.components.funcs.start_mongod import StartMongod
@@ -8,7 +9,7 @@ from config_generator.components.funcs.test import Test
 
 from config_generator.etc.distros import find_large_distro, make_distro_str
 
-from shrub.v3.evg_build_variant import BuildVariant, DisplayTask
+from shrub.v3.evg_build_variant import BuildVariant
 from shrub.v3.evg_task import EvgTask, EvgTaskRef
 
 from itertools import product
@@ -20,9 +21,9 @@ TAG = 'versioned-api'
 # pylint: disable=line-too-long
 # fmt: off
 MATRIX = [
-    ('macos-1100',        None,        ['Release'], ['shared'], [None]),
-    ('ubuntu2004',        None,        ['Debug'  ], ['shared'], [None]),
-    ('windows-vsCurrent', 'vs2019x64', ['Debug'  ], ['shared'], [None]),
+    ('rhel80',            None,        ['Debug'], ['shared'], [None]),
+    ('macos-14-arm64',    None,        ['Debug'], ['shared'], [None]),
+    ('windows-vsCurrent', 'vs2022x64', ['Debug'], ['shared'], [None]),
 ]
 # fmt: on
 # pylint: enable=line-too-long
@@ -78,6 +79,7 @@ def tasks():
                         Setup.call(),
                         StartMongod.call(mongodb_version='latest', topology='single', vars=mongod_vars),
                         FetchCDriverSource.call(),
+                        InstallUV.call(),
                         Compile.call(build_type=build_type, compiler=compiler, vars=compile_vars),
                         FetchDET.call(),
                         RunKMSServers.call(),
@@ -95,11 +97,5 @@ def variants():
             name=f'{TAG}-matrix',
             display_name=f'{TAG}-matrix',
             tasks=[EvgTaskRef(name=f'.{TAG}')],
-            display_tasks=[
-                DisplayTask(
-                    name=f'{TAG}-matrix',
-                    execution_tasks=[f'.{TAG}'],
-                )
-            ],
         ),
     ]

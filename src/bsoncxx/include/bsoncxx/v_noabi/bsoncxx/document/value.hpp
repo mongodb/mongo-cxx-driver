@@ -31,9 +31,10 @@ namespace v_noabi {
 namespace document {
 
 ///
-/// A read-only BSON document that owns its underlying buffer. When a document::value goes
-/// out of scope, the underlying buffer is freed. Generally this class should be used
-/// sparingly; document::view should be used instead wherever possible.
+/// A read-only BSON document that owns its underlying buffer.
+///
+/// When a document::value goes out of scope, the underlying buffer is freed. Generally this class
+/// should be used sparingly; document::view should be used instead wherever possible.
 ///
 class value {
    public:
@@ -77,8 +78,8 @@ class value {
 
     ~value() = default;
 
-    BSONCXX_ABI_EXPORT_CDECL() value(const value&);
-    BSONCXX_ABI_EXPORT_CDECL(value&) operator=(const value&);
+    BSONCXX_ABI_EXPORT_CDECL() value(value const&);
+    BSONCXX_ABI_EXPORT_CDECL(value&) operator=(value const&);
 
     value(value&&) = default;
     value& operator=(value&&) = default;
@@ -92,11 +93,11 @@ class value {
     ///   A user-defined object to serialize into a BSON object.
     ///
     template <typename T, detail::requires_not_t<int, std::is_same<T, array::view>> = 0>
-    explicit value(const T& t) : value({}) {
+    explicit value(T const& t) : value({}) {
         to_bson(t, *this);
     }
     template <typename T>
-    value& operator=(const T& t) {
+    value& operator=(T const& t) {
         *this = value{t};
         return *this;
     }
@@ -155,7 +156,7 @@ class value {
     ///
     /// @return A pointer to the value's buffer.
     ///
-    BSONCXX_ABI_EXPORT_CDECL(const std::uint8_t*) data() const;
+    BSONCXX_ABI_EXPORT_CDECL(std::uint8_t const*) data() const;
 
     ///
     /// Gets the length of the underlying buffer.
@@ -180,10 +181,10 @@ class value {
     ///
     document::view view() const noexcept {
         // Silence false positive with g++ 10.2.1 on Debian 11.
-        BSONCXX_PUSH_WARNINGS();
-        BSONCXX_DISABLE_WARNING(GCC("-Wmaybe-uninitialized"));
+        BSONCXX_PRIVATE_WARNINGS_PUSH();
+        BSONCXX_PRIVATE_WARNINGS_DISABLE(GCC("-Wmaybe-uninitialized"));
         return document::view{static_cast<uint8_t*>(_data.get()), _length};
-        BSONCXX_POP_WARNINGS();
+        BSONCXX_PRIVATE_WARNINGS_POP();
     }
 
     ///
@@ -198,7 +199,7 @@ class value {
     ///
     /// Constructs an object of type T from this document object. This method uses
     /// argument-dependent lookup to find the function declaration
-    /// `void from_bson(T& t, const bsoncxx::v_noabi::document::view& doc)`.
+    /// `void from_bson(T& t, bsoncxx::v_noabi::document::view const& doc)`.
     ///
     /// @note Type T must be default-constructible. Otherwise, use `void get(T& t)`.
     ///
@@ -212,7 +213,7 @@ class value {
     ///
     /// Constructs an object of type T from this document object. This method uses
     /// argument-dependent lookup to find the function declaration
-    /// `void from_bson(T& t, const bsoncxx::v_noabi::document::view& doc)`.
+    /// `void from_bson(T& t, bsoncxx::v_noabi::document::view const& doc)`.
     ///
     /// @param t
     ///   The object to construct. The contents of the document object will be deserialized
@@ -251,21 +252,21 @@ class value {
 /// @{
 
 /// @relatesalso bsoncxx::v_noabi::document::value
-inline bool operator==(const value& lhs, const value& rhs) {
+inline bool operator==(value const& lhs, value const& rhs) {
     return (lhs.view() == rhs.view());
 }
 
 /// @relatesalso bsoncxx::v_noabi::document::value
-inline bool operator!=(const value& lhs, const value& rhs) {
+inline bool operator!=(value const& lhs, value const& rhs) {
     return !(lhs == rhs);
 }
 
 /// @}
 ///
 
-}  // namespace document
-}  // namespace v_noabi
-}  // namespace bsoncxx
+} // namespace document
+} // namespace v_noabi
+} // namespace bsoncxx
 
 namespace bsoncxx {
 namespace document {
@@ -273,8 +274,8 @@ namespace document {
 using ::bsoncxx::v_noabi::document::operator==;
 using ::bsoncxx::v_noabi::document::operator!=;
 
-}  // namespace document
-}  // namespace bsoncxx
+} // namespace document
+} // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>
 
@@ -282,19 +283,3 @@ using ::bsoncxx::v_noabi::document::operator!=;
 /// @file
 /// Provides @ref bsoncxx::v_noabi::document::value.
 ///
-
-#if defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
-
-namespace bsoncxx {
-namespace document {
-
-/// @ref bsoncxx::v_noabi::document::operator==(const v_noabi::document::value& lhs, const v_noabi::document::value& rhs)
-inline bool operator==(const v_noabi::document::value& lhs, const v_noabi::document::value& rhs);
-
-/// @ref bsoncxx::v_noabi::document::operator!=(const v_noabi::document::value& lhs, const v_noabi::document::value& rhs)
-inline bool operator!=(const v_noabi::document::value& lhs, const v_noabi::document::value& rhs);
-
-}  // namespace document
-}  // namespace bsoncxx
-
-#endif  // defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

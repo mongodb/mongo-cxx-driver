@@ -32,8 +32,7 @@ TEST_CASE("[] can reach into nested arrays", "[bsoncxx]") {
     //     "ints": [ 1, 3, [ 5 ] ],
     //     "bools": [ true, false ]
     // }
-    auto build_doc = make_document(kvp("ints", make_array(1, 3, make_array(5))),
-                                   kvp("bools", make_array(true, false)));
+    auto build_doc = make_document(kvp("ints", make_array(1, 3, make_array(5))), kvp("bools", make_array(true, false)));
     auto doc = build_doc.view();
 
     SECTION("works with one level") {
@@ -86,8 +85,7 @@ TEST_CASE("[] can reach into nested documents", "[bsoncxx]") {
     //     }
     // }
     auto build_doc = make_document(
-        kvp("ints",
-            make_document(kvp("x", 1), kvp("y", 3), kvp("more", make_document(kvp("z", 5))))),
+        kvp("ints", make_document(kvp("x", 1), kvp("y", 3), kvp("more", make_document(kvp("z", 5))))),
         kvp("bools", make_document(kvp("t", true), kvp("f", false))));
 
     auto doc = build_doc.view();
@@ -152,11 +150,8 @@ TEST_CASE("[] can reach into mixed nested arrays and documents", "[bsoncxx]") {
             make_document(
                 kvp("x", 1),
                 kvp("y", 3),
-                kvp("arr",
-                    make_array(
-                        5, 7, make_document(kvp("z", 9), kvp("even_more", make_array(11))))))),
-        kvp("bools",
-            make_document(kvp("t", true), kvp("f", false), kvp("arr", make_array(false, true)))));
+                kvp("arr", make_array(5, 7, make_document(kvp("z", 9), kvp("even_more", make_array(11))))))),
+        kvp("bools", make_document(kvp("t", true), kvp("f", false), kvp("arr", make_array(false, true)))));
 
     auto doc = build_doc.view();
 
@@ -227,7 +222,7 @@ TEST_CASE("document view begin/end/find give expected types", "[bsoncxx]") {
     auto value = make_document(kvp("a", 1));
 
     SECTION("const document::view gives const_iterator") {
-        const document::view const_doc = value.view();
+        document::view const const_doc = value.view();
 
         document::view::const_iterator citer = const_doc.begin();
         REQUIRE(citer != const_doc.end());
@@ -278,7 +273,7 @@ TEST_CASE("array view begin/end/find give expected types", "[bsoncxx]") {
     auto value = make_array("a");
 
     SECTION("const array::view gives const_iterator") {
-        const array::view const_ary = value.view();
+        array::view const const_ary = value.view();
 
         array::view::const_iterator citer = const_ary.begin();
         REQUIRE(citer != const_ary.end());
@@ -320,13 +315,13 @@ TEST_CASE("array view begin/end/find give expected types", "[bsoncxx]") {
 TEST_CASE("CXX-1476: CXX-992 regression fixes", "[bsoncxx]") {
     SECTION("request for field 'o' does not return field 'op'") {
         constexpr auto k_json = R"({ "op" : 1, "o" : 2 })";
-        const auto bson = from_json(k_json);
+        auto const bson = from_json(k_json);
         REQUIRE(bson.view()["o"].key() == stdx::string_view("o"));
     }
 
     SECTION("empty key is not ignored") {
         constexpr auto k_json = R"({ "" : 1 })";
-        const auto bson = from_json(k_json);
+        auto const bson = from_json(k_json);
         REQUIRE(bson.view().find("") != bson.view().cend());
         REQUIRE(bson.view().find(stdx::string_view()) != bson.view().cend());
     }
@@ -347,9 +342,8 @@ TEST_CASE("can use operator[] with document::value") {
     //     },
     //     "test_array": [5, 4, 3]
     // }
-    auto doc = make_document(kvp("beep", 25),
-                             kvp("boop", make_document(kvp("test", true))),
-                             kvp("test_array", make_array(5, 4, 3)));
+    auto doc = make_document(
+        kvp("beep", 25), kvp("boop", make_document(kvp("test", true))), kvp("test_array", make_array(5, 4, 3)));
     auto view = doc.view();
 
     SECTION("operator[] can access valid keys") {
@@ -393,4 +387,4 @@ TEST_CASE("document::values have a superset of document::view's methods") {
     }
 }
 
-}  // namespace
+} // namespace

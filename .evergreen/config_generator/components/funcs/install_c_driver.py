@@ -8,13 +8,13 @@ from typing import Mapping
 
 
 # If updating mongoc_version_minimum, also update:
-# - LIBBSON_REQUIRED_VERSION and LIBMONGOC_REQUIRED_VERSION in CMakeLists.txt
+# - BSON_REQUIRED_VERSION and MONGOC_REQUIRED_VERSION in CMakeLists.txt
 # - the version of pkg:github/mongodb/mongo-c-driver in etc/purls.txt
 # - the default value of --c-driver-build-ref in etc/make_release.py
-# Only LIBMONGOC_DOWNLOAD_VERSION needs to be updated when pinning to an unreleased commit.
+# Only MONGOC_DOWNLOAD_VERSION needs to be updated when pinning to an unreleased commit.
 # If pinning to an unreleased commit, create a "Blocked" JIRA ticket with
 # a "depends on" link to the appropriate C Driver version release ticket.
-MONGOC_VERSION_MINIMUM = '1.29.0'
+MONGOC_VERSION_MINIMUM = '2.0.0'
 
 
 class InstallCDriver(Function):
@@ -29,6 +29,10 @@ class InstallCDriver(Function):
         bash_exec(
             command_type=EvgCommandType.SETUP,
             add_expansions_to_env=True,
+            env={
+                'CC': '${cc_compiler}',
+                'CXX': '${cxx_compiler}',
+            },
             script='mongo-cxx-driver/.evergreen/scripts/install-c-driver.sh'
         ),
     ]

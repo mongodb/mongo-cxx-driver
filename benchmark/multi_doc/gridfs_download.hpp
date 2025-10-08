@@ -36,10 +36,7 @@ class gridfs_download : public microbench {
    public:
     // The task size comes from the Driver Perfomance Benchmarking Reference Doc.
     gridfs_download(std::string file_name)
-        : microbench{"TestGridFsDownload",
-                     52.43,
-                     std::set<benchmark_type>{benchmark_type::multi_bench,
-                                              benchmark_type::read_bench}},
+        : microbench{"TestGridFsDownload", 52.43, std::set<benchmark_type>{benchmark_type::multi_bench, benchmark_type::read_bench}},
           _conn{mongocxx::uri{}},
           _file_name{std::move(file_name)} {}
 
@@ -77,8 +74,7 @@ void gridfs_download::task() {
     auto buffer_size = std::min(file_length, static_cast<std::int64_t>(downloader.chunk_size()));
     auto buffer = std::make_unique<std::uint8_t[]>(static_cast<std::size_t>(buffer_size));
 
-    while ([[maybe_unused]] auto length_read =
-               downloader.read(buffer.get(), static_cast<std::size_t>(buffer_size))) {
+    while ([[maybe_unused]] auto length_read = downloader.read(buffer.get(), static_cast<std::size_t>(buffer_size))) {
     }
 }
-}  // namespace benchmark
+} // namespace benchmark

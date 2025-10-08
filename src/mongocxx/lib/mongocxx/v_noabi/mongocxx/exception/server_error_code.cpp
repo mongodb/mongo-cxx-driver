@@ -16,8 +16,6 @@
 
 #include <mongocxx/exception/server_error_code.hpp>
 
-#include <mongocxx/config/private/prelude.hh>
-
 namespace mongocxx {
 namespace v_noabi {
 
@@ -28,7 +26,7 @@ namespace {
 //
 class server_error_category final : public std::error_category {
    public:
-    const char* name() const noexcept override {
+    char const* name() const noexcept override {
         return "mongodb";
     }
 
@@ -37,12 +35,12 @@ class server_error_category final : public std::error_category {
     }
 };
 
-}  // namespace
+} // namespace
 
-const std::error_category& server_error_category() {
-    static const class server_error_category category {};
+std::error_category const& server_error_category() {
+    static const class server_error_category category{};
     return category;
 }
 
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace v_noabi
+} // namespace mongocxx

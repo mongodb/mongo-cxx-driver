@@ -22,17 +22,17 @@ namespace gridfs {
 
 class bucket;
 
-}  // namespace gridfs
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace gridfs
+} // namespace v_noabi
+} // namespace mongocxx
 
 namespace mongocxx {
 namespace gridfs {
 
 using ::mongocxx::v_noabi::gridfs::bucket;
 
-}  // namespace gridfs
-}  // namespace mongocxx
+} // namespace gridfs
+} // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
 
@@ -40,16 +40,3 @@ using ::mongocxx::v_noabi::gridfs::bucket;
 /// @file
 /// Declares @ref mongocxx::v_noabi::gridfs::bucket.
 ///
-
-#if defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
-
-namespace mongocxx {
-namespace gridfs {
-
-/// @ref mongocxx::v_noabi::gridfs::bucket
-class bucket {};
-
-}  // namespace gridfs
-}  // namespace mongocxx
-
-#endif  // defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

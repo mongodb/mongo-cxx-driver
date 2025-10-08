@@ -32,10 +32,10 @@ std::tuple<T&&, U&&> kvp(T&& t, U&& u) {
     return std::tuple<T&&, U&&>(std::forward<T>(t), std::forward<U>(u));
 }
 
-}  // namespace basic
-}  // namespace builder
-}  // namespace v_noabi
-}  // namespace bsoncxx
+} // namespace basic
+} // namespace builder
+} // namespace v_noabi
+} // namespace bsoncxx
 
 namespace bsoncxx {
 namespace builder {
@@ -43,9 +43,9 @@ namespace basic {
 
 using ::bsoncxx::v_noabi::builder::basic::kvp;
 
-}  // namespace basic
-}  // namespace builder
-}  // namespace bsoncxx
+} // namespace basic
+} // namespace builder
+} // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>
 
@@ -53,19 +53,3 @@ using ::bsoncxx::v_noabi::builder::basic::kvp;
 /// @file
 /// Declares @ref bsoncxx::v_noabi::builder::basic::kvp.
 ///
-
-#if defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
-
-namespace bsoncxx {
-namespace builder {
-namespace basic {
-
-/// @ref bsoncxx::v_noabi::builder::basic::kvp
-template <typename T, typename U>
-std::tuple<T&&, U&&> kvp(T&& t, U&& u);
-
-}  // namespace basic
-}  // namespace builder
-}  // namespace bsoncxx
-
-#endif  // defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

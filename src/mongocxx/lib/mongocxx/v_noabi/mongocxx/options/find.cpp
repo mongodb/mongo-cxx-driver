@@ -13,9 +13,8 @@
 // limitations under the License.
 
 #include <mongocxx/options/find.hpp>
-#include <mongocxx/private/read_preference.hh>
 
-#include <mongocxx/config/private/prelude.hh>
+#include <mongocxx/private/read_preference.hh>
 
 namespace mongocxx {
 namespace v_noabi {
@@ -126,99 +125,91 @@ find& find::sort(bsoncxx::v_noabi::document::view_or_value ordering) {
     return *this;
 }
 
-const bsoncxx::v_noabi::stdx::optional<bool>& find::allow_disk_use() const {
+bsoncxx::v_noabi::stdx::optional<bool> const& find::allow_disk_use() const {
     return _allow_disk_use;
 }
 
-const bsoncxx::v_noabi::stdx::optional<bool>& find::allow_partial_results() const {
+bsoncxx::v_noabi::stdx::optional<bool> const& find::allow_partial_results() const {
     return _allow_partial_results;
 }
 
-const bsoncxx::v_noabi::stdx::optional<std::int32_t>& find::batch_size() const {
+bsoncxx::v_noabi::stdx::optional<std::int32_t> const& find::batch_size() const {
     return _batch_size;
 }
 
-const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value>& find::collation()
-    const {
+bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const& find::collation() const {
     return _collation;
 }
 
-const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value>& find::comment()
-    const {
+bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value> const& find::comment() const {
     return _comment;
 }
 
-const bsoncxx::v_noabi::stdx::optional<cursor::type>& find::cursor_type() const {
+bsoncxx::v_noabi::stdx::optional<cursor::type> const& find::cursor_type() const {
     return _cursor_type;
 }
 
-const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::hint>& find::hint() const {
+bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::hint> const& find::hint() const {
     return _hint;
 }
 
-const bsoncxx::v_noabi::stdx::optional<std::int64_t>& find::limit() const {
+bsoncxx::v_noabi::stdx::optional<std::int64_t> const& find::limit() const {
     return _limit;
 }
 
-const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> find::let()
-    const {
+bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const find::let() const {
     return _let;
 }
 
-const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value>&
-find::comment_option() const {
+bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value> const& find::comment_option()
+    const {
     return _comment_option;
 }
 
-const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value>& find::max()
-    const {
+bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const& find::max() const {
     return _max;
 }
 
-const bsoncxx::v_noabi::stdx::optional<std::chrono::milliseconds>& find::max_await_time() const {
+bsoncxx::v_noabi::stdx::optional<std::chrono::milliseconds> const& find::max_await_time() const {
     return _max_await_time;
 }
 
-const bsoncxx::v_noabi::stdx::optional<std::chrono::milliseconds>& find::max_time() const {
+bsoncxx::v_noabi::stdx::optional<std::chrono::milliseconds> const& find::max_time() const {
     return _max_time;
 }
 
-const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value>& find::min()
-    const {
+bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const& find::min() const {
     return _min;
 }
 
-const bsoncxx::v_noabi::stdx::optional<bool>& find::no_cursor_timeout() const {
+bsoncxx::v_noabi::stdx::optional<bool> const& find::no_cursor_timeout() const {
     return _no_cursor_timeout;
 }
 
-const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value>&
-find::projection() const {
+bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const& find::projection() const {
     return _projection;
 }
 
-const bsoncxx::v_noabi::stdx::optional<bool>& find::return_key() const {
+bsoncxx::v_noabi::stdx::optional<bool> const& find::return_key() const {
     return _return_key;
 }
 
-const bsoncxx::v_noabi::stdx::optional<bool>& find::show_record_id() const {
+bsoncxx::v_noabi::stdx::optional<bool> const& find::show_record_id() const {
     return _show_record_id;
 }
 
-const bsoncxx::v_noabi::stdx::optional<std::int64_t>& find::skip() const {
+bsoncxx::v_noabi::stdx::optional<std::int64_t> const& find::skip() const {
     return _skip;
 }
 
-const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value>& find::sort()
-    const {
+bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const& find::sort() const {
     return _ordering;
 }
 
-const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::read_preference>& find::read_preference()
-    const {
+bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::read_preference> const& find::read_preference() const {
     return _read_preference;
 }
 
-}  // namespace options
-}  // namespace v_noabi
-}  // namespace mongocxx
+} // namespace options
+} // namespace v_noabi
+} // namespace mongocxx

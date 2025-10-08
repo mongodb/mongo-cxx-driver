@@ -24,7 +24,7 @@ functions:
         content_type: text/html
         local_files_include_filter: cxx-abi/compat_reports/**/compat_report.html
         permissions: public-read
-        remote_file: mongo-cxx-driver/${branch_name}/${revision}/${version_id}/${build_id}/${execution}/abi-compliance-check/abi/
+        remote_file: mongo-cxx-driver/${branch_name}/${revision}/${version_id}/${build_id}/${task_id}/${execution}/abi-compliance-check/abi/
     - command: s3.put
       type: system
       params:
@@ -35,7 +35,7 @@ functions:
         content_type: text/plain
         local_files_include_filter: cxx-abi/logs/**/log.txt
         permissions: public-read
-        remote_file: mongo-cxx-driver/${branch_name}/${revision}/${version_id}/${build_id}/${execution}/abi-compliance-check/abi/
+        remote_file: mongo-cxx-driver/${branch_name}/${revision}/${version_id}/${build_id}/${task_id}/${execution}/abi-compliance-check/abi/
     - command: s3.put
       type: system
       params:
@@ -46,7 +46,7 @@ functions:
         content_type: text/html
         local_files_include_filter: cxx-noabi/compat_reports/**/compat_report.html
         permissions: public-read
-        remote_file: mongo-cxx-driver/${branch_name}/${revision}/${version_id}/${build_id}/${execution}/abi-compliance-check/noabi/
+        remote_file: mongo-cxx-driver/${branch_name}/${revision}/${version_id}/${build_id}/${task_id}/${execution}/abi-compliance-check/noabi/
     - command: s3.put
       type: system
       params:
@@ -57,7 +57,7 @@ functions:
         content_type: text/plain
         local_files_include_filter: cxx-noabi/logs/**/log.txt
         permissions: public-read
-        remote_file: mongo-cxx-driver/${branch_name}/${revision}/${version_id}/${build_id}/${execution}/abi-compliance-check/noabi/
+        remote_file: mongo-cxx-driver/${branch_name}/${revision}/${version_id}/${build_id}/${task_id}/${execution}/abi-compliance-check/noabi/
   abi-prohibited-symbols:
     command: subprocess.exec
     type: test
@@ -91,7 +91,7 @@ functions:
         content_type: text/plain
         local_files_include_filter: cxx-abi/*.txt
         permissions: public-read
-        remote_file: mongo-cxx-driver/${branch_name}/${revision}/${version_id}/${build_id}/${execution}/abidiff/abi/
+        remote_file: mongo-cxx-driver/${branch_name}/${revision}/${version_id}/${build_id}/${task_id}/${execution}/abidiff/abi/
     - command: s3.put
       type: system
       params:
@@ -102,7 +102,7 @@ functions:
         content_type: text/plain
         local_files_include_filter: cxx-noabi/*.txt
         permissions: public-read
-        remote_file: mongo-cxx-driver/${branch_name}/${revision}/${version_id}/${build_id}/${execution}/abidiff/noabi/
+        remote_file: mongo-cxx-driver/${branch_name}/${revision}/${version_id}/${build_id}/${task_id}/${execution}/abidiff/noabi/
   backtrace:
     command: subprocess.exec
     type: system
@@ -142,11 +142,23 @@ functions:
         args:
           - -c
           - build/benchmark/microbenchmarks all
-    - command: perf.send
+    - command: subprocess.exec
       type: system
       params:
-        name: perf
-        file: mongo-cxx-driver/results.json
+        binary: bash
+        working_dir: mongo-cxx-driver
+        include_expansions_in_env:
+          - project_id
+          - version_id
+          - build_variant
+          - task_name
+          - task_id
+          - execution
+          - requester
+          - revision_order_id
+        args:
+          - -c
+          - .evergreen/scripts/send-perf-data.sh
   build-package-debian:
     - command: subprocess.exec
       type: test
@@ -188,34 +200,64 @@ functions:
         permissions: public-read
         remote_file: mongo-cxx-driver/${branch_name}/${revision}/${version_id}/${build_id}/${execution}/rpm-packages.tar.gz
   build_mongohouse:
-    command: subprocess.exec
-    type: setup
-    params:
-      binary: bash
-      args:
-        - -c
-        - |
-          if [ ! -d "drivers-evergreen-tools" ]; then
-              git clone https://github.com/mongodb-labs/drivers-evergreen-tools.git
-          fi
-          cd drivers-evergreen-tools
-          export DRIVERS_TOOLS=$(pwd)
+    - command: ec2.assume_role
+      params:
+        role_arn: ${aws_test_secrets_role}
+    - command: subprocess.exec
+      type: setup
+      params:
+        binary: bash
+        include_expansions_in_env:
+          - AWS_ACCESS_KEY_ID
+          - AWS_SECRET_ACCESS_KEY
+          - AWS_SESSION_TOKEN
+        args:
+          - -c
+          - |
+            if [ ! -d "drivers-evergreen-tools" ]; then
+                git clone https://github.com/mongodb-labs/drivers-evergreen-tools.git
+            fi
+            cd drivers-evergreen-tools
+            export DRIVERS_TOOLS=$(pwd)
 
-          .evergreen/atlas_data_lake/pull-mongohouse-image.sh
+            .evergreen/atlas_data_lake/pull-mongohouse-image.sh
   check augmented sbom:
-    command: subprocess.exec
-    type: test
-    params:
-      binary: bash
-      working_dir: mongo-cxx-driver
-      include_expansions_in_env:
-        - ARTIFACTORY_USER
-        - ARTIFACTORY_PASSWORD
-        - SILK_CLIENT_ID
-        - SILK_CLIENT_SECRET
-      args:
-        - -c
-        - .evergreen/scripts/check-augmented-sbom.sh
+    - command: ec2.assume_role
+      type: setup
+      params:
+        role_arn: ${KONDUKTO_ROLE_ARN}
+    - command: subprocess.exec
+      type: setup
+      params:
+        binary: bash
+        include_expansions_in_env:
+          - AWS_ACCESS_KEY_ID
+          - AWS_SECRET_ACCESS_KEY
+          - AWS_SESSION_TOKEN
+        args:
+          - -c
+          - |
+            set -o errexit
+            set -o pipefail
+            kondukto_token="$(aws secretsmanager get-secret-value --secret-id "kondukto-token" --region "us-east-1" --query 'SecretString' --output text)"
+            printf "KONDUKTO_TOKEN: %s\n" "$kondukto_token" >|expansions.kondukto.yml
+    - command: expansions.update
+      type: setup
+      params:
+        file: expansions.kondukto.yml
+    - command: subprocess.exec
+      type: test
+      params:
+        binary: bash
+        working_dir: mongo-cxx-driver
+        include_expansions_in_env:
+          - ARTIFACTORY_PASSWORD
+          - ARTIFACTORY_USER
+          - branch_name
+          - KONDUKTO_TOKEN
+        args:
+          - -c
+          - .evergreen/scripts/sbom.sh
   clang-tidy:
     command: subprocess.exec
     type: test
@@ -226,9 +268,36 @@ functions:
         - cc_compiler
         - cxx_compiler
         - distro_id
+        - UV_INSTALL_DIR
       args:
         - -c
         - etc/run-clang-tidy.sh
+  cmake-compat:
+    - command: subprocess.exec
+      type: test
+      params:
+        binary: bash
+        working_dir: mongo-cxx-driver
+        include_expansions_in_env:
+          - CMAKE_MAJOR_VERSION
+          - CMAKE_MINOR_VERSION
+          - CMAKE_PATCH_VERSION
+          - INSTALL_C_DRIVER
+        args:
+          - -c
+          - .evergreen/scripts/cmake-compat.sh
+    - command: subprocess.exec
+      type: test
+      params:
+        binary: bash
+        include_expansions_in_env:
+          - CMAKE_MAJOR_VERSION
+          - CMAKE_MINOR_VERSION
+          - CMAKE_PATCH_VERSION
+          - INSTALL_C_DRIVER
+        args:
+          - -c
+          - mongo-cxx-driver/.evergreen/scripts/cmake-compat-check.sh
   compile:
     command: subprocess.exec
     type: test
@@ -240,7 +309,6 @@ functions:
         CXX: ${cxx_compiler}
       include_expansions_in_env:
         - branch_name
-        - BSON_EXTRA_ALIGNMENT
         - BSONCXX_POLYFILL
         - build_type
         - COMPILE_MACRO_GUARD_TESTS
@@ -254,6 +322,7 @@ functions:
         - USE_SANITIZER_ASAN
         - USE_SANITIZER_UBSAN
         - USE_STATIC_LIBS
+        - UV_INSTALL_DIR
       args:
         - -c
         - .evergreen/scripts/compile.sh
@@ -302,17 +371,150 @@ functions:
       args:
         - -c
         - git clone --depth 1 https://github.com/mongodb/mongo-c-driver mongoc
+  install-uv:
+    - command: subprocess.exec
+      type: setup
+      params:
+        binary: bash
+        args:
+          - -c
+          - |
+            if [[ -n "$XDG_CACHE_DIR" ]]; then
+                cache_dir="$XDG_CACHE_DIR" # XDG Base Directory specification.
+            elif [[ -n "$LOCALAPPDATA" ]]; then
+                cache_dir="$LOCALAPPDATA" # Windows.
+            elif [[ -n "$USERPROFILE" ]]; then
+                cache_dir="$USERPROFILE/.cache" # Windows (fallback).
+            elif [[ -d "$HOME/Library/Caches" ]]; then
+                cache_dir="$HOME/Library/Caches" # MacOS.
+            elif [[ -n "$HOME" ]]; then
+                cache_dir="$HOME/.cache" # Linux-like.
+            elif [[ -d ~/.cache ]]; then
+                cache_dir="~/.cache" # Linux-like (fallback).
+            else
+                cache_dir="$(pwd)/.cache" # EVG task directory (fallback).
+            fi
+
+            mkdir -p "$cache_dir/mongo-cxx-driver" || exit
+            cache_dir="$(cd "$cache_dir/mongo-cxx-driver" && pwd)" || exit
+
+            printf "MONGO_CXX_DRIVER_CACHE_DIR: %s\n" "$cache_dir" >|expansions.set-cache-dir.yml
+    - command: expansions.update
+      type: setup
+      params:
+        file: expansions.set-cache-dir.yml
+    - command: subprocess.exec
+      type: setup
+      params:
+        binary: bash
+        args:
+          - -c
+          - |
+            set -o errexit
+            set -o pipefail
+
+            if [[ ! -n "${MONGO_CXX_DRIVER_CACHE_DIR}" ]]; then
+                echo "MONGO_CXX_DRIVER_CACHE_DIR is not defined!" 1>&2
+                exit 1
+            fi
+
+            uv_install_dir="${MONGO_CXX_DRIVER_CACHE_DIR}/uv-0.5.14"
+            mkdir -p "$uv_install_dir"
+
+            if ! command -v "$uv_install_dir/uv" 2>/dev/null; then
+                env \
+                    UV_INSTALL_DIR="$uv_install_dir" \
+                    UV_UNMANAGED_INSTALL=1 \
+                    INSTALLER_PRINT_VERBOSE=1 \
+                    mongo-cxx-driver/.evergreen/scripts/uv-installer.sh
+            fi
+
+            PATH="$uv_install_dir:$PATH" command -V uv
+            PATH="$uv_install_dir:$PATH" uv --version
+
+            printf "UV_INSTALL_DIR: %s\n" "$uv_install_dir" >|expansions.uv.yml
+    - command: expansions.update
+      type: setup
+      params:
+        file: expansions.uv.yml
+  install-valgrind:
+    - command: subprocess.exec
+      type: setup
+      params:
+        binary: bash
+        args:
+          - -c
+          - |
+            if [[ -n "$XDG_CACHE_DIR" ]]; then
+                cache_dir="$XDG_CACHE_DIR" # XDG Base Directory specification.
+            elif [[ -n "$LOCALAPPDATA" ]]; then
+                cache_dir="$LOCALAPPDATA" # Windows.
+            elif [[ -n "$USERPROFILE" ]]; then
+                cache_dir="$USERPROFILE/.cache" # Windows (fallback).
+            elif [[ -d "$HOME/Library/Caches" ]]; then
+                cache_dir="$HOME/Library/Caches" # MacOS.
+            elif [[ -n "$HOME" ]]; then
+                cache_dir="$HOME/.cache" # Linux-like.
+            elif [[ -d ~/.cache ]]; then
+                cache_dir="~/.cache" # Linux-like (fallback).
+            else
+                cache_dir="$(pwd)/.cache" # EVG task directory (fallback).
+            fi
+
+            mkdir -p "$cache_dir/mongo-cxx-driver" || exit
+            cache_dir="$(cd "$cache_dir/mongo-cxx-driver" && pwd)" || exit
+
+            printf "MONGO_CXX_DRIVER_CACHE_DIR: %s\n" "$cache_dir" >|expansions.set-cache-dir.yml
+    - command: expansions.update
+      type: setup
+      params:
+        file: expansions.set-cache-dir.yml
+    - command: subprocess.exec
+      type: setup
+      params:
+        binary: bash
+        args:
+          - -c
+          - |
+            set -o errexit
+            set -o pipefail
+
+            if [[ ! -n "${MONGO_CXX_DRIVER_CACHE_DIR}" ]]; then
+              echo "MONGO_CXX_DRIVER_CACHE_DIR is not defined!" 1>&2
+              exit 1
+            fi
+
+            valgrind_install_dir="${MONGO_CXX_DRIVER_CACHE_DIR}/valgrind-3.24.0"
+            mkdir -p "$valgrind_install_dir"
+
+            if ! command -v "$valgrind_install_dir/bin/valgrind" 2>/dev/null; then
+              env \
+                install_prefix="${MONGO_CXX_DRIVER_CACHE_DIR}/valgrind-3.24.0" \
+                mongo-cxx-driver/.evergreen/scripts/valgrind-installer.sh
+            fi
+
+            PATH="$valgrind_install_dir/bin:$PATH" command -V valgrind
+            PATH="$valgrind_install_dir/bin:$PATH" valgrind --version
+
+            printf "VALGRIND_INSTALL_DIR: %s\n" "$valgrind_install_dir/bin" >|expansions.valgrind.yml
+    - command: expansions.update
+      type: setup
+      params:
+        file: expansions.valgrind.yml
   install_c_driver:
     - command: expansions.update
       type: setup
       params:
         updates:
-          - { key: mongoc_version_minimum, value: 1.29.0 }
+          - { key: mongoc_version_minimum, value: 2.0.2 }
     - command: subprocess.exec
       type: setup
       params:
         binary: bash
         add_expansions_to_env: true
+        env:
+          CC: ${cc_compiler}
+          CXX: ${cxx_compiler}
         args:
           - -c
           - mongo-cxx-driver/.evergreen/scripts/install-c-driver.sh
@@ -322,9 +524,11 @@ functions:
     params:
       binary: bash
       working_dir: mongo-cxx-driver
+      env:
+        DRYRUN: "1"
       args:
         - -c
-        - python etc/clang_format.py lint
+        - ${UV_INSTALL_DIR}/uv run --frozen etc/clang-format-all.sh
   run scan build:
     - command: subprocess.exec
       type: test
@@ -346,11 +550,6 @@ functions:
           - |
             set -o errexit
             echo "Preparing CSFLE venv environment..."
-            if [[ "${distro_id}" =~ windows-64-vs2015-* ]]; then
-                # Python: ImportError: DLL load failed while importing _rust: The specified procedure could not be found.
-                echo "Preparing CSFLE venv environment... skipped."
-                exit 0
-            fi
             cd ./drivers-evergreen-tools/.evergreen/csfle
             # This function ensures future invocations of activate-kmstlsvenv.sh conducted in
             # parallel do not race to setup a venv environment; it has already been prepared.
@@ -368,11 +567,6 @@ functions:
           - |
             set -o errexit
             echo "Starting mock KMS servers..."
-            if [[ "${distro_id}" =~ windows-64-vs2015-* ]]; then
-                # Python: ImportError: DLL load failed while importing _rust: The specified procedure could not be found.
-                echo "Starting mock KMS servers... skipped."
-                exit 0
-            fi
             cd ./drivers-evergreen-tools/.evergreen/csfle
             . ./activate-kmstlsvenv.sh
             python -u kms_http_server.py --ca_file ../x509gen/ca.pem --cert_file ../x509gen/server.pem --port 8999 &
@@ -393,6 +587,38 @@ functions:
           export DRIVERS_TOOLS=$(pwd)
 
           .evergreen/atlas_data_lake/run-mongohouse-image.sh
+  set-cache-dir:
+    - command: subprocess.exec
+      type: setup
+      params:
+        binary: bash
+        args:
+          - -c
+          - |
+            if [[ -n "$XDG_CACHE_DIR" ]]; then
+                cache_dir="$XDG_CACHE_DIR" # XDG Base Directory specification.
+            elif [[ -n "$LOCALAPPDATA" ]]; then
+                cache_dir="$LOCALAPPDATA" # Windows.
+            elif [[ -n "$USERPROFILE" ]]; then
+                cache_dir="$USERPROFILE/.cache" # Windows (fallback).
+            elif [[ -d "$HOME/Library/Caches" ]]; then
+                cache_dir="$HOME/Library/Caches" # MacOS.
+            elif [[ -n "$HOME" ]]; then
+                cache_dir="$HOME/.cache" # Linux-like.
+            elif [[ -d ~/.cache ]]; then
+                cache_dir="~/.cache" # Linux-like (fallback).
+            else
+                cache_dir="$(pwd)/.cache" # EVG task directory (fallback).
+            fi
+
+            mkdir -p "$cache_dir/mongo-cxx-driver" || exit
+            cache_dir="$(cd "$cache_dir/mongo-cxx-driver" && pwd)" || exit
+
+            printf "MONGO_CXX_DRIVER_CACHE_DIR: %s\n" "$cache_dir" >|expansions.set-cache-dir.yml
+    - command: expansions.update
+      type: setup
+      params:
+        file: expansions.set-cache-dir.yml
   setup:
     - command: subprocess.exec
       type: setup
@@ -457,8 +683,8 @@ functions:
           set -o pipefail
           if cd drivers-evergreen-tools/.evergreen/orchestration 2>/dev/null; then
               . ../venv-utils.sh
-              if venvactivate venv; then
-              mongo-orchestration stop
+              if venvactivate venv 2>/dev/null; then
+                  mongo-orchestration stop
               fi
           fi
   test:
@@ -485,7 +711,6 @@ functions:
         - example_projects_cxxflags
         - example_projects_ldflags
         - generator
-        - lib_dir
         - MONGOCXX_TEST_TOPOLOGY
         - MONGODB_API_VERSION
         - platform
@@ -494,6 +719,7 @@ functions:
         - TEST_WITH_VALGRIND
         - use_mongocryptd
         - USE_STATIC_LIBS
+        - VALGRIND_INSTALL_DIR
       args:
         - -c
         - .evergreen/scripts/test.sh
@@ -509,7 +735,11 @@ functions:
         - |
           export MONGOC_INSTALL_PREFIX=$(pwd)/../mongoc
           export MONGOCXX_INSTALL_PREFIX=$(pwd)/build/install
-          export LIB_DIR=${lib_dir}
+          if [[ "${distro_id}" == rhel* ]]; then
+              export LIB_DIR=lib64
+          else
+              export LIB_DIR=lib
+          fi
           export BUILD_TYPE=${build_type}
           export BUILD_DIR=$(pwd)/build
 
@@ -528,7 +758,11 @@ functions:
         - |
           export MONGOC_INSTALL_PREFIX=$(pwd)/../mongoc
           export MONGOCXX_INSTALL_PREFIX=$(pwd)/build/install
-          export LIB_DIR=${lib_dir}
+          if [[ "${distro_id}" == rhel* ]]; then
+              export LIB_DIR=lib64
+          else
+              export LIB_DIR=lib
+          fi
           export BUILD_TYPE=${build_type}
           export BUILD_DIR=$(pwd)/build
           export URI="mongodb://bob:pwd123@localhost"
@@ -552,6 +786,8 @@ functions:
     params:
       binary: bash
       working_dir: mongo-cxx-driver
+      include_expansions_in_env:
+        - distro_id
       args:
         - -c
         - .evergreen/scripts/test-mongohouse.sh
@@ -561,6 +797,8 @@ functions:
     params:
       binary: bash
       working_dir: mongo-cxx-driver
+      include_expansions_in_env:
+        - distro_id
       args:
         - -c
         - |
@@ -572,14 +810,25 @@ functions:
     - command: s3.put
       type: system
       params:
-        display_name: Augmented SBOM
+        display_name: Augmented SBOM (Old)
         aws_key: ${aws_key}
         aws_secret: ${aws_secret}
         bucket: mciuploads
         content_type: application/json
-        local_file: mongo-cxx-driver/etc/augmented.sbom.json.new
+        local_file: mongo-cxx-driver/old.json
         permissions: public-read
-        remote_file: mongo-cxx-driver/${build_variant}/${revision}/${version_id}/${build_id}/silk/augmented.sbom.json
+        remote_file: mongo-cxx-driver/${build_variant}/${revision}/${version_id}/${build_id}/sbom/old.json
+    - command: s3.put
+      type: system
+      params:
+        display_name: Augmented SBOM (New)
+        aws_key: ${aws_key}
+        aws_secret: ${aws_secret}
+        bucket: mciuploads
+        content_type: application/json
+        local_file: mongo-cxx-driver/new.json
+        permissions: public-read
+        remote_file: mongo-cxx-driver/${build_variant}/${revision}/${version_id}/${build_id}/sbom/new.json
     - command: s3.put
       type: system
       params:
@@ -590,7 +839,18 @@ functions:
         content_type: application/json
         local_file: mongo-cxx-driver/diff.txt
         permissions: public-read
-        remote_file: mongo-cxx-driver/${build_variant}/${revision}/${version_id}/${build_id}/silk/augmented.sbom.json.diff
+        remote_file: mongo-cxx-driver/${build_variant}/${revision}/${version_id}/${build_id}/sbom/diff.txt
+    - command: s3.put
+      type: system
+      params:
+        display_name: Augmented SBOM (Updated)
+        aws_key: ${aws_key}
+        aws_secret: ${aws_secret}
+        bucket: mciuploads
+        content_type: application/json
+        local_file: mongo-cxx-driver/etc/augmented.sbom.json.new
+        permissions: public-read
+        remote_file: mongo-cxx-driver/${build_variant}/${revision}/${version_id}/${build_id}/sbom/augmented.sbom.json
   upload code coverage:
     command: subprocess.exec
     type: system

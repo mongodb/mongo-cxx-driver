@@ -30,8 +30,9 @@ namespace builder {
 namespace stream {
 
 ///
-/// A stream context which expects a value, which can later be followed by
-/// more key/value pairs.
+/// A stream context which expects a value.
+///
+/// This can later be followed by more key/value pairs.
 ///
 /// The template argument can be used to hold additional information about
 /// containing documents or arrays. I.e. value_context<> implies that this
@@ -65,8 +66,7 @@ class value_context {
     ///   The value to append
     ///
     template <class T>
-    detail::requires_not_t<base, detail::is_invocable<T, single_context>>  //
-    operator<<(T&& t) {
+    detail::requires_not_t<base, detail::is_invocable<T, single_context>> operator<<(T&& t) {
         _core->append(std::forward<T>(t));
         return unwrap();
     }
@@ -79,8 +79,7 @@ class value_context {
     ///   The callback to invoke
     ///
     template <typename T>
-    detail::requires_t<base, detail::is_invocable<T, single_context>>  //
-    operator<<(T&& func) {
+    detail::requires_t<base, detail::is_invocable<T, single_context>> operator<<(T&& func) {
         detail::invoke(std::forward<T>(func), *this);
         return unwrap();
     }
@@ -90,7 +89,7 @@ class value_context {
     ///
     /// The argument must be an open_document_type token (it is otherwise ignored).
     ///
-    key_context<base> operator<<(const open_document_type) {
+    key_context<base> operator<<(open_document_type const) {
         _core->open_document();
         return wrap_document();
     }
@@ -100,7 +99,7 @@ class value_context {
     ///
     /// The argument must be an open_array_type token (it is otherwise ignored).
     ///
-    array_context<base> operator<<(const open_array_type) {
+    array_context<base> operator<<(open_array_type const) {
         _core->open_array();
         return wrap_array();
     }
@@ -136,10 +135,10 @@ class value_context {
     core* _core;
 };
 
-}  // namespace stream
-}  // namespace builder
-}  // namespace v_noabi
-}  // namespace bsoncxx
+} // namespace stream
+} // namespace builder
+} // namespace v_noabi
+} // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>
 

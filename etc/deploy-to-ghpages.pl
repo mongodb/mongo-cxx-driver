@@ -29,13 +29,27 @@ sub _pushd {
 
 sub _hugo_rsync {
     my $tmpdir = shift;
-    _try_run( qw{rsync -Cavz --delete --exclude=/api --exclude=/.git* --exclude=CNAME --exclude=sitemap.xml build/hugo/},
-        $tmpdir );
+    my @exclude = (
+        '/api',
+        '/categories',
+        '/.git*',
+        'CNAME',
+        '/sitemap.xml',
+        '/sitemap_index.xml',
+        '/404.html',
+    );
+    _try_run( qw{rsync -Cavz --delete}, ( map { ; '--exclude' => $_ } @exclude ), qw{build/hugo/}, $tmpdir );
 }
 
 sub _doxygen_rsync {
     my $tmpdir = shift;
-    my @filters = ( '- /current', '- /mongocxx-v3', '- /legacy-v1' );
+    # Do not modify symlinks.
+    my @filters = (
+        '- /current',
+        '- /mongocxx-v4',
+        '- /mongocxx-v3',
+        '- /legacy-v1',
+    );
     _try_run(
         qw{rsync -Cavz},
         ( map { ; '--filter' => $_ } @filters ),

@@ -36,11 +36,11 @@ if [ -z "$BUILD_DIR" ]; then
   print_usage_and_exit "BUILD_DIR is a required environment variable."
 fi
 
-# Use PATH / LD_LIBRARY_PATH / DYLD_LIBRARY_PATH to inform the tests where to find
+# Use PATH / LD_LIBRARY_PATH / DYLD_FALLBACK_LIBRARY_PATH to inform the tests where to find
 # mongoc library dependencies on Windows / Linux / Mac OS, respectively.
 export PATH=$PATH:$MONGOC_INSTALL_PREFIX/bin
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$MONGOC_INSTALL_PREFIX/$LIB_DIR/
-export DYLD_LIBRARY_PATH=$DYLD_LIBRARY_PATH:$MONGOC_INSTALL_PREFIX/$LIB_DIR/
+export DYLD_FALLBACK_LIBRARY_PATH=$DYLD_FALLBACK_LIBRARY_PATH:$MONGOC_INSTALL_PREFIX/$LIB_DIR/
 
 # Windows also needs to be informed where to find mongocxx library dependencies.
 export PATH=$PATH:$BUILD_DIR/src/bsoncxx/$BUILD_TYPE
