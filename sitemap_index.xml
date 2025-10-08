@@ -11,6 +11,11 @@
     <lastmod>2025-09-03</lastmod>
   </sitemap>
   <sitemap>
+    <loc>https://mongocxx.org/api/mongocxx-4.1.4/sitemap.xml</loc>
+    <priority>1.0</priority>
+    <lastmod>2025-10-08</lastmod>
+  </sitemap>
+  <sitemap>
     <loc>https://mongocxx.org/api/mongocxx-4.1.3/sitemap.xml</loc>
     <priority>1.0</priority>
     <lastmod>2025-09-30</lastmod>
