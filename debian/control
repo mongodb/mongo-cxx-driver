@@ -3,7 +3,7 @@ Priority: optional
 Maintainer: Mongo C++ Driver Team <mongo-cxx-driver-debian@googlegroups.com>
 Uploaders: Kevin Albertson <kevin.albertson@mongodb.com>,
            Roberto C. Sanchez <roberto@connexer.com>
-Build-Depends: debhelper (>= 11),
+Build-Depends: debhelper-compat (= 13),
                cmake,
                pkgconf,
                libmongoc-dev (>= 2.0.0),
