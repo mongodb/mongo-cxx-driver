@@ -790,7 +790,7 @@ See the [MongoDB C++ Driver Manual](https://www.mongodb.com/docs/languages/cpp/c
 
 NOTE: The mongocxx X.Y.x series does not promise API or ABI stability across patch releases.
 
-Please feel free to post any questions on the MongoDB Community forum in the [Drivers](https://www.mongodb.com/community/forums/c/data/drivers/7) category tagged with [cxx](https://www.mongodb.com/community/forums/tag/cxx). Bug reports should be filed against the [CXX](https://jira.mongodb.org/projects/CXX) project in the MongoDB JIRA. Your feedback on the C++11 driver is greatly appreciated.
+Please feel free to post any questions on [Stack Overflow](https://stackoverflow.com/questions/tagged/mongodb%20c++). Bug reports should be filed against the [CXX](https://jira.mongodb.org/projects/CXX) project in the MongoDB JIRA. Your feedback on the C++11 driver is greatly appreciated.
 
 Sincerely,
 
