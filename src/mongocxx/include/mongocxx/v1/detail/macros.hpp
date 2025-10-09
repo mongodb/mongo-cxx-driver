@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// Traditional include guard is required to support v1 include-via-prelude.
+// Traditional include guard is required to support v_noabi include-via-prelude.
 #if !defined(MONGOCXX_V1_DETAIL_MACROS_HPP)
 #define MONGOCXX_V1_DETAIL_MACROS_HPP
 
