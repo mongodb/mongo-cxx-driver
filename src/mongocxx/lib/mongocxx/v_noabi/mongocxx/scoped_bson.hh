@@ -43,15 +43,15 @@ inline scoped_bson_view to_scoped_bson_view(bsoncxx::v_noabi::document::view_or_
 }
 
 inline scoped_bson_view to_scoped_bson_view(bsoncxx::v_noabi::array::view const& v) {
-    return {bsoncxx::v_noabi::to_v1(v)};
+    return {bsoncxx::v1::document::view{bsoncxx::v_noabi::to_v1(v)}};
 }
 
 inline scoped_bson_view to_scoped_bson_view(bsoncxx::v_noabi::array::value const& v) {
-    return {bsoncxx::v_noabi::to_v1(v.view())};
+    return {bsoncxx::v1::document::view{bsoncxx::v_noabi::to_v1(v.view())}};
 }
 
 inline scoped_bson_view to_scoped_bson_view(bsoncxx::v_noabi::array::view_or_value const& v) {
-    return {bsoncxx::v_noabi::to_v1(v.view())};
+    return {bsoncxx::v1::document::view{bsoncxx::v_noabi::to_v1(v.view())}};
 }
 
 inline scoped_bson to_scoped_bson(bsoncxx::v_noabi::document::value v) {

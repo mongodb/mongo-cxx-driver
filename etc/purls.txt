@@ -6,4 +6,4 @@
 # re-generate the SBOM JSON file!
 
 # bson and mongoc may be obtained via cmake/FetchMongoC.cmake.
-pkg:github/mongodb/mongo-c-driver@v2.0.2
+pkg:github/mongodb/mongo-c-driver@2.1.2

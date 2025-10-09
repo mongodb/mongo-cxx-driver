@@ -406,26 +406,6 @@ git reset --hard rX.Y.Z
 git push -f upstream releases/stable
 ```
 
-### Coverity Report
-
-Export the `Issues: By Snapshot | SSDLC Report (v2)` view as a CSV named `static_analysis_report-X.Y.Z.csv`.
-
-### Upload SSDLC Reports
-
-Upload a copy of the `static_analysis_report-X.Y.Z.csv`, `etc/ssdlc_compliance_report.md`, `etc/third_party_vulnerabilities.md`, and `etc/augmented.sbom.json` files. Rename the files with the version number `-X.Y.Z` suffix in their filenames as already done for other files in this folder.
-
-> [!WARNING]
-> Uploading a file into the SSDLC Compliance Files folder is an irreversible action! However, the files may still be renamed. If necessary, rename any accidentally uploaded files to "(Delete Me)" or similar.
-
-Four new files should be present in the [SSDLC Compliance Files](https://drive.google.com/drive/folders/1_qwTwYyqPL7VjrZOiuyiDYi1y2NYiClS) folder following a release `X.Y.Z`:
-
-```
-augmented.sbom-X.Y.Z.json
-ssdlc_compliance_report-X.Y.Z.md
-static_analysis_report-X.Y.Z.csv
-third_party_vulnerabilities-X.Y.Z.md
-```
-
 ## Post-Release Steps
 
 ### Create a New Release Branch

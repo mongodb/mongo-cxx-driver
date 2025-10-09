@@ -100,7 +100,7 @@ ISSUE_TYPE_ID = {
 )
 @click.option(
     '--c-driver-build-ref',
-    default='2.0.2',
+    default='2.1.2',
     show_default=True,
     help='When building the C driver, build at this Git reference',
 )

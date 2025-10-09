@@ -309,9 +309,9 @@ if [[ "${_RUN_DISTCHECK:-}" ]]; then
   cmake --build . --config "${build_type:?}" --target distcheck
 fi
 
-if [[ -n "$(find "${mongoc_prefix:?}" -name 'bson-config.h')" ]]; then
+if [[ -n "$(find "${mongoc_prefix:?}" -name 'bson.h')" ]]; then
   : # Used install-c-driver.sh.
-elif [[ -n "$(find install -name 'bson-config.h')" ]]; then
+elif [[ -n "$(find install -name 'bson.h')" ]]; then
   : # Used auto-downloaded C Driver.
 else
   echo "unexpectedly compiled using a system mongoc library" 1>&2
