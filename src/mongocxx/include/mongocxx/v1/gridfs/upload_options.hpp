@@ -20,6 +20,16 @@
 
 #include <mongocxx/v1/detail/prelude.hpp>
 
+#include <bsoncxx/v1/document/value-fwd.hpp>
+#include <bsoncxx/v1/document/view-fwd.hpp>
+
+#include <bsoncxx/v1/stdx/optional.hpp>
+
+#include <mongocxx/v1/config/export.hpp>
+
+#include <cstdint>
+#include <memory>
+
 namespace mongocxx {
 namespace v1 {
 namespace gridfs {
@@ -27,12 +37,82 @@ namespace gridfs {
 ///
 /// Options related to uploading a file to a GridFS bucket.
 ///
+/// Supported fields include:
+/// - `chunk_size_bytes` ("chunkSizeBytes")
+/// - `metadata` ("metadata")
+///
 /// @see
 /// - [GridFS (MongoDB Manual)](https://www.mongodb.com/docs/manual/core/gridfs/)
 ///
 /// @attention This feature is experimental! It is not ready for use!
 ///
-class upload_options {};
+class upload_options {
+   private:
+    class impl;
+    std::unique_ptr<impl> _impl;
+
+   public:
+    ///
+    /// Destroy this object.
+    ///
+    /// @warning Invalidates all associated views.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL() ~upload_options();
+
+    ///
+    /// Move constructor.
+    ///
+    /// @par Postconditions:
+    /// - `other` is in an assign-or-destroy-only state.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL() upload_options(upload_options&& other) noexcept;
+
+    ///
+    /// Move assignment.
+    ///
+    /// @par Postconditions:
+    /// - `other` is in an assign-or-destroy-only state.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(upload_options&) operator=(upload_options&& other) noexcept;
+
+    ///
+    /// Copy construction.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL() upload_options(upload_options const& other);
+
+    ///
+    /// Copy assignment.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(upload_options&) operator=(upload_options const& other);
+
+    ///
+    /// Default initialization.
+    ///
+    /// @par Postconditions:
+    /// - All supported fields are "unset" or zero-initialized.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL() upload_options();
+
+    ///
+    /// Set the "chunkSizeBytes" field.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(upload_options&) chunk_size_bytes(std::int32_t chunk_size_bytes);
+
+    ///
+    /// Return the current "chunkSizeBytes" field.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<std::int32_t>) chunk_size_bytes() const;
+
+    ///
+    /// Set the "metadata" field.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(upload_options&) metadata(bsoncxx::v1::document::value metadata);
+
+    ///
+    /// Return the current "metadata" field.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view>) metadata() const;
+};
 
 } // namespace gridfs
 } // namespace v1

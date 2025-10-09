@@ -20,6 +20,14 @@
 
 #include <mongocxx/v1/detail/prelude.hpp>
 
+#include <bsoncxx/v1/oid-fwd.hpp>
+
+#include <bsoncxx/v1/stdx/string_view.hpp>
+
+#include <mongocxx/v1/config/export.hpp>
+
+#include <memory>
+
 namespace mongocxx {
 namespace v1 {
 namespace events {
@@ -32,7 +40,19 @@ namespace events {
 ///
 /// @attention This feature is experimental! It is not ready for use!
 ///
-class topology_opening {};
+class topology_opening {
+   private:
+    void const* _impl; // mongoc_apm_topology_opening_t const*
+
+   public:
+    ///
+    /// Return the client-generated unique topology ID.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::oid) topology_id() const;
+
+   private:
+    /* explicit(false) */ topology_opening(void const* impl);
+};
 
 } // namespace events
 } // namespace v1

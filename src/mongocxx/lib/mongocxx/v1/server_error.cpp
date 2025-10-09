@@ -13,3 +13,18 @@
 // limitations under the License.
 
 #include <mongocxx/v1/server_error.hpp>
+
+namespace mongocxx {
+namespace v1 {
+
+class server_error::impl {};
+
+server_error::~server_error() = default;
+
+bool server_error::has_error_label(char const* label) const {
+    (void)label;
+    return false;
+}
+
+} // namespace v1
+} // namespace mongocxx

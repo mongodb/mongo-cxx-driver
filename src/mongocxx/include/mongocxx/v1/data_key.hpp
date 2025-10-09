@@ -20,18 +20,116 @@
 
 #include <mongocxx/v1/detail/prelude.hpp>
 
+#include <bsoncxx/v1/document/value-fwd.hpp>
+#include <bsoncxx/v1/document/view-fwd.hpp>
+
+#include <bsoncxx/v1/stdx/optional.hpp>
+
+#include <mongocxx/v1/config/export.hpp>
+
+#include <cstdint>
+#include <memory>
+#include <string>
+#include <vector>
+
 namespace mongocxx {
 namespace v1 {
 
 ///
 /// A Data Encryption Key (DEK) for In-Use Encryption.
 ///
+/// Supported fields include:
+/// - `key_alt_names` ("keyAltNames")
+/// - `key_material` ("keyMaterial")
+/// - `master_key` ("masterKey")
+///
 /// @see
 /// - [Encryption Keys and Key Vaults (MongoDB Manual)](https://www.mongodb.com/docs/manual/core/queryable-encryption/fundamentals/keys-key-vaults/)
 ///
 /// @attention This feature is experimental! It is not ready for use!
 ///
-class data_key {};
+class data_key {
+   private:
+    class impl;
+    std::unique_ptr<impl> _impl;
+
+   public:
+    ///
+    /// Destroy this object.
+    ///
+    /// @warning Invalidates all associated views.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL() ~data_key();
+
+    ///
+    /// Move constructor.
+    ///
+    /// @par Postconditions:
+    /// - `other` is in an assign-or-destroy-only state.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL() data_key(data_key&& other) noexcept;
+
+    ///
+    /// Move assignment.
+    ///
+    /// @par Postconditions:
+    /// - `other` is in an assign-or-destroy-only state.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(data_key&) operator=(data_key&& other) noexcept;
+
+    ///
+    /// Copy construction.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL() data_key(data_key const& other);
+
+    ///
+    /// Copy assignment.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(data_key&) operator=(data_key const& other);
+
+    ///
+    /// Default initialization.
+    ///
+    /// @par Postconditions:
+    /// - All supported fields are "unset" or zero-initialized.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL() data_key();
+
+    ///
+    /// Set the "masterKey" field.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(data_key&) master_key(bsoncxx::v1::document::value master_key);
+
+    ///
+    /// Return the current "masterKey" field.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view>) master_key() const;
+
+    ///
+    /// Set the "keyAltNames" field.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(data_key&) key_alt_names(std::vector<std::string> key_alt_names);
+
+    ///
+    /// Return the current "keyAltNames" field.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(std::vector<std::string>) key_alt_names() const;
+
+    ///
+    /// Binary data with a length of exactly 96 bytes.
+    ///
+    using key_material_type = std::vector<std::uint8_t>;
+
+    ///
+    /// Set the "keyMaterial" field.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(data_key&) key_material(key_material_type key_material);
+
+    ///
+    /// Return the current "keyMaterial" field.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<key_material_type>) key_material();
+};
 
 } // namespace v1
 } // namespace mongocxx
