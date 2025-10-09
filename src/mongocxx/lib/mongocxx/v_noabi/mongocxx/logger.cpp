@@ -13,33 +13,3 @@
 // limitations under the License.
 
 #include <mongocxx/logger.hpp>
-
-namespace mongocxx {
-namespace v_noabi {
-
-bsoncxx::v_noabi::stdx::string_view to_string(log_level level) {
-    switch (level) {
-        case log_level::k_error:
-            return "error";
-        case log_level::k_critical:
-            return "critical";
-        case log_level::k_warning:
-            return "warning";
-        case log_level::k_message:
-            return "message";
-        case log_level::k_info:
-            return "info";
-        case log_level::k_debug:
-            return "debug";
-        case log_level::k_trace:
-            return "trace";
-        default:
-            return "unknown";
-    }
-}
-
-logger::logger() = default;
-logger::~logger() = default;
-
-} // namespace v_noabi
-} // namespace mongocxx

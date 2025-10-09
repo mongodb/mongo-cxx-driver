@@ -14,27 +14,21 @@
 
 #pragma once
 
-#include <mongocxx/v1/detail/prelude.hpp>
+#include <mongocxx/v1/exception.hpp>
 
 //
 
-#include <mongocxx/v1/config/export.hpp>
+#include <catch2/catch_tostring.hpp>
 
-namespace mongocxx {
-namespace v1 {
+CATCH_REGISTER_ENUM(
+    mongocxx::v1::source_errc,
+    mongocxx::v1::source_errc::zero,
+    mongocxx::v1::source_errc::mongocxx,
+    mongocxx::v1::source_errc::mongoc,
+    mongocxx::v1::source_errc::mongocrypt)
 
-enum class log_level;
-
-class MONGOCXX_ABI_EXPORT logger;
-
-class default_logger;
-
-} // namespace v1
-} // namespace mongocxx
-
-#include <mongocxx/v1/detail/postlude.hpp>
-
-///
-/// @file
-/// Declares @ref mongocxx::v1::logger.
-///
+CATCH_REGISTER_ENUM(
+    mongocxx::v1::type_errc,
+    mongocxx::v1::type_errc::zero,
+    mongocxx::v1::type_errc::invalid_argument,
+    mongocxx::v1::type_errc::runtime_error)

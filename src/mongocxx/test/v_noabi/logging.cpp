@@ -12,16 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <mongocxx/logger.hpp>
+
+//
+
 #include <vector>
 
 #include <mongocxx/instance.hpp>
-#include <mongocxx/logger.hpp>
 
 #include <bsoncxx/private/make_unique.hh>
 
 #include <mongocxx/private/mongoc.hh>
 
 #include <bsoncxx/test/catch.hh>
+
+#include <mongocxx/test/subprocess.hh>
 
 namespace {
 using namespace mongocxx;
@@ -49,18 +54,21 @@ class reset_log_handler_when_done {
     }
 };
 
-TEST_CASE("a user-provided log handler will be used for logging output", "[instance]") {
-    reset_log_handler_when_done rlhwd;
+TEST_CASE("custom", "[mongocxx][v_noabi][logger]") {
+    auto const ret = mongocxx::test::subprocess([] {
+        reset_log_handler_when_done rlhwd;
 
-    std::vector<test_log_handler::event> events;
-    mongocxx::instance driver{bsoncxx::make_unique<test_log_handler>(&events)};
+        std::vector<test_log_handler::event> events;
+        mongocxx::instance driver{bsoncxx::make_unique<test_log_handler>(&events)};
 
-    // The libmongoc namespace mocking system doesn't play well with varargs
-    // functions, so we use a bare mongoc_log call here.
-    mongoc_log(::MONGOC_LOG_LEVEL_ERROR, "foo", "bar");
+        // The libmongoc namespace mocking system doesn't play well with varargs
+        // functions, so we use a bare mongoc_log call here.
+        mongoc_log(::MONGOC_LOG_LEVEL_ERROR, "foo", "bar");
 
-    REQUIRE(events.size() == 1);
-    REQUIRE(events[0] == std::make_tuple(log_level::k_error, "foo", "bar"));
+        REQUIRE(events.size() == 1);
+        REQUIRE(events[0] == std::make_tuple(log_level::k_error, "foo", "bar"));
+    });
+    REQUIRE(ret == 0);
 }
 
 } // namespace
