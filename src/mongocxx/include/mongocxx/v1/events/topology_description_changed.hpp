@@ -20,6 +20,14 @@
 
 #include <mongocxx/v1/detail/prelude.hpp>
 
+#include <bsoncxx/v1/oid-fwd.hpp>
+
+#include <mongocxx/v1/events/topology_description-fwd.hpp>
+
+#include <mongocxx/v1/config/export.hpp>
+
+#include <memory>
+
 namespace mongocxx {
 namespace v1 {
 namespace events {
@@ -32,7 +40,29 @@ namespace events {
 ///
 /// @attention This feature is experimental! It is not ready for use!
 ///
-class topology_description_changed {};
+class topology_description_changed {
+   private:
+    void const* _impl; // mongoc_apm_topology_changed_t const*
+
+   public:
+    ///
+    /// Return the client-generated unique topology ID.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::oid) topology_id() const;
+
+    ///
+    /// Return the previous topology description.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(v1::events::topology_description) previous_description() const;
+
+    ///
+    /// Return the new topology description.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(v1::events::topology_description) new_description() const;
+
+   private:
+    /* explicit(false) */ topology_description_changed(void const* impl);
+};
 
 } // namespace events
 } // namespace v1

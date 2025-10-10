@@ -20,16 +20,122 @@
 
 #include <mongocxx/v1/detail/prelude.hpp>
 
+#include <bsoncxx/v1/document/value-fwd.hpp>
+#include <bsoncxx/v1/document/view-fwd.hpp>
+#include <bsoncxx/v1/types/value-fwd.hpp>
+#include <bsoncxx/v1/types/view-fwd.hpp>
+
+#include <mongocxx/v1/read_preference-fwd.hpp>
+
+#include <bsoncxx/v1/stdx/optional.hpp>
+
+#include <mongocxx/v1/config/export.hpp>
+
+#include <chrono>
+#include <memory>
+
 namespace mongocxx {
 namespace v1 {
 
 ///
 /// Options for a "distinct" command.
 ///
+/// Supported fields include:
+/// - `collation`
+/// - `comment`
+/// - `max_time` ("maxTimeMS")
+/// - `read_preference` ("readPreference")
+///
 /// @see
 /// - [`distinct` (database command) (MongoDB Manual)](https://www.mongodb.com/docs/manual/reference/command/distinct/)
 ///
-class distinct_options {};
+class distinct_options {
+   private:
+    class impl;
+    std::unique_ptr<impl> _impl;
+
+   public:
+    ///
+    /// Destroy this object.
+    ///
+    /// @warning Invalidates all associated views.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL() ~distinct_options();
+
+    ///
+    /// Move constructor.
+    ///
+    /// @par Postconditions:
+    /// - `other` is in an assign-or-destroy-only state.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL() distinct_options(distinct_options&& other) noexcept;
+
+    ///
+    /// Move assignment.
+    ///
+    /// @par Postconditions:
+    /// - `other` is in an assign-or-destroy-only state.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(distinct_options&) operator=(distinct_options&& other) noexcept;
+
+    ///
+    /// Copy construction.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL() distinct_options(distinct_options const& other);
+
+    ///
+    /// Copy assignment.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(distinct_options&) operator=(distinct_options const& other);
+
+    ///
+    /// Default initialization.
+    ///
+    /// @par Postconditions:
+    /// - All supported fields are "unset" or zero-initialized.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL() distinct_options();
+
+    ///
+    /// Set the "collation" field.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(distinct_options&) collation(bsoncxx::v1::document::value collation);
+
+    ///
+    /// Return the current "collation" field.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view>) collation() const;
+
+    ///
+    /// Set the "maxTime" field.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(distinct_options&) max_time(std::chrono::milliseconds max_time);
+
+    ///
+    /// Return the current "maxTime" field.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<std::chrono::milliseconds>) max_time() const;
+
+    ///
+    /// Set the "comment" field.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(distinct_options&) comment(bsoncxx::v1::types::value comment);
+
+    ///
+    /// Return the current "comment" field.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::types::view>) comment() const;
+
+    ///
+    /// Set the "readPreference" field.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(distinct_options&) read_preference(v1::read_preference rp);
+
+    ///
+    /// Return the current "readPreference" field.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<v1::read_preference>) read_preference() const;
+};
 
 } // namespace v1
 } // namespace mongocxx
