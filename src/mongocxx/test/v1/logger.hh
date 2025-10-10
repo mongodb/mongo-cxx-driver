@@ -14,27 +14,24 @@
 
 #pragma once
 
-#include <mongocxx/v1/detail/prelude.hpp>
+#include <mongocxx/v1/logger.hpp>
 
 //
 
-#include <mongocxx/v1/config/export.hpp>
+#include <catch2/catch_tostring.hpp>
 
-namespace mongocxx {
-namespace v1 {
+CATCH_REGISTER_ENUM(
+    mongocxx::v1::log_level,
+    mongocxx::v1::log_level::k_error,
+    mongocxx::v1::log_level::k_critical,
+    mongocxx::v1::log_level::k_warning,
+    mongocxx::v1::log_level::k_message,
+    mongocxx::v1::log_level::k_info,
+    mongocxx::v1::log_level::k_debug,
+    mongocxx::v1::log_level::k_trace)
 
-enum class log_level;
+namespace Catch {
 
-class MONGOCXX_ABI_EXPORT logger;
+// No point specializing StringMaker for abstract class mongocxx::v1::logger.
 
-class default_logger;
-
-} // namespace v1
-} // namespace mongocxx
-
-#include <mongocxx/v1/detail/postlude.hpp>
-
-///
-/// @file
-/// Declares @ref mongocxx::v1::logger.
-///
+} // namespace Catch

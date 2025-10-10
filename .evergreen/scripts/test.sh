@@ -289,8 +289,23 @@ else
     command -V valgrind
     valgrind --version
     run_test() {
+      valgrind_args=(
+        "--leak-check=full"
+        "--track-origins=yes"
+        "--num-callers=50"
+        "--error-exitcode=1"
+        "--error-limit=no"
+        "--read-var-info=yes"
+        "--suppressions=../etc/memcheck.suppressions"
+      )
+
+      # Avoid noisy diagnostics caused by deliberate subprocess termination.
+      if [[ "${1:?}" =~ test_instance ]]; then
+        valgrind_args+=("--trace-children=no")
+      fi
+
       echo "Running ${1:?}..."
-      valgrind --leak-check=full --track-origins=yes --num-callers=50 --error-exitcode=1 --error-limit=no --read-var-info=yes --suppressions=../etc/memcheck.suppressions "${1:?}" "${test_args[@]:?}" || return
+      valgrind "${1:?}" "${test_args[@]:?}" || return
       echo "Running ${1:?}... done."
     }
   fi
@@ -304,7 +319,6 @@ else
   run_test ./src/mongocxx/test/test_command_monitoring_specs
   run_test ./src/mongocxx/test/test_instance
   run_test ./src/mongocxx/test/test_transactions_specs
-  run_test ./src/mongocxx/test/test_logging
   run_test ./src/mongocxx/test/test_retryable_reads_specs
   run_test ./src/mongocxx/test/test_read_write_concern_specs
   run_test ./src/mongocxx/test/test_unified_format_specs

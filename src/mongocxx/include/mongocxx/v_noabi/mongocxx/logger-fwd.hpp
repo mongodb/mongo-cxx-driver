@@ -14,23 +14,29 @@
 
 #pragma once
 
+#include <mongocxx/v1/logger-fwd.hpp>
+
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
 namespace v_noabi {
 
-enum class log_level;
+using v1::log_level;
 
-class MONGOCXX_ABI_EXPORT logger;
+using v1::logger;
+
+using v1::default_logger;
 
 } // namespace v_noabi
 } // namespace mongocxx
 
 namespace mongocxx {
 
-using ::mongocxx::v_noabi::log_level;
+using v1::log_level;
 
-using ::mongocxx::v_noabi::logger;
+using v1::logger;
+
+using v1::default_logger;
 
 } // namespace mongocxx
 
@@ -39,4 +45,7 @@ using ::mongocxx::v_noabi::logger;
 ///
 /// @file
 /// Declares utilities related to mongocxx logging.
+///
+/// @par Includes
+/// - @ref mongocxx/v1/logger-fwd.hpp
 ///
