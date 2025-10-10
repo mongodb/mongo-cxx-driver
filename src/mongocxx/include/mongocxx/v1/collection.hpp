@@ -481,11 +481,11 @@ class collection {
     /// - [`findAndModify` (database command) (MongoDB Manual)](https://www.mongodb.com/docs/manual/reference/command/findAndModify/)
     ///
     /// @{
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view>) find_one_and_delete(
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value>) find_one_and_delete(
         bsoncxx::v1::document::view query,
         v1::find_one_and_delete_options const& opts = {});
 
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view>) find_one_and_delete(
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value>) find_one_and_delete(
         v1::client_session const& session,
         bsoncxx::v1::document::view query,
         v1::find_one_and_delete_options const& opts = {});
@@ -505,12 +505,12 @@ class collection {
     /// - [`findAndModify` (database command) (MongoDB Manual)](https://www.mongodb.com/docs/manual/reference/command/findAndModify/)
     ///
     /// @{
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view>) find_one_and_replace(
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value>) find_one_and_replace(
         bsoncxx::v1::document::view query,
         bsoncxx::v1::document::value replacement,
         v1::find_one_and_replace_options const& opts = {});
 
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view>) find_one_and_replace(
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value>) find_one_and_replace(
         v1::client_session const& session,
         bsoncxx::v1::document::view query,
         bsoncxx::v1::document::value update,
@@ -531,23 +531,23 @@ class collection {
     /// - [`findAndModify` (database command) (MongoDB Manual)](https://www.mongodb.com/docs/manual/reference/command/findAndModify/)
     ///
     /// @{
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view>) find_one_and_update(
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value>) find_one_and_update(
         bsoncxx::v1::document::view query,
         bsoncxx::v1::document::view update,
         v1::find_one_and_update_options const& opts = {});
 
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view>) find_one_and_update(
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value>) find_one_and_update(
         bsoncxx::v1::document::view query,
         v1::pipeline const& update,
         v1::find_one_and_update_options const& opts = {});
 
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view>) find_one_and_update(
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value>) find_one_and_update(
         v1::client_session const& session,
         bsoncxx::v1::document::view query,
         bsoncxx::v1::document::view update,
         v1::find_one_and_update_options const& opts = {});
 
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view>) find_one_and_update(
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value>) find_one_and_update(
         v1::client_session const& session,
         bsoncxx::v1::document::view query,
         v1::pipeline const& update,
