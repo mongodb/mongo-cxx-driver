@@ -9,9 +9,9 @@
 set -o errexit
 
 on_exit () {
-  if [ -e ./unstable-chroot/debootstrap/debootstrap.log ]; then
+  if [ -e ./trixie-chroot/debootstrap/debootstrap.log ]; then
     echo "Dumping debootstrap.log"
-    cat ./unstable-chroot/debootstrap/debootstrap.log
+    cat ./trixie-chroot/debootstrap/debootstrap.log
   fi
 }
 trap on_exit EXIT
@@ -30,9 +30,9 @@ if [ "${IS_PATCH}" = "true" ]; then
   git remote add upstream https://github.com/mongodb/mongo-cxx-driver
   git fetch upstream
   CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
-  git checkout upstream/debian/unstable
+  git checkout debian/3.11.0-1
   git checkout ${CURRENT_BRANCH}
-  git checkout upstream/debian/unstable -- ./debian/
+  git checkout debian/3.11.0-1 -- ./debian/
   if [ -s ../upstream.patch ]; then
     [ -d debian/patches ] || mkdir debian/patches
     mv ../upstream.patch debian/patches/
@@ -52,13 +52,13 @@ cd ..
 
 git clone https://salsa.debian.org/installer-team/debootstrap.git debootstrap.git
 export DEBOOTSTRAP_DIR=`pwd`/debootstrap.git
-sudo -E ./debootstrap.git/debootstrap --variant=buildd unstable ./unstable-chroot/ http://cdn-aws.deb.debian.org/debian
-cp -a mongo-cxx-driver ./unstable-chroot/tmp/
-sudo DEB_BUILD_PROFILES="${DEB_BUILD_PROFILES}" chroot ./unstable-chroot /bin/bash -c "
+sudo -E ./debootstrap.git/debootstrap --variant=buildd trixie ./trixie-chroot/ http://cdn-aws.deb.debian.org/debian
+cp -a mongo-cxx-driver ./trixie-chroot/tmp/
+sudo DEB_BUILD_PROFILES="${DEB_BUILD_PROFILES}" chroot ./trixie-chroot /bin/bash -c "
   (apt-get install -y ca-certificates cmake debhelper doxygen git libboost-dev libsasl2-dev libsnappy-dev libssl-dev libutf8proc-dev pkgconf zlib1g-dev build-essential curl fakeroot furo git-buildpackage python3-sphinx python3-sphinx-design python3-packaging && \
   mkdir /tmp/mongo-c-driver && \
   cd /tmp/mongo-c-driver && \
-  curl -o deb.tar.gz -L https://s3.amazonaws.com/mciuploads/mongo-c-driver/master/mongo-c-driver-debian-packages-latest.tar.gz && \
+  curl -o deb.tar.gz -L https://s3.amazonaws.com/mciuploads/mongo-c-driver/r1.30/mongo-c-driver-debian-packages-latest.tar.gz && \
   tar zxvf deb.tar.gz && \
   apt-get install -y ./*.deb && \
   chown -R root:root /tmp/mongo-cxx-driver && \
@@ -70,9 +70,9 @@ sudo DEB_BUILD_PROFILES="${DEB_BUILD_PROFILES}" chroot ./unstable-chroot /bin/ba
   git remote remove upstream || true && \
   git remote add upstream https://github.com/mongodb/mongo-cxx-driver && \
   git fetch upstream && \
-  git checkout upstream/debian/unstable && \
+  git checkout debian/3.11.0-1 && \
   git checkout ${CURRENT_BRANCH} && \
-  git checkout upstream/debian/unstable -- ./debian/ && \
+  git checkout debian/3.11.0-1 -- ./debian/ && \
   git commit -m 'fetch debian directory from the debian/unstable branch' && \
   LANG=C /bin/bash -x ./debian/build_snapshot.sh && \
   debc ../*.changes && \
@@ -82,8 +82,8 @@ sudo DEB_BUILD_PROFILES="${DEB_BUILD_PROFILES}" chroot ./unstable-chroot /bin/ba
   /usr/bin/g++ ${MNMLSTC_INCLUDE:-}-I/usr/include/bsoncxx/v_noabi -I/usr/include/mongocxx/v_noabi -I. -o index_examples examples/mongocxx/mongodb.com/index_examples.cpp -lmongocxx -lbsoncxx && \
   /usr/bin/g++ ${MNMLSTC_INCLUDE:-}-I/usr/include/bsoncxx/v_noabi -I/usr/include/mongocxx/v_noabi -I. -o documentation_examples examples/mongocxx/mongodb.com/documentation_examples.cpp -lmongocxx -lbsoncxx )"
 
-[ -e ./unstable-chroot/tmp/mongo-cxx-driver/runcommand_examples ] || (echo "Example 'runcommand_examples' was not built!" ; exit 1)
-[ -e ./unstable-chroot/tmp/mongo-cxx-driver/aggregation_examples ] || (echo "Example 'aggregation_examples' was not built!" ; exit 1)
-[ -e ./unstable-chroot/tmp/mongo-cxx-driver/index_examples ] || (echo "Example 'index_examples' was not built!" ; exit 1)
-[ -e ./unstable-chroot/tmp/mongo-cxx-driver/documentation_examples ] || (echo "Example 'documentation_examples' was not built!" ; exit 1)
-(cd ./unstable-chroot/tmp/ ; tar zcvf ../../deb.tar.gz *.dsc *.orig.tar.gz *.debian.tar.xz *.build *.deb)
+[ -e ./trixie-chroot/tmp/mongo-cxx-driver/runcommand_examples ] || (echo "Example 'runcommand_examples' was not built!" ; exit 1)
+[ -e ./trixie-chroot/tmp/mongo-cxx-driver/aggregation_examples ] || (echo "Example 'aggregation_examples' was not built!" ; exit 1)
+[ -e ./trixie-chroot/tmp/mongo-cxx-driver/index_examples ] || (echo "Example 'index_examples' was not built!" ; exit 1)
+[ -e ./trixie-chroot/tmp/mongo-cxx-driver/documentation_examples ] || (echo "Example 'documentation_examples' was not built!" ; exit 1)
+(cd ./trixie-chroot/tmp/ ; tar zcvf ../../deb.tar.gz *.dsc *.orig.tar.gz *.debian.tar.xz *.build *.deb)
