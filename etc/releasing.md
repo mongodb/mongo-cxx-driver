@@ -377,6 +377,8 @@ Review the contents of the release draft, then publish the release.
 Navigate to the
 [fixVersions page on Jira](https://jira.mongodb.com/plugins/servlet/project-config/CXX/versions?status=unreleased).
 
+Close the Jira ticket tracking this release with "Documentation Changes" set to "Not Needed". A DOCSP ticket is generated later.
+
 Click the "..." next to the relevant version and select "Release".
 
 ### Update GitHub Webhook
@@ -427,6 +429,10 @@ git push upstream releases/vX.Y
 ```
 
 The new branch should be continuously tested on Evergreen. Update the "Display Name" and "Branch Name" of the [mongo-cxx-driver-latest-release Evergreen project](https://spruce.mongodb.com/project/mongo-cxx-driver-latest-release/settings/general) to refer to the new release branch.
+
+### Update SBOM serial number
+
+Check out the release branch `releases/vX.Y`.
 
 Update `etc/cyclonedx.sbom.json` with a new unique serial number for the next upcoming patch release (e.g. for `1.3.1` following the release of `1.3.0`):
 
@@ -528,25 +534,25 @@ Commit these changes to the `post-release-changes` branch:
 git commit -m "Post-release changes"
 ```
 
-### Create Documentation Tickets
+### Update Documentation Ticket
 
-(Stable Releases Only) Close the Jira ticket tracking this release with "Documentation Changes" set to "Needed". Fill the "Documentation Changes Summary" field with information requesting updates to:
+When the Jira fixVersion is released, a DOCSP ticket is created and e-mailed to the `dbx-c-cxx` group with subject "Action Required: Relay Compatibility Updates to Docs Team".
 
-  - the tables on the [Compatibility](https://www.mongodb.com/docs/languages/cpp/cpp-driver/current/compatibility/) page,
-  - the "Driver Status by Family and Version" section of the [home
+Add a comment requesting updates to:
+
+  - (if applicable) the tables on the [Compatibility](https://www.mongodb.com/docs/languages/cpp/cpp-driver/current/compatibility/) page,
+  - (if applicable) the "Driver Status by Family and Version" section of the [home
     page](https://www.mongodb.com/docs/languages/cpp/cpp-driver/current/#driver-status-by-family-and-version), and
   - the [full version](https://github.com/mongodb/docs-cpp/blob/master/snooty.toml) for the C++ Driver documentation pages.
-
-This will generate a DOCSP ticket with instructions to update the C++ Driver docs.
 
 Example (using Jira syntax formatting):
 
 ```
 * The [Compatibility|https://www.mongodb.com/docs/languages/cpp/cpp-driver/current/compatibility/] page must be updated:
-  - mongocxx-X.Y.Z may change "libmongoc Compatibility" by requiring mongoc-A.B.C or later.
-  - mongocxx-X.Y.Z should have the same "MongoDB Compatibility", "Language Compatibility", and "Compiler Compatibility" as version mongocxx-X.Y.(Z-1)
+** mongocxx-X.Y.Z may change "libmongoc Compatibility" by requiring mongoc-A.B.C or later.
+** mongocxx-X.Y.Z should have the same "MongoDB Compatibility", "Language Compatibility", and "Compiler Compatibility" as version mongocxx-X.Y.(Z-1)
 * The [MongoDB C++ Driver|https://www.mongodb.com/docs/languages/cpp/cpp-driver/current/#driver-status-by-family-and-version] page must be updated: {{{}mongocxx X.Y.x{}}} is now a previous stable release and no longer under active development; {{{}mongocxx X.Y+1.x{}}} is the new current stable release eligible for bug fixes.
-* the [full version|https://github.com/mongodb/docs-cpp/blob/master/snooty.toml] for C++ Driver documentation must be updated to {{{}X.Y.Z{}}}.
+* The [full version|https://github.com/mongodb/docs-cpp/blob/master/snooty.toml] for C++ Driver documentation must be updated to {{{}X.Y.Z{}}}.
 ```
 
 ### Publish Updated Documentation
@@ -790,7 +796,7 @@ See the [MongoDB C++ Driver Manual](https://www.mongodb.com/docs/languages/cpp/c
 
 NOTE: The mongocxx X.Y.x series does not promise API or ABI stability across patch releases.
 
-Please feel free to post any questions on the MongoDB Community forum in the [Drivers](https://www.mongodb.com/community/forums/c/data/drivers/7) category tagged with [cxx](https://www.mongodb.com/community/forums/tag/cxx). Bug reports should be filed against the [CXX](https://jira.mongodb.org/projects/CXX) project in the MongoDB JIRA. Your feedback on the C++11 driver is greatly appreciated.
+Please feel free to post any questions on [Stack Overflow](https://stackoverflow.com/questions/tagged/mongodb%20c++). Bug reports should be filed against the [CXX](https://jira.mongodb.org/projects/CXX) project in the MongoDB JIRA. Your feedback on the C++11 driver is greatly appreciated.
 
 Sincerely,
 

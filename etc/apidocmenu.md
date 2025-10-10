@@ -2,7 +2,50 @@
 
 ## Driver Documentation By Version
 
-[4.1.3](../mongocxx-4.1.3) | [4.1.2](../mongocxx-4.1.2) | [4.1.1](../mongocxx-4.1.1) | [4.1.0](../mongocxx-4.1.0) | [4.0.0](../mongocxx-4.0.0) | [3.11.0](../mongocxx-3.11.0) | [3.10.2](../mongocxx-3.10.2) | [3.10.1](../mongocxx-3.10.1) | [3.10.0](../mongocxx-3.10.0) | [3.9.0](../mongocxx-3.9.0) | [3.8.1](../mongocxx-3.8.1) | [3.8.0](../mongocxx-3.8.0) | [3.7.2](../mongocxx-3.7.2) | [3.7.1](../mongocxx-3.7.1) | [3.7.0](../mongocxx-3.7.0) | [3.6.7](../mongocxx-3.6.7) | [3.6.6](../mongocxx-3.6.6) | [3.6.5](../mongocxx-3.6.5) | [3.6.4](../mongocxx-3.6.4) | [3.6.3](../mongocxx-3.6.3) | [3.6.2](../mongocxx-3.6.2) | [3.6.1](../mongocxx-3.6.1) | [3.6.0](../mongocxx-3.6.0) | [3.5.1](../mongocxx-3.5.1) | [3.5.0](../mongocxx-3.5.0) | [3.4.2](../mongocxx-3.4.2) | [3.4.1](../mongocxx-3.4.1) | [3.4.0](../mongocxx-3.4.0) | [3.3.2](../mongocxx-3.3.2) | [3.3.1](../mongocxx-3.3.1) | [3.3.0](../mongocxx-3.3.0) | [3.2.1](../mongocxx-3.2.1) | [3.2.0](../mongocxx-3.2.0) | [3.1.4](../mongocxx-3.1.4/) | [3.1.3](../mongocxx-3.1.3/) | [3.1.2](../mongocxx-3.1.2/) | [3.1.1](../mongocxx-3.1.1/) | [3.1.0](../mongocxx-3.1.0/) | [3.0.3](../mongocxx-3.0.3/) | [3.0.2](../mongocxx-3.0.2/) | [3.0.1](../mongocxx-3.0.1/) | [3.0.0](../mongocxx-3.0.0/)
+[4.1.4](../mongocxx-4.1.4) |
+[4.1.3](../mongocxx-4.1.3) |
+[4.1.2](../mongocxx-4.1.2) |
+[4.1.1](../mongocxx-4.1.1) |
+[4.1.0](../mongocxx-4.1.0) |
+[4.0.0](../mongocxx-4.0.0) |
+[3.11.1](../mongocxx-3.11.1) |
+[3.11.0](../mongocxx-3.11.0) |
+[3.10.2](../mongocxx-3.10.2) |
+[3.10.1](../mongocxx-3.10.1) |
+[3.10.0](../mongocxx-3.10.0) |
+[3.9.0](../mongocxx-3.9.0) |
+[3.8.1](../mongocxx-3.8.1) |
+[3.8.0](../mongocxx-3.8.0) |
+[3.7.2](../mongocxx-3.7.2) |
+[3.7.1](../mongocxx-3.7.1) |
+[3.7.0](../mongocxx-3.7.0) |
+[3.6.7](../mongocxx-3.6.7) |
+[3.6.6](../mongocxx-3.6.6) |
+[3.6.5](../mongocxx-3.6.5) |
+[3.6.4](../mongocxx-3.6.4) |
+[3.6.3](../mongocxx-3.6.3) |
+[3.6.2](../mongocxx-3.6.2) |
+[3.6.1](../mongocxx-3.6.1) |
+[3.6.0](../mongocxx-3.6.0) |
+[3.5.1](../mongocxx-3.5.1) |
+[3.5.0](../mongocxx-3.5.0) |
+[3.4.2](../mongocxx-3.4.2) |
+[3.4.1](../mongocxx-3.4.1) |
+[3.4.0](../mongocxx-3.4.0) |
+[3.3.2](../mongocxx-3.3.2) |
+[3.3.1](../mongocxx-3.3.1) |
+[3.3.0](../mongocxx-3.3.0) |
+[3.2.1](../mongocxx-3.2.1) |
+[3.2.0](../mongocxx-3.2.0) |
+[3.1.4](../mongocxx-3.1.4/) |
+[3.1.3](../mongocxx-3.1.3/) |
+[3.1.2](../mongocxx-3.1.2/) |
+[3.1.1](../mongocxx-3.1.1/) |
+[3.1.0](../mongocxx-3.1.0/) |
+[3.0.3](../mongocxx-3.0.3/) |
+[3.0.2](../mongocxx-3.0.2/) |
+[3.0.1](../mongocxx-3.0.1/) |
+[3.0.0](../mongocxx-3.0.0/)
 
 ## Driver Development Status
 
@@ -12,13 +55,12 @@
 | Version     | ABI Stability   | Development Stability       | Development Status |
 | :---------: | :-------------: | :-------------------------: | :----------------: |
 | master      | N/A             | _Do not use in production!_ | Active             |
-| 4.1.3       | None            | Ready for Use               | Bug Fixes Only     |
-| 4.1.2       | None            | Ready for Use               | Not Supported      |
-| 4.1.1       | None            | Ready for Use               | Not Supported      |
-| 4.1.0       | None            | Ready for Use               | Not Supported      |
+| 4.1.4       | None            | Ready for Use               | Bug Fixes Only     |
+| 4.1.3       | None            | Ready for Use               | Not Supported      |
+| ...         | ...             | ...                         | ...                |
 | 4.0.0       | None            | Ready for Use               | Not Supported      |
-| 3.11.0      | None            | Ready for Use               | Bug Fixes Only     |
-| 3.10.2      | None            | Ready for Use               | Not Supported      |
+| 3.11.1      | None            | Ready for Use               | Bug Fixes Only     |
+| 3.11.0      | None            | Ready for Use               | Not Supported      |
 | ...         | ...             | ...                         | ...                |
 | 3.0.0       | None            | Ready for Use               | Not Supported      |
 
