@@ -172,12 +172,8 @@ class instance {
 } // namespace v1
 } // namespace mongocxx
 
-namespace std {
-
 template <>
-struct is_error_code_enum<mongocxx::v1::instance::errc> : true_type {};
-
-} // namespace std
+struct std::is_error_code_enum<mongocxx::v1::instance::errc> : true_type {};
 
 #include <mongocxx/v1/detail/postlude.hpp>
 
