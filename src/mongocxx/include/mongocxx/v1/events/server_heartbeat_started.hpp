@@ -55,7 +55,10 @@ class server_heartbeat_started {
     MONGOCXX_ABI_EXPORT_CDECL(std::uint16_t) port() const;
 
     ///
-    /// Return true when this heartbeat event is for an awaitable "hello" (instead of a "legacy" hello).
+    /// Return true when this heartbeat event used the "streaming" protocol (instead of the "polling" protocol).
+    ///
+    /// @see
+    /// - [Server Monitoring (MongoDB Specifications)](https://specifications.readthedocs.io/en/latest/server-discovery-and-monitoring/server-monitoring/)
     ///
     MONGOCXX_ABI_EXPORT_CDECL(bool) awaited() const;
 
