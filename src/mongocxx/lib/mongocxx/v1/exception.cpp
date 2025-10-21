@@ -13,3 +13,77 @@
 // limitations under the License.
 
 #include <mongocxx/v1/exception.hpp>
+
+//
+
+#include <string>
+#include <system_error>
+
+#include <bsoncxx/private/immortal.hh>
+#include <bsoncxx/private/type_traits.hh>
+
+namespace mongocxx {
+namespace v1 {
+
+std::error_category const& source_error_category() {
+    class type final : public std::error_category {
+        char const* name() const noexcept override {
+            return "mongocxx::v1::source_errc";
+        }
+
+        std::string message(int v) const noexcept override {
+            using code = v1::source_errc;
+
+            switch (static_cast<code>(v)) {
+                case code::zero:
+                    return "zero";
+                case code::mongocxx:
+                    return "mongocxx";
+                case code::mongoc:
+                    return "mongoc";
+                case code::mongocrypt:
+                    return "mongocrypt";
+                case code::server:
+                    return "server";
+                default:
+                    return std::string(this->name()) + ':' + std::to_string(v);
+            }
+        }
+    };
+
+    static bsoncxx::immortal<type> const instance;
+
+    return instance.value();
+}
+
+std::error_category const& type_error_category() {
+    class type final : public std::error_category {
+        char const* name() const noexcept override {
+            return "mongocxx::v1::type_errc";
+        }
+
+        std::string message(int v) const noexcept override {
+            using code = v1::type_errc;
+
+            switch (static_cast<code>(v)) {
+                case code::zero:
+                    return "zero";
+                case code::invalid_argument:
+                    return "invalid argument";
+                case code::runtime_error:
+                    return "runtime error";
+                default:
+                    return std::string(this->name()) + ':' + std::to_string(v);
+            }
+        }
+    };
+
+    static bsoncxx::immortal<type> const instance;
+
+    return instance.value();
+}
+
+exception::~exception() = default;
+
+} // namespace v1
+} // namespace mongocxx
