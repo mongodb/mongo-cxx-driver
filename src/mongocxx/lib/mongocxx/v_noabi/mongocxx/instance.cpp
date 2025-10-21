@@ -21,7 +21,7 @@
 #include <mongocxx/v1/logger.hpp>
 
 #include <atomic>
-#include <stdexcept>
+#include <memory>
 #include <utility>
 
 #include <mongocxx/exception/error_code.hpp>
@@ -54,7 +54,7 @@ class instance::impl {
 
     // mongoc does not expose the state of registered custom log handlers. A bit of indirection is needed to
     // condition the informational "enabled" message even after `handler` is moved-from.
-    impl(std::unique_ptr<logger>&& handler, bool set_custom_handler) try : _instance{std::move(handler)} {
+    impl(std::unique_ptr<v_noabi::logger>&& handler, bool set_custom_handler) try : _instance{std::move(handler)} {
         if (set_custom_handler) {
             // Inform the user that a custom log handler has been registered.
             // Cannot use `libmongoc::*` mock due to varargs.

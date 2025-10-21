@@ -115,15 +115,11 @@ BSONCXX_PRIVATE_WARNINGS_POP();
 } // namespace v1
 } // namespace mongocxx
 
-namespace std {
+template <>
+struct std::is_error_condition_enum<mongocxx::v1::source_errc> : true_type {};
 
 template <>
-struct is_error_condition_enum<mongocxx::v1::source_errc> : true_type {};
-
-template <>
-struct is_error_condition_enum<mongocxx::v1::type_errc> : true_type {};
-
-} // namespace std
+struct std::is_error_condition_enum<mongocxx::v1::type_errc> : true_type {};
 
 #include <mongocxx/v1/detail/postlude.hpp>
 

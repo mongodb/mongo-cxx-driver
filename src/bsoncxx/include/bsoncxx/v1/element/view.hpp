@@ -31,7 +31,6 @@
 #include <array>
 #include <cstddef>
 #include <cstdint>
-#include <memory>
 #include <system_error>
 #include <type_traits>
 
@@ -265,12 +264,8 @@ class view {
 } // namespace v1
 } // namespace bsoncxx
 
-namespace std {
-
 template <>
-struct is_error_code_enum<bsoncxx::v1::element::view::errc> : true_type {};
-
-} // namespace std
+struct std::is_error_code_enum<bsoncxx::v1::element::view::errc> : true_type {};
 
 #include <bsoncxx/v1/detail/postlude.hpp>
 

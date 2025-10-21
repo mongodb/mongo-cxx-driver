@@ -25,6 +25,7 @@
 
 #include <cstdint>
 #include <system_error>
+#include <type_traits>
 
 namespace bsoncxx {
 namespace v1 {
@@ -128,12 +129,8 @@ class decimal128 {
 } // namespace v1
 } // namespace bsoncxx
 
-namespace std {
-
 template <>
-struct is_error_code_enum<bsoncxx::v1::decimal128::errc> : true_type {};
-
-} // namespace std
+struct std::is_error_code_enum<bsoncxx::v1::decimal128::errc> : true_type {};
 
 #include <bsoncxx/v1/detail/postlude.hpp>
 
