@@ -25,7 +25,8 @@ CATCH_REGISTER_ENUM(
     mongocxx::v1::source_errc::zero,
     mongocxx::v1::source_errc::mongocxx,
     mongocxx::v1::source_errc::mongoc,
-    mongocxx::v1::source_errc::mongocrypt)
+    mongocxx::v1::source_errc::mongocrypt,
+    mongocxx::v1::source_errc::server)
 
 CATCH_REGISTER_ENUM(
     mongocxx::v1::type_errc,
