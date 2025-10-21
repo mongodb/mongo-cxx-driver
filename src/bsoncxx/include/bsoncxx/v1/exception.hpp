@@ -112,15 +112,11 @@ BSONCXX_PRIVATE_WARNINGS_POP();
 } // namespace v1
 } // namespace bsoncxx
 
-namespace std {
+template <>
+struct std::is_error_condition_enum<bsoncxx::v1::source_errc> : true_type {};
 
 template <>
-struct is_error_condition_enum<bsoncxx::v1::source_errc> : true_type {};
-
-template <>
-struct is_error_condition_enum<bsoncxx::v1::type_errc> : true_type {};
-
-} // namespace std
+struct std::is_error_condition_enum<bsoncxx::v1::type_errc> : true_type {};
 
 #include <bsoncxx/v1/detail/postlude.hpp>
 

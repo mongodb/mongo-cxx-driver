@@ -33,6 +33,8 @@
 #include <chrono>
 #include <cstdint>
 #include <cstring>
+#include <system_error>
+#include <type_traits>
 
 namespace bsoncxx {
 namespace v1 {
@@ -1216,12 +1218,8 @@ class view {
 } // namespace v1
 } // namespace bsoncxx
 
-namespace std {
-
 template <>
-struct is_error_code_enum<bsoncxx::v1::types::view::errc> : true_type {};
-
-} // namespace std
+struct std::is_error_code_enum<bsoncxx::v1::types::view::errc> : true_type {};
 
 #include <bsoncxx/v1/detail/postlude.hpp>
 

@@ -30,6 +30,8 @@
 #include <ctime>
 #include <string>
 #include <system_error>
+#include <type_traits>
+
 namespace bsoncxx {
 namespace v1 {
 
@@ -203,12 +205,8 @@ BSONCXX_PRIVATE_INLINE_CXX17 constexpr std::size_t oid::k_oid_length;
 } // namespace v1
 } // namespace bsoncxx
 
-namespace std {
-
 template <>
-struct is_error_code_enum<bsoncxx::v1::oid::errc> : true_type {};
-
-} // namespace std
+struct std::is_error_code_enum<bsoncxx::v1::oid::errc> : true_type {};
 
 #include <bsoncxx/v1/detail/postlude.hpp>
 

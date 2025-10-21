@@ -30,6 +30,7 @@
 #include <cstring>
 #include <iterator>
 #include <system_error>
+#include <type_traits>
 
 namespace bsoncxx {
 namespace v1 {
@@ -389,12 +390,8 @@ inline v1::element::view view::operator[](v1::stdx::string_view key) const {
 } // namespace v1
 } // namespace bsoncxx
 
-namespace std {
-
 template <>
-struct is_error_code_enum<bsoncxx::v1::document::view::errc> : true_type {};
-
-} // namespace std
+struct std::is_error_code_enum<bsoncxx::v1::document::view::errc> : true_type {};
 
 #include <bsoncxx/v1/detail/postlude.hpp>
 
