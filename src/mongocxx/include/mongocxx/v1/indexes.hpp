@@ -161,6 +161,7 @@ class indexes {
     /// - `twod_location_min` ("min")
     /// - `twod_sphere_version` ("2dsphereIndexVersion")
     /// - `unique`
+    /// - `version` ("v")
     /// - `weights`
     /// - `write_concern` ("writeConcern")
     ///
