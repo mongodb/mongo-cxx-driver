@@ -19,14 +19,8 @@ Changes prior to 3.9.0 are documented as [release notes on GitHub](https://githu
   - `type_view()` in `bsoncxx::document::element` and `bsoncxx::array::element`: equivalent to `get_value()`.
   - `type_value()` in `bsoncxx::document::element` and `bsoncxx::array::element`: equivalent to `get_owning_value()`.
 
-### Fixed
-
-- CMake option `ENABLE_TESTS` (`OFF` by default) is no longer overwritten by the auto-downloaded C Driver (`ON` by default) during CMake configuration.
-- `storage_engine() const` in `mongocxx::v_noabi::options::index` is correctly exported using mongocxx export macros instead of bsoncxx export macros.
-
 ### Changed
 
-- Bump the minimum required C Driver version to [2.1.0](https://github.com/mongodb/mongo-c-driver/releases/tag/2.1.0).
 - CMake 3.16.0 or newer is required when `ENABLE_TESTS=ON` for compatibility with the updated Catch2 library version (3.7.0 -> 3.8.1).
 - Minimum supported compiler versions to build from source are updated to the following:
   - GCC 8.1 (from GCC 4.8.2).
@@ -71,6 +65,16 @@ Changes prior to 3.9.0 are documented as [release notes on GitHub](https://githu
   - See: [MongoDB Software Lifecycle Schedules](https://www.mongodb.com/legal/support-policy/lifecycles).
   - See: [MongoDB C Driver 2.1.0 Release Notes](https://github.com/mongodb/mongo-c-driver/releases/tag/2.1.0).
 - Support for macOS 11 and macOS 12 (deprecated in 4.1.0).
+
+## 4.1.4
+
+### Changed
+
+- Bump the auto-downloaded C Driver version to [2.1.2](https://github.com/mongodb/mongo-c-driver/releases/tag/2.1.2).
+
+### Changed
+
+- Bump the minimum required C Driver version to [1.30.6](https://github.com/mongodb/mongo-c-driver/releases/tag/1.30.6).
 
 ## 4.1.3
 
@@ -171,6 +175,12 @@ Changes prior to 3.9.0 are documented as [release notes on GitHub](https://githu
   - `bsoncxx::builder::types` in `<bsoncxx/builder/list.hpp>`. Use `bsoncxx::types` in `<bsoncxx/types.hpp>` instead.
   - `bsoncxx::builder::stream::concatenate` in `<bsoncxx/builder/stream/helpers.hpp>`. Use `bsoncxx::builder::concatenate` in `<bsoncxx/builder/concatenate.hpp>` instead.
   - `mongocxx::events::read_preference` in `<mongocxx/events/topology_description.hpp>`. Use `mongocxx::read_preference` in `<mongocxx/read_preference.hpp>` instead.
+
+## 3.11.1
+
+### Fixed
+
+- The API version of auto-downloaded C Driver libraries no longer incorrectly inherits the C++ Driver's `BUILD_VERSION` value.
 
 ## 3.11.0
 
