@@ -467,7 +467,7 @@ class indexes {
     ///
     /// Copy assignment.
     ///
-    options& operator=(indexes const& other);
+    indexes& operator=(indexes const& other);
 
     ///
     /// Return all indexes in the associated collection.
