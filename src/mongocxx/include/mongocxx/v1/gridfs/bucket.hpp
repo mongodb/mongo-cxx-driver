@@ -155,8 +155,6 @@ class bucket {
     ///
     /// Equivalent to @ref upload_from_stream_with_id with a file ID generated using @ref bsoncxx::v1::oid.
     ///
-    /// @note The file is not completely uploaded until @ref mongocxx::v1::gridfs::uploader::close() is invoked.
-    ///
     /// @{
     MONGOCXX_ABI_EXPORT_CDECL(v1::gridfs::upload_result) upload_from_stream(
         bsoncxx::v1::stdx::string_view filename,
