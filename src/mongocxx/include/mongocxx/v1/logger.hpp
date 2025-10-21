@@ -94,8 +94,6 @@ class logger {
     /// Users may override this function to implement custom log message behavior such as outputting messages to a file
     /// or sending messages to a remote server.
     ///
-    ///
-    ///
     /// @param level The log level for the message being handled.
     /// @param domain The domain of the message.
     /// @param message The contents of the log message.
