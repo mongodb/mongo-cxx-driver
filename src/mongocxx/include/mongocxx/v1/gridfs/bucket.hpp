@@ -226,7 +226,7 @@ class bucket {
     MONGOCXX_ABI_EXPORT_CDECL(void) download_to_stream(bsoncxx::v1::types::view id, std::ostream& output);
 
     MONGOCXX_ABI_EXPORT_CDECL(void)
-    download_to_stream(v1::client_session const& session, bsoncxx::v1::types::view id, std::ostream& destination);
+    download_to_stream(v1::client_session const& session, bsoncxx::v1::types::view id, std::ostream& output);
     /// @}
     ///
 
