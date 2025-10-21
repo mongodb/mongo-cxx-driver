@@ -85,7 +85,7 @@ std::error_category const& type_error_category() {
 namespace bsoncxx {
 namespace v1 {
 
-exception::~exception() = default;
+void exception::key_function() const {}
 
 } // namespace v1
 } // namespace bsoncxx

@@ -83,7 +83,7 @@ std::error_category const& type_error_category() {
     return instance.value();
 }
 
-exception::~exception() = default;
+void exception::key_function() const {}
 
 } // namespace v1
 } // namespace mongocxx

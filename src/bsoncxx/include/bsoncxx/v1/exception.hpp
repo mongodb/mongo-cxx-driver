@@ -97,14 +97,10 @@ BSONCXX_PRIVATE_WARNINGS_DISABLE(MSVC(4275));
 ///
 class exception : public std::system_error {
    public:
-    ~exception() override;
-
-    exception(exception&&) noexcept = default;
-    exception& operator=(exception&&) noexcept = default;
-    exception(exception const&) = default;
-    exception& operator=(exception const&) = default;
-
     using std::system_error::system_error;
+
+   private:
+    BSONCXX_ABI_NO_EXPORT virtual void key_function() const;
 };
 
 BSONCXX_PRIVATE_WARNINGS_POP();
