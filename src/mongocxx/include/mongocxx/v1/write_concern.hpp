@@ -204,8 +204,6 @@ class write_concern {
     ///
     /// Set the "w" field to a custom write concern name.
     ///
-    /// @param v Equivalent to `this->acknowledge_level(level::k_default)` when `v` is empty.
-    ///
     MONGOCXX_ABI_EXPORT_CDECL(write_concern&) tag(bsoncxx::v1::stdx::string_view v);
 
     ///
