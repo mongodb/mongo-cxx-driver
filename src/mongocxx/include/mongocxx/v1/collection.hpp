@@ -26,6 +26,8 @@
 #include <mongocxx/v1/delete_one_result-fwd.hpp>
 #include <mongocxx/v1/insert_one_result-fwd.hpp>
 #include <mongocxx/v1/pipeline-fwd.hpp>
+#include <mongocxx/v1/read_concern-fwd.hpp>
+#include <mongocxx/v1/read_preference-fwd.hpp>
 #include <mongocxx/v1/replace_one_result-fwd.hpp>
 #include <mongocxx/v1/search_indexes-fwd.hpp>
 #include <mongocxx/v1/update_many_result-fwd.hpp>
@@ -36,6 +38,7 @@
 #include <bsoncxx/v1/document/value.hpp>
 #include <bsoncxx/v1/document/view.hpp>
 #include <bsoncxx/v1/stdx/optional.hpp>
+#include <bsoncxx/v1/stdx/string_view.hpp>
 #include <bsoncxx/v1/types/value.hpp>
 
 #include <mongocxx/v1/aggregate_options.hpp>
@@ -60,7 +63,9 @@
 #include <mongocxx/v1/update_one_options.hpp>
 
 #include <cstdint>
+#include <string>
 #include <system_error>
+#include <type_traits>
 #include <utility>
 #include <vector>
 

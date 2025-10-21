@@ -26,6 +26,7 @@
 #include <mongocxx/v1/client_session-fwd.hpp>
 #include <mongocxx/v1/cursor-fwd.hpp>
 
+#include <bsoncxx/v1/stdx/optional.hpp>
 #include <bsoncxx/v1/stdx/string_view.hpp>
 
 #include <mongocxx/v1/aggregate_options.hpp>

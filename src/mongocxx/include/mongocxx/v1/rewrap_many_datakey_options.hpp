@@ -28,6 +28,8 @@
 
 #include <mongocxx/v1/config/export.hpp>
 
+#include <string>
+
 namespace mongocxx {
 namespace v1 {
 

@@ -40,6 +40,8 @@
 #include <mongocxx/v1/write_concern.hpp>
 
 #include <cstdint>
+#include <string>
+#include <vector>
 
 namespace mongocxx {
 namespace v1 {

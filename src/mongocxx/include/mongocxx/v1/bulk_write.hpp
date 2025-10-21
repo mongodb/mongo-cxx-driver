@@ -20,6 +20,8 @@
 
 #include <mongocxx/v1/detail/prelude.hpp>
 
+#include <bsoncxx/v1/array/view-fwd.hpp>
+#include <bsoncxx/v1/document/view-fwd.hpp>
 #include <bsoncxx/v1/types/value-fwd.hpp>
 
 #include <mongocxx/v1/hint-fwd.hpp>
