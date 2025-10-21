@@ -21,10 +21,5 @@ class server_error::impl {};
 
 server_error::~server_error() = default;
 
-bool server_error::has_error_label(char const* label) const {
-    (void)label;
-    return false;
-}
-
 } // namespace v1
 } // namespace mongocxx

@@ -28,7 +28,6 @@
 #include <mongocxx/v1/exception.hpp>
 
 #include <memory>
-#include <string>
 #include <system_error>
 
 namespace mongocxx {
@@ -104,18 +103,7 @@ class server_error : public v1::exception {
     ///
     /// @important The set of error labels may vary depending on the operation and error.
     ///
-    /// @{
-    bool MONGOCXX_ABI_CDECL has_error_label(char const* label) const;
-
-    bool has_error_label(std::string const& label) const {
-        return this->has_error_label(label.c_str());
-    }
-
-    bool has_error_label(bsoncxx::v1::stdx::string_view label) const {
-        return this->has_error_label(std::string(label).c_str());
-    }
-    /// @}
-    ///
+    bool MONGOCXX_ABI_CDECL has_error_label(bsoncxx::v1::stdx::string_view label) const;
 };
 
 } // namespace v1

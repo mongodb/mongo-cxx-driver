@@ -30,7 +30,6 @@
 #include <chrono>
 #include <cstdint>
 #include <memory>
-#include <string>
 
 namespace mongocxx {
 namespace v1 {
@@ -207,23 +206,9 @@ class write_concern {
     ///
     /// Set the "w" field to a custom write concern name.
     ///
-    /// @{
-    write_concern& tag(bsoncxx::v1::stdx::string_view v) {
-        return this->tag(std::string(v).c_str());
-    }
-
-    write_concern& tag(std::string const& v) {
-        return this->tag(v.c_str());
-    }
-    /// @}
+    /// @param v Equivalent to `this->acknowledge_level(level::k_default)` when `v` is empty.
     ///
-
-    ///
-    /// Set the "w" field to a custom write concern name.
-    ///
-    /// @param v Equivalent to `this->acknowledge_level(level::k_default)` when `v == nullptr`.
-    ///
-    MONGOCXX_ABI_EXPORT_CDECL(write_concern&) tag(char const* v);
+    MONGOCXX_ABI_EXPORT_CDECL(write_concern&) tag(bsoncxx::v1::stdx::string_view v);
 
     ///
     /// Return the current "w" value as a custom write concern name.

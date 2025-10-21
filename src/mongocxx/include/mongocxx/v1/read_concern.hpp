@@ -27,7 +27,6 @@
 #include <mongocxx/v1/config/export.hpp>
 
 #include <memory>
-#include <string>
 
 namespace mongocxx {
 namespace v1 {
@@ -164,27 +163,9 @@ class read_concern {
     ///
     /// Set the read concern level to an arbitrary string.
     ///
-    /// @param v Equivalent to `this->acknowledge_level(k_server_default)` when `v.empty()`.
+    /// @param v Equivalent to `this->acknowledge_level(k_server_default)` when `v` is empty.
     ///
-    /// @{
-    read_concern& acknowledge_string(bsoncxx::v1::stdx::string_view v) {
-        this->acknowledge_string(v.empty() ? nullptr : std::string(v).c_str());
-        return *this;
-    }
-
-    read_concern& acknowledge_string(std::string const& v) {
-        this->acknowledge_string(v.empty() ? nullptr : v.c_str());
-        return *this;
-    }
-    /// @}
-    ///
-
-    ///
-    /// Set the read concern level to an arbitrary string.
-    ///
-    /// @param v Equivalent to `this->acknowledge_level(k_server_default)` when `v == nullptr`.
-    ///
-    MONGOCXX_ABI_EXPORT_CDECL(read_concern&) acknowledge_string(char const* v);
+    MONGOCXX_ABI_EXPORT_CDECL(read_concern&) acknowledge_string(bsoncxx::v1::stdx::string_view v);
 
     ///
     /// Return the current read concern level as a string.

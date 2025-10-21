@@ -161,14 +161,7 @@ class uri {
     ///
     /// @throws mongocxx::v1::exception if a client-side error is encountered.
     ///
-    /// @{
-    /* explicit(false) */ MONGOCXX_ABI_EXPORT_CDECL() uri(char const* v);
-
-    /* explicit(false) */ uri(bsoncxx::v1::stdx::string_view v) : uri{std::string{v}.c_str()} {}
-
-    /* explicit(false) */ uri(std::string v) : uri{v.c_str()} {}
-    /// @}
-    ///
+    /* explicit(false) */ MONGOCXX_ABI_EXPORT_CDECL() uri(bsoncxx::v1::stdx::string_view v);
 
     ///
     /// Return the "authMechanism" option.
