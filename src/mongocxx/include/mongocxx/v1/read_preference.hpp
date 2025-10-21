@@ -37,6 +37,7 @@ namespace v1 {
 /// Options related to a MongoDB Read Preference.
 ///
 /// Supported fields include:
+/// - `hedge`
 /// - `max_staleness` ("maxStalenessSeconds")
 /// - `mode`
 /// - `tags` ("tag_sets")
@@ -122,11 +123,24 @@ class read_preference {
     /// Default initialization.
     ///
     /// @par Postconditions:
-    /// - `this->mode() == k_primary`
-    /// - `this->tags().empty() == true`
-    /// - `this->max_staleness().has_value() == false`
+    /// - All supported fields are "unset" or zero-initialized.
     ///
     MONGOCXX_ABI_EXPORT_CDECL() read_preference();
+
+    ///
+    /// Set the "hedge" field.
+    ///
+    /// @deprecated Deprecated in MongoDB Server version 8.0.
+    ///
+    MONGOCXX_DEPRECATED MONGOCXX_ABI_EXPORT_CDECL(read_preference&) hedge(bsoncxx::v1::document::view v);
+
+    ///
+    /// Return the current "hedge" field.
+    ///
+    /// @deprecated Deprecated in MongoDB Server version 8.0.
+    ///
+    MONGOCXX_DEPRECATED MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view>) hedge()
+        const;
 
     ///
     /// Set the "mode" field.
