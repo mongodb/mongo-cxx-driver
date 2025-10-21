@@ -28,7 +28,6 @@
 #include <mongocxx/v1/config/export.hpp>
 
 #include <cstdint>
-#include <memory>
 #include <string>
 #include <vector>
 
@@ -51,7 +50,7 @@ namespace v1 {
 class data_key {
    private:
     class impl;
-    std::unique_ptr<impl> _impl;
+    void* _impl;
 
    public:
     ///

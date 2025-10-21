@@ -31,7 +31,6 @@
 #include <mongocxx/v1/config/export.hpp>
 
 #include <cstdint>
-#include <memory>
 #include <string>
 
 namespace mongocxx {
@@ -61,7 +60,7 @@ class encrypt {
 
    private:
     class impl;
-    std::unique_ptr<impl> _impl;
+    void* _impl;
 
    public:
     ///

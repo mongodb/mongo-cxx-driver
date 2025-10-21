@@ -26,7 +26,6 @@
 
 #include <cstddef>
 #include <iterator>
-#include <memory>
 
 namespace mongocxx {
 namespace v1 {
@@ -42,7 +41,7 @@ namespace v1 {
 class cursor {
    private:
     class impl;
-    std::unique_ptr<impl> _impl;
+    void* _impl;
 
    public:
     ///
@@ -140,8 +139,7 @@ class cursor {
 ///
 class cursor::iterator {
    private:
-    class impl;
-    std::unique_ptr<impl> _impl;
+    void* _impl; // v1::cursor
 
    public:
     ///

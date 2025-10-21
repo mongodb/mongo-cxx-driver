@@ -26,7 +26,6 @@
 
 #include <cstddef>
 #include <cstdint>
-#include <memory>
 #include <system_error>
 #include <type_traits>
 
@@ -45,7 +44,7 @@ namespace gridfs {
 class downloader {
    private:
     class impl;
-    std::unique_ptr<impl> _impl;
+    void* _impl;
 
    public:
     ///

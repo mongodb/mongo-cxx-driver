@@ -33,7 +33,6 @@
 #include <mongocxx/v1/config/export.hpp>
 
 #include <chrono>
-#include <memory>
 
 namespace mongocxx {
 namespace v1 {
@@ -60,7 +59,7 @@ namespace v1 {
 class find_one_and_delete_options {
    private:
     class impl;
-    std::unique_ptr<impl> _impl;
+    void* _impl;
 
    public:
     ///

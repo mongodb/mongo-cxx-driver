@@ -29,8 +29,6 @@
 
 #include <mongocxx/v1/config/export.hpp>
 
-#include <memory>
-
 namespace mongocxx {
 namespace v1 {
 
@@ -50,7 +48,7 @@ namespace v1 {
 class insert_one_options {
    private:
     class impl;
-    std::unique_ptr<impl> _impl;
+    void* _impl;
 
    public:
     ///

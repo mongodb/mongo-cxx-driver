@@ -34,7 +34,6 @@
 #include <cstddef>
 #include <cstdint>
 #include <iterator>
-#include <memory>
 #include <string>
 
 namespace mongocxx {
@@ -51,7 +50,7 @@ namespace v1 {
 class change_stream {
    private:
     class impl;
-    std::unique_ptr<impl> _impl;
+    void* _impl;
 
    public:
     class options;
@@ -136,7 +135,7 @@ class change_stream {
 class change_stream::options {
    private:
     class impl;
-    std::unique_ptr<impl> _impl;
+    void* _impl;
 
    public:
     ///
@@ -292,8 +291,7 @@ class change_stream::options {
 ///
 class change_stream::iterator {
    private:
-    class impl;
-    std::unique_ptr<impl> _impl;
+    void* _impl; // v1::change_stream
 
    public:
     ///

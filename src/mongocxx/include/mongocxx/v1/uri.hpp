@@ -40,7 +40,6 @@
 #include <mongocxx/v1/config/export.hpp>
 
 #include <cstdint>
-#include <memory>
 #include <string>
 #include <system_error>
 #include <vector>
@@ -95,8 +94,7 @@ namespace v1 {
 ///
 class uri {
    private:
-    class impl;
-    std::unique_ptr<impl> _impl;
+    void* _impl; // mongoc_uri_t
 
    public:
     ///

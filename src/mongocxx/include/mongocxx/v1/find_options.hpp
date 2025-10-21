@@ -34,7 +34,6 @@
 
 #include <chrono>
 #include <cstdint>
-#include <memory>
 #include <string>
 
 namespace mongocxx {
@@ -73,7 +72,7 @@ namespace v1 {
 class find_options {
    private:
     class impl;
-    std::unique_ptr<impl> _impl;
+    void* _impl;
 
    public:
     ///

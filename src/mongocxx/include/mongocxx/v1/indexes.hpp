@@ -33,7 +33,6 @@
 
 #include <chrono>
 #include <cstdint>
-#include <memory>
 #include <string>
 #include <system_error>
 #include <type_traits>
@@ -59,7 +58,7 @@ class indexes {
 
    private:
     class impl;
-    std::unique_ptr<impl> _impl;
+    void* _impl;
 
    public:
     ///
@@ -80,7 +79,7 @@ class indexes {
 
        private:
         class impl;
-        std::unique_ptr<impl> _impl;
+        void* _impl;
 
        public:
         ///
@@ -173,7 +172,7 @@ class indexes {
 
        private:
         class impl;
-        std::unique_ptr<impl> _impl;
+        void* _impl;
 
        public:
         ///

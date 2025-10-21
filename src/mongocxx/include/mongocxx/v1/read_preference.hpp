@@ -28,7 +28,6 @@
 #include <mongocxx/v1/config/export.hpp>
 
 #include <chrono>
-#include <memory>
 
 namespace mongocxx {
 namespace v1 {
@@ -49,8 +48,7 @@ namespace v1 {
 ///
 class read_preference {
    private:
-    class impl;
-    std::unique_ptr<impl> _impl;
+    void* _impl; // mongoc_read_prefs_t
 
    public:
     ///

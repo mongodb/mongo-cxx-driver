@@ -31,7 +31,6 @@
 #include <mongocxx/v1/aggregate_options.hpp>
 #include <mongocxx/v1/config/export.hpp>
 
-#include <memory>
 #include <string>
 #include <vector>
 
@@ -51,7 +50,7 @@ namespace v1 {
 class search_indexes {
    private:
     class impl;
-    std::unique_ptr<impl> _impl;
+    void* _impl;
 
    public:
     class model;
@@ -313,7 +312,7 @@ class search_indexes::model {
 
    private:
     class impl;
-    std::unique_ptr<impl> _impl;
+    void* _impl;
 
    public:
     ///

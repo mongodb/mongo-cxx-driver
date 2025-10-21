@@ -36,7 +36,6 @@
 
 #include <cstdint>
 #include <map>
-#include <memory>
 #include <utility>
 
 namespace mongocxx {
@@ -169,7 +168,7 @@ class bulk_write::insert_one {
 class bulk_write::update_one {
    private:
     class impl;
-    std::unique_ptr<impl> _impl;
+    void* _impl;
 
    public:
     ///
@@ -299,7 +298,7 @@ class bulk_write::update_one {
 class bulk_write::update_many {
    private:
     class impl;
-    std::unique_ptr<impl> _impl;
+    void* _impl;
 
    public:
     ///
@@ -418,7 +417,7 @@ class bulk_write::update_many {
 class bulk_write::replace_one {
    private:
     class impl;
-    std::unique_ptr<impl> _impl;
+    void* _impl;
 
    public:
     ///
@@ -531,7 +530,7 @@ class bulk_write::replace_one {
 class bulk_write::delete_one {
    private:
     class impl;
-    std::unique_ptr<impl> _impl;
+    void* _impl;
 
    public:
     ///
@@ -617,7 +616,7 @@ class bulk_write::delete_one {
 class bulk_write::delete_many {
    private:
     class impl;
-    std::unique_ptr<impl> _impl;
+    void* _impl;
 
    public:
     ///
@@ -699,7 +698,7 @@ class bulk_write::delete_many {
 class bulk_write::single {
    private:
     class impl;
-    std::unique_ptr<impl> _impl;
+    void* _impl;
 
    public:
     ///
@@ -845,7 +844,7 @@ class bulk_write::single {
 class bulk_write::options {
    private:
     class impl;
-    std::unique_ptr<impl> _impl;
+    void* _impl;
 
    public:
     ///
@@ -965,7 +964,7 @@ class bulk_write::options {
 class bulk_write::result {
    private:
     class impl;
-    std::unique_ptr<impl> _impl;
+    void* _impl;
 
    public:
     ///

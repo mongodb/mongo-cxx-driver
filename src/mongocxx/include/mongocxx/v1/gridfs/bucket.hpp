@@ -42,7 +42,6 @@
 #include <cstddef>
 #include <cstdint>
 #include <istream>
-#include <memory>
 #include <ostream>
 #include <string>
 #include <system_error>
@@ -62,7 +61,7 @@ namespace gridfs {
 class bucket {
    private:
     class impl;
-    std::unique_ptr<impl> _impl;
+    void* _impl;
 
    public:
     class options;
@@ -339,7 +338,7 @@ class bucket {
 class bucket::options {
    private:
     class impl;
-    std::unique_ptr<impl> _impl;
+    void* _impl;
 
    public:
     ///

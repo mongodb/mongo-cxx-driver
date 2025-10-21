@@ -28,7 +28,6 @@
 #include <mongocxx/v1/config/export.hpp>
 
 #include <cstdint>
-#include <memory>
 
 namespace mongocxx {
 namespace v1 {
@@ -44,7 +43,7 @@ namespace v1 {
 class replace_one_result {
    private:
     class impl;
-    std::unique_ptr<impl> _impl;
+    void* _impl;
 
    public:
     ///

@@ -27,7 +27,6 @@
 #include <mongocxx/v1/config/export.hpp>
 
 #include <cstdint>
-#include <memory>
 
 namespace mongocxx {
 namespace v1 {
@@ -43,7 +42,7 @@ namespace events {
 ///
 class server_opening {
    private:
-    void const* _impl; // mongoc_apm_server_opening_t const*
+    void const* _impl; // mongoc_apm_server_opening_t const
 
    public:
     ///

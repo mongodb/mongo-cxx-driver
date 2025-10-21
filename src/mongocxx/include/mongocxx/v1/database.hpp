@@ -40,7 +40,6 @@
 #include <mongocxx/v1/write_concern.hpp>
 
 #include <cstdint>
-#include <memory>
 
 namespace mongocxx {
 namespace v1 {
@@ -56,7 +55,7 @@ namespace v1 {
 class database {
    private:
     class impl;
-    std::unique_ptr<impl> _impl;
+    void* _impl;
 
    public:
     ///

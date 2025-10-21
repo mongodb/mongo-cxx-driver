@@ -29,7 +29,6 @@
 #include <mongocxx/v1/config/export.hpp>
 
 #include <cstddef>
-#include <memory>
 #include <string>
 #include <system_error>
 
@@ -51,7 +50,7 @@ namespace v1 {
 class pool {
    private:
     class impl;
-    std::unique_ptr<impl> _impl;
+    void* _impl;
 
    public:
     class options;
@@ -175,7 +174,7 @@ class pool {
 class pool::options {
    private:
     class impl;
-    std::unique_ptr<impl> _impl;
+    void* _impl;
 
    public:
     ///
@@ -236,7 +235,7 @@ class pool::options {
 class pool::entry {
    private:
     class impl;
-    std::unique_ptr<impl> _impl;
+    void* _impl;
 
    public:
     ///

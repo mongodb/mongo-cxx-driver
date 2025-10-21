@@ -29,7 +29,6 @@
 #include <mongocxx/v1/config/export.hpp>
 
 #include <cstdint>
-#include <memory>
 
 namespace mongocxx {
 namespace v1 {
@@ -45,7 +44,7 @@ namespace events {
 ///
 class command_started {
    private:
-    void const* _impl; // mongoc_apm_command_started_t const*
+    void const* _impl; // mongoc_apm_command_started_t const
 
    public:
     ///

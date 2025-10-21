@@ -30,7 +30,6 @@
 
 #include <mongocxx/v1/config/export.hpp>
 
-#include <memory>
 #include <string>
 #include <utility>
 
@@ -59,7 +58,7 @@ namespace v1 {
 class auto_encryption {
    private:
     class impl;
-    std::unique_ptr<impl> _impl;
+    void* _impl;
 
    public:
     ///

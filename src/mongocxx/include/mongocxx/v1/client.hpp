@@ -37,7 +37,6 @@
 #include <mongocxx/v1/client_session.hpp>
 #include <mongocxx/v1/config/export.hpp>
 
-#include <memory>
 #include <string>
 #include <vector>
 
@@ -58,7 +57,7 @@ namespace v1 {
 class client {
    private:
     class impl;
-    std::unique_ptr<impl> _impl;
+    void* _impl;
 
    public:
     class options;
@@ -274,7 +273,7 @@ class client {
 class client::options {
    private:
     class impl;
-    std::unique_ptr<impl> _impl;
+    void* _impl;
 
    public:
     ///

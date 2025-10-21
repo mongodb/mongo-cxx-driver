@@ -60,7 +60,6 @@
 #include <mongocxx/v1/update_one_options.hpp>
 
 #include <cstdint>
-#include <memory>
 #include <system_error>
 #include <utility>
 #include <vector>
@@ -79,7 +78,7 @@ namespace v1 {
 class collection {
    private:
     class impl;
-    std::unique_ptr<impl> _impl;
+    void* _impl;
 
     template <typename Container>
     using has_begin_expr = decltype((std::declval<Container const&>().begin()));

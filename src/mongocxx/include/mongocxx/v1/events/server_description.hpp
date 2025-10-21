@@ -28,7 +28,6 @@
 #include <mongocxx/v1/config/export.hpp>
 
 #include <cstdint>
-#include <memory>
 
 namespace mongocxx {
 namespace v1 {
@@ -44,8 +43,7 @@ namespace events {
 ///
 class server_description {
    private:
-    class impl;
-    std::unique_ptr<impl> _impl;
+    void* _impl; // mongoc_server_description_t
 
    public:
     ///

@@ -27,7 +27,6 @@
 
 #include <mongocxx/v1/config/export.hpp>
 
-#include <memory>
 #include <vector>
 
 namespace mongocxx {
@@ -44,7 +43,7 @@ namespace events {
 ///
 class topology_description {
    private:
-    void const* _impl; // mongoc_topology_description_t const*
+    void const* _impl; // mongoc_topology_description_t const
 
    public:
     ///

@@ -38,7 +38,6 @@
 #include <mongocxx/v1/config/export.hpp>
 
 #include <functional>
-#include <memory>
 
 namespace mongocxx {
 namespace v1 {
@@ -54,7 +53,7 @@ namespace v1 {
 class apm {
    private:
     class impl;
-    std::unique_ptr<impl> _impl;
+    void* _impl;
 
    public:
     ///

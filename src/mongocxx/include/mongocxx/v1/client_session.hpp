@@ -32,7 +32,6 @@
 
 #include <cstdint>
 #include <functional>
-#include <memory>
 
 namespace mongocxx {
 namespace v1 {
@@ -49,7 +48,7 @@ namespace v1 {
 class client_session {
    private:
     class impl;
-    std::unique_ptr<impl> _impl;
+    void* _impl;
 
    public:
     class options;
@@ -310,8 +309,7 @@ class client_session {
 ///
 class client_session::options {
    private:
-    class impl;
-    std::unique_ptr<impl> _impl;
+    void* _impl; // mongoc_session_opt_t
 
    public:
     ///

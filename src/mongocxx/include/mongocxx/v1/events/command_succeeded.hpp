@@ -44,7 +44,7 @@ namespace events {
 ///
 class command_succeeded {
    private:
-    void const* _impl; // mongoc_apm_command_succeeded_t const*
+    void const* _impl; // mongoc_apm_command_succeeded_t const
 
    public:
     ///

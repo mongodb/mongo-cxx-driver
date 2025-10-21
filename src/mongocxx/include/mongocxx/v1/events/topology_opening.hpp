@@ -26,8 +26,6 @@
 
 #include <mongocxx/v1/config/export.hpp>
 
-#include <memory>
-
 namespace mongocxx {
 namespace v1 {
 namespace events {
@@ -42,7 +40,7 @@ namespace events {
 ///
 class topology_opening {
    private:
-    void const* _impl; // mongoc_apm_topology_opening_t const*
+    void const* _impl; // mongoc_apm_topology_opening_t const
 
    public:
     ///

@@ -39,7 +39,7 @@ namespace v1 {
 class delete_one_result {
    private:
     class impl;
-    std::unique_ptr<impl> _impl;
+    void* _impl;
 
    public:
     ///

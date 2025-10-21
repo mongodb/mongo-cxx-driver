@@ -40,7 +40,6 @@
 
 #include <mongocxx/v1/config/export.hpp>
 
-#include <memory>
 #include <string>
 #include <utility>
 
@@ -62,8 +61,7 @@ namespace v1 {
 ///
 class client_encryption {
    private:
-    class impl;
-    std::unique_ptr<impl> _impl;
+    void* _impl; // mongoc_client_encryption_t
 
    public:
     class options;
@@ -290,7 +288,7 @@ class client_encryption {
 class client_encryption::options {
    private:
     class impl;
-    std::unique_ptr<impl> _impl;
+    void* _impl;
 
    public:
     ///
