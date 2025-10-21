@@ -22,6 +22,7 @@
 
 #include <bsoncxx/v1/document/view-fwd.hpp>
 
+#include <bsoncxx/v1/stdx/optional.hpp>
 #include <bsoncxx/v1/stdx/string_view.hpp>
 
 #include <mongocxx/v1/config/export.hpp>
@@ -90,7 +91,7 @@ class server_description {
     ///
     /// Return the client-measured execution time of the "hello" command.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(std::int64_t) round_trip_time() const;
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<std::int64_t>) round_trip_time() const;
 
     ///
     /// Return the topology type.
