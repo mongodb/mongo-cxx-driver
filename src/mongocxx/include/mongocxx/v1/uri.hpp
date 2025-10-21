@@ -166,12 +166,12 @@ class uri {
     ///
     /// Return the "authMechanism" option.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(std::string) auth_mechanism() const;
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::string_view) auth_mechanism() const;
 
     ///
     /// Return the "authSource" option.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(std::string) auth_source() const;
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::string_view) auth_source() const;
 
     ///
     /// Return the host(s) identifiers specified by the connection string.
@@ -183,7 +183,7 @@ class uri {
     ///
     /// @returns Empty when no database name was specified.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(std::string) database() const;
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::string_view) database() const;
 
     ///
     /// Return all URI options that were specified by the connection string.
@@ -193,7 +193,7 @@ class uri {
     ///
     /// Return the password specified by the connection string.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(std::string) password() const;
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::string_view) password() const;
 
     ///
     /// Return the "readConcern" option.
@@ -208,7 +208,7 @@ class uri {
     ///
     /// Return the "replicaSet" option.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(std::string) replica_set() const;
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::string_view) replica_set() const;
 
     ///
     /// Return the "tls" option.
@@ -223,7 +223,7 @@ class uri {
     ///
     /// Return the username specified by the connection string.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(std::string) username() const;
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::string_view) username() const;
 
     ///
     /// Return the "writeConcern" option.
