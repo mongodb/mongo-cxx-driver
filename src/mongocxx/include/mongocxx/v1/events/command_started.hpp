@@ -69,7 +69,7 @@ class command_started {
     MONGOCXX_ABI_EXPORT_CDECL(std::int64_t) request_id() const;
 
     ///
-    /// Return the cklient-generated operation ID.
+    /// Return the client-generated operation ID.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(std::int64_t) operation_id() const;
 
