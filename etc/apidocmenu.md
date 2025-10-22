@@ -1,6 +1,6 @@
 # MongoDB C++ Driver
 
-## Driver Documentation By Version
+<h1>Driver Documentation By Version</h1>
 
 [4.1.4](../mongocxx-4.1.4) |
 [4.1.3](../mongocxx-4.1.3) |
@@ -47,7 +47,7 @@
 [3.0.1](../mongocxx-3.0.1/) |
 [3.0.0](../mongocxx-3.0.0/)
 
-## Driver Development Status
+<h1>Driver Development Status</h1>
 
 > [!IMPORTANT]
 > Relevant bug fixes will be backported from the current major version to the previous major version for a period of one year after the new major version is released.
@@ -64,22 +64,22 @@
 | ...         | ...             | ...                         | ...                |
 | 3.0.0       | None            | Ready for Use               | Not Supported      |
 
-## MongoDB Server Compatibility
+<h1>MongoDB Server Compatibility</h1>
 
 MongoDB server version compatibility per driver version is documented in the [MongoDB Manual](https://www.mongodb.com/docs/languages/cpp/cpp-driver/current/compatibility/).
 
-## Resources
+<h1>Resources</h1>
 
 * [MongoDB C++ Driver Quickstart](https://www.mongodb.com/docs/languages/cpp/cpp-driver/current/tutorial/)
 * [MongoDB C++ Driver Manual](https://www.mongodb.com/docs/languages/cpp/cpp-driver/current/)
 * [MongoDB C++ Driver Source Code on GitHub](https://github.com/mongodb/mongo-cxx-driver)
 * [MongoDB Database Manual](https://www.mongodb.com/docs/manual/)
 
-## Bugs and issues
+<h1>Bugs and issues</h1>
 
 See our [JIRA project](https://jira.mongodb.com/browse/CXX).
 
-## License
+<h1>License</h1>
 
 The source files in this repository are made available under the terms of
 the Apache License, version 2.0.
