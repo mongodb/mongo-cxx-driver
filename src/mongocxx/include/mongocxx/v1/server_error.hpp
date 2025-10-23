@@ -33,6 +33,10 @@
 namespace mongocxx {
 namespace v1 {
 
+BSONCXX_PRIVATE_WARNINGS_PUSH();
+BSONCXX_PRIVATE_WARNINGS_DISABLE(MSVC(4251));
+BSONCXX_PRIVATE_WARNINGS_DISABLE(MSVC(4275));
+
 ///
 /// A MongoDB server error.
 ///
@@ -108,6 +112,8 @@ class server_error : public v1::exception {
    private:
     MONGOCXX_ABI_NO_EXPORT void key_function() const override;
 };
+
+BSONCXX_PRIVATE_WARNINGS_POP();
 
 } // namespace v1
 } // namespace mongocxx
