@@ -53,7 +53,7 @@ class server_error : public v1::exception {
     ///
     /// @warning Invalidates all associated views.
     ///
-    ~server_error() override;
+    ~server_error() override = default;
 
     ///
     /// Move constructor.
@@ -104,6 +104,9 @@ class server_error : public v1::exception {
     /// @important The set of error labels may vary depending on the operation and error.
     ///
     bool MONGOCXX_ABI_CDECL has_error_label(bsoncxx::v1::stdx::string_view label) const;
+
+   private:
+    MONGOCXX_ABI_NO_EXPORT void key_function() const override;
 };
 
 } // namespace v1
