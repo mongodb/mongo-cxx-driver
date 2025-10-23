@@ -22,6 +22,7 @@
 
 #include <bsoncxx/v1/document/view-fwd.hpp>
 
+#include <bsoncxx/v1/detail/macros.hpp>
 #include <bsoncxx/v1/stdx/string_view.hpp>
 
 #include <mongocxx/v1/config/export.hpp>
