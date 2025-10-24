@@ -14,6 +14,7 @@ set -o pipefail
 : "${MONGOCXX_TEST_TOPOLOGY:?}"
 : "${UV_INSTALL_DIR:?}"
 
+: "${ASAN_SYMBOLIZER_PATH:-}"
 : "${CRYPT_SHARED_LIB_PATH:-}"
 : "${disable_slow_tests:-}"
 : "${example_projects_cc:-}"
