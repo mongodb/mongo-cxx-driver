@@ -428,9 +428,9 @@ tasks:
           BUILD_SHARED_AND_STATIC_LIBS: "ON"
           REQUIRED_CXX_STANDARD: 17
           build_type: Debug
-  - name: compile-only-rhel76-gcc-cxx11-debug
-    run_on: rhel76-large
-    tags: [compile-only, rhel76, cxx11, gcc, debug]
+  - name: compile-only-rhel7.9-gcc-cxx11-debug
+    run_on: rhel7.9-large
+    tags: [compile-only, rhel7.9, cxx11, gcc, debug]
     commands:
       - command: expansions.update
         params:
@@ -448,9 +448,9 @@ tasks:
           build_type: Debug
           cc_compiler: gcc
           cxx_compiler: g++
-  - name: compile-only-rhel76-gcc-cxx14-debug
-    run_on: rhel76-large
-    tags: [compile-only, rhel76, cxx14, gcc, debug]
+  - name: compile-only-rhel7.9-gcc-cxx14-debug
+    run_on: rhel7.9-large
+    tags: [compile-only, rhel7.9, cxx14, gcc, debug]
     commands:
       - command: expansions.update
         params:

@@ -148,14 +148,15 @@ functions:
         binary: bash
         working_dir: mongo-cxx-driver
         include_expansions_in_env:
-          - project_id
-          - version_id
           - build_variant
-          - task_name
-          - task_id
           - execution
+          - parsed_order_id
+          - project_id
           - requester
           - revision_order_id
+          - task_id
+          - task_name
+          - version_id
         args:
           - -c
           - .evergreen/scripts/send-perf-data.sh
@@ -506,7 +507,7 @@ functions:
       type: setup
       params:
         updates:
-          - { key: mongoc_version_minimum, value: 2.0.2 }
+          - { key: mongoc_version_minimum, value: 2.0.0 }
     - command: subprocess.exec
       type: setup
       params:
