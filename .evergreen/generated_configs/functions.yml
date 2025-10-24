@@ -280,10 +280,10 @@ functions:
         binary: bash
         working_dir: mongo-cxx-driver
         include_expansions_in_env:
-          - CMAKE_MAJOR_VERSION
-          - CMAKE_MINOR_VERSION
-          - CMAKE_PATCH_VERSION
+          - CMAKE_VERSION
+          - distro_id
           - INSTALL_C_DRIVER
+          - UV_INSTALL_DIR
         args:
           - -c
           - .evergreen/scripts/cmake-compat.sh
@@ -292,10 +292,10 @@ functions:
       params:
         binary: bash
         include_expansions_in_env:
-          - CMAKE_MAJOR_VERSION
-          - CMAKE_MINOR_VERSION
-          - CMAKE_PATCH_VERSION
+          - CMAKE_VERSION
+          - distro_id
           - INSTALL_C_DRIVER
+          - UV_INSTALL_DIR
         args:
           - -c
           - mongo-cxx-driver/.evergreen/scripts/cmake-compat-check.sh
@@ -414,20 +414,31 @@ functions:
             set -o errexit
             set -o pipefail
 
+            version="0.8.6"
+
             if [[ ! -n "${MONGO_CXX_DRIVER_CACHE_DIR}" ]]; then
                 echo "MONGO_CXX_DRIVER_CACHE_DIR is not defined!" 1>&2
                 exit 1
             fi
 
-            uv_install_dir="${MONGO_CXX_DRIVER_CACHE_DIR}/uv-0.5.14"
+            uv_install_dir="${MONGO_CXX_DRIVER_CACHE_DIR}/uv-$version"
             mkdir -p "$uv_install_dir"
 
-            if ! command -v "$uv_install_dir/uv" 2>/dev/null; then
+            # Install if the binary is missing or the incorrect version.
+            if ! (command -v "$uv_install_dir/uv" >/dev/null && "$uv_install_dir/uv" --version 2>/dev/null | grep "$version"); then
+                script="$(mktemp)"
+                cp -f mongo-cxx-driver/.evergreen/scripts/uv-installer.sh "$script"
+                chmod +x "$script"
+                # Always patch the install script so it validates checksums.
+                (
+                  . mongo-cxx-driver/.evergreen/scripts/patch-uv-installer.sh
+                  patch_uv_installer "$script" "$version"
+                )
                 env \
                     UV_INSTALL_DIR="$uv_install_dir" \
                     UV_UNMANAGED_INSTALL=1 \
                     INSTALLER_PRINT_VERBOSE=1 \
-                    mongo-cxx-driver/.evergreen/scripts/uv-installer.sh
+                    "$script"
             fi
 
             PATH="$uv_install_dir:$PATH" command -V uv
@@ -465,7 +476,8 @@ functions:
         DRYRUN: "1"
       args:
         - -c
-        - ${UV_INSTALL_DIR}/uv run --frozen etc/clang-format-all.sh
+        - |
+          PATH="${UV_INSTALL_DIR}:$PATH" uv run --frozen etc/clang-format-all.sh
   run scan build:
     - command: subprocess.exec
       type: test
@@ -557,38 +569,9 @@ functions:
       params:
         file: expansions.set-cache-dir.yml
   setup:
-    - command: subprocess.exec
-      type: setup
-      params:
-        binary: bash
-        args:
-          - -c
-          - |
-            set -o errexit
-            set -o pipefail
-            rm -rf "mongo-cxx-driver"
-            rm -fr "mongo-c-driver"
-            rm -fr mongod
-            rm -fr drivers-evergreen-tools
-    - command: git.get_project
-      params:
-        directory: mongo-cxx-driver
-    - command: subprocess.exec
-      type: setup
-      params:
-        binary: bash
-        args:
-          - -c
-          - |
-            set -o errexit
-            set -o pipefail
-            cc --version || true
-            c++ --version || true
-            gcc --version || true
-            g++ --version || true
-            clang --version || true
-            cmake --version || true
-            openssl version || true
+    command: git.get_project
+    params:
+      directory: mongo-cxx-driver
   start_mongod:
     - command: subprocess.exec
       type: setup
@@ -657,6 +640,7 @@ functions:
         - TEST_WITH_VALGRIND
         - use_mongocryptd
         - USE_STATIC_LIBS
+        - UV_INSTALL_DIR
         - VALGRIND_INSTALL_DIR
       args:
         - -c
@@ -735,14 +719,36 @@ functions:
     params:
       binary: bash
       working_dir: mongo-cxx-driver
-      include_expansions_in_env:
-        - distro_id
       args:
         - -c
         - |
+          set -o errexit
+          set -o pipefail
+
+          PATH="${UV_INSTALL_DIR}:$PATH"
+
+          # lib vs. lib64 (i.e. RHEL).
+          if [[ "${distro_id}" == rhel* ]]; then
+              LIB_DIR="lib64"
+          else
+              LIB_DIR="lib"
+          fi
+
+          touch "build/install/$LIB_DIR/canary.txt"
+
+          ls -l "build/install/share/mongo-cxx-driver"
+
           case "$OSTYPE" in
-          darwin*|linux*) .evergreen/scripts/uninstall_check.sh ;;
-          cygwin) cmd.exe /c ".evergreen\\scripts\\uninstall_check_windows.cmd" ;;
+          darwin*|linux*)
+              # Ninja generator.
+              uvx cmake --build build --target uninstall
+              env LIB_DIR="$LIB_DIR" .evergreen/scripts/uninstall_check.sh
+              ;;
+          cygwin)
+              # Visual Studio generator.
+              uvx cmake --build build --config Debug --target uninstall
+              cmd.exe /c ".evergreen\\scripts\\uninstall_check_windows.cmd"
+              ;;
           esac
   upload augmented sbom:
     - command: s3.put

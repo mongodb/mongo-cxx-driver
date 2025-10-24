@@ -11,8 +11,8 @@ set -o pipefail
 : "${cse_azure_tenant_id:?}"
 : "${cse_gcp_email:?}"
 : "${cse_gcp_privatekey:?}"
-: "${distro_id:?}" # Required by find-cmake-latest.sh.
 : "${MONGOCXX_TEST_TOPOLOGY:?}"
+: "${UV_INSTALL_DIR:?}"
 
 : "${CRYPT_SHARED_LIB_PATH:-}"
 : "${disable_slow_tests:-}"
@@ -100,11 +100,8 @@ fi
 export DRIVERS_TOOLS
 popd # "${working_dir:?}/../drivers-evergreen-tools"
 
-# shellcheck source=/dev/null
-. "${mongoc_dir:?}/.evergreen/scripts/find-cmake-latest.sh"
-export cmake_binary
-cmake_binary="$(find_cmake_latest)"
-command -v "${cmake_binary:?}"
+. .evergreen/scripts/install-build-tools.sh
+install_build_tools
 
 # Use ccache if available.
 if [[ -f "${mongoc_dir:?}/.evergreen/scripts/find-ccache.sh" ]]; then
@@ -238,10 +235,10 @@ fi
 pushd "${working_dir:?}/build"
 
 if [[ "${OSTYPE:?}" =~ cygwin ]]; then
-  CTEST_OUTPUT_ON_FAILURE=1 "${cmake_binary:?}" --build . --config "${build_type:?}" --target RUN_TESTS -- /verbosity:minimal
+  CTEST_OUTPUT_ON_FAILURE=1 cmake --build . --config "${build_type:?}" --target RUN_TESTS -- /verbosity:minimal
 
   echo "Building examples..."
-  "${cmake_binary:?}" --build . --config "${build_type:?}" --target examples/examples
+  cmake --build . --config "${build_type:?}" --target examples/examples
   echo "Building examples... done."
 
   # Only run examples if MONGODB_API_VERSION is unset. We do not append
@@ -249,7 +246,7 @@ if [[ "${OSTYPE:?}" =~ cygwin ]]; then
   # is true.
   if [[ -z "$MONGODB_API_VERSION" ]]; then
     echo "Running examples..."
-    if ! "${cmake_binary:?}" --build . --config "${build_type:?}" --target examples/run-examples --parallel 1 -- /verbosity:minimal >|output.txt 2>&1; then
+    if ! cmake --build . --config "${build_type:?}" --target examples/run-examples --parallel 1 -- /verbosity:minimal >|output.txt 2>&1; then
       # Only emit output on failure.
       cat output.txt
       exit 1
@@ -285,7 +282,6 @@ else
   if [[ "${TEST_WITH_ASAN:-}" == "ON" || "${TEST_WITH_UBSAN:-}" == "ON" ]]; then
     export ASAN_OPTIONS="detect_leaks=1"
     export UBSAN_OPTIONS="print_stacktrace=1"
-    export PATH="/opt/mongodbtoolchain/v4/bin:${PATH:-}" # llvm-symbolizer
   elif [[ "${TEST_WITH_VALGRIND:-}" == "ON" ]]; then
     command -V valgrind
     valgrind --version
@@ -318,7 +314,7 @@ else
     export OBJC_DISABLE_INITIALIZE_FORK_SAFETY=YES
 
     echo "Running examples..."
-    if ! "${cmake_binary:?}" --build . --target run-examples --parallel 1 >|output.txt 2>&1; then
+    if ! cmake --build . --target run-examples --parallel 1 >|output.txt 2>&1; then
       # Only emit output on failure.
       cat output.txt
       exit 1
@@ -338,7 +334,7 @@ PKG_CONFIG_PATH+=":${working_dir:?}/build/install/${LIB_DIR:?}/pkgconfig"
 export PKG_CONFIG_PATH
 
 # Environment variables used by example projects.
-export CMAKE_GENERATOR="${generator:-}"
+export CMAKE_GENERATOR="${generator:-"Ninja"}"
 export CMAKE_GENERATOR_PLATFORM="${platform:-}"
 export BUILD_TYPE="${build_type:?}"
 export CXXFLAGS="${example_projects_cxxflags:-}"
@@ -346,6 +342,7 @@ export LDFLAGS="${example_projects_ldflags:-}"
 export CC="${example_projects_cc:-"cc"}"
 export CXX="${example_projects_cxx:-"c++"}"
 export CXX_STANDARD="${example_projects_cxx_standard:-11}"
+export ninja_binary
 
 if [[ "$OSTYPE" =~ cygwin ]]; then
   export MSVC=1

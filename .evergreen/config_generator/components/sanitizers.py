@@ -61,8 +61,8 @@ def tasks():
             test_vars = {
                 'TEST_WITH_CSFLE': 'ON',
                 'MONGOCXX_TEST_TOPOLOGY': topology,
-                'example_projects_cc': 'clang',
-                'example_projects_cxx': 'clang++',
+                'example_projects_cc': cc_compiler,
+                'example_projects_cxx': cxx_compiler,
             }
 
             if link_type == 'static':
@@ -96,8 +96,8 @@ def tasks():
             commands += [
                 Setup.call(),
                 StartMongod.call(mongodb_version=mongodb_version, topology=topology),
-                InstallCDriver.call(),
                 InstallUV.call(),
+                InstallCDriver.call(),
                 Compile.call(vars=compile_vars),
                 FetchDET.call(),
                 RunKMSServers.call(),
