@@ -14537,6 +14537,7 @@ tasks:
       - func: run_kms_servers
       - func: test
         vars:
+          ASAN_SYMBOLIZER_PATH: /opt/mongodbtoolchain/v4/bin/llvm-symbolizer
           MONGOCXX_TEST_TOPOLOGY: replica
           TEST_WITH_ASAN: "ON"
           TEST_WITH_CSFLE: "ON"
@@ -14570,6 +14571,7 @@ tasks:
       - func: run_kms_servers
       - func: test
         vars:
+          ASAN_SYMBOLIZER_PATH: /opt/mongodbtoolchain/v4/bin/llvm-symbolizer
           MONGOCXX_TEST_TOPOLOGY: sharded
           TEST_WITH_ASAN: "ON"
           TEST_WITH_CSFLE: "ON"
@@ -14602,6 +14604,7 @@ tasks:
       - func: run_kms_servers
       - func: test
         vars:
+          ASAN_SYMBOLIZER_PATH: /opt/mongodbtoolchain/v4/bin/llvm-symbolizer
           MONGOCXX_TEST_TOPOLOGY: single
           TEST_WITH_ASAN: "ON"
           TEST_WITH_CSFLE: "ON"
@@ -14635,6 +14638,7 @@ tasks:
       - func: run_kms_servers
       - func: test
         vars:
+          ASAN_SYMBOLIZER_PATH: /opt/mongodbtoolchain/v4/bin/llvm-symbolizer
           MONGOCXX_TEST_TOPOLOGY: replica
           TEST_WITH_ASAN: "ON"
           TEST_WITH_CSFLE: "ON"
@@ -14668,6 +14672,7 @@ tasks:
       - func: run_kms_servers
       - func: test
         vars:
+          ASAN_SYMBOLIZER_PATH: /opt/mongodbtoolchain/v4/bin/llvm-symbolizer
           MONGOCXX_TEST_TOPOLOGY: sharded
           TEST_WITH_ASAN: "ON"
           TEST_WITH_CSFLE: "ON"
@@ -14700,6 +14705,7 @@ tasks:
       - func: run_kms_servers
       - func: test
         vars:
+          ASAN_SYMBOLIZER_PATH: /opt/mongodbtoolchain/v4/bin/llvm-symbolizer
           MONGOCXX_TEST_TOPOLOGY: single
           TEST_WITH_ASAN: "ON"
           TEST_WITH_CSFLE: "ON"
@@ -14733,6 +14739,7 @@ tasks:
       - func: run_kms_servers
       - func: test
         vars:
+          ASAN_SYMBOLIZER_PATH: /opt/mongodbtoolchain/v4/bin/llvm-symbolizer
           MONGOCXX_TEST_TOPOLOGY: replica
           TEST_WITH_ASAN: "ON"
           TEST_WITH_CSFLE: "ON"
@@ -14766,6 +14773,7 @@ tasks:
       - func: run_kms_servers
       - func: test
         vars:
+          ASAN_SYMBOLIZER_PATH: /opt/mongodbtoolchain/v4/bin/llvm-symbolizer
           MONGOCXX_TEST_TOPOLOGY: sharded
           TEST_WITH_ASAN: "ON"
           TEST_WITH_CSFLE: "ON"
@@ -14798,6 +14806,7 @@ tasks:
       - func: run_kms_servers
       - func: test
         vars:
+          ASAN_SYMBOLIZER_PATH: /opt/mongodbtoolchain/v4/bin/llvm-symbolizer
           MONGOCXX_TEST_TOPOLOGY: single
           TEST_WITH_ASAN: "ON"
           TEST_WITH_CSFLE: "ON"
@@ -14831,6 +14840,7 @@ tasks:
       - func: run_kms_servers
       - func: test
         vars:
+          ASAN_SYMBOLIZER_PATH: /opt/mongodbtoolchain/v4/bin/llvm-symbolizer
           MONGOCXX_TEST_TOPOLOGY: replica
           TEST_WITH_CSFLE: "ON"
           TEST_WITH_UBSAN: "ON"
@@ -14864,6 +14874,7 @@ tasks:
       - func: run_kms_servers
       - func: test
         vars:
+          ASAN_SYMBOLIZER_PATH: /opt/mongodbtoolchain/v4/bin/llvm-symbolizer
           MONGOCXX_TEST_TOPOLOGY: sharded
           TEST_WITH_CSFLE: "ON"
           TEST_WITH_UBSAN: "ON"
@@ -14896,6 +14907,7 @@ tasks:
       - func: run_kms_servers
       - func: test
         vars:
+          ASAN_SYMBOLIZER_PATH: /opt/mongodbtoolchain/v4/bin/llvm-symbolizer
           MONGOCXX_TEST_TOPOLOGY: single
           TEST_WITH_CSFLE: "ON"
           TEST_WITH_UBSAN: "ON"
@@ -14929,6 +14941,7 @@ tasks:
       - func: run_kms_servers
       - func: test
         vars:
+          ASAN_SYMBOLIZER_PATH: /opt/mongodbtoolchain/v4/bin/llvm-symbolizer
           MONGOCXX_TEST_TOPOLOGY: replica
           TEST_WITH_CSFLE: "ON"
           TEST_WITH_UBSAN: "ON"
@@ -14962,6 +14975,7 @@ tasks:
       - func: run_kms_servers
       - func: test
         vars:
+          ASAN_SYMBOLIZER_PATH: /opt/mongodbtoolchain/v4/bin/llvm-symbolizer
           MONGOCXX_TEST_TOPOLOGY: sharded
           TEST_WITH_CSFLE: "ON"
           TEST_WITH_UBSAN: "ON"
@@ -14994,6 +15008,7 @@ tasks:
       - func: run_kms_servers
       - func: test
         vars:
+          ASAN_SYMBOLIZER_PATH: /opt/mongodbtoolchain/v4/bin/llvm-symbolizer
           MONGOCXX_TEST_TOPOLOGY: single
           TEST_WITH_CSFLE: "ON"
           TEST_WITH_UBSAN: "ON"
@@ -15027,6 +15042,7 @@ tasks:
       - func: run_kms_servers
       - func: test
         vars:
+          ASAN_SYMBOLIZER_PATH: /opt/mongodbtoolchain/v4/bin/llvm-symbolizer
           MONGOCXX_TEST_TOPOLOGY: replica
           TEST_WITH_CSFLE: "ON"
           TEST_WITH_UBSAN: "ON"
@@ -15060,6 +15076,7 @@ tasks:
       - func: run_kms_servers
       - func: test
         vars:
+          ASAN_SYMBOLIZER_PATH: /opt/mongodbtoolchain/v4/bin/llvm-symbolizer
           MONGOCXX_TEST_TOPOLOGY: sharded
           TEST_WITH_CSFLE: "ON"
           TEST_WITH_UBSAN: "ON"
@@ -15092,6 +15109,7 @@ tasks:
       - func: run_kms_servers
       - func: test
         vars:
+          ASAN_SYMBOLIZER_PATH: /opt/mongodbtoolchain/v4/bin/llvm-symbolizer
           MONGOCXX_TEST_TOPOLOGY: single
           TEST_WITH_CSFLE: "ON"
           TEST_WITH_UBSAN: "ON"
