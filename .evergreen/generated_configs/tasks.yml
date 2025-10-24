@@ -337,6 +337,25 @@ tasks:
           build_type: Debug
           cc_compiler: gcc
           cxx_compiler: g++
+  - name: compile-only-debian12-latest-gcc-cxx23-debug
+    run_on: debian12-latest-large
+    tags: [compile-only, debian12-latest, cxx23, gcc, debug]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+            - { key: cc_compiler, value: gcc }
+            - { key: cxx_compiler, value: g++ }
+      - func: setup
+      - func: install_c_driver
+      - func: compile
+        vars:
+          BUILD_SHARED_AND_STATIC_LIBS: "ON"
+          REQUIRED_CXX_STANDARD: 23
+          build_type: Debug
+          cc_compiler: gcc
+          cxx_compiler: g++
   - name: compile-only-macos-14-arm64-cxx11-debug
     run_on: macos-14-arm64
     tags: [compile-only, macos-14-arm64, cxx11, debug]
@@ -1769,6 +1788,25 @@ tasks:
         vars:
           BUILD_SHARED_AND_STATIC_LIBS: "ON"
           REQUIRED_CXX_STANDARD: 20
+          build_type: Debug
+          cc_compiler: gcc-13
+          cxx_compiler: g++-13
+  - name: compile-only-ubuntu2404-gcc-13-cxx23-debug
+    run_on: ubuntu2404-large
+    tags: [compile-only, ubuntu2404, cxx23, gcc-13, debug]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+            - { key: cc_compiler, value: gcc-13 }
+            - { key: cxx_compiler, value: g++-13 }
+      - func: setup
+      - func: install_c_driver
+      - func: compile
+        vars:
+          BUILD_SHARED_AND_STATIC_LIBS: "ON"
+          REQUIRED_CXX_STANDARD: 23
           build_type: Debug
           cc_compiler: gcc-13
           cxx_compiler: g++-13

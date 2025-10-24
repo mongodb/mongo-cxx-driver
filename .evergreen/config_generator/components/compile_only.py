@@ -35,8 +35,8 @@ MATRIX = [
     ('rhel92',          'gcc',    [11, 17, 20, 23]), # GCC 11.3 (max: C++23)
     ('rhel94',          'gcc',    [11, 17, 20, 23]), # GCC 11.4 (max: C++23)
     ('rhel95',          'gcc',    [11, 17, 20, 23]), # GCC 11.5 (max: C++23)
-    ('debian12-latest', 'gcc',    [11, 17, 20,   ]), # GCC 12.2 (max: C++23)
-    ('ubuntu2404',      'gcc-13', [11, 17, 20,   ]), # GCC 13.3 (max: C++23)
+    ('debian12-latest', 'gcc',    [11, 17, 20, 23]), # GCC 12.2 (max: C++23)
+    ('ubuntu2404',      'gcc-13', [11, 17, 20, 23]), # GCC 13.3 (max: C++23)
 
     ('windows-vsCurrent', 'vs2015x64', [11, 14,             'latest']), # Max: C++14
     ('windows-vsCurrent', 'vs2017x64', [11, 14, 17, 20,     'latest']), # Max: C++20
