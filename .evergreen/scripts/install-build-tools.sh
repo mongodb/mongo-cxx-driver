@@ -4,7 +4,7 @@ export_uv_tool_dirs() {
   UV_TOOL_DIR="$(pwd)/uv-tool" || return
   UV_TOOL_BIN_DIR="$(pwd)/uv-bin" || return
 
-  PATH="${UV_TOOL_BIN_DIR:?}:${UV_INSTALL_DIR:?}:${PATH:-}"
+  PATH="${UV_TOOL_BIN_DIR:?}:${PATH:-}"
 
   # Windows requires "C:\path\to\dir" instead of "/cygdrive/c/path/to/dir" (PATH is automatically converted).
   if [[ "${OSTYPE:?}" == cygwin ]]; then

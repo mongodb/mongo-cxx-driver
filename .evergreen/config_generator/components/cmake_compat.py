@@ -1,6 +1,5 @@
 from config_generator.components.funcs.fetch_c_driver_source import FetchCDriverSource
 from config_generator.components.funcs.install_c_driver import InstallCDriver
-from config_generator.components.funcs.install_uv import InstallUV
 from config_generator.components.funcs.setup import Setup
 
 from config_generator.etc.distros import find_small_distro
@@ -34,7 +33,6 @@ class CMakeCompat(Function):
                 'CMAKE_VERSION',
                 'distro_id',
                 'INSTALL_C_DRIVER',
-                'UV_INSTALL_DIR',
             ],
             script='.evergreen/scripts/cmake-compat.sh',
         ),
@@ -44,7 +42,6 @@ class CMakeCompat(Function):
                 'CMAKE_VERSION',
                 'distro_id',
                 'INSTALL_C_DRIVER',
-                'UV_INSTALL_DIR',
             ],
             script='mongo-cxx-driver/.evergreen/scripts/cmake-compat-check.sh',
         ),
@@ -66,7 +63,6 @@ def tasks():
         for install_c_driver in install_c_driver_modes:
             commands = [
                 Setup.call(),
-                InstallUV.call(),
                 (InstallCDriver.call() if install_c_driver else FetchCDriverSource.call()),
                 CMakeCompat.call(
                     vars={

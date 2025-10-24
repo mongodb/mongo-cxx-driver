@@ -1,7 +1,6 @@
 from config_generator.components.funcs.compile import Compile
 from config_generator.components.funcs.fetch_det import FetchDET
 from config_generator.components.funcs.install_c_driver import InstallCDriver
-from config_generator.components.funcs.install_uv import InstallUV
 from config_generator.components.funcs.setup import Setup
 
 from config_generator.etc.distros import find_large_distro
@@ -55,7 +54,6 @@ def tasks():
             tags=[TAG, distro_name],
             run_on=distro.name,
             commands=[
-                InstallUV.call(),
                 InstallCDriver.call(),
                 Compile.call(build_type='Debug', vars={'ENABLE_TESTS': 'ON'}),
                 TestSearchIndexHelpers.call(),
