@@ -47,8 +47,7 @@ def ls_distro(name, **kwargs):
 
 
 DEBIAN_DISTROS = [
-    *ls_distro(name='debian11', os='debian', os_type='linux', os_ver='11'),
-    *ls_distro(name='debian12', os='debian', os_type='linux', os_ver='12'),
+    *ls_distro(name='debian11-latest', os='debian', os_type='linux', os_ver='11'),
     *ls_distro(name='debian12-latest', os='debian', os_type='linux', os_ver='latest'),
 ]
 
