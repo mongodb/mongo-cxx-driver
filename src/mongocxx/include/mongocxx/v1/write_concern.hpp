@@ -89,7 +89,7 @@ class write_concern {
         ///
         /// An unknown (unsupported) write concern level.
         ///
-        /// @note Not to be confused with @ref k_default.
+        /// @note Not to be confused with @ref level::k_default.
         ///
         k_unknown,
     };
@@ -148,12 +148,12 @@ class write_concern {
     /// Return the current "w" field as an acknowledgement level.
     ///
     /// @returns
-    /// - @ref k_default when "w" is unset.
-    /// - @ref k_majority when `"w": "majority"`.
-    /// - @ref k_tag when `"w": <custom write concern name>`.
-    /// - @ref k_unacknowledged when `"w": 0`.
-    /// - @ref k_acknowledged when `"w": n` and `n >= 1`.
-    /// - @ref k_unknown for all other (unsupported) values.
+    /// - @ref level::k_default when "w" is unset.
+    /// - @ref level::k_majority when `"w": "majority"`.
+    /// - @ref level::k_tag when `"w": <custom write concern name>`.
+    /// - @ref level::k_unacknowledged when `"w": 0`.
+    /// - @ref level::k_acknowledged when `"w": n` and `n >= 1`.
+    /// - @ref level::k_unknown for all other (unsupported) values.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(level) acknowledge_level() const;
 
@@ -197,7 +197,8 @@ class write_concern {
     ///
     /// Return the current "w" field as an integer.
     ///
-    /// @returns Empty when `this->acknowledge_level()` is not @ref k_unacknowledged or @ref k_acknowledged.
+    /// @returns Empty when `this->acknowledge_level()` is not @ref level::k_unacknowledged or @ref
+    /// level::k_acknowledged.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<std::int32_t>) nodes() const;
 
@@ -209,7 +210,7 @@ class write_concern {
     ///
     /// Return the current "w" value as a custom write concern name.
     ///
-    /// @returns Empty when `this->acknowledge_level()` is not @ref k_tag.
+    /// @returns Empty when `this->acknowledge_level()` is not @ref level::k_tag.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::stdx::string_view>) tag() const;
 

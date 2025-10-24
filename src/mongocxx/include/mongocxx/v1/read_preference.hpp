@@ -144,12 +144,12 @@ class read_preference {
     /// Set the "mode" field.
     ///
     /// @param v One of:
-    /// - @ref k_primary
-    /// - @ref k_primary_preferred
-    /// - @ref k_secondary
-    /// - @ref k_secondary_preferred
-    /// - @ref k_nearest
-    /// Any unsupported value is interpreted as @ref k_primary.
+    /// - @ref read_mode::k_primary
+    /// - @ref read_mode::k_primary_preferred
+    /// - @ref read_mode::k_secondary
+    /// - @ref read_mode::k_secondary_preferred
+    /// - @ref read_mode::k_nearest
+    /// Any unsupported value is interpreted as @ref read_mode::k_primary.
     ///
     /// @see
     /// - [Read Preference Use Cases](https://www.mongodb.com/docs/manual/core/read-preference-use-cases/)

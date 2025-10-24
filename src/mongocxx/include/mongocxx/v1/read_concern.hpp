@@ -81,7 +81,7 @@ class read_concern {
         ///
         /// An unknown (unsupported) read concern level.
         ///
-        /// @note Not to be confused with @ref k_server_default.
+        /// @note Not to be confused with @ref level::k_server_default.
         ///
         k_unknown,
 
@@ -143,12 +143,12 @@ class read_concern {
     /// Set the read concern level.
     ///
     /// @param v One of:
-    /// - @ref k_local
-    /// - @ref k_majority
-    /// - @ref k_linearizable
-    /// - @ref k_server_default
-    /// - @ref k_available
-    /// - @ref k_snapshot
+    /// - @ref level::k_local
+    /// - @ref level::k_majority
+    /// - @ref level::k_linearizable
+    /// - @ref level::k_server_default
+    /// - @ref level::k_available
+    /// - @ref level::k_snapshot
     ///
     MONGOCXX_ABI_EXPORT_CDECL(read_concern&) acknowledge_level(level v);
 
@@ -167,7 +167,7 @@ class read_concern {
     ///
     /// Return the current read concern level as a string.
     ///
-    /// @returns Empty when `this->acknowledge_level()` is @ref k_server_default or @ref k_unknown.
+    /// @returns Empty when `this->acknowledge_level()` is @ref level::k_server_default or @ref level::k_unknown.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::string_view) acknowledge_string() const;
 
