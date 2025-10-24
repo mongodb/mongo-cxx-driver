@@ -1,8 +1,6 @@
 from config_generator.components.funcs.compile import Compile
 from config_generator.components.funcs.fetch_det import FetchDET
 from config_generator.components.funcs.install_c_driver import InstallCDriver
-from config_generator.components.funcs.install_valgrind import InstallValgrind
-from config_generator.components.funcs.install_uv import InstallUV
 from config_generator.components.funcs.run_kms_servers import RunKMSServers
 from config_generator.components.funcs.setup import Setup
 from config_generator.components.funcs.start_mongod import StartMongod
@@ -24,7 +22,7 @@ TAG = 'valgrind'
 # fmt: off
 MATRIX = [
     # min-max-latest
-    ('rhel80', None, ['shared'], ['4.0', '8.0', 'latest'], ['single', 'replica', 'sharded']),
+    ('rhel80', None, ['shared'], ['4.2', '8.0', 'latest'], ['single', 'replica', 'sharded']),
 ]
 # fmt: on
 # pylint: enable=line-too-long
@@ -68,10 +66,8 @@ def tasks():
 
             commands += [
                 Setup.call(),
-                InstallValgrind.call(),
                 StartMongod.call(mongodb_version=mongodb_version, topology=topology),
                 InstallCDriver.call(vars=icd_vars),
-                InstallUV.call(),
                 Compile.call(compiler=compiler, vars=compile_vars),
                 FetchDET.call(),
                 RunKMSServers.call(),

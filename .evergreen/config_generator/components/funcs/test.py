@@ -12,6 +12,7 @@ class Test(Function):
     commands = bash_exec(
         command_type=EvgCommandType.TEST,
         include_expansions_in_env=[
+            'ASAN_SYMBOLIZER_PATH',
             'build_type',
             'CRYPT_SHARED_LIB_PATH',  # Set by run-orchestration.sh in "start_mongod".
             'cse_aws_access_key_id',
@@ -33,6 +34,7 @@ class Test(Function):
             'MONGODB_API_VERSION',
             'platform',
             'TEST_WITH_ASAN',
+            'TEST_WITH_CSFLE',
             'TEST_WITH_UBSAN',
             'TEST_WITH_VALGRIND',
             'use_mongocryptd',

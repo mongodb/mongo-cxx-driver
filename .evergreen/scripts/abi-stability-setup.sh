@@ -19,14 +19,28 @@ command -V git >/dev/null
   exit 1
 }
 
+# For latest Clang versions supporting recent C++ standards.
+export CC CXX
+case "${distro_id:?}" in
+rhel95*)
+  CC="clang-19"
+  CXX="clang++-19"
+  ;;
+ubuntu22*)
+  CC="clang-12"
+  CXX="clang++-12"
+  ;;
+*)
+  echo "unexpected distro: ${distro_id:?}" 1>&2
+  exit 1
+  ;;
+esac
+
 declare working_dir
 working_dir="$(pwd)"
 
-declare cmake_binary
-# shellcheck source=/dev/null
-. ./mongoc/.evergreen/scripts/find-cmake-latest.sh
-cmake_binary="$(find_cmake_latest)"
-command -V "${cmake_binary:?}"
+. mongo-cxx-driver/.evergreen/scripts/install-build-tools.sh
+install_build_tools
 
 # Use ccache if available.
 if [[ -f "./mongoc/.evergreen/scripts/find-ccache.sh" ]]; then
@@ -52,34 +66,8 @@ declare old_ver new_ver
 old_ver="${base:1}"
 new_ver="${current:1}"
 
-# Use Ninja if available.
-if command -V ninja; then
-  export CMAKE_GENERATOR
-  CMAKE_GENERATOR="Ninja"
-else
-  export CMAKE_BUILD_PARALLEL_LEVEL
-  CMAKE_BUILD_PARALLEL_LEVEL="$(nproc)"
-fi
-
 # Install prefix to use for ABI compatibility scripts.
 mkdir -p "${working_dir}/install"
-
-# For latest Clang versions supporting recent C++ standards.
-export CC CXX
-case "${distro_id:?}" in
-rhel95*)
-  CC="clang-19"
-  CXX="clang++-19"
-  ;;
-ubuntu22*)
-  CC="clang-12"
-  CXX="clang++-12"
-  ;;
-*)
-  echo "unexpected distro: ${distro_id:?}" 1>&2
-  exit 1
-  ;;
-esac
 
 # As encouraged by ABI compatibility checkers.
 export CFLAGS CXXFLAGS
@@ -110,14 +98,14 @@ git -C mongo-cxx-driver reset --hard "${base:?}"
 # Install old (base) to install/old.
 echo "Building old libraries..."
 (
-  "${cmake_binary:?}" \
+  cmake \
     -S mongo-cxx-driver \
     -B build/old \
     -DCMAKE_INSTALL_PREFIX=install/old \
     -DBUILD_VERSION="${old_ver:?}-base" \
     "${configure_flags[@]:?}" || exit
-  "${cmake_binary:?}" --build build/old || exit
-  "${cmake_binary:?}" --install build/old || exit
+  cmake --build build/old || exit
+  cmake --install build/old || exit
 ) &>old.log || {
   cat old.log 1>&2
   exit 1
@@ -131,14 +119,14 @@ git -C mongo-cxx-driver stash pop -q || true # Only patch builds have stashed ch
 # Install new (current) to install/new.
 echo "Building new libraries..."
 (
-  "${cmake_binary:?}" \
+  cmake \
     -S mongo-cxx-driver \
     -B build/new \
     -DCMAKE_INSTALL_PREFIX=install/new \
     -DBUILD_VERSION="${new_ver:?}-current" \
     "${configure_flags[@]:?}" || exit
-  "${cmake_binary:?}" --build build/new || exit
-  "${cmake_binary:?}" --install build/new || exit
+  cmake --build build/new || exit
+  cmake --install build/new || exit
 ) &>new.log || {
   cat new.log 1>&2
   exit 1

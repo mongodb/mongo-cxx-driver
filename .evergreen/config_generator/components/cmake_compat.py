@@ -1,6 +1,5 @@
 from config_generator.components.funcs.fetch_c_driver_source import FetchCDriverSource
 from config_generator.components.funcs.install_c_driver import InstallCDriver
-from config_generator.components.funcs.install_uv import InstallUV
 from config_generator.components.funcs.setup import Setup
 
 from config_generator.etc.distros import find_small_distro
@@ -16,9 +15,10 @@ TAG = 'cmake-compat'
 # pylint: disable=line-too-long
 # fmt: off
 MATRIX = [
-    ("min",    [3, 15, 4]),
-    ("max-v3", [3, 31, 7]),
-    ("max",    [4,  0, 1]),
+    # As-if `cmake~=<version>` (PEP 0440).
+    ("min",    "3.15.0"),
+    ("max-v3", "3.0"   ),
+    ("max",    "4.0.0" ),
 ]
 # fmt: on
 
@@ -30,9 +30,8 @@ class CMakeCompat(Function):
             command_type=EvgCommandType.TEST,
             working_dir='mongo-cxx-driver',
             include_expansions_in_env=[
-                'CMAKE_MAJOR_VERSION',
-                'CMAKE_MINOR_VERSION',
-                'CMAKE_PATCH_VERSION',
+                'CMAKE_VERSION',
+                'distro_id',
                 'INSTALL_C_DRIVER',
             ],
             script='.evergreen/scripts/cmake-compat.sh',
@@ -40,9 +39,8 @@ class CMakeCompat(Function):
         bash_exec(
             command_type=EvgCommandType.TEST,
             include_expansions_in_env=[
-                'CMAKE_MAJOR_VERSION',
-                'CMAKE_MINOR_VERSION',
-                'CMAKE_PATCH_VERSION',
+                'CMAKE_VERSION',
+                'distro_id',
                 'INSTALL_C_DRIVER',
             ],
             script='mongo-cxx-driver/.evergreen/scripts/cmake-compat-check.sh',
@@ -65,13 +63,10 @@ def tasks():
         for install_c_driver in install_c_driver_modes:
             commands = [
                 Setup.call(),
-                InstallUV.call(),
                 (InstallCDriver.call() if install_c_driver else FetchCDriverSource.call()),
                 CMakeCompat.call(
                     vars={
-                        'CMAKE_MAJOR_VERSION': version[0],
-                        'CMAKE_MINOR_VERSION': version[1],
-                        'CMAKE_PATCH_VERSION': version[2],
+                        'CMAKE_VERSION': version,
                         'INSTALL_C_DRIVER': int(install_c_driver),
                     },
                 ),

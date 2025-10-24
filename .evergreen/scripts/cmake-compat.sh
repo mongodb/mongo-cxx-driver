@@ -3,9 +3,7 @@
 set -o errexit
 set -o pipefail
 
-: "${CMAKE_MAJOR_VERSION:?}"
-: "${CMAKE_MINOR_VERSION:?}"
-: "${CMAKE_PATCH_VERSION:?}"
+: "${CMAKE_VERSION:?}"
 : "${INSTALL_C_DRIVER:?}"
 
 [[ -d ../mongoc ]] || {
@@ -18,14 +16,8 @@ if [[ "${OSTYPE:?}" =~ cygwin ]]; then
   mongoc_prefix="$(cygpath -m "${mongoc_prefix:?}")"
 fi
 
-# shellcheck source=/dev/null
-. "${mongoc_prefix:?}/.evergreen/scripts/find-cmake-version.sh"
-export cmake_binary
-cmake_binary="$(find_cmake_version "${CMAKE_MAJOR_VERSION:?}" "${CMAKE_MINOR_VERSION:?}" "${CMAKE_PATCH_VERSION:?}")"
-"${cmake_binary:?}" --version
-
-CMAKE_BUILD_PARALLEL_LEVEL="$(nproc)"
-export CMAKE_BUILD_PARALLEL_LEVEL
+. .evergreen/scripts/install-build-tools.sh
+install_build_tools
 
 # Use ccache if available.
 if [[ -f "${mongoc_prefix:?}/.evergreen/scripts/find-ccache.sh" ]]; then
@@ -58,8 +50,8 @@ fi
 echo "Configuring with CMake flags:"
 printf " - %s\n" "${cmake_flags[@]:?}"
 
-"${cmake_binary:?}" -S . -B build "${cmake_flags[@]:?}"
-"${cmake_binary:?}" --build build --target install
+cmake -S . -B build "${cmake_flags[@]:?}"
+cmake --build build --target install
 
 # Use header bson.h to detect installation of C Driver libraries.
 bson_h="$(find install -name 'bson.h')"

@@ -1,7 +1,6 @@
 from config_generator.components.funcs.compile import Compile
 from config_generator.components.funcs.fetch_det import FetchDET
 from config_generator.components.funcs.install_c_driver import InstallCDriver
-from config_generator.components.funcs.install_uv import InstallUV
 from config_generator.components.funcs.run_kms_servers import RunKMSServers
 from config_generator.components.funcs.setup import Setup
 from config_generator.components.funcs.start_mongod import StartMongod
@@ -22,7 +21,7 @@ TAG = 'sanitizers'
 # pylint: disable=line-too-long
 # fmt: off
 MATRIX = [
-    ('rhel80', ['asan', 'ubsan'], ['shared', 'static'], ['4.0', '8.0', 'latest'], ['single', 'replica', 'sharded']),
+    ('rhel80', ['asan', 'ubsan'], ['static'], ['4.2', '8.0', 'latest'], ['single', 'replica', 'sharded']),
 ]
 # fmt: on
 # pylint: enable=line-too-long
@@ -57,12 +56,13 @@ def tasks():
             updates += [KeyValueParam(key=key, value=value)
                         for key, value in [('cc_compiler', cc_compiler), ('cxx_compiler', cxx_compiler)]]
 
-            icd_vars = {'SKIP_INSTALL_LIBMONGOCRYPT': 1}
-            compile_vars = {'ENABLE_TESTS': 'ON', 'RUN_DISTCHECK': 1}
+            compile_vars = {'ENABLE_TESTS': 'ON'}
             test_vars = {
+                'ASAN_SYMBOLIZER_PATH': '/opt/mongodbtoolchain/v4/bin/llvm-symbolizer',
+                'TEST_WITH_CSFLE': 'ON',
                 'MONGOCXX_TEST_TOPOLOGY': topology,
-                'example_projects_cc': 'clang',
-                'example_projects_cxx': 'clang++',
+                'example_projects_cc': cc_compiler,
+                'example_projects_cxx': cxx_compiler,
             }
 
             if link_type == 'static':
@@ -96,8 +96,7 @@ def tasks():
             commands += [
                 Setup.call(),
                 StartMongod.call(mongodb_version=mongodb_version, topology=topology),
-                InstallCDriver.call(vars=icd_vars),
-                InstallUV.call(),
+                InstallCDriver.call(),
                 Compile.call(vars=compile_vars),
                 FetchDET.call(),
                 RunKMSServers.call(),

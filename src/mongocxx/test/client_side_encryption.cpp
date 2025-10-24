@@ -1176,7 +1176,7 @@ void _run_endpoint_test(
     }));
 
     kms_doc_invalid.append(
-        kvp("kmip", [&](sub_document subdoc) { subdoc.append(kvp("endpoint", "doesnotexist.local:5698")); }));
+        kvp("kmip", [&](sub_document subdoc) { subdoc.append(kvp("endpoint", "doesnotexist.invalid:5698")); }));
 
     ce_opts_invalid.key_vault_client(setup_client);
     ce_opts_invalid.key_vault_namespace({"keyvault", "datakeys"});
@@ -1276,22 +1276,16 @@ TEST_CASE("Custom endpoint", "[client_side_encryption]") {
         _run_endpoint_test(&setup_client, endpoint_masterkey2.view(), "aws");
     }
 
-    // Call client_encryption.createDataKey() with "aws" as the provider and the following
+    // Call client_encryption.createDataKey() with "kmip" as the provider and the following
     // masterKey:
     // {
-    //   region: "us-east-1",
-    //   key: "arn:aws:kms:us-east-1:579766882180:key/89fcc2c4-08b0-4bd9-9f25-e30687b580d0",
-    //   endpoint: "kms.us-east-1.amazonaws.com:12345"
+    //   "keyId": "1",
+    //   "endpoint": "localhost:12345"
     // }
     // Expect this to fail with a socket connection error.
     SECTION("Test Case 4") {
-        auto socket_error_masterkey = document{}
-                                      << "region"
-                                      << "us-east-1"
-                                      << "key"
-                                      << "arn:aws:kms:us-east-1:579766882180:key/89fcc2c4-08b0-4bd9-9f25-e30687b580d0"
-                                      << "endpoint"
-                                      << "kms.us-east-1.amazonaws.com:12345" << finalize;
+        auto socket_error_masterkey = document{} << "keyId" << 1 << "endpoing"
+                                                 << "localhost:12345" << finalize;
         _run_endpoint_test(&setup_client, socket_error_masterkey.view(), "aws", {{"error"}});
     }
 
@@ -1428,7 +1422,7 @@ TEST_CASE("Custom endpoint", "[client_side_encryption]") {
     // Expect this to succeed. Use the returned UUID of the key to explicitly encrypt and decrypt
     // the string "test" to validate it works. Call client_encryption_invalid.createDataKey() with
     // the same masterKey. Expect this to fail with a network exception indicating failure to
-    // resolve "doesnotexist.local".
+    // resolve "doesnotexist.invalid".
     SECTION("Test Case 10") {
         auto kmip_masterkey = document{} << "keyId"
                                          << "1" << finalize;
@@ -1437,7 +1431,7 @@ TEST_CASE("Custom endpoint", "[client_side_encryption]") {
             kmip_masterkey.view(),
             "kmip",
             bsoncxx::stdx::nullopt,
-            {{"Failed to resolve doesnotexist.local: generic server error"}});
+            {{"Failed to resolve doesnotexist.invalid: generic server error"}});
     }
 
     // Call `client_encryption.createDataKey()` with "kmip" as the provider and the following
@@ -1460,20 +1454,20 @@ TEST_CASE("Custom endpoint", "[client_side_encryption]") {
     // masterKey:
     // {
     //   "keyId": "1",
-    //   "endpoint": "doesnotexist.local:5698"
+    //   "endpoint": "doesnotexist.invalid:5698"
     // }
     // Expect this to fail with a network exception indicating failure to resolve
-    // "doesnotexist.local".
+    // "doesnotexist.invalid".
     SECTION("Test Case 12") {
         auto kmip_masterkey = document{} << "keyId"
                                          << "1"
                                          << "endpoint"
-                                         << "doesnotexist.local:5698" << finalize;
+                                         << "doesnotexist.invalid:5698" << finalize;
         _run_endpoint_test(
             &setup_client,
             kmip_masterkey.view(),
             "kmip",
-            {{"Failed to resolve doesnotexist.local: generic server error"}});
+            {{"Failed to resolve doesnotexist.invalid: generic server error"}});
     }
 }
 
@@ -1955,7 +1949,7 @@ TEST_CASE("KMS TLS Options Tests", "[client_side_encryption][!mayfail]") {
 
         opts.master_key(
             document() << "keyVaultEndpoint"
-                       << "doesnotexist.local"
+                       << "doesnotexist.invalid"
                        << "keyName"
                        << "foo" << finalize);
 

@@ -11,7 +11,6 @@ from shrub.v3.evg_task_group import EvgTaskGroup
 
 from itertools import product
 
-
 TAG = 'abi-stability'
 
 
@@ -182,17 +181,18 @@ def task_groups():
         EvgTaskGroup(
             name=f'tg-{TAG}-{polyfill}-cxx{cxx_standard}',
             max_hosts=-1,
-            setup_group_can_fail_task=True,
+            setup_task_can_fail_task=True,
             setup_task=[
                 git_get_project(directory='mongo-cxx-driver'),
                 InstallCDriver.call(),
                 bash_exec(
+                    command_type=EvgCommandType.SETUP,
                     env={
                         'cxx_standard': f'{cxx_standard}',
                         'polyfill': polyfill,
                     },
                     include_expansions_in_env=['distro_id'],
-                    script='mongo-cxx-driver/.evergreen/scripts/abi-stability-setup.sh'
+                    script='mongo-cxx-driver/.evergreen/scripts/abi-stability-setup.sh',
                 ),
                 s3_put(
                     command_type=EvgCommandType.SETUP,

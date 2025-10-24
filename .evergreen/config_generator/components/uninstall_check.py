@@ -1,6 +1,5 @@
 from config_generator.components.funcs.compile import Compile
 from config_generator.components.funcs.fetch_c_driver_source import FetchCDriverSource
-from config_generator.components.funcs.install_uv import InstallUV
 from config_generator.components.funcs.setup import Setup
 
 from config_generator.etc.distros import find_large_distro, make_distro_str
@@ -33,11 +32,32 @@ class UninstallCheck(Function):
     commands = bash_exec(
         command_type=EvgCommandType.TEST,
         working_dir='mongo-cxx-driver',
-        include_expansions_in_env=['distro_id'],
         script='''\
+            set -o errexit
+            set -o pipefail
+
+            # lib vs. lib64 (i.e. RHEL).
+            if [[ "${distro_id}" == rhel* ]]; then
+                LIB_DIR="lib64"
+            else
+                LIB_DIR="lib"
+            fi
+
+            touch "build/install/$LIB_DIR/canary.txt"
+
+            ls -l "build/install/share/mongo-cxx-driver"
+
             case "$OSTYPE" in
-            darwin*|linux*) .evergreen/scripts/uninstall_check.sh ;;
-            cygwin) cmd.exe /c ".evergreen\\\\scripts\\\\uninstall_check_windows.cmd" ;;
+            darwin*|linux*)
+                # Ninja generator.
+                uvx cmake --build build --target uninstall
+                env LIB_DIR="$LIB_DIR" .evergreen/scripts/uninstall_check.sh
+                ;;
+            cygwin)
+                # Visual Studio generator.
+                uvx cmake --build build --config Debug --target uninstall
+                cmd.exe /c ".evergreen\\\\scripts\\\\uninstall_check_windows.cmd"
+                ;;
             esac
         '''
     )
@@ -64,7 +84,6 @@ def tasks():
                     commands=[
                         Setup.call(),
                         FetchCDriverSource.call(),
-                        InstallUV.call(),
                         Compile.call(
                             build_type=build_type,
                             compiler=compiler,

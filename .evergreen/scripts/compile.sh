@@ -13,7 +13,6 @@ set -o pipefail
 
 : "${branch_name:?}"
 : "${build_type:?}"
-: "${distro_id:?}" # Required by find-cmake-latest.sh.
 
 : "${BSONCXX_POLYFILL:-}"
 : "${COMPILE_MACRO_GUARD_TESTS:-}"
@@ -35,25 +34,13 @@ if [[ "${OSTYPE:?}" =~ cygwin ]]; then
   mongoc_prefix=$(cygpath -m "${mongoc_prefix:?}")
 fi
 
-# shellcheck source=/dev/null
-. "${mongoc_prefix:?}/.evergreen/scripts/find-cmake-latest.sh"
-export cmake_binary
-cmake_binary="$(find_cmake_latest)"
-command -v "$cmake_binary"
+. .evergreen/scripts/install-build-tools.sh
+install_build_tools
 
 if [[ "${build_type:?}" != "Debug" && "${build_type:?}" != "Release" ]]; then
   echo "$0: expected build_type environment variable to be set to 'Debug' or 'Release'" >&2
   exit 1
 fi
-
-if [[ "${OSTYPE}" == darwin* ]]; then
-  # MacOS does not have nproc.
-  nproc() {
-    sysctl -n hw.logicalcpu
-  }
-fi
-CMAKE_BUILD_PARALLEL_LEVEL="$(nproc)"
-export CMAKE_BUILD_PARALLEL_LEVEL
 
 # Use ccache if available.
 if [[ -f "${mongoc_prefix:?}/.evergreen/scripts/find-ccache.sh" ]]; then
@@ -66,6 +53,13 @@ build_targets=()
 cmake_build_opts=()
 case "${OSTYPE:?}" in
 cygwin)
+  # MSBuild task-based parallelism (VS 2019 16.3 and newer).
+  export UseMultiToolTask=true
+  export EnforceProcessCountAcrossBuilds=true
+  # MSBuild inter-project parallelism via CMake (3.26 and newer).
+  export CMAKE_BUILD_PARALLEL_LEVEL
+  CMAKE_BUILD_PARALLEL_LEVEL="$(nproc)" # /maxcpucount
+
   cmake_build_opts+=("/verbosity:minimal")
   build_targets+=(--target ALL_BUILD --target examples/examples)
   ;;
@@ -81,7 +75,7 @@ darwin* | linux*)
 esac
 
 # Create a VERSION_CURRENT file in the build directory to include in the dist tarball.
-PATH="${UV_INSTALL_DIR:?}:${PATH:-}" uv run --frozen python ./etc/calc_release_version.py >./build/VERSION_CURRENT
+uvx python ./etc/calc_release_version.py >./build/VERSION_CURRENT
 cd build
 
 cmake_flags=(
@@ -101,7 +95,11 @@ _RUN_DISTCHECK=""
 case "${OSTYPE:?}" in
 cygwin)
   case "${generator:-}" in
-  *2015* | *2017* | *2019* | *2022*) ;;
+  *2015* | *2017* | *2019* | *2022*)
+    # MSBuild parallelism.
+    export UseMultiToolTask=true
+    export EnforceProcessCountAcrossBuilds=true
+    ;;
   *)
     echo "missing explicit CMake Generator on Windows distro" 1>&2
     exit 1
@@ -109,7 +107,7 @@ cygwin)
   esac
   ;;
 darwin* | linux*)
-  : "${generator:="Unix Makefiles"}"
+  : "${generator:="Ninja"}"
 
   # If enabled, limit distcheck to Unix-like systems only.
   _RUN_DISTCHECK="${RUN_DISTCHECK:-}"
@@ -152,7 +150,7 @@ else()
   endif()
 endif()
 DOC
-  "${cmake_binary:?}" -S . -B build --log-level=notice
+  cmake -S . -B build --log-level=notice
   popd # "$(tmpfile -d)"
   echo "Checking requested C++ standard is supported... done."
 fi
@@ -248,7 +246,7 @@ if [[ -n "${REQUIRED_CXX_STANDARD:-}" ]]; then
   cmake_flags+=("-DCMAKE_CXX_STANDARD_REQUIRED=ON")
 
   if [[ "${REQUIRED_CXX_STANDARD:?}" == "latest" ]]; then
-    [[ "${CMAKE_GENERATOR:-}" =~ "Visual Studio" ]] || {
+    [[ "${CMAKE_GENERATOR:?}" =~ "Visual Studio" ]] || {
       echo "REQUIRED_CXX_STANDARD=latest to enable /std:c++latest is only supported with Visual Studio generators" 1>&2
       exit 1
     }
@@ -295,25 +293,25 @@ fi
 echo "Configuring with CMake flags:"
 printf " - %s\n" "${cmake_flags[@]}"
 
-"${cmake_binary}" "${cmake_flags[@]}" ..
+cmake "${cmake_flags[@]}" ..
 
 if [[ "${COMPILE_MACRO_GUARD_TESTS:-"OFF"}" == "ON" ]]; then
   # We only need to compile the macro guard tests.
-  "${cmake_binary}" --build . --config "${build_type:?}" --target test_bsoncxx_macro_guards test_mongocxx_macro_guards -- "${cmake_build_opts[@]}"
+  cmake --build . --config "${build_type:?}" --target test_bsoncxx_macro_guards test_mongocxx_macro_guards -- "${cmake_build_opts[@]}"
   exit # Nothing else to be done.
 fi
 
 # Regular build and install routine.
-"${cmake_binary}" --build . --config "${build_type:?}" "${build_targets[@]:?}" -- "${cmake_build_opts[@]}"
-"${cmake_binary}" --install . --config "${build_type:?}"
+cmake --build . --config "${build_type:?}" "${build_targets[@]:?}" -- "${cmake_build_opts[@]}"
+cmake --install . --config "${build_type:?}"
 
 if [[ "${_RUN_DISTCHECK:-}" ]]; then
-  "${cmake_binary}" --build . --config "${build_type:?}" --target distcheck
+  cmake --build . --config "${build_type:?}" --target distcheck
 fi
 
-if [[ -n "$(find "${mongoc_prefix:?}" -name 'bson-config.h')" ]]; then
+if [[ -n "$(find "${mongoc_prefix:?}" -name 'bson.h')" ]]; then
   : # Used install-c-driver.sh.
-elif [[ -n "$(find install -name 'bson-config.h')" ]]; then
+elif [[ -n "$(find install -name 'bson.h')" ]]; then
   : # Used auto-downloaded C Driver.
 else
   echo "unexpectedly compiled using a system mongoc library" 1>&2

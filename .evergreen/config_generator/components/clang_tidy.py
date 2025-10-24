@@ -1,5 +1,4 @@
 from config_generator.components.funcs.install_c_driver import InstallCDriver
-from config_generator.components.funcs.install_uv import InstallUV
 from config_generator.components.funcs.setup import Setup
 
 from config_generator.etc.distros import compiler_to_vars, find_small_distro
@@ -25,7 +24,6 @@ class ClangTidy(Function):
             'cc_compiler',
             'cxx_compiler',
             'distro_id',
-            'UV_INSTALL_DIR',
         ],
         script='etc/run-clang-tidy.sh',
     )
@@ -54,7 +52,6 @@ def tasks():
             run_on=distro.name,
             commands=[
                 Setup.call(),
-                InstallUV.call(),
                 InstallCDriver.call(compiler='clang'),
                 ClangTidy.call(compiler='clang'),
             ],

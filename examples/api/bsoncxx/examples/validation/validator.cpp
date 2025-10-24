@@ -77,8 +77,10 @@ void example(std::uint8_t const* bytes, std::size_t length) {
 
         EXPECT(!bsoncxx::validate(bytes, length, options, &offset));
 
-        // Offset of `"$numberInt": "123"` relative to start of the document.
-        EXPECT(offset == 31u);
+        // [libbson  < 2.0.1] Offset of `"$numberInt": "123"` relative to start of the
+        //                     sub-document. (CDRIVER-5710)
+        // [libbson >= 2.0.2] Offset of `"$numberInt": "123"` relative to start of the document.
+        EXPECT(offset == 31u || offset == 4u);
     }
 }
 // [Example]
