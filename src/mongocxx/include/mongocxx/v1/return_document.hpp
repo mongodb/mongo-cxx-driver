@@ -27,9 +27,23 @@ namespace v1 {
 /// `returnDocument` from the CRUD API specification.
 ///
 /// @see
-/// - [CRUD API (MongoDB Specifications)](https://www.mongodb.com/docs/manual/reference/command/return_document/)
+/// - [CRUD API (MongoDB Specifications)](https://specifications.readthedocs.io/en/latest/crud/crud/)
 ///
-enum class return_document {};
+enum class return_document {
+    ///
+    /// Return the original document.
+    ///
+    /// @note Equivalent to `"returnNewDocument": false`.
+    ///
+    k_before,
+
+    ///
+    /// Return the updated document.
+    ///
+    /// @note Equivalent to `"returnNewDocument": true`.
+    ///
+    k_after,
+};
 
 } // namespace v1
 } // namespace mongocxx
