@@ -33,6 +33,18 @@ tar xzf mongo-c-driver.tar.gz --directory "${mongoc_dir}" --strip-components=1
 . mongo-cxx-driver/.evergreen/scripts/install-build-tools.sh
 install_build_tools
 
+# CDRIVER-5967: requires mongo-c-driver 2.0.1 for CMake 4.0 compatibility on MacOS.
+case "${OSTYPE:?}" in
+darwin*)
+  uv_tool_bin_dir="$(mktemp -d)"
+  UV_TOOL_BIN_DIR="${uv_tool_bin_dir:?}" uv tool install 'cmake~=3.0'
+  cmake_binary="$(command -v "${uv_tool_bin_dir:?}/cmake")"
+  ;;
+*)
+  cmake_binary="$(command -v cmake)"
+  ;;
+esac
+
 # Default CMake generator to use if not already provided.
 declare CMAKE_GENERATOR CMAKE_GENERATOR_PLATFORM
 if [[ "${OSTYPE:?}" == "cygwin" ]]; then
@@ -55,7 +67,7 @@ export CMAKE_GENERATOR CMAKE_GENERATOR_PLATFORM
 if [[ "${SKIP_INSTALL_LIBMONGOCRYPT:-}" != "1" ]]; then
   {
     echo "Installing libmongocrypt into ${mongoc_dir}..." 1>&2
-    "${mongoc_dir}/.evergreen/scripts/compile-libmongocrypt.sh" "$(command -v cmake)" "${mongoc_idir}" "${mongoc_install_idir}"
+    "${mongoc_dir}/.evergreen/scripts/compile-libmongocrypt.sh" "${cmake_binary:?}" "${mongoc_idir}" "${mongoc_install_idir}"
     echo "Installing libmongocrypt into ${mongoc_dir}... done." 1>&2
   } >/dev/null
 fi
@@ -101,7 +113,7 @@ fi
 # Install C Driver libraries.
 {
   echo "Installing C Driver into ${mongoc_dir}..." 1>&2
-  cmake -S "${mongoc_idir}" -B "${mongoc_idir}" "${configure_flags[@]}"
-  cmake --build "${mongoc_idir}" --config Debug --target install -- "${compile_flags[@]}"
+  "${cmake_binary:?}" -S "${mongoc_idir}" -B "${mongoc_idir}" "${configure_flags[@]}"
+  "${cmake_binary:?}" --build "${mongoc_idir}" --config Debug --target install -- "${compile_flags[@]}"
   echo "Installing C Driver into ${mongoc_dir}... done." 1>&2
 } >/dev/null
