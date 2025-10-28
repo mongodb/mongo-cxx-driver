@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include <mongocxx/v1/encrypt-fwd.hpp>
+#include <mongocxx/v1/encrypt_options-fwd.hpp>
 
 //
 
@@ -23,7 +23,7 @@
 #include <bsoncxx/v1/types/value-fwd.hpp>
 #include <bsoncxx/v1/types/view-fwd.hpp>
 
-#include <mongocxx/v1/range-fwd.hpp>
+#include <mongocxx/v1/range_options-fwd.hpp>
 
 #include <bsoncxx/v1/stdx/optional.hpp>
 #include <bsoncxx/v1/stdx/string_view.hpp>
@@ -54,7 +54,7 @@ namespace v1 {
 ///
 /// @attention This feature is experimental! It is not ready for use!
 ///
-class encrypt {
+class encrypt_options {
     // This class implements `EncryptOpts`:
     //  - https://specifications.readthedocs.io/en/latest/client-side-encryption/client-side-encryption/
 
@@ -93,7 +93,7 @@ class encrypt {
     ///
     /// @warning Invalidates all associated views.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL() ~encrypt();
+    MONGOCXX_ABI_EXPORT_CDECL() ~encrypt_options();
 
     ///
     /// Move constructor.
@@ -101,7 +101,7 @@ class encrypt {
     /// @par Postconditions:
     /// - `other` is in an assign-or-destroy-only state.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL() encrypt(encrypt&& other) noexcept;
+    MONGOCXX_ABI_EXPORT_CDECL() encrypt_options(encrypt_options&& other) noexcept;
 
     ///
     /// Move assignment.
@@ -109,17 +109,17 @@ class encrypt {
     /// @par Postconditions:
     /// - `other` is in an assign-or-destroy-only state.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(encrypt&) operator=(encrypt&& other) noexcept;
+    MONGOCXX_ABI_EXPORT_CDECL(encrypt_options&) operator=(encrypt_options&& other) noexcept;
 
     ///
     /// Copy construction.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL() encrypt(encrypt const& other);
+    MONGOCXX_ABI_EXPORT_CDECL() encrypt_options(encrypt_options const& other);
 
     ///
     /// Copy assignment.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(encrypt&) operator=(encrypt const& other);
+    MONGOCXX_ABI_EXPORT_CDECL(encrypt_options&) operator=(encrypt_options const& other);
 
     ///
     /// Default initialization.
@@ -127,14 +127,14 @@ class encrypt {
     /// @par Postconditions:
     /// - All supported fields are "unset" or zero-initialized.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL() encrypt();
+    MONGOCXX_ABI_EXPORT_CDECL() encrypt_options();
 
     ///
     /// Set the "keyId" field.
     ///
     /// @param v A @ref bsoncxx::v1::types::binary_subtype::k_uuid.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(encrypt&) key_id(bsoncxx::v1::types::value v);
+    MONGOCXX_ABI_EXPORT_CDECL(encrypt_options&) key_id(bsoncxx::v1::types::value v);
 
     ///
     /// Return the current "keyId" field.
@@ -144,7 +144,7 @@ class encrypt {
     ///
     /// Set the "keyAltName" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(encrypt&) key_alt_name(std::string v);
+    MONGOCXX_ABI_EXPORT_CDECL(encrypt_options&) key_alt_name(std::string v);
 
     ///
     /// Return the "keyAltName" field.
@@ -154,7 +154,7 @@ class encrypt {
     ///
     /// Set the "algorithm" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(encrypt&) algorithm(encryption_algorithm v);
+    MONGOCXX_ABI_EXPORT_CDECL(encrypt_options&) algorithm(encryption_algorithm v);
 
     ///
     /// Return the current "algorithm" field.
@@ -164,7 +164,7 @@ class encrypt {
     ///
     /// Set the "contentionFactor" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(encrypt&) contention_factor(std::int64_t v);
+    MONGOCXX_ABI_EXPORT_CDECL(encrypt_options&) contention_factor(std::int64_t v);
 
     ///
     /// Return the current "contentionFactor" field.
@@ -174,7 +174,7 @@ class encrypt {
     ///
     /// Set the "queryType" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(encrypt&) query_type(encryption_query_type v);
+    MONGOCXX_ABI_EXPORT_CDECL(encrypt_options&) query_type(encryption_query_type v);
 
     ///
     /// Return the current "queryType" field.
@@ -184,12 +184,12 @@ class encrypt {
     ///
     /// Set the "rangeOpts" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(encrypt&) range_opts(v1::range v);
+    MONGOCXX_ABI_EXPORT_CDECL(encrypt_options&) range_opts(v1::range_options v);
 
     ///
     /// Return the current "rangeOpts" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<range>) range_opts() const;
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<v1::range_options>) range_opts() const;
 };
 
 } // namespace v1
@@ -199,5 +199,5 @@ class encrypt {
 
 ///
 /// @file
-/// Provides @ref mongocxx::v1::encrypt.
+/// Provides @ref mongocxx::v1::encrypt_options.
 ///

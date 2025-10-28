@@ -23,7 +23,7 @@
 #include <bsoncxx/v1/document/view-fwd.hpp>
 
 #include <mongocxx/v1/apm-fwd.hpp>
-#include <mongocxx/v1/auto_encryption-fwd.hpp>
+#include <mongocxx/v1/auto_encryption_options-fwd.hpp>
 #include <mongocxx/v1/cursor-fwd.hpp>
 #include <mongocxx/v1/database-fwd.hpp>
 #include <mongocxx/v1/pipeline-fwd.hpp>
@@ -327,12 +327,12 @@ class client::options {
     ///
     /// Set the "auto_encryption_opts" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(options&) auto_encryption_opts(v1::auto_encryption v);
+    MONGOCXX_ABI_EXPORT_CDECL(options&) auto_encryption_opts(v1::auto_encryption_options v);
 
     ///
     /// Return the current "auto_encryption_opts" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<v1::auto_encryption>) auto_encryption_opts() const;
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<v1::auto_encryption_options>) auto_encryption_opts() const;
 
     ///
     /// Set the "apm_opts" field.

@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include <mongocxx/v1/data_key-fwd.hpp>
+#include <mongocxx/v1/data_key_options-fwd.hpp>
 
 //
 
@@ -47,7 +47,7 @@ namespace v1 {
 ///
 /// @attention This feature is experimental! It is not ready for use!
 ///
-class data_key {
+class data_key_options {
    private:
     class impl;
     void* _impl;
@@ -58,7 +58,7 @@ class data_key {
     ///
     /// @warning Invalidates all associated views.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL() ~data_key();
+    MONGOCXX_ABI_EXPORT_CDECL() ~data_key_options();
 
     ///
     /// Move constructor.
@@ -66,7 +66,7 @@ class data_key {
     /// @par Postconditions:
     /// - `other` is in an assign-or-destroy-only state.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL() data_key(data_key&& other) noexcept;
+    MONGOCXX_ABI_EXPORT_CDECL() data_key_options(data_key_options&& other) noexcept;
 
     ///
     /// Move assignment.
@@ -74,17 +74,17 @@ class data_key {
     /// @par Postconditions:
     /// - `other` is in an assign-or-destroy-only state.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(data_key&) operator=(data_key&& other) noexcept;
+    MONGOCXX_ABI_EXPORT_CDECL(data_key_options&) operator=(data_key_options&& other) noexcept;
 
     ///
     /// Copy construction.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL() data_key(data_key const& other);
+    MONGOCXX_ABI_EXPORT_CDECL() data_key_options(data_key_options const& other);
 
     ///
     /// Copy assignment.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(data_key&) operator=(data_key const& other);
+    MONGOCXX_ABI_EXPORT_CDECL(data_key_options&) operator=(data_key_options const& other);
 
     ///
     /// Default initialization.
@@ -92,12 +92,12 @@ class data_key {
     /// @par Postconditions:
     /// - All supported fields are "unset" or zero-initialized.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL() data_key();
+    MONGOCXX_ABI_EXPORT_CDECL() data_key_options();
 
     ///
     /// Set the "masterKey" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(data_key&) master_key(bsoncxx::v1::document::value master_key);
+    MONGOCXX_ABI_EXPORT_CDECL(data_key_options&) master_key(bsoncxx::v1::document::value master_key);
 
     ///
     /// Return the current "masterKey" field.
@@ -107,7 +107,7 @@ class data_key {
     ///
     /// Set the "keyAltNames" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(data_key&) key_alt_names(std::vector<std::string> key_alt_names);
+    MONGOCXX_ABI_EXPORT_CDECL(data_key_options&) key_alt_names(std::vector<std::string> key_alt_names);
 
     ///
     /// Return the current "keyAltNames" field.
@@ -122,7 +122,7 @@ class data_key {
     ///
     /// Set the "keyMaterial" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(data_key&) key_material(key_material_type key_material);
+    MONGOCXX_ABI_EXPORT_CDECL(data_key_options&) key_material(key_material_type key_material);
 
     ///
     /// Return the current "keyMaterial" field.
@@ -137,5 +137,5 @@ class data_key {
 
 ///
 /// @file
-/// Provides @ref mongocxx::v1::data_key.
+/// Provides @ref mongocxx::v1::data_key_options.
 ///

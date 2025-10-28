@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include <mongocxx/v1/auto_encryption-fwd.hpp>
+#include <mongocxx/v1/auto_encryption_options-fwd.hpp>
 
 //
 
@@ -55,7 +55,7 @@ namespace v1 {
 /// - [MongoClient Options for Queryable Encryption (MongoDB Manual)](https://www.mongodb.com/docs/manual/core/queryable-encryption/reference/qe-options-clients/)
 /// - [MongoClient Options for CSFLE](https://www.mongodb.com/docs/manual/core/csfle/reference/csfle-options-clients/)
 ///
-class auto_encryption {
+class auto_encryption_options {
    private:
     class impl;
     void* _impl;
@@ -66,7 +66,7 @@ class auto_encryption {
     ///
     /// @warning Invalidates all associated views.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL() ~auto_encryption();
+    MONGOCXX_ABI_EXPORT_CDECL() ~auto_encryption_options();
 
     ///
     /// Move constructor.
@@ -74,7 +74,7 @@ class auto_encryption {
     /// @par Postconditions:
     /// - `other` is in an assign-or-destroy-only state.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL() auto_encryption(auto_encryption&& other) noexcept;
+    MONGOCXX_ABI_EXPORT_CDECL() auto_encryption_options(auto_encryption_options&& other) noexcept;
 
     ///
     /// Move assignment.
@@ -82,17 +82,17 @@ class auto_encryption {
     /// @par Postconditions:
     /// - `other` is in an assign-or-destroy-only state.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(auto_encryption&) operator=(auto_encryption&& other) noexcept;
+    MONGOCXX_ABI_EXPORT_CDECL(auto_encryption_options&) operator=(auto_encryption_options&& other) noexcept;
 
     ///
     /// Copy construction.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL() auto_encryption(auto_encryption const& other);
+    MONGOCXX_ABI_EXPORT_CDECL() auto_encryption_options(auto_encryption_options const& other);
 
     ///
     /// Copy assignment.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(auto_encryption&) operator=(auto_encryption const& other);
+    MONGOCXX_ABI_EXPORT_CDECL(auto_encryption_options&) operator=(auto_encryption_options const& other);
 
     ///
     /// Default initialization.
@@ -100,7 +100,7 @@ class auto_encryption {
     /// @par Postconditions:
     /// - All supported fields are "unset" or zero-initialized.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL() auto_encryption();
+    MONGOCXX_ABI_EXPORT_CDECL() auto_encryption_options();
 
     ///
     /// Set the "keyVaultClient" field.
@@ -111,7 +111,7 @@ class auto_encryption {
     ///
     /// @param v Equivalent to "unset" when null.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(auto_encryption&) key_vault_client(v1::client* v);
+    MONGOCXX_ABI_EXPORT_CDECL(auto_encryption_options&) key_vault_client(v1::client* v);
 
     ///
     /// Return the current "keyVaultClient" field.
@@ -129,7 +129,7 @@ class auto_encryption {
     ///
     /// @param v Equivalent to "unset" when null.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(auto_encryption&) key_vault_pool(v1::pool* v);
+    MONGOCXX_ABI_EXPORT_CDECL(auto_encryption_options&) key_vault_pool(v1::pool* v);
 
     ///
     /// Return the current "keyVaultPool" field.
@@ -148,7 +148,7 @@ class auto_encryption {
     ///
     /// Set the "keyVaultNamespace" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(auto_encryption&) key_vault_namespace(ns_pair v);
+    MONGOCXX_ABI_EXPORT_CDECL(auto_encryption_options&) key_vault_namespace(ns_pair v);
 
     ///
     /// Return the current "keyVaultNamespace" field.
@@ -158,7 +158,7 @@ class auto_encryption {
     ///
     /// Set the "kmsProviders" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(auto_encryption&) kms_providers(bsoncxx::v1::document::value v);
+    MONGOCXX_ABI_EXPORT_CDECL(auto_encryption_options&) kms_providers(bsoncxx::v1::document::value v);
 
     ///
     /// Return the current "kmsProviders" field.
@@ -168,7 +168,7 @@ class auto_encryption {
     ///
     /// Set the "tlsOptions" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(auto_encryption&) tls_opts(bsoncxx::v1::document::value v);
+    MONGOCXX_ABI_EXPORT_CDECL(auto_encryption_options&) tls_opts(bsoncxx::v1::document::value v);
 
     ///
     /// Return the current "tlsOptions" field.
@@ -178,7 +178,7 @@ class auto_encryption {
     ///
     /// Set the "schemaMap" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(auto_encryption&) schema_map(bsoncxx::v1::document::value v);
+    MONGOCXX_ABI_EXPORT_CDECL(auto_encryption_options&) schema_map(bsoncxx::v1::document::value v);
 
     ///
     /// Return the "schemaMap" field.
@@ -188,7 +188,7 @@ class auto_encryption {
     ///
     /// Set the "encryptedFieldsMap" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(auto_encryption&) encrypted_fields_map(bsoncxx::v1::document::value v);
+    MONGOCXX_ABI_EXPORT_CDECL(auto_encryption_options&) encrypted_fields_map(bsoncxx::v1::document::value v);
 
     ///
     /// Return the current "encryptedFieldsMap" field.
@@ -198,7 +198,7 @@ class auto_encryption {
     ///
     /// Set the "bypassAutoEncryption" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(auto_encryption&) bypass_auto_encryption(bool v);
+    MONGOCXX_ABI_EXPORT_CDECL(auto_encryption_options&) bypass_auto_encryption(bool v);
 
     ///
     /// Return the current "bypassAutoEncryption" field.
@@ -208,7 +208,7 @@ class auto_encryption {
     ///
     /// Set the "bypassQueryAnalysis" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(auto_encryption&) bypass_query_analysis(bool v);
+    MONGOCXX_ABI_EXPORT_CDECL(auto_encryption_options&) bypass_query_analysis(bool v);
 
     ///
     /// Return the current "bypassQueryAnalysis" field.
@@ -218,7 +218,7 @@ class auto_encryption {
     ///
     /// Set the "extraOptions" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(auto_encryption&) extra_options(bsoncxx::v1::document::value v);
+    MONGOCXX_ABI_EXPORT_CDECL(auto_encryption_options&) extra_options(bsoncxx::v1::document::value v);
 
     ///
     /// Return the current "extraOptions" field.
@@ -233,5 +233,5 @@ class auto_encryption {
 
 ///
 /// @file
-/// Provides @ref mongocxx::v1::auto_encryption.
+/// Provides @ref mongocxx::v1::auto_encryption_options.
 ///

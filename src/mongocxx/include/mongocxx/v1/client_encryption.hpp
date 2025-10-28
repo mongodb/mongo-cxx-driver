@@ -28,10 +28,10 @@
 #include <mongocxx/v1/client-fwd.hpp>
 #include <mongocxx/v1/collection-fwd.hpp>
 #include <mongocxx/v1/cursor-fwd.hpp>
-#include <mongocxx/v1/data_key-fwd.hpp>
+#include <mongocxx/v1/data_key_options-fwd.hpp>
 #include <mongocxx/v1/database-fwd.hpp>
 #include <mongocxx/v1/delete_one_result-fwd.hpp>
-#include <mongocxx/v1/encrypt-fwd.hpp>
+#include <mongocxx/v1/encrypt_options-fwd.hpp>
 #include <mongocxx/v1/rewrap_many_datakey_options-fwd.hpp>
 #include <mongocxx/v1/rewrap_many_datakey_result-fwd.hpp>
 
@@ -115,7 +115,7 @@ class client_encryption {
     /// @{
     MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::types::value) create_data_key(
         bsoncxx::v1::stdx::string_view kms_provider,
-        v1::data_key const& opts);
+        v1::data_key_options const& opts);
 
     MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::types::value) create_data_key(bsoncxx::v1::stdx::string_view kms_provider);
     /// @}
@@ -173,7 +173,7 @@ class client_encryption {
     ///
     MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::types::value) encrypt(
         bsoncxx::v1::types::view value,
-        v1::encrypt const& opts);
+        v1::encrypt_options const& opts);
 
     ///
     /// Encrypt the given Match Expression or Aggregate Expression.
@@ -188,7 +188,7 @@ class client_encryption {
     ///
     MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::document::value) encrypt_expression(
         bsoncxx::v1::document::view expr,
-        v1::encrypt const& opts);
+        v1::encrypt_options const& opts);
 
     ///
     /// Decrypt the given value.

@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include <mongocxx/v1/range-fwd.hpp>
+#include <mongocxx/v1/range_options-fwd.hpp>
 
 //
 
@@ -33,7 +33,7 @@ namespace mongocxx {
 namespace v1 {
 
 ///
-/// Options related to range queries for Queryable Encryption.
+/// Options related to range_options queries for Queryable Encryption.
 ///
 /// Supported fields include:
 /// - `max`
@@ -48,7 +48,7 @@ namespace v1 {
 ///
 /// @attention This feature is experimental! It is not ready for use!
 ///
-class range {
+class range_options {
    private:
     class impl;
     void* _impl;
@@ -59,7 +59,7 @@ class range {
     ///
     /// @warning Invalidates all associated views.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL() ~range();
+    MONGOCXX_ABI_EXPORT_CDECL() ~range_options();
 
     ///
     /// Move constructor.
@@ -67,7 +67,7 @@ class range {
     /// @par Postconditions:
     /// - `other` is in an assign-or-destroy-only state.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL() range(range&& other) noexcept;
+    MONGOCXX_ABI_EXPORT_CDECL() range_options(range_options&& other) noexcept;
 
     ///
     /// Move assignment.
@@ -75,17 +75,17 @@ class range {
     /// @par Postconditions:
     /// - `other` is in an assign-or-destroy-only state.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(range&) operator=(range&& other) noexcept;
+    MONGOCXX_ABI_EXPORT_CDECL(range_options&) operator=(range_options&& other) noexcept;
 
     ///
     /// Copy construction.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL() range(range const& other);
+    MONGOCXX_ABI_EXPORT_CDECL() range_options(range_options const& other);
 
     ///
     /// Copy assignment.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(range&) operator=(range const& other);
+    MONGOCXX_ABI_EXPORT_CDECL(range_options&) operator=(range_options const& other);
 
     ///
     /// Default initialization.
@@ -93,12 +93,12 @@ class range {
     /// @par Postconditions:
     /// - All supported fields are "unset" or zero-initialized.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL() range();
+    MONGOCXX_ABI_EXPORT_CDECL() range_options();
 
     ///
     /// Set the "min" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(range&) min(bsoncxx::v1::types::value value);
+    MONGOCXX_ABI_EXPORT_CDECL(range_options&) min(bsoncxx::v1::types::value value);
 
     ///
     /// Return the current "min" field.
@@ -109,7 +109,7 @@ class range {
     ///
     /// Set the "max" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(range&) max(bsoncxx::v1::types::value value);
+    MONGOCXX_ABI_EXPORT_CDECL(range_options&) max(bsoncxx::v1::types::value value);
 
     ///
     /// Return the current "max" field.
@@ -120,7 +120,7 @@ class range {
     ///
     /// Set the "sparsity" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(range&) sparsity(std::int64_t value);
+    MONGOCXX_ABI_EXPORT_CDECL(range_options&) sparsity(std::int64_t value);
 
     ///
     /// Return the current "sparsity" field.
@@ -131,7 +131,7 @@ class range {
     ///
     /// Set the "trimFactor" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(range&) trim_factor(std::int32_t value);
+    MONGOCXX_ABI_EXPORT_CDECL(range_options&) trim_factor(std::int32_t value);
 
     ///
     /// Return the current "trimFactor" field.
@@ -142,7 +142,7 @@ class range {
     ///
     /// Set the "precision" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(range&) precision(std::int32_t value);
+    MONGOCXX_ABI_EXPORT_CDECL(range_options&) precision(std::int32_t value);
 
     ///
     /// Return the current "precision" field.
@@ -158,5 +158,5 @@ class range {
 
 ///
 /// @file
-/// Provides @ref mongocxx::v1::range.
+/// Provides @ref mongocxx::v1::range_options.
 ///
