@@ -126,7 +126,7 @@ class client_encryption {
     ///
     /// @param db The database within which to create the encrypted collection.
     /// @param name The name of the new encrypted collection.
-    /// @param opts "createCollection" options.
+    /// @param opts "create" options.
     /// @param coll_opts Set to the options used to create the encrypted collection, including the "encryptedFields"
     /// field.
     /// @param kms_provider The KMS provider to use for this operation.
@@ -148,7 +148,7 @@ class client_encryption {
     ///
     /// @param db The database within which to create the encrypted collection.
     /// @param name The name of the new encrypted collection.
-    /// @param opts "createCollection" options.
+    /// @param opts "create" options.
     /// @param coll_opts Set to the options used to create the encrypted collection, including the "encryptedFields"
     /// field.
     /// @param kms_provider The KMS provider to use for this operation.
@@ -253,9 +253,9 @@ class client_encryption {
         bsoncxx::v1::stdx::string_view key_alt_name);
 
     ///
-    /// Remove the specified data key.
+    /// Remove the given keyAltName from the specified data key.
     ///
-    /// @returns The data key before its removal.
+    /// @returns The data key before the removal of the given keyAltName.
     ///
     /// @throws mongocxx::v1::server_error when a server-side error is encountered and a raw server error is available.
     /// @throws mongocxx::v1::exception for all other runtime errors.

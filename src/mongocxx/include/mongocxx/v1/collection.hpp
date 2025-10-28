@@ -562,7 +562,7 @@ class collection {
     ///
     /// Insert a single document into this collection as a bulk write operation.
     ///
-    /// If the document(s) do not contain an "_id" field, an "_id" field is generated using @ref bsoncxx::v1::oid.
+    /// If the document does not contain an "_id" field, an "_id" field is generated using @ref bsoncxx::v1::oid.
     ///
     /// @returns Empty when the bulk write operation is unacknowledged.
     ///
@@ -782,7 +782,7 @@ class collection {
     ///
 
     ///
-    /// Update multiple documents in this collection as a bulk write operation.
+    /// Update a single document in this collection as a bulk write operation.
     ///
     /// @returns Empty when the bulk write operation is unacknowledged.
     ///

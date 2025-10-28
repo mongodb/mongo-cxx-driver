@@ -82,8 +82,8 @@ class insert_many_result {
     ///
     MONGOCXX_ABI_EXPORT_CDECL(v1::bulk_write::result) result() const;
 
-    /// a
-    ///  Return the number of inserted documents.
+    ///
+    /// Return the number of inserted documents.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(std::int64_t) inserted_count() const;
 

@@ -306,7 +306,7 @@ class database {
     /// Return a GridFS bucket for this database.
     ///
     /// @note When the "bucketName" field is unset, the default bucket name "fs" is used instead.
-    /// @note When the "chunkSizeBytes" field is unset, the default chunk size of 255 kB is used instead.
+    /// @note When the "chunkSizeBytes" field is unset, the default chunk size of 255 KiB is used instead.
     ///
     /// @see
     /// - [GridFS (MongoDB Manual)](https://www.mongodb.com/docs/manual/core/gridfs/)

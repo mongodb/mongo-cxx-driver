@@ -118,12 +118,11 @@ class pool {
     /// This function blocks the current thread until a client object is available or "waitQueueTimeoutMS" is
     /// triggered.
     ///
-    /// @note The first client object  acquired from the pool blocks the current thread until the initial connection to
-    /// the MongoDB server(s) is established.
+    /// @note Connection to the MongoDB server(s) is attempted in a background "monitoring" thread when the first client
+    /// object is acquired. Server-side errors will only be encountered during or after the first command is executed.
     ///
     /// @returns A handle to a client object connected to the MongoDB server(s).
     ///
-    /// @throws mongocxx::v1::server_error when a server-side error is encountered and a raw server error is available.
     /// @throws mongocxx::v1::exception with @ref mongocxx::v1::pool::errc::wait_queue_timeout if a client object could
     /// not be acquired within "waitQueueTimeoutMS".
     ///
@@ -135,12 +134,15 @@ class pool {
     /// @note The first client object acquired from a pool blocks the current thread until the initial connection to the
     /// MongoDB server(s) is established.
     ///
+    /// @note Connection to the MongoDB server(s) is attempted in a background "monitoring" thread when the first client
+    /// object is acquired. Server-side errors will only be encountered during or after the first command is executed.
+    ///
     /// @returns Empty when a client object is not immediately available.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<entry>) try_acquire();
 
     ///
-    /// Errors codes which may be returned by @ref mongocxx::v1::collection.
+    /// Errors codes which may be returned by @ref mongocxx::v1::pool.
     ///
     /// @attention This feature is experimental! It is not ready for use!
     ///
@@ -150,7 +152,7 @@ class pool {
     };
 
     ///
-    /// The error category for @ref mongocxx::v1::collection::errc.
+    /// The error category for @ref mongocxx::v1::pool::errc.
     ///
     /// @attention This feature is experimental! It is not ready for use!
     ///

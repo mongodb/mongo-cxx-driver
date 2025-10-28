@@ -259,40 +259,8 @@ class client_session {
     MONGOCXX_ABI_EXPORT_CDECL(void) with_transaction(with_transaction_cb const& fn, v1::transaction const& opts);
 
     ///
-    /// Start and commit a new standalone transaction using `fn`.
-    ///
-    /// The default transaction options are applied to the new transaction.
-    ///
-    /// The behavior is approximately equivalent to:
-    /// ```cpp
-    /// this->start_transaction();
-    /// while (/* unspecified */) {
-    ///     try {
-    ///         fn();
-    ///         this->commit_transaction(); // Success.
-    ///     } catch (/* unspecified */) {
-    ///        if (/* unspecified */) {
-    ///            continue; // Retry attempt.
-    ///        } else {
-    ///            this->abort_transaction();
-    ///            throw; // Failure.
-    ///        }
-    ///     }
-    /// }
-    /// ```
-    ///
-    /// Any user-defined exceptions thrown by `fn` will be caught and rethrown after the standalone transaction has been
-    /// aborted.
-    ///
-    /// @warning `fn` **MUST** allow any @ref mongocxx::v1::server_error exceptions thrown by an operation within `fn`
-    /// to propagate out of `fn` for correct retry attempt behavior. `fn` **MUST NOT** attempt to manually retry
-    /// operations.
-    ///
-    /// @note This operation uses an internal, non-configurable time limit of 120 seconds. The transaction may be
-    /// retried until this time limit is exceeded.
-    ///
-    /// @throws mongocxx::v1::exception when a client-side error is encountered.
-    /// @throws mongocxx::v1::server_error when a server-side error is encountered and all retry attempts have failed.
+    /// Equivalent to @ref with_transaction(with_transaction_cb const& fn, v1::transaction const& opts) with a
+    /// default-initialized @ref v1::transaction.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(void) with_transaction(with_transaction_cb const& fn);
 };

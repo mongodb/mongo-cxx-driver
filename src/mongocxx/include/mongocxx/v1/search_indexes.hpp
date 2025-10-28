@@ -359,7 +359,7 @@ class search_indexes::model {
     model(bsoncxx::v1::stdx::string_view name, bsoncxx::v1::document::value definition);
 
     ///
-    /// Initialize this search index model with the given "name".
+    /// Initialize this search index model with the given "definition".
     ///
     /// @par Postconditions:
     /// - All other supported fields are "unset" or zero-initialized.

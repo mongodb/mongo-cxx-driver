@@ -956,8 +956,8 @@ class bulk_write::options {
 /// the CRUD API specification is used to implement the requested operations (see: `MONGOC_WRITE_RESULT_COMPLETE`).
 ///
 /// @see
+/// - [`mongoc_bulk_operation_t` (mongoc)](https://mongoc.org/libmongoc/current/mongoc_bulk_operation_t.html)
 /// - [CRUD API (MongoDB Specifications)](https://specifications.readthedocs.io/en/latest/crud/crud/)
-/// - [Bulk Write API (MongoDB Specifications)](https://specifications.readthedocs.io/en/latest/crud/bulk-write/)
 /// - [Bulk Write Operations (MongoDB Manual)](https://www.mongodb.com/docs/manual/core/bulk-write-operations/)
 /// - [Update Methods (MongoDB Manual)](https://www.mongodb.com/docs/manual/reference/update-methods/)
 ///
@@ -1048,7 +1048,7 @@ class bulk_write::result {
     MONGOCXX_ABI_EXPORT_CDECL(id_map) upserted_ids() const;
 
     ///
-    /// Compare equal when `lhs.raw()` and `rhs.raw()` compare equal.
+    /// Compare equal when all supported fields compare equal.
     ///
     /// @{
     friend MONGOCXX_ABI_EXPORT_CDECL(bool) operator==(result const& lhs, result const& rhs);

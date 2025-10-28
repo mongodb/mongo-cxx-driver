@@ -106,12 +106,12 @@ class distinct_options {
     MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view>) collation() const;
 
     ///
-    /// Set the "maxTime" field.
+    /// Set the "maxTimeMS" field.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(distinct_options&) max_time(std::chrono::milliseconds max_time);
 
     ///
-    /// Return the current "maxTime" field.
+    /// Return the current "maxTimeMS" field.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<std::chrono::milliseconds>) max_time() const;
 

@@ -98,11 +98,11 @@ class client {
     ///
     /// Initialize with the given URI.
     ///
-    /// @par Postconditions:
-    /// - `*this` is connected to the MongoDB server(s).
+    /// @note No connection is attempted until the first command executed with this client object or with an associated
+    /// object obtained from this client object. Server-side errors will only be encountered during or after the first
+    /// command executed.
     ///
-    /// @throws mongocxx::v1::server_error when a server-side error is encountered and a raw server error is available.
-    /// @throws mongocxx::v1::exception for all other runtime errors.
+    /// @throws mongocxx::v1::exception when a client-side error is encountered.
     ///
     /// @{
     MONGOCXX_ABI_EXPORT_CDECL() client(v1::uri uri, options const& opts);
@@ -112,13 +112,10 @@ class client {
     ///
 
     ///
-    /// Initialize with default URI options.
+    /// Default initialization.
     ///
     /// @par Postconditions:
-    /// - `*this` is connected to the MongoDB server(s).
-    ///
-    /// @throws mongocxx::v1::server_error when a server-side error is encountered and a raw server error is available.
-    /// @throws mongocxx::v1::exception for all other runtime errors.
+    /// - `*this` is in an assign-or-destroy-only state.
     ///
     MONGOCXX_ABI_EXPORT_CDECL() client();
 
@@ -128,7 +125,7 @@ class client {
     explicit MONGOCXX_ABI_EXPORT_CDECL() operator bool() const;
 
     ///
-    /// Return the URI options used to initialize this client.
+    /// Return the @ref mongocxx::v1::uri used to initialize this client.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(v1::uri) uri() const;
 

@@ -43,7 +43,7 @@ namespace v1 {
 /// - `hint`
 /// - `let`
 /// - `write_concern` ("writeConcern")
-/// - comment`
+/// - `comment`
 ///
 /// @see
 /// - [Delete Methods (MongoDB Manual)](https://www.mongodb.com/docs/manual/reference/delete-methods/)

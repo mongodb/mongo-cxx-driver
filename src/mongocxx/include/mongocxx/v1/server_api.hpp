@@ -101,7 +101,8 @@ class server_api {
     /// Initialize with the given server API version.
     ///
     /// @par Postconditions:
-    /// - All supported fields are "unset" or zero-initialized.
+    /// - `this->get_version() == v`.
+    /// - All other supported fields are "unset" or zero-initialized.
     ///
     explicit MONGOCXX_ABI_EXPORT_CDECL() server_api(version v);
 

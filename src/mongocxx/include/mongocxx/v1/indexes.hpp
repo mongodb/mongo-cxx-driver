@@ -217,12 +217,12 @@ class indexes {
         MONGOCXX_ABI_EXPORT_CDECL() options();
 
         ///
-        /// Set the "maxTime" field.
+        /// Set the "maxTimeMS" field.
         ///
         MONGOCXX_ABI_EXPORT_CDECL(options&) max_time(std::chrono::milliseconds max_time);
 
         ///
-        /// Return the current "maxTime" field.
+        /// Return the current "maxTimeMS" field.
         ///
         MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<std::chrono::milliseconds>) max_time() const;
 
@@ -481,7 +481,7 @@ class indexes {
     MONGOCXX_ABI_EXPORT_CDECL(v1::cursor) list(v1::client_session const& session);
 
     ///
-    /// Equivalent to `this->create_one(...)` with a single index model.
+    /// Equivalent to `this->create_one(model(keys, create_opts), opts)`.
     ///
     /// @param keys The "keys" field of the new index definition.
     /// @param create_opts "createIndexes" command options.
@@ -495,7 +495,7 @@ class indexes {
     }
 
     ///
-    /// Equivalent to `this->create_one(...)` with a single index model.
+    /// Equivalent to `this->create_one(session, model(keys, create_opts), opts)`.
     ///
     /// @param session The session with which this operation is associated.
     /// @param keys The "keys" field of the new index definition.
