@@ -336,11 +336,11 @@ class database {
     ///
     /// @{
     MONGOCXX_ABI_EXPORT_CDECL(v1::change_stream) watch(
-        v1::pipeline const& pipe,
+        v1::pipeline const& pipeline,
         v1::change_stream::options const& opts = {});
 
     MONGOCXX_ABI_EXPORT_CDECL(v1::change_stream)
-    watch(v1::client_session const& session, v1::pipeline const& pipe, v1::change_stream::options const& opts = {});
+    watch(v1::client_session const& session, v1::pipeline const& pipeline, v1::change_stream::options const& opts = {});
     /// @}
     ///
 };
