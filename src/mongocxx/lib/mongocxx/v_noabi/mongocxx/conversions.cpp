@@ -14,7 +14,7 @@
 
 #include <mongocxx/v1/detail/macros.hpp>
 
-#include <mongocxx/private/conversions.hh>
+#include <mongocxx/conversions.hh>
 
 namespace mongocxx {
 namespace libmongoc {

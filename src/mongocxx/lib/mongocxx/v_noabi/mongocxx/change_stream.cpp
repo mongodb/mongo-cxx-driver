@@ -16,9 +16,10 @@
 
 #include <mongocxx/change_stream.hpp>
 
+#include <mongocxx/change_stream.hh>
+
 #include <bsoncxx/private/make_unique.hh>
 
-#include <mongocxx/private/change_stream.hh>
 #include <mongocxx/private/mongoc.hh>
 
 namespace mongocxx {

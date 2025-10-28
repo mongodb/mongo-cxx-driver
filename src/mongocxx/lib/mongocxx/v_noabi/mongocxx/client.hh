@@ -19,7 +19,7 @@
 #include <mongocxx/client.hpp>
 
 #include <mongocxx/private/mongoc.hh>
-#include <mongocxx/private/write_concern.hh>
+#include <mongocxx/write_concern.hh>
 
 namespace mongocxx {
 namespace v_noabi {

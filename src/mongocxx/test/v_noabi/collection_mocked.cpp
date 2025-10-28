@@ -32,12 +32,12 @@
 #include <mongocxx/pipeline.hpp>
 #include <mongocxx/read_preference.hpp>
 
+#include <mongocxx/conversions.hh>
 #include <mongocxx/scoped_bson.hh>
 
 #include <bsoncxx/private/bson.hh>
 #include <bsoncxx/private/helpers.hh>
 
-#include <mongocxx/private/conversions.hh>
 #include <mongocxx/private/mongoc.hh>
 
 #include <bsoncxx/test/catch.hh>

@@ -14,7 +14,7 @@
 
 #include <mongocxx/read_preference.hpp>
 
-#include <mongocxx/private/conversions.hh>
+#include <mongocxx/conversions.hh>
 
 #include <bsoncxx/test/catch.hh>
 

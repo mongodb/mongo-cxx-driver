@@ -28,9 +28,9 @@
 #include <mongocxx/instance.hpp>
 #include <mongocxx/options/index_view.hpp>
 
+#include <mongocxx/conversions.hh>
 #include <mongocxx/scoped_bson.hh>
 
-#include <mongocxx/private/conversions.hh>
 #include <mongocxx/private/mongoc.hh>
 
 #include <bsoncxx/test/catch.hh>

@@ -28,7 +28,8 @@
 #include <mongocxx/pool.hpp>
 #include <mongocxx/uri.hpp>
 
-#include <mongocxx/private/conversions.hh>
+#include <mongocxx/conversions.hh>
+
 #include <mongocxx/private/mongoc.hh>
 #include <mongocxx/private/ssl.hh>
 

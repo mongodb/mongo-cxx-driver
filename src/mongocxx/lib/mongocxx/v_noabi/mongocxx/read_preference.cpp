@@ -18,13 +18,13 @@
 #include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/read_preference.hpp>
 
+#include <mongocxx/conversions.hh>
+#include <mongocxx/read_preference.hh>
 #include <mongocxx/scoped_bson.hh>
 
 #include <bsoncxx/private/make_unique.hh>
 
-#include <mongocxx/private/conversions.hh>
 #include <mongocxx/private/mongoc.hh>
-#include <mongocxx/private/read_preference.hh>
 
 namespace mongocxx {
 namespace v_noabi {
