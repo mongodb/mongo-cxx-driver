@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include <mongocxx/v1/exception.hpp>
+#include <mongocxx/v1/exception.hpp> // IWYU pragma: export
 
 //
 

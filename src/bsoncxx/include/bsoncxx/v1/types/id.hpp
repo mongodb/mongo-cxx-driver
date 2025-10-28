@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include <bsoncxx/v1/types/id-fwd.hpp>
+#include <bsoncxx/v1/types/id-fwd.hpp> // IWYU pragma: export
 
 //
 

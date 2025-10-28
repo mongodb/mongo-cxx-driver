@@ -18,7 +18,7 @@
 
 //
 
-#include <bsoncxx/v1/element/view.hpp>
+#include <bsoncxx/v1/element/view.hpp> // IWYU pragma: export
 
 #include <cstddef>
 #include <cstdint>
@@ -26,7 +26,7 @@
 #include <bsoncxx/array/view-fwd.hpp>
 #include <bsoncxx/types/bson_value/view-fwd.hpp>
 
-#include <bsoncxx/document/element.hpp>
+#include <bsoncxx/document/element.hpp> // IWYU pragma: export
 
 #include <bsoncxx/config/prelude.hpp>
 

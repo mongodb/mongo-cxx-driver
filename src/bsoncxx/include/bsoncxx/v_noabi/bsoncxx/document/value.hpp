@@ -18,7 +18,7 @@
 
 //
 
-#include <bsoncxx/v1/document/value.hpp>
+#include <bsoncxx/v1/document/value.hpp> // IWYU pragma: export
 
 #include <cstdlib>
 #include <memory>

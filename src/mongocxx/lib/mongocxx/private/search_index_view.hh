@@ -7,7 +7,7 @@
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/string/to_string.hpp>
 
-#include <mongocxx/search_index_view.hpp>
+#include <mongocxx/search_index_view.hpp> // IWYU pragma: export
 
 #include <mongocxx/scoped_bson.hh>
 

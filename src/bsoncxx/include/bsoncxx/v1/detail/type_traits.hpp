@@ -18,7 +18,7 @@
 
 #include <bsoncxx/v1/detail/macros.hpp>
 
-#include <type_traits>
+#include <type_traits> // IWYU pragma: export
 #include <utility>
 
 namespace bsoncxx {

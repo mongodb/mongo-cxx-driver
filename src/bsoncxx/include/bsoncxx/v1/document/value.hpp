@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include <bsoncxx/v1/document/value-fwd.hpp>
+#include <bsoncxx/v1/document/value-fwd.hpp> // IWYU pragma: export
 
 //
 
@@ -22,8 +22,8 @@
 
 #include <bsoncxx/v1/config/export.hpp>
 #include <bsoncxx/v1/detail/type_traits.hpp>
-#include <bsoncxx/v1/document/view.hpp>
-#include <bsoncxx/v1/element/view.hpp>
+#include <bsoncxx/v1/document/view.hpp> // IWYU pragma: export
+#include <bsoncxx/v1/element/view.hpp>  // IWYU pragma: export
 
 #include <cstddef>
 #include <cstring>

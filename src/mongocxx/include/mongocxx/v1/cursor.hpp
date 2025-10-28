@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include <mongocxx/v1/cursor-fwd.hpp>
+#include <mongocxx/v1/cursor-fwd.hpp> // IWYU pragma: export
 
 //
 

@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include <mongocxx/v1/update_many_result-fwd.hpp>
+#include <mongocxx/v1/update_many_result-fwd.hpp> // IWYU pragma: export
 
 //
 

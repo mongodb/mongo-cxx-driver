@@ -14,21 +14,21 @@
 
 #pragma once
 
-#include <bsoncxx/v1/types/view-fwd.hpp>
+#include <bsoncxx/v1/types/view-fwd.hpp> // IWYU pragma: export
 
 //
 
 #include <bsoncxx/v1/detail/prelude.hpp>
 
-#include <bsoncxx/v1/array/view.hpp>
+#include <bsoncxx/v1/array/view.hpp> // IWYU pragma: export
 #include <bsoncxx/v1/config/export.hpp>
-#include <bsoncxx/v1/decimal128.hpp>
+#include <bsoncxx/v1/decimal128.hpp> // IWYU pragma: export
 #include <bsoncxx/v1/detail/macros.hpp>
 #include <bsoncxx/v1/detail/type_traits.hpp>
-#include <bsoncxx/v1/document/view.hpp>
-#include <bsoncxx/v1/oid.hpp>
+#include <bsoncxx/v1/document/view.hpp> // IWYU pragma: export
+#include <bsoncxx/v1/oid.hpp>           // IWYU pragma: export
 #include <bsoncxx/v1/stdx/string_view.hpp>
-#include <bsoncxx/v1/types/id.hpp>
+#include <bsoncxx/v1/types/id.hpp> // IWYU pragma: export
 
 #include <chrono>
 #include <cstdint>

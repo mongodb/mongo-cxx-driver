@@ -18,7 +18,7 @@
 
 //
 
-#include <bsoncxx/v1/decimal128.hpp>
+#include <bsoncxx/v1/decimal128.hpp> // IWYU pragma: export
 #include <bsoncxx/v1/detail/type_traits.hpp>
 
 #include <cstdint>

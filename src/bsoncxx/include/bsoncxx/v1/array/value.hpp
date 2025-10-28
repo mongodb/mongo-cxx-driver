@@ -14,15 +14,15 @@
 
 #pragma once
 
-#include <bsoncxx/v1/array/value-fwd.hpp>
+#include <bsoncxx/v1/array/value-fwd.hpp> // IWYU pragma: export
 
 //
 
 #include <bsoncxx/v1/detail/prelude.hpp>
 
-#include <bsoncxx/v1/array/view.hpp>
+#include <bsoncxx/v1/array/view.hpp> // IWYU pragma: export
 #include <bsoncxx/v1/config/export.hpp>
-#include <bsoncxx/v1/document/value.hpp>
+#include <bsoncxx/v1/document/value.hpp> // IWYU pragma: export
 
 #include <cstdint>
 #include <type_traits>

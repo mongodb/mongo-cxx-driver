@@ -16,7 +16,7 @@
 
 #include <list>
 
-#include <mongocxx/client.hpp>
+#include <mongocxx/client.hpp> // IWYU pragma: export
 
 #include <mongocxx/private/mongoc.hh>
 #include <mongocxx/private/write_concern.hh>

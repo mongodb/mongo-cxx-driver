@@ -18,7 +18,7 @@
 
 //
 
-#include <bsoncxx/v1/exception.hpp>
+#include <bsoncxx/v1/exception.hpp> // IWYU pragma: export
 
 #include <cstdint>
 #include <system_error>

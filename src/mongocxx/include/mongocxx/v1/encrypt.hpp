@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include <mongocxx/v1/encrypt-fwd.hpp>
+#include <mongocxx/v1/encrypt-fwd.hpp> // IWYU pragma: export
 
 //
 

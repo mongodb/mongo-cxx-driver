@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include <mongocxx/gridfs/bucket.hh>
+#include <mongocxx/gridfs/bucket.hh> // IWYU pragma: export
 
 //
 

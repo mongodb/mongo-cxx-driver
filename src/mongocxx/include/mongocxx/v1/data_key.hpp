@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include <mongocxx/v1/data_key-fwd.hpp>
+#include <mongocxx/v1/data_key-fwd.hpp> // IWYU pragma: export
 
 //
 

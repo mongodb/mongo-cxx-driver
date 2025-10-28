@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include <mongocxx/gridfs/uploader.hpp>
+#include <mongocxx/gridfs/uploader.hpp> // IWYU pragma: export
 
 //
 

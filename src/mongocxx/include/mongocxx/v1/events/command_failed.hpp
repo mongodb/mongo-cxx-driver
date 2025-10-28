@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include <mongocxx/v1/events/command_failed-fwd.hpp>
+#include <mongocxx/v1/events/command_failed-fwd.hpp> // IWYU pragma: export
 
 //
 

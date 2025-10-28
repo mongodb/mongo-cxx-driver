@@ -18,7 +18,7 @@
 
 //
 
-#include <bsoncxx/v1/array/view.hpp>
+#include <bsoncxx/v1/array/view.hpp> // IWYU pragma: export
 
 #include <cstddef>
 #include <cstdint>
