@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include <mongocxx/v1/data_key-fwd.hpp>
+#include <mongocxx/v1/data_key_options-fwd.hpp>
 
 //
 
@@ -31,7 +31,7 @@ namespace v1 {
 ///
 /// @attention This feature is experimental! It is not ready for use!
 ///
-class data_key {};
+class data_key_options {};
 
 } // namespace v1
 } // namespace mongocxx
@@ -40,5 +40,5 @@ class data_key {};
 
 ///
 /// @file
-/// Provides @ref mongocxx::v1::data_key.
+/// Provides @ref mongocxx::v1::data_key_options.
 ///

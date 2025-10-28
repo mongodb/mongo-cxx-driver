@@ -135,7 +135,7 @@ set(mongocxx_sources_v1
     mongocxx/v1/config/version.cpp
     mongocxx/v1/count_options.cpp
     mongocxx/v1/cursor.cpp
-    mongocxx/v1/data_key.cpp
+    mongocxx/v1/data_key_options.cpp
     mongocxx/v1/database.cpp
     mongocxx/v1/delete_many_options.cpp
     mongocxx/v1/delete_many_result.cpp

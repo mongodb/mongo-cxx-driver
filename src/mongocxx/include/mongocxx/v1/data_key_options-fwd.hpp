@@ -19,7 +19,7 @@
 namespace mongocxx {
 namespace v1 {
 
-class data_key;
+class data_key_options;
 
 } // namespace v1
 } // namespace mongocxx
@@ -28,5 +28,5 @@ class data_key;
 
 ///
 /// @file
-/// Declares @ref mongocxx::v1::data_key.
+/// Declares @ref mongocxx::v1::data_key_options.
 ///
