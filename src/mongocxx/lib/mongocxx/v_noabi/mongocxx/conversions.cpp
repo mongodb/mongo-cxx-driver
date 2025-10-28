@@ -17,7 +17,7 @@
 #include <mongocxx/conversions.hh>
 
 namespace mongocxx {
-namespace libmongoc {
+namespace v_noabi {
 namespace conversions {
 
 mongoc_read_mode_t read_mode_t_from_read_mode(read_preference::read_mode read_mode) {
@@ -55,5 +55,5 @@ read_preference::read_mode read_mode_from_read_mode_t(mongoc_read_mode_t read_mo
 }
 
 } // namespace conversions
-} // namespace libmongoc
+} // namespace v_noabi
 } // namespace mongocxx

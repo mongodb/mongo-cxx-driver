@@ -20,7 +20,7 @@
 #include <mongocxx/private/mongoc.hh>
 
 namespace mongocxx {
-namespace libmongoc {
+namespace v_noabi {
 namespace conversions {
 
 MONGOCXX_ABI_EXPORT_CDECL_TESTING(mongoc_read_mode_t)
@@ -30,5 +30,5 @@ MONGOCXX_ABI_EXPORT_CDECL_TESTING(read_preference::read_mode)
 read_mode_from_read_mode_t(mongoc_read_mode_t read_mode);
 
 } // namespace conversions
-} // namespace libmongoc
+} // namespace v_noabi
 } // namespace mongocxx

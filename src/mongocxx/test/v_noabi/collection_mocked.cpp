@@ -202,7 +202,8 @@ TEST_CASE("Collection", "[collection]") {
                 } else {
                     REQUIRE(
                         mongoc_read_prefs_get_mode(read_preference) ==
-                        libmongoc::conversions::read_mode_t_from_read_mode(mongo_coll.read_preference().mode()));
+                        mongocxx::v_noabi::conversions::read_mode_t_from_read_mode(
+                            mongo_coll.read_preference().mode()));
                 }
 
                 if (opts.write_concern()) {
@@ -389,60 +390,61 @@ TEST_CASE("Collection", "[collection]") {
         bsoncxx::stdx::optional<bsoncxx::document::view> expected_sort{};
         bsoncxx::stdx::optional<read_preference> expected_read_preference{};
 
-        collection_find_with_opts->interpose(
-            [&](mongoc_collection_t*, bson_t const* filter, bson_t const* opts, mongoc_read_prefs_t const* read_prefs) {
-                collection_find_called = true;
+        collection_find_with_opts->interpose([&](mongoc_collection_t*,
+                                                 bson_t const* filter,
+                                                 bson_t const* opts,
+                                                 mongoc_read_prefs_t const* read_prefs) {
+            collection_find_called = true;
 
-                bsoncxx::document::view filter_view{bson_get_data(filter), filter->len};
-                bsoncxx::document::view opts_view{bson_get_data(opts), opts->len};
+            bsoncxx::document::view filter_view{bson_get_data(filter), filter->len};
+            bsoncxx::document::view opts_view{bson_get_data(opts), opts->len};
 
-                REQUIRE(filter_view == doc);
+            REQUIRE(filter_view == doc);
 
-                if (expected_allow_partial_results) {
-                    REQUIRE(opts_view["allowPartialResults"].get_bool().value == *expected_allow_partial_results);
+            if (expected_allow_partial_results) {
+                REQUIRE(opts_view["allowPartialResults"].get_bool().value == *expected_allow_partial_results);
+            }
+            if (expected_comment) {
+                REQUIRE(opts_view["comment"].get_string().value == *expected_comment);
+            }
+            if (expected_cursor_type) {
+                bsoncxx::document::element tailable = opts_view["tailable"];
+                bsoncxx::document::element awaitData = opts_view["awaitData"];
+                switch (*expected_cursor_type) {
+                    case mongocxx::cursor::type::k_non_tailable:
+                        REQUIRE(!tailable);
+                        REQUIRE(!awaitData);
+                        break;
+                    case mongocxx::cursor::type::k_tailable:
+                        REQUIRE(tailable.get_bool().value);
+                        REQUIRE(!awaitData);
+                        break;
+                    case mongocxx::cursor::type::k_tailable_await:
+                        REQUIRE(tailable.get_bool().value);
+                        REQUIRE(awaitData.get_bool().value);
+                        break;
                 }
-                if (expected_comment) {
-                    REQUIRE(opts_view["comment"].get_string().value == *expected_comment);
-                }
-                if (expected_cursor_type) {
-                    bsoncxx::document::element tailable = opts_view["tailable"];
-                    bsoncxx::document::element awaitData = opts_view["awaitData"];
-                    switch (*expected_cursor_type) {
-                        case mongocxx::cursor::type::k_non_tailable:
-                            REQUIRE(!tailable);
-                            REQUIRE(!awaitData);
-                            break;
-                        case mongocxx::cursor::type::k_tailable:
-                            REQUIRE(tailable.get_bool().value);
-                            REQUIRE(!awaitData);
-                            break;
-                        case mongocxx::cursor::type::k_tailable_await:
-                            REQUIRE(tailable.get_bool().value);
-                            REQUIRE(awaitData.get_bool().value);
-                            break;
-                    }
-                }
-                if (expected_hint) {
-                    REQUIRE(opts_view["hint"].get_string() == expected_hint->get_string());
-                }
-                if (expected_no_cursor_timeout) {
-                    REQUIRE(opts_view["noCursorTimeout"].get_bool().value == *expected_no_cursor_timeout);
-                }
-                if (expected_sort) {
-                    REQUIRE(opts_view["sort"].get_document() == *expected_sort);
-                }
+            }
+            if (expected_hint) {
+                REQUIRE(opts_view["hint"].get_string() == expected_hint->get_string());
+            }
+            if (expected_no_cursor_timeout) {
+                REQUIRE(opts_view["noCursorTimeout"].get_bool().value == *expected_no_cursor_timeout);
+            }
+            if (expected_sort) {
+                REQUIRE(opts_view["sort"].get_document() == *expected_sort);
+            }
 
-                if (expected_read_preference)
-                    REQUIRE(
-                        mongoc_read_prefs_get_mode(read_prefs) == static_cast<int>(expected_read_preference->mode()));
-                else
-                    REQUIRE(
-                        mongoc_read_prefs_get_mode(read_prefs) ==
-                        libmongoc::conversions::read_mode_t_from_read_mode(mongo_coll.read_preference().mode()));
+            if (expected_read_preference)
+                REQUIRE(mongoc_read_prefs_get_mode(read_prefs) == static_cast<int>(expected_read_preference->mode()));
+            else
+                REQUIRE(
+                    mongoc_read_prefs_get_mode(read_prefs) ==
+                    mongocxx::v_noabi::conversions::read_mode_t_from_read_mode(mongo_coll.read_preference().mode()));
 
-                mongoc_cursor_t* cursor = nullptr;
-                return cursor;
-            });
+            mongoc_cursor_t* cursor = nullptr;
+            return cursor;
+        });
 
         SECTION("find succeeds") {
             REQUIRE_NOTHROW(mongo_coll.find(doc));

@@ -45,7 +45,7 @@ TEST_CASE("Read preference", "[read_preference]") {
 
     SECTION("Can have mode changed") {
         rp.mode(read_preference::read_mode::k_nearest);
-        REQUIRE(libmongoc::conversions::read_mode_t_from_read_mode(rp.mode()) == MONGOC_READ_NEAREST);
+        REQUIRE(mongocxx::v_noabi::conversions::read_mode_t_from_read_mode(rp.mode()) == MONGOC_READ_NEAREST);
     }
 
     {
@@ -146,7 +146,7 @@ TEST_CASE("Read preference methods call underlying mongoc methods", "[read_prefe
         read_preference::read_mode expected_mode = read_preference::read_mode::k_nearest;
         read_prefs_set_mode->interpose([&](mongoc_read_prefs_t*, mongoc_read_mode_t mode) {
             called = true;
-            REQUIRE(mode == libmongoc::conversions::read_mode_t_from_read_mode(expected_mode));
+            REQUIRE(mode == mongocxx::v_noabi::conversions::read_mode_t_from_read_mode(expected_mode));
         });
         rp.mode(expected_mode);
         REQUIRE(called);

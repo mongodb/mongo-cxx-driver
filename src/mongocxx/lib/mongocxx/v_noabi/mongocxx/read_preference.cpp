@@ -47,14 +47,14 @@ read_preference::read_preference(std::unique_ptr<impl>&& implementation) {
 read_preference::read_preference()
     : _impl(
           bsoncxx::make_unique<impl>(
-              libmongoc::read_prefs_new(libmongoc::conversions::read_mode_t_from_read_mode(read_mode::k_primary)))) {}
+              libmongoc::read_prefs_new(v_noabi::conversions::read_mode_t_from_read_mode(read_mode::k_primary)))) {}
 
 read_preference::read_preference(read_mode mode) : read_preference(mode, deprecated_tag{}) {}
 
 read_preference::read_preference(read_mode mode, deprecated_tag)
     : _impl(
           bsoncxx::make_unique<impl>(
-              libmongoc::read_prefs_new(libmongoc::conversions::read_mode_t_from_read_mode(mode)))) {}
+              libmongoc::read_prefs_new(v_noabi::conversions::read_mode_t_from_read_mode(mode)))) {}
 
 read_preference::read_preference(read_mode mode, bsoncxx::v_noabi::document::view_or_value tags)
     : read_preference(mode, std::move(tags), deprecated_tag{}) {}
@@ -67,7 +67,7 @@ read_preference::read_preference(read_mode mode, bsoncxx::v_noabi::document::vie
 read_preference::~read_preference() = default;
 
 read_preference& read_preference::mode(read_mode mode) {
-    libmongoc::read_prefs_set_mode(_impl->read_preference_t, libmongoc::conversions::read_mode_t_from_read_mode(mode));
+    libmongoc::read_prefs_set_mode(_impl->read_preference_t, v_noabi::conversions::read_mode_t_from_read_mode(mode));
 
     return *this;
 }
@@ -83,7 +83,7 @@ read_preference& read_preference::tags(bsoncxx::v_noabi::array::view_or_value ta
 }
 
 read_preference::read_mode read_preference::mode() const {
-    return libmongoc::conversions::read_mode_from_read_mode_t(libmongoc::read_prefs_get_mode(_impl->read_preference_t));
+    return v_noabi::conversions::read_mode_from_read_mode_t(libmongoc::read_prefs_get_mode(_impl->read_preference_t));
 }
 
 bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view> read_preference::tags() const {
