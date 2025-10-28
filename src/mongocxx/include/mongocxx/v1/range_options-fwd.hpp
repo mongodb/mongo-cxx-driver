@@ -14,24 +14,12 @@
 
 #pragma once
 
-#include <mongocxx/v1/range-fwd.hpp>
-
-//
-
 #include <mongocxx/v1/detail/prelude.hpp>
 
 namespace mongocxx {
 namespace v1 {
 
-///
-/// Options related to range queries for Queryable Encryption.
-///
-/// @see
-/// - [Encrypted Fields and Enabled Queries](https://www.mongodb.com/docs/manual/core/queryable-encryption/fundamentals/encrypt-and-query/)
-///
-/// @attention This feature is experimental! It is not ready for use!
-///
-class range {};
+class range_options;
 
 } // namespace v1
 } // namespace mongocxx
@@ -40,5 +28,5 @@ class range {};
 
 ///
 /// @file
-/// Provides @ref mongocxx::v1::range.
+/// Declares @ref mongocxx::v1::range_options.
 ///

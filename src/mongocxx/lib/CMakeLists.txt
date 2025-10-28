@@ -180,7 +180,7 @@ set(mongocxx_sources_v1
     mongocxx/v1/logger.cpp
     mongocxx/v1/pipeline.cpp
     mongocxx/v1/pool.cpp
-    mongocxx/v1/range.cpp
+    mongocxx/v1/range_options.cpp
     mongocxx/v1/read_concern.cpp
     mongocxx/v1/read_preference.cpp
     mongocxx/v1/replace_one_options.cpp
