@@ -11,8 +11,8 @@
 
 #include <mongocxx/scoped_bson.hh>
 
-#include <mongocxx/private/append_aggregate_options.hh>
-#include <mongocxx/private/client_session.hh>
+#include <mongocxx/append_aggregate_options.hh>
+#include <mongocxx/client_session.hh>
 #include <mongocxx/private/mongoc.hh>
 
 namespace mongocxx {

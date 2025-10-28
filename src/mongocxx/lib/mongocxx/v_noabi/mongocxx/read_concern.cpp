@@ -19,10 +19,11 @@
 #include <mongocxx/exception/exception.hpp>
 #include <mongocxx/read_concern.hpp>
 
+#include <mongocxx/read_concern.hh>
+
 #include <bsoncxx/private/make_unique.hh>
 
 #include <mongocxx/private/mongoc.hh>
-#include <mongocxx/private/read_concern.hh>
 
 namespace mongocxx {
 namespace v_noabi {

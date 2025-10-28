@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include <mongocxx/v1/encrypt-fwd.hpp> // IWYU pragma: export
+#include <mongocxx/v1/encrypt_options-fwd.hpp> // IWYU pragma: export
 
 //
 
@@ -33,7 +33,7 @@ namespace v1 {
 ///
 /// @attention This feature is experimental! It is not ready for use!
 ///
-class encrypt {
+class encrypt_options {
     // This class implements `EncryptOpts`:
     //  - https://specifications.readthedocs.io/en/latest/client-side-encryption/client-side-encryption/
 };
@@ -45,5 +45,5 @@ class encrypt {
 
 ///
 /// @file
-/// Provides @ref mongocxx::v1::encrypt.
+/// Provides @ref mongocxx::v1::encrypt_options.
 ///

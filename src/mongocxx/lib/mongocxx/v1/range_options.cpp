@@ -12,4 +12,4 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <mongocxx/v1/auto_encryption.hpp>
+#include <mongocxx/v1/range_options.hpp>

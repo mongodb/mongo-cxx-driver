@@ -30,10 +30,10 @@
 #include <bsoncxx/private/bson.hh>
 #include <bsoncxx/private/helpers.hh>
 
-#include <mongocxx/private/client.hh>
-#include <mongocxx/private/cursor.hh>
+#include <mongocxx/client.hh>
+#include <mongocxx/cursor.hh>
 #include <mongocxx/private/mongoc.hh>
-#include <mongocxx/private/mongoc_error.hh>
+#include <mongocxx/mongoc_error.hh>
 #include <mongocxx/private/scoped_bson_value.hh>
 
 namespace mongocxx {

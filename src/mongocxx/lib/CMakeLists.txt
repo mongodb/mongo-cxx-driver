@@ -13,7 +13,6 @@
 # limitations under the License.
 
 set(mongocxx_sources_private
-    mongocxx/private/conversions.cpp
     mongocxx/private/mongoc.cpp
     mongocxx/private/numeric_casting.cpp
     mongocxx/private/scoped_bson.cpp
@@ -29,6 +28,7 @@ set(mongocxx_sources_v_noabi
     mongocxx/v_noabi/mongocxx/config/config.cpp
     mongocxx/v_noabi/mongocxx/config/export.cpp
     mongocxx/v_noabi/mongocxx/config/version.cpp
+    mongocxx/v_noabi/mongocxx/conversions.cpp
     mongocxx/v_noabi/mongocxx/cursor.cpp
     mongocxx/v_noabi/mongocxx/database.cpp
     mongocxx/v_noabi/mongocxx/events/command_failed_event.cpp
@@ -123,7 +123,7 @@ set(mongocxx_sources_v_noabi
 set(mongocxx_sources_v1
     mongocxx/v1/aggregate_options.cpp
     mongocxx/v1/apm.cpp
-    mongocxx/v1/auto_encryption.cpp
+    mongocxx/v1/auto_encryption_options.cpp
     mongocxx/v1/bulk_write.cpp
     mongocxx/v1/change_stream.cpp
     mongocxx/v1/client_encryption.cpp
@@ -135,7 +135,7 @@ set(mongocxx_sources_v1
     mongocxx/v1/config/version.cpp
     mongocxx/v1/count_options.cpp
     mongocxx/v1/cursor.cpp
-    mongocxx/v1/data_key.cpp
+    mongocxx/v1/data_key_options.cpp
     mongocxx/v1/database.cpp
     mongocxx/v1/delete_many_options.cpp
     mongocxx/v1/delete_many_result.cpp
@@ -144,7 +144,7 @@ set(mongocxx_sources_v1
     mongocxx/v1/detail/postlude.cpp
     mongocxx/v1/detail/prelude.cpp
     mongocxx/v1/distinct_options.cpp
-    mongocxx/v1/encrypt.cpp
+    mongocxx/v1/encrypt_options.cpp
     mongocxx/v1/estimated_document_count_options.cpp
     mongocxx/v1/events/command_failed.cpp
     mongocxx/v1/events/command_started.cpp
@@ -180,7 +180,7 @@ set(mongocxx_sources_v1
     mongocxx/v1/logger.cpp
     mongocxx/v1/pipeline.cpp
     mongocxx/v1/pool.cpp
-    mongocxx/v1/range.cpp
+    mongocxx/v1/range_options.cpp
     mongocxx/v1/read_concern.cpp
     mongocxx/v1/read_preference.cpp
     mongocxx/v1/replace_one_options.cpp
@@ -254,42 +254,42 @@ set_dist_list(src_mongocxx_lib_DIST
     ${mongocxx_sources_private}
     ${mongocxx_sources_v_noabi}
     ${mongocxx_sources_v1}
-    mongocxx/private/append_aggregate_options.hh
-    mongocxx/private/bulk_write.hh
-    mongocxx/private/change_stream.hh
-    mongocxx/private/client_encryption.hh
-    mongocxx/private/client_session.hh
-    mongocxx/private/client.hh
-    mongocxx/private/collection.hh
     mongocxx/private/config/config.hh.in
-    mongocxx/private/conversions.hh
-    mongocxx/private/cursor.hh
-    mongocxx/private/database.hh
     mongocxx/private/export.hh
-    mongocxx/private/index_view.hh
     mongocxx/private/mock.hh
-    mongocxx/private/mongoc_error.hh
     mongocxx/private/mongoc.hh
     mongocxx/private/numeric_casting.hh
-    mongocxx/private/pipeline.hh
-    mongocxx/private/pool.hh
-    mongocxx/private/read_concern.hh
-    mongocxx/private/read_preference.hh
     mongocxx/private/scoped_bson_value.hh
     mongocxx/private/scoped_bson.hh
-    mongocxx/private/search_index_model.hh
-    mongocxx/private/search_index_view.hh
     mongocxx/private/ssl.hh
-    mongocxx/private/uri.hh
-    mongocxx/private/write_concern.hh
+    mongocxx/v_noabi/mongocxx/append_aggregate_options.hh
+    mongocxx/v_noabi/mongocxx/bulk_write.hh
+    mongocxx/v_noabi/mongocxx/change_stream.hh
+    mongocxx/v_noabi/mongocxx/client_encryption.hh
+    mongocxx/v_noabi/mongocxx/client_session.hh
+    mongocxx/v_noabi/mongocxx/client.hh
+    mongocxx/v_noabi/mongocxx/collection.hh
+    mongocxx/v_noabi/mongocxx/conversions.hh
+    mongocxx/v_noabi/mongocxx/cursor.hh
+    mongocxx/v_noabi/mongocxx/database.hh
     mongocxx/v_noabi/mongocxx/gridfs/bucket.hh
     mongocxx/v_noabi/mongocxx/gridfs/downloader.hh
     mongocxx/v_noabi/mongocxx/gridfs/uploader.hh
+    mongocxx/v_noabi/mongocxx/index_view.hh
+    mongocxx/v_noabi/mongocxx/mongoc_error.hh
     mongocxx/v_noabi/mongocxx/options/apm.hh
     mongocxx/v_noabi/mongocxx/options/server_api.hh
     mongocxx/v_noabi/mongocxx/options/tls.hh
     mongocxx/v_noabi/mongocxx/options/transaction.hh
+    mongocxx/v_noabi/mongocxx/pipeline.hh
+    mongocxx/v_noabi/mongocxx/pool.hh
+    mongocxx/v_noabi/mongocxx/read_concern.hh
+    mongocxx/v_noabi/mongocxx/read_preference.hh
     mongocxx/v_noabi/mongocxx/scoped_bson.hh
+    mongocxx/v_noabi/mongocxx/search_index_model.hh
+    mongocxx/v_noabi/mongocxx/search_index_view.hh
+    mongocxx/v_noabi/mongocxx/uri.hh
+    mongocxx/v_noabi/mongocxx/write_concern.hh
     mongocxx/v1/config/config.hpp.in
     mongocxx/v1/config/version.hpp.in
 )

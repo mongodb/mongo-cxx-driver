@@ -20,22 +20,22 @@
 #include <mongocxx/exception/operation_exception.hpp>
 #include <mongocxx/options/auto_encryption.hpp>
 
+#include <mongocxx/client.hh>
+#include <mongocxx/client_session.hh>
+#include <mongocxx/mongoc_error.hh>
 #include <mongocxx/options/apm.hh>
 #include <mongocxx/options/server_api.hh>
 #include <mongocxx/options/tls.hh>
+#include <mongocxx/pipeline.hh>
+#include <mongocxx/read_concern.hh>
+#include <mongocxx/read_preference.hh>
 #include <mongocxx/scoped_bson.hh>
+#include <mongocxx/uri.hh>
+#include <mongocxx/write_concern.hh>
 
 #include <bsoncxx/private/make_unique.hh>
 
-#include <mongocxx/private/client.hh>
-#include <mongocxx/private/client_session.hh>
-#include <mongocxx/private/mongoc_error.hh>
-#include <mongocxx/private/pipeline.hh>
-#include <mongocxx/private/read_concern.hh>
-#include <mongocxx/private/read_preference.hh>
 #include <mongocxx/private/ssl.hh>
-#include <mongocxx/private/uri.hh>
-#include <mongocxx/private/write_concern.hh>
 
 namespace mongocxx {
 namespace v_noabi {

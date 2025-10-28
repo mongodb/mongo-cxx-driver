@@ -14,12 +14,24 @@
 
 #pragma once
 
+#include <mongocxx/v1/data_key_options-fwd.hpp> // IWYU pragma: export
+
+//
+
 #include <mongocxx/v1/detail/prelude.hpp>
 
 namespace mongocxx {
 namespace v1 {
 
-class auto_encryption;
+///
+/// A Data Encryption Key (DEK) for In-Use Encryption.
+///
+/// @see
+/// - [Encryption Keys and Key Vaults (MongoDB Manual)](https://www.mongodb.com/docs/manual/core/queryable-encryption/fundamentals/keys-key-vaults/)
+///
+/// @attention This feature is experimental! It is not ready for use!
+///
+class data_key_options {};
 
 } // namespace v1
 } // namespace mongocxx
@@ -28,5 +40,5 @@ class auto_encryption;
 
 ///
 /// @file
-/// Declares @ref mongocxx::v1::auto_encryption.
+/// Provides @ref mongocxx::v1::data_key_options.
 ///

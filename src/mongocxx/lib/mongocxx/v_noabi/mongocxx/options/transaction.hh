@@ -23,9 +23,9 @@
 
 #include <bsoncxx/private/make_unique.hh>
 
-#include <mongocxx/private/read_concern.hh>
-#include <mongocxx/private/read_preference.hh>
-#include <mongocxx/private/write_concern.hh>
+#include <mongocxx/read_concern.hh>
+#include <mongocxx/read_preference.hh>
+#include <mongocxx/write_concern.hh>
 
 namespace mongocxx {
 namespace v_noabi {

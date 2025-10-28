@@ -20,16 +20,16 @@
 #include <mongocxx/exception/bulk_write_exception.hpp>
 #include <mongocxx/exception/logic_error.hpp>
 
+#include <mongocxx/bulk_write.hh>
+#include <mongocxx/client_session.hh>
+#include <mongocxx/collection.hh>
+#include <mongocxx/mongoc_error.hh>
 #include <mongocxx/scoped_bson.hh>
+#include <mongocxx/write_concern.hh>
 
 #include <bsoncxx/private/make_unique.hh>
 
-#include <mongocxx/private/bulk_write.hh>
-#include <mongocxx/private/client_session.hh>
-#include <mongocxx/private/collection.hh>
 #include <mongocxx/private/mongoc.hh>
-#include <mongocxx/private/mongoc_error.hh>
-#include <mongocxx/private/write_concern.hh>
 
 namespace mongocxx {
 namespace v_noabi {

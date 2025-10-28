@@ -20,17 +20,17 @@
 #include <mongocxx/exception/operation_exception.hpp>
 #include <mongocxx/pool.hpp>
 
+#include <mongocxx/client.hh>
+#include <mongocxx/mongoc_error.hh>
 #include <mongocxx/options/apm.hh>
 #include <mongocxx/options/server_api.hh>
 #include <mongocxx/options/tls.hh>
+#include <mongocxx/pool.hh>
+#include <mongocxx/uri.hh>
 
 #include <bsoncxx/private/make_unique.hh>
 
-#include <mongocxx/private/client.hh>
-#include <mongocxx/private/mongoc_error.hh>
-#include <mongocxx/private/pool.hh>
 #include <mongocxx/private/ssl.hh>
-#include <mongocxx/private/uri.hh>
 
 namespace mongocxx {
 namespace v_noabi {

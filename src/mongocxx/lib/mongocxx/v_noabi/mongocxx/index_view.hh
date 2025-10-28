@@ -31,7 +31,7 @@
 
 #include <mongocxx/scoped_bson.hh>
 
-#include <mongocxx/private/client_session.hh>
+#include <mongocxx/client_session.hh>
 #include <mongocxx/private/mongoc.hh>
 
 namespace mongocxx {

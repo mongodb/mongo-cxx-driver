@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include <mongocxx/v1/range-fwd.hpp> // IWYU pragma: export
+#include <mongocxx/v1/range_options-fwd.hpp> // IWYU pragma: export
 
 //
 
@@ -31,7 +31,7 @@ namespace v1 {
 ///
 /// @attention This feature is experimental! It is not ready for use!
 ///
-class range {};
+class range_options {};
 
 } // namespace v1
 } // namespace mongocxx
@@ -40,5 +40,5 @@ class range {};
 
 ///
 /// @file
-/// Provides @ref mongocxx::v1::range.
+/// Provides @ref mongocxx::v1::range_options.
 ///

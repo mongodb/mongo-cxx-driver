@@ -17,9 +17,9 @@
 #include <mongocxx/client.hpp>
 #include <mongocxx/database.hpp> // IWYU pragma: export
 
-#include <mongocxx/private/client.hh>
+#include <mongocxx/client.hh>
 #include <mongocxx/private/mongoc.hh>
-#include <mongocxx/private/write_concern.hh>
+#include <mongocxx/write_concern.hh>
 
 namespace mongocxx {
 namespace v_noabi {

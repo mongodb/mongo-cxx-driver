@@ -22,10 +22,11 @@
 #include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/write_concern.hpp>
 
+#include <mongocxx/write_concern.hh>
+
 #include <bsoncxx/private/make_unique.hh>
 
 #include <mongocxx/private/mongoc.hh>
-#include <mongocxx/private/write_concern.hh>
 
 namespace mongocxx {
 namespace v_noabi {

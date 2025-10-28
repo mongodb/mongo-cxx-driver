@@ -18,13 +18,14 @@
 #include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/uri.hpp>
 
+#include <mongocxx/read_concern.hh>
+#include <mongocxx/read_preference.hh>
+#include <mongocxx/uri.hh>
+#include <mongocxx/write_concern.hh>
+
 #include <bsoncxx/private/make_unique.hh>
 
 #include <mongocxx/private/mongoc.hh>
-#include <mongocxx/private/read_concern.hh>
-#include <mongocxx/private/read_preference.hh>
-#include <mongocxx/private/uri.hh>
-#include <mongocxx/private/write_concern.hh>
 
 namespace mongocxx {
 namespace v_noabi {

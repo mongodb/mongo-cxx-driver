@@ -29,9 +29,9 @@
 #include <bsoncxx/private/bson.hh>
 #include <bsoncxx/private/helpers.hh>
 
-#include <mongocxx/private/client.hh>
+#include <mongocxx/client.hh>
 #include <mongocxx/private/mongoc.hh>
-#include <mongocxx/private/mongoc_error.hh>
+#include <mongocxx/mongoc_error.hh>
 
 namespace mongocxx {
 namespace v_noabi {

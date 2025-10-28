@@ -22,9 +22,9 @@
 
 #include <bsoncxx/private/helpers.hh>
 
-#include <mongocxx/private/database.hh>
-#include <mongocxx/private/read_preference.hh>
-#include <mongocxx/private/write_concern.hh>
+#include <mongocxx/database.hh>
+#include <mongocxx/read_preference.hh>
+#include <mongocxx/write_concern.hh>
 
 namespace mongocxx {
 namespace v_noabi {

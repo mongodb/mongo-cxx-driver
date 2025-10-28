@@ -14,19 +14,21 @@
 
 #pragma once
 
-#include <mongocxx/v1/detail/prelude.hpp>
+#include <mongocxx/read_preference.hpp>
+
+#include <mongocxx/private/export.hh>
+#include <mongocxx/private/mongoc.hh>
 
 namespace mongocxx {
-namespace v1 {
+namespace v_noabi {
+namespace conversions {
 
-class encrypt;
+MONGOCXX_ABI_EXPORT_CDECL_TESTING(mongoc_read_mode_t)
+read_mode_t_from_read_mode(read_preference::read_mode read_mode);
 
-} // namespace v1
+MONGOCXX_ABI_EXPORT_CDECL_TESTING(read_preference::read_mode)
+read_mode_from_read_mode_t(mongoc_read_mode_t read_mode);
+
+} // namespace conversions
+} // namespace v_noabi
 } // namespace mongocxx
-
-#include <mongocxx/v1/detail/postlude.hpp>
-
-///
-/// @file
-/// Declares @ref mongocxx::v1::encrypt.
-///
