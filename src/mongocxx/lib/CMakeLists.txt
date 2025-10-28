@@ -144,7 +144,7 @@ set(mongocxx_sources_v1
     mongocxx/v1/detail/postlude.cpp
     mongocxx/v1/detail/prelude.cpp
     mongocxx/v1/distinct_options.cpp
-    mongocxx/v1/encrypt.cpp
+    mongocxx/v1/encrypt_options.cpp
     mongocxx/v1/estimated_document_count_options.cpp
     mongocxx/v1/events/command_failed.cpp
     mongocxx/v1/events/command_started.cpp
