@@ -14,10 +14,10 @@
 
 #include <mongocxx/client_encryption.hpp>
 
-#include <bsoncxx/private/make_unique.hh>
+#include <mongocxx/client_encryption.hh>
+#include <mongocxx/database.hh>
 
-#include <mongocxx/private/client_encryption.hh>
-#include <mongocxx/private/database.hh>
+#include <bsoncxx/private/make_unique.hh>
 
 namespace mongocxx {
 namespace v_noabi {

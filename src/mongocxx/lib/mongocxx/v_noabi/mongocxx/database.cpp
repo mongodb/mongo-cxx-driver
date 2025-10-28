@@ -25,18 +25,18 @@
 #include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/exception/operation_exception.hpp>
 
+#include <mongocxx/client.hh>
+#include <mongocxx/client_session.hh>
+#include <mongocxx/database.hh>
+#include <mongocxx/mongoc_error.hh>
+#include <mongocxx/pipeline.hh>
+#include <mongocxx/read_concern.hh>
+#include <mongocxx/read_preference.hh>
 #include <mongocxx/scoped_bson.hh>
 
 #include <bsoncxx/private/make_unique.hh>
 
-#include <mongocxx/private/client.hh>
-#include <mongocxx/private/client_session.hh>
-#include <mongocxx/private/database.hh>
 #include <mongocxx/private/mongoc.hh>
-#include <mongocxx/private/mongoc_error.hh>
-#include <mongocxx/private/pipeline.hh>
-#include <mongocxx/private/read_concern.hh>
-#include <mongocxx/private/read_preference.hh>
 
 using bsoncxx::v_noabi::builder::concatenate;
 using bsoncxx::v_noabi::builder::basic::kvp;

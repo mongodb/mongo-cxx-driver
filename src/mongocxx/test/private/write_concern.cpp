@@ -15,8 +15,9 @@
 #include <mongocxx/instance.hpp>
 #include <mongocxx/write_concern.hpp>
 
+#include <mongocxx/write_concern.hh>
+
 #include <mongocxx/private/mongoc.hh>
-#include <mongocxx/private/write_concern.hh>
 
 #include <bsoncxx/test/catch.hh>
 

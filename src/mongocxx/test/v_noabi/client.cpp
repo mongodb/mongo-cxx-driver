@@ -28,7 +28,8 @@
 #include <mongocxx/pool.hpp>
 #include <mongocxx/uri.hpp>
 
-#include <mongocxx/private/conversions.hh>
+#include <mongocxx/conversions.hh>
+
 #include <mongocxx/private/mongoc.hh>
 #include <mongocxx/private/ssl.hh>
 
@@ -210,8 +211,8 @@ TEST_CASE("A client's read preferences may be set and obtained", "[client]") {
         called_set = true;
         saved_preference.reset(mongoc_read_prefs_copy(read_prefs));
         REQUIRE(
-            mongoc_read_prefs_get_mode(read_prefs) ==
-            libmongoc::conversions::read_mode_t_from_read_mode(read_preference::read_mode::k_secondary_preferred));
+            mongoc_read_prefs_get_mode(read_prefs) == mongocxx::v_noabi::conversions::read_mode_t_from_read_mode(
+                                                          read_preference::read_mode::k_secondary_preferred));
     });
 
     client_get_preference->interpose([&](mongoc_client_t const*) { return saved_preference.get(); }).forever();

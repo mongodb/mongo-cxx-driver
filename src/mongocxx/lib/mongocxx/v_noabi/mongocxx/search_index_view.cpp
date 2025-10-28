@@ -2,9 +2,9 @@
 #include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/search_index_view.hpp>
 
-#include <bsoncxx/private/make_unique.hh>
+#include <mongocxx/search_index_view.hh>
 
-#include <mongocxx/private/search_index_view.hh>
+#include <bsoncxx/private/make_unique.hh>
 
 namespace mongocxx {
 namespace v_noabi {

@@ -15,12 +15,13 @@
 #include <mongocxx/cursor.hpp>
 #include <mongocxx/exception/query_exception.hpp>
 
+#include <mongocxx/cursor.hh>
+#include <mongocxx/mongoc_error.hh>
+
 #include <bsoncxx/private/bson.hh>
 #include <bsoncxx/private/make_unique.hh>
 
-#include <mongocxx/private/cursor.hh>
 #include <mongocxx/private/mongoc.hh>
-#include <mongocxx/private/mongoc_error.hh>
 
 namespace mongocxx {
 namespace v_noabi {
