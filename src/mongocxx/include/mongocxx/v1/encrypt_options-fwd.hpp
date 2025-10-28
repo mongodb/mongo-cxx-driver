@@ -19,7 +19,7 @@
 namespace mongocxx {
 namespace v1 {
 
-class range;
+class encrypt_options;
 
 } // namespace v1
 } // namespace mongocxx
@@ -28,5 +28,5 @@ class range;
 
 ///
 /// @file
-/// Declares @ref mongocxx::v1::range.
+/// Declares @ref mongocxx::v1::encrypt_options.
 ///

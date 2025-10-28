@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include <mongocxx/v1/range-fwd.hpp>
+#include <mongocxx/v1/auto_encryption_options-fwd.hpp>
 
 //
 
@@ -24,14 +24,13 @@ namespace mongocxx {
 namespace v1 {
 
 ///
-/// Options related to range queries for Queryable Encryption.
+/// Options related In-Use Encryption configuration.
 ///
 /// @see
-/// - [Encrypted Fields and Enabled Queries](https://www.mongodb.com/docs/manual/core/queryable-encryption/fundamentals/encrypt-and-query/)
+/// - [MongoClient Options for Queryable Encryption (MongoDB Manual)](https://www.mongodb.com/docs/manual/core/queryable-encryption/reference/qe-options-clients/)
+/// - [MongoClient Options for CSFLE](https://www.mongodb.com/docs/manual/core/csfle/reference/csfle-options-clients/)
 ///
-/// @attention This feature is experimental! It is not ready for use!
-///
-class range {};
+class auto_encryption_options {};
 
 } // namespace v1
 } // namespace mongocxx
@@ -40,5 +39,5 @@ class range {};
 
 ///
 /// @file
-/// Provides @ref mongocxx::v1::range.
+/// Provides @ref mongocxx::v1::auto_encryption_options.
 ///

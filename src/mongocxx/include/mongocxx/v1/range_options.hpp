@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include <mongocxx/v1/encrypt-fwd.hpp>
+#include <mongocxx/v1/range_options-fwd.hpp>
 
 //
 
@@ -24,19 +24,14 @@ namespace mongocxx {
 namespace v1 {
 
 ///
-/// Options related to explicit encryption for In-Use Encryption.
+/// Options related to range queries for Queryable Encryption.
 ///
 /// @see
-/// - [Fields and Encryption Types (MongoDB Manual)](https://www.mongodb.com/docs/manual/core/csfle/fundamentals/encryption-algorithms/)
-/// - [Encrypted Fields and Enabled Queries (MongoDB Manual)](https://mongodb.com/docs/manual/core/queryable-encryption/fundamentals/encrypt-and-query/)
-/// - [Encryption Schemas](https://www.mongodb.com/docs/manual/core/csfle/fundamentals/create-schema/)
+/// - [Encrypted Fields and Enabled Queries](https://www.mongodb.com/docs/manual/core/queryable-encryption/fundamentals/encrypt-and-query/)
 ///
 /// @attention This feature is experimental! It is not ready for use!
 ///
-class encrypt {
-    // This class implements `EncryptOpts`:
-    //  - https://specifications.readthedocs.io/en/latest/client-side-encryption/client-side-encryption/
-};
+class range_options {};
 
 } // namespace v1
 } // namespace mongocxx
@@ -45,5 +40,5 @@ class encrypt {
 
 ///
 /// @file
-/// Provides @ref mongocxx::v1::encrypt.
+/// Provides @ref mongocxx::v1::range_options.
 ///

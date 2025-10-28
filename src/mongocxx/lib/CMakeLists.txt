@@ -123,7 +123,7 @@ set(mongocxx_sources_v_noabi
 set(mongocxx_sources_v1
     mongocxx/v1/aggregate_options.cpp
     mongocxx/v1/apm.cpp
-    mongocxx/v1/auto_encryption.cpp
+    mongocxx/v1/auto_encryption_options.cpp
     mongocxx/v1/bulk_write.cpp
     mongocxx/v1/change_stream.cpp
     mongocxx/v1/client_encryption.cpp
@@ -135,7 +135,7 @@ set(mongocxx_sources_v1
     mongocxx/v1/config/version.cpp
     mongocxx/v1/count_options.cpp
     mongocxx/v1/cursor.cpp
-    mongocxx/v1/data_key.cpp
+    mongocxx/v1/data_key_options.cpp
     mongocxx/v1/database.cpp
     mongocxx/v1/delete_many_options.cpp
     mongocxx/v1/delete_many_result.cpp
@@ -144,7 +144,7 @@ set(mongocxx_sources_v1
     mongocxx/v1/detail/postlude.cpp
     mongocxx/v1/detail/prelude.cpp
     mongocxx/v1/distinct_options.cpp
-    mongocxx/v1/encrypt.cpp
+    mongocxx/v1/encrypt_options.cpp
     mongocxx/v1/estimated_document_count_options.cpp
     mongocxx/v1/events/command_failed.cpp
     mongocxx/v1/events/command_started.cpp
@@ -180,7 +180,7 @@ set(mongocxx_sources_v1
     mongocxx/v1/logger.cpp
     mongocxx/v1/pipeline.cpp
     mongocxx/v1/pool.cpp
-    mongocxx/v1/range.cpp
+    mongocxx/v1/range_options.cpp
     mongocxx/v1/read_concern.cpp
     mongocxx/v1/read_preference.cpp
     mongocxx/v1/replace_one_options.cpp
