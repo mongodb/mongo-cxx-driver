@@ -344,7 +344,7 @@ class client_encryption::options {
     ///
     /// Return the current "keyVaultClient" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<mongocxx::v1::client*>) key_vault_client() const;
+    MONGOCXX_ABI_EXPORT_CDECL(mongocxx::v1::client*) key_vault_client() const;
 
     ///
     /// The name of a database and a collection.
