@@ -18,10 +18,12 @@
 
 #include <bsoncxx/v1/array/view.hpp>
 #include <bsoncxx/v1/decimal128.hpp>
+#include <bsoncxx/v1/detail/macros.hpp>
 #include <bsoncxx/v1/document/view.hpp>
 #include <bsoncxx/v1/exception.hpp>
 #include <bsoncxx/v1/oid.hpp>
 #include <bsoncxx/v1/stdx/optional.hpp>
+#include <bsoncxx/v1/stdx/string_view.hpp>
 #include <bsoncxx/v1/types/id.hpp>
 
 #include <bsoncxx/v1/types/view.hh>
@@ -29,7 +31,10 @@
 #include <chrono>
 #include <cstddef>
 #include <cstdint>
+#include <cstring>
 #include <string>
+#include <system_error>
+#include <utility>
 
 #include <bsoncxx/private/bson.hh>
 #include <bsoncxx/private/immortal.hh>

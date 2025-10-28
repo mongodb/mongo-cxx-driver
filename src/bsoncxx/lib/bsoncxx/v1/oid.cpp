@@ -17,9 +17,13 @@
 //
 
 #include <bsoncxx/v1/exception.hpp>
+#include <bsoncxx/v1/stdx/string_view.hpp>
 
+#include <cstdint>
 #include <cstring>
+#include <ctime>
 #include <string>
+#include <system_error>
 
 #include <bsoncxx/private/bson.hh> // <winsock.h> via <bson/bson-compat.h>
 #include <bsoncxx/private/immortal.hh>

@@ -22,6 +22,7 @@
 
 #include <bsoncxx/v1/config/export.hpp>
 
+#include <cstdint>
 #include <string>
 
 namespace bsoncxx {

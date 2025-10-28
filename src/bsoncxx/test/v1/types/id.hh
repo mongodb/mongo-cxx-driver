@@ -18,6 +18,8 @@
 
 //
 
+#include <string>
+
 #include <bsoncxx/test/stringify.hh>
 
 template <>

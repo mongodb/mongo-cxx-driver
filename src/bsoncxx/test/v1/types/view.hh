@@ -24,8 +24,12 @@
 #include <bsoncxx/test/v1/oid.hh>              // StringMaker<bsoncxx::v1::oid>
 #include <bsoncxx/test/v1/stdx/string_view.hh> // StringMaker<bsoncxx::v1::stdx::string_view>
 
+#include <chrono>
+#include <cstdint>
 #include <iomanip>
+#include <ios>
 #include <sstream>
+#include <string>
 #include <utility>
 
 #include <bsoncxx/test/stringify.hh>

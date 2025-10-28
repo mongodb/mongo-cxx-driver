@@ -24,8 +24,10 @@
 #include <bsoncxx/v1/detail/type_traits.hpp>
 #include <bsoncxx/v1/document/view.hpp> // IWYU pragma: export
 #include <bsoncxx/v1/element/view.hpp>  // IWYU pragma: export
+#include <bsoncxx/v1/stdx/string_view.hpp>
 
 #include <cstddef>
+#include <cstdint>
 #include <cstring>
 #include <functional>
 #include <memory>

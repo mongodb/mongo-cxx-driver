@@ -24,6 +24,7 @@
 #include <bsoncxx/v1/stdx/string_view.hpp>
 
 #include <cstdint>
+#include <string>
 #include <system_error>
 #include <type_traits>
 

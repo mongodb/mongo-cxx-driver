@@ -20,6 +20,8 @@
 
 #include <bsoncxx/test/v1/element/view.hh> // StringMaker<bsoncxx::v1::element::view>
 
+#include <string>
+
 #include <bsoncxx/private/export.hh>
 
 #include <bsoncxx/test/stringify.hh>

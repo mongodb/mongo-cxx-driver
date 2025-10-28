@@ -18,6 +18,8 @@
 
 //
 
+#include <string>
+
 #include <bsoncxx/private/export.hh>
 
 #include <catch2/catch_tostring.hpp>

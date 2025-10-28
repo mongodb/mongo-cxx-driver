@@ -18,6 +18,8 @@
 
 //
 
+#include <string>
+
 #include <catch2/catch_tostring.hpp>
 
 CATCH_REGISTER_ENUM(
