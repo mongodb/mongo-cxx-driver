@@ -123,7 +123,7 @@ set(mongocxx_sources_v_noabi
 set(mongocxx_sources_v1
     mongocxx/v1/aggregate_options.cpp
     mongocxx/v1/apm.cpp
-    mongocxx/v1/auto_encryption.cpp
+    mongocxx/v1/auto_encryption_options.cpp
     mongocxx/v1/bulk_write.cpp
     mongocxx/v1/change_stream.cpp
     mongocxx/v1/client_encryption.cpp

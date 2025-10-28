@@ -14,12 +14,23 @@
 
 #pragma once
 
+#include <mongocxx/v1/auto_encryption_options-fwd.hpp>
+
+//
+
 #include <mongocxx/v1/detail/prelude.hpp>
 
 namespace mongocxx {
 namespace v1 {
 
-class auto_encryption;
+///
+/// Options related In-Use Encryption configuration.
+///
+/// @see
+/// - [MongoClient Options for Queryable Encryption (MongoDB Manual)](https://www.mongodb.com/docs/manual/core/queryable-encryption/reference/qe-options-clients/)
+/// - [MongoClient Options for CSFLE](https://www.mongodb.com/docs/manual/core/csfle/reference/csfle-options-clients/)
+///
+class auto_encryption_options {};
 
 } // namespace v1
 } // namespace mongocxx
@@ -28,5 +39,5 @@ class auto_encryption;
 
 ///
 /// @file
-/// Declares @ref mongocxx::v1::auto_encryption.
+/// Provides @ref mongocxx::v1::auto_encryption_options.
 ///
