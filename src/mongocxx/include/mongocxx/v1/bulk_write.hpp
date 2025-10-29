@@ -945,18 +945,14 @@ class bulk_write::options {
 /// The result of a write operation.
 ///
 /// Supported fields include:
-/// - `inserted_count` ("nInserted" or "insertedCount")
-/// - `matched_count` ("nMatched" or "matchedCount")
-/// - `modified_count` ("nModified" or "modifiedCount")
-/// - `deleted_count` ("nDeleted" or "deletedCount")
-/// - `upserted_count` ("nUpserted" or "upsertedCount")
-/// - `upserted_ids` ("upserted" or "upsertedIds")
-///
-/// @important The raw server response is translated by mongoc into the Bulk Write API specification format even when
-/// the CRUD API specification is used to implement the requested operations (see: `MONGOC_WRITE_RESULT_COMPLETE`).
+/// - `inserted_count` ("insertedCount")
+/// - `matched_count` ("matchedCount")
+/// - `modified_count` ("modifiedCount")
+/// - `deleted_count` ("deletedCount")
+/// - `upserted_count` ("upsertedCount")
+/// - `upserted_ids` ("upsertedIds")
 ///
 /// @see
-/// - [`mongoc_bulk_operation_t` (mongoc)](https://mongoc.org/libmongoc/current/mongoc_bulk_operation_t.html)
 /// - [CRUD API (MongoDB Specifications)](https://specifications.readthedocs.io/en/latest/crud/crud/)
 /// - [Bulk Write Operations (MongoDB Manual)](https://www.mongodb.com/docs/manual/core/bulk-write-operations/)
 /// - [Update Methods (MongoDB Manual)](https://www.mongodb.com/docs/manual/reference/update-methods/)
@@ -1011,27 +1007,27 @@ class bulk_write::result {
     MONGOCXX_ABI_EXPORT_CDECL() result();
 
     ///
-    /// Return the value of the mongoc "nInserted" field.
+    /// Return the value of the "insertedCount" field.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(std::int64_t) inserted_count() const;
 
     ///
-    /// Return the value of the mongoc "nMatched" field.
+    /// Return the value of the "matchedCount" field.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(std::int64_t) matched_count() const;
 
     ///
-    /// Return the value of the mongoc "nModified" field.
+    /// Return the value of the "modifiedCount" field.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(std::int64_t) modified_count() const;
 
     ///
-    /// Return the value of the mongoc "nDeleted" field.
+    /// Return the value of the "deletedCount" field.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(std::int64_t) deleted_count() const;
 
     ///
-    /// Return the value of the mongoc "nUpserted" field.
+    /// Return the value of the "upsertedCount" field.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(std::int64_t) upserted_count() const;
 
@@ -1041,9 +1037,9 @@ class bulk_write::result {
     using id_map = std::map<std::int64_t, bsoncxx::v1::types::view>;
 
     ///
-    /// Return a map from the operation index to the upserted document ID.
+    /// Return the "upsertedIds" field as a a map from the operation index to the upserted document ID.
     ///
-    /// @returns Empty when the "upserted" field is not present or is empty.
+    /// @returns Empty when the "upsertedIds" field is not present or is empty.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(id_map) upserted_ids() const;
 
