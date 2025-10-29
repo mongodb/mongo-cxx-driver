@@ -116,7 +116,7 @@ class bucket {
     /// Equivalent to @ref open_upload_stream_with_id with a file ID generated using @ref bsoncxx::v1::oid.
     ///
     /// @{
-    v1::gridfs::uploader open_upload_stream(
+    MONGOCXX_ABI_EXPORT_CDECL(v1::gridfs::uploader) open_upload_stream(
         bsoncxx::v1::stdx::string_view filename,
         v1::gridfs::upload_options const& opts = {});
 
