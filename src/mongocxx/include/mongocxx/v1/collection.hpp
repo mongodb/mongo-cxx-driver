@@ -105,6 +105,9 @@ class collection {
     template <typename InputIt>
     struct is_write_iter : bsoncxx::detail::is_detected<is_write_iter_expr, InputIt> {};
 
+    template <typename Sentinel, typename InputIt>
+    struct is_sentinel_for : bsoncxx::detail::is_equality_comparable<Sentinel, InputIt> {};
+
     template <typename Container>
     struct is_container : bsoncxx::detail::conjunction<has_begin<Container>, has_end<Container>> {};
 
@@ -252,14 +255,19 @@ class collection {
     /// @par Constraints:
     /// - `InputIt` satisfies Cpp17InputIterator.
     /// - The value type of `InputIt` is convertible to @ref mongocxx::v1::bulk_write::single.
+    /// - `Sentinel` satisfies `std::sentinel_for<Sentinel, InputIt>`.
     ///
     /// @see
     /// - [Bulk Write Operations (MongoDB Manual)](https://www.mongodb.com/docs/manual/core/bulk-write-operations/)
     ///
     /// @{
-    template <typename InputIt, bsoncxx::detail::enable_if_t<is_write_iter<InputIt>::value>* = nullptr>
+    template <
+        typename InputIt,
+        typename Sentinel,
+        bsoncxx::detail::enable_if_t<is_write_iter<InputIt>::value && is_sentinel_for<Sentinel, InputIt>::value>* =
+            nullptr>
     bsoncxx::v1::stdx::optional<v1::bulk_write::result>
-    bulk_write(InputIt begin, InputIt end, v1::bulk_write::options const& opts = {}) {
+    bulk_write(InputIt begin, Sentinel end, v1::bulk_write::options const& opts = {}) {
         v1::bulk_write bulk{this->create_bulk_write(opts)};
         for (auto iter = begin; iter != end; ++iter) {
             bulk.append(*iter);
@@ -267,11 +275,15 @@ class collection {
         return bulk.execute();
     }
 
-    template <typename InputIt, bsoncxx::detail::enable_if_t<is_write_iter<InputIt>::value>* = nullptr>
+    template <
+        typename InputIt,
+        typename Sentinel,
+        bsoncxx::detail::enable_if_t<is_write_iter<InputIt>::value && is_sentinel_for<Sentinel, InputIt>::value>* =
+            nullptr>
     bsoncxx::v1::stdx::optional<v1::bulk_write::result> bulk_write(
         v1::client_session const& session,
         InputIt begin,
-        InputIt end,
+        Sentinel end,
         v1::bulk_write::options const& opts = {}) {
         v1::bulk_write bulk{this->create_bulk_write(session, opts)};
         for (auto iter = begin; iter != end; ++iter) {
@@ -611,6 +623,7 @@ class collection {
     /// @par Constraints:
     /// - `InputIt` satisfies Cpp17InputIterator.
     /// - The value type of `InputIt` is convertible to @ref bsoncxx::v1::document::view.
+    /// - `Sentinel` satisfies `std::is_sentinel_for<Sentinel, InputIt>`.
     ///
     /// @returns Empty when the bulk write operation is unacknowledged.
     ///
@@ -621,9 +634,13 @@ class collection {
     /// - [Bulk Write Operations (MongoDB Manual)](https://www.mongodb.com/docs/manual/core/bulk-write-operations/)
     ///
     /// @{
-    template <typename InputIt, bsoncxx::detail::enable_if_t<is_document_iter<InputIt>::value>* = nullptr>
+    template <
+        typename InputIt,
+        typename Sentinel,
+        bsoncxx::detail::enable_if_t<is_document_iter<InputIt>::value && is_sentinel_for<Sentinel, InputIt>::value>* =
+            nullptr>
     bsoncxx::v1::stdx::optional<v1::insert_many_result>
-    insert_many(InputIt begin, InputIt end, v1::insert_many_options const& opts = {}) {
+    insert_many(InputIt begin, Sentinel end, v1::insert_many_options const& opts = {}) {
         v1::bulk_write bulk{this->_create_insert_many(nullptr, opts)};
         std::vector<bsoncxx::v1::types::value> inserted_ids;
         for (auto iter = begin; iter != end; ++iter) {
@@ -632,11 +649,15 @@ class collection {
         return this->_execute_insert_many(bulk, inserted_ids);
     }
 
-    template <typename InputIt, bsoncxx::detail::enable_if_t<is_document_iter<InputIt>::value>* = nullptr>
+    template <
+        typename InputIt,
+        typename Sentinel,
+        bsoncxx::detail::enable_if_t<is_document_iter<InputIt>::value && is_sentinel_for<Sentinel, InputIt>::value>* =
+            nullptr>
     bsoncxx::v1::stdx::optional<v1::insert_many_result> insert_many(
         v1::client_session const& session,
         InputIt begin,
-        InputIt end,
+        Sentinel end,
         v1::insert_many_options const& opts = {}) {
         v1::bulk_write bulk{this->_create_insert_many(&session, opts)};
         std::vector<bsoncxx::v1::types::value> inserted_ids;
