@@ -23,7 +23,6 @@
 #include <bsoncxx/v1/document/view-fwd.hpp>
 
 #include <bsoncxx/v1/detail/macros.hpp>
-#include <bsoncxx/v1/stdx/string_view.hpp>
 
 #include <mongocxx/v1/config/export.hpp>
 #include <mongocxx/v1/exception.hpp>
@@ -102,13 +101,6 @@ class server_error : public v1::exception {
     /// @important The contents of the resulting BSON document may vary depending on the operation and error.
     ///
     bsoncxx::v1::document::view MONGOCXX_ABI_CDECL raw() const;
-
-    ///
-    /// Return true if the raw server error contains the specified error label.
-    ///
-    /// @important The set of error labels may vary depending on the operation and error.
-    ///
-    bool MONGOCXX_ABI_CDECL has_error_label(bsoncxx::v1::stdx::string_view label) const;
 
    private:
     void key_function() const override {}

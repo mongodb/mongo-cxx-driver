@@ -21,6 +21,7 @@
 #include <mongocxx/v1/detail/prelude.hpp>
 
 #include <bsoncxx/v1/detail/macros.hpp>
+#include <bsoncxx/v1/stdx/string_view.hpp>
 
 #include <mongocxx/v1/config/export.hpp>
 
@@ -101,6 +102,13 @@ BSONCXX_PRIVATE_WARNINGS_DISABLE(MSVC(4275));
 class exception : public std::system_error {
    public:
     using std::system_error::system_error;
+
+    ///
+    /// Return true if this exception contains the specified error label.
+    ///
+    /// @important The set of error labels may vary depending on the operation and error.
+    ///
+    bool MONGOCXX_ABI_CDECL has_error_label(bsoncxx::v1::stdx::string_view label) const;
 
    private:
     MONGOCXX_ABI_NO_EXPORT virtual void key_function() const;
