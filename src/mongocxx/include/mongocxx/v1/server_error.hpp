@@ -49,45 +49,9 @@ BSONCXX_PRIVATE_WARNINGS_DISABLE(MSVC(4275));
 class server_error : public v1::exception {
    private:
     class impl;
-    std::unique_ptr<impl> _impl;
+    std::shared_ptr<impl> _impl;
 
    public:
-    ///
-    /// Destroy this object.
-    ///
-    /// @warning Invalidates all associated views.
-    ///
-    ~server_error() override;
-
-    ///
-    /// Move constructor.
-    ///
-    /// @par Postconditions:
-    /// - `other` is in an assign-or-destroy-only state.
-    ///
-    MONGOCXX_ABI_CDECL server_error(server_error&& other) noexcept;
-
-    ///
-    /// Move assignment.
-    ///
-    /// @par Postconditions:
-    /// - `other` is in an assign-or-destroy-only state.
-    ///
-    server_error& MONGOCXX_ABI_CDECL operator=(server_error&& other) noexcept;
-
-    ///
-    /// Copy construction.
-    ///
-    MONGOCXX_ABI_CDECL server_error(server_error const& other);
-
-    ///
-    /// Copy assignment.
-    ///
-    server_error& MONGOCXX_ABI_CDECL operator=(server_error const& other);
-
-    // Inherit constructors.
-    using v1::exception::exception;
-
     ///
     /// The client error code.
     ///
@@ -103,7 +67,7 @@ class server_error : public v1::exception {
     bsoncxx::v1::document::view MONGOCXX_ABI_CDECL raw() const;
 
    private:
-    void key_function() const override {}
+    MONGOCXX_ABI_NO_EXPORT void key_function() const override;
 };
 
 BSONCXX_PRIVATE_WARNINGS_POP();

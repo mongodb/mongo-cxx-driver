@@ -12,14 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <mongocxx/v1/exception.hpp>
+#include <mongocxx/v1/exception.hh>
 
 //
 
+#include <memory>
 #include <string>
 #include <system_error>
+#include <utility>
 
 #include <bsoncxx/private/immortal.hh>
+#include <bsoncxx/private/make_unique.hh>
 #include <bsoncxx/private/type_traits.hh>
 
 namespace mongocxx {
@@ -83,6 +86,10 @@ std::error_category const& type_error_category() {
     return instance.value();
 }
 
+class exception::impl {};
+
+exception::exception(std::error_code ec, std::unique_ptr<impl> impl) : std::system_error{ec}, _impl{std::move(impl)} {}
+
 // Prevent vague linkage of the vtable and type_info object (-Wweak-vtables).
 // - https://itanium-cxx-abi.github.io/cxx-abi/abi.html#vague-vtable
 //   > The key function is the first non-pure virtual function that is not inline at the point of class definition.
@@ -92,6 +99,10 @@ std::error_category const& type_error_category() {
 //   > For polymorphic classes (classes with virtual functions), the ‘type_info’ object is written out along with the
 //   vtable.
 void exception::key_function() const {}
+
+exception exception::internal::make(std::error_code ec) {
+    return {ec, bsoncxx::make_unique<impl>()};
+}
 
 } // namespace v1
 } // namespace mongocxx
