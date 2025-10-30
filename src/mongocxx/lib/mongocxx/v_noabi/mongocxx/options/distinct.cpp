@@ -14,7 +14,7 @@
 
 #include <mongocxx/options/distinct.hpp>
 
-#include <mongocxx/private/read_preference.hh>
+#include <mongocxx/read_preference.hh>
 
 namespace mongocxx {
 namespace v_noabi {

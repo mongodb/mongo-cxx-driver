@@ -18,10 +18,10 @@
 #include <mongocxx/index_view.hpp>
 #include <mongocxx/options/index_view.hpp>
 
-#include <bsoncxx/private/make_unique.hh>
+#include <mongocxx/index_view.hh>
+#include <mongocxx/mongoc_error.hh>
 
-#include <mongocxx/private/index_view.hh>
-#include <mongocxx/private/mongoc_error.hh>
+#include <bsoncxx/private/make_unique.hh>
 
 namespace mongocxx {
 namespace v_noabi {

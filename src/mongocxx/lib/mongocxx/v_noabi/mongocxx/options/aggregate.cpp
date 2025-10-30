@@ -16,8 +16,8 @@
 
 #include <mongocxx/options/aggregate.hpp>
 
-#include <mongocxx/private/append_aggregate_options.hh>
-#include <mongocxx/private/read_preference.hh>
+#include <mongocxx/append_aggregate_options.hh>
+#include <mongocxx/read_preference.hh>
 
 namespace mongocxx {
 namespace v_noabi {

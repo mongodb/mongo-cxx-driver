@@ -15,9 +15,9 @@
 #include <mongocxx/client.hpp>
 #include <mongocxx/options/client_encryption.hpp>
 
+#include <mongocxx/client.hh>
 #include <mongocxx/scoped_bson.hh>
 
-#include <mongocxx/private/client.hh>
 #include <mongocxx/private/mongoc.hh>
 
 namespace mongocxx {

@@ -14,21 +14,34 @@
 
 #pragma once
 
-#include <mongocxx/read_preference.hpp>
+#include <list>
 
-#include <mongocxx/private/export.hh>
+#include <mongocxx/client.hpp>
+
 #include <mongocxx/private/mongoc.hh>
+#include <mongocxx/write_concern.hh>
 
 namespace mongocxx {
-namespace libmongoc {
-namespace conversions {
+namespace v_noabi {
 
-MONGOCXX_ABI_EXPORT_CDECL_TESTING(mongoc_read_mode_t)
-read_mode_t_from_read_mode(read_preference::read_mode read_mode);
+class client::impl {
+   public:
+    impl(mongoc_client_t* client) : client_t(client) {}
 
-MONGOCXX_ABI_EXPORT_CDECL_TESTING(read_preference::read_mode)
-read_mode_from_read_mode_t(mongoc_read_mode_t read_mode);
+    ~impl() {
+        libmongoc::client_destroy(client_t);
+    }
 
-} // namespace conversions
-} // namespace libmongoc
+    impl(impl&&) = delete;
+    impl& operator=(impl&&) = delete;
+
+    impl(impl const&) = delete;
+    impl& operator=(impl const&) = delete;
+
+    mongoc_client_t* client_t;
+    std::list<bsoncxx::v_noabi::string::view_or_value> tls_options;
+    options::apm listeners;
+};
+
+} // namespace v_noabi
 } // namespace mongocxx

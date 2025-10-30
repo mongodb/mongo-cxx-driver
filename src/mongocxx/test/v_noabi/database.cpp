@@ -28,9 +28,9 @@
 #include <mongocxx/instance.hpp>
 #include <mongocxx/options/index_view.hpp>
 
+#include <mongocxx/conversions.hh>
 #include <mongocxx/scoped_bson.hh>
 
-#include <mongocxx/private/conversions.hh>
 #include <mongocxx/private/mongoc.hh>
 
 #include <bsoncxx/test/catch.hh>
@@ -220,7 +220,7 @@ TEST_CASE("A database", "[database]") {
             saved_preference.reset(mongoc_read_prefs_copy(read_prefs));
             REQUIRE(
                 mongoc_read_prefs_get_mode(read_prefs) ==
-                libmongoc::conversions::read_mode_t_from_read_mode(read_preference::read_mode::k_secondary_preferred));
+                v_noabi::conversions::read_mode_t_from_read_mode(read_preference::read_mode::k_secondary_preferred));
         });
 
         database_get_preference->interpose([&](mongoc_database_t const*) { return saved_preference.get(); }).forever();

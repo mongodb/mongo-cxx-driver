@@ -18,11 +18,11 @@
 #include <mongocxx/options/auto_encryption.hpp>
 #include <mongocxx/pool.hpp>
 
+#include <mongocxx/client.hh>
+#include <mongocxx/pool.hh>
 #include <mongocxx/scoped_bson.hh>
 
-#include <mongocxx/private/client.hh>
 #include <mongocxx/private/mongoc.hh>
-#include <mongocxx/private/pool.hh>
 
 namespace mongocxx {
 namespace v_noabi {

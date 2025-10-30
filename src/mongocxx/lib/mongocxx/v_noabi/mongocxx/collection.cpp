@@ -44,22 +44,22 @@
 #include <mongocxx/result/update.hpp>
 #include <mongocxx/write_concern.hpp>
 
+#include <mongocxx/bulk_write.hh>
+#include <mongocxx/client_session.hh>
+#include <mongocxx/collection.hh>
+#include <mongocxx/cursor.hh>
+#include <mongocxx/mongoc_error.hh>
+#include <mongocxx/pipeline.hh>
+#include <mongocxx/read_concern.hh>
+#include <mongocxx/read_preference.hh>
 #include <mongocxx/scoped_bson.hh>
+#include <mongocxx/write_concern.hh>
 
 #include <bsoncxx/private/bson.hh>
 #include <bsoncxx/private/helpers.hh>
 #include <bsoncxx/private/make_unique.hh>
 
-#include <mongocxx/private/bulk_write.hh>
-#include <mongocxx/private/client_session.hh>
-#include <mongocxx/private/collection.hh>
-#include <mongocxx/private/cursor.hh>
 #include <mongocxx/private/mongoc.hh>
-#include <mongocxx/private/mongoc_error.hh>
-#include <mongocxx/private/pipeline.hh>
-#include <mongocxx/private/read_concern.hh>
-#include <mongocxx/private/read_preference.hh>
-#include <mongocxx/private/write_concern.hh>
 
 using bsoncxx::v_noabi::builder::concatenate;
 using bsoncxx::v_noabi::builder::basic::kvp;

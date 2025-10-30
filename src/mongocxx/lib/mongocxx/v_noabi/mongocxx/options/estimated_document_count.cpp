@@ -14,7 +14,7 @@
 
 #include <mongocxx/options/estimated_document_count.hpp>
 
-#include <mongocxx/private/read_preference.hh>
+#include <mongocxx/read_preference.hh>
 
 namespace mongocxx {
 namespace v_noabi {

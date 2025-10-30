@@ -23,7 +23,7 @@
 #include <mongocxx/scoped_bson.hh>
 
 #include <mongocxx/private/mongoc.hh>
-#include <mongocxx/private/mongoc_error.hh>
+#include <mongocxx/mongoc_error.hh>
 
 namespace mongocxx {
 namespace v_noabi {
