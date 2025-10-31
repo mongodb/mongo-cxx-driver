@@ -18,29 +18,69 @@
 
 //
 
-#include <string>
+#include <mongocxx/v1/detail/prelude.hpp>
+
+#include <bsoncxx/v1/document/view-fwd.hpp>
+
+#include <bsoncxx/v1/detail/macros.hpp>
+
+#include <mongocxx/v1/config/export.hpp>
+#include <mongocxx/v1/exception.hpp> // IWYU pragma: export
+
+#include <memory>
 #include <system_error>
 
 namespace mongocxx {
 namespace v1 {
 
+BSONCXX_PRIVATE_WARNINGS_PUSH();
+BSONCXX_PRIVATE_WARNINGS_DISABLE(MSVC(4251));
+BSONCXX_PRIVATE_WARNINGS_DISABLE(MSVC(4275));
+
 ///
 /// A MongoDB server error.
 ///
-/// @important This class may contain both a client error code _and_ a server error code:
-/// - Use `this->code()` to obtain the primary error code (which may equal `this->server_code()`).
-/// - Use `this->server_code()` to obtain the server error code (which may equal `zero`).
-/// Use @ref mongocxx::v1::source_errc to determine the origin of `this->code()`.
+/// @important `this->code()` always returns the raw server error code. Use `this->client_code()` to query the
+/// client-side error code.
 ///
 /// @par Inherits:
 /// - @ref mongocxx::v1::exception
 ///
-class server_error {};
+class server_error : public v1::exception {
+   private:
+    class impl;
+    std::shared_ptr<impl> _impl;
+
+   public:
+    ///
+    /// The client error code.
+    ///
+    /// @returns Default-initialized when no client error code is available.
+    ///
+    std::error_code MONGOCXX_ABI_CDECL client_code() const;
+
+    ///
+    /// The raw server error.
+    ///
+    /// @important The contents of the resulting BSON document may vary depending on the operation and error.
+    ///
+    bsoncxx::v1::document::view MONGOCXX_ABI_CDECL raw() const;
+
+   private:
+    MONGOCXX_ABI_NO_EXPORT void key_function() const override;
+};
+
+BSONCXX_PRIVATE_WARNINGS_POP();
 
 } // namespace v1
 } // namespace mongocxx
 
+#include <mongocxx/v1/detail/postlude.hpp>
+
 ///
 /// @file
 /// Provides @ref mongocxx::v1::server_error.
+///
+/// @par Includes
+/// - @ref mongocxx/v1/exception.hpp
 ///

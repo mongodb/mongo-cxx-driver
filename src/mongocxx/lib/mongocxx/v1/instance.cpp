@@ -20,8 +20,9 @@
 #include <bsoncxx/v1/stdx/string_view.hpp>
 
 #include <mongocxx/v1/config/version.hpp>
-#include <mongocxx/v1/exception.hpp>
 #include <mongocxx/v1/logger.hpp>
+
+#include <mongocxx/v1/exception.hh>
 
 #include <atomic>
 #include <memory>
@@ -99,7 +100,7 @@ class instance::impl {
 
             if (!instance_state.compare_exchange_strong(
                     expected, 1, std::memory_order_acquire, std::memory_order_relaxed)) {
-                throw v1::exception{code::multiple_instances};
+                throw v1::exception::internal::make(std::error_code{code::multiple_instances});
             }
         }
 

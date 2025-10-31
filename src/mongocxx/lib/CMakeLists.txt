@@ -292,4 +292,5 @@ set_dist_list(src_mongocxx_lib_DIST
     mongocxx/v_noabi/mongocxx/write_concern.hh
     mongocxx/v1/config/config.hpp.in
     mongocxx/v1/config/version.hpp.in
+    mongocxx/v1/exception.hh
 )

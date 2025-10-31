@@ -12,14 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <mongocxx/v1/server_error.hpp>
+#include <mongocxx/v1/exception.hpp> // IWYU pragma: export
+
+//
+
+#include <system_error>
+
+#include <mongocxx/private/export.hh>
 
 namespace mongocxx {
 namespace v1 {
 
-class server_error::impl {};
-
-void server_error::key_function() const {}
+class exception::internal {
+   public:
+    static MONGOCXX_ABI_EXPORT_CDECL_TESTING(exception) make(std::error_code ec);
+};
 
 } // namespace v1
 } // namespace mongocxx
