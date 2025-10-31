@@ -25,7 +25,7 @@
 #include <bsoncxx/v1/detail/macros.hpp>
 
 #include <mongocxx/v1/config/export.hpp>
-#include <mongocxx/v1/exception.hpp>
+#include <mongocxx/v1/exception.hpp> // IWYU pragma: export
 
 #include <memory>
 #include <system_error>
@@ -80,4 +80,7 @@ BSONCXX_PRIVATE_WARNINGS_POP();
 ///
 /// @file
 /// Provides @ref mongocxx::v1::server_error.
+///
+/// @par Includes
+/// - @ref mongocxx/v1/exception.hpp
 ///
