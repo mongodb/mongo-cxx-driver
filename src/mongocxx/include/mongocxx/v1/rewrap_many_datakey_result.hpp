@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include <mongocxx/v1/rewrap_many_datakey_result-fwd.hpp>
+#include <mongocxx/v1/rewrap_many_datakey_result-fwd.hpp> // IWYU pragma: export
 
 //
 

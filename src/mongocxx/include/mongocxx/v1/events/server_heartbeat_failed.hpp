@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include <mongocxx/v1/events/server_heartbeat_failed-fwd.hpp>
+#include <mongocxx/v1/events/server_heartbeat_failed-fwd.hpp> // IWYU pragma: export
 
 //
 

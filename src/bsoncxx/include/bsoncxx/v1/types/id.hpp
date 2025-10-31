@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include <bsoncxx/v1/types/id-fwd.hpp>
+#include <bsoncxx/v1/types/id-fwd.hpp> // IWYU pragma: export
 
 //
 
@@ -22,6 +22,7 @@
 
 #include <bsoncxx/v1/config/export.hpp>
 
+#include <cstdint>
 #include <string>
 
 namespace bsoncxx {

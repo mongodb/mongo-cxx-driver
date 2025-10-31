@@ -19,7 +19,7 @@
 //
 
 #include <bsoncxx/v1/detail/type_traits.hpp>
-#include <bsoncxx/v1/oid.hpp>
+#include <bsoncxx/v1/oid.hpp> // IWYU pragma: export
 
 #include <array>
 #include <ctime>

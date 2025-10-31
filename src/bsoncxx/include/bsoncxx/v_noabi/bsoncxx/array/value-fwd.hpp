@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include <bsoncxx/v1/array/value-fwd.hpp>
+#include <bsoncxx/v1/array/value-fwd.hpp> // IWYU pragma: export
 
 #include <bsoncxx/config/prelude.hpp>
 

@@ -21,6 +21,8 @@
 #include <bsoncxx/test/v1/types/value.hh>
 #include <bsoncxx/test/v1/types/view.hh>
 
+#include <cstdint>
+#include <cstring>
 #include <string>
 #include <system_error>
 

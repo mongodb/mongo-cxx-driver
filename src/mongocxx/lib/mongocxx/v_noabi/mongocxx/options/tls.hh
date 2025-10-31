@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include <mongocxx/options/tls.hpp>
+#include <mongocxx/options/tls.hpp> // IWYU pragma: export
 
 //
 

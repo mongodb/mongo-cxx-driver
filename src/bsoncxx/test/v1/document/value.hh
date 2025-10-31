@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include <bsoncxx/v1/document/value.hpp>
+#include <bsoncxx/v1/document/value.hpp> // IWYU pragma: export
 
 //
 

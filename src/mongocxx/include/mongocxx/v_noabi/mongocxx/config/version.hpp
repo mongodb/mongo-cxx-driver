@@ -13,7 +13,7 @@
 // limitations under the License.
 
 // For backward compatibility.
-#include <mongocxx/v1/config/version.hpp>
+#include <mongocxx/v1/config/version.hpp> // IWYU pragma: export
 
 ///
 /// @file

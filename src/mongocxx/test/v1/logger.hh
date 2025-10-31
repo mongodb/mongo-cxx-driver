@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include <mongocxx/v1/logger.hpp>
+#include <mongocxx/v1/logger.hpp> // IWYU pragma: export
 
 //
 

@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include <mongocxx/v1/find_one_and_update_options-fwd.hpp>
+#include <mongocxx/v1/find_one_and_update_options-fwd.hpp> // IWYU pragma: export
 
 //
 

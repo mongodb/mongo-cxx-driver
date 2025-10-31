@@ -16,7 +16,7 @@
 
 #include <bsoncxx/builder/basic/array.hpp>
 
-#include <mongocxx/pipeline.hpp>
+#include <mongocxx/pipeline.hpp> // IWYU pragma: export
 
 namespace mongocxx {
 namespace v_noabi {

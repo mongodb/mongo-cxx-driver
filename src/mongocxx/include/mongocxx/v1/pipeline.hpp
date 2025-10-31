@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include <mongocxx/v1/pipeline-fwd.hpp>
+#include <mongocxx/v1/pipeline-fwd.hpp> // IWYU pragma: export
 
 //
 

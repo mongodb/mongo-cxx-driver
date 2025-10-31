@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include <mongocxx/v1/insert_one_options-fwd.hpp>
+#include <mongocxx/v1/insert_one_options-fwd.hpp> // IWYU pragma: export
 
 //
 

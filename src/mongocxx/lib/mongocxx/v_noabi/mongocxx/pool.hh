@@ -17,7 +17,7 @@
 #include <list>
 #include <utility>
 
-#include <mongocxx/pool.hpp>
+#include <mongocxx/pool.hpp> // IWYU pragma: export
 
 #include <mongocxx/private/mongoc.hh>
 

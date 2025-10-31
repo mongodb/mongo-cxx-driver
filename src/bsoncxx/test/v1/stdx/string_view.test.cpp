@@ -16,11 +16,10 @@
 
 //
 
-#include <initializer_list>
-#include <list>
 #include <stdexcept>
 #include <string>
 #include <type_traits>
+#include <vector>
 
 #ifdef __has_include
 #if __has_include(<version>)

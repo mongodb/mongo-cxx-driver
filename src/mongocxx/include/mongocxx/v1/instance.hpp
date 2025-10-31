@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include <mongocxx/v1/instance-fwd.hpp>
+#include <mongocxx/v1/instance-fwd.hpp> // IWYU pragma: export
 
 //
 

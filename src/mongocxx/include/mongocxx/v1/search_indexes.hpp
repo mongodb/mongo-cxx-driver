@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include <mongocxx/v1/search_indexes-fwd.hpp>
+#include <mongocxx/v1/search_indexes-fwd.hpp> // IWYU pragma: export
 
 //
 

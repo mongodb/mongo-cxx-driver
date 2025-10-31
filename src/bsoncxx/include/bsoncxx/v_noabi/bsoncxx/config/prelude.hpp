@@ -12,13 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <bsoncxx/v1/detail/prelude.hpp>
+#include <bsoncxx/v1/detail/prelude.hpp> // IWYU pragma: export
 
-#include <bsoncxx/config/compiler.hpp>
-#include <bsoncxx/config/config.hpp>
-#include <bsoncxx/config/export.hpp>
-#include <bsoncxx/config/util.hpp>
-#include <bsoncxx/config/version.hpp>
+#include <bsoncxx/config/compiler.hpp> // IWYU pragma: export
+#include <bsoncxx/config/config.hpp>   // IWYU pragma: export
+#include <bsoncxx/config/export.hpp>   // IWYU pragma: export
+#include <bsoncxx/config/util.hpp>     // IWYU pragma: export
+#include <bsoncxx/config/version.hpp>  // IWYU pragma: export
 
 ///
 /// @file

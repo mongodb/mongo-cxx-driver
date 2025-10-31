@@ -41,8 +41,11 @@ using std::string_view;
 
 #include <algorithm>
 #include <cstddef>
+#include <functional>
 #include <ios>
+#include <iterator>
 #include <limits>
+#include <ostream>
 #include <stdexcept>
 #include <string>
 #include <utility>

@@ -16,21 +16,29 @@
 
 //
 
+#include <bsoncxx/v1/detail/macros.hpp>
+
 #include <bsoncxx/test/v1/document/view.hh>
+#include <bsoncxx/test/v1/stdx/optional.hh>
+#include <bsoncxx/test/v1/stdx/string_view.hh>
 #include <bsoncxx/test/v1/types/view.hh>
 
 #include <cstdint>
 #include <cstring>
 #include <functional>
+#include <memory>
+#include <ostream>
 #include <sstream>
+#include <stdexcept>
+#include <type_traits>
 #include <utility>
 
 #include <bsoncxx/private/type_traits.hh>
 
-#include <bsoncxx/test/catch.hh>
 #include <bsoncxx/test/stringify.hh>
 #include <bsoncxx/test/system_error.hh>
 
+#include <catch2/catch_test_macros.hpp>
 #include <catch2/matchers/catch_matchers_string.hpp>
 
 namespace {

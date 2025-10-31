@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include <mongocxx/v1/events/topology_closed-fwd.hpp>
+#include <mongocxx/v1/events/topology_closed-fwd.hpp> // IWYU pragma: export
 
 //
 

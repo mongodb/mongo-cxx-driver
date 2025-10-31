@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <bsoncxx/v1/element/view.hpp>
+#include <bsoncxx/v1/element/view.hpp> // IWYU pragma: export
 
 //
 

@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include <mongocxx/v1/server_error-fwd.hpp>
+#include <mongocxx/v1/server_error-fwd.hpp> // IWYU pragma: export
 
 //
 

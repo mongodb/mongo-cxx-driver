@@ -26,7 +26,7 @@
 #include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/exception/operation_exception.hpp>
 #include <mongocxx/exception/write_exception.hpp>
-#include <mongocxx/index_view.hpp>
+#include <mongocxx/index_view.hpp> // IWYU pragma: export
 #include <mongocxx/options/index_view.hpp>
 
 #include <mongocxx/scoped_bson.hh>

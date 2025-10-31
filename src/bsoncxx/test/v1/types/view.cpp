@@ -16,12 +16,17 @@
 
 //
 
+#include <bsoncxx/v1/detail/macros.hpp>
+
 #include <bsoncxx/test/v1/document/view.hh>
 #include <bsoncxx/test/v1/exception.hh>
+#include <bsoncxx/test/v1/stdx/string_view.hh>
 #include <bsoncxx/test/v1/types/id.hh>
 #include <bsoncxx/test/v1/types/value.hh>
 #include <bsoncxx/test/v1/types/view.hh>
 
+#include <chrono>
+#include <cstdint>
 #include <string>
 #include <system_error>
 

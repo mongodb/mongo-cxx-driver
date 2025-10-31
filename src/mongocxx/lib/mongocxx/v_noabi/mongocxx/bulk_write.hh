@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include <mongocxx/bulk_write.hpp>
+#include <mongocxx/bulk_write.hpp> // IWYU pragma: export
 
 #include <mongocxx/private/mongoc.hh>
 

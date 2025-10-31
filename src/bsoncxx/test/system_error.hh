@@ -16,11 +16,12 @@
 
 #include <bsoncxx/v1/detail/macros.hpp>
 
+#include <string>
 #include <system_error>
 
 #include <bsoncxx/test/stringify.hh>
 
-#include <catch2/catch_test_macros.hpp>
+#include <catch2/catch_test_macros.hpp> // IWYU pragma: export
 #include <catch2/catch_tostring.hpp>
 
 #define THROWS_WITH_CODE_IMPL(_assertion, _expr, _code)                               \

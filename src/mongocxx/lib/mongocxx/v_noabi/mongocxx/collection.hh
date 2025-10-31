@@ -17,7 +17,7 @@
 #include <bsoncxx/document/value.hpp>
 #include <bsoncxx/stdx/string_view.hpp>
 
-#include <mongocxx/collection.hpp>
+#include <mongocxx/collection.hpp> // IWYU pragma: export
 #include <mongocxx/database.hpp>
 
 #include <bsoncxx/private/helpers.hh>

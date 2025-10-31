@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include <bsoncxx/types/bson_value/value-fwd.hpp>
+#include <bsoncxx/types/bson_value/value-fwd.hpp> // IWYU pragma: export
 
 ///
 /// @file

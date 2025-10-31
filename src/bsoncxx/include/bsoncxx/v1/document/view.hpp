@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include <bsoncxx/v1/document/view-fwd.hpp>
+#include <bsoncxx/v1/document/view-fwd.hpp> // IWYU pragma: export
 
 //
 
@@ -22,7 +22,7 @@
 
 #include <bsoncxx/v1/config/export.hpp>
 #include <bsoncxx/v1/detail/bit.hpp>
-#include <bsoncxx/v1/element/view.hpp>
+#include <bsoncxx/v1/element/view.hpp> // IWYU pragma: export
 #include <bsoncxx/v1/stdx/string_view.hpp>
 
 #include <cstddef>

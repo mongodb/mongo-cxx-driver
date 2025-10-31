@@ -46,6 +46,7 @@ using std::optional;
 #include <cstddef>
 #include <cstdio>
 #include <exception>
+#include <functional>
 #include <initializer_list>
 #include <memory>
 #include <new>

@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include <mongocxx/v1/change_stream-fwd.hpp>
+#include <mongocxx/v1/change_stream-fwd.hpp> // IWYU pragma: export
 
 //
 

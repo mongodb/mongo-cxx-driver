@@ -19,7 +19,7 @@
 //
 
 #include <bsoncxx/v1/detail/type_traits.hpp>
-#include <bsoncxx/v1/types/value.hpp>
+#include <bsoncxx/v1/types/value.hpp> // IWYU pragma: export
 
 #include <iostream>
 #include <memory>

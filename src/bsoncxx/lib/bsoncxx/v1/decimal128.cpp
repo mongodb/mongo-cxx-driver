@@ -17,6 +17,7 @@
 //
 
 #include <bsoncxx/v1/exception.hpp>
+#include <bsoncxx/v1/stdx/string_view.hpp>
 
 #include <climits>
 #include <cstddef>

@@ -18,6 +18,8 @@
 
 #include <bsoncxx/test/v1/stdx/string_view.hh>
 
+#include <cstdint>
+
 #include <bsoncxx/test/stringify.hh>
 
 #include <catch2/catch_test_macros.hpp>

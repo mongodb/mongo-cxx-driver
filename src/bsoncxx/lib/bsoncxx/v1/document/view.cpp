@@ -17,10 +17,13 @@
 //
 
 #include <bsoncxx/v1/exception.hpp>
+#include <bsoncxx/v1/stdx/string_view.hpp>
 
 #include <bsoncxx/v1/element/view.hh>
 
 #include <array>
+#include <climits>
+#include <cstddef>
 #include <cstdint>
 #include <string>
 #include <system_error>

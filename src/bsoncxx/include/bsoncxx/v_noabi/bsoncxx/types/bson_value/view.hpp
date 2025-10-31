@@ -18,7 +18,7 @@
 
 //
 
-#include <bsoncxx/v1/types/view.hpp>
+#include <bsoncxx/v1/types/view.hpp> // IWYU pragma: export
 
 #include <cstddef>
 #include <cstdint>

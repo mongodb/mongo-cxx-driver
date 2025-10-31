@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include <bsoncxx/v1/decimal128-fwd.hpp>
+#include <bsoncxx/v1/decimal128-fwd.hpp> // IWYU pragma: export
 
 //
 
@@ -24,6 +24,7 @@
 #include <bsoncxx/v1/stdx/string_view.hpp>
 
 #include <cstdint>
+#include <string>
 #include <system_error>
 #include <type_traits>
 

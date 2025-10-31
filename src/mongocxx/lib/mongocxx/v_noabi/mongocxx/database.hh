@@ -15,7 +15,7 @@
 #pragma once
 
 #include <mongocxx/client.hpp>
-#include <mongocxx/database.hpp>
+#include <mongocxx/database.hpp> // IWYU pragma: export
 
 #include <mongocxx/client.hh>
 #include <mongocxx/private/mongoc.hh>

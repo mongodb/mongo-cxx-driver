@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include <mongocxx/v1/write_concern-fwd.hpp>
+#include <mongocxx/v1/write_concern-fwd.hpp> // IWYU pragma: export
 
 //
 

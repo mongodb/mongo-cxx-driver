@@ -17,9 +17,12 @@
 //
 
 #include <bsoncxx/test/v1/exception.hh>
+#include <bsoncxx/test/v1/stdx/string_view.hh>
 
 #include <climits>
+#include <cstddef>
 #include <memory>
+#include <new>
 #include <string>
 #include <system_error>
 

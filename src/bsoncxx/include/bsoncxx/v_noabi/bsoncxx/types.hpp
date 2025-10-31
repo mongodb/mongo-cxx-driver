@@ -20,7 +20,7 @@
 
 #include <bsoncxx/v1/detail/type_traits.hpp>
 #include <bsoncxx/v1/types/id.hpp>
-#include <bsoncxx/v1/types/view.hpp>
+#include <bsoncxx/v1/types/view.hpp> // IWYU pragma: export
 
 #include <chrono>
 #include <cstring>
