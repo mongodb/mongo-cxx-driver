@@ -25,7 +25,7 @@
 
 #include <bsoncxx/v1/stdx/optional.hpp>
 
-#include <mongocxx/v1/client.hpp>
+#include <mongocxx/v1/client.hpp> // IWYU pragma: export
 #include <mongocxx/v1/config/export.hpp>
 
 #include <cstddef>
@@ -308,4 +308,7 @@ class pool::entry {
 ///
 /// @file
 /// Provides @ref mongocxx::v1::pool.
+///
+/// @par Includes
+/// - @ref mongocxx/v1/client.hpp
 ///
