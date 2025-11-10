@@ -20,6 +20,14 @@
 
 #include <mongocxx/v1/detail/prelude.hpp>
 
+#include <bsoncxx/v1/oid-fwd.hpp>
+
+#include <bsoncxx/v1/stdx/string_view.hpp>
+
+#include <mongocxx/v1/config/export.hpp>
+
+#include <cstdint>
+
 namespace mongocxx {
 namespace v1 {
 namespace events {
@@ -32,7 +40,29 @@ namespace events {
 ///
 /// @attention This feature is experimental! It is not ready for use!
 ///
-class server_opening {};
+class server_opening {
+   private:
+    void const* _impl; // mongoc_apm_server_opening_t const
+
+   public:
+    ///
+    /// Return the hostname for the connection used by the command.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::string_view) host() const;
+
+    ///
+    /// Return the port number for the connection used by the command.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(std::uint16_t) port() const;
+
+    ///
+    /// Return the client-generated unique topology ID.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::oid) topology_id() const;
+
+   private:
+    /* explicit(false) */ server_opening(void const* impl);
+};
 
 } // namespace events
 } // namespace v1
@@ -40,7 +70,6 @@ class server_opening {};
 
 #include <mongocxx/v1/detail/postlude.hpp>
 
-///
 /// @file
 /// Provides @ref mongocxx::v1::events::server_opening.
 ///

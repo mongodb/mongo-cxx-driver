@@ -20,17 +20,111 @@
 
 #include <mongocxx/v1/detail/prelude.hpp>
 
+#include <bsoncxx/v1/types/value-fwd.hpp>
+#include <bsoncxx/v1/types/view-fwd.hpp>
+
+#include <mongocxx/v1/read_preference-fwd.hpp>
+
+#include <bsoncxx/v1/stdx/optional.hpp>
+
+#include <mongocxx/v1/config/export.hpp>
+
+#include <chrono>
+
 namespace mongocxx {
 namespace v1 {
 
 ///
 /// Options for an "estimatedDocumentCount" operation.
 ///
+/// Supported fields include:
+/// - `comment`
+/// - `max_time` ("maxTimeMS")
+/// - `read_preference` ("readPreference")
+///
 /// @see
 /// - [CRUD API (MongoDB Specifications)](https://specifications.readthedocs.io/en/latest/crud/crud/)
 /// - [`count` (database command) (MongoDB Manual)](https://www.mongodb.com/docs/manual/reference/command/count/)
 ///
-class estimated_document_count_options {};
+class estimated_document_count_options {
+   private:
+    class impl;
+    void* _impl;
+
+   public:
+    ///
+    /// Destroy this object.
+    ///
+    /// @warning Invalidates all associated views.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL() ~estimated_document_count_options();
+
+    ///
+    /// Move constructor.
+    ///
+    /// @par Postconditions:
+    /// - `other` is in an assign-or-destroy-only state.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL() estimated_document_count_options(estimated_document_count_options&& other) noexcept;
+
+    ///
+    /// Move assignment.
+    ///
+    /// @par Postconditions:
+    /// - `other` is in an assign-or-destroy-only state.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(estimated_document_count_options&) operator=(
+        estimated_document_count_options&& other) noexcept;
+
+    ///
+    /// Copy construction.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL() estimated_document_count_options(estimated_document_count_options const& other);
+
+    ///
+    /// Copy assignment.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(estimated_document_count_options&) operator=(
+        estimated_document_count_options const& other);
+
+    ///
+    /// Default initialization.
+    ///
+    /// @par Postconditions:
+    /// - All supported fields are "unset" or zero-initialized.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL() estimated_document_count_options();
+
+    ///
+    /// Set the "maxTimeMS" field.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(estimated_document_count_options&) max_time(std::chrono::milliseconds max_time);
+
+    ///
+    /// Return the current "maxTimeMS" field.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<std::chrono::milliseconds>) max_time() const;
+
+    ///
+    /// Set the "comment" field.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(estimated_document_count_options&) comment(bsoncxx::v1::types::value comment);
+
+    ///
+    /// Return the current "comment" field.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::types::view>) comment() const;
+
+    ///
+    /// Set the "readPreference" field.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(estimated_document_count_options&) read_preference(v1::read_preference rp);
+
+    ///
+    /// Return the current "readPreference" field.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<v1::read_preference>) read_preference() const;
+};
 
 } // namespace v1
 } // namespace mongocxx
