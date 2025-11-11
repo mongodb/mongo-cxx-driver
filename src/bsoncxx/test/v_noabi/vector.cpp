@@ -259,7 +259,7 @@ TEMPLATE_TEST_CASE(
         auto element = test_format_specific::element_unit();
         bsoncxx::document::value doc =
             make_document(kvp("vector", [&](sub_binary sbin) { sbin.allocate(TestType{}, 1u)[0u] = element; }));
-        types::b_binary const& binary = doc.view()["vector"].get_binary();
+        auto const binary = doc.view()["vector"].get_binary();
         CHECK(binary.sub_type == binary_sub_type::k_vector);
         binary_eq_bytes(binary, expected_bytes);
         vector::accessor<TestType const> validate_encoded{binary};
@@ -282,7 +282,7 @@ TEMPLATE_TEST_CASE(
             });
             BSONCXX_PRIVATE_WARNINGS_POP();
         }));
-        types::b_binary const& binary = doc.view()["vector"].get_binary();
+        auto const binary = doc.view()["vector"].get_binary();
         vector::accessor<TestType const> validate_encoded{binary};
         CHECK(binary.size > 1000u);
     }
@@ -302,7 +302,7 @@ TEMPLATE_TEST_CASE(
                 CHECK_FALSE(value == element_unit);
             });
         }));
-        types::b_binary const& binary = doc.view()["vector"].get_binary();
+        auto const binary = doc.view()["vector"].get_binary();
         vector::accessor<TestType const> validate_encoded{binary};
         CHECK(binary.size > 1000u);
     }
@@ -325,7 +325,7 @@ TEMPLATE_TEST_CASE(
 
             BSONCXX_PRIVATE_WARNINGS_POP();
         }));
-        types::b_binary const& binary = doc.view()["vector"].get_binary();
+        auto const binary = doc.view()["vector"].get_binary();
         vector::accessor<TestType const> validate_encoded{binary};
     }
 
@@ -341,7 +341,7 @@ TEMPLATE_TEST_CASE(
             CHECK(vec.byte_at(vec.byte_size() - 2) == vec.byte_at(vec.byte_size() - 1));
             CHECK_FALSE(vec.byte_at(vec.byte_size() - 2) != vec.byte_at(vec.byte_size() - 1));
         }));
-        types::b_binary const& binary = doc.view()["vector"].get_binary();
+        auto const binary = doc.view()["vector"].get_binary();
         vector::accessor<TestType const> validate_encoded{binary};
     }
 
@@ -381,7 +381,7 @@ TEMPLATE_TEST_CASE(
 
             BSONCXX_PRIVATE_WARNINGS_POP();
         }));
-        types::b_binary const& binary = doc.view()["vector"].get_binary();
+        auto const binary = doc.view()["vector"].get_binary();
         vector::accessor<TestType const> validate_encoded{binary};
     }
 
@@ -408,7 +408,7 @@ TEMPLATE_TEST_CASE(
 
             BSONCXX_PRIVATE_WARNINGS_POP();
         }));
-        types::b_binary const& binary = doc.view()["vector"].get_binary();
+        auto const binary = doc.view()["vector"].get_binary();
         vector::accessor<TestType const> validate_encoded{binary};
     }
 }
@@ -526,7 +526,7 @@ TEST_CASE("vector accessor packed_bit", "[bsoncxx::vector::accessor]") {
             CHECK(vec.byte_at(0) == 0xaa);
             CHECK(vec.byte_at(1) == 0x80);
         }));
-        types::b_binary const& binary = doc.view()["vector"].get_binary();
+        auto const binary = doc.view()["vector"].get_binary();
         CHECK(binary.sub_type == binary_sub_type::k_vector);
         std::array<std::uint8_t, 4> expected_bytes{0x10, 7, 0xaa, 0x80};
         binary_eq_bytes(binary, expected_bytes);
@@ -571,7 +571,7 @@ TEST_CASE("vector accessor packed_bit", "[bsoncxx::vector::accessor]") {
                     CHECK(vec.byte_back() == std::uint8_t(0xFF << padding));
                 }
             }));
-            types::b_binary const& binary = doc.view()["vector"].get_binary();
+            auto const binary = doc.view()["vector"].get_binary();
             CHECK(binary.sub_type == binary_sub_type::k_vector);
             vector::accessor<vector::formats::f_packed_bit const> vec{binary};
             REQUIRE(vec.size() == element_count);

@@ -23,7 +23,7 @@ namespace v1 {
 
 enum server_errc : int;
 
-class server_error;
+class MONGOCXX_ABI_EXPORT server_error;
 
 } // namespace v1
 } // namespace mongocxx
