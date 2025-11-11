@@ -29,8 +29,8 @@
 #include <bsoncxx/test/stringify.hh>    // IWYU pragma: export
 #include <bsoncxx/test/system_error.hh> // IWYU pragma: export
 
-#include <catch2/catch_test_macros.hpp> // IWYU pragma: export // TEST_CASE, SECTION, CHECK, etc.
-#include <catch2/catch_tostring.hpp>    // IWYU pragma: export // Catch::StringMaker
+#include <catch2/catch_test_macros.hpp> // IWYU pragma: export: TEST_CASE, SECTION, CHECK, etc.
+#include <catch2/catch_tostring.hpp>    // IWYU pragma: export: Catch::StringMaker
 
 namespace Catch {
 

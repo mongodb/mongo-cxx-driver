@@ -49,8 +49,6 @@ using std::optional;
 #include <functional>
 #include <initializer_list>
 #include <memory>
-#include <new>
-#include <stdexcept>
 #include <type_traits>
 #include <utility>
 

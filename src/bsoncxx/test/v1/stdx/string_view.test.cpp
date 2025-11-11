@@ -23,7 +23,7 @@
 
 #ifdef __has_include
 #if __has_include(<version>)
-#include <version>
+#include <version> // IWYU pragma: keep: feature macro tests.
 #endif
 #endif
 

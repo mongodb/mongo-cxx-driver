@@ -22,8 +22,6 @@
 
 #include <bsoncxx/v1/types/view-fwd.hpp>
 
-#include <bsoncxx/v1/stdx/optional.hpp>
-
 #include <mongocxx/v1/bulk_write.hpp>
 #include <mongocxx/v1/config/export.hpp>
 

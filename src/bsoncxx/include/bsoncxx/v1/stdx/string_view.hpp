@@ -37,12 +37,10 @@ using std::string_view;
 
 #include <bsoncxx/v1/detail/compare.hpp>
 #include <bsoncxx/v1/detail/macros.hpp>
-#include <bsoncxx/v1/detail/type_traits.hpp>
 
 #include <algorithm>
 #include <cstddef>
 #include <functional>
-#include <ios>
 #include <iterator>
 #include <limits>
 #include <ostream>

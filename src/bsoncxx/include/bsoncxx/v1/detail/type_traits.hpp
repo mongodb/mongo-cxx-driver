@@ -18,6 +18,7 @@
 
 #include <bsoncxx/v1/detail/macros.hpp>
 
+#include <cstddef>
 #include <type_traits> // IWYU pragma: export
 #include <utility>
 

@@ -33,7 +33,6 @@
 
 #include <bsoncxx/private/bson.hh>
 #include <bsoncxx/private/immortal.hh>
-#include <bsoncxx/private/make_unique.hh>
 #include <bsoncxx/private/type_traits.hh>
 
 namespace bsoncxx {

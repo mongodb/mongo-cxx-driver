@@ -22,8 +22,6 @@
 
 #include <bsoncxx/v1/oid-fwd.hpp>
 
-#include <bsoncxx/v1/stdx/string_view.hpp>
-
 #include <mongocxx/v1/config/export.hpp>
 
 namespace mongocxx {

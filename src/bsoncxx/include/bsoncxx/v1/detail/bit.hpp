@@ -16,8 +16,6 @@
 
 #include <bsoncxx/v1/detail/prelude.hpp>
 
-#include <bsoncxx/v1/config/config.hpp>
-
 #if defined(__has_include)
 #if __has_include(<bit>) && (!defined(_MSVC_LANG) || _MSVC_LANG >= 202002L)
 

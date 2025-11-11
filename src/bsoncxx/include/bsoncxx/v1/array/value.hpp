@@ -21,7 +21,6 @@
 #include <bsoncxx/v1/detail/prelude.hpp>
 
 #include <bsoncxx/v1/array/view.hpp> // IWYU pragma: export
-#include <bsoncxx/v1/config/export.hpp>
 #include <bsoncxx/v1/detail/type_traits.hpp>
 #include <bsoncxx/v1/document/value.hpp> // IWYU pragma: export
 

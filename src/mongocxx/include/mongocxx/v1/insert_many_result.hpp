@@ -26,6 +26,7 @@
 #include <mongocxx/v1/config/export.hpp>
 
 #include <cstdint>
+#include <map>
 
 namespace mongocxx {
 namespace v1 {

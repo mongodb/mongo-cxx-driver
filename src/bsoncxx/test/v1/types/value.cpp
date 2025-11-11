@@ -22,7 +22,6 @@
 #include <bsoncxx/v1/types/value.hh>
 #include <bsoncxx/v1/types/view.hh>
 
-#include <bsoncxx/test/v1/detail/bit.hh>
 #include <bsoncxx/test/v1/document/view.hh>
 #include <bsoncxx/test/v1/exception.hh>
 #include <bsoncxx/test/v1/stdx/string_view.hh>

@@ -24,7 +24,6 @@
 #include <cstdint>
 
 #include <bsoncxx/private/bson.hh>
-#include <bsoncxx/private/immortal.hh>
 #include <bsoncxx/private/itoa.hh>
 #include <bsoncxx/private/type_traits.hh>
 

@@ -20,8 +20,6 @@
 #include <bsoncxx/v1/detail/type_traits.hpp>
 
 #include <cstddef>
-#include <functional>
-#include <type_traits>
 #include <utility>
 
 namespace bsoncxx {

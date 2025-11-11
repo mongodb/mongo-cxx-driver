@@ -23,10 +23,13 @@
 #include <bsoncxx/test/v1/stdx/string_view.hh>
 
 #include <cstddef>
+#include <functional>
+#include <initializer_list>
 #include <memory>
 #include <mutex>
 #include <string>
 #include <type_traits>
+#include <utility>
 
 #include <bsoncxx/private/make_unique.hh>
 

@@ -19,7 +19,7 @@
 #include <cstddef>
 #include <exception>
 #include <mutex>
-#include <sstream> // IWYU pragma: keep
+#include <sstream> // IWYU pragma: keep: for `BSONCXX_TEST_EXCEPTION_GUARD_END`.
 #include <string>
 #include <vector>
 
