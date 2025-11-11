@@ -11,6 +11,8 @@ if [[ "${distro_id:?}" != rhel* ]]; then
   exit 1
 fi
 
+command -V parallel >/dev/null
+
 # shellcheck source=/dev/null
 . .evergreen/scripts/install-build-tools.sh
 install_build_tools
