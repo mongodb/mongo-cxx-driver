@@ -151,8 +151,8 @@ tasks:
       - func: benchmarks-compile
       - func: benchmarks-run
   - name: clang-tidy
-    run_on: rhel80-small
-    tags: [clang-tidy, rhel80]
+    run_on: rhel9-latest-small
+    tags: [clang-tidy, rhel9-latest]
     commands:
       - func: setup
       - func: install_c_driver

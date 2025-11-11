@@ -40,7 +40,7 @@ def functions():
 
 
 def tasks():
-    distro_name = 'rhel80'
+    distro_name = 'rhel9-latest'
     distro = find_small_distro(distro_name)
 
     return [
