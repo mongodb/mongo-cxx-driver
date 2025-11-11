@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include <bsoncxx/document/view_or_value.hpp>
+#include <bsoncxx/document/view_or_value.hpp> // IWYU pragma: keep: backward compatility, to be removed.
 
 #include <bsoncxx/config/prelude.hpp>
 

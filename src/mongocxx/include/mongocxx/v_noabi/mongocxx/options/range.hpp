@@ -16,9 +16,9 @@
 
 #include <cstdint>
 
-#include <mongocxx/options/range-fwd.hpp>
+#include <mongocxx/options/range-fwd.hpp> // IWYU pragma: export
 
-#include <bsoncxx/types.hpp>
+#include <bsoncxx/types.hpp> // IWYU pragma: keep: backward compatibility, to be removed.
 #include <bsoncxx/types/bson_value/view_or_value.hpp>
 
 #include <mongocxx/config/prelude.hpp>

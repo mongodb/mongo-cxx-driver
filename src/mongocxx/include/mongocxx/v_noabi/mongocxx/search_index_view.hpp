@@ -4,10 +4,10 @@
 #include <vector>
 
 #include <mongocxx/collection-fwd.hpp>
-#include <mongocxx/search_index_view-fwd.hpp>
+#include <mongocxx/search_index_view-fwd.hpp> // IWYU pragma: export
 
 #include <bsoncxx/document/view_or_value.hpp>
-#include <bsoncxx/stdx/optional.hpp>
+#include <bsoncxx/stdx/optional.hpp> // IWYU pragma: keep: backward compatibility, to be removed.
 
 #include <mongocxx/cursor.hpp>
 #include <mongocxx/options/aggregate.hpp>

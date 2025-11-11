@@ -19,12 +19,12 @@
 #include <memory>
 
 #include <mongocxx/gridfs/bucket-fwd.hpp>
-#include <mongocxx/gridfs/downloader-fwd.hpp>
+#include <mongocxx/gridfs/downloader-fwd.hpp> // IWYU pragma: export
 
 #include <bsoncxx/document/value.hpp>
 #include <bsoncxx/document/view.hpp>
 #include <bsoncxx/stdx/optional.hpp>
-#include <bsoncxx/types/bson_value/view.hpp>
+#include <bsoncxx/types/bson_value/view.hpp> // IWYU pragma: keep: backward compatibility, to be removed.
 
 #include <mongocxx/cursor.hpp>
 

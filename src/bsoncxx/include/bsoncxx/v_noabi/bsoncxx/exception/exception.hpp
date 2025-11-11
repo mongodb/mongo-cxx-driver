@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include <bsoncxx/exception/exception-fwd.hpp>
+#include <bsoncxx/exception/exception-fwd.hpp> // IWYU pragma: export
 
 //
 

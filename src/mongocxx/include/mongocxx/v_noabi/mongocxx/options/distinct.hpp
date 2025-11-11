@@ -15,10 +15,10 @@
 #pragma once
 
 #include <chrono>
-#include <cstdint>
-#include <string>
+#include <cstdint> // IWYU pragma: keep: backward compatibility, to be removed.
+#include <string>  // IWYU pragma: keep: backward compatibility, to be removed.
 
-#include <mongocxx/options/distinct-fwd.hpp>
+#include <mongocxx/options/distinct-fwd.hpp> // IWYU pragma: export
 
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/stdx/optional.hpp>

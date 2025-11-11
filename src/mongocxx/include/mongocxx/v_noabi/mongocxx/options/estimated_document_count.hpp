@@ -16,7 +16,7 @@
 
 #include <chrono>
 
-#include <mongocxx/options/estimated_document_count-fwd.hpp>
+#include <mongocxx/options/estimated_document_count-fwd.hpp> // IWYU pragma: export
 
 #include <bsoncxx/stdx/optional.hpp>
 #include <bsoncxx/types/bson_value/view_or_value.hpp>

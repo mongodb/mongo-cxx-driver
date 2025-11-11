@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include <bsoncxx/document/element-fwd.hpp>
+#include <bsoncxx/document/element-fwd.hpp> // IWYU pragma: export
 
 //
 
@@ -25,12 +25,12 @@
 
 #include <bsoncxx/array/element-fwd.hpp>
 #include <bsoncxx/document/element-fwd.hpp>
-#include <bsoncxx/document/view-fwd.hpp>
+#include <bsoncxx/document/view-fwd.hpp> // IWYU pragma: keep: backward compatibility, to be removed.
 #include <bsoncxx/types-fwd.hpp>
 #include <bsoncxx/types/bson_value/value-fwd.hpp>
 #include <bsoncxx/types/bson_value/view-fwd.hpp>
 
-#include <bsoncxx/stdx/optional.hpp>
+#include <bsoncxx/stdx/optional.hpp> // IWYU pragma: keep: backward compatibility, to be removed.
 #include <bsoncxx/stdx/string_view.hpp>
 
 #include <bsoncxx/config/prelude.hpp>

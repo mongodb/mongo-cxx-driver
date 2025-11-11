@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include <mongocxx/options/bulk_write-fwd.hpp>
+#include <mongocxx/options/bulk_write-fwd.hpp> // IWYU pragma: export
 
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/stdx/optional.hpp>

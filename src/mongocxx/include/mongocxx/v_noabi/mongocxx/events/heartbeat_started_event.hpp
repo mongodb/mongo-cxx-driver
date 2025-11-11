@@ -16,7 +16,7 @@
 
 #include <cstdint>
 
-#include <mongocxx/events/heartbeat_started_event-fwd.hpp>
+#include <mongocxx/events/heartbeat_started_event-fwd.hpp> // IWYU pragma: export
 
 #include <bsoncxx/stdx/string_view.hpp>
 

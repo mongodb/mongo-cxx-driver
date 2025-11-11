@@ -16,7 +16,7 @@
 
 #include <bsoncxx/types/bson_value/value.hpp>
 #include <bsoncxx/types/bson_value/view.hpp>
-#include <bsoncxx/view_or_value.hpp>
+#include <bsoncxx/view_or_value.hpp> // IWYU pragma: export
 
 #include <bsoncxx/config/prelude.hpp>
 

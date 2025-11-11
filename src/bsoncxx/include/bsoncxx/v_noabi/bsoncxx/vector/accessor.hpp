@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include <bsoncxx/vector/accessor-fwd.hpp>
+#include <bsoncxx/vector/accessor-fwd.hpp> // IWYU pragma: export
 
 //
 
@@ -25,7 +25,7 @@
 #include <bsoncxx/exception/error_code.hpp>
 #include <bsoncxx/exception/exception.hpp>
 #include <bsoncxx/vector/detail.hpp>
-#include <bsoncxx/vector/formats.hpp>
+#include <bsoncxx/vector/formats.hpp> // IWYU pragma: keep: backward compatibility, to be removed.
 
 #include <bsoncxx/config/prelude.hpp>
 

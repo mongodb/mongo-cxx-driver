@@ -16,7 +16,7 @@
 
 #include <vector>
 
-#include <mongocxx/events/topology_description-fwd.hpp>
+#include <mongocxx/events/topology_description-fwd.hpp> // IWYU pragma: export
 
 #include <bsoncxx/stdx/string_view.hpp>
 

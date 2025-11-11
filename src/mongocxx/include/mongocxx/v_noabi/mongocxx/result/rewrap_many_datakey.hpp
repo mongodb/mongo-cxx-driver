@@ -14,12 +14,12 @@
 
 #pragma once
 
-#include <mongocxx/result/rewrap_many_datakey-fwd.hpp>
+#include <mongocxx/result/rewrap_many_datakey-fwd.hpp> // IWYU pragma: export
 
-#include <bsoncxx/document/value.hpp>
+#include <bsoncxx/document/value.hpp> // IWYU pragma: keep: backward compatibility, to be removed.
 #include <bsoncxx/stdx/optional.hpp>
 
-#include <mongocxx/bulk_write.hpp>
+#include <mongocxx/bulk_write.hpp> // IWYU pragma: keep: backward compatibility, to be removed.
 
 #include <mongocxx/config/prelude.hpp>
 

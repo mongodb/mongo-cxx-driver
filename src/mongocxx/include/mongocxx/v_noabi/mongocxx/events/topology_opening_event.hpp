@@ -14,11 +14,11 @@
 
 #pragma once
 
-#include <mongocxx/events/topology_opening_event-fwd.hpp>
+#include <mongocxx/events/topology_opening_event-fwd.hpp> // IWYU pragma: export
 
 #include <bsoncxx/oid.hpp>
 
-#include <mongocxx/events/topology_description.hpp>
+#include <mongocxx/events/topology_description.hpp> // IWYU pragma: keep: backward compatibility, to be removed.
 
 #include <mongocxx/config/prelude.hpp>
 

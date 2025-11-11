@@ -16,7 +16,7 @@
 
 #include <string>
 
-#include <mongocxx/options/gridfs/bucket-fwd.hpp>
+#include <mongocxx/options/gridfs/bucket-fwd.hpp> // IWYU pragma: export
 
 #include <bsoncxx/stdx/optional.hpp>
 

@@ -20,7 +20,7 @@
 #include <mongocxx/client-fwd.hpp>
 #include <mongocxx/client_encryption-fwd.hpp>
 #include <mongocxx/collection-fwd.hpp>
-#include <mongocxx/database-fwd.hpp>
+#include <mongocxx/database-fwd.hpp> // IWYU pragma: export
 
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/string/view_or_value.hpp>

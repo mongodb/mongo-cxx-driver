@@ -18,10 +18,10 @@
 #include <map>
 
 #include <mongocxx/collection-fwd.hpp>
-#include <mongocxx/result/insert_many-fwd.hpp>
+#include <mongocxx/result/insert_many-fwd.hpp> // IWYU pragma: export
 
 #include <bsoncxx/array/value.hpp>
-#include <bsoncxx/types.hpp>
+#include <bsoncxx/types.hpp> // IWYU pragma: keep: backward compatibility, to be removed.
 
 #include <mongocxx/result/bulk_write.hpp>
 

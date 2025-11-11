@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include <bsoncxx/builder/concatenate-fwd.hpp>
+#include <bsoncxx/builder/concatenate-fwd.hpp> // IWYU pragma: export
 
 #include <bsoncxx/array/view_or_value.hpp>
 #include <bsoncxx/document/view_or_value.hpp>

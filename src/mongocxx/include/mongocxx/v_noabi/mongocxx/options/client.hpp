@@ -14,9 +14,9 @@
 
 #pragma once
 
-#include <string>
+#include <string> // IWYU pragma: keep: backward compatibility, to be removed.
 
-#include <mongocxx/options/client-fwd.hpp>
+#include <mongocxx/options/client-fwd.hpp> // IWYU pragma: export
 
 #include <bsoncxx/stdx/optional.hpp>
 

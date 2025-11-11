@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include <mongocxx/model/replace_one-fwd.hpp>
+#include <mongocxx/model/replace_one-fwd.hpp> // IWYU pragma: export
 
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/stdx/optional.hpp>

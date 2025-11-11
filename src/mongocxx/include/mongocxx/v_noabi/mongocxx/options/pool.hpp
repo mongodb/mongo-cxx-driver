@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include <mongocxx/options/pool-fwd.hpp>
+#include <mongocxx/options/pool-fwd.hpp> // IWYU pragma: export
 
 #include <mongocxx/options/client.hpp>
 

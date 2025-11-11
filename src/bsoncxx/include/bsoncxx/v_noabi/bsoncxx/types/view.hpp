@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include <bsoncxx/types/bson_value/view.hpp>
+#include <bsoncxx/types/bson_value/view.hpp> // IWYU pragma: export
 
 ///
 /// @file

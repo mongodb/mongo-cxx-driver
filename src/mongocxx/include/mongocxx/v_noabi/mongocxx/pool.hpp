@@ -18,7 +18,7 @@
 #include <memory>
 
 #include <mongocxx/options/auto_encryption-fwd.hpp>
-#include <mongocxx/pool-fwd.hpp>
+#include <mongocxx/pool-fwd.hpp> // IWYU pragma: export
 
 #include <bsoncxx/stdx/optional.hpp>
 

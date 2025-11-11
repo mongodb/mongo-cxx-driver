@@ -14,16 +14,18 @@
 
 #pragma once
 
-#include <bsoncxx/array/element-fwd.hpp>
+#include <bsoncxx/array/element-fwd.hpp> // IWYU pragma: export
 
 //
+
+#include <bsoncxx/v1/types/id-fwd.hpp>
 
 #include <bsoncxx/v1/element/view.hpp> // IWYU pragma: export
 
 #include <cstddef>
-#include <cstdint>
+#include <cstdint> // IWYU pragma: keep: backward compatibility, to be removed.
 
-#include <bsoncxx/array/view-fwd.hpp>
+#include <bsoncxx/array/view-fwd.hpp> // IWYU pragma: keep: backward compatibility, to be removed.
 #include <bsoncxx/types/bson_value/view-fwd.hpp>
 
 #include <bsoncxx/document/element.hpp> // IWYU pragma: export

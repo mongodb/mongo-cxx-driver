@@ -20,7 +20,7 @@
 
 #include <mongocxx/client-fwd.hpp>
 #include <mongocxx/pool-fwd.hpp>
-#include <mongocxx/uri-fwd.hpp>
+#include <mongocxx/uri-fwd.hpp> // IWYU pragma: export
 
 #include <bsoncxx/document/view.hpp>
 #include <bsoncxx/string/view_or_value.hpp>

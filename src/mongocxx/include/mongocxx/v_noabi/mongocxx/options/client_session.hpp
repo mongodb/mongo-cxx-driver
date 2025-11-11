@@ -15,7 +15,7 @@
 #pragma once
 
 #include <mongocxx/client_session-fwd.hpp>
-#include <mongocxx/options/client_session-fwd.hpp>
+#include <mongocxx/options/client_session-fwd.hpp> // IWYU pragma: export
 
 #include <bsoncxx/stdx/optional.hpp>
 

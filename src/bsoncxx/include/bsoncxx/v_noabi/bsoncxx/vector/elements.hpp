@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include <bsoncxx/vector/elements-fwd.hpp>
+#include <bsoncxx/vector/elements-fwd.hpp> // IWYU pragma: export
 
 //
 

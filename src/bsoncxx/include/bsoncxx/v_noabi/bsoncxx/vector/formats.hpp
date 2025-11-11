@@ -14,14 +14,16 @@
 
 #pragma once
 
-#include <bsoncxx/vector/formats-fwd.hpp>
+#include <bsoncxx/vector/formats-fwd.hpp> // IWYU pragma: export
 
 //
 
-#include <array>
+#include <array> // IWYU pragma: keep: backward compatibility, to be removed.
+#include <cstddef>
+#include <cstdint>
 
 #include <bsoncxx/types-fwd.hpp>
-#include <bsoncxx/vector/accessor-fwd.hpp>
+#include <bsoncxx/vector/accessor-fwd.hpp> // IWYU pragma: keep: backward compatibility, to be removed.
 
 #include <bsoncxx/config/prelude.hpp>
 

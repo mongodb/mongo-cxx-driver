@@ -19,7 +19,7 @@
 
 #include <mongocxx/collection-fwd.hpp>
 #include <mongocxx/database-fwd.hpp>
-#include <mongocxx/options/aggregate-fwd.hpp>
+#include <mongocxx/options/aggregate-fwd.hpp> // IWYU pragma: export
 
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/document/view_or_value.hpp>

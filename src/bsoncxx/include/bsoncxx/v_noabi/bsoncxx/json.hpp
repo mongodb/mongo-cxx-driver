@@ -16,12 +16,12 @@
 
 #include <string>
 
-#include <bsoncxx/json-fwd.hpp>
+#include <bsoncxx/json-fwd.hpp> // IWYU pragma: export
 
 #include <bsoncxx/array/view.hpp>
 #include <bsoncxx/document/value.hpp>
 #include <bsoncxx/document/view.hpp>
-#include <bsoncxx/stdx/optional.hpp>
+#include <bsoncxx/stdx/optional.hpp> // IWYU pragma: keep: backward compatibility, to be removed.
 
 #include <bsoncxx/config/prelude.hpp>
 

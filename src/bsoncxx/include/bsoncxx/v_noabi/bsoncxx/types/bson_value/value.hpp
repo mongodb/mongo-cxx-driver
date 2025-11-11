@@ -14,22 +14,22 @@
 
 #pragma once
 
-#include <bsoncxx/types/bson_value/value-fwd.hpp>
+#include <bsoncxx/types/bson_value/value-fwd.hpp> // IWYU pragma: export
 
 //
 
 #include <bsoncxx/v1/detail/type_traits.hpp>
 #include <bsoncxx/v1/types/value.hpp> // IWYU pragma: export
 
-#include <iostream>
-#include <memory>
+#include <iostream> // IWYU pragma: keep: backward compatibility, to be removed.
+#include <memory>   // IWYU pragma: keep: backward compatibility, to be removed.
 #include <string>
 #include <utility>
 #include <vector>
 
-#include <bsoncxx/document/element-fwd.hpp>
+#include <bsoncxx/document/element-fwd.hpp> // IWYU pragma: keep: backward compatibility, to be removed.
 
-#include <bsoncxx/array/view_or_value.hpp>
+#include <bsoncxx/array/view_or_value.hpp> // IWYU pragma: keep: backward compatibility, to be removed.
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/types/bson_value/view.hpp>
 

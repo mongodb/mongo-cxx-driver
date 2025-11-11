@@ -14,9 +14,9 @@
 
 #pragma once
 
-#include <mongocxx/options/insert-fwd.hpp>
+#include <mongocxx/options/insert-fwd.hpp> // IWYU pragma: export
 
-#include <bsoncxx/document/view.hpp>
+#include <bsoncxx/document/view.hpp> // IWYU pragma: keep: backward compatibility, to be removed.
 #include <bsoncxx/stdx/optional.hpp>
 #include <bsoncxx/types/bson_value/view_or_value.hpp>
 

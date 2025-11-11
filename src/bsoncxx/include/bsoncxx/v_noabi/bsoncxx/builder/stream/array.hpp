@@ -14,15 +14,15 @@
 
 #pragma once
 
-#include <bsoncxx/builder/stream/array-fwd.hpp>
+#include <bsoncxx/builder/stream/array-fwd.hpp> // IWYU pragma: export
 
 #include <bsoncxx/array/value.hpp>
 #include <bsoncxx/array/view.hpp>
 #include <bsoncxx/builder/core.hpp>
 #include <bsoncxx/builder/stream/array_context.hpp>
-#include <bsoncxx/builder/stream/key_context.hpp>
-#include <bsoncxx/builder/stream/single_context.hpp>
-#include <bsoncxx/builder/stream/value_context.hpp>
+#include <bsoncxx/builder/stream/key_context.hpp>    // IWYU pragma: keep: backward compatibility, to be removed.
+#include <bsoncxx/builder/stream/single_context.hpp> // IWYU pragma: keep: backward compatibility, to be removed.
+#include <bsoncxx/builder/stream/value_context.hpp>  // IWYU pragma: keep: backward compatibility, to be removed.
 
 #include <bsoncxx/config/prelude.hpp>
 

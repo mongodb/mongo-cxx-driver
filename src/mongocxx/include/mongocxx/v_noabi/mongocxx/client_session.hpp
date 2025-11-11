@@ -19,7 +19,7 @@
 
 #include <mongocxx/bulk_write-fwd.hpp>
 #include <mongocxx/client-fwd.hpp>
-#include <mongocxx/client_session-fwd.hpp>
+#include <mongocxx/client_session-fwd.hpp> // IWYU pragma: export
 #include <mongocxx/collection-fwd.hpp>
 #include <mongocxx/database-fwd.hpp>
 #include <mongocxx/index_view-fwd.hpp>

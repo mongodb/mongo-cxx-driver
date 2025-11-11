@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include <mongocxx/options/find_one_common_options-fwd.hpp>
+#include <mongocxx/options/find_one_common_options-fwd.hpp> // IWYU pragma: export
 
 #include <mongocxx/config/prelude.hpp>
 

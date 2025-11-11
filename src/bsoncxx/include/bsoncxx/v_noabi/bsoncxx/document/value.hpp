@@ -14,19 +14,24 @@
 
 #pragma once
 
-#include <bsoncxx/document/value-fwd.hpp>
+#include <bsoncxx/document/value-fwd.hpp> // IWYU pragma: export
 
 //
 
+#include <bsoncxx/v1/detail/type_traits.hpp>
 #include <bsoncxx/v1/document/value.hpp> // IWYU pragma: export
+#include <bsoncxx/v1/stdx/string_view.hpp>
 
+#include <cstdint>
 #include <cstdlib>
 #include <memory>
 #include <type_traits>
+#include <utility>
 
 #include <bsoncxx/array/view.hpp>
+#include <bsoncxx/document/element.hpp>
 #include <bsoncxx/document/view.hpp>
-#include <bsoncxx/stdx/type_traits.hpp>
+#include <bsoncxx/stdx/type_traits.hpp> // IWYU pragma: keep: backward compatibity, to be removed.
 
 #include <bsoncxx/config/prelude.hpp>
 

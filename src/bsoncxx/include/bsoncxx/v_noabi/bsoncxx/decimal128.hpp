@@ -14,12 +14,12 @@
 
 #pragma once
 
-#include <bsoncxx/decimal128-fwd.hpp>
+#include <bsoncxx/decimal128-fwd.hpp> // IWYU pragma: export
 
 //
 
-#include <bsoncxx/v1/decimal128.hpp> // IWYU pragma: export
-#include <bsoncxx/v1/detail/type_traits.hpp>
+#include <bsoncxx/v1/decimal128.hpp>         // IWYU pragma: export
+#include <bsoncxx/v1/detail/type_traits.hpp> // IWYU pragma: keep: backward compatibility, to be removed.
 
 #include <cstdint>
 #include <string>
