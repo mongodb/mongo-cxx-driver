@@ -11,9 +11,7 @@ if [[ "${distro_id:?}" != rhel* ]]; then
   exit 1
 fi
 
-if ! command -v parallel >/dev/null; then
-  sudo yum install -q -y parallel
-fi
+command -V parallel >/dev/null
 
 # shellcheck source=/dev/null
 . .evergreen/scripts/install-build-tools.sh
