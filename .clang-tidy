@@ -15,7 +15,7 @@ ImplementationFileExtensions:
 HeaderFilterRegex: ''
 ExcludeHeaderFilterRegex: ''
 FormatStyle:     none
-User:            ec2-user
+User:            ''
 CheckOptions:
   cert-arr39-c.WarnOnOffsetDividedBySizeOf: 'true'
   cert-arr39-c.WarnOnSizeOfCompareToConstant: 'false'
