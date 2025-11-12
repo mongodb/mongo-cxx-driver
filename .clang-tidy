@@ -1,9 +1,5 @@
 ---
 Checks:
-  - clang-diagnostic-*
-  - clang-analyzer-*
-  - clang-diagnostic-*
-  - clang-analyzer-*
   - -*
   - cert-*
   - cppcoreguidelines-*
