@@ -1,5 +1,13 @@
 ---
-Checks:          'clang-diagnostic-*,clang-analyzer-*,clang-diagnostic-*,clang-analyzer-*,-*,cert-*,cppcoreguidelines-*,clang-analyzer-*'
+Checks:
+  - clang-diagnostic-*
+  - clang-analyzer-*
+  - clang-diagnostic-*
+  - clang-analyzer-*
+  - -*
+  - cert-*
+  - cppcoreguidelines-*
+  - clang-analyzer-*'
 WarningsAsErrors: ''
 HeaderFileExtensions:
   - ''
