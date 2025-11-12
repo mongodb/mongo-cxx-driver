@@ -13,7 +13,7 @@ ImplementationFileExtensions:
   - cpp
   - cxx
 HeaderFilterRegex: ''
-ExcludeHeaderFilterRegex: ''
+ExcludeHeaderFilterRegex: '(?:.*/bsoncxx/enums/.*|.*/(?:prelude|postlude)\.hpp$)'
 FormatStyle:     none
 User:            ''
 CheckOptions:
