@@ -22,9 +22,9 @@ command -V git >/dev/null
 # For latest Clang versions supporting recent C++ standards.
 export CC CXX
 case "${distro_id:?}" in
-rhel95*)
-  CC="clang-19"
-  CXX="clang++-19"
+rhel9*)
+  CC="clang"
+  CXX="clang++"
   ;;
 ubuntu22*)
   CC="clang-12"
