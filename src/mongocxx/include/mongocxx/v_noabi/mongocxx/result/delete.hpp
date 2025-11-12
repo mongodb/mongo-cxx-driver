@@ -16,7 +16,7 @@
 
 #include <cstdint>
 
-#include <mongocxx/result/delete-fwd.hpp>
+#include <mongocxx/result/delete-fwd.hpp> // IWYU pragma: export
 
 #include <mongocxx/result/bulk_write.hpp>
 

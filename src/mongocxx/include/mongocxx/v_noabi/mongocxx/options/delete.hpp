@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include <mongocxx/options/delete-fwd.hpp>
+#include <mongocxx/options/delete-fwd.hpp> // IWYU pragma: export
 
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/stdx/optional.hpp>

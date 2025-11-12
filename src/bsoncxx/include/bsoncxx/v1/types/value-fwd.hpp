@@ -16,8 +16,6 @@
 
 #include <bsoncxx/v1/detail/prelude.hpp>
 
-#include <bsoncxx/v1/types/value-fwd.hpp>
-
 namespace bsoncxx {
 namespace v1 {
 namespace types {

@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include <mongocxx/v1/logger-fwd.hpp>
+#include <mongocxx/v1/logger-fwd.hpp> // IWYU pragma: export
 
 #include <mongocxx/config/prelude.hpp>
 

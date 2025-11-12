@@ -20,11 +20,11 @@
 #include <mongocxx/collection-fwd.hpp>
 #include <mongocxx/database-fwd.hpp>
 #include <mongocxx/options/transaction-fwd.hpp>
-#include <mongocxx/read_concern-fwd.hpp>
+#include <mongocxx/read_concern-fwd.hpp> // IWYU pragma: export
 #include <mongocxx/uri-fwd.hpp>
 
 #include <bsoncxx/document/value.hpp>
-#include <bsoncxx/stdx/optional.hpp>
+#include <bsoncxx/stdx/optional.hpp> // IWYU pragma: keep: backward compatibility, to be removed.
 #include <bsoncxx/stdx/string_view.hpp>
 
 #include <mongocxx/options/transaction.hpp>

@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include <mongocxx/write_type-fwd.hpp>
+#include <mongocxx/write_type-fwd.hpp> // IWYU pragma: export
 
 #include <mongocxx/config/prelude.hpp>
 

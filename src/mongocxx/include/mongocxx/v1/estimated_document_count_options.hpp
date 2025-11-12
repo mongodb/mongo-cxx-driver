@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include <mongocxx/v1/estimated_document_count_options-fwd.hpp>
+#include <mongocxx/v1/estimated_document_count_options-fwd.hpp> // IWYU pragma: export
 
 //
 

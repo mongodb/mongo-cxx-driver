@@ -21,7 +21,7 @@
 #include <mongocxx/client-fwd.hpp>
 #include <mongocxx/collection-fwd.hpp>
 #include <mongocxx/database-fwd.hpp>
-#include <mongocxx/pipeline-fwd.hpp>
+#include <mongocxx/pipeline-fwd.hpp> // IWYU pragma: export
 
 #include <bsoncxx/array/view.hpp>
 #include <bsoncxx/array/view_or_value.hpp>

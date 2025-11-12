@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include <mongocxx/write_concern.hpp>
+#include <mongocxx/write_concern.hpp> // IWYU pragma: export
 
 #include <mongocxx/private/mongoc.hh>
 

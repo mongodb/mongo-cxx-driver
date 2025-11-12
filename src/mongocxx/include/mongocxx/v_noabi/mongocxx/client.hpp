@@ -17,7 +17,7 @@
 #include <memory>
 #include <string>
 
-#include <mongocxx/client-fwd.hpp>
+#include <mongocxx/client-fwd.hpp> // IWYU pragma: export
 #include <mongocxx/client_session-fwd.hpp>
 #include <mongocxx/collection-fwd.hpp>
 #include <mongocxx/database-fwd.hpp>

@@ -18,7 +18,7 @@
 
 #include <exception>
 
-#include <mongocxx/client_session.hpp>
+#include <mongocxx/client_session.hpp> // IWYU pragma: export
 #include <mongocxx/exception/error_code.hpp>
 #include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/exception/operation_exception.hpp>

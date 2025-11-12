@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include <mongocxx/private/scoped_bson.hh>
+#include <mongocxx/private/scoped_bson.hh> // IWYU pragma: export
 
 //
 

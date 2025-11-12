@@ -17,7 +17,7 @@
 #include <bsoncxx/document/view.hpp>
 #include <bsoncxx/stdx/optional.hpp>
 
-#include <mongocxx/change_stream.hpp>
+#include <mongocxx/change_stream.hpp> // IWYU pragma: export
 #include <mongocxx/exception/query_exception.hpp>
 
 #include <mongocxx/scoped_bson.hh>

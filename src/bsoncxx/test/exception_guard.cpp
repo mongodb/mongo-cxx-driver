@@ -16,6 +16,8 @@
 
 //
 
+#include <bsoncxx/test/v1/stdx/string_view.hh>
+
 #include <atomic>
 #include <chrono>
 #include <stdexcept>
@@ -23,8 +25,7 @@
 #include <thread>
 #include <vector>
 
-#include <bsoncxx/test/catch.hh>
-
+#include <catch2/catch_test_macros.hpp>
 #include <catch2/matchers/catch_matchers_string.hpp>
 
 namespace {
@@ -36,9 +37,9 @@ TEST_CASE("bsoncxx::test::exception_guard", "[test]") {
 
     SECTION("init") {
         CHECK(eguard.ptr == nullptr);
-        CHECK(eguard.file == bsoncxx::stdx::string_view(""));
+        CHECK(eguard.file == bsoncxx::v1::stdx::string_view(""));
         CHECK(eguard.line == 0u);
-        CHECK(eguard.func == bsoncxx::stdx::string_view(""));
+        CHECK(eguard.func == bsoncxx::v1::stdx::string_view(""));
     }
 
     SECTION("reset") {
@@ -47,9 +48,9 @@ TEST_CASE("bsoncxx::test::exception_guard", "[test]") {
         // clang-format on
 
         CHECK(eguard.ptr == nullptr);
-        CHECK(eguard.file == bsoncxx::stdx::string_view(__FILE__));
+        CHECK(eguard.file == bsoncxx::v1::stdx::string_view(__FILE__));
         CHECK(eguard.line == line);
-        CHECK(eguard.func == bsoncxx::stdx::string_view(__func__));
+        CHECK(eguard.func == bsoncxx::v1::stdx::string_view(__func__));
     }
 
     SECTION("simple") {
@@ -58,9 +59,9 @@ TEST_CASE("bsoncxx::test::exception_guard", "[test]") {
             BSONCXX_TEST_EXCEPTION_GUARD_END(eguard);
 
             CHECK(eguard.ptr == nullptr);
-            CHECK(eguard.file == bsoncxx::stdx::string_view(""));
+            CHECK(eguard.file == bsoncxx::v1::stdx::string_view(""));
             CHECK(eguard.line == 0u);
-            CHECK(eguard.func == bsoncxx::stdx::string_view(""));
+            CHECK(eguard.func == bsoncxx::v1::stdx::string_view(""));
 
             BSONCXX_TEST_EXCEPTION_GUARD_CHECK(eguard);
             SUCCEED("no exception was thrown by the check");
@@ -121,7 +122,7 @@ TEST_CASE("bsoncxx::test::exception_guard", "[test]") {
             REQUIRE(eguard.ignored.size() == 1u);
             {
                 auto const& log = eguard.ignored[0];
-                auto const log_view = bsoncxx::stdx::string_view(log);
+                auto const log_view = bsoncxx::v1::stdx::string_view(log);
 
                 CAPTURE(log);
                 CAPTURE(expected.file);
@@ -143,7 +144,7 @@ TEST_CASE("bsoncxx::test::exception_guard", "[test]") {
             REQUIRE(eguard.ignored.size() == 2u);
             {
                 auto const& log = eguard.ignored[1];
-                auto const log_view = bsoncxx::stdx::string_view(log);
+                auto const log_view = bsoncxx::v1::stdx::string_view(log);
 
                 CAPTURE(log);
                 CAPTURE(expected.file);

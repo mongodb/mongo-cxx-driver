@@ -16,6 +16,8 @@
 
 //
 
+#include <bsoncxx/v1/detail/macros.hpp>
+
 #include <string>
 #include <type_traits>
 

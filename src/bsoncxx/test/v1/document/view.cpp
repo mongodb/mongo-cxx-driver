@@ -18,12 +18,17 @@
 
 #include <bsoncxx/test/v1/element/view.hh>
 #include <bsoncxx/test/v1/exception.hh>
+#include <bsoncxx/test/v1/stdx/string_view.hh>
 #include <bsoncxx/test/v1/types/id.hh>
 #include <bsoncxx/test/v1/types/value.hh>
 #include <bsoncxx/test/v1/types/view.hh>
 
 #include <climits>
+#include <cstddef>
+#include <cstdint>
+#include <cstring>
 #include <memory>
+#include <new>
 #include <string>
 #include <system_error>
 

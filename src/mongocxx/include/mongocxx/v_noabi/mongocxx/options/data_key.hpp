@@ -18,7 +18,7 @@
 #include <vector>
 
 #include <mongocxx/client_encryption-fwd.hpp>
-#include <mongocxx/options/data_key-fwd.hpp>
+#include <mongocxx/options/data_key-fwd.hpp> // IWYU pragma: export
 
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/stdx/optional.hpp>

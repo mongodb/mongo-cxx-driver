@@ -14,9 +14,9 @@
 
 #pragma once
 
-#include <memory>
+#include <memory> // IWYU pragma: keep: backward compatibility, to be removed.
 
-#include <mongocxx/events/command_succeeded_event-fwd.hpp>
+#include <mongocxx/events/command_succeeded_event-fwd.hpp> // IWYU pragma: export
 
 #include <bsoncxx/document/view.hpp>
 #include <bsoncxx/oid.hpp>

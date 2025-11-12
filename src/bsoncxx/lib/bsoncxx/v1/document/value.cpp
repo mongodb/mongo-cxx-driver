@@ -16,6 +16,8 @@
 
 //
 
+#include <cstdint>
+
 #include <bsoncxx/private/type_traits.hh>
 
 namespace bsoncxx {

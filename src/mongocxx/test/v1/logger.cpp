@@ -16,6 +16,8 @@
 
 //
 
+#include <bsoncxx/v1/stdx/string_view.hpp>
+
 #include <type_traits>
 
 #include <bsoncxx/test/stringify.hh>

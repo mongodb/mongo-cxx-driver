@@ -14,15 +14,13 @@
 
 #pragma once
 
-#include <mongocxx/v1/events/topology_opening-fwd.hpp>
+#include <mongocxx/v1/events/topology_opening-fwd.hpp> // IWYU pragma: export
 
 //
 
 #include <mongocxx/v1/detail/prelude.hpp>
 
 #include <bsoncxx/v1/oid-fwd.hpp>
-
-#include <bsoncxx/v1/stdx/string_view.hpp>
 
 #include <mongocxx/v1/config/export.hpp>
 

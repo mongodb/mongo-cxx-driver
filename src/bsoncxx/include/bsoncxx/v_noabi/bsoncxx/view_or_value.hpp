@@ -16,7 +16,7 @@
 
 #include <type_traits>
 
-#include <bsoncxx/view_or_value-fwd.hpp>
+#include <bsoncxx/view_or_value-fwd.hpp> // IWYU pragma: export
 
 #include <bsoncxx/stdx/optional.hpp>
 

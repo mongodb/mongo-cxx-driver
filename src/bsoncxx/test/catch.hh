@@ -26,11 +26,11 @@
 #include <bsoncxx/stdx/operators.hpp>
 #include <bsoncxx/stdx/optional.hpp>
 
-#include <bsoncxx/test/stringify.hh>
-#include <bsoncxx/test/system_error.hh>
+#include <bsoncxx/test/stringify.hh>    // IWYU pragma: export
+#include <bsoncxx/test/system_error.hh> // IWYU pragma: export
 
-#include <catch2/catch_test_macros.hpp> // TEST_CASE, SECTION, CHECK, etc.
-#include <catch2/catch_tostring.hpp>    // Catch::StringMaker
+#include <catch2/catch_test_macros.hpp> // IWYU pragma: export: TEST_CASE, SECTION, CHECK, etc.
+#include <catch2/catch_tostring.hpp>    // IWYU pragma: export: Catch::StringMaker
 
 namespace Catch {
 

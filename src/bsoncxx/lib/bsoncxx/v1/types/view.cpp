@@ -29,7 +29,9 @@
 #include <chrono>
 #include <cstddef>
 #include <cstdint>
+#include <cstring>
 #include <string>
+#include <system_error>
 
 #include <bsoncxx/private/bson.hh>
 #include <bsoncxx/private/immortal.hh>

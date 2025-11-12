@@ -18,7 +18,7 @@
 #include <memory>
 
 #include <mongocxx/client_session-fwd.hpp>
-#include <mongocxx/options/transaction-fwd.hpp>
+#include <mongocxx/options/transaction-fwd.hpp> // IWYU pragma: export
 #include <mongocxx/read_concern-fwd.hpp>
 #include <mongocxx/read_preference-fwd.hpp>
 #include <mongocxx/write_concern-fwd.hpp>

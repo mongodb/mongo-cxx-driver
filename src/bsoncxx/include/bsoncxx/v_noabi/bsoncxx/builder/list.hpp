@@ -16,8 +16,8 @@
 
 #include <sstream>
 
-#include <bsoncxx/builder/basic/array-fwd.hpp>
-#include <bsoncxx/builder/list-fwd.hpp>
+#include <bsoncxx/builder/basic/array-fwd.hpp> // IWYU pragma: keep: backward compatibility, to be removed.
+#include <bsoncxx/builder/list-fwd.hpp>        // IWYU pragma: export
 
 #include <bsoncxx/builder/core.hpp>
 #include <bsoncxx/exception/error_code.hpp>

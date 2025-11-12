@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include <mongocxx/options/apm.hpp>
+#include <mongocxx/options/apm.hpp> // IWYU pragma: export
 
 //
 

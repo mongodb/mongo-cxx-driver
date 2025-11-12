@@ -14,9 +14,11 @@
 
 #pragma once
 
-#include <mongocxx/v1/instance.hpp>
+#include <mongocxx/v1/instance.hpp> // IWYU pragma: export
 
 //
+
+#include <string>
 
 #include <catch2/catch_tostring.hpp>
 

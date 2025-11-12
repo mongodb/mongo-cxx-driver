@@ -14,14 +14,14 @@
 
 #pragma once
 
-#include <bsoncxx/oid-fwd.hpp>
+#include <bsoncxx/oid-fwd.hpp> // IWYU pragma: export
 
 //
 
-#include <bsoncxx/v1/detail/type_traits.hpp>
-#include <bsoncxx/v1/oid.hpp>
+#include <bsoncxx/v1/detail/type_traits.hpp> // IWYU pragma: keep: backward compatibility, to be removed.
+#include <bsoncxx/v1/oid.hpp>                // IWYU pragma: export
 
-#include <array>
+#include <array> // IWYU pragma: keep: backward compatibility, to be removed.
 #include <ctime>
 #include <string>
 

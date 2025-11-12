@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include <bsoncxx/v1/types/view-fwd.hpp>
+#include <bsoncxx/v1/types/view-fwd.hpp> // IWYU pragma: export
 
 #include <bsoncxx/config/prelude.hpp>
 

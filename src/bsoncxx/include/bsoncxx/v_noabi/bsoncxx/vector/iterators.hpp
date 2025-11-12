@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include <bsoncxx/vector/iterators-fwd.hpp>
+#include <bsoncxx/vector/iterators-fwd.hpp> // IWYU pragma: export
 
 //
 

@@ -24,7 +24,7 @@
 BSONCXX_PRIVATE_WARNINGS_PUSH();
 BSONCXX_PRIVATE_WARNINGS_DISABLE(GNU("-Wconversion"));
 BSONCXX_PRIVATE_IF_MSVC(BSONCXX_PRIVATE_PRAGMA(warning(push, 1));)
-#include <mongoc/mongoc.h>
+#include <mongoc/mongoc.h> // IWYU pragma: export
 BSONCXX_PRIVATE_WARNINGS_POP();
 
 // See https://jira.mongodb.com/browse/CXX-1453 and

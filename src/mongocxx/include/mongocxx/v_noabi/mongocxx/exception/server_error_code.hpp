@@ -17,7 +17,7 @@
 #include <cstdint>
 #include <system_error>
 
-#include <mongocxx/exception/server_error_code-fwd.hpp>
+#include <mongocxx/exception/server_error_code-fwd.hpp> // IWYU pragma: export
 
 #include <mongocxx/config/prelude.hpp>
 

@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include <bsoncxx/builder/concatenate.hpp>
+#include <bsoncxx/builder/concatenate.hpp> // IWYU pragma: export
 
 #include <bsoncxx/config/prelude.hpp>
 

@@ -14,9 +14,9 @@
 
 #pragma once
 
-#include <mongocxx/options/replace-fwd.hpp>
+#include <mongocxx/options/replace-fwd.hpp> // IWYU pragma: export
 
-#include <bsoncxx/array/view_or_value.hpp>
+#include <bsoncxx/array/view_or_value.hpp> // IWYU pragma: keep: backward compatibility, to be removed.
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/stdx/optional.hpp>
 #include <bsoncxx/types/bson_value/view_or_value.hpp>

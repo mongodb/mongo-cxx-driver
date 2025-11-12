@@ -12,12 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <mongocxx/v1/detail/prelude.hpp>
+#include <mongocxx/v1/detail/prelude.hpp> // IWYU pragma: export
 
-#include <mongocxx/config/compiler.hpp>
-#include <mongocxx/config/config.hpp>
-#include <mongocxx/config/export.hpp>
-#include <mongocxx/config/version.hpp>
+#include <mongocxx/config/compiler.hpp> // IWYU pragma: export
+#include <mongocxx/config/config.hpp>   // IWYU pragma: export
+#include <mongocxx/config/export.hpp>   // IWYU pragma: export
+#include <mongocxx/config/version.hpp>  // IWYU pragma: export
 
 ///
 /// @file

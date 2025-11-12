@@ -15,18 +15,18 @@
 #pragma once
 
 #include <memory>
-#include <stdexcept>
+#include <stdexcept> // IWYU pragma: keep: backward compatibility, to be removed.
 #include <string>
-#include <type_traits>
+#include <type_traits> // IWYU pragma: keep: backward compatibility, to be removed.
 
-#include <bsoncxx/builder/core-fwd.hpp>
+#include <bsoncxx/builder/core-fwd.hpp> // IWYU pragma: export
 
 #include <bsoncxx/array/value.hpp>
 #include <bsoncxx/array/view.hpp>
 #include <bsoncxx/document/value.hpp>
 #include <bsoncxx/document/view.hpp>
 #include <bsoncxx/stdx/string_view.hpp>
-#include <bsoncxx/stdx/type_traits.hpp>
+#include <bsoncxx/stdx/type_traits.hpp> // IWYU pragma: keep: backward compatibility, to be removed.
 #include <bsoncxx/types.hpp>
 
 #include <bsoncxx/config/prelude.hpp>

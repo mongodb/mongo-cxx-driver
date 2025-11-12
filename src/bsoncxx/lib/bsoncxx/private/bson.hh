@@ -21,6 +21,6 @@ BSONCXX_PRIVATE_WARNINGS_PUSH();
 BSONCXX_PRIVATE_WARNINGS_DISABLE(GNU("-Wconversion"));
 BSONCXX_PRIVATE_IF_MSVC(BSONCXX_PRIVATE_PRAGMA(warning(push, 1));)
 
-#include <bson/bson.h>
+#include <bson/bson.h> // IWYU pragma: export
 
 BSONCXX_PRIVATE_WARNINGS_POP();

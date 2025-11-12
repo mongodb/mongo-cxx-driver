@@ -15,19 +15,19 @@
 #pragma once
 
 #include <algorithm>
-#include <string>
+#include <string> // IWYU pragma: keep: backward compatibility, to be removed.
 
 #include <mongocxx/bulk_write-fwd.hpp>
 #include <mongocxx/client_encryption-fwd.hpp>
-#include <mongocxx/collection-fwd.hpp>
+#include <mongocxx/collection-fwd.hpp> // IWYU pragma: export
 #include <mongocxx/database-fwd.hpp>
 
 #include <bsoncxx/builder/basic/array.hpp>
-#include <bsoncxx/builder/basic/document.hpp>
-#include <bsoncxx/builder/basic/kvp.hpp>
-#include <bsoncxx/builder/concatenate.hpp>
+#include <bsoncxx/builder/basic/document.hpp> // IWYU pragma: keep: backward compatibility, to be removed.
+#include <bsoncxx/builder/basic/kvp.hpp>      // IWYU pragma: keep: backward compatibility, to be removed.
+#include <bsoncxx/builder/concatenate.hpp>    // IWYU pragma: keep: backward compatibility, to be removed.
 #include <bsoncxx/document/view_or_value.hpp>
-#include <bsoncxx/oid.hpp>
+#include <bsoncxx/oid.hpp> // IWYU pragma: keep: backward compatibility, to be removed.
 #include <bsoncxx/stdx/optional.hpp>
 #include <bsoncxx/string/view_or_value.hpp>
 
@@ -36,7 +36,7 @@
 #include <mongocxx/client_session.hpp>
 #include <mongocxx/cursor.hpp>
 #include <mongocxx/index_view.hpp>
-#include <mongocxx/model/insert_one.hpp>
+#include <mongocxx/model/insert_one.hpp> // IWYU pragma: keep: backward compatibility, to be removed.
 #include <mongocxx/options/aggregate.hpp>
 #include <mongocxx/options/bulk_write.hpp>
 #include <mongocxx/options/change_stream.hpp>
@@ -48,7 +48,7 @@
 #include <mongocxx/options/find_one_and_delete.hpp>
 #include <mongocxx/options/find_one_and_replace.hpp>
 #include <mongocxx/options/find_one_and_update.hpp>
-#include <mongocxx/options/index.hpp>
+#include <mongocxx/options/index.hpp> // IWYU pragma: keep: backward compatibility, to be removed.
 #include <mongocxx/options/index_view.hpp>
 #include <mongocxx/options/insert.hpp>
 #include <mongocxx/options/replace.hpp>

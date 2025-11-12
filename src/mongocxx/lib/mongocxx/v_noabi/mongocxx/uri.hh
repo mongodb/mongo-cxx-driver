@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include <mongocxx/uri.hpp>
+#include <mongocxx/uri.hpp> // IWYU pragma: export
 
 #include <mongocxx/private/mongoc.hh>
 

@@ -14,11 +14,11 @@
 
 #pragma once
 
-#include <mongocxx/logger-fwd.hpp>
+#include <mongocxx/logger-fwd.hpp> // IWYU pragma: export
 
 //
 
-#include <mongocxx/v1/logger.hpp>
+#include <mongocxx/v1/logger.hpp> // IWYU pragma: export
 
 #include <mongocxx/config/prelude.hpp>
 

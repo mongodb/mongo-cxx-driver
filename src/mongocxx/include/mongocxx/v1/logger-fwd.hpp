@@ -16,8 +16,6 @@
 
 #include <mongocxx/v1/detail/prelude.hpp>
 
-//
-
 #include <mongocxx/v1/config/export.hpp>
 
 namespace mongocxx {

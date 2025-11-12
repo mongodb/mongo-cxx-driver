@@ -17,7 +17,7 @@
 #include <chrono>
 #include <cstdint>
 #include <memory>
-#include <stdexcept>
+#include <stdexcept> // IWYU pragma: keep: backward compatibility, to be removed.
 #include <string>
 
 #include <mongocxx/bulk_write-fwd.hpp>
@@ -26,7 +26,7 @@
 #include <mongocxx/database-fwd.hpp>
 #include <mongocxx/options/transaction-fwd.hpp>
 #include <mongocxx/uri-fwd.hpp>
-#include <mongocxx/write_concern-fwd.hpp>
+#include <mongocxx/write_concern-fwd.hpp> // IWYU pragma: export
 
 #include <bsoncxx/document/value.hpp>
 #include <bsoncxx/stdx/optional.hpp>

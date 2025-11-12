@@ -17,7 +17,7 @@
 #include <chrono>
 #include <cstdint>
 
-#include <mongocxx/options/find-fwd.hpp>
+#include <mongocxx/options/find-fwd.hpp> // IWYU pragma: export
 
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/stdx/optional.hpp>

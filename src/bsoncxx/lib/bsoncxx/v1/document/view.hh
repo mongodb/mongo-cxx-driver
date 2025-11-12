@@ -12,10 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <bsoncxx/v1/document/view.hpp>
+#include <bsoncxx/v1/document/view.hpp> // IWYU pragma: export
 
 //
 
+#include <cstddef>
 #include <cstdint>
 
 namespace bsoncxx {

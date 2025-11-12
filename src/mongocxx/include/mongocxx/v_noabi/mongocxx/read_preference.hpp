@@ -17,14 +17,14 @@
 #include <chrono>
 #include <cstdint>
 #include <memory>
-#include <string>
+#include <string> // IWYU pragma: keep: backward compatibility, to be removed.
 
 #include <mongocxx/client-fwd.hpp>
 #include <mongocxx/collection-fwd.hpp>
 #include <mongocxx/database-fwd.hpp>
 #include <mongocxx/events/topology_description-fwd.hpp>
 #include <mongocxx/options/transaction-fwd.hpp>
-#include <mongocxx/read_preference-fwd.hpp>
+#include <mongocxx/read_preference-fwd.hpp> // IWYU pragma: export
 #include <mongocxx/search_index_view-fwd.hpp>
 #include <mongocxx/uri-fwd.hpp>
 

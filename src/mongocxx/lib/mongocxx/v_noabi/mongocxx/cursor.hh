@@ -17,7 +17,7 @@
 #include <bsoncxx/document/view.hpp>
 #include <bsoncxx/stdx/optional.hpp>
 
-#include <mongocxx/cursor.hpp>
+#include <mongocxx/cursor.hpp> // IWYU pragma: export
 
 #include <mongocxx/private/mongoc.hh>
 
