@@ -262,6 +262,7 @@ set_dist_list(src_mongocxx_lib_DIST
     mongocxx/private/scoped_bson_value.hh
     mongocxx/private/scoped_bson.hh
     mongocxx/private/ssl.hh
+    mongocxx/private/utility.hh
     mongocxx/v_noabi/mongocxx/append_aggregate_options.hh
     mongocxx/v_noabi/mongocxx/bulk_write.hh
     mongocxx/v_noabi/mongocxx/change_stream.hh
