@@ -12,8 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <bsoncxx/test/v1/element/view.hh> // IWYU pragma: keep: Catch::StringMaker<bsoncxx::v1::element::view>
-#include <bsoncxx/test/v1/types/view.hh>   // IWYU pragma: keep: Catch::StringMaker<bsoncxx::v1::types::view>
+#include <bsoncxx/test/v1/document/view.hh> // IWYU pragma: keep: Catch::StringMaker<bsoncxx::v1::document::view>
 
 //
 
