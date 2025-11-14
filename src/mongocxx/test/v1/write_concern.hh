@@ -14,19 +14,17 @@
 
 #pragma once
 
-#include <mongocxx/write_concern.hpp> // IWYU pragma: export
+#include <mongocxx/v1/write_concern.hpp> // IWYU pragma: export
 
 //
 
-#include <mongocxx/private/mongoc.hh>
+#include <catch2/catch_tostring.hpp>
 
-namespace mongocxx {
-namespace v_noabi {
-
-class write_concern::internal {
-   public:
-    static mongoc_write_concern_t const* as_mongoc(write_concern const& self);
-};
-
-} // namespace v_noabi
-} // namespace mongocxx
+CATCH_REGISTER_ENUM(
+    mongocxx::v1::write_concern::level,
+    mongocxx::v1::write_concern::level::k_default,
+    mongocxx::v1::write_concern::level::k_majority,
+    mongocxx::v1::write_concern::level::k_tag,
+    mongocxx::v1::write_concern::level::k_unacknowledged,
+    mongocxx::v1::write_concern::level::k_acknowledged,
+    mongocxx::v1::write_concern::level::k_unknown)

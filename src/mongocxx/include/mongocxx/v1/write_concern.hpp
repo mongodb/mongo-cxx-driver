@@ -248,6 +248,11 @@ class write_concern {
     }
     /// @}
     ///
+
+    class internal;
+
+   private:
+    /* explicit(false) */ write_concern(void* impl);
 };
 
 } // namespace v1
