@@ -200,6 +200,11 @@ class read_preference {
     }
     /// @}
     ///
+
+    class internal;
+
+   private:
+    /* explicit(false) */ read_preference(void* impl);
 };
 
 } // namespace v1
