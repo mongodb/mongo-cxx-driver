@@ -18,6 +18,9 @@
 
 //
 
+#include <bsoncxx/test/v1/document/view.hh> // IWYU pragma: keep: StringMaker<bsoncxx::v1::document::view>
+#include <bsoncxx/test/v1/element/view.hh>  // IWYU pragma: keep: StringMaker<bsoncxx::v1::element::view>
+
 #include <string>
 
 #include <bsoncxx/private/export.hh>
