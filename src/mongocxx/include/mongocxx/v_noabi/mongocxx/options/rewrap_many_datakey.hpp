@@ -15,12 +15,12 @@
 #pragma once
 
 #include <mongocxx/client_encryption-fwd.hpp>
-#include <mongocxx/options/rewrap_many_datakey-fwd.hpp>
+#include <mongocxx/options/rewrap_many_datakey-fwd.hpp> // IWYU pragma: export
 
 #include <bsoncxx/stdx/optional.hpp>
 #include <bsoncxx/string/view_or_value.hpp>
-#include <bsoncxx/types.hpp>
-#include <bsoncxx/types/bson_value/view_or_value.hpp>
+#include <bsoncxx/types.hpp>                          // IWYU pragma: keep: backward compatibility, to be removed.
+#include <bsoncxx/types/bson_value/view_or_value.hpp> // IWYU pragma: keep: backward compatibility, to be removed.
 
 #include <mongocxx/config/prelude.hpp>
 

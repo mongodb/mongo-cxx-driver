@@ -16,8 +16,8 @@
 
 #include <bsoncxx/array/value.hpp>
 #include <bsoncxx/array/view.hpp>
-#include <bsoncxx/document/view.hpp>
-#include <bsoncxx/view_or_value.hpp>
+#include <bsoncxx/document/view.hpp> // IWYU pragma: keep: backward compatibility, to be removed.
+#include <bsoncxx/view_or_value.hpp> // IWYU pragma: export
 
 #include <bsoncxx/config/prelude.hpp>
 

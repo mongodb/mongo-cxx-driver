@@ -2,7 +2,7 @@
 
 #include <bsoncxx/builder/basic/document.hpp>
 
-#include <mongocxx/options/aggregate.hpp>
+#include <mongocxx/options/aggregate.hpp> // IWYU pragma: export
 
 namespace mongocxx {
 namespace v_noabi {

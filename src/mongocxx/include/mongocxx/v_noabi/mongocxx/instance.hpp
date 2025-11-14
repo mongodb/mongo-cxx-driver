@@ -14,11 +14,11 @@
 
 #pragma once
 
-#include <mongocxx/instance-fwd.hpp>
+#include <mongocxx/instance-fwd.hpp> // IWYU pragma: export
 
 //
 
-#include <mongocxx/v1/instance.hpp>
+#include <mongocxx/v1/instance.hpp> // IWYU pragma: export
 
 #include <memory>
 

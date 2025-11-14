@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include <mongocxx/model/insert_one-fwd.hpp>
+#include <mongocxx/model/insert_one-fwd.hpp> // IWYU pragma: export
 
 #include <bsoncxx/document/view_or_value.hpp>
 

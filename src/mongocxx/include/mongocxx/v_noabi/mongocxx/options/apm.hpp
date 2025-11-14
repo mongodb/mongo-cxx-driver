@@ -16,7 +16,7 @@
 
 #include <functional>
 
-#include <mongocxx/options/apm-fwd.hpp>
+#include <mongocxx/options/apm-fwd.hpp> // IWYU pragma: export
 
 #include <mongocxx/events/command_failed_event.hpp>
 #include <mongocxx/events/command_started_event.hpp>

@@ -12,23 +12,23 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <bsoncxx/v1/document/value.hpp>
+#pragma once
+
+#include <utility> // IWYU pragma: export
 
 //
 
-#include <cstdint>
+namespace mongocxx {
 
-#include <bsoncxx/private/type_traits.hh>
+#if defined(__cpp_lib_exchange_function) && __cpp_lib_exchange_function >= 201304L
+using std::exchange;
+#else
+template <typename T, typename U = T>
+T exchange(T& obj, U&& new_val) {
+    T old_val = std::move(obj);
+    obj = std::forward<U>(new_val);
+    return old_val;
+}
+#endif
 
-namespace bsoncxx {
-namespace v1 {
-namespace document {
-
-static_assert(is_regular<value>::value, "bsoncxx::v1::document::value must be regular");
-static_assert(is_nothrow_moveable<value>::value, "bsoncxx::v1::document::value must be nothrow moveable");
-
-void value::noop_deleter(std::uint8_t*) { /* noop */ }
-
-} // namespace document
-} // namespace v1
-} // namespace bsoncxx
+} // namespace mongocxx

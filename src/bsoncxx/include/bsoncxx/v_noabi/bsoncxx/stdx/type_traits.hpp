@@ -15,7 +15,7 @@
 #pragma once
 
 // For backward compatibility.
-#include <bsoncxx/v1/detail/type_traits.hpp>
+#include <bsoncxx/v1/detail/type_traits.hpp> // IWYU pragma: export
 
 ///
 /// @file

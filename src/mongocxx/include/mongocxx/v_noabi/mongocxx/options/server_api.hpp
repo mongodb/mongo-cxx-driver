@@ -17,7 +17,7 @@
 #include <string>
 
 #include <mongocxx/client-fwd.hpp>
-#include <mongocxx/options/server_api-fwd.hpp>
+#include <mongocxx/options/server_api-fwd.hpp> // IWYU pragma: export
 #include <mongocxx/pool-fwd.hpp>
 
 #include <bsoncxx/stdx/optional.hpp>

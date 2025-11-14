@@ -19,7 +19,7 @@
 #include <ostream>
 
 #include <mongocxx/database-fwd.hpp>
-#include <mongocxx/gridfs/bucket-fwd.hpp>
+#include <mongocxx/gridfs/bucket-fwd.hpp> // IWYU pragma: export
 
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/stdx/optional.hpp>

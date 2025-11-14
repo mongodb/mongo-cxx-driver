@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include <mongocxx/v1/events/server_opening-fwd.hpp>
+#include <mongocxx/v1/events/server_opening-fwd.hpp> // IWYU pragma: export
 
 //
 

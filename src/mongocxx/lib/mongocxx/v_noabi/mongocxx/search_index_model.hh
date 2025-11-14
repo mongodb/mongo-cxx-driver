@@ -2,7 +2,7 @@
 
 #include <bsoncxx/document/view_or_value.hpp>
 
-#include <mongocxx/search_index_model.hpp>
+#include <mongocxx/search_index_model.hpp> // IWYU pragma: export
 
 namespace mongocxx {
 namespace v_noabi {

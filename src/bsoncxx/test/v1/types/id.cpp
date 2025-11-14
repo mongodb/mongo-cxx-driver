@@ -16,7 +16,7 @@
 
 //
 
-#include <bsoncxx/test/v1/stdx/string_view.hh>
+#include <cstdint>
 
 #include <bsoncxx/test/stringify.hh>
 

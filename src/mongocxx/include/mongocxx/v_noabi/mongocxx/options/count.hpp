@@ -16,9 +16,9 @@
 
 #include <chrono>
 #include <cstdint>
-#include <string>
+#include <string> // IWYU pragma: keep: backward compatibility, to be removed.
 
-#include <mongocxx/options/count-fwd.hpp>
+#include <mongocxx/options/count-fwd.hpp> // IWYU pragma: export
 
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/stdx/optional.hpp>

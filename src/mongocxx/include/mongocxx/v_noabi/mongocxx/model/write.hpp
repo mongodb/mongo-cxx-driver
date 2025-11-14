@@ -14,11 +14,11 @@
 
 #pragma once
 
-#include <cstdint>
+#include <cstdint> // IWYU pragma: keep: backward compatibility, to be removed.
 
-#include <mongocxx/model/write-fwd.hpp>
+#include <mongocxx/model/write-fwd.hpp> // IWYU pragma: export
 
-#include <bsoncxx/stdx/optional.hpp>
+#include <bsoncxx/stdx/optional.hpp> // IWYU pragma: keep: backward compatibility, to be removed.
 
 #include <mongocxx/model/delete_many.hpp>
 #include <mongocxx/model/delete_one.hpp>

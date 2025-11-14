@@ -14,16 +14,16 @@
 
 #pragma once
 
+#include <bsoncxx/test/v1/stdx/string_view.hh>
+
 #include <cstddef>
 #include <exception>
 #include <mutex>
-#include <sstream>
+#include <sstream> // IWYU pragma: keep: for `BSONCXX_TEST_EXCEPTION_GUARD_END`.
 #include <string>
 #include <vector>
 
-#include <bsoncxx/stdx/string_view.hpp>
-
-#include <bsoncxx/test/catch.hh>
+#include <catch2/catch_test_macros.hpp>
 
 namespace bsoncxx {
 namespace test {
@@ -31,9 +31,9 @@ namespace test {
 struct exception_guard_state {
     std::mutex m = {};
     std::exception_ptr ptr = {};
-    stdx::string_view file = {};
+    v1::stdx::string_view file = {};
     std::size_t line = {};
-    stdx::string_view func = {};
+    v1::stdx::string_view func = {};
     std::vector<std::string> ignored; // Cannot use INFO() in guarded regions.
 };
 

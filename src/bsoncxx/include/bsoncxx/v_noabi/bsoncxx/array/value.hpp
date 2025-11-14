@@ -14,16 +14,19 @@
 
 #pragma once
 
-#include <bsoncxx/array/value-fwd.hpp>
+#include <bsoncxx/array/value-fwd.hpp> // IWYU pragma: export
 
 //
 
-#include <bsoncxx/v1/array/value.hpp>
+#include <bsoncxx/v1/array/value.hpp> // IWYU pragma: export
 
+#include <cstdint>
 #include <cstdlib>
 #include <memory>
+#include <utility>
 
 #include <bsoncxx/array/view.hpp>
+#include <bsoncxx/document/element.hpp>
 #include <bsoncxx/document/value.hpp>
 
 #include <bsoncxx/config/prelude.hpp>

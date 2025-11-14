@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include <mongocxx/options/server_api.hpp>
+#include <mongocxx/options/server_api.hpp> // IWYU pragma: export
 
 //
 

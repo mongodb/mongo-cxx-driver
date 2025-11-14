@@ -22,7 +22,7 @@
 #include <mongocxx/client.hpp>
 #include <mongocxx/client_encryption.hpp>
 #include <mongocxx/exception/operation_exception.hpp>
-#include <mongocxx/options/client_encryption.hpp>
+#include <mongocxx/options/client_encryption.hpp> // IWYU pragma: export
 #include <mongocxx/result/bulk_write.hpp>
 
 #include <mongocxx/scoped_bson.hh>

@@ -14,14 +14,14 @@
 
 #pragma once
 
-#include <bsoncxx/builder/basic/document-fwd.hpp>
+#include <bsoncxx/builder/basic/document-fwd.hpp> // IWYU pragma: export
 
 //
 
-#include <bsoncxx/builder/basic/array-fwd.hpp>
+#include <bsoncxx/builder/basic/array-fwd.hpp> // IWYU pragma: keep: backward compatibility, to be removed.
 
-#include <bsoncxx/builder/basic/impl.hpp>
-#include <bsoncxx/builder/basic/kvp.hpp>
+#include <bsoncxx/builder/basic/impl.hpp> // IWYU pragma: keep: backward compatibility, to be removed.
+#include <bsoncxx/builder/basic/kvp.hpp>  // IWYU pragma: keep: backward compatibility, to be removed.
 #include <bsoncxx/builder/basic/sub_document.hpp>
 #include <bsoncxx/builder/core.hpp>
 #include <bsoncxx/document/value.hpp>

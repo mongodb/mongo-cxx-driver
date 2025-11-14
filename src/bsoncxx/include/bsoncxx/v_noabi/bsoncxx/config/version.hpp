@@ -13,7 +13,7 @@
 // limitations under the License.
 
 // For backward compatibility.
-#include <bsoncxx/v1/config/version.hpp>
+#include <bsoncxx/v1/config/version.hpp> // IWYU pragma: export
 
 ///
 /// @file

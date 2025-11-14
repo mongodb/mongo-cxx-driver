@@ -16,17 +16,23 @@
 
 //
 
+#include <bsoncxx/v1/detail/macros.hpp>
 #include <bsoncxx/v1/document/view.hpp>
 #include <bsoncxx/v1/exception.hpp>
+#include <bsoncxx/v1/stdx/optional.hpp>
+#include <bsoncxx/v1/stdx/string_view.hpp>
 
 #include <bsoncxx/v1/types/value.hh>
 #include <bsoncxx/v1/types/view.hh>
 
+#include <array>
+#include <cstddef>
+#include <cstdint>
 #include <string>
+#include <system_error>
 
 #include <bsoncxx/private/bson.hh>
 #include <bsoncxx/private/immortal.hh>
-#include <bsoncxx/private/make_unique.hh>
 #include <bsoncxx/private/type_traits.hh>
 
 namespace bsoncxx {

@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include <mongocxx/v1/insert_many_result-fwd.hpp>
+#include <mongocxx/v1/insert_many_result-fwd.hpp> // IWYU pragma: export
 
 //
 
@@ -26,6 +26,7 @@
 #include <mongocxx/v1/config/export.hpp>
 
 #include <cstdint>
+#include <map>
 
 namespace mongocxx {
 namespace v1 {

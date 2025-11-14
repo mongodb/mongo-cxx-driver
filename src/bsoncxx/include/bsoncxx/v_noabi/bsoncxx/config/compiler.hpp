@@ -13,7 +13,7 @@
 // limitations under the License.
 
 // For backward compatibility.
-#include <bsoncxx/v1/detail/macros.hpp>
+#include <bsoncxx/v1/detail/macros.hpp> // IWYU pragma: export
 
 ///
 /// @file

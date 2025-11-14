@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include <bsoncxx/builder/stream/array_context-fwd.hpp>
+#include <bsoncxx/builder/stream/array_context-fwd.hpp> // IWYU pragma: export
 #include <bsoncxx/builder/stream/key_context-fwd.hpp>
 #include <bsoncxx/builder/stream/single_context-fwd.hpp>
 

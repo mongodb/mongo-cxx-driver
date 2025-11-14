@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include <mongocxx/v1/read_preference-fwd.hpp>
+#include <mongocxx/v1/read_preference-fwd.hpp> // IWYU pragma: export
 
 //
 

@@ -15,7 +15,7 @@
 #pragma once
 
 #include <string>
-#include <utility>
+#include <utility> // IWYU pragma: keep: backward compatibility, to be removed.
 
 #include <bsoncxx/stdx/string_view.hpp>
 

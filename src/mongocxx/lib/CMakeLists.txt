@@ -201,6 +201,12 @@ set(mongocxx_sources_v1
     mongocxx/v1/write_concern.cpp
 )
 
+file(GLOB_RECURSE mongocxx_headers
+    RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
+    CONFIGURE_DEPENDS
+    "*.hh"
+)
+
 list(APPEND mongocxx_sources
     ${mongocxx_sources_private}
     ${mongocxx_sources_v_noabi}
@@ -254,43 +260,8 @@ set_dist_list(src_mongocxx_lib_DIST
     ${mongocxx_sources_private}
     ${mongocxx_sources_v_noabi}
     ${mongocxx_sources_v1}
+    ${mongocxx_headers}
     mongocxx/private/config/config.hh.in
-    mongocxx/private/export.hh
-    mongocxx/private/mock.hh
-    mongocxx/private/mongoc.hh
-    mongocxx/private/numeric_casting.hh
-    mongocxx/private/scoped_bson_value.hh
-    mongocxx/private/scoped_bson.hh
-    mongocxx/private/ssl.hh
-    mongocxx/v_noabi/mongocxx/append_aggregate_options.hh
-    mongocxx/v_noabi/mongocxx/bulk_write.hh
-    mongocxx/v_noabi/mongocxx/change_stream.hh
-    mongocxx/v_noabi/mongocxx/client_encryption.hh
-    mongocxx/v_noabi/mongocxx/client_session.hh
-    mongocxx/v_noabi/mongocxx/client.hh
-    mongocxx/v_noabi/mongocxx/collection.hh
-    mongocxx/v_noabi/mongocxx/conversions.hh
-    mongocxx/v_noabi/mongocxx/cursor.hh
-    mongocxx/v_noabi/mongocxx/database.hh
-    mongocxx/v_noabi/mongocxx/gridfs/bucket.hh
-    mongocxx/v_noabi/mongocxx/gridfs/downloader.hh
-    mongocxx/v_noabi/mongocxx/gridfs/uploader.hh
-    mongocxx/v_noabi/mongocxx/index_view.hh
-    mongocxx/v_noabi/mongocxx/mongoc_error.hh
-    mongocxx/v_noabi/mongocxx/options/apm.hh
-    mongocxx/v_noabi/mongocxx/options/server_api.hh
-    mongocxx/v_noabi/mongocxx/options/tls.hh
-    mongocxx/v_noabi/mongocxx/options/transaction.hh
-    mongocxx/v_noabi/mongocxx/pipeline.hh
-    mongocxx/v_noabi/mongocxx/pool.hh
-    mongocxx/v_noabi/mongocxx/read_concern.hh
-    mongocxx/v_noabi/mongocxx/read_preference.hh
-    mongocxx/v_noabi/mongocxx/scoped_bson.hh
-    mongocxx/v_noabi/mongocxx/search_index_model.hh
-    mongocxx/v_noabi/mongocxx/search_index_view.hh
-    mongocxx/v_noabi/mongocxx/uri.hh
-    mongocxx/v_noabi/mongocxx/write_concern.hh
     mongocxx/v1/config/config.hpp.in
     mongocxx/v1/config/version.hpp.in
-    mongocxx/v1/exception.hh
 )

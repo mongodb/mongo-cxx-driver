@@ -16,7 +16,7 @@
 
 #include <cstdint>
 
-#include <mongocxx/events/server_opening_event-fwd.hpp>
+#include <mongocxx/events/server_opening_event-fwd.hpp> // IWYU pragma: export
 
 #include <bsoncxx/oid.hpp>
 

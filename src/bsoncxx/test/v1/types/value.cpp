@@ -16,24 +16,30 @@
 
 //
 
+#include <bsoncxx/v1/detail/macros.hpp>
 #include <bsoncxx/v1/detail/type_traits.hpp>
 
 #include <bsoncxx/v1/types/value.hh>
 #include <bsoncxx/v1/types/view.hh>
 
-#include <bsoncxx/test/v1/detail/bit.hh>
 #include <bsoncxx/test/v1/document/view.hh>
 #include <bsoncxx/test/v1/exception.hh>
+#include <bsoncxx/test/v1/stdx/string_view.hh>
 #include <bsoncxx/test/v1/types/id.hh>
 #include <bsoncxx/test/v1/types/value.hh>
 #include <bsoncxx/test/v1/types/view.hh>
 
+#include <chrono>
+#include <cstddef>
 #include <cstdint>
+#include <new>
 #include <string>
 #include <system_error>
 #include <type_traits>
 #include <utility>
+#include <vector>
 
+#include <bsoncxx/private/bson.hh>
 #include <bsoncxx/private/make_unique.hh>
 
 #include <bsoncxx/test/stringify.hh>

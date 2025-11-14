@@ -18,7 +18,9 @@
 
 #include <bsoncxx/test/v1/exception.hh>
 
+#include <cstdint>
 #include <ctime>
+#include <string>
 #include <system_error>
 #include <vector>
 

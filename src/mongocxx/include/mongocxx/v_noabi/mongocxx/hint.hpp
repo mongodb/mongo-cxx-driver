@@ -16,9 +16,9 @@
 
 #include <string>
 
-#include <mongocxx/hint-fwd.hpp>
+#include <mongocxx/hint-fwd.hpp> // IWYU pragma: export
 
-#include <bsoncxx/document/value.hpp>
+#include <bsoncxx/document/value.hpp> // IWYU pragma: keep: backward compatibility, to be removed.
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/stdx/optional.hpp>
 #include <bsoncxx/string/view_or_value.hpp>

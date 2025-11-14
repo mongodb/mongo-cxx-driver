@@ -14,9 +14,11 @@
 
 #pragma once
 
-#include <bsoncxx/v1/decimal128.hpp>
+#include <bsoncxx/v1/decimal128.hpp> // IWYU pragma: export
 
 //
+
+#include <string>
 
 #include <catch2/catch_tostring.hpp>
 

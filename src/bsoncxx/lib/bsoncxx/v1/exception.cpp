@@ -20,7 +20,6 @@
 #include <system_error>
 
 #include <bsoncxx/private/immortal.hh>
-#include <bsoncxx/private/type_traits.hh>
 
 namespace bsoncxx {
 namespace v1 {

@@ -20,9 +20,14 @@
 
 #include <mongocxx/test/v1/logger.hh>
 
+#include <cerrno>
+#include <cstddef>
+#include <cstdio>
 #include <functional>
+#include <string>
 #include <utility>
 
+#include <bsoncxx/private/bson.hh>
 #include <bsoncxx/private/make_unique.hh>
 
 #include <mongocxx/private/mongoc.hh>
@@ -35,6 +40,7 @@
 #include <catch2/matchers/catch_matchers_string.hpp>
 
 #if !defined(_MSC_VER)
+#include <fcntl.h>
 #include <unistd.h>
 #endif
 

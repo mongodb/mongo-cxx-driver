@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include <mongocxx/v1/config/export.hpp>
+#include <mongocxx/v1/config/export.hpp> // IWYU pragma: export
 
 // See bsoncxx/private/export.hh.
 

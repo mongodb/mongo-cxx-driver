@@ -15,9 +15,9 @@
 #pragma once
 
 #include <chrono>
-#include <cstdint>
+#include <cstdint> // IWYU pragma: keep: backward compatibility, to be removed.
 
-#include <mongocxx/options/find_one_and_update-fwd.hpp>
+#include <mongocxx/options/find_one_and_update-fwd.hpp> // IWYU pragma: export
 
 #include <bsoncxx/array/view_or_value.hpp>
 #include <bsoncxx/document/view_or_value.hpp>

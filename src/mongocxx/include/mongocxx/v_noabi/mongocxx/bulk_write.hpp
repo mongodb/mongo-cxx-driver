@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include <mongocxx/bulk_write-fwd.hpp>
+#include <mongocxx/bulk_write-fwd.hpp> // IWYU pragma: export
 #include <mongocxx/collection-fwd.hpp>
 
 #include <mongocxx/client_session.hpp>

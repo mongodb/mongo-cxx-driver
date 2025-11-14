@@ -16,13 +16,13 @@
 
 #include <cstdint>
 #include <map>
-#include <vector>
+#include <vector> // IWYU pragma: keep: backward compatibility, to be removed.
 
-#include <mongocxx/result/bulk_write-fwd.hpp>
+#include <mongocxx/result/bulk_write-fwd.hpp> // IWYU pragma: export
 
 #include <bsoncxx/document/value.hpp>
 #include <bsoncxx/document/view.hpp>
-#include <bsoncxx/types.hpp>
+#include <bsoncxx/types.hpp> // IWYU pragma: keep: backward compatibility, to be removed.
 
 #include <mongocxx/config/prelude.hpp>
 

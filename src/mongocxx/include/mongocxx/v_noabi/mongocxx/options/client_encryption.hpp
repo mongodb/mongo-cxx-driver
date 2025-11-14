@@ -18,7 +18,7 @@
 
 #include <mongocxx/client-fwd.hpp>
 #include <mongocxx/client_encryption-fwd.hpp>
-#include <mongocxx/options/client_encryption-fwd.hpp>
+#include <mongocxx/options/client_encryption-fwd.hpp> // IWYU pragma: export
 
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/stdx/optional.hpp>

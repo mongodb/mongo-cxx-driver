@@ -19,7 +19,7 @@
 #include <mongocxx/client-fwd.hpp>
 #include <mongocxx/client_encryption-fwd.hpp>
 #include <mongocxx/collection-fwd.hpp>
-#include <mongocxx/cursor-fwd.hpp>
+#include <mongocxx/cursor-fwd.hpp> // IWYU pragma: export
 #include <mongocxx/database-fwd.hpp>
 #include <mongocxx/index_view-fwd.hpp>
 #include <mongocxx/search_index_view-fwd.hpp>

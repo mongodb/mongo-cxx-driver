@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include <bsoncxx/v1/stdx/string_view.hpp>
+#include <bsoncxx/v1/stdx/string_view.hpp> // IWYU pragma: export
 
 namespace bsoncxx {
 namespace v_noabi {

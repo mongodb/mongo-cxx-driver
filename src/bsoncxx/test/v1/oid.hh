@@ -14,9 +14,11 @@
 
 #pragma once
 
-#include <bsoncxx/v1/oid.hpp>
+#include <bsoncxx/v1/oid.hpp> // IWYU pragma: export
 
 //
+
+#include <string>
 
 #include <catch2/catch_tostring.hpp>
 

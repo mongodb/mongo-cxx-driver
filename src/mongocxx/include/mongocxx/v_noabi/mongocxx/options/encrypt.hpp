@@ -17,10 +17,10 @@
 #include <string>
 
 #include <mongocxx/client_encryption-fwd.hpp>
-#include <mongocxx/options/encrypt-fwd.hpp>
+#include <mongocxx/options/encrypt-fwd.hpp> // IWYU pragma: export
 
 #include <bsoncxx/stdx/optional.hpp>
-#include <bsoncxx/types.hpp>
+#include <bsoncxx/types.hpp> // IWYU pragma: keep: backward compatibility, to be removed.
 #include <bsoncxx/types/bson_value/view_or_value.hpp>
 
 #include <mongocxx/options/range.hpp>

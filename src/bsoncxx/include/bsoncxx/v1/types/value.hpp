@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include <bsoncxx/v1/types/value-fwd.hpp>
+#include <bsoncxx/v1/types/value-fwd.hpp> // IWYU pragma: export
 
 //
 
@@ -29,7 +29,7 @@
 #include <bsoncxx/v1/config/export.hpp>
 #include <bsoncxx/v1/detail/macros.hpp>
 #include <bsoncxx/v1/stdx/string_view.hpp>
-#include <bsoncxx/v1/types/view.hpp>
+#include <bsoncxx/v1/types/view.hpp> // IWYU pragma: export
 
 #include <array>
 #include <chrono>

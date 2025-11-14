@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include <mongocxx/v1/apm-fwd.hpp>
+#include <mongocxx/v1/apm-fwd.hpp> // IWYU pragma: export
 
 //
 
@@ -24,14 +24,12 @@
 #include <mongocxx/v1/events/command_started-fwd.hpp>
 #include <mongocxx/v1/events/command_succeeded-fwd.hpp>
 #include <mongocxx/v1/events/server_closed-fwd.hpp>
-#include <mongocxx/v1/events/server_description-fwd.hpp>
 #include <mongocxx/v1/events/server_description_changed-fwd.hpp>
 #include <mongocxx/v1/events/server_heartbeat_failed-fwd.hpp>
 #include <mongocxx/v1/events/server_heartbeat_started-fwd.hpp>
 #include <mongocxx/v1/events/server_heartbeat_succeeded-fwd.hpp>
 #include <mongocxx/v1/events/server_opening-fwd.hpp>
 #include <mongocxx/v1/events/topology_closed-fwd.hpp>
-#include <mongocxx/v1/events/topology_description-fwd.hpp>
 #include <mongocxx/v1/events/topology_description_changed-fwd.hpp>
 #include <mongocxx/v1/events/topology_opening-fwd.hpp>
 

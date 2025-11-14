@@ -14,9 +14,9 @@
 
 #pragma once
 
-#include <bsoncxx/builder/basic/sub_document-fwd.hpp>
+#include <bsoncxx/builder/basic/sub_document-fwd.hpp> // IWYU pragma: export
 
-#include <bsoncxx/builder/basic/helpers.hpp>
+#include <bsoncxx/builder/basic/helpers.hpp> // IWYU pragma: keep: backward compatibility, to be removed.
 #include <bsoncxx/builder/concatenate.hpp>
 #include <bsoncxx/builder/core.hpp>
 #include <bsoncxx/stdx/string_view.hpp>

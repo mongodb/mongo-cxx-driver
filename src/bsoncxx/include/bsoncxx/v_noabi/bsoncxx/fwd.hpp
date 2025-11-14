@@ -14,44 +14,44 @@
 
 #pragma once
 
-#include <bsoncxx/array/element-fwd.hpp>
-#include <bsoncxx/array/value-fwd.hpp>
-#include <bsoncxx/array/view-fwd.hpp>
-#include <bsoncxx/builder/basic/array-fwd.hpp>
-#include <bsoncxx/builder/basic/document-fwd.hpp>
-#include <bsoncxx/builder/basic/sub_array-fwd.hpp>
-#include <bsoncxx/builder/basic/sub_binary-fwd.hpp>
-#include <bsoncxx/builder/basic/sub_document-fwd.hpp>
-#include <bsoncxx/builder/concatenate-fwd.hpp>
-#include <bsoncxx/builder/core-fwd.hpp>
-#include <bsoncxx/builder/list-fwd.hpp>
-#include <bsoncxx/builder/stream/array-fwd.hpp>
-#include <bsoncxx/builder/stream/array_context-fwd.hpp>
-#include <bsoncxx/builder/stream/closed_context-fwd.hpp>
-#include <bsoncxx/builder/stream/document-fwd.hpp>
-#include <bsoncxx/builder/stream/helpers-fwd.hpp>
-#include <bsoncxx/builder/stream/key_context-fwd.hpp>
-#include <bsoncxx/builder/stream/single_context-fwd.hpp>
-#include <bsoncxx/builder/stream/value_context-fwd.hpp>
-#include <bsoncxx/decimal128-fwd.hpp>
-#include <bsoncxx/document/element-fwd.hpp>
-#include <bsoncxx/document/value-fwd.hpp>
-#include <bsoncxx/document/view-fwd.hpp>
-#include <bsoncxx/exception/error_code-fwd.hpp>
-#include <bsoncxx/exception/exception-fwd.hpp>
-#include <bsoncxx/json-fwd.hpp>
-#include <bsoncxx/oid-fwd.hpp>
-#include <bsoncxx/string/view_or_value-fwd.hpp>
-#include <bsoncxx/types-fwd.hpp>
-#include <bsoncxx/types/bson_value/value-fwd.hpp>
-#include <bsoncxx/types/bson_value/view-fwd.hpp>
-#include <bsoncxx/validate-fwd.hpp>
-#include <bsoncxx/vector/accessor-fwd.hpp>
-#include <bsoncxx/vector/detail-fwd.hpp>
-#include <bsoncxx/vector/elements-fwd.hpp>
-#include <bsoncxx/vector/formats-fwd.hpp>
-#include <bsoncxx/vector/iterators-fwd.hpp>
-#include <bsoncxx/view_or_value-fwd.hpp>
+#include <bsoncxx/array/element-fwd.hpp>                 // IWYU pragma: export
+#include <bsoncxx/array/value-fwd.hpp>                   // IWYU pragma: export
+#include <bsoncxx/array/view-fwd.hpp>                    // IWYU pragma: export
+#include <bsoncxx/builder/basic/array-fwd.hpp>           // IWYU pragma: export
+#include <bsoncxx/builder/basic/document-fwd.hpp>        // IWYU pragma: export
+#include <bsoncxx/builder/basic/sub_array-fwd.hpp>       // IWYU pragma: export
+#include <bsoncxx/builder/basic/sub_binary-fwd.hpp>      // IWYU pragma: export
+#include <bsoncxx/builder/basic/sub_document-fwd.hpp>    // IWYU pragma: export
+#include <bsoncxx/builder/concatenate-fwd.hpp>           // IWYU pragma: export
+#include <bsoncxx/builder/core-fwd.hpp>                  // IWYU pragma: export
+#include <bsoncxx/builder/list-fwd.hpp>                  // IWYU pragma: export
+#include <bsoncxx/builder/stream/array-fwd.hpp>          // IWYU pragma: export
+#include <bsoncxx/builder/stream/array_context-fwd.hpp>  // IWYU pragma: export
+#include <bsoncxx/builder/stream/closed_context-fwd.hpp> // IWYU pragma: export
+#include <bsoncxx/builder/stream/document-fwd.hpp>       // IWYU pragma: export
+#include <bsoncxx/builder/stream/helpers-fwd.hpp>        // IWYU pragma: export
+#include <bsoncxx/builder/stream/key_context-fwd.hpp>    // IWYU pragma: export
+#include <bsoncxx/builder/stream/single_context-fwd.hpp> // IWYU pragma: export
+#include <bsoncxx/builder/stream/value_context-fwd.hpp>  // IWYU pragma: export
+#include <bsoncxx/decimal128-fwd.hpp>                    // IWYU pragma: export
+#include <bsoncxx/document/element-fwd.hpp>              // IWYU pragma: export
+#include <bsoncxx/document/value-fwd.hpp>                // IWYU pragma: export
+#include <bsoncxx/document/view-fwd.hpp>                 // IWYU pragma: export
+#include <bsoncxx/exception/error_code-fwd.hpp>          // IWYU pragma: export
+#include <bsoncxx/exception/exception-fwd.hpp>           // IWYU pragma: export
+#include <bsoncxx/json-fwd.hpp>                          // IWYU pragma: export
+#include <bsoncxx/oid-fwd.hpp>                           // IWYU pragma: export
+#include <bsoncxx/string/view_or_value-fwd.hpp>          // IWYU pragma: export
+#include <bsoncxx/types-fwd.hpp>                         // IWYU pragma: export
+#include <bsoncxx/types/bson_value/value-fwd.hpp>        // IWYU pragma: export
+#include <bsoncxx/types/bson_value/view-fwd.hpp>         // IWYU pragma: export
+#include <bsoncxx/validate-fwd.hpp>                      // IWYU pragma: export
+#include <bsoncxx/vector/accessor-fwd.hpp>               // IWYU pragma: export
+#include <bsoncxx/vector/detail-fwd.hpp>                 // IWYU pragma: export
+#include <bsoncxx/vector/elements-fwd.hpp>               // IWYU pragma: export
+#include <bsoncxx/vector/formats-fwd.hpp>                // IWYU pragma: export
+#include <bsoncxx/vector/iterators-fwd.hpp>              // IWYU pragma: export
+#include <bsoncxx/view_or_value-fwd.hpp>                 // IWYU pragma: export
 
 ///
 /// @file

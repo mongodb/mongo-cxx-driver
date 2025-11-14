@@ -16,12 +16,20 @@
 
 //
 
+#include <bsoncxx/test/v1/stdx/optional.hh>
 #include <bsoncxx/test/v1/types/view.hh>
 
+#include <cstddef>
 #include <cstdint>
+#include <cstring>
+#include <functional>
+#include <memory>
+#include <utility>
 
-#include <bsoncxx/test/catch.hh>
 #include <bsoncxx/test/stringify.hh>
+#include <bsoncxx/test/system_error.hh>
+
+#include <catch2/catch_test_macros.hpp>
 
 namespace {
 

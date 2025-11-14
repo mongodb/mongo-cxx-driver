@@ -16,10 +16,10 @@
 
 #include <string>
 
-#include <bsoncxx/string/view_or_value-fwd.hpp>
+#include <bsoncxx/string/view_or_value-fwd.hpp> // IWYU pragma: export
 
 #include <bsoncxx/stdx/string_view.hpp>
-#include <bsoncxx/view_or_value.hpp>
+#include <bsoncxx/view_or_value.hpp> // IWYU pragma: export
 
 #include <bsoncxx/config/prelude.hpp>
 

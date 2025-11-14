@@ -17,7 +17,7 @@
 #include <chrono>
 #include <string>
 
-#include <mongocxx/options/index_view-fwd.hpp>
+#include <mongocxx/options/index_view-fwd.hpp> // IWYU pragma: export
 
 #include <bsoncxx/stdx/optional.hpp>
 

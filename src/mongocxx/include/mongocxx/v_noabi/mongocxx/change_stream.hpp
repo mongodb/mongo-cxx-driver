@@ -16,7 +16,7 @@
 
 #include <memory>
 
-#include <mongocxx/change_stream-fwd.hpp>
+#include <mongocxx/change_stream-fwd.hpp> // IWYU pragma: export
 #include <mongocxx/client-fwd.hpp>
 #include <mongocxx/collection-fwd.hpp>
 #include <mongocxx/database-fwd.hpp>

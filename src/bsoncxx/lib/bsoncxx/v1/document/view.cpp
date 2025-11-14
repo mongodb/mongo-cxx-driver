@@ -17,17 +17,19 @@
 //
 
 #include <bsoncxx/v1/exception.hpp>
+#include <bsoncxx/v1/stdx/string_view.hpp>
 
 #include <bsoncxx/v1/element/view.hh>
 
 #include <array>
+#include <climits>
+#include <cstddef>
 #include <cstdint>
 #include <string>
 #include <system_error>
 
 #include <bsoncxx/private/bson.hh>
 #include <bsoncxx/private/immortal.hh>
-#include <bsoncxx/private/itoa.hh>
 #include <bsoncxx/private/type_traits.hh>
 
 namespace bsoncxx {

@@ -18,7 +18,7 @@
 #include <vector>
 
 #include <mongocxx/collection-fwd.hpp>
-#include <mongocxx/index_view-fwd.hpp>
+#include <mongocxx/index_view-fwd.hpp> // IWYU pragma: export
 
 #include <bsoncxx/document/value.hpp>
 #include <bsoncxx/stdx/optional.hpp>

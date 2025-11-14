@@ -17,7 +17,7 @@
 #include <string>
 #include <type_traits>
 
-#include <catch2/catch_tostring.hpp>
+#include <catch2/catch_tostring.hpp> // IWYU pragma: export
 
 namespace bsoncxx {
 namespace test {
