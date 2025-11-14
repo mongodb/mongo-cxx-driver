@@ -427,33 +427,3 @@ TEST_CASE("StringMaker", "[bsoncxx][test][v1][document][view]") {
 }
 
 } // namespace
-
-std::string Catch::StringMaker<bsoncxx::v1::document::view>::convert(bsoncxx::v1::document::view const& value) try {
-    if (!value) {
-        return "invalid";
-    }
-
-    auto const end = value.end();
-    auto iter = value.begin();
-
-    if (iter == end) {
-        return "{}";
-    }
-
-    std::string res;
-    res += '{';
-    res += bsoncxx::test::stringify(*iter);
-    for (++iter; iter != end; ++iter) {
-        res += ", ";
-        res += bsoncxx::test::stringify(*iter);
-    }
-    res += '}';
-    return res;
-} catch (bsoncxx::v1::exception const& ex) {
-    WARN("exception during stringification: " << ex.what());
-    if (ex.code() == code::invalid_data) {
-        return "invalid";
-    } else {
-        throw;
-    }
-}

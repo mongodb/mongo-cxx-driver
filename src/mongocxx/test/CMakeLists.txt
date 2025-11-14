@@ -31,6 +31,12 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
     target_compile_options(mongocxx_mocked PRIVATE /bigobj)
 endif()
 
+set(mongocxx_test_bsoncxx
+    ${PROJECT_SOURCE_DIR}/../bsoncxx/test/v1/array/view_string_maker.cpp
+    ${PROJECT_SOURCE_DIR}/../bsoncxx/test/v1/document/view_string_maker.cpp
+    ${PROJECT_SOURCE_DIR}/../bsoncxx/test/v1/element/view_string_maker.cpp
+)
+
 set(mongocxx_test_sources_private
     private/numeric_casting.cpp
     private/scoped_bson_value.cpp
@@ -95,6 +101,7 @@ set(mongocxx_test_sources_v_noabi
 )
 
 set(mongocxx_test_sources_v1
+    v1/bsoncxx.cpp
     v1/exception.cpp
     v1/logger.cpp
 )
@@ -137,6 +144,7 @@ add_library(client_helpers OBJECT v_noabi/client_helpers.cpp)
 add_library(spec_test_common OBJECT ${mongocxx_test_sources_spec})
 
 add_executable(test_driver
+    ${mongocxx_test_bsoncxx}
     ${mongocxx_test_sources_private}
     ${mongocxx_test_sources_v_noabi}
     ${mongocxx_test_sources_v1}
@@ -152,28 +160,52 @@ add_executable(test_instance
 )
 target_compile_definitions(test_instance PRIVATE MONGOCXX_TEST_DISABLE_MAIN_INSTANCE)
 
-add_executable(test_crud_specs spec/crud.cpp)
+add_executable(test_crud_specs
+    ${mongocxx_test_bsoncxx}
+    spec/crud.cpp
+)
 target_link_libraries(test_crud_specs PRIVATE spec_test_common client_helpers)
 
-add_executable(test_gridfs_specs spec/gridfs.cpp)
+add_executable(test_gridfs_specs
+    ${mongocxx_test_bsoncxx}
+    spec/gridfs.cpp
+)
 target_link_libraries(test_gridfs_specs PRIVATE spec_test_common client_helpers)
 
-add_executable(test_client_side_encryption_specs spec/client_side_encryption.cpp)
+add_executable(test_client_side_encryption_specs
+    ${mongocxx_test_bsoncxx}
+    spec/client_side_encryption.cpp
+)
 target_link_libraries(test_client_side_encryption_specs PRIVATE spec_test_common client_helpers)
 
-add_executable(test_command_monitoring_specs spec/command_monitoring.cpp)
+add_executable(test_command_monitoring_specs
+    ${mongocxx_test_bsoncxx}
+    spec/command_monitoring.cpp
+)
 target_link_libraries(test_command_monitoring_specs PRIVATE spec_test_common client_helpers)
 
-add_executable(test_transactions_specs spec/transactions.cpp)
+add_executable(test_transactions_specs
+    ${mongocxx_test_bsoncxx}
+    spec/transactions.cpp
+)
 target_link_libraries(test_transactions_specs PRIVATE spec_test_common client_helpers)
 
-add_executable(test_retryable_reads_specs spec/retryable-reads.cpp)
+add_executable(test_retryable_reads_specs
+    ${mongocxx_test_bsoncxx}
+    spec/retryable-reads.cpp
+)
 target_link_libraries(test_retryable_reads_specs PRIVATE spec_test_common client_helpers)
 
-add_executable(test_read_write_concern_specs spec/read_write_concern.cpp)
+add_executable(test_read_write_concern_specs
+    ${mongocxx_test_bsoncxx}
+    spec/read_write_concern.cpp
+)
 target_link_libraries(test_read_write_concern_specs PRIVATE spec_test_common client_helpers)
 
-add_executable(test_unified_format_specs spec/unified_tests/operations.cpp spec/unified_tests/runner.cpp)
+add_executable(test_unified_format_specs
+    ${mongocxx_test_bsoncxx}
+    spec/unified_tests/operations.cpp spec/unified_tests/runner.cpp
+)
 target_link_libraries(test_unified_format_specs PRIVATE spec_test_common client_helpers)
 
 # Common target properties for test executables.

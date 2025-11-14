@@ -289,21 +289,3 @@ TEST_CASE("StringMaker", "[bsoncxx][test][v1][element][view]") {
 }
 
 } // namespace
-
-std::string Catch::StringMaker<bsoncxx::v1::element::view>::convert(bsoncxx::v1::element::view const& value) try {
-    if (!value) {
-        return "invalid";
-    }
-
-    std::string res;
-    res += bsoncxx::test::stringify(value.key());
-    res += ": ";
-    res += bsoncxx::test::stringify(value.type_view());
-    return res;
-} catch (bsoncxx::v1::exception const& ex) {
-    if (ex.code() == code::invalid_view || ex.code() == code::invalid_data) {
-        return "invalid";
-    } else {
-        throw;
-    }
-}

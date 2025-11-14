@@ -18,7 +18,7 @@
 
 //
 
-#include <bsoncxx/test/v1/element/view.hh> // StringMaker<bsoncxx::v1::element::view>
+#include <bsoncxx/test/v1/element/view.hh> // IWYU pragma: keep: StringMaker<T>
 
 #include <string>
 
