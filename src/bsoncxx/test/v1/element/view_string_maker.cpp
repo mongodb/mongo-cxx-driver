@@ -12,8 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// This file is included by mongocxx/test/v1/bsoncxx.cpp!
-
 #include <bsoncxx/test/v1/element/view.hh>
 
 //
