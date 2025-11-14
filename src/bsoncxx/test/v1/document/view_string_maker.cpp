@@ -16,9 +16,9 @@
 
 //
 
-#include <bsoncxx/test/v1/array/view.hh>
+#include <bsoncxx/test/v1/array/view.hh> // IWYU pragma: keep: Catch::StringMaker<bsoncxx::v1::array::view>
 #include <bsoncxx/test/v1/exception.hh>
-#include <bsoncxx/test/v1/types/view.hh>
+#include <bsoncxx/test/v1/types/view.hh> // IWYU pragma: keep: Catch::StringMaker<bsoncxx::v1::types::view>
 
 #include <string>
 
