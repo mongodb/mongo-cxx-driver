@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <mongocxx/v1/read_concern.hh>
+
 #include <bsoncxx/types.hpp>
 
 #include <mongocxx/exception/error_code.hpp>
@@ -96,8 +98,8 @@ std::string uri::password() const {
 }
 
 mongocxx::v_noabi::read_concern uri::read_concern() const {
-    auto rc = libmongoc::uri_get_read_concern(_impl->uri_t);
-    return mongocxx::v_noabi::read_concern(bsoncxx::make_unique<read_concern::impl>(libmongoc::read_concern_copy(rc)));
+    return v1::read_concern::internal::make(
+        libmongoc::read_concern_copy(libmongoc::uri_get_read_concern(_impl->uri_t)));
 }
 
 mongocxx::v_noabi::read_preference uri::read_preference() const {

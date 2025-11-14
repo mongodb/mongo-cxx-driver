@@ -14,18 +14,26 @@
 
 #pragma once
 
-#include <mongocxx/options/transaction.hh> // IWYU pragma: export
+#include <mongocxx/options/transaction.hpp> // IWYU pragma: export
 
 //
+
+#include <mongocxx/v1/read_concern.hh>
 
 #include <chrono>
 #include <memory>
 
-#include <bsoncxx/private/make_unique.hh>
+#include <bsoncxx/stdx/optional.hpp>
+
+#include <mongocxx/read_concern.hpp>
 
 #include <mongocxx/read_concern.hh>
 #include <mongocxx/read_preference.hh>
 #include <mongocxx/write_concern.hh>
+
+#include <bsoncxx/private/make_unique.hh>
+
+#include <mongocxx/private/mongoc.hh>
 
 namespace mongocxx {
 namespace v_noabi {
@@ -59,16 +67,16 @@ class transaction::impl {
     impl& operator=(impl&&) = default;
 
     void read_concern(mongocxx::v_noabi::read_concern const& rc) {
-        libmongoc::transaction_opts_set_read_concern(_transaction_opt_t.get(), rc._impl->read_concern_t);
+        libmongoc::transaction_opts_set_read_concern(
+            _transaction_opt_t.get(), v_noabi::read_concern::internal::as_mongoc(rc));
     }
 
-    bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::read_concern> read_concern() const {
-        auto rc = libmongoc::transaction_opts_get_read_concern(_transaction_opt_t.get());
-        if (!rc) {
-            return bsoncxx::v_noabi::stdx::nullopt;
+    bsoncxx::v_noabi::stdx::optional<v_noabi::read_concern> read_concern() const {
+        bsoncxx::v_noabi::stdx::optional<v_noabi::read_concern> ret;
+        if (auto const rc = libmongoc::transaction_opts_get_read_concern(_transaction_opt_t.get())) {
+            ret.emplace(v1::read_concern::internal::make(libmongoc::read_concern_copy(rc)));
         }
-        mongocxx::v_noabi::read_concern rci(bsoncxx::make_unique<read_concern::impl>(libmongoc::read_concern_copy(rc)));
-        return bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::read_concern>(std::move(rci));
+        return ret;
     }
 
     void write_concern(mongocxx::v_noabi::write_concern const& wc) {
