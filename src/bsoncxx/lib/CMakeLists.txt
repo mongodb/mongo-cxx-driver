@@ -60,6 +60,12 @@ set(bsoncxx_sources_v1
     bsoncxx/v1/types/view.cpp
 )
 
+file(GLOB_RECURSE bsoncxx_headers
+    RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
+    CONFIGURE_DEPENDS
+    "*.hh"
+)
+
 list(APPEND bsoncxx_sources
     ${bsoncxx_sources_private}
     ${bsoncxx_sources_v_noabi}
@@ -99,23 +105,8 @@ set_dist_list(src_bsoncxx_lib_DIST
     ${bsoncxx_sources_private}
     ${bsoncxx_sources_v_noabi}
     ${bsoncxx_sources_v1}
-    bsoncxx/private/b64_ntop.hh
+    ${bsoncxx_headers}
     bsoncxx/private/config/config.hh.in
-    bsoncxx/private/export.hh
-    bsoncxx/private/helpers.hh
-    bsoncxx/private/immortal.hh
-    bsoncxx/private/itoa.hh
-    bsoncxx/private/bson.hh
-    bsoncxx/private/make_unique.hh
-    bsoncxx/private/stack.hh
-    bsoncxx/private/suppress_deprecation_warnings.hh
-    bsoncxx/private/type_traits.hh
-    bsoncxx/private/version.hh
     bsoncxx/v1/config/config.hpp.in
     bsoncxx/v1/config/version.hpp.in
-    bsoncxx/v1/document/view.hh
-    bsoncxx/v1/element/view.hh
-    bsoncxx/v1/oid.hh
-    bsoncxx/v1/types/value.hh
-    bsoncxx/v1/types/view.hh
 )
