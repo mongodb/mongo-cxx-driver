@@ -14,30 +14,22 @@
 
 #pragma once
 
-#include <mongocxx/v1/read_concern-fwd.hpp>
+#include <mongocxx/v1/read_concern.hpp> // IWYU pragma: export
 
-#include <mongocxx/config/prelude.hpp>
+//
 
-namespace mongocxx {
-namespace v_noabi {
-
-class read_concern;
-
-} // namespace v_noabi
-} // namespace mongocxx
+#include <mongocxx/private/export.hh>
+#include <mongocxx/private/mongoc.hh>
 
 namespace mongocxx {
+namespace v1 {
 
-using v_noabi::read_concern;
+class read_concern::internal {
+   public:
+    static MONGOCXX_ABI_EXPORT_CDECL_TESTING(read_concern) make(mongoc_read_concern_t* rc);
 
+    static mongoc_read_concern_t const* as_mongoc(read_concern const& self);
+};
+
+} // namespace v1
 } // namespace mongocxx
-
-#include <mongocxx/config/postlude.hpp>
-
-///
-/// @file
-/// Declares @ref mongocxx::v_noabi::read_concern.
-///
-/// @par Includes
-/// - @ref mongocxx/v1/read_concern-fwd.hpp
-///

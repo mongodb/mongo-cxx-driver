@@ -12,120 +12,66 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <bsoncxx/builder/basic/document.hpp>
-#include <bsoncxx/string/to_string.hpp>
+#include <mongocxx/read_concern.hh>
+
+//
+
+#include <mongocxx/v1/read_concern.hh>
 
 #include <mongocxx/exception/error_code.hpp>
 #include <mongocxx/exception/exception.hpp>
-#include <mongocxx/read_concern.hpp>
-
-#include <mongocxx/read_concern.hh>
-
-#include <bsoncxx/private/make_unique.hh>
 
 #include <mongocxx/private/mongoc.hh>
+
+namespace {
+namespace static_assertions {
+namespace level {
+
+using lv1 = mongocxx::v1::read_concern::level;
+using lv_noabi = mongocxx::v_noabi::read_concern::level;
+
+template <lv1 lhs, lv_noabi rhs>
+struct check {
+    static_assert(
+        static_cast<int>(lhs) == static_cast<int>(rhs),
+        "read_concern::level: v1 and v_noabi must have the same values");
+};
+
+template struct check<lv1::k_local, lv_noabi::k_local>;
+template struct check<lv1::k_majority, lv_noabi::k_majority>;
+template struct check<lv1::k_linearizable, lv_noabi::k_linearizable>;
+template struct check<lv1::k_server_default, lv_noabi::k_server_default>;
+template struct check<lv1::k_unknown, lv_noabi::k_unknown>;
+template struct check<lv1::k_available, lv_noabi::k_available>;
+template struct check<lv1::k_snapshot, lv_noabi::k_snapshot>;
+
+} // namespace level
+} // namespace static_assertions
+} // namespace
 
 namespace mongocxx {
 namespace v_noabi {
 
-read_concern::read_concern() : _impl{bsoncxx::make_unique<impl>(libmongoc::read_concern_new())} {}
-
-read_concern::read_concern(std::unique_ptr<impl>&& implementation) : _impl{std::move(implementation)} {}
-
-read_concern::read_concern(read_concern&&) noexcept = default;
-read_concern& read_concern::operator=(read_concern&&) noexcept = default;
-
-read_concern::read_concern(read_concern const& other)
-    : _impl(bsoncxx::make_unique<impl>(libmongoc::read_concern_copy(other._impl->read_concern_t))) {}
-
-read_concern& read_concern::operator=(read_concern const& other) {
-    _impl = bsoncxx::make_unique<impl>(libmongoc::read_concern_copy(other._impl->read_concern_t));
-    return *this;
-}
-
-read_concern::~read_concern() = default;
-
 void read_concern::acknowledge_level(read_concern::level rc_level) {
     switch (rc_level) {
         case read_concern::level::k_local:
-            libmongoc::read_concern_set_level(_impl->read_concern_t, MONGOC_READ_CONCERN_LEVEL_LOCAL);
-            break;
         case read_concern::level::k_majority:
-            libmongoc::read_concern_set_level(_impl->read_concern_t, MONGOC_READ_CONCERN_LEVEL_MAJORITY);
-            break;
         case read_concern::level::k_linearizable:
-            libmongoc::read_concern_set_level(_impl->read_concern_t, MONGOC_READ_CONCERN_LEVEL_LINEARIZABLE);
-            break;
         case read_concern::level::k_server_default:
-            // libmongoc uses a NULL level to mean "use the server's default read_concern."
-            libmongoc::read_concern_set_level(_impl->read_concern_t, nullptr);
-            break;
         case read_concern::level::k_available:
-            libmongoc::read_concern_set_level(_impl->read_concern_t, MONGOC_READ_CONCERN_LEVEL_AVAILABLE);
-            break;
         case read_concern::level::k_snapshot:
-            libmongoc::read_concern_set_level(_impl->read_concern_t, MONGOC_READ_CONCERN_LEVEL_SNAPSHOT);
+            _rc.acknowledge_level(static_cast<v1::read_concern::level>(rc_level));
             break;
 
-        case read_concern::level::k_unknown:
         default:
-            throw exception{error_code::k_unknown_read_concern};
+        case read_concern::level::k_unknown:
+            // Backward compatibility: k_unknown is an exception.
+            throw v_noabi::exception{error_code::k_unknown_read_concern};
     }
 }
 
-void read_concern::acknowledge_string(bsoncxx::v_noabi::stdx::string_view rc_string) {
-    // libmongoc uses a NULL level to mean "use the server's default read_concern."
-    libmongoc::read_concern_set_level(
-        _impl->read_concern_t, rc_string.empty() ? nullptr : bsoncxx::v_noabi::string::to_string(rc_string).data());
-}
-
-read_concern::level read_concern::acknowledge_level() const {
-    auto level = libmongoc::read_concern_get_level(_impl->read_concern_t);
-    if (!level) {
-        return read_concern::level::k_server_default;
-    }
-    if (strcmp(MONGOC_READ_CONCERN_LEVEL_LOCAL, level) == 0) {
-        return read_concern::level::k_local;
-    } else if (strcmp(MONGOC_READ_CONCERN_LEVEL_MAJORITY, level) == 0) {
-        return read_concern::level::k_majority;
-    } else if (strcmp(MONGOC_READ_CONCERN_LEVEL_LINEARIZABLE, level) == 0) {
-        return read_concern::level::k_linearizable;
-    } else if (strcmp(MONGOC_READ_CONCERN_LEVEL_AVAILABLE, level) == 0) {
-        return read_concern::level::k_available;
-    } else if (strcmp(MONGOC_READ_CONCERN_LEVEL_SNAPSHOT, level) == 0) {
-        return read_concern::level::k_snapshot;
-    } else {
-        return read_concern::level::k_unknown;
-    }
-}
-
-bsoncxx::v_noabi::stdx::string_view read_concern::acknowledge_string() const {
-    auto level = libmongoc::read_concern_get_level(_impl->read_concern_t);
-    if (!level) {
-        return "";
-    }
-    return {bsoncxx::v_noabi::stdx::string_view{level}};
-}
-
-bsoncxx::v_noabi::document::value read_concern::to_document() const {
-    using bsoncxx::v_noabi::builder::basic::kvp;
-
-    auto level = libmongoc::read_concern_get_level(_impl->read_concern_t);
-
-    bsoncxx::v_noabi::builder::basic::document doc;
-    if (level) {
-        doc.append(kvp("level", level));
-    }
-
-    return doc.extract();
-}
-
-bool operator==(read_concern const& lhs, read_concern const& rhs) {
-    return lhs.acknowledge_level() == rhs.acknowledge_level();
-}
-
-bool operator!=(read_concern const& lhs, read_concern const& rhs) {
-    return !(lhs == rhs);
+mongoc_read_concern_t const* read_concern::internal::as_mongoc(read_concern const& self) {
+    return v1::read_concern::internal::as_mongoc(self._rc);
 }
 
 } // namespace v_noabi

@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <mongocxx/v1/read_concern.hh>
 #include <mongocxx/v1/read_preference.hh>
 
 #include <bsoncxx/builder/basic/kvp.hpp>
@@ -37,6 +38,7 @@
 
 #include <bsoncxx/private/make_unique.hh>
 
+#include <mongocxx/private/mongoc.hh>
 #include <mongocxx/private/ssl.hh>
 
 namespace mongocxx {
@@ -151,8 +153,7 @@ client::operator bool() const noexcept {
 }
 
 void client::read_concern_deprecated(mongocxx::v_noabi::read_concern rc) {
-    auto client_t = _get_impl().client_t;
-    libmongoc::client_set_read_concern(client_t, rc._impl->read_concern_t);
+    libmongoc::client_set_read_concern(_get_impl().client_t, v_noabi::read_concern::internal::as_mongoc(rc));
 }
 
 void client::read_concern(mongocxx::v_noabi::read_concern rc) {
@@ -160,8 +161,8 @@ void client::read_concern(mongocxx::v_noabi::read_concern rc) {
 }
 
 mongocxx::v_noabi::read_concern client::read_concern() const {
-    auto rc = libmongoc::client_get_read_concern(_get_impl().client_t);
-    return {bsoncxx::make_unique<read_concern::impl>(libmongoc::read_concern_copy(rc))};
+    return v1::read_concern::internal::make(
+        libmongoc::read_concern_copy(libmongoc::client_get_read_concern(_get_impl().client_t)));
 }
 
 void client::read_preference_deprecated(mongocxx::v_noabi::read_preference rp) {
