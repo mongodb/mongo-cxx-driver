@@ -69,7 +69,7 @@ find_args=(
 )
 
 echo "Scanning the following files:"
-find src "${find_args[@]}"
+find src "${find_args[@]}" | sed -E -e 's/^/ - /'
 
 # TODO: update clang-tidy config and address warnings.
 {
