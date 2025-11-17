@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <mongocxx/v1/read_preference.hh>
+
 #include <bsoncxx/types.hpp>
 
 #include <mongocxx/exception/error_code.hpp>
@@ -101,9 +103,8 @@ mongocxx::v_noabi::read_concern uri::read_concern() const {
 }
 
 mongocxx::v_noabi::read_preference uri::read_preference() const {
-    auto rp = libmongoc::uri_get_read_prefs_t(_impl->uri_t);
-    return mongocxx::v_noabi::read_preference(
-        bsoncxx::make_unique<read_preference::impl>(libmongoc::read_prefs_copy(rp)));
+    return v1::read_preference::internal::make(
+        libmongoc::read_prefs_copy(libmongoc::uri_get_read_prefs_t(_impl->uri_t)));
 }
 
 std::string uri::replica_set() const {

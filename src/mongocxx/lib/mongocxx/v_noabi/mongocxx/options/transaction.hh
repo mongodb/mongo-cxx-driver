@@ -18,14 +18,18 @@
 
 //
 
+#include <mongocxx/v1/read_preference.hh>
+
 #include <chrono>
 #include <memory>
-
-#include <bsoncxx/private/make_unique.hh>
 
 #include <mongocxx/read_concern.hh>
 #include <mongocxx/read_preference.hh>
 #include <mongocxx/write_concern.hh>
+
+#include <bsoncxx/private/make_unique.hh>
+
+#include <mongocxx/private/mongoc.hh>
 
 namespace mongocxx {
 namespace v_noabi {
@@ -86,17 +90,18 @@ class transaction::impl {
     }
 
     void read_preference(mongocxx::v_noabi::read_preference const& rp) {
-        libmongoc::transaction_opts_set_read_prefs(_transaction_opt_t.get(), rp._impl->read_preference_t);
+        libmongoc::transaction_opts_set_read_prefs(
+            _transaction_opt_t.get(), v_noabi::read_preference::internal::as_mongoc(rp));
     }
 
     bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::read_preference> read_preference() const {
-        auto rp = libmongoc::transaction_opts_get_read_prefs(_transaction_opt_t.get());
-        if (!rp) {
-            return bsoncxx::v_noabi::stdx::nullopt;
+        bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::read_preference> ret;
+
+        if (auto const rp = libmongoc::transaction_opts_get_read_prefs(_transaction_opt_t.get())) {
+            ret.emplace(v1::read_preference::internal::make(libmongoc::read_prefs_copy(rp)));
         }
-        mongocxx::v_noabi::read_preference rpi(
-            bsoncxx::make_unique<read_preference::impl>(libmongoc::read_prefs_copy(rp)));
-        return bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::read_preference>(std::move(rpi));
+
+        return ret;
     }
 
     void max_commit_time_ms(std::chrono::milliseconds ms) {
