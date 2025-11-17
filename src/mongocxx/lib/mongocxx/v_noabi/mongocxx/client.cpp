@@ -13,6 +13,7 @@
 // limitations under the License.
 
 #include <mongocxx/v1/read_concern.hh>
+#include <mongocxx/v1/read_preference.hh>
 
 #include <bsoncxx/builder/basic/kvp.hpp>
 
@@ -165,7 +166,7 @@ mongocxx::v_noabi::read_concern client::read_concern() const {
 }
 
 void client::read_preference_deprecated(mongocxx::v_noabi::read_preference rp) {
-    libmongoc::client_set_read_prefs(_get_impl().client_t, rp._impl->read_preference_t);
+    libmongoc::client_set_read_prefs(_get_impl().client_t, v_noabi::read_preference::internal::as_mongoc(rp));
 }
 
 void client::read_preference(mongocxx::v_noabi::read_preference rp) {
@@ -173,10 +174,8 @@ void client::read_preference(mongocxx::v_noabi::read_preference rp) {
 }
 
 mongocxx::v_noabi::read_preference client::read_preference() const {
-    mongocxx::v_noabi::read_preference rp(
-        bsoncxx::make_unique<read_preference::impl>(
-            libmongoc::read_prefs_copy(libmongoc::client_get_read_prefs(_get_impl().client_t))));
-    return rp;
+    return v1::read_preference::internal::make(
+        libmongoc::read_prefs_copy(libmongoc::client_get_read_prefs(_get_impl().client_t)));
 }
 
 mongocxx::v_noabi::uri client::uri() const {

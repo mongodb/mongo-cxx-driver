@@ -9,10 +9,11 @@
 
 #include <mongocxx/search_index_view.hpp> // IWYU pragma: export
 
-#include <mongocxx/scoped_bson.hh>
-
 #include <mongocxx/append_aggregate_options.hh>
 #include <mongocxx/client_session.hh>
+#include <mongocxx/read_preference.hh>
+#include <mongocxx/scoped_bson.hh>
+
 #include <mongocxx/private/mongoc.hh>
 
 namespace mongocxx {
@@ -73,8 +74,10 @@ class search_index_view::impl {
             opts_doc.append(bsoncxx::v_noabi::builder::concatenate_doc{session->_get_impl().to_document()});
         }
 
-        mongoc_read_prefs_t const* const rp_ptr =
-            options.read_preference() ? options.read_preference()->_impl->read_preference_t : nullptr;
+        mongoc_read_prefs_t const* const read_prefs = [&options] {
+            auto const& opt = options.read_preference();
+            return opt ? v_noabi::read_preference::internal::as_mongoc(*opt) : nullptr;
+        }();
 
         auto coll_copy = copy_and_apply_default_rw_concerns(_coll);
         return libmongoc::collection_aggregate(
@@ -82,7 +85,7 @@ class search_index_view::impl {
             mongoc_query_flags_t(),
             to_scoped_bson_view(pipeline.view_array()),
             to_scoped_bson_view(opts_doc),
-            rp_ptr);
+            read_prefs);
     }
 
     std::string create_one(client_session const* session, search_index_model const& model) {

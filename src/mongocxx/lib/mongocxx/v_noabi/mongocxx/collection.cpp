@@ -13,6 +13,7 @@
 // limitations under the License.
 
 #include <mongocxx/v1/read_concern.hh>
+#include <mongocxx/v1/read_preference.hh>
 
 #include <chrono>
 #include <cstdint>
@@ -387,9 +388,9 @@ bsoncxx::v_noabi::builder::basic::document build_find_options_document(options::
 } // namespace
 
 cursor collection::_find(client_session const* session, view_or_value filter, options::find const& options) {
-    mongoc_read_prefs_t const* rp_ptr = nullptr;
-    if (options.read_preference()) {
-        rp_ptr = options.read_preference()->_impl->read_preference_t;
+    mongoc_read_prefs_t const* read_prefs = nullptr;
+    if (auto const& opt = options.read_preference()) {
+        read_prefs = v_noabi::read_preference::internal::as_mongoc(*opt);
     }
 
     bsoncxx::v_noabi::builder::basic::document options_builder{build_find_options_document(options)};
@@ -402,7 +403,7 @@ cursor collection::_find(client_session const* session, view_or_value filter, op
             _get_impl().collection_t,
             mongocxx::to_scoped_bson_view(filter),
             mongocxx::to_scoped_bson_view(options_builder),
-            rp_ptr),
+            read_prefs),
         options.cursor_type()};
 
     if (options.max_await_time()) {
@@ -457,10 +458,10 @@ collection::_aggregate(client_session const* session, pipeline const& pipeline, 
         b.append(bsoncxx::v_noabi::builder::concatenate_doc{session->_get_impl().to_document()});
     }
 
-    ::mongoc_read_prefs_t const* rp_ptr = nullptr;
+    mongoc_read_prefs_t const* read_prefs = nullptr;
 
-    if (options.read_preference()) {
-        rp_ptr = options.read_preference()->_impl->read_preference_t;
+    if (auto const& opt = options.read_preference()) {
+        read_prefs = v_noabi::read_preference::internal::as_mongoc(*opt);
     }
 
     return cursor(
@@ -469,7 +470,7 @@ collection::_aggregate(client_session const* session, pipeline const& pipeline, 
             static_cast<::mongoc_query_flags_t>(0),
             mongocxx::to_scoped_bson_view(pipeline._impl->view_array()),
             mongocxx::to_scoped_bson_view(b),
-            rp_ptr));
+            read_prefs));
 }
 
 cursor collection::aggregate(pipeline const& pipeline, options::aggregate const& options) {
@@ -1040,8 +1041,8 @@ collection::_count_documents(client_session const* session, view_or_value filter
     bson_error_t error;
     mongoc_read_prefs_t const* read_prefs = nullptr;
 
-    if (auto const& rp = options.read_preference()) {
-        read_prefs = rp->_impl->read_preference_t;
+    if (auto const& opt = options.read_preference()) {
+        read_prefs = v_noabi::read_preference::internal::as_mongoc(*opt);
     }
 
     bsoncxx::v_noabi::builder::basic::document opts_builder;
@@ -1102,8 +1103,8 @@ std::int64_t collection::estimated_document_count(options::estimated_document_co
 
     mongoc_read_prefs_t const* read_prefs = nullptr;
 
-    if (auto const& rp = options.read_preference()) {
-        read_prefs = rp->_impl->read_preference_t;
+    if (auto const& opt = options.read_preference()) {
+        read_prefs = v_noabi::read_preference::internal::as_mongoc(*opt);
     }
 
     bsoncxx::v_noabi::builder::basic::document opts_builder;
@@ -1188,9 +1189,9 @@ cursor collection::_distinct(
         opts_builder.append(bsoncxx::v_noabi::builder::concatenate_doc{session->_get_impl().to_document()});
     }
 
-    mongoc_read_prefs_t const* rp_ptr = nullptr;
-    if (auto const& rp = options.read_preference()) {
-        rp_ptr = rp->_impl->read_preference_t;
+    mongoc_read_prefs_t const* read_prefs = nullptr;
+    if (auto const& opt = options.read_preference()) {
+        read_prefs = v_noabi::read_preference::internal::as_mongoc(*opt);
     }
 
     //
@@ -1202,7 +1203,7 @@ cursor collection::_distinct(
     auto result = libmongoc::collection_read_command_with_opts(
         _get_impl().collection_t,
         mongocxx::to_scoped_bson_view(command_builder),
-        rp_ptr,
+        read_prefs,
         mongocxx::to_scoped_bson_view(opts_builder),
         reply.out_ptr(),
         &error);
@@ -1320,14 +1321,12 @@ mongocxx::v_noabi::read_concern collection::read_concern() const {
 }
 
 void collection::read_preference(mongocxx::v_noabi::read_preference rp) {
-    libmongoc::collection_set_read_prefs(_get_impl().collection_t, rp._impl->read_preference_t);
+    libmongoc::collection_set_read_prefs(_get_impl().collection_t, v_noabi::read_preference::internal::as_mongoc(rp));
 }
 
 mongocxx::v_noabi::read_preference collection::read_preference() const {
-    mongocxx::v_noabi::read_preference rp(
-        bsoncxx::make_unique<read_preference::impl>(
-            libmongoc::read_prefs_copy(libmongoc::collection_get_read_prefs(_get_impl().collection_t))));
-    return rp;
+    return v1::read_preference::internal::make(
+        libmongoc::read_prefs_copy(libmongoc::collection_get_read_prefs(_get_impl().collection_t)));
 }
 
 void collection::write_concern(mongocxx::v_noabi::write_concern wc) {

@@ -16,30 +16,14 @@
 
 #include <mongocxx/options/find_one_common_options-fwd.hpp> // IWYU pragma: export
 
-#include <mongocxx/config/prelude.hpp>
+//
 
-namespace mongocxx {
-namespace v_noabi {
-namespace options {
-
-///
-/// Indicates whether a `findOneAndModify` operation should return the old or new version of the
-/// modified document.
-///
-enum class return_document {
-    /// Return the version of the document before the modification takes place.
-    k_before,
-    /// Return the version of the document after the modification takes place.
-    k_after,
-};
-
-} // namespace options
-} // namespace v_noabi
-} // namespace mongocxx
-
-#include <mongocxx/config/postlude.hpp>
+#include <mongocxx/v1/return_document.hpp> // IWYU pragma: export
 
 ///
 /// @file
 /// Provides @ref mongocxx::v_noabi::options::return_document.
+///
+/// @par Includes
+/// - @ref mongocxx/v1/return_document.hpp
 ///
