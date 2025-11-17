@@ -14,20 +14,26 @@
 
 #pragma once
 
-#include <memory>
-
-#include <mongocxx/client-fwd.hpp>
-#include <mongocxx/collection-fwd.hpp>
-#include <mongocxx/database-fwd.hpp>
-#include <mongocxx/options/transaction-fwd.hpp>
 #include <mongocxx/read_concern-fwd.hpp> // IWYU pragma: export
-#include <mongocxx/uri-fwd.hpp>
+
+//
+
+#include <mongocxx/v1/read_concern.hpp> // IWYU pragma: export
+
+#include <memory> // IWYU pragma: keep: backward compatibility, to be removed.
+#include <utility>
+
+#include <mongocxx/client-fwd.hpp>              // IWYU pragma: keep: backward compatibility, to be removed.
+#include <mongocxx/collection-fwd.hpp>          // IWYU pragma: keep: backward compatibility, to be removed.
+#include <mongocxx/database-fwd.hpp>            // IWYU pragma: keep: backward compatibility, to be removed.
+#include <mongocxx/options/transaction-fwd.hpp> // IWYU pragma: keep: backward compatibility, to be removed.
+#include <mongocxx/uri-fwd.hpp>                 // IWYU pragma: keep: backward compatibility, to be removed.
 
 #include <bsoncxx/document/value.hpp>
 #include <bsoncxx/stdx/optional.hpp> // IWYU pragma: keep: backward compatibility, to be removed.
 #include <bsoncxx/stdx/string_view.hpp>
 
-#include <mongocxx/options/transaction.hpp>
+#include <mongocxx/options/transaction.hpp> // IWYU pragma: keep: backward compatibility, to be removed.
 
 #include <mongocxx/config/prelude.hpp>
 
@@ -46,6 +52,9 @@ namespace v_noabi {
 /// - [Read Concern (MongoDB Manual)](https://www.mongodb.com/docs/manual/reference/read-concern/)
 ///
 class read_concern {
+   private:
+    v1::read_concern _rc;
+
    public:
     ///
     /// A class to represent the read concern level for read operations.
@@ -71,32 +80,31 @@ class read_concern {
     /// run with this read_concern will use the server's default read_concern instead of
     /// specifying one.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL() read_concern();
+    read_concern() = default;
 
     ///
-    /// Copy constructs a read_concern.
+    /// Construct with the @ref mongocxx::v1 equivalent.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL() read_concern(read_concern const&);
+    /* explicit(false) */ read_concern(v1::read_concern rc) : _rc{std::move(rc)} {}
 
     ///
-    /// Copy assigns a read_concern.
+    /// Convert to the @ref mongocxx::v1 equivalent.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(read_concern&) operator=(read_concern const&);
+    /// @par Postconditions:
+    /// - `other` is in an assign-or-destroy-only state.
+    ///
+    /// @warning Invalidates all associated iterators and views.
+    ///
+    explicit operator v1::read_concern() && {
+        return std::move(_rc);
+    }
 
     ///
-    /// Move constructs a read_concern.
+    /// Convert to the @ref mongocxx::v1 equivalent.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL() read_concern(read_concern&&) noexcept;
-
-    ///
-    /// Move assigns a read_concern.
-    ///
-    MONGOCXX_ABI_EXPORT_CDECL(read_concern&) operator=(read_concern&&) noexcept;
-
-    ///
-    /// Destroys a read_concern.
-    ///
-    MONGOCXX_ABI_EXPORT_CDECL() ~read_concern();
+    explicit operator v1::read_concern() const& {
+        return _rc;
+    }
 
     ///
     /// Sets the read concern level.
@@ -118,7 +126,9 @@ class read_concern {
     ///
     /// @return The read concern level.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(level) acknowledge_level() const;
+    level acknowledge_level() const {
+        return static_cast<level>(_rc.acknowledge_level());
+    }
 
     ///
     /// Sets the read concern string. Any valid read concern string (e.g. "local",
@@ -129,8 +139,9 @@ class read_concern {
     /// @param rc_string
     ///   The read concern string.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(void)
-    acknowledge_string(bsoncxx::v_noabi::stdx::string_view rc_string);
+    void acknowledge_string(bsoncxx::v1::stdx::string_view rc_string) {
+        _rc.acknowledge_string(rc_string);
+    }
 
     ///
     /// Gets the current read concern string.
@@ -140,7 +151,13 @@ class read_concern {
     ///
     /// @return The read concern string.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::string_view) acknowledge_string() const;
+    bsoncxx::v1::stdx::string_view acknowledge_string() const {
+        auto ret = _rc.acknowledge_string();
+        if (ret.empty()) {
+            ret = "";
+        }
+        return ret;
+    }
 
     ///
     /// Gets the document form of this read_concern.
@@ -148,7 +165,9 @@ class read_concern {
     /// @return
     ///   Document representation of this read_concern.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::document::value) to_document() const;
+    bsoncxx::v_noabi::document::value to_document() const {
+        return bsoncxx::v_noabi::from_v1(_rc.to_document());
+    }
 
     ///
     /// @relates mongocxx::v_noabi::read_concern
@@ -156,24 +175,32 @@ class read_concern {
     /// Compares two read_concern objects for (in)-equality.
     ///
     /// @{
-    friend MONGOCXX_ABI_EXPORT_CDECL(bool) operator==(read_concern const&, read_concern const&);
-    friend MONGOCXX_ABI_EXPORT_CDECL(bool) operator!=(read_concern const&, read_concern const&);
+    friend bool operator==(read_concern const& lhs, read_concern const& rhs) {
+        return lhs.acknowledge_level() == rhs.acknowledge_level();
+    }
+
+    friend bool operator!=(read_concern const& lhs, read_concern const& rhs) {
+        return !(lhs == rhs);
+    }
     /// @}
     ///
 
-   private:
-    friend ::mongocxx::v_noabi::client;
-    friend ::mongocxx::v_noabi::collection;
-    friend ::mongocxx::v_noabi::database;
-    friend ::mongocxx::v_noabi::options::transaction;
-    friend ::mongocxx::v_noabi::uri;
-
-    class impl;
-
-    read_concern(std::unique_ptr<impl>&& implementation);
-
-    std::unique_ptr<impl> _impl;
+    class internal;
 };
+
+///
+/// Convert to the @ref mongocxx::v_noabi equivalent of `v`.
+///
+inline v_noabi::read_concern from_v1(v1::read_concern v) {
+    return {std::move(v)};
+}
+
+///
+/// Convert to the @ref mongocxx::v1 equivalent of `v`.
+///
+inline v1::read_concern to_v1(v_noabi::read_concern v) {
+    return v1::read_concern{std::move(v)};
+}
 
 } // namespace v_noabi
 } // namespace mongocxx
@@ -183,4 +210,7 @@ class read_concern {
 ///
 /// @file
 /// Provides @ref mongocxx::v_noabi::read_concern.
+///
+/// @par Includes
+/// - @ref mongocxx/v1/read_concern.hpp
 ///

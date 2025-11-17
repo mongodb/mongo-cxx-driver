@@ -16,26 +16,16 @@
 
 #include <mongocxx/read_concern.hpp> // IWYU pragma: export
 
+//
+
 #include <mongocxx/private/mongoc.hh>
 
 namespace mongocxx {
 namespace v_noabi {
 
-class read_concern::impl {
+class read_concern::internal {
    public:
-    impl(::mongoc_read_concern_t* read_concern) : read_concern_t{read_concern} {}
-
-    ~impl() {
-        libmongoc::read_concern_destroy(read_concern_t);
-    }
-
-    impl(impl&&) = delete;
-    impl& operator=(impl&&) = delete;
-
-    impl(impl const&) = delete;
-    impl& operator=(impl const&) = delete;
-
-    ::mongoc_read_concern_t* read_concern_t;
+    static mongoc_read_concern_t const* as_mongoc(read_concern const& self);
 };
 
 } // namespace v_noabi
