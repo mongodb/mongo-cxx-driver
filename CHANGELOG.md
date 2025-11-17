@@ -9,6 +9,9 @@ Changes prior to 3.9.0 are documented as [release notes on GitHub](https://githu
 
 ## 4.2.0 [Unreleased]
 
+> [!IMPORTANT]
+> This release removes or changes the exports of many unstable ABI symbols.
+
 ### Added
 
 * To support incremental migration, the following entities are defined as equivalent to their renamed counterparts.
