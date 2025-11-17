@@ -232,7 +232,7 @@ class read_preference {
     }
 
     ///
-    /// Sets or updates the tag set list for this read_preference.
+    /// Returns the current tag set list for this read_preference.
     ///
     /// @return The optionally set current tag set list.
     ///
