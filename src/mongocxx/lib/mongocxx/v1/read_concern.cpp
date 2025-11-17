@@ -106,7 +106,7 @@ read_concern::level read_concern::acknowledge_level() const {
         return level::k_server_default;
     }
 
-    std::unordered_map<bsoncxx::v1::stdx::string_view, level> map = {
+    std::unordered_map<bsoncxx::v1::stdx::string_view, level> const map = {
         {MONGOC_READ_CONCERN_LEVEL_LOCAL, level::k_local},
         {MONGOC_READ_CONCERN_LEVEL_MAJORITY, level::k_majority},
         {MONGOC_READ_CONCERN_LEVEL_LINEARIZABLE, level::k_linearizable},
