@@ -14,25 +14,35 @@
 
 #pragma once
 
+#include <mongocxx/read_preference-fwd.hpp> // IWYU pragma: export
+
+//
+
+#include <bsoncxx/v1/detail/macros.hpp>
+
+#include <mongocxx/v1/read_preference.hpp>
+
 #include <chrono>
 #include <cstdint>
-#include <memory>
+#include <memory> // IWYU pragma: keep: backward compatibility, to be removed.
 #include <string> // IWYU pragma: keep: backward compatibility, to be removed.
+#include <utility>
 
-#include <mongocxx/client-fwd.hpp>
-#include <mongocxx/collection-fwd.hpp>
-#include <mongocxx/database-fwd.hpp>
-#include <mongocxx/events/topology_description-fwd.hpp>
-#include <mongocxx/options/transaction-fwd.hpp>
-#include <mongocxx/read_preference-fwd.hpp> // IWYU pragma: export
-#include <mongocxx/search_index_view-fwd.hpp>
-#include <mongocxx/uri-fwd.hpp>
+#include <mongocxx/client-fwd.hpp>                      // IWYU pragma: keep: backward compatibility, to be removed.
+#include <mongocxx/collection-fwd.hpp>                  // IWYU pragma: keep: backward compatibility, to be removed.
+#include <mongocxx/database-fwd.hpp>                    // IWYU pragma: keep: backward compatibility, to be removed.
+#include <mongocxx/events/topology_description-fwd.hpp> // IWYU pragma: keep: backward compatibility, to be removed.
+#include <mongocxx/options/transaction-fwd.hpp>         // IWYU pragma: keep: backward compatibility, to be removed.
+#include <mongocxx/search_index_view-fwd.hpp>           // IWYU pragma: keep: backward compatibility, to be removed.
+#include <mongocxx/uri-fwd.hpp>                         // IWYU pragma: keep: backward compatibility, to be removed.
 
+#include <bsoncxx/array/view.hpp>
 #include <bsoncxx/array/view_or_value.hpp>
+#include <bsoncxx/document/view.hpp>
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/stdx/optional.hpp>
 
-#include <mongocxx/options/transaction.hpp>
+#include <mongocxx/options/transaction.hpp> // IWYU pragma: keep: backward compatibility, to be removed.
 
 #include <mongocxx/config/prelude.hpp>
 
@@ -47,6 +57,9 @@ namespace v_noabi {
 /// - [Read Preference (MongoDB Manual)](https://www.mongodb.com/docs/manual/core/read-preference/)
 ///
 class read_preference {
+   private:
+    v1::read_preference _rp;
+
    public:
     ///
     /// Determines which members in a replica set are acceptable to read from.
@@ -90,7 +103,31 @@ class read_preference {
     ///
     /// Constructs a new read_preference with read_mode set to k_primary.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL() read_preference();
+    read_preference() = default;
+
+    ///
+    /// Construct with the @ref mongocxx::v1 equivalent.
+    ///
+    /* explicit(false) */ read_preference(v1::read_preference rp) : _rp{std::move(rp)} {}
+
+    ///
+    /// Convert to the @ref mongocxx::v1 equivalent.
+    ///
+    /// @par Postconditions:
+    /// - `other` is in an assign-or-destroy-only state.
+    ///
+    /// @warning Invalidates all associated iterators and views.
+    ///
+    explicit operator v1::read_preference() && {
+        return std::move(_rp);
+    }
+
+    ///
+    /// Convert to the @ref mongocxx::v1 equivalent.
+    ///
+    explicit operator v1::read_preference() const& {
+        return _rp;
+    }
 
     // @cond DOXYGEN_DISABLE
     struct deprecated_tag {};
@@ -104,10 +141,12 @@ class read_preference {
     ///
     /// @deprecated Use @ref mode instead.
     ///
-    MONGOCXX_DEPRECATED MONGOCXX_ABI_EXPORT_CDECL() read_preference(read_mode mode);
+    MONGOCXX_DEPRECATED read_preference(read_mode mode) : read_preference{mode, deprecated_tag{}} {}
 
     // @cond DOXYGEN_DISABLE
-    MONGOCXX_ABI_EXPORT_CDECL() read_preference(read_mode mode, deprecated_tag);
+    read_preference(read_mode mode, deprecated_tag) {
+        this->mode(mode);
+    }
     // @endcond
 
     ///
@@ -123,39 +162,14 @@ class read_preference {
     ///
     /// @deprecated Use @ref tags instead.
     ///
-    MONGOCXX_DEPRECATED MONGOCXX_ABI_EXPORT_CDECL() read_preference(
-        read_mode mode,
-        bsoncxx::v_noabi::document::view_or_value tags);
+    MONGOCXX_DEPRECATED read_preference(read_mode mode, bsoncxx::v_noabi::document::view_or_value tags)
+        : read_preference{mode, tags, deprecated_tag{}} {}
 
     // @cond DOXYGEN_DISABLE
-    MONGOCXX_ABI_EXPORT_CDECL()
-    read_preference(read_mode mode, bsoncxx::v_noabi::document::view_or_value tags, deprecated_tag);
+    read_preference(read_mode mode, bsoncxx::v_noabi::document::view_or_value tags, deprecated_tag) {
+        this->mode(mode).tags(tags.view());
+    }
     // @endcond
-
-    ///
-    /// Copy constructs a read_preference.
-    ///
-    MONGOCXX_ABI_EXPORT_CDECL() read_preference(read_preference const&);
-
-    ///
-    /// Copy assigns a read_preference.
-    ///
-    MONGOCXX_ABI_EXPORT_CDECL(read_preference&) operator=(read_preference const&);
-
-    ///
-    /// Move constructs a read_preference.
-    ///
-    MONGOCXX_ABI_EXPORT_CDECL() read_preference(read_preference&&) noexcept;
-
-    ///
-    /// Move assigns a read_preference.
-    ///
-    MONGOCXX_ABI_EXPORT_CDECL(read_preference&) operator=(read_preference&&) noexcept;
-
-    ///
-    /// Destroys a read_preference.
-    ///
-    MONGOCXX_ABI_EXPORT_CDECL() ~read_preference();
 
     ///
     /// Sets a new mode for this read_preference.
@@ -167,14 +181,19 @@ class read_preference {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(read_preference&) mode(read_mode mode);
+    read_preference& mode(read_mode mode) {
+        _rp.mode(static_cast<v1::read_preference::read_mode>(mode));
+        return *this;
+    }
 
     ///
     /// Returns the current read_mode for this read_preference.
     ///
     /// @return The current read_mode.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(read_mode) mode() const;
+    read_mode mode() const {
+        return static_cast<read_mode>(_rp.mode());
+    }
 
     ///
     /// Sets or updates the tag set list for this read_preference.
@@ -189,8 +208,10 @@ class read_preference {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(read_preference&)
-    tags(bsoncxx::v_noabi::document::view_or_value tag_set_list);
+    read_preference& tags(bsoncxx::v_noabi::document::view_or_value tag_set_list) {
+        _rp.tags(bsoncxx::v_noabi::to_v1(tag_set_list.view()));
+        return *this;
+    }
 
     ///
     /// Sets or updates the tag set list for this read_preference.
@@ -205,19 +226,30 @@ class read_preference {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(read_preference&)
-    tags(bsoncxx::v_noabi::array::view_or_value tag_set_list);
+    read_preference& tags(bsoncxx::v_noabi::array::view_or_value tag_set_list) {
+        _rp.tags(bsoncxx::v_noabi::to_v1(tag_set_list.view()));
+        return *this;
+    }
 
     ///
-    /// Sets or updates the tag set list for this read_preference.
+    /// Returns the current tag set list for this read_preference.
     ///
     /// @return The optionally set current tag set list.
     ///
     /// @see
     /// - https://www.mongodb.com/docs/manual/core/read-preference-tags/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view>)
-    tags() const;
+    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view> tags() const {
+        bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view> ret;
+
+        auto const v = _rp.tags();
+
+        if (!v.empty()) {
+            ret.emplace(v);
+        }
+
+        return ret;
+    }
 
     ///
     /// Sets the max staleness setting for this read_preference.  Secondary
@@ -256,8 +288,13 @@ class read_preference {
     ///
     /// @return The optionally current max staleness setting.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<std::chrono::seconds>)
-    max_staleness() const;
+    bsoncxx::v_noabi::stdx::optional<std::chrono::seconds> max_staleness() const {
+        return _rp.max_staleness();
+    }
+
+    BSONCXX_PRIVATE_WARNINGS_PUSH();
+    BSONCXX_PRIVATE_WARNINGS_DISABLE(GNU("-Wdeprecated-declarations"));
+    BSONCXX_PRIVATE_WARNINGS_DISABLE(MSVC(4996));
 
     ///
     /// Sets the hedge document to be used for the read preference. Sharded clusters running MongoDB
@@ -279,8 +316,10 @@ class read_preference {
     /// @return A reference to the object on which this member function is being called. This
     /// facilitates method chaining.
     ///
-    MONGOCXX_DEPRECATED MONGOCXX_ABI_EXPORT_CDECL(read_preference&) hedge(
-        bsoncxx::v_noabi::document::view_or_value hedge);
+    MONGOCXX_DEPRECATED read_preference& hedge(bsoncxx::v_noabi::document::view_or_value hedge) {
+        _rp.hedge(bsoncxx::v_noabi::to_v1(hedge.view()));
+        return *this;
+    }
 
     ///
     /// Gets the current hedge document to be used for the read preference.
@@ -290,7 +329,15 @@ class read_preference {
     /// @return A hedge document if one was set.
     ///
     MONGOCXX_DEPRECATED MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view> const)
-    hedge() const;
+    hedge() const {
+        bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view> ret;
+        if (auto const opt = _rp.hedge()) {
+            ret.emplace(*opt);
+        }
+        return ret;
+    }
+
+    BSONCXX_PRIVATE_WARNINGS_POP();
 
     ///
     /// @relates mongocxx::v_noabi::read_preference
@@ -298,26 +345,32 @@ class read_preference {
     /// Compares two read_preference objects for (in)-equality.
     ///
     /// @{
-    friend MONGOCXX_ABI_EXPORT_CDECL(bool) operator==(read_preference const&, read_preference const&);
-    friend MONGOCXX_ABI_EXPORT_CDECL(bool) operator!=(read_preference const&, read_preference const&);
+    friend bool operator==(read_preference const& lhs, read_preference const& rhs) {
+        return (lhs.mode() == rhs.mode()) && (lhs.tags() == rhs.tags()) && (lhs.max_staleness() == rhs.max_staleness());
+    }
+
+    friend bool operator!=(read_preference const& lhs, read_preference const& rhs) {
+        return !(lhs == rhs);
+    }
     /// @}
     ///
 
-   private:
-    friend ::mongocxx::v_noabi::client;
-    friend ::mongocxx::v_noabi::collection;
-    friend ::mongocxx::v_noabi::database;
-    friend ::mongocxx::v_noabi::events::topology_description;
-    friend ::mongocxx::v_noabi::options::transaction;
-    friend ::mongocxx::v_noabi::search_index_view;
-    friend ::mongocxx::v_noabi::uri;
-
-    class impl;
-
-    read_preference(std::unique_ptr<impl>&& implementation);
-
-    std::unique_ptr<impl> _impl;
+    class internal;
 };
+
+///
+/// Convert to the @ref mongocxx::v_noabi equivalent of `v`.
+///
+inline v_noabi::read_preference from_v1(v1::read_preference v) {
+    return {std::move(v)};
+}
+
+///
+/// Convert to the @ref mongocxx::v1 equivalent of `v`.
+///
+inline v1::read_preference to_v1(v_noabi::read_preference v) {
+    return v1::read_preference{std::move(v)};
+}
 
 } // namespace v_noabi
 } // namespace mongocxx
@@ -327,4 +380,7 @@ class read_preference {
 ///
 /// @file
 /// Provides @ref mongocxx::v_noabi::read_preference.
+///
+/// @par Includes
+/// - @ref mongocxx/v1/read_preference.hpp
 ///

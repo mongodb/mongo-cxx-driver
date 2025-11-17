@@ -9,6 +9,10 @@ Changes prior to 3.9.0 are documented as [release notes on GitHub](https://githu
 
 ## 4.2.0 [Unreleased]
 
+> [!IMPORTANT]
+> This release removes and changes the exports of many unstable ABI symbols.
+> Recompilation is required to link against the mongocxx shared library for this release.
+
 ### Added
 
 * To support incremental migration, the following entities are defined as equivalent to their renamed counterparts.

@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <mongocxx/v1/read_preference.hh>
 #include <mongocxx/v1/write_concern.hh>
 
 #include <utility>
@@ -126,15 +127,18 @@ database::_aggregate(client_session const* session, pipeline const& pipeline, op
         b.append(bsoncxx::v_noabi::builder::concatenate_doc{session->_get_impl().to_document()});
     }
 
-    ::mongoc_read_prefs_t const* rp_ptr = nullptr;
+    ::mongoc_read_prefs_t const* read_prefs = nullptr;
 
-    if (options.read_preference()) {
-        rp_ptr = options.read_preference()->_impl->read_preference_t;
+    if (auto const& opt = options.read_preference()) {
+        read_prefs = v_noabi::read_preference::internal::as_mongoc(*opt);
     }
 
     return cursor(
         libmongoc::database_aggregate(
-            _get_impl().database_t, to_scoped_bson_view(pipeline._impl->view_array()), to_scoped_bson_view(b), rp_ptr));
+            _get_impl().database_t,
+            to_scoped_bson_view(pipeline._impl->view_array()),
+            to_scoped_bson_view(b),
+            read_prefs));
 }
 
 cursor database::aggregate(pipeline const& pipeline, options::aggregate const& options) {
@@ -251,7 +255,7 @@ bsoncxx::v_noabi::document::value database::run_command(
         _get_impl().client_impl->client_t,
         _get_impl().name.c_str(),
         to_scoped_bson_view(command.view()),
-        read_preference()._impl->read_preference_t,
+        libmongoc::database_get_read_prefs(_get_impl().database_t),
         server_id,
         reply.out_ptr(),
         &error);
@@ -348,7 +352,7 @@ mongocxx::v_noabi::read_concern database::read_concern() const {
 }
 
 void database::read_preference(mongocxx::v_noabi::read_preference rp) {
-    libmongoc::database_set_read_prefs(_get_impl().database_t, rp._impl->read_preference_t);
+    libmongoc::database_set_read_prefs(_get_impl().database_t, v_noabi::read_preference::internal::as_mongoc(rp));
 }
 
 bool database::has_collection(bsoncxx::v_noabi::string::view_or_value name) const {
@@ -362,10 +366,8 @@ bool database::has_collection(bsoncxx::v_noabi::string::view_or_value name) cons
 }
 
 mongocxx::v_noabi::read_preference database::read_preference() const {
-    mongocxx::v_noabi::read_preference rp(
-        bsoncxx::make_unique<read_preference::impl>(
-            libmongoc::read_prefs_copy(libmongoc::database_get_read_prefs(_get_impl().database_t))));
-    return rp;
+    return v1::read_preference::internal::make(
+        libmongoc::read_prefs_copy(libmongoc::database_get_read_prefs(_get_impl().database_t)));
 }
 
 void database::write_concern(mongocxx::v_noabi::write_concern wc) {
