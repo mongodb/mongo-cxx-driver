@@ -14,30 +14,18 @@
 
 #pragma once
 
-#include <mongocxx/v1/read_concern-fwd.hpp>
+#include <mongocxx/v1/read_concern.hpp> // IWYU pragma: export
 
-#include <mongocxx/config/prelude.hpp>
+//
 
-namespace mongocxx {
-namespace v_noabi {
+#include <catch2/catch_tostring.hpp>
 
-class read_concern;
-
-} // namespace v_noabi
-} // namespace mongocxx
-
-namespace mongocxx {
-
-using v_noabi::read_concern;
-
-} // namespace mongocxx
-
-#include <mongocxx/config/postlude.hpp>
-
-///
-/// @file
-/// Declares @ref mongocxx::v_noabi::read_concern.
-///
-/// @par Includes
-/// - @ref mongocxx/v1/read_concern-fwd.hpp
-///
+CATCH_REGISTER_ENUM(
+    mongocxx::v1::read_concern::level,
+    mongocxx::v1::read_concern::level::k_local,
+    mongocxx::v1::read_concern::level::k_majority,
+    mongocxx::v1::read_concern::level::k_linearizable,
+    mongocxx::v1::read_concern::level::k_server_default,
+    mongocxx::v1::read_concern::level::k_unknown,
+    mongocxx::v1::read_concern::level::k_available,
+    mongocxx::v1::read_concern::level::k_snapshot)

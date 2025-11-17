@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <mongocxx/v1/read_concern.hh>
 #include <mongocxx/v1/read_preference.hh>
 #include <mongocxx/v1/write_concern.hh>
 
@@ -343,12 +344,12 @@ void database::drop(
 }
 
 void database::read_concern(mongocxx::v_noabi::read_concern rc) {
-    libmongoc::database_set_read_concern(_get_impl().database_t, rc._impl->read_concern_t);
+    libmongoc::database_set_read_concern(_get_impl().database_t, v_noabi::read_concern::internal::as_mongoc(rc));
 }
 
 mongocxx::v_noabi::read_concern database::read_concern() const {
-    auto rc = libmongoc::database_get_read_concern(_get_impl().database_t);
-    return {bsoncxx::make_unique<read_concern::impl>(libmongoc::read_concern_copy(rc))};
+    return v1::read_concern::internal::make(
+        libmongoc::read_concern_copy(libmongoc::database_get_read_concern(_get_impl().database_t)));
 }
 
 void database::read_preference(mongocxx::v_noabi::read_preference rp) {

@@ -190,6 +190,11 @@ class read_concern {
     }
     /// @}
     ///
+
+    class internal;
+
+   private:
+    /* explicit(false) */ read_concern(void* impl);
 };
 
 } // namespace v1
