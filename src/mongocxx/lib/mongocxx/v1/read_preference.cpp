@@ -89,7 +89,7 @@ bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view> read_preference::hedge(
 
 read_preference& read_preference::mode(read_mode v) {
     switch (v) {
-        default:
+        default: // Precondition violation: undocumented but well-defined behavior.
         case read_mode::k_primary:
             libmongoc::read_prefs_set_mode(to_mongoc(_impl), MONGOC_READ_PRIMARY);
             break;

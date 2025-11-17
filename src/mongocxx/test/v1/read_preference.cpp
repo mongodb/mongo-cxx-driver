@@ -121,8 +121,8 @@ TEST_CASE("mode", "[mongocxx][v1][read_preference]") {
             {mode::k_secondary, mode::k_secondary},
             {mode::k_secondary_preferred, mode::k_secondary_preferred},
             {mode::k_nearest, mode::k_nearest},
-            {static_cast<mode>(-1), mode::k_primary},
-            {static_cast<mode>(5), mode::k_primary},
+            {static_cast<mode>(-1), mode::k_primary}, // Undocumented behavior.
+            {static_cast<mode>(5), mode::k_primary},  // Undocumented behavior.
         }));
 
     CAPTURE(input);

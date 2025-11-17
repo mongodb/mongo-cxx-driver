@@ -149,7 +149,6 @@ class read_preference {
     /// - @ref read_mode::k_secondary
     /// - @ref read_mode::k_secondary_preferred
     /// - @ref read_mode::k_nearest
-    /// Any unsupported value is interpreted as @ref read_mode::k_primary.
     ///
     /// @see
     /// - [Read Preference Use Cases](https://www.mongodb.com/docs/manual/core/read-preference-use-cases/)
