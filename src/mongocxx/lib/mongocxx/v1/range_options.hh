@@ -12,25 +12,24 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <mongocxx/options/range.hpp>
+#pragma once
+
+#include <mongocxx/v1/range_options.hpp> // IWYU pragma: export
 
 //
 
-#include <mongocxx/v1/range_options.hh>
+#include <bsoncxx/v1/types/value-fwd.hpp>
 
-#include <utility>
+#include <bsoncxx/v1/stdx/optional.hpp>
 
 namespace mongocxx {
-namespace v_noabi {
-namespace options {
+namespace v1 {
 
-range::range(v1::range_options opts)
-    : _min{std::move(v1::range_options::internal::min(opts))},
-      _max{std::move(v1::range_options::internal::max(opts))},
-      _sparsity{opts.sparsity()},
-      _trim_factor{opts.trim_factor()},
-      _precision{opts.precision()} {}
+class range_options::internal {
+   public:
+    static bsoncxx::v1::stdx::optional<bsoncxx::v1::types::value>& min(range_options& self);
+    static bsoncxx::v1::stdx::optional<bsoncxx::v1::types::value>& max(range_options& self);
+};
 
-} // namespace options
-} // namespace v_noabi
+} // namespace v1
 } // namespace mongocxx

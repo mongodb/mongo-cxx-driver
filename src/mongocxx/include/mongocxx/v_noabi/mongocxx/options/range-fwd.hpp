@@ -14,6 +14,8 @@
 
 #pragma once
 
+#include <mongocxx/v1/range_options-fwd.hpp>
+
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
@@ -29,7 +31,7 @@ class range;
 namespace mongocxx {
 namespace options {
 
-using ::mongocxx::v_noabi::options::range;
+using v_noabi::options::range;
 
 } // namespace options
 } // namespace mongocxx
@@ -39,4 +41,7 @@ using ::mongocxx::v_noabi::options::range;
 ///
 /// @file
 /// Declares @ref mongocxx::v_noabi::options::range.
+///
+/// @par Includes
+/// - @ref mongocxx/v1/range_options.hpp
 ///
