@@ -310,7 +310,7 @@ TEST_CASE("throw_exception", "[mongocxx][v1][error][exception]") {
                     throw_exception(error, std::move(raw));
                 } catch (v1::server_error const& ex) {
                     CAPTURE(ex);
-                    FAIL("unexpected v1::server_error");
+                    FAIL("should not reach this point");
                     return {};
                 } catch (v1::exception const& ex) {
                     return ex.code();
