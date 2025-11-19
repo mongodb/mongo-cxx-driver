@@ -308,6 +308,10 @@ TEST_CASE("throw_exception", "[mongocxx][v1][error][exception]") {
                 try {
                     bson_error_t const error{0, 123, "abc", MONGOC_ERROR_CATEGORY_SERVER};
                     throw_exception(error, std::move(raw));
+                } catch (v1::server_error const& ex) {
+                    CAPTURE(ex);
+                    FAIL("unexpected v1::server_error");
+                    return {};
                 } catch (v1::exception const& ex) {
                     return ex.code();
                 }
