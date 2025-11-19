@@ -6,7 +6,7 @@ from shrub.v3.evg_task import EvgTask, EvgTaskRef
 
 from config_generator.components.funcs.install_c_driver import InstallCDriver
 from config_generator.components.funcs.setup import Setup
-from config_generator.etc.distros import compiler_to_vars, find_small_distro
+from config_generator.etc.distros import compiler_to_vars, find_large_distro
 from config_generator.etc.function import Function
 from config_generator.etc.utils import bash_exec
 
@@ -40,8 +40,8 @@ def functions():
 
 
 def tasks():
-    distro_name = 'rhel80'
-    distro = find_small_distro(distro_name)
+    distro_name = 'rhel9-latest'
+    distro = find_large_distro(distro_name)
 
     return [
         EvgTask(

@@ -14,34 +14,25 @@
 
 #pragma once
 
-#include <mongocxx/v1/tls-fwd.hpp>
+#include <mongocxx/v1/tls.hpp> // IWYU pragma: export
 
-#include <mongocxx/config/prelude.hpp>
+//
 
-namespace mongocxx {
-namespace v_noabi {
-namespace options {
+#include <bsoncxx/v1/stdx/optional.hpp>
 
-class tls;
-
-} // namespace options
-} // namespace v_noabi
-} // namespace mongocxx
+#include <string>
 
 namespace mongocxx {
-namespace options {
+namespace v1 {
 
-using v_noabi::options::tls;
+class tls::internal {
+   public:
+    static bsoncxx::v1::stdx::optional<std::string>& pem_file(tls& self);
+    static bsoncxx::v1::stdx::optional<std::string>& pem_password(tls& self);
+    static bsoncxx::v1::stdx::optional<std::string>& ca_file(tls& self);
+    static bsoncxx::v1::stdx::optional<std::string>& ca_dir(tls& self);
+    static bsoncxx::v1::stdx::optional<std::string>& crl_file(tls& self);
+};
 
-} // namespace options
+} // namespace v1
 } // namespace mongocxx
-
-#include <mongocxx/config/postlude.hpp>
-
-///
-/// @file
-/// Declares @ref mongocxx::v_noabi::options::tls.
-///
-/// @par Includes
-/// - @ref mongocxx/v1/tls-fwd.hpp
-///

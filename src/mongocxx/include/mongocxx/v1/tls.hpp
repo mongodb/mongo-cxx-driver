@@ -151,6 +151,8 @@ class tls {
     /// Return the current "weak_cert_validation" field.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bool>) allow_invalid_certificates() const;
+
+    class internal;
 };
 
 } // namespace v1
