@@ -407,7 +407,7 @@ TEST_CASE("throw_exception", "[mongocxx][v1][error][exception]") {
             } catch (v1::exception const& ex) {
                 auto const& code = ex.code();
 
-                // Translate sasl error codes from mongoc into MONGOC_ERROR_BSON_INVALID.
+                // Translate sasl error codes from mongoc into MONGOC_ERROR_CLIENT_AUTHENTICATE.
                 CHECK(code == mongocxx::v1::source_errc::mongoc);
                 CHECK(code == mongocxx::v1::type_errc::runtime_error);
                 CHECK(code.value() == MONGOC_ERROR_CLIENT_AUTHENTICATE);
