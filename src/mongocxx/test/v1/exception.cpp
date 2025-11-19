@@ -147,8 +147,8 @@ TEST_CASE("make", "[mongocxx][v1][error][exception]") {
             CHECK(ec == bsoncxx::v1::type_errc::runtime_error);
 
             // Not from mongocxx.
-            CHECK(ec != v1::source_errc::mongocxx);
-            CHECK(ec != v1::type_errc::runtime_error);
+            CHECK(ec != mongocxx::v1::source_errc::mongocxx);
+            CHECK(ec != mongocxx::v1::type_errc::runtime_error);
         }
     }
 
@@ -226,8 +226,8 @@ TEST_CASE("throw_exception", "[mongocxx][v1][error][exception]") {
                 auto const& code = ex.code();
 
                 // Translate bson error codes from mongoc into MONGOC_ERROR_BSON_INVALID.
-                CHECK(code == source_errc::mongoc);
-                CHECK(code == v1::type_errc::runtime_error);
+                CHECK(code == mongocxx::v1::source_errc::mongoc);
+                CHECK(code == mongocxx::v1::type_errc::runtime_error);
                 CHECK(code.value() == MONGOC_ERROR_BSON_INVALID);
                 CHECK(MONGOC_ERROR_BSON_INVALID == 18);
                 CHECK(code.message() == "mongoc_error_code_t:18");
@@ -257,8 +257,8 @@ TEST_CASE("throw_exception", "[mongocxx][v1][error][exception]") {
             } catch (v1::exception const& ex) {
                 auto const& code = ex.code();
 
-                CHECK(code == source_errc::mongoc);
-                CHECK(code == v1::type_errc::runtime_error);
+                CHECK(code == mongocxx::v1::source_errc::mongoc);
+                CHECK(code == mongocxx::v1::type_errc::runtime_error);
                 CHECK(code.value() == 123);
                 CHECK(code.message() == "mongoc_error_code_t:123");
 
@@ -285,8 +285,8 @@ TEST_CASE("throw_exception", "[mongocxx][v1][error][exception]") {
                 } catch (v1::exception const& ex) {
                     auto const& code = ex.code();
 
-                    CHECK(code == source_errc::server);
-                    CHECK(code == v1::type_errc::runtime_error);
+                    CHECK(code == mongocxx::v1::source_errc::server);
+                    CHECK(code == mongocxx::v1::type_errc::runtime_error);
                     CHECK(code.message() == "server error code 123");
 
                     CHECK_THAT(ex.what(), Catch::Matchers::ContainsSubstring("abc"));
@@ -321,24 +321,24 @@ TEST_CASE("throw_exception", "[mongocxx][v1][error][exception]") {
                 auto const code = op(bsoncxx::v1::document::value{nullptr});
 
                 CHECK(code.message() == "server error code 123");
-                CHECK(code == source_errc::server);
-                CHECK(code == type_errc::runtime_error);
+                CHECK(code == mongocxx::v1::source_errc::server);
+                CHECK(code == mongocxx::v1::type_errc::runtime_error);
             }
 
             {
                 auto const code = op(scoped_bson{}.value());
 
                 CHECK(code.message() == "server error code 123");
-                CHECK(code == source_errc::server);
-                CHECK(code == type_errc::runtime_error);
+                CHECK(code == mongocxx::v1::source_errc::server);
+                CHECK(code == mongocxx::v1::type_errc::runtime_error);
             }
 
             {
                 auto const code = op(scoped_bson{R"({"x": 1})"}.value());
 
                 CHECK(code.message() == "server error code 123");
-                CHECK(code == source_errc::server);
-                CHECK(code == type_errc::runtime_error);
+                CHECK(code == mongocxx::v1::source_errc::server);
+                CHECK(code == mongocxx::v1::type_errc::runtime_error);
             }
         }
 
@@ -350,8 +350,8 @@ TEST_CASE("throw_exception", "[mongocxx][v1][error][exception]") {
                 } catch (v1::server_error const& ex) {
                     auto const& code = ex.code();
 
-                    CHECK(code == source_errc::server);
-                    CHECK(code == type_errc::runtime_error);
+                    CHECK(code == mongocxx::v1::source_errc::server);
+                    CHECK(code == mongocxx::v1::type_errc::runtime_error);
                     CHECK(code.value() == 456);
                     CHECK(code.message() == "server error code 456");
                     CHECK_THAT(ex.what(), Catch::Matchers::ContainsSubstring("abc"));
@@ -380,8 +380,8 @@ TEST_CASE("throw_exception", "[mongocxx][v1][error][exception]") {
             } catch (v1::exception const& ex) {
                 auto const& code = ex.code();
 
-                CHECK(code == source_errc::mongocrypt);
-                CHECK(code == type_errc::runtime_error);
+                CHECK(code == mongocxx::v1::source_errc::mongocrypt);
+                CHECK(code == mongocxx::v1::type_errc::runtime_error);
                 CHECK(code.value() == 123);
                 CHECK(code.message() == "mongocrypt_status_t:123");
 
@@ -408,8 +408,8 @@ TEST_CASE("throw_exception", "[mongocxx][v1][error][exception]") {
                 auto const& code = ex.code();
 
                 // Translate sasl error codes from mongoc into MONGOC_ERROR_BSON_INVALID.
-                CHECK(code == source_errc::mongoc);
-                CHECK(code == type_errc::runtime_error);
+                CHECK(code == mongocxx::v1::source_errc::mongoc);
+                CHECK(code == mongocxx::v1::type_errc::runtime_error);
                 CHECK(code.value() == MONGOC_ERROR_CLIENT_AUTHENTICATE);
                 CHECK(MONGOC_ERROR_CLIENT_AUTHENTICATE == 11);
                 CHECK(code.message() == "mongoc_error_code_t:11");
@@ -439,13 +439,13 @@ TEST_CASE("throw_exception", "[mongocxx][v1][error][exception]") {
             } catch (v1::exception const& ex) {
                 auto const& code = ex.code();
 
-                CHECK(code != source_errc::zero);
-                CHECK(code != source_errc::mongocxx);
-                CHECK(code != source_errc::mongoc);
-                CHECK(code != source_errc::mongocrypt);
-                CHECK(code != source_errc::server);
+                CHECK(code != mongocxx::v1::source_errc::zero);
+                CHECK(code != mongocxx::v1::source_errc::mongocxx);
+                CHECK(code != mongocxx::v1::source_errc::mongoc);
+                CHECK(code != mongocxx::v1::source_errc::mongocrypt);
+                CHECK(code != mongocxx::v1::source_errc::server);
 
-                CHECK(code == type_errc::runtime_error);
+                CHECK(code == mongocxx::v1::type_errc::runtime_error);
 
                 CHECK(code.value() == 123);
                 CHECK(code.message() == "unknown:123");
