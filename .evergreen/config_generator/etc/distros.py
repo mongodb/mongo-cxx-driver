@@ -63,6 +63,7 @@ MACOS_ARM64_DISTROS = [
 ]
 
 RHEL_DISTROS = [
+    *ls_distro(name='rhel9-latest', os='rhel', os_type='linux', os_ver='9'),
     *ls_distro(name='rhel7.9', os='rhel', os_type='linux', os_ver='7.9'),
     *ls_distro(name='rhel80', os='rhel', os_type='linux', os_ver='8.0'),
     *ls_distro(name='rhel84', os='rhel', os_type='linux', os_ver='8.4'),
@@ -72,7 +73,6 @@ RHEL_DISTROS = [
     *ls_distro(name='rhel93', os='rhel', os_type='linux', os_ver='9.3'),
     *ls_distro(name='rhel94', os='rhel', os_type='linux', os_ver='9.4'),
     *ls_distro(name='rhel95', os='rhel', os_type='linux', os_ver='9.5'),
-    *ls_distro(name='rhel92', os='rhel', os_type='linux', os_ver='9.0'),
 ]
 
 RHEL_ARM64_DISTROS = [

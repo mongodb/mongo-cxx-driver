@@ -14,9 +14,26 @@
 
 #include <mongocxx/options/tls.hpp>
 
+//
+
+#include <mongocxx/v1/tls.hh>
+
+#include <utility>
+
+#include <bsoncxx/stdx/optional.hpp>
+#include <bsoncxx/string/view_or_value.hpp>
+
 namespace mongocxx {
 namespace v_noabi {
 namespace options {
+
+tls::tls(v1::tls v)
+    : _pem_file{std::move(v1::tls::internal::pem_file(v))},
+      _pem_password{std::move(v1::tls::internal::pem_password(v))},
+      _ca_file{std::move(v1::tls::internal::ca_file(v))},
+      _ca_dir{std::move(v1::tls::internal::ca_dir(v))},
+      _crl_file{std::move(v1::tls::internal::crl_file(v))},
+      _allow_invalid_certificates{v.allow_invalid_certificates()} {}
 
 tls& tls::pem_file(bsoncxx::v_noabi::string::view_or_value pem_file) {
     _pem_file = std::move(pem_file);

@@ -25,15 +25,16 @@
 #include <mongocxx/options/client_encryption.hpp> // IWYU pragma: export
 #include <mongocxx/result/bulk_write.hpp>
 
+#include <mongocxx/client.hh>
+#include <mongocxx/cursor.hh>
+#include <mongocxx/mongoc_error.hh>
+#include <mongocxx/options/data_key.hh>
 #include <mongocxx/scoped_bson.hh>
 
 #include <bsoncxx/private/bson.hh>
 #include <bsoncxx/private/helpers.hh>
 
-#include <mongocxx/client.hh>
-#include <mongocxx/cursor.hh>
 #include <mongocxx/private/mongoc.hh>
-#include <mongocxx/mongoc_error.hh>
 #include <mongocxx/private/scoped_bson_value.hh>
 
 namespace mongocxx {
@@ -74,24 +75,16 @@ class client_encryption::impl {
 
     bsoncxx::v_noabi::types::bson_value::value create_data_key(
         std::string kms_provider,
-        options::data_key const& opts) {
-        using opts_type = mongoc_client_encryption_datakey_opts_t;
-
-        struct opts_deleter {
-            void operator()(opts_type* ptr) noexcept {
-                libmongoc::client_encryption_datakey_opts_destroy(ptr);
-            }
-        };
-
-        using datakey_opts_ptr = std::unique_ptr<opts_type, opts_deleter>;
-
-        auto const datakey_opts = datakey_opts_ptr(static_cast<opts_type*>(opts.convert()));
-
+        v_noabi::options::data_key const& opts) {
         detail::scoped_bson_value keyid;
         bson_error_t error;
 
         if (!libmongoc::client_encryption_create_datakey(
-                _client_encryption.get(), kms_provider.c_str(), datakey_opts.get(), keyid.value_for_init(), &error)) {
+                _client_encryption.get(),
+                kms_provider.c_str(),
+                v_noabi::options::data_key::internal::to_mongoc(opts).get(),
+                keyid.value_for_init(),
+                &error)) {
             throw_exception<operation_exception>(error);
         }
 
