@@ -19,7 +19,9 @@
 #include <bsoncxx/v1/document/value.hpp>
 #include <bsoncxx/v1/stdx/optional.hpp>
 
+#include <algorithm>
 #include <cstdint>
+#include <iterator>
 #include <memory>
 #include <string>
 #include <vector>
@@ -127,9 +129,13 @@ data_key_options::internal::to_mongoc(data_key_options const& self) {
         std::vector<char*> names;
 
         names.reserve(_impl._key_alt_names.size());
-        for (auto const& name : _impl._key_alt_names) {
-            names.push_back(const_cast<char*>(name.c_str())); // For copy only.
-        }
+        std::transform(
+            _impl._key_alt_names.begin(),
+            _impl._key_alt_names.end(),
+            std::back_inserter(names),
+            [](std::string const& name) {
+                return const_cast<char*>(name.c_str()); // For copy only.
+            });
 
         libmongoc::client_encryption_datakey_opts_set_keyaltnames(
             opts, names.data(), static_cast<std::uint32_t>(_impl._key_alt_names.size()));
