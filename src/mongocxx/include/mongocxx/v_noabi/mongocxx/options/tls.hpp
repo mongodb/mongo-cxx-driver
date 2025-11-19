@@ -14,9 +14,15 @@
 
 #pragma once
 
-#include <string> // IWYU pragma: keep: backward compatibility, to be removed.
-
 #include <mongocxx/options/tls-fwd.hpp> // IWYU pragma: export
+
+//
+
+#include <mongocxx/v1/tls.hpp> // IWYU pragma: export
+
+#include <memory> // IWYU pragma: keep: backward compatibility, to be removed.
+#include <string>
+#include <utility>
 
 #include <bsoncxx/stdx/optional.hpp>
 #include <bsoncxx/string/view_or_value.hpp>
@@ -32,6 +38,49 @@ namespace options {
 ///
 class tls {
    public:
+    ///
+    /// Default initialization.
+    ///
+    tls() = default;
+
+    ///
+    /// Construct with the @ref mongocxx::v1 equivalent.
+    ///
+    /* explicit(false) */ MONGOCXX_ABI_EXPORT_CDECL() tls(v1::tls v);
+
+    ///
+    /// Convert to the @ref mongocxx::v1 equivalent.
+    ///
+    explicit operator v1::tls() const {
+        v1::tls ret;
+
+        if (_pem_file) {
+            ret.pem_file(std::string{_pem_file->view()});
+        }
+
+        if (_pem_password) {
+            ret.pem_password(std::string{_pem_password->view()});
+        }
+
+        if (_ca_file) {
+            ret.ca_file(std::string{_ca_file->view()});
+        }
+
+        if (_ca_dir) {
+            ret.ca_dir(std::string{_ca_dir->view()});
+        }
+
+        if (_crl_file) {
+            ret.crl_file(std::string{_crl_file->view()});
+        }
+
+        if (_allow_invalid_certificates) {
+            ret.allow_invalid_certificates(*_allow_invalid_certificates);
+        }
+
+        return ret;
+    }
+
     ///
     /// The path to the .pem file containing a public key certificate and its associated private
     /// key.
@@ -168,9 +217,32 @@ class tls {
 } // namespace v_noabi
 } // namespace mongocxx
 
+namespace mongocxx {
+namespace v_noabi {
+
+///
+/// Convert to the @ref mongocxx::v_noabi equivalent of `v`.
+///
+inline v_noabi::options::tls from_v1(v1::tls v) {
+    return {std::move(v)};
+}
+
+///
+/// Convert to the @ref mongocxx::v1 equivalent of `v`.
+///
+inline v1::tls to_v1(v_noabi::options::tls v) {
+    return v1::tls{std::move(v)};
+}
+
+} // namespace v_noabi
+} // namespace mongocxx
+
 #include <mongocxx/config/postlude.hpp>
 
 ///
 /// @file
 /// Provides @ref mongocxx::v_noabi::options::tls.
+///
+/// @par Includes
+/// - @ref mongocxx/v1/tls.hpp
 ///
