@@ -23,13 +23,11 @@
 
 #include <cstddef>
 #include <cstdint>
-#include <cstring>
-#include <string>
-#include <system_error>
 
 #include <bsoncxx/test/stringify.hh>
 #include <bsoncxx/test/system_error.hh>
 
+#include <catch2/catch_test_macros.hpp>
 #include <catch2/matchers/catch_matchers_string.hpp>
 
 namespace {
@@ -353,33 +351,3 @@ TEST_CASE("StringMaker", "[bsoncxx][test][v1][array][view]") {
 }
 
 } // namespace
-
-std::string Catch::StringMaker<bsoncxx::v1::array::view>::convert(bsoncxx::v1::array::view const& value) try {
-    if (!value) {
-        return "invalid";
-    }
-
-    auto const end = value.end();
-    auto iter = value.begin();
-
-    if (iter == end) {
-        return "[]";
-    }
-
-    std::string res;
-    res += '[';
-    res += bsoncxx::test::stringify(iter->type_view());
-    for (++iter; iter != end; ++iter) {
-        res += ", ";
-        res += bsoncxx::test::stringify(iter->type_view());
-    }
-    res += ']';
-    return res;
-} catch (bsoncxx::v1::exception const& ex) {
-    WARN("exception during stringification: " << ex.what());
-    if (ex.code() == code::invalid_data) {
-        return "invalid";
-    } else {
-        throw;
-    }
-}

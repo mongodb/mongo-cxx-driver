@@ -11,6 +11,7 @@ if [[ "${distro_id:?}" != rhel* ]]; then
   exit 1
 fi
 
+# Required to execute clang-tidy commands in parallel.
 command -V parallel >/dev/null
 
 # shellcheck source=/dev/null

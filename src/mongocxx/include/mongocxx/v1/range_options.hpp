@@ -149,6 +149,8 @@ class range_options {
     ///
     MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<std::int32_t>)
     precision() const;
+
+    class internal;
 };
 
 } // namespace v1

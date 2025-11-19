@@ -14,19 +14,22 @@
 
 #pragma once
 
-#include <mongocxx/read_preference.hpp> // IWYU pragma: export
+#include <mongocxx/v1/read_concern.hpp> // IWYU pragma: export
 
 //
 
+#include <mongocxx/private/export.hh>
 #include <mongocxx/private/mongoc.hh>
 
 namespace mongocxx {
-namespace v_noabi {
+namespace v1 {
 
-class read_preference::internal {
+class read_concern::internal {
    public:
-    static mongoc_read_prefs_t const* as_mongoc(read_preference const& self);
+    static MONGOCXX_ABI_EXPORT_CDECL_TESTING(read_concern) make(mongoc_read_concern_t* rc);
+
+    static mongoc_read_concern_t const* as_mongoc(read_concern const& self);
 };
 
-} // namespace v_noabi
+} // namespace v1
 } // namespace mongocxx

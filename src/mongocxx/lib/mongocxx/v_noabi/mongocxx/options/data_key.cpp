@@ -12,71 +12,33 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <mongocxx/options/data_key.hpp>
+#include <mongocxx/options/data_key.hh>
 
-#include <mongocxx/scoped_bson.hh>
+//
 
-#include <mongocxx/private/mongoc.hh>
+#include <mongocxx/v1/data_key_options.hh>
+
+#include <utility>
+
+#include <bsoncxx/document/value.hpp>
 
 namespace mongocxx {
 namespace v_noabi {
 namespace options {
 
-data_key& data_key::master_key(bsoncxx::v_noabi::document::view_or_value master_key) {
-    _master_key = std::move(master_key);
-    return *this;
-}
+data_key::data_key(v1::data_key_options key)
+    : _master_key{[&]() -> decltype(_master_key) {
+          decltype(_master_key) ret;
+          if (auto& opt = v1::data_key_options::internal::master_key(key)) {
+              ret = bsoncxx::v_noabi::from_v1(std::move(*opt));
+          }
+          return ret;
+      }()},
+      _key_alt_names{std::move(v1::data_key_options::internal::key_alt_names(key))},
+      _key_material{std::move(v1::data_key_options::internal::key_material(key))} {}
 
-bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const& data_key::master_key() const {
-    return _master_key;
-}
-
-data_key& data_key::key_alt_names(std::vector<std::string> key_alt_names) {
-    _key_alt_names = std::move(key_alt_names);
-
-    return *this;
-}
-
-std::vector<std::string> const& data_key::key_alt_names() const {
-    return _key_alt_names;
-}
-
-void* data_key::convert() const {
-    mongoc_client_encryption_datakey_opts_t* opts_t = libmongoc::client_encryption_datakey_opts_new();
-
-    if (_master_key) {
-        libmongoc::client_encryption_datakey_opts_set_masterkey(opts_t, to_scoped_bson_view(_master_key->view()));
-    }
-
-    if (!_key_alt_names.empty()) {
-        auto altnames = _key_alt_names;
-        auto names = static_cast<char**>(bson_malloc(sizeof(char*) * altnames.size()));
-        uint32_t i = 0;
-
-        for (auto&& name : altnames) {
-            names[i++] = const_cast<char*>(name.data());
-        }
-
-        libmongoc::client_encryption_datakey_opts_set_keyaltnames(opts_t, names, i);
-
-        bson_free(names);
-    }
-
-    if (_key_material) {
-        uint32_t size = static_cast<uint32_t>(_key_material->size());
-        libmongoc::client_encryption_datakey_opts_set_keymaterial(opts_t, _key_material->data(), size);
-    }
-
-    return opts_t;
-}
-
-data_key& data_key::key_material(data_key::key_material_type key_material) {
-    _key_material = std::move(key_material);
-    return *this;
-}
-
-bsoncxx::v_noabi::stdx::optional<data_key::key_material_type> const& data_key::key_material() {
-    return _key_material;
+v1::data_key_options::internal::unique_ptr_type data_key::internal::to_mongoc(data_key const& self) {
+    return v1::data_key_options::internal::to_mongoc(to_v1(self));
 }
 
 } // namespace options

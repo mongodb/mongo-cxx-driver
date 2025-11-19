@@ -14,19 +14,18 @@
 
 #pragma once
 
-#include <mongocxx/read_preference.hpp> // IWYU pragma: export
+#include <mongocxx/v1/read_concern.hpp> // IWYU pragma: export
 
 //
 
-#include <mongocxx/private/mongoc.hh>
+#include <catch2/catch_tostring.hpp>
 
-namespace mongocxx {
-namespace v_noabi {
-
-class read_preference::internal {
-   public:
-    static mongoc_read_prefs_t const* as_mongoc(read_preference const& self);
-};
-
-} // namespace v_noabi
-} // namespace mongocxx
+CATCH_REGISTER_ENUM(
+    mongocxx::v1::read_concern::level,
+    mongocxx::v1::read_concern::level::k_local,
+    mongocxx::v1::read_concern::level::k_majority,
+    mongocxx::v1::read_concern::level::k_linearizable,
+    mongocxx::v1::read_concern::level::k_server_default,
+    mongocxx::v1::read_concern::level::k_unknown,
+    mongocxx::v1::read_concern::level::k_available,
+    mongocxx::v1::read_concern::level::k_snapshot)

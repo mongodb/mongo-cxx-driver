@@ -127,7 +127,9 @@ class data_key_options {
     ///
     /// Return the current "keyMaterial" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<key_material_type>) key_material();
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<key_material_type>) key_material() const;
+
+    class internal;
 };
 
 } // namespace v1

@@ -12,4 +12,147 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <mongocxx/v1/tls.hpp>
+#include <mongocxx/v1/tls.hh>
+
+//
+
+#include <bsoncxx/v1/stdx/optional.hpp>
+#include <bsoncxx/v1/stdx/string_view.hpp>
+
+#include <string>
+
+#include <mongocxx/private/utility.hh>
+
+namespace mongocxx {
+namespace v1 {
+
+class tls::impl {
+   public:
+    bsoncxx::v1::stdx::optional<std::string> _pem_file;
+    bsoncxx::v1::stdx::optional<std::string> _pem_password;
+    bsoncxx::v1::stdx::optional<std::string> _ca_file;
+    bsoncxx::v1::stdx::optional<std::string> _ca_dir;
+    bsoncxx::v1::stdx::optional<std::string> _crl_file;
+    bsoncxx::v1::stdx::optional<bool> _allow_invalid_certificates;
+
+    static impl const& with(tls const& self) {
+        return *static_cast<impl const*>(self._impl);
+    }
+
+    static impl const* with(tls const* self) {
+        return static_cast<impl const*>(self->_impl);
+    }
+
+    static impl& with(tls& self) {
+        return *static_cast<impl*>(self._impl);
+    }
+
+    static impl* with(tls* self) {
+        return static_cast<impl*>(self->_impl);
+    }
+
+    static impl* with(void* ptr) {
+        return static_cast<impl*>(ptr);
+    }
+};
+
+tls::~tls() {
+    delete impl::with(this);
+}
+
+tls::tls(tls&& other) noexcept : _impl{exchange(other._impl, nullptr)} {}
+
+tls& tls::operator=(tls&& other) noexcept {
+    if (this != &other) {
+        delete impl::with(exchange(_impl, exchange(other._impl, nullptr)));
+    }
+    return *this;
+}
+
+tls::tls(tls const& other) : _impl{new impl{impl::with(other)}} {}
+
+tls& tls::operator=(tls const& other) {
+    if (this != &other) {
+        delete impl::with(exchange(_impl, new impl{impl::with(other)}));
+    }
+    return *this;
+}
+
+tls::tls() : _impl{new impl{}} {}
+
+tls& tls::pem_file(std::string v) {
+    impl::with(this)->_pem_file = std::move(v);
+    return *this;
+}
+
+bsoncxx::v1::stdx::optional<bsoncxx::v1::stdx::string_view> tls::pem_file() const {
+    return impl::with(this)->_pem_file;
+}
+
+tls& tls::pem_password(std::string v) {
+    impl::with(this)->_pem_password = std::move(v);
+    return *this;
+}
+
+bsoncxx::v1::stdx::optional<bsoncxx::v1::stdx::string_view> tls::pem_password() const {
+    return impl::with(this)->_pem_password;
+}
+
+tls& tls::ca_file(std::string v) {
+    impl::with(this)->_ca_file = std::move(v);
+    return *this;
+}
+
+bsoncxx::v1::stdx::optional<bsoncxx::v1::stdx::string_view> tls::ca_file() const {
+    return impl::with(this)->_ca_file;
+}
+
+tls& tls::ca_dir(std::string v) {
+    impl::with(this)->_ca_dir = std::move(v);
+    return *this;
+}
+
+bsoncxx::v1::stdx::optional<bsoncxx::v1::stdx::string_view> tls::ca_dir() const {
+    return impl::with(this)->_ca_dir;
+}
+
+tls& tls::crl_file(std::string v) {
+    impl::with(this)->_crl_file = std::move(v);
+    return *this;
+}
+
+bsoncxx::v1::stdx::optional<bsoncxx::v1::stdx::string_view> tls::crl_file() const {
+    return impl::with(this)->_crl_file;
+}
+
+tls& tls::allow_invalid_certificates(bool v) {
+    impl::with(this)->_allow_invalid_certificates = v;
+    return *this;
+}
+
+bsoncxx::v1::stdx::optional<bool> tls::allow_invalid_certificates() const {
+    return impl::with(this)->_allow_invalid_certificates;
+}
+
+bsoncxx::v1::stdx::optional<std::string>& tls::internal::pem_file(tls& self) {
+    return impl::with(self)._pem_file;
+}
+
+bsoncxx::v1::stdx::optional<std::string>& tls::internal::pem_password(tls& self) {
+    return impl::with(self)._pem_password;
+}
+
+bsoncxx::v1::stdx::optional<std::string>& tls::internal::ca_file(tls& self) {
+    return impl::with(self)._ca_file;
+}
+
+bsoncxx::v1::stdx::optional<std::string>& tls::internal::ca_dir(tls& self) {
+    return impl::with(self)._ca_dir;
+}
+
+bsoncxx::v1::stdx::optional<std::string>& tls::internal::crl_file(tls& self) {
+    return impl::with(self)._crl_file;
+}
+
+} // namespace v1
+} // namespace mongocxx

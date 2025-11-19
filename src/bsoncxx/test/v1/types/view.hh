@@ -22,7 +22,8 @@
 #include <bsoncxx/test/v1/decimal128.hh>       // StringMaker<bsoncxx::v1::decimal128>
 #include <bsoncxx/test/v1/document/view.hh>    // StringMaker<bsoncxx::v1::document::view>
 #include <bsoncxx/test/v1/oid.hh>              // StringMaker<bsoncxx::v1::oid>
-#include <bsoncxx/test/v1/stdx/string_view.hh> // StringMaker<bsoncxx::v1::stdx::string_view>
+#include <bsoncxx/test/v1/stdx/string_view.hh>
+#include <bsoncxx/test/v1/types/id.hh>         // StringMaker<bsoncxx::v1::types::id>
 
 #include <chrono>
 #include <cstdint>

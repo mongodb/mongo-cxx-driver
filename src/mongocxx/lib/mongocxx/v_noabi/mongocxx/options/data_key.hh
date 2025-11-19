@@ -14,19 +14,21 @@
 
 #pragma once
 
-#include <mongocxx/read_preference.hpp> // IWYU pragma: export
+#include <mongocxx/options/data_key.hpp> // IWYU pragma: export
 
 //
 
-#include <mongocxx/private/mongoc.hh>
+#include <mongocxx/v1/data_key_options.hh>
 
 namespace mongocxx {
 namespace v_noabi {
+namespace options {
 
-class read_preference::internal {
+class data_key::internal {
    public:
-    static mongoc_read_prefs_t const* as_mongoc(read_preference const& self);
+    static v1::data_key_options::internal::unique_ptr_type to_mongoc(data_key const& self);
 };
 
+} // namespace options
 } // namespace v_noabi
 } // namespace mongocxx

@@ -14,19 +14,25 @@
 
 #pragma once
 
-#include <mongocxx/read_preference.hpp> // IWYU pragma: export
+#include <mongocxx/v1/tls.hpp> // IWYU pragma: export
 
 //
 
-#include <mongocxx/private/mongoc.hh>
+#include <bsoncxx/v1/stdx/optional.hpp>
+
+#include <string>
 
 namespace mongocxx {
-namespace v_noabi {
+namespace v1 {
 
-class read_preference::internal {
+class tls::internal {
    public:
-    static mongoc_read_prefs_t const* as_mongoc(read_preference const& self);
+    static bsoncxx::v1::stdx::optional<std::string>& pem_file(tls& self);
+    static bsoncxx::v1::stdx::optional<std::string>& pem_password(tls& self);
+    static bsoncxx::v1::stdx::optional<std::string>& ca_file(tls& self);
+    static bsoncxx::v1::stdx::optional<std::string>& ca_dir(tls& self);
+    static bsoncxx::v1::stdx::optional<std::string>& crl_file(tls& self);
 };
 
-} // namespace v_noabi
+} // namespace v1
 } // namespace mongocxx

@@ -14,19 +14,22 @@
 
 #pragma once
 
-#include <mongocxx/read_preference.hpp> // IWYU pragma: export
+#include <mongocxx/v1/range_options.hpp> // IWYU pragma: export
 
 //
 
-#include <mongocxx/private/mongoc.hh>
+#include <bsoncxx/v1/types/value-fwd.hpp>
+
+#include <bsoncxx/v1/stdx/optional.hpp>
 
 namespace mongocxx {
-namespace v_noabi {
+namespace v1 {
 
-class read_preference::internal {
+class range_options::internal {
    public:
-    static mongoc_read_prefs_t const* as_mongoc(read_preference const& self);
+    static bsoncxx::v1::stdx::optional<bsoncxx::v1::types::value>& min(range_options& self);
+    static bsoncxx::v1::stdx::optional<bsoncxx::v1::types::value>& max(range_options& self);
 };
 
-} // namespace v_noabi
+} // namespace v1
 } // namespace mongocxx
