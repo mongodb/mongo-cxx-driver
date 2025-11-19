@@ -105,6 +105,7 @@ set(mongocxx_test_sources_v1
     v1/data_key_options.cpp
     v1/exception.cpp
     v1/logger.cpp
+    v1/range_options.cpp
     v1/read_concern.cpp
     v1/read_preference.cpp
     v1/tls.cpp
