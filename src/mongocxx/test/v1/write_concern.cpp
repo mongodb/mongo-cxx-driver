@@ -20,14 +20,14 @@
 #include <bsoncxx/test/v1/stdx/optional.hh>
 #include <bsoncxx/test/v1/stdx/string_view.hh>
 
+#include <mongocxx/test/private/scoped_bson.hh>
+
 #include <chrono>
 #include <cstdint>
 #include <tuple>
 #include <utility>
 
 #include <bsoncxx/private/bson.hh>
-
-#include <mongocxx/private/scoped_bson.hh>
 
 #include <catch2/catch_test_macros.hpp>
 #include <catch2/generators/catch_generators.hpp>

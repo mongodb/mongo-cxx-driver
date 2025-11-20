@@ -248,8 +248,8 @@ inline v_noabi::options::data_key from_v1(v1::data_key_options v) {
 
 /// Convert to the @ref mongocxx::v1 equivalent of `v`.
 ///
-inline v1::data_key_options to_v1(v_noabi::options::data_key v) {
-    return v1::data_key_options{std::move(v)};
+inline v1::data_key_options to_v1(v_noabi::options::data_key const& v) {
+    return v1::data_key_options{v};
 }
 
 } // namespace v_noabi

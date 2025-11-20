@@ -19,13 +19,13 @@
 #include <bsoncxx/test/v1/document/view.hh>
 #include <bsoncxx/test/v1/stdx/string_view.hh>
 
+#include <mongocxx/test/private/scoped_bson.hh>
+
 #include <chrono>
 #include <tuple>
 #include <utility>
 
 #include <bsoncxx/private/suppress_deprecation_warnings.hh>
-
-#include <mongocxx/private/scoped_bson.hh>
 
 #include <catch2/catch_test_macros.hpp>
 #include <catch2/generators/catch_generators.hpp>
