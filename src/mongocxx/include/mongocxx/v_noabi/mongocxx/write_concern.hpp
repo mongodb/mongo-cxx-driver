@@ -85,9 +85,9 @@ class write_concern {
     /// Convert to the @ref mongocxx::v1 equivalent.
     ///
     /// @par Postconditions:
-    /// - `other` is in an assign-or-destroy-only state.
+    /// - `*this` is in an assign-or-destroy-only state.
     ///
-    /// @warning Invalidates all associated iterators and views.
+    /// @warning Invalidates all associated views.
     ///
     explicit operator v1::write_concern() && {
         return std::move(_wc);
