@@ -14,18 +14,9 @@
 
 #pragma once
 
-#include <bsoncxx/v1/types/value.hpp> // IWYU pragma: export
+#include <mongocxx/private/scoped_bson.hh> // IWYU pragma: export
 
 //
 
-#include <bsoncxx/test/v1/types/view.hh> // IWYU pragma: export
-
-#include <catch2/catch_tostring.hpp>
-
-CATCH_REGISTER_ENUM(
-    bsoncxx::v1::types::value::errc,
-    bsoncxx::v1::types::value::errc::zero,
-    bsoncxx::v1::types::value::errc::invalid_length_u32)
-
-template <>
-struct Catch::StringMaker<bsoncxx::v1::types::value> : StringMaker<bsoncxx::v1::types::view> {};
+#include <bsoncxx/test/v1/array/view.hh>    // IWYU pragma: keep: Catch::StringMaker<bsoncxx::v1::array::view>
+#include <bsoncxx/test/v1/document/view.hh> // IWYU pragma: keep: Catch::StringMaker<bsoncxx::v1::document::view>

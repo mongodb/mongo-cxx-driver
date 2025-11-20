@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <mongocxx/private/scoped_bson.hh>
+#include <mongocxx/test/private/scoped_bson.hh>
 
 //
 
