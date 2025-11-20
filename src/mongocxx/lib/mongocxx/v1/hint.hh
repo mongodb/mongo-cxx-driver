@@ -12,27 +12,26 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <mongocxx/hint.hpp>
+#pragma once
+
+#include <mongocxx/v1/hint.hpp> // IWYU pragma: export
 
 //
 
-#include <mongocxx/v1/hint.hh>
+#include <bsoncxx/v1/document/value-fwd.hpp>
 
-#include <utility>
+#include <bsoncxx/v1/stdx/optional.hpp>
 
-#include <bsoncxx/document/value.hpp>
+#include <string>
 
 namespace mongocxx {
-namespace v_noabi {
+namespace v1 {
 
-hint::hint(v1::hint hint)
-    : _index_doc{[&]() -> decltype(_index_doc) {
-          if (auto& opt = v1::hint::internal::doc(hint)) {
-              return bsoncxx::v_noabi::from_v1(std::move(*opt));
-          }
-          return {};
-      }()},
-      _index_string{std::move(v1::hint::internal::str(hint))} {}
+class hint::internal {
+   public:
+    static bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value>& doc(hint& self);
+    static bsoncxx::v1::stdx::optional<std::string>& str(hint& self);
+};
 
-} // namespace v_noabi
+} // namespace v1
 } // namespace mongocxx

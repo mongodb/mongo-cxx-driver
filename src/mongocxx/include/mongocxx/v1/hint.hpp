@@ -131,7 +131,7 @@ class hint {
     ///
     /// @{
     friend bool operator==(hint const& lhs, hint const& rhs) {
-        return lhs.str() == rhs.str() || lhs.doc() == rhs.doc();
+        return lhs.str() == rhs.str() && lhs.doc() == rhs.doc();
     }
 
     friend bool operator!=(hint const& lhs, hint const& rhs) {
@@ -183,6 +183,8 @@ class hint {
     }
     /// @}
     ///
+
+    class internal;
 };
 
 } // namespace v1
