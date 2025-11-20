@@ -252,6 +252,8 @@ class pipeline {
     /// Append the "$unwind" stage.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(pipeline&) unwind(bsoncxx::v1::stdx::string_view v);
+
+    class internal;
 };
 
 } // namespace v1
