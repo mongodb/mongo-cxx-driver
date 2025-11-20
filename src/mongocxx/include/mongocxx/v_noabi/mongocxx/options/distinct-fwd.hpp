@@ -16,6 +16,8 @@
 
 #include <mongocxx/config/prelude.hpp>
 
+#include <mongocxx/v1/distinct_options-fwd.hpp>
+
 namespace mongocxx {
 namespace v_noabi {
 namespace options {
@@ -29,7 +31,7 @@ class distinct;
 namespace mongocxx {
 namespace options {
 
-using ::mongocxx::v_noabi::options::distinct;
+using v_noabi::options::distinct;
 
 } // namespace options
 } // namespace mongocxx
@@ -39,4 +41,7 @@ using ::mongocxx::v_noabi::options::distinct;
 ///
 /// @file
 /// Declares @ref mongocxx::v_noabi::options::distinct.
+///
+/// @par Includes
+/// - @ref mongocxx/v1/distinct_options-fwd.hpp
 ///
