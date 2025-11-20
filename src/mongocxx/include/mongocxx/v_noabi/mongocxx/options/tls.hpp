@@ -230,8 +230,8 @@ inline v_noabi::options::tls from_v1(v1::tls v) {
 ///
 /// Convert to the @ref mongocxx::v1 equivalent of `v`.
 ///
-inline v1::tls to_v1(v_noabi::options::tls v) {
-    return v1::tls{std::move(v)};
+inline v1::tls to_v1(v_noabi::options::tls const& v) {
+    return v1::tls{v};
 }
 
 } // namespace v_noabi
