@@ -24,6 +24,8 @@
 #include <bsoncxx/test/v1/document/view.hh>
 #include <bsoncxx/test/v1/exception.hh>
 
+#include <mongocxx/test/private/scoped_bson.hh>
+
 #include <cstdint>
 #include <system_error>
 #include <utility>
@@ -31,7 +33,6 @@
 #include <bsoncxx/private/bson.hh>
 
 #include <mongocxx/private/mongoc.hh>
-#include <mongocxx/private/scoped_bson.hh>
 
 #include <catch2/catch_test_macros.hpp>
 #include <catch2/matchers/catch_matchers_string.hpp>

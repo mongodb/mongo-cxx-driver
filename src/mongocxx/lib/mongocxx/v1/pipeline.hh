@@ -14,19 +14,19 @@
 
 #pragma once
 
-#include <mongocxx/pipeline.hpp> // IWYU pragma: export
+#include <mongocxx/v1/pipeline.hpp> // IWYU pragma: export
 
 //
 
 #include <mongocxx/private/scoped_bson.hh>
 
 namespace mongocxx {
-namespace v_noabi {
+namespace v1 {
 
 class pipeline::internal {
    public:
     static scoped_bson const& doc(pipeline const& self);
 };
 
-} // namespace v_noabi
+} // namespace v1
 } // namespace mongocxx

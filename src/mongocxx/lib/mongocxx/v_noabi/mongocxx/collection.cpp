@@ -32,7 +32,6 @@
 
 #include <mongocxx/bulk_write.hpp>
 #include <mongocxx/client.hpp>
-#include <mongocxx/collection.hpp>
 #include <mongocxx/exception/error_code.hpp>
 #include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/exception/operation_exception.hpp>
@@ -468,7 +467,7 @@ collection::_aggregate(client_session const* session, pipeline const& pipeline, 
         libmongoc::collection_aggregate(
             _get_impl().collection_t,
             static_cast<::mongoc_query_flags_t>(0),
-            mongocxx::to_scoped_bson_view(pipeline._impl->view_array()),
+            v_noabi::pipeline::internal::doc(pipeline).bson(),
             mongocxx::to_scoped_bson_view(b),
             read_prefs));
 }
@@ -1360,7 +1359,7 @@ collection::watch(client_session const& session, pipeline const& pipe, options::
 change_stream
 collection::_watch(client_session const* session, pipeline const& pipe, options::change_stream const& options) {
     bsoncxx::v_noabi::builder::basic::document container;
-    container.append(kvp("pipeline", pipe._impl->view_array()));
+    container.append(kvp("pipeline", v_noabi::pipeline::internal::doc(pipe).array_view()));
 
     bsoncxx::v_noabi::builder::basic::document options_builder;
     options_builder.append(bsoncxx::v_noabi::builder::concatenate(options.as_bson()));

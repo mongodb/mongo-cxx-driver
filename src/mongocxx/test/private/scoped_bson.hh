@@ -14,19 +14,23 @@
 
 #pragma once
 
-#include <mongocxx/pipeline.hpp> // IWYU pragma: export
+#include <mongocxx/private/scoped_bson.hh> // IWYU pragma: export
 
 //
 
-#include <mongocxx/private/scoped_bson.hh>
+#include <bsoncxx/test/v1/document/view.hh> // IWYU pragma: keep: Catch::StringMaker<bsoncxx::v1::document::view>
 
-namespace mongocxx {
-namespace v_noabi {
+#include <string>
 
-class pipeline::internal {
-   public:
-    static scoped_bson const& doc(pipeline const& self);
+#include <bsoncxx/test/stringify.hh>
+
+namespace Catch {
+
+template <>
+struct StringMaker<mongocxx::scoped_bson> {
+    static std::string convert(mongocxx::scoped_bson const& value) {
+        return bsoncxx::test::stringify(value.view());
+    }
 };
 
-} // namespace v_noabi
-} // namespace mongocxx
+} // namespace Catch

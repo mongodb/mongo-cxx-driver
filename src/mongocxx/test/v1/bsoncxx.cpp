@@ -14,7 +14,7 @@
 
 #include <bsoncxx/test/v1/document/view.hh> // IWYU pragma: keep: Catch::StringMaker<bsoncxx::v1::document::view>
 
-#include <mongocxx/private/scoped_bson.hh>
+#include <mongocxx/test/private/scoped_bson.hh>
 
 #include <bsoncxx/test/stringify.hh>
 

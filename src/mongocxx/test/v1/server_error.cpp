@@ -22,10 +22,10 @@
 #include <bsoncxx/test/v1/document/value.hh>
 #include <bsoncxx/test/v1/types/view.hh>
 
+#include <mongocxx/test/private/scoped_bson.hh>
+
 #include <system_error>
 #include <utility>
-
-#include <mongocxx/private/scoped_bson.hh>
 
 #include <catch2/catch_test_macros.hpp>
 #include <catch2/matchers/catch_matchers_string.hpp>
