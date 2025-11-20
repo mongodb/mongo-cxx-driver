@@ -14,15 +14,22 @@
 
 #pragma once
 
-#include <string>
-
 #include <mongocxx/hint-fwd.hpp> // IWYU pragma: export
 
+//
+
+#include <mongocxx/v1/hint.hpp> // IWYU pragma: export
+
+#include <string>
+#include <utility>
+
 #include <bsoncxx/document/value.hpp> // IWYU pragma: keep: backward compatibility, to be removed.
+#include <bsoncxx/document/view.hpp>
 #include <bsoncxx/document/view_or_value.hpp>
-#include <bsoncxx/stdx/optional.hpp>
+#include <bsoncxx/stdx/optional.hpp> // IWYU pragma: keep: backward compatibility, to be removed.
 #include <bsoncxx/string/view_or_value.hpp>
-#include <bsoncxx/types/bson_value/view.hpp>
+#include <bsoncxx/types.hpp>
+#include <bsoncxx/types/view.hpp>
 
 #include <mongocxx/config/prelude.hpp>
 
@@ -35,6 +42,22 @@ namespace v_noabi {
 class hint {
    public:
     ///
+    /// Construct with the @ref mongocxx::v1 equivalent.
+    ///
+    /* explicit(false) */ MONGOCXX_ABI_EXPORT_CDECL() hint(v1::hint hint);
+
+    ///
+    /// Convert to the @ref mongocxx::v1 equivalent.
+    ///
+    explicit operator v1::hint() const {
+        if (_index_doc) {
+            return v1::hint{bsoncxx::v1::document::value{bsoncxx::v_noabi::to_v1(_index_doc->view())}};
+        }
+
+        return v1::hint{std::string{_index_string->view()}};
+    }
+
+    ///
     /// Constructs a new hint.
     ///
     /// Note: this constructor is purposefully not explicit, to allow conversion
@@ -43,7 +66,7 @@ class hint {
     /// @param index
     ///   Document view or value representing the index to be used.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL() hint(bsoncxx::v_noabi::document::view_or_value index);
+    hint(bsoncxx::v_noabi::document::view_or_value index) : _index_doc{std::move(index)} {}
 
     ///
     /// Constructs a new hint.
@@ -51,7 +74,7 @@ class hint {
     /// @param index
     ///   String representing the name of the index to be used.
     ///
-    explicit MONGOCXX_ABI_EXPORT_CDECL() hint(bsoncxx::v_noabi::string::view_or_value index);
+    explicit hint(bsoncxx::v_noabi::string::view_or_value index) : _index_string(std::move(index)) {}
 
     ///
     /// @relates mongocxx::v_noabi::hint
@@ -60,7 +83,9 @@ class hint {
     ///
     /// Compares equal if the hint contains a matching index name. Otherwise, compares unequal.
     ///
-    friend MONGOCXX_ABI_EXPORT_CDECL(bool) operator==(hint const& index_hint, std::string index);
+    friend bool operator==(hint const& index_hint, std::string index) {
+        return index_hint._index_string == index;
+    }
 
     ///
     /// @relates mongocxx::v_noabi::hint
@@ -69,7 +94,9 @@ class hint {
     ///
     /// Compares equal if the hint contains a matching index document. Otherwise, compares unequal.
     ///
-    friend MONGOCXX_ABI_EXPORT_CDECL(bool) operator==(hint const& index_hint, bsoncxx::v_noabi::document::view index);
+    friend bool operator==(hint const& index_hint, bsoncxx::v_noabi::document::view index) {
+        return index_hint._index_doc == index;
+    }
 
     ///
     /// Returns a types::bson_value::view representing this hint.
@@ -78,7 +105,13 @@ class hint {
     /// not outlive
     /// the hint object that it was created from.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::types::bson_value::view) to_value() const;
+    bsoncxx::v_noabi::types::view to_value() const {
+        if (_index_doc) {
+            return bsoncxx::v_noabi::types::bson_value::view{bsoncxx::v_noabi::types::b_document{_index_doc->view()}};
+        }
+
+        return bsoncxx::v_noabi::types::bson_value::view{bsoncxx::v_noabi::types::b_string{_index_string->view()}};
+    }
 
     ///
     /// Returns a types::bson_value::view representing this hint.
@@ -87,8 +120,8 @@ class hint {
     /// not outlive
     /// the hint object that it was created from.
     ///
-    operator bsoncxx::v_noabi::types::bson_value::view() const {
-        return to_value();
+    operator bsoncxx::v_noabi::types::view() const {
+        return this->to_value();
     }
 
    private:
@@ -104,13 +137,19 @@ class hint {
 /// @{
 
 /// @relatesalso mongocxx::v_noabi::hint
-MONGOCXX_ABI_EXPORT_CDECL(bool) operator==(std::string index, hint const& index_hint);
+inline bool operator==(std::string str, hint const& hint) {
+    return hint == str;
+}
 
 /// @relatesalso mongocxx::v_noabi::hint
-MONGOCXX_ABI_EXPORT_CDECL(bool) operator!=(hint const& index_hint, std::string index);
+inline bool operator!=(hint const& hint, std::string str) {
+    return !(hint == str);
+}
 
 /// @relatesalso mongocxx::v_noabi::hint
-MONGOCXX_ABI_EXPORT_CDECL(bool) operator!=(std::string index, hint const& index_index);
+inline bool operator!=(std::string str, hint const& hint) {
+    return !(hint == str);
+}
 
 /// @}
 ///
@@ -123,25 +162,44 @@ MONGOCXX_ABI_EXPORT_CDECL(bool) operator!=(std::string index, hint const& index_
 /// @{
 
 /// @relatesalso mongocxx::v_noabi::hint
-MONGOCXX_ABI_EXPORT_CDECL(bool)
-operator==(bsoncxx::v_noabi::document::view index, hint const& index_hint);
+inline bool operator==(bsoncxx::v_noabi::document::view doc, hint const& hint) {
+    return hint == doc;
+}
+
 /// @relatesalso mongocxx::v_noabi::hint
-MONGOCXX_ABI_EXPORT_CDECL(bool)
-operator!=(hint const& index_hint, bsoncxx::v_noabi::document::view index);
+inline bool operator!=(hint const& hint, bsoncxx::v_noabi::document::view doc) {
+    return !(hint == doc);
+}
+
 /// @relatesalso mongocxx::v_noabi::hint
-MONGOCXX_ABI_EXPORT_CDECL(bool)
-operator!=(bsoncxx::v_noabi::document::view index, hint const& index_hint);
+inline bool operator!=(bsoncxx::v_noabi::document::view doc, hint const& hint) {
+    return !(hint == doc);
+}
 
 /// @}
 ///
+
+///
+/// Convert to the @ref mongocxx::v_noabi equivalent of `v`.
+///
+inline v_noabi::hint from_v1(v1::hint v) {
+    return {std::move(v)};
+}
+
+///
+/// Convert to the @ref mongocxx::v1 equivalent of `v`.
+///
+inline v1::hint to_v1(v_noabi::hint const& v) {
+    return v1::hint{v};
+}
 
 } // namespace v_noabi
 } // namespace mongocxx
 
 namespace mongocxx {
 
-using ::mongocxx::v_noabi::operator==;
-using ::mongocxx::v_noabi::operator!=;
+using v_noabi::operator==;
+using v_noabi::operator!=;
 
 } // namespace mongocxx
 
@@ -150,4 +208,7 @@ using ::mongocxx::v_noabi::operator!=;
 ///
 /// @file
 /// Provides @ref mongocxx::v_noabi::hint.
+///
+/// @par Includes
+/// - @ref mongocxx/v1/hint.hpp
 ///
