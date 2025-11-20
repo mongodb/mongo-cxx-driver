@@ -23,6 +23,7 @@
 #include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/exception/operation_exception.hpp>
 #include <mongocxx/options/auto_encryption.hpp>
+#include <mongocxx/pipeline.hpp>
 
 #include <mongocxx/client.hh>
 #include <mongocxx/client_session.hh>
@@ -30,7 +31,6 @@
 #include <mongocxx/options/apm.hh>
 #include <mongocxx/options/server_api.hh>
 #include <mongocxx/options/tls.hh>
-#include <mongocxx/pipeline.hh>
 #include <mongocxx/read_concern.hh>
 #include <mongocxx/read_preference.hh>
 #include <mongocxx/scoped_bson.hh>
@@ -301,7 +301,7 @@ client::watch(client_session const& session, pipeline const& pipe, options::chan
 change_stream
 client::_watch(client_session const* session, pipeline const& pipe, options::change_stream const& options) {
     bsoncxx::v_noabi::builder::basic::document container;
-    container.append(bsoncxx::v_noabi::builder::basic::kvp("pipeline", pipe._impl->view_array()));
+    container.append(bsoncxx::v_noabi::builder::basic::kvp("pipeline", pipe.view_array()));
 
     bsoncxx::v_noabi::builder::basic::document options_builder;
     options_builder.append(bsoncxx::v_noabi::builder::concatenate(options.as_bson()));

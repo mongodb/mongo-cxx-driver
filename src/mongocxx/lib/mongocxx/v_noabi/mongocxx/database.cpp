@@ -137,7 +137,7 @@ database::_aggregate(client_session const* session, pipeline const& pipeline, op
     return cursor(
         libmongoc::database_aggregate(
             _get_impl().database_t,
-            to_scoped_bson_view(pipeline._impl->view_array()),
+            v_noabi::pipeline::internal::doc(pipeline).bson(),
             to_scoped_bson_view(b),
             read_prefs));
 }
@@ -408,7 +408,7 @@ database::watch(client_session const& session, pipeline const& pipe, options::ch
 change_stream
 database::_watch(client_session const* session, pipeline const& pipe, options::change_stream const& options) {
     bsoncxx::v_noabi::builder::basic::document container;
-    container.append(kvp("pipeline", pipe._impl->view_array()));
+    container.append(kvp("pipeline", pipe.view_array()));
 
     bsoncxx::v_noabi::builder::basic::document options_builder;
     options_builder.append(bsoncxx::v_noabi::builder::concatenate(options.as_bson()));
