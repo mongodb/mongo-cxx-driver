@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <mongocxx/private/scoped_bson.hh>
+#include <mongocxx/test/private/scoped_bson.hh>
 
 //
 
@@ -23,7 +23,10 @@
 #include <bsoncxx/private/bson.hh>
 #include <bsoncxx/private/make_unique.hh>
 
+#include <bsoncxx/test/stringify.hh>
+
 #include <catch2/catch_test_macros.hpp>
+#include <catch2/generators/catch_generators.hpp>
 #include <catch2/matchers/catch_matchers_exception.hpp>
 
 namespace mongocxx {
@@ -634,6 +637,18 @@ TEST_CASE("inout_ptr", "[mongocxx][private][scoped_bson]") {
         REQUIRE(doc.bson() == nullptr);
         CHECK_FALSE(doc.view());
     }
+}
+
+TEST_CASE("StringMaker", "[mongocxx][test][private][scoped_bson]") {
+    auto const v = GENERATE(values({
+        scoped_bson{},
+        scoped_bson{R"({})"},
+        scoped_bson{R"([])"},
+        scoped_bson{R"({"x": 1, "y": 2.0, "z": "3"})"},
+        scoped_bson{R"([{"x": 1}, {"y": 2.0}, {"z": "3"}])"},
+    }));
+
+    CHECK(bsoncxx::test::stringify(v) == bsoncxx::test::stringify(v.view()));
 }
 
 } // namespace mongocxx

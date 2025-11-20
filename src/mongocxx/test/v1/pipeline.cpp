@@ -20,13 +20,13 @@
 #include <bsoncxx/test/v1/stdx/string_view.hh>
 #include <bsoncxx/test/v1/types/view.hh>
 
+#include <mongocxx/test/private/scoped_bson.hh>
+
 #include <cstdint>
 #include <tuple>
 #include <utility>
 
 #include <bsoncxx/private/bson.hh>
-
-#include <mongocxx/private/scoped_bson.hh>
 
 #include <bsoncxx/test/system_error.hh>
 
