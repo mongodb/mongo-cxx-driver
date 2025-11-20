@@ -429,6 +429,8 @@ TEST_CASE("concat", "[mongocxx][private][scoped_bson]") {
             auto const data = bsoncxx::make_unique_for_overwrite<char[]>(size);
             auto const big_string = bsoncxx::v1::stdx::string_view{data.get(), size};
 
+            REQUIRE(data);
+
             std::memset(data.get(), 'x', size - 1u);
             data[size - 1u] = '\0';
 
