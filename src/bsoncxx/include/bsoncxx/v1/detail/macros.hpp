@@ -119,11 +119,16 @@
 //
 // MSVC: supports inline variables since 19.12 (with /std:c++latest), but behavior is broken for static data members
 // (multiple definitions) until 19.20 even when __cpp_inline_variables is defined.
+//
+// mingw-w64: this is an ancient bug/issue: https://sourceware.org/bugzilla/show_bug.cgi?id=9687. Use the
+// Windows-specific [[gnu::selectany]] attribute instead, which provides linke-once semantics for global variables.
 #if (                                                                                                      \
     !defined(_MSC_VER) &&                                                                                  \
     (__cplusplus >= 201703L || (defined(__cpp_inline_variables) && __cpp_inline_variables >= 201606L))) || \
     (defined(_MSC_VER) && _MSC_VER >= 1920 && defined(_MSVC_LANG) && _MSVC_LANG >= 201703L)
 #define BSONCXX_PRIVATE_INLINE_CXX17 inline
+#elif defined(__MINGW32__) || defined(__MINGW64__)
+#define BSONCXX_PRIVATE_INLINE_CXX17 [[gnu::selectany]]
 #else
 #define BSONCXX_PRIVATE_INLINE_CXX17                                                                   \
     BSONCXX_PRIVATE_IF_GCC([[gnu::weak]])                                                              \
