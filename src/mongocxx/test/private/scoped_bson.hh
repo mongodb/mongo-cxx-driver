@@ -20,3 +20,18 @@
 
 #include <bsoncxx/test/v1/array/view.hh>    // IWYU pragma: keep: Catch::StringMaker<bsoncxx::v1::array::view>
 #include <bsoncxx/test/v1/document/view.hh> // IWYU pragma: keep: Catch::StringMaker<bsoncxx::v1::document::view>
+
+#include <string>
+
+#include <bsoncxx/test/stringify.hh>
+
+namespace Catch {
+
+template <>
+struct StringMaker<mongocxx::scoped_bson> {
+    static std::string convert(mongocxx::scoped_bson const& value) {
+        return bsoncxx::test::stringify(value.view());
+    }
+};
+
+} // namespace Catch
