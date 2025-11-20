@@ -99,26 +99,24 @@ class hint {
     }
 
     ///
-    /// Returns a types::bson_value::view representing this hint.
+    /// Returns a @ref bsoncxx::v_noabi::types::view representing this hint.
     ///
-    /// @return Hint, as a types::bson_value::view. The caller must ensure that the returned object
-    /// not outlive
-    /// the hint object that it was created from.
+    /// @return Hint, as a @ref bsoncxx::v_noabi::types::view. The caller must ensure that the returned object not
+    /// outlive the hint object that it was created from.
     ///
     bsoncxx::v_noabi::types::view to_value() const {
         if (_index_doc) {
-            return bsoncxx::v_noabi::types::bson_value::view{bsoncxx::v_noabi::types::b_document{_index_doc->view()}};
+            return bsoncxx::v_noabi::types::view{bsoncxx::v_noabi::types::b_document{_index_doc->view()}};
         }
 
-        return bsoncxx::v_noabi::types::bson_value::view{bsoncxx::v_noabi::types::b_string{_index_string->view()}};
+        return bsoncxx::v_noabi::types::view{bsoncxx::v_noabi::types::b_string{_index_string->view()}};
     }
 
     ///
-    /// Returns a types::bson_value::view representing this hint.
+    /// Returns a @ref bsoncxx::v_noabi::types::view representing this hint.
     ///
-    /// @return Hint, as a types::bson_value::view. The caller must ensure that the returned object
-    /// not outlive
-    /// the hint object that it was created from.
+    /// @return Hint, as a @ref bsoncxx::v_noabi::types::view. The caller must ensure that the returned object not
+    /// outlive the hint object that it was created from.
     ///
     operator bsoncxx::v_noabi::types::view() const {
         return this->to_value();
