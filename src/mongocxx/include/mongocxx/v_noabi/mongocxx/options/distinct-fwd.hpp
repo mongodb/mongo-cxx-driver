@@ -14,9 +14,9 @@
 
 #pragma once
 
-#include <mongocxx/config/prelude.hpp>
-
 #include <mongocxx/v1/distinct_options-fwd.hpp>
+
+#include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
 namespace v_noabi {
