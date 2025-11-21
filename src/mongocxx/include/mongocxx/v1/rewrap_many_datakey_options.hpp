@@ -111,6 +111,8 @@ class rewrap_many_datakey_options {
     /// Return the current "masterKey" field.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view>) master_key() const;
+
+    class internal;
 };
 
 } // namespace v1
