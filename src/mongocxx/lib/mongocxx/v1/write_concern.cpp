@@ -81,7 +81,7 @@ write_concern& write_concern::acknowledge_level(level v) {
             libmongoc::write_concern_set_w(to_mongoc(_impl), MONGOC_WRITE_CONCERN_W_UNACKNOWLEDGED);
             break;
         case level::k_acknowledged:
-            libmongoc::write_concern_set_w(to_mongoc(_impl), 1); // MONGOC_WRITE_CONCERN_W_ACKNOWLEDGED
+            libmongoc::write_concern_set_w(to_mongoc(_impl), 1); // Missing MONGOC_WRITE_CONCERN_W_ACKNOWLEDGED.
             break;
 
         default:
