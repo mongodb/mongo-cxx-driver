@@ -14,34 +14,25 @@
 
 #pragma once
 
-#include <mongocxx/v1/estimated_document_count_options-fwd.hpp> // IWYU pragma: export
+#include <mongocxx/v1/estimated_document_count_options.hpp> // IWYU pragma: export
 
-#include <mongocxx/config/prelude.hpp>
+//
 
-namespace mongocxx {
-namespace v_noabi {
-namespace options {
+#include <bsoncxx/v1/types/value-fwd.hpp>
 
-class estimated_document_count;
+#include <mongocxx/v1/read_preference-fwd.hpp>
 
-} // namespace options
-} // namespace v_noabi
-} // namespace mongocxx
+#include <bsoncxx/v1/stdx/optional.hpp>
 
 namespace mongocxx {
-namespace options {
+namespace v1 {
 
-using v_noabi::options::estimated_document_count;
+class estimated_document_count_options::internal {
+   public:
+    static bsoncxx::v1::stdx::optional<bsoncxx::v1::types::value>& comment(estimated_document_count_options& self);
+    static bsoncxx::v1::stdx::optional<mongocxx::v1::read_preference>& read_preference(
+        estimated_document_count_options& self);
+};
 
-} // namespace options
+} // namespace v1
 } // namespace mongocxx
-
-#include <mongocxx/config/postlude.hpp>
-
-///
-/// @file
-/// Declares @ref mongocxx::v_noabi::options::estimated_document_count.
-///
-/// @par Includes
-/// - @ref mongocxx/v1/estimated_document_count_options-fwd.hpp
-///
