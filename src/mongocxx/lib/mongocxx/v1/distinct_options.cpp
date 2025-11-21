@@ -12,4 +12,130 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <mongocxx/v1/distinct_options.hpp>
+#include <mongocxx/v1/distinct_options.hh>
+
+//
+
+#include <bsoncxx/v1/document/value.hpp>
+#include <bsoncxx/v1/stdx/optional.hpp>
+#include <bsoncxx/v1/types/value.hpp>
+
+#include <mongocxx/v1/read_preference.hpp>
+
+#include <chrono>
+
+#include <mongocxx/private/utility.hh>
+
+namespace mongocxx {
+namespace v1 {
+
+class distinct_options::impl {
+   public:
+    bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> _collation;
+    bsoncxx::v1::stdx::optional<std::chrono::milliseconds> _max_time;
+    bsoncxx::v1::stdx::optional<bsoncxx::v1::types::value> _comment;
+    bsoncxx::v1::stdx::optional<mongocxx::v1::read_preference> _read_preference;
+
+    static impl const& with(distinct_options const& self) {
+        return *static_cast<impl const*>(self._impl);
+    }
+
+    static impl const* with(distinct_options const* self) {
+        return static_cast<impl const*>(self->_impl);
+    }
+
+    static impl& with(distinct_options& self) {
+        return *static_cast<impl*>(self._impl);
+    }
+
+    static impl* with(distinct_options* self) {
+        return static_cast<impl*>(self->_impl);
+    }
+
+    static impl* with(void* ptr) {
+        return static_cast<impl*>(ptr);
+    }
+};
+
+distinct_options::~distinct_options() {
+    delete impl::with(this);
+}
+
+distinct_options::distinct_options(distinct_options&& other) noexcept : _impl{exchange(other._impl, nullptr)} {}
+
+distinct_options& distinct_options::operator=(distinct_options&& other) noexcept {
+    if (this != &other) {
+        delete impl::with(exchange(_impl, exchange(other._impl, nullptr)));
+    }
+
+    return *this;
+}
+
+distinct_options::distinct_options(distinct_options const& other) : _impl{new impl{impl::with(other)}} {}
+
+distinct_options& distinct_options::operator=(distinct_options const& other) {
+    if (this != &other) {
+        delete impl::with(exchange(_impl, new impl{impl::with(other)}));
+    }
+
+    return *this;
+}
+
+distinct_options::distinct_options() : _impl{new impl{}} {}
+
+distinct_options& distinct_options::collation(bsoncxx::v1::document::value collation) {
+    impl::with(this)->_collation = std::move(collation);
+    return *this;
+}
+
+bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view> distinct_options::collation() const {
+    return impl::with(this)->_collation;
+}
+
+distinct_options& distinct_options::max_time(std::chrono::milliseconds max_time) {
+    impl::with(this)->_max_time = std::move(max_time);
+    return *this;
+}
+
+bsoncxx::v1::stdx::optional<std::chrono::milliseconds> distinct_options::max_time() const {
+    return impl::with(this)->_max_time;
+}
+
+distinct_options& distinct_options::comment(bsoncxx::v1::types::value comment) {
+    impl::with(this)->_comment = std::move(comment);
+    return *this;
+}
+
+bsoncxx::v1::stdx::optional<bsoncxx::v1::types::view> distinct_options::comment() const {
+    return impl::with(this)->_comment;
+}
+
+distinct_options& distinct_options::read_preference(v1::read_preference rp) {
+    impl::with(this)->_read_preference = std::move(rp);
+    return *this;
+}
+
+bsoncxx::v1::stdx::optional<v1::read_preference> distinct_options::read_preference() const {
+    return impl::with(this)->_read_preference;
+}
+
+bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value>& distinct_options::internal::collation(
+    distinct_options& self) {
+    return impl::with(self)._collation;
+}
+
+bsoncxx::v1::stdx::optional<std::chrono::milliseconds>& distinct_options::internal::max_time(distinct_options& self) {
+    return impl::with(self)._max_time;
+}
+
+bsoncxx::v1::stdx::optional<bsoncxx::v1::types::value>& distinct_options::internal::comment(distinct_options& self) {
+    return impl::with(self)._comment;
+}
+
+bsoncxx::v1::stdx::optional<mongocxx::v1::read_preference>& distinct_options::internal::read_preference(
+    distinct_options& self) {
+    return impl::with(self)._read_preference;
+}
+
+} // namespace v1
+} // namespace mongocxx

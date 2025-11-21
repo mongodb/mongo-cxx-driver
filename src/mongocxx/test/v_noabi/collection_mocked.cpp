@@ -545,6 +545,7 @@ TEST_CASE("writes", "[mongocxx][v_noabi][collection]") {
     auto expected_order_setting = false;
     auto expect_set_bypass_document_validation_called = false;
     auto expected_bypass_document_validation = false;
+    hint index_hint("a_1");
     bsoncxx::stdx::optional<bsoncxx::types::bson_value::view> expected_hint{};
 
     auto const filter_doc = make_document(kvp("_id", "wow"), kvp("foo", "bar"));
@@ -841,7 +842,6 @@ TEST_CASE("writes", "[mongocxx][v_noabi][collection]") {
         }
 
         SECTION("With hint") {
-            hint index_hint("a_1");
             expected_hint = index_hint.to_value();
             options.hint(index_hint);
         }
@@ -920,7 +920,6 @@ TEST_CASE("writes", "[mongocxx][v_noabi][collection]") {
         }
 
         SECTION("With hint") {
-            hint index_hint("a_1");
             expected_hint = index_hint.to_value();
             options.hint(index_hint);
         }
@@ -963,7 +962,6 @@ TEST_CASE("writes", "[mongocxx][v_noabi][collection]") {
 
         options::delete_options options;
         SECTION("With hint") {
-            hint index_hint("a_1");
             expected_hint = index_hint.to_value();
             options.hint(index_hint);
         }
@@ -1006,7 +1004,6 @@ TEST_CASE("writes", "[mongocxx][v_noabi][collection]") {
 
         options::delete_options options;
         SECTION("With hint") {
-            hint index_hint("a_1");
             expected_hint = index_hint.to_value();
             options.hint(index_hint);
         }
