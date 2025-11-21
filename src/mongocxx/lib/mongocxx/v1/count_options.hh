@@ -39,8 +39,3 @@ class count_options::internal {
 
 } // namespace v1
 } // namespace mongocxx
-
-///
-/// @file
-/// Provides @ref mongocxx::v1::count_options.
-///
