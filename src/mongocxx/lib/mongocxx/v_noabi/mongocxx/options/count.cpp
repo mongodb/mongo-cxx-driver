@@ -33,12 +33,12 @@ count::count(v1::count_options opts)
           }
           return {};
       }()},
-      _hint{v1::count_options::internal::hint(opts)},
-      _comment{v1::count_options::internal::comment(opts)},
+      _hint{std::move(v1::count_options::internal::hint(opts))},
+      _comment{std::move(v1::count_options::internal::comment(opts))},
       _limit{opts.limit()},
       _max_time{opts.max_time()},
       _skip{opts.skip()},
-      _read_preference{v1::count_options::internal::read_preference(opts)}
+      _read_preference{std::move(v1::count_options::internal::read_preference(opts))}
 
 {}
 
