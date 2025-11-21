@@ -51,8 +51,3 @@ class data_key_options::internal {
 
 } // namespace v1
 } // namespace mongocxx
-
-///
-/// @file
-/// Provides @ref mongocxx::v1::data_key_options.
-///

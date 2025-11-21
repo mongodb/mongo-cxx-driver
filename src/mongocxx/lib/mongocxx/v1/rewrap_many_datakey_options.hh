@@ -12,27 +12,26 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <mongocxx/hint.hpp>
+#pragma once
+
+#include <mongocxx/v1/rewrap_many_datakey_options.hpp> // IWYU pragma: export
+
+#include <string>
 
 //
 
-#include <mongocxx/v1/hint.hh>
+#include <bsoncxx/v1/document/value-fwd.hpp>
 
-#include <utility>
-
-#include <bsoncxx/document/value.hpp>
+#include <bsoncxx/v1/stdx/optional.hpp>
 
 namespace mongocxx {
-namespace v_noabi {
+namespace v1 {
 
-hint::hint(v1::hint hint)
-    : _index_doc{[&]() -> decltype(_index_doc) {
-          if (auto& opt = v1::hint::internal::doc(hint)) {
-              return bsoncxx::v_noabi::from_v1(std::move(*opt));
-          }
-          return {};
-      }()},
-      _index_string{std::move(v1::hint::internal::str(hint))} {}
+class rewrap_many_datakey_options::internal {
+   public:
+    static std::string& provider(rewrap_many_datakey_options& self);
+    static bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value>& master_key(rewrap_many_datakey_options& self);
+};
 
-} // namespace v_noabi
+} // namespace v1
 } // namespace mongocxx

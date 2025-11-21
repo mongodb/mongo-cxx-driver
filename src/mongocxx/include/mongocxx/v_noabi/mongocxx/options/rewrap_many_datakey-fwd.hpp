@@ -14,6 +14,8 @@
 
 #pragma once
 
+#include <mongocxx/v1/rewrap_many_datakey_options-fwd.hpp> // IWYU pragma: export
+
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
@@ -29,7 +31,7 @@ class rewrap_many_datakey;
 namespace mongocxx {
 namespace options {
 
-using ::mongocxx::v_noabi::options::rewrap_many_datakey;
+using v_noabi::options::rewrap_many_datakey;
 
 } // namespace options
 } // namespace mongocxx
@@ -39,4 +41,7 @@ using ::mongocxx::v_noabi::options::rewrap_many_datakey;
 ///
 /// @file
 /// Declares @ref mongocxx::v_noabi::options::rewrap_many_datakey.
+///
+/// @par Includes
+/// - @ref mongocxx/v1/rewrap_many_datakey-fwd.hpp
 ///
