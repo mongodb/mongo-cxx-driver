@@ -105,6 +105,7 @@ set(mongocxx_test_sources_v1
     v1/count_options.cpp
     v1/data_key_options.cpp
     v1/distinct_options.cpp
+    v1/estimated_document_count_options.cpp
     v1/exception.cpp
     v1/hint.cpp
     v1/logger.cpp
