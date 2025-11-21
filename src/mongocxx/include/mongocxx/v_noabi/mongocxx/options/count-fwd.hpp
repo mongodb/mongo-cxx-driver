@@ -14,6 +14,8 @@
 
 #pragma once
 
+#include <mongocxx/v1/count_options-fwd.hpp> // IWYU pragma: export
+
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
@@ -29,7 +31,7 @@ class count;
 namespace mongocxx {
 namespace options {
 
-using ::mongocxx::v_noabi::options::count;
+using v_noabi::options::count;
 
 } // namespace options
 } // namespace mongocxx
@@ -39,4 +41,7 @@ using ::mongocxx::v_noabi::options::count;
 ///
 /// @file
 /// Declares @ref mongocxx::v_noabi::options::count.
+///
+/// @par Includes
+/// - @ref mongocxx/v1/count_options-fwd.hpp
 ///
