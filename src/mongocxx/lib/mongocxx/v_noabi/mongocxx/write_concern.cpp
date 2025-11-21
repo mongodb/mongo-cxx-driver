@@ -44,11 +44,11 @@ struct check {
         "write_concern::level: v1 and v_noabi must have the same values");
 };
 
-template struct check<lv1 ::k_default, lv_noabi::k_default>;
-template struct check<lv1 ::k_majority, lv_noabi::k_majority>;
-template struct check<lv1 ::k_tag, lv_noabi::k_tag>;
-template struct check<lv1 ::k_unacknowledged, lv_noabi::k_unacknowledged>;
-template struct check<lv1 ::k_acknowledged, lv_noabi::k_acknowledged>;
+template struct check<lv1::k_default, lv_noabi::k_default>;
+template struct check<lv1::k_majority, lv_noabi::k_majority>;
+template struct check<lv1::k_tag, lv_noabi::k_tag>;
+template struct check<lv1::k_unacknowledged, lv_noabi::k_unacknowledged>;
+template struct check<lv1::k_acknowledged, lv_noabi::k_acknowledged>;
 
 } // namespace level
 } // namespace static_assertions
