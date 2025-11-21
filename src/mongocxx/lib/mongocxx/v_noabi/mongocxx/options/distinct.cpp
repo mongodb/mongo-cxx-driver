@@ -14,47 +14,28 @@
 
 #include <mongocxx/options/distinct.hpp>
 
-#include <mongocxx/read_preference.hh>
+//
+
+#include <mongocxx/v1/distinct_options.hh>
+
+#include <utility>
+
+#include <bsoncxx/document/value.hpp>
 
 namespace mongocxx {
 namespace v_noabi {
 namespace options {
 
-distinct& distinct::collation(bsoncxx::v_noabi::document::view_or_value collation) {
-    _collation = std::move(collation);
-    return *this;
-}
-
-distinct& distinct::max_time(std::chrono::milliseconds max_time) {
-    _max_time = std::move(max_time);
-    return *this;
-}
-
-distinct& distinct::comment(bsoncxx::v_noabi::types::bson_value::view_or_value comment) {
-    _comment = std::move(comment);
-    return *this;
-}
-
-distinct& distinct::read_preference(mongocxx::v_noabi::read_preference rp) {
-    _read_preference = std::move(rp);
-    return *this;
-}
-
-bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const& distinct::collation() const {
-    return _collation;
-}
-
-bsoncxx::v_noabi::stdx::optional<std::chrono::milliseconds> const& distinct::max_time() const {
-    return _max_time;
-}
-
-bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value> const& distinct::comment() const {
-    return _comment;
-}
-
-bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::read_preference> const& distinct::read_preference() const {
-    return _read_preference;
-}
+distinct::distinct(v1::distinct_options opts)
+    : _collation{[&]() -> decltype(_collation) {
+          if (auto& opt = v1::distinct_options::internal::collation(opts)) {
+              return bsoncxx::v_noabi::from_v1(std::move(*opt));
+          }
+          return {};
+      }()},
+      _max_time{std::move(v1::distinct_options::internal::max_time(opts))},
+      _comment{std::move(v1::distinct_options::internal::comment(opts))},
+      _read_preference{std::move(v1::distinct_options::internal::read_preference(opts))} {}
 
 } // namespace options
 } // namespace v_noabi
