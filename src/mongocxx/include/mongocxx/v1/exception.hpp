@@ -117,6 +117,9 @@ class exception : public std::system_error {
 
    private:
     MONGOCXX_ABI_NO_EXPORT /* explicit(false) */
+    exception(std::error_code ec, char const* message, std::unique_ptr<impl> impl);
+
+    MONGOCXX_ABI_NO_EXPORT /* explicit(false) */
     exception(std::error_code ec, std::unique_ptr<impl> impl);
 
     MONGOCXX_ABI_NO_EXPORT virtual void key_function() const;

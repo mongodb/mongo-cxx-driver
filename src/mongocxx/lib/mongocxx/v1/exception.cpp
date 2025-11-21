@@ -16,16 +16,113 @@
 
 //
 
+#include <bsoncxx/v1/array/value.hpp>
+#include <bsoncxx/v1/document/value.hpp>
+#include <bsoncxx/v1/document/view.hpp>
+#include <bsoncxx/v1/stdx/string_view.hpp>
+#include <bsoncxx/v1/types/id.hpp>
+#include <bsoncxx/v1/types/view.hpp>
+
+#include <mongocxx/v1/server_error.hh>
+
+#include <cstring>
 #include <memory>
 #include <string>
 #include <system_error>
 #include <utility>
 
+#include <bsoncxx/private/bson.hh>
 #include <bsoncxx/private/immortal.hh>
 #include <bsoncxx/private/make_unique.hh>
 
+#include <mongocxx/private/mongoc.hh>
+
 namespace mongocxx {
 namespace v1 {
+
+namespace {
+
+bool common_equivalence(v1::source_errc errc, int v, std::error_condition const& ec) noexcept {
+    if (ec.category() == v1::source_error_category()) {
+        return v != 0 ? errc == static_cast<v1::source_errc>(ec.value()) : false;
+    }
+
+    if (ec.category() == v1::type_error_category()) {
+        return v != 0 ? v1::type_errc::runtime_error == static_cast<v1::type_errc>(ec.value()) : false;
+    }
+
+    return false;
+}
+
+std::error_category const& mongoc_error_category() {
+    class type final : public std::error_category {
+        char const* name() const noexcept override {
+            return "mongoc_error_code_t";
+        }
+
+        std::string message(int v) const noexcept override {
+            return std::string(this->name()) + ':' + std::to_string(v);
+        }
+
+        bool equivalent(int v, std::error_condition const& ec) const noexcept override {
+            return common_equivalence(v1::source_errc::mongoc, v, ec);
+        }
+    };
+
+    static bsoncxx::immortal<type> const instance;
+
+    return instance.value();
+}
+
+std::error_category const& mongocrypt_error_category() {
+    class type final : public std::error_category {
+        char const* name() const noexcept override {
+            return "mongocrypt_status_t";
+        }
+
+        std::string message(int v) const noexcept override {
+            return std::string(this->name()) + ':' + std::to_string(v);
+        }
+
+        bool equivalent(int v, std::error_condition const& ec) const noexcept override {
+            return common_equivalence(v1::source_errc::mongocrypt, v, ec);
+        }
+    };
+
+    static bsoncxx::immortal<type> const instance;
+
+    return instance.value();
+}
+
+std::error_category const& unknown_error_category() {
+    class type final : public std::error_category {
+        char const* name() const noexcept override {
+            return "unknown";
+        }
+
+        std::string message(int v) const noexcept override {
+            return std::string(this->name()) + ':' + std::to_string(v);
+        }
+
+        bool equivalent(int v, std::error_condition const& ec) const noexcept override {
+            if (ec.category() == v1::source_error_category()) {
+                return false;
+            }
+
+            if (ec.category() == v1::type_error_category()) {
+                return v != 0 ? v1::type_errc::runtime_error == static_cast<v1::type_errc>(ec.value()) : false;
+            }
+
+            return false;
+        }
+    };
+
+    static bsoncxx::immortal<type> const instance;
+
+    return instance.value();
+}
+
+} // namespace
 
 std::error_category const& source_error_category() {
     class type final : public std::error_category {
@@ -85,7 +182,22 @@ std::error_category const& type_error_category() {
     return instance.value();
 }
 
-class exception::impl {};
+class exception::impl {
+   public:
+    bsoncxx::v1::array::value _error_labels;
+};
+
+bool exception::has_error_label(bsoncxx::v1::stdx::string_view label) const {
+    for (auto const& e : _impl->_error_labels) {
+        if (e.type_view() == bsoncxx::v1::types::b_string{label}) {
+            return true;
+        }
+    }
+    return false;
+}
+
+exception::exception(std::error_code ec, char const* message, std::unique_ptr<impl> impl)
+    : std::system_error{ec, message}, _impl{std::move(impl)} {}
 
 exception::exception(std::error_code ec, std::unique_ptr<impl> impl) : std::system_error{ec}, _impl{std::move(impl)} {}
 
@@ -99,8 +211,129 @@ exception::exception(std::error_code ec, std::unique_ptr<impl> impl) : std::syst
 //   vtable.
 void exception::key_function() const {}
 
+namespace {
+
+v1::exception make_exception(bson_error_t const& error) {
+    auto const code = static_cast<int>(error.code);
+    auto const raw_category = static_cast<int>(error.reserved);
+    auto const message = static_cast<char const*>(error.message);
+    auto const has_message = message[0] != '\0';
+
+    // Undocumented: see mongoc-error-private.h.
+    switch (raw_category) {
+        // MONGOC_ERROR_CATEGORY_BSON / BSON_ERROR_CATEGORY
+        // Unlikely. Convert to MONGOC_ERROR_BSON_INVALID (18).
+        case 1: {
+            std::string what;
+            what += "bson error code ";
+            what += std::to_string(code);
+            if (has_message) {
+                what += ": ";
+                what += message;
+            }
+            return v1::exception::internal::make(MONGOC_ERROR_BSON_INVALID, mongoc_error_category(), what.c_str());
+        }
+
+        // MONGOC_ERROR_CATEGORY
+        case 2: {
+            if (has_message) {
+                return v1::exception::internal::make(code, mongoc_error_category(), message);
+            } else {
+                return v1::exception::internal::make(code, mongoc_error_category());
+            }
+        }
+
+        // MONGOC_ERROR_CATEGORY_SERVER
+        // Unlikely. Throw as `v1::exception` but use the correct error category.
+        case 3: {
+            if (has_message) {
+                return v1::exception::internal::make(code, v1::server_error::internal::category(), message);
+            } else {
+                return v1::exception::internal::make(code, v1::server_error::internal::category());
+            }
+        }
+
+        // MONGOC_ERROR_CATEGORY_CRYPT
+        case 4: {
+            if (has_message) {
+                return v1::exception::internal::make(code, mongocrypt_error_category(), message);
+            } else {
+                return v1::exception::internal::make(code, mongocrypt_error_category());
+            }
+        }
+
+        // MONGOC_ERROR_CATEGORY_SASL
+        // Unlikely. Convert to MONGOC_ERROR_CLIENT_AUTHENTICATE (11).
+        case 5: {
+            std::string what;
+            what += "sasl error code ";
+            what += std::to_string(code);
+            if (has_message) {
+                what += ": ";
+                what += message;
+            }
+            return v1::exception::internal::make(
+                MONGOC_ERROR_CLIENT_AUTHENTICATE, mongoc_error_category(), what.c_str());
+        }
+
+        // Unlikely.
+        default: {
+            std::string what;
+            what += "unknown error category ";
+            what += std::to_string(raw_category);
+            if (has_message) {
+                what += ": ";
+                what += message;
+            }
+
+            return v1::exception::internal::make(code, unknown_error_category(), what.c_str());
+        }
+    }
+}
+
+} // namespace
+
 exception exception::internal::make(std::error_code ec) {
     return {ec, bsoncxx::make_unique<impl>()};
+}
+
+exception exception::internal::make(int code, std::error_category const& category, char const* message) {
+    return {std::error_code{code, category}, message, bsoncxx::make_unique<impl>()};
+}
+
+exception exception::internal::make(int code, std::error_category const& category) {
+    return {std::error_code{code, category}, bsoncxx::make_unique<impl>()};
+}
+
+void exception::internal::set_error_labels(exception& self, bsoncxx::v1::document::view v) {
+    auto& _error_labels = self._impl->_error_labels;
+
+    auto const e = v["errorLabels"];
+
+    if (e && e.type_id() == bsoncxx::v1::types::id::k_array) {
+        _error_labels = e.get_array().value;
+    } else {
+        _error_labels = bsoncxx::v1::array::value{};
+    }
+}
+
+void throw_exception(bson_error_t const& error) {
+    throw make_exception(error);
+}
+
+void throw_exception(bson_error_t const& error, bsoncxx::v1::document::value doc) {
+    // Server-side error.
+    if (auto const code = doc["code"]) {
+        if (code.type_id() == bsoncxx::v1::types::id::k_int32) {
+            auto const ex = make_exception(error);
+            throw v1::server_error::internal::make(int{code.get_int32().value}, ex.what(), std::move(doc), ex.code());
+        }
+    }
+
+    // Client-side error.
+    auto ex = make_exception(error);
+    exception::internal::set_error_labels(ex, doc);
+    throw ex;
 }
 
 } // namespace v1

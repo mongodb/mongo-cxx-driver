@@ -16,7 +16,12 @@
 
 //
 
+#include <bsoncxx/v1/document/value.hpp>
+#include <bsoncxx/v1/document/view.hpp>
+
 #include <system_error>
+
+#include <bsoncxx/private/bson.hh>
 
 #include <mongocxx/private/export.hh>
 
@@ -26,7 +31,22 @@ namespace v1 {
 class exception::internal {
    public:
     static MONGOCXX_ABI_EXPORT_CDECL_TESTING(exception) make(std::error_code ec);
+    static MONGOCXX_ABI_EXPORT_CDECL_TESTING(exception)
+    make(int code, std::error_category const& category, char const* message);
+    static MONGOCXX_ABI_EXPORT_CDECL_TESTING(exception) make(int code, std::error_category const& category);
+
+    static MONGOCXX_ABI_EXPORT_CDECL_TESTING(void) set_error_labels(exception& self, bsoncxx::v1::document::view v);
 };
+
+[[noreturn]] MONGOCXX_ABI_EXPORT_CDECL_TESTING(void) throw_exception(bson_error_t const& error);
+
+[[noreturn]] MONGOCXX_ABI_EXPORT_CDECL_TESTING(void) throw_exception(
+    bson_error_t const& error,
+    bsoncxx::v1::document::value raw);
+
+[[noreturn]] inline void throw_exception(bson_error_t const& error, bsoncxx::v1::document::view raw) {
+    throw_exception(error, bsoncxx::v1::document::value{raw});
+}
 
 } // namespace v1
 } // namespace mongocxx

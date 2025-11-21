@@ -14,12 +14,19 @@
 
 #pragma once
 
+#include <mongocxx/v1/server_error.hpp>
+
+#include <cstdint>
+#include <system_error>
+#include <utility>
+
 #include <bsoncxx/document/value.hpp>
+#include <bsoncxx/document/view.hpp>
 
 #include <mongocxx/exception/operation_exception.hpp>
 #include <mongocxx/exception/server_error_code.hpp>
 
-#include <mongocxx/private/mongoc.hh>
+#include <bsoncxx/private/bson.hh>
 
 namespace mongocxx {
 namespace v_noabi {
@@ -29,8 +36,8 @@ inline std::error_code make_error_code(int code, int) {
     return {code, server_error_category()};
 }
 
-inline std::error_code make_error_code(::bson_error_t const& error) {
-    return make_error_code(static_cast<int>(error.code), static_cast<int>(error.domain));
+inline std::error_code make_error_code(bson_error_t const& error) {
+    return v_noabi::make_error_code(static_cast<int>(error.code), static_cast<int>(error.domain));
 }
 
 inline void set_bson_error_message(bson_error_t* error, char const* msg) {
@@ -39,7 +46,7 @@ inline void set_bson_error_message(bson_error_t* error, char const* msg) {
 
 inline void make_bson_error(bson_error_t* error, operation_exception const& e) {
     // No way to get the domain back out of the exception, so zero out.
-    error->code = static_cast<uint32_t>(e.code().value());
+    error->code = static_cast<std::uint32_t>(e.code().value());
     error->domain = 0;
     set_bson_error_message(error, e.what());
 }
@@ -52,13 +59,23 @@ inline void make_generic_bson_error(bson_error_t* error) {
 }
 
 template <typename exception_type>
-[[noreturn]] void throw_exception(::bson_error_t const& error) {
-    throw exception_type{make_error_code(error), error.message};
+[[noreturn]] void throw_exception(bson_error_t const& error) {
+    throw exception_type{v_noabi::make_error_code(error), error.message};
 }
 
 template <typename exception_type>
-[[noreturn]] void throw_exception(bsoncxx::v_noabi::document::value raw_server_error, ::bson_error_t const& error) {
-    throw exception_type{make_error_code(error), std::move(raw_server_error), error.message};
+[[noreturn]] void throw_exception(bsoncxx::v_noabi::document::value raw_server_error, bson_error_t const& error) {
+    throw exception_type{v_noabi::make_error_code(error), std::move(raw_server_error), error.message};
+}
+
+template <typename exception_type>
+[[noreturn]] void throw_exception(v1::exception const& ex) {
+    if (auto const ptr = dynamic_cast<v1::server_error const*>(&ex)) {
+        throw exception_type{
+            ptr->code(), bsoncxx::v_noabi::document::value{bsoncxx::v_noabi::from_v1(ptr->raw())}, ptr->what()};
+    }
+
+    throw exception_type{ex.code(), ex.what()};
 }
 
 } // namespace v_noabi

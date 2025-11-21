@@ -66,7 +66,12 @@ class server_error : public v1::exception {
     ///
     bsoncxx::v1::document::view MONGOCXX_ABI_CDECL raw() const;
 
+    class internal;
+
    private:
+    MONGOCXX_ABI_NO_EXPORT /* explicit(false) */
+    server_error(int code, char const* message, std::unique_ptr<impl> impl);
+
     MONGOCXX_ABI_NO_EXPORT void key_function() const override;
 };
 
