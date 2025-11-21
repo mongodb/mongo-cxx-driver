@@ -14,6 +14,7 @@
 
 #include <mongocxx/v1/read_concern.hh>
 #include <mongocxx/v1/read_preference.hh>
+#include <mongocxx/v1/write_concern.hh>
 
 #include <utility>
 
@@ -36,6 +37,7 @@
 #include <mongocxx/read_concern.hh>
 #include <mongocxx/read_preference.hh>
 #include <mongocxx/scoped_bson.hh>
+#include <mongocxx/write_concern.hh>
 
 #include <bsoncxx/private/make_unique.hh>
 
@@ -370,14 +372,12 @@ mongocxx::v_noabi::read_preference database::read_preference() const {
 }
 
 void database::write_concern(mongocxx::v_noabi::write_concern wc) {
-    libmongoc::database_set_write_concern(_get_impl().database_t, wc._impl->write_concern_t);
+    libmongoc::database_set_write_concern(_get_impl().database_t, v_noabi::write_concern::internal::as_mongoc(wc));
 }
 
 mongocxx::v_noabi::write_concern database::write_concern() const {
-    mongocxx::v_noabi::write_concern wc(
-        bsoncxx::make_unique<write_concern::impl>(
-            libmongoc::write_concern_copy(libmongoc::database_get_write_concern(_get_impl().database_t))));
-    return wc;
+    return v1::write_concern::internal::make(
+        libmongoc::write_concern_copy(libmongoc::database_get_write_concern(_get_impl().database_t)));
 }
 
 collection database::collection(bsoncxx::v_noabi::string::view_or_value name) const {

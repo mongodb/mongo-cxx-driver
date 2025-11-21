@@ -41,7 +41,6 @@ set(mongocxx_test_sources_private
     private/numeric_casting.cpp
     private/scoped_bson_value.cpp
     private/scoped_bson.cpp
-    private/write_concern.cpp
     private/mongoc_version.cpp
 )
 
@@ -114,6 +113,7 @@ set(mongocxx_test_sources_v1
     v1/read_preference.cpp
     v1/rewrap_many_datakey_options.cpp
     v1/tls.cpp
+    v1/write_concern.cpp
 )
 
 set(mongocxx_test_sources_spec

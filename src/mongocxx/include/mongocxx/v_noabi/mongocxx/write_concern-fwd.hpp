@@ -14,6 +14,8 @@
 
 #pragma once
 
+#include <mongocxx/v1/write_concern-fwd.hpp>
+
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
@@ -26,7 +28,7 @@ class write_concern;
 
 namespace mongocxx {
 
-using ::mongocxx::v_noabi::write_concern;
+using v_noabi::write_concern;
 
 } // namespace mongocxx
 
@@ -35,4 +37,7 @@ using ::mongocxx::v_noabi::write_concern;
 ///
 /// @file
 /// Declares @ref mongocxx::v_noabi::write_concern.
+///
+/// @par Includes
+/// - @ref mongocxx/v1/write_concern-fwd.hpp
 ///

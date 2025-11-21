@@ -14,6 +14,7 @@
 
 #include <mongocxx/v1/read_concern.hh>
 #include <mongocxx/v1/read_preference.hh>
+#include <mongocxx/v1/write_concern.hh>
 
 #include <bsoncxx/builder/basic/kvp.hpp>
 
@@ -185,7 +186,7 @@ mongocxx::v_noabi::uri client::uri() const {
 }
 
 void client::write_concern_deprecated(mongocxx::v_noabi::write_concern wc) {
-    libmongoc::client_set_write_concern(_get_impl().client_t, wc._impl->write_concern_t);
+    libmongoc::client_set_write_concern(_get_impl().client_t, v_noabi::write_concern::internal::as_mongoc(wc));
 }
 
 void client::write_concern(mongocxx::v_noabi::write_concern wc) {
@@ -193,10 +194,8 @@ void client::write_concern(mongocxx::v_noabi::write_concern wc) {
 }
 
 mongocxx::v_noabi::write_concern client::write_concern() const {
-    mongocxx::v_noabi::write_concern wc(
-        bsoncxx::make_unique<write_concern::impl>(
-            libmongoc::write_concern_copy(libmongoc::client_get_write_concern(_get_impl().client_t))));
-    return wc;
+    return v1::write_concern::internal::make(
+        libmongoc::write_concern_copy(libmongoc::client_get_write_concern(_get_impl().client_t)));
 }
 
 mongocxx::v_noabi::database client::database(bsoncxx::v_noabi::string::view_or_value name) const& {

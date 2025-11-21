@@ -14,6 +14,7 @@
 
 #include <mongocxx/v1/read_concern.hh>
 #include <mongocxx/v1/read_preference.hh>
+#include <mongocxx/v1/write_concern.hh>
 
 #include <bsoncxx/types.hpp>
 
@@ -129,9 +130,8 @@ std::string uri::username() const {
 }
 
 mongocxx::v_noabi::write_concern uri::write_concern() const {
-    auto wc = libmongoc::uri_get_write_concern(_impl->uri_t);
-    return mongocxx::v_noabi::write_concern(
-        bsoncxx::make_unique<write_concern::impl>(libmongoc::write_concern_copy(wc)));
+    return v1::write_concern::internal::make(
+        libmongoc::write_concern_copy(libmongoc::uri_get_write_concern(_impl->uri_t)));
 }
 
 static bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::stdx::string_view> _string_option(

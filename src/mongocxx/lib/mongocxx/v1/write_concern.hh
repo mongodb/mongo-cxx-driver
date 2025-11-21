@@ -14,19 +14,22 @@
 
 #pragma once
 
-#include <mongocxx/write_concern.hpp> // IWYU pragma: export
+#include <mongocxx/v1/write_concern.hpp> // IWYU pragma: export
 
 //
 
+#include <mongocxx/private/export.hh>
 #include <mongocxx/private/mongoc.hh>
 
 namespace mongocxx {
-namespace v_noabi {
+namespace v1 {
 
 class write_concern::internal {
    public:
+    static MONGOCXX_ABI_EXPORT_CDECL_TESTING(write_concern) make(mongoc_write_concern_t* rc);
+
     static mongoc_write_concern_t const* as_mongoc(write_concern const& self);
 };
 
-} // namespace v_noabi
+} // namespace v1
 } // namespace mongocxx
