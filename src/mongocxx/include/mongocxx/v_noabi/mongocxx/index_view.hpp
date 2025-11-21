@@ -47,7 +47,7 @@ class index_view {
     MONGOCXX_ABI_EXPORT_CDECL() ~index_view();
 
     index_view(index_view const&) = delete;
-    MONGOCXX_ABI_EXPORT_CDECL(index_view&) operator=(index_view const&) = delete;
+    index_view& operator=(index_view const&) = delete;
 
     ///
     /// Returns a cursor over all the indexes.

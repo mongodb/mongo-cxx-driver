@@ -33,7 +33,7 @@ namespace test {
 // (`*is_signal_ptr` is `true`) .
 int subprocess(std::function<void()> fn, bool* is_signal_ptr = nullptr);
 
-#if !defined(_MSC_VER)
+#if !defined(_WIN32)
 
 #define CHECK_SUBPROCESS(...)                                    \
     if (1) {                                                     \
@@ -54,7 +54,7 @@ int subprocess(std::function<void()> fn, bool* is_signal_ptr = nullptr);
 #define CHECK_SUBPROCESS(...) SKIP("mongocxx::test::subprocess() is not supported")
 #define CHECK_FALSE_SUBPROCESS(...) SKIP("mongocxx::test::subprocess() is not supported")
 
-#endif // !defined(_MSC_VER)
+#endif // !defined(_WIN32)
 
 } // namespace test
 } // namespace mongocxx

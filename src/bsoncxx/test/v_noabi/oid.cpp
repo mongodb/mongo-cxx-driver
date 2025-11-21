@@ -74,9 +74,12 @@ parsed_oid parse_oid(oid const& oid) {
 }
 
 void compare_string(std::time_t const& t, bsoncxx::stdx::string_view time) {
-    char time_str[48] = {};
-    CHECK(0 != (std::strftime(time_str, sizeof(time_str), "%b %e, %Y %H:%M:%S UTC", std::gmtime(&t))));
-    CHECK(time_str == time);
+    char time_str[48];
+
+    // Avoid %e for MSVCRT-based mingw-w64 GCC compatibility.
+    REQUIRE(0 != (strftime(time_str, sizeof(time_str), "%b %d, %Y %H:%M:%S UTC", std::gmtime(&t))));
+
+    REQUIRE(time_str == time);
 }
 
 TEST_CASE("basic", "[bsoncxx][v_noabi][oid]") {
@@ -96,10 +99,10 @@ TEST_CASE("basic", "[bsoncxx][v_noabi][oid]") {
         REQUIRE(tc == 0x80000000);
         REQUIRE(td == 0xFFFFFFFF);
 
-        compare_string(ta, "Jan  1, 1970 00:00:00 UTC");
+        compare_string(ta, "Jan 01, 1970 00:00:00 UTC");
         compare_string(tb, "Jan 19, 2038 03:14:07 UTC");
         compare_string(tc, "Jan 19, 2038 03:14:08 UTC");
-        compare_string(td, "Feb  7, 2106 06:28:15 UTC");
+        compare_string(td, "Feb 07, 2106 06:28:15 UTC");
     }
 
     // Ensure that after a new process is created through a fork() or similar process creation operation, the "random
@@ -138,7 +141,8 @@ TEST_CASE("basic", "[bsoncxx][v_noabi][oid]") {
         {
             std::time_t time = o.get_time_t();
             char str[sizeof("YYYY-MM-DD HH:MM:SS")];
-            CHECK(std::strftime(str, sizeof(str), "%F %T", std::gmtime(&time)) == sizeof(str) - 1u);
+            // Avoid %F and %T for mingw-w64 GCC compatibiility.
+            CHECK(std::strftime(str, sizeof(str), "%Y-%m-%d %H:%M:%S", std::gmtime(&time)) == sizeof(str) - 1u);
             CHECK(std::string(str) == "2000-01-01 23:59:59");
         }
 

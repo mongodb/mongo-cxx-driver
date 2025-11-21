@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <bsoncxx/test/v1/array/view.hh>
+
 #include <algorithm>
 
 #include <bsoncxx/array/view.hpp>

@@ -68,7 +68,7 @@ class client_session {
     MONGOCXX_ABI_EXPORT_CDECL(client_session&) operator=(client_session&&) noexcept;
 
     client_session(client_session const&) = delete;
-    MONGOCXX_ABI_EXPORT_CDECL(client_session&) operator=(client_session const&) = delete;
+    client_session& operator=(client_session const&) = delete;
 
     ///
     /// Ends and destroys the session.

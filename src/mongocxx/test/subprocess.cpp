@@ -21,7 +21,7 @@
 
 #include <catch2/catch_test_macros.hpp>
 
-#if !defined(_MSC_VER)
+#if !defined(_WIN32)
 
 #include <cstdlib>  // exit(), strsignal(), etc.
 #include <string.h> // strsignal()
@@ -112,7 +112,7 @@ int subprocess(std::function<void()> fn, bool* is_signal_ptr) {
 } // namespace test
 } // namespace mongocxx
 
-#endif // !defined(_MSC_VER)
+#endif // !defined(_WIN32)
 
 TEST_CASE("counter", "[mongocxx][test][subprocess]") {
     std::atomic_int counter{0};
@@ -166,7 +166,7 @@ TEST_CASE("exception", "[mongocxx][test][subprocess]") {
 }
 
 TEST_CASE("unknown exception", "[mongocxx][test][subprocess]") {
-#if !defined(_MSC_VER)
+#if !defined(_WIN32)
     auto is_signal = false;
     auto const ret = mongocxx::test::subprocess(
         [] {
@@ -185,5 +185,5 @@ TEST_CASE("unknown exception", "[mongocxx][test][subprocess]") {
 
     CHECK_SUBPROCESS([] {});
 
-#endif // !defined(_MSC_VER)
+#endif // !defined(_WIN32)
 }

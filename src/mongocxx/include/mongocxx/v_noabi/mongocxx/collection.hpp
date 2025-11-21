@@ -239,8 +239,9 @@ class collection {
     /// - @ref mongocxx::v_noabi::bulk_write
     /// - https://www.mongodb.com/docs/manual/core/bulk-write-operations/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<result::bulk_write>)
-    write(model::write const& write, options::bulk_write const& options = options::bulk_write()) {
+    bsoncxx::v_noabi::stdx::optional<result::bulk_write> write(
+        model::write const& write,
+        options::bulk_write const& options = options::bulk_write()) {
         return create_bulk_write(options).append(write).execute();
     }
 
@@ -267,8 +268,7 @@ class collection {
     /// - @ref mongocxx::v_noabi::bulk_write
     /// - https://www.mongodb.com/docs/manual/core/bulk-write-operations/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<result::bulk_write>)
-    write(
+    bsoncxx::v_noabi::stdx::optional<result::bulk_write> write(
         client_session const& session,
         model::write const& write,
         options::bulk_write const& options = options::bulk_write()) {

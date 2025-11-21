@@ -39,9 +39,8 @@
 #include <catch2/catch_test_macros.hpp>
 #include <catch2/matchers/catch_matchers_string.hpp>
 
-#if !defined(_MSC_VER)
+#if !defined(_WIN32)
 #include <fcntl.h>
-#include <unistd.h>
 #endif
 
 namespace mongocxx {
@@ -69,7 +68,7 @@ class custom_logger : public logger {
 } // namespace
 
 TEST_CASE("logger", "[mongocxx][v1][instance]") {
-#if !defined(_MSC_VER)
+#if !defined(_WIN32)
     class capture_stderr {
        private:
         int _pipes[2];
@@ -133,7 +132,7 @@ TEST_CASE("logger", "[mongocxx][v1][instance]") {
         }
     };
 
-#endif // !defined(_MSC_VER)
+#endif // !defined(_WIN32)
 
     {
         auto const test_default = [] {
@@ -150,6 +149,7 @@ TEST_CASE("logger", "[mongocxx][v1][instance]") {
                 Catch::Matchers::ContainsSubstring("mongocxx::v1::instance") &&
                     Catch::Matchers::ContainsSubstring("mongoc_log_default_handler"));
         };
+        (void)test_default;
         CHECK_SUBPROCESS(test_default);
     }
 
@@ -168,6 +168,7 @@ TEST_CASE("logger", "[mongocxx][v1][instance]") {
                 !Catch::Matchers::ContainsSubstring("mongocxx::v1::instance") &&
                     !Catch::Matchers::ContainsSubstring("SHOULD NOT BE LOGGED"));
         };
+        (void)test_noop;
         CHECK_SUBPROCESS(test_noop);
     }
 
@@ -195,6 +196,7 @@ TEST_CASE("logger", "[mongocxx][v1][instance]") {
             CHECK(domain == "mongocxx::v1::instance");
             CHECK(message == "custom_logger");
         };
+        (void)test_custom;
         CHECK_SUBPROCESS(test_custom);
     }
 }
@@ -205,6 +207,7 @@ TEST_CASE("stringify", "[mongocxx][test][v1][instance]") {
 
         REQUIRE(bsoncxx::test::stringify(i) == "mongocxx::v1::instance");
     };
+    (void)test;
     CHECK_SUBPROCESS(test);
 }
 

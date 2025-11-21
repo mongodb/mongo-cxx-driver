@@ -18,6 +18,7 @@
 
 //
 
+#include <bsoncxx/test/v1/array/view.hh>    // IWYU pragma: keep: Catch::StringMaker<bsoncxx::v1::array::view>
 #include <bsoncxx/test/v1/document/view.hh> // IWYU pragma: keep: Catch::StringMaker<bsoncxx::v1::document::view>
 
 #include <string>

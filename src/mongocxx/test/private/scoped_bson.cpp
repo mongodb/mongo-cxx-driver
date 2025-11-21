@@ -16,6 +16,8 @@
 
 //
 
+#include <bsoncxx/test/v1/document/value.hh>
+
 #include <cstdint>
 #include <stdexcept>
 #include <utility>
@@ -430,6 +432,8 @@ TEST_CASE("concat", "[mongocxx][private][scoped_bson]") {
             auto const data = bsoncxx::make_unique_for_overwrite<char[]>(size);
             auto const big_string = bsoncxx::v1::stdx::string_view{data.get(), size};
 
+            REQUIRE(data);
+
             std::memset(data.get(), 'x', size - 1u);
             data[size - 1u] = '\0';
 
@@ -513,32 +517,55 @@ TEST_CASE("concat", "[mongocxx][private][scoped_bson]") {
     }
 
     SECTION("deleter") {
+        auto& noop_deleter = bsoncxx::v1::document::value::noop_deleter;
+        auto& bson_free = ::bson_free;
+
         scoped_bson const x1{R"({"x": 1})"};
         scoped_bson const x2{R"({"x": 2})"};
         scoped_bson const x1x2{R"({"x": 1, "x": 2})"};
 
         std::uint8_t data[] = {5, 0, 0, 0, 0}; // {}
-        scoped_bson doc{bsoncxx::v1::document::value{data, &bsoncxx::v1::document::value::noop_deleter}};
+        scoped_bson doc{bsoncxx::v1::document::value{data, &noop_deleter}};
 
         doc += x1; // noop_deleter -> bson_free
 
         CHECK(doc.view() == x1.view());
 
+#if defined(__MINGW32__)
+        {
+            // Linking with mingw-w64 does not guarantee a unique address for `bson_free`.
+            // Negative-test that the deleter is *no longer* `noop_deleter` instead.
+            (void)bson_free;
+            auto const deleter_ptr = doc.value().get_deleter().target<decltype(&noop_deleter)>();
+            CHECK_FALSE(deleter_ptr);
+        }
+#else
         {
             auto const deleter_ptr = doc.value().get_deleter().target<decltype(&bson_free)>();
             REQUIRE(deleter_ptr);
             CHECK(*deleter_ptr == &bson_free);
         }
+#endif
 
         doc += x2; // bson_free -> bson_free
 
         CHECK(doc.view() == x1x2.view());
 
+#if defined(__MINGW32__)
+        {
+            // Linking with mingw-w64 does not guarantee a unique address for `bson_free`.
+            // Negative-test that the deleter is *no longer* `noop_deleter` instead.
+            (void)bson_free;
+            auto const deleter_ptr = doc.value().get_deleter().target<decltype(&noop_deleter)>();
+            CHECK_FALSE(deleter_ptr);
+        }
+#else
         {
             auto const deleter_ptr = doc.value().get_deleter().target<decltype(&bson_free)>();
             REQUIRE(deleter_ptr);
             CHECK(*deleter_ptr == &bson_free);
         }
+#endif
     }
 }
 
