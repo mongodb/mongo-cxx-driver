@@ -41,6 +41,7 @@
 #include <mongocxx/options/client.hpp>
 #include <mongocxx/options/client_encryption.hpp>
 #include <mongocxx/options/data_key.hpp>
+#include <mongocxx/options/encrypt.hpp>
 #include <mongocxx/uri.hpp>
 #include <mongocxx/write_concern.hpp>
 
@@ -51,6 +52,7 @@
 #include <bsoncxx/test/catch.hh>
 
 #include <mongocxx/test/spec/monitoring.hh>
+#include <mongocxx/test/spec/unified_tests/assert.hh>
 
 #include <catch2/generators/catch_generators.hpp>
 
@@ -1955,6 +1957,31 @@ TEST_CASE("KMS TLS Options Tests", "[client_side_encryption][!mayfail]") {
     }
 }
 
+void _drop_and_create_collection(
+    std::string const& db_name,
+    std::string const& coll_name,
+    bsoncxx::stdx::optional<bsoncxx::stdx::string_view> encrypted_fields_path) {
+    mongocxx::client client{
+        uri{},
+        test_util::add_test_server_api(),
+    };
+
+    auto opts_doc_builder = bsoncxx::builder::basic::document{};
+    if (encrypted_fields_path.has_value()) {
+        auto encrypted_fields = _doc_from_file(encrypted_fields_path.value());
+        opts_doc_builder.append(kvp("encryptedFields", encrypted_fields));
+    }
+    bsoncxx::document::value opts_doc{opts_doc_builder.extract()};
+
+    write_concern wc_majority;
+    wc_majority.acknowledge_level(write_concern::level::k_majority);
+
+    auto coll = client[db_name][coll_name];
+    coll.drop(wc_majority, opts_doc.view());
+
+    client[db_name].create_collection(coll_name, opts_doc.view(), wc_majority);
+}
+
 // https://github.com/mongodb/specifications/blob/master/source/client-side-encryption/tests/README.md#test-setup
 std::tuple<mongocxx::client_encryption, mongocxx::client> _setup_explicit_encryption(
     bsoncxx::document::view key1_document,
@@ -1970,28 +1997,10 @@ std::tuple<mongocxx::client_encryption, mongocxx::client> _setup_explicit_encryp
     // Drop and create the collection db.explicit_encryption using
     // encryptedFields as an option. See FLE 2 CreateCollection() and
     // Collection.Drop().
-    {
-        write_concern wc_majority;
-        wc_majority.acknowledge_level(write_concern::level::k_majority);
-
-        auto coll = client["db"]["explicit_encryption"];
-        auto drop_doc = make_document(kvp("encryptedFields", encrypted_fields));
-        coll.drop(wc_majority, drop_doc.view());
-
-        client["db"].create_collection("explicit_encryption", drop_doc.view(), wc_majority);
-    }
+    _drop_and_create_collection("db", "explicit_encryption", "/explicit-encryption/encryptedFields.json");
 
     // Drop and create the collection keyvault.datakeys.
-    {
-        write_concern wc_majority;
-        wc_majority.acknowledge_level(write_concern::level::k_majority);
-
-        auto coll = client["keyvault"]["datakeys"];
-        coll.drop(wc_majority);
-
-        auto const empty_doc = make_document();
-        client["keyvault"].create_collection("datakeys", empty_doc.view(), wc_majority);
-    }
+    _drop_and_create_collection("keyvault", "datakeys", bsoncxx::stdx::nullopt);
 
     // Insert key1Document in keyvault.datakeys with majority write concern.
     {
@@ -3469,6 +3478,104 @@ TEST_CASE("16. Rewrap. Case 2: RewrapManyDataKeyOpts.provider is not optional", 
         clientEncryption.rewrap_many_datakey(
             make_document(), mongocxx::options::rewrap_many_datakey().master_key(make_document())),
         Catch::Matchers::ContainsSubstring("expected 'provider' to be set to identify type of 'master_key'"));
+}
+
+TEST_CASE("Text Explicit Encryption", "[client_side_encryption]") {
+    CLIENT_SIDE_ENCRYPTION_ENABLED_OR_SKIP();
+
+    mongocxx::client conn{
+        mongocxx::uri{},
+        test_util::add_test_server_api(),
+    };
+
+    if (!test_util::server_version_is_at_least("8.1")) {
+        SKIP("MongoDB server 8.1 or newer required");
+    }
+
+    if (test_util::get_topology() == "single") {
+        SKIP("must not run against a standalone server");
+    }
+
+    // Load the file key1-document.json as key1Document.
+    auto key1_document = _doc_from_file("/explicit-encryption/key1-document.json");
+
+    // Read the "_id" field of key1Document as key1ID.
+    auto key1_id = key1_document["_id"].get_value();
+
+    mongocxx::client key_vault_client{
+        uri{},
+        test_util::add_test_server_api(),
+    };
+    auto [client_encryption, encrypted_client] = _setup_explicit_encryption(key1_document, &key_vault_client);
+    _drop_and_create_collection("db", "prefix-suffix", "/explicit-encryption/encryptedFields-prefix-suffix.json");
+    _drop_and_create_collection("db", "substring", "/explicit-encryption/encryptedFields-substring.json");
+
+    auto const prefix_opts = options::prefix().str_max_query_length(10).str_min_query_length(2);
+    auto const suffix_opts = options::suffix().str_max_query_length(10).str_min_query_length(2);
+    auto const substring_opts =
+        options::substring().str_max_length(10).str_max_query_length(10).str_min_query_length(2);
+
+    auto const default_encrypt_opts = [&]() {
+        return options::encrypt()
+            .key_id(key1_id)
+            .algorithm(options::encrypt::encryption_algorithm::k_textPreview)
+            .contention_factor(0);
+    };
+    auto const default_text_opts = [&]() {
+        return options::text().case_sensitive(true).diacritic_sensitive(true);
+    };
+
+    const auto foobarbaz_doc = make_document(kvp("_id", 0), kvp("encryptedText", "foobarbaz"));
+
+    auto client_substring = encrypted_client["db"]["substring"];
+    auto client_prefix_suffix = encrypted_client["db"]["prefix-suffix"];
+    {
+        // Use clientEncryption to encrypt the string "foobarbaz" with the following EncryptOpts:
+        // TODO
+        auto const encrypt_opts =
+            default_encrypt_opts().text_opts(default_text_opts().prefix(prefix_opts).suffix(suffix_opts));
+        auto const encrypted_foobarbaz = client_encryption.encrypt(make_value("foobarbaz"), encrypt_opts);
+
+        // Use encryptedClient to insert the following document into db.prefix-suffix with majority write concern:
+        client_prefix_suffix.insert_one(make_document(kvp("_id", 0), kvp("encryptedText", encrypted_foobarbaz)));
+    }
+
+    // TODO same for substring
+    {
+        // Use clientEncryption to encrypt the string "foobarbaz" with the following EncryptOpts:
+        // TODO
+        auto const encrypt_opts = default_encrypt_opts().text_opts(default_text_opts().substring(substring_opts));
+        auto const encrypted_foobarbaz = client_encryption.encrypt(make_value("foobarbaz"), encrypt_opts);
+
+        // Use encryptedClient to insert the following document into db.prefix-suffix with majority write concern:
+        client_substring.insert_one(make_document(kvp("_id", 0), kvp("encryptedText", encrypted_foobarbaz)));
+    }
+
+    SECTION("can find a document by prefix") {
+        auto const encrypt_opts = default_encrypt_opts()
+                                      .query_type(options::encrypt::encryption_query_type::k_prefixPreview)
+                                      .text_opts(default_text_opts().prefix(prefix_opts));
+        auto const encrypted_foo = client_encryption.encrypt(make_value("foo"), encrypt_opts);
+        auto const query = make_document(
+            kvp("$expr", make_document(kvp("$encStrStartsWith", make_document(kvp("input", "$encryptedText"), kvp("prefix", encrypted_foo))))));
+
+        auto cursor = client_prefix_suffix.find(query.view());
+        auto const found = std::vector<bsoncxx::document::value>(cursor.begin(), cursor.end());
+        REQUIRE(found.size() == 1);
+        REQUIRE(found == std::vector{foobarbaz_doc});
+        std::cout << bsoncxx::to_json(found[0].view()) << std::endl;
+        // TODO expected
+    }
+
+    SECTION("can find a document by suffix") {}
+
+    SECTION("assert no document found by prefix") {}
+
+    SECTION("assert no document found by suffix") {}
+
+    SECTION("can find a document by substring") {}
+
+    SECTION("assert no document found by substring") {}
 }
 
 } // namespace
