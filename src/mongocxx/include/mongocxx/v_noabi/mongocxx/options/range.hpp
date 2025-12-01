@@ -63,11 +63,6 @@ class range {
     ///
     /// Convert to the @ref mongocxx::v1 equivalent.
     ///
-    /// @par Postconditions:
-    /// - `*this` is in an assign-or-destroy-only state.
-    ///
-    /// @warning Invalidates all associated views.
-    ///
     explicit operator v1::range_options() const {
         v1::range_options ret;
 

@@ -20,6 +20,7 @@
 
 #include <mongocxx/v1/read_concern.hh>
 #include <mongocxx/v1/read_preference.hh>
+#include <mongocxx/v1/write_concern.hh>
 
 #include <chrono>
 #include <memory>
@@ -81,17 +82,18 @@ class transaction::impl {
     }
 
     void write_concern(mongocxx::v_noabi::write_concern const& wc) {
-        libmongoc::transaction_opts_set_write_concern(_transaction_opt_t.get(), wc._impl->write_concern_t);
+        libmongoc::transaction_opts_set_write_concern(
+            _transaction_opt_t.get(), v_noabi::write_concern::internal::as_mongoc(wc));
     }
 
     bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern> write_concern() const {
-        auto wc = libmongoc::transaction_opts_get_write_concern(_transaction_opt_t.get());
-        if (!wc) {
-            return bsoncxx::v_noabi::stdx::nullopt;
+        bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern> ret;
+
+        if (auto const wc = libmongoc::transaction_opts_get_write_concern(_transaction_opt_t.get())) {
+            ret.emplace(v1::write_concern::internal::make(libmongoc::write_concern_copy(wc)));
         }
-        mongocxx::v_noabi::write_concern wci(
-            bsoncxx::make_unique<write_concern::impl>(libmongoc::write_concern_copy(wc)));
-        return bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern>(std::move(wci));
+
+        return ret;
     }
 
     void read_preference(mongocxx::v_noabi::read_preference const& rp) {

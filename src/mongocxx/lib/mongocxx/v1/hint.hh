@@ -14,34 +14,24 @@
 
 #pragma once
 
-#include <mongocxx/v1/count_options-fwd.hpp> // IWYU pragma: export
+#include <mongocxx/v1/hint.hpp> // IWYU pragma: export
 
-#include <mongocxx/config/prelude.hpp>
+//
 
-namespace mongocxx {
-namespace v_noabi {
-namespace options {
+#include <bsoncxx/v1/document/value-fwd.hpp>
 
-class count;
+#include <bsoncxx/v1/stdx/optional.hpp>
 
-} // namespace options
-} // namespace v_noabi
-} // namespace mongocxx
+#include <string>
 
 namespace mongocxx {
-namespace options {
+namespace v1 {
 
-using v_noabi::options::count;
+class hint::internal {
+   public:
+    static bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value>& doc(hint& self);
+    static bsoncxx::v1::stdx::optional<std::string>& str(hint& self);
+};
 
-} // namespace options
+} // namespace v1
 } // namespace mongocxx
-
-#include <mongocxx/config/postlude.hpp>
-
-///
-/// @file
-/// Declares @ref mongocxx::v_noabi::options::count.
-///
-/// @par Includes
-/// - @ref mongocxx/v1/count_options-fwd.hpp
-///

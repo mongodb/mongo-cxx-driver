@@ -1,0 +1,99 @@
+// Copyright 2009-present MongoDB, Inc.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+#include <mongocxx/v1/rewrap_many_datakey_options.hpp>
+
+//
+
+#include <bsoncxx/test/v1/stdx/string_view.hh>
+
+#include <string>
+#include <utility>
+
+#include <mongocxx/private/scoped_bson.hh>
+
+#include <catch2/catch_test_macros.hpp>
+#include <catch2/generators/catch_generators.hpp>
+#include <catch2/generators/catch_generators_adapters.hpp>
+
+namespace mongocxx {
+namespace v1 {
+
+TEST_CASE("ownership", "[mongocxx][v1][rewrap_many_datakey_options]") {
+    rewrap_many_datakey_options source;
+    rewrap_many_datakey_options target;
+
+    source.provider("source");
+    target.provider("target");
+
+    REQUIRE(source.provider() == "source");
+    REQUIRE(target.provider() == "target");
+
+    auto const source_value = source.provider();
+
+    SECTION("move") {
+        auto move = std::move(source);
+
+        // source is in an assign-or-move-only state.
+
+        CHECK(move.provider() == source_value);
+
+        target = std::move(move);
+
+        // source is in an assign-or-move-only state.
+
+        CHECK(target.provider() == source_value);
+    }
+
+    SECTION("copy") {
+        auto copy = source;
+
+        CHECK(source.provider() == source_value);
+        CHECK(copy.provider() == source_value);
+
+        target = copy;
+
+        CHECK(copy.provider() == source_value);
+        CHECK(target.provider() == source_value);
+    }
+}
+
+TEST_CASE("default", "[mongocxx][v1][rewrap_many_datakey_options]") {
+    rewrap_many_datakey_options const rc;
+
+    CHECK(rc.provider().empty());
+    CHECK_FALSE(rc.master_key().has_value());
+}
+
+TEST_CASE("provider") {
+    auto const v = GENERATE(values({
+        std::string{},
+        std::string{""},
+        std::string{"abc"},
+    }));
+
+    CHECK(rewrap_many_datakey_options{}.provider(v).provider() == v);
+}
+
+TEST_CASE("master_key") {
+    auto const v = GENERATE(values({
+        scoped_bson{},
+        scoped_bson{R"({"x": 1})"},
+    }));
+
+    CHECK(rewrap_many_datakey_options{}.master_key(v.value()).master_key() == v.view());
+}
+
+} // namespace v1
+} // namespace mongocxx

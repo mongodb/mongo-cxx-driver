@@ -14,34 +14,22 @@
 
 #pragma once
 
-#include <mongocxx/v1/count_options-fwd.hpp> // IWYU pragma: export
+#include <mongocxx/v1/write_concern.hpp> // IWYU pragma: export
 
-#include <mongocxx/config/prelude.hpp>
+//
 
-namespace mongocxx {
-namespace v_noabi {
-namespace options {
-
-class count;
-
-} // namespace options
-} // namespace v_noabi
-} // namespace mongocxx
+#include <mongocxx/private/export.hh>
+#include <mongocxx/private/mongoc.hh>
 
 namespace mongocxx {
-namespace options {
+namespace v1 {
 
-using v_noabi::options::count;
+class write_concern::internal {
+   public:
+    static MONGOCXX_ABI_EXPORT_CDECL_TESTING(write_concern) make(mongoc_write_concern_t* rc);
 
-} // namespace options
+    static mongoc_write_concern_t const* as_mongoc(write_concern const& self);
+};
+
+} // namespace v1
 } // namespace mongocxx
-
-#include <mongocxx/config/postlude.hpp>
-
-///
-/// @file
-/// Declares @ref mongocxx::v_noabi::options::count.
-///
-/// @par Includes
-/// - @ref mongocxx/v1/count_options-fwd.hpp
-///

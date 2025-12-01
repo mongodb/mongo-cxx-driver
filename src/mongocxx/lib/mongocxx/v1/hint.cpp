@@ -12,4 +12,110 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <mongocxx/v1/hint.hpp>
+#include <mongocxx/v1/hint.hh>
+
+#include <string>
+
+//
+
+#include <bsoncxx/v1/document/value.hpp>
+#include <bsoncxx/v1/stdx/optional.hpp>
+#include <bsoncxx/v1/stdx/string_view.hpp>
+#include <bsoncxx/v1/types/view.hpp>
+
+#include <mongocxx/private/utility.hh>
+
+namespace mongocxx {
+namespace v1 {
+
+class hint::impl {
+   public:
+    bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> _doc;
+    bsoncxx::v1::stdx::optional<std::string> _str;
+
+    static impl const& with(hint const& other) {
+        return *static_cast<impl const*>(other._impl);
+    }
+
+    static impl const* with(hint const* other) {
+        return static_cast<impl const*>(other->_impl);
+    }
+
+    static impl& with(hint& other) {
+        return *static_cast<impl*>(other._impl);
+    }
+
+    static impl* with(hint* other) {
+        return static_cast<impl*>(other->_impl);
+    }
+
+    static impl* with(void* ptr) {
+        return static_cast<impl*>(ptr);
+    }
+};
+
+hint::~hint() {
+    delete impl::with(_impl);
+}
+
+hint::hint(hint&& other) noexcept : _impl{exchange(other._impl, nullptr)} {}
+
+hint& hint::operator=(hint&& other) noexcept {
+    if (this != &other) {
+        delete impl::with(exchange(_impl, exchange(other._impl, nullptr)));
+    }
+
+    return *this;
+}
+
+hint::hint(hint const& other) : _impl{new impl{impl::with(other)}} {}
+
+hint& hint::operator=(hint const& other) {
+    if (this != &other) {
+        delete impl::with(exchange(_impl, new impl{impl::with(other)}));
+    }
+
+    return *this;
+}
+
+hint::hint() : _impl{new impl{}} {}
+
+hint::hint(std::string str) : hint{} {
+    impl::with(this)->_str = std::move(str);
+}
+
+hint::hint(bsoncxx::v1::document::value doc) : hint{} {
+    impl::with(this)->_doc = std::move(doc);
+}
+
+bsoncxx::v1::stdx::optional<bsoncxx::v1::stdx::string_view> hint::str() const {
+    return impl::with(this)->_str;
+}
+
+bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view> hint::doc() const {
+    return impl::with(this)->_doc;
+}
+
+bsoncxx::v1::types::view hint::to_value() const {
+    if (auto const& opt = impl::with(this)->_doc) {
+        return bsoncxx::v1::types::b_document{*opt};
+    }
+
+    // Invariant: either `_doc` or `_str` has a value.
+    return bsoncxx::v1::types::b_string{*impl::with(this)->_str};
+}
+
+hint::operator bsoncxx::v1::types::view() const {
+    return this->to_value();
+}
+
+bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value>& hint::internal::doc(hint& self) {
+    return impl::with(self)._doc;
+}
+
+bsoncxx::v1::stdx::optional<std::string>& hint::internal::str(hint& self) {
+    return impl::with(self)._str;
+}
+
+} // namespace v1
+} // namespace mongocxx

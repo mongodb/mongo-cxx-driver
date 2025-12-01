@@ -14,34 +14,17 @@
 
 #pragma once
 
-#include <mongocxx/v1/count_options-fwd.hpp> // IWYU pragma: export
+#include <mongocxx/v1/write_concern.hpp> // IWYU pragma: export
 
-#include <mongocxx/config/prelude.hpp>
+//
 
-namespace mongocxx {
-namespace v_noabi {
-namespace options {
+#include <catch2/catch_tostring.hpp>
 
-class count;
-
-} // namespace options
-} // namespace v_noabi
-} // namespace mongocxx
-
-namespace mongocxx {
-namespace options {
-
-using v_noabi::options::count;
-
-} // namespace options
-} // namespace mongocxx
-
-#include <mongocxx/config/postlude.hpp>
-
-///
-/// @file
-/// Declares @ref mongocxx::v_noabi::options::count.
-///
-/// @par Includes
-/// - @ref mongocxx/v1/count_options-fwd.hpp
-///
+CATCH_REGISTER_ENUM(
+    mongocxx::v1::write_concern::level,
+    mongocxx::v1::write_concern::level::k_default,
+    mongocxx::v1::write_concern::level::k_majority,
+    mongocxx::v1::write_concern::level::k_tag,
+    mongocxx::v1::write_concern::level::k_unacknowledged,
+    mongocxx::v1::write_concern::level::k_acknowledged,
+    mongocxx::v1::write_concern::level::k_unknown)

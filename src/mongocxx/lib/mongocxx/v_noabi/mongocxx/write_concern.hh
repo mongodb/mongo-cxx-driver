@@ -16,26 +16,16 @@
 
 #include <mongocxx/write_concern.hpp> // IWYU pragma: export
 
+//
+
 #include <mongocxx/private/mongoc.hh>
 
 namespace mongocxx {
 namespace v_noabi {
 
-class write_concern::impl {
+class write_concern::internal {
    public:
-    impl(mongoc_write_concern_t* write_concern) : write_concern_t(write_concern) {}
-
-    ~impl() {
-        libmongoc::write_concern_destroy(write_concern_t);
-    }
-
-    impl(impl&&) = delete;
-    impl& operator=(impl&&) = delete;
-
-    impl(impl const&) = delete;
-    impl& operator=(impl const&) = delete;
-
-    mongoc_write_concern_t* write_concern_t;
+    static mongoc_write_concern_t const* as_mongoc(write_concern const& self);
 };
 
 } // namespace v_noabi

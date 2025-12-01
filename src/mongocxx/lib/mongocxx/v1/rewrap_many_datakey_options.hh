@@ -14,34 +14,24 @@
 
 #pragma once
 
-#include <mongocxx/v1/count_options-fwd.hpp> // IWYU pragma: export
+#include <mongocxx/v1/rewrap_many_datakey_options.hpp> // IWYU pragma: export
 
-#include <mongocxx/config/prelude.hpp>
+#include <string>
 
-namespace mongocxx {
-namespace v_noabi {
-namespace options {
+//
 
-class count;
+#include <bsoncxx/v1/document/value-fwd.hpp>
 
-} // namespace options
-} // namespace v_noabi
-} // namespace mongocxx
+#include <bsoncxx/v1/stdx/optional.hpp>
 
 namespace mongocxx {
-namespace options {
+namespace v1 {
 
-using v_noabi::options::count;
+class rewrap_many_datakey_options::internal {
+   public:
+    static std::string& provider(rewrap_many_datakey_options& self);
+    static bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value>& master_key(rewrap_many_datakey_options& self);
+};
 
-} // namespace options
+} // namespace v1
 } // namespace mongocxx
-
-#include <mongocxx/config/postlude.hpp>
-
-///
-/// @file
-/// Declares @ref mongocxx::v_noabi::options::count.
-///
-/// @par Includes
-/// - @ref mongocxx/v1/count_options-fwd.hpp
-///

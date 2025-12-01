@@ -12,190 +12,94 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <mongocxx/v1/detail/macros.hpp>
+#include <mongocxx/write_concern.hh>
 
-#include <bsoncxx/builder/basic/document.hpp>
-#include <bsoncxx/string/to_string.hpp>
+//
+
+#include <mongocxx/v1/write_concern.hh>
+
+#include <chrono>
+#include <cstdint>
+#include <tuple>
 
 #include <mongocxx/exception/error_code.hpp>
 #include <mongocxx/exception/exception.hpp>
 #include <mongocxx/exception/logic_error.hpp>
-#include <mongocxx/write_concern.hpp>
 
 #include <mongocxx/write_concern.hh>
 
-#include <bsoncxx/private/make_unique.hh>
-
 #include <mongocxx/private/mongoc.hh>
+
+namespace {
+namespace static_assertions {
+namespace level {
+
+using lv1 = mongocxx::v1::write_concern::level;
+using lv_noabi = mongocxx::v_noabi::write_concern::level;
+
+template <lv1 lhs, lv_noabi rhs>
+struct check {
+    static_assert(
+        static_cast<int>(lhs) == static_cast<int>(rhs),
+        "write_concern::level: v1 and v_noabi must have the same values");
+};
+
+template struct check<lv1::k_default, lv_noabi::k_default>;
+template struct check<lv1::k_majority, lv_noabi::k_majority>;
+template struct check<lv1::k_tag, lv_noabi::k_tag>;
+template struct check<lv1::k_unacknowledged, lv_noabi::k_unacknowledged>;
+template struct check<lv1::k_acknowledged, lv_noabi::k_acknowledged>;
+
+} // namespace level
+} // namespace static_assertions
+} // namespace
 
 namespace mongocxx {
 namespace v_noabi {
 
-write_concern::write_concern() : _impl{bsoncxx::make_unique<impl>(libmongoc::write_concern_new())} {}
+namespace {
 
-write_concern::write_concern(std::unique_ptr<impl>&& implementation) {
-    _impl.reset(implementation.release());
-}
+struct static_assertions {
+    using lv1 = v1::write_concern::level;
+    using lv_noabi = v_noabi::write_concern::level;
 
-write_concern::write_concern(write_concern&&) noexcept = default;
-write_concern& write_concern::operator=(write_concern&&) noexcept = default;
+    static_assert(static_cast<int>(lv1::k_default) == static_cast<int>(lv_noabi::k_default), "");
+    static_assert(static_cast<int>(lv1::k_majority) == static_cast<int>(lv_noabi::k_majority), "");
+    static_assert(static_cast<int>(lv1::k_tag) == static_cast<int>(lv_noabi::k_tag), "");
+    static_assert(static_cast<int>(lv1::k_unacknowledged) == static_cast<int>(lv_noabi::k_unacknowledged), "");
+    static_assert(static_cast<int>(lv1::k_acknowledged) == static_cast<int>(lv_noabi::k_acknowledged), "");
+};
 
-write_concern::write_concern(write_concern const& other)
-    : _impl(bsoncxx::make_unique<impl>(libmongoc::write_concern_copy(other._impl->write_concern_t))) {}
-
-write_concern& write_concern::operator=(write_concern const& other) {
-    _impl.reset(bsoncxx::make_unique<impl>(libmongoc::write_concern_copy(other._impl->write_concern_t)).release());
-    return *this;
-}
-
-write_concern::~write_concern() = default;
-
-void write_concern::journal(bool journal) {
-    libmongoc::write_concern_set_journal(_impl->write_concern_t, journal);
-}
+} // namespace
 
 void write_concern::nodes(std::int32_t confirm_from) {
     if (confirm_from < 0) {
         throw mongocxx::v_noabi::logic_error{error_code::k_invalid_parameter};
     }
-    libmongoc::write_concern_set_w(_impl->write_concern_t, confirm_from);
+
+    _wc.nodes(confirm_from);
 }
 
 void write_concern::acknowledge_level(write_concern::level confirm_level) {
-    std::int32_t w = 0;
-    switch (confirm_level) {
-        case write_concern::level::k_default:
-            w = MONGOC_WRITE_CONCERN_W_DEFAULT;
-            break;
-        case write_concern::level::k_majority:
-            w = MONGOC_WRITE_CONCERN_W_MAJORITY;
-            break;
-        case write_concern::level::k_unacknowledged:
-            w = MONGOC_WRITE_CONCERN_W_UNACKNOWLEDGED;
-            break;
-        case write_concern::level::k_acknowledged:
-            w = 1;
-            break;
-        case write_concern::level::k_tag:
-            // no exception for setting tag if it's set
-            if (libmongoc::write_concern_get_w(_impl->write_concern_t) != MONGOC_WRITE_CONCERN_W_TAG) {
-                throw exception{error_code::k_unknown_write_concern};
-            } else {
-                return;
-            }
+    if (confirm_level == level::k_tag) {
+        if (this->acknowledge_level() != level::k_tag) {
+            throw exception{error_code::k_unknown_write_concern};
+        } else {
+            return;
+        }
     }
-    libmongoc::write_concern_set_w(_impl->write_concern_t, w);
-}
 
-void write_concern::tag(bsoncxx::v_noabi::stdx::string_view confirm_from) {
-    libmongoc::write_concern_set_wtag(_impl->write_concern_t, bsoncxx::v_noabi::string::to_string(confirm_from).data());
-}
-
-void write_concern::majority(std::chrono::milliseconds timeout) {
-    auto const count = timeout.count();
-    if ((count < 0) || (count >= std::numeric_limits<std::int32_t>::max()))
-        throw logic_error{error_code::k_invalid_parameter};
-
-    libmongoc::write_concern_set_wmajority(_impl->write_concern_t, static_cast<std::int32_t>(count));
+    _wc.acknowledge_level(static_cast<v1::write_concern::level>(confirm_level));
 }
 
 void write_concern::timeout(std::chrono::milliseconds timeout) {
     auto const count = timeout.count();
-    if ((count < 0) || (count >= std::numeric_limits<std::int32_t>::max()))
+
+    if ((count < 0) || (count >= std::int64_t{INT32_MAX})) {
         throw logic_error{error_code::k_invalid_parameter};
-
-    libmongoc::write_concern_set_wtimeout(_impl->write_concern_t, static_cast<std::int32_t>(count));
-}
-
-bool write_concern::journal() const {
-    return libmongoc::write_concern_get_journal(_impl->write_concern_t);
-}
-
-bsoncxx::v_noabi::stdx::optional<std::int32_t> write_concern::nodes() const {
-    std::int32_t w = libmongoc::write_concern_get_w(_impl->write_concern_t);
-    return w >= 0 ? bsoncxx::v_noabi::stdx::optional<std::int32_t>{w} : bsoncxx::v_noabi::stdx::nullopt;
-}
-
-write_concern::level write_concern::acknowledge_level() const {
-    std::int32_t w = libmongoc::write_concern_get_w(_impl->write_concern_t);
-    if (w >= 1)
-        return write_concern::level::k_acknowledged;
-    switch (w) {
-        case MONGOC_WRITE_CONCERN_W_UNACKNOWLEDGED:
-            return write_concern::level::k_unacknowledged;
-        case MONGOC_WRITE_CONCERN_W_DEFAULT:
-            return write_concern::level::k_default;
-        case MONGOC_WRITE_CONCERN_W_MAJORITY:
-            return write_concern::level::k_majority;
-        case MONGOC_WRITE_CONCERN_W_TAG:
-            return write_concern::level::k_tag;
-        default:
-            MONGOCXX_PRIVATE_UNREACHABLE;
-    }
-}
-
-bsoncxx::v_noabi::stdx::optional<std::string> write_concern::tag() const {
-    char const* tag_str = libmongoc::write_concern_get_wtag(_impl->write_concern_t);
-    return tag_str ? bsoncxx::v_noabi::stdx::make_optional<std::string>(tag_str) : bsoncxx::v_noabi::stdx::nullopt;
-}
-
-bool write_concern::majority() const {
-    return libmongoc::write_concern_get_wmajority(_impl->write_concern_t);
-}
-
-std::chrono::milliseconds write_concern::timeout() const {
-    return std::chrono::milliseconds(libmongoc::write_concern_get_wtimeout(_impl->write_concern_t));
-}
-
-bool write_concern::is_acknowledged() const {
-    return libmongoc::write_concern_is_acknowledged(_impl->write_concern_t);
-}
-
-bsoncxx::v_noabi::document::value write_concern::to_document() const {
-    using bsoncxx::v_noabi::builder::basic::kvp;
-    using bsoncxx::v_noabi::builder::basic::make_document;
-
-    bsoncxx::v_noabi::builder::basic::document doc;
-
-    if (auto ns = nodes()) {
-        doc.append(kvp("w", *ns));
-    } else {
-        switch (acknowledge_level()) {
-            case write_concern::level::k_unacknowledged:
-                doc.append(kvp("w", 0));
-                break;
-            case write_concern::level::k_default:
-                // "Commands supporting a write concern MUST NOT send the default write concern to
-                // the server." See Spec 135.
-                break;
-            case write_concern::level::k_majority:
-                doc.append(kvp("w", "majority"));
-                break;
-            case write_concern::level::k_tag:
-                if (auto t = tag()) {
-                    doc.append(kvp("w", *t));
-                }
-                break;
-
-            case write_concern::level::k_acknowledged:
-                // `ns.has_value()` implies an acknowledged write.
-                break;
-
-            default:
-                break;
-        }
     }
 
-    if (libmongoc::write_concern_journal_is_set(_impl->write_concern_t)) {
-        doc.append(kvp("j", journal()));
-    }
-
-    std::int32_t count;
-    if ((count = static_cast<std::int32_t>(timeout().count())) > 0) {
-        doc.append(kvp("wtimeout", bsoncxx::v_noabi::types::b_int32{count}));
-    }
-
-    return doc.extract();
+    _wc.timeout(timeout);
 }
 
 bool operator==(write_concern const& lhs, write_concern const& rhs) {
@@ -205,8 +109,8 @@ bool operator==(write_concern const& lhs, write_concern const& rhs) {
                rhs.journal(), rhs.nodes(), rhs.acknowledge_level(), rhs.tag(), rhs.majority(), rhs.timeout());
 }
 
-bool operator!=(write_concern const& lhs, write_concern const& rhs) {
-    return !(lhs == rhs);
+mongoc_write_concern_t const* write_concern::internal::as_mongoc(write_concern const& self) {
+    return v1::write_concern::internal::as_mongoc(self._wc);
 }
 
 } // namespace v_noabi
