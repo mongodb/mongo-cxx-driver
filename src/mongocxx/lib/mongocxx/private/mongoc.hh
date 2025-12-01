@@ -396,6 +396,7 @@ BSONCXX_PRIVATE_WARNINGS_POP();
     X(write_concern_get_wmajority)                                        \
     X(write_concern_get_wtag)                                             \
     X(write_concern_get_wtimeout)                                         \
+    X(write_concern_get_wtimeout_int64)                                   \
     X(write_concern_is_acknowledged)                                      \
     X(write_concern_journal_is_set)                                       \
     X(write_concern_new)                                                  \
@@ -403,7 +404,8 @@ BSONCXX_PRIVATE_WARNINGS_POP();
     X(write_concern_set_w)                                                \
     X(write_concern_set_wmajority)                                        \
     X(write_concern_set_wtag)                                             \
-    X(write_concern_set_wtimeout)
+    X(write_concern_set_wtimeout)                                         \
+    X(write_concern_set_wtimeout_int64)
 
 namespace mongocxx {
 namespace libmongoc {

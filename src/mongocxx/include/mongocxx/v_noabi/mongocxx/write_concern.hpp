@@ -14,25 +14,31 @@
 
 #pragma once
 
+#include <mongocxx/write_concern-fwd.hpp> // IWYU pragma: export
+
+//
+
+#include <mongocxx/v1/write_concern.hpp>
+
 #include <chrono>
 #include <cstdint>
-#include <memory>
+#include <memory>    // IWYU pragma: keep: backward compatibility, to be removed.
 #include <stdexcept> // IWYU pragma: keep: backward compatibility, to be removed.
 #include <string>
+#include <utility>
 
-#include <mongocxx/bulk_write-fwd.hpp>
-#include <mongocxx/client-fwd.hpp>
-#include <mongocxx/collection-fwd.hpp>
-#include <mongocxx/database-fwd.hpp>
-#include <mongocxx/options/transaction-fwd.hpp>
-#include <mongocxx/uri-fwd.hpp>
-#include <mongocxx/write_concern-fwd.hpp> // IWYU pragma: export
+#include <mongocxx/bulk_write-fwd.hpp>          // IWYU pragma: keep: backward compatibility, to be removed.
+#include <mongocxx/client-fwd.hpp>              // IWYU pragma: keep: backward compatibility, to be removed.
+#include <mongocxx/collection-fwd.hpp>          // IWYU pragma: keep: backward compatibility, to be removed.
+#include <mongocxx/database-fwd.hpp>            // IWYU pragma: keep: backward compatibility, to be removed.
+#include <mongocxx/options/transaction-fwd.hpp> // IWYU pragma: keep: backward compatibility, to be removed.
+#include <mongocxx/uri-fwd.hpp>                 // IWYU pragma: keep: backward compatibility, to be removed.
 
 #include <bsoncxx/document/value.hpp>
 #include <bsoncxx/stdx/optional.hpp>
 #include <bsoncxx/stdx/string_view.hpp>
 
-#include <mongocxx/options/transaction.hpp>
+#include <mongocxx/options/transaction.hpp> // IWYU pragma: keep: backward compatibility, to be removed.
 
 #include <mongocxx/config/prelude.hpp>
 
@@ -46,6 +52,9 @@ namespace v_noabi {
 /// - [Write Concern (MongoDB Manual)](https://www.mongodb.com/docs/manual/core/write-concern/)
 ///
 class write_concern {
+   private:
+    v1::write_concern _wc;
+
    public:
     ///
     /// A class to represent the write concern level for write operations.
@@ -65,32 +74,31 @@ class write_concern {
     ///
     /// Constructs a new write_concern.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL() write_concern();
+    write_concern() = default;
 
     ///
-    /// Copy constructs a write_concern.
+    /// Construct with the @ref mongocxx::v1 equivalent.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL() write_concern(write_concern const&);
+    /* explicit(false) */ write_concern(v1::write_concern rc) : _wc{std::move(rc)} {}
 
     ///
-    /// Copy assigns a write_concern.
+    /// Convert to the @ref mongocxx::v1 equivalent.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(write_concern&) operator=(write_concern const&);
+    /// @par Postconditions:
+    /// - `*this` is in an assign-or-destroy-only state.
+    ///
+    /// @warning Invalidates all associated views.
+    ///
+    explicit operator v1::write_concern() && {
+        return std::move(_wc);
+    }
 
     ///
-    /// Move constructs a write_concern.
+    /// Convert to the @ref mongocxx::v1 equivalent.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL() write_concern(write_concern&&) noexcept;
-
-    ///
-    /// Move assigns a write_concern.
-    ///
-    MONGOCXX_ABI_EXPORT_CDECL(write_concern&) operator=(write_concern&&) noexcept;
-
-    ///
-    /// Destroys a write_concern.
-    ///
-    MONGOCXX_ABI_EXPORT_CDECL() ~write_concern();
+    explicit operator v1::write_concern() const& {
+        return _wc;
+    }
 
     ///
     /// Sets the journal parameter for this write concern.
@@ -100,7 +108,9 @@ class write_concern {
     ///   before reporting a write operations was successful. This ensures that data is not lost if
     ///   the mongod instance shuts down unexpectedly.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(void) journal(bool journal);
+    void journal(bool journal) {
+        _wc.journal(journal);
+    }
 
     ///
     /// Sets the number of nodes that are required to acknowledge the write before the operation is
@@ -155,7 +165,10 @@ class write_concern {
     ///
     /// @throws mongocxx::v_noabi::logic_error for an invalid timeout value.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(void) majority(std::chrono::milliseconds timeout);
+    void majority(std::chrono::milliseconds timeout) {
+        this->timeout(timeout);
+        this->acknowledge_level(level::k_majority);
+    }
 
     ///
     /// Sets the name representing the server-side getLastErrorMode entry containing the list of
@@ -166,7 +179,9 @@ class write_concern {
     /// @param tag
     ///   The string representing on of the "getLastErrorModes" in the replica set configuration.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(void) tag(bsoncxx::v_noabi::stdx::string_view tag);
+    void tag(bsoncxx::v_noabi::stdx::string_view tag) {
+        _wc.tag(tag);
+    }
 
     ///
     /// Sets an upper bound on the time a write concern can take to be satisfied. If the write
@@ -185,7 +200,9 @@ class write_concern {
     ///
     /// @return @c true if journal is required, @c false if not.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bool) journal() const;
+    bool journal() const {
+        return _wc.journal().value_or(false);
+    }
 
     ///
     /// Gets the current number of nodes that this write_concern requires operations to reach.
@@ -198,7 +215,9 @@ class write_concern {
     ///
     /// @return The number of required nodes.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<std::int32_t>) nodes() const;
+    bsoncxx::v_noabi::stdx::optional<std::int32_t> nodes() const {
+        return _wc.nodes();
+    }
 
     ///
     /// Gets the current acknowledgment level.
@@ -208,35 +227,49 @@ class write_concern {
     ///
     /// @return The acknowledgment level.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(level) acknowledge_level() const;
+    level acknowledge_level() const {
+        return static_cast<level>(_wc.acknowledge_level());
+    }
 
     ///
     /// Gets the current getLastErrorMode that is required by this write_concern.
     ///
     /// @return The current getLastErrorMode.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<std::string>) tag() const;
+    bsoncxx::v_noabi::stdx::optional<std::string> tag() const {
+        bsoncxx::v_noabi::stdx::optional<std::string> ret;
+        if (auto const opt = _wc.tag()) {
+            ret.emplace(*opt);
+        }
+        return ret;
+    }
 
     ///
     /// Gets whether the majority of nodes is currently required by this write_concern.
     ///
     /// @return The current majority setting.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bool) majority() const;
+    bool majority() const {
+        return _wc.acknowledge_level() == v1::write_concern::level::k_majority;
+    }
 
     ///
     /// Gets the current timeout for this write_concern.
     ///
     /// @return Current timeout in milliseconds.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(std::chrono::milliseconds) timeout() const;
+    std::chrono::milliseconds timeout() const {
+        return _wc.timeout();
+    }
 
     ///
     /// Gets whether this write_concern requires an acknowledged write.
     ///
     /// @return Whether this write concern requires an acknowledged write.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bool) is_acknowledged() const;
+    bool is_acknowledged() const {
+        return _wc.is_acknowledged();
+    }
 
     ///
     /// Gets the document form of this write_concern.
@@ -244,7 +277,9 @@ class write_concern {
     /// @return
     ///   Document representation of this write_concern.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::document::value) to_document() const;
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::document::value) to_document() const {
+        return bsoncxx::v_noabi::from_v1(_wc.to_document());
+    }
 
     ///
     /// @relates mongocxx::v_noabi::write_concern
@@ -252,25 +287,30 @@ class write_concern {
     /// Compares two write_concern objects for (in)-equality.
     ///
     /// @{
-    friend MONGOCXX_ABI_EXPORT_CDECL(bool) operator==(write_concern const&, write_concern const&);
-    friend MONGOCXX_ABI_EXPORT_CDECL(bool) operator!=(write_concern const&, write_concern const&);
+    friend MONGOCXX_ABI_EXPORT_CDECL(bool) operator==(write_concern const& lhs, write_concern const& rhs);
+
+    friend bool operator!=(write_concern const& lhs, write_concern const& rhs) {
+        return !(lhs == rhs);
+    }
     /// @}
     ///
 
-   private:
-    friend ::mongocxx::v_noabi::bulk_write;
-    friend ::mongocxx::v_noabi::client;
-    friend ::mongocxx::v_noabi::collection;
-    friend ::mongocxx::v_noabi::database;
-    friend ::mongocxx::v_noabi::options::transaction;
-    friend ::mongocxx::v_noabi::uri;
-
-    class impl;
-
-    write_concern(std::unique_ptr<impl>&& implementation);
-
-    std::unique_ptr<impl> _impl;
+    class internal;
 };
+
+///
+/// Convert to the @ref mongocxx::v_noabi equivalent of `v`.
+///
+inline v_noabi::write_concern from_v1(v1::write_concern v) {
+    return {std::move(v)};
+}
+
+///
+/// Convert to the @ref mongocxx::v1 equivalent of `v`.
+///
+inline v1::write_concern to_v1(v_noabi::write_concern v) {
+    return v1::write_concern{std::move(v)};
+}
 
 } // namespace v_noabi
 } // namespace mongocxx
@@ -280,4 +320,7 @@ class write_concern {
 ///
 /// @file
 /// Provides @ref mongocxx::v_noabi::write_concern.
+///
+/// @par Includes
+/// - @ref mongocxx/v1/write_concern-fwd.hpp
 ///
