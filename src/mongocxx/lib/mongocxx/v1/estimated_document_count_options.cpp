@@ -16,7 +16,6 @@
 
 //
 
-#include <bsoncxx/v1/document/value.hpp>
 #include <bsoncxx/v1/stdx/optional.hpp>
 #include <bsoncxx/v1/types/value.hpp>
 
@@ -31,7 +30,6 @@ namespace v1 {
 
 class estimated_document_count_options::impl {
    public:
-    bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> _collation;
     bsoncxx::v1::stdx::optional<std::chrono::milliseconds> _max_time;
     bsoncxx::v1::stdx::optional<bsoncxx::v1::types::value> _comment;
     bsoncxx::v1::stdx::optional<mongocxx::v1::read_preference> _read_preference;
