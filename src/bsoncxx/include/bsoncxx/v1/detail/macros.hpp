@@ -121,7 +121,7 @@
 // (multiple definitions) until 19.20 even when __cpp_inline_variables is defined.
 //
 // mingw-w64: this is an ancient bug/issue: https://sourceware.org/bugzilla/show_bug.cgi?id=9687. Use the
-// Windows-specific [[gnu::selectany]] attribute instead, which provides linke-once semantics for global variables.
+// Windows-specific [[gnu::selectany]] attribute instead, which provides link-once semantics for global variables.
 #if (                                                                                                      \
     !defined(_MSC_VER) &&                                                                                  \
     (__cplusplus >= 201703L || (defined(__cpp_inline_variables) && __cpp_inline_variables >= 201606L))) || \
