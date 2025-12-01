@@ -147,7 +147,8 @@ TEST_CASE("basic", "[bsoncxx][v1][oid]") {
         {
             std::time_t time = o.get_time_t();
             char str[sizeof("YYYY-MM-DD HH:MM:SS")];
-            CHECK(std::strftime(str, sizeof(str), "%F %T", std::gmtime(&time)) == sizeof(str) - 1u);
+            // Avoid %F and %T for mingw-w64 GCC compatibiility.
+            CHECK(std::strftime(str, sizeof(str), "%Y-%m-%d %H:%M:%S", std::gmtime(&time)) == sizeof(str) - 1u);
             CHECK(std::string(str) == "1970-01-01 00:00:00");
         }
 
@@ -172,7 +173,8 @@ TEST_CASE("basic", "[bsoncxx][v1][oid]") {
         {
             std::time_t time = o.get_time_t();
             char str[sizeof("YYYY-MM-DD HH:MM:SS")];
-            CHECK(std::strftime(str, sizeof(str), "%F %T", std::gmtime(&time)) == sizeof(str) - 1u);
+            // Avoid %F and %T for mingw-w64 GCC compatibiility.
+            CHECK(std::strftime(str, sizeof(str), "%Y-%m-%d %H:%M:%S", std::gmtime(&time)) == sizeof(str) - 1u);
             CHECK(std::string(str) == "2000-01-01 23:59:59");
         }
 

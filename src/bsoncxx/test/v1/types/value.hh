@@ -18,7 +18,7 @@
 
 //
 
-#include <bsoncxx/test/v1/types/view.hh>
+#include <bsoncxx/test/v1/types/view.hh> // IWYU pragma: export
 
 #include <catch2/catch_tostring.hpp>
 

@@ -47,7 +47,7 @@ scoped_bson& scoped_bson::operator+=(scoped_bson_view other) {
         }
 
         bson_destroy(&bson);
-        throw std::logic_error{"mongocxx::scoped_bson::operator+=: bson_new_from_data failed"};
+        throw std::logic_error{"mongocxx::scoped_bson::operator+=: bson_concat failed"};
     }
 
     // Compatible allocator: avoid an unnecessary copy by reusing the underlying BSON data.
