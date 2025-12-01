@@ -127,7 +127,7 @@
     (__cplusplus >= 201703L || (defined(__cpp_inline_variables) && __cpp_inline_variables >= 201606L))) || \
     (defined(_MSC_VER) && _MSC_VER >= 1920 && defined(_MSVC_LANG) && _MSVC_LANG >= 201703L)
 #define BSONCXX_PRIVATE_INLINE_CXX17 inline
-#elif defined(__MINGW32__) || defined(__MINGW64__)
+#elif defined(__MINGW32__)
 #define BSONCXX_PRIVATE_INLINE_CXX17 [[gnu::selectany]]
 #else
 #define BSONCXX_PRIVATE_INLINE_CXX17                                                                   \
