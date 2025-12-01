@@ -277,7 +277,7 @@ class write_concern {
     /// @return
     ///   Document representation of this write_concern.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::document::value) to_document() const {
+    bsoncxx::v_noabi::document::value to_document() const {
         return bsoncxx::v_noabi::from_v1(_wc.to_document());
     }
 
