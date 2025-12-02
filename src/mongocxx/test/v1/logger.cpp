@@ -16,7 +16,7 @@
 
 //
 
-#include <bsoncxx/v1/stdx/string_view.hpp>
+#include <bsoncxx/test/v1/stdx/string_view.hh>
 
 #include <type_traits>
 
