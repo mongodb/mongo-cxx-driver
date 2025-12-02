@@ -87,6 +87,8 @@ class command_succeeded {
     ///
     MONGOCXX_ABI_EXPORT_CDECL(std::uint16_t) port() const;
 
+    class internal;
+
    private:
     /* explicit(false) */ command_succeeded(void const* impl);
 };

@@ -12,4 +12,261 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <mongocxx/v1/apm.hpp>
+#include <mongocxx/v1/apm.hh>
+
+//
+
+#include <mongocxx/v1/config/export.hpp>
+#include <mongocxx/v1/events/command_failed.hpp>
+#include <mongocxx/v1/events/command_started.hpp>
+#include <mongocxx/v1/events/command_succeeded.hpp>
+#include <mongocxx/v1/events/server_closed.hpp>
+#include <mongocxx/v1/events/server_description_changed.hpp>
+#include <mongocxx/v1/events/server_heartbeat_failed.hpp>
+#include <mongocxx/v1/events/server_heartbeat_started.hpp>
+#include <mongocxx/v1/events/server_heartbeat_succeeded.hpp>
+#include <mongocxx/v1/events/server_opening.hpp>
+#include <mongocxx/v1/events/topology_closed.hpp>
+#include <mongocxx/v1/events/topology_description_changed.hpp>
+#include <mongocxx/v1/events/topology_opening.hpp>
+
+#include <functional>
+
+#include <mongocxx/private/utility.hh>
+
+namespace mongocxx {
+namespace v1 {
+
+class apm::impl {
+   public:
+    template <typename T>
+    using fn_type = std::function<void MONGOCXX_ABI_CDECL(T const&)>;
+
+    fn_type<v1::events::command_started> _command_started;
+    fn_type<v1::events::command_failed> _command_failed;
+    fn_type<v1::events::command_succeeded> _command_succeeded;
+    fn_type<v1::events::server_closed> _server_closed;
+    fn_type<v1::events::server_description_changed> _server_description_changed;
+    fn_type<v1::events::server_opening> _server_opening;
+    fn_type<v1::events::topology_closed> _topology_closed;
+    fn_type<v1::events::topology_description_changed> _topology_description_changed;
+    fn_type<v1::events::topology_opening> _topology_opening;
+    fn_type<v1::events::server_heartbeat_started> _server_heartbeat_started;
+    fn_type<v1::events::server_heartbeat_failed> _server_heartbeat_failed;
+    fn_type<v1::events::server_heartbeat_succeeded> _server_heartbeat_succeeded;
+
+    static impl const& with(apm const& self) {
+        return *static_cast<impl const*>(self._impl);
+    }
+
+    static impl const* with(apm const* self) {
+        return static_cast<impl const*>(self->_impl);
+    }
+
+    static impl& with(apm& self) {
+        return *static_cast<impl*>(self._impl);
+    }
+
+    static impl* with(apm* self) {
+        return static_cast<impl*>(self->_impl);
+    }
+
+    static impl* with(void* ptr) {
+        return static_cast<impl*>(ptr);
+    }
+};
+
+apm::~apm() {
+    delete impl::with(this);
+}
+
+apm::apm(apm&& other) noexcept : _impl{exchange(other._impl, nullptr)} {}
+
+apm& apm::operator=(apm&& other) noexcept {
+    if (this != &other) {
+        delete impl::with(exchange(_impl, exchange(other._impl, nullptr)));
+    }
+
+    return *this;
+}
+
+apm::apm(apm const& other) : _impl{new impl{impl::with(other)}} {}
+
+apm& apm::operator=(apm const& other) {
+    if (this != &other) {
+        delete impl::with(exchange(_impl, new impl{impl::with(other)}));
+    }
+
+    return *this;
+}
+
+apm::apm() : _impl{new impl{}} {}
+
+apm& apm::on_command_started(std::function<void MONGOCXX_ABI_CDECL(v1::events::command_started const&)> fn) {
+    impl::with(this)->_command_started = std::move(fn);
+    return *this;
+}
+
+std::function<void MONGOCXX_ABI_CDECL(v1::events::command_started const&)> apm::command_started() const {
+    return impl::with(this)->_command_started;
+}
+
+apm& apm::on_command_failed(std::function<void MONGOCXX_ABI_CDECL(v1::events::command_failed const&)> fn) {
+    impl::with(this)->_command_failed = std::move(fn);
+    return *this;
+}
+
+std::function<void MONGOCXX_ABI_CDECL(v1::events::command_failed const&)> apm::command_failed() const {
+    return impl::with(this)->_command_failed;
+}
+
+apm& apm::on_command_succeeded(std::function<void MONGOCXX_ABI_CDECL(v1::events::command_succeeded const&)> fn) {
+    impl::with(this)->_command_succeeded = std::move(fn);
+    return *this;
+}
+
+std::function<void MONGOCXX_ABI_CDECL(v1::events::command_succeeded const&)> apm::command_succeeded() const {
+    return impl::with(this)->_command_succeeded;
+}
+
+apm& apm::on_server_opening(std::function<void MONGOCXX_ABI_CDECL(v1::events::server_opening const&)> fn) {
+    impl::with(this)->_server_opening = std::move(fn);
+    return *this;
+}
+
+std::function<void MONGOCXX_ABI_CDECL(v1::events::server_opening const&)> apm::server_opening() const {
+    return impl::with(this)->_server_opening;
+}
+
+apm& apm::on_server_closed(std::function<void MONGOCXX_ABI_CDECL(v1::events::server_closed const&)> fn) {
+    impl::with(this)->_server_closed = std::move(fn);
+    return *this;
+}
+
+std::function<void MONGOCXX_ABI_CDECL(v1::events::server_closed const&)> apm::server_closed() const {
+    return impl::with(this)->_server_closed;
+}
+
+apm& apm::on_server_description_changed(
+    std::function<void MONGOCXX_ABI_CDECL(v1::events::server_description_changed const&)> fn) {
+    impl::with(this)->_server_description_changed = std::move(fn);
+    return *this;
+}
+
+std::function<void MONGOCXX_ABI_CDECL(v1::events::server_description_changed const&)> apm::server_description_changed()
+    const {
+    return impl::with(this)->_server_description_changed;
+}
+
+apm& apm::on_topology_opening(std::function<void MONGOCXX_ABI_CDECL(v1::events::topology_opening const&)> fn) {
+    impl::with(this)->_topology_opening = std::move(fn);
+    return *this;
+}
+
+std::function<void MONGOCXX_ABI_CDECL(v1::events::topology_opening const&)> apm::topology_opening() const {
+    return impl::with(this)->_topology_opening;
+}
+
+apm& apm::on_topology_closed(std::function<void MONGOCXX_ABI_CDECL(v1::events::topology_closed const&)> fn) {
+    impl::with(this)->_topology_closed = std::move(fn);
+    return *this;
+}
+
+std::function<void MONGOCXX_ABI_CDECL(v1::events::topology_closed const&)> apm::topology_closed() const {
+    return impl::with(this)->_topology_closed;
+}
+
+apm& apm::on_topology_description_changed(
+    std::function<void MONGOCXX_ABI_CDECL(v1::events::topology_description_changed const&)> fn) {
+    impl::with(this)->_topology_description_changed = std::move(fn);
+    return *this;
+}
+
+std::function<void MONGOCXX_ABI_CDECL(v1::events::topology_description_changed const&)>
+apm::topology_description_changed() const {
+    return impl::with(this)->_topology_description_changed;
+}
+
+apm& apm::on_server_heartbeat_started(
+    std::function<void MONGOCXX_ABI_CDECL(v1::events::server_heartbeat_started const&)> fn) {
+    impl::with(this)->_server_heartbeat_started = std::move(fn);
+    return *this;
+}
+
+std::function<void MONGOCXX_ABI_CDECL(v1::events::server_heartbeat_started const&)> apm::server_heartbeat_started()
+    const {
+    return impl::with(this)->_server_heartbeat_started;
+}
+
+apm& apm::on_server_heartbeat_failed(
+    std::function<void MONGOCXX_ABI_CDECL(v1::events::server_heartbeat_failed const&)> fn) {
+    impl::with(this)->_server_heartbeat_failed = std::move(fn);
+    return *this;
+}
+
+std::function<void MONGOCXX_ABI_CDECL(v1::events::server_heartbeat_failed const&)> apm::server_heartbeat_failed()
+    const {
+    return impl::with(this)->_server_heartbeat_failed;
+}
+
+apm& apm::on_server_heartbeat_succeeded(
+    std::function<void MONGOCXX_ABI_CDECL(v1::events::server_heartbeat_succeeded const&)> fn) {
+    impl::with(this)->_server_heartbeat_succeeded = std::move(fn);
+    return *this;
+}
+
+std::function<void MONGOCXX_ABI_CDECL(v1::events::server_heartbeat_succeeded const&)> apm::server_heartbeat_succeeded()
+    const {
+    return impl::with(this)->_server_heartbeat_succeeded;
+}
+
+auto apm::internal::command_started(apm& self) -> fn_type<v1::events::command_started>& {
+    return impl::with(self)._command_started;
+}
+
+auto apm::internal::command_failed(apm& self) -> fn_type<v1::events::command_failed>& {
+    return impl::with(self)._command_failed;
+}
+
+auto apm::internal::command_succeeded(apm& self) -> fn_type<v1::events::command_succeeded>& {
+    return impl::with(self)._command_succeeded;
+}
+
+auto apm::internal::server_closed(apm& self) -> fn_type<v1::events::server_closed>& {
+    return impl::with(self)._server_closed;
+}
+
+auto apm::internal::server_description_changed(apm& self) -> fn_type<v1::events::server_description_changed>& {
+    return impl::with(self)._server_description_changed;
+}
+
+auto apm::internal::server_opening(apm& self) -> fn_type<v1::events::server_opening>& {
+    return impl::with(self)._server_opening;
+}
+
+auto apm::internal::topology_closed(apm& self) -> fn_type<v1::events::topology_closed>& {
+    return impl::with(self)._topology_closed;
+}
+
+auto apm::internal::topology_description_changed(apm& self) -> fn_type<v1::events::topology_description_changed>& {
+    return impl::with(self)._topology_description_changed;
+}
+
+auto apm::internal::topology_opening(apm& self) -> fn_type<v1::events::topology_opening>& {
+    return impl::with(self)._topology_opening;
+}
+
+auto apm::internal::server_heartbeat_started(apm& self) -> fn_type<v1::events::server_heartbeat_started>& {
+    return impl::with(self)._server_heartbeat_started;
+}
+
+auto apm::internal::server_heartbeat_failed(apm& self) -> fn_type<v1::events::server_heartbeat_failed>& {
+    return impl::with(self)._server_heartbeat_failed;
+}
+
+auto apm::internal::server_heartbeat_succeeded(apm& self) -> fn_type<v1::events::server_heartbeat_succeeded>& {
+    return impl::with(self)._server_heartbeat_succeeded;
+}
+
+} // namespace v1
+} // namespace mongocxx

@@ -296,6 +296,8 @@ class apm {
     ///
     MONGOCXX_ABI_EXPORT_CDECL(std::function<void MONGOCXX_ABI_CDECL(v1::events::server_heartbeat_succeeded const&)>)
     server_heartbeat_succeeded() const;
+
+    class internal;
 };
 
 } // namespace v1

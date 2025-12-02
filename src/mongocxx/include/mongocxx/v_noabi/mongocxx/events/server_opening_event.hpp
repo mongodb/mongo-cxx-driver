@@ -14,11 +14,16 @@
 
 #pragma once
 
-#include <cstdint>
-
 #include <mongocxx/events/server_opening_event-fwd.hpp> // IWYU pragma: export
 
+//
+
+#include <mongocxx/v1/events/server_opening.hpp> // IWYU pragma: export
+
+#include <cstdint>
+
 #include <bsoncxx/oid.hpp>
+#include <bsoncxx/stdx/string_view.hpp>
 
 #include <mongocxx/config/prelude.hpp>
 
@@ -33,33 +38,44 @@ namespace events {
 /// - [SDAM Logging and Monitoring Specification (MongoDB Specifications)](https://specifications.readthedocs.io/en/latest/server-discovery-and-monitoring/server-discovery-and-monitoring-logging-and-monitoring/)
 ///
 class server_opening_event {
+   private:
+    v1::events::server_opening _event;
+
    public:
-    explicit server_opening_event(void const* event);
+    ///
+    /// @deprecated For internal use only.
+    ///
+    explicit MONGOCXX_ABI_NO_EXPORT server_opening_event(void const* event);
 
     ///
-    /// Destroys a server_opening_event.
+    /// Construct with the @ref mongocxx::v1 equivalent.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL() ~server_opening_event();
+    /* explicit(false) */ server_opening_event(v1::events::server_opening const& event) : _event{event} {}
 
-    server_opening_event(server_opening_event&&) = default;
-    server_opening_event& operator=(server_opening_event&&) = default;
-
-    server_opening_event(server_opening_event const&) = default;
-    server_opening_event& operator=(server_opening_event const&) = default;
+    ///
+    /// Convert to the @ref mongocxx::v1 equivalent.
+    ///
+    explicit operator v1::events::server_opening() const {
+        return _event;
+    }
 
     ///
     /// Returns the server host name.
     ///
     /// @return The host name.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::string_view) host() const;
+    bsoncxx::v_noabi::stdx::string_view host() const {
+        return _event.host();
+    }
 
     ///
     /// Returns the server port.
     ///
     /// @return The port.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(std::uint16_t) port() const;
+    std::uint16_t port() const {
+        return _event.port();
+    }
 
     ///
     /// An opaque id, unique to this topology for this mongocxx::v_noabi::client or
@@ -67,13 +83,32 @@ class server_opening_event {
     ///
     /// @return The id.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::oid const) topology_id() const;
-
-   private:
-    void const* _event;
+    bsoncxx::v_noabi::oid const topology_id() const {
+        return _event.topology_id();
+    }
 };
 
 } // namespace events
+} // namespace v_noabi
+} // namespace mongocxx
+
+namespace mongocxx {
+namespace v_noabi {
+
+///
+/// Convert to the @ref mongocxx::v_noabi equivalent of `v`.
+///
+inline v_noabi::events::server_opening_event from_v1(v1::events::server_opening const& v) {
+    return {v};
+}
+
+///
+/// Convert to the @ref mongocxx::v1 equivalent of `v`.
+///
+inline v1::events::server_opening to_v1(v_noabi::events::server_opening_event const& v) {
+    return v1::events::server_opening{v};
+}
+
 } // namespace v_noabi
 } // namespace mongocxx
 
@@ -82,4 +117,7 @@ class server_opening_event {
 ///
 /// @file
 /// Provides @ref mongocxx::v_noabi::events::server_opening_event.
+///
+/// @par Includes
+/// - @ref mongocxx/v1/events/server_opening.hpp
 ///

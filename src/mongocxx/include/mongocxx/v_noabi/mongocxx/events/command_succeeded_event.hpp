@@ -14,13 +14,19 @@
 
 #pragma once
 
-#include <memory> // IWYU pragma: keep: backward compatibility, to be removed.
-
 #include <mongocxx/events/command_succeeded_event-fwd.hpp> // IWYU pragma: export
+
+//
+
+#include <mongocxx/v1/events/command_succeeded.hpp> // IWYU pragma: export
+
+#include <cstdint>
+#include <memory> // IWYU pragma: keep: backward compatibility, to be removed.
 
 #include <bsoncxx/document/view.hpp>
 #include <bsoncxx/oid.hpp>
 #include <bsoncxx/stdx/optional.hpp>
+#include <bsoncxx/stdx/string_view.hpp>
 
 #include <mongocxx/config/prelude.hpp>
 
@@ -35,81 +41,121 @@ namespace events {
 /// - [Command Logging and Monitoring (MongoDB Specifications)](https://specifications.readthedocs.io/en/latest/command-logging-and-monitoring/command-logging-and-monitoring/)
 ///
 class command_succeeded_event {
+   private:
+    v1::events::command_succeeded _event;
+
    public:
-    explicit command_succeeded_event(void const* event);
     ///
-    /// Destroys a command_succeeded_event.
+    /// @deprecated For internal use only.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL() ~command_succeeded_event();
+    explicit MONGOCXX_ABI_NO_EXPORT command_succeeded_event(void const* event);
 
-    command_succeeded_event(command_succeeded_event&&) = default;
-    command_succeeded_event& operator=(command_succeeded_event&&) = default;
+    ///
+    /// Construct with the @ref mongocxx::v1 equivalent.
+    ///
+    /* explicit(false) */ command_succeeded_event(v1::events::command_succeeded const& event) : _event{event} {}
 
-    command_succeeded_event(command_succeeded_event const&) = default;
-    command_succeeded_event& operator=(command_succeeded_event const&) = default;
+    ///
+    /// Convert to the @ref mongocxx::v1 equivalent.
+    ///
+    explicit operator v1::events::command_succeeded() const {
+        return _event;
+    }
 
     ///
     /// Returns the server reply for the succeeded operation.
     ///
     /// @return The reply.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::document::view) reply() const;
+    bsoncxx::v_noabi::document::view reply() const {
+        return _event.reply();
+    }
 
     ///
     /// Returns the name of the command.
     ///
     /// @return The command name.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::string_view) command_name() const;
+    bsoncxx::v_noabi::stdx::string_view command_name() const {
+        return _event.command_name();
+    }
 
     ///
     /// Returns the duration of the successful operation.
     ///
     /// @return The duration in microseconds.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(std::int64_t) duration() const;
+    std::int64_t duration() const {
+        return _event.duration();
+    }
 
     ///
     /// Returns the request id.
     ///
     /// @return The request id.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(std::int64_t) request_id() const;
+    std::int64_t request_id() const {
+        return _event.request_id();
+    }
 
     ///
     /// Returns the operation id.
     ///
     /// @return The operation id.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(std::int64_t) operation_id() const;
+    std::int64_t operation_id() const {
+        return _event.operation_id();
+    }
 
     ///
     /// Optionally returns the service id.
     ///
     /// @return No contained value, or contains the service id if load balancing is enabled.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::oid>)
-    service_id() const;
+    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::oid> service_id() const {
+        return _event.service_id();
+    }
 
     ///
     /// Returns the host name.
     ///
     /// @return The host name.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::string_view) host() const;
+    bsoncxx::v_noabi::stdx::string_view host() const {
+        return _event.host();
+    }
 
     ///
     /// Returns the port.
     ///
     /// @return The port.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(std::uint16_t) port() const;
-
-   private:
-    void const* _succeeded_event;
+    std::uint16_t port() const {
+        return _event.port();
+    }
 };
 
 } // namespace events
+} // namespace v_noabi
+} // namespace mongocxx
+
+namespace mongocxx {
+namespace v_noabi {
+
+///
+/// Convert to the @ref mongocxx::v_noabi equivalent of `v`.
+///
+inline v_noabi::events::command_succeeded_event from_v1(v1::events::command_succeeded const& v) {
+    return {v};
+}
+
+///
+/// Convert to the @ref mongocxx::v1 equivalent of `v`.
+///
+inline v1::events::command_succeeded to_v1(v_noabi::events::command_succeeded_event const& v) {
+    return v1::events::command_succeeded{v};
+}
+
 } // namespace v_noabi
 } // namespace mongocxx
 
@@ -118,4 +164,7 @@ class command_succeeded_event {
 ///
 /// @file
 /// Provides @ref mongocxx::v_noabi::events::command_succeeded_event.
+///
+/// @par Includes
+/// - @ref mongocxx/v1/events/command_succeeded.hpp
 ///

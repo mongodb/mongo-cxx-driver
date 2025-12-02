@@ -14,30 +14,18 @@
 
 #include <mongocxx/events/server_opening_event.hpp>
 
+//
+
+#include <mongocxx/v1/events/server_opening.hh>
+
 #include <mongocxx/private/mongoc.hh>
 
 namespace mongocxx {
 namespace v_noabi {
 namespace events {
 
-server_opening_event::server_opening_event(void const* event) : _event(event) {}
-
-server_opening_event::~server_opening_event() = default;
-
-bsoncxx::v_noabi::stdx::string_view server_opening_event::host() const {
-    return libmongoc::apm_server_changed_get_host(static_cast<mongoc_apm_server_changed_t const*>(_event))->host;
-}
-
-std::uint16_t server_opening_event::port() const {
-    return libmongoc::apm_server_changed_get_host(static_cast<mongoc_apm_server_changed_t const*>(_event))->port;
-}
-
-bsoncxx::v_noabi::oid const server_opening_event::topology_id() const {
-    bson_oid_t boid;
-    libmongoc::apm_server_changed_get_topology_id(static_cast<mongoc_apm_server_changed_t const*>(_event), &boid);
-
-    return bsoncxx::v_noabi::oid{reinterpret_cast<char const*>(boid.bytes), sizeof(boid.bytes)};
-}
+server_opening_event::server_opening_event(void const* event)
+    : _event{v1::events::server_opening::internal::make(static_cast<mongoc_apm_server_opening_t const*>(event))} {}
 
 } // namespace events
 } // namespace v_noabi

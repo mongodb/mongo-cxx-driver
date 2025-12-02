@@ -12,4 +12,80 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <mongocxx/v1/events/command_succeeded.hpp>
+#include <mongocxx/v1/events/command_succeeded.hh>
+
+//
+
+#include <bsoncxx/v1/document/view.hpp>
+#include <bsoncxx/v1/oid.hpp>
+#include <bsoncxx/v1/stdx/optional.hpp>
+#include <bsoncxx/v1/stdx/string_view.hpp>
+
+#include <cstdint>
+
+#include <mongocxx/private/mongoc.hh>
+#include <mongocxx/private/scoped_bson.hh>
+
+namespace mongocxx {
+namespace v1 {
+namespace events {
+
+namespace {
+
+mongoc_apm_command_succeeded_t const* to_mongoc(void const* ptr) {
+    return static_cast<mongoc_apm_command_succeeded_t const*>(ptr);
+}
+
+} // namespace
+
+bsoncxx::v1::document::view command_succeeded::reply() const {
+    return scoped_bson_view{libmongoc::apm_command_succeeded_get_reply(to_mongoc(_impl))}.view();
+}
+
+bsoncxx::v1::stdx::string_view command_succeeded::command_name() const {
+    return libmongoc::apm_command_succeeded_get_command_name(to_mongoc(_impl));
+}
+
+std::int64_t command_succeeded::duration() const {
+    return libmongoc::apm_command_succeeded_get_duration(to_mongoc(_impl));
+}
+
+std::int64_t command_succeeded::request_id() const {
+    return libmongoc::apm_command_succeeded_get_request_id(to_mongoc(_impl));
+}
+
+std::int64_t command_succeeded::operation_id() const {
+    return libmongoc::apm_command_succeeded_get_operation_id(to_mongoc(_impl));
+}
+
+bsoncxx::v1::stdx::optional<bsoncxx::v1::oid> command_succeeded::service_id() const {
+    bsoncxx::v1::stdx::optional<bsoncxx::v1::oid> ret;
+
+    if (auto const id = libmongoc::apm_command_succeeded_get_service_id(to_mongoc(_impl))) {
+        ret.emplace(reinterpret_cast<std::uint8_t const*>(id), bsoncxx::v1::oid::k_oid_length);
+    }
+
+    return ret;
+}
+
+bsoncxx::v1::stdx::string_view command_succeeded::host() const {
+    return libmongoc::apm_command_succeeded_get_host(to_mongoc(_impl))->host;
+}
+
+std::uint16_t command_succeeded::port() const {
+    return libmongoc::apm_command_succeeded_get_host(to_mongoc(_impl))->port;
+}
+
+command_succeeded::command_succeeded(void const* impl) : _impl{impl} {}
+
+command_succeeded command_succeeded::internal::make(mongoc_apm_command_succeeded_t const* ptr) {
+    return {ptr};
+}
+
+mongoc_apm_command_succeeded_t const* command_succeeded::internal::as_mongoc(command_succeeded const& self) {
+    return to_mongoc(self._impl);
+}
+
+} // namespace events
+} // namespace v1
+} // namespace mongocxx
