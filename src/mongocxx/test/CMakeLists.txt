@@ -113,6 +113,7 @@ set(mongocxx_test_sources_v1
     v1/read_concern.cpp
     v1/read_preference.cpp
     v1/rewrap_many_datakey_options.cpp
+    v1/server_error.cpp
     v1/tls.cpp
     v1/write_concern.cpp
 )
