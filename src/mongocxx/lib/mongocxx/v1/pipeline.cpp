@@ -37,11 +37,21 @@ namespace v1 {
 
 class pipeline::impl {
    private:
-    static_assert(INT32_MAX == std::int32_t{2147483647}, "");
+    class idx_type {
+       private:
+        // Non-negative values only.
+        static_assert(INT32_MAX == std::int32_t{2147483647}, "");
+        std::array<char, sizeof("2147483647")> _buffer = {};
+        std::int32_t _count = {};
 
-    std::array<char, sizeof("2147483647")> _idx = {};
+       public:
+        char const* operator()() {
+            (void)std::snprintf(_buffer.data(), _buffer.size(), "%" PRId32, _count);
+            ++_count;
+            return _buffer.data();
+        }
+    } _idx;
 
-    std::int32_t _count = 0;
     scoped_bson _doc;
 
    public:
@@ -49,34 +59,24 @@ class pipeline::impl {
         return _doc;
     }
 
-    char const* idx() {
-        (void)std::snprintf(_idx.data(), _idx.size(), "%" PRId32, _count);
-        return _idx.data();
-    }
-
     void append(bsoncxx::v1::document::view doc) {
-        _doc += scoped_bson{BCON_NEW(this->idx(), BCON_DOCUMENT(scoped_bson_view{doc}.bson()))};
-        ++_count;
+        _doc += scoped_bson{BCON_NEW(this->_idx(), BCON_DOCUMENT(scoped_bson_view{doc}.bson()))};
     }
 
     void append(char const* name, bsoncxx::v1::document::view doc) {
-        _doc += scoped_bson{BCON_NEW(this->idx(), "{", name, BCON_DOCUMENT(scoped_bson_view{doc}.bson()), "}")};
-        ++_count;
+        _doc += scoped_bson{BCON_NEW(this->_idx(), "{", name, BCON_DOCUMENT(scoped_bson_view{doc}.bson()), "}")};
     }
 
     void append(char const* name, bsoncxx::v1::stdx::string_view v) {
-        _doc += scoped_bson{BCON_NEW(this->idx(), "{", name, BCON_UTF8(std::string{v}.c_str()), "}")};
-        ++_count;
+        _doc += scoped_bson{BCON_NEW(this->_idx(), "{", name, BCON_UTF8(std::string{v}.c_str()), "}")};
     }
 
     void append(char const* name, std::int32_t v) {
-        _doc += scoped_bson{BCON_NEW(this->idx(), "{", name, BCON_INT32(v), "}")};
-        ++_count;
+        _doc += scoped_bson{BCON_NEW(this->_idx(), "{", name, BCON_INT32(v), "}")};
     }
 
     void append(char const* name, std::int64_t v) {
-        _doc += scoped_bson{BCON_NEW(this->idx(), "{", name, BCON_INT64(v), "}")};
-        ++_count;
+        _doc += scoped_bson{BCON_NEW(this->_idx(), "{", name, BCON_INT64(v), "}")};
     }
 
     static impl const& with(pipeline const& self) {
