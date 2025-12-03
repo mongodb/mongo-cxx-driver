@@ -14,6 +14,7 @@
 
 #include <mongocxx/v1/read_concern.hh>
 #include <mongocxx/v1/read_preference.hh>
+#include <mongocxx/v1/write_concern.hh>
 
 #include <bsoncxx/builder/basic/kvp.hpp>
 
@@ -22,6 +23,7 @@
 #include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/exception/operation_exception.hpp>
 #include <mongocxx/options/auto_encryption.hpp>
+#include <mongocxx/pipeline.hpp>
 
 #include <mongocxx/client.hh>
 #include <mongocxx/client_session.hh>
@@ -29,7 +31,6 @@
 #include <mongocxx/options/apm.hh>
 #include <mongocxx/options/server_api.hh>
 #include <mongocxx/options/tls.hh>
-#include <mongocxx/pipeline.hh>
 #include <mongocxx/read_concern.hh>
 #include <mongocxx/read_preference.hh>
 #include <mongocxx/scoped_bson.hh>
@@ -185,7 +186,7 @@ mongocxx::v_noabi::uri client::uri() const {
 }
 
 void client::write_concern_deprecated(mongocxx::v_noabi::write_concern wc) {
-    libmongoc::client_set_write_concern(_get_impl().client_t, wc._impl->write_concern_t);
+    libmongoc::client_set_write_concern(_get_impl().client_t, v_noabi::write_concern::internal::as_mongoc(wc));
 }
 
 void client::write_concern(mongocxx::v_noabi::write_concern wc) {
@@ -193,10 +194,8 @@ void client::write_concern(mongocxx::v_noabi::write_concern wc) {
 }
 
 mongocxx::v_noabi::write_concern client::write_concern() const {
-    mongocxx::v_noabi::write_concern wc(
-        bsoncxx::make_unique<write_concern::impl>(
-            libmongoc::write_concern_copy(libmongoc::client_get_write_concern(_get_impl().client_t))));
-    return wc;
+    return v1::write_concern::internal::make(
+        libmongoc::write_concern_copy(libmongoc::client_get_write_concern(_get_impl().client_t)));
 }
 
 mongocxx::v_noabi::database client::database(bsoncxx::v_noabi::string::view_or_value name) const& {
@@ -302,7 +301,7 @@ client::watch(client_session const& session, pipeline const& pipe, options::chan
 change_stream
 client::_watch(client_session const* session, pipeline const& pipe, options::change_stream const& options) {
     bsoncxx::v_noabi::builder::basic::document container;
-    container.append(bsoncxx::v_noabi::builder::basic::kvp("pipeline", pipe._impl->view_array()));
+    container.append(bsoncxx::v_noabi::builder::basic::kvp("pipeline", pipe.view_array()));
 
     bsoncxx::v_noabi::builder::basic::document options_builder;
     options_builder.append(bsoncxx::v_noabi::builder::concatenate(options.as_bson()));

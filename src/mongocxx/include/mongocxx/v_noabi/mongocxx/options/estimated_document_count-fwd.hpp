@@ -14,6 +14,8 @@
 
 #pragma once
 
+#include <mongocxx/v1/estimated_document_count_options-fwd.hpp> // IWYU pragma: export
+
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
@@ -29,7 +31,7 @@ class estimated_document_count;
 namespace mongocxx {
 namespace options {
 
-using ::mongocxx::v_noabi::options::estimated_document_count;
+using v_noabi::options::estimated_document_count;
 
 } // namespace options
 } // namespace mongocxx
@@ -39,4 +41,7 @@ using ::mongocxx::v_noabi::options::estimated_document_count;
 ///
 /// @file
 /// Declares @ref mongocxx::v_noabi::options::estimated_document_count.
+///
+/// @par Includes
+/// - @ref mongocxx/v1/estimated_document_count_options-fwd.hpp
 ///

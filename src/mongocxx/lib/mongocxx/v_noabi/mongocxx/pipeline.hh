@@ -14,32 +14,18 @@
 
 #pragma once
 
-#include <bsoncxx/builder/basic/array.hpp>
-
 #include <mongocxx/pipeline.hpp> // IWYU pragma: export
+
+//
+
+#include <mongocxx/private/scoped_bson.hh>
 
 namespace mongocxx {
 namespace v_noabi {
 
-class pipeline::impl {
+class pipeline::internal {
    public:
-    bsoncxx::v_noabi::builder::basic::array& sink() {
-        return _builder;
-    }
-
-    bsoncxx::v_noabi::array::view view_array() {
-        return _builder.view();
-    }
-
-    ///
-    /// view() is deprecated. Use view_array() instead.
-    ///
-    bsoncxx::v_noabi::document::view view() {
-        return _builder.view();
-    }
-
-   private:
-    bsoncxx::v_noabi::builder::basic::array _builder;
+    static scoped_bson const& doc(pipeline const& self);
 };
 
 } // namespace v_noabi

@@ -14,6 +14,7 @@
 
 #include <mongocxx/v1/read_concern.hh>
 #include <mongocxx/v1/read_preference.hh>
+#include <mongocxx/v1/write_concern.hh>
 
 #include <chrono>
 #include <cstdint>
@@ -32,7 +33,6 @@
 
 #include <mongocxx/bulk_write.hpp>
 #include <mongocxx/client.hpp>
-#include <mongocxx/collection.hpp>
 #include <mongocxx/exception/error_code.hpp>
 #include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/exception/operation_exception.hpp>
@@ -45,7 +45,6 @@
 #include <mongocxx/result/insert_one.hpp>
 #include <mongocxx/result/replace_one.hpp>
 #include <mongocxx/result/update.hpp>
-#include <mongocxx/write_concern.hpp>
 
 #include <mongocxx/bulk_write.hh>
 #include <mongocxx/client_session.hh>
@@ -468,7 +467,7 @@ collection::_aggregate(client_session const* session, pipeline const& pipeline, 
         libmongoc::collection_aggregate(
             _get_impl().collection_t,
             static_cast<::mongoc_query_flags_t>(0),
-            mongocxx::to_scoped_bson_view(pipeline._impl->view_array()),
+            v_noabi::pipeline::internal::doc(pipeline).bson(),
             mongocxx::to_scoped_bson_view(b),
             read_prefs));
 }
@@ -1330,14 +1329,12 @@ mongocxx::v_noabi::read_preference collection::read_preference() const {
 }
 
 void collection::write_concern(mongocxx::v_noabi::write_concern wc) {
-    libmongoc::collection_set_write_concern(_get_impl().collection_t, wc._impl->write_concern_t);
+    libmongoc::collection_set_write_concern(_get_impl().collection_t, v_noabi::write_concern::internal::as_mongoc(wc));
 }
 
 mongocxx::v_noabi::write_concern collection::write_concern() const {
-    mongocxx::v_noabi::write_concern wc(
-        bsoncxx::make_unique<write_concern::impl>(
-            libmongoc::write_concern_copy(libmongoc::collection_get_write_concern(_get_impl().collection_t))));
-    return wc;
+    return v1::write_concern::internal::make(
+        libmongoc::write_concern_copy(libmongoc::collection_get_write_concern(_get_impl().collection_t)));
 }
 
 change_stream collection::watch(options::change_stream const& options) {
@@ -1360,7 +1357,7 @@ collection::watch(client_session const& session, pipeline const& pipe, options::
 change_stream
 collection::_watch(client_session const* session, pipeline const& pipe, options::change_stream const& options) {
     bsoncxx::v_noabi::builder::basic::document container;
-    container.append(kvp("pipeline", pipe._impl->view_array()));
+    container.append(kvp("pipeline", v_noabi::pipeline::internal::doc(pipe).array_view()));
 
     bsoncxx::v_noabi::builder::basic::document options_builder;
     options_builder.append(bsoncxx::v_noabi::builder::concatenate(options.as_bson()));

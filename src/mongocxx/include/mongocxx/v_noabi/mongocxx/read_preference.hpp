@@ -114,9 +114,9 @@ class read_preference {
     /// Convert to the @ref mongocxx::v1 equivalent.
     ///
     /// @par Postconditions:
-    /// - `other` is in an assign-or-destroy-only state.
+    /// - `*this` is in an assign-or-destroy-only state.
     ///
-    /// @warning Invalidates all associated iterators and views.
+    /// @warning Invalidates all associated views.
     ///
     explicit operator v1::read_preference() && {
         return std::move(_rp);
@@ -328,8 +328,7 @@ class read_preference {
     ///
     /// @return A hedge document if one was set.
     ///
-    MONGOCXX_DEPRECATED MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view> const)
-    hedge() const {
+    MONGOCXX_DEPRECATED bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view> const hedge() const {
         bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view> ret;
         if (auto const opt = _rp.hedge()) {
             ret.emplace(*opt);

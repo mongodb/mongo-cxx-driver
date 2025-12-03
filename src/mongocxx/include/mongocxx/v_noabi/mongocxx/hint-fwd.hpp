@@ -14,6 +14,8 @@
 
 #pragma once
 
+#include <mongocxx/v1/hint-fwd.hpp> // IWYU pragma: export
+
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
@@ -26,7 +28,7 @@ class hint;
 
 namespace mongocxx {
 
-using ::mongocxx::v_noabi::hint;
+using v_noabi::hint;
 
 } // namespace mongocxx
 
@@ -35,4 +37,7 @@ using ::mongocxx::v_noabi::hint;
 ///
 /// @file
 /// Declares @ref mongocxx::v_noabi::hint.
+///
+/// @par Includes
+/// - @ref mongocxx/v1/hint-fwd.hpp
 ///

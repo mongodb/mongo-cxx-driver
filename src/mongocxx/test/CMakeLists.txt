@@ -41,7 +41,6 @@ set(mongocxx_test_sources_private
     private/numeric_casting.cpp
     private/scoped_bson_value.cpp
     private/scoped_bson.cpp
-    private/write_concern.cpp
     private/mongoc_version.cpp
 )
 
@@ -102,13 +101,21 @@ set(mongocxx_test_sources_v_noabi
 
 set(mongocxx_test_sources_v1
     v1/bsoncxx.cpp
+    v1/count_options.cpp
     v1/data_key_options.cpp
+    v1/distinct_options.cpp
+    v1/estimated_document_count_options.cpp
     v1/exception.cpp
+    v1/hint.cpp
     v1/logger.cpp
+    v1/pipeline.cpp
     v1/range_options.cpp
     v1/read_concern.cpp
     v1/read_preference.cpp
+    v1/rewrap_many_datakey_options.cpp
+    v1/server_error.cpp
     v1/tls.cpp
+    v1/write_concern.cpp
 )
 
 set(mongocxx_test_sources_spec
