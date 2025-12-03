@@ -54,9 +54,7 @@ namespace {
 
 class collection_names {
    public:
-    explicit collection_names(char** names) {
-        _names = names;
-    }
+    explicit collection_names(char** names) : _names{names} {}
 
     ~collection_names() {
         bson_strfreev(_names);

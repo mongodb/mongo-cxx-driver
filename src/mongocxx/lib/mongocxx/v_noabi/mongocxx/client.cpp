@@ -50,9 +50,7 @@ using bsoncxx::v_noabi::builder::basic::kvp;
 namespace {
 class database_names {
    public:
-    explicit database_names(char** names) {
-        _names = names;
-    }
+    explicit database_names(char** names) : _names{names} {}
 
     ~database_names() {
         bson_strfreev(_names);
