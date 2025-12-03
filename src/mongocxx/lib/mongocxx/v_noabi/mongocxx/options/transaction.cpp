@@ -30,11 +30,13 @@ transaction::transaction() : _impl{bsoncxx::make_unique<impl>()} {}
 transaction::transaction(transaction&&) noexcept = default;
 transaction& transaction::operator=(transaction&&) noexcept = default;
 
-transaction::transaction(transaction const& other)
-    : _impl{bsoncxx::make_unique<impl>(other._get_impl().get_transaction_opt_t())} {}
+transaction::transaction(transaction const& other) : _impl{bsoncxx::make_unique<impl>(other._get_impl())} {}
 
 transaction& transaction::operator=(transaction const& other) {
-    _impl = bsoncxx::make_unique<impl>(other._get_impl().get_transaction_opt_t());
+    if (this != &other) {
+        _impl = bsoncxx::make_unique<impl>(other._get_impl());
+    }
+
     return *this;
 }
 

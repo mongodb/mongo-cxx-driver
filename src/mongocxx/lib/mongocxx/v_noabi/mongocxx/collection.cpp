@@ -272,12 +272,14 @@ collection::collection(collection const& c) {
 }
 
 collection& collection::operator=(collection const& c) {
-    if (!c) {
-        _impl.reset();
-    } else if (!*this) {
-        _impl = bsoncxx::make_unique<impl>(c._get_impl());
-    } else {
-        *_impl = c._get_impl();
+    if (this != &c) {
+        if (!c._impl) {
+            _impl.reset();
+        } else if (!_impl) {
+            _impl = bsoncxx::make_unique<impl>(c._get_impl());
+        } else {
+            *_impl = c._get_impl();
+        }
     }
 
     return *this;

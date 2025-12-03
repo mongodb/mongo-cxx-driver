@@ -23,6 +23,7 @@ search_index_model& search_index_model::operator=(search_index_model&&) noexcept
 search_index_model::search_index_model(search_index_model const& other)
     : _impl(bsoncxx::make_unique<impl>(other._get_impl())) {}
 
+// NOLINTNEXTLINE(cert-oop54-cpp): handled by impl.
 search_index_model& search_index_model::operator=(search_index_model const& other) {
     _get_impl() = other._get_impl();
     return *this;

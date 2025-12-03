@@ -172,13 +172,16 @@ bucket::bucket(bucket const& b) {
 }
 
 bucket& bucket::operator=(bucket const& b) {
-    if (!b) {
-        _impl.reset();
-    } else if (!*this) {
-        _impl = bsoncxx::make_unique<impl>(b._get_impl());
-    } else {
-        *_impl = b._get_impl();
+    if (this != &b) {
+        if (!b._impl) {
+            _impl.reset();
+        } else if (!_impl) {
+            _impl = bsoncxx::make_unique<impl>(b._get_impl());
+        } else {
+            *_impl = b._get_impl();
+        }
     }
+
     return *this;
 }
 

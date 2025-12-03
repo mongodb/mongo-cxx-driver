@@ -155,6 +155,7 @@ value::value(value const& other) {
     new (impl::with(this)) impl{impl::with(other)};
 }
 
+// NOLINTNEXTLINE(cert-oop54-cpp): handled by impl.
 value& value::operator=(value const& other) {
     *impl::with(this) = impl::with(other);
     return *this;

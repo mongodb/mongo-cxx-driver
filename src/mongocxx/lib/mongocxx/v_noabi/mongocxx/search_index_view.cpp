@@ -19,6 +19,7 @@ search_index_view& search_index_view::operator=(search_index_view&&) noexcept = 
 search_index_view::search_index_view(search_index_view const& other)
     : _impl(bsoncxx::make_unique<impl>(other._get_impl())) {}
 
+// NOLINTNEXTLINE(cert-oop54-cpp): handled by impl.
 search_index_view& search_index_view::operator=(search_index_view const& other) {
     _get_impl() = other._get_impl();
     return *this;

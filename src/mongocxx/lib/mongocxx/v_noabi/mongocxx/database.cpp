@@ -103,12 +103,14 @@ database::database(database const& d) {
 }
 
 database& database::operator=(database const& d) {
-    if (!d) {
-        _impl.reset();
-    } else if (!*this) {
-        _impl = bsoncxx::make_unique<impl>(d._get_impl());
-    } else {
-        *_impl = d._get_impl();
+    if (this != &d) {
+        if (!d) {
+            _impl.reset();
+        } else if (!*this) {
+            _impl = bsoncxx::make_unique<impl>(d._get_impl());
+        } else {
+            *_impl = d._get_impl();
+        }
     }
 
     return *this;

@@ -196,6 +196,7 @@ view::view(view const& other) noexcept {
     new (impl::with(this)) impl{impl::with(other)};
 }
 
+// NOLINTNEXTLINE(cert-oop54-cpp): handled by impl.
 view& view::operator=(view const& other) noexcept {
     *impl::with(this) = impl::with(other);
     return *this;
