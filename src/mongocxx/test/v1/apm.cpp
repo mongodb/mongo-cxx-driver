@@ -44,8 +44,8 @@ namespace {
 template <typename T>
 bsoncxx::v1::stdx::optional<void(MONGOCXX_ABI_CDECL*)(T const&)> get_target(
     std::function<void MONGOCXX_ABI_CDECL(T const&)> const& fn) {
-    if (auto const deleter_ptr = fn.template target<void(MONGOCXX_ABI_CDECL*)(T const&)>()) {
-        return *deleter_ptr;
+    if (auto const fn_ptr = fn.template target<void(MONGOCXX_ABI_CDECL*)(T const&)>()) {
+        return *fn_ptr;
     }
     return {};
 }
