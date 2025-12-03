@@ -14,84 +14,47 @@
 
 #include <mongocxx/options/find_one_and_delete.hpp>
 
+//
+
+#include <mongocxx/v1/find_one_and_delete_options.hh>
+
+#include <utility>
+
+#include <bsoncxx/document/value.hpp>
+
 namespace mongocxx {
 namespace v_noabi {
 namespace options {
 
-find_one_and_delete& find_one_and_delete::collation(bsoncxx::v_noabi::document::view_or_value collation) {
-    _collation = std::move(collation);
-    return *this;
-}
-
-find_one_and_delete& find_one_and_delete::max_time(std::chrono::milliseconds max_time) {
-    _max_time = std::move(max_time);
-    return *this;
-}
-
-find_one_and_delete& find_one_and_delete::projection(bsoncxx::v_noabi::document::view_or_value projection) {
-    _projection = std::move(projection);
-    return *this;
-}
-
-find_one_and_delete& find_one_and_delete::sort(bsoncxx::v_noabi::document::view_or_value ordering) {
-    _ordering = std::move(ordering);
-    return *this;
-}
-
-find_one_and_delete& find_one_and_delete::write_concern(mongocxx::v_noabi::write_concern write_concern) {
-    _write_concern = std::move(write_concern);
-    return *this;
-}
-
-find_one_and_delete& find_one_and_delete::hint(mongocxx::v_noabi::hint index_hint) {
-    _hint = std::move(index_hint);
-    return *this;
-}
-
-find_one_and_delete& find_one_and_delete::let(bsoncxx::v_noabi::document::view_or_value let) {
-    _let = let;
-    return *this;
-}
-
-find_one_and_delete& find_one_and_delete::comment(bsoncxx::v_noabi::types::bson_value::view_or_value comment) {
-    _comment = std::move(comment);
-    return *this;
-}
-
-bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::hint> const& find_one_and_delete::hint() const {
-    return _hint;
-}
-
-bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const& find_one_and_delete::collation()
-    const {
-    return _collation;
-}
-
-bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const& find_one_and_delete::projection()
-    const {
-    return _projection;
-}
-
-bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const& find_one_and_delete::sort() const {
-    return _ordering;
-}
-
-bsoncxx::v_noabi::stdx::optional<std::chrono::milliseconds> const& find_one_and_delete::max_time() const {
-    return _max_time;
-}
-
-bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern> const& find_one_and_delete::write_concern() const {
-    return _write_concern;
-}
-
-bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const find_one_and_delete::let() const {
-    return _let;
-}
-
-bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value> const
-find_one_and_delete::comment() const {
-    return _comment;
-}
+find_one_and_delete::find_one_and_delete(v1::find_one_and_delete_options opts)
+    : _collation{[&]() -> decltype(_collation) {
+          if (auto& opt = v1::find_one_and_delete_options::internal::collation(opts)) {
+              return bsoncxx::v_noabi::from_v1(std::move(*opt));
+          }
+          return {};
+      }()},
+      _max_time{opts.max_time()},
+      _projection{[&]() -> decltype(_projection) {
+          if (auto& opt = v1::find_one_and_delete_options::internal::projection(opts)) {
+              return bsoncxx::v_noabi::from_v1(std::move(*opt));
+          }
+          return {};
+      }()},
+      _ordering{[&]() -> decltype(_projection) {
+          if (auto& opt = v1::find_one_and_delete_options::internal::sort(opts)) {
+              return bsoncxx::v_noabi::from_v1(std::move(*opt));
+          }
+          return {};
+      }()},
+      _write_concern{std::move(v1::find_one_and_delete_options::internal::write_concern(opts))},
+      _hint{std::move(v1::find_one_and_delete_options::internal::hint(opts))},
+      _let{[&]() -> decltype(_let) {
+          if (auto& opt = v1::find_one_and_delete_options::internal::let(opts)) {
+              return bsoncxx::v_noabi::from_v1(std::move(*opt));
+          }
+          return {};
+      }()},
+      _comment{std::move(v1::find_one_and_delete_options::internal::comment(opts))} {}
 
 } // namespace options
 } // namespace v_noabi
