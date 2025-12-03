@@ -333,7 +333,7 @@ void throw_exception(bson_error_t const& error, bsoncxx::v1::document::value doc
     // Client-side error.
     auto ex = make_exception(error);
     exception::internal::set_error_labels(ex, doc);
-    throw ex;
+    throw std::move(ex);
 }
 
 } // namespace v1
