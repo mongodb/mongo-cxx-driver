@@ -342,9 +342,11 @@ BSONCXX_PRIVATE_WARNINGS_POP();
     X(server_api_strict)                                                  \
     X(server_api_version_from_string)                                     \
     X(server_api_version_to_string)                                       \
+    X(server_description_destroy)                                         \
     X(server_description_hello_response)                                  \
     X(server_description_host)                                            \
     X(server_description_id)                                              \
+    X(server_description_new_copy)                                        \
     X(server_description_round_trip_time)                                 \
     X(server_description_type)                                            \
     X(server_descriptions_destroy_all)                                    \

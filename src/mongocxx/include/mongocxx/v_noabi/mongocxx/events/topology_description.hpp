@@ -14,9 +14,14 @@
 
 #pragma once
 
-#include <vector>
-
 #include <mongocxx/events/topology_description-fwd.hpp> // IWYU pragma: export
+
+//
+
+#include <mongocxx/v1/events/topology_description.hpp> // IWYU pragma: export
+
+#include <cstddef>
+#include <vector>
 
 #include <bsoncxx/stdx/string_view.hpp>
 
@@ -36,6 +41,9 @@ namespace events {
 /// - mongocxx::v_noabi::events::topology_changed_event
 ///
 class topology_description {
+   private:
+    v1::events::topology_description _td;
+
    public:
     ///
     /// An array of server_description instances.
@@ -77,8 +85,12 @@ class topology_description {
         /// Returns an iterator to the beginning.
         ///
         /// @{
-        MONGOCXX_ABI_EXPORT_CDECL(iterator) begin() noexcept;
-        MONGOCXX_ABI_EXPORT_CDECL(const_iterator) begin() const noexcept;
+        iterator begin() noexcept {
+            return _container.begin();
+        }
+        const_iterator begin() const noexcept {
+            return _container.begin();
+        }
         /// @}
         ///
 
@@ -86,39 +98,45 @@ class topology_description {
         /// Returns an iterator to the end.
         ///
         /// @{
-        MONGOCXX_ABI_EXPORT_CDECL(iterator) end() noexcept;
-        MONGOCXX_ABI_EXPORT_CDECL(const_iterator) end() const noexcept;
+        iterator end() noexcept {
+            return _container.end();
+        }
+        const_iterator end() const noexcept {
+            return _container.begin();
+        }
         /// @}
         ///
 
         ///
         /// The number of server_description instances in the array.
         ///
-        MONGOCXX_ABI_EXPORT_CDECL(std::size_t) size() const noexcept;
+        std::size_t size() const noexcept {
+            return _container.size();
+        }
 
        private:
-        friend ::mongocxx::v_noabi::events::topology_description;
+        friend topology_description;
 
-        explicit server_descriptions(void* sds, std::size_t size);
-        void swap(server_descriptions& other) noexcept;
+        server_descriptions(void* sds, std::size_t size);
 
         container _container;
         void* _sds;
         std::size_t _size;
     };
 
-    explicit topology_description(void* event);
+    explicit MONGOCXX_ABI_EXPORT_CDECL() topology_description(void const* td);
 
     ///
-    /// Destroys a topology_description.
+    /// Construct with the @ref mongocxx::v1 equivalent.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL() ~topology_description();
+    /* explicit(false) */ topology_description(v1::events::topology_description const& td) : _td{td} {}
 
-    topology_description(topology_description&&) = default;
-    topology_description& operator=(topology_description&&) = default;
-
-    topology_description(topology_description const&) = default;
-    topology_description& operator=(topology_description const&) = default;
+    ///
+    /// Convert to the @ref mongocxx::v1 equivalent.
+    ///
+    explicit operator v1::events::topology_description() const {
+        return _td;
+    }
 
     ///
     /// The topology type: "Unknown", "Sharded", "ReplicaSetNoPrimary", "ReplicaSetWithPrimary", or
@@ -126,7 +144,9 @@ class topology_description {
     ///
     /// @return The type as a short-lived string view.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::string_view) type() const;
+    bsoncxx::v_noabi::stdx::string_view type() const {
+        return _td.type();
+    }
 
     ///
     /// Determines if the topology has a readable server available. Servers are
@@ -137,8 +157,7 @@ class topology_description {
     ///
     /// @return Whether there is a readable server available.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bool)
-    has_readable_server(mongocxx::v_noabi::read_preference const& pref) const;
+    MONGOCXX_ABI_EXPORT_CDECL(bool) has_readable_server(v_noabi::read_preference const& pref) const;
 
     ///
     /// Determines if the topology has a writable server available, such as a
@@ -148,7 +167,9 @@ class topology_description {
     ///
     /// @return Whether there is a writable server available.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bool) has_writable_server() const;
+    bool has_writable_server() const {
+        return _td.has_writable_server();
+    }
 
     ///
     /// Fetches descriptions for all known servers in the topology.
@@ -156,14 +177,29 @@ class topology_description {
     /// @return An array of server_description objects.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(server_descriptions) servers() const;
-
-   private:
-    // Non-const since mongoc_topology_description_has_readable_server/writable_server take
-    // non-const. They do server selection, which modifies the mongoc_topology_description_t.
-    void* _td;
 };
 
 } // namespace events
+} // namespace v_noabi
+} // namespace mongocxx
+
+namespace mongocxx {
+namespace v_noabi {
+
+///
+/// Convert to the @ref mongocxx::v_noabi equivalent of `v`.
+///
+inline v_noabi::events::topology_description from_v1(v1::events::topology_description const& v) {
+    return {v};
+}
+
+///
+/// Convert to the @ref mongocxx::v1 equivalent of `v`.
+///
+inline v1::events::topology_description to_v1(v_noabi::events::topology_description const& v) {
+    return v1::events::topology_description{v};
+}
+
 } // namespace v_noabi
 } // namespace mongocxx
 
@@ -172,4 +208,7 @@ class topology_description {
 ///
 /// @file
 /// Provides @ref mongocxx::v_noabi::events::topology_description.
+///
+/// @par Includes
+/// - @ref mongocxx/v1/events/topology_description.hpp
 ///

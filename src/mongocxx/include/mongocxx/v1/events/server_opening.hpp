@@ -60,6 +60,8 @@ class server_opening {
     ///
     MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::oid) topology_id() const;
 
+    class internal;
+
    private:
     /* explicit(false) */ server_opening(void const* impl);
 };

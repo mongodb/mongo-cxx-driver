@@ -14,6 +14,8 @@
 
 #pragma once
 
+#include <mongocxx/v1/events/server_heartbeat_started-fwd.hpp> // IWYU pragma: export
+
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
@@ -29,7 +31,7 @@ class heartbeat_started_event;
 namespace mongocxx {
 namespace events {
 
-using ::mongocxx::v_noabi::events::heartbeat_started_event;
+using v_noabi::events::heartbeat_started_event;
 
 } // namespace events
 } // namespace mongocxx
@@ -39,4 +41,7 @@ using ::mongocxx::v_noabi::events::heartbeat_started_event;
 ///
 /// @file
 /// Declares @ref mongocxx::v_noabi::events::heartbeat_started_event.
+///
+/// @par Includes
+/// - @ref mongocxx/v1/events/server_heartbeat_started-fwd.hpp
 ///

@@ -28,7 +28,7 @@ class read_preference::internal {
    public:
     static MONGOCXX_ABI_EXPORT_CDECL_TESTING(read_preference) make(mongoc_read_prefs_t* rc);
 
-    static mongoc_read_prefs_t const* as_mongoc(read_preference const& self);
+    static MONGOCXX_ABI_EXPORT_CDECL_TESTING(mongoc_read_prefs_t const*) as_mongoc(read_preference const& self);
 };
 
 } // namespace v1

@@ -14,13 +14,19 @@
 
 #pragma once
 
-#include <memory> // IWYU pragma: keep: backward compatibility, to be removed.
-
 #include <mongocxx/events/command_failed_event-fwd.hpp> // IWYU pragma: export
+
+//
+
+#include <mongocxx/v1/events/command_failed.hpp> // IWYU pragma: export
+
+#include <cstdint>
+#include <memory> // IWYU pragma: keep: backward compatibility, to be removed.
 
 #include <bsoncxx/document/view.hpp>
 #include <bsoncxx/oid.hpp>
 #include <bsoncxx/stdx/optional.hpp>
+#include <bsoncxx/stdx/string_view.hpp>
 
 #include <mongocxx/config/prelude.hpp>
 
@@ -35,82 +41,121 @@ namespace events {
 /// - [Command Logging and Monitoring (MongoDB Specifications)](https://specifications.readthedocs.io/en/latest/command-logging-and-monitoring/command-logging-and-monitoring/)
 ///
 class command_failed_event {
+   private:
+    v1::events::command_failed _event;
+
    public:
-    explicit command_failed_event(void const* event);
+    ///
+    /// @deprecated For internal use only.
+    ///
+    explicit MONGOCXX_ABI_NO_EXPORT command_failed_event(void const* event);
 
     ///
-    /// Destroys a command_failed_event.
+    /// Construct with the @ref mongocxx::v1 equivalent.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL() ~command_failed_event();
+    /* explicit(false) */ command_failed_event(v1::events::command_failed const& event) : _event{event} {}
 
-    command_failed_event(command_failed_event&&) = default;
-    command_failed_event& operator=(command_failed_event&&) = default;
-
-    command_failed_event(command_failed_event const&) = default;
-    command_failed_event& operator=(command_failed_event const&) = default;
+    ///
+    /// Convert to the @ref mongocxx::v1 equivalent.
+    ///
+    explicit operator v1::events::command_failed() const {
+        return _event;
+    }
 
     ///
     /// Returns the server’s reply to the failed operation.
     ///
     /// @return The failure.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::document::view) failure() const;
+    bsoncxx::v_noabi::document::view failure() const {
+        return _event.failure();
+    }
 
     ///
     /// Returns the name of the command.
     ///
     /// @return The command name.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::string_view) command_name() const;
+    bsoncxx::v_noabi::stdx::string_view command_name() const {
+        return _event.command_name();
+    }
 
     ///
     /// Returns the duration of the failed operation.
     ///
     /// @return The duration in microseconds.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(std::int64_t) duration() const;
+    std::int64_t duration() const {
+        return _event.duration();
+    }
 
     ///
     /// Returns the request id.
     ///
     /// @return The request id.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(std::int64_t) request_id() const;
+    std::int64_t request_id() const {
+        return _event.request_id();
+    }
 
     ///
     /// Returns the operation id.
     ///
     /// @return The operation id.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(std::int64_t) operation_id() const;
+    std::int64_t operation_id() const {
+        return _event.operation_id();
+    }
 
     ///
     /// Optionally returns the service id.
     ///
     /// @return No contained value, or contains the service id if load balancing is enabled.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::oid>)
-    service_id() const;
+    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::oid> service_id() const {
+        return _event.service_id();
+    }
 
     ///
     /// Returns the host name.
     ///
     /// @return The host name.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::string_view) host() const;
+    bsoncxx::v_noabi::stdx::string_view host() const {
+        return _event.host();
+    }
 
     ///
     /// Returns the port.
     ///
     /// @return The port.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(std::uint16_t) port() const;
-
-   private:
-    void const* _failed_event;
+    std::uint16_t port() const {
+        return _event.port();
+    }
 };
 
 } // namespace events
+} // namespace v_noabi
+} // namespace mongocxx
+
+namespace mongocxx {
+namespace v_noabi {
+
+///
+/// Convert to the @ref mongocxx::v_noabi equivalent of `v`.
+///
+inline v_noabi::events::command_failed_event from_v1(v1::events::command_failed const& v) {
+    return {v};
+}
+
+///
+/// Convert to the @ref mongocxx::v1 equivalent of `v`.
+///
+inline v1::events::command_failed to_v1(v_noabi::events::command_failed_event const& v) {
+    return v1::events::command_failed{v};
+}
+
 } // namespace v_noabi
 } // namespace mongocxx
 
@@ -119,4 +164,7 @@ class command_failed_event {
 ///
 /// @file
 /// Provides @ref mongocxx::v_noabi::events::command_failed_event.
+///
+/// @par Includes
+/// - @ref mongocxx/v1/events/command_failed.hpp
 ///

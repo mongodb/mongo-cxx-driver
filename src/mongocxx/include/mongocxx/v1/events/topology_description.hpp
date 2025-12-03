@@ -73,6 +73,8 @@ class topology_description {
     ///
     MONGOCXX_ABI_EXPORT_CDECL(std::vector<v1::events::server_description>) servers() const;
 
+    class internal;
+
    private:
     /* explicit(false) */ topology_description(void const* impl);
 };

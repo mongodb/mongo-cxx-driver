@@ -16,6 +16,10 @@
 
 #include <mongocxx/events/topology_opening_event-fwd.hpp> // IWYU pragma: export
 
+//
+
+#include <mongocxx/v1/events/topology_opening.hpp> // IWYU pragma: export
+
 #include <bsoncxx/oid.hpp>
 
 #include <mongocxx/events/topology_description.hpp> // IWYU pragma: keep: backward compatibility, to be removed.
@@ -33,19 +37,26 @@ namespace events {
 /// - [SDAM Logging and Monitoring Specification (MongoDB Specifications)](https://specifications.readthedocs.io/en/latest/server-discovery-and-monitoring/server-discovery-and-monitoring-logging-and-monitoring/)
 ///
 class topology_opening_event {
+   private:
+    v1::events::topology_opening _event;
+
    public:
-    explicit topology_opening_event(void const* event);
+    ///
+    /// @deprecated For internal use only.
+    ///
+    explicit MONGOCXX_ABI_NO_EXPORT topology_opening_event(void const* event);
 
     ///
-    /// Destroys a topology_opening_event.
+    /// Construct with the @ref mongocxx::v1 equivalent.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL() ~topology_opening_event();
+    /* explicit(false) */ topology_opening_event(v1::events::topology_opening const& event) : _event{event} {}
 
-    topology_opening_event(topology_opening_event&&) = default;
-    topology_opening_event& operator=(topology_opening_event&&) = default;
-
-    topology_opening_event(topology_opening_event const&) = default;
-    topology_opening_event& operator=(topology_opening_event const&) = default;
+    ///
+    /// Convert to the @ref mongocxx::v1 equivalent.
+    ///
+    explicit operator v1::events::topology_opening() const {
+        return _event;
+    }
 
     ///
     /// An opaque id, unique to this topology for this mongocxx::v_noabi::client or
@@ -53,13 +64,32 @@ class topology_opening_event {
     ///
     /// @return The id.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::oid) topology_id() const;
-
-   private:
-    void const* _event;
+    bsoncxx::v_noabi::oid topology_id() const {
+        return _event.topology_id();
+    }
 };
 
 } // namespace events
+} // namespace v_noabi
+} // namespace mongocxx
+
+namespace mongocxx {
+namespace v_noabi {
+
+///
+/// Convert to the @ref mongocxx::v_noabi equivalent of `v`.
+///
+inline v_noabi::events::topology_opening_event from_v1(v1::events::topology_opening const& v) {
+    return {v};
+}
+
+///
+/// Convert to the @ref mongocxx::v1 equivalent of `v`.
+///
+inline v1::events::topology_opening to_v1(v_noabi::events::topology_opening_event const& v) {
+    return v1::events::topology_opening{v};
+}
+
 } // namespace v_noabi
 } // namespace mongocxx
 
@@ -68,4 +98,7 @@ class topology_opening_event {
 ///
 /// @file
 /// Provides @ref mongocxx::v_noabi::events::topology_opening_event.
+///
+/// @par Includes
+/// - @ref mongocxx/v1/events/topology_opening.hpp
 ///

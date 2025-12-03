@@ -87,6 +87,8 @@ class command_started {
     ///
     MONGOCXX_ABI_EXPORT_CDECL(std::uint16_t) port() const;
 
+    class internal;
+
    private:
     /* explicit(false) */ command_started(void const* impl);
 };

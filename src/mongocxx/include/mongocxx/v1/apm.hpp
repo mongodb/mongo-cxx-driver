@@ -254,14 +254,14 @@ class apm {
     /// @par Preconditions:
     /// - `fn` MUST NOT throw an exception when invoked.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(apm&) on_heartbeat_started(
+    MONGOCXX_ABI_EXPORT_CDECL(apm&) on_server_heartbeat_started(
         std::function<void MONGOCXX_ABI_CDECL(v1::events::server_heartbeat_started const&)> fn);
 
     ///
     /// Return the current the "ServerHeartbeatStartedEvent" handler.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(std::function<void MONGOCXX_ABI_CDECL(v1::events::server_heartbeat_started const&)>)
-    heartbeat_started() const;
+    server_heartbeat_started() const;
 
     ///
     /// Set the "ServerHeartbeatFailedEvent" handler.
@@ -271,14 +271,14 @@ class apm {
     /// @par Preconditions:
     /// - `fn` MUST NOT throw an exception when invoked.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(apm&) on_heartbeat_failed(
+    MONGOCXX_ABI_EXPORT_CDECL(apm&) on_server_heartbeat_failed(
         std::function<void MONGOCXX_ABI_CDECL(v1::events::server_heartbeat_failed const&)> fn);
 
     ///
     /// Return the current the "ServerHeartbeatFailedEvent" handler.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(std::function<void MONGOCXX_ABI_CDECL(v1::events::server_heartbeat_failed const&)>)
-    heartbeat_failed() const;
+    server_heartbeat_failed() const;
 
     ///
     /// Set the "ServerHeartbeatSucceededEvent" handler.
@@ -288,14 +288,16 @@ class apm {
     /// @par Preconditions:
     /// - `fn` MUST NOT throw an exception when invoked.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(apm&) on_heartbeat_succeeded(
+    MONGOCXX_ABI_EXPORT_CDECL(apm&) on_server_heartbeat_succeeded(
         std::function<void MONGOCXX_ABI_CDECL(v1::events::server_heartbeat_succeeded const&)> fn);
 
     ///
     /// Return the current the "ServerHeartbeatSucceededEvent" handler.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(std::function<void MONGOCXX_ABI_CDECL(v1::events::server_heartbeat_succeeded const&)>)
-    heartbeat_succeeded() const;
+    server_heartbeat_succeeded() const;
+
+    class internal;
 };
 
 } // namespace v1

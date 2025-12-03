@@ -14,15 +14,29 @@
 
 #include <mongocxx/events/server_description.hpp>
 
+//
+
+#include <mongocxx/v1/events/server_description.hh>
+
+#include <cstdint>
+
+#include <bsoncxx/document/view.hpp>
+#include <bsoncxx/stdx/string_view.hpp>
+
+#include <bsoncxx/private/bson.hh>
+
 #include <mongocxx/private/mongoc.hh>
 
 namespace mongocxx {
 namespace v_noabi {
 namespace events {
 
-server_description::server_description(void const* sd) : _sd(sd) {}
+server_description::server_description(v1::events::server_description const& other)
+    : _sd{v1::events::server_description::internal::as_mongoc(other)} {}
 
-server_description::~server_description() = default;
+server_description::operator v1::events::server_description() const {
+    return v1::events::server_description::internal::make(static_cast<mongoc_server_description_t const*>(_sd));
+}
 
 std::uint32_t server_description::id() const {
     return libmongoc::server_description_id(static_cast<mongoc_server_description_t const*>(_sd));
@@ -34,10 +48,6 @@ std::int64_t server_description::round_trip_time() const {
 
 bsoncxx::v_noabi::stdx::string_view server_description::type() const {
     return libmongoc::server_description_type(static_cast<mongoc_server_description_t const*>(_sd));
-}
-
-bsoncxx::v_noabi::document::view server_description::is_master() const {
-    return hello();
 }
 
 bsoncxx::v_noabi::document::view server_description::hello() const {

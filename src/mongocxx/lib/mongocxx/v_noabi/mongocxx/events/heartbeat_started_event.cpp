@@ -14,30 +14,19 @@
 
 #include <mongocxx/events/heartbeat_started_event.hpp>
 
+//
+
+#include <mongocxx/v1/events/server_heartbeat_started.hh>
+
 #include <mongocxx/private/mongoc.hh>
 
 namespace mongocxx {
 namespace v_noabi {
 namespace events {
 
-heartbeat_started_event::heartbeat_started_event(void const* event) : _started_event(event) {}
-
-heartbeat_started_event::~heartbeat_started_event() = default;
-
-bsoncxx::v_noabi::stdx::string_view heartbeat_started_event::host() const {
-    auto casted = static_cast<mongoc_apm_server_heartbeat_started_t const*>(_started_event);
-    return libmongoc::apm_server_heartbeat_started_get_host(casted)->host;
-}
-
-std::uint16_t heartbeat_started_event::port() const {
-    auto casted = static_cast<mongoc_apm_server_heartbeat_started_t const*>(_started_event);
-    return libmongoc::apm_server_heartbeat_started_get_host(casted)->port;
-}
-
-bool heartbeat_started_event::awaited() const {
-    auto casted = static_cast<mongoc_apm_server_heartbeat_started_t const*>(_started_event);
-    return libmongoc::apm_server_heartbeat_started_get_awaited(casted);
-}
+heartbeat_started_event::heartbeat_started_event(void const* event)
+    : _event{v1::events::server_heartbeat_started::internal::make(
+          static_cast<mongoc_apm_server_heartbeat_started_t const*>(event))} {}
 
 } // namespace events
 } // namespace v_noabi
