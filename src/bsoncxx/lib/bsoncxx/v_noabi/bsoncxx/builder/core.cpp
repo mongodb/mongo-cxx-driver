@@ -69,7 +69,7 @@ class managed_bson_t {
 
 class core::impl {
    public:
-    impl(bool is_array) : _depth(0), _root_is_array(is_array), _n(0), _has_user_key(false) {}
+    impl(bool is_array) : _root_is_array(is_array) {}
 
     void reinit() {
         while (!_stack.empty()) {
@@ -209,8 +209,7 @@ class core::impl {
         frame(frame const&) = delete;
         frame& operator=(frame const&) = delete;
 
-        frame(bson_t* parent, char const* key, std::int32_t len, bool is_array)
-            : n(0), is_array(is_array), parent(parent) {
+        frame(bson_t* parent, char const* key, std::int32_t len, bool is_array) : is_array(is_array), parent(parent) {
             if (is_array) {
                 if (!bson_append_array_begin(parent, key, len, &bson)) {
                     throw bsoncxx::v_noabi::exception{error_code::k_cannot_begin_appending_array};
@@ -234,16 +233,16 @@ class core::impl {
             }
         }
 
-        std::size_t n;
-        bool is_array;
-        bson_t bson;
-        bson_t* parent;
+        std::size_t n = {};
+        bool is_array = {};
+        bson_t bson = {};
+        bson_t* parent = {};
     };
 
-    std::size_t _depth;
+    std::size_t _depth = {};
 
-    bool _root_is_array;
-    std::size_t _n;
+    bool _root_is_array = {};
+    std::size_t _n = {};
     managed_bson_t _root;
 
     // The bottom frame of _stack has _root as its parent.
@@ -254,7 +253,7 @@ class core::impl {
     stdx::string_view _user_key_view;
     std::string _user_key_owned;
 
-    bool _has_user_key;
+    bool _has_user_key = {};
 };
 
 core::core(bool is_array) {
