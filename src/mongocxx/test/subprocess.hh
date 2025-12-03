@@ -14,8 +14,6 @@
 
 #pragma once
 
-#include <bsoncxx/v1/stdx/string_view.hpp>
-
 #include <functional>
 
 namespace mongocxx {
