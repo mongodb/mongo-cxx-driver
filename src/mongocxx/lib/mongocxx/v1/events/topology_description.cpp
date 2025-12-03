@@ -61,8 +61,14 @@ std::vector<v1::events::server_description> topology_description::servers() cons
     std::size_t n = {};
     auto const sds = libmongoc::topology_description_get_servers(to_mongoc(_impl), &n);
 
+    try {
+        ret.reserve(n); // Unlikely, but may throw std::length_error.
+    } catch (...) {
+        libmongoc::server_descriptions_destroy_all(sds, n);
+        throw;
+    }
+
     // Transfer ownership of each element, but not the parent array.
-    ret.reserve(n);
     std::transform(sds, sds + n, std::back_inserter(ret), [](mongoc_server_description_t* sd) {
         return v1::events::server_description::internal::make(sd);
     });
