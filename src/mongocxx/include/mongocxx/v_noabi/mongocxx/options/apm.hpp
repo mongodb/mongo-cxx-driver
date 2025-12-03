@@ -50,9 +50,6 @@ namespace options {
 /// - [SDAM Logging and Monitoring Specification (MongoDB Specifications)](https://specifications.readthedocs.io/en/latest/server-discovery-and-monitoring/server-discovery-and-monitoring-logging-and-monitoring/#events-api_1)
 ///
 class apm {
-   private:
-    v1::apm _apm;
-
    public:
     ///
     /// Default initialization.
