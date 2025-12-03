@@ -390,16 +390,7 @@ void test_topology_description(MemFn mem_fn, Mock& mock, Object const& object, i
     topology_description const td = (object.*mem_fn)();
 
     SECTION("type") {
-        auto type = libmongoc::topology_description_type.create_instance();
-
-        char const str = '\0';
-
-        type->interpose([&](mongoc_topology_description_t const* ptr) -> char const* {
-            CHECK(static_cast<void const*>(ptr) == &tdid);
-            return &str;
-        });
-
-        CHECK(td.type() == &str);
+        test_string(&topology_description::type, libmongoc::topology_description_type, td, &tdid);
     }
 
     SECTION("has_readable_server") {
