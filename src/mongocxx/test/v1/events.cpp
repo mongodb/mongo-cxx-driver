@@ -131,7 +131,7 @@ void test_uint32(MemFn mem_fn, Mock& mock, Object const& object, identity_type c
     auto const v = GENERATE(values({
         std::uint32_t{0},
         std::uint32_t{1},
-        std::uint32_t{INT32_MAX},
+        std::uint32_t{UINT32_MAX},
     }));
 
     auto fn = mock.create_instance();
