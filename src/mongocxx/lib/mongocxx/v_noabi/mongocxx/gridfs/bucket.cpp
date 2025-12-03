@@ -44,11 +44,9 @@ namespace gridfs {
 namespace {
 
 std::int32_t read_chunk_size_from_files_document(bsoncxx::v_noabi::document::view files_doc) {
-    std::int64_t const k_max_document_size = 16 * 1024 * 1024;
-    std::int64_t chunk_size;
+    static constexpr std::int64_t k_max_document_size = {16 * 1024 * 1024};
 
-    auto chunk_size_ele = files_doc["chunkSize"];
-
+    auto const chunk_size_ele = files_doc["chunkSize"];
     if (!chunk_size_ele) {
         throw gridfs_exception{
             error_code::k_gridfs_file_corrupted,
@@ -56,6 +54,7 @@ std::int32_t read_chunk_size_from_files_document(bsoncxx::v_noabi::document::vie
             "k_int32 or k_int64"};
     }
 
+    std::int64_t chunk_size = {};
     if (chunk_size_ele.type() == bsoncxx::v_noabi::type::k_int64) {
         chunk_size = chunk_size_ele.get_int64().value;
     } else if (chunk_size_ele.type() == bsoncxx::v_noabi::type::k_int32) {
@@ -83,9 +82,7 @@ std::int32_t read_chunk_size_from_files_document(bsoncxx::v_noabi::document::vie
 }
 
 std::int64_t read_length_from_files_document(bsoncxx::v_noabi::document::view const files_doc) {
-    auto length_ele = files_doc["length"];
-    std::int64_t length;
-
+    auto const length_ele = files_doc["length"];
     if (!length_ele) {
         throw gridfs_exception{
             error_code::k_gridfs_file_corrupted,
@@ -93,6 +90,7 @@ std::int64_t read_length_from_files_document(bsoncxx::v_noabi::document::view co
             "k_int32 or k_int64"};
     }
 
+    std::int64_t length = {};
     if (length_ele.type() == bsoncxx::v_noabi::type::k_int64) {
         length = length_ele.get_int64().value;
     } else if (length_ele.type() == bsoncxx::v_noabi::type::k_int32) {
@@ -371,7 +369,7 @@ downloader bucket::_open_download_stream(
     }
 
     if (end) {
-        int64_t end_i64;
+        int64_t end_i64 = {};
         if (!size_t_to_int64_safe(*end, end_i64)) {
             throw gridfs_exception{error_code::k_invalid_parameter, "expected end to not be greater than max int64"};
         }
@@ -409,7 +407,7 @@ void bucket::_download_to_stream(
     bsoncxx::v_noabi::stdx::optional<std::size_t> end) {
     downloader download_stream = _open_download_stream(session, id, start, end);
 
-    std::size_t chunk_size;
+    std::size_t chunk_size = {};
     if (!int32_to_size_t_safe(download_stream.chunk_size(), chunk_size)) {
         throw gridfs_exception{error_code::k_invalid_parameter, "expected chunk size to be in bounds of size_t"};
     }
@@ -417,7 +415,7 @@ void bucket::_download_to_stream(
         start.emplace<std::size_t>(0);
     }
     if (!end) {
-        std::size_t file_length_sz;
+        std::size_t file_length_sz = {};
         if (!int64_to_size_t_safe(download_stream.file_length(), file_length_sz)) {
             throw gridfs_exception{error_code::k_invalid_parameter, "expected file length to be in bounds of int64"};
         }

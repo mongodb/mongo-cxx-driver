@@ -91,8 +91,8 @@ class core::impl {
             throw bsoncxx::v_noabi::exception{error_code::k_cannot_perform_document_operation_on_array};
         }
 
-        uint32_t buf_len;
-        uint8_t* buf_ptr = bson_destroy_with_steal(_root.get(), true, &buf_len);
+        uint32_t buf_len = {};
+        auto const buf_ptr = bson_destroy_with_steal(_root.get(), true, &buf_len);
         bson_init(_root.get());
 
         return bsoncxx::v_noabi::document::value{buf_ptr, buf_len, bson_free_deleter};
@@ -104,8 +104,8 @@ class core::impl {
             throw bsoncxx::v_noabi::exception{error_code::k_cannot_perform_array_operation_on_document};
         }
 
-        uint32_t buf_len;
-        uint8_t* buf_ptr = bson_destroy_with_steal(_root.get(), true, &buf_len);
+        uint32_t buf_len = {};
+        auto const buf_ptr = bson_destroy_with_steal(_root.get(), true, &buf_len);
         bson_init(_root.get());
 
         return bsoncxx::v_noabi::array::value{buf_ptr, buf_len, bson_free_deleter};
@@ -351,7 +351,7 @@ core& core::append(types::b_binary const& value) {
 
 uint8_t* core::append(binary_sub_type sub_type, uint32_t length) {
     stdx::string_view key = _impl->next_key();
-    uint8_t* allocated_bytes;
+    uint8_t* allocated_bytes = {};
 
     if (!bson_append_binary_uninit(
             _impl->back(),

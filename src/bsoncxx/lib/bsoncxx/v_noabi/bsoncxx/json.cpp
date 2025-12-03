@@ -48,8 +48,8 @@ std::string to_json_helper(document::view view, decltype(bson_as_legacy_extended
         throw exception(error_code::k_failed_converting_bson_to_json);
     }
 
-    size_t size;
-    auto result = converter(&bson, &size);
+    size_t size = {};
+    auto const result = converter(&bson, &size);
 
     if (!result) {
         throw exception(error_code::k_failed_converting_bson_to_json);
@@ -101,9 +101,8 @@ document::value from_json(stdx::string_view json) {
     if (!result)
         throw exception(error_code::k_json_parse_failure, error.message);
 
-    std::uint32_t length;
-    std::uint8_t* buf = bson_destroy_with_steal(result, true, &length);
-
+    std::uint32_t length = {};
+    auto const buf = bson_destroy_with_steal(result, true, &length);
     return document::value{buf, length, bson_free_deleter};
 }
 

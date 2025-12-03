@@ -1228,10 +1228,10 @@ cursor collection::_distinct(
         throw bsoncxx::v_noabi::exception{bsoncxx::v_noabi::error_code::k_internal_error};
     }
 
-    bson_t const* error_document;
-
     cursor fake_cursor{libmongoc::cursor_new_from_command_reply_with_opts(
         _get_impl().client_impl->client_t, fake_reply.inout_ptr(), nullptr)};
+
+    bson_t const* error_document = {};
     if (libmongoc::cursor_error_document(fake_cursor._impl->cursor_t, &error, &error_document)) {
         if (error_document) {
             bsoncxx::v_noabi::document::value error_doc{

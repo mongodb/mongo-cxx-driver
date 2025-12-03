@@ -30,7 +30,7 @@ std::vector<int> split_version(bsoncxx::stdx::string_view input) {
 
     std::vector<int> ret;
 
-    std::size_t pos;
+    std::size_t pos = {};
 
     while ((pos = input.find_first_not_of(digits)) != npos) {
         auto const str = input.substr(0u, pos);
