@@ -38,11 +38,16 @@ namespace v1 {
 class pipeline::impl {
    private:
     static_assert(INT32_MAX == std::int32_t{2147483647}, "");
-    std::array<char, sizeof("2147483647")> _idx = {}; // Access via `this->idx()`.
+
+    std::array<char, sizeof("2147483647")> _idx = {};
+
+    std::int32_t _count = 0;
+    scoped_bson _doc;
 
    public:
-    scoped_bson _doc;
-    std::int32_t _count = 0;
+    scoped_bson const& doc() const {
+        return _doc;
+    }
 
     char const* idx() {
         (void)std::snprintf(_idx.data(), _idx.size(), "%" PRId32, _count);
@@ -122,7 +127,7 @@ pipeline& pipeline::operator=(pipeline const& other) {
 pipeline::pipeline() : _impl{new impl{}} {}
 
 bsoncxx::v1::array::view pipeline::view_array() const {
-    return impl::with(this)->_doc.array_view();
+    return impl::with(this)->doc().array_view();
 }
 
 pipeline& pipeline::append_stage(bsoncxx::v1::document::view v) {
@@ -296,7 +301,7 @@ pipeline& pipeline::unwind(bsoncxx::v1::stdx::string_view v) {
 }
 
 scoped_bson const& pipeline::internal::doc(pipeline const& self) {
-    return impl::with(self)._doc;
+    return impl::with(self).doc();
 }
 
 } // namespace v1
