@@ -213,7 +213,7 @@ bsoncxx::v_noabi::stdx::optional<double> const& index::haystack_bucket_size() co
 }
 
 // CDRIVER-5946: mongoc_index_storage_opt_type_t was removed in mongoc 2.0.
-enum mongoc_index_storage_opt_type_t {
+enum struct mongoc_index_storage_opt_type_t {
     MONGOC_INDEX_STORAGE_OPT_MMAPV1,
     MONGOC_INDEX_STORAGE_OPT_WIREDTIGER,
 };
@@ -328,7 +328,7 @@ index::wiredtiger_storage_options::config_string() const {
 }
 
 int index::wiredtiger_storage_options::type() const {
-    return mongoc_index_storage_opt_type_t::MONGOC_INDEX_STORAGE_OPT_WIREDTIGER;
+    return static_cast<int>(mongoc_index_storage_opt_type_t::MONGOC_INDEX_STORAGE_OPT_WIREDTIGER);
 }
 
 } // namespace options

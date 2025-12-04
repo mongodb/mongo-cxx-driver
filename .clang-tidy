@@ -8,7 +8,7 @@ Checks:
   - -cppcoreguidelines-pro-bounds-constant-array-index # Noise.
   - -cppcoreguidelines-pro-bounds-pointer-arithmetic # Noise.
   - -cppcoreguidelines-pro-type-union-access # Requires C++17 or newer for `std::variant`.
-WarningsAsErrors: '*,-cert-err58-cpp,-cppcoreguidelines-avoid-do-while,-cppcoreguidelines-avoid-non-const-global-variables,-cppcoreguidelines-pro-type-union-access,-cppcoreguidelines-pro-type-vararg,-cppcoreguidelines-rvalue-reference-param-not-moved,-cppcoreguidelines-use-enum-class'
+WarningsAsErrors: '*,-cert-err58-cpp,-cppcoreguidelines-avoid-do-while,-cppcoreguidelines-avoid-non-const-global-variables,-cppcoreguidelines-pro-type-union-access,-cppcoreguidelines-pro-type-vararg,-cppcoreguidelines-rvalue-reference-param-not-moved'
 HeaderFileExtensions:
   - ''
   - h
@@ -123,6 +123,6 @@ CheckOptions:
   cppcoreguidelines-special-member-functions.IgnoreMacros: 'true'
   cppcoreguidelines-use-default-member-init.IgnoreMacros: 'true'
   cppcoreguidelines-use-default-member-init.UseAssignment: 'false'
-  cppcoreguidelines-use-enum-class.IgnoreUnscopedEnumsInClasses: 'false'
+  cppcoreguidelines-use-enum-class.IgnoreUnscopedEnumsInClasses: 'true'
 SystemHeaders:   false
 ...

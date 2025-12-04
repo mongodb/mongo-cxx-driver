@@ -220,6 +220,7 @@ v1::exception make_exception(bson_error_t const& error) {
     auto const has_message = message[0] != '\0';
 
     // Undocumented: see mongoc-error-private.h.
+    // NOLINTNEXTLINE(cppcoreguidelines-use-enum-class): compile-time constants.
     enum : int {
         MONGOC_ERROR_CATEGORY_BSON = 1, // BSON_ERROR_CATEGORY
         MONGOC_ERROR_CATEGORY = 2,
