@@ -14,108 +14,348 @@
 
 #pragma once
 
-#include <mongocxx/options/text-fwd.hpp> // IWYU pragma: export
-
-#include <mongocxx/options/prefix.hpp>
-#include <mongocxx/options/substring.hpp>
-#include <mongocxx/options/suffix.hpp>
-
-//
-
 #include <bsoncxx/stdx/optional.hpp>
 
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
-namespace v_noabi {
-namespace options {
+namespace v_1 {
 
 ///
-/// Used by @ref mongocxx::v_noabi::options::encrypt::text_opts.
+/// Options related to text_options queries for Queryable Encryption.
 ///
-/// Specifies index options (`TextOpts`) for a Queryable Encryption field supporting "textPreview"
-/// queries.
+/// Supported fields include:
+/// - `case_sensitive` ("caseSensitive")
+/// - `diacritic_sensitive` ("diacriticSensitive")
+/// - `prefix`
+/// - `suffix`
+/// - `substring`
 ///
-/// @note `caseSensitive`, `diacriticSensitive`, `prefix`, `suffix`, and `substring` must match the values set in the
-/// encryptedFields of the destination collection.
+/// @see
+/// - [Client Side Encryption (MongoDB Specifications)](https://specifications.readthedocs.io/en/latest/client-side-encryption/client-side-encryption/)
+/// - [Encrypted Fields and Enabled Queries (MongoDB Manual)](https://www.mongodb.com/docs/manual/core/queryable-encryption/fundamentals/encrypt-and-query/)
 ///
-class text {
+/// @attention This feature is experimental! It is not ready for use!
+///
+class text_options {
    public:
+    class prefix;
+    class suffix;
+    class substring;
+
+    ///
+    /// Destroy this object.
+    ///
+    /// @warning Invalidates all associated views.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL() ~text_options();
+
+    ///
+    /// Move constructor.
+    ///
+    /// @par Postconditions:
+    /// - `other` is in an assign-or-destroy-only state.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL() text_options(text_options&& other) noexcept;
+
+    ///
+    /// Move assignment.
+    ///
+    /// @par Postconditions:
+    /// - `other` is in an assign-or-destroy-only state.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(text_options&) operator=(text_options&& other) noexcept;
+
+    ///
+    /// Copy construction.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL() text_options(text_options const& other);
+
+    ///
+    /// Copy assignment.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(text_options&) operator=(text_options const& other);
+
     ///
     /// Default initialization.
     ///
-    text() = default;
+    /// @par Postconditions:
+    /// - All supported fields are "unset" or zero-initialized.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL() text_options();
 
-    /// @brief Sets `TextOpts.caseSensitive`
-    text& case_sensitive(bool value) {
-        _case_sensitive = value;
-        return *this;
-    }
+    ///
+    /// Set the "caseSensitive" field.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(text_options&) case_sensitive(bool value);
 
-    /// @brief Gets `TextOpts.caseSensitive`
-    bsoncxx::v_noabi::stdx::optional<bool> const& case_sensitive() const {
-        return _case_sensitive;
-    }
+    ///
+    /// Gets the current "caseSensitive" field.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bool>) const& case_sensitive() const;
 
-    /// @brief Sets `TextOpts.diacriticSensitive`
-    text& diacritic_sensitive(bool value) {
-        _diacritic_sensitive = value;
-        return *this;
-    }
+    ///
+    /// Set the "diacriticSensitive" field.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(text_options&) diacritic_sensitive(bool value);
 
-    /// @brief Gets `TextOpts.diacriticSensitive`
-    bsoncxx::v_noabi::stdx::optional<bool> const& diacritic_sensitive() const {
-        return _diacritic_sensitive;
-    }
+    ///
+    /// Gets the current "diacriticSensitive" field.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bool>) const& diacritic_sensitive() const;
 
-    /// @brief Sets `TextOpts.PrefixOpts`
-    text& prefix(options::prefix opts) {
-        _prefix = opts;
-        return *this;
-    }
+    ///
+    /// Sets the "prefix" field.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(text_options&) prefix_opts(prefix opts);
 
-    /// @brief Gets `TextOpts.PrefixOpts`
-    bsoncxx::v_noabi::stdx::optional<options::prefix> const& prefix() const {
-        return _prefix;
-    }
+    ///
+    /// Gets the current "prefix" field.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<prefix> const&) prefix_opts() const;
 
-    /// @brief Sets `TextOpts.SuffixOpts`
-    text& suffix(options::suffix opts) {
-        _suffix = opts;
-        return *this;
-    }
+    ///
+    /// Sets the "suffix" field.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(text_options&) suffix_opts(suffix opts);
 
-    /// @brief Gets `TextOpts.SuffixOpts`
-    bsoncxx::v_noabi::stdx::optional<options::suffix> const& suffix() const {
-        return _suffix;
-    }
+    ///
+    /// Gets the current "suffix" field.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<suffix> const&) suffix_opts() const;
 
-    /// @brief Sets `TextOpts.SubstringOpts`
-    text& substring(options::substring opts) {
-        _substring = opts;
-        return *this;
-    }
+    ///
+    /// Sets the "substring" field.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(text_options&) substring_opts(substring opts);
 
-    /// @brief Gets `TextOpts.SubstringOpts`
-    bsoncxx::v_noabi::stdx::optional<options::substring> const& substring() const {
-        return _substring;
-    }
+    ///
+    /// Gets the current "substring" field.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<substring> const&) substring_opts() const;
 
    private:
-    bsoncxx::v_noabi::stdx::optional<bool> _case_sensitive;
-    bsoncxx::v_noabi::stdx::optional<bool> _diacritic_sensitive;
-    bsoncxx::v_noabi::stdx::optional<options::prefix> _prefix;
-    bsoncxx::v_noabi::stdx::optional<options::suffix> _suffix;
-    bsoncxx::v_noabi::stdx::optional<options::substring> _substring;
+    class impl;
+    void* _impl;
 };
 
-} // namespace options
-} // namespace v_noabi
+class text_options::prefix {
+   private:
+    class impl;
+    void* _impl;
+
+   public:
+    ///
+    /// Destroy this object.
+    ///
+    /// @warning Invalidates all associated views.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL() ~prefix();
+
+    ///
+    /// Move constructor.
+    ///
+    /// @par Postconditions:
+    /// - `other` is in an assign-or-destroy-only state.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL() prefix(prefix&& other) noexcept;
+
+    ///
+    /// Move assignment.
+    ///
+    /// @par Postconditions:
+    /// - `other` is in an assign-or-destroy-only state.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(prefix&) operator=(prefix&& other) noexcept;
+
+    ///
+    /// Copy construction.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL() prefix(prefix const& other);
+
+    ///
+    /// Copy assignment.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(prefix&) operator=(prefix const& other);
+
+    ///
+    /// Default initialization.
+    ///
+    /// @par Postconditions:
+    /// - All supported fields are "unset" or zero-initialized.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL() prefix();
+
+    ///
+    /// Set the "strMaxQueryLength" field.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(prefix&) str_max_query_length(int32_t value);
+
+    ///
+    /// Return the current "strMaxQueryLength" field.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<int32_t> const&) str_max_query_length() const;
+
+    ///
+    /// Set the "strminQueryLength" field.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(prefix&) str_min_query_length(int32_t value);
+
+    ///
+    /// Return the current "strminQueryLength" field.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<int32_t> const&) str_min_query_length() const;
+};
+class text_options::suffix {
+   private:
+    class impl;
+    void* _impl;
+
+   public:
+    ///
+    /// Destroy this object.
+    ///
+    /// @warning Invalidates all associated views.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL() ~suffix();
+
+    ///
+    /// Move constructor.
+    ///
+    /// @par Postconditions:
+    /// - `other` is in an assign-or-destroy-only state.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL() suffix(suffix&& other) noexcept;
+
+    ///
+    /// Move assignment.
+    ///
+    /// @par Postconditions:
+    /// - `other` is in an assign-or-destroy-only state.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(suffix&) operator=(suffix&& other) noexcept;
+
+    ///
+    /// Copy construction.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL() suffix(suffix const& other);
+
+    ///
+    /// Copy assignment.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(suffix&) operator=(suffix const& other);
+
+    ///
+    /// Default initialization.
+    ///
+    /// @par Postconditions:
+    /// - All supported fields are "unset" or zero-initialized.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL() suffix();
+
+    ///
+    /// Set the "strMaxQueryLength" field.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(suffix&) str_max_query_length(int32_t value);
+
+    ///
+    /// Return the current "strMaxQueryLength" field.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<int32_t> const&) str_max_query_length() const;
+
+    ///
+    /// Set the "strminQueryLength" field.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(suffix&) str_min_query_length(int32_t value);
+
+    ///
+    /// Return the current "strminQueryLength" field.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<int32_t> const&) str_min_query_length() const;
+};
+class text_options::substring {
+   private:
+    class impl;
+    void* _impl;
+
+   public:
+    ///
+    /// Destroy this object.
+    ///
+    /// @warning Invalidates all associated views.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL() ~substring();
+
+    ///
+    /// Move constructor.
+    ///
+    /// @par Postconditions:
+    /// - `other` is in an assign-or-destroy-only state.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL() substring(substring&& other) noexcept;
+
+    ///
+    /// Move assignment.
+    ///
+    /// @par Postconditions:
+    /// - `other` is in an assign-or-destroy-only state.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(substring&) operator=(substring&& other) noexcept;
+
+    ///
+    /// Copy construction.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL() substring(substring const& other);
+
+    ///
+    /// Copy assignment.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(substring&) operator=(substring const& other);
+
+    ///
+    /// Default initialization.
+    ///
+    /// @par Postconditions:
+    /// - All supported fields are "unset" or zero-initialized.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL() substring();
+
+    ///
+    /// Set the "strMaxLength" field.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(substring&) str_max_length(int32_t value);
+
+    ///
+    /// Return the current "strMaxLength" field.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<int32_t> const&) str_max_length() const;
+    ///
+    /// Set the "strMaxQueryLength" field.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(substring&) str_max_query_length(int32_t value);
+
+    ///
+    /// Return the current "strMaxQueryLength" field.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<int32_t> const&) str_max_query_length() const;
+
+    ///
+    /// Set the "strminQueryLength" field.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(substring&) str_min_query_length(int32_t value);
+
+    ///
+    /// Return the current "strminQueryLength" field.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<int32_t> const&) str_min_query_length() const;
+};
+
+} // namespace v_1
 } // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
 
 ///
 /// @file
-/// Provides @ref mongocxx::v_noabi::options::text.
+/// Provides @ref mongocxx::v1::text_options.
 ///
