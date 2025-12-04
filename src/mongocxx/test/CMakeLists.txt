@@ -111,6 +111,8 @@ set(mongocxx_test_sources_v1
     v1/events.cpp
     v1/exception.cpp
     v1/hint.cpp
+    v1/insert_many_options.cpp
+    v1/insert_one_options.cpp
     v1/logger.cpp
     v1/pipeline.cpp
     v1/range_options.cpp

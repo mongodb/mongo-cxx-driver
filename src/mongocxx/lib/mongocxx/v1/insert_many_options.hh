@@ -14,36 +14,24 @@
 
 #pragma once
 
-#include <mongocxx/v1/insert_many_options-fwd.hpp> // IWYU pragma: export
-#include <mongocxx/v1/insert_one_options-fwd.hpp>  // IWYU pragma: export
+#include <mongocxx/v1/insert_many_options.hpp> // IWYU pragma: export
 
-#include <mongocxx/config/prelude.hpp>
+//
 
-namespace mongocxx {
-namespace v_noabi {
-namespace options {
+#include <bsoncxx/v1/types/value-fwd.hpp>
 
-class insert;
+#include <mongocxx/v1/write_concern-fwd.hpp>
 
-} // namespace options
-} // namespace v_noabi
-} // namespace mongocxx
+#include <bsoncxx/v1/stdx/optional.hpp>
 
 namespace mongocxx {
-namespace options {
+namespace v1 {
 
-using v_noabi::options::insert;
+class insert_many_options::internal {
+   public:
+    static bsoncxx::v1::stdx::optional<v1::write_concern>& write_concern(insert_many_options& self);
+    static bsoncxx::v1::stdx::optional<bsoncxx::v1::types::value>& comment(insert_many_options& self);
+};
 
-} // namespace options
+} // namespace v1
 } // namespace mongocxx
-
-#include <mongocxx/config/postlude.hpp>
-
-///
-/// @file
-/// Declares @ref mongocxx::v_noabi::options::insert.
-///
-/// @par Includes
-/// - @ref mongocxx/v1/insert_many_options-fwd.hpp
-/// - @ref mongocxx/v1/insert_one_options-fwd.hpp
-///
