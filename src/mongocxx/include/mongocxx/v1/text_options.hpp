@@ -19,7 +19,7 @@
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
-namespace v_1 {
+namespace v1 {
 
 ///
 /// Options related to text_options queries for Queryable Encryption.
@@ -92,7 +92,7 @@ class text_options {
     ///
     /// Gets the current "caseSensitive" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bool>) const& case_sensitive() const;
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bool>) case_sensitive() const;
 
     ///
     /// Set the "diacriticSensitive" field.
@@ -102,7 +102,7 @@ class text_options {
     ///
     /// Gets the current "diacriticSensitive" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bool>) const& diacritic_sensitive() const;
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bool>) diacritic_sensitive() const;
 
     ///
     /// Sets the "prefix" field.
@@ -194,17 +194,17 @@ class text_options::prefix {
     ///
     /// Return the current "strMaxQueryLength" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<int32_t> const&) str_max_query_length() const;
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<int32_t>) str_max_query_length() const;
 
     ///
-    /// Set the "strminQueryLength" field.
+    /// Set the "strMinQueryLength" field.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(prefix&) str_min_query_length(int32_t value);
 
     ///
-    /// Return the current "strminQueryLength" field.
+    /// Return the current "strMinQueryLength" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<int32_t> const&) str_min_query_length() const;
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<int32_t>) str_min_query_length() const;
 };
 class text_options::suffix {
    private:
@@ -261,7 +261,7 @@ class text_options::suffix {
     ///
     /// Return the current "strMaxQueryLength" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<int32_t> const&) str_max_query_length() const;
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<int32_t>) str_max_query_length() const;
 
     ///
     /// Set the "strminQueryLength" field.
@@ -271,7 +271,7 @@ class text_options::suffix {
     ///
     /// Return the current "strminQueryLength" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<int32_t> const&) str_min_query_length() const;
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<int32_t>) str_min_query_length() const;
 };
 class text_options::substring {
    private:
@@ -328,7 +328,7 @@ class text_options::substring {
     ///
     /// Return the current "strMaxLength" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<int32_t> const&) str_max_length() const;
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<int32_t>) str_max_length() const;
     ///
     /// Set the "strMaxQueryLength" field.
     ///
@@ -337,7 +337,7 @@ class text_options::substring {
     ///
     /// Return the current "strMaxQueryLength" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<int32_t> const&) str_max_query_length() const;
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<int32_t>) str_max_query_length() const;
 
     ///
     /// Set the "strminQueryLength" field.
@@ -347,10 +347,10 @@ class text_options::substring {
     ///
     /// Return the current "strminQueryLength" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<int32_t> const&) str_min_query_length() const;
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<int32_t>) str_min_query_length() const;
 };
 
-} // namespace v_1
+} // namespace v1
 } // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
