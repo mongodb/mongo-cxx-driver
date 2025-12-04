@@ -123,7 +123,7 @@ bucket::bucket(database const& db, options::gridfs::bucket const& options) {
         throw logic_error{error_code::k_invalid_parameter, "non-empty bucket name required"};
     }
 
-    std::int32_t default_chunk_size_bytes = 255 * 1024;
+    std::int32_t default_chunk_size_bytes = 255 * 1024; // NOLINT(cppcoreguidelines-avoid-magic-numbers): 255 KiB.
     if (auto chunk_size_bytes = options.chunk_size_bytes()) {
         default_chunk_size_bytes = *chunk_size_bytes;
     }
@@ -265,6 +265,7 @@ void bucket::_upload_from_stream_with_id(
     std::unique_ptr<std::uint8_t[]> buffer = bsoncxx::make_unique<std::uint8_t[]>(static_cast<std::size_t>(chunk_size));
 
     do {
+        // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast): stdlib vs. mongocxx compatibility.
         source->read(reinterpret_cast<char*>(buffer.get()), static_cast<std::streamsize>(chunk_size));
         upload_stream.write(buffer.get(), static_cast<std::size_t>(source->gcount()));
     } while (*source);
@@ -427,6 +428,7 @@ void bucket::_download_to_stream(
     while (bytes_expected > 0) {
         std::size_t const bytes_read =
             download_stream.read(buffer.get(), static_cast<std::size_t>(std::min(bytes_expected, chunk_size)));
+        // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast): stdlib vs. mongocxx compatibility.
         destination->write(reinterpret_cast<char*>(buffer.get()), static_cast<std::streamsize>(bytes_read));
         bytes_expected -= bytes_read;
     }

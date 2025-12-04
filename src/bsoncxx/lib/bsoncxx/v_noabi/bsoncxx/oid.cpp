@@ -54,6 +54,7 @@ oid::oid(stdx::string_view const& str) try : _oid{str} {
     throw v_noabi::exception{v_noabi::error_code::k_invalid_oid};
 }
 
+// NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast): v1 vs. v_noabi compatibility.
 oid::oid(char const* bytes, std::size_t len) try : _oid{reinterpret_cast<std::uint8_t const*>(bytes), len} {
 } catch (v1::exception const&) {
     throw v_noabi::exception{v_noabi::error_code::k_invalid_oid};

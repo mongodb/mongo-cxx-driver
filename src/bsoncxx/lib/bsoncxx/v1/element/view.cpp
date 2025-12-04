@@ -156,6 +156,8 @@ class alignas(BSONCXX_PRIVATE_MAX_ALIGN_T) view::impl {
         throw v1::exception{code::invalid_data};
     }
 
+    // Helpers to access the inline PIMPL object.
+    // NOLINTBEGIN(cppcoreguidelines-pro-type-reinterpret-cast)
     static impl const& with(view const& v) {
         return *reinterpret_cast<view::impl const*>(v._storage.data());
     }
@@ -167,6 +169,7 @@ class alignas(BSONCXX_PRIVATE_MAX_ALIGN_T) view::impl {
     static impl* with(view* v) {
         return reinterpret_cast<view::impl*>(v->_storage.data());
     }
+    // NOLINTEND(cppcoreguidelines-pro-type-reinterpret-cast)
 };
 
 void view::impl::check() const {

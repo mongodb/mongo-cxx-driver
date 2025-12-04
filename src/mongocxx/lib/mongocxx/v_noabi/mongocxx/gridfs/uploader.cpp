@@ -32,9 +32,9 @@
 namespace {
 
 std::size_t chunks_collection_documents_max_length(std::size_t chunk_size) {
-    // 16 * 1000 * 1000 is used instead of 16 * 1024 * 1024 to ensure that the command document sent
-    // to the server has space for the other fields.
-    return 16 * 1000 * 1000 / chunk_size;
+    // 16 * 1000 * 1000 (16 MB) is used instead of 16 * 1024 * 1024 (16 MiB) to ensure that the command document sent to
+    // the server has space for the other fields. NOLINTNEXTLINE(cppcoreguidelines-avoid-magic-numbers)
+    return 16u * 1000u * 1000u / chunk_size;
 }
 
 } // namespace

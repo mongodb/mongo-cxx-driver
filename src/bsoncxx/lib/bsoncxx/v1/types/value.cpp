@@ -111,6 +111,8 @@ class alignas(BSONCXX_PRIVATE_MAX_ALIGN_T) value::impl {
         return _value.value;
     }
 
+    // Helpers to access the inline PIMPL object.
+    // NOLINTBEGIN(cppcoreguidelines-pro-type-reinterpret-cast)
     static impl const& with(value const& self) {
         return *reinterpret_cast<value::impl const*>(self._storage.data());
     }
@@ -126,6 +128,7 @@ class alignas(BSONCXX_PRIVATE_MAX_ALIGN_T) value::impl {
     static impl* with(value* self) {
         return reinterpret_cast<value::impl*>(self->_storage.data());
     }
+    // NOLINTEND(cppcoreguidelines-pro-type-reinterpret-cast)
 };
 
 value::impl::~impl() {
