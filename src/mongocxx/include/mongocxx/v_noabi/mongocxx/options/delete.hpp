@@ -289,8 +289,6 @@ inline v_noabi::options::delete_options from_v1(v1::delete_many_options v) {
 ///
 /// Convert to the @ref mongocxx::v_noabi equivalent of `v`.
 ///
-/// @note The `ordered` field is initialized as unset.
-///
 inline v_noabi::options::delete_options from_v1(v1::delete_one_options v) {
     return {std::move(v)};
 }
