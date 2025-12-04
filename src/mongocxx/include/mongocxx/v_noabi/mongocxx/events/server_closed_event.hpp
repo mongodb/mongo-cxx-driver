@@ -14,9 +14,13 @@
 
 #pragma once
 
-#include <cstdint>
-
 #include <mongocxx/events/server_closed_event-fwd.hpp> // IWYU pragma: export
+
+//
+
+#include <mongocxx/v1/events/server_closed.hpp> // IWYU pragma: export
+
+#include <cstdint>
 
 #include <bsoncxx/oid.hpp>
 #include <bsoncxx/stdx/string_view.hpp>
@@ -36,33 +40,44 @@ namespace events {
 /// - [SDAM Logging and Monitoring Specification (MongoDB Specifications)](https://specifications.readthedocs.io/en/latest/server-discovery-and-monitoring/server-discovery-and-monitoring-logging-and-monitoring/)
 ///
 class server_closed_event {
+   private:
+    v1::events::server_closed _event;
+
    public:
-    explicit server_closed_event(void const* event);
+    ///
+    /// @deprecated For internal use only.
+    ///
+    explicit MONGOCXX_ABI_NO_EXPORT server_closed_event(void const* event);
 
     ///
-    /// Destroys a server_closed_event.
+    /// Construct with the @ref mongocxx::v1 equivalent.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL() ~server_closed_event();
+    /* explicit(false) */ server_closed_event(v1::events::server_closed const& event) : _event{event} {}
 
-    server_closed_event(server_closed_event&&) = default;
-    server_closed_event& operator=(server_closed_event&&) = default;
-
-    server_closed_event(server_closed_event const&) = default;
-    server_closed_event& operator=(server_closed_event const&) = default;
+    ///
+    /// Convert to the @ref mongocxx::v1 equivalent.
+    ///
+    explicit operator v1::events::server_closed() const {
+        return _event;
+    }
 
     ///
     /// Returns the server host name.
     ///
     /// @return The host name.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::string_view) host() const;
+    bsoncxx::v_noabi::stdx::string_view host() const {
+        return _event.host();
+    }
 
     ///
     /// Returns the server port.
     ///
     /// @return The port.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(std::uint16_t) port() const;
+    std::uint16_t port() const {
+        return _event.port();
+    }
 
     ///
     /// An opaque id, unique to this topology for this mongocxx::v_noabi::client or
@@ -70,13 +85,32 @@ class server_closed_event {
     ///
     /// @return The id.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::oid const) topology_id() const;
-
-   private:
-    void const* _event;
+    bsoncxx::v_noabi::oid const topology_id() const {
+        return _event.topology_id();
+    }
 };
 
 } // namespace events
+} // namespace v_noabi
+} // namespace mongocxx
+
+namespace mongocxx {
+namespace v_noabi {
+
+///
+/// Convert to the @ref mongocxx::v_noabi equivalent of `v`.
+///
+inline v_noabi::events::server_closed_event from_v1(v1::events::server_closed const& v) {
+    return {v};
+}
+
+///
+/// Convert to the @ref mongocxx::v1 equivalent of `v`.
+///
+inline v1::events::server_closed to_v1(v_noabi::events::server_closed_event const& v) {
+    return v1::events::server_closed{v};
+}
+
 } // namespace v_noabi
 } // namespace mongocxx
 
@@ -85,4 +119,7 @@ class server_closed_event {
 ///
 /// @file
 /// Provides @ref mongocxx::v_noabi::events::server_closed_event.
+///
+/// @par Includes
+/// - @ref mongocxx/v1/events/server_closed.hpp
 ///

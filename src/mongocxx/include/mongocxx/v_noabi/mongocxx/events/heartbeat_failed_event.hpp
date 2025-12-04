@@ -14,10 +14,14 @@
 
 #pragma once
 
+#include <mongocxx/events/heartbeat_failed_event-fwd.hpp> // IWYU pragma: export
+
+//
+
+#include <mongocxx/v1/events/server_heartbeat_failed.hpp> // IWYU pragma: export
+
 #include <cstdint>
 #include <string>
-
-#include <mongocxx/events/heartbeat_failed_event-fwd.hpp> // IWYU pragma: export
 
 #include <bsoncxx/stdx/string_view.hpp>
 
@@ -34,60 +38,94 @@ namespace events {
 /// - [SDAM Logging and Monitoring Specification (MongoDB Specifications)](https://specifications.readthedocs.io/en/latest/server-discovery-and-monitoring/server-discovery-and-monitoring-logging-and-monitoring/)
 ///
 class heartbeat_failed_event {
+   private:
+    v1::events::server_heartbeat_failed _event;
+
    public:
-    explicit heartbeat_failed_event(void const* event);
+    ///
+    /// @deprecated For internal use only.
+    ///
+    explicit MONGOCXX_ABI_NO_EXPORT heartbeat_failed_event(void const* event);
 
     ///
-    /// Destroys a heartbeat_failed_event.
+    /// Construct with the @ref mongocxx::v1 equivalent.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL() ~heartbeat_failed_event();
+    /* explicit(false) */ heartbeat_failed_event(v1::events::server_heartbeat_failed const& event) : _event{event} {}
 
-    heartbeat_failed_event(heartbeat_failed_event&&) = default;
-    heartbeat_failed_event& operator=(heartbeat_failed_event&&) = default;
-
-    heartbeat_failed_event(heartbeat_failed_event const&) = default;
-    heartbeat_failed_event& operator=(heartbeat_failed_event const&) = default;
+    ///
+    /// Convert to the @ref mongocxx::v1 equivalent.
+    ///
+    explicit operator v1::events::server_heartbeat_failed() const {
+        return _event;
+    }
 
     ///
     /// Returns the failed operation's error message.
     ///
     /// @return The message.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(std::string) message() const;
+    std::string message() const {
+        return _event.message();
+    }
 
     ///
     /// Returns the duration of the failed operation.
     ///
     /// @return The duration in microseconds.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(std::int64_t) duration() const;
+    std::int64_t duration() const {
+        return _event.duration();
+    }
 
     ///
     /// Returns the host name.
     ///
     /// @return The host name.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::string_view) host() const;
+    bsoncxx::v_noabi::stdx::string_view host() const {
+        return _event.host();
+    }
 
     ///
     /// Returns the port.
     ///
     /// @return The port.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(std::uint16_t) port() const;
+    std::uint16_t port() const {
+        return _event.port();
+    }
 
     ///
     /// Returns a boolean indicating whether this heartbeat event is from an awaitable hello.
     ///
     /// @return A boolean.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bool) awaited() const;
-
-   private:
-    void const* _failed_event;
+    bool awaited() const {
+        return _event.awaited();
+    }
 };
 
 } // namespace events
+} // namespace v_noabi
+} // namespace mongocxx
+
+namespace mongocxx {
+namespace v_noabi {
+
+///
+/// Convert to the @ref mongocxx::v_noabi equivalent of `v`.
+///
+inline v_noabi::events::heartbeat_failed_event from_v1(v1::events::server_heartbeat_failed const& v) {
+    return {v};
+}
+
+///
+/// Convert to the @ref mongocxx::v1 equivalent of `v`.
+///
+inline v1::events::server_heartbeat_failed to_v1(v_noabi::events::heartbeat_failed_event const& v) {
+    return v1::events::server_heartbeat_failed{v};
+}
+
 } // namespace v_noabi
 } // namespace mongocxx
 
@@ -96,4 +134,7 @@ class heartbeat_failed_event {
 ///
 /// @file
 /// Provides @ref mongocxx::v_noabi::events::heartbeat_failed_event.
+///
+/// @par Includes
+/// - @ref mongocxx/v1/events/server_heartbeat_failed.hpp
 ///

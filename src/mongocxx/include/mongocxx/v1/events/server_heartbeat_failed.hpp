@@ -72,6 +72,8 @@ class server_heartbeat_failed {
     ///
     MONGOCXX_ABI_EXPORT_CDECL(bool) awaited() const;
 
+    class internal;
+
    private:
     /* explicit(false) */ server_heartbeat_failed(void const* impl);
 };

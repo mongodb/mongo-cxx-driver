@@ -12,4 +12,51 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <mongocxx/v1/events/server_heartbeat_started.hpp>
+#include <mongocxx/v1/events/server_heartbeat_started.hh>
+
+//
+
+#include <bsoncxx/v1/stdx/string_view.hpp>
+
+#include <cstdint>
+
+#include <mongocxx/private/mongoc.hh>
+
+namespace mongocxx {
+namespace v1 {
+namespace events {
+
+namespace {
+
+mongoc_apm_server_heartbeat_started_t const* to_mongoc(void const* ptr) {
+    return static_cast<mongoc_apm_server_heartbeat_started_t const*>(ptr);
+}
+
+} // namespace
+
+bsoncxx::v1::stdx::string_view server_heartbeat_started::host() const {
+    return libmongoc::apm_server_heartbeat_started_get_host(to_mongoc(_impl))->host;
+}
+
+std::uint16_t server_heartbeat_started::port() const {
+    return libmongoc::apm_server_heartbeat_started_get_host(to_mongoc(_impl))->port;
+}
+
+bool server_heartbeat_started::awaited() const {
+    return libmongoc::apm_server_heartbeat_started_get_awaited(to_mongoc(_impl));
+}
+
+server_heartbeat_started::server_heartbeat_started(void const* impl) : _impl{impl} {}
+
+server_heartbeat_started server_heartbeat_started::internal::make(mongoc_apm_server_heartbeat_started_t const* ptr) {
+    return {ptr};
+}
+
+mongoc_apm_server_heartbeat_started_t const* server_heartbeat_started::internal::as_mongoc(
+    server_heartbeat_started const& self) {
+    return to_mongoc(self._impl);
+}
+
+} // namespace events
+} // namespace v1
+} // namespace mongocxx

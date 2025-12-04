@@ -61,6 +61,8 @@ class server_heartbeat_started {
     ///
     MONGOCXX_ABI_EXPORT_CDECL(bool) awaited() const;
 
+    class internal;
+
    private:
     /* explicit(false) */ server_heartbeat_started(void const* impl);
 };

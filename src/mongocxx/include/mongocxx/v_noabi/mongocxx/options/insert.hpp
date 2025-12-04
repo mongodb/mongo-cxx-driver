@@ -16,8 +16,18 @@
 
 #include <mongocxx/options/insert-fwd.hpp> // IWYU pragma: export
 
+//
+
+#include <bsoncxx/v1/types/value.hpp>
+
+#include <mongocxx/v1/insert_many_options.hpp> // IWYU pragma: export
+#include <mongocxx/v1/insert_one_options.hpp>  // IWYU pragma: export
+
+#include <utility>
+
 #include <bsoncxx/document/view.hpp> // IWYU pragma: keep: backward compatibility, to be removed.
 #include <bsoncxx/stdx/optional.hpp>
+#include <bsoncxx/types/bson_value/view.hpp>
 #include <bsoncxx/types/bson_value/view_or_value.hpp>
 
 #include <mongocxx/write_concern.hpp>
@@ -34,6 +44,75 @@ namespace options {
 class insert {
    public:
     ///
+    /// Default initialization.
+    ///
+    insert() = default;
+
+    ///
+    /// Construct with the @ref mongocxx::v1 equivalent.
+    ///
+    /* explicit(false) */ MONGOCXX_ABI_EXPORT_CDECL() insert(v1::insert_many_options opts);
+
+    ///
+    /// Construct with the @ref mongocxx::v1 equivalent.
+    ///
+    /* explicit(false) */ MONGOCXX_ABI_EXPORT_CDECL() insert(v1::insert_one_options opts);
+
+    ///
+    /// Convert to the @ref mongocxx::v1 equivalent.
+    ///
+    explicit operator v1::insert_many_options() const {
+        using bsoncxx::v_noabi::to_v1;
+        using mongocxx::v_noabi::to_v1;
+
+        v1::insert_many_options ret;
+
+        if (_write_concern) {
+            ret.write_concern(to_v1(*_write_concern));
+        }
+
+        if (_bypass_document_validation) {
+            ret.bypass_document_validation(*_bypass_document_validation);
+        }
+
+        if (_ordered) {
+            ret.ordered(*_ordered);
+        }
+
+        if (_comment) {
+            ret.comment(bsoncxx::v1::types::value{to_v1(*_comment)});
+        }
+
+        return ret;
+    }
+
+    ///
+    /// Convert to the @ref mongocxx::v1 equivalent.
+    ///
+    /// @note The `ordered` field is ignored.
+    ///
+    explicit operator v1::insert_one_options() const {
+        using bsoncxx::v_noabi::to_v1;
+        using mongocxx::v_noabi::to_v1;
+
+        v1::insert_one_options ret;
+
+        if (_write_concern) {
+            ret.write_concern(to_v1(*_write_concern));
+        }
+
+        if (_bypass_document_validation) {
+            ret.bypass_document_validation(*_bypass_document_validation);
+        }
+
+        if (_comment) {
+            ret.comment(bsoncxx::v1::types::value{to_v1(*_comment)});
+        }
+
+        return ret;
+    }
+
+    ///
     /// Sets the bypass_document_validation option.
     /// If true, allows the write to opt-out of document level validation.
     ///
@@ -48,15 +127,19 @@ class insert {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(insert&) bypass_document_validation(bool bypass_document_validation);
+    insert& bypass_document_validation(bool bypass_document_validation) {
+        _bypass_document_validation = bypass_document_validation;
+        return *this;
+    }
 
     ///
     /// Gets the current value of the bypass_document_validation option.
     ///
     /// @return The optional value of the bypass_document_validation option.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bool> const&)
-    bypass_document_validation() const;
+    bsoncxx::v_noabi::stdx::optional<bool> const& bypass_document_validation() const {
+        return _bypass_document_validation;
+    }
 
     ///
     /// Sets the write_concern for this operation.
@@ -71,7 +154,10 @@ class insert {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(insert&) write_concern(mongocxx::v_noabi::write_concern wc);
+    insert& write_concern(v_noabi::write_concern wc) {
+        _write_concern = std::move(wc);
+        return *this;
+    }
 
     ///
     /// The current write_concern for this operation.
@@ -81,8 +167,9 @@ class insert {
     /// @see
     /// - https://www.mongodb.com/docs/manual/core/write-concern/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern> const&)
-    write_concern() const;
+    bsoncxx::v_noabi::stdx::optional<v_noabi::write_concern> const& write_concern() const {
+        return _write_concern;
+    }
 
     ///
     /// @note: This applies only to insert_many and is ignored for insert_one.
@@ -102,7 +189,10 @@ class insert {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/insert/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(insert&) ordered(bool ordered);
+    insert& ordered(bool ordered) {
+        _ordered = ordered;
+        return *this;
+    }
 
     ///
     /// The current ordered value for this operation.
@@ -112,7 +202,9 @@ class insert {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/insert/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bool> const&) ordered() const;
+    bsoncxx::v_noabi::stdx::optional<bool> const& ordered() const {
+        return _ordered;
+    }
 
     ///
     /// Sets the comment for this operation.
@@ -127,8 +219,10 @@ class insert {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(insert&)
-    comment(bsoncxx::v_noabi::types::bson_value::view_or_value comment);
+    insert& comment(bsoncxx::v_noabi::types::bson_value::view_or_value comment) {
+        _comment = std::move(comment);
+        return *this;
+    }
 
     ///
     /// The current comment for this operation.
@@ -138,11 +232,12 @@ class insert {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/insert/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value> const&)
-    comment() const;
+    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value> const& comment() const {
+        return _comment;
+    }
 
    private:
-    bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern> _write_concern;
+    bsoncxx::v_noabi::stdx::optional<v_noabi::write_concern> _write_concern;
     bsoncxx::v_noabi::stdx::optional<bool> _ordered;
     bsoncxx::v_noabi::stdx::optional<bool> _bypass_document_validation;
     bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value> _comment;
@@ -152,9 +247,41 @@ class insert {
 } // namespace v_noabi
 } // namespace mongocxx
 
+namespace mongocxx {
+namespace v_noabi {
+
+///
+/// Convert to the @ref mongocxx::v_noabi equivalent of `v`.
+///
+inline v_noabi::options::insert from_v1(v1::insert_many_options v) {
+    return {std::move(v)};
+}
+
+///
+/// Convert to the @ref mongocxx::v_noabi equivalent of `v`.
+///
+/// @note The `ordered` field is initialized as unset.
+///
+inline v_noabi::options::insert from_v1(v1::insert_one_options v) {
+    return {std::move(v)};
+}
+
+// Ambiguous whether `v_noabi::options::insert` should be converted to `v1::insert_many_options` or
+// `v1::insert_one_options`. Require users to explicitly cast to the expected type instead.
+//
+// v1::insert_many_options to_v1(v_noabi::options::insert const& v);
+// v1::insert_one_options to_v1(v_noabi::options::insert const& v);
+
+} // namespace v_noabi
+} // namespace mongocxx
+
 #include <mongocxx/config/postlude.hpp>
 
 ///
 /// @file
 /// Provides @ref mongocxx::v_noabi::options::insert.
+///
+/// @par Includes
+/// - @ref mongocxx/v1/insert_many_options.hpp
+/// - @ref mongocxx/v1/insert_one_options.hpp
 ///

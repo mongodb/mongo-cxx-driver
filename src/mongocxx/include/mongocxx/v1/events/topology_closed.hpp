@@ -46,6 +46,8 @@ class topology_closed {
     ///
     MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::oid) topology_id() const;
 
+    class internal;
+
    private:
     /* explicit(false) */ topology_closed(void const* impl);
 };

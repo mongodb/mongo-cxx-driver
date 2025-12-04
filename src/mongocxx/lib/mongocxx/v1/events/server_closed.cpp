@@ -12,4 +12,55 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <mongocxx/v1/events/server_closed.hpp>
+#include <mongocxx/v1/events/server_closed.hh>
+
+//
+
+#include <bsoncxx/v1/oid.hpp>
+#include <bsoncxx/v1/stdx/string_view.hpp>
+
+#include <cstdint>
+
+#include <bsoncxx/private/bson.hh>
+
+#include <mongocxx/private/mongoc.hh>
+
+namespace mongocxx {
+namespace v1 {
+namespace events {
+
+namespace {
+
+mongoc_apm_server_closed_t const* to_mongoc(void const* ptr) {
+    return static_cast<mongoc_apm_server_closed_t const*>(ptr);
+}
+
+} // namespace
+
+bsoncxx::v1::stdx::string_view server_closed::host() const {
+    return libmongoc::apm_server_closed_get_host(to_mongoc(_impl))->host;
+}
+
+std::uint16_t server_closed::port() const {
+    return libmongoc::apm_server_closed_get_host(to_mongoc(_impl))->port;
+}
+
+bsoncxx::v1::oid server_closed::topology_id() const {
+    bson_oid_t id = {};
+    libmongoc::apm_server_closed_get_topology_id(to_mongoc(_impl), &id);
+    return bsoncxx::v1::oid{reinterpret_cast<std::uint8_t const*>(&id), sizeof(id)};
+}
+
+server_closed::server_closed(void const* impl) : _impl{impl} {}
+
+server_closed server_closed::internal::make(mongoc_apm_server_closed_t const* ptr) {
+    return {ptr};
+}
+
+mongoc_apm_server_closed_t const* server_closed::internal::as_mongoc(server_closed const& self) {
+    return to_mongoc(self._impl);
+}
+
+} // namespace events
+} // namespace v1
+} // namespace mongocxx
