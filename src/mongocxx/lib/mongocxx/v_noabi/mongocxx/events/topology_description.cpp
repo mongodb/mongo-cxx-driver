@@ -94,8 +94,9 @@ bool topology_description::has_writable_server() const {
 
 topology_description::server_descriptions topology_description::servers() const {
     std::size_t n = {};
-    auto const sds = libmongoc::topology_description_get_servers(static_cast<mongoc_topology_description_t*>(_td), &n);
-    return server_descriptions{reinterpret_cast<void*>(sds), n};
+    auto const sds =
+        libmongoc::topology_description_get_servers(v1::events::topology_description::internal::as_mongoc(_td), &n);
+    return {reinterpret_cast<void*>(sds), n};
 }
 
 } // namespace events
