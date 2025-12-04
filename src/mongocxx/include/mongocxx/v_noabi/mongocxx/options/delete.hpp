@@ -293,11 +293,11 @@ inline v_noabi::options::delete_options from_v1(v1::delete_one_options v) {
     return {std::move(v)};
 }
 
-// Ambiguous whether `v_noabi::options::delete` should be converted to `v1::delete_many_options` or
+// Ambiguous whether `v_noabi::options::delete_options` should be converted to `v1::delete_many_options` or
 // `v1::delete_one_options`. Require users to explicitly cast to the expected type instead.
 //
-// v1::delete_many_options to_v1(v_noabi::options::delete const& v);
-// v1::delete_one_options to_v1(v_noabi::options::delete const& v);
+// v1::delete_many_options to_v1(v_noabi::options::delete_options const& v);
+// v1::delete_one_options to_v1(v_noabi::options::delete_options const& v);
 
 } // namespace v_noabi
 } // namespace mongocxx
