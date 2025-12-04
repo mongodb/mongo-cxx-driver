@@ -14,6 +14,9 @@
 
 #pragma once
 
+#include <mongocxx/v1/delete_many_options-fwd.hpp> // IWYU pragma: export
+#include <mongocxx/v1/delete_one_options-fwd.hpp>  // IWYU pragma: export
+
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
@@ -29,7 +32,7 @@ class delete_options;
 namespace mongocxx {
 namespace options {
 
-using ::mongocxx::v_noabi::options::delete_options;
+using v_noabi::options::delete_options;
 
 } // namespace options
 } // namespace mongocxx
@@ -39,4 +42,8 @@ using ::mongocxx::v_noabi::options::delete_options;
 ///
 /// @file
 /// Declares @ref mongocxx::v_noabi::options::delete_options.
+///
+/// @par Includes
+/// - @ref mongocxx/v1/delete_many_options-fwd.hpp
+/// - @ref mongocxx/v1/delete_one_options-fwd.hpp
 ///
