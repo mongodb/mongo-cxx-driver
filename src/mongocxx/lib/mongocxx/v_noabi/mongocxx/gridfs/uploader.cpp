@@ -201,16 +201,20 @@ void uploader::flush_chunks() {
     _get_impl().chunks_collection_documents.clear();
 }
 
-uploader::impl const& uploader::_get_impl() const {
-    if (!_impl) {
+template <typename Self>
+auto uploader::_get_impl(Self& self) -> decltype(*self._impl) {
+    if (!self._impl) {
         throw logic_error{error_code::k_invalid_gridfs_uploader_object};
     }
-    return *_impl;
+    return *self._impl;
+}
+
+uploader::impl const& uploader::_get_impl() const {
+    return _get_impl(*this);
 }
 
 uploader::impl& uploader::_get_impl() {
-    auto cthis = const_cast<uploader const*>(this);
-    return const_cast<uploader::impl&>(cthis->_get_impl());
+    return _get_impl(*this);
 }
 
 } // namespace gridfs

@@ -48,16 +48,20 @@ search_index_model& search_index_model::type(bsoncxx::v_noabi::string::view_or_v
     return *this;
 }
 
-search_index_model::impl const& search_index_model::_get_impl() const {
-    if (!_impl) {
+template <typename Self>
+auto search_index_model::_get_impl(Self& self) -> decltype(*self._impl) {
+    if (!self._impl) {
         throw logic_error{error_code::k_invalid_search_index_model};
     }
-    return *_impl;
+    return *self._impl;
+}
+
+search_index_model::impl const& search_index_model::_get_impl() const {
+    return _get_impl(*this);
 }
 
 search_index_model::impl& search_index_model::_get_impl() {
-    auto cthis = const_cast<search_index_model const*>(this);
-    return const_cast<search_index_model::impl&>(cthis->_get_impl());
+    return _get_impl(*this);
 }
 
 } // namespace v_noabi

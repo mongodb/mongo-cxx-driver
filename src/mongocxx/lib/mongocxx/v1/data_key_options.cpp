@@ -138,7 +138,10 @@ data_key_options::internal::to_mongoc(data_key_options const& self) {
             _impl._key_alt_names.end(),
             std::back_inserter(names),
             [](std::string const& name) {
-                return const_cast<char*>(name.c_str()); // For copy only.
+                // mongoc_client_encryption_datakey_opts_set_keyaltnames() deep-copies the elements of `keyaltnames`
+                // without modification.
+                // NOLINTNEXTLINE(cppcoreguidelines-pro-type-const-cast)
+                return const_cast<char*>(name.c_str());
             });
 
         libmongoc::client_encryption_datakey_opts_set_keyaltnames(

@@ -60,12 +60,18 @@ class client_session {
     ///
     /// Move constructs a session.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL() client_session(client_session&&) noexcept;
+    /// @par Postconditions:
+    /// - `other` is in an assign-or-destroy-only state.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL() client_session(client_session&& other) noexcept;
 
     ///
     /// Move assigns a session.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(client_session&) operator=(client_session&&) noexcept;
+    /// @par Postconditions:
+    /// - `other` is in an assign-or-destroy-only state.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(client_session&) operator=(client_session&& other) noexcept;
 
     client_session(client_session const&) = delete;
     client_session& operator=(client_session const&) = delete;
@@ -223,8 +229,9 @@ class client_session {
 
     client_session(mongocxx::v_noabi::client const* client, options::client_session const& options);
 
-    impl& _get_impl();
-    impl const& _get_impl() const;
+    impl const& _get_impl() const {
+        return *_impl;
+    }
 
     std::unique_ptr<impl> _impl;
 };

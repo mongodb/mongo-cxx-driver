@@ -1436,16 +1436,20 @@ bsoncxx::v_noabi::stdx::optional<result::insert_many> collection::_exec_insert_m
     return result::insert_many{std::move(result.value()), inserted_ids.extract()};
 }
 
-collection::impl const& collection::_get_impl() const {
-    if (!_impl) {
+template <typename Self>
+auto collection::_get_impl(Self& self) -> decltype(*self._impl) {
+    if (!self._impl) {
         throw logic_error{error_code::k_invalid_collection_object};
     }
-    return *_impl;
+    return *self._impl;
+}
+
+collection::impl const& collection::_get_impl() const {
+    return _get_impl(*this);
 }
 
 collection::impl& collection::_get_impl() {
-    auto cthis = const_cast<collection const*>(this);
-    return const_cast<collection::impl&>(cthis->_get_impl());
+    return _get_impl(*this);
 }
 
 } // namespace v_noabi

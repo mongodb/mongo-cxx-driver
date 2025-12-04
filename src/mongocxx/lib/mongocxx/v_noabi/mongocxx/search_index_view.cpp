@@ -119,16 +119,20 @@ void search_index_view::update_one(
     _get_impl().update_one(&session, name, definition);
 }
 
-search_index_view::impl const& search_index_view::_get_impl() const {
-    if (!_impl) {
+template <typename Self>
+auto search_index_view::_get_impl(Self& self) -> decltype(*self._impl) {
+    if (!self._impl) {
         throw mongocxx::v_noabi::logic_error{error_code::k_invalid_search_index_view};
     }
-    return *_impl;
+    return *self._impl;
+}
+
+search_index_view::impl const& search_index_view::_get_impl() const {
+    return _get_impl(*this);
 }
 
 search_index_view::impl& search_index_view::_get_impl() {
-    auto cthis = const_cast<search_index_view const*>(this);
-    return const_cast<search_index_view::impl&>(cthis->_get_impl());
+    return _get_impl(*this);
 }
 
 } // namespace v_noabi

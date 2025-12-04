@@ -556,16 +556,20 @@ void bucket::create_indexes_if_nonexistent(client_session const* session) {
     _get_impl().indexes_created = true;
 }
 
-bucket::impl const& bucket::_get_impl() const {
-    if (!_impl) {
+template <typename Self>
+auto bucket::_get_impl(Self& self) -> decltype(*self._impl) {
+    if (!self._impl) {
         throw logic_error{error_code::k_invalid_gridfs_bucket_object};
     }
-    return *_impl;
+    return *self._impl;
+}
+
+bucket::impl const& bucket::_get_impl() const {
+    return _get_impl(*this);
 }
 
 bucket::impl& bucket::_get_impl() {
-    auto cthis = const_cast<bucket const*>(this);
-    return const_cast<bucket::impl&>(cthis->_get_impl());
+    return _get_impl(*this);
 }
 
 } // namespace gridfs
