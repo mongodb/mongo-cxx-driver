@@ -261,7 +261,10 @@ void bucket::_upload_from_stream_with_id(
     std::istream* source,
     options::gridfs::upload const& options) {
     uploader upload_stream = _open_upload_stream_with_id(session, id, filename, options);
-    std::int32_t chunk_size = upload_stream.chunk_size();
+    auto const chunk_size = upload_stream.chunk_size();
+
+    // Fixed-size dynamic array: size tracked by `chunk_size`.
+    // NOLINTNEXTLINE(cppcoreguidelines-avoid-c-arrays)
     std::unique_ptr<std::uint8_t[]> buffer = bsoncxx::make_unique<std::uint8_t[]>(static_cast<std::size_t>(chunk_size));
 
     do {
@@ -408,10 +411,13 @@ void bucket::_download_to_stream(
     bsoncxx::v_noabi::stdx::optional<std::size_t> end) {
     downloader download_stream = _open_download_stream(session, id, start, end);
 
-    std::size_t chunk_size = {};
-    if (!int32_to_size_t_safe(download_stream.chunk_size(), chunk_size)) {
-        throw gridfs_exception{error_code::k_invalid_parameter, "expected chunk size to be in bounds of size_t"};
-    }
+    auto const chunk_size = [&download_stream] {
+        std::size_t ret = {};
+        if (!int32_to_size_t_safe(download_stream.chunk_size(), ret)) {
+            throw gridfs_exception{error_code::k_invalid_parameter, "expected chunk size to be in bounds of size_t"};
+        }
+        return ret;
+    }();
     if (!start) {
         start.emplace<std::size_t>(0);
     }
@@ -423,7 +429,10 @@ void bucket::_download_to_stream(
         end = file_length_sz;
     }
     auto bytes_expected = *end - *start;
-    std::unique_ptr<std::uint8_t[]> buffer = bsoncxx::make_unique<std::uint8_t[]>(static_cast<std::size_t>(chunk_size));
+
+    // Fixed-size dynamic array: size tracked by `chunk_size`.
+    // NOLINTNEXTLINE(cppcoreguidelines-avoid-c-arrays)
+    std::unique_ptr<std::uint8_t[]> buffer = bsoncxx::make_unique<std::uint8_t[]>(chunk_size);
 
     while (bytes_expected > 0) {
         std::size_t const bytes_read =

@@ -18,6 +18,8 @@ namespace bsoncxx {
 
 namespace {
 
+// Precomputed table of C strings.
+// NOLINTNEXTLINE(cppcoreguidelines-avoid-c-arrays)
 constexpr char k_index_table[] =
     "0\0"
     "1\0"

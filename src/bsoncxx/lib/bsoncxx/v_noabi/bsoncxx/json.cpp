@@ -56,6 +56,9 @@ std::string to_json_helper(document::view view, decltype(bson_as_legacy_extended
     }
 
     auto const deleter = [](char* result) { bson_free(result); };
+
+    // Fixed-size dynamic array: size tracked by `size`.
+    // NOLINTNEXTLINE(cppcoreguidelines-avoid-c-arrays)
     std::unique_ptr<char[], decltype(deleter)> const cleanup(result, deleter);
 
     return {result, size};
