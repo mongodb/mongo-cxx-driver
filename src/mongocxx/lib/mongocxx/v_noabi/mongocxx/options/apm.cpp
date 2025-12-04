@@ -18,129 +18,79 @@
 
 #include <mongocxx/v1/config/export.hpp>
 
+#include <mongocxx/v1/apm.hh>
+
+#include <functional>
+#include <utility>
+
+#include <mongocxx/events/command_failed_event.hpp>
+#include <mongocxx/events/command_started_event.hpp>
+#include <mongocxx/events/command_succeeded_event.hpp>
+#include <mongocxx/events/heartbeat_failed_event.hpp>
+#include <mongocxx/events/heartbeat_started_event.hpp>
+#include <mongocxx/events/heartbeat_succeeded_event.hpp>
+#include <mongocxx/events/server_changed_event.hpp>
+#include <mongocxx/events/server_closed_event.hpp>
+#include <mongocxx/events/server_opening_event.hpp>
+#include <mongocxx/events/topology_changed_event.hpp>
+#include <mongocxx/events/topology_closed_event.hpp>
+#include <mongocxx/events/topology_opening_event.hpp>
+
 namespace mongocxx {
 namespace v_noabi {
 namespace options {
 
-apm& apm::on_command_started(
-    std::function<void MONGOCXX_ABI_CDECL(events::command_started_event const&)> command_started) {
-    _command_started = std::move(command_started);
-    return *this;
+namespace {
+
+template <typename Event>
+struct event_to_v1;
+
+// clang-format off
+template <> struct event_to_v1<v_noabi::events::command_started_event> { using type = v1::events::command_started; };
+template <> struct event_to_v1<v_noabi::events::command_failed_event> { using type = v1::events::command_failed; };
+template <> struct event_to_v1<v_noabi::events::command_succeeded_event> { using type = v1::events::command_succeeded; };
+template <> struct event_to_v1<v_noabi::events::server_closed_event> { using type = v1::events::server_closed; };
+template <> struct event_to_v1<v_noabi::events::server_changed_event> { using type = v1::events::server_description_changed; };
+template <> struct event_to_v1<v_noabi::events::server_opening_event> { using type = v1::events::server_opening; };
+template <> struct event_to_v1<v_noabi::events::topology_closed_event> { using type = v1::events::topology_closed; };
+template <> struct event_to_v1<v_noabi::events::topology_changed_event> { using type = v1::events::topology_description_changed; };
+template <> struct event_to_v1<v_noabi::events::topology_opening_event> { using type = v1::events::topology_opening; };
+template <> struct event_to_v1<v_noabi::events::heartbeat_started_event> { using type = v1::events::server_heartbeat_started; };
+template <> struct event_to_v1<v_noabi::events::heartbeat_failed_event> { using type = v1::events::server_heartbeat_failed; };
+template <> struct event_to_v1<v_noabi::events::heartbeat_succeeded_event> { using type = v1::events::server_heartbeat_succeeded; };
+// clang-format on
+
+// C++14 or newer is required for [x = std::move(expr)] captures.
+template <typename Fn>
+struct invoke_as_v1 {
+    Fn _fn;
+
+    template <typename v_noabi_type, typename v1_type = typename event_to_v1<v_noabi_type>::type>
+    void MONGOCXX_ABI_CDECL operator()(v_noabi_type const& event) const {
+        _fn(static_cast<v1_type>(event));
+    }
+};
+
+template <typename Fn>
+auto v_noabi_to_v1(Fn&& fn) -> invoke_as_v1<Fn> {
+    return invoke_as_v1<Fn>{std::forward<Fn>(fn)};
 }
 
-std::function<void MONGOCXX_ABI_CDECL(events::command_started_event const&)> const& apm::command_started() const {
-    return _command_started;
-}
+} // namespace
 
-apm& apm::on_command_failed(
-    std::function<void MONGOCXX_ABI_CDECL(events::command_failed_event const&)> command_failed) {
-    _command_failed = std::move(command_failed);
-    return *this;
-}
-
-std::function<void MONGOCXX_ABI_CDECL(events::command_failed_event const&)> const& apm::command_failed() const {
-    return _command_failed;
-}
-
-apm& apm::on_command_succeeded(
-    std::function<void MONGOCXX_ABI_CDECL(events::command_succeeded_event const&)> command_succeeded) {
-    _command_succeeded = std::move(command_succeeded);
-    return *this;
-}
-
-std::function<void MONGOCXX_ABI_CDECL(events::command_succeeded_event const&)> const& apm::command_succeeded() const {
-    return _command_succeeded;
-}
-
-apm& apm::on_server_opening(
-    std::function<void MONGOCXX_ABI_CDECL(events::server_opening_event const&)> server_opening) {
-    _server_opening = server_opening;
-    return *this;
-}
-
-std::function<void MONGOCXX_ABI_CDECL(events::server_opening_event const&)> const& apm::server_opening() const {
-    return _server_opening;
-}
-
-apm& apm::on_server_closed(std::function<void MONGOCXX_ABI_CDECL(events::server_closed_event const&)> server_closed) {
-    _server_closed = server_closed;
-    return *this;
-}
-
-std::function<void MONGOCXX_ABI_CDECL(events::server_closed_event const&)> const& apm::server_closed() const {
-    return _server_closed;
-}
-
-apm& apm::on_server_changed(
-    std::function<void MONGOCXX_ABI_CDECL(events::server_changed_event const&)> server_changed) {
-    _server_changed = server_changed;
-    return *this;
-}
-
-std::function<void MONGOCXX_ABI_CDECL(events::server_changed_event const&)> const& apm::server_changed() const {
-    return _server_changed;
-}
-
-apm& apm::on_topology_opening(
-    std::function<void MONGOCXX_ABI_CDECL(events::topology_opening_event const&)> topology_opening) {
-    _topology_opening = topology_opening;
-    return *this;
-}
-
-std::function<void MONGOCXX_ABI_CDECL(events::topology_opening_event const&)> const& apm::topology_opening() const {
-    return _topology_opening;
-}
-
-apm& apm::on_topology_closed(
-    std::function<void MONGOCXX_ABI_CDECL(events::topology_closed_event const&)> topology_closed) {
-    _topology_closed = topology_closed;
-    return *this;
-}
-
-std::function<void MONGOCXX_ABI_CDECL(events::topology_closed_event const&)> const& apm::topology_closed() const {
-    return _topology_closed;
-}
-
-apm& apm::on_topology_changed(
-    std::function<void MONGOCXX_ABI_CDECL(events::topology_changed_event const&)> topology_changed) {
-    _topology_changed = topology_changed;
-    return *this;
-}
-
-std::function<void MONGOCXX_ABI_CDECL(events::topology_changed_event const&)> const& apm::topology_changed() const {
-    return _topology_changed;
-}
-
-apm& apm::on_heartbeat_started(
-    std::function<void MONGOCXX_ABI_CDECL(events::heartbeat_started_event const&)> heartbeat_started) {
-    _heartbeat_started = std::move(heartbeat_started);
-    return *this;
-}
-
-std::function<void MONGOCXX_ABI_CDECL(events::heartbeat_started_event const&)> const& apm::heartbeat_started() const {
-    return _heartbeat_started;
-}
-
-apm& apm::on_heartbeat_failed(
-    std::function<void MONGOCXX_ABI_CDECL(events::heartbeat_failed_event const&)> heartbeat_failed) {
-    _heartbeat_failed = std::move(heartbeat_failed);
-    return *this;
-}
-
-std::function<void MONGOCXX_ABI_CDECL(events::heartbeat_failed_event const&)> const& apm::heartbeat_failed() const {
-    return _heartbeat_failed;
-}
-
-apm& apm::on_heartbeat_succeeded(
-    std::function<void MONGOCXX_ABI_CDECL(events::heartbeat_succeeded_event const&)> heartbeat_succeeded) {
-    _heartbeat_succeeded = std::move(heartbeat_succeeded);
-    return *this;
-}
-
-std::function<void MONGOCXX_ABI_CDECL(events::heartbeat_succeeded_event const&)> const& apm::heartbeat_succeeded()
-    const {
-    return _heartbeat_succeeded;
-}
+apm::apm(v1::apm other)
+    : _command_started{v_noabi_to_v1(std::move(v1::apm::internal::command_started(other)))},
+      _command_failed{v_noabi_to_v1(std::move(v1::apm::internal::command_failed(other)))},
+      _command_succeeded{v_noabi_to_v1(std::move(v1::apm::internal::command_succeeded(other)))},
+      _server_closed{v_noabi_to_v1(std::move(v1::apm::internal::server_closed(other)))},
+      _server_changed{v_noabi_to_v1(std::move(v1::apm::internal::server_description_changed(other)))},
+      _server_opening{v_noabi_to_v1(std::move(v1::apm::internal::server_opening(other)))},
+      _topology_closed{v_noabi_to_v1(std::move(v1::apm::internal::topology_closed(other)))},
+      _topology_changed{v_noabi_to_v1(std::move(v1::apm::internal::topology_description_changed(other)))},
+      _topology_opening{v_noabi_to_v1(std::move(v1::apm::internal::topology_opening(other)))},
+      _heartbeat_started{v_noabi_to_v1(std::move(v1::apm::internal::server_heartbeat_started(other)))},
+      _heartbeat_failed{v_noabi_to_v1(std::move(v1::apm::internal::server_heartbeat_failed(other)))},
+      _heartbeat_succeeded{v_noabi_to_v1(std::move(v1::apm::internal::server_heartbeat_succeeded(other)))} {}
 
 } // namespace options
 } // namespace v_noabi

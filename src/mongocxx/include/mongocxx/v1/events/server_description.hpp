@@ -72,12 +72,12 @@ class server_description {
     ///
     /// Copy constructor.
     ///
-    server_description(server_description const& other);
+    MONGOCXX_ABI_EXPORT_CDECL() server_description(server_description const& other);
 
     ///
     /// Copy assignment.
     ///
-    server_description& operator=(server_description const& other);
+    MONGOCXX_ABI_EXPORT_CDECL(server_description&) operator=(server_description const& other);
 
     ///
     /// Return the client-generated unique server ID.
@@ -124,6 +124,11 @@ class server_description {
     /// Return the port number for the connection used by the command.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(std::uint16_t) port() const;
+
+    class internal;
+
+   private:
+    /* explicit(false) */ server_description(void* impl);
 };
 
 } // namespace events

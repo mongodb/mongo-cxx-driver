@@ -58,6 +58,8 @@ class topology_description_changed {
     ///
     MONGOCXX_ABI_EXPORT_CDECL(v1::events::topology_description) new_description() const;
 
+    class internal;
+
    private:
     /* explicit(false) */ topology_description_changed(void const* impl);
 };

@@ -124,6 +124,8 @@ class estimated_document_count_options {
     /// Return the current "readPreference" field.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<v1::read_preference>) read_preference() const;
+
+    class internal;
 };
 
 } // namespace v1

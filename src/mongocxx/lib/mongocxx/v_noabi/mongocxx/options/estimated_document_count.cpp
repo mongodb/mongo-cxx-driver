@@ -14,40 +14,20 @@
 
 #include <mongocxx/options/estimated_document_count.hpp>
 
-#include <mongocxx/read_preference.hh>
+//
+
+#include <mongocxx/v1/estimated_document_count_options.hh>
+
+#include <utility>
 
 namespace mongocxx {
 namespace v_noabi {
 namespace options {
 
-estimated_document_count& estimated_document_count::max_time(std::chrono::milliseconds max_time) {
-    _max_time = std::move(max_time);
-    return *this;
-}
-
-estimated_document_count& estimated_document_count::read_preference(mongocxx::v_noabi::read_preference rp) {
-    _read_preference = std::move(rp);
-    return *this;
-}
-
-estimated_document_count& estimated_document_count::comment(
-    bsoncxx::v_noabi::types::bson_value::view_or_value comment) {
-    _comment = std::move(comment);
-    return *this;
-}
-
-bsoncxx::v_noabi::stdx::optional<std::chrono::milliseconds> const& estimated_document_count::max_time() const {
-    return _max_time;
-}
-
-bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value> const&
-estimated_document_count::comment() const {
-    return _comment;
-}
-
-bsoncxx::v_noabi::stdx::optional<read_preference> const& estimated_document_count::read_preference() const {
-    return _read_preference;
-}
+estimated_document_count::estimated_document_count(v1::estimated_document_count_options opts)
+    : _max_time{opts.max_time()},
+      _comment{std::move(v1::estimated_document_count_options::internal::comment(opts))},
+      _read_preference{std::move(v1::estimated_document_count_options::internal::read_preference(opts))} {}
 
 } // namespace options
 } // namespace v_noabi

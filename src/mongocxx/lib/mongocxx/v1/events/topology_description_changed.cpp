@@ -12,4 +12,59 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <mongocxx/v1/events/topology_description_changed.hpp>
+#include <mongocxx/v1/events/topology_description_changed.hh>
+
+//
+
+#include <bsoncxx/v1/oid.hpp>
+
+#include <mongocxx/v1/events/topology_description.hh>
+
+#include <cstdint>
+
+#include <bsoncxx/private/bson.hh>
+
+#include <mongocxx/private/mongoc.hh>
+
+namespace mongocxx {
+namespace v1 {
+namespace events {
+
+namespace {
+
+mongoc_apm_topology_changed_t const* to_mongoc(void const* ptr) {
+    return static_cast<mongoc_apm_topology_changed_t const*>(ptr);
+}
+
+} // namespace
+
+bsoncxx::v1::oid topology_description_changed::topology_id() const {
+    bson_oid_t id = {};
+    libmongoc::apm_topology_changed_get_topology_id(to_mongoc(_impl), &id);
+    return bsoncxx::v1::oid{reinterpret_cast<std::uint8_t const*>(&id), sizeof(id)};
+}
+
+v1::events::topology_description topology_description_changed::previous_description() const {
+    return v1::events::topology_description::internal::make(
+        libmongoc::apm_topology_changed_get_previous_description(to_mongoc(_impl)));
+}
+
+v1::events::topology_description topology_description_changed::new_description() const {
+    return v1::events::topology_description::internal::make(
+        libmongoc::apm_topology_changed_get_new_description(to_mongoc(_impl)));
+}
+
+topology_description_changed::topology_description_changed(void const* impl) : _impl{impl} {}
+
+topology_description_changed topology_description_changed::internal::make(mongoc_apm_topology_changed_t const* ptr) {
+    return {ptr};
+}
+
+mongoc_apm_topology_changed_t const* topology_description_changed::internal::as_mongoc(
+    topology_description_changed const& self) {
+    return to_mongoc(self._impl);
+}
+
+} // namespace events
+} // namespace v1
+} // namespace mongocxx

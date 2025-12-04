@@ -72,6 +72,8 @@ class server_description_changed {
     ///
     MONGOCXX_ABI_EXPORT_CDECL(v1::events::server_description) new_description() const;
 
+    class internal;
+
    private:
     /* explicit(false) */ server_description_changed(void const* impl);
 };

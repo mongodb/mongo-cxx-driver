@@ -16,6 +16,12 @@
 
 #include <mongocxx/events/server_changed_event-fwd.hpp> // IWYU pragma: export
 
+//
+
+#include <mongocxx/v1/events/server_description_changed.hpp> // IWYU pragma: export
+
+#include <cstdint>
+
 #include <bsoncxx/oid.hpp>
 #include <bsoncxx/stdx/string_view.hpp>
 
@@ -34,33 +40,44 @@ namespace events {
 /// - [SDAM Logging and Monitoring Specification (MongoDB Specifications)](https://specifications.readthedocs.io/en/latest/server-discovery-and-monitoring/server-discovery-and-monitoring-logging-and-monitoring/)
 ///
 class server_changed_event {
+   private:
+    v1::events::server_description_changed _event;
+
    public:
-    explicit server_changed_event(void const* event);
+    ///
+    /// @deprecated For internal use only.
+    ///
+    explicit MONGOCXX_ABI_NO_EXPORT server_changed_event(void const* event);
 
     ///
-    /// Destroys a server_changed_event.
+    /// Construct with the @ref mongocxx::v1 equivalent.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL() ~server_changed_event();
+    /* explicit(false) */ server_changed_event(v1::events::server_description_changed const& event) : _event{event} {}
 
-    server_changed_event(server_changed_event&&) = default;
-    server_changed_event& operator=(server_changed_event&&) = default;
-
-    server_changed_event(server_changed_event const&) = default;
-    server_changed_event& operator=(server_changed_event const&) = default;
+    ///
+    /// Convert to the @ref mongocxx::v1 equivalent.
+    ///
+    explicit operator v1::events::server_description_changed() const {
+        return _event;
+    }
 
     ///
     /// Returns the server host name.
     ///
     /// @return The host name.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::string_view) host() const;
+    bsoncxx::v_noabi::stdx::string_view host() const {
+        return _event.host();
+    }
 
     ///
     /// Returns the server port.
     ///
     /// @return The port.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(std::uint16_t) port() const;
+    std::uint16_t port() const {
+        return _event.port();
+    }
 
     ///
     /// An opaque id, unique to this topology for this mongocxx::v_noabi::client or
@@ -68,7 +85,9 @@ class server_changed_event {
     ///
     /// @return The id.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::oid const) topology_id() const;
+    bsoncxx::v_noabi::oid const topology_id() const {
+        return _event.topology_id();
+    }
 
     ///
     /// The server's description before it changed.
@@ -83,12 +102,29 @@ class server_changed_event {
     /// @return The server_description.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(server_description const) new_description() const;
-
-   private:
-    void const* _event;
 };
 
 } // namespace events
+} // namespace v_noabi
+} // namespace mongocxx
+
+namespace mongocxx {
+namespace v_noabi {
+
+///
+/// Convert to the @ref mongocxx::v_noabi equivalent of `v`.
+///
+inline v_noabi::events::server_changed_event from_v1(v1::events::server_description_changed const& v) {
+    return {v};
+}
+
+///
+/// Convert to the @ref mongocxx::v1 equivalent of `v`.
+///
+inline v1::events::server_description_changed to_v1(v_noabi::events::server_changed_event const& v) {
+    return v1::events::server_description_changed{v};
+}
+
 } // namespace v_noabi
 } // namespace mongocxx
 
@@ -97,4 +133,7 @@ class server_changed_event {
 ///
 /// @file
 /// Provides @ref mongocxx::v_noabi::events::server_changed_event.
+///
+/// @par Includes
+/// - @ref mongocxx/v1/events/server_description_changed.hpp
 ///

@@ -16,6 +16,13 @@
 
 #include <mongocxx/events/server_description-fwd.hpp> // IWYU pragma: export
 
+//
+
+#include <mongocxx/v1/events/server_description.hpp> // IWYU pragma: export
+
+#include <cstdint>
+#include <utility>
+
 #include <bsoncxx/document/view.hpp>
 #include <bsoncxx/stdx/string_view.hpp>
 
@@ -33,18 +40,19 @@ namespace events {
 ///
 class server_description {
    public:
-    explicit server_description(void const* event);
+    explicit server_description(void const* sd) : _sd(sd) {}
 
     ///
-    /// Destroys a server_description.
+    /// Construct with the @ref mongocxx::v1 equivalent.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL() ~server_description();
+    /// @important `*this` MUST be used within the lifetime of `other`.
+    ///
+    /* explicit(false) */ MONGOCXX_ABI_EXPORT_CDECL() server_description(v1::events::server_description const& other);
 
-    server_description(server_description&&) = default;
-    server_description& operator=(server_description&&) = default;
-
-    server_description(server_description const&) = default;
-    server_description& operator=(server_description const&) = default;
+    ///
+    /// Convert to the @ref mongocxx::v1 equivalent.
+    ///
+    explicit MONGOCXX_ABI_EXPORT_CDECL() operator v1::events::server_description() const;
 
     ///
     /// An opaque id, unique to this server for this mongocxx::v_noabi::client or
@@ -74,7 +82,9 @@ class server_description {
     ///
     /// @deprecated use hello instead.
     ///
-    MONGOCXX_DEPRECATED MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::document::view) is_master() const;
+    MONGOCXX_DEPRECATED bsoncxx::v_noabi::document::view is_master() const {
+        return this->hello();
+    }
 
     ///
     /// The server's last response to the "hello" command, or an empty document if the driver
@@ -106,9 +116,32 @@ class server_description {
 } // namespace v_noabi
 } // namespace mongocxx
 
+namespace mongocxx {
+namespace v_noabi {
+
+///
+/// Convert to the @ref mongocxx::v_noabi equivalent of `v`.
+///
+inline v_noabi::events::server_description from_v1(v1::events::server_description v) {
+    return {std::move(v)};
+}
+
+///
+/// Convert to the @ref mongocxx::v1 equivalent of `v`.
+///
+inline v1::events::server_description to_v1(v_noabi::events::server_description const& v) {
+    return v1::events::server_description{v};
+}
+
+} // namespace v_noabi
+} // namespace mongocxx
+
 #include <mongocxx/config/postlude.hpp>
 
 ///
 /// @file
 /// Provides @ref mongocxx::v_noabi::events::server_description.
+///
+/// @par Includes
+/// - @ref mongocxx/v1/events/server_description.hpp
 ///

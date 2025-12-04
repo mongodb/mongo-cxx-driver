@@ -328,8 +328,7 @@ class read_preference {
     ///
     /// @return A hedge document if one was set.
     ///
-    MONGOCXX_DEPRECATED MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view> const)
-    hedge() const {
+    MONGOCXX_DEPRECATED bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view> const hedge() const {
         bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view> ret;
         if (auto const opt = _rp.hedge()) {
             ret.emplace(*opt);

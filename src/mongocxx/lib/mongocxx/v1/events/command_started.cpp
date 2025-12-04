@@ -12,4 +12,80 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <mongocxx/v1/events/command_started.hpp>
+#include <mongocxx/v1/events/command_started.hh>
+
+//
+
+#include <bsoncxx/v1/document/view.hpp>
+#include <bsoncxx/v1/oid.hpp>
+#include <bsoncxx/v1/stdx/optional.hpp>
+#include <bsoncxx/v1/stdx/string_view.hpp>
+
+#include <cstdint>
+
+#include <mongocxx/private/mongoc.hh>
+#include <mongocxx/private/scoped_bson.hh>
+
+namespace mongocxx {
+namespace v1 {
+namespace events {
+
+namespace {
+
+mongoc_apm_command_started_t const* to_mongoc(void const* ptr) {
+    return static_cast<mongoc_apm_command_started_t const*>(ptr);
+}
+
+} // namespace
+
+bsoncxx::v1::document::view command_started::command() const {
+    return scoped_bson_view{libmongoc::apm_command_started_get_command(to_mongoc(_impl))}.view();
+}
+
+bsoncxx::v1::stdx::string_view command_started::database_name() const {
+    return libmongoc::apm_command_started_get_database_name(to_mongoc(_impl));
+}
+
+bsoncxx::v1::stdx::string_view command_started::command_name() const {
+    return libmongoc::apm_command_started_get_command_name(to_mongoc(_impl));
+}
+
+std::int64_t command_started::request_id() const {
+    return libmongoc::apm_command_started_get_request_id(to_mongoc(_impl));
+}
+
+std::int64_t command_started::operation_id() const {
+    return libmongoc::apm_command_started_get_operation_id(to_mongoc(_impl));
+}
+
+bsoncxx::v1::stdx::optional<bsoncxx::v1::oid> command_started::service_id() const {
+    bsoncxx::v1::stdx::optional<bsoncxx::v1::oid> ret;
+
+    if (auto const id = libmongoc::apm_command_started_get_service_id(to_mongoc(_impl))) {
+        ret.emplace(reinterpret_cast<std::uint8_t const*>(id), bsoncxx::v1::oid::k_oid_length);
+    }
+
+    return ret;
+}
+
+bsoncxx::v1::stdx::string_view command_started::host() const {
+    return libmongoc::apm_command_started_get_host(to_mongoc(_impl))->host;
+}
+
+std::uint16_t command_started::port() const {
+    return libmongoc::apm_command_started_get_host(to_mongoc(_impl))->port;
+}
+
+command_started::command_started(void const* impl) : _impl{impl} {}
+
+command_started command_started::internal::make(mongoc_apm_command_started_t const* ptr) {
+    return {ptr};
+}
+
+mongoc_apm_command_started_t const* command_started::internal::as_mongoc(command_started const& self) {
+    return to_mongoc(self._impl);
+}
+
+} // namespace events
+} // namespace v1
+} // namespace mongocxx

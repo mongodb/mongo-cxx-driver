@@ -16,6 +16,10 @@
 
 #include <mongocxx/events/topology_closed_event-fwd.hpp> // IWYU pragma: export
 
+//
+
+#include <mongocxx/v1/events/topology_closed.hpp> // IWYU pragma: export
+
 #include <bsoncxx/oid.hpp>
 
 #include <mongocxx/config/prelude.hpp>
@@ -31,19 +35,26 @@ namespace events {
 /// - [SDAM Logging and Monitoring Specification (MongoDB Specifications)](https://specifications.readthedocs.io/en/latest/server-discovery-and-monitoring/server-discovery-and-monitoring-logging-and-monitoring/)
 ///
 class topology_closed_event {
+   private:
+    v1::events::topology_closed _event;
+
    public:
-    explicit topology_closed_event(void const* event);
+    ///
+    /// @deprecated For internal use only.
+    ///
+    explicit MONGOCXX_ABI_NO_EXPORT topology_closed_event(void const* event);
 
     ///
-    /// Destroys a topology_closed_event.
+    /// Construct with the @ref mongocxx::v1 equivalent.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL() ~topology_closed_event();
+    /* explicit(false) */ topology_closed_event(v1::events::topology_closed const& event) : _event{event} {}
 
-    topology_closed_event(topology_closed_event&&) = default;
-    topology_closed_event& operator=(topology_closed_event&&) = default;
-
-    topology_closed_event(topology_closed_event const&) = default;
-    topology_closed_event& operator=(topology_closed_event const&) = default;
+    ///
+    /// Convert to the @ref mongocxx::v1 equivalent.
+    ///
+    explicit operator v1::events::topology_closed() const {
+        return _event;
+    }
 
     ///
     /// An opaque id, unique to this topology for this mongocxx::v_noabi::client or
@@ -51,13 +62,32 @@ class topology_closed_event {
     ///
     /// @return The id.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::oid) topology_id() const;
-
-   private:
-    void const* _event;
+    bsoncxx::v_noabi::oid topology_id() const {
+        return _event.topology_id();
+    }
 };
 
 } // namespace events
+} // namespace v_noabi
+} // namespace mongocxx
+
+namespace mongocxx {
+namespace v_noabi {
+
+///
+/// Convert to the @ref mongocxx::v_noabi equivalent of `v`.
+///
+inline v_noabi::events::topology_closed_event from_v1(v1::events::topology_closed const& v) {
+    return {v};
+}
+
+///
+/// Convert to the @ref mongocxx::v1 equivalent of `v`.
+///
+inline v1::events::topology_closed to_v1(v_noabi::events::topology_closed_event const& v) {
+    return v1::events::topology_closed{v};
+}
+
 } // namespace v_noabi
 } // namespace mongocxx
 
@@ -66,4 +96,8 @@ class topology_closed_event {
 ///
 /// @file
 /// Provides @ref mongocxx::v_noabi::events::topology_closed_event.
+///
+/// @par Includes
+/// - @ref mongocxx/v1/events/topology_closed.hpp
+///
 ///
