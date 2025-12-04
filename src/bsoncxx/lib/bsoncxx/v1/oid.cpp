@@ -37,6 +37,8 @@ using code = v1::oid::errc;
 static_assert(is_regular<oid>::value, "bsoncxx::v1::oid must be regular");
 static_assert(is_semitrivial<oid>::value, "bsoncxx::v1::oid must be semitrivial");
 
+// _bytes: initialized with memcpy.
+// NOLINTNEXTLINE(cppcoreguidelines-pro-type-member-init)
 oid::oid() {
 #if defined(_WIN32)
     // Ensure the Winsock DLL is initialized prior to calling `gethostname` in `bsoncxx::v1::oid::oid()`:
@@ -66,6 +68,8 @@ oid::oid() {
     std::memcpy(_bytes.data(), oid.bytes, sizeof(oid.bytes));
 }
 
+// _bytes: initialized with memcpy.
+// NOLINTNEXTLINE(cppcoreguidelines-pro-type-member-init)
 oid::oid(std::uint8_t const* bytes, std::size_t len) {
     if (!bytes) {
         throw v1::exception{code::null_bytes_ptr};
@@ -78,6 +82,8 @@ oid::oid(std::uint8_t const* bytes, std::size_t len) {
     std::memcpy(_bytes.data(), bytes, _bytes.size());
 }
 
+// _bytes: initialized with memcpy.
+// NOLINTNEXTLINE(cppcoreguidelines-pro-type-member-init)
 oid::oid(v1::stdx::string_view str) {
     if (str.empty()) {
         throw v1::exception{code::empty_string};

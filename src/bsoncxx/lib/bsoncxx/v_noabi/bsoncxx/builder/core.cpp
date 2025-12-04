@@ -43,9 +43,7 @@ void bson_free_deleter(std::uint8_t* ptr) {
 //
 class managed_bson_t {
    public:
-    managed_bson_t() {
-        bson_init(&bson);
-    }
+    managed_bson_t() = default;
 
     managed_bson_t(managed_bson_t&&) = delete;
     managed_bson_t& operator=(managed_bson_t&&) = delete;
@@ -62,7 +60,7 @@ class managed_bson_t {
     }
 
    private:
-    bson_t bson;
+    bson_t bson = BSON_INITIALIZER;
 };
 
 } // namespace

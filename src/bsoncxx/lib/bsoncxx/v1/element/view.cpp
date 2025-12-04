@@ -195,8 +195,10 @@ void view::impl::check() const {
 
 view::~view() = default;
 
+// _storage: initialized with placement new.
+// NOLINTNEXTLINE(cppcoreguidelines-pro-type-member-init)
 view::view(view const& other) noexcept {
-    new (impl::with(this)) impl{impl::with(other)};
+    new (_storage.data()) impl{impl::with(other)};
 }
 
 // NOLINTNEXTLINE(cert-oop54-cpp): handled by impl.
@@ -205,10 +207,14 @@ view& view::operator=(view const& other) noexcept {
     return *this;
 }
 
+// _storage: initialized with placement new.
+// NOLINTNEXTLINE(cppcoreguidelines-pro-type-member-init)
 view::view() {
     new (_storage.data()) impl{};
 }
 
+// _storage: initialized with placement new.
+// NOLINTNEXTLINE(cppcoreguidelines-pro-type-member-init)
 view::view(impl i) {
     new (_storage.data()) impl{i};
 }

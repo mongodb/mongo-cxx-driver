@@ -27,10 +27,10 @@ class itoa {
     // NOLINTNEXTLINE(cppcoreguidelines-avoid-magic-numbers).
     static_assert(UINT32_MAX == std::uint32_t{4294967295}, "");
 
-    std::uint32_t _val;
-    char const* _str;
-    std::uint8_t _len;
-    char _buf[sizeof("4294967295")];
+    std::uint32_t _val = {};
+    char const* _str = {};
+    std::uint8_t _len = {};
+    char _buf[sizeof("4294967295")] = {};
 
    public:
     ~itoa() = default;
