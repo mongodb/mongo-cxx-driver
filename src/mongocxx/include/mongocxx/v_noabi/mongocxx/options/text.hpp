@@ -14,21 +14,38 @@
 
 #pragma once
 
-#include <mongocxx/v1/detail/prelude.hpp>
+#include <mongocxx/options/text-fwd.hpp> // IWYU pragma: export
 
-#include <mongocxx/v1/config/export.hpp>
+//
+
+#include <mongocxx/v1/text_options.hpp> // IWYU pragma: export
+
+#include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
-namespace v1 {
+namespace v_noabi {
+namespace options {
 
-class text_options;
+using text = v1::text_options;
 
-} // namespace v1
+} // namespace options
+} // namespace v_noabi
 } // namespace mongocxx
 
-#include <mongocxx/v1/detail/postlude.hpp>
+namespace mongocxx {
+namespace options {
+
+using v_noabi::options::text;
+
+} // namespace options
+} // namespace mongocxx
+
+#include <mongocxx/config/postlude.hpp>
 
 ///
 /// @file
-/// Declares @ref mongocxx::v1::text_options.
+/// Declares @ref mongocxx::v_noabi::options::range.
+///
+/// @par Includes
+/// - @ref mongocxx/v1/range_options.hpp
 ///

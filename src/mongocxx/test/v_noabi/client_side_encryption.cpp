@@ -42,6 +42,7 @@
 #include <mongocxx/options/client_encryption.hpp>
 #include <mongocxx/options/data_key.hpp>
 #include <mongocxx/options/encrypt.hpp>
+#include <mongocxx/options/text.hpp>
 #include <mongocxx/uri.hpp>
 #include <mongocxx/write_concern.hpp>
 
@@ -3510,10 +3511,10 @@ TEST_CASE("Text Explicit Encryption", "[client_side_encryption]") {
     _drop_and_create_collection("db", "prefix-suffix", "/explicit-encryption/encryptedFields-prefix-suffix.json");
     _drop_and_create_collection("db", "substring", "/explicit-encryption/encryptedFields-substring.json");
 
-    auto const prefix_opts = options::prefix().str_max_query_length(10).str_min_query_length(2);
-    auto const suffix_opts = options::suffix().str_max_query_length(10).str_min_query_length(2);
+    auto const prefix_opts = text_options::prefix().str_max_query_length(10).str_min_query_length(2);
+    auto const suffix_opts = text_options::suffix().str_max_query_length(10).str_min_query_length(2);
     auto const substring_opts =
-        options::substring().str_max_length(10).str_max_query_length(10).str_min_query_length(2);
+        text_options::substring().str_max_length(10).str_max_query_length(10).str_min_query_length(2);
 
     auto const default_encrypt_opts = [&]() {
         return options::encrypt()
@@ -3521,11 +3522,9 @@ TEST_CASE("Text Explicit Encryption", "[client_side_encryption]") {
             .algorithm(options::encrypt::encryption_algorithm::k_textPreview)
             .contention_factor(0);
     };
-    auto const default_text_opts = [&]() {
-        return options::text().case_sensitive(true).diacritic_sensitive(true);
-    };
+    auto const default_text_opts = [&]() { return text_options().case_sensitive(true).diacritic_sensitive(true); };
 
-    const auto foobarbaz_doc = make_document(kvp("_id", 0), kvp("encryptedText", "foobarbaz"));
+    auto const foobarbaz_doc = make_document(kvp("_id", 0), kvp("encryptedText", "foobarbaz"));
 
     auto client_substring = encrypted_client["db"]["substring"];
     auto client_prefix_suffix = encrypted_client["db"]["prefix-suffix"];
@@ -3533,7 +3532,7 @@ TEST_CASE("Text Explicit Encryption", "[client_side_encryption]") {
         // Use clientEncryption to encrypt the string "foobarbaz" with the following EncryptOpts:
         // TODO
         auto const encrypt_opts =
-            default_encrypt_opts().text_opts(default_text_opts().prefix(prefix_opts).suffix(suffix_opts));
+            default_encrypt_opts().text_opts(default_text_opts().prefix_opts(prefix_opts).suffix_opts(suffix_opts));
         auto const encrypted_foobarbaz = client_encryption.encrypt(make_value("foobarbaz"), encrypt_opts);
 
         // Use encryptedClient to insert the following document into db.prefix-suffix with majority write concern:
@@ -3544,7 +3543,7 @@ TEST_CASE("Text Explicit Encryption", "[client_side_encryption]") {
     {
         // Use clientEncryption to encrypt the string "foobarbaz" with the following EncryptOpts:
         // TODO
-        auto const encrypt_opts = default_encrypt_opts().text_opts(default_text_opts().substring(substring_opts));
+        auto const encrypt_opts = default_encrypt_opts().text_opts(default_text_opts().substring_opts(substring_opts));
         auto const encrypted_foobarbaz = client_encryption.encrypt(make_value("foobarbaz"), encrypt_opts);
 
         // Use encryptedClient to insert the following document into db.prefix-suffix with majority write concern:
@@ -3554,10 +3553,12 @@ TEST_CASE("Text Explicit Encryption", "[client_side_encryption]") {
     SECTION("can find a document by prefix") {
         auto const encrypt_opts = default_encrypt_opts()
                                       .query_type(options::encrypt::encryption_query_type::k_prefixPreview)
-                                      .text_opts(default_text_opts().prefix(prefix_opts));
+                                      .text_opts(default_text_opts().prefix_opts(prefix_opts));
         auto const encrypted_foo = client_encryption.encrypt(make_value("foo"), encrypt_opts);
-        auto const query = make_document(
-            kvp("$expr", make_document(kvp("$encStrStartsWith", make_document(kvp("input", "$encryptedText"), kvp("prefix", encrypted_foo))))));
+        auto const query = make_document(kvp(
+            "$expr",
+            make_document(kvp(
+                "$encStrStartsWith", make_document(kvp("input", "$encryptedText"), kvp("prefix", encrypted_foo))))));
 
         auto cursor = client_prefix_suffix.find(query.view());
         auto const found = std::vector<bsoncxx::document::value>(cursor.begin(), cursor.end());
