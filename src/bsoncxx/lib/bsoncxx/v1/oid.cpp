@@ -95,7 +95,7 @@ oid::oid(v1::stdx::string_view str) {
 std::string oid::to_string() const {
     bson_oid_t oid;
     std::memcpy(oid.bytes, _bytes.data(), sizeof(oid.bytes));
-    char str[25];
+    char str[2u * k_oid_length + 1u]; // Two hex digits per byte + null terminator: 25 characters.
     bson_oid_to_string(&oid, str);
     return std::string(str);
 }

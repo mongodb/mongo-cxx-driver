@@ -39,7 +39,8 @@ class pipeline::impl {
    private:
     class idx_type {
        private:
-        // Non-negative values only.
+        // Exact value of INT32_MAX for `sizeof()` below. Non-negative values only.
+        // NOLINTNEXTLINE(cppcoreguidelines-avoid-magic-numbers)
         static_assert(INT32_MAX == std::int32_t{2147483647}, "");
         std::array<char, sizeof("2147483647")> _buffer = {};
         std::int32_t _count = {};

@@ -220,10 +220,18 @@ v1::exception make_exception(bson_error_t const& error) {
     auto const has_message = message[0] != '\0';
 
     // Undocumented: see mongoc-error-private.h.
+    enum : int {
+        MONGOC_ERROR_CATEGORY_BSON = 1, // BSON_ERROR_CATEGORY
+        MONGOC_ERROR_CATEGORY = 2,
+        MONGOC_ERROR_CATEGORY_SERVER = 3,
+        MONGOC_ERROR_CATEGORY_CRYPT = 4,
+        MONGOC_ERROR_CATEGORY_SASL = 5,
+    };
+
+    // Undocumented: see mongoc-error-private.h.
     switch (raw_category) {
-        // MONGOC_ERROR_CATEGORY_BSON / BSON_ERROR_CATEGORY
         // Unlikely. Convert to MONGOC_ERROR_BSON_INVALID (18).
-        case 1: {
+        case MONGOC_ERROR_CATEGORY_BSON: {
             std::string what;
             what += "bson error code ";
             what += std::to_string(code);
@@ -234,8 +242,8 @@ v1::exception make_exception(bson_error_t const& error) {
             return v1::exception::internal::make(MONGOC_ERROR_BSON_INVALID, mongoc_error_category(), what.c_str());
         }
 
-        // MONGOC_ERROR_CATEGORY
-        case 2: {
+        // Throw as a mongoc error code.
+        case MONGOC_ERROR_CATEGORY: {
             if (has_message) {
                 return v1::exception::internal::make(code, mongoc_error_category(), message);
             } else {
@@ -243,9 +251,8 @@ v1::exception make_exception(bson_error_t const& error) {
             }
         }
 
-        // MONGOC_ERROR_CATEGORY_SERVER
         // Unlikely. Throw as `v1::exception` but use the correct error category.
-        case 3: {
+        case MONGOC_ERROR_CATEGORY_SERVER: {
             if (has_message) {
                 return v1::exception::internal::make(code, v1::server_error::internal::category(), message);
             } else {
@@ -253,8 +260,8 @@ v1::exception make_exception(bson_error_t const& error) {
             }
         }
 
-        // MONGOC_ERROR_CATEGORY_CRYPT
-        case 4: {
+        // Throw as a libmongocrypt error code.
+        case MONGOC_ERROR_CATEGORY_CRYPT: {
             if (has_message) {
                 return v1::exception::internal::make(code, mongocrypt_error_category(), message);
             } else {
@@ -262,9 +269,8 @@ v1::exception make_exception(bson_error_t const& error) {
             }
         }
 
-        // MONGOC_ERROR_CATEGORY_SASL
         // Unlikely. Convert to MONGOC_ERROR_CLIENT_AUTHENTICATE (11).
-        case 5: {
+        case MONGOC_ERROR_CATEGORY_SASL: {
             std::string what;
             what += "sasl error code ";
             what += std::to_string(code);
@@ -276,7 +282,7 @@ v1::exception make_exception(bson_error_t const& error) {
                 MONGOC_ERROR_CLIENT_AUTHENTICATE, mongoc_error_category(), what.c_str());
         }
 
-        // Unlikely.
+        // Unlikely. Throw as an unknown error code.
         default: {
             std::string what;
             what += "unknown error category ";

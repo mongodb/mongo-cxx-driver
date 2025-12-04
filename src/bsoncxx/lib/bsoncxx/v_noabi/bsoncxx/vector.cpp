@@ -94,13 +94,13 @@ void f_float32::write_frame(std::uint8_t* binary_data, std::uint32_t, std::size_
 }
 
 void f_packed_bit::write_frame(std::uint8_t* binary_data, std::uint32_t binary_data_length, std::size_t element_count) {
+    static constexpr std::uint8_t mask = {0x7u};
+
     binary_data[binary_data_length - 1] = UINT8_C(0);
     detail::write_header(
         binary_data,
         detail::make_header(
-            detail::element_type::unsigned_integer,
-            detail::element_size::bits_1,
-            std::uint8_t(std::size_t{7u} & -element_count)));
+            detail::element_type::unsigned_integer, detail::element_size::bits_1, std::uint8_t(mask & -element_count)));
 }
 
 void formats::f_int8::validate(types::b_binary const& binary) {
