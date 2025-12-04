@@ -17,7 +17,7 @@ This section provides a template that may be used for actual vulnerability repor
 
 - **Date Detected:** YYYY-MM-DD
 - **Severity:** Low, Medium, High, or Critical
-- **Detector:** Silk or Snyk
+- **Detector:** Endor Labs or Dependency-Track
 - **Description:** A short vulnerability description.
 - **Dependency:** Name and version of the 3rd party dependency.
 - **Upstream Status:** False Positive, Won't Fix, Fix Pending, or Fix Available. This is the fix status for the 3rd party dependency, not the CXX Driver. "Fix Available" should include the version and/or date when the fix was released, e.g. "Fix Available (1.2.3, 1970-01-01)".
