@@ -14,6 +14,9 @@
 
 #pragma once
 
+#include <mongocxx/v1/update_many_options-fwd.hpp> // IWYU pragma: export
+#include <mongocxx/v1/update_one_options-fwd.hpp>  // IWYU pragma: export
+
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
@@ -29,7 +32,7 @@ class update;
 namespace mongocxx {
 namespace options {
 
-using ::mongocxx::v_noabi::options::update;
+using v_noabi::options::update;
 
 } // namespace options
 } // namespace mongocxx
@@ -39,4 +42,8 @@ using ::mongocxx::v_noabi::options::update;
 ///
 /// @file
 /// Declares @ref mongocxx::v_noabi::options::update.
+///
+/// @par Includes
+/// - @ref mongocxx/v1/update_many_options-fwd.hpp
+/// - @ref mongocxx/v1/update_one_options-fwd.hpp
 ///
