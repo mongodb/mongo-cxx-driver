@@ -16,7 +16,7 @@
 #include <mongocxx/v1/read_preference.hh>
 #include <mongocxx/v1/write_concern.hh>
 
-#include <bsoncxx/types.hpp>
+#include <utility>
 
 #include <mongocxx/exception/error_code.hpp>
 #include <mongocxx/exception/logic_error.hpp>
@@ -49,9 +49,7 @@ std::string to_string_null_safe(char const* str) {
 
 std::string const uri::k_default_uri = "mongodb://localhost:27017";
 
-uri::uri(std::unique_ptr<impl>&& implementation) {
-    _impl.reset(implementation.release());
-}
+uri::uri(std::unique_ptr<impl>&& implementation) : _impl{std::move(implementation)} {}
 
 uri::uri(bsoncxx::v_noabi::string::view_or_value uri_string) {
     bson_error_t error;

@@ -63,6 +63,7 @@ value::value(v_noabi::document::view view)
 namespace bsoncxx {
 namespace v_noabi {
 
+// NOLINTNEXTLINE(cppcoreguidelines-rvalue-reference-param-not-moved): ownership transfer with `v.release()`.
 v_noabi::document::value from_v1(v1::document::value&& v) {
     auto const deleter_ptr = v.get_deleter().target<v_noabi::document::value::deleter_type>();
 

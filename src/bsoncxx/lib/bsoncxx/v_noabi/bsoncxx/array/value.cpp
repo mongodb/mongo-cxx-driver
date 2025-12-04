@@ -54,6 +54,7 @@ value::value(v_noabi::array::view view)
 namespace bsoncxx {
 namespace v_noabi {
 
+// NOLINTNEXTLINE(cppcoreguidelines-rvalue-reference-param-not-moved): ownership transfer with `v.release()`.
 v_noabi::array::value from_v1(v1::array::value&& v) {
     auto const deleter_ptr = v.get_deleter().target<v_noabi::array::value::deleter_type>();
 
