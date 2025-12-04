@@ -100,6 +100,8 @@ class pipeline::impl {
     }
 };
 
+// NOLINTBEGIN(cppcoreguidelines-owning-memory): owning void* for ABI stability.
+
 pipeline::~pipeline() {
     delete impl::with(this);
 }
@@ -125,6 +127,8 @@ pipeline& pipeline::operator=(pipeline const& other) {
 }
 
 pipeline::pipeline() : _impl{new impl{}} {}
+
+// NOLINTEND(cppcoreguidelines-owning-memory)
 
 bsoncxx::v1::array::view pipeline::view_array() const {
     return impl::with(this)->doc().array_view();

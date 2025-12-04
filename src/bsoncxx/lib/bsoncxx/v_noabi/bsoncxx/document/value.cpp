@@ -43,7 +43,7 @@ static_assert(!is_implicitly_convertible<v1::document::value const&, value>::val
 namespace {
 
 void uint8_t_deleter(std::uint8_t* ptr) {
-    delete[] ptr;
+    delete[] ptr; // NOLINT(cppcoreguidelines-owning-memory): custom deleter.
 }
 
 } // namespace

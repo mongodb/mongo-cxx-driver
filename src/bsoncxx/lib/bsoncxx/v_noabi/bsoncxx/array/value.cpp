@@ -34,7 +34,7 @@ static_assert(!is_explicitly_convertible<v1::array::value const&, value>::value,
 namespace {
 
 void uint8_t_deleter(std::uint8_t* ptr) {
-    delete[] ptr;
+    delete[] ptr; // NOLINT(cppcoreguidelines-owning-memory): custom deleter.
 }
 
 } // namespace

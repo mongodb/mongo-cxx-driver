@@ -60,6 +60,8 @@ class data_key_options::impl {
     }
 };
 
+// NOLINTBEGIN(cppcoreguidelines-owning-memory): owning void* for ABI stability.
+
 data_key_options::~data_key_options() {
     delete impl::with(this);
 }
@@ -85,6 +87,8 @@ data_key_options& data_key_options::operator=(data_key_options const& other) {
 }
 
 data_key_options::data_key_options() : _impl{new impl{}} {}
+
+// NOLINTEND(cppcoreguidelines-owning-memory)
 
 data_key_options& data_key_options::master_key(bsoncxx::v1::document::value master_key) {
     impl::with(this)->_master_key = std::move(master_key);
