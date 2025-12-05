@@ -100,6 +100,7 @@ set(mongocxx_test_sources_v_noabi
 )
 
 set(mongocxx_test_sources_v1
+    v1/aggregate_options.cpp
     v1/apm.cpp
     v1/bsoncxx.cpp
     v1/count_options.cpp

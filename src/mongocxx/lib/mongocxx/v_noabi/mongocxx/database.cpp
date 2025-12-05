@@ -29,6 +29,7 @@
 #include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/exception/operation_exception.hpp>
 
+#include <mongocxx/append_aggregate_options.hh>
 #include <mongocxx/client.hh>
 #include <mongocxx/client_session.hh>
 #include <mongocxx/database.hh>
@@ -122,7 +123,7 @@ cursor
 database::_aggregate(client_session const* session, pipeline const& pipeline, options::aggregate const& options) {
     bsoncxx::v_noabi::builder::basic::document b;
 
-    options.append(b);
+    append_aggregate_options(b, options);
 
     if (session) {
         b.append(bsoncxx::v_noabi::builder::concatenate_doc{session->_get_impl().to_document()});
