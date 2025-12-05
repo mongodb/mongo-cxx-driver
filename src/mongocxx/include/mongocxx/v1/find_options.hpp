@@ -22,19 +22,19 @@
 
 #include <bsoncxx/v1/document/value-fwd.hpp>
 #include <bsoncxx/v1/document/view-fwd.hpp>
+#include <bsoncxx/v1/types/value-fwd.hpp>
+#include <bsoncxx/v1/types/view-fwd.hpp>
 
 #include <mongocxx/v1/hint-fwd.hpp>
 #include <mongocxx/v1/read_preference-fwd.hpp>
 
 #include <bsoncxx/v1/stdx/optional.hpp>
-#include <bsoncxx/v1/stdx/string_view.hpp>
 
 #include <mongocxx/v1/config/export.hpp>
 #include <mongocxx/v1/cursor.hpp>
 
 #include <chrono>
 #include <cstdint>
-#include <string>
 
 namespace mongocxx {
 namespace v1 {
@@ -159,12 +159,12 @@ class find_options {
     ///
     /// Set the "comment" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(find_options&) comment(std::string comment);
+    MONGOCXX_ABI_EXPORT_CDECL(find_options&) comment(bsoncxx::v1::types::value comment);
 
     ///
     /// Return the current "comment" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::stdx::string_view>) comment() const;
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::types::view>) comment() const;
 
     ///
     /// Set the "cursorType" field.
