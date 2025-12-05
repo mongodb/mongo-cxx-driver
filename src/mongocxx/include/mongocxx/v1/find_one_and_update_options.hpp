@@ -183,7 +183,7 @@ class find_one_and_update_options {
     ///
     /// Set the "returnDocument" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(find_one_and_update_options&) return_document(return_document return_document);
+    MONGOCXX_ABI_EXPORT_CDECL(find_one_and_update_options&) return_document(v1::return_document return_document);
 
     ///
     /// Return the current "returnDocument" field.
@@ -229,6 +229,8 @@ class find_one_and_update_options {
     /// Return the current "arrayFilters" field.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::array::view>) array_filters() const;
+
+    class internal;
 };
 
 } // namespace v1
