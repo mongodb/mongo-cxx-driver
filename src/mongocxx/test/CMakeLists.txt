@@ -111,6 +111,7 @@ set(mongocxx_test_sources_v1
     v1/estimated_document_count_options.cpp
     v1/events.cpp
     v1/exception.cpp
+    v1/find_one_and_delete_options.cpp
     v1/find_options.cpp
     v1/hint.cpp
     v1/insert_many_options.cpp
