@@ -14,45 +14,30 @@
 
 #include <mongocxx/options/insert.hpp>
 
+//
+
+#include <mongocxx/v1/insert_many_options.hh>
+#include <mongocxx/v1/insert_one_options.hh>
+
+#include <utility>
+
+#include <bsoncxx/stdx/optional.hpp>
+
 namespace mongocxx {
 namespace v_noabi {
 namespace options {
 
-insert& insert::bypass_document_validation(bool bypass_document_validation) {
-    _bypass_document_validation = bypass_document_validation;
-    return *this;
-}
+insert::insert(v1::insert_many_options opts)
+    : _write_concern{std::move(v1::insert_many_options::internal::write_concern(opts))},
+      _ordered{opts.ordered()},
+      _bypass_document_validation{opts.bypass_document_validation()},
+      _comment{std::move(v1::insert_many_options::internal::comment(opts))} {}
 
-insert& insert::write_concern(mongocxx::v_noabi::write_concern wc) {
-    _write_concern = std::move(wc);
-    return *this;
-}
-
-insert& insert::ordered(bool ordered) {
-    _ordered = ordered;
-    return *this;
-}
-
-insert& insert::comment(bsoncxx::v_noabi::types::bson_value::view_or_value comment) {
-    _comment = std::move(comment);
-    return *this;
-}
-
-bsoncxx::v_noabi::stdx::optional<bool> const& insert::bypass_document_validation() const {
-    return _bypass_document_validation;
-}
-
-bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern> const& insert::write_concern() const {
-    return _write_concern;
-}
-
-bsoncxx::v_noabi::stdx::optional<bool> const& insert::ordered() const {
-    return _ordered;
-}
-
-bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value> const& insert::comment() const {
-    return _comment;
-}
+insert::insert(v1::insert_one_options opts)
+    : _write_concern{std::move(v1::insert_one_options::internal::write_concern(opts))},
+      _ordered{},
+      _bypass_document_validation{opts.bypass_document_validation()},
+      _comment{std::move(v1::insert_one_options::internal::comment(opts))} {}
 
 } // namespace options
 } // namespace v_noabi

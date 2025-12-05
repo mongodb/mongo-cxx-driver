@@ -12,95 +12,84 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <bsoncxx/array/view_or_value.hpp>
-#include <bsoncxx/document/view_or_value.hpp>
-
 #include <mongocxx/options/update.hpp>
+
+//
+
+#include <mongocxx/v1/update_many_options.hh>
+#include <mongocxx/v1/update_one_options.hh>
+
+#include <utility>
+
+#include <bsoncxx/array/value.hpp>
+#include <bsoncxx/document/value.hpp>
+#include <bsoncxx/stdx/optional.hpp>
 
 namespace mongocxx {
 namespace v_noabi {
 namespace options {
 
-update& update::bypass_document_validation(bool bypass_document_validation) {
-    _bypass_document_validation = bypass_document_validation;
-    return *this;
-}
+update::update(v1::update_many_options opts)
+    : _bypass_document_validation{opts.bypass_document_validation()},
+      _collation{[&]() -> decltype(_collation) {
+          if (auto& opt = v1::update_many_options::internal::collation(opts)) {
+              return bsoncxx::v_noabi::from_v1(std::move(*opt));
+          }
+          return {};
+      }()},
+      _upsert{opts.upsert()},
+      _write_concern{std::move(v1::update_many_options::internal::write_concern(opts))},
+      _array_filters{[&]() -> decltype(_array_filters) {
+          if (auto& opt = v1::update_many_options::internal::array_filters(opts)) {
+              return bsoncxx::v_noabi::from_v1(std::move(*opt));
+          }
+          return {};
+      }()},
+      _hint{std::move(v1::update_many_options::internal::hint(opts))},
+      _let{[&]() -> decltype(_let) {
+          if (auto& opt = v1::update_many_options::internal::let(opts)) {
+              return bsoncxx::v_noabi::from_v1(std::move(*opt));
+          }
+          return {};
+      }()},
+      _sort{[&]() -> decltype(_sort) {
+          if (auto& opt = v1::update_many_options::internal::sort(opts)) {
+              return bsoncxx::v_noabi::from_v1(std::move(*opt));
+          }
+          return {};
+      }()},
+      _comment{std::move(v1::update_many_options::internal::comment(opts))} {}
 
-update& update::collation(bsoncxx::v_noabi::document::view_or_value collation) {
-    _collation = std::move(collation);
-    return *this;
-}
-
-update& update::hint(mongocxx::v_noabi::hint index_hint) {
-    _hint = std::move(index_hint);
-    return *this;
-}
-
-update& update::let(bsoncxx::v_noabi::document::view_or_value let) {
-    _let = let;
-    return *this;
-}
-
-update& update::sort(bsoncxx::v_noabi::document::view_or_value sort) {
-    _sort = std::move(sort);
-    return *this;
-}
-
-update& update::comment(bsoncxx::v_noabi::types::bson_value::view_or_value comment) {
-    _comment = std::move(comment);
-    return *this;
-}
-
-update& update::upsert(bool upsert) {
-    _upsert = upsert;
-    return *this;
-}
-
-update& update::write_concern(mongocxx::v_noabi::write_concern wc) {
-    _write_concern = std::move(wc);
-    return *this;
-}
-
-bsoncxx::v_noabi::stdx::optional<bool> const& update::bypass_document_validation() const {
-    return _bypass_document_validation;
-}
-
-bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const& update::collation() const {
-    return _collation;
-}
-
-bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::hint> const& update::hint() const {
-    return _hint;
-}
-
-bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const update::let() const {
-    return _let;
-}
-
-bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const& update::sort() const {
-    return _sort;
-}
-
-bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value> const update::comment() const {
-    return _comment;
-}
-
-bsoncxx::v_noabi::stdx::optional<bool> const& update::upsert() const {
-    return _upsert;
-}
-
-bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern> const& update::write_concern() const {
-    return _write_concern;
-}
-
-update& update::array_filters(bsoncxx::v_noabi::array::view_or_value array_filters) {
-    _array_filters = std::move(array_filters);
-    return *this;
-}
-
-bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::array::view_or_value> const& update::array_filters() const {
-    return _array_filters;
-}
+update::update(v1::update_one_options opts)
+    : _bypass_document_validation{opts.bypass_document_validation()},
+      _collation{[&]() -> decltype(_collation) {
+          if (auto& opt = v1::update_one_options::internal::collation(opts)) {
+              return bsoncxx::v_noabi::from_v1(std::move(*opt));
+          }
+          return {};
+      }()},
+      _upsert{opts.upsert()},
+      _write_concern{std::move(v1::update_one_options::internal::write_concern(opts))},
+      _array_filters{[&]() -> decltype(_array_filters) {
+          if (auto& opt = v1::update_one_options::internal::array_filters(opts)) {
+              return bsoncxx::v_noabi::from_v1(std::move(*opt));
+          }
+          return {};
+      }()},
+      _hint{std::move(v1::update_one_options::internal::hint(opts))},
+      _let{[&]() -> decltype(_let) {
+          if (auto& opt = v1::update_one_options::internal::let(opts)) {
+              return bsoncxx::v_noabi::from_v1(std::move(*opt));
+          }
+          return {};
+      }()},
+      _sort{[&]() -> decltype(_sort) {
+          if (auto& opt = v1::update_one_options::internal::sort(opts)) {
+              return bsoncxx::v_noabi::from_v1(std::move(*opt));
+          }
+          return {};
+      }()},
+      _comment{std::move(v1::update_one_options::internal::comment(opts))} {}
 
 } // namespace options
 } // namespace v_noabi
