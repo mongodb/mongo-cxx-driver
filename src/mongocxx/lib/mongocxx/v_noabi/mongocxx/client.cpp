@@ -50,9 +50,7 @@ using bsoncxx::v_noabi::builder::basic::kvp;
 namespace {
 class database_names {
    public:
-    explicit database_names(char** names) {
-        _names = names;
-    }
+    explicit database_names(char** names) : _names{names} {}
 
     ~database_names() {
         bson_strfreev(_names);
@@ -313,16 +311,20 @@ client::_watch(client_session const* session, pipeline const& pipe, options::cha
         _get_impl().client_t, to_scoped_bson_view(container), to_scoped_bson_view(options_builder))};
 }
 
-client::impl const& client::_get_impl() const {
-    if (!_impl) {
+template <typename Self>
+auto client::_get_impl(Self& self) -> decltype(*self._impl) {
+    if (!self._impl) {
         throw logic_error{error_code::k_invalid_client_object};
     }
-    return *_impl;
+    return *self._impl;
+}
+
+client::impl const& client::_get_impl() const {
+    return _get_impl(*this);
 }
 
 client::impl& client::_get_impl() {
-    auto cthis = const_cast<client const*>(this);
-    return const_cast<client::impl&>(cthis->_get_impl());
+    return _get_impl(*this);
 }
 
 } // namespace v_noabi

@@ -76,6 +76,8 @@ class apm::impl {
     }
 };
 
+// NOLINTBEGIN(cppcoreguidelines-owning-memory): owning void* for ABI stability.
+
 apm::~apm() {
     delete impl::with(this);
 }
@@ -101,6 +103,8 @@ apm& apm::operator=(apm const& other) {
 }
 
 apm::apm() : _impl{new impl{}} {}
+
+// NOLINTEND(cppcoreguidelines-owning-memory)
 
 apm& apm::on_command_started(std::function<void MONGOCXX_ABI_CDECL(v1::events::command_started const&)> fn) {
     impl::with(this)->_command_started = std::move(fn);

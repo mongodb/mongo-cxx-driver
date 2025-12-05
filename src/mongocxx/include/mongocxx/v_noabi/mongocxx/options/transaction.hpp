@@ -156,8 +156,12 @@ class transaction {
 
     class impl;
 
+    template <typename Self>
+    static auto _get_impl(Self& self) -> decltype(*self._impl);
+
     impl& _get_impl();
     impl const& _get_impl() const;
+
     std::unique_ptr<impl> _impl;
 };
 

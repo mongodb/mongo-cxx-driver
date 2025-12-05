@@ -20,6 +20,7 @@
 #include <mongocxx/v1/instance.hpp>
 #include <mongocxx/v1/logger.hpp>
 
+#include <array>
 #include <atomic>
 #include <memory>
 #include <utility>
@@ -42,8 +43,9 @@ std::atomic<instance*> current_instance{nullptr};
 
 // Sentinel value denoting the current instance has been destroyed.
 instance* sentinel() {
-    alignas(instance) static unsigned char value[sizeof(instance)];
-    return reinterpret_cast<instance*>(value);
+    alignas(instance) static std::array<unsigned char, sizeof(instance)> value = {};
+    // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast): identity only.
+    return reinterpret_cast<instance*>(value.data());
 }
 
 } // namespace

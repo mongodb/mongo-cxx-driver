@@ -30,11 +30,13 @@ transaction::transaction() : _impl{bsoncxx::make_unique<impl>()} {}
 transaction::transaction(transaction&&) noexcept = default;
 transaction& transaction::operator=(transaction&&) noexcept = default;
 
-transaction::transaction(transaction const& other)
-    : _impl{bsoncxx::make_unique<impl>(other._get_impl().get_transaction_opt_t())} {}
+transaction::transaction(transaction const& other) : _impl{bsoncxx::make_unique<impl>(other._get_impl())} {}
 
 transaction& transaction::operator=(transaction const& other) {
-    _impl = bsoncxx::make_unique<impl>(other._get_impl().get_transaction_opt_t());
+    if (this != &other) {
+        _impl = bsoncxx::make_unique<impl>(other._get_impl());
+    }
+
     return *this;
 }
 
@@ -76,16 +78,20 @@ bsoncxx::v_noabi::stdx::optional<std::chrono::milliseconds> transaction::max_com
     return _impl->max_commit_time_ms();
 }
 
-transaction::impl const& transaction::_get_impl() const {
-    if (!_impl) {
+template <typename Self>
+auto transaction::_get_impl(Self& self) -> decltype(*self._impl) {
+    if (!self._impl) {
         throw logic_error{error_code::k_invalid_transaction_options_object};
     }
-    return *_impl;
+    return *self._impl;
+}
+
+transaction::impl const& transaction::_get_impl() const {
+    return _get_impl(*this);
 }
 
 transaction::impl& transaction::_get_impl() {
-    auto cthis = const_cast<transaction const*>(this);
-    return const_cast<transaction::impl&>(cthis->_get_impl());
+    return _get_impl(*this);
 }
 
 } // namespace options

@@ -19,6 +19,7 @@
 #include <bsoncxx/v1/exception.hpp>
 #include <bsoncxx/v1/stdx/string_view.hpp>
 
+#include <array>
 #include <cstdint>
 #include <cstring>
 #include <ctime>
@@ -37,6 +38,8 @@ using code = v1::oid::errc;
 static_assert(is_regular<oid>::value, "bsoncxx::v1::oid must be regular");
 static_assert(is_semitrivial<oid>::value, "bsoncxx::v1::oid must be semitrivial");
 
+// _bytes: initialized with memcpy.
+// NOLINTNEXTLINE(cppcoreguidelines-pro-type-member-init)
 oid::oid() {
 #if defined(_WIN32)
     // Ensure the Winsock DLL is initialized prior to calling `gethostname` in `bsoncxx::v1::oid::oid()`:
@@ -66,6 +69,8 @@ oid::oid() {
     std::memcpy(_bytes.data(), oid.bytes, sizeof(oid.bytes));
 }
 
+// _bytes: initialized with memcpy.
+// NOLINTNEXTLINE(cppcoreguidelines-pro-type-member-init)
 oid::oid(std::uint8_t const* bytes, std::size_t len) {
     if (!bytes) {
         throw v1::exception{code::null_bytes_ptr};
@@ -78,6 +83,8 @@ oid::oid(std::uint8_t const* bytes, std::size_t len) {
     std::memcpy(_bytes.data(), bytes, _bytes.size());
 }
 
+// _bytes: initialized with memcpy.
+// NOLINTNEXTLINE(cppcoreguidelines-pro-type-member-init)
 oid::oid(v1::stdx::string_view str) {
     if (str.empty()) {
         throw v1::exception{code::empty_string};
@@ -95,9 +102,9 @@ oid::oid(v1::stdx::string_view str) {
 std::string oid::to_string() const {
     bson_oid_t oid;
     std::memcpy(oid.bytes, _bytes.data(), sizeof(oid.bytes));
-    char str[25];
-    bson_oid_to_string(&oid, str);
-    return std::string(str);
+    std::array<char, 2u * k_oid_length + 1u> str = {}; // Two hex digits per byte + null terminator: 25 characters.
+    bson_oid_to_string(&oid, str.data());
+    return std::string(str.data());
 }
 
 std::time_t oid::get_time_t() const {

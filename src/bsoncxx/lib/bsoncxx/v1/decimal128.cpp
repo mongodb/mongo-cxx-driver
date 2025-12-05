@@ -19,6 +19,7 @@
 #include <bsoncxx/v1/exception.hpp>
 #include <bsoncxx/v1/stdx/string_view.hpp>
 
+#include <array>
 #include <climits>
 #include <cstddef>
 #include <string>
@@ -59,9 +60,9 @@ std::string decimal128::to_string() const {
     bson_decimal128_t d128;
     d128.high = _high;
     d128.low = _low;
-    char str[BSON_DECIMAL128_STRING];
-    bson_decimal128_to_string(&d128, str);
-    return {str};
+    std::array<char, BSON_DECIMAL128_STRING> str = {};
+    bson_decimal128_to_string(&d128, str.data());
+    return {str.data()};
 }
 
 std::error_category const& decimal128::error_category() {

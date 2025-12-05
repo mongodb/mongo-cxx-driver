@@ -57,6 +57,8 @@ class delete_many_options::impl {
     }
 };
 
+// NOLINTBEGIN(cppcoreguidelines-owning-memory): owning void* for ABI stability.
+
 delete_many_options::~delete_many_options() {
     delete impl::with(this);
 }
@@ -83,6 +85,8 @@ delete_many_options& delete_many_options::operator=(delete_many_options const& o
 }
 
 delete_many_options::delete_many_options() : _impl{new impl{}} {}
+
+// NOLINTEND(cppcoreguidelines-owning-memory)
 
 delete_many_options& delete_many_options::collation(bsoncxx::v1::document::value collation) {
     impl::with(this)->_collation = std::move(collation);

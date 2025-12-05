@@ -156,6 +156,8 @@ class alignas(BSONCXX_PRIVATE_MAX_ALIGN_T) view::impl {
         throw v1::exception{code::invalid_data};
     }
 
+    // Helpers to access the inline PIMPL object.
+    // NOLINTBEGIN(cppcoreguidelines-pro-type-reinterpret-cast)
     static impl const& with(view const& v) {
         return *reinterpret_cast<view::impl const*>(v._storage.data());
     }
@@ -167,6 +169,7 @@ class alignas(BSONCXX_PRIVATE_MAX_ALIGN_T) view::impl {
     static impl* with(view* v) {
         return reinterpret_cast<view::impl*>(v->_storage.data());
     }
+    // NOLINTEND(cppcoreguidelines-pro-type-reinterpret-cast)
 };
 
 void view::impl::check() const {
@@ -192,19 +195,26 @@ void view::impl::check() const {
 
 view::~view() = default;
 
+// _storage: initialized with placement new.
+// NOLINTNEXTLINE(cppcoreguidelines-pro-type-member-init)
 view::view(view const& other) noexcept {
-    new (impl::with(this)) impl{impl::with(other)};
+    new (_storage.data()) impl{impl::with(other)};
 }
 
+// NOLINTNEXTLINE(cert-oop54-cpp): handled by impl.
 view& view::operator=(view const& other) noexcept {
     *impl::with(this) = impl::with(other);
     return *this;
 }
 
+// _storage: initialized with placement new.
+// NOLINTNEXTLINE(cppcoreguidelines-pro-type-member-init)
 view::view() {
     new (_storage.data()) impl{};
 }
 
+// _storage: initialized with placement new.
+// NOLINTNEXTLINE(cppcoreguidelines-pro-type-member-init)
 view::view(impl i) {
     new (_storage.data()) impl{i};
 }

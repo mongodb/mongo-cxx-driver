@@ -111,6 +111,8 @@ class alignas(BSONCXX_PRIVATE_MAX_ALIGN_T) value::impl {
         return _value.value;
     }
 
+    // Helpers to access the inline PIMPL object.
+    // NOLINTBEGIN(cppcoreguidelines-pro-type-reinterpret-cast)
     static impl const& with(value const& self) {
         return *reinterpret_cast<value::impl const*>(self._storage.data());
     }
@@ -126,6 +128,7 @@ class alignas(BSONCXX_PRIVATE_MAX_ALIGN_T) value::impl {
     static impl* with(value* self) {
         return reinterpret_cast<value::impl*>(self->_storage.data());
     }
+    // NOLINTEND(cppcoreguidelines-pro-type-reinterpret-cast)
 };
 
 value::impl::~impl() {
@@ -142,8 +145,10 @@ value::~value() {
     impl::with(this)->~impl();
 }
 
+// _storage: initialized with placement new.
+// NOLINTNEXTLINE(cppcoreguidelines-pro-type-member-init)
 value::value(value&& other) noexcept {
-    new (impl::with(this)) impl{std::move(impl::with(other))};
+    new (_storage.data()) impl{std::move(impl::with(other))};
 }
 
 value& value::operator=(value&& other) noexcept {
@@ -151,10 +156,13 @@ value& value::operator=(value&& other) noexcept {
     return *this;
 }
 
+// _storage: initialized with placement new.
+// NOLINTNEXTLINE(cppcoreguidelines-pro-type-member-init)
 value::value(value const& other) {
-    new (impl::with(this)) impl{impl::with(other)};
+    new (_storage.data()) impl{impl::with(other)};
 }
 
+// NOLINTNEXTLINE(cert-oop54-cpp): handled by impl.
 value& value::operator=(value const& other) {
     *impl::with(this) = impl::with(other);
     return *this;
@@ -278,8 +286,10 @@ value::value(v1::types::b_date const v) : value{} {
     impl::with(this)->v().v_datetime = v.value.count();
 }
 
+// _storage: initialized with placement new.
+// NOLINTNEXTLINE(cppcoreguidelines-pro-type-member-init)
 value::value(v1::types::b_null) {
-    (new (impl::with(this)) impl{})->t() = BSON_TYPE_NULL;
+    (new (_storage.data()) impl{})->t() = BSON_TYPE_NULL;
 }
 
 value::value(v1::types::b_regex const v) : value{} {

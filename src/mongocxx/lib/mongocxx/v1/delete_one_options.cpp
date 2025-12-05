@@ -57,6 +57,8 @@ class delete_one_options::impl {
     }
 };
 
+// NOLINTBEGIN(cppcoreguidelines-owning-memory): owning void* for ABI stability.
+
 delete_one_options::~delete_one_options() {
     delete impl::with(this);
 }
@@ -82,6 +84,8 @@ delete_one_options& delete_one_options::operator=(delete_one_options const& othe
 }
 
 delete_one_options::delete_one_options() : _impl{new impl{}} {}
+
+// NOLINTEND(cppcoreguidelines-owning-memory)
 
 delete_one_options& delete_one_options::collation(bsoncxx::v1::document::value collation) {
     impl::with(this)->_collation = std::move(collation);

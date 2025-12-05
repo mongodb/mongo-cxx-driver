@@ -55,6 +55,8 @@ class estimated_document_count_options::impl {
     }
 };
 
+// NOLINTBEGIN(cppcoreguidelines-owning-memory): owning void* for ABI stability.
+
 estimated_document_count_options::~estimated_document_count_options() {
     delete impl::with(this);
 }
@@ -84,6 +86,8 @@ estimated_document_count_options& estimated_document_count_options::operator=(
 }
 
 estimated_document_count_options::estimated_document_count_options() : _impl{new impl{}} {}
+
+// NOLINTEND(cppcoreguidelines-owning-memory)
 
 estimated_document_count_options& estimated_document_count_options::max_time(std::chrono::milliseconds max_time) {
     impl::with(this)->_max_time = max_time;

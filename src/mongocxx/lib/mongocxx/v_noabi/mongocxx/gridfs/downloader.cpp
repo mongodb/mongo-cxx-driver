@@ -176,16 +176,20 @@ void downloader::fetch_chunk() {
     ++_get_impl().chunks_seen;
 }
 
-downloader::impl const& downloader::_get_impl() const {
-    if (!_impl) {
+template <typename Self>
+auto downloader::_get_impl(Self& self) -> decltype(*self._impl) {
+    if (!self._impl) {
         throw logic_error{error_code::k_invalid_gridfs_downloader_object};
     }
-    return *_impl;
+    return *self._impl;
+}
+
+downloader::impl const& downloader::_get_impl() const {
+    return _get_impl(*this);
 }
 
 downloader::impl& downloader::_get_impl() {
-    auto cthis = const_cast<downloader const*>(this);
-    return const_cast<downloader::impl&>(cthis->_get_impl());
+    return _get_impl(*this);
 }
 
 } // namespace gridfs

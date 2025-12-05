@@ -43,9 +43,7 @@ void bson_free_deleter(std::uint8_t* ptr) {
 //
 class managed_bson_t {
    public:
-    managed_bson_t() {
-        bson_init(&bson);
-    }
+    managed_bson_t() = default;
 
     managed_bson_t(managed_bson_t&&) = delete;
     managed_bson_t& operator=(managed_bson_t&&) = delete;
@@ -62,14 +60,14 @@ class managed_bson_t {
     }
 
    private:
-    bson_t bson;
+    bson_t bson = BSON_INITIALIZER;
 };
 
 } // namespace
 
 class core::impl {
    public:
-    impl(bool is_array) : _depth(0), _root_is_array(is_array), _n(0), _has_user_key(false) {}
+    impl(bool is_array) : _root_is_array(is_array) {}
 
     void reinit() {
         while (!_stack.empty()) {
@@ -91,8 +89,8 @@ class core::impl {
             throw bsoncxx::v_noabi::exception{error_code::k_cannot_perform_document_operation_on_array};
         }
 
-        uint32_t buf_len;
-        uint8_t* buf_ptr = bson_destroy_with_steal(_root.get(), true, &buf_len);
+        uint32_t buf_len = {};
+        auto const buf_ptr = bson_destroy_with_steal(_root.get(), true, &buf_len);
         bson_init(_root.get());
 
         return bsoncxx::v_noabi::document::value{buf_ptr, buf_len, bson_free_deleter};
@@ -104,8 +102,8 @@ class core::impl {
             throw bsoncxx::v_noabi::exception{error_code::k_cannot_perform_array_operation_on_document};
         }
 
-        uint32_t buf_len;
-        uint8_t* buf_ptr = bson_destroy_with_steal(_root.get(), true, &buf_len);
+        uint32_t buf_len = {};
+        auto const buf_ptr = bson_destroy_with_steal(_root.get(), true, &buf_len);
         bson_init(_root.get());
 
         return bsoncxx::v_noabi::array::value{buf_ptr, buf_len, bson_free_deleter};
@@ -209,8 +207,7 @@ class core::impl {
         frame(frame const&) = delete;
         frame& operator=(frame const&) = delete;
 
-        frame(bson_t* parent, char const* key, std::int32_t len, bool is_array)
-            : n(0), is_array(is_array), parent(parent) {
+        frame(bson_t* parent, char const* key, std::int32_t len, bool is_array) : is_array(is_array), parent(parent) {
             if (is_array) {
                 if (!bson_append_array_begin(parent, key, len, &bson)) {
                     throw bsoncxx::v_noabi::exception{error_code::k_cannot_begin_appending_array};
@@ -234,16 +231,16 @@ class core::impl {
             }
         }
 
-        std::size_t n;
-        bool is_array;
-        bson_t bson;
-        bson_t* parent;
+        std::size_t n = {};
+        bool is_array = {};
+        bson_t bson = {};
+        bson_t* parent = {};
     };
 
-    std::size_t _depth;
+    std::size_t _depth = {};
 
-    bool _root_is_array;
-    std::size_t _n;
+    bool _root_is_array = {};
+    std::size_t _n = {};
     managed_bson_t _root;
 
     // The bottom frame of _stack has _root as its parent.
@@ -254,7 +251,7 @@ class core::impl {
     stdx::string_view _user_key_view;
     std::string _user_key_owned;
 
-    bool _has_user_key;
+    bool _has_user_key = {};
 };
 
 core::core(bool is_array) {
@@ -351,7 +348,7 @@ core& core::append(types::b_binary const& value) {
 
 uint8_t* core::append(binary_sub_type sub_type, uint32_t length) {
     stdx::string_view key = _impl->next_key();
-    uint8_t* allocated_bytes;
+    uint8_t* allocated_bytes = {};
 
     if (!bson_append_binary_uninit(
             _impl->back(),

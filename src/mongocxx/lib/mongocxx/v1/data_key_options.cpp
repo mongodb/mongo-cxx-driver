@@ -60,6 +60,8 @@ class data_key_options::impl {
     }
 };
 
+// NOLINTBEGIN(cppcoreguidelines-owning-memory): owning void* for ABI stability.
+
 data_key_options::~data_key_options() {
     delete impl::with(this);
 }
@@ -85,6 +87,8 @@ data_key_options& data_key_options::operator=(data_key_options const& other) {
 }
 
 data_key_options::data_key_options() : _impl{new impl{}} {}
+
+// NOLINTEND(cppcoreguidelines-owning-memory)
 
 data_key_options& data_key_options::master_key(bsoncxx::v1::document::value master_key) {
     impl::with(this)->_master_key = std::move(master_key);
@@ -134,7 +138,10 @@ data_key_options::internal::to_mongoc(data_key_options const& self) {
             _impl._key_alt_names.end(),
             std::back_inserter(names),
             [](std::string const& name) {
-                return const_cast<char*>(name.c_str()); // For copy only.
+                // mongoc_client_encryption_datakey_opts_set_keyaltnames() deep-copies the elements of `keyaltnames`
+                // without modification.
+                // NOLINTNEXTLINE(cppcoreguidelines-pro-type-const-cast)
+                return const_cast<char*>(name.c_str());
             });
 
         libmongoc::client_encryption_datakey_opts_set_keyaltnames(

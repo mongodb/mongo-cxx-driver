@@ -62,6 +62,8 @@ class count_options::impl {
     }
 };
 
+// NOLINTBEGIN(cppcoreguidelines-owning-memory): owning void* for ABI stability.
+
 count_options::~count_options() {
     delete impl::with(_impl);
 }
@@ -87,6 +89,8 @@ count_options& count_options::operator=(count_options const& other) {
 }
 
 count_options::count_options() : _impl{new impl{}} {}
+
+// NOLINTEND(cppcoreguidelines-owning-memory)
 
 count_options& count_options::collation(bsoncxx::v1::document::value collation) {
     impl::with(this)->_collation = std::move(collation);

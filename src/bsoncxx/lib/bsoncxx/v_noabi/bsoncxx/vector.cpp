@@ -27,9 +27,11 @@
 namespace bsoncxx {
 namespace v_noabi {
 namespace vector {
-namespace detail {
+
+namespace {
 
 // Equivalent to bson_vector_element_type_t.
+// NOLINTNEXTLINE(cppcoreguidelines-use-enum-class): used by bitwise operations.
 enum element_type : std::uint8_t {
     signed_integer = 0,
     unsigned_integer = 1,
@@ -37,22 +39,23 @@ enum element_type : std::uint8_t {
 };
 
 // Equivalent to bson_vector_element_size_t.
+// NOLINTNEXTLINE(cppcoreguidelines-use-enum-class): used by bitwise operations.
 enum element_size : std::uint8_t {
     bits_1 = 0,
     bits_8 = 3,
     bits_32 = 7,
 };
 
-static header make_header(element_type element_type, element_size element_size, std::uint8_t padding) {
-    return {{static_cast<std::uint8_t>((element_type << 4) | element_size), padding}};
+detail::header make_header(element_type type, element_size size, std::uint8_t padding) {
+    return {{static_cast<std::uint8_t>((type << 4) | size), padding}};
 }
 
-static void write_header(std::uint8_t* binary_data, header const& hdr) {
-    std::memcpy(binary_data, hdr.data(), header_size);
+void write_header(std::uint8_t* binary_data, detail::header const& hdr) {
+    std::memcpy(binary_data, hdr.data(), detail::header_size);
 }
 
 template <typename Impl>
-static std::uint32_t libbson_length_for_append(std::size_t element_count, Impl func) {
+std::uint32_t libbson_length_for_append(std::size_t element_count, Impl func) {
     std::uint32_t result = func(element_count);
     if (result < BSON_VECTOR_HEADER_LEN) {
         throw exception{error_code::k_vector_too_large};
@@ -61,58 +64,53 @@ static std::uint32_t libbson_length_for_append(std::size_t element_count, Impl f
 }
 
 template <typename Impl>
-static void libbson_validate(types::b_binary const& binary, Impl func) {
+void libbson_validate(types::b_binary const& binary, Impl func) {
     if (binary.sub_type != binary_sub_type::k_vector || !func(NULL, binary.bytes, binary.size)) {
         throw exception{error_code::k_invalid_vector};
     }
 }
 
-} // namespace detail
+} // namespace
 
 namespace formats {
 
 std::uint32_t f_int8::length_for_append(std::size_t element_count) {
-    return detail::libbson_length_for_append(element_count, bson_vector_int8_binary_data_length);
+    return libbson_length_for_append(element_count, bson_vector_int8_binary_data_length);
 }
 
 std::uint32_t f_float32::length_for_append(std::size_t element_count) {
-    return detail::libbson_length_for_append(element_count, bson_vector_float32_binary_data_length);
+    return libbson_length_for_append(element_count, bson_vector_float32_binary_data_length);
 }
 
 std::uint32_t f_packed_bit::length_for_append(std::size_t element_count) {
-    return detail::libbson_length_for_append(element_count, bson_vector_packed_bit_binary_data_length);
+    return libbson_length_for_append(element_count, bson_vector_packed_bit_binary_data_length);
 }
 
 void f_int8::write_frame(std::uint8_t* binary_data, std::uint32_t, std::size_t) {
-    detail::write_header(
-        binary_data, detail::make_header(detail::element_type::signed_integer, detail::element_size::bits_8, 0));
+    write_header(binary_data, make_header(element_type::signed_integer, element_size::bits_8, 0));
 }
 
 void f_float32::write_frame(std::uint8_t* binary_data, std::uint32_t, std::size_t) {
-    detail::write_header(
-        binary_data, detail::make_header(detail::element_type::floating_point, detail::element_size::bits_32, 0));
+    write_header(binary_data, make_header(element_type::floating_point, element_size::bits_32, 0));
 }
 
 void f_packed_bit::write_frame(std::uint8_t* binary_data, std::uint32_t binary_data_length, std::size_t element_count) {
+    static constexpr std::uint8_t mask = {0x7u};
+
     binary_data[binary_data_length - 1] = UINT8_C(0);
-    detail::write_header(
-        binary_data,
-        detail::make_header(
-            detail::element_type::unsigned_integer,
-            detail::element_size::bits_1,
-            std::uint8_t(std::size_t{7u} & -element_count)));
+    write_header(binary_data, make_header(unsigned_integer, bits_1, std::uint8_t(mask & -element_count)));
 }
 
 void formats::f_int8::validate(types::b_binary const& binary) {
-    return detail::libbson_validate(binary, bson_vector_int8_const_view_init);
+    return libbson_validate(binary, bson_vector_int8_const_view_init);
 }
 
 void formats::f_float32::validate(types::b_binary const& binary) {
-    return detail::libbson_validate(binary, bson_vector_float32_const_view_init);
+    return libbson_validate(binary, bson_vector_float32_const_view_init);
 }
 
 void formats::f_packed_bit::validate(types::b_binary const& binary) {
-    return detail::libbson_validate(binary, bson_vector_packed_bit_const_view_init);
+    return libbson_validate(binary, bson_vector_packed_bit_const_view_init);
 }
 
 } // namespace formats

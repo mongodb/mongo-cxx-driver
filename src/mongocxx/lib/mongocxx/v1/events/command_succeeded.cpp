@@ -62,7 +62,7 @@ bsoncxx::v1::stdx::optional<bsoncxx::v1::oid> command_succeeded::service_id() co
     bsoncxx::v1::stdx::optional<bsoncxx::v1::oid> ret;
 
     if (auto const id = libmongoc::apm_command_succeeded_get_service_id(to_mongoc(_impl))) {
-        ret.emplace(reinterpret_cast<std::uint8_t const*>(id), bsoncxx::v1::oid::k_oid_length);
+        ret.emplace(id->bytes, bsoncxx::v1::oid::k_oid_length);
     }
 
     return ret;
