@@ -33,7 +33,7 @@
 namespace mongocxx {
 namespace v1 {
 
-TEST_CASE("ownership", "[mongocxx][v1][s]") {
+TEST_CASE("ownership", "[mongocxx][v1][update_many_options]") {
     update_many_options source;
     update_many_options target;
 
