@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+
 cmake_minimum_required(VERSION 3.15...4.0)
 
 project(MONGO_CXX_DRIVER LANGUAGES CXX)
@@ -56,7 +57,6 @@ else()
     message(WARNING "Unknown compiler... recklessly proceeding without a version check")
 endif()
 
-# Also update etc/purls.txt.
 set(BSON_REQUIRED_VERSION 2.1.2)
 set(MONGOC_REQUIRED_VERSION 2.1.2)
 set(MONGOC_DOWNLOAD_VERSION 2.1.2)
