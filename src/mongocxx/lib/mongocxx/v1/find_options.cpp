@@ -290,10 +290,6 @@ bsoncxx::v1::stdx::optional<bsoncxx::v1::types::value>& find_options::internal::
     return impl::with(self)._comment;
 }
 
-bsoncxx::v1::stdx::optional<v1::cursor::type>& find_options::internal::cursor_type(find_options& self) {
-    return impl::with(self)._cursor_type;
-}
-
 bsoncxx::v1::stdx::optional<v1::hint>& find_options::internal::hint(find_options& self) {
     return impl::with(self)._hint;
 }

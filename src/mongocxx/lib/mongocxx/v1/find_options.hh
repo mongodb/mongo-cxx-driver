@@ -35,7 +35,6 @@ class find_options::internal {
    public:
     static bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value>& collation(find_options& self);
     static bsoncxx::v1::stdx::optional<bsoncxx::v1::types::value>& comment(find_options& self);
-    static bsoncxx::v1::stdx::optional<v1::cursor::type>& cursor_type(find_options& self);
     static bsoncxx::v1::stdx::optional<v1::hint>& hint(find_options& self);
     static bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value>& let(find_options& self);
     static bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value>& max(find_options& self);
