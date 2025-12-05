@@ -14,6 +14,8 @@
 
 #pragma once
 
+#include <mongocxx/v1/find_one_and_update_options-fwd.hpp> // IWYU pragma: export
+
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
@@ -29,7 +31,7 @@ class find_one_and_update;
 namespace mongocxx {
 namespace options {
 
-using ::mongocxx::v_noabi::options::find_one_and_update;
+using v_noabi::options::find_one_and_update;
 
 } // namespace options
 } // namespace mongocxx
@@ -39,4 +41,7 @@ using ::mongocxx::v_noabi::options::find_one_and_update;
 ///
 /// @file
 /// Declares @ref mongocxx::v_noabi::options::find_one_and_update.
+///
+/// @par Includes
+/// - @ref mongocxx/v1/find_one_and_update_options-fwd.hpp
 ///
