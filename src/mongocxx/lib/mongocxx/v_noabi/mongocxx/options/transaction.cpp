@@ -16,76 +16,85 @@
 
 //
 
+#include <mongocxx/v1/transaction.hh>
+
+#include <chrono>
+#include <utility>
+
+#include <bsoncxx/stdx/optional.hpp>
+
 #include <mongocxx/exception/error_code.hpp>
 #include <mongocxx/exception/logic_error.hpp>
 
-#include <bsoncxx/private/make_unique.hh>
+#include <mongocxx/read_concern.hh>
+#include <mongocxx/read_preference.hh>
+#include <mongocxx/write_concern.hh>
+
+#include <mongocxx/private/mongoc.hh>
 
 namespace mongocxx {
 namespace v_noabi {
 namespace options {
 
-transaction::transaction() : _impl{bsoncxx::make_unique<impl>()} {}
+namespace {
 
-transaction::transaction(transaction&&) noexcept = default;
-transaction& transaction::operator=(transaction&&) noexcept = default;
+template <typename Transaction>
+Transaction& check_moved_from(Transaction& txn) {
+    if (!v1::transaction::internal::as_mongoc(txn)) {
+        throw logic_error{error_code::k_invalid_transaction_options_object};
+    }
+    return txn;
+}
 
-transaction::transaction(transaction const& other)
-    : _impl{bsoncxx::make_unique<impl>(other._get_impl().get_transaction_opt_t())} {}
+} // namespace
+
+transaction::transaction(transaction const& other) : _txn{check_moved_from(other._txn)} {}
 
 transaction& transaction::operator=(transaction const& other) {
-    _impl = bsoncxx::make_unique<impl>(other._get_impl().get_transaction_opt_t());
+    _txn = check_moved_from(other._txn);
     return *this;
 }
 
-transaction::~transaction() noexcept = default;
-
-transaction& transaction::read_concern(mongocxx::v_noabi::read_concern const& rc) {
-    _impl->read_concern(rc);
+transaction& transaction::read_concern(v_noabi::read_concern const& rc) {
+    v1::transaction::internal::set_read_concern(check_moved_from(_txn), v_noabi::read_concern::internal::as_mongoc(rc));
     return *this;
 }
 
-bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::read_concern> transaction::read_concern() const {
-    return _impl->read_concern();
+bsoncxx::v_noabi::stdx::optional<v_noabi::read_concern> transaction::read_concern() const {
+    return check_moved_from(_txn).read_concern();
 }
 
-transaction& transaction::write_concern(mongocxx::v_noabi::write_concern const& wc) {
-    _impl->write_concern(wc);
+transaction& transaction::write_concern(v_noabi::write_concern const& wc) {
+    v1::transaction::internal::set_write_concern(
+        check_moved_from(_txn), v_noabi::write_concern::internal::as_mongoc(wc));
     return *this;
 }
 
-bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern> transaction::write_concern() const {
-    return _impl->write_concern();
+bsoncxx::v_noabi::stdx::optional<v_noabi::write_concern> transaction::write_concern() const {
+    return check_moved_from(_txn).write_concern();
 }
 
-transaction& transaction::read_preference(mongocxx::v_noabi::read_preference const& rp) {
-    _impl->read_preference(rp);
+transaction& transaction::read_preference(v_noabi::read_preference const& rp) {
+    v1::transaction::internal::set_read_preference(
+        check_moved_from(_txn), v_noabi::read_preference::internal::as_mongoc(rp));
     return *this;
 }
 
-bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::read_preference> transaction::read_preference() const {
-    return _impl->read_preference();
+bsoncxx::v_noabi::stdx::optional<v_noabi::read_preference> transaction::read_preference() const {
+    return check_moved_from(_txn).read_preference();
 }
 
 transaction& transaction::max_commit_time_ms(std::chrono::milliseconds ms) {
-    _impl->max_commit_time_ms(ms);
+    check_moved_from(_txn).max_commit_time_ms(ms);
     return *this;
 }
 
 bsoncxx::v_noabi::stdx::optional<std::chrono::milliseconds> transaction::max_commit_time_ms() const {
-    return _impl->max_commit_time_ms();
+    return check_moved_from(_txn).max_commit_time_ms();
 }
 
-transaction::impl const& transaction::_get_impl() const {
-    if (!_impl) {
-        throw logic_error{error_code::k_invalid_transaction_options_object};
-    }
-    return *_impl;
-}
-
-transaction::impl& transaction::_get_impl() {
-    auto cthis = const_cast<transaction const*>(this);
-    return const_cast<transaction::impl&>(cthis->_get_impl());
+mongoc_transaction_opt_t const* transaction::internal::as_mongoc(transaction const& self) {
+    return v1::transaction::internal::as_mongoc(check_moved_from(self._txn));
 }
 
 } // namespace options

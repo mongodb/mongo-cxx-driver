@@ -14,11 +14,17 @@
 
 #pragma once
 
-#include <chrono>
-#include <memory>
-
-#include <mongocxx/client_session-fwd.hpp>
 #include <mongocxx/options/transaction-fwd.hpp> // IWYU pragma: export
+
+//
+
+#include <mongocxx/v1/transaction.hpp> // IWYU pragma: export
+
+#include <chrono>
+#include <memory> // IWYU pragma: keep: backward compatibility, to be removed.
+#include <utility>
+
+#include <mongocxx/client_session-fwd.hpp> // IWYU pragma: keep: backward compatibility, to be removed.
 #include <mongocxx/read_concern-fwd.hpp>
 #include <mongocxx/read_preference-fwd.hpp>
 #include <mongocxx/write_concern-fwd.hpp>
@@ -35,33 +41,61 @@ namespace options {
 /// Used by MongoDB transaction operations.
 ///
 class transaction {
+   private:
+    v1::transaction _txn;
+
    public:
-    MONGOCXX_ABI_EXPORT_CDECL() transaction();
+    ///
+    /// Default initialization.
+    ///
+    transaction() = default;
 
     ///
     /// Copy constructs transaction options.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL() transaction(transaction const&);
+    MONGOCXX_ABI_EXPORT_CDECL() transaction(transaction const& other);
 
     ///
     /// Copy assigns transaction options.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(transaction&) operator=(transaction const&);
+    MONGOCXX_ABI_EXPORT_CDECL(transaction&) operator=(transaction const& other);
 
     ///
     /// Move constructs transaction options.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL() transaction(transaction&&) noexcept;
+    transaction(transaction&& other) noexcept = default;
 
     ///
     /// Move assigns transaction options.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(transaction&) operator=(transaction&&) noexcept;
+    transaction& operator=(transaction&& other) noexcept = default;
 
     ///
     /// Destroys the transaction options.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL() ~transaction() noexcept;
+    ~transaction() noexcept = default;
+
+    ///
+    /// Construct with the @ref mongocxx::v1 equivalent.
+    ///
+    /* explicit(false) */ transaction(v1::transaction txn) : _txn{std::move(txn)} {}
+
+    ///
+    /// Convert to the @ref mongocxx::v1 equivalent.
+    ///
+    /// @par Postconditions:
+    /// - `*this` is in an assign-or-destroy-only state.
+    ///
+    explicit operator v1::transaction() && {
+        return std::move(_txn);
+    }
+
+    ///
+    /// Convert to the @ref mongocxx::v1 equivalent.
+    ///
+    explicit operator v1::transaction() const& {
+        return _txn;
+    }
 
     ///
     /// Sets the transaction read concern.
@@ -73,7 +107,7 @@ class transaction {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(transaction&) read_concern(mongocxx::v_noabi::read_concern const& rc);
+    MONGOCXX_ABI_EXPORT_CDECL(transaction&) read_concern(v_noabi::read_concern const& rc);
 
     ///
     /// Gets the current transaction read concern.
@@ -81,7 +115,7 @@ class transaction {
     /// @return
     ///    An optional containing the read concern. If the read concern has not been set, a
     ///    disengaged optional is returned.
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::read_concern>)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<v_noabi::read_concern>)
     read_concern() const;
 
     ///
@@ -95,7 +129,7 @@ class transaction {
     ///   method chaining.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(transaction&)
-    write_concern(mongocxx::v_noabi::write_concern const& wc);
+    write_concern(v_noabi::write_concern const& wc);
 
     ///
     /// Gets the current transaction write concern.
@@ -105,7 +139,7 @@ class transaction {
     /// @return
     ///    An optional containing the write concern. If the write concern has not been set, a
     ///    disengaged optional is returned.
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern>)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<v_noabi::write_concern>)
     write_concern() const;
 
     ///
@@ -119,7 +153,7 @@ class transaction {
     ///   method chaining.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(transaction&)
-    read_preference(mongocxx::v_noabi::read_preference const& rp);
+    read_preference(v_noabi::read_preference const& rp);
 
     ///
     /// Gets the current transaction read preference.
@@ -127,7 +161,7 @@ class transaction {
     /// @return
     ///    An optional containing the read preference. If the read preference has not been set, a
     ///    disengaged optional is returned.
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::read_preference>)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<v_noabi::read_preference>)
     read_preference() const;
 
     ///
@@ -148,20 +182,32 @@ class transaction {
     ///   An optional containing the timeout. If the max commit time has not been set,
     ///   a disengaged optional is returned.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<std::chrono::milliseconds>)
-    max_commit_time_ms() const;
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<std::chrono::milliseconds>) max_commit_time_ms() const;
 
-   private:
-    friend ::mongocxx::v_noabi::client_session;
-
-    class impl;
-
-    impl& _get_impl();
-    impl const& _get_impl() const;
-    std::unique_ptr<impl> _impl;
+    class internal;
 };
 
 } // namespace options
+} // namespace v_noabi
+} // namespace mongocxx
+
+namespace mongocxx {
+namespace v_noabi {
+
+///
+/// Convert to the @ref v_noabi equivalent of `v`.
+///
+inline v_noabi::options::transaction from_v1(v1::transaction v) {
+    return {std::move(v)};
+}
+
+///
+/// Convert to the @ref mongocxx::v1 equivalent of `v`.
+///
+inline v1::transaction to_v1(v_noabi::options::transaction v) {
+    return v1::transaction{std::move(v)};
+}
+
 } // namespace v_noabi
 } // namespace mongocxx
 
@@ -170,4 +216,7 @@ class transaction {
 ///
 /// @file
 /// Provides @ref mongocxx::v_noabi::options::transaction.
+///
+/// @par Includes
+/// - @ref mongocxx/v1/transaction.hpp
 ///

@@ -132,6 +132,11 @@ class transaction {
     /// Return the current "writeConcern" field.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<v1::write_concern>) write_concern() const;
+
+    class internal;
+
+   private:
+    /* explicit(false) */ transaction(void* impl);
 };
 
 } // namespace v1

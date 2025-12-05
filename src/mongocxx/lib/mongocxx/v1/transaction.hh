@@ -14,34 +14,23 @@
 
 #pragma once
 
-#include <mongocxx/v1/transaction-fwd.hpp>
+#include <mongocxx/v1/transaction.hpp> // IWYU pragma: export
 
-#include <mongocxx/config/prelude.hpp>
+//
 
-namespace mongocxx {
-namespace v_noabi {
-namespace options {
-
-class transaction;
-
-} // namespace options
-} // namespace v_noabi
-} // namespace mongocxx
+#include <mongocxx/private/mongoc.hh>
 
 namespace mongocxx {
-namespace options {
+namespace v1 {
 
-using v_noabi::options::transaction;
+class transaction::internal {
+   public:
+    static mongoc_transaction_opt_t const* as_mongoc(transaction const& self);
 
-} // namespace options
+    static void set_read_concern(transaction& self, mongoc_read_concern_t const* v);
+    static void set_read_preference(transaction& self, mongoc_read_prefs_t const* v);
+    static void set_write_concern(transaction& self, mongoc_write_concern_t const* v);
+};
+
+} // namespace v1
 } // namespace mongocxx
-
-#include <mongocxx/config/postlude.hpp>
-
-///
-/// @file
-/// Declares @ref mongocxx::v_noabi::options::transaction.
-///
-/// @par Includes
-/// - @ref mongocxx/v1/transaction-fwd.hpp
-///
