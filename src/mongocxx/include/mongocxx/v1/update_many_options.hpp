@@ -192,6 +192,8 @@ class update_many_options {
     /// Return the current "arrayFilters" field.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::array::view>) array_filters() const;
+
+    class internal;
 };
 
 } // namespace v1
