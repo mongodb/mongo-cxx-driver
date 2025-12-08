@@ -16,9 +16,20 @@
 
 #include <mongocxx/options/replace-fwd.hpp> // IWYU pragma: export
 
+//
+
+#include <bsoncxx/v1/document/value.hpp>
+#include <bsoncxx/v1/types/value.hpp>
+
+#include <mongocxx/v1/replace_one_options.hpp> // IWYU pragma: export
+
+#include <utility>
+
 #include <bsoncxx/array/view_or_value.hpp> // IWYU pragma: keep: backward compatibility, to be removed.
+#include <bsoncxx/document/view.hpp>
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/stdx/optional.hpp>
+#include <bsoncxx/types/bson_value/view.hpp>
 #include <bsoncxx/types/bson_value/view_or_value.hpp>
 
 #include <mongocxx/hint.hpp>
@@ -36,6 +47,60 @@ namespace options {
 class replace {
    public:
     ///
+    /// Default initialization.
+    ///
+    replace() = default;
+
+    ///
+    /// Construct with the @ref mongocxx::v1 equivalent.
+    ///
+    /* explicit(false) */ MONGOCXX_ABI_EXPORT_CDECL() replace(v1::replace_one_options opts);
+
+    ///
+    /// Convert to the @ref mongocxx::v1 equivalent.
+    ///
+    explicit operator v1::replace_one_options() const {
+        using bsoncxx::v_noabi::to_v1;
+        using mongocxx::v_noabi::to_v1;
+
+        v1::replace_one_options ret;
+
+        if (_bypass_document_validation) {
+            ret.bypass_document_validation(*_bypass_document_validation);
+        }
+
+        if (_collation) {
+            ret.collation(bsoncxx::v1::document::value{to_v1(_collation->view())});
+        }
+
+        if (_upsert) {
+            ret.upsert(*_upsert);
+        }
+
+        if (_write_concern) {
+            ret.write_concern(to_v1(*_write_concern));
+        }
+
+        if (_hint) {
+            ret.hint(to_v1(*_hint));
+        }
+
+        if (_let) {
+            ret.let(bsoncxx::v1::document::value{to_v1(_let->view())});
+        }
+
+        if (_sort) {
+            ret.sort(bsoncxx::v1::document::value{to_v1(_sort->view())});
+        }
+
+        if (_comment) {
+            ret.comment(bsoncxx::v1::types::value{to_v1(_comment->view())});
+        }
+
+        return ret;
+    }
+
+    ///
     /// Sets the bypass_document_validation option.
     /// If true, allows the write to opt-out of document level validation.
     ///
@@ -50,15 +115,19 @@ class replace {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(replace&) bypass_document_validation(bool bypass_document_validation);
+    replace& bypass_document_validation(bool bypass_document_validation) {
+        _bypass_document_validation = bypass_document_validation;
+        return *this;
+    }
 
     ///
     /// Gets the current value of the bypass_document_validation option.
     ///
     /// @return The optional value of the bypass_document_validation option.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bool> const&)
-    bypass_document_validation() const;
+    bsoncxx::v_noabi::stdx::optional<bool> const& bypass_document_validation() const {
+        return _bypass_document_validation;
+    }
 
     ///
     /// Sets the collation for this operation.
@@ -73,8 +142,10 @@ class replace {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/collation/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(replace&)
-    collation(bsoncxx::v_noabi::document::view_or_value collation);
+    replace& collation(bsoncxx::v_noabi::document::view_or_value collation) {
+        _collation = std::move(collation);
+        return *this;
+    }
 
     ///
     /// Retrieves the current collation for this operation.
@@ -85,8 +156,9 @@ class replace {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/collation/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const&)
-    collation() const;
+    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const& collation() const {
+        return _collation;
+    }
 
     ///
     /// Sets the upsert option.
@@ -104,14 +176,19 @@ class replace {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(replace&) upsert(bool upsert);
+    replace& upsert(bool upsert) {
+        _upsert = upsert;
+        return *this;
+    }
 
     ///
     /// Gets the current value of the upsert option.
     ///
     /// @return The optional value of the upsert option.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bool> const&) upsert() const;
+    bsoncxx::v_noabi::stdx::optional<bool> const& upsert() const {
+        return _upsert;
+    }
 
     ///
     /// Sets the write_concern for this operation.
@@ -126,7 +203,10 @@ class replace {
     /// @see
     /// - https://www.mongodb.com/docs/manual/core/write-concern/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(replace&) write_concern(mongocxx::v_noabi::write_concern wc);
+    replace& write_concern(v_noabi::write_concern wc) {
+        _write_concern = std::move(wc);
+        return *this;
+    }
 
     ///
     /// The current write_concern for this operation.
@@ -137,8 +217,9 @@ class replace {
     /// @see
     /// - https://www.mongodb.com/docs/manual/core/write-concern/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern> const&)
-    write_concern() const;
+    bsoncxx::v_noabi::stdx::optional<v_noabi::write_concern> const& write_concern() const {
+        return _write_concern;
+    }
 
     ///
     /// Sets the index to use for this operation.
@@ -153,15 +234,19 @@ class replace {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(replace&) hint(mongocxx::v_noabi::hint index_hint);
+    replace& hint(v_noabi::hint index_hint) {
+        _hint = std::move(index_hint);
+        return *this;
+    }
 
     ///
     /// Gets the current hint.
     ///
     /// @return The current hint, if one is set.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::hint> const&)
-    hint() const;
+    bsoncxx::v_noabi::stdx::optional<v_noabi::hint> const& hint() const {
+        return _hint;
+    }
 
     ///
     /// Set the value of the let option.
@@ -173,7 +258,10 @@ class replace {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(replace&) let(bsoncxx::v_noabi::document::view_or_value let);
+    replace& let(bsoncxx::v_noabi::document::view_or_value let) {
+        _let = std::move(let);
+        return *this;
+    }
 
     ///
     /// Gets the current value of the let option.
@@ -181,19 +269,24 @@ class replace {
     /// @return
     ///  The current let option.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const)
-    let() const;
+    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const let() const {
+        return _let;
+    }
 
     ///
     /// Set the sort option.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(replace&) sort(bsoncxx::v_noabi::document::view_or_value sort);
+    replace& sort(bsoncxx::v_noabi::document::view_or_value sort) {
+        _sort = std::move(sort);
+        return *this;
+    }
 
     ///
     /// Get the current value of the sort option.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const&)
-    sort() const;
+    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const& sort() const {
+        return _sort;
+    }
 
     ///
     /// Set the value of the comment option.
@@ -205,8 +298,10 @@ class replace {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(replace&)
-    comment(bsoncxx::v_noabi::types::bson_value::view_or_value comment);
+    replace& comment(bsoncxx::v_noabi::types::bson_value::view_or_value comment) {
+        _comment = std::move(comment);
+        return *this;
+    }
 
     ///
     /// Gets the current value of the comment option.
@@ -214,15 +309,16 @@ class replace {
     /// @return
     ///  The current comment option.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value> const)
-    comment() const;
+    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value> const comment() const {
+        return _comment;
+    }
 
    private:
     bsoncxx::v_noabi::stdx::optional<bool> _bypass_document_validation;
     bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> _collation;
     bsoncxx::v_noabi::stdx::optional<bool> _upsert;
-    bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern> _write_concern;
-    bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::hint> _hint;
+    bsoncxx::v_noabi::stdx::optional<v_noabi::write_concern> _write_concern;
+    bsoncxx::v_noabi::stdx::optional<v_noabi::hint> _hint;
     bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> _let;
     bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> _sort;
     bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value> _comment;
@@ -232,9 +328,32 @@ class replace {
 } // namespace v_noabi
 } // namespace mongocxx
 
+namespace mongocxx {
+namespace v_noabi {
+
+///
+/// Convert to the @ref mongocxx::v_noabi equivalent of `v`.
+///
+inline v_noabi::options::replace from_v1(v1::replace_one_options v) {
+    return {std::move(v)};
+}
+
+///
+/// Convert to the @ref mongocxx::v1 equivalent of `v`.
+///
+inline v1::replace_one_options to_v1(v_noabi::options::replace const& v) {
+    return v1::replace_one_options{v};
+}
+
+} // namespace v_noabi
+} // namespace mongocxx
+
 #include <mongocxx/config/postlude.hpp>
 
 ///
 /// @file
 /// Provides @ref mongocxx::v_noabi::options::replace.
+///
+/// @par Includes
+/// - @ref mongocxx/v1/replace_one_options.hpp
 ///

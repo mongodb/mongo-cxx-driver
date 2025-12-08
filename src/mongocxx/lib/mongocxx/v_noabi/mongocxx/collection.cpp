@@ -46,6 +46,7 @@
 #include <mongocxx/result/replace_one.hpp>
 #include <mongocxx/result/update.hpp>
 
+#include <mongocxx/append_aggregate_options.hh>
 #include <mongocxx/bulk_write.hh>
 #include <mongocxx/client_session.hh>
 #include <mongocxx/collection.hh>
@@ -453,7 +454,7 @@ cursor
 collection::_aggregate(client_session const* session, pipeline const& pipeline, options::aggregate const& options) {
     bsoncxx::v_noabi::builder::basic::document b;
 
-    options.append(b);
+    append_aggregate_options(b, options);
 
     if (session) {
         b.append(bsoncxx::v_noabi::builder::concatenate_doc{session->_get_impl().to_document()});
