@@ -103,6 +103,8 @@ class transaction_options {
     ///
     /// Return the current "maxCommitTimeMS" field.
     ///
+    /// @note `0` is equivalent to "unset".
+    ///
     MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<std::chrono::milliseconds>) max_commit_time_ms() const;
 
     ///
