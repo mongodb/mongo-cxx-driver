@@ -4,12 +4,13 @@ Checks:
   - cert-*
   - cppcoreguidelines-*
   - clang-analyzer-*'
+  - -cppcoreguidelines-avoid-do-while # Noise
   - -cppcoreguidelines-pro-bounds-array-to-pointer-decay # Noise.
   - -cppcoreguidelines-pro-bounds-constant-array-index # Noise.
   - -cppcoreguidelines-pro-bounds-pointer-arithmetic # Noise.
   - -cppcoreguidelines-pro-type-union-access # Requires C++17 or newer for `std::variant`.
   - -cppcoreguidelines-pro-type-vararg # Noise.
-WarningsAsErrors: '*,-cert-err58-cpp,-cppcoreguidelines-avoid-do-while,-cppcoreguidelines-avoid-non-const-global-variables'
+WarningsAsErrors: '*,-cert-err58-cpp,-cppcoreguidelines-avoid-non-const-global-variables'
 HeaderFileExtensions:
   - ''
   - h
