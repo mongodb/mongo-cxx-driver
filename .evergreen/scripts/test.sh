@@ -231,6 +231,14 @@ else
   echo "Waiting for mock KMS servers to start... done."
 fi
 
+if [[ "${generator:-}" == Visual\ Studio\ * ]]; then
+  cmake_build_opts+=("/verbosity:minimal")
+elif [[ "${OSTYPE:?}" == cygwin ]]; then
+  : "${generator:="Ninja Multi-Config"}"
+  PATH="/cygdrive/c/ProgramData/chocolatey/lib/winlibs/tools/mingw64/bin:${PATH:-}" # mingw-w64 GCC
+  cmake_build_opts=(--quiet)                                                        # "" is not a valid argument to Ninja.
+fi
+
 # Required by example projects.
 export CMAKE_GENERATOR="${generator:-}"
 export CMAKE_GENERATOR_PLATFORM="${platform:-}"
@@ -244,13 +252,10 @@ pushd "${working_dir:?}/build"
 
 if [[ "${OSTYPE:?}" == cygwin ]]; then
   if [[ "${generator:-}" == Visual\ Studio\ * ]]; then
-    cmake_build_opts+=("/verbosity:minimal")
     run_tests_target="RUN_TESTS"
     build_examples_target="examples/examples"
     run_examples_target="examples/run-examples"
   else
-    PATH="/cygdrive/c/ProgramData/chocolatey/lib/winlibs/tools/mingw64/bin:${PATH:-}" # mingw-w64 GCC
-    cmake_build_opts=(--quiet)                                                        # "" is not a valid argument to Ninja.
     run_tests_target=test
     build_examples_target="examples"
     run_examples_target="run-examples"
@@ -370,7 +375,7 @@ PKG_CONFIG_PATH+=":${mongoc_dir:?}/${LIB_DIR:?}/pkgconfig"
 PKG_CONFIG_PATH+=":${working_dir:?}/build/install/${LIB_DIR:?}/pkgconfig"
 export PKG_CONFIG_PATH
 
-if [[ "${MSVC:-}" != "1" ]]; then
+if [[ "${generator:-}" != Visual\ Studio\ * ]]; then
   LD_LIBRARY_PATH="${working_dir:?}/build/install/${LIB_DIR:?}:${LD_LIBRARY_PATH:-}"
   DYLD_FALLBACK_LIBRARY_PATH="$(pwd)/build/install/lib:${DYLD_FALLBACK_LIBRARY_PATH:-}"
 fi

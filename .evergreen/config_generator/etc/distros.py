@@ -88,6 +88,7 @@ UBUNTU_ARM64_DISTROS = [
 
 WINDOWS_DISTROS = [
     *ls_distro(name='windows-vsCurrent', os='windows', os_type='windows'),
+    *ls_distro(name='windows-2022-latest', os='windows', os_type='windows'),
 ]
 
 # See: https://evergreen.mongodb.com/distros
