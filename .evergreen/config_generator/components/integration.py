@@ -126,9 +126,6 @@ def tasks():
             updates += [KeyValueParam(key='build_type', value=build_type)]
             updates += [KeyValueParam(key=key, value=value) for key, value in compiler_to_vars(compiler).items()]
 
-            if distro.os_type == 'windows':
-                test_vars |= {'example_projects_cxx_standard': 17}
-
             if build_type == 'Debug' and distro.os in ['ubuntu2204', 'ubuntu2404']:
                 updates += [KeyValueParam(key='ENABLE_CODE_COVERAGE', value='ON')]
 
@@ -138,10 +135,7 @@ def tasks():
 
             if cxx_standard is not None:
                 compile_vars |= {'REQUIRED_CXX_STANDARD': cxx_standard}
-                test_vars |= {
-                    'example_projects_cxx_standard': cxx_standard,
-                    'REQUIRED_CXX_STANDARD': cxx_standard,
-                }
+                test_vars |= {'REQUIRED_CXX_STANDARD': cxx_standard}
 
             commands = [expansions_update(updates=updates)] if updates else []
             commands += [

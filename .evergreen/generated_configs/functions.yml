@@ -553,15 +553,13 @@ functions:
         - cse_gcp_privatekey
         - disable_slow_tests
         - distro_id
-        - example_projects_cc
-        - example_projects_cxx
-        - example_projects_cxx_standard
         - example_projects_cxxflags
         - example_projects_ldflags
         - generator
         - MONGOCXX_TEST_TOPOLOGY
         - MONGODB_API_VERSION
         - platform
+        - REQUIRED_CXX_STANDARD
         - TEST_WITH_ASAN
         - TEST_WITH_CSFLE
         - TEST_WITH_UBSAN

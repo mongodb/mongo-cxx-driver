@@ -16,14 +16,12 @@ set -o pipefail
 : "${ASAN_SYMBOLIZER_PATH:-}"
 : "${CRYPT_SHARED_LIB_PATH:-}"
 : "${disable_slow_tests:-}"
-: "${example_projects_cc:-}"
-: "${example_projects_cxx_standard:-}"
-: "${example_projects_cxx:-}"
 : "${example_projects_cxxflags:-}"
 : "${example_projects_ldflags:-}"
 : "${generator:-}"
 : "${MONGODB_API_VERSION:-}"
 : "${platform:-}"
+: "${REQUIRED_CXX_STANDARD:-}"
 : "${TEST_WITH_ASAN:-}"
 : "${TEST_WITH_CSFLE:-}"
 : "${TEST_WITH_UBSAN:-}"
@@ -233,6 +231,15 @@ else
   echo "Waiting for mock KMS servers to start... done."
 fi
 
+# Required by example projects.
+export CMAKE_GENERATOR="${generator:-}"
+export CMAKE_GENERATOR_PLATFORM="${platform:-}"
+export CC="${CC:-"cc"}"
+export CXX="${CXX:-"c++"}"
+export CXX_STANDARD="${REQUIRED_CXX_STANDARD:-"11"}"
+export CXXFLAGS="${example_projects_cxxflags:-}"
+export LDFLAGS="${example_projects_ldflags:-}"
+
 pushd "${working_dir:?}/build"
 
 if [[ "${OSTYPE:?}" == cygwin ]]; then
@@ -363,20 +370,7 @@ PKG_CONFIG_PATH+=":${mongoc_dir:?}/${LIB_DIR:?}/pkgconfig"
 PKG_CONFIG_PATH+=":${working_dir:?}/build/install/${LIB_DIR:?}/pkgconfig"
 export PKG_CONFIG_PATH
 
-# Environment variables used by example projects.
-export CMAKE_GENERATOR="${generator:-"Ninja"}"
-export CMAKE_GENERATOR_PLATFORM="${platform:-}"
-export BUILD_TYPE="${build_type:?}"
-export CXXFLAGS="${example_projects_cxxflags:-}"
-export LDFLAGS="${example_projects_ldflags:-}"
-export CC="${example_projects_cc:-"cc"}"
-export CXX="${example_projects_cxx:-"c++"}"
-export CXX_STANDARD="${example_projects_cxx_standard:-11}"
-export ninja_binary
-
-if [[ "${generator:-}" == Visual\ Studio\ * ]]; then
-  export MSVC=1
-else
+if [[ "${MSVC:-}" != "1" ]]; then
   LD_LIBRARY_PATH="${working_dir:?}/build/install/${LIB_DIR:?}:${LD_LIBRARY_PATH:-}"
   DYLD_FALLBACK_LIBRARY_PATH="$(pwd)/build/install/lib:${DYLD_FALLBACK_LIBRARY_PATH:-}"
 fi
