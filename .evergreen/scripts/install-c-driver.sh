@@ -35,21 +35,35 @@ install_build_tools
 
 # Default CMake generator to use if not already provided.
 declare CMAKE_GENERATOR CMAKE_GENERATOR_PLATFORM
-if [[ "${OSTYPE:?}" == "cygwin" ]]; then
-  # MSBuild task-based parallelism (VS 2019 16.3 and newer).
-  export UseMultiToolTask=true
-  export EnforceProcessCountAcrossBuilds=true
-  # MSBuild inter-project parallelism via CMake (3.26 and newer).
-  export CMAKE_BUILD_PARALLEL_LEVEL
-  CMAKE_BUILD_PARALLEL_LEVEL="$(nproc)" # /maxcpucount
+case "${OSTYPE:?}" in
+cygwin)
+  if [[ "${generator:-}" == Visual\ Studio\ * ]]; then
+    # MSBuild task-based parallelism (VS 2019 16.3 and newer).
+    export UseMultiToolTask=true
+    export EnforceProcessCountAcrossBuilds=true
+    # MSBuild inter-project parallelism via CMake (3.26 and newer).
+    export CMAKE_BUILD_PARALLEL_LEVEL
+    CMAKE_BUILD_PARALLEL_LEVEL="$(nproc)" # /maxcpucount
 
-  CMAKE_GENERATOR="${generator:-"Visual Studio 14 2015"}"
-  CMAKE_GENERATOR_PLATFORM="${platform:-"x64"}"
-else
-  CMAKE_GENERATOR="Ninja"
-  CMAKE_GENERATOR_PLATFORM="${platform:-""}"
-fi
-export CMAKE_GENERATOR CMAKE_GENERATOR_PLATFORM
+    CMAKE_GENERATOR="${generator:?}"
+    CMAKE_GENERATOR_PLATFORM="${platform:-"x64"}"
+  else
+    : "${generator:="Ninja Multi-Config"}"
+    PATH="/cygdrive/c/ProgramData/chocolatey/lib/winlibs/tools/mingw64/bin:${PATH:-}" # mingw-w64 GCC
+  fi
+  ;;
+
+darwin* | linux*)
+  : "${generator:="Ninja"}"
+  ;;
+
+*)
+  echo "unrecognized operating system ${OSTYPE:?}" 1>&2
+  exit 1
+  ;;
+esac
+export CMAKE_GENERATOR="${generator:?}"
+export CMAKE_GENERATOR_PLATFORM="${platform:-}"
 
 # Install libmongocrypt.
 if [[ "${SKIP_INSTALL_LIBMONGOCRYPT:-}" != "1" ]]; then
@@ -115,10 +129,17 @@ declare -a compile_flags
 
 case "${OSTYPE:?}" in
 cygwin)
-  # Replace `/Zi`, which is incompatible with ccache, with `/Z7` while preserving other default debug flags.
-  cmake_flags+=(
-    "-DCMAKE_MSVC_DEBUG_INFORMATION_FORMAT=Embedded"
-  )
+  if [[ "${generator:-}" == Visual\ Studio\ * ]]; then
+    # Replace `/Zi`, which is incompatible with ccache, with `/Z7` while preserving other default debug flags.
+    configure_flags+=(
+      "-DCMAKE_MSVC_DEBUG_INFORMATION_FORMAT=Embedded"
+    )
+  else
+    # Avoid mingw-w64 linker issues (hangs indefinitely?).
+    configure_flags+=(
+      "-DMONGO_USE_LLD=OFF"
+    )
+  fi
   ;;
 darwin*)
   configure_flags+=("-DCMAKE_C_FLAGS=-fPIC")

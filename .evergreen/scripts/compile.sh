@@ -53,19 +53,29 @@ build_targets=()
 cmake_build_opts=()
 case "${OSTYPE:?}" in
 cygwin)
-  # MSBuild task-based parallelism (VS 2019 16.3 and newer).
-  export UseMultiToolTask=true
-  export EnforceProcessCountAcrossBuilds=true
-  # MSBuild inter-project parallelism via CMake (3.26 and newer).
-  export CMAKE_BUILD_PARALLEL_LEVEL
-  CMAKE_BUILD_PARALLEL_LEVEL="$(nproc)" # /maxcpucount
+  if [[ "${generator:-}" == Visual\ Studio\ * ]]; then
+    # MSBuild task-based parallelism (VS 2019 16.3 and newer).
+    export UseMultiToolTask=true
+    export EnforceProcessCountAcrossBuilds=true
+    # MSBuild inter-project parallelism via CMake (3.26 and newer).
+    export CMAKE_BUILD_PARALLEL_LEVEL
+    CMAKE_BUILD_PARALLEL_LEVEL="$(nproc)" # /maxcpucount
 
-  cmake_build_opts+=("/verbosity:minimal")
-  build_targets+=(--target ALL_BUILD --target examples/examples)
+    cmake_build_opts+=("/verbosity:minimal")
+    build_targets+=(--target ALL_BUILD --target examples/examples)
+  else
+    : "${generator:="Ninja Multi-Config"}"
+    PATH="/cygdrive/c/ProgramData/chocolatey/lib/winlibs/tools/mingw64/bin:${PATH:-}" # mingw-w64 GCC
+    build_targets+=(--target all --target examples)
+  fi
   ;;
 
 darwin* | linux*)
+  : "${generator:="Ninja"}"
   build_targets+=(--target all --target examples)
+
+  # If enabled, limit distcheck to Unix-like systems only.
+  _RUN_DISTCHECK="${RUN_DISTCHECK:-}"
   ;;
 
 *)
@@ -73,6 +83,8 @@ darwin* | linux*)
   exit 1
   ;;
 esac
+export CMAKE_GENERATOR="${generator:?}"
+export CMAKE_GENERATOR_PLATFORM="${platform:-}"
 
 # Create a VERSION_CURRENT file in the build directory to include in the dist tarball.
 uvx python ./etc/calc_release_version.py >./build/VERSION_CURRENT
@@ -90,35 +102,6 @@ cmake_flags=(
 if [[ -z "$(find "${mongoc_prefix:?}" -name 'bson-config.h')" ]]; then
   cmake_flags+=("-DCMAKE_DISABLE_FIND_PACKAGE_mongoc-1.0=ON")
 fi
-
-_RUN_DISTCHECK=""
-case "${OSTYPE:?}" in
-cygwin)
-  case "${generator:-}" in
-  *2015* | *2017* | *2019* | *2022*)
-    # MSBuild parallelism.
-    export UseMultiToolTask=true
-    export EnforceProcessCountAcrossBuilds=true
-    ;;
-  *)
-    echo "missing explicit CMake Generator on Windows distro" 1>&2
-    exit 1
-    ;;
-  esac
-  ;;
-darwin* | linux*)
-  : "${generator:="Ninja"}"
-
-  # If enabled, limit distcheck to Unix-like systems only.
-  _RUN_DISTCHECK="${RUN_DISTCHECK:-}"
-  ;;
-*)
-  echo "unrecognized operating system ${OSTYPE:?}" 1>&2
-  exit 1
-  ;;
-esac
-export CMAKE_GENERATOR="${generator:?}"
-export CMAKE_GENERATOR_PLATFORM="${platform:-}"
 
 if [[ -n "${REQUIRED_CXX_STANDARD:-}" ]]; then
   echo "Checking requested C++ standard is supported..."
@@ -168,20 +151,23 @@ cxx_flags=()
 
 case "${OSTYPE:?}" in
 cygwin)
-  # Most compiler flags are not applicable to builds on Windows distros.
+  if [[ "${generator:-}" == Visual\ Studio\ * ]]; then
+    # Replace `/Zi`, which is incompatible with ccache, with `/Z7` while preserving other default debug flags.
+    cmake_flags+=(
+      "-DCMAKE_MSVC_DEBUG_INFORMATION_FORMAT=Embedded"
+    )
 
-  # Replace `/Zi`, which is incompatible with ccache, with `/Z7` while preserving other default debug flags.
-  cmake_flags+=(
-    "-DCMAKE_MSVC_DEBUG_INFORMATION_FORMAT=Embedded"
-  )
-
-  # Ensure default MSVC flags are preserved despite explicit compiler flags.
-  cc_flags+=(/DWIN32 /D_WINDOWS)
-  cxx_flags+=(/DWIN32 /D_WINDOWS /GR /EHsc)
-  if [[ "${build_type:?}" == "debug" ]]; then
-    cxx_flags+=(/Ob0 /Od /RTC1)
+    # Ensure default MSVC flags are preserved despite explicit compiler flags.
+    cc_flags+=(/DWIN32 /D_WINDOWS)
+    cxx_flags+=(/DWIN32 /D_WINDOWS /GR /EHsc)
+    if [[ "${build_type:?}" == "debug" ]]; then
+      cxx_flags+=(/Ob0 /Od /RTC1)
+    else
+      cxx_flags+=(/O2 /Ob2 /DNDEBUG)
+    fi
   else
-    cxx_flags+=(/O2 /Ob2 /DNDEBUG)
+    cc_flags+=("${cc_flags_init[@]}")
+    cxx_flags+=("${cxx_flags_init[@]}")
   fi
   ;;
 darwin*)

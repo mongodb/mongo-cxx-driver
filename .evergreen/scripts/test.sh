@@ -235,11 +235,24 @@ fi
 
 pushd "${working_dir:?}/build"
 
-if [[ "${OSTYPE:?}" =~ cygwin ]]; then
-  CTEST_OUTPUT_ON_FAILURE=1 cmake --build . --config "${build_type:?}" --target RUN_TESTS -- /verbosity:minimal
+if [[ "${OSTYPE:?}" == cygwin ]]; then
+  if [[ "${generator:-}" == Visual\ Studio\ * ]]; then
+    cmake_build_opts+=("/verbosity:minimal")
+    run_tests_target="RUN_TESTS"
+    build_examples_target="examples/examples"
+    run_examples_target="examples/run-examples"
+  else
+    PATH="/cygdrive/c/ProgramData/chocolatey/lib/winlibs/tools/mingw64/bin:${PATH:-}" # mingw-w64 GCC
+    cmake_build_opts=(--quiet)                                                        # "" is not a valid argument to Ninja.
+    run_tests_target=test
+    build_examples_target="examples"
+    run_examples_target="run-examples"
+  fi
+
+  CTEST_OUTPUT_ON_FAILURE=1 cmake --build . --config "${build_type:?}" --target "${run_tests_target:?}" -- "${cmake_build_opts[@]:-}"
 
   echo "Building examples..."
-  cmake --build . --config "${build_type:?}" --target examples/examples
+  cmake --build . --config "${build_type:?}" --target "${build_examples_target:?}"
   echo "Building examples... done."
 
   # Only run examples if MONGODB_API_VERSION is unset. We do not append
@@ -247,7 +260,7 @@ if [[ "${OSTYPE:?}" =~ cygwin ]]; then
   # is true.
   if [[ -z "$MONGODB_API_VERSION" ]]; then
     echo "Running examples..."
-    if ! cmake --build . --config "${build_type:?}" --target examples/run-examples --parallel 1 -- /verbosity:minimal >|output.txt 2>&1; then
+    if ! cmake --build . --config "${build_type:?}" --target "${run_examples_target:?}" --parallel 1 -- "${cmake_build_opts[@]:-}" >|output.txt 2>&1; then
       # Only emit output on failure.
       cat output.txt
       exit 1
@@ -361,7 +374,7 @@ export CXX="${example_projects_cxx:-"c++"}"
 export CXX_STANDARD="${example_projects_cxx_standard:-11}"
 export ninja_binary
 
-if [[ "$OSTYPE" =~ cygwin ]]; then
+if [[ "${generator:-}" == Visual\ Studio\ * ]]; then
   export MSVC=1
 else
   LD_LIBRARY_PATH="${working_dir:?}/build/install/${LIB_DIR:?}:${LD_LIBRARY_PATH:-}"
