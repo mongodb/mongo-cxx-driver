@@ -36,7 +36,7 @@ TEST_CASE("ownership", "[mongocxx][v1][transaction]") {
     transaction target;
 
     auto const source_secs = secs{123};
-    auto const target_secs = secs{123};
+    auto const target_secs = secs{456};
 
     source.max_commit_time_ms(source_secs);
     target.max_commit_time_ms(target_secs);
