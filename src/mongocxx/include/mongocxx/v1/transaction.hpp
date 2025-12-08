@@ -96,6 +96,8 @@ class transaction {
     ///
     /// Set the "maxCommitTimeMS" field.
     ///
+    /// @note `0` is equivalent to "unset".
+    ///
     MONGOCXX_ABI_EXPORT_CDECL(transaction&) max_commit_time_ms(std::chrono::milliseconds v);
 
     ///
