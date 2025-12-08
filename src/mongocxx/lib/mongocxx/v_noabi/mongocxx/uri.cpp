@@ -47,6 +47,7 @@ std::string to_string_null_safe(char const* str) {
 
 } // namespace
 
+// NOLINTNEXTLINE(cert-err58-cpp): v_noabi backward compatibility.
 std::string const uri::k_default_uri = "mongodb://localhost:27017";
 
 uri::uri(std::unique_ptr<impl>&& implementation) : _impl{std::move(implementation)} {}
