@@ -9,7 +9,7 @@ Checks:
   - -cppcoreguidelines-pro-bounds-pointer-arithmetic # Noise.
   - -cppcoreguidelines-pro-type-union-access # Requires C++17 or newer for `std::variant`.
   - -cppcoreguidelines-pro-type-vararg # Noise.
-WarningsAsErrors: '*,-cert-err58-cpp,-cppcoreguidelines-avoid-do-while,-cppcoreguidelines-avoid-non-const-global-variables,-cppcoreguidelines-pro-type-union-access,-cppcoreguidelines-rvalue-reference-param-not-moved'
+WarningsAsErrors: '*,-cert-err58-cpp,-cppcoreguidelines-avoid-do-while,-cppcoreguidelines-avoid-non-const-global-variables,-cppcoreguidelines-pro-type-union-access'
 HeaderFileExtensions:
   - ''
   - h
