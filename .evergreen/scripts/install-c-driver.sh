@@ -53,11 +53,49 @@ export CMAKE_GENERATOR CMAKE_GENERATOR_PLATFORM
 
 # Install libmongocrypt.
 if [[ "${SKIP_INSTALL_LIBMONGOCRYPT:-}" != "1" ]]; then
-  {
-    echo "Installing libmongocrypt into ${mongoc_dir}..." 1>&2
+  echo "Installing libmongocrypt into ${mongoc_dir}..."
+
+  # Avoid using compile-libmongocrypt.sh (mongo-c-driver) -> compile.sh (libmongocrypt) -> build_all.sh (libmongocrypt),
+  # which hardcodes MSVC-specific compiler flags (-EHsc) and does not support the Ninja Multi-Config generator (see:
+  # references to the USE_NINJA environment variable).
+  if [[ "${OSTYPE:?}" == cygwin && "${CMAKE_GENERATOR:?}" != Visual\ Studio\ * ]]; then
+    (
+      git clone -q --revision=6528eb5cffdf278ec21da952ba2324cc5e2517ac https://github.com/mongodb/libmongocrypt # 1.17.1 or 1.18.0 when released.
+
+      declare -a crypt_cmake_flags=(
+        "-DMONGOCRYPT_MONGOC_DIR=${mongoc_idir:?}"
+        "-DBUILD_TESTING=OFF"
+        "-DENABLE_ONLINE_TESTS=OFF"
+        "-DENABLE_MONGOC=OFF"
+        "-DBUILD_VERSION=1.18.0-dev"
+      )
+
+      . "${mongoc_dir}/.evergreen/scripts/find-ccache.sh"
+      find_ccache_and_export_vars "$(pwd)/libmongocrypt" || true
+      if command -v "${CMAKE_C_COMPILER_LAUNCHER:-}" && [[ "${OSTYPE:?}" == cygwin && "${generator:-}" == Visual\ Studio\ * ]]; then
+        crypt_cmake_flags+=(
+          "-DCMAKE_POLICY_DEFAULT_CMP0141=NEW"
+          "-DCMAKE_MSVC_DEBUG_INFORMATION_FORMAT=Embedded"
+        )
+      fi
+
+      # build_all.sh (libmongocrypt)
+      cmake \
+        "${crypt_cmake_flags[@]:?}" \
+        -D CMAKE_INSTALL_PREFIX="${mongoc_install_idir:?}" \
+        -D CMAKE_BUILD_TYPE=RelWithDebInfo \
+        -S libmongocrypt \
+        -B libmongocrypt/cmake-build
+      cmake --build libmongocrypt/cmake-build --config RelWithDebInfo --target install
+    ) &>output.txt || {
+      cat output.txt >&2
+      exit 1
+    }
+  else
     "${mongoc_dir}/.evergreen/scripts/compile-libmongocrypt.sh" "$(command -v cmake)" "${mongoc_idir}" "${mongoc_install_idir}"
-    echo "Installing libmongocrypt into ${mongoc_dir}... done." 1>&2
-  } >/dev/null
+  fi
+
+  echo "Installing libmongocrypt into ${mongoc_dir}... done."
 fi
 
 declare -a configure_flags=(
