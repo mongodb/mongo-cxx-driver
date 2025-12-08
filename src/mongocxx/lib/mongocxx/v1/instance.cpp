@@ -50,6 +50,7 @@ namespace {
 // 0: no instance object has been created.
 // 1: there is a single instance object.
 // 2: the single instance object has been destroyed.
+// NOLINTNEXTLINE(cppcoreguidelines-avoid-non-const-global-variables): support `code::multiple_instances`.
 std::atomic_int instance_state{0};
 
 void custom_log_handler(

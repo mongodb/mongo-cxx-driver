@@ -38,7 +38,7 @@ namespace v_noabi {
 
 namespace {
 
-// To support mongocxx::v_noabi::instance::current().
+// NOLINTNEXTLINE(cppcoreguidelines-avoid-non-const-global-variables): support `instance::current()`.
 std::atomic<instance*> current_instance{nullptr};
 
 // Sentinel value denoting the current instance has been destroyed.
