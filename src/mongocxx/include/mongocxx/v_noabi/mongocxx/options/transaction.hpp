@@ -18,7 +18,7 @@
 
 //
 
-#include <mongocxx/v1/transaction.hpp> // IWYU pragma: export
+#include <mongocxx/v1/transaction_options.hpp> // IWYU pragma: export
 
 #include <chrono>
 #include <memory> // IWYU pragma: keep: backward compatibility, to be removed.
@@ -42,7 +42,7 @@ namespace options {
 ///
 class transaction {
    private:
-    v1::transaction _txn;
+    v1::transaction_options _txn;
 
    public:
     ///
@@ -78,7 +78,7 @@ class transaction {
     ///
     /// Construct with the @ref mongocxx::v1 equivalent.
     ///
-    /* explicit(false) */ transaction(v1::transaction txn) : _txn{std::move(txn)} {}
+    /* explicit(false) */ transaction(v1::transaction_options txn) : _txn{std::move(txn)} {}
 
     ///
     /// Convert to the @ref mongocxx::v1 equivalent.
@@ -86,14 +86,14 @@ class transaction {
     /// @par Postconditions:
     /// - `*this` is in an assign-or-destroy-only state.
     ///
-    explicit operator v1::transaction() && {
+    explicit operator v1::transaction_options() && {
         return std::move(_txn);
     }
 
     ///
     /// Convert to the @ref mongocxx::v1 equivalent.
     ///
-    explicit operator v1::transaction() const& {
+    explicit operator v1::transaction_options() const& {
         return _txn;
     }
 
@@ -197,15 +197,15 @@ namespace v_noabi {
 ///
 /// Convert to the @ref v_noabi equivalent of `v`.
 ///
-inline v_noabi::options::transaction from_v1(v1::transaction v) {
+inline v_noabi::options::transaction from_v1(v1::transaction_options v) {
     return {std::move(v)};
 }
 
 ///
 /// Convert to the @ref mongocxx::v1 equivalent of `v`.
 ///
-inline v1::transaction to_v1(v_noabi::options::transaction v) {
-    return v1::transaction{std::move(v)};
+inline v1::transaction_options to_v1(v_noabi::options::transaction v) {
+    return v1::transaction_options{std::move(v)};
 }
 
 } // namespace v_noabi
@@ -218,5 +218,5 @@ inline v1::transaction to_v1(v_noabi::options::transaction v) {
 /// Provides @ref mongocxx::v_noabi::options::transaction.
 ///
 /// @par Includes
-/// - @ref mongocxx/v1/transaction.hpp
+/// - @ref mongocxx/v1/transaction_options.hpp
 ///

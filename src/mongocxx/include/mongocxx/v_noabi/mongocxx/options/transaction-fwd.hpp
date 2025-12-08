@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include <mongocxx/v1/transaction-fwd.hpp>
+#include <mongocxx/v1/transaction_options-fwd.hpp> // IWYU pragma: export
 
 #include <mongocxx/config/prelude.hpp>
 
@@ -43,5 +43,5 @@ using v_noabi::options::transaction;
 /// Declares @ref mongocxx::v_noabi::options::transaction.
 ///
 /// @par Includes
-/// - @ref mongocxx/v1/transaction-fwd.hpp
+/// - @ref mongocxx/v1/transaction_options-fwd.hpp
 ///

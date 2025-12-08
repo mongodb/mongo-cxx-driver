@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include <mongocxx/v1/transaction.hpp> // IWYU pragma: export
+#include <mongocxx/v1/transaction_options.hpp> // IWYU pragma: export
 
 //
 
@@ -23,13 +23,13 @@
 namespace mongocxx {
 namespace v1 {
 
-class transaction::internal {
+class transaction_options::internal {
    public:
-    static mongoc_transaction_opt_t const* as_mongoc(transaction const& self);
+    static mongoc_transaction_opt_t const* as_mongoc(transaction_options const& self);
 
-    static void set_read_concern(transaction& self, mongoc_read_concern_t const* v);
-    static void set_read_preference(transaction& self, mongoc_read_prefs_t const* v);
-    static void set_write_concern(transaction& self, mongoc_write_concern_t const* v);
+    static void set_read_concern(transaction_options& self, mongoc_read_concern_t const* v);
+    static void set_read_preference(transaction_options& self, mongoc_read_prefs_t const* v);
+    static void set_write_concern(transaction_options& self, mongoc_write_concern_t const* v);
 };
 
 } // namespace v1

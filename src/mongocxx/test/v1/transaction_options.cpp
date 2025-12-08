@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <mongocxx/v1/transaction.hpp>
+#include <mongocxx/v1/transaction_options.hpp>
 
 //
 
@@ -29,11 +29,11 @@
 namespace mongocxx {
 namespace v1 {
 
-TEST_CASE("ownership", "[mongocxx][v1][transaction]") {
+TEST_CASE("ownership", "[mongocxx][v1][transaction_options]") {
     using secs = std::chrono::seconds;
 
-    transaction source;
-    transaction target;
+    transaction_options source;
+    transaction_options target;
 
     auto const source_secs = secs{123};
     auto const target_secs = secs{456};
@@ -68,8 +68,8 @@ TEST_CASE("ownership", "[mongocxx][v1][transaction]") {
     }
 }
 
-TEST_CASE("default", "[mongocxx][v1][transaction]") {
-    transaction const txn;
+TEST_CASE("default", "[mongocxx][v1][transaction_options]") {
+    transaction_options const txn;
 
     CHECK_FALSE(txn.max_commit_time_ms().has_value());
     CHECK_FALSE(txn.read_concern().has_value());
@@ -77,7 +77,7 @@ TEST_CASE("default", "[mongocxx][v1][transaction]") {
     CHECK_FALSE(txn.write_concern().has_value());
 }
 
-TEST_CASE("max_commit_time_ms", "[mongocxx][v1][transaction]") {
+TEST_CASE("max_commit_time_ms", "[mongocxx][v1][transaction_options]") {
     using msecs = std::chrono::milliseconds;
 
     auto const v = GENERATE(values({
@@ -91,7 +91,7 @@ TEST_CASE("max_commit_time_ms", "[mongocxx][v1][transaction]") {
 
     CAPTURE(v);
 
-    transaction txn;
+    transaction_options txn;
     CHECK_NOTHROW(txn.max_commit_time_ms(v));
 
     // DEFAULT_MAX_COMMIT_TIME_MS (0) is equivalent to "unset".
@@ -104,34 +104,34 @@ TEST_CASE("max_commit_time_ms", "[mongocxx][v1][transaction]") {
     }
 }
 
-TEST_CASE("read_concern", "[mongocxx][v1][transaction]") {
+TEST_CASE("read_concern", "[mongocxx][v1][transaction_options]") {
     auto const v = GENERATE(values({
         read_concern{},
         std::move(read_concern{}.acknowledge_level(read_concern::level::k_majority)),
     }));
     CAPTURE(v.acknowledge_level());
 
-    CHECK(transaction{}.read_concern(v).read_concern() == v);
+    CHECK(transaction_options{}.read_concern(v).read_concern() == v);
 }
 
-TEST_CASE("read_preference", "[mongocxx][v1][transaction]") {
+TEST_CASE("read_preference", "[mongocxx][v1][transaction_options]") {
     auto const v = GENERATE(values({
         read_preference{},
         std::move(read_preference{}.mode(read_preference::read_mode::k_primary_preferred)),
     }));
     CAPTURE(v.mode());
 
-    CHECK(transaction{}.read_preference(v).read_preference() == v);
+    CHECK(transaction_options{}.read_preference(v).read_preference() == v);
 }
 
-TEST_CASE("write_concern", "[mongocxx][v1][transaction]") {
+TEST_CASE("write_concern", "[mongocxx][v1][transaction_options]") {
     auto const v = GENERATE(values({
         write_concern{},
         std::move(write_concern{}.acknowledge_level(write_concern::level::k_majority)),
     }));
     CAPTURE(v.acknowledge_level());
 
-    CHECK(transaction{}.write_concern(v).write_concern() == v);
+    CHECK(transaction_options{}.write_concern(v).write_concern() == v);
 }
 
 } // namespace v1

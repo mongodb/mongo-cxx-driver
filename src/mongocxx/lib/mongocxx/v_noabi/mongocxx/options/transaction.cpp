@@ -16,7 +16,7 @@
 
 //
 
-#include <mongocxx/v1/transaction.hh>
+#include <mongocxx/v1/transaction_options.hh>
 
 #include <chrono>
 #include <utility>
@@ -40,7 +40,7 @@ namespace {
 
 template <typename Transaction>
 Transaction& check_moved_from(Transaction& txn) {
-    if (!v1::transaction::internal::as_mongoc(txn)) {
+    if (!v1::transaction_options::internal::as_mongoc(txn)) {
         throw logic_error{error_code::k_invalid_transaction_options_object};
     }
     return txn;
@@ -56,7 +56,8 @@ transaction& transaction::operator=(transaction const& other) {
 }
 
 transaction& transaction::read_concern(v_noabi::read_concern const& rc) {
-    v1::transaction::internal::set_read_concern(check_moved_from(_txn), v_noabi::read_concern::internal::as_mongoc(rc));
+    v1::transaction_options::internal::set_read_concern(
+        check_moved_from(_txn), v_noabi::read_concern::internal::as_mongoc(rc));
     return *this;
 }
 
@@ -65,7 +66,7 @@ bsoncxx::v_noabi::stdx::optional<v_noabi::read_concern> transaction::read_concer
 }
 
 transaction& transaction::write_concern(v_noabi::write_concern const& wc) {
-    v1::transaction::internal::set_write_concern(
+    v1::transaction_options::internal::set_write_concern(
         check_moved_from(_txn), v_noabi::write_concern::internal::as_mongoc(wc));
     return *this;
 }
@@ -75,7 +76,7 @@ bsoncxx::v_noabi::stdx::optional<v_noabi::write_concern> transaction::write_conc
 }
 
 transaction& transaction::read_preference(v_noabi::read_preference const& rp) {
-    v1::transaction::internal::set_read_preference(
+    v1::transaction_options::internal::set_read_preference(
         check_moved_from(_txn), v_noabi::read_preference::internal::as_mongoc(rp));
     return *this;
 }
@@ -94,7 +95,7 @@ bsoncxx::v_noabi::stdx::optional<std::chrono::milliseconds> transaction::max_com
 }
 
 mongoc_transaction_opt_t const* transaction::internal::as_mongoc(transaction const& self) {
-    return v1::transaction::internal::as_mongoc(check_moved_from(self._txn));
+    return v1::transaction_options::internal::as_mongoc(check_moved_from(self._txn));
 }
 
 } // namespace options

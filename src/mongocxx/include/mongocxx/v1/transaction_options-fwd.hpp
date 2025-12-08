@@ -19,7 +19,7 @@
 namespace mongocxx {
 namespace v1 {
 
-class transaction;
+class transaction_options;
 
 } // namespace v1
 } // namespace mongocxx
@@ -28,5 +28,5 @@ class transaction;
 
 ///
 /// @file
-/// Declares @ref mongocxx::v1::transaction.
+/// Declares @ref mongocxx::v1::transaction_options.
 ///
