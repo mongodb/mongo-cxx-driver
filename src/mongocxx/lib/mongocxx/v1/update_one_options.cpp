@@ -64,6 +64,8 @@ class update_one_options::impl {
     }
 };
 
+// NOLINTBEGIN(cppcoreguidelines-owning-memory): owning void* for ABI stability.
+
 update_one_options::~update_one_options() {
     delete impl::with(this);
 }
@@ -89,6 +91,8 @@ update_one_options& update_one_options::operator=(update_one_options const& othe
 }
 
 update_one_options::update_one_options() : _impl{new impl{}} {}
+
+// NOLINTEND(cppcoreguidelines-owning-memory)
 
 update_one_options& update_one_options::bypass_document_validation(bool bypass_document_validation) {
     impl::with(this)->_bypass_document_validation = bypass_document_validation;

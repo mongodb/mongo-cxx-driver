@@ -60,6 +60,8 @@ class replace_one_options::impl {
     }
 };
 
+// NOLINTBEGIN(cppcoreguidelines-owning-memory): owning void* for ABI stability.
+
 replace_one_options::~replace_one_options() {
     delete impl::with(this);
 }
@@ -86,6 +88,8 @@ replace_one_options& replace_one_options::operator=(replace_one_options const& o
 }
 
 replace_one_options::replace_one_options() : _impl{new impl{}} {}
+
+// NOLINTEND(cppcoreguidelines-owning-memory)
 
 replace_one_options& replace_one_options::bypass_document_validation(bool bypass_document_validation) {
     impl::with(this)->_bypass_document_validation = std::move(bypass_document_validation);
