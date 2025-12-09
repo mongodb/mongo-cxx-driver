@@ -14,13 +14,23 @@
 
 #pragma once
 
-#include <chrono>
-#include <cstdint> // IWYU pragma: keep: backward compatibility, to be removed.
-
 #include <mongocxx/options/find_one_and_replace-fwd.hpp> // IWYU pragma: export
 
+//
+
+#include <bsoncxx/v1/document/value.hpp>
+#include <bsoncxx/v1/types/value.hpp>
+
+#include <mongocxx/v1/find_one_and_replace_options.hpp> // IWYU pragma: export
+
+#include <chrono>
+#include <cstdint> // IWYU pragma: keep: backward compatibility, to be removed.
+#include <utility>
+
+#include <bsoncxx/document/view.hpp>
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/stdx/optional.hpp>
+#include <bsoncxx/types/bson_value/view.hpp>
 #include <bsoncxx/types/bson_value/view_or_value.hpp>
 
 #include <mongocxx/hint.hpp>
@@ -38,6 +48,72 @@ namespace options {
 ///
 class find_one_and_replace {
    public:
+    ///
+    /// Default initialization.
+    ///
+    find_one_and_replace() = default;
+
+    ///
+    /// Construct with the @ref mongocxx::v1 equivalent.
+    ///
+    /* explicit(false) */ MONGOCXX_ABI_EXPORT_CDECL() find_one_and_replace(v1::find_one_and_replace_options opts);
+
+    ///
+    /// Convert to the @ref mongocxx::v1 equivalent.
+    ///
+    explicit operator v1::find_one_and_replace_options() const {
+        using bsoncxx::v_noabi::to_v1;
+        using mongocxx::v_noabi::to_v1;
+
+        v1::find_one_and_replace_options ret;
+
+        if (_bypass_document_validation) {
+            ret.bypass_document_validation(*_bypass_document_validation);
+        }
+
+        if (_collation) {
+            ret.collation(bsoncxx::v1::document::value{to_v1(_collation->view())});
+        }
+
+        if (_hint) {
+            ret.hint(to_v1(*_hint));
+        }
+
+        if (_let) {
+            ret.let(bsoncxx::v1::document::value{to_v1(_let->view())});
+        }
+
+        if (_comment) {
+            ret.comment(bsoncxx::v1::types::value{to_v1(*_comment)});
+        }
+
+        if (_max_time) {
+            ret.max_time(*_max_time);
+        }
+
+        if (_projection) {
+            ret.projection(bsoncxx::v1::document::value{to_v1(_projection->view())});
+        }
+
+        if (_return_document) {
+            ret.return_document(*_return_document);
+        }
+
+        if (_ordering) {
+            ret.sort(bsoncxx::v1::document::value{to_v1(_ordering->view())});
+        }
+
+        if (_upsert) {
+            ret.upsert(*_upsert);
+        }
+
+        if (_write_concern) {
+            ret.write_concern(to_v1(*_write_concern));
+        }
+
+        return ret;
+    }
+
     /// Sets the collation for this operation.
     ///
     /// @param collation
@@ -50,8 +126,10 @@ class find_one_and_replace {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/findAndModify/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(find_one_and_replace&)
-    collation(bsoncxx::v_noabi::document::view_or_value collation);
+    find_one_and_replace& collation(bsoncxx::v_noabi::document::view_or_value collation) {
+        _collation = std::move(collation);
+        return *this;
+    }
 
     ///
     /// Retrieves the current collation for this operation.
@@ -62,8 +140,9 @@ class find_one_and_replace {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/findAndModify/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const&)
-    collation() const;
+    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const& collation() const {
+        return _collation;
+    }
 
     ///
     /// Whether or not to bypass document validation for this operation.
@@ -82,8 +161,10 @@ class find_one_and_replace {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/findAndModify/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(find_one_and_replace&)
-    bypass_document_validation(bool bypass_document_validation);
+    find_one_and_replace& bypass_document_validation(bool bypass_document_validation) {
+        _bypass_document_validation = bypass_document_validation;
+        return *this;
+    }
 
     ///
     /// The current setting for bypassing document validation.
@@ -93,8 +174,9 @@ class find_one_and_replace {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/findAndModify/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bool> const&)
-    bypass_document_validation() const;
+    bsoncxx::v_noabi::stdx::optional<bool> const& bypass_document_validation() const {
+        return _bypass_document_validation;
+    }
 
     ///
     /// Sets the index to use for this operation.
@@ -109,15 +191,19 @@ class find_one_and_replace {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(find_one_and_replace&) hint(mongocxx::v_noabi::hint index_hint);
+    find_one_and_replace& hint(v_noabi::hint index_hint) {
+        _hint = std::move(index_hint);
+        return *this;
+    }
 
     ///
     /// Gets the current hint.
     ///
     /// @return The current hint, if one is set.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::hint> const&)
-    hint() const;
+    bsoncxx::v_noabi::stdx::optional<v_noabi::hint> const& hint() const {
+        return _hint;
+    }
 
     ///
     /// Set the value of the let option.
@@ -129,8 +215,10 @@ class find_one_and_replace {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(find_one_and_replace&)
-    let(bsoncxx::v_noabi::document::view_or_value let);
+    find_one_and_replace& let(bsoncxx::v_noabi::document::view_or_value let) {
+        _let = std::move(let);
+        return *this;
+    }
 
     ///
     /// Gets the current value of the let option.
@@ -138,8 +226,9 @@ class find_one_and_replace {
     /// @return
     ///  The current let option.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const)
-    let() const;
+    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const let() const {
+        return _let;
+    }
 
     ///
     /// Set the value of the comment option.
@@ -151,8 +240,10 @@ class find_one_and_replace {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(find_one_and_replace&)
-    comment(bsoncxx::v_noabi::types::bson_value::view_or_value comment);
+    find_one_and_replace& comment(bsoncxx::v_noabi::types::bson_value::view_or_value comment) {
+        _comment = std::move(comment);
+        return *this;
+    }
 
     ///
     /// Gets the current value of the comment option.
@@ -160,8 +251,9 @@ class find_one_and_replace {
     /// @return
     ///  The current comment option.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value> const)
-    comment() const;
+    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value> const comment() const {
+        return _comment;
+    }
 
     ///
     /// Sets the maximum amount of time for this operation to run (server-side) in milliseconds.
@@ -176,7 +268,10 @@ class find_one_and_replace {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/findAndModify/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(find_one_and_replace&) max_time(std::chrono::milliseconds max_time);
+    find_one_and_replace& max_time(std::chrono::milliseconds max_time) {
+        _max_time = max_time;
+        return *this;
+    }
 
     ///
     /// The current max_time setting.
@@ -186,8 +281,9 @@ class find_one_and_replace {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/findAndModify/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<std::chrono::milliseconds> const&)
-    max_time() const;
+    bsoncxx::v_noabi::stdx::optional<std::chrono::milliseconds> const& max_time() const {
+        return _max_time;
+    }
 
     ///
     /// Sets a projection, which limits the fields to return.
@@ -202,8 +298,10 @@ class find_one_and_replace {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/findAndModify/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(find_one_and_replace&)
-    projection(bsoncxx::v_noabi::document::view_or_value projection);
+    find_one_and_replace& projection(bsoncxx::v_noabi::document::view_or_value projection) {
+        _projection = std::move(projection);
+        return *this;
+    }
 
     ///
     /// Gets the current projection for this operation.
@@ -213,8 +311,9 @@ class find_one_and_replace {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/findAndModify/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const&)
-    projection() const;
+    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const& projection() const {
+        return _projection;
+    }
 
     ///
     /// Set the desired version of the replaced document to return, either the original
@@ -231,8 +330,10 @@ class find_one_and_replace {
     /// - https://www.mongodb.com/docs/manual/reference/command/findAndModify/
     /// - @ref mongocxx::v_noabi::options::return_document
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(find_one_and_replace&)
-    return_document(return_document return_document);
+    find_one_and_replace& return_document(return_document return_document) {
+        _return_document = return_document;
+        return *this;
+    }
 
     ///
     /// Which version of the replaced document to return.
@@ -243,8 +344,9 @@ class find_one_and_replace {
     /// - https://www.mongodb.com/docs/manual/reference/command/findAndModify/
     /// - @ref mongocxx::v_noabi::options::return_document
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::options::return_document> const&)
-    return_document() const;
+    bsoncxx::v_noabi::stdx::optional<v_noabi::options::return_document> const& return_document() const {
+        return _return_document;
+    }
 
     ///
     /// Sets the order by which to search the collection for a matching document.
@@ -262,8 +364,10 @@ class find_one_and_replace {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/findAndModify/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(find_one_and_replace&)
-    sort(bsoncxx::v_noabi::document::view_or_value ordering);
+    find_one_and_replace& sort(bsoncxx::v_noabi::document::view_or_value ordering) {
+        _ordering = std::move(ordering);
+        return *this;
+    }
 
     ///
     /// Gets the current sort ordering.
@@ -273,8 +377,9 @@ class find_one_and_replace {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/findAndModify/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const&)
-    sort() const;
+    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const& sort() const {
+        return _ordering;
+    }
 
     ///
     /// Sets the upsert flag on the operation. When @c true, the operation creates a new document if
@@ -291,7 +396,10 @@ class find_one_and_replace {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/findAndModify/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(find_one_and_replace&) upsert(bool upsert);
+    find_one_and_replace& upsert(bool upsert) {
+        _upsert = upsert;
+        return *this;
+    }
 
     ///
     /// Gets the current upsert setting.
@@ -301,7 +409,9 @@ class find_one_and_replace {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/findAndModify/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bool> const&) upsert() const;
+    bsoncxx::v_noabi::stdx::optional<bool> const& upsert() const {
+        return _upsert;
+    }
 
     ///
     /// Sets the write concern for this operation.
@@ -316,8 +426,10 @@ class find_one_and_replace {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/findAndModify/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(find_one_and_replace&)
-    write_concern(mongocxx::v_noabi::write_concern write_concern);
+    find_one_and_replace& write_concern(v_noabi::write_concern write_concern) {
+        _write_concern = std::move(write_concern);
+        return *this;
+    }
 
     ///
     /// Gets the current write concern.
@@ -328,24 +440,45 @@ class find_one_and_replace {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/findAndModify/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern> const&)
-    write_concern() const;
+    bsoncxx::v_noabi::stdx::optional<v_noabi::write_concern> const& write_concern() const {
+        return _write_concern;
+    }
 
    private:
     bsoncxx::v_noabi::stdx::optional<bool> _bypass_document_validation;
     bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> _collation;
-    bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::hint> _hint;
+    bsoncxx::v_noabi::stdx::optional<v_noabi::hint> _hint;
     bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> _let;
     bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value> _comment;
     bsoncxx::v_noabi::stdx::optional<std::chrono::milliseconds> _max_time;
     bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> _projection;
-    bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::options::return_document> _return_document;
+    bsoncxx::v_noabi::stdx::optional<v_noabi::options::return_document> _return_document;
     bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> _ordering;
     bsoncxx::v_noabi::stdx::optional<bool> _upsert;
-    bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern> _write_concern;
+    bsoncxx::v_noabi::stdx::optional<v_noabi::write_concern> _write_concern;
 };
 
 } // namespace options
+} // namespace v_noabi
+} // namespace mongocxx
+
+namespace mongocxx {
+namespace v_noabi {
+
+///
+/// Convert to the @ref mongocxx::v_noabi equivalent of `v`.
+///
+inline v_noabi::options::find_one_and_replace from_v1(v1::find_one_and_replace_options v) {
+    return {std::move(v)};
+}
+
+///
+/// Convert to the @ref mongocxx::v1 equivalent of `v`.
+///
+inline v1::find_one_and_replace_options to_v1(v_noabi::options::find_one_and_replace const& v) {
+    return v1::find_one_and_replace_options{v};
+}
+
 } // namespace v_noabi
 } // namespace mongocxx
 
@@ -354,4 +487,7 @@ class find_one_and_replace {
 ///
 /// @file
 /// Provides @ref mongocxx::v_noabi::options::find_one_and_replace.
+///
+/// @par Includes
+/// - @ref mongocxx/v1/find_one_and_replace_options.hpp
 ///
