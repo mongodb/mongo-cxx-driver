@@ -14,12 +14,21 @@
 
 #pragma once
 
-#include <memory>
-
 #include <mongocxx/change_stream-fwd.hpp> // IWYU pragma: export
-#include <mongocxx/client-fwd.hpp>
-#include <mongocxx/collection-fwd.hpp>
-#include <mongocxx/database-fwd.hpp>
+
+//
+
+#include <mongocxx/v1/change_stream.hpp> // IWYU pragma: export
+
+#include <cstdint>
+#include <iterator>
+#include <memory> // IWYU pragma: keep: backward compatibility, to be removed.
+#include <type_traits>
+#include <utility>
+
+#include <mongocxx/client-fwd.hpp>     // IWYU pragma: keep: backward compatibility, to be removed.
+#include <mongocxx/collection-fwd.hpp> // IWYU pragma: keep: backward compatibility, to be removed.
+#include <mongocxx/database-fwd.hpp>   // IWYU pragma: keep: backward compatibility, to be removed.
 
 #include <bsoncxx/document/view.hpp>
 #include <bsoncxx/stdx/optional.hpp>
@@ -33,6 +42,10 @@ namespace v_noabi {
 /// A MongoDB change stream.
 ///
 class change_stream {
+   private:
+    v1::change_stream _stream;
+    bsoncxx::v_noabi::document::view _doc;
+
    public:
     /// A change stream iterator.
     class iterator;
@@ -48,9 +61,41 @@ class change_stream {
     MONGOCXX_ABI_EXPORT_CDECL(change_stream&) operator=(change_stream&& other) noexcept;
 
     ///
+    /// This class is not copyable.
+    ///
+    change_stream(change_stream const& other) = delete;
+
+    ///
+    /// This class is not copyable.
+    ///
+    change_stream& operator=(change_stream const& other) = delete;
+
+    ///
     /// Destroys a change_stream.
     ///
     MONGOCXX_ABI_EXPORT_CDECL() ~change_stream();
+
+    ///
+    /// Construct with the @ref mongocxx::v1 equivalent.
+    ///
+    /* explicit(false) */ change_stream(v1::change_stream stream) : _stream{std::move(stream)} {}
+
+    ///
+    /// Convert to the @ref bsoncxx::v1 equivalent.
+    ///
+    /// @par Postconditions:
+    /// - `other` is in an assign-or-destroy-only state.
+    ///
+    /// @warning Invalidates all associated iterators and views.
+    ///
+    explicit operator v1::change_stream() && {
+        return std::move(_stream);
+    }
+
+    ///
+    /// This class is not copyable.
+    ///
+    explicit operator v1::change_stream() const& = delete;
 
     ///
     /// A change_stream::iterator points to the beginning of any
@@ -71,6 +116,8 @@ class change_stream {
     ///   The change_stream::iterator
     /// @exception
     ///   Throws mongocxx::v_noabi::query_exception if the query failed.
+    ///
+    /// @warning This function is NOT logically const despite the const-qualifier.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(iterator) begin() const;
 
@@ -107,20 +154,9 @@ class change_stream {
     /// @return
     ///   The token.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view>)
-    get_resume_token() const;
-
-   private:
-    friend ::mongocxx::v_noabi::client;
-    friend ::mongocxx::v_noabi::collection;
-    friend ::mongocxx::v_noabi::database;
-
-    friend ::mongocxx::v_noabi::change_stream::iterator;
-
-    change_stream(void* change_stream_ptr);
-
-    class impl;
-    std::unique_ptr<impl> _impl;
+    bsoncxx::v1::stdx::optional<bsoncxx::v_noabi::document::view> get_resume_token() const {
+        return _stream.get_resume_token();
+    }
 };
 
 ///
@@ -148,6 +184,9 @@ class change_stream::iterator {
     /// The returned document::view is valid until the iterator is incremented. The value may be
     /// copied to extend its lifetime.
     ///
+    /// @par Preconditions:
+    /// - `*this` does not compare equal to the end iterator.
+    ///
     MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::document::view const&) operator*() const;
 
     ///
@@ -155,6 +194,9 @@ class change_stream::iterator {
     ///
     /// The returned document::view is valid until the iterator is incremented. The value may be
     /// copied to extend its lifetime.
+    ///
+    /// @par Preconditions:
+    /// - `*this` does not compare equal to the end iterator.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::document::view const*) operator->() const;
 
@@ -186,7 +228,9 @@ class change_stream::iterator {
     ///
     /// @throws mongocxx::v_noabi::query_exception if the query failed
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(void) operator++(int);
+    void operator++(int) {
+        this->operator++();
+    }
 
     ///
     /// @relates bsoncxx::v_noabi::change_stream::iterator
@@ -198,28 +242,39 @@ class change_stream::iterator {
     ///
     /// @{
     friend MONGOCXX_ABI_EXPORT_CDECL(bool) operator==(
-        change_stream::iterator const&,
-        change_stream::iterator const&) noexcept;
+        change_stream::iterator const& lhs,
+        change_stream::iterator const& rhs) noexcept;
 
-    friend MONGOCXX_ABI_EXPORT_CDECL(bool) operator!=(
-        change_stream::iterator const&,
-        change_stream::iterator const&) noexcept;
+    friend bool operator!=(change_stream::iterator const& lhs, change_stream::iterator const& rhs) noexcept {
+        return !(lhs == rhs);
+    }
     /// @}
     ///
 
    private:
-    friend ::mongocxx::v_noabi::change_stream;
+    friend change_stream;
 
-    enum class iter_type { k_tracking, k_default_constructed, k_end };
-
-    explicit iterator(iter_type type, change_stream const* change_stream);
+    explicit iterator(change_stream* change_stream, bool is_end);
 
     bool is_exhausted() const;
 
-    // iter_type==k_default_constructed is equivalent to _change_stream==nullptr
-    iter_type _type;
-    change_stream const* _change_stream;
+    change_stream* _change_stream;
+    bool _is_end;
 };
+
+///
+/// Convert to the @ref mongocxx::v_noabi equivalent of `v`.
+///
+inline v_noabi::change_stream from_v1(v1::change_stream v) {
+    return {std::move(v)};
+}
+
+///
+/// Convert to the @ref mongocxx::v1 equivalent of `v`.
+///
+inline v1::change_stream to_v1(v_noabi::change_stream v) {
+    return v1::change_stream{std::move(v)};
+}
 
 } // namespace v_noabi
 } // namespace mongocxx
@@ -229,4 +284,7 @@ class change_stream::iterator {
 ///
 /// @file
 /// Provides @ref mongocxx::v_noabi::change_stream.
+///
+/// @par Includes
+/// - @ref mongocxx/v1/change_stream.hpp
 ///

@@ -114,6 +114,11 @@ class change_stream {
     /// @returns Empty document when not available.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view>) get_resume_token() const;
+
+    class internal;
+
+   private:
+    /* explicit(false) */ change_stream(void* impl);
 };
 
 ///
@@ -272,6 +277,8 @@ class change_stream::options {
     ///
     MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::types::b_timestamp>) start_at_operation_time()
         const;
+
+    class internal;
 };
 
 ///
@@ -408,6 +415,11 @@ class change_stream::iterator {
     friend bool operator!=(iterator const& lhs, iterator const& rhs) {
         return !(lhs == rhs);
     }
+
+    class internal;
+
+   private:
+    /* explicit(false) */ iterator(void* impl);
 };
 
 inline change_stream::iterator change_stream::end() const {

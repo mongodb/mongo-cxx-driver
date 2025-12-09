@@ -103,6 +103,7 @@ set(mongocxx_test_sources_v1
     v1/aggregate_options.cpp
     v1/apm.cpp
     v1/bsoncxx.cpp
+    v1/change_stream.cpp
     v1/count_options.cpp
     v1/data_key_options.cpp
     v1/delete_many_options.cpp

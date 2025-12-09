@@ -12,15 +12,24 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <string>
-
 #include <mongocxx/change_stream.hpp>
 
-#include <mongocxx/change_stream.hh>
+//
+
+#include <mongocxx/v1/detail/macros.hpp>
+#include <mongocxx/v1/server_error.hpp>
+
+#include <mongocxx/v1/change_stream.hh>
+
+#include <type_traits>
+
+#include <bsoncxx/document/view.hpp>
+
+#include <mongocxx/exception/query_exception.hpp>
+
+#include <mongocxx/mongoc_error.hh>
 
 #include <bsoncxx/private/make_unique.hh>
-
-#include <mongocxx/private/mongoc.hh>
 
 namespace mongocxx {
 namespace v_noabi {
@@ -45,84 +54,87 @@ change_stream& change_stream::operator=(change_stream&&) noexcept = default;
 change_stream::~change_stream() = default;
 
 change_stream::iterator change_stream::begin() const {
-    if (_impl->is_dead()) {
-        return end();
+    if (v1::change_stream::internal::is_dead(_stream)) {
+        return this->end();
     }
-    return iterator{change_stream::iterator::iter_type::k_tracking, this};
+    // Backward compatibility: `begin()` is not logically const.
+    return iterator{const_cast<change_stream*>(this), false};
 }
 
 change_stream::iterator change_stream::end() const {
-    return iterator{change_stream::iterator::iter_type::k_end, this};
+    // Backward compatibility: `begin()` is not logically const.
+    return iterator{const_cast<change_stream*>(this), true};
 }
 
-bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view> change_stream::get_resume_token() const {
-    return _impl->get_resume_token();
-}
-
-// void* since we don't leak C driver defs into C++ driver
-change_stream::change_stream(void* change_stream_ptr)
-    : _impl(bsoncxx::make_unique<impl>(static_cast<mongoc_change_stream_t*>(change_stream_ptr))) {}
-
-change_stream::iterator::iterator() : change_stream::iterator::iterator{iter_type::k_default_constructed, nullptr} {}
+change_stream::iterator::iterator() : iterator{nullptr, true} {}
 
 bsoncxx::v_noabi::document::view const& change_stream::iterator::operator*() const {
-    return _change_stream->_impl->doc();
+    return _change_stream->_doc;
 }
 
 bsoncxx::v_noabi::document::view const* change_stream::iterator::operator->() const {
-    return std::addressof(_change_stream->_impl->doc());
+    return std::addressof(_change_stream->_doc);
 }
 
 change_stream::iterator& change_stream::iterator::operator++() {
-    if (_type == iter_type::k_tracking) {
-        _change_stream->_impl->advance_iterator();
+    if (_change_stream) {
+        try {
+            v1::change_stream::internal::advance_iterator(_change_stream->_stream);
+        } catch (v1::exception const& ex) {
+            _change_stream->_doc = {};
+            throw_exception<v_noabi::query_exception>(ex);
+        }
+
+        // Backward compatibility: support `*iter -> T const&`.
+        _change_stream->_doc = v1::change_stream::internal::doc(_change_stream->_stream);
     }
     return *this;
 }
 
-void change_stream::iterator::operator++(int) {
-    operator++();
-}
+change_stream::iterator::iterator(change_stream* change_stream, bool is_end)
+    : _change_stream{change_stream},
+      _is_end{change_stream ? is_end : true} // `_change_stream == nullptr` implies `_is_end == true`.
+{
+    if (!is_end) {
+        // Backward compatibility: do not advance on consecutive calls to `.begin()`.
+        if (v1::change_stream::internal::is_active(_change_stream->_stream)) {
+            return;
+        }
 
-change_stream::iterator::iterator(iter_type const type, change_stream const* change_stream)
-    : _type{type}, _change_stream{change_stream} {
-    if (type != iter_type::k_tracking || _change_stream->_impl->has_started()) {
-        return;
+        try {
+            // Advance to first event on begin() to keep operator*() state-machine-free.
+            v1::change_stream::internal::advance_iterator(_change_stream->_stream);
+        } catch (v1::exception const& ex) {
+            _change_stream->_doc = {};
+            throw_exception<v_noabi::query_exception>(ex);
+        }
+
+        // Backward compatibility: support `*iter -> T const&`.
+        _change_stream->_doc = v1::change_stream::internal::doc(_change_stream->_stream);
     }
-
-    _change_stream->_impl->mark_started();
-    // Advance to first event on begin() to keep operator*() state-machine-free.
-    operator++();
 }
 
-// Care about the underlying change_stream being the same so we can
-// support a collection of iterators for change streams from different
-// collections.
 bool operator==(change_stream::iterator const& lhs, change_stream::iterator const& rhs) noexcept {
-    // Tracking different streams never equal.
+    // Backward compatibility: different underlying streams never compare equal, even for end iterators.
     if (lhs._change_stream != rhs._change_stream) {
         return false;
     }
-    // User-constructed:
-    if (rhs._change_stream == nullptr) {
-        return lhs._change_stream == nullptr;
-    }
-    // Both end or tracking:
-    if (rhs._type == lhs._type) {
-        return rhs.is_exhausted() == lhs.is_exhausted();
-    }
-    return
-        // Either one side is .end()-constructed, and the other is exhausted
-        ((lhs._type == change_stream::iterator::iter_type::k_end) && rhs.is_exhausted()) ||
-        ((rhs._type == change_stream::iterator::iter_type::k_end) && lhs.is_exhausted());
-}
 
-bool operator!=(change_stream::iterator const& lhs, change_stream::iterator const& rhs) noexcept {
-    return !(lhs == rhs);
+    // One is an end iterator and the other is exhausted.
+    if (!lhs._is_end != !rhs._is_end) {
+        return (lhs._change_stream ? lhs : rhs).is_exhausted();
+    }
+
+    // Both are end iterators (null) or both are active iterators.
+    return true;
 }
 
 bool change_stream::iterator::is_exhausted() const {
-    return _change_stream->_impl->is_exhausted();
+    if (_change_stream) {
+        return !v1::change_stream::internal::is_active(_change_stream->_stream);
+    }
+
+    MONGOCXX_PRIVATE_UNREACHABLE; // scan-build: warning: Forming reference to null pointer [core.NonNullParamChecker]
 }
 
 } // namespace v_noabi
