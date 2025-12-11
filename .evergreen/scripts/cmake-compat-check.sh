@@ -72,7 +72,7 @@ printf " - %s\n" "${cmake_flags[@]:?}"
 echo "Importing C++ Driver via find_package()..."
 {
   cat >|CMakeLists.txt <<DOC
-cmake_minimum_required(VERSION 3.15...4.0)
+cmake_minimum_required(VERSION 3.15...4.99)
 project(cmake-compat)
 
 find_package(mongocxx REQUIRED)
@@ -93,7 +93,7 @@ echo "Importing C++ Driver via find_package()... done."
 echo "Importing C++ Driver via add_subdirectory()..."
 {
   cat >|CMakeLists.txt <<DOC
-cmake_minimum_required(VERSION 3.15...4.0)
+cmake_minimum_required(VERSION 3.15...4.99)
 project(cmake-compat)
 
 set(ENABLE_EXAMPLES OFF)

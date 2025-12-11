@@ -15,11 +15,23 @@ if ! pkg-config --cflags libmongocxx | grep -v -q -- -DMONGOCXX_STATIC; then
   exit 1
 fi
 
+compile_flags=(
+  "-std=c++${CXX_STANDARD:?}"
+  -Wall -Wextra -Werror
+  ${CXXFLAGS:-}
+  $(pkg-config --cflags libmongocxx)
+)
+
+link_flags=(
+  ${LDFLAGS:-}
+  $(pkg-config --libs libmongocxx)
+)
+
+echo "Compiling with: ${compile_flags[*]}"
+echo "Linking with: ${link_flags[*]}"
+
 rm -rf build/*
 cd build
-
-"${CXX:?}" $CXXFLAGS -Wall -Wextra -Werror -std="c++${CXX_STANDARD:?}" -c -o hello_mongocxx.o ../../../hello_mongocxx.cpp $(pkg-config --cflags libmongocxx)
-
-"${CXX:?}" $LDFLAGS -std="c++${CXX_STANDARD:?}" -o hello_mongocxx hello_mongocxx.o $(pkg-config --libs libmongocxx)
-
+"${CXX:?}" "${compile_flags[@]:?}" -o hello_mongocxx.o -c ../../../hello_mongocxx.cpp
+"${CXX:?}" -o hello_mongocxx hello_mongocxx.o "${link_flags[@]:?}"
 ./hello_mongocxx
