@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include "mongocxx/private/scoped_bson.hh"
 #include <mongocxx/v1/detail/macros.hpp>
 
 #include <mongocxx/test/v_noabi/catch_helpers.hh>
@@ -3481,7 +3482,7 @@ TEST_CASE("16. Rewrap. Case 2: RewrapManyDataKeyOpts.provider is not optional", 
         Catch::Matchers::ContainsSubstring("expected 'provider' to be set to identify type of 'master_key'"));
 }
 
-TEST_CASE("Text Explicit Encryption", "[client_side_encryption]") {
+TEST_CASE("27. Text Explicit Encryption", "[client_side_encryption]") {
     CLIENT_SIDE_ENCRYPTION_ENABLED_OR_SKIP();
 
     mongocxx::client conn{
@@ -3489,8 +3490,8 @@ TEST_CASE("Text Explicit Encryption", "[client_side_encryption]") {
         test_util::add_test_server_api(),
     };
 
-    if (!test_util::server_version_is_at_least("8.1")) {
-        SKIP("MongoDB server 8.1 or newer required");
+    if (!test_util::server_version_is_at_least("8.2")) {
+        SKIP("MongoDB server 8.2 or newer required");
     }
 
     if (test_util::get_topology() == "single") {
@@ -3563,20 +3564,102 @@ TEST_CASE("Text Explicit Encryption", "[client_side_encryption]") {
         auto cursor = client_prefix_suffix.find(query.view());
         auto const found = std::vector<bsoncxx::document::value>(cursor.begin(), cursor.end());
         REQUIRE(found.size() == 1);
-        REQUIRE(found == std::vector{foobarbaz_doc});
-        std::cout << bsoncxx::to_json(found[0].view()) << std::endl;
-        // TODO expected
+        const auto expected = mongocxx::scoped_bson({R"({ "encryptedText": "foobarbaz" })"});
+        CHECK(test_util::matches(found[0].view(), expected.view()));
     }
 
-    SECTION("can find a document by suffix") {}
+    SECTION("can find a document by suffix") {
+        auto const encrypt_opts = default_encrypt_opts()
+                                      .query_type(options::encrypt::encryption_query_type::k_suffixPreview)
+                                      .text_opts(default_text_opts().suffix_opts(suffix_opts));
+        auto const encrypted_baz = client_encryption.encrypt(make_value("baz"), encrypt_opts);
+        auto const query = make_document(kvp(
+            "$expr",
+            make_document(kvp(
+                "$encStrEndsWith", make_document(kvp("input", "$encryptedText"), kvp("suffix", encrypted_baz))))));
 
-    SECTION("assert no document found by prefix") {}
+        auto cursor = client_prefix_suffix.find(query.view());
+        auto const found = std::vector<bsoncxx::document::value>(cursor.begin(), cursor.end());
+        REQUIRE(found.size() == 1);
+        const auto expected = mongocxx::scoped_bson({R"({ "encryptedText": "foobarbaz" })"});
+        CHECK(test_util::matches(found[0].view(), expected.view()));
+    }
 
-    SECTION("assert no document found by suffix") {}
+    SECTION("assert no document found by prefix") {
+        auto const encrypt_opts = default_encrypt_opts()
+                                      .query_type(options::encrypt::encryption_query_type::k_prefixPreview)
+                                      .text_opts(default_text_opts().prefix_opts(prefix_opts));
+        auto const encrypted_baz = client_encryption.encrypt(make_value("baz"), encrypt_opts);
+        auto const query = make_document(kvp(
+            "$expr",
+            make_document(kvp(
+                "$encStrStartsWith", make_document(kvp("input", "$encryptedText"), kvp("prefix", encrypted_baz))))));
 
-    SECTION("can find a document by substring") {}
+        auto cursor = client_prefix_suffix.find(query.view());
+        auto const found = std::vector<bsoncxx::document::value>(cursor.begin(), cursor.end());
+        REQUIRE(found.size() == 0);
+    }
 
-    SECTION("assert no document found by substring") {}
+    SECTION("assert no document found by suffix") {
+        auto const encrypt_opts = default_encrypt_opts()
+                                      .query_type(options::encrypt::encryption_query_type::k_suffixPreview)
+                                      .text_opts(default_text_opts().suffix_opts(suffix_opts));
+        auto const encrypted_foo = client_encryption.encrypt(make_value("foo"), encrypt_opts);
+        auto const query = make_document(kvp(
+            "$expr",
+            make_document(kvp(
+                "$encStrEndsWith", make_document(kvp("input", "$encryptedText"), kvp("suffix", encrypted_foo))))));
+
+        auto cursor = client_prefix_suffix.find(query.view());
+        auto const found = std::vector<bsoncxx::document::value>(cursor.begin(), cursor.end());
+        REQUIRE(found.size() == 0);
+    }
+
+    SECTION("can find a document by substring") {
+        auto const encrypt_opts = default_encrypt_opts()
+                                      .query_type(options::encrypt::encryption_query_type::k_substringPreview)
+                                      .text_opts(default_text_opts().substring_opts(substring_opts));
+        auto const encrypted_bar = client_encryption.encrypt(make_value("bar"), encrypt_opts);
+        auto const query = make_document(kvp(
+            "$expr",
+            make_document(kvp(
+                "$encStrContains", make_document(kvp("input", "$encryptedText"), kvp("substring", encrypted_bar))))));
+
+        auto cursor = client_substring.find(query.view());
+        auto const found = std::vector<bsoncxx::document::value>(cursor.begin(), cursor.end());
+        REQUIRE(found.size() == 1);
+        const auto expected = mongocxx::scoped_bson({R"({ "encryptedText": "foobarbaz" })"});
+        CHECK(test_util::matches(found[0].view(), expected.view()));
+    }
+
+    SECTION("assert no document found by substring") {
+        auto const encrypt_opts = default_encrypt_opts()
+                                      .query_type(options::encrypt::encryption_query_type::k_substringPreview)
+                                      .text_opts(default_text_opts().substring_opts(substring_opts));
+        auto const encrypted_qux = client_encryption.encrypt(make_value("qux"), encrypt_opts);
+        auto const query = make_document(kvp(
+            "$expr",
+            make_document(kvp(
+                "$encStrContains", make_document(kvp("input", "$encryptedText"), kvp("substring", encrypted_qux))))));
+
+        auto cursor = client_substring.find(query.view());
+        auto const found = std::vector<bsoncxx::document::value>(cursor.begin(), cursor.end());
+        REQUIRE(found.size() == 0);
+    }
+
+    SECTION("assert contentionFactor is required") {
+        // Test that encrypting without contentionFactor throws an error
+        auto const encrypt_opts_without_contention =
+            options::encrypt()
+                .key_id(key1_id)
+                .algorithm(options::encrypt::encryption_algorithm::k_textPreview)
+                .query_type(options::encrypt::encryption_query_type::k_prefixPreview)
+                .text_opts(default_text_opts().prefix_opts(prefix_opts));
+
+        REQUIRE_THROWS_WITH(
+            client_encryption.encrypt(make_value("foo"), encrypt_opts_without_contention),
+            Catch::Matchers::ContainsSubstring("contention factor is required for textPreview algorithm"));
+    }
 }
 
 } // namespace
