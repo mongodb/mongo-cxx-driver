@@ -323,14 +323,14 @@ TEST_CASE("begin", "[mongocxx][v1][change_stream]") {
         CHECK(data.error_document_count == 0);
 
         auto const i2 = stream.begin();
-        CHECK(data.next_count == 2);
+        CHECK(data.next_count == 1);
         CHECK(data.error_document_count == 0);
 
         CHECK(i1 == i2);
         CHECK(i1 != stream.end());
         CHECK(i2 != stream.end());
 
-        CHECK(data.next_count == 2);
+        CHECK(data.next_count == 1);
         CHECK(data.error_document_count == 0);
     }
 
@@ -360,32 +360,38 @@ TEST_CASE("begin", "[mongocxx][v1][change_stream]") {
         CHECK(data.next_count == 0);
         CHECK(data.error_document_count == 0);
 
-        auto iter = stream.begin();
+        {
+            auto const iter = stream.begin();
 
-        CHECK(change_stream::internal::is_resumable(stream));
-        CHECK(change_stream::internal::doc(stream) == empty);
-        CHECK(data.next_count == 1);
-        CHECK(data.error_document_count == 1);
-        CHECK(iter == stream.end());
-        CHECK(iter->empty());
+            CHECK(change_stream::internal::is_resumable(stream));
+            CHECK(change_stream::internal::doc(stream) == empty);
+            CHECK(data.next_count == 1);
+            CHECK(data.error_document_count == 1);
+            CHECK(iter == stream.end());
+            CHECK(iter->empty());
+        }
 
-        CHECK_NOTHROW(++iter);
+        {
+            auto const iter = stream.begin();
 
-        CHECK(change_stream::internal::is_resumable(stream));
-        CHECK(change_stream::internal::doc(stream) == empty);
-        CHECK(data.next_count == 2);
-        CHECK(data.error_document_count == 2);
-        CHECK(iter == stream.end());
-        CHECK(iter->empty());
+            CHECK(change_stream::internal::is_resumable(stream));
+            CHECK(change_stream::internal::doc(stream) == empty);
+            CHECK(data.next_count == 2);
+            CHECK(data.error_document_count == 2);
+            CHECK(iter == stream.end());
+            CHECK(iter->empty());
+        }
 
-        CHECK_NOTHROW(++iter);
+        {
+            auto const iter = stream.begin();
 
-        CHECK(change_stream::internal::is_active(stream));
-        CHECK(change_stream::internal::doc(stream) == data.doc.view());
-        CHECK(data.next_count == 3);
-        CHECK(data.error_document_count == 2);
-        CHECK(iter != stream.end());
-        CHECK(*iter == data.doc.view());
+            CHECK(change_stream::internal::is_active(stream));
+            CHECK(change_stream::internal::doc(stream) == data.doc.view());
+            CHECK(data.next_count == 3);
+            CHECK(data.error_document_count == 2);
+            CHECK(iter != stream.end());
+            CHECK(*iter == data.doc.view());
+        }
     }
 
     SECTION("error document") {

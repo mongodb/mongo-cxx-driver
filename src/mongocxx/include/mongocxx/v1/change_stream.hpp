@@ -95,7 +95,9 @@ class change_stream {
     ///
     /// @important All iterators associated with the same change stream object share the same state.
     ///
-    /// This function advances the underlying cursor to obtain the next (first) event document.
+    /// This function advances the underlying cursor to obtain the first available event document. The underlying cursor
+    /// is only advanced at most once: consecutive calls to `this->begin()` do not advance the underlying cursor state.
+    /// To obtain subsequent available event documents, the resulting iterator must be incremented instead.
     ///
     /// @throws mongocxx::v1::server_error when a server-side error is encountered.
     ///

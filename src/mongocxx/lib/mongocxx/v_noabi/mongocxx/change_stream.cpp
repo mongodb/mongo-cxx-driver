@@ -96,7 +96,7 @@ change_stream::iterator::iterator(change_stream* change_stream, bool is_end)
       _is_end{change_stream ? is_end : true} // `_change_stream == nullptr` implies `_is_end == true`.
 {
     if (!is_end) {
-        // Backward compatibility: do not advance on consecutive calls to `.begin()`.
+        // Do not advance on consecutive calls to `.begin()`.
         if (v1::change_stream::internal::is_active(_change_stream->_stream)) {
             return;
         }

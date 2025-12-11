@@ -41,7 +41,7 @@ namespace {
 
 enum class state {
     is_active,    // An event document is available after last iteration.
-    is_resumable, // No event document(s) after last iteration (end).
+    is_resumable, // No event document is available after last iteration (end).
     is_dead,      // Change stream encountered an irrecoverable error (end).
 };
 
@@ -100,10 +100,14 @@ change_stream& change_stream::operator=(change_stream&& other) noexcept {
 
 change_stream::iterator change_stream::begin() {
     switch (impl::with(this)->_state) {
-        case state::is_active:
+        case state::is_active: {
+            // Do not advance on consecutive calls to `.begin()`.
+            return iterator::internal::make(this);
+        }
+
         case state::is_resumable: {
             auto iter = iterator::internal::make(this);
-            ++iter; // Obtain the next (first) event document.
+            ++iter; // Obtain the first available event document.
             return iter;
         }
 

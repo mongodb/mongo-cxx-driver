@@ -98,19 +98,19 @@ class change_stream {
     explicit operator v1::change_stream() const& = delete;
 
     ///
-    /// A change_stream::iterator points to the beginning of any
-    /// available notifications. Each call to begin() advances to the next
-    /// available notification. The state of all iterators is tracked by the
-    /// change_stream itself, so advancing one iterator advances all iterators.
+    /// A change_stream::iterator points to the beginning of any available notifications.
     ///
-    /// change_stream::begin() and increment operators may block if the current batch of documents
-    /// is exhausted. They will not return until a notification is available, the max_await_time
-    /// (from the options::change_stream) milliseconds have elapsed, or a server error is
-    /// encountered.
+    ///.The first call to begin() advances to the next available notification. Consecutive calls to begin() only advance
+    /// to the next available notification once. The state of all iterators is tracked by the change_stream itself,
+    /// so advancing one iterator advances all iterators.
     ///
-    /// When change_stream.begin() == change_stream.end(), no notifications
-    /// are available. Each call to change_stream.begin() checks again for
-    /// newly-available notifications.
+    /// change_stream::begin() and increment operators may block if the current batch of documents is exhausted. They
+    /// will not return until a notification is available, the max_await_time (from the options::change_stream)
+    /// milliseconds have elapsed, or a server error is encountered.
+    ///
+    /// When change_stream.begin() == change_stream.end(), no notifications are available. Each call to
+    /// change_stream.begin() checks again for newly-available notifications and advances (once) to the next available
+    /// notification.
     ///
     /// @return
     ///   The change_stream::iterator
