@@ -273,12 +273,14 @@ collection::collection(collection const& c) {
 }
 
 collection& collection::operator=(collection const& c) {
-    if (!c) {
-        _impl.reset();
-    } else if (!*this) {
-        _impl = bsoncxx::make_unique<impl>(c._get_impl());
-    } else {
-        *_impl = c._get_impl();
+    if (this != &c) {
+        if (!c._impl) {
+            _impl.reset();
+        } else if (!_impl) {
+            _impl = bsoncxx::make_unique<impl>(c._get_impl());
+        } else {
+            *_impl = c._get_impl();
+        }
     }
 
     return *this;
@@ -1227,10 +1229,10 @@ cursor collection::_distinct(
         throw bsoncxx::v_noabi::exception{bsoncxx::v_noabi::error_code::k_internal_error};
     }
 
-    bson_t const* error_document;
-
     cursor fake_cursor{libmongoc::cursor_new_from_command_reply_with_opts(
         _get_impl().client_impl->client_t, fake_reply.inout_ptr(), nullptr)};
+
+    bson_t const* error_document = {};
     if (libmongoc::cursor_error_document(fake_cursor._impl->cursor_t, &error, &error_document)) {
         if (error_document) {
             bsoncxx::v_noabi::document::value error_doc{
@@ -1435,16 +1437,20 @@ bsoncxx::v_noabi::stdx::optional<result::insert_many> collection::_exec_insert_m
     return result::insert_many{std::move(result.value()), inserted_ids.extract()};
 }
 
-collection::impl const& collection::_get_impl() const {
-    if (!_impl) {
+template <typename Self>
+auto collection::_get_impl(Self& self) -> decltype(*self._impl) {
+    if (!self._impl) {
         throw logic_error{error_code::k_invalid_collection_object};
     }
-    return *_impl;
+    return *self._impl;
+}
+
+collection::impl const& collection::_get_impl() const {
+    return _get_impl(*this);
 }
 
 collection::impl& collection::_get_impl() {
-    auto cthis = const_cast<collection const*>(this);
-    return const_cast<collection::impl&>(cthis->_get_impl());
+    return _get_impl(*this);
 }
 
 } // namespace v_noabi

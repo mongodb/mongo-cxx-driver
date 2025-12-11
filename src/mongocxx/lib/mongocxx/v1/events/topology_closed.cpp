@@ -39,7 +39,7 @@ mongoc_apm_topology_closed_t const* to_mongoc(void const* ptr) {
 bsoncxx::v1::oid topology_closed::topology_id() const {
     bson_oid_t id = {};
     libmongoc::apm_topology_closed_get_topology_id(to_mongoc(_impl), &id);
-    return bsoncxx::v1::oid{reinterpret_cast<std::uint8_t const*>(&id), sizeof(id)};
+    return bsoncxx::v1::oid{id.bytes, sizeof(id)};
 }
 
 topology_closed::topology_closed(void const* impl) : _impl{impl} {}

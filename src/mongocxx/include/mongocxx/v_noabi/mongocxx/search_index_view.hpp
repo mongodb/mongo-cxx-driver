@@ -259,8 +259,10 @@ class search_index_view {
 
     std::vector<std::string> _create_many_helper(bsoncxx::v_noabi::array::view created_indexes);
 
-    impl const& _get_impl() const;
+    template <typename Self>
+    static auto _get_impl(Self& self) -> decltype(*self._impl);
 
+    impl const& _get_impl() const;
     impl& _get_impl();
 
    private:

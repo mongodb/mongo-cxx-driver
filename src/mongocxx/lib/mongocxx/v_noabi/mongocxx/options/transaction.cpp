@@ -50,6 +50,7 @@ Transaction& check_moved_from(Transaction& txn) {
 
 transaction::transaction(transaction const& other) : _txn{check_moved_from(other._txn)} {}
 
+// NOLINTNEXTLINE(cert-oop54-cpp): handled by v1::transaction.
 transaction& transaction::operator=(transaction const& other) {
     _txn = check_moved_from(other._txn);
     return *this;

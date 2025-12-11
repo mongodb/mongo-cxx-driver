@@ -44,11 +44,9 @@ namespace gridfs {
 namespace {
 
 std::int32_t read_chunk_size_from_files_document(bsoncxx::v_noabi::document::view files_doc) {
-    std::int64_t const k_max_document_size = 16 * 1024 * 1024;
-    std::int64_t chunk_size;
+    static constexpr std::int64_t k_max_document_size = {16 * 1024 * 1024};
 
-    auto chunk_size_ele = files_doc["chunkSize"];
-
+    auto const chunk_size_ele = files_doc["chunkSize"];
     if (!chunk_size_ele) {
         throw gridfs_exception{
             error_code::k_gridfs_file_corrupted,
@@ -56,6 +54,7 @@ std::int32_t read_chunk_size_from_files_document(bsoncxx::v_noabi::document::vie
             "k_int32 or k_int64"};
     }
 
+    std::int64_t chunk_size = {};
     if (chunk_size_ele.type() == bsoncxx::v_noabi::type::k_int64) {
         chunk_size = chunk_size_ele.get_int64().value;
     } else if (chunk_size_ele.type() == bsoncxx::v_noabi::type::k_int32) {
@@ -83,9 +82,7 @@ std::int32_t read_chunk_size_from_files_document(bsoncxx::v_noabi::document::vie
 }
 
 std::int64_t read_length_from_files_document(bsoncxx::v_noabi::document::view const files_doc) {
-    auto length_ele = files_doc["length"];
-    std::int64_t length;
-
+    auto const length_ele = files_doc["length"];
     if (!length_ele) {
         throw gridfs_exception{
             error_code::k_gridfs_file_corrupted,
@@ -93,6 +90,7 @@ std::int64_t read_length_from_files_document(bsoncxx::v_noabi::document::view co
             "k_int32 or k_int64"};
     }
 
+    std::int64_t length = {};
     if (length_ele.type() == bsoncxx::v_noabi::type::k_int64) {
         length = length_ele.get_int64().value;
     } else if (length_ele.type() == bsoncxx::v_noabi::type::k_int32) {
@@ -125,7 +123,7 @@ bucket::bucket(database const& db, options::gridfs::bucket const& options) {
         throw logic_error{error_code::k_invalid_parameter, "non-empty bucket name required"};
     }
 
-    std::int32_t default_chunk_size_bytes = 255 * 1024;
+    std::int32_t default_chunk_size_bytes = 255 * 1024; // NOLINT(cppcoreguidelines-avoid-magic-numbers): 255 KiB.
     if (auto chunk_size_bytes = options.chunk_size_bytes()) {
         default_chunk_size_bytes = *chunk_size_bytes;
     }
@@ -172,13 +170,16 @@ bucket::bucket(bucket const& b) {
 }
 
 bucket& bucket::operator=(bucket const& b) {
-    if (!b) {
-        _impl.reset();
-    } else if (!*this) {
-        _impl = bsoncxx::make_unique<impl>(b._get_impl());
-    } else {
-        *_impl = b._get_impl();
+    if (this != &b) {
+        if (!b._impl) {
+            _impl.reset();
+        } else if (!_impl) {
+            _impl = bsoncxx::make_unique<impl>(b._get_impl());
+        } else {
+            *_impl = b._get_impl();
+        }
     }
+
     return *this;
 }
 
@@ -260,10 +261,14 @@ void bucket::_upload_from_stream_with_id(
     std::istream* source,
     options::gridfs::upload const& options) {
     uploader upload_stream = _open_upload_stream_with_id(session, id, filename, options);
-    std::int32_t chunk_size = upload_stream.chunk_size();
+    auto const chunk_size = upload_stream.chunk_size();
+
+    // Fixed-size dynamic array: size tracked by `chunk_size`.
+    // NOLINTNEXTLINE(cppcoreguidelines-avoid-c-arrays)
     std::unique_ptr<std::uint8_t[]> buffer = bsoncxx::make_unique<std::uint8_t[]>(static_cast<std::size_t>(chunk_size));
 
     do {
+        // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast): stdlib vs. mongocxx compatibility.
         source->read(reinterpret_cast<char*>(buffer.get()), static_cast<std::streamsize>(chunk_size));
         upload_stream.write(buffer.get(), static_cast<std::size_t>(source->gcount()));
     } while (*source);
@@ -368,7 +373,7 @@ downloader bucket::_open_download_stream(
     }
 
     if (end) {
-        int64_t end_i64;
+        int64_t end_i64 = {};
         if (!size_t_to_int64_safe(*end, end_i64)) {
             throw gridfs_exception{error_code::k_invalid_parameter, "expected end to not be greater than max int64"};
         }
@@ -406,26 +411,33 @@ void bucket::_download_to_stream(
     bsoncxx::v_noabi::stdx::optional<std::size_t> end) {
     downloader download_stream = _open_download_stream(session, id, start, end);
 
-    std::size_t chunk_size;
-    if (!int32_to_size_t_safe(download_stream.chunk_size(), chunk_size)) {
-        throw gridfs_exception{error_code::k_invalid_parameter, "expected chunk size to be in bounds of size_t"};
-    }
+    auto const chunk_size = [&download_stream] {
+        std::size_t ret = {};
+        if (!int32_to_size_t_safe(download_stream.chunk_size(), ret)) {
+            throw gridfs_exception{error_code::k_invalid_parameter, "expected chunk size to be in bounds of size_t"};
+        }
+        return ret;
+    }();
     if (!start) {
         start.emplace<std::size_t>(0);
     }
     if (!end) {
-        std::size_t file_length_sz;
+        std::size_t file_length_sz = {};
         if (!int64_to_size_t_safe(download_stream.file_length(), file_length_sz)) {
             throw gridfs_exception{error_code::k_invalid_parameter, "expected file length to be in bounds of int64"};
         }
         end = file_length_sz;
     }
     auto bytes_expected = *end - *start;
-    std::unique_ptr<std::uint8_t[]> buffer = bsoncxx::make_unique<std::uint8_t[]>(static_cast<std::size_t>(chunk_size));
+
+    // Fixed-size dynamic array: size tracked by `chunk_size`.
+    // NOLINTNEXTLINE(cppcoreguidelines-avoid-c-arrays)
+    std::unique_ptr<std::uint8_t[]> buffer = bsoncxx::make_unique<std::uint8_t[]>(chunk_size);
 
     while (bytes_expected > 0) {
         std::size_t const bytes_read =
             download_stream.read(buffer.get(), static_cast<std::size_t>(std::min(bytes_expected, chunk_size)));
+        // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast): stdlib vs. mongocxx compatibility.
         destination->write(reinterpret_cast<char*>(buffer.get()), static_cast<std::streamsize>(bytes_read));
         bytes_expected -= bytes_read;
     }
@@ -553,16 +565,20 @@ void bucket::create_indexes_if_nonexistent(client_session const* session) {
     _get_impl().indexes_created = true;
 }
 
-bucket::impl const& bucket::_get_impl() const {
-    if (!_impl) {
+template <typename Self>
+auto bucket::_get_impl(Self& self) -> decltype(*self._impl) {
+    if (!self._impl) {
         throw logic_error{error_code::k_invalid_gridfs_bucket_object};
     }
-    return *_impl;
+    return *self._impl;
+}
+
+bucket::impl const& bucket::_get_impl() const {
+    return _get_impl(*this);
 }
 
 bucket::impl& bucket::_get_impl() {
-    auto cthis = const_cast<bucket const*>(this);
-    return const_cast<bucket::impl&>(cthis->_get_impl());
+    return _get_impl(*this);
 }
 
 } // namespace gridfs

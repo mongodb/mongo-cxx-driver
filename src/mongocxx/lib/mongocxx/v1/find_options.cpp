@@ -76,6 +76,8 @@ class find_options::impl {
     }
 };
 
+// NOLINTBEGIN(cppcoreguidelines-owning-memory): owning void* for ABI stability.
+
 find_options::~find_options() {
     delete impl::with(_impl);
 }
@@ -101,6 +103,8 @@ find_options& find_options::operator=(find_options const& other) {
 }
 
 find_options::find_options() : _impl{new impl{}} {}
+
+// NOLINTEND(cppcoreguidelines-owning-memory)
 
 find_options& find_options::allow_disk_use(bool allow_disk_use) {
     impl::with(this)->_allow_disk_use = allow_disk_use;

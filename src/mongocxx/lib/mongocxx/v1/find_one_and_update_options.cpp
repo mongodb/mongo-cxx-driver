@@ -68,6 +68,8 @@ class find_one_and_update_options::impl {
     }
 };
 
+// NOLINTBEGIN(cppcoreguidelines-owning-memory): owning void* for ABI stability.
+
 find_one_and_update_options::~find_one_and_update_options() {
     delete impl::with(this);
 }
@@ -95,6 +97,8 @@ find_one_and_update_options& find_one_and_update_options::operator=(find_one_and
 }
 
 find_one_and_update_options::find_one_and_update_options() : _impl{new impl{}} {}
+
+// NOLINTEND(cppcoreguidelines-owning-memory)
 
 find_one_and_update_options& find_one_and_update_options::collation(bsoncxx::v1::document::value collation) {
     impl::with(this)->_collation = std::move(collation);

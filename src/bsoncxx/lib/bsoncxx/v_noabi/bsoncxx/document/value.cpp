@@ -43,7 +43,7 @@ static_assert(!is_implicitly_convertible<v1::document::value const&, value>::val
 namespace {
 
 void uint8_t_deleter(std::uint8_t* ptr) {
-    delete[] ptr;
+    delete[] ptr; // NOLINT(cppcoreguidelines-owning-memory): custom deleter.
 }
 
 } // namespace
@@ -63,6 +63,7 @@ value::value(v_noabi::document::view view)
 namespace bsoncxx {
 namespace v_noabi {
 
+// NOLINTNEXTLINE(cppcoreguidelines-rvalue-reference-param-not-moved): ownership transfer with `v.release()`.
 v_noabi::document::value from_v1(v1::document::value&& v) {
     auto const deleter_ptr = v.get_deleter().target<v_noabi::document::value::deleter_type>();
 
