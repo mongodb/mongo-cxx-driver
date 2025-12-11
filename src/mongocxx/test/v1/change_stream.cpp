@@ -45,6 +45,7 @@ namespace v1 {
 TEST_CASE("exceptions", "[mongocxx][v1][change_stream]") {
     struct test_data_type {
         scoped_bson doc;
+        scoped_bson error_doc;
         int next_count = 0;
         int error_document_count = 0;
     } data;
@@ -57,12 +58,12 @@ TEST_CASE("exceptions", "[mongocxx][v1][change_stream]") {
     auto change_stream_next = libmongoc::change_stream_next.create_instance();
     change_stream_next
         ->interpose([&](mongoc_change_stream_t* stream, bson_t const** bson) -> bool {
+            (void)bson;
             CHECK(reinterpret_cast<test_data_type*>(stream) == &data);
             ++data.next_count;
-            *bson = (data.doc = scoped_bson{BCON_NEW("next", BCON_INT32(data.next_count))}).bson();
             return false;
         })
-        .forever();
+        .times(1);
 
     auto change_stream_error_document = libmongoc::change_stream_error_document.create_instance();
     change_stream_error_document
@@ -70,7 +71,6 @@ TEST_CASE("exceptions", "[mongocxx][v1][change_stream]") {
             (void)(stream);
             (void)err;
             (void)bson;
-            FAIL("should not reach this point");
             return false;
         })
         .forever();
@@ -82,52 +82,81 @@ TEST_CASE("exceptions", "[mongocxx][v1][change_stream]") {
             change_stream_error_document->interpose(
                 [&](mongoc_change_stream_t const* stream, bson_error_t* err, bson_t const** bson) -> bool {
                     CHECK(reinterpret_cast<test_data_type const*>(stream) == &data);
+                    REQUIRE(err);
+                    REQUIRE(bson);
+
                     ++data.error_document_count;
 
-                    auto const code = data.error_document_count;
+                    bson_set_error(err, 0, 123, "error_document: %d", data.error_document_count);
 
-                    data.doc = scoped_bson{BCON_NEW("count", BCON_INT32(code))};
-                    bson_set_error(
-                        err, 0, static_cast<std::uint32_t>(code), "error_document: %d", data.error_document_count);
-                    *bson = data.doc.bson();
+                    data.error_doc = scoped_bson{BCON_NEW("error_document", BCON_INT32(data.error_document_count))};
+                    *bson = data.error_doc.bson();
 
                     return true;
                 });
 
-            CHECK_THROWS_MATCHES(
-                stream.begin(),
-                mongocxx::v1::exception,
-                Catch::Matchers::MessageMatches(Catch::Matchers::ContainsSubstring("error_document: 1")));
+            try {
+                (void)stream.begin();
+                FAIL("should not reach this point");
+            } catch (v1::server_error const& ex) {
+                FAIL("expected a mongocxx::v1::exception, got: " << ex.what());
+            } catch (v1::exception const& ex) {
+                CHECK(ex.code().value() == 18);
+                CHECK_THAT(
+                    ex.what(),
+                    Catch::Matchers::ContainsSubstring("mongoc_error_code_t:18") &&
+                        Catch::Matchers::ContainsSubstring("bson error code 123") &&
+                        Catch::Matchers::ContainsSubstring("error_document: 1"));
+            }
 
+            CHECK_NOTHROW(stream.begin());
+
+            CHECK(change_stream::internal::is_dead(stream));
+            CHECK(change_stream::internal::doc(stream).empty());
             CHECK(data.next_count == 1);
             CHECK(data.error_document_count == 1);
-            CHECK(stream.begin() == stream.end());
         }
 
         SECTION("v1::server_error") {
-            change_stream_error_document->interpose(
-                [&](mongoc_change_stream_t const* stream, bson_error_t* err, bson_t const** bson) -> bool {
+            change_stream_error_document
+                ->interpose([&](mongoc_change_stream_t const* stream, bson_error_t* err, bson_t const** bson) -> bool {
                     CHECK(reinterpret_cast<test_data_type const*>(stream) == &data);
+                    REQUIRE(err);
+                    REQUIRE(bson);
+
                     ++data.error_document_count;
 
-                    auto const code = data.error_document_count;
+                    bson_set_error(err, 0, 456, "error_document: %d", data.error_document_count);
 
-                    data.doc = scoped_bson{BCON_NEW("code", BCON_INT32(code))};
-                    bson_set_error(
-                        err, 0, static_cast<std::uint32_t>(code), "error_document: %d", data.error_document_count);
-                    *bson = data.doc.bson();
+                    data.error_doc = scoped_bson{BCON_NEW("code", BCON_INT32(data.error_document_count))};
+                    *bson = data.error_doc.bson();
 
                     return true;
-                });
+                })
+                .times(1);
 
-            CHECK_THROWS_MATCHES(
-                stream.begin(),
-                mongocxx::v1::server_error,
-                Catch::Matchers::MessageMatches(Catch::Matchers::ContainsSubstring("error_document: 1")));
+            try {
+                (void)stream.begin();
+                FAIL("should not reach this point");
+            } catch (v1::server_error const& ex) {
+                CHECK(ex.code().value() == 1);
+                CHECK(ex.client_code().value() == 18);
+                CHECK_THAT(
+                    ex.what(),
+                    Catch::Matchers::ContainsSubstring("server error code 1") &&
+                        Catch::Matchers::ContainsSubstring("mongoc_error_code_t:18") &&
+                        Catch::Matchers::ContainsSubstring("bson error code 456") &&
+                        Catch::Matchers::ContainsSubstring("error_document: 1"));
+            } catch (v1::exception const& ex) {
+                FAIL("expected a mongocxx::v1::server_error, got: " << ex.what());
+            }
 
+            CHECK_NOTHROW(stream.begin());
+
+            CHECK(change_stream::internal::is_dead(stream));
+            CHECK(change_stream::internal::doc(stream).empty());
             CHECK(data.next_count == 1);
             CHECK(data.error_document_count == 1);
-            CHECK(stream.begin() == stream.end());
         }
     }
 }
@@ -391,105 +420,6 @@ TEST_CASE("begin", "[mongocxx][v1][change_stream]") {
             CHECK(data.error_document_count == 2);
             CHECK(iter != stream.end());
             CHECK(*iter == data.doc.view());
-        }
-    }
-
-    SECTION("error document") {
-        auto stream = change_stream::internal::make(reinterpret_cast<mongoc_change_stream_t*>(&data));
-
-        CHECK(change_stream::internal::is_resumable(stream));
-        CHECK(data.next_count == 0);
-        CHECK(data.error_document_count == 0);
-
-        change_stream_next
-            ->interpose([&](mongoc_change_stream_t* stream, bson_t const** bson) -> bool {
-                (void)bson;
-                CHECK(reinterpret_cast<test_data_type*>(stream) == &data);
-                ++data.next_count;
-                return false;
-            })
-            .times(1);
-
-        SECTION("client error") {
-            change_stream_error_document
-                ->interpose([&](mongoc_change_stream_t const* stream, bson_error_t* err, bson_t const** bson) -> bool {
-                    CHECK(reinterpret_cast<test_data_type const*>(stream) == &data);
-                    REQUIRE(err);
-                    REQUIRE(bson);
-
-                    ++data.error_document_count;
-
-                    bson_set_error(err, 0, 123, "error_document: %d", data.error_document_count);
-
-                    data.error_doc = scoped_bson{BCON_NEW("error_document", BCON_INT32(data.error_document_count))};
-                    *bson = data.error_doc.bson();
-
-                    return true;
-                })
-                .times(1);
-
-            try {
-                (void)stream.begin();
-                FAIL("should not reach this point");
-            } catch (v1::server_error const& ex) {
-                FAIL("expected a mongocxx::v1::exception, got: " << ex.what());
-            } catch (v1::exception const& ex) {
-                CHECK(ex.code().value() == 18);
-                CHECK_THAT(
-                    ex.what(),
-                    Catch::Matchers::ContainsSubstring("mongoc_error_code_t:18") &&
-                        Catch::Matchers::ContainsSubstring("bson error code 123") &&
-                        Catch::Matchers::ContainsSubstring("error_document: 1"));
-            }
-
-            CHECK_NOTHROW(stream.begin());
-
-            CHECK(change_stream::internal::is_dead(stream));
-            CHECK(change_stream::internal::doc(stream) == empty);
-            CHECK(data.next_count == 1);
-            CHECK(data.error_document_count == 1);
-        }
-
-        SECTION("server error") {
-            change_stream_error_document
-                ->interpose([&](mongoc_change_stream_t const* stream, bson_error_t* err, bson_t const** bson) -> bool {
-                    CHECK(reinterpret_cast<test_data_type const*>(stream) == &data);
-                    REQUIRE(err);
-                    REQUIRE(bson);
-
-                    ++data.error_document_count;
-
-                    bson_set_error(err, 0, 456, "error_document: %d", data.error_document_count);
-
-                    data.error_doc = scoped_bson{BCON_NEW("code", BCON_INT32(data.error_document_count))};
-                    *bson = data.error_doc.bson();
-
-                    return true;
-                })
-                .times(1);
-
-            try {
-                (void)stream.begin();
-                FAIL("should not reach this point");
-            } catch (v1::server_error const& ex) {
-                CHECK(ex.code().value() == 1);
-                CHECK(ex.client_code().value() == 18);
-                CHECK_THAT(
-                    ex.what(),
-                    Catch::Matchers::ContainsSubstring("server error code 1") &&
-                        Catch::Matchers::ContainsSubstring("mongoc_error_code_t:18") &&
-                        Catch::Matchers::ContainsSubstring("bson error code 456") &&
-                        Catch::Matchers::ContainsSubstring("error_document: 1"));
-            } catch (v1::exception const& ex) {
-                FAIL("expected a mongocxx::v1::server_error, got: " << ex.what());
-            }
-
-            CHECK_NOTHROW(stream.begin());
-
-            CHECK(change_stream::internal::is_dead(stream));
-            CHECK(change_stream::internal::doc(stream) == empty);
-            CHECK(data.next_count == 1);
-            CHECK(data.error_document_count == 1);
         }
     }
 }
