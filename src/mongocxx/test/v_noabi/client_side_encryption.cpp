@@ -3509,7 +3509,9 @@ TEST_CASE("27. Text Explicit Encryption", "[client_side_encryption]") {
         uri{},
         test_util::add_test_server_api(),
     };
-    auto [client_encryption, encrypted_client] = _setup_explicit_encryption(key1_document, &key_vault_client);
+    auto tpl = _setup_explicit_encryption(key1_document, &key_vault_client);
+    auto client_encryption = std::move(std::get<0>(tpl));
+    auto encrypted_client = std::move(std::get<1>(tpl));
     _drop_and_create_collection("db", "prefix-suffix", "/explicit-encryption/encryptedFields-prefix-suffix.json");
     _drop_and_create_collection("db", "substring", "/explicit-encryption/encryptedFields-substring.json");
 
