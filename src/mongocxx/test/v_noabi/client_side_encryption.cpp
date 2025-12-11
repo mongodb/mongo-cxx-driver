@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "mongocxx/private/scoped_bson.hh"
 #include <mongocxx/v1/detail/macros.hpp>
 
 #include <mongocxx/test/v_noabi/catch_helpers.hh>
@@ -50,6 +49,8 @@
 #include <mongocxx/scoped_bson.hh>
 
 #include <bsoncxx/private/make_unique.hh>
+
+#include <mongocxx/private/scoped_bson.hh>
 
 #include <bsoncxx/test/catch.hh>
 
@@ -3564,7 +3565,7 @@ TEST_CASE("27. Text Explicit Encryption", "[client_side_encryption]") {
         auto cursor = client_prefix_suffix.find(query.view());
         auto const found = std::vector<bsoncxx::document::value>(cursor.begin(), cursor.end());
         REQUIRE(found.size() == 1);
-        const auto expected = mongocxx::scoped_bson({R"({ "encryptedText": "foobarbaz" })"});
+        auto const expected = mongocxx::scoped_bson({R"({ "encryptedText": "foobarbaz" })"});
         CHECK(test_util::matches(found[0].view(), expected.view()));
     }
 
@@ -3573,15 +3574,15 @@ TEST_CASE("27. Text Explicit Encryption", "[client_side_encryption]") {
                                       .query_type(options::encrypt::encryption_query_type::k_suffixPreview)
                                       .text_opts(default_text_opts().suffix_opts(suffix_opts));
         auto const encrypted_baz = client_encryption.encrypt(make_value("baz"), encrypt_opts);
-        auto const query = make_document(kvp(
-            "$expr",
-            make_document(kvp(
-                "$encStrEndsWith", make_document(kvp("input", "$encryptedText"), kvp("suffix", encrypted_baz))))));
+        auto const query = make_document(
+            kvp("$expr",
+                make_document(kvp(
+                    "$encStrEndsWith", make_document(kvp("input", "$encryptedText"), kvp("suffix", encrypted_baz))))));
 
         auto cursor = client_prefix_suffix.find(query.view());
         auto const found = std::vector<bsoncxx::document::value>(cursor.begin(), cursor.end());
         REQUIRE(found.size() == 1);
-        const auto expected = mongocxx::scoped_bson({R"({ "encryptedText": "foobarbaz" })"});
+        auto const expected = mongocxx::scoped_bson({R"({ "encryptedText": "foobarbaz" })"});
         CHECK(test_util::matches(found[0].view(), expected.view()));
     }
 
@@ -3605,10 +3606,10 @@ TEST_CASE("27. Text Explicit Encryption", "[client_side_encryption]") {
                                       .query_type(options::encrypt::encryption_query_type::k_suffixPreview)
                                       .text_opts(default_text_opts().suffix_opts(suffix_opts));
         auto const encrypted_foo = client_encryption.encrypt(make_value("foo"), encrypt_opts);
-        auto const query = make_document(kvp(
-            "$expr",
-            make_document(kvp(
-                "$encStrEndsWith", make_document(kvp("input", "$encryptedText"), kvp("suffix", encrypted_foo))))));
+        auto const query = make_document(
+            kvp("$expr",
+                make_document(kvp(
+                    "$encStrEndsWith", make_document(kvp("input", "$encryptedText"), kvp("suffix", encrypted_foo))))));
 
         auto cursor = client_prefix_suffix.find(query.view());
         auto const found = std::vector<bsoncxx::document::value>(cursor.begin(), cursor.end());
@@ -3628,7 +3629,7 @@ TEST_CASE("27. Text Explicit Encryption", "[client_side_encryption]") {
         auto cursor = client_substring.find(query.view());
         auto const found = std::vector<bsoncxx::document::value>(cursor.begin(), cursor.end());
         REQUIRE(found.size() == 1);
-        const auto expected = mongocxx::scoped_bson({R"({ "encryptedText": "foobarbaz" })"});
+        auto const expected = mongocxx::scoped_bson({R"({ "encryptedText": "foobarbaz" })"});
         CHECK(test_util::matches(found[0].view(), expected.view()));
     }
 
