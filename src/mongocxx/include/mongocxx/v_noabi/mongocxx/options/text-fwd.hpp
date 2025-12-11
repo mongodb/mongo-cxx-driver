@@ -14,8 +14,9 @@
 
 #pragma once
 
-#include "mongocxx/v1/text_options.hpp"
 #include <mongocxx/v1/text_options-fwd.hpp> // IWYU pragma: export
+
+#include <mongocxx/v1/text_options.hpp>
 
 #include <mongocxx/config/prelude.hpp>
 
