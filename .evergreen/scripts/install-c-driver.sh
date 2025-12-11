@@ -67,7 +67,7 @@ export CMAKE_GENERATOR_PLATFORM="${platform:-}"
 
 # Install libmongocrypt.
 if [[ "${SKIP_INSTALL_LIBMONGOCRYPT:-}" != "1" ]]; then
-  echo "Installing libmongocrypt into ${mongoc_dir}..."
+  echo "Installing libmongocrypt into ${mongoc_install_idir}..."
 
   # Avoid using compile-libmongocrypt.sh (mongo-c-driver) -> compile.sh (libmongocrypt) -> build_all.sh (libmongocrypt),
   # which hardcodes MSVC-specific compiler flags (-EHsc) and does not support the Ninja Multi-Config generator (see:
@@ -109,7 +109,7 @@ if [[ "${SKIP_INSTALL_LIBMONGOCRYPT:-}" != "1" ]]; then
     "${mongoc_dir}/.evergreen/scripts/compile-libmongocrypt.sh" "$(command -v cmake)" "${mongoc_idir}" "${mongoc_install_idir}"
   fi
 
-  echo "Installing libmongocrypt into ${mongoc_dir}... done."
+  echo "Installing libmongocrypt into ${mongoc_install_idir}... done."
 fi
 
 declare -a configure_flags=(
