@@ -181,7 +181,7 @@ class find_one_and_replace_options {
     ///
     /// Set the "returnDocument" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(find_one_and_replace_options&) return_document(return_document return_document);
+    MONGOCXX_ABI_EXPORT_CDECL(find_one_and_replace_options&) return_document(v1::return_document return_document);
 
     ///
     /// Return the current "returnDocument" field.
@@ -217,6 +217,8 @@ class find_one_and_replace_options {
     /// Return the current "writeConcern" field.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<v1::write_concern>) write_concern() const;
+
+    class internal;
 };
 
 } // namespace v1
