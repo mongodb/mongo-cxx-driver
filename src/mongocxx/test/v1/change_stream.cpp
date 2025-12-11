@@ -24,7 +24,6 @@
 #include <bsoncxx/test/v1/types/value.hh>
 
 #include <chrono>
-#include <cstdint>
 #include <utility>
 
 #include <bsoncxx/private/bson.hh>
@@ -87,9 +86,11 @@ TEST_CASE("exceptions", "[mongocxx][v1][change_stream]") {
 
                     ++data.error_document_count;
 
-                    bson_set_error(err, 0, 123, "error_document: %d", data.error_document_count);
+                    bson_set_error(err, 0, 123, "advance failure");
+                    err->reserved = 2u; // MONGOC_ERROR_CATEGORY
 
-                    data.error_doc = scoped_bson{BCON_NEW("error_document", BCON_INT32(data.error_document_count))};
+                    data.error_doc =
+                        scoped_bson{BCON_NEW("error_document_count", BCON_INT32(data.error_document_count))};
                     *bson = data.error_doc.bson();
 
                     return true;
@@ -98,15 +99,10 @@ TEST_CASE("exceptions", "[mongocxx][v1][change_stream]") {
             try {
                 (void)stream.begin();
                 FAIL("should not reach this point");
-            } catch (v1::server_error const& ex) {
-                FAIL("expected a mongocxx::v1::exception, got: " << ex.what());
             } catch (v1::exception const& ex) {
-                CHECK(ex.code().value() == 18);
-                CHECK_THAT(
-                    ex.what(),
-                    Catch::Matchers::ContainsSubstring("mongoc_error_code_t:18") &&
-                        Catch::Matchers::ContainsSubstring("bson error code 123") &&
-                        Catch::Matchers::ContainsSubstring("error_document: 1"));
+                CHECK(ex.code() == v1::source_errc::mongoc);
+                CHECK(ex.code().value() == 123);
+                CHECK_THAT(ex.what(), Catch::Matchers::ContainsSubstring("advance failure"));
             }
 
             CHECK_NOTHROW(stream.begin());
@@ -126,9 +122,11 @@ TEST_CASE("exceptions", "[mongocxx][v1][change_stream]") {
 
                     ++data.error_document_count;
 
-                    bson_set_error(err, 0, 456, "error_document: %d", data.error_document_count);
+                    bson_set_error(err, 0, 456, "advance failure");
+                    err->reserved = 2u; // MONGOC_ERROR_CATEGORY
 
-                    data.error_doc = scoped_bson{BCON_NEW("code", BCON_INT32(data.error_document_count))};
+                    data.error_doc = scoped_bson{BCON_NEW(
+                        "code", BCON_INT32(123), "error_document_count", BCON_INT32(data.error_document_count))};
                     *bson = data.error_doc.bson();
 
                     return true;
@@ -139,16 +137,12 @@ TEST_CASE("exceptions", "[mongocxx][v1][change_stream]") {
                 (void)stream.begin();
                 FAIL("should not reach this point");
             } catch (v1::server_error const& ex) {
-                CHECK(ex.code().value() == 1);
-                CHECK(ex.client_code().value() == 18);
-                CHECK_THAT(
-                    ex.what(),
-                    Catch::Matchers::ContainsSubstring("server error code 1") &&
-                        Catch::Matchers::ContainsSubstring("mongoc_error_code_t:18") &&
-                        Catch::Matchers::ContainsSubstring("bson error code 456") &&
-                        Catch::Matchers::ContainsSubstring("error_document: 1"));
-            } catch (v1::exception const& ex) {
-                FAIL("expected a mongocxx::v1::server_error, got: " << ex.what());
+                CHECK(ex.code() == v1::source_errc::server);
+                CHECK(ex.code().value() == 123);
+                CHECK(ex.client_code() == v1::source_errc::mongoc);
+                CHECK(ex.client_code().value() == 456);
+                CHECK(ex.raw()["error_document_count"].get_int32().value == 1);
+                CHECK_THAT(ex.what(), Catch::Matchers::ContainsSubstring("advance failure"));
             }
 
             CHECK_NOTHROW(stream.begin());
