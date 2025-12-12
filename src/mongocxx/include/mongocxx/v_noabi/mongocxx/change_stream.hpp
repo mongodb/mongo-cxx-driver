@@ -100,9 +100,9 @@ class change_stream {
     ///
     /// A change_stream::iterator points to the beginning of any available notifications.
     ///
-    ///.The first call to begin() advances to the next available notification. Consecutive calls to begin() only advance
-    /// to the next available notification once. The state of all iterators is tracked by the change_stream itself,
-    /// so advancing one iterator advances all iterators.
+    /// The first call to begin() advances to the next available notification. Consecutive calls to begin() only advance
+    /// to the next available notification at most once. The state of all iterators is tracked by the change_stream
+    /// itself, so advancing one iterator advances all iterators.
     ///
     /// change_stream::begin() and increment operators may block if the current batch of documents is exhausted. They
     /// will not return until a notification is available, the max_await_time (from the options::change_stream)
