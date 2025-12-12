@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <mongocxx/v1/change_stream.hh>
 #include <mongocxx/v1/read_concern.hh>
 #include <mongocxx/v1/read_preference.hh>
 #include <mongocxx/v1/write_concern.hh>
@@ -1369,10 +1370,11 @@ collection::_watch(client_session const* session, pipeline const& pipe, options:
     }
 
     // NOTE: collection_watch copies what it needs so we're safe to destroy our copies.
-    return change_stream{libmongoc::collection_watch(
-        _get_impl().collection_t,
-        mongocxx::to_scoped_bson_view(container),
-        mongocxx::to_scoped_bson_view(options_builder))};
+    return v1::change_stream::internal::make(
+        libmongoc::collection_watch(
+            _get_impl().collection_t,
+            mongocxx::to_scoped_bson_view(container),
+            mongocxx::to_scoped_bson_view(options_builder)));
 }
 
 index_view collection::indexes() {
