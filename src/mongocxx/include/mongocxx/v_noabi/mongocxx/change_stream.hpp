@@ -84,7 +84,7 @@ class change_stream {
     /// Convert to the @ref bsoncxx::v1 equivalent.
     ///
     /// @par Postconditions:
-    /// - `other` is in an assign-or-destroy-only state.
+    /// - `*this` is in an assign-or-destroy-only state.
     ///
     /// @warning Invalidates all associated iterators and views.
     ///
