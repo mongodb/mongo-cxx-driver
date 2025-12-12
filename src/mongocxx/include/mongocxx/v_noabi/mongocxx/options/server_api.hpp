@@ -14,11 +14,16 @@
 
 #pragma once
 
+#include <mongocxx/options/server_api-fwd.hpp> // IWYU pragma: export
+
+//
+
+#include <mongocxx/v1/server_api.hpp> // IWYU pragma: export
+
 #include <string>
 
-#include <mongocxx/client-fwd.hpp>
-#include <mongocxx/options/server_api-fwd.hpp> // IWYU pragma: export
-#include <mongocxx/pool-fwd.hpp>
+#include <mongocxx/client-fwd.hpp> // IWYU pragma: keep: backward compatibility, to be removed.
+#include <mongocxx/pool-fwd.hpp>   // IWYU pragma: keep: backward compatibility, to be removed.
 
 #include <bsoncxx/stdx/optional.hpp>
 #include <bsoncxx/stdx/string_view.hpp>
@@ -40,9 +45,7 @@ class server_api {
     ///
     /// Enum representing the possible values for server API version.
     ///
-    enum class version {
-        k_version_1, ///< Stable API Version 1.
-    };
+    using version = v1::server_api::version;
 
     ///
     /// Constructs a new server_api object.
@@ -55,7 +58,19 @@ class server_api {
     /// @param version
     ///   The server api version to send to the server.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL() server_api(version version);
+    /* explicit(false) */ server_api(version version) : _version{version} {}
+
+    ///
+    /// Construct with the @ref mongocxx::v1 equivalent.
+    ///
+    /* explicit(false) */ server_api(v1::server_api const& opts) : server_api{opts.get_version()} {}
+
+    ///
+    /// Convert to the @ref mongocxx::v1 equivalent.
+    ///
+    explicit operator v1::server_api() const {
+        return v1::server_api{_version};
+    }
 
     ///
     /// Converts a version enum value to its string value.
@@ -93,7 +108,10 @@ class server_api {
     /// @return
     ///   A reference to this object to facilitate method chaining.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(server_api&) strict(bool strict);
+    server_api& strict(bool strict) {
+        _strict = strict;
+        return *this;
+    }
 
     ///
     /// Gets the current value of the strict option.
@@ -101,7 +119,9 @@ class server_api {
     /// @return
     ///   The optional value of the strict option.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bool> const&) strict() const;
+    bsoncxx::v_noabi::stdx::optional<bool> const& strict() const {
+        return _strict;
+    }
 
     ///
     /// Sets the deprecation errors option, specifying whether the server should
@@ -113,7 +133,10 @@ class server_api {
     /// @return
     ///   A reference to this object to facilitate method chaining.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(server_api&) deprecation_errors(bool deprecation_errors);
+    server_api& deprecation_errors(bool deprecation_errors) {
+        _deprecation_errors = deprecation_errors;
+        return *this;
+    }
 
     ///
     /// Gets the current value of the deprecation errors option.
@@ -121,8 +144,9 @@ class server_api {
     /// @return
     ///   The optional value of the deprecation errors option.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bool> const&)
-    deprecation_errors() const;
+    bsoncxx::v_noabi::stdx::optional<bool> const& deprecation_errors() const {
+        return _deprecation_errors;
+    }
 
     ///
     /// Gets the declared server api version.
@@ -130,12 +154,11 @@ class server_api {
     /// @return
     ///   The version enum value specifying the declared server api version.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(version) get_version() const;
+    version get_version() const {
+        return _version;
+    }
 
    private:
-    friend ::mongocxx::v_noabi::client;
-    friend ::mongocxx::v_noabi::pool;
-
     version _version;
     bsoncxx::v_noabi::stdx::optional<bool> _strict;
     bsoncxx::v_noabi::stdx::optional<bool> _deprecation_errors;
@@ -145,9 +168,32 @@ class server_api {
 } // namespace v_noabi
 } // namespace mongocxx
 
+namespace mongocxx {
+namespace v_noabi {
+
+///
+/// Convert to the @ref mongocxx::v_noabi equivalent of `v`.
+///
+inline v_noabi::options::server_api from_v1(v1::server_api const& v) {
+    return {v};
+}
+
+///
+/// Convert to the @ref mongocxx::v1 equivalent of `v`.
+///
+inline v1::server_api to_v1(v_noabi::options::server_api const& v) {
+    return v1::server_api{v};
+}
+
+} // namespace v_noabi
+} // namespace mongocxx
+
 #include <mongocxx/config/postlude.hpp>
 
 ///
 /// @file
 /// Provides @ref mongocxx::v_noabi::options::server_api.
+///
+/// @par Includes
+/// - @ref mongocxx/v1/server_api.hpp
 ///
