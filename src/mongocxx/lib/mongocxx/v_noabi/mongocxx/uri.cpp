@@ -28,8 +28,6 @@
 #include <mongocxx/exception/exception.hpp>
 #include <mongocxx/exception/logic_error.hpp>
 
-#include <mongocxx/mongoc_error.hh>
-
 #include <mongocxx/private/mongoc.hh>
 
 namespace mongocxx {
@@ -40,7 +38,7 @@ std::string const uri::k_default_uri = "mongodb://localhost:27017";
 
 uri::uri(bsoncxx::v_noabi::string::view_or_value uri_string) try : _uri{uri_string.view()} {
 } catch (v1::exception const& ex) {
-    throw_exception<v_noabi::logic_error>(ex);
+    throw v_noabi::logic_error{v_noabi::error_code::k_invalid_uri, ex.what()};
 }
 
 void uri::server_selection_try_once(bool val) try {
