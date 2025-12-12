@@ -39,13 +39,16 @@ void cursor::iterator::operator++(int) {
 }
 
 cursor::iterator& cursor::iterator::operator++() {
-    bson_t const* out;
-    bson_t const* error_document;
-    bson_error_t error;
+    bson_t const* out = {};
 
     if (libmongoc::cursor_next(_cursor->_impl->cursor_t, &out)) {
         _cursor->_impl->doc = bsoncxx::v_noabi::document::view{bson_get_data(out), out->len};
-    } else if (libmongoc::cursor_error_document(_cursor->_impl->cursor_t, &error, &error_document)) {
+        return *this;
+    }
+
+    bson_t const* error_document = {};
+    bson_error_t error = {};
+    if (libmongoc::cursor_error_document(_cursor->_impl->cursor_t, &error, &error_document)) {
         _cursor->_impl->mark_dead();
         if (error_document) {
             bsoncxx::v_noabi::document::value error_doc{
@@ -54,9 +57,10 @@ cursor::iterator& cursor::iterator::operator++() {
         } else {
             throw_exception<query_exception>(error);
         }
-    } else {
-        _cursor->_impl->mark_nothing_left();
     }
+
+    _cursor->_impl->mark_nothing_left();
+
     return *this;
 }
 

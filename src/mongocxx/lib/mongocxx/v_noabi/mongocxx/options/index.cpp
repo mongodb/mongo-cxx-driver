@@ -213,7 +213,7 @@ bsoncxx::v_noabi::stdx::optional<double> const& index::haystack_bucket_size() co
 }
 
 // CDRIVER-5946: mongoc_index_storage_opt_type_t was removed in mongoc 2.0.
-enum mongoc_index_storage_opt_type_t {
+enum struct mongoc_index_storage_opt_type_t {
     MONGOC_INDEX_STORAGE_OPT_MMAPV1,
     MONGOC_INDEX_STORAGE_OPT_WIREDTIGER,
 };
@@ -297,10 +297,8 @@ index::operator bsoncxx::v_noabi::document::view_or_value() {
     if (_storage_engine) {
         root.append(kvp("storageEngine", *_storage_engine));
     } else if (_storage_options) {
-        if (_storage_options->type() == MONGOC_INDEX_STORAGE_OPT_WIREDTIGER) {
-            options::index::wiredtiger_storage_options const* wt_options =
-                static_cast<options::index::wiredtiger_storage_options const*>(_storage_options.get());
-
+        if (auto const wt_options =
+                dynamic_cast<options::index::wiredtiger_storage_options const*>(_storage_options.get())) {
             bsoncxx::v_noabi::document::view_or_value storage_doc;
             if (wt_options->config_string()) {
                 storage_doc =
@@ -330,7 +328,7 @@ index::wiredtiger_storage_options::config_string() const {
 }
 
 int index::wiredtiger_storage_options::type() const {
-    return mongoc_index_storage_opt_type_t::MONGOC_INDEX_STORAGE_OPT_WIREDTIGER;
+    return static_cast<int>(mongoc_index_storage_opt_type_t::MONGOC_INDEX_STORAGE_OPT_WIREDTIGER);
 }
 
 } // namespace options

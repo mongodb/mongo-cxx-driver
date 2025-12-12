@@ -61,8 +61,6 @@ def tasks():
                 'ASAN_SYMBOLIZER_PATH': '/opt/mongodbtoolchain/v4/bin/llvm-symbolizer',
                 'TEST_WITH_CSFLE': 'ON',
                 'MONGOCXX_TEST_TOPOLOGY': topology,
-                'example_projects_cc': cc_compiler,
-                'example_projects_cxx': cxx_compiler,
             }
 
             if link_type == 'static':

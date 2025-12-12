@@ -16,9 +16,23 @@ if ! pkg-config --print-requires libbsoncxx-static | grep -q -- bson2-static; th
   exit 1
 fi
 
+compile_flags=(
+  "-std=c++${CXX_STANDARD:?}"
+  -Wall -Wextra -Werror
+  ${CXXFLAGS:-}
+  $(pkg-config --cflags libbsoncxx-static)
+)
+
+link_flags=(
+  ${LDFLAGS:-}
+  $(pkg-config --libs libbsoncxx-static)
+)
+
+echo "Compiling with: ${compile_flags[*]}"
+echo "Linking with: ${link_flags[*]}"
+
 rm -rf build/*
 cd build
-"${CXX:?}" $CXXFLAGS -Wall -Wextra -Werror -std="c++${CXX_STANDARD:?}" -c -o hello_bsoncxx.o ../../../hello_bsoncxx.cpp $(pkg-config --cflags libbsoncxx-static)
-# TODO: remove `-pthread` once CDRIVER-4776 is resolved.
-"${CXX:?}" $LDFLAGS -pthread -std="c++${CXX_STANDARD:?}" -o hello_bsoncxx hello_bsoncxx.o $(pkg-config --libs libbsoncxx-static)
+"${CXX:?}" "${compile_flags[@]:?}" -o hello_bsoncxx.o -c ../../../hello_bsoncxx.cpp
+"${CXX:?}" -o hello_bsoncxx hello_bsoncxx.o "${link_flags[@]:?}"
 ./hello_bsoncxx

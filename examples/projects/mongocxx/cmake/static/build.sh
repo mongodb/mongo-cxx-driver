@@ -4,11 +4,17 @@ set -o errexit
 set -o pipefail
 
 rm -rf build/*
-cd build
-if [ -z "$MSVC" ]; then
-  uvx cmake -DCMAKE_BUILD_TYPE="${build_type}" -DCMAKE_CXX_STANDARD="${CXX_STANDARD:?}" ..
-  uvx cmake --build . --target run
+
+config_flags=("-DCMAKE_CXX_STANDARD=${CXX_STANDARD:?}")
+build_flags=()
+
+if [[ "${OSTYPE:?}" == cygwin ]]; then
+  build_flags+=(--config "${build_type:?}")
 else
-  uvx cmake -G "Visual Studio 15 2017" -A "x64" -DCMAKE_CXX_STANDARD="${CXX_STANDARD:?}" -DCMAKE_MSVC_DEBUG_INFORMATION_FORMAT=Embedded ..
-  uvx cmake --build . --target run --config "${build_type:?}" -- /verbosity:minimal
+  config_flags+=("-DCMAKE_BUILD_TYPE=${build_type:?}")
 fi
+
+build_flags+=(--target run)
+
+uvx cmake "${config_flags[@]:?}" -B build
+uvx cmake --build build "${build_flags[@]:?}"

@@ -18,6 +18,17 @@ if(NOT BUILD_TESTING)
     set_property(DIRECTORY PROPERTY EXCLUDE_FROM_ALL TRUE)
 endif()
 
+# Avoid x86 (32-bit) compatibility preventing compilation of large test TUs:
+#  MSVC: "C1128: number of sections exceeded object file format".
+#  GCC: "too many sections" and "file too big".
+if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+    message(STATUS "Compiling test executables with '/bigobj'")
+    add_compile_options("/bigobj")
+elseif(MINGW)
+    message(STATUS "Compiling test executables with '-Wa,-mbig-obj'")
+    add_compile_options("-Wa,-mbig-obj")
+endif()
+
 if(MONGOCXX_BUILD_SHARED)
     mongocxx_add_library(mongocxx_mocked "mongocxx-mocked" SHARED)
 else()
@@ -26,10 +37,6 @@ endif()
 
 target_link_libraries(mongocxx_mocked PUBLIC bsoncxx_testing)
 target_compile_definitions(mongocxx_mocked PUBLIC MONGOCXX_TESTING)
-
-if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
-    target_compile_options(mongocxx_mocked PRIVATE /bigobj)
-endif()
 
 set(mongocxx_test_bsoncxx
     ${PROJECT_SOURCE_DIR}/../bsoncxx/test/v1/array/view_string_maker.cpp
@@ -279,10 +286,6 @@ set_property(
     APPEND PROPERTY LINK_LIBRARIES
         mongocxx::test_properties_with_main
 )
-
-if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
-    target_compile_options(test_driver PRIVATE /bigobj)
-endif()
 
 if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     target_compile_options(test_driver PRIVATE -Wno-maybe-uninitialized)

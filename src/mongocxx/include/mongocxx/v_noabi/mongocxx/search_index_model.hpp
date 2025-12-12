@@ -100,8 +100,10 @@ class search_index_model {
    private:
     class impl;
 
-    impl const& _get_impl() const;
+    template <typename Self>
+    static auto _get_impl(Self& self) -> decltype(*self._impl);
 
+    impl const& _get_impl() const;
     impl& _get_impl();
 
    private:

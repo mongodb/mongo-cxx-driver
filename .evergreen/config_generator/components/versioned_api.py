@@ -66,9 +66,6 @@ def tasks():
             compile_vars = {'ENABLE_TESTS': 'ON'}
             test_vars |= {'MONGOCXX_TEST_TOPOLOGY': 'single'}
 
-            if distro.os_type == 'windows':
-                test_vars |= {'example_projects_cxx_standard': 17}
-
             res.append(
                 EvgTask(
                     name=name,

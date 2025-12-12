@@ -54,6 +54,8 @@ class insert_many_options::impl {
     }
 };
 
+// NOLINTBEGIN(cppcoreguidelines-owning-memory): owning void* for ABI stability.
+
 insert_many_options::~insert_many_options() {
     delete impl::with(this);
 }
@@ -80,6 +82,8 @@ insert_many_options& insert_many_options::operator=(insert_many_options const& o
 }
 
 insert_many_options::insert_many_options() : _impl{new impl{}} {}
+
+// NOLINTEND(cppcoreguidelines-owning-memory)
 
 insert_many_options& insert_many_options::bypass_document_validation(bool bypass_document_validation) {
     impl::with(this)->_bypass_document_validation = bypass_document_validation;

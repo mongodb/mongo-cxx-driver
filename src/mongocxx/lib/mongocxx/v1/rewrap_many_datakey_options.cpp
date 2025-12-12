@@ -53,6 +53,8 @@ class rewrap_many_datakey_options::impl {
     }
 };
 
+// NOLINTBEGIN(cppcoreguidelines-owning-memory): owning void* for ABI stability.
+
 rewrap_many_datakey_options::~rewrap_many_datakey_options() {
     delete impl::with(this);
 }
@@ -80,6 +82,8 @@ rewrap_many_datakey_options& rewrap_many_datakey_options::operator=(rewrap_many_
 }
 
 rewrap_many_datakey_options::rewrap_many_datakey_options() : _impl{new impl{}} {}
+
+// NOLINTEND(cppcoreguidelines-owning-memory)
 
 rewrap_many_datakey_options& rewrap_many_datakey_options::provider(std::string provider) {
     impl::with(this)->_provider = std::move(provider);

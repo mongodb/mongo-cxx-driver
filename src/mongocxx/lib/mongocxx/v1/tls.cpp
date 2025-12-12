@@ -56,6 +56,8 @@ class tls::impl {
     }
 };
 
+// NOLINTBEGIN(cppcoreguidelines-owning-memory): owning void* for ABI stability.
+
 tls::~tls() {
     delete impl::with(this);
 }
@@ -79,6 +81,8 @@ tls& tls::operator=(tls const& other) {
 }
 
 tls::tls() : _impl{new impl{}} {}
+
+// NOLINTEND(cppcoreguidelines-owning-memory)
 
 tls& tls::pem_file(std::string v) {
     impl::with(this)->_pem_file = std::move(v);

@@ -16,14 +16,12 @@ set -o pipefail
 : "${ASAN_SYMBOLIZER_PATH:-}"
 : "${CRYPT_SHARED_LIB_PATH:-}"
 : "${disable_slow_tests:-}"
-: "${example_projects_cc:-}"
-: "${example_projects_cxx_standard:-}"
-: "${example_projects_cxx:-}"
 : "${example_projects_cxxflags:-}"
 : "${example_projects_ldflags:-}"
 : "${generator:-}"
 : "${MONGODB_API_VERSION:-}"
 : "${platform:-}"
+: "${REQUIRED_CXX_STANDARD:-}"
 : "${TEST_WITH_ASAN:-}"
 : "${TEST_WITH_CSFLE:-}"
 : "${TEST_WITH_UBSAN:-}"
@@ -233,13 +231,40 @@ else
   echo "Waiting for mock KMS servers to start... done."
 fi
 
+if [[ "${generator:-}" == Visual\ Studio\ * ]]; then
+  cmake_build_opts+=("/verbosity:minimal")
+elif [[ "${OSTYPE:?}" == cygwin ]]; then
+  : "${generator:="Ninja Multi-Config"}"
+  PATH="/cygdrive/c/ProgramData/chocolatey/lib/winlibs/tools/mingw64/bin:${PATH:-}" # mingw-w64 GCC
+  cmake_build_opts=(--quiet)                                                        # "" is not a valid argument to Ninja.
+fi
+
+# Required by example projects.
+export CMAKE_GENERATOR="${generator:-}"
+export CMAKE_GENERATOR_PLATFORM="${platform:-}"
+export CC="${CC:-"cc"}"
+export CXX="${CXX:-"c++"}"
+export CXX_STANDARD="${REQUIRED_CXX_STANDARD:-"11"}"
+export CXXFLAGS="${example_projects_cxxflags:-}"
+export LDFLAGS="${example_projects_ldflags:-}"
+
 pushd "${working_dir:?}/build"
 
-if [[ "${OSTYPE:?}" =~ cygwin ]]; then
-  CTEST_OUTPUT_ON_FAILURE=1 cmake --build . --config "${build_type:?}" --target RUN_TESTS -- /verbosity:minimal
+if [[ "${OSTYPE:?}" == cygwin ]]; then
+  if [[ "${generator:-}" == Visual\ Studio\ * ]]; then
+    run_tests_target="RUN_TESTS"
+    build_examples_target="examples/examples"
+    run_examples_target="examples/run-examples"
+  else
+    run_tests_target=test
+    build_examples_target="examples"
+    run_examples_target="run-examples"
+  fi
+
+  CTEST_OUTPUT_ON_FAILURE=1 cmake --build . --config "${build_type:?}" --target "${run_tests_target:?}" -- "${cmake_build_opts[@]:-}"
 
   echo "Building examples..."
-  cmake --build . --config "${build_type:?}" --target examples/examples
+  cmake --build . --config "${build_type:?}" --target "${build_examples_target:?}"
   echo "Building examples... done."
 
   # Only run examples if MONGODB_API_VERSION is unset. We do not append
@@ -247,7 +272,7 @@ if [[ "${OSTYPE:?}" =~ cygwin ]]; then
   # is true.
   if [[ -z "$MONGODB_API_VERSION" ]]; then
     echo "Running examples..."
-    if ! cmake --build . --config "${build_type:?}" --target examples/run-examples --parallel 1 -- /verbosity:minimal >|output.txt 2>&1; then
+    if ! cmake --build . --config "${build_type:?}" --target "${run_examples_target:?}" --parallel 1 -- "${cmake_build_opts[@]:-}" >|output.txt 2>&1; then
       # Only emit output on failure.
       cat output.txt
       exit 1
@@ -350,20 +375,7 @@ PKG_CONFIG_PATH+=":${mongoc_dir:?}/${LIB_DIR:?}/pkgconfig"
 PKG_CONFIG_PATH+=":${working_dir:?}/build/install/${LIB_DIR:?}/pkgconfig"
 export PKG_CONFIG_PATH
 
-# Environment variables used by example projects.
-export CMAKE_GENERATOR="${generator:-"Ninja"}"
-export CMAKE_GENERATOR_PLATFORM="${platform:-}"
-export BUILD_TYPE="${build_type:?}"
-export CXXFLAGS="${example_projects_cxxflags:-}"
-export LDFLAGS="${example_projects_ldflags:-}"
-export CC="${example_projects_cc:-"cc"}"
-export CXX="${example_projects_cxx:-"c++"}"
-export CXX_STANDARD="${example_projects_cxx_standard:-11}"
-export ninja_binary
-
-if [[ "$OSTYPE" =~ cygwin ]]; then
-  export MSVC=1
-else
+if [[ "${generator:-}" != Visual\ Studio\ * ]]; then
   LD_LIBRARY_PATH="${working_dir:?}/build/install/${LIB_DIR:?}:${LD_LIBRARY_PATH:-}"
   DYLD_FALLBACK_LIBRARY_PATH="$(pwd)/build/install/lib:${DYLD_FALLBACK_LIBRARY_PATH:-}"
 fi

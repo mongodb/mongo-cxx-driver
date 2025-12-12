@@ -425,7 +425,7 @@ void run_operation_check_result(document::view op, make_op_runner_fn make_op_run
             FAIL("expected an error, got: " << bsoncxx::to_json(*actual_result));
         }
         INFO("expected error message " << op["result"]["errorContains"].get_string().value);
-        INFO("got error message" << error_msg);
+        INFO("got: " << error_msg);
         // Do a case insensitive check.
         auto error_contains = test_util::tolowercase(op["result"]["errorContains"].get_string().value);
         REQUIRE(test_util::tolowercase(error_msg).find(error_contains) < error_msg.length());

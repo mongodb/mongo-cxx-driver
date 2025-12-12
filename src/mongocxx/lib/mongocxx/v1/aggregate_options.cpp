@@ -68,6 +68,8 @@ class aggregate_options::impl {
     }
 };
 
+// NOLINTBEGIN(cppcoreguidelines-owning-memory): owning void* for ABI stability.
+
 aggregate_options::~aggregate_options() {
     delete impl::with(this);
 }
@@ -93,6 +95,8 @@ aggregate_options& aggregate_options::operator=(aggregate_options const& other) 
 }
 
 aggregate_options::aggregate_options() : _impl{new impl{}} {}
+
+// NOLINTEND(cppcoreguidelines-owning-memory)
 
 aggregate_options& aggregate_options::allow_disk_use(bool allow_disk_use) {
     impl::with(this)->_allow_disk_use = allow_disk_use;

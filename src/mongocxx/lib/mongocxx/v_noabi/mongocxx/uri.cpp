@@ -16,7 +16,7 @@
 #include <mongocxx/v1/read_preference.hh>
 #include <mongocxx/v1/write_concern.hh>
 
-#include <bsoncxx/types.hpp>
+#include <utility>
 
 #include <mongocxx/exception/error_code.hpp>
 #include <mongocxx/exception/logic_error.hpp>
@@ -47,11 +47,10 @@ std::string to_string_null_safe(char const* str) {
 
 } // namespace
 
+// NOLINTNEXTLINE(cert-err58-cpp): v_noabi backward compatibility.
 std::string const uri::k_default_uri = "mongodb://localhost:27017";
 
-uri::uri(std::unique_ptr<impl>&& implementation) {
-    _impl.reset(implementation.release());
-}
+uri::uri(std::unique_ptr<impl>&& implementation) : _impl{std::move(implementation)} {}
 
 uri::uri(bsoncxx::v_noabi::string::view_or_value uri_string) {
     bson_error_t error;
@@ -137,14 +136,10 @@ mongocxx::v_noabi::write_concern uri::write_concern() const {
 static bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::stdx::string_view> _string_option(
     mongoc_uri_t* uri,
     std::string opt_name) {
-    char const* value;
-
-    value = libmongoc::uri_get_option_as_utf8(uri, opt_name.c_str(), nullptr);
-    if (!value) {
-        return bsoncxx::v_noabi::stdx::nullopt;
+    if (auto const value = libmongoc::uri_get_option_as_utf8(uri, opt_name.c_str(), nullptr)) {
+        return value;
     }
-
-    return bsoncxx::v_noabi::stdx::string_view{value};
+    return {};
 }
 
 static bsoncxx::v_noabi::stdx::optional<std::int32_t> _int32_option(mongoc_uri_t* uri, std::string opt_name) {
@@ -181,14 +176,15 @@ bsoncxx::v_noabi::stdx::optional<std::int32_t> uri::srv_max_hosts() const {
 static bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view> _credential_document_option(
     mongoc_uri_t* uri,
     std::string opt_name) {
-    bson_iter_t iter;
-    uint8_t const* data;
-    uint32_t len;
-    bson_t const* options_bson = libmongoc::uri_get_credentials(uri);
+    auto const options_bson = libmongoc::uri_get_credentials(uri);
 
+    bson_iter_t iter = {};
     if (!bson_iter_init_find_case(&iter, options_bson, opt_name.c_str()) || !BSON_ITER_HOLDS_DOCUMENT(&iter)) {
         return bsoncxx::v_noabi::stdx::nullopt;
     }
+
+    uint8_t const* data = {};
+    uint32_t len = {};
     bson_iter_document(&iter, &len, &data);
     return bsoncxx::v_noabi::document::view(data, len);
 }
@@ -203,17 +199,17 @@ bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view> uri::auth_mec
 }
 
 std::vector<bsoncxx::v_noabi::stdx::string_view> uri::compressors() const {
-    bson_t const* compressors;
-    std::vector<bsoncxx::v_noabi::stdx::string_view> result;
-    bson_iter_t iter;
-
-    compressors = libmongoc::uri_get_compressors(_impl->uri_t);
+    auto const compressors = libmongoc::uri_get_compressors(_impl->uri_t);
     if (!compressors) {
         // Should not happen. libmongoc will return an empty document even if there were no
         // compressors present in the URI.
-        return result;
+        return {};
     }
+
+    bson_iter_t iter = {};
     bson_iter_init(&iter, compressors);
+
+    std::vector<bsoncxx::v_noabi::stdx::string_view> result;
     while (bson_iter_next(&iter)) {
         result.push_back(bsoncxx::v_noabi::stdx::string_view{bson_iter_key(&iter), bson_iter_key_len(&iter)});
     }
