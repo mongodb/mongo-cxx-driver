@@ -42,6 +42,7 @@
 #include <cstdint>
 #include <string>
 #include <system_error>
+#include <type_traits>
 #include <vector>
 
 namespace mongocxx {
@@ -395,6 +396,13 @@ BSONCXX_PRIVATE_INLINE_CXX17 constexpr char const* uri::k_default_uri;
 
 } // namespace v1
 } // namespace mongocxx
+
+namespace std {
+
+template <>
+struct is_error_code_enum<mongocxx::v1::uri::errc> : true_type {};
+
+} // namespace std
 
 #include <mongocxx/v1/detail/postlude.hpp>
 
