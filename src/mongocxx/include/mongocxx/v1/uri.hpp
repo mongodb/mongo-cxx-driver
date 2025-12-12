@@ -394,7 +394,7 @@ class uri {
     class internal;
 
    private:
-    // MSVC incorrectly picks this ctor given `char const*` arguments.
+    // MSVC may incorrectly select this ctor given a `char const*` argument without `/Zc:strictStrings`.
     explicit uri(void* impl);
 };
 
