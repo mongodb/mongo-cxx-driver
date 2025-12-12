@@ -36,7 +36,7 @@ namespace mongocxx {
 namespace v_noabi {
 
 // Attempts to create a new client pool using the uri. Throws an exception upon error.
-static mongoc_client_pool_t* construct_client_pool(mongoc_uri_t* uri) {
+static mongoc_client_pool_t* construct_client_pool(mongoc_uri_t const* uri) {
     bson_error_t error;
     auto pool = libmongoc::client_pool_new_with_error(uri, &error);
     if (!pool) {
@@ -57,7 +57,7 @@ void pool::_release(client* client) {
 pool::~pool() = default;
 
 pool::pool(uri const& uri, options::pool const& options)
-    : _impl{bsoncxx::make_unique<impl>(construct_client_pool(uri._impl->uri_t))} {
+    : _impl{bsoncxx::make_unique<impl>(construct_client_pool(v_noabi::uri::internal::as_mongoc(uri)))} {
 #if MONGOCXX_SSL_IS_ENABLED()
     if (options.client_opts().tls_opts()) {
         if (!uri.tls())

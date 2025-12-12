@@ -300,10 +300,6 @@ v1::exception make_exception(bson_error_t const& error) {
 
 } // namespace
 
-exception exception::internal::make(std::error_code ec) {
-    return {ec, bsoncxx::make_unique<impl>()};
-}
-
 exception exception::internal::make(int code, std::error_category const& category, char const* message) {
     return {std::error_code{code, category}, message, bsoncxx::make_unique<impl>()};
 }
