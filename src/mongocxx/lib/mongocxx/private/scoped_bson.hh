@@ -236,7 +236,7 @@ class scoped_bson {
     // doc += scoped_bson{R"({"x": 2})"};
     // return doc;                     // {"x": 1, "x": 2}
     // ```
-    MONGOCXX_ABI_EXPORT_CDECL_TESTING(scoped_bson&) operator+=(scoped_bson_view other);
+    MONGOCXX_ABI_EXPORT_CDECL_TESTING(scoped_bson&) operator+=(scoped_bson_view const& other);
 
     std::uint8_t const* data() const {
         return _value.data();
