@@ -57,12 +57,15 @@ change_stream::iterator change_stream::begin() const {
     if (v1::change_stream::internal::is_dead(_stream)) {
         return this->end();
     }
+
     // Backward compatibility: `begin()` is not logically const.
+    // NOLINTNEXTLINE(cppcoreguidelines-pro-type-const-cast)
     return iterator{const_cast<change_stream*>(this), false};
 }
 
 change_stream::iterator change_stream::end() const {
     // Backward compatibility: `begin()` is not logically const.
+    // NOLINTNEXTLINE(cppcoreguidelines-pro-type-const-cast)
     return iterator{const_cast<change_stream*>(this), true};
 }
 

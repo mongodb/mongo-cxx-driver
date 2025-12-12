@@ -85,6 +85,8 @@ class change_stream::impl {
     }
 };
 
+// NOLINTBEGIN(cppcoreguidelines-owning-memory): owning void* for ABI stability.
+
 change_stream::~change_stream() {
     delete impl::with(this);
 }
@@ -97,6 +99,8 @@ change_stream& change_stream::operator=(change_stream&& other) noexcept {
     }
     return *this;
 }
+
+// NOLINTEND(cppcoreguidelines-owning-memory)
 
 change_stream::iterator change_stream::begin() {
     switch (impl::with(this)->_state) {
@@ -203,6 +207,8 @@ class change_stream::options::impl {
     }
 };
 
+// NOLINTBEGIN(cppcoreguidelines-owning-memory): owning void* for ABI stability.
+
 change_stream::options::~options() {
     delete impl::with(this);
 }
@@ -226,6 +232,8 @@ change_stream::options& change_stream::options::operator=(options const& other) 
 }
 
 change_stream::options::options() : _impl{new impl{}} {}
+
+// NOLINTEND(cppcoreguidelines-owning-memory)
 
 change_stream::options& change_stream::options::batch_size(std::int32_t v) {
     impl::with(this)->_batch_size = std::move(v);
