@@ -99,6 +99,8 @@ class change_stream {
     /// is only advanced at most once: consecutive calls to `this->begin()` do not advance the underlying cursor state.
     /// To obtain subsequent available event documents, the resulting iterator must be incremented instead.
     ///
+    /// @warning Invalidates all views to the current event document and resume token.
+    ///
     /// @throws mongocxx::v1::server_error when a server-side error is encountered.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(iterator) begin();
@@ -389,7 +391,7 @@ class change_stream::iterator {
     ///
     /// @note Pre-increment and post-increment are equivalent.
     ///
-    /// @warning Invalidates all views to the current event document.
+    /// @warning Invalidates all views to the current event document and resume token.
     ///
     /// @throws mongocxx::v1::server_error when a server-side error is encountered and a raw server error is available.
     /// @throws mongocxx::v1::exception for all other runtime errors.
