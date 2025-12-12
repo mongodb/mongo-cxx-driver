@@ -275,12 +275,12 @@ TEST_CASE("begin", "[mongocxx][v1][change_stream]") {
     SECTION("iteration") {
         auto stream = change_stream::internal::make(reinterpret_cast<mongoc_change_stream_t*>(&data));
 
-        CHECK(change_stream::internal::is_resumable(stream));
+        CHECK(change_stream::internal::can_get_more(stream));
         CHECK(data.next_count == 0);
 
         auto iter = stream.begin();
         REQUIRE(iter != stream.end());
-        CHECK(change_stream::internal::is_active(stream));
+        CHECK(change_stream::internal::has_doc(stream));
         CHECK(change_stream::internal::doc(stream) == *iter);
         CHECK(iter->find("next") != iter->end());
         CHECK((*iter)["next"].get_int32().value == 1);
@@ -289,7 +289,7 @@ TEST_CASE("begin", "[mongocxx][v1][change_stream]") {
 
         CHECK_NOTHROW(++iter);
         REQUIRE(iter != stream.end());
-        CHECK(change_stream::internal::is_active(stream));
+        CHECK(change_stream::internal::has_doc(stream));
         CHECK(change_stream::internal::doc(stream) == *iter);
         CHECK(iter->find("next") != iter->end());
         CHECK((*iter)["next"].get_int32().value == 2);
@@ -298,7 +298,7 @@ TEST_CASE("begin", "[mongocxx][v1][change_stream]") {
 
         CHECK_NOTHROW(iter++);
         REQUIRE(iter != stream.end());
-        CHECK(change_stream::internal::is_active(stream));
+        CHECK(change_stream::internal::has_doc(stream));
         CHECK(change_stream::internal::doc(stream) == *iter);
         CHECK(iter->find("next") != iter->end());
         CHECK((*iter)["next"].get_int32().value == 3);
@@ -379,14 +379,14 @@ TEST_CASE("begin", "[mongocxx][v1][change_stream]") {
             })
             .times(2);
 
-        CHECK(change_stream::internal::is_resumable(stream));
+        CHECK(change_stream::internal::can_get_more(stream));
         CHECK(data.next_count == 0);
         CHECK(data.error_document_count == 0);
 
         {
             auto const iter = stream.begin();
 
-            CHECK(change_stream::internal::is_resumable(stream));
+            CHECK(change_stream::internal::can_get_more(stream));
             CHECK(change_stream::internal::doc(stream) == empty);
             CHECK(data.next_count == 1);
             CHECK(data.error_document_count == 1);
@@ -397,7 +397,7 @@ TEST_CASE("begin", "[mongocxx][v1][change_stream]") {
         {
             auto const iter = stream.begin();
 
-            CHECK(change_stream::internal::is_resumable(stream));
+            CHECK(change_stream::internal::can_get_more(stream));
             CHECK(change_stream::internal::doc(stream) == empty);
             CHECK(data.next_count == 2);
             CHECK(data.error_document_count == 2);
@@ -408,7 +408,7 @@ TEST_CASE("begin", "[mongocxx][v1][change_stream]") {
         {
             auto const iter = stream.begin();
 
-            CHECK(change_stream::internal::is_active(stream));
+            CHECK(change_stream::internal::has_doc(stream));
             CHECK(change_stream::internal::doc(stream) == data.doc.view());
             CHECK(data.next_count == 3);
             CHECK(data.error_document_count == 2);

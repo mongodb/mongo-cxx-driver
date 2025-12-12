@@ -40,9 +40,9 @@ namespace v1 {
 namespace {
 
 enum class state {
-    is_active,    // An event document is available after last iteration.
-    is_resumable, // No event document is available after last iteration (end).
-    is_dead,      // Change stream encountered an irrecoverable error (end).
+    has_doc,      // The previous advancement returned a document.
+    can_get_more, // No document is currently available, but can get more (end).
+    is_dead,      // Cannot obtain any more documents (end).
 };
 
 } // namespace
@@ -51,7 +51,7 @@ class change_stream::impl {
    public:
     mongoc_change_stream_t* _stream;
     bsoncxx::v1::document::view _doc; // The event document.
-    state _state = state::is_resumable;
+    state _state = state::can_get_more;
 
     ~impl() {
         libmongoc::change_stream_destroy(_stream);
@@ -100,14 +100,14 @@ change_stream& change_stream::operator=(change_stream&& other) noexcept {
 
 change_stream::iterator change_stream::begin() {
     switch (impl::with(this)->_state) {
-        case state::is_active: {
+        case state::has_doc: {
             // Do not advance on consecutive calls to `.begin()`.
             return iterator::internal::make(this);
         }
 
-        case state::is_resumable: {
+        case state::can_get_more: {
             auto iter = iterator::internal::make(this);
-            ++iter; // Obtain the first available event document.
+            ++iter; // Obtain the first active event document.
             return iter;
         }
 
@@ -138,12 +138,12 @@ bsoncxx::v1::document::view change_stream::internal::doc(change_stream const& se
     return impl::with(self)._doc;
 }
 
-bool change_stream::internal::is_active(change_stream const& self) {
-    return impl::with(self)._state == state::is_active;
+bool change_stream::internal::has_doc(change_stream const& self) {
+    return impl::with(self)._state == state::has_doc;
 }
 
-bool change_stream::internal::is_resumable(change_stream const& self) {
-    return impl::with(self)._state == state::is_resumable;
+bool change_stream::internal::can_get_more(change_stream const& self) {
+    return impl::with(self)._state == state::can_get_more;
 }
 
 bool change_stream::internal::is_dead(change_stream const& self) {
@@ -159,8 +159,8 @@ void change_stream::internal::advance_iterator(change_stream& self) {
     bson_error_t error = {};
 
     if (libmongoc::change_stream_next(_stream, doc.out_ptr())) {
-        // Event document is available.
-        _state = state::is_active;
+        // Event document is active.
+        _state = state::has_doc;
         _doc = doc.view();
     } else if (libmongoc::change_stream_error_document(_stream, &error, doc.out_ptr())) {
         // An irrecoverable error occurred.
@@ -169,7 +169,7 @@ void change_stream::internal::advance_iterator(change_stream& self) {
         throw_exception(error, doc.view());
     } else {
         // Change stream is resumable.
-        _state = state::is_resumable;
+        _state = state::can_get_more;
         _doc = {};
     }
 }
@@ -321,7 +321,7 @@ bool operator==(change_stream::iterator const& lhs, change_stream::iterator cons
     // One is an end iterator and the other is an inactive iterator.
     if (!_lhs != !_rhs) {
         auto const& stream = _lhs ? *_lhs : *_rhs;
-        return !change_stream::internal::is_active(stream);
+        return !change_stream::internal::has_doc(stream);
     }
 
     // Different underlying streams and neither are end iterators.

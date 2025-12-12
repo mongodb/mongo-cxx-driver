@@ -32,8 +32,8 @@ class change_stream::internal {
 
     static MONGOCXX_ABI_EXPORT_CDECL_TESTING(bsoncxx::v1::document::view) doc(change_stream const& self);
 
-    static MONGOCXX_ABI_EXPORT_CDECL_TESTING(bool) is_active(change_stream const& self);
-    static MONGOCXX_ABI_EXPORT_CDECL_TESTING(bool) is_resumable(change_stream const& self);
+    static MONGOCXX_ABI_EXPORT_CDECL_TESTING(bool) has_doc(change_stream const& self);
+    static MONGOCXX_ABI_EXPORT_CDECL_TESTING(bool) can_get_more(change_stream const& self);
     static MONGOCXX_ABI_EXPORT_CDECL_TESTING(bool) is_dead(change_stream const& self);
 
     static void advance_iterator(change_stream& self);

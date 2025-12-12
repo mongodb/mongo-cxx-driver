@@ -97,7 +97,7 @@ change_stream::iterator::iterator(change_stream* change_stream, bool is_end)
 {
     if (!is_end) {
         // Do not advance on consecutive calls to `.begin()`.
-        if (v1::change_stream::internal::is_active(_change_stream->_stream)) {
+        if (v1::change_stream::internal::has_doc(_change_stream->_stream)) {
             return;
         }
 
@@ -131,7 +131,7 @@ bool operator==(change_stream::iterator const& lhs, change_stream::iterator cons
 
 bool change_stream::iterator::is_exhausted() const {
     if (_change_stream) {
-        return !v1::change_stream::internal::is_active(_change_stream->_stream);
+        return !v1::change_stream::internal::has_doc(_change_stream->_stream);
     }
 
     MONGOCXX_PRIVATE_UNREACHABLE; // scan-build: warning: Forming reference to null pointer [core.NonNullParamChecker]
