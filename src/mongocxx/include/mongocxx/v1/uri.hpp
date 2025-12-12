@@ -242,7 +242,7 @@ class uri {
     ///
     /// Return the mongoc "credentials" field containing "authMechanism" and related options.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view>) credentials();
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view>) credentials() const;
 
     ///
     /// Return the "srvMaxHosts" option.
