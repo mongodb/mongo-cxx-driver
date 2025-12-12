@@ -14,13 +14,10 @@
 
 #pragma once
 
-#include <bsoncxx/v1/detail/type_traits.hpp>
-
 #include <mongocxx/v1/server_error.hpp>
 
 #include <cstdint>
 #include <system_error>
-#include <type_traits>
 #include <utility>
 
 #include <bsoncxx/document/value.hpp>
@@ -71,30 +68,13 @@ template <typename exception_type>
     throw exception_type{v_noabi::make_error_code(error), std::move(raw_server_error), error.message};
 }
 
-template <
-    typename exception_type,
-    bsoncxx::detail::enable_if_t<std::is_constructible<
-        exception_type,
-        std::error_code,
-        bsoncxx::v_noabi::document::value,
-        char const*>::value>* = nullptr>
+template <typename exception_type>
 [[noreturn]] void throw_exception(v1::exception const& ex) {
     if (auto const ptr = dynamic_cast<v1::server_error const*>(&ex)) {
         throw exception_type{
             ptr->code(), bsoncxx::v_noabi::document::value{bsoncxx::v_noabi::from_v1(ptr->raw())}, ptr->what()};
     }
 
-    throw exception_type{ex.code(), ex.what()};
-}
-
-template <
-    typename exception_type,
-    bsoncxx::detail::enable_if_t<!std::is_constructible<
-        exception_type,
-        std::error_code,
-        bsoncxx::v_noabi::document::value,
-        char const*>::value>* = nullptr>
-[[noreturn]] void throw_exception(v1::exception const& ex) {
     throw exception_type{ex.code(), ex.what()};
 }
 
