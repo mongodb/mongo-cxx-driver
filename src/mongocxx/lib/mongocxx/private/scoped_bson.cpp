@@ -23,7 +23,7 @@
 
 namespace mongocxx {
 
-scoped_bson& scoped_bson::operator+=(scoped_bson_view other) {
+scoped_bson& scoped_bson::operator+=(scoped_bson_view const& other) {
     if (!_value) {
         throw std::logic_error{"mongocxx::scoped_bson::operator+=: this->data() == nullptr"};
     }
