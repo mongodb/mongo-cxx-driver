@@ -16,22 +16,16 @@
 
 #include <mongocxx/uri.hpp> // IWYU pragma: export
 
+//
+
 #include <mongocxx/private/mongoc.hh>
 
 namespace mongocxx {
 namespace v_noabi {
 
-class uri::impl {
+class uri::internal {
    public:
-    impl(mongoc_uri_t* uri) : uri_t(uri) {}
-    ~impl() {
-        libmongoc::uri_destroy(uri_t);
-    }
-    impl(impl&&) = delete;
-    impl& operator=(impl&&) = delete;
-    impl(impl const&) = delete;
-    impl& operator=(impl const&) = delete;
-    mongoc_uri_t* uri_t;
+    static mongoc_uri_t const* as_mongoc(uri const& self);
 };
 
 } // namespace v_noabi

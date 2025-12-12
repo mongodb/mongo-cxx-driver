@@ -390,6 +390,12 @@ class uri {
     friend std::error_code make_error_code(errc v) {
         return {static_cast<int>(v), error_category()};
     }
+
+    class internal;
+
+   private:
+    // MSVC incorrectly picks this ctor given `char const*` arguments.
+    explicit uri(void* impl);
 };
 
 BSONCXX_PRIVATE_INLINE_CXX17 constexpr char const* uri::k_default_uri;

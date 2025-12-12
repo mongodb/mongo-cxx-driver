@@ -16,10 +16,12 @@
 
 //
 
+#include <bsoncxx/v1/detail/type_traits.hpp>
 #include <bsoncxx/v1/document/value.hpp>
 #include <bsoncxx/v1/document/view.hpp>
 
 #include <system_error>
+#include <utility>
 
 #include <bsoncxx/private/bson.hh>
 
@@ -30,10 +32,27 @@ namespace v1 {
 
 class exception::internal {
    public:
-    static MONGOCXX_ABI_EXPORT_CDECL_TESTING(exception) make(std::error_code ec);
     static MONGOCXX_ABI_EXPORT_CDECL_TESTING(exception)
     make(int code, std::error_category const& category, char const* message);
     static MONGOCXX_ABI_EXPORT_CDECL_TESTING(exception) make(int code, std::error_category const& category);
+
+    template <
+        typename Errc,
+        typename... Args,
+        bsoncxx::detail::enable_if_t<std::is_error_code_enum<Errc>::value>* = nullptr>
+    static exception make(Errc errc, Args&&... args) {
+        using std::make_error_code;
+        auto const ec = make_error_code(errc);
+        return make(ec.value(), ec.category(), std::forward<Args>(args)...);
+    }
+
+    static exception make(std::error_code ec) {
+        return make(ec.value(), ec.category());
+    }
+
+    static exception make(std::error_code ec, char const* message) {
+        return make(ec.value(), ec.category(), message);
+    }
 
     static MONGOCXX_ABI_EXPORT_CDECL_TESTING(void) set_error_labels(exception& self, bsoncxx::v1::document::view v);
 };
