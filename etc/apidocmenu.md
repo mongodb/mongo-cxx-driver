@@ -60,7 +60,6 @@
 | ...         | ...             | ...                         | ...                |
 | 4.0.0       | None            | Ready for Use               | Not Supported      |
 | 3.11.1      | None            | Ready for Use               | Not Supported      |
-| 3.11.0      | None            | Ready for Use               | Not Supported      |
 | ...         | ...             | ...                         | ...                |
 | 3.0.0       | None            | Ready for Use               | Not Supported      |
 
