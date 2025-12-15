@@ -42,6 +42,7 @@
 #include <cstdint>
 #include <string>
 #include <system_error>
+#include <type_traits>
 #include <vector>
 
 namespace mongocxx {
@@ -242,7 +243,7 @@ class uri {
     ///
     /// Return the mongoc "credentials" field containing "authMechanism" and related options.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view>) credentials();
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view>) credentials() const;
 
     ///
     /// Return the "srvMaxHosts" option.
@@ -389,12 +390,29 @@ class uri {
     friend std::error_code make_error_code(errc v) {
         return {static_cast<int>(v), error_category()};
     }
+
+    class internal;
+
+   private:
+    // MSVC may incorrectly select the `void*` ctor given a `char const*` argument without `/Zc:strictStrings`.
+    struct void_ptr {
+        void* impl = nullptr;
+    };
+
+    explicit uri(void_ptr vp);
 };
 
 BSONCXX_PRIVATE_INLINE_CXX17 constexpr char const* uri::k_default_uri;
 
 } // namespace v1
 } // namespace mongocxx
+
+namespace std {
+
+template <>
+struct is_error_code_enum<mongocxx::v1::uri::errc> : true_type {};
+
+} // namespace std
 
 #include <mongocxx/v1/detail/postlude.hpp>
 

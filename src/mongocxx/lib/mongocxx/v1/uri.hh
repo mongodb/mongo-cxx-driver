@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include <mongocxx/v1/read_concern.hpp> // IWYU pragma: export
+#include <mongocxx/v1/uri.hpp> // IWYU pragma: export
 
 //
 
@@ -24,11 +24,11 @@
 namespace mongocxx {
 namespace v1 {
 
-class read_concern::internal {
+class uri::internal {
    public:
-    static MONGOCXX_ABI_EXPORT_CDECL_TESTING(read_concern) make(mongoc_read_concern_t* rc);
+    static uri make(mongoc_uri_t* uri);
 
-    static MONGOCXX_ABI_EXPORT_CDECL_TESTING(mongoc_read_concern_t const*) as_mongoc(read_concern const& self);
+    static MONGOCXX_ABI_EXPORT_CDECL_TESTING(mongoc_uri_t const*) as_mongoc(uri const& self);
 };
 
 } // namespace v1

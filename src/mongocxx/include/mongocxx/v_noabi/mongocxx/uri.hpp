@@ -14,16 +14,27 @@
 
 #pragma once
 
-#include <memory>
+#include <mongocxx/uri-fwd.hpp> // IWYU pragma: export
+
+//
+
+#include <bsoncxx/v1/detail/type_traits.hpp>
+
+#include <mongocxx/v1/uri.hpp> // IWYU pragma: export
+
+#include <cstdint>
+#include <memory> // IWYU pragma: keep: backward compatibility, to be removed.
 #include <string>
+#include <type_traits>
 #include <utility>
 #include <vector>
 
-#include <mongocxx/client-fwd.hpp>
-#include <mongocxx/pool-fwd.hpp>
-#include <mongocxx/uri-fwd.hpp> // IWYU pragma: export
+#include <mongocxx/client-fwd.hpp> // IWYU pragma: keep: backward compatibility, to be removed.
+#include <mongocxx/pool-fwd.hpp>   // IWYU pragma: keep: backward compatibility, to be removed.
 
 #include <bsoncxx/document/view.hpp>
+#include <bsoncxx/stdx/optional.hpp>
+#include <bsoncxx/stdx/string_view.hpp>
 #include <bsoncxx/string/view_or_value.hpp>
 
 #include <mongocxx/read_concern.hpp>
@@ -42,15 +53,11 @@ namespace v_noabi {
 /// - [Connection Strings (MongoDB Manual)](https://www.mongodb.com/docs/manual/reference/connection-string/)
 ///
 class uri {
+   private:
+    v1::uri _uri;
+
    public:
-    ///
-    /// A host.
-    ///
-    struct host {
-        std::string name;    ///< The host name.
-        std::uint16_t port;  ///< The port number.
-        std::int32_t family; ///< The address family.
-    };
+    using host = v1::uri::host;
 
     ///
     /// The default URI string: `"mongodb://localhost:27017"`.
@@ -58,63 +65,107 @@ class uri {
     static MONGOCXX_ABI_EXPORT const std::string k_default_uri;
 
     ///
-    /// Constructs a uri from an optional MongoDB URI string. If no URI string is specified,
-    /// uses the default URI string: `"mongodb://localhost:27017"`.
+    /// Constructs a uri from the provided MongoDB URI string.
     ///
     /// @see
     /// - https://mongoc.org/libmongoc/current/mongoc_uri_t.html
     ///
-    /// @param uri_string
-    ///   String representing a MongoDB connection string URI, defaults to k_default_uri.
+    /// @{
+    /* explicit(false) */ MONGOCXX_ABI_EXPORT_CDECL() uri(bsoncxx::v_noabi::string::view_or_value uri_string);
+
+    template <
+        typename T,
+        bsoncxx::detail::enable_if_t<std::is_convertible<T, bsoncxx::v_noabi::string::view_or_value>::value>* = nullptr>
+    /* explicit(false) */ uri(T t) : uri{bsoncxx::v_noabi::string::view_or_value{t}} {
+        // For backward compatibility: avoid ambiguity with the new v1::uri ctor.
+    }
+    /// @}
+
     ///
-    MONGOCXX_ABI_EXPORT_CDECL()
-    uri(bsoncxx::v_noabi::string::view_or_value uri_string = k_default_uri);
+    /// Constructs a uri from the default MongoDB URI string: `"mongodb://localhost:27017"`.
+    ///
+    /// @see
+    /// - https://mongoc.org/libmongoc/current/mongoc_uri_t.html
+    ///
+    uri() : uri{bsoncxx::v_noabi::string::view_or_value{k_default_uri}} {}
 
     ///
     /// Move constructs a uri.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL() uri(uri&&) noexcept;
+    uri(uri&& other) noexcept = default;
 
     ///
     /// Move assigns a uri.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(uri&) operator=(uri&&) noexcept;
+    uri& operator=(uri&& other) noexcept = default;
 
     ///
     /// Destroys a uri.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL() ~uri();
+    ~uri() = default;
 
-    uri(uri const&) = delete;
-    uri& operator=(uri const&) = delete;
+    uri(uri const& other) = delete;
+    uri& operator=(uri const& other) = delete;
+
+    ///
+    /// Construct with the @ref mongocxx::v1 equivalent.
+    ///
+    /* explicit(false) */ uri(v1::uri uri) : _uri{std::move(uri)} {}
+
+    ///
+    /// Convert to the @ref mongocxx::v1 equivalent.
+    ///
+    /// @par Postconditions:
+    /// - `*this` is in an assign-or-destroy-only state.
+    ///
+    /// @warning Invalidates all associated views.
+    ///
+    explicit operator v1::uri() && {
+        return std::move(_uri);
+    }
+
+    ///
+    /// Convert to the @ref mongocxx::v1 equivalent.
+    ///
+    explicit operator v1::uri() const& {
+        return _uri;
+    }
 
     ///
     /// Returns the authentication mechanism from the uri.
     ///
     /// @return A string representing the authentication mechanism.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(std::string) auth_mechanism() const;
+    std::string auth_mechanism() const {
+        return std::string{_uri.auth_mechanism()};
+    }
 
     ///
     /// Returns the authentication source from the uri.
     ///
     /// @return A string representing the authentication source.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(std::string) auth_source() const;
+    std::string auth_source() const {
+        return std::string{_uri.auth_source()};
+    }
 
     ///
     /// Returns the hosts from the uri.
     ///
     /// @return A vector of hosts.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(std::vector<host>) hosts() const;
+    std::vector<host> hosts() const {
+        return _uri.hosts();
+    }
 
     ///
     /// Returns the database from the uri.
     ///
     /// @return A string with the name of the database.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(std::string) database() const;
+    std::string database() const {
+        return std::string{_uri.database()};
+    }
 
     ///
     /// Returns other uri options.
@@ -125,35 +176,45 @@ class uri {
     ///
     /// @return A document view containing other options.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::document::view) options() const;
+    bsoncxx::v_noabi::document::view options() const {
+        return _uri.options();
+    }
 
     ///
     /// Returns the password from the uri.
     ///
     /// @return A string containing the supplied password.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(std::string) password() const;
+    std::string password() const {
+        return std::string{_uri.password()};
+    }
 
     ///
     /// Returns the read concern from the uri.
     ///
     /// @return A read_concern that represents what was specified in the uri.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(mongocxx::v_noabi::read_concern) read_concern() const;
+    v_noabi::read_concern read_concern() const {
+        return _uri.read_concern();
+    }
 
     ///
     /// Returns the read preference from the uri.
     ///
     /// @return A read_preference that represents what was specified in the uri.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(mongocxx::v_noabi::read_preference) read_preference() const;
+    v_noabi::read_preference read_preference() const {
+        return _uri.read_preference();
+    }
 
     ///
     /// Returns the replica set specified in the uri.
     ///
     /// @return A string representing the supplied replica set name.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(std::string) replica_set() const;
+    std::string replica_set() const {
+        return std::string{_uri.replica_set()};
+    }
 
     ///
     /// Returns the ssl parameter from the uri.
@@ -162,66 +223,79 @@ class uri {
     ///
     /// @deprecated The tls() method should be used instead of this method.
     ///
-    MONGOCXX_DEPRECATED MONGOCXX_ABI_EXPORT_CDECL(bool) ssl() const;
+    bool ssl() const {
+        return _uri.tls();
+    }
 
     ///
     /// Returns the tls parameter from the uri.
     ///
     /// @return Boolean that is @c true if tls is enabled and @c false if not.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bool) tls() const;
+    bool tls() const {
+        return _uri.tls();
+    }
 
     ///
     /// Returns the uri in a string format.
     ///
     /// @return A string with the uri.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(std::string) to_string() const;
+    std::string to_string() const {
+        return std::string{_uri.to_string()};
+    }
 
     ///
     /// Returns the supplied username from the uri.
     ///
     /// @return A string with the username specified in the uri.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(std::string) username() const;
+    std::string username() const {
+        return std::string{_uri.username()};
+    }
 
     ///
     /// Returns the write concern specified in the uri.
     ///
     /// @return A write_concern that represents what was specified in the uri.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(mongocxx::v_noabi::write_concern) write_concern() const;
+    v_noabi::write_concern write_concern() const {
+        return _uri.write_concern();
+    }
 
     ///
     /// Returns the value of the option "appname" if present in the uri.
     ///
     /// @return An optional bsoncxx::v_noabi::stdx::string_view
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::stdx::string_view>)
-    appname() const;
+    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::stdx::string_view> appname() const {
+        return _uri.appname();
+    }
 
     ///
     /// Returns the value of the option "authMechanismProperties" if present in the uri.
     ///
     /// @return An optional bsoncxx::v_noabi::document::view
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view>)
-    auth_mechanism_properties() const;
+    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view> auth_mechanism_properties() const {
+        return _uri.auth_mechanism_properties();
+    }
 
     ///
     /// Returns the value of the option credentials if present in the uri.
     ///
     /// @return An optional bsoncxx::v_noabi::document::view
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view>)
-    credentials();
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view>) credentials();
 
     ///
     /// Returns the value of the option "srvMaxHosts" if present in the uri.
     ///
     /// @return An optional std::int32_t
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<std::int32_t>) srv_max_hosts() const;
+    bsoncxx::v_noabi::stdx::optional<std::int32_t> srv_max_hosts() const {
+        return _uri.srv_max_hosts();
+    }
 
     ///
     /// Returns the list of compressors present in the uri or an empty list if "compressors" was not
@@ -229,75 +303,90 @@ class uri {
     ///
     /// @return A std::vector of bsoncxx::v_noabi::stdx::string_view.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(std::vector<bsoncxx::v_noabi::stdx::string_view>) compressors() const;
+    std::vector<bsoncxx::v_noabi::stdx::string_view> compressors() const {
+        return _uri.compressors();
+    }
 
     ///
     /// Returns the value of the option "connectTimeoutMS" if present in the uri.
     ///
     /// @return An optional std::int32_t
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<std::int32_t>)
-    connect_timeout_ms() const;
+    bsoncxx::v_noabi::stdx::optional<std::int32_t> connect_timeout_ms() const {
+        return _uri.connect_timeout_ms();
+    }
 
     ///
     /// Returns the value of the option "directConnection" if present in the uri.
     ///
     /// @return An optional bool
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bool>) direct_connection() const;
+    bsoncxx::v_noabi::stdx::optional<bool> direct_connection() const {
+        return _uri.direct_connection();
+    }
 
     ///
     /// Returns the value of the option "heartbeatFrequencyMS" if present in the uri.
     ///
     /// @return An optional std::int32_t
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<std::int32_t>)
-    heartbeat_frequency_ms() const;
+    bsoncxx::v_noabi::stdx::optional<std::int32_t> heartbeat_frequency_ms() const {
+        return _uri.heartbeat_frequency_ms();
+    }
 
     ///
     /// Returns the value of the option "localThresholdMS" if present in the uri.
     ///
     /// @return An optional std::int32_t
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<std::int32_t>)
-    local_threshold_ms() const;
+    bsoncxx::v_noabi::stdx::optional<std::int32_t> local_threshold_ms() const {
+        return _uri.local_threshold_ms();
+    }
 
     ///
     /// Returns the value of the option "maxPoolSize" if present in the uri.
     ///
     /// @return An optional std::int32_t
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<std::int32_t>) max_pool_size() const;
+    bsoncxx::v_noabi::stdx::optional<std::int32_t> max_pool_size() const {
+        return _uri.max_pool_size();
+    }
 
     ///
     /// Returns the value of the option "retryReads" if present in the uri.
     ///
     /// @return An optional bool
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bool>) retry_reads() const;
+    bsoncxx::v_noabi::stdx::optional<bool> retry_reads() const {
+        return _uri.retry_reads();
+    }
 
     ///
     /// Returns the value of the option "retryWrites" if present in the uri.
     ///
     /// @return An optional bool
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bool>) retry_writes() const;
+    bsoncxx::v_noabi::stdx::optional<bool> retry_writes() const {
+        return _uri.retry_writes();
+    }
 
     ///
     /// Returns the value of the option "serverSelectionTimeoutMS" if present in the uri.
     ///
     /// @return An optional std::int32_t
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<std::int32_t>)
-    server_selection_timeout_ms() const;
+    bsoncxx::v_noabi::stdx::optional<std::int32_t> server_selection_timeout_ms() const {
+        return _uri.server_selection_timeout_ms();
+    }
 
     ///
     /// Returns the value of the option "serverSelectionTryOnce" if present in the uri.
     ///
     /// @return An optional bool
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bool>)
-    server_selection_try_once() const;
+    bsoncxx::v_noabi::stdx::optional<bool> server_selection_try_once() const {
+        return _uri.server_selection_try_once();
+    }
 
     ///
     /// Sets the value of the option "serverSelectionTryOnce" in the uri.
@@ -306,56 +395,61 @@ class uri {
     ///
     /// @throws mongocxx::v_noabi::exception if there is an error setting the option.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(void)
-    server_selection_try_once(bool val);
+    MONGOCXX_ABI_EXPORT_CDECL(void) server_selection_try_once(bool val);
 
     ///
     /// Returns the value of the option "socketTimeoutMS" if present in the uri.
     ///
     /// @return An optional std::int32_t
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<std::int32_t>)
-    socket_timeout_ms() const;
+    bsoncxx::v_noabi::stdx::optional<std::int32_t> socket_timeout_ms() const {
+        return _uri.socket_timeout_ms();
+    }
 
     ///
     /// Returns the value of the option "tlsAllowInvalidCertificates" if present in the uri.
     ///
     /// @return An optional bool
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bool>)
-    tls_allow_invalid_certificates() const;
+    bsoncxx::v_noabi::stdx::optional<bool> tls_allow_invalid_certificates() const {
+        return _uri.tls_allow_invalid_certificates();
+    }
 
     ///
     /// Returns the value of the option "tlsAllowInvalidHostnames" if present in the uri.
     ///
     /// @return An optional bool
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bool>)
-    tls_allow_invalid_hostnames() const;
+    bsoncxx::v_noabi::stdx::optional<bool> tls_allow_invalid_hostnames() const {
+        return _uri.tls_allow_invalid_hostnames();
+    }
 
     ///
     /// Returns the value of the option "tlsCAFile" if present in the uri.
     ///
     /// @return An optional bsoncxx::v_noabi::stdx::string_view
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::stdx::string_view>)
-    tls_ca_file() const;
+    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::stdx::string_view> tls_ca_file() const {
+        return _uri.tls_ca_file();
+    }
 
     ///
     /// Returns the value of the option "tlsCertificateKeyFile" if present in the uri.
     ///
     /// @return An optional bsoncxx::v_noabi::stdx::string_view
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::stdx::string_view>)
-    tls_certificate_key_file() const;
+    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::stdx::string_view> tls_certificate_key_file() const {
+        return _uri.tls_certificate_key_file();
+    }
 
     ///
     /// Returns the value of the option "tlsCertificateKeyFilePassword" if present in the uri.
     ///
     /// @return An optional bsoncxx::v_noabi::stdx::string_view
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::stdx::string_view>)
-    tls_certificate_key_file_password() const;
+    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::stdx::string_view> tls_certificate_key_file_password() const {
+        return _uri.tls_certificate_key_file_password();
+    }
 
     ///
     /// Returns the value of the option "tlsDisableCertificateRevocationCheck" if present in the
@@ -363,50 +457,62 @@ class uri {
     ///
     /// @return An optional bool
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bool>)
-    tls_disable_certificate_revocation_check() const;
+    bsoncxx::v_noabi::stdx::optional<bool> tls_disable_certificate_revocation_check() const {
+        return _uri.tls_disable_certificate_revocation_check();
+    }
 
     ///
     /// Returns the value of the option "tlsDisableOCSPEndpointCheck" if present in the uri.
     ///
     /// @return An optional bool
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bool>)
-    tls_disable_ocsp_endpoint_check() const;
+    bsoncxx::v_noabi::stdx::optional<bool> tls_disable_ocsp_endpoint_check() const {
+        return _uri.tls_disable_ocsp_endpoint_check();
+    }
 
     ///
     /// Returns the value of the option "tlsInsecure" if present in the uri.
     ///
     /// @return An optional bool
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bool>) tls_insecure() const;
+    bsoncxx::v_noabi::stdx::optional<bool> tls_insecure() const {
+        return _uri.tls_insecure();
+    }
 
     ///
     /// Returns the value of the option "waitQueueTimeoutMS" if present in the uri.
     ///
     /// @return An optional std::int32_t
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<std::int32_t>)
-    wait_queue_timeout_ms() const;
+    bsoncxx::v_noabi::stdx::optional<std::int32_t> wait_queue_timeout_ms() const {
+        return _uri.wait_queue_timeout_ms();
+    }
 
     ///
     /// Returns the value of the option "zlibCompressionLevel" if present in the uri.
     ///
     /// @return An optional std::int32_t
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<std::int32_t>)
-    zlib_compression_level() const;
+    bsoncxx::v_noabi::stdx::optional<std::int32_t> zlib_compression_level() const {
+        return _uri.zlib_compression_level();
+    }
 
-   private:
-    friend ::mongocxx::v_noabi::client;
-    friend ::mongocxx::v_noabi::pool;
-
-    class impl;
-
-    uri(std::unique_ptr<impl>&& implementation);
-
-    std::unique_ptr<impl> _impl;
+    class internal;
 };
+
+///
+/// Convert to the @ref mongocxx::v_noabi equivalent of `v`.
+///
+inline v_noabi::uri from_v1(v1::uri v) {
+    return {std::move(v)};
+}
+
+///
+/// Convert to the @ref mongocxx::v1 equivalent of `v`.
+///
+inline v1::uri to_v1(v_noabi::uri v) {
+    return v1::uri{std::move(v)};
+}
 
 } // namespace v_noabi
 } // namespace mongocxx
@@ -416,4 +522,7 @@ class uri {
 ///
 /// @file
 /// Provides @ref mongocxx::v_noabi::uri.
+///
+/// @par Includes
+/// - @ref mongocxx/v1/uri.hpp
 ///

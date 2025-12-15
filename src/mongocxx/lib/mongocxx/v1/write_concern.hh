@@ -28,7 +28,7 @@ class write_concern::internal {
    public:
     static MONGOCXX_ABI_EXPORT_CDECL_TESTING(write_concern) make(mongoc_write_concern_t* rc);
 
-    static mongoc_write_concern_t const* as_mongoc(write_concern const& self);
+    static MONGOCXX_ABI_EXPORT_CDECL_TESTING(mongoc_write_concern_t const*) as_mongoc(write_concern const& self);
 };
 
 } // namespace v1

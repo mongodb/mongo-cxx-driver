@@ -15,6 +15,7 @@
 #include <mongocxx/v1/change_stream.hh>
 #include <mongocxx/v1/read_concern.hh>
 #include <mongocxx/v1/read_preference.hh>
+#include <mongocxx/v1/uri.hh>
 #include <mongocxx/v1/write_concern.hh>
 
 #include <bsoncxx/builder/basic/kvp.hpp>
@@ -88,7 +89,7 @@ client::client(mongocxx::v_noabi::uri const& uri, options::client const& options
         throw exception{error_code::k_ssl_not_supported};
     }
 #endif
-    auto new_client = libmongoc::client_new_from_uri(uri._impl->uri_t);
+    auto new_client = libmongoc::client_new_from_uri(v_noabi::uri::internal::as_mongoc(uri));
     if (!new_client) {
         // Shouldn't happen after checks above, but future libmongoc's may change behavior.
         throw exception{error_code::k_invalid_parameter, "could not construct client from URI"};
@@ -179,9 +180,7 @@ mongocxx::v_noabi::read_preference client::read_preference() const {
 }
 
 mongocxx::v_noabi::uri client::uri() const {
-    mongocxx::v_noabi::uri connection_string(
-        bsoncxx::make_unique<uri::impl>(libmongoc::uri_copy(libmongoc::client_get_uri(_get_impl().client_t))));
-    return connection_string;
+    return v1::uri::internal::make(libmongoc::uri_copy(libmongoc::client_get_uri(_get_impl().client_t)));
 }
 
 void client::write_concern_deprecated(mongocxx::v_noabi::write_concern wc) {

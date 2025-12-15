@@ -374,12 +374,14 @@ BSONCXX_PRIVATE_WARNINGS_POP();
     X(transaction_opts_set_write_concern)                                 \
     X(uri_copy)                                                           \
     X(uri_destroy)                                                        \
+    X(uri_get_appname)                                                    \
     X(uri_get_auth_mechanism)                                             \
     X(uri_get_auth_source)                                                \
     X(uri_get_compressors)                                                \
     X(uri_get_credentials)                                                \
     X(uri_get_database)                                                   \
     X(uri_get_hosts)                                                      \
+    X(uri_get_mechanism_properties)                                       \
     X(uri_get_option_as_utf8)                                             \
     X(uri_get_options)                                                    \
     X(uri_get_password)                                                   \
@@ -390,6 +392,7 @@ BSONCXX_PRIVATE_WARNINGS_POP();
     X(uri_get_tls)                                                        \
     X(uri_get_username)                                                   \
     X(uri_get_write_concern)                                              \
+    X(uri_set_option_as_bool)                                             \
     X(uri_new_with_error)                                                 \
     X(write_concern_copy)                                                 \
     X(write_concern_destroy)                                              \
