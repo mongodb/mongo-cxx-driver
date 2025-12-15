@@ -16,12 +16,14 @@
 
 #include <bsoncxx/v1/array/view.hpp>
 #include <bsoncxx/v1/detail/type_traits.hpp>
+#include <bsoncxx/v1/stdx/string_view.hpp>
 
 #include <mongocxx/v1/server_error.hpp>
 
 #include <mongocxx/v1/exception.hh>
 
 #include <cstdint>
+#include <string>
 #include <system_error>
 #include <type_traits>
 #include <utility>
@@ -76,6 +78,27 @@ template <typename exception_type>
     throw exception_type{v_noabi::make_error_code(error), std::move(raw_server_error), error.message};
 }
 
+inline std::string strip_ec_msg(std::string what, std::error_code code) {
+    auto const what_view = bsoncxx::v1::stdx::string_view{what};
+    auto const msg = code.message();
+    auto const pos = what.find(msg);
+    auto const delim = bsoncxx::v1::stdx::string_view(": ");
+
+    if (pos != what_view.npos) {
+        // "abc: msg: def" -> "abc: def"
+        if (what_view.find(delim, pos) == pos) {
+            what.erase(pos, msg.size() + delim.size());
+        }
+
+        // "abc: msg" -> "abc"
+        else if (pos >= delim.size() && what_view.rfind(delim, pos) == pos - delim.size()) {
+            what.erase(pos - delim.size(), msg.size() + delim.size());
+        }
+    }
+
+    return what;
+}
+
 template <
     typename exception_type,
     bsoncxx::detail::enable_if_t<std::is_base_of<operation_exception, exception_type>::value>* = nullptr>
@@ -89,7 +112,10 @@ template <
 
     // Server-side error.
     if (auto const ptr = dynamic_cast<v1::server_error const*>(&ex)) {
-        throw exception_type{code, bsoncxx::v_noabi::document::value{from_v1(ptr->raw())}, ptr->what()};
+        throw exception_type{
+            code,
+            bsoncxx::v_noabi::document::value{from_v1(ptr->raw())},
+            strip_ec_msg(ptr->what(), ptr->code()).c_str()};
     }
 
     // Array fields must be represented as "raw server error" document fields.
@@ -108,12 +134,12 @@ template <
         append_array_field("errorReplies", v1::exception::internal::get_error_replies(ex));
 
         if (!doc.view().empty()) {
-            throw exception_type{code, from_v1(std::move(doc).value()), ex.what()};
+            throw exception_type{code, from_v1(std::move(doc).value()), strip_ec_msg(ex.what(), ex.code()).c_str()};
         }
     }
 
     // No "raw server error" document is required.
-    throw exception_type{code, ex.what()};
+    throw exception_type{code, strip_ec_msg(ex.what(), ex.code())};
 }
 
 template <
@@ -126,7 +152,7 @@ template <
                           : ex.code();
 
     // No "raw server error" document is required.
-    throw exception_type{code, ex.what()};
+    throw exception_type{code, strip_ec_msg(ex.what(), ex.code())};
 }
 
 } // namespace v_noabi

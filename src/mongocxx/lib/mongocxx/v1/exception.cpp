@@ -25,7 +25,6 @@
 
 #include <mongocxx/v1/server_error.hh>
 
-#include <cstdint>
 #include <cstring>
 #include <memory>
 #include <string>
