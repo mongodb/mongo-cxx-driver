@@ -110,6 +110,11 @@ template <
         }
     }
 
+    // Server-side error with no raw server error document.
+    if (ex.code() == v1::source_errc::server) {
+        throw exception_type{std::error_code{ex.code().value(), v_noabi::server_error_category()}, ex.what()};
+    }
+
     // Client-side error.
     throw exception_type{ex.code(), ex.what()};
 }
@@ -118,7 +123,7 @@ template <
     typename exception_type,
     bsoncxx::detail::enable_if_t<!std::is_base_of<operation_exception, exception_type>::value>* = nullptr>
 [[noreturn]] void throw_exception(v1::exception const& ex) {
-    // Server-side error.
+    // Server-side error with no raw server error document.
     if (ex.code() == v1::source_errc::server) {
         throw exception_type{std::error_code{ex.code().value(), v_noabi::server_error_category()}, ex.what()};
     }
