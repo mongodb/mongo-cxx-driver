@@ -53,11 +53,6 @@ endif()
 
 set(mongocxx_sources "") # Required by mongocxx_add_library().
 
-# Prevent `char const*` arguments from selecting `void*` constructors.
-add_compile_options(
-    "$<$<CXX_COMPILER_ID:MSVC>:/Zc:strictStrings>"
-)
-
 add_subdirectory(include)
 add_subdirectory(lib)
 

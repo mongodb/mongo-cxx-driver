@@ -408,10 +408,12 @@ std::error_category const& uri::error_category() {
     return instance.value();
 }
 
-uri::uri(void* impl) : _impl{impl} {}
+uri::uri(void_ptr vp) : _impl{vp.impl} {}
 
 uri uri::internal::make(mongoc_uri_t* uri) {
-    return v1::uri{uri};
+    v1::uri::void_ptr vp;
+    vp.impl = uri;
+    return v1::uri{vp};
 }
 
 mongoc_uri_t const* uri::internal::as_mongoc(uri const& self) {
