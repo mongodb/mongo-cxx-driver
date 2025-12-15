@@ -59,14 +59,25 @@ void test_string(MemFn mem_fn, Mock& mock) {
     uri const opts;
     auto const identity = uri::internal::as_mongoc(opts);
 
-    char const str = '\0';
-
     auto fn = mock.create_instance();
-    fn->interpose([&](mongoc_uri_t const* ptr) -> char const* {
-        CHECK(ptr == identity);
-        return &str;
-    });
-    CHECK((opts.*mem_fn)().data() == static_cast<void const*>(&str));
+
+    SECTION("null") {
+        fn->interpose([&](mongoc_uri_t const* ptr) -> char const* {
+            CHECK(ptr == identity);
+            return nullptr;
+        });
+        CHECK((opts.*mem_fn)().data() == nullptr);
+    }
+
+    SECTION("value") {
+        char const str = '\0';
+
+        fn->interpose([&](mongoc_uri_t const* ptr) -> char const* {
+            CHECK(ptr == identity);
+            return &str;
+        });
+        CHECK((opts.*mem_fn)().data() == static_cast<void const*>(&str));
+    }
 }
 
 template <typename MemFn, typename Mock>
@@ -74,17 +85,29 @@ void test_string_opt(MemFn mem_fn, Mock& mock) {
     uri const opts;
     auto const identity = uri::internal::as_mongoc(opts);
 
-    char const str = '\0';
-
     auto fn = mock.create_instance();
-    fn->interpose([&](mongoc_uri_t const* ptr) -> char const* {
-        CHECK(ptr == identity);
-        return &str;
-    });
 
-    auto const opt = (opts.*mem_fn)();
-    REQUIRE(opt.has_value());
-    CHECK(opt->data() == static_cast<void const*>(&str));
+    SECTION("empty") {
+        fn->interpose([&](mongoc_uri_t const* ptr) -> char const* {
+            CHECK(ptr == identity);
+            return nullptr;
+        });
+
+        CHECK_FALSE((opts.*mem_fn)().has_value());
+    }
+
+    SECTION("value") {
+        char const str = '\0';
+
+        fn->interpose([&](mongoc_uri_t const* ptr) -> char const* {
+            CHECK(ptr == identity);
+            return &str;
+        });
+
+        auto const opt = (opts.*mem_fn)();
+        REQUIRE(opt.has_value());
+        CHECK(opt->data() == static_cast<void const*>(&str));
+    }
 }
 
 template <typename MemFn, typename Mock>
@@ -122,17 +145,29 @@ void test_doc_opt(MemFn mem_fn, Mock& mock) {
     uri const opts;
     auto const identity = uri::internal::as_mongoc(opts);
 
-    scoped_bson const doc{R"({"x": 1})"};
-
     auto fn = mock.create_instance();
-    fn->interpose([&](mongoc_uri_t const* ptr) -> bson_t const* {
-        CHECK(ptr == identity);
-        return doc.bson();
-    });
 
-    auto const opt = (opts.*mem_fn)();
-    REQUIRE(opt.has_value());
-    CHECK(opt->data() == doc.view().data());
+    SECTION("empty") {
+        fn->interpose([&](mongoc_uri_t const* ptr) -> bson_t const* {
+            CHECK(ptr == identity);
+            return nullptr;
+        });
+
+        CHECK_FALSE((opts.*mem_fn)().has_value());
+    }
+
+    SECTION("value") {
+        scoped_bson const doc{R"({"x": 1})"};
+
+        fn->interpose([&](mongoc_uri_t const* ptr) -> bson_t const* {
+            CHECK(ptr == identity);
+            return doc.bson();
+        });
+
+        auto const opt = (opts.*mem_fn)();
+        REQUIRE(opt.has_value());
+        CHECK(opt->data() == doc.view().data());
+    }
 }
 
 template <typename MemFn, typename T>
@@ -146,7 +181,7 @@ void test_credentials_option(MemFn mem_fn, bsoncxx::v1::document::view doc, T co
     auto credentials = libmongoc::uri_get_credentials.create_instance();
     credentials->interpose([&](mongoc_uri_t const* ptr) -> bson_t const* {
         CHECK(ptr == identity);
-        return scoped_bson_view{doc}.bson();
+        return scoped_bson_view{doc}.bson(); // Never null.
     });
 
     CHECK((opts.*mem_fn)() == expected);
@@ -163,7 +198,7 @@ void test_option(MemFn mem_fn, bsoncxx::v1::document::view doc, T const& expecte
     auto options = libmongoc::uri_get_options.create_instance();
     options->interpose([&](mongoc_uri_t const* ptr) -> bson_t const* {
         CHECK(ptr == identity);
-        return scoped_bson_view{doc}.bson();
+        return scoped_bson_view{doc}.bson(); // Never null.
     });
 
     CHECK((opts.*mem_fn)() == expected);
@@ -510,7 +545,17 @@ TEST_CASE("tls", "[mongocxx][v1][uri]") {
 }
 
 TEST_CASE("to_string", "[mongocxx][v1][uri]") {
-    test_string(&uri::to_string, libmongoc::uri_get_string);
+    uri const opts;
+    auto const identity = uri::internal::as_mongoc(opts);
+
+    char const str = '\0';
+
+    auto fn = libmongoc::uri_get_string.create_instance();
+    fn->interpose([&](mongoc_uri_t const* ptr) -> char const* {
+        CHECK(ptr == identity);
+        return &str; // Never null.
+    });
+    CHECK(opts.to_string().data() == static_cast<void const*>(&str));
 }
 
 TEST_CASE("username", "[mongocxx][v1][uri]") {
