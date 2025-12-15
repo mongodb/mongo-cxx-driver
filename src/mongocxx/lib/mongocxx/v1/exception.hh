@@ -57,14 +57,10 @@ class exception::internal {
     }
 
     static MONGOCXX_ABI_EXPORT_CDECL_TESTING(void) set_error_labels(exception& self, bsoncxx::v1::document::view v);
-    static void set_write_concern_errors(exception& self, bsoncxx::v1::document::view v);
-    static void set_write_errors(exception& self, bsoncxx::v1::document::view v);
-    static void set_error_replies(exception& self, bsoncxx::v1::document::view v);
+    static void set_reply(exception& self, bsoncxx::v1::document::value v);
 
     static bsoncxx::v1::array::view get_error_labels(exception const& self);
-    static bsoncxx::v1::array::view get_write_concern_errors(exception const& self);
-    static bsoncxx::v1::array::view get_write_errors(exception const& self);
-    static bsoncxx::v1::array::view get_error_replies(exception const& self);
+    static bsoncxx::v1::document::value const& get_reply(exception const& self);
 };
 
 [[noreturn]] MONGOCXX_ABI_EXPORT_CDECL_TESTING(void) throw_exception(bson_error_t const& error);
