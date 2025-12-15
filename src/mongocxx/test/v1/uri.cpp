@@ -243,7 +243,7 @@ void test_option_bool(bsoncxx::v1::stdx::optional<bool> (uri::*mem_fn)() const, 
 
 } // namespace
 
-TEST_CASE("error code", "[bsoncxx][v1][uri][error]") {
+TEST_CASE("error code", "[mongocxx][v1][uri][error]") {
     using mongocxx::v1::source_errc;
     using mongocxx::v1::type_errc;
 
@@ -296,7 +296,7 @@ TEST_CASE("error code", "[bsoncxx][v1][uri][error]") {
     }
 }
 
-TEST_CASE("exceptions", "[bsoncxx][v1][uri]") {
+TEST_CASE("exceptions", "[mongocxx][v1][uri]") {
     SECTION("initialization") {
         try {
             (void)uri{"invalid"};
