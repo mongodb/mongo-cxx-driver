@@ -13,6 +13,7 @@
 // limitations under the License.
 
 #include <mongocxx/v1/change_stream.hh>
+#include <mongocxx/v1/cursor.hh>
 #include <mongocxx/v1/read_concern.hh>
 #include <mongocxx/v1/read_preference.hh>
 #include <mongocxx/v1/write_concern.hh>
@@ -136,7 +137,7 @@ database::_aggregate(client_session const* session, pipeline const& pipeline, op
         read_prefs = v_noabi::read_preference::internal::as_mongoc(*opt);
     }
 
-    return cursor(
+    return v1::cursor::internal::make(
         libmongoc::database_aggregate(
             _get_impl().database_t,
             v_noabi::pipeline::internal::doc(pipeline).bson(),
@@ -160,7 +161,8 @@ cursor database::_list_collections(client_session const* session, bsoncxx::v_noa
         options_builder.append(bsoncxx::v_noabi::builder::concatenate_doc{session->_get_impl().to_document()});
     }
 
-    return libmongoc::database_find_collections_with_opts(_get_impl().database_t, to_scoped_bson_view(options_builder));
+    return v1::cursor::internal::make(
+        libmongoc::database_find_collections_with_opts(_get_impl().database_t, to_scoped_bson_view(options_builder)));
 }
 
 cursor database::list_collections(bsoncxx::v_noabi::document::view_or_value filter) {

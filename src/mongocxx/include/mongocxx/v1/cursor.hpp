@@ -126,6 +126,11 @@ class cursor {
     /// @important The end iterator has no associated cursor.
     ///
     iterator end() const;
+
+    class internal;
+
+   private:
+    /* explicit(false) */ cursor(void* impl);
 };
 
 ///
@@ -262,6 +267,11 @@ class cursor::iterator {
     friend bool operator!=(iterator const& lhs, iterator const& rhs) {
         return !(lhs == rhs);
     }
+
+    class internal;
+
+   private:
+    /* explicit(false) */ iterator(void* impl);
 };
 
 inline cursor::iterator cursor::end() const {

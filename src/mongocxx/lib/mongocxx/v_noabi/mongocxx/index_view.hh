@@ -14,6 +14,8 @@
 
 #pragma once
 
+#include <mongocxx/v1/cursor.hh>
+
 #include <vector>
 
 #include <bsoncxx/builder/basic/array.hpp>
@@ -29,9 +31,9 @@
 #include <mongocxx/index_view.hpp> // IWYU pragma: export
 #include <mongocxx/options/index_view.hpp>
 
+#include <mongocxx/client_session.hh>
 #include <mongocxx/scoped_bson.hh>
 
-#include <mongocxx/client_session.hh>
 #include <mongocxx/private/mongoc.hh>
 
 namespace mongocxx {
@@ -56,10 +58,11 @@ class index_view::impl {
         if (session) {
             bsoncxx::v_noabi::builder::basic::document options_builder;
             options_builder.append(bsoncxx::v_noabi::builder::concatenate_doc{session->_get_impl().to_document()});
-            return libmongoc::collection_find_indexes_with_opts(_coll, to_scoped_bson_view(options_builder));
+            return v1::cursor::internal::make(
+                libmongoc::collection_find_indexes_with_opts(_coll, to_scoped_bson_view(options_builder)));
         }
 
-        return libmongoc::collection_find_indexes_with_opts(_coll, nullptr);
+        return v1::cursor::internal::make(libmongoc::collection_find_indexes_with_opts(_coll, nullptr));
     }
 
     bsoncxx::v_noabi::stdx::optional<std::string>

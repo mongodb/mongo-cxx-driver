@@ -13,6 +13,7 @@
 // limitations under the License.
 
 #include <mongocxx/v1/change_stream.hh>
+#include <mongocxx/v1/cursor.hh>
 #include <mongocxx/v1/read_concern.hh>
 #include <mongocxx/v1/read_preference.hh>
 #include <mongocxx/v1/write_concern.hh>
@@ -51,7 +52,6 @@
 #include <mongocxx/bulk_write.hh>
 #include <mongocxx/client_session.hh>
 #include <mongocxx/collection.hh>
-#include <mongocxx/cursor.hh>
 #include <mongocxx/mongoc_error.hh>
 #include <mongocxx/pipeline.hh>
 #include <mongocxx/read_concern.hh>
@@ -401,23 +401,24 @@ cursor collection::_find(client_session const* session, view_or_value filter, op
         options_builder.append(bsoncxx::v_noabi::builder::concatenate_doc{session->_get_impl().to_document()});
     }
 
-    cursor query_cursor{
+    auto query_cursor = v1::cursor::internal::make(
         libmongoc::collection_find_with_opts(
             _get_impl().collection_t,
             mongocxx::to_scoped_bson_view(filter),
             mongocxx::to_scoped_bson_view(options_builder),
             read_prefs),
-        options.cursor_type()};
+        options.cursor_type());
 
     if (options.max_await_time()) {
         auto const count = options.max_await_time()->count();
         if ((count < 0) || (count >= std::numeric_limits<std::uint32_t>::max())) {
             throw logic_error{error_code::k_invalid_parameter};
         }
-        libmongoc::cursor_set_max_await_time_ms(query_cursor._impl->cursor_t, static_cast<std::uint32_t>(count));
+        libmongoc::cursor_set_max_await_time_ms(
+            v1::cursor::internal::as_mongoc(query_cursor), static_cast<std::uint32_t>(count));
     }
 
-    return query_cursor;
+    return cursor{std::move(query_cursor)};
 }
 
 cursor collection::find(view_or_value filter, options::find const& options) {
@@ -467,7 +468,7 @@ collection::_aggregate(client_session const* session, pipeline const& pipeline, 
         read_prefs = v_noabi::read_preference::internal::as_mongoc(*opt);
     }
 
-    return cursor(
+    return v1::cursor::internal::make(
         libmongoc::collection_aggregate(
             _get_impl().collection_t,
             static_cast<::mongoc_query_flags_t>(0),
@@ -1230,11 +1231,12 @@ cursor collection::_distinct(
         throw bsoncxx::v_noabi::exception{bsoncxx::v_noabi::error_code::k_internal_error};
     }
 
-    cursor fake_cursor{libmongoc::cursor_new_from_command_reply_with_opts(
-        _get_impl().client_impl->client_t, fake_reply.inout_ptr(), nullptr)};
-
     bson_t const* error_document = {};
-    if (libmongoc::cursor_error_document(fake_cursor._impl->cursor_t, &error, &error_document)) {
+
+    auto fake_cursor = v1::cursor::internal::make(
+        libmongoc::cursor_new_from_command_reply_with_opts(
+            _get_impl().client_impl->client_t, fake_reply.inout_ptr(), nullptr));
+    if (libmongoc::cursor_error_document(v1::cursor::internal::as_mongoc(fake_cursor), &error, &error_document)) {
         if (error_document) {
             bsoncxx::v_noabi::document::value error_doc{
                 bsoncxx::v_noabi::document::view{bson_get_data(error_document), error_document->len}};
@@ -1244,7 +1246,7 @@ cursor collection::_distinct(
         }
     }
 
-    return fake_cursor;
+    return cursor{std::move(fake_cursor)};
 }
 
 cursor collection::distinct(
@@ -1263,14 +1265,15 @@ cursor collection::distinct(
 }
 
 cursor collection::list_indexes() const {
-    return libmongoc::collection_find_indexes_with_opts(_get_impl().collection_t, nullptr);
+    return v1::cursor::internal::make(libmongoc::collection_find_indexes_with_opts(_get_impl().collection_t, nullptr));
 }
 
 cursor collection::list_indexes(client_session const& session) const {
     bsoncxx::v_noabi::builder::basic::document options_builder;
     options_builder.append(bsoncxx::v_noabi::builder::concatenate_doc{session._get_impl().to_document()});
-    return libmongoc::collection_find_indexes_with_opts(
-        _get_impl().collection_t, mongocxx::to_scoped_bson_view(options_builder));
+    return v1::cursor::internal::make(
+        libmongoc::collection_find_indexes_with_opts(
+            _get_impl().collection_t, mongocxx::to_scoped_bson_view(options_builder)));
 }
 
 void collection::_drop(

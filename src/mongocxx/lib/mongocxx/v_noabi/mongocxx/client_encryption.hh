@@ -14,6 +14,8 @@
 
 #pragma once
 
+#include <mongocxx/v1/cursor.hh>
+
 #include <memory>
 #include <utility>
 
@@ -26,7 +28,6 @@
 #include <mongocxx/result/bulk_write.hpp>
 
 #include <mongocxx/client.hh>
-#include <mongocxx/cursor.hh>
 #include <mongocxx/mongoc_error.hh>
 #include <mongocxx/options/data_key.hh>
 #include <mongocxx/scoped_bson.hh>
@@ -239,7 +240,7 @@ class client_encryption::impl {
             throw_exception<operation_exception>(error);
         }
 
-        return mongocxx::v_noabi::cursor(cursor);
+        return v1::cursor::internal::make(cursor);
     }
 
     bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::value> add_key_alt_name(

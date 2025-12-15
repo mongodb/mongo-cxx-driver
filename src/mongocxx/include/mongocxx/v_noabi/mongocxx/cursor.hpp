@@ -14,18 +14,26 @@
 
 #pragma once
 
-#include <memory>
-
-#include <mongocxx/client-fwd.hpp>
-#include <mongocxx/client_encryption-fwd.hpp>
-#include <mongocxx/collection-fwd.hpp>
 #include <mongocxx/cursor-fwd.hpp> // IWYU pragma: export
-#include <mongocxx/database-fwd.hpp>
-#include <mongocxx/index_view-fwd.hpp>
-#include <mongocxx/search_index_view-fwd.hpp>
+
+//
+
+#include <mongocxx/v1/cursor.hpp> // IWYU pragma: export
+
+#include <cstddef>
+#include <iterator>
+#include <memory> // IWYU pragma: keep: backward compatibility, to be removed.
+#include <utility>
+
+#include <mongocxx/client-fwd.hpp>            // IWYU pragma: keep: backward compatibility, to be removed.
+#include <mongocxx/client_encryption-fwd.hpp> // IWYU pragma: keep: backward compatibility, to be removed.
+#include <mongocxx/collection-fwd.hpp>        // IWYU pragma: keep: backward compatibility, to be removed.
+#include <mongocxx/database-fwd.hpp>          // IWYU pragma: keep: backward compatibility, to be removed.
+#include <mongocxx/index_view-fwd.hpp>        // IWYU pragma: keep: backward compatibility, to be removed.
+#include <mongocxx/search_index_view-fwd.hpp> // IWYU pragma: keep: backward compatibility, to be removed.
 
 #include <bsoncxx/document/view.hpp>
-#include <bsoncxx/stdx/optional.hpp>
+#include <bsoncxx/stdx/optional.hpp> // IWYU pragma: keep: backward compatibility, to be removed.
 
 #include <mongocxx/config/prelude.hpp>
 
@@ -40,28 +48,60 @@ namespace v_noabi {
 /// @note By default, cursors timeout after 10 minutes of inactivity.
 ///
 class cursor {
+   private:
+    v1::cursor _cursor;
+    bsoncxx::v_noabi::document::view _doc;
+
    public:
-    enum class type { k_non_tailable, k_tailable, k_tailable_await };
+    using type = v1::cursor::type;
 
     class iterator;
 
     ///
     /// Move constructs a cursor.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL() cursor(cursor&&) noexcept;
+    MONGOCXX_ABI_EXPORT_CDECL() cursor(cursor&& other) noexcept;
 
     ///
     /// Move assigns a cursor.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(cursor&) operator=(cursor&&) noexcept;
+    MONGOCXX_ABI_EXPORT_CDECL(cursor&) operator=(cursor&& other) noexcept;
 
     ///
     /// Destroys a cursor.
     ///
     MONGOCXX_ABI_EXPORT_CDECL() ~cursor();
 
-    cursor(cursor const&) = delete;
-    cursor& operator=(cursor const&) = delete;
+    ///
+    /// This class is not copyable.
+    ///
+    cursor(cursor const& other) = delete;
+    ///
+    /// This class is not copyable.
+    ///
+    cursor& operator=(cursor const& other) = delete;
+
+    ///
+    /// Construct with the @ref mongocxx::v1 equivalent.
+    ///
+    /* explicit(false) */ cursor(v1::cursor cursor) : _cursor{std::move(cursor)} {}
+
+    ///
+    /// Convert to the @ref bsoncxx::v1 equivalent.
+    ///
+    /// @par Postconditions:
+    /// - `other` is in an assign-or-destroy-only state.
+    ///
+    /// @warning Invalidates all associated iterators and views.
+    ///
+    explicit operator v1::cursor() && {
+        return std::move(_cursor);
+    }
+
+    ///
+    /// This class is not copyable.
+    ///
+    explicit operator v1::cursor() const& = delete;
 
     ///
     /// A cursor::iterator points to the beginning of any available results.
@@ -90,20 +130,7 @@ class cursor {
     ///
     MONGOCXX_ABI_EXPORT_CDECL(iterator) end();
 
-   private:
-    friend ::mongocxx::v_noabi::client_encryption;
-    friend ::mongocxx::v_noabi::client;
-    friend ::mongocxx::v_noabi::collection;
-    friend ::mongocxx::v_noabi::database;
-    friend ::mongocxx::v_noabi::index_view;
-    friend ::mongocxx::v_noabi::search_index_view;
-
-    friend ::mongocxx::v_noabi::cursor::iterator;
-
-    cursor(void* cursor_ptr, bsoncxx::v_noabi::stdx::optional<type> cursor_type = bsoncxx::v_noabi::stdx::nullopt);
-
-    class impl;
-    std::unique_ptr<impl> _impl;
+    class internal;
 };
 
 ///
@@ -157,10 +184,9 @@ class cursor::iterator {
     ///
     /// @throws mongocxx::v_noabi::query_exception if the query failed
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(void) operator++(int);
-
-   private:
-    friend ::mongocxx::v_noabi::cursor;
+    void operator++(int) {
+        this->operator++();
+    }
 
     ///
     /// @relates mongocxx::v_noabi::mongocxx::cursor::iterator
@@ -170,13 +196,19 @@ class cursor::iterator {
     ///
     /// @{
     friend MONGOCXX_ABI_EXPORT_CDECL(bool) operator==(iterator const&, iterator const&);
-    friend MONGOCXX_ABI_EXPORT_CDECL(bool) operator!=(iterator const&, iterator const&);
+
+    friend bool operator!=(cursor::iterator const& lhs, cursor::iterator const& rhs) noexcept {
+        return !(lhs == rhs);
+    }
     /// @}
     ///
 
-    bool is_exhausted() const;
+   private:
+    friend cursor;
 
     explicit iterator(cursor* cursor);
+
+    bool is_exhausted() const;
 
     // If this pointer is null, the iterator is considered "past-the-end".
     cursor* _cursor;
