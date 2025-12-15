@@ -82,15 +82,17 @@ template <
 [[noreturn]] void throw_exception(v1::exception const& ex) {
     using bsoncxx::v_noabi::from_v1;
 
+    // `v1::server_error_category()` -> `v_noabi::server_error_category()`.
+    auto const code = ex.code() == v1::source_errc::server
+                          ? std::error_code{ex.code().value(), v_noabi::server_error_category()}
+                          : ex.code();
+
     // Server-side error.
     if (auto const ptr = dynamic_cast<v1::server_error const*>(&ex)) {
-        throw exception_type{
-            std::error_code{ptr->code().value(), v_noabi::server_error_category()},
-            bsoncxx::v_noabi::document::value{from_v1(ptr->raw())},
-            ptr->what()};
+        throw exception_type{code, bsoncxx::v_noabi::document::value{from_v1(ptr->raw())}, ptr->what()};
     }
 
-    // Client-side error with array fields that must be throw as `.raw_server_error()` fields.
+    // Array fields must be represented as "raw server error" document fields.
     {
         scoped_bson doc;
 
@@ -106,30 +108,25 @@ template <
         append_array_field("errorReplies", v1::exception::internal::get_error_replies(ex));
 
         if (!doc.view().empty()) {
-            throw exception_type{ex.code(), from_v1(std::move(doc).value()), ex.what()};
+            throw exception_type{code, from_v1(std::move(doc).value()), ex.what()};
         }
     }
 
-    // Server-side error with no raw server error document.
-    if (ex.code() == v1::source_errc::server) {
-        throw exception_type{std::error_code{ex.code().value(), v_noabi::server_error_category()}, ex.what()};
-    }
-
-    // Client-side error.
-    throw exception_type{ex.code(), ex.what()};
+    // No "raw server error" document is required.
+    throw exception_type{code, ex.what()};
 }
 
 template <
     typename exception_type,
     bsoncxx::detail::enable_if_t<!std::is_base_of<operation_exception, exception_type>::value>* = nullptr>
 [[noreturn]] void throw_exception(v1::exception const& ex) {
-    // Server-side error with no raw server error document.
-    if (ex.code() == v1::source_errc::server) {
-        throw exception_type{std::error_code{ex.code().value(), v_noabi::server_error_category()}, ex.what()};
-    }
+    // `v1::server_error_category()` -> `v_noabi::server_error_category()`.
+    auto const code = ex.code() == v1::source_errc::server
+                          ? std::error_code{ex.code().value(), v_noabi::server_error_category()}
+                          : ex.code();
 
-    // Client-side error.
-    throw exception_type{ex.code(), ex.what()};
+    // No "raw server error" document is required.
+    throw exception_type{code, ex.what()};
 }
 
 } // namespace v_noabi
