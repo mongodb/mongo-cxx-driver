@@ -21,6 +21,7 @@
 #include <bsoncxx/v1/detail/type_traits.hpp>
 #include <bsoncxx/v1/document/value.hpp>
 #include <bsoncxx/v1/document/view.hpp>
+#include <bsoncxx/v1/stdx/optional.hpp>
 
 #include <system_error>
 #include <utility>
@@ -60,7 +61,7 @@ class exception::internal {
     static void set_reply(exception& self, bsoncxx::v1::document::value v);
 
     static bsoncxx::v1::array::view get_error_labels(exception const& self);
-    static bsoncxx::v1::document::value const& get_reply(exception const& self);
+    static bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> const& get_reply(exception const& self);
 };
 
 [[noreturn]] MONGOCXX_ABI_EXPORT_CDECL_TESTING(void) throw_exception(bson_error_t const& error);

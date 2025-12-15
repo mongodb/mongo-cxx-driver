@@ -19,6 +19,7 @@
 #include <bsoncxx/v1/array/value.hpp>
 #include <bsoncxx/v1/document/value.hpp>
 #include <bsoncxx/v1/document/view.hpp>
+#include <bsoncxx/v1/stdx/optional.hpp>
 #include <bsoncxx/v1/stdx/string_view.hpp>
 #include <bsoncxx/v1/types/id.hpp>
 #include <bsoncxx/v1/types/view.hpp>
@@ -185,7 +186,9 @@ std::error_category const& type_error_category() {
 class exception::impl {
    public:
     bsoncxx::v1::array::value _error_labels;
-    bsoncxx::v1::document::value _reply; // For backward compatibility with v_noabi::operation_exception.
+
+    // For backward compatibility with v_noabi::operation_exception.
+    bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> _reply;
 };
 
 bool exception::has_error_label(bsoncxx::v1::stdx::string_view label) const {
@@ -338,7 +341,7 @@ bsoncxx::v1::array::view exception::internal::get_error_labels(exception const& 
     return self._impl->_error_labels;
 }
 
-bsoncxx::v1::document::value const& exception::internal::get_reply(exception const& self) {
+bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> const& exception::internal::get_reply(exception const& self) {
     return self._impl->_reply;
 }
 

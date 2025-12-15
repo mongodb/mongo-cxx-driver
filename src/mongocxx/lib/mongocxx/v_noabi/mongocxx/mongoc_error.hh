@@ -14,7 +14,6 @@
 
 #pragma once
 
-#include <bsoncxx/v1/array/view.hpp>
 #include <bsoncxx/v1/detail/type_traits.hpp>
 #include <bsoncxx/v1/stdx/string_view.hpp>
 
@@ -35,8 +34,6 @@
 #include <mongocxx/exception/server_error_code.hpp>
 
 #include <bsoncxx/private/bson.hh>
-
-#include <mongocxx/private/scoped_bson.hh>
 
 namespace mongocxx {
 namespace v_noabi {
@@ -119,12 +116,8 @@ template <
     }
 
     // Propagate the original mongoc reply document as the "raw server error" document.
-    {
-        auto const& reply = v1::exception::internal::get_reply(ex);
-
-        if (!reply.empty()) {
-            throw exception_type{code, from_v1(reply), strip_ec_msg(ex.what(), ex.code()).c_str()};
-        }
+    if (auto const& reply = v1::exception::internal::get_reply(ex)) {
+        throw exception_type{code, from_v1(*reply), strip_ec_msg(ex.what(), ex.code()).c_str()};
     }
 
     // No "raw server error" document is required.
