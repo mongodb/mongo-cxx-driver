@@ -403,7 +403,6 @@ TEST_CASE("default", "[mongocxx][v1][uri]") {
     CHECK_FALSE(opts.retry_writes().has_value());
     CHECK_FALSE(opts.server_selection_timeout_ms().has_value());
     CHECK_FALSE(opts.server_selection_try_once().has_value());
-    CHECK_FALSE(opts.server_selection_try_once().has_value());
     CHECK_FALSE(opts.socket_timeout_ms().has_value());
     CHECK_FALSE(opts.tls_allow_invalid_certificates().has_value());
     CHECK_FALSE(opts.tls_allow_invalid_hostnames().has_value());
