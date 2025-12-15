@@ -92,10 +92,6 @@ bsoncxx::v1::stdx::optional<bsoncxx::v1::stdx::string_view> get_field(mongoc_uri
     return {};
 }
 
-template <typename T>
-bsoncxx::v1::stdx::optional<T> get_credentials_field(mongoc_uri_t const* uri, char const* field);
-
-template <>
 bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view> get_credentials_field(
     mongoc_uri_t const* uri,
     char const* field) {
@@ -236,7 +232,7 @@ bsoncxx::v1::stdx::optional<bsoncxx::v1::stdx::string_view> uri::appname() const
 }
 
 bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view> uri::auth_mechanism_properties() const {
-    return get_credentials_field<bsoncxx::v1::document::view>(to_mongoc(_impl), MONGOC_URI_AUTHMECHANISMPROPERTIES);
+    return get_credentials_field(to_mongoc(_impl), MONGOC_URI_AUTHMECHANISMPROPERTIES);
 }
 
 bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view> uri::credentials() const {
