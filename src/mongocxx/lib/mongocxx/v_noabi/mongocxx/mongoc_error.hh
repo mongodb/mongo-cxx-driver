@@ -14,10 +14,16 @@
 
 #pragma once
 
+#include <bsoncxx/v1/array/view.hpp>
+#include <bsoncxx/v1/detail/type_traits.hpp>
+
 #include <mongocxx/v1/server_error.hpp>
+
+#include <mongocxx/v1/exception.hh>
 
 #include <cstdint>
 #include <system_error>
+#include <type_traits>
 #include <utility>
 
 #include <bsoncxx/document/value.hpp>
@@ -27,6 +33,8 @@
 #include <mongocxx/exception/server_error_code.hpp>
 
 #include <bsoncxx/private/bson.hh>
+
+#include <mongocxx/private/scoped_bson.hh>
 
 namespace mongocxx {
 namespace v_noabi {
@@ -68,14 +76,46 @@ template <typename exception_type>
     throw exception_type{v_noabi::make_error_code(error), std::move(raw_server_error), error.message};
 }
 
-template <typename exception_type>
+template <
+    typename exception_type,
+    bsoncxx::detail::enable_if_t<std::is_base_of<operation_exception, exception_type>::value>* = nullptr>
 [[noreturn]] void throw_exception(v1::exception const& ex) {
+    using bsoncxx::v_noabi::from_v1;
+
+    // Server-side error.
     if (auto const ptr = dynamic_cast<v1::server_error const*>(&ex)) {
-        throw exception_type{
-            ptr->code(), bsoncxx::v_noabi::document::value{bsoncxx::v_noabi::from_v1(ptr->raw())}, ptr->what()};
+        throw exception_type{ptr->code(), bsoncxx::v_noabi::document::value{from_v1(ptr->raw())}, ptr->what()};
     }
 
+    // Client-side error with array fields that must be throw as `.raw_server_error()` fields.
+    {
+        scoped_bson doc;
+
+        auto const append_array_field = [&](char const* name, bsoncxx::v1::array::view field) {
+            if (!field.empty()) {
+                doc += scoped_bson{BCON_NEW(name, BCON_ARRAY(scoped_bson_view{field}.bson()))};
+            }
+        };
+
+        append_array_field("errorLabels", v1::exception::internal::get_error_labels(ex));
+        append_array_field("writeConcernErrors", v1::exception::internal::get_write_concern_errors(ex));
+        append_array_field("writeErrors", v1::exception::internal::get_write_errors(ex));
+        append_array_field("errorReplies", v1::exception::internal::get_error_replies(ex));
+
+        if (!doc.view().empty()) {
+            throw exception_type{ex.code(), from_v1(std::move(doc).value()), ex.what()};
+        }
+    }
+
+    // Client-side error.
     throw exception_type{ex.code(), ex.what()};
+}
+
+template <
+    typename exception_type,
+    bsoncxx::detail::enable_if_t<!std::is_base_of<operation_exception, exception_type>::value>* = nullptr>
+[[noreturn]] void throw_exception(v1::exception const& ex) {
+    throw exception_type{ex.code(), ex.what()}; // Client-side error.
 }
 
 } // namespace v_noabi

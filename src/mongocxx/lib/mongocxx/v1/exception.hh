@@ -16,6 +16,8 @@
 
 //
 
+#include <bsoncxx/v1/array/view-fwd.hpp>
+
 #include <bsoncxx/v1/detail/type_traits.hpp>
 #include <bsoncxx/v1/document/value.hpp>
 #include <bsoncxx/v1/document/view.hpp>
@@ -55,6 +57,14 @@ class exception::internal {
     }
 
     static MONGOCXX_ABI_EXPORT_CDECL_TESTING(void) set_error_labels(exception& self, bsoncxx::v1::document::view v);
+    static void set_write_concern_errors(exception& self, bsoncxx::v1::document::view v);
+    static void set_write_errors(exception& self, bsoncxx::v1::document::view v);
+    static void set_error_replies(exception& self, bsoncxx::v1::document::view v);
+
+    static bsoncxx::v1::array::view get_error_labels(exception const& self);
+    static bsoncxx::v1::array::view get_write_concern_errors(exception const& self);
+    static bsoncxx::v1::array::view get_write_errors(exception const& self);
+    static bsoncxx::v1::array::view get_error_replies(exception const& self);
 };
 
 [[noreturn]] MONGOCXX_ABI_EXPORT_CDECL_TESTING(void) throw_exception(bson_error_t const& error);

@@ -97,6 +97,9 @@ bsoncxx::v1::document::view server_error::raw() const {
 server_error::server_error(int code, char const* message, std::unique_ptr<impl> impl)
     : v1::exception{v1::exception::internal::make(code, server_error_category(), message)}, _impl{std::move(impl)} {
     v1::exception::internal::set_error_labels(*this, _impl->_raw);
+    v1::exception::internal::set_write_concern_errors(*this, _impl->_raw);
+    v1::exception::internal::set_write_errors(*this, _impl->_raw);
+    v1::exception::internal::set_error_replies(*this, _impl->_raw);
 }
 
 server_error server_error::internal::make(int code, char const* message, bsoncxx::v1::document::value raw) {

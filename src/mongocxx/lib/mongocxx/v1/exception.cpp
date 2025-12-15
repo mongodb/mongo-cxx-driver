@@ -25,6 +25,7 @@
 
 #include <mongocxx/v1/server_error.hh>
 
+#include <cstdint>
 #include <cstring>
 #include <memory>
 #include <string>
@@ -185,6 +186,9 @@ std::error_category const& type_error_category() {
 class exception::impl {
    public:
     bsoncxx::v1::array::value _error_labels;
+    bsoncxx::v1::array::value _write_concern_errors;
+    bsoncxx::v1::array::value _write_errors;
+    bsoncxx::v1::array::value _error_replies;
 };
 
 bool exception::has_error_label(bsoncxx::v1::stdx::string_view label) const {
@@ -308,16 +312,53 @@ exception exception::internal::make(int code, std::error_category const& categor
     return {std::error_code{code, category}, bsoncxx::make_unique<impl>()};
 }
 
-void exception::internal::set_error_labels(exception& self, bsoncxx::v1::document::view v) {
-    auto& _error_labels = self._impl->_error_labels;
+namespace {
 
-    auto const e = v["errorLabels"];
+void set_array_field(
+    bsoncxx::v1::stdx::string_view name,
+    bsoncxx::v1::array::value& field,
+    bsoncxx::v1::document::view v) {
+    auto const e = v[name];
 
     if (e && e.type_id() == bsoncxx::v1::types::id::k_array) {
-        _error_labels = e.get_array().value;
+        field = e.get_array().value;
     } else {
-        _error_labels = bsoncxx::v1::array::value{};
+        field = bsoncxx::v1::array::value{};
     }
+}
+
+} // namespace
+
+void exception::internal::set_error_labels(exception& self, bsoncxx::v1::document::view v) {
+    set_array_field("errorLabels", self._impl->_error_labels, v);
+}
+
+void exception::internal::set_write_concern_errors(exception& self, bsoncxx::v1::document::view v) {
+    set_array_field("writeConcernErrors", self._impl->_write_concern_errors, v);
+}
+
+void exception::internal::set_write_errors(exception& self, bsoncxx::v1::document::view v) {
+    set_array_field("writeErrors", self._impl->_write_errors, v);
+}
+
+void exception::internal::set_error_replies(exception& self, bsoncxx::v1::document::view v) {
+    set_array_field("errorReplies", self._impl->_error_replies, v);
+}
+
+bsoncxx::v1::array::view exception::internal::get_error_labels(exception const& self) {
+    return self._impl->_error_labels;
+}
+
+bsoncxx::v1::array::view exception::internal::get_write_concern_errors(exception const& self) {
+    return self._impl->_write_concern_errors;
+}
+
+bsoncxx::v1::array::view exception::internal::get_write_errors(exception const& self) {
+    return self._impl->_write_errors;
+}
+
+bsoncxx::v1::array::view exception::internal::get_error_replies(exception const& self) {
+    return self._impl->_error_replies;
 }
 
 void throw_exception(bson_error_t const& error) {
@@ -335,7 +376,12 @@ void throw_exception(bson_error_t const& error, bsoncxx::v1::document::value doc
 
     // Client-side error.
     auto ex = make_exception(error);
+
     exception::internal::set_error_labels(ex, doc);
+    exception::internal::set_write_concern_errors(ex, doc);
+    exception::internal::set_write_errors(ex, doc);
+    exception::internal::set_error_replies(ex, doc);
+
     throw std::move(ex);
 }
 
