@@ -14,10 +14,18 @@
 
 #pragma once
 
+#include <bsoncxx/v1/array/view.hpp>
+#include <bsoncxx/v1/detail/type_traits.hpp>
+#include <bsoncxx/v1/stdx/string_view.hpp>
+
 #include <mongocxx/v1/server_error.hpp>
 
+#include <mongocxx/v1/exception.hh>
+
 #include <cstdint>
+#include <string>
 #include <system_error>
+#include <type_traits>
 #include <utility>
 
 #include <bsoncxx/document/value.hpp>
@@ -27,6 +35,8 @@
 #include <mongocxx/exception/server_error_code.hpp>
 
 #include <bsoncxx/private/bson.hh>
+
+#include <mongocxx/private/scoped_bson.hh>
 
 namespace mongocxx {
 namespace v_noabi {
@@ -68,14 +78,81 @@ template <typename exception_type>
     throw exception_type{v_noabi::make_error_code(error), std::move(raw_server_error), error.message};
 }
 
-template <typename exception_type>
-[[noreturn]] void throw_exception(v1::exception const& ex) {
-    if (auto const ptr = dynamic_cast<v1::server_error const*>(&ex)) {
-        throw exception_type{
-            ptr->code(), bsoncxx::v_noabi::document::value{bsoncxx::v_noabi::from_v1(ptr->raw())}, ptr->what()};
+inline std::string strip_ec_msg(std::string what, std::error_code code) {
+    auto const what_view = bsoncxx::v1::stdx::string_view{what};
+    auto const msg = code.message();
+    auto const pos = what.find(msg);
+    auto const delim = bsoncxx::v1::stdx::string_view(": ");
+
+    if (pos != what_view.npos) {
+        // "abc: msg: def" -> "abc: def"
+        if (what_view.find(delim, pos) == pos) {
+            what.erase(pos, msg.size() + delim.size());
+        }
+
+        // "abc: msg" -> "abc"
+        else if (pos >= delim.size() && what_view.rfind(delim, pos) == pos - delim.size()) {
+            what.erase(pos - delim.size(), msg.size() + delim.size());
+        }
     }
 
-    throw exception_type{ex.code(), ex.what()};
+    return what;
+}
+
+template <
+    typename exception_type,
+    bsoncxx::detail::enable_if_t<std::is_base_of<operation_exception, exception_type>::value>* = nullptr>
+[[noreturn]] void throw_exception(v1::exception const& ex) {
+    using bsoncxx::v_noabi::from_v1;
+
+    // `v1::server_error_category()` -> `v_noabi::server_error_category()`.
+    auto const code = ex.code() == v1::source_errc::server
+                          ? std::error_code{ex.code().value(), v_noabi::server_error_category()}
+                          : ex.code();
+
+    // Server-side error.
+    if (auto const ptr = dynamic_cast<v1::server_error const*>(&ex)) {
+        throw exception_type{
+            code,
+            bsoncxx::v_noabi::document::value{from_v1(ptr->raw())},
+            strip_ec_msg(ptr->what(), ptr->code()).c_str()};
+    }
+
+    // Array fields must be represented as "raw server error" document fields.
+    {
+        scoped_bson doc;
+
+        auto const append_array_field = [&](char const* name, bsoncxx::v1::array::view field) {
+            if (!field.empty()) {
+                doc += scoped_bson{BCON_NEW(name, BCON_ARRAY(scoped_bson_view{field}.bson()))};
+            }
+        };
+
+        append_array_field("errorLabels", v1::exception::internal::get_error_labels(ex));
+        append_array_field("writeConcernErrors", v1::exception::internal::get_write_concern_errors(ex));
+        append_array_field("writeErrors", v1::exception::internal::get_write_errors(ex));
+        append_array_field("errorReplies", v1::exception::internal::get_error_replies(ex));
+
+        if (!doc.view().empty()) {
+            throw exception_type{code, from_v1(std::move(doc).value()), strip_ec_msg(ex.what(), ex.code()).c_str()};
+        }
+    }
+
+    // No "raw server error" document is required.
+    throw exception_type{code, strip_ec_msg(ex.what(), ex.code())};
+}
+
+template <
+    typename exception_type,
+    bsoncxx::detail::enable_if_t<!std::is_base_of<operation_exception, exception_type>::value>* = nullptr>
+[[noreturn]] void throw_exception(v1::exception const& ex) {
+    // `v1::server_error_category()` -> `v_noabi::server_error_category()`.
+    auto const code = ex.code() == v1::source_errc::server
+                          ? std::error_code{ex.code().value(), v_noabi::server_error_category()}
+                          : ex.code();
+
+    // No "raw server error" document is required.
+    throw exception_type{code, strip_ec_msg(ex.what(), ex.code())};
 }
 
 } // namespace v_noabi
