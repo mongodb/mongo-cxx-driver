@@ -64,14 +64,17 @@ class cursor {
     cursor& operator=(cursor const&) = delete;
 
     ///
-    /// A cursor::iterator that points to the beginning of any available
-    /// results.  If begin() is called more than once, the cursor::iterator
-    /// returned points to the next remaining result, not the result of
-    /// the original call to begin().
+    /// A cursor::iterator points to the beginning of any available results.
     ///
-    /// For a tailable cursor, when cursor.begin() == cursor.end(), no
-    /// documents are available.  Each call to cursor.begin() checks again
-    /// for newly-available documents.
+    /// The first call to begin() advances to the next available document. Consecutive calls to begin() only advance  to
+    /// the next available document at most once. The state of all iterators is tracked by the change_stream  itself, so
+    /// advancing one iterator advances all iterators.
+    ///
+    /// For a non-tailable cursor, when cursor.begin() == cursor.end(), no more documents can be obtained with the
+    /// cursor. Calling begin() will always return end().
+    ///
+    /// For a tailable cursor, when cursor.begin() == cursor.end(), no document is currently available. However, a
+    /// subsequent call to begin() will request for more available documents.
     ///
     /// @return the cursor::iterator
     ///
