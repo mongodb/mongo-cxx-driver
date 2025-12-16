@@ -3,14 +3,16 @@
 set -o errexit
 set -o pipefail
 
+command -V pkgconf
+
 # Sanity-check that static library macros are not set when building against the shared library.
 # Users don't need to include this section in their projects.
-if ! pkg-config --cflags libmongocxx | grep -v -q -- -DBSONCXX_STATIC; then
+if ! pkgconf --cflags libmongocxx | grep -v -q -- -DBSONCXX_STATIC; then
   echo "Expected BSONCXX_STATIC to not be set" >&2
   exit 1
 fi
 
-if ! pkg-config --cflags libmongocxx | grep -v -q -- -DMONGOCXX_STATIC; then
+if ! pkgconf --cflags libmongocxx | grep -v -q -- -DMONGOCXX_STATIC; then
   echo "Expected MONGOCXX_STATIC to not be set" >&2
   exit 1
 fi

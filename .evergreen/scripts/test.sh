@@ -371,8 +371,13 @@ CMAKE_PREFIX_PATH="${mongoc_dir:?}:${working_dir:?}/build/install"
 export CMAKE_PREFIX_PATH
 
 PKG_CONFIG_PATH=""
-PKG_CONFIG_PATH+=":${mongoc_dir:?}/${LIB_DIR:?}/pkgconfig"
-PKG_CONFIG_PATH+=":${working_dir:?}/build/install/${LIB_DIR:?}/pkgconfig"
+if [[ "${OSTYPE:?}" == cygwin ]]; then
+  PKG_CONFIG_PATH+=";$(cygpath -aw "${mongoc_dir:?}/${LIB_DIR:?}/pkgconfig")"
+  PKG_CONFIG_PATH+=";$(cygpath -aw "${working_dir:?}/build/install/${LIB_DIR:?}/pkgconfig")"
+else
+  PKG_CONFIG_PATH+=":${mongoc_dir:?}/${LIB_DIR:?}/pkgconfig"
+  PKG_CONFIG_PATH+=":${working_dir:?}/build/install/${LIB_DIR:?}/pkgconfig"
+fi
 export PKG_CONFIG_PATH
 
 if [[ "${generator:-}" != Visual\ Studio\ * ]]; then
