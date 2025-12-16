@@ -229,9 +229,9 @@ void* encrypt::convert() const {
 
         auto const& case_sensitive = _text_opts->case_sensitive();
         auto const& diacritic_sensitive = _text_opts->diacritic_sensitive();
-        auto const& prefix = _text_opts->prefix_opts();
-        auto const& suffix = _text_opts->suffix_opts();
-        auto const& substring = _text_opts->substring_opts();
+        auto prefix = _text_opts->prefix_opts();
+        auto suffix = _text_opts->suffix_opts();
+        auto substring = _text_opts->substring_opts();
 
         if (case_sensitive) {
             libmongoc::client_encryption_encrypt_text_opts_set_case_sensitive(text_opts, case_sensitive.value());

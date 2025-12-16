@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include <bsoncxx/stdx/optional.hpp>
+#include <bsoncxx/v1/stdx/optional.hpp>
 
 #include <mongocxx/config/prelude.hpp>
 
@@ -112,7 +112,7 @@ class text_options {
     ///
     /// Gets the current "prefix" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<prefix> const&) prefix_opts() const;
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<prefix>) prefix_opts() const;
 
     ///
     /// Sets the "suffix" field.
@@ -122,7 +122,7 @@ class text_options {
     ///
     /// Gets the current "suffix" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<suffix> const&) suffix_opts() const;
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<suffix>) suffix_opts() const;
 
     ///
     /// Sets the "substring" field.
@@ -132,7 +132,7 @@ class text_options {
     ///
     /// Gets the current "substring" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<substring> const&) substring_opts() const;
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<substring>) substring_opts() const;
 
    private:
     class impl;

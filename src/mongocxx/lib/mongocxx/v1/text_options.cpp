@@ -203,7 +203,7 @@ text_options& text_options::prefix_opts(prefix value) {
     return *this;
 }
 
-bsoncxx::v1::stdx::optional<text_options::prefix> const& text_options::prefix_opts() const {
+bsoncxx::v1::stdx::optional<text_options::prefix> text_options::prefix_opts() const {
     return impl::with(this)->_prefix;
 }
 
@@ -212,7 +212,7 @@ text_options& text_options::suffix_opts(suffix value) {
     return *this;
 }
 
-bsoncxx::v1::stdx::optional<text_options::suffix> const& text_options::suffix_opts() const {
+bsoncxx::v1::stdx::optional<text_options::suffix> text_options::suffix_opts() const {
     return impl::with(this)->_suffix;
 }
 
@@ -221,7 +221,7 @@ text_options& text_options::substring_opts(substring value) {
     return *this;
 }
 
-bsoncxx::v1::stdx::optional<text_options::substring> const& text_options::substring_opts() const {
+bsoncxx::v1::stdx::optional<text_options::substring> text_options::substring_opts() const {
     return impl::with(this)->_substring;
 }
 
