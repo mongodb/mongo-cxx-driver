@@ -923,7 +923,8 @@ class bulk_write::options {
     /// Default initialization.
     ///
     /// @par Postconditions:
-    /// - All supported fields are "unset" or zero-initialized.
+    /// - `this->ordered() == true`.
+    /// - All other supported fields are "unset" or zero-initialized.
     ///
     MONGOCXX_ABI_EXPORT_CDECL() options();
 
