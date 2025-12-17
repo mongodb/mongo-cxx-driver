@@ -935,7 +935,7 @@ class bulk_write::options {
     ///
     /// Return the current "bypassDocumentValidation" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bool> const) bypass_document_validation() const;
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bool>) bypass_document_validation() const;
 
     ///
     /// Set the "comment" field.
@@ -945,7 +945,7 @@ class bulk_write::options {
     ///
     /// Return the current "comment" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::types::view> const) comment() const;
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::types::view>) comment() const;
 
     ///
     /// Set the "let" field.
@@ -955,7 +955,7 @@ class bulk_write::options {
     ///
     /// Return the current "let" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view> const) let() const;
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view>) let() const;
 
     ///
     /// Set the "ordered" field.
