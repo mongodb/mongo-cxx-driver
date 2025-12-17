@@ -1037,14 +1037,6 @@ class bulk_write::result {
     MONGOCXX_ABI_EXPORT_CDECL(result&) operator=(result const& other);
 
     ///
-    /// Default initialization.
-    ///
-    /// @par Postconditions:
-    /// - All supported fields are "unset" or zero-initialized.
-    ///
-    MONGOCXX_ABI_EXPORT_CDECL() result();
-
-    ///
     /// Return the value of the "insertedCount" field.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(std::int64_t) inserted_count() const;
