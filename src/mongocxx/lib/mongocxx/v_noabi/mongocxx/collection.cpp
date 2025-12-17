@@ -33,7 +33,6 @@
 #include <bsoncxx/stdx/optional.hpp>
 #include <bsoncxx/types.hpp>
 
-#include <mongocxx/bulk_write.hpp>
 #include <mongocxx/client.hpp>
 #include <mongocxx/exception/error_code.hpp>
 #include <mongocxx/exception/logic_error.hpp>
@@ -288,13 +287,13 @@ collection& collection::operator=(collection const& c) {
 }
 
 mongocxx::v_noabi::bulk_write collection::create_bulk_write(options::bulk_write const& options) {
-    return mongocxx::v_noabi::bulk_write{*this, options};
+    return v_noabi::bulk_write::internal::make(*this, options, nullptr);
 }
 
 mongocxx::v_noabi::bulk_write collection::create_bulk_write(
     client_session const& session,
     options::bulk_write const& options) {
-    return mongocxx::v_noabi::bulk_write{*this, options, &session};
+    return v_noabi::bulk_write::internal::make(*this, options, &session);
 }
 
 namespace {
@@ -508,7 +507,7 @@ collection::_insert_one(client_session const* session, view_or_value document, o
         bulk_opts.comment(*comment);
     }
 
-    mongocxx::v_noabi::bulk_write bulk_op{*this, bulk_opts, session};
+    auto bulk_op = v_noabi::bulk_write::internal::make(*this, bulk_opts, session);
     bsoncxx::v_noabi::document::element oid{};
     bsoncxx::v_noabi::builder::basic::document new_document;
 

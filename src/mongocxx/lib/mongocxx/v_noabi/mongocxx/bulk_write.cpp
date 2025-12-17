@@ -12,226 +12,271 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <mongocxx/bulk_write.hh>
+
+//
+
+#include <mongocxx/v1/exception.hpp>
+
+#include <bsoncxx/v1/types/value.hh>
+
+#include <mongocxx/v1/bulk_write.hh>
+
+#include <utility>
+
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/builder/basic/kvp.hpp>
+#include <bsoncxx/document/view.hpp>
+#include <bsoncxx/stdx/optional.hpp>
 
 #include <mongocxx/bulk_write.hpp>
 #include <mongocxx/collection.hpp>
 #include <mongocxx/exception/bulk_write_exception.hpp>
 #include <mongocxx/exception/logic_error.hpp>
+#include <mongocxx/model/delete_many.hpp>
+#include <mongocxx/model/delete_one.hpp>
+#include <mongocxx/model/insert_one.hpp>
+#include <mongocxx/model/replace_one.hpp>
+#include <mongocxx/model/update_many.hpp>
+#include <mongocxx/model/update_one.hpp>
+#include <mongocxx/model/write.hpp>
+#include <mongocxx/options/bulk_write.hpp>
+#include <mongocxx/result/bulk_write.hpp>
+#include <mongocxx/write_type.hpp>
 
-#include <mongocxx/bulk_write.hh>
 #include <mongocxx/client_session.hh>
 #include <mongocxx/collection.hh>
 #include <mongocxx/mongoc_error.hh>
 #include <mongocxx/scoped_bson.hh>
-#include <mongocxx/write_concern.hh>
 
-#include <bsoncxx/private/make_unique.hh>
+#include <bsoncxx/private/bson.hh>
 
 #include <mongocxx/private/mongoc.hh>
 
 namespace mongocxx {
 namespace v_noabi {
 
-using bsoncxx::v_noabi::builder::basic::kvp;
+namespace {
 
-bulk_write::bulk_write(bulk_write&&) noexcept = default;
-bulk_write& bulk_write::operator=(bulk_write&&) noexcept = default;
-
-bulk_write::~bulk_write() = default;
-
-bool bulk_write::empty() const noexcept {
-    return _impl->is_empty;
+template <typename Op>
+void append_collation(scoped_bson& options, Op const& op) {
+    if (auto const opt = op.collation()) {
+        auto const doc = to_scoped_bson_view(opt->view());
+        options += scoped_bson{BCON_NEW("collation", BCON_DOCUMENT(doc.bson()))};
+    }
 }
 
-bulk_write& bulk_write::append(model::write const& operation) {
-    switch (operation.type()) {
-        case write_type::k_insert_one: {
-            bson_error_t error;
-            auto result = libmongoc::bulk_operation_insert_with_opts(
-                _impl->operation_t, to_scoped_bson_view(operation.get_insert_one().document()), nullptr, &error);
-            if (!result) {
-                throw_exception<logic_error>(error);
-            }
-            break;
-        }
-        case write_type::k_update_one: {
-            bsoncxx::v_noabi::builder::basic::document options_builder;
-            if (auto const collation = operation.get_update_one().collation()) {
-                options_builder.append(kvp("collation", *collation));
-            }
-            if (auto const hint = operation.get_update_one().hint()) {
-                options_builder.append(kvp("hint", *hint));
-            }
-            if (auto const sort = operation.get_update_one().sort()) {
-                options_builder.append(kvp("sort", *sort));
-            }
-            if (auto const upsert = operation.get_update_one().upsert()) {
-                options_builder.append(kvp("upsert", *upsert));
-            }
-            if (auto const array_filters = operation.get_update_one().array_filters()) {
-                options_builder.append(kvp("arrayFilters", *array_filters));
-            }
+template <typename Op>
+void append_hint(scoped_bson& options, Op const& op) {
+    namespace builder = bsoncxx::v_noabi::builder::basic;
 
-            bson_error_t error;
-            auto result = libmongoc::bulk_operation_update_one_with_opts(
-                _impl->operation_t,
-                to_scoped_bson_view(operation.get_update_one().filter()),
-                to_scoped_bson_view(operation.get_update_one().update()),
-                to_scoped_bson_view(options_builder.extract()),
-                &error);
-            if (!result) {
-                throw_exception<logic_error>(error);
-            }
-            break;
-        }
-        case write_type::k_update_many: {
-            bsoncxx::v_noabi::builder::basic::document options_builder;
-            if (auto const collation = operation.get_update_many().collation()) {
-                options_builder.append(kvp("collation", *collation));
-            }
-            if (auto const hint = operation.get_update_many().hint()) {
-                options_builder.append(kvp("hint", *hint));
-            }
-            if (auto const upsert = operation.get_update_many().upsert()) {
-                options_builder.append(kvp("upsert", *upsert));
-            }
-            if (auto const array_filters = operation.get_update_many().array_filters()) {
-                options_builder.append(kvp("arrayFilters", *array_filters));
-            }
+    if (auto const& opt = op.hint()) {
+        builder::document doc;
+        doc.append(builder::kvp("hint", opt->to_value()));
+        options += to_scoped_bson_view(doc.view());
+    }
+}
 
-            bson_error_t error;
-            auto result = libmongoc::bulk_operation_update_many_with_opts(
-                _impl->operation_t,
-                to_scoped_bson_view(operation.get_update_many().filter()),
-                to_scoped_bson_view(operation.get_update_many().update()),
-                to_scoped_bson_view(options_builder.extract()),
-                &error);
-            if (!result) {
-                throw_exception<logic_error>(error);
-            }
-            break;
-        }
-        case write_type::k_delete_one: {
-            bsoncxx::v_noabi::builder::basic::document options_builder;
-            if (auto const collation = operation.get_delete_one().collation()) {
-                options_builder.append(kvp("collation", *collation));
-            }
-            if (auto const hint = operation.get_delete_one().hint()) {
-                options_builder.append(kvp("hint", *hint));
-            }
+template <typename Op>
+void append_sort(scoped_bson& options, Op const& op) {
+    if (auto const opt = op.sort()) {
+        auto const doc = to_scoped_bson_view(*opt);
+        options += scoped_bson{BCON_NEW("sort", BCON_DOCUMENT(doc.bson()))};
+    }
+}
 
-            bson_error_t error;
-            auto result = libmongoc::bulk_operation_remove_one_with_opts(
-                _impl->operation_t,
-                to_scoped_bson_view(operation.get_delete_one().filter()),
-                to_scoped_bson_view(options_builder),
-                &error);
-            if (!result) {
-                throw_exception<logic_error>(error);
-            }
-            break;
-        }
-        case write_type::k_delete_many: {
-            bsoncxx::v_noabi::builder::basic::document options_builder;
-            if (auto const collation = operation.get_delete_many().collation()) {
-                options_builder.append(kvp("collation", *collation));
-            }
-            if (auto const hint = operation.get_delete_many().hint()) {
-                options_builder.append(kvp("hint", *hint));
-            }
+template <typename Op>
+void append_upsert(scoped_bson& options, Op const& op) {
+    if (auto const opt = op.upsert()) {
+        options += scoped_bson{BCON_NEW("upsert", BCON_BOOL(*opt))};
+    }
+}
 
-            bson_error_t error;
-            auto result = libmongoc::bulk_operation_remove_many_with_opts(
-                _impl->operation_t,
-                to_scoped_bson_view(operation.get_delete_many().filter()),
-                to_scoped_bson_view(options_builder),
-                &error);
-            if (!result) {
-                throw_exception<logic_error>(error);
-            }
-            break;
-        }
-        case write_type::k_replace_one: {
-            bsoncxx::v_noabi::builder::basic::document options_builder;
-            if (auto const collation = operation.get_replace_one().collation()) {
-                options_builder.append(kvp("collation", *collation));
-            }
-            if (auto const hint = operation.get_replace_one().hint()) {
-                options_builder.append(kvp("hint", *hint));
-            }
-            if (auto const sort = operation.get_replace_one().sort()) {
-                options_builder.append(kvp("sort", *sort));
-            }
-            if (auto const upsert = operation.get_replace_one().upsert()) {
-                options_builder.append(kvp("upsert", *upsert));
-            }
+template <typename Op>
+void append_array_filters(scoped_bson& options, Op const& op) {
+    if (auto const opt = op.array_filters()) {
+        auto const doc = to_scoped_bson_view(*opt);
+        options += scoped_bson{BCON_NEW("arrayFilters", BCON_ARRAY(doc.bson()))};
+    }
+}
 
-            bson_error_t error;
-            auto result = libmongoc::bulk_operation_replace_one_with_opts(
-                _impl->operation_t,
-                to_scoped_bson_view(operation.get_replace_one().filter()),
-                to_scoped_bson_view(operation.get_replace_one().replacement()),
-                to_scoped_bson_view(options_builder),
-                &error);
-            if (!result) {
-                throw_exception<logic_error>(error);
-            }
+void append_insert_one(mongoc_bulk_operation_t* bulk, v_noabi::model::insert_one const& op) {
+    bson_error_t error = {};
+
+    if (!libmongoc::bulk_operation_insert_with_opts(bulk, to_scoped_bson_view(op.document()).bson(), nullptr, &error)) {
+        throw_exception<v_noabi::logic_error>(error);
+    }
+}
+
+void append_delete_one(mongoc_bulk_operation_t* bulk, v_noabi::model::delete_one const& op) {
+    scoped_bson options;
+
+    append_collation(options, op);
+    append_hint(options, op);
+
+    bson_error_t error = {};
+
+    if (!libmongoc::bulk_operation_remove_one_with_opts(
+            bulk, to_scoped_bson_view(op.filter()).bson(), options.bson(), &error)) {
+        throw_exception<v_noabi::logic_error>(error);
+    }
+}
+
+void append_delete_many(mongoc_bulk_operation_t* bulk, v_noabi::model::delete_many const& op) {
+    scoped_bson options;
+
+    append_collation(options, op);
+    append_hint(options, op);
+
+    bson_error_t error = {};
+
+    if (!libmongoc::bulk_operation_remove_many_with_opts(
+            bulk, to_scoped_bson_view(op.filter()).bson(), options.bson(), &error)) {
+        throw_exception<v_noabi::logic_error>(error);
+    }
+}
+
+void append_update_one(mongoc_bulk_operation_t* bulk, v_noabi::model::update_one const& op) {
+    scoped_bson options;
+
+    append_collation(options, op);
+    append_hint(options, op);
+    append_sort(options, op);
+    append_upsert(options, op);
+    append_array_filters(options, op);
+
+    bson_error_t error = {};
+
+    if (!libmongoc::bulk_operation_update_one_with_opts(
+            bulk,
+            to_scoped_bson_view(op.filter()).bson(),
+            to_scoped_bson_view(op.update()).bson(),
+            options.bson(),
+            &error)) {
+        throw_exception<v_noabi::logic_error>(error);
+    }
+}
+
+void append_update_many(mongoc_bulk_operation_t* bulk, v_noabi::model::update_many const& op) {
+    scoped_bson options;
+
+    append_collation(options, op);
+    append_hint(options, op);
+    append_upsert(options, op);
+    append_array_filters(options, op);
+
+    bson_error_t error = {};
+
+    if (!libmongoc::bulk_operation_update_many_with_opts(
+            bulk,
+            to_scoped_bson_view(op.filter()).bson(),
+            to_scoped_bson_view(op.update()).bson(),
+            options.bson(),
+            &error)) {
+        throw_exception<v_noabi::logic_error>(error);
+    }
+}
+
+void append_replace_one(mongoc_bulk_operation_t* bulk, v_noabi::model::replace_one const& op) {
+    scoped_bson options;
+
+    append_collation(options, op);
+    append_hint(options, op);
+    append_sort(options, op);
+    append_upsert(options, op);
+
+    bson_error_t error = {};
+
+    if (!libmongoc::bulk_operation_replace_one_with_opts(
+            bulk,
+            to_scoped_bson_view(op.filter()).bson(),
+            to_scoped_bson_view(op.replacement()).bson(),
+            options.bson(),
+            &error)) {
+        throw_exception<v_noabi::logic_error>(error);
+    }
+}
+
+} // namespace
+
+bulk_write& bulk_write::append(v_noabi::model::write const& op) {
+    auto const bulk = v1::bulk_write::internal::as_mongoc(_bulk);
+
+    switch (op.type()) {
+        case v_noabi::write_type::k_insert_one:
+            append_insert_one(bulk, op.get_insert_one());
             break;
-        }
+        case v_noabi::write_type::k_delete_one:
+            append_delete_one(bulk, op.get_delete_one());
+            break;
+        case v_noabi::write_type::k_delete_many:
+            append_delete_many(bulk, op.get_delete_many());
+            break;
+        case v_noabi::write_type::k_update_one:
+            append_update_one(bulk, op.get_update_one());
+            break;
+        case v_noabi::write_type::k_update_many:
+            append_update_many(bulk, op.get_update_many());
+            break;
+        case v_noabi::write_type::k_replace_one:
+            append_replace_one(bulk, op.get_replace_one());
+            break;
+        default:
+            // Ignore.
+            break;
     }
 
-    _impl->is_empty = false;
+    v1::bulk_write::internal::is_empty(_bulk) = false;
 
     return *this;
 }
 
-bsoncxx::v_noabi::stdx::optional<result::bulk_write> bulk_write::execute() const {
-    mongoc_bulk_operation_t* b = _impl->operation_t;
-    bson_error_t error;
-
-    scoped_bson reply;
-    if (!libmongoc::bulk_operation_execute(b, reply.out_ptr(), &error)) {
-        throw_exception<bulk_write_exception>(from_v1(std::move(reply)), error);
-    }
-
-    // Reply is empty for unacknowledged writes, so return disengaged optional.
-    if (reply.view().empty()) {
-        return bsoncxx::v_noabi::stdx::nullopt;
-    }
-
-    result::bulk_write result(from_v1(std::move(reply)));
-
-    return bsoncxx::v_noabi::stdx::optional<result::bulk_write>(std::move(result));
+bsoncxx::v_noabi::stdx::optional<result::bulk_write> bulk_write::execute() const try {
+    // Backward compatibility: `execute()` is not logically const.
+    // NOLINTNEXTLINE(cppcoreguidelines-pro-type-const-cast)
+    return const_cast<v1::bulk_write&>(_bulk).execute();
+} catch (v1::exception const& ex) {
+    throw_exception<v_noabi::bulk_write_exception>(ex);
 }
 
-bulk_write::bulk_write(collection const& coll, options::bulk_write const& options, client_session const* session)
-    : _created_from_collection{true} {
-    bsoncxx::v_noabi::builder::basic::document options_builder;
-    if (!options.ordered()) {
+bulk_write
+bulk_write::internal::make(collection const& coll, options::bulk_write const& opts, client_session const* session) {
+    scoped_bson options;
+
+    if (!opts.ordered()) {
         // ordered is true by default. Only append it if set to false.
-        options_builder.append(kvp("ordered", false));
+        options += scoped_bson{BCON_NEW("ordered", BCON_BOOL(false))};
     }
-    if (auto const& wc = options.write_concern()) {
-        options_builder.append(kvp("writeConcern", wc->to_document()));
+
+    if (auto const& opt = opts.write_concern()) {
+        auto const v = opt->to_document();
+        options += scoped_bson{BCON_NEW("writeConcern", BCON_DOCUMENT(to_scoped_bson_view(v).bson()))};
     }
-    if (auto const& let = options.let()) {
-        options_builder.append(kvp("let", *let));
+
+    if (auto const& opt = opts.let()) {
+        auto const v = opt->view();
+        options += scoped_bson{BCON_NEW("let", BCON_DOCUMENT(to_scoped_bson_view(v).bson()))};
     }
-    if (auto const& comment = options.comment()) {
-        options_builder.append(kvp("comment", *comment));
+
+    if (auto const& opt = opts.comment()) {
+        namespace builder = bsoncxx::v_noabi::builder::basic;
+        builder::document doc;
+        doc.append(builder::kvp("comment", opt->view()));
+        options += to_scoped_bson_view(doc.view());
     }
+
     if (session) {
-        options_builder.append(bsoncxx::v_noabi::builder::concatenate_doc{session->_get_impl().to_document()});
+        options += to_scoped_bson_view(session->_get_impl().to_document());
     }
 
-    _impl = bsoncxx::make_unique<bulk_write::impl>(libmongoc::collection_create_bulk_operation_with_opts(
-        coll._get_impl().collection_t, to_scoped_bson_view(options_builder)));
+    auto ret = v1::bulk_write::internal::make(
+        libmongoc::collection_create_bulk_operation_with_opts(coll._get_impl().collection_t, options.bson()));
 
-    if (auto validation = options.bypass_document_validation()) {
-        libmongoc::bulk_operation_set_bypass_document_validation(_impl->operation_t, *validation);
+    if (auto const validation = opts.bypass_document_validation()) {
+        libmongoc::bulk_operation_set_bypass_document_validation(v1::bulk_write::internal::as_mongoc(ret), *validation);
     }
+
+    return bulk_write{std::move(ret)};
 }
 
 } // namespace v_noabi

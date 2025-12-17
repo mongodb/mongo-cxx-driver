@@ -16,6 +16,10 @@
 
 #include <mongocxx/write_type-fwd.hpp> // IWYU pragma: export
 
+//
+
+#include <mongocxx/v1/bulk_write.hpp> // IWYU pragma: export
+
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
@@ -44,6 +48,20 @@ enum class write_type {
     k_replace_one,
 };
 
+///
+/// Convert to the @ref mongocxx::v_noabi equivalent of `v`.
+///
+inline v_noabi::write_type from_v1(v1::bulk_write::type v) {
+    return static_cast<v_noabi::write_type>(v);
+}
+
+///
+/// Convert to the @ref mongocxx::v1 equivalent of `v`.
+///
+inline v1::bulk_write::type to_v1(v_noabi::write_type v) {
+    return static_cast<v1::bulk_write::type>(v);
+}
+
 } // namespace v_noabi
 } // namespace mongocxx
 
@@ -52,4 +70,7 @@ enum class write_type {
 ///
 /// @file
 /// Provides @ref mongocxx::v_noabi::write_type.
+///
+/// @par Includes
+/// - @ref mongocxx/v1/bulk_write.hpp
 ///

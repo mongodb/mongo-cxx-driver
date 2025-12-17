@@ -14,6 +14,8 @@
 
 #pragma once
 
+#include <mongocxx/v1/bulk_write-fwd.hpp> // IWYU pragma: export
+
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
@@ -26,7 +28,7 @@ enum class write_type;
 
 namespace mongocxx {
 
-using ::mongocxx::v_noabi::write_type;
+using v_noabi::write_type;
 
 } // namespace mongocxx
 
@@ -35,4 +37,7 @@ using ::mongocxx::v_noabi::write_type;
 ///
 /// @file
 /// Declares @ref mongocxx::v_noabi::write_type.
+///
+/// @par Includes
+/// - @ref mongocxx/v1/bulk_write-fwd.hpp
 ///

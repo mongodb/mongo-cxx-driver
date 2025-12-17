@@ -16,27 +16,19 @@
 
 #include <mongocxx/bulk_write.hpp> // IWYU pragma: export
 
-#include <mongocxx/private/mongoc.hh>
+//
+
+#include <mongocxx/collection-fwd.hpp>
+
+#include <mongocxx/client_session.hpp>
+#include <mongocxx/options/bulk_write.hpp>
 
 namespace mongocxx {
 namespace v_noabi {
 
-class bulk_write::impl {
+class bulk_write::internal {
    public:
-    impl(mongoc_bulk_operation_t* op) : operation_t(op) {}
-
-    ~impl() {
-        libmongoc::bulk_operation_destroy(operation_t);
-    }
-
-    impl(impl&&) = delete;
-    impl& operator=(impl&&) = delete;
-
-    impl(impl const&) = delete;
-    impl& operator=(impl const&) = delete;
-
-    mongoc_bulk_operation_t* operation_t;
-    bool is_empty = true;
+    static bulk_write make(collection const& coll, options::bulk_write const& opts, client_session const* session);
 };
 
 } // namespace v_noabi

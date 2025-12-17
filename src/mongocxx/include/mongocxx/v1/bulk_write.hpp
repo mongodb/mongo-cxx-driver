@@ -106,8 +106,6 @@ class bulk_write {
     ///
     /// Destroy this object.
     ///
-    /// @warning Invalidates all associated views.
-    ///
     MONGOCXX_ABI_EXPORT_CDECL() ~bulk_write();
 
     ///
@@ -157,6 +155,11 @@ class bulk_write {
     /// @throws mongocxx::v1::exception for all other runtime errors.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<result>) execute();
+
+    class internal;
+
+   private:
+    /* explicit(false) */ bulk_write(void* bulk);
 };
 
 ///
@@ -318,6 +321,8 @@ class bulk_write::update_one {
     /// Return the current "arrayFilters" field.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::array::view>) array_filters() const;
+
+    class internal;
 };
 
 ///
@@ -435,6 +440,11 @@ class bulk_write::update_many {
     /// Return the current "arrayFilters" field.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::array::view>) array_filters() const;
+
+    class internal;
+
+   private:
+    /* explicit(false) */ update_many(void* impl);
 };
 
 ///
@@ -551,6 +561,11 @@ class bulk_write::replace_one {
     /// Return the current "upsert" field.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bool>) upsert() const;
+
+    class internal;
+
+   private:
+    /* explicit(false) */ replace_one(void* impl);
 };
 
 ///
@@ -637,6 +652,11 @@ class bulk_write::delete_one {
     /// Return the current "hint" field.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<v1::hint>) hint() const;
+
+    class internal;
+
+   private:
+    /* explicit(false) */ delete_one(void* impl);
 };
 
 ///
@@ -723,6 +743,11 @@ class bulk_write::delete_many {
     /// Return the current "hint" field.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<v1::hint>) hint() const;
+
+    class internal;
+
+   private:
+    /* explicit(false) */ delete_many(void* impl);
 };
 
 ///
@@ -862,6 +887,8 @@ class bulk_write::single {
     MONGOCXX_ABI_EXPORT_CDECL(replace_one&&) get_replace_one() &&;
     /// @}
     ///
+
+    class internal;
 };
 
 ///
@@ -977,6 +1004,11 @@ class bulk_write::options {
     /// Return the current "writeConcern" field.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<v1::write_concern>) write_concern() const;
+
+    class internal;
+
+   private:
+    /* explicit(false) */ options(void* impl);
 };
 
 ///
@@ -1084,6 +1116,11 @@ class bulk_write::result {
     }
     /// @}
     ///
+
+    class internal;
+
+   private:
+    /* explicit(false) */ result(void* impl);
 };
 
 } // namespace v1

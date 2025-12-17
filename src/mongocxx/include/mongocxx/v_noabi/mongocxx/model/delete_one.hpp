@@ -14,8 +14,17 @@
 
 #pragma once
 
+#include <bsoncxx/v1/document/value.hpp>
+
 #include <mongocxx/model/delete_one-fwd.hpp> // IWYU pragma: export
 
+//
+
+#include <mongocxx/v1/bulk_write.hpp> // IWYU pragma: export
+
+#include <utility>
+
+#include <bsoncxx/document/view.hpp>
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/stdx/optional.hpp>
 
@@ -33,19 +42,46 @@ namespace model {
 class delete_one {
    public:
     ///
+    /// Construct with the @ref mongocxx::v1 equivalent.
+    ///
+    /* explicit(false) */ MONGOCXX_ABI_EXPORT_CDECL() delete_one(v1::bulk_write::delete_one op);
+
+    ///
+    /// Convert to the @ref mongocxx::v1 equivalent.
+    ///
+    explicit operator v1::bulk_write::delete_one() const {
+        using bsoncxx::v_noabi::to_v1;
+        using mongocxx::v_noabi::to_v1;
+
+        v1::bulk_write::delete_one ret{bsoncxx::v1::document::value{to_v1(_filter.view())}};
+
+        if (_collation) {
+            ret.collation(bsoncxx::v1::document::value{to_v1(_collation->view())});
+        }
+
+        if (_hint) {
+            ret.hint(to_v1(*_hint));
+        }
+
+        return ret;
+    }
+
+    ///
     /// Constructs a delete operation that will delete the first document matching the filter.
     ///
     /// @param filter
     ///   Document representing the criteria for deletion.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL() delete_one(bsoncxx::v_noabi::document::view_or_value filter);
+    delete_one(bsoncxx::v_noabi::document::view_or_value filter) : _filter{std::move(filter)} {}
 
     ///
     /// Gets the filter on this delete operation.
     ///
     /// @return The filter to be used for the delete operation.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::document::view_or_value const&) filter() const;
+    bsoncxx::v_noabi::document::view_or_value const& filter() const {
+        return _filter;
+    }
 
     ///
     /// Sets the collation for this delete operation.
@@ -56,8 +92,10 @@ class delete_one {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/collation/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(delete_one&)
-    collation(bsoncxx::v_noabi::document::view_or_value collation);
+    delete_one& collation(bsoncxx::v_noabi::document::view_or_value collation) {
+        _collation = std::move(collation);
+        return *this;
+    }
 
     ///
     /// Gets the collation option for this delete operation.
@@ -68,8 +106,9 @@ class delete_one {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/collation/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const&)
-    collation() const;
+    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const& collation() const {
+        return _collation;
+    }
 
     ///
     /// Sets the index to use for this operation.
@@ -84,15 +123,19 @@ class delete_one {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(delete_one&) hint(mongocxx::v_noabi::hint index_hint);
+    delete_one& hint(mongocxx::v_noabi::hint index_hint) {
+        _hint = std::move(index_hint);
+        return *this;
+    }
 
     ///
     /// Gets the current hint.
     ///
     /// @return The current hint, if one is set.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::hint> const&)
-    hint() const;
+    bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::hint> const& hint() const {
+        return _hint;
+    }
 
    private:
     bsoncxx::v_noabi::document::view_or_value _filter;
@@ -105,9 +148,32 @@ class delete_one {
 } // namespace v_noabi
 } // namespace mongocxx
 
+namespace mongocxx {
+namespace v_noabi {
+
+///
+/// Convert to the @ref mongocxx::v_noabi equivalent of `v`.
+///
+inline v_noabi::model::delete_one from_v1(v1::bulk_write::delete_one v) {
+    return {std::move(v)};
+}
+
+///
+/// Convert to the @ref mongocxx::v1 equivalent of `v`.
+///
+inline v1::bulk_write::delete_one to_v1(v_noabi::model::delete_one const& v) {
+    return v1::bulk_write::delete_one{v};
+}
+
+} // namespace v_noabi
+} // namespace mongocxx
+
 #include <mongocxx/config/postlude.hpp>
 
 ///
 /// @file
 /// Provides @ref mongocxx::v_noabi::model::delete_one.
+///
+/// @par Includes
+/// - @ref mongocxx/v1/bulk_write.hpp
 ///
