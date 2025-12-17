@@ -87,10 +87,10 @@ class cursor {
     /* explicit(false) */ cursor(v1::cursor cursor) : _cursor{std::move(cursor)} {}
 
     ///
-    /// Convert to the @ref bsoncxx::v1 equivalent.
+    /// Convert to the @ref mongocxx::v1 equivalent.
     ///
     /// @par Postconditions:
-    /// - `other` is in an assign-or-destroy-only state.
+    /// - `*this` is in an assign-or-destroy-only state.
     ///
     /// @warning Invalidates all associated iterators and views.
     ///
@@ -106,8 +106,8 @@ class cursor {
     ///
     /// A cursor::iterator points to the beginning of any available results.
     ///
-    /// The first call to begin() advances to the next available document. Consecutive calls to begin() only advance  to
-    /// the next available document at most once. The state of all iterators is tracked by the change_stream  itself, so
+    /// The first call to begin() advances to the next available document. Consecutive calls to begin() only advance to
+    /// the next available document at most once. The state of all iterators is tracked by the cursor  itself, so
     /// advancing one iterator advances all iterators.
     ///
     /// For a non-tailable cursor, when cursor.begin() == cursor.end(), no more documents can be obtained with the
