@@ -19,6 +19,7 @@
 #include <bsoncxx/v1/array/value.hpp>
 #include <bsoncxx/v1/document/value.hpp>
 #include <bsoncxx/v1/document/view.hpp>
+#include <bsoncxx/v1/stdx/optional.hpp>
 #include <bsoncxx/v1/stdx/string_view.hpp>
 #include <bsoncxx/v1/types/id.hpp>
 #include <bsoncxx/v1/types/view.hpp>
@@ -185,9 +186,9 @@ std::error_category const& type_error_category() {
 class exception::impl {
    public:
     bsoncxx::v1::array::value _error_labels;
-    bsoncxx::v1::array::value _write_concern_errors;
-    bsoncxx::v1::array::value _write_errors;
-    bsoncxx::v1::array::value _error_replies;
+
+    // For backward compatibility with v_noabi::operation_exception.
+    bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> _reply;
 };
 
 bool exception::has_error_label(bsoncxx::v1::stdx::string_view label) const {
@@ -332,32 +333,16 @@ void exception::internal::set_error_labels(exception& self, bsoncxx::v1::documen
     set_array_field("errorLabels", self._impl->_error_labels, v);
 }
 
-void exception::internal::set_write_concern_errors(exception& self, bsoncxx::v1::document::view v) {
-    set_array_field("writeConcernErrors", self._impl->_write_concern_errors, v);
-}
-
-void exception::internal::set_write_errors(exception& self, bsoncxx::v1::document::view v) {
-    set_array_field("writeErrors", self._impl->_write_errors, v);
-}
-
-void exception::internal::set_error_replies(exception& self, bsoncxx::v1::document::view v) {
-    set_array_field("errorReplies", self._impl->_error_replies, v);
+void exception::internal::set_reply(exception& self, bsoncxx::v1::document::value v) {
+    self._impl->_reply = std::move(v);
 }
 
 bsoncxx::v1::array::view exception::internal::get_error_labels(exception const& self) {
     return self._impl->_error_labels;
 }
 
-bsoncxx::v1::array::view exception::internal::get_write_concern_errors(exception const& self) {
-    return self._impl->_write_concern_errors;
-}
-
-bsoncxx::v1::array::view exception::internal::get_write_errors(exception const& self) {
-    return self._impl->_write_errors;
-}
-
-bsoncxx::v1::array::view exception::internal::get_error_replies(exception const& self) {
-    return self._impl->_error_replies;
+bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> const& exception::internal::get_reply(exception const& self) {
+    return self._impl->_reply;
 }
 
 void throw_exception(bson_error_t const& error) {
@@ -377,9 +362,7 @@ void throw_exception(bson_error_t const& error, bsoncxx::v1::document::value doc
     auto ex = make_exception(error);
 
     exception::internal::set_error_labels(ex, doc);
-    exception::internal::set_write_concern_errors(ex, doc);
-    exception::internal::set_write_errors(ex, doc);
-    exception::internal::set_error_replies(ex, doc);
+    exception::internal::set_reply(ex, std::move(doc));
 
     throw std::move(ex);
 }

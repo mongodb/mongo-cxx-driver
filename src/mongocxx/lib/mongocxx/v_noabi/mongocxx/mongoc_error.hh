@@ -14,7 +14,6 @@
 
 #pragma once
 
-#include <bsoncxx/v1/array/view.hpp>
 #include <bsoncxx/v1/detail/type_traits.hpp>
 #include <bsoncxx/v1/stdx/string_view.hpp>
 
@@ -35,8 +34,6 @@
 #include <mongocxx/exception/server_error_code.hpp>
 
 #include <bsoncxx/private/bson.hh>
-
-#include <mongocxx/private/scoped_bson.hh>
 
 namespace mongocxx {
 namespace v_noabi {
@@ -118,24 +115,9 @@ template <
             strip_ec_msg(ptr->what(), ptr->code()).c_str()};
     }
 
-    // Array fields must be represented as "raw server error" document fields.
-    {
-        scoped_bson doc;
-
-        auto const append_array_field = [&](char const* name, bsoncxx::v1::array::view field) {
-            if (!field.empty()) {
-                doc += scoped_bson{BCON_NEW(name, BCON_ARRAY(scoped_bson_view{field}.bson()))};
-            }
-        };
-
-        append_array_field("errorLabels", v1::exception::internal::get_error_labels(ex));
-        append_array_field("writeConcernErrors", v1::exception::internal::get_write_concern_errors(ex));
-        append_array_field("writeErrors", v1::exception::internal::get_write_errors(ex));
-        append_array_field("errorReplies", v1::exception::internal::get_error_replies(ex));
-
-        if (!doc.view().empty()) {
-            throw exception_type{code, from_v1(std::move(doc).value()), strip_ec_msg(ex.what(), ex.code()).c_str()};
-        }
+    // Propagate the original mongoc reply document as the "raw server error" document.
+    if (auto const& reply = v1::exception::internal::get_reply(ex)) {
+        throw exception_type{code, from_v1(*reply), strip_ec_msg(ex.what(), ex.code()).c_str()};
     }
 
     // No "raw server error" document is required.
