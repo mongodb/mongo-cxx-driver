@@ -14,6 +14,8 @@
 
 #pragma once
 
+#include <mongocxx/v1/server_api-fwd.hpp>
+
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
@@ -29,7 +31,7 @@ class server_api;
 namespace mongocxx {
 namespace options {
 
-using ::mongocxx::v_noabi::options::server_api;
+using v_noabi::options::server_api;
 
 } // namespace options
 } // namespace mongocxx
@@ -39,4 +41,7 @@ using ::mongocxx::v_noabi::options::server_api;
 ///
 /// @file
 /// Declares @ref mongocxx::v_noabi::options::server_api.
+///
+/// @par Includes
+/// - @ref mongocxx/v1/server_api-fwd.hpp
 ///

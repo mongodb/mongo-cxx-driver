@@ -16,6 +16,7 @@
 
 //
 
+#include <string>
 #include <system_error>
 
 #include <bsoncxx/stdx/string_view.hpp>
@@ -23,52 +24,24 @@
 #include <mongocxx/exception/error_code.hpp>
 #include <mongocxx/exception/logic_error.hpp>
 
-#include <mongocxx/private/mongoc.hh>
-
 namespace mongocxx {
 namespace v_noabi {
 namespace options {
 
 std::string server_api::version_to_string(server_api::version version) {
     switch (version) {
-        case server_api::version::k_version_1:
+        case version::k_version_1:
             return "1";
         default:
-            throw mongocxx::v_noabi::logic_error{
-                mongocxx::v_noabi::error_code::k_invalid_parameter, "invalid server API version"};
+            throw v_noabi::logic_error{v_noabi::error_code::k_invalid_parameter, "invalid server API version"};
     }
 }
 
 server_api::version server_api::version_from_string(bsoncxx::v_noabi::stdx::string_view version) {
     if (version == "1") {
-        return server_api::version::k_version_1;
+        return version::k_version_1;
     }
-    throw mongocxx::v_noabi::logic_error{
-        mongocxx::v_noabi::error_code::k_invalid_parameter, "invalid server API version"};
-}
-
-server_api::server_api(server_api::version version) : _version(std::move(version)) {}
-
-server_api& server_api::strict(bool strict) {
-    _strict = strict;
-    return *this;
-}
-
-bsoncxx::v_noabi::stdx::optional<bool> const& server_api::strict() const {
-    return _strict;
-}
-
-server_api& server_api::deprecation_errors(bool deprecation_errors) {
-    _deprecation_errors = deprecation_errors;
-    return *this;
-}
-
-bsoncxx::v_noabi::stdx::optional<bool> const& server_api::deprecation_errors() const {
-    return _deprecation_errors;
-}
-
-server_api::version server_api::get_version() const {
-    return _version;
+    throw v_noabi::logic_error{v_noabi::error_code::k_invalid_parameter, "invalid server API version"};
 }
 
 } // namespace options
