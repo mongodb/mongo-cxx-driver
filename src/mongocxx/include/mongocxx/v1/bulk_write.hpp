@@ -53,6 +53,10 @@ namespace v1 {
 /// @attention This feature is experimental! It is not ready for use!
 ///
 class bulk_write {
+   private:
+    class impl;
+    void* _impl;
+
    public:
     ///
     /// Enumeration identifying the type of a write operation.
@@ -98,6 +102,39 @@ class bulk_write {
     class single;
     class options;
     class result;
+
+    ///
+    /// Destroy this object.
+    ///
+    /// @warning Invalidates all associated views.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL() ~bulk_write();
+
+    ///
+    /// Move constructor.
+    ///
+    /// @par Postconditions:
+    /// - `other` is in an assign-or-destroy-only state.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL() bulk_write(bulk_write&& other) noexcept;
+
+    ///
+    /// Move assignment.
+    ///
+    /// @par Postconditions:
+    /// - `other` is in an assign-or-destroy-only state.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(bulk_write&) operator=(bulk_write&& other) noexcept;
+
+    ///
+    /// This class is not copyable.
+    ///
+    bulk_write(bulk_write const& other) = delete;
+
+    ///
+    /// This class is not copyable.
+    ///
+    bulk_write& operator=(bulk_write const& other) = delete;
 
     ///
     /// Return true when there are no appended operations.
