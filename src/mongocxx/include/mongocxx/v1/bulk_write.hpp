@@ -146,7 +146,7 @@ class bulk_write {
     ///
     /// @throws mongocxx::v1::exception when a client-side error is encountered.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bulk_write&) append(single op);
+    MONGOCXX_ABI_EXPORT_CDECL(bulk_write&) append(single const& op);
 
     ///
     /// Execute the appended operations.
