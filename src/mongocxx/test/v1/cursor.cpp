@@ -42,24 +42,31 @@
 namespace mongocxx {
 namespace v1 {
 
+namespace {
+
+struct identity_type {};
+
+} // namespace
+
 TEST_CASE("exceptions", "[mongocxx][v1][cursor]") {
-    struct test_data_type {
-        scoped_bson doc;
-        scoped_bson error_doc;
-        int next_count = 0;
-        int error_document_count = 0;
-    } data;
+    identity_type identity;
+
+    auto const cid = reinterpret_cast<mongoc_cursor_t*>(&identity);
+
+    scoped_bson doc;
+    scoped_bson error_doc;
+    int next_count = 0;
+    int error_document_count = 0;
 
     auto cursor_destroy = libmongoc::cursor_destroy.create_instance();
-    cursor_destroy->interpose([&](mongoc_cursor_t* p) -> void { CHECK(reinterpret_cast<test_data_type*>(p) == &data); })
-        .forever();
+    cursor_destroy->interpose([&](mongoc_cursor_t* cursor) -> void { CHECK(cursor == cid); }).forever();
 
     auto cursor_next = libmongoc::cursor_next.create_instance();
     cursor_next
         ->interpose([&](mongoc_cursor_t* cursor, bson_t const** bson) -> bool {
-            (void)bson;
-            CHECK(reinterpret_cast<test_data_type*>(cursor) == &data);
-            ++data.next_count;
+            CHECK(cursor == cid);
+            CHECK(bson);
+            ++next_count;
             return false;
         })
         .times(1);
@@ -67,31 +74,30 @@ TEST_CASE("exceptions", "[mongocxx][v1][cursor]") {
     auto cursor_error_document = libmongoc::cursor_error_document.create_instance();
     cursor_error_document
         ->interpose([&](mongoc_cursor_t const* cursor, bson_error_t* err, bson_t const** bson) -> bool {
-            (void)(cursor);
-            (void)err;
-            (void)bson;
+            CHECK(cursor == cid);
+            CHECK(err);
+            CHECK(bson);
             return false;
         })
         .forever();
 
-    auto cursor = cursor::internal::make(reinterpret_cast<mongoc_cursor_t*>(&data));
+    auto cursor = cursor::internal::make(cid);
 
     SECTION("cursor_error_document") {
         SECTION("v1::exception") {
             cursor_error_document->interpose(
                 [&](mongoc_cursor_t const* cursor, bson_error_t* err, bson_t const** bson) -> bool {
-                    CHECK(reinterpret_cast<test_data_type const*>(cursor) == &data);
+                    CHECK(cursor == cid);
                     REQUIRE(err);
                     REQUIRE(bson);
 
-                    ++data.error_document_count;
+                    ++error_document_count;
 
                     bson_set_error(err, 0, 123, "advance failure");
                     err->reserved = 2u; // MONGOC_ERROR_CATEGORY
 
-                    data.error_doc =
-                        scoped_bson{BCON_NEW("error_document_count", BCON_INT32(data.error_document_count))};
-                    *bson = data.error_doc.bson();
+                    error_doc = scoped_bson{BCON_NEW("error_document_count", BCON_INT32(error_document_count))};
+                    *bson = error_doc.bson();
 
                     return true;
                 });
@@ -109,25 +115,25 @@ TEST_CASE("exceptions", "[mongocxx][v1][cursor]") {
 
             CHECK(cursor::internal::is_dead(cursor));
             CHECK(cursor::internal::doc(cursor).empty());
-            CHECK(data.next_count == 1);
-            CHECK(data.error_document_count == 1);
+            CHECK(next_count == 1);
+            CHECK(error_document_count == 1);
         }
 
         SECTION("v1::server_error") {
             cursor_error_document
                 ->interpose([&](mongoc_cursor_t const* cursor, bson_error_t* err, bson_t const** bson) -> bool {
-                    CHECK(reinterpret_cast<test_data_type const*>(cursor) == &data);
+                    CHECK(cursor == cid);
                     REQUIRE(err);
                     REQUIRE(bson);
 
-                    ++data.error_document_count;
+                    ++error_document_count;
 
                     bson_set_error(err, 0, 456, "advance failure");
                     err->reserved = 2u; // MONGOC_ERROR_CATEGORY
 
-                    data.error_doc = scoped_bson{BCON_NEW(
-                        "code", BCON_INT32(123), "error_document_count", BCON_INT32(data.error_document_count))};
-                    *bson = data.error_doc.bson();
+                    error_doc = scoped_bson{
+                        BCON_NEW("code", BCON_INT32(123), "error_document_count", BCON_INT32(error_document_count))};
+                    *bson = error_doc.bson();
 
                     return true;
                 })
@@ -149,76 +155,86 @@ TEST_CASE("exceptions", "[mongocxx][v1][cursor]") {
 
             CHECK(cursor::internal::is_dead(cursor));
             CHECK(cursor::internal::doc(cursor).empty());
-            CHECK(data.next_count == 1);
-            CHECK(data.error_document_count == 1);
+            CHECK(next_count == 1);
+            CHECK(error_document_count == 1);
         }
     }
 }
 
 TEST_CASE("ownership", "[mongocxx][v1][cursor]") {
-    struct test_data_type {
-        int destroyed_count = 0;
-    } source_data, target_data;
+    identity_type source_identity;
+    identity_type target_identity;
+
+    auto const source_cid = reinterpret_cast<mongoc_cursor_t*>(&source_identity);
+    auto const target_cid = reinterpret_cast<mongoc_cursor_t*>(&target_identity);
+
+    int source_destroyed_count = 0;
+    int target_destroyed_count = 0;
 
     auto cursor_destroy = libmongoc::cursor_destroy.create_instance();
     cursor_destroy
         ->interpose([&](mongoc_cursor_t* cursor) -> void {
-            auto const data = reinterpret_cast<test_data_type*>(cursor);
-
-            if (data == &source_data || data == &target_data) {
-                data->destroyed_count += 1;
+            if (cursor == source_cid) {
+                source_destroyed_count += 1;
+            } else if (cursor == target_cid) {
+                target_destroyed_count += 1;
             } else {
-                CHECK(static_cast<void const*>(&source_data));
-                CHECK(static_cast<void const*>(&target_data));
-                CHECK(static_cast<void const*>(data));
                 FAIL_CHECK("should not reach this point");
             }
         })
         .forever();
 
-    auto source = cursor::internal::make(reinterpret_cast<mongoc_cursor_t*>(&source_data));
-    bsoncxx::v1::stdx::optional<cursor> target =
-        cursor::internal::make(reinterpret_cast<mongoc_cursor_t*>(&target_data));
+    auto source = cursor::internal::make(source_cid);
+    bsoncxx::v1::stdx::optional<cursor> target = cursor::internal::make(target_cid);
 
     SECTION("move") {
         auto move = std::move(source);
 
-        CHECK(source_data.destroyed_count == 0);
-        CHECK(target_data.destroyed_count == 0);
+        CHECK(source_destroyed_count == 0);
+        CHECK(target_destroyed_count == 0);
 
         target = std::move(move);
 
-        CHECK(source_data.destroyed_count == 0);
-        CHECK(target_data.destroyed_count == 1);
+        CHECK(source_destroyed_count == 0);
+        CHECK(target_destroyed_count == 1);
 
         target.reset();
 
-        CHECK(source_data.destroyed_count == 1);
-        CHECK(target_data.destroyed_count == 1);
+        CHECK(source_destroyed_count == 1);
+        CHECK(target_destroyed_count == 1);
     }
 }
 
 TEST_CASE("end", "[mongocxx][v1][cursor]") {
-    struct test_data_type {
-        int next_count = 0;
-    } data;
+    identity_type id1;
+    identity_type id2;
+
+    auto const cid1 = reinterpret_cast<mongoc_cursor_t*>(&id1);
+    auto const cid2 = reinterpret_cast<mongoc_cursor_t*>(&id2);
+
+    int next_count = 0;
 
     auto cursor_destroy = libmongoc::cursor_destroy.create_instance();
-    cursor_destroy->interpose([&](mongoc_cursor_t* p) -> void { CHECK(reinterpret_cast<test_data_type*>(p) == &data); })
+    cursor_destroy
+        ->interpose([&](mongoc_cursor_t* cursor) -> void {
+            if (cursor && cursor != cid1 && cursor != cid2) {
+                FAIL_CHECK("should not reach this point");
+            }
+        })
         .forever();
 
     auto cursor_next = libmongoc::cursor_next.create_instance();
     cursor_next
         ->interpose([&](mongoc_cursor_t* cursor, bson_t const** bson) -> bool {
-            (void)cursor;
-            (void)bson;
+            CHECK(cursor);
+            CHECK(bson);
             FAIL("should not reach this point");
             return false;
         })
         .forever();
 
-    auto const c1 = cursor::internal::make(reinterpret_cast<mongoc_cursor_t*>(&data));
-    auto const c2 = cursor::internal::make(reinterpret_cast<mongoc_cursor_t*>(&data));
+    auto const c1 = cursor::internal::make(cid1);
+    auto const c2 = cursor::internal::make(cid2);
 
     CHECK(c1.end() == c1.end());
     CHECK(c1.end() == c2.end());
@@ -231,31 +247,32 @@ TEST_CASE("end", "[mongocxx][v1][cursor]") {
     CHECK((*c1.end()).empty()); // OK.
     // CHECK(c1.end()->empty()); // Undefined behavior.
 
-    CHECK(data.next_count == 0);
+    CHECK(next_count == 0);
 }
 
 TEST_CASE("begin", "[mongocxx][v1][cursor]") {
-    struct test_data_type {
-        scoped_bson doc;
-        scoped_bson error_doc;
-        int next_count = 0;
-        int error_document_count = 0;
-    } data;
+    identity_type identity;
+
+    auto const cid = reinterpret_cast<mongoc_cursor_t*>(&identity);
+
+    scoped_bson doc;
+    scoped_bson error_doc;
+    int next_count = 0;
+    int error_document_count = 0;
 
     static bsoncxx::v1::document::view const empty;
 
     auto cursor_destroy = libmongoc::cursor_destroy.create_instance();
-    cursor_destroy->interpose([&](mongoc_cursor_t* p) -> void { CHECK(reinterpret_cast<test_data_type*>(p) == &data); })
-        .forever();
+    cursor_destroy->interpose([&](mongoc_cursor_t* cursor) -> void { CHECK(cursor == cid); }).forever();
 
     auto cursor_next = libmongoc::cursor_next.create_instance();
     cursor_next
         ->interpose([&](mongoc_cursor_t* cursor, bson_t const** bson) -> bool {
-            (void)bson;
-            CHECK(reinterpret_cast<test_data_type*>(cursor) == &data);
-            ++data.next_count;
-            data.doc = scoped_bson{BCON_NEW("next", BCON_INT32(data.next_count))};
-            *bson = data.doc.bson();
+            CHECK(cursor == cid);
+            REQUIRE(bson);
+            ++next_count;
+            doc = scoped_bson{BCON_NEW("next", BCON_INT32(next_count))};
+            *bson = doc.bson();
             return true;
         })
         .forever();
@@ -263,18 +280,18 @@ TEST_CASE("begin", "[mongocxx][v1][cursor]") {
     auto cursor_error_document = libmongoc::cursor_error_document.create_instance();
     cursor_error_document
         ->interpose([&](mongoc_cursor_t const* cursor, bson_error_t* err, bson_t const** bson) -> bool {
-            (void)(cursor);
-            (void)err;
-            (void)bson;
+            CHECK(cursor);
+            CHECK(err);
+            CHECK(bson);
             return false;
         })
         .forever();
 
     SECTION("iteration") {
-        auto cursor = cursor::internal::make(reinterpret_cast<mongoc_cursor_t*>(&data));
+        auto cursor = cursor::internal::make(cid);
 
         CHECK(cursor::internal::can_get_more(cursor));
-        CHECK(data.next_count == 0);
+        CHECK(next_count == 0);
 
         auto iter = cursor.begin();
         REQUIRE(iter != cursor.end());
@@ -282,8 +299,8 @@ TEST_CASE("begin", "[mongocxx][v1][cursor]") {
         CHECK(cursor::internal::doc(cursor) == *iter);
         CHECK(iter->find("next") != iter->end());
         CHECK((*iter)["next"].get_int32().value == 1);
-        CHECK(data.next_count == 1);
-        CHECK(data.error_document_count == 0);
+        CHECK(next_count == 1);
+        CHECK(error_document_count == 0);
 
         CHECK_NOTHROW(++iter);
         REQUIRE(iter != cursor.end());
@@ -291,8 +308,8 @@ TEST_CASE("begin", "[mongocxx][v1][cursor]") {
         CHECK(cursor::internal::doc(cursor) == *iter);
         CHECK(iter->find("next") != iter->end());
         CHECK((*iter)["next"].get_int32().value == 2);
-        CHECK(data.next_count == 2);
-        CHECK(data.error_document_count == 0);
+        CHECK(next_count == 2);
+        CHECK(error_document_count == 0);
 
         CHECK_NOTHROW(iter++);
         REQUIRE(iter != cursor.end());
@@ -300,24 +317,24 @@ TEST_CASE("begin", "[mongocxx][v1][cursor]") {
         CHECK(cursor::internal::doc(cursor) == *iter);
         CHECK(iter->find("next") != iter->end());
         CHECK((*iter)["next"].get_int32().value == 3);
-        CHECK(data.next_count == 3);
-        CHECK(data.error_document_count == 0);
+        CHECK(next_count == 3);
+        CHECK(error_document_count == 0);
     }
 
     SECTION("equality") {
-        auto c1 = cursor::internal::make(reinterpret_cast<mongoc_cursor_t*>(&data));
-        auto c2 = cursor::internal::make(reinterpret_cast<mongoc_cursor_t*>(&data));
+        auto c1 = cursor::internal::make(cid);
+        auto c2 = cursor::internal::make(cid);
 
-        CHECK(data.next_count == 0);
-        CHECK(data.error_document_count == 0);
+        CHECK(next_count == 0);
+        CHECK(error_document_count == 0);
 
         auto iter1 = c1.begin();
-        CHECK(data.next_count == 1);
-        CHECK(data.error_document_count == 0);
+        CHECK(next_count == 1);
+        CHECK(error_document_count == 0);
 
         auto iter2 = c2.begin();
-        CHECK(data.next_count == 2);
-        CHECK(data.error_document_count == 0);
+        CHECK(next_count == 2);
+        CHECK(error_document_count == 0);
 
         CHECK(iter1 == iter1);
         CHECK(iter2 == iter2);
@@ -329,65 +346,65 @@ TEST_CASE("begin", "[mongocxx][v1][cursor]") {
         CHECK(iter1 != c2.end());
         CHECK(iter2 != c1.end());
 
-        CHECK(data.next_count == 2);
-        CHECK(data.error_document_count == 0);
+        CHECK(next_count == 2);
+        CHECK(error_document_count == 0);
     }
 
     SECTION("consecutive") {
-        auto cursor = cursor::internal::make(reinterpret_cast<mongoc_cursor_t*>(&data));
+        auto cursor = cursor::internal::make(cid);
 
-        CHECK(data.next_count == 0);
-        CHECK(data.error_document_count == 0);
+        CHECK(next_count == 0);
+        CHECK(error_document_count == 0);
 
         auto const i1 = cursor.begin();
-        CHECK(data.next_count == 1);
-        CHECK(data.error_document_count == 0);
+        CHECK(next_count == 1);
+        CHECK(error_document_count == 0);
 
         auto const i2 = cursor.begin();
-        CHECK(data.next_count == 1);
-        CHECK(data.error_document_count == 0);
+        CHECK(next_count == 1);
+        CHECK(error_document_count == 0);
 
         CHECK(i1 == i2);
         CHECK(i1 != cursor.end());
         CHECK(i2 != cursor.end());
 
-        CHECK(data.next_count == 1);
-        CHECK(data.error_document_count == 0);
+        CHECK(next_count == 1);
+        CHECK(error_document_count == 0);
     }
 
     SECTION("non-tailable") {
-        auto cursor = cursor::internal::make(reinterpret_cast<mongoc_cursor_t*>(&data));
+        auto cursor = cursor::internal::make(cid);
 
         cursor_next
             ->interpose([&](mongoc_cursor_t* cursor, bson_t const** bson) -> bool {
-                (void)bson;
-                CHECK(reinterpret_cast<test_data_type*>(cursor) == &data);
-                ++data.next_count;
+                CHECK(cursor == cid);
+                CHECK(bson);
+                ++next_count;
                 return false;
             })
             .times(1);
 
         cursor_error_document
             ->interpose([&](mongoc_cursor_t const* cursor, bson_error_t* err, bson_t const** bson) -> bool {
-                CHECK(reinterpret_cast<test_data_type const*>(cursor) == &data);
-                REQUIRE(err);
-                REQUIRE(bson);
-                ++data.error_document_count;
+                CHECK(cursor == cid);
+                CHECK(err);
+                CHECK(bson);
+                ++error_document_count;
                 return false;
             })
             .times(2);
 
         CHECK(cursor::internal::can_get_more(cursor));
-        CHECK(data.next_count == 0);
-        CHECK(data.error_document_count == 0);
+        CHECK(next_count == 0);
+        CHECK(error_document_count == 0);
 
         {
             auto const iter = cursor.begin();
 
             CHECK(cursor::internal::is_dead(cursor));
             CHECK(cursor::internal::doc(cursor) == empty);
-            CHECK(data.next_count == 1);
-            CHECK(data.error_document_count == 1);
+            CHECK(next_count == 1);
+            CHECK(error_document_count == 1);
             CHECK(iter == cursor.end());
             CHECK(v1::cursor::iterator::internal::with(iter) == &cursor);
         }
@@ -397,8 +414,8 @@ TEST_CASE("begin", "[mongocxx][v1][cursor]") {
 
             CHECK(cursor::internal::is_dead(cursor));
             CHECK(cursor::internal::doc(cursor) == empty);
-            CHECK(data.next_count == 1);
-            CHECK(data.error_document_count == 1);
+            CHECK(next_count == 1);
+            CHECK(error_document_count == 1);
             CHECK(iter == cursor.end());
             CHECK(v1::cursor::iterator::internal::with(iter) == nullptr);
         }
@@ -407,38 +424,38 @@ TEST_CASE("begin", "[mongocxx][v1][cursor]") {
     SECTION("tailable") {
         auto const type = GENERATE(cursor::type::k_tailable, cursor::type::k_tailable_await);
 
-        auto cursor = cursor::internal::make(reinterpret_cast<mongoc_cursor_t*>(&data), type);
+        auto cursor = cursor::internal::make(cid, type);
 
         cursor_next
             ->interpose([&](mongoc_cursor_t* cursor, bson_t const** bson) -> bool {
-                (void)bson;
-                CHECK(reinterpret_cast<test_data_type*>(cursor) == &data);
-                ++data.next_count;
+                CHECK(cursor == cid);
+                CHECK(bson);
+                ++next_count;
                 return false;
             })
             .times(2);
 
         cursor_error_document
             ->interpose([&](mongoc_cursor_t const* cursor, bson_error_t* err, bson_t const** bson) -> bool {
-                CHECK(reinterpret_cast<test_data_type const*>(cursor) == &data);
-                REQUIRE(err);
-                REQUIRE(bson);
-                ++data.error_document_count;
+                CHECK(cursor == cid);
+                CHECK(err);
+                CHECK(bson);
+                ++error_document_count;
                 return false;
             })
             .times(2);
 
         CHECK(cursor::internal::can_get_more(cursor));
-        CHECK(data.next_count == 0);
-        CHECK(data.error_document_count == 0);
+        CHECK(next_count == 0);
+        CHECK(error_document_count == 0);
 
         {
             auto const iter = cursor.begin();
 
             CHECK(cursor::internal::can_get_more(cursor));
             CHECK(cursor::internal::doc(cursor) == empty);
-            CHECK(data.next_count == 1);
-            CHECK(data.error_document_count == 1);
+            CHECK(next_count == 1);
+            CHECK(error_document_count == 1);
             CHECK(iter == cursor.end());
             CHECK(iter->empty());
         }
@@ -448,8 +465,8 @@ TEST_CASE("begin", "[mongocxx][v1][cursor]") {
 
             CHECK(cursor::internal::can_get_more(cursor));
             CHECK(cursor::internal::doc(cursor) == empty);
-            CHECK(data.next_count == 2);
-            CHECK(data.error_document_count == 2);
+            CHECK(next_count == 2);
+            CHECK(error_document_count == 2);
             CHECK(iter == cursor.end());
             CHECK(iter->empty());
         }
@@ -458,11 +475,11 @@ TEST_CASE("begin", "[mongocxx][v1][cursor]") {
             auto const iter = cursor.begin();
 
             CHECK(cursor::internal::has_doc(cursor));
-            CHECK(cursor::internal::doc(cursor) == data.doc.view());
-            CHECK(data.next_count == 3);
-            CHECK(data.error_document_count == 2);
+            CHECK(cursor::internal::doc(cursor) == doc.view());
+            CHECK(next_count == 3);
+            CHECK(error_document_count == 2);
             CHECK(iter != cursor.end());
-            CHECK(*iter == data.doc.view());
+            CHECK(*iter == doc.view());
         }
     }
 }
