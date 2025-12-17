@@ -13,6 +13,7 @@
 // limitations under the License.
 
 #include <mongocxx/v1/change_stream.hh>
+#include <mongocxx/v1/cursor.hh>
 #include <mongocxx/v1/read_concern.hh>
 #include <mongocxx/v1/read_preference.hh>
 #include <mongocxx/v1/uri.hh>
@@ -201,17 +202,19 @@ mongocxx::v_noabi::database client::database(bsoncxx::v_noabi::string::view_or_v
 }
 
 cursor client::list_databases() const {
-    return libmongoc::client_find_databases_with_opts(_get_impl().client_t, nullptr);
+    return v1::cursor::internal::make(libmongoc::client_find_databases_with_opts(_get_impl().client_t, nullptr));
 }
 
 cursor client::list_databases(client_session const& session) const {
     bsoncxx::v_noabi::builder::basic::document options_doc;
     options_doc.append(bsoncxx::v_noabi::builder::concatenate_doc{session._get_impl().to_document()});
-    return libmongoc::client_find_databases_with_opts(_get_impl().client_t, to_scoped_bson_view(options_doc));
+    return v1::cursor::internal::make(
+        libmongoc::client_find_databases_with_opts(_get_impl().client_t, to_scoped_bson_view(options_doc)));
 }
 
 cursor client::list_databases(bsoncxx::v_noabi::document::view_or_value const opts) const {
-    return libmongoc::client_find_databases_with_opts(_get_impl().client_t, to_scoped_bson_view(opts));
+    return v1::cursor::internal::make(
+        libmongoc::client_find_databases_with_opts(_get_impl().client_t, to_scoped_bson_view(opts)));
 }
 
 cursor client::list_databases(client_session const& session, bsoncxx::v_noabi::document::view_or_value const opts)
@@ -219,7 +222,8 @@ cursor client::list_databases(client_session const& session, bsoncxx::v_noabi::d
     bsoncxx::v_noabi::builder::basic::document options_doc;
     options_doc.append(bsoncxx::v_noabi::builder::concatenate_doc{session._get_impl().to_document()});
     options_doc.append(bsoncxx::v_noabi::builder::concatenate_doc{opts});
-    return libmongoc::client_find_databases_with_opts(_get_impl().client_t, to_scoped_bson_view(options_doc));
+    return v1::cursor::internal::make(
+        libmongoc::client_find_databases_with_opts(_get_impl().client_t, to_scoped_bson_view(options_doc)));
 }
 
 std::vector<std::string> client::list_database_names(bsoncxx::v_noabi::document::view_or_value filter) const {

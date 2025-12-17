@@ -1,5 +1,7 @@
 #pragma once
 
+#include <mongocxx/v1/cursor.hh>
+
 #include <vector>
 
 #include <bsoncxx/builder/basic/array.hpp>
@@ -80,12 +82,13 @@ class search_index_view::impl {
         }();
 
         auto coll_copy = copy_and_apply_default_rw_concerns(_coll);
-        return libmongoc::collection_aggregate(
-            coll_copy.get(),
-            mongoc_query_flags_t(),
-            to_scoped_bson_view(pipeline.view_array()),
-            to_scoped_bson_view(opts_doc),
-            read_prefs);
+        return v1::cursor::internal::make(
+            libmongoc::collection_aggregate(
+                coll_copy.get(),
+                mongoc_query_flags_t(),
+                to_scoped_bson_view(pipeline.view_array()),
+                to_scoped_bson_view(opts_doc),
+                read_prefs));
     }
 
     std::string create_one(client_session const* session, search_index_model const& model) {
