@@ -401,7 +401,7 @@ TEST_CASE("begin", "[mongocxx][v1][cursor]") {
             CHECK(next_count == 1);
             CHECK(error_document_count == 1);
             CHECK(iter == cursor.end());
-            CHECK(v1::cursor::iterator::internal::with(iter) == &cursor);
+            CHECK(v1::cursor::iterator::internal::get_cursor(iter) == &cursor);
         }
 
         {
@@ -412,7 +412,7 @@ TEST_CASE("begin", "[mongocxx][v1][cursor]") {
             CHECK(next_count == 1);
             CHECK(error_document_count == 1);
             CHECK(iter == cursor.end());
-            CHECK(v1::cursor::iterator::internal::with(iter) == nullptr);
+            CHECK(v1::cursor::iterator::internal::get_cursor(iter) == nullptr);
         }
     }
 

@@ -230,7 +230,7 @@ cursor::iterator cursor::iterator::internal::make(cursor* self) {
     return {self};
 }
 
-cursor const* cursor::iterator::internal::with(iterator const& self) {
+cursor const* cursor::iterator::internal::get_cursor(iterator const& self) {
     return static_cast<cursor const*>(self._impl);
 }
 

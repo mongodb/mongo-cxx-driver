@@ -54,7 +54,7 @@ class cursor::iterator::internal {
    public:
     static iterator make(cursor* self);
 
-    static MONGOCXX_ABI_EXPORT_CDECL_TESTING(cursor const*) with(iterator const& self);
+    static MONGOCXX_ABI_EXPORT_CDECL_TESTING(cursor const*) get_cursor(iterator const& self);
 };
 
 } // namespace v1
