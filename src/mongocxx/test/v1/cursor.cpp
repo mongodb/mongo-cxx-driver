@@ -23,7 +23,6 @@
 #include <bsoncxx/test/v1/stdx/optional.hh>
 #include <bsoncxx/test/v1/types/value.hh>
 
-#include <chrono>
 #include <utility>
 
 #include <bsoncxx/private/bson.hh>
@@ -212,8 +211,6 @@ TEST_CASE("end", "[mongocxx][v1][cursor]") {
     auto const cid1 = reinterpret_cast<mongoc_cursor_t*>(&id1);
     auto const cid2 = reinterpret_cast<mongoc_cursor_t*>(&id2);
 
-    int next_count = 0;
-
     auto cursor_destroy = libmongoc::cursor_destroy.create_instance();
     cursor_destroy
         ->interpose([&](mongoc_cursor_t* cursor) -> void {
@@ -246,8 +243,6 @@ TEST_CASE("end", "[mongocxx][v1][cursor]") {
 
     CHECK((*c1.end()).empty()); // OK.
     // CHECK(c1.end()->empty()); // Undefined behavior.
-
-    CHECK(next_count == 0);
 }
 
 TEST_CASE("begin", "[mongocxx][v1][cursor]") {
@@ -457,7 +452,7 @@ TEST_CASE("begin", "[mongocxx][v1][cursor]") {
             CHECK(next_count == 1);
             CHECK(error_document_count == 1);
             CHECK(iter == cursor.end());
-            CHECK(iter->empty());
+            CHECK(iter->empty()); // Undocumented behavior.
         }
 
         {
@@ -468,7 +463,7 @@ TEST_CASE("begin", "[mongocxx][v1][cursor]") {
             CHECK(next_count == 2);
             CHECK(error_document_count == 2);
             CHECK(iter == cursor.end());
-            CHECK(iter->empty());
+            CHECK(iter->empty()); // Undocumented behavior.
         }
 
         {
