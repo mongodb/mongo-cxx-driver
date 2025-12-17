@@ -28,6 +28,9 @@ install_build_tools() {
     uv tool install -q ninja || return
   fi
 
+  uv tool install -q pkgconf || return
+
   cmake --version | head -n 1 || return
   echo "ninja version: $(ninja --version)" || return
+  echo "pkgconf version: $(pkgconf --version 2>/dev/null)" || return
 }
