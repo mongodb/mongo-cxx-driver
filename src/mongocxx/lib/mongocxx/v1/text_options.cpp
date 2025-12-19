@@ -25,24 +25,24 @@
 namespace mongocxx {
 namespace v1 {
 
-class common_opts_impl {
+namespace {
+
+class common_fields {
    public:
     bsoncxx::v1::stdx::optional<int32_t> _min_query_length;
     bsoncxx::v1::stdx::optional<int32_t> _max_query_length;
     bsoncxx::v1::stdx::optional<int32_t> _max_length;
 
-    static common_opts_impl& with(void* ptr) {
-        return *static_cast<common_opts_impl*>(ptr);
+    static common_fields& with(void* ptr) {
+        return *static_cast<common_fields*>(ptr);
     }
 
-    static common_opts_impl const& with(void const* ptr) {
-        return *static_cast<common_opts_impl const*>(ptr);
+    static common_fields const& with(void const* ptr) {
+        return *static_cast<common_fields const*>(ptr);
     }
 };
 
-class text_options::prefix::impl final : public common_opts_impl {};
-class text_options::suffix::impl final : public common_opts_impl {};
-class text_options::substring::impl final : public common_opts_impl {};
+} // namespace
 
 class text_options::impl {
    public:
@@ -100,85 +100,87 @@ text_options& text_options::operator=(text_options const& other) {
 text_options::text_options() : _impl{new impl{}} {}
 
 text_options::prefix::~prefix() {
-    delete static_cast<text_options::prefix::impl*>(_impl);
+    delete static_cast<common_fields*>(_impl);
 }
 
 text_options::prefix::prefix(prefix&& other) noexcept : _impl{exchange(other._impl, nullptr)} {}
 
 text_options::prefix& text_options::prefix::operator=(prefix&& other) noexcept {
     if (this != &other) {
-        delete static_cast<text_options::prefix::impl*>(exchange(_impl, exchange(other._impl, nullptr)));
+        delete static_cast<common_fields*>(exchange(_impl, exchange(other._impl, nullptr)));
     }
 
     return *this;
 }
 
-text_options::prefix::prefix(prefix const& other) : _impl{new impl{*static_cast<impl const*>(other._impl)}} {}
+text_options::prefix::prefix(prefix const& other)
+    : _impl{new common_fields{*static_cast<common_fields const*>(other._impl)}} {}
 
 text_options::prefix& text_options::prefix::operator=(prefix const& other) {
     if (this != &other) {
-        delete static_cast<text_options::prefix::impl*>(
-            exchange(_impl, new impl{*static_cast<impl const*>(other._impl)}));
+        delete static_cast<common_fields*>(
+            exchange(_impl, new common_fields{*static_cast<common_fields const*>(other._impl)}));
     }
 
     return *this;
 }
 
-text_options::prefix::prefix() : _impl{new impl{}} {}
-
+text_options::prefix::prefix() : _impl{new common_fields{}} {}
 text_options::suffix::~suffix() {
-    delete static_cast<text_options::suffix::impl*>(_impl);
+    delete static_cast<common_fields*>(_impl);
 }
 
 text_options::suffix::suffix(suffix&& other) noexcept : _impl{exchange(other._impl, nullptr)} {}
 
 text_options::suffix& text_options::suffix::operator=(suffix&& other) noexcept {
     if (this != &other) {
-        delete static_cast<text_options::suffix::impl*>(exchange(_impl, exchange(other._impl, nullptr)));
+        delete static_cast<common_fields*>(exchange(_impl, exchange(other._impl, nullptr)));
     }
 
     return *this;
 }
 
-text_options::suffix::suffix(suffix const& other) : _impl{new impl{*static_cast<impl const*>(other._impl)}} {}
+text_options::suffix::suffix(suffix const& other)
+    : _impl{new common_fields{*static_cast<common_fields const*>(other._impl)}} {}
 
 text_options::suffix& text_options::suffix::operator=(suffix const& other) {
     if (this != &other) {
-        delete static_cast<text_options::suffix::impl*>(
-            exchange(_impl, new impl{*static_cast<impl const*>(other._impl)}));
+        delete static_cast<common_fields*>(
+            exchange(_impl, new common_fields{*static_cast<common_fields const*>(other._impl)}));
     }
 
     return *this;
 }
 
-text_options::suffix::suffix() : _impl{new impl{}} {}
-
+text_options::suffix::suffix() : _impl{new common_fields{}} {}
 text_options::substring::~substring() {
-    delete static_cast<text_options::substring::impl*>(_impl);
+    delete static_cast<common_fields*>(_impl);
 }
 
 text_options::substring::substring(substring&& other) noexcept : _impl{exchange(other._impl, nullptr)} {}
 
 text_options::substring& text_options::substring::operator=(substring&& other) noexcept {
     if (this != &other) {
-        delete static_cast<text_options::substring::impl*>(exchange(_impl, exchange(other._impl, nullptr)));
+        delete static_cast<common_fields*>(exchange(_impl, exchange(other._impl, nullptr)));
     }
 
     return *this;
 }
 
-text_options::substring::substring(substring const& other) : _impl{new impl{*static_cast<impl const*>(other._impl)}} {}
+text_options::substring::substring(substring const& other)
+    : _impl{new common_fields{*static_cast<common_fields const*>(other._impl)}} {}
 
 text_options::substring& text_options::substring::operator=(substring const& other) {
     if (this != &other) {
-        delete static_cast<text_options::substring::impl*>(
-            exchange(_impl, new impl{*static_cast<impl const*>(other._impl)}));
+        delete static_cast<common_fields*>(
+            exchange(_impl, new common_fields{*static_cast<common_fields const*>(other._impl)}));
     }
 
     return *this;
 }
 
-text_options::substring::substring() : _impl{new impl{}} {}
+text_options::substring::substring() : _impl{new common_fields{}} {}
+
 
 text_options& text_options::case_sensitive(bool value) {
     impl::with(this)->_case_sensitive = value;
@@ -226,66 +228,66 @@ bsoncxx::v1::stdx::optional<text_options::substring> text_options::substring_opt
 }
 
 bsoncxx::v1::stdx::optional<int32_t> text_options::prefix::str_max_query_length() const {
-    return common_opts_impl::with(_impl)._max_query_length;
+    return common_fields::with(_impl)._max_query_length;
 }
 
 text_options::prefix& text_options::prefix::str_max_query_length(int32_t value) {
-    common_opts_impl::with(_impl)._max_query_length = value;
+    common_fields::with(_impl)._max_query_length = value;
     return *this;
 }
 
 bsoncxx::v1::stdx::optional<int32_t> text_options::prefix::str_min_query_length() const {
-    return common_opts_impl::with(_impl)._min_query_length;
+    return common_fields::with(_impl)._min_query_length;
 }
 
 text_options::prefix& text_options::prefix::str_min_query_length(int32_t value) {
-    common_opts_impl::with(_impl)._min_query_length = value;
+    common_fields::with(_impl)._min_query_length = value;
     return *this;
 }
 
 bsoncxx::v1::stdx::optional<int32_t> text_options::suffix::str_max_query_length() const {
-    return common_opts_impl::with(_impl)._max_query_length;
+    return common_fields::with(_impl)._max_query_length;
 }
 
 text_options::suffix& text_options::suffix::str_max_query_length(int32_t value) {
-    common_opts_impl::with(_impl)._max_query_length = value;
+    common_fields::with(_impl)._max_query_length = value;
     return *this;
 }
 
 bsoncxx::v1::stdx::optional<int32_t> text_options::suffix::str_min_query_length() const {
-    return common_opts_impl::with(_impl)._min_query_length;
+    return common_fields::with(_impl)._min_query_length;
 }
 
 text_options::suffix& text_options::suffix::str_min_query_length(int32_t value) {
-    common_opts_impl::with(_impl)._min_query_length = value;
+    common_fields::with(_impl)._min_query_length = value;
     return *this;
 }
 
 bsoncxx::v1::stdx::optional<int32_t> text_options::substring::str_max_query_length() const {
-    return common_opts_impl::with(_impl)._max_query_length;
+    return common_fields::with(_impl)._max_query_length;
 }
 
 text_options::substring& text_options::substring::str_max_query_length(int32_t value) {
-    common_opts_impl::with(_impl)._max_query_length = value;
+    common_fields::with(_impl)._max_query_length = value;
     return *this;
 }
 
 bsoncxx::v1::stdx::optional<int32_t> text_options::substring::str_min_query_length() const {
-    return common_opts_impl::with(_impl)._min_query_length;
+    return common_fields::with(_impl)._min_query_length;
 }
 
 text_options::substring& text_options::substring::str_min_query_length(int32_t value) {
-    common_opts_impl::with(_impl)._min_query_length = value;
+    common_fields::with(_impl)._min_query_length = value;
     return *this;
 }
 
 text_options::substring& text_options::substring::str_max_length(int32_t value) {
-    common_opts_impl::with(_impl)._max_length = value;
+    common_fields::with(_impl)._max_length = value;
     return *this;
 }
 
 bsoncxx::v1::stdx::optional<int32_t> text_options::substring::str_max_length() const {
-    return common_opts_impl::with(_impl)._max_length;
+    return common_fields::with(_impl)._max_length;
 }
 
 } // namespace v1
