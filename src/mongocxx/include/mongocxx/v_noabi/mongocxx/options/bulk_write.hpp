@@ -59,9 +59,6 @@ class bulk_write {
     ///
     /// Convert to the @ref mongocxx::v1 equivalent.
     ///
-    /// @note The `comment` field is initialized with `this->comment_option()` (BSON type value) when set; otherwise, by
-    /// `this->comment()` (`std::string`) when set; otherwise, it is unset.
-    ///
     explicit operator v1::bulk_write::options() const {
         using bsoncxx::v_noabi::to_v1;
         using mongocxx::v_noabi::to_v1;
