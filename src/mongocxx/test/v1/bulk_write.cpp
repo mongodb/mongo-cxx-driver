@@ -348,7 +348,7 @@ void test_ownership(Op& target, Op& source) {
 
 template <>
 void test_ownership(bulk_write::insert_one&, bulk_write::insert_one&) {
-    // `mongocxx::v1::bulk_write::insert_one` is an aggregate type.
+    // Avoid unnecessarily re-testing the ownership semantics of `bsoncxx::v1::document::value`.
     // static_assert(std::is_aggregate_v<bulk_write::insert_one>); // Requires C++17 or newer.
 }
 
