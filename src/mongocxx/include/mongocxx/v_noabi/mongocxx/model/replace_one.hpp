@@ -16,6 +16,15 @@
 
 #include <mongocxx/model/replace_one-fwd.hpp> // IWYU pragma: export
 
+//
+
+#include <bsoncxx/v1/document/value.hpp>
+
+#include <mongocxx/v1/bulk_write.hpp> // IWYU pragma: export
+
+#include <utility>
+
+#include <bsoncxx/document/view.hpp>
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/stdx/optional.hpp>
 
@@ -33,6 +42,41 @@ namespace model {
 class replace_one {
    public:
     ///
+    /// Construct with the @ref mongocxx::v1 equivalent.
+    ///
+    /* explicit(false) */ MONGOCXX_ABI_EXPORT_CDECL() replace_one(v1::bulk_write::replace_one op);
+
+    ///
+    /// Convert to the @ref mongocxx::v1 equivalent.
+    ///
+    explicit operator v1::bulk_write::replace_one() const {
+        using bsoncxx::v_noabi::to_v1;
+        using mongocxx::v_noabi::to_v1;
+
+        v1::bulk_write::replace_one ret{
+            bsoncxx::v1::document::value{to_v1(_filter.view())},
+            bsoncxx::v1::document::value{to_v1(_replacement.view())}};
+
+        if (_collation) {
+            ret.collation(bsoncxx::v1::document::value{to_v1(_collation->view())});
+        }
+
+        if (_upsert) {
+            ret.upsert(*_upsert);
+        }
+
+        if (_hint) {
+            ret.hint(to_v1(*_hint));
+        }
+
+        if (_sort) {
+            ret.sort(bsoncxx::v1::document::value{to_v1(_sort->view())});
+        }
+
+        return ret;
+    }
+
+    ///
     /// Constructs an update operation that will replace a single document matching the filter.
     ///
     /// @param filter
@@ -40,24 +84,26 @@ class replace_one {
     /// @param replacement
     ///   Document that will serve as the replacement.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL()
-    replace_one(
-        bsoncxx::v_noabi::document::view_or_value filter,
-        bsoncxx::v_noabi::document::view_or_value replacement);
+    replace_one(bsoncxx::v_noabi::document::view_or_value filter, bsoncxx::v_noabi::document::view_or_value replacement)
+        : _filter{std::move(filter)}, _replacement{std::move(replacement)} {}
 
     ///
     /// Gets the filter for replacement.
     ///
     /// @return The filter to be used for the replacement operation.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::document::view_or_value const&) filter() const;
+    bsoncxx::v_noabi::document::view_or_value const& filter() const {
+        return _filter;
+    }
 
     ///
     /// Gets the replacement document.
     ///
     /// @return The document that will replace the original selected document.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::document::view_or_value const&) replacement() const;
+    bsoncxx::v_noabi::document::view_or_value const& replacement() const {
+        return _replacement;
+    }
 
     ///
     /// Sets the collation for this replacement operation.
@@ -68,8 +114,10 @@ class replace_one {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/collation/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(replace_one&)
-    collation(bsoncxx::v_noabi::document::view_or_value collation);
+    replace_one& collation(bsoncxx::v_noabi::document::view_or_value collation) {
+        _collation = std::move(collation);
+        return *this;
+    }
 
     ///
     /// Gets the collation option for this replacement operation.
@@ -80,8 +128,9 @@ class replace_one {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/collation/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const&)
-    collation() const;
+    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const& collation() const {
+        return _collation;
+    }
 
     ///
     /// Sets the upsert option.
@@ -96,14 +145,19 @@ class replace_one {
     ///   The server side default is @c false, which does not insert a new document if a match
     ///   is not found.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(replace_one&) upsert(bool upsert);
+    replace_one& upsert(bool upsert) {
+        _upsert = upsert;
+        return *this;
+    }
 
     ///
     /// Gets the current value of the upsert option.
     ///
     /// @return The optional value of the upsert option.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bool> const&) upsert() const;
+    bsoncxx::v_noabi::stdx::optional<bool> const& upsert() const {
+        return _upsert;
+    }
 
     ///
     /// Sets the index to use for this operation.
@@ -118,26 +172,34 @@ class replace_one {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(replace_one&) hint(mongocxx::v_noabi::hint index_hint);
+    replace_one& hint(mongocxx::v_noabi::hint index_hint) {
+        _hint = std::move(index_hint);
+        return *this;
+    }
 
     ///
     /// Gets the current hint.
     ///
     /// @return The current hint, if one is set.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::hint> const&)
-    hint() const;
+    bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::hint> const& hint() const {
+        return _hint;
+    }
 
     ///
     /// Set the sort option.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(replace_one&) sort(bsoncxx::v_noabi::document::view_or_value sort);
+    replace_one& sort(bsoncxx::v_noabi::document::view_or_value sort) {
+        _sort = std::move(sort);
+        return *this;
+    }
 
     ///
     /// Get the current value of the sort option.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const&)
-    sort() const;
+    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const& sort() const {
+        return _sort;
+    }
 
    private:
     bsoncxx::v_noabi::document::view_or_value _filter;
@@ -153,9 +215,32 @@ class replace_one {
 } // namespace v_noabi
 } // namespace mongocxx
 
+namespace mongocxx {
+namespace v_noabi {
+
+///
+/// Convert to the @ref mongocxx::v_noabi equivalent of `v`.
+///
+inline v_noabi::model::replace_one from_v1(v1::bulk_write::replace_one v) {
+    return {std::move(v)};
+}
+
+///
+/// Convert to the @ref mongocxx::v1 equivalent of `v`.
+///
+inline v1::bulk_write::replace_one to_v1(v_noabi::model::replace_one const& v) {
+    return v1::bulk_write::replace_one{v};
+}
+
+} // namespace v_noabi
+} // namespace mongocxx
+
 #include <mongocxx/config/postlude.hpp>
 
 ///
 /// @file
 /// Provides @ref mongocxx::v_noabi::model::replace_one.
+///
+/// @par Includes
+/// - @ref mongocxx/v1/bulk_write.hpp
 ///

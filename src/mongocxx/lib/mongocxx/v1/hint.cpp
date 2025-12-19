@@ -121,5 +121,13 @@ bsoncxx::v1::stdx::optional<std::string>& hint::internal::str(hint& self) {
     return impl::with(self)._str;
 }
 
+bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> const& hint::internal::doc(hint const& self) {
+    return impl::with(self)._doc;
+}
+
+bsoncxx::v1::stdx::optional<std::string> const& hint::internal::str(hint const& self) {
+    return impl::with(self)._str;
+}
+
 } // namespace v1
 } // namespace mongocxx

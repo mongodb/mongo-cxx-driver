@@ -12,77 +12,44 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <bsoncxx/array/view_or_value.hpp>
-
 #include <mongocxx/model/update_one.hpp>
+
+//
+
+#include <mongocxx/v1/bulk_write.hh>
+
+#include <utility>
+
+#include <bsoncxx/array/value.hpp>
+#include <bsoncxx/document/value.hpp>
 
 namespace mongocxx {
 namespace v_noabi {
 namespace model {
 
-update_one::update_one(
-    bsoncxx::v_noabi::document::view_or_value filter,
-    bsoncxx::v_noabi::document::view_or_value update)
-    : _filter(std::move(filter)), _update(std::move(update)) {}
-
-update_one::update_one(bsoncxx::v_noabi::document::view_or_value filter, pipeline const& update)
-    : _filter(std::move(filter)), _update(bsoncxx::v_noabi::document::value(update.view_array())) {}
-
-update_one::update_one(bsoncxx::v_noabi::document::view_or_value filter, std::initializer_list<_empty_doc_tag>)
-    : _filter(std::move(filter)), _update() {}
-
-bsoncxx::v_noabi::document::view_or_value const& update_one::filter() const {
-    return _filter;
-}
-
-bsoncxx::v_noabi::document::view_or_value const& update_one::update() const {
-    return _update;
-}
-
-update_one& update_one::collation(bsoncxx::v_noabi::document::view_or_value collation) {
-    _collation = collation;
-    return *this;
-}
-
-bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const& update_one::collation() const {
-    return _collation;
-}
-
-update_one& update_one::hint(mongocxx::v_noabi::hint index_hint) {
-    _hint = std::move(index_hint);
-    return *this;
-}
-
-bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::hint> const& update_one::hint() const {
-    return _hint;
-}
-
-update_one& update_one::sort(bsoncxx::v_noabi::document::view_or_value sort) {
-    _sort = std::move(sort);
-    return *this;
-}
-
-bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const& update_one::sort() const {
-    return _sort;
-}
-
-update_one& update_one::upsert(bool upsert) {
-    _upsert = upsert;
-    return *this;
-}
-
-bsoncxx::v_noabi::stdx::optional<bool> const& update_one::upsert() const {
-    return _upsert;
-}
-
-update_one& update_one::array_filters(bsoncxx::v_noabi::array::view_or_value array_filters) {
-    _array_filters = std::move(array_filters);
-    return *this;
-}
-
-bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::array::view_or_value> const& update_one::array_filters() const {
-    return _array_filters;
-}
+update_one::update_one(v1::bulk_write::update_one op)
+    : _filter{bsoncxx::v_noabi::from_v1(std::move(v1::bulk_write::update_one::internal::filter(op)))},
+      _update{bsoncxx::v_noabi::from_v1(std::move(v1::bulk_write::update_one::internal::update(op)))},
+      _collation{[&]() -> decltype(_collation) {
+          if (auto& opt = v1::bulk_write::update_one::internal::collation(op)) {
+              return bsoncxx::v_noabi::from_v1(std::move(*opt));
+          }
+          return {};
+      }()},
+      _array_filters{[&]() -> decltype(_array_filters) {
+          if (auto& opt = v1::bulk_write::update_one::internal::array_filters(op)) {
+              return bsoncxx::v_noabi::from_v1(std::move(*opt));
+          }
+          return {};
+      }()},
+      _upsert{op.upsert()},
+      _hint{std::move(v1::bulk_write::update_one::internal::hint(op))},
+      _sort{[&]() -> decltype(_sort) {
+          if (auto& opt = v1::bulk_write::update_one::internal::sort(op)) {
+              return bsoncxx::v_noabi::from_v1(std::move(*opt));
+          }
+          return {};
+      }()} {}
 
 } // namespace model
 } // namespace v_noabi

@@ -16,7 +16,19 @@
 
 #include <mongocxx/model/update_many-fwd.hpp> // IWYU pragma: export
 
+//
+
+#include <bsoncxx/v1/array/value.hpp>
+
+#include <mongocxx/v1/bulk_write.hpp> // IWYU pragma: export
+
+#include <initializer_list>
+#include <utility>
+
+#include <bsoncxx/array/view.hpp>
 #include <bsoncxx/array/view_or_value.hpp>
+#include <bsoncxx/document/value.hpp>
+#include <bsoncxx/document/view.hpp>
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/stdx/optional.hpp>
 
@@ -49,6 +61,40 @@ class update_many {
 
    public:
     ///
+    /// Construct with the @ref mongocxx::v1 equivalent.
+    ///
+    /* explicit(false) */ MONGOCXX_ABI_EXPORT_CDECL() update_many(v1::bulk_write::update_many op);
+
+    ///
+    /// Convert to the @ref mongocxx::v1 equivalent.
+    ///
+    explicit operator v1::bulk_write::update_many() const {
+        using bsoncxx::v_noabi::to_v1;
+        using mongocxx::v_noabi::to_v1;
+
+        v1::bulk_write::update_many ret{
+            bsoncxx::v1::document::value{to_v1(_filter.view())}, bsoncxx::v1::document::value{to_v1(_update.view())}};
+
+        if (_collation) {
+            ret.collation(bsoncxx::v1::document::value{to_v1(_collation->view())});
+        }
+
+        if (_array_filters) {
+            ret.array_filters(bsoncxx::v1::array::value{to_v1(_array_filters->view())});
+        }
+
+        if (_upsert) {
+            ret.upsert(*_upsert);
+        }
+
+        if (_hint) {
+            ret.hint(to_v1(*_hint));
+        }
+
+        return ret;
+    }
+
+    ///
     /// Constructs an update operation that will modify all documents matching the filter.
     ///
     /// @param filter
@@ -56,8 +102,8 @@ class update_many {
     /// @param update
     ///   Document representing the modifications to be applied to matching documents.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL()
-    update_many(bsoncxx::v_noabi::document::view_or_value filter, bsoncxx::v_noabi::document::view_or_value update);
+    update_many(bsoncxx::v_noabi::document::view_or_value filter, bsoncxx::v_noabi::document::view_or_value update)
+        : _filter{std::move(filter)}, _update{std::move(update)} {}
 
     ///
     /// Constructs an update operation that will modify all documents matching the filter.
@@ -67,8 +113,8 @@ class update_many {
     /// @param update
     ///   Pipeline representing the modifications to be applied to matching documents.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL()
-    update_many(bsoncxx::v_noabi::document::view_or_value filter, pipeline const& update);
+    update_many(bsoncxx::v_noabi::document::view_or_value filter, pipeline const& update)
+        : _filter{std::move(filter)}, _update{bsoncxx::v_noabi::document::value{update.view_array()}} {}
 
     ///
     /// Constructs an update operation that will modify all documents matching the filter.
@@ -78,22 +124,28 @@ class update_many {
     /// @param update
     ///   Supports the empty update {}.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL()
-    update_many(bsoncxx::v_noabi::document::view_or_value filter, std::initializer_list<_empty_doc_tag> update);
+    update_many(bsoncxx::v_noabi::document::view_or_value filter, std::initializer_list<_empty_doc_tag> update)
+        : _filter{std::move(filter)} {
+        (void)update;
+    }
 
     ///
     /// Gets the filter.
     ///
     /// @return The filter to be used for the update operation.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::document::view_or_value const&) filter() const;
+    bsoncxx::v_noabi::document::view_or_value const& filter() const {
+        return _filter;
+    }
 
     ///
     /// Gets the update document.
     ///
     /// @return The modifications to be applied as part of the update.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::document::view_or_value const&) update() const;
+    bsoncxx::v_noabi::document::view_or_value const& update() const {
+        return _update;
+    }
 
     ///
     /// Sets the collation for this update operation.
@@ -104,8 +156,10 @@ class update_many {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/collation/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(update_many&)
-    collation(bsoncxx::v_noabi::document::view_or_value collation);
+    update_many& collation(bsoncxx::v_noabi::document::view_or_value collation) {
+        _collation = std::move(collation);
+        return *this;
+    }
 
     ///
     /// Gets the collation option for this update operation.
@@ -116,8 +170,9 @@ class update_many {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/collation/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const&)
-    collation() const;
+    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const& collation() const {
+        return _collation;
+    }
 
     /// Sets the index to use for this operation.
     ///
@@ -131,15 +186,19 @@ class update_many {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(update_many&) hint(mongocxx::v_noabi::hint index_hint);
+    update_many& hint(mongocxx::v_noabi::hint index_hint) {
+        _hint = std::move(index_hint);
+        return *this;
+    }
 
     ///
     /// Gets the current hint.
     ///
     /// @return The current hint, if one is set.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::hint> const&)
-    hint() const;
+    bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::hint> const& hint() const {
+        return _hint;
+    }
 
     ///
     /// Sets the upsert option.
@@ -154,14 +213,19 @@ class update_many {
     ///   The server side default is @c false, which does not insert a new document if a match
     ///   is not found.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(update_many&) upsert(bool upsert);
+    update_many& upsert(bool upsert) {
+        _upsert = upsert;
+        return *this;
+    }
 
     ///
     /// Gets the current value of the upsert option.
     ///
     /// @return The optional value of the upsert option.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bool> const&) upsert() const;
+    bsoncxx::v_noabi::stdx::optional<bool> const& upsert() const {
+        return _upsert;
+    }
 
     ///
     /// Set array filters for this update operation.
@@ -172,8 +236,10 @@ class update_many {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/update/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(update_many&)
-    array_filters(bsoncxx::v_noabi::array::view_or_value array_filters);
+    update_many& array_filters(bsoncxx::v_noabi::array::view_or_value array_filters) {
+        _array_filters = std::move(array_filters);
+        return *this;
+    }
 
     ///
     /// Get array filters for this operation.
@@ -184,8 +250,9 @@ class update_many {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/update/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::array::view_or_value> const&)
-    array_filters() const;
+    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::array::view_or_value> const& array_filters() const {
+        return _array_filters;
+    }
 
    private:
     bsoncxx::v_noabi::document::view_or_value _filter;
@@ -201,9 +268,32 @@ class update_many {
 } // namespace v_noabi
 } // namespace mongocxx
 
+namespace mongocxx {
+namespace v_noabi {
+
+///
+/// Convert to the @ref mongocxx::v_noabi equivalent of `v`.
+///
+inline v_noabi::model::update_many from_v1(v1::bulk_write::update_many v) {
+    return {std::move(v)};
+}
+
+///
+/// Convert to the @ref mongocxx::v1 equivalent of `v`.
+///
+inline v1::bulk_write::update_many to_v1(v_noabi::model::update_many const& v) {
+    return v1::bulk_write::update_many{v};
+}
+
+} // namespace v_noabi
+} // namespace mongocxx
+
 #include <mongocxx/config/postlude.hpp>
 
 ///
 /// @file
 /// Provides @ref mongocxx::v_noabi::model::update_many.
+///
+/// @par Includes
+/// - @ref mongocxx/v1/bulk_write.hpp
 ///

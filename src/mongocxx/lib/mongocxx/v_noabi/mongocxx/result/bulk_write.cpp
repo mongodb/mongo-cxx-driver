@@ -14,54 +14,62 @@
 
 #include <mongocxx/result/bulk_write.hpp>
 
+//
+
+#include <mongocxx/v1/bulk_write.hh>
+
+#include <cstdint>
+#include <utility>
+
+#include <bsoncxx/document/value.hpp>
+
 namespace mongocxx {
 namespace v_noabi {
 namespace result {
 
-bulk_write::bulk_write(bsoncxx::v_noabi::document::value raw_response) : _response(std::move(raw_response)) {}
+bulk_write::bulk_write(bsoncxx::v_noabi::document::value raw_response)
+    : _result{v1::bulk_write::result::internal::make(bsoncxx::v_noabi::to_v1(std::move(raw_response)))} {}
 
 std::int32_t bulk_write::inserted_count() const {
-    return view()["nInserted"].get_int32();
+    return v1::bulk_write::result::internal::reply(_result)["nInserted"].get_int32();
 }
 
 std::int32_t bulk_write::matched_count() const {
-    return view()["nMatched"].get_int32();
+    return v1::bulk_write::result::internal::reply(_result)["nMatched"].get_int32();
 }
 
 std::int32_t bulk_write::modified_count() const {
-    return view()["nModified"].get_int32();
+    return v1::bulk_write::result::internal::reply(_result)["nModified"].get_int32();
 }
 
 std::int32_t bulk_write::deleted_count() const {
-    return view()["nRemoved"].get_int32();
+    return v1::bulk_write::result::internal::reply(_result)["nRemoved"].get_int32();
 }
 
 std::int32_t bulk_write::upserted_count() const {
-    return view()["nUpserted"].get_int32();
+    return v1::bulk_write::result::internal::reply(_result)["nUpserted"].get_int32();
 }
 
 bulk_write::id_map bulk_write::upserted_ids() const {
+    auto const reply = v1::bulk_write::result::internal::reply(_result);
+
     id_map upserted_ids;
 
-    if (!view()["upserted"]) {
+    if (!reply["upserted"]) {
         return upserted_ids;
     }
 
-    for (auto&& id : view()["upserted"].get_array().value) {
+    for (auto&& id : reply["upserted"].get_array().value) {
         upserted_ids.emplace(id["index"].get_int32(), id["_id"]);
     }
     return upserted_ids;
 }
 
-bsoncxx::v_noabi::document::view bulk_write::view() const {
-    return _response.view();
-}
-
 bool operator==(bulk_write const& lhs, bulk_write const& rhs) {
-    return lhs.view() == rhs.view();
-}
-bool operator!=(bulk_write const& lhs, bulk_write const& rhs) {
-    return !(lhs == rhs);
+    auto const& l = v1::bulk_write::result::internal::reply(lhs._result);
+    auto const& r = v1::bulk_write::result::internal::reply(rhs._result);
+
+    return l == r;
 }
 
 } // namespace result

@@ -31,6 +31,9 @@ class hint::internal {
    public:
     static bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value>& doc(hint& self);
     static bsoncxx::v1::stdx::optional<std::string>& str(hint& self);
+
+    static bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> const& doc(hint const& self);
+    static bsoncxx::v1::stdx::optional<std::string> const& str(hint const& self);
 };
 
 } // namespace v1
