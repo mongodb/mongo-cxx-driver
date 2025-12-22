@@ -25,17 +25,13 @@ podman pull "${silkbomb:?}"
 silkbomb_augment_flags=(
   --repo mongodb/mongo-cxx-driver
   --branch "${branch_name:?}"
-  --sbom-in /pwd/etc/cyclonedx.sbom.json
+  --sbom-in /pwd/sbom.json
   --sbom-out /pwd/etc/augmented.sbom.json.new
 
   # Any notable updates to the Augmented SBOM version should be done manually after careful inspection.
-  # Otherwise, it should be equal to the SBOM Lite version, which should normally be `1`.
+  # Otherwise, it should be equal to the existing SBOM version.
   --no-update-sbom-version
 )
-
-# First validate the SBOM Lite.
-podman run -it --rm -v "$(pwd):/pwd" "${silkbomb:?}" \
-  validate --purls /pwd/etc/purls.txt --sbom-in /pwd/etc/cyclonedx.sbom.json --exclude jira
 
 # Allow the timestamp to be updated in the Augmented SBOM for update purposes.
 podman run -it --rm -v "$(pwd):/pwd" --env 'KONDUKTO_TOKEN' "${silkbomb:?}" augment "${silkbomb_augment_flags[@]:?}"
