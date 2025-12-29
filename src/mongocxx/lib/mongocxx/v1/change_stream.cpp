@@ -194,6 +194,10 @@ class change_stream::options::impl {
         return *static_cast<impl const*>(self._impl);
     }
 
+    static impl& with(options& self) {
+        return *static_cast<impl*>(self._impl);
+    }
+
     static impl const* with(options const* self) {
         return static_cast<impl const*>(self->_impl);
     }
@@ -334,6 +338,32 @@ bool operator==(change_stream::iterator const& lhs, change_stream::iterator cons
 
     // Different underlying streams and neither are end iterators.
     return false;
+}
+
+bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value>& change_stream::options::internal::collation(options& self) {
+    return impl::with(self)._collation;
+}
+
+bsoncxx::v1::stdx::optional<bsoncxx::v1::types::value>& change_stream::options::internal::comment(options& self) {
+    return impl::with(self)._comment;
+}
+
+bsoncxx::v1::stdx::optional<std::string>& change_stream::options::internal::full_document(options& self) {
+    return impl::with(self)._full_document;
+}
+
+bsoncxx::v1::stdx::optional<std::string>& change_stream::options::internal::full_document_before_change(options& self) {
+    return impl::with(self)._full_document_before_change;
+}
+
+bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value>& change_stream::options::internal::resume_after(
+    options& self) {
+    return impl::with(self)._resume_after;
+}
+
+bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value>& change_stream::options::internal::start_after(
+    options& self) {
+    return impl::with(self)._start_after;
 }
 
 change_stream::iterator::~iterator() = default;

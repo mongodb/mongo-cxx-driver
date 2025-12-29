@@ -52,6 +52,7 @@
 #include <mongocxx/client_session.hh>
 #include <mongocxx/collection.hh>
 #include <mongocxx/mongoc_error.hh>
+#include <mongocxx/options/change_stream.hh>
 #include <mongocxx/pipeline.hh>
 #include <mongocxx/read_concern.hh>
 #include <mongocxx/read_preference.hh>
@@ -1366,7 +1367,8 @@ collection::_watch(client_session const* session, pipeline const& pipe, options:
     container.append(kvp("pipeline", v_noabi::pipeline::internal::doc(pipe).array_view()));
 
     bsoncxx::v_noabi::builder::basic::document options_builder;
-    options_builder.append(bsoncxx::v_noabi::builder::concatenate(options.as_bson()));
+    options_builder.append(
+        bsoncxx::v_noabi::builder::concatenate(v_noabi::options::change_stream::internal::to_document(options)));
     if (session) {
         options_builder.append(bsoncxx::v_noabi::builder::concatenate_doc{session->_get_impl().to_document()});
     }

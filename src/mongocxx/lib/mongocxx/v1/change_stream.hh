@@ -18,7 +18,14 @@
 
 //
 
+#include <bsoncxx/v1/document/value-fwd.hpp>
 #include <bsoncxx/v1/document/view-fwd.hpp>
+#include <bsoncxx/v1/types/value-fwd.hpp>
+#include <bsoncxx/v1/types/view-fwd.hpp>
+
+#include <bsoncxx/v1/stdx/optional.hpp>
+
+#include <string>
 
 #include <mongocxx/private/export.hh>
 #include <mongocxx/private/mongoc.hh>
@@ -37,6 +44,16 @@ class change_stream::internal {
     static MONGOCXX_ABI_EXPORT_CDECL_TESTING(bool) is_dead(change_stream const& self);
 
     static void advance_iterator(change_stream& self);
+};
+
+class change_stream::options::internal {
+   public:
+    static bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value>& collation(options& self);
+    static bsoncxx::v1::stdx::optional<bsoncxx::v1::types::value>& comment(options& self);
+    static bsoncxx::v1::stdx::optional<std::string>& full_document(options& self);
+    static bsoncxx::v1::stdx::optional<std::string>& full_document_before_change(options& self);
+    static bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value>& resume_after(options& self);
+    static bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value>& start_after(options& self);
 };
 
 class change_stream::iterator::internal {

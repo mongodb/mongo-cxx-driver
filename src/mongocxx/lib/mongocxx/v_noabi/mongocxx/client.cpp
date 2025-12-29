@@ -32,6 +32,7 @@
 #include <mongocxx/client_session.hh>
 #include <mongocxx/mongoc_error.hh>
 #include <mongocxx/options/apm.hh>
+#include <mongocxx/options/change_stream.hh>
 #include <mongocxx/options/server_api.hh>
 #include <mongocxx/options/tls.hh>
 #include <mongocxx/read_concern.hh>
@@ -306,7 +307,8 @@ client::_watch(client_session const* session, pipeline const& pipe, options::cha
     container.append(bsoncxx::v_noabi::builder::basic::kvp("pipeline", pipe.view_array()));
 
     bsoncxx::v_noabi::builder::basic::document options_builder;
-    options_builder.append(bsoncxx::v_noabi::builder::concatenate(options.as_bson()));
+    options_builder.append(
+        bsoncxx::v_noabi::builder::concatenate(v_noabi::options::change_stream::internal::to_document(options)));
     if (session) {
         options_builder.append(bsoncxx::v_noabi::builder::concatenate_doc{session->_get_impl().to_document()});
     }
