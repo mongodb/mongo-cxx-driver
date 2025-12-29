@@ -82,9 +82,9 @@ class pipeline {
     /// Convert to the @ref mongocxx::v1 equivalent.
     ///
     /// @par Postconditions:
-    /// - `other` is in an assign-or-destroy-only state.
+    /// - `*this` is in an assign-or-destroy-only state.
     ///
-    /// @warning Invalidates all associated iterators and views.
+    /// @warning Invalidates all associated views.
     ///
     explicit operator v1::pipeline() && {
         return std::move(_pipeline);
