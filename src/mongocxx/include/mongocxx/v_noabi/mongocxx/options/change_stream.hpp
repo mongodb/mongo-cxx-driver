@@ -14,16 +14,30 @@
 
 #pragma once
 
-#include <chrono>
-
-#include <mongocxx/client-fwd.hpp>
-#include <mongocxx/collection-fwd.hpp>
-#include <mongocxx/database-fwd.hpp>
 #include <mongocxx/options/change_stream-fwd.hpp> // IWYU pragma: export
 
+//
+
+#include <bsoncxx/v1/types/value.hpp>
+
+#include <mongocxx/v1/change_stream.hpp> // IWYU pragma: export
+
+#include <chrono>
+#include <cstdint>
+#include <string>
+#include <utility>
+
+#include <mongocxx/client-fwd.hpp>     // IWYU pragma: keep: backward compatibility, to be removed.
+#include <mongocxx/collection-fwd.hpp> // IWYU pragma: keep: backward compatibility, to be removed.
+#include <mongocxx/database-fwd.hpp>   // IWYU pragma: keep: backward compatibility, to be removed.
+
+#include <bsoncxx/document/value.hpp>
+#include <bsoncxx/document/view.hpp>
 #include <bsoncxx/document/view_or_value.hpp>
+#include <bsoncxx/stdx/optional.hpp>
 #include <bsoncxx/string/view_or_value.hpp>
 #include <bsoncxx/types.hpp>
+#include <bsoncxx/types/bson_value/view.hpp>
 #include <bsoncxx/types/bson_value/view_or_value.hpp>
 
 #include <mongocxx/config/prelude.hpp>
@@ -37,7 +51,62 @@ namespace options {
 ///
 class change_stream {
    public:
-    MONGOCXX_ABI_EXPORT_CDECL() change_stream();
+    ///
+    /// Default initialization.
+    ///
+    change_stream() = default;
+
+    ///
+    /// Construct with the @ref mongocxx::v1 equivalent.
+    ///
+    /* explicit(false) */ MONGOCXX_ABI_EXPORT_CDECL() change_stream(v1::change_stream::options opts);
+
+    ///
+    /// Convert to the @ref mongocxx::v1 equivalent.
+    ///
+    explicit operator v1::change_stream::options() const {
+        using bsoncxx::v_noabi::to_v1;
+
+        v1::change_stream::options ret;
+
+        if (_full_document) {
+            ret.full_document(std::string{_full_document->view()});
+        }
+
+        if (_full_document_before_change) {
+            ret.full_document_before_change(std::string{_full_document_before_change->view()});
+        }
+
+        if (_batch_size) {
+            ret.batch_size(*_batch_size);
+        }
+
+        if (_comment) {
+            ret.comment(bsoncxx::v1::types::value{{to_v1(_comment->view())}});
+        }
+
+        if (_collation) {
+            ret.collation(bsoncxx::v1::document::value{to_v1(_collation->view())});
+        }
+
+        if (_resume_after) {
+            ret.resume_after(bsoncxx::v1::document::value{to_v1(_resume_after->view())});
+        }
+
+        if (_start_after) {
+            ret.start_after(bsoncxx::v1::document::value{to_v1(_start_after->view())});
+        }
+
+        if (_max_await_time) {
+            ret.max_await_time(*_max_await_time);
+        }
+
+        if (_start_at_operation_time) {
+            ret.start_at_operation_time(to_v1(*_start_at_operation_time));
+        }
+
+        return ret;
+    }
 
     ///
     /// Sets the fullDocument option for the $changeStream.
@@ -66,8 +135,10 @@ class change_stream {
     ///   A reference to the object on which this member function is being called. This facilitates
     ///   method chaining.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(change_stream&)
-    full_document(bsoncxx::v_noabi::string::view_or_value full_doc);
+    change_stream& full_document(bsoncxx::v_noabi::string::view_or_value full_doc) {
+        _full_document = std::move(full_doc);
+        return *this;
+    }
 
     ///
     /// Gets the current fullDocument option.
@@ -75,8 +146,9 @@ class change_stream {
     /// @return
     ///   The current fullDocument option.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value> const&)
-    full_document() const;
+    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value> const& full_document() const {
+        return _full_document;
+    }
 
     ///
     /// Sets the fullDocumentBeforeChange option for the $changeStream.
@@ -97,8 +169,10 @@ class change_stream {
     ///   A reference to the object on which this member function is being called. This facilitates
     ///   method chaining.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(change_stream&)
-    full_document_before_change(bsoncxx::v_noabi::string::view_or_value full_doc_before_change);
+    change_stream& full_document_before_change(bsoncxx::v_noabi::string::view_or_value full_doc_before_change) {
+        _full_document_before_change = std::move(full_doc_before_change);
+        return *this;
+    }
 
     ///
     /// Gets the current fullDocumentBeforeChange option.
@@ -106,8 +180,10 @@ class change_stream {
     /// @return
     ///   The current fullDocumentBeforeChange option.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value> const&)
-    full_document_before_change() const;
+    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value> const& full_document_before_change()
+        const {
+        return _full_document_before_change;
+    }
 
     ///
     /// Sets the number of documents to return per batch.
@@ -119,7 +195,10 @@ class change_stream {
     ///   A reference to the object on which this member function is being called. This facilitates
     ///   method chaining.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(change_stream&) batch_size(std::int32_t batch_size);
+    change_stream& batch_size(std::int32_t batch_size) {
+        _batch_size = batch_size;
+        return *this;
+    }
 
     ///
     /// The current batch size setting.
@@ -127,8 +206,9 @@ class change_stream {
     /// @return
     ///   The current batch size.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<std::int32_t> const&)
-    batch_size() const;
+    bsoncxx::v_noabi::stdx::optional<std::int32_t> const& batch_size() const {
+        return _batch_size;
+    }
 
     ///
     /// Sets the current value of the comment option.
@@ -140,8 +220,10 @@ class change_stream {
     ///   A reference to the object on which this member function is being called. This facilitates
     ///   method chaining.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(change_stream&)
-    comment(bsoncxx::v_noabi::types::bson_value::view_or_value comment);
+    change_stream& comment(bsoncxx::v_noabi::types::bson_value::view_or_value comment) {
+        _comment = std::move(comment);
+        return *this;
+    }
 
     ///
     /// Gets the current value of the comment option.
@@ -149,8 +231,9 @@ class change_stream {
     /// @return
     ///   The current comment option.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value> const&)
-    comment() const;
+    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value> const& comment() const {
+        return _comment;
+    }
 
     ///
     /// Specifies the logical starting point for the new change stream.
@@ -167,8 +250,10 @@ class change_stream {
     ///   A reference to the object on which this member function is being called. This facilitates
     ///   method chaining.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(change_stream&)
-    resume_after(bsoncxx::v_noabi::document::view_or_value resume_after);
+    change_stream& resume_after(bsoncxx::v_noabi::document::view_or_value resume_after) {
+        _resume_after = std::move(resume_after);
+        return *this;
+    }
 
     ///
     /// Retrieves the current resumeToken for this change stream.
@@ -176,8 +261,9 @@ class change_stream {
     /// @return
     ///   The current resumeToken.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const&)
-    resume_after() const;
+    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const& resume_after() const {
+        return _resume_after;
+    }
 
     ///
     /// Specifies the logical starting point of the new change stream. The new stream will
@@ -196,8 +282,10 @@ class change_stream {
     /// @return
     ///   A reference to the object on which this function is being called.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(change_stream&)
-    start_after(bsoncxx::v_noabi::document::view_or_value token);
+    change_stream& start_after(bsoncxx::v_noabi::document::view_or_value token) {
+        _start_after = std::move(token);
+        return *this;
+    }
 
     ///
     /// Retrieves the current startAfter token for this change stream.
@@ -205,8 +293,9 @@ class change_stream {
     /// @return
     ///   The current startAfter token.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const&)
-    start_after() const;
+    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const& start_after() const {
+        return _start_after;
+    }
 
     ///
     /// Sets the collation for this operation.
@@ -218,8 +307,10 @@ class change_stream {
     ///   A reference to the object on which this member function is being called. This facilitates
     ///   method chaining.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(change_stream&)
-    collation(bsoncxx::v_noabi::document::view_or_value collation);
+    change_stream& collation(bsoncxx::v_noabi::document::view_or_value collation) {
+        _collation = std::move(collation);
+        return *this;
+    }
 
     ///
     /// Retrieves the current collation for this operation.
@@ -227,8 +318,9 @@ class change_stream {
     /// @return
     ///   The current collation.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const&)
-    collation() const;
+    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const& collation() const {
+        return _collation;
+    }
 
     ///
     /// Sets the maximum amount of time for for the server to wait on new documents to satisfy a
@@ -241,7 +333,10 @@ class change_stream {
     ///   A reference to the object on which this member function is being called. This facilitates
     ///   method chaining.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(change_stream&) max_await_time(std::chrono::milliseconds max_time);
+    change_stream& max_await_time(std::chrono::milliseconds max_time) {
+        _max_await_time = max_time;
+        return *this;
+    }
 
     ///
     /// The current max_time setting.
@@ -249,8 +344,9 @@ class change_stream {
     /// @return
     ///   The current max time (in milliseconds).
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<std::chrono::milliseconds> const&)
-    max_await_time() const;
+    bsoncxx::v_noabi::stdx::optional<std::chrono::milliseconds> const& max_await_time() const {
+        return _max_await_time;
+    }
 
     ///
     /// Specifies the logical starting point for the new change stream. Changes are returned at or
@@ -266,8 +362,10 @@ class change_stream {
     ///   A reference to the object on which this member function is being called. This facilitates
     ///   method chaining.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(change_stream&)
-    start_at_operation_time(bsoncxx::v_noabi::types::b_timestamp timestamp);
+    change_stream& start_at_operation_time(bsoncxx::v_noabi::types::b_timestamp timestamp) {
+        _start_at_operation_time = std::move(timestamp);
+        return *this;
+    }
 
     ///
     /// The current start_at_operation_time setting.
@@ -275,16 +373,13 @@ class change_stream {
     /// @return
     ///   The current startAtOperationTime option.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::stdx::optional<bsoncxx::v_noabi::types::b_timestamp> const&)
-    start_at_operation_time() const;
+    bsoncxx::stdx::optional<bsoncxx::v_noabi::types::b_timestamp> const& start_at_operation_time() const {
+        return _start_at_operation_time;
+    }
+
+    class internal;
 
    private:
-    friend ::mongocxx::v_noabi::client;
-    friend ::mongocxx::v_noabi::collection;
-    friend ::mongocxx::v_noabi::database;
-
-    bsoncxx::v_noabi::document::value as_bson() const;
-
     bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value> _full_document;
     bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value> _full_document_before_change;
     bsoncxx::v_noabi::stdx::optional<std::int32_t> _batch_size;
@@ -300,9 +395,32 @@ class change_stream {
 } // namespace v_noabi
 } // namespace mongocxx
 
+namespace mongocxx {
+namespace v_noabi {
+
+///
+/// Convert to the @ref mongocxx::v_noabi equivalent of `v`.
+///
+inline v_noabi::options::change_stream from_v1(v1::change_stream::options v) {
+    return {std::move(v)};
+}
+
+///
+/// Convert to the @ref mongocxx::v1 equivalent of `v`.
+///
+inline v1::change_stream::options to_v1(v_noabi::options::change_stream const& v) {
+    return v1::change_stream::options{v};
+}
+
+} // namespace v_noabi
+} // namespace mongocxx
+
 #include <mongocxx/config/postlude.hpp>
 
 ///
 /// @file
 /// Provides @ref mongocxx::v_noabi::options::change_stream.
+///
+/// @par Includes
+/// - @ref mongocxx/v1/change_stream.hpp
 ///

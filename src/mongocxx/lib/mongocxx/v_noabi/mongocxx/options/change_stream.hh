@@ -14,34 +14,21 @@
 
 #pragma once
 
-#include <mongocxx/v1/change_stream-fwd.hpp> // IWYU pragma: export
+#include <mongocxx/options/change_stream.hpp> // IWYU pragma: export
 
-#include <mongocxx/config/prelude.hpp>
+//
+
+#include <bsoncxx/document/value-fwd.hpp>
 
 namespace mongocxx {
 namespace v_noabi {
 namespace options {
 
-class change_stream;
+class change_stream::internal {
+   public:
+    static bsoncxx::v_noabi::document::value to_document(change_stream const& self);
+};
 
 } // namespace options
 } // namespace v_noabi
 } // namespace mongocxx
-
-namespace mongocxx {
-namespace options {
-
-using v_noabi::options::change_stream;
-
-} // namespace options
-} // namespace mongocxx
-
-#include <mongocxx/config/postlude.hpp>
-
-///
-/// @file
-/// Declares @ref mongocxx::v_noabi::options::change_stream.
-///
-/// @par Includes
-/// - @ref mongocxx/v1/change_stream-fwd.hpp
-///
