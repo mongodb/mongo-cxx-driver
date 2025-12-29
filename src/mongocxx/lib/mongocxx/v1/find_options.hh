@@ -26,8 +26,6 @@
 
 #include <bsoncxx/v1/stdx/optional.hpp>
 
-#include <mongocxx/v1/cursor.hpp>
-
 namespace mongocxx {
 namespace v1 {
 
