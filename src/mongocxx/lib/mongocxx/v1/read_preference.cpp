@@ -74,17 +74,16 @@ read_preference& read_preference::hedge(bsoncxx::v1::document::view v) {
 }
 
 bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view> read_preference::hedge() const {
-    bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view> ret;
-
     BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_BEGIN
     auto const doc = libmongoc::read_prefs_get_hedge(to_mongoc(_impl));
     BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_END
 
     if (!bson_empty(doc)) {
-        ret.emplace(bson_get_data(doc), doc->len);
+        return bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view>{
+            bsoncxx::v1::stdx::in_place, bson_get_data(doc), doc->len};
     }
 
-    return ret;
+    return {};
 }
 
 read_preference& read_preference::mode(read_mode v) {

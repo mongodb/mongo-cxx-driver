@@ -132,14 +132,13 @@ write_concern& write_concern::nodes(std::int32_t v) {
 }
 
 bsoncxx::v1::stdx::optional<std::int32_t> write_concern::nodes() const {
-    bsoncxx::v1::stdx::optional<std::int32_t> ret;
-
     auto const w = libmongoc::write_concern_get_w(to_mongoc(_impl));
+
     if (w >= 0) {
-        ret.emplace(w);
+        return w;
     }
 
-    return ret;
+    return {};
 }
 
 write_concern& write_concern::tag(bsoncxx::v1::stdx::string_view v) {
@@ -148,13 +147,11 @@ write_concern& write_concern::tag(bsoncxx::v1::stdx::string_view v) {
 }
 
 bsoncxx::v1::stdx::optional<bsoncxx::v1::stdx::string_view> write_concern::tag() const {
-    bsoncxx::v1::stdx::optional<bsoncxx::v1::stdx::string_view> ret;
-
     if (auto const str = libmongoc::write_concern_get_wtag(to_mongoc(_impl))) {
-        ret.emplace(str);
+        return str;
     }
 
-    return ret;
+    return {};
 }
 
 write_concern& write_concern::journal(bool j) {
@@ -163,13 +160,11 @@ write_concern& write_concern::journal(bool j) {
 }
 
 bsoncxx::v1::stdx::optional<bool> write_concern::journal() const {
-    bsoncxx::v1::stdx::optional<bool> ret;
-
     if (libmongoc::write_concern_journal_is_set(to_mongoc(_impl))) {
-        ret.emplace(libmongoc::write_concern_get_journal(to_mongoc(_impl)));
+        return libmongoc::write_concern_get_journal(to_mongoc(_impl));
     }
 
-    return ret;
+    return {};
 }
 
 bool write_concern::is_acknowledged() const {
