@@ -18,7 +18,6 @@
 
 #include <mongocxx/v1/exception.hpp>
 #include <mongocxx/v1/instance.hpp>
-#include <mongocxx/v1/logger.hpp>
 
 #include <array>
 #include <atomic>

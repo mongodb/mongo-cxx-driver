@@ -28,11 +28,10 @@ namespace options {
 
 data_key::data_key(v1::data_key_options key)
     : _master_key{[&]() -> decltype(_master_key) {
-          decltype(_master_key) ret;
           if (auto& opt = v1::data_key_options::internal::master_key(key)) {
-              ret = bsoncxx::v_noabi::from_v1(std::move(*opt));
+              return bsoncxx::v_noabi::from_v1(std::move(*opt));
           }
-          return ret;
+          return {};
       }()},
       _key_alt_names{std::move(v1::data_key_options::internal::key_alt_names(key))},
       _key_material{std::move(v1::data_key_options::internal::key_material(key))} {}

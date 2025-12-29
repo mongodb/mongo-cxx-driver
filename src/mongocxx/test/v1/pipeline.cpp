@@ -77,7 +77,7 @@ TEST_CASE("ownership", "[mongocxx][v1][pipeline]") {
     }
 }
 
-TEST_CASE("default") {
+TEST_CASE("default", "[mongocxx][v1][pipeline]") {
     pipeline const v;
 
     CHECK(v.view_array().empty());

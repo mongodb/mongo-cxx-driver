@@ -126,13 +126,11 @@ read_concern& read_concern::acknowledge_string(bsoncxx::v1::stdx::string_view v)
 }
 
 bsoncxx::v1::stdx::string_view read_concern::acknowledge_string() const {
-    bsoncxx::v1::stdx::string_view ret;
-
     if (auto const level_cstr = libmongoc::read_concern_get_level(to_mongoc(_impl))) {
-        ret = bsoncxx::v1::stdx::string_view{level_cstr};
+        return level_cstr;
     }
 
-    return ret;
+    return {};
 }
 
 bsoncxx::v1::document::value read_concern::to_document() const {
