@@ -84,6 +84,11 @@ class rewrap_many_datakey_result {
     /// @returns Empty when the write operation is unacknowledged.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<v1::bulk_write::result>) result() const;
+
+    class internal;
+
+   private:
+    /* explicit(false) */ rewrap_many_datakey_result(void* impl);
 };
 
 } // namespace v1
