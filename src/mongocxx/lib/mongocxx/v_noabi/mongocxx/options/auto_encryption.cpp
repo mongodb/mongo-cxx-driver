@@ -16,9 +16,6 @@
 
 //
 
-#include <mongocxx/v1/client-fwd.hpp>
-#include <mongocxx/v1/pool-fwd.hpp>
-
 #include <mongocxx/v1/auto_encryption_options.hh>
 
 #include <stdexcept>
