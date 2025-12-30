@@ -114,11 +114,11 @@ auto_encryption::operator v1::auto_encryption_options() const {
     return ret;
 }
 
-options::auto_encryption options::auto_encryption::internal::from_v1(v1::auto_encryption_options v) {
+auto_encryption auto_encryption::internal::from_v1(v1::auto_encryption_options v) {
     return {std::move(v)};
 }
 
-v1::auto_encryption_options options::auto_encryption::internal::to_v1(options::auto_encryption const& v) {
+v1::auto_encryption_options auto_encryption::internal::to_v1(auto_encryption const& v) {
     return v1::auto_encryption_options{v};
 }
 
