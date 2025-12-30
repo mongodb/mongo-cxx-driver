@@ -16,6 +16,9 @@
 
 //
 
+#include <mongocxx/v1/client-fwd.hpp>
+#include <mongocxx/v1/pool-fwd.hpp>
+
 #include <mongocxx/v1/auto_encryption_options.hh>
 
 #include <stdexcept>
@@ -168,5 +171,20 @@ mongoc_auto_encryption_opts_t* auto_encryption::internal::to_mongoc(auto_encrypt
 }
 
 } // namespace options
+} // namespace v_noabi
+} // namespace mongocxx
+
+namespace mongocxx {
+namespace v_noabi {
+
+v_noabi::options::auto_encryption v_noabi::options::auto_encryption::internal::from_v1(v1::auto_encryption_options v) {
+    return {std::move(v)};
+}
+
+v1::auto_encryption_options v_noabi::options::auto_encryption::internal::to_v1(
+    v_noabi::options::auto_encryption const& v) {
+    return v1::auto_encryption_options{v};
+}
+
 } // namespace v_noabi
 } // namespace mongocxx

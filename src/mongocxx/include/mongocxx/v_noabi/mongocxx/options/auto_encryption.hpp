@@ -18,6 +18,9 @@
 
 //
 
+#include <mongocxx/v1/client-fwd.hpp>
+#include <mongocxx/v1/pool-fwd.hpp>
+
 #include <mongocxx/v1/auto_encryption_options.hpp> // IWYU pragma: export
 
 #include <string> // IWYU pragma: keep: backward compatibility, to be removed.
@@ -44,20 +47,6 @@ class auto_encryption {
     /// Default constructs a new auto_encryption object.
     ///
     auto_encryption() noexcept {}
-
-    ///
-    /// Construct with the @ref mongocxx::v1 equivalent.
-    ///
-    /// @note The `key_vault_client` and `key_vault_pool` fields are ignored.
-    ///
-    /* explicit(false) */ MONGOCXX_ABI_EXPORT_CDECL() auto_encryption(v1::auto_encryption_options opts);
-
-    ///
-    /// Convert to the @ref mongocxx::v1 equivalent.
-    ///
-    /// @note The `key_vault_client` and `key_vault_pool` fields are ignored.
-    ///
-    explicit MONGOCXX_ABI_EXPORT_CDECL() operator v1::auto_encryption_options() const;
 
     ///
     /// When the key vault collection is on a separate MongoDB cluster,
@@ -468,6 +457,10 @@ class auto_encryption {
     bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> _schema_map;
     bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> _encrypted_fields_map;
     bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> _extra_options;
+
+    /* explicit(false) */ auto_encryption(v1::auto_encryption_options opts);
+
+    explicit operator v1::auto_encryption_options() const;
 };
 
 } // namespace options
@@ -480,16 +473,48 @@ namespace v_noabi {
 ///
 /// Convert to the @ref mongocxx::v_noabi equivalent of `v`.
 ///
-inline v_noabi::options::auto_encryption from_v1(v1::auto_encryption_options v) {
-    return {std::move(v)};
+/// @important The `key_vault_client` and `key_vault_pool` fields in the resulting object are unset when not explicitly
+/// provided as an argument to this conversion function.
+///
+/// @{
+MONGOCXX_ABI_EXPORT_CDECL(v_noabi::options::auto_encryption) from_v1(v1::auto_encryption_options v);
+
+inline v_noabi::options::auto_encryption from_v1(v1::auto_encryption_options v, v_noabi::client* client) {
+    auto ret = from_v1(std::move(v));
+    ret.key_vault_client(client);
+    return ret;
 }
+
+inline v_noabi::options::auto_encryption from_v1(v1::auto_encryption_options v, v_noabi::pool* pool) {
+    auto ret = from_v1(std::move(v));
+    ret.key_vault_pool(pool);
+    return ret;
+}
+/// @}
+///
 
 ///
 /// Convert to the @ref mongocxx::v1 equivalent of `v`.
 ///
-inline v1::auto_encryption_options to_v1(v_noabi::options::auto_encryption const& v) {
-    return v1::auto_encryption_options{v};
+/// @important The `key_vault_client` and `key_vault_pool` fields in the resulting object are unset when not explicitly
+/// provided as an argument to this conversion function.
+///
+/// @{
+MONGOCXX_ABI_EXPORT_CDECL(v1::auto_encryption_options) to_v1(v_noabi::options::auto_encryption const& v);
+
+inline v1::auto_encryption_options to_v1(v_noabi::options::auto_encryption const& v, v1::client* client) {
+    auto ret = to_v1(v);
+    ret.key_vault_client(client);
+    return ret;
 }
+
+inline v1::auto_encryption_options to_v1(v_noabi::options::auto_encryption const& v, v1::pool* pool) {
+    auto ret = to_v1(v);
+    ret.key_vault_pool(pool);
+    return ret;
+}
+/// @}
+///
 
 } // namespace v_noabi
 } // namespace mongocxx

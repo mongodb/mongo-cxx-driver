@@ -26,6 +26,9 @@ namespace options {
 
 class auto_encryption::internal {
    public:
+    static auto_encryption from_v1(v1::auto_encryption_options v);
+    static v1::auto_encryption_options to_v1(auto_encryption const& v);
+
     static mongoc_auto_encryption_opts_t* to_mongoc(auto_encryption const& opts);
 };
 
