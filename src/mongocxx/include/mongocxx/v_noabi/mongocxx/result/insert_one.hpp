@@ -16,8 +16,15 @@
 
 #include <mongocxx/result/insert_one-fwd.hpp> // IWYU pragma: export
 
-#include <bsoncxx/array/value.hpp>
-#include <bsoncxx/types.hpp> // IWYU pragma: keep: backward compatibility, to be removed.
+//
+
+#include <mongocxx/v1/insert_one_result.hpp> // IWYU pragma: export
+
+#include <utility>
+
+#include <bsoncxx/array/value.hpp> // IWYU pragma: keep: backward compatibility, to be removed.
+#include <bsoncxx/types.hpp>       // IWYU pragma: keep: backward compatibility, to be removed.
+#include <bsoncxx/types/bson_value/value.hpp>
 #include <bsoncxx/types/bson_value/view.hpp>
 
 #include <mongocxx/result/bulk_write.hpp>
@@ -33,38 +40,93 @@ namespace result {
 ///
 class insert_one {
    public:
-    // This constructor is public for testing purposes only
-    MONGOCXX_ABI_EXPORT_CDECL()
-    insert_one(result::bulk_write result, bsoncxx::v_noabi::types::bson_value::view inserted_id);
+    ~insert_one() = default;
+
+    insert_one(insert_one&& other) noexcept = default;
+    insert_one& operator=(insert_one&& other) noexcept = default;
+
+    insert_one(insert_one const& other)
+        : _result{other._result}, _inserted_id_owned{other._inserted_id_owned}, _inserted_id{_inserted_id_owned} {}
+
+    insert_one& operator=(insert_one const& other) {
+        if (this != &other) {
+            _result = other._result;
+            _inserted_id_owned = other._inserted_id_owned;
+            _inserted_id = _inserted_id_owned;
+        }
+
+        return *this;
+    }
+
+    ///
+    /// @deprecated For internal use only.
+    ///
+    insert_one(v_noabi::result::bulk_write result, bsoncxx::v_noabi::types::view inserted_id)
+        : _result{std::move(result)}, _inserted_id_owned{inserted_id}, _inserted_id{_inserted_id_owned} {}
+
+    ///
+    /// Construct with the @ref mongocxx::v1 equivalent.
+    ///
+    /* explicit(false) */ MONGOCXX_ABI_EXPORT_CDECL() insert_one(v1::insert_one_result opts);
+
+    ///
+    /// Convert to the @ref mongocxx::v1 equivalent.
+    ///
+    explicit MONGOCXX_ABI_EXPORT_CDECL() operator v1::insert_one_result() const;
 
     ///
     /// Returns the bulk write result for this insert operation.
     ///
     /// @return The raw bulk write result.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(result::bulk_write const&) result() const;
+    v_noabi::result::bulk_write const& result() const {
+        return _result;
+    }
 
     ///
     /// Gets the _id of the inserted document.
     ///
     /// @return The value of the _id field for the inserted document.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::types::bson_value::view const&) inserted_id() const;
+    bsoncxx::v_noabi::types::bson_value::view const& inserted_id() const {
+        return _inserted_id;
+    }
 
-    friend MONGOCXX_ABI_EXPORT_CDECL(bool) operator==(insert_one const&, insert_one const&);
-    friend MONGOCXX_ABI_EXPORT_CDECL(bool) operator!=(insert_one const&, insert_one const&);
+    friend bool operator==(insert_one const& lhs, insert_one const& rhs) {
+        return lhs._result == rhs._result && lhs._inserted_id == rhs._inserted_id;
+    }
+
+    friend bool operator!=(insert_one const& lhs, insert_one const& rhs) {
+        return !(lhs == rhs);
+    }
 
    private:
-    result::bulk_write _result;
-
-    // Array with a single element, containing the value of the _id field for the inserted document.
-    bsoncxx::v_noabi::array::value _inserted_id_owned;
-
-    // Points into _inserted_id_owned.
-    bsoncxx::v_noabi::types::bson_value::view _inserted_id;
+    v_noabi::result::bulk_write _result;
+    bsoncxx::v_noabi::types::value _inserted_id_owned;
+    bsoncxx::v_noabi::types::view _inserted_id;
 };
 
 } // namespace result
+} // namespace v_noabi
+} // namespace mongocxx
+
+namespace mongocxx {
+namespace v_noabi {
+
+///
+/// Convert to the @ref mongocxx::v_noabi equivalent of `v`.
+///
+inline v_noabi::result::insert_one from_v1(v1::insert_one_result v) {
+    return {std::move(v)};
+}
+
+///
+/// Convert to the @ref mongocxx::v1 equivalent of `v`.
+///
+inline v1::insert_one_result to_v1(v_noabi::result::insert_one const& v) {
+    return v1::insert_one_result{v};
+}
+
 } // namespace v_noabi
 } // namespace mongocxx
 
@@ -73,4 +135,7 @@ class insert_one {
 ///
 /// @file
 /// Provides @ref mongocxx::v_noabi::result::insert_one.
+///
+/// @par Includes
+/// - @ref mongocxx/v1/insert_one_result.hpp
 ///

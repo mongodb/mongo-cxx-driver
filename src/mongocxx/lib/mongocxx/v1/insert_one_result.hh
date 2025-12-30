@@ -14,34 +14,28 @@
 
 #pragma once
 
-#include <mongocxx/v1/insert_one_result-fwd.hpp> // IWYU pragma: export
+#include <mongocxx/v1/insert_one_result.hpp> // IWYU pragma: export
 
-#include <mongocxx/config/prelude.hpp>
+//
 
-namespace mongocxx {
-namespace v_noabi {
-namespace result {
+#include <bsoncxx/v1/types/value-fwd.hpp>
 
-class insert_one;
+#include <mongocxx/v1/bulk_write.hpp>
 
-} // namespace result
-} // namespace v_noabi
-} // namespace mongocxx
+#include <mongocxx/private/export.hh>
 
 namespace mongocxx {
-namespace result {
+namespace v1 {
 
-using v_noabi::result::insert_one;
+class insert_one_result::internal {
+   public:
+    static MONGOCXX_ABI_EXPORT_CDECL_TESTING(insert_one_result) make(
+        v1::bulk_write::result result,
+        bsoncxx::v1::types::value inserted_id);
 
-} // namespace result
+    static MONGOCXX_ABI_EXPORT_CDECL_TESTING(v1::bulk_write::result&) result(insert_one_result& self);
+    static MONGOCXX_ABI_EXPORT_CDECL_TESTING(bsoncxx::v1::types::value&) inserted_id(insert_one_result& self);
+};
+
+} // namespace v1
 } // namespace mongocxx
-
-#include <mongocxx/config/postlude.hpp>
-
-///
-/// @file
-/// Declares @ref mongocxx::v_noabi::result::insert_one.
-///
-/// @par Includes
-/// - @ref mongocxx/v1/insert_one_result-fwd.hpp
-///

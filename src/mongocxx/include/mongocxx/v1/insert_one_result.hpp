@@ -107,6 +107,11 @@ class insert_one_result {
     }
     /// @}
     ///
+
+    class internal;
+
+   private:
+    /* explicit(false) */ insert_one_result(void* impl);
 };
 
 } // namespace v1
