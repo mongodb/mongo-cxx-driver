@@ -117,6 +117,14 @@ auto_encryption::operator v1::auto_encryption_options() const {
     return ret;
 }
 
+options::auto_encryption options::auto_encryption::internal::from_v1(v1::auto_encryption_options v) {
+    return {std::move(v)};
+}
+
+v1::auto_encryption_options options::auto_encryption::internal::to_v1(options::auto_encryption const& v) {
+    return v1::auto_encryption_options{v};
+}
+
 mongoc_auto_encryption_opts_t* auto_encryption::internal::to_mongoc(auto_encryption const& opts) {
     if (opts.key_vault_client() && opts.key_vault_pool()) {
         throw v_noabi::exception{
@@ -177,13 +185,12 @@ mongoc_auto_encryption_opts_t* auto_encryption::internal::to_mongoc(auto_encrypt
 namespace mongocxx {
 namespace v_noabi {
 
-v_noabi::options::auto_encryption v_noabi::options::auto_encryption::internal::from_v1(v1::auto_encryption_options v) {
-    return {std::move(v)};
+v_noabi::options::auto_encryption from_v1(v1::auto_encryption_options v) {
+    return v_noabi::options::auto_encryption::internal::from_v1(std::move(v));
 }
 
-v1::auto_encryption_options v_noabi::options::auto_encryption::internal::to_v1(
-    v_noabi::options::auto_encryption const& v) {
-    return v1::auto_encryption_options{v};
+v1::auto_encryption_options to_v1(v_noabi::options::auto_encryption const& v) {
+    return v_noabi::options::auto_encryption::internal::to_v1(v);
 }
 
 } // namespace v_noabi
