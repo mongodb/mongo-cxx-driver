@@ -25,13 +25,13 @@
 #include <mongocxx/exception/error_code.hpp>
 #include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/exception/operation_exception.hpp>
-#include <mongocxx/options/auto_encryption.hpp>
 #include <mongocxx/pipeline.hpp>
 
 #include <mongocxx/client.hh>
 #include <mongocxx/client_session.hh>
 #include <mongocxx/mongoc_error.hh>
 #include <mongocxx/options/apm.hh>
+#include <mongocxx/options/auto_encryption.hh>
 #include <mongocxx/options/change_stream.hh>
 #include <mongocxx/options/server_api.hh>
 #include <mongocxx/options/tls.hh>
@@ -108,14 +108,13 @@ client::client(mongocxx::v_noabi::uri const& uri, options::client const& options
         libmongoc::client_set_apm_callbacks(_get_impl().client_t, callbacks.get(), context);
     }
 
-    if (options.auto_encryption_opts()) {
-        auto const& auto_encrypt_opts = *options.auto_encryption_opts();
-        auto mongoc_auto_encrypt_opts = static_cast<mongoc_auto_encryption_opts_t*>(auto_encrypt_opts.convert());
+    if (auto const& auto_encryption_opts = options.auto_encryption_opts()) {
+        auto const opts = v_noabi::options::auto_encryption::internal::to_mongoc(*auto_encryption_opts);
 
         bson_error_t error;
-        auto r = libmongoc::client_enable_auto_encryption(_get_impl().client_t, mongoc_auto_encrypt_opts, &error);
+        auto r = libmongoc::client_enable_auto_encryption(_get_impl().client_t, opts, &error);
 
-        libmongoc::auto_encryption_opts_destroy(mongoc_auto_encrypt_opts);
+        libmongoc::auto_encryption_opts_destroy(opts);
 
         if (!r) {
             throw_exception<operation_exception>(error);

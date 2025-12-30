@@ -14,10 +14,19 @@
 
 #pragma once
 
-#include <string>
+#include <mongocxx/options/auto_encryption-fwd.hpp> // IWYU pragma: export
+
+//
+
+#include <mongocxx/v1/client-fwd.hpp>
+#include <mongocxx/v1/pool-fwd.hpp>
+
+#include <mongocxx/v1/auto_encryption_options.hpp> // IWYU pragma: export
+
+#include <string> // IWYU pragma: keep: backward compatibility, to be removed.
+#include <utility>
 
 #include <mongocxx/client-fwd.hpp>
-#include <mongocxx/options/auto_encryption-fwd.hpp> // IWYU pragma: export
 #include <mongocxx/pool-fwd.hpp>
 
 #include <bsoncxx/document/view_or_value.hpp>
@@ -37,7 +46,7 @@ class auto_encryption {
     ///
     /// Default constructs a new auto_encryption object.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL() auto_encryption() noexcept;
+    auto_encryption() noexcept {}
 
     ///
     /// When the key vault collection is on a separate MongoDB cluster,
@@ -56,7 +65,10 @@ class auto_encryption {
     /// @see
     /// - https://www.mongodb.com/docs/manual/core/security-client-side-encryption/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(auto_encryption&) key_vault_client(mongocxx::v_noabi::client* client);
+    auto_encryption& key_vault_client(mongocxx::v_noabi::client* client) {
+        _key_vault_client = client;
+        return *this;
+    }
 
     ///
     /// Gets the key vault client.
@@ -64,8 +76,9 @@ class auto_encryption {
     /// @return
     ///   An optional pointer to the key vault client.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::client*> const&)
-    key_vault_client() const;
+    bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::client*> const& key_vault_client() const {
+        return _key_vault_client;
+    }
 
     ///
     /// When the key vault collection is on a separate MongoDB cluster,
@@ -88,7 +101,10 @@ class auto_encryption {
     /// @see
     /// - https://www.mongodb.com/docs/manual/core/security-client-side-encryption/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(auto_encryption&) key_vault_pool(mongocxx::v_noabi::pool* pool);
+    auto_encryption& key_vault_pool(mongocxx::v_noabi::pool* pool) {
+        _key_vault_pool = pool;
+        return *this;
+    }
 
     ///
     /// Gets the key vault pool.
@@ -96,13 +112,14 @@ class auto_encryption {
     /// @return
     ///   An optional pointer to the key vault pool.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::pool*> const&)
-    key_vault_pool() const;
+    bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::pool*> const& key_vault_pool() const {
+        return _key_vault_pool;
+    }
 
     ///
     /// Represents the name of a database and a collection.
     ///
-    using ns_pair = std::pair<std::string, std::string>;
+    using ns_pair = v1::auto_encryption_options::ns_pair;
 
     ///
     /// Sets the namespace to use to access the key vault collection, which
@@ -121,7 +138,10 @@ class auto_encryption {
     /// @see
     /// - https://www.mongodb.com/docs/manual/core/security-client-side-encryption/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(auto_encryption&) key_vault_namespace(ns_pair ns);
+    auto_encryption& key_vault_namespace(ns_pair ns) {
+        _key_vault_namespace = std::move(ns);
+        return *this;
+    }
 
     ///
     /// Gets the key vault namespace.
@@ -130,8 +150,9 @@ class auto_encryption {
     ///   An optional pair of strings representing the namespace of the
     ///   key vault collection.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<ns_pair> const&)
-    key_vault_namespace() const;
+    bsoncxx::v_noabi::stdx::optional<ns_pair> const& key_vault_namespace() const {
+        return _key_vault_namespace;
+    }
 
     ///
     /// Sets the KMS providers to use for client side encryption.
@@ -177,8 +198,10 @@ class auto_encryption {
     /// @see
     /// - https://www.mongodb.com/docs/manual/core/security-client-side-encryption/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(auto_encryption&)
-    kms_providers(bsoncxx::v_noabi::document::view_or_value kms_providers);
+    auto_encryption& kms_providers(bsoncxx::v_noabi::document::view_or_value kms_providers) {
+        _kms_providers = std::move(kms_providers);
+        return *this;
+    }
 
     ///
     /// Gets the KMS providers.
@@ -186,8 +209,9 @@ class auto_encryption {
     /// @return
     ///   An optional document containing the KMS providers.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const&)
-    kms_providers() const;
+    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const& kms_providers() const {
+        return _kms_providers;
+    }
 
     ///
     /// Sets the TLS options to use for client side encryption with a given KMS provider.
@@ -212,8 +236,10 @@ class auto_encryption {
     /// @see
     /// - https://www.mongodb.com/docs/manual/core/security-client-side-encryption/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(auto_encryption&)
-    tls_opts(bsoncxx::v_noabi::document::view_or_value tls_opts);
+    auto_encryption& tls_opts(bsoncxx::v_noabi::document::view_or_value tls_opts) {
+        _tls_opts = std::move(tls_opts);
+        return *this;
+    }
 
     ///
     /// Gets the TLS options.
@@ -221,8 +247,9 @@ class auto_encryption {
     /// @return
     ///   An optional document containing the TLS options.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const&)
-    tls_opts() const;
+    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const& tls_opts() const {
+        return _tls_opts;
+    }
 
     ///
     /// Sets a local JSON schema.
@@ -247,8 +274,10 @@ class auto_encryption {
     /// @see
     /// - https://www.mongodb.com/docs/manual/core/security-client-side-encryption/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(auto_encryption&)
-    schema_map(bsoncxx::v_noabi::document::view_or_value schema_map);
+    auto_encryption& schema_map(bsoncxx::v_noabi::document::view_or_value schema_map) {
+        _schema_map = std::move(schema_map);
+        return *this;
+    }
 
     ///
     /// Gets the schema map.
@@ -256,8 +285,9 @@ class auto_encryption {
     /// @return
     ///   An optional document containing the schema map.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const&)
-    schema_map() const;
+    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const& schema_map() const {
+        return _schema_map;
+    }
 
     ///
     /// Sets the local encrypted fields map.
@@ -278,8 +308,10 @@ class auto_encryption {
     /// @see
     /// - https://www.mongodb.com/docs/manual/core/security-client-side-encryption/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(auto_encryption&)
-    encrypted_fields_map(bsoncxx::v_noabi::document::view_or_value encrypted_fields_map);
+    auto_encryption& encrypted_fields_map(bsoncxx::v_noabi::document::view_or_value encrypted_fields_map) {
+        _encrypted_fields_map = std::move(encrypted_fields_map);
+        return *this;
+    }
 
     ///
     /// Get encrypted fields map
@@ -287,8 +319,9 @@ class auto_encryption {
     /// @return
     ///   An optional document containing the encrypted fields map
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const&)
-    encrypted_fields_map() const;
+    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const& encrypted_fields_map() const {
+        return _encrypted_fields_map;
+    }
 
     ///
     /// Automatic encryption is disabled when the 'bypassAutoEncryption'
@@ -303,7 +336,10 @@ class auto_encryption {
     /// @see
     /// - https://www.mongodb.com/docs/manual/core/security-client-side-encryption/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(auto_encryption&) bypass_auto_encryption(bool should_bypass);
+    auto_encryption& bypass_auto_encryption(bool should_bypass) {
+        _bypass = should_bypass;
+        return *this;
+    }
 
     ///
     /// Gets a boolean specifying whether or not auto encryption is bypassed.
@@ -311,7 +347,9 @@ class auto_encryption {
     /// @return
     ///   A boolean specifying whether auto encryption is bypassed.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bool) bypass_auto_encryption() const;
+    bool bypass_auto_encryption() const {
+        return _bypass;
+    }
 
     ///
     /// Query analysis is disabled when the 'bypassQueryAnalysis'
@@ -326,7 +364,10 @@ class auto_encryption {
     /// @see
     /// - https://www.mongodb.com/docs/manual/core/security-client-side-encryption/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(auto_encryption&) bypass_query_analysis(bool should_bypass);
+    auto_encryption& bypass_query_analysis(bool should_bypass) {
+        _bypass_query_analysis = should_bypass;
+        return *this;
+    }
 
     ///
     /// Gets a boolean specifying whether or not query analysis is bypassed.
@@ -334,7 +375,9 @@ class auto_encryption {
     /// @return
     ///   A boolean specifying whether query analysis is bypassed.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bool) bypass_query_analysis() const;
+    bool bypass_query_analysis() const {
+        return _bypass_query_analysis;
+    }
 
     ///
     /// Set extra options related to the mongocryptd process. This options
@@ -386,8 +429,10 @@ class auto_encryption {
     /// @see
     /// - https://www.mongodb.com/docs/manual/core/security-client-side-encryption/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(auto_encryption&)
-    extra_options(bsoncxx::v_noabi::document::view_or_value extra);
+    auto_encryption& extra_options(bsoncxx::v_noabi::document::view_or_value extra) {
+        _extra_options = std::move(extra);
+        return *this;
+    }
 
     ///
     /// Gets extra options related to the mongocryptd process.
@@ -395,17 +440,15 @@ class auto_encryption {
     /// @return
     ///   An optional document containing the extra options.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const&)
-    extra_options() const;
+    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const& extra_options() const {
+        return _extra_options;
+    }
+
+    class internal;
 
    private:
-    friend ::mongocxx::v_noabi::client;
-    friend ::mongocxx::v_noabi::pool;
-
-    void* convert() const;
-
-    bool _bypass;
-    bool _bypass_query_analysis;
+    bool _bypass = false;
+    bool _bypass_query_analysis = false;
     bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::client*> _key_vault_client;
     bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::pool*> _key_vault_pool;
     bsoncxx::v_noabi::stdx::optional<ns_pair> _key_vault_namespace;
@@ -414,9 +457,65 @@ class auto_encryption {
     bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> _schema_map;
     bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> _encrypted_fields_map;
     bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> _extra_options;
+
+    /* explicit(false) */ auto_encryption(v1::auto_encryption_options opts);
+
+    explicit operator v1::auto_encryption_options() const;
 };
 
 } // namespace options
+} // namespace v_noabi
+} // namespace mongocxx
+
+namespace mongocxx {
+namespace v_noabi {
+
+///
+/// Convert to the @ref mongocxx::v_noabi equivalent of `v`.
+///
+/// @important The `key_vault_client` and `key_vault_pool` fields in the resulting object are unset when not explicitly
+/// provided as an argument to this conversion function.
+///
+/// @{
+MONGOCXX_ABI_EXPORT_CDECL(v_noabi::options::auto_encryption) from_v1(v1::auto_encryption_options v);
+
+inline v_noabi::options::auto_encryption from_v1(v1::auto_encryption_options v, v_noabi::client* client) {
+    auto ret = from_v1(std::move(v));
+    ret.key_vault_client(client);
+    return ret;
+}
+
+inline v_noabi::options::auto_encryption from_v1(v1::auto_encryption_options v, v_noabi::pool* pool) {
+    auto ret = from_v1(std::move(v));
+    ret.key_vault_pool(pool);
+    return ret;
+}
+/// @}
+///
+
+///
+/// Convert to the @ref mongocxx::v1 equivalent of `v`.
+///
+/// @important The `key_vault_client` and `key_vault_pool` fields in the resulting object are unset when not explicitly
+/// provided as an argument to this conversion function.
+///
+/// @{
+MONGOCXX_ABI_EXPORT_CDECL(v1::auto_encryption_options) to_v1(v_noabi::options::auto_encryption const& v);
+
+inline v1::auto_encryption_options to_v1(v_noabi::options::auto_encryption const& v, v1::client* client) {
+    auto ret = to_v1(v);
+    ret.key_vault_client(client);
+    return ret;
+}
+
+inline v1::auto_encryption_options to_v1(v_noabi::options::auto_encryption const& v, v1::pool* pool) {
+    auto ret = to_v1(v);
+    ret.key_vault_pool(pool);
+    return ret;
+}
+/// @}
+///
+
 } // namespace v_noabi
 } // namespace mongocxx
 
@@ -425,4 +524,7 @@ class auto_encryption {
 ///
 /// @file
 /// Provides @ref mongocxx::v_noabi::options::auto_encryption.
+///
+/// @par Includes
+/// - @ref mongocxx/v1/auto_encryption_options.hpp
 ///

@@ -224,6 +224,8 @@ class auto_encryption_options {
     /// Return the current "extraOptions" field.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view>) extra_options() const;
+
+    class internal;
 };
 
 } // namespace v1
