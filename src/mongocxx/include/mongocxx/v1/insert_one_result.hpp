@@ -25,6 +25,8 @@
 #include <mongocxx/v1/bulk_write.hpp>
 #include <mongocxx/v1/config/export.hpp>
 
+#include <cstdint>
+
 namespace mongocxx {
 namespace v1 {
 
@@ -83,6 +85,11 @@ class insert_one_result {
     /// Return the raw bulk write result.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(v1::bulk_write::result) result() const;
+
+    ///
+    /// Return the number of inserted documents.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(std::int64_t) inserted_count() const;
 
     ///
     /// Return the inserted document ID.
