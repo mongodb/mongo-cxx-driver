@@ -32,9 +32,23 @@ class insert_many_result::impl {
    public:
     v1::bulk_write::result _result;
     bsoncxx::v1::array::value _inserted_ids;
+    id_map _id_map; // Eagerly compute and cache result of `.inserted_ids()`.
+
+    ~impl() = default;
+
+    impl(impl&& other) = delete;
+    impl& operator=(impl&& other) = delete;
+
+    impl(impl const& other) : _result{other._result}, _inserted_ids{other._inserted_ids} {
+        this->sync_id_map();
+    }
+
+    impl& operator=(impl const& other) = delete;
 
     impl(v1::bulk_write::result result, bsoncxx::v1::array::value inserted_ids)
-        : _result{std::move(result)}, _inserted_ids{std::move(inserted_ids)} {}
+        : _result{std::move(result)}, _inserted_ids{std::move(inserted_ids)} {
+        this->sync_id_map();
+    }
 
     static impl const& with(insert_many_result const& other) {
         return *static_cast<impl const*>(other._impl);
@@ -54,6 +68,14 @@ class insert_many_result::impl {
 
     static impl* with(void* ptr) {
         return static_cast<impl*>(ptr);
+    }
+
+   private:
+    void sync_id_map() {
+        std::int64_t idx = 0;
+        for (auto const e : _inserted_ids) {
+            _id_map.emplace(idx++, e.type_view());
+        }
     }
 };
 
@@ -94,14 +116,7 @@ std::int64_t insert_many_result::inserted_count() const {
 }
 
 insert_many_result::id_map insert_many_result::inserted_ids() const {
-    id_map ret;
-
-    std::int64_t idx = 0;
-    for (auto const e : impl::with(this)->_inserted_ids) {
-        ret.emplace(idx++, e.type_view());
-    }
-
-    return ret;
+    return impl::with(this)->_id_map;
 }
 
 bool operator==(insert_many_result const& lhs, insert_many_result const& rhs) {
