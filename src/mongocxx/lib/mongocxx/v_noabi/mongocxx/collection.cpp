@@ -1419,17 +1419,14 @@ void collection::_insert_many_doc_handler(
     mongocxx::v_noabi::bulk_write& writes,
     bsoncxx::v_noabi::builder::basic::array& inserted_ids,
     bsoncxx::v_noabi::document::view doc) const {
-    bsoncxx::v_noabi::builder::basic::document id_doc;
-
     if (!doc["_id"]) {
-        id_doc.append(kvp("_id", bsoncxx::v_noabi::oid{}));
-        writes.append(model::insert_one{make_document(concatenate(id_doc.view()), concatenate(doc))});
+        bsoncxx::v_noabi::oid const id;
+        writes.append(model::insert_one{make_document(kvp("_id", id), concatenate(doc))});
+        inserted_ids.append(id);
     } else {
-        id_doc.append(kvp("_id", doc["_id"].get_value()));
         writes.append(model::insert_one{doc});
+        inserted_ids.append(doc["_id"].get_value());
     }
-
-    inserted_ids.append(id_doc.view());
 }
 
 bsoncxx::v_noabi::stdx::optional<result::insert_many> collection::_exec_insert_many(

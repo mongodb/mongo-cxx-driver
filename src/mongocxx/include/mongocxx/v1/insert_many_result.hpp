@@ -113,6 +113,11 @@ class insert_many_result {
     }
     /// @}
     ///
+
+    class internal;
+
+   private:
+    /* explicit(false) */ insert_many_result(void* impl);
 };
 
 } // namespace v1

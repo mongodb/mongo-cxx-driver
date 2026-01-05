@@ -12,66 +12,54 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <bsoncxx/types/bson_value/view.hpp>
-
 #include <mongocxx/result/insert_many.hpp>
+
+//
+
+#include <mongocxx/v1/insert_many_result.hh>
+
+#include <cstddef>
+#include <utility>
+
+#include <bsoncxx/array/element.hpp>
+#include <bsoncxx/array/value.hpp>
+#include <bsoncxx/types/view.hpp> // IWYU pragma: keep: bsoncxx::v_noabi::array::element::get_value()
+
+#include <mongocxx/result/bulk_write.hpp>
 
 namespace mongocxx {
 namespace v_noabi {
 namespace result {
 
-insert_many::insert_many(result::bulk_write result, bsoncxx::v_noabi::array::value inserted_ids)
-    : _result(std::move(result)), _inserted_ids_owned(std::move(inserted_ids)) {
-    _buildInsertedIds();
-}
+insert_many::insert_many(v1::insert_many_result opts)
+    : _result{std::move(v1::insert_many_result::internal::result(opts))},
+      _inserted_ids{bsoncxx::v_noabi::from_v1(std::move(v1::insert_many_result::internal::inserted_ids(opts)))} {}
 
-insert_many::insert_many(insert_many const& src) : _result(src._result), _inserted_ids_owned(src._inserted_ids_owned) {
-    _buildInsertedIds();
-}
-
-insert_many& insert_many::operator=(insert_many const& src) {
-    insert_many tmp(src);
-    *this = std::move(tmp);
-    return *this;
-}
-
-void insert_many::_buildInsertedIds() {
-    _inserted_ids.clear();
-    std::size_t index = 0;
-    for (auto&& ele : _inserted_ids_owned.view()) {
-        _inserted_ids.emplace(index++, ele.get_document().value["_id"]);
-    }
-}
-
-result::bulk_write const& insert_many::result() const {
-    return _result;
-}
-
-std::int32_t insert_many::inserted_count() const {
-    return _result.inserted_count();
-}
-
-insert_many::id_map insert_many::inserted_ids() const {
-    return _inserted_ids;
+insert_many::operator v1::insert_many_result() const {
+    return v1::insert_many_result::internal::make(v_noabi::to_v1(_result), bsoncxx::v_noabi::to_v1(_inserted_ids));
 }
 
 bool operator==(insert_many const& lhs, insert_many const& rhs) {
     if (lhs.result() != rhs.result()) {
         return false;
-    } else if (lhs.inserted_ids().size() != rhs.inserted_ids().size()) {
+    }
+
+    auto const lhs_ids = lhs.inserted_ids();
+    auto const rhs_ids = rhs.inserted_ids();
+
+    if (lhs_ids.size() != rhs_ids.size()) {
         return false;
     }
-    insert_many::id_map::const_iterator litr = lhs._inserted_ids.begin();
-    insert_many::id_map::const_iterator ritr = rhs._inserted_ids.begin();
-    for (; litr != lhs._inserted_ids.end(); litr++, ritr++) {
-        if (litr->first != ritr->first || litr->second.get_oid() != ritr->second.get_oid()) {
+
+    auto liter = lhs_ids.begin();
+    auto riter = rhs_ids.begin();
+
+    for (; liter != lhs_ids.end(); liter++, riter++) {
+        if (liter->first != riter->first || liter->second.get_oid() != riter->second.get_oid()) {
             return false;
         }
     }
     return true;
-}
-bool operator!=(insert_many const& lhs, insert_many const& rhs) {
-    return !(lhs == rhs);
 }
 
 } // namespace result

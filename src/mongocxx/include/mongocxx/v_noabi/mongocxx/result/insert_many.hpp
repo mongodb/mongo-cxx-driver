@@ -14,13 +14,22 @@
 
 #pragma once
 
-#include <cstdint>
-#include <map>
-
-#include <mongocxx/collection-fwd.hpp>
 #include <mongocxx/result/insert_many-fwd.hpp> // IWYU pragma: export
 
+//
+
+#include <mongocxx/v1/insert_many_result.hpp> // IWYU pragma: export
+
+#include <cstddef>
+#include <cstdint>
+#include <map>
+#include <utility>
+
+#include <mongocxx/collection-fwd.hpp> // IWYU pragma: keep: backward compatibility, to be removed.
+
+#include <bsoncxx/array/element.hpp>
 #include <bsoncxx/array/value.hpp>
+#include <bsoncxx/document/element.hpp>
 #include <bsoncxx/types.hpp> // IWYU pragma: keep: backward compatibility, to be removed.
 
 #include <mongocxx/result/bulk_write.hpp>
@@ -38,30 +47,39 @@ class insert_many {
    public:
     using id_map = std::map<std::size_t, bsoncxx::v_noabi::document::element>;
 
-    MONGOCXX_ABI_EXPORT_CDECL()
-    insert_many(result::bulk_write result, bsoncxx::v_noabi::array::value inserted_ids);
+    ///
+    /// Construct with the @ref mongocxx::v1 equivalent.
+    ///
+    /* explicit(false) */ MONGOCXX_ABI_EXPORT_CDECL() insert_many(v1::insert_many_result opts);
 
-    ~insert_many() = default;
+    ///
+    /// Convert to the @ref mongocxx::v1 equivalent.
+    ///
+    explicit MONGOCXX_ABI_EXPORT_CDECL() operator v1::insert_many_result() const;
 
-    MONGOCXX_ABI_EXPORT_CDECL() insert_many(insert_many const&);
-    MONGOCXX_ABI_EXPORT_CDECL(insert_many&) operator=(insert_many const&);
-
-    insert_many(insert_many&&) = default;
-    insert_many& operator=(insert_many&&) = default;
+    ///
+    /// @deprecated For internal use only.
+    ///
+    insert_many(result::bulk_write result, bsoncxx::v_noabi::array::value inserted_ids)
+        : _result{std::move(result)}, _inserted_ids{std::move(inserted_ids)} {}
 
     ///
     /// Returns the bulk write result for this insert many operation.
     ///
     /// @return The raw bulk write result.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(result::bulk_write const&) result() const;
+    v_noabi::result::bulk_write const& result() const {
+        return _result;
+    }
 
     ///
     /// Gets the number of documents that were inserted during this operation.
     ///
     /// @return The number of documents that were inserted.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(std::int32_t) inserted_count() const;
+    std::int32_t inserted_count() const {
+        return _result.inserted_count();
+    }
 
     ///
     /// Gets the _ids of the inserted documents.
@@ -70,28 +88,47 @@ class insert_many {
     /// destroyed.
     /// @return Map of the index of the operation to the _id of the inserted document.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(id_map) inserted_ids() const;
+    id_map inserted_ids() const {
+        id_map ret;
+        std::size_t index = 0;
+        for (auto const& ele : _inserted_ids) {
+            ret.emplace(index++, bsoncxx::v_noabi::to_v1(ele));
+        }
+        return ret;
+    }
 
-    friend MONGOCXX_ABI_EXPORT_CDECL(bool) operator==(insert_many const&, insert_many const&);
-    friend MONGOCXX_ABI_EXPORT_CDECL(bool) operator!=(insert_many const&, insert_many const&);
+    friend MONGOCXX_ABI_EXPORT_CDECL(bool) operator==(insert_many const& lhs, insert_many const& rhs);
+
+    friend bool operator!=(insert_many const& lhs, insert_many const& rhs) {
+        return !(lhs == rhs);
+    }
 
    private:
-    friend ::mongocxx::v_noabi::collection;
-
-    // Construct _inserted_ids from _inserted_ids_owned
-    void _buildInsertedIds();
-
-    result::bulk_write _result;
-
-    // Array containing documents with the values of the _id field for the inserted documents. This
-    // array is in the following format: [{"_id": ...}, {"_id": ...}, ...].
-    bsoncxx::v_noabi::array::value _inserted_ids_owned;
-
-    // Points into _inserted_ids_owned.
-    id_map _inserted_ids;
+    v_noabi::result::bulk_write _result;
+    bsoncxx::v_noabi::array::value _inserted_ids;
 };
 
 } // namespace result
+} // namespace v_noabi
+} // namespace mongocxx
+
+namespace mongocxx {
+namespace v_noabi {
+
+///
+/// Convert to the @ref mongocxx::v_noabi equivalent of `v`.
+///
+inline v_noabi::result::insert_many from_v1(v1::insert_many_result v) {
+    return {std::move(v)};
+}
+
+///
+/// Convert to the @ref mongocxx::v1 equivalent of `v`.
+///
+inline v1::insert_many_result to_v1(v_noabi::result::insert_many const& v) {
+    return v1::insert_many_result{v};
+}
+
 } // namespace v_noabi
 } // namespace mongocxx
 
@@ -100,4 +137,7 @@ class insert_many {
 ///
 /// @file
 /// Provides @ref mongocxx::v_noabi::result::insert_many.
+///
+/// @par Includes
+/// - @ref mongocxx/v1/insert_many_result.hpp
 ///
