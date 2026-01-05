@@ -127,13 +127,13 @@ TEST_CASE("basic", "[mongocxx][v1][insert_many_result]") {
             },
         }));
 
-    auto const opts = v1::insert_many_result::internal::make(
+    auto const res = v1::insert_many_result::internal::make(
         v1::bulk_write::result::internal::make(scoped_bson{BCON_NEW("nInserted", BCON_INT32(inserted_count))}.value()),
         bsoncxx::v1::array::value{inserted_ids_owner.array_view()});
 
-    CHECK(opts.result().inserted_count() == inserted_count);
-    CHECK(opts.inserted_count() == inserted_count);
-    CHECK(opts.inserted_ids() == inserted_ids_map);
+    CHECK(res.result().inserted_count() == inserted_count);
+    CHECK(res.inserted_count() == inserted_count);
+    CHECK(res.inserted_ids() == inserted_ids_map);
 }
 
 TEST_CASE("equality", "[mongocxx][v1][insert_many_result]") {
