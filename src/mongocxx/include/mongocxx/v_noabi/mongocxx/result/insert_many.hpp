@@ -47,9 +47,9 @@ class insert_many {
    public:
     using id_map = std::map<std::size_t, bsoncxx::v_noabi::document::element>;
 
-    ~insert_many() = default;
+    ~insert_many() noexcept = default;
 
-    insert_many(insert_many&& other) = default;
+    insert_many(insert_many&& other) noexcept = default;
 
     insert_many& operator=(insert_many&& other) = default;
 

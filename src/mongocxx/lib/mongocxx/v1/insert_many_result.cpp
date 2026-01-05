@@ -36,8 +36,8 @@ class insert_many_result::impl {
 
     ~impl() = default;
 
-    impl(impl&& other) = delete;
-    impl& operator=(impl&& other) = delete;
+    impl(impl&& other) noexcept = delete;
+    impl& operator=(impl&& other) noexcept = delete;
 
     impl(impl const& other) : _result{other._result}, _inserted_ids{other._inserted_ids} {
         this->sync_id_map();
