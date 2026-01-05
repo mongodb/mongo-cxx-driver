@@ -12,4 +12,135 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <mongocxx/v1/insert_many_result.hpp>
+#include <mongocxx/v1/insert_many_result.hh>
+
+//
+
+#include <bsoncxx/v1/array/value.hpp>
+
+#include <mongocxx/v1/bulk_write.hpp>
+
+#include <cstddef>
+#include <cstdint>
+
+#include <mongocxx/private/utility.hh>
+
+namespace mongocxx {
+namespace v1 {
+
+class insert_many_result::impl {
+   public:
+    v1::bulk_write::result _result;
+    bsoncxx::v1::array::value _inserted_ids;
+    id_map _id_map; // Eagerly compute and cache result of `.inserted_ids()`.
+
+    ~impl() = default;
+
+    impl(impl&& other) noexcept = delete;
+    impl& operator=(impl&& other) noexcept = delete;
+
+    impl(impl const& other) : _result{other._result}, _inserted_ids{other._inserted_ids} {
+        this->sync_id_map();
+    }
+
+    impl& operator=(impl const& other) = delete;
+
+    impl(v1::bulk_write::result result, bsoncxx::v1::array::value inserted_ids)
+        : _result{std::move(result)}, _inserted_ids{std::move(inserted_ids)} {
+        this->sync_id_map();
+    }
+
+    static impl const& with(insert_many_result const& other) {
+        return *static_cast<impl const*>(other._impl);
+    }
+
+    static impl const* with(insert_many_result const* other) {
+        return static_cast<impl const*>(other->_impl);
+    }
+
+    static impl& with(insert_many_result& other) {
+        return *static_cast<impl*>(other._impl);
+    }
+
+    static impl* with(insert_many_result* other) {
+        return static_cast<impl*>(other->_impl);
+    }
+
+    static impl* with(void* ptr) {
+        return static_cast<impl*>(ptr);
+    }
+
+   private:
+    void sync_id_map() {
+        std::int64_t idx = 0;
+        for (auto const e : _inserted_ids) {
+            _id_map.emplace(idx++, e.type_view());
+        }
+    }
+};
+
+// NOLINTBEGIN(cppcoreguidelines-owning-memory): owning void* for ABI stability.
+
+insert_many_result::~insert_many_result() {
+    delete impl::with(_impl);
+}
+
+insert_many_result::insert_many_result(insert_many_result&& other) noexcept : _impl{exchange(other._impl, nullptr)} {}
+
+insert_many_result& insert_many_result::operator=(insert_many_result&& other) noexcept {
+    if (this != &other) {
+        delete impl::with(exchange(_impl, exchange(other._impl, nullptr)));
+    }
+
+    return *this;
+}
+
+insert_many_result::insert_many_result(insert_many_result const& other) : _impl{new impl{impl::with(other)}} {}
+
+insert_many_result& insert_many_result::operator=(insert_many_result const& other) {
+    if (this != &other) {
+        delete impl::with(exchange(_impl, new impl{impl::with(other)}));
+    }
+
+    return *this;
+}
+
+// NOLINTEND(cppcoreguidelines-owning-memory)
+
+v1::bulk_write::result insert_many_result::result() const {
+    return impl::with(this)->_result;
+}
+
+std::int64_t insert_many_result::inserted_count() const {
+    return impl::with(this)->_result.inserted_count();
+}
+
+insert_many_result::id_map insert_many_result::inserted_ids() const {
+    return impl::with(this)->_id_map;
+}
+
+bool operator==(insert_many_result const& lhs, insert_many_result const& rhs) {
+    auto& l = insert_many_result::impl::with(lhs);
+    auto& r = insert_many_result::impl::with(rhs);
+
+    return l._result == r._result && l._inserted_ids == r._inserted_ids;
+}
+
+insert_many_result insert_many_result::internal::make(
+    v1::bulk_write::result result,
+    bsoncxx::v1::array::value inserted_ids) {
+    return {new impl{std::move(result), std::move(inserted_ids)}};
+}
+
+v1::bulk_write::result& insert_many_result::internal::result(insert_many_result& self) {
+    return impl::with(self)._result;
+}
+
+bsoncxx::v1::array::value& insert_many_result::internal::inserted_ids(insert_many_result& self) {
+    return impl::with(self)._inserted_ids;
+}
+
+insert_many_result::insert_many_result(void* impl) : _impl{impl} {}
+
+} // namespace v1
+} // namespace mongocxx
