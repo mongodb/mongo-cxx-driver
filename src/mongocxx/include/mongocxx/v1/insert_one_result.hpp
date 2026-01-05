@@ -87,11 +87,6 @@ class insert_one_result {
     MONGOCXX_ABI_EXPORT_CDECL(v1::bulk_write::result) result() const;
 
     ///
-    /// Return the number of inserted documents.
-    ///
-    MONGOCXX_ABI_EXPORT_CDECL(std::int64_t) inserted_count() const;
-
-    ///
     /// Return the inserted document ID.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::types::view) inserted_id() const;

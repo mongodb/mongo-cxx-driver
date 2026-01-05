@@ -86,10 +86,6 @@ v1::bulk_write::result insert_one_result::result() const {
     return impl::with(this)->_result;
 }
 
-std::int64_t insert_one_result::inserted_count() const {
-    return impl::with(this)->_result.inserted_count();
-}
-
 bsoncxx::v1::types::view insert_one_result::inserted_id() const {
     return impl::with(this)->_inserted_id;
 }

@@ -93,7 +93,6 @@ TEST_CASE("basic", "[mongocxx][v1][insert_one_result]") {
         inserted_id);
 
     CHECK(opts.result().inserted_count() == inserted_count);
-    CHECK(opts.inserted_count() == inserted_count);
     CHECK(opts.inserted_id() == inserted_id);
 }
 
