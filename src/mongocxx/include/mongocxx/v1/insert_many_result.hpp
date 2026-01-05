@@ -36,7 +36,6 @@ namespace v1 {
 ///
 /// Supported fields include:
 /// - `result`
-/// - `inserted_ids`
 ///
 /// @see
 /// - [Insert Methods (MongoDB Manual)](https://www.mongodb.com/docs/manual/reference/insert-methods/)
