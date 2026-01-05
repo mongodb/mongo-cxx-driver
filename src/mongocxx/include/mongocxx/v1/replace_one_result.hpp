@@ -35,6 +35,9 @@ namespace v1 {
 ///
 /// The result of a "replaceOne" operation.
 ///
+/// Supported fields include:
+/// - `result`
+///
 /// @see
 /// - [Update Methods (MongoDB Manual)](https://www.mongodb.com/docs/manual/reference/update-methods/)
 ///
@@ -102,7 +105,7 @@ class replace_one_result {
     MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::types::view>) upserted_id() const;
 
     ///
-    /// Compare equal when `lhs.result()` and `rhs.result()` compare equal.
+    /// Compare equal when all supported fields compare equal.
     ///
     /// @{
     friend MONGOCXX_ABI_EXPORT_CDECL(bool) operator==(replace_one_result const& lhs, replace_one_result const& rhs);
