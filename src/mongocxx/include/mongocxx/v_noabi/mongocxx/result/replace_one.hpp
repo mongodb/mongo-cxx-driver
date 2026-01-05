@@ -14,10 +14,16 @@
 
 #pragma once
 
-#include <cstdint>
-
 #include <mongocxx/result/replace_one-fwd.hpp> // IWYU pragma: export
 
+//
+
+#include <mongocxx/v1/replace_one_result.hpp> // IWYU pragma: export
+
+#include <cstdint>
+#include <utility>
+
+#include <bsoncxx/document/element.hpp>
 #include <bsoncxx/stdx/optional.hpp>
 #include <bsoncxx/types.hpp> // IWYU pragma: keep: backward compatibility, to be removed.
 
@@ -34,46 +40,97 @@ namespace result {
 ///
 class replace_one {
    public:
-    // This constructor is public for testing purposes only
-    explicit MONGOCXX_ABI_EXPORT_CDECL() replace_one(result::bulk_write result);
+    ///
+    /// @deprecated For internal use only.
+    ///
+    explicit replace_one(v_noabi::result::bulk_write result) : _result{std::move(result)} {}
+
+    ///
+    /// Construct with the @ref mongocxx::v1 equivalent.
+    ///
+    /* explicit(false) */ MONGOCXX_ABI_EXPORT_CDECL() replace_one(v1::replace_one_result opts);
+
+    ///
+    /// Convert to the @ref mongocxx::v1 equivalent.
+    ///
+    explicit MONGOCXX_ABI_EXPORT_CDECL() operator v1::replace_one_result() const;
 
     ///
     /// Returns the bulk write result for this replace_one operation.
     ///
     /// @return The raw bulk write result.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(result::bulk_write const&) result() const;
+    v_noabi::result::bulk_write const& result() const {
+        return _result;
+    }
 
     ///
     /// Gets the number of documents that were matched during this operation.
     ///
     /// @return The number of documents that were matched.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(std::int32_t) matched_count() const;
+    std::int32_t matched_count() const {
+        return _result.matched_count();
+    }
 
     ///
     /// Gets the number of documents that were modified during this operation.
     ///
     /// @return The number of documents that were modified.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(std::int32_t) modified_count() const;
+    std::int32_t modified_count() const {
+        return _result.modified_count();
+    }
 
     ///
     /// Gets the id of the upserted document.
     ///
     /// @return The value of the _id field for upserted document.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::element>)
-    upserted_id() const;
+    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::element> upserted_id() const {
+        auto const ids = _result.upserted_ids();
+        auto const iter = ids.find(0);
 
-    friend MONGOCXX_ABI_EXPORT_CDECL(bool) operator==(replace_one const&, replace_one const&);
-    friend MONGOCXX_ABI_EXPORT_CDECL(bool) operator!=(replace_one const&, replace_one const&);
+        if (iter != ids.end()) {
+            return iter->second;
+        }
+
+        return {};
+    }
+
+    friend bool operator==(replace_one const& lhs, replace_one const& rhs) {
+        return lhs._result == rhs._result;
+    }
+
+    friend bool operator!=(replace_one const& lhs, replace_one const& rhs) {
+        return !(lhs == rhs);
+    }
 
    private:
-    result::bulk_write _result;
+    v_noabi::result::bulk_write _result;
 };
 
 } // namespace result
+} // namespace v_noabi
+} // namespace mongocxx
+
+namespace mongocxx {
+namespace v_noabi {
+
+///
+/// Convert to the @ref mongocxx::v_noabi equivalent of `v`.
+///
+inline v_noabi::result::replace_one from_v1(v1::replace_one_result v) {
+    return {std::move(v)};
+}
+
+///
+/// Convert to the @ref mongocxx::v1 equivalent of `v`.
+///
+inline v1::replace_one_result to_v1(v_noabi::result::replace_one const& v) {
+    return v1::replace_one_result{v};
+}
+
 } // namespace v_noabi
 } // namespace mongocxx
 
@@ -82,4 +139,7 @@ class replace_one {
 ///
 /// @file
 /// Provides @ref mongocxx::v_noabi::result::replace_one.
+///
+/// @par Includes
+/// - @ref mongocxx/v1/replace_one_result.hpp
 ///

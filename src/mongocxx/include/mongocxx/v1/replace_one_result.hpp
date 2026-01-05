@@ -115,6 +115,11 @@ class replace_one_result {
     }
     /// @}
     ///
+
+    class internal;
+
+   private:
+    /* explicit(false) */ replace_one_result(void* impl);
 };
 
 } // namespace v1
