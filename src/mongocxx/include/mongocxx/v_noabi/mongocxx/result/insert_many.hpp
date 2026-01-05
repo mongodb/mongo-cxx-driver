@@ -47,6 +47,26 @@ class insert_many {
    public:
     using id_map = std::map<std::size_t, bsoncxx::v_noabi::document::element>;
 
+    ~insert_many() = default;
+
+    insert_many(insert_many&& other) = default;
+
+    insert_many& operator=(insert_many&& other) = default;
+
+    insert_many(insert_many const& other) : _result{other._result}, _inserted_ids{other._inserted_ids} {
+        this->sync_id_map();
+    }
+
+    insert_many& operator=(insert_many const& other) {
+        if (this != &other) {
+            _result = other._result;
+            _inserted_ids = other._inserted_ids;
+            this->sync_id_map();
+        }
+
+        return *this;
+    }
+
     ///
     /// Construct with the @ref mongocxx::v1 equivalent.
     ///
@@ -89,12 +109,7 @@ class insert_many {
     /// @return Map of the index of the operation to the _id of the inserted document.
     ///
     id_map inserted_ids() const {
-        id_map ret;
-        std::size_t index = 0;
-        for (auto const& ele : _inserted_ids) {
-            ret.emplace(index++, bsoncxx::v_noabi::to_v1(ele));
-        }
-        return ret;
+        return _id_map;
     }
 
     friend MONGOCXX_ABI_EXPORT_CDECL(bool) operator==(insert_many const& lhs, insert_many const& rhs);
@@ -106,6 +121,15 @@ class insert_many {
    private:
     v_noabi::result::bulk_write _result;
     bsoncxx::v_noabi::array::value _inserted_ids;
+    id_map _id_map;
+
+    void sync_id_map() {
+        std::size_t index = 0;
+        for (auto const& ele : _inserted_ids) {
+            // v_noabi::array::element -> v1::element::view -> v_noabi::document::element
+            _id_map.emplace(index++, bsoncxx::v_noabi::to_v1(ele));
+        }
+    }
 };
 
 } // namespace result
