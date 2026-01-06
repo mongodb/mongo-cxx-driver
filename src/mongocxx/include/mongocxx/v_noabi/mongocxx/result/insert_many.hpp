@@ -81,7 +81,9 @@ class insert_many {
     /// @deprecated For internal use only.
     ///
     insert_many(result::bulk_write result, bsoncxx::v_noabi::array::value inserted_ids)
-        : _result{std::move(result)}, _inserted_ids{std::move(inserted_ids)} {}
+        : _result{std::move(result)}, _inserted_ids{std::move(inserted_ids)} {
+        this->sync_id_map();
+    }
 
     ///
     /// Returns the bulk write result for this insert many operation.
