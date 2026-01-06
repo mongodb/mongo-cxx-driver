@@ -14,6 +14,9 @@
 
 #pragma once
 
+#include <mongocxx/v1/update_many_result-fwd.hpp> // IWYU pragma: export
+#include <mongocxx/v1/update_one_result-fwd.hpp>  // IWYU pragma: export
+
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
@@ -29,7 +32,7 @@ class update;
 namespace mongocxx {
 namespace result {
 
-using ::mongocxx::v_noabi::result::update;
+using v_noabi::result::update;
 
 } // namespace result
 } // namespace mongocxx
@@ -39,4 +42,8 @@ using ::mongocxx::v_noabi::result::update;
 ///
 /// @file
 /// Declares @ref mongocxx::v_noabi::result::update.
+///
+/// @par Includes
+/// - @ref mongocxx/v1/update_many_result-fwd.hpp
+/// - @ref mongocxx/v1/update_one_result-fwd.hpp
 ///

@@ -120,6 +120,11 @@ class update_one_result {
     }
     /// @}
     ///
+
+    class internal;
+
+   private:
+    /* explicit(false) */ update_one_result(void* impl);
 };
 
 } // namespace v1

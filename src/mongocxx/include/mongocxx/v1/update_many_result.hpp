@@ -122,6 +122,11 @@ class update_many_result {
     }
     /// @}
     ///
+
+    class internal;
+
+   private:
+    /* explicit(false) */ update_many_result(void* impl);
 };
 
 } // namespace v1
