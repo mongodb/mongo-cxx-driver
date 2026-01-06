@@ -34,6 +34,9 @@ namespace v1 {
 ///
 /// The result of an "updateMany" operation.
 ///
+/// Supported fields include:
+/// - `result`
+///
 /// @see
 /// - [Update Methods (MongoDB Manual)](https://www.mongodb.com/docs/manual/reference/update-methods/)
 ///
@@ -111,7 +114,7 @@ class update_many_result {
     MONGOCXX_ABI_EXPORT_CDECL(id_map) upserted_ids() const;
 
     ///
-    /// Compare equal when `lhs.result()` and `rhs.result()` compare equal.
+    /// Compare equal when all supported fields compare equal.
     ///
     /// @{
     friend MONGOCXX_ABI_EXPORT_CDECL(bool) operator==(update_many_result const& lhs, update_many_result const& rhs);
