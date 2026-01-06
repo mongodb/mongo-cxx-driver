@@ -491,6 +491,10 @@ value::internal::make(std::uint8_t const* raw, std::uint32_t length, std::uint32
     return ret;
 }
 
+bson_value_t const& value::internal::get_bson_value(value const& v) {
+    return impl::with(v)._value;
+}
+
 bson_value_t& value::internal::get_bson_value(value& v) {
     return impl::with(v)._value;
 }

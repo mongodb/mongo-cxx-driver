@@ -12,27 +12,25 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <mongocxx/result/replace_one.hpp>
+#pragma once
+
+#include <mongocxx/v1/replace_one_result.hpp> // IWYU pragma: export
 
 //
 
-#include <mongocxx/v1/replace_one_result.hh>
+#include <mongocxx/v1/bulk_write.hpp>
 
-#include <utility>
-
-#include <mongocxx/result/bulk_write.hpp>
+#include <mongocxx/private/export.hh>
 
 namespace mongocxx {
-namespace v_noabi {
-namespace result {
+namespace v1 {
 
-replace_one::replace_one(v1::replace_one_result opts)
-    : _result{std::move(v1::replace_one_result::internal::result(opts))} {}
+class replace_one_result::internal {
+   public:
+    static MONGOCXX_ABI_EXPORT_CDECL_TESTING(replace_one_result) make(v1::bulk_write::result result);
 
-replace_one::operator v1::replace_one_result() const {
-    return v1::replace_one_result::internal::make(v_noabi::to_v1(_result));
-}
+    static MONGOCXX_ABI_EXPORT_CDECL_TESTING(v1::bulk_write::result&) result(replace_one_result& self);
+};
 
-} // namespace result
-} // namespace v_noabi
+} // namespace v1
 } // namespace mongocxx
