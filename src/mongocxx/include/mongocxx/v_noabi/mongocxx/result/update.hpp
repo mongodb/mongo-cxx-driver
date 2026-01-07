@@ -14,10 +14,17 @@
 
 #pragma once
 
-#include <cstdint>
-
 #include <mongocxx/result/update-fwd.hpp> // IWYU pragma: export
 
+//
+
+#include <mongocxx/v1/update_many_result.hpp> // IWYU pragma: export
+#include <mongocxx/v1/update_one_result.hpp>  // IWYU pragma: export
+
+#include <cstdint>
+#include <utility>
+
+#include <bsoncxx/document/element.hpp>
 #include <bsoncxx/stdx/optional.hpp>
 #include <bsoncxx/types.hpp> // IWYU pragma: keep: backward compatibility, to be removed.
 
@@ -34,51 +41,120 @@ namespace result {
 ///
 class update {
    public:
-    // This constructor is public for testing purposes only
-    explicit MONGOCXX_ABI_EXPORT_CDECL() update(result::bulk_write result);
+    ///
+    /// @deprecated For internal use only.
+    ///
+    explicit update(v_noabi::result::bulk_write result) : _result{std::move(result)} {}
+
+    ///
+    /// Construct with the @ref mongocxx::v1 equivalent.
+    ///
+    /* explicit(false) */ MONGOCXX_ABI_EXPORT_CDECL() update(v1::update_many_result opts);
+
+    ///
+    /// Construct with the @ref mongocxx::v1 equivalent.
+    ///
+    /* explicit(false) */ MONGOCXX_ABI_EXPORT_CDECL() update(v1::update_one_result opts);
+
+    ///
+    /// Convert to the @ref mongocxx::v1 equivalent.
+    ///
+    explicit MONGOCXX_ABI_EXPORT_CDECL() operator v1::update_many_result() const;
+
+    ///
+    /// Convert to the @ref mongocxx::v1 equivalent.
+    ///
+    explicit MONGOCXX_ABI_EXPORT_CDECL() operator v1::update_one_result() const;
 
     ///
     /// Returns the bulk write result for this update operation.
     ///
     /// @return The raw bulk write result.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(result::bulk_write const&) result() const;
+    v_noabi::result::bulk_write const& result() const {
+        return _result;
+    }
 
     ///
     /// Gets the number of documents that were matched during this operation.
     ///
     /// @return The number of documents that were matched.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(std::int32_t) matched_count() const;
+    std::int32_t matched_count() const {
+        return _result.matched_count();
+    }
 
     ///
     /// Gets the number of documents that were modified during this operation.
     ///
     /// @return The number of documents that were modified.
-    MONGOCXX_ABI_EXPORT_CDECL(std::int32_t) modified_count() const;
+    std::int32_t modified_count() const {
+        return _result.modified_count();
+    }
 
     ///
     /// Gets the number of documents that were upserted during this operation.
     ///
     /// @return The number of documents that were upserted.
-    MONGOCXX_ABI_EXPORT_CDECL(std::int32_t) upserted_count() const;
+    std::int32_t upserted_count() const {
+        return _result.upserted_count();
+    }
 
     ///
     /// If a document was upserted during this operation, gets the _id of the upserted document.
     ///
     /// @return The value of the _id field for upserted document.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::element>)
-    upserted_id() const;
+    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::element> upserted_id() const {
+        auto const ids = _result.upserted_ids();
+        auto const iter = ids.find(0);
 
-    friend MONGOCXX_ABI_EXPORT_CDECL(bool) operator==(update const&, update const&);
-    friend MONGOCXX_ABI_EXPORT_CDECL(bool) operator!=(update const&, update const&);
+        if (iter != ids.end()) {
+            return iter->second;
+        }
+
+        return {};
+    }
+
+    friend bool operator==(update const& lhs, update const& rhs) {
+        return lhs._result == rhs._result;
+    }
+
+    friend bool operator!=(update const& lhs, update const& rhs) {
+        return !(lhs == rhs);
+    }
 
    private:
-    result::bulk_write _result;
+    v_noabi::result::bulk_write _result;
 };
 
 } // namespace result
+} // namespace v_noabi
+} // namespace mongocxx
+
+namespace mongocxx {
+namespace v_noabi {
+
+///
+/// Convert to the @ref mongocxx::v_noabi equivalent of `v`.
+///
+inline v_noabi::result::update from_v1(v1::update_many_result v) {
+    return {std::move(v)};
+}
+
+///
+/// Convert to the @ref mongocxx::v_noabi equivalent of `v`.
+///
+inline v_noabi::result::update from_v1(v1::update_one_result v) {
+    return {std::move(v)};
+}
+
+// Ambiguous whether `v_noabi::result::update` should be converted to `v1::update_many_result` or
+// `v1::update_one_result`. Require users to explicitly cast to the expected type instead.
+//
+// v1::update_many_result to_v1(v_noabi::result::update const& v);
+// v1::update_one_result to_v1(v_noabi::result::update const& v);
+
 } // namespace v_noabi
 } // namespace mongocxx
 
@@ -87,4 +163,8 @@ class update {
 ///
 /// @file
 /// Provides @ref mongocxx::v_noabi::result::update.
+///
+/// @par Includes
+/// - @ref mongocxx/v1/update_many_result.hpp
+/// - @ref mongocxx/v1/update_one_result.hpp
 ///

@@ -14,39 +14,31 @@
 
 #include <mongocxx/result/update.hpp>
 
+//
+
+#include <mongocxx/v1/update_many_result.hh>
+#include <mongocxx/v1/update_one_result.hh>
+
+#include <utility>
+
+#include <mongocxx/result/bulk_write.hpp>
+
 namespace mongocxx {
 namespace v_noabi {
 namespace result {
 
-update::update(result::bulk_write result) : _result(std::move(result)) {}
+update::update(v1::update_many_result opts)
+    : _result{v_noabi::from_v1(std::move(v1::update_many_result::internal::result(opts)))} {}
 
-result::bulk_write const& update::result() const {
-    return _result;
-}
-std::int32_t update::matched_count() const {
-    return _result.matched_count();
-}
+update::update(v1::update_one_result opts)
+    : _result{v_noabi::from_v1(std::move(v1::update_one_result::internal::result(opts)))} {}
 
-std::int32_t update::modified_count() const {
-    return _result.modified_count();
+update::operator v1::update_many_result() const {
+    return v1::update_many_result::internal::make(v_noabi::to_v1(_result));
 }
 
-std::int32_t update::upserted_count() const {
-    return _result.upserted_count();
-}
-
-bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::element> update::upserted_id() const {
-    if (_result.upserted_ids().size() == 0) {
-        return bsoncxx::v_noabi::stdx::nullopt;
-    }
-    return _result.upserted_ids()[0];
-}
-
-bool operator==(update const& lhs, update const& rhs) {
-    return lhs.result() == rhs.result();
-}
-bool operator!=(update const& lhs, update const& rhs) {
-    return !(lhs == rhs);
+update::operator v1::update_one_result() const {
+    return v1::update_one_result::internal::make(v_noabi::to_v1(_result));
 }
 
 } // namespace result
