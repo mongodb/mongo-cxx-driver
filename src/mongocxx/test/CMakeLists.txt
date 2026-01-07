@@ -145,7 +145,9 @@ set(mongocxx_test_sources_v1
     v1/tls.cpp
     v1/transaction_options.cpp
     v1/update_many_options.cpp
+    v1/update_many_result.cpp
     v1/update_one_options.cpp
+    v1/update_one_result.cpp
     v1/uri.cpp
     v1/write_concern.cpp
 )
