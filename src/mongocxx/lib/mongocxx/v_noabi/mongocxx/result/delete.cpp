@@ -14,25 +14,31 @@
 
 #include <mongocxx/result/delete.hpp>
 
+//
+
+#include <mongocxx/v1/delete_many_result.hh>
+#include <mongocxx/v1/delete_one_result.hh>
+
+#include <utility>
+
+#include <mongocxx/result/bulk_write.hpp>
+
 namespace mongocxx {
 namespace v_noabi {
 namespace result {
 
-delete_result::delete_result(result::bulk_write result) : _result(std::move(result)) {}
+delete_result::delete_result(v1::delete_many_result opts)
+    : _result{v_noabi::from_v1(std::move(v1::delete_many_result::internal::result(opts)))} {}
 
-result::bulk_write const& delete_result::result() const {
-    return _result;
+delete_result::delete_result(v1::delete_one_result opts)
+    : _result{v_noabi::from_v1(std::move(v1::delete_one_result::internal::result(opts)))} {}
+
+delete_result::operator v1::delete_many_result() const {
+    return v1::delete_many_result::internal::make(v_noabi::to_v1(_result));
 }
 
-std::int32_t delete_result::deleted_count() const {
-    return _result.deleted_count();
-}
-
-bool operator==(delete_result const& lhs, delete_result const& rhs) {
-    return lhs.result() == rhs.result();
-}
-bool operator!=(delete_result const& lhs, delete_result const& rhs) {
-    return !(lhs == rhs);
+delete_result::operator v1::delete_one_result() const {
+    return v1::delete_one_result::internal::make(v_noabi::to_v1(_result));
 }
 
 } // namespace result

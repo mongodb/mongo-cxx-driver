@@ -99,6 +99,11 @@ class delete_one_result {
     }
     /// @}
     ///
+
+    class internal;
+
+   private:
+    /* explicit(false) */ delete_one_result(void* impl);
 };
 
 } // namespace v1
