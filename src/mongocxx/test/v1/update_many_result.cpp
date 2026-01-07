@@ -80,6 +80,7 @@ TEST_CASE("ownership", "[mongocxx][v1][update_many_result]") {
 TEST_CASE("basic", "[mongocxx][v1][update_many_result]") {
     auto const matched_count = GENERATE(0, 1, 2, 3);
     auto const modified_count = GENERATE(0, 1, 2, 3);
+    auto const upserted_count = GENERATE(0, 1, 2, 3);
 
     if (matched_count < modified_count) {
         SUCCEED("do not test impossible scenario: matched_count < modified_count");
@@ -124,15 +125,19 @@ TEST_CASE("basic", "[mongocxx][v1][update_many_result]") {
                             BCON_INT32(matched_count),
                             "nModified",
                             BCON_INT32(modified_count),
+                            "nUpserted",
+                            BCON_INT32(upserted_count),
                             "upserted",
                             BCON_ARRAY(upserted_ids.bson()))}
                 .value()));
 
     CHECK(res.result().matched_count() == matched_count);
     CHECK(res.result().modified_count() == modified_count);
+    CHECK(res.result().upserted_count() == upserted_count);
 
     CHECK(res.matched_count() == matched_count);
     CHECK(res.modified_count() == modified_count);
+    CHECK(res.upserted_count() == upserted_count);
 
     auto const res_ids = res.upserted_ids();
     CHECK(res_ids.size() == (ids.size() - null_ids_count));
@@ -150,9 +155,10 @@ TEST_CASE("basic", "[mongocxx][v1][update_many_result]") {
 
 TEST_CASE("equality", "[mongocxx][v1][update_many_result]") {
     auto const n0 = v1::bulk_write::result::internal::make(
-        scoped_bson{R"({"nMatched": 0, "nModified": 0, "upserted": []})"}.value());
+        scoped_bson{R"({"nMatched": 0, "nModified": 0, "nUpserted": 0, "upserted": []})"}.value());
     auto const n1 = v1::bulk_write::result::internal::make(
-        scoped_bson{R"({"nMatched": 1, "nModified": 1, "upserted": [{"index": 0, "_id": 1}]})"}.value());
+        scoped_bson{R"({"nMatched": 1, "nModified": 1, "nUpserted": 1, "upserted": [{"index": 0, "_id": 1}]})"}
+            .value());
 
     auto lhs = v1::update_many_result::internal::make(n0);
     auto rhs = v1::update_many_result::internal::make(n0);
