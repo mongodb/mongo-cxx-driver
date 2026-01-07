@@ -31,6 +31,9 @@ namespace v1 {
 ///
 /// The result of a "deleteOne" operation.
 ///
+/// Supported fields include:
+/// - `result`
+///
 /// @see
 /// - [Delete Methods (MongoDB Manual)](https://www.mongodb.com/docs/manual/reference/delete-methods/)
 ///
@@ -86,7 +89,7 @@ class delete_one_result {
     MONGOCXX_ABI_EXPORT_CDECL(std::int64_t) deleted_count() const;
 
     ///
-    /// Compare equal when `lhs.result()` and `rhs.result()` compare equal.
+    /// Compare equal when all supported fields compare equal.
     ///
     /// @{
     friend MONGOCXX_ABI_EXPORT_CDECL(bool) operator==(delete_one_result const& lhs, delete_one_result const& rhs);
@@ -96,6 +99,11 @@ class delete_one_result {
     }
     /// @}
     ///
+
+    class internal;
+
+   private:
+    /* explicit(false) */ delete_one_result(void* impl);
 };
 
 } // namespace v1
