@@ -82,11 +82,6 @@ TEST_CASE("basic", "[mongocxx][v1][update_many_result]") {
     auto const modified_count = GENERATE(0, 1, 2, 3);
     auto const upserted_count = GENERATE(0, 1, 2, 3);
 
-    if (matched_count < modified_count) {
-        SUCCEED("do not test impossible scenario: matched_count < modified_count");
-        return;
-    }
-
     std::array<bsoncxx::v1::types::value, 3u> ids = {{
         GENERATE(as<bsoncxx::v1::types::value>{}, bsoncxx::v1::types::b_null{}, 1, 2.0, "three"),
         GENERATE(as<bsoncxx::v1::types::value>{}, bsoncxx::v1::types::b_null{}, 1, 2.0, "three"),
