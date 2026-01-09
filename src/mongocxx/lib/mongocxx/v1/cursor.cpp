@@ -124,6 +124,10 @@ cursor cursor::internal::make(mongoc_cursor_t* cursor, type type) {
     return {new impl{cursor, type}};
 }
 
+mongoc_cursor_t const* cursor::internal::as_mongoc(cursor const& self) {
+    return impl::with(self)._cursor;
+}
+
 mongoc_cursor_t* cursor::internal::as_mongoc(cursor& self) {
     return impl::with(self)._cursor;
 }

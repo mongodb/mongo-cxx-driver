@@ -38,6 +38,8 @@
 #include <mongocxx/v1/config/export.hpp>
 
 #include <string>
+#include <system_error>
+#include <type_traits>
 #include <vector>
 
 namespace mongocxx {
@@ -254,6 +256,38 @@ class client {
     /// - [`mongoc_client_reset`](https://mongoc.org/libmongoc/current/mongoc_client_reset.html)
     ///
     MONGOCXX_ABI_EXPORT_CDECL(void) reset();
+
+    ///
+    /// Errors codes which may be returned by @ref mongocxx::v1::client.
+    ///
+    /// @attention This feature is experimental! It is not ready for use!
+    ///
+    enum class errc {
+        zero,              ///< Zero.
+        tls_not_enabled,   ///< TLS is not enabled by URI options.
+        tls_not_supported, ///< TLS is not supported by the mongoc library.
+    };
+
+    ///
+    /// The error category for @ref mongocxx::v1::client::errc.
+    ///
+    /// @attention This feature is experimental! It is not ready for use!
+    ///
+    static MONGOCXX_ABI_EXPORT_CDECL(std::error_category const&) error_category();
+
+    ///
+    /// Support implicit conversion to `std::error_code`.
+    ///
+    /// @attention This feature is experimental! It is not ready for use!
+    ///
+    friend std::error_code make_error_code(errc v) {
+        return {static_cast<int>(v), error_category()};
+    }
+
+    class internal;
+
+   private:
+    /* explicit(false) */ client(void* impl);
 };
 
 ///
@@ -353,10 +387,19 @@ class client::options {
     /// Return the current "server_api_opts" field.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<v1::server_api>) server_api_opts() const;
+
+    class internal;
 };
 
 } // namespace v1
 } // namespace mongocxx
+
+namespace std {
+
+template <>
+struct is_error_code_enum<mongocxx::v1::client::errc> : true_type {};
+
+} // namespace std
 
 #include <mongocxx/v1/detail/postlude.hpp>
 

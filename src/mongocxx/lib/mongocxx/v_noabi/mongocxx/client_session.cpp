@@ -27,7 +27,7 @@ namespace v_noabi {
 
 // Private constructors.
 client_session::client_session(
-    mongocxx::v_noabi::client const* client,
+    mongocxx::v_noabi::client* client,
     mongocxx::v_noabi::options::client_session const& options)
     : _impl(bsoncxx::make_unique<impl>(client, options)) {}
 

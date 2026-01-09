@@ -138,6 +138,26 @@ bsoncxx::v1::stdx::optional<bool> tls::allow_invalid_certificates() const {
     return impl::with(this)->_allow_invalid_certificates;
 }
 
+bsoncxx::v1::stdx::optional<std::string> const& tls::internal::pem_file(tls const& self) {
+    return impl::with(self)._pem_file;
+}
+
+bsoncxx::v1::stdx::optional<std::string> const& tls::internal::pem_password(tls const& self) {
+    return impl::with(self)._pem_password;
+}
+
+bsoncxx::v1::stdx::optional<std::string> const& tls::internal::ca_file(tls const& self) {
+    return impl::with(self)._ca_file;
+}
+
+bsoncxx::v1::stdx::optional<std::string> const& tls::internal::ca_dir(tls const& self) {
+    return impl::with(self)._ca_dir;
+}
+
+bsoncxx::v1::stdx::optional<std::string> const& tls::internal::crl_file(tls const& self) {
+    return impl::with(self)._crl_file;
+}
+
 bsoncxx::v1::stdx::optional<std::string>& tls::internal::pem_file(tls& self) {
     return impl::with(self)._pem_file;
 }

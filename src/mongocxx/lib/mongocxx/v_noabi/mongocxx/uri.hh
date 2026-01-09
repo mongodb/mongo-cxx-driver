@@ -25,6 +25,8 @@ namespace v_noabi {
 
 class uri::internal {
    public:
+    static v1::uri const& as_v1(uri const& self);
+
     static mongoc_uri_t const* as_mongoc(uri const& self);
 };
 

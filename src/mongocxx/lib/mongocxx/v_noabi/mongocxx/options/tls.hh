@@ -20,40 +20,24 @@
 
 #include <list>
 
+#include <bsoncxx/string/view_or_value.hpp>
+
 #include <mongocxx/private/mongoc.hh>
-#include <mongocxx/private/ssl.hh>
 
 namespace mongocxx {
 namespace v_noabi {
 namespace options {
 
-#if MONGOCXX_SSL_IS_ENABLED()
-inline std::pair<::mongoc_ssl_opt_t, std::list<bsoncxx::v_noabi::string::view_or_value>> make_tls_opts(
-    tls const& tls_opts) {
-    ::mongoc_ssl_opt_t out{};
-    std::list<bsoncxx::v_noabi::string::view_or_value> values;
+class tls::internal {
+   public:
+    struct to_mongoc_type {
+        std::list<bsoncxx::v_noabi::string::view_or_value> string_owner;
 
-    if (tls_opts.pem_file()) {
-        out.pem_file = values.emplace(values.end(), tls_opts.pem_file()->terminated())->data();
-    }
-    if (tls_opts.pem_password()) {
-        out.pem_pwd = values.emplace(values.end(), tls_opts.pem_password()->terminated())->data();
-    }
-    if (tls_opts.ca_file()) {
-        out.ca_file = values.emplace(values.end(), tls_opts.ca_file()->terminated())->data();
-    }
-    if (tls_opts.ca_dir()) {
-        out.ca_dir = values.emplace(values.end(), tls_opts.ca_dir()->terminated())->data();
-    }
-    if (tls_opts.crl_file()) {
-        out.crl_file = values.emplace(values.end(), tls_opts.crl_file()->terminated())->data();
-    }
-    if (tls_opts.allow_invalid_certificates()) {
-        out.weak_cert_validation = *(tls_opts.allow_invalid_certificates());
-    }
-    return {out, std::move(values)};
-}
-#endif
+        mongoc_ssl_opt_t opt;
+    };
+
+    static to_mongoc_type to_mongoc(tls const& opts);
+};
 
 } // namespace options
 } // namespace v_noabi

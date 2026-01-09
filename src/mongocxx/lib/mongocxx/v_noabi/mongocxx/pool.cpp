@@ -12,9 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <mongocxx/client.hpp>
+
+//
+
+#include <mongocxx/v1/client.hh>
+
 #include <utility>
 
-#include <mongocxx/client.hpp>
 #include <mongocxx/exception/error_code.hpp>
 #include <mongocxx/exception/exception.hpp>
 #include <mongocxx/exception/operation_exception.hpp>
@@ -49,9 +54,9 @@ static mongoc_client_pool_t* construct_client_pool(mongoc_uri_t const* uri) {
 }
 
 void pool::_release(client* client) {
-    libmongoc::client_pool_push(_impl->client_pool_t, client->_get_impl().client_t);
+    libmongoc::client_pool_push(_impl->client_pool_t, v_noabi::client::internal::as_mongoc(*client));
     // prevent client destructor from destroying the underlying mongoc_client_t
-    client->_get_impl().client_t = nullptr;
+    v_noabi::client::internal::disown(*client);
     delete client; // NOLINT(cppcoreguidelines-owning-memory): custom deleter.
 }
 
@@ -60,50 +65,43 @@ pool::~pool() = default;
 pool::pool(uri const& uri, options::pool const& options)
     : _impl{bsoncxx::make_unique<impl>(construct_client_pool(v_noabi::uri::internal::as_mongoc(uri)))} {
 #if MONGOCXX_SSL_IS_ENABLED()
-    if (options.client_opts().tls_opts()) {
-        if (!uri.tls())
-            throw exception{error_code::k_invalid_parameter, "cannot set TLS options if 'tls=true' not in URI"};
+    if (auto const& opts = options.client_opts().tls_opts()) {
+        if (!uri.tls()) {
+            throw v_noabi::exception{
+                v_noabi::error_code::k_invalid_parameter, "cannot set TLS options if 'tls=true' not in URI"};
+        }
 
-        auto mongoc_opts = options::make_tls_opts(*options.client_opts().tls_opts());
-        _impl->tls_options = std::move(mongoc_opts.second);
-        libmongoc::client_pool_set_ssl_opts(_impl->client_pool_t, &mongoc_opts.first);
+        auto const v = v_noabi::options::tls::internal::to_mongoc(*opts);
+        libmongoc::client_pool_set_ssl_opts(_impl->client_pool_t, &v.opt);
     }
 #else
-    if (uri.tls() || options.client_opts().tls_opts())
-        throw exception{error_code::k_ssl_not_supported};
+    if (uri.tls() || options.client_opts().tls_opts().has_value())
+        throw v_noabi::exception{v_noabi::error_code::k_ssl_not_supported};
 #endif
 
-    if (auto const& auto_encryption_opts = options.client_opts().auto_encryption_opts()) {
-        auto const opts = v_noabi::options::auto_encryption::internal::to_mongoc(*auto_encryption_opts);
+    if (auto const& opts = options.client_opts().auto_encryption_opts()) {
+        bson_error_t error = {};
 
-        bson_error_t error;
-        auto r = libmongoc::client_pool_enable_auto_encryption(_impl->client_pool_t, opts, &error);
-
-        libmongoc::auto_encryption_opts_destroy(opts);
-
-        if (!r) {
-            throw_exception<operation_exception>(error);
+        if (!libmongoc::client_pool_enable_auto_encryption(
+                _impl->client_pool_t, v_noabi::options::auto_encryption::internal::to_mongoc(*opts).get(), &error)) {
+            v_noabi::throw_exception<operation_exception>(error);
         }
     }
 
-    if (options.client_opts().apm_opts()) {
-        _impl->listeners = *options.client_opts().apm_opts();
-        auto callbacks = options::make_apm_callbacks(_impl->listeners);
-        // We cast the APM class to a void* so we can pass it into libmongoc's context.
-        // It will be cast back to an APM class in the event handlers.
-        auto context = static_cast<void*>(&(_impl->listeners));
-        libmongoc::client_pool_set_apm_callbacks(_impl->client_pool_t, callbacks.get(), context);
+    if (auto const& opts = options.client_opts().apm_opts()) {
+        _impl->listeners = *opts;
+        libmongoc::client_pool_set_apm_callbacks(
+            _impl->client_pool_t,
+            v_noabi::options::make_apm_callbacks(_impl->listeners).get(),
+            static_cast<void*>(&_impl->listeners));
     }
 
-    if (options.client_opts().server_api_opts()) {
-        auto const& server_api_opts = *options.client_opts().server_api_opts();
-        auto mongoc_server_api_opts = options::make_server_api(server_api_opts);
+    if (auto const& opts = options.client_opts().server_api_opts()) {
+        bson_error_t error = {};
 
-        bson_error_t error;
-        auto result = libmongoc::client_pool_set_server_api(_impl->client_pool_t, mongoc_server_api_opts.get(), &error);
-
-        if (!result) {
-            throw_exception<operation_exception>(error);
+        if (!libmongoc::client_pool_set_server_api(
+                _impl->client_pool_t, v_noabi::options::server_api::internal::to_mongoc(*opts).get(), &error)) {
+            v_noabi::throw_exception<v_noabi::operation_exception>(error);
         }
     }
 }
@@ -129,21 +127,27 @@ pool::entry::operator bool() const noexcept {
 pool::entry::entry(pool::entry::unique_client p) : _client(std::move(p)) {}
 
 pool::entry pool::acquire() {
-    auto cli = libmongoc::client_pool_pop(_impl->client_pool_t);
-    if (!cli)
+    auto const cli = libmongoc::client_pool_pop(_impl->client_pool_t);
+    if (!cli) {
         throw exception{
             error_code::k_pool_wait_queue_timeout,
             "failed to acquire client, possibly due to parameter 'waitQueueTimeoutMS' limits."};
+    }
 
-    return entry(entry::unique_client(new client(cli), [this](client* client) { _release(client); }));
+    return entry(entry::unique_client(new v_noabi::client{v1::client::internal::make(cli)}, [this](client* client) {
+        _release(client);
+    }));
 }
 
 bsoncxx::v_noabi::stdx::optional<pool::entry> pool::try_acquire() {
-    auto cli = libmongoc::client_pool_try_pop(_impl->client_pool_t);
-    if (!cli)
+    auto const cli = libmongoc::client_pool_try_pop(_impl->client_pool_t);
+    if (!cli) {
         return bsoncxx::v_noabi::stdx::nullopt;
+    }
 
-    return entry(entry::unique_client(new client(cli), [this](client* client) { _release(client); }));
+    return entry(entry::unique_client(new v_noabi::client{v1::client::internal::make(cli)}, [this](client* client) {
+        _release(client);
+    }));
 }
 
 } // namespace v_noabi

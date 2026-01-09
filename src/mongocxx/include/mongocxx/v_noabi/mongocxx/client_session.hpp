@@ -227,7 +227,7 @@ class client_session {
 
     class impl;
 
-    client_session(mongocxx::v_noabi::client const* client, options::client_session const& options);
+    client_session(mongocxx::v_noabi::client* client, options::client_session const& options);
 
     impl const& _get_impl() const {
         return *_impl;

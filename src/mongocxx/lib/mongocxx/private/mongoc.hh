@@ -215,6 +215,7 @@ BSONCXX_PRIVATE_WARNINGS_POP();
     X(client_get_uri)                                                     \
     X(client_get_write_concern)                                           \
     X(client_new_from_uri)                                                \
+    X(client_new_from_uri_with_error)                                     \
     X(client_pool_destroy)                                                \
     X(client_pool_enable_auto_encryption)                                 \
     X(client_pool_new_with_error)                                         \

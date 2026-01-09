@@ -12,12 +12,24 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <mongocxx/v1/client_session.hpp>
+#pragma once
+
+#include <mongocxx/options/client.hpp> // IWYU pragma: export
+
+//
+
+#include <mongocxx/v1/client.hpp>
 
 namespace mongocxx {
-namespace v1 {
+namespace v_noabi {
+namespace options {
 
-client_session::options::~options() = default; // TODO: v1::client_session (CXX-3237)
+class client::internal {
+   public:
+    static client from_v1(v1::client::options v);
+    static v1::client::options to_v1(client const& v);
+};
 
-} // namespace v1
+} // namespace options
+} // namespace v_noabi
 } // namespace mongocxx
