@@ -88,12 +88,12 @@ class client {
     ///
     /// This class is not copyable.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL() client(client const& other);
+    client(client const& other) = delete;
 
     ///
     /// This class is not copyable.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(client&) operator=(client const& other);
+    client& operator=(client const& other) = delete;
 
     ///
     /// Initialize with the given URI.
