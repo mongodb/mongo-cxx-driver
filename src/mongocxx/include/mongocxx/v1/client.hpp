@@ -105,7 +105,7 @@ class client {
     /// @throws mongocxx::v1::exception when a client-side error is encountered.
     ///
     /// @{
-    MONGOCXX_ABI_EXPORT_CDECL() client(v1::uri uri, options const& opts);
+    MONGOCXX_ABI_EXPORT_CDECL() client(v1::uri uri, options opts);
 
     /* explicit(false) */ MONGOCXX_ABI_EXPORT_CDECL() client(v1::uri uri);
     /// @}
