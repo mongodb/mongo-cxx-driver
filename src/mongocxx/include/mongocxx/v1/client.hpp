@@ -209,13 +209,13 @@ class client {
     /// - [Change Streams (MongoDB Manual)](https://www.mongodb.com/docs/manual/changeStreams/)
     ///
     /// @{
-    MONGOCXX_ABI_EXPORT_CDECL(v1::change_stream) watch(v1::change_stream::options opts);
+    MONGOCXX_ABI_EXPORT_CDECL(v1::change_stream) watch(v1::change_stream::options const& opts);
 
     MONGOCXX_ABI_EXPORT_CDECL(v1::change_stream) watch();
 
     MONGOCXX_ABI_EXPORT_CDECL(v1::change_stream) watch(
         v1::client_session const& session,
-        v1::change_stream::options opts);
+        v1::change_stream::options const& opts);
 
     MONGOCXX_ABI_EXPORT_CDECL(v1::change_stream) watch(v1::client_session const& session);
     /// @}
