@@ -12025,86 +12025,6 @@ tasks:
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
           REQUIRED_CXX_STANDARD: 11
-  - name: integration-windows-2019-vs2022-x64-debug-shared-cxx11-8.0-replica
-    run_on: windows-vsCurrent-large
-    tags: [integration, windows-vsCurrent, windows, debug, shared, cxx11, "8.0", replica]
-    commands:
-      - command: expansions.update
-        params:
-          updates:
-            - { key: build_type, value: Debug }
-            - { key: generator, value: Visual Studio 17 2022 }
-            - { key: platform, value: x64 }
-      - func: setup
-      - func: start_mongod
-        vars:
-          TOPOLOGY: replica_set
-          mongodb_version: "8.0"
-      - func: install_c_driver
-      - func: compile
-        vars:
-          ENABLE_TESTS: "ON"
-          REQUIRED_CXX_STANDARD: 11
-          RUN_DISTCHECK: 1
-      - func: fetch-det
-      - func: run_kms_servers
-      - func: test
-        vars:
-          MONGOCXX_TEST_TOPOLOGY: replica
-          REQUIRED_CXX_STANDARD: 11
-  - name: integration-windows-2019-vs2022-x64-debug-shared-cxx11-8.0-sharded
-    run_on: windows-vsCurrent-large
-    tags: [integration, windows-vsCurrent, windows, debug, shared, cxx11, "8.0", sharded]
-    commands:
-      - command: expansions.update
-        params:
-          updates:
-            - { key: build_type, value: Debug }
-            - { key: generator, value: Visual Studio 17 2022 }
-            - { key: platform, value: x64 }
-      - func: setup
-      - func: start_mongod
-        vars:
-          TOPOLOGY: sharded_cluster
-          mongodb_version: "8.0"
-      - func: install_c_driver
-      - func: compile
-        vars:
-          ENABLE_TESTS: "ON"
-          REQUIRED_CXX_STANDARD: 11
-          RUN_DISTCHECK: 1
-      - func: fetch-det
-      - func: run_kms_servers
-      - func: test
-        vars:
-          MONGOCXX_TEST_TOPOLOGY: sharded
-          REQUIRED_CXX_STANDARD: 11
-  - name: integration-windows-2019-vs2022-x64-debug-shared-cxx11-8.0-single
-    run_on: windows-vsCurrent-large
-    tags: [integration, windows-vsCurrent, windows, debug, shared, cxx11, "8.0", single]
-    commands:
-      - command: expansions.update
-        params:
-          updates:
-            - { key: build_type, value: Debug }
-            - { key: generator, value: Visual Studio 17 2022 }
-            - { key: platform, value: x64 }
-      - func: setup
-      - func: start_mongod
-        vars:
-          mongodb_version: "8.0"
-      - func: install_c_driver
-      - func: compile
-        vars:
-          ENABLE_TESTS: "ON"
-          REQUIRED_CXX_STANDARD: 11
-          RUN_DISTCHECK: 1
-      - func: fetch-det
-      - func: run_kms_servers
-      - func: test
-        vars:
-          MONGOCXX_TEST_TOPOLOGY: single
-          REQUIRED_CXX_STANDARD: 11
   - name: integration-windows-2019-vs2022-x64-debug-shared-cxx11-csfle-4.2-replica
     run_on: windows-vsCurrent-large
     tags: [integration, windows-vsCurrent, windows, debug, shared, cxx11, csfle, "4.2", replica]
@@ -12188,117 +12108,6 @@ tasks:
           MONGOCXX_TEST_TOPOLOGY: single
           REQUIRED_CXX_STANDARD: 11
           TEST_WITH_CSFLE: "ON"
-  - name: integration-windows-2019-vs2022-x64-debug-shared-cxx11-csfle-8.0-replica
-    run_on: windows-vsCurrent-large
-    tags: [integration, windows-vsCurrent, windows, debug, shared, cxx11, csfle, "8.0", replica]
-    commands:
-      - command: expansions.update
-        params:
-          updates:
-            - { key: build_type, value: Debug }
-            - { key: generator, value: Visual Studio 17 2022 }
-            - { key: platform, value: x64 }
-      - func: setup
-      - func: start_mongod
-        vars:
-          TOPOLOGY: replica_set
-          mongodb_version: "8.0"
-      - func: install_c_driver
-      - func: compile
-        vars:
-          ENABLE_TESTS: "ON"
-          REQUIRED_CXX_STANDARD: 11
-          RUN_DISTCHECK: 1
-      - func: fetch-det
-      - func: run_kms_servers
-      - func: test
-        vars:
-          MONGOCXX_TEST_TOPOLOGY: replica
-          REQUIRED_CXX_STANDARD: 11
-          TEST_WITH_CSFLE: "ON"
-  - name: integration-windows-2019-vs2022-x64-debug-shared-cxx11-csfle-8.0-sharded
-    run_on: windows-vsCurrent-large
-    tags: [integration, windows-vsCurrent, windows, debug, shared, cxx11, csfle, "8.0", sharded]
-    commands:
-      - command: expansions.update
-        params:
-          updates:
-            - { key: build_type, value: Debug }
-            - { key: generator, value: Visual Studio 17 2022 }
-            - { key: platform, value: x64 }
-      - func: setup
-      - func: start_mongod
-        vars:
-          TOPOLOGY: sharded_cluster
-          mongodb_version: "8.0"
-      - func: install_c_driver
-      - func: compile
-        vars:
-          ENABLE_TESTS: "ON"
-          REQUIRED_CXX_STANDARD: 11
-          RUN_DISTCHECK: 1
-      - func: fetch-det
-      - func: run_kms_servers
-      - func: test
-        vars:
-          MONGOCXX_TEST_TOPOLOGY: sharded
-          REQUIRED_CXX_STANDARD: 11
-          TEST_WITH_CSFLE: "ON"
-  - name: integration-windows-2019-vs2022-x64-debug-shared-cxx11-csfle-8.0-single
-    run_on: windows-vsCurrent-large
-    tags: [integration, windows-vsCurrent, windows, debug, shared, cxx11, csfle, "8.0", single]
-    commands:
-      - command: expansions.update
-        params:
-          updates:
-            - { key: build_type, value: Debug }
-            - { key: generator, value: Visual Studio 17 2022 }
-            - { key: platform, value: x64 }
-      - func: setup
-      - func: start_mongod
-        vars:
-          mongodb_version: "8.0"
-      - func: install_c_driver
-      - func: compile
-        vars:
-          ENABLE_TESTS: "ON"
-          REQUIRED_CXX_STANDARD: 11
-          RUN_DISTCHECK: 1
-      - func: fetch-det
-      - func: run_kms_servers
-      - func: test
-        vars:
-          MONGOCXX_TEST_TOPOLOGY: single
-          REQUIRED_CXX_STANDARD: 11
-          TEST_WITH_CSFLE: "ON"
-  - name: integration-windows-2019-vs2022-x64-debug-shared-cxx11-csfle-latest-replica
-    run_on: windows-vsCurrent-large
-    tags: [integration, windows-vsCurrent, windows, debug, shared, cxx11, csfle, latest, replica]
-    commands:
-      - command: expansions.update
-        params:
-          updates:
-            - { key: build_type, value: Debug }
-            - { key: generator, value: Visual Studio 17 2022 }
-            - { key: platform, value: x64 }
-      - func: setup
-      - func: start_mongod
-        vars:
-          TOPOLOGY: replica_set
-          mongodb_version: latest
-      - func: install_c_driver
-      - func: compile
-        vars:
-          ENABLE_TESTS: "ON"
-          REQUIRED_CXX_STANDARD: 11
-          RUN_DISTCHECK: 1
-      - func: fetch-det
-      - func: run_kms_servers
-      - func: test
-        vars:
-          MONGOCXX_TEST_TOPOLOGY: replica
-          REQUIRED_CXX_STANDARD: 11
-          TEST_WITH_CSFLE: "ON"
   - name: integration-windows-2019-vs2022-x64-debug-shared-cxx11-csfle-latest-replica-mongocryptd
     run_on: windows-vsCurrent-large
     tags: [integration, windows-vsCurrent, windows, debug, shared, cxx11, csfle, latest, replica, mongocryptd]
@@ -12328,141 +12137,6 @@ tasks:
           REQUIRED_CXX_STANDARD: 11
           TEST_WITH_CSFLE: "ON"
           use_mongocryptd: true
-  - name: integration-windows-2019-vs2022-x64-debug-shared-cxx11-csfle-latest-sharded
-    run_on: windows-vsCurrent-large
-    tags: [integration, windows-vsCurrent, windows, debug, shared, cxx11, csfle, latest, sharded]
-    commands:
-      - command: expansions.update
-        params:
-          updates:
-            - { key: build_type, value: Debug }
-            - { key: generator, value: Visual Studio 17 2022 }
-            - { key: platform, value: x64 }
-      - func: setup
-      - func: start_mongod
-        vars:
-          TOPOLOGY: sharded_cluster
-          mongodb_version: latest
-      - func: install_c_driver
-      - func: compile
-        vars:
-          ENABLE_TESTS: "ON"
-          REQUIRED_CXX_STANDARD: 11
-          RUN_DISTCHECK: 1
-      - func: fetch-det
-      - func: run_kms_servers
-      - func: test
-        vars:
-          MONGOCXX_TEST_TOPOLOGY: sharded
-          REQUIRED_CXX_STANDARD: 11
-          TEST_WITH_CSFLE: "ON"
-  - name: integration-windows-2019-vs2022-x64-debug-shared-cxx11-csfle-latest-single
-    run_on: windows-vsCurrent-large
-    tags: [integration, windows-vsCurrent, windows, debug, shared, cxx11, csfle, latest, single]
-    commands:
-      - command: expansions.update
-        params:
-          updates:
-            - { key: build_type, value: Debug }
-            - { key: generator, value: Visual Studio 17 2022 }
-            - { key: platform, value: x64 }
-      - func: setup
-      - func: start_mongod
-        vars:
-          mongodb_version: latest
-      - func: install_c_driver
-      - func: compile
-        vars:
-          ENABLE_TESTS: "ON"
-          REQUIRED_CXX_STANDARD: 11
-          RUN_DISTCHECK: 1
-      - func: fetch-det
-      - func: run_kms_servers
-      - func: test
-        vars:
-          MONGOCXX_TEST_TOPOLOGY: single
-          REQUIRED_CXX_STANDARD: 11
-          TEST_WITH_CSFLE: "ON"
-  - name: integration-windows-2019-vs2022-x64-debug-shared-cxx11-latest-replica
-    run_on: windows-vsCurrent-large
-    tags: [integration, windows-vsCurrent, windows, debug, shared, cxx11, latest, replica]
-    commands:
-      - command: expansions.update
-        params:
-          updates:
-            - { key: build_type, value: Debug }
-            - { key: generator, value: Visual Studio 17 2022 }
-            - { key: platform, value: x64 }
-      - func: setup
-      - func: start_mongod
-        vars:
-          TOPOLOGY: replica_set
-          mongodb_version: latest
-      - func: install_c_driver
-      - func: compile
-        vars:
-          ENABLE_TESTS: "ON"
-          REQUIRED_CXX_STANDARD: 11
-          RUN_DISTCHECK: 1
-      - func: fetch-det
-      - func: run_kms_servers
-      - func: test
-        vars:
-          MONGOCXX_TEST_TOPOLOGY: replica
-          REQUIRED_CXX_STANDARD: 11
-  - name: integration-windows-2019-vs2022-x64-debug-shared-cxx11-latest-sharded
-    run_on: windows-vsCurrent-large
-    tags: [integration, windows-vsCurrent, windows, debug, shared, cxx11, latest, sharded]
-    commands:
-      - command: expansions.update
-        params:
-          updates:
-            - { key: build_type, value: Debug }
-            - { key: generator, value: Visual Studio 17 2022 }
-            - { key: platform, value: x64 }
-      - func: setup
-      - func: start_mongod
-        vars:
-          TOPOLOGY: sharded_cluster
-          mongodb_version: latest
-      - func: install_c_driver
-      - func: compile
-        vars:
-          ENABLE_TESTS: "ON"
-          REQUIRED_CXX_STANDARD: 11
-          RUN_DISTCHECK: 1
-      - func: fetch-det
-      - func: run_kms_servers
-      - func: test
-        vars:
-          MONGOCXX_TEST_TOPOLOGY: sharded
-          REQUIRED_CXX_STANDARD: 11
-  - name: integration-windows-2019-vs2022-x64-debug-shared-cxx11-latest-single
-    run_on: windows-vsCurrent-large
-    tags: [integration, windows-vsCurrent, windows, debug, shared, cxx11, latest, single]
-    commands:
-      - command: expansions.update
-        params:
-          updates:
-            - { key: build_type, value: Debug }
-            - { key: generator, value: Visual Studio 17 2022 }
-            - { key: platform, value: x64 }
-      - func: setup
-      - func: start_mongod
-        vars:
-          mongodb_version: latest
-      - func: install_c_driver
-      - func: compile
-        vars:
-          ENABLE_TESTS: "ON"
-          REQUIRED_CXX_STANDARD: 11
-          RUN_DISTCHECK: 1
-      - func: fetch-det
-      - func: run_kms_servers
-      - func: test
-        vars:
-          MONGOCXX_TEST_TOPOLOGY: single
-          REQUIRED_CXX_STANDARD: 11
   - name: integration-windows-2019-vs2022-x64-debug-shared-cxx17-4.2-replica
     run_on: windows-vsCurrent-large
     tags: [integration, windows-vsCurrent, windows, debug, shared, cxx17, "4.2", replica]
@@ -12531,86 +12205,6 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: "4.2"
-      - func: install_c_driver
-      - func: compile
-        vars:
-          ENABLE_TESTS: "ON"
-          REQUIRED_CXX_STANDARD: 17
-          RUN_DISTCHECK: 1
-      - func: fetch-det
-      - func: run_kms_servers
-      - func: test
-        vars:
-          MONGOCXX_TEST_TOPOLOGY: single
-          REQUIRED_CXX_STANDARD: 17
-  - name: integration-windows-2019-vs2022-x64-debug-shared-cxx17-8.0-replica
-    run_on: windows-vsCurrent-large
-    tags: [integration, windows-vsCurrent, windows, debug, shared, cxx17, "8.0", replica]
-    commands:
-      - command: expansions.update
-        params:
-          updates:
-            - { key: build_type, value: Debug }
-            - { key: generator, value: Visual Studio 17 2022 }
-            - { key: platform, value: x64 }
-      - func: setup
-      - func: start_mongod
-        vars:
-          TOPOLOGY: replica_set
-          mongodb_version: "8.0"
-      - func: install_c_driver
-      - func: compile
-        vars:
-          ENABLE_TESTS: "ON"
-          REQUIRED_CXX_STANDARD: 17
-          RUN_DISTCHECK: 1
-      - func: fetch-det
-      - func: run_kms_servers
-      - func: test
-        vars:
-          MONGOCXX_TEST_TOPOLOGY: replica
-          REQUIRED_CXX_STANDARD: 17
-  - name: integration-windows-2019-vs2022-x64-debug-shared-cxx17-8.0-sharded
-    run_on: windows-vsCurrent-large
-    tags: [integration, windows-vsCurrent, windows, debug, shared, cxx17, "8.0", sharded]
-    commands:
-      - command: expansions.update
-        params:
-          updates:
-            - { key: build_type, value: Debug }
-            - { key: generator, value: Visual Studio 17 2022 }
-            - { key: platform, value: x64 }
-      - func: setup
-      - func: start_mongod
-        vars:
-          TOPOLOGY: sharded_cluster
-          mongodb_version: "8.0"
-      - func: install_c_driver
-      - func: compile
-        vars:
-          ENABLE_TESTS: "ON"
-          REQUIRED_CXX_STANDARD: 17
-          RUN_DISTCHECK: 1
-      - func: fetch-det
-      - func: run_kms_servers
-      - func: test
-        vars:
-          MONGOCXX_TEST_TOPOLOGY: sharded
-          REQUIRED_CXX_STANDARD: 17
-  - name: integration-windows-2019-vs2022-x64-debug-shared-cxx17-8.0-single
-    run_on: windows-vsCurrent-large
-    tags: [integration, windows-vsCurrent, windows, debug, shared, cxx17, "8.0", single]
-    commands:
-      - command: expansions.update
-        params:
-          updates:
-            - { key: build_type, value: Debug }
-            - { key: generator, value: Visual Studio 17 2022 }
-            - { key: platform, value: x64 }
-      - func: setup
-      - func: start_mongod
-        vars:
-          mongodb_version: "8.0"
       - func: install_c_driver
       - func: compile
         vars:
@@ -12706,252 +12300,6 @@ tasks:
           MONGOCXX_TEST_TOPOLOGY: single
           REQUIRED_CXX_STANDARD: 17
           TEST_WITH_CSFLE: "ON"
-  - name: integration-windows-2019-vs2022-x64-debug-shared-cxx17-csfle-8.0-replica
-    run_on: windows-vsCurrent-large
-    tags: [integration, windows-vsCurrent, windows, debug, shared, cxx17, csfle, "8.0", replica]
-    commands:
-      - command: expansions.update
-        params:
-          updates:
-            - { key: build_type, value: Debug }
-            - { key: generator, value: Visual Studio 17 2022 }
-            - { key: platform, value: x64 }
-      - func: setup
-      - func: start_mongod
-        vars:
-          TOPOLOGY: replica_set
-          mongodb_version: "8.0"
-      - func: install_c_driver
-      - func: compile
-        vars:
-          ENABLE_TESTS: "ON"
-          REQUIRED_CXX_STANDARD: 17
-          RUN_DISTCHECK: 1
-      - func: fetch-det
-      - func: run_kms_servers
-      - func: test
-        vars:
-          MONGOCXX_TEST_TOPOLOGY: replica
-          REQUIRED_CXX_STANDARD: 17
-          TEST_WITH_CSFLE: "ON"
-  - name: integration-windows-2019-vs2022-x64-debug-shared-cxx17-csfle-8.0-sharded
-    run_on: windows-vsCurrent-large
-    tags: [integration, windows-vsCurrent, windows, debug, shared, cxx17, csfle, "8.0", sharded]
-    commands:
-      - command: expansions.update
-        params:
-          updates:
-            - { key: build_type, value: Debug }
-            - { key: generator, value: Visual Studio 17 2022 }
-            - { key: platform, value: x64 }
-      - func: setup
-      - func: start_mongod
-        vars:
-          TOPOLOGY: sharded_cluster
-          mongodb_version: "8.0"
-      - func: install_c_driver
-      - func: compile
-        vars:
-          ENABLE_TESTS: "ON"
-          REQUIRED_CXX_STANDARD: 17
-          RUN_DISTCHECK: 1
-      - func: fetch-det
-      - func: run_kms_servers
-      - func: test
-        vars:
-          MONGOCXX_TEST_TOPOLOGY: sharded
-          REQUIRED_CXX_STANDARD: 17
-          TEST_WITH_CSFLE: "ON"
-  - name: integration-windows-2019-vs2022-x64-debug-shared-cxx17-csfle-8.0-single
-    run_on: windows-vsCurrent-large
-    tags: [integration, windows-vsCurrent, windows, debug, shared, cxx17, csfle, "8.0", single]
-    commands:
-      - command: expansions.update
-        params:
-          updates:
-            - { key: build_type, value: Debug }
-            - { key: generator, value: Visual Studio 17 2022 }
-            - { key: platform, value: x64 }
-      - func: setup
-      - func: start_mongod
-        vars:
-          mongodb_version: "8.0"
-      - func: install_c_driver
-      - func: compile
-        vars:
-          ENABLE_TESTS: "ON"
-          REQUIRED_CXX_STANDARD: 17
-          RUN_DISTCHECK: 1
-      - func: fetch-det
-      - func: run_kms_servers
-      - func: test
-        vars:
-          MONGOCXX_TEST_TOPOLOGY: single
-          REQUIRED_CXX_STANDARD: 17
-          TEST_WITH_CSFLE: "ON"
-  - name: integration-windows-2019-vs2022-x64-debug-shared-cxx17-csfle-latest-replica
-    run_on: windows-vsCurrent-large
-    tags: [integration, windows-vsCurrent, windows, debug, shared, cxx17, csfle, latest, replica]
-    commands:
-      - command: expansions.update
-        params:
-          updates:
-            - { key: build_type, value: Debug }
-            - { key: generator, value: Visual Studio 17 2022 }
-            - { key: platform, value: x64 }
-      - func: setup
-      - func: start_mongod
-        vars:
-          TOPOLOGY: replica_set
-          mongodb_version: latest
-      - func: install_c_driver
-      - func: compile
-        vars:
-          ENABLE_TESTS: "ON"
-          REQUIRED_CXX_STANDARD: 17
-          RUN_DISTCHECK: 1
-      - func: fetch-det
-      - func: run_kms_servers
-      - func: test
-        vars:
-          MONGOCXX_TEST_TOPOLOGY: replica
-          REQUIRED_CXX_STANDARD: 17
-          TEST_WITH_CSFLE: "ON"
-  - name: integration-windows-2019-vs2022-x64-debug-shared-cxx17-csfle-latest-sharded
-    run_on: windows-vsCurrent-large
-    tags: [integration, windows-vsCurrent, windows, debug, shared, cxx17, csfle, latest, sharded]
-    commands:
-      - command: expansions.update
-        params:
-          updates:
-            - { key: build_type, value: Debug }
-            - { key: generator, value: Visual Studio 17 2022 }
-            - { key: platform, value: x64 }
-      - func: setup
-      - func: start_mongod
-        vars:
-          TOPOLOGY: sharded_cluster
-          mongodb_version: latest
-      - func: install_c_driver
-      - func: compile
-        vars:
-          ENABLE_TESTS: "ON"
-          REQUIRED_CXX_STANDARD: 17
-          RUN_DISTCHECK: 1
-      - func: fetch-det
-      - func: run_kms_servers
-      - func: test
-        vars:
-          MONGOCXX_TEST_TOPOLOGY: sharded
-          REQUIRED_CXX_STANDARD: 17
-          TEST_WITH_CSFLE: "ON"
-  - name: integration-windows-2019-vs2022-x64-debug-shared-cxx17-csfle-latest-single
-    run_on: windows-vsCurrent-large
-    tags: [integration, windows-vsCurrent, windows, debug, shared, cxx17, csfle, latest, single]
-    commands:
-      - command: expansions.update
-        params:
-          updates:
-            - { key: build_type, value: Debug }
-            - { key: generator, value: Visual Studio 17 2022 }
-            - { key: platform, value: x64 }
-      - func: setup
-      - func: start_mongod
-        vars:
-          mongodb_version: latest
-      - func: install_c_driver
-      - func: compile
-        vars:
-          ENABLE_TESTS: "ON"
-          REQUIRED_CXX_STANDARD: 17
-          RUN_DISTCHECK: 1
-      - func: fetch-det
-      - func: run_kms_servers
-      - func: test
-        vars:
-          MONGOCXX_TEST_TOPOLOGY: single
-          REQUIRED_CXX_STANDARD: 17
-          TEST_WITH_CSFLE: "ON"
-  - name: integration-windows-2019-vs2022-x64-debug-shared-cxx17-latest-replica
-    run_on: windows-vsCurrent-large
-    tags: [integration, windows-vsCurrent, windows, debug, shared, cxx17, latest, replica]
-    commands:
-      - command: expansions.update
-        params:
-          updates:
-            - { key: build_type, value: Debug }
-            - { key: generator, value: Visual Studio 17 2022 }
-            - { key: platform, value: x64 }
-      - func: setup
-      - func: start_mongod
-        vars:
-          TOPOLOGY: replica_set
-          mongodb_version: latest
-      - func: install_c_driver
-      - func: compile
-        vars:
-          ENABLE_TESTS: "ON"
-          REQUIRED_CXX_STANDARD: 17
-          RUN_DISTCHECK: 1
-      - func: fetch-det
-      - func: run_kms_servers
-      - func: test
-        vars:
-          MONGOCXX_TEST_TOPOLOGY: replica
-          REQUIRED_CXX_STANDARD: 17
-  - name: integration-windows-2019-vs2022-x64-debug-shared-cxx17-latest-sharded
-    run_on: windows-vsCurrent-large
-    tags: [integration, windows-vsCurrent, windows, debug, shared, cxx17, latest, sharded]
-    commands:
-      - command: expansions.update
-        params:
-          updates:
-            - { key: build_type, value: Debug }
-            - { key: generator, value: Visual Studio 17 2022 }
-            - { key: platform, value: x64 }
-      - func: setup
-      - func: start_mongod
-        vars:
-          TOPOLOGY: sharded_cluster
-          mongodb_version: latest
-      - func: install_c_driver
-      - func: compile
-        vars:
-          ENABLE_TESTS: "ON"
-          REQUIRED_CXX_STANDARD: 17
-          RUN_DISTCHECK: 1
-      - func: fetch-det
-      - func: run_kms_servers
-      - func: test
-        vars:
-          MONGOCXX_TEST_TOPOLOGY: sharded
-          REQUIRED_CXX_STANDARD: 17
-  - name: integration-windows-2019-vs2022-x64-debug-shared-cxx17-latest-single
-    run_on: windows-vsCurrent-large
-    tags: [integration, windows-vsCurrent, windows, debug, shared, cxx17, latest, single]
-    commands:
-      - command: expansions.update
-        params:
-          updates:
-            - { key: build_type, value: Debug }
-            - { key: generator, value: Visual Studio 17 2022 }
-            - { key: platform, value: x64 }
-      - func: setup
-      - func: start_mongod
-        vars:
-          mongodb_version: latest
-      - func: install_c_driver
-      - func: compile
-        vars:
-          ENABLE_TESTS: "ON"
-          REQUIRED_CXX_STANDARD: 17
-          RUN_DISTCHECK: 1
-      - func: fetch-det
-      - func: run_kms_servers
-      - func: test
-        vars:
-          MONGOCXX_TEST_TOPOLOGY: single
-          REQUIRED_CXX_STANDARD: 17
   - name: integration-windows-2022-latest-gcc-debug-shared-cxx11-4.2-replica
     run_on: windows-2022-latest-large
     tags: [integration, windows-2022-latest, windows, debug, shared, cxx11, "4.2", replica]
@@ -13416,6 +12764,658 @@ tasks:
             - { key: build_type, value: Debug }
             - { key: cc_compiler, value: gcc }
             - { key: cxx_compiler, value: g++ }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: latest
+      - func: install_c_driver
+      - func: compile
+        vars:
+          ENABLE_TESTS: "ON"
+          REQUIRED_CXX_STANDARD: 17
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+          REQUIRED_CXX_STANDARD: 17
+  - name: integration-windows-2022-latest-vs2022x64-debug-shared-cxx11-8.0-replica
+    run_on: windows-2022-latest-large
+    tags: [integration, windows-2022-latest, windows, debug, shared, cxx11, "8.0", replica]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+            - { key: generator, value: Visual Studio 17 2022 }
+            - { key: platform, value: x64 }
+      - func: setup
+      - func: start_mongod
+        vars:
+          TOPOLOGY: replica_set
+          mongodb_version: "8.0"
+      - func: install_c_driver
+      - func: compile
+        vars:
+          ENABLE_TESTS: "ON"
+          REQUIRED_CXX_STANDARD: 11
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: replica
+          REQUIRED_CXX_STANDARD: 11
+  - name: integration-windows-2022-latest-vs2022x64-debug-shared-cxx11-8.0-sharded
+    run_on: windows-2022-latest-large
+    tags: [integration, windows-2022-latest, windows, debug, shared, cxx11, "8.0", sharded]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+            - { key: generator, value: Visual Studio 17 2022 }
+            - { key: platform, value: x64 }
+      - func: setup
+      - func: start_mongod
+        vars:
+          TOPOLOGY: sharded_cluster
+          mongodb_version: "8.0"
+      - func: install_c_driver
+      - func: compile
+        vars:
+          ENABLE_TESTS: "ON"
+          REQUIRED_CXX_STANDARD: 11
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: sharded
+          REQUIRED_CXX_STANDARD: 11
+  - name: integration-windows-2022-latest-vs2022x64-debug-shared-cxx11-8.0-single
+    run_on: windows-2022-latest-large
+    tags: [integration, windows-2022-latest, windows, debug, shared, cxx11, "8.0", single]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+            - { key: generator, value: Visual Studio 17 2022 }
+            - { key: platform, value: x64 }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: "8.0"
+      - func: install_c_driver
+      - func: compile
+        vars:
+          ENABLE_TESTS: "ON"
+          REQUIRED_CXX_STANDARD: 11
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+          REQUIRED_CXX_STANDARD: 11
+  - name: integration-windows-2022-latest-vs2022x64-debug-shared-cxx11-csfle-8.0-replica
+    run_on: windows-2022-latest-large
+    tags: [integration, windows-2022-latest, windows, debug, shared, cxx11, csfle, "8.0", replica]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+            - { key: generator, value: Visual Studio 17 2022 }
+            - { key: platform, value: x64 }
+      - func: setup
+      - func: start_mongod
+        vars:
+          TOPOLOGY: replica_set
+          mongodb_version: "8.0"
+      - func: install_c_driver
+      - func: compile
+        vars:
+          ENABLE_TESTS: "ON"
+          REQUIRED_CXX_STANDARD: 11
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: replica
+          REQUIRED_CXX_STANDARD: 11
+          TEST_WITH_CSFLE: "ON"
+  - name: integration-windows-2022-latest-vs2022x64-debug-shared-cxx11-csfle-8.0-sharded
+    run_on: windows-2022-latest-large
+    tags: [integration, windows-2022-latest, windows, debug, shared, cxx11, csfle, "8.0", sharded]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+            - { key: generator, value: Visual Studio 17 2022 }
+            - { key: platform, value: x64 }
+      - func: setup
+      - func: start_mongod
+        vars:
+          TOPOLOGY: sharded_cluster
+          mongodb_version: "8.0"
+      - func: install_c_driver
+      - func: compile
+        vars:
+          ENABLE_TESTS: "ON"
+          REQUIRED_CXX_STANDARD: 11
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: sharded
+          REQUIRED_CXX_STANDARD: 11
+          TEST_WITH_CSFLE: "ON"
+  - name: integration-windows-2022-latest-vs2022x64-debug-shared-cxx11-csfle-8.0-single
+    run_on: windows-2022-latest-large
+    tags: [integration, windows-2022-latest, windows, debug, shared, cxx11, csfle, "8.0", single]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+            - { key: generator, value: Visual Studio 17 2022 }
+            - { key: platform, value: x64 }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: "8.0"
+      - func: install_c_driver
+      - func: compile
+        vars:
+          ENABLE_TESTS: "ON"
+          REQUIRED_CXX_STANDARD: 11
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+          REQUIRED_CXX_STANDARD: 11
+          TEST_WITH_CSFLE: "ON"
+  - name: integration-windows-2022-latest-vs2022x64-debug-shared-cxx11-csfle-latest-replica
+    run_on: windows-2022-latest-large
+    tags: [integration, windows-2022-latest, windows, debug, shared, cxx11, csfle, latest, replica]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+            - { key: generator, value: Visual Studio 17 2022 }
+            - { key: platform, value: x64 }
+      - func: setup
+      - func: start_mongod
+        vars:
+          TOPOLOGY: replica_set
+          mongodb_version: latest
+      - func: install_c_driver
+      - func: compile
+        vars:
+          ENABLE_TESTS: "ON"
+          REQUIRED_CXX_STANDARD: 11
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: replica
+          REQUIRED_CXX_STANDARD: 11
+          TEST_WITH_CSFLE: "ON"
+  - name: integration-windows-2022-latest-vs2022x64-debug-shared-cxx11-csfle-latest-sharded
+    run_on: windows-2022-latest-large
+    tags: [integration, windows-2022-latest, windows, debug, shared, cxx11, csfle, latest, sharded]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+            - { key: generator, value: Visual Studio 17 2022 }
+            - { key: platform, value: x64 }
+      - func: setup
+      - func: start_mongod
+        vars:
+          TOPOLOGY: sharded_cluster
+          mongodb_version: latest
+      - func: install_c_driver
+      - func: compile
+        vars:
+          ENABLE_TESTS: "ON"
+          REQUIRED_CXX_STANDARD: 11
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: sharded
+          REQUIRED_CXX_STANDARD: 11
+          TEST_WITH_CSFLE: "ON"
+  - name: integration-windows-2022-latest-vs2022x64-debug-shared-cxx11-csfle-latest-single
+    run_on: windows-2022-latest-large
+    tags: [integration, windows-2022-latest, windows, debug, shared, cxx11, csfle, latest, single]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+            - { key: generator, value: Visual Studio 17 2022 }
+            - { key: platform, value: x64 }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: latest
+      - func: install_c_driver
+      - func: compile
+        vars:
+          ENABLE_TESTS: "ON"
+          REQUIRED_CXX_STANDARD: 11
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+          REQUIRED_CXX_STANDARD: 11
+          TEST_WITH_CSFLE: "ON"
+  - name: integration-windows-2022-latest-vs2022x64-debug-shared-cxx11-latest-replica
+    run_on: windows-2022-latest-large
+    tags: [integration, windows-2022-latest, windows, debug, shared, cxx11, latest, replica]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+            - { key: generator, value: Visual Studio 17 2022 }
+            - { key: platform, value: x64 }
+      - func: setup
+      - func: start_mongod
+        vars:
+          TOPOLOGY: replica_set
+          mongodb_version: latest
+      - func: install_c_driver
+      - func: compile
+        vars:
+          ENABLE_TESTS: "ON"
+          REQUIRED_CXX_STANDARD: 11
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: replica
+          REQUIRED_CXX_STANDARD: 11
+  - name: integration-windows-2022-latest-vs2022x64-debug-shared-cxx11-latest-sharded
+    run_on: windows-2022-latest-large
+    tags: [integration, windows-2022-latest, windows, debug, shared, cxx11, latest, sharded]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+            - { key: generator, value: Visual Studio 17 2022 }
+            - { key: platform, value: x64 }
+      - func: setup
+      - func: start_mongod
+        vars:
+          TOPOLOGY: sharded_cluster
+          mongodb_version: latest
+      - func: install_c_driver
+      - func: compile
+        vars:
+          ENABLE_TESTS: "ON"
+          REQUIRED_CXX_STANDARD: 11
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: sharded
+          REQUIRED_CXX_STANDARD: 11
+  - name: integration-windows-2022-latest-vs2022x64-debug-shared-cxx11-latest-single
+    run_on: windows-2022-latest-large
+    tags: [integration, windows-2022-latest, windows, debug, shared, cxx11, latest, single]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+            - { key: generator, value: Visual Studio 17 2022 }
+            - { key: platform, value: x64 }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: latest
+      - func: install_c_driver
+      - func: compile
+        vars:
+          ENABLE_TESTS: "ON"
+          REQUIRED_CXX_STANDARD: 11
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+          REQUIRED_CXX_STANDARD: 11
+  - name: integration-windows-2022-latest-vs2022x64-debug-shared-cxx17-8.0-replica
+    run_on: windows-2022-latest-large
+    tags: [integration, windows-2022-latest, windows, debug, shared, cxx17, "8.0", replica]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+            - { key: generator, value: Visual Studio 17 2022 }
+            - { key: platform, value: x64 }
+      - func: setup
+      - func: start_mongod
+        vars:
+          TOPOLOGY: replica_set
+          mongodb_version: "8.0"
+      - func: install_c_driver
+      - func: compile
+        vars:
+          ENABLE_TESTS: "ON"
+          REQUIRED_CXX_STANDARD: 17
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: replica
+          REQUIRED_CXX_STANDARD: 17
+  - name: integration-windows-2022-latest-vs2022x64-debug-shared-cxx17-8.0-sharded
+    run_on: windows-2022-latest-large
+    tags: [integration, windows-2022-latest, windows, debug, shared, cxx17, "8.0", sharded]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+            - { key: generator, value: Visual Studio 17 2022 }
+            - { key: platform, value: x64 }
+      - func: setup
+      - func: start_mongod
+        vars:
+          TOPOLOGY: sharded_cluster
+          mongodb_version: "8.0"
+      - func: install_c_driver
+      - func: compile
+        vars:
+          ENABLE_TESTS: "ON"
+          REQUIRED_CXX_STANDARD: 17
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: sharded
+          REQUIRED_CXX_STANDARD: 17
+  - name: integration-windows-2022-latest-vs2022x64-debug-shared-cxx17-8.0-single
+    run_on: windows-2022-latest-large
+    tags: [integration, windows-2022-latest, windows, debug, shared, cxx17, "8.0", single]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+            - { key: generator, value: Visual Studio 17 2022 }
+            - { key: platform, value: x64 }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: "8.0"
+      - func: install_c_driver
+      - func: compile
+        vars:
+          ENABLE_TESTS: "ON"
+          REQUIRED_CXX_STANDARD: 17
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+          REQUIRED_CXX_STANDARD: 17
+  - name: integration-windows-2022-latest-vs2022x64-debug-shared-cxx17-csfle-8.0-replica
+    run_on: windows-2022-latest-large
+    tags: [integration, windows-2022-latest, windows, debug, shared, cxx17, csfle, "8.0", replica]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+            - { key: generator, value: Visual Studio 17 2022 }
+            - { key: platform, value: x64 }
+      - func: setup
+      - func: start_mongod
+        vars:
+          TOPOLOGY: replica_set
+          mongodb_version: "8.0"
+      - func: install_c_driver
+      - func: compile
+        vars:
+          ENABLE_TESTS: "ON"
+          REQUIRED_CXX_STANDARD: 17
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: replica
+          REQUIRED_CXX_STANDARD: 17
+          TEST_WITH_CSFLE: "ON"
+  - name: integration-windows-2022-latest-vs2022x64-debug-shared-cxx17-csfle-8.0-sharded
+    run_on: windows-2022-latest-large
+    tags: [integration, windows-2022-latest, windows, debug, shared, cxx17, csfle, "8.0", sharded]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+            - { key: generator, value: Visual Studio 17 2022 }
+            - { key: platform, value: x64 }
+      - func: setup
+      - func: start_mongod
+        vars:
+          TOPOLOGY: sharded_cluster
+          mongodb_version: "8.0"
+      - func: install_c_driver
+      - func: compile
+        vars:
+          ENABLE_TESTS: "ON"
+          REQUIRED_CXX_STANDARD: 17
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: sharded
+          REQUIRED_CXX_STANDARD: 17
+          TEST_WITH_CSFLE: "ON"
+  - name: integration-windows-2022-latest-vs2022x64-debug-shared-cxx17-csfle-8.0-single
+    run_on: windows-2022-latest-large
+    tags: [integration, windows-2022-latest, windows, debug, shared, cxx17, csfle, "8.0", single]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+            - { key: generator, value: Visual Studio 17 2022 }
+            - { key: platform, value: x64 }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: "8.0"
+      - func: install_c_driver
+      - func: compile
+        vars:
+          ENABLE_TESTS: "ON"
+          REQUIRED_CXX_STANDARD: 17
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+          REQUIRED_CXX_STANDARD: 17
+          TEST_WITH_CSFLE: "ON"
+  - name: integration-windows-2022-latest-vs2022x64-debug-shared-cxx17-csfle-latest-replica
+    run_on: windows-2022-latest-large
+    tags: [integration, windows-2022-latest, windows, debug, shared, cxx17, csfle, latest, replica]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+            - { key: generator, value: Visual Studio 17 2022 }
+            - { key: platform, value: x64 }
+      - func: setup
+      - func: start_mongod
+        vars:
+          TOPOLOGY: replica_set
+          mongodb_version: latest
+      - func: install_c_driver
+      - func: compile
+        vars:
+          ENABLE_TESTS: "ON"
+          REQUIRED_CXX_STANDARD: 17
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: replica
+          REQUIRED_CXX_STANDARD: 17
+          TEST_WITH_CSFLE: "ON"
+  - name: integration-windows-2022-latest-vs2022x64-debug-shared-cxx17-csfle-latest-sharded
+    run_on: windows-2022-latest-large
+    tags: [integration, windows-2022-latest, windows, debug, shared, cxx17, csfle, latest, sharded]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+            - { key: generator, value: Visual Studio 17 2022 }
+            - { key: platform, value: x64 }
+      - func: setup
+      - func: start_mongod
+        vars:
+          TOPOLOGY: sharded_cluster
+          mongodb_version: latest
+      - func: install_c_driver
+      - func: compile
+        vars:
+          ENABLE_TESTS: "ON"
+          REQUIRED_CXX_STANDARD: 17
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: sharded
+          REQUIRED_CXX_STANDARD: 17
+          TEST_WITH_CSFLE: "ON"
+  - name: integration-windows-2022-latest-vs2022x64-debug-shared-cxx17-csfle-latest-single
+    run_on: windows-2022-latest-large
+    tags: [integration, windows-2022-latest, windows, debug, shared, cxx17, csfle, latest, single]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+            - { key: generator, value: Visual Studio 17 2022 }
+            - { key: platform, value: x64 }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: latest
+      - func: install_c_driver
+      - func: compile
+        vars:
+          ENABLE_TESTS: "ON"
+          REQUIRED_CXX_STANDARD: 17
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+          REQUIRED_CXX_STANDARD: 17
+          TEST_WITH_CSFLE: "ON"
+  - name: integration-windows-2022-latest-vs2022x64-debug-shared-cxx17-latest-replica
+    run_on: windows-2022-latest-large
+    tags: [integration, windows-2022-latest, windows, debug, shared, cxx17, latest, replica]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+            - { key: generator, value: Visual Studio 17 2022 }
+            - { key: platform, value: x64 }
+      - func: setup
+      - func: start_mongod
+        vars:
+          TOPOLOGY: replica_set
+          mongodb_version: latest
+      - func: install_c_driver
+      - func: compile
+        vars:
+          ENABLE_TESTS: "ON"
+          REQUIRED_CXX_STANDARD: 17
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: replica
+          REQUIRED_CXX_STANDARD: 17
+  - name: integration-windows-2022-latest-vs2022x64-debug-shared-cxx17-latest-sharded
+    run_on: windows-2022-latest-large
+    tags: [integration, windows-2022-latest, windows, debug, shared, cxx17, latest, sharded]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+            - { key: generator, value: Visual Studio 17 2022 }
+            - { key: platform, value: x64 }
+      - func: setup
+      - func: start_mongod
+        vars:
+          TOPOLOGY: sharded_cluster
+          mongodb_version: latest
+      - func: install_c_driver
+      - func: compile
+        vars:
+          ENABLE_TESTS: "ON"
+          REQUIRED_CXX_STANDARD: 17
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: sharded
+          REQUIRED_CXX_STANDARD: 17
+  - name: integration-windows-2022-latest-vs2022x64-debug-shared-cxx17-latest-single
+    run_on: windows-2022-latest-large
+    tags: [integration, windows-2022-latest, windows, debug, shared, cxx17, latest, single]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+            - { key: generator, value: Visual Studio 17 2022 }
+            - { key: platform, value: x64 }
       - func: setup
       - func: start_mongod
         vars:
