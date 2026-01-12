@@ -12108,35 +12108,6 @@ tasks:
           MONGOCXX_TEST_TOPOLOGY: single
           REQUIRED_CXX_STANDARD: 11
           TEST_WITH_CSFLE: "ON"
-  - name: integration-windows-2019-vs2022-x64-debug-shared-cxx11-csfle-latest-replica-mongocryptd
-    run_on: windows-vsCurrent-large
-    tags: [integration, windows-vsCurrent, windows, debug, shared, cxx11, csfle, latest, replica, mongocryptd]
-    commands:
-      - command: expansions.update
-        params:
-          updates:
-            - { key: build_type, value: Debug }
-            - { key: generator, value: Visual Studio 17 2022 }
-            - { key: platform, value: x64 }
-      - func: setup
-      - func: start_mongod
-        vars:
-          TOPOLOGY: replica_set
-          mongodb_version: latest
-      - func: install_c_driver
-      - func: compile
-        vars:
-          ENABLE_TESTS: "ON"
-          REQUIRED_CXX_STANDARD: 11
-          RUN_DISTCHECK: 1
-      - func: fetch-det
-      - func: run_kms_servers
-      - func: test
-        vars:
-          MONGOCXX_TEST_TOPOLOGY: replica
-          REQUIRED_CXX_STANDARD: 11
-          TEST_WITH_CSFLE: "ON"
-          use_mongocryptd: true
   - name: integration-windows-2019-vs2022-x64-debug-shared-cxx17-4.2-replica
     run_on: windows-vsCurrent-large
     tags: [integration, windows-vsCurrent, windows, debug, shared, cxx17, "4.2", replica]
@@ -12971,6 +12942,35 @@ tasks:
           MONGOCXX_TEST_TOPOLOGY: replica
           REQUIRED_CXX_STANDARD: 11
           TEST_WITH_CSFLE: "ON"
+  - name: integration-windows-2022-latest-vs2022x64-debug-shared-cxx11-csfle-latest-replica-mongocryptd
+    run_on: windows-2022-latest-large
+    tags: [integration, windows-2022-latest, windows, debug, shared, cxx11, csfle, latest, replica, mongocryptd]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+            - { key: generator, value: Visual Studio 17 2022 }
+            - { key: platform, value: x64 }
+      - func: setup
+      - func: start_mongod
+        vars:
+          TOPOLOGY: replica_set
+          mongodb_version: latest
+      - func: install_c_driver
+      - func: compile
+        vars:
+          ENABLE_TESTS: "ON"
+          REQUIRED_CXX_STANDARD: 11
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: replica
+          REQUIRED_CXX_STANDARD: 11
+          TEST_WITH_CSFLE: "ON"
+          use_mongocryptd: true
   - name: integration-windows-2022-latest-vs2022x64-debug-shared-cxx11-csfle-latest-sharded
     run_on: windows-2022-latest-large
     tags: [integration, windows-2022-latest, windows, debug, shared, cxx11, csfle, latest, sharded]
@@ -14556,9 +14556,9 @@ tasks:
           MONGOCXX_TEST_TOPOLOGY: single
           MONGODB_API_VERSION: 1
           build_type: Debug
-  - name: versioned-api-one-required-windows-2019-vs2022-x64-debug-shared
-    run_on: windows-vsCurrent-large
-    tags: [versioned-api, windows-vsCurrent, vs2022x64, debug, shared]
+  - name: versioned-api-one-required-windows-2022-latest-vs2022x64-debug-shared
+    run_on: windows-2022-latest-large
+    tags: [versioned-api, windows-2022-latest, vs2022x64, debug, shared]
     commands:
       - func: setup
       - func: start_mongod
@@ -14624,9 +14624,9 @@ tasks:
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
           build_type: Debug
-  - name: versioned-api-two-accepted-windows-2019-vs2022-x64-debug-shared
-    run_on: windows-vsCurrent-large
-    tags: [versioned-api, windows-vsCurrent, vs2022x64, debug, shared]
+  - name: versioned-api-two-accepted-windows-2022-latest-vs2022x64-debug-shared
+    run_on: windows-2022-latest-large
+    tags: [versioned-api, windows-2022-latest, vs2022x64, debug, shared]
     commands:
       - func: setup
       - func: start_mongod

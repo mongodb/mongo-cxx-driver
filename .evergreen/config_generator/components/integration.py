@@ -57,13 +57,13 @@ WINDOWS_MATRIX = [
 ]
 
 MONGOCRYPTD_MATRIX = [
-    ('rhel80',             None,        ['Debug'], ['shared'], [11], [None], ['crypt'], ['latest'], ['replica']),
-    ('rhel8-arm64-latest', None,        ['Debug'], ['shared'], [11], [None], ['crypt'], ['latest'], ['replica']),
-    ('rhel8-power',        None,        ['Debug'], ['shared'], [11], [None], ['crypt'], ['latest'], ['replica']),
-    ('rhel8-zseries',      None,        ['Debug'], ['shared'], [11], [None], ['crypt'], ['latest'], ['replica']),
-    ('macos-14-arm64',     None,        ['Debug'], ['shared'], [11], [None], ['crypt'], ['latest'], ['replica']),
-    ('macos-14',           None,        ['Debug'], ['shared'], [11], [None], ['crypt'], ['latest'], ['replica']),
-    ('windows-vsCurrent',  'vs2022x64', ['Debug'], ['shared'], [11], [None], ['crypt'], ['latest'], ['replica']),
+    ('rhel80',              None,        ['Debug'], ['shared'], [11], [None], ['crypt'], ['latest'], ['replica']),
+    ('rhel8-arm64-latest',  None,        ['Debug'], ['shared'], [11], [None], ['crypt'], ['latest'], ['replica']),
+    ('rhel8-power',         None,        ['Debug'], ['shared'], [11], [None], ['crypt'], ['latest'], ['replica']),
+    ('rhel8-zseries',       None,        ['Debug'], ['shared'], [11], [None], ['crypt'], ['latest'], ['replica']),
+    ('macos-14-arm64',      None,        ['Debug'], ['shared'], [11], [None], ['crypt'], ['latest'], ['replica']),
+    ('macos-14',            None,        ['Debug'], ['shared'], [11], [None], ['crypt'], ['latest'], ['replica']),
+    ('windows-2022-latest', 'vs2022x64', ['Debug'], ['shared'], [11], [None], ['crypt'], ['latest'], ['replica']),
 ]
 
 # fmt: on
