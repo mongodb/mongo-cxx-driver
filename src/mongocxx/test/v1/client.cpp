@@ -142,6 +142,12 @@ struct client_mocks_type {
 
     v1::uri uri;
 
+    ~client_mocks_type() = default;
+    client_mocks_type(client_mocks_type&& other) noexcept = delete;
+    client_mocks_type& operator=(client_mocks_type&& other) noexcept = delete;
+    client_mocks_type(client_mocks_type const& other) = delete;
+    client_mocks_type& operator=(client_mocks_type const& other) = delete;
+
     client_mocks_type()
         : uri_destroy{libmongoc::uri_destroy.create_instance()},
           uri_copy{libmongoc::uri_copy.create_instance()},
