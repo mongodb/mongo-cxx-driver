@@ -108,12 +108,12 @@ class client {
     explicit operator v1::client() const& = delete;
 
     ///
-    /// Creates a new client connection to MongoDB.
+    /// Creates a new client to MongoDB.
     ///
     /// @param mongodb_uri
-    ///   A MongoDB URI representing the connection parameters
+    ///   A MongoDB URI.
     /// @param options
-    ///   Additional options that cannot be specified via the mongodb_uri
+    ///   Additional URI options.
     ///
     /// @throws mongocxx::v_noabi::exception if invalid options are provided
     /// (whether from the URI or provided client options).
