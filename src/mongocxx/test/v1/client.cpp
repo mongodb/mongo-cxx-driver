@@ -624,7 +624,7 @@ void test_auto_encryption_opts_doc(
 
 } // namespace
 
-TEST_CASE("auto_encryption_opts", "[mongocxx][v1][client][!mayfail]") {
+TEST_CASE("auto_encryption_opts", "[mongocxx][v1][client]") {
     // Workaround baffling segmentation faults during destruction of the `mocks` local variable when compiled with GCC
     // on RHEL 8 ARM64. Not observed on any other target platform. Compiling with Clang or enabling ASAN suppresses this
     // runtime error. This issue seems to only affect this specific test case. (???)
