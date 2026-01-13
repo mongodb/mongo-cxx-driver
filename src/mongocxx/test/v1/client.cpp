@@ -267,6 +267,7 @@ TEST_CASE("exceptions", "[mongocxx][v1][client]") {
 
             try {
                 (void)mocks.make();
+                FAIL("should not reach this point");
             } catch (v1::exception const& ex) {
                 CHECK(ex.code() == v1::source_errc::mongoc);
                 CHECK(ex.code().value() == static_cast<int>(v));
@@ -289,6 +290,7 @@ TEST_CASE("exceptions", "[mongocxx][v1][client]") {
 
             try {
                 (void)mocks.make(std::move(opts));
+                FAIL("should not reach this point");
             } catch (v1::exception const& ex) {
                 CHECK(ex.code() == v1::source_errc::mongoc);
                 CHECK(ex.code().value() == static_cast<int>(v));
@@ -311,6 +313,7 @@ TEST_CASE("exceptions", "[mongocxx][v1][client]") {
 
             try {
                 (void)mocks.make(std::move(opts));
+                FAIL("should not reach this point");
             } catch (v1::exception const& ex) {
                 CHECK(ex.code() == v1::source_errc::mongoc);
                 CHECK(ex.code().value() == static_cast<int>(v));
@@ -332,6 +335,7 @@ TEST_CASE("exceptions", "[mongocxx][v1][client]") {
 
             try {
                 client.list_database_names();
+                FAIL("should not reach this point");
             } catch (v1::exception const& ex) {
                 CHECK(ex.code() == v1::source_errc::mongoc);
                 CHECK(ex.code().value() == static_cast<int>(v));
