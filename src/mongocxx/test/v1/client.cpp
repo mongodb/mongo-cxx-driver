@@ -260,7 +260,7 @@ TEST_CASE("exceptions", "[mongocxx][v1][client]") {
                 });
 
             try {
-                (void)client{std::move(mocks.uri)};
+                (void)mocks.make();
             } catch (v1::exception const& ex) {
                 CHECK(ex.code() == v1::source_errc::mongoc);
                 CHECK(ex.code().value() == static_cast<int>(v));
@@ -282,7 +282,7 @@ TEST_CASE("exceptions", "[mongocxx][v1][client]") {
             CHECK_NOTHROW(opts.auto_encryption_opts(v1::auto_encryption_options{}));
 
             try {
-                (void)client{std::move(mocks.uri), std::move(opts)};
+                (void)mocks.make(std::move(opts));
             } catch (v1::exception const& ex) {
                 CHECK(ex.code() == v1::source_errc::mongoc);
                 CHECK(ex.code().value() == static_cast<int>(v));
@@ -304,7 +304,7 @@ TEST_CASE("exceptions", "[mongocxx][v1][client]") {
             CHECK_NOTHROW(opts.server_api_opts(v1::server_api{v1::server_api::version::k_version_1}));
 
             try {
-                (void)client{std::move(mocks.uri), std::move(opts)};
+                (void)mocks.make(std::move(opts));
             } catch (v1::exception const& ex) {
                 CHECK(ex.code() == v1::source_errc::mongoc);
                 CHECK(ex.code().value() == static_cast<int>(v));
@@ -313,7 +313,7 @@ TEST_CASE("exceptions", "[mongocxx][v1][client]") {
         }
 
         SECTION("list_database_names") {
-            client client{std::move(mocks.uri)};
+            auto client = mocks.make();
 
             auto get_database_names_with_opts = libmongoc::client_get_database_names_with_opts.create_instance();
             get_database_names_with_opts->interpose(
@@ -671,7 +671,7 @@ TEST_CASE("auto_encryption_opts", "[mongocxx][v1][client]") {
             client::options opts;
             CHECK_NOTHROW(opts.auto_encryption_opts(std::move(auto_encryption_opts)));
             mocks.client_destroy->interpose([&](mongoc_client_t* ptr) -> void { CHECK(ptr == mocks.client_id); });
-            CHECK_NOTHROW(mocks.make(std::move(opts)));
+            (void)mocks.make(std::move(opts));
         }
 
         CHECK(counter == 1);
@@ -702,7 +702,7 @@ TEST_CASE("auto_encryption_opts", "[mongocxx][v1][client]") {
 
             client::options opts;
             CHECK_NOTHROW(opts.auto_encryption_opts(std::move(auto_encryption_opts)));
-            CHECK_NOTHROW(mocks.make(std::move(opts)));
+            (void)mocks.make(std::move(opts));
         }
 
         CHECK(counter == 1);
@@ -878,7 +878,7 @@ TEST_CASE("apm_opts", "[mongocxx][v1][client]") {
     {
         client::options opts;
         CHECK_NOTHROW(opts.apm_opts(std::move(callbacks)));
-        CHECK_NOTHROW(mocks.make(std::move(opts)));
+        (void)mocks.make(std::move(opts));
     }
 
     // Only one APM callback (by index) should have been invoked.
@@ -946,7 +946,7 @@ TEST_CASE("server_api_opts", "[mongocxx][v1][client]") {
         {
             client::options opts;
             CHECK_NOTHROW(opts.server_api_opts(std::move(api)));
-            CHECK_NOTHROW(mocks.make(std::move(opts)));
+            (void)mocks.make(std::move(opts));
         }
 
         CHECK(counter == 1);
@@ -970,7 +970,7 @@ TEST_CASE("server_api_opts", "[mongocxx][v1][client]") {
         {
             client::options opts;
             CHECK_NOTHROW(opts.server_api_opts(std::move(api)));
-            CHECK_NOTHROW(mocks.make(std::move(opts)));
+            (void)mocks.make(std::move(opts));
         }
 
         CHECK(counter == 1);
@@ -1636,7 +1636,7 @@ TEST_CASE("reset", "[mongocxx][v1][client]") {
     auto reset = libmongoc::client_reset.create_instance();
     reset->interpose([&](mongoc_client_t* ptr) -> void { CHECK(ptr == mocks.client_id); });
 
-    CHECK_NOTHROW(mocks.make().reset());
+    (void)mocks.make().reset();
 }
 
 } // namespace v1
