@@ -124,6 +124,7 @@ struct identity_type {};
 struct client_mocks_type {
     using uri_destroy_type = decltype(libmongoc::uri_destroy.create_instance());
     using uri_copy_type = decltype(libmongoc::uri_copy.create_instance());
+    using uri_get_tls_type = decltype(libmongoc::uri_get_tls.create_instance());
     using client_destroy_type = decltype(libmongoc::client_destroy.create_instance());
     using client_new_type = decltype(libmongoc::client_new_from_uri_with_error.create_instance());
 
@@ -135,6 +136,7 @@ struct client_mocks_type {
 
     uri_destroy_type uri_destroy;
     uri_copy_type uri_copy;
+    uri_get_tls_type uri_get_tls;
     client_destroy_type client_destroy;
     client_new_type client_new_from_uri_with_error;
 
@@ -143,6 +145,7 @@ struct client_mocks_type {
     client_mocks_type()
         : uri_destroy{libmongoc::uri_destroy.create_instance()},
           uri_copy{libmongoc::uri_copy.create_instance()},
+          uri_get_tls{libmongoc::uri_get_tls.create_instance()},
           client_destroy{libmongoc::client_destroy.create_instance()},
           client_new_from_uri_with_error{libmongoc::client_new_from_uri_with_error.create_instance()},
           uri{v1::uri::internal::make(uri_id)} {
@@ -159,6 +162,13 @@ struct client_mocks_type {
                 CHECK(ptr == uri_id);
                 FAIL("should not reach this point");
                 return nullptr;
+            })
+            .forever();
+
+        uri_get_tls
+            ->interpose([&](mongoc_uri_t const* ptr) -> bool {
+                CHECK(ptr == uri_id);
+                return false;
             })
             .forever();
 
@@ -193,8 +203,7 @@ TEST_CASE("exceptions", "[mongocxx][v1][client]") {
     SECTION("mongocxx") {
 #if MONGOCXX_SSL_IS_ENABLED()
         SECTION("tls_not_enabled") {
-            auto uri_get_tls = libmongoc::uri_get_tls.create_instance();
-            uri_get_tls->interpose([&](mongoc_uri_t const* uri) -> bool {
+            mocks.uri_get_tls->interpose([&](mongoc_uri_t const* uri) -> bool {
                 CHECK(uri == mocks.uri_id);
                 return false;
             });
@@ -219,8 +228,7 @@ TEST_CASE("exceptions", "[mongocxx][v1][client]") {
             CAPTURE(tls_opts_set);
 
             if (tls_enabled || tls_opts_set) {
-                auto uri_get_tls = libmongoc::uri_get_tls.create_instance();
-                uri_get_tls->interpose([&](mongoc_uri_t const* uri) -> bool {
+                mocks.uri_get_tls->interpose([&](mongoc_uri_t const* uri) -> bool {
                     CHECK(uri == mocks.uri_id);
                     return tls_enabled;
                 });
@@ -469,8 +477,6 @@ TEST_CASE("tls_opts", "[mongocxx][v1][client]") {
                 {&v1::tls::crl_file, &mongoc_ssl_opt_t::crl_file},
             }));
 
-        auto uri_get_tls = libmongoc::uri_get_tls.create_instance();
-
         int set_counter = 0;
         set_ssl_opts->interpose([&](mongoc_client_t* client, mongoc_ssl_opt_t const* opts) -> void {
             CHECK(client == mocks.client_id);
@@ -480,7 +486,7 @@ TEST_CASE("tls_opts", "[mongocxx][v1][client]") {
         });
 
         int get_counter = 0;
-        uri_get_tls->interpose([&](mongoc_uri_t const* uri) -> bool {
+        mocks.uri_get_tls->interpose([&](mongoc_uri_t const* uri) -> bool {
             CHECK(uri == mocks.uri_id);
             ++get_counter;
             return true;
@@ -513,8 +519,6 @@ TEST_CASE("tls_opts", "[mongocxx][v1][client]") {
                 {&v1::tls::allow_invalid_certificates, &mongoc_ssl_opt_t::weak_cert_validation},
             }));
 
-        auto uri_get_tls = libmongoc::uri_get_tls.create_instance();
-
         int set_counter = 0;
         set_ssl_opts->interpose([&](mongoc_client_t* client, mongoc_ssl_opt_t const* opts) -> void {
             CHECK(client == mocks.client_id);
@@ -524,7 +528,7 @@ TEST_CASE("tls_opts", "[mongocxx][v1][client]") {
         });
 
         int get_counter = 0;
-        uri_get_tls->interpose([&](mongoc_uri_t const* uri) -> bool {
+        mocks.uri_get_tls->interpose([&](mongoc_uri_t const* uri) -> bool {
             CHECK(uri == mocks.uri_id);
             ++get_counter;
             return true;
@@ -620,11 +624,13 @@ TEST_CASE("auto_encryption_opts", "[mongocxx][v1][client]") {
     auto opts_new = libmongoc::auto_encryption_opts_new.create_instance();
     auto enable_auto_encryption = libmongoc::client_enable_auto_encryption.create_instance();
 
-    opts_destroy->interpose([&](mongoc_auto_encryption_opts_t* ptr) {
-        if (ptr) {
-            CHECK(ptr == opts_id);
-        }
-    });
+    opts_destroy
+        ->interpose([&](mongoc_auto_encryption_opts_t* ptr) {
+            if (ptr) {
+                CHECK(ptr == opts_id);
+            }
+        })
+        .forever();
 
     opts_new->interpose([&]() -> mongoc_auto_encryption_opts_t* { return opts_id; }).forever();
 
@@ -696,7 +702,7 @@ TEST_CASE("auto_encryption_opts", "[mongocxx][v1][client]") {
 
             client::options opts;
             CHECK_NOTHROW(opts.auto_encryption_opts(std::move(auto_encryption_opts)));
-            (void)mocks.make(std::move(opts));
+            CHECK_NOTHROW(mocks.make(std::move(opts)));
         }
 
         CHECK(counter == 1);
@@ -983,6 +989,7 @@ TEST_CASE("uri", "[mongocxx][v1][client]") {
 
     auto uri_destroy = libmongoc::uri_destroy.create_instance();
     auto uri_copy = libmongoc::uri_copy.create_instance();
+    auto uri_get_tls = libmongoc::uri_get_tls.create_instance();
     auto client_destroy = libmongoc::client_destroy.create_instance();
     auto client_new_from_uri_with_error = libmongoc::client_new_from_uri_with_error.create_instance();
     auto get_uri = libmongoc::client_get_uri.create_instance();
@@ -1006,6 +1013,15 @@ TEST_CASE("uri", "[mongocxx][v1][client]") {
             CHECK(ptr == uri1_id);
             ++uri_copy_count;
             return uri2_id;
+        })
+        .forever();
+
+    int uri_get_tls_count = 0;
+    uri_get_tls
+        ->interpose([&](mongoc_uri_t const* ptr) -> bool {
+            CHECK(ptr == uri1_id);
+            ++uri_get_tls_count;
+            return false;
         })
         .forever();
 
@@ -1035,11 +1051,12 @@ TEST_CASE("uri", "[mongocxx][v1][client]") {
     });
 
     {
-        auto client = v1::client{v1::uri::internal::make(uri1_id)};
+        v1::client const client{v1::uri::internal::make(uri1_id)};
 
         CHECK(uri_destroy_count == 1);
         CHECK(uri_copy_count == 0);
         CHECK(get_uri_count == 0);
+        CHECK(uri_get_tls_count == 1);
 
         {
             auto const uri = client.uri();
@@ -1054,6 +1071,7 @@ TEST_CASE("uri", "[mongocxx][v1][client]") {
         CHECK(uri_destroy_count == 2);
         CHECK(uri_copy_count == 1);
         CHECK(get_uri_count == 1);
+        CHECK(uri_get_tls_count == 1);
     }
 
     CHECK(new_count == 1);

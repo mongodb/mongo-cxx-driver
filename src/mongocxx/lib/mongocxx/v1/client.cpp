@@ -422,20 +422,24 @@ client::client(v1::uri uri, options opts) : client{new impl{v1::uri::internal::a
         }
     }
 
-#if MONGOCXX_SSL_IS_ENABLED()
-    if (auto const& opt = options::internal::tls_opts(opts)) {
-        if (!uri.tls()) {
-            throw v1::exception::internal::make(errc::tls_not_enabled);
-        }
+    {
+        auto const tls_enabled = uri.tls();
 
-        auto const v = to_mongoc(*opt);
-        libmongoc::client_set_ssl_opts(_client, &v);
-    }
+#if MONGOCXX_SSL_IS_ENABLED()
+        if (auto const& opt = options::internal::tls_opts(opts)) {
+            if (!tls_enabled) {
+                throw v1::exception::internal::make(errc::tls_not_enabled);
+            }
+
+            auto const v = to_mongoc(*opt);
+            libmongoc::client_set_ssl_opts(_client, &v);
+        }
 #else
-    if (uri.tls() || options::internal::tls_opts(opts)) {
-        throw v1::exception::internal::make(errc::tls_not_supported);
-    }
+        if (tls_enabled || options::internal::tls_opts(opts)) {
+            throw v1::exception::internal::make(errc::tls_not_supported);
+        }
 #endif
+    }
 }
 
 client::client(v1::uri uri) : client{std::move(uri), {}} {}
