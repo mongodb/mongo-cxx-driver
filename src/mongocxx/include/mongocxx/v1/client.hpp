@@ -246,6 +246,8 @@ class client {
     ///
     /// Invalidate this client object without invaliding existing cursors or sessions.
     ///
+    /// @warning Do not call this member function on a client obtained from a @ref v1::pool.
+    ///
     /// This function must be invoked by a (forked) child process to prevent its destruction within the child process
     /// from invalidating the state of the client object within the parent process.
     ///
