@@ -18,11 +18,15 @@
 
 //
 
+#include <mongocxx/private/ssl.hh>
+
+#if MONGOCXX_SSL_IS_ENABLED()
 #include <list>
 
 #include <bsoncxx/string/view_or_value.hpp>
 
 #include <mongocxx/private/mongoc.hh>
+#endif
 
 namespace mongocxx {
 namespace v_noabi {
@@ -30,6 +34,7 @@ namespace options {
 
 class tls::internal {
    public:
+#if MONGOCXX_SSL_IS_ENABLED()
     struct to_mongoc_type {
         std::list<bsoncxx::v_noabi::string::view_or_value> string_owner;
 
@@ -37,6 +42,7 @@ class tls::internal {
     };
 
     static to_mongoc_type to_mongoc(tls const& opts);
+#endif
 };
 
 } // namespace options

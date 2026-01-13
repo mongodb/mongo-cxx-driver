@@ -23,6 +23,8 @@
 #include <bsoncxx/stdx/optional.hpp>
 #include <bsoncxx/string/view_or_value.hpp>
 
+#include <mongocxx/private/ssl.hh>
+
 namespace mongocxx {
 namespace v_noabi {
 namespace options {
@@ -89,6 +91,7 @@ bsoncxx::v_noabi::stdx::optional<bool> const& tls::allow_invalid_certificates() 
     return _allow_invalid_certificates;
 }
 
+#if MONGOCXX_SSL_IS_ENABLED()
 tls::internal::to_mongoc_type tls::internal::to_mongoc(tls const& opts) {
     to_mongoc_type ret = {};
 
@@ -118,6 +121,7 @@ tls::internal::to_mongoc_type tls::internal::to_mongoc(tls const& opts) {
 
     return ret;
 }
+#endif
 
 } // namespace options
 } // namespace v_noabi
