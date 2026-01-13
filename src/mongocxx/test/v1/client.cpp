@@ -651,7 +651,7 @@ TEST_CASE("auto_encryption_opts", "[mongocxx][v1][client]") {
         mocks.client_destroy->interpose([&](mongoc_client_t* ptr) -> void {
             if (ptr) {
                 if (ptr != kv_client_id) {
-                    FAIL_CHECK("unspected mongoc_client_t");
+                    FAIL_CHECK("unexpected mongoc_client_t");
                 }
             }
         });
