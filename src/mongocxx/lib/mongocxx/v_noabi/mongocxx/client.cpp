@@ -16,6 +16,8 @@
 
 //
 
+#include <mongocxx/v1/exception.hpp>
+
 #include <mongocxx/v1/change_stream.hh>
 #include <mongocxx/v1/client.hh>
 #include <mongocxx/v1/cursor.hh>
@@ -29,9 +31,8 @@
 #include <utility>
 #include <vector>
 
-#include <bsoncxx/builder/basic/document.hpp>
-#include <bsoncxx/builder/basic/kvp.hpp>
-#include <bsoncxx/builder/concatenate.hpp>
+#include <bsoncxx/document/value.hpp>
+#include <bsoncxx/document/view.hpp>
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/string/view_or_value.hpp>
 
@@ -52,7 +53,7 @@
 #include <mongocxx/options/auto_encryption.hh>
 #include <mongocxx/options/change_stream.hh>
 #include <mongocxx/options/server_api.hh>
-#include <mongocxx/options/tls.hh>
+#include <mongocxx/options/tls.hh> // IWYU pragma: keep: MONGOCXX_SSL_IS_ENABLED
 #include <mongocxx/read_concern.hh>
 #include <mongocxx/read_preference.hh>
 #include <mongocxx/scoped_bson.hh>
@@ -163,8 +164,7 @@ v_noabi::read_preference client::read_preference() const {
 }
 
 v_noabi::uri client::uri() const {
-    return v1::uri::internal::make(
-        libmongoc::uri_copy(libmongoc::client_get_uri(v1::client::internal::as_mongoc(check_moved_from(_client)))));
+    return check_moved_from(_client).uri();
 }
 
 void client::write_concern_deprecated(v_noabi::write_concern wc) {
@@ -190,49 +190,43 @@ v_noabi::database client::database(bsoncxx::v_noabi::string::view_or_value name)
     return v_noabi::database(v1::client::internal::as_mongoc(c), std::move(name));
 }
 
-cursor client::list_databases() const {
+v_noabi::cursor client::list_databases() const {
     // Backward compatibility: `list_databases()` is not logically const.
     // NOLINTNEXTLINE(cppcoreguidelines-pro-type-const-cast)
     auto& c = const_cast<v1::client&>(check_moved_from(_client));
 
-    return v1::cursor::internal::make(
-        libmongoc::client_find_databases_with_opts(v1::client::internal::as_mongoc(c), nullptr));
+    return c.list_databases();
 }
 
-cursor client::list_databases(client_session const& session) const {
+v_noabi::cursor client::list_databases(v_noabi::client_session const& session) const {
     // Backward compatibility: `list_databases()` is not logically const.
     // NOLINTNEXTLINE(cppcoreguidelines-pro-type-const-cast)
     auto& c = const_cast<v1::client&>(check_moved_from(_client));
 
-    bsoncxx::v_noabi::builder::basic::document options_doc;
-    options_doc.append(bsoncxx::v_noabi::builder::concatenate_doc{session._get_impl().to_document()});
-
-    return v1::cursor::internal::make(
-        libmongoc::client_find_databases_with_opts(
-            v1::client::internal::as_mongoc(c), to_scoped_bson_view(options_doc)));
+    return c.list_databases(to_scoped_bson_view(session._get_impl().to_document()).view());
 }
 
-cursor client::list_databases(bsoncxx::v_noabi::document::view_or_value const opts) const {
+v_noabi::cursor client::list_databases(bsoncxx::v_noabi::document::view_or_value const opts) const {
     // Backward compatibility: `list_databases()` is not logically const.
     // NOLINTNEXTLINE(cppcoreguidelines-pro-type-const-cast)
     auto& c = const_cast<v1::client&>(check_moved_from(_client));
 
-    return v1::cursor::internal::make(
-        libmongoc::client_find_databases_with_opts(v1::client::internal::as_mongoc(c), to_scoped_bson_view(opts)));
+    return c.list_databases(to_scoped_bson_view(opts).view());
 }
 
-cursor client::list_databases(client_session const& session, bsoncxx::v_noabi::document::view_or_value const opts)
-    const {
+v_noabi::cursor client::list_databases(
+    v_noabi::client_session const& session,
+    bsoncxx::v_noabi::document::view_or_value const opts) const {
     // Backward compatibility: `list_databases()` is not logically const.
     // NOLINTNEXTLINE(cppcoreguidelines-pro-type-const-cast)
     auto& c = const_cast<v1::client&>(check_moved_from(_client));
 
-    bsoncxx::v_noabi::builder::basic::document options_doc;
-    options_doc.append(bsoncxx::v_noabi::builder::concatenate_doc{session._get_impl().to_document()});
-    options_doc.append(bsoncxx::v_noabi::builder::concatenate_doc{opts});
-    return v1::cursor::internal::make(
-        libmongoc::client_find_databases_with_opts(
-            v1::client::internal::as_mongoc(c), to_scoped_bson_view(options_doc)));
+    scoped_bson doc;
+
+    doc += to_scoped_bson_view(session._get_impl().to_document());
+    doc += to_scoped_bson_view(opts);
+
+    return c.list_databases(doc.view());
 }
 
 namespace {
@@ -263,83 +257,83 @@ std::vector<std::string> list_database_names_impl(mongoc_client_t* client, bson_
 
 } // namespace
 
-std::vector<std::string> client::list_database_names(bsoncxx::v_noabi::document::view_or_value filter) const {
+std::vector<std::string> client::list_database_names(bsoncxx::v_noabi::document::view_or_value filter) const try {
     // Backward compatibility: `list_database_names()` is not logically const.
     // NOLINTNEXTLINE(cppcoreguidelines-pro-type-const-cast)
     auto& c = const_cast<v1::client&>(check_moved_from(_client));
 
-    scoped_bson const options{BCON_NEW("filter", BCON_DOCUMENT(to_scoped_bson_view(filter).bson()))};
-
-    return list_database_names_impl(v1::client::internal::as_mongoc(c), options.bson());
+    return c.list_database_names(to_scoped_bson_view(filter).view());
+} catch (v1::exception const& ex) {
+    v_noabi::throw_exception<v_noabi::operation_exception>(ex);
 }
 
 std::vector<std::string> client::list_database_names(
-    client_session const& session,
-    bsoncxx::v_noabi::document::view_or_value const filter) const {
+    v_noabi::client_session const& session,
+    bsoncxx::v_noabi::document::view_or_value const filter) const try {
     // Backward compatibility: `list_databases()` is not logically const.
     // NOLINTNEXTLINE(cppcoreguidelines-pro-type-const-cast)
     auto& c = const_cast<v1::client&>(check_moved_from(_client));
 
-    namespace builder = bsoncxx::v_noabi::builder::basic;
+    scoped_bson opts;
 
-    scoped_bson options;
+    opts += to_scoped_bson(session._get_impl().to_document());
+    opts += scoped_bson{BCON_NEW("filter", BCON_DOCUMENT(to_scoped_bson_view(filter).bson()))};
 
-    options += to_scoped_bson(session._get_impl().to_document());
-    options += scoped_bson{BCON_NEW("filter", BCON_DOCUMENT(to_scoped_bson_view(filter).bson()))};
-
-    return list_database_names_impl(v1::client::internal::as_mongoc(c), options.bson());
+    return list_database_names_impl(v1::client::internal::as_mongoc(c), opts.bson());
+} catch (v1::exception const& ex) {
+    v_noabi::throw_exception<v_noabi::operation_exception>(ex);
 }
 
 v_noabi::client_session client::start_session(v_noabi::options::client_session const& options) {
-    return client_session(this, options);
+    return v_noabi::client_session{this, options};
 }
 
 void client::reset() {
-    libmongoc::client_reset(v1::client::internal::as_mongoc(check_moved_from(_client)));
+    check_moved_from(_client).reset();
 }
 
-change_stream client::watch(options::change_stream const& options) {
-    return watch(pipeline{}, options);
+v_noabi::change_stream client::watch(v_noabi::options::change_stream const& options) {
+    return _watch(nullptr, v_noabi::pipeline{}, options);
 }
 
-change_stream client::watch(client_session const& session, options::change_stream const& options) {
-    return _watch(&session, pipeline{}, options);
+v_noabi::change_stream client::watch(client_session const& session, v_noabi::options::change_stream const& options) {
+    return _watch(&session, v_noabi::pipeline{}, options);
 }
 
-change_stream client::watch(pipeline const& pipe, options::change_stream const& options) {
+v_noabi::change_stream client::watch(v_noabi::pipeline const& pipe, v_noabi::options::change_stream const& options) {
     return _watch(nullptr, pipe, options);
 }
 
-change_stream
-client::watch(client_session const& session, pipeline const& pipe, options::change_stream const& options) {
+v_noabi::change_stream client::watch(
+    client_session const& session,
+    v_noabi::pipeline const& pipe,
+    v_noabi::options::change_stream const& options) {
     return _watch(&session, pipe, options);
 }
 
-change_stream
-client::_watch(client_session const* session, pipeline const& pipe, options::change_stream const& options) {
-    bsoncxx::v_noabi::builder::basic::document container;
-    container.append(bsoncxx::v_noabi::builder::basic::kvp("pipeline", pipe.view_array()));
+v_noabi::change_stream client::_watch(
+    client_session const* session,
+    v_noabi::pipeline const& pipe,
+    v_noabi::options::change_stream const& options) {
+    scoped_bson pipeline{BCON_NEW("pipeline", BCON_ARRAY(to_scoped_bson_view(pipe.view_array()).bson()))};
 
-    bsoncxx::v_noabi::builder::basic::document options_builder;
-    options_builder.append(
-        bsoncxx::v_noabi::builder::concatenate(v_noabi::options::change_stream::internal::to_document(options)));
+    auto opts = to_scoped_bson(v_noabi::options::change_stream::internal::to_document(options));
+
     if (session) {
-        options_builder.append(bsoncxx::v_noabi::builder::concatenate_doc{session->_get_impl().to_document()});
+        opts += to_scoped_bson_view(session->_get_impl().to_document());
     }
 
     return v1::change_stream::internal::make(
         libmongoc::client_watch(
-            v1::client::internal::as_mongoc(check_moved_from(_client)),
-            to_scoped_bson_view(container),
-            to_scoped_bson_view(options_builder)));
+            v1::client::internal::as_mongoc(check_moved_from(_client)), pipeline.bson(), opts.bson()));
 }
 
 void client::internal::disown(client& self) {
-    v1::client::internal::disown(self._client);
+    v1::client::internal::disown(check_moved_from(self._client));
 }
 
 mongoc_client_t* client::internal::as_mongoc(client& self) {
-    return v1::client::internal::as_mongoc(self._client);
+    return v1::client::internal::as_mongoc(check_moved_from(self._client));
 }
 
 } // namespace v_noabi
