@@ -181,7 +181,6 @@ text_options::substring& text_options::substring::operator=(substring const& oth
 
 text_options::substring::substring() : _impl{new common_fields{}} {}
 
-
 text_options& text_options::case_sensitive(bool value) {
     impl::with(this)->_case_sensitive = value;
     return *this;
