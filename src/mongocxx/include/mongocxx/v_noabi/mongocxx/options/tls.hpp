@@ -92,15 +92,19 @@ class tls {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(tls&) pem_file(bsoncxx::v_noabi::string::view_or_value pem_file);
+    tls& pem_file(bsoncxx::v_noabi::string::view_or_value pem_file) {
+        _pem_file = std::move(pem_file);
+        return *this;
+    }
 
     ///
     /// Retrieves the current path to the .pem file.
     ///
     /// @return The path to the .pem file.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value> const&)
-    pem_file() const;
+    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value> const& pem_file() const {
+        return _pem_file;
+    }
 
     ///
     /// The pass phrase used to decrypt an encrypted PEM file.
@@ -112,16 +116,19 @@ class tls {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(tls&)
-    pem_password(bsoncxx::v_noabi::string::view_or_value pem_password);
+    tls& pem_password(bsoncxx::v_noabi::string::view_or_value pem_password) {
+        _pem_password = std::move(pem_password);
+        return *this;
+    }
 
     ///
     /// Retrieves the current decryption pass phrase.
     ///
     /// @return The pass phrase.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value> const&)
-    pem_password() const;
+    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value> const& pem_password() const {
+        return _pem_password;
+    }
 
     ///
     /// The path to the .pem file that contains the root certificate chain from the Certificate
@@ -134,15 +141,19 @@ class tls {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(tls&) ca_file(bsoncxx::v_noabi::string::view_or_value ca_file);
+    tls& ca_file(bsoncxx::v_noabi::string::view_or_value ca_file) {
+        _ca_file = std::move(ca_file);
+        return *this;
+    }
 
     ///
     /// Retrieves the current path to the CA file.
     ///
     /// @return The path to the CA file.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value> const&)
-    ca_file() const;
+    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value> const& ca_file() const {
+        return _ca_file;
+    }
 
     ///
     /// The path to the Certificate Authority directory.
@@ -154,15 +165,19 @@ class tls {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(tls&) ca_dir(bsoncxx::v_noabi::string::view_or_value ca_dir);
+    tls& ca_dir(bsoncxx::v_noabi::string::view_or_value ca_dir) {
+        _ca_dir = std::move(ca_dir);
+        return *this;
+    }
 
     ///
     /// Retrieves the current path to the CA directory.
     ///
     /// @return The path to the CA directory.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value> const&)
-    ca_dir() const;
+    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value> const& ca_dir() const {
+        return _ca_dir;
+    }
 
     ///
     /// The path to the .pem file that contains revoked certificates.
@@ -174,15 +189,19 @@ class tls {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(tls&) crl_file(bsoncxx::v_noabi::string::view_or_value crl_file);
+    tls& crl_file(bsoncxx::v_noabi::string::view_or_value crl_file) {
+        _crl_file = std::move(crl_file);
+        return *this;
+    }
 
     ///
     /// Retrieves the current path to the .pem file that contains revoked certificates.
     ///
     /// @return The path to the revoked certificates file.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value> const&)
-    crl_file() const;
+    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value> const& crl_file() const {
+        return _crl_file;
+    }
 
     ///
     /// If true, the driver will not verify the server's CA file.
@@ -194,15 +213,19 @@ class tls {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(tls&) allow_invalid_certificates(bool allow_invalid_certificates);
+    tls& allow_invalid_certificates(bool allow_invalid_certificates) {
+        _allow_invalid_certificates = std::move(allow_invalid_certificates);
+        return *this;
+    }
 
     ///
     /// Retrieves whether or not the driver will check the server's CA file.
     ///
     /// @return Whether or not the driver will check the server's CA file.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bool> const&)
-    allow_invalid_certificates() const;
+    bsoncxx::v_noabi::stdx::optional<bool> const& allow_invalid_certificates() const {
+        return _allow_invalid_certificates;
+    }
 
     class internal;
 
