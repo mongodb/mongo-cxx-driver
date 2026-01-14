@@ -101,7 +101,7 @@ inline v1::rewrap_many_datakey_result to_v1(v_noabi::result::rewrap_many_datakey
 
 ///
 /// @file
-/// Provides @ref v_noabi::result::rewrap_many_datakey.
+/// Provides @ref mongocxx::v_noabi::result::rewrap_many_datakey.
 ///
 /// @par Includes
 /// - @ref mongocxx/v1/rewrap_many_datakey_result.hpp
