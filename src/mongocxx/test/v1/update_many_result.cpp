@@ -21,7 +21,6 @@
 #include <mongocxx/v1/bulk_write.hh>
 #include <mongocxx/v1/update_many_result.hh>
 
-#include <bsoncxx/test/v1/stdx/optional.hh>
 #include <bsoncxx/test/v1/types/value.hh>
 
 #include <mongocxx/test/private/scoped_bson.hh>
