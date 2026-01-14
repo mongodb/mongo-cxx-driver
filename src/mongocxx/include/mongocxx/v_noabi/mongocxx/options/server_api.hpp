@@ -158,6 +158,8 @@ class server_api {
         return _version;
     }
 
+    class internal;
+
    private:
     version _version;
     bsoncxx::v_noabi::stdx::optional<bool> _strict;

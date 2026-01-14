@@ -14,21 +14,36 @@
 
 #pragma once
 
-#include <memory>
-#include <string>
-
 #include <mongocxx/client-fwd.hpp> // IWYU pragma: export
+
+//
+
+#include <mongocxx/v1/client.hpp> // IWYU pragma: export
+
+#include <list>   // IWYU pragma: keep: backward compatibility, to be removed.
+#include <memory> // IWYU pragma: keep: backward compatibility, to be removed.
+#include <string>
+#include <utility>
+#include <vector>
+
+#include <mongocxx/change_stream-fwd.hpp>
 #include <mongocxx/client_session-fwd.hpp>
-#include <mongocxx/collection-fwd.hpp>
+#include <mongocxx/collection-fwd.hpp> // IWYU pragma: keep: backward compatibility, to be removed.
+#include <mongocxx/cursor-fwd.hpp>
 #include <mongocxx/database-fwd.hpp>
-#include <mongocxx/options/auto_encryption-fwd.hpp>
-#include <mongocxx/options/client_encryption-fwd.hpp>
-#include <mongocxx/pool-fwd.hpp>
+#include <mongocxx/options/auto_encryption-fwd.hpp>   // IWYU pragma: keep: backward compatibility, to be removed.
+#include <mongocxx/options/client_encryption-fwd.hpp> // IWYU pragma: keep: backward compatibility, to be removed.
+#include <mongocxx/pipeline-fwd.hpp>
+#include <mongocxx/pool-fwd.hpp> // IWYU pragma: keep: backward compatibility, to be removed.
+
+#include <bsoncxx/document/view_or_value.hpp>
+#include <bsoncxx/string/view_or_value.hpp>
 
 #include <mongocxx/client_session.hpp>
 #include <mongocxx/database.hpp>
+#include <mongocxx/options/change_stream.hpp>
 #include <mongocxx/options/client.hpp>
-#include <mongocxx/options/client_encryption.hpp>
+#include <mongocxx/options/client_encryption.hpp> // IWYU pragma: keep: backward compatibility, to be removed.
 #include <mongocxx/options/client_session.hpp>
 #include <mongocxx/read_concern.hpp>
 #include <mongocxx/read_preference.hpp>
@@ -52,58 +67,68 @@ namespace v_noabi {
 ///
 /// @par Example
 /// ```cpp
-/// mongocxx::v_noabi::client mongo_client{mongocxx::v_noabi::uri{}};
-/// mongocxx::v_noabi::client mongo_client{mongocxx::v_noabi::uri{"mongodb://localhost:27017"}};
+/// v_noabi::client mongo_client{v_noabi::uri{}};
+/// v_noabi::client mongo_client{v_noabi::uri{"mongodb://localhost:27017"}};
 /// ```
 ///
 /// Note that client is not thread-safe. See
 /// https://www.mongodb.com/docs/languages/cpp/cpp-driver/current/thread-safety/ for more details.
 class client {
+   private:
+    v1::client _client;
+
    public:
     ///
     /// Default constructs a new client. The client is not connected and is equivalent to the
     /// state of a moved-from client. The only valid actions to take with a default constructed
     /// 'client' are to assign to it, or destroy it.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL() client() noexcept;
+    client() noexcept {}
 
     ///
-    /// Creates a new client connection to MongoDB.
+    /// Construct with the @ref mongocxx::v1 equivalent.
+    ///
+    /* explicit(false) */ client(v1::client client) : _client{std::move(client)} {}
+
+    ///
+    /// Convert to the @ref mongocxx::v1 equivalent.
+    ///
+    /// @par Postconditions:
+    /// - `*this` is in an assign-or-destroy-only state.
+    ///
+    /// @warning Invalidates all associated objects.
+    ///
+    explicit operator v1::client() && {
+        return std::move(_client);
+    }
+
+    ///
+    /// This class is not copyable.
+    ///
+    explicit operator v1::client() const& = delete;
+
+    ///
+    /// Creates a new client to MongoDB.
     ///
     /// @param mongodb_uri
-    ///   A MongoDB URI representing the connection parameters
+    ///   A MongoDB URI.
     /// @param options
-    ///   Additional options that cannot be specified via the mongodb_uri
+    ///   Additional URI options.
     ///
     /// @throws mongocxx::v_noabi::exception if invalid options are provided
     /// (whether from the URI or provided client options).
     ///
-    MONGOCXX_ABI_EXPORT_CDECL()
-    client(mongocxx::v_noabi::uri const& mongodb_uri, options::client const& options = options::client());
-
-    ///
-    /// Move constructs a client.
-    ///
-    MONGOCXX_ABI_EXPORT_CDECL() client(client&&) noexcept;
-
-    ///
-    /// Move assigns a client.
-    ///
-    MONGOCXX_ABI_EXPORT_CDECL(client&) operator=(client&&) noexcept;
-
-    ///
-    /// Destroys a client.
-    ///
-    MONGOCXX_ABI_EXPORT_CDECL() ~client();
-
-    client(client const&) = delete;
-    client& operator=(client const&) = delete;
+    MONGOCXX_ABI_EXPORT_CDECL() client(
+        v_noabi::uri const& mongodb_uri,
+        options::client const& options = options::client());
 
     ///
     /// Returns true if the client is valid, meaning it was not default constructed
     /// or moved from.
     ///
-    explicit MONGOCXX_ABI_EXPORT_CDECL() operator bool() const noexcept;
+    explicit operator bool() const noexcept {
+        return _client.operator bool();
+    }
 
     ///
     /// Sets the read concern for this client.
@@ -122,16 +147,16 @@ class client {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/read-concern/
     ///
-    MONGOCXX_DEPRECATED MONGOCXX_ABI_EXPORT_CDECL(void) read_concern(mongocxx::v_noabi::read_concern rc);
+    MONGOCXX_DEPRECATED MONGOCXX_ABI_EXPORT_CDECL(void) read_concern(v_noabi::read_concern rc);
 
-    MONGOCXX_ABI_EXPORT_CDECL(void) read_concern_deprecated(mongocxx::v_noabi::read_concern rc);
+    MONGOCXX_ABI_EXPORT_CDECL(void) read_concern_deprecated(v_noabi::read_concern rc);
 
     ///
     /// Returns the current read concern for this client.
     ///
     /// @return The current @c read_concern
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(mongocxx::v_noabi::read_concern) read_concern() const;
+    MONGOCXX_ABI_EXPORT_CDECL(v_noabi::read_concern) read_concern() const;
 
     ///
     /// Sets the read preference for this client.
@@ -150,10 +175,10 @@ class client {
     /// @see
     /// - https://www.mongodb.com/docs/manual/core/read-preference/
     ///
-    MONGOCXX_DEPRECATED MONGOCXX_ABI_EXPORT_CDECL(void) read_preference(mongocxx::v_noabi::read_preference rp);
+    MONGOCXX_DEPRECATED MONGOCXX_ABI_EXPORT_CDECL(void) read_preference(v_noabi::read_preference rp);
 
     MONGOCXX_ABI_EXPORT_CDECL(void)
-    read_preference_deprecated(mongocxx::v_noabi::read_preference rp);
+    read_preference_deprecated(v_noabi::read_preference rp);
 
     ///
     /// Returns the current read preference for this client.
@@ -163,14 +188,14 @@ class client {
     /// @see
     /// - https://www.mongodb.com/docs/manual/core/read-preference/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(mongocxx::v_noabi::read_preference) read_preference() const;
+    MONGOCXX_ABI_EXPORT_CDECL(v_noabi::read_preference) read_preference() const;
 
     ///
     /// Returns the current uri for this client.
     ///
     /// @return The @c uri that this client was created with.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(mongocxx::v_noabi::uri) uri() const;
+    MONGOCXX_ABI_EXPORT_CDECL(v_noabi::uri) uri() const;
 
     ///
     /// Sets the write concern for this client.
@@ -186,15 +211,15 @@ class client {
     /// @param wc
     ///   The new write concern
     ///
-    MONGOCXX_DEPRECATED MONGOCXX_ABI_EXPORT_CDECL(void) write_concern(mongocxx::v_noabi::write_concern wc);
+    MONGOCXX_DEPRECATED MONGOCXX_ABI_EXPORT_CDECL(void) write_concern(v_noabi::write_concern wc);
 
-    MONGOCXX_ABI_EXPORT_CDECL(void) write_concern_deprecated(mongocxx::v_noabi::write_concern wc);
+    MONGOCXX_ABI_EXPORT_CDECL(void) write_concern_deprecated(v_noabi::write_concern wc);
 
     ///
     /// Returns the current write concern for this client.
     ///
     /// @return the current @c write_concern
-    MONGOCXX_ABI_EXPORT_CDECL(mongocxx::v_noabi::write_concern) write_concern() const;
+    MONGOCXX_ABI_EXPORT_CDECL(v_noabi::write_concern) write_concern() const;
 
     ///
     /// Obtains a database that represents a logical grouping of collections on a MongoDB server.
@@ -206,10 +231,10 @@ class client {
     ///
     /// @return The database
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(mongocxx::v_noabi::database)
+    MONGOCXX_ABI_EXPORT_CDECL(v_noabi::database)
     database(bsoncxx::v_noabi::string::view_or_value name) const&;
 
-    mongocxx::v_noabi::database database(bsoncxx::v_noabi::string::view_or_value name) const&& = delete;
+    v_noabi::database database(bsoncxx::v_noabi::string::view_or_value name) const&& = delete;
 
     ///
     /// Allows the syntax @c client["db_name"] as a convenient shorthand for the client::database()
@@ -222,11 +247,12 @@ class client {
     ///
     /// @return Client side representation of a server side database
     ///
-    mongocxx::v_noabi::database operator[](bsoncxx::v_noabi::string::view_or_value name) const& {
+    v_noabi::database operator[](bsoncxx::v_noabi::string::view_or_value name) const& {
         return database(name);
     }
 
-    mongocxx::v_noabi::database operator[](bsoncxx::v_noabi::string::view_or_value name) const&& = delete;
+    v_noabi::database operator[](bsoncxx::v_noabi::string::view_or_value name) const&& = delete;
+
     ///
     /// Enumerates the databases in the client.
     ///
@@ -242,7 +268,7 @@ class client {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/listDatabases
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(cursor) list_databases() const;
+    MONGOCXX_ABI_EXPORT_CDECL(v_noabi::cursor) list_databases() const;
 
     ///
     /// Enumerates the databases in the client.
@@ -262,7 +288,7 @@ class client {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/listDatabases
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(cursor) list_databases(client_session const& session) const;
+    MONGOCXX_ABI_EXPORT_CDECL(v_noabi::cursor) list_databases(v_noabi::client_session const& session) const;
 
     ///
     /// Enumerates the databases in the client.
@@ -282,7 +308,7 @@ class client {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/listDatabases
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(cursor)
+    MONGOCXX_ABI_EXPORT_CDECL(v_noabi::cursor)
     list_databases(bsoncxx::v_noabi::document::view_or_value const opts) const;
 
     ///
@@ -306,8 +332,8 @@ class client {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/listDatabases
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(cursor)
-    list_databases(client_session const& session, bsoncxx::v_noabi::document::view_or_value const opts) const;
+    MONGOCXX_ABI_EXPORT_CDECL(v_noabi::cursor)
+    list_databases(v_noabi::client_session const& session, bsoncxx::v_noabi::document::view_or_value const opts) const;
 
     ///
     /// Queries the MongoDB server for a list of known databases.
@@ -344,21 +370,22 @@ class client {
     /// - https://www.mongodb.com/docs/manual/reference/command/listDatabases
     ///
     MONGOCXX_ABI_EXPORT_CDECL(std::vector<std::string>)
-    list_database_names(client_session const& session, bsoncxx::v_noabi::document::view_or_value const filter = {})
-        const;
+    list_database_names(
+        v_noabi::client_session const& session,
+        bsoncxx::v_noabi::document::view_or_value const filter = {}) const;
 
     ///
     /// Create a client session for a sequence of operations.
     ///
-    /// @return A client_session object. See `mongocxx::v_noabi::client_session` for more
+    /// @return A client_session object. See `v_noabi::client_session` for more
     /// information.
     ///
     /// @throws mongocxx::v_noabi::operation_exception if the driver is not built with crypto
     /// support, if options is misconfigured, or if the session is configured with options that the
     /// server does not support.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(client_session)
-    start_session(options::client_session const& options = {});
+    MONGOCXX_ABI_EXPORT_CDECL(v_noabi::client_session)
+    start_session(v_noabi::options::client_session const& options = {});
 
     ///
     /// Get a change stream on this client with an empty pipeline.
@@ -374,7 +401,7 @@ class client {
     /// @see
     /// - https://www.mongodb.com/docs/manual/changeStreams/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(change_stream) watch(options::change_stream const& options = {});
+    MONGOCXX_ABI_EXPORT_CDECL(v_noabi::change_stream) watch(v_noabi::options::change_stream const& options = {});
 
     ///
     /// Get a change stream on this client with an empty pipeline.
@@ -382,7 +409,7 @@ class client {
     /// Change streams are only supported with a "majority" read concern or no read concern.
     ///
     /// @param session
-    ///   The mongocxx::v_noabi::client_session with which to perform the watch operation.
+    ///   The v_noabi::client_session with which to perform the watch operation.
     /// @param options
     ///   The options to use when creating the change stream.
     ///
@@ -392,8 +419,8 @@ class client {
     /// @see
     /// - https://www.mongodb.com/docs/manual/changeStreams/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(change_stream)
-    watch(client_session const& session, options::change_stream const& options = {});
+    MONGOCXX_ABI_EXPORT_CDECL(v_noabi::change_stream)
+    watch(v_noabi::client_session const& session, v_noabi::options::change_stream const& options = {});
 
     ///
     /// Get a change stream on this client.
@@ -413,8 +440,8 @@ class client {
     /// @see
     /// - https://www.mongodb.com/docs/manual/changeStreams/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(change_stream)
-    watch(pipeline const& pipe, options::change_stream const& options = {});
+    MONGOCXX_ABI_EXPORT_CDECL(v_noabi::change_stream)
+    watch(v_noabi::pipeline const& pipe, v_noabi::options::change_stream const& options = {});
 
     ///
     /// Get a change stream on this client.
@@ -422,7 +449,7 @@ class client {
     /// Change streams are only supported with a "majority" read concern or no read concern.
     ///
     /// @param session
-    ///   The mongocxx::v_noabi::client_session with which to perform the watch operation.
+    ///   The v_noabi::client_session with which to perform the watch operation.
     /// @param pipe
     ///   The aggregation pipeline to be used on the change notifications.
     /// @param options
@@ -434,8 +461,11 @@ class client {
     /// @see
     /// - https://www.mongodb.com/docs/manual/changeStreams/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(change_stream)
-    watch(client_session const& session, pipeline const& pipe, options::change_stream const& options = {});
+    MONGOCXX_ABI_EXPORT_CDECL(v_noabi::change_stream)
+    watch(
+        v_noabi::client_session const& session,
+        v_noabi::pipeline const& pipe,
+        v_noabi::options::change_stream const& options = {});
 
     ///
     /// Prevents resource cleanup in the child process from interfering
@@ -454,28 +484,34 @@ class client {
     ///
     MONGOCXX_ABI_EXPORT_CDECL(void) reset();
 
+    class internal;
+
    private:
-    friend ::mongocxx::v_noabi::client_session;
-    friend ::mongocxx::v_noabi::collection;
-    friend ::mongocxx::v_noabi::database;
-    friend ::mongocxx::v_noabi::options::auto_encryption;
-    friend ::mongocxx::v_noabi::options::client_encryption;
-    friend ::mongocxx::v_noabi::pool;
-
-    explicit client(void* implementation);
-
-    change_stream _watch(client_session const* session, pipeline const& pipe, options::change_stream const& options);
-
-    class impl;
-
-    template <typename Self>
-    static auto _get_impl(Self& self) -> decltype(*self._impl);
-
-    impl& _get_impl();
-    impl const& _get_impl() const;
-
-    std::unique_ptr<impl> _impl;
+    v_noabi::change_stream _watch(
+        v_noabi::client_session const* session,
+        v_noabi::pipeline const& pipe,
+        v_noabi::options::change_stream const& options);
 };
+
+} // namespace v_noabi
+} // namespace mongocxx
+
+namespace mongocxx {
+namespace v_noabi {
+
+///
+/// Convert to the @ref mongocxx::v_noabi equivalent of `v`.
+///
+inline v_noabi::client from_v1(v1::client v) {
+    return {std::move(v)};
+}
+
+///
+/// Convert to the @ref mongocxx::v1 equivalent of `v`.
+///
+inline v1::client to_v1(v_noabi::client v) {
+    return v1::client{std::move(v)};
+}
 
 } // namespace v_noabi
 } // namespace mongocxx
@@ -485,4 +521,7 @@ class client {
 ///
 /// @file
 /// Provides @ref mongocxx::v_noabi::client.
+///
+/// @par Includes
+/// - @ref mongocxx/v1/client.hpp
 ///

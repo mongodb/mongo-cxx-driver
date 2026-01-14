@@ -27,6 +27,12 @@ namespace v1 {
 
 class tls::internal {
    public:
+    static bsoncxx::v1::stdx::optional<std::string> const& pem_file(tls const& self);
+    static bsoncxx::v1::stdx::optional<std::string> const& pem_password(tls const& self);
+    static bsoncxx::v1::stdx::optional<std::string> const& ca_file(tls const& self);
+    static bsoncxx::v1::stdx::optional<std::string> const& ca_dir(tls const& self);
+    static bsoncxx::v1::stdx::optional<std::string> const& crl_file(tls const& self);
+
     static bsoncxx::v1::stdx::optional<std::string>& pem_file(tls& self);
     static bsoncxx::v1::stdx::optional<std::string>& pem_password(tls& self);
     static bsoncxx::v1::stdx::optional<std::string>& ca_file(tls& self);

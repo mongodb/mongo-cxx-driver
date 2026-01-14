@@ -47,6 +47,7 @@ class cursor::internal {
 
     static void advance_iterator(cursor& self);
 
+    static MONGOCXX_ABI_EXPORT_CDECL_TESTING(mongoc_cursor_t const*) as_mongoc(cursor const& self);
     static mongoc_cursor_t* as_mongoc(cursor& self);
 };
 

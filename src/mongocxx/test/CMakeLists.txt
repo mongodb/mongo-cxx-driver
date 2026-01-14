@@ -112,6 +112,7 @@ set(mongocxx_test_sources_v1
     v1/auto_encryption_options.cpp
     v1/bsoncxx.cpp
     v1/bulk_write.cpp
+    v1/client.cpp
     v1/change_stream.cpp
     v1/count_options.cpp
     v1/cursor.cpp

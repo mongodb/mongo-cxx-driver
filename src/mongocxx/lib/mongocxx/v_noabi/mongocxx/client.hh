@@ -14,33 +14,20 @@
 
 #pragma once
 
-#include <list>
-
 #include <mongocxx/client.hpp> // IWYU pragma: export
 
+//
+
 #include <mongocxx/private/mongoc.hh>
-#include <mongocxx/write_concern.hh>
 
 namespace mongocxx {
 namespace v_noabi {
 
-class client::impl {
+class client::internal {
    public:
-    impl(mongoc_client_t* client) : client_t(client) {}
+    static void disown(client& self);
 
-    ~impl() {
-        libmongoc::client_destroy(client_t);
-    }
-
-    impl(impl&&) = delete;
-    impl& operator=(impl&&) = delete;
-
-    impl(impl const&) = delete;
-    impl& operator=(impl const&) = delete;
-
-    mongoc_client_t* client_t;
-    std::list<bsoncxx::v_noabi::string::view_or_value> tls_options;
-    options::apm listeners;
+    static mongoc_client_t* as_mongoc(client& self);
 };
 
 } // namespace v_noabi

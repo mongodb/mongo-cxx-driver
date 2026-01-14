@@ -204,6 +204,8 @@ class tls {
     MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bool> const&)
     allow_invalid_certificates() const;
 
+    class internal;
+
    private:
     bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value> _pem_file;
     bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value> _pem_password;

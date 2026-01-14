@@ -38,6 +38,8 @@
 #include <mongocxx/v1/config/export.hpp>
 
 #include <string>
+#include <system_error>
+#include <type_traits>
 #include <vector>
 
 namespace mongocxx {
@@ -88,12 +90,12 @@ class client {
     ///
     /// This class is not copyable.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL() client(client const& other);
+    client(client const& other) = delete;
 
     ///
     /// This class is not copyable.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(client&) operator=(client const& other);
+    client& operator=(client const& other) = delete;
 
     ///
     /// Initialize with the given URI.
@@ -105,7 +107,7 @@ class client {
     /// @throws mongocxx::v1::exception when a client-side error is encountered.
     ///
     /// @{
-    MONGOCXX_ABI_EXPORT_CDECL() client(v1::uri uri, options const& opts);
+    MONGOCXX_ABI_EXPORT_CDECL() client(v1::uri uri, options opts);
 
     /* explicit(false) */ MONGOCXX_ABI_EXPORT_CDECL() client(v1::uri uri);
     /// @}
@@ -209,13 +211,13 @@ class client {
     /// - [Change Streams (MongoDB Manual)](https://www.mongodb.com/docs/manual/changeStreams/)
     ///
     /// @{
-    MONGOCXX_ABI_EXPORT_CDECL(v1::change_stream) watch(v1::change_stream::options opts);
+    MONGOCXX_ABI_EXPORT_CDECL(v1::change_stream) watch(v1::change_stream::options const& opts);
 
     MONGOCXX_ABI_EXPORT_CDECL(v1::change_stream) watch();
 
     MONGOCXX_ABI_EXPORT_CDECL(v1::change_stream) watch(
         v1::client_session const& session,
-        v1::change_stream::options opts);
+        v1::change_stream::options const& opts);
 
     MONGOCXX_ABI_EXPORT_CDECL(v1::change_stream) watch(v1::client_session const& session);
     /// @}
@@ -244,6 +246,8 @@ class client {
     ///
     /// Invalidate this client object without invaliding existing cursors or sessions.
     ///
+    /// @warning Do not call this member function on a client obtained from a @ref v1::pool.
+    ///
     /// This function must be invoked by a (forked) child process to prevent its destruction within the child process
     /// from invalidating the state of the client object within the parent process.
     ///
@@ -254,6 +258,38 @@ class client {
     /// - [`mongoc_client_reset`](https://mongoc.org/libmongoc/current/mongoc_client_reset.html)
     ///
     MONGOCXX_ABI_EXPORT_CDECL(void) reset();
+
+    ///
+    /// Errors codes which may be returned by @ref mongocxx::v1::client.
+    ///
+    /// @attention This feature is experimental! It is not ready for use!
+    ///
+    enum class errc {
+        zero,              ///< Zero.
+        tls_not_enabled,   ///< TLS is not enabled by URI options.
+        tls_not_supported, ///< TLS is not supported by the mongoc library.
+    };
+
+    ///
+    /// The error category for @ref mongocxx::v1::client::errc.
+    ///
+    /// @attention This feature is experimental! It is not ready for use!
+    ///
+    static MONGOCXX_ABI_EXPORT_CDECL(std::error_category const&) error_category();
+
+    ///
+    /// Support implicit conversion to `std::error_code`.
+    ///
+    /// @attention This feature is experimental! It is not ready for use!
+    ///
+    friend std::error_code make_error_code(errc v) {
+        return {static_cast<int>(v), error_category()};
+    }
+
+    class internal;
+
+   private:
+    /* explicit(false) */ client(void* impl);
 };
 
 ///
@@ -353,10 +389,19 @@ class client::options {
     /// Return the current "server_api_opts" field.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<v1::server_api>) server_api_opts() const;
+
+    class internal;
 };
 
 } // namespace v1
 } // namespace mongocxx
+
+namespace std {
+
+template <>
+struct is_error_code_enum<mongocxx::v1::client::errc> : true_type {};
+
+} // namespace std
 
 #include <mongocxx/v1/detail/postlude.hpp>
 

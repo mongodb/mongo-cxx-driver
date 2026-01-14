@@ -91,11 +91,11 @@ database& database::operator=(database&&) noexcept = default;
 
 database::~database() = default;
 
-database::database(mongocxx::v_noabi::client const& client, bsoncxx::v_noabi::string::view_or_value name)
+database::database(void* client, bsoncxx::v_noabi::string::view_or_value name)
     : _impl(
           bsoncxx::make_unique<impl>(
-              libmongoc::client_get_database(client._get_impl().client_t, name.terminated().data()),
-              &client._get_impl(),
+              libmongoc::client_get_database(static_cast<mongoc_client_t*>(client), name.terminated().data()),
+              static_cast<mongoc_client_t*>(client),
               name.terminated().data())) {}
 
 database::database(database const& d) {
@@ -258,7 +258,7 @@ bsoncxx::v_noabi::document::value database::run_command(
 
     scoped_bson reply;
     auto result = libmongoc::client_command_simple_with_server_id(
-        _get_impl().client_impl->client_t,
+        _get_impl().client,
         _get_impl().name.c_str(),
         to_scoped_bson_view(command.view()),
         libmongoc::database_get_read_prefs(_get_impl().database_t),

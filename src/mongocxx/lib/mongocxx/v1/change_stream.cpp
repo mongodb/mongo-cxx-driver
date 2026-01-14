@@ -178,6 +178,10 @@ void change_stream::internal::advance_iterator(change_stream& self) {
     }
 }
 
+mongoc_change_stream_t const* change_stream::internal::as_mongoc(change_stream const& self) {
+    return impl::with(self)._stream;
+}
+
 class change_stream::options::impl {
    public:
     bsoncxx::v1::stdx::optional<std::int32_t> _batch_size;
@@ -338,6 +342,35 @@ bool operator==(change_stream::iterator const& lhs, change_stream::iterator cons
 
     // Different underlying streams and neither are end iterators.
     return false;
+}
+
+bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> const& change_stream::options::internal::collation(
+    options const& self) {
+    return impl::with(self)._collation;
+}
+
+bsoncxx::v1::stdx::optional<bsoncxx::v1::types::value> const& change_stream::options::internal::comment(
+    options const& self) {
+    return impl::with(self)._comment;
+}
+
+bsoncxx::v1::stdx::optional<std::string> const& change_stream::options::internal::full_document(options const& self) {
+    return impl::with(self)._full_document;
+}
+
+bsoncxx::v1::stdx::optional<std::string> const& change_stream::options::internal::full_document_before_change(
+    options const& self) {
+    return impl::with(self)._full_document_before_change;
+}
+
+bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> const& change_stream::options::internal::resume_after(
+    options const& self) {
+    return impl::with(self)._resume_after;
+}
+
+bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> const& change_stream::options::internal::start_after(
+    options const& self) {
+    return impl::with(self)._start_after;
 }
 
 bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value>& change_stream::options::internal::collation(options& self) {

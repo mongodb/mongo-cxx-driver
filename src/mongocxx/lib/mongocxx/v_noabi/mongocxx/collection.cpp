@@ -258,14 +258,14 @@ collection::collection(database const& database, bsoncxx::v_noabi::string::view_
           bsoncxx::make_unique<impl>(
               libmongoc::database_get_collection(database._get_impl().database_t, collection_name.terminated().data()),
               database.name(),
-              database._get_impl().client_impl)) {}
+              database._get_impl().client)) {}
 
 collection::collection(database const& database, void* collection)
     : _impl(
           bsoncxx::make_unique<impl>(
               static_cast<mongoc_collection_t*>(collection),
               database.name(),
-              database._get_impl().client_impl)) {}
+              database._get_impl().client)) {}
 
 collection::collection(collection const& c) {
     if (c) {
@@ -1234,8 +1234,7 @@ cursor collection::_distinct(
     bson_t const* error_document = {};
 
     auto fake_cursor = v1::cursor::internal::make(
-        libmongoc::cursor_new_from_command_reply_with_opts(
-            _get_impl().client_impl->client_t, fake_reply.inout_ptr(), nullptr));
+        libmongoc::cursor_new_from_command_reply_with_opts(_get_impl().client, fake_reply.inout_ptr(), nullptr));
     if (libmongoc::cursor_error_document(v1::cursor::internal::as_mongoc(fake_cursor), &error, &error_document)) {
         if (error_document) {
             bsoncxx::v_noabi::document::value error_doc{
@@ -1382,11 +1381,11 @@ collection::_watch(client_session const* session, pipeline const& pipe, options:
 }
 
 index_view collection::indexes() {
-    return index_view{_get_impl().collection_t, _get_impl().client_impl->client_t};
+    return index_view{_get_impl().collection_t, _get_impl().client};
 }
 
 search_index_view collection::search_indexes() {
-    return search_index_view{_get_impl().collection_t, _get_impl().client_impl->client_t};
+    return search_index_view{_get_impl().collection_t, _get_impl().client};
 }
 
 mongocxx::v_noabi::bulk_write collection::_init_insert_many(

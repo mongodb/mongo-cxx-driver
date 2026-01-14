@@ -49,6 +49,10 @@ void uri::server_selection_try_once(bool val) try {
     throw v_noabi::exception{v_noabi::error_code::k_invalid_uri, "failed to set 'serverSelectionTryOnce' option"};
 }
 
+v1::uri const& uri::internal::as_v1(uri const& self) {
+    return self._uri;
+}
+
 mongoc_uri_t const* uri::internal::as_mongoc(uri const& self) {
     return v1::uri::internal::as_mongoc(self._uri);
 }

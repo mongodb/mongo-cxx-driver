@@ -537,7 +537,7 @@ class database {
     friend ::mongocxx::v_noabi::client;
     friend ::mongocxx::v_noabi::collection;
 
-    database(mongocxx::v_noabi::client const& client, bsoncxx::v_noabi::string::view_or_value name);
+    database(void* client, bsoncxx::v_noabi::string::view_or_value name);
 
     cursor _aggregate(client_session const* session, pipeline const& pipeline, options::aggregate const& options);
 

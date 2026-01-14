@@ -16,6 +16,7 @@
 
 //
 
+#include <memory>
 #include <string>
 #include <system_error>
 
@@ -23,6 +24,8 @@
 
 #include <mongocxx/exception/error_code.hpp>
 #include <mongocxx/exception/logic_error.hpp>
+
+#include <mongocxx/private/mongoc.hh>
 
 namespace mongocxx {
 namespace v_noabi {
@@ -42,6 +45,35 @@ server_api::version server_api::version_from_string(bsoncxx::v_noabi::stdx::stri
         return version::k_version_1;
     }
     throw v_noabi::logic_error{v_noabi::error_code::k_invalid_parameter, "invalid server API version"};
+}
+
+std::unique_ptr<mongoc_server_api_t, server_api::internal::mongoc_server_api_deleter> server_api::internal::to_mongoc(
+    server_api const& opts) {
+    mongoc_server_api_version_t mongoc_api_version = {};
+
+    // Convert version enum value to std::string then to c_str to create mongoc api version.
+    auto result = libmongoc::server_api_version_from_string(
+        server_api::version_to_string(opts.get_version()).c_str(), &mongoc_api_version);
+    if (!result) {
+        throw mongocxx::v_noabi::logic_error{
+            mongocxx::v_noabi::error_code::k_invalid_parameter,
+            "invalid server API version" + server_api::version_to_string(opts.get_version())};
+    }
+
+    std::unique_ptr<mongoc_server_api_t, server_api::internal::mongoc_server_api_deleter> ret{
+        libmongoc::server_api_new(mongoc_api_version)};
+
+    auto const ptr = ret.get();
+
+    if (!ptr) {
+        throw mongocxx::v_noabi::logic_error{
+            mongocxx::v_noabi::error_code::k_create_resource_fail, "could not create server API"};
+    }
+
+    libmongoc::server_api_strict(ptr, opts._strict.value_or(false));
+    libmongoc::server_api_deprecation_errors(ptr, opts._deprecation_errors.value_or(false));
+
+    return ret;
 }
 
 } // namespace options

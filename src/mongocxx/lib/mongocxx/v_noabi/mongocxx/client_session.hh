@@ -71,7 +71,7 @@ bool with_transaction_cpp_cb(mongoc_client_session_t*, void* ctx, bson_t** reply
 
 class client_session::impl {
    public:
-    impl(mongocxx::v_noabi::client const* client, options::client_session const& session_options)
+    impl(mongocxx::v_noabi::client* client, options::client_session const& session_options)
         : _client(client), _options(session_options), _session_t(nullptr, nullptr) {
         // Create a mongoc_session_opts_t from session_options.
         std::unique_ptr<mongoc_session_opt_t, decltype(libmongoc::session_opts_destroy)> opt_t{
@@ -91,7 +91,7 @@ class client_session::impl {
         }
 
         bson_error_t error;
-        auto s = libmongoc::client_start_session(_client->_get_impl().client_t, opt_t.get(), &error);
+        auto s = libmongoc::client_start_session(v_noabi::client::internal::as_mongoc(*_client), opt_t.get(), &error);
         if (!s) {
             throw mongocxx::v_noabi::exception{error_code::k_cannot_create_session, error.message};
         }
@@ -231,7 +231,7 @@ class client_session::impl {
     }
 
    private:
-    mongocxx::v_noabi::client const* _client;
+    mongocxx::v_noabi::client* _client;
     options::client_session _options;
 
     using unique_session = std::unique_ptr<mongoc_client_session_t, std::function<void(mongoc_client_session_t*)>>;

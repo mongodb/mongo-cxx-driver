@@ -44,10 +44,19 @@ class change_stream::internal {
     static MONGOCXX_ABI_EXPORT_CDECL_TESTING(bool) is_dead(change_stream const& self);
 
     static void advance_iterator(change_stream& self);
+
+    static MONGOCXX_ABI_EXPORT_CDECL_TESTING(mongoc_change_stream_t const*) as_mongoc(change_stream const& self);
 };
 
 class change_stream::options::internal {
    public:
+    static bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> const& collation(options const& self);
+    static bsoncxx::v1::stdx::optional<bsoncxx::v1::types::value> const& comment(options const& self);
+    static bsoncxx::v1::stdx::optional<std::string> const& full_document(options const& self);
+    static bsoncxx::v1::stdx::optional<std::string> const& full_document_before_change(options const& self);
+    static bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> const& resume_after(options const& self);
+    static bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> const& start_after(options const& self);
+
     static bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value>& collation(options& self);
     static bsoncxx::v1::stdx::optional<bsoncxx::v1::types::value>& comment(options& self);
     static bsoncxx::v1::stdx::optional<std::string>& full_document(options& self);

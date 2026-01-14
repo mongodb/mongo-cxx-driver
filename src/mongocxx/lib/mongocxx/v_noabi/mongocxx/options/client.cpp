@@ -12,56 +12,72 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <mongocxx/options/client.hpp>
+#include <mongocxx/options/client.hh>
+
+//
+
+#include <mongocxx/v1/client.hh>
+
+#include <utility>
+
+#include <mongocxx/options/apm.hpp>
+#include <mongocxx/options/server_api.hpp>
+#include <mongocxx/options/tls.hpp>
 
 namespace mongocxx {
 namespace v_noabi {
 namespace options {
 
-client& client::tls_opts(tls tls_opts) {
-    _tls_opts = std::move(tls_opts);
-    return *this;
+client::client(v1::client::options opts)
+    : _tls_opts{std::move(v1::client::options::internal::tls_opts(opts))},
+      _apm_opts{std::move(v1::client::options::internal::apm_opts(opts))},
+      _auto_encrypt_opts{},
+      _server_api_opts{std::move(v1::client::options::internal::server_api_opts(opts))} {}
+
+client::operator v1::client::options() const {
+    using mongocxx::v_noabi::from_v1;
+
+    v1::client::options ret;
+
+    if (_tls_opts) {
+        ret.tls_opts(v_noabi::to_v1(*_tls_opts));
+    }
+
+    if (_apm_opts) {
+        ret.apm_opts(v_noabi::to_v1(*_apm_opts));
+    }
+
+    // _auto_encrypt_opts
+
+    if (_server_api_opts) {
+        ret.server_api_opts(v_noabi::to_v1(*_server_api_opts));
+    }
+
+    return ret;
 }
 
-bsoncxx::v_noabi::stdx::optional<tls> const& client::tls_opts() const {
-    return _tls_opts;
+client client::internal::from_v1(v1::client::options v) {
+    return {std::move(v)};
 }
 
-client& client::ssl_opts(tls ssl_opts) {
-    return tls_opts(std::move(ssl_opts));
-}
-
-bsoncxx::v_noabi::stdx::optional<tls> const& client::ssl_opts() const {
-    return tls_opts();
-}
-
-client& client::apm_opts(apm apm_opts) {
-    _apm_opts = std::move(apm_opts);
-    return *this;
-}
-
-bsoncxx::v_noabi::stdx::optional<apm> const& client::apm_opts() const {
-    return _apm_opts;
-}
-
-client& client::auto_encryption_opts(auto_encryption auto_encryption_opts) {
-    _auto_encrypt_opts = std::move(auto_encryption_opts);
-    return *this;
-}
-
-bsoncxx::v_noabi::stdx::optional<auto_encryption> const& client::auto_encryption_opts() const {
-    return _auto_encrypt_opts;
-}
-
-client& client::server_api_opts(server_api server_api_opts) {
-    _server_api_opts = std::move(server_api_opts);
-    return *this;
-}
-
-bsoncxx::v_noabi::stdx::optional<server_api> const& client::server_api_opts() const {
-    return _server_api_opts;
+v1::client::options client::internal::to_v1(client const& v) {
+    return v1::client::options{v};
 }
 
 } // namespace options
+} // namespace v_noabi
+} // namespace mongocxx
+
+namespace mongocxx {
+namespace v_noabi {
+
+v_noabi::options::client from_v1(v1::client::options v) {
+    return v_noabi::options::client::internal::from_v1(std::move(v));
+}
+
+v1::client::options to_v1(v_noabi::options::client v) {
+    return v_noabi::options::client::internal::to_v1(v);
+}
+
 } // namespace v_noabi
 } // namespace mongocxx

@@ -65,8 +65,8 @@ void* client_encryption::convert() const {
     mongoc_client_encryption_opts_t* opts_t = libmongoc::client_encryption_opts_new();
 
     if (_key_vault_client) {
-        mongoc_client_t* client_t = (*_key_vault_client)->_get_impl().client_t;
-        libmongoc::client_encryption_opts_set_keyvault_client(opts_t, client_t);
+        libmongoc::client_encryption_opts_set_keyvault_client(
+            opts_t, v_noabi::client::internal::as_mongoc(**_key_vault_client));
     }
 
     if (_key_vault_namespace) {

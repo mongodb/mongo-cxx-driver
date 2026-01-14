@@ -18,13 +18,13 @@
 
 #include <mongocxx/v1/auto_encryption_options.hh>
 
+#include <memory>
 #include <stdexcept>
 #include <utility>
 
 #include <bsoncxx/document/value.hpp>
 #include <bsoncxx/document/view.hpp>
 
-#include <mongocxx/client.hpp>
 #include <mongocxx/exception/error_code.hpp>
 #include <mongocxx/exception/exception.hpp>
 #include <mongocxx/pool.hpp>
@@ -122,54 +122,56 @@ v1::auto_encryption_options auto_encryption::internal::to_v1(auto_encryption con
     return v1::auto_encryption_options{v};
 }
 
-mongoc_auto_encryption_opts_t* auto_encryption::internal::to_mongoc(auto_encryption const& opts) {
+std::unique_ptr<mongoc_auto_encryption_opts_t, auto_encryption::internal::mongoc_auto_encryption_opts_deleter>
+auto_encryption::internal::to_mongoc(auto_encryption const& opts) {
+    std::unique_ptr<mongoc_auto_encryption_opts_t, mongoc_auto_encryption_opts_deleter> ret{
+        libmongoc::auto_encryption_opts_new()};
+
+    auto const ptr = ret.get();
+
     if (opts.key_vault_client() && opts.key_vault_pool()) {
         throw v_noabi::exception{
             error_code::k_invalid_parameter, "cannot set both key vault client and key vault pool, please choose one"};
     }
 
-    auto const ret = libmongoc::auto_encryption_opts_new();
-
-    if (!ret) {
+    if (!ptr) {
         throw std::logic_error{"could not get object from libmongoc"};
     }
 
     if (auto const& opt = opts.key_vault_client()) {
-        mongoc_client_t* client_t = (*opt)->_get_impl().client_t;
-        libmongoc::auto_encryption_opts_set_keyvault_client(ret, client_t);
+        libmongoc::auto_encryption_opts_set_keyvault_client(ptr, v_noabi::client::internal::as_mongoc(**opt));
     }
 
     if (auto const& opt = opts.key_vault_pool()) {
-        mongoc_client_pool_t* pool_t = (*opt)->_impl->client_pool_t;
-        libmongoc::auto_encryption_opts_set_keyvault_client_pool(ret, pool_t);
+        libmongoc::auto_encryption_opts_set_keyvault_client_pool(ptr, (*opt)->_impl->client_pool_t);
     }
 
     if (auto const& opt = opts.key_vault_namespace()) {
         auto const& ns = *opt;
-        libmongoc::auto_encryption_opts_set_keyvault_namespace(ret, ns.first.c_str(), ns.second.c_str());
+        libmongoc::auto_encryption_opts_set_keyvault_namespace(ptr, ns.first.c_str(), ns.second.c_str());
     }
 
     if (auto const& opt = opts.kms_providers()) {
-        libmongoc::auto_encryption_opts_set_kms_providers(ret, to_scoped_bson_view(*opt));
+        libmongoc::auto_encryption_opts_set_kms_providers(ptr, to_scoped_bson_view(*opt));
     }
 
     if (auto const& opt = opts.tls_opts()) {
-        libmongoc::auto_encryption_opts_set_tls_opts(ret, to_scoped_bson_view(*opt));
+        libmongoc::auto_encryption_opts_set_tls_opts(ptr, to_scoped_bson_view(*opt));
     }
 
     if (auto const& opt = opts.schema_map()) {
-        libmongoc::auto_encryption_opts_set_schema_map(ret, to_scoped_bson_view(*opt));
+        libmongoc::auto_encryption_opts_set_schema_map(ptr, to_scoped_bson_view(*opt));
     }
 
     if (auto const& opt = opts.encrypted_fields_map()) {
-        libmongoc::auto_encryption_opts_set_encrypted_fields_map(ret, to_scoped_bson_view(*opt));
+        libmongoc::auto_encryption_opts_set_encrypted_fields_map(ptr, to_scoped_bson_view(*opt));
     }
 
-    libmongoc::auto_encryption_opts_set_bypass_auto_encryption(ret, opts.bypass_auto_encryption());
-    libmongoc::auto_encryption_opts_set_bypass_query_analysis(ret, opts.bypass_query_analysis());
+    libmongoc::auto_encryption_opts_set_bypass_auto_encryption(ptr, opts.bypass_auto_encryption());
+    libmongoc::auto_encryption_opts_set_bypass_query_analysis(ptr, opts.bypass_query_analysis());
 
     if (auto const& opt = opts.extra_options()) {
-        libmongoc::auto_encryption_opts_set_extra(ret, to_scoped_bson_view(*opt));
+        libmongoc::auto_encryption_opts_set_extra(ptr, to_scoped_bson_view(*opt));
     }
 
     return ret;

@@ -14,6 +14,8 @@
 
 #pragma once
 
+#include <memory>
+
 #include <mongocxx/options/auto_encryption.hpp> // IWYU pragma: export
 
 //
@@ -29,7 +31,14 @@ class auto_encryption::internal {
     static auto_encryption from_v1(v1::auto_encryption_options v);
     static v1::auto_encryption_options to_v1(auto_encryption const& v);
 
-    static mongoc_auto_encryption_opts_t* to_mongoc(auto_encryption const& opts);
+    struct mongoc_auto_encryption_opts_deleter {
+        void operator()(mongoc_auto_encryption_opts_t* ptr) const noexcept {
+            libmongoc::auto_encryption_opts_destroy(ptr);
+        }
+    };
+
+    static std::unique_ptr<mongoc_auto_encryption_opts_t, mongoc_auto_encryption_opts_deleter> to_mongoc(
+        auto_encryption const& opts);
 };
 
 } // namespace options
