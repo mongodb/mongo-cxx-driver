@@ -37,60 +37,6 @@ tls::tls(v1::tls v)
       _crl_file{std::move(v1::tls::internal::crl_file(v))},
       _allow_invalid_certificates{v.allow_invalid_certificates()} {}
 
-tls& tls::pem_file(bsoncxx::v_noabi::string::view_or_value pem_file) {
-    _pem_file = std::move(pem_file);
-    return *this;
-}
-
-bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value> const& tls::pem_file() const {
-    return _pem_file;
-}
-
-tls& tls::pem_password(bsoncxx::v_noabi::string::view_or_value pem_password) {
-    _pem_password = std::move(pem_password);
-    return *this;
-}
-
-bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value> const& tls::pem_password() const {
-    return _pem_password;
-}
-
-tls& tls::ca_file(bsoncxx::v_noabi::string::view_or_value ca_file) {
-    _ca_file = std::move(ca_file);
-    return *this;
-}
-
-bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value> const& tls::ca_file() const {
-    return _ca_file;
-}
-
-tls& tls::ca_dir(bsoncxx::v_noabi::string::view_or_value ca_dir) {
-    _ca_dir = std::move(ca_dir);
-    return *this;
-}
-
-bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value> const& tls::ca_dir() const {
-    return _ca_dir;
-}
-
-tls& tls::crl_file(bsoncxx::v_noabi::string::view_or_value crl_file) {
-    _crl_file = std::move(crl_file);
-    return *this;
-}
-
-bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value> const& tls::crl_file() const {
-    return _crl_file;
-}
-
-tls& tls::allow_invalid_certificates(bool allow_invalid_certificates) {
-    _allow_invalid_certificates = allow_invalid_certificates;
-    return *this;
-}
-
-bsoncxx::v_noabi::stdx::optional<bool> const& tls::allow_invalid_certificates() const {
-    return _allow_invalid_certificates;
-}
-
 #if MONGOCXX_SSL_IS_ENABLED()
 tls::internal::to_mongoc_type tls::internal::to_mongoc(tls const& opts) {
     to_mongoc_type ret = {};

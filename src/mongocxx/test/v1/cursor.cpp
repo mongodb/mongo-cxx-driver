@@ -23,13 +23,14 @@
 #include <bsoncxx/test/v1/stdx/optional.hh>
 #include <bsoncxx/test/v1/types/value.hh>
 
+#include <mongocxx/test/private/scoped_bson.hh>
+
 #include <utility>
 
 #include <bsoncxx/private/bson.hh>
 
 #include <mongocxx/private/mock.hh>
 #include <mongocxx/private/mongoc.hh>
-#include <mongocxx/private/scoped_bson.hh>
 
 #include <bsoncxx/test/system_error.hh>
 

@@ -92,7 +92,7 @@ TEST_CASE("basic", "[mongocxx][v1][replace_one_result]") {
         return ret;
     }();
 
-    auto const opts = v1::replace_one_result::internal::make(
+    auto const res = v1::replace_one_result::internal::make(
         v1::bulk_write::result::internal::make(
             scoped_bson{BCON_NEW(
                             "nMatched",
@@ -103,16 +103,16 @@ TEST_CASE("basic", "[mongocxx][v1][replace_one_result]") {
                             BCON_ARRAY(upserted_ids.bson()))}
                 .value()));
 
-    CHECK(opts.result().matched_count() == matched_count);
-    CHECK(opts.result().modified_count() == modified_count);
+    CHECK(res.result().matched_count() == matched_count);
+    CHECK(res.result().modified_count() == modified_count);
 
-    CHECK(opts.matched_count() == matched_count);
-    CHECK(opts.modified_count() == modified_count);
+    CHECK(res.matched_count() == matched_count);
+    CHECK(res.modified_count() == modified_count);
 
     if (upserted_id.type_id() == bsoncxx::v1::types::id::k_null) {
-        CHECK_FALSE(opts.upserted_id().has_value());
+        CHECK_FALSE(res.upserted_id().has_value());
     } else {
-        CHECK(opts.upserted_id() == upserted_id);
+        CHECK(res.upserted_id() == upserted_id);
     }
 }
 
