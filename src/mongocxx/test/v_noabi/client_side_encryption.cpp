@@ -3567,7 +3567,7 @@ TEST_CASE("27. Text Explicit Encryption", "[client_side_encryption]") {
         auto cursor = client_prefix_suffix.find(query.view());
         auto const found = std::vector<bsoncxx::document::value>(cursor.begin(), cursor.end());
         REQUIRE(found.size() == 1);
-        auto const expected = mongocxx::scoped_bson({R"({ "encryptedText": "foobarbaz" })"});
+        auto const expected = mongocxx::scoped_bson(R"({ "encryptedText": "foobarbaz" })");
         CHECK(test_util::matches(found[0].view(), expected.view()));
     }
 
@@ -3584,7 +3584,7 @@ TEST_CASE("27. Text Explicit Encryption", "[client_side_encryption]") {
         auto cursor = client_prefix_suffix.find(query.view());
         auto const found = std::vector<bsoncxx::document::value>(cursor.begin(), cursor.end());
         REQUIRE(found.size() == 1);
-        auto const expected = mongocxx::scoped_bson({R"({ "encryptedText": "foobarbaz" })"});
+        auto const expected = mongocxx::scoped_bson(R"({ "encryptedText": "foobarbaz" })");
         CHECK(test_util::matches(found[0].view(), expected.view()));
     }
 
@@ -3631,7 +3631,7 @@ TEST_CASE("27. Text Explicit Encryption", "[client_side_encryption]") {
         auto cursor = client_substring.find(query.view());
         auto const found = std::vector<bsoncxx::document::value>(cursor.begin(), cursor.end());
         REQUIRE(found.size() == 1);
-        auto const expected = mongocxx::scoped_bson({R"({ "encryptedText": "foobarbaz" })"});
+        auto const expected = mongocxx::scoped_bson(R"({ "encryptedText": "foobarbaz" })");
         CHECK(test_util::matches(found[0].view(), expected.view()));
     }
 
