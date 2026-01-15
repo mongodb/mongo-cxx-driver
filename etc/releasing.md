@@ -75,12 +75,6 @@ Some release steps require one or more of the following secrets.
     GRS_CONFIG_USER1_USERNAME=<username>
     GRS_CONFIG_USER1_PASSWORD=<password>
     ```
-- Snyk credentials.
-  - Location: `~/.secrets/snyk-creds.txt`
-  - Format:
-    ```bash
-    SNYK_API_TOKEN=<token>
-    ```
 
 ## Pre-Release Steps
 
@@ -118,24 +112,26 @@ All issues with an Impact level of "High" or greater must have a "MongoDB Final 
 
 All issues with an Impact level of "Medium" or greater which do not have a "MongoDB Final Status" of "Fix Committed" must document rationale for its current status in the "Notes" field.
 
-### SBOM Lite
+### SBOM
+
+A GitHub Action automatically scans master and release branches using Endor Labs and, if the SBOM has changed, opens a PR with the updated SBOM file. Ensure that any open `CXX Update SBOM action $BRANCH_NAME` PRs are merged for the release branch. The workflow script looks for a release tag or release branch name, so if the release tag has not yet been created then the SBOM `metadata.component` information may not match the full release version. If this is the case, manually change the following fields in the `sbom.json` file to the correct version. For example, if the release is 4.1.0:
+
+```json
+{
+  "metadata": {
+    "component": {
+      "version": "4.1.0",
+      "cpe": "cpe:2.3:a:mongodb:c++:4.1.0:*:*:*:*:*:*:*",
+      "purl": "pkg:github/mongodb/mongo-cxx-driver@r4.1.0",
+    }
+  }
+}
+```
+The `metadata.component.bom-ref` field does not need to change, but if you do change it be sure to also update the assocaited `dependencies[].ref` field. Note that the github PURL references the release tag (`rX.Y.Z`).
 
 Ensure the container engine (e.g. `podman` or `docker`) is authenticated with the DevProd-provided Amazon ECR instance.
 
-Ensure the list of bundled dependencies in `etc/purls.txt` is up-to-date. If not, update `etc/purls.txt`.
-
-If `etc/purls.txt` was updated, update the SBOM Lite document using the following command(s):
-
-```bash
-# Ensure latest version of SilkBomb is being used.
-podman pull 901841024863.dkr.ecr.us-east-1.amazonaws.com/release-infrastructure/silkbomb:2.0
-
-# Output: "... writing sbom to file"
-podman run -it --rm -v "$(pwd):/pwd" 901841024863.dkr.ecr.us-east-1.amazonaws.com/release-infrastructure/silkbomb:2.0 \
-  update --refresh --no-update-sbom-version -p "/pwd/etc/purls.txt" -i "/pwd/etc/cyclonedx.sbom.json" -o "/pwd/etc/cyclonedx.sbom.json"
-```
-
-Run a patch build which executes the `sbom` task and download the "Augmented SBOM (Updated)" file as `etc/augmented.sbom.json`. Evergreen CLI may be used to schedule only the `sbom` task:
+Run a patch build which executes the `sbom` task and downloads the "Augmented SBOM (Updated)" file as `etc/augmented.sbom.json`. Evergreen CLI may be used to schedule only the `sbom` task:
 
 ```bash
 # Ensure `-p` matches the correct Evergreen project for the current branch!
@@ -153,12 +149,6 @@ Review the contents of the new Augmented SBOM and ensure any new or known vulner
 Update `etc/third_party_vulnerabilities.md` with any updates to new or known vulnerabilities for third party dependencies that have not yet been fixed by the upcoming release.
 
 Download the "Augmented SBOM (Updated)" file from the latest EVG commit build in the `sbom` task and commit it into the repo as `etc/augmented.sbom.json` (even if the only notable change is the timestamp field).
-
-### Check Snyk
-
-Inspect the list of projects in the latest report for the `mongodb/mongo-cxx-driver` target in [Snyk](https://app.snyk.io/org/dev-prod/).
-
-Deactivate any projects that will not be relevant in the upcoming release. Remove any projects that are not relevant to the current release.
 
 ### Check Jira
 
@@ -430,70 +420,6 @@ git push upstream releases/vX.Y
 
 The new branch should be continuously tested on Evergreen. Update the "Display Name" and "Branch Name" of the [mongo-cxx-driver-latest-release Evergreen project](https://spruce.mongodb.com/project/mongo-cxx-driver-latest-release/settings/general) to refer to the new release branch.
 
-### Update SBOM serial number
-
-Check out the release branch `releases/vX.Y`.
-
-Update `etc/cyclonedx.sbom.json` with a new unique serial number for the next upcoming patch release (e.g. for `1.3.1` following the release of `1.3.0`):
-
-```bash
-# Ensure latest version of SilkBomb is being used.
-podman pull 901841024863.dkr.ecr.us-east-1.amazonaws.com/release-infrastructure/silkbomb:2.0
-
-# Output: "... writing sbom to file"
-podman run -it --rm -v "$(pwd):/pwd" 901841024863.dkr.ecr.us-east-1.amazonaws.com/release-infrastructure/silkbomb:2.0 \
-  update --refresh --generate-new-serial-number -p "/pwd/etc/purls.txt" -i "/pwd/etc/cyclonedx.sbom.json" -o "/pwd/etc/cyclonedx.sbom.json"
-```
-
-Update `etc/augmented.sbom.json` by running a patch build which executes the `sbom` task as described above in [SBOM Lite](#sbom-lite).
-
-Commit and push these changes to the `releases/vX.Y` branch.
-
-### Update Snyk
-
-> [!IMPORTANT]
-> Run the Snyk commands in a fresh clone of the post-release repository to avoid existing build and release artifacts from affecting Snyk.
-
-Checkout the new release tag.
-
-Configure and build the CXX Driver (do not reuse an existing C Driver installation; use the auto-downloaded C Driver sources instead):
-
-```bash
-cmake -S . -B build
-cmake --build build
-```
-
-Then run:
-
-```bash
-# Snyk credentials. Ask for these from a team member.
-. ~/.secrets/snyk-creds.txt
-
-# The new release tag. Ensure this is correct!
-release_tag="rX.Y.Z"
-
-# Authenticate with Snyk dev-prod organization.
-snyk auth "${SNYK_API_TOKEN:?}"
-
-# Verify third party dependency sources listed in etc/purls.txt are detected by Snyk.
-# If not, see: https://support.snyk.io/hc/en-us/requests/new
-# Use --exclude=extras until CXX-3042 is resolved
-snyk_args=(
-  --org=dev-prod
-  --remote-repo-url=https://github.com/mongodb/mongo-cxx-driver/
-  --target-reference="${release_tag:?}"
-  --unmanaged
-  --all-projects
-  --exclude=extras
-)
-snyk test "${snyk_args[@]:?}" --print-deps
-
-# Create a new Snyk target reference for the new release tag.
-snyk monitor "${snyk_args[@]:?}"
-```
-
-Verify the new Snyk target reference is present in the [Snyk project targets list](https://app.snyk.io/org/dev-prod/projects?groupBy=targets&before&after&searchQuery=mongo-cxx-driver&sortBy=highest+severity&filters[Show]=&filters[Integrations]=cli&filters[CollectionIds]=) for `mongodb/mongo-cxx-driver`.
-
 ### Post-Release Changes
 
 Create and checkout a new branch `post-release-changes` relative to `master` to contain documentation updates following the new release:
@@ -512,21 +438,7 @@ For a patch release, in `etc/apidocmenu.md`, update the list of versions under "
 
 In `README.md`, sync the "Driver Development Status" table with the updated table from `etc/apidocmenu.md`.
 
-Update `etc/cyclonedx.sbom.json` with a new unique serial number for the next upcoming non-patch release (e.g. for `1.4.0` following the release of `1.3.0`):
-
-```bash
-# Ensure latest version of SilkBomb is being used.
-podman pull 901841024863.dkr.ecr.us-east-1.amazonaws.com/release-infrastructure/silkbomb:2.0
-
-# Output: "... writing sbom to file"
-podman run -it --rm -v "$(pwd):/pwd" 901841024863.dkr.ecr.us-east-1.amazonaws.com/release-infrastructure/silkbomb:2.0 \
-  update --refresh --generate-new-serial-number -p "/pwd/etc/purls.txt" -i "/pwd/etc/cyclonedx.sbom.json" -o "/pwd/etc/cyclonedx.sbom.json"
-
-git add etc/cyclonedx.sbom.json
-git commit -m "update SBOM serial number"
-```
-
-Update `etc/augmented.sbom.json` by running a patch build which executes the `sbom` task as described above in [SBOM Lite](#sbom-lite).
+Update `etc/augmented.sbom.json` by running a patch build which executes the `sbom` task as described above in [SBOM](#sbom).
 
 Commit these changes to the `post-release-changes` branch:
 
