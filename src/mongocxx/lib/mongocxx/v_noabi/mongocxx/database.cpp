@@ -129,7 +129,7 @@ database::_aggregate(client_session const* session, pipeline const& pipeline, op
     append_aggregate_options(b, options);
 
     if (session) {
-        b.append(bsoncxx::v_noabi::builder::concatenate_doc{session->_get_impl().to_document()});
+        v_noabi::client_session::internal::append_to(*session, b);
     }
 
     ::mongoc_read_prefs_t const* read_prefs = nullptr;
@@ -159,7 +159,7 @@ cursor database::_list_collections(client_session const* session, bsoncxx::v_noa
     options_builder.append(kvp("filter", filter));
 
     if (session) {
-        options_builder.append(bsoncxx::v_noabi::builder::concatenate_doc{session->_get_impl().to_document()});
+        v_noabi::client_session::internal::append_to(*session, options_builder);
     }
 
     return v1::cursor::internal::make(
@@ -181,7 +181,7 @@ std::vector<std::string> database::_list_collection_names(
     options_builder.append(kvp("filter", filter));
 
     if (session) {
-        options_builder.append(bsoncxx::v_noabi::builder::concatenate_doc{session->_get_impl().to_document()});
+        v_noabi::client_session::internal::append_to(*session, options_builder);
     }
 
     bson_error_t error;
@@ -222,7 +222,7 @@ bsoncxx::v_noabi::document::value database::_run_command(
 
     bsoncxx::v_noabi::builder::basic::document options_builder;
     if (session) {
-        options_builder.append(bsoncxx::v_noabi::builder::concatenate_doc{session->_get_impl().to_document()});
+        v_noabi::client_session::internal::append_to(*session, options_builder);
     }
 
     scoped_bson reply;
@@ -288,7 +288,7 @@ collection database::_create_collection(
     }
 
     if (session) {
-        options_builder.append(bsoncxx::v_noabi::builder::concatenate_doc{session->_get_impl().to_document()});
+        v_noabi::client_session::internal::append_to(*session, options_builder);
     }
 
     auto result = libmongoc::database_create_collection(
@@ -330,7 +330,7 @@ void database::_drop(
     }
 
     if (session) {
-        opts_doc.append(bsoncxx::v_noabi::builder::concatenate_doc{session->_get_impl().to_document()});
+        v_noabi::client_session::internal::append_to(*session, opts_doc);
     }
 
     if (!libmongoc::database_drop_with_opts(_get_impl().database_t, to_scoped_bson_view(opts_doc), &error)) {
@@ -419,7 +419,7 @@ database::_watch(client_session const* session, pipeline const& pipe, options::c
     options_builder.append(
         bsoncxx::v_noabi::builder::concatenate(v_noabi::options::change_stream::internal::to_document(options)));
     if (session) {
-        options_builder.append(bsoncxx::v_noabi::builder::concatenate_doc{session->_get_impl().to_document()});
+        v_noabi::client_session::internal::append_to(*session, options_builder);
     }
 
     return v1::change_stream::internal::make(

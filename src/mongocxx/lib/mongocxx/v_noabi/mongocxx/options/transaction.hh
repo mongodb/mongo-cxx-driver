@@ -26,6 +26,7 @@ namespace options {
 
 class transaction::internal {
    public:
+    static v1::transaction_options const& as_v1(transaction const& self);
     static mongoc_transaction_opt_t const* as_mongoc(transaction const& self);
 };
 

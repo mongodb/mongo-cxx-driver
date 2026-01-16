@@ -14,21 +14,29 @@
 
 #pragma once
 
-#include <functional>
-#include <memory>
-
-#include <mongocxx/bulk_write-fwd.hpp>
-#include <mongocxx/client-fwd.hpp>
 #include <mongocxx/client_session-fwd.hpp> // IWYU pragma: export
-#include <mongocxx/collection-fwd.hpp>
-#include <mongocxx/database-fwd.hpp>
-#include <mongocxx/index_view-fwd.hpp>
-#include <mongocxx/search_index_view-fwd.hpp>
+
+//
+
+#include <mongocxx/v1/client_session.hpp> // IWYU pragma: export
+
+#include <cstdint>
+#include <functional>
+#include <memory> // IWYU pragma: keep: backward compatibility, to be removed.
+
+#include <mongocxx/bulk_write-fwd.hpp> // IWYU pragma: keep: backward compatibility, to be removed.
+#include <mongocxx/client-fwd.hpp>
+#include <mongocxx/collection-fwd.hpp>        // IWYU pragma: keep: backward compatibility, to be removed.
+#include <mongocxx/database-fwd.hpp>          // IWYU pragma: keep: backward compatibility, to be removed.
+#include <mongocxx/index_view-fwd.hpp>        // IWYU pragma: keep: backward compatibility, to be removed.
+#include <mongocxx/search_index_view-fwd.hpp> // IWYU pragma: keep: backward compatibility, to be removed.
 
 #include <bsoncxx/document/view.hpp>
 #include <bsoncxx/stdx/optional.hpp>
+#include <bsoncxx/types.hpp>
 
 #include <mongocxx/options/client_session.hpp>
+#include <mongocxx/options/transaction.hpp>
 
 #include <mongocxx/config/prelude.hpp>
 
@@ -48,54 +56,35 @@ namespace v_noabi {
 /// - https://www.mongodb.com/docs/manual/core/read-isolation-consistency-recency/#causal-consistency
 ///
 class client_session {
+   private:
+    v1::client_session _session;
+    v_noabi::client* _client;
+    v_noabi::options::client_session _options;
+
    public:
-    enum class transaction_state {
-        k_transaction_none,
-        k_transaction_starting,
-        k_transaction_in_progress,
-        k_transaction_committed,
-        k_transaction_aborted,
-    };
-
-    ///
-    /// Move constructs a session.
-    ///
-    /// @par Postconditions:
-    /// - `other` is in an assign-or-destroy-only state.
-    ///
-    MONGOCXX_ABI_EXPORT_CDECL() client_session(client_session&& other) noexcept;
-
-    ///
-    /// Move assigns a session.
-    ///
-    /// @par Postconditions:
-    /// - `other` is in an assign-or-destroy-only state.
-    ///
-    MONGOCXX_ABI_EXPORT_CDECL(client_session&) operator=(client_session&& other) noexcept;
-
-    client_session(client_session const&) = delete;
-    client_session& operator=(client_session const&) = delete;
-
-    ///
-    /// Ends and destroys the session.
-    ///
-    MONGOCXX_ABI_EXPORT_CDECL() ~client_session() noexcept;
+    using transaction_state = v1::client_session::transaction_state;
 
     ///
     /// Gets the client that started this session.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(mongocxx::v_noabi::client const&) client() const noexcept;
+    v_noabi::client const& client() const noexcept {
+        return *_client;
+    }
 
     ///
     /// Gets the options this session was created with.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(options::client_session const&) options() const noexcept;
+    options::client_session const& options() const noexcept {
+        return _options;
+    }
 
     ///
     /// Get the server-side "logical session ID" associated with this session, as a BSON document.
     /// This view is invalid after the session is destroyed.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::document::view) id() const noexcept;
+    bsoncxx::v_noabi::document::view id() const noexcept {
+        return _session.id();
+    }
 
     ///
     /// Get the session's clusterTime, as a BSON document. This is an opaque value suitable for
@@ -103,30 +92,40 @@ class client_session {
     /// not been used for any operation and you have not called advance_cluster_time().
     /// This view is invalid after the session is destroyed.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::document::view) cluster_time() const noexcept;
+    bsoncxx::v_noabi::document::view cluster_time() const noexcept {
+        return _session.cluster_time();
+    }
 
     ///
     /// Get the session's operationTime, as a BSON timestamp. This is an opaque value suitable for
     /// passing to advance_operation_time(). The timestamp is zero if the session has not been used
     /// for any operation and you have not called advance_operation_time().
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::types::b_timestamp) operation_time() const noexcept;
+    bsoncxx::v_noabi::types::b_timestamp operation_time() const noexcept {
+        return bsoncxx::v_noabi::from_v1(_session.operation_time());
+    }
 
     ///
     /// Get the server_id the session is pinned to. The server_id is zero if the session is not
     /// pinned to a server.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(std::uint32_t) server_id() const noexcept;
+    std::uint32_t server_id() const noexcept {
+        return _session.server_id();
+    }
 
     ///
     /// Returns the current transaction state for this session.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(transaction_state) get_transaction_state() const noexcept;
+    transaction_state get_transaction_state() const noexcept {
+        return _session.get_transaction_state();
+    }
 
     ///
     /// Returns whether or not this session is dirty.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bool) get_dirty() const noexcept;
+    bool get_dirty() const noexcept {
+        return _session.get_dirty();
+    }
 
     ///
     /// Advance the cluster time for a session. Has an effect only if the new cluster time is
@@ -136,8 +135,9 @@ class client_session {
     /// clusterTime from another session, ensuring subsequent operations in this session are
     /// causally consistent with the last operation in the other session.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(void)
-    advance_cluster_time(bsoncxx::v_noabi::document::view const& cluster_time);
+    void advance_cluster_time(bsoncxx::v_noabi::document::view const& cluster_time) {
+        _session.advance_cluster_time(bsoncxx::v_noabi::to_v1(cluster_time));
+    }
 
     ///
     /// Advance the session's operation time, expressed as a BSON timestamp. Has an effect only if
@@ -147,8 +147,9 @@ class client_session {
     /// clusterTime from another session, ensuring subsequent operations in this session are
     /// causally consistent with the last operation in the other session.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(void)
-    advance_operation_time(bsoncxx::v_noabi::types::b_timestamp const& operation_time);
+    void advance_operation_time(bsoncxx::v_noabi::types::b_timestamp const& operation_time) {
+        _session.advance_operation_time(bsoncxx::v_noabi::to_v1(operation_time));
+    }
 
     ///
     /// Starts a transaction on the current client session.
@@ -160,8 +161,8 @@ class client_session {
     /// are network or other transient failures, or if there are other errors such as a session with
     /// a transaction already in progress.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(void)
-    start_transaction(bsoncxx::v_noabi::stdx::optional<options::transaction> const& transaction_opts = {});
+    MONGOCXX_ABI_EXPORT_CDECL(void) start_transaction(
+        bsoncxx::v_noabi::stdx::optional<v_noabi::options::transaction> const& transaction_opts = {});
 
     ///
     /// Commits a transaction on the current client session.
@@ -214,26 +215,12 @@ class client_session {
     /// @throws mongocxx::v_noabi::operation_exception if there are errors completing the
     /// transaction.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(void)
-    with_transaction(with_transaction_cb cb, options::transaction opts = {});
+    MONGOCXX_ABI_EXPORT_CDECL(void) with_transaction(with_transaction_cb cb, v_noabi::options::transaction opts = {});
+
+    class internal;
 
    private:
-    friend ::mongocxx::v_noabi::bulk_write;
-    friend ::mongocxx::v_noabi::client;
-    friend ::mongocxx::v_noabi::collection;
-    friend ::mongocxx::v_noabi::database;
-    friend ::mongocxx::v_noabi::index_view;
-    friend ::mongocxx::v_noabi::search_index_view;
-
-    class impl;
-
-    client_session(mongocxx::v_noabi::client* client, options::client_session const& options);
-
-    impl const& _get_impl() const {
-        return *_impl;
-    }
-
-    std::unique_ptr<impl> _impl;
+    client_session(v1::client_session session, v_noabi::client& client, v_noabi::options::client_session options);
 };
 
 } // namespace v_noabi
@@ -244,4 +231,7 @@ class client_session {
 ///
 /// @file
 /// Provides @ref mongocxx::v_noabi::client_session.
+///
+/// @par Includes
+/// - @ref mongocxx/v1/client_session.hpp
 ///

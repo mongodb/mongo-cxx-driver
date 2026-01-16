@@ -266,7 +266,7 @@ bulk_write::internal::make(collection const& coll, options::bulk_write const& op
     }
 
     if (session) {
-        options += to_scoped_bson_view(session->_get_impl().to_document());
+        v_noabi::client_session::internal::append_to(*session, options);
     }
 
     auto ret = v1::bulk_write::internal::make(

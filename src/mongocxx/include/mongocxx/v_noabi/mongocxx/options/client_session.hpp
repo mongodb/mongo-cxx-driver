@@ -14,8 +14,15 @@
 
 #pragma once
 
-#include <mongocxx/client_session-fwd.hpp>
 #include <mongocxx/options/client_session-fwd.hpp> // IWYU pragma: export
+
+//
+
+#include <mongocxx/v1/client_session.hpp> // IWYU pragma: export
+
+#include <utility>
+
+#include <mongocxx/client_session-fwd.hpp> // IWYU pragma: keep: backward compatibility, to be removed.
 
 #include <bsoncxx/stdx/optional.hpp>
 
@@ -32,6 +39,42 @@ namespace options {
 ///
 class client_session {
    public:
+    ///
+    /// Default initialization.
+    ///
+    client_session() = default;
+
+    ///
+    /// Construct with the @ref mongocxx::v1 equivalent.
+    ///
+    /* explicit(false) */ client_session(v1::client_session::options const& opts)
+        : _causal_consistency{opts.causal_consistency()},
+          _snapshot{opts.snapshot()},
+          _default_transaction_opts{opts.default_transaction_opts()} {}
+
+    ///
+    /// Convert to the @ref mongocxx::v1 equivalent.
+    ///
+    explicit operator v1::client_session::options() const {
+        using mongocxx::v_noabi::to_v1;
+
+        v1::client_session::options ret;
+
+        if (_causal_consistency) {
+            ret.causal_consistency(*_causal_consistency);
+        }
+
+        if (_snapshot) {
+            ret.snapshot(*_snapshot);
+        }
+
+        if (_default_transaction_opts) {
+            ret.default_transaction_opts(to_v1(*_default_transaction_opts));
+        }
+
+        return ret;
+    }
+
     ///
     /// Sets the causal_consistency option.
     ///
@@ -50,13 +93,18 @@ class client_session {
     /// @see
     /// - https://www.mongodb.com/docs/manual/core/read-isolation-consistency-recency/#causal-consistency
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(client_session&) causal_consistency(bool causal_consistency) noexcept;
+    client_session& causal_consistency(bool causal_consistency) noexcept {
+        _causal_consistency = causal_consistency;
+        return *this;
+    }
 
     ///
     /// Gets the value of the causal_consistency option.
     ///
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bool) causal_consistency() const noexcept;
+    bool causal_consistency() const noexcept {
+        return _causal_consistency.value_or(true);
+    }
 
     ///
     /// Sets the read concern "snapshot" (not enabled by default).
@@ -72,12 +120,17 @@ class client_session {
     /// other may be active at a time. Attempting to do so will result in an error being thrown
     /// by mongocxx::v_noabi::client::start_session.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(client_session&) snapshot(bool enable_snapshot_reads) noexcept;
+    client_session& snapshot(bool enable_snapshot_reads) noexcept {
+        _snapshot = enable_snapshot_reads;
+        return *this;
+    }
 
     ///
     /// Gets the value of the snapshot_reads option.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bool) snapshot() const noexcept;
+    bool snapshot() const noexcept {
+        return _snapshot.value_or(false);
+    }
 
     ///
     /// Sets the default transaction options.
@@ -89,27 +142,47 @@ class client_session {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(client_session&)
-    default_transaction_opts(transaction default_transaction_opts);
+    client_session& default_transaction_opts(transaction default_transaction_opts) {
+        _default_transaction_opts = std::move(default_transaction_opts);
+        return *this;
+    }
 
     ///
     /// Gets the current default transaction options.
     ///
     /// @return The default transaction options.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<transaction> const&)
-    default_transaction_opts() const;
+    bsoncxx::v_noabi::stdx::optional<transaction> const& default_transaction_opts() const {
+        return _default_transaction_opts;
+    }
 
    private:
-    friend ::mongocxx::v_noabi::client_session;
-
     bsoncxx::v_noabi::stdx::optional<bool> _causal_consistency;
-    bsoncxx::v_noabi::stdx::optional<bool> _enable_snapshot_reads;
-
+    bsoncxx::v_noabi::stdx::optional<bool> _snapshot;
     bsoncxx::v_noabi::stdx::optional<transaction> _default_transaction_opts;
 };
 
 } // namespace options
+} // namespace v_noabi
+} // namespace mongocxx
+
+namespace mongocxx {
+namespace v_noabi {
+
+///
+/// Convert to the @ref mongocxx::v_noabi equivalent of `v`.
+///
+inline v_noabi::options::client_session from_v1(v1::client_session::options v) {
+    return {v};
+}
+
+///
+/// Convert to the @ref mongocxx::v1 equivalent of `v`.
+///
+inline v1::client_session::options to_v1(v_noabi::options::client_session v) {
+    return v1::client_session::options{v};
+}
+
 } // namespace v_noabi
 } // namespace mongocxx
 
@@ -118,4 +191,7 @@ class client_session {
 ///
 /// @file
 /// Provides @ref mongocxx::v_noabi::options::client_session.
+///
+/// @par Includes
+/// - @ref mongocxx/v1/client_session.hpp
 ///

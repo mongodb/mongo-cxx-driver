@@ -30,6 +30,7 @@
 #include <mongocxx/v1/apm.hh>
 #include <mongocxx/v1/auto_encryption_options.hh>
 #include <mongocxx/v1/change_stream.hh>
+#include <mongocxx/v1/client_session.hh>
 #include <mongocxx/v1/cursor.hh>
 #include <mongocxx/v1/events/command_failed.hh>
 #include <mongocxx/v1/events/command_started.hh>
@@ -479,9 +480,14 @@ v1::cursor client::list_databases() {
 }
 
 v1::cursor client::list_databases(v1::client_session const& session) {
-    // TODO: v1::client_session (CXX-3237)
-    (void)session;
-    MONGOCXX_PRIVATE_UNREACHABLE;
+    scoped_bson doc;
+    bson_error_t error = {};
+
+    if (!v1::client_session::internal::append_to(session, doc, error)) {
+        v1::throw_exception(error);
+    }
+
+    return list_databases_impl(impl::with(this)->_client, doc.bson());
 }
 
 v1::cursor client::list_databases(bsoncxx::v1::document::view opts) {
@@ -489,10 +495,16 @@ v1::cursor client::list_databases(bsoncxx::v1::document::view opts) {
 }
 
 v1::cursor client::list_databases(v1::client_session const& session, bsoncxx::v1::document::view opts) {
-    // TODO: v1::client_session (CXX-3237)
-    (void)session;
-    (void)opts;
-    MONGOCXX_PRIVATE_UNREACHABLE;
+    scoped_bson doc;
+    bson_error_t error = {};
+
+    if (!v1::client_session::internal::append_to(session, doc, error)) {
+        v1::throw_exception(error);
+    }
+
+    doc += opts;
+
+    return list_databases_impl(impl::with(this)->_client, doc.bson());
 }
 
 namespace {
@@ -531,10 +543,15 @@ std::vector<std::string> client::list_database_names(bsoncxx::v1::document::view
 std::vector<std::string> client::list_database_names(
     v1::client_session const& session,
     bsoncxx::v1::document::view filter) {
-    // TODO: v1::client_session (CXX-3237)
-    (void)session;
-    (void)filter;
-    MONGOCXX_PRIVATE_UNREACHABLE;
+    scoped_bson doc;
+    bson_error_t error = {};
+
+    if (!v1::client_session::internal::append_to(session, doc, error)) {
+        v1::throw_exception(error);
+    }
+
+    doc += scoped_bson{BCON_NEW("filter", BCON_DOCUMENT(scoped_bson_view{filter}.bson()))};
+    return list_database_names_impl(impl::with(this)->_client, doc.bson());
 }
 
 std::vector<std::string> client::list_database_names() {
@@ -542,20 +559,36 @@ std::vector<std::string> client::list_database_names() {
 }
 
 std::vector<std::string> client::list_database_names(v1::client_session const& session) {
-    // TODO: v1::client_session (CXX-3237)
-    (void)session;
-    MONGOCXX_PRIVATE_UNREACHABLE;
+    scoped_bson doc;
+    bson_error_t error = {};
+
+    if (!v1::client_session::internal::append_to(session, doc, error)) {
+        v1::throw_exception(error);
+    }
+
+    return list_database_names_impl(impl::with(this)->_client, doc.bson());
 }
 
-v1::client_session client::start_session(v1::client_session::options opts) {
-    // TODO: v1::client_session (CXX-3237)
-    (void)opts;
-    MONGOCXX_PRIVATE_UNREACHABLE;
+namespace {
+
+v1::client_session start_session_impl(v1::client& client, mongoc_session_opt_t const* opts) {
+    bson_error_t error = {};
+
+    if (auto const ptr = libmongoc::client_start_session(v1::client::internal::as_mongoc(client), opts, &error)) {
+        return v1::client_session::internal::make(ptr, client);
+    }
+
+    v1::throw_exception(error);
+}
+
+} // namespace
+
+v1::client_session client::start_session(v1::client_session::options const& opts) {
+    return start_session_impl(*this, v1::client_session::options::internal::as_mongoc(opts));
 }
 
 v1::client_session client::start_session() {
-    // TODO: v1::client_session (CXX-3237)
-    MONGOCXX_PRIVATE_UNREACHABLE;
+    return start_session_impl(*this, nullptr);
 }
 
 namespace {
@@ -630,16 +663,26 @@ v1::change_stream client::watch() {
 }
 
 v1::change_stream client::watch(v1::client_session const& session, v1::change_stream::options const& opts) {
-    // TODO: v1::client_session (CXX-3237)
-    (void)session;
-    (void)opts;
-    MONGOCXX_PRIVATE_UNREACHABLE;
+    scoped_bson doc;
+    bson_error_t error = {};
+
+    if (!v1::client_session::internal::append_to(session, doc, error)) {
+        v1::throw_exception(error);
+    }
+
+    doc += to_document(opts);
+    return watch_impl(impl::with(this)->_client, bsoncxx::v1::array::view{}, doc.bson());
 }
 
 v1::change_stream client::watch(v1::client_session const& session) {
-    // TODO: v1::client_session (CXX-3237)
-    (void)session;
-    MONGOCXX_PRIVATE_UNREACHABLE;
+    scoped_bson doc;
+    bson_error_t error = {};
+
+    if (!v1::client_session::internal::append_to(session, doc, error)) {
+        v1::throw_exception(error);
+    }
+
+    return watch_impl(impl::with(this)->_client, bsoncxx::v1::array::view{}, doc.bson());
 }
 
 v1::change_stream client::watch(v1::pipeline const& pipeline, v1::change_stream::options const& opts) {
@@ -648,11 +691,15 @@ v1::change_stream client::watch(v1::pipeline const& pipeline, v1::change_stream:
 
 v1::change_stream
 client::watch(v1::client_session const& session, v1::pipeline const& pipeline, v1::change_stream::options const& opts) {
-    // TODO: v1::client_session (CXX-3237)
-    (void)session;
-    (void)pipeline;
-    (void)opts;
-    MONGOCXX_PRIVATE_UNREACHABLE;
+    scoped_bson doc;
+    bson_error_t error = {};
+
+    if (!v1::client_session::internal::append_to(session, doc, error)) {
+        v1::throw_exception(error);
+    }
+
+    doc += to_document(opts);
+    return watch_impl(impl::with(this)->_client, pipeline.view_array(), doc.bson());
 }
 
 v1::change_stream client::watch(v1::pipeline const& pipeline) {
@@ -660,10 +707,14 @@ v1::change_stream client::watch(v1::pipeline const& pipeline) {
 }
 
 v1::change_stream client::watch(v1::client_session const& session, v1::pipeline const& pipeline) {
-    // TODO: v1::client_session (CXX-3237)
-    (void)session;
-    (void)pipeline;
-    MONGOCXX_PRIVATE_UNREACHABLE;
+    scoped_bson doc;
+    bson_error_t error = {};
+
+    if (!v1::client_session::internal::append_to(session, doc, error)) {
+        v1::throw_exception(error);
+    }
+
+    return watch_impl(impl::with(this)->_client, pipeline.view_array(), doc.bson());
 }
 
 void client::reset() {

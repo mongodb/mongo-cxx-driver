@@ -198,7 +198,7 @@ class client {
     /// - [Server Sessions (MongoDB Manual)](https://mongodb.com/docs/manual/reference/server-sessions/)
     ///
     /// @{
-    MONGOCXX_ABI_EXPORT_CDECL(v1::client_session) start_session(v1::client_session::options opts);
+    MONGOCXX_ABI_EXPORT_CDECL(v1::client_session) start_session(v1::client_session::options const& opts);
 
     MONGOCXX_ABI_EXPORT_CDECL(v1::client_session) start_session();
     /// @}

@@ -95,6 +95,10 @@ bsoncxx::v_noabi::stdx::optional<std::chrono::milliseconds> transaction::max_com
     return check_moved_from(_txn).max_commit_time_ms();
 }
 
+v1::transaction_options const& transaction::internal::as_v1(transaction const& self) {
+    return check_moved_from(self._txn);
+}
+
 mongoc_transaction_opt_t const* transaction::internal::as_mongoc(transaction const& self) {
     return v1::transaction_options::internal::as_mongoc(check_moved_from(self._txn));
 }

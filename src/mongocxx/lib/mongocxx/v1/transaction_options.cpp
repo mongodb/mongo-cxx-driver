@@ -120,6 +120,12 @@ bsoncxx::v1::stdx::optional<v1::write_concern> transaction_options::write_concer
     return {};
 }
 
+transaction_options::transaction_options(void* impl) : _impl{impl} {}
+
+transaction_options transaction_options::internal::make(mongoc_transaction_opt_t* impl) {
+    return {impl};
+}
+
 mongoc_transaction_opt_t const* transaction_options::internal::as_mongoc(transaction_options const& self) {
     return to_mongoc(self._impl);
 }

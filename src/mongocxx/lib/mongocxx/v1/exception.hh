@@ -61,7 +61,8 @@ class exception::internal {
     static void set_reply(exception& self, bsoncxx::v1::document::value v);
 
     static bsoncxx::v1::array::view get_error_labels(exception const& self);
-    static bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> const& get_reply(exception const& self);
+    static MONGOCXX_ABI_EXPORT_CDECL_TESTING(bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> const&)
+    get_reply(exception const& self);
 };
 
 [[noreturn]] MONGOCXX_ABI_EXPORT_CDECL_TESTING(void) throw_exception(bson_error_t const& error);
