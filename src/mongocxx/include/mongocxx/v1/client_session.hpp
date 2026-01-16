@@ -183,7 +183,7 @@ class client_session {
     ///
     /// @throws mongocxx::v1::exception when a client-side error is encountered.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(void) start_transaction(v1::transaction_options opts);
+    MONGOCXX_ABI_EXPORT_CDECL(void) start_transaction(v1::transaction_options const& opts);
 
     ///
     /// Start a new transaction.
@@ -346,7 +346,7 @@ class client_session::options {
     ///
     /// Set the "defaultTransactionOptions" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(options&) default_transaction_opts(v1::transaction_options v);
+    MONGOCXX_ABI_EXPORT_CDECL(options&) default_transaction_opts(v1::transaction_options const& v);
 
     ///
     /// Return the current "defaultTransactionOptions" field.
