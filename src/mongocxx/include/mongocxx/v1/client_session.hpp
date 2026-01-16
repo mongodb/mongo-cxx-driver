@@ -265,6 +265,11 @@ class client_session {
     /// default-initialized @ref v1::transaction_options.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(void) with_transaction(with_transaction_cb const& fn);
+
+    class internal;
+
+   private:
+    /* explicit(false) */ client_session(void* impl);
 };
 
 ///
@@ -352,6 +357,11 @@ class client_session::options {
     /// Return the current "defaultTransactionOptions" field.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<v1::transaction_options>) default_transaction_opts() const;
+
+    class internal;
+
+   private:
+    /* explicit(false) */ options(void* impl);
 };
 
 } // namespace v1

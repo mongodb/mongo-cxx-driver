@@ -23,6 +23,7 @@
 
 #include <mongocxx/v1/auto_encryption_options.hh>
 #include <mongocxx/v1/change_stream.hh>
+#include <mongocxx/v1/client_session.hh>
 #include <mongocxx/v1/cursor.hh>
 #include <mongocxx/v1/tls.hh>
 #include <mongocxx/v1/uri.hh>
@@ -202,6 +203,46 @@ struct client_mocks_type {
     }
 };
 
+struct session_mocks_type {
+    using destroy_type = decltype(libmongoc::client_session_destroy.create_instance());
+    using append_type = decltype(libmongoc::client_session_append.create_instance());
+
+    identity_type session_identity;
+
+    mongoc_client_session_t* session_id = reinterpret_cast<mongoc_client_session_t*>(&session_identity);
+
+    destroy_type destroy = libmongoc::client_session_destroy.create_instance();
+    append_type append = libmongoc::client_session_append.create_instance();
+
+    scoped_bson doc{R"({"sessionId": 123})"};
+
+    session_mocks_type() {
+        destroy
+            ->interpose([&](mongoc_client_session_t* ptr) -> void {
+                if (ptr) {
+                    CHECK(ptr == session_id);
+                }
+            })
+            .forever();
+
+        append
+            ->interpose([&](mongoc_client_session_t const* ptr, bson_t* out, bson_error_t* error) -> bool {
+                CHECK(ptr == session_id);
+                REQUIRE(out != nullptr);
+                CHECK(error != nullptr);
+
+                bson_copy_to(doc.bson(), out);
+
+                return true;
+            })
+            .forever();
+    }
+
+    client_session make(v1::client& client) {
+        return v1::client_session::internal::make(session_id, client);
+    }
+};
+
 } // namespace
 
 TEST_CASE("exceptions", "[mongocxx][v1][client]") {
@@ -249,12 +290,12 @@ TEST_CASE("exceptions", "[mongocxx][v1][client]") {
     }
 
     SECTION("mongoc") {
-        auto const v = GENERATE(as<std::uint32_t>(), 1, 2, 3);
+        auto const v = GENERATE(1, 2, 3);
         auto const msg = GENERATE("one", "two", "three");
 
         auto const set_error = [&](bson_error_t* error) {
             REQUIRE(error != nullptr);
-            bson_set_error(error, MONGOC_ERROR_CLIENT, v, "%s", msg);
+            bson_set_error(error, MONGOC_ERROR_CLIENT, static_cast<std::uint32_t>(v), "%s", msg);
             error->reserved = 2; // MONGOC_ERROR_CATEGORY
         };
 
@@ -341,6 +382,137 @@ TEST_CASE("exceptions", "[mongocxx][v1][client]") {
                 CHECK(ex.code() == v1::source_errc::mongoc);
                 CHECK(ex.code().value() == static_cast<int>(v));
                 CHECK_THAT(ex.what(), Catch::Matchers::ContainsSubstring(msg));
+            }
+        }
+
+        SECTION("start_session") {
+            auto client = mocks.make();
+
+            auto start_session = libmongoc::client_start_session.create_instance();
+            start_session->interpose(
+                [&](mongoc_client_t* ptr,
+                    mongoc_session_opt_t const* opts,
+                    bson_error_t* err) -> mongoc_client_session_t* {
+                    CHECK(ptr == mocks.client_id);
+                    CHECK(opts == nullptr);
+                    REQUIRE(err != nullptr);
+
+                    set_error(err);
+
+                    return nullptr;
+                });
+
+            try {
+                (void)client.start_session();
+                FAIL("should not reach this point");
+            } catch (v1::exception const& ex) {
+                CHECK(ex.code() == v1::source_errc::mongoc);
+                CHECK(ex.code().value() == v);
+                CHECK_THAT(ex.what(), Catch::Matchers::ContainsSubstring(msg));
+            }
+        }
+
+        SECTION("session") {
+            auto client = mocks.make();
+
+            session_mocks_type session_mocks;
+            auto const session = session_mocks.make(client);
+
+            session_mocks.append
+                ->interpose([&](mongoc_client_session_t const* ptr, bson_t* out, bson_error_t* error) -> bool {
+                    CHECK(ptr == session_mocks.session_id);
+                    CHECK(out != nullptr);
+                    REQUIRE(error != nullptr);
+
+                    set_error(error);
+
+                    return false;
+                })
+                .forever();
+
+            SECTION("list_databases") {
+                auto const op = [&](bsoncxx::v1::document::view const* opts_ptr) {
+                    try {
+                        opts_ptr ? client.list_databases(session, *opts_ptr) : client.list_databases(session);
+                        FAIL("should not reach this point");
+                    } catch (v1::exception const& ex) {
+                        CHECK(ex.code() == v1::source_errc::mongoc);
+                        CHECK(ex.code().value() == static_cast<int>(v));
+                        CHECK_THAT(ex.what(), Catch::Matchers::ContainsSubstring(msg));
+                    }
+                };
+
+                SECTION("no options") {
+                    op(nullptr);
+                }
+
+                SECTION("with options") {
+                    scoped_bson const doc{R"({"x": 1})"};
+                    auto const view = doc.view();
+                    op(&view);
+                }
+            }
+
+            SECTION("list_database_names") {
+                auto const op = [&](bsoncxx::v1::document::view const* filter_ptr) -> void {
+                    try {
+                        filter_ptr ? client.list_database_names(session, *filter_ptr)
+                                   : client.list_database_names(session);
+                        FAIL("should not reach this point");
+                    } catch (v1::exception const& ex) {
+                        CHECK(ex.code() == v1::source_errc::mongoc);
+                        CHECK(ex.code().value() == static_cast<int>(v));
+                        CHECK_THAT(ex.what(), Catch::Matchers::ContainsSubstring(msg));
+                    }
+                };
+
+                SECTION("no filter") {
+                    op(nullptr);
+                }
+
+                SECTION("with filter") {
+                    scoped_bson const doc{R"({"x": 1})"};
+                    auto const view = doc.view();
+                    op(&view);
+                }
+            }
+
+            SECTION("watch") {
+                auto const op = [&](v1::pipeline const* pipeline_ptr,
+                                    v1::change_stream::options const* opts_ptr) -> void {
+                    try {
+                        pipeline_ptr ? (opts_ptr ? client.watch(session, *pipeline_ptr, *opts_ptr)
+                                                 : client.watch(session, *pipeline_ptr))
+                                     : (opts_ptr ? client.watch(session, *opts_ptr) : client.watch(session));
+                        FAIL("should not reach this point");
+                    } catch (v1::exception const& ex) {
+                        CHECK(ex.code() == v1::source_errc::mongoc);
+                        CHECK(ex.code().value() == static_cast<int>(v));
+                        CHECK_THAT(ex.what(), Catch::Matchers::ContainsSubstring(msg));
+                    }
+                };
+
+                SECTION("no options") {
+                    op(nullptr, nullptr);
+                }
+
+                SECTION("with options") {
+                    v1::change_stream::options const opts;
+                    op(nullptr, &opts);
+                }
+
+                SECTION("with pipeline") {
+                    v1::pipeline const pipeline;
+
+                    SECTION("no options") {
+                        op(&pipeline, nullptr);
+                    }
+
+                    SECTION("with options") {
+                        v1::change_stream::options const opts;
+                        op(&pipeline, &opts);
+                    }
+                }
             }
         }
     }
@@ -1113,54 +1285,99 @@ TEST_CASE("list_databases", "[mongocxx][v1][client]") {
 
     auto client = mocks.make();
 
-    SECTION("basic") {
-        auto const names = GENERATE(
-            values<std::vector<std::string>>({
-                {},
-                {"x"},
-                {"a", "b", "c"},
-            }));
+    int counter = 0;
+
+    auto const names = GENERATE(
+        values<std::vector<std::string>>({
+            {},
+            {"x"},
+            {"a", "b", "c"},
+        }));
+
+    SECTION("no options") {
+        find_databases_with_opts->interpose([&](mongoc_client_t* ptr, bson_t const* opts) -> mongoc_cursor_t* {
+            CHECK(ptr == mocks.client_id);
+            CHECK(opts == nullptr);
+            ++counter;
+            return cursor_id;
+        });
+
+        {
+            auto const cursor = client.list_databases();
+            CHECK(v1::cursor::internal::as_mongoc(cursor) == cursor_id);
+        }
+
+        CHECK(counter == 1);
+    }
+
+    SECTION("with options") {
+        scoped_bson const owner{R"({"x": 1})"};
+
+        find_databases_with_opts->interpose([&](mongoc_client_t* ptr, bson_t const* opts) -> mongoc_cursor_t* {
+            CHECK(ptr == mocks.client_id);
+            REQUIRE(opts != nullptr);
+            CHECK(scoped_bson_view{opts}.data() == owner.data());
+            ++counter;
+            return cursor_id;
+        });
+
+        {
+            auto const cursor = client.list_databases(owner.view());
+            CHECK(v1::cursor::internal::as_mongoc(cursor) == cursor_id);
+        }
+
+        CHECK(counter == 1);
+    }
+
+    SECTION("session") {
+        session_mocks_type session_mocks;
+        auto const session = session_mocks.make(client);
+
+        auto const op = [&](bsoncxx::v1::document::view const* opts_ptr) -> void {
+            auto const cursor = opts_ptr ? client.list_databases(session, *opts_ptr) : client.list_databases(session);
+
+            CHECK(v1::cursor::internal::as_mongoc(cursor) == cursor_id);
+            CHECK(counter == 1);
+        };
 
         SECTION("no options") {
-            int counter = 0;
             find_databases_with_opts->interpose([&](mongoc_client_t* ptr, bson_t const* opts) -> mongoc_cursor_t* {
                 CHECK(ptr == mocks.client_id);
-                CHECK(opts == nullptr);
+                REQUIRE(opts != nullptr);
+
+                CHECK(scoped_bson_view{opts}.view() == session_mocks.doc.view());
+
                 ++counter;
+
                 return cursor_id;
             });
 
-            {
-                auto const cursor = client.list_databases();
-                CHECK(v1::cursor::internal::as_mongoc(cursor) == cursor_id);
-            }
+            op(nullptr);
 
             CHECK(counter == 1);
         }
 
         SECTION("with options") {
             scoped_bson const owner{R"({"x": 1})"};
+            scoped_bson const expected{R"({"sessionId": 123, "x": 1})"};
 
-            int counter = 0;
             find_databases_with_opts->interpose([&](mongoc_client_t* ptr, bson_t const* opts) -> mongoc_cursor_t* {
                 CHECK(ptr == mocks.client_id);
                 REQUIRE(opts != nullptr);
-                CHECK(scoped_bson_view{opts}.data() == owner.data());
+
+                CHECK(scoped_bson_view{opts}.view() == expected.view());
+
                 ++counter;
+
                 return cursor_id;
             });
 
-            {
-                auto const cursor = client.list_databases(owner.view());
-                CHECK(v1::cursor::internal::as_mongoc(cursor) == cursor_id);
-            }
+            auto const view = owner.view();
+
+            op(&view);
 
             CHECK(counter == 1);
         }
-    }
-
-    SECTION("session") {
-        // TODO: v1::client_session (CXX-3237)
     }
 }
 
@@ -1181,70 +1398,110 @@ TEST_CASE("list_database_names", "[mongocxx][v1][client]") {
 
     auto client = mocks.make();
 
-    SECTION("basic") {
-        auto const names = GENERATE(
-            values<std::vector<std::string>>({
-                {},
-                {"x"},
-                {"a", "b", "c"},
-            }));
+    int counter = 0;
 
-        struct names_deleter {
-            void operator()(char** ptr) const noexcept {
-                bson_strfreev(ptr);
-            }
-        };
+    auto const names = GENERATE(
+        values<std::vector<std::string>>({
+            {},
+            {"x"},
+            {"a", "b", "c"},
+        }));
 
-        SECTION("no filter") {
-            int counter = 0;
-            get_database_names_with_opts->interpose(
-                [&](mongoc_client_t* ptr, bson_t const* opts, bson_error_t* error) -> char** {
-                    CHECK(ptr == mocks.client_id);
-                    CHECK(opts == nullptr);
-                    CHECK(error != nullptr);
+    struct names_deleter {
+        void operator()(char** ptr) const noexcept {
+            bson_strfreev(ptr);
+        }
+    };
 
-                    ++counter;
+    SECTION("no filter") {
+        get_database_names_with_opts->interpose(
+            [&](mongoc_client_t* ptr, bson_t const* opts, bson_error_t* error) -> char** {
+                CHECK(ptr == mocks.client_id);
+                CHECK(opts == nullptr);
+                CHECK(error != nullptr);
 
-                    if (names.empty()) {
-                        return static_cast<char**>(bson_malloc0(sizeof(char*))); // Null terminator.
-                    }
+                ++counter;
 
-                    // NOLINTNEXTLINE(cppcoreguidelines-avoid-c-arrays): bson compatibility.
-                    auto owner = std::unique_ptr<char*[], names_deleter>(
-                        static_cast<char**>(bson_malloc0((names.size() + 1u) * sizeof(char*))));
+                if (names.empty()) {
+                    return static_cast<char**>(bson_malloc0(sizeof(char*))); // Null terminator.
+                }
 
-                    for (std::size_t idx = 0u; idx < names.size(); ++idx) {
-                        auto const& name = names[idx];
-                        owner[idx] = bson_strndup(name.c_str(), name.size());
-                    }
+                // NOLINTNEXTLINE(cppcoreguidelines-avoid-c-arrays): bson compatibility.
+                auto owner = std::unique_ptr<char*[], names_deleter>(
+                    static_cast<char**>(bson_malloc0((names.size() + 1u) * sizeof(char*))));
 
-                    return owner.release();
-                });
+                for (std::size_t idx = 0u; idx < names.size(); ++idx) {
+                    auto const& name = names[idx];
+                    owner[idx] = bson_strndup(name.c_str(), name.size());
+                }
 
-            auto const result = client.list_database_names();
+                return owner.release();
+            });
+
+        auto const result = client.list_database_names();
+
+        CHECK(result == names);
+        CHECK(counter == 1);
+    }
+
+    SECTION("with filter") {
+        scoped_bson const filter{R"({"x": 1})"};
+        scoped_bson const options{BCON_NEW("filter", BCON_DOCUMENT(filter.bson()))};
+
+        get_database_names_with_opts->interpose(
+            [&](mongoc_client_t* ptr, bson_t const* opts, bson_error_t* error) -> char** {
+                CHECK(ptr == mocks.client_id);
+                REQUIRE(opts != nullptr);
+                CHECK(error != nullptr);
+
+                CHECK(scoped_bson_view{opts}.view() == options.view());
+
+                ++counter;
+
+                if (names.empty()) {
+                    return static_cast<char**>(bson_malloc0(sizeof(char*))); // Null terminator.
+                }
+
+                // NOLINTNEXTLINE(cppcoreguidelines-avoid-c-arrays): bson compatibility.
+                auto owner = std::unique_ptr<char*[], names_deleter>(
+                    static_cast<char**>(bson_malloc0((names.size() + 1u) * sizeof(char*))));
+
+                for (std::size_t idx = 0u; idx < names.size(); ++idx) {
+                    auto const& name = names[idx];
+                    owner[idx] = bson_strndup(name.c_str(), name.size());
+                }
+
+                return owner.release();
+            });
+
+        auto const result = client.list_database_names(filter.view());
+
+        CHECK(result == names);
+        CHECK(counter == 1);
+    }
+
+    SECTION("session") {
+        session_mocks_type session_mocks;
+        auto const session = session_mocks.make(client);
+
+        auto const op = [&](bsoncxx::v1::document::view const* opts_ptr) -> void {
+            auto const result =
+                opts_ptr ? client.list_database_names(session, *opts_ptr) : client.list_database_names(session);
 
             CHECK(result == names);
             CHECK(counter == 1);
-        }
+        };
 
-        SECTION("with filter") {
-            scoped_bson const filter{R"({"x": 1})"};
-            scoped_bson const options{BCON_NEW("filter", BCON_DOCUMENT(filter.bson()))};
-
-            int counter = 0;
+        SECTION("no filter") {
             get_database_names_with_opts->interpose(
                 [&](mongoc_client_t* ptr, bson_t const* opts, bson_error_t* error) -> char** {
                     CHECK(ptr == mocks.client_id);
                     REQUIRE(opts != nullptr);
                     CHECK(error != nullptr);
 
-                    CHECK(scoped_bson_view{opts}.view() == options.view());
+                    CHECK(scoped_bson_view{opts}.view() == session_mocks.doc.view());
 
                     ++counter;
-
-                    if (names.empty()) {
-                        return static_cast<char**>(bson_malloc0(sizeof(char*))); // Null terminator.
-                    }
 
                     // NOLINTNEXTLINE(cppcoreguidelines-avoid-c-arrays): bson compatibility.
                     auto owner = std::unique_ptr<char*[], names_deleter>(
@@ -1258,20 +1515,130 @@ TEST_CASE("list_database_names", "[mongocxx][v1][client]") {
                     return owner.release();
                 });
 
-            auto const result = client.list_database_names(filter.view());
+            op(nullptr);
 
-            CHECK(result == names);
             CHECK(counter == 1);
         }
-    }
 
-    SECTION("session") {
-        // TODO: v1::client_session (CXX-3237)
+        SECTION("with filter") {
+            scoped_bson const owner{R"({"x": 1})"};
+            scoped_bson const expected{R"({"sessionId": 123, "filter": {"x": 1}})"};
+
+            get_database_names_with_opts->interpose(
+                [&](mongoc_client_t* ptr, bson_t const* opts, bson_error_t* error) -> char** {
+                    CHECK(ptr == mocks.client_id);
+                    REQUIRE(opts != nullptr);
+                    CHECK(error != nullptr);
+
+                    CHECK(scoped_bson_view{opts}.view() == expected.view());
+
+                    ++counter;
+
+                    // NOLINTNEXTLINE(cppcoreguidelines-avoid-c-arrays): bson compatibility.
+                    auto owner = std::unique_ptr<char*[], names_deleter>(
+                        static_cast<char**>(bson_malloc0((names.size() + 1u) * sizeof(char*))));
+
+                    for (std::size_t idx = 0u; idx < names.size(); ++idx) {
+                        auto const& name = names[idx];
+                        owner[idx] = bson_strndup(name.c_str(), name.size());
+                    }
+
+                    return owner.release();
+                });
+
+            auto const view = owner.view();
+
+            op(&view);
+
+            CHECK(counter == 1);
+        }
     }
 }
 
 TEST_CASE("start_session", "[mongocxx][v1][client]") {
-    // TODO: v1::client_session (CXX-3237)
+    client_mocks_type mocks;
+
+    auto client = mocks.make();
+
+    identity_type session_identity;
+    auto const session_id = reinterpret_cast<mongoc_client_session_t*>(&session_identity);
+
+    auto session_destroy = libmongoc::client_session_destroy.create_instance();
+    auto start_session = libmongoc::client_start_session.create_instance();
+    auto session_append = libmongoc::client_session_append.create_instance();
+
+    session_destroy
+        ->interpose([&](mongoc_client_session_t* ptr) -> void {
+            if (ptr) {
+                CHECK(ptr == session_id);
+            }
+        })
+        .forever();
+
+    SECTION("no options") {
+        int counter = 0;
+        start_session
+            ->interpose(
+                [&](mongoc_client_t* ptr,
+                    mongoc_session_opt_t const* opts,
+                    bson_error_t* error) -> mongoc_client_session_t* {
+                    CHECK(ptr == mocks.client_id);
+                    CHECK(opts == nullptr);
+                    CHECK(error != nullptr);
+                    ++counter;
+                    return session_id;
+                })
+            .forever();
+
+        auto const session = client.start_session();
+
+        CHECK(v1::client_session::internal::as_mongoc(session) == session_id);
+        CHECK(counter == 1);
+    }
+
+    SECTION("with options") {
+        identity_type opts_identity;
+        auto const opts_id = reinterpret_cast<mongoc_session_opt_t*>(&opts_identity);
+
+        auto opts_destroy = libmongoc::session_opts_destroy.create_instance();
+        auto opts_copy = libmongoc::session_opts_clone.create_instance();
+
+        opts_destroy
+            ->interpose([&](mongoc_session_opt_t* ptr) -> void {
+                if (ptr) {
+                    CHECK(ptr == opts_id);
+                }
+            })
+            .forever();
+        opts_copy
+            ->interpose([&](mongoc_session_opt_t const* ptr) -> mongoc_session_opt_t* {
+                CHECK(ptr == opts_id);
+                FAIL("should not reach this point");
+                return opts_id;
+            })
+            .forever();
+
+        auto const opts = v1::client_session::options::internal::make(opts_id);
+
+        int counter = 0;
+        start_session
+            ->interpose(
+                [&](mongoc_client_t* ptr,
+                    mongoc_session_opt_t const* opts,
+                    bson_error_t* error) -> mongoc_client_session_t* {
+                    CHECK(ptr == mocks.client_id);
+                    CHECK(opts == opts_id);
+                    CHECK(error != nullptr);
+                    ++counter;
+                    return session_id;
+                })
+            .forever();
+
+        auto const session = client.start_session(opts);
+
+        CHECK(v1::client_session::internal::as_mongoc(session) == session_id);
+        CHECK(counter == 1);
+    }
 }
 
 namespace {
@@ -1641,7 +2008,97 @@ TEST_CASE("watch", "[mongocxx][v1][client]") {
     }
 
     SECTION("with session") {
-        // TODO: v1::client_session (CXX-3237)
+        auto client = mocks.make();
+
+        session_mocks_type session_mocks;
+        auto const session = session_mocks.make(client);
+
+        int count = 0;
+
+        auto const op = [&](v1::pipeline const* pipeline_ptr, v1::change_stream::options const* opts_ptr) -> void {
+            auto const stream = pipeline_ptr ? (opts_ptr ? client.watch(session, *pipeline_ptr, *opts_ptr)
+                                                         : client.watch(session, *pipeline_ptr))
+                                             : (opts_ptr ? client.watch(session, *opts_ptr) : client.watch(session));
+
+            CHECK(v1::change_stream::internal::as_mongoc(stream) == stream_id);
+            CHECK(count == 1);
+        };
+
+        SECTION("no options") {
+            watch->interpose(
+                [&](mongoc_client_t* ptr, bson_t const* pipeline, bson_t const* opts) -> mongoc_change_stream_t* {
+                    CHECK(ptr == mocks.client_id);
+                    CHECK(scoped_bson_view{pipeline}.view().empty());
+                    REQUIRE(opts != nullptr);
+
+                    CHECK(scoped_bson_view{opts}.view() == session_mocks.doc.view());
+
+                    ++count;
+
+                    return stream_id;
+                });
+
+            op(nullptr, nullptr);
+        }
+
+        SECTION("with options") {
+            watch->interpose(
+                [&](mongoc_client_t* ptr, bson_t const* pipeline, bson_t const* opts) -> mongoc_change_stream_t* {
+                    CHECK(ptr == mocks.client_id);
+                    CHECK(scoped_bson_view{pipeline}.view().empty());
+                    REQUIRE(opts != nullptr);
+
+                    CHECK(scoped_bson_view{opts}.view() == session_mocks.doc.view());
+
+                    ++count;
+
+                    return stream_id;
+                });
+
+            v1::change_stream::options const opts;
+            op(nullptr, &opts);
+        }
+
+        SECTION("with pipeline") {
+            v1::pipeline pipeline;
+            pipeline.append_stage(scoped_bson{R"({"x": 1})"}.value());
+            auto const data = pipeline.view_array().data();
+
+            SECTION("no options") {
+                watch->interpose(
+                    [&](mongoc_client_t* ptr, bson_t const* pipeline, bson_t const* opts) -> mongoc_change_stream_t* {
+                        CHECK(ptr == mocks.client_id);
+                        CHECK(scoped_bson_view{pipeline}.data() == data);
+                        REQUIRE(opts != nullptr);
+
+                        CHECK(scoped_bson_view{opts}.view() == session_mocks.doc.view());
+
+                        ++count;
+
+                        return stream_id;
+                    });
+
+                op(&pipeline, nullptr);
+            }
+
+            SECTION("with options") {
+                watch->interpose(
+                    [&](mongoc_client_t* ptr, bson_t const* pipeline, bson_t const* opts) -> mongoc_change_stream_t* {
+                        CHECK(ptr == mocks.client_id);
+                        CHECK(scoped_bson_view{pipeline}.data() == data);
+                        REQUIRE(opts != nullptr);
+
+                        CHECK(scoped_bson_view{opts}.view() == session_mocks.doc.view());
+
+                        ++count;
+
+                        return stream_id;
+                    });
+
+                v1::change_stream::options const opts;
+                op(&pipeline, &opts);
+            }
+        }
     }
 }
 
