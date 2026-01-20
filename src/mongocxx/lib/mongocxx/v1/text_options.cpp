@@ -79,9 +79,11 @@ text_options::~text_options() {
 
 text_options::text_options(text_options&& other) noexcept : _impl{exchange(other._impl, nullptr)} {}
 
-text_options& text_options::operator=(text_options&& other) noexcept {
+text_options& text_options::text_options::operator=(text_options&& other) noexcept {
     if (this != &other) {
-        delete impl::with(exchange(_impl, exchange(other._impl, nullptr)));
+        auto old = impl::with(_impl);
+        _impl = exchange(other._impl, nullptr);
+        delete old;
     }
 
     return *this;
@@ -89,9 +91,11 @@ text_options& text_options::operator=(text_options&& other) noexcept {
 
 text_options::text_options(text_options const& other) : _impl{new impl{impl::with(other)}} {}
 
-text_options& text_options::operator=(text_options const& other) {
+text_options& text_options::text_options::operator=(text_options const& other) {
     if (this != &other) {
-        delete impl::with(exchange(_impl, new impl{impl::with(other)}));
+        auto old = impl::with(_impl);
+        _impl = new impl{impl::with(other)};
+        delete old;
     }
 
     return *this;
@@ -100,14 +104,18 @@ text_options& text_options::operator=(text_options const& other) {
 text_options::text_options() : _impl{new impl{}} {}
 
 text_options::prefix::~prefix() {
-    delete static_cast<common_fields*>(_impl);
+    if (_impl) {
+        delete static_cast<common_fields*>(_impl);
+    }
 }
 
 text_options::prefix::prefix(prefix&& other) noexcept : _impl{exchange(other._impl, nullptr)} {}
 
 text_options::prefix& text_options::prefix::operator=(prefix&& other) noexcept {
     if (this != &other) {
-        delete static_cast<common_fields*>(exchange(_impl, exchange(other._impl, nullptr)));
+        auto old = static_cast<common_fields*>(_impl);
+        _impl = exchange(other._impl, nullptr);
+        delete old;
     }
 
     return *this;
@@ -118,8 +126,9 @@ text_options::prefix::prefix(prefix const& other)
 
 text_options::prefix& text_options::prefix::operator=(prefix const& other) {
     if (this != &other) {
-        delete static_cast<common_fields*>(
-            exchange(_impl, new common_fields{*static_cast<common_fields const*>(other._impl)}));
+        auto old = static_cast<common_fields*>(_impl);
+        _impl = new common_fields{*static_cast<common_fields const*>(other._impl)};
+        delete old;
     }
 
     return *this;
@@ -127,14 +136,18 @@ text_options::prefix& text_options::prefix::operator=(prefix const& other) {
 
 text_options::prefix::prefix() : _impl{new common_fields{}} {}
 text_options::suffix::~suffix() {
-    delete static_cast<common_fields*>(_impl);
+    if (_impl) {
+        delete static_cast<common_fields*>(_impl);
+    }
 }
 
 text_options::suffix::suffix(suffix&& other) noexcept : _impl{exchange(other._impl, nullptr)} {}
 
 text_options::suffix& text_options::suffix::operator=(suffix&& other) noexcept {
     if (this != &other) {
-        delete static_cast<common_fields*>(exchange(_impl, exchange(other._impl, nullptr)));
+        auto old = static_cast<common_fields*>(_impl);
+        _impl = exchange(other._impl, nullptr);
+        delete old;
     }
 
     return *this;
@@ -145,8 +158,9 @@ text_options::suffix::suffix(suffix const& other)
 
 text_options::suffix& text_options::suffix::operator=(suffix const& other) {
     if (this != &other) {
-        delete static_cast<common_fields*>(
-            exchange(_impl, new common_fields{*static_cast<common_fields const*>(other._impl)}));
+        auto old = static_cast<common_fields*>(_impl);
+        _impl = new common_fields{*static_cast<common_fields const*>(other._impl)};
+        delete old;
     }
 
     return *this;
@@ -154,14 +168,18 @@ text_options::suffix& text_options::suffix::operator=(suffix const& other) {
 
 text_options::suffix::suffix() : _impl{new common_fields{}} {}
 text_options::substring::~substring() {
-    delete static_cast<common_fields*>(_impl);
+    if (_impl) {
+        delete static_cast<common_fields*>(_impl);
+    }
 }
 
 text_options::substring::substring(substring&& other) noexcept : _impl{exchange(other._impl, nullptr)} {}
 
 text_options::substring& text_options::substring::operator=(substring&& other) noexcept {
     if (this != &other) {
-        delete static_cast<common_fields*>(exchange(_impl, exchange(other._impl, nullptr)));
+        auto old = static_cast<common_fields*>(_impl);
+        _impl = exchange(other._impl, nullptr);
+        delete old;
     }
 
     return *this;
@@ -172,8 +190,9 @@ text_options::substring::substring(substring const& other)
 
 text_options::substring& text_options::substring::operator=(substring const& other) {
     if (this != &other) {
-        delete static_cast<common_fields*>(
-            exchange(_impl, new common_fields{*static_cast<common_fields const*>(other._impl)}));
+        auto old = static_cast<common_fields*>(_impl);
+        _impl = new common_fields{*static_cast<common_fields const*>(other._impl)};
+        delete old;
     }
 
     return *this;
