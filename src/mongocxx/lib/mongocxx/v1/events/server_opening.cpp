@@ -48,7 +48,7 @@ std::uint16_t server_opening::port() const {
 bsoncxx::v1::oid server_opening::topology_id() const {
     bson_oid_t id = {};
     libmongoc::apm_server_opening_get_topology_id(to_mongoc(_impl), &id);
-    return bsoncxx::v1::oid{reinterpret_cast<std::uint8_t const*>(&id), sizeof(id)};
+    return bsoncxx::v1::oid{id.bytes, sizeof(id)};
 }
 
 server_opening::server_opening(void const* impl) : _impl{impl} {}

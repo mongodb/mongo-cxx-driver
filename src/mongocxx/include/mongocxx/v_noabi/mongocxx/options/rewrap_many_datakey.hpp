@@ -182,5 +182,5 @@ inline v1::rewrap_many_datakey_options to_v1(v_noabi::options::rewrap_many_datak
 /// Provides @ref mongocxx::v_noabi::options::rewrap_many_datakey.
 ///
 /// @par Includes
-/// - @ref mongocxx/v1/rewrap_many_datakey.hpp
+/// - @ref mongocxx/v1/rewrap_many_datakey_options.hpp
 ///

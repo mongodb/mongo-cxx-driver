@@ -24,7 +24,7 @@
 #include <bsoncxx/v1/types/view-fwd.hpp>
 
 #include <mongocxx/v1/client-fwd.hpp>
-#include <mongocxx/v1/transaction-fwd.hpp>
+#include <mongocxx/v1/transaction_options-fwd.hpp>
 
 #include <bsoncxx/v1/stdx/optional.hpp>
 
@@ -183,7 +183,7 @@ class client_session {
     ///
     /// @throws mongocxx::v1::exception when a client-side error is encountered.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(void) start_transaction(v1::transaction opts);
+    MONGOCXX_ABI_EXPORT_CDECL(void) start_transaction(v1::transaction_options opts);
 
     ///
     /// Start a new transaction.
@@ -256,11 +256,13 @@ class client_session {
     /// @throws mongocxx::v1::exception when a client-side error is encountered.
     /// @throws mongocxx::v1::server_error when a server-side error is encountered and all retry attempts have failed.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(void) with_transaction(with_transaction_cb const& fn, v1::transaction const& opts);
+    MONGOCXX_ABI_EXPORT_CDECL(void) with_transaction(
+        with_transaction_cb const& fn,
+        v1::transaction_options const& opts);
 
     ///
-    /// Equivalent to @ref with_transaction(with_transaction_cb const& fn, v1::transaction const& opts) with a
-    /// default-initialized @ref v1::transaction.
+    /// Equivalent to @ref with_transaction(with_transaction_cb const& fn, v1::transaction_options const& opts) with a
+    /// default-initialized @ref v1::transaction_options.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(void) with_transaction(with_transaction_cb const& fn);
 };
@@ -344,12 +346,12 @@ class client_session::options {
     ///
     /// Set the "defaultTransactionOptions" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(options&) default_transaction_opts(v1::transaction v);
+    MONGOCXX_ABI_EXPORT_CDECL(options&) default_transaction_opts(v1::transaction_options v);
 
     ///
     /// Return the current "defaultTransactionOptions" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<v1::transaction>) default_transaction_opts() const;
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<v1::transaction_options>) default_transaction_opts() const;
 };
 
 } // namespace v1

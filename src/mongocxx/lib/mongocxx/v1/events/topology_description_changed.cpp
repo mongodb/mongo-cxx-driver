@@ -41,7 +41,7 @@ mongoc_apm_topology_changed_t const* to_mongoc(void const* ptr) {
 bsoncxx::v1::oid topology_description_changed::topology_id() const {
     bson_oid_t id = {};
     libmongoc::apm_topology_changed_get_topology_id(to_mongoc(_impl), &id);
-    return bsoncxx::v1::oid{reinterpret_cast<std::uint8_t const*>(&id), sizeof(id)};
+    return bsoncxx::v1::oid{id.bytes, sizeof(id)};
 }
 
 v1::events::topology_description topology_description_changed::previous_description() const {

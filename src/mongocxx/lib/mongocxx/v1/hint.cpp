@@ -54,6 +54,8 @@ class hint::impl {
     }
 };
 
+// NOLINTBEGIN(cppcoreguidelines-owning-memory): owning void* for ABI stability.
+
 hint::~hint() {
     delete impl::with(_impl);
 }
@@ -79,6 +81,8 @@ hint& hint::operator=(hint const& other) {
 }
 
 hint::hint() : _impl{new impl{}} {}
+
+// NOLINTEND(cppcoreguidelines-owning-memory)
 
 hint::hint(std::string str) : hint{} {
     impl::with(this)->_str = std::move(str);
@@ -114,6 +118,14 @@ bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value>& hint::internal::doc(h
 }
 
 bsoncxx::v1::stdx::optional<std::string>& hint::internal::str(hint& self) {
+    return impl::with(self)._str;
+}
+
+bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> const& hint::internal::doc(hint const& self) {
+    return impl::with(self)._doc;
+}
+
+bsoncxx::v1::stdx::optional<std::string> const& hint::internal::str(hint const& self) {
     return impl::with(self)._str;
 }
 

@@ -55,6 +55,8 @@ class range_options::impl {
     }
 };
 
+// NOLINTBEGIN(cppcoreguidelines-owning-memory): owning void* for ABI stability.
+
 range_options::~range_options() {
     delete impl::with(this);
 }
@@ -80,6 +82,8 @@ range_options& range_options::operator=(range_options const& other) {
 }
 
 range_options::range_options() : _impl{new impl{}} {}
+
+// NOLINTEND(cppcoreguidelines-owning-memory)
 
 range_options& range_options::min(bsoncxx::v1::types::value value) {
     impl::with(this)->_min = std::move(value);

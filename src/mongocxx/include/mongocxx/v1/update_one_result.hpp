@@ -35,6 +35,9 @@ namespace v1 {
 ///
 /// The result of an "updateOne" operation.
 ///
+/// Supported fields include:
+/// - `result`
+///
 /// @see
 /// - [Update Methods (MongoDB Manual)](https://www.mongodb.com/docs/manual/reference/update-methods/)
 ///
@@ -107,7 +110,7 @@ class update_one_result {
     MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::types::view>) upserted_id() const;
 
     ///
-    /// Compare equal when `lhs.result()` and `rhs.result()` compare equal.
+    /// Compare equal when all supported fields compare equal.
     ///
     /// @{
     friend MONGOCXX_ABI_EXPORT_CDECL(bool) operator==(update_one_result const& lhs, update_one_result const& rhs);
@@ -117,6 +120,11 @@ class update_one_result {
     }
     /// @}
     ///
+
+    class internal;
+
+   private:
+    /* explicit(false) */ update_one_result(void* impl);
 };
 
 } // namespace v1

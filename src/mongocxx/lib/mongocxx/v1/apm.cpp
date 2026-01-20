@@ -76,6 +76,8 @@ class apm::impl {
     }
 };
 
+// NOLINTBEGIN(cppcoreguidelines-owning-memory): owning void* for ABI stability.
+
 apm::~apm() {
     delete impl::with(this);
 }
@@ -101,6 +103,8 @@ apm& apm::operator=(apm const& other) {
 }
 
 apm::apm() : _impl{new impl{}} {}
+
+// NOLINTEND(cppcoreguidelines-owning-memory)
 
 apm& apm::on_command_started(std::function<void MONGOCXX_ABI_CDECL(v1::events::command_started const&)> fn) {
     impl::with(this)->_command_started = std::move(fn);
@@ -218,6 +222,57 @@ apm& apm::on_server_heartbeat_succeeded(
 std::function<void MONGOCXX_ABI_CDECL(v1::events::server_heartbeat_succeeded const&)> apm::server_heartbeat_succeeded()
     const {
     return impl::with(this)->_server_heartbeat_succeeded;
+}
+
+auto apm::internal::command_started(apm const& self) -> fn_type<v1::events::command_started> const& {
+    return impl::with(self)._command_started;
+}
+
+auto apm::internal::command_failed(apm const& self) -> fn_type<v1::events::command_failed> const& {
+    return impl::with(self)._command_failed;
+}
+
+auto apm::internal::command_succeeded(apm const& self) -> fn_type<v1::events::command_succeeded> const& {
+    return impl::with(self)._command_succeeded;
+}
+
+auto apm::internal::server_closed(apm const& self) -> fn_type<v1::events::server_closed> const& {
+    return impl::with(self)._server_closed;
+}
+
+auto apm::internal::server_description_changed(apm const& self)
+    -> fn_type<v1::events::server_description_changed> const& {
+    return impl::with(self)._server_description_changed;
+}
+
+auto apm::internal::server_opening(apm const& self) -> fn_type<v1::events::server_opening> const& {
+    return impl::with(self)._server_opening;
+}
+
+auto apm::internal::topology_closed(apm const& self) -> fn_type<v1::events::topology_closed> const& {
+    return impl::with(self)._topology_closed;
+}
+
+auto apm::internal::topology_description_changed(apm const& self)
+    -> fn_type<v1::events::topology_description_changed> const& {
+    return impl::with(self)._topology_description_changed;
+}
+
+auto apm::internal::topology_opening(apm const& self) -> fn_type<v1::events::topology_opening> const& {
+    return impl::with(self)._topology_opening;
+}
+
+auto apm::internal::server_heartbeat_started(apm const& self) -> fn_type<v1::events::server_heartbeat_started> const& {
+    return impl::with(self)._server_heartbeat_started;
+}
+
+auto apm::internal::server_heartbeat_failed(apm const& self) -> fn_type<v1::events::server_heartbeat_failed> const& {
+    return impl::with(self)._server_heartbeat_failed;
+}
+
+auto apm::internal::server_heartbeat_succeeded(apm const& self)
+    -> fn_type<v1::events::server_heartbeat_succeeded> const& {
+    return impl::with(self)._server_heartbeat_succeeded;
 }
 
 auto apm::internal::command_started(apm& self) -> fn_type<v1::events::command_started>& {

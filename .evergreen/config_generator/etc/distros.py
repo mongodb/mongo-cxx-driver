@@ -12,7 +12,6 @@ class Distro(BaseModel):
     * os: Name of the operating system.
     * os_type: One of Linux, MacOS, or Windows.
     * os_ver: Version of the operating system.
-    * vs_ver: Version of Visual Studio available.
     * size: Size of tasks the distro is designed to handle.
     * arch: Target architecture.
     """
@@ -21,18 +20,6 @@ class Distro(BaseModel):
     os: str | None = None
     os_type: Literal['linux', 'macos', 'windows'] | None = None
     os_ver: str | None = None
-    vs_ver: (
-        Literal[
-            '2015',
-            '2017',
-            '2019',
-            '2022',
-            'vsCurrent',
-            'vsCurrent2',
-            'vsMulti',
-        ]
-        | None
-    ) = None
     size: Literal['small', 'large'] | None = None
     arch: Literal['arm64', 'power8', 'zseries'] | None = None
 
@@ -100,7 +87,8 @@ UBUNTU_ARM64_DISTROS = [
 ]
 
 WINDOWS_DISTROS = [
-    *ls_distro(name='windows-vsCurrent', os='windows', os_type='windows', vs_ver='vsCurrent'),
+    *ls_distro(name='windows-vsCurrent', os='windows', os_type='windows', os_ver='2019'),
+    *ls_distro(name='windows-2022-latest', os='windows', os_type='windows', os_ver='2022'),
 ]
 
 # See: https://evergreen.mongodb.com/distros

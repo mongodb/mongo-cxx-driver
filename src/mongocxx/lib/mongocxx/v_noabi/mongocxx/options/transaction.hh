@@ -18,120 +18,15 @@
 
 //
 
-#include <mongocxx/v1/read_concern.hh>
-#include <mongocxx/v1/read_preference.hh>
-#include <mongocxx/v1/write_concern.hh>
-
-#include <chrono>
-#include <memory>
-
-#include <bsoncxx/stdx/optional.hpp>
-
-#include <mongocxx/read_concern.hpp>
-
-#include <mongocxx/read_concern.hh>
-#include <mongocxx/read_preference.hh>
-#include <mongocxx/write_concern.hh>
-
-#include <bsoncxx/private/make_unique.hh>
-
 #include <mongocxx/private/mongoc.hh>
 
 namespace mongocxx {
 namespace v_noabi {
 namespace options {
 
-class transaction::impl {
+class transaction::internal {
    public:
-    impl()
-        : _transaction_opt_t(
-              unique_transaction_opt{libmongoc::transaction_opts_new(), &mongoc_transaction_opts_destroy}) {}
-
-    impl(mongoc_transaction_opt_t* txn_opts)
-        : _transaction_opt_t(
-              unique_transaction_opt{libmongoc::transaction_opts_clone(txn_opts), &mongoc_transaction_opts_destroy}) {}
-
-    impl(impl const& other)
-        : _transaction_opt_t(
-              unique_transaction_opt{
-                  libmongoc::transaction_opts_clone(other._transaction_opt_t.get()),
-                  &mongoc_transaction_opts_destroy}) {}
-
-    impl& operator=(impl const& other) {
-        _transaction_opt_t = unique_transaction_opt{
-            libmongoc::transaction_opts_clone(other._transaction_opt_t.get()), &mongoc_transaction_opts_destroy};
-        return *this;
-    }
-
-    ~impl() = default;
-
-    impl(impl&&) = default;
-    impl& operator=(impl&&) = default;
-
-    void read_concern(mongocxx::v_noabi::read_concern const& rc) {
-        libmongoc::transaction_opts_set_read_concern(
-            _transaction_opt_t.get(), v_noabi::read_concern::internal::as_mongoc(rc));
-    }
-
-    bsoncxx::v_noabi::stdx::optional<v_noabi::read_concern> read_concern() const {
-        bsoncxx::v_noabi::stdx::optional<v_noabi::read_concern> ret;
-        if (auto const rc = libmongoc::transaction_opts_get_read_concern(_transaction_opt_t.get())) {
-            ret.emplace(v1::read_concern::internal::make(libmongoc::read_concern_copy(rc)));
-        }
-        return ret;
-    }
-
-    void write_concern(mongocxx::v_noabi::write_concern const& wc) {
-        libmongoc::transaction_opts_set_write_concern(
-            _transaction_opt_t.get(), v_noabi::write_concern::internal::as_mongoc(wc));
-    }
-
-    bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern> write_concern() const {
-        bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern> ret;
-
-        if (auto const wc = libmongoc::transaction_opts_get_write_concern(_transaction_opt_t.get())) {
-            ret.emplace(v1::write_concern::internal::make(libmongoc::write_concern_copy(wc)));
-        }
-
-        return ret;
-    }
-
-    void read_preference(mongocxx::v_noabi::read_preference const& rp) {
-        libmongoc::transaction_opts_set_read_prefs(
-            _transaction_opt_t.get(), v_noabi::read_preference::internal::as_mongoc(rp));
-    }
-
-    bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::read_preference> read_preference() const {
-        bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::read_preference> ret;
-
-        if (auto const rp = libmongoc::transaction_opts_get_read_prefs(_transaction_opt_t.get())) {
-            ret.emplace(v1::read_preference::internal::make(libmongoc::read_prefs_copy(rp)));
-        }
-
-        return ret;
-    }
-
-    void max_commit_time_ms(std::chrono::milliseconds ms) {
-        libmongoc::transaction_opts_set_max_commit_time_ms(_transaction_opt_t.get(), ms.count());
-    }
-
-    bsoncxx::v_noabi::stdx::optional<std::chrono::milliseconds> max_commit_time_ms() const {
-        auto ms = libmongoc::transaction_opts_get_max_commit_time_ms(_transaction_opt_t.get());
-        if (!ms) {
-            return bsoncxx::v_noabi::stdx::nullopt;
-        }
-        return {std::chrono::milliseconds{ms}};
-    }
-
-    mongoc_transaction_opt_t* get_transaction_opt_t() const noexcept {
-        return _transaction_opt_t.get();
-    }
-
-   private:
-    using unique_transaction_opt =
-        std::unique_ptr<mongoc_transaction_opt_t, decltype(&mongoc_transaction_opts_destroy)>;
-
-    unique_transaction_opt _transaction_opt_t;
+    static mongoc_transaction_opt_t const* as_mongoc(transaction const& self);
 };
 
 } // namespace options

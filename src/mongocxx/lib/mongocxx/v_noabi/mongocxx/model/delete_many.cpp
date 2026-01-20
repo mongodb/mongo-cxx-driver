@@ -14,33 +14,27 @@
 
 #include <mongocxx/model/delete_many.hpp>
 
+//
+
+#include <mongocxx/v1/bulk_write.hh>
+
+#include <utility>
+
+#include <bsoncxx/document/value.hpp>
+
 namespace mongocxx {
 namespace v_noabi {
 namespace model {
 
-delete_many::delete_many(bsoncxx::v_noabi::document::view_or_value filter) : _filter(std::move(filter)) {}
-
-bsoncxx::v_noabi::document::view_or_value const& delete_many::filter() const {
-    return _filter;
-}
-
-delete_many& delete_many::collation(bsoncxx::v_noabi::document::view_or_value collation) {
-    _collation = collation;
-    return *this;
-}
-
-delete_many& delete_many::hint(mongocxx::v_noabi::hint index_hint) {
-    _hint = std::move(index_hint);
-    return *this;
-}
-
-bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::hint> const& delete_many::hint() const {
-    return _hint;
-}
-
-bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const& delete_many::collation() const {
-    return _collation;
-}
+delete_many::delete_many(v1::bulk_write::delete_many op)
+    : _filter{bsoncxx::v_noabi::from_v1(std::move(v1::bulk_write::delete_many::internal::filter(op)))},
+      _collation{[&]() -> decltype(_collation) {
+          if (auto& opt = v1::bulk_write::delete_many::internal::collation(op)) {
+              return bsoncxx::v_noabi::from_v1(std::move(*opt));
+          }
+          return {};
+      }()},
+      _hint{std::move(v1::bulk_write::delete_many::internal::hint(op))} {}
 
 } // namespace model
 } // namespace v_noabi

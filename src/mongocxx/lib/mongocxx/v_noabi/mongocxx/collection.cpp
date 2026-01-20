@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <mongocxx/v1/change_stream.hh>
+#include <mongocxx/v1/cursor.hh>
 #include <mongocxx/v1/read_concern.hh>
 #include <mongocxx/v1/read_preference.hh>
 #include <mongocxx/v1/write_concern.hh>
@@ -31,7 +33,6 @@
 #include <bsoncxx/stdx/optional.hpp>
 #include <bsoncxx/types.hpp>
 
-#include <mongocxx/bulk_write.hpp>
 #include <mongocxx/client.hpp>
 #include <mongocxx/exception/error_code.hpp>
 #include <mongocxx/exception/logic_error.hpp>
@@ -46,11 +47,12 @@
 #include <mongocxx/result/replace_one.hpp>
 #include <mongocxx/result/update.hpp>
 
+#include <mongocxx/append_aggregate_options.hh>
 #include <mongocxx/bulk_write.hh>
 #include <mongocxx/client_session.hh>
 #include <mongocxx/collection.hh>
-#include <mongocxx/cursor.hh>
 #include <mongocxx/mongoc_error.hh>
+#include <mongocxx/options/change_stream.hh>
 #include <mongocxx/pipeline.hh>
 #include <mongocxx/read_concern.hh>
 #include <mongocxx/read_preference.hh>
@@ -256,14 +258,14 @@ collection::collection(database const& database, bsoncxx::v_noabi::string::view_
           bsoncxx::make_unique<impl>(
               libmongoc::database_get_collection(database._get_impl().database_t, collection_name.terminated().data()),
               database.name(),
-              database._get_impl().client_impl)) {}
+              database._get_impl().client)) {}
 
 collection::collection(database const& database, void* collection)
     : _impl(
           bsoncxx::make_unique<impl>(
               static_cast<mongoc_collection_t*>(collection),
               database.name(),
-              database._get_impl().client_impl)) {}
+              database._get_impl().client)) {}
 
 collection::collection(collection const& c) {
     if (c) {
@@ -272,25 +274,27 @@ collection::collection(collection const& c) {
 }
 
 collection& collection::operator=(collection const& c) {
-    if (!c) {
-        _impl.reset();
-    } else if (!*this) {
-        _impl = bsoncxx::make_unique<impl>(c._get_impl());
-    } else {
-        *_impl = c._get_impl();
+    if (this != &c) {
+        if (!c._impl) {
+            _impl.reset();
+        } else if (!_impl) {
+            _impl = bsoncxx::make_unique<impl>(c._get_impl());
+        } else {
+            *_impl = c._get_impl();
+        }
     }
 
     return *this;
 }
 
 mongocxx::v_noabi::bulk_write collection::create_bulk_write(options::bulk_write const& options) {
-    return mongocxx::v_noabi::bulk_write{*this, options};
+    return v_noabi::bulk_write::internal::make(*this, options, nullptr);
 }
 
 mongocxx::v_noabi::bulk_write collection::create_bulk_write(
     client_session const& session,
     options::bulk_write const& options) {
-    return mongocxx::v_noabi::bulk_write{*this, options, &session};
+    return v_noabi::bulk_write::internal::make(*this, options, &session);
 }
 
 namespace {
@@ -397,23 +401,24 @@ cursor collection::_find(client_session const* session, view_or_value filter, op
         options_builder.append(bsoncxx::v_noabi::builder::concatenate_doc{session->_get_impl().to_document()});
     }
 
-    cursor query_cursor{
+    auto query_cursor = v1::cursor::internal::make(
         libmongoc::collection_find_with_opts(
             _get_impl().collection_t,
             mongocxx::to_scoped_bson_view(filter),
             mongocxx::to_scoped_bson_view(options_builder),
             read_prefs),
-        options.cursor_type()};
+        options.cursor_type());
 
     if (options.max_await_time()) {
         auto const count = options.max_await_time()->count();
         if ((count < 0) || (count >= std::numeric_limits<std::uint32_t>::max())) {
             throw logic_error{error_code::k_invalid_parameter};
         }
-        libmongoc::cursor_set_max_await_time_ms(query_cursor._impl->cursor_t, static_cast<std::uint32_t>(count));
+        libmongoc::cursor_set_max_await_time_ms(
+            v1::cursor::internal::as_mongoc(query_cursor), static_cast<std::uint32_t>(count));
     }
 
-    return query_cursor;
+    return cursor{std::move(query_cursor)};
 }
 
 cursor collection::find(view_or_value filter, options::find const& options) {
@@ -451,7 +456,7 @@ cursor
 collection::_aggregate(client_session const* session, pipeline const& pipeline, options::aggregate const& options) {
     bsoncxx::v_noabi::builder::basic::document b;
 
-    options.append(b);
+    append_aggregate_options(b, options);
 
     if (session) {
         b.append(bsoncxx::v_noabi::builder::concatenate_doc{session->_get_impl().to_document()});
@@ -463,7 +468,7 @@ collection::_aggregate(client_session const* session, pipeline const& pipeline, 
         read_prefs = v_noabi::read_preference::internal::as_mongoc(*opt);
     }
 
-    return cursor(
+    return v1::cursor::internal::make(
         libmongoc::collection_aggregate(
             _get_impl().collection_t,
             static_cast<::mongoc_query_flags_t>(0),
@@ -503,7 +508,7 @@ collection::_insert_one(client_session const* session, view_or_value document, o
         bulk_opts.comment(*comment);
     }
 
-    mongocxx::v_noabi::bulk_write bulk_op{*this, bulk_opts, session};
+    auto bulk_op = v_noabi::bulk_write::internal::make(*this, bulk_opts, session);
     bsoncxx::v_noabi::document::element oid{};
     bsoncxx::v_noabi::builder::basic::document new_document;
 
@@ -1226,11 +1231,11 @@ cursor collection::_distinct(
         throw bsoncxx::v_noabi::exception{bsoncxx::v_noabi::error_code::k_internal_error};
     }
 
-    bson_t const* error_document;
+    bson_t const* error_document = {};
 
-    cursor fake_cursor{libmongoc::cursor_new_from_command_reply_with_opts(
-        _get_impl().client_impl->client_t, fake_reply.inout_ptr(), nullptr)};
-    if (libmongoc::cursor_error_document(fake_cursor._impl->cursor_t, &error, &error_document)) {
+    auto fake_cursor = v1::cursor::internal::make(
+        libmongoc::cursor_new_from_command_reply_with_opts(_get_impl().client, fake_reply.inout_ptr(), nullptr));
+    if (libmongoc::cursor_error_document(v1::cursor::internal::as_mongoc(fake_cursor), &error, &error_document)) {
         if (error_document) {
             bsoncxx::v_noabi::document::value error_doc{
                 bsoncxx::v_noabi::document::view{bson_get_data(error_document), error_document->len}};
@@ -1240,7 +1245,7 @@ cursor collection::_distinct(
         }
     }
 
-    return fake_cursor;
+    return cursor{std::move(fake_cursor)};
 }
 
 cursor collection::distinct(
@@ -1259,14 +1264,15 @@ cursor collection::distinct(
 }
 
 cursor collection::list_indexes() const {
-    return libmongoc::collection_find_indexes_with_opts(_get_impl().collection_t, nullptr);
+    return v1::cursor::internal::make(libmongoc::collection_find_indexes_with_opts(_get_impl().collection_t, nullptr));
 }
 
 cursor collection::list_indexes(client_session const& session) const {
     bsoncxx::v_noabi::builder::basic::document options_builder;
     options_builder.append(bsoncxx::v_noabi::builder::concatenate_doc{session._get_impl().to_document()});
-    return libmongoc::collection_find_indexes_with_opts(
-        _get_impl().collection_t, mongocxx::to_scoped_bson_view(options_builder));
+    return v1::cursor::internal::make(
+        libmongoc::collection_find_indexes_with_opts(
+            _get_impl().collection_t, mongocxx::to_scoped_bson_view(options_builder)));
 }
 
 void collection::_drop(
@@ -1360,24 +1366,26 @@ collection::_watch(client_session const* session, pipeline const& pipe, options:
     container.append(kvp("pipeline", v_noabi::pipeline::internal::doc(pipe).array_view()));
 
     bsoncxx::v_noabi::builder::basic::document options_builder;
-    options_builder.append(bsoncxx::v_noabi::builder::concatenate(options.as_bson()));
+    options_builder.append(
+        bsoncxx::v_noabi::builder::concatenate(v_noabi::options::change_stream::internal::to_document(options)));
     if (session) {
         options_builder.append(bsoncxx::v_noabi::builder::concatenate_doc{session->_get_impl().to_document()});
     }
 
     // NOTE: collection_watch copies what it needs so we're safe to destroy our copies.
-    return change_stream{libmongoc::collection_watch(
-        _get_impl().collection_t,
-        mongocxx::to_scoped_bson_view(container),
-        mongocxx::to_scoped_bson_view(options_builder))};
+    return v1::change_stream::internal::make(
+        libmongoc::collection_watch(
+            _get_impl().collection_t,
+            mongocxx::to_scoped_bson_view(container),
+            mongocxx::to_scoped_bson_view(options_builder)));
 }
 
 index_view collection::indexes() {
-    return index_view{_get_impl().collection_t, _get_impl().client_impl->client_t};
+    return index_view{_get_impl().collection_t, _get_impl().client};
 }
 
 search_index_view collection::search_indexes() {
-    return search_index_view{_get_impl().collection_t, _get_impl().client_impl->client_t};
+    return search_index_view{_get_impl().collection_t, _get_impl().client};
 }
 
 mongocxx::v_noabi::bulk_write collection::_init_insert_many(
@@ -1410,17 +1418,14 @@ void collection::_insert_many_doc_handler(
     mongocxx::v_noabi::bulk_write& writes,
     bsoncxx::v_noabi::builder::basic::array& inserted_ids,
     bsoncxx::v_noabi::document::view doc) const {
-    bsoncxx::v_noabi::builder::basic::document id_doc;
-
     if (!doc["_id"]) {
-        id_doc.append(kvp("_id", bsoncxx::v_noabi::oid{}));
-        writes.append(model::insert_one{make_document(concatenate(id_doc.view()), concatenate(doc))});
+        bsoncxx::v_noabi::oid const id;
+        writes.append(model::insert_one{make_document(kvp("_id", id), concatenate(doc))});
+        inserted_ids.append(id);
     } else {
-        id_doc.append(kvp("_id", doc["_id"].get_value()));
         writes.append(model::insert_one{doc});
+        inserted_ids.append(doc["_id"].get_value());
     }
-
-    inserted_ids.append(id_doc.view());
 }
 
 bsoncxx::v_noabi::stdx::optional<result::insert_many> collection::_exec_insert_many(
@@ -1434,16 +1439,20 @@ bsoncxx::v_noabi::stdx::optional<result::insert_many> collection::_exec_insert_m
     return result::insert_many{std::move(result.value()), inserted_ids.extract()};
 }
 
-collection::impl const& collection::_get_impl() const {
-    if (!_impl) {
+template <typename Self>
+auto collection::_get_impl(Self& self) -> decltype(*self._impl) {
+    if (!self._impl) {
         throw logic_error{error_code::k_invalid_collection_object};
     }
-    return *_impl;
+    return *self._impl;
+}
+
+collection::impl const& collection::_get_impl() const {
+    return _get_impl(*this);
 }
 
 collection::impl& collection::_get_impl() {
-    auto cthis = const_cast<collection const*>(this);
-    return const_cast<collection::impl&>(cthis->_get_impl());
+    return _get_impl(*this);
 }
 
 } // namespace v_noabi

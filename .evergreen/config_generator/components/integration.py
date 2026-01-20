@@ -50,17 +50,20 @@ MACOS_MATRIX = [
 WINDOWS_MATRIX = [
     # Windows x86_64 (min-max-latest).
     # Windows x86_64: 4.2+.
-    ('windows-vsCurrent', 'vs2022x64', ['Debug'], ['shared'], [11, 17], [None], ['plain', 'csfle'], ['4.2', '8.0', 'latest'], ['single', 'replica', 'sharded']),
+    ('windows-vsCurrent',   'vs2022x64', ['Debug'], ['shared'], [11, 17], [None], ['plain', 'csfle'], ['4.2',                ], ['single', 'replica', 'sharded']),
+    ('windows-2022-latest', 'vs2022x64', ['Debug'], ['shared'], [11, 17], [None], ['plain', 'csfle'], [       '8.0', 'latest'], ['single', 'replica', 'sharded']),
+
+    ('windows-2022-latest', 'gcc',       ['Debug'], ['shared'], [11, 17], [None], ['plain'         ], ['4.2', '8.0', 'latest'], ['single', 'replica', 'sharded']),
 ]
 
 MONGOCRYPTD_MATRIX = [
-    ('rhel80',             None,        ['Debug'], ['shared'], [11], [None], ['crypt'], ['latest'], ['replica']),
-    ('rhel8-arm64-latest', None,        ['Debug'], ['shared'], [11], [None], ['crypt'], ['latest'], ['replica']),
-    ('rhel8-power',        None,        ['Debug'], ['shared'], [11], [None], ['crypt'], ['latest'], ['replica']),
-    ('rhel8-zseries',      None,        ['Debug'], ['shared'], [11], [None], ['crypt'], ['latest'], ['replica']),
-    ('macos-14-arm64',     None,        ['Debug'], ['shared'], [11], [None], ['crypt'], ['latest'], ['replica']),
-    ('macos-14',           None,        ['Debug'], ['shared'], [11], [None], ['crypt'], ['latest'], ['replica']),
-    ('windows-vsCurrent',  'vs2022x64', ['Debug'], ['shared'], [11], [None], ['crypt'], ['latest'], ['replica']),
+    ('rhel80',              None,        ['Debug'], ['shared'], [11], [None], ['crypt'], ['latest'], ['replica']),
+    ('rhel8-arm64-latest',  None,        ['Debug'], ['shared'], [11], [None], ['crypt'], ['latest'], ['replica']),
+    ('rhel8-power',         None,        ['Debug'], ['shared'], [11], [None], ['crypt'], ['latest'], ['replica']),
+    ('rhel8-zseries',       None,        ['Debug'], ['shared'], [11], [None], ['crypt'], ['latest'], ['replica']),
+    ('macos-14-arm64',      None,        ['Debug'], ['shared'], [11], [None], ['crypt'], ['latest'], ['replica']),
+    ('macos-14',            None,        ['Debug'], ['shared'], [11], [None], ['crypt'], ['latest'], ['replica']),
+    ('windows-2022-latest', 'vs2022x64', ['Debug'], ['shared'], [11], [None], ['crypt'], ['latest'], ['replica']),
 ]
 
 # fmt: on
@@ -126,9 +129,6 @@ def tasks():
             updates += [KeyValueParam(key='build_type', value=build_type)]
             updates += [KeyValueParam(key=key, value=value) for key, value in compiler_to_vars(compiler).items()]
 
-            if distro.os_type == 'windows':
-                test_vars |= {'example_projects_cxx_standard': 17}
-
             if build_type == 'Debug' and distro.os in ['ubuntu2204', 'ubuntu2404']:
                 updates += [KeyValueParam(key='ENABLE_CODE_COVERAGE', value='ON')]
 
@@ -138,10 +138,7 @@ def tasks():
 
             if cxx_standard is not None:
                 compile_vars |= {'REQUIRED_CXX_STANDARD': cxx_standard}
-                test_vars |= {
-                    'example_projects_cxx_standard': cxx_standard,
-                    'REQUIRED_CXX_STANDARD': cxx_standard,
-                }
+                test_vars |= {'REQUIRED_CXX_STANDARD': cxx_standard}
 
             commands = [expansions_update(updates=updates)] if updates else []
             commands += [

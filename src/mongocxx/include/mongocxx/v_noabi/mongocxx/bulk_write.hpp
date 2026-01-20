@@ -15,9 +15,18 @@
 #pragma once
 
 #include <mongocxx/bulk_write-fwd.hpp> // IWYU pragma: export
-#include <mongocxx/collection-fwd.hpp>
 
-#include <mongocxx/client_session.hpp>
+//
+
+#include <mongocxx/v1/bulk_write.hpp> // IWYU pragma: export
+
+#include <utility>
+
+#include <mongocxx/collection-fwd.hpp> // IWYU pragma: keep: backward compatibility, to be removed.
+
+#include <bsoncxx/stdx/optional.hpp>
+
+#include <mongocxx/client_session.hpp> // IWYU pragma: keep: backward compatibility, to be removed.
 #include <mongocxx/model/write.hpp>
 #include <mongocxx/options/bulk_write.hpp>
 #include <mongocxx/result/bulk_write.hpp>
@@ -43,28 +52,63 @@ namespace v_noabi {
 /// - https://www.mongodb.com/docs/manual/core/bulk-write-operations/
 ///
 class bulk_write {
+   private:
+    v1::bulk_write _bulk;
+
    public:
     ///
     /// Move constructs a bulk write operation.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL() bulk_write(bulk_write&&) noexcept;
+    bulk_write(bulk_write&&) noexcept = default;
 
     ///
     /// Move assigns a bulk write operation.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bulk_write&) operator=(bulk_write&&) noexcept;
+    bulk_write& operator=(bulk_write&&) noexcept = default;
+
+    ///
+    /// This class is not copyable.
+    ///
+    bulk_write(bulk_write const& other) = delete;
+
+    ///
+    /// This class is not copyable.
+    ///
+    bulk_write& operator=(bulk_write const& other) = delete;
 
     ///
     /// Destroys a bulk write operation.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL() ~bulk_write();
+    ~bulk_write() = default;
+
+    ///
+    /// Construct with the @ref mongocxx::v1 equivalent.
+    ///
+    /* explicit(false) */ bulk_write(v1::bulk_write bulk) : _bulk{std::move(bulk)} {}
+
+    ///
+    /// Convert to the @ref mongocxx::v1 equivalent.
+    ///
+    /// @par Postconditions:
+    /// - `*this` is in an assign-or-destroy-only state.
+    ///
+    explicit operator v1::bulk_write() && {
+        return std::move(_bulk);
+    }
+
+    ///
+    /// This class is not copyable.
+    ///
+    explicit operator v1::bulk_write() const& = delete;
 
     ///
     /// Checks if a bulk write operation is empty.
     ///
     /// @return A boolean indicating if the bulk write operation is empty.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bool) empty() const noexcept;
+    bool empty() const noexcept {
+        return _bulk.empty();
+    }
 
     ///
     /// Appends a single write to the bulk write operation. The write operation's contents are
@@ -88,7 +132,7 @@ class bulk_write {
     ///
     /// @throws mongocxx::v_noabi::logic_error if the given operation is invalid.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bulk_write&) append(model::write const& operation);
+    MONGOCXX_ABI_EXPORT_CDECL(bulk_write&) append(v_noabi::model::write const& operation);
 
     ///
     /// Executes a bulk write.
@@ -102,16 +146,22 @@ class bulk_write {
     ///
     MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<result::bulk_write>) execute() const;
 
-   private:
-    friend ::mongocxx::v_noabi::collection;
-
-    class impl;
-
-    bulk_write(collection const& coll, options::bulk_write const& options, client_session const* session = nullptr);
-
-    bool _created_from_collection;
-    std::unique_ptr<impl> _impl;
+    class internal;
 };
+
+///
+/// Convert to the @ref mongocxx::v_noabi equivalent of `v`.
+///
+inline v_noabi::bulk_write from_v1(v1::bulk_write v) {
+    return {std::move(v)};
+}
+
+///
+/// Convert to the @ref mongocxx::v1 equivalent of `v`.
+///
+inline v1::bulk_write to_v1(v_noabi::bulk_write v) {
+    return v1::bulk_write{std::move(v)};
+}
 
 } // namespace v_noabi
 } // namespace mongocxx
@@ -121,4 +171,7 @@ class bulk_write {
 ///
 /// @file
 /// Provides @ref mongocxx::v_noabi::bulk_write.
+///
+/// @par Includes
+/// - @ref mongocxx/v1/bulk_write.hpp
 ///

@@ -121,7 +121,7 @@ void test_string(MemFn mem_fn, Mock& mock, Object const& object, identity_type c
         CHECK(static_cast<void const*>(ptr) == identity);
         return &str;
     });
-    CHECK((object.*mem_fn)() == &str);
+    CHECK(static_cast<void const*>((object.*mem_fn)().data()) == static_cast<void const*>(&str));
 }
 
 template <typename MemFn, typename Object, typename Mock>

@@ -18,9 +18,7 @@
 
 //
 
-#include <mongocxx/exception/error_code.hpp>
-#include <mongocxx/exception/logic_error.hpp>
-#include <mongocxx/options/apm.hpp>
+#include <memory>
 
 #include <mongocxx/private/mongoc.hh>
 
@@ -28,35 +26,16 @@ namespace mongocxx {
 namespace v_noabi {
 namespace options {
 
-using unique_server_api = std::unique_ptr<mongoc_server_api_t, decltype(libmongoc::server_api_destroy)>;
+class server_api::internal {
+   public:
+    struct mongoc_server_api_deleter {
+        void operator()(mongoc_server_api_t* ptr) const noexcept {
+            libmongoc::server_api_destroy(ptr);
+        }
+    };
 
-inline unique_server_api make_server_api(server_api const& opts) {
-    mongoc_server_api_version_t mongoc_api_version;
-
-    // Convert version enum value to std::string then to c_str to create mongoc api version.
-    auto result = libmongoc::server_api_version_from_string(
-        server_api::version_to_string(opts.get_version()).c_str(), &mongoc_api_version);
-    if (!result) {
-        throw mongocxx::v_noabi::logic_error{
-            mongocxx::v_noabi::error_code::k_invalid_parameter,
-            "invalid server API version" + server_api::version_to_string(opts.get_version())};
-    }
-
-    auto mongoc_server_api_opts = libmongoc::server_api_new(mongoc_api_version);
-    if (!mongoc_server_api_opts) {
-        throw mongocxx::v_noabi::logic_error{
-            mongocxx::v_noabi::error_code::k_create_resource_fail, "could not create server API"};
-    }
-
-    if (opts.strict().value_or(false)) {
-        libmongoc::server_api_strict(mongoc_server_api_opts, opts.strict().value_or(false));
-    }
-    if (opts.deprecation_errors().value_or(false)) {
-        libmongoc::server_api_deprecation_errors(mongoc_server_api_opts, opts.deprecation_errors().value_or(false));
-    }
-
-    return {mongoc_server_api_opts, libmongoc::server_api_destroy};
-}
+    static std::unique_ptr<mongoc_server_api_t, mongoc_server_api_deleter> to_mongoc(server_api const& opts);
+};
 
 } // namespace options
 } // namespace v_noabi

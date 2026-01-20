@@ -18,6 +18,17 @@ if(NOT BUILD_TESTING)
     set_property(DIRECTORY PROPERTY EXCLUDE_FROM_ALL TRUE)
 endif()
 
+# Avoid x86 (32-bit) compatibility preventing compilation of large test TUs:
+#  MSVC: "C1128: number of sections exceeded object file format".
+#  GCC: "too many sections" and "file too big".
+if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+    message(STATUS "Compiling test executables with '/bigobj'")
+    add_compile_options("/bigobj")
+elseif(MINGW)
+    message(STATUS "Compiling test executables with '-Wa,-mbig-obj'")
+    add_compile_options("-Wa,-mbig-obj")
+endif()
+
 if(MONGOCXX_BUILD_SHARED)
     mongocxx_add_library(mongocxx_mocked "mongocxx-mocked" SHARED)
 else()
@@ -26,10 +37,6 @@ endif()
 
 target_link_libraries(mongocxx_mocked PUBLIC bsoncxx_testing)
 target_compile_definitions(mongocxx_mocked PUBLIC MONGOCXX_TESTING)
-
-if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
-    target_compile_options(mongocxx_mocked PRIVATE /bigobj)
-endif()
 
 set(mongocxx_test_bsoncxx
     ${PROJECT_SOURCE_DIR}/../bsoncxx/test/v1/array/view_string_maker.cpp
@@ -100,23 +107,51 @@ set(mongocxx_test_sources_v_noabi
 )
 
 set(mongocxx_test_sources_v1
+    v1/aggregate_options.cpp
     v1/apm.cpp
+    v1/auto_encryption_options.cpp
     v1/bsoncxx.cpp
+    v1/bulk_write.cpp
+    v1/client.cpp
+    v1/change_stream.cpp
     v1/count_options.cpp
+    v1/cursor.cpp
     v1/data_key_options.cpp
+    v1/delete_many_options.cpp
+    v1/delete_many_result.cpp
+    v1/delete_one_options.cpp
+    v1/delete_one_result.cpp
     v1/distinct_options.cpp
     v1/estimated_document_count_options.cpp
     v1/events.cpp
     v1/exception.cpp
+    v1/find_one_and_delete_options.cpp
+    v1/find_one_and_replace_options.cpp
+    v1/find_one_and_update_options.cpp
+    v1/find_options.cpp
     v1/hint.cpp
+    v1/insert_many_options.cpp
+    v1/insert_many_result.cpp
+    v1/insert_one_options.cpp
+    v1/insert_one_result.cpp
     v1/logger.cpp
     v1/pipeline.cpp
     v1/range_options.cpp
     v1/read_concern.cpp
     v1/read_preference.cpp
+    v1/replace_one_options.cpp
+    v1/replace_one_result.cpp
     v1/rewrap_many_datakey_options.cpp
+    v1/rewrap_many_datakey_result.cpp
+    v1/server_api.cpp
     v1/server_error.cpp
     v1/tls.cpp
+    v1/transaction_options.cpp
+    v1/update_many_options.cpp
+    v1/update_many_result.cpp
+    v1/update_one_options.cpp
+    v1/update_one_result.cpp
+    v1/uri.cpp
     v1/write_concern.cpp
 )
 
@@ -265,10 +300,6 @@ set_property(
     APPEND PROPERTY LINK_LIBRARIES
         mongocxx::test_properties_with_main
 )
-
-if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
-    target_compile_options(test_driver PRIVATE /bigobj)
-endif()
 
 if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     target_compile_options(test_driver PRIVATE -Wno-maybe-uninitialized)

@@ -14,16 +14,27 @@
 
 #pragma once
 
-#include <chrono>
-#include <cstdint>
-
-#include <mongocxx/collection-fwd.hpp>
-#include <mongocxx/database-fwd.hpp>
 #include <mongocxx/options/aggregate-fwd.hpp> // IWYU pragma: export
 
-#include <bsoncxx/builder/basic/document.hpp>
+//
+
+#include <bsoncxx/v1/document/value.hpp>
+#include <bsoncxx/v1/types/value.hpp>
+
+#include <mongocxx/v1/aggregate_options.hpp> // IWYU pragma: export
+
+#include <chrono>
+#include <cstdint>
+#include <utility>
+
+#include <mongocxx/collection-fwd.hpp> // IWYU pragma: keep: backward compatibility, to be removed.
+#include <mongocxx/database-fwd.hpp>   // IWYU pragma: keep: backward compatibility, to be removed.
+
+#include <bsoncxx/builder/basic/document.hpp> // IWYU pragma: keep: backward compatibility, to be removed.
+#include <bsoncxx/document/view.hpp>
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/stdx/optional.hpp>
+#include <bsoncxx/types/bson_value/view.hpp>
 #include <bsoncxx/types/bson_value/view_or_value.hpp>
 
 #include <mongocxx/hint.hpp>
@@ -43,6 +54,72 @@ namespace options {
 class aggregate {
    public:
     ///
+    /// Default initialization.
+    ///
+    aggregate() = default;
+
+    ///
+    /// Construct with the @ref mongocxx::v1 equivalent.
+    ///
+    /* explicit(false) */ MONGOCXX_ABI_EXPORT_CDECL() aggregate(v1::aggregate_options opts);
+
+    ///
+    /// Convert to the @ref mongocxx::v1 equivalent.
+    ///
+    explicit operator v1::aggregate_options() const {
+        using bsoncxx::v_noabi::to_v1;
+        using mongocxx::v_noabi::to_v1;
+
+        v1::aggregate_options ret;
+
+        if (_allow_disk_use) {
+            ret.allow_disk_use(*_allow_disk_use);
+        }
+
+        if (_batch_size) {
+            ret.batch_size(*_batch_size);
+        }
+
+        if (_collation) {
+            ret.collation(bsoncxx::v1::document::value{to_v1(_collation->view())});
+        }
+
+        if (_let) {
+            ret.let(bsoncxx::v1::document::value{to_v1(_let->view())});
+        }
+
+        if (_max_time) {
+            ret.max_time(*_max_time);
+        }
+
+        if (_read_preference) {
+            ret.read_preference(to_v1(*_read_preference));
+        }
+
+        if (_bypass_document_validation) {
+            ret.bypass_document_validation(*_bypass_document_validation);
+        }
+
+        if (_hint) {
+            ret.hint(to_v1(*_hint));
+        }
+
+        if (_write_concern) {
+            ret.write_concern(to_v1(*_write_concern));
+        }
+
+        if (_read_concern) {
+            ret.read_concern(to_v1(*_read_concern));
+        }
+
+        if (_comment) {
+            ret.comment(bsoncxx::v1::types::value{to_v1(_comment->view())});
+        }
+
+        return ret;
+    }
+
+    ///
     /// Enables writing to temporary files. When set to @c true, aggregation stages can write data
     /// to the _tmp subdirectory in the dbPath directory. The server-side default is @c false.
     ///
@@ -56,7 +133,10 @@ class aggregate {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/aggregate/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(aggregate&) allow_disk_use(bool allow_disk_use);
+    aggregate& allow_disk_use(bool allow_disk_use) {
+        _allow_disk_use = allow_disk_use;
+        return *this;
+    }
 
     ///
     /// Retrieves the current allow_disk_use setting.
@@ -66,7 +146,9 @@ class aggregate {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/aggregate/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bool> const&) allow_disk_use() const;
+    bsoncxx::v_noabi::stdx::optional<bool> const& allow_disk_use() const {
+        return _allow_disk_use;
+    }
 
     ///
     /// Sets the number of documents to return per batch.
@@ -81,7 +163,10 @@ class aggregate {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/aggregate/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(aggregate&) batch_size(std::int32_t batch_size);
+    aggregate& batch_size(std::int32_t batch_size) {
+        _batch_size = batch_size;
+        return *this;
+    }
 
     ///
     /// The current batch size setting.
@@ -91,8 +176,9 @@ class aggregate {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/aggregate/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<std::int32_t> const&)
-    batch_size() const;
+    bsoncxx::v_noabi::stdx::optional<std::int32_t> const& batch_size() const {
+        return _batch_size;
+    }
 
     ///
     /// Sets the collation for this operation.
@@ -107,8 +193,10 @@ class aggregate {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/aggregate/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(aggregate&)
-    collation(bsoncxx::v_noabi::document::view_or_value collation);
+    aggregate& collation(bsoncxx::v_noabi::document::view_or_value collation) {
+        _collation = std::move(collation);
+        return *this;
+    }
 
     ///
     /// Retrieves the current collation for this operation.
@@ -119,8 +207,9 @@ class aggregate {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/aggregate/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const&)
-    collation() const;
+    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const& collation() const {
+        return _collation;
+    }
 
     ///
     /// Sets the variable mapping for this operation.
@@ -135,7 +224,10 @@ class aggregate {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/aggregate/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(aggregate&) let(bsoncxx::v_noabi::document::view_or_value let);
+    aggregate& let(bsoncxx::v_noabi::document::view_or_value let) {
+        _let = std::move(let);
+        return *this;
+    }
 
     ///
     /// Retrieves the current variable mapping for this operation.
@@ -146,8 +238,9 @@ class aggregate {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/aggregate/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const&)
-    let() const;
+    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const& let() const {
+        return _let;
+    }
 
     ///
     /// Sets the maximum amount of time for this operation to run server-side in milliseconds.
@@ -162,7 +255,10 @@ class aggregate {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/aggregate/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(aggregate&) max_time(std::chrono::milliseconds max_time);
+    aggregate& max_time(std::chrono::milliseconds max_time) {
+        _max_time = max_time;
+        return *this;
+    }
 
     ///
     /// The current max_time setting.
@@ -173,8 +269,9 @@ class aggregate {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/aggregate/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<std::chrono::milliseconds> const&)
-    max_time() const;
+    bsoncxx::v_noabi::stdx::optional<std::chrono::milliseconds> const& max_time() const {
+        return _max_time;
+    }
 
     ///
     /// Sets the read_preference for this operation.
@@ -188,7 +285,10 @@ class aggregate {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/aggregate/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(aggregate&) read_preference(mongocxx::v_noabi::read_preference rp);
+    aggregate& read_preference(v_noabi::read_preference rp) {
+        _read_preference = std::move(rp);
+        return *this;
+    }
 
     ///
     /// The current read_preference for this operation.
@@ -198,8 +298,9 @@ class aggregate {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/aggregate/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::read_preference> const&)
-    read_preference() const;
+    bsoncxx::v_noabi::stdx::optional<v_noabi::read_preference> const& read_preference() const {
+        return _read_preference;
+    }
 
     ///
     /// Sets whether the $out stage should bypass document validation.
@@ -210,8 +311,10 @@ class aggregate {
     ///   A reference to the object on which this member function is being called. This facilitates
     ///   method chaining.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(aggregate&)
-    bypass_document_validation(bool bypass_document_validation);
+    aggregate& bypass_document_validation(bool bypass_document_validation) {
+        _bypass_document_validation = bypass_document_validation;
+        return *this;
+    }
 
     ///
     /// The current bypass_document_validation setting.
@@ -221,8 +324,9 @@ class aggregate {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/aggregate/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bool> const&)
-    bypass_document_validation() const;
+    bsoncxx::v_noabi::stdx::optional<bool> const& bypass_document_validation() const {
+        return _bypass_document_validation;
+    }
 
     ///
     /// Sets the index to use for this operation.
@@ -240,7 +344,10 @@ class aggregate {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(aggregate&) hint(mongocxx::v_noabi::hint index_hint);
+    aggregate& hint(v_noabi::hint index_hint) {
+        _hint = std::move(index_hint);
+        return *this;
+    }
 
     ///
     /// Gets the current hint.
@@ -250,8 +357,9 @@ class aggregate {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/aggregate/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::hint> const&)
-    hint() const;
+    bsoncxx::v_noabi::stdx::optional<v_noabi::hint> const& hint() const {
+        return _hint;
+    }
 
     ///
     /// Sets the write concern to use for this operation. Only has an effect if $out is a part of
@@ -267,8 +375,10 @@ class aggregate {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(aggregate&)
-    write_concern(mongocxx::v_noabi::write_concern write_concern);
+    aggregate& write_concern(v_noabi::write_concern write_concern) {
+        _write_concern = std::move(write_concern);
+        return *this;
+    }
 
     ///
     /// Gets the current write concern.
@@ -279,8 +389,9 @@ class aggregate {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/aggregate/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern> const&)
-    write_concern() const;
+    bsoncxx::v_noabi::stdx::optional<v_noabi::write_concern> const& write_concern() const {
+        return _write_concern;
+    }
 
     ///
     /// Sets the read concern to use for this operation.
@@ -294,8 +405,10 @@ class aggregate {
     /// @return
     ///   A reference to the object on which this member function is being called.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(aggregate&)
-    read_concern(mongocxx::v_noabi::read_concern read_concern);
+    aggregate& read_concern(v_noabi::read_concern read_concern) {
+        _read_concern = std::move(read_concern);
+        return *this;
+    }
 
     ///
     /// Gets the current read concern.
@@ -306,8 +419,9 @@ class aggregate {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/aggregate/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::read_concern> const&)
-    read_concern() const;
+    bsoncxx::v_noabi::stdx::optional<v_noabi::read_concern> const& read_concern() const {
+        return _read_concern;
+    }
 
     ///
     /// Sets the comment to use for this operation.
@@ -321,8 +435,10 @@ class aggregate {
     /// @return
     ///   A reference to the object on which this member function is being called.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(aggregate&)
-    comment(bsoncxx::v_noabi::types::bson_value::view_or_value comment);
+    aggregate& comment(bsoncxx::v_noabi::types::bson_value::view_or_value comment) {
+        _comment = std::move(comment);
+        return *this;
+    }
 
     ///
     /// Gets the current comment.
@@ -333,29 +449,45 @@ class aggregate {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/aggregate/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value> const&)
-    comment() const;
+    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value> const& comment() const {
+        return _comment;
+    }
 
    private:
-    friend ::mongocxx::v_noabi::collection;
-    friend ::mongocxx::v_noabi::database;
-
-    void append(bsoncxx::v_noabi::builder::basic::document& builder) const;
-
     bsoncxx::v_noabi::stdx::optional<bool> _allow_disk_use;
     bsoncxx::v_noabi::stdx::optional<std::int32_t> _batch_size;
     bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> _collation;
     bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> _let;
     bsoncxx::v_noabi::stdx::optional<std::chrono::milliseconds> _max_time;
-    bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::read_preference> _read_preference;
+    bsoncxx::v_noabi::stdx::optional<v_noabi::read_preference> _read_preference;
     bsoncxx::v_noabi::stdx::optional<bool> _bypass_document_validation;
-    bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::hint> _hint;
-    bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern> _write_concern;
-    bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::read_concern> _read_concern;
+    bsoncxx::v_noabi::stdx::optional<v_noabi::hint> _hint;
+    bsoncxx::v_noabi::stdx::optional<v_noabi::write_concern> _write_concern;
+    bsoncxx::v_noabi::stdx::optional<v_noabi::read_concern> _read_concern;
     bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value> _comment;
 };
 
 } // namespace options
+} // namespace v_noabi
+} // namespace mongocxx
+
+namespace mongocxx {
+namespace v_noabi {
+
+///
+/// Convert to the @ref mongocxx::v_noabi equivalent of `v`.
+///
+inline v_noabi::options::aggregate from_v1(v1::aggregate_options v) {
+    return {std::move(v)};
+}
+
+///
+/// Convert to the @ref mongocxx::v1 equivalent of `v`.
+///
+inline v1::aggregate_options to_v1(v_noabi::options::aggregate const& v) {
+    return v1::aggregate_options{v};
+}
+
 } // namespace v_noabi
 } // namespace mongocxx
 
@@ -364,4 +496,7 @@ class aggregate {
 ///
 /// @file
 /// Provides @ref mongocxx::v_noabi::options::aggregate.
+///
+/// @par Includes
+/// - @ref mongocxx/v1/aggregate_options.hpp
 ///

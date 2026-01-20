@@ -56,6 +56,8 @@ class tls::impl {
     }
 };
 
+// NOLINTBEGIN(cppcoreguidelines-owning-memory): owning void* for ABI stability.
+
 tls::~tls() {
     delete impl::with(this);
 }
@@ -79,6 +81,8 @@ tls& tls::operator=(tls const& other) {
 }
 
 tls::tls() : _impl{new impl{}} {}
+
+// NOLINTEND(cppcoreguidelines-owning-memory)
 
 tls& tls::pem_file(std::string v) {
     impl::with(this)->_pem_file = std::move(v);
@@ -132,6 +136,26 @@ tls& tls::allow_invalid_certificates(bool v) {
 
 bsoncxx::v1::stdx::optional<bool> tls::allow_invalid_certificates() const {
     return impl::with(this)->_allow_invalid_certificates;
+}
+
+bsoncxx::v1::stdx::optional<std::string> const& tls::internal::pem_file(tls const& self) {
+    return impl::with(self)._pem_file;
+}
+
+bsoncxx::v1::stdx::optional<std::string> const& tls::internal::pem_password(tls const& self) {
+    return impl::with(self)._pem_password;
+}
+
+bsoncxx::v1::stdx::optional<std::string> const& tls::internal::ca_file(tls const& self) {
+    return impl::with(self)._ca_file;
+}
+
+bsoncxx::v1::stdx::optional<std::string> const& tls::internal::ca_dir(tls const& self) {
+    return impl::with(self)._ca_dir;
+}
+
+bsoncxx::v1::stdx::optional<std::string> const& tls::internal::crl_file(tls const& self) {
+    return impl::with(self)._crl_file;
 }
 
 bsoncxx::v1::stdx::optional<std::string>& tls::internal::pem_file(tls& self) {

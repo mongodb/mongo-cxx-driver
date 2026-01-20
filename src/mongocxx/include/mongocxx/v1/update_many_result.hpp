@@ -34,6 +34,9 @@ namespace v1 {
 ///
 /// The result of an "updateMany" operation.
 ///
+/// Supported fields include:
+/// - `result`
+///
 /// @see
 /// - [Update Methods (MongoDB Manual)](https://www.mongodb.com/docs/manual/reference/update-methods/)
 ///
@@ -98,10 +101,8 @@ class update_many_result {
     ///
     MONGOCXX_ABI_EXPORT_CDECL(std::int64_t) upserted_count() const;
 
-    ///
-    /// A map from the operation index to the upserted document ID.
-    ///
-    using id_map = std::map<std::int64_t, bsoncxx::v1::types::view>;
+    /// @copydoc mongocxx::v1::bulk_write::result::id_map
+    using id_map = mongocxx::v1::bulk_write::result::id_map;
 
     ///
     /// Return a map from the operation index to the upserted document ID.
@@ -111,7 +112,7 @@ class update_many_result {
     MONGOCXX_ABI_EXPORT_CDECL(id_map) upserted_ids() const;
 
     ///
-    /// Compare equal when `lhs.result()` and `rhs.result()` compare equal.
+    /// Compare equal when all supported fields compare equal.
     ///
     /// @{
     friend MONGOCXX_ABI_EXPORT_CDECL(bool) operator==(update_many_result const& lhs, update_many_result const& rhs);
@@ -121,6 +122,11 @@ class update_many_result {
     }
     /// @}
     ///
+
+    class internal;
+
+   private:
+    /* explicit(false) */ update_many_result(void* impl);
 };
 
 } // namespace v1

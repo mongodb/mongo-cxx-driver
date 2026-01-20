@@ -14,6 +14,8 @@
 
 #pragma once
 
+#include <mongocxx/v1/replace_one_result-fwd.hpp> // IWYU pragma: export
+
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
@@ -29,7 +31,7 @@ class replace_one;
 namespace mongocxx {
 namespace result {
 
-using ::mongocxx::v_noabi::result::replace_one;
+using v_noabi::result::replace_one;
 
 } // namespace result
 } // namespace mongocxx
@@ -39,4 +41,7 @@ using ::mongocxx::v_noabi::result::replace_one;
 ///
 /// @file
 /// Declares @ref mongocxx::v_noabi::result::replace_one.
+///
+/// @par Includes
+/// - @ref mongocxx/v1/replace_one_result-fwd.hpp
 ///

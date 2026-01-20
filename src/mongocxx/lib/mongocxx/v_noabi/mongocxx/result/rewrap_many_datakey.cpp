@@ -12,19 +12,31 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <mongocxx/bulk_write.hpp>
 #include <mongocxx/result/rewrap_many_datakey.hpp>
+
+//
+
+#include <mongocxx/v1/rewrap_many_datakey_result.hh>
+
+#include <utility>
+
+#include <mongocxx/result/bulk_write.hpp>
 
 namespace mongocxx {
 namespace v_noabi {
 namespace result {
 
-rewrap_many_datakey::rewrap_many_datakey(mongocxx::v_noabi::result::bulk_write bulk_write_result_doc) {
-    _result = std::move(bulk_write_result_doc);
-}
+rewrap_many_datakey::rewrap_many_datakey(v1::rewrap_many_datakey_result opts)
+    : _result{std::move(v1::rewrap_many_datakey_result::internal::result(opts))} {}
 
-bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::result::bulk_write> const& rewrap_many_datakey::result() {
-    return _result;
+rewrap_many_datakey::operator v1::rewrap_many_datakey_result() const {
+    auto ret = v1::rewrap_many_datakey_result::internal::make();
+
+    if (_result) {
+        v1::rewrap_many_datakey_result::internal::result(ret) = v_noabi::to_v1(*_result);
+    }
+
+    return ret;
 }
 
 } // namespace result

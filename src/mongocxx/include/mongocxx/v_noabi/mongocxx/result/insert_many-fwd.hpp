@@ -14,6 +14,8 @@
 
 #pragma once
 
+#include <mongocxx/v1/insert_many_result-fwd.hpp> // IWYU pragma: export
+
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
@@ -29,7 +31,7 @@ class insert_many;
 namespace mongocxx {
 namespace result {
 
-using ::mongocxx::v_noabi::result::insert_many;
+using v_noabi::result::insert_many;
 
 } // namespace result
 } // namespace mongocxx
@@ -39,4 +41,7 @@ using ::mongocxx::v_noabi::result::insert_many;
 ///
 /// @file
 /// Declares @ref mongocxx::v_noabi::result::insert_many.
+///
+/// @par Includes
+/// - @ref mongocxx/v1/insert_many_result-fwd.hpp
 ///

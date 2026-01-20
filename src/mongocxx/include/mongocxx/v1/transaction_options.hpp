@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include <mongocxx/v1/transaction-fwd.hpp> // IWYU pragma: export
+#include <mongocxx/v1/transaction_options-fwd.hpp> // IWYU pragma: export
 
 //
 
@@ -47,7 +47,7 @@ namespace v1 {
 ///
 /// @attention This feature is experimental! It is not ready for use!
 ///
-class transaction {
+class transaction_options {
    private:
     void* _impl; // mongoc_transaction_opt_t
 
@@ -57,7 +57,7 @@ class transaction {
     ///
     /// @warning Invalidates all associated views.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL() ~transaction();
+    MONGOCXX_ABI_EXPORT_CDECL() ~transaction_options();
 
     ///
     /// Move constructor.
@@ -65,7 +65,7 @@ class transaction {
     /// @par Postconditions:
     /// - `other` is in an assign-or-destroy-only state.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL() transaction(transaction&& other) noexcept;
+    MONGOCXX_ABI_EXPORT_CDECL() transaction_options(transaction_options&& other) noexcept;
 
     ///
     /// Move assignment.
@@ -73,17 +73,17 @@ class transaction {
     /// @par Postconditions:
     /// - `other` is in an assign-or-destroy-only state.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(transaction&) operator=(transaction&& other) noexcept;
+    MONGOCXX_ABI_EXPORT_CDECL(transaction_options&) operator=(transaction_options&& other) noexcept;
 
     ///
     /// Copy construction.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL() transaction(transaction const& other);
+    MONGOCXX_ABI_EXPORT_CDECL() transaction_options(transaction_options const& other);
 
     ///
     /// Copy assignment.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(transaction&) operator=(transaction const& other);
+    MONGOCXX_ABI_EXPORT_CDECL(transaction_options&) operator=(transaction_options const& other);
 
     ///
     /// Default initialization.
@@ -91,22 +91,26 @@ class transaction {
     /// @par Postconditions:
     /// - All supported fields are "unset" or zero-initialized.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL() transaction();
+    MONGOCXX_ABI_EXPORT_CDECL() transaction_options();
 
     ///
     /// Set the "maxCommitTimeMS" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(transaction&) max_commit_time_ms(std::chrono::milliseconds v);
+    /// @note `0` is equivalent to "unset".
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(transaction_options&) max_commit_time_ms(std::chrono::milliseconds v);
 
     ///
     /// Return the current "maxCommitTimeMS" field.
+    ///
+    /// @note `0` is equivalent to "unset".
     ///
     MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<std::chrono::milliseconds>) max_commit_time_ms() const;
 
     ///
     /// Set the "readConcern" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(transaction&) read_concern(v1::read_concern const& v);
+    MONGOCXX_ABI_EXPORT_CDECL(transaction_options&) read_concern(v1::read_concern const& v);
 
     ///
     /// Return the current "readConcern" field.
@@ -116,7 +120,7 @@ class transaction {
     ///
     /// Set the "readPreference" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(transaction&) read_preference(v1::read_preference const& v);
+    MONGOCXX_ABI_EXPORT_CDECL(transaction_options&) read_preference(v1::read_preference const& v);
 
     ///
     /// Return the current "readPreference" field.
@@ -126,12 +130,17 @@ class transaction {
     ///
     /// Set the "writeConcern" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(transaction&) write_concern(v1::write_concern const& v);
+    MONGOCXX_ABI_EXPORT_CDECL(transaction_options&) write_concern(v1::write_concern const& v);
 
     ///
     /// Return the current "writeConcern" field.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<v1::write_concern>) write_concern() const;
+
+    class internal;
+
+   private:
+    /* explicit(false) */ transaction_options(void* impl);
 };
 
 } // namespace v1
@@ -141,5 +150,5 @@ class transaction {
 
 ///
 /// @file
-/// Provides @ref mongocxx::v1::transaction.
+/// Provides @ref mongocxx::v1::transaction_options.
 ///

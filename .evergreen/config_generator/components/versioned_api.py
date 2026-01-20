@@ -18,9 +18,9 @@ TAG = 'versioned-api'
 # pylint: disable=line-too-long
 # fmt: off
 MATRIX = [
-    ('rhel80',            None,        ['Debug'], ['shared'], [None]),
-    ('macos-14-arm64',    None,        ['Debug'], ['shared'], [None]),
-    ('windows-vsCurrent', 'vs2022x64', ['Debug'], ['shared'], [None]),
+    ('rhel80',              None,        ['Debug'], ['shared'], [None]),
+    ('macos-14-arm64',      None,        ['Debug'], ['shared'], [None]),
+    ('windows-2022-latest', 'vs2022x64', ['Debug'], ['shared'], [None]),
 ]
 # fmt: on
 # pylint: enable=line-too-long
@@ -65,9 +65,6 @@ def tasks():
             mongod_vars |= {'AUTH': 'noauth'}  # Versioned API + auth is tested by the C Driver.
             compile_vars = {'ENABLE_TESTS': 'ON'}
             test_vars |= {'MONGOCXX_TEST_TOPOLOGY': 'single'}
-
-            if distro.os_type == 'windows':
-                test_vars |= {'example_projects_cxx_standard': 17}
 
             res.append(
                 EvgTask(

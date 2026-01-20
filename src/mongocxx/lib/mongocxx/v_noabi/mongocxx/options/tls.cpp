@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <mongocxx/options/tls.hpp>
+#include <mongocxx/options/tls.hh>
 
 //
 
@@ -22,6 +22,8 @@
 
 #include <bsoncxx/stdx/optional.hpp>
 #include <bsoncxx/string/view_or_value.hpp>
+
+#include <mongocxx/private/ssl.hh>
 
 namespace mongocxx {
 namespace v_noabi {
@@ -35,59 +37,37 @@ tls::tls(v1::tls v)
       _crl_file{std::move(v1::tls::internal::crl_file(v))},
       _allow_invalid_certificates{v.allow_invalid_certificates()} {}
 
-tls& tls::pem_file(bsoncxx::v_noabi::string::view_or_value pem_file) {
-    _pem_file = std::move(pem_file);
-    return *this;
-}
+#if MONGOCXX_SSL_IS_ENABLED()
+tls::internal::to_mongoc_type tls::internal::to_mongoc(tls const& opts) {
+    to_mongoc_type ret = {};
 
-bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value> const& tls::pem_file() const {
-    return _pem_file;
-}
+    auto& opt = ret.opt;
 
-tls& tls::pem_password(bsoncxx::v_noabi::string::view_or_value pem_password) {
-    _pem_password = std::move(pem_password);
-    return *this;
-}
+    if (opts._pem_file) {
+        opt.pem_file = ret.string_owner.emplace(ret.string_owner.end(), opts._pem_file->terminated())->data();
+    }
 
-bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value> const& tls::pem_password() const {
-    return _pem_password;
-}
+    if (opts._pem_password) {
+        opt.pem_pwd = ret.string_owner.emplace(ret.string_owner.end(), opts._pem_password->terminated())->data();
+    }
 
-tls& tls::ca_file(bsoncxx::v_noabi::string::view_or_value ca_file) {
-    _ca_file = std::move(ca_file);
-    return *this;
-}
+    if (opts._ca_file) {
+        opt.ca_file = ret.string_owner.emplace(ret.string_owner.end(), opts._ca_file->terminated())->data();
+    }
 
-bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value> const& tls::ca_file() const {
-    return _ca_file;
-}
+    if (opts._ca_dir) {
+        opt.ca_dir = ret.string_owner.emplace(ret.string_owner.end(), opts._ca_dir->terminated())->data();
+    }
 
-tls& tls::ca_dir(bsoncxx::v_noabi::string::view_or_value ca_dir) {
-    _ca_dir = std::move(ca_dir);
-    return *this;
-}
+    if (opts._crl_file) {
+        opt.crl_file = ret.string_owner.emplace(ret.string_owner.end(), opts._crl_file->terminated())->data();
+    }
 
-bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value> const& tls::ca_dir() const {
-    return _ca_dir;
-}
+    opt.weak_cert_validation = opts._allow_invalid_certificates.value_or(false);
 
-tls& tls::crl_file(bsoncxx::v_noabi::string::view_or_value crl_file) {
-    _crl_file = std::move(crl_file);
-    return *this;
+    return ret;
 }
-
-bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value> const& tls::crl_file() const {
-    return _crl_file;
-}
-
-tls& tls::allow_invalid_certificates(bool allow_invalid_certificates) {
-    _allow_invalid_certificates = allow_invalid_certificates;
-    return *this;
-}
-
-bsoncxx::v_noabi::stdx::optional<bool> const& tls::allow_invalid_certificates() const {
-    return _allow_invalid_certificates;
-}
+#endif
 
 } // namespace options
 } // namespace v_noabi

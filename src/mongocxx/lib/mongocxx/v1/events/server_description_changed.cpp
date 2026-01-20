@@ -50,7 +50,7 @@ std::uint16_t server_description_changed::port() const {
 bsoncxx::v1::oid server_description_changed::topology_id() const {
     bson_oid_t id = {};
     libmongoc::apm_server_changed_get_topology_id(to_mongoc(_impl), &id);
-    return bsoncxx::v1::oid{reinterpret_cast<std::uint8_t const*>(&id), sizeof(id)};
+    return bsoncxx::v1::oid{id.bytes, sizeof(id)};
 }
 
 v1::events::server_description server_description_changed::previous_description() const {

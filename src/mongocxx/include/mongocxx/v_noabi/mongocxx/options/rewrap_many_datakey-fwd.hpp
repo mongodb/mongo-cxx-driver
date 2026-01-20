@@ -43,5 +43,5 @@ using v_noabi::options::rewrap_many_datakey;
 /// Declares @ref mongocxx::v_noabi::options::rewrap_many_datakey.
 ///
 /// @par Includes
-/// - @ref mongocxx/v1/rewrap_many_datakey-fwd.hpp
+/// - @ref mongocxx/v1/rewrap_many_datakey_options-fwd.hpp
 ///

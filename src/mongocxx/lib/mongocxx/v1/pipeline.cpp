@@ -37,41 +37,47 @@ namespace v1 {
 
 class pipeline::impl {
    private:
-    static_assert(INT32_MAX == std::int32_t{2147483647}, "");
-    std::array<char, sizeof("2147483647")> _idx = {}; // Access via `this->idx()`.
+    class idx_type {
+       private:
+        // Exact value of INT32_MAX for `sizeof()` below. Non-negative values only.
+        // NOLINTNEXTLINE(cppcoreguidelines-avoid-magic-numbers)
+        static_assert(INT32_MAX == std::int32_t{2147483647}, "");
+        std::array<char, sizeof("2147483647")> _buffer = {};
+        std::int32_t _count = {};
+
+       public:
+        char const* operator()() {
+            (void)std::snprintf(_buffer.data(), _buffer.size(), "%" PRId32, _count);
+            ++_count;
+            return _buffer.data();
+        }
+    } _idx;
+
+    scoped_bson _doc;
 
    public:
-    scoped_bson _doc;
-    std::int32_t _count = 0;
-
-    char const* idx() {
-        (void)std::snprintf(_idx.data(), _idx.size(), "%" PRId32, _count);
-        return _idx.data();
+    scoped_bson const& doc() const {
+        return _doc;
     }
 
     void append(bsoncxx::v1::document::view doc) {
-        _doc += scoped_bson{BCON_NEW(this->idx(), BCON_DOCUMENT(scoped_bson_view{doc}.bson()))};
-        ++_count;
+        _doc += scoped_bson{BCON_NEW(this->_idx(), BCON_DOCUMENT(scoped_bson_view{doc}.bson()))};
     }
 
     void append(char const* name, bsoncxx::v1::document::view doc) {
-        _doc += scoped_bson{BCON_NEW(this->idx(), "{", name, BCON_DOCUMENT(scoped_bson_view{doc}.bson()), "}")};
-        ++_count;
+        _doc += scoped_bson{BCON_NEW(this->_idx(), "{", name, BCON_DOCUMENT(scoped_bson_view{doc}.bson()), "}")};
     }
 
     void append(char const* name, bsoncxx::v1::stdx::string_view v) {
-        _doc += scoped_bson{BCON_NEW(this->idx(), "{", name, BCON_UTF8(std::string{v}.c_str()), "}")};
-        ++_count;
+        _doc += scoped_bson{BCON_NEW(this->_idx(), "{", name, BCON_UTF8(std::string{v}.c_str()), "}")};
     }
 
     void append(char const* name, std::int32_t v) {
-        _doc += scoped_bson{BCON_NEW(this->idx(), "{", name, BCON_INT32(v), "}")};
-        ++_count;
+        _doc += scoped_bson{BCON_NEW(this->_idx(), "{", name, BCON_INT32(v), "}")};
     }
 
     void append(char const* name, std::int64_t v) {
-        _doc += scoped_bson{BCON_NEW(this->idx(), "{", name, BCON_INT64(v), "}")};
-        ++_count;
+        _doc += scoped_bson{BCON_NEW(this->_idx(), "{", name, BCON_INT64(v), "}")};
     }
 
     static impl const& with(pipeline const& self) {
@@ -94,6 +100,8 @@ class pipeline::impl {
         return static_cast<impl*>(ptr);
     }
 };
+
+// NOLINTBEGIN(cppcoreguidelines-owning-memory): owning void* for ABI stability.
 
 pipeline::~pipeline() {
     delete impl::with(this);
@@ -121,8 +129,10 @@ pipeline& pipeline::operator=(pipeline const& other) {
 
 pipeline::pipeline() : _impl{new impl{}} {}
 
+// NOLINTEND(cppcoreguidelines-owning-memory)
+
 bsoncxx::v1::array::view pipeline::view_array() const {
-    return impl::with(this)->_doc.array_view();
+    return impl::with(this)->doc().array_view();
 }
 
 pipeline& pipeline::append_stage(bsoncxx::v1::document::view v) {
@@ -296,7 +306,7 @@ pipeline& pipeline::unwind(bsoncxx::v1::stdx::string_view v) {
 }
 
 scoped_bson const& pipeline::internal::doc(pipeline const& self) {
-    return impl::with(self)._doc;
+    return impl::with(self).doc();
 }
 
 } // namespace v1

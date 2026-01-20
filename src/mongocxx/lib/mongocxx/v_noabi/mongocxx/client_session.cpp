@@ -20,18 +20,20 @@
 
 #include <bsoncxx/private/make_unique.hh>
 
+#include <mongocxx/private/utility.hh>
+
 namespace mongocxx {
 namespace v_noabi {
 
 // Private constructors.
 client_session::client_session(
-    mongocxx::v_noabi::client const* client,
+    mongocxx::v_noabi::client* client,
     mongocxx::v_noabi::options::client_session const& options)
     : _impl(bsoncxx::make_unique<impl>(client, options)) {}
 
-client_session::client_session(client_session&&) noexcept = default;
+client_session::client_session(client_session&& other) noexcept = default;
 
-client_session& client_session::operator=(client_session&&) noexcept = default;
+client_session& client_session::operator=(client_session&& other) noexcept = default;
 
 client_session::~client_session() noexcept = default;
 
@@ -89,16 +91,6 @@ client_session::transaction_state client_session::get_transaction_state() const 
 
 bool client_session::get_dirty() const noexcept {
     return _impl->get_dirty();
-}
-
-client_session::impl const& client_session::_get_impl() const {
-    // Never null.
-    return *_impl;
-}
-
-client_session::impl& client_session::_get_impl() {
-    auto cthis = const_cast<client_session const*>(this);
-    return const_cast<client_session::impl&>(cthis->_get_impl());
 }
 
 } // namespace v_noabi

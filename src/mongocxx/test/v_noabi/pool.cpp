@@ -86,22 +86,22 @@ TEST_CASE(
     tls_opts.crl_file(crl_file);
     tls_opts.allow_invalid_certificates(allow_invalid_certificates);
 
-    ::mongoc_ssl_opt_t interposed = {};
-
-    client_pool_set_ssl_opts->visit([&](::mongoc_client_pool_t*, ::mongoc_ssl_opt_t const* opts) {
+    client_pool_set_ssl_opts->interpose([&](::mongoc_client_pool_t*, ::mongoc_ssl_opt_t const* opts) {
         set_tls_opts_called = true;
-        interposed = *opts;
+
+        REQUIRE(opts != nullptr);
+
+        CHECK_THAT(opts->pem_file, Catch::Matchers::Equals(pem_file));
+        CHECK_THAT(opts->pem_pwd, Catch::Matchers::Equals(pem_password));
+        CHECK_THAT(opts->ca_file, Catch::Matchers::Equals(ca_file));
+        CHECK_THAT(opts->ca_dir, Catch::Matchers::Equals(ca_dir));
+        CHECK_THAT(opts->crl_file, Catch::Matchers::Equals(crl_file));
+        CHECK(opts->weak_cert_validation == allow_invalid_certificates);
     });
 
     pool p{uri{"mongodb://mongodb.example.com:9999/?tls=true"}, options::client().tls_opts(tls_opts)};
 
-    REQUIRE(set_tls_opts_called);
-    REQUIRE(interposed.pem_file == pem_file);
-    REQUIRE(interposed.pem_pwd == pem_password);
-    REQUIRE(interposed.ca_file == ca_file);
-    REQUIRE(interposed.ca_dir == ca_dir);
-    REQUIRE(interposed.crl_file == crl_file);
-    REQUIRE(interposed.weak_cert_validation == allow_invalid_certificates);
+    CHECK(set_tls_opts_called);
 }
 #endif
 

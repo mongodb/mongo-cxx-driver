@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <mongocxx/v1/change_stream.hh>
+#include <mongocxx/v1/cursor.hh>
 #include <mongocxx/v1/read_concern.hh>
 #include <mongocxx/v1/read_preference.hh>
 #include <mongocxx/v1/write_concern.hh>
@@ -29,10 +31,12 @@
 #include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/exception/operation_exception.hpp>
 
+#include <mongocxx/append_aggregate_options.hh>
 #include <mongocxx/client.hh>
 #include <mongocxx/client_session.hh>
 #include <mongocxx/database.hh>
 #include <mongocxx/mongoc_error.hh>
+#include <mongocxx/options/change_stream.hh>
 #include <mongocxx/pipeline.hh>
 #include <mongocxx/read_concern.hh>
 #include <mongocxx/read_preference.hh>
@@ -54,9 +58,7 @@ namespace {
 
 class collection_names {
    public:
-    explicit collection_names(char** names) {
-        _names = names;
-    }
+    explicit collection_names(char** names) : _names{names} {}
 
     ~collection_names() {
         bson_strfreev(_names);
@@ -89,11 +91,11 @@ database& database::operator=(database&&) noexcept = default;
 
 database::~database() = default;
 
-database::database(mongocxx::v_noabi::client const& client, bsoncxx::v_noabi::string::view_or_value name)
+database::database(void* client, bsoncxx::v_noabi::string::view_or_value name)
     : _impl(
           bsoncxx::make_unique<impl>(
-              libmongoc::client_get_database(client._get_impl().client_t, name.terminated().data()),
-              &client._get_impl(),
+              libmongoc::client_get_database(static_cast<mongoc_client_t*>(client), name.terminated().data()),
+              static_cast<mongoc_client_t*>(client),
               name.terminated().data())) {}
 
 database::database(database const& d) {
@@ -103,12 +105,14 @@ database::database(database const& d) {
 }
 
 database& database::operator=(database const& d) {
-    if (!d) {
-        _impl.reset();
-    } else if (!*this) {
-        _impl = bsoncxx::make_unique<impl>(d._get_impl());
-    } else {
-        *_impl = d._get_impl();
+    if (this != &d) {
+        if (!d) {
+            _impl.reset();
+        } else if (!*this) {
+            _impl = bsoncxx::make_unique<impl>(d._get_impl());
+        } else {
+            *_impl = d._get_impl();
+        }
     }
 
     return *this;
@@ -122,7 +126,7 @@ cursor
 database::_aggregate(client_session const* session, pipeline const& pipeline, options::aggregate const& options) {
     bsoncxx::v_noabi::builder::basic::document b;
 
-    options.append(b);
+    append_aggregate_options(b, options);
 
     if (session) {
         b.append(bsoncxx::v_noabi::builder::concatenate_doc{session->_get_impl().to_document()});
@@ -134,7 +138,7 @@ database::_aggregate(client_session const* session, pipeline const& pipeline, op
         read_prefs = v_noabi::read_preference::internal::as_mongoc(*opt);
     }
 
-    return cursor(
+    return v1::cursor::internal::make(
         libmongoc::database_aggregate(
             _get_impl().database_t,
             v_noabi::pipeline::internal::doc(pipeline).bson(),
@@ -158,7 +162,8 @@ cursor database::_list_collections(client_session const* session, bsoncxx::v_noa
         options_builder.append(bsoncxx::v_noabi::builder::concatenate_doc{session->_get_impl().to_document()});
     }
 
-    return libmongoc::database_find_collections_with_opts(_get_impl().database_t, to_scoped_bson_view(options_builder));
+    return v1::cursor::internal::make(
+        libmongoc::database_find_collections_with_opts(_get_impl().database_t, to_scoped_bson_view(options_builder)));
 }
 
 cursor database::list_collections(bsoncxx::v_noabi::document::view_or_value filter) {
@@ -253,7 +258,7 @@ bsoncxx::v_noabi::document::value database::run_command(
 
     scoped_bson reply;
     auto result = libmongoc::client_command_simple_with_server_id(
-        _get_impl().client_impl->client_t,
+        _get_impl().client,
         _get_impl().name.c_str(),
         to_scoped_bson_view(command.view()),
         libmongoc::database_get_read_prefs(_get_impl().database_t),
@@ -411,25 +416,31 @@ database::_watch(client_session const* session, pipeline const& pipe, options::c
     container.append(kvp("pipeline", pipe.view_array()));
 
     bsoncxx::v_noabi::builder::basic::document options_builder;
-    options_builder.append(bsoncxx::v_noabi::builder::concatenate(options.as_bson()));
+    options_builder.append(
+        bsoncxx::v_noabi::builder::concatenate(v_noabi::options::change_stream::internal::to_document(options)));
     if (session) {
         options_builder.append(bsoncxx::v_noabi::builder::concatenate_doc{session->_get_impl().to_document()});
     }
 
-    return change_stream{libmongoc::database_watch(
-        _get_impl().database_t, to_scoped_bson_view(container), to_scoped_bson_view(options_builder))};
+    return v1::change_stream::internal::make(
+        libmongoc::database_watch(
+            _get_impl().database_t, to_scoped_bson_view(container), to_scoped_bson_view(options_builder)));
+}
+
+template <typename Self>
+auto database::_get_impl(Self& self) -> decltype(*self._impl) {
+    if (!self._impl) {
+        throw logic_error{error_code::k_invalid_database_object};
+    }
+    return *self._impl;
 }
 
 database::impl const& database::_get_impl() const {
-    if (!_impl) {
-        throw logic_error{error_code::k_invalid_database_object};
-    }
-    return *_impl;
+    return _get_impl(*this);
 }
 
 database::impl& database::_get_impl() {
-    auto cthis = const_cast<database const*>(this);
-    return const_cast<database::impl&>(cthis->_get_impl());
+    return _get_impl(*this);
 }
 
 } // namespace v_noabi

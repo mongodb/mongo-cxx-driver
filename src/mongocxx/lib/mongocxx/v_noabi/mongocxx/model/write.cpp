@@ -12,145 +12,113 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <type_traits>
-
 #include <mongocxx/model/write.hpp>
+
+//
+
+#include <mongocxx/v1/detail/macros.hpp>
+
+#include <utility>
+
+#include <mongocxx/model/delete_many.hpp>
+#include <mongocxx/model/delete_one.hpp>
+#include <mongocxx/model/insert_one.hpp>
+#include <mongocxx/model/replace_one.hpp>
+#include <mongocxx/model/update_many.hpp>
+#include <mongocxx/model/update_one.hpp>
+#include <mongocxx/write_type.hpp>
+
+#include <bsoncxx/private/type_traits.hh>
 
 namespace mongocxx {
 namespace v_noabi {
 namespace model {
 
-write::write(insert_one value) : _type(write_type::k_insert_one), _insert_one(std::move(value)) {
-    static_assert(std::is_nothrow_move_constructible<insert_one>::value, "Move-construct may throw");
-    static_assert(std::is_nothrow_move_assignable<insert_one>::value, "Move-assign may throw");
-}
-write::write(delete_one value) : _type(write_type::k_delete_one), _delete_one(std::move(value)) {
-    static_assert(std::is_nothrow_move_constructible<delete_one>::value, "Move-construct may throw");
-    static_assert(std::is_nothrow_move_assignable<delete_one>::value, "Move-assign may throw");
-}
-write::write(delete_many value) : _type(write_type::k_delete_many), _delete_many(std::move(value)) {
-    static_assert(std::is_nothrow_move_constructible<delete_many>::value, "Move-construct may throw");
-    static_assert(std::is_nothrow_move_assignable<delete_many>::value, "Move-assign may throw");
-}
-write::write(update_one value) : _type(write_type::k_update_one), _update_one(std::move(value)) {
-    static_assert(std::is_nothrow_move_constructible<update_one>::value, "Move-construct may throw");
-    static_assert(std::is_nothrow_move_assignable<update_one>::value, "Move-assign may throw");
-}
-write::write(update_many value) : _type(write_type::k_update_many), _update_many(std::move(value)) {
-    static_assert(std::is_nothrow_move_constructible<update_many>::value, "Move-construct may throw");
-    static_assert(std::is_nothrow_move_assignable<update_many>::value, "Move-assign may throw");
-}
-write::write(replace_one value) : _type(write_type::k_replace_one), _replace_one(std::move(value)) {
-    static_assert(std::is_nothrow_move_constructible<replace_one>::value, "Move-construct may throw");
-    static_assert(std::is_nothrow_move_assignable<replace_one>::value, "Move-assign may throw");
-}
+static_assert(
+    bsoncxx::is_nothrow_moveable<v_noabi::model::insert_one>::value,
+    "mongocxx::v_noabi::model::insert_one must be nothrow moveable");
 
-write::write(write&& rhs) noexcept {
-    switch (rhs._type) {
-        case write_type::k_insert_one:
-            new (&_insert_one) insert_one(std::move(rhs._insert_one));
-            break;
-        case write_type::k_update_one:
-            new (&_update_one) update_one(std::move(rhs._update_one));
-            break;
-        case write_type::k_update_many:
-            new (&_update_many) update_many(std::move(rhs._update_many));
-            break;
-        case write_type::k_delete_one:
-            new (&_delete_one) delete_one(std::move(rhs._delete_one));
-            break;
-        case write_type::k_delete_many:
-            new (&_delete_many) delete_many(std::move(rhs._delete_many));
-            break;
-        case write_type::k_replace_one:
-            new (&_replace_one) replace_one(std::move(rhs._replace_one));
-            break;
-    }
+static_assert(
+    bsoncxx::is_nothrow_moveable<v_noabi::model::delete_one>::value,
+    "mongocxx::v_noabi::model::delete_one must be nothrow moveable");
 
-    _type = rhs._type;
-}
+static_assert(
+    bsoncxx::is_nothrow_moveable<v_noabi::model::delete_many>::value,
+    "mongocxx::v_noabi::model::delete_many must be nothrow moveable");
 
-void write::destroy_member() noexcept {
+static_assert(
+    bsoncxx::is_nothrow_moveable<v_noabi::model::update_one>::value,
+    "mongocxx::v_noabi::model::update_one must be nothrow moveable");
+
+static_assert(
+    bsoncxx::is_nothrow_moveable<v_noabi::model::update_many>::value,
+    "mongocxx::v_noabi::model::update_many must be nothrow moveable");
+
+static_assert(
+    bsoncxx::is_nothrow_moveable<replace_one>::value,
+    "mongocxx::v_noabi::model::v_noabi::model::replace_one must be nothrow moveable");
+
+write::write(v1::bulk_write::single op) : _type{static_cast<v_noabi::write_type>(op.type())} {
     switch (_type) {
-        case write_type::k_insert_one:
-            _insert_one.~insert_one();
+        case v_noabi::write_type::k_insert_one:
+            new (&_insert_one) v_noabi::model::insert_one{std::move(op).get_insert_one()};
             break;
-        case write_type::k_update_one:
-            _update_one.~update_one();
+        case v_noabi::write_type::k_delete_one:
+            new (&_delete_one) v_noabi::model::delete_one{std::move(op).get_delete_one()};
             break;
-        case write_type::k_update_many:
-            _update_many.~update_many();
+        case v_noabi::write_type::k_delete_many:
+            new (&_delete_many) v_noabi::model::delete_many{std::move(op).get_delete_many()};
             break;
-        case write_type::k_delete_one:
-            _delete_one.~delete_one();
+        case v_noabi::write_type::k_update_one:
+            new (&_update_one) v_noabi::model::update_one{std::move(op).get_update_one()};
             break;
-        case write_type::k_delete_many:
-            _delete_many.~delete_many();
+        case v_noabi::write_type::k_update_many:
+            new (&_update_many) v_noabi::model::update_many{std::move(op).get_update_many()};
             break;
-        case write_type::k_replace_one:
-            _replace_one.~replace_one();
+        case v_noabi::write_type::k_replace_one:
+            new (&_replace_one) v_noabi::model::replace_one{std::move(op).get_replace_one()};
             break;
+        default:
+            MONGOCXX_PRIVATE_UNREACHABLE;
     }
 }
 
-write& write::operator=(write&& rhs) noexcept {
-    if (this == &rhs) {
-        return *this;
+write::operator v1::bulk_write::single() && {
+    switch (_type) {
+        case v_noabi::write_type::k_insert_one:
+            return to_v1(_insert_one);
+        case v_noabi::write_type::k_delete_one:
+            return to_v1(_delete_one);
+        case v_noabi::write_type::k_delete_many:
+            return to_v1(_delete_many);
+        case v_noabi::write_type::k_update_one:
+            return to_v1(_update_one);
+        case v_noabi::write_type::k_update_many:
+            return to_v1(_update_many);
+        case v_noabi::write_type::k_replace_one:
+            return to_v1(_replace_one);
+        default:
+            MONGOCXX_PRIVATE_UNREACHABLE;
     }
+}
 
-    destroy_member();
-
-    switch (rhs._type) {
-        case write_type::k_insert_one:
-            new (&_insert_one) insert_one(std::move(rhs._insert_one));
-            break;
-        case write_type::k_update_one:
-            new (&_update_one) update_one(std::move(rhs._update_one));
-            break;
-        case write_type::k_update_many:
-            new (&_update_many) update_many(std::move(rhs._update_many));
-            break;
-        case write_type::k_delete_one:
-            new (&_delete_one) delete_one(std::move(rhs._delete_one));
-            break;
-        case write_type::k_delete_many:
-            new (&_delete_many) delete_many(std::move(rhs._delete_many));
-            break;
-        case write_type::k_replace_one:
-            new (&_replace_one) replace_one(std::move(rhs._replace_one));
-            break;
+write::operator v1::bulk_write::single() const& {
+    switch (_type) {
+        case v_noabi::write_type::k_insert_one:
+            return to_v1(_insert_one);
+        case v_noabi::write_type::k_delete_one:
+            return to_v1(_delete_one);
+        case v_noabi::write_type::k_delete_many:
+            return to_v1(_delete_many);
+        case v_noabi::write_type::k_update_one:
+            return to_v1(_update_one);
+        case v_noabi::write_type::k_update_many:
+            return to_v1(_update_many);
+        case v_noabi::write_type::k_replace_one:
+            return to_v1(_replace_one);
+        default:
+            MONGOCXX_PRIVATE_UNREACHABLE;
     }
-
-    _type = rhs._type;
-
-    return *this;
-}
-
-write_type write::type() const {
-    return _type;
-}
-
-insert_one const& write::get_insert_one() const {
-    return _insert_one;
-}
-update_one const& write::get_update_one() const {
-    return _update_one;
-}
-update_many const& write::get_update_many() const {
-    return _update_many;
-}
-delete_one const& write::get_delete_one() const {
-    return _delete_one;
-}
-delete_many const& write::get_delete_many() const {
-    return _delete_many;
-}
-replace_one const& write::get_replace_one() const {
-    return _replace_one;
-}
-
-write::~write() {
-    destroy_member();
 }
 
 } // namespace model

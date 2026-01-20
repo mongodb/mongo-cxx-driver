@@ -18,6 +18,8 @@ namespace bsoncxx {
 
 namespace {
 
+// Precomputed table of C strings.
+// NOLINTNEXTLINE(cppcoreguidelines-avoid-c-arrays)
 constexpr char k_index_table[] =
     "0\0"
     "1\0"
@@ -1032,17 +1034,25 @@ itoa& itoa::operator=(std::uint32_t new_val) {
     return *this;
 }
 
+// Index the precomputed table by powers of 10 with additional offsets to account for intermediate null terminators.
+// NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers)
 void itoa::_init() {
     if (_val < 10u) {
+        // Index by (single digit + null terminator).
         _str = k_index_table + (2u * _val);
         _len = 1u;
     } else if (_val < 100u) {
-        _str = k_index_table + (2u * 10u) + (3u * (_val - 10u));
+        // Index by (double digit + null terminator) and skip lower entries.
+        _str = k_index_table + (3u * (_val - 10u)) + (2u * 10u);
         _len = 2u;
     } else if (_val < 1000u) {
-        _str = k_index_table + (2u * 10u) + (3u * 90u) + (4 * (_val - 100u));
+        // Index by (triple digit + null terminator) and skip lower entries.
+        _str = k_index_table + (4u * (_val - 100u)) + (2u * 10u) + (3u * 90u);
         _len = 3u;
-    } else {
+    }
+
+    // Fallback to traditional algorithm.
+    else {
         int size = static_cast<std::int32_t>(sizeof(_buf) - 1u);
         int i = size;
 
@@ -1058,5 +1068,6 @@ void itoa::_init() {
         _len = static_cast<std::uint8_t>(size - i);
     }
 }
+// NOLINTEND(cppcoreguidelines-avoid-magic-numbers)
 
 } // namespace bsoncxx

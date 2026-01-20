@@ -13,3 +13,11 @@
 // limitations under the License.
 
 #include <mongocxx/v1/client_session.hpp>
+
+namespace mongocxx {
+namespace v1 {
+
+client_session::options::~options() = default; // TODO: v1::client_session (CXX-3237)
+
+} // namespace v1
+} // namespace mongocxx

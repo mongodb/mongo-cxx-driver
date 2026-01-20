@@ -103,11 +103,17 @@ class cursor {
     cursor& operator=(cursor const&) = delete;
 
     ///
-    /// Return an iterator over the results of the associated query.
+    /// Return an iterator over the results of the associated cursor.
     ///
     /// @important All iterators associated with the same cursor object share the same state.
     ///
-    /// This function advances the underlying cursor to obtain the next (first) result document.
+    /// This function advances the underlying cursor to obtain the first available result document. The underlying
+    /// cursor is only advanced at most once: consecutive calls to `this->begin()` do not advance the underlying cursor
+    /// state. To obtain subsequent available result documents, the resulting iterator must be incremented instead.
+    ///
+    /// When an iterator compares equal to `this->end()`, a non-tailable cursor will no longer return any documents:
+    /// `this->begin() == this->end()` will always be true. However, a tailable cursor may request additional result
+    /// documents by calling `this->begin()` again: the behavior is the same as the first call to `this->begin()`.
     ///
     /// @throws mongocxx::v1::server_error when a server-side error is encountered and a raw server error is available.
     /// @throws mongocxx::v1::exception for all other runtime errors.
@@ -117,9 +123,14 @@ class cursor {
     ///
     /// Return an end iterator.
     ///
-    /// @important The end iterator has no associated query.
+    /// @important The end iterator has no associated cursor.
     ///
     iterator end() const;
+
+    class internal;
+
+   private:
+    /* explicit(false) */ cursor(void* impl);
 };
 
 ///
@@ -206,7 +217,7 @@ class cursor::iterator {
     MONGOCXX_ABI_EXPORT_CDECL() iterator();
 
     ///
-    /// Access the current query result document.
+    /// Access the current cursor result document.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(value_type) operator*() const;
 
@@ -256,6 +267,11 @@ class cursor::iterator {
     friend bool operator!=(iterator const& lhs, iterator const& rhs) {
         return !(lhs == rhs);
     }
+
+    class internal;
+
+   private:
+    /* explicit(false) */ iterator(void* impl);
 };
 
 inline cursor::iterator cursor::end() const {

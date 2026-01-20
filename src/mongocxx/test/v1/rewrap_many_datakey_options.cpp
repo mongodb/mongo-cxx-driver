@@ -76,7 +76,7 @@ TEST_CASE("default", "[mongocxx][v1][rewrap_many_datakey_options]") {
     CHECK_FALSE(rc.master_key().has_value());
 }
 
-TEST_CASE("provider") {
+TEST_CASE("provider", "[mongocxx][v1][rewrap_many_datakey_options]") {
     auto const v = GENERATE(values({
         std::string{},
         std::string{""},
@@ -86,7 +86,7 @@ TEST_CASE("provider") {
     CHECK(rewrap_many_datakey_options{}.provider(v).provider() == v);
 }
 
-TEST_CASE("master_key") {
+TEST_CASE("master_key", "[mongocxx][v1][rewrap_many_datakey_options]") {
     auto const v = GENERATE(values({
         scoped_bson{},
         scoped_bson{R"({"x": 1})"},

@@ -28,7 +28,7 @@ class read_concern::internal {
    public:
     static MONGOCXX_ABI_EXPORT_CDECL_TESTING(read_concern) make(mongoc_read_concern_t* rc);
 
-    static mongoc_read_concern_t const* as_mongoc(read_concern const& self);
+    static MONGOCXX_ABI_EXPORT_CDECL_TESTING(mongoc_read_concern_t const*) as_mongoc(read_concern const& self);
 };
 
 } // namespace v1

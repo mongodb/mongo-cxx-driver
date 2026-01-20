@@ -13,100 +13,90 @@
 // limitations under the License.
 
 #include <mongocxx/cursor.hpp>
+
+//
+
+#include <mongocxx/v1/exception.hpp>
+
+#include <mongocxx/v1/cursor.hh>
+
+#include <bsoncxx/document/view.hpp>
+
 #include <mongocxx/exception/query_exception.hpp>
 
-#include <mongocxx/cursor.hh>
 #include <mongocxx/mongoc_error.hh>
 
-#include <bsoncxx/private/bson.hh>
 #include <bsoncxx/private/make_unique.hh>
-
-#include <mongocxx/private/mongoc.hh>
 
 namespace mongocxx {
 namespace v_noabi {
 
-cursor::cursor(void* cursor_ptr, bsoncxx::v_noabi::stdx::optional<cursor::type> cursor_type)
-    : _impl(bsoncxx::make_unique<impl>(static_cast<mongoc_cursor_t*>(cursor_ptr), cursor_type)) {}
-
 cursor::cursor(cursor&&) noexcept = default;
+
 cursor& cursor::operator=(cursor&&) noexcept = default;
 
 cursor::~cursor() = default;
 
-void cursor::iterator::operator++(int) {
-    operator++();
-}
-
-cursor::iterator& cursor::iterator::operator++() {
-    bson_t const* out;
-    bson_t const* error_document;
-    bson_error_t error;
-
-    if (libmongoc::cursor_next(_cursor->_impl->cursor_t, &out)) {
-        _cursor->_impl->doc = bsoncxx::v_noabi::document::view{bson_get_data(out), out->len};
-    } else if (libmongoc::cursor_error_document(_cursor->_impl->cursor_t, &error, &error_document)) {
-        _cursor->_impl->mark_dead();
-        if (error_document) {
-            bsoncxx::v_noabi::document::value error_doc{
-                bsoncxx::v_noabi::document::view{bson_get_data(error_document), error_document->len}};
-            throw_exception<query_exception>(error_doc, error);
-        } else {
-            throw_exception<query_exception>(error);
-        }
-    } else {
-        _cursor->_impl->mark_nothing_left();
-    }
-    return *this;
-}
-
 cursor::iterator cursor::begin() {
-    if (_impl->is_dead()) {
-        return end();
+    if (v1::cursor::internal::is_dead(_cursor)) {
+        return this->end();
     }
-    return iterator(this);
+    return iterator{this};
 }
 
 cursor::iterator cursor::end() {
     return iterator(nullptr);
 }
 
-cursor::iterator::iterator(cursor* cursor) : _cursor(cursor) {
-    if (_cursor == nullptr || _cursor->_impl->has_started()) {
-        return;
-    }
-
-    _cursor->_impl->mark_started();
-    operator++();
-}
-
-//
-// An iterator is exhausted if it is the end-iterator (_cursor == nullptr)
-// or if the underlying _cursor is marked exhausted.
-//
-bool cursor::iterator::is_exhausted() const {
-    return !_cursor || _cursor->_impl->is_exhausted();
-}
-
 bsoncxx::v_noabi::document::view const& cursor::iterator::operator*() const {
-    return _cursor->_impl->doc;
+    return _cursor->_doc;
 }
 
 bsoncxx::v_noabi::document::view const* cursor::iterator::operator->() const {
-    return &_cursor->_impl->doc;
+    return std::addressof(_cursor->_doc);
 }
 
-//
-// Iterators are equal if they point to the same underlying _cursor or if they
-// both are "at the end".  We check for exhaustion first because the most
-// common check is `iter != cursor.end()`.
-//
+cursor::iterator& cursor::iterator::operator++() {
+    if (_cursor) {
+        try {
+            v1::cursor::internal::advance_iterator(_cursor->_cursor);
+        } catch (v1::exception const& ex) {
+            _cursor->_doc = {};
+            throw_exception<v_noabi::query_exception>(ex);
+        }
+
+        // Backward compatibility: support `*iter -> T const&`.
+        _cursor->_doc = v1::cursor::internal::doc(_cursor->_cursor);
+    }
+    return *this;
+}
+
+cursor::iterator::iterator(cursor* cursor) : _cursor{cursor} {
+    if (_cursor) {
+        // Do not advance on consecutive calls to `.begin()`.
+        if (v1::cursor::internal::has_doc(_cursor->_cursor)) {
+            return;
+        }
+
+        try {
+            // Advance to first event on begin() to keep operator*() state-machine-free.
+            v1::cursor::internal::advance_iterator(_cursor->_cursor);
+        } catch (v1::exception const& ex) {
+            _cursor->_doc = {};
+            throw_exception<v_noabi::query_exception>(ex);
+        }
+
+        // Backward compatibility: support `*iter -> T const&`.
+        _cursor->_doc = v1::cursor::internal::doc(_cursor->_cursor);
+    }
+}
+
 bool operator==(cursor::iterator const& lhs, cursor::iterator const& rhs) {
-    return ((rhs.is_exhausted() && lhs.is_exhausted()) || (lhs._cursor == rhs._cursor));
+    return (rhs.is_exhausted() && lhs.is_exhausted()) || lhs._cursor == rhs._cursor;
 }
 
-bool operator!=(cursor::iterator const& lhs, cursor::iterator const& rhs) {
-    return !(lhs == rhs);
+bool cursor::iterator::is_exhausted() const {
+    return !_cursor || !v1::cursor::internal::has_doc(_cursor->_cursor);
 }
 
 } // namespace v_noabi

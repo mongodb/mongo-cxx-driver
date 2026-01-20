@@ -12,4 +12,25 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <mongocxx/v1/transaction.hpp>
+#pragma once
+
+#include <mongocxx/v1/update_many_result.hpp> // IWYU pragma: export
+
+//
+
+#include <mongocxx/v1/bulk_write.hpp>
+
+#include <mongocxx/private/export.hh>
+
+namespace mongocxx {
+namespace v1 {
+
+class update_many_result::internal {
+   public:
+    static MONGOCXX_ABI_EXPORT_CDECL_TESTING(update_many_result) make(v1::bulk_write::result result);
+
+    static MONGOCXX_ABI_EXPORT_CDECL_TESTING(v1::bulk_write::result&) result(update_many_result& self);
+};
+
+} // namespace v1
+} // namespace mongocxx

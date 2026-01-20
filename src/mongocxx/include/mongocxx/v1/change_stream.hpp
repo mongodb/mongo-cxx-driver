@@ -95,7 +95,11 @@ class change_stream {
     ///
     /// @important All iterators associated with the same change stream object share the same state.
     ///
-    /// This function advances the underlying cursor to obtain the next (first) event document.
+    /// This function advances the underlying cursor to obtain the first available event document. The underlying cursor
+    /// is only advanced at most once: consecutive calls to `this->begin()` do not advance the underlying cursor state.
+    /// To obtain subsequent available event documents, the resulting iterator must be incremented instead.
+    ///
+    /// @warning Invalidates all views to the current event document and resume token.
     ///
     /// @throws mongocxx::v1::server_error when a server-side error is encountered.
     ///
@@ -114,6 +118,11 @@ class change_stream {
     /// @returns Empty document when not available.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view>) get_resume_token() const;
+
+    class internal;
+
+   private:
+    /* explicit(false) */ change_stream(void* impl);
 };
 
 ///
@@ -272,6 +281,8 @@ class change_stream::options {
     ///
     MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::types::b_timestamp>) start_at_operation_time()
         const;
+
+    class internal;
 };
 
 ///
@@ -380,7 +391,7 @@ class change_stream::iterator {
     ///
     /// @note Pre-increment and post-increment are equivalent.
     ///
-    /// @warning Invalidates all views to the current event document.
+    /// @warning Invalidates all views to the current event document and resume token.
     ///
     /// @throws mongocxx::v1::server_error when a server-side error is encountered and a raw server error is available.
     /// @throws mongocxx::v1::exception for all other runtime errors.
@@ -408,6 +419,11 @@ class change_stream::iterator {
     friend bool operator!=(iterator const& lhs, iterator const& rhs) {
         return !(lhs == rhs);
     }
+
+    class internal;
+
+   private:
+    /* explicit(false) */ iterator(void* impl);
 };
 
 inline change_stream::iterator change_stream::end() const {

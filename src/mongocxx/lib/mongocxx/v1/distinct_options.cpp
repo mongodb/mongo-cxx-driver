@@ -57,6 +57,8 @@ class distinct_options::impl {
     }
 };
 
+// NOLINTBEGIN(cppcoreguidelines-owning-memory): owning void* for ABI stability.
+
 distinct_options::~distinct_options() {
     delete impl::with(this);
 }
@@ -82,6 +84,8 @@ distinct_options& distinct_options::operator=(distinct_options const& other) {
 }
 
 distinct_options::distinct_options() : _impl{new impl{}} {}
+
+// NOLINTEND(cppcoreguidelines-owning-memory)
 
 distinct_options& distinct_options::collation(bsoncxx::v1::document::value collation) {
     impl::with(this)->_collation = std::move(collation);

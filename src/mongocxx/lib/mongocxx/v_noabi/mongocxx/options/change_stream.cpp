@@ -12,137 +12,98 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <string>
+#include <mongocxx/options/change_stream.hh>
+
+//
+
+#include <mongocxx/v1/change_stream.hh>
+
+#include <cstdint>
+#include <limits>
+#include <utility>
 
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/builder/basic/kvp.hpp>
-#include <bsoncxx/builder/core.hpp>
+#include <bsoncxx/document/value.hpp>
+#include <bsoncxx/stdx/optional.hpp>
+#include <bsoncxx/stdx/string_view.hpp>
+#include <bsoncxx/types.hpp>
 
 #include <mongocxx/exception/error_code.hpp>
 #include <mongocxx/exception/logic_error.hpp>
-#include <mongocxx/options/change_stream.hpp>
 
 namespace mongocxx {
 namespace v_noabi {
 namespace options {
 
-change_stream::change_stream() = default;
-
-change_stream& change_stream::full_document(bsoncxx::v_noabi::string::view_or_value full_doc) {
-    _full_document = std::move(full_doc);
-    return *this;
-}
-
-bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value> const& change_stream::full_document() const {
-    return _full_document;
-}
-
-change_stream& change_stream::full_document_before_change(
-    bsoncxx::v_noabi::string::view_or_value full_doc_before_change) {
-    _full_document_before_change = std::move(full_doc_before_change);
-    return *this;
-}
-
-bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value> const&
-change_stream::full_document_before_change() const {
-    return _full_document_before_change;
-}
-
-change_stream& change_stream::batch_size(std::int32_t batch_size) {
-    _batch_size = batch_size;
-    return *this;
-}
-
-bsoncxx::v_noabi::stdx::optional<std::int32_t> const& change_stream::batch_size() const {
-    return _batch_size;
-}
-
-change_stream& change_stream::comment(bsoncxx::v_noabi::types::bson_value::view_or_value comment) {
-    _comment = std::move(comment);
-    return *this;
-}
-
-bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value> const& change_stream::comment()
-    const {
-    return _comment;
-}
-
-change_stream& change_stream::resume_after(bsoncxx::v_noabi::document::view_or_value resume_after) {
-    _resume_after = std::move(resume_after);
-    return *this;
-}
-
-bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const& change_stream::resume_after() const {
-    return _resume_after;
-}
-
-change_stream& change_stream::start_after(bsoncxx::v_noabi::document::view_or_value token) {
-    _start_after = std::move(token);
-    return *this;
-}
-
-bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const& change_stream::start_after() const {
-    return _start_after;
-}
-
-change_stream& change_stream::collation(bsoncxx::v_noabi::document::view_or_value collation) {
-    _collation = std::move(collation);
-    return *this;
-}
-
-bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const& change_stream::collation() const {
-    return _collation;
-}
-
-change_stream& change_stream::max_await_time(std::chrono::milliseconds max_time) {
-    _max_await_time = std::move(max_time);
-    return *this;
-}
-
-bsoncxx::v_noabi::stdx::optional<std::chrono::milliseconds> const& change_stream::max_await_time() const {
-    return _max_await_time;
-}
-
-change_stream& change_stream::start_at_operation_time(bsoncxx::v_noabi::types::b_timestamp timestamp) {
-    _start_at_operation_time = std::move(timestamp);
-    return *this;
-}
-
-bsoncxx::stdx::optional<bsoncxx::v_noabi::types::b_timestamp> const& change_stream::start_at_operation_time() const {
-    return _start_at_operation_time;
-}
+change_stream::change_stream(v1::change_stream::options opts)
+    : _full_document{std::move(v1::change_stream::options::internal::full_document(opts))},
+      _full_document_before_change{std::move(v1::change_stream::options::internal::full_document_before_change(opts))},
+      _batch_size{opts.batch_size()},
+      _comment{std::move(v1::change_stream::options::internal::comment(opts))},
+      _collation{[&]() -> decltype(_collation) {
+          if (auto& opt = v1::change_stream::options::internal::collation(opts)) {
+              return bsoncxx::v_noabi::from_v1(std::move(*opt));
+          }
+          return {};
+      }()},
+      _resume_after{[&]() -> decltype(_resume_after) {
+          if (auto& opt = v1::change_stream::options::internal::resume_after(opts)) {
+              return bsoncxx::v_noabi::from_v1(std::move(*opt));
+          }
+          return {};
+      }()},
+      _start_after{[&]() -> decltype(_start_after) {
+          if (auto& opt = v1::change_stream::options::internal::start_after(opts)) {
+              return bsoncxx::v_noabi::from_v1(std::move(*opt));
+          }
+          return {};
+      }()},
+      _max_await_time{opts.max_await_time()},
+      _start_at_operation_time{[&]() -> decltype(_start_at_operation_time) {
+          if (auto const opt = opts.start_at_operation_time()) {
+              return bsoncxx::v_noabi::from_v1(*opt);
+          }
+          return {};
+      }()} {}
 
 namespace {
+
 template <typename T>
-inline void append_if(
+void append_if(
     bsoncxx::v_noabi::builder::basic::document& doc,
-    std::string const& key,
+    bsoncxx::v_noabi::stdx::string_view key,
     bsoncxx::v_noabi::stdx::optional<T> const& opt) {
     if (opt) {
         doc.append(bsoncxx::v_noabi::builder::basic::kvp(key, opt.value()));
     }
 }
+
 } // namespace
 
-bsoncxx::v_noabi::document::value change_stream::as_bson() const {
+bsoncxx::v_noabi::document::value change_stream::internal::to_document(change_stream const& self) {
+    namespace builder = bsoncxx::v_noabi::builder::basic;
+
     // Construct new bson rep each time since values may change after this is called.
-    bsoncxx::v_noabi::builder::basic::document out{};
+    builder::document out{};
 
-    append_if(out, "fullDocument", full_document());
-    append_if(out, "fullDocumentBeforeChange", full_document_before_change());
-    append_if(out, "resumeAfter", resume_after());
-    append_if(out, "startAfter", start_after());
-    append_if(out, "batchSize", batch_size());
-    append_if(out, "collation", collation());
-    append_if(out, "comment", comment());
-    append_if(out, "startAtOperationTime", start_at_operation_time());
+    append_if(out, "fullDocument", self._full_document);
+    append_if(out, "fullDocumentBeforeChange", self._full_document_before_change);
+    append_if(out, "resumeAfter", self._resume_after);
+    append_if(out, "startAfter", self._start_after);
+    append_if(out, "batchSize", self._batch_size);
+    append_if(out, "collation", self._collation);
+    append_if(out, "comment", self._comment);
+    append_if(out, "startAtOperationTime", self._start_at_operation_time);
 
-    if (max_await_time()) {
-        auto count = max_await_time().value().count();
+    if (auto const& opt = self._max_await_time) {
+        auto const count = opt->count();
+
         if ((count < 0) || (count >= std::numeric_limits<std::uint32_t>::max())) {
-            throw mongocxx::v_noabi::logic_error{mongocxx::v_noabi::error_code::k_invalid_parameter};
+            throw v_noabi::logic_error{v_noabi::error_code::k_invalid_parameter};
         }
-        out.append(bsoncxx::v_noabi::builder::basic::kvp("maxAwaitTimeMS", static_cast<std::int64_t>(count)));
+
+        out.append(builder::kvp("maxAwaitTimeMS", static_cast<std::int64_t>(count)));
     }
 
     return out.extract();

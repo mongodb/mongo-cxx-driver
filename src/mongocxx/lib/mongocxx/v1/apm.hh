@@ -43,6 +43,19 @@ class apm::internal {
     template <typename T>
     using fn_type = std::function<void MONGOCXX_ABI_CDECL(T const&)>;
 
+    static fn_type<v1::events::command_started> const& command_started(apm const& self);
+    static fn_type<v1::events::command_failed> const& command_failed(apm const& self);
+    static fn_type<v1::events::command_succeeded> const& command_succeeded(apm const& self);
+    static fn_type<v1::events::server_closed> const& server_closed(apm const& self);
+    static fn_type<v1::events::server_description_changed> const& server_description_changed(apm const& self);
+    static fn_type<v1::events::server_opening> const& server_opening(apm const& self);
+    static fn_type<v1::events::topology_closed> const& topology_closed(apm const& self);
+    static fn_type<v1::events::topology_description_changed> const& topology_description_changed(apm const& self);
+    static fn_type<v1::events::topology_opening> const& topology_opening(apm const& self);
+    static fn_type<v1::events::server_heartbeat_started> const& server_heartbeat_started(apm const& self);
+    static fn_type<v1::events::server_heartbeat_failed> const& server_heartbeat_failed(apm const& self);
+    static fn_type<v1::events::server_heartbeat_succeeded> const& server_heartbeat_succeeded(apm const& self);
+
     static fn_type<v1::events::command_started>& command_started(apm& self);
     static fn_type<v1::events::command_failed>& command_failed(apm& self);
     static fn_type<v1::events::command_succeeded>& command_succeeded(apm& self);

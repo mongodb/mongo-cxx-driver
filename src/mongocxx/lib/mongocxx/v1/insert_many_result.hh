@@ -14,19 +14,28 @@
 
 #pragma once
 
-#include <mongocxx/v1/detail/prelude.hpp>
+#include <mongocxx/v1/insert_many_result.hpp> // IWYU pragma: export
+
+//
+
+#include <bsoncxx/v1/array/value-fwd.hpp>
+
+#include <mongocxx/v1/bulk_write.hpp>
+
+#include <mongocxx/private/export.hh>
 
 namespace mongocxx {
 namespace v1 {
 
-class transaction;
+class insert_many_result::internal {
+   public:
+    static MONGOCXX_ABI_EXPORT_CDECL_TESTING(insert_many_result) make(
+        v1::bulk_write::result result,
+        bsoncxx::v1::array::value inserted_ids);
+
+    static MONGOCXX_ABI_EXPORT_CDECL_TESTING(v1::bulk_write::result&) result(insert_many_result& self);
+    static MONGOCXX_ABI_EXPORT_CDECL_TESTING(bsoncxx::v1::array::value&) inserted_ids(insert_many_result& self);
+};
 
 } // namespace v1
 } // namespace mongocxx
-
-#include <mongocxx/v1/detail/postlude.hpp>
-
-///
-/// @file
-/// Declares @ref mongocxx::v1::transaction.
-///

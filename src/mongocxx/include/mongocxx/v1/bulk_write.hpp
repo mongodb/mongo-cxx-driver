@@ -53,6 +53,10 @@ namespace v1 {
 /// @attention This feature is experimental! It is not ready for use!
 ///
 class bulk_write {
+   private:
+    class impl;
+    void* _impl;
+
    public:
     ///
     /// Enumeration identifying the type of a write operation.
@@ -100,6 +104,37 @@ class bulk_write {
     class result;
 
     ///
+    /// Destroy this object.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL() ~bulk_write();
+
+    ///
+    /// Move constructor.
+    ///
+    /// @par Postconditions:
+    /// - `other` is in an assign-or-destroy-only state.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL() bulk_write(bulk_write&& other) noexcept;
+
+    ///
+    /// Move assignment.
+    ///
+    /// @par Postconditions:
+    /// - `other` is in an assign-or-destroy-only state.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(bulk_write&) operator=(bulk_write&& other) noexcept;
+
+    ///
+    /// This class is not copyable.
+    ///
+    bulk_write(bulk_write const& other) = delete;
+
+    ///
+    /// This class is not copyable.
+    ///
+    bulk_write& operator=(bulk_write const& other) = delete;
+
+    ///
     /// Return true when there are no appended operations.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(bool) empty() const;
@@ -109,7 +144,7 @@ class bulk_write {
     ///
     /// @throws mongocxx::v1::exception when a client-side error is encountered.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bulk_write&) append(single op);
+    MONGOCXX_ABI_EXPORT_CDECL(bulk_write&) append(single const& op);
 
     ///
     /// Execute the appended operations.
@@ -120,6 +155,11 @@ class bulk_write {
     /// @throws mongocxx::v1::exception for all other runtime errors.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<result>) execute();
+
+    class internal;
+
+   private:
+    /* explicit(false) */ bulk_write(void* bulk);
 };
 
 ///
@@ -281,6 +321,8 @@ class bulk_write::update_one {
     /// Return the current "arrayFilters" field.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::array::view>) array_filters() const;
+
+    class internal;
 };
 
 ///
@@ -398,6 +440,11 @@ class bulk_write::update_many {
     /// Return the current "arrayFilters" field.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::array::view>) array_filters() const;
+
+    class internal;
+
+   private:
+    /* explicit(false) */ update_many(void* impl);
 };
 
 ///
@@ -514,6 +561,11 @@ class bulk_write::replace_one {
     /// Return the current "upsert" field.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bool>) upsert() const;
+
+    class internal;
+
+   private:
+    /* explicit(false) */ replace_one(void* impl);
 };
 
 ///
@@ -600,6 +652,11 @@ class bulk_write::delete_one {
     /// Return the current "hint" field.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<v1::hint>) hint() const;
+
+    class internal;
+
+   private:
+    /* explicit(false) */ delete_one(void* impl);
 };
 
 ///
@@ -686,6 +743,11 @@ class bulk_write::delete_many {
     /// Return the current "hint" field.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<v1::hint>) hint() const;
+
+    class internal;
+
+   private:
+    /* explicit(false) */ delete_many(void* impl);
 };
 
 ///
@@ -825,6 +887,8 @@ class bulk_write::single {
     MONGOCXX_ABI_EXPORT_CDECL(replace_one&&) get_replace_one() &&;
     /// @}
     ///
+
+    class internal;
 };
 
 ///
@@ -886,7 +950,8 @@ class bulk_write::options {
     /// Default initialization.
     ///
     /// @par Postconditions:
-    /// - All supported fields are "unset" or zero-initialized.
+    /// - `this->ordered() == true`.
+    /// - All other supported fields are "unset" or zero-initialized.
     ///
     MONGOCXX_ABI_EXPORT_CDECL() options();
 
@@ -898,7 +963,7 @@ class bulk_write::options {
     ///
     /// Return the current "bypassDocumentValidation" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bool> const) bypass_document_validation() const;
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bool>) bypass_document_validation() const;
 
     ///
     /// Set the "comment" field.
@@ -908,7 +973,7 @@ class bulk_write::options {
     ///
     /// Return the current "comment" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::types::view> const) comment() const;
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::types::view>) comment() const;
 
     ///
     /// Set the "let" field.
@@ -918,7 +983,7 @@ class bulk_write::options {
     ///
     /// Return the current "let" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view> const) let() const;
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view>) let() const;
 
     ///
     /// Set the "ordered" field.
@@ -939,6 +1004,11 @@ class bulk_write::options {
     /// Return the current "writeConcern" field.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<v1::write_concern>) write_concern() const;
+
+    class internal;
+
+   private:
+    /* explicit(false) */ options(void* impl);
 };
 
 ///
@@ -999,14 +1069,6 @@ class bulk_write::result {
     MONGOCXX_ABI_EXPORT_CDECL(result&) operator=(result const& other);
 
     ///
-    /// Default initialization.
-    ///
-    /// @par Postconditions:
-    /// - All supported fields are "unset" or zero-initialized.
-    ///
-    MONGOCXX_ABI_EXPORT_CDECL() result();
-
-    ///
     /// Return the value of the "insertedCount" field.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(std::int64_t) inserted_count() const;
@@ -1054,6 +1116,11 @@ class bulk_write::result {
     }
     /// @}
     ///
+
+    class internal;
+
+   private:
+    /* explicit(false) */ result(void* impl);
 };
 
 } // namespace v1

@@ -537,7 +537,7 @@ class database {
     friend ::mongocxx::v_noabi::client;
     friend ::mongocxx::v_noabi::collection;
 
-    database(mongocxx::v_noabi::client const& client, bsoncxx::v_noabi::string::view_or_value name);
+    database(void* client, bsoncxx::v_noabi::string::view_or_value name);
 
     cursor _aggregate(client_session const* session, pipeline const& pipeline, options::aggregate const& options);
 
@@ -564,6 +564,9 @@ class database {
     change_stream _watch(client_session const* session, pipeline const& pipe, options::change_stream const& options);
 
     class impl;
+
+    template <typename Self>
+    static auto _get_impl(Self& self) -> decltype(*self._impl);
 
     impl& _get_impl();
     impl const& _get_impl() const;

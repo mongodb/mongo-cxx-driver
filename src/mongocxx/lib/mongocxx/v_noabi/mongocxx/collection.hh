@@ -20,27 +20,24 @@
 #include <mongocxx/collection.hpp> // IWYU pragma: export
 #include <mongocxx/database.hpp>
 
-#include <bsoncxx/private/helpers.hh>
-
 #include <mongocxx/database.hh>
 #include <mongocxx/read_preference.hh>
 #include <mongocxx/write_concern.hh>
+
+#include <bsoncxx/private/helpers.hh>
+
+#include <mongocxx/private/mongoc.hh>
 
 namespace mongocxx {
 namespace v_noabi {
 
 class collection::impl {
    public:
-    impl(
-        mongoc_collection_t* collection,
-        bsoncxx::v_noabi::stdx::string_view database_name,
-        mongocxx::v_noabi::client::impl const* client)
-        : collection_t(collection), database_name(std::move(database_name)), client_impl(client) {}
+    impl(mongoc_collection_t* collection, bsoncxx::v_noabi::stdx::string_view database_name, mongoc_client_t* client)
+        : collection_t(collection), database_name(std::move(database_name)), client(client) {}
 
     impl(impl const& i)
-        : collection_t{libmongoc::collection_copy(i.collection_t)},
-          database_name{i.database_name},
-          client_impl{i.client_impl} {}
+        : collection_t{libmongoc::collection_copy(i.collection_t)}, database_name{i.database_name}, client{i.client} {}
 
     impl& operator=(impl const& i) {
         if (this != &i) {
@@ -48,7 +45,7 @@ class collection::impl {
             collection_t = libmongoc::collection_copy(i.collection_t);
 
             database_name = i.database_name;
-            client_impl = i.client_impl;
+            client = i.client;
         }
 
         return *this;
@@ -60,7 +57,7 @@ class collection::impl {
 
     mongoc_collection_t* collection_t;
     std::string database_name;
-    mongocxx::v_noabi::client::impl const* client_impl;
+    mongoc_client_t* client;
 };
 
 } // namespace v_noabi
