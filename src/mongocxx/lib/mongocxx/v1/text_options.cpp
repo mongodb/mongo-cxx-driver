@@ -103,6 +103,7 @@ text_options::text_options() : _impl{new impl{}} {}
 
 text_options::prefix::~prefix() {
     delete static_cast<common_fields*>(_impl);
+    _impl = nullptr; // warning: Attempt to free released memory [cplusplus.NewDelete]
 }
 
 text_options::prefix::prefix(prefix&& other) noexcept : _impl{exchange(other._impl, nullptr)} {}
@@ -130,6 +131,7 @@ text_options::prefix& text_options::prefix::operator=(prefix const& other) {
 text_options::prefix::prefix() : _impl{new common_fields{}} {}
 text_options::suffix::~suffix() {
     delete static_cast<common_fields*>(_impl);
+    _impl = nullptr; // warning: Attempt to free released memory [cplusplus.NewDelete]
 }
 
 text_options::suffix::suffix(suffix&& other) noexcept : _impl{exchange(other._impl, nullptr)} {}
@@ -157,6 +159,7 @@ text_options::suffix& text_options::suffix::operator=(suffix const& other) {
 text_options::suffix::suffix() : _impl{new common_fields{}} {}
 text_options::substring::~substring() {
     delete static_cast<common_fields*>(_impl);
+    _impl = nullptr; // warning: Attempt to free released memory [cplusplus.NewDelete]
 }
 
 text_options::substring::substring(substring&& other) noexcept : _impl{exchange(other._impl, nullptr)} {}
