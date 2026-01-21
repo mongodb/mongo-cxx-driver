@@ -79,21 +79,8 @@ struct session_mocks_type {
     session_mocks_type& operator=(session_mocks_type const& other) = delete;
 
     session_mocks_type() {
-        client_destroy
-            ->interpose([&](mongoc_client_t* ptr) -> void {
-                if (ptr) {
-                    CHECK(ptr == client_id);
-                }
-            })
-            .forever();
-
-        destroy
-            ->interpose([&](mongoc_client_session_t* ptr) -> void {
-                if (ptr) {
-                    CHECK(ptr == session_id);
-                }
-            })
-            .forever();
+        client_destroy->interpose([&](mongoc_client_t* ptr) -> void { CHECK(ptr == client_id); }).forever();
+        destroy->interpose([&](mongoc_client_session_t* ptr) -> void { CHECK(ptr == session_id); }).forever();
     }
 
     client_session make() {
@@ -131,13 +118,7 @@ TEST_CASE("exceptions", "[mongocxx][v1][client_session]") {
         auto const txn_id = reinterpret_cast<mongoc_transaction_opt_t*>(&txn_identity);
 
         auto txn_destroy = libmongoc::transaction_opts_destroy.create_instance();
-        txn_destroy
-            ->interpose([&](mongoc_transaction_opt_t* ptr) -> void {
-                if (ptr) {
-                    CHECK(ptr == txn_id);
-                }
-            })
-            .forever();
+        txn_destroy->interpose([&](mongoc_transaction_opt_t* ptr) -> void { CHECK(ptr == txn_id); }).forever();
         auto const txn_opts = v1::transaction_options::internal::make(txn_id);
 
         auto const op = [&](mongoc_transaction_opt_t* txn_opts_ptr) {
@@ -548,12 +529,10 @@ TEST_CASE("ownership", "[mongocxx][v1][client_session]") {
     auto destroy = libmongoc::client_session_destroy.create_instance();
     destroy
         ->interpose([&](mongoc_client_session_t* ptr) -> void {
-            if (ptr) {
-                if (ptr != session1 && ptr != session2) {
-                    FAIL("unexpected mongoc_client_t");
-                }
-                ++destroy_count;
+            if (ptr != session1 && ptr != session2) {
+                FAIL_CHECK("unexpected mongoc_client_t");
             }
+            ++destroy_count;
         })
         .forever();
 
@@ -698,10 +677,8 @@ TEST_CASE("opts", "[mongocxx][v1][client_session]") {
 
     int destroy_counter = 0;
     opts_destroy->interpose([&](mongoc_session_opt_t* ptr) -> void {
-        if (ptr) {
-            CHECK(ptr == opts_id);
-            ++destroy_counter;
-        }
+        CHECK(ptr == opts_id);
+        ++destroy_counter;
     });
 
     int get_counter = 0;
@@ -925,13 +902,7 @@ TEST_CASE("start_transaction", "[mongocxx][v1][client_session]") {
         auto const txn_id = reinterpret_cast<mongoc_transaction_opt_t*>(&txn_identity);
 
         auto txn_destroy = libmongoc::transaction_opts_destroy.create_instance();
-        txn_destroy
-            ->interpose([&](mongoc_transaction_opt_t* ptr) -> void {
-                if (ptr) {
-                    CHECK(ptr == txn_id);
-                }
-            })
-            .forever();
+        txn_destroy->interpose([&](mongoc_transaction_opt_t* ptr) -> void { CHECK(ptr == txn_id); }).forever();
         auto const txn_opts = v1::transaction_options::internal::make(txn_id);
 
         auto start_transaction = libmongoc::client_session_start_transaction.create_instance();
@@ -1185,13 +1156,7 @@ TEST_CASE("causal_consistency", "[mongocxx][v1][client_session][options]") {
 
     auto const input = GENERATE(false, true);
 
-    destroy
-        ->interpose([&](mongoc_session_opt_t* ptr) -> void {
-            if (ptr) {
-                CHECK(ptr == opts_id);
-            }
-        })
-        .forever();
+    destroy->interpose([&](mongoc_session_opt_t* ptr) -> void { CHECK(ptr == opts_id); }).forever();
     set_causal_consistency
         ->interpose([&](mongoc_session_opt_t* ptr, bool v) -> void {
             CHECK(ptr == opts_id);
@@ -1227,13 +1192,7 @@ TEST_CASE("snapshot", "[mongocxx][v1][client_session][options]") {
 
     auto const input = GENERATE(false, true);
 
-    destroy
-        ->interpose([&](mongoc_session_opt_t* ptr) -> void {
-            if (ptr) {
-                CHECK(ptr == opts_id);
-            }
-        })
-        .forever();
+    destroy->interpose([&](mongoc_session_opt_t* ptr) -> void { CHECK(ptr == opts_id); }).forever();
     set_snapshot
         ->interpose([&](mongoc_session_opt_t* ptr, bool v) -> void {
             CHECK(ptr == opts_id);
@@ -1273,13 +1232,7 @@ TEST_CASE("default_transaction_opts", "[mongocxx][v1][client_session][options]")
     auto txn_destroy = libmongoc::transaction_opts_destroy.create_instance();
     auto txn_clone = libmongoc::transaction_opts_clone.create_instance();
 
-    destroy
-        ->interpose([&](mongoc_session_opt_t* ptr) -> void {
-            if (ptr) {
-                CHECK(ptr == opts_id);
-            }
-        })
-        .forever();
+    destroy->interpose([&](mongoc_session_opt_t* ptr) -> void { CHECK(ptr == opts_id); }).forever();
     set_default_transaction_opts
         ->interpose([&](mongoc_session_opt_t* ptr, mongoc_transaction_opt_t const* txn_opts) -> void {
             CHECK(ptr == opts_id);

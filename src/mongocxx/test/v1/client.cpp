@@ -180,13 +180,7 @@ struct client_mocks_type {
             })
             .forever();
 
-        client_destroy
-            ->interpose([&](mongoc_client_t* ptr) {
-                if (ptr) {
-                    CHECK(ptr == client_id);
-                }
-            })
-            .forever();
+        client_destroy->interpose([&](mongoc_client_t* ptr) { CHECK(ptr == client_id); }).forever();
 
         client_new_from_uri_with_error
             ->interpose([&](mongoc_uri_t const* uri, bson_error_t* error) -> mongoc_client_t* {
@@ -217,13 +211,7 @@ struct session_mocks_type {
     scoped_bson doc{R"({"sessionId": 123})"};
 
     session_mocks_type() {
-        destroy
-            ->interpose([&](mongoc_client_session_t* ptr) -> void {
-                if (ptr) {
-                    CHECK(ptr == session_id);
-                }
-            })
-            .forever();
+        destroy->interpose([&](mongoc_client_session_t* ptr) -> void { CHECK(ptr == session_id); }).forever();
 
         append
             ->interpose([&](mongoc_client_session_t const* ptr, bson_t* out, bson_error_t* error) -> bool {
@@ -530,12 +518,10 @@ TEST_CASE("ownership", "[mongocxx][v1][client]") {
     auto destroy = libmongoc::client_destroy.create_instance();
     destroy
         ->interpose([&](mongoc_client_t* ptr) -> void {
-            if (ptr) {
-                if (ptr != client1 && ptr != client2) {
-                    FAIL("unexpected mongoc_client_t");
-                }
-                ++destroy_count;
+            if (ptr != client1 && ptr != client2) {
+                FAIL_CHECK("unexpected mongoc_client_t");
             }
+            ++destroy_count;
         })
         .forever();
 
@@ -811,13 +797,7 @@ TEST_CASE("auto_encryption_opts", "[mongocxx][v1][client]") {
     auto opts_new = libmongoc::auto_encryption_opts_new.create_instance();
     auto enable_auto_encryption = libmongoc::client_enable_auto_encryption.create_instance();
 
-    opts_destroy
-        ->interpose([&](mongoc_auto_encryption_opts_t* ptr) {
-            if (ptr) {
-                CHECK(ptr == opts_id);
-            }
-        })
-        .forever();
+    opts_destroy->interpose([&](mongoc_auto_encryption_opts_t* ptr) { CHECK(ptr == opts_id); }).forever();
 
     opts_new->interpose([&]() -> mongoc_auto_encryption_opts_t* { return opts_id; }).forever();
 
@@ -836,10 +816,8 @@ TEST_CASE("auto_encryption_opts", "[mongocxx][v1][client]") {
         auto const kv_client_id = reinterpret_cast<mongoc_client_t*>(&kv_client_identity);
         auto kv_client = v1::client::internal::make(kv_client_id);
         mocks.client_destroy->interpose([&](mongoc_client_t* ptr) -> void {
-            if (ptr) {
-                if (ptr != kv_client_id) {
-                    FAIL_CHECK("unexpected mongoc_client_t");
-                }
+            if (ptr != kv_client_id) {
+                FAIL_CHECK("unexpected mongoc_client_t");
             }
         });
 
@@ -1023,11 +1001,7 @@ TEST_CASE("apm_opts", "[mongocxx][v1][client]") {
     auto set_server_heartbeat_failed = libmongoc::apm_set_server_heartbeat_failed_cb.create_instance();
     auto set_server_heartbeat_succeeded = libmongoc::apm_set_server_heartbeat_succeeded_cb.create_instance();
 
-    callbacks_destroy->interpose([&](mongoc_apm_callbacks_t* ptr) {
-        if (ptr) {
-            REQUIRE(ptr == callbacks_id);
-        }
-    });
+    callbacks_destroy->interpose([&](mongoc_apm_callbacks_t* ptr) { CHECK(ptr == callbacks_id); });
 
     callbacks_new->interpose([&]() -> mongoc_apm_callbacks_t* { return callbacks_id; }).forever();
 
@@ -1090,13 +1064,7 @@ TEST_CASE("server_api_opts", "[mongocxx][v1][client]") {
     auto server_api_new = libmongoc::server_api_new.create_instance();
     auto set_server_api = libmongoc::client_set_server_api.create_instance();
 
-    server_api_destroy
-        ->interpose([&](mongoc_server_api_t* ptr) {
-            if (ptr) {
-                CHECK(ptr == server_api_id);
-            }
-        })
-        .forever();
+    server_api_destroy->interpose([&](mongoc_server_api_t* ptr) { CHECK(ptr == server_api_id); }).forever();
 
     server_api_new
         ->interpose([&](mongoc_server_api_version_t version) -> mongoc_server_api_t* {
@@ -1212,13 +1180,7 @@ TEST_CASE("uri", "[mongocxx][v1][client]") {
         })
         .forever();
 
-    client_destroy
-        ->interpose([&](mongoc_client_t* ptr) {
-            if (ptr) {
-                CHECK(ptr == client_id);
-            }
-        })
-        .forever();
+    client_destroy->interpose([&](mongoc_client_t* ptr) { CHECK(ptr == client_id); }).forever();
 
     int new_count = 0;
     client_new_from_uri_with_error
@@ -1277,11 +1239,7 @@ TEST_CASE("list_databases", "[mongocxx][v1][client]") {
     auto cursor_destroy = libmongoc::cursor_destroy.create_instance();
     auto find_databases_with_opts = libmongoc::client_find_databases_with_opts.create_instance();
 
-    cursor_destroy->interpose([&](mongoc_cursor_t* ptr) -> void {
-        if (ptr) {
-            CHECK(ptr == cursor_id);
-        }
-    });
+    cursor_destroy->interpose([&](mongoc_cursor_t* ptr) -> void { CHECK(ptr == cursor_id); });
 
     auto client = mocks.make();
 
@@ -1390,11 +1348,7 @@ TEST_CASE("list_database_names", "[mongocxx][v1][client]") {
     auto cursor_destroy = libmongoc::cursor_destroy.create_instance();
     auto get_database_names_with_opts = libmongoc::client_get_database_names_with_opts.create_instance();
 
-    cursor_destroy->interpose([&](mongoc_cursor_t* ptr) -> void {
-        if (ptr) {
-            CHECK(ptr == cursor_id);
-        }
-    });
+    cursor_destroy->interpose([&](mongoc_cursor_t* ptr) -> void { CHECK(ptr == cursor_id); });
 
     auto client = mocks.make();
 
@@ -1567,13 +1521,7 @@ TEST_CASE("start_session", "[mongocxx][v1][client]") {
     auto start_session = libmongoc::client_start_session.create_instance();
     auto session_append = libmongoc::client_session_append.create_instance();
 
-    session_destroy
-        ->interpose([&](mongoc_client_session_t* ptr) -> void {
-            if (ptr) {
-                CHECK(ptr == session_id);
-            }
-        })
-        .forever();
+    session_destroy->interpose([&](mongoc_client_session_t* ptr) -> void { CHECK(ptr == session_id); }).forever();
 
     SECTION("no options") {
         int counter = 0;
@@ -1603,13 +1551,7 @@ TEST_CASE("start_session", "[mongocxx][v1][client]") {
         auto opts_destroy = libmongoc::session_opts_destroy.create_instance();
         auto opts_copy = libmongoc::session_opts_clone.create_instance();
 
-        opts_destroy
-            ->interpose([&](mongoc_session_opt_t* ptr) -> void {
-                if (ptr) {
-                    CHECK(ptr == opts_id);
-                }
-            })
-            .forever();
+        opts_destroy->interpose([&](mongoc_session_opt_t* ptr) -> void { CHECK(ptr == opts_id); }).forever();
         opts_copy
             ->interpose([&](mongoc_session_opt_t const* ptr) -> mongoc_session_opt_t* {
                 CHECK(ptr == opts_id);
@@ -1885,13 +1827,7 @@ TEST_CASE("watch", "[mongocxx][v1][client]") {
     auto change_stream_destroy = libmongoc::change_stream_destroy.create_instance();
     auto watch = libmongoc::client_watch.create_instance();
 
-    change_stream_destroy
-        ->interpose([&](mongoc_change_stream_t* ptr) {
-            if (ptr) {
-                CHECK(ptr == stream_id);
-            }
-        })
-        .forever();
+    change_stream_destroy->interpose([&](mongoc_change_stream_t* ptr) { CHECK(ptr == stream_id); }).forever();
 
     v1::change_stream::options stream_opts;
 
