@@ -145,11 +145,11 @@ TEST_CASE("exceptions", "[mongocxx][v1][client_session]") {
         };
 
         SECTION("no options") {
-            op(txn_id);
+            op(nullptr);
         }
 
         SECTION("with options") {
-            op(nullptr);
+            op(txn_id);
         }
     }
 
@@ -581,7 +581,7 @@ TEST_CASE("ownership", "[mongocxx][v1][client_session][options]") {
         ->interpose([&](mongoc_session_opt_t* ptr) -> void {
             if (ptr) {
                 if (ptr != opts1 && ptr != opts2 && ptr != opts3) {
-                    FAIL("unexpected mongoc_client_t");
+                    FAIL("unexpected mongoc_session_opt_t");
                 }
                 ++destroy_count;
             }
