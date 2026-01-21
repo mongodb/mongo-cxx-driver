@@ -73,6 +73,8 @@ class text_options::impl {
     }
 };
 
+// NOLINTBEGIN(cppcoreguidelines-owning-memory): owning void* for ABI stability.
+
 text_options::~text_options() {
     delete impl::with(_impl);
 }
@@ -178,6 +180,8 @@ text_options::substring& text_options::substring::operator=(substring const& oth
 
     return *this;
 }
+
+// NOLINTEND(cppcoreguidelines-owning-memory)
 
 text_options::substring::substring() : _impl{new common_fields{}} {}
 
