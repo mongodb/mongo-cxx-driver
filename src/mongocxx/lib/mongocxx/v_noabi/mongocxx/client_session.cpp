@@ -96,16 +96,6 @@ bool with_transaction_impl(mongoc_client_session_t*, void* ctx_vp, bson_t** repl
         }
 
         return false;
-    } catch (v1::exception const& ex) {
-        bson_set_error(error, 0u, static_cast<std::uint32_t>(ex.code().value()), "%s", ex.what());
-
-        if (auto const ptr = dynamic_cast<v1::server_error const*>(&ex)) {
-            *reply = scoped_bson_view{ptr->raw()}.copy();
-        } else if (auto const& reply_opt = v1::exception::internal::get_reply(ex)) {
-            *reply = scoped_bson_view{*reply_opt}.copy();
-        }
-
-        return false;
     } catch (...) {
         ctx->eptr = std::current_exception();
         bson_set_error(error, 0u, 0u, "unknown error"); // CDRIVER-3524
