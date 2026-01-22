@@ -45,6 +45,8 @@ TEST_CASE("Transaction tests", "[transactions]") {
             auto db = mongodb_client["test"];
             auto coll = db["txn_test"];
 
+            coll.drop();
+
             // Insert a document that should change in this test
             coll.insert_one(make_document(kvp("should_be_two", 1)));
 
@@ -87,8 +89,7 @@ TEST_CASE("Transaction tests", "[transactions]") {
             REQUIRE(coll.count_documents(make_document(kvp("x", 1))) == 1);
 
             // Cleanup
-            coll.find_one_and_delete(make_document(kvp("should_be_two", 2)));
-            coll.find_one_and_delete(make_document(kvp("x", 1)));
+            coll.drop();
         };
 
     SECTION(
@@ -158,6 +159,8 @@ TEST_CASE("Transaction tests", "[transactions]") {
         bool has_transient_error_null_str = false;
         bool has_transient_error_no_null_str = false;
 
+        coll.drop();
+
         auto session = mongodb_client.start_session();
 
         // Insert a document that should NOT change in this test
@@ -207,7 +210,7 @@ TEST_CASE("Transaction tests", "[transactions]") {
         REQUIRE(coll.count_documents(make_document(kvp("should_be_one", 1))) == 1);
 
         // Cleanup
-        coll.find_one_and_delete(make_document(kvp("should_be_one", 1)));
+        coll.drop();
     }
 }
 

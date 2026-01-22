@@ -27,6 +27,7 @@ class client::internal {
    public:
     static void disown(client& self);
 
+    static v1::client& as_v1(client& self);
     static mongoc_client_t* as_mongoc(client& self);
 };
 
