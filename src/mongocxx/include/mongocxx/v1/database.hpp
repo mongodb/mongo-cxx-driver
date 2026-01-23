@@ -170,13 +170,13 @@ class database {
     MONGOCXX_ABI_EXPORT_CDECL(v1::collection) create_collection(
         bsoncxx::v1::stdx::string_view name,
         bsoncxx::v1::document::view opts = {},
-        bsoncxx::v1::stdx::optional<v1::write_concern> wc = {});
+        bsoncxx::v1::stdx::optional<v1::write_concern> const& wc = {});
 
     MONGOCXX_ABI_EXPORT_CDECL(v1::collection) create_collection(
         v1::client_session const& session,
         bsoncxx::v1::stdx::string_view name,
         bsoncxx::v1::document::view opts = {},
-        bsoncxx::v1::stdx::optional<v1::write_concern> wc = {});
+        bsoncxx::v1::stdx::optional<v1::write_concern> const& wc = {});
     /// @}
     ///
 
@@ -190,11 +190,11 @@ class database {
     /// - [`dropDatabase` (database command) (MongoDB Manual)](https://www.mongodb.com/docs/manual/reference/command/dropDatabase/)
     ///
     /// @{
-    MONGOCXX_ABI_EXPORT_CDECL(void) drop(bsoncxx::v1::stdx::optional<v1::write_concern> wc = {});
+    MONGOCXX_ABI_EXPORT_CDECL(void) drop(bsoncxx::v1::stdx::optional<v1::write_concern> const& wc = {});
 
     MONGOCXX_ABI_EXPORT_CDECL(void) drop(
         v1::client_session const& session,
-        bsoncxx::v1::stdx::optional<v1::write_concern> wc = {});
+        bsoncxx::v1::stdx::optional<v1::write_concern> const& wc = {});
     /// @}
     ///
 
@@ -255,7 +255,7 @@ class database {
     /// @see
     /// - [Default MongoDB Read Concerns/Write Concerns (MongoDB Manual)](https://www.mongodb.com/docs/manual/reference/mongodb-defaults/)
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(void) read_concern(v1::read_concern rc);
+    MONGOCXX_ABI_EXPORT_CDECL(void) read_concern(v1::read_concern const& rc);
 
     ///
     /// Return the current default "readConcern" to use for operations on this database.
@@ -270,7 +270,7 @@ class database {
     /// @see
     /// - [Default MongoDB Read Concerns/Write Concerns (MongoDB Manual)](https://www.mongodb.com/docs/manual/reference/mongodb-defaults/)
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(void) read_preference(v1::read_preference rp);
+    MONGOCXX_ABI_EXPORT_CDECL(void) read_preference(v1::read_preference const& rp);
 
     ///
     /// Return the current default "readPreference" to use for operations on this database.
@@ -285,7 +285,7 @@ class database {
     /// @see
     /// - [Default MongoDB Read Concerns/Write Concerns (MongoDB Manual)](https://www.mongodb.com/docs/manual/reference/mongodb-defaults/)
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(void) write_concern(v1::write_concern wc);
+    MONGOCXX_ABI_EXPORT_CDECL(void) write_concern(v1::write_concern const& wc);
 
     ///
     /// Return the current default "writeConcern" to use for operations on this database.
