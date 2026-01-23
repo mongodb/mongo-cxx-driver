@@ -650,7 +650,7 @@ class bucket {
     friend ::mongocxx::v_noabi::database;
 
     // Constructs a new GridFS bucket.  Throws if options are invalid.
-    bucket(database const& db, options::gridfs::bucket const& options);
+    bucket(database& db, options::gridfs::bucket const& options);
 
     void create_indexes_if_nonexistent(client_session const* session);
 

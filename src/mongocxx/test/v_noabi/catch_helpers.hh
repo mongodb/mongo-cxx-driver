@@ -115,6 +115,8 @@ class mongocxx_exception_matcher : public Catch::Matchers::MatcherBase<mongocxx:
 #define MOCK_DATABASE                                                                                                  \
     auto get_database = libmongoc::client_get_database.create_instance();                                              \
     get_database->interpose([&](mongoc_client_t*, char const*) { return nullptr; });                                   \
+    auto database_get_name = libmongoc::database_get_name.create_instance();                                           \
+    database_get_name->interpose([](mongoc_database_t*) -> char const* { return "mocked_collection"; }).forever();     \
     auto database_set_read_concern = libmongoc::database_set_read_concern.create_instance();                           \
     auto database_set_preference = libmongoc::database_set_read_prefs.create_instance();                               \
     database_set_preference->interpose([](mongoc_database_t*, mongoc_read_prefs_t const*) {}).forever();               \

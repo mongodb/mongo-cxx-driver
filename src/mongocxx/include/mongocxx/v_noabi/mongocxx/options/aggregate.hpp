@@ -453,6 +453,8 @@ class aggregate {
         return _comment;
     }
 
+    class internal;
+
    private:
     bsoncxx::v_noabi::stdx::optional<bool> _allow_disk_use;
     bsoncxx::v_noabi::stdx::optional<std::int32_t> _batch_size;

@@ -47,11 +47,11 @@
 #include <mongocxx/result/replace_one.hpp>
 #include <mongocxx/result/update.hpp>
 
-#include <mongocxx/append_aggregate_options.hh>
 #include <mongocxx/bulk_write.hh>
 #include <mongocxx/client_session.hh>
 #include <mongocxx/collection.hh>
 #include <mongocxx/mongoc_error.hh>
+#include <mongocxx/options/aggregate.hh>
 #include <mongocxx/options/change_stream.hh>
 #include <mongocxx/pipeline.hh>
 #include <mongocxx/read_concern.hh>
@@ -253,19 +253,21 @@ void collection::rename(
     return _rename(&session, new_name, drop_target_before_rename, wc);
 }
 
-collection::collection(database const& database, bsoncxx::v_noabi::string::view_or_value collection_name)
+collection::collection(database& database, bsoncxx::v_noabi::string::view_or_value collection_name)
     : _impl(
           bsoncxx::make_unique<impl>(
-              libmongoc::database_get_collection(database._get_impl().database_t, collection_name.terminated().data()),
+              libmongoc::database_get_collection(
+                  v_noabi::database::internal::as_mongoc(database),
+                  collection_name.terminated().data()),
               database.name(),
-              database._get_impl().client)) {}
+              v_noabi::database::internal::get_client(database))) {}
 
-collection::collection(database const& database, void* collection)
+collection::collection(database& database, void* collection)
     : _impl(
           bsoncxx::make_unique<impl>(
               static_cast<mongoc_collection_t*>(collection),
               database.name(),
-              database._get_impl().client)) {}
+              v_noabi::database::internal::get_client(database))) {}
 
 collection::collection(collection const& c) {
     if (c) {
@@ -454,9 +456,9 @@ collection::find_one(client_session const& session, view_or_value filter, option
 
 cursor
 collection::_aggregate(client_session const* session, pipeline const& pipeline, options::aggregate const& options) {
-    bsoncxx::v_noabi::builder::basic::document b;
+    scoped_bson b;
 
-    append_aggregate_options(b, options);
+    v_noabi::options::aggregate::internal::append_to(options, b);
 
     if (session) {
         v_noabi::client_session::internal::append_to(*session, b);
@@ -473,7 +475,7 @@ collection::_aggregate(client_session const* session, pipeline const& pipeline, 
             _get_impl().collection_t,
             static_cast<::mongoc_query_flags_t>(0),
             v_noabi::pipeline::internal::doc(pipeline).bson(),
-            mongocxx::to_scoped_bson_view(b),
+            b.bson(),
             read_prefs));
 }
 

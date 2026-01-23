@@ -305,7 +305,7 @@ class client_encryption::impl {
     }
 
     collection create_encrypted_collection(
-        database const& dbcxx,
+        database& dbcxx,
         mongoc_database_t* const db,
         std::string const& coll_name,
         bsoncxx::v_noabi::document::view const opts,

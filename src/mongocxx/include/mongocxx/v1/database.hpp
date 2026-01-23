@@ -343,6 +343,11 @@ class database {
     watch(v1::client_session const& session, v1::pipeline const& pipeline, v1::change_stream::options const& opts = {});
     /// @}
     ///
+
+    class internal;
+
+   private:
+    /* explicit(false) */ database(void* impl);
 };
 
 } // namespace v1

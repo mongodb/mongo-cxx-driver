@@ -22,6 +22,7 @@
 #include <mongocxx/v1/client.hh>
 #include <mongocxx/v1/client_session.hh>
 #include <mongocxx/v1/cursor.hh>
+#include <mongocxx/v1/database.hh>
 #include <mongocxx/v1/read_concern.hh>
 #include <mongocxx/v1/read_preference.hh>
 #include <mongocxx/v1/uri.hh>
@@ -188,7 +189,9 @@ v_noabi::database client::database(bsoncxx::v_noabi::string::view_or_value name)
     // NOLINTNEXTLINE(cppcoreguidelines-pro-type-const-cast)
     auto& c = const_cast<v1::client&>(check_moved_from(_client));
 
-    return v_noabi::database(v1::client::internal::as_mongoc(c), std::move(name));
+    return v1::database::internal::make(
+        libmongoc::client_get_database(v1::client::internal::as_mongoc(c), name.terminated().data()),
+        v1::client::internal::as_mongoc(c));
 }
 
 v_noabi::cursor client::list_databases() const {

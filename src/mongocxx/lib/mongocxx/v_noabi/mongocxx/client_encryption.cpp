@@ -58,9 +58,12 @@ collection client_encryption::create_encrypted_collection(
     bsoncxx::v_noabi::document::value& out_options,
     std::string const& kms_provider,
     bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view> const& masterkey) {
-    auto& db_impl = db._get_impl();
+    // Backward compatibility: `create_encrypted_collection()` is not logically const.
+    // NOLINTNEXTLINE(cppcoreguidelines-pro-type-const-cast)
+    auto& d = const_cast<v_noabi::database&>(db);
+
     return _impl->create_encrypted_collection(
-        db, db_impl.database_t, coll_name, options, out_options, kms_provider, masterkey);
+        d, v_noabi::database::internal::as_mongoc(d), coll_name, options, out_options, kms_provider, masterkey);
 }
 
 result::rewrap_many_datakey client_encryption::rewrap_many_datakey(

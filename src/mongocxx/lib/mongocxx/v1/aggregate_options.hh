@@ -28,11 +28,15 @@
 
 #include <bsoncxx/v1/stdx/optional.hpp>
 
+#include <mongocxx/private/scoped_bson.hh>
+
 namespace mongocxx {
 namespace v1 {
 
 class aggregate_options::internal {
    public:
+    static bsoncxx::v1::stdx::optional<v1::read_preference> const& read_preference(aggregate_options const& self);
+
     static bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value>& collation(aggregate_options& self);
     static bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value>& let(aggregate_options& self);
     static bsoncxx::v1::stdx::optional<v1::read_preference>& read_preference(aggregate_options& self);
@@ -40,6 +44,8 @@ class aggregate_options::internal {
     static bsoncxx::v1::stdx::optional<v1::write_concern>& write_concern(aggregate_options& self);
     static bsoncxx::v1::stdx::optional<v1::read_concern>& read_concern(aggregate_options& self);
     static bsoncxx::v1::stdx::optional<bsoncxx::v1::types::value>& comment(aggregate_options& self);
+
+    static void append_to(aggregate_options const& self, scoped_bson& doc);
 };
 
 } // namespace v1

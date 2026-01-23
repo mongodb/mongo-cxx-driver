@@ -14,20 +14,25 @@
 
 #pragma once
 
-#include <mongocxx/database.hpp> // IWYU pragma: export
+#include <mongocxx/v1/database.hpp> // IWYU pragma: export
 
 //
 
+#include <mongocxx/private/export.hh>
 #include <mongocxx/private/mongoc.hh>
 
 namespace mongocxx {
-namespace v_noabi {
+namespace v1 {
 
 class database::internal {
    public:
-    static mongoc_database_t* as_mongoc(database& self);
+    static MONGOCXX_ABI_EXPORT_CDECL_TESTING(database) make(mongoc_database_t* db, mongoc_client_t* client);
+
+    static MONGOCXX_ABI_EXPORT_CDECL_TESTING(mongoc_database_t const*) as_mongoc(database const& self);
+    static MONGOCXX_ABI_EXPORT_CDECL_TESTING(mongoc_database_t*) as_mongoc(database& self);
+
     static mongoc_client_t* get_client(database& self);
 };
 
-} // namespace v_noabi
+} // namespace v1
 } // namespace mongocxx

@@ -14,20 +14,21 @@
 
 #pragma once
 
-#include <mongocxx/database.hpp> // IWYU pragma: export
+#include <mongocxx/options/aggregate.hpp> // IWYU pragma: export
 
 //
 
-#include <mongocxx/private/mongoc.hh>
+#include <mongocxx/private/scoped_bson.hh>
 
 namespace mongocxx {
 namespace v_noabi {
+namespace options {
 
-class database::internal {
+class aggregate::internal {
    public:
-    static mongoc_database_t* as_mongoc(database& self);
-    static mongoc_client_t* get_client(database& self);
+    static void append_to(aggregate const& self, scoped_bson& doc);
 };
 
+} // namespace options
 } // namespace v_noabi
 } // namespace mongocxx
