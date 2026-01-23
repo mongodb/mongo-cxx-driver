@@ -19,6 +19,7 @@
 #include <bsoncxx/v1/array/value.hpp>
 #include <bsoncxx/v1/document/view.hpp>
 #include <bsoncxx/v1/stdx/optional.hpp>
+#include <bsoncxx/v1/stdx/string_view.hpp>
 
 #include <mongocxx/v1/client_session.hpp>
 #include <mongocxx/v1/database.hpp>
@@ -455,14 +456,14 @@ v1::uri client::uri() const {
     return v1::uri::internal::make(libmongoc::uri_copy(libmongoc::client_get_uri(impl::with(this)->_client)));
 }
 
-v1::database client::database(std::string name) {
+v1::database client::database(bsoncxx::v1::stdx::string_view name) {
     auto const _client = impl::with(this)->_client;
 
-    return v1::database::internal::make(libmongoc::client_get_database(_client, name.c_str()), _client);
+    return v1::database::internal::make(libmongoc::client_get_database(_client, std::string{name}.c_str()), _client);
 }
 
-v1::database client::operator[](std::string name) {
-    return this->database(std::move(name));
+v1::database client::operator[](bsoncxx::v1::stdx::string_view name) {
+    return this->database(name);
 }
 
 namespace {
