@@ -204,7 +204,7 @@ class database {
     /// @throws mongocxx::v1::server_error when a server-side error is encountered and a raw server error is available.
     /// @throws mongocxx::v1::exception for all other runtime errors.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bool) has_collection(bsoncxx::v1::stdx::string_view name) const;
+    MONGOCXX_ABI_EXPORT_CDECL(bool) has_collection(bsoncxx::v1::stdx::string_view name);
 
     ///
     /// Return an unsorted list of all collections and views in this database.
