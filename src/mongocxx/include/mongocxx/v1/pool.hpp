@@ -97,7 +97,7 @@ class pool {
     /// @throws mongocxx::v1::exception if a client-side error is encountered.
     ///
     /// @{
-    explicit MONGOCXX_ABI_EXPORT_CDECL() pool(v1::uri const& uri, options const& opts);
+    explicit MONGOCXX_ABI_EXPORT_CDECL() pool(v1::uri const& uri, options opts);
 
     explicit MONGOCXX_ABI_EXPORT_CDECL() pool(v1::uri const& uri);
     /// @}
