@@ -297,7 +297,11 @@ class pool::entry {
     ///
     /// Equivalent to `(*this)->database(name)`.
     ///
-    v1::database operator[](bsoncxx::v1::stdx::string_view name);
+    /// @{
+    MONGOCXX_ABI_EXPORT_CDECL(v1::database) database(bsoncxx::v1::stdx::string_view name);
+    MONGOCXX_ABI_EXPORT_CDECL(v1::database) operator[](bsoncxx::v1::stdx::string_view name);
+    /// @}
+    ///
 };
 
 } // namespace v1
