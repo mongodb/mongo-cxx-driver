@@ -24,12 +24,12 @@
 #include <mongocxx/v1/uri-fwd.hpp>
 
 #include <bsoncxx/v1/stdx/optional.hpp>
+#include <bsoncxx/v1/stdx/string_view.hpp>
 
 #include <mongocxx/v1/client.hpp> // IWYU pragma: export
 #include <mongocxx/v1/config/export.hpp>
 
 #include <cstddef>
-#include <string>
 #include <system_error>
 
 namespace mongocxx {
@@ -297,7 +297,7 @@ class pool::entry {
     ///
     /// Equivalent to `(*this)->database(name)`.
     ///
-    mongocxx::v1::database operator[](std::string name);
+    v1::database operator[](bsoncxx::v1::stdx::string_view name);
 };
 
 } // namespace v1
