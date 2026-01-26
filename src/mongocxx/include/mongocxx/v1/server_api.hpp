@@ -172,6 +172,8 @@ class server_api {
     friend std::error_code make_error_code(errc v) {
         return {static_cast<int>(v), error_category()};
     }
+
+    class internal;
 };
 
 } // namespace v1

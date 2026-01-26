@@ -21,6 +21,7 @@
 
 #include <string>
 
+#include <mongocxx/private/mongoc.hh>
 #include <mongocxx/private/utility.hh>
 
 namespace mongocxx {
@@ -176,6 +177,34 @@ bsoncxx::v1::stdx::optional<std::string>& tls::internal::ca_dir(tls& self) {
 
 bsoncxx::v1::stdx::optional<std::string>& tls::internal::crl_file(tls& self) {
     return impl::with(self)._crl_file;
+}
+
+mongoc_ssl_opt_t tls::internal::to_mongoc(v1::tls const& self) {
+    mongoc_ssl_opt_t ret = {};
+
+    if (auto const& opt = v1::tls::internal::pem_file(self)) {
+        ret.pem_file = opt->c_str();
+    }
+
+    if (auto const& opt = v1::tls::internal::pem_password(self)) {
+        ret.pem_pwd = opt->c_str();
+    }
+
+    if (auto const& opt = v1::tls::internal::ca_file(self)) {
+        ret.ca_file = opt->c_str();
+    }
+
+    if (auto const& opt = v1::tls::internal::ca_dir(self)) {
+        ret.ca_dir = opt->c_str();
+    }
+
+    if (auto const& opt = v1::tls::internal::crl_file(self)) {
+        ret.crl_file = opt->c_str();
+    }
+
+    ret.weak_cert_validation = self.allow_invalid_certificates().value_or(false);
+
+    return ret;
 }
 
 } // namespace v1

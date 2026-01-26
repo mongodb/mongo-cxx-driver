@@ -16,12 +16,17 @@
 
 //
 
-#include <mongocxx/v1/client-fwd.hpp>
 #include <mongocxx/v1/pool-fwd.hpp>
 
 #include <bsoncxx/v1/document/value.hpp>
 #include <bsoncxx/v1/stdx/optional.hpp>
 
+#include <mongocxx/v1/client.hh>
+
+#include <memory>
+
+#include <mongocxx/private/mongoc.hh>
+#include <mongocxx/private/scoped_bson.hh>
 #include <mongocxx/private/utility.hh>
 
 namespace mongocxx {
@@ -211,6 +216,51 @@ bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value>& auto_encryption_optio
 bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value>& auto_encryption_options::internal::extra_options(
     auto_encryption_options& self) {
     return impl::with(self)._extra_options;
+}
+
+std::unique_ptr<mongoc_auto_encryption_opts_t, auto_encryption_options::internal::mongoc_auto_encryption_opts_deleter>
+auto_encryption_options::internal::to_mongoc(v1::auto_encryption_options const& self) {
+    std::unique_ptr<mongoc_auto_encryption_opts_t, mongoc_auto_encryption_opts_deleter> ret{
+        libmongoc::auto_encryption_opts_new()};
+
+    auto const ptr = ret.get();
+
+    if (auto const& opt = self.key_vault_client()) {
+        libmongoc::auto_encryption_opts_set_keyvault_client(ptr, v1::client::internal::as_mongoc(*opt));
+    }
+
+    if (auto const& opt = self.key_vault_pool()) {
+        (void)opt; // TODO: v1::pool (CXX-3237)
+    }
+
+    if (auto const& opt = self.key_vault_namespace()) {
+        libmongoc::auto_encryption_opts_set_keyvault_namespace(ptr, opt->first.c_str(), opt->second.c_str());
+    }
+
+    if (auto const& opt = self.kms_providers()) {
+        libmongoc::auto_encryption_opts_set_kms_providers(ptr, scoped_bson_view{*opt}.bson());
+    }
+
+    if (auto const& opt = self.tls_opts()) {
+        libmongoc::auto_encryption_opts_set_tls_opts(ptr, scoped_bson_view{*opt}.bson());
+    }
+
+    if (auto const& opt = self.schema_map()) {
+        libmongoc::auto_encryption_opts_set_schema_map(ptr, scoped_bson_view{*opt}.bson());
+    }
+
+    if (auto const& opt = self.encrypted_fields_map()) {
+        libmongoc::auto_encryption_opts_set_encrypted_fields_map(ptr, scoped_bson_view{*opt}.bson());
+    }
+
+    libmongoc::auto_encryption_opts_set_bypass_auto_encryption(ptr, self.bypass_auto_encryption());
+    libmongoc::auto_encryption_opts_set_bypass_query_analysis(ptr, self.bypass_query_analysis());
+
+    if (auto const& opt = self.extra_options()) {
+        libmongoc::auto_encryption_opts_set_extra(ptr, scoped_bson_view{*opt}.bson());
+    }
+
+    return ret;
 }
 
 } // namespace v1
