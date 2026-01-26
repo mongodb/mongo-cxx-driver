@@ -21,7 +21,6 @@
 #include <bsoncxx/v1/document/value-fwd.hpp>
 #include <bsoncxx/v1/document/view-fwd.hpp>
 #include <bsoncxx/v1/types/value-fwd.hpp>
-#include <bsoncxx/v1/types/view-fwd.hpp>
 
 #include <bsoncxx/v1/stdx/optional.hpp>
 
@@ -63,6 +62,8 @@ class change_stream::options::internal {
     static bsoncxx::v1::stdx::optional<std::string>& full_document_before_change(options& self);
     static bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value>& resume_after(options& self);
     static bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value>& start_after(options& self);
+
+    static bsoncxx::v1::document::value to_document(options const& self);
 };
 
 class change_stream::iterator::internal {

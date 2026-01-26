@@ -125,9 +125,11 @@ TEST_CASE("mongocxx::database copy assignment operator", "[database]") {
 }
 
 TEST_CASE("A database", "[database]") {
-    bsoncxx::stdx::string_view database_name{"database"};
     MOCK_CLIENT;
     MOCK_DATABASE;
+
+    auto const database_name = "database";
+    database_get_name->interpose([&](mongoc_database_t*) -> char const* { return database_name; });
 
     client mongo_client{uri{}, test_util::add_test_server_api()};
 

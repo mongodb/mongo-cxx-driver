@@ -19,6 +19,7 @@
 #include <bsoncxx/v1/array/value.hpp>
 #include <bsoncxx/v1/document/view.hpp>
 #include <bsoncxx/v1/stdx/optional.hpp>
+#include <bsoncxx/v1/stdx/string_view.hpp>
 
 #include <mongocxx/v1/client_session.hpp>
 #include <mongocxx/v1/database.hpp>
@@ -32,6 +33,7 @@
 #include <mongocxx/v1/change_stream.hh>
 #include <mongocxx/v1/client_session.hh>
 #include <mongocxx/v1/cursor.hh>
+#include <mongocxx/v1/database.hh>
 #include <mongocxx/v1/events/command_failed.hh>
 #include <mongocxx/v1/events/command_started.hh>
 #include <mongocxx/v1/events/command_succeeded.hh>
@@ -53,7 +55,6 @@
 #include <iostream>
 #include <memory>
 #include <ostream>
-#include <stdexcept>
 #include <string>
 #include <system_error>
 #include <vector>
@@ -455,16 +456,14 @@ v1::uri client::uri() const {
     return v1::uri::internal::make(libmongoc::uri_copy(libmongoc::client_get_uri(impl::with(this)->_client)));
 }
 
-v1::database client::database(std::string name) {
-    // TODO: v1::database (CXX-3237)
-    (void)name;
-    MONGOCXX_PRIVATE_UNREACHABLE;
+v1::database client::database(bsoncxx::v1::stdx::string_view name) {
+    auto const _client = impl::with(this)->_client;
+
+    return v1::database::internal::make(libmongoc::client_get_database(_client, std::string{name}.c_str()), _client);
 }
 
-v1::database client::operator[](std::string name) {
-    // TODO: v1::database (CXX-3237)
-    (void)name;
-    MONGOCXX_PRIVATE_UNREACHABLE;
+v1::database client::operator[](bsoncxx::v1::stdx::string_view name) {
+    return this->database(name);
 }
 
 namespace {
@@ -597,65 +596,13 @@ v1::change_stream watch_impl(mongoc_client_t* client, bsoncxx::v1::array::view p
     return v1::change_stream::internal::make(libmongoc::client_watch(client, scoped_bson_view{pipeline}.bson(), opts));
 }
 
-bsoncxx::v1::document::value to_document(v1::change_stream::options const& opts) {
-    scoped_bson bson;
-
-    if (auto const& opt = v1::change_stream::options::internal::full_document(opts)) {
-        bson += scoped_bson{BCON_NEW("fullDocument", BCON_UTF8(opt->c_str()))};
-    }
-
-    if (auto const& opt = v1::change_stream::options::internal::full_document_before_change(opts)) {
-        bson += scoped_bson{BCON_NEW("fullDocumentBeforeChange", BCON_UTF8(opt->c_str()))};
-    }
-
-    if (auto const& opt = v1::change_stream::options::internal::resume_after(opts)) {
-        bson += scoped_bson{BCON_NEW("resumeAfter", BCON_DOCUMENT(scoped_bson_view{*opt}.bson()))};
-    }
-
-    if (auto const& opt = v1::change_stream::options::internal::start_after(opts)) {
-        bson += scoped_bson{BCON_NEW("startAfter", BCON_DOCUMENT(scoped_bson_view{*opt}.bson()))};
-    }
-
-    if (auto const opt = opts.batch_size()) {
-        bson += scoped_bson{BCON_NEW("batchSize", BCON_INT32(*opt))};
-    }
-
-    if (auto const& opt = v1::change_stream::options::internal::collation(opts)) {
-        bson += scoped_bson{BCON_NEW("collation", BCON_DOCUMENT(scoped_bson_view{*opt}.bson()))};
-    }
-
-    if (auto const& opt = v1::change_stream::options::internal::comment(opts)) {
-        scoped_bson v;
-
-        if (!BSON_APPEND_VALUE(v.inout_ptr(), "comment", &bsoncxx::v1::types::value::internal::get_bson_value(*opt))) {
-            throw std::logic_error{"mongocxx::v1::client::watch: BSON_APPEND_VALUE failed"};
-        }
-
-        bson += v;
-    }
-
-    if (auto const opt = opts.start_at_operation_time()) {
-        scoped_bson v;
-
-        // BCON_TIMESTAMP() incorrectly uses int32_ptr instead of uint32_ptr. Use BSON_*() API instead.
-        if (!BSON_APPEND_TIMESTAMP(v.inout_ptr(), "startAtOperationTime", opt->timestamp, opt->increment)) {
-            throw std::logic_error{"mongocxx::v1::client::watch: BSON_APPEND_TIMESTAMP failed"};
-        }
-
-        bson += v;
-    }
-
-    if (auto const opt = opts.max_await_time()) {
-        bson += scoped_bson{BCON_NEW("maxAwaitTimeMS", BCON_INT64(opt->count()))};
-    }
-
-    return std::move(bson).value();
-}
-
 } // namespace
 
 v1::change_stream client::watch(v1::change_stream::options const& opts) {
-    return watch_impl(impl::with(this)->_client, bsoncxx::v1::array::view{}, scoped_bson{to_document(opts)}.bson());
+    return watch_impl(
+        impl::with(this)->_client,
+        bsoncxx::v1::array::view{},
+        scoped_bson{v1::change_stream::options::internal::to_document(opts)}.bson());
 }
 
 v1::change_stream client::watch() {
@@ -670,7 +617,7 @@ v1::change_stream client::watch(v1::client_session const& session, v1::change_st
         v1::throw_exception(error);
     }
 
-    doc += to_document(opts);
+    doc += v1::change_stream::options::internal::to_document(opts);
     return watch_impl(impl::with(this)->_client, bsoncxx::v1::array::view{}, doc.bson());
 }
 
@@ -686,7 +633,10 @@ v1::change_stream client::watch(v1::client_session const& session) {
 }
 
 v1::change_stream client::watch(v1::pipeline const& pipeline, v1::change_stream::options const& opts) {
-    return watch_impl(impl::with(this)->_client, pipeline.view_array(), scoped_bson{to_document(opts)}.bson());
+    return watch_impl(
+        impl::with(this)->_client,
+        pipeline.view_array(),
+        scoped_bson{v1::change_stream::options::internal::to_document(opts)}.bson());
 }
 
 v1::change_stream
@@ -698,7 +648,7 @@ client::watch(v1::client_session const& session, v1::pipeline const& pipeline, v
         v1::throw_exception(error);
     }
 
-    doc += to_document(opts);
+    doc += v1::change_stream::options::internal::to_document(opts);
     return watch_impl(impl::with(this)->_client, pipeline.view_array(), doc.bson());
 }
 

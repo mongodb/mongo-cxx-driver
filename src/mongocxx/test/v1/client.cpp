@@ -25,6 +25,7 @@
 #include <mongocxx/v1/change_stream.hh>
 #include <mongocxx/v1/client_session.hh>
 #include <mongocxx/v1/cursor.hh>
+#include <mongocxx/v1/database.hh>
 #include <mongocxx/v1/tls.hh>
 #include <mongocxx/v1/uri.hh>
 
@@ -1230,7 +1231,29 @@ TEST_CASE("uri", "[mongocxx][v1][client]") {
 }
 
 TEST_CASE("database", "[mongocxx][v1][client]") {
-    // TODO: v1::database (CXX-3237)
+    client_mocks_type mocks;
+
+    identity_type database_identity;
+    auto const database_id = reinterpret_cast<mongoc_database_t*>(&database_identity);
+
+    auto database_destroy = libmongoc::database_destroy.create_instance();
+    auto get_database = libmongoc::client_get_database.create_instance();
+
+    auto const input = GENERATE("a", "b", "c");
+
+    database_destroy->interpose([&](mongoc_database_t* ptr) -> void { CHECK(ptr == database_id); });
+
+    get_database->interpose([&](mongoc_client_t* ptr, char const* name) -> mongoc_database_t* {
+        CHECK(ptr == mocks.client_id);
+        CHECK_THAT(name, Catch::Matchers::Equals(input));
+        return database_id;
+    });
+
+    auto client = mocks.make();
+
+    auto const db = client[input];
+
+    CHECK(v1::database::internal::as_mongoc(db) == database_id);
 }
 
 TEST_CASE("list_databases", "[mongocxx][v1][client]") {

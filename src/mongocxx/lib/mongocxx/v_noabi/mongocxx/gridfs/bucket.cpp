@@ -113,7 +113,7 @@ std::int64_t read_length_from_files_document(bsoncxx::v_noabi::document::view co
 
 } // namespace
 
-bucket::bucket(database const& db, options::gridfs::bucket const& options) {
+bucket::bucket(database& db, options::gridfs::bucket const& options) {
     std::string bucket_name = "fs";
     if (auto name = options.bucket_name()) {
         bucket_name = *name;

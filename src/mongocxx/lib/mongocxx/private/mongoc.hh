@@ -292,6 +292,7 @@ BSONCXX_PRIVATE_WARNINGS_POP();
     X(database_find_collections_with_opts)                                \
     X(database_get_collection_names_with_opts)                            \
     X(database_get_collection)                                            \
+    X(database_get_name)                                                  \
     X(database_get_read_concern)                                          \
     X(database_get_read_prefs)                                            \
     X(database_get_write_concern)                                         \

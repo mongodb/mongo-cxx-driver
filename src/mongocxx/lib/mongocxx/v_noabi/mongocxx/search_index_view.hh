@@ -13,9 +13,9 @@
 #include <mongocxx/pipeline.hpp>
 #include <mongocxx/search_index_view.hpp> // IWYU pragma: export
 
-#include <mongocxx/append_aggregate_options.hh>
 #include <mongocxx/client_session.hh>
 #include <mongocxx/mongoc_error.hh>
+#include <mongocxx/options/aggregate.hh>
 #include <mongocxx/read_preference.hh>
 #include <mongocxx/scoped_bson.hh>
 
@@ -71,9 +71,9 @@ class search_index_view::impl {
     }
 
     cursor list(client_session const* session, pipeline const& pipeline, options::aggregate const& options) {
-        bsoncxx::v_noabi::builder::basic::document opts_doc;
+        scoped_bson opts_doc;
 
-        append_aggregate_options(opts_doc, options);
+        v_noabi::options::aggregate::internal::append_to(options, opts_doc);
 
         if (session) {
             v_noabi::client_session::internal::append_to(*session, opts_doc);
@@ -90,7 +90,7 @@ class search_index_view::impl {
                 coll_copy.get(),
                 mongoc_query_flags_t(),
                 to_scoped_bson_view(pipeline.view_array()),
-                to_scoped_bson_view(opts_doc),
+                opts_doc.bson(),
                 read_prefs));
     }
 

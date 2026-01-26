@@ -1874,9 +1874,9 @@ class collection {
     friend ::mongocxx::v_noabi::client_encryption;
     friend ::mongocxx::v_noabi::database;
 
-    collection(database const& database, bsoncxx::v_noabi::string::view_or_value collection_name);
+    collection(database& database, bsoncxx::v_noabi::string::view_or_value collection_name);
 
-    collection(database const& database, void* collection);
+    collection(database& database, void* collection);
 
     cursor _aggregate(client_session const* session, pipeline const& pipeline, options::aggregate const& options);
 
