@@ -80,14 +80,14 @@ class pool {
     MONGOCXX_ABI_EXPORT_CDECL(pool&) operator=(pool&& other) noexcept;
 
     ///
-    /// Copy construction.
+    /// This class is immovable.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL() pool(pool const& other);
+    pool(pool const& other) = delete;
 
     ///
-    /// Copy assignment.
+    /// This class is immovable.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(pool&) operator=(pool const& other);
+    pool& operator=(pool const& other) = delete;
 
     ///
     /// Initialize this pool with the given URI.
@@ -262,14 +262,14 @@ class pool::entry {
     MONGOCXX_ABI_EXPORT_CDECL(entry&) operator=(entry&& other) noexcept;
 
     ///
-    /// Copy construction.
+    /// This class is not copyable.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL() entry(entry const& other);
+    entry(entry const& other) = delete;
 
     ///
-    /// Copy assignment.
+    /// This class is not copyable.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(entry&) operator=(entry const& other);
+    entry& operator=(entry const& other) = delete;
 
     ///
     /// Access the managed client.
