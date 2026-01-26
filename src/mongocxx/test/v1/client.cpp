@@ -1241,11 +1241,7 @@ TEST_CASE("database", "[mongocxx][v1][client]") {
 
     auto const input = GENERATE("a", "b", "c");
 
-    database_destroy->interpose([&](mongoc_database_t* ptr) -> void {
-        if (ptr) {
-            CHECK(ptr == database_id);
-        }
-    });
+    database_destroy->interpose([&](mongoc_database_t* ptr) -> void { CHECK(ptr == database_id); });
 
     get_database->interpose([&](mongoc_client_t* ptr, char const* name) -> mongoc_database_t* {
         CHECK(ptr == mocks.client_id);
