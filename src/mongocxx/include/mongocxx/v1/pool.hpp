@@ -113,6 +113,11 @@ class pool {
     explicit MONGOCXX_ABI_EXPORT_CDECL() pool();
 
     ///
+    /// Return true when `*this` is NOT in an assign-or-destroy-only state.
+    ///
+    explicit MONGOCXX_ABI_EXPORT_CDECL() operator bool() const;
+
+    ///
     /// Return a client object associated with this pool.
     ///
     /// This function blocks the current thread until a client object is available or "waitQueueTimeoutMS" is
