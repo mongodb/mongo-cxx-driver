@@ -481,5 +481,9 @@ void apm::internal::set_apm_callbacks(mongoc_client_t* client, v1::apm& apm) {
     libmongoc::client_set_apm_callbacks(client, apm_callbacks{apm}._callbacks, &apm);
 }
 
+void apm::internal::set_apm_callbacks(mongoc_client_pool_t* pool, v1::apm& apm) {
+    libmongoc::client_pool_set_apm_callbacks(pool, apm_callbacks{apm}._callbacks, &apm);
+}
+
 } // namespace v1
 } // namespace mongocxx

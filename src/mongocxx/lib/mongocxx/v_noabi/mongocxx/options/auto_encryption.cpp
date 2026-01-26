@@ -143,7 +143,7 @@ auto_encryption::internal::to_mongoc(auto_encryption const& opts) {
     }
 
     if (auto const& opt = opts.key_vault_pool()) {
-        libmongoc::auto_encryption_opts_set_keyvault_client_pool(ptr, (*opt)->_impl->client_pool_t);
+        libmongoc::auto_encryption_opts_set_keyvault_client_pool(ptr, v_noabi::pool::internal::as_mongoc(**opt));
     }
 
     if (auto const& opt = opts.key_vault_namespace()) {

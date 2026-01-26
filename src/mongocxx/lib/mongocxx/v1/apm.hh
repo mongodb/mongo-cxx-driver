@@ -72,6 +72,7 @@ class apm::internal {
     static fn_type<v1::events::server_heartbeat_succeeded>& server_heartbeat_succeeded(apm& self);
 
     static void set_apm_callbacks(mongoc_client_t* client, v1::apm& apm);
+    static void set_apm_callbacks(mongoc_client_pool_t* pool, v1::apm& apm);
 };
 
 } // namespace v1

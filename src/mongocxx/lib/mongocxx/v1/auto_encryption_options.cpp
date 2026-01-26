@@ -22,6 +22,7 @@
 #include <bsoncxx/v1/stdx/optional.hpp>
 
 #include <mongocxx/v1/client.hh>
+#include <mongocxx/v1/pool.hh>
 
 #include <memory>
 
@@ -230,7 +231,7 @@ auto_encryption_options::internal::to_mongoc(v1::auto_encryption_options const& 
     }
 
     if (auto const& opt = self.key_vault_pool()) {
-        (void)opt; // TODO: v1::pool (CXX-3237)
+        libmongoc::auto_encryption_opts_set_keyvault_client_pool(ptr, v1::pool::internal::as_mongoc(*opt));
     }
 
     if (auto const& opt = self.key_vault_namespace()) {

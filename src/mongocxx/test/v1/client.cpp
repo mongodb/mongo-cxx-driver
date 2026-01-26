@@ -26,6 +26,7 @@
 #include <mongocxx/v1/client_session.hh>
 #include <mongocxx/v1/cursor.hh>
 #include <mongocxx/v1/database.hh>
+#include <mongocxx/v1/pool.hh>
 #include <mongocxx/v1/tls.hh>
 #include <mongocxx/v1/uri.hh>
 
@@ -816,11 +817,7 @@ TEST_CASE("auto_encryption_opts", "[mongocxx][v1][client]") {
         identity_type kv_client_identity;
         auto const kv_client_id = reinterpret_cast<mongoc_client_t*>(&kv_client_identity);
         auto kv_client = v1::client::internal::make(kv_client_id);
-        mocks.client_destroy->interpose([&](mongoc_client_t* ptr) -> void {
-            if (ptr != kv_client_id) {
-                FAIL_CHECK("unexpected mongoc_client_t");
-            }
-        });
+        mocks.client_destroy->interpose([&](mongoc_client_t* ptr) -> void { CHECK(ptr == kv_client_id); });
 
         int counter = 0;
         auto set_keyvault_client = libmongoc::auto_encryption_opts_set_keyvault_client.create_instance();
@@ -848,7 +845,33 @@ TEST_CASE("auto_encryption_opts", "[mongocxx][v1][client]") {
     }
 
     SECTION("key_vault_pool") {
-        // TODO: v1::pool (CXX-3237)
+        auto pool_destroy = libmongoc::client_pool_destroy.create_instance();
+
+        identity_type kv_pool_identity;
+        auto const kv_pool_id = reinterpret_cast<mongoc_client_pool_t*>(&kv_pool_identity);
+        auto kv_pool = v1::pool::internal::make(kv_pool_id);
+        pool_destroy->interpose([&](mongoc_client_pool_t* ptr) -> void { CHECK(ptr == kv_pool_id); });
+
+        int counter = 0;
+        auto set_keyvault_client_pool = libmongoc::auto_encryption_opts_set_keyvault_client_pool.create_instance();
+        set_keyvault_client_pool->interpose(
+            [&](mongoc_auto_encryption_opts_t* ptr, mongoc_client_pool_t* kv_ptr) -> void {
+                CHECK(ptr == opts_id);
+                CHECK(kv_ptr == kv_pool_id);
+                ++counter;
+            });
+
+        {
+            v1::auto_encryption_options auto_encryption_opts;
+            CHECK_NOTHROW(auto_encryption_opts.key_vault_pool(&kv_pool));
+
+            client::options opts;
+            CHECK_NOTHROW(opts.auto_encryption_opts(std::move(auto_encryption_opts)));
+            (void)mocks.make(std::move(opts));
+        }
+
+        CHECK(counter == 1);
+        CHECK(enable_count == 1);
     }
 
     SECTION("key_vault_namespace") {

@@ -31,6 +31,7 @@
 
 #include <cstddef>
 #include <system_error>
+#include <type_traits>
 
 namespace mongocxx {
 namespace v1 {
@@ -80,12 +81,12 @@ class pool {
     MONGOCXX_ABI_EXPORT_CDECL(pool&) operator=(pool&& other) noexcept;
 
     ///
-    /// This class is immovable.
+    /// This class is not copyable.
     ///
     pool(pool const& other) = delete;
 
     ///
-    /// This class is immovable.
+    /// This class is not copyable.
     ///
     pool& operator=(pool const& other) = delete;
 
@@ -171,6 +172,11 @@ class pool {
     friend std::error_code make_error_code(errc v) {
         return {static_cast<int>(v), error_category()};
     }
+
+    class internal;
+
+   private:
+    /* explicit(false) */ pool(void* impl);
 };
 
 ///
@@ -232,6 +238,8 @@ class pool::options {
     /// Return the current client options.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(v1::client::options) client_opts() const;
+
+    class internal;
 };
 
 ///
@@ -279,12 +287,12 @@ class pool::entry {
     ///
     /// Access the managed client.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(client*) operator->();
+    MONGOCXX_ABI_EXPORT_CDECL(v1::client*) operator->();
 
     ///
     /// Access the managed client.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(client&) operator*();
+    MONGOCXX_ABI_EXPORT_CDECL(v1::client&) operator*();
 
     ///
     /// Explicitly release the managed client object back to the associated pool.
@@ -307,10 +315,22 @@ class pool::entry {
     MONGOCXX_ABI_EXPORT_CDECL(v1::database) operator[](bsoncxx::v1::stdx::string_view name);
     /// @}
     ///
+
+    class internal;
+
+   private:
+    /* explicit(false) */ entry(void* impl);
 };
 
 } // namespace v1
 } // namespace mongocxx
+
+namespace std {
+
+template <>
+struct is_error_code_enum<mongocxx::v1::pool::errc> : true_type {};
+
+} // namespace std
 
 #include <mongocxx/v1/detail/postlude.hpp>
 

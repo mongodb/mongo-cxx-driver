@@ -12,28 +12,36 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#pragma once
-
-#include <mongocxx/pool.hpp> // IWYU pragma: export
+#include <mongocxx/v1/pool.hpp> // IWYU pragma: export
 
 //
 
-#include <mongocxx/client-fwd.hpp>
+#include <mongocxx/v1/apm-fwd.hpp>
 
+#include <mongocxx/private/export.hh>
 #include <mongocxx/private/mongoc.hh>
 
 namespace mongocxx {
-namespace v_noabi {
+namespace v1 {
 
 class pool::internal {
    public:
-    static mongoc_client_pool_t* as_mongoc(pool& self);
+    static MONGOCXX_ABI_EXPORT_CDECL_TESTING(pool) make(mongoc_client_pool_t* ptr);
+
+    static MONGOCXX_ABI_EXPORT_CDECL_TESTING(mongoc_client_pool_t*) as_mongoc(pool& self);
+
+    static void set_apm(pool& self, v1::apm v);
+};
+
+class pool::options::internal {
+   public:
+    static v1::client::options& client_opts(options& self);
 };
 
 class pool::entry::internal {
    public:
-    static entry make(v_noabi::client client, mongoc_client_pool_t* pool);
+    static MONGOCXX_ABI_EXPORT_CDECL(entry) make(mongoc_client_pool_t* pool, mongoc_client_t* client);
 };
 
-} // namespace v_noabi
+} // namespace v1
 } // namespace mongocxx

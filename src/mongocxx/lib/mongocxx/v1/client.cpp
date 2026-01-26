@@ -22,7 +22,6 @@
 #include <bsoncxx/v1/stdx/string_view.hpp>
 
 #include <mongocxx/v1/client_session.hpp>
-#include <mongocxx/v1/database.hpp>
 
 #include <bsoncxx/v1/types/value.hh>
 
@@ -31,6 +30,7 @@
 #include <mongocxx/v1/change_stream.hh>
 #include <mongocxx/v1/client_session.hh>
 #include <mongocxx/v1/cursor.hh>
+#include <mongocxx/v1/database.hh>
 #include <mongocxx/v1/exception.hh>
 #include <mongocxx/v1/pipeline.hh>
 #include <mongocxx/v1/server_api.hh>
@@ -465,8 +465,8 @@ void client::internal::set_apm(client& self, v1::apm v) {
     v1::apm::internal::set_apm_callbacks(impl::with(self)._client, _apm);
 }
 
-void client::internal::disown(client& self) {
-    impl::with(self)._client = nullptr;
+mongoc_client_t* client::internal::release(client& self) {
+    return exchange(impl::with(self)._client, nullptr);
 }
 
 mongoc_client_t const* client::internal::as_mongoc(client const& self) {

@@ -22,6 +22,7 @@
 #include <string>
 
 #include <mongocxx/private/mongoc.hh>
+#include <mongocxx/private/ssl.hh>
 #include <mongocxx/private/utility.hh>
 
 namespace mongocxx {
@@ -179,6 +180,7 @@ bsoncxx::v1::stdx::optional<std::string>& tls::internal::crl_file(tls& self) {
     return impl::with(self)._crl_file;
 }
 
+#if MONGOCXX_SSL_IS_ENABLED()
 mongoc_ssl_opt_t tls::internal::to_mongoc(v1::tls const& self) {
     mongoc_ssl_opt_t ret = {};
 
@@ -206,6 +208,7 @@ mongoc_ssl_opt_t tls::internal::to_mongoc(v1::tls const& self) {
 
     return ret;
 }
+#endif
 
 } // namespace v1
 } // namespace mongocxx

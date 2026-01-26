@@ -16,6 +16,12 @@
 
 #include <mongocxx/options/pool-fwd.hpp> // IWYU pragma: export
 
+//
+
+#include <mongocxx/v1/pool.hpp> // IWYU pragma: export
+
+#include <utility>
+
 #include <mongocxx/options/client.hpp>
 
 #include <mongocxx/config/prelude.hpp>
@@ -30,23 +36,30 @@ namespace options {
 class pool {
    public:
     ///
+    /// Default initialization.
+    ///
+    pool() = default;
+
+    ///
     /// Constructs a new pool options object. Note that options::pool is implictly convertible from
     /// options::client.
     ///
     /// @param client_opts
     ///   The client options.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL() pool(client client_opts = client());
+    pool(v_noabi::options::client client_opts) : _client_opts{std::move(client_opts)} {}
 
     ///
     /// The current client options.
     ///
     /// @return The client options.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(client const&) client_opts() const;
+    v_noabi::options::client const& client_opts() const {
+        return _client_opts;
+    }
 
    private:
-    client _client_opts;
+    v_noabi::options::client _client_opts;
 };
 
 } // namespace options
@@ -58,4 +71,7 @@ class pool {
 ///
 /// @file
 /// Provides @ref mongocxx::v_noabi::options::pool.
+///
+/// @par Includes
+/// - @ref mongocxx/v1/pool.hpp
 ///

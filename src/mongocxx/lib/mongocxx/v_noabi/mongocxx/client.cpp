@@ -343,8 +343,8 @@ v_noabi::change_stream client::_watch(
             v1::client::internal::as_mongoc(check_moved_from(_client)), pipeline.bson(), opts.bson()));
 }
 
-void client::internal::disown(client& self) {
-    v1::client::internal::disown(check_moved_from(self._client));
+mongoc_client_t* client::internal::release(client& self) {
+    return v1::client::internal::release(check_moved_from(self._client));
 }
 
 v1::client& client::internal::as_v1(client& self) {
