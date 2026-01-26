@@ -1,9 +1,0 @@
-# These package URLs (purls) point to the versions (tags) of external dependencies
-# that are committed to the project. Refer: https://github.com/package-url/purl-spec
-
-# This file is fed to silkbomb to generate the cyclonedx.sbom.json file. Edit this file
-# instead of modifying the SBOM JSON directly. After modifying this file, be sure to
-# re-generate the SBOM JSON file!
-
-# bson and mongoc may be obtained via cmake/FetchMongoC.cmake.
-pkg:github/mongodb/mongo-c-driver@2.1.2

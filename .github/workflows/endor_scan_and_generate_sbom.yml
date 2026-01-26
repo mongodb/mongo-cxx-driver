@@ -1,0 +1,144 @@
+name: Endor Labs Scan and Generate SBOM
+
+# This workflow runs an SCA scan using Endor Labs.
+# When triggered by a pull_request
+#   a PR scan is run (non-blocking) that reports any identified issues as a PR comment.
+# When triggered by a create, push or workflow_dispatch
+#   a monitoring scan is run, an SBOM file is generated, and if the SBOM has changed a PR is opened.
+# The pull_request and push triggers are scoped to cmake files in the master and release branches
+# Internal documentation: go/sbom-scope
+
+on:
+  workflow_dispatch: {}
+  pull_request:
+    branches:
+      - "master"
+      - "releases/v*"
+      - "debian/*"
+    paths:
+      - "**/CMakeLists.txt"
+      - "**/*.cmake"
+  push:
+    branches:
+      - "master"
+      - "releases/v*"
+      - "debian/*"
+    paths:
+      - "**/CMakeLists.txt"
+      - "**/*.cmake"
+
+permissions:
+  id-token: write # Required to request a json web token (JWT) for keyless authentication with Endor Labs
+  contents: write # Required for commit
+  pull-requests: write # Required for PR
+
+jobs:
+  endor_scan_and_generate_sbom:
+    runs-on: ubuntu-latest
+
+    concurrency:
+      group: sbom-${{ github.ref }}
+      cancel-in-progress: false
+
+    env:
+      # for a pull_request, we run a PR scan and do not generate an SBOM
+      PR_SCAN: ${{ github.event_name == 'pull_request' }}
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v6
+        with:
+          fetch-tags: true
+          submodules: recursive
+
+      - name: Configure CMake and fetch dependency sources
+        env:
+          BUILD_TYPE: Release
+          BUILD: ${{github.workspace}}/build
+          CXX_STANDARD: 17
+        working-directory: ${{env.BUILD}}
+        run: |
+          cmake .. -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DCMAKE_CXX_STANDARD=${{env.CXX_STANDARD}} -DENABLE_TESTS=ON
+          rm .gitignore # prevent exclusion of build/_deps from endorctl scan
+
+      - name: Endor Labs Scan (PR or Monitoring)
+        uses: endorlabs/github-action@519df81de5f68536c84ae05ebb2986d0bb1d19fc # v1.1.8
+        env:
+          ENDOR_SCAN_EMBEDDINGS: true
+        with:
+          additional_args: '--languages=c --include-path="build/_deps/**"'
+          enable_pr_comments: ${{ env.PR_SCAN }}
+          github_token: ${{ secrets.GITHUB_TOKEN }} # Required for endorctl to write pr comments
+          log_level: info
+          log_verbose: false
+          namespace: mongodb.${{github.repository_owner}}
+          pr: ${{ env.PR_SCAN }}
+          scan_dependencies: true
+          scan_summary_output_type: "table"
+          tags: github_action
+
+      - name: Install uv (push only)
+        if: env.PR_SCAN == 'false'
+        uses: astral-sh/setup-uv@1e862dfacbd1d6d858c55d9b792c756523627244 # v7.1.4
+        with:
+          python-version: "3.10"
+          activate-environment: true
+          enable-cache: true
+
+      - name: Stash existing SBOM, generate new SBOM (push only)
+        if: env.PR_SCAN == 'false'
+        run: |
+          # If sbom.json does not exist, create an empty file to avoid jq errors
+          echo >> sbom.json
+          # Existing SBOM: Strip out nondeterministic SBOM fields and save to temp file
+          jq 'del(.version, .metadata.timestamp, .metadata.tools.services[].version)' sbom.json > ${{runner.temp}}/sbom.existing.cdx.json
+          # etc/sbom/generate_sbom.py
+          uv run --group generate_sbom etc/sbom/generate_sbom.py --enable-github-action-token --target=branch --sbom-metadata=etc/sbom/metadata.cdx.json --save-warnings=${{runner.temp}}/warnings.txt
+          # Generated SBOM: Strip out nondeterministic SBOM fields and save to temp file
+          jq 'del(.version, .metadata.timestamp, .metadata.tools.services[].version)' sbom.json > ${{runner.temp}}/sbom.generated.cdx.json
+
+      - name: Validate SBOM with CycloneDX CLI (push only)
+        if: env.PR_SCAN == 'false'
+        run: |
+          curl -L -s -o ${{runner.temp}}/cyclonedx "https://github.com/CycloneDX/cyclonedx-cli/releases/download/v0.29.1/cyclonedx-linux-x64"
+          chmod +x ${{runner.temp}}/cyclonedx
+          ${{runner.temp}}/cyclonedx validate --input-file sbom.json --fail-on-errors
+
+      - name: Check for SBOM changes (push only)
+        if: env.PR_SCAN == 'false'
+        id: sbom_diff
+        run: |
+          # diff the temp SBOM files, save output to variable, supress exit code
+          RESULT=$(diff --brief ${{runner.temp}}/sbom.existing.cdx.json ${{runner.temp}}/sbom.generated.cdx.json || true)
+          # Set the output variable
+          echo "result=$RESULT" | tee -a $GITHUB_OUTPUT
+
+      - name: Generate pull request content, if SBOM has changed (push only)
+        if: env.PR_SCAN == 'false' && steps.sbom_diff.outputs.result
+        run: |
+          cat > ${{runner.temp}}/pr_body.txt << EOF
+          ## Automated SBOM Update
+
+          This PR was automatically generated based on Endor Labs SCA scan results.
+
+          ### Triggered by
+          - Commit: ${{ github.sha }}
+          - Workflow run: [${{ github.run_id }}](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
+
+          ---
+          EOF
+          cat ${{runner.temp}}/warnings.txt >> ${{runner.temp}}/pr_body.txt
+
+      - name: Open Pull Request, if SBOM has changed (push only)
+        if: env.PR_SCAN == 'false' && steps.sbom_diff.outputs.result
+        uses: peter-evans/create-pull-request@84ae59a2cdc2258d6fa0732dd66352dddae2a412 # v7.0.9
+        env:
+          BRANCH_NAME: ${{ github.head_ref || github.ref_name }}
+        with:
+          add-paths: sbom.json
+          body-path: ${{runner.temp}}/pr_body.txt
+          branch: auto-update-sbom-${{ env.BRANCH_NAME }}
+          commit-message: "chore: Update SBOM after dependency changes"
+          delete-branch: true
+          labels: sbom
+          title: CXX Update SBOM action [${{ env.BRANCH_NAME }}]
