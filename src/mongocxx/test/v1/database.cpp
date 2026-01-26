@@ -346,7 +346,7 @@ TEST_CASE("exceptions", "[mongocxx][v1][database]") {
                             REQUIRE(reply != nullptr);
                             REQUIRE(error != nullptr);
 
-                            set_client_error(error);
+                            set_server_error(error);
                             bson_copy_to(raw.bson(), reply);
 
                             return false;
