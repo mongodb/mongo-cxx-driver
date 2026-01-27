@@ -108,7 +108,7 @@ namespace {
 
 struct identity_type {};
 
-// Represent a successfully-constructed mocked `v1::client` object.
+// Represent a successfully-constructed mocked `v1::pool` object.
 struct pool_mocks_type {
     using uri_destroy_type = decltype(libmongoc::uri_destroy.create_instance());
     using uri_copy_type = decltype(libmongoc::uri_copy.create_instance());
