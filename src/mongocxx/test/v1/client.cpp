@@ -272,7 +272,9 @@ TEST_CASE("exceptions", "[mongocxx][v1][client]") {
                 });
 
                 client::options opts;
-                CHECK_NOTHROW(opts.tls_opts(v1::tls{}));
+                CHECKED_IF(tls_opts_set) {
+                    CHECK_NOTHROW(opts.tls_opts(v1::tls{}));
+                }
                 CHECK_THROWS_WITH_CODE(mocks.make(std::move(opts)), code::tls_not_supported);
             }
         }
