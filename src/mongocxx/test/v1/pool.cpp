@@ -718,7 +718,7 @@ TEST_CASE("tls_opts", "[mongocxx][v1][pool]") {
     CHECK(set_counter == 1);
     CHECK(get_counter == 1);
 #else
-    SKIP(std::error_code{code::tls_not_supported}.message());
+    SKIP(std::error_code{v1::client::errc::tls_not_supported}.message());
 #endif
 }
 
