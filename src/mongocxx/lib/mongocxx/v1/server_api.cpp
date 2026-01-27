@@ -30,7 +30,6 @@
 #include <bsoncxx/private/immortal.hh>
 
 #include <mongocxx/private/mongoc.hh>
-#include <mongocxx/private/ssl.hh>
 #include <mongocxx/private/utility.hh>
 
 namespace mongocxx {
@@ -208,7 +207,6 @@ std::error_category const& server_api::error_category() {
     return instance.value();
 }
 
-#if MONGOCXX_SSL_IS_ENABLED()
 std::unique_ptr<mongoc_server_api_t, server_api::internal::mongoc_server_api_deleter> server_api::internal::to_mongoc(
     v1::server_api const& api) {
     mongoc_server_api_version_t version = {};
@@ -233,7 +231,6 @@ std::unique_ptr<mongoc_server_api_t, server_api::internal::mongoc_server_api_del
 
     return ret;
 }
-#endif
 
 } // namespace v1
 } // namespace mongocxx
