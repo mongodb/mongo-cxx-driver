@@ -51,7 +51,7 @@ namespace v1 {
 
 using code = mongocxx::v1::pool::errc;
 
-TEST_CASE("error code", "[bsoncxx][v1][pool][error]") {
+TEST_CASE("error code", "[mongocxx][v1][pool][error]") {
     using mongocxx::v1::source_errc;
     using mongocxx::v1::type_errc;
 
