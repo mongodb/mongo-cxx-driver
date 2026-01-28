@@ -529,7 +529,7 @@ class collection {
     MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value>) find_one_and_replace(
         v1::client_session const& session,
         bsoncxx::v1::document::view query,
-        bsoncxx::v1::document::value update,
+        bsoncxx::v1::document::value replacement,
         v1::find_one_and_replace_options const& opts = {});
     /// @}
     ///
