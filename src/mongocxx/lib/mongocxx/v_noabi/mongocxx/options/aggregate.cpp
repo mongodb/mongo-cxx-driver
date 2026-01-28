@@ -87,7 +87,8 @@ void aggregate::internal::append_to(aggregate const& self, scoped_bson& doc) {
                 "hint",
                 &bsoncxx::v1::types::value::internal::get_bson_value(
                     bsoncxx::v1::types::value{bsoncxx::v_noabi::to_v1(opt->to_value())}))) {
-            throw std::logic_error{"mongocxx::v1::aggregate_options::internal::to_document: BSON_APPEND_VALUE failed"};
+            throw std::logic_error{
+                "mongocxx::v_noabi::options::aggregate::internal::to_document: BSON_APPEND_VALUE failed"};
         }
 
         doc += v;
@@ -112,8 +113,9 @@ void aggregate::internal::append_to(aggregate const& self, scoped_bson& doc) {
                 v.inout_ptr(),
                 "comment",
                 &bsoncxx::v1::types::value::internal::get_bson_value(
-                    bsoncxx::v1::types::value{bsoncxx::v_noabi::to_v1(*opt)}))) {
-            throw std::logic_error{"mongocxx::v1::aggregate_options::internal::to_document: BSON_APPEND_VALUE failed"};
+                    bsoncxx::v1::types::value{bsoncxx::v_noabi::to_v1(opt->view())}))) {
+            throw std::logic_error{
+                "mongocxx::v_noabi::options::aggregate::internal::to_document: BSON_APPEND_VALUE failed"};
         }
 
         doc += v;

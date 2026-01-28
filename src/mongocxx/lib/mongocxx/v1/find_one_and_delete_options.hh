@@ -31,6 +31,19 @@ namespace v1 {
 
 class find_one_and_delete_options::internal {
    public:
+    static bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> const& collation(
+        find_one_and_delete_options const& self);
+    static bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> const& projection(
+        find_one_and_delete_options const& self);
+    static bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> const& sort(
+        find_one_and_delete_options const& self);
+    static bsoncxx::v1::stdx::optional<v1::write_concern> const& write_concern(find_one_and_delete_options const& self);
+    static bsoncxx::v1::stdx::optional<v1::hint> const& hint(find_one_and_delete_options const& self);
+    static bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> const& let(
+        find_one_and_delete_options const& self);
+    static bsoncxx::v1::stdx::optional<bsoncxx::v1::types::value> const& comment(
+        find_one_and_delete_options const& self);
+
     static bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value>& collation(find_one_and_delete_options& self);
     static bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value>& projection(find_one_and_delete_options& self);
     static bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value>& sort(find_one_and_delete_options& self);

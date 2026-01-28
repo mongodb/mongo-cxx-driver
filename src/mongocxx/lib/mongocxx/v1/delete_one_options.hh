@@ -26,16 +26,23 @@
 
 #include <bsoncxx/v1/stdx/optional.hpp>
 
+#include <mongocxx/private/scoped_bson.hh>
+
 namespace mongocxx {
 namespace v1 {
 
 class delete_one_options::internal {
    public:
+    static bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> const& collation(delete_one_options const& self);
+    static bsoncxx::v1::stdx::optional<v1::hint> const& hint(delete_one_options const& self);
+
     static bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value>& collation(delete_one_options& self);
     static bsoncxx::v1::stdx::optional<v1::write_concern>& write_concern(delete_one_options& self);
     static bsoncxx::v1::stdx::optional<v1::hint>& hint(delete_one_options& self);
     static bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value>& let(delete_one_options& self);
     static bsoncxx::v1::stdx::optional<bsoncxx::v1::types::value>& comment(delete_one_options& self);
+
+    static void append_to(delete_one_options const& self, scoped_bson& doc);
 };
 
 } // namespace v1

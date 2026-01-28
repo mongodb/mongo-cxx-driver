@@ -17,6 +17,7 @@
 //
 
 #include <mongocxx/v1/change_stream.hh>
+#include <mongocxx/v1/collection.hh>
 #include <mongocxx/v1/cursor.hh>
 #include <mongocxx/v1/database.hh>
 #include <mongocxx/v1/read_concern.hh>
@@ -285,7 +286,8 @@ v_noabi::collection database::create_collection(
             scoped_bson{BCON_NEW("writeConcern", BCON_DOCUMENT(to_scoped_bson(write_concern->to_document()).bson()))};
     }
 
-    return v_noabi::collection(*this, create_collection_impl(_db, std::string{name}.c_str(), doc.bson()));
+    return v1::collection::internal::make(
+        create_collection_impl(_db, std::string{name}.c_str(), doc.bson()), v1::database::internal::get_client(_db));
 }
 
 v_noabi::collection database::create_collection(
@@ -304,7 +306,8 @@ v_noabi::collection database::create_collection(
 
     v_noabi::client_session::internal::append_to(session, doc);
 
-    return v_noabi::collection(*this, create_collection_impl(_db, std::string{name}.c_str(), doc.bson()));
+    return v1::collection::internal::make(
+        create_collection_impl(_db, std::string{name}.c_str(), doc.bson()), v1::database::internal::get_client(_db));
 }
 
 namespace {
@@ -389,9 +392,11 @@ v_noabi::write_concern database::write_concern() const {
 collection database::collection(bsoncxx::v_noabi::string::view_or_value name) const {
     // Backward compatibility: `collection()` is not logically const.
     // NOLINTNEXTLINE(cppcoreguidelines-pro-type-const-cast)
-    auto& d = const_cast<v_noabi::database&>(check_moved_from(*this));
+    auto& d = const_cast<v1::database&>(check_moved_from(_db));
 
-    return v_noabi::collection(d, std::move(name));
+    return v1::collection::internal::make(
+        libmongoc::database_get_collection(v1::database::internal::as_mongoc(d), name.terminated().data()),
+        v1::database::internal::get_client(d));
 }
 
 v_noabi::gridfs::bucket database::gridfs_bucket(v_noabi::options::gridfs::bucket const& options) const {

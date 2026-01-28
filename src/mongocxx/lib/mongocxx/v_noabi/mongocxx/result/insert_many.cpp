@@ -33,7 +33,9 @@ namespace result {
 
 insert_many::insert_many(v1::insert_many_result res)
     : _result{std::move(v1::insert_many_result::internal::result(res))},
-      _inserted_ids{bsoncxx::v_noabi::from_v1(std::move(v1::insert_many_result::internal::inserted_ids(res)))} {}
+      _inserted_ids{bsoncxx::v_noabi::from_v1(std::move(v1::insert_many_result::internal::inserted_ids(res)))} {
+    this->sync_id_map();
+}
 
 insert_many::operator v1::insert_many_result() const {
     return v1::insert_many_result::internal::make(v_noabi::to_v1(_result), bsoncxx::v_noabi::to_v1(_inserted_ids));

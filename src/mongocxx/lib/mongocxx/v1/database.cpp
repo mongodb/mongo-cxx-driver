@@ -22,7 +22,6 @@
 #include <bsoncxx/v1/stdx/optional.hpp>
 #include <bsoncxx/v1/stdx/string_view.hpp>
 
-#include <mongocxx/v1/collection.hpp>
 #include <mongocxx/v1/detail/macros.hpp>
 #include <mongocxx/v1/gridfs/bucket.hpp>
 #include <mongocxx/v1/pipeline.hpp>
@@ -30,6 +29,7 @@
 #include <mongocxx/v1/aggregate_options.hh>
 #include <mongocxx/v1/change_stream.hh>
 #include <mongocxx/v1/client_session.hh>
+#include <mongocxx/v1/collection.hh>
 #include <mongocxx/v1/cursor.hh>
 #include <mongocxx/v1/exception.hh>
 #include <mongocxx/v1/read_concern.hh>
@@ -218,15 +218,35 @@ bsoncxx::v1::document::value database::run_command(bsoncxx::v1::document::view c
     return std::move(reply).value();
 }
 
+namespace {
+
+v1::collection
+create_collection_impl(mongoc_database_t* db, mongoc_client_t* client, char const* name, bson_t const* opts) {
+    bson_error_t error = {};
+
+    if (auto const ptr = libmongoc::database_create_collection(db, name, opts, &error)) {
+        return v1::collection::internal::make(ptr, client);
+    }
+
+    v1::throw_exception(error);
+}
+
+} // namespace
+
 v1::collection database::create_collection(
     bsoncxx::v1::stdx::string_view name,
     bsoncxx::v1::document::view opts,
     bsoncxx::v1::stdx::optional<v1::write_concern> const& wc) {
-    // TODO: v1::collection (CXX-3237)
-    (void)name;
-    (void)opts;
-    (void)wc;
-    MONGOCXX_PRIVATE_UNREACHABLE;
+    scoped_bson doc;
+
+    doc += opts;
+
+    if (wc) {
+        doc += scoped_bson{BCON_NEW("writeConcern", BCON_DOCUMENT(scoped_bson{wc->to_document()}.bson()))};
+    }
+
+    return create_collection_impl(
+        impl::with(this)->_db, impl::with(this)->_client, std::string{name}.c_str(), doc.bson());
 }
 
 v1::collection database::create_collection(
@@ -234,12 +254,21 @@ v1::collection database::create_collection(
     bsoncxx::v1::stdx::string_view name,
     bsoncxx::v1::document::view opts,
     bsoncxx::v1::stdx::optional<v1::write_concern> const& wc) {
-    // TODO: v1::collection (CXX-3237)
-    (void)session;
-    (void)name;
-    (void)opts;
-    (void)wc;
-    MONGOCXX_PRIVATE_UNREACHABLE;
+    scoped_bson doc;
+    bson_error_t error = {};
+
+    doc += opts;
+
+    if (wc) {
+        doc += scoped_bson{BCON_NEW("writeConcern", BCON_DOCUMENT(scoped_bson{wc->to_document()}.bson()))};
+    }
+
+    if (!v1::client_session::internal::append_to(session, doc, error)) {
+        v1::throw_exception(error);
+    }
+
+    return create_collection_impl(
+        impl::with(this)->_db, impl::with(this)->_client, std::string{name}.c_str(), doc.bson());
 }
 
 namespace {
@@ -395,9 +424,9 @@ v1::write_concern database::write_concern() const {
 }
 
 v1::collection database::collection(bsoncxx::v1::stdx::string_view name) const {
-    (void)name;
-    // TODO: v1::collection (CXX-3237)
-    MONGOCXX_PRIVATE_UNREACHABLE;
+    return v1::collection::internal::make(
+        libmongoc::database_get_collection(impl::with(this)->_db, std::string{name}.c_str()),
+        impl::with(this)->_client);
 }
 
 v1::collection database::operator[](bsoncxx::v1::stdx::string_view name) const {

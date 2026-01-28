@@ -24,14 +24,21 @@
 
 #include <bsoncxx/v1/stdx/optional.hpp>
 
+#include <mongocxx/private/scoped_bson.hh>
+
 namespace mongocxx {
 namespace v1 {
 
 class estimated_document_count_options::internal {
    public:
+    static bsoncxx::v1::stdx::optional<mongocxx::v1::read_preference> const& read_preference(
+        estimated_document_count_options const& self);
+
     static bsoncxx::v1::stdx::optional<bsoncxx::v1::types::value>& comment(estimated_document_count_options& self);
     static bsoncxx::v1::stdx::optional<mongocxx::v1::read_preference>& read_preference(
         estimated_document_count_options& self);
+
+    static void append_to(estimated_document_count_options const& self, scoped_bson& doc);
 };
 
 } // namespace v1

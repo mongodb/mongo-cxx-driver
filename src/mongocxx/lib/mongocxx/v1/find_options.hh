@@ -26,11 +26,15 @@
 
 #include <bsoncxx/v1/stdx/optional.hpp>
 
+#include <mongocxx/private/scoped_bson.hh>
+
 namespace mongocxx {
 namespace v1 {
 
 class find_options::internal {
    public:
+    static bsoncxx::v1::stdx::optional<v1::read_preference> const& read_preference(find_options const& self);
+
     static bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value>& collation(find_options& self);
     static bsoncxx::v1::stdx::optional<bsoncxx::v1::types::value>& comment(find_options& self);
     static bsoncxx::v1::stdx::optional<v1::hint>& hint(find_options& self);
@@ -40,6 +44,8 @@ class find_options::internal {
     static bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value>& projection(find_options& self);
     static bsoncxx::v1::stdx::optional<v1::read_preference>& read_preference(find_options& self);
     static bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value>& sort(find_options& self);
+
+    static void append_to(find_options const& self, scoped_bson& doc);
 };
 
 } // namespace v1

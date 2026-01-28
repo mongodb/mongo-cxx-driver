@@ -30,7 +30,6 @@
 #include <bsoncxx/stdx/optional.hpp>
 
 #include <mongocxx/bulk_write.hpp>
-#include <mongocxx/collection.hpp>
 #include <mongocxx/exception/bulk_write_exception.hpp>
 #include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/model/delete_many.hpp>
@@ -240,7 +239,7 @@ bsoncxx::v_noabi::stdx::optional<result::bulk_write> bulk_write::execute() const
 }
 
 bulk_write
-bulk_write::internal::make(collection const& coll, options::bulk_write const& opts, client_session const* session) {
+bulk_write::internal::make(collection& coll, options::bulk_write const& opts, client_session const* session) {
     scoped_bson options;
 
     if (!opts.ordered()) {
@@ -270,7 +269,8 @@ bulk_write::internal::make(collection const& coll, options::bulk_write const& op
     }
 
     auto ret = v1::bulk_write::internal::make(
-        libmongoc::collection_create_bulk_operation_with_opts(coll._get_impl().collection_t, options.bson()));
+        libmongoc::collection_create_bulk_operation_with_opts(
+            v_noabi::collection::internal::as_mongoc(coll), options.bson()));
 
     if (auto const validation = opts.bypass_document_validation()) {
         libmongoc::bulk_operation_set_bypass_document_validation(v1::bulk_write::internal::as_mongoc(ret), *validation);
