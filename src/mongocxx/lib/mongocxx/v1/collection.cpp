@@ -345,10 +345,9 @@ find_impl(mongoc_collection_t* coll, bson_t const* filter, bson_t const* opts, v
 }
 
 bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> find_one_impl(v1::cursor cursor) {
-    auto const iter = cursor.begin();
-
-    if (iter != cursor.end()) {
-        return bsoncxx::v1::document::value{*iter};
+    // Use a for loop for convenience.
+    for (auto const e : cursor) {
+        return bsoncxx::v1::document::value{e};
     }
 
     return {};
