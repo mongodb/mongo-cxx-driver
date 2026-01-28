@@ -12,15 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <mongocxx/v1/server_api.hpp>
+#include <mongocxx/v1/server_api.hh>
 
 //
 
 #include <bsoncxx/v1/stdx/optional.hpp>
 #include <bsoncxx/v1/stdx/string_view.hpp>
 
+#include <mongocxx/v1/detail/macros.hpp>
+
 #include <mongocxx/v1/exception.hh>
 
+#include <memory>
 #include <string>
 #include <system_error>
 
@@ -202,6 +205,31 @@ std::error_category const& server_api::error_category() {
     static bsoncxx::immortal<type> const instance;
 
     return instance.value();
+}
+
+std::unique_ptr<mongoc_server_api_t, server_api::internal::mongoc_server_api_deleter> server_api::internal::to_mongoc(
+    v1::server_api const& api) {
+    mongoc_server_api_version_t version = {};
+
+    if (!libmongoc::server_api_version_from_string(
+            v1::server_api::version_to_string(api.get_version()).c_str(), &version)) {
+        // Invariant: enforced by `v1::server_api::errc::invalid_version`.
+        MONGOCXX_PRIVATE_UNREACHABLE;
+    }
+
+    std::unique_ptr<mongoc_server_api_t, mongoc_server_api_deleter> ret{libmongoc::server_api_new(version)};
+
+    auto const ptr = ret.get();
+
+    if (auto const opt = api.strict()) {
+        libmongoc::server_api_strict(ptr, *opt);
+    }
+
+    if (auto const opt = api.deprecation_errors()) {
+        libmongoc::server_api_deprecation_errors(ptr, *opt);
+    }
+
+    return ret;
 }
 
 } // namespace v1

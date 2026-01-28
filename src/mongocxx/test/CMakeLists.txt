@@ -138,6 +138,7 @@ set(mongocxx_test_sources_v1
     v1/insert_one_result.cpp
     v1/logger.cpp
     v1/pipeline.cpp
+    v1/pool.cpp
     v1/range_options.cpp
     v1/read_concern.cpp
     v1/read_preference.cpp

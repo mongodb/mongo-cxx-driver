@@ -35,6 +35,8 @@
 
 #include <functional>
 
+#include <mongocxx/private/mongoc.hh>
+
 namespace mongocxx {
 namespace v1 {
 
@@ -68,6 +70,9 @@ class apm::internal {
     static fn_type<v1::events::server_heartbeat_started>& server_heartbeat_started(apm& self);
     static fn_type<v1::events::server_heartbeat_failed>& server_heartbeat_failed(apm& self);
     static fn_type<v1::events::server_heartbeat_succeeded>& server_heartbeat_succeeded(apm& self);
+
+    static void set_apm_callbacks(mongoc_client_t* client, v1::apm& apm);
+    static void set_apm_callbacks(mongoc_client_pool_t* pool, v1::apm& apm);
 };
 
 } // namespace v1

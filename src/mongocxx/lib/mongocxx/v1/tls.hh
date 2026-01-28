@@ -22,6 +22,9 @@
 
 #include <string>
 
+#include <mongocxx/private/mongoc.hh>
+#include <mongocxx/private/ssl.hh>
+
 namespace mongocxx {
 namespace v1 {
 
@@ -38,6 +41,10 @@ class tls::internal {
     static bsoncxx::v1::stdx::optional<std::string>& ca_file(tls& self);
     static bsoncxx::v1::stdx::optional<std::string>& ca_dir(tls& self);
     static bsoncxx::v1::stdx::optional<std::string>& crl_file(tls& self);
+
+#if MONGOCXX_SSL_IS_ENABLED()
+    static mongoc_ssl_opt_t to_mongoc(v1::tls const& self);
+#endif
 };
 
 } // namespace v1

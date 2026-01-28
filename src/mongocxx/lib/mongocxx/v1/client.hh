@@ -37,7 +37,7 @@ class client::internal {
 
     static void set_apm(client& self, v1::apm v);
 
-    static void disown(client& self);
+    static mongoc_client_t* release(client& self);
 
     static mongoc_client_t const* as_mongoc(client const& self);
     static MONGOCXX_ABI_EXPORT_CDECL_TESTING(mongoc_client_t*) as_mongoc(client& self);
