@@ -907,6 +907,7 @@ class collection {
     enum class errc {
         zero,               ///< Zero.
         max_await_time_u32, ///< The "maxAwaitTimeMS" field must be representable as an `std::uint32_t`.
+        max_time_u32,       ///< The "maxTimeMS" field must be representable as an `std::uint32_t`.
     };
 
     ///
