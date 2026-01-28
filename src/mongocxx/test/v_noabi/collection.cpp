@@ -2340,6 +2340,9 @@ TEST_CASE("Cursor iteration", "[collection][cursor]") {
     options::find opts;
     std::string type_str = "no cursor type set";
 
+    // Improve test execution time for k_tailable_await.
+    static constexpr std::chrono::milliseconds fast_max_await_time{1};
+
     auto run_test = [&]() {
         INFO(type_str);
 
@@ -2397,8 +2400,24 @@ TEST_CASE("Cursor iteration", "[collection][cursor]") {
             // cursor.begin(), the existing iterator still appears exhausted.
             REQUIRE(iter == cursor.end());
 
-            // After calling cursor.begin(), the existing iterator is revived.
-            cursor.begin();
+            if (opts.cursor_type() == cursor::type::k_tailable_await) {
+                // Permit some tailable cursor timeouts in favor of faster overall test execution.
+                auto const now = [] { return std::chrono::steady_clock::now(); };
+                auto const limit = std::chrono::milliseconds{100};
+                auto const until = now() + limit;
+
+                REQUIRE(limit == 100 * fast_max_await_time);
+
+                while (now() < until) {
+                    CHECKED_IF(cursor.begin() != cursor.end()) {
+                        break;
+                    }
+                }
+            } else {
+                // After calling cursor.begin(), the existing iterator is revived.
+                CHECK_NOTHROW(cursor.begin());
+            }
+
             REQUIRE(iter != cursor.end());
             REQUIRE(iter == cursor.begin());
 
@@ -2440,12 +2459,7 @@ TEST_CASE("Cursor iteration", "[collection][cursor]") {
     SECTION("k_tailable_await") {
         opts.cursor_type(cursor::type::k_tailable_await);
         type_str = "k_tailable_await";
-
-        // Improve execution time by reducing the amount of time the server waits for new
-        // results for this cursor. Note: may cause flaky test failures if the duration is too
-        // short.
-        opts.max_await_time(std::chrono::milliseconds{10});
-
+        opts.max_await_time(fast_max_await_time);
         run_test();
     }
 }
