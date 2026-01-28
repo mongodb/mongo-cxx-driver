@@ -27,11 +27,18 @@
 
 #include <bsoncxx/v1/stdx/optional.hpp>
 
+#include <mongocxx/private/scoped_bson.hh>
+
 namespace mongocxx {
 namespace v1 {
 
 class update_one_options::internal {
    public:
+    static bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> const& collation(update_one_options const& self);
+    static bsoncxx::v1::stdx::optional<v1::hint> const& hint(update_one_options const& self);
+    static bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> const& sort(update_one_options const& self);
+    static bsoncxx::v1::stdx::optional<bsoncxx::v1::array::value> const& array_filters(update_one_options const& self);
+
     static bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value>& collation(update_one_options& self);
     static bsoncxx::v1::stdx::optional<v1::hint>& hint(update_one_options& self);
     static bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value>& let(update_one_options& self);
@@ -39,6 +46,8 @@ class update_one_options::internal {
     static bsoncxx::v1::stdx::optional<bsoncxx::v1::types::value>& comment(update_one_options& self);
     static bsoncxx::v1::stdx::optional<v1::write_concern>& write_concern(update_one_options& self);
     static bsoncxx::v1::stdx::optional<bsoncxx::v1::array::value>& array_filters(update_one_options& self);
+
+    static void append_to(update_one_options const& self, scoped_bson& doc);
 };
 
 } // namespace v1

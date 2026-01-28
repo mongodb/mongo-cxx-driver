@@ -14,6 +14,8 @@
 
 #include <mongocxx/v1/insert_many_options.hh>
 
+#include <stdexcept>
+
 //
 
 #include <bsoncxx/v1/stdx/optional.hpp>
@@ -21,6 +23,11 @@
 
 #include <mongocxx/v1/write_concern.hpp>
 
+#include <bsoncxx/v1/types/value.hh>
+
+#include <bsoncxx/private/bson.hh>
+
+#include <mongocxx/private/scoped_bson.hh>
 #include <mongocxx/private/utility.hh>
 
 namespace mongocxx {
@@ -129,6 +136,32 @@ bsoncxx::v1::stdx::optional<v1::write_concern>& insert_many_options::internal::w
 bsoncxx::v1::stdx::optional<bsoncxx::v1::types::value>& insert_many_options::internal::comment(
     insert_many_options& self) {
     return impl::with(self)._comment;
+}
+
+void insert_many_options::internal::append_to(insert_many_options const& self, scoped_bson& doc) {
+    // Only include "ordered" when `false` (not the default behavior).
+    if (impl::with(self)._ordered.value_or(true) == false) {
+        doc += scoped_bson{BCON_NEW("ordered", BCON_BOOL(false))};
+    }
+
+    if (auto const& opt = impl::with(self)._write_concern) {
+        doc += scoped_bson{BCON_NEW("writeConcern", BCON_DOCUMENT(scoped_bson{opt->to_document()}.bson()))};
+    }
+
+    if (auto const& opt = impl::with(self)._bypass_document_validation) {
+        doc += scoped_bson{BCON_NEW("bypassDocumentValidation", BCON_BOOL(*opt))};
+    }
+
+    if (auto const& opt = impl::with(self)._comment) {
+        scoped_bson v;
+
+        if (!BSON_APPEND_VALUE(v.inout_ptr(), "comment", &bsoncxx::v1::types::value::internal::get_bson_value(*opt))) {
+            throw std::logic_error{
+                "mongocxx::v1::insert_many_options::internal::to_document: BSON_APPEND_VALUE failed"};
+        }
+
+        doc += v;
+    }
 }
 
 } // namespace v1

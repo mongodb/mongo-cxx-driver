@@ -25,6 +25,7 @@
 #include <mongocxx/v1/change_stream.hh>
 #include <mongocxx/v1/client.hh>
 #include <mongocxx/v1/client_session.hh>
+#include <mongocxx/v1/collection.hh>
 #include <mongocxx/v1/cursor.hh>
 #include <mongocxx/v1/exception.hh>
 #include <mongocxx/v1/read_concern.hh>
@@ -845,7 +846,121 @@ TEST_CASE("run_command", "[mongocxx][v1][database]") {
 }
 
 TEST_CASE("create_collection", "[mongocxx][v1][database]") {
-    // TODO: v1::collection (CXX-3237)
+    database_mocks_type mocks;
+
+    auto db = mocks.make();
+
+    identity_type coll_identity;
+    auto const coll_id = reinterpret_cast<mongoc_collection_t*>(&coll_identity);
+    auto collection_destroy = libmongoc::collection_destroy.create_instance();
+    collection_destroy->interpose([&](mongoc_collection_t* ptr) -> void { CHECK(ptr == coll_id); });
+
+    auto const opts_input = GENERATE(as<scoped_bson>(), R"({})", R"({"x": 1})");
+    auto const name_input = GENERATE("a", "b", "c");
+
+    SECTION("no write_concern") {
+        scoped_bson const expected_opts{opts_input};
+
+        auto create_collection = libmongoc::database_create_collection.create_instance();
+        create_collection->interpose(
+            [&](mongoc_database_t* ptr, char const* name, bson_t const* opts, bson_error_t* error)
+                -> mongoc_collection_t* {
+                CHECK(ptr == mocks.database_id);
+                CHECK_THAT(name, Catch::Matchers::Equals(name_input));
+                REQUIRE(opts != nullptr);
+                CHECK(error != nullptr);
+
+                CHECK(scoped_bson_view{opts}.view() == expected_opts.view());
+
+                return coll_id;
+            });
+
+        auto const coll = db.create_collection(name_input, opts_input.view());
+
+        CHECK(v1::collection::internal::as_mongoc(coll) == coll_id);
+    }
+
+    SECTION("with write_concern") {
+        auto const nodes = GENERATE(as<std::int32_t>(), 1, 2, 3);
+
+        scoped_bson expected_opts{opts_input};
+        expected_opts += scoped_bson{BCON_NEW("writeConcern", "{", "w", BCON_INT32(nodes), "}")};
+
+        auto create_collection = libmongoc::database_create_collection.create_instance();
+        create_collection->interpose(
+            [&](mongoc_database_t* ptr, char const* name, bson_t const* opts, bson_error_t* error)
+                -> mongoc_collection_t* {
+                CHECK(ptr == mocks.database_id);
+                CHECK_THAT(name, Catch::Matchers::Equals(name_input));
+                REQUIRE(opts != nullptr);
+                CHECK(error != nullptr);
+
+                CHECK(scoped_bson_view{opts}.view() == expected_opts.view());
+
+                return coll_id;
+            });
+
+        auto const coll =
+            db.create_collection(name_input, opts_input.view(), std::move(v1::write_concern{}.nodes(nodes)));
+
+        CHECK(v1::collection::internal::as_mongoc(coll) == coll_id);
+    }
+
+    SECTION("session") {
+        session_mocks_type session_mocks;
+
+        auto const session = session_mocks.make(mocks.client);
+
+        SECTION("no write_concern") {
+            scoped_bson expected_opts{opts_input};
+            expected_opts += scoped_bson{R"({"sessionId": 123})"};
+
+            auto create_collection = libmongoc::database_create_collection.create_instance();
+            create_collection->interpose(
+                [&](mongoc_database_t* ptr, char const* name, bson_t const* opts, bson_error_t* error)
+                    -> mongoc_collection_t* {
+                    CHECK(ptr == mocks.database_id);
+                    CHECK_THAT(name, Catch::Matchers::Equals(name_input));
+                    REQUIRE(opts != nullptr);
+                    CHECK(error != nullptr);
+
+                    CHECK(scoped_bson_view{opts}.view() == expected_opts.view());
+
+                    return coll_id;
+                });
+
+            auto const coll = db.create_collection(session, name_input, opts_input.view());
+
+            CHECK(v1::collection::internal::as_mongoc(coll) == coll_id);
+        }
+
+        SECTION("with write_concern") {
+            auto const nodes = GENERATE(as<std::int32_t>(), 1, 2, 3);
+
+            scoped_bson expected_opts{opts_input};
+            expected_opts +=
+                scoped_bson{BCON_NEW("writeConcern", "{", "w", BCON_INT32(nodes), "}", "sessionId", BCON_INT32(123))};
+
+            auto create_collection = libmongoc::database_create_collection.create_instance();
+            create_collection->interpose(
+                [&](mongoc_database_t* ptr, char const* name, bson_t const* opts, bson_error_t* error)
+                    -> mongoc_collection_t* {
+                    CHECK(ptr == mocks.database_id);
+                    CHECK_THAT(name, Catch::Matchers::Equals(name_input));
+                    REQUIRE(opts != nullptr);
+                    CHECK(error != nullptr);
+
+                    CHECK(scoped_bson_view{opts}.view() == expected_opts.view());
+
+                    return coll_id;
+                });
+
+            auto const coll = db.create_collection(
+                session, name_input, opts_input.view(), std::move(v1::write_concern{}.nodes(nodes)));
+
+            CHECK(v1::collection::internal::as_mongoc(coll) == coll_id);
+        }
+    }
 }
 
 TEST_CASE("drop", "[mongocxx][v1][database]") {
@@ -1249,7 +1364,26 @@ TEST_CASE("write_concern", "[mongocxx][v1][database]") {
 }
 
 TEST_CASE("collection", "[mongocxx][v1][database]") {
-    // TODO: v1::collection (CXX-3237)
+    database_mocks_type mocks;
+
+    auto db = mocks.make();
+
+    identity_type coll_identity;
+    auto const coll_id = reinterpret_cast<mongoc_collection_t*>(&coll_identity);
+    auto collection_destroy = libmongoc::collection_destroy.create_instance();
+    collection_destroy->interpose([&](mongoc_collection_t* ptr) -> void { CHECK(ptr == coll_id); });
+
+    auto const input = GENERATE("a", "b", "c");
+
+    auto get_collection = libmongoc::database_get_collection.create_instance();
+    get_collection->interpose([&](mongoc_database_t* ptr, char const* name) -> mongoc_collection_t* {
+        CHECK(ptr == mocks.database_id);
+        CHECK_THAT(name, Catch::Matchers::Equals(input));
+        return coll_id;
+    });
+
+    auto const coll = db[input];
+    CHECK(v1::collection::internal::as_mongoc(coll) == coll_id);
 }
 
 TEST_CASE("gridfs_bucket", "[mongocxx][v1][database]") {

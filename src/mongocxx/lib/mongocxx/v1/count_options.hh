@@ -26,15 +26,21 @@
 
 #include <bsoncxx/v1/stdx/optional.hpp>
 
+#include <mongocxx/private/scoped_bson.hh>
+
 namespace mongocxx {
 namespace v1 {
 
 class count_options::internal {
    public:
+    static bsoncxx::v1::stdx::optional<mongocxx::v1::read_preference> const& read_preference(count_options const& self);
+
     static bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value>& collation(count_options& self);
     static bsoncxx::v1::stdx::optional<mongocxx::v1::hint>& hint(count_options& self);
     static bsoncxx::v1::stdx::optional<bsoncxx::v1::types::value>& comment(count_options& self);
     static bsoncxx::v1::stdx::optional<mongocxx::v1::read_preference>& read_preference(count_options& self);
+
+    static void append_to(count_options const& self, scoped_bson& doc);
 };
 
 } // namespace v1

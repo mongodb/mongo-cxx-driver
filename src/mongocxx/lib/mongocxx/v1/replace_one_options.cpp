@@ -18,11 +18,17 @@
 
 #include <bsoncxx/v1/document/value.hpp>
 #include <bsoncxx/v1/stdx/optional.hpp>
-#include <bsoncxx/v1/types/value.hpp>
 
 #include <mongocxx/v1/hint.hpp>
 #include <mongocxx/v1/write_concern.hpp>
 
+#include <bsoncxx/v1/types/value.hh>
+
+#include <stdexcept>
+
+#include <bsoncxx/private/bson.hh>
+
+#include <mongocxx/private/scoped_bson.hh>
 #include <mongocxx/private/utility.hh>
 
 namespace mongocxx {
@@ -163,6 +169,20 @@ bsoncxx::v1::stdx::optional<bsoncxx::v1::types::view> const replace_one_options:
     return impl::with(this)->_comment;
 }
 
+bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> const& replace_one_options::internal::collation(
+    replace_one_options const& self) {
+    return impl::with(self)._collation;
+}
+
+bsoncxx::v1::stdx::optional<v1::hint> const& replace_one_options::internal::hint(replace_one_options const& self) {
+    return impl::with(self)._hint;
+}
+
+bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> const& replace_one_options::internal::sort(
+    replace_one_options const& self) {
+    return impl::with(self)._sort;
+}
+
 bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value>& replace_one_options::internal::collation(
     replace_one_options& self) {
     return impl::with(self)._collation;
@@ -190,6 +210,31 @@ bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value>& replace_one_options::
 bsoncxx::v1::stdx::optional<bsoncxx::v1::types::value>& replace_one_options::internal::comment(
     replace_one_options& self) {
     return impl::with(self)._comment;
+}
+
+void replace_one_options::internal::append_to(replace_one_options const& self, scoped_bson& doc) {
+    if (auto const& opt = impl::with(self)._bypass_document_validation) {
+        doc += scoped_bson{BCON_NEW("bypassDocumentValidation", BCON_BOOL(*opt))};
+    }
+
+    if (auto const& opt = impl::with(self)._write_concern) {
+        doc += scoped_bson{BCON_NEW("writeConcern", BCON_DOCUMENT(scoped_bson{opt->to_document()}.bson()))};
+    }
+
+    if (auto const& opt = impl::with(self)._let) {
+        doc += scoped_bson{BCON_NEW("let", BCON_DOCUMENT(scoped_bson_view{*opt}.bson()))};
+    }
+
+    if (auto const& opt = impl::with(self)._comment) {
+        scoped_bson v;
+
+        if (!BSON_APPEND_VALUE(v.inout_ptr(), "comment", &bsoncxx::v1::types::value::internal::get_bson_value(*opt))) {
+            throw std::logic_error{
+                "mongocxx::v1::replace_one_options::internal::to_document: BSON_APPEND_VALUE failed"};
+        }
+
+        doc += v;
+    }
 }
 
 } // namespace v1

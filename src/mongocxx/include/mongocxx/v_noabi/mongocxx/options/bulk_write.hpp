@@ -221,6 +221,8 @@ class bulk_write {
         return _comment;
     }
 
+    class internal;
+
    private:
     bool _ordered = true;
     bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern> _write_concern;

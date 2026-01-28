@@ -926,7 +926,11 @@ class collection {
         return {static_cast<int>(v), error_category()};
     }
 
+    class internal;
+
    private:
+    /* explicit(false) */ collection(void* impl);
+
     MONGOCXX_ABI_EXPORT_CDECL(v1::bulk_write) _create_insert_many(
         v1::client_session const* session,
         v1::insert_many_options const& opts);

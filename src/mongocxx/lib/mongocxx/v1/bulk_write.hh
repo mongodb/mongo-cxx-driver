@@ -28,6 +28,7 @@
 
 #include <mongocxx/private/export.hh>
 #include <mongocxx/private/mongoc.hh>
+#include <mongocxx/private/scoped_bson.hh>
 
 namespace mongocxx {
 namespace v1 {
@@ -109,6 +110,8 @@ class bulk_write::options::internal {
     static bsoncxx::v1::stdx::optional<bsoncxx::v1::types::value>& comment(options& self);
     static bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value>& let(options& self);
     static bsoncxx::v1::stdx::optional<v1::write_concern>& write_concern(options& self);
+
+    static void append_to(options const& self, scoped_bson& doc);
 };
 
 class bulk_write::result::internal {

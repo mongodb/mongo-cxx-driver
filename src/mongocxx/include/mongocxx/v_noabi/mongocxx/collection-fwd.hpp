@@ -14,6 +14,8 @@
 
 #pragma once
 
+#include <mongocxx/v1/collection-fwd.hpp> // IWYU pragma: export
+
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
@@ -26,7 +28,7 @@ class collection;
 
 namespace mongocxx {
 
-using ::mongocxx::v_noabi::collection;
+using v_noabi::collection;
 
 } // namespace mongocxx
 
@@ -35,4 +37,7 @@ using ::mongocxx::v_noabi::collection;
 ///
 /// @file
 /// Declares @ref mongocxx::v_noabi::collection.
+///
+/// @par Includes
+/// - @ref mongocxx/v1/collection.hpp
 ///

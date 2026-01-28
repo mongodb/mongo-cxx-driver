@@ -166,6 +166,41 @@ bsoncxx::v1::stdx::optional<bsoncxx::v1::types::view> const find_one_and_delete_
     return impl::with(this)->_comment;
 }
 
+bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> const& find_one_and_delete_options::internal::collation(
+    find_one_and_delete_options const& self) {
+    return impl::with(self)._collation;
+}
+
+bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> const& find_one_and_delete_options::internal::projection(
+    find_one_and_delete_options const& self) {
+    return impl::with(self)._projection;
+}
+
+bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> const& find_one_and_delete_options::internal::sort(
+    find_one_and_delete_options const& self) {
+    return impl::with(self)._sort;
+}
+
+bsoncxx::v1::stdx::optional<v1::write_concern> const& find_one_and_delete_options::internal::write_concern(
+    find_one_and_delete_options const& self) {
+    return impl::with(self)._write_concern;
+}
+
+bsoncxx::v1::stdx::optional<v1::hint> const& find_one_and_delete_options::internal::hint(
+    find_one_and_delete_options const& self) {
+    return impl::with(self)._hint;
+}
+
+bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> const& find_one_and_delete_options::internal::let(
+    find_one_and_delete_options const& self) {
+    return impl::with(self)._let;
+}
+
+bsoncxx::v1::stdx::optional<bsoncxx::v1::types::value> const& find_one_and_delete_options::internal::comment(
+    find_one_and_delete_options const& self) {
+    return impl::with(self)._comment;
+}
+
 bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value>& find_one_and_delete_options::internal::collation(
     find_one_and_delete_options& self) {
     return impl::with(self)._collation;

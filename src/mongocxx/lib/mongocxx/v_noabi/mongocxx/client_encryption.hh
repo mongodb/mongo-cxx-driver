@@ -14,6 +14,7 @@
 
 #pragma once
 
+#include <mongocxx/v1/collection.hh>
 #include <mongocxx/v1/cursor.hh>
 
 #include <memory>
@@ -28,6 +29,7 @@
 #include <mongocxx/result/bulk_write.hpp>
 
 #include <mongocxx/client.hh>
+#include <mongocxx/database.hh>
 #include <mongocxx/mongoc_error.hh>
 #include <mongocxx/options/data_key.hh>
 #include <mongocxx/scoped_bson.hh>
@@ -333,7 +335,7 @@ class client_encryption::impl {
         if (!coll_ptr) {
             throw_exception<operation_exception>(error);
         }
-        return collection(dbcxx, coll_ptr);
+        return v1::collection::internal::make(coll_ptr, v_noabi::database::internal::get_client(dbcxx));
     }
 
    private:

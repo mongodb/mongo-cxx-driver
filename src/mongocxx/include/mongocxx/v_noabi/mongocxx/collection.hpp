@@ -14,21 +14,31 @@
 
 #pragma once
 
+#include <mongocxx/collection-fwd.hpp> // IWYU pragma: export
+
+//
+
+#include <mongocxx/v1/collection.hpp> // IWYU pragma: export
+
 #include <algorithm>
+#include <cstdint>
+#include <initializer_list>
 #include <string> // IWYU pragma: keep: backward compatibility, to be removed.
+#include <utility>
 
 #include <mongocxx/bulk_write-fwd.hpp>
-#include <mongocxx/client_encryption-fwd.hpp>
-#include <mongocxx/collection-fwd.hpp> // IWYU pragma: export
-#include <mongocxx/database-fwd.hpp>
+#include <mongocxx/client_encryption-fwd.hpp> // IWYU pragma: keep: backward compatibility, to be removed.
+#include <mongocxx/database-fwd.hpp>          // IWYU pragma: keep: backward compatibility, to be removed.
 
 #include <bsoncxx/builder/basic/array.hpp>
 #include <bsoncxx/builder/basic/document.hpp> // IWYU pragma: keep: backward compatibility, to be removed.
 #include <bsoncxx/builder/basic/kvp.hpp>      // IWYU pragma: keep: backward compatibility, to be removed.
 #include <bsoncxx/builder/concatenate.hpp>    // IWYU pragma: keep: backward compatibility, to be removed.
+#include <bsoncxx/document/value.hpp>
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/oid.hpp> // IWYU pragma: keep: backward compatibility, to be removed.
 #include <bsoncxx/stdx/optional.hpp>
+#include <bsoncxx/stdx/string_view.hpp>
 #include <bsoncxx/string/view_or_value.hpp>
 
 #include <mongocxx/bulk_write.hpp>
@@ -37,6 +47,7 @@
 #include <mongocxx/cursor.hpp>
 #include <mongocxx/index_view.hpp>
 #include <mongocxx/model/insert_one.hpp> // IWYU pragma: keep: backward compatibility, to be removed.
+#include <mongocxx/model/write.hpp>
 #include <mongocxx/options/aggregate.hpp>
 #include <mongocxx/options/bulk_write.hpp>
 #include <mongocxx/options/change_stream.hpp>
@@ -85,6 +96,9 @@ namespace v_noabi {
 /// ```
 ///
 class collection {
+   private:
+    v1::collection _coll;
+
     //
     // Utility class supporting the convenience of {} meaning an empty bsoncxx::v_noabi::document.
     //
@@ -106,32 +120,56 @@ class collection {
     /// valid actions to take with a default constructed collection
     /// are to assign to it, or destroy it.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL() collection() noexcept;
+    collection() noexcept {}
 
     ///
     /// Move constructs a collection.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL() collection(collection&&) noexcept;
+    collection(collection&& other) noexcept = default;
 
     ///
     /// Move assigns a collection.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(collection&) operator=(collection&&) noexcept;
+    collection& operator=(collection&& other) noexcept = default;
 
     ///
     /// Copy constructs a collection.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL() collection(collection const&);
+    MONGOCXX_ABI_EXPORT_CDECL() collection(collection const& other);
 
     ///
     /// Copy assigns a collection.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(collection&) operator=(collection const&);
+    MONGOCXX_ABI_EXPORT_CDECL(collection&) operator=(collection const& other);
 
     ///
     /// Destroys a collection.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL() ~collection();
+    ~collection() = default;
+
+    ///
+    /// Construct with the @ref mongocxx::v1 equivalent.
+    ///
+    /* explicit(false) */ collection(v1::collection collection) : _coll{std::move(collection)} {}
+
+    ///
+    /// Convert to the @ref mongocxx::v1 equivalent.
+    ///
+    /// @par Postconditions:
+    /// - `*this` is in an assign-or-destroy-only state.
+    ///
+    /// @warning Invalidates all associated objects.
+    ///
+    explicit operator v1::collection() && {
+        return std::move(_coll);
+    }
+
+    ///
+    /// This class is not copyable.
+    ///
+    explicit operator v1::collection() const& {
+        return _coll;
+    }
 
     ///
     /// Returns true if the collection is valid, meaning it was not
@@ -159,8 +197,8 @@ class collection {
     ///   collection level set read concern - collection::read_concern(rc).
     ///   (Write concern supported only for MongoDB 3.4+).
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(cursor)
-    aggregate(pipeline const& pipeline, options::aggregate const& options = options::aggregate());
+    MONGOCXX_ABI_EXPORT_CDECL(v_noabi::cursor)
+    aggregate(v_noabi::pipeline const& pipeline, v_noabi::options::aggregate const& options = {});
 
     ///
     /// Runs an aggregation framework pipeline against this collection.
@@ -184,11 +222,11 @@ class collection {
     ///   collection level set read concern - collection::read_concern(rc).
     ///   (Write concern supported only for MongoDB 3.4+).
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(cursor)
+    MONGOCXX_ABI_EXPORT_CDECL(v_noabi::cursor)
     aggregate(
-        client_session const& session,
-        pipeline const& pipeline,
-        options::aggregate const& options = options::aggregate());
+        v_noabi::client_session const& session,
+        v_noabi::pipeline const& pipeline,
+        v_noabi::options::aggregate const& options = {});
 
     ///
     /// Creates a new bulk operation to be executed against this collection.
@@ -200,8 +238,8 @@ class collection {
     /// @return
     ///    The newly-created bulk write.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(mongocxx::v_noabi::bulk_write)
-    create_bulk_write(options::bulk_write const& options = {});
+    MONGOCXX_ABI_EXPORT_CDECL(v_noabi::bulk_write)
+    create_bulk_write(v_noabi::options::bulk_write const& options = {});
 
     ///
     /// Creates a new bulk operation to be executed against this collection.
@@ -215,8 +253,8 @@ class collection {
     /// @return
     ///    The newly-created bulk write.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(mongocxx::v_noabi::bulk_write)
-    create_bulk_write(client_session const& session, options::bulk_write const& options = {});
+    MONGOCXX_ABI_EXPORT_CDECL(v_noabi::bulk_write)
+    create_bulk_write(v_noabi::client_session const& session, v_noabi::options::bulk_write const& options = {});
 
     ///
     /// Sends a write to the server as a bulk write operation.
@@ -224,7 +262,7 @@ class collection {
     /// @param write
     ///   A model::write.
     /// @param options
-    ///   Optional arguments, see options::bulk_write.
+    ///   Optional arguments, see v_noabi::options::bulk_write.
     ///
     /// @return
     ///   The optional result of the bulk operation execution.
@@ -239,10 +277,10 @@ class collection {
     /// - @ref mongocxx::v_noabi::bulk_write
     /// - https://www.mongodb.com/docs/manual/core/bulk-write-operations/
     ///
-    bsoncxx::v_noabi::stdx::optional<result::bulk_write> write(
-        model::write const& write,
-        options::bulk_write const& options = options::bulk_write()) {
-        return create_bulk_write(options).append(write).execute();
+    bsoncxx::v_noabi::stdx::optional<v_noabi::result::bulk_write> write(
+        v_noabi::model::write const& write,
+        v_noabi::options::bulk_write const& options = {}) {
+        return this->create_bulk_write(options).append(write).execute();
     }
 
     ///
@@ -253,7 +291,7 @@ class collection {
     /// @param write
     ///   A model::write.
     /// @param options
-    ///   Optional arguments, see options::bulk_write.
+    ///   Optional arguments, see v_noabi::options::bulk_write.
     ///
     /// @return
     ///   The optional result of the bulk operation execution.
@@ -268,11 +306,11 @@ class collection {
     /// - @ref mongocxx::v_noabi::bulk_write
     /// - https://www.mongodb.com/docs/manual/core/bulk-write-operations/
     ///
-    bsoncxx::v_noabi::stdx::optional<result::bulk_write> write(
-        client_session const& session,
-        model::write const& write,
-        options::bulk_write const& options = options::bulk_write()) {
-        return create_bulk_write(session, options).append(write).execute();
+    bsoncxx::v_noabi::stdx::optional<v_noabi::result::bulk_write> write(
+        v_noabi::client_session const& session,
+        v_noabi::model::write const& write,
+        v_noabi::options::bulk_write const& options = {}) {
+        return this->create_bulk_write(session, options).append(write).execute();
     }
 
     ///
@@ -285,7 +323,7 @@ class collection {
     /// @param writes
     ///   A container of model::write.
     /// @param options
-    ///   Optional arguments, see options::bulk_write.
+    ///   Optional arguments, see v_noabi::options::bulk_write.
     ///
     /// @return The optional result of the bulk operation execution.
     /// If the write concern is unacknowledged, the optional will be
@@ -298,10 +336,10 @@ class collection {
     /// - https://www.mongodb.com/docs/manual/core/bulk-write-operations/
     ///
     template <typename container_type>
-    bsoncxx::v_noabi::stdx::optional<result::bulk_write> bulk_write(
+    bsoncxx::v_noabi::stdx::optional<v_noabi::result::bulk_write> bulk_write(
         container_type const& writes,
-        options::bulk_write const& options = options::bulk_write()) {
-        return bulk_write(writes.begin(), writes.end(), options);
+        v_noabi::options::bulk_write const& options = {}) {
+        return this->bulk_write(writes.begin(), writes.end(), options);
     }
 
     ///
@@ -316,7 +354,7 @@ class collection {
     /// @param writes
     ///   A container of model::write.
     /// @param options
-    ///   Optional arguments, see options::bulk_write.
+    ///   Optional arguments, see v_noabi::options::bulk_write.
     ///
     /// @return The optional result of the bulk operation execution.
     /// If the write concern is unacknowledged, the optional will be
@@ -329,11 +367,11 @@ class collection {
     /// - https://www.mongodb.com/docs/manual/core/bulk-write-operations/
     ///
     template <typename container_type>
-    bsoncxx::v_noabi::stdx::optional<result::bulk_write> bulk_write(
-        client_session const& session,
+    bsoncxx::v_noabi::stdx::optional<v_noabi::result::bulk_write> bulk_write(
+        v_noabi::client_session const& session,
         container_type const& writes,
-        options::bulk_write const& options = options::bulk_write()) {
-        return bulk_write(session, writes.begin(), writes.end(), options);
+        v_noabi::options::bulk_write const& options = {}) {
+        return this->bulk_write(session, writes.begin(), writes.end(), options);
     }
 
     ///
@@ -349,7 +387,7 @@ class collection {
     /// @param end
     ///   Iterator pointing to the end of the writes to send.
     /// @param options
-    ///   Optional arguments, see options::bulk_write.
+    ///   Optional arguments, see v_noabi::options::bulk_write.
     ///
     /// @return The optional result of the bulk operation execution, a result::bulk_write.
     ///
@@ -360,10 +398,10 @@ class collection {
     /// - https://www.mongodb.com/docs/manual/core/bulk-write-operations/
     ///
     template <typename write_model_iterator_type>
-    bsoncxx::v_noabi::stdx::optional<result::bulk_write> bulk_write(
+    bsoncxx::v_noabi::stdx::optional<v_noabi::result::bulk_write> bulk_write(
         write_model_iterator_type begin,
         write_model_iterator_type end,
-        options::bulk_write const& options = options::bulk_write()) {
+        v_noabi::options::bulk_write const& options = {}) {
         auto writes = create_bulk_write(options);
         std::for_each(begin, end, [&](model::write const& current) { writes.append(current); });
         return writes.execute();
@@ -384,7 +422,7 @@ class collection {
     /// @param end
     ///   Iterator pointing to the end of the writes to send.
     /// @param options
-    ///   Optional arguments, see options::bulk_write.
+    ///   Optional arguments, see v_noabi::options::bulk_write.
     ///
     /// @return The optional result of the bulk operation execution, a result::bulk_write.
     ///
@@ -395,11 +433,11 @@ class collection {
     /// - https://www.mongodb.com/docs/manual/core/bulk-write-operations/
     ///
     template <typename write_model_iterator_type>
-    bsoncxx::v_noabi::stdx::optional<result::bulk_write> bulk_write(
-        client_session const& session,
+    bsoncxx::v_noabi::stdx::optional<v_noabi::result::bulk_write> bulk_write(
+        v_noabi::client_session const& session,
         write_model_iterator_type begin,
         write_model_iterator_type end,
-        options::bulk_write const& options = options::bulk_write()) {
+        v_noabi::options::bulk_write const& options = {}) {
         auto writes = create_bulk_write(session, options);
         std::for_each(begin, end, [&](model::write const& current) { writes.append(current); });
         return writes.execute();
@@ -429,7 +467,7 @@ class collection {
     /// - @ref mongocxx::v_noabi::collection::estimated_document_count
     ///
     MONGOCXX_ABI_EXPORT_CDECL(std::int64_t)
-    count_documents(bsoncxx::v_noabi::document::view_or_value filter, options::count const& options = options::count());
+    count_documents(bsoncxx::v_noabi::document::view_or_value filter, v_noabi::options::count const& options = {});
 
     ///
     /// Counts the number of documents matching the provided filter.
@@ -455,9 +493,9 @@ class collection {
     ///
     MONGOCXX_ABI_EXPORT_CDECL(std::int64_t)
     count_documents(
-        client_session const& session,
+        v_noabi::client_session const& session,
         bsoncxx::v_noabi::document::view_or_value filter,
-        options::count const& options = options::count());
+        v_noabi::options::count const& options = {});
 
     ///
     /// Returns an estimate of the number of documents in the collection.
@@ -476,7 +514,7 @@ class collection {
     /// - @ref mongocxx::v_noabi::collection::count_documents
     ///
     MONGOCXX_ABI_EXPORT_CDECL(std::int64_t)
-    estimated_document_count(options::estimated_document_count const& options = options::estimated_document_count());
+    estimated_document_count(v_noabi::options::estimated_document_count const& options = {});
 
     ///
     /// Creates an index over the collection for the provided keys with the provided options.
@@ -497,11 +535,16 @@ class collection {
     /// @note
     ///   Write concern supported only for MongoDB 3.4+.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::document::value)
-    create_index(
+    bsoncxx::v_noabi::document::value create_index(
         bsoncxx::v_noabi::document::view_or_value keys,
         bsoncxx::v_noabi::document::view_or_value index_options = {},
-        options::index_view operation_options = options::index_view{});
+        v_noabi::options::index_view operation_options = {}) {
+        using namespace bsoncxx::v_noabi::builder::basic;
+
+        auto const name_opt = this->indexes().create_one(keys, index_options, operation_options);
+
+        return name_opt ? make_document(kvp("name", *name_opt)) : make_document();
+    }
 
     ///
     /// Creates an index over the collection for the provided keys with the provided options.
@@ -524,12 +567,17 @@ class collection {
     /// @note
     ///   Write concern supported only for MongoDB 3.4+.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::document::value)
-    create_index(
-        client_session const& session,
+    bsoncxx::v_noabi::document::value create_index(
+        v_noabi::client_session const& session,
         bsoncxx::v_noabi::document::view_or_value keys,
         bsoncxx::v_noabi::document::view_or_value index_options = {},
-        options::index_view operation_options = options::index_view{});
+        v_noabi::options::index_view operation_options = {}) {
+        using namespace bsoncxx::v_noabi::builder::basic;
+
+        auto const name_opt = this->indexes().create_one(session, keys, index_options, operation_options);
+
+        return name_opt ? make_document(kvp("name", *name_opt)) : make_document();
+    }
 
     ///
     /// Deletes all matching documents from the collection.
@@ -548,10 +596,8 @@ class collection {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/delete/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<result::delete_result>)
-    delete_many(
-        bsoncxx::v_noabi::document::view_or_value filter,
-        options::delete_options const& options = options::delete_options());
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<v_noabi::result::delete_result>)
+    delete_many(bsoncxx::v_noabi::document::view_or_value filter, v_noabi::options::delete_options const& options = {});
 
     ///
     /// Deletes all matching documents from the collection.
@@ -572,11 +618,11 @@ class collection {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/delete/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<result::delete_result>)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<v_noabi::result::delete_result>)
     delete_many(
-        client_session const& session,
+        v_noabi::client_session const& session,
         bsoncxx::v_noabi::document::view_or_value filter,
-        options::delete_options const& options = options::delete_options());
+        v_noabi::options::delete_options const& options = {});
 
     ///
     /// Deletes a single matching document from the collection.
@@ -595,10 +641,8 @@ class collection {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/delete/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<result::delete_result>)
-    delete_one(
-        bsoncxx::v_noabi::document::view_or_value filter,
-        options::delete_options const& options = options::delete_options());
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<v_noabi::result::delete_result>)
+    delete_one(bsoncxx::v_noabi::document::view_or_value filter, v_noabi::options::delete_options const& options = {});
 
     ///
     /// Deletes a single matching document from the collection.
@@ -619,11 +663,11 @@ class collection {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/delete/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<result::delete_result>)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<v_noabi::result::delete_result>)
     delete_one(
-        client_session const& session,
+        v_noabi::client_session const& session,
         bsoncxx::v_noabi::document::view_or_value filter,
-        options::delete_options const& options = options::delete_options());
+        v_noabi::options::delete_options const& options = {});
 
     ///
     /// Finds the distinct values for a specified field across the collection.
@@ -633,7 +677,7 @@ class collection {
     /// @param filter
     ///   Document view representing the documents for which the distinct operation will apply.
     /// @param options
-    ///   Optional arguments, see options::distinct.
+    ///   Optional arguments, see v_noabi::options::distinct.
     ///
     /// @return mongocxx::v_noabi::cursor having the distinct values for the specified
     /// field.  If the operation fails, the cursor throws
@@ -642,11 +686,11 @@ class collection {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/distinct/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(cursor)
+    MONGOCXX_ABI_EXPORT_CDECL(v_noabi::cursor)
     distinct(
         bsoncxx::v_noabi::string::view_or_value name,
         bsoncxx::v_noabi::document::view_or_value filter,
-        options::distinct const& options = options::distinct());
+        v_noabi::options::distinct const& options = {});
 
     ///
     /// Finds the distinct values for a specified field across the collection.
@@ -658,7 +702,7 @@ class collection {
     /// @param filter
     ///   Document view representing the documents for which the distinct operation will apply.
     /// @param options
-    ///   Optional arguments, see options::distinct.
+    ///   Optional arguments, see v_noabi::options::distinct.
     ///
     /// @return mongocxx::v_noabi::cursor having the distinct values for the specified
     /// field.  If the operation fails, the cursor throws
@@ -667,12 +711,12 @@ class collection {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/distinct/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(cursor)
+    MONGOCXX_ABI_EXPORT_CDECL(v_noabi::cursor)
     distinct(
-        client_session const& session,
+        v_noabi::client_session const& session,
         bsoncxx::v_noabi::string::view_or_value name,
         bsoncxx::v_noabi::document::view_or_value filter,
-        options::distinct const& options = options::distinct());
+        v_noabi::options::distinct const& options = {});
 
     ///
     /// Drops this collection and all its contained documents from the database.
@@ -720,7 +764,7 @@ class collection {
     ///
     MONGOCXX_ABI_EXPORT_CDECL(void)
     drop(
-        client_session const& session,
+        v_noabi::client_session const& session,
         bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern> const& write_concern = {},
         bsoncxx::v_noabi::document::view_or_value collection_options = {});
 
@@ -730,7 +774,7 @@ class collection {
     /// @param filter
     ///   Document view representing a document that should match the query.
     /// @param options
-    ///   Optional arguments, see options::find
+    ///   Optional arguments, see v_noabi::options::find
     ///
     /// @return A mongocxx::v_noabi::cursor with the results.  If the query fails,
     /// the cursor throws mongocxx::v_noabi::query_exception when the returned cursor
@@ -742,8 +786,8 @@ class collection {
     /// @see
     /// - https://www.mongodb.com/docs/manual/core/read-operations-introduction/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(cursor)
-    find(bsoncxx::v_noabi::document::view_or_value filter, options::find const& options = options::find());
+    MONGOCXX_ABI_EXPORT_CDECL(v_noabi::cursor)
+    find(bsoncxx::v_noabi::document::view_or_value filter, v_noabi::options::find const& options = {});
 
     ///
     /// Finds the documents in this collection which match the provided filter.
@@ -753,7 +797,7 @@ class collection {
     /// @param filter
     ///   Document view representing a document that should match the query.
     /// @param options
-    ///   Optional arguments, see options::find
+    ///   Optional arguments, see v_noabi::options::find
     ///
     /// @return A mongocxx::v_noabi::cursor with the results.  If the query fails,
     /// the cursor throws mongocxx::v_noabi::query_exception when the returned cursor
@@ -765,11 +809,11 @@ class collection {
     /// @see
     /// - https://www.mongodb.com/docs/manual/core/read-operations-introduction/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(cursor)
+    MONGOCXX_ABI_EXPORT_CDECL(v_noabi::cursor)
     find(
-        client_session const& session,
+        v_noabi::client_session const& session,
         bsoncxx::v_noabi::document::view_or_value filter,
-        options::find const& options = options::find());
+        v_noabi::options::find const& options = {});
 
     ///
     /// Finds a single document in this collection that match the provided filter.
@@ -777,7 +821,7 @@ class collection {
     /// @param filter
     ///   Document view representing a document that should match the query.
     /// @param options
-    ///   Optional arguments, see options::find
+    ///   Optional arguments, see v_noabi::options::find
     ///
     /// @return An optional document that matched the filter.
     ///
@@ -787,7 +831,7 @@ class collection {
     /// - https://www.mongodb.com/docs/manual/core/read-operations-introduction/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::value>)
-    find_one(bsoncxx::v_noabi::document::view_or_value filter, options::find const& options = options::find());
+    find_one(bsoncxx::v_noabi::document::view_or_value filter, v_noabi::options::find const& options = {});
 
     ///
     /// Finds a single document in this collection that match the provided filter.
@@ -797,7 +841,7 @@ class collection {
     /// @param filter
     ///   Document view representing a document that should match the query.
     /// @param options
-    ///   Optional arguments, see options::find
+    ///   Optional arguments, see v_noabi::options::find
     ///
     /// @return An optional document that matched the filter.
     ///
@@ -808,9 +852,9 @@ class collection {
     ///
     MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::value>)
     find_one(
-        client_session const& session,
+        v_noabi::client_session const& session,
         bsoncxx::v_noabi::document::view_or_value filter,
-        options::find const& options = options::find());
+        v_noabi::options::find const& options = {});
 
     ///
     /// Finds a single document matching the filter, deletes it, and returns the original.
@@ -818,7 +862,7 @@ class collection {
     /// @param filter
     ///   Document view representing a document that should be deleted.
     /// @param options
-    ///   Optional arguments, see options::find_one_and_delete
+    ///   Optional arguments, see v_noabi::options::find_one_and_delete
     ///
     /// @return The document that was deleted.
     ///
@@ -832,7 +876,7 @@ class collection {
     MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::value>)
     find_one_and_delete(
         bsoncxx::v_noabi::document::view_or_value filter,
-        options::find_one_and_delete const& options = options::find_one_and_delete());
+        v_noabi::options::find_one_and_delete const& options = {});
 
     ///
     /// Finds a single document matching the filter, deletes it, and returns the original.
@@ -842,7 +886,7 @@ class collection {
     /// @param filter
     ///   Document view representing a document that should be deleted.
     /// @param options
-    ///   Optional arguments, see options::find_one_and_delete
+    ///   Optional arguments, see v_noabi::options::find_one_and_delete
     ///
     /// @return The document that was deleted.
     ///
@@ -855,9 +899,9 @@ class collection {
     ///
     MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::value>)
     find_one_and_delete(
-        client_session const& session,
+        v_noabi::client_session const& session,
         bsoncxx::v_noabi::document::view_or_value filter,
-        options::find_one_and_delete const& options = options::find_one_and_delete());
+        v_noabi::options::find_one_and_delete const& options = {});
 
     ///
     /// Finds a single document matching the filter, replaces it, and returns either the original
@@ -868,7 +912,7 @@ class collection {
     /// @param replacement
     ///   Document view representing the replacement for a matching document.
     /// @param options
-    ///   Optional arguments, see options::find_one_and_replace.
+    ///   Optional arguments, see v_noabi::options::find_one_and_replace.
     ///
     /// @return The original or replaced document.
     ///
@@ -883,7 +927,7 @@ class collection {
     find_one_and_replace(
         bsoncxx::v_noabi::document::view_or_value filter,
         bsoncxx::v_noabi::document::view_or_value replacement,
-        options::find_one_and_replace const& options = options::find_one_and_replace());
+        v_noabi::options::find_one_and_replace const& options = {});
 
     ///
     /// Finds a single document matching the filter, replaces it, and returns either the original
@@ -896,7 +940,7 @@ class collection {
     /// @param replacement
     ///   Document view representing the replacement for a matching document.
     /// @param options
-    ///   Optional arguments, see options::find_one_and_replace.
+    ///   Optional arguments, see v_noabi::options::find_one_and_replace.
     ///
     /// @return The original or replaced document.
     ///
@@ -909,10 +953,10 @@ class collection {
     ///
     MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::value>)
     find_one_and_replace(
-        client_session const& session,
+        v_noabi::client_session const& session,
         bsoncxx::v_noabi::document::view_or_value filter,
         bsoncxx::v_noabi::document::view_or_value replacement,
-        options::find_one_and_replace const& options = options::find_one_and_replace());
+        v_noabi::options::find_one_and_replace const& options = {});
 
     ///
     /// Finds a single document matching the filter, updates it, and returns either the original
@@ -923,7 +967,7 @@ class collection {
     /// @param update
     ///   Document view representing the update to apply to a matching document.
     /// @param options
-    ///   Optional arguments, see options::find_one_and_update.
+    ///   Optional arguments, see v_noabi::options::find_one_and_update.
     ///
     /// @return The original or updated document.
     ///
@@ -938,7 +982,7 @@ class collection {
     find_one_and_update(
         bsoncxx::v_noabi::document::view_or_value filter,
         bsoncxx::v_noabi::document::view_or_value update,
-        options::find_one_and_update const& options = options::find_one_and_update());
+        v_noabi::options::find_one_and_update const& options = {});
 
     ///
     /// Finds a single document matching the filter, updates it, and returns either the original
@@ -949,7 +993,7 @@ class collection {
     /// @param update
     ///   Pipeline representing the update to apply to a matching document.
     /// @param options
-    ///   Optional arguments, see options::find_one_and_update.
+    ///   Optional arguments, see v_noabi::options::find_one_and_update.
     ///
     /// @return The original or updated document.
     ///
@@ -963,8 +1007,8 @@ class collection {
     MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::value>)
     find_one_and_update(
         bsoncxx::v_noabi::document::view_or_value filter,
-        pipeline const& update,
-        options::find_one_and_update const& options = options::find_one_and_update());
+        v_noabi::pipeline const& update,
+        v_noabi::options::find_one_and_update const& options = {});
 
     ///
     /// Finds a single document matching the filter, updates it, and returns either the original
@@ -975,7 +1019,7 @@ class collection {
     /// @param update
     ///   Supports the empty update {}.
     /// @param options
-    ///   Optional arguments, see options::find_one_and_update.
+    ///   Optional arguments, see v_noabi::options::find_one_and_update.
     ///
     /// @return The original or updated document.
     ///
@@ -990,7 +1034,7 @@ class collection {
     find_one_and_update(
         bsoncxx::v_noabi::document::view_or_value filter,
         std::initializer_list<_empty_doc_tag> update,
-        options::find_one_and_update const& options = options::find_one_and_update());
+        v_noabi::options::find_one_and_update const& options = {});
 
     ///
     /// Finds a single document matching the filter, updates it, and returns either the original
@@ -1003,7 +1047,7 @@ class collection {
     /// @param update
     ///   Document view representing the update to apply to a matching document.
     /// @param options
-    ///   Optional arguments, see options::find_one_and_update.
+    ///   Optional arguments, see v_noabi::options::find_one_and_update.
     ///
     /// @return The original or updated document.
     ///
@@ -1016,10 +1060,10 @@ class collection {
     ///
     MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::value>)
     find_one_and_update(
-        client_session const& session,
+        v_noabi::client_session const& session,
         bsoncxx::v_noabi::document::view_or_value filter,
         bsoncxx::v_noabi::document::view_or_value update,
-        options::find_one_and_update const& options = options::find_one_and_update());
+        v_noabi::options::find_one_and_update const& options = {});
 
     ///
     /// Finds a single document matching the filter, updates it, and returns either the original
@@ -1032,7 +1076,7 @@ class collection {
     /// @param update
     ///   Pipeline representing the update to apply to a matching document.
     /// @param options
-    ///   Optional arguments, see options::find_one_and_update.
+    ///   Optional arguments, see v_noabi::options::find_one_and_update.
     ///
     /// @return The original or updated document.
     ///
@@ -1045,10 +1089,10 @@ class collection {
     ///
     MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::value>)
     find_one_and_update(
-        client_session const& session,
+        v_noabi::client_session const& session,
         bsoncxx::v_noabi::document::view_or_value filter,
-        pipeline const& update,
-        options::find_one_and_update const& options = options::find_one_and_update());
+        v_noabi::pipeline const& update,
+        v_noabi::options::find_one_and_update const& options = {});
 
     ///
     /// Finds a single document matching the filter, updates it, and returns either the original
@@ -1061,7 +1105,7 @@ class collection {
     /// @param update
     ///   Supports the empty update {}.
     /// @param options
-    ///   Optional arguments, see options::find_one_and_update.
+    ///   Optional arguments, see v_noabi::options::find_one_and_update.
     ///
     /// @return The original or updated document.
     ///
@@ -1074,10 +1118,10 @@ class collection {
     ///
     MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::value>)
     find_one_and_update(
-        client_session const& session,
+        v_noabi::client_session const& session,
         bsoncxx::v_noabi::document::view_or_value filter,
         std::initializer_list<_empty_doc_tag> update,
-        options::find_one_and_update const& options = options::find_one_and_update());
+        v_noabi::options::find_one_and_update const& options = {});
 
     ///
     /// Inserts a single document into the collection. If the document is missing an identifier
@@ -1086,7 +1130,7 @@ class collection {
     /// @param document
     ///   The document to insert.
     /// @param options
-    ///   Optional arguments, see options::insert.
+    ///   Optional arguments, see v_noabi::options::insert.
     ///
     /// @return The optional result of attempting to perform the insert.
     /// If the write concern is unacknowledged, the optional will be
@@ -1094,8 +1138,8 @@ class collection {
     ///
     /// @throws mongocxx::v_noabi::bulk_write_exception if the operation fails.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<result::insert_one>)
-    insert_one(bsoncxx::v_noabi::document::view_or_value document, options::insert const& options = {});
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<v_noabi::result::insert_one>)
+    insert_one(bsoncxx::v_noabi::document::view_or_value document, v_noabi::options::insert const& options = {});
 
     ///
     ///
@@ -1107,7 +1151,7 @@ class collection {
     /// @param document
     ///   The document to insert.
     /// @param options
-    ///   Optional arguments, see options::insert.
+    ///   Optional arguments, see v_noabi::options::insert.
     ///
     /// @return The optional result of attempting to perform the insert.
     /// If the write concern is unacknowledged, the optional will be
@@ -1115,11 +1159,11 @@ class collection {
     ///
     /// @throws mongocxx::v_noabi::bulk_write_exception if the operation fails.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<result::insert_one>)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<v_noabi::result::insert_one>)
     insert_one(
-        client_session const& session,
+        v_noabi::client_session const& session,
         bsoncxx::v_noabi::document::view_or_value document,
-        options::insert const& options = {});
+        v_noabi::options::insert const& options = {});
 
     ///
     /// Inserts multiple documents into the collection. If any of the documents are missing
@@ -1136,7 +1180,7 @@ class collection {
     /// @param container
     ///   Container of a documents to insert.
     /// @param options
-    ///   Optional arguments, see options::insert.
+    ///   Optional arguments, see v_noabi::options::insert.
     ///
     /// @return The optional result of attempting to performing the insert.
     /// If the write concern is unacknowledged, the optional will be
@@ -1145,10 +1189,10 @@ class collection {
     /// @throws mongocxx::v_noabi::bulk_write_exception when the operation fails.
     ///
     template <typename container_type>
-    bsoncxx::v_noabi::stdx::optional<result::insert_many> insert_many(
+    bsoncxx::v_noabi::stdx::optional<v_noabi::result::insert_many> insert_many(
         container_type const& container,
-        options::insert const& options = options::insert()) {
-        return insert_many(container.begin(), container.end(), options);
+        v_noabi::options::insert const& options = {}) {
+        return this->insert_many(container.begin(), container.end(), options);
     }
 
     ///
@@ -1164,7 +1208,7 @@ class collection {
     /// @param container
     ///   Container of a documents to insert.
     /// @param options
-    ///   Optional arguments, see options::insert.
+    ///   Optional arguments, see v_noabi::options::insert.
     ///
     /// @return The optional result of attempting to performing the insert.
     /// If the write concern is unacknowledged, the optional will be
@@ -1173,11 +1217,11 @@ class collection {
     /// @throws mongocxx::v_noabi::bulk_write_exception when the operation fails.
     ///
     template <typename container_type>
-    bsoncxx::v_noabi::stdx::optional<result::insert_many> insert_many(
-        client_session const& session,
+    bsoncxx::v_noabi::stdx::optional<v_noabi::result::insert_many> insert_many(
+        v_noabi::client_session const& session,
         container_type const& container,
-        options::insert const& options = options::insert()) {
-        return insert_many(session, container.begin(), container.end(), options);
+        v_noabi::options::insert const& options = {}) {
+        return this->insert_many(session, container.begin(), container.end(), options);
     }
 
     ///
@@ -1197,18 +1241,18 @@ class collection {
     /// @param end
     ///   Iterator pointing to the end of the documents to be inserted.
     /// @param options
-    ///   Optional arguments, see options::insert.
+    ///   Optional arguments, see v_noabi::options::insert.
     ///
     /// @return The result of attempting to performing the insert.
     ///
     /// @throws mongocxx::v_noabi::bulk_write_exception if the operation fails.
     ///
     template <typename document_view_iterator_type>
-    bsoncxx::v_noabi::stdx::optional<result::insert_many> insert_many(
+    bsoncxx::v_noabi::stdx::optional<v_noabi::result::insert_many> insert_many(
         document_view_iterator_type begin,
         document_view_iterator_type end,
-        options::insert const& options = options::insert()) {
-        return _insert_many(nullptr, begin, end, options);
+        v_noabi::options::insert const& options = {}) {
+        return this->_insert_many(nullptr, begin, end, options);
     }
 
     ///
@@ -1226,19 +1270,19 @@ class collection {
     /// @param end
     ///   Iterator pointing to the end of the documents to be inserted.
     /// @param options
-    ///   Optional arguments, see options::insert.
+    ///   Optional arguments, see v_noabi::options::insert.
     ///
     /// @return The result of attempting to performing the insert.
     ///
     /// @throws mongocxx::v_noabi::bulk_write_exception if the operation fails.
     ///
     template <typename document_view_iterator_type>
-    bsoncxx::v_noabi::stdx::optional<result::insert_many> insert_many(
-        client_session const& session,
+    bsoncxx::v_noabi::stdx::optional<v_noabi::result::insert_many> insert_many(
+        v_noabi::client_session const& session,
         document_view_iterator_type begin,
         document_view_iterator_type end,
-        options::insert const& options = options::insert()) {
-        return _insert_many(&session, begin, end, options);
+        v_noabi::options::insert const& options = {}) {
+        return this->_insert_many(&session, begin, end, options);
     }
 
     ///
@@ -1252,7 +1296,7 @@ class collection {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/listIndexes/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(cursor) list_indexes() const;
+    MONGOCXX_ABI_EXPORT_CDECL(v_noabi::cursor) list_indexes() const;
 
     ///
     /// Returns a list of the indexes currently on this collection.
@@ -1267,7 +1311,7 @@ class collection {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/listIndexes/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(cursor) list_indexes(client_session const& session) const;
+    MONGOCXX_ABI_EXPORT_CDECL(v_noabi::cursor) list_indexes(v_noabi::client_session const& session) const;
 
     ///
     /// Returns the name of this collection.
@@ -1300,7 +1344,7 @@ class collection {
     rename(
         bsoncxx::v_noabi::string::view_or_value new_name,
         bool drop_target_before_rename = false,
-        bsoncxx::v_noabi::stdx::optional<write_concern> const& write_concern = {});
+        bsoncxx::v_noabi::stdx::optional<v_noabi::write_concern> const& write_concern = {});
 
     ///
     /// Rename this collection.
@@ -1325,10 +1369,10 @@ class collection {
     ///
     MONGOCXX_ABI_EXPORT_CDECL(void)
     rename(
-        client_session const& session,
+        v_noabi::client_session const& session,
         bsoncxx::v_noabi::string::view_or_value new_name,
         bool drop_target_before_rename = false,
-        bsoncxx::v_noabi::stdx::optional<write_concern> const& write_concern = {});
+        bsoncxx::v_noabi::stdx::optional<v_noabi::write_concern> const& write_concern = {});
 
     ///
     /// Sets the read_concern for this collection. Changes will not have any effect on existing
@@ -1340,7 +1384,7 @@ class collection {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/read-concern/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(void) read_concern(mongocxx::v_noabi::read_concern rc);
+    MONGOCXX_ABI_EXPORT_CDECL(void) read_concern(v_noabi::read_concern rc);
 
     ///
     /// Gets the read_concern for the collection.
@@ -1350,7 +1394,7 @@ class collection {
     ///
     /// @return The current read_concern.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(mongocxx::v_noabi::read_concern) read_concern() const;
+    MONGOCXX_ABI_EXPORT_CDECL(v_noabi::read_concern) read_concern() const;
 
     ///
     /// Sets the read_preference for this collection. Changes will not have any effect on existing
@@ -1362,7 +1406,7 @@ class collection {
     /// @see
     /// - https://www.mongodb.com/docs/manual/core/read-preference/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(void) read_preference(mongocxx::v_noabi::read_preference rp);
+    MONGOCXX_ABI_EXPORT_CDECL(void) read_preference(v_noabi::read_preference rp);
 
     ///
     /// Gets the read_preference for the collection.
@@ -1372,7 +1416,7 @@ class collection {
     /// @see
     /// - https://www.mongodb.com/docs/manual/core/read-preference/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(mongocxx::v_noabi::read_preference) read_preference() const;
+    MONGOCXX_ABI_EXPORT_CDECL(v_noabi::read_preference) read_preference() const;
 
     ///
     /// Replaces a single document matching the provided filter in this collection.
@@ -1382,7 +1426,7 @@ class collection {
     /// @param replacement
     ///   The replacement document.
     /// @param options
-    ///   Optional arguments, see options::replace.
+    ///   Optional arguments, see v_noabi::options::replace.
     ///
     /// @return The optional result of attempting to replace a document.
     /// If the write concern is unacknowledged, the optional will be
@@ -1395,11 +1439,11 @@ class collection {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/update/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<result::replace_one>)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<v_noabi::result::replace_one>)
     replace_one(
         bsoncxx::v_noabi::document::view_or_value filter,
         bsoncxx::v_noabi::document::view_or_value replacement,
-        options::replace const& options = options::replace{});
+        v_noabi::options::replace const& options = {});
 
     ///
     /// Replaces a single document matching the provided filter in this collection.
@@ -1411,7 +1455,7 @@ class collection {
     /// @param replacement
     ///   The replacement document.
     /// @param options
-    ///   Optional arguments, see options::replace.
+    ///   Optional arguments, see v_noabi::options::replace.
     ///
     /// @return The optional result of attempting to replace a document.
     /// If the write concern is unacknowledged, the optional will be
@@ -1424,12 +1468,12 @@ class collection {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/update/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<result::replace_one>)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<v_noabi::result::replace_one>)
     replace_one(
-        client_session const& session,
+        v_noabi::client_session const& session,
         bsoncxx::v_noabi::document::view_or_value filter,
         bsoncxx::v_noabi::document::view_or_value replacement,
-        options::replace const& options = options::replace{});
+        v_noabi::options::replace const& options = {});
 
     ///
     /// Updates multiple documents matching the provided filter in this collection.
@@ -1439,7 +1483,7 @@ class collection {
     /// @param update
     ///   Document representing the update to be applied to matching documents.
     /// @param options
-    ///   Optional arguments, see options::update.
+    ///   Optional arguments, see v_noabi::options::update.
     ///
     /// @return The optional result of attempting to update multiple documents.
     /// If the write concern is unacknowledged, the optional will be
@@ -1452,11 +1496,11 @@ class collection {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/update/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<result::update>)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<v_noabi::result::update>)
     update_many(
         bsoncxx::v_noabi::document::view_or_value filter,
         bsoncxx::v_noabi::document::view_or_value update,
-        options::update const& options = options::update());
+        v_noabi::options::update const& options = {});
 
     ///
     /// Updates multiple documents matching the provided filter in this collection.
@@ -1466,7 +1510,7 @@ class collection {
     /// @param update
     ///   Pipeline representing the update to be applied to matching documents.
     /// @param options
-    ///   Optional arguments, see options::update.
+    ///   Optional arguments, see v_noabi::options::update.
     ///
     /// @return The optional result of attempting to update multiple documents.
     /// If the write concern is unacknowledged, the optional will be
@@ -1479,11 +1523,11 @@ class collection {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/update/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<result::update>)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<v_noabi::result::update>)
     update_many(
         bsoncxx::v_noabi::document::view_or_value filter,
-        pipeline const& update,
-        options::update const& options = options::update());
+        v_noabi::pipeline const& update,
+        v_noabi::options::update const& options = {});
 
     ///
     /// Updates multiple documents matching the provided filter in this collection.
@@ -1493,7 +1537,7 @@ class collection {
     /// @param update
     ///   Supports the empty update {}.
     /// @param options
-    ///   Optional arguments, see options::update.
+    ///   Optional arguments, see v_noabi::options::update.
     ///
     /// @return The optional result of attempting to update multiple documents.
     /// If the write concern is unacknowledged, the optional will be
@@ -1506,11 +1550,11 @@ class collection {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/update/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<result::update>)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<v_noabi::result::update>)
     update_many(
         bsoncxx::v_noabi::document::view_or_value filter,
         std::initializer_list<_empty_doc_tag> update,
-        options::update const& options = options::update());
+        v_noabi::options::update const& options = {});
 
     ///
     /// Updates multiple documents matching the provided filter in this collection.
@@ -1522,7 +1566,7 @@ class collection {
     /// @param update
     ///   Document representing the update to be applied to matching documents.
     /// @param options
-    ///   Optional arguments, see options::update.
+    ///   Optional arguments, see v_noabi::options::update.
     ///
     /// @return The optional result of attempting to update multiple documents.
     /// If the write concern is unacknowledged, the optional will be
@@ -1535,12 +1579,12 @@ class collection {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/update/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<result::update>)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<v_noabi::result::update>)
     update_many(
-        client_session const& session,
+        v_noabi::client_session const& session,
         bsoncxx::v_noabi::document::view_or_value filter,
         bsoncxx::v_noabi::document::view_or_value update,
-        options::update const& options = options::update());
+        v_noabi::options::update const& options = {});
 
     ///
     /// Updates multiple documents matching the provided filter in this collection.
@@ -1552,7 +1596,7 @@ class collection {
     /// @param update
     ///   Pipeline representing the update to be applied to matching documents.
     /// @param options
-    ///   Optional arguments, see options::update.
+    ///   Optional arguments, see v_noabi::options::update.
     ///
     /// @return The optional result of attempting to update multiple documents.
     /// If the write concern is unacknowledged, the optional will be
@@ -1565,12 +1609,12 @@ class collection {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/update/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<result::update>)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<v_noabi::result::update>)
     update_many(
-        client_session const& session,
+        v_noabi::client_session const& session,
         bsoncxx::v_noabi::document::view_or_value filter,
-        pipeline const& update,
-        options::update const& options = options::update());
+        v_noabi::pipeline const& update,
+        v_noabi::options::update const& options = {});
 
     ///
     /// Updates multiple documents matching the provided filter in this collection.
@@ -1582,7 +1626,7 @@ class collection {
     /// @param update
     ///   Supports the empty update {}.
     /// @param options
-    ///   Optional arguments, see options::update.
+    ///   Optional arguments, see v_noabi::options::update.
     ///
     /// @return The optional result of attempting to update multiple documents.
     /// If the write concern is unacknowledged, the optional will be
@@ -1595,12 +1639,12 @@ class collection {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/update/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<result::update>)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<v_noabi::result::update>)
     update_many(
-        client_session const& session,
+        v_noabi::client_session const& session,
         bsoncxx::v_noabi::document::view_or_value filter,
         std::initializer_list<_empty_doc_tag> update,
-        options::update const& options = options::update());
+        v_noabi::options::update const& options = {});
 
     ///
     /// Updates a single document matching the provided filter in this collection.
@@ -1610,7 +1654,7 @@ class collection {
     /// @param update
     ///   Document representing the update to be applied to a matching document.
     /// @param options
-    ///   Optional arguments, see options::update.
+    ///   Optional arguments, see v_noabi::options::update.
     ///
     /// @return The optional result of attempting to update a document.
     /// If the write concern is unacknowledged, the optional will be
@@ -1623,11 +1667,11 @@ class collection {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/update/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<result::update>)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<v_noabi::result::update>)
     update_one(
         bsoncxx::v_noabi::document::view_or_value filter,
         bsoncxx::v_noabi::document::view_or_value update,
-        options::update const& options = options::update());
+        v_noabi::options::update const& options = {});
 
     ///
     /// Updates a single document matching the provided filter in this collection.
@@ -1637,7 +1681,7 @@ class collection {
     /// @param update
     ///   Pipeline representing the update to be applied to a matching document.
     /// @param options
-    ///   Optional arguments, see options::update.
+    ///   Optional arguments, see v_noabi::options::update.
     ///
     /// @return The optional result of attempting to update a document.
     /// If the write concern is unacknowledged, the optional will be
@@ -1650,11 +1694,11 @@ class collection {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/update/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<result::update>)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<v_noabi::result::update>)
     update_one(
         bsoncxx::v_noabi::document::view_or_value filter,
-        pipeline const& update,
-        options::update const& options = options::update());
+        v_noabi::pipeline const& update,
+        v_noabi::options::update const& options = {});
 
     ///
     /// Updates a single document matching the provided filter in this collection.
@@ -1664,7 +1708,7 @@ class collection {
     /// @param update
     ///   Supports the empty update {}.
     /// @param options
-    ///   Optional arguments, see options::update.
+    ///   Optional arguments, see v_noabi::options::update.
     ///
     /// @return The optional result of attempting to update a document.
     /// If the write concern is unacknowledged, the optional will be
@@ -1677,11 +1721,11 @@ class collection {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/update/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<result::update>)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<v_noabi::result::update>)
     update_one(
         bsoncxx::v_noabi::document::view_or_value filter,
         std::initializer_list<_empty_doc_tag> update,
-        options::update const& options = options::update());
+        v_noabi::options::update const& options = {});
 
     ///
     /// Updates a single document matching the provided filter in this collection.
@@ -1693,7 +1737,7 @@ class collection {
     /// @param update
     ///   Document representing the update to be applied to a matching document.
     /// @param options
-    ///   Optional arguments, see options::update.
+    ///   Optional arguments, see v_noabi::options::update.
     ///
     /// @return The optional result of attempting to update a document.
     /// If the write concern is unacknowledged, the optional will be
@@ -1706,12 +1750,12 @@ class collection {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/update/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<result::update>)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<v_noabi::result::update>)
     update_one(
-        client_session const& session,
+        v_noabi::client_session const& session,
         bsoncxx::v_noabi::document::view_or_value filter,
         bsoncxx::v_noabi::document::view_or_value update,
-        options::update const& options = options::update());
+        v_noabi::options::update const& options = {});
 
     ///
     /// Updates a single document matching the provided filter in this collection.
@@ -1723,7 +1767,7 @@ class collection {
     /// @param update
     ///   Pipeline representing the update to be applied to a matching document.
     /// @param options
-    ///   Optional arguments, see options::update.
+    ///   Optional arguments, see v_noabi::options::update.
     ///
     /// @return The optional result of attempting to update a document.
     /// If the write concern is unacknowledged, the optional will be
@@ -1736,12 +1780,12 @@ class collection {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/update/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<result::update>)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<v_noabi::result::update>)
     update_one(
-        client_session const& session,
+        v_noabi::client_session const& session,
         bsoncxx::v_noabi::document::view_or_value filter,
-        pipeline const& update,
-        options::update const& options = options::update());
+        v_noabi::pipeline const& update,
+        v_noabi::options::update const& options = {});
 
     ///
     /// Updates a single document matching the provided filter in this collection.
@@ -1753,7 +1797,7 @@ class collection {
     /// @param update
     ///   Supports the empty update {}.
     /// @param options
-    ///   Optional arguments, see options::update.
+    ///   Optional arguments, see v_noabi::options::update.
     ///
     /// @return The optional result of attempting to update a document.
     /// If the write concern is unacknowledged, the optional will be
@@ -1766,12 +1810,12 @@ class collection {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/update/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<result::update>)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<v_noabi::result::update>)
     update_one(
-        client_session const& session,
+        v_noabi::client_session const& session,
         bsoncxx::v_noabi::document::view_or_value filter,
         std::initializer_list<_empty_doc_tag> update,
-        options::update const& options = options::update());
+        v_noabi::options::update const& options = {});
 
     ///
     /// Sets the write_concern for this collection. Changes will not have any effect on existing
@@ -1780,19 +1824,19 @@ class collection {
     /// @param wc
     ///   The new write_concern to use.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(void) write_concern(mongocxx::v_noabi::write_concern wc);
+    MONGOCXX_ABI_EXPORT_CDECL(void) write_concern(v_noabi::write_concern wc);
 
     ///
     /// Gets the write_concern for the collection.
     ///
     /// @return The current write_concern.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(mongocxx::v_noabi::write_concern) write_concern() const;
+    MONGOCXX_ABI_EXPORT_CDECL(v_noabi::write_concern) write_concern() const;
 
     ///
     /// Gets an index_view to the collection.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(index_view) indexes();
+    MONGOCXX_ABI_EXPORT_CDECL(v_noabi::index_view) indexes();
 
     ///
     ///
@@ -1808,7 +1852,7 @@ class collection {
     /// @see
     /// - https://www.mongodb.com/docs/manual/changeStreams/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(change_stream) watch(options::change_stream const& options = {});
+    MONGOCXX_ABI_EXPORT_CDECL(v_noabi::change_stream) watch(v_noabi::options::change_stream const& options = {});
 
     ///
     /// @param session
@@ -1822,8 +1866,8 @@ class collection {
     /// @see
     /// - https://www.mongodb.com/docs/manual/changeStreams/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(change_stream)
-    watch(client_session const& session, options::change_stream const& options = {});
+    MONGOCXX_ABI_EXPORT_CDECL(v_noabi::change_stream)
+    watch(v_noabi::client_session const& session, v_noabi::options::change_stream const& options = {});
 
     ///
     /// Gets a change stream on this collection.
@@ -1842,8 +1886,8 @@ class collection {
     /// @see
     /// - https://www.mongodb.com/docs/manual/changeStreams/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(change_stream)
-    watch(pipeline const& pipe, options::change_stream const& options = {});
+    MONGOCXX_ABI_EXPORT_CDECL(v_noabi::change_stream)
+    watch(v_noabi::pipeline const& pipe, v_noabi::options::change_stream const& options = {});
 
     ///
     /// Gets a change stream on this collection.
@@ -1861,128 +1905,22 @@ class collection {
     /// @see
     /// - https://www.mongodb.com/docs/manual/changeStreams/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(change_stream)
-    watch(client_session const& session, pipeline const& pipe, options::change_stream const& options = {});
+    MONGOCXX_ABI_EXPORT_CDECL(v_noabi::change_stream)
+    watch(
+        v_noabi::client_session const& session,
+        v_noabi::pipeline const& pipe,
+        v_noabi::options::change_stream const& options = {});
 
     ///
     /// Gets a search_index_view to the collection.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(search_index_view) search_indexes();
+    MONGOCXX_ABI_EXPORT_CDECL(v_noabi::search_index_view) search_indexes();
+
+    class internal;
 
    private:
-    friend ::mongocxx::v_noabi::bulk_write;
-    friend ::mongocxx::v_noabi::client_encryption;
-    friend ::mongocxx::v_noabi::database;
-
-    collection(database& database, bsoncxx::v_noabi::string::view_or_value collection_name);
-
-    collection(database& database, void* collection);
-
-    cursor _aggregate(client_session const* session, pipeline const& pipeline, options::aggregate const& options);
-
-    std::int64_t _count(
-        client_session const* session,
-        bsoncxx::v_noabi::document::view_or_value filter,
-        options::count const& options);
-
-    std::int64_t _count_documents(
-        client_session const* session,
-        bsoncxx::v_noabi::document::view_or_value filter,
-        options::count const& options);
-
-    bsoncxx::v_noabi::document::value _create_index(
-        client_session const* session,
-        bsoncxx::v_noabi::document::view_or_value keys,
-        bsoncxx::v_noabi::document::view_or_value index_options,
-        options::index_view operation_options);
-
-    bsoncxx::v_noabi::stdx::optional<result::delete_result> _delete_many(
-        client_session const* session,
-        bsoncxx::v_noabi::document::view_or_value filter,
-        options::delete_options const& options);
-
-    bsoncxx::v_noabi::stdx::optional<result::delete_result> _delete_one(
-        client_session const* session,
-        bsoncxx::v_noabi::document::view_or_value filter,
-        options::delete_options const& options);
-
-    cursor _distinct(
-        client_session const* session,
-        bsoncxx::v_noabi::string::view_or_value name,
-        bsoncxx::v_noabi::document::view_or_value filter,
-        options::distinct const& options);
-
-    void _drop(
-        client_session const* session,
-        bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern> const& write_concern,
-        bsoncxx::v_noabi::document::view_or_value collection_options);
-
-    cursor _find(
-        client_session const* session,
-        bsoncxx::v_noabi::document::view_or_value filter,
-        options::find const& options);
-
-    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::value> _find_one(
-        client_session const* session,
-        bsoncxx::v_noabi::document::view_or_value filter,
-        options::find const& options);
-
-    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::value> _find_one_and_delete(
-        client_session const* session,
-        bsoncxx::v_noabi::document::view_or_value filter,
-        options::find_one_and_delete const& options);
-
-    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::value> _find_one_and_replace(
-        client_session const* session,
-        bsoncxx::v_noabi::document::view_or_value filter,
-        bsoncxx::v_noabi::document::view_or_value replacement,
-        options::find_one_and_replace const& options);
-
-    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::value> _find_one_and_update(
-        client_session const* session,
-        bsoncxx::v_noabi::document::view_or_value filter,
-        bsoncxx::v_noabi::document::view_or_value update,
-        options::find_one_and_update const& options);
-
-    bsoncxx::v_noabi::stdx::optional<result::insert_one> _insert_one(
-        client_session const* session,
-        bsoncxx::v_noabi::document::view_or_value document,
-        options::insert const& options);
-
-    void _rename(
-        client_session const* session,
-        bsoncxx::v_noabi::string::view_or_value new_name,
-        bool drop_target_before_rename,
-        bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern> const& write_concern);
-
-    bsoncxx::v_noabi::stdx::optional<result::replace_one> _replace_one(
-        client_session const* session,
-        options::bulk_write const& bulk_opts,
-        model::replace_one const& replace_op);
-
-    bsoncxx::v_noabi::stdx::optional<result::replace_one> _replace_one(
-        client_session const* session,
-        bsoncxx::v_noabi::document::view_or_value filter,
-        bsoncxx::v_noabi::document::view_or_value replacement,
-        options::replace const& options);
-
-    bsoncxx::v_noabi::stdx::optional<result::update> _update_one(
-        client_session const* session,
-        bsoncxx::v_noabi::document::view_or_value filter,
-        bsoncxx::v_noabi::document::view_or_value update,
-        options::update const& options);
-
-    bsoncxx::v_noabi::stdx::optional<result::update> _update_many(
-        client_session const* session,
-        bsoncxx::v_noabi::document::view_or_value filter,
-        bsoncxx::v_noabi::document::view_or_value update,
-        options::update const& options);
-
-    change_stream _watch(client_session const* session, pipeline const& pipe, options::change_stream const& options);
-
-    // Helpers for the insert_many method templates.
-    MONGOCXX_ABI_EXPORT_CDECL(mongocxx::v_noabi::bulk_write)
-    _init_insert_many(options::insert const& options, client_session const* session);
+    MONGOCXX_ABI_EXPORT_CDECL(v_noabi::bulk_write)
+    _init_insert_many(v_noabi::options::insert const& options, client_session const* session);
 
     MONGOCXX_ABI_EXPORT_CDECL(void)
     _insert_many_doc_handler(
@@ -1990,15 +1928,15 @@ class collection {
         bsoncxx::v_noabi::builder::basic::array& inserted_ids,
         bsoncxx::v_noabi::document::view doc) const;
 
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<result::insert_many>)
-    _exec_insert_many(mongocxx::v_noabi::bulk_write& writes, bsoncxx::v_noabi::builder::basic::array& inserted_ids);
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<v_noabi::result::insert_many>)
+    _exec_insert_many(v_noabi::bulk_write& writes, bsoncxx::v_noabi::builder::basic::array& inserted_ids);
 
     template <typename document_view_iterator_type>
-    bsoncxx::v_noabi::stdx::optional<result::insert_many> _insert_many(
+    bsoncxx::v_noabi::stdx::optional<v_noabi::result::insert_many> _insert_many(
         client_session const* session,
         document_view_iterator_type begin,
         document_view_iterator_type end,
-        options::insert const& options) {
+        v_noabi::options::insert const& options) {
         bsoncxx::v_noabi::builder::basic::array inserted_ids;
         auto writes = _init_insert_many(options, session);
         std::for_each(begin, end, [&inserted_ids, &writes, this](bsoncxx::v_noabi::document::view doc) {
@@ -2006,17 +1944,27 @@ class collection {
         });
         return _exec_insert_many(writes, inserted_ids);
     }
-
-    class impl;
-
-    template <typename Self>
-    static auto _get_impl(Self& self) -> decltype(*self._impl);
-
-    impl& _get_impl();
-    impl const& _get_impl() const;
-
-    std::unique_ptr<impl> _impl;
 };
+
+} // namespace v_noabi
+} // namespace mongocxx
+
+namespace mongocxx {
+namespace v_noabi {
+
+///
+/// Convert to the @ref mongocxx::v_noabi equivalent of `v`.
+///
+inline v_noabi::collection from_v1(v1::collection v) {
+    return {std::move(v)};
+}
+
+///
+/// Convert to the @ref mongocxx::v1 equivalent of `v`.
+///
+inline v1::collection to_v1(v_noabi::collection v) {
+    return v1::collection{std::move(v)};
+}
 
 } // namespace v_noabi
 } // namespace mongocxx
@@ -2026,4 +1974,7 @@ class collection {
 ///
 /// @file
 /// Provides @ref mongocxx::v_noabi::collection.
+///
+/// @par Includes
+/// - @ref mongocxx/v1/collection.hpp
 ///
