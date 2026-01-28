@@ -2342,6 +2342,7 @@ TEST_CASE("Cursor iteration", "[collection][cursor]") {
 
     // Improve test execution time for k_tailable_await.
     static constexpr std::chrono::milliseconds fast_max_await_time{1};
+    static constexpr std::chrono::milliseconds await_retry_limit{100};
 
     auto run_test = [&]() {
         INFO(type_str);
@@ -2403,10 +2404,7 @@ TEST_CASE("Cursor iteration", "[collection][cursor]") {
             if (opts.cursor_type() == cursor::type::k_tailable_await) {
                 // Permit some tailable cursor timeouts in favor of faster overall test execution.
                 auto const now = [] { return std::chrono::steady_clock::now(); };
-                auto const limit = std::chrono::milliseconds{100};
-                auto const until = now() + limit;
-
-                REQUIRE(limit == 100 * fast_max_await_time);
+                auto const until = now() + await_retry_limit;
 
                 while (now() < until) {
                     CHECKED_IF(cursor.begin() != cursor.end()) {
