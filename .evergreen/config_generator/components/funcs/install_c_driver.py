@@ -12,7 +12,7 @@ from config_generator.etc.utils import bash_exec
 # - the default value of --c-driver-build-ref in etc/make_release.py
 # If pinning to an unreleased commit, create a "Blocked" JIRA ticket with
 # a "depends on" link to the appropriate C Driver version release ticket.
-MONGOC_VERSION_MINIMUM = '2.1.2'
+MONGOC_VERSION_MINIMUM = '2.2.1'
 
 
 class InstallCDriver(Function):
