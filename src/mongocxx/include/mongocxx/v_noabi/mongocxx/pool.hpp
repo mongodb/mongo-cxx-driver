@@ -14,13 +14,21 @@
 
 #pragma once
 
-#include <functional>
-#include <memory>
-
-#include <mongocxx/options/auto_encryption-fwd.hpp>
 #include <mongocxx/pool-fwd.hpp> // IWYU pragma: export
 
+//
+
+#include <mongocxx/v1/pool.hpp> // IWYU pragma: export
+
+#include <cstddef>
+#include <functional>
+#include <memory>
+#include <utility>
+
+#include <mongocxx/options/auto_encryption-fwd.hpp> // IWYU pragma: keep: backward compatibility, to be removed.
+
 #include <bsoncxx/stdx/optional.hpp>
+#include <bsoncxx/string/view_or_value.hpp>
 
 #include <mongocxx/client.hpp>
 #include <mongocxx/database.hpp>
@@ -52,6 +60,9 @@ namespace v_noabi {
 /// connection pool should be used even if the application itself is single-threaded.
 ///
 class pool {
+   private:
+    v1::pool _pool;
+
    public:
     ///
     /// Creates a pool associated with a connection string.
@@ -65,13 +76,13 @@ class pool {
     /// or
     ///  provided client options).
     explicit MONGOCXX_ABI_EXPORT_CDECL() pool(
-        uri const& mongodb_uri = mongocxx::v_noabi::uri(),
-        options::pool const& options = options::pool());
+        v_noabi::uri const& mongodb_uri = {},
+        v_noabi::options::pool const& options = {});
 
     ///
     /// Destroys a pool.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL() ~pool();
+    ~pool() = default;
 
     pool(pool&&) = delete;
     pool& operator=(pool&&) = delete;
@@ -90,35 +101,43 @@ class pool {
     class entry {
        public:
         /// Access a member of the client instance.
-        MONGOCXX_ABI_EXPORT_CDECL(client*) operator->() const& noexcept;
-        client* operator->() && = delete;
+        v_noabi::client* operator->() const& noexcept {
+            return _client.get();
+        }
+        v_noabi::client* operator->() && = delete;
 
         /// Retrieve a reference to the client.
-        MONGOCXX_ABI_EXPORT_CDECL(client&) operator*() const& noexcept;
-        client& operator*() && = delete;
+        v_noabi::client& operator*() const& noexcept {
+            return *_client;
+        }
+        v_noabi::client& operator*() && = delete;
 
         /// Assign nullptr to this entry to release its client to the pool.
-        MONGOCXX_ABI_EXPORT_CDECL(entry&) operator=(std::nullptr_t) noexcept;
+        entry& operator=(std::nullptr_t) noexcept {
+            _client.reset();
+            return *this;
+        }
 
         /// Return true if this entry has a client acquired from the pool.
-        explicit MONGOCXX_ABI_EXPORT_CDECL() operator bool() const noexcept;
+        explicit operator bool() const noexcept {
+            return _client != nullptr;
+        }
 
         // Allows the pool_entry["db_name"] syntax to be used to access a database within the
         // entry's underlying client.
         mongocxx::v_noabi::database operator[](bsoncxx::v_noabi::string::view_or_value name) const& {
-            return (**this)[name];
+            return (*_client)[name];
         }
-
         mongocxx::v_noabi::database operator[](bsoncxx::v_noabi::string::view_or_value name) && = delete;
 
+        class internal;
+
        private:
-        friend ::mongocxx::v_noabi::pool;
+        using ptr_type = std::unique_ptr<v_noabi::client, std::function<void MONGOCXX_ABI_CDECL(v_noabi::client*)>>;
 
-        using unique_client = std::unique_ptr<client, std::function<void MONGOCXX_ABI_CDECL(client*)>>;
+        ptr_type _client;
 
-        explicit entry(unique_client);
-
-        unique_client _client;
+        /* explicit(false) */ entry(ptr_type client) : _client{std::move(client)} {}
     };
 
     ///
@@ -133,13 +152,7 @@ class pool {
     ///
     MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<entry>) try_acquire();
 
-   private:
-    friend ::mongocxx::v_noabi::options::auto_encryption;
-
-    void _release(client* client);
-
-    class impl;
-    std::unique_ptr<impl> const _impl;
+    class internal;
 };
 
 } // namespace v_noabi
@@ -150,4 +163,7 @@ class pool {
 ///
 /// @file
 /// Provides @ref mongocxx::v_noabi::pool.
+///
+/// @par Includes
+/// - @ref mongocxx/v1/pool.hpp
 ///

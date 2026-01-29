@@ -47,11 +47,11 @@
 #include <mongocxx/result/replace_one.hpp>
 #include <mongocxx/result/update.hpp>
 
-#include <mongocxx/append_aggregate_options.hh>
 #include <mongocxx/bulk_write.hh>
 #include <mongocxx/client_session.hh>
 #include <mongocxx/collection.hh>
 #include <mongocxx/mongoc_error.hh>
+#include <mongocxx/options/aggregate.hh>
 #include <mongocxx/options/change_stream.hh>
 #include <mongocxx/pipeline.hh>
 #include <mongocxx/read_concern.hh>
@@ -222,7 +222,7 @@ void collection::_rename(
     }
 
     if (session) {
-        opts_doc.append(bsoncxx::v_noabi::builder::concatenate_doc{session->_get_impl().to_document()});
+        v_noabi::client_session::internal::append_to(*session, opts_doc);
     }
 
     bool result = libmongoc::collection_rename_with_opts(
@@ -253,19 +253,21 @@ void collection::rename(
     return _rename(&session, new_name, drop_target_before_rename, wc);
 }
 
-collection::collection(database const& database, bsoncxx::v_noabi::string::view_or_value collection_name)
+collection::collection(database& database, bsoncxx::v_noabi::string::view_or_value collection_name)
     : _impl(
           bsoncxx::make_unique<impl>(
-              libmongoc::database_get_collection(database._get_impl().database_t, collection_name.terminated().data()),
+              libmongoc::database_get_collection(
+                  v_noabi::database::internal::as_mongoc(database),
+                  collection_name.terminated().data()),
               database.name(),
-              database._get_impl().client)) {}
+              v_noabi::database::internal::get_client(database))) {}
 
-collection::collection(database const& database, void* collection)
+collection::collection(database& database, void* collection)
     : _impl(
           bsoncxx::make_unique<impl>(
               static_cast<mongoc_collection_t*>(collection),
               database.name(),
-              database._get_impl().client)) {}
+              v_noabi::database::internal::get_client(database))) {}
 
 collection::collection(collection const& c) {
     if (c) {
@@ -398,7 +400,7 @@ cursor collection::_find(client_session const* session, view_or_value filter, op
 
     bsoncxx::v_noabi::builder::basic::document options_builder{build_find_options_document(options)};
     if (session) {
-        options_builder.append(bsoncxx::v_noabi::builder::concatenate_doc{session->_get_impl().to_document()});
+        v_noabi::client_session::internal::append_to(*session, options_builder);
     }
 
     auto query_cursor = v1::cursor::internal::make(
@@ -454,12 +456,12 @@ collection::find_one(client_session const& session, view_or_value filter, option
 
 cursor
 collection::_aggregate(client_session const* session, pipeline const& pipeline, options::aggregate const& options) {
-    bsoncxx::v_noabi::builder::basic::document b;
+    scoped_bson b;
 
-    append_aggregate_options(b, options);
+    v_noabi::options::aggregate::internal::append_to(options, b);
 
     if (session) {
-        b.append(bsoncxx::v_noabi::builder::concatenate_doc{session->_get_impl().to_document()});
+        v_noabi::client_session::internal::append_to(*session, b);
     }
 
     mongoc_read_prefs_t const* read_prefs = nullptr;
@@ -473,7 +475,7 @@ collection::_aggregate(client_session const* session, pipeline const& pipeline, 
             _get_impl().collection_t,
             static_cast<::mongoc_query_flags_t>(0),
             v_noabi::pipeline::internal::doc(pipeline).bson(),
-            mongocxx::to_scoped_bson_view(b),
+            b.bson(),
             read_prefs));
 }
 
@@ -916,7 +918,7 @@ bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::value> collection::
 
     return find_and_modify(
         _get_impl().collection_t,
-        session ? session->_get_impl().get_session_t() : nullptr,
+        session ? v_noabi::client_session::internal::as_mongoc(*session) : nullptr,
         filter,
         &replacement,
         flags,
@@ -956,7 +958,7 @@ bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::value> collection::
 
     return find_and_modify(
         _get_impl().collection_t,
-        session ? session->_get_impl().get_session_t() : nullptr,
+        session ? v_noabi::client_session::internal::as_mongoc(*session) : nullptr,
         filter,
         &update,
         flags,
@@ -1018,7 +1020,7 @@ bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::value> collection::
     options::find_one_and_delete const& options) {
     return find_and_modify(
         _get_impl().collection_t,
-        session ? session->_get_impl().get_session_t() : nullptr,
+        session ? v_noabi::client_session::internal::as_mongoc(*session) : nullptr,
         filter,
         nullptr,
         MONGOC_FIND_AND_MODIFY_REMOVE,
@@ -1068,7 +1070,7 @@ collection::_count_documents(client_session const* session, view_or_value filter
     }
 
     if (session) {
-        opts_builder.append(bsoncxx::v_noabi::builder::concatenate_doc{session->_get_impl().to_document()});
+        v_noabi::client_session::internal::append_to(*session, opts_builder);
     }
 
     if (auto const& skip = options.skip()) {
@@ -1190,7 +1192,7 @@ cursor collection::_distinct(
     }
 
     if (session) {
-        opts_builder.append(bsoncxx::v_noabi::builder::concatenate_doc{session->_get_impl().to_document()});
+        v_noabi::client_session::internal::append_to(*session, opts_builder);
     }
 
     mongoc_read_prefs_t const* read_prefs = nullptr;
@@ -1269,7 +1271,7 @@ cursor collection::list_indexes() const {
 
 cursor collection::list_indexes(client_session const& session) const {
     bsoncxx::v_noabi::builder::basic::document options_builder;
-    options_builder.append(bsoncxx::v_noabi::builder::concatenate_doc{session._get_impl().to_document()});
+    v_noabi::client_session::internal::append_to(session, options_builder);
     return v1::cursor::internal::make(
         libmongoc::collection_find_indexes_with_opts(
             _get_impl().collection_t, mongocxx::to_scoped_bson_view(options_builder)));
@@ -1287,7 +1289,7 @@ void collection::_drop(
     }
 
     if (session) {
-        opts_doc.append(bsoncxx::v_noabi::builder::concatenate_doc{session->_get_impl().to_document()});
+        v_noabi::client_session::internal::append_to(*session, opts_doc);
     }
 
     if (!collection_options.view().empty()) {
@@ -1369,7 +1371,7 @@ collection::_watch(client_session const* session, pipeline const& pipe, options:
     options_builder.append(
         bsoncxx::v_noabi::builder::concatenate(v_noabi::options::change_stream::internal::to_document(options)));
     if (session) {
-        options_builder.append(bsoncxx::v_noabi::builder::concatenate_doc{session->_get_impl().to_document()});
+        v_noabi::client_session::internal::append_to(*session, options_builder);
     }
 
     // NOTE: collection_watch copies what it needs so we're safe to destroy our copies.

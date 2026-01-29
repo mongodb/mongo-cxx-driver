@@ -112,11 +112,13 @@ set(mongocxx_test_sources_v1
     v1/auto_encryption_options.cpp
     v1/bsoncxx.cpp
     v1/bulk_write.cpp
-    v1/client.cpp
     v1/change_stream.cpp
+    v1/client_session.cpp
+    v1/client.cpp
     v1/count_options.cpp
     v1/cursor.cpp
     v1/data_key_options.cpp
+    v1/database.cpp
     v1/delete_many_options.cpp
     v1/delete_many_result.cpp
     v1/delete_one_options.cpp
@@ -136,6 +138,7 @@ set(mongocxx_test_sources_v1
     v1/insert_one_result.cpp
     v1/logger.cpp
     v1/pipeline.cpp
+    v1/pool.cpp
     v1/range_options.cpp
     v1/read_concern.cpp
     v1/read_preference.cpp

@@ -22,6 +22,10 @@
 
 #include <bsoncxx/v1/stdx/optional.hpp>
 
+#include <memory>
+
+#include <mongocxx/private/mongoc.hh>
+
 namespace mongocxx {
 namespace v1 {
 
@@ -34,6 +38,15 @@ class auto_encryption_options::internal {
     static bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value>& encrypted_fields_map(
         auto_encryption_options& self);
     static bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value>& extra_options(auto_encryption_options& self);
+
+    struct mongoc_auto_encryption_opts_deleter {
+        void operator()(mongoc_auto_encryption_opts_t* ptr) const noexcept {
+            libmongoc::auto_encryption_opts_destroy(ptr);
+        }
+    };
+
+    static std::unique_ptr<mongoc_auto_encryption_opts_t, mongoc_auto_encryption_opts_deleter> to_mongoc(
+        v1::auto_encryption_options const& self);
 };
 
 } // namespace v1

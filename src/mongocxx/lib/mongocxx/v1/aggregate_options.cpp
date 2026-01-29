@@ -18,16 +18,22 @@
 
 #include <bsoncxx/v1/document/value.hpp>
 #include <bsoncxx/v1/stdx/optional.hpp>
-#include <bsoncxx/v1/types/value.hpp>
 
-#include <mongocxx/v1/hint.hpp>
 #include <mongocxx/v1/read_concern.hpp>
 #include <mongocxx/v1/read_preference.hpp>
 #include <mongocxx/v1/write_concern.hpp>
 
+#include <bsoncxx/v1/types/value.hh>
+
+#include <mongocxx/v1/hint.hh>
+
 #include <chrono>
 #include <cstdint>
+#include <stdexcept>
 
+#include <bsoncxx/private/bson.hh>
+
+#include <mongocxx/private/scoped_bson.hh>
 #include <mongocxx/private/utility.hh>
 
 namespace mongocxx {
@@ -206,6 +212,11 @@ bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value>& aggregate_options::in
     return impl::with(self)._let;
 }
 
+bsoncxx::v1::stdx::optional<v1::read_preference> const& aggregate_options::internal::read_preference(
+    aggregate_options const& self) {
+    return impl::with(self)._read_preference;
+}
+
 bsoncxx::v1::stdx::optional<v1::read_preference>& aggregate_options::internal::read_preference(
     aggregate_options& self) {
     return impl::with(self)._read_preference;
@@ -225,6 +236,60 @@ bsoncxx::v1::stdx::optional<v1::read_concern>& aggregate_options::internal::read
 
 bsoncxx::v1::stdx::optional<bsoncxx::v1::types::value>& aggregate_options::internal::comment(aggregate_options& self) {
     return impl::with(self)._comment;
+}
+
+void aggregate_options::internal::append_to(aggregate_options const& self, scoped_bson& doc) {
+    if (auto const& opt = impl::with(self)._allow_disk_use) {
+        doc += scoped_bson{BCON_NEW("allowDiskUse", BCON_BOOL(*opt))};
+    }
+
+    if (auto const& opt = impl::with(self)._collation) {
+        doc += scoped_bson{BCON_NEW("collation", BCON_DOCUMENT(scoped_bson_view{*opt}.bson()))};
+    }
+
+    if (auto const& opt = impl::with(self)._let) {
+        doc += scoped_bson{BCON_NEW("let", BCON_DOCUMENT(scoped_bson_view{*opt}.bson()))};
+    }
+
+    if (auto const& opt = impl::with(self)._max_time) {
+        doc += scoped_bson{BCON_NEW("maxTimeMS", BCON_INT64(std::int64_t{opt->count()}))};
+    }
+
+    if (auto const& opt = impl::with(self)._bypass_document_validation) {
+        doc += scoped_bson{BCON_NEW("bypassDocumentValidation", BCON_BOOL(*opt))};
+    }
+
+    if (auto const& opt = impl::with(self)._hint) {
+        if (auto const& doc_opt = v1::hint::internal::doc(*opt)) {
+            doc += scoped_bson{BCON_NEW("hint", BCON_DOCUMENT(scoped_bson_view{*doc_opt}.bson()))};
+        }
+
+        if (auto const& str_opt = v1::hint::internal::str(*opt)) {
+            doc += scoped_bson{BCON_NEW("hint", BCON_UTF8(str_opt->c_str()))};
+        }
+    }
+
+    if (auto const& opt = impl::with(self)._read_concern) {
+        doc += scoped_bson{BCON_NEW("readConcern", BCON_DOCUMENT(scoped_bson{opt->to_document()}.bson()))};
+    }
+
+    if (auto const& opt = impl::with(self)._write_concern) {
+        doc += scoped_bson{BCON_NEW("writeConcern", BCON_DOCUMENT(scoped_bson{opt->to_document()}.bson()))};
+    }
+
+    if (auto const& opt = impl::with(self)._batch_size) {
+        doc += scoped_bson{BCON_NEW("batchSize", BCON_INT32(*opt))};
+    }
+
+    if (auto const& opt = impl::with(self)._comment) {
+        scoped_bson v;
+
+        if (!BSON_APPEND_VALUE(v.inout_ptr(), "comment", &bsoncxx::v1::types::value::internal::get_bson_value(*opt))) {
+            throw std::logic_error{"mongocxx::v1::aggregate_options::internal::to_document: BSON_APPEND_VALUE failed"};
+        }
+
+        doc += v;
+    }
 }
 
 } // namespace v1

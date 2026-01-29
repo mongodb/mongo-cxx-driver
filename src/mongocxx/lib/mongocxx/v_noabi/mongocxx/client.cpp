@@ -20,7 +20,9 @@
 
 #include <mongocxx/v1/change_stream.hh>
 #include <mongocxx/v1/client.hh>
+#include <mongocxx/v1/client_session.hh>
 #include <mongocxx/v1/cursor.hh>
+#include <mongocxx/v1/database.hh>
 #include <mongocxx/v1/read_concern.hh>
 #include <mongocxx/v1/read_preference.hh>
 #include <mongocxx/v1/uri.hh>
@@ -187,7 +189,9 @@ v_noabi::database client::database(bsoncxx::v_noabi::string::view_or_value name)
     // NOLINTNEXTLINE(cppcoreguidelines-pro-type-const-cast)
     auto& c = const_cast<v1::client&>(check_moved_from(_client));
 
-    return v_noabi::database(v1::client::internal::as_mongoc(c), std::move(name));
+    return v1::database::internal::make(
+        libmongoc::client_get_database(v1::client::internal::as_mongoc(c), name.terminated().data()),
+        v1::client::internal::as_mongoc(c));
 }
 
 v_noabi::cursor client::list_databases() const {
@@ -203,7 +207,9 @@ v_noabi::cursor client::list_databases(v_noabi::client_session const& session) c
     // NOLINTNEXTLINE(cppcoreguidelines-pro-type-const-cast)
     auto& c = const_cast<v1::client&>(check_moved_from(_client));
 
-    return c.list_databases(to_scoped_bson_view(session._get_impl().to_document()).view());
+    scoped_bson doc;
+    v_noabi::client_session::internal::append_to(session, doc);
+    return c.list_databases(doc.view());
 }
 
 v_noabi::cursor client::list_databases(bsoncxx::v_noabi::document::view_or_value const opts) const {
@@ -223,7 +229,7 @@ v_noabi::cursor client::list_databases(
 
     scoped_bson doc;
 
-    doc += to_scoped_bson_view(session._get_impl().to_document());
+    v_noabi::client_session::internal::append_to(session, doc);
     doc += to_scoped_bson_view(opts);
 
     return c.list_databases(doc.view());
@@ -276,7 +282,7 @@ std::vector<std::string> client::list_database_names(
 
     scoped_bson opts;
 
-    opts += to_scoped_bson(session._get_impl().to_document());
+    v_noabi::client_session::internal::append_to(session, opts);
     opts += scoped_bson{BCON_NEW("filter", BCON_DOCUMENT(to_scoped_bson_view(filter).bson()))};
 
     return list_database_names_impl(v1::client::internal::as_mongoc(c), opts.bson());
@@ -285,7 +291,16 @@ std::vector<std::string> client::list_database_names(
 }
 
 v_noabi::client_session client::start_session(v_noabi::options::client_session const& options) {
-    return v_noabi::client_session{this, options};
+    bson_error_t error = {};
+
+    if (auto const ptr = libmongoc::client_start_session(
+            v1::client::internal::as_mongoc(_client),
+            v1::client_session::options::internal::as_mongoc(v_noabi::to_v1(options)),
+            &error)) {
+        return v_noabi::client_session::internal::make(ptr, check_moved_from(*this), options);
+    }
+
+    throw v_noabi::exception{error_code::k_cannot_create_session, error.message};
 }
 
 void client::reset() {
@@ -320,7 +335,7 @@ v_noabi::change_stream client::_watch(
     auto opts = to_scoped_bson(v_noabi::options::change_stream::internal::to_document(options));
 
     if (session) {
-        opts += to_scoped_bson_view(session->_get_impl().to_document());
+        v_noabi::client_session::internal::append_to(*session, opts);
     }
 
     return v1::change_stream::internal::make(
@@ -328,8 +343,12 @@ v_noabi::change_stream client::_watch(
             v1::client::internal::as_mongoc(check_moved_from(_client)), pipeline.bson(), opts.bson()));
 }
 
-void client::internal::disown(client& self) {
-    v1::client::internal::disown(check_moved_from(self._client));
+mongoc_client_t* client::internal::release(client& self) {
+    return v1::client::internal::release(check_moved_from(self._client));
+}
+
+v1::client& client::internal::as_v1(client& self) {
+    return self._client;
 }
 
 mongoc_client_t* client::internal::as_mongoc(client& self) {

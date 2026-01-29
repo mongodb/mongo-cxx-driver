@@ -313,6 +313,7 @@ BSONCXX_PRIVATE_WARNINGS_POP();
     X(database_find_collections_with_opts)                                   \
     X(database_get_collection_names_with_opts)                               \
     X(database_get_collection)                                               \
+    X(database_get_name)                                                     \
     X(database_get_read_concern)                                             \
     X(database_get_read_prefs)                                               \
     X(database_get_write_concern)                                            \
@@ -372,8 +373,10 @@ BSONCXX_PRIVATE_WARNINGS_POP();
     X(server_description_round_trip_time)                                    \
     X(server_description_type)                                               \
     X(server_descriptions_destroy_all)                                       \
+    X(session_opts_clone)                                                    \
     X(session_opts_destroy)                                                  \
     X(session_opts_get_causal_consistency)                                   \
+    X(session_opts_get_default_transaction_opts)                             \
     X(session_opts_get_snapshot)                                             \
     X(session_opts_new)                                                      \
     X(session_opts_set_causal_consistency)                                   \

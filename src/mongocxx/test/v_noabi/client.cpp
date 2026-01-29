@@ -335,6 +335,9 @@ TEST_CASE("A client can create a named database object", "[client]") {
 
     bsoncxx::stdx::string_view name("database");
 
+    auto database_get_name = libmongoc::database_get_name.create_instance();
+    database_get_name->interpose([&](mongoc_database_t*) -> char const* { return name.data(); }).forever();
+
     client mongo_client{uri{}, test_util::add_test_server_api()};
     database obtained_database = mongo_client[name];
     REQUIRE(obtained_database.name() == name);

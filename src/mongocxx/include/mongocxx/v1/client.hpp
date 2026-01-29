@@ -32,6 +32,7 @@
 #include <mongocxx/v1/uri-fwd.hpp>
 
 #include <bsoncxx/v1/stdx/optional.hpp>
+#include <bsoncxx/v1/stdx/string_view.hpp>
 
 #include <mongocxx/v1/change_stream.hpp>
 #include <mongocxx/v1/client_session.hpp>
@@ -134,12 +135,12 @@ class client {
     ///
     /// Access the database with the given name.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(v1::database) database(std::string name);
+    MONGOCXX_ABI_EXPORT_CDECL(v1::database) database(bsoncxx::v1::stdx::string_view name);
 
     ///
     /// Equivalent to `this->database(name)`.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(v1::database) operator[](std::string name);
+    MONGOCXX_ABI_EXPORT_CDECL(v1::database) operator[](bsoncxx::v1::stdx::string_view name);
 
     ///
     /// Return an unsorted list of all existing databases.
@@ -198,7 +199,7 @@ class client {
     /// - [Server Sessions (MongoDB Manual)](https://mongodb.com/docs/manual/reference/server-sessions/)
     ///
     /// @{
-    MONGOCXX_ABI_EXPORT_CDECL(v1::client_session) start_session(v1::client_session::options opts);
+    MONGOCXX_ABI_EXPORT_CDECL(v1::client_session) start_session(v1::client_session::options const& opts);
 
     MONGOCXX_ABI_EXPORT_CDECL(v1::client_session) start_session();
     /// @}

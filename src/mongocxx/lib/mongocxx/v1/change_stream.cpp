@@ -21,10 +21,13 @@
 #include <bsoncxx/v1/stdx/string_view.hpp>
 #include <bsoncxx/v1/types/value.hpp>
 
+#include <bsoncxx/v1/types/value.hh>
+
 #include <mongocxx/v1/exception.hh>
 
 #include <chrono>
 #include <cstdint>
+#include <stdexcept>
 #include <string>
 #include <utility>
 
@@ -397,6 +400,61 @@ bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value>& change_stream::option
 bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value>& change_stream::options::internal::start_after(
     options& self) {
     return impl::with(self)._start_after;
+}
+
+bsoncxx::v1::document::value change_stream::options::internal::to_document(v1::change_stream::options const& opts) {
+    scoped_bson bson;
+
+    if (auto const& opt = v1::change_stream::options::internal::full_document(opts)) {
+        bson += scoped_bson{BCON_NEW("fullDocument", BCON_UTF8(opt->c_str()))};
+    }
+
+    if (auto const& opt = v1::change_stream::options::internal::full_document_before_change(opts)) {
+        bson += scoped_bson{BCON_NEW("fullDocumentBeforeChange", BCON_UTF8(opt->c_str()))};
+    }
+
+    if (auto const& opt = v1::change_stream::options::internal::resume_after(opts)) {
+        bson += scoped_bson{BCON_NEW("resumeAfter", BCON_DOCUMENT(scoped_bson_view{*opt}.bson()))};
+    }
+
+    if (auto const& opt = v1::change_stream::options::internal::start_after(opts)) {
+        bson += scoped_bson{BCON_NEW("startAfter", BCON_DOCUMENT(scoped_bson_view{*opt}.bson()))};
+    }
+
+    if (auto const opt = opts.batch_size()) {
+        bson += scoped_bson{BCON_NEW("batchSize", BCON_INT32(*opt))};
+    }
+
+    if (auto const& opt = v1::change_stream::options::internal::collation(opts)) {
+        bson += scoped_bson{BCON_NEW("collation", BCON_DOCUMENT(scoped_bson_view{*opt}.bson()))};
+    }
+
+    if (auto const& opt = v1::change_stream::options::internal::comment(opts)) {
+        scoped_bson v;
+
+        if (!BSON_APPEND_VALUE(v.inout_ptr(), "comment", &bsoncxx::v1::types::value::internal::get_bson_value(*opt))) {
+            throw std::logic_error{"mongocxx::v1::client::watch: BSON_APPEND_VALUE failed"};
+        }
+
+        bson += v;
+    }
+
+    if (auto const opt = opts.start_at_operation_time()) {
+        scoped_bson v;
+
+        // BCON_TIMESTAMP() incorrectly uses int32_ptr instead of uint32_ptr. Use BSON_*() API instead.
+        if (!BSON_APPEND_TIMESTAMP(v.inout_ptr(), "startAtOperationTime", opt->timestamp, opt->increment)) {
+            throw std::logic_error{"mongocxx::v1::client::watch: BSON_APPEND_TIMESTAMP failed"};
+        }
+
+        bson += v;
+    }
+
+    if (auto const opt = opts.max_await_time()) {
+        bson += scoped_bson{BCON_NEW("maxAwaitTimeMS", BCON_INT64(opt->count()))};
+    }
+
+    return std::move(bson).value();
 }
 
 change_stream::iterator::~iterator() = default;

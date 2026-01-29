@@ -19,40 +19,25 @@
 #include <bsoncxx/v1/array/value.hpp>
 #include <bsoncxx/v1/document/view.hpp>
 #include <bsoncxx/v1/stdx/optional.hpp>
+#include <bsoncxx/v1/stdx/string_view.hpp>
 
 #include <mongocxx/v1/client_session.hpp>
-#include <mongocxx/v1/database.hpp>
-#include <mongocxx/v1/detail/macros.hpp>
-#include <mongocxx/v1/server_api.hpp>
 
 #include <bsoncxx/v1/types/value.hh>
 
 #include <mongocxx/v1/apm.hh>
 #include <mongocxx/v1/auto_encryption_options.hh>
 #include <mongocxx/v1/change_stream.hh>
+#include <mongocxx/v1/client_session.hh>
 #include <mongocxx/v1/cursor.hh>
-#include <mongocxx/v1/events/command_failed.hh>
-#include <mongocxx/v1/events/command_started.hh>
-#include <mongocxx/v1/events/command_succeeded.hh>
-#include <mongocxx/v1/events/server_closed.hh>
-#include <mongocxx/v1/events/server_description_changed.hh>
-#include <mongocxx/v1/events/server_heartbeat_failed.hh>
-#include <mongocxx/v1/events/server_heartbeat_started.hh>
-#include <mongocxx/v1/events/server_heartbeat_succeeded.hh>
-#include <mongocxx/v1/events/server_opening.hh>
-#include <mongocxx/v1/events/topology_closed.hh>
-#include <mongocxx/v1/events/topology_description_changed.hh>
-#include <mongocxx/v1/events/topology_opening.hh>
+#include <mongocxx/v1/database.hh>
 #include <mongocxx/v1/exception.hh>
 #include <mongocxx/v1/pipeline.hh>
+#include <mongocxx/v1/server_api.hh>
 #include <mongocxx/v1/tls.hh>
 #include <mongocxx/v1/uri.hh>
 
-#include <exception>
-#include <iostream>
 #include <memory>
-#include <ostream>
-#include <stdexcept>
 #include <string>
 #include <system_error>
 #include <vector>
@@ -69,269 +54,6 @@ namespace mongocxx {
 namespace v1 {
 
 using code = client::errc;
-
-namespace {
-
-// An APM callback exiting via an exception is documented as being undefined behavior.
-// For QoI, terminate the program before allowing the exception to bypass libmongoc code.
-template <typename Fn>
-void exception_guard(char const* source, Fn fn) noexcept {
-    try {
-        fn();
-    } catch (...) {
-        std::cerr << "fatal error: APM callback " << source << " exited via an exception" << std::endl;
-        std::terminate();
-    }
-}
-
-void command_started(mongoc_apm_command_started_t const* v) noexcept {
-    auto const& context = *static_cast<v1::apm*>(libmongoc::apm_command_started_get_context(v));
-    auto const event = v1::events::command_started::internal::make(v);
-    exception_guard(__func__, [&] { v1::apm::internal::command_started(context)(event); });
-}
-
-void command_failed(mongoc_apm_command_failed_t const* v) noexcept {
-    auto const& context = *static_cast<v1::apm*>(libmongoc::apm_command_failed_get_context(v));
-    auto const event = v1::events::command_failed::internal::make(v);
-    exception_guard(__func__, [&] { v1::apm::internal::command_failed(context)(event); });
-}
-
-void command_succeeded(mongoc_apm_command_succeeded_t const* v) noexcept {
-    auto const& context = *static_cast<v1::apm*>(libmongoc::apm_command_succeeded_get_context(v));
-    auto const event = v1::events::command_succeeded::internal::make(v);
-    exception_guard(__func__, [&] { v1::apm::internal::command_succeeded(context)(event); });
-}
-
-void server_opening(mongoc_apm_server_opening_t const* v) noexcept {
-    auto const& context = *static_cast<v1::apm*>(libmongoc::apm_server_opening_get_context(v));
-    auto const event = v1::events::server_opening::internal::make(v);
-    exception_guard(__func__, [&] { v1::apm::internal::server_opening(context)(event); });
-}
-
-void server_closed(mongoc_apm_server_closed_t const* v) noexcept {
-    auto const& context = *static_cast<v1::apm*>(libmongoc::apm_server_closed_get_context(v));
-    auto const event = v1::events::server_closed::internal::make(v);
-    exception_guard(__func__, [&] { v1::apm::internal::server_closed(context)(event); });
-}
-
-void server_description_changed(mongoc_apm_server_changed_t const* v) noexcept {
-    auto const& context = *static_cast<v1::apm*>(libmongoc::apm_server_changed_get_context(v));
-    auto const event = v1::events::server_description_changed::internal::make(v);
-    exception_guard(__func__, [&] { v1::apm::internal::server_description_changed(context)(event); });
-}
-
-void topology_opening(mongoc_apm_topology_opening_t const* v) noexcept {
-    auto const& context = *static_cast<v1::apm*>(libmongoc::apm_topology_opening_get_context(v));
-    auto const event = v1::events::topology_opening::internal::make(v);
-    exception_guard(__func__, [&] { v1::apm::internal::topology_opening(context)(event); });
-}
-
-void topology_closed(mongoc_apm_topology_closed_t const* v) noexcept {
-    auto const& context = *static_cast<v1::apm*>(libmongoc::apm_topology_closed_get_context(v));
-    auto const event = v1::events::topology_closed::internal::make(v);
-    exception_guard(__func__, [&] { v1::apm::internal::topology_closed(context)(event); });
-}
-
-void topology_description_changed(mongoc_apm_topology_changed_t const* v) noexcept {
-    auto const& context = *static_cast<v1::apm*>(libmongoc::apm_topology_changed_get_context(v));
-    auto const event = v1::events::topology_description_changed::internal::make(v);
-    exception_guard(__func__, [&] { v1::apm::internal::topology_description_changed(context)(event); });
-}
-
-void server_heartbeat_started(mongoc_apm_server_heartbeat_started_t const* v) noexcept {
-    auto const& context = *static_cast<v1::apm*>(libmongoc::apm_server_heartbeat_started_get_context(v));
-    auto const event = v1::events::server_heartbeat_started::internal::make(v);
-    exception_guard(__func__, [&] { v1::apm::internal::server_heartbeat_started(context)(event); });
-}
-
-void server_heartbeat_failed(mongoc_apm_server_heartbeat_failed_t const* v) noexcept {
-    auto const& context = *static_cast<v1::apm*>(libmongoc::apm_server_heartbeat_failed_get_context(v));
-    auto const event = v1::events::server_heartbeat_failed::internal::make(v);
-    exception_guard(__func__, [&] { v1::apm::internal::server_heartbeat_failed(context)(event); });
-}
-
-void server_heartbeat_succeeded(mongoc_apm_server_heartbeat_succeeded_t const* v) noexcept {
-    auto const& context = *static_cast<v1::apm*>(libmongoc::apm_server_heartbeat_succeeded_get_context(v));
-    auto const event = v1::events::server_heartbeat_succeeded::internal::make(v);
-    exception_guard(__func__, [&] { v1::apm::internal::server_heartbeat_succeeded(context)(event); });
-}
-
-class apm_callbacks {
-   public:
-    mongoc_apm_callbacks_t* _callbacks = libmongoc::apm_callbacks_new();
-
-    ~apm_callbacks() {
-        libmongoc::apm_callbacks_destroy(_callbacks);
-    }
-
-    apm_callbacks(apm_callbacks&& other) = delete;
-    apm_callbacks& operator=(apm_callbacks&& other) = delete;
-    apm_callbacks(apm_callbacks const& other) = delete;
-    apm_callbacks& operator=(apm_callbacks const& other) = delete;
-
-    explicit apm_callbacks(v1::apm const& apm) {
-        if (v1::apm::internal::command_started(apm)) {
-            libmongoc::apm_set_command_started_cb(_callbacks, command_started);
-        }
-
-        if (v1::apm::internal::command_failed(apm)) {
-            libmongoc::apm_set_command_failed_cb(_callbacks, command_failed);
-        }
-
-        if (v1::apm::internal::command_succeeded(apm)) {
-            libmongoc::apm_set_command_succeeded_cb(_callbacks, command_succeeded);
-        }
-
-        if (v1::apm::internal::server_opening(apm)) {
-            libmongoc::apm_set_server_opening_cb(_callbacks, server_opening);
-        }
-
-        if (v1::apm::internal::server_closed(apm)) {
-            libmongoc::apm_set_server_closed_cb(_callbacks, server_closed);
-        }
-
-        if (v1::apm::internal::server_description_changed(apm)) {
-            libmongoc::apm_set_server_changed_cb(_callbacks, server_description_changed);
-        }
-
-        if (v1::apm::internal::topology_opening(apm)) {
-            libmongoc::apm_set_topology_opening_cb(_callbacks, topology_opening);
-        }
-
-        if (v1::apm::internal::topology_closed(apm)) {
-            libmongoc::apm_set_topology_closed_cb(_callbacks, topology_closed);
-        }
-
-        if (v1::apm::internal::topology_description_changed(apm)) {
-            libmongoc::apm_set_topology_changed_cb(_callbacks, topology_description_changed);
-        }
-
-        if (v1::apm::internal::server_heartbeat_started(apm)) {
-            libmongoc::apm_set_server_heartbeat_started_cb(_callbacks, server_heartbeat_started);
-        }
-
-        if (v1::apm::internal::server_heartbeat_failed(apm)) {
-            libmongoc::apm_set_server_heartbeat_failed_cb(_callbacks, server_heartbeat_failed);
-        }
-
-        if (v1::apm::internal::server_heartbeat_succeeded(apm)) {
-            libmongoc::apm_set_server_heartbeat_succeeded_cb(_callbacks, server_heartbeat_succeeded);
-        }
-    }
-};
-
-struct mongoc_auto_encryption_opts_deleter {
-    void operator()(mongoc_auto_encryption_opts_t* ptr) const noexcept {
-        libmongoc::auto_encryption_opts_destroy(ptr);
-    }
-};
-
-std::unique_ptr<mongoc_auto_encryption_opts_t, mongoc_auto_encryption_opts_deleter> to_mongoc(
-    v1::auto_encryption_options const& opts) {
-    std::unique_ptr<mongoc_auto_encryption_opts_t, mongoc_auto_encryption_opts_deleter> ret{
-        libmongoc::auto_encryption_opts_new()};
-
-    auto const ptr = ret.get();
-
-    if (auto const& opt = opts.key_vault_client()) {
-        libmongoc::auto_encryption_opts_set_keyvault_client(ptr, v1::client::internal::as_mongoc(*opt));
-    }
-
-    if (auto const& opt = opts.key_vault_pool()) {
-        (void)opt; // TODO: v1::pool (CXX-3237)
-    }
-
-    if (auto const& opt = opts.key_vault_namespace()) {
-        libmongoc::auto_encryption_opts_set_keyvault_namespace(ptr, opt->first.c_str(), opt->second.c_str());
-    }
-
-    if (auto const& opt = opts.kms_providers()) {
-        libmongoc::auto_encryption_opts_set_kms_providers(ptr, scoped_bson_view{*opt}.bson());
-    }
-
-    if (auto const& opt = opts.tls_opts()) {
-        libmongoc::auto_encryption_opts_set_tls_opts(ptr, scoped_bson_view{*opt}.bson());
-    }
-
-    if (auto const& opt = opts.schema_map()) {
-        libmongoc::auto_encryption_opts_set_schema_map(ptr, scoped_bson_view{*opt}.bson());
-    }
-
-    if (auto const& opt = opts.encrypted_fields_map()) {
-        libmongoc::auto_encryption_opts_set_encrypted_fields_map(ptr, scoped_bson_view{*opt}.bson());
-    }
-
-    libmongoc::auto_encryption_opts_set_bypass_auto_encryption(ptr, opts.bypass_auto_encryption());
-    libmongoc::auto_encryption_opts_set_bypass_query_analysis(ptr, opts.bypass_query_analysis());
-
-    if (auto const& opt = opts.extra_options()) {
-        libmongoc::auto_encryption_opts_set_extra(ptr, scoped_bson_view{*opt}.bson());
-    }
-
-    return ret;
-}
-
-struct mongoc_server_api_deleter {
-    void operator()(mongoc_server_api_t* ptr) const noexcept {
-        libmongoc::server_api_destroy(ptr);
-    }
-};
-
-std::unique_ptr<mongoc_server_api_t, mongoc_server_api_deleter> to_mongoc(v1::server_api const& api) {
-    mongoc_server_api_version_t version = {};
-
-    if (!libmongoc::server_api_version_from_string(
-            v1::server_api::version_to_string(api.get_version()).c_str(), &version)) {
-        // Invariant: enforced by `v1::server_api::errc::invalid_version`.
-        MONGOCXX_PRIVATE_UNREACHABLE;
-    }
-
-    std::unique_ptr<mongoc_server_api_t, mongoc_server_api_deleter> ret{libmongoc::server_api_new(version)};
-
-    auto const ptr = ret.get();
-
-    if (auto const opt = api.strict()) {
-        libmongoc::server_api_strict(ptr, *opt);
-    }
-
-    if (auto const opt = api.deprecation_errors()) {
-        libmongoc::server_api_deprecation_errors(ptr, *opt);
-    }
-
-    return ret;
-}
-
-#if MONGOCXX_SSL_IS_ENABLED()
-mongoc_ssl_opt_t to_mongoc(v1::tls const& opts) {
-    mongoc_ssl_opt_t ret = {};
-
-    if (auto const& opt = v1::tls::internal::pem_file(opts)) {
-        ret.pem_file = opt->c_str();
-    }
-
-    if (auto const& opt = v1::tls::internal::pem_password(opts)) {
-        ret.pem_pwd = opt->c_str();
-    }
-
-    if (auto const& opt = v1::tls::internal::ca_file(opts)) {
-        ret.ca_file = opt->c_str();
-    }
-
-    if (auto const& opt = v1::tls::internal::ca_dir(opts)) {
-        ret.ca_dir = opt->c_str();
-    }
-
-    if (auto const& opt = v1::tls::internal::crl_file(opts)) {
-        ret.crl_file = opt->c_str();
-    }
-
-    ret.weak_cert_validation = opts.allow_invalid_certificates().value_or(false);
-
-    return ret;
-}
-#endif
-
-} // namespace
 
 class client::impl {
    public:
@@ -409,7 +131,8 @@ client::client(v1::uri uri, options opts) : client{new impl{v1::uri::internal::a
     if (auto const& opt = options::internal::auto_encryption_opts(opts)) {
         bson_error_t error = {};
 
-        if (!libmongoc::client_enable_auto_encryption(_client, to_mongoc(*opt).get(), &error)) {
+        if (!libmongoc::client_enable_auto_encryption(
+                _client, v1::auto_encryption_options::internal::to_mongoc(*opt).get(), &error)) {
             v1::throw_exception(error);
         }
     }
@@ -417,7 +140,7 @@ client::client(v1::uri uri, options opts) : client{new impl{v1::uri::internal::a
     if (auto const& opt = options::internal::server_api_opts(opts)) {
         bson_error_t error = {};
 
-        if (!libmongoc::client_set_server_api(_client, to_mongoc(*opt).get(), &error)) {
+        if (!libmongoc::client_set_server_api(_client, v1::server_api::internal::to_mongoc(*opt).get(), &error)) {
             v1::throw_exception(error);
         }
     }
@@ -431,7 +154,7 @@ client::client(v1::uri uri, options opts) : client{new impl{v1::uri::internal::a
                 throw v1::exception::internal::make(errc::tls_not_enabled);
             }
 
-            auto const v = to_mongoc(*opt);
+            auto const v = v1::tls::internal::to_mongoc(*opt);
             libmongoc::client_set_ssl_opts(_client, &v);
         }
 #else
@@ -454,16 +177,14 @@ v1::uri client::uri() const {
     return v1::uri::internal::make(libmongoc::uri_copy(libmongoc::client_get_uri(impl::with(this)->_client)));
 }
 
-v1::database client::database(std::string name) {
-    // TODO: v1::database (CXX-3237)
-    (void)name;
-    MONGOCXX_PRIVATE_UNREACHABLE;
+v1::database client::database(bsoncxx::v1::stdx::string_view name) {
+    auto const _client = impl::with(this)->_client;
+
+    return v1::database::internal::make(libmongoc::client_get_database(_client, std::string{name}.c_str()), _client);
 }
 
-v1::database client::operator[](std::string name) {
-    // TODO: v1::database (CXX-3237)
-    (void)name;
-    MONGOCXX_PRIVATE_UNREACHABLE;
+v1::database client::operator[](bsoncxx::v1::stdx::string_view name) {
+    return this->database(name);
 }
 
 namespace {
@@ -479,9 +200,14 @@ v1::cursor client::list_databases() {
 }
 
 v1::cursor client::list_databases(v1::client_session const& session) {
-    // TODO: v1::client_session (CXX-3237)
-    (void)session;
-    MONGOCXX_PRIVATE_UNREACHABLE;
+    scoped_bson doc;
+    bson_error_t error = {};
+
+    if (!v1::client_session::internal::append_to(session, doc, error)) {
+        v1::throw_exception(error);
+    }
+
+    return list_databases_impl(impl::with(this)->_client, doc.bson());
 }
 
 v1::cursor client::list_databases(bsoncxx::v1::document::view opts) {
@@ -489,10 +215,16 @@ v1::cursor client::list_databases(bsoncxx::v1::document::view opts) {
 }
 
 v1::cursor client::list_databases(v1::client_session const& session, bsoncxx::v1::document::view opts) {
-    // TODO: v1::client_session (CXX-3237)
-    (void)session;
-    (void)opts;
-    MONGOCXX_PRIVATE_UNREACHABLE;
+    scoped_bson doc;
+    bson_error_t error = {};
+
+    if (!v1::client_session::internal::append_to(session, doc, error)) {
+        v1::throw_exception(error);
+    }
+
+    doc += opts;
+
+    return list_databases_impl(impl::with(this)->_client, doc.bson());
 }
 
 namespace {
@@ -531,10 +263,15 @@ std::vector<std::string> client::list_database_names(bsoncxx::v1::document::view
 std::vector<std::string> client::list_database_names(
     v1::client_session const& session,
     bsoncxx::v1::document::view filter) {
-    // TODO: v1::client_session (CXX-3237)
-    (void)session;
-    (void)filter;
-    MONGOCXX_PRIVATE_UNREACHABLE;
+    scoped_bson doc;
+    bson_error_t error = {};
+
+    if (!v1::client_session::internal::append_to(session, doc, error)) {
+        v1::throw_exception(error);
+    }
+
+    doc += scoped_bson{BCON_NEW("filter", BCON_DOCUMENT(scoped_bson_view{filter}.bson()))};
+    return list_database_names_impl(impl::with(this)->_client, doc.bson());
 }
 
 std::vector<std::string> client::list_database_names() {
@@ -542,20 +279,36 @@ std::vector<std::string> client::list_database_names() {
 }
 
 std::vector<std::string> client::list_database_names(v1::client_session const& session) {
-    // TODO: v1::client_session (CXX-3237)
-    (void)session;
-    MONGOCXX_PRIVATE_UNREACHABLE;
+    scoped_bson doc;
+    bson_error_t error = {};
+
+    if (!v1::client_session::internal::append_to(session, doc, error)) {
+        v1::throw_exception(error);
+    }
+
+    return list_database_names_impl(impl::with(this)->_client, doc.bson());
 }
 
-v1::client_session client::start_session(v1::client_session::options opts) {
-    // TODO: v1::client_session (CXX-3237)
-    (void)opts;
-    MONGOCXX_PRIVATE_UNREACHABLE;
+namespace {
+
+v1::client_session start_session_impl(v1::client& client, mongoc_session_opt_t const* opts) {
+    bson_error_t error = {};
+
+    if (auto const ptr = libmongoc::client_start_session(v1::client::internal::as_mongoc(client), opts, &error)) {
+        return v1::client_session::internal::make(ptr, client);
+    }
+
+    v1::throw_exception(error);
+}
+
+} // namespace
+
+v1::client_session client::start_session(v1::client_session::options const& opts) {
+    return start_session_impl(*this, v1::client_session::options::internal::as_mongoc(opts));
 }
 
 v1::client_session client::start_session() {
-    // TODO: v1::client_session (CXX-3237)
-    MONGOCXX_PRIVATE_UNREACHABLE;
+    return start_session_impl(*this, nullptr);
 }
 
 namespace {
@@ -564,65 +317,13 @@ v1::change_stream watch_impl(mongoc_client_t* client, bsoncxx::v1::array::view p
     return v1::change_stream::internal::make(libmongoc::client_watch(client, scoped_bson_view{pipeline}.bson(), opts));
 }
 
-bsoncxx::v1::document::value to_document(v1::change_stream::options const& opts) {
-    scoped_bson bson;
-
-    if (auto const& opt = v1::change_stream::options::internal::full_document(opts)) {
-        bson += scoped_bson{BCON_NEW("fullDocument", BCON_UTF8(opt->c_str()))};
-    }
-
-    if (auto const& opt = v1::change_stream::options::internal::full_document_before_change(opts)) {
-        bson += scoped_bson{BCON_NEW("fullDocumentBeforeChange", BCON_UTF8(opt->c_str()))};
-    }
-
-    if (auto const& opt = v1::change_stream::options::internal::resume_after(opts)) {
-        bson += scoped_bson{BCON_NEW("resumeAfter", BCON_DOCUMENT(scoped_bson_view{*opt}.bson()))};
-    }
-
-    if (auto const& opt = v1::change_stream::options::internal::start_after(opts)) {
-        bson += scoped_bson{BCON_NEW("startAfter", BCON_DOCUMENT(scoped_bson_view{*opt}.bson()))};
-    }
-
-    if (auto const opt = opts.batch_size()) {
-        bson += scoped_bson{BCON_NEW("batchSize", BCON_INT32(*opt))};
-    }
-
-    if (auto const& opt = v1::change_stream::options::internal::collation(opts)) {
-        bson += scoped_bson{BCON_NEW("collation", BCON_DOCUMENT(scoped_bson_view{*opt}.bson()))};
-    }
-
-    if (auto const& opt = v1::change_stream::options::internal::comment(opts)) {
-        scoped_bson v;
-
-        if (!BSON_APPEND_VALUE(v.inout_ptr(), "comment", &bsoncxx::v1::types::value::internal::get_bson_value(*opt))) {
-            throw std::logic_error{"mongocxx::v1::client::watch: BSON_APPEND_VALUE failed"};
-        }
-
-        bson += v;
-    }
-
-    if (auto const opt = opts.start_at_operation_time()) {
-        scoped_bson v;
-
-        // BCON_TIMESTAMP() incorrectly uses int32_ptr instead of uint32_ptr. Use BSON_*() API instead.
-        if (!BSON_APPEND_TIMESTAMP(v.inout_ptr(), "startAtOperationTime", opt->timestamp, opt->increment)) {
-            throw std::logic_error{"mongocxx::v1::client::watch: BSON_APPEND_TIMESTAMP failed"};
-        }
-
-        bson += v;
-    }
-
-    if (auto const opt = opts.max_await_time()) {
-        bson += scoped_bson{BCON_NEW("maxAwaitTimeMS", BCON_INT64(opt->count()))};
-    }
-
-    return std::move(bson).value();
-}
-
 } // namespace
 
 v1::change_stream client::watch(v1::change_stream::options const& opts) {
-    return watch_impl(impl::with(this)->_client, bsoncxx::v1::array::view{}, scoped_bson{to_document(opts)}.bson());
+    return watch_impl(
+        impl::with(this)->_client,
+        bsoncxx::v1::array::view{},
+        scoped_bson{v1::change_stream::options::internal::to_document(opts)}.bson());
 }
 
 v1::change_stream client::watch() {
@@ -630,29 +331,46 @@ v1::change_stream client::watch() {
 }
 
 v1::change_stream client::watch(v1::client_session const& session, v1::change_stream::options const& opts) {
-    // TODO: v1::client_session (CXX-3237)
-    (void)session;
-    (void)opts;
-    MONGOCXX_PRIVATE_UNREACHABLE;
+    scoped_bson doc;
+    bson_error_t error = {};
+
+    if (!v1::client_session::internal::append_to(session, doc, error)) {
+        v1::throw_exception(error);
+    }
+
+    doc += v1::change_stream::options::internal::to_document(opts);
+    return watch_impl(impl::with(this)->_client, bsoncxx::v1::array::view{}, doc.bson());
 }
 
 v1::change_stream client::watch(v1::client_session const& session) {
-    // TODO: v1::client_session (CXX-3237)
-    (void)session;
-    MONGOCXX_PRIVATE_UNREACHABLE;
+    scoped_bson doc;
+    bson_error_t error = {};
+
+    if (!v1::client_session::internal::append_to(session, doc, error)) {
+        v1::throw_exception(error);
+    }
+
+    return watch_impl(impl::with(this)->_client, bsoncxx::v1::array::view{}, doc.bson());
 }
 
 v1::change_stream client::watch(v1::pipeline const& pipeline, v1::change_stream::options const& opts) {
-    return watch_impl(impl::with(this)->_client, pipeline.view_array(), scoped_bson{to_document(opts)}.bson());
+    return watch_impl(
+        impl::with(this)->_client,
+        pipeline.view_array(),
+        scoped_bson{v1::change_stream::options::internal::to_document(opts)}.bson());
 }
 
 v1::change_stream
 client::watch(v1::client_session const& session, v1::pipeline const& pipeline, v1::change_stream::options const& opts) {
-    // TODO: v1::client_session (CXX-3237)
-    (void)session;
-    (void)pipeline;
-    (void)opts;
-    MONGOCXX_PRIVATE_UNREACHABLE;
+    scoped_bson doc;
+    bson_error_t error = {};
+
+    if (!v1::client_session::internal::append_to(session, doc, error)) {
+        v1::throw_exception(error);
+    }
+
+    doc += v1::change_stream::options::internal::to_document(opts);
+    return watch_impl(impl::with(this)->_client, pipeline.view_array(), doc.bson());
 }
 
 v1::change_stream client::watch(v1::pipeline const& pipeline) {
@@ -660,10 +378,14 @@ v1::change_stream client::watch(v1::pipeline const& pipeline) {
 }
 
 v1::change_stream client::watch(v1::client_session const& session, v1::pipeline const& pipeline) {
-    // TODO: v1::client_session (CXX-3237)
-    (void)session;
-    (void)pipeline;
-    MONGOCXX_PRIVATE_UNREACHABLE;
+    scoped_bson doc;
+    bson_error_t error = {};
+
+    if (!v1::client_session::internal::append_to(session, doc, error)) {
+        v1::throw_exception(error);
+    }
+
+    return watch_impl(impl::with(this)->_client, pipeline.view_array(), doc.bson());
 }
 
 void client::reset() {
@@ -740,11 +462,11 @@ client client::internal::make(mongoc_client_t* client) {
 void client::internal::set_apm(client& self, v1::apm v) {
     auto& _apm = impl::with(self)._apm;
     _apm = std::move(v);
-    libmongoc::client_set_apm_callbacks(impl::with(self)._client, apm_callbacks{_apm}._callbacks, &_apm);
+    v1::apm::internal::set_apm_callbacks(impl::with(self)._client, _apm);
 }
 
-void client::internal::disown(client& self) {
-    impl::with(self)._client = nullptr;
+mongoc_client_t* client::internal::release(client& self) {
+    return exchange(impl::with(self)._client, nullptr);
 }
 
 mongoc_client_t const* client::internal::as_mongoc(client const& self) {

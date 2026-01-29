@@ -12,4 +12,23 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <mongocxx/options/pool.hpp>
+#pragma once
+
+#include <mongocxx/options/aggregate.hpp> // IWYU pragma: export
+
+//
+
+#include <mongocxx/private/scoped_bson.hh>
+
+namespace mongocxx {
+namespace v_noabi {
+namespace options {
+
+class aggregate::internal {
+   public:
+    static void append_to(aggregate const& self, scoped_bson& doc);
+};
+
+} // namespace options
+} // namespace v_noabi
+} // namespace mongocxx

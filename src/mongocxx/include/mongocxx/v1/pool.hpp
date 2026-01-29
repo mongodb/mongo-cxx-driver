@@ -24,13 +24,14 @@
 #include <mongocxx/v1/uri-fwd.hpp>
 
 #include <bsoncxx/v1/stdx/optional.hpp>
+#include <bsoncxx/v1/stdx/string_view.hpp>
 
 #include <mongocxx/v1/client.hpp> // IWYU pragma: export
 #include <mongocxx/v1/config/export.hpp>
 
 #include <cstddef>
-#include <string>
 #include <system_error>
+#include <type_traits>
 
 namespace mongocxx {
 namespace v1 {
@@ -80,14 +81,14 @@ class pool {
     MONGOCXX_ABI_EXPORT_CDECL(pool&) operator=(pool&& other) noexcept;
 
     ///
-    /// Copy construction.
+    /// This class is not copyable.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL() pool(pool const& other);
+    pool(pool const& other) = delete;
 
     ///
-    /// Copy assignment.
+    /// This class is not copyable.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(pool&) operator=(pool const& other);
+    pool& operator=(pool const& other) = delete;
 
     ///
     /// Initialize this pool with the given URI.
@@ -97,9 +98,9 @@ class pool {
     /// @throws mongocxx::v1::exception if a client-side error is encountered.
     ///
     /// @{
-    explicit MONGOCXX_ABI_EXPORT_CDECL() pool(v1::uri const& uri, options const& opts);
+    MONGOCXX_ABI_EXPORT_CDECL() pool(v1::uri const& uri, options opts);
 
-    explicit MONGOCXX_ABI_EXPORT_CDECL() pool(v1::uri const& uri);
+    /* explicit(false) */ MONGOCXX_ABI_EXPORT_CDECL() pool(v1::uri const& uri);
     /// @}
     ///
 
@@ -111,6 +112,11 @@ class pool {
     /// @throws mongocxx::v1::exception if a client-side error is encountered.
     ///
     explicit MONGOCXX_ABI_EXPORT_CDECL() pool();
+
+    ///
+    /// Return true when `*this` is NOT in an assign-or-destroy-only state.
+    ///
+    explicit MONGOCXX_ABI_EXPORT_CDECL() operator bool() const;
 
     ///
     /// Return a client object associated with this pool.
@@ -166,6 +172,11 @@ class pool {
     friend std::error_code make_error_code(errc v) {
         return {static_cast<int>(v), error_category()};
     }
+
+    class internal;
+
+   private:
+    /* explicit(false) */ pool(void* impl);
 };
 
 ///
@@ -213,7 +224,7 @@ class pool::options {
     ///
     /// Initialize with client options to apply to a pool.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL() options(v1::client::options opts);
+    /* explicit(false) */ MONGOCXX_ABI_EXPORT_CDECL() options(v1::client::options opts);
 
     ///
     /// Default initialization.
@@ -227,6 +238,8 @@ class pool::options {
     /// Return the current client options.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(v1::client::options) client_opts() const;
+
+    class internal;
 };
 
 ///
@@ -262,24 +275,24 @@ class pool::entry {
     MONGOCXX_ABI_EXPORT_CDECL(entry&) operator=(entry&& other) noexcept;
 
     ///
-    /// Copy construction.
+    /// This class is not copyable.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL() entry(entry const& other);
+    entry(entry const& other) = delete;
 
     ///
-    /// Copy assignment.
+    /// This class is not copyable.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(entry&) operator=(entry const& other);
-
-    ///
-    /// Access the managed client.
-    ///
-    MONGOCXX_ABI_EXPORT_CDECL(client*) operator->();
+    entry& operator=(entry const& other) = delete;
 
     ///
     /// Access the managed client.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(client&) operator*();
+    MONGOCXX_ABI_EXPORT_CDECL(v1::client*) operator->();
+
+    ///
+    /// Access the managed client.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(v1::client&) operator*();
 
     ///
     /// Explicitly release the managed client object back to the associated pool.
@@ -297,11 +310,27 @@ class pool::entry {
     ///
     /// Equivalent to `(*this)->database(name)`.
     ///
-    mongocxx::v1::database operator[](std::string name);
+    /// @{
+    MONGOCXX_ABI_EXPORT_CDECL(v1::database) database(bsoncxx::v1::stdx::string_view name);
+    MONGOCXX_ABI_EXPORT_CDECL(v1::database) operator[](bsoncxx::v1::stdx::string_view name);
+    /// @}
+    ///
+
+    class internal;
+
+   private:
+    /* explicit(false) */ entry(void* impl);
 };
 
 } // namespace v1
 } // namespace mongocxx
+
+namespace std {
+
+template <>
+struct is_error_code_enum<mongocxx::v1::pool::errc> : true_type {};
+
+} // namespace std
 
 #include <mongocxx/v1/detail/postlude.hpp>
 

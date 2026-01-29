@@ -32,6 +32,7 @@
 #include <mongocxx/options/index_view.hpp>
 
 #include <mongocxx/client_session.hh>
+#include <mongocxx/mongoc_error.hh>
 #include <mongocxx/scoped_bson.hh>
 
 #include <mongocxx/private/mongoc.hh>
@@ -57,7 +58,7 @@ class index_view::impl {
     cursor list(client_session const* session) {
         if (session) {
             bsoncxx::v_noabi::builder::basic::document options_builder;
-            options_builder.append(bsoncxx::v_noabi::builder::concatenate_doc{session->_get_impl().to_document()});
+            v_noabi::client_session::internal::append_to(*session, options_builder);
             return v1::cursor::internal::make(
                 libmongoc::collection_find_indexes_with_opts(_coll, to_scoped_bson_view(options_builder)));
         }
@@ -140,7 +141,7 @@ class index_view::impl {
         }
 
         if (session) {
-            opts_doc.append(bsoncxx::v_noabi::builder::concatenate_doc{session->_get_impl().to_document()});
+            v_noabi::client_session::internal::append_to(*session, opts_doc);
         }
 
         if (options.commit_quorum()) {
@@ -191,7 +192,7 @@ class index_view::impl {
         }
 
         if (session) {
-            opts_doc.append(bsoncxx::v_noabi::builder::concatenate_doc{session->_get_impl().to_document()});
+            v_noabi::client_session::internal::append_to(*session, opts_doc);
         }
 
         bsoncxx::v_noabi::document::value command =
@@ -225,7 +226,7 @@ class index_view::impl {
         }
 
         if (session) {
-            opts_doc.append(bsoncxx::v_noabi::builder::concatenate_doc{session->_get_impl().to_document()});
+            v_noabi::client_session::internal::append_to(*session, opts_doc);
         }
 
         scoped_bson reply;

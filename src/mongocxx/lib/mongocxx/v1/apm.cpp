@@ -17,21 +17,23 @@
 //
 
 #include <mongocxx/v1/config/export.hpp>
-#include <mongocxx/v1/events/command_failed.hpp>
-#include <mongocxx/v1/events/command_started.hpp>
-#include <mongocxx/v1/events/command_succeeded.hpp>
-#include <mongocxx/v1/events/server_closed.hpp>
-#include <mongocxx/v1/events/server_description_changed.hpp>
-#include <mongocxx/v1/events/server_heartbeat_failed.hpp>
-#include <mongocxx/v1/events/server_heartbeat_started.hpp>
-#include <mongocxx/v1/events/server_heartbeat_succeeded.hpp>
-#include <mongocxx/v1/events/server_opening.hpp>
-#include <mongocxx/v1/events/topology_closed.hpp>
-#include <mongocxx/v1/events/topology_description_changed.hpp>
-#include <mongocxx/v1/events/topology_opening.hpp>
+
+#include <mongocxx/v1/events/command_failed.hh>
+#include <mongocxx/v1/events/command_started.hh>
+#include <mongocxx/v1/events/command_succeeded.hh>
+#include <mongocxx/v1/events/server_closed.hh>
+#include <mongocxx/v1/events/server_description_changed.hh>
+#include <mongocxx/v1/events/server_heartbeat_failed.hh>
+#include <mongocxx/v1/events/server_heartbeat_started.hh>
+#include <mongocxx/v1/events/server_heartbeat_succeeded.hh>
+#include <mongocxx/v1/events/server_opening.hh>
+#include <mongocxx/v1/events/topology_closed.hh>
+#include <mongocxx/v1/events/topology_description_changed.hh>
+#include <mongocxx/v1/events/topology_opening.hh>
 
 #include <functional>
 
+#include <mongocxx/private/mongoc.hh>
 #include <mongocxx/private/utility.hh>
 
 namespace mongocxx {
@@ -321,6 +323,166 @@ auto apm::internal::server_heartbeat_failed(apm& self) -> fn_type<v1::events::se
 
 auto apm::internal::server_heartbeat_succeeded(apm& self) -> fn_type<v1::events::server_heartbeat_succeeded>& {
     return impl::with(self)._server_heartbeat_succeeded;
+}
+
+namespace {
+
+// An APM callback exiting via an exception is documented as being undefined behavior.
+// For QoI, terminate the program before allowing the exception to bypass libmongoc code.
+template <typename Fn>
+void exception_guard(char const* source, Fn fn) noexcept {
+    try {
+        fn();
+    } catch (...) {
+        std::cerr << "fatal error: APM callback " << source << " exited via an exception" << std::endl;
+        std::terminate();
+    }
+}
+
+void command_started(mongoc_apm_command_started_t const* v) noexcept {
+    auto const& context = *static_cast<v1::apm*>(libmongoc::apm_command_started_get_context(v));
+    auto const event = v1::events::command_started::internal::make(v);
+    exception_guard(__func__, [&] { v1::apm::internal::command_started(context)(event); });
+}
+
+void command_failed(mongoc_apm_command_failed_t const* v) noexcept {
+    auto const& context = *static_cast<v1::apm*>(libmongoc::apm_command_failed_get_context(v));
+    auto const event = v1::events::command_failed::internal::make(v);
+    exception_guard(__func__, [&] { v1::apm::internal::command_failed(context)(event); });
+}
+
+void command_succeeded(mongoc_apm_command_succeeded_t const* v) noexcept {
+    auto const& context = *static_cast<v1::apm*>(libmongoc::apm_command_succeeded_get_context(v));
+    auto const event = v1::events::command_succeeded::internal::make(v);
+    exception_guard(__func__, [&] { v1::apm::internal::command_succeeded(context)(event); });
+}
+
+void server_opening(mongoc_apm_server_opening_t const* v) noexcept {
+    auto const& context = *static_cast<v1::apm*>(libmongoc::apm_server_opening_get_context(v));
+    auto const event = v1::events::server_opening::internal::make(v);
+    exception_guard(__func__, [&] { v1::apm::internal::server_opening(context)(event); });
+}
+
+void server_closed(mongoc_apm_server_closed_t const* v) noexcept {
+    auto const& context = *static_cast<v1::apm*>(libmongoc::apm_server_closed_get_context(v));
+    auto const event = v1::events::server_closed::internal::make(v);
+    exception_guard(__func__, [&] { v1::apm::internal::server_closed(context)(event); });
+}
+
+void server_description_changed(mongoc_apm_server_changed_t const* v) noexcept {
+    auto const& context = *static_cast<v1::apm*>(libmongoc::apm_server_changed_get_context(v));
+    auto const event = v1::events::server_description_changed::internal::make(v);
+    exception_guard(__func__, [&] { v1::apm::internal::server_description_changed(context)(event); });
+}
+
+void topology_opening(mongoc_apm_topology_opening_t const* v) noexcept {
+    auto const& context = *static_cast<v1::apm*>(libmongoc::apm_topology_opening_get_context(v));
+    auto const event = v1::events::topology_opening::internal::make(v);
+    exception_guard(__func__, [&] { v1::apm::internal::topology_opening(context)(event); });
+}
+
+void topology_closed(mongoc_apm_topology_closed_t const* v) noexcept {
+    auto const& context = *static_cast<v1::apm*>(libmongoc::apm_topology_closed_get_context(v));
+    auto const event = v1::events::topology_closed::internal::make(v);
+    exception_guard(__func__, [&] { v1::apm::internal::topology_closed(context)(event); });
+}
+
+void topology_description_changed(mongoc_apm_topology_changed_t const* v) noexcept {
+    auto const& context = *static_cast<v1::apm*>(libmongoc::apm_topology_changed_get_context(v));
+    auto const event = v1::events::topology_description_changed::internal::make(v);
+    exception_guard(__func__, [&] { v1::apm::internal::topology_description_changed(context)(event); });
+}
+
+void server_heartbeat_started(mongoc_apm_server_heartbeat_started_t const* v) noexcept {
+    auto const& context = *static_cast<v1::apm*>(libmongoc::apm_server_heartbeat_started_get_context(v));
+    auto const event = v1::events::server_heartbeat_started::internal::make(v);
+    exception_guard(__func__, [&] { v1::apm::internal::server_heartbeat_started(context)(event); });
+}
+
+void server_heartbeat_failed(mongoc_apm_server_heartbeat_failed_t const* v) noexcept {
+    auto const& context = *static_cast<v1::apm*>(libmongoc::apm_server_heartbeat_failed_get_context(v));
+    auto const event = v1::events::server_heartbeat_failed::internal::make(v);
+    exception_guard(__func__, [&] { v1::apm::internal::server_heartbeat_failed(context)(event); });
+}
+
+void server_heartbeat_succeeded(mongoc_apm_server_heartbeat_succeeded_t const* v) noexcept {
+    auto const& context = *static_cast<v1::apm*>(libmongoc::apm_server_heartbeat_succeeded_get_context(v));
+    auto const event = v1::events::server_heartbeat_succeeded::internal::make(v);
+    exception_guard(__func__, [&] { v1::apm::internal::server_heartbeat_succeeded(context)(event); });
+}
+
+class apm_callbacks {
+   public:
+    mongoc_apm_callbacks_t* _callbacks = libmongoc::apm_callbacks_new();
+
+    ~apm_callbacks() {
+        libmongoc::apm_callbacks_destroy(_callbacks);
+    }
+
+    apm_callbacks(apm_callbacks&& other) = delete;
+    apm_callbacks& operator=(apm_callbacks&& other) = delete;
+    apm_callbacks(apm_callbacks const& other) = delete;
+    apm_callbacks& operator=(apm_callbacks const& other) = delete;
+
+    explicit apm_callbacks(v1::apm const& apm) {
+        if (v1::apm::internal::command_started(apm)) {
+            libmongoc::apm_set_command_started_cb(_callbacks, command_started);
+        }
+
+        if (v1::apm::internal::command_failed(apm)) {
+            libmongoc::apm_set_command_failed_cb(_callbacks, command_failed);
+        }
+
+        if (v1::apm::internal::command_succeeded(apm)) {
+            libmongoc::apm_set_command_succeeded_cb(_callbacks, command_succeeded);
+        }
+
+        if (v1::apm::internal::server_opening(apm)) {
+            libmongoc::apm_set_server_opening_cb(_callbacks, server_opening);
+        }
+
+        if (v1::apm::internal::server_closed(apm)) {
+            libmongoc::apm_set_server_closed_cb(_callbacks, server_closed);
+        }
+
+        if (v1::apm::internal::server_description_changed(apm)) {
+            libmongoc::apm_set_server_changed_cb(_callbacks, server_description_changed);
+        }
+
+        if (v1::apm::internal::topology_opening(apm)) {
+            libmongoc::apm_set_topology_opening_cb(_callbacks, topology_opening);
+        }
+
+        if (v1::apm::internal::topology_closed(apm)) {
+            libmongoc::apm_set_topology_closed_cb(_callbacks, topology_closed);
+        }
+
+        if (v1::apm::internal::topology_description_changed(apm)) {
+            libmongoc::apm_set_topology_changed_cb(_callbacks, topology_description_changed);
+        }
+
+        if (v1::apm::internal::server_heartbeat_started(apm)) {
+            libmongoc::apm_set_server_heartbeat_started_cb(_callbacks, server_heartbeat_started);
+        }
+
+        if (v1::apm::internal::server_heartbeat_failed(apm)) {
+            libmongoc::apm_set_server_heartbeat_failed_cb(_callbacks, server_heartbeat_failed);
+        }
+
+        if (v1::apm::internal::server_heartbeat_succeeded(apm)) {
+            libmongoc::apm_set_server_heartbeat_succeeded_cb(_callbacks, server_heartbeat_succeeded);
+        }
+    }
+};
+
+} // namespace
+
+void apm::internal::set_apm_callbacks(mongoc_client_t* client, v1::apm& apm) {
+    libmongoc::client_set_apm_callbacks(client, apm_callbacks{apm}._callbacks, &apm);
+}
+
+void apm::internal::set_apm_callbacks(mongoc_client_pool_t* pool, v1::apm& apm) {
+    libmongoc::client_pool_set_apm_callbacks(pool, apm_callbacks{apm}._callbacks, &apm);
 }
 
 } // namespace v1

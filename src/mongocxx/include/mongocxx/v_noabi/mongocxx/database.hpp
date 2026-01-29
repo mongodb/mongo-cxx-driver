@@ -14,21 +14,38 @@
 
 #pragma once
 
-#include <memory>
-#include <string>
-
-#include <mongocxx/client-fwd.hpp>
-#include <mongocxx/client_encryption-fwd.hpp>
-#include <mongocxx/collection-fwd.hpp>
 #include <mongocxx/database-fwd.hpp> // IWYU pragma: export
 
+//
+
+#include <mongocxx/v1/database.hpp> // IWYU pragma: export
+
+#include <cstdint>
+#include <memory> // IWYU pragma: keep: backward compatibility, to be removed.
+#include <string>
+#include <utility>
+#include <vector>
+
+#include <mongocxx/client-fwd.hpp>            // IWYU pragma: keep: backward compatibility, to be removed.
+#include <mongocxx/client_encryption-fwd.hpp> // IWYU pragma: keep: backward compatibility, to be removed.
+#include <mongocxx/collection-fwd.hpp>
+
+#include <bsoncxx/document/value.hpp>
 #include <bsoncxx/document/view_or_value.hpp>
+#include <bsoncxx/stdx/optional.hpp>
+#include <bsoncxx/stdx/string_view.hpp>
 #include <bsoncxx/string/view_or_value.hpp>
 
+#include <mongocxx/change_stream.hpp>
 #include <mongocxx/client_session.hpp>
 #include <mongocxx/collection.hpp>
+#include <mongocxx/cursor.hpp>
 #include <mongocxx/gridfs/bucket.hpp>
+#include <mongocxx/options/aggregate.hpp>
+#include <mongocxx/options/change_stream.hpp>
 #include <mongocxx/options/gridfs/bucket.hpp>
+#include <mongocxx/pipeline.hpp>
+#include <mongocxx/read_concern.hpp>
 #include <mongocxx/read_preference.hpp>
 #include <mongocxx/write_concern.hpp>
 
@@ -44,44 +61,73 @@ namespace v_noabi {
 /// all of its default settings from the client that creates it.
 ///
 class database {
+   private:
+    v1::database _db;
+
    public:
     ///
     /// Default constructs a new database. The database is not valid for use and is equivalent
     /// to the state of a moved-from database. The only valid actions to take with a default
     /// constructed database are to assign to it, or destroy it.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL() database() noexcept;
+    database() noexcept {}
 
     ///
     /// Move constructs a database.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL() database(database&&) noexcept;
+    database(database&& other) noexcept = default;
 
     ///
     /// Move assigns a database.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(database&) operator=(database&&) noexcept;
+    database& operator=(database&& other) noexcept = default;
 
     ///
     /// Copy constructs a database.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL() database(database const&);
+    MONGOCXX_ABI_EXPORT_CDECL() database(database const& other);
 
     ///
     /// Copy assigns a database.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(database&) operator=(database const&);
+    MONGOCXX_ABI_EXPORT_CDECL(database&) operator=(database const& other);
 
     ///
     /// Destroys a database.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL() ~database();
+    ~database() = default;
+
+    ///
+    /// Construct with the @ref mongocxx::v1 equivalent.
+    ///
+    /* explicit(false) */ database(v1::database database) : _db{std::move(database)} {}
+
+    ///
+    /// Convert to the @ref mongocxx::v1 equivalent.
+    ///
+    /// @par Postconditions:
+    /// - `*this` is in an assign-or-destroy-only state.
+    ///
+    /// @warning Invalidates all associated objects.
+    ///
+    explicit operator v1::database() && {
+        return std::move(_db);
+    }
+
+    ///
+    /// This class is not copyable.
+    ///
+    explicit operator v1::database() const& {
+        return _db;
+    }
 
     ///
     /// Returns true if the client is valid, meaning it was not default constructed
     /// or moved from.
     ///
-    explicit MONGOCXX_ABI_EXPORT_CDECL() operator bool() const noexcept;
+    explicit operator bool() const noexcept {
+        return _db.operator bool();
+    }
 
     ///
     /// Runs an aggregation framework pipeline against this database for
@@ -105,8 +151,8 @@ class database {
     ///   database level set read concern - database::read_concern(rc).
     ///   (Write concern supported only for MongoDB 3.4+).
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(cursor)
-    aggregate(pipeline const& pipeline, options::aggregate const& options = options::aggregate());
+    MONGOCXX_ABI_EXPORT_CDECL(v_noabi::cursor)
+    aggregate(v_noabi::pipeline const& pipeline, v_noabi::options::aggregate const& options = {});
 
     ///
     /// Runs an aggregation framework pipeline against this database for
@@ -132,11 +178,11 @@ class database {
     ///   database level set read concern - database::read_concern(rc).
     ///   (Write concern supported only for MongoDB 3.4+).
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(cursor)
+    MONGOCXX_ABI_EXPORT_CDECL(v_noabi::cursor)
     aggregate(
-        client_session const& session,
-        pipeline const& pipeline,
-        options::aggregate const& options = options::aggregate());
+        v_noabi::client_session const& session,
+        v_noabi::pipeline const& pipeline,
+        v_noabi::options::aggregate const& options = {});
 
     ///
     /// Runs a command against this database.
@@ -165,7 +211,7 @@ class database {
     /// @throws mongocxx::v_noabi::operation_exception if the operation fails.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::document::value)
-    run_command(client_session const& session, bsoncxx::v_noabi::document::view_or_value command);
+    run_command(v_noabi::client_session const& session, bsoncxx::v_noabi::document::view_or_value command);
 
     ///
     /// Executes a command on a specific server using this database.
@@ -180,7 +226,7 @@ class database {
     /// @throws mongocxx::v_noabi::operation_exception if the operation fails.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::document::value)
-    run_command(bsoncxx::v_noabi::document::view_or_value command, uint32_t server_id);
+    run_command(bsoncxx::v_noabi::document::view_or_value command, std::uint32_t server_id);
 
     ///
     /// Explicitly creates a collection in this database with the specified options.
@@ -202,11 +248,11 @@ class database {
     /// @exception
     ///   mongocxx::v_noabi::operation_exception if the operation fails.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(mongocxx::v_noabi::collection)
+    MONGOCXX_ABI_EXPORT_CDECL(v_noabi::collection)
     create_collection(
         bsoncxx::v_noabi::stdx::string_view name,
         bsoncxx::v_noabi::document::view_or_value collection_options = {},
-        bsoncxx::v_noabi::stdx::optional<write_concern> const& write_concern = {});
+        bsoncxx::v_noabi::stdx::optional<v_noabi::write_concern> const& write_concern = {});
 
     ///
     /// Explicitly creates a collection in this database with the specified options.
@@ -230,12 +276,12 @@ class database {
     /// @exception
     ///   mongocxx::v_noabi::operation_exception if the operation fails.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(mongocxx::v_noabi::collection)
+    MONGOCXX_ABI_EXPORT_CDECL(v_noabi::collection)
     create_collection(
-        client_session const& session,
+        v_noabi::client_session const& session,
         bsoncxx::v_noabi::stdx::string_view name,
         bsoncxx::v_noabi::document::view_or_value collection_options = {},
-        bsoncxx::v_noabi::stdx::optional<write_concern> const& write_concern = {});
+        bsoncxx::v_noabi::stdx::optional<v_noabi::write_concern> const& write_concern = {});
 
     ///
     /// Drops the database and all its collections.
@@ -251,7 +297,7 @@ class database {
     /// - https://www.mongodb.com/docs/manual/reference/command/dropDatabase/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(void)
-    drop(bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern> const& write_concern = {});
+    drop(bsoncxx::v_noabi::stdx::optional<v_noabi::write_concern> const& write_concern = {});
 
     ///
     /// Drops the database and all its collections.
@@ -270,8 +316,8 @@ class database {
     ///
     MONGOCXX_ABI_EXPORT_CDECL(void)
     drop(
-        client_session const& session,
-        bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern> const& write_concern = {});
+        v_noabi::client_session const& session,
+        bsoncxx::v_noabi::stdx::optional<v_noabi::write_concern> const& write_concern = {});
 
     ///
     /// Checks whether this database contains a collection having the given name.
@@ -297,7 +343,7 @@ class database {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/listCollections/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(cursor)
+    MONGOCXX_ABI_EXPORT_CDECL(v_noabi::cursor)
     list_collections(bsoncxx::v_noabi::document::view_or_value filter = {});
 
     ///
@@ -313,8 +359,8 @@ class database {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/listCollections/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(cursor)
-    list_collections(client_session const& session, bsoncxx::v_noabi::document::view_or_value filter = {});
+    MONGOCXX_ABI_EXPORT_CDECL(v_noabi::cursor)
+    list_collections(v_noabi::client_session const& session, bsoncxx::v_noabi::document::view_or_value filter = {});
 
     ///
     /// Enumerates the collection names in this database.
@@ -350,7 +396,9 @@ class database {
     /// - https://www.mongodb.com/docs/manual/reference/command/listCollections/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(std::vector<std::string>)
-    list_collection_names(client_session const& session, bsoncxx::v_noabi::document::view_or_value filter = {});
+    list_collection_names(
+        v_noabi::client_session const& session,
+        bsoncxx::v_noabi::document::view_or_value filter = {});
 
     ///
     /// Get the name of this database.
@@ -372,7 +420,7 @@ class database {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/read-concern/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(void) read_concern(mongocxx::v_noabi::read_concern rc);
+    MONGOCXX_ABI_EXPORT_CDECL(void) read_concern(v_noabi::read_concern rc);
 
     ///
     /// The current read concern for this database.
@@ -382,7 +430,7 @@ class database {
     ///
     /// @return the current read_concern
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(mongocxx::v_noabi::read_concern) read_concern() const;
+    MONGOCXX_ABI_EXPORT_CDECL(v_noabi::read_concern) read_concern() const;
 
     ///
     /// Sets the read_preference for this database.
@@ -396,7 +444,7 @@ class database {
     ///
     /// @param rp the new read_preference.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(void) read_preference(mongocxx::v_noabi::read_preference rp);
+    MONGOCXX_ABI_EXPORT_CDECL(void) read_preference(v_noabi::read_preference rp);
 
     ///
     /// The current read preference for this database.
@@ -406,7 +454,7 @@ class database {
     ///
     /// @return the current read_preference
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(mongocxx::v_noabi::read_preference) read_preference() const;
+    MONGOCXX_ABI_EXPORT_CDECL(v_noabi::read_preference) read_preference() const;
 
     ///
     /// Sets the write_concern for this database.
@@ -415,14 +463,14 @@ class database {
     /// from this database, but do affect new ones as new collections will receive a copy of the
     /// write_concern of this database upon instantiation.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(void) write_concern(mongocxx::v_noabi::write_concern wc);
+    MONGOCXX_ABI_EXPORT_CDECL(void) write_concern(v_noabi::write_concern wc);
 
     ///
     /// The current write_concern for this database.
     ///
     /// @return the current write_concern
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(mongocxx::v_noabi::write_concern) write_concern() const;
+    MONGOCXX_ABI_EXPORT_CDECL(v_noabi::write_concern) write_concern() const;
 
     ///
     /// Access a collection (logical grouping of documents) within this database.
@@ -431,7 +479,7 @@ class database {
     ///
     /// @return the collection.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(mongocxx::v_noabi::collection)
+    MONGOCXX_ABI_EXPORT_CDECL(v_noabi::collection)
     collection(bsoncxx::v_noabi::string::view_or_value name) const;
 
     ///
@@ -442,8 +490,8 @@ class database {
     ///
     /// @return the collection.
     ///
-    mongocxx::v_noabi::collection operator[](bsoncxx::v_noabi::string::view_or_value name) const {
-        return collection(name);
+    v_noabi::collection operator[](bsoncxx::v_noabi::string::view_or_value name) const {
+        return this->collection(name);
     }
 
     ///
@@ -460,8 +508,8 @@ class database {
     ///
     /// @throws mongocxx::v_noabi::logic_error if `options` are invalid.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(gridfs::bucket)
-    gridfs_bucket(options::gridfs::bucket const& options = options::gridfs::bucket()) const;
+    MONGOCXX_ABI_EXPORT_CDECL(v_noabi::gridfs::bucket)
+    gridfs_bucket(v_noabi::options::gridfs::bucket const& options = {}) const;
 
     ///
     /// Gets a change stream on this database with an empty pipeline.
@@ -476,7 +524,7 @@ class database {
     /// @see
     /// - https://www.mongodb.com/docs/manual/changeStreams/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(change_stream) watch(options::change_stream const& options = {});
+    MONGOCXX_ABI_EXPORT_CDECL(v_noabi::change_stream) watch(v_noabi::options::change_stream const& options = {});
 
     ///
     /// @param session
@@ -490,8 +538,8 @@ class database {
     /// @see
     /// - https://www.mongodb.com/docs/manual/changeStreams/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(change_stream)
-    watch(client_session const& session, options::change_stream const& options = {});
+    MONGOCXX_ABI_EXPORT_CDECL(v_noabi::change_stream)
+    watch(v_noabi::client_session const& session, v_noabi::options::change_stream const& options = {});
 
     ///
     /// Gets a change stream on this database.
@@ -510,8 +558,8 @@ class database {
     /// @see
     /// - https://www.mongodb.com/docs/manual/changeStreams/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(change_stream)
-    watch(pipeline const& pipe, options::change_stream const& options = {});
+    MONGOCXX_ABI_EXPORT_CDECL(v_noabi::change_stream)
+    watch(v_noabi::pipeline const& pipe, v_noabi::options::change_stream const& options = {});
 
     ///
     /// Gets a change stream on this database.
@@ -529,50 +577,34 @@ class database {
     /// @see
     /// - https://www.mongodb.com/docs/manual/changeStreams/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(change_stream)
-    watch(client_session const& session, pipeline const& pipe, options::change_stream const& options = {});
+    MONGOCXX_ABI_EXPORT_CDECL(v_noabi::change_stream)
+    watch(
+        v_noabi::client_session const& session,
+        v_noabi::pipeline const& pipe,
+        v_noabi::options::change_stream const& options = {});
 
-   private:
-    friend ::mongocxx::v_noabi::client_encryption;
-    friend ::mongocxx::v_noabi::client;
-    friend ::mongocxx::v_noabi::collection;
-
-    database(void* client, bsoncxx::v_noabi::string::view_or_value name);
-
-    cursor _aggregate(client_session const* session, pipeline const& pipeline, options::aggregate const& options);
-
-    bsoncxx::v_noabi::document::value _run_command(
-        client_session const* session,
-        bsoncxx::v_noabi::document::view_or_value command);
-
-    mongocxx::v_noabi::collection _create_collection(
-        client_session const* session,
-        bsoncxx::v_noabi::stdx::string_view name,
-        bsoncxx::v_noabi::document::view_or_value collection_options,
-        bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern> const& write_concern);
-
-    cursor _list_collections(client_session const* session, bsoncxx::v_noabi::document::view_or_value filter);
-
-    std::vector<std::string> _list_collection_names(
-        client_session const* session,
-        bsoncxx::v_noabi::document::view_or_value filter);
-
-    void _drop(
-        client_session const* session,
-        bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern> const& write_concern);
-
-    change_stream _watch(client_session const* session, pipeline const& pipe, options::change_stream const& options);
-
-    class impl;
-
-    template <typename Self>
-    static auto _get_impl(Self& self) -> decltype(*self._impl);
-
-    impl& _get_impl();
-    impl const& _get_impl() const;
-
-    std::unique_ptr<impl> _impl;
+    class internal;
 };
+
+} // namespace v_noabi
+} // namespace mongocxx
+
+namespace mongocxx {
+namespace v_noabi {
+
+///
+/// Convert to the @ref mongocxx::v_noabi equivalent of `v`.
+///
+inline v_noabi::database from_v1(v1::database v) {
+    return {std::move(v)};
+}
+
+///
+/// Convert to the @ref mongocxx::v1 equivalent of `v`.
+///
+inline v1::database to_v1(v_noabi::database v) {
+    return v1::database{std::move(v)};
+}
 
 } // namespace v_noabi
 } // namespace mongocxx
@@ -582,4 +614,7 @@ class database {
 ///
 /// @file
 /// Provides @ref mongocxx::v_noabi::database.
+///
+/// @par Includes
+/// - @ref mongocxx/v1/database.hpp
 ///

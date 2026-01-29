@@ -12,4 +12,29 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <mongocxx/options/pool.hpp>
+#pragma once
+
+#include <mongocxx/v1/server_api.hpp> // IWYU pragma: export
+
+//
+
+#include <memory>
+
+#include <mongocxx/private/mongoc.hh>
+
+namespace mongocxx {
+namespace v1 {
+
+class server_api::internal {
+   public:
+    struct mongoc_server_api_deleter {
+        void operator()(mongoc_server_api_t* ptr) const noexcept {
+            libmongoc::server_api_destroy(ptr);
+        }
+    };
+
+    static std::unique_ptr<mongoc_server_api_t, mongoc_server_api_deleter> to_mongoc(v1::server_api const& self);
+};
+
+} // namespace v1
+} // namespace mongocxx
