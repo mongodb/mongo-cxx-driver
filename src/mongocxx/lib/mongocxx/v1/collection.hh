@@ -26,12 +26,12 @@ namespace v1 {
 
 class collection::internal {
    public:
-    static collection make(mongoc_collection_t* coll, mongoc_client_t* client);
+    static MONGOCXX_ABI_EXPORT_CDECL_TESTING(collection) make(mongoc_collection_t* coll, mongoc_client_t* client);
 
     static mongoc_client_t* get_client(collection& self);
 
     static MONGOCXX_ABI_EXPORT_CDECL_TESTING(mongoc_collection_t const*) as_mongoc(collection const& self);
-    static mongoc_collection_t* as_mongoc(collection& self);
+    static MONGOCXX_ABI_EXPORT_CDECL_TESTING(mongoc_collection_t*) as_mongoc(collection& self);
 };
 
 } // namespace v1
