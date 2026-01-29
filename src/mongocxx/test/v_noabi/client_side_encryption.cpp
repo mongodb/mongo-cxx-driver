@@ -3533,24 +3533,17 @@ TEST_CASE("27. Text Explicit Encryption", "[client_side_encryption]") {
     auto client_substring = encrypted_client["db"]["substring"];
     auto client_prefix_suffix = encrypted_client["db"]["prefix-suffix"];
     {
-        // Use clientEncryption to encrypt the string "foobarbaz" with the following EncryptOpts:
-        // TODO
         auto const encrypt_opts =
             default_encrypt_opts().text_opts(default_text_opts().prefix_opts(prefix_opts).suffix_opts(suffix_opts));
         auto const encrypted_foobarbaz = client_encryption.encrypt(make_value("foobarbaz"), encrypt_opts);
 
-        // Use encryptedClient to insert the following document into db.prefix-suffix with majority write concern:
         client_prefix_suffix.insert_one(make_document(kvp("_id", 0), kvp("encryptedText", encrypted_foobarbaz)));
     }
 
-    // TODO same for substring
     {
-        // Use clientEncryption to encrypt the string "foobarbaz" with the following EncryptOpts:
-        // TODO
         auto const encrypt_opts = default_encrypt_opts().text_opts(default_text_opts().substring_opts(substring_opts));
         auto const encrypted_foobarbaz = client_encryption.encrypt(make_value("foobarbaz"), encrypt_opts);
 
-        // Use encryptedClient to insert the following document into db.prefix-suffix with majority write concern:
         client_substring.insert_one(make_document(kvp("_id", 0), kvp("encryptedText", encrypted_foobarbaz)));
     }
 
