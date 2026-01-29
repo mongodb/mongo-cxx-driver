@@ -18,7 +18,7 @@
 
 #include <mongocxx/v1/hint.hpp>
 #include <mongocxx/v1/read_preference.hpp>
-#include <mongocxx/v1/text_options.hpp> // IWYU pragma: export
+#include <mongocxx/v1/text_options.hpp>
 
 #include <mongocxx/private/utility.hh>
 
