@@ -29,11 +29,7 @@
 
 #include <chrono>
 #include <cstdint>
-#include <stdexcept>
 
-#include <bsoncxx/private/bson.hh>
-
-#include <mongocxx/private/scoped_bson.hh>
 #include <mongocxx/private/utility.hh>
 
 namespace mongocxx {
@@ -159,13 +155,27 @@ count_options& count_options::read_preference(v1::read_preference rp) {
     return *this;
 }
 
+bsoncxx::v1::stdx::optional<v1::read_preference> count_options::read_preference() const {
+    return impl::with(this)->_rp;
+}
+
+bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> const& count_options::internal::collation(
+    count_options const& self) {
+    return impl::with(self)._collation;
+}
+
+bsoncxx::v1::stdx::optional<mongocxx::v1::hint> const& count_options::internal::hint(count_options const& self) {
+    return impl::with(self)._hint;
+}
+
+bsoncxx::v1::stdx::optional<bsoncxx::v1::types::value> const& count_options::internal::comment(
+    count_options const& self) {
+    return impl::with(self)._comment;
+}
+
 bsoncxx::v1::stdx::optional<mongocxx::v1::read_preference> const& count_options::internal::read_preference(
     count_options const& self) {
     return impl::with(self)._rp;
-}
-
-bsoncxx::v1::stdx::optional<v1::read_preference> count_options::read_preference() const {
-    return impl::with(this)->_rp;
 }
 
 bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value>& count_options::internal::collation(count_options& self) {
@@ -183,45 +193,6 @@ bsoncxx::v1::stdx::optional<bsoncxx::v1::types::value>& count_options::internal:
 bsoncxx::v1::stdx::optional<mongocxx::v1::read_preference>& count_options::internal::read_preference(
     count_options& self) {
     return impl::with(self)._rp;
-}
-
-void count_options::internal::append_to(count_options const& self, scoped_bson& doc) {
-    if (auto const& collation = impl::with(self)._collation) {
-        doc += scoped_bson{BCON_NEW("collation", BCON_DOCUMENT(scoped_bson_view{*collation}.bson()))};
-    }
-
-    if (auto const& max_time = impl::with(self)._max_time) {
-        doc += scoped_bson{BCON_NEW("maxTimeMS", BCON_INT64(max_time->count()))};
-    }
-
-    if (auto const& hint = impl::with(self)._hint) {
-        if (auto const& doc_opt = v1::hint::internal::doc(*hint)) {
-            doc += scoped_bson{BCON_NEW("hint", BCON_DOCUMENT(scoped_bson_view{*doc_opt}.bson()))};
-        }
-
-        if (auto const& str_opt = v1::hint::internal::str(*hint)) {
-            doc += scoped_bson{BCON_NEW("hint", BCON_UTF8(str_opt->c_str()))};
-        }
-    }
-
-    if (auto const& comment = impl::with(self)._comment) {
-        scoped_bson v;
-
-        if (!BSON_APPEND_VALUE(
-                v.inout_ptr(), "comment", &bsoncxx::v1::types::value::internal::get_bson_value(*comment))) {
-            throw std::logic_error{"mongocxx::v1::count_options::internal::append_to: BSON_APPEND_VALUE failed"};
-        }
-
-        doc += v;
-    }
-
-    if (auto const& skip = impl::with(self)._skip) {
-        doc += scoped_bson{BCON_NEW("skip", BCON_INT64(*skip))};
-    }
-
-    if (auto const& limit = impl::with(self)._limit) {
-        doc += scoped_bson{BCON_NEW("limit", BCON_INT64(*limit))};
-    }
 }
 
 } // namespace v1

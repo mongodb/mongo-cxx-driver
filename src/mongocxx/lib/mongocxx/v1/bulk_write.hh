@@ -107,6 +107,10 @@ class bulk_write::single::internal {
 
 class bulk_write::options::internal {
    public:
+    static bsoncxx::v1::stdx::optional<bsoncxx::v1::types::value> const& comment(options const& self);
+    static bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> const& let(options const& self);
+    static bsoncxx::v1::stdx::optional<v1::write_concern> const& write_concern(options const& self);
+
     static bsoncxx::v1::stdx::optional<bsoncxx::v1::types::value>& comment(options& self);
     static bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value>& let(options& self);
     static bsoncxx::v1::stdx::optional<v1::write_concern>& write_concern(options& self);

@@ -22,7 +22,6 @@
 #include <bsoncxx/v1/stdx/optional.hpp>
 #include <bsoncxx/v1/stdx/string_view.hpp>
 
-#include <mongocxx/v1/bulk_write.hpp>
 #include <mongocxx/v1/detail/macros.hpp>
 #include <mongocxx/v1/indexes.hpp>
 #include <mongocxx/v1/pipeline.hpp>
@@ -163,6 +162,304 @@ template <typename Options>
 mongoc_read_prefs_t const* get_read_prefs(Options const& options) {
     auto const& rp_opt = Options::internal::read_preference(options);
     return rp_opt ? v1::read_preference::internal::as_mongoc(*rp_opt) : nullptr;
+}
+
+void append_comment(bsoncxx::v1::types::value const& opt, scoped_bson& doc) {
+    scoped_bson v;
+
+    if (!BSON_APPEND_VALUE(v.inout_ptr(), "comment", &bsoncxx::v1::types::value::internal::get_bson_value(opt))) {
+        throw std::logic_error{"mongocxx::v1::append_comment: BSON_APPEND_VALUE failed"};
+    }
+
+    doc += v;
+}
+
+void append_hint(v1::hint const& opt, scoped_bson& doc) {
+    scoped_bson v;
+
+    if (!BSON_APPEND_VALUE(
+            v.inout_ptr(),
+            "hint",
+            &bsoncxx::v1::types::value::internal::get_bson_value(bsoncxx::v1::types::value{opt.to_value()}))) {
+        throw std::logic_error{"mongocxx::v1::append_hint: BSON_APPEND_VALUE failed"};
+    }
+
+    doc += v;
+}
+
+void append_to(v1::bulk_write::options const& opts, scoped_bson& doc) {
+    if (!opts.ordered()) {
+        // ordered is true by default. Only append it if set to false.
+        doc += scoped_bson{BCON_NEW("ordered", BCON_BOOL(false))};
+    }
+
+    if (auto const& opt = v1::bulk_write::options::internal::write_concern(opts)) {
+        auto const v = opt->to_document();
+        doc += scoped_bson{BCON_NEW("writeConcern", BCON_DOCUMENT(scoped_bson_view{v}.bson()))};
+    }
+
+    if (auto const& opt = v1::bulk_write::options::internal::let(opts)) {
+        auto const v = opt->view();
+        doc += scoped_bson{BCON_NEW("let", BCON_DOCUMENT(scoped_bson_view{v}.bson()))};
+    }
+
+    if (auto const& opt = v1::bulk_write::options::internal::comment(opts)) {
+        append_comment(*opt, doc);
+    }
+}
+
+void append_to(v1::count_options const& opts, scoped_bson& doc) {
+    if (auto const& opt = v1::count_options::internal::collation(opts)) {
+        doc += scoped_bson{BCON_NEW("collation", BCON_DOCUMENT(scoped_bson_view{*opt}.bson()))};
+    }
+
+    if (auto const& opt = opts.max_time()) {
+        doc += scoped_bson{BCON_NEW("maxTimeMS", BCON_INT64(opt->count()))};
+    }
+
+    if (auto const& opt = v1::count_options::internal::hint(opts)) {
+        append_hint(*opt, doc);
+    }
+
+    if (auto const& opt = v1::count_options::internal::comment(opts)) {
+        append_comment(*opt, doc);
+    }
+
+    if (auto const& opt = opts.skip()) {
+        doc += scoped_bson{BCON_NEW("skip", BCON_INT64(*opt))};
+    }
+
+    if (auto const& opt = opts.limit()) {
+        doc += scoped_bson{BCON_NEW("limit", BCON_INT64(*opt))};
+    }
+}
+
+void append_to(v1::estimated_document_count_options const& opts, scoped_bson& doc) {
+    if (auto const& opt = opts.max_time()) {
+        doc += scoped_bson(BCON_NEW("maxTimeMS", BCON_INT64(opt->count())));
+    }
+
+    if (auto const& opt = v1::estimated_document_count_options::internal::comment(opts)) {
+        append_comment(*opt, doc);
+    }
+}
+
+void append_to(v1::delete_many_options const& opts, scoped_bson& doc) {
+    if (auto const& opt = v1::delete_many_options::internal::write_concern(opts)) {
+        doc += scoped_bson{BCON_NEW("writeConcern", BCON_DOCUMENT(scoped_bson{opt->to_document()}.bson()))};
+    }
+
+    if (auto const& opt = v1::delete_many_options::internal::let(opts)) {
+        doc += scoped_bson{BCON_NEW("let", BCON_DOCUMENT(scoped_bson_view{*opt}.bson()))};
+    }
+
+    if (auto const& opt = v1::delete_many_options::internal::comment(opts)) {
+        append_comment(*opt, doc);
+    }
+}
+
+void append_to(v1::delete_one_options const& opts, scoped_bson& doc) {
+    if (auto const& opt = v1::delete_one_options::internal::write_concern(opts)) {
+        doc += scoped_bson{BCON_NEW("writeConcern", BCON_DOCUMENT(scoped_bson{opt->to_document()}.bson()))};
+    }
+
+    if (auto const& opt = v1::delete_one_options::internal::let(opts)) {
+        doc += scoped_bson{BCON_NEW("let", BCON_DOCUMENT(scoped_bson_view{*opt}.bson()))};
+    }
+
+    if (auto const& opt = v1::delete_one_options::internal::comment(opts)) {
+        append_comment(*opt, doc);
+    }
+}
+
+void append_to(v1::distinct_options const& opts, scoped_bson& doc) {
+    if (auto const& opt = opts.max_time()) {
+        doc += scoped_bson{BCON_NEW("maxTimeMS", BCON_INT64(opt->count()))};
+    }
+
+    if (auto const& opt = v1::distinct_options::internal::collation(opts)) {
+        doc += scoped_bson{BCON_NEW("collation", BCON_DOCUMENT(scoped_bson_view{*opt}.bson()))};
+    }
+
+    if (auto const& opt = v1::distinct_options::internal::comment(opts)) {
+        append_comment(*opt, doc);
+    }
+}
+
+void append_to(v1::find_options const& opts, scoped_bson& doc) {
+    if (auto const& opt = opts.allow_disk_use()) {
+        doc += scoped_bson{BCON_NEW("allowDiskUse", BCON_BOOL(*opt))};
+    }
+
+    if (auto const& opt = opts.allow_partial_results()) {
+        doc += scoped_bson{BCON_NEW("allowPartialResults", BCON_BOOL(*opt))};
+    }
+
+    if (auto const opt = opts.batch_size()) {
+        doc += scoped_bson{BCON_NEW("batchSize", BCON_INT32(*opt))};
+    }
+
+    if (auto const& opt = v1::find_options::internal::collation(opts)) {
+        doc += scoped_bson{BCON_NEW("collation", BCON_DOCUMENT(scoped_bson_view{*opt}.bson()))};
+    }
+
+    if (auto const& opt = v1::find_options::internal::comment(opts)) {
+        append_comment(*opt, doc);
+    }
+
+    if (auto const& opt = opts.cursor_type()) {
+        switch (*opt) {
+            case cursor::type::k_non_tailable: {
+                // Do nothing.
+            } break;
+
+            case cursor::type::k_tailable: {
+                doc += scoped_bson{BCON_NEW("tailable", BCON_BOOL(true))};
+            } break;
+
+            case cursor::type::k_tailable_await: {
+                doc += scoped_bson{BCON_NEW("tailable", BCON_BOOL(true), "awaitData", BCON_BOOL(true))};
+            } break;
+
+            default:
+                MONGOCXX_PRIVATE_UNREACHABLE;
+        }
+    }
+
+    if (auto const& opt = v1::find_options::internal::hint(opts)) {
+        append_hint(*opt, doc);
+    }
+
+    if (auto const& opt = v1::find_options::internal::let(opts)) {
+        doc += scoped_bson{BCON_NEW("let", BCON_DOCUMENT(scoped_bson_view{*opt}.bson()))};
+    }
+
+    if (auto const& opt = opts.limit()) {
+        doc += scoped_bson{BCON_NEW("limit", BCON_INT64(*opt))};
+    }
+
+    if (auto const& opt = v1::find_options::internal::max(opts)) {
+        doc += scoped_bson{BCON_NEW("max", BCON_DOCUMENT(scoped_bson_view{*opt}.bson()))};
+    }
+
+    if (auto const& opt = opts.max_await_time()) {
+        doc += scoped_bson{BCON_NEW("maxTimeMS", BCON_INT64(std::int64_t{opt->count()}))};
+    }
+
+    if (auto const& opt = v1::find_options::internal::min(opts)) {
+        doc += scoped_bson{BCON_NEW("min", BCON_DOCUMENT(scoped_bson_view{*opt}.bson()))};
+    }
+
+    if (auto const& opt = opts.no_cursor_timeout()) {
+        doc += scoped_bson{BCON_NEW("noCursorTimeout", BCON_BOOL(*opt))};
+    }
+
+    if (auto const& opt = v1::find_options::internal::projection(opts)) {
+        doc += scoped_bson{BCON_NEW("projection", BCON_DOCUMENT(scoped_bson_view{*opt}.bson()))};
+    }
+
+    if (auto const& opt = opts.return_key()) {
+        doc += scoped_bson{BCON_NEW("returnKey", BCON_BOOL(*opt))};
+    }
+
+    if (auto const& opt = opts.show_record_id()) {
+        doc += scoped_bson{BCON_NEW("showRecordId", BCON_BOOL(*opt))};
+    }
+
+    if (auto const& opt = opts.skip()) {
+        doc += scoped_bson{BCON_NEW("skip", BCON_INT64(*opt))};
+    }
+
+    if (auto const& opt = v1::find_options::internal::sort(opts)) {
+        doc += scoped_bson{BCON_NEW("sort", BCON_DOCUMENT(scoped_bson_view{*opt}.bson()))};
+    }
+}
+
+void append_to(v1::insert_many_options const& opts, scoped_bson& doc) {
+    // Only include "ordered" when `false` (not the default behavior).
+    if (opts.ordered().value_or(true) == false) {
+        doc += scoped_bson{BCON_NEW("ordered", BCON_BOOL(false))};
+    }
+
+    if (auto const& opt = v1::insert_many_options::internal::write_concern(opts)) {
+        doc += scoped_bson{BCON_NEW("writeConcern", BCON_DOCUMENT(scoped_bson{opt->to_document()}.bson()))};
+    }
+
+    if (auto const& opt = opts.bypass_document_validation()) {
+        doc += scoped_bson{BCON_NEW("bypassDocumentValidation", BCON_BOOL(*opt))};
+    }
+
+    if (auto const& opt = v1::insert_many_options::internal::comment(opts)) {
+        append_comment(*opt, doc);
+    }
+}
+
+void append_to(v1::insert_one_options const& opts, scoped_bson& doc) {
+    if (auto const& opt = v1::insert_one_options::internal::write_concern(opts)) {
+        doc += scoped_bson{BCON_NEW("writeConcern", BCON_DOCUMENT(scoped_bson{opt->to_document()}.bson()))};
+    }
+
+    if (auto const& opt = opts.bypass_document_validation()) {
+        doc += scoped_bson{BCON_NEW("bypassDocumentValidation", BCON_BOOL(*opt))};
+    }
+
+    if (auto const& opt = v1::insert_one_options::internal::comment(opts)) {
+        append_comment(*opt, doc);
+    }
+}
+
+void append_to(v1::replace_one_options const& opts, scoped_bson& doc) {
+    if (auto const& opt = opts.bypass_document_validation()) {
+        doc += scoped_bson{BCON_NEW("bypassDocumentValidation", BCON_BOOL(*opt))};
+    }
+
+    if (auto const& opt = v1::replace_one_options::internal::write_concern(opts)) {
+        doc += scoped_bson{BCON_NEW("writeConcern", BCON_DOCUMENT(scoped_bson{opt->to_document()}.bson()))};
+    }
+
+    if (auto const& opt = v1::replace_one_options::internal::let(opts)) {
+        doc += scoped_bson{BCON_NEW("let", BCON_DOCUMENT(scoped_bson_view{*opt}.bson()))};
+    }
+
+    if (auto const& opt = v1::replace_one_options::internal::comment(opts)) {
+        append_comment(*opt, doc);
+    }
+}
+
+void append_to(v1::update_many_options const& opts, scoped_bson& doc) {
+    if (auto const& opt = opts.bypass_document_validation()) {
+        doc += scoped_bson{BCON_NEW("bypassDocumentValidation", BCON_BOOL(*opt))};
+    }
+
+    if (auto const& opt = v1::update_many_options::internal::write_concern(opts)) {
+        doc += scoped_bson{BCON_NEW("writeConcern", BCON_DOCUMENT(scoped_bson{opt->to_document()}.bson()))};
+    }
+
+    if (auto const& opt = v1::update_many_options::internal::let(opts)) {
+        doc += scoped_bson{BCON_NEW("let", BCON_DOCUMENT(scoped_bson_view{*opt}.bson()))};
+    }
+
+    if (auto const& opt = v1::update_many_options::internal::comment(opts)) {
+        append_comment(*opt, doc);
+    }
+}
+
+void append_to(v1::update_one_options const& opts, scoped_bson& doc) {
+    if (auto const& opt = opts.bypass_document_validation()) {
+        doc += scoped_bson{BCON_NEW("bypassDocumentValidation", BCON_BOOL(*opt))};
+    }
+
+    if (auto const& opt = v1::update_one_options::internal::write_concern(opts)) {
+        doc += scoped_bson{BCON_NEW("writeConcern", BCON_DOCUMENT(scoped_bson{opt->to_document()}.bson()))};
+    }
+
+    if (auto const& opt = v1::update_one_options::internal::let(opts)) {
+        doc += scoped_bson{BCON_NEW("let", BCON_DOCUMENT(scoped_bson_view{*opt}.bson()))};
+    }
+
+    if (auto const& opt = v1::update_one_options::internal::comment(opts)) {
+        append_comment(*opt, doc);
+    }
 }
 
 v1::cursor aggregate_impl(
@@ -735,7 +1032,7 @@ v1::cursor collection::aggregate(
 v1::bulk_write collection::create_bulk_write(v1::bulk_write::options const& opts) {
     scoped_bson doc;
 
-    v1::bulk_write::options::internal::append_to(opts, doc);
+    append_to(opts, doc);
 
     return create_bulk_write_impl(impl::with(this)->_coll, doc.bson(), opts.bypass_document_validation());
 }
@@ -744,7 +1041,7 @@ v1::bulk_write collection::create_bulk_write(v1::client_session const& session, 
     scoped_bson doc;
     bson_error_t error = {};
 
-    v1::bulk_write::options::internal::append_to(opts, doc);
+    append_to(opts, doc);
 
     if (!v1::client_session::internal::append_to(session, doc, error)) {
         v1::throw_exception(error);
@@ -756,7 +1053,7 @@ v1::bulk_write collection::create_bulk_write(v1::client_session const& session, 
 std::int64_t collection::count_documents(bsoncxx::v1::document::view filter, v1::count_options const& opts) {
     scoped_bson doc;
 
-    v1::count_options::internal::append_to(opts, doc);
+    append_to(opts, doc);
 
     return count_documents_impl(
         impl::with(this)->_coll, scoped_bson_view{filter}.bson(), doc.bson(), get_read_prefs(opts));
@@ -769,7 +1066,7 @@ std::int64_t collection::count_documents(
     scoped_bson doc;
     bson_error_t error = {};
 
-    v1::count_options::internal::append_to(opts, doc);
+    append_to(opts, doc);
 
     if (!v1::client_session::internal::append_to(session, doc, error)) {
         v1::throw_exception(error);
@@ -782,7 +1079,7 @@ std::int64_t collection::count_documents(
 std::int64_t collection::estimated_document_count(v1::estimated_document_count_options const& opts) {
     scoped_bson doc;
 
-    v1::estimated_document_count_options::internal::append_to(opts, doc);
+    append_to(opts, doc);
 
     return estimated_document_count_impl(impl::with(this)->_coll, doc.bson(), get_read_prefs(opts));
 }
@@ -792,7 +1089,7 @@ bsoncxx::v1::stdx::optional<v1::delete_many_result> collection::delete_many(
     v1::delete_many_options const& opts) {
     scoped_bson doc;
 
-    v1::delete_many_options::internal::append_to(opts, doc);
+    append_to(opts, doc);
 
     return delete_many_impl(create_bulk_write_impl(impl::with(this)->_coll, doc.bson(), {}), q, opts);
 }
@@ -804,7 +1101,7 @@ bsoncxx::v1::stdx::optional<v1::delete_many_result> collection::delete_many(
     scoped_bson doc;
     bson_error_t error = {};
 
-    v1::delete_many_options::internal::append_to(opts, doc);
+    append_to(opts, doc);
 
     if (!v1::client_session::internal::append_to(session, doc, error)) {
         v1::throw_exception(error);
@@ -818,7 +1115,7 @@ bsoncxx::v1::stdx::optional<v1::delete_one_result> collection::delete_one(
     v1::delete_one_options const& opts) {
     scoped_bson doc;
 
-    v1::delete_one_options::internal::append_to(opts, doc);
+    append_to(opts, doc);
 
     return delete_one_impl(create_bulk_write_impl(impl::with(this)->_coll, doc.bson(), {}), q, opts);
 }
@@ -830,7 +1127,7 @@ bsoncxx::v1::stdx::optional<v1::delete_one_result> collection::delete_one(
     scoped_bson doc;
     bson_error_t error = {};
 
-    v1::delete_one_options::internal::append_to(opts, doc);
+    append_to(opts, doc);
 
     if (!v1::client_session::internal::append_to(session, doc, error)) {
         v1::throw_exception(error);
@@ -845,7 +1142,7 @@ v1::cursor collection::distinct(
     v1::distinct_options const& opts) {
     scoped_bson doc;
 
-    v1::distinct_options::internal::append_to(opts, doc);
+    append_to(opts, doc);
 
     return distinct_impl(
         impl::with(this)->_coll,
@@ -864,7 +1161,7 @@ v1::cursor collection::distinct(
     scoped_bson doc;
     bson_error_t error = {};
 
-    v1::distinct_options::internal::append_to(opts, doc);
+    append_to(opts, doc);
 
     if (!v1::client_session::internal::append_to(session, doc, error)) {
         v1::throw_exception(error);
@@ -914,7 +1211,7 @@ void collection::drop(
 v1::cursor collection::find(bsoncxx::v1::document::view filter, v1::find_options const& opts) {
     scoped_bson doc;
 
-    v1::find_options::internal::append_to(opts, doc);
+    append_to(opts, doc);
 
     return find_impl(impl::with(this)->_coll, scoped_bson_view{filter}.bson(), doc.bson(), opts);
 }
@@ -924,7 +1221,7 @@ collection::find(v1::client_session const& session, bsoncxx::v1::document::view 
     scoped_bson doc;
     bson_error_t error = {};
 
-    v1::find_options::internal::append_to(opts, doc);
+    append_to(opts, doc);
 
     if (!v1::client_session::internal::append_to(session, doc, error)) {
         v1::throw_exception(error);
@@ -1028,7 +1325,7 @@ bsoncxx::v1::stdx::optional<v1::insert_one_result> collection::insert_one(
     v1::insert_one_options const& opts) {
     scoped_bson doc;
 
-    v1::insert_one_options::internal::append_to(opts, doc);
+    append_to(opts, doc);
 
     return insert_one_impl(
         create_bulk_write_impl(impl::with(this)->_coll, doc.bson(), opts.bypass_document_validation()), document);
@@ -1041,7 +1338,7 @@ bsoncxx::v1::stdx::optional<v1::insert_one_result> collection::insert_one(
     scoped_bson doc;
     bson_error_t error = {};
 
-    v1::insert_one_options::internal::append_to(opts, doc);
+    append_to(opts, doc);
 
     if (!v1::client_session::internal::append_to(session, doc, error)) {
         v1::throw_exception(error);
@@ -1111,7 +1408,7 @@ bsoncxx::v1::stdx::optional<v1::replace_one_result> collection::replace_one(
     v1::replace_one_options const& opts) {
     scoped_bson doc;
 
-    v1::replace_one_options::internal::append_to(opts, doc);
+    append_to(opts, doc);
 
     return replace_one_impl(
         create_bulk_write_impl(impl::with(this)->_coll, doc.bson(), opts.bypass_document_validation()),
@@ -1128,7 +1425,7 @@ bsoncxx::v1::stdx::optional<v1::replace_one_result> collection::replace_one(
     scoped_bson doc;
     bson_error_t error = {};
 
-    v1::replace_one_options::internal::append_to(opts, doc);
+    append_to(opts, doc);
 
     if (!v1::client_session::internal::append_to(session, doc, error)) {
         v1::throw_exception(error);
@@ -1152,7 +1449,7 @@ bsoncxx::v1::stdx::optional<v1::update_many_result> collection::update_many(
     v1::update_many_options const& opts) {
     scoped_bson doc;
 
-    v1::update_many_options::internal::append_to(opts, doc);
+    append_to(opts, doc);
 
     return update_many_impl(
         create_bulk_write_impl(impl::with(this)->_coll, doc.bson(), opts.bypass_document_validation()),
@@ -1167,7 +1464,7 @@ bsoncxx::v1::stdx::optional<v1::update_many_result> collection::update_many(
     update_many_options const& opts) {
     scoped_bson doc;
 
-    v1::update_many_options::internal::append_to(opts, doc);
+    append_to(opts, doc);
 
     return update_many_impl(
         create_bulk_write_impl(impl::with(this)->_coll, doc.bson(), opts.bypass_document_validation()),
@@ -1184,7 +1481,7 @@ bsoncxx::v1::stdx::optional<v1::update_many_result> collection::update_many(
     scoped_bson doc;
     bson_error_t error = {};
 
-    v1::update_many_options::internal::append_to(opts, doc);
+    append_to(opts, doc);
 
     if (!v1::client_session::internal::append_to(session, doc, error)) {
         v1::throw_exception(error);
@@ -1205,7 +1502,7 @@ bsoncxx::v1::stdx::optional<v1::update_many_result> collection::update_many(
     scoped_bson doc;
     bson_error_t error = {};
 
-    v1::update_many_options::internal::append_to(opts, doc);
+    append_to(opts, doc);
 
     if (!v1::client_session::internal::append_to(session, doc, error)) {
         v1::throw_exception(error);
@@ -1224,7 +1521,7 @@ bsoncxx::v1::stdx::optional<v1::update_one_result> collection::update_one(
     v1::update_one_options const& opts) {
     scoped_bson doc;
 
-    v1::update_one_options::internal::append_to(opts, doc);
+    append_to(opts, doc);
 
     return update_one_impl(
         create_bulk_write_impl(impl::with(this)->_coll, doc.bson(), opts.bypass_document_validation()),
@@ -1237,7 +1534,7 @@ bsoncxx::v1::stdx::optional<v1::update_one_result>
 collection::update_one(bsoncxx::v1::document::view filter, v1::pipeline const& update, update_one_options const& opts) {
     scoped_bson doc;
 
-    v1::update_one_options::internal::append_to(opts, doc);
+    append_to(opts, doc);
 
     return update_one_impl(
         create_bulk_write_impl(impl::with(this)->_coll, doc.bson(), opts.bypass_document_validation()),
@@ -1254,7 +1551,7 @@ bsoncxx::v1::stdx::optional<v1::update_one_result> collection::update_one(
     scoped_bson doc;
     bson_error_t error = {};
 
-    v1::update_one_options::internal::append_to(opts, doc);
+    append_to(opts, doc);
 
     if (!v1::client_session::internal::append_to(session, doc, error)) {
         v1::throw_exception(error);
@@ -1275,7 +1572,7 @@ bsoncxx::v1::stdx::optional<v1::update_one_result> collection::update_one(
     scoped_bson doc;
     bson_error_t error = {};
 
-    v1::update_one_options::internal::append_to(opts, doc);
+    append_to(opts, doc);
 
     if (!v1::client_session::internal::append_to(session, doc, error)) {
         v1::throw_exception(error);
@@ -1403,7 +1700,7 @@ v1::bulk_write collection::_create_insert_many(v1::client_session const* session
     scoped_bson doc;
     bson_error_t error = {};
 
-    v1::insert_many_options::internal::append_to(opts, doc);
+    append_to(opts, doc);
 
     if (session && !v1::client_session::internal::append_to(*session, doc, error)) {
         v1::throw_exception(error);

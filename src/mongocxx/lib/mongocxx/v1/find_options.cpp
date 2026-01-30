@@ -20,7 +20,6 @@
 #include <bsoncxx/v1/stdx/optional.hpp>
 
 #include <mongocxx/v1/cursor.hpp>
-#include <mongocxx/v1/detail/macros.hpp>
 #include <mongocxx/v1/read_preference.hpp>
 
 #include <bsoncxx/v1/types/value.hh>
@@ -29,11 +28,7 @@
 
 #include <chrono>
 #include <cstdint>
-#include <stdexcept>
 
-#include <bsoncxx/private/bson.hh>
-
-#include <mongocxx/private/scoped_bson.hh>
 #include <mongocxx/private/utility.hh>
 
 namespace mongocxx {
@@ -293,9 +288,45 @@ bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view> find_options::sort() co
     return impl::with(this)->_sort;
 }
 
+bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> const& find_options::internal::collation(
+    find_options const& self) {
+    return impl::with(self)._collation;
+}
+
+bsoncxx::v1::stdx::optional<bsoncxx::v1::types::value> const& find_options::internal::comment(
+    find_options const& self) {
+    return impl::with(self)._comment;
+}
+
+bsoncxx::v1::stdx::optional<v1::hint> const& find_options::internal::hint(find_options const& self) {
+    return impl::with(self)._hint;
+}
+
+bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> const& find_options::internal::let(find_options const& self) {
+    return impl::with(self)._let;
+}
+
+bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> const& find_options::internal::max(find_options const& self) {
+    return impl::with(self)._max;
+}
+
+bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> const& find_options::internal::min(find_options const& self) {
+    return impl::with(self)._min;
+}
+
+bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> const& find_options::internal::projection(
+    find_options const& self) {
+    return impl::with(self)._projection;
+}
+
 bsoncxx::v1::stdx::optional<v1::read_preference> const& find_options::internal::read_preference(
     find_options const& self) {
     return impl::with(self)._read_preference;
+}
+
+bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> const& find_options::internal::sort(
+    find_options const& self) {
+    return impl::with(self)._sort;
 }
 
 bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value>& find_options::internal::collation(find_options& self) {
@@ -332,107 +363,6 @@ bsoncxx::v1::stdx::optional<v1::read_preference>& find_options::internal::read_p
 
 bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value>& find_options::internal::sort(find_options& self) {
     return impl::with(self)._sort;
-}
-
-void find_options::internal::append_to(find_options const& self, scoped_bson& doc) {
-    if (auto const& opt = impl::with(self)._allow_disk_use) {
-        doc += scoped_bson{BCON_NEW("allowDiskUse", BCON_BOOL(*opt))};
-    }
-
-    if (auto const& opt = impl::with(self)._allow_partial_results) {
-        doc += scoped_bson{BCON_NEW("allowPartialResults", BCON_BOOL(*opt))};
-    }
-
-    if (auto const opt = impl::with(self)._batch_size) {
-        doc += scoped_bson{BCON_NEW("batchSize", BCON_INT32(*opt))};
-    }
-
-    if (auto const& opt = impl::with(self)._collation) {
-        doc += scoped_bson{BCON_NEW("collation", BCON_DOCUMENT(scoped_bson_view{*opt}.bson()))};
-    }
-
-    if (auto const& opt = impl::with(self)._comment) {
-        scoped_bson v;
-
-        if (!BSON_APPEND_VALUE(v.inout_ptr(), "comment", &bsoncxx::v1::types::value::internal::get_bson_value(*opt))) {
-            throw std::logic_error{"mongocxx::v1::find_options::internal::append_to: BSON_APPEND_VALUE failed"};
-        }
-
-        doc += v;
-    }
-
-    if (auto const& opt = impl::with(self)._cursor_type) {
-        switch (*opt) {
-            case cursor::type::k_non_tailable: {
-                // Do nothing.
-            } break;
-
-            case cursor::type::k_tailable: {
-                doc += scoped_bson{BCON_NEW("tailable", BCON_BOOL(true))};
-            } break;
-
-            case cursor::type::k_tailable_await: {
-                doc += scoped_bson{BCON_NEW("tailable", BCON_BOOL(true), "awaitData", BCON_BOOL(true))};
-            } break;
-
-            default:
-                MONGOCXX_PRIVATE_UNREACHABLE;
-        }
-    }
-
-    if (auto const& opt = impl::with(self)._hint) {
-        if (auto const& doc_opt = v1::hint::internal::doc(*opt)) {
-            doc += scoped_bson{BCON_NEW("hint", BCON_DOCUMENT(scoped_bson_view{*doc_opt}.bson()))};
-        }
-
-        if (auto const& str_opt = v1::hint::internal::str(*opt)) {
-            doc += scoped_bson{BCON_NEW("hint", BCON_UTF8(str_opt->c_str()))};
-        }
-    }
-
-    if (auto const& opt = impl::with(self)._let) {
-        doc += scoped_bson{BCON_NEW("let", BCON_DOCUMENT(scoped_bson_view{*opt}.bson()))};
-    }
-
-    if (auto const& opt = impl::with(self)._limit) {
-        doc += scoped_bson{BCON_NEW("limit", BCON_INT64(*opt))};
-    }
-
-    if (auto const& opt = impl::with(self)._max) {
-        doc += scoped_bson{BCON_NEW("max", BCON_DOCUMENT(scoped_bson_view{*opt}.bson()))};
-    }
-
-    if (auto const& opt = impl::with(self)._max_time) {
-        doc += scoped_bson{BCON_NEW("maxTimeMS", BCON_INT64(std::int64_t{opt->count()}))};
-    }
-
-    if (auto const& opt = impl::with(self)._min) {
-        doc += scoped_bson{BCON_NEW("min", BCON_DOCUMENT(scoped_bson_view{*opt}.bson()))};
-    }
-
-    if (auto const& opt = impl::with(self)._no_cursor_timeout) {
-        doc += scoped_bson{BCON_NEW("noCursorTimeout", BCON_BOOL(*opt))};
-    }
-
-    if (auto const& opt = impl::with(self)._projection) {
-        doc += scoped_bson{BCON_NEW("projection", BCON_DOCUMENT(scoped_bson_view{*opt}.bson()))};
-    }
-
-    if (auto const& opt = impl::with(self)._return_key) {
-        doc += scoped_bson{BCON_NEW("returnKey", BCON_BOOL(*opt))};
-    }
-
-    if (auto const& opt = impl::with(self)._show_record_id) {
-        doc += scoped_bson{BCON_NEW("showRecordId", BCON_BOOL(*opt))};
-    }
-
-    if (auto const& opt = impl::with(self)._skip) {
-        doc += scoped_bson{BCON_NEW("skip", BCON_INT64(*opt))};
-    }
-
-    if (auto const& opt = impl::with(self)._sort) {
-        doc += scoped_bson{BCON_NEW("sort", BCON_DOCUMENT(scoped_bson_view{*opt}.bson()))};
-    }
 }
 
 } // namespace v1

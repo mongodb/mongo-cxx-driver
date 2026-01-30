@@ -30,7 +30,6 @@
 #include <mongocxx/v1/hint.hh>
 
 #include <cstdint>
-#include <stdexcept>
 
 #include <bsoncxx/private/bson.hh>
 
@@ -1238,6 +1237,21 @@ bsoncxx::v1::stdx::optional<v1::write_concern> bulk_write::options::write_concer
     return impl::with(this)->_write_concern;
 }
 
+bsoncxx::v1::stdx::optional<bsoncxx::v1::types::value> const& bulk_write::options::internal::comment(
+    options const& self) {
+    return impl::with(self)._comment;
+}
+
+bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> const& bulk_write::options::internal::let(
+    options const& self) {
+    return impl::with(self)._let;
+}
+
+bsoncxx::v1::stdx::optional<v1::write_concern> const& bulk_write::options::internal::write_concern(
+    options const& self) {
+    return impl::with(self)._write_concern;
+}
+
 bsoncxx::v1::stdx::optional<bsoncxx::v1::types::value>& bulk_write::options::internal::comment(options& self) {
     return impl::with(self)._comment;
 }
@@ -1248,33 +1262,6 @@ bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value>& bulk_write::options::
 
 bsoncxx::v1::stdx::optional<v1::write_concern>& bulk_write::options::internal::write_concern(options& self) {
     return impl::with(self)._write_concern;
-}
-
-void bulk_write::options::internal::append_to(options const& self, scoped_bson& doc) {
-    if (!impl::with(self)._ordered) {
-        // ordered is true by default. Only append it if set to false.
-        doc += scoped_bson{BCON_NEW("ordered", BCON_BOOL(false))};
-    }
-
-    if (auto const& opt = impl::with(self)._write_concern) {
-        auto const v = opt->to_document();
-        doc += scoped_bson{BCON_NEW("writeConcern", BCON_DOCUMENT(scoped_bson_view{v}.bson()))};
-    }
-
-    if (auto const& opt = impl::with(self)._let) {
-        auto const v = opt->view();
-        doc += scoped_bson{BCON_NEW("let", BCON_DOCUMENT(scoped_bson_view{v}.bson()))};
-    }
-
-    if (auto const& opt = impl::with(self)._comment) {
-        scoped_bson v;
-
-        if (!BSON_APPEND_VALUE(v.inout_ptr(), "comment", &bsoncxx::v1::types::value::internal::get_bson_value(*opt))) {
-            throw std::logic_error{"mongocxx::v1::bulk_write::options::internal::append_to: BSON_APPEND_VALUE failed"};
-        }
-
-        doc += v;
-    }
 }
 
 class bulk_write::result::impl {

@@ -22,11 +22,6 @@
 
 #include <bsoncxx/v1/types/value.hh>
 
-#include <stdexcept>
-
-#include <bsoncxx/private/bson.hh>
-
-#include <mongocxx/private/scoped_bson.hh>
 #include <mongocxx/private/utility.hh>
 
 namespace mongocxx {
@@ -116,6 +111,16 @@ bsoncxx::v1::stdx::optional<bsoncxx::v1::types::view> insert_one_options::commen
     return impl::with(this)->_comment;
 }
 
+bsoncxx::v1::stdx::optional<v1::write_concern> const& insert_one_options::internal::write_concern(
+    insert_one_options const& self) {
+    return impl::with(self)._write_concern;
+}
+
+bsoncxx::v1::stdx::optional<bsoncxx::v1::types::value> const& insert_one_options::internal::comment(
+    insert_one_options const& self) {
+    return impl::with(self)._comment;
+}
+
 bsoncxx::v1::stdx::optional<v1::write_concern>& insert_one_options::internal::write_concern(insert_one_options& self) {
     return impl::with(self)._write_concern;
 }
@@ -123,26 +128,6 @@ bsoncxx::v1::stdx::optional<v1::write_concern>& insert_one_options::internal::wr
 bsoncxx::v1::stdx::optional<bsoncxx::v1::types::value>& insert_one_options::internal::comment(
     insert_one_options& self) {
     return impl::with(self)._comment;
-}
-
-void insert_one_options::internal::append_to(insert_one_options const& self, scoped_bson& doc) {
-    if (auto const& opt = impl::with(self)._write_concern) {
-        doc += scoped_bson{BCON_NEW("writeConcern", BCON_DOCUMENT(scoped_bson{opt->to_document()}.bson()))};
-    }
-
-    if (auto const& opt = impl::with(self)._bypass_document_validation) {
-        doc += scoped_bson{BCON_NEW("bypassDocumentValidation", BCON_BOOL(*opt))};
-    }
-
-    if (auto const& opt = impl::with(self)._comment) {
-        scoped_bson v;
-
-        if (!BSON_APPEND_VALUE(v.inout_ptr(), "comment", &bsoncxx::v1::types::value::internal::get_bson_value(*opt))) {
-            throw std::logic_error{"mongocxx::v1::insert_one_options::internal::append_to: BSON_APPEND_VALUE failed"};
-        }
-
-        doc += v;
-    }
 }
 
 } // namespace v1

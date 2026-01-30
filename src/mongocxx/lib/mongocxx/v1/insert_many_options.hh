@@ -24,17 +24,16 @@
 
 #include <bsoncxx/v1/stdx/optional.hpp>
 
-#include <mongocxx/private/scoped_bson.hh>
-
 namespace mongocxx {
 namespace v1 {
 
 class insert_many_options::internal {
    public:
+    static bsoncxx::v1::stdx::optional<v1::write_concern> const& write_concern(insert_many_options const& self);
+    static bsoncxx::v1::stdx::optional<bsoncxx::v1::types::value> const& comment(insert_many_options const& self);
+
     static bsoncxx::v1::stdx::optional<v1::write_concern>& write_concern(insert_many_options& self);
     static bsoncxx::v1::stdx::optional<bsoncxx::v1::types::value>& comment(insert_many_options& self);
-
-    static void append_to(insert_many_options const& self, scoped_bson& doc);
 };
 
 } // namespace v1

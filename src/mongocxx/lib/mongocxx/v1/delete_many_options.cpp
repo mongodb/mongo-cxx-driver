@@ -14,8 +14,6 @@
 
 #include <mongocxx/v1/delete_many_options.hh>
 
-#include <stdexcept>
-
 //
 
 #include <bsoncxx/v1/document/value.hpp>
@@ -26,9 +24,6 @@
 
 #include <bsoncxx/v1/types/value.hh>
 
-#include <bsoncxx/private/bson.hh>
-
-#include <mongocxx/private/scoped_bson.hh>
 #include <mongocxx/private/utility.hh>
 
 namespace mongocxx {
@@ -144,8 +139,23 @@ bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> const& delete_many_opt
     return impl::with(self)._collation;
 }
 
+bsoncxx::v1::stdx::optional<v1::write_concern> const& delete_many_options::internal::write_concern(
+    delete_many_options const& self) {
+    return impl::with(self)._write_concern;
+}
+
 bsoncxx::v1::stdx::optional<v1::hint> const& delete_many_options::internal::hint(delete_many_options const& self) {
     return impl::with(self)._hint;
+}
+
+bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> const& delete_many_options::internal::let(
+    delete_many_options const& self) {
+    return impl::with(self)._let;
+}
+
+bsoncxx::v1::stdx::optional<bsoncxx::v1::types::value> const& delete_many_options::internal::comment(
+    delete_many_options const& self) {
+    return impl::with(self)._comment;
 }
 
 bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value>& delete_many_options::internal::collation(
@@ -170,26 +180,6 @@ bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value>& delete_many_options::
 bsoncxx::v1::stdx::optional<bsoncxx::v1::types::value>& delete_many_options::internal::comment(
     delete_many_options& self) {
     return impl::with(self)._comment;
-}
-
-void delete_many_options::internal::append_to(delete_many_options const& self, scoped_bson& doc) {
-    if (auto const& opt = impl::with(self)._write_concern) {
-        doc += scoped_bson{BCON_NEW("writeConcern", BCON_DOCUMENT(scoped_bson{opt->to_document()}.bson()))};
-    }
-
-    if (auto const& opt = impl::with(self)._let) {
-        doc += scoped_bson{BCON_NEW("let", BCON_DOCUMENT(scoped_bson_view{*opt}.bson()))};
-    }
-
-    if (auto const& opt = impl::with(self)._comment) {
-        scoped_bson v;
-
-        if (!BSON_APPEND_VALUE(v.inout_ptr(), "comment", &bsoncxx::v1::types::value::internal::get_bson_value(*opt))) {
-            throw std::logic_error{"mongocxx::v1::delete_many_options::internal::append_to: BSON_APPEND_VALUE failed"};
-        }
-
-        doc += v;
-    }
 }
 
 } // namespace v1

@@ -23,11 +23,7 @@
 #include <bsoncxx/v1/types/value.hh>
 
 #include <chrono>
-#include <stdexcept>
 
-#include <bsoncxx/private/bson.hh>
-
-#include <mongocxx/private/scoped_bson.hh>
 #include <mongocxx/private/utility.hh>
 
 namespace mongocxx {
@@ -121,6 +117,11 @@ bsoncxx::v1::stdx::optional<v1::read_preference> estimated_document_count_option
     return impl::with(this)->_read_preference;
 }
 
+bsoncxx::v1::stdx::optional<bsoncxx::v1::types::value> const& estimated_document_count_options::internal::comment(
+    estimated_document_count_options const& self) {
+    return impl::with(self)._comment;
+}
+
 bsoncxx::v1::stdx::optional<mongocxx::v1::read_preference> const&
 estimated_document_count_options::internal::read_preference(estimated_document_count_options const& self) {
     return impl::with(self)._read_preference;
@@ -134,25 +135,6 @@ bsoncxx::v1::stdx::optional<bsoncxx::v1::types::value>& estimated_document_count
 bsoncxx::v1::stdx::optional<mongocxx::v1::read_preference>& estimated_document_count_options::internal::read_preference(
     estimated_document_count_options& self) {
     return impl::with(self)._read_preference;
-}
-
-void estimated_document_count_options::internal::append_to(
-    estimated_document_count_options const& self,
-    scoped_bson& doc) {
-    if (auto const& opt = impl::with(self)._max_time) {
-        doc += scoped_bson(BCON_NEW("maxTimeMS", BCON_INT64(opt->count())));
-    }
-
-    if (auto const& opt = impl::with(self)._comment) {
-        scoped_bson v;
-
-        if (!BSON_APPEND_VALUE(v.inout_ptr(), "comment", &bsoncxx::v1::types::value::internal::get_bson_value(*opt))) {
-            throw std::logic_error{
-                "mongocxx::v1::estimated_document_count_options::internal::append_to: BSON_APPEND_VALUE failed"};
-        }
-
-        doc += v;
-    }
 }
 
 } // namespace v1

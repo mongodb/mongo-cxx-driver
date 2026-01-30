@@ -24,11 +24,7 @@
 #include <bsoncxx/v1/types/value.hh>
 
 #include <chrono>
-#include <stdexcept>
 
-#include <bsoncxx/private/bson.hh>
-
-#include <mongocxx/private/scoped_bson.hh>
 #include <mongocxx/private/utility.hh>
 
 namespace mongocxx {
@@ -128,6 +124,21 @@ bsoncxx::v1::stdx::optional<v1::read_preference> distinct_options::read_preferen
     return impl::with(this)->_read_preference;
 }
 
+bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> const& distinct_options::internal::collation(
+    distinct_options const& self) {
+    return impl::with(self)._collation;
+}
+
+bsoncxx::v1::stdx::optional<std::chrono::milliseconds> const& distinct_options::internal::max_time(
+    distinct_options const& self) {
+    return impl::with(self)._max_time;
+}
+
+bsoncxx::v1::stdx::optional<bsoncxx::v1::types::value> const& distinct_options::internal::comment(
+    distinct_options const& self) {
+    return impl::with(self)._comment;
+}
+
 bsoncxx::v1::stdx::optional<mongocxx::v1::read_preference> const& distinct_options::internal::read_preference(
     distinct_options const& self) {
     return impl::with(self)._read_preference;
@@ -149,26 +160,6 @@ bsoncxx::v1::stdx::optional<bsoncxx::v1::types::value>& distinct_options::intern
 bsoncxx::v1::stdx::optional<mongocxx::v1::read_preference>& distinct_options::internal::read_preference(
     distinct_options& self) {
     return impl::with(self)._read_preference;
-}
-
-void distinct_options::internal::append_to(distinct_options const& self, scoped_bson& doc) {
-    if (auto const& opt = impl::with(self)._max_time) {
-        doc += scoped_bson{BCON_NEW("maxTimeMS", BCON_INT64(opt->count()))};
-    }
-
-    if (auto const& opt = impl::with(self)._collation) {
-        doc += scoped_bson{BCON_NEW("collation", BCON_DOCUMENT(scoped_bson_view{*opt}.bson()))};
-    }
-
-    if (auto const& opt = impl::with(self)._comment) {
-        scoped_bson v;
-
-        if (!BSON_APPEND_VALUE(v.inout_ptr(), "comment", &bsoncxx::v1::types::value::internal::get_bson_value(*opt))) {
-            throw std::logic_error{"mongocxx::v1::distinct_options::internal::append_to: BSON_APPEND_VALUE failed"};
-        }
-
-        doc += v;
-    }
 }
 
 } // namespace v1
