@@ -52,12 +52,6 @@ update::update(v1::update_many_options opts)
           }
           return {};
       }()},
-      _sort{[&]() -> decltype(_sort) {
-          if (auto& opt = v1::update_many_options::internal::sort(opts)) {
-              return bsoncxx::v_noabi::from_v1(std::move(*opt));
-          }
-          return {};
-      }()},
       _comment{std::move(v1::update_many_options::internal::comment(opts))} {}
 
 update::update(v1::update_one_options opts)

@@ -67,6 +67,8 @@ class update {
     ///
     /// Convert to the @ref mongocxx::v1 equivalent.
     ///
+    /// @note The "sort" field is ignored.
+    ///
     explicit operator v1::update_many_options() const {
         using bsoncxx::v_noabi::to_v1;
         using mongocxx::v_noabi::to_v1;
@@ -99,10 +101,6 @@ class update {
 
         if (_let) {
             ret.let(bsoncxx::v1::document::value{to_v1(_let->view())});
-        }
-
-        if (_sort) {
-            ret.sort(bsoncxx::v1::document::value{to_v1(_sort->view())});
         }
 
         if (_comment) {

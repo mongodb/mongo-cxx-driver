@@ -132,15 +132,6 @@ bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view> const update_many_optio
     return impl::with(this)->_let;
 }
 
-update_many_options& update_many_options::sort(bsoncxx::v1::document::value sort) {
-    impl::with(this)->_sort = std::move(sort);
-    return *this;
-}
-
-bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view> update_many_options::sort() const {
-    return impl::with(this)->_sort;
-}
-
 update_many_options& update_many_options::comment(bsoncxx::v1::types::value comment) {
     impl::with(this)->_comment = std::move(comment);
     return *this;
@@ -191,11 +182,6 @@ bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> const& update_many_opt
     return impl::with(self)._let;
 }
 
-bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> const& update_many_options::internal::sort(
-    update_many_options const& self) {
-    return impl::with(self)._sort;
-}
-
 bsoncxx::v1::stdx::optional<bsoncxx::v1::types::value> const& update_many_options::internal::comment(
     update_many_options const& self) {
     return impl::with(self)._comment;
@@ -223,11 +209,6 @@ bsoncxx::v1::stdx::optional<v1::hint>& update_many_options::internal::hint(updat
 bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value>& update_many_options::internal::let(
     update_many_options& self) {
     return impl::with(self)._let;
-}
-
-bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value>& update_many_options::internal::sort(
-    update_many_options& self) {
-    return impl::with(self)._sort;
 }
 
 bsoncxx::v1::stdx::optional<bsoncxx::v1::types::value>& update_many_options::internal::comment(

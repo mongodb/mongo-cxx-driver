@@ -79,7 +79,6 @@ TEST_CASE("default", "[mongocxx][v1][update_many_options]") {
     CHECK_FALSE(opts.collation().has_value());
     CHECK_FALSE(opts.hint().has_value());
     CHECK_FALSE(opts.let().has_value());
-    CHECK_FALSE(opts.sort().has_value());
     CHECK_FALSE(opts.comment().has_value());
     CHECK_FALSE(opts.upsert().has_value());
     CHECK_FALSE(opts.write_concern().has_value());
@@ -117,15 +116,6 @@ TEST_CASE("let", "[mongocxx][v1][update_many_options]") {
     }));
 
     CHECK(update_many_options{}.let(v.value()).let() == v.view());
-}
-
-TEST_CASE("sort", "[mongocxx][v1][update_many_options]") {
-    auto const v = GENERATE(values({
-        scoped_bson{},
-        scoped_bson{R"({"x": 1})"},
-    }));
-
-    CHECK(update_many_options{}.sort(v.value()).sort() == v.view());
 }
 
 TEST_CASE("comment", "[mongocxx][v1][update_many_options]") {
