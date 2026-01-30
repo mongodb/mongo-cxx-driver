@@ -197,7 +197,7 @@ std::int64_t count_documents_impl(
     auto const ret = libmongoc::collection_count_documents(coll, filter, opts, read_prefs, reply.out_ptr(), &error);
 
     if (ret < 0) {
-        v1::throw_exception(error);
+        v1::throw_exception(error, std::move(reply).value());
     }
 
     return ret;
@@ -211,7 +211,7 @@ estimated_document_count_impl(mongoc_collection_t* coll, bson_t const* opts, mon
     auto const ret = libmongoc::collection_estimated_document_count(coll, opts, read_prefs, reply.out_ptr(), &error);
 
     if (ret < 0) {
-        v1::throw_exception(error);
+        v1::throw_exception(error, std::move(reply).value());
     }
 
     return ret;
