@@ -666,13 +666,7 @@ bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> find_and_modify_impl(
         }
 
         if (auto const& opt = Options::internal::hint(options)) {
-            if (auto const& doc_opt = v1::hint::internal::doc(*opt)) {
-                extra += scoped_bson{BCON_NEW("hint", BCON_DOCUMENT(scoped_bson_view{*doc_opt}.bson()))};
-            }
-
-            if (auto const& str_opt = v1::hint::internal::str(*opt)) {
-                extra += scoped_bson{BCON_NEW("hint", BCON_UTF8(str_opt->c_str()))};
-            }
+            append_hint(*opt, extra);
         }
 
         if (auto const& opt = Options::internal::let(options)) {
@@ -680,14 +674,7 @@ bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> find_and_modify_impl(
         }
 
         if (auto const& opt = Options::internal::comment(options)) {
-            scoped_bson v;
-
-            if (!BSON_APPEND_VALUE(
-                    v.inout_ptr(), "comment", &bsoncxx::v1::types::value::internal::get_bson_value(*opt))) {
-                throw std::logic_error{"mongocxx::v1::find_and_modify_impl: BSON_APPEND_VALUE failed"};
-            }
-
-            extra += v;
+            append_comment(*opt, extra);
         }
 
         libmongoc::find_and_modify_opts_append(opts, extra.bson());

@@ -37,7 +37,6 @@
 #include <cstdint>
 #include <cstring>
 #include <initializer_list>
-#include <limits>
 #include <stdexcept>
 #include <string>
 #include <utility>
@@ -652,17 +651,7 @@ bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::value> find_and_mod
         }
 
         if (auto const& opt = options.hint()) {
-            scoped_bson v;
-
-            if (!BSON_APPEND_VALUE(
-                    v.inout_ptr(),
-                    "hint",
-                    &bsoncxx::v1::types::value::internal::get_bson_value(
-                        bsoncxx::v1::types::value{bsoncxx::v_noabi::to_v1(opt->to_value())}))) {
-                throw std::logic_error{"mongocxx::v_noabi::find_and_modify_impl: BSON_APPEND_VALUE failed"};
-            }
-
-            extra += v;
+            append_hint(*opt, extra);
         }
 
         if (auto const& opt = options.let()) {
@@ -670,17 +659,7 @@ bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::value> find_and_mod
         }
 
         if (auto const& opt = options.comment()) {
-            scoped_bson v;
-
-            if (!BSON_APPEND_VALUE(
-                    v.inout_ptr(),
-                    "comment",
-                    &bsoncxx::v1::types::value::internal::get_bson_value(
-                        bsoncxx::v1::types::value{bsoncxx::v_noabi::to_v1(opt->view())}))) {
-                throw std::logic_error{"mongocxx::v_noabi::find_and_modify_impl: BSON_APPEND_VALUE failed"};
-            }
-
-            extra += v;
+            append_comment(*opt, extra);
         }
 
         libmongoc::find_and_modify_opts_append(opts, extra.bson());
