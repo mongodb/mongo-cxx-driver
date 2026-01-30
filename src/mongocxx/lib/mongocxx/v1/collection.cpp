@@ -385,10 +385,6 @@ void append_to(v1::insert_many_options const& opts, scoped_bson& doc) {
         doc += scoped_bson{BCON_NEW("writeConcern", BCON_DOCUMENT(scoped_bson{opt->to_document()}.bson()))};
     }
 
-    if (auto const& opt = opts.bypass_document_validation()) {
-        doc += scoped_bson{BCON_NEW("bypassDocumentValidation", BCON_BOOL(*opt))};
-    }
-
     if (auto const& opt = v1::insert_many_options::internal::comment(opts)) {
         append_comment(*opt, doc);
     }
@@ -399,20 +395,12 @@ void append_to(v1::insert_one_options const& opts, scoped_bson& doc) {
         doc += scoped_bson{BCON_NEW("writeConcern", BCON_DOCUMENT(scoped_bson{opt->to_document()}.bson()))};
     }
 
-    if (auto const& opt = opts.bypass_document_validation()) {
-        doc += scoped_bson{BCON_NEW("bypassDocumentValidation", BCON_BOOL(*opt))};
-    }
-
     if (auto const& opt = v1::insert_one_options::internal::comment(opts)) {
         append_comment(*opt, doc);
     }
 }
 
 void append_to(v1::replace_one_options const& opts, scoped_bson& doc) {
-    if (auto const& opt = opts.bypass_document_validation()) {
-        doc += scoped_bson{BCON_NEW("bypassDocumentValidation", BCON_BOOL(*opt))};
-    }
-
     if (auto const& opt = v1::replace_one_options::internal::write_concern(opts)) {
         doc += scoped_bson{BCON_NEW("writeConcern", BCON_DOCUMENT(scoped_bson{opt->to_document()}.bson()))};
     }
@@ -427,10 +415,6 @@ void append_to(v1::replace_one_options const& opts, scoped_bson& doc) {
 }
 
 void append_to(v1::update_many_options const& opts, scoped_bson& doc) {
-    if (auto const& opt = opts.bypass_document_validation()) {
-        doc += scoped_bson{BCON_NEW("bypassDocumentValidation", BCON_BOOL(*opt))};
-    }
-
     if (auto const& opt = v1::update_many_options::internal::write_concern(opts)) {
         doc += scoped_bson{BCON_NEW("writeConcern", BCON_DOCUMENT(scoped_bson{opt->to_document()}.bson()))};
     }
@@ -445,10 +429,6 @@ void append_to(v1::update_many_options const& opts, scoped_bson& doc) {
 }
 
 void append_to(v1::update_one_options const& opts, scoped_bson& doc) {
-    if (auto const& opt = opts.bypass_document_validation()) {
-        doc += scoped_bson{BCON_NEW("bypassDocumentValidation", BCON_BOOL(*opt))};
-    }
-
     if (auto const& opt = v1::update_one_options::internal::write_concern(opts)) {
         doc += scoped_bson{BCON_NEW("writeConcern", BCON_DOCUMENT(scoped_bson{opt->to_document()}.bson()))};
     }
