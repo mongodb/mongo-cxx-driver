@@ -976,7 +976,6 @@ v1::cursor collection::aggregate(
     scoped_bson doc;
 
     v1::aggregate_options::internal::append_to(opts, doc);
-
     v1::client_session::internal::append_to(session, doc);
 
     return aggregate_impl(
@@ -995,7 +994,6 @@ v1::bulk_write collection::create_bulk_write(v1::client_session const& session, 
     scoped_bson doc;
 
     append_to(opts, doc);
-
     v1::client_session::internal::append_to(session, doc);
 
     return create_bulk_write_impl(impl::with(this)->_coll, doc.bson(), opts.bypass_document_validation());
@@ -1017,7 +1015,6 @@ std::int64_t collection::count_documents(
     scoped_bson doc;
 
     append_to(opts, doc);
-
     v1::client_session::internal::append_to(session, doc);
 
     return count_documents_impl(
@@ -1049,7 +1046,6 @@ bsoncxx::v1::stdx::optional<v1::delete_many_result> collection::delete_many(
     scoped_bson doc;
 
     append_to(opts, doc);
-
     v1::client_session::internal::append_to(session, doc);
 
     return delete_many_impl(create_bulk_write_impl(impl::with(this)->_coll, doc.bson(), {}), q, opts);
@@ -1072,7 +1068,6 @@ bsoncxx::v1::stdx::optional<v1::delete_one_result> collection::delete_one(
     scoped_bson doc;
 
     append_to(opts, doc);
-
     v1::client_session::internal::append_to(session, doc);
 
     return delete_one_impl(create_bulk_write_impl(impl::with(this)->_coll, doc.bson(), {}), q, opts);
@@ -1103,7 +1098,6 @@ v1::cursor collection::distinct(
     scoped_bson doc;
 
     append_to(opts, doc);
-
     v1::client_session::internal::append_to(session, doc);
 
     return distinct_impl(
@@ -1157,7 +1151,6 @@ collection::find(v1::client_session const& session, bsoncxx::v1::document::view 
     scoped_bson doc;
 
     append_to(opts, doc);
-
     v1::client_session::internal::append_to(session, doc);
 
     return find_impl(impl::with(this)->_coll, scoped_bson_view{filter}.bson(), doc.bson(), opts);
@@ -1271,7 +1264,6 @@ bsoncxx::v1::stdx::optional<v1::insert_one_result> collection::insert_one(
     scoped_bson doc;
 
     append_to(opts, doc);
-
     v1::client_session::internal::append_to(session, doc);
 
     return insert_one_impl(
@@ -1352,7 +1344,6 @@ bsoncxx::v1::stdx::optional<v1::replace_one_result> collection::replace_one(
     scoped_bson doc;
 
     append_to(opts, doc);
-
     v1::client_session::internal::append_to(session, doc);
 
     return replace_one_impl(
@@ -1405,7 +1396,6 @@ bsoncxx::v1::stdx::optional<v1::update_many_result> collection::update_many(
     scoped_bson doc;
 
     append_to(opts, doc);
-
     v1::client_session::internal::append_to(session, doc);
 
     return update_many_impl(
@@ -1423,7 +1413,6 @@ bsoncxx::v1::stdx::optional<v1::update_many_result> collection::update_many(
     scoped_bson doc;
 
     append_to(opts, doc);
-
     v1::client_session::internal::append_to(session, doc);
 
     return update_many_impl(
@@ -1469,7 +1458,6 @@ bsoncxx::v1::stdx::optional<v1::update_one_result> collection::update_one(
     scoped_bson doc;
 
     append_to(opts, doc);
-
     v1::client_session::internal::append_to(session, doc);
 
     return update_one_impl(
@@ -1487,7 +1475,6 @@ bsoncxx::v1::stdx::optional<v1::update_one_result> collection::update_one(
     scoped_bson doc;
 
     append_to(opts, doc);
-
     v1::client_session::internal::append_to(session, doc);
 
     return update_one_impl(

@@ -215,7 +215,6 @@ v1::cursor client::list_databases(v1::client_session const& session, bsoncxx::v1
     scoped_bson doc;
 
     v1::client_session::internal::append_to(session, doc);
-
     doc += opts;
 
     return list_databases_impl(impl::with(this)->_client, doc.bson());
@@ -260,8 +259,8 @@ std::vector<std::string> client::list_database_names(
     scoped_bson doc;
 
     v1::client_session::internal::append_to(session, doc);
-
     doc += scoped_bson{BCON_NEW("filter", BCON_DOCUMENT(scoped_bson_view{filter}.bson()))};
+
     return list_database_names_impl(impl::with(this)->_client, doc.bson());
 }
 
@@ -322,8 +321,8 @@ v1::change_stream client::watch(v1::client_session const& session, v1::change_st
     scoped_bson doc;
 
     v1::client_session::internal::append_to(session, doc);
-
     doc += v1::change_stream::options::internal::to_document(opts);
+
     return watch_impl(impl::with(this)->_client, bsoncxx::v1::array::view{}, doc.bson());
 }
 
@@ -347,8 +346,8 @@ client::watch(v1::client_session const& session, v1::pipeline const& pipeline, v
     scoped_bson doc;
 
     v1::client_session::internal::append_to(session, doc);
-
     doc += v1::change_stream::options::internal::to_document(opts);
+
     return watch_impl(impl::with(this)->_client, pipeline.view_array(), doc.bson());
 }
 

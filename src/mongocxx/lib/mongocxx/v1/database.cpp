@@ -154,7 +154,6 @@ v1::cursor database::aggregate(
     scoped_bson doc;
 
     v1::aggregate_options::internal::append_to(opts, doc);
-
     v1::client_session::internal::append_to(session, doc);
 
     return aggregate_impl(impl::with(this)->_db, pipeline.view_array(), doc.bson(), opts);
@@ -441,7 +440,6 @@ v1::change_stream database::watch(v1::client_session const& session, v1::change_
     scoped_bson doc;
 
     doc += v1::change_stream::options::internal::to_document(opts);
-
     v1::client_session::internal::append_to(session, doc);
 
     return watch_impl(impl::with(this)->_db, bsoncxx::v1::array::view{}, doc.bson());
@@ -462,7 +460,6 @@ v1::change_stream database::watch(
     scoped_bson doc;
 
     doc += v1::change_stream::options::internal::to_document(opts);
-
     v1::client_session::internal::append_to(session, doc);
 
     return watch_impl(impl::with(this)->_db, pipeline.view_array(), doc.bson());
