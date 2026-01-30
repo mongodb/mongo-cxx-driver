@@ -39,5 +39,5 @@ using v_noabi::collection;
 /// Declares @ref mongocxx::v_noabi::collection.
 ///
 /// @par Includes
-/// - @ref mongocxx/v1/collection.hpp
+/// - @ref mongocxx/v1/collection-fwd.hpp
 ///
