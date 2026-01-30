@@ -1920,7 +1920,7 @@ class collection {
 
    private:
     MONGOCXX_ABI_EXPORT_CDECL(v_noabi::bulk_write)
-    _init_insert_many(v_noabi::options::insert const& options, client_session const* session);
+    _init_insert_many(v_noabi::options::insert const& options, v_noabi::client_session const* session);
 
     MONGOCXX_ABI_EXPORT_CDECL(void)
     _insert_many_doc_handler(
@@ -1933,7 +1933,7 @@ class collection {
 
     template <typename document_view_iterator_type>
     bsoncxx::v_noabi::stdx::optional<v_noabi::result::insert_many> _insert_many(
-        client_session const* session,
+        v_noabi::client_session const* session,
         document_view_iterator_type begin,
         document_view_iterator_type end,
         v_noabi::options::insert const& options) {

@@ -1386,7 +1386,7 @@ bsoncxx::v_noabi::stdx::optional<v_noabi::result::insert_one> collection::insert
         std::move(document));
 }
 
-index_view collection::indexes() {
+v_noabi::index_view collection::indexes() {
     auto& c = check_moved_from(_coll);
 
     return index_view{v1::collection::internal::as_mongoc(c), v1::collection::internal::get_client(c)};
@@ -1511,7 +1511,7 @@ bsoncxx::v_noabi::stdx::optional<v_noabi::result::replace_one> collection::repla
         options);
 }
 
-search_index_view collection::search_indexes() {
+v_noabi::search_index_view collection::search_indexes() {
     auto& c = check_moved_from(_coll);
 
     return search_index_view{v1::collection::internal::as_mongoc(c), v1::collection::internal::get_client(c)};
@@ -1751,7 +1751,7 @@ bsoncxx::v_noabi::stdx::optional<v_noabi::result::update> collection::update_one
         options);
 }
 
-change_stream collection::watch(options::change_stream const& options) {
+v_noabi::change_stream collection::watch(v_noabi::options::change_stream const& options) {
     scoped_bson doc;
 
     doc += to_scoped_bson(v_noabi::options::change_stream::internal::to_document(options));
@@ -1760,7 +1760,9 @@ change_stream collection::watch(options::change_stream const& options) {
         v1::collection::internal::as_mongoc(check_moved_from(_coll)), bsoncxx::v1::array::view{}, doc.bson());
 }
 
-change_stream collection::watch(client_session const& session, v_noabi::options::change_stream const& options) {
+v_noabi::change_stream collection::watch(
+    v_noabi::client_session const& session,
+    v_noabi::options::change_stream const& options) {
     scoped_bson doc;
 
     doc += to_scoped_bson(v_noabi::options::change_stream::internal::to_document(options));
@@ -1771,7 +1773,7 @@ change_stream collection::watch(client_session const& session, v_noabi::options:
         v1::collection::internal::as_mongoc(check_moved_from(_coll)), bsoncxx::v1::array::view{}, doc.bson());
 }
 
-change_stream collection::watch(pipeline const& pipe, v_noabi::options::change_stream const& options) {
+v_noabi::change_stream collection::watch(pipeline const& pipe, v_noabi::options::change_stream const& options) {
     scoped_bson doc;
 
     doc += to_scoped_bson(v_noabi::options::change_stream::internal::to_document(options));
@@ -1779,8 +1781,8 @@ change_stream collection::watch(pipeline const& pipe, v_noabi::options::change_s
     return watch_impl(v1::collection::internal::as_mongoc(check_moved_from(_coll)), pipe.view_array(), doc.bson());
 }
 
-change_stream collection::watch(
-    client_session const& session,
+v_noabi::change_stream collection::watch(
+    v_noabi::client_session const& session,
     v_noabi::pipeline const& pipe,
     v_noabi::options::change_stream const& options) {
     scoped_bson doc;
