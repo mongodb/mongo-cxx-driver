@@ -1289,19 +1289,16 @@ bsoncxx::v1::stdx::optional<v1::update_one_result> collection::update_one(
 }
 
 v1::change_stream collection::watch(v1::change_stream::options const& opts) {
-    scoped_bson doc;
-
-    doc += v1::change_stream::options::internal::to_document(opts);
-
-    return watch_impl(impl::with(this)->_coll, bsoncxx::v1::array::view{}, doc.bson());
+    return watch_impl(
+        impl::with(this)->_coll,
+        bsoncxx::v1::array::view{},
+        scoped_bson{v1::change_stream::options::internal::to_document(opts)}.bson());
 }
 
 v1::change_stream collection::watch(v1::client_session const& session, v1::change_stream::options const& opts) {
-    scoped_bson doc;
+    scoped_bson doc{v1::change_stream::options::internal::to_document(opts)};
+
     bson_error_t error = {};
-
-    doc += v1::change_stream::options::internal::to_document(opts);
-
     if (!v1::client_session::internal::append_to(session, doc, error)) {
         v1::throw_exception(error);
     }
@@ -1310,22 +1307,19 @@ v1::change_stream collection::watch(v1::client_session const& session, v1::chang
 }
 
 v1::change_stream collection::watch(v1::pipeline const& pipeline, v1::change_stream::options const& opts) {
-    scoped_bson doc;
-
-    doc += v1::change_stream::options::internal::to_document(opts);
-
-    return watch_impl(impl::with(this)->_coll, pipeline.view_array(), doc.bson());
+    return watch_impl(
+        impl::with(this)->_coll,
+        pipeline.view_array(),
+        scoped_bson{v1::change_stream::options::internal::to_document(opts)}.bson());
 }
 
 v1::change_stream collection::watch(
     v1::client_session const& session,
     v1::pipeline const& pipeline,
     v1::change_stream::options const& opts) {
-    scoped_bson doc;
+    scoped_bson doc{v1::change_stream::options::internal::to_document(opts)};
+
     bson_error_t error = {};
-
-    doc += v1::change_stream::options::internal::to_document(opts);
-
     if (!v1::client_session::internal::append_to(session, doc, error)) {
         v1::throw_exception(error);
     }

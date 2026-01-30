@@ -1753,20 +1753,16 @@ bsoncxx::v_noabi::stdx::optional<v_noabi::result::update> collection::update_one
 }
 
 v_noabi::change_stream collection::watch(v_noabi::options::change_stream const& options) {
-    scoped_bson doc;
-
-    doc += to_scoped_bson(v_noabi::options::change_stream::internal::to_document(options));
-
     return watch_impl(
-        v1::collection::internal::as_mongoc(check_moved_from(_coll)), bsoncxx::v1::array::view{}, doc.bson());
+        v1::collection::internal::as_mongoc(check_moved_from(_coll)),
+        bsoncxx::v1::array::view{},
+        to_scoped_bson(v_noabi::options::change_stream::internal::to_document(options)).bson());
 }
 
 v_noabi::change_stream collection::watch(
     v_noabi::client_session const& session,
     v_noabi::options::change_stream const& options) {
-    scoped_bson doc;
-
-    doc += to_scoped_bson(v_noabi::options::change_stream::internal::to_document(options));
+    auto doc = to_scoped_bson(v_noabi::options::change_stream::internal::to_document(options));
 
     v_noabi::client_session::internal::append_to(session, doc);
 
@@ -1775,20 +1771,17 @@ v_noabi::change_stream collection::watch(
 }
 
 v_noabi::change_stream collection::watch(pipeline const& pipe, v_noabi::options::change_stream const& options) {
-    scoped_bson doc;
-
-    doc += to_scoped_bson(v_noabi::options::change_stream::internal::to_document(options));
-
-    return watch_impl(v1::collection::internal::as_mongoc(check_moved_from(_coll)), pipe.view_array(), doc.bson());
+    return watch_impl(
+        v1::collection::internal::as_mongoc(check_moved_from(_coll)),
+        pipe.view_array(),
+        to_scoped_bson(v_noabi::options::change_stream::internal::to_document(options)).bson());
 }
 
 v_noabi::change_stream collection::watch(
     v_noabi::client_session const& session,
     v_noabi::pipeline const& pipe,
     v_noabi::options::change_stream const& options) {
-    scoped_bson doc;
-
-    doc += to_scoped_bson(v_noabi::options::change_stream::internal::to_document(options));
+    auto doc = to_scoped_bson(v_noabi::options::change_stream::internal::to_document(options));
 
     v_noabi::client_session::internal::append_to(session, doc);
 
