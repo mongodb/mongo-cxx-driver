@@ -152,13 +152,10 @@ v1::cursor database::aggregate(
     v1::pipeline const& pipeline,
     v1::aggregate_options const& opts) {
     scoped_bson doc;
-    bson_error_t error = {};
 
     v1::aggregate_options::internal::append_to(opts, doc);
 
-    if (!v1::client_session::internal::append_to(session, doc, error)) {
-        v1::throw_exception(error);
-    }
+    v1::client_session::internal::append_to(session, doc);
 
     return aggregate_impl(impl::with(this)->_db, pipeline.view_array(), doc.bson(), opts);
 }
@@ -188,11 +185,8 @@ bsoncxx::v1::document::value database::run_command(
     v1::client_session const& session,
     bsoncxx::v1::document::view command) {
     scoped_bson opts;
-    bson_error_t error = {};
 
-    if (!v1::client_session::internal::append_to(session, opts, error)) {
-        v1::throw_exception(error);
-    }
+    v1::client_session::internal::append_to(session, opts);
 
     return run_command_impl(impl::with(this)->_db, command, opts.bson());
 }
@@ -255,7 +249,6 @@ v1::collection database::create_collection(
     bsoncxx::v1::document::view opts,
     bsoncxx::v1::stdx::optional<v1::write_concern> const& wc) {
     scoped_bson doc;
-    bson_error_t error = {};
 
     doc += opts;
 
@@ -263,9 +256,7 @@ v1::collection database::create_collection(
         doc += scoped_bson{BCON_NEW("writeConcern", BCON_DOCUMENT(scoped_bson{wc->to_document()}.bson()))};
     }
 
-    if (!v1::client_session::internal::append_to(session, doc, error)) {
-        v1::throw_exception(error);
-    }
+    v1::client_session::internal::append_to(session, doc);
 
     return create_collection_impl(
         impl::with(this)->_db, impl::with(this)->_client, std::string{name}.c_str(), doc.bson());
@@ -295,15 +286,12 @@ void database::drop(bsoncxx::v1::stdx::optional<v1::write_concern> const& wc) {
 
 void database::drop(v1::client_session const& session, bsoncxx::v1::stdx::optional<v1::write_concern> const& wc) {
     scoped_bson opts;
-    bson_error_t error = {};
 
     if (wc) {
         opts += scoped_bson{BCON_NEW("writeConcern", BCON_DOCUMENT(scoped_bson{wc->to_document()}.bson()))};
     }
 
-    if (!v1::client_session::internal::append_to(session, opts, error)) {
-        v1::throw_exception(error);
-    }
+    v1::client_session::internal::append_to(session, opts);
 
     drop_impl(impl::with(this)->_db, opts.bson());
 }
@@ -336,11 +324,8 @@ v1::cursor database::list_collections(bsoncxx::v1::document::view filter) {
 
 v1::cursor database::list_collections(v1::client_session const& session, bsoncxx::v1::document::view filter) {
     scoped_bson opts{BCON_NEW("filter", BCON_DOCUMENT(scoped_bson_view{filter}.bson()))};
-    bson_error_t error = {};
 
-    if (!v1::client_session::internal::append_to(session, opts, error)) {
-        v1::throw_exception(error);
-    }
+    v1::client_session::internal::append_to(session, opts);
 
     return list_collections_impl(impl::with(this)->_db, opts.bson());
 }
@@ -383,11 +368,8 @@ std::vector<std::string> database::list_collection_names(
     v1::client_session const& session,
     bsoncxx::v1::document::view filter) {
     scoped_bson opts{BCON_NEW("filter", BCON_DOCUMENT(scoped_bson_view{filter}.bson()))};
-    bson_error_t error = {};
 
-    if (!v1::client_session::internal::append_to(session, opts, error)) {
-        v1::throw_exception(error);
-    }
+    v1::client_session::internal::append_to(session, opts);
 
     return list_collection_names_impl(impl::with(this)->_db, opts.bson());
 }
@@ -457,13 +439,10 @@ v1::change_stream database::watch(v1::change_stream::options const& opts) {
 
 v1::change_stream database::watch(v1::client_session const& session, v1::change_stream::options const& opts) {
     scoped_bson doc;
-    bson_error_t error = {};
 
     doc += v1::change_stream::options::internal::to_document(opts);
 
-    if (!v1::client_session::internal::append_to(session, doc, error)) {
-        v1::throw_exception(error);
-    }
+    v1::client_session::internal::append_to(session, doc);
 
     return watch_impl(impl::with(this)->_db, bsoncxx::v1::array::view{}, doc.bson());
 }
@@ -481,13 +460,10 @@ v1::change_stream database::watch(
     v1::pipeline const& pipeline,
     v1::change_stream::options const& opts) {
     scoped_bson doc;
-    bson_error_t error = {};
 
     doc += v1::change_stream::options::internal::to_document(opts);
 
-    if (!v1::client_session::internal::append_to(session, doc, error)) {
-        v1::throw_exception(error);
-    }
+    v1::client_session::internal::append_to(session, doc);
 
     return watch_impl(impl::with(this)->_db, pipeline.view_array(), doc.bson());
 }

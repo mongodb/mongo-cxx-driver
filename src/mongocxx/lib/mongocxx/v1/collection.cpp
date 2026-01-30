@@ -643,8 +643,6 @@ bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> find_and_modify_impl(
     auto const opts_owner = opts_ptr_type{libmongoc::find_and_modify_opts_new()};
     auto const opts = opts_owner.get();
 
-    bson_error_t error = {};
-
     // Some options must be passed via an `extra` BSON document.
     {
         scoped_bson extra;
@@ -653,8 +651,8 @@ bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> find_and_modify_impl(
             extra += scoped_bson{BCON_NEW("writeConcern", BCON_DOCUMENT(scoped_bson{opt->to_document()}.bson()))};
         }
 
-        if (session_ptr && !v1::client_session::internal::append_to(*session_ptr, extra, error)) {
-            v1::throw_exception(error);
+        if (session_ptr) {
+            v1::client_session::internal::append_to(*session_ptr, extra);
         }
 
         if (auto const& opt = Options::internal::collation(options)) {
@@ -712,6 +710,7 @@ bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> find_and_modify_impl(
     }
 
     scoped_bson reply;
+    bson_error_t error = {};
     if (!libmongoc::collection_find_and_modify_with_opts(coll, filter, opts, reply.out_ptr(), &error)) {
         v1::throw_exception(error, std::move(reply).value());
     }
@@ -975,13 +974,10 @@ v1::cursor collection::aggregate(
     v1::pipeline const& pipeline,
     v1::aggregate_options const& opts) {
     scoped_bson doc;
-    bson_error_t error = {};
 
     v1::aggregate_options::internal::append_to(opts, doc);
 
-    if (!v1::client_session::internal::append_to(session, doc, error)) {
-        v1::throw_exception(error);
-    }
+    v1::client_session::internal::append_to(session, doc);
 
     return aggregate_impl(
         impl::with(this)->_coll, scoped_bson_view{pipeline.view_array()}.bson(), doc.bson(), get_read_prefs(opts));
@@ -997,13 +993,10 @@ v1::bulk_write collection::create_bulk_write(v1::bulk_write::options const& opts
 
 v1::bulk_write collection::create_bulk_write(v1::client_session const& session, v1::bulk_write::options const& opts) {
     scoped_bson doc;
-    bson_error_t error = {};
 
     append_to(opts, doc);
 
-    if (!v1::client_session::internal::append_to(session, doc, error)) {
-        v1::throw_exception(error);
-    }
+    v1::client_session::internal::append_to(session, doc);
 
     return create_bulk_write_impl(impl::with(this)->_coll, doc.bson(), opts.bypass_document_validation());
 }
@@ -1022,13 +1015,10 @@ std::int64_t collection::count_documents(
     bsoncxx::v1::document::view filter,
     v1::count_options const& opts) {
     scoped_bson doc;
-    bson_error_t error = {};
 
     append_to(opts, doc);
 
-    if (!v1::client_session::internal::append_to(session, doc, error)) {
-        v1::throw_exception(error);
-    }
+    v1::client_session::internal::append_to(session, doc);
 
     return count_documents_impl(
         impl::with(this)->_coll, scoped_bson_view{filter}.bson(), doc.bson(), get_read_prefs(opts));
@@ -1057,13 +1047,10 @@ bsoncxx::v1::stdx::optional<v1::delete_many_result> collection::delete_many(
     bsoncxx::v1::document::view q,
     v1::delete_many_options const& opts) {
     scoped_bson doc;
-    bson_error_t error = {};
 
     append_to(opts, doc);
 
-    if (!v1::client_session::internal::append_to(session, doc, error)) {
-        v1::throw_exception(error);
-    }
+    v1::client_session::internal::append_to(session, doc);
 
     return delete_many_impl(create_bulk_write_impl(impl::with(this)->_coll, doc.bson(), {}), q, opts);
 }
@@ -1083,13 +1070,10 @@ bsoncxx::v1::stdx::optional<v1::delete_one_result> collection::delete_one(
     bsoncxx::v1::document::view q,
     v1::delete_one_options const& opts) {
     scoped_bson doc;
-    bson_error_t error = {};
 
     append_to(opts, doc);
 
-    if (!v1::client_session::internal::append_to(session, doc, error)) {
-        v1::throw_exception(error);
-    }
+    v1::client_session::internal::append_to(session, doc);
 
     return delete_one_impl(create_bulk_write_impl(impl::with(this)->_coll, doc.bson(), {}), q, opts);
 }
@@ -1117,13 +1101,10 @@ v1::cursor collection::distinct(
     bsoncxx::v1::document::view query,
     v1::distinct_options const& opts) {
     scoped_bson doc;
-    bson_error_t error = {};
 
     append_to(opts, doc);
 
-    if (!v1::client_session::internal::append_to(session, doc, error)) {
-        v1::throw_exception(error);
-    }
+    v1::client_session::internal::append_to(session, doc);
 
     return distinct_impl(
         impl::with(this)->_coll,
@@ -1151,7 +1132,6 @@ void collection::drop(
     bsoncxx::v1::stdx::optional<v1::write_concern> const& wc,
     bsoncxx::v1::document::view opts) {
     scoped_bson doc;
-    bson_error_t error = {};
 
     if (wc) {
         doc += scoped_bson{BCON_NEW("writeConcern", BCON_DOCUMENT(scoped_bson{wc->to_document()}.bson()))};
@@ -1159,9 +1139,7 @@ void collection::drop(
 
     doc += opts;
 
-    if (!v1::client_session::internal::append_to(session, doc, error)) {
-        v1::throw_exception(error);
-    }
+    v1::client_session::internal::append_to(session, doc);
 
     drop_impl(impl::with(this)->_coll, doc.bson());
 }
@@ -1177,13 +1155,10 @@ v1::cursor collection::find(bsoncxx::v1::document::view filter, v1::find_options
 v1::cursor
 collection::find(v1::client_session const& session, bsoncxx::v1::document::view filter, v1::find_options const& opts) {
     scoped_bson doc;
-    bson_error_t error = {};
 
     append_to(opts, doc);
 
-    if (!v1::client_session::internal::append_to(session, doc, error)) {
-        v1::throw_exception(error);
-    }
+    v1::client_session::internal::append_to(session, doc);
 
     return find_impl(impl::with(this)->_coll, scoped_bson_view{filter}.bson(), doc.bson(), opts);
 }
@@ -1294,13 +1269,10 @@ bsoncxx::v1::stdx::optional<v1::insert_one_result> collection::insert_one(
     bsoncxx::v1::document::view document,
     v1::insert_one_options const& opts) {
     scoped_bson doc;
-    bson_error_t error = {};
 
     append_to(opts, doc);
 
-    if (!v1::client_session::internal::append_to(session, doc, error)) {
-        v1::throw_exception(error);
-    }
+    v1::client_session::internal::append_to(session, doc);
 
     return insert_one_impl(
         create_bulk_write_impl(impl::with(this)->_coll, doc.bson(), opts.bypass_document_validation()), document);
@@ -1329,15 +1301,12 @@ void collection::rename(
     bool drop_target,
     bsoncxx::v1::stdx::optional<v1::write_concern> const& write_concern) {
     scoped_bson doc;
-    bson_error_t error = {};
 
     if (write_concern) {
         doc += scoped_bson{BCON_NEW("writeConcern", BCON_DOCUMENT(scoped_bson{write_concern->to_document()}.bson()))};
     }
 
-    if (!v1::client_session::internal::append_to(session, doc, error)) {
-        v1::throw_exception(error);
-    }
+    v1::client_session::internal::append_to(session, doc);
 
     return rename_impl(impl::with(this)->_coll, std::string{new_name}.c_str(), drop_target, doc.bson());
 }
@@ -1381,13 +1350,10 @@ bsoncxx::v1::stdx::optional<v1::replace_one_result> collection::replace_one(
     bsoncxx::v1::document::value replacement,
     v1::replace_one_options const& opts) {
     scoped_bson doc;
-    bson_error_t error = {};
 
     append_to(opts, doc);
 
-    if (!v1::client_session::internal::append_to(session, doc, error)) {
-        v1::throw_exception(error);
-    }
+    v1::client_session::internal::append_to(session, doc);
 
     return replace_one_impl(
         create_bulk_write_impl(impl::with(this)->_coll, doc.bson(), opts.bypass_document_validation()),
@@ -1437,13 +1403,10 @@ bsoncxx::v1::stdx::optional<v1::update_many_result> collection::update_many(
     bsoncxx::v1::document::view update,
     v1::update_many_options const& opts) {
     scoped_bson doc;
-    bson_error_t error = {};
 
     append_to(opts, doc);
 
-    if (!v1::client_session::internal::append_to(session, doc, error)) {
-        v1::throw_exception(error);
-    }
+    v1::client_session::internal::append_to(session, doc);
 
     return update_many_impl(
         create_bulk_write_impl(impl::with(this)->_coll, doc.bson(), opts.bypass_document_validation()),
@@ -1458,13 +1421,10 @@ bsoncxx::v1::stdx::optional<v1::update_many_result> collection::update_many(
     v1::pipeline const& update,
     v1::update_many_options const& opts) {
     scoped_bson doc;
-    bson_error_t error = {};
 
     append_to(opts, doc);
 
-    if (!v1::client_session::internal::append_to(session, doc, error)) {
-        v1::throw_exception(error);
-    }
+    v1::client_session::internal::append_to(session, doc);
 
     return update_many_impl(
         create_bulk_write_impl(impl::with(this)->_coll, doc.bson(), opts.bypass_document_validation()),
@@ -1507,13 +1467,10 @@ bsoncxx::v1::stdx::optional<v1::update_one_result> collection::update_one(
     bsoncxx::v1::document::view update,
     v1::update_one_options const& opts) {
     scoped_bson doc;
-    bson_error_t error = {};
 
     append_to(opts, doc);
 
-    if (!v1::client_session::internal::append_to(session, doc, error)) {
-        v1::throw_exception(error);
-    }
+    v1::client_session::internal::append_to(session, doc);
 
     return update_one_impl(
         create_bulk_write_impl(impl::with(this)->_coll, doc.bson(), opts.bypass_document_validation()),
@@ -1528,13 +1485,10 @@ bsoncxx::v1::stdx::optional<v1::update_one_result> collection::update_one(
     v1::pipeline const& update,
     v1::update_one_options const& opts) {
     scoped_bson doc;
-    bson_error_t error = {};
 
     append_to(opts, doc);
 
-    if (!v1::client_session::internal::append_to(session, doc, error)) {
-        v1::throw_exception(error);
-    }
+    v1::client_session::internal::append_to(session, doc);
 
     return update_one_impl(
         create_bulk_write_impl(impl::with(this)->_coll, doc.bson(), opts.bypass_document_validation()),
@@ -1553,10 +1507,7 @@ v1::change_stream collection::watch(v1::change_stream::options const& opts) {
 v1::change_stream collection::watch(v1::client_session const& session, v1::change_stream::options const& opts) {
     scoped_bson doc{v1::change_stream::options::internal::to_document(opts)};
 
-    bson_error_t error = {};
-    if (!v1::client_session::internal::append_to(session, doc, error)) {
-        v1::throw_exception(error);
-    }
+    v1::client_session::internal::append_to(session, doc);
 
     return watch_impl(impl::with(this)->_coll, bsoncxx::v1::array::view{}, doc.bson());
 }
@@ -1574,10 +1525,7 @@ v1::change_stream collection::watch(
     v1::change_stream::options const& opts) {
     scoped_bson doc{v1::change_stream::options::internal::to_document(opts)};
 
-    bson_error_t error = {};
-    if (!v1::client_session::internal::append_to(session, doc, error)) {
-        v1::throw_exception(error);
-    }
+    v1::client_session::internal::append_to(session, doc);
 
     return watch_impl(impl::with(this)->_coll, pipeline.view_array(), doc.bson());
 }
@@ -1652,12 +1600,11 @@ collection::collection(void* impl) : _impl{impl} {}
 
 v1::bulk_write collection::_create_insert_many(v1::client_session const* session, v1::insert_many_options const& opts) {
     scoped_bson doc;
-    bson_error_t error = {};
 
     append_to(opts, doc);
 
-    if (session && !v1::client_session::internal::append_to(*session, doc, error)) {
-        v1::throw_exception(error);
+    if (session) {
+        v1::client_session::internal::append_to(*session, doc);
     }
 
     return create_bulk_write_impl(impl::with(this)->_coll, doc.bson(), opts.bypass_document_validation());

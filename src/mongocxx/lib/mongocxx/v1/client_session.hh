@@ -20,8 +20,6 @@
 
 #include <mongocxx/v1/client-fwd.hpp>
 
-#include <bsoncxx/private/bson.hh>
-
 #include <mongocxx/private/export.hh>
 #include <mongocxx/private/mongoc.hh>
 #include <mongocxx/private/scoped_bson.hh>
@@ -38,7 +36,7 @@ class client_session::internal {
     static MONGOCXX_ABI_EXPORT_CDECL_TESTING(mongoc_client_session_t const*) as_mongoc(client_session const& self);
     static MONGOCXX_ABI_EXPORT_CDECL_TESTING(mongoc_client_session_t*) as_mongoc(client_session& self);
 
-    static MONGOCXX_ABI_EXPORT_CDECL(bool) append_to(client_session const& self, scoped_bson& out, bson_error_t& error);
+    static MONGOCXX_ABI_EXPORT_CDECL(void) append_to(client_session const& self, scoped_bson& out);
 };
 
 class client_session::options::internal {

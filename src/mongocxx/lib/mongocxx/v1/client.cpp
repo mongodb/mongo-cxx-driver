@@ -201,11 +201,8 @@ v1::cursor client::list_databases() {
 
 v1::cursor client::list_databases(v1::client_session const& session) {
     scoped_bson doc;
-    bson_error_t error = {};
 
-    if (!v1::client_session::internal::append_to(session, doc, error)) {
-        v1::throw_exception(error);
-    }
+    v1::client_session::internal::append_to(session, doc);
 
     return list_databases_impl(impl::with(this)->_client, doc.bson());
 }
@@ -216,11 +213,8 @@ v1::cursor client::list_databases(bsoncxx::v1::document::view opts) {
 
 v1::cursor client::list_databases(v1::client_session const& session, bsoncxx::v1::document::view opts) {
     scoped_bson doc;
-    bson_error_t error = {};
 
-    if (!v1::client_session::internal::append_to(session, doc, error)) {
-        v1::throw_exception(error);
-    }
+    v1::client_session::internal::append_to(session, doc);
 
     doc += opts;
 
@@ -264,11 +258,8 @@ std::vector<std::string> client::list_database_names(
     v1::client_session const& session,
     bsoncxx::v1::document::view filter) {
     scoped_bson doc;
-    bson_error_t error = {};
 
-    if (!v1::client_session::internal::append_to(session, doc, error)) {
-        v1::throw_exception(error);
-    }
+    v1::client_session::internal::append_to(session, doc);
 
     doc += scoped_bson{BCON_NEW("filter", BCON_DOCUMENT(scoped_bson_view{filter}.bson()))};
     return list_database_names_impl(impl::with(this)->_client, doc.bson());
@@ -280,11 +271,8 @@ std::vector<std::string> client::list_database_names() {
 
 std::vector<std::string> client::list_database_names(v1::client_session const& session) {
     scoped_bson doc;
-    bson_error_t error = {};
 
-    if (!v1::client_session::internal::append_to(session, doc, error)) {
-        v1::throw_exception(error);
-    }
+    v1::client_session::internal::append_to(session, doc);
 
     return list_database_names_impl(impl::with(this)->_client, doc.bson());
 }
@@ -332,11 +320,8 @@ v1::change_stream client::watch() {
 
 v1::change_stream client::watch(v1::client_session const& session, v1::change_stream::options const& opts) {
     scoped_bson doc;
-    bson_error_t error = {};
 
-    if (!v1::client_session::internal::append_to(session, doc, error)) {
-        v1::throw_exception(error);
-    }
+    v1::client_session::internal::append_to(session, doc);
 
     doc += v1::change_stream::options::internal::to_document(opts);
     return watch_impl(impl::with(this)->_client, bsoncxx::v1::array::view{}, doc.bson());
@@ -344,11 +329,8 @@ v1::change_stream client::watch(v1::client_session const& session, v1::change_st
 
 v1::change_stream client::watch(v1::client_session const& session) {
     scoped_bson doc;
-    bson_error_t error = {};
 
-    if (!v1::client_session::internal::append_to(session, doc, error)) {
-        v1::throw_exception(error);
-    }
+    v1::client_session::internal::append_to(session, doc);
 
     return watch_impl(impl::with(this)->_client, bsoncxx::v1::array::view{}, doc.bson());
 }
@@ -363,11 +345,8 @@ v1::change_stream client::watch(v1::pipeline const& pipeline, v1::change_stream:
 v1::change_stream
 client::watch(v1::client_session const& session, v1::pipeline const& pipeline, v1::change_stream::options const& opts) {
     scoped_bson doc;
-    bson_error_t error = {};
 
-    if (!v1::client_session::internal::append_to(session, doc, error)) {
-        v1::throw_exception(error);
-    }
+    v1::client_session::internal::append_to(session, doc);
 
     doc += v1::change_stream::options::internal::to_document(opts);
     return watch_impl(impl::with(this)->_client, pipeline.view_array(), doc.bson());
@@ -379,11 +358,8 @@ v1::change_stream client::watch(v1::pipeline const& pipeline) {
 
 v1::change_stream client::watch(v1::client_session const& session, v1::pipeline const& pipeline) {
     scoped_bson doc;
-    bson_error_t error = {};
 
-    if (!v1::client_session::internal::append_to(session, doc, error)) {
-        v1::throw_exception(error);
-    }
+    v1::client_session::internal::append_to(session, doc);
 
     return watch_impl(impl::with(this)->_client, pipeline.view_array(), doc.bson());
 }
