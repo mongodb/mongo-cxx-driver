@@ -69,7 +69,7 @@ TEST_CASE("error code", "[mongocxx][v1][collection][error]") {
     }
 
     SECTION("non-zero") {
-        std::error_code const ec = code::max_await_time_u32;
+        std::error_code const ec = code::max_time_u32;
 
         CHECK(ec.category() == category);
         CHECK(ec.value() != static_cast<int>(code::zero));
@@ -82,12 +82,10 @@ TEST_CASE("error code", "[mongocxx][v1][collection][error]") {
     }
 
     SECTION("source") {
-        CHECK(make_error_code(code::max_await_time_u32) == source_errc::mongocxx);
         CHECK(make_error_code(code::max_time_u32) == source_errc::mongocxx);
     }
 
     SECTION("type") {
-        CHECK(make_error_code(code::max_await_time_u32) == type_errc::invalid_argument);
         CHECK(make_error_code(code::max_time_u32) == type_errc::invalid_argument);
     }
 }

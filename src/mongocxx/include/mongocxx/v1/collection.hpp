@@ -446,8 +446,6 @@ class collection {
     ///
     /// Find documents in this collection matching the given query filter.
     ///
-    /// @throws mongocxx::v1::exception with @ref mongocxx::v1::collection::errc::max_await_time_u32 if the
-    /// "maxAwaitTimeMS" field is not representable as an `std::uint32_t`.
     /// @throws mongocxx::v1::server_error when a server-side error is encountered and a raw server error is available.
     /// @throws mongocxx::v1::exception for all other runtime errors.
     ///
@@ -467,8 +465,6 @@ class collection {
     ///
     /// @returns Empty when no matching document was found.
     ///
-    /// @throws mongocxx::v1::exception with @ref mongocxx::v1::collection::errc::max_await_time_u32 if the
-    /// "maxAwaitTimeMS" field is not representable as an `std::uint32_t`.
     /// @throws mongocxx::v1::server_error when a server-side error is encountered and a raw server error is available.
     /// @throws mongocxx::v1::exception for all other runtime errors.
     ///
@@ -490,6 +486,8 @@ class collection {
     ///
     /// @returns Empty when no matching document was found.
     ///
+    /// @throws mongocxx::v1::exception with @ref mongocxx::v1::collection::errc::max_time_u32 if the "maxTimeMS" field
+    /// is not representable as an `std::uint32_t`.
     /// @throws mongocxx::v1::server_error when a server-side error is encountered and a raw server error is available.
     /// @throws mongocxx::v1::exception for all other runtime errors.
     ///
@@ -514,6 +512,8 @@ class collection {
     /// @returns The document before or after replacement, depending on the "returnDocument" field. Empty when no
     /// matching document was found.
     ///
+    /// @throws mongocxx::v1::exception with @ref mongocxx::v1::collection::errc::max_time_u32 if the "maxTimeMS" field
+    /// is not representable as an `std::uint32_t`.
     /// @throws mongocxx::v1::server_error when a server-side error is encountered and a raw server error is available.
     /// @throws mongocxx::v1::exception for all other runtime errors.
     ///
@@ -540,6 +540,8 @@ class collection {
     /// @returns The document before or after the update, depending on the "returnDocument" field. Empty when no
     /// matching document was found.
     ///
+    /// @throws mongocxx::v1::exception with @ref mongocxx::v1::collection::errc::max_time_u32 if the "maxTimeMS" field
+    /// is not representable as an `std::uint32_t`.
     /// @throws mongocxx::v1::server_error when a server-side error is encountered and a raw server error is available.
     /// @throws mongocxx::v1::exception for all other runtime errors.
     ///
@@ -905,9 +907,8 @@ class collection {
     /// @attention This feature is experimental! It is not ready for use!
     ///
     enum class errc {
-        zero,               ///< Zero.
-        max_await_time_u32, ///< The "maxAwaitTimeMS" field must be representable as an `std::uint32_t`.
-        max_time_u32,       ///< The "maxTimeMS" field must be representable as an `std::uint32_t`.
+        zero,         ///< Zero.
+        max_time_u32, ///< The "maxTimeMS" field must be representable as an `std::uint32_t`.
     };
 
     ///

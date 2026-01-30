@@ -214,7 +214,7 @@ void append_to(v1::count_options const& opts, scoped_bson& doc) {
     }
 
     if (auto const& opt = opts.max_time()) {
-        doc += scoped_bson{BCON_NEW("maxTimeMS", BCON_INT64(opt->count()))};
+        doc += scoped_bson{BCON_NEW("maxTimeMS", BCON_INT64(std::int64_t{opt->count()}))};
     }
 
     if (auto const& opt = v1::count_options::internal::hint(opts)) {
@@ -236,7 +236,7 @@ void append_to(v1::count_options const& opts, scoped_bson& doc) {
 
 void append_to(v1::estimated_document_count_options const& opts, scoped_bson& doc) {
     if (auto const& opt = opts.max_time()) {
-        doc += scoped_bson(BCON_NEW("maxTimeMS", BCON_INT64(opt->count())));
+        doc += scoped_bson(BCON_NEW("maxTimeMS", BCON_INT64(std::int64_t{opt->count()})));
     }
 
     if (auto const& opt = v1::estimated_document_count_options::internal::comment(opts)) {
@@ -274,7 +274,7 @@ void append_to(v1::delete_one_options const& opts, scoped_bson& doc) {
 
 void append_to(v1::distinct_options const& opts, scoped_bson& doc) {
     if (auto const& opt = opts.max_time()) {
-        doc += scoped_bson{BCON_NEW("maxTimeMS", BCON_INT64(opt->count()))};
+        doc += scoped_bson{BCON_NEW("maxTimeMS", BCON_INT64(std::int64_t{opt->count()}))};
     }
 
     if (auto const& opt = v1::distinct_options::internal::collation(opts)) {
@@ -343,6 +343,10 @@ void append_to(v1::find_options const& opts, scoped_bson& doc) {
     }
 
     if (auto const& opt = opts.max_await_time()) {
+        doc += scoped_bson{BCON_NEW("maxAwaitTimeMS", BCON_INT64(std::int64_t{opt->count()}))};
+    }
+
+    if (auto const& opt = opts.max_time()) {
         doc += scoped_bson{BCON_NEW("maxTimeMS", BCON_INT64(std::int64_t{opt->count()}))};
     }
 
@@ -605,21 +609,8 @@ void drop_impl(mongoc_collection_t* coll, bson_t const* opts) {
 
 v1::cursor
 find_impl(mongoc_collection_t* coll, bson_t const* filter, bson_t const* opts, v1::find_options const& find_opts) {
-    auto ret = v1::cursor::internal::make(
+    return v1::cursor::internal::make(
         libmongoc::collection_find_with_opts(coll, filter, opts, get_read_prefs(find_opts)), find_opts.cursor_type());
-
-    if (auto const opt = find_opts.max_await_time()) {
-        auto const count = opt->count();
-
-        if (count < 0 || count > std::numeric_limits<std::uint32_t>::max()) {
-            throw v1::exception::internal::make(code::max_time_u32);
-        }
-
-        libmongoc::cursor_set_max_await_time_ms(
-            v1::cursor::internal::as_mongoc(ret), static_cast<std::uint32_t>(count));
-    }
-
-    return ret;
 }
 
 bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> find_one_impl(v1::cursor cursor) {
@@ -1623,8 +1614,6 @@ std::error_category const& collection::error_category() {
             switch (static_cast<code>(v)) {
                 case code::zero:
                     return "zero";
-                case code::max_await_time_u32:
-                    return "the \"maxAwaitTimeMS\" field must be representable as a `std::uint32_t`";
                 case code::max_time_u32:
                     return "the \"maxTimeMS\" field must be representable as a `std::uint32_t`";
                 default:
@@ -1639,7 +1628,6 @@ std::error_category const& collection::error_category() {
                 auto const source = static_cast<condition>(ec.value());
 
                 switch (static_cast<code>(v)) {
-                    case code::max_await_time_u32:
                     case code::max_time_u32:
                         return source == condition::mongocxx;
 
@@ -1655,7 +1643,6 @@ std::error_category const& collection::error_category() {
                 auto const type = static_cast<condition>(ec.value());
 
                 switch (static_cast<code>(v)) {
-                    case code::max_await_time_u32:
                     case code::max_time_u32:
                         return type == condition::invalid_argument;
 

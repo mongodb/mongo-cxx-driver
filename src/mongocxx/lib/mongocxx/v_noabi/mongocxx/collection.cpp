@@ -226,7 +226,7 @@ void append_to(v_noabi::options::count const& opts, scoped_bson& doc) {
     }
 
     if (auto const& opt = opts.max_time()) {
-        doc += scoped_bson{BCON_NEW("maxTimeMS", BCON_INT64(opt->count()))};
+        doc += scoped_bson{BCON_NEW("maxTimeMS", BCON_INT64(std::int64_t{opt->count()}))};
     }
 
     if (auto const& opt = opts.hint()) {
@@ -248,7 +248,7 @@ void append_to(v_noabi::options::count const& opts, scoped_bson& doc) {
 
 void append_to(v_noabi::options::estimated_document_count const& opts, scoped_bson& doc) {
     if (auto const& opt = opts.max_time()) {
-        doc += scoped_bson(BCON_NEW("maxTimeMS", BCON_INT64(opt->count())));
+        doc += scoped_bson(BCON_NEW("maxTimeMS", BCON_INT64(std::int64_t{opt->count()})));
     }
 
     if (auto const& opt = opts.comment()) {
@@ -272,7 +272,7 @@ void append_to(v_noabi::options::delete_options const& opts, scoped_bson& doc) {
 
 void append_to(v_noabi::options::distinct const& opts, scoped_bson& doc) {
     if (auto const& opt = opts.max_time()) {
-        doc += scoped_bson{BCON_NEW("maxTimeMS", BCON_INT64(opt->count()))};
+        doc += scoped_bson{BCON_NEW("maxTimeMS", BCON_INT64(std::int64_t{opt->count()}))};
     }
 
     if (auto const& opt = opts.collation()) {
@@ -340,6 +340,10 @@ void append_to(v_noabi::options::find const& opts, scoped_bson& doc) {
 
     if (auto const& opt = opts.max()) {
         doc += scoped_bson{BCON_NEW("max", BCON_DOCUMENT(to_scoped_bson_view(*opt).bson()))};
+    }
+
+    if (auto const& opt = opts.max_await_time()) {
+        doc += scoped_bson{BCON_NEW("maxAwaitTimeMS", BCON_INT64(std::int64_t{opt->count()}))};
     }
 
     if (auto const& opt = opts.max_time()) {
@@ -586,21 +590,8 @@ v1::cursor find_impl(
     bson_t const* filter,
     bson_t const* opts,
     v_noabi::options::find const& find_opts) {
-    auto ret = v1::cursor::internal::make(
+    return v1::cursor::internal::make(
         libmongoc::collection_find_with_opts(coll, filter, opts, get_read_prefs(find_opts)), find_opts.cursor_type());
-
-    if (auto const opt = find_opts.max_await_time()) {
-        auto const count = opt->count();
-
-        if (count < 0 || count > std::numeric_limits<std::uint32_t>::max()) {
-            throw v_noabi::logic_error{v_noabi::error_code::k_invalid_parameter};
-        }
-
-        libmongoc::cursor_set_max_await_time_ms(
-            v1::cursor::internal::as_mongoc(ret), static_cast<std::uint32_t>(count));
-    }
-
-    return ret;
 }
 
 bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::value> find_one_impl(v_noabi::cursor cursor) {
