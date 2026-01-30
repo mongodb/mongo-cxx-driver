@@ -115,7 +115,7 @@ class database {
     }
 
     ///
-    /// This class is not copyable.
+    /// Convert to the @ref mongocxx::v1 equivalent.
     ///
     explicit operator v1::database() const& {
         return _db;

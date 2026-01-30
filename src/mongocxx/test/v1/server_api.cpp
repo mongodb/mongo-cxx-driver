@@ -36,7 +36,7 @@ namespace v1 {
 
 using code = server_api::errc;
 
-TEST_CASE("error code", "[bsoncxx][v1][server_api][error]") {
+TEST_CASE("error code", "[mongocxx][v1][server_api][error]") {
     using mongocxx::v1::source_errc;
     using mongocxx::v1::type_errc;
 
@@ -89,7 +89,7 @@ TEST_CASE("error code", "[bsoncxx][v1][server_api][error]") {
     }
 }
 
-TEST_CASE("exceptions", "[bsoncxx][v1][server_api]") {
+TEST_CASE("exceptions", "[mongocxx][v1][server_api]") {
     SECTION("version_to_string") {
         CHECK_THROWS_WITH_CODE(
             server_api::version_to_string(static_cast<server_api::version>(1)), code::invalid_version);

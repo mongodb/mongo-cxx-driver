@@ -285,16 +285,15 @@ mongoc_client_session_t* client_session::internal::as_mongoc(client_session& sel
     return impl::with(self)._session;
 }
 
-bool client_session::internal::append_to(client_session const& self, scoped_bson& out, bson_error_t& error) {
+void client_session::internal::append_to(client_session const& self, scoped_bson& out) {
     scoped_bson doc;
+    bson_error_t error = {};
 
-    auto const ret = libmongoc::client_session_append(impl::with(self)._session, doc.out_ptr(), &error);
-
-    if (ret) {
-        out += doc;
+    if (!libmongoc::client_session_append(impl::with(self)._session, doc.out_ptr(), &error)) {
+        v1::throw_exception(error);
     }
 
-    return ret;
+    out += doc;
 }
 
 namespace {
