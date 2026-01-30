@@ -37,6 +37,7 @@
 #include <cstdint>
 #include <cstring>
 #include <initializer_list>
+#include <limits>
 #include <stdexcept>
 #include <string>
 #include <utility>
@@ -589,6 +590,14 @@ v1::cursor find_impl(
     bson_t const* filter,
     bson_t const* opts,
     v_noabi::options::find const& find_opts) {
+    if (auto const& opt = find_opts.max_await_time()) {
+        auto const count = opt->count();
+
+        if (count < 0 || count > std::numeric_limits<std::int32_t>::max()) {
+            throw v_noabi::logic_error{v_noabi::error_code::k_invalid_parameter};
+        }
+    }
+
     return v1::cursor::internal::make(
         libmongoc::collection_find_with_opts(coll, filter, opts, get_read_prefs(find_opts)), find_opts.cursor_type());
 }
