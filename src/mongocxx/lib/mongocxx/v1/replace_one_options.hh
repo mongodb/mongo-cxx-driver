@@ -31,6 +31,13 @@ namespace v1 {
 
 class replace_one_options::internal {
    public:
+    static bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> const& collation(replace_one_options const& self);
+    static bsoncxx::v1::stdx::optional<v1::write_concern> const& write_concern(replace_one_options const& self);
+    static bsoncxx::v1::stdx::optional<v1::hint> const& hint(replace_one_options const& self);
+    static bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> const& let(replace_one_options const& self);
+    static bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> const& sort(replace_one_options const& self);
+    static bsoncxx::v1::stdx::optional<bsoncxx::v1::types::value> const& comment(replace_one_options const& self);
+
     static bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value>& collation(replace_one_options& self);
     static bsoncxx::v1::stdx::optional<v1::write_concern>& write_concern(replace_one_options& self);
     static bsoncxx::v1::stdx::optional<v1::hint>& hint(replace_one_options& self);

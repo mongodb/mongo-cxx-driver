@@ -14,50 +14,18 @@
 
 #pragma once
 
-#include <bsoncxx/document/value.hpp>
-#include <bsoncxx/stdx/string_view.hpp>
-
 #include <mongocxx/collection.hpp> // IWYU pragma: export
-#include <mongocxx/database.hpp>
 
-#include <mongocxx/database.hh>
-#include <mongocxx/read_preference.hh>
-#include <mongocxx/write_concern.hh>
-
-#include <bsoncxx/private/helpers.hh>
+//
 
 #include <mongocxx/private/mongoc.hh>
 
 namespace mongocxx {
 namespace v_noabi {
 
-class collection::impl {
+class collection::internal {
    public:
-    impl(mongoc_collection_t* collection, bsoncxx::v_noabi::stdx::string_view database_name, mongoc_client_t* client)
-        : collection_t(collection), database_name(std::move(database_name)), client(client) {}
-
-    impl(impl const& i)
-        : collection_t{libmongoc::collection_copy(i.collection_t)}, database_name{i.database_name}, client{i.client} {}
-
-    impl& operator=(impl const& i) {
-        if (this != &i) {
-            libmongoc::collection_destroy(collection_t);
-            collection_t = libmongoc::collection_copy(i.collection_t);
-
-            database_name = i.database_name;
-            client = i.client;
-        }
-
-        return *this;
-    }
-
-    ~impl() {
-        libmongoc::collection_destroy(collection_t);
-    }
-
-    mongoc_collection_t* collection_t;
-    std::string database_name;
-    mongoc_client_t* client;
+    static mongoc_collection_t* as_mongoc(collection& self);
 };
 
 } // namespace v_noabi

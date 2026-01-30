@@ -18,10 +18,11 @@
 
 #include <bsoncxx/v1/document/value.hpp>
 #include <bsoncxx/v1/stdx/optional.hpp>
-#include <bsoncxx/v1/types/value.hpp>
 
 #include <mongocxx/v1/hint.hpp>
 #include <mongocxx/v1/write_concern.hpp>
+
+#include <bsoncxx/v1/types/value.hh>
 
 #include <mongocxx/private/utility.hh>
 
@@ -130,6 +131,30 @@ delete_one_options& delete_one_options::comment(bsoncxx::v1::types::value commen
 
 bsoncxx::v1::stdx::optional<bsoncxx::v1::types::view> const delete_one_options::comment() const {
     return impl::with(this)->_comment;
+}
+
+bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> const& delete_one_options::internal::collation(
+    delete_one_options const& self) {
+    return impl::with(self)._collation;
+}
+
+bsoncxx::v1::stdx::optional<v1::write_concern> const& delete_one_options::internal::write_concern(
+    delete_one_options const& self) {
+    return impl::with(self)._write_concern;
+}
+
+bsoncxx::v1::stdx::optional<v1::hint> const& delete_one_options::internal::hint(delete_one_options const& self) {
+    return impl::with(self)._hint;
+}
+
+bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> const& delete_one_options::internal::let(
+    delete_one_options const& self) {
+    return impl::with(self)._let;
+}
+
+bsoncxx::v1::stdx::optional<bsoncxx::v1::types::value> const& delete_one_options::internal::comment(
+    delete_one_options const& self) {
+    return impl::with(self)._comment;
 }
 
 bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value>& delete_one_options::internal::collation(

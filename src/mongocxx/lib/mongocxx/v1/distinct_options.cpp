@@ -18,9 +18,10 @@
 
 #include <bsoncxx/v1/document/value.hpp>
 #include <bsoncxx/v1/stdx/optional.hpp>
-#include <bsoncxx/v1/types/value.hpp>
 
 #include <mongocxx/v1/read_preference.hpp>
+
+#include <bsoncxx/v1/types/value.hh>
 
 #include <chrono>
 
@@ -121,6 +122,26 @@ distinct_options& distinct_options::read_preference(v1::read_preference rp) {
 
 bsoncxx::v1::stdx::optional<v1::read_preference> distinct_options::read_preference() const {
     return impl::with(this)->_read_preference;
+}
+
+bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> const& distinct_options::internal::collation(
+    distinct_options const& self) {
+    return impl::with(self)._collation;
+}
+
+bsoncxx::v1::stdx::optional<std::chrono::milliseconds> const& distinct_options::internal::max_time(
+    distinct_options const& self) {
+    return impl::with(self)._max_time;
+}
+
+bsoncxx::v1::stdx::optional<bsoncxx::v1::types::value> const& distinct_options::internal::comment(
+    distinct_options const& self) {
+    return impl::with(self)._comment;
+}
+
+bsoncxx::v1::stdx::optional<mongocxx::v1::read_preference> const& distinct_options::internal::read_preference(
+    distinct_options const& self) {
+    return impl::with(self)._read_preference;
 }
 
 bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value>& distinct_options::internal::collation(

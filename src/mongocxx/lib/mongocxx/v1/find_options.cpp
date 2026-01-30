@@ -18,11 +18,13 @@
 
 #include <bsoncxx/v1/document/value.hpp>
 #include <bsoncxx/v1/stdx/optional.hpp>
-#include <bsoncxx/v1/types/value.hpp>
 
 #include <mongocxx/v1/cursor.hpp>
-#include <mongocxx/v1/hint.hpp>
 #include <mongocxx/v1/read_preference.hpp>
+
+#include <bsoncxx/v1/types/value.hh>
+
+#include <mongocxx/v1/hint.hh>
 
 #include <chrono>
 #include <cstdint>
@@ -284,6 +286,47 @@ find_options& find_options::sort(bsoncxx::v1::document::value ordering) {
 
 bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view> find_options::sort() const {
     return impl::with(this)->_sort;
+}
+
+bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> const& find_options::internal::collation(
+    find_options const& self) {
+    return impl::with(self)._collation;
+}
+
+bsoncxx::v1::stdx::optional<bsoncxx::v1::types::value> const& find_options::internal::comment(
+    find_options const& self) {
+    return impl::with(self)._comment;
+}
+
+bsoncxx::v1::stdx::optional<v1::hint> const& find_options::internal::hint(find_options const& self) {
+    return impl::with(self)._hint;
+}
+
+bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> const& find_options::internal::let(find_options const& self) {
+    return impl::with(self)._let;
+}
+
+bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> const& find_options::internal::max(find_options const& self) {
+    return impl::with(self)._max;
+}
+
+bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> const& find_options::internal::min(find_options const& self) {
+    return impl::with(self)._min;
+}
+
+bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> const& find_options::internal::projection(
+    find_options const& self) {
+    return impl::with(self)._projection;
+}
+
+bsoncxx::v1::stdx::optional<v1::read_preference> const& find_options::internal::read_preference(
+    find_options const& self) {
+    return impl::with(self)._read_preference;
+}
+
+bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> const& find_options::internal::sort(
+    find_options const& self) {
+    return impl::with(self)._sort;
 }
 
 bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value>& find_options::internal::collation(find_options& self) {

@@ -18,10 +18,14 @@
 
 #include <bsoncxx/v1/document/value.hpp>
 #include <bsoncxx/v1/stdx/optional.hpp>
-#include <bsoncxx/v1/types/value.hpp>
+#include <bsoncxx/v1/types/view.hpp>
 
-#include <mongocxx/v1/hint.hpp>
 #include <mongocxx/v1/read_preference.hpp>
+
+#include <bsoncxx/v1/types/value.hh>
+
+#include <mongocxx/v1/exception.hh>
+#include <mongocxx/v1/hint.hh>
 
 #include <chrono>
 #include <cstdint>
@@ -153,6 +157,25 @@ count_options& count_options::read_preference(v1::read_preference rp) {
 
 bsoncxx::v1::stdx::optional<v1::read_preference> count_options::read_preference() const {
     return impl::with(this)->_rp;
+}
+
+bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> const& count_options::internal::collation(
+    count_options const& self) {
+    return impl::with(self)._collation;
+}
+
+bsoncxx::v1::stdx::optional<mongocxx::v1::hint> const& count_options::internal::hint(count_options const& self) {
+    return impl::with(self)._hint;
+}
+
+bsoncxx::v1::stdx::optional<bsoncxx::v1::types::value> const& count_options::internal::comment(
+    count_options const& self) {
+    return impl::with(self)._comment;
+}
+
+bsoncxx::v1::stdx::optional<mongocxx::v1::read_preference> const& count_options::internal::read_preference(
+    count_options const& self) {
+    return impl::with(self)._rp;
 }
 
 bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value>& count_options::internal::collation(count_options& self) {

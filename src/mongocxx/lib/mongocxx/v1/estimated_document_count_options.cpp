@@ -17,9 +17,10 @@
 //
 
 #include <bsoncxx/v1/stdx/optional.hpp>
-#include <bsoncxx/v1/types/value.hpp>
 
 #include <mongocxx/v1/read_preference.hpp>
+
+#include <bsoncxx/v1/types/value.hh>
 
 #include <chrono>
 
@@ -114,6 +115,16 @@ estimated_document_count_options& estimated_document_count_options::read_prefere
 
 bsoncxx::v1::stdx::optional<v1::read_preference> estimated_document_count_options::read_preference() const {
     return impl::with(this)->_read_preference;
+}
+
+bsoncxx::v1::stdx::optional<bsoncxx::v1::types::value> const& estimated_document_count_options::internal::comment(
+    estimated_document_count_options const& self) {
+    return impl::with(self)._comment;
+}
+
+bsoncxx::v1::stdx::optional<mongocxx::v1::read_preference> const&
+estimated_document_count_options::internal::read_preference(estimated_document_count_options const& self) {
+    return impl::with(self)._read_preference;
 }
 
 bsoncxx::v1::stdx::optional<bsoncxx::v1::types::value>& estimated_document_count_options::internal::comment(

@@ -32,6 +32,14 @@ namespace v1 {
 
 class update_one_options::internal {
    public:
+    static bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> const& collation(update_one_options const& self);
+    static bsoncxx::v1::stdx::optional<v1::hint> const& hint(update_one_options const& self);
+    static bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> const& let(update_one_options const& self);
+    static bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> const& sort(update_one_options const& self);
+    static bsoncxx::v1::stdx::optional<bsoncxx::v1::types::value> const& comment(update_one_options const& self);
+    static bsoncxx::v1::stdx::optional<v1::write_concern> const& write_concern(update_one_options const& self);
+    static bsoncxx::v1::stdx::optional<bsoncxx::v1::array::value> const& array_filters(update_one_options const& self);
+
     static bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value>& collation(update_one_options& self);
     static bsoncxx::v1::stdx::optional<v1::hint>& hint(update_one_options& self);
     static bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value>& let(update_one_options& self);

@@ -32,10 +32,16 @@ namespace v1 {
 
 class update_many_options::internal {
    public:
+    static bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> const& collation(update_many_options const& self);
+    static bsoncxx::v1::stdx::optional<v1::hint> const& hint(update_many_options const& self);
+    static bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> const& let(update_many_options const& self);
+    static bsoncxx::v1::stdx::optional<bsoncxx::v1::types::value> const& comment(update_many_options const& self);
+    static bsoncxx::v1::stdx::optional<v1::write_concern> const& write_concern(update_many_options const& self);
+    static bsoncxx::v1::stdx::optional<bsoncxx::v1::array::value> const& array_filters(update_many_options const& self);
+
     static bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value>& collation(update_many_options& self);
     static bsoncxx::v1::stdx::optional<v1::hint>& hint(update_many_options& self);
     static bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value>& let(update_many_options& self);
-    static bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value>& sort(update_many_options& self);
     static bsoncxx::v1::stdx::optional<bsoncxx::v1::types::value>& comment(update_many_options& self);
     static bsoncxx::v1::stdx::optional<v1::write_concern>& write_concern(update_many_options& self);
     static bsoncxx::v1::stdx::optional<bsoncxx::v1::array::value>& array_filters(update_many_options& self);

@@ -17,9 +17,10 @@
 //
 
 #include <bsoncxx/v1/stdx/optional.hpp>
-#include <bsoncxx/v1/types/value.hpp>
 
 #include <mongocxx/v1/write_concern.hpp>
+
+#include <bsoncxx/v1/types/value.hh>
 
 #include <mongocxx/private/utility.hh>
 
@@ -108,6 +109,16 @@ insert_one_options& insert_one_options::comment(bsoncxx::v1::types::value commen
 
 bsoncxx::v1::stdx::optional<bsoncxx::v1::types::view> insert_one_options::comment() const {
     return impl::with(this)->_comment;
+}
+
+bsoncxx::v1::stdx::optional<v1::write_concern> const& insert_one_options::internal::write_concern(
+    insert_one_options const& self) {
+    return impl::with(self)._write_concern;
+}
+
+bsoncxx::v1::stdx::optional<bsoncxx::v1::types::value> const& insert_one_options::internal::comment(
+    insert_one_options const& self) {
+    return impl::with(self)._comment;
 }
 
 bsoncxx::v1::stdx::optional<v1::write_concern>& insert_one_options::internal::write_concern(insert_one_options& self) {

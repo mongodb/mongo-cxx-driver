@@ -433,12 +433,12 @@ class collection {
     ///
     /// @{
     MONGOCXX_ABI_EXPORT_CDECL(void) drop(
-        bsoncxx::v1::stdx::optional<v1::write_concern> wc = {},
+        bsoncxx::v1::stdx::optional<v1::write_concern> const& wc = {},
         bsoncxx::v1::document::view opts = {});
 
     MONGOCXX_ABI_EXPORT_CDECL(void) drop(
         v1::client_session const& session,
-        bsoncxx::v1::stdx::optional<v1::write_concern> wc = {},
+        bsoncxx::v1::stdx::optional<v1::write_concern> const& wc = {},
         bsoncxx::v1::document::view opts = {});
     /// @}
     ///
@@ -446,8 +446,6 @@ class collection {
     ///
     /// Find documents in this collection matching the given query filter.
     ///
-    /// @throws mongocxx::v1::exception with @ref mongocxx::v1::collection::errc::max_await_time_u32 if the
-    /// "maxAwaitTimeMS" field is not representable as an `std::uint32_t`.
     /// @throws mongocxx::v1::server_error when a server-side error is encountered and a raw server error is available.
     /// @throws mongocxx::v1::exception for all other runtime errors.
     ///
@@ -467,8 +465,6 @@ class collection {
     ///
     /// @returns Empty when no matching document was found.
     ///
-    /// @throws mongocxx::v1::exception with @ref mongocxx::v1::collection::errc::max_await_time_u32 if the
-    /// "maxAwaitTimeMS" field is not representable as an `std::uint32_t`.
     /// @throws mongocxx::v1::server_error when a server-side error is encountered and a raw server error is available.
     /// @throws mongocxx::v1::exception for all other runtime errors.
     ///
@@ -490,6 +486,8 @@ class collection {
     ///
     /// @returns Empty when no matching document was found.
     ///
+    /// @throws mongocxx::v1::exception with @ref mongocxx::v1::collection::errc::max_time_u32 if the "maxTimeMS" field
+    /// is not representable as an `std::uint32_t`.
     /// @throws mongocxx::v1::server_error when a server-side error is encountered and a raw server error is available.
     /// @throws mongocxx::v1::exception for all other runtime errors.
     ///
@@ -514,6 +512,8 @@ class collection {
     /// @returns The document before or after replacement, depending on the "returnDocument" field. Empty when no
     /// matching document was found.
     ///
+    /// @throws mongocxx::v1::exception with @ref mongocxx::v1::collection::errc::max_time_u32 if the "maxTimeMS" field
+    /// is not representable as an `std::uint32_t`.
     /// @throws mongocxx::v1::server_error when a server-side error is encountered and a raw server error is available.
     /// @throws mongocxx::v1::exception for all other runtime errors.
     ///
@@ -523,13 +523,13 @@ class collection {
     /// @{
     MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value>) find_one_and_replace(
         bsoncxx::v1::document::view query,
-        bsoncxx::v1::document::value replacement,
+        bsoncxx::v1::document::view replacement,
         v1::find_one_and_replace_options const& opts = {});
 
     MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value>) find_one_and_replace(
         v1::client_session const& session,
         bsoncxx::v1::document::view query,
-        bsoncxx::v1::document::value update,
+        bsoncxx::v1::document::view replacement,
         v1::find_one_and_replace_options const& opts = {});
     /// @}
     ///
@@ -540,6 +540,8 @@ class collection {
     /// @returns The document before or after the update, depending on the "returnDocument" field. Empty when no
     /// matching document was found.
     ///
+    /// @throws mongocxx::v1::exception with @ref mongocxx::v1::collection::errc::max_time_u32 if the "maxTimeMS" field
+    /// is not representable as an `std::uint32_t`.
     /// @throws mongocxx::v1::server_error when a server-side error is encountered and a raw server error is available.
     /// @throws mongocxx::v1::exception for all other runtime errors.
     ///
@@ -701,13 +703,13 @@ class collection {
     MONGOCXX_ABI_EXPORT_CDECL(void) rename(
         bsoncxx::v1::stdx::string_view new_name,
         bool drop_target = false,
-        bsoncxx::v1::stdx::optional<v1::write_concern> write_concern = {});
+        bsoncxx::v1::stdx::optional<v1::write_concern> const& write_concern = {});
 
     MONGOCXX_ABI_EXPORT_CDECL(void) rename(
         v1::client_session const& session,
         bsoncxx::v1::stdx::string_view new_name,
         bool drop_target = false,
-        bsoncxx::v1::stdx::optional<v1::write_concern> write_concern = {});
+        bsoncxx::v1::stdx::optional<v1::write_concern> const& write_concern = {});
     /// @}
     ///
 
@@ -720,7 +722,7 @@ class collection {
     /// @see
     /// - [Default MongoDB Read Concerns/Write Concerns (MongoDB Manual)](https://www.mongodb.com/docs/manual/reference/mongodb-defaults/)
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(void) read_concern(v1::read_concern rc);
+    MONGOCXX_ABI_EXPORT_CDECL(void) read_concern(v1::read_concern const& rc);
 
     ///
     /// Return the current default "readConcern" to use for operations on this collection.
@@ -736,7 +738,7 @@ class collection {
     /// @see
     /// - [Default MongoDB Read Concerns/Write Concerns (MongoDB Manual)](https://www.mongodb.com/docs/manual/reference/mongodb-defaults/)
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(void) read_preference(v1::read_preference rp);
+    MONGOCXX_ABI_EXPORT_CDECL(void) read_preference(v1::read_preference const& rp);
 
     ///
     /// Return the current default "readPreference" to use for operations on this collection.
@@ -845,7 +847,7 @@ class collection {
     /// @see
     /// - [Default MongoDB Read Concerns/Write Concerns (MongoDB Manual)](https://www.mongodb.com/docs/manual/reference/mongodb-defaults/)
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(void) write_concern(v1::write_concern wc);
+    MONGOCXX_ABI_EXPORT_CDECL(void) write_concern(v1::write_concern const& wc);
 
     ///
     /// Return the current default "writeConcern" to use for operations on this collection.
@@ -905,8 +907,8 @@ class collection {
     /// @attention This feature is experimental! It is not ready for use!
     ///
     enum class errc {
-        zero,               ///< Zero.
-        max_await_time_u32, ///< The "maxAwaitTimeMS" field must be representable as an `std::uint32_t`.
+        zero,         ///< Zero.
+        max_time_u32, ///< The "maxTimeMS" field must be representable as an `std::uint32_t`.
     };
 
     ///
@@ -925,7 +927,11 @@ class collection {
         return {static_cast<int>(v), error_category()};
     }
 
+    class internal;
+
    private:
+    /* explicit(false) */ collection(void* impl);
+
     MONGOCXX_ABI_EXPORT_CDECL(v1::bulk_write) _create_insert_many(
         v1::client_session const* session,
         v1::insert_many_options const& opts);

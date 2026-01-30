@@ -14,22 +14,25 @@
 
 #pragma once
 
-#include <mongocxx/bulk_write.hpp> // IWYU pragma: export
+#include <mongocxx/v1/collection.hpp> // IWYU pragma: export
 
 //
 
-#include <mongocxx/collection-fwd.hpp>
-
-#include <mongocxx/client_session.hpp>
-#include <mongocxx/options/bulk_write.hpp>
+#include <mongocxx/private/export.hh>
+#include <mongocxx/private/mongoc.hh>
 
 namespace mongocxx {
-namespace v_noabi {
+namespace v1 {
 
-class bulk_write::internal {
+class collection::internal {
    public:
-    static bulk_write make(collection& coll, options::bulk_write const& opts, client_session const* session);
+    static MONGOCXX_ABI_EXPORT_CDECL_TESTING(collection) make(mongoc_collection_t* coll, mongoc_client_t* client);
+
+    static mongoc_client_t* get_client(collection& self);
+
+    static MONGOCXX_ABI_EXPORT_CDECL_TESTING(mongoc_collection_t const*) as_mongoc(collection const& self);
+    static MONGOCXX_ABI_EXPORT_CDECL_TESTING(mongoc_collection_t*) as_mongoc(collection& self);
 };
 
-} // namespace v_noabi
+} // namespace v1
 } // namespace mongocxx

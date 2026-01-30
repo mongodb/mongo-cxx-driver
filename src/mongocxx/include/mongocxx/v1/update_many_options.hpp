@@ -47,7 +47,6 @@ namespace v1 {
 /// - `comment`
 /// - `hint`
 /// - `let`
-/// - `sort`
 /// - `upsert`
 /// - `write_concern` ("writeConcern")
 ///
@@ -142,16 +141,6 @@ class update_many_options {
     /// Return the current "let" field.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view> const) let() const;
-
-    ///
-    /// Set the "sort" field.
-    ///
-    MONGOCXX_ABI_EXPORT_CDECL(update_many_options&) sort(bsoncxx::v1::document::value sort);
-
-    ///
-    /// Return the current "sort" field.
-    ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view>) sort() const;
 
     ///
     /// Set the "comment" field.

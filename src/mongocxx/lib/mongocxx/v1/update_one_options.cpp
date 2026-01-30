@@ -20,11 +20,12 @@
 #include <bsoncxx/v1/document/value.hpp>
 #include <bsoncxx/v1/document/view.hpp>
 #include <bsoncxx/v1/stdx/optional.hpp>
-#include <bsoncxx/v1/types/value.hpp>
 #include <bsoncxx/v1/types/view.hpp>
 
 #include <mongocxx/v1/hint.hpp>
 #include <mongocxx/v1/write_concern.hpp>
+
+#include <bsoncxx/v1/types/value.hh>
 
 #include <mongocxx/private/utility.hh>
 
@@ -173,6 +174,40 @@ update_one_options& update_one_options::array_filters(bsoncxx::v1::array::value 
 
 bsoncxx::v1::stdx::optional<bsoncxx::v1::array::view> update_one_options::array_filters() const {
     return impl::with(this)->_array_filters;
+}
+
+bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> const& update_one_options::internal::collation(
+    update_one_options const& self) {
+    return impl::with(self)._collation;
+}
+
+bsoncxx::v1::stdx::optional<v1::hint> const& update_one_options::internal::hint(update_one_options const& self) {
+    return impl::with(self)._hint;
+}
+
+bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> const& update_one_options::internal::let(
+    update_one_options const& self) {
+    return impl::with(self)._let;
+}
+
+bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> const& update_one_options::internal::sort(
+    update_one_options const& self) {
+    return impl::with(self)._sort;
+}
+
+bsoncxx::v1::stdx::optional<bsoncxx::v1::types::value> const& update_one_options::internal::comment(
+    update_one_options const& self) {
+    return impl::with(self)._comment;
+}
+
+bsoncxx::v1::stdx::optional<v1::write_concern> const& update_one_options::internal::write_concern(
+    update_one_options const& self) {
+    return impl::with(self)._write_concern;
+}
+
+bsoncxx::v1::stdx::optional<bsoncxx::v1::array::value> const& update_one_options::internal::array_filters(
+    update_one_options const& self) {
+    return impl::with(self)._array_filters;
 }
 
 bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value>& update_one_options::internal::collation(

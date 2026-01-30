@@ -1237,6 +1237,21 @@ bsoncxx::v1::stdx::optional<v1::write_concern> bulk_write::options::write_concer
     return impl::with(this)->_write_concern;
 }
 
+bsoncxx::v1::stdx::optional<bsoncxx::v1::types::value> const& bulk_write::options::internal::comment(
+    options const& self) {
+    return impl::with(self)._comment;
+}
+
+bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> const& bulk_write::options::internal::let(
+    options const& self) {
+    return impl::with(self)._let;
+}
+
+bsoncxx::v1::stdx::optional<v1::write_concern> const& bulk_write::options::internal::write_concern(
+    options const& self) {
+    return impl::with(self)._write_concern;
+}
+
 bsoncxx::v1::stdx::optional<bsoncxx::v1::types::value>& bulk_write::options::internal::comment(options& self) {
     return impl::with(self)._comment;
 }

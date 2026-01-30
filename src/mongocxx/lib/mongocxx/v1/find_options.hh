@@ -31,6 +31,16 @@ namespace v1 {
 
 class find_options::internal {
    public:
+    static bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> const& collation(find_options const& self);
+    static bsoncxx::v1::stdx::optional<bsoncxx::v1::types::value> const& comment(find_options const& self);
+    static bsoncxx::v1::stdx::optional<v1::hint> const& hint(find_options const& self);
+    static bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> const& let(find_options const& self);
+    static bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> const& max(find_options const& self);
+    static bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> const& min(find_options const& self);
+    static bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> const& projection(find_options const& self);
+    static bsoncxx::v1::stdx::optional<v1::read_preference> const& read_preference(find_options const& self);
+    static bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> const& sort(find_options const& self);
+
     static bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value>& collation(find_options& self);
     static bsoncxx::v1::stdx::optional<bsoncxx::v1::types::value>& comment(find_options& self);
     static bsoncxx::v1::stdx::optional<v1::hint>& hint(find_options& self);

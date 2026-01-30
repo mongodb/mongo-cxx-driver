@@ -21,6 +21,8 @@
 
 #include <mongocxx/v1/write_concern.hpp>
 
+#include <bsoncxx/v1/types/value.hh>
+
 #include <mongocxx/private/utility.hh>
 
 namespace mongocxx {
@@ -119,6 +121,16 @@ insert_many_options& insert_many_options::comment(bsoncxx::v1::types::value comm
 
 bsoncxx::v1::stdx::optional<bsoncxx::v1::types::view> insert_many_options::comment() const {
     return impl::with(this)->_comment;
+}
+
+bsoncxx::v1::stdx::optional<v1::write_concern> const& insert_many_options::internal::write_concern(
+    insert_many_options const& self) {
+    return impl::with(self)._write_concern;
+}
+
+bsoncxx::v1::stdx::optional<bsoncxx::v1::types::value> const& insert_many_options::internal::comment(
+    insert_many_options const& self) {
+    return impl::with(self)._comment;
 }
 
 bsoncxx::v1::stdx::optional<v1::write_concern>& insert_many_options::internal::write_concern(

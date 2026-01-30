@@ -31,6 +31,12 @@ namespace v1 {
 
 class delete_many_options::internal {
    public:
+    static bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> const& collation(delete_many_options const& self);
+    static bsoncxx::v1::stdx::optional<v1::write_concern> const& write_concern(delete_many_options const& self);
+    static bsoncxx::v1::stdx::optional<v1::hint> const& hint(delete_many_options const& self);
+    static bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> const& let(delete_many_options const& self);
+    static bsoncxx::v1::stdx::optional<bsoncxx::v1::types::value> const& comment(delete_many_options const& self);
+
     static bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value>& collation(delete_many_options& self);
     static bsoncxx::v1::stdx::optional<v1::write_concern>& write_concern(delete_many_options& self);
     static bsoncxx::v1::stdx::optional<v1::hint>& hint(delete_many_options& self);
