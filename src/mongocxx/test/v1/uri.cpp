@@ -176,13 +176,15 @@ void test_credentials_option(MemFn mem_fn, bsoncxx::v1::document::view doc, T co
     CAPTURE(doc);
     CAPTURE(expected);
 
+    scoped_bson_view const actual{doc};
+
     uri const opts;
     auto const identity = uri::internal::as_mongoc(opts);
 
     auto credentials = libmongoc::uri_get_credentials.create_instance();
     credentials->interpose([&](mongoc_uri_t const* ptr) -> bson_t const* {
         CHECK(ptr == identity);
-        return scoped_bson_view{doc}.bson(); // Never null.
+        return actual.bson(); // Never null.
     });
 
     CHECK((opts.*mem_fn)() == expected);
@@ -193,13 +195,15 @@ void test_option(MemFn mem_fn, bsoncxx::v1::document::view doc, T const& expecte
     CAPTURE(doc);
     CAPTURE(expected);
 
+    scoped_bson_view const actual{doc};
+
     uri const opts;
     auto const identity = uri::internal::as_mongoc(opts);
 
     auto options = libmongoc::uri_get_options.create_instance();
     options->interpose([&](mongoc_uri_t const* ptr) -> bson_t const* {
         CHECK(ptr == identity);
-        return scoped_bson_view{doc}.bson(); // Never null.
+        return actual.bson(); // Never null.
     });
 
     CHECK((opts.*mem_fn)() == expected);
