@@ -385,7 +385,7 @@ bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> find_and_modify_impl(
             extra += scoped_bson{BCON_NEW("writeConcern", BCON_DOCUMENT(scoped_bson{opt->to_document()}.bson()))};
         }
 
-        if (session_ptr && v1::client_session::internal::append_to(*session_ptr, extra, error)) {
+        if (session_ptr && !v1::client_session::internal::append_to(*session_ptr, extra, error)) {
             v1::throw_exception(error);
         }
 
