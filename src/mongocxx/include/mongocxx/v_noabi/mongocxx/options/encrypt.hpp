@@ -24,6 +24,7 @@
 #include <bsoncxx/types/bson_value/view_or_value.hpp>
 
 #include <mongocxx/options/range.hpp>
+#include <mongocxx/options/text.hpp>
 
 #include <mongocxx/config/prelude.hpp>
 
@@ -118,6 +119,11 @@ class encrypt {
         /// Use range encryption.
         ///
         k_range,
+
+        ///
+        /// Use textPreview encryption.
+        ///
+        k_textPreview,
     };
 
     ///
@@ -130,6 +136,15 @@ class encrypt {
 
         /// @brief Use query type "range".
         k_range,
+
+        /// @brief Use query type "prefixPreview".
+        k_prefixPreview,
+
+        /// @brief Use query type "suffixPreview".
+        k_suffixPreview,
+
+        /// @brief Use query type "substringPreview".
+        k_substringPreview,
     };
 
     ///
@@ -213,6 +228,17 @@ class encrypt {
     MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<options::range> const&)
     range_opts() const;
 
+    ///
+    /// Sets the text options to use for encryption.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(encrypt&) text_opts(options::text opts);
+
+    ///
+    /// Gets the current text options
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<options::text> const&)
+    text_opts() const;
+
    private:
     friend ::mongocxx::v_noabi::client_encryption;
 
@@ -224,6 +250,7 @@ class encrypt {
     bsoncxx::v_noabi::stdx::optional<int64_t> _contention_factor;
     bsoncxx::v_noabi::stdx::optional<encryption_query_type> _query_type;
     bsoncxx::v_noabi::stdx::optional<options::range> _range_opts;
+    bsoncxx::v_noabi::stdx::optional<options::text> _text_opts;
 };
 
 } // namespace options
