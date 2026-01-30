@@ -178,6 +178,7 @@ v1::bulk_write
 create_bulk_write_impl(mongoc_collection_t* coll, bson_t const* opts, bsoncxx::v1::stdx::optional<bool> bdv_opt) {
     auto ret = v1::bulk_write::internal::make(libmongoc::collection_create_bulk_operation_with_opts(coll, opts));
 
+    // CDRIVER-4304: mongoc_bulk_opts_t doesn't support "bypassDocumentValidation" yet.
     if (bdv_opt) {
         libmongoc::bulk_operation_set_bypass_document_validation(v1::bulk_write::internal::as_mongoc(ret), *bdv_opt);
     }
