@@ -462,12 +462,12 @@ class indexes {
     ///
     /// Copy constructor.
     ///
-    indexes(indexes const& other);
+    MONGOCXX_ABI_EXPORT_CDECL() indexes(indexes const& other);
 
     ///
     /// Copy assignment.
     ///
-    indexes& operator=(indexes const& other);
+    MONGOCXX_ABI_EXPORT_CDECL(indexes&) operator=(indexes const& other);
 
     ///
     /// Return all indexes in the associated collection.
