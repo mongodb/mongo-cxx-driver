@@ -300,7 +300,7 @@ class indexes {
         ///
         /// Set the "collation" field.
         ///
-        MONGOCXX_ABI_EXPORT_CDECL(options&) collation(bsoncxx::v1::document::view collation);
+        MONGOCXX_ABI_EXPORT_CDECL(options&) collation(bsoncxx::v1::document::value collation);
 
         ///
         /// Return the current "collation" field.
@@ -320,8 +320,7 @@ class indexes {
         ///
         /// Set the "storageEngine" field.
         ///
-        MONGOCXX_ABI_EXPORT_CDECL(options&) storage_engine(
-            bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view> storage_engine);
+        MONGOCXX_ABI_EXPORT_CDECL(options&) storage_engine(bsoncxx::v1::document::value storage_engine);
 
         ///
         /// Return the current "storageEngine" field.
@@ -351,7 +350,7 @@ class indexes {
         ///
         /// Set the "weights" field.
         ///
-        MONGOCXX_ABI_EXPORT_CDECL(options&) weights(bsoncxx::v1::document::view weights);
+        MONGOCXX_ABI_EXPORT_CDECL(options&) weights(bsoncxx::v1::document::value weights);
 
         ///
         /// Return the current "weights" field.
