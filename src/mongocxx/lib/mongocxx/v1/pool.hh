@@ -40,7 +40,7 @@ class pool::options::internal {
 
 class pool::entry::internal {
    public:
-    static MONGOCXX_ABI_EXPORT_CDECL(entry) make(mongoc_client_pool_t* pool, mongoc_client_t* client);
+    static MONGOCXX_ABI_EXPORT_CDECL_TESTING(entry) make(mongoc_client_pool_t* pool, mongoc_client_t* client);
 };
 
 } // namespace v1

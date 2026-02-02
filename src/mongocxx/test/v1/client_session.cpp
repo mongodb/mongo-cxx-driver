@@ -1089,16 +1089,19 @@ TEST_CASE("append_to", "[mongocxx][v1][client_session]") {
 
             bson_concat(out, input.bson());
             bson_set_error(error, 0u, v, "%s", msg);
+            error->reserved = 2u; // MONGOC_ERROR_CATEGORY
 
             return false;
         });
 
         scoped_bson doc = before;
-        bson_error_t error = {};
-        CHECK_FALSE(v1::client_session::internal::append_to(session, doc, error));
-        CHECK(doc.view() == before.view());
-        CHECK(error.code == v);
-        CHECK_THAT(error.message, Catch::Matchers::Equals(msg));
+        try {
+            v1::client_session::internal::append_to(session, doc);
+        } catch (v1::exception const& ex) {
+            CHECK(ex.code() == v1::source_errc::mongoc);
+            CHECK(ex.code().value() == static_cast<int>(v));
+            CHECK_THAT(ex.what(), Catch::Matchers::ContainsSubstring(msg));
+        }
     }
 
     SECTION("success") {
@@ -1118,7 +1121,7 @@ TEST_CASE("append_to", "[mongocxx][v1][client_session]") {
 
         scoped_bson doc = before;
         bson_error_t error = {};
-        CHECK(v1::client_session::internal::append_to(session, doc, error));
+        CHECK_NOTHROW(v1::client_session::internal::append_to(session, doc));
         CHECK(doc.view() == expected.view());
         CHECK(error.code == 0);
     }

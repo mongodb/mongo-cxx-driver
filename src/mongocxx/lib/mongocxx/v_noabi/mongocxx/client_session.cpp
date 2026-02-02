@@ -143,18 +143,23 @@ mongoc_client_session_t const* client_session::internal::as_mongoc(client_sessio
 }
 
 void client_session::internal::append_to(client_session const& self, scoped_bson& out) {
+    scoped_bson doc;
     bson_error_t error = {};
 
-    if (!v1::client_session::internal::append_to(self._session, out, error)) {
+    if (!libmongoc::client_session_append(
+            v1::client_session::internal::as_mongoc(self._session), doc.out_ptr(), &error)) {
         throw v_noabi::logic_error{v_noabi::error_code::k_invalid_session, error.message};
     }
+
+    out += doc;
 }
 
 void client_session::internal::append_to(client_session const& self, bsoncxx::builder::basic::document& builder) {
     scoped_bson doc;
     bson_error_t error = {};
 
-    if (!v1::client_session::internal::append_to(self._session, doc, error)) {
+    if (!libmongoc::client_session_append(
+            v1::client_session::internal::as_mongoc(self._session), doc.out_ptr(), &error)) {
         throw v_noabi::logic_error{v_noabi::error_code::k_invalid_session, error.message};
     }
 

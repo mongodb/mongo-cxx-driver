@@ -97,12 +97,12 @@ class bulk_write::delete_many::internal {
 
 class bulk_write::single::internal {
    public:
-    static MONGOCXX_ABI_EXPORT_CDECL(insert_one&) get_insert_one(single& self);
-    static MONGOCXX_ABI_EXPORT_CDECL(update_one&) get_update_one(single& self);
-    static MONGOCXX_ABI_EXPORT_CDECL(update_many&) get_update_many(single& self);
-    static MONGOCXX_ABI_EXPORT_CDECL(delete_one&) get_delete_one(single& self);
-    static MONGOCXX_ABI_EXPORT_CDECL(delete_many&) get_delete_many(single& self);
-    static MONGOCXX_ABI_EXPORT_CDECL(replace_one&) get_replace_one(single& self);
+    static MONGOCXX_ABI_EXPORT_CDECL_TESTING(insert_one&) get_insert_one(single& self);
+    static MONGOCXX_ABI_EXPORT_CDECL_TESTING(update_one&) get_update_one(single& self);
+    static MONGOCXX_ABI_EXPORT_CDECL_TESTING(update_many&) get_update_many(single& self);
+    static MONGOCXX_ABI_EXPORT_CDECL_TESTING(delete_one&) get_delete_one(single& self);
+    static MONGOCXX_ABI_EXPORT_CDECL_TESTING(delete_many&) get_delete_many(single& self);
+    static MONGOCXX_ABI_EXPORT_CDECL_TESTING(replace_one&) get_replace_one(single& self);
 };
 
 class bulk_write::options::internal {

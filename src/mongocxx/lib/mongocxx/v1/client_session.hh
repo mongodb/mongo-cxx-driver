@@ -20,8 +20,6 @@
 
 #include <mongocxx/v1/client-fwd.hpp>
 
-#include <bsoncxx/private/bson.hh>
-
 #include <mongocxx/private/export.hh>
 #include <mongocxx/private/mongoc.hh>
 #include <mongocxx/private/scoped_bson.hh>
@@ -31,21 +29,21 @@ namespace v1 {
 
 class client_session::internal {
    public:
-    static MONGOCXX_ABI_EXPORT_CDECL(client_session) make(mongoc_client_session_t* session, v1::client& client);
+    static MONGOCXX_ABI_EXPORT_CDECL_TESTING(client_session) make(mongoc_client_session_t* session, v1::client& client);
 
     static v1::client_session const& as_v1(client_session const& self);
 
     static MONGOCXX_ABI_EXPORT_CDECL_TESTING(mongoc_client_session_t const*) as_mongoc(client_session const& self);
     static MONGOCXX_ABI_EXPORT_CDECL_TESTING(mongoc_client_session_t*) as_mongoc(client_session& self);
 
-    static MONGOCXX_ABI_EXPORT_CDECL(bool) append_to(client_session const& self, scoped_bson& out, bson_error_t& error);
+    static MONGOCXX_ABI_EXPORT_CDECL_TESTING(void) append_to(client_session const& self, scoped_bson& out);
 };
 
 class client_session::options::internal {
    public:
     static MONGOCXX_ABI_EXPORT_CDECL_TESTING(options) make(mongoc_session_opt_t* impl);
 
-    static MONGOCXX_ABI_EXPORT_CDECL(mongoc_session_opt_t const*) as_mongoc(options const& self);
+    static MONGOCXX_ABI_EXPORT_CDECL_TESTING(mongoc_session_opt_t const*) as_mongoc(options const& self);
 };
 
 } // namespace v1
