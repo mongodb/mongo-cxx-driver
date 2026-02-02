@@ -133,6 +133,7 @@ set(mongocxx_test_sources_v1
     v1/find_one_and_update_options.cpp
     v1/find_options.cpp
     v1/hint.cpp
+    v1/indexes.cpp
     v1/insert_many_options.cpp
     v1/insert_many_result.cpp
     v1/insert_one_options.cpp

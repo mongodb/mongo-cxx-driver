@@ -12,52 +12,45 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <bsoncxx/builder/basic/document.hpp>
-#include <bsoncxx/builder/basic/kvp.hpp>
-#include <bsoncxx/types.hpp>
-
 #include <mongocxx/options/index_view.hpp>
 
-using bsoncxx::v_noabi::builder::basic::kvp;
-using bsoncxx::v_noabi::builder::basic::make_document;
+//
+
+#include <mongocxx/v1/indexes.hh>
+
+#include <string>
+#include <utility>
+
+#include <bsoncxx/document/value.hpp>
+
+#include <mongocxx/scoped_bson.hh>
+
+#include <bsoncxx/private/bson.hh>
 
 namespace mongocxx {
 namespace v_noabi {
 namespace options {
 
-index_view::index_view() : _max_time(), _write_concern(), _commit_quorum() {}
+index_view::index_view(v1::indexes::options opts)
+    : _max_time{opts.max_time()},
+      _write_concern{std::move(v1::indexes::options::internal::write_concern(opts))},
+      _commit_quorum{[&]() -> decltype(_commit_quorum) {
+          if (auto& opt = v1::indexes::options::internal::commit_quorum(opts)) {
+              return bsoncxx::v_noabi::from_v1(std::move(*opt));
+          }
 
-bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern> const& index_view::write_concern() const {
-    return _write_concern;
-}
-
-bsoncxx::v_noabi::stdx::optional<std::chrono::milliseconds> const& index_view::max_time() const {
-    return _max_time;
-}
-
-bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::value> const index_view::commit_quorum() const {
-    return _commit_quorum;
-}
-
-index_view& index_view::max_time(std::chrono::milliseconds max_time) {
-    _max_time = max_time;
-    return *this;
-}
-
-index_view& index_view::write_concern(mongocxx::v_noabi::write_concern write_concern) {
-    _write_concern = std::move(write_concern);
-    return *this;
-}
+          return {};
+      }()} {}
 
 index_view& index_view::commit_quorum(int commit_quorum) {
-    _commit_quorum = bsoncxx::v_noabi::stdx::make_optional<bsoncxx::v_noabi::document::value>(
-        make_document(kvp("commitQuorum", bsoncxx::v_noabi::types::b_int32{commit_quorum})));
+    _commit_quorum =
+        bsoncxx::v_noabi::from_v1(scoped_bson{BCON_NEW("commitQuorum", BCON_INT32(commit_quorum))}.value());
     return *this;
 }
 
 index_view& index_view::commit_quorum(std::string commit_quorum) {
-    _commit_quorum = bsoncxx::v_noabi::stdx::make_optional<bsoncxx::v_noabi::document::value>(
-        make_document(kvp("commitQuorum", commit_quorum)));
+    _commit_quorum =
+        bsoncxx::v_noabi::from_v1(scoped_bson{BCON_NEW("commitQuorum", BCON_UTF8(commit_quorum.c_str()))}.value());
     return *this;
 }
 

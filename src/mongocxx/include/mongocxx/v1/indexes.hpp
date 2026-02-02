@@ -434,6 +434,11 @@ class indexes {
         /// Return these index management options as a document.
         ///
         /* explicit(false) */ MONGOCXX_ABI_EXPORT_CDECL() operator bsoncxx::v1::document::value() const;
+
+        class internal;
+
+       private:
+        /* explicit(false) */ options(void* impl);
     };
 
     ///
@@ -702,6 +707,11 @@ class indexes {
     friend std::error_code make_error_code(errc v) {
         return {static_cast<int>(v), error_category()};
     }
+
+    class internal;
+
+   private:
+    /* explicit(false) */ indexes(void* impl);
 };
 
 } // namespace v1

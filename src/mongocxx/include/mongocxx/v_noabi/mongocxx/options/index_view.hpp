@@ -14,12 +14,20 @@
 
 #pragma once
 
-#include <chrono>
-#include <string>
-
 #include <mongocxx/options/index_view-fwd.hpp> // IWYU pragma: export
 
+//
+
+#include <mongocxx/v1/indexes.hpp> // IWYU pragma: export
+
+#include <chrono>
+#include <cstdint>
+#include <string>
+#include <utility>
+
+#include <bsoncxx/document/value.hpp>
 #include <bsoncxx/stdx/optional.hpp>
+#include <bsoncxx/types.hpp>
 
 #include <mongocxx/write_concern.hpp>
 
@@ -34,7 +42,48 @@ namespace options {
 ///
 class index_view {
    public:
-    MONGOCXX_ABI_EXPORT_CDECL() index_view();
+    index_view() = default;
+
+    ///
+    /// Construct with the @ref mongocxx::v1 equivalent.
+    ///
+    /// @note Only `CreateIndexOptions` fields are converted. All other fields are unset.
+    ///
+    /* explicit(false) */ MONGOCXX_ABI_EXPORT_CDECL() index_view(v1::indexes::options opts);
+
+    ///
+    /// Convert to the @ref mongocxx::v1 equivalent.
+    ///
+    /// @note Only `CreateIndexOptions` fields are converted. All other fields are unset.
+    ///
+    explicit operator v1::indexes::options() const {
+        using bsoncxx::v_noabi::to_v1;
+        using mongocxx::v_noabi::to_v1;
+
+        v1::indexes::options ret;
+
+        if (_max_time) {
+            ret.max_time(*_max_time);
+        }
+
+        if (_write_concern) {
+            ret.write_concern(to_v1(*_write_concern));
+        }
+
+        if (_commit_quorum) {
+            auto const v = _commit_quorum->view()["commitQuorum"];
+
+            if (v.type() == bsoncxx::v_noabi::type::k_int32) {
+                ret.commit_quorum(v.get_int32().value);
+            }
+
+            if (v.type() == bsoncxx::v_noabi::type::k_string) {
+                ret.commit_quorum(v.get_string().value);
+            }
+        }
+
+        return ret;
+    }
 
     ///
     /// Sets the maximum amount of time for this operation to run (server-side) in milliseconds.
@@ -49,7 +98,10 @@ class index_view {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/findAndModify/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(index_view&) max_time(std::chrono::milliseconds max_time);
+    index_view& max_time(std::chrono::milliseconds max_time) {
+        _max_time = max_time;
+        return *this;
+    }
 
     ///
     /// The current max_time setting.
@@ -60,8 +112,9 @@ class index_view {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/findAndModify/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<std::chrono::milliseconds> const&)
-    max_time() const;
+    bsoncxx::v_noabi::stdx::optional<std::chrono::milliseconds> const& max_time() const {
+        return _max_time;
+    }
 
     ///
     /// Sets the write concern for this operation.
@@ -76,8 +129,10 @@ class index_view {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/findAndModify/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(index_view&)
-    write_concern(mongocxx::v_noabi::write_concern write_concern);
+    index_view& write_concern(mongocxx::v_noabi::write_concern write_concern) {
+        _write_concern = std::move(write_concern);
+        return *this;
+    }
 
     ///
     /// Gets the current write concern.
@@ -88,8 +143,9 @@ class index_view {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/findAndModify/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern> const&)
-    write_concern() const;
+    bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern> const& write_concern() const {
+        return _write_concern;
+    }
 
     ///
     /// Sets the commit quorum for this operation.
@@ -140,8 +196,9 @@ class index_view {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/createIndexes
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::value> const)
-    commit_quorum() const;
+    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::value> const commit_quorum() const {
+        return _commit_quorum;
+    }
 
    private:
     bsoncxx::v_noabi::stdx::optional<std::chrono::milliseconds> _max_time;
@@ -153,9 +210,32 @@ class index_view {
 } // namespace v_noabi
 } // namespace mongocxx
 
+namespace mongocxx {
+namespace v_noabi {
+
+// Ambiguous whether `v1::indexes::options` should be converted to `v_noabi::options::index_view` or
+// `v_noabi::options::index`. Require users to explicitly cast to the expected type instead.
+//
+// v_noabi::options::index_view from_v1(v1::indexes::options v);
+
+///
+/// Convert to the @ref mongocxx::v1 equivalent of `v`.
+///
+/// @note "IndexOptions" fields are ignored.
+///
+inline v1::indexes::options to_v1(v_noabi::options::index_view v) {
+    return v1::indexes::options{std::move(v)};
+}
+
+} // namespace v_noabi
+} // namespace mongocxx
+
 #include <mongocxx/config/postlude.hpp>
 
 ///
 /// @file
 /// Provides @ref mongocxx::v_noabi::options::index_view.
+///
+/// @par Includes
+/// - @ref mongocxx/v1/indexes.hpp
 ///

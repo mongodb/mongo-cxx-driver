@@ -13,30 +13,3 @@
 // limitations under the License.
 
 #include <mongocxx/index_model.hpp>
-
-namespace mongocxx {
-namespace v_noabi {
-
-index_model::index_model(
-    bsoncxx::v_noabi::document::view_or_value const& keys,
-    bsoncxx::v_noabi::document::view_or_value const& options)
-    : _keys{keys.view()}, _options{options.view()} {}
-
-index_model::index_model(index_model&&) noexcept = default;
-
-index_model& index_model::operator=(index_model&&) noexcept = default;
-
-index_model::index_model(index_model const&) = default;
-
-index_model::~index_model() = default;
-
-bsoncxx::v_noabi::document::view index_model::keys() const {
-    return _keys.view();
-}
-
-bsoncxx::v_noabi::document::view index_model::options() const {
-    return _options.view();
-}
-
-} // namespace v_noabi
-} // namespace mongocxx

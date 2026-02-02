@@ -16,7 +16,14 @@
 
 #include <mongocxx/index_model-fwd.hpp> // IWYU pragma: export
 
-#include <bsoncxx/document/value.hpp>
+//
+
+#include <mongocxx/v1/indexes.hpp> // IWYU pragma: export
+
+#include <utility>
+
+#include <bsoncxx/document/value.hpp> // IWYU pragma: keep: backward compatibility, to be removed.
+#include <bsoncxx/document/view.hpp>
 #include <bsoncxx/document/view_or_value.hpp>
 
 #include <mongocxx/options/index.hpp> // IWYU pragma: keep: backward compatibility, to be removed.
@@ -27,59 +34,83 @@ namespace mongocxx {
 namespace v_noabi {
 
 ///
-/// Used by @ref mongocxx::v_noabi::index_view.
+/// Used by @ref mongocxx::v_noabi::index_model.
 ///
 class index_model {
+   private:
+    v1::indexes::model _index;
+
    public:
     ///
     /// Initializes a new index_model over a mongocxx::v_noabi::collection.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL()
     index_model(
         bsoncxx::v_noabi::document::view_or_value const& keys,
-        bsoncxx::v_noabi::document::view_or_value const& options = {});
+        bsoncxx::v_noabi::document::view_or_value const& options = {})
+        : _index{
+              bsoncxx::v1::document::value{bsoncxx::v_noabi::to_v1(keys.view())},
+              bsoncxx::v1::document::value{bsoncxx::v_noabi::to_v1(options.view())}} {}
 
     index_model() = delete;
 
     ///
-    /// Move constructs an index_model.
+    /// Construct with the @ref mongocxx::v1 equivalent.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL() index_model(index_model&&) noexcept;
+    /* explicit(false) */ index_model(v1::indexes::model index) : _index{std::move(index)} {}
 
     ///
-    /// Move assigns an index_model.
+    /// Convert to the @ref mongocxx::v1 equivalent.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(index_model&) operator=(index_model&&) noexcept;
+    /// @par Postconditions:
+    /// - `*this` is in an assign-or-destroy-only state.
+    ///
+    /// @warning Invalidates all associated objects.
+    ///
+    explicit operator v1::indexes::model() && {
+        return std::move(_index);
+    }
 
     ///
-    /// Copy constructs an index_model.
+    /// Convert to the @ref mongocxx::v1 equivalent.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL() index_model(index_model const&);
-
-    ///
-    /// Copy assigns an index_model.
-    ///
-    index_model& operator=(index_model const&) = default;
-
-    ///
-    /// Destroys an index_model.
-    ///
-    MONGOCXX_ABI_EXPORT_CDECL() ~index_model();
+    explicit operator v1::indexes::model() const& {
+        return _index;
+    }
 
     ///
     /// Retrieves keys of an index_model.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::document::view) keys() const;
+    bsoncxx::v_noabi::document::view keys() const {
+        return _index.keys();
+    }
 
     ///
     /// Retrieves options of an index_model.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::document::view) options() const;
-
-   private:
-    bsoncxx::v_noabi::document::value _keys;
-    bsoncxx::v_noabi::document::value _options;
+    bsoncxx::v_noabi::document::view options() const {
+        return _index.options();
+    }
 };
+
+} // namespace v_noabi
+} // namespace mongocxx
+
+namespace mongocxx {
+namespace v_noabi {
+
+///
+/// Convert to the @ref mongocxx::v_noabi equivalent of `v`.
+///
+inline v_noabi::index_model from_v1(v1::indexes::model v) {
+    return {std::move(v)};
+}
+
+///
+/// Convert to the @ref mongocxx::v1 equivalent of `v`.
+///
+inline v1::indexes::model to_v1(v_noabi::index_model v) {
+    return v1::indexes::model{std::move(v)};
+}
 
 } // namespace v_noabi
 } // namespace mongocxx
@@ -89,4 +120,7 @@ class index_model {
 ///
 /// @file
 /// Provides @ref mongocxx::v_noabi::index_model.
+///
+/// @par Includes
+/// - @ref mongocxx/v1/indexes.hpp
 ///
