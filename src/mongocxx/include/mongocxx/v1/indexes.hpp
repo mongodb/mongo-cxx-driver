@@ -142,15 +142,18 @@ class indexes {
     ///
     /// Options for @ref mongocxx::v1::indexes.
     ///
-    /// Supported fields include:
+    /// Supported "CreateIndexOptions" fields include:
+    /// - `commit_quorum` ("commitQuorum")
+    /// - `max_time` ("maxTimeMS")
+    /// - `write_concern` ("writeConcern")
+    ///
+    /// Supported "IndexOptions" fields include:
     /// - `background`
     /// - `collation`
-    /// - `commit_quorum` ("commitQuorum")
     /// - `default_language`
     /// - `expire_after` ("expireAfterSeconds")
     /// - `hidden`
     /// - `language_override`
-    /// - `max_time` ("maxTimeMS")
     /// - `name`
     /// - `partial_filter_expression` ("partialFilterExpression")
     /// - `sparse`
@@ -162,7 +165,6 @@ class indexes {
     /// - `unique`
     /// - `version` ("v")
     /// - `weights`
-    /// - `write_concern` ("writeConcern")
     ///
     /// @attention This feature is experimental! It is not ready for use!
     ///
