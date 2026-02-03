@@ -106,9 +106,6 @@ TEST_CASE("index", "[index][option]") {
 
         auto doc = idx_as_doc();
 
-        CHECK(doc.view() == options_doc.view());
-
-        REQUIRE(doc.view().length() == options_doc.view().length());
         REQUIRE(doc.view() == options_doc.view());
     }
 
