@@ -24,6 +24,7 @@
 #include <bsoncxx/v1/types/view-fwd.hpp>
 
 #include <mongocxx/v1/range_options-fwd.hpp>
+#include <mongocxx/v1/text_options-fwd.hpp>
 
 #include <bsoncxx/v1/stdx/optional.hpp>
 #include <bsoncxx/v1/stdx/string_view.hpp>
@@ -46,6 +47,7 @@ namespace v1 {
 /// - `key_id` ("keyId")
 /// - `query_type` ("queryType")
 /// - `range_opts` ("rangeOpts")
+/// - `text_opts` ("textOpts")
 ///
 /// @see
 /// - [Fields and Encryption Types (MongoDB Manual)](https://www.mongodb.com/docs/manual/core/csfle/fundamentals/encryption-algorithms/)
@@ -75,6 +77,13 @@ class encrypt_options {
         k_indexed,       ///< "Indexed"
         k_unindexed,     ///< "Unindexed"
         k_range,         ///< "Range"
+
+        ///
+        /// "TextPreview"
+        ///
+        /// @attention This feature is experimental! It is not ready for use!
+        ///
+        k_textPreview,
     };
 
     ///
@@ -84,8 +93,17 @@ class encrypt_options {
     /// - [Supported Operations for Queryable Encryption (MongoDB Manual)](https://www.mongodb.com/docs/manual/core/queryable-encryption/reference/supported-operations/)
     ///
     enum class encryption_query_type : std::uint8_t {
-        k_equality, ///< "equalty"
-        k_range,    ///< "range"
+        k_equality,      ///< "equalty"
+        k_range,         ///< "range"
+        k_prefixPreview, ///< "prefixPreview"
+        k_suffixPreview, ///< "suffixPreview"
+
+        ///
+        ///< "substringPreview"
+        ///
+        /// @attention This feature is experimental! It is not ready for use!
+        ///
+        k_substringPreview,
     };
 
     ///
@@ -190,6 +208,18 @@ class encrypt_options {
     /// Return the current "rangeOpts" field.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<v1::range_options>) range_opts() const;
+
+    ///
+    /// Set the "textOpts" field.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(encrypt_options&) text_opts(v1::text_options v);
+
+    ///
+    /// Return the current "textOpts" field.
+    ///
+    /// @attention This feature is experimental! It is not ready for use!
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<v1::text_options>) text_opts() const;
 };
 
 } // namespace v1
