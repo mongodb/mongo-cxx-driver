@@ -126,7 +126,7 @@ TEST_CASE("ownership", "[mongocxx][v1][indexes]") {
 
         target = std::move(move);
 
-        // source is in an assign-or-move-only state.
+        // move is in an assign-or-move-only state.
 
         CHECK(get_collection(target) == coll1_id);
     }
@@ -163,7 +163,7 @@ TEST_CASE("ownership", "[mongocxx][v1][indexes][model]") {
 
         target = std::move(move);
 
-        // source is in an assign-or-move-only state.
+        // move is in an assign-or-move-only state.
 
         CHECK(target.keys() == source_value.view());
     }
@@ -203,7 +203,7 @@ TEST_CASE("ownership", "[mongocxx][v1][indexes][options]") {
 
         target = std::move(move);
 
-        // source is in an assign-or-move-only state.
+        // move is in an assign-or-move-only state.
 
         CHECK(target.max_time() == source_value);
     }
