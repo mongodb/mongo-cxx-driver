@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <mongocxx/v1/text_options.hpp>
+#include <mongocxx/v1/text_options.hh>
 
 //
 
@@ -44,9 +44,9 @@ class text_options::impl {
    public:
     bsoncxx::v1::stdx::optional<bool> _case_sensitive;
     bsoncxx::v1::stdx::optional<bool> _diacritic_sensitive;
-    bsoncxx::v1::stdx::optional<prefix> _prefix;
-    bsoncxx::v1::stdx::optional<suffix> _suffix;
-    bsoncxx::v1::stdx::optional<substring> _substring;
+    bsoncxx::v1::stdx::optional<prefix> _prefix_opts;
+    bsoncxx::v1::stdx::optional<suffix> _suffix_opts;
+    bsoncxx::v1::stdx::optional<substring> _substring_opts;
 
     static impl const& with(text_options const& other) {
         return *static_cast<impl const*>(other._impl);
@@ -181,8 +181,8 @@ text_options::substring& text_options::substring::operator=(substring const& oth
 
 text_options::substring::substring() : _impl{new common_fields{}} {}
 
-text_options& text_options::case_sensitive(bool value) {
-    impl::with(this)->_case_sensitive = value;
+text_options& text_options::case_sensitive(bool v) {
+    impl::with(this)->_case_sensitive = v;
     return *this;
 }
 
@@ -190,8 +190,8 @@ bsoncxx::v1::stdx::optional<bool> text_options::case_sensitive() const {
     return impl::with(this)->_case_sensitive;
 }
 
-text_options& text_options::diacritic_sensitive(bool value) {
-    impl::with(this)->_diacritic_sensitive = value;
+text_options& text_options::diacritic_sensitive(bool v) {
+    impl::with(this)->_diacritic_sensitive = v;
     return *this;
 }
 
@@ -199,39 +199,39 @@ bsoncxx::v1::stdx::optional<bool> text_options::diacritic_sensitive() const {
     return impl::with(this)->_diacritic_sensitive;
 }
 
-text_options& text_options::prefix_opts(prefix value) {
-    impl::with(this)->_prefix = std::move(value);
+text_options& text_options::prefix_opts(prefix v) {
+    impl::with(this)->_prefix_opts = std::move(v);
     return *this;
 }
 
 bsoncxx::v1::stdx::optional<text_options::prefix> text_options::prefix_opts() const {
-    return impl::with(this)->_prefix;
+    return impl::with(this)->_prefix_opts;
 }
 
-text_options& text_options::suffix_opts(suffix value) {
-    impl::with(this)->_suffix = std::move(value);
+text_options& text_options::suffix_opts(suffix v) {
+    impl::with(this)->_suffix_opts = std::move(v);
     return *this;
 }
 
 bsoncxx::v1::stdx::optional<text_options::suffix> text_options::suffix_opts() const {
-    return impl::with(this)->_suffix;
+    return impl::with(this)->_suffix_opts;
 }
 
-text_options& text_options::substring_opts(substring value) {
-    impl::with(this)->_substring = std::move(value);
+text_options& text_options::substring_opts(substring v) {
+    impl::with(this)->_substring_opts = std::move(v);
     return *this;
 }
 
 bsoncxx::v1::stdx::optional<text_options::substring> text_options::substring_opts() const {
-    return impl::with(this)->_substring;
+    return impl::with(this)->_substring_opts;
 }
 
 bsoncxx::v1::stdx::optional<std::int32_t> text_options::prefix::str_max_query_length() const {
     return common_fields::with(_impl)->_max_query_length;
 }
 
-text_options::prefix& text_options::prefix::str_max_query_length(std::int32_t value) {
-    common_fields::with(_impl)->_max_query_length = value;
+text_options::prefix& text_options::prefix::str_max_query_length(std::int32_t v) {
+    common_fields::with(_impl)->_max_query_length = v;
     return *this;
 }
 
@@ -239,8 +239,8 @@ bsoncxx::v1::stdx::optional<std::int32_t> text_options::prefix::str_min_query_le
     return common_fields::with(_impl)->_min_query_length;
 }
 
-text_options::prefix& text_options::prefix::str_min_query_length(std::int32_t value) {
-    common_fields::with(_impl)->_min_query_length = value;
+text_options::prefix& text_options::prefix::str_min_query_length(std::int32_t v) {
+    common_fields::with(_impl)->_min_query_length = v;
     return *this;
 }
 
@@ -248,8 +248,8 @@ bsoncxx::v1::stdx::optional<std::int32_t> text_options::suffix::str_max_query_le
     return common_fields::with(_impl)->_max_query_length;
 }
 
-text_options::suffix& text_options::suffix::str_max_query_length(std::int32_t value) {
-    common_fields::with(_impl)->_max_query_length = value;
+text_options::suffix& text_options::suffix::str_max_query_length(std::int32_t v) {
+    common_fields::with(_impl)->_max_query_length = v;
     return *this;
 }
 
@@ -257,8 +257,8 @@ bsoncxx::v1::stdx::optional<std::int32_t> text_options::suffix::str_min_query_le
     return common_fields::with(_impl)->_min_query_length;
 }
 
-text_options::suffix& text_options::suffix::str_min_query_length(std::int32_t value) {
-    common_fields::with(_impl)->_min_query_length = value;
+text_options::suffix& text_options::suffix::str_min_query_length(std::int32_t v) {
+    common_fields::with(_impl)->_min_query_length = v;
     return *this;
 }
 
@@ -266,8 +266,8 @@ bsoncxx::v1::stdx::optional<std::int32_t> text_options::substring::str_max_query
     return common_fields::with(_impl)->_max_query_length;
 }
 
-text_options::substring& text_options::substring::str_max_query_length(std::int32_t value) {
-    common_fields::with(_impl)->_max_query_length = value;
+text_options::substring& text_options::substring::str_max_query_length(std::int32_t v) {
+    common_fields::with(_impl)->_max_query_length = v;
     return *this;
 }
 
@@ -275,18 +275,31 @@ bsoncxx::v1::stdx::optional<std::int32_t> text_options::substring::str_min_query
     return common_fields::with(_impl)->_min_query_length;
 }
 
-text_options::substring& text_options::substring::str_min_query_length(std::int32_t value) {
-    common_fields::with(_impl)->_min_query_length = value;
+text_options::substring& text_options::substring::str_min_query_length(std::int32_t v) {
+    common_fields::with(_impl)->_min_query_length = v;
     return *this;
 }
 
-text_options::substring& text_options::substring::str_max_length(std::int32_t value) {
-    common_fields::with(_impl)->_max_length = value;
+text_options::substring& text_options::substring::str_max_length(std::int32_t v) {
+    common_fields::with(_impl)->_max_length = v;
     return *this;
 }
 
 bsoncxx::v1::stdx::optional<std::int32_t> text_options::substring::str_max_length() const {
     return common_fields::with(_impl)->_max_length;
+}
+
+bsoncxx::v1::stdx::optional<text_options::prefix> const& text_options::internal::prefix_opts(text_options const& self) {
+    return impl::with(self)._prefix_opts;
+}
+
+bsoncxx::v1::stdx::optional<text_options::suffix> const& text_options::internal::suffix_opts(text_options const& self) {
+    return impl::with(self)._suffix_opts;
+}
+
+bsoncxx::v1::stdx::optional<text_options::substring> const& text_options::internal::substring_opts(
+    text_options const& self) {
+    return impl::with(self)._substring_opts;
 }
 
 } // namespace v1

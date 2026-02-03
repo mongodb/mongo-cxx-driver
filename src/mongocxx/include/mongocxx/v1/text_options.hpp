@@ -33,9 +33,9 @@ namespace v1 {
 /// Supported fields include:
 /// - `case_sensitive` ("caseSensitive")
 /// - `diacritic_sensitive` ("diacriticSensitive")
-/// - `prefix`
-/// - `suffix`
-/// - `substring`
+/// - `prefix_opts` ("prefix")
+/// - `suffix_opts` ("suffix")
+/// - `substring_opts` ("substring")
 ///
 /// @see
 /// - [Client Side Encryption (MongoDB Specifications)](https://specifications.readthedocs.io/en/latest/client-side-encryption/client-side-encryption/)
@@ -97,7 +97,7 @@ class text_options {
     ///
     /// Set the "caseSensitive" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(text_options&) case_sensitive(bool value);
+    MONGOCXX_ABI_EXPORT_CDECL(text_options&) case_sensitive(bool v);
 
     ///
     /// Return the current "caseSensitive" field.
@@ -107,7 +107,7 @@ class text_options {
     ///
     /// Set the "diacriticSensitive" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(text_options&) diacritic_sensitive(bool value);
+    MONGOCXX_ABI_EXPORT_CDECL(text_options&) diacritic_sensitive(bool v);
 
     ///
     /// Return the current "diacriticSensitive" field.
@@ -117,7 +117,7 @@ class text_options {
     ///
     /// Set the "prefix" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(text_options&) prefix_opts(prefix opts);
+    MONGOCXX_ABI_EXPORT_CDECL(text_options&) prefix_opts(prefix v);
 
     ///
     /// Return the current "prefix" field.
@@ -127,7 +127,7 @@ class text_options {
     ///
     /// Set the "suffix" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(text_options&) suffix_opts(suffix opts);
+    MONGOCXX_ABI_EXPORT_CDECL(text_options&) suffix_opts(suffix v);
 
     ///
     /// Return the current "suffix" field.
@@ -137,12 +137,14 @@ class text_options {
     ///
     /// Set the "substring" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(text_options&) substring_opts(substring opts);
+    MONGOCXX_ABI_EXPORT_CDECL(text_options&) substring_opts(substring v);
 
     ///
     /// Return the current "substring" field.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<substring>) substring_opts() const;
+
+    class internal;
 };
 
 ///
@@ -200,7 +202,7 @@ class text_options::prefix {
     ///
     /// Set the "strMaxQueryLength" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(prefix&) str_max_query_length(std::int32_t value);
+    MONGOCXX_ABI_EXPORT_CDECL(prefix&) str_max_query_length(std::int32_t v);
 
     ///
     /// Return the current "strMaxQueryLength" field.
@@ -210,7 +212,7 @@ class text_options::prefix {
     ///
     /// Set the "strMinQueryLength" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(prefix&) str_min_query_length(std::int32_t value);
+    MONGOCXX_ABI_EXPORT_CDECL(prefix&) str_min_query_length(std::int32_t v);
 
     ///
     /// Return the current "strMinQueryLength" field.
@@ -273,7 +275,7 @@ class text_options::suffix {
     ///
     /// Set the "strMaxQueryLength" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(suffix&) str_max_query_length(std::int32_t value);
+    MONGOCXX_ABI_EXPORT_CDECL(suffix&) str_max_query_length(std::int32_t v);
 
     ///
     /// Return the current "strMaxQueryLength" field.
@@ -283,7 +285,7 @@ class text_options::suffix {
     ///
     /// Set the "strminQueryLength" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(suffix&) str_min_query_length(std::int32_t value);
+    MONGOCXX_ABI_EXPORT_CDECL(suffix&) str_min_query_length(std::int32_t v);
 
     ///
     /// Return the current "strminQueryLength" field.
@@ -346,7 +348,7 @@ class text_options::substring {
     ///
     /// Set the "strMaxLength" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(substring&) str_max_length(std::int32_t value);
+    MONGOCXX_ABI_EXPORT_CDECL(substring&) str_max_length(std::int32_t v);
 
     ///
     /// Return the current "strMaxLength" field.
@@ -355,7 +357,7 @@ class text_options::substring {
     ///
     /// Set the "strMaxQueryLength" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(substring&) str_max_query_length(std::int32_t value);
+    MONGOCXX_ABI_EXPORT_CDECL(substring&) str_max_query_length(std::int32_t v);
 
     ///
     /// Return the current "strMaxQueryLength" field.
@@ -365,7 +367,7 @@ class text_options::substring {
     ///
     /// Set the "strminQueryLength" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(substring&) str_min_query_length(std::int32_t value);
+    MONGOCXX_ABI_EXPORT_CDECL(substring&) str_min_query_length(std::int32_t v);
 
     ///
     /// Return the current "strminQueryLength" field.

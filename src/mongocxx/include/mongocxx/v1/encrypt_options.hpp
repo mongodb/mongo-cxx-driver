@@ -95,11 +95,23 @@ class encrypt_options {
     enum class encryption_query_type : std::uint8_t {
         k_equality,      ///< "equalty"
         k_range,         ///< "range"
-        k_prefixPreview, ///< "prefixPreview"
-        k_suffixPreview, ///< "suffixPreview"
 
         ///
-        ///< "substringPreview"
+        /// "prefixPreview"
+        ///
+        /// @attention This feature is experimental! It is not ready for use!
+        ///
+        k_prefixPreview,
+
+        ///
+        /// "suffixPreview"
+        ///
+        /// @attention This feature is experimental! It is not ready for use!
+        ///
+        k_suffixPreview,
+
+        ///
+        /// "substringPreview"
         ///
         /// @attention This feature is experimental! It is not ready for use!
         ///
@@ -220,6 +232,11 @@ class encrypt_options {
     /// @attention This feature is experimental! It is not ready for use!
     ///
     MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<v1::text_options>) text_opts() const;
+
+    class internal;
+
+   private:
+    /* explicit(false) */ encrypt_options(void* impl);
 };
 
 } // namespace v1

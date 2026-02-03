@@ -14,34 +14,21 @@
 
 #pragma once
 
-#include <mongocxx/v1/encrypt_options-fwd.hpp> // IWYU pragma: export
+#include <mongocxx/v1/text_options.hpp> // IWYU pragma: export
 
-#include <mongocxx/config/prelude.hpp>
+//
 
-namespace mongocxx {
-namespace v_noabi {
-namespace options {
-
-class encrypt;
-
-} // namespace options
-} // namespace v_noabi
-} // namespace mongocxx
+#include <bsoncxx/v1/stdx/optional.hpp>
 
 namespace mongocxx {
-namespace options {
+namespace v1 {
 
-using v_noabi::options::encrypt;
+class text_options::internal {
+   public:
+    static bsoncxx::v1::stdx::optional<prefix> const& prefix_opts(text_options const& self);
+    static bsoncxx::v1::stdx::optional<suffix> const& suffix_opts(text_options const& self);
+    static bsoncxx::v1::stdx::optional<substring> const& substring_opts(text_options const& self);
+};
 
-} // namespace options
+} // namespace v1
 } // namespace mongocxx
-
-#include <mongocxx/config/postlude.hpp>
-
-///
-/// @file
-/// Declares @ref mongocxx::v_noabi::options::encrypt.
-///
-/// @par Includes
-/// - @ref mongocxx/v1/encrypt_options-fwd.hpp
-///

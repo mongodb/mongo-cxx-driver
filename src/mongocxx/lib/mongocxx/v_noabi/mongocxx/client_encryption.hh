@@ -51,7 +51,9 @@ class client_encryption::impl {
         }
     };
 
-    using encrypt_opts_ptr = std::unique_ptr<mongoc_client_encryption_encrypt_opts_t, encrypt_opts_deleter>;
+    using encrypt_opts_ptr_type = std::unique_ptr<mongoc_client_encryption_encrypt_opts_t, encrypt_opts_deleter>;
+
+    static encrypt_opts_ptr_type to_mongoc(options::encrypt const& opts);
 
    public:
     impl(options::client_encryption opts) : _opts(std::move(opts)) {
@@ -97,8 +99,7 @@ class client_encryption::impl {
     bsoncxx::v_noabi::types::bson_value::value encrypt(
         bsoncxx::v_noabi::types::bson_value::view value,
         options::encrypt const& opts) {
-        auto const encrypt_opts =
-            encrypt_opts_ptr(static_cast<mongoc_client_encryption_encrypt_opts_t*>(opts.convert()));
+        auto const encrypt_opts = to_mongoc(opts);
 
         detail::scoped_bson_value ciphertext;
         bson_error_t error;
@@ -118,8 +119,7 @@ class client_encryption::impl {
     bsoncxx::v_noabi::document::value encrypt_expression(
         bsoncxx::v_noabi::document::view_or_value expr,
         options::encrypt const& opts) {
-        auto const encrypt_opts =
-            encrypt_opts_ptr(static_cast<mongoc_client_encryption_encrypt_opts_t*>(opts.convert()));
+        auto const encrypt_opts = to_mongoc(opts);
 
         bson_error_t error = {};
 
