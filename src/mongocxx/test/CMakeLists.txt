@@ -149,6 +149,7 @@ set(mongocxx_test_sources_v1
     v1/rewrap_many_datakey_result.cpp
     v1/server_api.cpp
     v1/server_error.cpp
+    v1/text_options.cpp
     v1/tls.cpp
     v1/transaction_options.cpp
     v1/update_many_options.cpp
