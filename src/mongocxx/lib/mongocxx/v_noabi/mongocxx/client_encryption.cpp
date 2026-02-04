@@ -40,7 +40,7 @@ client_encryption::impl::encrypt_opts_ptr_type client_encryption::impl::to_mongo
 
     if (auto const& opt = opts.key_id()) {
         if (opt->view().type() != bsoncxx::v_noabi::type::k_binary) {
-            throw exception{error_code::k_invalid_parameter, "key id myst be a binary value"};
+            throw exception{error_code::k_invalid_parameter, "key id must be a binary value"};
         }
 
         auto key_id = opt->view().get_binary();
