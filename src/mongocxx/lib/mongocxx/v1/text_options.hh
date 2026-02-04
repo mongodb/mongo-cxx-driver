@@ -14,19 +14,21 @@
 
 #pragma once
 
-#include <mongocxx/v1/detail/prelude.hpp>
+#include <mongocxx/v1/text_options.hpp> // IWYU pragma: export
+
+//
+
+#include <bsoncxx/v1/stdx/optional.hpp>
 
 namespace mongocxx {
 namespace v1 {
 
-class text_options;
+class text_options::internal {
+   public:
+    static bsoncxx::v1::stdx::optional<prefix> const& prefix_opts(text_options const& self);
+    static bsoncxx::v1::stdx::optional<suffix> const& suffix_opts(text_options const& self);
+    static bsoncxx::v1::stdx::optional<substring> const& substring_opts(text_options const& self);
+};
 
 } // namespace v1
 } // namespace mongocxx
-
-#include <mongocxx/v1/detail/postlude.hpp>
-
-///
-/// @file
-/// Declares @ref mongocxx::v1::text_options.
-///

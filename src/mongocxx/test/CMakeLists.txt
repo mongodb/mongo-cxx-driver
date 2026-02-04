@@ -125,6 +125,7 @@ set(mongocxx_test_sources_v1
     v1/delete_one_options.cpp
     v1/delete_one_result.cpp
     v1/distinct_options.cpp
+    v1/encrypt_options.cpp
     v1/estimated_document_count_options.cpp
     v1/events.cpp
     v1/exception.cpp
@@ -149,6 +150,7 @@ set(mongocxx_test_sources_v1
     v1/rewrap_many_datakey_result.cpp
     v1/server_api.cpp
     v1/server_error.cpp
+    v1/text_options.cpp
     v1/tls.cpp
     v1/transaction_options.cpp
     v1/update_many_options.cpp
