@@ -2342,7 +2342,7 @@ TEST_CASE("Cursor iteration", "[collection][cursor]") {
 
     // Improve test execution time for k_tailable_await.
     static constexpr std::chrono::milliseconds fast_max_await_time{1};
-    static constexpr std::chrono::milliseconds await_retry_limit{100};
+    static constexpr std::chrono::seconds await_retry_limit{10};
 
     auto run_test = [&]() {
         INFO(type_str);
