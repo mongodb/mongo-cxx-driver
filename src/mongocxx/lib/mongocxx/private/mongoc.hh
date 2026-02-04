@@ -18,8 +18,8 @@
 
 #include <bsoncxx/private/suppress_deprecation_warnings.hh>
 
-#include <mongocxx/private/export.hh>
-#include <mongocxx/private/mock.hh>
+#include <mongocxx/private/export.hh> // IWYU pragma: export
+#include <mongocxx/private/mock.hh>   // IWYU pragma: export
 
 BSONCXX_PRIVATE_WARNINGS_PUSH();
 BSONCXX_PRIVATE_WARNINGS_DISABLE(GNU("-Wconversion"));
@@ -32,445 +32,425 @@ BSONCXX_PRIVATE_WARNINGS_POP();
 // is that GCC sees the visibility attributes on the mongoc functions,
 // and considers them part of the type, and then emits a silly
 // diagnostic stating that the attribute was ignored.
-#if defined(__GNUC__) && (__GNUC__ >= 6) && !defined(__clang__)
-#define SILENCE_IGNORED_ATTRIBUTES_BEGIN() \
-    BSONCXX_PRIVATE_WARNINGS_PUSH();       \
-    BSONCXX_PRIVATE_WARNINGS_DISABLE(GCC("-Wignored-attributes"))
+#if defined(MONGOCXX_TESTING) && defined(__GNUC__) && (__GNUC__ >= 6) && !defined(__clang__)
+#define SILENCE_IGNORED_ATTRIBUTES_BEGIN()
+BSONCXX_PRIVATE_WARNINGS_PUSH();
+BSONCXX_PRIVATE_WARNINGS_DISABLE(GCC("-Wignored-attributes"))
 #define SILENCE_IGNORED_ATTRIBUTES_END() BSONCXX_PRIVATE_WARNINGS_POP()
 #else
 #define SILENCE_IGNORED_ATTRIBUTES_BEGIN()
 #define SILENCE_IGNORED_ATTRIBUTES_END()
 #endif
 
-#if defined(MONGOC_ENABLE_SSL)
-#define MONGOC_SYMBOLS_SSL_XMACRO(X) \
-    X(client_pool_set_ssl_opts)      \
-    X(client_set_ssl_opts)
-#else
-#define MONGOC_SYMBOLS_SSL_XMACRO(X)
-#endif
+#pragma push_macro("MONGOCXX_PRIVATE_MOCKED_EXPORT")
+#undef MONGOCXX_PRIVATE_MOCKED_EXPORT
 
-#pragma push_macro("MONGOC_SYMBOLS_XMACRO")
-#define MONGOC_SYMBOLS_XMACRO(X)                                             \
-    MONGOC_SYMBOLS_SSL_XMACRO(X)                                             \
-    X(apm_callbacks_destroy)                                                 \
-    X(apm_callbacks_new)                                                     \
-    X(apm_command_failed_get_command_name)                                   \
-    X(apm_command_failed_get_context)                                        \
-    X(apm_command_failed_get_duration)                                       \
-    X(apm_command_failed_get_error)                                          \
-    X(apm_command_failed_get_host)                                           \
-    X(apm_command_failed_get_operation_id)                                   \
-    X(apm_command_failed_get_reply)                                          \
-    X(apm_command_failed_get_request_id)                                     \
-    X(apm_command_failed_get_server_id)                                      \
-    X(apm_command_failed_get_service_id)                                     \
-    X(apm_command_started_get_command_name)                                  \
-    X(apm_command_started_get_command)                                       \
-    X(apm_command_started_get_context)                                       \
-    X(apm_command_started_get_database_name)                                 \
-    X(apm_command_started_get_host)                                          \
-    X(apm_command_started_get_operation_id)                                  \
-    X(apm_command_started_get_request_id)                                    \
-    X(apm_command_started_get_server_id)                                     \
-    X(apm_command_started_get_service_id)                                    \
-    X(apm_command_succeeded_get_command_name)                                \
-    X(apm_command_succeeded_get_context)                                     \
-    X(apm_command_succeeded_get_duration)                                    \
-    X(apm_command_succeeded_get_host)                                        \
-    X(apm_command_succeeded_get_operation_id)                                \
-    X(apm_command_succeeded_get_reply)                                       \
-    X(apm_command_succeeded_get_request_id)                                  \
-    X(apm_command_succeeded_get_server_id)                                   \
-    X(apm_command_succeeded_get_service_id)                                  \
-    X(apm_server_changed_get_context)                                        \
-    X(apm_server_changed_get_host)                                           \
-    X(apm_server_changed_get_new_description)                                \
-    X(apm_server_changed_get_previous_description)                           \
-    X(apm_server_changed_get_topology_id)                                    \
-    X(apm_server_closed_get_context)                                         \
-    X(apm_server_closed_get_host)                                            \
-    X(apm_server_closed_get_topology_id)                                     \
-    X(apm_server_heartbeat_failed_get_awaited)                               \
-    X(apm_server_heartbeat_failed_get_context)                               \
-    X(apm_server_heartbeat_failed_get_duration)                              \
-    X(apm_server_heartbeat_failed_get_error)                                 \
-    X(apm_server_heartbeat_failed_get_host)                                  \
-    X(apm_server_heartbeat_started_get_awaited)                              \
-    X(apm_server_heartbeat_started_get_context)                              \
-    X(apm_server_heartbeat_started_get_host)                                 \
-    X(apm_server_heartbeat_succeeded_get_awaited)                            \
-    X(apm_server_heartbeat_succeeded_get_context)                            \
-    X(apm_server_heartbeat_succeeded_get_duration)                           \
-    X(apm_server_heartbeat_succeeded_get_host)                               \
-    X(apm_server_heartbeat_succeeded_get_reply)                              \
-    X(apm_server_opening_get_context)                                        \
-    X(apm_server_opening_get_host)                                           \
-    X(apm_server_opening_get_topology_id)                                    \
-    X(apm_set_command_failed_cb)                                             \
-    X(apm_set_command_started_cb)                                            \
-    X(apm_set_command_succeeded_cb)                                          \
-    X(apm_set_server_changed_cb)                                             \
-    X(apm_set_server_closed_cb)                                              \
-    X(apm_set_server_heartbeat_failed_cb)                                    \
-    X(apm_set_server_heartbeat_started_cb)                                   \
-    X(apm_set_server_heartbeat_succeeded_cb)                                 \
-    X(apm_set_server_opening_cb)                                             \
-    X(apm_set_topology_changed_cb)                                           \
-    X(apm_set_topology_closed_cb)                                            \
-    X(apm_set_topology_opening_cb)                                           \
-    X(apm_topology_changed_get_context)                                      \
-    X(apm_topology_changed_get_new_description)                              \
-    X(apm_topology_changed_get_previous_description)                         \
-    X(apm_topology_changed_get_topology_id)                                  \
-    X(apm_topology_closed_get_context)                                       \
-    X(apm_topology_closed_get_topology_id)                                   \
-    X(apm_topology_opening_get_context)                                      \
-    X(apm_topology_opening_get_topology_id)                                  \
-    X(auto_encryption_opts_destroy)                                          \
-    X(auto_encryption_opts_new)                                              \
-    X(auto_encryption_opts_set_bypass_auto_encryption)                       \
-    X(auto_encryption_opts_set_bypass_query_analysis)                        \
-    X(auto_encryption_opts_set_encrypted_fields_map)                         \
-    X(auto_encryption_opts_set_extra)                                        \
-    X(auto_encryption_opts_set_keyvault_client_pool)                         \
-    X(auto_encryption_opts_set_keyvault_client)                              \
-    X(auto_encryption_opts_set_keyvault_namespace)                           \
-    X(auto_encryption_opts_set_kms_providers)                                \
-    X(auto_encryption_opts_set_schema_map)                                   \
-    X(auto_encryption_opts_set_tls_opts)                                     \
-    X(bulk_operation_destroy)                                                \
-    X(bulk_operation_execute)                                                \
-    X(bulk_operation_get_write_concern)                                      \
-    X(bulk_operation_insert_with_opts)                                       \
-    X(bulk_operation_new)                                                    \
-    X(bulk_operation_remove_many_with_opts)                                  \
-    X(bulk_operation_remove_one_with_opts)                                   \
-    X(bulk_operation_replace_one_with_opts)                                  \
-    X(bulk_operation_set_bypass_document_validation)                         \
-    X(bulk_operation_set_client_session)                                     \
-    X(bulk_operation_set_client)                                             \
-    X(bulk_operation_set_collection)                                         \
-    X(bulk_operation_set_database)                                           \
-    X(bulk_operation_set_write_concern)                                      \
-    X(bulk_operation_update_many_with_opts)                                  \
-    X(bulk_operation_update_one_with_opts)                                   \
-    X(change_stream_destroy)                                                 \
-    X(change_stream_error_document)                                          \
-    X(change_stream_get_resume_token)                                        \
-    X(change_stream_next)                                                    \
-    X(cleanup)                                                               \
-    X(client_command_simple_with_server_id)                                  \
-    X(client_destroy)                                                        \
-    X(client_enable_auto_encryption)                                         \
-    X(client_encryption_add_key_alt_name)                                    \
-    X(client_encryption_create_datakey)                                      \
-    X(client_encryption_create_encrypted_collection)                         \
-    X(client_encryption_datakey_opts_destroy)                                \
-    X(client_encryption_datakey_opts_new)                                    \
-    X(client_encryption_datakey_opts_set_keyaltnames)                        \
-    X(client_encryption_datakey_opts_set_keymaterial)                        \
-    X(client_encryption_datakey_opts_set_masterkey)                          \
-    X(client_encryption_decrypt)                                             \
-    X(client_encryption_delete_key)                                          \
-    X(client_encryption_destroy)                                             \
-    X(client_encryption_encrypt_expression)                                  \
-    X(client_encryption_encrypt_opts_destroy)                                \
-    X(client_encryption_encrypt_opts_new)                                    \
-    X(client_encryption_encrypt_opts_set_algorithm)                          \
-    X(client_encryption_encrypt_opts_set_contention_factor)                  \
-    X(client_encryption_encrypt_opts_set_keyaltname)                         \
-    X(client_encryption_encrypt_opts_set_keyid)                              \
-    X(client_encryption_encrypt_opts_set_query_type)                         \
-    X(client_encryption_encrypt_opts_set_range_opts)                         \
-    X(client_encryption_encrypt_opts_set_text_opts)                          \
-    X(client_encryption_encrypt_range_opts_destroy)                          \
-    X(client_encryption_encrypt_range_opts_new)                              \
-    X(client_encryption_encrypt_range_opts_set_max)                          \
-    X(client_encryption_encrypt_range_opts_set_min)                          \
-    X(client_encryption_encrypt_range_opts_set_precision)                    \
-    X(client_encryption_encrypt_range_opts_set_sparsity)                     \
-    X(client_encryption_encrypt_range_opts_set_trim_factor)                  \
-    X(client_encryption_encrypt_text_opts_destroy)                           \
-    X(client_encryption_encrypt_text_opts_new)                               \
-    X(client_encryption_encrypt_text_opts_set_case_sensitive)                \
-    X(client_encryption_encrypt_text_opts_set_diacritic_sensitive)           \
-    X(client_encryption_encrypt_text_opts_set_prefix)                        \
-    X(client_encryption_encrypt_text_opts_set_suffix)                        \
-    X(client_encryption_encrypt_text_opts_set_substring)                     \
-    X(client_encryption_encrypt_text_prefix_opts_destroy)                    \
-    X(client_encryption_encrypt_text_prefix_opts_new)                        \
-    X(client_encryption_encrypt_text_prefix_opts_set_str_min_query_length)   \
-    X(client_encryption_encrypt_text_prefix_opts_set_str_max_query_length)   \
-    X(client_encryption_encrypt_text_suffix_opts_destroy)                    \
-    X(client_encryption_encrypt_text_suffix_opts_new)                        \
-    X(client_encryption_encrypt_text_suffix_opts_set_str_min_query_length)   \
-    X(client_encryption_encrypt_text_suffix_opts_set_str_max_query_length)   \
-    X(client_encryption_encrypt_text_substring_opts_destroy)                 \
-    X(client_encryption_encrypt_text_substring_opts_new)                     \
-    X(client_encryption_encrypt_text_substring_opts_set_str_min_query_length)\
-    X(client_encryption_encrypt_text_substring_opts_set_str_max_query_length)\
-    X(client_encryption_encrypt_text_substring_opts_set_str_max_length)      \
-    X(client_encryption_encrypt)                                             \
-    X(client_encryption_get_key_by_alt_name)                                 \
-    X(client_encryption_get_key)                                             \
-    X(client_encryption_get_keys)                                            \
-    X(client_encryption_new)                                                 \
-    X(client_encryption_opts_destroy)                                        \
-    X(client_encryption_opts_new)                                            \
-    X(client_encryption_opts_set_keyvault_client)                            \
-    X(client_encryption_opts_set_keyvault_namespace)                         \
-    X(client_encryption_opts_set_kms_providers)                              \
-    X(client_encryption_opts_set_tls_opts)                                   \
-    X(client_encryption_remove_key_alt_name)                                 \
-    X(client_encryption_rewrap_many_datakey_result_destroy)                  \
-    X(client_encryption_rewrap_many_datakey_result_get_bulk_write_result)    \
-    X(client_encryption_rewrap_many_datakey_result_new)                      \
-    X(client_encryption_rewrap_many_datakey)                                 \
-    X(client_find_databases_with_opts)                                       \
-    X(client_get_collection)                                                 \
-    X(client_get_database_names_with_opts)                                   \
-    X(client_get_database)                                                   \
-    X(client_get_read_concern)                                               \
-    X(client_get_read_prefs)                                                 \
-    X(client_get_uri)                                                        \
-    X(client_get_write_concern)                                              \
-    X(client_new_from_uri)                                                   \
-    X(client_new_from_uri_with_error)                                        \
-    X(client_pool_destroy)                                                   \
-    X(client_pool_enable_auto_encryption)                                    \
-    X(client_pool_new_with_error)                                            \
-    X(client_pool_new)                                                       \
-    X(client_pool_pop)                                                       \
-    X(client_pool_push)                                                      \
-    X(client_pool_set_apm_callbacks)                                         \
-    X(client_pool_set_server_api)                                            \
-    X(client_pool_try_pop)                                                   \
-    X(client_reset)                                                          \
-    X(client_select_server)                                                  \
-    X(client_session_abort_transaction)                                      \
-    X(client_session_advance_cluster_time)                                   \
-    X(client_session_advance_operation_time)                                 \
-    X(client_session_append)                                                 \
-    X(client_session_commit_transaction)                                     \
-    X(client_session_destroy)                                                \
-    X(client_session_get_cluster_time)                                       \
-    X(client_session_get_dirty)                                              \
-    X(client_session_get_lsid)                                               \
-    X(client_session_get_operation_time)                                     \
-    X(client_session_get_opts)                                               \
-    X(client_session_get_server_id)                                          \
-    X(client_session_get_transaction_state)                                  \
-    X(client_session_in_transaction)                                         \
-    X(client_session_start_transaction)                                      \
-    X(client_session_with_transaction)                                       \
-    X(client_set_apm_callbacks)                                              \
-    X(client_set_read_concern)                                               \
-    X(client_set_read_prefs)                                                 \
-    X(client_set_server_api)                                                 \
-    X(client_set_write_concern)                                              \
-    X(client_start_session)                                                  \
-    X(client_watch)                                                          \
-    X(collection_aggregate)                                                  \
-    X(collection_command_simple)                                             \
-    X(collection_copy)                                                       \
-    X(collection_count_documents)                                            \
-    X(collection_create_bulk_operation_with_opts)                            \
-    X(collection_destroy)                                                    \
-    X(collection_drop_index)                                                 \
-    X(collection_drop_with_opts)                                             \
-    X(collection_drop)                                                       \
-    X(collection_estimated_document_count)                                   \
-    X(collection_find_and_modify_with_opts)                                  \
-    X(collection_find_indexes_with_opts)                                     \
-    X(collection_find_with_opts)                                             \
-    X(collection_get_name)                                                   \
-    X(collection_get_read_concern)                                           \
-    X(collection_get_read_prefs)                                             \
-    X(collection_get_write_concern)                                          \
-    X(collection_keys_to_index_string)                                       \
-    X(collection_read_command_with_opts)                                     \
-    X(collection_rename_with_opts)                                           \
-    X(collection_rename)                                                     \
-    X(collection_set_read_concern)                                           \
-    X(collection_set_read_prefs)                                             \
-    X(collection_set_write_concern)                                          \
-    X(collection_watch)                                                      \
-    X(collection_write_command_with_opts)                                    \
-    X(cursor_destroy)                                                        \
-    X(cursor_error_document)                                                 \
-    X(cursor_error)                                                          \
-    X(cursor_new_from_command_reply_with_opts)                               \
-    X(cursor_next)                                                           \
-    X(cursor_set_max_await_time_ms)                                          \
-    X(database_aggregate)                                                    \
-    X(database_command_with_opts)                                            \
-    X(database_copy)                                                         \
-    X(database_create_collection)                                            \
-    X(database_destroy)                                                      \
-    X(database_drop_with_opts)                                               \
-    X(database_drop)                                                         \
-    X(database_find_collections_with_opts)                                   \
-    X(database_get_collection_names_with_opts)                               \
-    X(database_get_collection)                                               \
-    X(database_get_name)                                                     \
-    X(database_get_read_concern)                                             \
-    X(database_get_read_prefs)                                               \
-    X(database_get_write_concern)                                            \
-    X(database_has_collection)                                               \
-    X(database_set_read_concern)                                             \
-    X(database_set_read_prefs)                                               \
-    X(database_set_write_concern)                                            \
-    X(database_watch)                                                        \
-    X(error_has_label)                                                       \
-    X(find_and_modify_opts_append)                                           \
-    X(find_and_modify_opts_destroy)                                          \
-    X(find_and_modify_opts_new)                                              \
-    X(find_and_modify_opts_set_bypass_document_validation)                   \
-    X(find_and_modify_opts_set_fields)                                       \
-    X(find_and_modify_opts_set_flags)                                        \
-    X(find_and_modify_opts_set_max_time_ms)                                  \
-    X(find_and_modify_opts_set_sort)                                         \
-    X(find_and_modify_opts_set_update)                                       \
-    X(handshake_data_append)                                                 \
-    X(init)                                                                  \
-    /* X(log_set_handler) CDRIVER-5678: not __cdecl. */                      \
-    X(read_concern_copy)                                                     \
-    X(read_concern_destroy)                                                  \
-    X(read_concern_get_level)                                                \
-    X(read_concern_new)                                                      \
-    X(read_concern_set_level)                                                \
-    X(read_prefs_copy)                                                       \
-    X(read_prefs_destroy)                                                    \
-    BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_BEGIN                              \
-    X(read_prefs_get_hedge) /* CXX-3241 */                                   \
-    BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_END                                \
-    X(read_prefs_get_max_staleness_seconds)                                  \
-    X(read_prefs_get_mode)                                                   \
-    X(read_prefs_get_tags)                                                   \
-    X(read_prefs_new)                                                        \
-    BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_BEGIN                              \
-    X(read_prefs_set_hedge) /* CXX-3241 */                                   \
-    BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_END                                \
-    X(read_prefs_set_max_staleness_seconds)                                  \
-    X(read_prefs_set_mode)                                                   \
-    X(read_prefs_set_tags)                                                   \
-    X(server_api_copy)                                                       \
-    X(server_api_deprecation_errors)                                         \
-    X(server_api_destroy)                                                    \
-    X(server_api_get_deprecation_errors)                                     \
-    X(server_api_get_strict)                                                 \
-    X(server_api_get_version)                                                \
-    X(server_api_new)                                                        \
-    X(server_api_strict)                                                     \
-    X(server_api_version_from_string)                                        \
-    X(server_api_version_to_string)                                          \
-    X(server_description_destroy)                                            \
-    X(server_description_hello_response)                                     \
-    X(server_description_host)                                               \
-    X(server_description_id)                                                 \
-    X(server_description_new_copy)                                           \
-    X(server_description_round_trip_time)                                    \
-    X(server_description_type)                                               \
-    X(server_descriptions_destroy_all)                                       \
-    X(session_opts_clone)                                                    \
-    X(session_opts_destroy)                                                  \
-    X(session_opts_get_causal_consistency)                                   \
-    X(session_opts_get_default_transaction_opts)                             \
-    X(session_opts_get_snapshot)                                             \
-    X(session_opts_new)                                                      \
-    X(session_opts_set_causal_consistency)                                   \
-    X(session_opts_set_default_transaction_opts)                             \
-    X(session_opts_set_snapshot)                                             \
-    X(topology_description_get_servers)                                      \
-    X(topology_description_has_readable_server)                              \
-    X(topology_description_has_writable_server)                              \
-    X(topology_description_type)                                             \
-    X(transaction_opts_clone)                                                \
-    X(transaction_opts_destroy)                                              \
-    X(transaction_opts_get_max_commit_time_ms)                               \
-    X(transaction_opts_get_read_concern)                                     \
-    X(transaction_opts_get_read_prefs)                                       \
-    X(transaction_opts_get_write_concern)                                    \
-    X(transaction_opts_new)                                                  \
-    X(transaction_opts_set_max_commit_time_ms)                               \
-    X(transaction_opts_set_read_concern)                                     \
-    X(transaction_opts_set_read_prefs)                                       \
-    X(transaction_opts_set_write_concern)                                    \
-    X(uri_copy)                                                              \
-    X(uri_destroy)                                                           \
-    X(uri_get_appname)                                                       \
-    X(uri_get_auth_mechanism)                                                \
-    X(uri_get_auth_source)                                                   \
-    X(uri_get_compressors)                                                   \
-    X(uri_get_credentials)                                                   \
-    X(uri_get_database)                                                      \
-    X(uri_get_hosts)                                                         \
-    X(uri_get_mechanism_properties)                                          \
-    X(uri_get_option_as_utf8)                                                \
-    X(uri_get_options)                                                       \
-    X(uri_get_password)                                                      \
-    X(uri_get_read_concern)                                                  \
-    X(uri_get_read_prefs_t)                                                  \
-    X(uri_get_replica_set)                                                   \
-    X(uri_get_string)                                                        \
-    X(uri_get_tls)                                                           \
-    X(uri_get_username)                                                      \
-    X(uri_get_write_concern)                                                 \
-    X(uri_set_option_as_bool)                                                \
-    X(uri_new_with_error)                                                    \
-    X(write_concern_copy)                                                    \
-    X(write_concern_destroy)                                                 \
-    X(write_concern_get_journal)                                             \
-    X(write_concern_get_w)                                                   \
-    X(write_concern_get_wmajority)                                           \
-    X(write_concern_get_wtag)                                                \
-    X(write_concern_get_wtimeout)                                            \
-    X(write_concern_get_wtimeout_int64)                                      \
-    X(write_concern_is_acknowledged)                                         \
-    X(write_concern_journal_is_set)                                          \
-    X(write_concern_new)                                                     \
-    X(write_concern_set_journal)                                             \
-    X(write_concern_set_w)                                                   \
-    X(write_concern_set_wmajority)                                           \
-    X(write_concern_set_wtag)                                                \
-    X(write_concern_set_wtimeout)                                            \
-    X(write_concern_set_wtimeout_int64)
+#if defined(MONGOCXX_TESTING)
+#define MONGOCXX_PRIVATE_MOCKED_EXPORT(name)                                                      \
+    extern MONGOCXX_ABI_EXPORT_TESTING mongocxx::test_util::mock<decltype(&mongoc_##name)>& name; \
+    BSONCXX_PRIVATE_FORCE_SEMICOLON
+#else
+#define MONGOCXX_PRIVATE_MOCKED_EXPORT(name) \
+    constexpr auto name = mongoc_##name;     \
+    BSONCXX_PRIVATE_FORCE_SEMICOLON
+#endif
 
 namespace mongocxx {
 namespace libmongoc {
 
-#if defined(MONGOCXX_TESTING)
-
 SILENCE_IGNORED_ATTRIBUTES_BEGIN();
 
-#pragma push_macro("X")
-#undef X
-#define X(name) extern MONGOCXX_ABI_EXPORT_TESTING mongocxx::test_util::mock<decltype(&mongoc_##name)>& name;
-MONGOC_SYMBOLS_XMACRO(X)
-#pragma pop_macro("X")
+#if defined(MONGOC_ENABLE_SSL)
+MONGOCXX_PRIVATE_MOCKED_EXPORT(client_pool_set_ssl_opts);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(client_set_ssl_opts);
+#endif
 
-// CDRIVER-5678
-using log_func_cdecl_t = void(
-    MONGOCXX_ABI_CDECL*)(mongoc_log_level_t log_level, char const* log_domain, char const* message, void* user_data);
-using log_set_handler_cdecl_t = void(MONGOCXX_ABI_CDECL*)(log_func_cdecl_t log_func, void* user_data);
+BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_BEGIN
+MONGOCXX_PRIVATE_MOCKED_EXPORT(read_prefs_get_hedge); /* CXX-3241 */
+MONGOCXX_PRIVATE_MOCKED_EXPORT(read_prefs_set_hedge); /* CXX-3241 */
+BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_END
 
-extern MONGOCXX_ABI_EXPORT_TESTING mongocxx::test_util::mock<log_set_handler_cdecl_t>& log_set_handler;
+MONGOCXX_PRIVATE_MOCKED_EXPORT(apm_callbacks_destroy);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(apm_callbacks_new);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(apm_command_failed_get_command_name);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(apm_command_failed_get_context);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(apm_command_failed_get_duration);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(apm_command_failed_get_error);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(apm_command_failed_get_host);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(apm_command_failed_get_operation_id);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(apm_command_failed_get_reply);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(apm_command_failed_get_request_id);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(apm_command_failed_get_server_id);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(apm_command_failed_get_service_id);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(apm_command_started_get_command_name);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(apm_command_started_get_command);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(apm_command_started_get_context);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(apm_command_started_get_database_name);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(apm_command_started_get_host);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(apm_command_started_get_operation_id);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(apm_command_started_get_request_id);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(apm_command_started_get_server_id);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(apm_command_started_get_service_id);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(apm_command_succeeded_get_command_name);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(apm_command_succeeded_get_context);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(apm_command_succeeded_get_duration);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(apm_command_succeeded_get_host);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(apm_command_succeeded_get_operation_id);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(apm_command_succeeded_get_reply);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(apm_command_succeeded_get_request_id);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(apm_command_succeeded_get_server_id);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(apm_command_succeeded_get_service_id);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(apm_server_changed_get_context);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(apm_server_changed_get_host);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(apm_server_changed_get_new_description);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(apm_server_changed_get_previous_description);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(apm_server_changed_get_topology_id);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(apm_server_closed_get_context);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(apm_server_closed_get_host);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(apm_server_closed_get_topology_id);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(apm_server_heartbeat_failed_get_awaited);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(apm_server_heartbeat_failed_get_context);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(apm_server_heartbeat_failed_get_duration);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(apm_server_heartbeat_failed_get_error);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(apm_server_heartbeat_failed_get_host);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(apm_server_heartbeat_started_get_awaited);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(apm_server_heartbeat_started_get_context);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(apm_server_heartbeat_started_get_host);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(apm_server_heartbeat_succeeded_get_awaited);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(apm_server_heartbeat_succeeded_get_context);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(apm_server_heartbeat_succeeded_get_duration);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(apm_server_heartbeat_succeeded_get_host);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(apm_server_heartbeat_succeeded_get_reply);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(apm_server_opening_get_context);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(apm_server_opening_get_host);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(apm_server_opening_get_topology_id);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(apm_set_command_failed_cb);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(apm_set_command_started_cb);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(apm_set_command_succeeded_cb);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(apm_set_server_changed_cb);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(apm_set_server_closed_cb);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(apm_set_server_heartbeat_failed_cb);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(apm_set_server_heartbeat_started_cb);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(apm_set_server_heartbeat_succeeded_cb);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(apm_set_server_opening_cb);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(apm_set_topology_changed_cb);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(apm_set_topology_closed_cb);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(apm_set_topology_opening_cb);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(apm_topology_changed_get_context);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(apm_topology_changed_get_new_description);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(apm_topology_changed_get_previous_description);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(apm_topology_changed_get_topology_id);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(apm_topology_closed_get_context);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(apm_topology_closed_get_topology_id);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(apm_topology_opening_get_context);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(apm_topology_opening_get_topology_id);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(auto_encryption_opts_destroy);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(auto_encryption_opts_new);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(auto_encryption_opts_set_bypass_auto_encryption);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(auto_encryption_opts_set_bypass_query_analysis);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(auto_encryption_opts_set_encrypted_fields_map);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(auto_encryption_opts_set_extra);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(auto_encryption_opts_set_keyvault_client_pool);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(auto_encryption_opts_set_keyvault_client);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(auto_encryption_opts_set_keyvault_namespace);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(auto_encryption_opts_set_kms_providers);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(auto_encryption_opts_set_schema_map);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(auto_encryption_opts_set_tls_opts);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(bulk_operation_destroy);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(bulk_operation_execute);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(bulk_operation_get_write_concern);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(bulk_operation_insert_with_opts);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(bulk_operation_new);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(bulk_operation_remove_many_with_opts);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(bulk_operation_remove_one_with_opts);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(bulk_operation_replace_one_with_opts);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(bulk_operation_set_bypass_document_validation);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(bulk_operation_set_client_session);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(bulk_operation_set_client);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(bulk_operation_set_collection);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(bulk_operation_set_database);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(bulk_operation_set_write_concern);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(bulk_operation_update_many_with_opts);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(bulk_operation_update_one_with_opts);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(change_stream_destroy);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(change_stream_error_document);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(change_stream_get_resume_token);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(change_stream_next);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(cleanup);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(client_command_simple_with_server_id);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(client_destroy);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(client_enable_auto_encryption);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(client_encryption_add_key_alt_name);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(client_encryption_create_datakey);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(client_encryption_create_encrypted_collection);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(client_encryption_datakey_opts_destroy);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(client_encryption_datakey_opts_new);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(client_encryption_datakey_opts_set_keyaltnames);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(client_encryption_datakey_opts_set_keymaterial);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(client_encryption_datakey_opts_set_masterkey);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(client_encryption_decrypt);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(client_encryption_delete_key);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(client_encryption_destroy);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(client_encryption_encrypt_expression);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(client_encryption_encrypt_opts_destroy);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(client_encryption_encrypt_opts_new);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(client_encryption_encrypt_opts_set_algorithm);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(client_encryption_encrypt_opts_set_contention_factor);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(client_encryption_encrypt_opts_set_keyaltname);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(client_encryption_encrypt_opts_set_keyid);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(client_encryption_encrypt_opts_set_query_type);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(client_encryption_encrypt_opts_set_range_opts);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(client_encryption_encrypt_opts_set_text_opts);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(client_encryption_encrypt_range_opts_destroy);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(client_encryption_encrypt_range_opts_new);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(client_encryption_encrypt_range_opts_set_max);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(client_encryption_encrypt_range_opts_set_min);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(client_encryption_encrypt_range_opts_set_precision);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(client_encryption_encrypt_range_opts_set_sparsity);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(client_encryption_encrypt_range_opts_set_trim_factor);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(client_encryption_encrypt_text_opts_destroy);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(client_encryption_encrypt_text_opts_new);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(client_encryption_encrypt_text_opts_set_case_sensitive);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(client_encryption_encrypt_text_opts_set_diacritic_sensitive);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(client_encryption_encrypt_text_opts_set_prefix);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(client_encryption_encrypt_text_opts_set_substring);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(client_encryption_encrypt_text_opts_set_suffix);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(client_encryption_encrypt_text_prefix_opts_destroy);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(client_encryption_encrypt_text_prefix_opts_new);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(client_encryption_encrypt_text_prefix_opts_set_str_max_query_length);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(client_encryption_encrypt_text_prefix_opts_set_str_min_query_length);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(client_encryption_encrypt_text_substring_opts_destroy);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(client_encryption_encrypt_text_substring_opts_new);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(client_encryption_encrypt_text_substring_opts_set_str_max_length);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(client_encryption_encrypt_text_substring_opts_set_str_max_query_length);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(client_encryption_encrypt_text_substring_opts_set_str_min_query_length);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(client_encryption_encrypt_text_suffix_opts_destroy);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(client_encryption_encrypt_text_suffix_opts_new);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(client_encryption_encrypt_text_suffix_opts_set_str_max_query_length);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(client_encryption_encrypt_text_suffix_opts_set_str_min_query_length);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(client_encryption_encrypt);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(client_encryption_get_key_by_alt_name);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(client_encryption_get_key);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(client_encryption_get_keys);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(client_encryption_new);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(client_encryption_opts_destroy);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(client_encryption_opts_new);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(client_encryption_opts_set_keyvault_client);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(client_encryption_opts_set_keyvault_namespace);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(client_encryption_opts_set_kms_providers);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(client_encryption_opts_set_tls_opts);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(client_encryption_remove_key_alt_name);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(client_encryption_rewrap_many_datakey_result_destroy);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(client_encryption_rewrap_many_datakey_result_get_bulk_write_result);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(client_encryption_rewrap_many_datakey_result_new);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(client_encryption_rewrap_many_datakey);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(client_find_databases_with_opts);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(client_get_collection);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(client_get_database_names_with_opts);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(client_get_database);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(client_get_read_concern);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(client_get_read_prefs);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(client_get_uri);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(client_get_write_concern);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(client_new_from_uri_with_error);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(client_new_from_uri);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(client_pool_destroy);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(client_pool_enable_auto_encryption);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(client_pool_new_with_error);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(client_pool_new);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(client_pool_pop);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(client_pool_push);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(client_pool_set_apm_callbacks);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(client_pool_set_server_api);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(client_pool_try_pop);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(client_reset);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(client_select_server);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(client_session_abort_transaction);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(client_session_advance_cluster_time);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(client_session_advance_operation_time);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(client_session_append);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(client_session_commit_transaction);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(client_session_destroy);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(client_session_get_cluster_time);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(client_session_get_dirty);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(client_session_get_lsid);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(client_session_get_operation_time);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(client_session_get_opts);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(client_session_get_server_id);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(client_session_get_transaction_state);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(client_session_in_transaction);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(client_session_start_transaction);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(client_session_with_transaction);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(client_set_apm_callbacks);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(client_set_read_concern);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(client_set_read_prefs);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(client_set_server_api);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(client_set_write_concern);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(client_start_session);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(client_watch);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(collection_aggregate);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(collection_command_simple);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(collection_copy);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(collection_count_documents);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(collection_create_bulk_operation_with_opts);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(collection_destroy);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(collection_drop_index);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(collection_drop_with_opts);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(collection_drop);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(collection_estimated_document_count);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(collection_find_and_modify_with_opts);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(collection_find_indexes_with_opts);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(collection_find_with_opts);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(collection_get_name);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(collection_get_read_concern);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(collection_get_read_prefs);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(collection_get_write_concern);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(collection_keys_to_index_string);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(collection_read_command_with_opts);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(collection_rename_with_opts);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(collection_rename);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(collection_set_read_concern);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(collection_set_read_prefs);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(collection_set_write_concern);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(collection_watch);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(collection_write_command_with_opts);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(cursor_destroy);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(cursor_error_document);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(cursor_error);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(cursor_new_from_command_reply_with_opts);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(cursor_next);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(cursor_set_max_await_time_ms);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(database_aggregate);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(database_command_with_opts);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(database_copy);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(database_create_collection);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(database_destroy);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(database_drop_with_opts);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(database_drop);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(database_find_collections_with_opts);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(database_get_collection_names_with_opts);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(database_get_collection);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(database_get_name);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(database_get_read_concern);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(database_get_read_prefs);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(database_get_write_concern);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(database_has_collection);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(database_set_read_concern);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(database_set_read_prefs);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(database_set_write_concern);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(database_watch);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(error_has_label);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(find_and_modify_opts_append);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(find_and_modify_opts_destroy);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(find_and_modify_opts_new);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(find_and_modify_opts_set_bypass_document_validation);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(find_and_modify_opts_set_fields);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(find_and_modify_opts_set_flags);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(find_and_modify_opts_set_max_time_ms);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(find_and_modify_opts_set_sort);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(find_and_modify_opts_set_update);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(handshake_data_append);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(init);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(log_set_handler);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(read_concern_copy);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(read_concern_destroy);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(read_concern_get_level);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(read_concern_new);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(read_concern_set_level);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(read_prefs_copy);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(read_prefs_destroy);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(read_prefs_get_max_staleness_seconds);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(read_prefs_get_mode);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(read_prefs_get_tags);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(read_prefs_new);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(read_prefs_set_max_staleness_seconds);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(read_prefs_set_mode);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(read_prefs_set_tags);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(server_api_copy);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(server_api_deprecation_errors);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(server_api_destroy);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(server_api_get_deprecation_errors);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(server_api_get_strict);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(server_api_get_version);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(server_api_new);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(server_api_strict);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(server_api_version_from_string);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(server_api_version_to_string);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(server_description_destroy);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(server_description_hello_response);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(server_description_host);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(server_description_id);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(server_description_new_copy);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(server_description_round_trip_time);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(server_description_type);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(server_descriptions_destroy_all);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(session_opts_clone);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(session_opts_destroy);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(session_opts_get_causal_consistency);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(session_opts_get_default_transaction_opts);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(session_opts_get_snapshot);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(session_opts_new);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(session_opts_set_causal_consistency);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(session_opts_set_default_transaction_opts);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(session_opts_set_snapshot);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(topology_description_get_servers);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(topology_description_has_readable_server);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(topology_description_has_writable_server);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(topology_description_type);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(transaction_opts_clone);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(transaction_opts_destroy);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(transaction_opts_get_max_commit_time_ms);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(transaction_opts_get_read_concern);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(transaction_opts_get_read_prefs);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(transaction_opts_get_write_concern);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(transaction_opts_new);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(transaction_opts_set_max_commit_time_ms);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(transaction_opts_set_read_concern);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(transaction_opts_set_read_prefs);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(transaction_opts_set_write_concern);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(uri_copy);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(uri_destroy);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(uri_get_appname);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(uri_get_auth_mechanism);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(uri_get_auth_source);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(uri_get_compressors);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(uri_get_credentials);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(uri_get_database);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(uri_get_hosts);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(uri_get_mechanism_properties);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(uri_get_option_as_utf8);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(uri_get_options);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(uri_get_password);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(uri_get_read_concern);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(uri_get_read_prefs_t);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(uri_get_replica_set);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(uri_get_string);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(uri_get_tls);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(uri_get_username);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(uri_get_write_concern);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(uri_new_with_error);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(uri_set_option_as_bool);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(write_concern_copy);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(write_concern_destroy);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(write_concern_get_journal);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(write_concern_get_w);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(write_concern_get_wmajority);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(write_concern_get_wtag);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(write_concern_get_wtimeout_int64);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(write_concern_get_wtimeout);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(write_concern_is_acknowledged);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(write_concern_journal_is_set);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(write_concern_new);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(write_concern_set_journal);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(write_concern_set_w);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(write_concern_set_wmajority);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(write_concern_set_wtag);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(write_concern_set_wtimeout_int64);
+MONGOCXX_PRIVATE_MOCKED_EXPORT(write_concern_set_wtimeout);
 
 SILENCE_IGNORED_ATTRIBUTES_END();
 
-#else // defined(MONGOCXX_TESTING) ^|v !defined(MONGOCXX_TESTING)
-
-#pragma push_macro("X")
-#undef X
-#define X(name) constexpr auto name = mongoc_##name;
-MONGOC_SYMBOLS_XMACRO(X)
-#pragma pop_macro("X")
-
-// CDRIVER-5678
-constexpr auto log_set_handler = mongoc_log_set_handler;
-
-#endif // !defined(MONGOCXX_TESTING)
-
 } // namespace libmongoc
 } // namespace mongocxx
+
+#pragma pop_macro("MONGOCXX_PRIVATE_MOCKED_EXPORT")
