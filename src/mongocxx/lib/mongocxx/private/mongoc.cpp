@@ -16,8 +16,9 @@
 
 #if defined(MONGOCXX_TESTING)
 
-#define MONGOCXX_PRIVATE_MOCKED_EXPORT_DEFN(name) \
-    test_util::mock<decltype(&mongoc_##name)>& name = *new test_util::mock<decltype(&mongoc_##name)>(mongoc_##name);
+#define MONGOCXX_PRIVATE_MOCKED_EXPORT_DEFN(name)                                                                    \
+    test_util::mock<decltype(&mongoc_##name)>& name = *new test_util::mock<decltype(&mongoc_##name)>(mongoc_##name); \
+    BSONCXX_PRIVATE_FORCE_SEMICOLON
 
 namespace mongocxx {
 namespace libmongoc {
