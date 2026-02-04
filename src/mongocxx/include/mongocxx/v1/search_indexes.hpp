@@ -356,7 +356,7 @@ class search_indexes::model {
     /// - All other supported fields are "unset" or zero-initialized.
     ///
     MONGOCXX_ABI_EXPORT_CDECL()
-    model(bsoncxx::v1::stdx::string_view name, bsoncxx::v1::document::value definition);
+    model(std::string name, bsoncxx::v1::document::value definition);
 
     ///
     /// Initialize this search index model with the given "definition".
@@ -385,7 +385,7 @@ class search_indexes::model {
     ///
     /// Set the "type" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(model&) type(bsoncxx::v1::stdx::string_view type);
+    MONGOCXX_ABI_EXPORT_CDECL(model&) type(std::string type);
 };
 
 } // namespace v1
