@@ -254,8 +254,13 @@ auto_encryption_options::internal::to_mongoc(v1::auto_encryption_options const& 
         libmongoc::auto_encryption_opts_set_encrypted_fields_map(ptr, scoped_bson_view{*opt}.bson());
     }
 
-    libmongoc::auto_encryption_opts_set_bypass_auto_encryption(ptr, self.bypass_auto_encryption());
-    libmongoc::auto_encryption_opts_set_bypass_query_analysis(ptr, self.bypass_query_analysis());
+    if (self.bypass_auto_encryption()) {
+        libmongoc::auto_encryption_opts_set_bypass_auto_encryption(ptr, true);
+    }
+
+    if (self.bypass_query_analysis()) {
+        libmongoc::auto_encryption_opts_set_bypass_query_analysis(ptr, true);
+    }
 
     if (auto const& opt = self.extra_options()) {
         libmongoc::auto_encryption_opts_set_extra(ptr, scoped_bson_view{*opt}.bson());
