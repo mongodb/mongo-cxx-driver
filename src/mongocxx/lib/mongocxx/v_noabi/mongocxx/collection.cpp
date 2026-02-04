@@ -29,6 +29,7 @@
 #include <mongocxx/v1/read_concern.hh>
 #include <mongocxx/v1/read_preference.hh>
 #include <mongocxx/v1/replace_one_result.hh>
+#include <mongocxx/v1/search_indexes.hh>
 #include <mongocxx/v1/update_many_result.hh>
 #include <mongocxx/v1/update_one_result.hh>
 #include <mongocxx/v1/write_concern.hh>
@@ -1492,9 +1493,7 @@ bsoncxx::v_noabi::stdx::optional<v_noabi::result::replace_one> collection::repla
 }
 
 v_noabi::search_index_view collection::search_indexes() {
-    auto& c = check_moved_from(_coll);
-
-    return search_index_view{v1::collection::internal::as_mongoc(c), v1::collection::internal::get_client(c)};
+    return check_moved_from(_coll).search_indexes();
 }
 
 bsoncxx::v_noabi::stdx::optional<v_noabi::result::update> collection::update_many(

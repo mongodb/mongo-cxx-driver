@@ -56,6 +56,7 @@
 #include <mongocxx/v1/read_preference.hh>
 #include <mongocxx/v1/replace_one_options.hh>
 #include <mongocxx/v1/replace_one_result.hh>
+#include <mongocxx/v1/search_indexes.hh>
 #include <mongocxx/v1/update_many_options.hh>
 #include <mongocxx/v1/update_many_result.hh>
 #include <mongocxx/v1/update_one_options.hh>
@@ -1354,8 +1355,13 @@ bsoncxx::v1::stdx::optional<v1::replace_one_result> collection::replace_one(
 }
 
 v1::search_indexes collection::search_indexes() {
-    // TODO: v1::search_indexes (CXX-3237)
-    MONGOCXX_PRIVATE_UNREACHABLE;
+    auto const ptr = libmongoc::collection_copy(impl::with(this)->_coll);
+
+    // All search index operations use default read/write concern.
+    libmongoc::collection_set_read_concern(ptr, v1::read_concern::internal::as_mongoc(v1::read_concern{}));
+    libmongoc::collection_set_write_concern(ptr, v1::write_concern::internal::as_mongoc(v1::write_concern{}));
+
+    return v1::search_indexes::internal::make(ptr);
 }
 
 bsoncxx::v1::stdx::optional<v1::update_many_result> collection::update_many(

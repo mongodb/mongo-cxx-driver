@@ -292,6 +292,11 @@ class search_indexes {
         v1::client_session const& session,
         bsoncxx::v1::stdx::string_view name,
         bsoncxx::v1::document::view definition);
+
+    class internal;
+
+   private:
+    /* explicit(false) */ search_indexes(void* impl);
 };
 
 ///
@@ -386,6 +391,8 @@ class search_indexes::model {
     /// Set the "type" field.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(model&) type(std::string type);
+
+    class internal;
 };
 
 } // namespace v1

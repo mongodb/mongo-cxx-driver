@@ -14,11 +14,17 @@
 
 #pragma once
 
-#include <string> // IWYU pragma: keep: backward compatibility, to be removed.
-
 #include <mongocxx/search_index_model-fwd.hpp> // IWYU pragma: export
 
+//
+
+#include <mongocxx/v1/search_indexes.hpp> // IWYU pragma: export
+
+#include <memory>
+#include <string> // IWYU pragma: keep: backward compatibility, to be removed.
+
 #include <bsoncxx/document/value.hpp> // IWYU pragma: keep: backward compatibility, to be removed.
+#include <bsoncxx/document/view.hpp>
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/stdx/optional.hpp>
 #include <bsoncxx/string/view_or_value.hpp>
@@ -47,24 +53,34 @@ class search_index_model {
     search_index_model() = delete;
 
     ///
+    /// Construct with the @ref mongocxx::v1 equivalent.
+    ///
+    /* explicit(false) */ MONGOCXX_ABI_EXPORT_CDECL() search_index_model(v1::search_indexes::model opts);
+
+    ///
+    /// Convert to the @ref mongocxx::v1 equivalent.
+    ///
+    explicit MONGOCXX_ABI_EXPORT_CDECL() operator v1::search_indexes::model() const;
+
+    ///
     /// Move constructs a search_index_model.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL() search_index_model(search_index_model&&) noexcept;
+    MONGOCXX_ABI_EXPORT_CDECL() search_index_model(search_index_model&& other) noexcept;
 
     ///
     /// Move assigns a search_index_model.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(search_index_model&) operator=(search_index_model&&) noexcept;
+    MONGOCXX_ABI_EXPORT_CDECL(search_index_model&) operator=(search_index_model&& other) noexcept;
 
     ///
     /// Copy constructs a search_index_model.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL() search_index_model(search_index_model const&);
+    MONGOCXX_ABI_EXPORT_CDECL() search_index_model(search_index_model const& other);
 
     ///
     /// Copy assigns a search_index_model.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(search_index_model&) operator=(search_index_model const&);
+    MONGOCXX_ABI_EXPORT_CDECL(search_index_model&) operator=(search_index_model const& other);
 
     ///
     /// Destroys a search_index_model.
@@ -97,16 +113,10 @@ class search_index_model {
     MONGOCXX_ABI_EXPORT_CDECL(search_index_model&)
     type(bsoncxx::v_noabi::string::view_or_value type);
 
+    class internal;
+
    private:
     class impl;
-
-    template <typename Self>
-    static auto _get_impl(Self& self) -> decltype(*self._impl);
-
-    impl const& _get_impl() const;
-    impl& _get_impl();
-
-   private:
     std::unique_ptr<impl> _impl;
 };
 
@@ -118,4 +128,7 @@ class search_index_model {
 ///
 /// @file
 /// Provides @ref mongocxx::v_noabi::search_index_model.
+///
+/// @par Includes
+/// - @ref mongocxx/v1/search_indexes.hpp
 ///
