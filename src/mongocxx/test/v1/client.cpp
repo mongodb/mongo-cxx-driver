@@ -752,7 +752,13 @@ void test_auto_encryption_opts_bool(
         (void)mocks.make(std::move(opts));
     }
 
-    CHECK(counter == 1);
+    CHECKED_IF(input) {
+        CHECK(counter == 1);
+    }
+
+    else {
+        CHECK(counter == 0);
+    }
 }
 
 template <typename Mock>
@@ -788,11 +794,7 @@ void test_auto_encryption_opts_doc(
 } // namespace
 
 TEST_CASE("auto_encryption_opts", "[mongocxx][v1][client]") {
-    // Workaround baffling segmentation faults during destruction of the `mocks` local variable when compiled with GCC
-    // on RHEL 8 ARM64. Not observed on any other target platform. Compiling with Clang or enabling ASAN suppresses this
-    // runtime error. This issue seems to only affect this specific test case. (???)
-    std::unique_ptr<client_mocks_type> mocks_owner{new client_mocks_type{}};
-    auto& mocks = *mocks_owner;
+    client_mocks_type mocks;
 
     identity_type opts_identity;
     auto const opts_id = reinterpret_cast<mongoc_auto_encryption_opts_t*>(&opts_identity);
@@ -839,10 +841,7 @@ TEST_CASE("auto_encryption_opts", "[mongocxx][v1][client]") {
             (void)mocks.make(std::move(opts));
         }
 
-        // Workaround baffling assertion failure when compiling with GCC on RHEL 8 PPC64LE. Not observed on any other
-        // target platform. Compiling with Clang or enabling ASAN suppresses this failure. This issue seems to only
-        // affect this specific test case. (???)
-        CHECK_NOFAIL(counter == 1);
+        CHECK(counter == 1);
         CHECK(enable_count == 1);
     }
 

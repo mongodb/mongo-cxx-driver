@@ -584,11 +584,7 @@ TEST_CASE("apm_opts", "[mongocxx][v1][pool]") {
 
 // Defer thorough test coverage to v1::client::options.
 TEST_CASE("auto_encryption_opts", "[mongocxx][v1][pool]") {
-    // Workaround baffling segmentation faults during destruction of the `mocks` local variable when compiled with GCC
-    // on RHEL 8 ARM64. Not observed on any other target platform. Compiling with Clang or enabling ASAN suppresses this
-    // runtime error. This issue seems to only affect this specific test case. (???)
-    std::unique_ptr<pool_mocks_type> mocks_owner{new pool_mocks_type{}};
-    auto& mocks = *mocks_owner;
+    pool_mocks_type mocks;
 
     identity_type opts_identity;
     auto const opts_id = reinterpret_cast<mongoc_auto_encryption_opts_t*>(&opts_identity);
