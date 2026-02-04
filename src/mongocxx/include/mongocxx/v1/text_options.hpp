@@ -28,7 +28,7 @@ namespace mongocxx {
 namespace v1 {
 
 ///
-/// Options related to text_options queries for Queryable Encryption.
+/// Options related to text queries for Queryable Encryption.
 ///
 /// Supported fields include:
 /// - `case_sensitive` ("caseSensitive")
