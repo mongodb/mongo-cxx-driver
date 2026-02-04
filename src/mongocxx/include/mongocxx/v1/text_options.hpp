@@ -148,7 +148,7 @@ class text_options {
 };
 
 ///
-/// Options for a prefix query in Queryable Encryption.
+/// Options related to prefix queries in Queryable Encryption.
 ///
 /// @attention This feature is experimental! It is not ready for use!
 ///
@@ -221,7 +221,7 @@ class text_options::prefix {
 };
 
 ///
-/// Options for a suffix query in Queryable Encryption.
+/// Options related to suffix queries in Queryable Encryption.
 ///
 /// @attention This feature is experimental! It is not ready for use!
 ///
@@ -294,7 +294,7 @@ class text_options::suffix {
 };
 
 ///
-/// Options for a substring query in Queryable Encryption.
+/// Options related to substring queries in Queryable Encryption.
 ///
 /// @attention This feature is experimental! It is not ready for use!
 ///
