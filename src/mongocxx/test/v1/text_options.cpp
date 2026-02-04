@@ -44,7 +44,7 @@ TEST_CASE("ownership", "[mongocxx][v1][text_options]") {
 
         target = std::move(move);
 
-        // source is in an assign-or-move-only state.
+        // move is in an assign-or-move-only state.
 
         CHECK(target.case_sensitive() == source_value);
     }
@@ -81,7 +81,7 @@ TEST_CASE("ownership", "[mongocxx][v1][text_options][prefix]") {
 
         target = std::move(move);
 
-        // source is in an assign-or-move-only state.
+        // move is in an assign-or-move-only state.
 
         CHECK(target.str_max_query_length() == source_value);
     }
@@ -118,7 +118,7 @@ TEST_CASE("ownership", "[mongocxx][v1][text_options][suffix]") {
 
         target = std::move(move);
 
-        // source is in an assign-or-move-only state.
+        // move is in an assign-or-move-only state.
 
         CHECK(target.str_max_query_length() == source_value);
     }
@@ -155,7 +155,7 @@ TEST_CASE("ownership", "[mongocxx][v1][text_options][substring]") {
 
         target = std::move(move);
 
-        // source is in an assign-or-move-only state.
+        // move is in an assign-or-move-only state.
 
         CHECK(target.str_max_length() == source_value);
     }
