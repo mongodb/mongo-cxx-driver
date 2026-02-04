@@ -213,7 +213,7 @@ class search_indexes {
     /// @see
     /// - [`createSearchIndexes` (database command) (MongoDB Manual)](https://www.mongodb.com/docs/manual/reference/command/createSearchIndexes/)
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(std::string) create_one(client_session const& session, model const& index);
+    MONGOCXX_ABI_EXPORT_CDECL(std::string) create_one(v1::client_session const& session, model const& index);
 
     ///
     /// Create multiple search indexes in the associated collection.
@@ -226,7 +226,7 @@ class search_indexes {
     /// @see
     /// - [`createSearchIndexes` (database command) (MongoDB Manual)](https://www.mongodb.com/docs/manual/reference/command/createSearchIndexes/)
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(std::vector<std::string>) create_many(std::vector<search_indexes::model> const& indexes);
+    MONGOCXX_ABI_EXPORT_CDECL(std::vector<std::string>) create_many(std::vector<model> const& indexes);
 
     ///
     /// Create multiple search indexes in the associated collection.
@@ -240,7 +240,7 @@ class search_indexes {
     /// - [`createSearchIndexes` (database command) (MongoDB Manual)](https://www.mongodb.com/docs/manual/reference/command/createSearchIndexes/)
     ///
     MONGOCXX_ABI_EXPORT_CDECL(std::vector<std::string>) create_many(
-        client_session const& session,
+        v1::client_session const& session,
         std::vector<model> const& indexes);
 
     ///
@@ -289,7 +289,7 @@ class search_indexes {
     ///
     MONGOCXX_ABI_EXPORT_CDECL(void)
     update_one(
-        client_session const& session,
+        v1::client_session const& session,
         bsoncxx::v1::stdx::string_view name,
         bsoncxx::v1::document::view definition);
 };
