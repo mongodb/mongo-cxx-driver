@@ -93,8 +93,8 @@ class encrypt_options {
     /// - [Supported Operations for Queryable Encryption (MongoDB Manual)](https://www.mongodb.com/docs/manual/core/queryable-encryption/reference/supported-operations/)
     ///
     enum class encryption_query_type : std::uint8_t {
-        k_equality,      ///< "equalty"
-        k_range,         ///< "range"
+        k_equality, ///< "equalty"
+        k_range,    ///< "range"
 
         ///
         /// "prefixPreview"
