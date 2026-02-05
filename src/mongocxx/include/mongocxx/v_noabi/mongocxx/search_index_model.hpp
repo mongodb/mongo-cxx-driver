@@ -22,6 +22,7 @@
 
 #include <memory>
 #include <string> // IWYU pragma: keep: backward compatibility, to be removed.
+#include <utility>
 
 #include <bsoncxx/document/value.hpp> // IWYU pragma: keep: backward compatibility, to be removed.
 #include <bsoncxx/document/view.hpp>
@@ -119,6 +120,26 @@ class search_index_model {
     class impl;
     std::unique_ptr<impl> _impl;
 };
+
+} // namespace v_noabi
+} // namespace mongocxx
+
+namespace mongocxx {
+namespace v_noabi {
+
+///
+/// Convert to the @ref mongocxx::v_noabi equivalent of `v`.
+///
+inline v_noabi::search_index_model from_v1(v1::search_indexes::model v) {
+    return {std::move(v)};
+}
+
+///
+/// Convert to the @ref mongocxx::v1 equivalent of `v`.
+///
+inline v1::search_indexes::model to_v1(v_noabi::search_index_model v) {
+    return v1::search_indexes::model{std::move(v)};
+}
 
 } // namespace v_noabi
 } // namespace mongocxx
