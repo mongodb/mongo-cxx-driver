@@ -16,8 +16,12 @@
 
 //
 
+#include <mongocxx/v1/search_indexes.hh>
+
+#include <string>
 #include <utility>
 
+#include <bsoncxx/document/value.hpp>
 #include <bsoncxx/document/view.hpp>
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/stdx/optional.hpp>
@@ -38,9 +42,9 @@ class search_index_model::impl {
     bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value> _type;
 
     impl(bsoncxx::v_noabi::string::view_or_value name, bsoncxx::v_noabi::document::view_or_value definition)
-        : _name(name), _definition(definition.view()) {}
+        : _name{std::move(name)}, _definition(std::move(definition)) {}
 
-    explicit impl(bsoncxx::v_noabi::document::view_or_value definition) : _definition(definition.view()) {}
+    explicit impl(bsoncxx::v_noabi::document::view_or_value definition) : _definition(std::move(definition)) {}
 
     template <typename Self>
     static auto with(Self& self) -> decltype(*self._impl) {
@@ -81,6 +85,33 @@ search_index_model& search_index_model::operator=(search_index_model const& othe
 }
 
 search_index_model::~search_index_model() = default;
+
+search_index_model::search_index_model(v1::search_indexes::model opts)
+    : _impl{bsoncxx::make_unique<impl>(
+          bsoncxx::v_noabi::from_v1(std::move(v1::search_indexes::model::internal::definition(opts))))} {
+    if (auto& opt = v1::search_indexes::model::internal::name(opts)) {
+        _impl->_name = std::move(*opt);
+    }
+
+    if (auto& opt = v1::search_indexes::model::internal::type(opts)) {
+        _impl->_type = std::move(*opt);
+    }
+}
+
+search_index_model::operator v1::search_indexes::model() const {
+    auto& opts = *impl::with(this);
+
+    auto definition = bsoncxx::v1::document::value{bsoncxx::v_noabi::to_v1(opts._definition.view())};
+
+    auto ret = opts._name ? v1::search_indexes::model{std::string{opts._name->view()}, std::move(definition)}
+                          : v1::search_indexes::model{std::move(definition)};
+
+    if (auto const& opt = opts._type) {
+        ret.type(std::string{opt->view()});
+    }
+
+    return ret;
+}
 
 bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value> search_index_model::name() const {
     return impl::with(this)->_name;

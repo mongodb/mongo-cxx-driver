@@ -18,6 +18,8 @@
 
 //
 
+#include <bsoncxx/v1/document/value-fwd.hpp>
+
 #include <bsoncxx/v1/stdx/optional.hpp>
 
 #include <string>
@@ -41,7 +43,12 @@ class search_indexes::internal {
 class search_indexes::model::internal {
    public:
     static bsoncxx::v1::stdx::optional<std::string> const& name(model const& self);
+    static bsoncxx::v1::document::value const& definition(model const& self);
     static bsoncxx::v1::stdx::optional<std::string> const& type(model const& self);
+
+    static bsoncxx::v1::stdx::optional<std::string>& name(model& self);
+    static bsoncxx::v1::document::value& definition(model& self);
+    static bsoncxx::v1::stdx::optional<std::string>& type(model& self);
 };
 
 } // namespace v1

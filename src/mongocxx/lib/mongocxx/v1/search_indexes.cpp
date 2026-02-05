@@ -510,7 +510,23 @@ bsoncxx::v1::stdx::optional<std::string> const& search_indexes::model::internal:
     return impl::with(self)._name;
 }
 
+bsoncxx::v1::document::value const& search_indexes::model::internal::definition(model const& self) {
+    return impl::with(self)._definition;
+}
+
 bsoncxx::v1::stdx::optional<std::string> const& search_indexes::model::internal::type(model const& self) {
+    return impl::with(self)._type;
+}
+
+bsoncxx::v1::stdx::optional<std::string>& search_indexes::model::internal::name(model& self) {
+    return impl::with(self)._name;
+}
+
+bsoncxx::v1::document::value& search_indexes::model::internal::definition(model& self) {
+    return impl::with(self)._definition;
+}
+
+bsoncxx::v1::stdx::optional<std::string>& search_indexes::model::internal::type(model& self) {
     return impl::with(self)._type;
 }
 
