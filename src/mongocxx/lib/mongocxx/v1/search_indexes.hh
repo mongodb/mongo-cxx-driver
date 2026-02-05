@@ -19,6 +19,9 @@
 //
 
 #include <bsoncxx/v1/document/value-fwd.hpp>
+#include <bsoncxx/v1/document/view-fwd.hpp>
+
+#include <mongocxx/v1/cursor-fwd.hpp>
 
 #include <bsoncxx/v1/stdx/optional.hpp>
 
@@ -26,6 +29,8 @@
 
 #include <mongocxx/private/export.hh>
 #include <mongocxx/private/mongoc.hh>
+
+#include <bson/bson_t.h>
 
 namespace mongocxx {
 namespace v1 {
@@ -38,6 +43,19 @@ class search_indexes::internal {
 
     static MONGOCXX_ABI_EXPORT_CDECL_TESTING(mongoc_collection_t const*) get_collection(search_indexes const& self);
     static mongoc_collection_t* get_collection(search_indexes& self);
+
+    static v1::cursor
+    list_impl(mongoc_collection_t* coll, char const* name, bson_t const* opts, mongoc_read_prefs_t const* read_prefs);
+
+    static std::string create_one_impl(mongoc_collection_t* coll, bson_t const* index, bson_t const* opts);
+
+    static void drop_one_impl(mongoc_collection_t* coll, char const* name, bson_t const* opts);
+
+    static void update_one_impl(
+        mongoc_collection_t* coll,
+        char const* name,
+        bsoncxx::v1::document::view definition,
+        bson_t const* opts);
 };
 
 class search_indexes::model::internal {
