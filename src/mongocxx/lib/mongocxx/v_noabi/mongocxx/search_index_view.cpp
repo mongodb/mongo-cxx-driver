@@ -99,7 +99,7 @@ bsoncxx::v_noabi::document::value create_impl(mongoc_collection_t* coll, bson_t 
     return bsoncxx::v_noabi::from_v1(std::move(reply).value());
 }
 
-void append_to(bsoncxx::v_noabi ::document::view definition, char const* name, char const* type, scoped_bson& doc) {
+void append_to(bsoncxx::v_noabi::document::view definition, char const* name, char const* type, scoped_bson& doc) {
     if (name) {
         doc += scoped_bson{BCON_NEW("name", BCON_UTF8(name))};
     }
