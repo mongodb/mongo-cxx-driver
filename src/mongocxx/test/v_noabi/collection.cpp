@@ -2348,9 +2348,12 @@ TEST_CASE("Cursor iteration", "[collection][cursor]") {
         INFO(type_str);
 
         // Insert 3 documents.
-        for (int32_t n : {1, 2, 3}) {
-            coll.insert_one(make_document(kvp("x", n)));
-        }
+        coll.insert_many(
+            std::vector<bsoncxx::document::value>({
+                make_document(kvp("x", 1)),
+                make_document(kvp("x", 2)),
+                make_document(kvp("x", 3)),
+            }));
 
         auto cursor = coll.find({}, opts);
         auto iter = cursor.begin();
@@ -2393,9 +2396,12 @@ TEST_CASE("Cursor iteration", "[collection][cursor]") {
         // should no longer be exhausted.
         if (opts.cursor_type() != cursor::type::k_non_tailable) {
             // Insert 3 more documents.
-            for (int32_t n : {4, 5, 6}) {
-                coll.insert_one(make_document(kvp("x", n)));
-            }
+            coll.insert_many(
+                std::vector<bsoncxx::document::value>({
+                    make_document(kvp("x", 4)),
+                    make_document(kvp("x", 5)),
+                    make_document(kvp("x", 6)),
+                }));
 
             // More documents are available, but until the next call to
             // cursor.begin(), the existing iterator still appears exhausted.
