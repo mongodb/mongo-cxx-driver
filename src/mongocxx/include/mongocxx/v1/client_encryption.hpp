@@ -23,7 +23,6 @@
 #include <bsoncxx/v1/document/value-fwd.hpp>
 #include <bsoncxx/v1/document/view-fwd.hpp>
 #include <bsoncxx/v1/types/value-fwd.hpp>
-#include <bsoncxx/v1/types/view-fwd.hpp>
 
 #include <mongocxx/v1/client-fwd.hpp>
 #include <mongocxx/v1/collection-fwd.hpp>
@@ -172,7 +171,7 @@ class client_encryption {
     /// @throws mongocxx::v1::exception for all other runtime errors.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::types::value) encrypt(
-        bsoncxx::v1::types::view value,
+        bsoncxx::v1::types::value value,
         v1::encrypt_options const& opts);
 
     ///
@@ -196,7 +195,7 @@ class client_encryption {
     /// @throws mongocxx::v1::server_error when a server-side error is encountered and a raw server error is available.
     /// @throws mongocxx::v1::exception for all other runtime errors.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::types::value) decrypt(bsoncxx::v1::types::view value);
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::types::value) decrypt(bsoncxx::v1::types::value value);
 
     ///
     /// Decrypt and (re-)encrypt multiple data keys.
@@ -230,7 +229,7 @@ class client_encryption {
     /// @throws mongocxx::v1::server_error when a server-side error is encountered and a raw server error is available.
     /// @throws mongocxx::v1::exception for all other runtime errors.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::document::value) get_key(bsoncxx::v1::types::view id);
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::document::value) get_key(bsoncxx::v1::types::value id);
 
     ///
     /// Return all data keys within the associated key vault collection.
@@ -249,7 +248,7 @@ class client_encryption {
     /// @throws mongocxx::v1::exception for all other runtime errors.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::document::value) add_key_alt_name(
-        bsoncxx::v1::types::view id,
+        bsoncxx::v1::types::value id,
         bsoncxx::v1::stdx::string_view key_alt_name);
 
     ///
@@ -261,7 +260,7 @@ class client_encryption {
     /// @throws mongocxx::v1::exception for all other runtime errors.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::document::value) remove_key_alt_name(
-        bsoncxx::v1::types::view id,
+        bsoncxx::v1::types::value id,
         bsoncxx::v1::stdx::string_view key_alt_name);
 
     ///
