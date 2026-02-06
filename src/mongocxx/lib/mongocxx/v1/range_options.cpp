@@ -130,6 +130,14 @@ bsoncxx::v1::stdx::optional<std::int32_t> range_options::precision() const {
     return impl::with(this)->_precision;
 }
 
+bsoncxx::v1::stdx::optional<bsoncxx::v1::types::value> const& range_options::internal::min(range_options const& self) {
+    return impl::with(self)._min;
+}
+
+bsoncxx::v1::stdx::optional<bsoncxx::v1::types::value> const& range_options::internal::max(range_options const& self) {
+    return impl::with(self)._max;
+}
+
 bsoncxx::v1::stdx::optional<bsoncxx::v1::types::value>& range_options::internal::min(range_options& self) {
     return impl::with(self)._min;
 }

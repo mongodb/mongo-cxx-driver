@@ -46,7 +46,6 @@ set(mongocxx_test_bsoncxx
 
 set(mongocxx_test_sources_private
     private/numeric_casting.cpp
-    private/scoped_bson_value.cpp
     private/scoped_bson.cpp
     private/mongoc_version.cpp
 )
@@ -74,6 +73,7 @@ set(mongocxx_test_sources_v_noabi
     v_noabi/model/update_one.cpp
     v_noabi/options/aggregate.cpp
     v_noabi/options/bulk_write.cpp
+    v_noabi/options/client_encryption.cpp
     v_noabi/options/client_session.cpp
     v_noabi/options/count.cpp
     v_noabi/options/delete.cpp
@@ -113,6 +113,7 @@ set(mongocxx_test_sources_v1
     v1/bsoncxx.cpp
     v1/bulk_write.cpp
     v1/change_stream.cpp
+    v1/client_encryption.cpp
     v1/client_session.cpp
     v1/client.cpp
     v1/collection.cpp

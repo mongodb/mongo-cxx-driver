@@ -27,6 +27,9 @@ namespace v1 {
 
 class range_options::internal {
    public:
+    static bsoncxx::v1::stdx::optional<bsoncxx::v1::types::value> const& min(range_options const& self);
+    static bsoncxx::v1::stdx::optional<bsoncxx::v1::types::value> const& max(range_options const& self);
+
     static bsoncxx::v1::stdx::optional<bsoncxx::v1::types::value>& min(range_options& self);
     static bsoncxx::v1::stdx::optional<bsoncxx::v1::types::value>& max(range_options& self);
 };

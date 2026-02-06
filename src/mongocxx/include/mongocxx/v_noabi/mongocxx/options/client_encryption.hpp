@@ -14,11 +14,17 @@
 
 #pragma once
 
+#include <mongocxx/options/client_encryption-fwd.hpp> // IWYU pragma: export
+
+//
+
+#include <mongocxx/v1/client_encryption.hpp> // IWYU pragma: export
+
 #include <string>
+#include <utility>
 
 #include <mongocxx/client-fwd.hpp>
-#include <mongocxx/client_encryption-fwd.hpp>
-#include <mongocxx/options/client_encryption-fwd.hpp> // IWYU pragma: export
+#include <mongocxx/client_encryption-fwd.hpp> // IWYU pragma: keep: backward compatibility, to be removed.
 
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/stdx/optional.hpp>
@@ -35,6 +41,11 @@ namespace options {
 class client_encryption {
    public:
     ///
+    /// Default initialization.
+    ///
+    client_encryption() = default;
+
+    ///
     /// When the key vault collection is on a separate MongoDB cluster,
     /// sets the optional client to use to route data key queries to
     /// that cluster.
@@ -48,8 +59,10 @@ class client_encryption {
     /// @see
     /// - https://www.mongodb.com/docs/manual/core/security-client-side-encryption/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(client_encryption&)
-    key_vault_client(mongocxx::v_noabi::client* client);
+    client_encryption& key_vault_client(mongocxx::v_noabi::client* client) {
+        _key_vault_client = client;
+        return *this;
+    }
 
     ///
     /// Gets the key vault client.
@@ -57,8 +70,9 @@ class client_encryption {
     /// @return
     ///   An optional pointer to the key vault client.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::client*> const&)
-    key_vault_client() const;
+    bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::client*> const& key_vault_client() const {
+        return _key_vault_client;
+    }
 
     ///
     /// Represents the name of a database and a collection.
@@ -82,7 +96,10 @@ class client_encryption {
     /// @see
     /// - https://www.mongodb.com/docs/manual/core/security-client-side-encryption/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(client_encryption&) key_vault_namespace(ns_pair ns);
+    client_encryption& key_vault_namespace(ns_pair ns) {
+        _key_vault_namespace = std::move(ns);
+        return *this;
+    }
 
     ///
     /// Gets the key vault namespace.
@@ -91,8 +108,9 @@ class client_encryption {
     ///   An optional pair of strings representing the namespace of the
     ///   key vault collection.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<ns_pair> const&)
-    key_vault_namespace() const;
+    bsoncxx::v_noabi::stdx::optional<ns_pair> const& key_vault_namespace() const {
+        return _key_vault_namespace;
+    }
 
     ///
     /// Sets the KMS providers to use for client side encryption.
@@ -138,8 +156,10 @@ class client_encryption {
     /// @see
     /// - https://www.mongodb.com/docs/manual/core/security-client-side-encryption/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(client_encryption&)
-    kms_providers(bsoncxx::v_noabi::document::view_or_value kms_providers);
+    client_encryption& kms_providers(bsoncxx::v_noabi::document::view_or_value kms_providers) {
+        _kms_providers = std::move(kms_providers);
+        return *this;
+    }
 
     ///
     /// Gets the KMS providers.
@@ -147,8 +167,9 @@ class client_encryption {
     /// @return
     ///   An optional document containing the KMS providers.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const&)
-    kms_providers() const;
+    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const& kms_providers() const {
+        return _kms_providers;
+    }
 
     ///
     /// Sets the TLS options to use for client side encryption with a given KMS provider.
@@ -173,8 +194,10 @@ class client_encryption {
     /// @see
     /// - https://www.mongodb.com/docs/manual/core/security-client-side-encryption/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(client_encryption&)
-    tls_opts(bsoncxx::v_noabi::document::view_or_value tls_opts);
+    client_encryption& tls_opts(bsoncxx::v_noabi::document::view_or_value tls_opts) {
+        _tls_opts = std::move(tls_opts);
+        return *this;
+    }
 
     ///
     /// Gets the TLS options.
@@ -182,21 +205,64 @@ class client_encryption {
     /// @return
     ///   An optional document containing the TLS options.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const&)
-    tls_opts() const;
+    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const& tls_opts() const {
+        return _tls_opts;
+    }
+
+    class internal;
 
    private:
-    friend ::mongocxx::v_noabi::client_encryption;
-
-    void* convert() const;
-
     bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::client*> _key_vault_client;
     bsoncxx::v_noabi::stdx::optional<ns_pair> _key_vault_namespace;
     bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> _kms_providers;
     bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> _tls_opts;
+
+    /* explicit(false) */ MONGOCXX_ABI_NO_EXPORT client_encryption(v1::client_encryption::options opts);
+
+    explicit MONGOCXX_ABI_NO_EXPORT operator v1::client_encryption::options() const;
 };
 
 } // namespace options
+} // namespace v_noabi
+} // namespace mongocxx
+
+namespace mongocxx {
+namespace v_noabi {
+
+///
+/// Convert to the @ref mongocxx::v_noabi equivalent of `v`.
+///
+/// @important The `key_vault_client` field in the resulting object is unset when not explicitly provided as an argument
+/// to this conversion function.
+///
+/// @{
+MONGOCXX_ABI_EXPORT_CDECL(v_noabi::options::client_encryption) from_v1(v1::client_encryption::options v);
+
+inline v_noabi::options::client_encryption from_v1(v1::client_encryption::options v, v_noabi::client* client) {
+    auto ret = from_v1(std::move(v));
+    ret.key_vault_client(client);
+    return ret;
+}
+/// @}
+///
+
+///
+/// Convert to the @ref mongocxx::v1 equivalent of `v`.
+///
+/// @important The `key_vault_client` field in the resulting object is unset when not explicitly provided as an argument
+/// to this conversion function.
+///
+/// @{
+MONGOCXX_ABI_EXPORT_CDECL(v1::client_encryption::options) to_v1(v_noabi::options::client_encryption const& v);
+
+inline v1::client_encryption::options to_v1(v_noabi::options::client_encryption const& v, v1::client* client) {
+    auto ret = to_v1(v);
+    ret.key_vault_client(client);
+    return ret;
+}
+/// @}
+///
+
 } // namespace v_noabi
 } // namespace mongocxx
 
@@ -205,4 +271,7 @@ class client_encryption {
 ///
 /// @file
 /// Provides @ref mongocxx::v_noabi::options::client_encryption.
+///
+/// @par Includes
+/// - @ref mongocxx/v1/client_encryption.hpp
 ///
