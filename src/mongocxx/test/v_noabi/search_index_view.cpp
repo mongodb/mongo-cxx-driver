@@ -1,20 +1,41 @@
+// Copyright 2009-present MongoDB, Inc.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+#include <bsoncxx/test/v1/stdx/optional.hh>
+
+#include <mongocxx/test/private/scoped_bson.hh>
 #include <mongocxx/test/v_noabi/client_helpers.hh>
 
 #include <chrono>
+#include <string>
 #include <thread>
 
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/builder/basic/kvp.hpp>
+#include <bsoncxx/document/value.hpp>
 #include <bsoncxx/oid.hpp>
 
 #include <mongocxx/client.hpp>
 #include <mongocxx/cursor.hpp>
 #include <mongocxx/instance.hpp>
+#include <mongocxx/search_index_model.hpp>
 #include <mongocxx/search_index_view.hpp>
 
 #include <bsoncxx/test/catch.hh>
 
 #include <catch2/catch_case_sensitive.hpp>
+#include <catch2/generators/catch_generators.hpp>
 #include <catch2/matchers/catch_matchers_string.hpp>
 
 namespace {
@@ -558,4 +579,49 @@ TEST_CASE("atlas search indexes tests", "[atlas][search_indexes]") {
         SUCCEED("Create many works with vector search types");
     }
 }
+
+TEST_CASE("v1", "[mongocxx][v_noabi][search_index_model]") {
+    using v_noabi = v_noabi::search_index_model;
+    using v1 = v1::search_indexes::model;
+
+    using bsoncxx::v1::stdx::nullopt;
+
+    auto definition = GENERATE(as<scoped_bson>(), R"({})", R"({"x": 1})");
+    auto name_opt = GENERATE(as<bsoncxx::v1::stdx::optional<std::string>>(), nullopt, "name");
+    auto type_opt = GENERATE(as<bsoncxx::v1::stdx::optional<std::string>>(), nullopt, "type");
+
+    CAPTURE(definition.view());
+    CAPTURE(name_opt);
+    CAPTURE(type_opt);
+
+    SECTION("from_v1") {
+        v1 from = name_opt ? v1{*name_opt, definition.value()} : v1{definition.value()};
+
+        if (type_opt) {
+            from.type(*type_opt);
+        }
+
+        v_noabi const to{from};
+
+        CHECK(to.definition() == from.definition());
+        CHECK(to.name() == from.name());
+        CHECK(to.type() == from.type());
+    }
+
+    SECTION("to_v1") {
+        v_noabi from = name_opt ? v_noabi{*name_opt, bsoncxx::v_noabi::from_v1(definition.value())}
+                                : v_noabi{bsoncxx::v_noabi::from_v1(definition.value())};
+
+        if (type_opt) {
+            from.type(*type_opt);
+        }
+
+        v1 const to{from};
+
+        CHECK(to.definition() == from.definition());
+        CHECK(to.name() == from.name());
+        CHECK(to.type() == from.type());
+    }
+}
+
 } // namespace

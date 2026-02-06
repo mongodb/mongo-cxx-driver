@@ -18,7 +18,7 @@
 
 #include <bsoncxx/private/suppress_deprecation_warnings.hh>
 
-#include <mongocxx/private/export.hh> // IWYU pragma: export
+#include <mongocxx/private/export.hh>
 #include <mongocxx/private/mock.hh>   // IWYU pragma: export
 
 BSONCXX_PRIVATE_WARNINGS_PUSH();

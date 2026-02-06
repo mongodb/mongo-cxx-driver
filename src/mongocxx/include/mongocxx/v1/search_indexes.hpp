@@ -213,7 +213,7 @@ class search_indexes {
     /// @see
     /// - [`createSearchIndexes` (database command) (MongoDB Manual)](https://www.mongodb.com/docs/manual/reference/command/createSearchIndexes/)
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(std::string) create_one(client_session const& session, model const& index);
+    MONGOCXX_ABI_EXPORT_CDECL(std::string) create_one(v1::client_session const& session, model const& index);
 
     ///
     /// Create multiple search indexes in the associated collection.
@@ -226,7 +226,7 @@ class search_indexes {
     /// @see
     /// - [`createSearchIndexes` (database command) (MongoDB Manual)](https://www.mongodb.com/docs/manual/reference/command/createSearchIndexes/)
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(std::vector<std::string>) create_many(std::vector<search_indexes::model> const& indexes);
+    MONGOCXX_ABI_EXPORT_CDECL(std::vector<std::string>) create_many(std::vector<model> const& indexes);
 
     ///
     /// Create multiple search indexes in the associated collection.
@@ -240,7 +240,7 @@ class search_indexes {
     /// - [`createSearchIndexes` (database command) (MongoDB Manual)](https://www.mongodb.com/docs/manual/reference/command/createSearchIndexes/)
     ///
     MONGOCXX_ABI_EXPORT_CDECL(std::vector<std::string>) create_many(
-        client_session const& session,
+        v1::client_session const& session,
         std::vector<model> const& indexes);
 
     ///
@@ -289,9 +289,14 @@ class search_indexes {
     ///
     MONGOCXX_ABI_EXPORT_CDECL(void)
     update_one(
-        client_session const& session,
+        v1::client_session const& session,
         bsoncxx::v1::stdx::string_view name,
         bsoncxx::v1::document::view definition);
+
+    class internal;
+
+   private:
+    /* explicit(false) */ search_indexes(void* impl);
 };
 
 ///
@@ -356,7 +361,7 @@ class search_indexes::model {
     /// - All other supported fields are "unset" or zero-initialized.
     ///
     MONGOCXX_ABI_EXPORT_CDECL()
-    model(bsoncxx::v1::stdx::string_view name, bsoncxx::v1::document::value definition);
+    model(std::string name, bsoncxx::v1::document::value definition);
 
     ///
     /// Initialize this search index model with the given "definition".
@@ -385,7 +390,9 @@ class search_indexes::model {
     ///
     /// Set the "type" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(model&) type(bsoncxx::v1::stdx::string_view type);
+    MONGOCXX_ABI_EXPORT_CDECL(model&) type(std::string type);
+
+    class internal;
 };
 
 } // namespace v1
