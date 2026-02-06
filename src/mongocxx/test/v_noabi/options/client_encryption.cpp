@@ -18,8 +18,8 @@
 
 #include <mongocxx/v1/client-fwd.hpp>
 
-#include <bsoncxx/v1/document/value.hpp>
-#include <bsoncxx/v1/stdx/optional.hpp>
+#include <bsoncxx/test/v1/document/value.hh>
+#include <bsoncxx/test/v1/stdx/optional.hh>
 
 #include <mongocxx/client-fwd.hpp>
 
