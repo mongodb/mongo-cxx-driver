@@ -12,21 +12,75 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <mongocxx/v1/text_options.hh>
-
 #include <mongocxx/client_encryption.hpp>
+
+//
+
+#include <bsoncxx/v1/document/value.hpp>
+
+#include <mongocxx/v1/exception.hpp>
+
+#include <bsoncxx/v1/types/value.hh>
+
+#include <mongocxx/v1/bulk_write.hh>
+#include <mongocxx/v1/collection.hh>
+#include <mongocxx/v1/rewrap_many_datakey_result.hh>
+
+#include <memory>
+#include <string>
+#include <utility>
+
+#include <bsoncxx/document/value.hpp>
+#include <bsoncxx/document/view.hpp>
+#include <bsoncxx/document/view_or_value.hpp>
+#include <bsoncxx/stdx/optional.hpp>
+#include <bsoncxx/string/view_or_value.hpp>
+#include <bsoncxx/types/bson_value/value.hpp>
+#include <bsoncxx/types/bson_value/view.hpp>
+#include <bsoncxx/types/bson_value/view_or_value.hpp>
+
+#include <mongocxx/cursor.hpp>
 #include <mongocxx/exception/error_code.hpp>
 #include <mongocxx/exception/exception.hpp>
+#include <mongocxx/exception/operation_exception.hpp>
+#include <mongocxx/options/encrypt.hpp>
+#include <mongocxx/options/rewrap_many_datakey.hpp>
+#include <mongocxx/result/delete.hpp>
+#include <mongocxx/result/rewrap_many_datakey.hpp>
 
-#include <mongocxx/client_encryption.hh>
+#include <mongocxx/collection.hh>
 #include <mongocxx/database.hh>
+#include <mongocxx/mongoc_error.hh>
+#include <mongocxx/options/client_encryption.hh>
+#include <mongocxx/options/data_key.hh>
+#include <mongocxx/scoped_bson.hh>
 
-#include <bsoncxx/private/make_unique.hh>
+#include <bsoncxx/private/bson.hh>
+
+#include <mongocxx/private/mongoc.hh>
 
 namespace mongocxx {
 namespace v_noabi {
 
-client_encryption::impl::encrypt_opts_ptr_type client_encryption::impl::to_mongoc(options::encrypt const& opts) {
+namespace {
+
+bson_value_t const& get_bson_value(bsoncxx::v1::types::value const& value) {
+    return bsoncxx::v1::types::value::internal::get_bson_value(value);
+}
+
+bson_value_t& get_bson_value(bsoncxx::v1::types::value& value) {
+    return bsoncxx::v1::types::value::internal::get_bson_value(value);
+}
+
+struct encrypt_opts_deleter {
+    void operator()(mongoc_client_encryption_encrypt_opts_t* ptr) noexcept {
+        libmongoc::client_encryption_encrypt_opts_destroy(ptr);
+    }
+};
+
+using encrypt_opts_ptr_type = std::unique_ptr<mongoc_client_encryption_encrypt_opts_t, encrypt_opts_deleter>;
+
+encrypt_opts_ptr_type to_mongoc(v_noabi::options::encrypt const& opts) {
     struct encrypt_opts_deleter {
         void operator()(mongoc_client_encryption_encrypt_opts_t* ptr) noexcept {
             libmongoc::client_encryption_encrypt_opts_destroy(ptr);
@@ -39,49 +93,39 @@ client_encryption::impl::encrypt_opts_ptr_type client_encryption::impl::to_mongo
     // libmongoc will error if both key_id and key_alt_name are set, so no need to check here.
 
     if (auto const& opt = opts.key_id()) {
-        if (opt->view().type() != bsoncxx::v_noabi::type::k_binary) {
-            throw exception{error_code::k_invalid_parameter, "key id must be a binary value"};
-        }
-
-        auto key_id = opt->view().get_binary();
-
-        if (key_id.sub_type != bsoncxx::v_noabi::binary_sub_type::k_uuid) {
-            throw exception{error_code::k_invalid_parameter, "key id must be a binary value with subtype 4 (UUID)"};
-        }
-
-        libmongoc::client_encryption_encrypt_opts_set_keyid(ptr, detail::scoped_bson_value(key_id).get());
+        libmongoc::client_encryption_encrypt_opts_set_keyid(
+            ptr, &get_bson_value(bsoncxx::v1::types::value{bsoncxx::v_noabi::to_v1(opt->view())}));
     }
 
     if (auto const& opt = opts.key_alt_name()) {
         libmongoc::client_encryption_encrypt_opts_set_keyaltname(ptr, opt->c_str());
     }
 
+    // When no valid encryption algorithm is given, mongoc will return an error.
     if (auto const& opt = opts.algorithm()) {
         switch (*opt) {
-            case options::encrypt::encryption_algorithm::k_deterministic:
+            case v_noabi::options::encrypt::encryption_algorithm::k_deterministic:
                 libmongoc::client_encryption_encrypt_opts_set_algorithm(
                     ptr, "AEAD_AES_256_CBC_HMAC_SHA_512-Deterministic");
                 break;
-            case options::encrypt::encryption_algorithm::k_random:
+            case v_noabi::options::encrypt::encryption_algorithm::k_random:
                 libmongoc::client_encryption_encrypt_opts_set_algorithm(ptr, "AEAD_AES_256_CBC_HMAC_SHA_512-Random");
                 break;
-            case options::encrypt::encryption_algorithm::k_indexed:
+            case v_noabi::options::encrypt::encryption_algorithm::k_indexed:
                 libmongoc::client_encryption_encrypt_opts_set_algorithm(ptr, MONGOC_ENCRYPT_ALGORITHM_INDEXED);
                 break;
-            case options::encrypt::encryption_algorithm::k_unindexed:
+            case v_noabi::options::encrypt::encryption_algorithm::k_unindexed:
                 libmongoc::client_encryption_encrypt_opts_set_algorithm(ptr, MONGOC_ENCRYPT_ALGORITHM_UNINDEXED);
                 break;
-            case options::encrypt::encryption_algorithm::k_range:
+            case v_noabi::options::encrypt::encryption_algorithm::k_range:
                 libmongoc::client_encryption_encrypt_opts_set_algorithm(ptr, MONGOC_ENCRYPT_ALGORITHM_RANGE);
                 break;
-            case options::encrypt::encryption_algorithm::k_textPreview:
+            case v_noabi::options::encrypt::encryption_algorithm::k_textPreview:
                 libmongoc::client_encryption_encrypt_opts_set_algorithm(ptr, MONGOC_ENCRYPT_ALGORITHM_TEXTPREVIEW);
                 break;
             default:
-                throw exception{error_code::k_invalid_parameter, "unsupported encryption algorithm"};
+                throw v_noabi::exception{v_noabi::error_code::k_invalid_parameter, "unsupported encryption algorithm"};
         }
-    } else {
-        // libmongoc will error in this case, encryption algorithm must be set.
     }
 
     if (auto const& opt = opts.contention_factor()) {
@@ -90,24 +134,24 @@ client_encryption::impl::encrypt_opts_ptr_type client_encryption::impl::to_mongo
 
     if (auto const& opt = opts.query_type()) {
         switch (*opt) {
-            case options::encrypt::encryption_query_type::k_equality:
+            case v_noabi::options::encrypt::encryption_query_type::k_equality:
                 libmongoc::client_encryption_encrypt_opts_set_query_type(ptr, MONGOC_ENCRYPT_QUERY_TYPE_EQUALITY);
                 break;
-            case options::encrypt::encryption_query_type::k_range:
+            case v_noabi::options::encrypt::encryption_query_type::k_range:
                 libmongoc::client_encryption_encrypt_opts_set_query_type(ptr, MONGOC_ENCRYPT_QUERY_TYPE_RANGE);
                 break;
-            case options::encrypt::encryption_query_type::k_prefixPreview:
+            case v_noabi::options::encrypt::encryption_query_type::k_prefixPreview:
                 libmongoc::client_encryption_encrypt_opts_set_query_type(ptr, MONGOC_ENCRYPT_QUERY_TYPE_PREFIXPREVIEW);
                 break;
-            case options::encrypt::encryption_query_type::k_suffixPreview:
+            case v_noabi::options::encrypt::encryption_query_type::k_suffixPreview:
                 libmongoc::client_encryption_encrypt_opts_set_query_type(ptr, MONGOC_ENCRYPT_QUERY_TYPE_SUFFIXPREVIEW);
                 break;
-            case options::encrypt::encryption_query_type::k_substringPreview:
+            case v_noabi::options::encrypt::encryption_query_type::k_substringPreview:
                 libmongoc::client_encryption_encrypt_opts_set_query_type(
                     ptr, MONGOC_ENCRYPT_QUERY_TYPE_SUBSTRINGPREVIEW);
                 break;
             default:
-                throw exception{error_code::k_invalid_parameter, "unsupported query type"};
+                throw v_noabi::exception{v_noabi::error_code::k_invalid_parameter, "unsupported query type"};
         }
     }
 
@@ -118,8 +162,9 @@ client_encryption::impl::encrypt_opts_ptr_type client_encryption::impl::to_mongo
             }
         };
 
-        auto range_opts_owner = std::unique_ptr<mongoc_client_encryption_encrypt_range_opts_t, range_opts_deleter>(
-            libmongoc::client_encryption_encrypt_range_opts_new());
+        auto const range_opts_owner =
+            std::unique_ptr<mongoc_client_encryption_encrypt_range_opts_t, range_opts_deleter>(
+                libmongoc::client_encryption_encrypt_range_opts_new());
         auto const range_opts = range_opts_owner.get();
 
         auto const& min = opt->min();
@@ -130,12 +175,12 @@ client_encryption::impl::encrypt_opts_ptr_type client_encryption::impl::to_mongo
 
         if (min) {
             libmongoc::client_encryption_encrypt_range_opts_set_min(
-                range_opts, detail::scoped_bson_value(min->view()).get());
+                range_opts, &get_bson_value(bsoncxx::v1::types::value{bsoncxx::v_noabi::to_v1(min->view())}));
         }
 
         if (max) {
             libmongoc::client_encryption_encrypt_range_opts_set_max(
-                range_opts, detail::scoped_bson_value(max->view()).get());
+                range_opts, &get_bson_value(bsoncxx::v1::types::value{bsoncxx::v_noabi::to_v1(max->view())}));
         }
 
         if (precision) {
@@ -160,15 +205,15 @@ client_encryption::impl::encrypt_opts_ptr_type client_encryption::impl::to_mongo
             }
         };
 
-        auto text_opts_owner = std::unique_ptr<mongoc_client_encryption_encrypt_text_opts_t, text_opts_deleter>(
+        auto const text_opts_owner = std::unique_ptr<mongoc_client_encryption_encrypt_text_opts_t, text_opts_deleter>(
             libmongoc::client_encryption_encrypt_text_opts_new());
         auto const text_opts = text_opts_owner.get();
 
         auto const& case_sensitive = opt->case_sensitive();
         auto const& diacritic_sensitive = opt->diacritic_sensitive();
-        auto prefix = v1::text_options::internal::prefix_opts(*opt);
-        auto suffix = v1::text_options::internal::suffix_opts(*opt);
-        auto substring = v1::text_options::internal::substring_opts(*opt);
+        auto const& prefix = opt->prefix_opts();
+        auto const& suffix = opt->suffix_opts();
+        auto const& substring = opt->substring_opts();
 
         if (case_sensitive) {
             libmongoc::client_encryption_encrypt_text_opts_set_case_sensitive(text_opts, case_sensitive.value());
@@ -186,7 +231,7 @@ client_encryption::impl::encrypt_opts_ptr_type client_encryption::impl::to_mongo
                 }
             };
 
-            auto prefix_opts_owner =
+            auto const prefix_opts_owner =
                 std::unique_ptr<mongoc_client_encryption_encrypt_text_prefix_opts_t, prefix_opts_deleter>(
                     libmongoc::client_encryption_encrypt_text_prefix_opts_new());
             auto const prefix_opts = prefix_opts_owner.get();
@@ -214,7 +259,7 @@ client_encryption::impl::encrypt_opts_ptr_type client_encryption::impl::to_mongo
                 }
             };
 
-            auto suffix_opts_owner =
+            auto const suffix_opts_owner =
                 std::unique_ptr<mongoc_client_encryption_encrypt_text_suffix_opts_t, suffix_opts_deleter>(
                     libmongoc::client_encryption_encrypt_text_suffix_opts_new());
             auto const suffix_opts = suffix_opts_owner.get();
@@ -242,7 +287,7 @@ client_encryption::impl::encrypt_opts_ptr_type client_encryption::impl::to_mongo
                 }
             };
 
-            auto substring_opts_owner =
+            auto const substring_opts_owner =
                 std::unique_ptr<mongoc_client_encryption_encrypt_text_substring_opts_t, substring_opts_deleter>(
                     libmongoc::client_encryption_encrypt_text_substring_opts_new());
             auto const substring_opts = substring_opts_owner.get();
@@ -275,37 +320,65 @@ client_encryption::impl::encrypt_opts_ptr_type client_encryption::impl::to_mongo
     return ret;
 }
 
-client_encryption::client_encryption(options::client_encryption opts)
-    : _impl(bsoncxx::make_unique<impl>(std::move(opts))) {}
+} // namespace
 
-client_encryption::~client_encryption() = default;
-client_encryption::client_encryption(client_encryption&&) noexcept = default;
-client_encryption& client_encryption::operator=(client_encryption&&) noexcept = default;
+client_encryption::client_encryption(v_noabi::options::client_encryption opts)
+    : _ce{[&] {
+          bson_error_t error = {};
 
-bsoncxx::v_noabi::types::bson_value::value client_encryption::create_data_key(
+          if (auto const ptr = libmongoc::client_encryption_new(
+                  options::client_encryption::internal::to_mongoc(opts).get(), &error)) {
+              return v1::client_encryption::internal::make(ptr);
+          }
+
+          v_noabi::throw_exception<v_noabi::operation_exception>(error);
+      }()} {}
+
+bsoncxx::v_noabi::types::value client_encryption::create_data_key(
     std::string kms_provider,
-    options::data_key const& opts) {
-    return _impl->create_data_key(kms_provider, opts);
+    v_noabi::options::data_key const& opts) {
+    bsoncxx::v1::types::value keyid;
+    bson_error_t error = {};
+
+    if (!libmongoc::client_encryption_create_datakey(
+            v1::client_encryption::internal::as_mongoc(_ce),
+            std::string{kms_provider}.c_str(),
+            v_noabi::options::data_key::internal::to_mongoc(opts).get(),
+            &get_bson_value(keyid),
+            &error)) {
+        v_noabi::throw_exception<v_noabi::operation_exception>(error);
+    }
+
+    return bsoncxx::v1::types::value{std::move(keyid)};
 }
 
-bsoncxx::v_noabi::types::bson_value::value client_encryption::encrypt(
-    bsoncxx::v_noabi::types::bson_value::view value,
-    options::encrypt const& opts) {
-    return _impl->encrypt(value, opts);
+namespace {
+
+v1::collection create_encrypted_collection_impl(
+    mongoc_client_encryption_t* ce,
+    mongoc_client_t* client,
+    mongoc_database_t* db,
+    char const* name,
+    bson_t const* opts,
+    bsoncxx::v1::document::value& coll_opts,
+    char const* kms_provider,
+    bson_t const* masterkey) {
+    scoped_bson out;
+    bson_error_t error = {};
+
+    if (auto const ptr = libmongoc::client_encryption_create_encrypted_collection(
+            ce, db, name, opts, out.out_ptr(), kms_provider, masterkey, &error)) {
+        coll_opts = std::move(out).value();
+        return v1::collection::internal::make(ptr, client);
+    }
+
+    v_noabi::throw_exception<v_noabi::operation_exception>(error);
 }
 
-bsoncxx::v_noabi::document::value client_encryption::encrypt_expression(
-    bsoncxx::v_noabi::document::view_or_value expr,
-    options::encrypt const& opts) {
-    return _impl->encrypt_expression(expr, opts);
-}
+} // namespace
 
-bsoncxx::v_noabi::types::bson_value::value client_encryption::decrypt(bsoncxx::v_noabi::types::bson_value::view value) {
-    return _impl->decrypt(value);
-}
-
-collection client_encryption::create_encrypted_collection(
-    database const& db,
+v_noabi::collection client_encryption::create_encrypted_collection(
+    v_noabi::database const& db,
     std::string const& coll_name,
     bsoncxx::v_noabi::document::view const& options,
     bsoncxx::v_noabi::document::value& out_options,
@@ -315,44 +388,176 @@ collection client_encryption::create_encrypted_collection(
     // NOLINTNEXTLINE(cppcoreguidelines-pro-type-const-cast)
     auto& d = const_cast<v_noabi::database&>(db);
 
-    return _impl->create_encrypted_collection(
-        d, v_noabi::database::internal::as_mongoc(d), coll_name, options, out_options, kms_provider, masterkey);
+    bsoncxx::v1::document::value coll_opts;
+
+    auto ret = create_encrypted_collection_impl(
+        v1::client_encryption::internal::as_mongoc(_ce),
+        v_noabi::database::internal::get_client(d),
+        v_noabi::database::internal::as_mongoc(d),
+        coll_name.c_str(),
+        to_scoped_bson_view(options).bson(),
+        coll_opts,
+        kms_provider.c_str(),
+        masterkey ? to_scoped_bson_view(*masterkey).bson() : nullptr);
+
+    out_options = bsoncxx::v_noabi::from_v1(std::move(coll_opts));
+
+    return ret;
 }
 
-result::rewrap_many_datakey client_encryption::rewrap_many_datakey(
+namespace {
+
+// CSFLE API requires empty strings to be not-null.
+bsoncxx::v1::types::value ensure_not_null_string(bsoncxx::v1::types::value value) {
+    auto& v = bsoncxx::v1::types::value::internal::get_bson_value(value);
+
+    if (v.value_type == BSON_TYPE_UTF8 && v.value.v_utf8.str == nullptr) {
+        v.value.v_utf8.str = static_cast<char*>(bson_malloc0(1u));
+    }
+
+    return value;
+}
+
+} // namespace
+
+bsoncxx::v_noabi::types::value client_encryption::encrypt(
+    bsoncxx::v_noabi::types::bson_value::view value,
+    v_noabi::options::encrypt const& opts) {
+    bsoncxx::v1::types::value ciphertext;
+    bson_error_t error = {};
+
+    if (!libmongoc::client_encryption_encrypt(
+            v1::client_encryption::internal::as_mongoc(_ce),
+            &get_bson_value(ensure_not_null_string(bsoncxx::v1::types::value{bsoncxx::v_noabi::to_v1(value)})),
+            to_mongoc(opts).get(),
+            &get_bson_value(ciphertext),
+            &error)) {
+        v_noabi::throw_exception<v_noabi::operation_exception>(error);
+    }
+
+    return ciphertext;
+}
+
+bsoncxx::v_noabi::document::value client_encryption::encrypt_expression(
+    bsoncxx::v_noabi::document::view_or_value expr,
+    v_noabi::options::encrypt const& opts) {
+    auto const encrypt_opts = to_mongoc(opts);
+
+    bson_error_t error = {};
+
+    scoped_bson encrypted;
+    if (!libmongoc::client_encryption_encrypt_expression(
+            v1::client_encryption::internal::as_mongoc(_ce),
+            to_scoped_bson_view(expr).bson(),
+            encrypt_opts.get(),
+            encrypted.out_ptr(),
+            &error)) {
+        v_noabi::throw_exception<v_noabi::operation_exception>(error);
+    }
+
+    return bsoncxx::v_noabi::from_v1(std::move(encrypted).value());
+}
+
+bsoncxx::v_noabi::types::value client_encryption::decrypt(bsoncxx::v_noabi::types::bson_value::view value) try {
+    return _ce.decrypt(bsoncxx::v1::types::value{bsoncxx::v_noabi::to_v1(value)});
+} catch (v1::exception const& ex) {
+    v_noabi::throw_exception<v_noabi::operation_exception>(ex);
+}
+
+v_noabi::result::rewrap_many_datakey client_encryption::rewrap_many_datakey(
     bsoncxx::v_noabi::document::view_or_value filter,
-    options::rewrap_many_datakey const& opts) {
-    return _impl->rewrap_many_datakey(filter, opts);
+    v_noabi::options::rewrap_many_datakey const& opts) {
+    struct result_deleter {
+        void operator()(mongoc_client_encryption_rewrap_many_datakey_result_t* ptr) noexcept {
+            libmongoc::client_encryption_rewrap_many_datakey_result_destroy(ptr);
+        }
+    };
+
+    using result_ptr = std::unique_ptr<mongoc_client_encryption_rewrap_many_datakey_result_t, result_deleter>;
+
+    auto const result_owner = result_ptr{libmongoc::client_encryption_rewrap_many_datakey_result_new()};
+    auto const result = result_owner.get();
+
+    auto const& provider = opts.provider();
+    auto const& master_key_opt = opts.master_key();
+
+    bson_error_t error = {};
+
+    if (!libmongoc::client_encryption_rewrap_many_datakey(
+            v1::client_encryption::internal::as_mongoc(_ce),
+            to_scoped_bson_view(filter).bson(),
+            provider.view().empty() ? nullptr : provider.terminated().data(),
+            master_key_opt ? to_scoped_bson_view(*master_key_opt).bson() : nullptr,
+            result,
+            &error)) {
+        v_noabi::throw_exception<v_noabi::operation_exception>(error);
+    }
+
+    auto ret = v1::rewrap_many_datakey_result::internal::make();
+
+    if (bson_t const* bulk_write_result =
+            libmongoc::client_encryption_rewrap_many_datakey_result_get_bulk_write_result(result)) {
+        v1::rewrap_many_datakey_result::internal::result(ret) =
+            v1::bulk_write::result::internal::make(scoped_bson_view{bulk_write_result}.value());
+    }
+
+    return std::move(ret);
 }
 
-result::delete_result client_encryption::delete_key(bsoncxx::v_noabi::types::bson_value::view_or_value id) {
-    return _impl->delete_key(id);
+v_noabi::result::delete_result client_encryption::delete_key(
+    bsoncxx::v_noabi::types::bson_value::view_or_value id) try {
+    return _ce.delete_key(bsoncxx::v1::types::value{bsoncxx::v_noabi::to_v1(id.view())});
+} catch (v1::exception const& ex) {
+    v_noabi::throw_exception<v_noabi::operation_exception>(ex);
 }
+
+namespace {
+
+// Backward compatibility: v_noabi translates an empty document into a null optional.
+bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::value> empty_as_null(bsoncxx::v1::document::value v) {
+    if (v.empty()) {
+        return {};
+    }
+
+    return bsoncxx::v_noabi::from_v1(v);
+}
+
+} // namespace
 
 bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::value> client_encryption::get_key(
-    bsoncxx::v_noabi::types::bson_value::view_or_value id) {
-    return _impl->get_key(id);
+    bsoncxx::v_noabi::types::bson_value::view_or_value id) try {
+    return empty_as_null(_ce.get_key(bsoncxx::v1::types::value{bsoncxx::v_noabi::to_v1(id.view())}));
+} catch (v1::exception const& ex) {
+    v_noabi::throw_exception<v_noabi::operation_exception>(ex);
 }
 
-mongocxx::v_noabi::cursor client_encryption::get_keys() {
-    return _impl->get_keys();
+v_noabi::cursor client_encryption::get_keys() try { return _ce.get_keys(); } catch (v1::exception const& ex) {
+    v_noabi::throw_exception<v_noabi::operation_exception>(ex);
 }
 
 bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::value> client_encryption::add_key_alt_name(
     bsoncxx::v_noabi::types::bson_value::view_or_value id,
-    bsoncxx::v_noabi::string::view_or_value key_alt_name) {
-    return _impl->add_key_alt_name(id, key_alt_name);
-}
-
-bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::value> client_encryption::get_key_by_alt_name(
-    bsoncxx::v_noabi::string::view_or_value key_alt_name) {
-    return _impl->get_key_by_alt_name(key_alt_name);
+    bsoncxx::v_noabi::string::view_or_value key_alt_name) try {
+    return empty_as_null(
+        _ce.add_key_alt_name(bsoncxx::v1::types::value{bsoncxx::v_noabi::to_v1(id.view())}, key_alt_name.view()));
+} catch (v1::exception const& ex) {
+    v_noabi::throw_exception<v_noabi::operation_exception>(ex);
 }
 
 bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::value> client_encryption::remove_key_alt_name(
     bsoncxx::v_noabi::types::bson_value::view_or_value id,
-    bsoncxx::v_noabi::string::view_or_value key_alt_name) {
-    return _impl->remove_key_alt_name(id, key_alt_name);
+    bsoncxx::v_noabi::string::view_or_value key_alt_name) try {
+    return empty_as_null(
+        _ce.remove_key_alt_name(bsoncxx::v1::types::value{bsoncxx::v_noabi::to_v1(id.view())}, key_alt_name.view()));
+} catch (v1::exception const& ex) {
+    v_noabi::throw_exception<v_noabi::operation_exception>(ex);
+}
+
+bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::value> client_encryption::get_key_by_alt_name(
+    bsoncxx::v_noabi::string::view_or_value key_alt_name) try {
+    return empty_as_null(_ce.get_key_by_alt_name(key_alt_name.view()));
+} catch (v1::exception const& ex) {
+    v_noabi::throw_exception<v_noabi::operation_exception>(ex);
 }
 
 } // namespace v_noabi

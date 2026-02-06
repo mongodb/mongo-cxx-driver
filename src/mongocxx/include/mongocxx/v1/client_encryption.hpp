@@ -91,12 +91,12 @@ class client_encryption {
     ///
     /// This class is not copyable.
     ///
-    client_encryption(client_encryption const& other);
+    client_encryption(client_encryption const& other) = delete;
 
     ///
     /// This class is not copyable.
     ///
-    client_encryption& operator=(client_encryption const& other);
+    client_encryption& operator=(client_encryption const& other) = delete;
 
     ///
     /// Initialize with the given options.
@@ -271,6 +271,11 @@ class client_encryption {
     ///
     MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::document::value) get_key_by_alt_name(
         bsoncxx::v1::stdx::string_view key_alt_name);
+
+    class internal;
+
+   private:
+    /* explicit(false) */ client_encryption(void* impl);
 };
 
 ///
@@ -383,6 +388,8 @@ class client_encryption::options {
     /// Return the current "tlsOptions" field.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view>) tls_opts() const;
+
+    class internal;
 };
 
 } // namespace v1
