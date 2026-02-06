@@ -501,7 +501,7 @@ v_noabi::result::rewrap_many_datakey client_encryption::rewrap_many_datakey(
             v1::bulk_write::result::internal::make(scoped_bson_view{bulk_write_result}.value());
     }
 
-    return std::move(ret);
+    return v_noabi::result::rewrap_many_datakey{std::move(ret)};
 }
 
 v_noabi::result::delete_result client_encryption::delete_key(
