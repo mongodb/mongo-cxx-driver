@@ -38,6 +38,7 @@
 #include <mongocxx/cursor.hpp>
 #include <mongocxx/hint.hpp>
 #include <mongocxx/read_preference.hpp>
+#include <mongocxx/read_concern.hpp>
 
 #include <mongocxx/config/prelude.hpp>
 
@@ -136,6 +137,10 @@ class find {
 
         if (_read_preference) {
             ret.read_preference(to_v1(*_read_preference));
+        }
+
+        if (_read_concern) {
+            ret.read_concern(to_v1(*_read_concern));
         }
 
         if (_return_key) {
@@ -695,6 +700,37 @@ class find {
     }
 
     ///
+    /// Sets the read_concern for this operation.
+    ///
+    /// @param rc
+    ///   The new read_concern.
+    ///
+    /// @return
+    ///   A reference to the object on which this member function is being called. This facilitates
+    ///   method chaining.
+    ///
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/find/
+    ///
+    find& read_concern(v_noabi::read_concern rc) {
+        _read_concern = std::move(rc);
+        return *this;
+    }
+
+    ///
+    /// The current read_concern for this operation.
+    ///
+    /// @return
+    ///   The current read_concern.
+    ///
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/find/
+    ///
+    bsoncxx::v_noabi::stdx::optional<v_noabi::read_concern> const& read_concern() const {
+        return _read_concern;
+    }
+
+    ///
     /// Sets whether to return the index keys associated with the query results, instead of the
     /// actual query results themselves.
     ///
@@ -840,6 +876,7 @@ class find {
     bsoncxx::v_noabi::stdx::optional<bool> _no_cursor_timeout;
     bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> _projection;
     bsoncxx::v_noabi::stdx::optional<v_noabi::read_preference> _read_preference;
+    bsoncxx::v_noabi::stdx::optional<v_noabi::read_concern> _read_concern;
     bsoncxx::v_noabi::stdx::optional<bool> _return_key;
     bsoncxx::v_noabi::stdx::optional<bool> _show_record_id;
     bsoncxx::v_noabi::stdx::optional<std::int64_t> _skip;
