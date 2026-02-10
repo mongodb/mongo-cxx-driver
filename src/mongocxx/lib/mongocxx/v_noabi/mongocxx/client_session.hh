@@ -34,6 +34,7 @@ class client_session::internal {
     static client_session
     make(mongoc_client_session_t* session, v_noabi::client& client, v_noabi::options::client_session opts);
 
+    static v1::client_session const& as_v1(client_session const& self);
     static mongoc_client_session_t const* as_mongoc(client_session const& self);
 
     static void append_to(client_session const& self, scoped_bson& out);

@@ -14,11 +14,19 @@
 
 #pragma once
 
+#include <mongocxx/options/index-fwd.hpp> // IWYU pragma: export
+
+//
+
+#include <mongocxx/v1/indexes.hpp> // IWYU pragma: export
+
 #include <chrono>
+#include <cstdint>
 #include <memory>
+#include <string>
+#include <utility>
 
 #include <mongocxx/collection-fwd.hpp>
-#include <mongocxx/options/index-fwd.hpp> // IWYU pragma: export
 
 #include <bsoncxx/document/value.hpp> // IWYU pragma: keep: backward compatibility, to be removed.
 #include <bsoncxx/document/view.hpp>
@@ -90,14 +98,18 @@ class index {
         /// @param config_string
         ///   The WiredTiger configuration string.
         ///
-        void config_string(bsoncxx::v_noabi::string::view_or_value config_string);
+        void config_string(bsoncxx::v_noabi::string::view_or_value config_string) {
+            _config_string = std::move(config_string);
+        }
 
         ///
         /// The current config_string setting.
         ///
         /// @return The current config_string.
         ///
-        bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value> const& config_string() const;
+        bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value> const& config_string() const {
+            return _config_string;
+        }
 
        private:
         friend ::mongocxx::v_noabi::collection;
@@ -109,7 +121,102 @@ class index {
 
     BSONCXX_PRIVATE_WARNINGS_POP();
 
-    MONGOCXX_ABI_EXPORT_CDECL() index();
+    ///
+    /// Default initialization.
+    ///
+    index() = default;
+
+    ///
+    /// Construct with the @ref mongocxx::v1 equivalent.
+    ///
+    /// @warning The fields owned by `opts` MUST outlive the views in this object.
+    ///
+    /* explicit(false) */ MONGOCXX_ABI_EXPORT_CDECL() index(v1::indexes::options const& opts);
+
+    ///
+    /// Convert to the @ref mongocxx::v1 equivalent.
+    ///
+    /// @note The `storage_options` and `haystack_bucket_size` fields are ignored.
+    ///
+    explicit operator v1::indexes::options() const {
+        using bsoncxx::v_noabi::to_v1;
+
+        v1::indexes::options ret;
+
+        if (_background) {
+            ret.background(*_background);
+        }
+
+        if (_unique) {
+            ret.unique(*_unique);
+        }
+
+        if (_hidden) {
+            ret.hidden(*_hidden);
+        }
+
+        if (_name) {
+            ret.name(std::string{_name->view()});
+        }
+
+        if (_collation) {
+            ret.collation(bsoncxx::v1::document::value{to_v1(*_collation)});
+        }
+
+        if (_sparse) {
+            ret.sparse(*_sparse);
+        }
+
+        // _storage_options
+
+        if (_storage_engine) {
+            ret.storage_engine(bsoncxx::v1::document::value{to_v1(*_storage_engine)});
+        }
+
+        if (_expire_after) {
+            ret.expire_after(*_expire_after);
+        }
+
+        if (_version) {
+            ret.version(*_version);
+        }
+
+        if (_weights) {
+            ret.weights(bsoncxx::v1::document::value{to_v1(*_weights)});
+        }
+
+        if (_default_language) {
+            ret.default_language(std::string{_default_language->view()});
+        }
+
+        if (_language_override) {
+            ret.language_override(std::string{_language_override->view()});
+        }
+
+        if (_partial_filter_expression) {
+            ret.partial_filter_expression(bsoncxx::v1::document::value{to_v1(*_partial_filter_expression)});
+        }
+
+        if (_twod_sphere_version) {
+            ret.twod_sphere_version(*_twod_sphere_version);
+        }
+
+        if (_twod_bits_precision) {
+            ret.twod_bits_precision(*_twod_bits_precision);
+        }
+
+        if (_twod_location_min) {
+            ret.twod_location_min(*_twod_location_min);
+        }
+
+        if (_twod_location_max) {
+            ret.twod_location_max(*_twod_location_max);
+        }
+
+        // _haystack_bucket_size
+
+        return ret;
+    }
 
     ///
     /// Whether or not to build the index in the background so that building the index does not
@@ -125,14 +232,19 @@ class index {
     /// @see
     /// - https://www.mongodb.com/docs/manual/tutorial/build-indexes-in-the-background/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(index&) background(bool background);
+    index& background(bool background) {
+        _background = std::move(background);
+        return *this;
+    }
 
     ///
     /// The current background setting.
     ///
     /// @return The current background.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bool> const&) background() const;
+    bsoncxx::v_noabi::stdx::optional<bool> const& background() const {
+        return _background;
+    }
 
     ///
     /// Whether or not to create a unique index so that the collection will not accept insertion of
@@ -148,14 +260,19 @@ class index {
     /// @see
     /// - https://www.mongodb.com/docs/manual/core/index-unique/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(index&) unique(bool unique);
+    index& unique(bool unique) {
+        _unique = std::move(unique);
+        return *this;
+    }
 
     ///
     /// The current unique setting.
     ///
     /// @return The current unique.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bool> const&) unique() const;
+    bsoncxx::v_noabi::stdx::optional<bool> const& unique() const {
+        return _unique;
+    }
 
     ///
     /// Whether or not the index is hidden from the query planner. A hidden index is not evaluated
@@ -171,14 +288,19 @@ class index {
     /// @see
     /// - https://www.mongodb.com/docs/manual/core/index-hidden/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(index&) hidden(bool hidden);
+    index& hidden(bool hidden) {
+        _hidden = std::move(hidden);
+        return *this;
+    }
 
     ///
     /// The current hidden setting.
     ///
     /// @return The current hidden.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bool> const&) hidden() const;
+    bsoncxx::v_noabi::stdx::optional<bool> const& hidden() const {
+        return _hidden;
+    }
 
     ///
     /// The name of the index.
@@ -190,15 +312,19 @@ class index {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(index&) name(bsoncxx::v_noabi::string::view_or_value name);
+    index& name(bsoncxx::v_noabi::string::view_or_value name) {
+        _name = std::move(name);
+        return *this;
+    }
 
     ///
     /// The current name setting.
     ///
     /// @return The current name.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value> const&)
-    name() const;
+    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value> const& name() const {
+        return _name;
+    }
 
     ///
     /// Sets the collation for this index.
@@ -213,7 +339,10 @@ class index {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/collation/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(index&) collation(bsoncxx::v_noabi::document::view collation);
+    index& collation(bsoncxx::v_noabi::document::view collation) {
+        _collation = std::move(collation);
+        return *this;
+    }
 
     ///
     /// Retrieves the current collation for this index.
@@ -224,8 +353,9 @@ class index {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/collation/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view> const&)
-    collation() const;
+    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view> const& collation() const {
+        return _collation;
+    }
 
     ///
     /// Whether or not to create a sparse index. Sparse indexes only reference documents with the
@@ -241,14 +371,19 @@ class index {
     /// @see
     /// - https://www.mongodb.com/docs/manual/core/index-sparse/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(index&) sparse(bool sparse);
+    index& sparse(bool sparse) {
+        _sparse = std::move(sparse);
+        return *this;
+    }
 
     ///
     /// The current sparse setting.
     ///
     /// @return The current sparse setting.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bool> const&) sparse() const;
+    bsoncxx::v_noabi::stdx::optional<bool> const& sparse() const {
+        return _sparse;
+    }
 
     ///
     /// Specifies the storage engine options for the index.
@@ -264,8 +399,10 @@ class index {
     ///
     /// @deprecated Use @ref mongocxx::v_noabi::options::index::storage_engine instead.
     ///
-    MONGOCXX_DEPRECATED MONGOCXX_ABI_EXPORT_CDECL(index&) storage_options(
-        std::unique_ptr<base_storage_options> storage_options);
+    MONGOCXX_DEPRECATED index& storage_options(std::unique_ptr<base_storage_options> storage_options) {
+        _storage_options = std::move(storage_options);
+        return *this;
+    }
 
     ///
     /// Specifies the WiredTiger-specific storage engine options for the index.
@@ -277,8 +414,10 @@ class index {
     ///
     /// @deprecated Use @ref mongocxx::v_noabi::options::index::storage_engine instead.
     ///
-    MONGOCXX_DEPRECATED MONGOCXX_ABI_EXPORT_CDECL(index&) storage_options(
-        std::unique_ptr<wiredtiger_storage_options> storage_options);
+    MONGOCXX_DEPRECATED index& storage_options(std::unique_ptr<wiredtiger_storage_options> storage_options) {
+        _storage_options = std::move(storage_options);
+        return *this;
+    }
 
     ///
     /// Specifies the storage engine options for the index.
@@ -294,17 +433,18 @@ class index {
     ///   The storage engine options for the index.
     ///
     /// @see
-    /// - [Specifying Storage Engine Options (MongoDB Manual)](https://www.mongodb.com/docs/manual/reference/method/db.createCollection/#std-label-create-collection-storage-engine-options)
-    /// - [Storage Engines for Self-Managed Deployments (MongoDB Manual)](https://www.mongodb.com/docs/manual/core/storage-engines/)
-    ///
-    MONGOCXX_ABI_EXPORT_CDECL(index&)
-    storage_engine(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view> storage_engine);
+    /// - [Specifying Storage Engine Options (MongoDB Manual)](https://www.mongodb.com/docs/manual/reference/method/db.createCollection/#std-label-create-collection-storage-engine-options) /// - [Storage Engines for Self-Managed Deployments (MongoDB Manual)](https://www.mongodb.com/docs/manual/core/storage-engines/) ///
+    index& storage_engine(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view> storage_engine) {
+        _storage_engine = std::move(storage_engine);
+        return *this;
+    }
 
     ///
     /// The current storage engine options.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view> const&)
-    storage_engine() const;
+    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view> const& storage_engine() const {
+        return _storage_engine;
+    }
 
     ///
     /// Set a value, in seconds, as a TTL to control how long MongoDB retains documents in this
@@ -320,15 +460,19 @@ class index {
     /// @see
     /// - https://www.mongodb.com/docs/manual/core/index-ttl/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(index&) expire_after(std::chrono::seconds seconds);
+    index& expire_after(std::chrono::seconds seconds) {
+        _expire_after = std::move(seconds);
+        return *this;
+    }
 
     ///
     /// The current expire_after setting.
     ///
     /// @return The current expire_after value.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<std::chrono::seconds> const&)
-    expire_after() const;
+    bsoncxx::v_noabi::stdx::optional<std::chrono::seconds> const& expire_after() const {
+        return _expire_after;
+    }
 
     ///
     /// Sets the index version.
@@ -340,15 +484,19 @@ class index {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(index&) version(std::int32_t v);
+    index& version(std::int32_t v) {
+        _version = std::move(v);
+        return *this;
+    }
 
     ///
     /// The current index version.
     ///
     /// @return The current index version.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<std::int32_t> const&)
-    version() const;
+    bsoncxx::v_noabi::stdx::optional<std::int32_t> const& version() const {
+        return _version;
+    }
 
     ///
     /// For text indexes, sets the weight document. The weight document contains field and weight
@@ -361,15 +509,19 @@ class index {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(index&) weights(bsoncxx::v_noabi::document::view weights);
+    index& weights(bsoncxx::v_noabi::document::view weights) {
+        _weights = std::move(weights);
+        return *this;
+    }
 
     ///
     /// The current weights setting.
     ///
     /// @return The current weights.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view> const&)
-    weights() const;
+    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view> const& weights() const {
+        return _weights;
+    }
 
     ///
     /// For text indexes, the language that determines the list of stop words and the rules for the
@@ -382,16 +534,19 @@ class index {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(index&)
-    default_language(bsoncxx::v_noabi::string::view_or_value default_language);
+    index& default_language(bsoncxx::v_noabi::string::view_or_value default_language) {
+        _default_language = std::move(default_language);
+        return *this;
+    }
 
     ///
     /// The current default_language setting.
     ///
     /// @return The current default_language.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value> const&)
-    default_language() const;
+    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value> const& default_language() const {
+        return _default_language;
+    }
 
     ///
     /// For text indexes, the name of the field, in the collection’s documents, that contains the
@@ -404,16 +559,19 @@ class index {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(index&)
-    language_override(bsoncxx::v_noabi::string::view_or_value language_override);
+    index& language_override(bsoncxx::v_noabi::string::view_or_value language_override) {
+        _language_override = std::move(language_override);
+        return *this;
+    }
 
     ///
     /// The current name of the field that contains the override language for text indexes.
     ///
     /// @return The name of the field that contains the override language for text indexes.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value> const&)
-    language_override() const;
+    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value> const& language_override() const {
+        return _language_override;
+    }
 
     ///
     /// Sets the document for the partial filter expression for partial indexes.
@@ -425,16 +583,19 @@ class index {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(index&)
-    partial_filter_expression(bsoncxx::v_noabi::document::view partial_filter_expression);
+    index& partial_filter_expression(bsoncxx::v_noabi::document::view partial_filter_expression) {
+        _partial_filter_expression = std::move(partial_filter_expression);
+        return *this;
+    }
 
     ///
     /// The current partial_filter_expression setting.
     ///
     /// @return The current partial_filter_expression.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view> const&)
-    partial_filter_expression() const;
+    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view> const& partial_filter_expression() const {
+        return _partial_filter_expression;
+    }
 
     ///
     /// For 2dsphere indexes, the 2dsphere index version number. Version can be either 1 or 2.
@@ -446,15 +607,19 @@ class index {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(index&) twod_sphere_version(std::uint8_t twod_sphere_version);
+    index& twod_sphere_version(std::uint8_t twod_sphere_version) {
+        _twod_sphere_version = std::move(twod_sphere_version);
+        return *this;
+    }
 
     ///
     /// The current twod_sphere_version setting.
     ///
     /// @return The current twod_sphere_version.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<std::uint8_t> const&)
-    twod_sphere_version() const;
+    bsoncxx::v_noabi::stdx::optional<std::uint8_t> const& twod_sphere_version() const {
+        return _twod_sphere_version;
+    }
 
     ///
     /// For 2d indexes, the precision of the stored geohash value of the location data.
@@ -466,15 +631,19 @@ class index {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(index&) twod_bits_precision(std::uint8_t twod_bits_precision);
+    index& twod_bits_precision(std::uint8_t twod_bits_precision) {
+        _twod_bits_precision = std::move(twod_bits_precision);
+        return *this;
+    }
 
     ///
     /// The current precision of the stored geohash value of the location data.
     ///
     /// @return The precision of the stored geohash value of the location data.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<std::uint8_t> const&)
-    twod_bits_precision() const;
+    bsoncxx::v_noabi::stdx::optional<std::uint8_t> const& twod_bits_precision() const {
+        return _twod_bits_precision;
+    }
 
     ///
     /// For 2d indexes, the lower inclusive boundary for the longitude and latitude values.
@@ -486,15 +655,19 @@ class index {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(index&) twod_location_min(double twod_location_min);
+    index& twod_location_min(double twod_location_min) {
+        _twod_location_min = std::move(twod_location_min);
+        return *this;
+    }
 
     ///
     /// The current lower inclusive boundary for the longitude and latitude values.
     ///
     /// @return The lower inclusive boundary for the longitude and latitude values.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<double> const&)
-    twod_location_min() const;
+    bsoncxx::v_noabi::stdx::optional<double> const& twod_location_min() const {
+        return _twod_location_min;
+    }
 
     ///
     /// For 2d indexes, the upper inclusive boundary for the longitude and latitude values.
@@ -506,15 +679,19 @@ class index {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(index&) twod_location_max(double twod_location_max);
+    index& twod_location_max(double twod_location_max) {
+        _twod_location_max = std::move(twod_location_max);
+        return *this;
+    }
 
     ///
     /// The current upper inclusive boundary for the longitude and latitude values.
     ///
     /// @return The upper inclusive boundary for the longitude and latitude values.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<double> const&)
-    twod_location_max() const;
+    bsoncxx::v_noabi::stdx::optional<double> const& twod_location_max() const {
+        return _twod_location_max;
+    }
 
     ///
     /// For geoHaystack indexes, specify the number of units within which to group the location
@@ -534,8 +711,14 @@ class index {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    MONGOCXX_DEPRECATED MONGOCXX_ABI_EXPORT_CDECL(index&) haystack_bucket_size(double haystack_bucket_size);
-    MONGOCXX_ABI_EXPORT_CDECL(index&) haystack_bucket_size_deprecated(double haystack_bucket_size);
+    MONGOCXX_DEPRECATED index& haystack_bucket_size(double haystack_bucket_size) {
+        return this->haystack_bucket_size_deprecated(haystack_bucket_size);
+    }
+
+    index& haystack_bucket_size_deprecated(double haystack_bucket_size) {
+        _haystack_bucket_size = haystack_bucket_size;
+        return *this;
+    }
 
     ///
     /// The current haystack_bucket_size setting.
@@ -545,10 +728,13 @@ class index {
     /// @deprecated
     ///   This method is deprecated.
     ///
-    MONGOCXX_DEPRECATED MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<double> const&)
-    haystack_bucket_size() const;
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<double> const&)
-    haystack_bucket_size_deprecated() const;
+    MONGOCXX_DEPRECATED bsoncxx::v_noabi::stdx::optional<double> const& haystack_bucket_size() const {
+        return this->haystack_bucket_size_deprecated();
+    }
+
+    bsoncxx::v_noabi::stdx::optional<double> const& haystack_bucket_size_deprecated() const {
+        return _haystack_bucket_size;
+    }
 
     ///
     /// Conversion operator that provides a view of the options in document form.
@@ -561,8 +747,6 @@ class index {
     MONGOCXX_ABI_EXPORT_CDECL() operator bsoncxx::v_noabi::document::view_or_value();
 
    private:
-    friend ::mongocxx::v_noabi::collection;
-
     bsoncxx::v_noabi::stdx::optional<bool> _background;
     bsoncxx::v_noabi::stdx::optional<bool> _unique;
     bsoncxx::v_noabi::stdx::optional<bool> _hidden;
@@ -593,6 +777,26 @@ class index {
 } // namespace v_noabi
 } // namespace mongocxx
 
+namespace mongocxx {
+namespace v_noabi {
+
+///
+/// Convert to the @ref mongocxx::v_noabi equivalent of `v`.
+///
+inline v_noabi::options::index from_v1(v1::indexes::options const& v) {
+    return {v};
+}
+
+///
+/// Convert to the @ref mongocxx::v1 equivalent of `v`.
+///
+inline v1::indexes::options to_v1(v_noabi::options::index const& v) {
+    return v1::indexes::options{v};
+}
+
+} // namespace v_noabi
+} // namespace mongocxx
+
 #include <bsoncxx/config/postlude.hpp>
 
 #include <mongocxx/config/postlude.hpp>
@@ -600,4 +804,7 @@ class index {
 ///
 /// @file
 /// Provides @ref mongocxx::v_noabi::options::index.
+///
+/// @par Includes
+/// - @ref mongocxx/v1/indexes.hpp
 ///

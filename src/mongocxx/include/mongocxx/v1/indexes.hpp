@@ -141,11 +141,6 @@ class indexes {
         MONGOCXX_ABI_EXPORT_CDECL() options();
 
         ///
-        /// Return the current "commitQuorum" field.
-        ///
-        MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view> const) commit_quorum() const;
-
-        ///
         /// Set the "background" field.
         ///
         MONGOCXX_ABI_EXPORT_CDECL(options&) background(bool v);
@@ -341,6 +336,8 @@ class indexes {
         /// Return these index management options as a document.
         ///
         /* explicit(false) */ MONGOCXX_ABI_EXPORT_CDECL() operator bsoncxx::v1::document::value() const;
+
+        class internal;
     };
 
     ///
@@ -523,6 +520,8 @@ class indexes {
         /// Return the current "writeConcern" field.
         ///
         MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<v1::write_concern>) write_concern() const;
+
+        class internal;
     };
 
     ///
@@ -621,6 +620,8 @@ class indexes {
         /// Return the current "writeConcern" field.
         ///
         MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<v1::write_concern>) write_concern() const;
+
+        class internal;
     };
 
     ///
@@ -708,6 +709,8 @@ class indexes {
         /// Return the current "writeConcern" field.
         ///
         MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<v1::write_concern>) write_concern() const;
+
+        class internal;
     };
 
     ///
@@ -795,6 +798,8 @@ class indexes {
         /// Return the current "writeConcern" field.
         ///
         MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<v1::write_concern>) write_concern() const;
+
+        class internal;
     };
 
     ///
@@ -872,6 +877,8 @@ class indexes {
         /// Return the current "comment" field.
         ///
         MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::types::view>) comment() const;
+
+        class internal;
     };
 
     ///
@@ -1136,6 +1143,11 @@ class indexes {
     friend std::error_code make_error_code(errc v) {
         return {static_cast<int>(v), error_category()};
     }
+
+    class internal;
+
+   private:
+    /* explicit(false) */ indexes(void* impl);
 };
 
 } // namespace v1

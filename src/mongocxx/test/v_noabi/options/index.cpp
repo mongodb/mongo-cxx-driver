@@ -12,19 +12,32 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <mongocxx/options/index.hpp>
+
+//
+
+#include <bsoncxx/test/v1/document/value.hh>
+#include <bsoncxx/test/v1/stdx/optional.hh>
+
 #include <mongocxx/test/v_noabi/catch_helpers.hh>
 
+#include <chrono>
+#include <cstdint>
+#include <string>
+#include <utility>
+
 #include <bsoncxx/builder/basic/document.hpp>
+#include <bsoncxx/document/view.hpp>
+#include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/json.hpp>
 #include <bsoncxx/types.hpp>
-
-#include <mongocxx/instance.hpp>
-#include <mongocxx/options/index.hpp>
 
 #include <bsoncxx/private/make_unique.hh>
 #include <bsoncxx/private/suppress_deprecation_warnings.hh>
 
 #include <bsoncxx/test/catch.hh>
+
+#include <catch2/generators/catch_generators.hpp>
 
 namespace {
 using namespace bsoncxx::builder::basic;
@@ -128,3 +141,184 @@ TEST_CASE("index", "[index][option]") {
     }
 }
 } // namespace
+
+namespace mongocxx {
+
+TEST_CASE("v1", "[mongocxx][v_noabi][options][index]") {
+    auto const has_value = GENERATE(false, true);
+
+    bsoncxx::v1::stdx::optional<bool> background;
+    bsoncxx::v1::stdx::optional<bool> unique;
+    bsoncxx::v1::stdx::optional<bool> hidden;
+    bsoncxx::v1::stdx::optional<std::string> name;
+    bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> collation;
+    bsoncxx::v1::stdx::optional<bool> sparse;
+    bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> storage_engine;
+    bsoncxx::v1::stdx::optional<std::chrono::seconds> expire_after;
+    bsoncxx::v1::stdx::optional<std::int32_t> version;
+    bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> weights;
+    bsoncxx::v1::stdx::optional<std::string> default_language;
+    bsoncxx::v1::stdx::optional<std::string> language_override;
+    bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> partial_filter_expression;
+    bsoncxx::v1::stdx::optional<std::uint8_t> twod_sphere_version;
+    bsoncxx::v1::stdx::optional<std::uint8_t> twod_bits_precision;
+    bsoncxx::v1::stdx::optional<double> twod_location_min;
+    bsoncxx::v1::stdx::optional<double> twod_location_max;
+
+    if (has_value) {
+        background.emplace();
+        unique.emplace();
+        hidden.emplace();
+        name.emplace();
+        collation.emplace();
+        sparse.emplace();
+        storage_engine.emplace();
+        expire_after.emplace();
+        version.emplace();
+        weights.emplace();
+        default_language.emplace();
+        language_override.emplace();
+        partial_filter_expression.emplace();
+        twod_sphere_version.emplace();
+        twod_bits_precision.emplace();
+        twod_location_min.emplace();
+        twod_location_max.emplace();
+    }
+
+    using bsoncxx::v_noabi::from_v1;
+    using mongocxx::v_noabi::from_v1;
+    using mongocxx::v_noabi::to_v1;
+
+    using v_noabi = v_noabi::options::index;
+    using v1 = v1::indexes::options;
+
+    SECTION("from_v1") {
+        v1 from;
+
+        if (has_value) {
+            from.background(*background);
+            from.unique(*unique);
+            from.hidden(*hidden);
+            from.name(*name);
+            from.collation(*collation);
+            from.sparse(*sparse);
+            from.storage_engine(*storage_engine);
+            from.expire_after(*expire_after);
+            from.version(*version);
+            from.weights(*weights);
+            from.default_language(*default_language);
+            from.language_override(*language_override);
+            from.partial_filter_expression(*partial_filter_expression);
+            from.twod_sphere_version(*twod_sphere_version);
+            from.twod_bits_precision(*twod_bits_precision);
+            from.twod_location_min(*twod_location_min);
+            from.twod_location_max(*twod_location_max);
+        }
+
+        v_noabi const to{from};
+
+        if (has_value) {
+            CHECK(to.background() == *background);
+            CHECK(to.unique() == *unique);
+            CHECK(to.hidden() == *hidden);
+            CHECK(to.name() == *name);
+            CHECK(to.collation() == collation->view());
+            CHECK(to.sparse() == *sparse);
+            CHECK(to.storage_engine() == storage_engine->view());
+            CHECK(to.expire_after() == *expire_after);
+            CHECK(to.version() == *version);
+            CHECK(to.weights() == weights->view());
+            CHECK(to.default_language() == *default_language);
+            CHECK(to.language_override() == *language_override);
+            CHECK(to.partial_filter_expression() == partial_filter_expression->view());
+            CHECK(to.twod_sphere_version() == *twod_sphere_version);
+            CHECK(to.twod_bits_precision() == *twod_bits_precision);
+            CHECK(to.twod_location_min() == *twod_location_min);
+            CHECK(to.twod_location_max() == *twod_location_max);
+        } else {
+            CHECK_FALSE(to.background().has_value());
+            CHECK_FALSE(to.unique().has_value());
+            CHECK_FALSE(to.hidden().has_value());
+            CHECK_FALSE(to.name().has_value());
+            CHECK_FALSE(to.collation().has_value());
+            CHECK_FALSE(to.sparse().has_value());
+            CHECK_FALSE(to.storage_engine().has_value());
+            CHECK_FALSE(to.expire_after().has_value());
+            CHECK_FALSE(to.version().has_value());
+            CHECK_FALSE(to.weights().has_value());
+            CHECK_FALSE(to.default_language().has_value());
+            CHECK_FALSE(to.language_override().has_value());
+            CHECK_FALSE(to.partial_filter_expression().has_value());
+            CHECK_FALSE(to.twod_sphere_version().has_value());
+            CHECK_FALSE(to.twod_bits_precision().has_value());
+            CHECK_FALSE(to.twod_location_min().has_value());
+            CHECK_FALSE(to.twod_location_max().has_value());
+        }
+    }
+
+    SECTION("to_v1") {
+        v_noabi from;
+
+        if (has_value) {
+            from.background(*background);
+            from.unique(*unique);
+            from.hidden(*hidden);
+            from.name(*name);
+            from.collation(from_v1(collation->view()));
+            from.sparse(*sparse);
+            from.storage_engine(from_v1(storage_engine->view()));
+            from.expire_after(*expire_after);
+            from.version(*version);
+            from.weights(from_v1(weights->view()));
+            from.default_language(*default_language);
+            from.language_override(*language_override);
+            from.partial_filter_expression(from_v1(partial_filter_expression->view()));
+            from.twod_sphere_version(*twod_sphere_version);
+            from.twod_bits_precision(*twod_bits_precision);
+            from.twod_location_min(*twod_location_min);
+            from.twod_location_max(*twod_location_max);
+        }
+
+        v1 const to{from};
+
+        if (has_value) {
+            CHECK(to.background() == *background);
+            CHECK(to.unique() == *unique);
+            CHECK(to.hidden() == *hidden);
+            CHECK(to.name() == *name);
+            CHECK(to.collation() == collation->view());
+            CHECK(to.sparse() == *sparse);
+            CHECK(to.storage_engine() == storage_engine->view());
+            CHECK(to.expire_after() == *expire_after);
+            CHECK(to.version() == *version);
+            CHECK(to.weights() == weights->view());
+            CHECK(to.default_language() == *default_language);
+            CHECK(to.language_override() == *language_override);
+            CHECK(to.partial_filter_expression() == partial_filter_expression->view());
+            CHECK(to.twod_sphere_version() == *twod_sphere_version);
+            CHECK(to.twod_bits_precision() == *twod_bits_precision);
+            CHECK(to.twod_location_min() == *twod_location_min);
+            CHECK(to.twod_location_max() == *twod_location_max);
+        } else {
+            CHECK_FALSE(to.background().has_value());
+            CHECK_FALSE(to.unique().has_value());
+            CHECK_FALSE(to.hidden().has_value());
+            CHECK_FALSE(to.name().has_value());
+            CHECK_FALSE(to.collation().has_value());
+            CHECK_FALSE(to.sparse().has_value());
+            CHECK_FALSE(to.storage_engine().has_value());
+            CHECK_FALSE(to.expire_after().has_value());
+            CHECK_FALSE(to.version().has_value());
+            CHECK_FALSE(to.weights().has_value());
+            CHECK_FALSE(to.default_language().has_value());
+            CHECK_FALSE(to.language_override().has_value());
+            CHECK_FALSE(to.partial_filter_expression().has_value());
+            CHECK_FALSE(to.twod_sphere_version().has_value());
+            CHECK_FALSE(to.twod_bits_precision().has_value());
+            CHECK_FALSE(to.twod_location_min().has_value());
+            CHECK_FALSE(to.twod_location_max().has_value());
+        }
+    }
+}
+
+} // namespace mongocxx
