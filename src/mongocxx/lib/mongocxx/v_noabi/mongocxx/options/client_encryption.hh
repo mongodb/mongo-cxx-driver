@@ -14,28 +14,27 @@
 
 #pragma once
 
-#include <mongocxx/v1/rewrap_many_datakey_options.hpp> // IWYU pragma: export
-
-#include <string>
+#include <mongocxx/options/client_encryption.hpp> // IWYU pragma: export
 
 //
 
-#include <bsoncxx/v1/document/value-fwd.hpp>
-
-#include <bsoncxx/v1/stdx/optional.hpp>
+#include <mongocxx/v1/client_encryption.hh>
 
 namespace mongocxx {
-namespace v1 {
+namespace v_noabi {
+namespace options {
 
-class rewrap_many_datakey_options::internal {
+class client_encryption::internal {
    public:
-    static std::string const& provider(rewrap_many_datakey_options const& self);
-    static bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> const& master_key(
-        rewrap_many_datakey_options const& self);
+    static client_encryption from_v1(v1::client_encryption::options v);
+    static v1::client_encryption::options to_v1(client_encryption const& v);
 
-    static std::string& provider(rewrap_many_datakey_options& self);
-    static bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value>& master_key(rewrap_many_datakey_options& self);
+    using opts_deleter = v1::client_encryption::options::internal::opts_deleter;
+    using opts_ptr_type = v1::client_encryption::options::internal::opts_ptr_type;
+
+    static opts_ptr_type to_mongoc(client_encryption const& opts);
 };
 
-} // namespace v1
+} // namespace options
+} // namespace v_noabi
 } // namespace mongocxx

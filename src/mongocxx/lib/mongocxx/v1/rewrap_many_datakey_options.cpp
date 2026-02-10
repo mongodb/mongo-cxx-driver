@@ -103,6 +103,15 @@ bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view> rewrap_many_datakey_opt
     return impl::with(this)->_master_key;
 }
 
+std::string const& rewrap_many_datakey_options::internal::provider(rewrap_many_datakey_options const& self) {
+    return impl::with(self)._provider;
+}
+
+bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> const& rewrap_many_datakey_options::internal::master_key(
+    rewrap_many_datakey_options const& self) {
+    return impl::with(self)._master_key;
+}
+
 std::string& rewrap_many_datakey_options::internal::provider(rewrap_many_datakey_options& self) {
     return impl::with(self)._provider;
 }
