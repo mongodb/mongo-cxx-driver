@@ -1116,8 +1116,9 @@ class indexes {
     /// @attention This feature is experimental! It is not ready for use!
     ///
     enum class errc {
-        zero,         ///< Zero.
-        invalid_name, ///< "*" is not a permitted index name.
+        zero,              ///< Zero.
+        expired_after_i32, ///< The "expiredAfterSeconds" field must be representable as an `std::int32_t`.
+        invalid_name,      ///< "*" is not a permitted index name.
     };
 
     ///
