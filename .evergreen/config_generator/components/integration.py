@@ -140,6 +140,9 @@ def tasks():
                 compile_vars |= {'REQUIRED_CXX_STANDARD': cxx_standard}
                 test_vars |= {'REQUIRED_CXX_STANDARD': cxx_standard}
 
+            # DEVPROD-1167: MacOS distros are sometimes much slower than usual.
+            exec_timeout_secs = 7200 if distro.os_type == 'macos' else None
+
             commands = [expansions_update(updates=updates)] if updates else []
             commands += [
                 Setup.call(),
@@ -158,6 +161,7 @@ def tasks():
                 name=name,
                 tags=tags,
                 run_on=distro.name,
+                exec_timeout_secs=exec_timeout_secs,
                 patchable=patchable,
                 commands=commands,
             )
