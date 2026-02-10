@@ -2207,6 +2207,7 @@ tasks:
   - name: integration-macos-14-arm64-debug-shared-cxx11-6.0-replica
     run_on: macos-14-arm64
     tags: [integration, macos-14-arm64, macos, debug, shared, cxx11, "6.0", replica]
+    exec_timeout_secs: 7200
     commands:
       - command: expansions.update
         params:
@@ -2232,6 +2233,7 @@ tasks:
   - name: integration-macos-14-arm64-debug-shared-cxx11-6.0-sharded
     run_on: macos-14-arm64
     tags: [integration, macos-14-arm64, macos, debug, shared, cxx11, "6.0", sharded]
+    exec_timeout_secs: 7200
     commands:
       - command: expansions.update
         params:
@@ -2257,6 +2259,7 @@ tasks:
   - name: integration-macos-14-arm64-debug-shared-cxx11-6.0-single
     run_on: macos-14-arm64
     tags: [integration, macos-14-arm64, macos, debug, shared, cxx11, "6.0", single]
+    exec_timeout_secs: 7200
     commands:
       - command: expansions.update
         params:
@@ -2281,6 +2284,7 @@ tasks:
   - name: integration-macos-14-arm64-debug-shared-cxx11-8.0-replica
     run_on: macos-14-arm64
     tags: [integration, macos-14-arm64, macos, debug, shared, cxx11, "8.0", replica]
+    exec_timeout_secs: 7200
     commands:
       - command: expansions.update
         params:
@@ -2306,6 +2310,7 @@ tasks:
   - name: integration-macos-14-arm64-debug-shared-cxx11-8.0-sharded
     run_on: macos-14-arm64
     tags: [integration, macos-14-arm64, macos, debug, shared, cxx11, "8.0", sharded]
+    exec_timeout_secs: 7200
     commands:
       - command: expansions.update
         params:
@@ -2331,6 +2336,7 @@ tasks:
   - name: integration-macos-14-arm64-debug-shared-cxx11-8.0-single
     run_on: macos-14-arm64
     tags: [integration, macos-14-arm64, macos, debug, shared, cxx11, "8.0", single]
+    exec_timeout_secs: 7200
     commands:
       - command: expansions.update
         params:
@@ -2355,6 +2361,7 @@ tasks:
   - name: integration-macos-14-arm64-debug-shared-cxx11-csfle-6.0-replica
     run_on: macos-14-arm64
     tags: [integration, macos-14-arm64, macos, debug, shared, cxx11, csfle, "6.0", replica]
+    exec_timeout_secs: 7200
     commands:
       - command: expansions.update
         params:
@@ -2381,6 +2388,7 @@ tasks:
   - name: integration-macos-14-arm64-debug-shared-cxx11-csfle-6.0-sharded
     run_on: macos-14-arm64
     tags: [integration, macos-14-arm64, macos, debug, shared, cxx11, csfle, "6.0", sharded]
+    exec_timeout_secs: 7200
     commands:
       - command: expansions.update
         params:
@@ -2407,6 +2415,7 @@ tasks:
   - name: integration-macos-14-arm64-debug-shared-cxx11-csfle-6.0-single
     run_on: macos-14-arm64
     tags: [integration, macos-14-arm64, macos, debug, shared, cxx11, csfle, "6.0", single]
+    exec_timeout_secs: 7200
     commands:
       - command: expansions.update
         params:
@@ -2432,6 +2441,7 @@ tasks:
   - name: integration-macos-14-arm64-debug-shared-cxx11-csfle-8.0-replica
     run_on: macos-14-arm64
     tags: [integration, macos-14-arm64, macos, debug, shared, cxx11, csfle, "8.0", replica]
+    exec_timeout_secs: 7200
     commands:
       - command: expansions.update
         params:
@@ -2458,6 +2468,7 @@ tasks:
   - name: integration-macos-14-arm64-debug-shared-cxx11-csfle-8.0-sharded
     run_on: macos-14-arm64
     tags: [integration, macos-14-arm64, macos, debug, shared, cxx11, csfle, "8.0", sharded]
+    exec_timeout_secs: 7200
     commands:
       - command: expansions.update
         params:
@@ -2484,6 +2495,7 @@ tasks:
   - name: integration-macos-14-arm64-debug-shared-cxx11-csfle-8.0-single
     run_on: macos-14-arm64
     tags: [integration, macos-14-arm64, macos, debug, shared, cxx11, csfle, "8.0", single]
+    exec_timeout_secs: 7200
     commands:
       - command: expansions.update
         params:
@@ -2509,6 +2521,7 @@ tasks:
   - name: integration-macos-14-arm64-debug-shared-cxx11-csfle-latest-replica
     run_on: macos-14-arm64
     tags: [integration, macos-14-arm64, macos, debug, shared, cxx11, csfle, latest, replica]
+    exec_timeout_secs: 7200
     commands:
       - command: expansions.update
         params:
@@ -2535,6 +2548,7 @@ tasks:
   - name: integration-macos-14-arm64-debug-shared-cxx11-csfle-latest-replica-mongocryptd
     run_on: macos-14-arm64
     tags: [integration, macos-14-arm64, macos, debug, shared, cxx11, csfle, latest, replica, mongocryptd]
+    exec_timeout_secs: 7200
     commands:
       - command: expansions.update
         params:
@@ -2562,6 +2576,7 @@ tasks:
   - name: integration-macos-14-arm64-debug-shared-cxx11-csfle-latest-sharded
     run_on: macos-14-arm64
     tags: [integration, macos-14-arm64, macos, debug, shared, cxx11, csfle, latest, sharded]
+    exec_timeout_secs: 7200
     commands:
       - command: expansions.update
         params:
@@ -2588,6 +2603,7 @@ tasks:
   - name: integration-macos-14-arm64-debug-shared-cxx11-csfle-latest-single
     run_on: macos-14-arm64
     tags: [integration, macos-14-arm64, macos, debug, shared, cxx11, csfle, latest, single]
+    exec_timeout_secs: 7200
     commands:
       - command: expansions.update
         params:
@@ -2613,6 +2629,7 @@ tasks:
   - name: integration-macos-14-arm64-debug-shared-cxx11-latest-replica
     run_on: macos-14-arm64
     tags: [integration, macos-14-arm64, macos, debug, shared, cxx11, latest, replica]
+    exec_timeout_secs: 7200
     commands:
       - command: expansions.update
         params:
@@ -2638,6 +2655,7 @@ tasks:
   - name: integration-macos-14-arm64-debug-shared-cxx11-latest-sharded
     run_on: macos-14-arm64
     tags: [integration, macos-14-arm64, macos, debug, shared, cxx11, latest, sharded]
+    exec_timeout_secs: 7200
     commands:
       - command: expansions.update
         params:
@@ -2663,6 +2681,7 @@ tasks:
   - name: integration-macos-14-arm64-debug-shared-cxx11-latest-single
     run_on: macos-14-arm64
     tags: [integration, macos-14-arm64, macos, debug, shared, cxx11, latest, single]
+    exec_timeout_secs: 7200
     commands:
       - command: expansions.update
         params:
@@ -2687,6 +2706,7 @@ tasks:
   - name: integration-macos-14-arm64-debug-shared-cxx17-6.0-replica
     run_on: macos-14-arm64
     tags: [integration, macos-14-arm64, macos, debug, shared, cxx17, "6.0", replica]
+    exec_timeout_secs: 7200
     commands:
       - command: expansions.update
         params:
@@ -2712,6 +2732,7 @@ tasks:
   - name: integration-macos-14-arm64-debug-shared-cxx17-6.0-sharded
     run_on: macos-14-arm64
     tags: [integration, macos-14-arm64, macos, debug, shared, cxx17, "6.0", sharded]
+    exec_timeout_secs: 7200
     commands:
       - command: expansions.update
         params:
@@ -2737,6 +2758,7 @@ tasks:
   - name: integration-macos-14-arm64-debug-shared-cxx17-6.0-single
     run_on: macos-14-arm64
     tags: [integration, macos-14-arm64, macos, debug, shared, cxx17, "6.0", single]
+    exec_timeout_secs: 7200
     commands:
       - command: expansions.update
         params:
@@ -2761,6 +2783,7 @@ tasks:
   - name: integration-macos-14-arm64-debug-shared-cxx17-8.0-replica
     run_on: macos-14-arm64
     tags: [integration, macos-14-arm64, macos, debug, shared, cxx17, "8.0", replica]
+    exec_timeout_secs: 7200
     commands:
       - command: expansions.update
         params:
@@ -2786,6 +2809,7 @@ tasks:
   - name: integration-macos-14-arm64-debug-shared-cxx17-8.0-sharded
     run_on: macos-14-arm64
     tags: [integration, macos-14-arm64, macos, debug, shared, cxx17, "8.0", sharded]
+    exec_timeout_secs: 7200
     commands:
       - command: expansions.update
         params:
@@ -2811,6 +2835,7 @@ tasks:
   - name: integration-macos-14-arm64-debug-shared-cxx17-8.0-single
     run_on: macos-14-arm64
     tags: [integration, macos-14-arm64, macos, debug, shared, cxx17, "8.0", single]
+    exec_timeout_secs: 7200
     commands:
       - command: expansions.update
         params:
@@ -2835,6 +2860,7 @@ tasks:
   - name: integration-macos-14-arm64-debug-shared-cxx17-csfle-6.0-replica
     run_on: macos-14-arm64
     tags: [integration, macos-14-arm64, macos, debug, shared, cxx17, csfle, "6.0", replica]
+    exec_timeout_secs: 7200
     commands:
       - command: expansions.update
         params:
@@ -2861,6 +2887,7 @@ tasks:
   - name: integration-macos-14-arm64-debug-shared-cxx17-csfle-6.0-sharded
     run_on: macos-14-arm64
     tags: [integration, macos-14-arm64, macos, debug, shared, cxx17, csfle, "6.0", sharded]
+    exec_timeout_secs: 7200
     commands:
       - command: expansions.update
         params:
@@ -2887,6 +2914,7 @@ tasks:
   - name: integration-macos-14-arm64-debug-shared-cxx17-csfle-6.0-single
     run_on: macos-14-arm64
     tags: [integration, macos-14-arm64, macos, debug, shared, cxx17, csfle, "6.0", single]
+    exec_timeout_secs: 7200
     commands:
       - command: expansions.update
         params:
@@ -2912,6 +2940,7 @@ tasks:
   - name: integration-macos-14-arm64-debug-shared-cxx17-csfle-8.0-replica
     run_on: macos-14-arm64
     tags: [integration, macos-14-arm64, macos, debug, shared, cxx17, csfle, "8.0", replica]
+    exec_timeout_secs: 7200
     commands:
       - command: expansions.update
         params:
@@ -2938,6 +2967,7 @@ tasks:
   - name: integration-macos-14-arm64-debug-shared-cxx17-csfle-8.0-sharded
     run_on: macos-14-arm64
     tags: [integration, macos-14-arm64, macos, debug, shared, cxx17, csfle, "8.0", sharded]
+    exec_timeout_secs: 7200
     commands:
       - command: expansions.update
         params:
@@ -2964,6 +2994,7 @@ tasks:
   - name: integration-macos-14-arm64-debug-shared-cxx17-csfle-8.0-single
     run_on: macos-14-arm64
     tags: [integration, macos-14-arm64, macos, debug, shared, cxx17, csfle, "8.0", single]
+    exec_timeout_secs: 7200
     commands:
       - command: expansions.update
         params:
@@ -2989,6 +3020,7 @@ tasks:
   - name: integration-macos-14-arm64-debug-shared-cxx17-csfle-latest-replica
     run_on: macos-14-arm64
     tags: [integration, macos-14-arm64, macos, debug, shared, cxx17, csfle, latest, replica]
+    exec_timeout_secs: 7200
     commands:
       - command: expansions.update
         params:
@@ -3015,6 +3047,7 @@ tasks:
   - name: integration-macos-14-arm64-debug-shared-cxx17-csfle-latest-sharded
     run_on: macos-14-arm64
     tags: [integration, macos-14-arm64, macos, debug, shared, cxx17, csfle, latest, sharded]
+    exec_timeout_secs: 7200
     commands:
       - command: expansions.update
         params:
@@ -3041,6 +3074,7 @@ tasks:
   - name: integration-macos-14-arm64-debug-shared-cxx17-csfle-latest-single
     run_on: macos-14-arm64
     tags: [integration, macos-14-arm64, macos, debug, shared, cxx17, csfle, latest, single]
+    exec_timeout_secs: 7200
     commands:
       - command: expansions.update
         params:
@@ -3066,6 +3100,7 @@ tasks:
   - name: integration-macos-14-arm64-debug-shared-cxx17-latest-replica
     run_on: macos-14-arm64
     tags: [integration, macos-14-arm64, macos, debug, shared, cxx17, latest, replica]
+    exec_timeout_secs: 7200
     commands:
       - command: expansions.update
         params:
@@ -3091,6 +3126,7 @@ tasks:
   - name: integration-macos-14-arm64-debug-shared-cxx17-latest-sharded
     run_on: macos-14-arm64
     tags: [integration, macos-14-arm64, macos, debug, shared, cxx17, latest, sharded]
+    exec_timeout_secs: 7200
     commands:
       - command: expansions.update
         params:
@@ -3116,6 +3152,7 @@ tasks:
   - name: integration-macos-14-arm64-debug-shared-cxx17-latest-single
     run_on: macos-14-arm64
     tags: [integration, macos-14-arm64, macos, debug, shared, cxx17, latest, single]
+    exec_timeout_secs: 7200
     commands:
       - command: expansions.update
         params:
@@ -3140,6 +3177,7 @@ tasks:
   - name: integration-macos-14-debug-shared-cxx11-4.2-replica
     run_on: macos-14
     tags: [integration, macos-14, macos, debug, shared, cxx11, "4.2", replica]
+    exec_timeout_secs: 7200
     commands:
       - command: expansions.update
         params:
@@ -3165,6 +3203,7 @@ tasks:
   - name: integration-macos-14-debug-shared-cxx11-4.2-sharded
     run_on: macos-14
     tags: [integration, macos-14, macos, debug, shared, cxx11, "4.2", sharded]
+    exec_timeout_secs: 7200
     commands:
       - command: expansions.update
         params:
@@ -3190,6 +3229,7 @@ tasks:
   - name: integration-macos-14-debug-shared-cxx11-4.2-single
     run_on: macos-14
     tags: [integration, macos-14, macos, debug, shared, cxx11, "4.2", single]
+    exec_timeout_secs: 7200
     commands:
       - command: expansions.update
         params:
@@ -3214,6 +3254,7 @@ tasks:
   - name: integration-macos-14-debug-shared-cxx11-8.0-replica
     run_on: macos-14
     tags: [integration, macos-14, macos, debug, shared, cxx11, "8.0", replica]
+    exec_timeout_secs: 7200
     commands:
       - command: expansions.update
         params:
@@ -3239,6 +3280,7 @@ tasks:
   - name: integration-macos-14-debug-shared-cxx11-8.0-sharded
     run_on: macos-14
     tags: [integration, macos-14, macos, debug, shared, cxx11, "8.0", sharded]
+    exec_timeout_secs: 7200
     commands:
       - command: expansions.update
         params:
@@ -3264,6 +3306,7 @@ tasks:
   - name: integration-macos-14-debug-shared-cxx11-8.0-single
     run_on: macos-14
     tags: [integration, macos-14, macos, debug, shared, cxx11, "8.0", single]
+    exec_timeout_secs: 7200
     commands:
       - command: expansions.update
         params:
@@ -3288,6 +3331,7 @@ tasks:
   - name: integration-macos-14-debug-shared-cxx11-csfle-4.2-replica
     run_on: macos-14
     tags: [integration, macos-14, macos, debug, shared, cxx11, csfle, "4.2", replica]
+    exec_timeout_secs: 7200
     commands:
       - command: expansions.update
         params:
@@ -3314,6 +3358,7 @@ tasks:
   - name: integration-macos-14-debug-shared-cxx11-csfle-4.2-sharded
     run_on: macos-14
     tags: [integration, macos-14, macos, debug, shared, cxx11, csfle, "4.2", sharded]
+    exec_timeout_secs: 7200
     commands:
       - command: expansions.update
         params:
@@ -3340,6 +3385,7 @@ tasks:
   - name: integration-macos-14-debug-shared-cxx11-csfle-4.2-single
     run_on: macos-14
     tags: [integration, macos-14, macos, debug, shared, cxx11, csfle, "4.2", single]
+    exec_timeout_secs: 7200
     commands:
       - command: expansions.update
         params:
@@ -3365,6 +3411,7 @@ tasks:
   - name: integration-macos-14-debug-shared-cxx11-csfle-8.0-replica
     run_on: macos-14
     tags: [integration, macos-14, macos, debug, shared, cxx11, csfle, "8.0", replica]
+    exec_timeout_secs: 7200
     commands:
       - command: expansions.update
         params:
@@ -3391,6 +3438,7 @@ tasks:
   - name: integration-macos-14-debug-shared-cxx11-csfle-8.0-sharded
     run_on: macos-14
     tags: [integration, macos-14, macos, debug, shared, cxx11, csfle, "8.0", sharded]
+    exec_timeout_secs: 7200
     commands:
       - command: expansions.update
         params:
@@ -3417,6 +3465,7 @@ tasks:
   - name: integration-macos-14-debug-shared-cxx11-csfle-8.0-single
     run_on: macos-14
     tags: [integration, macos-14, macos, debug, shared, cxx11, csfle, "8.0", single]
+    exec_timeout_secs: 7200
     commands:
       - command: expansions.update
         params:
@@ -3442,6 +3491,7 @@ tasks:
   - name: integration-macos-14-debug-shared-cxx11-csfle-latest-replica
     run_on: macos-14
     tags: [integration, macos-14, macos, debug, shared, cxx11, csfle, latest, replica]
+    exec_timeout_secs: 7200
     commands:
       - command: expansions.update
         params:
@@ -3468,6 +3518,7 @@ tasks:
   - name: integration-macos-14-debug-shared-cxx11-csfle-latest-replica-mongocryptd
     run_on: macos-14
     tags: [integration, macos-14, macos, debug, shared, cxx11, csfle, latest, replica, mongocryptd]
+    exec_timeout_secs: 7200
     commands:
       - command: expansions.update
         params:
@@ -3495,6 +3546,7 @@ tasks:
   - name: integration-macos-14-debug-shared-cxx11-csfle-latest-sharded
     run_on: macos-14
     tags: [integration, macos-14, macos, debug, shared, cxx11, csfle, latest, sharded]
+    exec_timeout_secs: 7200
     commands:
       - command: expansions.update
         params:
@@ -3521,6 +3573,7 @@ tasks:
   - name: integration-macos-14-debug-shared-cxx11-csfle-latest-single
     run_on: macos-14
     tags: [integration, macos-14, macos, debug, shared, cxx11, csfle, latest, single]
+    exec_timeout_secs: 7200
     commands:
       - command: expansions.update
         params:
@@ -3546,6 +3599,7 @@ tasks:
   - name: integration-macos-14-debug-shared-cxx11-latest-replica
     run_on: macos-14
     tags: [integration, macos-14, macos, debug, shared, cxx11, latest, replica]
+    exec_timeout_secs: 7200
     commands:
       - command: expansions.update
         params:
@@ -3571,6 +3625,7 @@ tasks:
   - name: integration-macos-14-debug-shared-cxx11-latest-sharded
     run_on: macos-14
     tags: [integration, macos-14, macos, debug, shared, cxx11, latest, sharded]
+    exec_timeout_secs: 7200
     commands:
       - command: expansions.update
         params:
@@ -3596,6 +3651,7 @@ tasks:
   - name: integration-macos-14-debug-shared-cxx11-latest-single
     run_on: macos-14
     tags: [integration, macos-14, macos, debug, shared, cxx11, latest, single]
+    exec_timeout_secs: 7200
     commands:
       - command: expansions.update
         params:
