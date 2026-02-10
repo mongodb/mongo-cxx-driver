@@ -106,10 +106,11 @@ encrypt_opts_ptr_type to_mongoc(v_noabi::options::encrypt const& opts) {
         switch (*opt) {
             case v_noabi::options::encrypt::encryption_algorithm::k_deterministic:
                 libmongoc::client_encryption_encrypt_opts_set_algorithm(
-                    ptr, "AEAD_AES_256_CBC_HMAC_SHA_512-Deterministic");
+                    ptr, MONGOC_AEAD_AES_256_CBC_HMAC_SHA_512_DETERMINISTIC);
                 break;
             case v_noabi::options::encrypt::encryption_algorithm::k_random:
-                libmongoc::client_encryption_encrypt_opts_set_algorithm(ptr, "AEAD_AES_256_CBC_HMAC_SHA_512-Random");
+                libmongoc::client_encryption_encrypt_opts_set_algorithm(
+                    ptr, MONGOC_AEAD_AES_256_CBC_HMAC_SHA_512_RANDOM);
                 break;
             case v_noabi::options::encrypt::encryption_algorithm::k_indexed:
                 libmongoc::client_encryption_encrypt_opts_set_algorithm(ptr, MONGOC_ENCRYPT_ALGORITHM_INDEXED);
