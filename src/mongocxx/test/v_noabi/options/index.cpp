@@ -323,6 +323,9 @@ TEST_CASE("v1", "[mongocxx][v_noabi][options][index]") {
             CHECK_FALSE(to.twod_location_min().has_value());
             CHECK_FALSE(to.twod_location_max().has_value());
         }
+
+        CHECK_FALSE(to.text_index_version().has_value());
+        CHECK_FALSE(to.wildcard_projection().has_value());
     }
 }
 
