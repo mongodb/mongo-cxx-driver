@@ -433,7 +433,9 @@ class index {
     ///   The storage engine options for the index.
     ///
     /// @see
-    /// - [Specifying Storage Engine Options (MongoDB Manual)](https://www.mongodb.com/docs/manual/reference/method/db.createCollection/#std-label-create-collection-storage-engine-options) /// - [Storage Engines for Self-Managed Deployments (MongoDB Manual)](https://www.mongodb.com/docs/manual/core/storage-engines/) ///
+    /// - [Specifying Storage Engine Options (MongoDB Manual)](https://www.mongodb.com/docs/manual/reference/method/db.createCollection/#std-label-create-collection-storage-engine-options)
+    /// - [Storage Engines for Self-Managed Deployments (MongoDB Manual)](https://www.mongodb.com/docs/manual/core/storage-engines/)
+    ///
     index& storage_engine(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view> storage_engine) {
         _storage_engine = std::move(storage_engine);
         return *this;
