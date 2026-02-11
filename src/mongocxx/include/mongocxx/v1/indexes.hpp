@@ -1043,7 +1043,7 @@ class indexes {
     ///
     /// Drop a single index in the associated collection.
     ///
-    /// @param index The name of index to drop. The options must be applicable to the "dropIndexes" command.
+    /// @param index The name of index to drop.
     /// @param drop_opts "dropIndexes" command options.
     ///
     /// @throws mongocxx::v1::exception with @ref mongocxx::v1::indexes::errc::invalid_name if `name` is equal to "*".
@@ -1058,7 +1058,7 @@ class indexes {
     /// Drop a single index in the associated collection.
     ///
     /// @param session The session with which this operation is associated.
-    /// @param index The name of index to drop. The options must be applicable to the "dropIndexes" command.
+    /// @param index The name of index to drop.
     /// @param drop_opts "dropIndexes" command options.
     ///
     /// @throws mongocxx::v1::exception with @ref mongocxx::v1::indexes::errc::invalid_name if `name` is equal to "*".
@@ -1074,7 +1074,7 @@ class indexes {
     ///
     /// Drop a single index in the associated collection.
     ///
-    /// @param index The description of the index to drop. The options must be applicable to the "dropIndexes" command.
+    /// @param index The description of the index to drop.
     /// @param drop_opts "dropIndexes" command options.
     ///
     /// @throws mongocxx::v1::exception with @ref mongocxx::v1::indexes::errc::invalid_name if `name` is equal to "*".
