@@ -24,6 +24,7 @@
 #include <mongocxx/v1/cursor.hh>
 #include <mongocxx/v1/delete_many_result.hh>
 #include <mongocxx/v1/delete_one_result.hh>
+#include <mongocxx/v1/indexes.hh>
 #include <mongocxx/v1/insert_many_result.hh>
 #include <mongocxx/v1/insert_one_result.hh>
 #include <mongocxx/v1/read_concern.hh>
@@ -1370,7 +1371,7 @@ bsoncxx::v_noabi::stdx::optional<v_noabi::result::insert_one> collection::insert
 v_noabi::index_view collection::indexes() {
     auto& c = check_moved_from(_coll);
 
-    return index_view{v1::collection::internal::as_mongoc(c), v1::collection::internal::get_client(c)};
+    return v1::indexes::internal::make(v1::collection::internal::as_mongoc(c), v1::collection::internal::get_client(c));
 }
 
 v_noabi::cursor collection::list_indexes() const {

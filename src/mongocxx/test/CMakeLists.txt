@@ -84,6 +84,7 @@ set(mongocxx_test_sources_v_noabi
     v_noabi/options/find.cpp
     v_noabi/options/gridfs/bucket.cpp
     v_noabi/options/gridfs/upload.cpp
+    v_noabi/options/index_view.cpp
     v_noabi/options/index.cpp
     v_noabi/options/insert.cpp
     v_noabi/options/pool.cpp
@@ -135,6 +136,7 @@ set(mongocxx_test_sources_v1
     v1/find_one_and_update_options.cpp
     v1/find_options.cpp
     v1/hint.cpp
+    v1/indexes.cpp
     v1/insert_many_options.cpp
     v1/insert_many_result.cpp
     v1/insert_one_options.cpp

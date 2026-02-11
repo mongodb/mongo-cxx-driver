@@ -138,6 +138,10 @@ client_session client_session::internal::make(
         v1::client_session::internal::make(session, v_noabi::client::internal::as_v1(client)), client, std::move(opts)};
 }
 
+v1::client_session const& client_session::internal::as_v1(client_session const& self) {
+    return self._session;
+}
+
 mongoc_client_session_t const* client_session::internal::as_mongoc(client_session const& self) {
     return v1::client_session::internal::as_mongoc(self._session);
 }

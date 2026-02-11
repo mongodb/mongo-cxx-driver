@@ -331,25 +331,25 @@ class collection {
         v1::estimated_document_count_options const& opts = {});
 
     ///
-    /// Equivalent to `this->indexes().create_one(...)`.
+    /// Equivalent to `this->indexes().create_one(keys, index_opts, create_opts)`.
     ///
-    /// @{
     bsoncxx::v1::stdx::optional<std::string> create_index(
         bsoncxx::v1::document::value keys,
-        bsoncxx::v1::document::value create_opts = {},
-        v1::indexes::options opts = {}) {
-        return this->indexes().create_one(keys, create_opts, opts);
+        bsoncxx::v1::document::value index_opts = {},
+        v1::indexes::create_one_options create_opts = {}) {
+        return this->indexes().create_one(keys, index_opts, create_opts);
     }
 
+    ///
+    /// Equivalent to `this->indexes().create_one(session, keys, index_opts, create_opts)`.
+    ///
     bsoncxx::v1::stdx::optional<std::string> create_index(
         v1::client_session const& session,
         bsoncxx::v1::document::value keys,
-        bsoncxx::v1::document::value create_opts = {},
-        v1::indexes::options opts = {}) {
-        return this->indexes().create_one(session, keys, create_opts, opts);
+        bsoncxx::v1::document::value index_opts = {},
+        v1::indexes::create_one_options create_opts = {}) {
+        return this->indexes().create_one(session, keys, index_opts, create_opts);
     }
-    /// @}
-    ///
 
     ///
     /// Delete multiple documents in this collection using the given query filter.

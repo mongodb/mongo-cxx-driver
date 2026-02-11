@@ -14,34 +14,24 @@
 
 #pragma once
 
-#include <mongocxx/v1/indexes-fwd.hpp> // IWYU pragma: export
+#include <mongocxx/options/index.hpp> // IWYU pragma: export
 
-#include <mongocxx/config/prelude.hpp>
+//
+
+#include <memory>
+
+#include <mongocxx/private/export.hh>
 
 namespace mongocxx {
 namespace v_noabi {
 namespace options {
 
-class index;
+class index::internal {
+   public:
+    static MONGOCXX_ABI_EXPORT_CDECL_TESTING(std::unique_ptr<base_storage_options> const&) storage_options(
+        index const& self);
+};
 
 } // namespace options
 } // namespace v_noabi
 } // namespace mongocxx
-
-namespace mongocxx {
-namespace options {
-
-using v_noabi::options::index;
-
-} // namespace options
-} // namespace mongocxx
-
-#include <mongocxx/config/postlude.hpp>
-
-///
-/// @file
-/// Declares @ref mongocxx::v_noabi::options::index.
-///
-/// @par Includes
-/// - @ref mongocxx/v1/indexes-fwd.hpp
-///
