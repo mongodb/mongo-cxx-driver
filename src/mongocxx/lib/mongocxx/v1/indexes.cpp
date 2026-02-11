@@ -324,7 +324,7 @@ v1::cursor indexes::list(list_options const& list_opts) {
 
     append_to(list_opts, doc);
 
-    return list_impl(impl::with(this)->_coll, nullptr);
+    return list_impl(impl::with(this)->_coll, doc.bson());
 }
 
 v1::cursor indexes::list(v1::client_session const& session, list_options const& list_opts) {
