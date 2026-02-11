@@ -748,6 +748,8 @@ class index {
     ///
     MONGOCXX_ABI_EXPORT_CDECL() operator bsoncxx::v_noabi::document::view_or_value();
 
+    class internal;
+
    private:
     bsoncxx::v_noabi::stdx::optional<bool> _background;
     bsoncxx::v_noabi::stdx::optional<bool> _unique;
@@ -768,11 +770,6 @@ class index {
     bsoncxx::v_noabi::stdx::optional<double> _twod_location_min;
     bsoncxx::v_noabi::stdx::optional<double> _twod_location_max;
     bsoncxx::v_noabi::stdx::optional<double> _haystack_bucket_size;
-
-    //
-    // Return the current storage_options setting.
-    //
-    std::unique_ptr<base_storage_options> const& storage_options() const;
 };
 
 } // namespace options

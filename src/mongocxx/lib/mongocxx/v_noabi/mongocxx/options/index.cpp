@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <mongocxx/options/index.hpp>
+#include <mongocxx/options/index.hh>
 
 //
 
@@ -173,6 +173,10 @@ index::wiredtiger_storage_options::~wiredtiger_storage_options() = default;
 
 int index::wiredtiger_storage_options::type() const {
     return static_cast<int>(mongoc_index_storage_opt_type_t::MONGOC_INDEX_STORAGE_OPT_WIREDTIGER);
+}
+
+std::unique_ptr<index::base_storage_options> const& index::internal::storage_options(index const& self) {
+    return self._storage_options;
 }
 
 } // namespace options

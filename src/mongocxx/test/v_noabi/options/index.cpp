@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <mongocxx/options/index.hpp>
+#include <mongocxx/options/index.hh>
 
 //
 
@@ -254,6 +254,11 @@ TEST_CASE("v1", "[mongocxx][v_noabi][options][index]") {
             CHECK_FALSE(to.twod_location_min().has_value());
             CHECK_FALSE(to.twod_location_max().has_value());
         }
+
+        BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_BEGIN
+        CHECK_FALSE(v_noabi::internal::storage_options(to));
+        CHECK_FALSE(to.haystack_bucket_size().has_value());
+        BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_END
     }
 
     SECTION("to_v1") {
