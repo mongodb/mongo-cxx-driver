@@ -917,7 +917,7 @@ class indexes {
     ///
     /// Return all indexes in the associated collection.
     ///
-    /// @param list_opts "listIndexes" command options."
+    /// @param list_opts "listIndexes" command options.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(v1::cursor) list(list_options const& list_opts = {});
 
