@@ -485,7 +485,7 @@ bsoncxx::v1::stdx::optional<v1::delete_many_result> delete_many_impl(
         op.hint(*opt);
     }
 
-    if (auto ret = bulk.append(op).execute()) {
+    if (auto ret = bulk.append(std::move(op)).execute()) {
         return v1::delete_many_result::internal::make(v_noabi::to_v1(std::move(*ret)));
     }
 
@@ -506,9 +506,7 @@ bsoncxx::v1::stdx::optional<v1::delete_one_result> delete_one_impl(
         op.hint(*opt);
     }
 
-    bulk.append(op);
-
-    if (auto ret = bulk.execute()) {
+    if (auto ret = bulk.append(std::move(op)).execute()) {
         return v1::delete_one_result::internal::make(v_noabi::to_v1(std::move(*ret)));
     }
 
@@ -851,7 +849,7 @@ bsoncxx::v1::stdx::optional<v1::replace_one_result> replace_one_impl(
         op.upsert(*opt);
     }
 
-    if (auto res = bulk.append(op).execute()) {
+    if (auto res = bulk.append(std::move(op)).execute()) {
         return v1::replace_one_result::internal::make(v_noabi::to_v1(std::move(*res)));
     }
 
@@ -876,7 +874,7 @@ update_many_impl(v_noabi::bulk_write bulk, v_noabi::model::update_many op, v_noa
         op.array_filters(*opt);
     }
 
-    if (auto res = bulk.append(op).execute()) {
+    if (auto res = bulk.append(std::move(op)).execute()) {
         return v1::update_many_result::internal::make(v_noabi::to_v1(std::move(*res)));
     }
 
@@ -921,7 +919,7 @@ update_one_impl(v_noabi::bulk_write bulk, v_noabi::model::update_one op, v_noabi
         op.array_filters(*opt);
     }
 
-    if (auto res = bulk.append(op).execute()) {
+    if (auto res = bulk.append(std::move(op)).execute()) {
         return v1::update_one_result::internal::make(v_noabi::to_v1(std::move(*res)));
     }
 
