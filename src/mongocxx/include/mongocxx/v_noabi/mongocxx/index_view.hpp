@@ -123,7 +123,7 @@ class index_view {
         bsoncxx::v_noabi::document::view_or_value const& keys,
         bsoncxx::v_noabi::document::view_or_value const& index_options = {},
         v_noabi::options::index_view const& options = {}) {
-        return this->create_one(v_noabi::index_model{std::move(keys), std::move(index_options)}, options);
+        return this->create_one(v_noabi::index_model{keys, index_options}, options);
     }
 
     ///
@@ -155,7 +155,7 @@ class index_view {
         bsoncxx::v_noabi::document::view_or_value const& keys,
         bsoncxx::v_noabi::document::view_or_value const& index_options = {},
         v_noabi::options::index_view const& options = {}) {
-        return this->create_one(session, v_noabi::index_model{std::move(keys), std::move(index_options)}, options);
+        return this->create_one(session, v_noabi::index_model{keys, index_options}, options);
     }
 
     ///
