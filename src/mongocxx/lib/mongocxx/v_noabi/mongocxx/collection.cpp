@@ -810,7 +810,7 @@ bsoncxx::v1::stdx::optional<v1::insert_one_result> insert_one_impl(
 
     auto id = document.view()["_id"].type_value();
 
-    if (auto res = bulk.append(v_noabi::model::insert_one{document}).execute()) {
+    if (auto res = bulk.append(v_noabi::model::insert_one{std::move(document)}).execute()) {
         return v1::insert_one_result::internal::make(
             v_noabi::to_v1(std::move(*res)), bsoncxx::v_noabi::to_v1(std::move(id)));
     }
@@ -1202,14 +1202,14 @@ v_noabi::cursor collection::find(
 bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::value> collection::find_one(
     bsoncxx::v_noabi::document::view_or_value filter,
     v_noabi::options::find const& options) {
-    return find_one_impl(this->find(filter, std::move(v_noabi::options::find{options}.limit(1))));
+    return find_one_impl(this->find(std::move(filter), std::move(v_noabi::options::find{options}.limit(1))));
 }
 
 bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::value> collection::find_one(
     v_noabi::client_session const& session,
     bsoncxx::v_noabi::document::view_or_value filter,
     v_noabi::options::find const& options) {
-    return find_one_impl(this->find(session, filter, std::move(v_noabi::options::find{options}.limit(1))));
+    return find_one_impl(this->find(session, std::move(filter), std::move(v_noabi::options::find{options}.limit(1))));
 }
 
 bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::value> collection::find_one_and_delete(
