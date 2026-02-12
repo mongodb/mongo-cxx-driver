@@ -20,8 +20,8 @@
 #include <bsoncxx/v1/stdx/optional.hpp>
 
 #include <mongocxx/v1/cursor.hpp>
-#include <mongocxx/v1/read_preference.hpp>
 #include <mongocxx/v1/read_concern.hpp>
+#include <mongocxx/v1/read_preference.hpp>
 
 #include <bsoncxx/v1/types/value.hh>
 
@@ -335,8 +335,7 @@ bsoncxx::v1::stdx::optional<v1::read_preference> const& find_options::internal::
     return impl::with(self)._read_preference;
 }
 
-bsoncxx::v1::stdx::optional<v1::read_concern> const& find_options::internal::read_concern(
-    find_options const& self) {
+bsoncxx::v1::stdx::optional<v1::read_concern> const& find_options::internal::read_concern(find_options const& self) {
     return impl::with(self)._read_concern;
 }
 
