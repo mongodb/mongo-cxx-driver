@@ -21,6 +21,7 @@
 
 #include <mongocxx/v1/cursor.hpp>
 #include <mongocxx/v1/read_preference.hpp>
+#include <mongocxx/v1/read_concern.hpp>
 
 #include <bsoncxx/v1/types/value.hh>
 
@@ -52,6 +53,7 @@ class find_options::impl {
     bsoncxx::v1::stdx::optional<bool> _no_cursor_timeout;
     bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> _projection;
     bsoncxx::v1::stdx::optional<v1::read_preference> _read_preference;
+    bsoncxx::v1::stdx::optional<v1::read_concern> _read_concern;
     bsoncxx::v1::stdx::optional<bool> _return_key;
     bsoncxx::v1::stdx::optional<bool> _show_record_id;
     bsoncxx::v1::stdx::optional<std::int64_t> _skip;
@@ -252,6 +254,15 @@ bsoncxx::v1::stdx::optional<v1::read_preference> find_options::read_preference()
     return impl::with(this)->_read_preference;
 }
 
+find_options& find_options::read_concern(v1::read_concern rc) {
+    impl::with(this)->_read_concern = std::move(rc);
+    return *this;
+}
+
+bsoncxx::v1::stdx::optional<v1::read_concern> find_options::read_concern() const {
+    return impl::with(this)->_read_concern;
+}
+
 find_options& find_options::return_key(bool return_key) {
     impl::with(this)->_return_key = return_key;
     return *this;
@@ -324,6 +335,11 @@ bsoncxx::v1::stdx::optional<v1::read_preference> const& find_options::internal::
     return impl::with(self)._read_preference;
 }
 
+bsoncxx::v1::stdx::optional<v1::read_concern> const& find_options::internal::read_concern(
+    find_options const& self) {
+    return impl::with(self)._read_concern;
+}
+
 bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> const& find_options::internal::sort(
     find_options const& self) {
     return impl::with(self)._sort;
@@ -359,6 +375,10 @@ bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value>& find_options::interna
 
 bsoncxx::v1::stdx::optional<v1::read_preference>& find_options::internal::read_preference(find_options& self) {
     return impl::with(self)._read_preference;
+}
+
+bsoncxx::v1::stdx::optional<v1::read_concern>& find_options::internal::read_concern(find_options& self) {
+    return impl::with(self)._read_concern;
 }
 
 bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value>& find_options::internal::sort(find_options& self) {

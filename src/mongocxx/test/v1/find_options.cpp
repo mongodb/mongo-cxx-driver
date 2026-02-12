@@ -94,6 +94,7 @@ TEST_CASE("default", "[mongocxx][v1][find_options]") {
     CHECK_FALSE(opts.no_cursor_timeout().has_value());
     CHECK_FALSE(opts.projection().has_value());
     CHECK_FALSE(opts.read_preference().has_value());
+    CHECK_FALSE(opts.read_concern().has_value());
     CHECK_FALSE(opts.return_key().has_value());
     CHECK_FALSE(opts.show_record_id().has_value());
     CHECK_FALSE(opts.skip().has_value());
