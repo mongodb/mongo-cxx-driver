@@ -18,6 +18,7 @@
 
 #include <mongocxx/v1/cursor.hpp>
 #include <mongocxx/v1/hint.hpp>
+#include <mongocxx/v1/read_concern.hpp>
 #include <mongocxx/v1/read_preference.hpp>
 
 #include <bsoncxx/test/v1/types/value.hh>
@@ -261,6 +262,18 @@ TEST_CASE("read_preference", "[mongocxx][v1][find_options]") {
     }));
 
     CHECK(find_options{}.read_preference(v).read_preference() == v);
+}
+
+TEST_CASE("read_concern", "[mongocxx][v1][find_options]") {
+    v1::read_concern rc;
+    rc.acknowledge_level(read_concern::level::k_majority);
+
+    find_options opts;
+    opts.read_concern(rc);
+
+    auto val = opts.read_concern();
+    REQUIRE(val.has_value());
+    CHECK(val->acknowledge_level() == rc.acknowledge_level());
 }
 
 TEST_CASE("return_key", "[mongocxx][v1][find_options]") {
