@@ -136,6 +136,8 @@ bsoncxx::v1::stdx::optional<std::string> create_one_impl(
         // SERVER-78611: sharded clusters may place fields in a raw response document instead of in
         // the top-level document.
         if (auto const raw = reply_owner.view()["raw"]) {
+            auto const shard_response = raw.get_document().view();
+
             // There should only be a single field in the raw response with the shard connection
             // string as the key. e.g.:
             //   {
@@ -146,8 +148,8 @@ bsoncxx::v1::stdx::optional<std::string> create_one_impl(
             //     }
             //   }
             // Using a for loop for convenience.
-            for (auto const& shard_response : raw.get_document().view()) {
-                return shard_response.get_document().view();
+            for (auto const e : shard_response) {
+                return e.get_document().view();
             }
         }
 

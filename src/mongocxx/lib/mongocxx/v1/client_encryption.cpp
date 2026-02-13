@@ -73,12 +73,6 @@ struct encrypt_opts_deleter {
 using encrypt_opts_ptr_type = std::unique_ptr<mongoc_client_encryption_encrypt_opts_t, encrypt_opts_deleter>;
 
 encrypt_opts_ptr_type to_mongoc(v1::encrypt_options const& opts) {
-    struct encrypt_opts_deleter {
-        void operator()(mongoc_client_encryption_encrypt_opts_t* ptr) noexcept {
-            libmongoc::client_encryption_encrypt_opts_destroy(ptr);
-        }
-    };
-
     auto ret = encrypt_opts_ptr_type{libmongoc::client_encryption_encrypt_opts_new()};
     auto const ptr = ret.get();
 
