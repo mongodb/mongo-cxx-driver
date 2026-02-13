@@ -16,180 +16,106 @@
 
 //
 
-#include <algorithm>
+#include <mongocxx/v1/exception-fwd.hpp>
+
+#include <mongocxx/v1/gridfs/downloader.hh>
+
+#include <cstddef>
 #include <cstdint>
-#include <cstring>
-#include <sstream>
+#include <utility>
 
-#include <bsoncxx/types.hpp>
+#include <bsoncxx/document/value.hpp>
+#include <bsoncxx/document/view.hpp>
 
+#include <mongocxx/cursor.hpp>
 #include <mongocxx/exception/error_code.hpp>
+#include <mongocxx/exception/gridfs_exception.hpp>
 #include <mongocxx/exception/logic_error.hpp>
+#include <mongocxx/exception/operation_exception.hpp>
 
-#include <bsoncxx/private/make_unique.hh>
-
-#include <mongocxx/private/numeric_casting.hh>
+#include <mongocxx/mongoc_error.hh>
 
 namespace mongocxx {
 namespace v_noabi {
 namespace gridfs {
 
-downloader::downloader(
-    bsoncxx::v_noabi::stdx::optional<cursor> chunks,
-    chunks_and_bytes_offset start,
-    std::int32_t chunk_size,
-    std::int64_t file_len,
-    bsoncxx::v_noabi::document::value files_doc)
-    : _impl{bsoncxx::make_unique<impl>(std::move(chunks), start, chunk_size, file_len, std::move(files_doc))} {}
+namespace {
 
-downloader::downloader() noexcept = default;
-downloader::downloader(downloader&&) noexcept = default;
-downloader& downloader::operator=(downloader&&) noexcept = default;
-downloader::~downloader() = default;
-
-downloader::operator bool() const noexcept {
-    return static_cast<bool>(_impl);
+template <typename Downloader>
+Downloader& check_moved_from(Downloader& downloader) {
+    if (!downloader) {
+        throw v_noabi::logic_error{v_noabi::error_code::k_invalid_gridfs_downloader_object};
+    }
+    return downloader;
 }
 
-std::size_t downloader::read(std::uint8_t* buffer, std::size_t length_requested) {
-    if (_get_impl().closed) {
-        throw logic_error{error_code::k_gridfs_stream_not_open};
-    }
+} // namespace
 
-    if (_get_impl().file_len == 0) {
-        return 0;
-    }
-
-    std::size_t bytes_read = 0;
-
-    while (length_requested > 0 && (_get_impl().chunks_seen != _get_impl().file_chunk_count ||
-                                    _get_impl().chunk_buffer_offset < _get_impl().chunk_buffer_len)) {
-        if (_get_impl().chunk_buffer_offset == _get_impl().chunk_buffer_len) {
-            fetch_chunk();
-        }
-
-        std::size_t length = std::min(length_requested, _get_impl().chunk_buffer_len - _get_impl().chunk_buffer_offset);
-        std::memcpy(buffer, &_get_impl().chunk_buffer_ptr[_get_impl().chunk_buffer_offset], length);
-        buffer = &buffer[length];
-        _get_impl().chunk_buffer_offset += length;
-        bytes_read += length;
-        length_requested -= length;
-    }
-
-    return bytes_read;
+std::size_t downloader::read(std::uint8_t* buffer, std::size_t length) try {
+    return check_moved_from(_downloader).read(buffer, length);
+} catch (v1::exception const& ex) {
+    internal::rethrow_exception(ex);
 }
 
-void downloader::close() {
-    if (_get_impl().closed) {
-        throw logic_error{error_code::k_gridfs_stream_not_open};
-    }
-
-    _get_impl().chunks = {};
-    _get_impl().closed = true;
+void downloader::close() try { return check_moved_from(_downloader).close(); } catch (v1::exception const& ex) {
+    internal::rethrow_exception(ex);
 }
 
 std::int32_t downloader::chunk_size() const {
-    return _get_impl().chunk_size;
+    return check_moved_from(_downloader).chunk_size();
 }
 
 std::int64_t downloader::file_length() const {
-    return _get_impl().file_len;
+    return check_moved_from(_downloader).file_length();
 }
 
 bsoncxx::v_noabi::document::view downloader::files_document() const {
-    return _get_impl().files_doc.view();
+    return check_moved_from(_downloader).files_document();
 }
 
-void downloader::fetch_chunk() {
-    if (_get_impl().chunks_curr == _get_impl().chunks_end) {
-        std::ostringstream err;
-        err << "expected file to have " << _get_impl().file_chunk_count
-            << " chunk(s), but query to chunks collection only returned " << _get_impl().chunks_seen << " chunk(s)";
-        throw gridfs_exception{error_code::k_gridfs_file_corrupted, err.str()};
-    }
-    auto chunks_seen = _get_impl().chunks_seen;
+downloader downloader::internal::make() {
+    return v1::gridfs::downloader::internal::make();
+}
 
-    if (chunks_seen) {
-        ++(*_get_impl().chunks_curr);
-    } else {
-        chunks_seen = _get_impl().start.chunks_offset;
-    }
+downloader downloader::internal::make(
+    v_noabi::cursor cursor,
+    bsoncxx::v_noabi::document::value files_document,
+    std::int64_t file_length,
+    std::int32_t chunk_size,
+    std::int32_t initial_chunk_offset,
+    std::int32_t initial_byte_offset) try {
+    return v1::gridfs::downloader::internal::make(
+        v_noabi::to_v1(std::move(cursor)),
+        bsoncxx::v_noabi::to_v1(std::move(files_document)),
+        file_length,
+        chunk_size,
+        initial_chunk_offset,
+        initial_byte_offset);
+} catch (v1::exception const& ex) {
+    rethrow_exception(ex);
+}
 
-    bsoncxx::v_noabi::document::view chunk_doc = **_get_impl().chunks_curr;
+[[noreturn]]
+void downloader::internal::rethrow_exception(v1::exception const& ex) {
+    if (ex.code().category() == v1::gridfs::downloader::error_category()) {
+        using code = v1::gridfs::downloader::errc;
 
-    auto chunk_n_ele = chunk_doc["n"];
-    if (!chunk_n_ele || chunk_n_ele.type() != bsoncxx::v_noabi::type::k_int32 ||
-        chunk_n_ele.get_int32().value != chunks_seen) {
-        std::ostringstream err;
-        err << "chunk #" << chunks_seen << ": expected to find field \"n\" with k_int32 type";
-        throw gridfs_exception{error_code::k_gridfs_file_corrupted, err.str()};
-    }
+        switch (static_cast<code>(ex.code().value())) {
+            case code::is_closed:
+                throw v_noabi::gridfs_exception{
+                    v_noabi::error_code::k_gridfs_stream_not_open, strip_ec_msg(ex.what(), ex.code())};
 
-    if (chunks_seen == std::numeric_limits<std::int32_t>::max()) {
-        throw gridfs_exception{error_code::k_gridfs_file_corrupted, "file has too many chunks"};
-    }
+            case code::corrupt_data:
+                throw v_noabi::gridfs_exception{
+                    v_noabi::error_code::k_gridfs_file_corrupted, strip_ec_msg(ex.what(), ex.code())};
 
-    auto chunk_data_ele = chunk_doc["data"];
-    if (!chunk_data_ele || chunk_data_ele.type() != bsoncxx::v_noabi::type::k_binary) {
-        std::ostringstream err;
-        err << "chunk #" << chunks_seen << ": expected to find field \"data\" with k_binary type";
-        throw gridfs_exception{error_code::k_gridfs_file_corrupted, err.str()};
-    }
-
-    auto binary_data = chunk_data_ele.get_binary();
-
-    if (chunks_seen != _get_impl().file_chunk_count - 1) {
-        if (binary_data.size != static_cast<std::uint32_t>(_get_impl().chunk_size)) {
-            std::ostringstream err;
-            err << "chunk #" << chunks_seen << ": expected size of chunk to be " << _get_impl().chunk_size
-                << " bytes, but actual size of chunk is " << binary_data.size << " bytes";
-            throw gridfs_exception{error_code::k_gridfs_file_corrupted, err.str()};
+            case code::zero:
+            default:
+                v_noabi::throw_exception<v_noabi::gridfs_exception>(ex);
         }
     } else {
-        auto expected_size = _get_impl().file_len % static_cast<std::int64_t>(_get_impl().chunk_size);
-
-        if (expected_size == 0) {
-            expected_size = static_cast<std::int64_t>(_get_impl().chunk_size);
-        }
-
-        if (binary_data.size != static_cast<std::uint32_t>(expected_size)) {
-            std::ostringstream err;
-            err << "chunk #" << chunks_seen << ": expected size of chunk to be " << expected_size
-                << " bytes, but actual size of chunk is " << binary_data.size << " bytes";
-            throw gridfs_exception{error_code::k_gridfs_file_corrupted, err.str()};
-        }
+        v_noabi::throw_exception<v_noabi::operation_exception>(ex);
     }
-
-    _get_impl().chunk_buffer_ptr = binary_data.bytes;
-    _get_impl().chunk_buffer_len = binary_data.size;
-
-    if (!_get_impl().chunks_seen) {
-        if (!int32_to_size_t_safe(_get_impl().start.bytes_offset, _get_impl().chunk_buffer_offset)) {
-            throw gridfs_exception{error_code::k_invalid_parameter, "expected bytes offset to be in bounds of size_t"};
-        }
-        _get_impl().chunk_buffer_offset = static_cast<std::size_t>(_get_impl().start.bytes_offset);
-        _get_impl().chunks_seen = chunks_seen;
-    } else {
-        _get_impl().chunk_buffer_offset = 0;
-    }
-
-    ++_get_impl().chunks_seen;
-}
-
-template <typename Self>
-auto downloader::_get_impl(Self& self) -> decltype(*self._impl) {
-    if (!self._impl) {
-        throw logic_error{error_code::k_invalid_gridfs_downloader_object};
-    }
-    return *self._impl;
-}
-
-downloader::impl const& downloader::_get_impl() const {
-    return _get_impl(*this);
-}
-
-downloader::impl& downloader::_get_impl() {
-    return _get_impl(*this);
 }
 
 } // namespace gridfs

@@ -16,6 +16,16 @@
 
 #include <mongocxx/options/gridfs/upload-fwd.hpp> // IWYU pragma: export
 
+//
+
+#include <bsoncxx/v1/document/value.hpp>
+
+#include <mongocxx/v1/gridfs/upload_options.hpp> // IWYU pragma: export
+
+#include <cstdint>
+#include <utility>
+
+#include <bsoncxx/document/view.hpp>
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/stdx/optional.hpp>
 
@@ -32,6 +42,38 @@ namespace gridfs {
 class upload {
    public:
     ///
+    /// Default initialization.
+    ///
+    upload() = default;
+
+    ///
+    /// Construct with the @ref mongocxx::v1 equivalent.
+    ///
+    /* explicit(false) */ MONGOCXX_ABI_EXPORT_CDECL() upload(v1::gridfs::upload_options opts);
+
+    ///
+    /// Convert to the @ref mongocxx::v1 equivalent.
+    ///
+    /// @note The `comment` field is initialized with `this->comment_option()` (BSON type value) when set; otherwise, by
+    /// `this->comment()` (`std::string`) when set; otherwise, it is unset.
+    ///
+    explicit operator v1::gridfs::upload_options() const {
+        using bsoncxx::v_noabi::to_v1;
+
+        v1::gridfs::upload_options ret;
+
+        if (_chunk_size_bytes) {
+            ret.chunk_size_bytes(*_chunk_size_bytes);
+        }
+
+        if (_metadata) {
+            ret.metadata(bsoncxx::v1::document::value{to_v1(_metadata->view())});
+        }
+
+        return ret;
+    }
+
+    ///
     /// Sets the chunk size of the GridFS file being uploaded. Defaults to the chunk size specified
     /// in options::gridfs::bucket.
     ///
@@ -42,7 +84,10 @@ class upload {
     ///   A reference to the object on which this member function is being called. This facilitates
     ///   method chaining.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(upload&) chunk_size_bytes(std::int32_t chunk_size_bytes);
+    upload& chunk_size_bytes(std::int32_t chunk_size_bytes) {
+        _chunk_size_bytes = chunk_size_bytes;
+        return *this;
+    }
 
     ///
     /// Gets the chunk size of the GridFS file being uploaded.
@@ -50,8 +95,9 @@ class upload {
     /// @return
     ///   The chunk size of the GridFS file being uploaded in bytes.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<std::int32_t> const&)
-    chunk_size_bytes() const;
+    bsoncxx::v_noabi::stdx::optional<std::int32_t> const& chunk_size_bytes() const {
+        return _chunk_size_bytes;
+    }
 
     ///
     /// Sets the metadata field of the GridFS file being uploaded. A GridFS file can store arbitrary
@@ -64,7 +110,10 @@ class upload {
     ///   A reference to the object on which this member function is being called. This facilitates
     ///   method chaining.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(upload&) metadata(bsoncxx::v_noabi::document::view_or_value metadata);
+    upload& metadata(bsoncxx::v_noabi::document::view_or_value metadata) {
+        _metadata = std::move(metadata);
+        return *this;
+    }
 
     ///
     /// Gets the metadata of the GridFS file being uploaded.
@@ -72,8 +121,9 @@ class upload {
     /// @return
     ///   The metadata document of the GridFS file.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const&)
-    metadata() const;
+    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const& metadata() const {
+        return _metadata;
+    }
 
    private:
     bsoncxx::v_noabi::stdx::optional<std::int32_t> _chunk_size_bytes;
@@ -85,9 +135,32 @@ class upload {
 } // namespace v_noabi
 } // namespace mongocxx
 
+namespace mongocxx {
+namespace v_noabi {
+
+///
+/// Convert to the @ref mongocxx::v_noabi equivalent of `v`.
+///
+inline v_noabi::options::gridfs::upload from_v1(v1::gridfs::upload_options v) {
+    return {std::move(v)};
+}
+
+///
+/// Convert to the @ref mongocxx::v1 equivalent of `v`.
+///
+inline v1::gridfs::upload_options to_v1(v_noabi::options::gridfs::upload const& v) {
+    return v1::gridfs::upload_options{v};
+}
+
+} // namespace v_noabi
+} // namespace mongocxx
+
 #include <mongocxx/config/postlude.hpp>
 
 ///
 /// @file
 /// Provides @ref mongocxx::v_noabi::options::gridfs::upload.
+///
+/// @par Includes
+/// - @ref mongocxx/v1/gridfs/upload_options.hpp
 ///

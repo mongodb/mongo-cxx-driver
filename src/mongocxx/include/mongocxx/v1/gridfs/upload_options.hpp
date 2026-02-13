@@ -111,6 +111,8 @@ class upload_options {
     /// Return the current "metadata" field.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view>) metadata() const;
+
+    class internal;
 };
 
 } // namespace gridfs

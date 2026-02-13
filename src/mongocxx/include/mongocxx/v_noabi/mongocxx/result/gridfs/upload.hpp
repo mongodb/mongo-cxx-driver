@@ -14,10 +14,15 @@
 
 #pragma once
 
-#include <mongocxx/result/gridfs/upload-fwd.hpp>
+#include <mongocxx/result/gridfs/upload-fwd.hpp> // IWYU pragma: export
 
-#include <bsoncxx/array/value.hpp>
-#include <bsoncxx/types/bson_value/view.hpp>
+//
+
+#include <mongocxx/v1/gridfs/upload_result.hpp> // IWYU pragma: export
+
+#include <bsoncxx/array/value.hpp> // IWYU pragma: keep: backward compatibility, to be removed.
+#include <bsoncxx/types/value.hpp>
+#include <bsoncxx/types/view.hpp>
 
 #include <mongocxx/config/prelude.hpp>
 
@@ -29,25 +34,60 @@ namespace gridfs {
 /// The result of a GridFS upload operation.
 class upload {
    public:
-    MONGOCXX_ABI_EXPORT_CDECL() upload(bsoncxx::v_noabi::types::bson_value::view id);
+    ~upload() = default;
+
+    upload(upload&& other) noexcept = default;
+    upload& operator=(upload&& other) noexcept = default;
+
+    upload(upload const& other) : _id_owner{other._id_owner}, _id{_id_owner} {}
+
+    upload& operator=(upload const& other) {
+        if (this != &other) {
+            _id_owner = other._id_owner;
+            _id = _id_owner;
+        }
+
+        return *this;
+    }
+
+    ///
+    /// @deprecated For internal use only.
+    ///
+    upload(bsoncxx::v_noabi::types::bson_value::view id) : _id_owner{id}, _id{_id_owner} {}
+
+    ///
+    /// Construct with the @ref mongocxx::v1 equivalent.
+    ///
+    /* explicit(false) */ MONGOCXX_ABI_EXPORT_CDECL() upload(v1::gridfs::upload_result opts);
+
+    ///
+    /// Convert to the @ref mongocxx::v1 equivalent.
+    ///
+    /// @note The `comment` field is initialized with `this->comment_option()` (BSON type value) when set; otherwise, by
+    /// `this->comment()` (`std::string`) when set; otherwise, it is unset.
+    ///
+    explicit MONGOCXX_ABI_EXPORT_CDECL() operator v1::gridfs::upload_result() const;
 
     ///
     /// Gets the id of the uploaded GridFS file.
     ///
     /// @return The id of the uploaded file.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::types::bson_value::view const&) id() const;
+    bsoncxx::v_noabi::types::view const& id() const {
+        return _id;
+    }
 
-    friend MONGOCXX_ABI_EXPORT_CDECL(bool) operator==(upload const&, upload const&);
-    friend MONGOCXX_ABI_EXPORT_CDECL(bool) operator!=(upload const&, upload const&);
+    friend bool operator==(upload const& lhs, upload const& rhs) {
+        return lhs._id == rhs._id;
+    }
+
+    friend bool operator!=(upload const& lhs, upload const& rhs) {
+        return !(lhs == rhs);
+    }
 
    private:
-    // Array with a single element, containing the value of the _id field for the inserted files
-    // collection document.
-    bsoncxx::v_noabi::array::value _id_owned;
-
-    // Points into _id_owned.
-    bsoncxx::v_noabi::types::bson_value::view _id;
+    bsoncxx::v_noabi::types::value _id_owner;
+    bsoncxx::v_noabi::types::view _id;
 };
 
 } // namespace gridfs
@@ -60,4 +100,7 @@ class upload {
 ///
 /// @file
 /// Provides @ref mongocxx::v_noabi::result::gridfs::upload.
+///
+/// @par Includes
+/// - @ref mongocxx/v1/gridfs/upload_result.hpp
 ///

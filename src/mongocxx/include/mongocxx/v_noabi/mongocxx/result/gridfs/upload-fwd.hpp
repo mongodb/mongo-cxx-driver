@@ -14,6 +14,8 @@
 
 #pragma once
 
+#include <mongocxx/v1/gridfs/upload_result-fwd.hpp> // IWYU pragma: export
+
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
@@ -32,7 +34,7 @@ namespace mongocxx {
 namespace result {
 namespace gridfs {
 
-using ::mongocxx::v_noabi::result::gridfs::upload;
+using v_noabi::result::gridfs::upload;
 
 } // namespace gridfs
 } // namespace result
@@ -43,4 +45,7 @@ using ::mongocxx::v_noabi::result::gridfs::upload;
 ///
 /// @file
 /// Declares @ref mongocxx::v_noabi::result::gridfs::upload.
+///
+/// @par Includes
+/// - @ref mongocxx/v1/gridfs/upload_result-fwd.hpp
 ///
