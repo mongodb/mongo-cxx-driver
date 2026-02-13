@@ -48,6 +48,7 @@
 #include <mongocxx/v1/find_one_and_update_options.hh>
 #include <mongocxx/v1/find_options.hh>
 #include <mongocxx/v1/hint.hh>
+#include <mongocxx/v1/indexes.hh>
 #include <mongocxx/v1/insert_many_options.hh>
 #include <mongocxx/v1/insert_many_result.hh>
 #include <mongocxx/v1/insert_one_options.hh>
@@ -1243,8 +1244,7 @@ bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> collection::find_one_a
 }
 
 v1::indexes collection::indexes() {
-    // TODO: v1::indexes (CXX-3237)
-    MONGOCXX_PRIVATE_UNREACHABLE;
+    return v1::indexes::internal::make(impl::with(this)->_coll, impl::with(this)->_client);
 }
 
 bsoncxx::v1::stdx::optional<v1::insert_one_result> collection::insert_one(
