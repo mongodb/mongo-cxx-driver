@@ -51,6 +51,7 @@ TEST_CASE("find", "[find][option]") {
     CHECK_OPTIONAL_ARGUMENT(find_opts, no_cursor_timeout, true);
     CHECK_OPTIONAL_ARGUMENT(find_opts, projection, projection.view());
     CHECK_OPTIONAL_ARGUMENT(find_opts, read_preference, read_preference{});
+    CHECK_OPTIONAL_ARGUMENT(find_opts, read_concern, read_concern{});
     CHECK_OPTIONAL_ARGUMENT(find_opts, return_key, true);
     CHECK_OPTIONAL_ARGUMENT(find_opts, show_record_id, true);
     CHECK_OPTIONAL_ARGUMENT(find_opts, skip, 3);
