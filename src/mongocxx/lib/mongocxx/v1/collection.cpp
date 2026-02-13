@@ -511,7 +511,7 @@ delete_many_impl(v1::bulk_write bulk, bsoncxx::v1::document::view q, v1::delete_
         op.hint(*opt);
     }
 
-    if (auto ret = bulk.append(op).execute()) {
+    if (auto ret = bulk.append(std::move(op)).execute()) {
         return v1::delete_many_result::internal::make(std::move(*ret));
     }
 
@@ -530,7 +530,7 @@ delete_one_impl(v1::bulk_write bulk, bsoncxx::v1::document::view q, v1::delete_o
         op.hint(*opt);
     }
 
-    if (auto ret = bulk.append(op).execute()) {
+    if (auto ret = bulk.append(std::move(op)).execute()) {
         return v1::delete_one_result::internal::make(std::move(*ret));
     }
 
@@ -853,7 +853,7 @@ bsoncxx::v1::stdx::optional<v1::replace_one_result> replace_one_impl(
         op.upsert(*opt);
     }
 
-    if (auto res = bulk.append(op).execute()) {
+    if (auto res = bulk.append(std::move(op)).execute()) {
         return v1::replace_one_result::internal::make(std::move(*res));
     }
 
@@ -878,7 +878,7 @@ update_many_impl(v1::bulk_write bulk, v1::bulk_write::update_many op, v1::update
         op.array_filters(*opt);
     }
 
-    if (auto res = bulk.append(op).execute()) {
+    if (auto res = bulk.append(std::move(op)).execute()) {
         return v1::update_many_result::internal::make(std::move(*res));
     }
 
@@ -927,7 +927,7 @@ update_one_impl(v1::bulk_write bulk, v1::bulk_write::update_one op, v1::update_o
         op.array_filters(*opt);
     }
 
-    if (auto res = bulk.append(op).execute()) {
+    if (auto res = bulk.append(std::move(op)).execute()) {
         return v1::update_one_result::internal::make(std::move(*res));
     }
 

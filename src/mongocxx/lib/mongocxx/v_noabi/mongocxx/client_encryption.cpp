@@ -403,7 +403,7 @@ v_noabi::collection client_encryption::create_encrypted_collection(
 
     out_options = bsoncxx::v_noabi::from_v1(std::move(coll_opts));
 
-    return ret;
+    return v_noabi::from_v1(std::move(ret));
 }
 
 namespace {

@@ -171,8 +171,11 @@ class scoped_bson {
     }
 
     scoped_bson& operator=(scoped_bson const& other) {
-        _value = other._value;
-        this->sync_bson();
+        if (this != &other) {
+            _value = other._value;
+            this->sync_bson();
+        }
+
         return *this;
     }
 
