@@ -217,6 +217,26 @@ class cursor::iterator {
 } // namespace v_noabi
 } // namespace mongocxx
 
+namespace mongocxx {
+namespace v_noabi {
+
+///
+/// Convert to the @ref mongocxx::v_noabi equivalent of `v`.
+///
+inline v_noabi::cursor from_v1(v1::cursor v) {
+    return {std::move(v)};
+}
+
+///
+/// Convert to the @ref mongocxx::v1 equivalent of `v`.
+///
+inline v1::cursor to_v1(v_noabi::cursor v) {
+    return v1::cursor{std::move(v)};
+}
+
+} // namespace v_noabi
+} // namespace mongocxx
+
 #include <mongocxx/config/postlude.hpp>
 
 ///

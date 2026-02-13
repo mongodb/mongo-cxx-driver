@@ -16,205 +16,128 @@
 
 //
 
-#include <algorithm>
-#include <chrono>
-#include <cstring>
-#include <limits>
+#include <mongocxx/v1/exception.hpp>
 
-#include <bsoncxx/builder/basic/document.hpp>
-#include <bsoncxx/builder/basic/kvp.hpp>
-#include <bsoncxx/types.hpp>
+#include <mongocxx/v1/gridfs/uploader.hh>
 
+#include <cstddef>
+#include <cstdint>
+#include <string>
+#include <utility>
+
+#include <bsoncxx/types/bson_value/value-fwd.hpp>
+
+#include <bsoncxx/document/value.hpp>
+#include <bsoncxx/document/view.hpp>
+#include <bsoncxx/document/view_or_value.hpp>
+#include <bsoncxx/stdx/optional.hpp>
+#include <bsoncxx/types/bson_value/value.hpp>
+
+#include <mongocxx/client_session.hpp>
+#include <mongocxx/collection.hpp>
 #include <mongocxx/exception/error_code.hpp>
 #include <mongocxx/exception/gridfs_exception.hpp>
 #include <mongocxx/exception/logic_error.hpp>
+#include <mongocxx/exception/operation_exception.hpp>
+#include <mongocxx/result/gridfs/upload.hpp>
 
-namespace {
-
-std::size_t chunks_collection_documents_max_length(std::size_t chunk_size) {
-    // 16 * 1000 * 1000 (16 MB) is used instead of 16 * 1024 * 1024 (16 MiB) to ensure that the command document sent to
-    // the server has space for the other fields. NOLINTNEXTLINE(cppcoreguidelines-avoid-magic-numbers)
-    return 16u * 1000u * 1000u / chunk_size;
-}
-
-} // namespace
+#include <mongocxx/client_session.hh>
+#include <mongocxx/mongoc_error.hh>
 
 namespace mongocxx {
 namespace v_noabi {
 namespace gridfs {
 
-uploader::uploader(
-    client_session const* session,
-    bsoncxx::v_noabi::types::bson_value::view id,
-    bsoncxx::v_noabi::stdx::string_view filename,
-    collection files,
-    collection chunks,
-    std::int32_t chunk_size,
-    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> metadata)
-    : _impl{bsoncxx::make_unique<impl>(
-          session,
-          id,
-          filename,
-          files,
-          chunks,
-          chunk_size,
-          metadata ? bsoncxx::v_noabi::stdx::make_optional<bsoncxx::v_noabi::document::value>(
-                         bsoncxx::v_noabi::document::value{metadata->view()})
-                   : bsoncxx::v_noabi::stdx::nullopt)} {}
+namespace {
 
-uploader::uploader() noexcept = default;
-uploader::uploader(uploader&&) noexcept = default;
-uploader& uploader::operator=(uploader&&) noexcept = default;
-uploader::~uploader() = default;
-
-uploader::operator bool() const noexcept {
-    return static_cast<bool>(_impl);
+template <typename Uploader>
+Uploader& check_moved_from(Uploader& uploader) {
+    if (!uploader) {
+        throw v_noabi::logic_error{v_noabi::error_code::k_invalid_gridfs_uploader_object};
+    }
+    return uploader;
 }
 
-void uploader::write(std::uint8_t const* bytes, std::size_t length) {
-    if (_get_impl().closed) {
-        throw logic_error{error_code::k_gridfs_stream_not_open};
-    }
+} // namespace
 
-    while (length > 0) {
-        std::size_t buffer_free_space = static_cast<std::size_t>(_get_impl().chunk_size) - _get_impl().buffer_off;
-
-        if (buffer_free_space == 0) {
-            finish_chunk();
-        }
-
-        std::size_t length_written = std::min(length, buffer_free_space);
-        std::memcpy(&_get_impl().buffer.get()[_get_impl().buffer_off], bytes, length_written);
-        bytes = &bytes[length_written];
-        _get_impl().buffer_off += length_written;
-        length -= length_written;
-    }
+void uploader::write(std::uint8_t const* bytes, std::size_t length) try {
+    check_moved_from(_uploader).write(bytes, length);
+} catch (v1::exception const& ex) {
+    internal::rethrow_exception(ex);
 }
 
-result::gridfs::upload uploader::close() {
-    using bsoncxx::v_noabi::builder::basic::kvp;
-
-    if (_get_impl().closed) {
-        throw logic_error{error_code::k_gridfs_stream_not_open};
+v_noabi::result::gridfs::upload uploader::close() try {
+    if (!check_moved_from(_uploader).is_open()) {
+        throw v_noabi::logic_error{v_noabi::error_code::k_gridfs_stream_not_open};
     }
 
-    _get_impl().closed = true;
-
-    bsoncxx::v_noabi::builder::basic::document file;
-
-    std::int64_t bytes_uploaded =
-        static_cast<std::int64_t>(_get_impl().chunks_written) * static_cast<std::int64_t>(_get_impl().chunk_size);
-    std::int64_t leftover = static_cast<std::int64_t>(_get_impl().buffer_off);
-
-    finish_chunk();
-    flush_chunks();
-
-    file.append(kvp("_id", _get_impl().result.id()));
-    file.append(kvp("length", bytes_uploaded + leftover));
-    file.append(kvp("chunkSize", _get_impl().chunk_size));
-    file.append(kvp("uploadDate", bsoncxx::v_noabi::types::b_date{std::chrono::system_clock::now()}));
-    file.append(kvp("filename", _get_impl().filename));
-
-    if (_get_impl().metadata) {
-        file.append(kvp("metadata", *_get_impl().metadata));
-    }
-
-    if (_get_impl().session) {
-        _get_impl().files.insert_one(*_get_impl().session, file.extract());
-    } else {
-        _get_impl().files.insert_one(file.extract());
-    }
-
-    return _get_impl().result;
+    return _uploader.close();
+} catch (v1::exception const& ex) {
+    internal::rethrow_exception(ex);
 }
 
-void uploader::abort() {
-    if (_get_impl().closed) {
-        throw logic_error{error_code::k_gridfs_stream_not_open};
+void uploader::abort() try {
+    if (!check_moved_from(_uploader).is_open()) {
+        throw v_noabi::logic_error{v_noabi::error_code::k_gridfs_stream_not_open};
     }
 
-    _get_impl().closed = true;
-
-    bsoncxx::v_noabi::builder::basic::document filter;
-    filter.append(bsoncxx::v_noabi::builder::basic::kvp("files_id", _get_impl().result.id()));
-
-    if (_get_impl().session) {
-        _get_impl().chunks.delete_many(*_get_impl().session, filter.extract());
-    } else {
-        _get_impl().chunks.delete_many(filter.extract());
-    }
+    check_moved_from(_uploader).abort();
+} catch (v1::exception const& ex) {
+    internal::rethrow_exception(ex);
 }
 
 std::int32_t uploader::chunk_size() const {
-    return _get_impl().chunk_size;
+    return check_moved_from(_uploader).chunk_size();
 }
 
-void uploader::finish_chunk() {
-    using bsoncxx::v_noabi::builder::basic::kvp;
+uploader uploader::internal::make(
+    v_noabi::collection files_coll,
+    v_noabi::collection chunks_coll,
+    v_noabi::client_session const* session_ptr,
+    std::string filename,
+    bsoncxx::v_noabi::types::value id,
+    std::int32_t chunk_size,
+    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const& metadata) {
+    using bsoncxx::v_noabi::to_v1;
+    using mongocxx::v_noabi::to_v1;
 
-    if (!_get_impl().buffer_off) {
-        return;
+    bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view> metadata_v1;
+
+    if (metadata) {
+        metadata_v1.emplace(metadata->view());
     }
 
-    bsoncxx::v_noabi::builder::basic::document chunk;
-
-    std::size_t bytes_in_chunk = _get_impl().buffer_off;
-
-    chunk.append(kvp("files_id", _get_impl().result.id()));
-    chunk.append(kvp("n", _get_impl().chunks_written));
-
-    if (_get_impl().chunks_written == std::numeric_limits<std::int32_t>::max()) {
-        throw gridfs_exception{error_code::k_gridfs_upload_requires_too_many_chunks};
-    }
-
-    ++_get_impl().chunks_written;
-
-    bsoncxx::v_noabi::types::b_binary data{
-        bsoncxx::v_noabi::binary_sub_type::k_binary,
-        static_cast<std::uint32_t>(bytes_in_chunk),
-        _get_impl().buffer.get()};
-
-    chunk.append(kvp("data", data));
-    _get_impl().chunks_collection_documents.push_back(chunk.extract());
-
-    // To reduce the number of calls to the server, chunks are sent in batches rather than each one
-    // being sent immediately upon being written.
-    if (_get_impl().chunks_collection_documents.size() >=
-        chunks_collection_documents_max_length(static_cast<std::size_t>(_get_impl().chunk_size))) {
-        flush_chunks();
-    }
-
-    _get_impl().buffer_off = 0;
+    return v1::gridfs::uploader::internal::make(
+        to_v1(std::move(files_coll)),
+        to_v1(std::move(chunks_coll)),
+        session_ptr ? &v_noabi::client_session::internal::as_v1(*session_ptr) : nullptr,
+        std::move(filename),
+        to_v1(std::move(id)),
+        chunk_size,
+        metadata_v1);
 }
 
-void uploader::flush_chunks() {
-    if (_get_impl().chunks_collection_documents.empty()) {
-        return;
-    }
+[[noreturn]]
+void uploader::internal::rethrow_exception(v1::exception const& ex) {
+    if (ex.code().category() == v1::gridfs::uploader::error_category()) {
+        using code = v1::gridfs::uploader::errc;
 
-    if (_get_impl().session) {
-        _get_impl().chunks.insert_many(*_get_impl().session, _get_impl().chunks_collection_documents);
+        switch (static_cast<code>(ex.code().value())) {
+            case code::is_closed:
+                throw v_noabi::gridfs_exception{
+                    v_noabi::error_code::k_gridfs_stream_not_open, strip_ec_msg(ex.what(), ex.code())};
+
+            case code::too_many_chunks:
+                throw v_noabi::gridfs_exception{
+                    v_noabi::error_code::k_gridfs_upload_requires_too_many_chunks, strip_ec_msg(ex.what(), ex.code())};
+
+            case code::zero:
+            default:
+                v_noabi::throw_exception<v_noabi::gridfs_exception>(ex);
+        }
     } else {
-        _get_impl().chunks.insert_many(_get_impl().chunks_collection_documents);
+        v_noabi::throw_exception<v_noabi::operation_exception>(ex);
     }
-
-    _get_impl().chunks_collection_documents.clear();
-}
-
-template <typename Self>
-auto uploader::_get_impl(Self& self) -> decltype(*self._impl) {
-    if (!self._impl) {
-        throw logic_error{error_code::k_invalid_gridfs_uploader_object};
-    }
-    return *self._impl;
-}
-
-uploader::impl const& uploader::_get_impl() const {
-    return _get_impl(*this);
-}
-
-uploader::impl& uploader::_get_impl() {
-    return _get_impl(*this);
 }
 
 } // namespace gridfs

@@ -20,6 +20,7 @@
 #include <mongocxx/v1/collection.hh>
 #include <mongocxx/v1/cursor.hh>
 #include <mongocxx/v1/database.hh>
+#include <mongocxx/v1/gridfs/bucket.hh>
 #include <mongocxx/v1/read_concern.hh>
 #include <mongocxx/v1/read_preference.hh>
 #include <mongocxx/v1/write_concern.hh>
@@ -404,7 +405,45 @@ v_noabi::gridfs::bucket database::gridfs_bucket(v_noabi::options::gridfs::bucket
     // NOLINTNEXTLINE(cppcoreguidelines-pro-type-const-cast)
     auto& d = const_cast<v_noabi::database&>(check_moved_from(*this));
 
-    return v_noabi::gridfs::bucket{d, options};
+    std::string bucket_name = options.bucket_name().value_or("fs");
+
+    if (bucket_name.empty()) {
+        throw v_noabi::logic_error{v_noabi::error_code::k_invalid_parameter, "non-empty bucket name required"};
+    }
+
+    // NOLINTNEXTLINE(cppcoreguidelines-avoid-magic-numbers): 255 KiB.
+    static constexpr std::int32_t default_chunk_size_default = {255 * 1024};
+
+    auto const default_chunk_size = options.chunk_size_bytes().value_or(default_chunk_size_default);
+
+    if (default_chunk_size <= 0) {
+        throw v_noabi::logic_error{
+            v_noabi::error_code::k_invalid_parameter, "positive value for chunk_size_bytes required"};
+    }
+
+    auto chunks = d[bucket_name + ".chunks"];
+    auto files = d[bucket_name + ".files"];
+
+    if (auto const& opt = options.read_concern()) {
+        files.read_concern(*opt);
+        chunks.read_concern(*opt);
+    }
+
+    if (auto const& opt = options.read_preference()) {
+        files.read_preference(*opt);
+        chunks.read_preference(*opt);
+    }
+
+    if (auto const& opt = options.write_concern()) {
+        files.write_concern(*opt);
+        chunks.write_concern(*opt);
+    }
+
+    return v1::gridfs::bucket::internal::make(
+        v_noabi::to_v1(std::move(files)),
+        v_noabi::to_v1(std::move(chunks)),
+        std::move(bucket_name),
+        default_chunk_size);
 }
 
 namespace {

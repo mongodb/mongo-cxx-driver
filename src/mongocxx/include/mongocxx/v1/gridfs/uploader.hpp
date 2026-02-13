@@ -196,6 +196,13 @@ class uploader {
     friend std::error_code make_error_code(errc v) {
         return {static_cast<int>(v), error_category()};
     }
+
+    class internal;
+
+   private:
+    /* explicit(false) */ uploader(void* impl);
+
+    void save_chunk();
 };
 
 } // namespace gridfs

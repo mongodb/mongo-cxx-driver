@@ -94,6 +94,11 @@ class upload_result {
     }
     /// @}
     ///
+
+    class internal;
+
+   private:
+    /* explicit(false) */ upload_result(void* impl);
 };
 
 } // namespace gridfs

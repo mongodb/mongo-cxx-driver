@@ -45,6 +45,7 @@
 #include <ostream>
 #include <string>
 #include <system_error>
+#include <type_traits>
 
 namespace mongocxx {
 namespace v1 {
@@ -296,6 +297,7 @@ class bucket {
     ///
     enum class errc {
         zero,                     ///< Zero.
+        invalid_bucket_name,      ///< The "bucketName" field must not be empty.
         invalid_chunk_size_bytes, ///< The "chunkSizeBytes" field must be a positive value.
         not_found,                ///< The requested GridFS file does not exist.
         corrupt_data,             ///< The GridFS file is in an invalid or inconsistent state.
@@ -317,6 +319,11 @@ class bucket {
     friend std::error_code make_error_code(errc v) {
         return {static_cast<int>(v), error_category()};
     }
+
+    class internal;
+
+   private:
+    /* explicit(false) */ bucket(void* impl);
 };
 
 ///
@@ -431,11 +438,23 @@ class bucket::options {
     /// Return the current "writeConcern" field.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<v1::write_concern>) write_concern() const;
+
+    class internal;
+
+   private:
+    /* explicit(false) */ options(void* impl);
 };
 
 } // namespace gridfs
 } // namespace v1
 } // namespace mongocxx
+
+namespace std {
+
+template <>
+struct is_error_code_enum<mongocxx::v1::gridfs::bucket::errc> : true_type {};
+
+} // namespace std
 
 #include <mongocxx/v1/detail/postlude.hpp>
 

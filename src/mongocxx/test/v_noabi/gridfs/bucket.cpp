@@ -41,7 +41,9 @@
 #include <mongocxx/options/find.hpp>
 #include <mongocxx/options/gridfs/upload.hpp>
 #include <mongocxx/options/index.hpp>
+#include <mongocxx/read_concern.hpp>
 #include <mongocxx/uri.hpp>
+#include <mongocxx/write_concern.hpp>
 
 #include <bsoncxx/test/catch.hh>
 

@@ -16,8 +16,6 @@
 
 //
 
-#include <bsoncxx/v1/array/view.hpp>
-
 #include <mongocxx/v1/aggregate_options.hpp>
 #include <mongocxx/v1/pipeline.hpp>
 #include <mongocxx/v1/server_error.hpp>
@@ -28,30 +26,33 @@
 #include <mongocxx/v1/collection.hh>
 #include <mongocxx/v1/cursor.hh>
 #include <mongocxx/v1/exception.hh>
+#include <mongocxx/v1/gridfs/bucket.hh>
 #include <mongocxx/v1/read_concern.hh>
 #include <mongocxx/v1/read_preference.hh>
 #include <mongocxx/v1/write_concern.hh>
 
+#include <bsoncxx/test/v1/array/view.hh>
 #include <bsoncxx/test/v1/document/view.hh>
 #include <bsoncxx/test/v1/stdx/string_view.hh>
 
 #include <mongocxx/test/private/scoped_bson.hh>
 
-#include <chrono>
 #include <cstddef>
 #include <cstdint>
 #include <functional>
 #include <memory>
 #include <string>
 #include <utility>
-#include <vector>
 
 #include <bsoncxx/private/bson.hh>
 
 #include <mongocxx/private/mongoc.hh>
 
+#include <bsoncxx/test/system_error.hh>
+
 #include <catch2/catch_test_macros.hpp>
 #include <catch2/generators/catch_generators.hpp>
+#include <catch2/matchers/catch_matchers_exception.hpp>
 #include <catch2/matchers/catch_matchers_string.hpp>
 
 namespace mongocxx {
@@ -1387,7 +1388,151 @@ TEST_CASE("collection", "[mongocxx][v1][database]") {
 }
 
 TEST_CASE("gridfs_bucket", "[mongocxx][v1][database]") {
-    // TODO: v1::gridfs (CXX-3237)
+    database_mocks_type mocks;
+    auto db = mocks.make();
+
+    identity_type coll_identity;
+    auto const coll_id = reinterpret_cast<mongoc_collection_t*>(&coll_identity);
+
+    auto collection_destroy = libmongoc::collection_destroy.create_instance();
+    auto get_collection = libmongoc::database_get_collection.create_instance();
+
+    collection_destroy
+        ->interpose([&](mongoc_collection_t* ptr) -> void {
+            if (ptr) {
+                CHECK(ptr == coll_id);
+            }
+        })
+        .forever();
+
+    get_collection
+        ->interpose([&](mongoc_database_t* ptr, char const* name) -> mongoc_collection_t* {
+            CHECK(ptr == mocks.database_id);
+            CHECK_THAT(name, Catch::Matchers::Equals("fs.files") || Catch::Matchers::Equals("fs.chunks"));
+            return coll_id;
+        })
+        .forever();
+
+    SECTION("exceptions") {
+        using code = v1::gridfs::bucket::errc;
+
+        CHECK_THROWS_WITH_CODE(
+            db.gridfs_bucket(v1::gridfs::bucket::options{}.bucket_name("")), code::invalid_bucket_name);
+
+        CHECK_THROWS_WITH_CODE(
+            db.gridfs_bucket(v1::gridfs::bucket::options{}.chunk_size_bytes(-1)), code::invalid_chunk_size_bytes);
+
+        CHECK_THROWS_WITH_CODE(
+            db.gridfs_bucket(v1::gridfs::bucket::options{}.chunk_size_bytes(0)), code::invalid_chunk_size_bytes);
+    }
+
+    SECTION("default") {
+        auto const bucket = db.gridfs_bucket();
+
+        REQUIRE(bucket);
+        CHECK(bucket.bucket_name() == "fs");
+        CHECK(v1::gridfs::bucket::internal::default_chunk_size(bucket) == 255 * 1024); // 255 KiB
+    }
+
+    SECTION("bucket_name") {
+        auto const v = GENERATE(as<std::string>(), "a", "b", "c");
+
+        auto const files_name = std::string{v} + ".files";
+        auto const chunks_name = std::string{v} + ".chunks";
+
+        int counter = 0;
+        get_collection
+            ->interpose([&](mongoc_database_t* ptr, char const* name) -> mongoc_collection_t* {
+                CHECK(ptr == mocks.database_id);
+                CHECK_THAT(name, Catch::Matchers::Equals(files_name) || Catch::Matchers::Equals(chunks_name));
+
+                ++counter;
+
+                return coll_id;
+            })
+            .forever();
+
+        auto const bucket = db.gridfs_bucket(v1::gridfs::bucket::options{}.bucket_name(v));
+
+        REQUIRE(bucket);
+        CHECK(bucket.bucket_name() == v);
+        CHECK(counter == 2);
+    }
+
+    SECTION("default_chunk_size") {
+        auto const v = GENERATE(as<std::int32_t>(), 1, 2, 3);
+
+        auto const bucket = db.gridfs_bucket(v1::gridfs::bucket::options{}.chunk_size_bytes(v));
+
+        REQUIRE(bucket);
+        CHECK(v1::gridfs::bucket::internal::default_chunk_size(bucket) == v);
+    }
+
+    SECTION("read_concern") {
+        v1::read_concern rc;
+
+        auto const rc_id = v1::read_concern::internal::as_mongoc(rc);
+
+        auto set_read_concern = libmongoc::collection_set_read_concern.create_instance();
+
+        int counter = 0;
+        set_read_concern
+            ->interpose([&](mongoc_collection_t* coll, mongoc_read_concern_t const* ptr) -> void {
+                CHECK(coll == coll_id);
+                CHECK(ptr == rc_id);
+                ++counter;
+            })
+            .forever();
+
+        auto const bucket = db.gridfs_bucket(v1::gridfs::bucket::options{}.read_concern(std::move(rc)));
+
+        REQUIRE(bucket);
+        CHECK(counter == 2);
+    }
+
+    SECTION("read_preference") {
+        v1::read_preference rp;
+
+        auto const rp_id = v1::read_preference::internal::as_mongoc(rp);
+
+        auto set_read_prefs = libmongoc::collection_set_read_prefs.create_instance();
+
+        int counter = 0;
+        set_read_prefs
+            ->interpose([&](mongoc_collection_t* coll, mongoc_read_prefs_t const* ptr) -> void {
+                CHECK(coll == coll_id);
+                CHECK(ptr == rp_id);
+                ++counter;
+            })
+            .forever();
+
+        auto const bucket = db.gridfs_bucket(v1::gridfs::bucket::options{}.read_preference(std::move(rp)));
+
+        REQUIRE(bucket);
+        CHECK(counter == 2);
+    }
+
+    SECTION("write_concern") {
+        v1::write_concern wc;
+
+        auto const wc_id = v1::write_concern::internal::as_mongoc(wc);
+
+        auto set_write_concern = libmongoc::collection_set_write_concern.create_instance();
+
+        int counter = 0;
+        set_write_concern
+            ->interpose([&](mongoc_collection_t* coll, mongoc_write_concern_t const* ptr) -> void {
+                CHECK(coll == coll_id);
+                CHECK(ptr == wc_id);
+                ++counter;
+            })
+            .forever();
+
+        auto const bucket = db.gridfs_bucket(v1::gridfs::bucket::options{}.write_concern(std::move(wc)));
+
+        REQUIRE(bucket);
+        CHECK(counter == 2);
+    }
 }
 
 TEST_CASE("watch", "[mongocxx][v1][database]") {
