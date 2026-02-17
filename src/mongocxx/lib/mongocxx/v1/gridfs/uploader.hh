@@ -29,13 +29,15 @@
 #include <cstdint>
 #include <string>
 
+#include <mongocxx/private/export.hh>
+
 namespace mongocxx {
 namespace v1 {
 namespace gridfs {
 
 class uploader::internal {
    public:
-    static uploader make(
+    static MONGOCXX_ABI_EXPORT_CDECL_TESTING(uploader) make(
         v1::collection files,
         v1::collection chunks,
         v1::client_session const* session_ptr,

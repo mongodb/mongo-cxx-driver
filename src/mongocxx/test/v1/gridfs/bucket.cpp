@@ -17,9 +17,18 @@
 //
 
 #include <mongocxx/v1/exception.hpp>
+#include <mongocxx/v1/read_concern.hpp>    // IWYU pragma: keep
+#include <mongocxx/v1/read_preference.hpp> // IWYU pragma: keep
+#include <mongocxx/v1/write_concern.hpp>   // IWYU pragma: keep
 
 #include <mongocxx/v1/collection.hh>
 
+#include <mongocxx/test/private/scoped_bson.hh>
+#include <mongocxx/test/v1/read_concern.hh>
+#include <mongocxx/test/v1/read_preference.hh>
+#include <mongocxx/test/v1/write_concern.hh>
+
+#include <cstdint>
 #include <string>
 #include <system_error>
 #include <utility>
@@ -27,6 +36,8 @@
 #include <mongocxx/private/mongoc.hh>
 
 #include <catch2/catch_test_macros.hpp>
+#include <catch2/generators/catch_generators.hpp>
+#include <catch2/generators/catch_generators_adapters.hpp>
 #include <catch2/matchers/catch_matchers_string.hpp>
 
 namespace mongocxx {
@@ -215,6 +226,99 @@ TEST_CASE("ownership", "[mongocxx][v1][gridfs][bucket]") {
 
         CHECK(destroy_count == 4);
     }
+}
+
+TEST_CASE("ownership", "[mongocxx][v1][gridfs][bucket][options]") {
+    bucket::options source;
+    bucket::options target;
+
+    source.bucket_name("source");
+    target.bucket_name("target");
+
+    REQUIRE(source.bucket_name() == "source");
+    REQUIRE(target.bucket_name() == "target");
+
+    auto const source_value = source.bucket_name();
+
+    SECTION("move") {
+        auto move = std::move(source);
+
+        // source is in an assign-or-move-only state.
+
+        CHECK(move.bucket_name() == source_value);
+
+        target = std::move(move);
+
+        // source is in an assign-or-move-only state.
+
+        CHECK(target.bucket_name() == source_value);
+    }
+
+    SECTION("copy") {
+        auto copy = source;
+
+        CHECK(source.bucket_name() == source_value);
+        CHECK(copy.bucket_name() == source_value);
+
+        target = copy;
+
+        CHECK(copy.bucket_name() == source_value);
+        CHECK(target.bucket_name() == source_value);
+    }
+}
+
+TEST_CASE("default", "[mongocxx][v1][gridfs][bucket][options]") {
+    bucket::options const opts;
+
+    CHECK_FALSE(opts.bucket_name().has_value());
+    CHECK_FALSE(opts.chunk_size_bytes().has_value());
+    CHECK_FALSE(opts.read_concern().has_value());
+    CHECK_FALSE(opts.read_preference().has_value());
+    CHECK_FALSE(opts.write_concern().has_value());
+}
+
+TEST_CASE("bucket_name", "[mongocxx][v1][gridfs][bucket][options]") {
+    auto const v = GENERATE(as<std::string>(), "", "abc");
+
+    CHECK(bucket::options{}.bucket_name(v).bucket_name() == v);
+}
+
+TEST_CASE("chunk_size_bytes", "[mongocxx][v1][gridfs][bucket][options]") {
+    auto const v = GENERATE(as<std::int32_t>(), INT32_MIN, -1, 0, 1, INT32_MAX);
+
+    CHECK(bucket::options{}.chunk_size_bytes(v).chunk_size_bytes() == v);
+}
+
+TEST_CASE("read_concern", "[mongocxx][v1][gridfs][bucket][options]") {
+    using T = v1::read_concern;
+
+    auto const v = GENERATE(T{}, std::move(T{}.acknowledge_level(T::level::k_majority)));
+
+    CHECK(bucket::options{}.read_concern(v).read_concern() == v);
+}
+
+TEST_CASE("read_preference", "[mongocxx][v1][gridfs][bucket][options]") {
+    using T = mongocxx::v1::read_preference;
+
+    auto const v = GENERATE(values({
+        T{},
+        T{}.mode(T::read_mode::k_secondary),
+        T{}.tags(scoped_bson{R"([1, 2.0, "3"])"}.array_view()),
+    }));
+
+    CHECK(bucket::options{}.read_preference(v).read_preference() == v);
+}
+
+TEST_CASE("write_concern", "[mongocxx][v1][gridfs][bucket][options]") {
+    using T = v1::write_concern;
+
+    auto const v = GENERATE(values({
+        T{},
+        T{}.acknowledge_level(T::level::k_majority),
+        T{}.tag("abc"),
+    }));
+
+    CHECK(bucket::options{}.write_concern(v).write_concern() == v);
 }
 
 } // namespace gridfs

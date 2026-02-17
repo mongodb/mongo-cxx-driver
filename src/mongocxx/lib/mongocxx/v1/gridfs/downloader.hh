@@ -34,7 +34,7 @@ class downloader::internal {
    public:
     static MONGOCXX_ABI_EXPORT_CDECL_TESTING(downloader) make();
 
-    static MONGOCXX_ABI_EXPORT_CDECL_TESTING(downloader) make(
+    static downloader make(
         v1::cursor cursor,
         bsoncxx::v1::document::value files_doc,
         std::int64_t file_length,

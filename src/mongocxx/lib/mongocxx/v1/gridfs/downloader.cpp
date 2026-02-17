@@ -107,7 +107,8 @@ class downloader::impl {
           _total_chunk_count{_chunk_size > 0 ? compute_total_chunk_count(_file_length, _chunk_size) : 0},
           _initial_chunk_number{initial_chunk_number},
           _initial_byte_offset{initial_byte_offset},
-          _chunks_iter{_chunks_cursor ? _chunks_cursor->begin() : v1::cursor::iterator{}} {}
+          _chunks_iter{_chunks_cursor ? _chunks_cursor->begin() : v1::cursor::iterator{}},
+          _chunks_end{_chunks_cursor ? _chunks_cursor->end() : v1::cursor::iterator{}} {}
 
     static impl const& with(downloader const& other) {
         return *static_cast<impl const*>(other._impl);

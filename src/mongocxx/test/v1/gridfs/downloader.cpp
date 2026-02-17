@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <mongocxx/v1/gridfs/downloader.hpp>
+#include <mongocxx/v1/gridfs/downloader.hh>
 
 //
 
@@ -20,6 +20,7 @@
 
 #include <string>
 #include <system_error>
+#include <utility>
 
 #include <catch2/catch_test_macros.hpp>
 #include <catch2/matchers/catch_matchers_string.hpp>
@@ -83,6 +84,38 @@ TEST_CASE("error code", "[mongocxx][v1][gridfs][downloader][error]") {
         CHECK(make_error_code(code::is_closed) == type_errc::runtime_error);
         CHECK(make_error_code(code::corrupt_data) == type_errc::runtime_error);
     }
+}
+
+TEST_CASE("ownership", "[mongocxx][v1][gridfs][downloader]") {
+    auto source = v1::gridfs::downloader::internal::make();
+    auto target = v1::gridfs::downloader::internal::make();
+
+    source.close();
+
+    REQUIRE_FALSE(source.is_open());
+    REQUIRE(target.is_open());
+
+    SECTION("move") {
+        auto move = std::move(source);
+
+        CHECK_FALSE(source);
+
+        REQUIRE(move);
+        CHECK_FALSE(move.is_open());
+
+        target = std::move(move);
+
+        CHECK_FALSE(move);
+
+        REQUIRE(target);
+        CHECK_FALSE(target.is_open());
+    }
+}
+
+TEST_CASE("default", "[mongocxx][v1][gridfs][downloader]") {
+    downloader const v;
+
+    CHECK_FALSE(v);
 }
 
 } // namespace gridfs
