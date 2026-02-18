@@ -342,8 +342,9 @@ uploader::uploader(void* impl) : _impl{impl} {}
 namespace {
 
 std::size_t saved_chunks_limit(std::int32_t chunk_size) {
-    // 16 * 1000 * 1000 (16 MB) is used instead of 16 * 1024 * 1024 (16 MiB) to ensure that the command document sent to
-    // the server has space for the other fields. NOLINTNEXTLINE(cppcoreguidelines-avoid-magic-numbers)
+    // 16 * 1000 * 1000 (16 MB) for approximate consistency with the 16 MiB BSON document limit, but slightly less for
+    // historical reasons (OP_MSG body size limit).
+    // NOLINTNEXTLINE(cppcoreguidelines-avoid-magic-numbers)
     return 16u * 1000u * 1000u / static_cast<std::size_t>(chunk_size);
 }
 

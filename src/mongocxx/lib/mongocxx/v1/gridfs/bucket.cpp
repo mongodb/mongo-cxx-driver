@@ -531,7 +531,7 @@ void bucket::internal::create_indexes(bucket& self, v1::client_session const* se
 
         auto const res = session_ptr ? files.find_one(*session_ptr, {}, opts) : files.find_one({}, opts);
 
-        // Do nothing if the indexes already exist.
+        // Do nothing if the files collection already contains documents.
         if (res.has_value()) {
             return;
         }
