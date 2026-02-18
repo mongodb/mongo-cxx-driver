@@ -287,7 +287,7 @@ std::error_category const& uploader::error_category() {
                 case code::zero:
                     return "zero";
                 case code::is_closed:
-                    return "the GridFS file download stream is not open";
+                    return "the GridFS file upload stream is not open";
                 case code::too_many_chunks:
                     return "the total number of chunks must be less than INT32_MAX";
                 default:
