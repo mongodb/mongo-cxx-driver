@@ -69,7 +69,7 @@ TEST_CASE("equality", "[mongocxx][v1][gridfs][upload_result]") {
 
     auto const lhs = upload_result::internal::make(id0);
 
-    SECTION("equal") {
+    {
         auto const rhs = upload_result::internal::make(id0);
 
         CHECK(lhs == lhs);
@@ -77,7 +77,7 @@ TEST_CASE("equality", "[mongocxx][v1][gridfs][upload_result]") {
         CHECK(lhs == rhs);
     }
 
-    SECTION("id") {
+    {
         auto const rhs = upload_result::internal::make(id1);
 
         CHECK(lhs == lhs);
