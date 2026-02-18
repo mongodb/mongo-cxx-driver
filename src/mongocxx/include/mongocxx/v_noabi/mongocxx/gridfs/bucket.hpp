@@ -126,7 +126,7 @@ class bucket {
     }
 
     ///
-    /// This class is not copyable.
+    /// Convert to the @ref mongocxx::v1 equivalent.
     ///
     explicit operator v1::gridfs::bucket() const& {
         return _bucket;

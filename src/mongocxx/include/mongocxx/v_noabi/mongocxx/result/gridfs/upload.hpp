@@ -63,9 +63,6 @@ class upload {
     ///
     /// Convert to the @ref mongocxx::v1 equivalent.
     ///
-    /// @note The `comment` field is initialized with `this->comment_option()` (BSON type value) when set; otherwise, by
-    /// `this->comment()` (`std::string`) when set; otherwise, it is unset.
-    ///
     explicit MONGOCXX_ABI_EXPORT_CDECL() operator v1::gridfs::upload_result() const;
 
     ///
