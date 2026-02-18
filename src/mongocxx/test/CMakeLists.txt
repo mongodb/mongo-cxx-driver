@@ -45,7 +45,6 @@ set(mongocxx_test_bsoncxx
 )
 
 set(mongocxx_test_sources_private
-    private/numeric_casting.cpp
     private/scoped_bson.cpp
     private/mongoc_version.cpp
 )
