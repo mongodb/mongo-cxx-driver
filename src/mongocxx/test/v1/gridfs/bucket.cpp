@@ -249,7 +249,7 @@ TEST_CASE("ownership", "[mongocxx][v1][gridfs][bucket][options]") {
 
         target = std::move(move);
 
-        // source is in an assign-or-move-only state.
+        // move is in an assign-or-move-only state.
 
         CHECK(target.bucket_name() == source_value);
     }

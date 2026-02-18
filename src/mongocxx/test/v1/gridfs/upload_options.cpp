@@ -50,7 +50,7 @@ TEST_CASE("ownership", "[mongocxx][v1][gridfs][upload_options]") {
 
         target = std::move(move);
 
-        // source is in an assign-or-move-only state.
+        // move is in an assign-or-move-only state.
 
         CHECK(target.chunk_size_bytes() == source_value);
     }
