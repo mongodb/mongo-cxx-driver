@@ -228,6 +228,11 @@ std::int64_t read_integral_field(char const* name, bsoncxx::v1::document::view d
         msg += name;
         msg += "\" with type k_int32 or k_int64";
 
+        if (e) {
+            msg += " but got type ";
+            msg += bsoncxx::v1::types::to_string(e.type_id());
+        }
+
         throw v1::exception::internal::make(code::corrupt_data, msg.c_str());
     }
 
@@ -253,11 +258,11 @@ void bucket::download_to_stream(v1::client_session const& session, bsoncxx::v1::
 }
 
 void bucket::download_to_stream(bsoncxx::v1::types::view id, std::ostream& output, std::size_t start, std::size_t end) {
+    // Also validates `start` and `end` are representable as std::int64_t.
+    auto downloader = internal::open_download_stream_impl(*this, nullptr, id, start, end);
+
     internal::download_to_stream_impl(
-        internal::open_download_stream_impl(*this, nullptr, id, start, end),
-        output,
-        static_cast<std::int64_t>(start),
-        static_cast<std::int64_t>(end));
+        std::move(downloader), output, static_cast<std::int64_t>(start), static_cast<std::int64_t>(end));
 }
 
 void bucket::download_to_stream(
@@ -266,11 +271,11 @@ void bucket::download_to_stream(
     std::ostream& output,
     std::size_t start,
     std::size_t end) {
+    // Also validates `start` and `end` are representable as std::int64_t.
+    auto downloader = internal::open_download_stream_impl(*this, &session, id, start, end);
+
     internal::download_to_stream_impl(
-        internal::open_download_stream_impl(*this, &session, id, start, end),
-        output,
-        static_cast<std::int64_t>(start),
-        static_cast<std::int64_t>(end));
+        std::move(downloader), output, static_cast<std::int64_t>(start), static_cast<std::int64_t>(end));
 }
 
 void bucket::delete_file(bsoncxx::v1::types::view id) {
