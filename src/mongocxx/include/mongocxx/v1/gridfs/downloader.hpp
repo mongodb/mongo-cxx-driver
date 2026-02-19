@@ -160,6 +160,13 @@ class downloader {
     friend std::error_code make_error_code(errc v) {
         return {static_cast<int>(v), error_category()};
     }
+
+    class internal;
+
+   private:
+    /* explicit(false) */ downloader(void* impl);
+
+    void download_next_chunk();
 };
 
 } // namespace gridfs

@@ -45,7 +45,6 @@ set(mongocxx_test_bsoncxx
 )
 
 set(mongocxx_test_sources_private
-    private/numeric_casting.cpp
     private/scoped_bson.cpp
     private/mongoc_version.cpp
 )
@@ -135,6 +134,11 @@ set(mongocxx_test_sources_v1
     v1/find_one_and_replace_options.cpp
     v1/find_one_and_update_options.cpp
     v1/find_options.cpp
+    v1/gridfs/bucket.cpp
+    v1/gridfs/downloader.cpp
+    v1/gridfs/upload_options.cpp
+    v1/gridfs/upload_result.cpp
+    v1/gridfs/uploader.cpp
     v1/hint.cpp
     v1/indexes.cpp
     v1/insert_many_options.cpp

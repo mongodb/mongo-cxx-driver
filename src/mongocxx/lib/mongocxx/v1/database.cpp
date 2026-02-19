@@ -22,7 +22,6 @@
 #include <bsoncxx/v1/stdx/optional.hpp>
 #include <bsoncxx/v1/stdx/string_view.hpp>
 
-#include <mongocxx/v1/detail/macros.hpp>
 #include <mongocxx/v1/gridfs/bucket.hpp>
 #include <mongocxx/v1/pipeline.hpp>
 
@@ -32,6 +31,7 @@
 #include <mongocxx/v1/collection.hh>
 #include <mongocxx/v1/cursor.hh>
 #include <mongocxx/v1/exception.hh>
+#include <mongocxx/v1/gridfs/bucket.hh>
 #include <mongocxx/v1/read_concern.hh>
 #include <mongocxx/v1/read_preference.hh>
 #include <mongocxx/v1/write_concern.hh>
@@ -415,9 +415,43 @@ v1::collection database::operator[](bsoncxx::v1::stdx::string_view name) const {
 }
 
 v1::gridfs::bucket database::gridfs_bucket(v1::gridfs::bucket::options const& opts) const {
-    // TODO: v1::gridfs (CXX-3237)
-    (void)opts;
-    MONGOCXX_PRIVATE_UNREACHABLE;
+    auto const bucket_name = std::string{v1::gridfs::bucket::options::internal::bucket_name(opts).value_or("fs")};
+
+    if (bucket_name.empty()) {
+        throw v1::exception::internal::make(
+            v1::gridfs::bucket::errc::invalid_bucket_name, "non-empty bucket name required");
+    }
+
+    // NOLINTNEXTLINE(cppcoreguidelines-avoid-magic-numbers): 255 KiB.
+    static constexpr std::int32_t default_chunk_size_default = {255 * 1024};
+
+    auto const default_chunk_size = opts.chunk_size_bytes().value_or(default_chunk_size_default);
+
+    if (default_chunk_size <= 0) {
+        throw v1::exception::internal::make(
+            v1::gridfs::bucket::errc::invalid_chunk_size_bytes, "positive value for chunk_size_bytes required");
+    }
+
+    auto chunks = this->collection(bucket_name + ".chunks");
+    auto files = this->collection(bucket_name + ".files");
+
+    if (auto const& opt = v1::gridfs::bucket::options::internal::read_concern(opts)) {
+        files.read_concern(*opt);
+        chunks.read_concern(*opt);
+    }
+
+    if (auto const& opt = v1::gridfs::bucket::options::internal::read_preference(opts)) {
+        files.read_preference(*opt);
+        chunks.read_preference(*opt);
+    }
+
+    if (auto const& opt = v1::gridfs::bucket::options::internal::write_concern(opts)) {
+        files.write_concern(*opt);
+        chunks.write_concern(*opt);
+    }
+
+    return v1::gridfs::bucket::internal::make(
+        std::move(files), std::move(chunks), std::move(bucket_name), default_chunk_size);
 }
 
 namespace {

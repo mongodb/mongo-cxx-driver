@@ -7,578 +7,328 @@
 // http://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+// distributed under the License is distributed on an "AS IS" BASIS, // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+// either express or implied. See the License for the specific language governing permissions and limitations under the
+// License.
 
-#include <mongocxx/v1/detail/macros.hpp>
+#include <mongocxx/gridfs/bucket.hpp>
 
-#include <ios>
-#include <sstream>
+//
+
+#include <bsoncxx/v1/document/value.hpp>
+
+#include <mongocxx/v1/exception.hpp>
+
+#include <mongocxx/v1/gridfs/bucket.hh>
+#include <mongocxx/v1/gridfs/upload_result.hh>
+#include <mongocxx/v1/gridfs/uploader.hh>
+
+#include <cstddef>
+#include <cstdint>
+#include <cstdlib>
+#include <istream>
+#include <ostream>
 #include <string>
+#include <utility>
 
-#include <bsoncxx/builder/basic/document.hpp>
-#include <bsoncxx/builder/basic/kvp.hpp>
+#include <bsoncxx/types/bson_value/value-fwd.hpp>
+
+#include <bsoncxx/document/view.hpp>
+#include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/oid.hpp>
 #include <bsoncxx/stdx/optional.hpp>
+#include <bsoncxx/stdx/string_view.hpp>
+#include <bsoncxx/types/bson_value/value.hpp>
+#include <bsoncxx/types/bson_value/view.hpp>
 
-#include <mongocxx/database.hpp>
+#include <mongocxx/client_session.hpp>
+#include <mongocxx/collection.hpp>
+#include <mongocxx/cursor.hpp>
 #include <mongocxx/exception/error_code.hpp>
 #include <mongocxx/exception/gridfs_exception.hpp>
 #include <mongocxx/exception/logic_error.hpp>
-#include <mongocxx/gridfs/bucket.hpp>
-#include <mongocxx/options/delete.hpp>
-#include <mongocxx/options/index.hpp>
+#include <mongocxx/exception/operation_exception.hpp>
+#include <mongocxx/options/find.hpp>
+#include <mongocxx/options/gridfs/upload.hpp>
+#include <mongocxx/result/gridfs/upload.hpp>
 
-#include <mongocxx/gridfs/bucket.hh>
-
-#include <bsoncxx/private/make_unique.hh>
-
-#include <mongocxx/private/numeric_casting.hh>
+#include <mongocxx/client_session.hh>
+#include <mongocxx/gridfs/downloader.hh>
+#include <mongocxx/gridfs/uploader.hh>
+#include <mongocxx/mongoc_error.hh>
 
 namespace mongocxx {
 namespace v_noabi {
 namespace gridfs {
 
+using internal = v1::gridfs::bucket::internal;
+
 namespace {
 
-std::int32_t read_chunk_size_from_files_document(bsoncxx::v_noabi::document::view files_doc) {
-    static constexpr std::int64_t k_max_document_size = {16 * 1024 * 1024};
-
-    auto const chunk_size_ele = files_doc["chunkSize"];
-    if (!chunk_size_ele) {
-        throw gridfs_exception{
-            error_code::k_gridfs_file_corrupted,
-            "expected files document to contain field \"chunkSize\" with type "
-            "k_int32 or k_int64"};
+template <typename Bucket>
+Bucket& check_moved_from(Bucket& bucket) {
+    if (!bucket) {
+        throw v_noabi::logic_error{v_noabi::error_code::k_invalid_gridfs_bucket_object};
     }
-
-    std::int64_t chunk_size = {};
-    if (chunk_size_ele.type() == bsoncxx::v_noabi::type::k_int64) {
-        chunk_size = chunk_size_ele.get_int64().value;
-    } else if (chunk_size_ele.type() == bsoncxx::v_noabi::type::k_int32) {
-        chunk_size = chunk_size_ele.get_int32().value;
-    } else {
-        throw gridfs_exception{
-            error_code::k_gridfs_file_corrupted,
-            "expected files document to contain field \"chunkSize\" with type "
-            "k_int32 or k_int64"};
-    }
-
-    // Each chunk needs to be able to fit in a single document.
-    if (chunk_size > k_max_document_size) {
-        std::ostringstream err;
-        err << "files document contains unexpected chunk size of " << chunk_size
-            << ", which exceeds maximum chunk size of " << k_max_document_size;
-        throw gridfs_exception{error_code::k_gridfs_file_corrupted, err.str()};
-    } else if (chunk_size <= 0) {
-        std::ostringstream err;
-        err << "files document contains unexpected chunk size: " << chunk_size << "; value must be positive";
-        throw gridfs_exception{error_code::k_gridfs_file_corrupted, err.str()};
-    }
-
-    return static_cast<std::int32_t>(chunk_size);
+    return bucket;
 }
 
-std::int64_t read_length_from_files_document(bsoncxx::v_noabi::document::view const files_doc) {
-    auto const length_ele = files_doc["length"];
-    if (!length_ele) {
-        throw gridfs_exception{
-            error_code::k_gridfs_file_corrupted,
-            "expected files document to contain field \"length\" with type "
-            "k_int32 or k_int64"};
-    }
+[[noreturn]]
+void rethrow_exception(v1::exception const& ex) {
+    if (ex.code().category() == v1::gridfs::bucket::error_category()) {
+        using code = v1::gridfs::bucket::errc;
 
-    std::int64_t length = {};
-    if (length_ele.type() == bsoncxx::v_noabi::type::k_int64) {
-        length = length_ele.get_int64().value;
-    } else if (length_ele.type() == bsoncxx::v_noabi::type::k_int32) {
-        length = length_ele.get_int32().value;
+        switch (static_cast<code>(ex.code().value())) {
+            case code::invalid_bucket_name:
+            case code::invalid_chunk_size_bytes:
+                throw v_noabi::logic_error{
+                    v_noabi::error_code::k_invalid_parameter, strip_ec_msg(ex.what(), ex.code())};
+
+            case code::not_found:
+                throw v_noabi::gridfs_exception{
+                    v_noabi::error_code::k_gridfs_file_not_found, strip_ec_msg(ex.what(), ex.code())};
+
+            case code::corrupt_data:
+                throw v_noabi::gridfs_exception{
+                    v_noabi::error_code::k_gridfs_file_corrupted, strip_ec_msg(ex.what(), ex.code())};
+
+            case code::invalid_byte_range:
+                throw v_noabi::logic_error{
+                    v_noabi::error_code::k_invalid_parameter, strip_ec_msg(ex.what(), ex.code())};
+
+            case code::zero:
+            default:
+                v_noabi::throw_exception<v_noabi::gridfs_exception>(ex);
+        }
+    } else if (ex.code().category() == v1::gridfs::uploader::error_category()) {
+        v_noabi::gridfs::uploader::internal::rethrow_exception(ex);
+    } else if (ex.code().category() == v1::gridfs::downloader::error_category()) {
+        v_noabi::gridfs::downloader::internal::rethrow_exception(ex);
     } else {
-        throw gridfs_exception{
-            error_code::k_gridfs_file_corrupted,
-            "expected files document to contain field \"length\" with type "
-            "k_int32 or k_int64"};
+        v_noabi::throw_exception<v_noabi::operation_exception>(ex);
     }
-
-    if (length < 0) {
-        std::ostringstream err;
-        err << "files document contains unexpected negative value for \"length\": " << length;
-        throw gridfs_exception{error_code::k_gridfs_file_corrupted, err.str()};
-    }
-
-    return length;
 }
 
 } // namespace
 
-bucket::bucket(database& db, options::gridfs::bucket const& options) {
-    std::string bucket_name = "fs";
-    if (auto name = options.bucket_name()) {
-        bucket_name = *name;
-    }
-
-    if (bucket_name.empty()) {
-        throw logic_error{error_code::k_invalid_parameter, "non-empty bucket name required"};
-    }
-
-    std::int32_t default_chunk_size_bytes = 255 * 1024; // NOLINT(cppcoreguidelines-avoid-magic-numbers): 255 KiB.
-    if (auto chunk_size_bytes = options.chunk_size_bytes()) {
-        default_chunk_size_bytes = *chunk_size_bytes;
-    }
-
-    if (default_chunk_size_bytes <= 0) {
-        throw logic_error{error_code::k_invalid_parameter, "positive value for chunk_size_bytes required"};
-    }
-
-    collection chunks = db[bucket_name + ".chunks"];
-    collection files = db[bucket_name + ".files"];
-
-    _impl = bsoncxx::make_unique<impl>(
-        std::move(bucket_name), default_chunk_size_bytes, std::move(chunks), std::move(files));
-
-    if (auto read_concern = options.read_concern()) {
-        _get_impl().files.read_concern(*read_concern);
-        _get_impl().chunks.read_concern(*read_concern);
-    }
-
-    if (auto read_preference = options.read_preference()) {
-        _get_impl().files.read_preference(*read_preference);
-        _get_impl().chunks.read_preference(*read_preference);
-    }
-
-    if (auto write_concern = options.write_concern()) {
-        _get_impl().files.write_concern(*write_concern);
-        _get_impl().chunks.write_concern(*write_concern);
+bucket::bucket(bucket const& other) {
+    if (other) {
+        _bucket = check_moved_from(other)._bucket;
     }
 }
 
-bucket::bucket() noexcept = default;
-bucket::bucket(bucket&&) noexcept = default;
-bucket& bucket::operator=(bucket&&) noexcept = default;
-bucket::~bucket() = default;
-
-bucket::operator bool() const noexcept {
-    return static_cast<bool>(_impl);
-}
-
-bucket::bucket(bucket const& b) {
-    if (b) {
-        _impl = bsoncxx::make_unique<impl>(b._get_impl());
-    }
-}
-
-bucket& bucket::operator=(bucket const& b) {
-    if (this != &b) {
-        if (!b._impl) {
-            _impl.reset();
-        } else if (!_impl) {
-            _impl = bsoncxx::make_unique<impl>(b._get_impl());
+bucket& bucket::operator=(bucket const& other) {
+    if (this != &other) {
+        if (!other) {
+            _bucket = v1::gridfs::bucket{};
         } else {
-            *_impl = b._get_impl();
+            _bucket = check_moved_from(other)._bucket;
         }
     }
-
     return *this;
 }
 
-uploader bucket::open_upload_stream(
+v_noabi::gridfs::uploader bucket::open_upload_stream(
     bsoncxx::v_noabi::stdx::string_view filename,
-    options::gridfs::upload const& options) {
-    auto id = bsoncxx::v_noabi::types::bson_value::view{bsoncxx::v_noabi::types::b_oid{}};
-    return open_upload_stream_with_id(id, filename, options);
+    v_noabi::options::gridfs::upload const& options) {
+    return this->open_upload_stream_with_id(bsoncxx::v_noabi::types::value{bsoncxx::v_noabi::oid{}}, filename, options);
 }
 
-uploader bucket::open_upload_stream(
-    client_session const& session,
+v_noabi::gridfs::uploader bucket::open_upload_stream(
+    v_noabi::client_session const& session,
     bsoncxx::v_noabi::stdx::string_view filename,
-    options::gridfs::upload const& options) {
-    auto id = bsoncxx::v_noabi::types::bson_value::view{bsoncxx::v_noabi::types::b_oid{}};
-    return open_upload_stream_with_id(session, id, filename, options);
+    v_noabi::options::gridfs::upload const& options) {
+    return this->open_upload_stream_with_id(
+        session, bsoncxx::v_noabi::types::value{bsoncxx::v_noabi::oid{}}, filename, options);
 }
 
-uploader bucket::_open_upload_stream_with_id(
-    client_session const* session,
-    bsoncxx::v_noabi::types::bson_value::view id,
+v_noabi::gridfs::uploader bucket::open_upload_stream_with_id(
+    bsoncxx::v_noabi::types::view id,
     bsoncxx::v_noabi::stdx::string_view filename,
-    options::gridfs::upload const& options) {
-    std::int32_t chunk_size_bytes = _get_impl().default_chunk_size_bytes;
+    v_noabi::options::gridfs::upload const& options) try {
+    bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view> metadata_v1;
 
-    if (auto chunk_size = options.chunk_size_bytes()) {
-        if (*chunk_size <= 0) {
-            throw logic_error{
-                error_code::k_invalid_parameter,
-                "positive value required for options::gridfs::upload::chunk_size_bytes()"};
-        }
-
-        chunk_size_bytes = *chunk_size;
+    if (auto const& opt = options.metadata()) {
+        metadata_v1.emplace(opt->view());
     }
 
-    create_indexes_if_nonexistent(session);
-
-    return uploader{session, id, filename, _get_impl().files, _get_impl().chunks, chunk_size_bytes, options.metadata()};
+    return internal::open_upload_stream_with_id_impl(
+        check_moved_from(_bucket),
+        nullptr,
+        bsoncxx::v_noabi::to_v1(id),
+        filename,
+        options.chunk_size_bytes(),
+        metadata_v1);
+} catch (v1::exception const& ex) {
+    rethrow_exception(ex);
 }
 
-uploader bucket::open_upload_stream_with_id(
-    bsoncxx::v_noabi::types::bson_value::view id,
+v_noabi::gridfs::uploader bucket::open_upload_stream_with_id(
+    v_noabi::client_session const& session,
+    bsoncxx::v_noabi::types::view id,
     bsoncxx::v_noabi::stdx::string_view filename,
-    options::gridfs::upload const& options) {
-    return _open_upload_stream_with_id(nullptr, id, filename, options);
-}
+    v_noabi::options::gridfs::upload const& options) try {
+    auto const& session_v1 = v_noabi::client_session::internal::as_v1(session);
 
-uploader bucket::open_upload_stream_with_id(
-    client_session const& session,
-    bsoncxx::v_noabi::types::bson_value::view id,
-    bsoncxx::v_noabi::stdx::string_view filename,
-    options::gridfs::upload const& options) {
-    return _open_upload_stream_with_id(&session, id, filename, options);
-}
+    bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view> metadata_v1;
 
-result::gridfs::upload bucket::upload_from_stream(
-    bsoncxx::v_noabi::stdx::string_view filename,
-    std::istream* source,
-    options::gridfs::upload const& options) {
-    auto id = bsoncxx::v_noabi::types::bson_value::view{bsoncxx::v_noabi::types::b_oid{}};
-    upload_from_stream_with_id(id, filename, source, options);
-    return id;
-}
-
-result::gridfs::upload bucket::upload_from_stream(
-    client_session const& session,
-    bsoncxx::v_noabi::stdx::string_view filename,
-    std::istream* source,
-    options::gridfs::upload const& options) {
-    auto id = bsoncxx::v_noabi::types::bson_value::view{bsoncxx::v_noabi::types::b_oid{}};
-    upload_from_stream_with_id(session, id, filename, source, options);
-    return id;
-}
-
-void bucket::_upload_from_stream_with_id(
-    client_session const* session,
-    bsoncxx::v_noabi::types::bson_value::view id,
-    bsoncxx::v_noabi::stdx::string_view filename,
-    std::istream* source,
-    options::gridfs::upload const& options) {
-    uploader upload_stream = _open_upload_stream_with_id(session, id, filename, options);
-    auto const chunk_size = upload_stream.chunk_size();
-
-    // Fixed-size dynamic array: size tracked by `chunk_size`.
-    // NOLINTNEXTLINE(cppcoreguidelines-avoid-c-arrays)
-    std::unique_ptr<std::uint8_t[]> buffer = bsoncxx::make_unique<std::uint8_t[]>(static_cast<std::size_t>(chunk_size));
-
-    do {
-        // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast): stdlib vs. mongocxx compatibility.
-        source->read(reinterpret_cast<char*>(buffer.get()), static_cast<std::streamsize>(chunk_size));
-        upload_stream.write(buffer.get(), static_cast<std::size_t>(source->gcount()));
-    } while (*source);
-
-    // `(source->fail() && !source->eof())` is our check for EOF, which we don't treat as an error.
-    if (source->bad() || (source->fail() && !source->eof())) {
-        upload_stream.abort();
-        source->exceptions(std::ios::failbit | std::ios::badbit);
-        MONGOCXX_PRIVATE_UNREACHABLE;
+    if (auto const& opt = options.metadata()) {
+        metadata_v1.emplace(opt->view());
     }
 
-    upload_stream.close();
+    return internal::open_upload_stream_with_id_impl(
+        check_moved_from(_bucket),
+        &session_v1,
+        bsoncxx::v_noabi::to_v1(id),
+        filename,
+        options.chunk_size_bytes(),
+        metadata_v1);
+} catch (v1::exception const& ex) {
+    rethrow_exception(ex);
+}
+
+v_noabi::result::gridfs::upload bucket::upload_from_stream(
+    bsoncxx::v_noabi::stdx::string_view filename,
+    std::istream* source,
+    v_noabi::options::gridfs::upload const& options) {
+    bsoncxx::v_noabi::types::value id{bsoncxx::v_noabi::oid{}};
+
+    this->upload_from_stream_with_id(id, filename, source, options);
+
+    return v1::gridfs::upload_result::internal::make(bsoncxx::v_noabi::to_v1(std::move(id)));
+}
+
+v_noabi::result::gridfs::upload bucket::upload_from_stream(
+    v_noabi::client_session const& session,
+    bsoncxx::v_noabi::stdx::string_view filename,
+    std::istream* source,
+    v_noabi::options::gridfs::upload const& options) {
+    bsoncxx::v_noabi::types::value id{bsoncxx::v_noabi::oid{}};
+
+    this->upload_from_stream_with_id(session, id, filename, source, options);
+
+    return v1::gridfs::upload_result::internal::make(bsoncxx::v_noabi::to_v1(std::move(id)));
 }
 
 void bucket::upload_from_stream_with_id(
-    bsoncxx::v_noabi::types::bson_value::view id,
+    bsoncxx::v_noabi::types::view id,
     bsoncxx::v_noabi::stdx::string_view filename,
     std::istream* source,
-    options::gridfs::upload const& options) {
-    return _upload_from_stream_with_id(nullptr, id, filename, source, options);
+    v_noabi::options::gridfs::upload const& options) try {
+    internal::upload_from_stream_with_id_impl(
+        v_noabi::to_v1(this->open_upload_stream_with_id(id, filename, options)), *source);
+} catch (v1::exception const& ex) {
+    rethrow_exception(ex);
 }
 
 void bucket::upload_from_stream_with_id(
-    client_session const& session,
-    bsoncxx::v_noabi::types::bson_value::view id,
+    v_noabi::client_session const& session,
+    bsoncxx::v_noabi::types::view id,
     bsoncxx::v_noabi::stdx::string_view filename,
     std::istream* source,
-    options::gridfs::upload const& options) {
-    return _upload_from_stream_with_id(&session, id, filename, source, options);
+    v_noabi::options::gridfs::upload const& options) try {
+    internal::upload_from_stream_with_id_impl(
+        v_noabi::to_v1(this->open_upload_stream_with_id(session, id, filename, options)), *source);
+} catch (v1::exception const& ex) {
+    rethrow_exception(ex);
 }
 
-downloader bucket::_open_download_stream(
-    client_session const* session,
-    bsoncxx::v_noabi::types::bson_value::view id,
-    bsoncxx::v_noabi::stdx::optional<std::size_t> start,
-    bsoncxx::v_noabi::stdx::optional<std::size_t> end) {
-    using namespace bsoncxx;
-
-    builder::basic::document files_filter;
-    files_filter.append(builder::basic::kvp("_id", id));
-
-    auto files_doc = session ? _get_impl().files.find_one(*session, files_filter.extract())
-                             : _get_impl().files.find_one(files_filter.extract());
-
-    if (!files_doc) {
-        throw gridfs_exception{error_code::k_gridfs_file_not_found};
-    }
-
-    auto files_doc_view = files_doc->view();
-
-    if (!files_doc_view["length"] ||
-        (files_doc_view["length"].type() != type::k_int64 && files_doc_view["length"].type() != type::k_int32)) {
-        throw gridfs_exception{
-            error_code::k_gridfs_file_corrupted,
-            "expected files document to contain field \"length\" with type "
-            "k_int32 or k_int64"};
-    }
-
-    auto const chunk_size = read_chunk_size_from_files_document(*files_doc);
-    auto const file_len = read_length_from_files_document(*files_doc);
-    chunks_and_bytes_offset start_offset;
-    auto length = files_doc_view["length"];
-
-    if ((length.type() == type::k_int64 && !length.get_int64().value) ||
-        (length.type() == type::k_int32 && !length.get_int32().value)) {
-        return downloader{bsoncxx::v_noabi::stdx::nullopt, start_offset, chunk_size, file_len, *files_doc};
-    }
-
-    builder::basic::document chunks_filter;
-    chunks_filter.append(builder::basic::kvp("files_id", id));
-
-    builder::basic::document chunks_sort;
-    chunks_sort.append(builder::basic::kvp("n", 1));
-
-    options::find chunks_options;
-    chunks_options.sort(chunks_sort.extract());
-
-    if (start && end) {
-        if (*start > *end) {
-            throw gridfs_exception{error_code::k_invalid_parameter, "expected end to be greater than start"};
-        }
-    }
-
-    int64_t start_i64 = 0;
-    if (start && *start > 0) {
-        if (!size_t_to_int64_safe(*start, start_i64)) {
-            throw gridfs_exception{error_code::k_invalid_parameter, "expected start to not be greater than max int64"};
-        }
-        if (file_len >= 0 && start_i64 > file_len) {
-            throw gridfs_exception{
-                error_code::k_invalid_parameter, "expected start to not be greater than the file length"};
-        }
-        auto start_offset_div = std::lldiv(start_i64, chunk_size);
-        if (!int64_to_int32_safe(start_offset_div.quot, start_offset.chunks_offset)) {
-            throw gridfs_exception{error_code::k_invalid_parameter, "expected chunk offset to be in bounds of int32"};
-        }
-
-        if (!int64_to_int32_safe(start_offset_div.rem, start_offset.bytes_offset)) {
-            throw gridfs_exception{error_code::k_invalid_parameter, "expected bytes offset to be in bounds of int32"};
-        }
-        chunks_options.skip(start_offset.chunks_offset);
-    }
-
-    if (end) {
-        int64_t end_i64 = {};
-        if (!size_t_to_int64_safe(*end, end_i64)) {
-            throw gridfs_exception{error_code::k_invalid_parameter, "expected end to not be greater than max int64"};
-        }
-
-        if (file_len >= 0 && end_i64 > file_len) {
-            throw gridfs_exception{
-                error_code::k_invalid_parameter, "expected end to not be greater than the file length"};
-        }
-        if (file_len >= 0 && end_i64 < file_len) {
-            int64_t const num_chunks =
-                (end_i64 / static_cast<int64_t>(chunk_size)) - (start_i64 / static_cast<int64_t>(chunk_size)) + 1;
-            chunks_options.limit(num_chunks);
-        }
-    }
-
-    auto cursor = session ? _get_impl().chunks.find(*session, chunks_filter.extract(), chunks_options)
-                          : _get_impl().chunks.find(chunks_filter.extract(), chunks_options);
-
-    return downloader{std::move(cursor), start_offset, chunk_size, file_len, *files_doc};
+v_noabi::gridfs::downloader bucket::open_download_stream(bsoncxx::v_noabi::types::view id) try {
+    return internal::open_download_stream_impl(check_moved_from(_bucket), nullptr, bsoncxx::v_noabi::to_v1(id));
+} catch (v1::exception const& ex) {
+    rethrow_exception(ex);
 }
 
-downloader bucket::open_download_stream(bsoncxx::v_noabi::types::bson_value::view id) {
-    return _open_download_stream(nullptr, id, bsoncxx::v_noabi::stdx::nullopt, bsoncxx::v_noabi::stdx::nullopt);
+v_noabi::gridfs::downloader bucket::open_download_stream(
+    v_noabi::client_session const& session,
+    bsoncxx::v_noabi::types::view id) try {
+    auto const& session_v1 = v_noabi::client_session::internal::as_v1(session);
+
+    return internal::open_download_stream_impl(check_moved_from(_bucket), &session_v1, bsoncxx::v_noabi::to_v1(id));
+} catch (v1::exception const& ex) {
+    rethrow_exception(ex);
 }
 
-downloader bucket::open_download_stream(client_session const& session, bsoncxx::v_noabi::types::bson_value::view id) {
-    return _open_download_stream(&session, id, bsoncxx::v_noabi::stdx::nullopt, bsoncxx::v_noabi::stdx::nullopt);
-}
-
-void bucket::_download_to_stream(
-    client_session const* session,
-    bsoncxx::v_noabi::types::bson_value::view id,
-    std::ostream* destination,
-    bsoncxx::v_noabi::stdx::optional<std::size_t> start,
-    bsoncxx::v_noabi::stdx::optional<std::size_t> end) {
-    downloader download_stream = _open_download_stream(session, id, start, end);
-
-    auto const chunk_size = [&download_stream] {
-        std::size_t ret = {};
-        if (!int32_to_size_t_safe(download_stream.chunk_size(), ret)) {
-            throw gridfs_exception{error_code::k_invalid_parameter, "expected chunk size to be in bounds of size_t"};
-        }
-        return ret;
-    }();
-    if (!start) {
-        start.emplace<std::size_t>(0);
-    }
-    if (!end) {
-        std::size_t file_length_sz = {};
-        if (!int64_to_size_t_safe(download_stream.file_length(), file_length_sz)) {
-            throw gridfs_exception{error_code::k_invalid_parameter, "expected file length to be in bounds of int64"};
-        }
-        end = file_length_sz;
-    }
-    auto bytes_expected = *end - *start;
-
-    // Fixed-size dynamic array: size tracked by `chunk_size`.
-    // NOLINTNEXTLINE(cppcoreguidelines-avoid-c-arrays)
-    std::unique_ptr<std::uint8_t[]> buffer = bsoncxx::make_unique<std::uint8_t[]>(chunk_size);
-
-    while (bytes_expected > 0) {
-        std::size_t const bytes_read =
-            download_stream.read(buffer.get(), static_cast<std::size_t>(std::min(bytes_expected, chunk_size)));
-        // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast): stdlib vs. mongocxx compatibility.
-        destination->write(reinterpret_cast<char*>(buffer.get()), static_cast<std::streamsize>(bytes_read));
-        bytes_expected -= bytes_read;
-    }
-
-    download_stream.close();
-}
-
-void bucket::download_to_stream(bsoncxx::v_noabi::types::bson_value::view id, std::ostream* destination) {
-    _download_to_stream(nullptr, id, destination, bsoncxx::v_noabi::stdx::nullopt, bsoncxx::v_noabi::stdx::nullopt);
+void bucket::download_to_stream(bsoncxx::v_noabi::types::view id, std::ostream* destination) try {
+    internal::download_to_stream_impl(
+        v_noabi::to_v1(this->open_download_stream(bsoncxx::v_noabi::to_v1(id))), *destination);
+} catch (v1::exception const& ex) {
+    rethrow_exception(ex);
 }
 
 void bucket::download_to_stream(
-    bsoncxx::v_noabi::types::bson_value::view id,
+    bsoncxx::v_noabi::types::view id,
     std::ostream* destination,
     std::size_t start,
-    std::size_t end) {
-    _download_to_stream(nullptr, id, destination, start, end);
+    std::size_t end) try {
+    using internal = v1::gridfs::bucket::internal;
+
+    internal::download_to_stream_impl(
+        internal::open_download_stream_impl(
+            check_moved_from(_bucket), nullptr, bsoncxx::v_noabi::to_v1(id), start, end),
+        *destination,
+        static_cast<std::int64_t>(start),
+        static_cast<std::int64_t>(end));
+} catch (v1::exception const& ex) {
+    rethrow_exception(ex);
 }
 
 void bucket::download_to_stream(
-    client_session const& session,
-    bsoncxx::v_noabi::types::bson_value::view id,
-    std::ostream* destination) {
-    _download_to_stream(&session, id, destination, bsoncxx::v_noabi::stdx::nullopt, bsoncxx::v_noabi::stdx::nullopt);
+    v_noabi::client_session const& session,
+    bsoncxx::v_noabi::types::view id,
+    std::ostream* destination) try {
+    internal::download_to_stream_impl(v_noabi::to_v1(this->open_download_stream(session, id)), *destination);
+} catch (v1::exception const& ex) {
+    rethrow_exception(ex);
 }
 
 void bucket::download_to_stream(
-    client_session const& session,
-    bsoncxx::v_noabi::types::bson_value::view id,
+    v_noabi::client_session const& session,
+    bsoncxx::v_noabi::types::view id,
     std::ostream* destination,
     std::size_t start,
-    std::size_t end) {
-    _download_to_stream(&session, id, destination, start, end);
+    std::size_t end) try {
+    using internal = v1::gridfs::bucket::internal;
+
+    auto const& session_v1 = v_noabi::client_session::internal::as_v1(session);
+
+    internal::download_to_stream_impl(
+        internal::open_download_stream_impl(
+            check_moved_from(_bucket), &session_v1, bsoncxx::v_noabi::to_v1(id), start, end),
+        *destination,
+        static_cast<std::int64_t>(start),
+        static_cast<std::int64_t>(end));
+} catch (v1::exception const& ex) {
+    rethrow_exception(ex);
 }
 
-void bucket::_delete_file(client_session const* session, bsoncxx::v_noabi::types::bson_value::view id) {
-    using namespace bsoncxx;
-
-    builder::basic::document files_builder;
-    files_builder.append(builder::basic::kvp("_id", id));
-
-    auto result = session ? _get_impl().files.delete_one(*session, files_builder.extract())
-                          : _get_impl().files.delete_one(files_builder.extract());
-    if (result) {
-        if (result->deleted_count() == 0) {
-            throw gridfs_exception{error_code::k_gridfs_file_not_found};
-        }
-    }
-
-    builder::basic::document chunks_builder;
-    chunks_builder.append(builder::basic::kvp("files_id", id));
-    document::value chunks_filter = chunks_builder.extract();
-
-    if (session) {
-        _get_impl().chunks.delete_many(*session, chunks_filter.view());
-    } else {
-        _get_impl().chunks.delete_many(chunks_filter.view());
-    }
+void bucket::delete_file(bsoncxx::v_noabi::types::view id) try {
+    internal::delete_file_impl(check_moved_from(_bucket), nullptr, bsoncxx::v_noabi::to_v1(id));
+} catch (v1::exception const& ex) {
+    rethrow_exception(ex);
 }
 
-void bucket::delete_file(bsoncxx::v_noabi::types::bson_value::view id) {
-    _delete_file(nullptr, id);
+void bucket::delete_file(v_noabi::client_session const& session, bsoncxx::v_noabi::types::view id) try {
+    auto const& session_v1 = v_noabi::client_session::internal::as_v1(session);
+
+    internal::delete_file_impl(check_moved_from(_bucket), &session_v1, bsoncxx::v_noabi::to_v1(id));
+} catch (v1::exception const& ex) {
+    rethrow_exception(ex);
 }
 
-void bucket::delete_file(client_session const& session, bsoncxx::v_noabi::types::bson_value::view id) {
-    _delete_file(&session, id);
+v_noabi::cursor bucket::find(bsoncxx::v_noabi::document::view_or_value filter, v_noabi::options::find const& options) {
+    return v_noabi::from_v1(internal::files(check_moved_from(_bucket))).find(filter, options);
 }
 
-cursor bucket::find(bsoncxx::v_noabi::document::view_or_value filter, options::find const& options) {
-    return _get_impl().files.find(filter, options);
-}
-
-cursor bucket::find(
-    client_session const& session,
+v_noabi::cursor bucket::find(
+    v_noabi::client_session const& session,
     bsoncxx::v_noabi::document::view_or_value filter,
-    options::find const& options) {
-    return _get_impl().files.find(session, filter, options);
+    v_noabi::options::find const& options) {
+    return v_noabi::from_v1(internal::files(check_moved_from(_bucket))).find(session, filter, options);
 }
 
 bsoncxx::v_noabi::stdx::string_view bucket::bucket_name() const {
-    return _get_impl().bucket_name;
-}
-
-void bucket::create_indexes_if_nonexistent(client_session const* session) {
-    if (_get_impl().indexes_created) {
-        return;
-    }
-
-    bsoncxx::v_noabi::builder::basic::document filter;
-    filter.append(bsoncxx::v_noabi::builder::basic::kvp("_id", 1));
-
-    auto find_options = options::find{}.projection(filter.view()).read_preference(read_preference{});
-
-    if (session) {
-        if (_get_impl().files.find_one(*session, {}, find_options)) {
-            return;
-        }
-    } else if (_get_impl().files.find_one({}, find_options)) {
-        return;
-    }
-
-    bsoncxx::v_noabi::builder::basic::document files_index;
-    files_index.append(bsoncxx::v_noabi::builder::basic::kvp("filename", 1));
-    files_index.append(bsoncxx::v_noabi::builder::basic::kvp("uploadDate", 1));
-
-    if (session) {
-        _get_impl().files.create_index(*session, files_index.extract());
-    } else {
-        _get_impl().files.create_index(files_index.extract());
-    }
-
-    bsoncxx::v_noabi::builder::basic::document chunks_index;
-    chunks_index.append(bsoncxx::v_noabi::builder::basic::kvp("files_id", 1));
-    chunks_index.append(bsoncxx::v_noabi::builder::basic::kvp("n", 1));
-
-    options::index chunks_index_options;
-    chunks_index_options.unique(true);
-
-    if (session) {
-        _get_impl().chunks.create_index(*session, chunks_index.extract(), chunks_index_options);
-    } else {
-        _get_impl().chunks.create_index(chunks_index.extract(), chunks_index_options);
-    }
-
-    _get_impl().indexes_created = true;
-}
-
-template <typename Self>
-auto bucket::_get_impl(Self& self) -> decltype(*self._impl) {
-    if (!self._impl) {
-        throw logic_error{error_code::k_invalid_gridfs_bucket_object};
-    }
-    return *self._impl;
-}
-
-bucket::impl const& bucket::_get_impl() const {
-    return _get_impl(*this);
-}
-
-bucket::impl& bucket::_get_impl() {
-    return _get_impl(*this);
+    return check_moved_from(_bucket).bucket_name();
 }
 
 } // namespace gridfs

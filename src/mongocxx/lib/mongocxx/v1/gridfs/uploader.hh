@@ -14,42 +14,39 @@
 
 #pragma once
 
-#include <mongocxx/gridfs/uploader.hpp> // IWYU pragma: export
+#include <mongocxx/v1/gridfs/uploader.hpp> // IWYU pragma: export
 
 //
+
+#include <bsoncxx/v1/document/view-fwd.hpp>
+#include <bsoncxx/v1/types/value-fwd.hpp>
+
+#include <mongocxx/v1/client_session-fwd.hpp>
+#include <mongocxx/v1/collection-fwd.hpp>
+
+#include <bsoncxx/v1/stdx/optional.hpp>
 
 #include <cstdint>
 #include <string>
 
-#include <bsoncxx/types/bson_value/value-fwd.hpp>
-
-#include <mongocxx/v1/exception-fwd.hpp>
-
-#include <mongocxx/client_session-fwd.hpp>
-#include <mongocxx/collection-fwd.hpp>
-
-#include <bsoncxx/document/view_or_value.hpp>
-#include <bsoncxx/stdx/optional.hpp>
+#include <mongocxx/private/export.hh>
 
 namespace mongocxx {
-namespace v_noabi {
+namespace v1 {
 namespace gridfs {
 
 class uploader::internal {
    public:
-    static uploader make(
-        v_noabi::collection files_coll,
-        v_noabi::collection chunks_coll,
-        v_noabi::client_session const* session_ptr,
+    static MONGOCXX_ABI_EXPORT_CDECL_TESTING(uploader) make(
+        v1::collection files,
+        v1::collection chunks,
+        v1::client_session const* session_ptr,
         std::string filename,
-        bsoncxx::v_noabi::types::value id,
+        bsoncxx::v1::types::value id,
         std::int32_t chunk_size,
-        bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const& metadata);
-
-    [[noreturn]]
-    static void rethrow_exception(v1::exception const& ex);
+        bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view> metadata);
 };
 
 } // namespace gridfs
-} // namespace v_noabi
+} // namespace v1
 } // namespace mongocxx

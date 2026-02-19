@@ -14,6 +14,8 @@
 
 #pragma once
 
+#include <mongocxx/v1/gridfs/uploader-fwd.hpp> // IWYU pragma: export
+
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
@@ -29,7 +31,7 @@ class uploader;
 namespace mongocxx {
 namespace gridfs {
 
-using ::mongocxx::v_noabi::gridfs::uploader;
+using v_noabi::gridfs::uploader;
 
 } // namespace gridfs
 } // namespace mongocxx
@@ -39,4 +41,7 @@ using ::mongocxx::v_noabi::gridfs::uploader;
 ///
 /// @file
 /// Declares utilities to upload GridFS files.
+///
+/// @par Includes
+/// - @ref mongocxx/v1/gridfs/uploader-fwd.hpp
 ///

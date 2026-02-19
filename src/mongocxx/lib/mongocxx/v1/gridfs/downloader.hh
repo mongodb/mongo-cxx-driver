@@ -12,29 +12,37 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <mongocxx/result/gridfs/upload.hpp>
+#pragma once
+
+#include <mongocxx/v1/gridfs/downloader.hpp> // IWYU pragma: export
 
 //
 
-#include <mongocxx/v1/gridfs/upload_result.hh>
+#include <bsoncxx/v1/document/value-fwd.hpp>
 
-#include <utility>
+#include <mongocxx/v1/cursor-fwd.hpp>
 
-#include <bsoncxx/types/value.hpp>
+#include <cstdint>
+
+#include <mongocxx/private/export.hh>
 
 namespace mongocxx {
-namespace v_noabi {
-namespace result {
+namespace v1 {
 namespace gridfs {
 
-upload::upload(v1::gridfs::upload_result opts)
-    : _id_owner{std::move(v1::gridfs::upload_result::internal::id(opts))}, _id{_id_owner} {}
+class downloader::internal {
+   public:
+    static MONGOCXX_ABI_EXPORT_CDECL_TESTING(downloader) make();
 
-upload::operator v1::gridfs::upload_result() const {
-    return v1::gridfs::upload_result::internal::make(bsoncxx::v_noabi::to_v1(_id_owner));
-}
+    static downloader make(
+        v1::cursor cursor,
+        bsoncxx::v1::document::value files_doc,
+        std::int64_t file_length,
+        std::int32_t chunk_size,
+        std::int32_t initial_chunk_number,
+        std::int32_t initial_byte_offset);
+};
 
 } // namespace gridfs
-} // namespace result
-} // namespace v_noabi
+} // namespace v1
 } // namespace mongocxx

@@ -14,7 +14,6 @@
 
 set(mongocxx_sources_private
     mongocxx/private/mongoc.cpp
-    mongocxx/private/numeric_casting.cpp
     mongocxx/private/scoped_bson.cpp
 )
 

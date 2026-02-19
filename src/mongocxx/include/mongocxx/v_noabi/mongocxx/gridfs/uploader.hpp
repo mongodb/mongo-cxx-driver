@@ -14,21 +14,27 @@
 
 #pragma once
 
-#include <cstddef>
-#include <cstdint>
-#include <memory>
-
-#include <mongocxx/gridfs/bucket-fwd.hpp>
 #include <mongocxx/gridfs/uploader-fwd.hpp> // IWYU pragma: export
 
-#include <bsoncxx/document/value.hpp> // IWYU pragma: keep: backward compatibility, to be removed.
-#include <bsoncxx/stdx/optional.hpp>
-#include <bsoncxx/stdx/string_view.hpp>
-#include <bsoncxx/types/bson_value/view.hpp>
-#include <bsoncxx/view_or_value.hpp> // IWYU pragma: keep: backward compatibility, to be removed.
+//
 
-#include <mongocxx/client_session.hpp>
-#include <mongocxx/collection.hpp>
+#include <mongocxx/v1/gridfs/uploader.hpp> // IWYU pragma: export
+
+#include <cstddef>
+#include <cstdint>
+#include <memory> // IWYU pragma: keep: backward compatibility, to be removed.
+#include <utility>
+
+#include <mongocxx/gridfs/bucket-fwd.hpp> // IWYU pragma: keep: backward compatibility, to be removed.
+
+#include <bsoncxx/document/value.hpp>        // IWYU pragma: keep: backward compatibility, to be removed.
+#include <bsoncxx/stdx/optional.hpp>         // IWYU pragma: keep: backward compatibility, to be removed.
+#include <bsoncxx/stdx/string_view.hpp>      // IWYU pragma: keep: backward compatibility, to be removed.
+#include <bsoncxx/types/bson_value/view.hpp> // IWYU pragma: keep: backward compatibility, to be removed.
+#include <bsoncxx/view_or_value.hpp>         // IWYU pragma: keep: backward compatibility, to be removed.
+
+#include <mongocxx/client_session.hpp> // IWYU pragma: keep: backward compatibility, to be removed.
+#include <mongocxx/collection.hpp>     // IWYU pragma: keep: backward compatibility, to be removed.
 #include <mongocxx/result/gridfs/upload.hpp>
 
 #include <mongocxx/config/prelude.hpp>
@@ -41,37 +47,63 @@ namespace gridfs {
 /// Used to upload a GridFS file.
 ///
 class uploader {
+   private:
+    v1::gridfs::uploader _uploader;
+
    public:
     ///
     /// Default constructs an uploader object. The uploader is equivalent to the state of a moved
     /// from uploader. The only valid actions to take with a default constructed uploader are to
     /// assign to it, or destroy it.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL() uploader() noexcept;
+    uploader() noexcept {}
 
     ///
     /// Move constructs an uploader.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL() uploader(uploader&&) noexcept;
+    uploader(uploader&&) noexcept = default;
 
     ///
     /// Move assigns an uploader.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(uploader&) operator=(uploader&&) noexcept;
+    uploader& operator=(uploader&&) noexcept = default;
 
-    uploader(uploader const&) = delete;
-
-    uploader& operator=(uploader const&) = delete;
+    uploader(uploader const& other) = delete;
+    uploader& operator=(uploader const& other) = delete;
 
     ///
     /// Destroys an uploader.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL() ~uploader();
+    ~uploader() = default;
+
+    ///
+    /// Construct with the @ref mongocxx::v1 equivalent.
+    ///
+    /* explicit(false) */ uploader(v1::gridfs::uploader uploader) : _uploader{std::move(uploader)} {}
+
+    ///
+    /// Convert to the @ref mongocxx::v1 equivalent.
+    ///
+    /// @par Postconditions:
+    /// - `*this` is in an assign-or-destroy-only state.
+    ///
+    /// @warning Invalidates all associated objects.
+    ///
+    explicit operator v1::gridfs::uploader() && {
+        return std::move(_uploader);
+    }
+
+    ///
+    /// This class is not copyable.
+    ///
+    explicit operator v1::gridfs::uploader() const& = delete;
 
     ///
     /// Returns true if the uploader is valid, meaning it was not default constructed or moved from.
     ///
-    explicit MONGOCXX_ABI_EXPORT_CDECL() operator bool() const noexcept;
+    explicit operator bool() const noexcept {
+        return _uploader.operator bool();
+    }
 
     ///
     /// Writes a specified number of bytes to a GridFS file.
@@ -125,54 +157,30 @@ class uploader {
     ///
     MONGOCXX_ABI_EXPORT_CDECL(std::int32_t) chunk_size() const;
 
-   private:
-    friend ::mongocxx::v_noabi::gridfs::bucket;
-
-    //
-    // Constructs a new uploader stream.
-    //
-    // @param session
-    //   The client session to use for upload operations.
-    //
-    // @param id
-    //   The id of the GridFS file being uploaded.
-    //
-    // @param files
-    //   The files collection of the bucket receiving the file.
-    //
-    // @param chunks
-    //   The chunks collection of the bucket receiving the file.
-    //
-    // @param chunk_size
-    //   The size in bytes of the chunks being uploaded.
-    //
-    // @param metadata
-    //   Optional metadata field of the files collection document.
-    //
-    uploader(
-        client_session const* session,
-        bsoncxx::v_noabi::types::bson_value::view id,
-        bsoncxx::v_noabi::stdx::string_view filename,
-        collection files,
-        collection chunks,
-        std::int32_t chunk_size,
-        bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> metadata = {});
-
-    void finish_chunk();
-    void flush_chunks();
-
-    class impl;
-
-    template <typename Self>
-    static auto _get_impl(Self& self) -> decltype(*self._impl);
-
-    impl& _get_impl();
-    impl const& _get_impl() const;
-
-    std::unique_ptr<impl> _impl;
+    class internal;
 };
 
 } // namespace gridfs
+} // namespace v_noabi
+} // namespace mongocxx
+
+namespace mongocxx {
+namespace v_noabi {
+
+///
+/// Convert to the @ref mongocxx::v_noabi equivalent of `v`.
+///
+inline v_noabi::gridfs::uploader from_v1(v1::gridfs::uploader v) {
+    return {std::move(v)};
+}
+
+///
+/// Convert to the @ref mongocxx::v1 equivalent of `v`.
+///
+inline v1::gridfs::uploader to_v1(v_noabi::gridfs::uploader v) {
+    return v1::gridfs::uploader{std::move(v)};
+}
+
 } // namespace v_noabi
 } // namespace mongocxx
 
@@ -181,4 +189,7 @@ class uploader {
 ///
 /// @file
 /// Provides utilities to upload GridFS files.
+///
+/// @par Includes
+/// - @ref mongocxx/v1/gridfs/uploader.hpp
 ///
