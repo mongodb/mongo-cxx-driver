@@ -12,23 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <mongocxx/options/distinct.hpp>
+#include <mongocxx/options/estimated_document_count.hpp>
 
 //
 
 #include <mongocxx/v1/read_preference.hpp>
 
-#include <bsoncxx/test/v1/document/value.hh>
 #include <bsoncxx/test/v1/stdx/optional.hh>
 #include <bsoncxx/test/v1/types/value.hh>
 
-#include <mongocxx/test/v_noabi/catch_helpers.hh>
-
 #include <chrono>
 
-#include <bsoncxx/builder/basic/document.hpp>
-#include <bsoncxx/builder/basic/kvp.hpp>
-#include <bsoncxx/document/view.hpp>
 #include <bsoncxx/types/bson_value/view.hpp>
 
 #include <mongocxx/read_preference.hpp>
@@ -38,48 +32,30 @@
 #include <catch2/catch_test_macros.hpp>
 #include <catch2/generators/catch_generators.hpp>
 
-namespace {
-using namespace bsoncxx::builder::basic;
-using namespace mongocxx;
-
-TEST_CASE("distinct", "[distinct][option]") {
-    options::distinct dist;
-
-    auto collation = make_document(kvp("locale", "en_US"));
-
-    CHECK_OPTIONAL_ARGUMENT(dist, collation, collation.view());
-    CHECK_OPTIONAL_ARGUMENT(dist, max_time, std::chrono::milliseconds{1000});
-    CHECK_OPTIONAL_ARGUMENT(dist, read_preference, read_preference{});
-}
-} // namespace
-
 namespace mongocxx {
 
-TEST_CASE("v1", "[mongocxx][v_noabi][options][distinct]") {
+TEST_CASE("v1", "[mongocxx][v_noabi][options][estimated_document_count]") {
     using bsoncxx::v_noabi::from_v1;
 
     auto const has_value = GENERATE(false, true);
 
-    bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> collation;
     bsoncxx::v1::stdx::optional<std::chrono::milliseconds> max_time;
     bsoncxx::v1::stdx::optional<bsoncxx::v1::types::value> comment;
     bsoncxx::v1::stdx::optional<v1::read_preference> read_preference;
 
     if (has_value) {
-        collation.emplace();
         max_time.emplace();
         comment.emplace();
         read_preference.emplace();
     }
 
-    using v_noabi = v_noabi::options::distinct;
-    using v1 = v1::distinct_options;
+    using v_noabi = v_noabi::options::estimated_document_count;
+    using v1 = v1::estimated_document_count_options;
 
     SECTION("from_v1") {
         v1 from;
 
         if (has_value) {
-            from.collation(*collation);
             from.max_time(*max_time);
             from.comment(*comment);
             from.read_preference(*read_preference);
@@ -88,12 +64,10 @@ TEST_CASE("v1", "[mongocxx][v_noabi][options][distinct]") {
         v_noabi const to{from};
 
         if (has_value) {
-            CHECK(to.collation().value() == collation->view());
             CHECK(to.max_time() == *max_time);
-            CHECK(to.comment().value() == *comment);
+            CHECK(to.comment() == *comment);
             CHECK(to.read_preference() == *read_preference);
         } else {
-            CHECK_FALSE(to.collation().has_value());
             CHECK_FALSE(to.max_time().has_value());
             CHECK_FALSE(to.comment().has_value());
             CHECK_FALSE(to.read_preference().has_value());
@@ -104,7 +78,6 @@ TEST_CASE("v1", "[mongocxx][v_noabi][options][distinct]") {
         v_noabi from;
 
         if (has_value) {
-            from.collation(from_v1(collation->view()));
             from.max_time(*max_time);
             from.comment(from_v1(comment->view()));
             from.read_preference(*read_preference);
@@ -113,12 +86,10 @@ TEST_CASE("v1", "[mongocxx][v_noabi][options][distinct]") {
         v1 const to{from};
 
         if (has_value) {
-            CHECK(to.collation().value() == collation->view());
             CHECK(to.max_time() == *max_time);
-            CHECK(to.comment().value() == *comment);
+            CHECK(to.comment() == *comment);
             CHECK(to.read_preference() == *read_preference);
         } else {
-            CHECK_FALSE(to.collation().has_value());
             CHECK_FALSE(to.max_time().has_value());
             CHECK_FALSE(to.comment().has_value());
             CHECK_FALSE(to.read_preference().has_value());

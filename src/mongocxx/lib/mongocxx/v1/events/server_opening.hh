@@ -29,7 +29,7 @@ class server_opening::internal {
    public:
     static MONGOCXX_ABI_EXPORT_CDECL_TESTING(server_opening) make(mongoc_apm_server_opening_t const* ptr);
 
-    static mongoc_apm_server_opening_t const* as_mongoc(server_opening const& self);
+    static MONGOCXX_ABI_EXPORT_CDECL_TESTING(mongoc_apm_server_opening_t const*) as_mongoc(server_opening const& self);
 };
 
 } // namespace events

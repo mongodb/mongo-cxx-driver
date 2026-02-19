@@ -30,7 +30,7 @@ class topology_description_changed::internal {
     static MONGOCXX_ABI_EXPORT_CDECL_TESTING(topology_description_changed) make(
         mongoc_apm_topology_changed_t const* ptr);
 
-    static mongoc_apm_topology_changed_t const* as_mongoc(topology_description_changed const& self);
+    static MONGOCXX_ABI_EXPORT_CDECL_TESTING(mongoc_apm_topology_changed_t const*) as_mongoc(topology_description_changed const& self);
 };
 
 } // namespace events

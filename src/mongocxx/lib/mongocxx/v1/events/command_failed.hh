@@ -29,7 +29,7 @@ class command_failed::internal {
    public:
    static MONGOCXX_ABI_EXPORT_CDECL_TESTING(command_failed) make(mongoc_apm_command_failed_t const* ptr);
 
-   static mongoc_apm_command_failed_t const* as_mongoc(command_failed const& self);
+   static MONGOCXX_ABI_EXPORT_CDECL_TESTING(mongoc_apm_command_failed_t const*) as_mongoc(command_failed const& self);
 };
 
 } // namespace events
