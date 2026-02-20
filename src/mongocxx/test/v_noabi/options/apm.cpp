@@ -32,6 +32,8 @@
 #include <mongocxx/v1/events/topology_description_changed.hh>
 #include <mongocxx/v1/events/topology_opening.hh>
 
+#include <array>
+#include <cstddef>
 #include <functional>
 #include <utility>
 
@@ -52,6 +54,7 @@
 
 #include <catch2/catch_test_macros.hpp>
 #include <catch2/generators/catch_generators.hpp>
+#include <catch2/generators/catch_generators_range.hpp>
 
 namespace mongocxx {
 
@@ -134,224 +137,275 @@ TEST_CASE("v1", "[mongocxx][v_noabi][options][apm]") {
     auto const topology_opening_event = topology_opening_type_v1::internal::make(topology_opening_id);
     // clang-format on
 
-    int command_failed_count = 0;
-    int command_started_count = 0;
-    int command_succeeded_count = 0;
-    int server_closed_count = 0;
-    int server_description_changed_count = 0;
-    int server_heartbeat_failed_count = 0;
-    int server_heartbeat_started_count = 0;
-    int server_heartbeat_succeeded_count = 0;
-    int server_opening_count = 0;
-    int topology_closed_count = 0;
-    int topology_description_changed_count = 0;
-    int topology_opening_count = 0;
-
-    // clang-format off
-    auto const command_failed_v_noabi = [&](command_failed_type_v_noabi const& event) {
-        command_failed_type_v1 v1{event};
-        CHECK(command_failed_type_v1::internal::as_mongoc(v1) == command_failed_id);
-        ++command_failed_count;
-    };
-    auto const command_started_v_noabi = [&](command_started_type_v_noabi const& event) {
-        command_started_type_v1 v1{event};
-        CHECK(command_started_type_v1::internal::as_mongoc(v1) == command_started_id);
-        ++command_started_count;
-    };
-    auto const command_succeeded_v_noabi = [&](command_succeeded_type_v_noabi const& event) {
-        command_succeeded_type_v1 v1{event};
-        CHECK(command_succeeded_type_v1::internal::as_mongoc(v1) == command_succeeded_id);
-        ++command_succeeded_count;
-    };
-    auto const server_closed_v_noabi = [&](server_closed_type_v_noabi const& event) {
-        server_closed_type_v1 v1{event};
-        CHECK(server_closed_type_v1::internal::as_mongoc(v1) == server_closed_id);
-        ++server_closed_count;
-    };
-    auto const server_description_changed_v_noabi = [&](server_description_changed_type_v_noabi const& event) {
-        server_description_changed_type_v1 v1{event};
-        CHECK(server_description_changed_type_v1::internal::as_mongoc(v1) == server_description_changed_id);
-        ++server_description_changed_count;
-    };
-    auto const server_heartbeat_failed_v_noabi = [&](server_heartbeat_failed_type_v_noabi const& event) {
-        server_heartbeat_failed_type_v1 v1{event};
-        CHECK(server_heartbeat_failed_type_v1::internal::as_mongoc(v1) == server_heartbeat_failed_id);
-        ++server_heartbeat_failed_count;
-    };
-    auto const server_heartbeat_started_v_noabi = [&](server_heartbeat_started_type_v_noabi const& event) {
-        server_heartbeat_started_type_v1 v1{event};
-        CHECK(server_heartbeat_started_type_v1::internal::as_mongoc(v1) == server_heartbeat_started_id);
-        ++server_heartbeat_started_count;
-    };
-    auto const server_heartbeat_succeeded_v_noabi = [&](server_heartbeat_succeeded_type_v_noabi const& event) {
-        server_heartbeat_succeeded_type_v1 v1{event};
-        CHECK(server_heartbeat_succeeded_type_v1::internal::as_mongoc(v1) == server_heartbeat_succeeded_id);
-        ++server_heartbeat_succeeded_count;
-    };
-    auto const server_opening_v_noabi = [&](server_opening_type_v_noabi const& event) {
-        server_opening_type_v1 v1{event};
-        CHECK(server_opening_type_v1::internal::as_mongoc(v1) == server_opening_id);
-        ++server_opening_count;
-    };
-    auto const topology_closed_v_noabi = [&](topology_closed_type_v_noabi const& event) {
-        topology_closed_type_v1 v1{event};
-        CHECK(topology_closed_type_v1::internal::as_mongoc(v1) == topology_closed_id);
-        ++topology_closed_count;
-    };
-    auto const topology_description_changed_v_noabi = [&](topology_description_changed_type_v_noabi const& event) {
-        topology_description_changed_type_v1 v1{event};
-        CHECK(topology_description_changed_type_v1::internal::as_mongoc(v1) == topology_description_changed_id);
-        ++topology_description_changed_count;
-    };
-    auto const topology_opening_v_noabi = [&](topology_opening_type_v_noabi const& event) {
-        topology_opening_type_v1 v1{event};
-        CHECK(topology_opening_type_v1::internal::as_mongoc(v1) == topology_opening_id);
-        ++topology_opening_count;
-    };
-    // clang-format on
-
-    // clang-format off
-    auto command_failed_v1 = [&](command_failed_type_v1 const& event) {
-        CHECK(command_failed_type_v1::internal::as_mongoc(event) == command_failed_id);
-        ++command_failed_count;
-    };
-    auto command_started_v1 = [&](command_started_type_v1 const& event) {
-        CHECK(command_started_type_v1::internal::as_mongoc(event) == command_started_id);
-        ++command_started_count;
-    };
-    auto command_succeeded_v1 = [&](command_succeeded_type_v1 const& event) {
-        CHECK(command_succeeded_type_v1::internal::as_mongoc(event) == command_succeeded_id);
-        ++command_succeeded_count;
-    };
-    auto server_closed_v1 = [&](server_closed_type_v1 const& event) {
-        CHECK(server_closed_type_v1::internal::as_mongoc(event) == server_closed_id);
-        ++server_closed_count;
-    };
-    auto server_description_changed_v1 = [&](server_description_changed_type_v1 const& event) {
-        CHECK(server_description_changed_type_v1::internal::as_mongoc(event) == server_description_changed_id);
-        ++server_description_changed_count;
-    };
-    auto server_heartbeat_failed_v1 = [&](server_heartbeat_failed_type_v1 const& event) {
-        CHECK(server_heartbeat_failed_type_v1::internal::as_mongoc(event) == server_heartbeat_failed_id);
-        ++server_heartbeat_failed_count;
-    };
-    auto server_heartbeat_started_v1 = [&](server_heartbeat_started_type_v1 const& event) {
-        CHECK(server_heartbeat_started_type_v1::internal::as_mongoc(event) == server_heartbeat_started_id);
-        ++server_heartbeat_started_count;
-    };
-    auto server_heartbeat_succeeded_v1 = [&](server_heartbeat_succeeded_type_v1 const& event) {
-        CHECK(server_heartbeat_succeeded_type_v1::internal::as_mongoc(event) == server_heartbeat_succeeded_id);
-        ++server_heartbeat_succeeded_count;
-    };
-    auto server_opening_v1 = [&](server_opening_type_v1 const& event) {
-        CHECK(server_opening_type_v1::internal::as_mongoc(event) == server_opening_id);
-        ++server_opening_count;
-    };
-    auto topology_closed_v1 = [&](topology_closed_type_v1 const& event) {
-        CHECK(topology_closed_type_v1::internal::as_mongoc(event) == topology_closed_id);
-        ++topology_closed_count;
-    };
-    auto topology_description_changed_v1 = [&](topology_description_changed_type_v1 const& event) {
-        CHECK(topology_description_changed_type_v1::internal::as_mongoc(event) == topology_description_changed_id);
-        ++topology_description_changed_count;
-    };
-    auto topology_opening_v1 = [&](topology_opening_type_v1 const& event) {
-        CHECK(topology_opening_type_v1::internal::as_mongoc(event) == topology_opening_id);
-        ++topology_opening_count;
-    };
-    // clang-format on
+    static constexpr std::size_t N = 12; // Number of APM callback functions.
+    std::array<int, N> counters = {};    // Number of times each APM callback (by index) is invoked.
 
     using v_noabi = v_noabi::options::apm;
     using v1 = v1::apm;
 
     SECTION("from_v1") {
+        std::size_t n = 0u;
+
+        auto command_failed_v1 = [&, n](command_failed_type_v1 const& event) {
+            CHECK(command_failed_type_v1::internal::as_mongoc(event) == command_failed_id);
+            ++counters[n];
+        };
+        ++n;
+
+        auto command_started_v1 = [&, n](command_started_type_v1 const& event) {
+            CHECK(command_started_type_v1::internal::as_mongoc(event) == command_started_id);
+            ++counters[n];
+        };
+        ++n;
+
+        auto command_succeeded_v1 = [&, n](command_succeeded_type_v1 const& event) {
+            CHECK(command_succeeded_type_v1::internal::as_mongoc(event) == command_succeeded_id);
+            ++counters[n];
+        };
+        ++n;
+
+        auto server_closed_v1 = [&, n](server_closed_type_v1 const& event) {
+            CHECK(server_closed_type_v1::internal::as_mongoc(event) == server_closed_id);
+            ++counters[n];
+        };
+        ++n;
+
+        auto server_description_changed_v1 = [&, n](server_description_changed_type_v1 const& event) {
+            CHECK(server_description_changed_type_v1::internal::as_mongoc(event) == server_description_changed_id);
+            ++counters[n];
+        };
+        ++n;
+
+        auto server_heartbeat_failed_v1 = [&, n](server_heartbeat_failed_type_v1 const& event) {
+            CHECK(server_heartbeat_failed_type_v1::internal::as_mongoc(event) == server_heartbeat_failed_id);
+            ++counters[n];
+        };
+        ++n;
+
+        auto server_heartbeat_started_v1 = [&, n](server_heartbeat_started_type_v1 const& event) {
+            CHECK(server_heartbeat_started_type_v1::internal::as_mongoc(event) == server_heartbeat_started_id);
+            ++counters[n];
+        };
+        ++n;
+
+        auto server_heartbeat_succeeded_v1 = [&, n](server_heartbeat_succeeded_type_v1 const& event) {
+            CHECK(server_heartbeat_succeeded_type_v1::internal::as_mongoc(event) == server_heartbeat_succeeded_id);
+            ++counters[n];
+        };
+        ++n;
+
+        auto server_opening_v1 = [&, n](server_opening_type_v1 const& event) {
+            CHECK(server_opening_type_v1::internal::as_mongoc(event) == server_opening_id);
+            ++counters[n];
+        };
+        ++n;
+
+        auto topology_closed_v1 = [&, n](topology_closed_type_v1 const& event) {
+            CHECK(topology_closed_type_v1::internal::as_mongoc(event) == topology_closed_id);
+            ++counters[n];
+        };
+        ++n;
+
+        auto topology_description_changed_v1 = [&, n](topology_description_changed_type_v1 const& event) {
+            CHECK(topology_description_changed_type_v1::internal::as_mongoc(event) == topology_description_changed_id);
+            ++counters[n];
+        };
+        ++n;
+
+        auto topology_opening_v1 = [&, n](topology_opening_type_v1 const& event) {
+            CHECK(topology_opening_type_v1::internal::as_mongoc(event) == topology_opening_id);
+            ++counters[n];
+        };
+        ++n;
+
+        REQUIRE(n == N);
+
+        auto const idx = GENERATE(range<std::size_t>(0u, N));
+        CAPTURE(idx);
+
         v1 from;
 
-        from.on_command_failed(std::ref(command_failed_v1));
-        from.on_command_started(std::ref(command_started_v1));
-        from.on_command_succeeded(std::ref(command_succeeded_v1));
-        from.on_server_closed(std::ref(server_closed_v1));
-        from.on_server_description_changed(std::ref(server_description_changed_v1));
-        from.on_server_heartbeat_failed(std::ref(server_heartbeat_failed_v1));
-        from.on_server_heartbeat_started(std::ref(server_heartbeat_started_v1));
-        from.on_server_heartbeat_succeeded(std::ref(server_heartbeat_succeeded_v1));
-        from.on_server_opening(std::ref(server_opening_v1));
-        from.on_topology_closed(std::ref(topology_closed_v1));
-        from.on_topology_description_changed(std::ref(topology_description_changed_v1));
-        from.on_topology_opening(std::ref(topology_opening_v1));
+        (void)(std::array<std::function<void()>, N>{{
+            [&] { from.on_command_failed(std::ref(command_failed_v1)); },
+            [&] { from.on_command_started(std::ref(command_started_v1)); },
+            [&] { from.on_command_succeeded(std::ref(command_succeeded_v1)); },
+            [&] { from.on_server_closed(std::ref(server_closed_v1)); },
+            [&] { from.on_server_description_changed(std::ref(server_description_changed_v1)); },
+            [&] { from.on_server_heartbeat_failed(std::ref(server_heartbeat_failed_v1)); },
+            [&] { from.on_server_heartbeat_started(std::ref(server_heartbeat_started_v1)); },
+            [&] { from.on_server_heartbeat_succeeded(std::ref(server_heartbeat_succeeded_v1)); },
+            [&] { from.on_server_opening(std::ref(server_opening_v1)); },
+            [&] { from.on_topology_closed(std::ref(topology_closed_v1)); },
+            [&] { from.on_topology_description_changed(std::ref(topology_description_changed_v1)); },
+            [&] { from.on_topology_opening(std::ref(topology_opening_v1)); },
+        }}[idx]());
 
         v_noabi const to{std::move(from)};
 
-        to.command_failed()(command_failed_event);
-        to.command_started()(command_started_event);
-        to.command_succeeded()(command_succeeded_event);
-        to.server_closed()(server_closed_event);
-        to.server_changed()(server_description_changed_event);
-        to.heartbeat_failed()(server_heartbeat_failed_event);
-        to.heartbeat_started()(server_heartbeat_started_event);
-        to.heartbeat_succeeded()(server_heartbeat_succeeded_event);
-        to.server_opening()(server_opening_event);
-        to.topology_closed()(topology_closed_event);
-        to.topology_changed()(topology_description_changed_event);
-        to.topology_opening()(topology_opening_event);
+        (void)(std::array<std::function<void()>, N>{{
+            [&] { to.command_failed()(command_failed_event); },
+            [&] { to.command_started()(command_started_event); },
+            [&] { to.command_succeeded()(command_succeeded_event); },
+            [&] { to.server_closed()(server_closed_event); },
+            [&] { to.server_changed()(server_description_changed_event); },
+            [&] { to.heartbeat_failed()(server_heartbeat_failed_event); },
+            [&] { to.heartbeat_started()(server_heartbeat_started_event); },
+            [&] { to.heartbeat_succeeded()(server_heartbeat_succeeded_event); },
+            [&] { to.server_opening()(server_opening_event); },
+            [&] { to.topology_closed()(topology_closed_event); },
+            [&] { to.topology_changed()(topology_description_changed_event); },
+            [&] { to.topology_opening()(topology_opening_event); },
+        }}[idx]());
 
-        CHECK(command_failed_count == 1);
-        CHECK(command_started_count == 1);
-        CHECK(command_succeeded_count == 1);
-        CHECK(server_closed_count == 1);
-        CHECK(server_description_changed_count == 1);
-        CHECK(server_heartbeat_failed_count == 1);
-        CHECK(server_heartbeat_started_count == 1);
-        CHECK(server_heartbeat_succeeded_count == 1);
-        CHECK(server_opening_count == 1);
-        CHECK(topology_closed_count == 1);
-        CHECK(topology_description_changed_count == 1);
-        CHECK(topology_opening_count == 1);
+        // Only one APM callback (by index) should have been invoked.
+        for (std::size_t i = 0u; i < N; ++i) {
+            CHECKED_IF(i == idx) {
+                CHECK(counters[i] == 1);
+            }
+
+            else {
+                CHECK(counters[i] == 0);
+            }
+        }
     }
 
     SECTION("to_v1") {
+        std::size_t n = 0u;
+
+        auto const command_failed_v_noabi = [&, n](command_failed_type_v_noabi const& event) {
+            command_failed_type_v1 v1{event};
+            CHECK(command_failed_type_v1::internal::as_mongoc(v1) == command_failed_id);
+            ++counters[n];
+        };
+        ++n;
+
+        auto const command_started_v_noabi = [&, n](command_started_type_v_noabi const& event) {
+            command_started_type_v1 v1{event};
+            CHECK(command_started_type_v1::internal::as_mongoc(v1) == command_started_id);
+            ++counters[n];
+        };
+        ++n;
+
+        auto const command_succeeded_v_noabi = [&, n](command_succeeded_type_v_noabi const& event) {
+            command_succeeded_type_v1 v1{event};
+            CHECK(command_succeeded_type_v1::internal::as_mongoc(v1) == command_succeeded_id);
+            ++counters[n];
+        };
+        ++n;
+
+        auto const server_closed_v_noabi = [&, n](server_closed_type_v_noabi const& event) {
+            server_closed_type_v1 v1{event};
+            CHECK(server_closed_type_v1::internal::as_mongoc(v1) == server_closed_id);
+            ++counters[n];
+        };
+        ++n;
+
+        auto const server_description_changed_v_noabi = [&, n](server_description_changed_type_v_noabi const& event) {
+            server_description_changed_type_v1 v1{event};
+            CHECK(server_description_changed_type_v1::internal::as_mongoc(v1) == server_description_changed_id);
+            ++counters[n];
+        };
+        ++n;
+
+        auto const server_heartbeat_failed_v_noabi = [&, n](server_heartbeat_failed_type_v_noabi const& event) {
+            server_heartbeat_failed_type_v1 v1{event};
+            CHECK(server_heartbeat_failed_type_v1::internal::as_mongoc(v1) == server_heartbeat_failed_id);
+            ++counters[n];
+        };
+        ++n;
+
+        auto const server_heartbeat_started_v_noabi = [&, n](server_heartbeat_started_type_v_noabi const& event) {
+            server_heartbeat_started_type_v1 v1{event};
+            CHECK(server_heartbeat_started_type_v1::internal::as_mongoc(v1) == server_heartbeat_started_id);
+            ++counters[n];
+        };
+        ++n;
+
+        auto const server_heartbeat_succeeded_v_noabi = [&, n](server_heartbeat_succeeded_type_v_noabi const& event) {
+            server_heartbeat_succeeded_type_v1 v1{event};
+            CHECK(server_heartbeat_succeeded_type_v1::internal::as_mongoc(v1) == server_heartbeat_succeeded_id);
+            ++counters[n];
+        };
+        ++n;
+
+        auto const server_opening_v_noabi = [&, n](server_opening_type_v_noabi const& event) {
+            server_opening_type_v1 v1{event};
+            CHECK(server_opening_type_v1::internal::as_mongoc(v1) == server_opening_id);
+            ++counters[n];
+        };
+        ++n;
+
+        auto const topology_closed_v_noabi = [&, n](topology_closed_type_v_noabi const& event) {
+            topology_closed_type_v1 v1{event};
+            CHECK(topology_closed_type_v1::internal::as_mongoc(v1) == topology_closed_id);
+            ++counters[n];
+        };
+        ++n;
+
+        auto const topology_description_changed_v_noabi = [&,
+                                                           n](topology_description_changed_type_v_noabi const& event) {
+            topology_description_changed_type_v1 v1{event};
+            CHECK(topology_description_changed_type_v1::internal::as_mongoc(v1) == topology_description_changed_id);
+            ++counters[n];
+        };
+        ++n;
+
+        auto const topology_opening_v_noabi = [&, n](topology_opening_type_v_noabi const& event) {
+            topology_opening_type_v1 v1{event};
+            CHECK(topology_opening_type_v1::internal::as_mongoc(v1) == topology_opening_id);
+            ++counters[n];
+        };
+        ++n;
+
+        REQUIRE(n == N);
+
+        auto const idx = GENERATE(range<std::size_t>(0u, N));
+        CAPTURE(idx);
+
         v_noabi from;
 
-        from.on_command_failed(std::ref(command_failed_v_noabi));
-        from.on_command_started(std::ref(command_started_v_noabi));
-        from.on_command_succeeded(std::ref(command_succeeded_v_noabi));
-        from.on_server_closed(std::ref(server_closed_v_noabi));
-        from.on_server_changed(std::ref(server_description_changed_v_noabi));
-        from.on_heartbeat_failed(std::ref(server_heartbeat_failed_v_noabi));
-        from.on_heartbeat_started(std::ref(server_heartbeat_started_v_noabi));
-        from.on_heartbeat_succeeded(std::ref(server_heartbeat_succeeded_v_noabi));
-        from.on_server_opening(std::ref(server_opening_v_noabi));
-        from.on_topology_closed(std::ref(topology_closed_v_noabi));
-        from.on_topology_changed(std::ref(topology_description_changed_v_noabi));
-        from.on_topology_opening(std::ref(topology_opening_v_noabi));
+        (void)(std::array<std::function<void()>, N>{{
+            [&] { from.on_command_failed(std::ref(command_failed_v_noabi)); },
+            [&] { from.on_command_started(std::ref(command_started_v_noabi)); },
+            [&] { from.on_command_succeeded(std::ref(command_succeeded_v_noabi)); },
+            [&] { from.on_server_closed(std::ref(server_closed_v_noabi)); },
+            [&] { from.on_server_changed(std::ref(server_description_changed_v_noabi)); },
+            [&] { from.on_heartbeat_failed(std::ref(server_heartbeat_failed_v_noabi)); },
+            [&] { from.on_heartbeat_started(std::ref(server_heartbeat_started_v_noabi)); },
+            [&] { from.on_heartbeat_succeeded(std::ref(server_heartbeat_succeeded_v_noabi)); },
+            [&] { from.on_server_opening(std::ref(server_opening_v_noabi)); },
+            [&] { from.on_topology_closed(std::ref(topology_closed_v_noabi)); },
+            [&] { from.on_topology_changed(std::ref(topology_description_changed_v_noabi)); },
+            [&] { from.on_topology_opening(std::ref(topology_opening_v_noabi)); },
+        }})[idx]();
 
         v1 const to{std::move(from)};
 
-        to.command_failed()(command_failed_event);
-        to.command_started()(command_started_event);
-        to.command_succeeded()(command_succeeded_event);
-        to.server_closed()(server_closed_event);
-        to.server_description_changed()(server_description_changed_event);
-        to.server_heartbeat_failed()(server_heartbeat_failed_event);
-        to.server_heartbeat_started()(server_heartbeat_started_event);
-        to.server_heartbeat_succeeded()(server_heartbeat_succeeded_event);
-        to.server_opening()(server_opening_event);
-        to.topology_closed()(topology_closed_event);
-        to.topology_description_changed()(topology_description_changed_event);
-        to.topology_opening()(topology_opening_event);
+        (void)(std::array<std::function<void()>, N>{{
+            [&] { to.command_failed()(command_failed_event); },
+            [&] { to.command_started()(command_started_event); },
+            [&] { to.command_succeeded()(command_succeeded_event); },
+            [&] { to.server_closed()(server_closed_event); },
+            [&] { to.server_description_changed()(server_description_changed_event); },
+            [&] { to.server_heartbeat_failed()(server_heartbeat_failed_event); },
+            [&] { to.server_heartbeat_started()(server_heartbeat_started_event); },
+            [&] { to.server_heartbeat_succeeded()(server_heartbeat_succeeded_event); },
+            [&] { to.server_opening()(server_opening_event); },
+            [&] { to.topology_closed()(topology_closed_event); },
+            [&] { to.topology_description_changed()(topology_description_changed_event); },
+            [&] { to.topology_opening()(topology_opening_event); },
+        }}[idx]());
 
-        CHECK(command_failed_count == 1);
-        CHECK(command_started_count == 1);
-        CHECK(command_succeeded_count == 1);
-        CHECK(server_closed_count == 1);
-        CHECK(server_description_changed_count == 1);
-        CHECK(server_heartbeat_failed_count == 1);
-        CHECK(server_heartbeat_started_count == 1);
-        CHECK(server_heartbeat_succeeded_count == 1);
-        CHECK(server_opening_count == 1);
-        CHECK(topology_closed_count == 1);
-        CHECK(topology_description_changed_count == 1);
-        CHECK(topology_opening_count == 1);
+        // Only one APM callback (by index) should have been invoked.
+        for (std::size_t i = 0u; i < N; ++i) {
+            CHECKED_IF(i == idx) {
+                CHECK(counters[i] == 1);
+            }
+
+            else {
+                CHECK(counters[i] == 0);
+            }
+        }
     }
 }
 
