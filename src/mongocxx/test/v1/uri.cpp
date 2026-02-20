@@ -16,9 +16,6 @@
 
 //
 
-#include <bsoncxx/v1/stdx/optional.hpp>
-#include <bsoncxx/v1/stdx/string_view.hpp>
-
 #include <mongocxx/v1/exception.hpp>
 
 #include <mongocxx/v1/read_concern.hh>
@@ -26,6 +23,8 @@
 #include <mongocxx/v1/write_concern.hh>
 
 #include <bsoncxx/test/v1/document/view.hh>
+#include <bsoncxx/test/v1/stdx/optional.hh>
+#include <bsoncxx/test/v1/stdx/string_view.hh>
 
 #include <mongocxx/test/private/scoped_bson.hh>
 

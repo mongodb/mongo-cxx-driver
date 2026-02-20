@@ -28,7 +28,7 @@ class topology_description::internal {
    public:
     static topology_description make(mongoc_topology_description_t const* sd);
 
-    static mongoc_topology_description_t const* as_mongoc(topology_description const& self);
+    static MONGOCXX_ABI_EXPORT_CDECL_TESTING(mongoc_topology_description_t const*) as_mongoc(topology_description const& self);
 };
 
 } // namespace events

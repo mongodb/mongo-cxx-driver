@@ -222,7 +222,7 @@ TEST_CASE("v1", "[mongocxx][v_noabi][options][index]") {
             CHECK(to.unique() == *unique);
             CHECK(to.hidden() == *hidden);
             CHECK(to.name() == *name);
-            CHECK(to.collation() == collation->view());
+            CHECK(to.collation().value() == collation->view());
             CHECK(to.sparse() == *sparse);
             CHECK(to.storage_engine() == storage_engine->view());
             CHECK(to.expire_after() == *expire_after);
@@ -291,7 +291,7 @@ TEST_CASE("v1", "[mongocxx][v_noabi][options][index]") {
             CHECK(to.unique() == *unique);
             CHECK(to.hidden() == *hidden);
             CHECK(to.name() == *name);
-            CHECK(to.collation() == collation->view());
+            CHECK(to.collation().value() == collation->view());
             CHECK(to.sparse() == *sparse);
             CHECK(to.storage_engine() == storage_engine->view());
             CHECK(to.expire_after() == *expire_after);

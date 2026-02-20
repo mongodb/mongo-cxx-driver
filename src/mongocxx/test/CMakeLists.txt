@@ -70,13 +70,20 @@ set(mongocxx_test_sources_v_noabi
     v_noabi/model/replace_one.cpp
     v_noabi/model/update_many.cpp
     v_noabi/model/update_one.cpp
+    v_noabi/model/write.cpp
     v_noabi/options/aggregate.cpp
+    v_noabi/options/apm.cpp
+    v_noabi/options/auto_encryption.cpp
     v_noabi/options/bulk_write.cpp
+    v_noabi/options/change_streams.cpp
     v_noabi/options/client_encryption.cpp
     v_noabi/options/client_session.cpp
     v_noabi/options/count.cpp
+    v_noabi/options/data_key.cpp
     v_noabi/options/delete.cpp
     v_noabi/options/distinct.cpp
+    v_noabi/options/encrypt.cpp
+    v_noabi/options/estimated_document_count.cpp
     v_noabi/options/find_one_and_delete.cpp
     v_noabi/options/find_one_and_replace.cpp
     v_noabi/options/find_one_and_update.cpp
@@ -87,7 +94,11 @@ set(mongocxx_test_sources_v_noabi
     v_noabi/options/index.cpp
     v_noabi/options/insert.cpp
     v_noabi/options/pool.cpp
+    v_noabi/options/range.cpp
     v_noabi/options/replace.cpp
+    v_noabi/options/rewrap_many_datakey.cpp
+    v_noabi/options/server_api.cpp
+    v_noabi/options/tls.cpp
     v_noabi/options/update.cpp
     v_noabi/pool.cpp
     v_noabi/read_concern.cpp

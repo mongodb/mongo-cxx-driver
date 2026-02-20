@@ -29,7 +29,7 @@ class command_started::internal {
    public:
     static MONGOCXX_ABI_EXPORT_CDECL_TESTING(command_started) make(mongoc_apm_command_started_t const* ptr);
 
-    static mongoc_apm_command_started_t const* as_mongoc(command_started const& self);
+    static MONGOCXX_ABI_EXPORT_CDECL_TESTING(mongoc_apm_command_started_t const*) as_mongoc(command_started const& self);
 };
 
 } // namespace events

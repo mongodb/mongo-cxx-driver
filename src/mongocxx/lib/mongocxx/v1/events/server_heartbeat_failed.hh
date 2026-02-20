@@ -30,7 +30,7 @@ class server_heartbeat_failed::internal {
     static MONGOCXX_ABI_EXPORT_CDECL_TESTING(server_heartbeat_failed) make(
         mongoc_apm_server_heartbeat_failed_t const* ptr);
 
-    static mongoc_apm_server_heartbeat_failed_t const* as_mongoc(server_heartbeat_failed const& self);
+    static MONGOCXX_ABI_EXPORT_CDECL_TESTING(mongoc_apm_server_heartbeat_failed_t const*) as_mongoc(server_heartbeat_failed const& self);
 };
 
 } // namespace events

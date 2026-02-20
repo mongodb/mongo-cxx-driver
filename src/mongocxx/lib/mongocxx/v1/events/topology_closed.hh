@@ -29,7 +29,7 @@ class topology_closed::internal {
    public:
     static MONGOCXX_ABI_EXPORT_CDECL_TESTING(topology_closed) make(mongoc_apm_topology_closed_t const* ptr);
 
-    static mongoc_apm_topology_closed_t const* as_mongoc(topology_closed const& self);
+    static MONGOCXX_ABI_EXPORT_CDECL_TESTING(mongoc_apm_topology_closed_t const*) as_mongoc(topology_closed const& self);
 };
 
 } // namespace events

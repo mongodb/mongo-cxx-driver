@@ -63,13 +63,24 @@ class server_api {
     ///
     /// Construct with the @ref mongocxx::v1 equivalent.
     ///
-    /* explicit(false) */ server_api(v1::server_api const& opts) : server_api{opts.get_version()} {}
+    /* explicit(false) */ server_api(v1::server_api const& opts)
+        : _version{opts.get_version()}, _strict{opts.strict()}, _deprecation_errors{opts.deprecation_errors()} {}
 
     ///
     /// Convert to the @ref mongocxx::v1 equivalent.
     ///
     explicit operator v1::server_api() const {
-        return v1::server_api{_version};
+        v1::server_api ret{_version};
+
+        if (_strict) {
+            ret.strict(*_strict);
+        }
+
+        if (_deprecation_errors) {
+            ret.deprecation_errors(*_deprecation_errors);
+        }
+
+        return ret;
     }
 
     ///
