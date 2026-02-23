@@ -142,7 +142,7 @@ class count {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/aggregate/
     ///
-    count& hint(mongocxx::v_noabi::hint index_hint) {
+    count& hint(v_noabi::hint index_hint) {
         _hint = std::move(index_hint);
         return *this;
     }
@@ -155,7 +155,7 @@ class count {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/aggregate/
     ///
-    bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::hint> const& hint() const {
+    bsoncxx::v_noabi::stdx::optional<v_noabi::hint> const& hint() const {
         return _hint;
     }
 
@@ -292,7 +292,7 @@ class count {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/aggregate/
     ///
-    count& read_preference(mongocxx::v_noabi::read_preference rp) {
+    count& read_preference(v_noabi::read_preference rp) {
         _read_preference = std::move(rp);
         return *this;
     }
@@ -305,18 +305,18 @@ class count {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/aggregate/
     ///
-    bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::read_preference> const& read_preference() const {
+    bsoncxx::v_noabi::stdx::optional<v_noabi::read_preference> const& read_preference() const {
         return _read_preference;
     }
 
    private:
     bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> _collation;
-    bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::hint> _hint;
+    bsoncxx::v_noabi::stdx::optional<v_noabi::hint> _hint;
     bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value> _comment;
     bsoncxx::v_noabi::stdx::optional<std::int64_t> _limit;
     bsoncxx::v_noabi::stdx::optional<std::chrono::milliseconds> _max_time;
     bsoncxx::v_noabi::stdx::optional<std::int64_t> _skip;
-    bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::read_preference> _read_preference;
+    bsoncxx::v_noabi::stdx::optional<v_noabi::read_preference> _read_preference;
 };
 
 } // namespace options

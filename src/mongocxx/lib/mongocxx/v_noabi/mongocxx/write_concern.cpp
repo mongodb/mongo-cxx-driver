@@ -74,7 +74,7 @@ struct static_assertions {
 
 void write_concern::nodes(std::int32_t confirm_from) {
     if (confirm_from < 0) {
-        throw mongocxx::v_noabi::logic_error{error_code::k_invalid_parameter};
+        throw v_noabi::logic_error{v_noabi::error_code::k_invalid_parameter};
     }
 
     _wc.nodes(confirm_from);
@@ -83,7 +83,7 @@ void write_concern::nodes(std::int32_t confirm_from) {
 void write_concern::acknowledge_level(write_concern::level confirm_level) {
     if (confirm_level == level::k_tag) {
         if (this->acknowledge_level() != level::k_tag) {
-            throw exception{error_code::k_unknown_write_concern};
+            throw v_noabi::exception{v_noabi::error_code::k_unknown_write_concern};
         } else {
             return;
         }
@@ -96,7 +96,7 @@ void write_concern::timeout(std::chrono::milliseconds timeout) {
     auto const count = timeout.count();
 
     if ((count < 0) || (count >= std::int64_t{INT32_MAX})) {
-        throw logic_error{error_code::k_invalid_parameter};
+        throw v_noabi::logic_error{v_noabi::error_code::k_invalid_parameter};
     }
 
     _wc.timeout(timeout);

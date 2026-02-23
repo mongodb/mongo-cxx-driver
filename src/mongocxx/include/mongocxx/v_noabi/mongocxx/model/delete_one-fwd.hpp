@@ -31,7 +31,7 @@ class delete_one;
 namespace mongocxx {
 namespace model {
 
-using ::mongocxx::v_noabi::model::delete_one;
+using v_noabi::model::delete_one;
 
 } // namespace model
 } // namespace mongocxx

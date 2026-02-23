@@ -48,7 +48,7 @@
 namespace mongocxx {
 namespace v1 {
 
-using code = mongocxx::v1::indexes::errc;
+using code = v1::indexes::errc;
 
 class indexes::impl {
    public:

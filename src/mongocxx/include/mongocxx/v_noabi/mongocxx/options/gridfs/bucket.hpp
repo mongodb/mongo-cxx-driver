@@ -156,7 +156,7 @@ class bucket {
     /// @return
     ///   The read concern of the bucket.
     ///
-    bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::read_concern> const& read_concern() const {
+    bsoncxx::v_noabi::stdx::optional<v_noabi::read_concern> const& read_concern() const {
         return _read_concern;
     }
 
@@ -188,7 +188,7 @@ class bucket {
     /// @return
     ///   The read preference of the bucket.
     ///
-    bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::read_preference> const& read_preference() const {
+    bsoncxx::v_noabi::stdx::optional<v_noabi::read_preference> const& read_preference() const {
         return _read_preference;
     }
 
@@ -214,7 +214,7 @@ class bucket {
     /// @return
     ///   The write concern of the bucket.
     ///
-    bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern> const& write_concern() const {
+    bsoncxx::v_noabi::stdx::optional<v_noabi::write_concern> const& write_concern() const {
         return _write_concern;
     }
 

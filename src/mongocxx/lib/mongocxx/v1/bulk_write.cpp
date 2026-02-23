@@ -305,7 +305,7 @@ class bulk_write::update_one::impl {
     bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> _collation;
     bsoncxx::v1::stdx::optional<bsoncxx::v1::array::value> _array_filters;
     bsoncxx::v1::stdx::optional<bool> _upsert;
-    bsoncxx::v1::stdx::optional<mongocxx::v1::hint> _hint;
+    bsoncxx::v1::stdx::optional<v1::hint> _hint;
     bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> _sort;
 
     static impl const& with(update_one const& self) {
@@ -419,7 +419,7 @@ bsoncxx::v1::stdx::optional<bsoncxx::v1::array::view> bulk_write::update_one::ar
     return impl::with(this)->_array_filters;
 }
 
-bsoncxx::v1::stdx::optional<mongocxx::v1::hint> const& bulk_write::update_one::internal::hint(
+bsoncxx::v1::stdx::optional<v1::hint> const& bulk_write::update_one::internal::hint(
     bulk_write::update_one const& self) {
     return impl::with(self)._hint;
 }
@@ -442,7 +442,7 @@ bsoncxx::v1::stdx::optional<bsoncxx::v1::array::value>& bulk_write::update_one::
     return impl::with(self)._array_filters;
 }
 
-bsoncxx::v1::stdx::optional<mongocxx::v1::hint>& bulk_write::update_one::internal::hint(update_one& self) {
+bsoncxx::v1::stdx::optional<v1::hint>& bulk_write::update_one::internal::hint(update_one& self) {
     return impl::with(self)._hint;
 }
 
@@ -457,7 +457,7 @@ class bulk_write::update_many::impl {
     bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> _collation;
     bsoncxx::v1::stdx::optional<bsoncxx::v1::array::value> _array_filters;
     bsoncxx::v1::stdx::optional<bool> _upsert;
-    bsoncxx::v1::stdx::optional<mongocxx::v1::hint> _hint;
+    bsoncxx::v1::stdx::optional<v1::hint> _hint;
 
     static impl const& with(update_many const& self) {
         return *static_cast<impl const*>(self._impl);
@@ -561,8 +561,7 @@ bsoncxx::v1::stdx::optional<bsoncxx::v1::array::view> bulk_write::update_many::a
     return impl::with(this)->_array_filters;
 }
 
-bsoncxx::v1::stdx::optional<mongocxx::v1::hint> const& bulk_write::update_many::internal::hint(
-    update_many const& self) {
+bsoncxx::v1::stdx::optional<v1::hint> const& bulk_write::update_many::internal::hint(update_many const& self) {
     return impl::with(self)._hint;
 }
 
@@ -588,7 +587,7 @@ bsoncxx::v1::stdx::optional<bool>& bulk_write::update_many::internal::upsert(upd
     return impl::with(self)._upsert;
 }
 
-bsoncxx::v1::stdx::optional<mongocxx::v1::hint>& bulk_write::update_many::internal::hint(update_many& self) {
+bsoncxx::v1::stdx::optional<v1::hint>& bulk_write::update_many::internal::hint(update_many& self) {
     return impl::with(self)._hint;
 }
 
@@ -700,8 +699,7 @@ bsoncxx::v1::stdx::optional<bool> bulk_write::replace_one::upsert() const {
     return impl::with(this)->_upsert;
 }
 
-bsoncxx::v1::stdx::optional<mongocxx::v1::hint> const& bulk_write::replace_one::internal::hint(
-    replace_one const& self) {
+bsoncxx::v1::stdx::optional<v1::hint> const& bulk_write::replace_one::internal::hint(replace_one const& self) {
     return impl::with(self)._hint;
 }
 
@@ -807,7 +805,7 @@ bsoncxx::v1::stdx::optional<v1::hint> bulk_write::delete_one::hint() const {
     return impl::with(this)->_hint;
 }
 
-bsoncxx::v1::stdx::optional<mongocxx::v1::hint> const& bulk_write::delete_one::internal::hint(delete_one const& self) {
+bsoncxx::v1::stdx::optional<v1::hint> const& bulk_write::delete_one::internal::hint(delete_one const& self) {
     return impl::with(self)._hint;
 }
 
@@ -905,8 +903,7 @@ bsoncxx::v1::stdx::optional<v1::hint> bulk_write::delete_many::hint() const {
     return impl::with(this)->_hint;
 }
 
-bsoncxx::v1::stdx::optional<mongocxx::v1::hint> const& bulk_write::delete_many::internal::hint(
-    delete_many const& self) {
+bsoncxx::v1::stdx::optional<v1::hint> const& bulk_write::delete_many::internal::hint(delete_many const& self) {
     return impl::with(self)._hint;
 }
 

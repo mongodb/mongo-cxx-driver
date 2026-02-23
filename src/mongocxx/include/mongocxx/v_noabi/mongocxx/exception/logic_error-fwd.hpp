@@ -26,7 +26,7 @@ class MONGOCXX_ABI_EXPORT logic_error;
 
 namespace mongocxx {
 
-using ::mongocxx::v_noabi::logic_error;
+using v_noabi::logic_error;
 
 } // namespace mongocxx
 

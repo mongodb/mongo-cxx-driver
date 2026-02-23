@@ -139,8 +139,8 @@ inline std::error_code make_error_code(error_code error) {
 
 namespace mongocxx {
 
-using ::mongocxx::v_noabi::error_category;
-using ::mongocxx::v_noabi::make_error_code;
+using v_noabi::error_category;
+using v_noabi::make_error_code;
 
 } // namespace mongocxx
 
@@ -150,7 +150,7 @@ namespace std {
 
 // @cond DOXYGEN_DISABLE
 template <>
-struct is_error_code_enum<::mongocxx::v_noabi::error_code> : std::true_type {};
+struct is_error_code_enum<mongocxx::v_noabi::error_code> : std::true_type {};
 // @endcond
 
 } // namespace std

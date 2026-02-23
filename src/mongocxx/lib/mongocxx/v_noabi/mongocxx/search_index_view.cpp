@@ -60,7 +60,7 @@ namespace {
 template <typename Indexes>
 Indexes& check_moved_from(Indexes& indexes) {
     if (v1::search_indexes::internal::is_moved_from(indexes)) {
-        throw mongocxx::v_noabi::logic_error{error_code::k_invalid_search_index_view};
+        throw v_noabi::logic_error{v_noabi::error_code::k_invalid_search_index_view};
     }
     return indexes;
 }

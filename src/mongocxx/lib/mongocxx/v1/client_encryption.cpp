@@ -602,7 +602,7 @@ client_encryption::client_encryption(void* impl) : _impl{impl} {}
 
 class client_encryption::options::impl {
    public:
-    mongocxx::v1::client* _key_vault_client = nullptr;
+    v1::client* _key_vault_client = nullptr;
     bsoncxx::v1::stdx::optional<ns_pair> _key_vault_namespace;
     bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> _kms_providers;
     bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> _tls_opts;
@@ -658,12 +658,12 @@ client_encryption::options::options() : _impl{new impl{}} {}
 
 // NOLINTEND(cppcoreguidelines-owning-memory)
 
-client_encryption::options& client_encryption::options::key_vault_client(mongocxx::v1::client* v) {
+client_encryption::options& client_encryption::options::key_vault_client(v1::client* v) {
     impl::with(this)->_key_vault_client = std::move(v);
     return *this;
 }
 
-mongocxx::v1::client* client_encryption::options::key_vault_client() const {
+v1::client* client_encryption::options::key_vault_client() const {
     return impl::with(this)->_key_vault_client;
 }
 

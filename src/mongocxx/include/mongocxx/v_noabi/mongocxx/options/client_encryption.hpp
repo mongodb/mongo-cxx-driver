@@ -59,7 +59,7 @@ class client_encryption {
     /// @see
     /// - https://www.mongodb.com/docs/manual/core/security-client-side-encryption/
     ///
-    client_encryption& key_vault_client(mongocxx::v_noabi::client* client) {
+    client_encryption& key_vault_client(v_noabi::client* client) {
         _key_vault_client = client;
         return *this;
     }
@@ -70,7 +70,7 @@ class client_encryption {
     /// @return
     ///   An optional pointer to the key vault client.
     ///
-    bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::client*> const& key_vault_client() const {
+    bsoncxx::v_noabi::stdx::optional<v_noabi::client*> const& key_vault_client() const {
         return _key_vault_client;
     }
 
@@ -212,7 +212,7 @@ class client_encryption {
     class internal;
 
    private:
-    bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::client*> _key_vault_client;
+    bsoncxx::v_noabi::stdx::optional<v_noabi::client*> _key_vault_client;
     bsoncxx::v_noabi::stdx::optional<ns_pair> _key_vault_namespace;
     bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> _kms_providers;
     bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> _tls_opts;

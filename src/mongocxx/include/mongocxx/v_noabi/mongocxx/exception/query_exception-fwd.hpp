@@ -26,7 +26,7 @@ class MONGOCXX_ABI_EXPORT query_exception;
 
 namespace mongocxx {
 
-using ::mongocxx::v_noabi::query_exception;
+using v_noabi::query_exception;
 
 } // namespace mongocxx
 

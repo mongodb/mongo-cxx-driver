@@ -51,7 +51,7 @@ class delete_one {
     ///
     explicit operator v1::bulk_write::delete_one() const {
         using bsoncxx::v_noabi::to_v1;
-        using mongocxx::v_noabi::to_v1;
+        using v_noabi::to_v1;
 
         v1::bulk_write::delete_one ret{bsoncxx::v1::document::value{to_v1(_filter.view())}};
 
@@ -123,7 +123,7 @@ class delete_one {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    delete_one& hint(mongocxx::v_noabi::hint index_hint) {
+    delete_one& hint(v_noabi::hint index_hint) {
         _hint = std::move(index_hint);
         return *this;
     }
@@ -133,7 +133,7 @@ class delete_one {
     ///
     /// @return The current hint, if one is set.
     ///
-    bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::hint> const& hint() const {
+    bsoncxx::v_noabi::stdx::optional<v_noabi::hint> const& hint() const {
         return _hint;
     }
 
@@ -141,7 +141,7 @@ class delete_one {
     bsoncxx::v_noabi::document::view_or_value _filter;
 
     bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> _collation;
-    bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::hint> _hint;
+    bsoncxx::v_noabi::stdx::optional<v_noabi::hint> _hint;
 };
 
 } // namespace model

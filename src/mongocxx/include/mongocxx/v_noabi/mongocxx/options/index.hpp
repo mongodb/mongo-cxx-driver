@@ -71,7 +71,7 @@ class index {
         base_storage_options() = default;
 
        private:
-        friend ::mongocxx::v_noabi::options::index;
+        friend v_noabi::options::index;
 
         virtual int type() const = 0;
     };
@@ -112,7 +112,7 @@ class index {
         }
 
        private:
-        friend ::mongocxx::v_noabi::collection;
+        friend v_noabi::collection;
 
         MONGOCXX_ABI_NO_EXPORT int type() const override;
 

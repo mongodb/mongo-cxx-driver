@@ -44,31 +44,31 @@ class bulk_write::internal {
 
 class bulk_write::update_one::internal {
    public:
-    static bsoncxx::v1::stdx::optional<mongocxx::v1::hint> const& hint(update_one const& self);
+    static bsoncxx::v1::stdx::optional<v1::hint> const& hint(update_one const& self);
 
     static MONGOCXX_ABI_EXPORT_CDECL_TESTING(bsoncxx::v1::document::value&) filter(update_one& self);
     static MONGOCXX_ABI_EXPORT_CDECL_TESTING(bsoncxx::v1::document::value&) update(update_one& self);
     static bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value>& collation(update_one& self);
     static bsoncxx::v1::stdx::optional<bsoncxx::v1::array::value>& array_filters(update_one& self);
-    static bsoncxx::v1::stdx::optional<mongocxx::v1::hint>& hint(update_one& self);
+    static bsoncxx::v1::stdx::optional<v1::hint>& hint(update_one& self);
     static bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value>& sort(update_one& self);
 };
 
 class bulk_write::update_many::internal {
    public:
-    static bsoncxx::v1::stdx::optional<mongocxx::v1::hint> const& hint(update_many const& self);
+    static bsoncxx::v1::stdx::optional<v1::hint> const& hint(update_many const& self);
 
     static MONGOCXX_ABI_EXPORT_CDECL_TESTING(bsoncxx::v1::document::value&) filter(update_many& self);
     static MONGOCXX_ABI_EXPORT_CDECL_TESTING(bsoncxx::v1::document::value&) update(update_many& self);
     static bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value>& collation(update_many& self);
     static bsoncxx::v1::stdx::optional<bsoncxx::v1::array::value>& array_filters(update_many& self);
     static bsoncxx::v1::stdx::optional<bool>& upsert(update_many& self);
-    static bsoncxx::v1::stdx::optional<mongocxx::v1::hint>& hint(update_many& self);
+    static bsoncxx::v1::stdx::optional<v1::hint>& hint(update_many& self);
 };
 
 class bulk_write::replace_one::internal {
    public:
-    static bsoncxx::v1::stdx::optional<mongocxx::v1::hint> const& hint(replace_one const& self);
+    static bsoncxx::v1::stdx::optional<v1::hint> const& hint(replace_one const& self);
 
     static MONGOCXX_ABI_EXPORT_CDECL_TESTING(bsoncxx::v1::document::value&) filter(replace_one& self);
     static MONGOCXX_ABI_EXPORT_CDECL_TESTING(bsoncxx::v1::document::value&) replacement(replace_one& self);
@@ -79,7 +79,7 @@ class bulk_write::replace_one::internal {
 
 class bulk_write::delete_one::internal {
    public:
-    static bsoncxx::v1::stdx::optional<mongocxx::v1::hint> const& hint(delete_one const& self);
+    static bsoncxx::v1::stdx::optional<v1::hint> const& hint(delete_one const& self);
 
     static MONGOCXX_ABI_EXPORT_CDECL_TESTING(bsoncxx::v1::document::value&) filter(delete_one& self);
     static bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value>& collation(delete_one& self);
@@ -88,7 +88,7 @@ class bulk_write::delete_one::internal {
 
 class bulk_write::delete_many::internal {
    public:
-    static bsoncxx::v1::stdx::optional<mongocxx::v1::hint> const& hint(delete_many const& self);
+    static bsoncxx::v1::stdx::optional<v1::hint> const& hint(delete_many const& self);
 
     static MONGOCXX_ABI_EXPORT_CDECL_TESTING(bsoncxx::v1::document::value&) filter(delete_many& self);
     static bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value>& collation(delete_many& self);

@@ -31,7 +31,7 @@ class update_many;
 namespace mongocxx {
 namespace model {
 
-using ::mongocxx::v_noabi::model::update_many;
+using v_noabi::model::update_many;
 
 } // namespace model
 } // namespace mongocxx

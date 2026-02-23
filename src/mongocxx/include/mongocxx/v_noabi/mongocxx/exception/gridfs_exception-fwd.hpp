@@ -26,7 +26,7 @@ class MONGOCXX_ABI_EXPORT gridfs_exception;
 
 namespace mongocxx {
 
-using ::mongocxx::v_noabi::gridfs_exception;
+using v_noabi::gridfs_exception;
 
 } // namespace mongocxx
 

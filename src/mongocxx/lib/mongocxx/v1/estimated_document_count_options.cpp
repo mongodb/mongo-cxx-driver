@@ -33,7 +33,7 @@ class estimated_document_count_options::impl {
    public:
     bsoncxx::v1::stdx::optional<std::chrono::milliseconds> _max_time;
     bsoncxx::v1::stdx::optional<bsoncxx::v1::types::value> _comment;
-    bsoncxx::v1::stdx::optional<mongocxx::v1::read_preference> _read_preference;
+    bsoncxx::v1::stdx::optional<v1::read_preference> _read_preference;
 
     static impl const& with(estimated_document_count_options const& self) {
         return *static_cast<impl const*>(self._impl);
@@ -122,8 +122,8 @@ bsoncxx::v1::stdx::optional<bsoncxx::v1::types::value> const& estimated_document
     return impl::with(self)._comment;
 }
 
-bsoncxx::v1::stdx::optional<mongocxx::v1::read_preference> const&
-estimated_document_count_options::internal::read_preference(estimated_document_count_options const& self) {
+bsoncxx::v1::stdx::optional<v1::read_preference> const& estimated_document_count_options::internal::read_preference(
+    estimated_document_count_options const& self) {
     return impl::with(self)._read_preference;
 }
 
@@ -132,7 +132,7 @@ bsoncxx::v1::stdx::optional<bsoncxx::v1::types::value>& estimated_document_count
     return impl::with(self)._comment;
 }
 
-bsoncxx::v1::stdx::optional<mongocxx::v1::read_preference>& estimated_document_count_options::internal::read_preference(
+bsoncxx::v1::stdx::optional<v1::read_preference>& estimated_document_count_options::internal::read_preference(
     estimated_document_count_options& self) {
     return impl::with(self)._read_preference;
 }

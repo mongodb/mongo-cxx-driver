@@ -26,7 +26,7 @@ class instance;
 
 namespace mongocxx {
 
-using ::mongocxx::v_noabi::instance;
+using v_noabi::instance;
 
 } // namespace mongocxx
 
