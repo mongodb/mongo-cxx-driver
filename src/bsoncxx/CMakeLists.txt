@@ -20,6 +20,9 @@ set(BSONCXX_VERSION_NO_EXTRA ${BSONCXX_VERSION_MAJOR}.${BSONCXX_VERSION_MINOR}.$
 set(BSONCXX_VERSION $CACHE{BSONCXX_VERSION_NO_EXTRA}${BSONCXX_VERSION_EXTRA} CACHE INTERNAL "")
 message(STATUS "bsoncxx version: $CACHE{BSONCXX_VERSION}")
 
+set(BSONCXX_SOVERSION "_noabi" CACHE INTERNAL "")
+message(STATUS "bsoncxx soversion: ${BSONCXX_SOVERSION}")
+
 option(BSONCXX_POLY_USE_IMPLS "Use bsoncxx implementations for stdx polyfills" OFF)
 option(BSONCXX_POLY_USE_STD "Use C++17 std library for stdx polyfills" OFF)
 

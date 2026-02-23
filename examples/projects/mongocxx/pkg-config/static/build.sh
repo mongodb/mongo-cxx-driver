@@ -5,18 +5,18 @@ set -o pipefail
 
 # Sanity-check that static library macros are set when building against the static library.  Users
 # don't need to include this section in their projects.
-if ! pkgconf --cflags libmongocxx-static | grep -q -- -DBSONCXX_STATIC; then
+if ! pkgconf --cflags "lib${MONGOCXX_BASENAME:?}-static" | grep -q -- -DBSONCXX_STATIC; then
   echo "Expected BSONCXX_STATIC to be set" >&2
   exit 1
 fi
 
-if ! pkgconf --cflags libmongocxx-static | grep -q -- -DMONGOCXX_STATIC; then
+if ! pkgconf --cflags "lib${MONGOCXX_BASENAME:?}-static" | grep -q -- -DMONGOCXX_STATIC; then
   echo "Expected MONGOCXX_STATIC to be set" >&2
   exit 1
 fi
 
 # Sanity-check that static libmongoc is required. Regression test for CXX-3290.
-if ! pkgconf --print-requires libmongocxx-static | grep -q -- mongoc2-static; then
+if ! pkgconf --print-requires "lib${MONGOCXX_BASENAME:?}-static" | grep -q -- mongoc2-static; then
   echo "Expected mongoc2-static to be required" >&2
   exit 1
 fi
@@ -25,12 +25,12 @@ compile_flags=(
   "-std=c++${CXX_STANDARD:?}"
   -Wall -Wextra -Werror
   ${CXXFLAGS:-}
-  $(pkg-config --cflags libmongocxx-static)
+  $(pkg-config --cflags "lib${MONGOCXX_BASENAME:?}-static")
 )
 
 link_flags=(
   ${LDFLAGS:-}
-  $(pkg-config --libs libmongocxx-static)
+  $(pkg-config --libs "lib${MONGOCXX_BASENAME:?}-static")
 )
 
 echo "Compiling with: ${compile_flags[*]}"

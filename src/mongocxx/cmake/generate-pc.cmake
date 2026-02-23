@@ -17,12 +17,6 @@ foreach(var ${input_vars})
     endif()
 endforeach()
 
-if(is_static)
-    set(pkgname "libmongocxx-static")
-else()
-    set(pkgname "libmongocxx")
-endif()
-
 if(1)
     set(requires "")
 

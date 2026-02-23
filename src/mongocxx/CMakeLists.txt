@@ -20,6 +20,9 @@ set(MONGOCXX_VERSION_NO_EXTRA ${MONGOCXX_VERSION_MAJOR}.${MONGOCXX_VERSION_MINOR
 set(MONGOCXX_VERSION ${MONGOCXX_VERSION_NO_EXTRA}${MONGOCXX_VERSION_EXTRA} CACHE INTERNAL "")
 message(STATUS "mongocxx version: $CACHE{MONGOCXX_VERSION}")
 
+set(MONGOCXX_SOVERSION "_noabi" CACHE INTERNAL "")
+message(STATUS "mongocxx soversion: ${MONGOCXX_SOVERSION}")
+
 option(MONGOCXX_ENABLE_SSL "Enable SSL - if the underlying C driver offers it" ON)
 option(MONGOCXX_ENABLE_SLOW_TESTS "Run slow tests when invoking the the test target" OFF)
 

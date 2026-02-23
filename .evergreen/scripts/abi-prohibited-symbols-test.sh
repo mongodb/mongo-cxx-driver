@@ -6,10 +6,10 @@ set -o pipefail
 command -V nm >/dev/null
 
 declare -a libs
-libs=(
-  install/new/lib/libbsoncxx.so
-  install/new/lib/libmongocxx.so
-)
+
+# CXX-804: fallback to old library filename pattern.
+[[ -f install/new/lib/libbsoncxx1.so ]] && libs+=("install/new/lib/libbsoncxx1.so") || libs+=("install/new/lib/libbsoncxx.so")
+[[ -f install/new/lib/libmongocxx1.so ]] && libs+=("install/new/lib/libmongocxx1.so") || libs+=("install/new/lib/libmongocxx.so")
 
 for lib in "${libs[@]}"; do
   [[ -f "${lib:?}" ]] || {

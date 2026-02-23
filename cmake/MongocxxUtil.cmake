@@ -8,6 +8,16 @@ function(mongocxx_add_library TARGET OUTPUT_NAME LINK_TYPE)
         ${mongocxx_sources}
     )
 
+    # The mongocxx ABI version number.
+    set(soversion "${MONGOCXX_SOVERSION}")
+
+    # The SONAME of the mongocxx shared library.
+    if ("${soversion}" STREQUAL "_noabi")
+        set(soname "${OUTPUT_NAME}")
+    else()
+        set(soname "${OUTPUT_NAME}${soversion}")
+    endif()
+
     # Full ABI tag string to append to library output name.
     # The value is determined at generator-time when using a multi-config generator.
     # Otherwise, the value is determined at configure-time.
@@ -24,7 +34,6 @@ function(mongocxx_add_library TARGET OUTPUT_NAME LINK_TYPE)
 
         # ABI version number. Only necessary for shared library targets.
         if(LINK_TYPE STREQUAL "SHARED")
-            set(soversion _noabi)
             set_target_properties(${TARGET} PROPERTIES SOVERSION ${soversion})
             string(APPEND abi_tag "-v${soversion}")
         endif()
@@ -82,9 +91,9 @@ function(mongocxx_add_library TARGET OUTPUT_NAME LINK_TYPE)
     endif()
 
     if(ENABLE_ABI_TAG_IN_LIBRARY_FILENAMES)
-        set_target_properties(${TARGET} PROPERTIES OUTPUT_NAME ${OUTPUT_NAME}${abi_tag})
+        set_target_properties(${TARGET} PROPERTIES OUTPUT_NAME ${soname}${abi_tag})
     else()
-        set_target_properties(${TARGET} PROPERTIES OUTPUT_NAME ${OUTPUT_NAME})
+        set_target_properties(${TARGET} PROPERTIES OUTPUT_NAME ${soname})
     endif()
 
     if(LINK_TYPE STREQUAL "SHARED")
