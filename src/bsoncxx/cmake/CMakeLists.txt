@@ -17,14 +17,14 @@ include(CMakePackageConfigHelpers)
 # Generate and install modern CMake package config files.
 if(1)
     write_basic_package_version_file(
-        bsoncxx-config-version.cmake
+        bsoncxxConfigVersion.cmake
         VERSION $CACHE{BSONCXX_VERSION}
         COMPATIBILITY SameMajorVersion
     )
 
     configure_file(
-        bsoncxx-config.cmake.in
-        bsoncxx-config.cmake
+        bsoncxxConfig.cmake.in
+        bsoncxxConfig.cmake
         @ONLY
     )
 
@@ -47,8 +47,8 @@ if(1)
 
     install(
         FILES
-        ${CMAKE_CURRENT_BINARY_DIR}/bsoncxx-config-version.cmake
-        ${CMAKE_CURRENT_BINARY_DIR}/bsoncxx-config.cmake
+        ${CMAKE_CURRENT_BINARY_DIR}/bsoncxxConfigVersion.cmake
+        ${CMAKE_CURRENT_BINARY_DIR}/bsoncxxConfig.cmake
         DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/bsoncxx-$CACHE{BSONCXX_VERSION}
         COMPONENT Devel
     )
@@ -117,7 +117,7 @@ endif()
 
 set_dist_list(src_bsoncxx_cmake_DIST
     CMakeLists.txt
-    bsoncxx-config.cmake.in
+    bsoncxxConfig.cmake.in
     generate-pc.cmake
     libbsoncxx.pc.in
 )

@@ -17,7 +17,7 @@ include(CMakePackageConfigHelpers)
 # Generate and install modern CMake package config files.
 if(1)
     write_basic_package_version_file(
-        mongocxx-config-version.cmake
+        mongocxxConfigVersion.cmake
         VERSION $CACHE{MONGOCXX_VERSION}
         COMPATIBILITY SameMajorVersion
     )
@@ -25,8 +25,8 @@ if(1)
     function(configure_mongocxx_config_cmake)
         set(BSONCXX_VERSION_NO_EXTRA $CACHE{BSONCXX_VERSION_NO_EXTRA})
         configure_file(
-            mongocxx-config.cmake.in
-            mongocxx-config.cmake
+            mongocxxConfig.cmake.in
+            mongocxxConfig.cmake
             @ONLY
         )
     endfunction()
@@ -51,8 +51,8 @@ if(1)
 
     install(
         FILES
-        ${CMAKE_CURRENT_BINARY_DIR}/mongocxx-config-version.cmake
-        ${CMAKE_CURRENT_BINARY_DIR}/mongocxx-config.cmake
+        ${CMAKE_CURRENT_BINARY_DIR}/mongocxxConfigVersion.cmake
+        ${CMAKE_CURRENT_BINARY_DIR}/mongocxxConfig.cmake
         DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/mongocxx-$CACHE{MONGOCXX_VERSION}
         COMPONENT Devel
     )
@@ -136,5 +136,5 @@ set_dist_list(src_mongocxx_cmake_DIST
     CMakeLists.txt
     generate-pc.cmake
     libmongocxx.pc.in
-    mongocxx-config.cmake.in
+    mongocxxConfig.cmake.in
 )
