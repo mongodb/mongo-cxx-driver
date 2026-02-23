@@ -14,13 +14,6 @@ function(bsoncxx_add_library TARGET OUTPUT_NAME LINK_TYPE)
     # The bsoncxx ABI version number.
     set(soversion "${BSONCXX_SOVERSION}")
 
-    # The SONAME of the bsoncxx shared library.
-    if ("${soversion}" STREQUAL "_noabi")
-        set(soname "${OUTPUT_NAME}")
-    else()
-        set(soname "${OUTPUT_NAME}${soversion}")
-    endif()
-
     add_library(${TARGET} ${LINK_TYPE}
         ${bsoncxx_sources}
     )
@@ -136,9 +129,9 @@ function(bsoncxx_add_library TARGET OUTPUT_NAME LINK_TYPE)
     endif()
 
     if(ENABLE_ABI_TAG_IN_LIBRARY_FILENAMES)
-        set_target_properties(${TARGET} PROPERTIES OUTPUT_NAME ${soname}${abi_tag})
+        set_target_properties(${TARGET} PROPERTIES OUTPUT_NAME ${OUTPUT_NAME}${abi_tag})
     else()
-        set_target_properties(${TARGET} PROPERTIES OUTPUT_NAME ${soname})
+        set_target_properties(${TARGET} PROPERTIES OUTPUT_NAME ${OUTPUT_NAME})
     endif()
 
     if(LINK_TYPE STREQUAL "SHARED")
