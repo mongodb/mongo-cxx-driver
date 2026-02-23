@@ -465,17 +465,25 @@ change_stream::iterator& change_stream::iterator::operator=(iterator const& othe
 
 change_stream::iterator::iterator() : _impl{nullptr} {}
 
+namespace {
+
+change_stream* to_change_stream(void* impl) {
+    return static_cast<change_stream*>(impl);
+}
+
+} // namespace
+
 change_stream::iterator::value_type change_stream::iterator::operator*() const {
-    return _impl ? change_stream::impl::with(static_cast<change_stream*>(_impl))->_doc : bsoncxx::v1::document::view{};
+    return _impl ? change_stream::impl::with(to_change_stream(_impl))->_doc : bsoncxx::v1::document::view{};
 }
 
 change_stream::iterator::pointer change_stream::iterator::operator->() const {
-    return &change_stream::impl::with(static_cast<change_stream*>(_impl))->_doc;
+    return &change_stream::impl::with(to_change_stream(_impl))->_doc;
 }
 
 change_stream::iterator& change_stream::iterator::operator++() {
     if (_impl) {
-        change_stream::internal::advance_iterator(*static_cast<change_stream*>(_impl));
+        change_stream::internal::advance_iterator(*to_change_stream(_impl));
     }
     return *this;
 }
