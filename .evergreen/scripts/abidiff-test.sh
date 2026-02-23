@@ -15,6 +15,10 @@ common_flags=(
   --headers-dir2 install/new/include
   --fail-no-debug-info      # Ensure debug info is present for our libs.
   --no-unreferenced-symbols # Not interested in symbols not owned by our libs.
+  --leaf-changes-only       # Reduce verbosity of diagnostics.
+  --impacted-interfaces     # Do not omit list of impacted interfaces.
+
+  --ignore-soname # CXX-804: old library filenames do not include soversion in the soname.
 )
 
 declare -a abi_flags=("${common_flags[@]:?}" --suppressions cxx-abi/abignore)
