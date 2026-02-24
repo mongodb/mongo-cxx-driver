@@ -272,7 +272,7 @@ class accessor {
     /// outside the allowed range.
     byte_reference byte_at(byte_count_type index) {
         if (index >= byte_size()) {
-            throw bsoncxx::v_noabi::exception{error_code::k_vector_out_of_range};
+            throw v_noabi::exception{error_code::k_vector_out_of_range};
         }
         return *(byte_begin() + byte_difference_type(index));
     }
@@ -283,7 +283,7 @@ class accessor {
     /// outside the allowed range.
     const_byte_reference byte_at(byte_count_type index) const {
         if (index >= byte_size()) {
-            throw bsoncxx::v_noabi::exception{error_code::k_vector_out_of_range};
+            throw v_noabi::exception{error_code::k_vector_out_of_range};
         }
         return *(byte_begin() + byte_difference_type(index));
     }
@@ -294,7 +294,7 @@ class accessor {
     /// outside the allowed range.
     reference at(element_count_type index) {
         if (index >= size()) {
-            throw bsoncxx::v_noabi::exception{error_code::k_vector_out_of_range};
+            throw v_noabi::exception{error_code::k_vector_out_of_range};
         }
         return *(begin() + element_difference_type(index));
     }
@@ -305,7 +305,7 @@ class accessor {
     /// outside the allowed range.
     const_reference at(element_count_type index) const {
         if (index >= size()) {
-            throw bsoncxx::v_noabi::exception{error_code::k_vector_out_of_range};
+            throw v_noabi::exception{error_code::k_vector_out_of_range};
         }
         return *(begin() + element_difference_type(index));
     }
@@ -330,7 +330,7 @@ class accessor {
     }
 
    private:
-    friend class bsoncxx::v_noabi::builder::basic::sub_binary;
+    friend class v_noabi::builder::basic::sub_binary;
     friend class accessor<typename std::remove_const<format>::type>;
 
     accessor(detail::accessor_data<format> data) noexcept : _data{data} {}

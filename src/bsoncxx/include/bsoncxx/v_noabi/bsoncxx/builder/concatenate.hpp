@@ -126,7 +126,7 @@ inline concatenate_array concatenate(array::view_or_value array) {
 namespace bsoncxx {
 namespace builder {
 
-using ::bsoncxx::v_noabi::builder::concatenate;
+using v_noabi::builder::concatenate;
 
 } // namespace builder
 } // namespace bsoncxx

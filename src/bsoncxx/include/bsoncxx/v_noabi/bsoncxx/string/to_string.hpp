@@ -56,7 +56,7 @@ std::basic_string<CharT, Traits, Allocator> to_string(
 namespace bsoncxx {
 namespace string {
 
-using ::bsoncxx::v_noabi::string::to_string;
+using v_noabi::string::to_string;
 
 } // namespace string
 } // namespace bsoncxx

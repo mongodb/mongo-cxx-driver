@@ -24,8 +24,8 @@
 namespace bsoncxx {
 namespace test_util {
 
-std::vector<int> split_version(bsoncxx::stdx::string_view input) {
-    static constexpr auto npos = bsoncxx::stdx::string_view::npos;
+std::vector<int> split_version(v_noabi::stdx::string_view input) {
+    static constexpr auto npos = v_noabi::stdx::string_view::npos;
     static constexpr auto digits = "0123456789";
 
     std::vector<int> ret;

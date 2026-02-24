@@ -165,7 +165,7 @@ class core {
     /// @throws
     ///   bsoncxx::v_noabi::exception if one of the keys fails to append.
     ///
-    BSONCXX_ABI_EXPORT_CDECL(core&) concatenate(bsoncxx::v_noabi::document::view const& view);
+    BSONCXX_ABI_EXPORT_CDECL(core&) concatenate(v_noabi::document::view const& view);
 
     ///
     /// Appends a BSON double.
@@ -624,7 +624,7 @@ class core {
     ///   bsoncxx::v_noabi::exception if the current BSON datum is a document that is waiting for a
     ///   key to be appended to start a new key/value pair.
     ///
-    BSONCXX_ABI_EXPORT_CDECL(core&) append(bsoncxx::v_noabi::document::view view);
+    BSONCXX_ABI_EXPORT_CDECL(core&) append(v_noabi::document::view view);
 
     ///
     /// Appends the given array view.
@@ -637,7 +637,7 @@ class core {
     ///   bsoncxx::v_noabi::exception if the current BSON datum is a document that is waiting for a
     ///   key to be appended to start a new key/value pair.
     ///
-    BSONCXX_ABI_EXPORT_CDECL(core&) append(bsoncxx::v_noabi::array::view view);
+    BSONCXX_ABI_EXPORT_CDECL(core&) append(v_noabi::array::view view);
 
     ///
     /// Gets a view over the document.
@@ -651,7 +651,7 @@ class core {
     ///
     /// @throws bsoncxx::v_noabi::exception if the precondition is violated.
     ///
-    BSONCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::document::view) view_document() const;
+    BSONCXX_ABI_EXPORT_CDECL(v_noabi::document::view) view_document() const;
 
     ///
     /// Gets a view over the array.
@@ -664,7 +664,7 @@ class core {
     ///
     /// @throws bsoncxx::v_noabi::exception if the precondition is violated.
     ///
-    BSONCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::array::view) view_array() const;
+    BSONCXX_ABI_EXPORT_CDECL(v_noabi::array::view) view_array() const;
 
     ///
     /// Transfers ownership of the underlying document to the caller.
@@ -682,7 +682,7 @@ class core {
     ///   After calling extract_document() it is illegal to call any methods on this class, unless
     ///   it is subsequenly moved into.
     ///
-    BSONCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::document::value) extract_document();
+    BSONCXX_ABI_EXPORT_CDECL(v_noabi::document::value) extract_document();
 
     ///
     /// Transfers ownership of the underlying document to the caller.
@@ -699,7 +699,7 @@ class core {
     ///   After calling extract_array() it is illegal to call any methods on this class, unless it
     ///   is subsequenly moved into.
     ///
-    BSONCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::array::value) extract_array();
+    BSONCXX_ABI_EXPORT_CDECL(v_noabi::array::value) extract_array();
 
     ///
     /// Deletes the contents of the underlying BSON datum. After calling clear(), the state of this
