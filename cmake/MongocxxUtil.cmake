@@ -8,6 +8,9 @@ function(mongocxx_add_library TARGET OUTPUT_NAME LINK_TYPE)
         ${mongocxx_sources}
     )
 
+    # The mongocxx ABI version number.
+    set(soversion "${MONGOCXX_SOVERSION}")
+
     # Full ABI tag string to append to library output name.
     # The value is determined at generator-time when using a multi-config generator.
     # Otherwise, the value is determined at configure-time.
@@ -24,7 +27,6 @@ function(mongocxx_add_library TARGET OUTPUT_NAME LINK_TYPE)
 
         # ABI version number. Only necessary for shared library targets.
         if(LINK_TYPE STREQUAL "SHARED")
-            set(soversion _noabi)
             set_target_properties(${TARGET} PROPERTIES SOVERSION ${soversion})
             string(APPEND abi_tag "-v${soversion}")
         endif()

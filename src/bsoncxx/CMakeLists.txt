@@ -20,6 +20,9 @@ set(BSONCXX_VERSION_NO_EXTRA ${BSONCXX_VERSION_MAJOR}.${BSONCXX_VERSION_MINOR}.$
 set(BSONCXX_VERSION $CACHE{BSONCXX_VERSION_NO_EXTRA}${BSONCXX_VERSION_EXTRA} CACHE INTERNAL "")
 message(STATUS "bsoncxx version: $CACHE{BSONCXX_VERSION}")
 
+set(BSONCXX_SOVERSION "_noabi" CACHE INTERNAL "")
+message(STATUS "bsoncxx soversion: ${BSONCXX_SOVERSION}")
+
 option(BSONCXX_POLY_USE_IMPLS "Use bsoncxx implementations for stdx polyfills" OFF)
 option(BSONCXX_POLY_USE_STD "Use C++17 std library for stdx polyfills" OFF)
 
@@ -30,6 +33,10 @@ if(BSONCXX_API_OVERRIDE_DEFAULT_ABI)
 endif()
 
 set(BSONCXX_OUTPUT_BASENAME "bsoncxx" CACHE STRING "Output bsoncxx library base name")
+set(bsoncxx_basename "${BSONCXX_OUTPUT_BASENAME}")
+if (NOT BSONCXX_SOVERSION STREQUAL "_noabi")
+    set(bsoncxx_basename "${BSONCXX_OUTPUT_BASENAME}${BSONCXX_SOVERSION}")
+endif()
 
 # Count how many polyfill options are true-ish
 set(BSONCXX_POLY_OPTIONS_SET 0)
@@ -86,7 +93,7 @@ include(BsoncxxUtil)
 set(bsoncxx_target_list "")
 
 if(BSONCXX_BUILD_SHARED)
-    bsoncxx_add_library(bsoncxx_shared "${BSONCXX_OUTPUT_BASENAME}" SHARED)
+    bsoncxx_add_library(bsoncxx_shared "${bsoncxx_basename}" SHARED)
     list(APPEND bsoncxx_target_list bsoncxx_shared)
 
     if(WIN32)
@@ -97,7 +104,7 @@ if(BSONCXX_BUILD_SHARED)
 endif()
 
 if(BSONCXX_BUILD_STATIC)
-    bsoncxx_add_library(bsoncxx_static "${BSONCXX_OUTPUT_BASENAME}-static" STATIC)
+    bsoncxx_add_library(bsoncxx_static "${bsoncxx_basename}-static" STATIC)
     list(APPEND bsoncxx_target_list bsoncxx_static)
 endif()
 

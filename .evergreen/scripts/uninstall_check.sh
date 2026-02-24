@@ -2,16 +2,22 @@
 
 set -o errexit # Exit the script with error if any of the commands fail
 
+BSONCXX_BASENAME="bsoncxx"
+MONGOCXX_BASENAME="mongocxx"
+
 BUILD_DIR="$(pwd)/build"
 INSTALL_DIR="$BUILD_DIR/install"
 
 ls -lR "$INSTALL_DIR"
 
-if test -f "$INSTALL_DIR/$LIB_DIR/pkgconfig/libbsoncxx.pc"; then
-  echo "libbsoncxx.pc found!"
+if test -f "$INSTALL_DIR/$LIB_DIR/pkgconfig/lib${BSONCXX_BASENAME:?}1.pc"; then
+  echo "lib${BSONCXX_BASENAME:?}1.pc found!"
+  exit 1
+elif test -f "$INSTALL_DIR/$LIB_DIR/pkgconfig/lib${BSONCXX_BASENAME:?}.pc"; then
+  echo "lib${BSONCXX_BASENAME:?}.pc found!" # CXX-804: fallback to old library filename pattern.
   exit 1
 else
-  echo "libbsoncxx.pc check ok"
+  echo "lib${BSONCXX_BASENAME:?}1.pc check ok"
 fi
 if test ! -f "$INSTALL_DIR/$LIB_DIR/canary.txt"; then
   echo "canary.txt not found!"
@@ -25,11 +31,14 @@ if test ! -d "$INSTALL_DIR/$LIB_DIR"; then
 else
   echo "$INSTALL_DIR/$LIB_DIR check ok"
 fi
-if test -f "$INSTALL_DIR/$LIB_DIR/pkgconfig/libmongocxx.pc"; then
-  echo "libmongocxx.pc found!"
+if test -f "$INSTALL_DIR/$LIB_DIR/pkgconfig/lib${MONGOCXX_BASENAME:?}1.pc"; then
+  echo "lib${MONGOCXX_BASENAME:?}1.pc found!"
+  exit 1
+elif test -f "$INSTALL_DIR/$LIB_DIR/pkgconfig/lib${MONGOCXX_BASENAME:?}.pc"; then
+  echo "lib${MONGOCXX_BASENAME:?}.pc found!" # CXX-804: fallback to old library filename pattern.
   exit 1
 else
-  echo "libmongocxx.pc check ok"
+  echo "lib${MONGOCXX_BASENAME:?}1.pc check ok"
 fi
 if test -f "$INSTALL_DIR/include/bsoncxx/v_noabi/bsoncxx/json.hpp"; then
   echo "bsoncxx/json.hpp found!"

@@ -17,7 +17,7 @@ include(CMakePackageConfigHelpers)
 # Generate and install modern CMake package config files.
 if(1)
     write_basic_package_version_file(
-        mongocxx-config-version.cmake
+        mongocxxConfigVersion.cmake
         VERSION $CACHE{MONGOCXX_VERSION}
         COMPATIBILITY SameMajorVersion
     )
@@ -25,8 +25,8 @@ if(1)
     function(configure_mongocxx_config_cmake)
         set(BSONCXX_VERSION_NO_EXTRA $CACHE{BSONCXX_VERSION_NO_EXTRA})
         configure_file(
-            mongocxx-config.cmake.in
-            mongocxx-config.cmake
+            mongocxxConfig.cmake.in
+            mongocxxConfig.cmake
             @ONLY
         )
     endfunction()
@@ -51,8 +51,8 @@ if(1)
 
     install(
         FILES
-        ${CMAKE_CURRENT_BINARY_DIR}/mongocxx-config-version.cmake
-        ${CMAKE_CURRENT_BINARY_DIR}/mongocxx-config.cmake
+        ${CMAKE_CURRENT_BINARY_DIR}/mongocxxConfigVersion.cmake
+        ${CMAKE_CURRENT_BINARY_DIR}/mongocxxConfig.cmake
         DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/mongocxx-$CACHE{MONGOCXX_VERSION}
         COMPONENT Devel
     )
@@ -74,12 +74,22 @@ if(1)
                 set(is_static 0)
             endif()
         else()
-            if(LINK_TYPE STREQUAL "STATIC")
-                set(bsoncxx_name "$CACHE{BSONCXX_OUTPUT_BASENAME}-static")
-                set(is_static 1)
+            if ("${BSONCXX_SOVERSION}" STREQUAL "_noabi")
+                if(LINK_TYPE STREQUAL "STATIC")
+                    set(bsoncxx_name "$CACHE{BSONCXX_OUTPUT_BASENAME}-static")
+                    set(is_static 1)
+                else()
+                    set(bsoncxx_name "$CACHE{BSONCXX_OUTPUT_BASENAME}")
+                    set(is_static 0)
+                endif()
             else()
-                set(bsoncxx_name "$CACHE{BSONCXX_OUTPUT_BASENAME}")
-                set(is_static 0)
+                if(LINK_TYPE STREQUAL "STATIC")
+                    set(bsoncxx_name "$CACHE{BSONCXX_OUTPUT_BASENAME}${BSONCXX_SOVERSION}-static")
+                    set(is_static 1)
+                else()
+                    set(bsoncxx_name "$CACHE{BSONCXX_OUTPUT_BASENAME}${BSONCXX_SOVERSION}")
+                    set(is_static 0)
+                endif()
             endif()
         endif()
 
@@ -109,10 +119,18 @@ if(1)
         if(ENABLE_ABI_TAG_IN_PKGCONFIG_FILENAMES)
             install(FILES ${pcfilename} DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
         else()
-            if(is_static)
-                set(pkgname "lib${MONGOCXX_OUTPUT_BASENAME}-static.pc")
+            if("${MONGOCXX_SOVERSION}" STREQUAL "_noabi")
+                if(is_static)
+                    set(pkgname "lib${MONGOCXX_OUTPUT_BASENAME}-static.pc")
+                else()
+                    set(pkgname "lib${MONGOCXX_OUTPUT_BASENAME}.pc")
+                endif()
             else()
-                set(pkgname "lib${MONGOCXX_OUTPUT_BASENAME}.pc")
+                if(is_static)
+                    set(pkgname "lib${MONGOCXX_OUTPUT_BASENAME}${MONGOCXX_SOVERSION}-static.pc")
+                else()
+                    set(pkgname "lib${MONGOCXX_OUTPUT_BASENAME}${MONGOCXX_SOVERSION}.pc")
+                endif()
             endif()
 
             install(
@@ -136,5 +154,5 @@ set_dist_list(src_mongocxx_cmake_DIST
     CMakeLists.txt
     generate-pc.cmake
     libmongocxx.pc.in
-    mongocxx-config.cmake.in
+    mongocxxConfig.cmake.in
 )

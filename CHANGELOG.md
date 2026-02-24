@@ -11,11 +11,12 @@ Changes prior to 3.9.0 are documented as [release notes on GitHub](https://githu
 
 > [!IMPORTANT]
 > This release removes and changes the exports of many unstable ABI symbols.
-> Recompilation is required to link against the mongocxx shared library for this release.
+> As a reminder, recompilation is required to link with a new release of the unstable ABI for mongo-cxx-driver libraries.
 
 ### Added
 
-* To support incremental migration, the following entities are defined as equivalent to their renamed counterparts.
+- Experimental support for stable ABI interfaces under the `v1` namespace for both bsoncxx and mongocxx libraries.
+- To support incremental migration, the following entities are defined as equivalent to their renamed counterparts.
   - `bsoncxx::types::id`: equivalent to `bsoncxx::type`.
   - `bsoncxx::types::binary_subtype`: equivalent to `bsoncxx::binary_sub_type`.
   - `bsoncxx::types::view`: equivalent to `bsoncxx::types::bson_value::view`.
@@ -25,6 +26,11 @@ Changes prior to 3.9.0 are documented as [release notes on GitHub](https://githu
 
 ### Changed
 
+> [!IMPORTANT]
+> This release provides an _experimental_ stable ABI for bsoncxx and mongocxx.
+
+- For consistency with the library and package filenames of MongoDB C Driver 2.0.0 and newer:
+  - CMake package config files now use the `<name>Config.cmake` and `<name>ConfigVersion.cmake` pattern. (Old: `<name>-config.cmake` and `<name>-config-version.cmake`)
 - CMake 3.16.0 or newer is required when `ENABLE_TESTS=ON` for compatibility with the updated Catch2 library version (3.7.0 -> 3.8.1).
 - Minimum supported compiler versions to build from source are updated to the following:
   - GCC 8.1 (from GCC 4.8.2).

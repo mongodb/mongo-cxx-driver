@@ -11,6 +11,9 @@ function(bsoncxx_add_library TARGET OUTPUT_NAME LINK_TYPE)
         message(FATAL_ERROR "expected bson_target to be defined")
     endif()
 
+    # The bsoncxx ABI version number.
+    set(soversion "${BSONCXX_SOVERSION}")
+
     add_library(${TARGET} ${LINK_TYPE}
         ${bsoncxx_sources}
     )
@@ -30,7 +33,6 @@ function(bsoncxx_add_library TARGET OUTPUT_NAME LINK_TYPE)
 
         # ABI version number. Only necessary for shared library targets.
         if(LINK_TYPE STREQUAL "SHARED")
-            set(soversion _noabi)
             set_target_properties(${TARGET} PROPERTIES SOVERSION ${soversion})
             string(APPEND abi_tag "-v${soversion}")
         endif()

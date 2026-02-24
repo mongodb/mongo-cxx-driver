@@ -16,12 +16,6 @@ foreach(var ${input_vars})
     endif()
 endforeach()
 
-if(is_static)
-    set(pkgname "libbsoncxx-static")
-else()
-    set(pkgname "libbsoncxx")
-endif()
-
 if(1)
     set(requires "")
 
