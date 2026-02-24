@@ -130,7 +130,7 @@ value::value(v_noabi::type id, std::uint64_t a, std::uint64_t b) {
         case v_noabi::type::k_maxkey:
         case v_noabi::type::k_minkey:
         default:
-            throw v_noabi::exception(error_code::k_invalid_bson_type_id);
+            throw v_noabi::exception(v_noabi::error_code::k_invalid_bson_type_id);
     }
 }
 

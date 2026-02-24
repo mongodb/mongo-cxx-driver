@@ -63,7 +63,7 @@ v1::stdx::string_view element::key() const try { return _view.key(); } catch (v1
         return from_v1(_view.get_##_name());                                                   \
     } catch (v1::exception const& ex) {                                                        \
         throw v_noabi::exception{                                                              \
-            error_code::k_need_element_type_k_##_name,                                         \
+            v_noabi::error_code::k_need_element_type_k_##_name,                                \
             std::string{"cannot get " #_name " from an uninitialized element: "} + ex.what()}; \
     }
 

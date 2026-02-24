@@ -300,7 +300,7 @@ v_noabi::client_session client::start_session(v_noabi::options::client_session c
         return v_noabi::client_session::internal::make(ptr, check_moved_from(*this), options);
     }
 
-    throw v_noabi::exception{error_code::k_cannot_create_session, error.message};
+    throw v_noabi::exception{v_noabi::error_code::k_cannot_create_session, error.message};
 }
 
 void client::reset() {
