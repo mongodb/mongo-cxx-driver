@@ -94,7 +94,7 @@ struct type {}; // The type intended to be referenced below.
 void fn(type param);
 
 // Also OK: unambiguously refers to the ABI-specific type.
-void fn(mongocxx::v_noabi::example::type param);
+void fn(v_noabi::example::type param);
 
 }  // namespace example
 }  // namespace v_noabi

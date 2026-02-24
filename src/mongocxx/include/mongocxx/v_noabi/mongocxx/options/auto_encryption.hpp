@@ -65,7 +65,7 @@ class auto_encryption {
     /// @see
     /// - https://www.mongodb.com/docs/manual/core/security-client-side-encryption/
     ///
-    auto_encryption& key_vault_client(mongocxx::v_noabi::client* client) {
+    auto_encryption& key_vault_client(v_noabi::client* client) {
         _key_vault_client = client;
         return *this;
     }
@@ -76,7 +76,7 @@ class auto_encryption {
     /// @return
     ///   An optional pointer to the key vault client.
     ///
-    bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::client*> const& key_vault_client() const {
+    bsoncxx::v_noabi::stdx::optional<v_noabi::client*> const& key_vault_client() const {
         return _key_vault_client;
     }
 
@@ -101,7 +101,7 @@ class auto_encryption {
     /// @see
     /// - https://www.mongodb.com/docs/manual/core/security-client-side-encryption/
     ///
-    auto_encryption& key_vault_pool(mongocxx::v_noabi::pool* pool) {
+    auto_encryption& key_vault_pool(v_noabi::pool* pool) {
         _key_vault_pool = pool;
         return *this;
     }
@@ -112,7 +112,7 @@ class auto_encryption {
     /// @return
     ///   An optional pointer to the key vault pool.
     ///
-    bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::pool*> const& key_vault_pool() const {
+    bsoncxx::v_noabi::stdx::optional<v_noabi::pool*> const& key_vault_pool() const {
         return _key_vault_pool;
     }
 
@@ -449,8 +449,8 @@ class auto_encryption {
    private:
     bool _bypass = false;
     bool _bypass_query_analysis = false;
-    bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::client*> _key_vault_client;
-    bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::pool*> _key_vault_pool;
+    bsoncxx::v_noabi::stdx::optional<v_noabi::client*> _key_vault_client;
+    bsoncxx::v_noabi::stdx::optional<v_noabi::pool*> _key_vault_pool;
     bsoncxx::v_noabi::stdx::optional<ns_pair> _key_vault_namespace;
     bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> _kms_providers;
     bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> _tls_opts;

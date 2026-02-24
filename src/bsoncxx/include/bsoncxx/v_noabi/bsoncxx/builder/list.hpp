@@ -101,8 +101,8 @@ class list {
    private:
     types::bson_value::value val;
 
-    friend ::bsoncxx::v_noabi::builder::document;
-    friend ::bsoncxx::v_noabi::builder::array;
+    friend v_noabi::builder::document;
+    friend v_noabi::builder::array;
 
     list(initializer_list_t init, bool type_deduction, bool is_array) : val{nullptr} {
         std::stringstream err_msg{"cannot construct document"};
@@ -138,7 +138,7 @@ class list {
                 _core.append(ele.val);
             val = types::bson_value::value(_core.extract_array());
         } else {
-            throw bsoncxx::v_noabi::exception{error_code::k_unmatched_key_in_builder, err_msg.str()};
+            throw v_noabi::exception{v_noabi::error_code::k_unmatched_key_in_builder, err_msg.str()};
         }
     }
 };

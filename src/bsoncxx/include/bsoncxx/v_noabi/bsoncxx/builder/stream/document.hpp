@@ -47,14 +47,14 @@ class document : public key_context<> {
     ///
     /// @return A view of the BSON document.
     ///
-    bsoncxx::v_noabi::document::view view() const {
+    v_noabi::document::view view() const {
         return _core.view_document();
     }
 
     ///
     /// @return A view of the BSON document.
     ///
-    operator bsoncxx::v_noabi::document::view() const {
+    operator v_noabi::document::view() const {
         return view();
     }
 
@@ -67,7 +67,7 @@ class document : public key_context<> {
     ///  After calling extract() it is illegal to call any methods
     ///  on this class, unless it is subsequenly moved into.
     ///
-    bsoncxx::v_noabi::document::value extract() {
+    v_noabi::document::value extract() {
         return _core.extract_document();
     }
 

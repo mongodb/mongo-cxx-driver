@@ -343,12 +343,12 @@ class client_encryption::options {
     ///
     /// @param v Equivalent to "unset" when null.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(options&) key_vault_client(mongocxx::v1::client* v);
+    MONGOCXX_ABI_EXPORT_CDECL(options&) key_vault_client(v1::client* v);
 
     ///
     /// Return the current "keyVaultClient" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(mongocxx::v1::client*) key_vault_client() const;
+    MONGOCXX_ABI_EXPORT_CDECL(v1::client*) key_vault_client() const;
 
     ///
     /// The name of a database and a collection.

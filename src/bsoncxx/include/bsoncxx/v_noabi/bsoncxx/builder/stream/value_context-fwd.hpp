@@ -33,7 +33,7 @@ namespace bsoncxx {
 namespace builder {
 namespace stream {
 
-using ::bsoncxx::v_noabi::builder::stream::value_context;
+using v_noabi::builder::stream::value_context;
 
 } // namespace stream
 } // namespace builder

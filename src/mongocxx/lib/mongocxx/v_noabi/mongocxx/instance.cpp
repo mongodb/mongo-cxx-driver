@@ -62,7 +62,7 @@ class instance::impl {
             mongoc_log(MONGOC_LOG_LEVEL_INFO, "mongocxx", "libmongoc logging callback enabled");
         }
     } catch (v1::exception const&) {
-        throw v_noabi::logic_error{error_code::k_cannot_recreate_instance};
+        throw v_noabi::logic_error{v_noabi::error_code::k_cannot_recreate_instance};
     }
 
     explicit impl(std::unique_ptr<logger> handler) : impl{std::move(handler), static_cast<bool>(handler)} {}
@@ -84,7 +84,7 @@ instance::~instance() {
 instance& instance::current() {
     if (auto const p = current_instance.load(std::memory_order_relaxed)) {
         if (p == sentinel()) {
-            throw v_noabi::logic_error{error_code::k_instance_destroyed};
+            throw v_noabi::logic_error{v_noabi::error_code::k_instance_destroyed};
         } else {
             return *p;
         }

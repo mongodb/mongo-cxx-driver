@@ -176,8 +176,8 @@ operator!=(validation_criteria const& lhs, validation_criteria const& rhs);
 
 namespace mongocxx {
 
-using ::mongocxx::v_noabi::operator==;
-using ::mongocxx::v_noabi::operator!=;
+using v_noabi::operator==;
+using v_noabi::operator!=;
 
 } // namespace mongocxx
 

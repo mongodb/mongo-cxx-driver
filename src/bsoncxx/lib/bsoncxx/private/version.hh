@@ -24,7 +24,7 @@ namespace bsoncxx {
 namespace test_util {
 
 // Convert the given string "1.2.3-suffix" into a vector [1, 2, 3].
-BSONCXX_ABI_EXPORT_CDECL_TESTING(std::vector<int>) split_version(bsoncxx::stdx::string_view input);
+BSONCXX_ABI_EXPORT_CDECL_TESTING(std::vector<int>) split_version(v_noabi::stdx::string_view input);
 
 } // namespace test_util
 } // namespace bsoncxx

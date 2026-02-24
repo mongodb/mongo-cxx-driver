@@ -128,7 +128,7 @@ class bulk_write {
     /// @see
     /// - https://www.mongodb.com/docs/manual/core/write-concern/
     ///
-    bulk_write& write_concern(mongocxx::v_noabi::write_concern wc) {
+    bulk_write& write_concern(v_noabi::write_concern wc) {
         _write_concern = std::move(wc);
         return *this;
     }
@@ -142,7 +142,7 @@ class bulk_write {
     /// @see
     /// - https://www.mongodb.com/docs/manual/core/write-concern/
     ///
-    bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern> const& write_concern() const {
+    bsoncxx::v_noabi::stdx::optional<v_noabi::write_concern> const& write_concern() const {
         return _write_concern;
     }
 
@@ -225,7 +225,7 @@ class bulk_write {
 
    private:
     bool _ordered = true;
-    bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern> _write_concern;
+    bsoncxx::v_noabi::stdx::optional<v_noabi::write_concern> _write_concern;
     bsoncxx::v_noabi::stdx::optional<bool> _bypass_document_validation;
     bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> _let;
     bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value> _comment;

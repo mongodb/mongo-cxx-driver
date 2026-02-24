@@ -96,11 +96,11 @@ namespace bsoncxx {
 namespace builder {
 namespace stream {
 
-using ::bsoncxx::v_noabi::builder::stream::close_array;
-using ::bsoncxx::v_noabi::builder::stream::close_document;
-using ::bsoncxx::v_noabi::builder::stream::finalize;
-using ::bsoncxx::v_noabi::builder::stream::open_array;
-using ::bsoncxx::v_noabi::builder::stream::open_document;
+using v_noabi::builder::stream::close_array;
+using v_noabi::builder::stream::close_document;
+using v_noabi::builder::stream::finalize;
+using v_noabi::builder::stream::open_array;
+using v_noabi::builder::stream::open_document;
 
 } // namespace stream
 } // namespace builder

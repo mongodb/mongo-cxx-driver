@@ -26,7 +26,7 @@ enum class ExtendedJsonMode : std::uint8_t;
 
 namespace bsoncxx {
 
-using ::bsoncxx::v_noabi::ExtendedJsonMode;
+using v_noabi::ExtendedJsonMode;
 
 } // namespace bsoncxx
 

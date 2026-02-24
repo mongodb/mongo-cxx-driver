@@ -26,7 +26,7 @@ class validator;
 
 namespace bsoncxx {
 
-using ::bsoncxx::v_noabi::validator;
+using v_noabi::validator;
 
 } // namespace bsoncxx
 

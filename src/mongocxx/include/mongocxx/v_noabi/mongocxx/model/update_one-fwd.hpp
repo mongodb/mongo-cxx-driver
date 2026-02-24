@@ -31,7 +31,7 @@ class update_one;
 namespace mongocxx {
 namespace model {
 
-using ::mongocxx::v_noabi::model::update_one;
+using v_noabi::model::update_one;
 
 } // namespace model
 } // namespace mongocxx

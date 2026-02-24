@@ -38,12 +38,12 @@ namespace v1 {
 class count_options::impl {
    public:
     bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> _collation;
-    bsoncxx::v1::stdx::optional<mongocxx::v1::hint> _hint;
+    bsoncxx::v1::stdx::optional<v1::hint> _hint;
     bsoncxx::v1::stdx::optional<bsoncxx::v1::types::value> _comment;
     bsoncxx::v1::stdx::optional<std::int64_t> _limit;
     bsoncxx::v1::stdx::optional<std::chrono::milliseconds> _max_time;
     bsoncxx::v1::stdx::optional<std::int64_t> _skip;
-    bsoncxx::v1::stdx::optional<mongocxx::v1::read_preference> _rp;
+    bsoncxx::v1::stdx::optional<v1::read_preference> _rp;
 
     static impl const& with(count_options const& other) {
         return *static_cast<impl const*>(other._impl);
@@ -164,7 +164,7 @@ bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> const& count_options::
     return impl::with(self)._collation;
 }
 
-bsoncxx::v1::stdx::optional<mongocxx::v1::hint> const& count_options::internal::hint(count_options const& self) {
+bsoncxx::v1::stdx::optional<v1::hint> const& count_options::internal::hint(count_options const& self) {
     return impl::with(self)._hint;
 }
 
@@ -173,7 +173,7 @@ bsoncxx::v1::stdx::optional<bsoncxx::v1::types::value> const& count_options::int
     return impl::with(self)._comment;
 }
 
-bsoncxx::v1::stdx::optional<mongocxx::v1::read_preference> const& count_options::internal::read_preference(
+bsoncxx::v1::stdx::optional<v1::read_preference> const& count_options::internal::read_preference(
     count_options const& self) {
     return impl::with(self)._rp;
 }
@@ -182,7 +182,7 @@ bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value>& count_options::intern
     return impl::with(self)._collation;
 }
 
-bsoncxx::v1::stdx::optional<mongocxx::v1::hint>& count_options::internal::hint(count_options& self) {
+bsoncxx::v1::stdx::optional<v1::hint>& count_options::internal::hint(count_options& self) {
     return impl::with(self)._hint;
 }
 
@@ -190,8 +190,7 @@ bsoncxx::v1::stdx::optional<bsoncxx::v1::types::value>& count_options::internal:
     return impl::with(self)._comment;
 }
 
-bsoncxx::v1::stdx::optional<mongocxx::v1::read_preference>& count_options::internal::read_preference(
-    count_options& self) {
+bsoncxx::v1::stdx::optional<v1::read_preference>& count_options::internal::read_preference(count_options& self) {
     return impl::with(self)._rp;
 }
 

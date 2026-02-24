@@ -31,7 +31,7 @@ class replace_one;
 namespace mongocxx {
 namespace model {
 
-using ::mongocxx::v_noabi::model::replace_one;
+using v_noabi::model::replace_one;
 
 } // namespace model
 } // namespace mongocxx

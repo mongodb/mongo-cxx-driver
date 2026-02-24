@@ -41,7 +41,7 @@ namespace {
 template <typename Transaction>
 Transaction& check_moved_from(Transaction& txn) {
     if (!v1::transaction_options::internal::as_mongoc(txn)) {
-        throw logic_error{error_code::k_invalid_transaction_options_object};
+        throw logic_error{v_noabi::error_code::k_invalid_transaction_options_object};
     }
     return txn;
 }

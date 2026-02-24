@@ -49,14 +49,14 @@ class array : public array_context<> {
     ///
     /// @return A view of the BSON array.
     ///
-    bsoncxx::v_noabi::array::view view() const {
+    v_noabi::array::view view() const {
         return _core.view_array();
     }
 
     ///
     /// @return A view of the BSON array.
     ///
-    operator bsoncxx::v_noabi::array::view() const {
+    operator v_noabi::array::view() const {
         return view();
     }
 
@@ -69,7 +69,7 @@ class array : public array_context<> {
     ///  After calling extract() it is illegal to call any methods
     ///  on this class, unless it is subsequenly moved into.
     ///
-    bsoncxx::v_noabi::array::value extract() {
+    v_noabi::array::value extract() {
         return _core.extract_array();
     }
 

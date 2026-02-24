@@ -125,10 +125,10 @@ class pool {
 
         // Allows the pool_entry["db_name"] syntax to be used to access a database within the
         // entry's underlying client.
-        mongocxx::v_noabi::database operator[](bsoncxx::v_noabi::string::view_or_value name) const& {
+        v_noabi::database operator[](bsoncxx::v_noabi::string::view_or_value name) const& {
             return (*_client)[name];
         }
-        mongocxx::v_noabi::database operator[](bsoncxx::v_noabi::string::view_or_value name) && = delete;
+        v_noabi::database operator[](bsoncxx::v_noabi::string::view_or_value name) && = delete;
 
         class internal;
 

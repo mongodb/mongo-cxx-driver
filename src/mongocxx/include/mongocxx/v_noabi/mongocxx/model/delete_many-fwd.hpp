@@ -31,7 +31,7 @@ class delete_many;
 namespace mongocxx {
 namespace model {
 
-using ::mongocxx::v_noabi::model::delete_many;
+using v_noabi::model::delete_many;
 
 } // namespace model
 } // namespace mongocxx

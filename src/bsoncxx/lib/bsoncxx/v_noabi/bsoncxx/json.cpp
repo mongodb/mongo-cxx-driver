@@ -45,14 +45,14 @@ std::string to_json_helper(document::view view, decltype(bson_as_legacy_extended
     bson_t bson;
 
     if (!bson_init_static(&bson, view.data(), view.length())) {
-        throw exception(error_code::k_failed_converting_bson_to_json);
+        throw v_noabi::exception(v_noabi::error_code::k_failed_converting_bson_to_json);
     }
 
     size_t size = {};
     auto const result = converter(&bson, &size);
 
     if (!result) {
-        throw exception(error_code::k_failed_converting_bson_to_json);
+        throw v_noabi::exception(v_noabi::error_code::k_failed_converting_bson_to_json);
     }
 
     auto const deleter = [](char* result) { bson_free(result); };
@@ -106,7 +106,7 @@ document::value from_json(stdx::string_view json) {
         &error);
 
     if (!result)
-        throw exception(error_code::k_json_parse_failure, error.message);
+        throw v_noabi::exception(v_noabi::error_code::k_json_parse_failure, error.message);
 
     std::uint32_t length = {};
     auto const buf = bson_destroy_with_steal(result, true, &length);

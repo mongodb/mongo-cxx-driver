@@ -26,7 +26,7 @@ class client_encryption;
 
 namespace mongocxx {
 
-using ::mongocxx::v_noabi::client_encryption;
+using v_noabi::client_encryption;
 
 } // namespace mongocxx
 

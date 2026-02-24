@@ -26,7 +26,7 @@ class index_model;
 
 namespace mongocxx {
 
-using ::mongocxx::v_noabi::index_model;
+using v_noabi::index_model;
 
 } // namespace mongocxx
 

@@ -34,9 +34,9 @@ namespace bsoncxx {
 namespace vector {
 namespace formats {
 
-using ::bsoncxx::v_noabi::vector::formats::f_float32;
-using ::bsoncxx::v_noabi::vector::formats::f_int8;
-using ::bsoncxx::v_noabi::vector::formats::f_packed_bit;
+using v_noabi::vector::formats::f_float32;
+using v_noabi::vector::formats::f_int8;
+using v_noabi::vector::formats::f_packed_bit;
 
 } // namespace formats
 } // namespace vector

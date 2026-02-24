@@ -58,7 +58,7 @@ template <typename Impl>
 std::uint32_t libbson_length_for_append(std::size_t element_count, Impl func) {
     std::uint32_t result = func(element_count);
     if (result < BSON_VECTOR_HEADER_LEN) {
-        throw exception{error_code::k_vector_too_large};
+        throw v_noabi::exception{v_noabi::error_code::k_vector_too_large};
     }
     return result;
 }
@@ -66,7 +66,7 @@ std::uint32_t libbson_length_for_append(std::size_t element_count, Impl func) {
 template <typename Impl>
 void libbson_validate(types::b_binary const& binary, Impl func) {
     if (binary.sub_type != binary_sub_type::k_vector || !func(NULL, binary.bytes, binary.size)) {
-        throw exception{error_code::k_invalid_vector};
+        throw v_noabi::exception{v_noabi::error_code::k_invalid_vector};
     }
 }
 

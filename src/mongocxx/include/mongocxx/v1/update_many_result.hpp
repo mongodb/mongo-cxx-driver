@@ -102,7 +102,7 @@ class update_many_result {
     MONGOCXX_ABI_EXPORT_CDECL(std::int64_t) upserted_count() const;
 
     /// @copydoc mongocxx::v1::bulk_write::result::id_map
-    using id_map = mongocxx::v1::bulk_write::result::id_map;
+    using id_map = v1::bulk_write::result::id_map;
 
     ///
     /// Return a map from the operation index to the upserted document ID.

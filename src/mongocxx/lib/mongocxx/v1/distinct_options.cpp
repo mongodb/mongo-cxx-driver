@@ -35,7 +35,7 @@ class distinct_options::impl {
     bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> _collation;
     bsoncxx::v1::stdx::optional<std::chrono::milliseconds> _max_time;
     bsoncxx::v1::stdx::optional<bsoncxx::v1::types::value> _comment;
-    bsoncxx::v1::stdx::optional<mongocxx::v1::read_preference> _read_preference;
+    bsoncxx::v1::stdx::optional<v1::read_preference> _read_preference;
 
     static impl const& with(distinct_options const& self) {
         return *static_cast<impl const*>(self._impl);
@@ -139,7 +139,7 @@ bsoncxx::v1::stdx::optional<bsoncxx::v1::types::value> const& distinct_options::
     return impl::with(self)._comment;
 }
 
-bsoncxx::v1::stdx::optional<mongocxx::v1::read_preference> const& distinct_options::internal::read_preference(
+bsoncxx::v1::stdx::optional<v1::read_preference> const& distinct_options::internal::read_preference(
     distinct_options const& self) {
     return impl::with(self)._read_preference;
 }
@@ -157,8 +157,7 @@ bsoncxx::v1::stdx::optional<bsoncxx::v1::types::value>& distinct_options::intern
     return impl::with(self)._comment;
 }
 
-bsoncxx::v1::stdx::optional<mongocxx::v1::read_preference>& distinct_options::internal::read_preference(
-    distinct_options& self) {
+bsoncxx::v1::stdx::optional<v1::read_preference>& distinct_options::internal::read_preference(distinct_options& self) {
     return impl::with(self)._read_preference;
 }
 

@@ -65,7 +65,7 @@ class array : public sub_array {
     ///
     /// @return A view of the BSON array.
     ///
-    bsoncxx::v_noabi::array::view view() const {
+    v_noabi::array::view view() const {
         return _core.view_array();
     }
 
@@ -75,7 +75,7 @@ class array : public sub_array {
     ///
     /// @return A view of the current builder contents.
     ///
-    operator bsoncxx::v_noabi::array::view() const {
+    operator v_noabi::array::view() const {
         return view();
     }
 
@@ -88,7 +88,7 @@ class array : public sub_array {
     ///  After calling extract() it is illegal to call any methods
     ///  on this class, unless it is subsequenly moved into.
     ///
-    bsoncxx::v_noabi::array::value extract() {
+    v_noabi::array::value extract() {
         return _core.extract_array();
     }
 
@@ -114,7 +114,7 @@ class array : public sub_array {
 ///   A bsoncxx::v_noabi::array::value containing the elements.
 ///
 template <typename... Args>
-bsoncxx::v_noabi::array::value make_array(Args&&... args) {
+v_noabi::array::value make_array(Args&&... args) {
     array array;
     array.append(std::forward<Args>(args)...);
     return array.extract();
@@ -129,7 +129,7 @@ namespace bsoncxx {
 namespace builder {
 namespace basic {
 
-using ::bsoncxx::v_noabi::builder::basic::make_array;
+using v_noabi::builder::basic::make_array;
 
 } // namespace basic
 } // namespace builder

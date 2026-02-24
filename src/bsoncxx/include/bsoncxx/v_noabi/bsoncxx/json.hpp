@@ -89,10 +89,10 @@ BSONCXX_ABI_EXPORT_CDECL(document::value) operator""_bson(char const* json, size
 
 namespace bsoncxx {
 
-using ::bsoncxx::v_noabi::from_json;
-using ::bsoncxx::v_noabi::to_json;
+using v_noabi::from_json;
+using v_noabi::to_json;
 
-using ::bsoncxx::v_noabi::operator""_bson;
+using v_noabi::operator""_bson;
 
 } // namespace bsoncxx
 

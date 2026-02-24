@@ -26,7 +26,7 @@ class MONGOCXX_ABI_EXPORT bulk_write_exception;
 
 namespace mongocxx {
 
-using ::mongocxx::v_noabi::bulk_write_exception;
+using v_noabi::bulk_write_exception;
 
 } // namespace mongocxx
 

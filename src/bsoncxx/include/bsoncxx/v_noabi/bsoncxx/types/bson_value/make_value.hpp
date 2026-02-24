@@ -44,7 +44,7 @@ namespace bsoncxx {
 namespace types {
 namespace bson_value {
 
-using ::bsoncxx::v_noabi::types::bson_value::make_value;
+using v_noabi::types::bson_value::make_value;
 
 } // namespace bson_value
 } // namespace types

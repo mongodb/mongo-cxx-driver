@@ -30,7 +30,7 @@ namespace bsoncxx {
 namespace builder {
 namespace stream {
 
-using ::bsoncxx::v_noabi::builder::stream::document;
+using v_noabi::builder::stream::document;
 
 } // namespace stream
 } // namespace builder

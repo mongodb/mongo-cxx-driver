@@ -172,7 +172,7 @@ class replace_one {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    replace_one& hint(mongocxx::v_noabi::hint index_hint) {
+    replace_one& hint(v_noabi::hint index_hint) {
         _hint = std::move(index_hint);
         return *this;
     }
@@ -182,7 +182,7 @@ class replace_one {
     ///
     /// @return The current hint, if one is set.
     ///
-    bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::hint> const& hint() const {
+    bsoncxx::v_noabi::stdx::optional<v_noabi::hint> const& hint() const {
         return _hint;
     }
 
@@ -207,7 +207,7 @@ class replace_one {
 
     bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> _collation;
     bsoncxx::v_noabi::stdx::optional<bool> _upsert;
-    bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::hint> _hint;
+    bsoncxx::v_noabi::stdx::optional<v_noabi::hint> _hint;
     bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> _sort;
 };
 

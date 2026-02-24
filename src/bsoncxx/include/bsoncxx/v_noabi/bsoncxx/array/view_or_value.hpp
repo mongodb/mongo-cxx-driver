@@ -37,7 +37,7 @@ using view_or_value = v_noabi::view_or_value<view, value>;
 namespace bsoncxx {
 namespace array {
 
-using ::bsoncxx::v_noabi::array::view_or_value;
+using v_noabi::array::view_or_value;
 
 } // namespace array
 } // namespace bsoncxx

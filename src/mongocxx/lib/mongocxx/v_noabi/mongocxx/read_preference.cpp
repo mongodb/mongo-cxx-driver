@@ -56,7 +56,7 @@ read_preference& read_preference::max_staleness(std::chrono::seconds max_stalene
     auto const v = max_staleness.count();
 
     if (v < -1 || v == 0) {
-        throw logic_error{error_code::k_invalid_parameter};
+        throw logic_error{v_noabi::error_code::k_invalid_parameter};
     }
 
     _rp.max_staleness(max_staleness);

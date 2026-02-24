@@ -66,7 +66,7 @@ void read_concern::acknowledge_level(read_concern::level rc_level) {
         default:
         case read_concern::level::k_unknown:
             // Backward compatibility: k_unknown is an exception.
-            throw v_noabi::exception{error_code::k_unknown_read_concern};
+            throw v_noabi::exception{v_noabi::error_code::k_unknown_read_concern};
     }
 }
 

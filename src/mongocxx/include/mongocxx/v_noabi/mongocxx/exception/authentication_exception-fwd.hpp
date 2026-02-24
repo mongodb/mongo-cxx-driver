@@ -26,7 +26,7 @@ class MONGOCXX_ABI_EXPORT authentication_exception;
 
 namespace mongocxx {
 
-using ::mongocxx::v_noabi::authentication_exception;
+using v_noabi::authentication_exception;
 
 } // namespace mongocxx
 

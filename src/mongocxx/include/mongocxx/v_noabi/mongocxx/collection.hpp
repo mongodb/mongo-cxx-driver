@@ -739,7 +739,7 @@ class collection {
     ///
     MONGOCXX_ABI_EXPORT_CDECL(void)
     drop(
-        bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern> const& write_concern = {},
+        bsoncxx::v_noabi::stdx::optional<v_noabi::write_concern> const& write_concern = {},
         bsoncxx::v_noabi::document::view_or_value collection_options = {});
 
     ///
@@ -765,7 +765,7 @@ class collection {
     MONGOCXX_ABI_EXPORT_CDECL(void)
     drop(
         v_noabi::client_session const& session,
-        bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern> const& write_concern = {},
+        bsoncxx::v_noabi::stdx::optional<v_noabi::write_concern> const& write_concern = {},
         bsoncxx::v_noabi::document::view_or_value collection_options = {});
 
     ///
@@ -1924,7 +1924,7 @@ class collection {
 
     MONGOCXX_ABI_EXPORT_CDECL(void)
     _insert_many_doc_handler(
-        mongocxx::v_noabi::bulk_write& writes,
+        v_noabi::bulk_write& writes,
         bsoncxx::v_noabi::builder::basic::array& inserted_ids,
         bsoncxx::v_noabi::document::view doc) const;
 

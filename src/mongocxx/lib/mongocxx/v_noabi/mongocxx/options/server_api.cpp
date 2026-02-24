@@ -55,8 +55,8 @@ std::unique_ptr<mongoc_server_api_t, server_api::internal::mongoc_server_api_del
     auto result = libmongoc::server_api_version_from_string(
         server_api::version_to_string(opts.get_version()).c_str(), &mongoc_api_version);
     if (!result) {
-        throw mongocxx::v_noabi::logic_error{
-            mongocxx::v_noabi::error_code::k_invalid_parameter,
+        throw v_noabi::logic_error{
+            v_noabi::error_code::k_invalid_parameter,
             "invalid server API version" + server_api::version_to_string(opts.get_version())};
     }
 
@@ -66,8 +66,7 @@ std::unique_ptr<mongoc_server_api_t, server_api::internal::mongoc_server_api_del
     auto const ptr = ret.get();
 
     if (!ptr) {
-        throw mongocxx::v_noabi::logic_error{
-            mongocxx::v_noabi::error_code::k_create_resource_fail, "could not create server API"};
+        throw v_noabi::logic_error{v_noabi::error_code::k_create_resource_fail, "could not create server API"};
     }
 
     libmongoc::server_api_strict(ptr, opts._strict.value_or(false));

@@ -31,7 +31,7 @@ class insert_one;
 namespace mongocxx {
 namespace model {
 
-using ::mongocxx::v_noabi::model::insert_one;
+using v_noabi::model::insert_one;
 
 } // namespace model
 } // namespace mongocxx

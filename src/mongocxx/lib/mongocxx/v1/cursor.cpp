@@ -194,24 +194,32 @@ cursor::iterator& cursor::iterator::operator=(iterator const& other) = default;
 
 cursor::iterator::iterator() : _impl{nullptr} {}
 
+namespace {
+
+cursor* to_cursor(void* impl) {
+    return static_cast<cursor*>(impl);
+}
+
+} // namespace
+
 cursor::iterator::value_type cursor::iterator::operator*() const {
-    return _impl ? cursor::impl::with(static_cast<cursor*>(_impl))->_doc : bsoncxx::v1::document::view{};
+    return _impl ? cursor::impl::with(to_cursor(_impl))->_doc : bsoncxx::v1::document::view{};
 }
 
 cursor::iterator::pointer cursor::iterator::operator->() const {
-    return &cursor::impl::with(static_cast<cursor*>(_impl))->_doc;
+    return &cursor::impl::with(to_cursor(_impl))->_doc;
 }
 
 cursor::iterator& cursor::iterator::operator++() {
     if (_impl) {
-        cursor::internal::advance_iterator(*static_cast<cursor*>(_impl));
+        cursor::internal::advance_iterator(*to_cursor(_impl));
     }
     return *this;
 }
 
 bool operator==(cursor::iterator const& lhs, cursor::iterator const& rhs) {
-    auto const _lhs = static_cast<cursor const*>(lhs._impl);
-    auto const _rhs = static_cast<cursor const*>(rhs._impl);
+    auto const _lhs = to_cursor(lhs._impl);
+    auto const _rhs = to_cursor(rhs._impl);
 
     // Both are end iterators (null) or both have the same underlying cursor (not null).
     if (_lhs == _rhs) {

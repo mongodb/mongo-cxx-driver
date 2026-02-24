@@ -35,13 +35,13 @@ class distinct_options::internal {
     static bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> const& collation(distinct_options const& self);
     static bsoncxx::v1::stdx::optional<std::chrono::milliseconds> const& max_time(distinct_options const& self);
     static bsoncxx::v1::stdx::optional<bsoncxx::v1::types::value> const& comment(distinct_options const& self);
-    static bsoncxx::v1::stdx::optional<mongocxx::v1::read_preference> const& read_preference(
+    static bsoncxx::v1::stdx::optional<v1::read_preference> const& read_preference(
         distinct_options const& self);
 
     static bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value>& collation(distinct_options& self);
     static bsoncxx::v1::stdx::optional<std::chrono::milliseconds>& max_time(distinct_options& self);
     static bsoncxx::v1::stdx::optional<bsoncxx::v1::types::value>& comment(distinct_options& self);
-    static bsoncxx::v1::stdx::optional<mongocxx::v1::read_preference>& read_preference(distinct_options& self);
+    static bsoncxx::v1::stdx::optional<v1::read_preference>& read_preference(distinct_options& self);
 };
 
 } // namespace v1

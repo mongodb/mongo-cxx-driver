@@ -131,7 +131,8 @@ auto_encryption::internal::to_mongoc(auto_encryption const& opts) {
 
     if (opts.key_vault_client() && opts.key_vault_pool()) {
         throw v_noabi::exception{
-            error_code::k_invalid_parameter, "cannot set both key vault client and key vault pool, please choose one"};
+            v_noabi::error_code::k_invalid_parameter,
+            "cannot set both key vault client and key vault pool, please choose one"};
     }
 
     if (!ptr) {
