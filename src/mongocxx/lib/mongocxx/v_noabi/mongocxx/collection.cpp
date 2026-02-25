@@ -857,7 +857,7 @@ bsoncxx::v1::stdx::optional<v1::replace_one_result> replace_one_impl(
 }
 
 bsoncxx::v1::stdx::optional<v1::update_many_result>
-update_many_impl(v_noabi::bulk_write bulk, v_noabi::model::update_many op, v_noabi::options::update const& opts) {
+update_many_impl(v_noabi::bulk_write bulk, v_noabi::model::update_many&& op, v_noabi::options::update const& opts) {
     if (auto const& opt = opts.collation()) {
         op.collation(*opt);
     }
@@ -898,7 +898,7 @@ bsoncxx::v1::stdx::optional<v1::update_many_result> update_many_impl(
 }
 
 bsoncxx::v1::stdx::optional<v1::update_one_result>
-update_one_impl(v_noabi::bulk_write bulk, v_noabi::model::update_one op, v_noabi::options::update const& opts) {
+update_one_impl(v_noabi::bulk_write bulk, v_noabi::model::update_one&& op, v_noabi::options::update const& opts) {
     if (auto const& opt = opts.collation()) {
         op.collation(*opt);
     }

@@ -217,10 +217,10 @@ inline v_noabi::options::client from_v1(v1::client::options v, v_noabi::options:
 /// argument to this conversion function.
 ///
 /// @{
-MONGOCXX_ABI_EXPORT_CDECL(v1::client::options) to_v1(v_noabi::options::client v);
+MONGOCXX_ABI_EXPORT_CDECL(v1::client::options) to_v1(v_noabi::options::client const& v);
 
-inline v1::client::options to_v1(v_noabi::options::client v, v1::auto_encryption_options opts) {
-    auto ret = to_v1(std::move(v));
+inline v1::client::options to_v1(v_noabi::options::client const& v, v1::auto_encryption_options opts) {
+    auto ret = to_v1(v);
     ret.auto_encryption_opts(std::move(opts));
     return ret;
 }
