@@ -336,8 +336,8 @@ class collection {
     bsoncxx::v1::stdx::optional<std::string> create_index(
         bsoncxx::v1::document::value keys,
         bsoncxx::v1::document::value index_opts = {},
-        v1::indexes::create_one_options create_opts = {}) {
-        return this->indexes().create_one(keys, index_opts, create_opts);
+        v1::indexes::create_one_options const& create_opts = {}) {
+        return this->indexes().create_one(std::move(keys), std::move(index_opts), create_opts);
     }
 
     ///
@@ -347,8 +347,8 @@ class collection {
         v1::client_session const& session,
         bsoncxx::v1::document::value keys,
         bsoncxx::v1::document::value index_opts = {},
-        v1::indexes::create_one_options create_opts = {}) {
-        return this->indexes().create_one(session, keys, index_opts, create_opts);
+        v1::indexes::create_one_options const& create_opts = {}) {
+        return this->indexes().create_one(session, std::move(keys), std::move(index_opts), create_opts);
     }
 
     ///

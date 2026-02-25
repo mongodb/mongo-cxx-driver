@@ -48,8 +48,10 @@ class scoped_bson_view {
     }
 
     scoped_bson_view& operator=(scoped_bson_view const& other) noexcept {
-        _view = other._view;
-        this->sync_bson();
+        if (this != &other) {
+            _view = other._view;
+            this->sync_bson();
+        }
         return *this;
     }
 

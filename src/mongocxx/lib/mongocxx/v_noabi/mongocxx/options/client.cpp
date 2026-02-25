@@ -75,8 +75,8 @@ v_noabi::options::client from_v1(v1::client::options v) {
     return v_noabi::options::client::internal::from_v1(std::move(v));
 }
 
-v1::client::options to_v1(v_noabi::options::client v) {
-    return v_noabi::options::client::internal::to_v1(std::move(v));
+v1::client::options to_v1(v_noabi::options::client const& v) {
+    return v_noabi::options::client::internal::to_v1(v);
 }
 
 } // namespace v_noabi

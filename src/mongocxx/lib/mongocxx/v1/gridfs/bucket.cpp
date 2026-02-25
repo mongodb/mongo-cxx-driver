@@ -529,10 +529,8 @@ void bucket::internal::create_indexes(bucket& self, v1::client_session const* se
         opts.projection(scoped_bson{R"({"_id": 1})"}.value());
         opts.read_preference(v1::read_preference{});
 
-        auto const res = session_ptr ? files.find_one(*session_ptr, {}, opts) : files.find_one({}, opts);
-
         // Do nothing if the files collection already contains documents.
-        if (res.has_value()) {
+        if ((session_ptr ? files.find_one(*session_ptr, {}, opts) : files.find_one({}, opts)).has_value()) {
             return;
         }
     }
