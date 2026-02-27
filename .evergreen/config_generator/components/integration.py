@@ -21,17 +21,17 @@ TAG = 'integration'
 LINUX_MATRIX = [
     # Linux x86_64 (full).
     # RHEL 8 x86_64: 4.0+.
-    ('rhel80', None, ['Debug'], ['shared', 'static'], [11, 17], [None], ['plain', 'csfle'], ['4.2', '4.4', '5.0', '6.0', '7.0', '8.0', 'latest'], ['single', 'replica', 'sharded']),
+    ('rhel80', None, ['Debug'], ['shared', 'static'], [11, 17], [None], ['plain', 'csfle'], ['4.2', '4.4', '5.0', '6.0', '7.0', '8.0', 'rapid', 'latest'], ['single', 'replica', 'sharded']),
 
     # Linux ARM64 (full).
     # RHEL 8 ARM64: 4.4+.
-    ('rhel8-arm64-latest', None, ['Debug'], ['shared', 'static'], [11, 17], [None], ['plain', 'csfle'], ['4.4', '5.0', '6.0', '7.0', '8.0', 'latest'], ['single', 'replica', 'sharded']),
+    ('rhel8-arm64-latest', None, ['Debug'], ['shared', 'static'], [11, 17], [None], ['plain', 'csfle'], ['4.4', '5.0', '6.0', '7.0', '8.0', 'rapid', 'latest'], ['single', 'replica', 'sharded']),
 
-    # Linux Power.
+    # Linux Power (Resource-limited: use sparingly).
     # RHEL 8 Power: 4.2+.
     ('rhel8-power', None, ['Debug'], ['shared'], [11], [None], ['csfle'], ['latest'], ['replica']),
 
-    # Linux zSeries.
+    # Linux zSeries (Resource-limited: use sparingly).
     # RHEL 8 zSeries: 5.0+.
     ('rhel8-zseries', None, ['Debug'], ['shared'], [11], [None], ['csfle'], ['latest'], ['replica']),
 ]
@@ -41,7 +41,7 @@ MACOS_MATRIX = [
     # MacOS ARM64: 6.0+.
     ('macos-14-arm64', None, ['Debug'], ['shared'], [11, 17], [None], ['plain', 'csfle'], ['6.0', '8.0', 'latest'], ['single', 'replica', 'sharded']),
 
-    # MacOS x86_64 (shared only, C++11 only, no extra alignment, min-max-latest).
+    # MacOS x86_64 (shared only, C++11 only, no extra alignment, min-max-latest) (Resource-limited: use sparingly).
     # MacOS x86_64: 4.2+.
     ('macos-14', None, ['Debug'], ['shared'], [11], [None], ['plain', 'csfle'], ['4.2', '8.0', 'latest'], ['single', 'replica', 'sharded']),
 

@@ -4532,6 +4532,83 @@ tasks:
           MONGOCXX_TEST_TOPOLOGY: single
           REQUIRED_CXX_STANDARD: 11
           TEST_WITH_CSFLE: "ON"
+  - name: integration-rhel8-arm64-latest-debug-shared-cxx11-csfle-rapid-replica
+    run_on: rhel8-arm64-latest-large
+    tags: [integration, rhel8-arm64-latest, linux, debug, shared, cxx11, csfle, rapid, replica]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+      - func: setup
+      - func: start_mongod
+        vars:
+          TOPOLOGY: replica_set
+          mongodb_version: rapid
+      - func: install_c_driver
+      - func: compile
+        vars:
+          ENABLE_TESTS: "ON"
+          REQUIRED_CXX_STANDARD: 11
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: replica
+          REQUIRED_CXX_STANDARD: 11
+          TEST_WITH_CSFLE: "ON"
+  - name: integration-rhel8-arm64-latest-debug-shared-cxx11-csfle-rapid-sharded
+    run_on: rhel8-arm64-latest-large
+    tags: [integration, rhel8-arm64-latest, linux, debug, shared, cxx11, csfle, rapid, sharded]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+      - func: setup
+      - func: start_mongod
+        vars:
+          TOPOLOGY: sharded_cluster
+          mongodb_version: rapid
+      - func: install_c_driver
+      - func: compile
+        vars:
+          ENABLE_TESTS: "ON"
+          REQUIRED_CXX_STANDARD: 11
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: sharded
+          REQUIRED_CXX_STANDARD: 11
+          TEST_WITH_CSFLE: "ON"
+  - name: integration-rhel8-arm64-latest-debug-shared-cxx11-csfle-rapid-single
+    run_on: rhel8-arm64-latest-large
+    tags: [integration, rhel8-arm64-latest, linux, debug, shared, cxx11, csfle, rapid, single]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: rapid
+      - func: install_c_driver
+      - func: compile
+        vars:
+          ENABLE_TESTS: "ON"
+          REQUIRED_CXX_STANDARD: 11
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+          REQUIRED_CXX_STANDARD: 11
+          TEST_WITH_CSFLE: "ON"
   - name: integration-rhel8-arm64-latest-debug-shared-cxx11-latest-replica
     run_on: rhel8-arm64-latest-large
     tags: [integration, rhel8-arm64-latest, linux, debug, shared, cxx11, latest, replica]
@@ -4594,6 +4671,80 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: latest
+      - func: install_c_driver
+      - func: compile
+        vars:
+          ENABLE_TESTS: "ON"
+          REQUIRED_CXX_STANDARD: 11
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+          REQUIRED_CXX_STANDARD: 11
+  - name: integration-rhel8-arm64-latest-debug-shared-cxx11-rapid-replica
+    run_on: rhel8-arm64-latest-large
+    tags: [integration, rhel8-arm64-latest, linux, debug, shared, cxx11, rapid, replica]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+      - func: setup
+      - func: start_mongod
+        vars:
+          TOPOLOGY: replica_set
+          mongodb_version: rapid
+      - func: install_c_driver
+      - func: compile
+        vars:
+          ENABLE_TESTS: "ON"
+          REQUIRED_CXX_STANDARD: 11
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: replica
+          REQUIRED_CXX_STANDARD: 11
+  - name: integration-rhel8-arm64-latest-debug-shared-cxx11-rapid-sharded
+    run_on: rhel8-arm64-latest-large
+    tags: [integration, rhel8-arm64-latest, linux, debug, shared, cxx11, rapid, sharded]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+      - func: setup
+      - func: start_mongod
+        vars:
+          TOPOLOGY: sharded_cluster
+          mongodb_version: rapid
+      - func: install_c_driver
+      - func: compile
+        vars:
+          ENABLE_TESTS: "ON"
+          REQUIRED_CXX_STANDARD: 11
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: sharded
+          REQUIRED_CXX_STANDARD: 11
+  - name: integration-rhel8-arm64-latest-debug-shared-cxx11-rapid-single
+    run_on: rhel8-arm64-latest-large
+    tags: [integration, rhel8-arm64-latest, linux, debug, shared, cxx11, rapid, single]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: rapid
       - func: install_c_driver
       - func: compile
         vars:
@@ -5438,6 +5589,83 @@ tasks:
           MONGOCXX_TEST_TOPOLOGY: single
           REQUIRED_CXX_STANDARD: 17
           TEST_WITH_CSFLE: "ON"
+  - name: integration-rhel8-arm64-latest-debug-shared-cxx17-csfle-rapid-replica
+    run_on: rhel8-arm64-latest-large
+    tags: [integration, rhel8-arm64-latest, linux, debug, shared, cxx17, csfle, rapid, replica]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+      - func: setup
+      - func: start_mongod
+        vars:
+          TOPOLOGY: replica_set
+          mongodb_version: rapid
+      - func: install_c_driver
+      - func: compile
+        vars:
+          ENABLE_TESTS: "ON"
+          REQUIRED_CXX_STANDARD: 17
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: replica
+          REQUIRED_CXX_STANDARD: 17
+          TEST_WITH_CSFLE: "ON"
+  - name: integration-rhel8-arm64-latest-debug-shared-cxx17-csfle-rapid-sharded
+    run_on: rhel8-arm64-latest-large
+    tags: [integration, rhel8-arm64-latest, linux, debug, shared, cxx17, csfle, rapid, sharded]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+      - func: setup
+      - func: start_mongod
+        vars:
+          TOPOLOGY: sharded_cluster
+          mongodb_version: rapid
+      - func: install_c_driver
+      - func: compile
+        vars:
+          ENABLE_TESTS: "ON"
+          REQUIRED_CXX_STANDARD: 17
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: sharded
+          REQUIRED_CXX_STANDARD: 17
+          TEST_WITH_CSFLE: "ON"
+  - name: integration-rhel8-arm64-latest-debug-shared-cxx17-csfle-rapid-single
+    run_on: rhel8-arm64-latest-large
+    tags: [integration, rhel8-arm64-latest, linux, debug, shared, cxx17, csfle, rapid, single]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: rapid
+      - func: install_c_driver
+      - func: compile
+        vars:
+          ENABLE_TESTS: "ON"
+          REQUIRED_CXX_STANDARD: 17
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+          REQUIRED_CXX_STANDARD: 17
+          TEST_WITH_CSFLE: "ON"
   - name: integration-rhel8-arm64-latest-debug-shared-cxx17-latest-replica
     run_on: rhel8-arm64-latest-large
     tags: [integration, rhel8-arm64-latest, linux, debug, shared, cxx17, latest, replica]
@@ -5500,6 +5728,80 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: latest
+      - func: install_c_driver
+      - func: compile
+        vars:
+          ENABLE_TESTS: "ON"
+          REQUIRED_CXX_STANDARD: 17
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+          REQUIRED_CXX_STANDARD: 17
+  - name: integration-rhel8-arm64-latest-debug-shared-cxx17-rapid-replica
+    run_on: rhel8-arm64-latest-large
+    tags: [integration, rhel8-arm64-latest, linux, debug, shared, cxx17, rapid, replica]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+      - func: setup
+      - func: start_mongod
+        vars:
+          TOPOLOGY: replica_set
+          mongodb_version: rapid
+      - func: install_c_driver
+      - func: compile
+        vars:
+          ENABLE_TESTS: "ON"
+          REQUIRED_CXX_STANDARD: 17
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: replica
+          REQUIRED_CXX_STANDARD: 17
+  - name: integration-rhel8-arm64-latest-debug-shared-cxx17-rapid-sharded
+    run_on: rhel8-arm64-latest-large
+    tags: [integration, rhel8-arm64-latest, linux, debug, shared, cxx17, rapid, sharded]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+      - func: setup
+      - func: start_mongod
+        vars:
+          TOPOLOGY: sharded_cluster
+          mongodb_version: rapid
+      - func: install_c_driver
+      - func: compile
+        vars:
+          ENABLE_TESTS: "ON"
+          REQUIRED_CXX_STANDARD: 17
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: sharded
+          REQUIRED_CXX_STANDARD: 17
+  - name: integration-rhel8-arm64-latest-debug-shared-cxx17-rapid-single
+    run_on: rhel8-arm64-latest-large
+    tags: [integration, rhel8-arm64-latest, linux, debug, shared, cxx17, rapid, single]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: rapid
       - func: install_c_driver
       - func: compile
         vars:
@@ -6410,6 +6712,89 @@ tasks:
           REQUIRED_CXX_STANDARD: 11
           TEST_WITH_CSFLE: "ON"
           USE_STATIC_LIBS: 1
+  - name: integration-rhel8-arm64-latest-debug-static-cxx11-csfle-rapid-replica
+    run_on: rhel8-arm64-latest-large
+    tags: [integration, rhel8-arm64-latest, linux, debug, static, cxx11, csfle, rapid, replica]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+      - func: setup
+      - func: start_mongod
+        vars:
+          TOPOLOGY: replica_set
+          mongodb_version: rapid
+      - func: install_c_driver
+      - func: compile
+        vars:
+          ENABLE_TESTS: "ON"
+          REQUIRED_CXX_STANDARD: 11
+          RUN_DISTCHECK: 1
+          USE_STATIC_LIBS: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: replica
+          REQUIRED_CXX_STANDARD: 11
+          TEST_WITH_CSFLE: "ON"
+          USE_STATIC_LIBS: 1
+  - name: integration-rhel8-arm64-latest-debug-static-cxx11-csfle-rapid-sharded
+    run_on: rhel8-arm64-latest-large
+    tags: [integration, rhel8-arm64-latest, linux, debug, static, cxx11, csfle, rapid, sharded]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+      - func: setup
+      - func: start_mongod
+        vars:
+          TOPOLOGY: sharded_cluster
+          mongodb_version: rapid
+      - func: install_c_driver
+      - func: compile
+        vars:
+          ENABLE_TESTS: "ON"
+          REQUIRED_CXX_STANDARD: 11
+          RUN_DISTCHECK: 1
+          USE_STATIC_LIBS: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: sharded
+          REQUIRED_CXX_STANDARD: 11
+          TEST_WITH_CSFLE: "ON"
+          USE_STATIC_LIBS: 1
+  - name: integration-rhel8-arm64-latest-debug-static-cxx11-csfle-rapid-single
+    run_on: rhel8-arm64-latest-large
+    tags: [integration, rhel8-arm64-latest, linux, debug, static, cxx11, csfle, rapid, single]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: rapid
+      - func: install_c_driver
+      - func: compile
+        vars:
+          ENABLE_TESTS: "ON"
+          REQUIRED_CXX_STANDARD: 11
+          RUN_DISTCHECK: 1
+          USE_STATIC_LIBS: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+          REQUIRED_CXX_STANDARD: 11
+          TEST_WITH_CSFLE: "ON"
+          USE_STATIC_LIBS: 1
   - name: integration-rhel8-arm64-latest-debug-static-cxx11-latest-replica
     run_on: rhel8-arm64-latest-large
     tags: [integration, rhel8-arm64-latest, linux, debug, static, cxx11, latest, replica]
@@ -6476,6 +6861,86 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: latest
+      - func: install_c_driver
+      - func: compile
+        vars:
+          ENABLE_TESTS: "ON"
+          REQUIRED_CXX_STANDARD: 11
+          RUN_DISTCHECK: 1
+          USE_STATIC_LIBS: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+          REQUIRED_CXX_STANDARD: 11
+          USE_STATIC_LIBS: 1
+  - name: integration-rhel8-arm64-latest-debug-static-cxx11-rapid-replica
+    run_on: rhel8-arm64-latest-large
+    tags: [integration, rhel8-arm64-latest, linux, debug, static, cxx11, rapid, replica]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+      - func: setup
+      - func: start_mongod
+        vars:
+          TOPOLOGY: replica_set
+          mongodb_version: rapid
+      - func: install_c_driver
+      - func: compile
+        vars:
+          ENABLE_TESTS: "ON"
+          REQUIRED_CXX_STANDARD: 11
+          RUN_DISTCHECK: 1
+          USE_STATIC_LIBS: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: replica
+          REQUIRED_CXX_STANDARD: 11
+          USE_STATIC_LIBS: 1
+  - name: integration-rhel8-arm64-latest-debug-static-cxx11-rapid-sharded
+    run_on: rhel8-arm64-latest-large
+    tags: [integration, rhel8-arm64-latest, linux, debug, static, cxx11, rapid, sharded]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+      - func: setup
+      - func: start_mongod
+        vars:
+          TOPOLOGY: sharded_cluster
+          mongodb_version: rapid
+      - func: install_c_driver
+      - func: compile
+        vars:
+          ENABLE_TESTS: "ON"
+          REQUIRED_CXX_STANDARD: 11
+          RUN_DISTCHECK: 1
+          USE_STATIC_LIBS: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: sharded
+          REQUIRED_CXX_STANDARD: 11
+          USE_STATIC_LIBS: 1
+  - name: integration-rhel8-arm64-latest-debug-static-cxx11-rapid-single
+    run_on: rhel8-arm64-latest-large
+    tags: [integration, rhel8-arm64-latest, linux, debug, static, cxx11, rapid, single]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: rapid
       - func: install_c_driver
       - func: compile
         vars:
@@ -7388,6 +7853,89 @@ tasks:
           REQUIRED_CXX_STANDARD: 17
           TEST_WITH_CSFLE: "ON"
           USE_STATIC_LIBS: 1
+  - name: integration-rhel8-arm64-latest-debug-static-cxx17-csfle-rapid-replica
+    run_on: rhel8-arm64-latest-large
+    tags: [integration, rhel8-arm64-latest, linux, debug, static, cxx17, csfle, rapid, replica]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+      - func: setup
+      - func: start_mongod
+        vars:
+          TOPOLOGY: replica_set
+          mongodb_version: rapid
+      - func: install_c_driver
+      - func: compile
+        vars:
+          ENABLE_TESTS: "ON"
+          REQUIRED_CXX_STANDARD: 17
+          RUN_DISTCHECK: 1
+          USE_STATIC_LIBS: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: replica
+          REQUIRED_CXX_STANDARD: 17
+          TEST_WITH_CSFLE: "ON"
+          USE_STATIC_LIBS: 1
+  - name: integration-rhel8-arm64-latest-debug-static-cxx17-csfle-rapid-sharded
+    run_on: rhel8-arm64-latest-large
+    tags: [integration, rhel8-arm64-latest, linux, debug, static, cxx17, csfle, rapid, sharded]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+      - func: setup
+      - func: start_mongod
+        vars:
+          TOPOLOGY: sharded_cluster
+          mongodb_version: rapid
+      - func: install_c_driver
+      - func: compile
+        vars:
+          ENABLE_TESTS: "ON"
+          REQUIRED_CXX_STANDARD: 17
+          RUN_DISTCHECK: 1
+          USE_STATIC_LIBS: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: sharded
+          REQUIRED_CXX_STANDARD: 17
+          TEST_WITH_CSFLE: "ON"
+          USE_STATIC_LIBS: 1
+  - name: integration-rhel8-arm64-latest-debug-static-cxx17-csfle-rapid-single
+    run_on: rhel8-arm64-latest-large
+    tags: [integration, rhel8-arm64-latest, linux, debug, static, cxx17, csfle, rapid, single]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: rapid
+      - func: install_c_driver
+      - func: compile
+        vars:
+          ENABLE_TESTS: "ON"
+          REQUIRED_CXX_STANDARD: 17
+          RUN_DISTCHECK: 1
+          USE_STATIC_LIBS: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+          REQUIRED_CXX_STANDARD: 17
+          TEST_WITH_CSFLE: "ON"
+          USE_STATIC_LIBS: 1
   - name: integration-rhel8-arm64-latest-debug-static-cxx17-latest-replica
     run_on: rhel8-arm64-latest-large
     tags: [integration, rhel8-arm64-latest, linux, debug, static, cxx17, latest, replica]
@@ -7454,6 +8002,86 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: latest
+      - func: install_c_driver
+      - func: compile
+        vars:
+          ENABLE_TESTS: "ON"
+          REQUIRED_CXX_STANDARD: 17
+          RUN_DISTCHECK: 1
+          USE_STATIC_LIBS: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+          REQUIRED_CXX_STANDARD: 17
+          USE_STATIC_LIBS: 1
+  - name: integration-rhel8-arm64-latest-debug-static-cxx17-rapid-replica
+    run_on: rhel8-arm64-latest-large
+    tags: [integration, rhel8-arm64-latest, linux, debug, static, cxx17, rapid, replica]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+      - func: setup
+      - func: start_mongod
+        vars:
+          TOPOLOGY: replica_set
+          mongodb_version: rapid
+      - func: install_c_driver
+      - func: compile
+        vars:
+          ENABLE_TESTS: "ON"
+          REQUIRED_CXX_STANDARD: 17
+          RUN_DISTCHECK: 1
+          USE_STATIC_LIBS: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: replica
+          REQUIRED_CXX_STANDARD: 17
+          USE_STATIC_LIBS: 1
+  - name: integration-rhel8-arm64-latest-debug-static-cxx17-rapid-sharded
+    run_on: rhel8-arm64-latest-large
+    tags: [integration, rhel8-arm64-latest, linux, debug, static, cxx17, rapid, sharded]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+      - func: setup
+      - func: start_mongod
+        vars:
+          TOPOLOGY: sharded_cluster
+          mongodb_version: rapid
+      - func: install_c_driver
+      - func: compile
+        vars:
+          ENABLE_TESTS: "ON"
+          REQUIRED_CXX_STANDARD: 17
+          RUN_DISTCHECK: 1
+          USE_STATIC_LIBS: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: sharded
+          REQUIRED_CXX_STANDARD: 17
+          USE_STATIC_LIBS: 1
+  - name: integration-rhel8-arm64-latest-debug-static-cxx17-rapid-single
+    run_on: rhel8-arm64-latest-large
+    tags: [integration, rhel8-arm64-latest, linux, debug, static, cxx17, rapid, single]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: rapid
       - func: install_c_driver
       - func: compile
         vars:
@@ -8588,6 +9216,83 @@ tasks:
           MONGOCXX_TEST_TOPOLOGY: single
           REQUIRED_CXX_STANDARD: 11
           TEST_WITH_CSFLE: "ON"
+  - name: integration-rhel80-debug-shared-cxx11-csfle-rapid-replica
+    run_on: rhel80-large
+    tags: [integration, rhel80, linux, debug, shared, cxx11, csfle, rapid, replica]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+      - func: setup
+      - func: start_mongod
+        vars:
+          TOPOLOGY: replica_set
+          mongodb_version: rapid
+      - func: install_c_driver
+      - func: compile
+        vars:
+          ENABLE_TESTS: "ON"
+          REQUIRED_CXX_STANDARD: 11
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: replica
+          REQUIRED_CXX_STANDARD: 11
+          TEST_WITH_CSFLE: "ON"
+  - name: integration-rhel80-debug-shared-cxx11-csfle-rapid-sharded
+    run_on: rhel80-large
+    tags: [integration, rhel80, linux, debug, shared, cxx11, csfle, rapid, sharded]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+      - func: setup
+      - func: start_mongod
+        vars:
+          TOPOLOGY: sharded_cluster
+          mongodb_version: rapid
+      - func: install_c_driver
+      - func: compile
+        vars:
+          ENABLE_TESTS: "ON"
+          REQUIRED_CXX_STANDARD: 11
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: sharded
+          REQUIRED_CXX_STANDARD: 11
+          TEST_WITH_CSFLE: "ON"
+  - name: integration-rhel80-debug-shared-cxx11-csfle-rapid-single
+    run_on: rhel80-large
+    tags: [integration, rhel80, linux, debug, shared, cxx11, csfle, rapid, single]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: rapid
+      - func: install_c_driver
+      - func: compile
+        vars:
+          ENABLE_TESTS: "ON"
+          REQUIRED_CXX_STANDARD: 11
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+          REQUIRED_CXX_STANDARD: 11
+          TEST_WITH_CSFLE: "ON"
   - name: integration-rhel80-debug-shared-cxx11-latest-replica
     run_on: rhel80-large
     tags: [integration, rhel80, linux, debug, shared, cxx11, latest, replica]
@@ -8650,6 +9355,80 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: latest
+      - func: install_c_driver
+      - func: compile
+        vars:
+          ENABLE_TESTS: "ON"
+          REQUIRED_CXX_STANDARD: 11
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+          REQUIRED_CXX_STANDARD: 11
+  - name: integration-rhel80-debug-shared-cxx11-rapid-replica
+    run_on: rhel80-large
+    tags: [integration, rhel80, linux, debug, shared, cxx11, rapid, replica]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+      - func: setup
+      - func: start_mongod
+        vars:
+          TOPOLOGY: replica_set
+          mongodb_version: rapid
+      - func: install_c_driver
+      - func: compile
+        vars:
+          ENABLE_TESTS: "ON"
+          REQUIRED_CXX_STANDARD: 11
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: replica
+          REQUIRED_CXX_STANDARD: 11
+  - name: integration-rhel80-debug-shared-cxx11-rapid-sharded
+    run_on: rhel80-large
+    tags: [integration, rhel80, linux, debug, shared, cxx11, rapid, sharded]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+      - func: setup
+      - func: start_mongod
+        vars:
+          TOPOLOGY: sharded_cluster
+          mongodb_version: rapid
+      - func: install_c_driver
+      - func: compile
+        vars:
+          ENABLE_TESTS: "ON"
+          REQUIRED_CXX_STANDARD: 11
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: sharded
+          REQUIRED_CXX_STANDARD: 11
+  - name: integration-rhel80-debug-shared-cxx11-rapid-single
+    run_on: rhel80-large
+    tags: [integration, rhel80, linux, debug, shared, cxx11, rapid, single]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: rapid
       - func: install_c_driver
       - func: compile
         vars:
@@ -9645,6 +10424,83 @@ tasks:
           MONGOCXX_TEST_TOPOLOGY: single
           REQUIRED_CXX_STANDARD: 17
           TEST_WITH_CSFLE: "ON"
+  - name: integration-rhel80-debug-shared-cxx17-csfle-rapid-replica
+    run_on: rhel80-large
+    tags: [integration, rhel80, linux, debug, shared, cxx17, csfle, rapid, replica]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+      - func: setup
+      - func: start_mongod
+        vars:
+          TOPOLOGY: replica_set
+          mongodb_version: rapid
+      - func: install_c_driver
+      - func: compile
+        vars:
+          ENABLE_TESTS: "ON"
+          REQUIRED_CXX_STANDARD: 17
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: replica
+          REQUIRED_CXX_STANDARD: 17
+          TEST_WITH_CSFLE: "ON"
+  - name: integration-rhel80-debug-shared-cxx17-csfle-rapid-sharded
+    run_on: rhel80-large
+    tags: [integration, rhel80, linux, debug, shared, cxx17, csfle, rapid, sharded]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+      - func: setup
+      - func: start_mongod
+        vars:
+          TOPOLOGY: sharded_cluster
+          mongodb_version: rapid
+      - func: install_c_driver
+      - func: compile
+        vars:
+          ENABLE_TESTS: "ON"
+          REQUIRED_CXX_STANDARD: 17
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: sharded
+          REQUIRED_CXX_STANDARD: 17
+          TEST_WITH_CSFLE: "ON"
+  - name: integration-rhel80-debug-shared-cxx17-csfle-rapid-single
+    run_on: rhel80-large
+    tags: [integration, rhel80, linux, debug, shared, cxx17, csfle, rapid, single]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: rapid
+      - func: install_c_driver
+      - func: compile
+        vars:
+          ENABLE_TESTS: "ON"
+          REQUIRED_CXX_STANDARD: 17
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+          REQUIRED_CXX_STANDARD: 17
+          TEST_WITH_CSFLE: "ON"
   - name: integration-rhel80-debug-shared-cxx17-latest-replica
     run_on: rhel80-large
     tags: [integration, rhel80, linux, debug, shared, cxx17, latest, replica]
@@ -9707,6 +10563,80 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: latest
+      - func: install_c_driver
+      - func: compile
+        vars:
+          ENABLE_TESTS: "ON"
+          REQUIRED_CXX_STANDARD: 17
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+          REQUIRED_CXX_STANDARD: 17
+  - name: integration-rhel80-debug-shared-cxx17-rapid-replica
+    run_on: rhel80-large
+    tags: [integration, rhel80, linux, debug, shared, cxx17, rapid, replica]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+      - func: setup
+      - func: start_mongod
+        vars:
+          TOPOLOGY: replica_set
+          mongodb_version: rapid
+      - func: install_c_driver
+      - func: compile
+        vars:
+          ENABLE_TESTS: "ON"
+          REQUIRED_CXX_STANDARD: 17
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: replica
+          REQUIRED_CXX_STANDARD: 17
+  - name: integration-rhel80-debug-shared-cxx17-rapid-sharded
+    run_on: rhel80-large
+    tags: [integration, rhel80, linux, debug, shared, cxx17, rapid, sharded]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+      - func: setup
+      - func: start_mongod
+        vars:
+          TOPOLOGY: sharded_cluster
+          mongodb_version: rapid
+      - func: install_c_driver
+      - func: compile
+        vars:
+          ENABLE_TESTS: "ON"
+          REQUIRED_CXX_STANDARD: 17
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: sharded
+          REQUIRED_CXX_STANDARD: 17
+  - name: integration-rhel80-debug-shared-cxx17-rapid-single
+    run_on: rhel80-large
+    tags: [integration, rhel80, linux, debug, shared, cxx17, rapid, single]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: rapid
       - func: install_c_driver
       - func: compile
         vars:
@@ -10780,6 +11710,89 @@ tasks:
           REQUIRED_CXX_STANDARD: 11
           TEST_WITH_CSFLE: "ON"
           USE_STATIC_LIBS: 1
+  - name: integration-rhel80-debug-static-cxx11-csfle-rapid-replica
+    run_on: rhel80-large
+    tags: [integration, rhel80, linux, debug, static, cxx11, csfle, rapid, replica]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+      - func: setup
+      - func: start_mongod
+        vars:
+          TOPOLOGY: replica_set
+          mongodb_version: rapid
+      - func: install_c_driver
+      - func: compile
+        vars:
+          ENABLE_TESTS: "ON"
+          REQUIRED_CXX_STANDARD: 11
+          RUN_DISTCHECK: 1
+          USE_STATIC_LIBS: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: replica
+          REQUIRED_CXX_STANDARD: 11
+          TEST_WITH_CSFLE: "ON"
+          USE_STATIC_LIBS: 1
+  - name: integration-rhel80-debug-static-cxx11-csfle-rapid-sharded
+    run_on: rhel80-large
+    tags: [integration, rhel80, linux, debug, static, cxx11, csfle, rapid, sharded]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+      - func: setup
+      - func: start_mongod
+        vars:
+          TOPOLOGY: sharded_cluster
+          mongodb_version: rapid
+      - func: install_c_driver
+      - func: compile
+        vars:
+          ENABLE_TESTS: "ON"
+          REQUIRED_CXX_STANDARD: 11
+          RUN_DISTCHECK: 1
+          USE_STATIC_LIBS: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: sharded
+          REQUIRED_CXX_STANDARD: 11
+          TEST_WITH_CSFLE: "ON"
+          USE_STATIC_LIBS: 1
+  - name: integration-rhel80-debug-static-cxx11-csfle-rapid-single
+    run_on: rhel80-large
+    tags: [integration, rhel80, linux, debug, static, cxx11, csfle, rapid, single]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: rapid
+      - func: install_c_driver
+      - func: compile
+        vars:
+          ENABLE_TESTS: "ON"
+          REQUIRED_CXX_STANDARD: 11
+          RUN_DISTCHECK: 1
+          USE_STATIC_LIBS: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+          REQUIRED_CXX_STANDARD: 11
+          TEST_WITH_CSFLE: "ON"
+          USE_STATIC_LIBS: 1
   - name: integration-rhel80-debug-static-cxx11-latest-replica
     run_on: rhel80-large
     tags: [integration, rhel80, linux, debug, static, cxx11, latest, replica]
@@ -10846,6 +11859,86 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: latest
+      - func: install_c_driver
+      - func: compile
+        vars:
+          ENABLE_TESTS: "ON"
+          REQUIRED_CXX_STANDARD: 11
+          RUN_DISTCHECK: 1
+          USE_STATIC_LIBS: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+          REQUIRED_CXX_STANDARD: 11
+          USE_STATIC_LIBS: 1
+  - name: integration-rhel80-debug-static-cxx11-rapid-replica
+    run_on: rhel80-large
+    tags: [integration, rhel80, linux, debug, static, cxx11, rapid, replica]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+      - func: setup
+      - func: start_mongod
+        vars:
+          TOPOLOGY: replica_set
+          mongodb_version: rapid
+      - func: install_c_driver
+      - func: compile
+        vars:
+          ENABLE_TESTS: "ON"
+          REQUIRED_CXX_STANDARD: 11
+          RUN_DISTCHECK: 1
+          USE_STATIC_LIBS: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: replica
+          REQUIRED_CXX_STANDARD: 11
+          USE_STATIC_LIBS: 1
+  - name: integration-rhel80-debug-static-cxx11-rapid-sharded
+    run_on: rhel80-large
+    tags: [integration, rhel80, linux, debug, static, cxx11, rapid, sharded]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+      - func: setup
+      - func: start_mongod
+        vars:
+          TOPOLOGY: sharded_cluster
+          mongodb_version: rapid
+      - func: install_c_driver
+      - func: compile
+        vars:
+          ENABLE_TESTS: "ON"
+          REQUIRED_CXX_STANDARD: 11
+          RUN_DISTCHECK: 1
+          USE_STATIC_LIBS: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: sharded
+          REQUIRED_CXX_STANDARD: 11
+          USE_STATIC_LIBS: 1
+  - name: integration-rhel80-debug-static-cxx11-rapid-single
+    run_on: rhel80-large
+    tags: [integration, rhel80, linux, debug, static, cxx11, rapid, single]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: rapid
       - func: install_c_driver
       - func: compile
         vars:
@@ -11921,6 +13014,89 @@ tasks:
           REQUIRED_CXX_STANDARD: 17
           TEST_WITH_CSFLE: "ON"
           USE_STATIC_LIBS: 1
+  - name: integration-rhel80-debug-static-cxx17-csfle-rapid-replica
+    run_on: rhel80-large
+    tags: [integration, rhel80, linux, debug, static, cxx17, csfle, rapid, replica]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+      - func: setup
+      - func: start_mongod
+        vars:
+          TOPOLOGY: replica_set
+          mongodb_version: rapid
+      - func: install_c_driver
+      - func: compile
+        vars:
+          ENABLE_TESTS: "ON"
+          REQUIRED_CXX_STANDARD: 17
+          RUN_DISTCHECK: 1
+          USE_STATIC_LIBS: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: replica
+          REQUIRED_CXX_STANDARD: 17
+          TEST_WITH_CSFLE: "ON"
+          USE_STATIC_LIBS: 1
+  - name: integration-rhel80-debug-static-cxx17-csfle-rapid-sharded
+    run_on: rhel80-large
+    tags: [integration, rhel80, linux, debug, static, cxx17, csfle, rapid, sharded]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+      - func: setup
+      - func: start_mongod
+        vars:
+          TOPOLOGY: sharded_cluster
+          mongodb_version: rapid
+      - func: install_c_driver
+      - func: compile
+        vars:
+          ENABLE_TESTS: "ON"
+          REQUIRED_CXX_STANDARD: 17
+          RUN_DISTCHECK: 1
+          USE_STATIC_LIBS: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: sharded
+          REQUIRED_CXX_STANDARD: 17
+          TEST_WITH_CSFLE: "ON"
+          USE_STATIC_LIBS: 1
+  - name: integration-rhel80-debug-static-cxx17-csfle-rapid-single
+    run_on: rhel80-large
+    tags: [integration, rhel80, linux, debug, static, cxx17, csfle, rapid, single]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: rapid
+      - func: install_c_driver
+      - func: compile
+        vars:
+          ENABLE_TESTS: "ON"
+          REQUIRED_CXX_STANDARD: 17
+          RUN_DISTCHECK: 1
+          USE_STATIC_LIBS: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+          REQUIRED_CXX_STANDARD: 17
+          TEST_WITH_CSFLE: "ON"
+          USE_STATIC_LIBS: 1
   - name: integration-rhel80-debug-static-cxx17-latest-replica
     run_on: rhel80-large
     tags: [integration, rhel80, linux, debug, static, cxx17, latest, replica]
@@ -11987,6 +13163,86 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: latest
+      - func: install_c_driver
+      - func: compile
+        vars:
+          ENABLE_TESTS: "ON"
+          REQUIRED_CXX_STANDARD: 17
+          RUN_DISTCHECK: 1
+          USE_STATIC_LIBS: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+          REQUIRED_CXX_STANDARD: 17
+          USE_STATIC_LIBS: 1
+  - name: integration-rhel80-debug-static-cxx17-rapid-replica
+    run_on: rhel80-large
+    tags: [integration, rhel80, linux, debug, static, cxx17, rapid, replica]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+      - func: setup
+      - func: start_mongod
+        vars:
+          TOPOLOGY: replica_set
+          mongodb_version: rapid
+      - func: install_c_driver
+      - func: compile
+        vars:
+          ENABLE_TESTS: "ON"
+          REQUIRED_CXX_STANDARD: 17
+          RUN_DISTCHECK: 1
+          USE_STATIC_LIBS: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: replica
+          REQUIRED_CXX_STANDARD: 17
+          USE_STATIC_LIBS: 1
+  - name: integration-rhel80-debug-static-cxx17-rapid-sharded
+    run_on: rhel80-large
+    tags: [integration, rhel80, linux, debug, static, cxx17, rapid, sharded]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+      - func: setup
+      - func: start_mongod
+        vars:
+          TOPOLOGY: sharded_cluster
+          mongodb_version: rapid
+      - func: install_c_driver
+      - func: compile
+        vars:
+          ENABLE_TESTS: "ON"
+          REQUIRED_CXX_STANDARD: 17
+          RUN_DISTCHECK: 1
+          USE_STATIC_LIBS: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: sharded
+          REQUIRED_CXX_STANDARD: 17
+          USE_STATIC_LIBS: 1
+  - name: integration-rhel80-debug-static-cxx17-rapid-single
+    run_on: rhel80-large
+    tags: [integration, rhel80, linux, debug, static, cxx17, rapid, single]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: rapid
       - func: install_c_driver
       - func: compile
         vars:
