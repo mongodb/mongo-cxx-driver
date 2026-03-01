@@ -38,6 +38,7 @@
 #include <mongocxx/cursor.hpp>
 #include <mongocxx/hint.hpp>
 #include <mongocxx/read_preference.hpp>
+#include <mongocxx/read_concern.hpp>
 
 #include <mongocxx/config/prelude.hpp>
 
@@ -138,6 +139,10 @@ class find {
             ret.read_preference(to_v1(*_read_preference));
         }
 
+        if (_read_concern) {
+            ret.read_concern(to_v1(*_read_concern));
+        }
+
         if (_return_key) {
             ret.return_key(*_return_key);
         }
@@ -199,7 +204,7 @@ class find {
     ///   Whether to allow partial results from mongos.
     ///
     /// @return
-    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   A reference to the object on which this member function is being called. This facilitates
     ///   method chaining.
     ///
     /// @see
@@ -229,7 +234,7 @@ class find {
     ///   The size of the batches to request.
     ///
     /// @return
-    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   A reference to the object on which this member function is being called. This facilitates
     ///   method chaining.
     ///
     /// @see
@@ -259,7 +264,7 @@ class find {
     ///   The new collation.
     ///
     /// @return
-    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   A reference to the object on which this member function is being called. This facilitates
     ///   method chaining.
     ///
     /// @see
@@ -293,7 +298,7 @@ class find {
     ///   The comment to attach to this query.
     ///
     /// @return
-    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   A reference to the object on which this member function is being called. This facilitates
     ///   method chaining.
     ///
     /// @see
@@ -325,7 +330,7 @@ class find {
     ///   The cursor type to set.
     ///
     /// @return
-    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   A reference to the object on which this member function is being called. This facilitates
     ///   method chaining.
     ///
     /// @see
@@ -361,7 +366,7 @@ class find {
     ///   Object representing the index to use.
     ///
     /// @return
-    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   A reference to the object on which this member function is being called. This facilitates
     ///   method chaining.
     ///
     find& hint(v_noabi::hint index_hint) {
@@ -388,7 +393,7 @@ class find {
     ///   The new let option.
     ///
     /// @return
-    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   A reference to the object on which this member function is being called. This facilitates
     ///   method chaining.
     ///
     /// @see
@@ -421,7 +426,7 @@ class find {
     ///   The new comment option.
     ///
     /// @return
-    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   A reference to the object on which this member function is being called. This facilitates
     ///   method chaining.
     ///
     /// @see
@@ -454,7 +459,7 @@ class find {
     ///   The maximum number of documents to return.
     ///
     /// @return
-    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   A reference to the object on which this member function is being called. This facilitates
     ///   method chaining.
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/find/
@@ -483,7 +488,7 @@ class find {
     ///   The exclusive upper bound for a specific index.
     ///
     /// @return
-    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   A reference to the object on which this member function is being called. This facilitates
     ///   method chaining.
     ///
     /// @see
@@ -518,7 +523,7 @@ class find {
     ///   The max amount of time (in milliseconds) to wait for new documents.
     ///
     /// @return
-    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   A reference to the object on which this member function is being called. This facilitates
     ///   method chaining.
     ///
     /// @see
@@ -549,7 +554,7 @@ class find {
     ///   The max amount of time (in milliseconds).
     ///
     /// @return
-    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   A reference to the object on which this member function is being called. This facilitates
     ///   method chaining.
     ///
     /// @see
@@ -579,7 +584,7 @@ class find {
     ///   The inclusive lower bound for a specific index.
     ///
     /// @return
-    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   A reference to the object on which this member function is being called. This facilitates
     ///   method chaining.
     ///
     /// @see
@@ -610,7 +615,7 @@ class find {
     ///   When true prevents the cursor from timing out.
     ///
     /// @return
-    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   A reference to the object on which this member function is being called. This facilitates
     ///   method chaining.
     ///
     /// @see
@@ -640,7 +645,7 @@ class find {
     ///   The projection document.
     ///
     /// @return
-    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   A reference to the object on which this member function is being called. This facilitates
     ///   method chaining.
     ///
     /// @see
@@ -670,7 +675,7 @@ class find {
     ///   The new read_preference.
     ///
     /// @return
-    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   A reference to the object on which this member function is being called. This facilitates
     ///   method chaining.
     ///
     /// @see
@@ -695,6 +700,37 @@ class find {
     }
 
     ///
+    /// Sets the read_concern for this operation.
+    ///
+    /// @param rc
+    ///   The new read_concern.
+    ///
+    /// @return
+    ///   A reference to the object on which this member function is being called. This facilitates
+    ///   method chaining.
+    ///
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/find/
+    ///
+    find& read_concern(v_noabi::read_concern rc) {
+        _read_concern = std::move(rc);
+        return *this;
+    }
+
+    ///
+    /// The current read_concern for this operation.
+    ///
+    /// @return
+    ///   The current read_concern.
+    ///
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/find/
+    ///
+    bsoncxx::v_noabi::stdx::optional<v_noabi::read_concern> const& read_concern() const {
+        return _read_concern;
+    }
+
+    ///
     /// Sets whether to return the index keys associated with the query results, instead of the
     /// actual query results themselves.
     ///
@@ -703,7 +739,7 @@ class find {
     ///   query results themselves.
     ///
     /// @return
-    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   A reference to the object on which this member function is being called. This facilitates
     ///   method chaining.
     ///
     /// @see
@@ -736,7 +772,7 @@ class find {
     ///   Whether to include the record identifier.
     ///
     /// @return
-    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   A reference to the object on which this member function is being called. This facilitates
     ///   method chaining.
     ///
     /// @see
@@ -768,7 +804,7 @@ class find {
     ///   The number of documents to skip.
     ///
     /// @return
-    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   A reference to the object on which this member function is being called. This facilitates
     ///   method chaining.
     ///
     /// @see
@@ -799,7 +835,7 @@ class find {
     ///   Document describing the order of the documents to be returned.
     ///
     /// @return
-    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   A reference to the object on which this member function is being called. This facilitates
     ///   method chaining.
     ///
     /// @see
@@ -840,6 +876,7 @@ class find {
     bsoncxx::v_noabi::stdx::optional<bool> _no_cursor_timeout;
     bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> _projection;
     bsoncxx::v_noabi::stdx::optional<v_noabi::read_preference> _read_preference;
+    bsoncxx::v_noabi::stdx::optional<v_noabi::read_concern> _read_concern;
     bsoncxx::v_noabi::stdx::optional<bool> _return_key;
     bsoncxx::v_noabi::stdx::optional<bool> _show_record_id;
     bsoncxx::v_noabi::stdx::optional<std::int64_t> _skip;

@@ -39,6 +39,7 @@ class find_options::internal {
     static bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> const& min(find_options const& self);
     static bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> const& projection(find_options const& self);
     static bsoncxx::v1::stdx::optional<v1::read_preference> const& read_preference(find_options const& self);
+    static bsoncxx::v1::stdx::optional<v1::read_concern> const& read_concern(find_options const& self);
     static bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> const& sort(find_options const& self);
 
     static bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value>& collation(find_options& self);
@@ -49,6 +50,7 @@ class find_options::internal {
     static bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value>& min(find_options& self);
     static bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value>& projection(find_options& self);
     static bsoncxx::v1::stdx::optional<v1::read_preference>& read_preference(find_options& self);
+    static bsoncxx::v1::stdx::optional<v1::read_concern>& read_concern(find_options& self);
     static bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value>& sort(find_options& self);
 };
 

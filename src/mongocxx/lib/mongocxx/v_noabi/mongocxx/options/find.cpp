@@ -75,6 +75,7 @@ find::find(v1::find_options opts)
           return {};
       }()},
       _read_preference{std::move(v1::find_options::internal::read_preference(opts))},
+      _read_concern{std::move(v1::find_options::internal::read_concern(opts))},
       _return_key{opts.return_key()},
       _show_record_id{opts.show_record_id()},
       _skip{opts.skip()},

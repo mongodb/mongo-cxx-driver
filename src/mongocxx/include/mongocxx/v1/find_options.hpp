@@ -26,6 +26,7 @@
 #include <bsoncxx/v1/types/view-fwd.hpp>
 
 #include <mongocxx/v1/hint-fwd.hpp>
+#include <mongocxx/v1/read_concern-fwd.hpp>
 #include <mongocxx/v1/read_preference-fwd.hpp>
 
 #include <bsoncxx/v1/stdx/optional.hpp>
@@ -59,6 +60,7 @@ namespace v1 {
 /// - `no_cursor_timeout` ("noCursorTimeout")
 /// - `projection`
 /// - `read_preference` ("readPreference")
+/// - `read_concern` ("readConcern")
 /// - `return_key` ("returnKey")
 /// - `show_record_id` ("showRecordId")
 /// - `skip`
@@ -275,6 +277,16 @@ class find_options {
     /// Return the current "readPreference" field.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<v1::read_preference>) read_preference() const;
+
+    ///
+    /// Set the "readConcern" field.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(find_options&) read_concern(v1::read_concern rc);
+
+    ///
+    /// Return the current "readConcern" field.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<v1::read_concern>) read_concern() const;
 
     ///
     /// Set the "returnKey" field.
