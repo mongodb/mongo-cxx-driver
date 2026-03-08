@@ -42,26 +42,7 @@ insert_many::operator v1::insert_many_result() const {
 }
 
 bool operator==(insert_many const& lhs, insert_many const& rhs) {
-    if (lhs.result() != rhs.result()) {
-        return false;
-    }
-
-    auto const lhs_ids = lhs.inserted_ids();
-    auto const rhs_ids = rhs.inserted_ids();
-
-    if (lhs_ids.size() != rhs_ids.size()) {
-        return false;
-    }
-
-    auto liter = lhs_ids.begin();
-    auto riter = rhs_ids.begin();
-
-    for (; liter != lhs_ids.end(); liter++, riter++) {
-        if (liter->first != riter->first || liter->second.get_oid() != riter->second.get_oid()) {
-            return false;
-        }
-    }
-    return true;
+    return lhs._result == rhs._result && lhs._inserted_ids.view() == rhs._inserted_ids.view();
 }
 
 } // namespace result
