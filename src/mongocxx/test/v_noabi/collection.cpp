@@ -2413,28 +2413,41 @@ TEST_CASE("Cursor iteration", "[collection][cursor]") {
                 auto const until = now() + await_retry_limit;
 
                 while (now() < until) {
-                    CHECKED_IF(cursor.begin() != cursor.end()) {
+                    // Check that the cursor finds the next three documents and that the
+                    // iterator stays in lockstep.
+                    for (auto&& doc : cursor) {
+                        CHECK(doc["x"].get_int32() == expected);
+
+                        CHECK(iter == cursor.begin());
+                        CHECK(iter != cursor.end());
+                        CHECK((*iter)["x"].get_int32() == expected);
+
+                        expected++;
+                    }
+
+                    // Avoid continuing to loop when current iteration has covered all six documents.
+                    if (expected == 7) {
                         break;
                     }
                 }
             } else {
                 // After calling cursor.begin(), the existing iterator is revived.
                 CHECK_NOTHROW(cursor.begin());
-            }
 
-            REQUIRE(iter != cursor.end());
-            REQUIRE(iter == cursor.begin());
-
-            // Check that the cursor finds the next three documents and that the
-            // iterator stays in lockstep.
-            for (auto&& doc : cursor) {
-                REQUIRE(doc["x"].get_int32() == expected);
-
-                REQUIRE(iter == cursor.begin());
                 REQUIRE(iter != cursor.end());
-                REQUIRE((*iter)["x"].get_int32() == expected);
+                REQUIRE(iter == cursor.begin());
 
-                expected++;
+                // Check that the cursor finds the next three documents and that the
+                // iterator stays in lockstep.
+                for (auto&& doc : cursor) {
+                    REQUIRE(doc["x"].get_int32() == expected);
+
+                    REQUIRE(iter == cursor.begin());
+                    REQUIRE(iter != cursor.end());
+                    REQUIRE((*iter)["x"].get_int32() == expected);
+
+                    expected++;
+                }
             }
 
             // Check that iteration has covered all six documents.
