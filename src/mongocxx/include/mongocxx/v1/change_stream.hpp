@@ -119,6 +119,20 @@ class change_stream {
     ///
     MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view>) get_resume_token() const;
 
+    ///
+    /// Advance the underlying cursor to obtain the next event document.
+    ///
+    /// Returns an empty optional when there are no event documents available.
+    ///
+    /// @note Calling `this->begin()` after `this->next()` does not advance the underlying cursor state.
+    ///
+    /// @warning Invalidates all views to the current event document and resume token.
+    ///
+    /// @throws mongocxx::v1::server_error when a server-side error is encountered and a raw server error is available.
+    /// @throws mongocxx::v1::exception for all other runtime errors.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view>) next();
+
     class internal;
 
    private:
@@ -389,7 +403,7 @@ class change_stream::iterator {
     /// Advance the underlying cursor to obtain the next event document.
     /// Compare equal to the end iterator when there are no event documents available.
     ///
-    /// @note Pre-increment and post-increment are equivalent.
+    /// @note Pre-increment, post-increment, and @ref v1::change_stream::next() are equivalent.
     ///
     /// @warning Invalidates all views to the current event document and resume token.
     ///

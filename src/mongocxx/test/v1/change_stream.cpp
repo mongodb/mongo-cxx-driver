@@ -26,6 +26,7 @@
 #include <mongocxx/test/private/scoped_bson.hh>
 
 #include <chrono>
+#include <functional>
 #include <utility>
 
 #include <bsoncxx/private/bson.hh>
@@ -36,6 +37,7 @@
 #include <bsoncxx/test/system_error.hh>
 
 #include <catch2/catch_test_macros.hpp>
+#include <catch2/generators/catch_generators.hpp>
 #include <catch2/matchers/catch_matchers_exception.hpp>
 #include <catch2/matchers/catch_matchers_string.hpp>
 
@@ -274,12 +276,26 @@ TEST_CASE("begin", "[mongocxx][v1][change_stream]") {
         .forever();
 
     SECTION("iteration") {
+        // `change_stream::next()` and `iterator::operator++()` are equivalent.
+        auto const use_next = GENERATE(false, true);
+        CAPTURE(use_next);
+
         auto stream = change_stream::internal::make(reinterpret_cast<mongoc_change_stream_t*>(&data));
 
         CHECK(change_stream::internal::can_get_more(stream));
         CHECK(data.next_count == 0);
 
-        auto iter = stream.begin();
+        change_stream::iterator iter;
+
+        if (use_next) {
+            auto const doc_opt = stream.next();
+            CHECK(doc_opt == scoped_bson{R"({"next": 1})"}.value());
+
+            iter = stream.begin(); // `next()` behaves like `begin()` (consecutive calls).
+        } else {
+            iter = stream.begin();
+        }
+
         REQUIRE(iter != stream.end());
         CHECK(change_stream::internal::has_doc(stream));
         CHECK(change_stream::internal::doc(stream) == *iter);
@@ -288,7 +304,12 @@ TEST_CASE("begin", "[mongocxx][v1][change_stream]") {
         CHECK(data.next_count == 1);
         CHECK(data.error_document_count == 0);
 
-        CHECK_NOTHROW(++iter);
+        if (use_next) {
+            CHECK(stream.next() == scoped_bson{R"({"next": 2})"}.value());
+        } else {
+            CHECK_NOTHROW(++iter); // Pre-increment and post-increment are equivalent.
+        }
+
         REQUIRE(iter != stream.end());
         CHECK(change_stream::internal::has_doc(stream));
         CHECK(change_stream::internal::doc(stream) == *iter);
@@ -297,7 +318,12 @@ TEST_CASE("begin", "[mongocxx][v1][change_stream]") {
         CHECK(data.next_count == 2);
         CHECK(data.error_document_count == 0);
 
-        CHECK_NOTHROW(iter++);
+        if (use_next) {
+            CHECK(stream.next() == scoped_bson{R"({"next": 3})"}.value());
+        } else {
+            CHECK_NOTHROW(iter++); // Pre-increment and post-increment are equivalent.
+        }
+
         REQUIRE(iter != stream.end());
         CHECK(change_stream::internal::has_doc(stream));
         CHECK(change_stream::internal::doc(stream) == *iter);
