@@ -142,8 +142,8 @@ TEST_CASE("equality", "[mongocxx][v1][insert_many_result]") {
     auto const n0 = v1::bulk_write::result::internal::make(scoped_bson{R"({"nInserted": 0})"}.value());
     auto const n1 = v1::bulk_write::result::internal::make(scoped_bson{R"({"nInserted": 1})"}.value());
 
-    auto const i1 = bsoncxx::v1::array::value{scoped_bson{R"([1])"}.array_view()};
-    auto const i2 = bsoncxx::v1::array::value{scoped_bson{R"([2])"}.array_view()};
+    auto const i1 = bsoncxx::v1::array::value{scoped_bson{R"([1, 1.0, "one"])"}.array_view()};
+    auto const i2 = bsoncxx::v1::array::value{scoped_bson{R"([2, 2.0, "two"])"}.array_view()};
 
     auto lhs = v1::insert_many_result::internal::make(n0, i1);
     auto rhs = v1::insert_many_result::internal::make(n0, i1);
