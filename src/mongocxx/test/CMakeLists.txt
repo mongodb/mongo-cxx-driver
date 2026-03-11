@@ -106,6 +106,7 @@ set(mongocxx_test_sources_v_noabi
     v_noabi/result/bulk_write.cpp
     v_noabi/result/delete.cpp
     v_noabi/result/gridfs/upload.cpp
+    v_noabi/result/insert_many.cpp
     v_noabi/result/insert_one.cpp
     v_noabi/result/replace_one.cpp
     v_noabi/result/update.cpp
