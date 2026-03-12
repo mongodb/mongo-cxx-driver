@@ -135,7 +135,17 @@ bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view> change_stream::get_resu
     return ret;
 }
 
-bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view> change_stream::next() {
+bsoncxx::v1::document::view change_stream::next() {
+    while (true) {
+        internal::advance_iterator(*this);
+
+        if (impl::with(this)->_state == state::has_doc) {
+            return impl::with(this)->_doc;
+        }
+    }
+}
+
+bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view> change_stream::try_next() {
     internal::advance_iterator(*this);
 
     if (impl::with(this)->_state == state::has_doc) {
