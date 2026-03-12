@@ -26,6 +26,7 @@
 #include <mongocxx/test/private/scoped_bson.hh>
 
 #include <chrono>
+#include <functional>
 #include <utility>
 
 #include <bsoncxx/private/bson.hh>
@@ -36,6 +37,7 @@
 #include <bsoncxx/test/system_error.hh>
 
 #include <catch2/catch_test_macros.hpp>
+#include <catch2/generators/catch_generators.hpp>
 #include <catch2/matchers/catch_matchers_exception.hpp>
 #include <catch2/matchers/catch_matchers_string.hpp>
 
@@ -256,30 +258,86 @@ TEST_CASE("begin", "[mongocxx][v1][change_stream]") {
         ->interpose([&](mongoc_change_stream_t* stream, bson_t const** bson) -> bool {
             (void)bson;
             CHECK(reinterpret_cast<test_data_type*>(stream) == &data);
-            ++data.next_count;
-            data.doc = scoped_bson{BCON_NEW("next", BCON_INT32(data.next_count))};
-            *bson = data.doc.bson();
-            return true;
+
+            // Return up to three documents for increment assertions.
+            if (data.next_count < 3) {
+                ++data.next_count;
+                data.doc = scoped_bson{BCON_NEW("next", BCON_INT32(data.next_count))};
+                *bson = data.doc.bson();
+                return true;
+            }
+
+            // Allow final increments to obtain no event document.
+            else {
+                ++data.next_count; // 4: try_next(), 5: next().
+                return false;
+            }
         })
         .forever();
 
     auto change_stream_error_document = libmongoc::change_stream_error_document.create_instance();
     change_stream_error_document
         ->interpose([&](mongoc_change_stream_t const* stream, bson_error_t* err, bson_t const** bson) -> bool {
-            (void)(stream);
-            (void)err;
-            (void)bson;
-            return false;
+            CHECK(stream);
+            REQUIRE(err != nullptr);
+            REQUIRE(bson != nullptr);
+
+            // Allow final `.try_next()` to return a null optional.
+            if (data.next_count < 5) {
+                return false;
+            }
+
+            // Allow final `.next()` to return via exception.
+            else {
+                bson_set_error(err, 0, 123, "advance failure");
+                err->reserved = 2u; // MONGOC_ERROR_CATEGORY
+                return true;
+            }
         })
         .forever();
 
     SECTION("iteration") {
+        // `change_stream::next()`, `change_stream::try_next()`, and `iterator::operator++()` are equivalent.
+        enum struct next_type {
+            no,
+            next,
+            try_next,
+        };
+
+        auto const use_next = GENERATE(next_type::no, next_type::next, next_type::try_next);
+        CAPTURE(use_next);
+
         auto stream = change_stream::internal::make(reinterpret_cast<mongoc_change_stream_t*>(&data));
 
         CHECK(change_stream::internal::can_get_more(stream));
         CHECK(data.next_count == 0);
 
-        auto iter = stream.begin();
+        change_stream::iterator iter;
+
+        switch (use_next) {
+            case next_type::no: {
+                iter = stream.begin();
+            } break;
+
+            case next_type::next: {
+                auto const doc = stream.next();
+                CHECK(doc == scoped_bson{R"({"next": 1})"}.value());
+
+                iter = stream.begin(); // `next()` behaves like `begin()` (consecutive calls).
+            } break;
+
+            case next_type::try_next: {
+                auto const doc_opt = stream.try_next();
+                CHECK(doc_opt == scoped_bson{R"({"next": 1})"}.value());
+
+                iter = stream.begin(); // `try_next()` behaves like `begin()` (consecutive calls).
+            } break;
+
+            default: {
+                FAIL("should not reach this point");
+            } break;
+        }
+
         REQUIRE(iter != stream.end());
         CHECK(change_stream::internal::has_doc(stream));
         CHECK(change_stream::internal::doc(stream) == *iter);
@@ -288,7 +346,24 @@ TEST_CASE("begin", "[mongocxx][v1][change_stream]") {
         CHECK(data.next_count == 1);
         CHECK(data.error_document_count == 0);
 
-        CHECK_NOTHROW(++iter);
+        switch (use_next) {
+            case next_type::no: {
+                CHECK_NOTHROW(++iter); // Pre-increment and post-increment are equivalent.
+            } break;
+
+            case next_type::next: {
+                CHECK(stream.next() == scoped_bson{R"({"next": 2})"}.value());
+            } break;
+
+            case next_type::try_next: {
+                CHECK(stream.try_next() == scoped_bson{R"({"next": 2})"}.value());
+            } break;
+
+            default: {
+                FAIL("should not reach this point");
+            } break;
+        }
+
         REQUIRE(iter != stream.end());
         CHECK(change_stream::internal::has_doc(stream));
         CHECK(change_stream::internal::doc(stream) == *iter);
@@ -297,7 +372,24 @@ TEST_CASE("begin", "[mongocxx][v1][change_stream]") {
         CHECK(data.next_count == 2);
         CHECK(data.error_document_count == 0);
 
-        CHECK_NOTHROW(iter++);
+        switch (use_next) {
+            case next_type::no: {
+                CHECK_NOTHROW(iter++); // Pre-increment and post-increment are equivalent.
+            } break;
+
+            case next_type::next: {
+                CHECK(stream.next() == scoped_bson{R"({"next": 3})"}.value());
+            } break;
+
+            case next_type::try_next: {
+                CHECK(stream.try_next() == scoped_bson{R"({"next": 3})"}.value());
+            } break;
+
+            default: {
+                FAIL("should not reach this point");
+            } break;
+        }
+
         REQUIRE(iter != stream.end());
         CHECK(change_stream::internal::has_doc(stream));
         CHECK(change_stream::internal::doc(stream) == *iter);
@@ -305,6 +397,24 @@ TEST_CASE("begin", "[mongocxx][v1][change_stream]") {
         CHECK((*iter)["next"].get_int32().value == 3);
         CHECK(data.next_count == 3);
         CHECK(data.error_document_count == 0);
+
+        switch (use_next) {
+            case next_type::no: {
+                CHECK(++iter == stream.end());
+            } break;
+
+            case next_type::next: {
+                CHECK_THROWS_WITH(stream.next(), Catch::Matchers::ContainsSubstring("advance failure"));
+            } break;
+
+            case next_type::try_next: {
+                CHECK(stream.try_next() == bsoncxx::v1::stdx::nullopt);
+            } break;
+
+            default: {
+                FAIL("should not reach this point");
+            } break;
+        }
     }
 
     SECTION("equality") {

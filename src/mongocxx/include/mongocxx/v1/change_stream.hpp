@@ -119,6 +119,36 @@ class change_stream {
     ///
     MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view>) get_resume_token() const;
 
+    ///
+    /// Obtain the next event document.
+    ///
+    /// This function blocks indefinitely: the underlying cursor is repeatedly advanced until an event document is
+    /// available.
+    ///
+    /// @note Calling `this->begin()` after `this->next()` does not advance the underlying cursor state.
+    ///
+    /// @warning Invalidates all views to the current event document and resume token.
+    ///
+    /// @throws mongocxx::v1::server_error when a server-side error is encountered and a raw server error is available.
+    /// @throws mongocxx::v1::exception for all other runtime errors.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::document::view) next();
+
+    ///
+    /// Try to obtain the next event document.
+    ///
+    /// This function does not block indefinitely: the underlying cursor is advanced only once.
+    /// An empty optional is returned when an event document is not available.
+    ///
+    /// @note Calling `this->begin()` after `this->try_next()` does not advance the underlying cursor state.
+    ///
+    /// @warning Invalidates all views to the current event document and resume token.
+    ///
+    /// @throws mongocxx::v1::server_error when a server-side error is encountered and a raw server error is available.
+    /// @throws mongocxx::v1::exception for all other runtime errors.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view>) try_next();
+
     class internal;
 
    private:
@@ -389,7 +419,7 @@ class change_stream::iterator {
     /// Advance the underlying cursor to obtain the next event document.
     /// Compare equal to the end iterator when there are no event documents available.
     ///
-    /// @note Pre-increment and post-increment are equivalent.
+    /// @note Pre-increment, post-increment, and @ref v1::change_stream::next() are equivalent.
     ///
     /// @warning Invalidates all views to the current event document and resume token.
     ///
