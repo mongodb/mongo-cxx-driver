@@ -20,7 +20,7 @@ See [ABI Versioning](https://www.mongodb.com/docs/languages/cpp/cpp-driver/curre
 The basic directory structure for `<library>` is:
 
 ```
-<library>/
+bsoncxx/
 ├── include/bsoncxx/
 │   ├── docs/
 │   ├── v_noabi/bsoncxx/
@@ -41,12 +41,12 @@ The basic directory structure for `<library>` is:
 
 - `<library>/include/` contains "public headers" which are installed as-is into the install prefix.
     - A header under `v<N>` must never include a header under `v_noabi` (stable vs unstable ABI).
-    - A header under `v<N>` must never include a header under `v<N - 1>` (ABI backward compatibility).
+    - A header under `v<N>` must never include a header under `v<less-than-N>` (ABI backward compatibility).
 - `<library>/lib/` contains internal headers and implementation files.
     - Files under `private/` provide internal interfaces which are reusable across ABI components (do not affect ABI).
     - The layout of `lib/v<abi>/...` mirrors the layout of `include/v<abi>/...`.
     - Components under `v<N>` must never use components under `v_noabi` (stable vs unstable ABI).
-    - Components `v<N>` must never use components under `v<N - 1>` (ABI backward compatibility).
+    - Components `v<N>` must never use components under `v<less-than-N>` (ABI backward compatibility).
 - `<library>/test/` contain test files.
     - Files under `test/...` mirrors the layout of `lib/...`.
     - Test files can use any ABI component as needed.
@@ -75,16 +75,17 @@ src/<library>/
     - This does not apply to detail, internal, private, and test interfaces.
 - Include What You Use priority:
     - The forward header must be the first include directive in the normal header.
-    - The normal header must be the first include directive in the internal header or implementation file.
-    - The internal or normal header must be the first include directive in the implementation.
-    - The internal header (or normal header) must be the first include directive in the test header or implementation file.
+    - The normal header must be the first include directive in the internal header.
+    - The internal (or normal) header must be the first include directive in the implementation file.
+    - The internal (or normal) header must be the first include directive in the test header.
+    - The test (or internal, or normal) header must be the first include directive in the test implementation file.
 - The forward header declares (but does not define) class types.
     - Root namespace redeclarations for class types belong here.
-- The declaration header declares functions, declares variables, defines class types, and defines type aliases.
+- The normal header declares functions, declares variables, defines class types, and defines type aliases.
     - Root namespace redeclarations for functions and variables belong here.
 - The internal header declares and defines internal interfaces.
     - `BSONCXX_ABI_EXPORT_CDECL_TESTING` may be required to use internal interfaces in test components.
-- The implementation defines all declared functions and declared variables.
+- The implementation file defines all declared functions and declared variables.
 - The test header defines Catch2 `StringMaker<T>` specializations.
     - Tests MUST include the test header (containing `StringMaker<T>` specializations) when one exists instead of the declaration header.
 - The test implementation file defines test cases for all related component interfaces.
@@ -137,23 +138,27 @@ void fn(mongocxx::example::type param);
 
 ### Public Headers
 
-Public headers are organized under `src/<library>/include/`. With the exception of generated headers, all header files under this directory are installed as-is to the install prefix with their existing structure.
+Public headers are organized under `src/<library>/include/`. With the exception of generated headers, all header files under this directory are installed as-is to the install prefix with their existing structure. This includes headers within `detail` subdirectories, which are headers reserved for internal use only and are not a part of the public API.
 
 ```
 include/
 ├── v_noabi/bsoncxx/
-│   ├── fwd.hpp
-│   ├── document/
-│   │   ├── value-fwd.hpp
-│   │   ├── value.hpp
-│   │   └── ...
+│   ├── fwd.hpp
+│   ├── detail/
+│   │   └── ...
+│   ├── document/
+│   │   ├── value-fwd.hpp
+│   │   ├── value.hpp
+│   │   └── ...
 │   └── ...
 ├── v1/
-│   ├── fwd.hpp
-│   ├── document/
-│   │   ├── value-fwd.hpp
-│   │   ├── value.hpp
-│   │   └── ...
+│   ├── fwd.hpp
+│   ├── detail/
+│   │   └── ...
+│   ├── document/
+│   │   ├── value-fwd.hpp
+│   │   ├── value.hpp
+│   │   └── ...
 │   └── ...
 └── CMakeLists.txt
 ```
@@ -164,7 +169,7 @@ Headers under `vN/` directories provide stable ABI interfaces declared within AB
 
 #### Unstable ABI Headers
 
-Headers under `v_noabi/` declare both unstable ABI interfaces within ABI namespace `v_noabi` AND the latest stable ABI interfaces. See [Unstable ABI Namespace](#unstable-abi-namespace) below.
+Headers under `v_noabi/` declare both unstable (`v_noabi`) AND stable ABI interfaces. See [Unstable ABI Namespace](#unstable-abi-namespace) below.
 
 > [!IMPORTANT]
 > Headers under `v_noabi/` MUST be placed under the additional `bsoncxx/` (or `mongocxx`) subdirectory for backward compatibility with unstable ABI header direct include style: `#include <bsoncxx/document/element.hpp>`.
@@ -176,9 +181,9 @@ The input files with the `.in` extension for generated headers are located under
 ```
 lib/
 ├── v1/
-│   ├── config/
-│   │   ├── config.hpp.in # Input file to generate config.hpp.
-│   │   └── ...
+│   ├── config/
+│   │   ├── config.hpp.in # Input file to generate config.hpp.
+│   │   └── ...
 │   └── ...
 └── CMakeLists.txt # Responsible for configuration and installation.
 ```
@@ -191,18 +196,18 @@ Forward headers with the `-fwd` basename suffix declare (but do not define!) cla
 include/
 ├── fwd.hpp
 ├── v_noabi/bsoncxx/
-│   ├── fwd.hpp
-│   ├── document/
-│   │   ├── value-fwd.hpp # Forward header.
-│   │   ├── value.hpp
-│   │   └── ...
+│   ├── fwd.hpp
+│   ├── document/
+│   │   ├── value-fwd.hpp # Forward header.
+│   │   ├── value.hpp
+│   │   └── ...
 │   └── ...
 ├── v1/
-│   ├── fwd.hpp
-│   ├── document/
-│   │   ├── value-fwd.hpp # Forward header.
-│   │   ├── value.hpp
-│   │   └── ...
+│   ├── fwd.hpp
+│   ├── document/
+│   │   ├── value-fwd.hpp # Forward header.
+│   │   ├── value.hpp
+│   │   └── ...
 │   └── ...
 └── CMakeLists.txt
 ```
@@ -216,22 +221,21 @@ Source files are organized under `lib/`. Their structure generally mirrors that 
 ```
 lib/
 ├── bsoncxx/
+│   ├── private/
+│   │   ├── immortal.hh  # Private header for internal usage only.
+│   │   ├── immortal.cpp # Implementation of entities declared in immortal.hh.
+│   │   └── ...
 │   ├── v_noabi/
 │   │   └── ...
 │   └── v1/
-│       ├── detail/
-│       │   ├── immortal.hh  # Private header for internal usage only.
-│       │   ├── immortal.cpp # Implementation of entities declared in immortal.hh.
+│       ├── config/
+│       │   ├── config.hpp.in # Input file to generate config.hpp.
 │       │   └── ...
 │       ├── document/
-│       │   ├── value.hh  # Internal declarations and definitions for element.hpp.
-│       │   ├── value.cpp # Definitions of entities declared in element.hpp and element.hh.
-│       │   └── ...
-│       └── detail/
-│           ├── config/
-│           │   ├── config.hpp.in # Input file to generate config.hpp.
-│           │   └── ...
-│           └── ...
+│       │   ├── value.hh  # Internal declarations and definitions for value.hpp.
+│       │   ├── value.cpp # Definitions of entities declared in value.hpp and value.hh.
+│       │   └── ...
+│       └── ...
 └── CMakeLists.txt # Responsible for configuration, generation, and installation.
 ```
 
