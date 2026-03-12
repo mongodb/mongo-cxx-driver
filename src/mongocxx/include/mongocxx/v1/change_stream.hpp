@@ -122,7 +122,8 @@ class change_stream {
     ///
     /// Obtain the next event document.
     ///
-    /// This function blocks until an event document is available by repeatedly advancing the underlying cursor.
+    /// This function blocks indefinitely: the underlying cursor is repeatedly advanced until an event document is
+    /// available.
     ///
     /// @note Calling `this->begin()` after `this->next()` does not advance the underlying cursor state.
     ///
@@ -136,8 +137,8 @@ class change_stream {
     ///
     /// Try to obtain the next event document.
     ///
-    /// This function does not block: the underlying cursor is advanced only once.
-    /// An empty optional is returned when no event document is currently available.
+    /// This function does not block indefinitely: the underlying cursor is advanced only once.
+    /// An empty optional is returned when an event document is not available.
     ///
     /// @note Calling `this->begin()` after `this->try_next()` does not advance the underlying cursor state.
     ///
