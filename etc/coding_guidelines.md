@@ -20,15 +20,15 @@ See [ABI Versioning](https://www.mongodb.com/docs/languages/cpp/cpp-driver/curre
 The basic directory structure for `<library>` is:
 
 ```
-bsoncxx/
-├── include/bsoncxx/
+<library>/
+├── include/<library>/
 │   ├── docs/
-│   ├── v_noabi/bsoncxx/
+│   ├── v_noabi/<library>/
 │   ├── v1/
 │   └── ...
-├── lib/bsoncxx/
+├── lib/<library>/
 │   ├── private/
-│   ├── v_noabi/bsoncxx/
+│   ├── v_noabi/<library>/
 │   ├── v1/
 │   └── ...
 ├── test/
