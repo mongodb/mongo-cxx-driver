@@ -81,7 +81,7 @@ src/<library>/
     - The test (or internal, or normal) header must be the first include directive in the test implementation file.
 - The forward header declares (but does not define) class types.
     - Root namespace redeclarations for class types belong here.
-- The normal header declares functions, declares variables, defines class types, and defines type aliases.
+- The normal header declares functions, declares variables, defines class types, and declares type aliases.
     - Root namespace redeclarations for functions and variables belong here.
 - The internal header declares and defines internal interfaces.
     - `BSONCXX_ABI_EXPORT_CDECL_TESTING` may be required to use internal interfaces in test components.
@@ -280,7 +280,7 @@ lib/
 - Use `BSONCXX_ABI_EXPORT` to export variables.
 - Only polymorphic classes (e.g. exceptions) should be declared with `BSONCXX_ABI_EXPORT`.
     - `BSONCXX_ABI_EXPORT` must be applied to the _first_ declaration of the class (e.g. in the forward header when applicable).
-    - All polymoprhic classes must define _at least one_ virtual function (e.g. the virtual destructor) out-of-line within the implementation file as the ["key function"](https://itanium-cxx-abi.github.io/cxx-abi/abi.html#vague-vtable).
+    - All polymorphic classes must define _at least one_ virtual function (e.g. the virtual destructor) out-of-line within the implementation file as the ["key function"](https://itanium-cxx-abi.github.io/cxx-abi/abi.html#vague-vtable).
 - Use `BSONCXX_ABI_CDECL` to declare all (pointer to) function types which are referenced by the ABI with the `__cdecl` calling convention.
     - For function types: `ReturnType BSONCXX_ABI_CDECL(Params...)`.
     - For pointer-to-function types: `ReturnType (BSONCXX_ABI_CDECL*)(Params...)`.
