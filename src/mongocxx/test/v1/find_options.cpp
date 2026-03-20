@@ -265,15 +265,14 @@ TEST_CASE("read_preference", "[mongocxx][v1][find_options]") {
 }
 
 TEST_CASE("read_concern", "[mongocxx][v1][find_options]") {
-    v1::read_concern rc;
-    rc.acknowledge_level(read_concern::level::k_majority);
+    using T = v1::read_concern;
 
-    find_options opts;
-    opts.read_concern(rc);
+    auto const v = GENERATE(values({
+        T{},
+        T{}.acknowledge_level(T::level::k_majority),
+    }));
 
-    auto val = opts.read_concern();
-    REQUIRE(val.has_value());
-    CHECK(val->acknowledge_level() == rc.acknowledge_level());
+    CHECK(find_options{}.read_concern(v).read_concern() == v);
 }
 
 TEST_CASE("return_key", "[mongocxx][v1][find_options]") {
