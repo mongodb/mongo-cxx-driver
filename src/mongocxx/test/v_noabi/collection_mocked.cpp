@@ -407,6 +407,7 @@ TEST_CASE("find", "[mongocxx][v_noabi][collection]") {
     bsoncxx::stdx::optional<bool> expected_no_cursor_timeout;
     bsoncxx::stdx::optional<bsoncxx::document::view> expected_sort{};
     bsoncxx::stdx::optional<read_preference> expected_read_preference{};
+    bsoncxx::stdx::optional<bsoncxx::document::view> expected_read_concern{};
 
     collection_find_with_opts->interpose(
         [&](mongoc_collection_t*, bson_t const* filter, bson_t const* opts, mongoc_read_prefs_t const* read_prefs) {
@@ -458,6 +459,10 @@ TEST_CASE("find", "[mongocxx][v_noabi][collection]") {
                     mongoc_read_prefs_get_mode(read_prefs) ==
                     mongocxx::v_noabi::conversions::read_mode_t_from_read_mode(mongo_coll.read_preference().mode()));
 
+            if (expected_read_concern)
+                REQUIRE(opts_view["readConcern"].get_document() == *expected_read_concern);
+            else
+                REQUIRE(opts_view.find("readConcern") == opts_view.end());
             mongoc_cursor_t* cursor = nullptr;
             return cursor;
         });
@@ -527,6 +532,20 @@ TEST_CASE("find", "[mongocxx][v_noabi][collection]") {
         expected_read_preference.emplace();
         expected_read_preference->mode(read_preference::read_mode::k_secondary);
         opts.read_preference(*expected_read_preference);
+
+        REQUIRE_NOTHROW(mongo_coll.find(doc, opts));
+        REQUIRE(collection_find_called);
+    }
+
+    SECTION("Succeeds with read concern") {
+        options::find opts;
+        mongocxx::read_concern rc;
+        rc.acknowledge_level(read_concern::level::k_majority);
+
+        auto rc_doc = make_document(kvp("level", "majority"));
+        expected_read_concern = rc_doc.view();
+
+        opts.read_concern(rc);
 
         REQUIRE_NOTHROW(mongo_coll.find(doc, opts));
         REQUIRE(collection_find_called);

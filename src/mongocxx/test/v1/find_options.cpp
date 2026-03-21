@@ -18,6 +18,7 @@
 
 #include <mongocxx/v1/cursor.hpp>
 #include <mongocxx/v1/hint.hpp>
+#include <mongocxx/v1/read_concern.hpp>
 #include <mongocxx/v1/read_preference.hpp>
 
 #include <bsoncxx/test/v1/types/value.hh>
@@ -94,6 +95,7 @@ TEST_CASE("default", "[mongocxx][v1][find_options]") {
     CHECK_FALSE(opts.no_cursor_timeout().has_value());
     CHECK_FALSE(opts.projection().has_value());
     CHECK_FALSE(opts.read_preference().has_value());
+    CHECK_FALSE(opts.read_concern().has_value());
     CHECK_FALSE(opts.return_key().has_value());
     CHECK_FALSE(opts.show_record_id().has_value());
     CHECK_FALSE(opts.skip().has_value());
@@ -260,6 +262,17 @@ TEST_CASE("read_preference", "[mongocxx][v1][find_options]") {
     }));
 
     CHECK(find_options{}.read_preference(v).read_preference() == v);
+}
+
+TEST_CASE("read_concern", "[mongocxx][v1][find_options]") {
+    using T = v1::read_concern;
+
+    auto const v = GENERATE(values({
+        T{},
+        T{}.acknowledge_level(T::level::k_majority),
+    }));
+
+    CHECK(find_options{}.read_concern(v).read_concern() == v);
 }
 
 TEST_CASE("return_key", "[mongocxx][v1][find_options]") {
