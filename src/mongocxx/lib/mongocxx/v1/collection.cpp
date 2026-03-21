@@ -375,6 +375,10 @@ void append_to(v1::find_options const& opts, scoped_bson& doc) {
         doc += scoped_bson{BCON_NEW("skip", BCON_INT64(*opt))};
     }
 
+    if (auto const& opt = v1::find_options::internal::read_concern(opts)) {
+        doc += scoped_bson{BCON_NEW("readConcern", BCON_DOCUMENT(scoped_bson{opt->to_document()}.bson()))};
+    }
+
     if (auto const& opt = v1::find_options::internal::sort(opts)) {
         doc += scoped_bson{BCON_NEW("sort", BCON_DOCUMENT(scoped_bson_view{*opt}.bson()))};
     }
