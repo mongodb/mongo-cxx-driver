@@ -23,6 +23,7 @@ Changes prior to 3.9.0 are documented as [release notes on GitHub](https://githu
   - `bsoncxx::types::value`: equivalent to `bsoncxx::types::bson_value::value`.
   - `type_view()` in `bsoncxx::document::element` and `bsoncxx::array::element`: equivalent to `get_value()`.
   - `type_value()` in `bsoncxx::document::element` and `bsoncxx::array::element`: equivalent to `get_owning_value()`.
+- Experimental support for In-Use Encryption Text Indexes (`mongocxx::v1::text_options`).
 
 ### Changed
 
