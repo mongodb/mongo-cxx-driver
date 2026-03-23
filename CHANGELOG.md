@@ -24,6 +24,7 @@ Changes prior to 3.9.0 are documented as [release notes on GitHub](https://githu
   - `type_view()` in `bsoncxx::document::element` and `bsoncxx::array::element`: equivalent to `get_value()`.
   - `type_value()` in `bsoncxx::document::element` and `bsoncxx::array::element`: equivalent to `get_owning_value()`.
 - Experimental support for In-Use Encryption Text Indexes (`mongocxx::v1::text_options`).
+- Change stream helpers for convenient iteration (`mongocxx::v1::change_stream::next` and `mongocxx::v1::change_stream::try_next`).
 
 ### Changed
 
