@@ -76,6 +76,10 @@ Changes prior to 3.9.0 are documented as [release notes on GitHub](https://githu
   - See: [MongoDB C Driver 2.1.0 Release Notes](https://github.com/mongodb/mongo-c-driver/releases/tag/2.1.0).
 - Support for macOS 11 and macOS 12 (deprecated in 4.1.0).
 
+### Fixed
+
+- Do not throw when comparing `mongocxx::result::insert_many` with non-ObjectID IDs.
+
 ## 4.1.4
 
 ### Changed
