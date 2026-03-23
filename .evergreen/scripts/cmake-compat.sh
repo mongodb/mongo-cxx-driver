@@ -27,8 +27,8 @@ if [[ -f "${mongoc_prefix:?}/.evergreen/scripts/find-ccache.sh" ]]; then
 fi
 
 cmake_flags=(
-  "-Werror=dev"
-  "-Werror=deprecated"
+  # "-Werror=dev" # TODO: restore once C driver stops setting CMP0147 to OLD
+  # "-Werror=deprecated" # TODO: restore once C driver stops setting CMP0147 to OLD
   "-DCMAKE_BUILD_TYPE=Debug"
   "-DCMAKE_INSTALL_PREFIX=install"
   "-DCMAKE_FIND_NO_INSTALL_PREFIX=ON"
