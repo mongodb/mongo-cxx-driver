@@ -1,0 +1,5 @@
+var searchData=
+[
+  ['noop_5fdeleter_5ftype_0',['noop_deleter_type',['../classbsoncxx_1_1v1_1_1document_1_1value.html#a69420b52dfaa28af0fc8e5df18389af7',1,'bsoncxx::v1::document::value']]],
+  ['ns_5fpair_1',['ns_pair',['../classmongocxx_1_1v1_1_1auto__encryption__options.html#acff2ca42eb8888b44b7c9f9e00e7c5b8',1,'mongocxx::v1::auto_encryption_options::ns_pair'],['../classmongocxx_1_1v1_1_1client__encryption_1_1options.html#ae8867fe974a75d5bb9d47d4beeb727f5',1,'mongocxx::v1::client_encryption::options::ns_pair'],['../classmongocxx_1_1v__noabi_1_1options_1_1auto__encryption.html#a1e319325f741ef68cf1a716e3def1f42',1,'mongocxx::v_noabi::options::auto_encryption::ns_pair'],['../classmongocxx_1_1v__noabi_1_1options_1_1client__encryption.html#a9be98291aad108781d32b247425d7f37',1,'mongocxx::v_noabi::options::client_encryption::ns_pair'],['../classmongocxx_1_1options_1_1auto__encryption.html#a1e319325f741ef68cf1a716e3def1f42',1,'mongocxx::options::auto_encryption::ns_pair'],['../classmongocxx_1_1options_1_1client__encryption.html#a9be98291aad108781d32b247425d7f37',1,'mongocxx::options::client_encryption::ns_pair']]]
+];
