@@ -550,7 +550,7 @@ Example (using Jira syntax formatting):
 ```
 * The [Compatibility|https://www.mongodb.com/docs/languages/cpp/cpp-driver/current/compatibility/] page must be updated:
 ** mongocxx-X.Y.Z may change "libmongoc Compatibility" by requiring mongoc-A.B.C or later.
-** mongocxx-X.Y.Z should have the same "MongoDB Compatibility", "Language Compatibility", and "Compiler Compatibility" as version mongocxx-X.Y.(Z-1)
+** mongocxx-X.Y.Z should have the same "MongoDB Compatibility", "C++ Compatibility", and "Compiler Compatibility" as version mongocxx-X.Y.(Z-1)
 * The [MongoDB C++ Driver|https://www.mongodb.com/docs/languages/cpp/cpp-driver/current/#driver-status-by-family-and-version] page must be updated: {{{}mongocxx X.Y.x{}}} is now a previous stable release and no longer under active development; {{{}mongocxx X.Y+1.x{}}} is the new current stable release eligible for bug fixes.
 * The [full version|https://github.com/mongodb/docs-cpp/blob/master/snooty.toml] for C++ Driver documentation must be updated to {{{}X.Y.Z{}}}.
 ```
