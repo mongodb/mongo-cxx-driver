@@ -537,7 +537,7 @@ def all_issues_closed(issues):
 
     status_set = set(i.fields.status.name for i in issues)
 
-    if status_set.difference({'Closed'}):
+    if status_set.difference({'Closed', 'Development Complete'}):
         msg = 'Open tickets found.  Cannot release!'
         msg += '\nThe following open tickets were found:'
         click.echo(msg, err=True)
