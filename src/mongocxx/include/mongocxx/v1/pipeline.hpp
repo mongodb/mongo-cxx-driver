@@ -88,7 +88,7 @@ class pipeline {
     ///
     /// Return the current array of aggregation stages.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::array::view) view_array() const;
+    [[nodiscard]] MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::array::view) view_array() const;
 
     ///
     /// Append the given aggregation stage.

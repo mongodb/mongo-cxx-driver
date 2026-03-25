@@ -163,7 +163,8 @@ class auto_encryption_options {
     ///
     /// Return the current "kmsProviders" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view>) kms_providers() const;
+    [[nodiscard]] MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view>) kms_providers()
+        const;
 
     ///
     /// Set the "tlsOptions" field.
@@ -173,7 +174,7 @@ class auto_encryption_options {
     ///
     /// Return the current "tlsOptions" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view>) tls_opts() const;
+    [[nodiscard]] MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view>) tls_opts() const;
 
     ///
     /// Set the "schemaMap" field.
@@ -183,7 +184,8 @@ class auto_encryption_options {
     ///
     /// Return the "schemaMap" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view>) schema_map() const;
+    [[nodiscard]] MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view>) schema_map()
+        const;
 
     ///
     /// Set the "encryptedFieldsMap" field.
@@ -193,7 +195,8 @@ class auto_encryption_options {
     ///
     /// Return the current "encryptedFieldsMap" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view>) encrypted_fields_map() const;
+    [[nodiscard]] MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view>)
+    encrypted_fields_map() const;
 
     ///
     /// Set the "bypassAutoEncryption" field.
@@ -223,7 +226,8 @@ class auto_encryption_options {
     ///
     /// Return the current "extraOptions" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view>) extra_options() const;
+    [[nodiscard]] MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view>) extra_options()
+        const;
 
     class internal;
 };

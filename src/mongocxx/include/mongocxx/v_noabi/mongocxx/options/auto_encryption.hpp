@@ -209,7 +209,8 @@ class auto_encryption {
     /// @return
     ///   An optional document containing the KMS providers.
     ///
-    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const& kms_providers() const {
+    [[nodiscard]] bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const& kms_providers()
+        const {
         return _kms_providers;
     }
 
@@ -247,7 +248,7 @@ class auto_encryption {
     /// @return
     ///   An optional document containing the TLS options.
     ///
-    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const& tls_opts() const {
+    [[nodiscard]] bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const& tls_opts() const {
         return _tls_opts;
     }
 
@@ -285,7 +286,8 @@ class auto_encryption {
     /// @return
     ///   An optional document containing the schema map.
     ///
-    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const& schema_map() const {
+    [[nodiscard]] bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const& schema_map()
+        const {
         return _schema_map;
     }
 
@@ -319,7 +321,8 @@ class auto_encryption {
     /// @return
     ///   An optional document containing the encrypted fields map
     ///
-    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const& encrypted_fields_map() const {
+    [[nodiscard]] bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const&
+    encrypted_fields_map() const {
         return _encrypted_fields_map;
     }
 
@@ -440,7 +443,8 @@ class auto_encryption {
     /// @return
     ///   An optional document containing the extra options.
     ///
-    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const& extra_options() const {
+    [[nodiscard]] bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const& extra_options()
+        const {
         return _extra_options;
     }
 

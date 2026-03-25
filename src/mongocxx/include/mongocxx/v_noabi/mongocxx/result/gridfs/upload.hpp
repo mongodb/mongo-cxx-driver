@@ -70,7 +70,7 @@ class upload {
     ///
     /// @return The id of the uploaded file.
     ///
-    bsoncxx::v_noabi::types::view const& id() const {
+    [[nodiscard]] bsoncxx::v_noabi::types::view const& id() const {
         return _id;
     }
 

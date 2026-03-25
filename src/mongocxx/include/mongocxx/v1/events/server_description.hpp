@@ -106,19 +106,19 @@ class server_description {
     /// - "Standalone"
     /// - "Unknown"
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::string_view) type() const;
+    [[nodiscard]] MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::string_view) type() const;
 
     ///
     /// Return the raw server response to the "hello" command.
     ///
     /// @returns Empty when connection was unsuccessful or a client-side error was encountered.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::document::view) hello() const;
+    [[nodiscard]] MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::document::view) hello() const;
 
     ///
     /// Return the hostname for the connection used by the command.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::string_view) host() const;
+    [[nodiscard]] MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::string_view) host() const;
 
     ///
     /// Return the port number for the connection used by the command.

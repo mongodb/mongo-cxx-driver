@@ -158,7 +158,8 @@ class indexes {
         ///
         /// Return the current "collation" field.
         ///
-        MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view>) collation() const;
+        [[nodiscard]] MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view>) collation()
+            const;
 
         ///
         /// Set the "default_language" field.
@@ -168,7 +169,8 @@ class indexes {
         ///
         /// Return the current "default_language" field.
         ///
-        MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::stdx::string_view>) default_language() const;
+        [[nodiscard]] MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::stdx::string_view>)
+        default_language() const;
 
         ///
         /// Set the "expireAfterSeconds" field.
@@ -198,8 +200,8 @@ class indexes {
         ///
         /// Return the current "language_override" field.
         ///
-        MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::stdx::string_view>) language_override()
-            const;
+        [[nodiscard]] MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::stdx::string_view>)
+        language_override() const;
 
         ///
         /// Set the "name" field.
@@ -209,7 +211,8 @@ class indexes {
         ///
         /// Return the current "name" field.
         ///
-        MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::stdx::string_view>) name() const;
+        [[nodiscard]] MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::stdx::string_view>) name()
+            const;
 
         ///
         /// Set the "partialFilterExpression" field.
@@ -219,8 +222,8 @@ class indexes {
         ///
         /// Return the current "partialFilterExpression" field.
         ///
-        MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view>) partial_filter_expression()
-            const;
+        [[nodiscard]] MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view>)
+        partial_filter_expression() const;
 
         ///
         /// Set the "sparse" field.
@@ -240,7 +243,8 @@ class indexes {
         ///
         /// Return the current "storageEngine" field.
         ///
-        MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view>) storage_engine() const;
+        [[nodiscard]] MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view>)
+        storage_engine() const;
 
         ///
         /// Set the "textIndexVersion" field.
@@ -320,7 +324,8 @@ class indexes {
         ///
         /// Return the current "wildcardProjection" field.
         ///
-        MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view>) wildcard_projection() const;
+        [[nodiscard]] MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view>)
+        wildcard_projection() const;
 
         ///
         /// Set the "weights" field.
@@ -330,7 +335,8 @@ class indexes {
         ///
         /// Return the current "weights" field.
         ///
-        MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view>) weights() const;
+        [[nodiscard]] MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view>) weights()
+            const;
 
         ///
         /// Return these index management options as a document.
@@ -415,12 +421,12 @@ class indexes {
         ///
         /// Return the current "keys" field.
         ///
-        MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::document::view) keys() const;
+        [[nodiscard]] MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::document::view) keys() const;
 
         ///
         /// Return the current "options" field.
         ///
-        MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::document::view) options() const;
+        [[nodiscard]] MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::document::view) options() const;
     };
 
     ///
@@ -489,7 +495,7 @@ class indexes {
         ///
         /// Return the current "comment" field.
         ///
-        MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::types::view>) comment() const;
+        [[nodiscard]] MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::types::view>) comment() const;
 
         ///
         /// Set the "commitQuorum" field.
@@ -499,7 +505,8 @@ class indexes {
         ///
         /// Return the current "commitQuorum" field.
         ///
-        MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view>) commit_quorum() const;
+        [[nodiscard]] MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view>)
+        commit_quorum() const;
 
         ///
         /// Set the "maxTimeMS" field.
@@ -589,7 +596,7 @@ class indexes {
         ///
         /// Return the current "comment" field.
         ///
-        MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::types::view>) comment() const;
+        [[nodiscard]] MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::types::view>) comment() const;
 
         ///
         /// Set the "commitQuorum" field.
@@ -599,7 +606,8 @@ class indexes {
         ///
         /// Return the current "commitQuorum" field.
         ///
-        MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view>) commit_quorum() const;
+        [[nodiscard]] MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view>)
+        commit_quorum() const;
 
         ///
         /// Set the "maxTimeMS" field.
@@ -688,7 +696,7 @@ class indexes {
         ///
         /// Return the current "comment" field.
         ///
-        MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::types::view>) comment() const;
+        [[nodiscard]] MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::types::view>) comment() const;
 
         ///
         /// Set the "maxTimeMS" field.
@@ -777,7 +785,7 @@ class indexes {
         ///
         /// Return the current "comment" field.
         ///
-        MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::types::view>) comment() const;
+        [[nodiscard]] MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::types::view>) comment() const;
 
         ///
         /// Set the "maxTimeMS" field.
@@ -876,7 +884,7 @@ class indexes {
         ///
         /// Return the current "comment" field.
         ///
-        MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::types::view>) comment() const;
+        [[nodiscard]] MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::types::view>) comment() const;
 
         class internal;
     };

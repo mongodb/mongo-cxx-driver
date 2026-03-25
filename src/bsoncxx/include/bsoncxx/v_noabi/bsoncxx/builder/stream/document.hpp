@@ -47,7 +47,7 @@ class document : public key_context<> {
     ///
     /// @return A view of the BSON document.
     ///
-    v_noabi::document::view view() const {
+    [[nodiscard]] v_noabi::document::view view() const {
         return _core.view_document();
     }
 

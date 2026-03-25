@@ -144,7 +144,7 @@ class topology_description {
     ///
     /// @return The type as a short-lived string view.
     ///
-    bsoncxx::v_noabi::stdx::string_view type() const {
+    [[nodiscard]] bsoncxx::v_noabi::stdx::string_view type() const {
         return _td.type();
     }
 

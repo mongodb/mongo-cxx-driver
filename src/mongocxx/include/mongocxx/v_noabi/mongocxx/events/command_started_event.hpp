@@ -67,7 +67,7 @@ class command_started_event {
     ///
     /// @return The command.
     ///
-    bsoncxx::v_noabi::document::view command() const {
+    [[nodiscard]] bsoncxx::v_noabi::document::view command() const {
         return _event.command();
     }
 
@@ -76,7 +76,7 @@ class command_started_event {
     ///
     /// @return The database name.
     ///
-    bsoncxx::v_noabi::stdx::string_view database_name() const {
+    [[nodiscard]] bsoncxx::v_noabi::stdx::string_view database_name() const {
         return _event.database_name();
     }
 
@@ -85,7 +85,7 @@ class command_started_event {
     ///
     /// @return The command name.
     ///
-    bsoncxx::v_noabi::stdx::string_view command_name() const {
+    [[nodiscard]] bsoncxx::v_noabi::stdx::string_view command_name() const {
         return _event.command_name();
     }
 
@@ -121,7 +121,7 @@ class command_started_event {
     ///
     /// @return The host name.
     ///
-    bsoncxx::v_noabi::stdx::string_view host() const {
+    [[nodiscard]] bsoncxx::v_noabi::stdx::string_view host() const {
         return _event.host();
     }
 

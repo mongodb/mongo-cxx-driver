@@ -125,7 +125,7 @@ class element {
     ///
     /// @throws bsoncxx::v_noabi::exception if this element is invalid.
     ///
-    BSONCXX_ABI_EXPORT_CDECL(v_noabi::type) type() const;
+    [[nodiscard]] BSONCXX_ABI_EXPORT_CDECL(v_noabi::type) type() const;
 
     ///
     /// Getter for the element's key.
@@ -134,7 +134,7 @@ class element {
     ///
     /// @throws bsoncxx::v_noabi::exception if this element is invalid.
     ///
-    BSONCXX_ABI_EXPORT_CDECL(v1::stdx::string_view) key() const;
+    [[nodiscard]] BSONCXX_ABI_EXPORT_CDECL(v1::stdx::string_view) key() const;
 
 #pragma push_macro("X")
 #undef X
@@ -159,7 +159,7 @@ class element {
     ///
     /// @return the element's value.
     ///
-    BSONCXX_ABI_EXPORT_CDECL(v_noabi::types::bson_value::view) get_value() const;
+    [[nodiscard]] BSONCXX_ABI_EXPORT_CDECL(v_noabi::types::bson_value::view) get_value() const;
 
     ///
     /// Getter for a types::bson_value::value variant wrapper of the value portion of
@@ -169,21 +169,21 @@ class element {
     ///
     /// @return an owning version of the element's value.
     ///
-    BSONCXX_ABI_EXPORT_CDECL(v_noabi::types::bson_value::value) get_owning_value() const;
+    [[nodiscard]] BSONCXX_ABI_EXPORT_CDECL(v_noabi::types::bson_value::value) get_owning_value() const;
 
     ///
     /// Equivalent to @ref get_value() const.
     ///
     /// To support incremental migration to @ref bsoncxx::v1::element::view::type_view() const.
     ///
-    BSONCXX_ABI_EXPORT_CDECL(v_noabi::types::bson_value::view) type_view() const;
+    [[nodiscard]] BSONCXX_ABI_EXPORT_CDECL(v_noabi::types::bson_value::view) type_view() const;
 
     ///
     /// Equivalent to @ref get_owning_value() const.
     ///
     /// To support incremental migration to @ref bsoncxx::v1::element::view::type_value() const.
     ///
-    BSONCXX_ABI_EXPORT_CDECL(v_noabi::types::bson_value::value) type_value() const;
+    [[nodiscard]] BSONCXX_ABI_EXPORT_CDECL(v_noabi::types::bson_value::value) type_value() const;
 
     ///
     /// If this element is a document, finds the first element of the document
@@ -199,7 +199,7 @@ class element {
     ///
     /// @return The matching element, if found, or an invalid element.
     ///
-    BSONCXX_ABI_EXPORT_CDECL(element) operator[](v1::stdx::string_view key) const;
+    [[nodiscard]] BSONCXX_ABI_EXPORT_CDECL(element) operator[](v1::stdx::string_view key) const;
 
     ///
     /// If this element is an array, indexes into this BSON array. If the
@@ -215,7 +215,7 @@ class element {
     ///
     /// @return The element if it exists, or an invalid element.
     ///
-    BSONCXX_ABI_EXPORT_CDECL(v_noabi::array::element) operator[](std::uint32_t i) const;
+    [[nodiscard]] BSONCXX_ABI_EXPORT_CDECL(v_noabi::array::element) operator[](std::uint32_t i) const;
 };
 
 ///
@@ -261,7 +261,7 @@ namespace v_noabi {
 ///
 /// Convert to the @ref bsoncxx::v1 equivalent of `v`.
 ///
-inline v1::element::view to_v1(v_noabi::document::element const& v) {
+[[nodiscard]] inline v1::element::view to_v1(v_noabi::document::element const& v) {
     return v1::element::view{v};
 }
 

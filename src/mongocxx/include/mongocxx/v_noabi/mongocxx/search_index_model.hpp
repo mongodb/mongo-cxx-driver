@@ -91,18 +91,18 @@ class search_index_model {
     ///
     /// Retrieves name of a search_index_model.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value>)
+    [[nodiscard]] MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value>)
     name() const;
 
     ///
     /// Retrieves definition of a search_index_model.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::document::view) definition() const;
+    [[nodiscard]] MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::document::view) definition() const;
 
     ///
     /// Retrieves type of a search_index_model.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value>)
+    [[nodiscard]] MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value>)
     type() const;
 
     ///

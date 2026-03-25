@@ -120,7 +120,7 @@ class insert_one_options {
     ///
     /// Return the current "comment" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::types::view>) comment() const;
+    [[nodiscard]] MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::types::view>) comment() const;
 
     class internal;
 };

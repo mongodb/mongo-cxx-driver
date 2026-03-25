@@ -110,7 +110,7 @@ class distinct {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/distinct/
     ///
-    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const& collation() const {
+    [[nodiscard]] bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const& collation() const {
         return _collation;
     }
 
@@ -170,7 +170,8 @@ class distinct {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/distinct/
     ///
-    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value> const& comment() const {
+    [[nodiscard]] bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value> const& comment()
+        const {
         return _comment;
     }
 

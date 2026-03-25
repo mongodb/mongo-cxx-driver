@@ -81,7 +81,7 @@ class upload_result {
     ///
     /// Return the ID of the uploaded GridFS file.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::types::view) id() const;
+    [[nodiscard]] MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::types::view) id() const;
 
     ///
     /// Compare equal when all supported fields compare equal.

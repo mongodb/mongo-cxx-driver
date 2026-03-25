@@ -405,7 +405,7 @@ class database {
     ///
     /// @return the name of this database.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::string_view) name() const;
+    [[nodiscard]] MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::string_view) name() const;
 
     ///
     /// Sets the read_concern for this database.

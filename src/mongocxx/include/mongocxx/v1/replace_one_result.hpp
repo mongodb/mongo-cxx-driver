@@ -102,7 +102,7 @@ class replace_one_result {
     ///
     /// @returns Empty when no document was upserted.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::types::view>) upserted_id() const;
+    [[nodiscard]] MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::types::view>) upserted_id() const;
 
     ///
     /// Compare equal when all supported fields compare equal.

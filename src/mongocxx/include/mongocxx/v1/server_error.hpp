@@ -64,7 +64,7 @@ class server_error : public v1::exception {
     ///
     /// @important The contents of the resulting BSON document may vary depending on the operation and error.
     ///
-    bsoncxx::v1::document::view MONGOCXX_ABI_CDECL raw() const;
+    [[nodiscard]] bsoncxx::v1::document::view MONGOCXX_ABI_CDECL raw() const;
 
     class internal;
 

@@ -41,8 +41,9 @@ namespace v_noabi {
 ///   An engaged optional containing a view if the document is valid, or
 ///   an unengaged optional if the document is invalid.
 ///
-BSONCXX_ABI_EXPORT_CDECL(stdx::optional<document::view>)
-validate(std::uint8_t const* data, std::size_t length);
+[[nodiscard]] BSONCXX_ABI_EXPORT_CDECL(stdx::optional<document::view>) validate(
+    std::uint8_t const* data,
+    std::size_t length);
 
 ///
 /// Validates a BSON document. This overload provides additional control over the
@@ -64,8 +65,7 @@ validate(std::uint8_t const* data, std::size_t length);
 ///   An engaged optional containing a view if the document is valid, or
 ///   an unengaged optional if the document is invalid.
 ///
-BSONCXX_ABI_EXPORT_CDECL(stdx::optional<document::view>)
-validate(
+[[nodiscard]] BSONCXX_ABI_EXPORT_CDECL(stdx::optional<document::view>) validate(
     std::uint8_t const* data,
     std::size_t length,
     validator const& validator,

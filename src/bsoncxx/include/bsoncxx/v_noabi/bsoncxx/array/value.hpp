@@ -181,7 +181,7 @@ class value {
     }
 
     /// @copydoc bsoncxx::v_noabi::array::view::operator[](std::uint32_t i) const
-    v_noabi::document::element operator[](std::uint32_t i) const {
+    [[nodiscard]] v_noabi::document::element operator[](std::uint32_t i) const {
         return _value.operator[](i);
     }
 
@@ -213,7 +213,7 @@ class value {
     ///
     /// Get a view over the array owned by this value.
     ///
-    v_noabi::array::view view() const noexcept {
+    [[nodiscard]] v_noabi::array::view view() const noexcept {
         return {_value.data(), _length};
     }
 

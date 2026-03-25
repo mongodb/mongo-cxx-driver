@@ -265,12 +265,12 @@ class bulk_write::update_one {
     ///
     /// Return the current "filter" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::document::view) filter() const;
+    [[nodiscard]] MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::document::view) filter() const;
 
     ///
     /// Return the current "update" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::document::view) update() const;
+    [[nodiscard]] MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::document::view) update() const;
 
     ///
     /// Set the "collation" field.
@@ -280,7 +280,7 @@ class bulk_write::update_one {
     ///
     /// Return the current "collation" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view>) collation() const;
+    [[nodiscard]] MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view>) collation() const;
 
     ///
     /// Set the "hint" field.
@@ -300,7 +300,7 @@ class bulk_write::update_one {
     ///
     /// Return the current "sort" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view>) sort() const;
+    [[nodiscard]] MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view>) sort() const;
 
     ///
     /// Set the "upsert" field.
@@ -320,7 +320,8 @@ class bulk_write::update_one {
     ///
     /// Return the current "arrayFilters" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::array::view>) array_filters() const;
+    [[nodiscard]] MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::array::view>) array_filters()
+        const;
 
     class internal;
 };
@@ -394,12 +395,12 @@ class bulk_write::update_many {
     ///
     /// Return the current "filter" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::document::view) filter() const;
+    [[nodiscard]] MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::document::view) filter() const;
 
     ///
     /// Return the current "update" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::document::view) update() const;
+    [[nodiscard]] MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::document::view) update() const;
 
     ///
     /// Set the "collation" field.
@@ -409,7 +410,7 @@ class bulk_write::update_many {
     ///
     /// Return the current "collation" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view>) collation() const;
+    [[nodiscard]] MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view>) collation() const;
 
     ///
     /// Set the "hint" field.
@@ -439,7 +440,8 @@ class bulk_write::update_many {
     ///
     /// Return the current "arrayFilters" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::array::view>) array_filters() const;
+    [[nodiscard]] MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::array::view>) array_filters()
+        const;
 
     class internal;
 
@@ -515,12 +517,12 @@ class bulk_write::replace_one {
     ///
     /// Return the current "filter" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::document::view) filter() const;
+    [[nodiscard]] MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::document::view) filter() const;
 
     ///
     /// Return the current "replacement" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::document::view) replacement() const;
+    [[nodiscard]] MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::document::view) replacement() const;
 
     ///
     /// Set the "collation" field.
@@ -530,7 +532,7 @@ class bulk_write::replace_one {
     ///
     /// Return the current "collation" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view>) collation() const;
+    [[nodiscard]] MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view>) collation() const;
 
     ///
     /// Set the "hint" field.
@@ -550,7 +552,7 @@ class bulk_write::replace_one {
     ///
     /// Return the current "sort" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view>) sort() const;
+    [[nodiscard]] MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view>) sort() const;
 
     ///
     /// Set the "upsert" field.
@@ -631,7 +633,7 @@ class bulk_write::delete_one {
     ///
     /// Return the current "filter" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::document::view) filter() const;
+    [[nodiscard]] MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::document::view) filter() const;
 
     ///
     /// Set the "collation" field.
@@ -641,7 +643,7 @@ class bulk_write::delete_one {
     ///
     /// Return the current "collation" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view>) collation() const;
+    [[nodiscard]] MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view>) collation() const;
 
     ///
     /// Set the "hint" field.
@@ -722,7 +724,7 @@ class bulk_write::delete_many {
     ///
     /// Return the current "filter" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::document::view) filter() const;
+    [[nodiscard]] MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::document::view) filter() const;
 
     ///
     /// Set the "collation" field.
@@ -732,7 +734,7 @@ class bulk_write::delete_many {
     ///
     /// Return the current "collation" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view>) collation() const;
+    [[nodiscard]] MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view>) collation() const;
 
     ///
     /// Set the "hint" field.
@@ -973,7 +975,7 @@ class bulk_write::options {
     ///
     /// Return the current "comment" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::types::view>) comment() const;
+    [[nodiscard]] MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::types::view>) comment() const;
 
     ///
     /// Set the "let" field.
@@ -983,7 +985,7 @@ class bulk_write::options {
     ///
     /// Return the current "let" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view>) let() const;
+    [[nodiscard]] MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view>) let() const;
 
     ///
     /// Set the "ordered" field.

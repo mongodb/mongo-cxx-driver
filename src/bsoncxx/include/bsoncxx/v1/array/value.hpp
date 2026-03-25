@@ -134,7 +134,7 @@ class value {
     ///
     /// Return a view of the BSON bytes as an array.
     ///
-    v1::array::view view() const {
+    [[nodiscard]] v1::array::view view() const {
         return v1::array::view{_value.data()};
     }
 
@@ -171,7 +171,7 @@ class value {
     }
 
     /// @copydoc v1::array::view::operator[](std::uint32_t i) const
-    v1::element::view operator[](std::uint32_t i) const {
+    [[nodiscard]] v1::element::view operator[](std::uint32_t i) const {
         return this->view()[i];
     }
 

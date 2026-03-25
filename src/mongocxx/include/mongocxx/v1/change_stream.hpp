@@ -117,7 +117,8 @@ class change_stream {
     ///
     /// @returns Empty document when not available.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view>) get_resume_token() const;
+    [[nodiscard]] MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view>) get_resume_token()
+        const;
 
     ///
     /// Obtain the next event document.
@@ -132,7 +133,7 @@ class change_stream {
     /// @throws mongocxx::v1::server_error when a server-side error is encountered and a raw server error is available.
     /// @throws mongocxx::v1::exception for all other runtime errors.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::document::view) next();
+    [[nodiscard]] MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::document::view) next();
 
     ///
     /// Try to obtain the next event document.
@@ -147,7 +148,7 @@ class change_stream {
     /// @throws mongocxx::v1::server_error when a server-side error is encountered and a raw server error is available.
     /// @throws mongocxx::v1::exception for all other runtime errors.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view>) try_next();
+    [[nodiscard]] MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view>) try_next();
 
     class internal;
 
@@ -236,7 +237,7 @@ class change_stream::options {
     ///
     /// Return the current "collation" option.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view>) collation() const;
+    [[nodiscard]] MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view>) collation() const;
 
     ///
     /// Set the "comment" option.
@@ -246,7 +247,7 @@ class change_stream::options {
     ///
     /// Return the current "comment" option.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::types::view>) comment() const;
+    [[nodiscard]] MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::types::view>) comment() const;
 
     ///
     /// Set the "fullDocument" option.
@@ -256,7 +257,8 @@ class change_stream::options {
     ///
     /// Return the current "fullDocument" option.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::stdx::string_view>) full_document() const;
+    [[nodiscard]] MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::stdx::string_view>) full_document()
+        const;
 
     ///
     /// Set the "fullDocumentBeforeChange" option.
@@ -266,8 +268,8 @@ class change_stream::options {
     ///
     /// Return the current "fullDocumentBeforeChange" option.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::stdx::string_view>) full_document_before_change()
-        const;
+    [[nodiscard]] MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::stdx::string_view>)
+    full_document_before_change() const;
 
     ///
     /// Set the "maxAwaitTimeMS" option.
@@ -289,7 +291,8 @@ class change_stream::options {
     ///
     /// @returns Empty optional when the "resumeAfter" option is unset.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view>) resume_after() const;
+    [[nodiscard]] MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view>) resume_after()
+        const;
 
     ///
     /// Set the "startAfter" option.
@@ -299,7 +302,8 @@ class change_stream::options {
     ///
     /// Return the current "startAfter" option.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view>) start_after() const;
+    [[nodiscard]] MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view>) start_after()
+        const;
 
     ///
     /// Set the "startAtOperationTime" option.
@@ -309,8 +313,8 @@ class change_stream::options {
     ///
     /// Return the current "startAtOperationTime" option.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::types::b_timestamp>) start_at_operation_time()
-        const;
+    [[nodiscard]] MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::types::b_timestamp>)
+    start_at_operation_time() const;
 
     class internal;
 };

@@ -129,7 +129,7 @@ namespace v_noabi {
 ///
 /// Convert to the @ref bsoncxx::v1 equivalent of `v`.
 ///
-inline v1::element::view to_v1(v_noabi::array::element const& v) {
+[[nodiscard]] inline v1::element::view to_v1(v_noabi::array::element const& v) {
     return v1::element::view{v};
 }
 

@@ -167,7 +167,8 @@ class client_encryption {
     /// @return
     ///   An optional document containing the KMS providers.
     ///
-    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const& kms_providers() const {
+    [[nodiscard]] bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const& kms_providers()
+        const {
         return _kms_providers;
     }
 
@@ -205,7 +206,7 @@ class client_encryption {
     /// @return
     ///   An optional document containing the TLS options.
     ///
-    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const& tls_opts() const {
+    [[nodiscard]] bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const& tls_opts() const {
         return _tls_opts;
     }
 

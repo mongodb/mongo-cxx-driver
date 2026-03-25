@@ -107,19 +107,19 @@ class hint {
     ///
     /// @returns Empty when not a string.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::stdx::string_view>) str() const;
+    [[nodiscard]] MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::stdx::string_view>) str() const;
 
     ///
     /// Return the current "hint" value as a document.
     ///
     /// @returns Empty when not a document.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view>) doc() const;
+    [[nodiscard]] MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view>) doc() const;
 
     ///
     /// Return the current "hint" value as a BSON type value.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::types::view) to_value() const;
+    [[nodiscard]] MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::types::view) to_value() const;
 
     ///
     /// Equivalent to to_value() const.

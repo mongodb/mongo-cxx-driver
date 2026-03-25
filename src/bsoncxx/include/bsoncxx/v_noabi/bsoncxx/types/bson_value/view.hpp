@@ -132,7 +132,7 @@ class view {
     ///
     /// @deprecated Use @ref type_id() const instead (renamed).
     ///
-    v_noabi::type type() const {
+    [[nodiscard]] v_noabi::type type() const {
         return _id;
     }
 
@@ -141,7 +141,7 @@ class view {
     ///
     /// To support incremental migration to @ref bsoncxx::v1::types::view.
     ///
-    v_noabi::type type_id() const {
+    [[nodiscard]] v_noabi::type type_id() const {
         return _id;
     }
 
@@ -222,14 +222,14 @@ namespace v_noabi {
 ///
 /// Convert to the @ref bsoncxx::v_noabi equivalent of `v`.
 ///
-inline v_noabi::types::bson_value::view from_v1(v1::types::view const& v) {
+[[nodiscard]] inline v_noabi::types::bson_value::view from_v1(v1::types::view const& v) {
     return {v};
 }
 
 ///
 /// Convert to the @ref bsoncxx::v1 equivalent of `v`.
 ///
-inline v1::types::view to_v1(v_noabi::types::bson_value::view const& v) {
+[[nodiscard]] inline v1::types::view to_v1(v_noabi::types::bson_value::view const& v) {
     return v1::types::view{v};
 }
 

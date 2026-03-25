@@ -688,7 +688,7 @@ class collection {
     ///
     /// Return the name of this collection.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::string_view) name() const;
+    [[nodiscard]] MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::string_view) name() const;
 
     ///
     /// Change the name of this collection.

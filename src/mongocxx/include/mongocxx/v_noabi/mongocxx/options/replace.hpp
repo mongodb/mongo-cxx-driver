@@ -156,7 +156,7 @@ class replace {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/collation/
     ///
-    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const& collation() const {
+    [[nodiscard]] bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const& collation() const {
         return _collation;
     }
 
@@ -269,7 +269,7 @@ class replace {
     /// @return
     ///  The current let option.
     ///
-    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const let() const {
+    [[nodiscard]] bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const let() const {
         return _let;
     }
 
@@ -284,7 +284,7 @@ class replace {
     ///
     /// Get the current value of the sort option.
     ///
-    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const& sort() const {
+    [[nodiscard]] bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const& sort() const {
         return _sort;
     }
 
@@ -309,7 +309,8 @@ class replace {
     /// @return
     ///  The current comment option.
     ///
-    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value> const comment() const {
+    [[nodiscard]] bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value> const comment()
+        const {
         return _comment;
     }
 

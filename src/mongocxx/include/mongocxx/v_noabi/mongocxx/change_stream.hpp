@@ -154,7 +154,7 @@ class change_stream {
     /// @return
     ///   The token.
     ///
-    bsoncxx::v1::stdx::optional<bsoncxx::v_noabi::document::view> get_resume_token() const {
+    [[nodiscard]] bsoncxx::v1::stdx::optional<bsoncxx::v_noabi::document::view> get_resume_token() const {
         return _stream.get_resume_token();
     }
 };

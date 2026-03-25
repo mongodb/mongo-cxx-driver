@@ -65,7 +65,7 @@ class insert_one {
     ///
     /// @return The document to be inserted.
     ///
-    bsoncxx::v_noabi::document::view_or_value const& document() const {
+    [[nodiscard]] bsoncxx::v_noabi::document::view_or_value const& document() const {
         return _document;
     }
 

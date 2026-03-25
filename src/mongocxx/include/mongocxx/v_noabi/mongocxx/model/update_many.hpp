@@ -134,7 +134,7 @@ class update_many {
     ///
     /// @return The filter to be used for the update operation.
     ///
-    bsoncxx::v_noabi::document::view_or_value const& filter() const {
+    [[nodiscard]] bsoncxx::v_noabi::document::view_or_value const& filter() const {
         return _filter;
     }
 
@@ -143,7 +143,7 @@ class update_many {
     ///
     /// @return The modifications to be applied as part of the update.
     ///
-    bsoncxx::v_noabi::document::view_or_value const& update() const {
+    [[nodiscard]] bsoncxx::v_noabi::document::view_or_value const& update() const {
         return _update;
     }
 
@@ -170,7 +170,7 @@ class update_many {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/collation/
     ///
-    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const& collation() const {
+    [[nodiscard]] bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const& collation() const {
         return _collation;
     }
 
@@ -250,7 +250,8 @@ class update_many {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/update/
     ///
-    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::array::view_or_value> const& array_filters() const {
+    [[nodiscard]] bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::array::view_or_value> const& array_filters()
+        const {
         return _array_filters;
     }
 

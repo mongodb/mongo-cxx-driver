@@ -136,7 +136,7 @@ class view {
     /// @exception bsoncxx::v1::exception with @ref bsoncxx::v1::document::view::errc::invalid_data if this operation
     /// failed due to invalid BSON bytes.
     ///
-    v1::element::view operator[](std::uint32_t i) const {
+    [[nodiscard]] v1::element::view operator[](std::uint32_t i) const {
         return *(this->find(i));
     }
 

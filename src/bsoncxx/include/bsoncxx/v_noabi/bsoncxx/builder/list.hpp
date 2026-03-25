@@ -94,7 +94,7 @@ class list {
     /// @see
     /// - @ref bsoncxx::v_noabi::types::bson_value::view.
     ///
-    types::bson_value::view view() {
+    [[nodiscard]] types::bson_value::view view() {
         return val.view();
     }
 

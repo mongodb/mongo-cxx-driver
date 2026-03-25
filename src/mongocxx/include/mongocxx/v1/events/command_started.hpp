@@ -50,17 +50,17 @@ class command_started {
     ///
     /// Return the command.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::document::view) command() const;
+    [[nodiscard]] MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::document::view) command() const;
 
     ///
     /// Return the database name.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::string_view) database_name() const;
+    [[nodiscard]] MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::string_view) database_name() const;
 
     ///
     /// Return the command name.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::string_view) command_name() const;
+    [[nodiscard]] MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::string_view) command_name() const;
 
     ///
     /// Return the client-generated request ID.
@@ -80,7 +80,7 @@ class command_started {
     ///
     /// Return the hostname for the connection used by the command.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::string_view) host() const;
+    [[nodiscard]] MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::string_view) host() const;
 
     ///
     /// Return the port number for the connection used by the command.

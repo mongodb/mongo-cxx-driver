@@ -102,7 +102,8 @@ class data_key_options {
     ///
     /// Return the current "masterKey" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view>) master_key() const;
+    [[nodiscard]] MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view>) master_key()
+        const;
 
     ///
     /// Set the "keyAltNames" field.

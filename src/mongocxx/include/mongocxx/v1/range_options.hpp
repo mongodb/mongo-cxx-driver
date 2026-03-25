@@ -103,8 +103,7 @@ class range_options {
     ///
     /// Return the current "min" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::types::view>)
-    min() const;
+    [[nodiscard]] MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::types::view>) min() const;
 
     ///
     /// Set the "max" field.
@@ -114,8 +113,7 @@ class range_options {
     ///
     /// Return the current "max" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::types::view>)
-    max() const;
+    [[nodiscard]] MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::types::view>) max() const;
 
     ///
     /// Set the "sparsity" field.

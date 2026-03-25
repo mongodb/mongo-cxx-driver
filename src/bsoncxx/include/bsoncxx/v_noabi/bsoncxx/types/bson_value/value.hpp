@@ -304,7 +304,7 @@ class value {
     ///
     /// @deprecated Use @ref type_id() const instead (renamed).
     ///
-    v_noabi::type type() const {
+    [[nodiscard]] v_noabi::type type() const {
         return this->view().type();
     }
 
@@ -313,14 +313,14 @@ class value {
     ///
     /// To support incremental migration to @ref bsoncxx::v1::types::value.
     ///
-    v_noabi::type type_id() const {
+    [[nodiscard]] v_noabi::type type_id() const {
         return this->view().type_id();
     }
 
     ///
     /// Get a view over the bson_value owned by this object.
     ///
-    v_noabi::types::bson_value::view view() const noexcept {
+    [[nodiscard]] v_noabi::types::bson_value::view view() const noexcept {
         return _value.view();
     }
 
@@ -408,14 +408,14 @@ namespace v_noabi {
 ///
 /// Convert to the @ref bsoncxx::v_noabi equivalent of `v`.
 ///
-inline v_noabi::types::bson_value::value from_v1(v1::types::value v) {
+[[nodiscard]] inline v_noabi::types::bson_value::value from_v1(v1::types::value v) {
     return {std::move(v)};
 }
 
 ///
 /// Convert to the @ref bsoncxx::v1 equivalent of `v`.
 ///
-inline v1::types::value to_v1(v_noabi::types::bson_value::value v) {
+[[nodiscard]] inline v1::types::value to_v1(v_noabi::types::bson_value::value v) {
     return v1::types::value{std::move(v)};
 }
 

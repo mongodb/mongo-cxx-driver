@@ -230,7 +230,7 @@ class value {
     ///
     /// @return The matching element, if found, or the invalid element.
     ///
-    v_noabi::document::element operator[](v1::stdx::string_view key) const {
+    [[nodiscard]] v_noabi::document::element operator[](v1::stdx::string_view key) const {
         return _value.operator[](key);
     }
 
@@ -273,7 +273,7 @@ class value {
     ///
     /// Get a view over the document owned by this value.
     ///
-    v_noabi::document::view view() const noexcept {
+    [[nodiscard]] v_noabi::document::view view() const noexcept {
         return {_value.data(), _length}; // Do NOT use _value.view().
     }
 

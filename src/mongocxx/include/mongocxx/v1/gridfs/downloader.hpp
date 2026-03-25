@@ -116,7 +116,7 @@ class downloader {
     ///
     /// Return the files collection document for the associated GridFS file.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::document::view) files_document() const;
+    [[nodiscard]] MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::document::view) files_document() const;
 
     ///
     /// Read up to `length` bytes of the associated GridFS file.

@@ -54,7 +54,7 @@ class validation_criteria {
     /// @return
     ///   Document representing a validation rule.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const&)
+    [[nodiscard]] MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const&)
     rule() const;
 
     ///

@@ -43,7 +43,7 @@ enum class log_level {
     k_trace,    ///< MONGOC_LOG_LEVEL_TRACE
 };
 
-MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::string_view) to_string(log_level level);
+[[nodiscard]] MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::string_view) to_string(log_level level);
 
 BSONCXX_PRIVATE_WARNINGS_PUSH();
 BSONCXX_PRIVATE_WARNINGS_DISABLE(MSVC(4251));

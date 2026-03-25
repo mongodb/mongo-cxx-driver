@@ -132,7 +132,7 @@ class view_or_value {
     ///
     /// @return a View into this view_or_value.
     ///
-    View const& view() const {
+    [[nodiscard]] View const& view() const {
         return _view;
     }
 

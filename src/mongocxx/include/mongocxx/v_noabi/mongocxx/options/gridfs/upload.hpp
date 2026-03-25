@@ -118,7 +118,7 @@ class upload {
     /// @return
     ///   The metadata document of the GridFS file.
     ///
-    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const& metadata() const {
+    [[nodiscard]] bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const& metadata() const {
         return _metadata;
     }
 

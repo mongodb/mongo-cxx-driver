@@ -147,7 +147,7 @@ class find_one_and_update {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/findAndModify/
     ///
-    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const& collation() const {
+    [[nodiscard]] bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const& collation() const {
         return _collation;
     }
 
@@ -234,7 +234,7 @@ class find_one_and_update {
     /// @return
     ///  The current let option.
     ///
-    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const let() const {
+    [[nodiscard]] bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const let() const {
         return _let;
     }
 
@@ -259,7 +259,8 @@ class find_one_and_update {
     /// @return
     ///  The current comment option.
     ///
-    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value> const comment() const {
+    [[nodiscard]] bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value> const comment()
+        const {
         return _comment;
     }
 
@@ -319,7 +320,8 @@ class find_one_and_update {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/findAndModify/
     ///
-    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const& projection() const {
+    [[nodiscard]] bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const& projection()
+        const {
         return _projection;
     }
 
@@ -385,7 +387,7 @@ class find_one_and_update {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/findAndModify/
     ///
-    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const& sort() const {
+    [[nodiscard]] bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const& sort() const {
         return _ordering;
     }
 
@@ -479,7 +481,8 @@ class find_one_and_update {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/findAndModify/
     ///
-    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::array::view_or_value> const& array_filters() const {
+    [[nodiscard]] bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::array::view_or_value> const& array_filters()
+        const {
         return _array_filters;
     }
 

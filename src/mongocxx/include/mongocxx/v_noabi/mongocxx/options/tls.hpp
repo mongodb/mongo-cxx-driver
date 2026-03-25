@@ -102,7 +102,7 @@ class tls {
     ///
     /// @return The path to the .pem file.
     ///
-    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value> const& pem_file() const {
+    [[nodiscard]] bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value> const& pem_file() const {
         return _pem_file;
     }
 
@@ -126,7 +126,8 @@ class tls {
     ///
     /// @return The pass phrase.
     ///
-    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value> const& pem_password() const {
+    [[nodiscard]] bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value> const& pem_password()
+        const {
         return _pem_password;
     }
 
@@ -151,7 +152,7 @@ class tls {
     ///
     /// @return The path to the CA file.
     ///
-    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value> const& ca_file() const {
+    [[nodiscard]] bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value> const& ca_file() const {
         return _ca_file;
     }
 
@@ -175,7 +176,7 @@ class tls {
     ///
     /// @return The path to the CA directory.
     ///
-    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value> const& ca_dir() const {
+    [[nodiscard]] bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value> const& ca_dir() const {
         return _ca_dir;
     }
 
@@ -199,7 +200,7 @@ class tls {
     ///
     /// @return The path to the revoked certificates file.
     ///
-    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value> const& crl_file() const {
+    [[nodiscard]] bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value> const& crl_file() const {
         return _crl_file;
     }
 

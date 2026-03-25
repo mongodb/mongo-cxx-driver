@@ -88,7 +88,7 @@ class insert_one {
     ///
     /// @return The value of the _id field for the inserted document.
     ///
-    bsoncxx::v_noabi::types::bson_value::view const& inserted_id() const {
+    [[nodiscard]] bsoncxx::v_noabi::types::bson_value::view const& inserted_id() const {
         return _inserted_id;
     }
 

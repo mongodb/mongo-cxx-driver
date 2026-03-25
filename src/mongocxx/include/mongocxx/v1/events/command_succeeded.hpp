@@ -50,12 +50,12 @@ class command_succeeded {
     ///
     /// Return the command reply.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::document::view) reply() const;
+    [[nodiscard]] MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::document::view) reply() const;
 
     ///
     /// Return the command name.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::string_view) command_name() const;
+    [[nodiscard]] MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::string_view) command_name() const;
 
     ///
     /// Return the execution time of the event.
@@ -80,7 +80,7 @@ class command_succeeded {
     ///
     /// Return the hostname for the connection used by the command.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::string_view) host() const;
+    [[nodiscard]] MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::string_view) host() const;
 
     ///
     /// Return the port number for the connection used by the command.

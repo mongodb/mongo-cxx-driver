@@ -149,7 +149,8 @@ class data_key {
     /// @return
     ///   An optional document containing the master key.
     ///
-    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const& master_key() const {
+    [[nodiscard]] bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const& master_key()
+        const {
         return _master_key;
     }
 

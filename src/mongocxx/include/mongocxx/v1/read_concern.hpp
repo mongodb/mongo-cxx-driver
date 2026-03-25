@@ -169,7 +169,7 @@ class read_concern {
     ///
     /// @returns Empty when `this->acknowledge_level()` is @ref level::k_server_default or @ref level::k_unknown.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::string_view) acknowledge_string() const;
+    [[nodiscard]] MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::string_view) acknowledge_string() const;
 
     ///
     /// Return this read concern option as a document.

@@ -87,7 +87,7 @@ class replace_one {
     ///
     /// @return The value of the _id field for upserted document.
     ///
-    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::element> upserted_id() const {
+    [[nodiscard]] bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::element> upserted_id() const {
         auto const ids = _result.upserted_ids();
         auto const iter = ids.find(0);
 

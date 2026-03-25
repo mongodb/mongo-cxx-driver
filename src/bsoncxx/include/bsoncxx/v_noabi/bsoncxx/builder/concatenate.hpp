@@ -50,7 +50,7 @@ struct concatenate_doc {
     ///
     /// @return A view of the wrapped concatenate document.
     ///
-    document::view view() const {
+    [[nodiscard]] document::view view() const {
         return doc;
     }
 };
@@ -80,7 +80,7 @@ struct concatenate_array {
     ///
     /// @return A view of the wrapped concatenate array.
     ///
-    array::view view() const {
+    [[nodiscard]] array::view view() const {
         return array;
     }
 };

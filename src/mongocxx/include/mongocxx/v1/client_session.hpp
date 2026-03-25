@@ -133,21 +133,21 @@ class client_session {
     ///
     /// @returns Empty when one is not available.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::document::view) id() const;
+    [[nodiscard]] MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::document::view) id() const;
 
     ///
     /// Return this session's current "clusterTime" value.
     ///
     /// @returns Empty when not available.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::document::view) cluster_time() const;
+    [[nodiscard]] MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::document::view) cluster_time() const;
 
     ///
     /// Return this session's current "operationTime" value.
     ///
     /// @returns Default-initialized when not available.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::types::b_timestamp) operation_time() const;
+    [[nodiscard]] MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::types::b_timestamp) operation_time() const;
 
     ///
     /// Return the ID of the current pinned server.

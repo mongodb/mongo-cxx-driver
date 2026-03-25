@@ -152,7 +152,7 @@ class delete_options {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/collation/
     ///
-    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const& collation() const {
+    [[nodiscard]] bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const& collation() const {
         return _collation;
     }
 
@@ -235,7 +235,7 @@ class delete_options {
     /// @return
     ///  The current let option.
     ///
-    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const let() const {
+    [[nodiscard]] bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const let() const {
         return _let;
     }
 
@@ -260,7 +260,8 @@ class delete_options {
     /// @return
     ///  The current comment option.
     ///
-    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value> const comment() const {
+    [[nodiscard]] bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value> const comment()
+        const {
         return _comment;
     }
 

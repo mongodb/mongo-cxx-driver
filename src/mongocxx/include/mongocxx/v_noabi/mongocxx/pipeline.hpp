@@ -697,7 +697,7 @@ class pipeline {
     ///
     /// @return A view of the underlying BSON array this pipeline represents.
     ///
-    bsoncxx::v_noabi::array::view view_array() const {
+    [[nodiscard]] bsoncxx::v_noabi::array::view view_array() const {
         return _pipeline.view_array();
     }
 

@@ -100,7 +100,8 @@ class tls {
     ///
     /// Return the current "pem_file" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::stdx::string_view>) pem_file() const;
+    [[nodiscard]] MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::stdx::string_view>) pem_file()
+        const;
 
     ///
     /// Set the "pem_pwd" field.
@@ -110,7 +111,8 @@ class tls {
     ///
     /// Return the current "pem_pwd" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::stdx::string_view>) pem_password() const;
+    [[nodiscard]] MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::stdx::string_view>) pem_password()
+        const;
 
     ///
     /// Set the "ca_file" field.
@@ -120,7 +122,8 @@ class tls {
     ///
     /// Retur the current "ca_file" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::stdx::string_view>) ca_file() const;
+    [[nodiscard]] MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::stdx::string_view>) ca_file()
+        const;
 
     ///
     /// Set the "ca_dir" field.
@@ -130,7 +133,7 @@ class tls {
     ///
     /// Return the current "ca_dir" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::stdx::string_view>) ca_dir() const;
+    [[nodiscard]] MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::stdx::string_view>) ca_dir() const;
 
     ///
     /// Set the "crl_file" field.
@@ -140,7 +143,8 @@ class tls {
     ///
     /// Return the current "crl_file" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::stdx::string_view>) crl_file() const;
+    [[nodiscard]] MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::stdx::string_view>) crl_file()
+        const;
 
     ///
     /// Set the "weak_cert_validation" field.

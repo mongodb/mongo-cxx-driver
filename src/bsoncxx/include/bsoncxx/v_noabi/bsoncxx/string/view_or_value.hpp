@@ -82,7 +82,7 @@ class view_or_value : public v_noabi::view_or_value<stdx::string_view, std::stri
     ///
     /// @return A new view_or_value object.
     ///
-    BSONCXX_ABI_EXPORT_CDECL(view_or_value) terminated() const;
+    [[nodiscard]] BSONCXX_ABI_EXPORT_CDECL(view_or_value) terminated() const;
 
     ///
     /// Call data() on this view_or_value's string_view. This method is not

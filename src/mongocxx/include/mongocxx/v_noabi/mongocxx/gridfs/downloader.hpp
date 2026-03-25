@@ -162,7 +162,7 @@ class downloader {
     /// @return
     ///    A view to the files collection document of the file being downloaded.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::document::view) files_document() const;
+    [[nodiscard]] MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::document::view) files_document() const;
 
     class internal;
 };

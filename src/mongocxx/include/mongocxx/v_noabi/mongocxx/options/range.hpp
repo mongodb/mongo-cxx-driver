@@ -98,7 +98,8 @@ class range {
 
     /// @brief Gets `RangeOpts.min`.
     /// @note Required if @ref precision is set.
-    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value> const& min() const {
+    [[nodiscard]] bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value> const& min()
+        const {
         return _min;
     }
 
@@ -111,7 +112,8 @@ class range {
 
     /// @brief Gets `RangeOpts.max`.
     /// @note Required if @ref precision is set.
-    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value> const& max() const {
+    [[nodiscard]] bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value> const& max()
+        const {
         return _max;
     }
 

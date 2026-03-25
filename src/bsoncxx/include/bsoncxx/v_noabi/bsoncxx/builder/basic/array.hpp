@@ -65,7 +65,7 @@ class array : public sub_array {
     ///
     /// @return A view of the BSON array.
     ///
-    v_noabi::array::view view() const {
+    [[nodiscard]] v_noabi::array::view view() const {
         return _core.view_array();
     }
 

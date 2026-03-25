@@ -106,8 +106,9 @@ class client_encryption {
     /// @see
     /// - https://www.mongodb.com/docs/ecosystem/use-cases/client-side-field-level-encryption-guide/#b-create-a-data-encryption-key
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::types::value)
-    create_data_key(std::string kms_provider, v_noabi::options::data_key const& opts = {});
+    [[nodiscard]] MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::types::value) create_data_key(
+        std::string kms_provider,
+        v_noabi::options::data_key const& opts = {});
 
     /**
      * @brief Create a collection with client-side-encryption enabled, automatically filling any
@@ -149,8 +150,9 @@ class client_encryption {
     /// @see
     /// https://www.mongodb.com/docs/manual/reference/method/ClientEncryption.encrypt/#ClientEncryption.encrypt
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::types::value)
-    encrypt(bsoncxx::v_noabi::types::bson_value::view value, v_noabi::options::encrypt const& opts);
+    [[nodiscard]] MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::types::value) encrypt(
+        bsoncxx::v_noabi::types::bson_value::view value,
+        v_noabi::options::encrypt const& opts);
 
     ///
     /// Encrypts a Match Expression or Aggregate Expression to query a range index.
@@ -179,8 +181,8 @@ class client_encryption {
     /// @see
     /// https://www.mongodb.com/docs/manual/reference/method/ClientEncryption.decrypt/#ClientEncryption.decrypt
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::types::value)
-    decrypt(bsoncxx::v_noabi::types::bson_value::view value);
+    [[nodiscard]] MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::types::value) decrypt(
+        bsoncxx::v_noabi::types::bson_value::view value);
 
     ///
     /// Decrypts multiple data keys and (re-)encrypts them with a new masterKey,

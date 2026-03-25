@@ -288,7 +288,7 @@ class bucket {
     ///
     /// Return the name of this bucket.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::string_view) bucket_name() const;
+    [[nodiscard]] MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::string_view) bucket_name() const;
 
     ///
     /// Errors codes which may be returned by @ref mongocxx::v1::gridfs::bucket.
@@ -397,7 +397,8 @@ class bucket::options {
     ///
     /// Return the current "bucketName" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::stdx::string_view>) bucket_name() const;
+    [[nodiscard]] MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::stdx::string_view>) bucket_name()
+        const;
 
     ///
     /// Set the "chunkSizeBytes" field.

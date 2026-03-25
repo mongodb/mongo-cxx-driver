@@ -151,7 +151,7 @@ class read_concern {
     ///
     /// @return The read concern string.
     ///
-    bsoncxx::v1::stdx::string_view acknowledge_string() const {
+    [[nodiscard]] bsoncxx::v1::stdx::string_view acknowledge_string() const {
         auto ret = _rc.acknowledge_string();
         if (ret.empty()) {
             ret = "";

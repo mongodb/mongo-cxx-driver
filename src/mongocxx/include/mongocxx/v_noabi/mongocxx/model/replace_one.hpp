@@ -92,7 +92,7 @@ class replace_one {
     ///
     /// @return The filter to be used for the replacement operation.
     ///
-    bsoncxx::v_noabi::document::view_or_value const& filter() const {
+    [[nodiscard]] bsoncxx::v_noabi::document::view_or_value const& filter() const {
         return _filter;
     }
 
@@ -101,7 +101,7 @@ class replace_one {
     ///
     /// @return The document that will replace the original selected document.
     ///
-    bsoncxx::v_noabi::document::view_or_value const& replacement() const {
+    [[nodiscard]] bsoncxx::v_noabi::document::view_or_value const& replacement() const {
         return _replacement;
     }
 
@@ -128,7 +128,7 @@ class replace_one {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/collation/
     ///
-    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const& collation() const {
+    [[nodiscard]] bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const& collation() const {
         return _collation;
     }
 
@@ -197,7 +197,7 @@ class replace_one {
     ///
     /// Get the current value of the sort option.
     ///
-    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const& sort() const {
+    [[nodiscard]] bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const& sort() const {
         return _sort;
     }
 

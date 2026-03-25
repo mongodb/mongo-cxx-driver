@@ -82,7 +82,7 @@ class client_session {
     /// Get the server-side "logical session ID" associated with this session, as a BSON document.
     /// This view is invalid after the session is destroyed.
     ///
-    bsoncxx::v_noabi::document::view id() const noexcept {
+    [[nodiscard]] bsoncxx::v_noabi::document::view id() const noexcept {
         return _session.id();
     }
 
@@ -92,7 +92,7 @@ class client_session {
     /// not been used for any operation and you have not called advance_cluster_time().
     /// This view is invalid after the session is destroyed.
     ///
-    bsoncxx::v_noabi::document::view cluster_time() const noexcept {
+    [[nodiscard]] bsoncxx::v_noabi::document::view cluster_time() const noexcept {
         return _session.cluster_time();
     }
 
@@ -101,7 +101,7 @@ class client_session {
     /// passing to advance_operation_time(). The timestamp is zero if the session has not been used
     /// for any operation and you have not called advance_operation_time().
     ///
-    bsoncxx::v_noabi::types::b_timestamp operation_time() const noexcept {
+    [[nodiscard]] bsoncxx::v_noabi::types::b_timestamp operation_time() const noexcept {
         return bsoncxx::v_noabi::from_v1(_session.operation_time());
     }
 

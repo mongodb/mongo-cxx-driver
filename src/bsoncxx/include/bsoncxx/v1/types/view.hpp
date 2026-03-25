@@ -174,7 +174,7 @@ struct b_document {
         return value;
     }
 
-    v1::document::view view() {
+    [[nodiscard]] v1::document::view view() {
         return value;
     }
 

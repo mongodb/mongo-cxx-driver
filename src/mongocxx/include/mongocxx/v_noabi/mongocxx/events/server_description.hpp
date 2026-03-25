@@ -75,14 +75,14 @@ class server_description {
     ///
     /// @return The type as a short-lived string view.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::string_view) type() const;
+    [[nodiscard]] MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::string_view) type() const;
 
     ///
     /// @return The response as a short-lived document view.
     ///
     /// @deprecated use hello instead.
     ///
-    MONGOCXX_DEPRECATED bsoncxx::v_noabi::document::view is_master() const {
+    [[nodiscard]] MONGOCXX_DEPRECATED bsoncxx::v_noabi::document::view is_master() const {
         return this->hello();
     }
 
@@ -92,14 +92,14 @@ class server_description {
     ///
     /// @return The response as a short-lived document view.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::document::view) hello() const;
+    [[nodiscard]] MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::document::view) hello() const;
 
     ///
     /// Returns the server host name.
     ///
     /// @return The host name.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::string_view) host() const;
+    [[nodiscard]] MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::string_view) host() const;
 
     ///
     /// Returns the server port.

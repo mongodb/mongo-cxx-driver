@@ -112,11 +112,12 @@ class client_encryption {
     /// @throws mongocxx::v1::exception for all other runtime errors.
     ///
     /// @{
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::types::value) create_data_key(
+    [[nodiscard]] MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::types::value) create_data_key(
         bsoncxx::v1::stdx::string_view kms_provider,
         v1::data_key_options const& opts);
 
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::types::value) create_data_key(bsoncxx::v1::stdx::string_view kms_provider);
+    [[nodiscard]] MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::types::value) create_data_key(
+        bsoncxx::v1::stdx::string_view kms_provider);
     /// @}
     ///
 
@@ -170,7 +171,7 @@ class client_encryption {
     /// @throws mongocxx::v1::server_error when a server-side error is encountered and a raw server error is available.
     /// @throws mongocxx::v1::exception for all other runtime errors.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::types::value) encrypt(
+    [[nodiscard]] MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::types::value) encrypt(
         bsoncxx::v1::types::value value,
         v1::encrypt_options const& opts);
 
@@ -195,7 +196,7 @@ class client_encryption {
     /// @throws mongocxx::v1::server_error when a server-side error is encountered and a raw server error is available.
     /// @throws mongocxx::v1::exception for all other runtime errors.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::types::value) decrypt(bsoncxx::v1::types::value value);
+    [[nodiscard]] MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::types::value) decrypt(bsoncxx::v1::types::value value);
 
     ///
     /// Decrypt and (re-)encrypt multiple data keys.
@@ -377,7 +378,8 @@ class client_encryption::options {
     ///
     /// Return the current "kmsProviders" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view>) kms_providers() const;
+    [[nodiscard]] MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view>) kms_providers()
+        const;
 
     ///
     /// Set the "tlsOptions" field.
@@ -387,7 +389,7 @@ class client_encryption::options {
     ///
     /// Return the current "tlsOptions" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view>) tls_opts() const;
+    [[nodiscard]] MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view>) tls_opts() const;
 
     class internal;
 };

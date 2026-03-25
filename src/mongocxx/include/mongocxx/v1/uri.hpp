@@ -165,12 +165,12 @@ class uri {
     ///
     /// Return the "authMechanism" option.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::string_view) auth_mechanism() const;
+    [[nodiscard]] MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::string_view) auth_mechanism() const;
 
     ///
     /// Return the "authSource" option.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::string_view) auth_source() const;
+    [[nodiscard]] MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::string_view) auth_source() const;
 
     ///
     /// Return the host(s) identifiers specified by the connection string.
@@ -182,17 +182,17 @@ class uri {
     ///
     /// @returns Empty when no database name was specified.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::string_view) database() const;
+    [[nodiscard]] MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::string_view) database() const;
 
     ///
     /// Return all URI options that were specified by the connection string.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::document::view) options() const;
+    [[nodiscard]] MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::document::view) options() const;
 
     ///
     /// Return the password specified by the connection string.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::string_view) password() const;
+    [[nodiscard]] MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::string_view) password() const;
 
     ///
     /// Return the "readConcern" option.
@@ -207,7 +207,7 @@ class uri {
     ///
     /// Return the "replicaSet" option.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::string_view) replica_set() const;
+    [[nodiscard]] MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::string_view) replica_set() const;
 
     ///
     /// Return the "tls" option.
@@ -217,12 +217,12 @@ class uri {
     ///
     /// Return this URI as a connection string.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::string_view) to_string() const;
+    [[nodiscard]] MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::string_view) to_string() const;
 
     ///
     /// Return the username specified by the connection string.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::string_view) username() const;
+    [[nodiscard]] MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::string_view) username() const;
 
     ///
     /// Return the "writeConcern" option.
@@ -232,18 +232,20 @@ class uri {
     ///
     /// Return the "appName" option.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::stdx::string_view>) appname() const;
+    [[nodiscard]] MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::stdx::string_view>) appname()
+        const;
 
     ///
     /// Return the "authMechanismProperties" option.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view>) auth_mechanism_properties()
-        const;
+    [[nodiscard]] MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view>)
+    auth_mechanism_properties() const;
 
     ///
     /// Return the mongoc "credentials" field containing "authMechanism" and related options.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view>) credentials() const;
+    [[nodiscard]] MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view>) credentials()
+        const;
 
     ///
     /// Return the "srvMaxHosts" option.
@@ -326,18 +328,19 @@ class uri {
     ///
     /// Return the "tlsCAFile" option.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::stdx::string_view>) tls_ca_file() const;
+    [[nodiscard]] MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::stdx::string_view>) tls_ca_file()
+        const;
 
     ///
     /// Return the "tlsCertificateKeyFile" option.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::stdx::string_view>) tls_certificate_key_file()
-        const;
+    [[nodiscard]] MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::stdx::string_view>)
+    tls_certificate_key_file() const;
 
     ///
     /// Return the "tlsCertificateKeyFilePassword" option.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::stdx::string_view>)
+    [[nodiscard]] MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::stdx::string_view>)
     tls_certificate_key_file_password() const;
 
     ///

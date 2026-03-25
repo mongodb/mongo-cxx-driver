@@ -79,7 +79,7 @@ class delete_many {
     ///
     /// @return The filter to be used for the delete operation.
     ///
-    bsoncxx::v_noabi::document::view_or_value const& filter() const {
+    [[nodiscard]] bsoncxx::v_noabi::document::view_or_value const& filter() const {
         return _filter;
     }
 
@@ -110,7 +110,7 @@ class delete_many {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/collation/
     ///
-    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const& collation() const {
+    [[nodiscard]] bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const& collation() const {
         return _collation;
     }
 

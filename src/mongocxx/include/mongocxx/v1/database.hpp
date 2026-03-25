@@ -245,7 +245,7 @@ class database {
     ///
     /// Return the name of this database.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::string_view) name() const;
+    [[nodiscard]] MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::string_view) name() const;
 
     ///
     /// Set the default "readConcern" to use for operations on this database.

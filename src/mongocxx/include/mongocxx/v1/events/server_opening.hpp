@@ -48,7 +48,7 @@ class server_opening {
     ///
     /// Return the hostname for the connection used by the command.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::string_view) host() const;
+    [[nodiscard]] MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::string_view) host() const;
 
     ///
     /// Return the port number for the connection used by the command.

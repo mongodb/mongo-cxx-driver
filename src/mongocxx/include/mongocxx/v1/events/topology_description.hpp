@@ -56,7 +56,7 @@ class topology_description {
     /// - "Single"
     /// - "Unknown"
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::string_view) type() const;
+    [[nodiscard]] MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::string_view) type() const;
 
     ///
     /// Return true when a readable server is available according to this topology description.

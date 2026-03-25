@@ -107,7 +107,7 @@ class update_one_result {
     ///
     /// @returns Empty when `this->upserted_count() == 0`.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::types::view>) upserted_id() const;
+    [[nodiscard]] MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::types::view>) upserted_id() const;
 
     ///
     /// Compare equal when all supported fields compare equal.

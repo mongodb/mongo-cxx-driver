@@ -110,7 +110,7 @@ class view {
     ///
     /// @return The element if it exists, or the invalid element.
     ///
-    v_noabi::array::element operator[](std::uint32_t i) const;
+    [[nodiscard]] v_noabi::array::element operator[](std::uint32_t i) const;
 
     ///
     /// Access the raw bytes of the underlying array.
@@ -248,14 +248,14 @@ namespace v_noabi {
 ///
 /// Convert to the @ref bsoncxx::v_noabi equivalent of `v`.
 ///
-inline v_noabi::array::view from_v1(v1::array::view const& v) {
+[[nodiscard]] inline v_noabi::array::view from_v1(v1::array::view const& v) {
     return {v};
 }
 
 ///
 /// Convert to the @ref bsoncxx::v1 equivalent of `v`.
 ///
-inline v1::array::view to_v1(v_noabi::array::view const& v) {
+[[nodiscard]] inline v1::array::view to_v1(v_noabi::array::view const& v) {
     return v1::array::view{v};
 }
 

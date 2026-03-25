@@ -1319,7 +1319,7 @@ class collection {
     /// @return The name of the collection.  The return value of this method is invalidated by any
     /// subsequent call to collection::rename() on this collection object.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::string_view) name() const;
+    [[nodiscard]] MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::string_view) name() const;
 
     ///
     /// Rename this collection.

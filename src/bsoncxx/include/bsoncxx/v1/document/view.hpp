@@ -189,7 +189,7 @@ class view {
     /// @exception bsoncxx::v1::exception with @ref bsoncxx::v1::document::view::errc::invalid_data if this operation
     /// failed due to invalid BSON bytes.
     ///
-    v1::element::view operator[](v1::stdx::string_view key) const;
+    [[nodiscard]] v1::element::view operator[](v1::stdx::string_view key) const;
 
     ///
     /// Compare equal when the BSON bytes represented by `lhs` and `rhs` compare equal.

@@ -67,7 +67,7 @@ class command_failed_event {
     ///
     /// @return The failure.
     ///
-    bsoncxx::v_noabi::document::view failure() const {
+    [[nodiscard]] bsoncxx::v_noabi::document::view failure() const {
         return _event.failure();
     }
 
@@ -76,7 +76,7 @@ class command_failed_event {
     ///
     /// @return The command name.
     ///
-    bsoncxx::v_noabi::stdx::string_view command_name() const {
+    [[nodiscard]] bsoncxx::v_noabi::stdx::string_view command_name() const {
         return _event.command_name();
     }
 
@@ -121,7 +121,7 @@ class command_failed_event {
     ///
     /// @return The host name.
     ///
-    bsoncxx::v_noabi::stdx::string_view host() const {
+    [[nodiscard]] bsoncxx::v_noabi::stdx::string_view host() const {
         return _event.host();
     }
 

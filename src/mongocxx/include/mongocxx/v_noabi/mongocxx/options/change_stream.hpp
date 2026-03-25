@@ -146,7 +146,8 @@ class change_stream {
     /// @return
     ///   The current fullDocument option.
     ///
-    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value> const& full_document() const {
+    [[nodiscard]] bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value> const& full_document()
+        const {
         return _full_document;
     }
 
@@ -180,8 +181,8 @@ class change_stream {
     /// @return
     ///   The current fullDocumentBeforeChange option.
     ///
-    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value> const& full_document_before_change()
-        const {
+    [[nodiscard]] bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value> const&
+    full_document_before_change() const {
         return _full_document_before_change;
     }
 
@@ -231,7 +232,8 @@ class change_stream {
     /// @return
     ///   The current comment option.
     ///
-    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value> const& comment() const {
+    [[nodiscard]] bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value> const& comment()
+        const {
         return _comment;
     }
 
@@ -261,7 +263,8 @@ class change_stream {
     /// @return
     ///   The current resumeToken.
     ///
-    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const& resume_after() const {
+    [[nodiscard]] bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const& resume_after()
+        const {
         return _resume_after;
     }
 
@@ -293,7 +296,8 @@ class change_stream {
     /// @return
     ///   The current startAfter token.
     ///
-    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const& start_after() const {
+    [[nodiscard]] bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const& start_after()
+        const {
         return _start_after;
     }
 
@@ -318,7 +322,7 @@ class change_stream {
     /// @return
     ///   The current collation.
     ///
-    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const& collation() const {
+    [[nodiscard]] bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const& collation() const {
         return _collation;
     }
 
@@ -373,7 +377,7 @@ class change_stream {
     /// @return
     ///   The current startAtOperationTime option.
     ///
-    bsoncxx::stdx::optional<bsoncxx::v_noabi::types::b_timestamp> const& start_at_operation_time() const {
+    [[nodiscard]] bsoncxx::stdx::optional<bsoncxx::v_noabi::types::b_timestamp> const& start_at_operation_time() const {
         return _start_at_operation_time;
     }
 

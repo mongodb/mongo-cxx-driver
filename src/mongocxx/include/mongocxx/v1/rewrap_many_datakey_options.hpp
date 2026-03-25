@@ -100,7 +100,7 @@ class rewrap_many_datakey_options {
     ///
     /// Return the current "provider" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::string_view) provider() const;
+    [[nodiscard]] MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::string_view) provider() const;
 
     ///
     /// Set the "masterKey" field.
@@ -110,7 +110,8 @@ class rewrap_many_datakey_options {
     ///
     /// Return the current "masterKey" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view>) master_key() const;
+    [[nodiscard]] MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view>) master_key()
+        const;
 
     class internal;
 };

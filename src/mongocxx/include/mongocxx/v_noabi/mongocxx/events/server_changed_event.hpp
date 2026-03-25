@@ -66,7 +66,7 @@ class server_changed_event {
     ///
     /// @return The host name.
     ///
-    bsoncxx::v_noabi::stdx::string_view host() const {
+    [[nodiscard]] bsoncxx::v_noabi::stdx::string_view host() const {
         return _event.host();
     }
 

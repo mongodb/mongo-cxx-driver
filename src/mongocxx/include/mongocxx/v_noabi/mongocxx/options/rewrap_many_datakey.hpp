@@ -105,7 +105,7 @@ class rewrap_many_datakey {
     /// @see
     /// - https://www.mongodb.com/docs/manual/core/csfle/reference/kms-providers/#std-label-csfle-reference-kms-providers
     ///
-    bsoncxx::v_noabi::string::view_or_value provider() const {
+    [[nodiscard]] bsoncxx::v_noabi::string::view_or_value provider() const {
         return _provider;
     }
 
@@ -142,7 +142,8 @@ class rewrap_many_datakey {
     /// @see
     /// - https://www.mongodb.com/docs/manual/core/csfle/reference/kms-providers/#std-label-csfle-reference-kms-providers-create-and-store
     ///
-    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const& master_key() const {
+    [[nodiscard]] bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const& master_key()
+        const {
         return _master_key;
     }
 

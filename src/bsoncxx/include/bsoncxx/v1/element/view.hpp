@@ -155,7 +155,7 @@ class view {
     /// @exception bsoncxx::v1::exception with @ref bsoncxx::v1::element::view::errc::invalid_view if this element is
     /// invalid.
     ///
-    BSONCXX_ABI_EXPORT_CDECL(v1::types::id) type_id() const;
+    [[nodiscard]] BSONCXX_ABI_EXPORT_CDECL(v1::types::id) type_id() const;
 
     ///
     /// Return the key.
@@ -163,7 +163,7 @@ class view {
     /// @exception bsoncxx::v1::exception with @ref bsoncxx::v1::element::view::errc::invalid_view if this element is
     /// invalid.
     ///
-    BSONCXX_ABI_EXPORT_CDECL(v1::stdx::string_view) key() const;
+    [[nodiscard]] BSONCXX_ABI_EXPORT_CDECL(v1::stdx::string_view) key() const;
 
 #pragma push_macro("X")
 #undef X
@@ -189,7 +189,7 @@ class view {
     /// @exception bsoncxx::v1::exception with @ref bsoncxx::v1::element::view::errc::invalid_view if this element is
     /// invalid.
     ///
-    BSONCXX_ABI_EXPORT_CDECL(v1::types::view) type_view() const;
+    [[nodiscard]] BSONCXX_ABI_EXPORT_CDECL(v1::types::view) type_view() const;
 
     ///
     /// Return a deep copy of the underlying BSON type value.
@@ -197,7 +197,7 @@ class view {
     /// @exception bsoncxx::v1::exception with @ref bsoncxx::v1::element::view::errc::invalid_view if this element is
     /// invalid.
     ///
-    BSONCXX_ABI_EXPORT_CDECL(v1::types::value) type_value() const;
+    [[nodiscard]] BSONCXX_ABI_EXPORT_CDECL(v1::types::value) type_value() const;
 
     ///
     /// Return the first element within the represented BSON document whose key compares equal to `key`.
@@ -211,7 +211,7 @@ class view {
     /// @exception bsoncxx::v1::exception with @ref bsoncxx::v1::element::view::errc::invalid_data if this operation
     /// failed due to invalid BSON bytes.
     ///
-    BSONCXX_ABI_EXPORT_CDECL(v1::element::view) operator[](v1::stdx::string_view key) const;
+    [[nodiscard]] BSONCXX_ABI_EXPORT_CDECL(v1::element::view) operator[](v1::stdx::string_view key) const;
 
     ///
     /// Return the first element within the represented BSON array whose key compares equal to `i`.
@@ -225,7 +225,7 @@ class view {
     /// @exception bsoncxx::v1::exception with @ref bsoncxx::v1::element::view::errc::invalid_data if this operation
     /// failed due to invalid BSON bytes.
     ///
-    BSONCXX_ABI_EXPORT_CDECL(v1::element::view) operator[](std::uint32_t idx) const;
+    [[nodiscard]] BSONCXX_ABI_EXPORT_CDECL(v1::element::view) operator[](std::uint32_t idx) const;
 
     ///
     /// Errors codes which may be returned by @ref bsoncxx::v1::element::view.

@@ -651,7 +651,7 @@ class core {
     ///
     /// @throws bsoncxx::v_noabi::exception if the precondition is violated.
     ///
-    BSONCXX_ABI_EXPORT_CDECL(v_noabi::document::view) view_document() const;
+    [[nodiscard]] BSONCXX_ABI_EXPORT_CDECL(v_noabi::document::view) view_document() const;
 
     ///
     /// Gets a view over the array.
@@ -664,7 +664,7 @@ class core {
     ///
     /// @throws bsoncxx::v_noabi::exception if the precondition is violated.
     ///
-    BSONCXX_ABI_EXPORT_CDECL(v_noabi::array::view) view_array() const;
+    [[nodiscard]] BSONCXX_ABI_EXPORT_CDECL(v_noabi::array::view) view_array() const;
 
     ///
     /// Transfers ownership of the underlying document to the caller.

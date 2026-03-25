@@ -69,12 +69,12 @@ class index_model {
     ///
     /// Retrieves keys of an index_model.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::document::view) keys() const;
+    [[nodiscard]] MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::document::view) keys() const;
 
     ///
     /// Retrieves options of an index_model.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::document::view) options() const;
+    [[nodiscard]] MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::document::view) options() const;
 
    private:
     bsoncxx::v_noabi::document::value _keys;

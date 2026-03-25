@@ -92,21 +92,21 @@ enum class binary_sub_type : std::uint8_t {
 ///
 /// Convert from the @ref bsoncxx::v1 equivalent of `v`.
 ///
-inline type from_v1(v1::types::id v) {
+[[nodiscard]] inline type from_v1(v1::types::id v) {
     return static_cast<type>(v);
 }
 
 ///
 /// Convert to the @ref bsoncxx::v1 equivalent of `v`.
 ///
-inline v1::types::id to_v1(type v) {
+[[nodiscard]] inline v1::types::id to_v1(type v) {
     return static_cast<v1::types::id>(v);
 }
 
 ///
 /// Convert from the @ref bsoncxx::v1 equivalent of `v`.
 ///
-inline binary_sub_type from_v1(v1::types::binary_subtype v) {
+[[nodiscard]] inline binary_sub_type from_v1(v1::types::binary_subtype v) {
     return static_cast<binary_sub_type>(v);
 }
 
@@ -223,7 +223,7 @@ struct b_document {
     ///
     /// Returns an unwrapped document::view
     ///
-    document::view view() {
+    [[nodiscard]] document::view view() {
         return value;
     }
 };
@@ -902,90 +902,90 @@ BSONCXX_V1_TYPES_XMACRO(X)
 ///
 /// @{
 
-inline v_noabi::types::b_double from_v1(v1::types::b_double const& v) {
+[[nodiscard]] inline v_noabi::types::b_double from_v1(v1::types::b_double const& v) {
     return {v.value};
 }
 
-inline v_noabi::types::b_string from_v1(v1::types::b_string const& v) {
+[[nodiscard]] inline v_noabi::types::b_string from_v1(v1::types::b_string const& v) {
     return v_noabi::types::b_string{v.value};
 }
 
-inline v_noabi::types::b_document from_v1(v1::types::b_document const& v) {
+[[nodiscard]] inline v_noabi::types::b_document from_v1(v1::types::b_document const& v) {
     return {v.value};
 }
 
-inline v_noabi::types::b_array from_v1(v1::types::b_array const& v) {
+[[nodiscard]] inline v_noabi::types::b_array from_v1(v1::types::b_array const& v) {
     return {v.value};
 }
 
-inline v_noabi::types::b_binary from_v1(v1::types::b_binary const& v) {
+[[nodiscard]] inline v_noabi::types::b_binary from_v1(v1::types::b_binary const& v) {
     return {from_v1(v.subtype), v.size, v.bytes};
 }
 
-inline v_noabi::types::b_undefined from_v1(v1::types::b_undefined const& v) {
+[[nodiscard]] inline v_noabi::types::b_undefined from_v1(v1::types::b_undefined const& v) {
     (void)v;
     return {};
 }
 
-inline v_noabi::types::b_oid from_v1(v1::types::b_oid const& v) {
+[[nodiscard]] inline v_noabi::types::b_oid from_v1(v1::types::b_oid const& v) {
     return {v.value};
 }
 
-inline v_noabi::types::b_bool from_v1(v1::types::b_bool const& v) {
+[[nodiscard]] inline v_noabi::types::b_bool from_v1(v1::types::b_bool const& v) {
     return {v.value};
 }
 
-inline v_noabi::types::b_date from_v1(v1::types::b_date const& v) {
+[[nodiscard]] inline v_noabi::types::b_date from_v1(v1::types::b_date const& v) {
     return v_noabi::types::b_date{v.value};
 }
 
-inline v_noabi::types::b_null from_v1(v1::types::b_null const& v) {
+[[nodiscard]] inline v_noabi::types::b_null from_v1(v1::types::b_null const& v) {
     (void)v;
     return {};
 }
 
-inline v_noabi::types::b_regex from_v1(v1::types::b_regex const& v) {
+[[nodiscard]] inline v_noabi::types::b_regex from_v1(v1::types::b_regex const& v) {
     return v_noabi::types::b_regex{v.regex, v.options};
 }
 
-inline v_noabi::types::b_dbpointer from_v1(v1::types::b_dbpointer const& v) {
+[[nodiscard]] inline v_noabi::types::b_dbpointer from_v1(v1::types::b_dbpointer const& v) {
     return {v.collection, v.value};
 }
 
-inline v_noabi::types::b_code from_v1(v1::types::b_code const& v) {
+[[nodiscard]] inline v_noabi::types::b_code from_v1(v1::types::b_code const& v) {
     return v_noabi::types::b_code{v.code};
 }
 
-inline v_noabi::types::b_symbol from_v1(v1::types::b_symbol const& v) {
+[[nodiscard]] inline v_noabi::types::b_symbol from_v1(v1::types::b_symbol const& v) {
     return v_noabi::types::b_symbol{v.symbol};
 }
 
-inline v_noabi::types::b_codewscope from_v1(v1::types::b_codewscope const& v) {
+[[nodiscard]] inline v_noabi::types::b_codewscope from_v1(v1::types::b_codewscope const& v) {
     return v_noabi::types::b_codewscope{v.code, v.scope};
 }
 
-inline v_noabi::types::b_int32 from_v1(v1::types::b_int32 const& v) {
+[[nodiscard]] inline v_noabi::types::b_int32 from_v1(v1::types::b_int32 const& v) {
     return {v.value};
 }
 
-inline v_noabi::types::b_timestamp from_v1(v1::types::b_timestamp const& v) {
+[[nodiscard]] inline v_noabi::types::b_timestamp from_v1(v1::types::b_timestamp const& v) {
     return {v.increment, v.timestamp};
 }
 
-inline v_noabi::types::b_int64 from_v1(v1::types::b_int64 const& v) {
+[[nodiscard]] inline v_noabi::types::b_int64 from_v1(v1::types::b_int64 const& v) {
     return {v.value};
 }
 
-inline v_noabi::types::b_decimal128 from_v1(v1::types::b_decimal128 const& v) {
+[[nodiscard]] inline v_noabi::types::b_decimal128 from_v1(v1::types::b_decimal128 const& v) {
     return v_noabi::types::b_decimal128{v.value};
 }
 
-inline v_noabi::types::b_maxkey from_v1(v1::types::b_maxkey const& v) {
+[[nodiscard]] inline v_noabi::types::b_maxkey from_v1(v1::types::b_maxkey const& v) {
     (void)v;
     return {};
 }
 
-inline v_noabi::types::b_minkey from_v1(v1::types::b_minkey const& v) {
+[[nodiscard]] inline v_noabi::types::b_minkey from_v1(v1::types::b_minkey const& v) {
     (void)v;
     return {};
 }
@@ -998,90 +998,90 @@ inline v_noabi::types::b_minkey from_v1(v1::types::b_minkey const& v) {
 ///
 /// @{
 
-inline v1::types::b_double to_v1(v_noabi::types::b_double const& v) {
+[[nodiscard]] inline v1::types::b_double to_v1(v_noabi::types::b_double const& v) {
     return v1::types::b_double{v.value};
 }
 
-inline v1::types::b_string to_v1(v_noabi::types::b_string const& v) {
+[[nodiscard]] inline v1::types::b_string to_v1(v_noabi::types::b_string const& v) {
     return v1::types::b_string{v.value};
 }
 
-inline v1::types::b_document to_v1(v_noabi::types::b_document const& v) {
+[[nodiscard]] inline v1::types::b_document to_v1(v_noabi::types::b_document const& v) {
     return v1::types::b_document{to_v1(v.value)};
 }
 
-inline v1::types::b_array to_v1(v_noabi::types::b_array const& v) {
+[[nodiscard]] inline v1::types::b_array to_v1(v_noabi::types::b_array const& v) {
     return v1::types::b_array{to_v1(v.value)};
 }
 
-inline v1::types::b_binary to_v1(v_noabi::types::b_binary const& v) {
+[[nodiscard]] inline v1::types::b_binary to_v1(v_noabi::types::b_binary const& v) {
     return v1::types::b_binary{to_v1(v.sub_type), v.size, v.bytes};
 }
 
-inline v1::types::b_undefined to_v1(v_noabi::types::b_undefined const& v) {
+[[nodiscard]] inline v1::types::b_undefined to_v1(v_noabi::types::b_undefined const& v) {
     (void)v;
     return v1::types::b_undefined{};
 }
 
-inline v1::types::b_oid to_v1(v_noabi::types::b_oid const& v) {
+[[nodiscard]] inline v1::types::b_oid to_v1(v_noabi::types::b_oid const& v) {
     return v1::types::b_oid{to_v1(v.value)};
 }
 
-inline v1::types::b_bool to_v1(v_noabi::types::b_bool const& v) {
+[[nodiscard]] inline v1::types::b_bool to_v1(v_noabi::types::b_bool const& v) {
     return v1::types::b_bool{v.value};
 }
 
-inline v1::types::b_date to_v1(v_noabi::types::b_date const& v) {
+[[nodiscard]] inline v1::types::b_date to_v1(v_noabi::types::b_date const& v) {
     return v1::types::b_date{v.value};
 }
 
-inline v1::types::b_null to_v1(v_noabi::types::b_null const& v) {
+[[nodiscard]] inline v1::types::b_null to_v1(v_noabi::types::b_null const& v) {
     (void)v;
     return v1::types::b_null{};
 }
 
-inline v1::types::b_regex to_v1(v_noabi::types::b_regex const& v) {
+[[nodiscard]] inline v1::types::b_regex to_v1(v_noabi::types::b_regex const& v) {
     return v1::types::b_regex{v.regex, v.options};
 }
 
-inline v1::types::b_dbpointer to_v1(v_noabi::types::b_dbpointer const& v) {
+[[nodiscard]] inline v1::types::b_dbpointer to_v1(v_noabi::types::b_dbpointer const& v) {
     return v1::types::b_dbpointer{v.collection, to_v1(v.value)};
 }
 
-inline v1::types::b_code to_v1(v_noabi::types::b_code const& v) {
+[[nodiscard]] inline v1::types::b_code to_v1(v_noabi::types::b_code const& v) {
     return v1::types::b_code{v.code};
 }
 
-inline v1::types::b_symbol to_v1(v_noabi::types::b_symbol const& v) {
+[[nodiscard]] inline v1::types::b_symbol to_v1(v_noabi::types::b_symbol const& v) {
     return v1::types::b_symbol{v.symbol};
 }
 
-inline v1::types::b_codewscope to_v1(v_noabi::types::b_codewscope const& v) {
+[[nodiscard]] inline v1::types::b_codewscope to_v1(v_noabi::types::b_codewscope const& v) {
     return v1::types::b_codewscope{v.code, to_v1(v.scope)};
 }
 
-inline v1::types::b_int32 to_v1(v_noabi::types::b_int32 const& v) {
+[[nodiscard]] inline v1::types::b_int32 to_v1(v_noabi::types::b_int32 const& v) {
     return v1::types::b_int32{v.value};
 }
 
-inline v1::types::b_timestamp to_v1(v_noabi::types::b_timestamp const& v) {
+[[nodiscard]] inline v1::types::b_timestamp to_v1(v_noabi::types::b_timestamp const& v) {
     return v1::types::b_timestamp{v.increment, v.timestamp};
 }
 
-inline v1::types::b_int64 to_v1(v_noabi::types::b_int64 const& v) {
+[[nodiscard]] inline v1::types::b_int64 to_v1(v_noabi::types::b_int64 const& v) {
     return v1::types::b_int64{v.value};
 }
 
-inline v1::types::b_decimal128 to_v1(v_noabi::types::b_decimal128 const& v) {
+[[nodiscard]] inline v1::types::b_decimal128 to_v1(v_noabi::types::b_decimal128 const& v) {
     return v1::types::b_decimal128{to_v1(v.value)};
 }
 
-inline v1::types::b_maxkey to_v1(v_noabi::types::b_maxkey const& v) {
+[[nodiscard]] inline v1::types::b_maxkey to_v1(v_noabi::types::b_maxkey const& v) {
     (void)v;
     return v1::types::b_maxkey{};
 }
 
-inline v1::types::b_minkey to_v1(v_noabi::types::b_minkey const& v) {
+[[nodiscard]] inline v1::types::b_minkey to_v1(v_noabi::types::b_minkey const& v) {
     (void)v;
     return v1::types::b_minkey{};
 }

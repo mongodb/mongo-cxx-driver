@@ -244,12 +244,12 @@ class value {
     ///
     /// Return the type of the underlying BSON type value.
     ///
-    BSONCXX_ABI_EXPORT_CDECL(v1::types::id) type_id() const;
+    [[nodiscard]] BSONCXX_ABI_EXPORT_CDECL(v1::types::id) type_id() const;
 
     ///
     /// Return a view of the underlying BSON type value.
     ///
-    BSONCXX_ABI_EXPORT_CDECL(v1::types::view) view() const;
+    [[nodiscard]] BSONCXX_ABI_EXPORT_CDECL(v1::types::view) view() const;
 
     ///
     /// Implicitly convert to `this->view()`.

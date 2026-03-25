@@ -374,7 +374,7 @@ class value {
     ///
     /// Return a view of the BSON bytes as a document.
     ///
-    v1::document::view view() const {
+    [[nodiscard]] v1::document::view view() const {
         return v1::document::view{_data.get()};
     }
 
@@ -411,7 +411,7 @@ class value {
     }
 
     /// @copydoc v1::document::view::operator[](v1::stdx::string_view key) const
-    v1::element::view operator[](v1::stdx::string_view key) const {
+    [[nodiscard]] v1::element::view operator[](v1::stdx::string_view key) const {
         return this->view()[key];
     }
 

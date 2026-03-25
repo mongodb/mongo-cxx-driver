@@ -169,7 +169,7 @@ class encrypt_options {
     ///
     /// Return the current "keyId" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::types::view>) key_id() const;
+    [[nodiscard]] MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::types::view>) key_id() const;
 
     ///
     /// Set the "keyAltName" field.
@@ -179,7 +179,8 @@ class encrypt_options {
     ///
     /// Return the "keyAltName" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::stdx::string_view>) key_alt_name() const;
+    [[nodiscard]] MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::stdx::string_view>) key_alt_name()
+        const;
 
     ///
     /// Set the "algorithm" field.

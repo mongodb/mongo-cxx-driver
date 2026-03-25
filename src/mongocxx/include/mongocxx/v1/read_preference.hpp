@@ -137,8 +137,9 @@ class read_preference {
     ///
     /// @deprecated Deprecated in MongoDB Server version 8.0.
     ///
-    MONGOCXX_DEPRECATED MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view>) hedge()
-        const;
+    [[nodiscard]]
+    MONGOCXX_DEPRECATED MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view>)
+    hedge() const;
 
     ///
     /// Set the "mode" field.
@@ -172,7 +173,7 @@ class read_preference {
     ///
     /// Return the current "tag_sets" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::array::view) tags() const;
+    [[nodiscard]] MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::array::view) tags() const;
 
     ///
     /// Set the "maxStalenessSeconds" field.

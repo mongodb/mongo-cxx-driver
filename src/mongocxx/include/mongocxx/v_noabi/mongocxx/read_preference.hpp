@@ -239,7 +239,7 @@ class read_preference {
     /// @see
     /// - https://www.mongodb.com/docs/manual/core/read-preference-tags/
     ///
-    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view> tags() const {
+    [[nodiscard]] bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view> tags() const {
         bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view> ret;
 
         auto const v = _rp.tags();
@@ -328,7 +328,8 @@ class read_preference {
     ///
     /// @return A hedge document if one was set.
     ///
-    MONGOCXX_DEPRECATED bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view> const hedge() const {
+    [[nodiscard]] MONGOCXX_DEPRECATED bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view> const hedge()
+        const {
         bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view> ret;
         if (auto const opt = _rp.hedge()) {
             ret.emplace(*opt);

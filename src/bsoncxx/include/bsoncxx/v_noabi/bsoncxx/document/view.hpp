@@ -142,7 +142,7 @@ class view {
     ///
     /// @return The matching element, if found, or the invalid element.
     ///
-    v_noabi::document::element operator[](v1::stdx::string_view key) const;
+    [[nodiscard]] v_noabi::document::element operator[](v1::stdx::string_view key) const;
 
     ///
     /// Access the raw bytes of the underlying document.
@@ -279,14 +279,14 @@ namespace v_noabi {
 ///
 /// Convert to the @ref bsoncxx::v_noabi equivalent of `v`.
 ///
-inline v_noabi::document::view from_v1(v1::document::view const& v) {
+[[nodiscard]] inline v_noabi::document::view from_v1(v1::document::view const& v) {
     return {v};
 }
 
 ///
 /// Convert to the @ref bsoncxx::v1 equivalent of `v`.
 ///
-inline v1::document::view to_v1(v_noabi::document::view const& v) {
+[[nodiscard]] inline v1::document::view to_v1(v_noabi::document::view const& v) {
     return v1::document::view{v};
 }
 

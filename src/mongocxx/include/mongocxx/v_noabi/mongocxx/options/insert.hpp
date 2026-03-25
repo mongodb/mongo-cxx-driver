@@ -232,7 +232,8 @@ class insert {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/insert/
     ///
-    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value> const& comment() const {
+    [[nodiscard]] bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value> const& comment()
+        const {
         return _comment;
     }
 

@@ -176,7 +176,7 @@ class uri {
     ///
     /// @return A document view containing other options.
     ///
-    bsoncxx::v_noabi::document::view options() const {
+    [[nodiscard]] bsoncxx::v_noabi::document::view options() const {
         return _uri.options();
     }
 
@@ -268,7 +268,7 @@ class uri {
     ///
     /// @return An optional bsoncxx::v_noabi::stdx::string_view
     ///
-    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::stdx::string_view> appname() const {
+    [[nodiscard]] bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::stdx::string_view> appname() const {
         return _uri.appname();
     }
 
@@ -277,7 +277,7 @@ class uri {
     ///
     /// @return An optional bsoncxx::v_noabi::document::view
     ///
-    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view> auth_mechanism_properties() const {
+    [[nodiscard]] bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view> auth_mechanism_properties() const {
         return _uri.auth_mechanism_properties();
     }
 
@@ -286,7 +286,8 @@ class uri {
     ///
     /// @return An optional bsoncxx::v_noabi::document::view
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view>) credentials();
+    [[nodiscard]] MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view>)
+    credentials();
 
     ///
     /// Returns the value of the option "srvMaxHosts" if present in the uri.
@@ -429,7 +430,7 @@ class uri {
     ///
     /// @return An optional bsoncxx::v_noabi::stdx::string_view
     ///
-    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::stdx::string_view> tls_ca_file() const {
+    [[nodiscard]] bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::stdx::string_view> tls_ca_file() const {
         return _uri.tls_ca_file();
     }
 
@@ -438,7 +439,8 @@ class uri {
     ///
     /// @return An optional bsoncxx::v_noabi::stdx::string_view
     ///
-    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::stdx::string_view> tls_certificate_key_file() const {
+    [[nodiscard]] bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::stdx::string_view> tls_certificate_key_file()
+        const {
         return _uri.tls_certificate_key_file();
     }
 
@@ -447,7 +449,8 @@ class uri {
     ///
     /// @return An optional bsoncxx::v_noabi::stdx::string_view
     ///
-    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::stdx::string_view> tls_certificate_key_file_password() const {
+    [[nodiscard]] bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::stdx::string_view>
+    tls_certificate_key_file_password() const {
         return _uri.tls_certificate_key_file_password();
     }
 

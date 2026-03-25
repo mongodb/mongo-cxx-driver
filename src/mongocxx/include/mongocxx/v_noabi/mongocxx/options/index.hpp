@@ -107,7 +107,8 @@ class index {
         ///
         /// @return The current config_string.
         ///
-        bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value> const& config_string() const {
+        [[nodiscard]] bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value> const& config_string()
+            const {
             return _config_string;
         }
 
@@ -322,7 +323,7 @@ class index {
     ///
     /// @return The current name.
     ///
-    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value> const& name() const {
+    [[nodiscard]] bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value> const& name() const {
         return _name;
     }
 
@@ -353,7 +354,7 @@ class index {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/collation/
     ///
-    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view> const& collation() const {
+    [[nodiscard]] bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view> const& collation() const {
         return _collation;
     }
 
@@ -444,7 +445,7 @@ class index {
     ///
     /// The current storage engine options.
     ///
-    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view> const& storage_engine() const {
+    [[nodiscard]] bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view> const& storage_engine() const {
         return _storage_engine;
     }
 
@@ -521,7 +522,7 @@ class index {
     ///
     /// @return The current weights.
     ///
-    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view> const& weights() const {
+    [[nodiscard]] bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view> const& weights() const {
         return _weights;
     }
 
@@ -546,7 +547,8 @@ class index {
     ///
     /// @return The current default_language.
     ///
-    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value> const& default_language() const {
+    [[nodiscard]] bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value> const& default_language()
+        const {
         return _default_language;
     }
 
@@ -571,7 +573,8 @@ class index {
     ///
     /// @return The name of the field that contains the override language for text indexes.
     ///
-    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value> const& language_override() const {
+    [[nodiscard]] bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value> const& language_override()
+        const {
         return _language_override;
     }
 
@@ -595,7 +598,8 @@ class index {
     ///
     /// @return The current partial_filter_expression.
     ///
-    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view> const& partial_filter_expression() const {
+    [[nodiscard]] bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view> const& partial_filter_expression()
+        const {
         return _partial_filter_expression;
     }
 

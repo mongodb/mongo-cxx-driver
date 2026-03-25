@@ -89,7 +89,7 @@ class insert_one_result {
     ///
     /// Return the inserted document ID.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::types::view) inserted_id() const;
+    [[nodiscard]] MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::types::view) inserted_id() const;
 
     ///
     /// Compare equal when all supported fields compare equal.

@@ -679,7 +679,7 @@ class bucket {
     /// @return
     ///   The name of the GridFS bucket.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::string_view) bucket_name() const;
+    [[nodiscard]] MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::string_view) bucket_name() const;
 };
 
 } // namespace gridfs

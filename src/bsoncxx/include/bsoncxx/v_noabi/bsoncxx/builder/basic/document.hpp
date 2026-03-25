@@ -66,7 +66,7 @@ class document : public sub_document {
     ///
     /// @return A view of the BSON document.
     ///
-    v_noabi::document::view view() const {
+    [[nodiscard]] v_noabi::document::view view() const {
         return _core.view_document();
     }
 
