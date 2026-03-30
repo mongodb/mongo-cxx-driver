@@ -69,7 +69,7 @@ required-environments = [
     "platform_system == 'Linux' and platform_machine == 's390x'",
 
     "platform_system == 'Darwin' and platform_machine == 'x86_64'",
-    "platform_system == 'Darwin' and platform_machine == 'aarch64'",
+    "platform_system == 'Darwin' and platform_machine == 'arm64'",
 
-    "platform_system == 'Windows' and platform_machine == 'x86_64'",
+    "platform_system == 'Windows' and platform_machine == 'AMD64'",
 ]

@@ -2,9 +2,8 @@ version = 1
 revision = 3
 requires-python = ">=3.10"
 resolution-markers = [
-    "(platform_machine != 'ppc64le' and platform_machine != 's390x' and platform_machine != 'x86_64' and sys_platform == 'linux') or (platform_machine != 'aarch64' and sys_platform == 'darwin') or (platform_machine != 'x86_64' and sys_platform == 'win32') or (sys_platform != 'darwin' and sys_platform != 'linux' and sys_platform != 'win32')",
-    "platform_machine == 'x86_64' and sys_platform == 'win32'",
-    "platform_machine == 'aarch64' and sys_platform == 'darwin'",
+    "(platform_machine != 'ppc64le' and platform_machine != 's390x' and platform_machine != 'x86_64' and sys_platform == 'linux') or (platform_machine != 'AMD64' and sys_platform == 'win32') or (sys_platform != 'linux' and sys_platform != 'win32')",
+    "platform_machine == 'AMD64' and sys_platform == 'win32'",
     "platform_machine == 's390x' and sys_platform == 'linux'",
     "platform_machine == 'ppc64le' and sys_platform == 'linux'",
     "platform_machine == 'x86_64' and sys_platform == 'linux'",
@@ -15,8 +14,8 @@ required-markers = [
     "platform_machine == 'ppc64le' and sys_platform == 'linux'",
     "platform_machine == 's390x' and sys_platform == 'linux'",
     "platform_machine == 'x86_64' and sys_platform == 'darwin'",
-    "platform_machine == 'aarch64' and sys_platform == 'darwin'",
-    "platform_machine == 'x86_64' and sys_platform == 'win32'",
+    "platform_machine == 'arm64' and sys_platform == 'darwin'",
+    "platform_machine == 'AMD64' and sys_platform == 'win32'",
 ]
 
 [[package]]
@@ -279,15 +278,13 @@ name = "cmake"
 version = "4.3.0"
 source = { registry = "https://pypi.org/simple" }
 resolution-markers = [
-    "platform_machine == 'x86_64' and sys_platform == 'win32'",
-    "platform_machine == 'aarch64' and sys_platform == 'darwin'",
+    "platform_machine == 'AMD64' and sys_platform == 'win32'",
     "platform_machine == 's390x' and sys_platform == 'linux'",
     "platform_machine == 'ppc64le' and sys_platform == 'linux'",
     "platform_machine == 'x86_64' and sys_platform == 'linux'",
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/85/cb/922693f3aa75ca3fde2e02aef0b765a8a37db9868f70609b508096df139f/cmake-4.3.0.tar.gz", hash = "sha256:b25ef14e4ebc16219eeb199da2199fc526c011f9973e02e7c21c69bfd46ed752", size = 36979, upload-time = "2026-03-23T19:38:06.284Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/3b/ee/d221c00452a31143fbdf35f52f981f2df54d0cedb26a8b7bb1c77b902369/cmake-4.3.0-py3-none-macosx_10_10_universal2.whl", hash = "sha256:e3d83af988c4ad687201a531440dafb6bd145a696433a4e202ac6e2b3524059d", size = 52487876, upload-time = "2026-03-23T19:36:58.449Z" },
     { url = "https://files.pythonhosted.org/packages/ce/29/66fd845ba8660e14603115cc2e296eaf4d77f9655e805275b3d74fc4afee/cmake-4.3.0-py3-none-manylinux2014_ppc64le.manylinux_2_17_ppc64le.whl", hash = "sha256:807d337f57f44651a495667bb7b713fd33ec1d4fd0caca570651a1168e0b573b", size = 30426591, upload-time = "2026-03-23T19:37:08.962Z" },
     { url = "https://files.pythonhosted.org/packages/59/f1/582950cfa1407d1703108b082e5d637b7fb1638573c1a385e5d84d6ec1cd/cmake-4.3.0-py3-none-manylinux2014_s390x.manylinux_2_17_s390x.whl", hash = "sha256:02bdf1b58e0c720d9bde7e3189e02dc1bd9be9df5f88bc6f3d615cb905050528", size = 28349255, upload-time = "2026-03-23T19:37:13.162Z" },
     { url = "https://files.pythonhosted.org/packages/59/4f/35cf245e8366651ff89db11cbefc6cae7845dfa361c2798fcdad102a33ac/cmake-4.3.0-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl", hash = "sha256:7259210f2465e602273e7e0bc45683a5b953c1dd46afb17534a63a7add9c3960", size = 29478905, upload-time = "2026-03-23T19:37:16.572Z" },
@@ -302,7 +299,7 @@ name = "cmake"
 version = "4.3.1"
 source = { registry = "https://pypi.org/simple" }
 resolution-markers = [
-    "(platform_machine != 'ppc64le' and platform_machine != 's390x' and platform_machine != 'x86_64' and sys_platform == 'linux') or (platform_machine != 'aarch64' and sys_platform == 'darwin') or (platform_machine != 'x86_64' and sys_platform == 'win32') or (sys_platform != 'darwin' and sys_platform != 'linux' and sys_platform != 'win32')",
+    "(platform_machine != 'ppc64le' and platform_machine != 's390x' and platform_machine != 'x86_64' and sys_platform == 'linux') or (platform_machine != 'AMD64' and sys_platform == 'win32') or (sys_platform != 'linux' and sys_platform != 'win32')",
 ]
 wheels = [
     { url = "https://files.pythonhosted.org/packages/43/07/05be57c389f8f0c3d0d7b878685ec1eed863b77787d65584c9399e294531/cmake-4.3.1-py3-none-macosx_10_10_universal2.whl", hash = "sha256:976337df534f4eea6b100a7af39f9a7a538aa5fd65b7d770cf2a07907439dca8", size = 52555201, upload-time = "2026-03-28T15:28:10.956Z" },
@@ -489,8 +486,8 @@ format-scripts = [
 ]
 make-release = [
     { name = "click" },
-    { name = "cmake", version = "4.3.0", source = { registry = "https://pypi.org/simple" }, marker = "(platform_machine == 'aarch64' and sys_platform == 'darwin') or (platform_machine == 'ppc64le' and sys_platform == 'linux') or (platform_machine == 's390x' and sys_platform == 'linux') or (platform_machine == 'x86_64' and sys_platform == 'linux') or (platform_machine == 'x86_64' and sys_platform == 'win32')" },
-    { name = "cmake", version = "4.3.1", source = { registry = "https://pypi.org/simple" }, marker = "(platform_machine != 'ppc64le' and platform_machine != 's390x' and platform_machine != 'x86_64' and sys_platform == 'linux') or (platform_machine != 'aarch64' and sys_platform == 'darwin') or (platform_machine != 'x86_64' and sys_platform == 'win32') or (sys_platform != 'darwin' and sys_platform != 'linux' and sys_platform != 'win32')" },
+    { name = "cmake", version = "4.3.0", source = { registry = "https://pypi.org/simple" }, marker = "(platform_machine == 'ppc64le' and sys_platform == 'linux') or (platform_machine == 's390x' and sys_platform == 'linux') or (platform_machine == 'x86_64' and sys_platform == 'linux') or (platform_machine == 'AMD64' and sys_platform == 'win32')" },
+    { name = "cmake", version = "4.3.1", source = { registry = "https://pypi.org/simple" }, marker = "(platform_machine != 'ppc64le' and platform_machine != 's390x' and platform_machine != 'x86_64' and sys_platform == 'linux') or (platform_machine != 'AMD64' and sys_platform == 'win32') or (sys_platform != 'linux' and sys_platform != 'win32')" },
     { name = "gitpython" },
     { name = "jira" },
     { name = "looseversion" },
