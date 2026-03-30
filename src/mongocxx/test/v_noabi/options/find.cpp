@@ -104,6 +104,7 @@ TEST_CASE("v1", "[mongocxx][v_noabi][options][find]") {
     bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> min;
     bsoncxx::v1::stdx::optional<bool> no_cursor_timeout;
     bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> projection;
+    bsoncxx::v1::stdx::optional<v1::read_concern> read_concern;
     bsoncxx::v1::stdx::optional<v1::read_preference> read_preference;
     bsoncxx::v1::stdx::optional<bool> return_key;
     bsoncxx::v1::stdx::optional<bool> show_record_id;
@@ -126,6 +127,7 @@ TEST_CASE("v1", "[mongocxx][v_noabi][options][find]") {
         min.emplace();
         no_cursor_timeout.emplace();
         projection.emplace();
+        read_concern.emplace();
         read_preference.emplace();
         return_key.emplace();
         show_record_id.emplace();
@@ -155,6 +157,7 @@ TEST_CASE("v1", "[mongocxx][v_noabi][options][find]") {
             from.min(*min);
             from.no_cursor_timeout(*no_cursor_timeout);
             from.projection(*projection);
+            from.read_concern(*read_concern);
             from.read_preference(*read_preference);
             from.return_key(*return_key);
             from.show_record_id(*show_record_id);
@@ -180,6 +183,7 @@ TEST_CASE("v1", "[mongocxx][v_noabi][options][find]") {
             CHECK(to.min().value() == min->view());
             CHECK(to.no_cursor_timeout() == *no_cursor_timeout);
             CHECK(to.projection().value() == projection->view());
+            CHECK(to.read_concern() == *read_concern);
             CHECK(to.read_preference() == *read_preference);
             CHECK(to.return_key() == *return_key);
             CHECK(to.show_record_id() == *show_record_id);
@@ -201,6 +205,7 @@ TEST_CASE("v1", "[mongocxx][v_noabi][options][find]") {
             CHECK_FALSE(to.min().has_value());
             CHECK_FALSE(to.no_cursor_timeout().has_value());
             CHECK_FALSE(to.projection().has_value());
+            CHECK_FALSE(to.read_concern().has_value());
             CHECK_FALSE(to.read_preference().has_value());
             CHECK_FALSE(to.return_key().has_value());
             CHECK_FALSE(to.show_record_id().has_value());
@@ -230,6 +235,7 @@ TEST_CASE("v1", "[mongocxx][v_noabi][options][find]") {
             from.min(from_v1(min->view()));
             from.no_cursor_timeout(*no_cursor_timeout);
             from.projection(from_v1(projection->view()));
+            from.read_concern(*read_concern);
             from.read_preference(*read_preference);
             from.return_key(*return_key);
             from.show_record_id(*show_record_id);
@@ -263,6 +269,7 @@ TEST_CASE("v1", "[mongocxx][v_noabi][options][find]") {
             CHECK(to.min().value() == min->view());
             CHECK(to.no_cursor_timeout() == *no_cursor_timeout);
             CHECK(to.projection().value() == projection->view());
+            CHECK(to.read_concern() == *read_concern);
             CHECK(to.read_preference() == *read_preference);
             CHECK(to.return_key() == *return_key);
             CHECK(to.show_record_id() == *show_record_id);
@@ -290,6 +297,7 @@ TEST_CASE("v1", "[mongocxx][v_noabi][options][find]") {
             CHECK_FALSE(to.min().has_value());
             CHECK_FALSE(to.no_cursor_timeout().has_value());
             CHECK_FALSE(to.projection().has_value());
+            CHECK_FALSE(to.read_concern().has_value());
             CHECK_FALSE(to.read_preference().has_value());
             CHECK_FALSE(to.return_key().has_value());
             CHECK_FALSE(to.show_record_id().has_value());
