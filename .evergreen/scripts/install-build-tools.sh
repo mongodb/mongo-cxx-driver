@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 
 export_uv_tool_dirs() {
-  UV_TOOL_DIR="$(pwd)/uv-tool" || return
-  UV_TOOL_BIN_DIR="$(pwd)/uv-bin" || return
+  UV_TOOL_DIR="$(mktemp -d)" || return
+  UV_TOOL_BIN_DIR="$(mktemp -d)" || return
 
-  PATH="${UV_TOOL_BIN_DIR:?}:${PATH:-}"
+  PATH="${UV_TOOL_BIN_DIR:?}:${PATH:-}" || return
 
   # Windows requires "C:\path\to\dir" instead of "/cygdrive/c/path/to/dir" (PATH is automatically converted).
   if [[ "${OSTYPE:?}" == cygwin ]]; then
@@ -12,11 +12,17 @@ export_uv_tool_dirs() {
     UV_TOOL_BIN_DIR="$(cygpath -aw "${UV_TOOL_BIN_DIR:?}")" || return
   fi
 
-  export UV_TOOL_DIR UV_TOOL_BIN_DIR
+  # PyPI `cmake` requires a sufficiently recent Python version.
+  UV_PYTHON_INSTALL_DIR="${UV_TOOL_DIR:?}" || return
+
+  export UV_TOOL_DIR UV_TOOL_BIN_DIR UV_PYTHON_INSTALL_DIR
 }
 
 install_build_tools() {
   export_uv_tool_dirs || return
+
+  # PyPI `cmake` requires a sufficiently recent Python version.
+  uv python install --no-bin -q || uv python install -q || return
 
   uv tool install -q cmake || return
 
@@ -30,6 +36,7 @@ install_build_tools() {
 
   uv tool install -q pkgconf || return
 
+  uvx python --version || return
   cmake --version | head -n 1 || return
   echo "ninja version: $(ninja --version)" || return
   echo "pkgconf version: $(pkgconf --version 2>/dev/null)" || return
