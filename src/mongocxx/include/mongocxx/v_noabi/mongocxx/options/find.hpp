@@ -37,8 +37,8 @@
 
 #include <mongocxx/cursor.hpp>
 #include <mongocxx/hint.hpp>
-#include <mongocxx/read_preference.hpp>
 #include <mongocxx/read_concern.hpp>
+#include <mongocxx/read_preference.hpp>
 
 #include <mongocxx/config/prelude.hpp>
 
