@@ -13,7 +13,6 @@
 // limitations under the License.
 
 #include "./assert.hh"
-#include "./entity.hh"
 #include "./operations.hh"
 
 #include <mongocxx/test/v_noabi/client_helpers.hh>
@@ -40,6 +39,7 @@
 #include <bsoncxx/test/catch.hh>
 
 #include <mongocxx/test/spec/monitoring.hh>
+#include <mongocxx/test/spec/unified_tests/entity.hh>
 #include <mongocxx/test/spec/util.hh>
 
 namespace {

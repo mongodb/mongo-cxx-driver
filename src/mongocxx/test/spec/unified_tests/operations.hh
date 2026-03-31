@@ -14,8 +14,6 @@
 
 #pragma once
 
-#include "./entity.hh"
-
 #include <unordered_map>
 
 #include <bsoncxx/array/element.hpp>
@@ -23,6 +21,7 @@
 #include <bsoncxx/document/view.hpp>
 
 #include <mongocxx/test/spec/monitoring.hh>
+#include <mongocxx/test/spec/unified_tests/entity.hh>
 
 namespace mongocxx {
 namespace operations {

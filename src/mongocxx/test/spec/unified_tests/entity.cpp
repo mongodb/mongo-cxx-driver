@@ -12,11 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "./entity.hh"
-
 #include <exception>
 
 #include <bsoncxx/string/to_string.hpp>
+
+#include <mongocxx/test/spec/unified_tests/entity.hh>
 
 namespace mongocxx {
 namespace entity {
