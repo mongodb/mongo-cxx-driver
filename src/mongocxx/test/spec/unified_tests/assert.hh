@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include "entity.hh"
+#include "./entity.hh"
 
 #include <bsoncxx/types/bson_value/view_or_value.hpp>
 

@@ -19,7 +19,7 @@
 #include <bsoncxx/private/suppress_deprecation_warnings.hh>
 
 #include <mongocxx/private/export.hh>
-#include <mongocxx/private/mock.hh>   // IWYU pragma: export
+#include <mongocxx/private/mock.hh> // IWYU pragma: export
 
 BSONCXX_PRIVATE_WARNINGS_PUSH();
 BSONCXX_PRIVATE_WARNINGS_DISABLE(GNU("-Wconversion"));

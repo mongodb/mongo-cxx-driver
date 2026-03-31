@@ -18,12 +18,12 @@
 
 //
 
+#include <mongocxx/v1/exception-fwd.hpp>
+
 #include <cstdint>
 #include <string>
 
 #include <bsoncxx/types/bson_value/value-fwd.hpp>
-
-#include <mongocxx/v1/exception-fwd.hpp>
 
 #include <mongocxx/client_session-fwd.hpp>
 #include <mongocxx/collection-fwd.hpp>

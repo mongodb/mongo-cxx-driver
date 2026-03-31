@@ -18,8 +18,9 @@
 
 //
 
-#include <cstdint>
 #include <mongocxx/v1/exception-fwd.hpp>
+
+#include <cstdint>
 
 #include <bsoncxx/document/value-fwd.hpp>
 

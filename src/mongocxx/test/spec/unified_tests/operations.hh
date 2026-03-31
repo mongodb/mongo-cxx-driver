@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include "entity.hh"
+#include "./entity.hh"
 
 #include <unordered_map>
 

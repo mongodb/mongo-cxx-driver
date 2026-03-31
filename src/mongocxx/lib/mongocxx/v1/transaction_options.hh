@@ -28,7 +28,8 @@ class transaction_options::internal {
    public:
     static MONGOCXX_ABI_EXPORT_CDECL_TESTING(transaction_options) make(mongoc_transaction_opt_t* impl);
 
-    static MONGOCXX_ABI_EXPORT_CDECL_TESTING(mongoc_transaction_opt_t const*) as_mongoc(transaction_options const& self);
+    static MONGOCXX_ABI_EXPORT_CDECL_TESTING(mongoc_transaction_opt_t const*) as_mongoc(
+        transaction_options const& self);
 
     static void set_read_concern(transaction_options& self, mongoc_read_concern_t const* v);
     static void set_read_preference(transaction_options& self, mongoc_read_prefs_t const* v);
