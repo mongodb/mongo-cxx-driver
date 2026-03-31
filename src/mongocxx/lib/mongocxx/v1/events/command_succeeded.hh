@@ -27,9 +27,10 @@ namespace events {
 
 class command_succeeded::internal {
    public:
-   static MONGOCXX_ABI_EXPORT_CDECL_TESTING(command_succeeded) make(mongoc_apm_command_succeeded_t const* ptr);
+    static MONGOCXX_ABI_EXPORT_CDECL_TESTING(command_succeeded) make(mongoc_apm_command_succeeded_t const* ptr);
 
-   static MONGOCXX_ABI_EXPORT_CDECL_TESTING(mongoc_apm_command_succeeded_t const*) as_mongoc(command_succeeded const& self);
+    static MONGOCXX_ABI_EXPORT_CDECL_TESTING(mongoc_apm_command_succeeded_t const*) as_mongoc(
+        command_succeeded const& self);
 };
 
 } // namespace events

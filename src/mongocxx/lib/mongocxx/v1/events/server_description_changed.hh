@@ -29,7 +29,8 @@ class server_description_changed::internal {
    public:
     static MONGOCXX_ABI_EXPORT_CDECL_TESTING(server_description_changed) make(mongoc_apm_server_changed_t const* ptr);
 
-    static MONGOCXX_ABI_EXPORT_CDECL_TESTING(mongoc_apm_server_changed_t const*) as_mongoc(server_description_changed const& self);
+    static MONGOCXX_ABI_EXPORT_CDECL_TESTING(mongoc_apm_server_changed_t const*) as_mongoc(
+        server_description_changed const& self);
 };
 
 } // namespace events

@@ -27,9 +27,10 @@ namespace events {
 
 class topology_opening::internal {
    public:
-   static MONGOCXX_ABI_EXPORT_CDECL_TESTING(topology_opening) make(mongoc_apm_topology_opening_t const* ptr);
+    static MONGOCXX_ABI_EXPORT_CDECL_TESTING(topology_opening) make(mongoc_apm_topology_opening_t const* ptr);
 
-   static MONGOCXX_ABI_EXPORT_CDECL_TESTING(mongoc_apm_topology_opening_t const*) as_mongoc(topology_opening const& self);
+    static MONGOCXX_ABI_EXPORT_CDECL_TESTING(mongoc_apm_topology_opening_t const*) as_mongoc(
+        topology_opening const& self);
 };
 
 } // namespace events

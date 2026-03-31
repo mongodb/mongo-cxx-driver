@@ -30,7 +30,8 @@ class server_description::internal {
     static server_description make(mongoc_server_description_t const* sd);
     static MONGOCXX_ABI_EXPORT_CDECL_TESTING(server_description) make(mongoc_server_description_t* sd);
 
-    static MONGOCXX_ABI_EXPORT_CDECL_TESTING(mongoc_server_description_t const*) as_mongoc(server_description const& self);
+    static MONGOCXX_ABI_EXPORT_CDECL_TESTING(mongoc_server_description_t const*) as_mongoc(
+        server_description const& self);
 };
 
 } // namespace events
