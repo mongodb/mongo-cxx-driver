@@ -17,6 +17,7 @@
 //
 
 #include <mongocxx/v1/hint.hpp>
+#include <mongocxx/v1/read_concern.hpp>
 #include <mongocxx/v1/write_concern.hpp>
 
 #include <bsoncxx/test/v1/array/value.hh>
@@ -32,6 +33,7 @@
 #include <bsoncxx/document/view.hpp>
 #include <bsoncxx/types/bson_value/view.hpp>
 
+#include <mongocxx/read_concern.hpp>
 #include <mongocxx/write_concern.hpp>
 
 #include <bsoncxx/test/catch.hh>
@@ -65,6 +67,7 @@ TEST_CASE("v1", "[mongocxx][v_noabi][options][update]") {
     bsoncxx::v1::stdx::optional<bool> bypass_document_validation;
     bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> collation;
     bsoncxx::v1::stdx::optional<bool> upsert;
+    bsoncxx::v1::stdx::optional<v1::read_concern> read_concern;
     bsoncxx::v1::stdx::optional<v1::write_concern> write_concern;
     bsoncxx::v1::stdx::optional<bsoncxx::v1::array::value> array_filters;
     bsoncxx::v1::stdx::optional<v1::hint> hint;
@@ -76,6 +79,7 @@ TEST_CASE("v1", "[mongocxx][v_noabi][options][update]") {
         bypass_document_validation.emplace(true);
         collation.emplace();
         upsert.emplace(true);
+        read_concern.emplace();
         write_concern.emplace();
         array_filters.emplace();
         hint.emplace("hint");
@@ -96,6 +100,7 @@ TEST_CASE("v1", "[mongocxx][v_noabi][options][update]") {
                 from.bypass_document_validation(*bypass_document_validation);
                 from.collation(*collation);
                 from.upsert(*upsert);
+                from.read_concern(*read_concern);
                 from.write_concern(*write_concern);
                 from.array_filters(*array_filters);
                 from.hint(*hint);
@@ -109,6 +114,7 @@ TEST_CASE("v1", "[mongocxx][v_noabi][options][update]") {
                 CHECK(to.bypass_document_validation() == *bypass_document_validation);
                 CHECK(to.collation().value() == collation->view());
                 CHECK(to.upsert() == *upsert);
+                CHECK(to.read_concern() == *read_concern);
                 CHECK(to.write_concern() == *write_concern);
                 CHECK(to.array_filters().value() == array_filters->view());
                 CHECK(to.hint().value().to_value() == hint->to_value());
@@ -118,6 +124,7 @@ TEST_CASE("v1", "[mongocxx][v_noabi][options][update]") {
                 CHECK_FALSE(to.bypass_document_validation().has_value());
                 CHECK_FALSE(to.collation().has_value());
                 CHECK_FALSE(to.upsert().has_value());
+                CHECK_FALSE(to.read_concern().has_value());
                 CHECK_FALSE(to.write_concern().has_value());
                 CHECK_FALSE(to.array_filters().has_value());
                 CHECK_FALSE(to.hint().has_value());
@@ -135,6 +142,7 @@ TEST_CASE("v1", "[mongocxx][v_noabi][options][update]") {
                 from.bypass_document_validation(*bypass_document_validation);
                 from.collation(*collation);
                 from.upsert(*upsert);
+                from.read_concern(*read_concern);
                 from.write_concern(*write_concern);
                 from.array_filters(*array_filters);
                 from.hint(*hint);
@@ -149,6 +157,7 @@ TEST_CASE("v1", "[mongocxx][v_noabi][options][update]") {
                 CHECK(to.bypass_document_validation() == *bypass_document_validation);
                 CHECK(to.collation().value() == collation->view());
                 CHECK(to.upsert() == *upsert);
+                CHECK(to.read_concern() == *read_concern);
                 CHECK(to.write_concern() == *write_concern);
                 CHECK(to.array_filters().value() == array_filters->view());
                 CHECK(to.hint().value().to_value() == hint->to_value());
@@ -159,6 +168,7 @@ TEST_CASE("v1", "[mongocxx][v_noabi][options][update]") {
                 CHECK_FALSE(to.bypass_document_validation().has_value());
                 CHECK_FALSE(to.collation().has_value());
                 CHECK_FALSE(to.upsert().has_value());
+                CHECK_FALSE(to.read_concern().has_value());
                 CHECK_FALSE(to.write_concern().has_value());
                 CHECK_FALSE(to.array_filters().has_value());
                 CHECK_FALSE(to.hint().has_value());
@@ -179,6 +189,7 @@ TEST_CASE("v1", "[mongocxx][v_noabi][options][update]") {
                 from.bypass_document_validation(*bypass_document_validation);
                 from.collation(from_v1(collation->view()));
                 from.upsert(*upsert);
+                from.read_concern(*read_concern);
                 from.write_concern(*write_concern);
                 from.array_filters(from_v1(array_filters->view()));
                 from.hint(*hint);
@@ -192,6 +203,7 @@ TEST_CASE("v1", "[mongocxx][v_noabi][options][update]") {
                 CHECK(to.bypass_document_validation() == *bypass_document_validation);
                 CHECK(to.collation().value() == collation->view());
                 CHECK(to.upsert() == *upsert);
+                CHECK(to.read_concern() == *read_concern);
                 CHECK(to.write_concern() == *write_concern);
                 CHECK(to.array_filters().value() == array_filters->view());
                 CHECK(to.hint().value().to_value() == hint->to_value());
@@ -201,6 +213,7 @@ TEST_CASE("v1", "[mongocxx][v_noabi][options][update]") {
                 CHECK_FALSE(to.bypass_document_validation().has_value());
                 CHECK_FALSE(to.collation().has_value());
                 CHECK_FALSE(to.upsert().has_value());
+                CHECK_FALSE(to.read_concern().has_value());
                 CHECK_FALSE(to.write_concern().has_value());
                 CHECK_FALSE(to.array_filters().has_value());
                 CHECK_FALSE(to.hint().has_value());
@@ -218,6 +231,7 @@ TEST_CASE("v1", "[mongocxx][v_noabi][options][update]") {
                 from.bypass_document_validation(*bypass_document_validation);
                 from.collation(from_v1(collation->view()));
                 from.upsert(*upsert);
+                from.read_concern(*read_concern);
                 from.write_concern(*write_concern);
                 from.array_filters(from_v1(array_filters->view()));
                 from.hint(*hint);
@@ -232,6 +246,7 @@ TEST_CASE("v1", "[mongocxx][v_noabi][options][update]") {
                 CHECK(to.bypass_document_validation() == *bypass_document_validation);
                 CHECK(to.collation().value() == collation->view());
                 CHECK(to.upsert() == *upsert);
+                CHECK(to.read_concern() == *read_concern);
                 CHECK(to.write_concern() == *write_concern);
                 CHECK(to.array_filters().value() == array_filters->view());
                 CHECK(to.hint().value().to_value() == hint->to_value());
@@ -242,6 +257,7 @@ TEST_CASE("v1", "[mongocxx][v_noabi][options][update]") {
                 CHECK_FALSE(to.bypass_document_validation().has_value());
                 CHECK_FALSE(to.collation().has_value());
                 CHECK_FALSE(to.upsert().has_value());
+                CHECK_FALSE(to.read_concern().has_value());
                 CHECK_FALSE(to.write_concern().has_value());
                 CHECK_FALSE(to.array_filters().has_value());
                 CHECK_FALSE(to.hint().has_value());
