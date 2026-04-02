@@ -34,6 +34,8 @@ install_build_tools() {
     uv tool install -q ninja || return
   fi
 
+  # Ensure `pkg-config` provided by PyPI pkgconf is able to fallback to the system `pkg-config`.
+  export FORCE_PKGCONF_PYPI=1
   uv tool install -q pkgconf || return
 
   uvx python --version || return
