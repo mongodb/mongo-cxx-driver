@@ -23,6 +23,7 @@
 #include <bsoncxx/v1/types/view.hpp>
 
 #include <mongocxx/v1/hint.hpp>
+#include <mongocxx/v1/read_concern.hpp>
 #include <mongocxx/v1/write_concern.hpp>
 
 #include <bsoncxx/v1/types/value.hh>
@@ -41,6 +42,7 @@ class update_many_options::impl {
     bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> _sort;
     bsoncxx::v1::stdx::optional<bsoncxx::v1::types::value> _comment;
     bsoncxx::v1::stdx::optional<bool> _upsert;
+    bsoncxx::v1::stdx::optional<v1::read_concern> _read_concern;
     bsoncxx::v1::stdx::optional<v1::write_concern> _write_concern;
     bsoncxx::v1::stdx::optional<bsoncxx::v1::array::value> _array_filters;
 
@@ -150,6 +152,15 @@ bsoncxx::v1::stdx::optional<bool> update_many_options::upsert() const {
     return impl::with(this)->_upsert;
 }
 
+update_many_options& update_many_options::read_concern(v1::read_concern rc) {
+    impl::with(this)->_read_concern = std::move(rc);
+    return *this;
+}
+
+bsoncxx::v1::stdx::optional<v1::read_concern> update_many_options::read_concern() const {
+    return impl::with(this)->_read_concern;
+}
+
 update_many_options& update_many_options::write_concern(v1::write_concern wc) {
     impl::with(this)->_write_concern = std::move(wc);
     return *this;
@@ -187,6 +198,11 @@ bsoncxx::v1::stdx::optional<bsoncxx::v1::types::value> const& update_many_option
     return impl::with(self)._comment;
 }
 
+bsoncxx::v1::stdx::optional<v1::read_concern> const& update_many_options::internal::read_concern(
+    update_many_options const& self) {
+    return impl::with(self)._read_concern;
+}
+
 bsoncxx::v1::stdx::optional<v1::write_concern> const& update_many_options::internal::write_concern(
     update_many_options const& self) {
     return impl::with(self)._write_concern;
@@ -214,6 +230,11 @@ bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value>& update_many_options::
 bsoncxx::v1::stdx::optional<bsoncxx::v1::types::value>& update_many_options::internal::comment(
     update_many_options& self) {
     return impl::with(self)._comment;
+}
+
+bsoncxx::v1::stdx::optional<v1::read_concern>& update_many_options::internal::read_concern(
+    update_many_options& self) {
+    return impl::with(self)._read_concern;
 }
 
 bsoncxx::v1::stdx::optional<v1::write_concern>& update_many_options::internal::write_concern(

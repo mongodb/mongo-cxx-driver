@@ -36,6 +36,7 @@
 #include <bsoncxx/types/bson_value/view_or_value.hpp>
 
 #include <mongocxx/hint.hpp>
+#include <mongocxx/read_concern.hpp>
 #include <mongocxx/write_concern.hpp>
 
 #include <mongocxx/config/prelude.hpp>
@@ -87,6 +88,10 @@ class update {
             ret.upsert(*_upsert);
         }
 
+        if (_read_concern) {
+            ret.read_concern(to_v1(*_read_concern));
+        }
+
         if (_write_concern) {
             ret.write_concern(to_v1(*_write_concern));
         }
@@ -131,6 +136,10 @@ class update {
             ret.upsert(*_upsert);
         }
 
+        if (_read_concern) {
+            ret.read_concern(to_v1(*_read_concern));
+        }
+
         if (_write_concern) {
             ret.write_concern(to_v1(*_write_concern));
         }
@@ -170,7 +179,7 @@ class update {
     ///   Whether or not to bypass document validation
     ///
     /// @return
-    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   A reference to the object on which this member function is being called. This facilitates
     ///   method chaining.
     ///
     update& bypass_document_validation(bool bypass_document_validation) {
@@ -194,7 +203,7 @@ class update {
     ///   The new collation.
     ///
     /// @return
-    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   A reference to the object on which this member function is being called. This facilitates
     ///   method chaining.
     ///
     /// @see
@@ -228,7 +237,7 @@ class update {
     ///   Object representing the index to use.
     ///
     /// @return
-    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   A reference to the object on which this member function is being called. This facilitates
     ///   method chaining.
     ///
     update& hint(v_noabi::hint index_hint) {
@@ -252,7 +261,7 @@ class update {
     ///   The new let option.
     ///
     /// @return
-    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   A reference to the object on which this member function is being called. This facilitates
     ///   method chaining.
     ///
     update& let(bsoncxx::v_noabi::document::view_or_value let) {
@@ -292,7 +301,7 @@ class update {
     ///   The new comment option.
     ///
     /// @return
-    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   A reference to the object on which this member function is being called. This facilitates
     ///   method chaining.
     ///
     update& comment(bsoncxx::v_noabi::types::bson_value::view_or_value comment) {
@@ -323,7 +332,7 @@ class update {
     ///   is not found.
     ///
     /// @return
-    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   A reference to the object on which this member function is being called. This facilitates
     ///   method chaining.
     ///
     update& upsert(bool upsert) {
@@ -341,13 +350,44 @@ class update {
     }
 
     ///
+    /// Sets the read_concern for this operation.
+    ///
+    /// @param rc
+    ///   The new read_concern
+    ///
+    /// @return
+    ///   A reference to the object on which this member function is being called. This facilitates
+    ///   method chaining.
+    ///
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/read-concern/
+    ///
+    update& read_concern(v_noabi::read_concern rc) {
+        _read_concern = std::move(rc);
+        return *this;
+    }
+
+    ///
+    /// The current read_concern for this operation.
+    ///
+    /// @return
+    ///   The current read_concern
+    ///
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/read-concern/
+    ///
+    bsoncxx::v_noabi::stdx::optional<v_noabi::read_concern> const& read_concern() const {
+        return _read_concern;
+    }
+
+    ///
     /// Sets the write_concern for this operation.
     ///
     /// @param wc
     ///   The new write_concern
     ///
     /// @return
-    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   A reference to the object on which this member function is being called. This facilitates
     ///   method chaining.
     ///
     /// @see
@@ -378,7 +418,7 @@ class update {
     ///   Array representing filters determining which array elements to modify.
     ///
     /// @return
-    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   A reference to the object on which this member function is being called. This facilitates
     ///   method chaining.
     ///
     /// @see
@@ -406,6 +446,7 @@ class update {
     bsoncxx::v_noabi::stdx::optional<bool> _bypass_document_validation;
     bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> _collation;
     bsoncxx::v_noabi::stdx::optional<bool> _upsert;
+    bsoncxx::v_noabi::stdx::optional<v_noabi::read_concern> _read_concern;
     bsoncxx::v_noabi::stdx::optional<v_noabi::write_concern> _write_concern;
     bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::array::view_or_value> _array_filters;
     bsoncxx::v_noabi::stdx::optional<v_noabi::hint> _hint;
