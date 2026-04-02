@@ -102,8 +102,8 @@ TEST_CASE("ownership", "[mongocxx][v1][collection]") {
     auto const coll2 = reinterpret_cast<mongoc_collection_t*>(&id2);
     auto const coll3 = reinterpret_cast<mongoc_collection_t*>(&id3);
 
-    auto destroy = libmongoc::make_instance(&libmongoc::collection_destroy);
-    auto copy = libmongoc::make_instance(&libmongoc::collection_copy);
+    auto destroy = libmongoc::collection_destroy.create_instance();
+    auto copy = libmongoc::collection_copy.create_instance();
 
     int destroy_count = 0;
     int copy_count = 0;
