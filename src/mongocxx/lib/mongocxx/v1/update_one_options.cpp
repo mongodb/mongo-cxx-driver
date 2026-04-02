@@ -249,13 +249,11 @@ bsoncxx::v1::stdx::optional<bsoncxx::v1::types::value>& update_one_options::inte
     return impl::with(self)._comment;
 }
 
-bsoncxx::v1::stdx::optional<v1::read_concern>& update_one_options::internal::read_concern(
-    update_one_options& self) {
+bsoncxx::v1::stdx::optional<v1::read_concern>& update_one_options::internal::read_concern(update_one_options& self) {
     return impl::with(self)._read_concern;
 }
 
-bsoncxx::v1::stdx::optional<v1::write_concern>& update_one_options::internal::write_concern(
-    update_one_options& self) {
+bsoncxx::v1::stdx::optional<v1::write_concern>& update_one_options::internal::write_concern(update_one_options& self) {
     return impl::with(self)._write_concern;
 }
 

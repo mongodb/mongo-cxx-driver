@@ -232,8 +232,7 @@ bsoncxx::v1::stdx::optional<bsoncxx::v1::types::value>& update_many_options::int
     return impl::with(self)._comment;
 }
 
-bsoncxx::v1::stdx::optional<v1::read_concern>& update_many_options::internal::read_concern(
-    update_many_options& self) {
+bsoncxx::v1::stdx::optional<v1::read_concern>& update_many_options::internal::read_concern(update_many_options& self) {
     return impl::with(self)._read_concern;
 }
 
