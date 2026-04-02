@@ -48,8 +48,8 @@ namespace v1 {
 /// - `comment`
 /// - `hint`
 /// - `let`
-/// - `upsert`
 /// - `read_concern` ("readConcern")
+/// - `upsert`
 /// - `write_concern` ("writeConcern")
 ///
 /// @see
