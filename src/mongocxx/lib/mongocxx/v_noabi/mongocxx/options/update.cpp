@@ -38,6 +38,7 @@ update::update(v1::update_many_options opts)
           return {};
       }()},
       _upsert{opts.upsert()},
+      _read_concern{std::move(v1::update_many_options::internal::read_concern(opts))},
       _write_concern{std::move(v1::update_many_options::internal::write_concern(opts))},
       _array_filters{[&]() -> decltype(_array_filters) {
           if (auto& opt = v1::update_many_options::internal::array_filters(opts)) {
@@ -63,6 +64,7 @@ update::update(v1::update_one_options opts)
           return {};
       }()},
       _upsert{opts.upsert()},
+      _read_concern{std::move(v1::update_one_options::internal::read_concern(opts))},
       _write_concern{std::move(v1::update_one_options::internal::write_concern(opts))},
       _array_filters{[&]() -> decltype(_array_filters) {
           if (auto& opt = v1::update_one_options::internal::array_filters(opts)) {
