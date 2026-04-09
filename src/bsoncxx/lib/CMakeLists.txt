@@ -98,6 +98,68 @@ if(1)
         DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/bsoncxx/v1/config
         COMPONENT dev
     )
+
+    if(1)
+        file(GLOB_RECURSE bsoncxx_v_noabi_fwd_headers
+            RELATIVE "${PROJECT_SOURCE_DIR}/include/bsoncxx/v_noabi"
+            CONFIGURE_DEPENDS
+            "${PROJECT_SOURCE_DIR}/include/bsoncxx/v_noabi/bsoncxx/*-fwd.hpp"
+        )
+        list(SORT bsoncxx_v_noabi_fwd_headers)
+
+        if("${bsoncxx_v_noabi_fwd_headers}" STREQUAL "")
+            message(FATAL_ERROR "No bsoncxx v_noabi forward headers found by file(GLOB_RECURSE)")
+        endif()
+
+        set(BSONCXX_V_NOABI_FWD_INCLUDES "")
+        foreach(header IN LISTS bsoncxx_v_noabi_fwd_headers)
+            string(APPEND BSONCXX_V_NOABI_FWD_INCLUDES "#include <${header}> // IWYU pragma: export\n")
+        endforeach()
+        string(STRIP "${BSONCXX_V_NOABI_FWD_INCLUDES}" BSONCXX_V_NOABI_FWD_INCLUDES)
+
+        configure_file(
+            bsoncxx/v_noabi/bsoncxx/fwd.hpp.in
+            bsoncxx/v_noabi/bsoncxx/fwd.hpp
+            @ONLY
+        )
+
+        install(FILES
+            ${CMAKE_CURRENT_BINARY_DIR}/bsoncxx/v_noabi/bsoncxx/fwd.hpp
+            DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/bsoncxx/v_noabi/bsoncxx
+            COMPONENT dev
+        )
+    endif()
+
+    if(1)
+        file(GLOB_RECURSE bsoncxx_v1_fwd_headers
+            RELATIVE "${PROJECT_SOURCE_DIR}/include"
+            CONFIGURE_DEPENDS
+            "${PROJECT_SOURCE_DIR}/include/bsoncxx/v1/*-fwd.hpp"
+        )
+        list(SORT bsoncxx_v1_fwd_headers)
+
+        if("${bsoncxx_v1_fwd_headers}" STREQUAL "")
+            message(FATAL_ERROR "No bsoncxx v1 forward headers found by file(GLOB_RECURSE)")
+        endif()
+
+        set(BSONCXX_V1_FWD_INCLUDES "")
+        foreach(header IN LISTS bsoncxx_v1_fwd_headers)
+            string(APPEND BSONCXX_V1_FWD_INCLUDES "#include <${header}> // IWYU pragma: export\n")
+        endforeach()
+        string(STRIP "${BSONCXX_V1_FWD_INCLUDES}" BSONCXX_V1_FWD_INCLUDES)
+
+        configure_file(
+            bsoncxx/v1/fwd.hpp.in
+            bsoncxx/v1/fwd.hpp
+            @ONLY
+        )
+
+        install(FILES
+            ${CMAKE_CURRENT_BINARY_DIR}/bsoncxx/v1/fwd.hpp
+            DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/bsoncxx/v1
+            COMPONENT dev
+        )
+    endif()
 endif()
 
 set_dist_list(src_bsoncxx_lib_DIST
@@ -107,6 +169,8 @@ set_dist_list(src_bsoncxx_lib_DIST
     ${bsoncxx_sources_v1}
     ${bsoncxx_headers}
     bsoncxx/private/config/config.hh.in
+    bsoncxx/v_noabi/bsoncxx/fwd.hpp.in
     bsoncxx/v1/config/config.hpp.in
     bsoncxx/v1/config/version.hpp.in
+    bsoncxx/v1/fwd.hpp.in
 )

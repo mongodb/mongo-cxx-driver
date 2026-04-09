@@ -108,6 +108,7 @@ function(mongocxx_add_library TARGET OUTPUT_NAME LINK_TYPE)
         $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
         $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/lib/mongocxx/v_noabi>
         $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/lib>
+        $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/lib/mongocxx/v_noabi>
         $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/lib>
     )
 endfunction(mongocxx_add_library)
