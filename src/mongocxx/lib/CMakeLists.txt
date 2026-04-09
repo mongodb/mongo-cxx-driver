@@ -253,6 +253,68 @@ if(1)
         DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/mongocxx/v1/config
         COMPONENT dev
     )
+
+    if(1)
+        file(GLOB_RECURSE mongocxx_v_noabi_fwd_headers
+            RELATIVE "${PROJECT_SOURCE_DIR}/include/mongocxx/v_noabi"
+            CONFIGURE_DEPENDS
+            "${PROJECT_SOURCE_DIR}/include/mongocxx/v_noabi/mongocxx/*-fwd.hpp"
+        )
+        list(SORT mongocxx_v_noabi_fwd_headers)
+
+        if("${mongocxx_v_noabi_fwd_headers}" STREQUAL "")
+            message(FATAL_ERROR "No mongocxx v_noabi forward headers found by file(GLOB_RECURSE)")
+        endif()
+
+        set(MONGOCXX_V_NOABI_FWD_INCLUDES "")
+        foreach(header IN LISTS mongocxx_v_noabi_fwd_headers)
+            string(APPEND MONGOCXX_V_NOABI_FWD_INCLUDES "#include <${header}> // IWYU pragma: export\n")
+        endforeach()
+        string(STRIP "${MONGOCXX_V_NOABI_FWD_INCLUDES}" MONGOCXX_V_NOABI_FWD_INCLUDES)
+
+        configure_file(
+            mongocxx/v_noabi/mongocxx/fwd.hpp.in
+            mongocxx/v_noabi/mongocxx/fwd.hpp
+            @ONLY
+        )
+
+        install(FILES
+            ${CMAKE_CURRENT_BINARY_DIR}/mongocxx/v_noabi/mongocxx/fwd.hpp
+            DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/mongocxx/v_noabi/mongocxx
+            COMPONENT dev
+        )
+    endif()
+
+    if(1)
+        file(GLOB_RECURSE mongocxx_v1_fwd_headers
+            RELATIVE "${PROJECT_SOURCE_DIR}/include"
+            CONFIGURE_DEPENDS
+            "${PROJECT_SOURCE_DIR}/include/mongocxx/v1/*-fwd.hpp"
+        )
+        list(SORT mongocxx_v1_fwd_headers)
+
+        if("${mongocxx_v1_fwd_headers}" STREQUAL "")
+            message(FATAL_ERROR "No mongocxx v1 forward headers found by file(GLOB_RECURSE)")
+        endif()
+
+        set(MONGOCXX_V1_FWD_INCLUDES "")
+        foreach(header IN LISTS mongocxx_v1_fwd_headers)
+            string(APPEND MONGOCXX_V1_FWD_INCLUDES "#include <${header}> // IWYU pragma: export\n")
+        endforeach()
+        string(STRIP "${MONGOCXX_V1_FWD_INCLUDES}" MONGOCXX_V1_FWD_INCLUDES)
+
+        configure_file(
+            mongocxx/v1/fwd.hpp.in
+            mongocxx/v1/fwd.hpp
+            @ONLY
+        )
+
+        install(FILES
+            ${CMAKE_CURRENT_BINARY_DIR}/mongocxx/v1/fwd.hpp
+            DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/mongocxx/v1
+            COMPONENT dev
+        )
+    endif()
 endif()
 
 set_dist_list(src_mongocxx_lib_DIST
@@ -262,6 +324,8 @@ set_dist_list(src_mongocxx_lib_DIST
     ${mongocxx_sources_v1}
     ${mongocxx_headers}
     mongocxx/private/config/config.hh.in
+    mongocxx/v_noabi/mongocxx/fwd.hpp.in
     mongocxx/v1/config/config.hpp.in
     mongocxx/v1/config/version.hpp.in
+    mongocxx/v1/fwd.hpp.in
 )
