@@ -11,6 +11,10 @@ Changes prior to 3.9.0 are documented as [release notes on GitHub](https://githu
 
 <!-- Will contain entries for the next minor release. -->
 
+### Deprecated
+
+- Support for Visual Studio 2015 (EOL since Oct 2025). Use Visual Studio 2017 or newer.
+
 ## 4.2.0
 
 > [!IMPORTANT]

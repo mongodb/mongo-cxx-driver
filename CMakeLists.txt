@@ -38,6 +38,11 @@ elseif(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
     if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS "19.0.24210")
         message(FATAL_ERROR "Visual Studio 13 2015 Update 3 or newer is required")
     endif()
+    if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS "19.10.25017")
+        message(DEPRECATION "Visual Studio 2017 version 15.0 or newer will be required")
+        # TODO(CXX-3215) replace DEPRECATION with:
+        # message(FATAL_ERROR "Visual Studio 2017 version 15.0 or newer is required")
+    endif()
 elseif(CMAKE_CXX_COMPILER_ID STREQUAL "AppleClang")
     # https://developer.apple.com/xcode/cpp/
     # https://en.wikipedia.org/wiki/Xcode#Version_comparison_table
