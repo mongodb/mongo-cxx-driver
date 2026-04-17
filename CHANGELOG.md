@@ -15,6 +15,10 @@ Changes prior to 3.9.0 are documented as [release notes on GitHub](https://githu
 
 - Support for Visual Studio 2015 (EOL since Oct 2025). Use Visual Studio 2017 or newer.
 
+### Changed
+
+- Bump the minimum required C Driver version to [2.3.0](https://github.com/mongodb/mongo-c-driver/releases/tag/2.3.0).
+
 ## 4.2.0
 
 > [!IMPORTANT]
