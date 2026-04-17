@@ -209,7 +209,7 @@ class core::impl {
 
         frame(bson_t* parent, char const* key, std::int32_t len, bool is_array) : is_array(is_array), parent(parent) {
             if (is_array) {
-                if (!bson_append_array_begin(parent, key, len, &bson)) {
+                if (!bson_append_array_unsafe_begin(parent, key, len, &bson)) {
                     throw v_noabi::exception{v_noabi::error_code::k_cannot_begin_appending_array};
                 }
             } else {

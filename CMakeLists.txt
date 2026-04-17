@@ -62,9 +62,9 @@ else()
 endif()
 
 # Also update etc/purls.txt.
-set(BSON_REQUIRED_VERSION 2.2.3)
-set(MONGOC_REQUIRED_VERSION 2.2.3)
-set(MONGOC_DOWNLOAD_VERSION 2.2.3)
+set(BSON_REQUIRED_VERSION 2.3.0)
+set(MONGOC_REQUIRED_VERSION 2.3.0)
+set(MONGOC_DOWNLOAD_VERSION 2.3.0)
 
 # All of our target compilers support the deprecated
 # attribute. Normally, we would just let the GenerateExportHeader

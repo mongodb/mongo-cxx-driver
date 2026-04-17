@@ -106,6 +106,9 @@ if [[ "${SKIP_INSTALL_LIBMONGOCRYPT:-}" != "1" ]]; then
       exit 1
     }
   else
+    # Unset CC / CXX variables if set to the empty string. Avoids an error in libmongocrypt building Ninja from source.
+    [ -z "${CC:-}" ] && unset CC
+    [ -z "${CXX:-}" ] && unset CXX
     "${mongoc_dir}/.evergreen/scripts/compile-libmongocrypt.sh" "$(command -v cmake)" "${mongoc_idir}" "${mongoc_install_idir}"
   fi
 
