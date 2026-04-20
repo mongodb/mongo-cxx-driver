@@ -113,6 +113,10 @@ class packed_bit_element {
         return {(byte - other.byte) * 8 + (difference_type{bit} - difference_type{other.bit})};
     }
 
+    constexpr reference operator[](difference_type const& other) const noexcept {
+        return *(*this + other);
+    }
+
     /// Advance this iterator forward by the indicated number of bits
     packed_bit_element& operator+=(difference_type const& other) noexcept {
         return *this = *this + other;
@@ -235,6 +239,10 @@ class packed_bit_byte {
     /// If the two iterators do not point into the same vector, behavior is undefined.
     constexpr difference_type operator-(packed_bit_byte const& other) const noexcept {
         return {byte - other.byte};
+    }
+
+    constexpr reference operator[](difference_type const& other) const noexcept {
+        return *(*this + other);
     }
 
     /// Advance this iterator forward by the indicated number of bytes

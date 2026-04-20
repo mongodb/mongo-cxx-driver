@@ -138,6 +138,9 @@ void iterator_operations(
     BSONCXX_PRIVATE_WARNINGS_PUSH();
     BSONCXX_PRIVATE_WARNINGS_DISABLE(GNU("-Wfloat-equal"));
 
+    CHECK(iter_copy[0] == *begin);
+    CHECK(iter_copy[1] == *(begin + 1));
+
     std::generate(begin, end, [&] { return element_unit; });
     std::for_each(begin, end, [&](auto const& value) { CHECK(value == element_unit); });
 
