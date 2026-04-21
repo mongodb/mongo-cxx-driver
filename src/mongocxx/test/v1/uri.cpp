@@ -647,6 +647,10 @@ TEST_CASE("direct_connection", "[mongocxx][v1][uri]") {
     test_option_bool(&uri::direct_connection, MONGOC_URI_DIRECTCONNECTION);
 }
 
+TEST_CASE("enable_overload_retargeting", "[mongocxx][v1][uri]") {
+    test_option_bool(&uri::enable_overload_retargeting, MONGOC_URI_ENABLEOVERLOADRETARGETING);
+}
+
 TEST_CASE("heartbeat_frequency_ms", "[mongocxx][v1][uri]") {
     test_option_int32(&uri::heartbeat_frequency_ms, MONGOC_URI_HEARTBEATFREQUENCYMS);
 }
@@ -657,10 +661,6 @@ TEST_CASE("local_threshold_ms", "[mongocxx][v1][uri]") {
 
 TEST_CASE("max_adaptive_retries", "[mongocxx][v1][uri]") {
     test_option_int32(&uri::max_adaptive_retries, MONGOC_URI_MAXADAPTIVERETRIES);
-}
-
-TEST_CASE("enable_overload_retargeting", "[mongocxx][v1][uri]") {
-    test_option_bool(&uri::enable_overload_retargeting, MONGOC_URI_ENABLEOVERLOADRETARGETING);
 }
 
 TEST_CASE("max_pool_size", "[mongocxx][v1][uri]") {
