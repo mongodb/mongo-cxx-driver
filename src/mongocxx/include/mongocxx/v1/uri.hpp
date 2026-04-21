@@ -60,10 +60,12 @@ namespace v1 {
 /// - `connect_timeout_ms` ("connectTimeoutMS")
 /// - `database`
 /// - `direct_connection` ("directConnection")
+/// - `enable_overload_retargeting` ("enableOverloadRetargeting")
 /// - `heartbeat_frequency_ms` ("heartbeatFrequencyMS")
 /// - `hosts`
 /// - `local_threshold_ms` ("localThresholdMS")
 /// - `max_pool_size` ("maxPoolSize")
+/// - `max_adaptive_retries` ("maxAdaptiveRetries")
 /// - `password`
 /// - `read_concern` ("readConcern")
 /// - `read_preference` ("readPreference")
@@ -274,6 +276,16 @@ class uri {
     /// Return the "localThresholdMS" option.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<std::int32_t>) local_threshold_ms() const;
+
+    ///
+    /// Return the "maxAdaptiveRetries" option.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<std::int32_t>) max_adaptive_retries() const;
+
+    ///
+    /// Return the "enableOverloadRetargeting" option.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bool>) enable_overload_retargeting() const;
 
     ///
     /// Return the "maxPoolSize" option.

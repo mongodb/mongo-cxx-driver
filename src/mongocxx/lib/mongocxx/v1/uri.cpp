@@ -276,6 +276,14 @@ bsoncxx::v1::stdx::optional<std::int32_t> uri::local_threshold_ms() const {
     return get_field<std::int32_t>(to_mongoc(_impl), MONGOC_URI_LOCALTHRESHOLDMS);
 }
 
+bsoncxx::v1::stdx::optional<std::int32_t> uri::max_adaptive_retries() const {
+    return get_field<std::int32_t>(to_mongoc(_impl), MONGOC_URI_MAXADAPTIVERETRIES);
+}
+
+bsoncxx::v1::stdx::optional<bool> uri::enable_overload_retargeting() const {
+    return get_field<bool>(to_mongoc(_impl), MONGOC_URI_ENABLEOVERLOADRETARGETING);
+}
+
 bsoncxx::v1::stdx::optional<std::int32_t> uri::max_pool_size() const {
     return get_field<std::int32_t>(to_mongoc(_impl), MONGOC_URI_MAXPOOLSIZE);
 }
