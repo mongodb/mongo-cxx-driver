@@ -227,6 +227,68 @@ TEST_CASE("uri::local_threshold_ms()", "[uri]") {
     _test_int32_option("localThresholdMS", [](mongocxx::uri& uri) { return uri.local_threshold_ms(); });
 }
 
+TEST_CASE("uri::max_adaptive_retries()", "[uri]") {
+    // As-if, _test_int32_options(), but does not error on invalid values.
+    {
+        /* Not present. */
+        mongocxx::uri uri{"mongodb://host/"};
+        REQUIRE(!uri.max_adaptive_retries());
+
+        /* Present. */
+        uri = mongocxx::uri{"mongodb://host/?maxAdaptiveRetries=1234"};
+        REQUIRE(uri.max_adaptive_retries());
+        REQUIRE(1234 == *uri.max_adaptive_retries());
+
+        uri = mongocxx::uri{"mongodb://host/?maxAdaptiveRetries=0"};
+        REQUIRE(uri.max_adaptive_retries());
+        REQUIRE(0 == *uri.max_adaptive_retries());
+
+        /* Present but empty. libmongoc considers it unset. */
+        uri = mongocxx::uri{"mongodb://host/?maxAdaptiveRetries=&tls=true"};
+        REQUIRE(!uri.max_adaptive_retries());
+
+        /* Present, but wrong type. **NOT** an error. */
+        REQUIRE_NOTHROW(uri = mongocxx::uri{"mongodb://host/?maxAdaptiveRetries=abc"});
+        REQUIRE_FALSE(uri.max_adaptive_retries().has_value());
+    }
+}
+
+TEST_CASE("uri::enable_overload_retargeting()", "[uri]") {
+    // As-if, _test_bool_option(), but does not error on invalid values.
+    {
+        /* Not present. */
+        mongocxx::uri uri{"mongodb://host/"};
+        REQUIRE(!uri.enable_overload_retargeting());
+
+        /* Present. */
+        uri = mongocxx::uri{"mongodb://host/?enableOverloadRetargeting=true"};
+        REQUIRE(uri.enable_overload_retargeting());
+        REQUIRE(true == *uri.enable_overload_retargeting());
+
+        /* Present, but false. */
+        uri = mongocxx::uri{"mongodb://host/?enableOverloadRetargeting=false"};
+        REQUIRE(uri.enable_overload_retargeting());
+        REQUIRE(false == *uri.enable_overload_retargeting());
+
+        /* Present but empty. libmongoc considers it unset. */
+        uri = mongocxx::uri{"mongodb://host/?enableOverloadRetargeting="};
+        REQUIRE(!uri.enable_overload_retargeting());
+
+        /* Present, but valid numeric. */
+        uri = mongocxx::uri{"mongodb://host/?enableOverloadRetargeting=1"};
+        REQUIRE(uri.enable_overload_retargeting());
+        REQUIRE(true == *uri.enable_overload_retargeting());
+
+        /* Present, but invalid numeric. **NOT** an error. */
+        REQUIRE_NOTHROW(uri = mongocxx::uri{"mongodb://host/?enableOverloadRetargeting=2"});
+        REQUIRE_FALSE(uri.enable_overload_retargeting().has_value());
+
+        /* Present, but wrong type. **NOT** an error. */
+        REQUIRE_NOTHROW(uri = mongocxx::uri{"mongodb://host/?enableOverloadRetargeting=lol"});
+        REQUIRE_FALSE(uri.enable_overload_retargeting().has_value());
+    }
+}
+
 TEST_CASE("uri::max_pool_size()", "[uri]") {
     _test_int32_option("maxPoolSize", [](mongocxx::uri& uri) { return uri.max_pool_size(); });
 }

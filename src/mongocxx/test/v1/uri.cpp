@@ -402,6 +402,8 @@ TEST_CASE("default", "[mongocxx][v1][uri]") {
     CHECK_FALSE(opts.direct_connection().has_value());
     CHECK_FALSE(opts.heartbeat_frequency_ms().has_value());
     CHECK_FALSE(opts.local_threshold_ms().has_value());
+    CHECK_FALSE(opts.max_adaptive_retries().has_value());
+    CHECK_FALSE(opts.enable_overload_retargeting().has_value());
     CHECK_FALSE(opts.max_pool_size().has_value());
     CHECK_FALSE(opts.retry_reads().has_value());
     CHECK_FALSE(opts.retry_writes().has_value());
@@ -651,6 +653,14 @@ TEST_CASE("heartbeat_frequency_ms", "[mongocxx][v1][uri]") {
 
 TEST_CASE("local_threshold_ms", "[mongocxx][v1][uri]") {
     test_option_int32(&uri::local_threshold_ms, MONGOC_URI_LOCALTHRESHOLDMS);
+}
+
+TEST_CASE("max_adaptive_retries", "[mongocxx][v1][uri]") {
+    test_option_int32(&uri::max_adaptive_retries, MONGOC_URI_MAXADAPTIVERETRIES);
+}
+
+TEST_CASE("enable_overload_retargeting", "[mongocxx][v1][uri]") {
+    test_option_bool(&uri::enable_overload_retargeting, MONGOC_URI_ENABLEOVERLOADRETARGETING);
 }
 
 TEST_CASE("max_pool_size", "[mongocxx][v1][uri]") {

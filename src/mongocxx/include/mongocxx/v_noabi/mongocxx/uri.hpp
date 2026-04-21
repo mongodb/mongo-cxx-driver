@@ -344,6 +344,24 @@ class uri {
     }
 
     ///
+    /// Returns the value of the option "maxAdaptiveRetries" if present in the uri.
+    ///
+    /// @return An optional std::int32_t
+    ///
+    bsoncxx::v_noabi::stdx::optional<std::int32_t> max_adaptive_retries() const {
+        return _uri.max_adaptive_retries();
+    }
+
+    ///
+    /// Returns the value of the option "enableOverloadRetargeting" if present in the uri.
+    ///
+    /// @return An optional bool
+    ///
+    bsoncxx::v_noabi::stdx::optional<bool> enable_overload_retargeting() const {
+        return _uri.enable_overload_retargeting();
+    }
+
+    ///
     /// Returns the value of the option "maxPoolSize" if present in the uri.
     ///
     /// @return An optional std::int32_t
