@@ -1,0 +1,27 @@
+var classmongocxx_1_1v1_1_1update__many__options =
+[
+    [ "~update_many_options", "classmongocxx_1_1v1_1_1update__many__options.html#af13be326cbfc26b77ec080104f1dfad1", null ],
+    [ "update_many_options", "classmongocxx_1_1v1_1_1update__many__options.html#a8c3ca25a9cd3d9143675789a96b2adb0", null ],
+    [ "update_many_options", "classmongocxx_1_1v1_1_1update__many__options.html#a4c202b1272b7d4d1a139ec8c9ebb31a2", null ],
+    [ "update_many_options", "classmongocxx_1_1v1_1_1update__many__options.html#ab9ef9b240bf491c671b2f00798c337dc", null ],
+    [ "array_filters", "classmongocxx_1_1v1_1_1update__many__options.html#adbe18b75f6bb68385060193e3703c42b", null ],
+    [ "array_filters", "classmongocxx_1_1v1_1_1update__many__options.html#abdb3080a300f9500621a44972494c75c", null ],
+    [ "bypass_document_validation", "classmongocxx_1_1v1_1_1update__many__options.html#a3f643987a84d887c5f0d7ba2e0734640", null ],
+    [ "bypass_document_validation", "classmongocxx_1_1v1_1_1update__many__options.html#a5342da477ce9410e400c949b32f0eea4", null ],
+    [ "collation", "classmongocxx_1_1v1_1_1update__many__options.html#ae93ad2209b55c00c7ad4437b3f65e558", null ],
+    [ "collation", "classmongocxx_1_1v1_1_1update__many__options.html#a07b611cec93744234d456c15f5fd14a9", null ],
+    [ "comment", "classmongocxx_1_1v1_1_1update__many__options.html#a97e33da39ee50cc77744938cbb1dc3a1", null ],
+    [ "comment", "classmongocxx_1_1v1_1_1update__many__options.html#ade44056cdfb19363c76a8015e11ce3a8", null ],
+    [ "hint", "classmongocxx_1_1v1_1_1update__many__options.html#a0ca665aad3ad841f13034a5ebfbdb27c", null ],
+    [ "hint", "classmongocxx_1_1v1_1_1update__many__options.html#ab2d44ec332e1fba2aab6c9f81bb0299f", null ],
+    [ "let", "classmongocxx_1_1v1_1_1update__many__options.html#a0e58804a0e882decba728131a03636ff", null ],
+    [ "let", "classmongocxx_1_1v1_1_1update__many__options.html#a60ac17904aa748c48f201646851a953c", null ],
+    [ "operator=", "classmongocxx_1_1v1_1_1update__many__options.html#ad2ef03d091a7b0b17cc9a276ccdb8986", null ],
+    [ "operator=", "classmongocxx_1_1v1_1_1update__many__options.html#aa3832c0a9270675bfbb1bb75217ad0c2", null ],
+    [ "read_concern", "classmongocxx_1_1v1_1_1update__many__options.html#a379f41da693635026e9e285d9f70e3ee", null ],
+    [ "read_concern", "classmongocxx_1_1v1_1_1update__many__options.html#a56dc925b1afd63f34f87c87e12c5bef6", null ],
+    [ "upsert", "classmongocxx_1_1v1_1_1update__many__options.html#a4626ad9bc405c32741d535e015276e31", null ],
+    [ "upsert", "classmongocxx_1_1v1_1_1update__many__options.html#a1c7b4997dda0651743ecbe23feff776c", null ],
+    [ "write_concern", "classmongocxx_1_1v1_1_1update__many__options.html#a7721c4871984527ac99a088f9acc9078", null ],
+    [ "write_concern", "classmongocxx_1_1v1_1_1update__many__options.html#aa0565bbd63bedcc64ea7c1a2016a2ee3", null ]
+];
