@@ -2,6 +2,7 @@
 
 <h1>Driver Documentation By Version</h1>
 
+[4.3.0](../mongocxx-4.3.0) |
 [4.2.0](../mongocxx-4.2.0) |
 [4.1.4](../mongocxx-4.1.4) |
 [4.1.3](../mongocxx-4.1.3) |
@@ -56,8 +57,8 @@
 | Version     | ABI Stability   | Development Stability       | Development Status |
 | :---------: | :-------------: | :-------------------------: | :----------------: |
 | master      | N/A             | _Do not use in production!_ | Active             |
-| 4.2.0       | None            | Ready for Use               | Bug Fixes Only     |
-| 4.1.4       | None            | Ready for Use               | Not Supported      |
+| 4.3.0       | None            | Ready for Use               | Bug Fixes Only     |
+| 4.2.0       | None            | Ready for Use               | Not Supported      |
 | ...         | ...             | ...                         | ...                |
 | 4.0.0       | None            | Ready for Use               | Not Supported      |
 | 3.11.1      | None            | Ready for Use               | Not Supported      |
