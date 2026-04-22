@@ -624,20 +624,20 @@ passing a default constructed <code>mongo::client::Options</code> object.</p>
 <p>Because the <code>mongo::client::Options</code> class has setters returning a
 <code>mongo::client::Options&amp;</code> you can chain together options to easily
 configure them at the call site:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">using</span> mongo<span style="color:#f92672">::</span>client<span style="color:#f92672">::</span>initialize;
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">using</span> mongo<span style="color:#f92672">::</span>client<span style="color:#f92672">::</span>initialize;
 </span></span><span style="display:flex;"><span><span style="color:#66d9ef">using</span> mongo<span style="color:#f92672">::</span>client<span style="color:#f92672">::</span>Options;
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span><span style="color:#75715e">// Configure the MongoDB C++ Driver, enabling SSL and setting
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e">// the SSL Certificate Authority file to &#34;mycafile&#34;.
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>Status status <span style="color:#f92672">=</span> initialize(
+</span></span></span><span style="display:flex;"><span>Status status <span style="color:#f92672">=</span> initialize(
 </span></span><span style="display:flex;"><span>    Options().setSSLMode(Options<span style="color:#f92672">::</span>kSSLRequired).setSSLCAFile(<span style="color:#e6db74">&#34;mycafile&#34;</span>)
 </span></span><span style="display:flex;"><span>);
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>status.isOK()) {
 </span></span><span style="display:flex;"><span>    <span style="color:#75715e">// deal with errors
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>} <span style="color:#66d9ef">else</span> {
+</span></span></span><span style="display:flex;"><span>} <span style="color:#66d9ef">else</span> {
 </span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Driver is up in SSL mode.
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>}
+</span></span></span><span style="display:flex;"><span>}
 </span></span></code></pre></div><h3 id="available-options">Available Options</h3>
 <h4 id="optionscallshutdownatexit-and-optionssetcallshutdownatexit"><code>Options::callShutdownAtExit</code> and <code>Options::setCallShutdownAtExit</code></h4>
 <ul>
