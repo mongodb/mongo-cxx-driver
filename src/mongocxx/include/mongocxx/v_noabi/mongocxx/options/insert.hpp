@@ -133,7 +133,7 @@ class insert {
     ///   Whether or not to bypass document validation
     ///
     /// @return
-    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   A reference to the object on which this member function is being called. This facilitates
     ///   method chaining.
     ///
     insert& bypass_document_validation(bool bypass_document_validation) {
@@ -190,7 +190,7 @@ class insert {
     /// - https://www.mongodb.com/docs/manual/core/write-concern/
     ///
     /// @return
-    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   A reference to the object on which this member function is being called. This facilitates
     ///   method chaining.
     ///
     insert& write_concern(v_noabi::write_concern wc) {
@@ -222,7 +222,7 @@ class insert {
     ///   Whether or not the insert_many will be ordered.
     ///
     /// @return
-    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   A reference to the object on which this member function is being called. This facilitates
     ///   method chaining.
     ///
     /// @see
@@ -255,7 +255,7 @@ class insert {
     /// - https://www.mongodb.com/docs/manual/reference/command/insert/
     ///
     /// @return
-    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   A reference to the object on which this member function is being called. This facilitates
     ///   method chaining.
     ///
     insert& comment(bsoncxx::v_noabi::types::bson_value::view_or_value comment) {
