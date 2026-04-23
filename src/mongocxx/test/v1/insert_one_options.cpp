@@ -16,6 +16,7 @@
 
 //
 
+#include <mongocxx/v1/read_concern.hpp>
 #include <mongocxx/v1/write_concern.hpp>
 
 #include <bsoncxx/test/v1/stdx/string_view.hh>
@@ -73,6 +74,7 @@ TEST_CASE("default", "[mongocxx][v1][insert_one_options]") {
     insert_one_options const opts;
 
     CHECK_FALSE(opts.bypass_document_validation().has_value());
+    CHECK_FALSE(opts.read_concern().has_value());
     CHECK_FALSE(opts.write_concern().has_value());
     CHECK_FALSE(opts.comment().has_value());
 }
@@ -81,6 +83,17 @@ TEST_CASE("bypass_document_validation", "[mongocxx][v1][insert_one_options]") {
     auto const v = GENERATE(false, true);
 
     CHECK(insert_one_options{}.bypass_document_validation(v).bypass_document_validation() == v);
+}
+
+TEST_CASE("read_concern", "[mongocxx][v1][insert_one_options]") {
+    using T = v1::read_concern;
+
+    auto const v = GENERATE(values({
+        T{},
+        T{}.acknowledge_level(T::level::k_majority),
+    }));
+
+    CHECK(insert_one_options{}.read_concern(v).read_concern() == v);
 }
 
 TEST_CASE("write_concern", "[mongocxx][v1][insert_one_options]") {
