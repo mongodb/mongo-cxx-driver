@@ -149,8 +149,7 @@ bsoncxx::v1::stdx::optional<bsoncxx::v1::types::value> const& insert_many_option
     return impl::with(self)._comment;
 }
 
-bsoncxx::v1::stdx::optional<v1::read_concern>& insert_many_options::internal::read_concern(
-    insert_many_options& self) {
+bsoncxx::v1::stdx::optional<v1::read_concern>& insert_many_options::internal::read_concern(insert_many_options& self) {
     return impl::with(self)._read_concern;
 }
 
