@@ -22,6 +22,7 @@
 #include <bsoncxx/v1/types/value-fwd.hpp>
 
 #include <mongocxx/v1/hint-fwd.hpp>
+#include <mongocxx/v1/read_concern-fwd.hpp>
 #include <mongocxx/v1/write_concern-fwd.hpp>
 
 #include <bsoncxx/v1/stdx/optional.hpp>
@@ -32,12 +33,14 @@ namespace v1 {
 class delete_many_options::internal {
    public:
     static bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> const& collation(delete_many_options const& self);
+    static bsoncxx::v1::stdx::optional<v1::read_concern> const& read_concern(delete_many_options const& self);
     static bsoncxx::v1::stdx::optional<v1::write_concern> const& write_concern(delete_many_options const& self);
     static bsoncxx::v1::stdx::optional<v1::hint> const& hint(delete_many_options const& self);
     static bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> const& let(delete_many_options const& self);
     static bsoncxx::v1::stdx::optional<bsoncxx::v1::types::value> const& comment(delete_many_options const& self);
 
     static bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value>& collation(delete_many_options& self);
+    static bsoncxx::v1::stdx::optional<v1::read_concern>& read_concern(delete_many_options& self);
     static bsoncxx::v1::stdx::optional<v1::write_concern>& write_concern(delete_many_options& self);
     static bsoncxx::v1::stdx::optional<v1::hint>& hint(delete_many_options& self);
     static bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value>& let(delete_many_options& self);

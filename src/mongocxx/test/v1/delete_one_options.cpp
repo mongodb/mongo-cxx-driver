@@ -17,6 +17,7 @@
 //
 
 #include <mongocxx/v1/hint.hpp>
+#include <mongocxx/v1/read_concern.hpp>
 #include <mongocxx/v1/write_concern.hpp>
 
 #include <bsoncxx/test/v1/stdx/string_view.hh>
@@ -76,6 +77,7 @@ TEST_CASE("default", "[mongocxx][v1][delete_one_options]") {
     delete_one_options const opts;
 
     CHECK_FALSE(opts.collation().has_value());
+    CHECK_FALSE(opts.read_concern().has_value());
     CHECK_FALSE(opts.write_concern().has_value());
     CHECK_FALSE(opts.hint().has_value());
     CHECK_FALSE(opts.let().has_value());
@@ -89,6 +91,17 @@ TEST_CASE("collation", "[mongocxx][v1][delete_one_options]") {
     }));
 
     CHECK(delete_one_options{}.collation(v.value()).collation() == v.view());
+}
+
+TEST_CASE("read_concern", "[mongocxx][v1][delete_one_options]") {
+    using T = v1::read_concern;
+
+    auto const v = GENERATE(values({
+        T{},
+        T{}.acknowledge_level(T::level::k_majority),
+    }));
+
+    CHECK(delete_one_options{}.read_concern(v).read_concern() == v);
 }
 
 TEST_CASE("write_concern", "[mongocxx][v1][delete_one_options]") {

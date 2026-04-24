@@ -26,6 +26,7 @@
 #include <bsoncxx/v1/types/view-fwd.hpp>
 
 #include <mongocxx/v1/hint-fwd.hpp>
+#include <mongocxx/v1/read_concern-fwd.hpp>
 #include <mongocxx/v1/write_concern-fwd.hpp>
 
 #include <bsoncxx/v1/stdx/optional.hpp>
@@ -42,6 +43,7 @@ namespace v1 {
 /// - `collation`
 /// - `hint`
 /// - `let`
+/// - `read_concern` ("readConcern")
 /// - `write_concern` ("writeConcern")
 /// - `comment`
 ///
@@ -106,6 +108,16 @@ class delete_one_options {
     /// Return the current "collation" field.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view>) collation() const;
+
+    ///
+    /// Set the "readConcern" field.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(delete_one_options&) read_concern(v1::read_concern rc);
+
+    ///
+    /// Return the current "readConcern" field.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<v1::read_concern>) read_concern() const;
 
     ///
     /// Set the "writeConcern" field.
