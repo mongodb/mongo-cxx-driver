@@ -28,13 +28,15 @@ namespace v_noabi {
 namespace options {
 
 insert::insert(v1::insert_many_options opts)
-    : _write_concern{std::move(v1::insert_many_options::internal::write_concern(opts))},
+    : _read_concern{std::move(v1::insert_many_options::internal::read_concern(opts))},
+      _write_concern{std::move(v1::insert_many_options::internal::write_concern(opts))},
       _ordered{opts.ordered()},
       _bypass_document_validation{opts.bypass_document_validation()},
       _comment{std::move(v1::insert_many_options::internal::comment(opts))} {}
 
 insert::insert(v1::insert_one_options opts)
-    : _write_concern{std::move(v1::insert_one_options::internal::write_concern(opts))},
+    : _read_concern{std::move(v1::insert_one_options::internal::read_concern(opts))},
+      _write_concern{std::move(v1::insert_one_options::internal::write_concern(opts))},
       _ordered{},
       _bypass_document_validation{opts.bypass_document_validation()},
       _comment{std::move(v1::insert_one_options::internal::comment(opts))} {}
