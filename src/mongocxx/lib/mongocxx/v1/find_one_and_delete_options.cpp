@@ -21,7 +21,6 @@
 #include <bsoncxx/v1/types/value.hpp>
 
 #include <mongocxx/v1/hint.hpp>
-#include <mongocxx/v1/read_concern.hpp>
 #include <mongocxx/v1/write_concern.hpp>
 
 #include <chrono>
@@ -37,7 +36,6 @@ class find_one_and_delete_options::impl {
     bsoncxx::v1::stdx::optional<std::chrono::milliseconds> _max_time;
     bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> _projection;
     bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> _sort;
-    bsoncxx::v1::stdx::optional<v1::read_concern> _read_concern;
     bsoncxx::v1::stdx::optional<v1::write_concern> _write_concern;
     bsoncxx::v1::stdx::optional<v1::hint> _hint;
     bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> _let;
@@ -132,15 +130,6 @@ bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view> find_one_and_delete_opt
     return impl::with(this)->_sort;
 }
 
-find_one_and_delete_options& find_one_and_delete_options::read_concern(v1::read_concern read_concern) {
-    impl::with(this)->_read_concern = std::move(read_concern);
-    return *this;
-}
-
-bsoncxx::v1::stdx::optional<v1::read_concern> find_one_and_delete_options::read_concern() const {
-    return impl::with(this)->_read_concern;
-}
-
 find_one_and_delete_options& find_one_and_delete_options::write_concern(v1::write_concern write_concern) {
     impl::with(this)->_write_concern = std::move(write_concern);
     return *this;
@@ -192,11 +181,6 @@ bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> const& find_one_and_de
     return impl::with(self)._sort;
 }
 
-bsoncxx::v1::stdx::optional<v1::read_concern> const& find_one_and_delete_options::internal::read_concern(
-    find_one_and_delete_options const& self) {
-    return impl::with(self)._read_concern;
-}
-
 bsoncxx::v1::stdx::optional<v1::write_concern> const& find_one_and_delete_options::internal::write_concern(
     find_one_and_delete_options const& self) {
     return impl::with(self)._write_concern;
@@ -230,11 +214,6 @@ bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value>& find_one_and_delete_o
 bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value>& find_one_and_delete_options::internal::sort(
     find_one_and_delete_options& self) {
     return impl::with(self)._sort;
-}
-
-bsoncxx::v1::stdx::optional<v1::read_concern>& find_one_and_delete_options::internal::read_concern(
-    find_one_and_delete_options& self) {
-    return impl::with(self)._read_concern;
 }
 
 bsoncxx::v1::stdx::optional<v1::write_concern>& find_one_and_delete_options::internal::write_concern(

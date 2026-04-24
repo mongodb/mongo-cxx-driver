@@ -26,7 +26,6 @@
 #include <bsoncxx/v1/types/view-fwd.hpp>
 
 #include <mongocxx/v1/hint-fwd.hpp>
-#include <mongocxx/v1/read_concern-fwd.hpp>
 #include <mongocxx/v1/write_concern-fwd.hpp>
 
 #include <bsoncxx/v1/stdx/optional.hpp>
@@ -48,7 +47,6 @@ namespace v1 {
 /// - `let`
 /// - `max_time` ("maxTimeMS")
 /// - `projection`
-/// - `read_concern` ("readConcern")
 /// - `sort`
 /// - `write_concern` ("writeConcern")
 ///
@@ -143,17 +141,7 @@ class find_one_and_delete_options {
     ///
     /// Return the current "sort" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view>) sort() const;
-
-    ///
-    /// Set the "readConcern" field.
-    ///
-    MONGOCXX_ABI_EXPORT_CDECL(find_one_and_delete_options&) read_concern(v1::read_concern read_concern);
-
-    ///
-    /// Return the current "readConcern" field.
-    ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<v1::read_concern>) read_concern() const;
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view>) sort() const; 
 
     ///
     /// Set the "writeConcern" field.
