@@ -141,7 +141,7 @@ class find_one_and_delete_options {
     ///
     /// Return the current "sort" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view>) sort() const; 
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view>) sort() const;
 
     ///
     /// Set the "writeConcern" field.
