@@ -259,6 +259,10 @@ void append_to(v_noabi::options::estimated_document_count const& opts, scoped_bs
 }
 
 void append_to(v_noabi::options::delete_options const& opts, scoped_bson& doc) {
+    if (auto const& opt = opts.read_concern()) {
+        doc += scoped_bson{BCON_NEW("readConcern", BCON_DOCUMENT(to_scoped_bson(opt->to_document()).bson()))};
+    }
+
     if (auto const& opt = opts.write_concern()) {
         doc += scoped_bson{BCON_NEW("writeConcern", BCON_DOCUMENT(to_scoped_bson(opt->to_document()).bson()))};
     }
