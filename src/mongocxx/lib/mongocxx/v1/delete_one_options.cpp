@@ -20,6 +20,7 @@
 #include <bsoncxx/v1/stdx/optional.hpp>
 
 #include <mongocxx/v1/hint.hpp>
+#include <mongocxx/v1/read_concern.hpp>
 #include <mongocxx/v1/write_concern.hpp>
 
 #include <bsoncxx/v1/types/value.hh>
@@ -32,6 +33,7 @@ namespace v1 {
 class delete_one_options::impl {
    public:
     bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> _collation;
+    bsoncxx::v1::stdx::optional<v1::read_concern> _read_concern;
     bsoncxx::v1::stdx::optional<v1::write_concern> _write_concern;
     bsoncxx::v1::stdx::optional<v1::hint> _hint;
     bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> _let;
@@ -97,6 +99,15 @@ bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view> delete_one_options::col
     return impl::with(this)->_collation;
 }
 
+delete_one_options& delete_one_options::read_concern(v1::read_concern rc) {
+    impl::with(this)->_read_concern = std::move(rc);
+    return *this;
+}
+
+bsoncxx::v1::stdx::optional<v1::read_concern> delete_one_options::read_concern() const {
+    return impl::with(this)->_read_concern;
+}
+
 delete_one_options& delete_one_options::write_concern(v1::write_concern wc) {
     impl::with(this)->_write_concern = std::move(wc);
     return *this;
@@ -138,6 +149,11 @@ bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> const& delete_one_opti
     return impl::with(self)._collation;
 }
 
+bsoncxx::v1::stdx::optional<v1::read_concern> const& delete_one_options::internal::read_concern(
+    delete_one_options const& self) {
+    return impl::with(self)._read_concern;
+}
+
 bsoncxx::v1::stdx::optional<v1::write_concern> const& delete_one_options::internal::write_concern(
     delete_one_options const& self) {
     return impl::with(self)._write_concern;
@@ -160,6 +176,10 @@ bsoncxx::v1::stdx::optional<bsoncxx::v1::types::value> const& delete_one_options
 bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value>& delete_one_options::internal::collation(
     delete_one_options& self) {
     return impl::with(self)._collation;
+}
+
+bsoncxx::v1::stdx::optional<v1::read_concern>& delete_one_options::internal::read_concern(delete_one_options& self) {
+    return impl::with(self)._read_concern;
 }
 
 bsoncxx::v1::stdx::optional<v1::write_concern>& delete_one_options::internal::write_concern(delete_one_options& self) {
