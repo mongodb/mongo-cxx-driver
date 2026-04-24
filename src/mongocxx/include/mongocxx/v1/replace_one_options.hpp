@@ -135,7 +135,7 @@ class replace_one_options {
     ///
     /// Set the "readConcern" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(replace_one_options&) read_concern(v1::read_concern wc);
+    MONGOCXX_ABI_EXPORT_CDECL(replace_one_options&) read_concern(v1::read_concern rc);
 
     ///
     /// Return the current "readConcern" field.

@@ -121,8 +121,8 @@ bsoncxx::v1::stdx::optional<bool> replace_one_options::upsert() const {
     return impl::with(this)->_upsert;
 }
 
-replace_one_options& replace_one_options::read_concern(v1::read_concern wc) {
-    impl::with(this)->_read_concern = std::move(wc);
+replace_one_options& replace_one_options::read_concern(v1::read_concern rc) {
+    impl::with(this)->_read_concern = std::move(rc);
     return *this;
 }
 
