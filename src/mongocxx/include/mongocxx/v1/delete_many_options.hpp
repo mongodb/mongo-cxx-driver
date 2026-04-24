@@ -112,7 +112,7 @@ class delete_many_options {
     ///
     /// Set the "readConcern" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(delete_many_options&) read_concern(read_concern rc);
+    MONGOCXX_ABI_EXPORT_CDECL(delete_many_options&) read_concern(v1::read_concern rc);
 
     ///
     /// Return the current "readConcern" field.
@@ -122,7 +122,7 @@ class delete_many_options {
     ///
     /// Set the "writeConcern" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(delete_many_options&) write_concern(write_concern wc);
+    MONGOCXX_ABI_EXPORT_CDECL(delete_many_options&) write_concern(v1::write_concern wc);
 
     ///
     /// Return the current "writeConcern" field.
