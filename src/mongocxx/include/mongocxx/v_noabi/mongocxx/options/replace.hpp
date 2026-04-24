@@ -33,6 +33,7 @@
 #include <bsoncxx/types/bson_value/view_or_value.hpp>
 
 #include <mongocxx/hint.hpp>
+#include <mongocxx/read_concern.hpp>
 #include <mongocxx/write_concern.hpp>
 
 #include <mongocxx/config/prelude.hpp>
@@ -77,6 +78,10 @@ class replace {
             ret.upsert(*_upsert);
         }
 
+        if (_read_concern) {
+            ret.read_concern(to_v1(*_read_concern));
+        }
+
         if (_write_concern) {
             ret.write_concern(to_v1(*_write_concern));
         }
@@ -112,7 +117,7 @@ class replace {
     ///   Whether or not to bypass document validation
     ///
     /// @return
-    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   A reference to the object on which this member function is being called. This facilitates
     ///   method chaining.
     ///
     replace& bypass_document_validation(bool bypass_document_validation) {
@@ -136,7 +141,7 @@ class replace {
     ///   The new collation.
     ///
     /// @return
-    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   A reference to the object on which this member function is being called. This facilitates
     ///   method chaining.
     ///
     /// @see
@@ -173,7 +178,7 @@ class replace {
     ///   is not found.
     ///
     /// @return
-    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   A reference to the object on which this member function is being called. This facilitates
     ///   method chaining.
     ///
     replace& upsert(bool upsert) {
@@ -191,13 +196,44 @@ class replace {
     }
 
     ///
+    /// Sets the read_concern for this operation.
+    ///
+    /// @param rc
+    ///   The new read_concern
+    ///
+    /// @return
+    ///   A reference to the object on which this member function is being called. This facilitates
+    ///   method chaining.
+    ///
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/read-concern/
+    ///
+    replace& read_concern(v_noabi::read_concern rc) {
+        _read_concern = std::move(rc);
+        return *this;
+    }
+
+    ///
+    /// The current read_concern for this operation.
+    ///
+    /// @return
+    ///   The current read_concern
+    ///
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/read-concern/
+    ///
+    bsoncxx::v_noabi::stdx::optional<v_noabi::read_concern> const& read_concern() const {
+        return _read_concern;
+    }
+
+    ///
     /// Sets the write_concern for this operation.
     ///
     /// @param wc
     ///   The new write_concern
     ///
     /// @return
-    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   A reference to the object on which this member function is being called. This facilitates
     ///   method chaining.
     ///
     /// @see
@@ -231,7 +267,7 @@ class replace {
     ///   Object representing the index to use.
     ///
     /// @return
-    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   A reference to the object on which this member function is being called. This facilitates
     ///   method chaining.
     ///
     replace& hint(v_noabi::hint index_hint) {
@@ -255,7 +291,7 @@ class replace {
     ///   The new let option.
     ///
     /// @return
-    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   A reference to the object on which this member function is being called. This facilitates
     ///   method chaining.
     ///
     replace& let(bsoncxx::v_noabi::document::view_or_value let) {
@@ -295,7 +331,7 @@ class replace {
     ///   The new comment option.
     ///
     /// @return
-    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   A reference to the object on which this member function is being called. This facilitates
     ///   method chaining.
     ///
     replace& comment(bsoncxx::v_noabi::types::bson_value::view_or_value comment) {
@@ -317,6 +353,7 @@ class replace {
     bsoncxx::v_noabi::stdx::optional<bool> _bypass_document_validation;
     bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> _collation;
     bsoncxx::v_noabi::stdx::optional<bool> _upsert;
+    bsoncxx::v_noabi::stdx::optional<v_noabi::read_concern> _read_concern;
     bsoncxx::v_noabi::stdx::optional<v_noabi::write_concern> _write_concern;
     bsoncxx::v_noabi::stdx::optional<v_noabi::hint> _hint;
     bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> _let;
