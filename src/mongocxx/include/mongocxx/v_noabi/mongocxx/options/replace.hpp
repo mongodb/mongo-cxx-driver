@@ -117,7 +117,7 @@ class replace {
     ///   Whether or not to bypass document validation
     ///
     /// @return
-    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   A reference to the object on which this member function is being called. This facilitates
     ///   method chaining.
     ///
     replace& bypass_document_validation(bool bypass_document_validation) {
@@ -141,7 +141,7 @@ class replace {
     ///   The new collation.
     ///
     /// @return
-    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   A reference to the object on which this member function is being called. This facilitates
     ///   method chaining.
     ///
     /// @see
@@ -178,7 +178,7 @@ class replace {
     ///   is not found.
     ///
     /// @return
-    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   A reference to the object on which this member function is being called. This facilitates
     ///   method chaining.
     ///
     replace& upsert(bool upsert) {
@@ -233,7 +233,7 @@ class replace {
     ///   The new write_concern
     ///
     /// @return
-    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   A reference to the object on which this member function is being called. This facilitates
     ///   method chaining.
     ///
     /// @see
@@ -267,7 +267,7 @@ class replace {
     ///   Object representing the index to use.
     ///
     /// @return
-    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   A reference to the object on which this member function is being called. This facilitates
     ///   method chaining.
     ///
     replace& hint(v_noabi::hint index_hint) {
@@ -291,7 +291,7 @@ class replace {
     ///   The new let option.
     ///
     /// @return
-    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   A reference to the object on which this member function is being called. This facilitates
     ///   method chaining.
     ///
     replace& let(bsoncxx::v_noabi::document::view_or_value let) {
@@ -331,7 +331,7 @@ class replace {
     ///   The new comment option.
     ///
     /// @return
-    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   A reference to the object on which this member function is being called. This facilitates
     ///   method chaining.
     ///
     replace& comment(bsoncxx::v_noabi::types::bson_value::view_or_value comment) {
