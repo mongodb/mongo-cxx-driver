@@ -20,6 +20,7 @@
 #include <bsoncxx/v1/stdx/optional.hpp>
 
 #include <mongocxx/v1/hint.hpp>
+#include <mongocxx/v1/read_concern.hpp>
 #include <mongocxx/v1/write_concern.hpp>
 
 #include <bsoncxx/v1/types/value.hh>
@@ -34,6 +35,7 @@ class replace_one_options::impl {
     bsoncxx::v1::stdx::optional<bool> _bypass_document_validation;
     bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> _collation;
     bsoncxx::v1::stdx::optional<bool> _upsert;
+    bsoncxx::v1::stdx::optional<v1::read_concern> _read_concern;
     bsoncxx::v1::stdx::optional<v1::write_concern> _write_concern;
     bsoncxx::v1::stdx::optional<v1::hint> _hint;
     bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> _let;
@@ -119,6 +121,15 @@ bsoncxx::v1::stdx::optional<bool> replace_one_options::upsert() const {
     return impl::with(this)->_upsert;
 }
 
+replace_one_options& replace_one_options::read_concern(v1::read_concern wc) {
+    impl::with(this)->_read_concern = std::move(wc);
+    return *this;
+}
+
+bsoncxx::v1::stdx::optional<v1::read_concern> replace_one_options::read_concern() const {
+    return impl::with(this)->_read_concern;
+}
+
 replace_one_options& replace_one_options::write_concern(v1::write_concern wc) {
     impl::with(this)->_write_concern = std::move(wc);
     return *this;
@@ -169,6 +180,11 @@ bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> const& replace_one_opt
     return impl::with(self)._collation;
 }
 
+bsoncxx::v1::stdx::optional<v1::read_concern> const& replace_one_options::internal::read_concern(
+    replace_one_options const& self) {
+    return impl::with(self)._read_concern;
+}
+
 bsoncxx::v1::stdx::optional<v1::write_concern> const& replace_one_options::internal::write_concern(
     replace_one_options const& self) {
     return impl::with(self)._write_concern;
@@ -196,6 +212,10 @@ bsoncxx::v1::stdx::optional<bsoncxx::v1::types::value> const& replace_one_option
 bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value>& replace_one_options::internal::collation(
     replace_one_options& self) {
     return impl::with(self)._collation;
+}
+
+bsoncxx::v1::stdx::optional<v1::read_concern>& replace_one_options::internal::read_concern(replace_one_options& self) {
+    return impl::with(self)._read_concern;
 }
 
 bsoncxx::v1::stdx::optional<v1::write_concern>& replace_one_options::internal::write_concern(

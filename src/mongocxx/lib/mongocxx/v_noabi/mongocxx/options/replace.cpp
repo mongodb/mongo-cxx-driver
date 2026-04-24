@@ -35,6 +35,7 @@ replace::replace(v1::replace_one_options opts)
           return {};
       }()},
       _upsert{opts.upsert()},
+      _read_concern{std::move(v1::replace_one_options::internal::read_concern(opts))},
       _write_concern{std::move(v1::replace_one_options::internal::write_concern(opts))},
       _hint{std::move(v1::replace_one_options::internal::hint(opts))},
       _let{[&]() -> decltype(_let) {
