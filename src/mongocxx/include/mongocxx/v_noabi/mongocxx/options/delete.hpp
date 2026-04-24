@@ -141,7 +141,7 @@ class delete_options {
     ///   The new collation.
     ///
     /// @return
-    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   A reference to the object on which this member function is being called. This facilitates
     ///   method chaining.
     ///
     /// @see
@@ -203,7 +203,7 @@ class delete_options {
     ///   The new write_concern.
     ///
     /// @return
-    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   A reference to the object on which this member function is being called. This facilitates
     ///   method chaining.
     ///
     /// @see
@@ -237,7 +237,7 @@ class delete_options {
     ///   Object representing the index to use.
     ///
     /// @return
-    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   A reference to the object on which this member function is being called. This facilitates
     ///   method chaining.
     ///
     delete_options& hint(v_noabi::hint index_hint) {
@@ -261,7 +261,7 @@ class delete_options {
     ///   The new let option.
     ///
     /// @return
-    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   A reference to the object on which this member function is being called. This facilitates
     ///   method chaining.
     ///
     delete_options& let(bsoncxx::v_noabi::document::view_or_value let) {
@@ -286,7 +286,7 @@ class delete_options {
     ///   The new comment option.
     ///
     /// @return
-    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   A reference to the object on which this member function is being called. This facilitates
     ///   method chaining.
     ///
     delete_options& comment(bsoncxx::v_noabi::types::bson_value::view_or_value comment) {
