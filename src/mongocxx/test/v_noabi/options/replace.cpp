@@ -150,6 +150,7 @@ TEST_CASE("v1", "[mongocxx][v_noabi][options][replace]") {
             CHECK(to.collation().value() == collation->view());
             CHECK(to.upsert() == *upsert);
             CHECK(to.read_concern() == *read_concern);
+            CHECK(to.write_concern() == *write_concern);
             CHECK(to.hint().value().to_value() == hint->to_value());
             CHECK(to.let().value() == let->view());
             CHECK(to.sort().value() == sort->view());
@@ -159,6 +160,7 @@ TEST_CASE("v1", "[mongocxx][v_noabi][options][replace]") {
             CHECK_FALSE(to.collation().has_value());
             CHECK_FALSE(to.upsert().has_value());
             CHECK_FALSE(to.read_concern().has_value());
+            CHECK_FALSE(to.write_concern().has_value());
             CHECK_FALSE(to.hint().has_value());
             CHECK_FALSE(to.let().has_value());
             CHECK_FALSE(to.sort().has_value());
