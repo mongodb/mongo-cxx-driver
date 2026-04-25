@@ -103,7 +103,7 @@ class bulk_write {
     ///   reported after attempting all operations.
     ///
     /// @return
-    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   A reference to the object on which this member function is being called. This facilitates
     ///   method chaining.
     ///
     bulk_write& ordered(bool ordered) {
@@ -158,7 +158,7 @@ class bulk_write {
     ///   The new write_concern.
     ///
     /// @return
-    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   A reference to the object on which this member function is being called. This facilitates
     ///   method chaining.
     ///
     /// @see
@@ -189,7 +189,7 @@ class bulk_write {
     ///   Whether or not to bypass document validation.
     ///
     /// @return
-    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   A reference to the object on which this member function is being called. This facilitates
     ///   method chaining.
     ///
     bulk_write& bypass_document_validation(bool bypass_document_validation) {
@@ -214,7 +214,7 @@ class bulk_write {
     ///   The new let option.
     ///
     /// @return
-    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   A reference to the object on which this member function is being called. This facilitates
     ///   method chaining.
     ///
     bulk_write& let(bsoncxx::v_noabi::document::view_or_value let) {
@@ -239,7 +239,7 @@ class bulk_write {
     ///   The new comment option.
     ///
     /// @return
-    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   A reference to the object on which this member function is being called. This facilitates
     ///   method chaining.
     ///
     bulk_write& comment(bsoncxx::v_noabi::types::bson_value::view_or_value comment) {
