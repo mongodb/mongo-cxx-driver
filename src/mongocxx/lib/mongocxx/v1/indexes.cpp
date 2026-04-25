@@ -27,6 +27,7 @@
 #include <mongocxx/v1/client_session.hh>
 #include <mongocxx/v1/cursor.hh>
 #include <mongocxx/v1/exception.hh>
+#include <mongocxx/v1/read_concern.hh>
 #include <mongocxx/v1/write_concern.hh>
 
 #include <chrono>
@@ -157,6 +158,7 @@ class create_index_options_impl {
     bsoncxx::v1::stdx::optional<bsoncxx::v1::types::value> _comment;
     bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> _commit_quorum;
     bsoncxx::v1::stdx::optional<std::chrono::milliseconds> _max_time;
+    bsoncxx::v1::stdx::optional<v1::read_concern> _read_concern;
     bsoncxx::v1::stdx::optional<v1::write_concern> _write_concern;
 
     static create_index_options_impl* with(void* ptr) {
@@ -174,6 +176,10 @@ void append_create_to(CreateIndexOptions const& opts, scoped_bson& doc) {
         doc += scoped_bson{BCON_NEW("maxTimeMS", BCON_INT64(std::int64_t{opt->count()}))};
     }
 
+    if (auto const& opt = CreateIndexOptions::internal::read_concern(opts)) {
+        doc += scoped_bson{BCON_NEW("readConcern", BCON_DOCUMENT(scoped_bson{opt->to_document()}.bson()))};
+    }
+
     if (auto const& opt = CreateIndexOptions::internal::write_concern(opts)) {
         doc += scoped_bson{BCON_NEW("writeConcern", BCON_DOCUMENT(scoped_bson{opt->to_document()}.bson()))};
     }
@@ -183,6 +189,7 @@ class drop_index_options_impl {
    public:
     bsoncxx::v1::stdx::optional<bsoncxx::v1::types::value> _comment;
     bsoncxx::v1::stdx::optional<std::chrono::milliseconds> _max_time;
+    bsoncxx::v1::stdx::optional<v1::read_concern> _read_concern;
     bsoncxx::v1::stdx::optional<v1::write_concern> _write_concern;
 
     static drop_index_options_impl* with(void* ptr) {
@@ -198,6 +205,10 @@ void append_drop_to(DropIndexOptions const& opts, scoped_bson& doc) {
 
     if (auto const& opt = opts.max_time()) {
         doc += scoped_bson{BCON_NEW("maxTimeMS", BCON_INT64(std::int64_t{opt->count()}))};
+    }
+
+    if (auto const& opt = DropIndexOptions::internal::read_concern(opts)) {
+        doc += scoped_bson{BCON_NEW("readConcern", BCON_DOCUMENT(scoped_bson{opt->to_document()}.bson()))};
     }
 
     if (auto const& opt = DropIndexOptions::internal::write_concern(opts)) {
@@ -949,6 +960,11 @@ indexes::create_one_options& indexes::create_one_options::max_time(std::chrono::
     return *this;
 }
 
+indexes::create_one_options& indexes::create_one_options::read_concern(v1::read_concern v) {
+    create_index_options_impl::with(_impl)->_read_concern = std::move(v);
+    return *this;
+}
+
 indexes::create_one_options& indexes::create_one_options::write_concern(v1::write_concern v) {
     create_index_options_impl::with(_impl)->_write_concern = std::move(v);
     return *this;
@@ -964,6 +980,10 @@ bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view> indexes::create_one_opt
 
 bsoncxx::v1::stdx::optional<std::chrono::milliseconds> indexes::create_one_options::max_time() const {
     return create_index_options_impl::with(_impl)->_max_time;
+}
+
+bsoncxx::v1::stdx::optional<v1::read_concern> indexes::create_one_options::read_concern() const {
+    return create_index_options_impl::with(_impl)->_read_concern;
 }
 
 bsoncxx::v1::stdx::optional<v1::write_concern> indexes::create_one_options::write_concern() const {
@@ -1018,6 +1038,11 @@ indexes::create_many_options& indexes::create_many_options::max_time(std::chrono
     return *this;
 }
 
+indexes::create_many_options& indexes::create_many_options::read_concern(v1::read_concern v) {
+    create_index_options_impl::with(_impl)->_read_concern = std::move(v);
+    return *this;
+}
+
 indexes::create_many_options& indexes::create_many_options::write_concern(v1::write_concern v) {
     create_index_options_impl::with(_impl)->_write_concern = std::move(v);
     return *this;
@@ -1033,6 +1058,10 @@ bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view> indexes::create_many_op
 
 bsoncxx::v1::stdx::optional<std::chrono::milliseconds> indexes::create_many_options::max_time() const {
     return create_index_options_impl::with(_impl)->_max_time;
+}
+
+bsoncxx::v1::stdx::optional<v1::read_concern> indexes::create_many_options::read_concern() const {
+    return create_index_options_impl::with(_impl)->_read_concern;
 }
 
 bsoncxx::v1::stdx::optional<v1::write_concern> indexes::create_many_options::write_concern() const {
@@ -1088,6 +1117,15 @@ indexes::drop_one_options& indexes::drop_one_options::max_time(std::chrono::mill
 
 bsoncxx::v1::stdx::optional<std::chrono::milliseconds> indexes::drop_one_options::max_time() const {
     return drop_index_options_impl::with(_impl)->_max_time;
+}
+
+indexes::drop_one_options& indexes::drop_one_options::read_concern(v1::read_concern v) {
+    drop_index_options_impl::with(_impl)->_read_concern = std::move(v);
+    return *this;
+}
+
+bsoncxx::v1::stdx::optional<v1::read_concern> indexes::drop_one_options::read_concern() const {
+    return drop_index_options_impl::with(_impl)->_read_concern;
 }
 
 indexes::drop_one_options& indexes::drop_one_options::write_concern(v1::write_concern v) {
@@ -1148,6 +1186,15 @@ indexes::drop_all_options& indexes::drop_all_options::max_time(std::chrono::mill
 
 bsoncxx::v1::stdx::optional<std::chrono::milliseconds> indexes::drop_all_options::max_time() const {
     return drop_index_options_impl::with(_impl)->_max_time;
+}
+
+indexes::drop_all_options& indexes::drop_all_options::read_concern(v1::read_concern v) {
+    drop_index_options_impl::with(_impl)->_read_concern = std::move(v);
+    return *this;
+}
+
+bsoncxx::v1::stdx::optional<v1::read_concern> indexes::drop_all_options::read_concern() const {
+    return drop_index_options_impl::with(_impl)->_read_concern;
 }
 
 indexes::drop_all_options& indexes::drop_all_options::write_concern(v1::write_concern v) {
@@ -1318,6 +1365,11 @@ bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> const& indexes::create
     return create_index_options_impl::with(self._impl)->_commit_quorum;
 }
 
+bsoncxx::v1::stdx::optional<v1::read_concern> const& indexes::create_one_options::internal::read_concern(
+    create_one_options const& self) {
+    return create_index_options_impl::with(self._impl)->_read_concern;
+}
+
 bsoncxx::v1::stdx::optional<v1::write_concern> const& indexes::create_one_options::internal::write_concern(
     create_one_options const& self) {
     return create_index_options_impl::with(self._impl)->_write_concern;
@@ -1331,6 +1383,11 @@ bsoncxx::v1::stdx::optional<bsoncxx::v1::types::value>& indexes::create_one_opti
 bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value>& indexes::create_one_options::internal::commit_quorum(
     create_one_options& self) {
     return create_index_options_impl::with(self._impl)->_commit_quorum;
+}
+
+bsoncxx::v1::stdx::optional<v1::read_concern>& indexes::create_one_options::internal::read_concern(
+    create_one_options& self) {
+    return create_index_options_impl::with(self._impl)->_read_concern;
 }
 
 bsoncxx::v1::stdx::optional<v1::write_concern>& indexes::create_one_options::internal::write_concern(
@@ -1348,6 +1405,11 @@ bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> const& indexes::create
     return create_index_options_impl::with(self._impl)->_commit_quorum;
 }
 
+bsoncxx::v1::stdx::optional<v1::read_concern> const& indexes::create_many_options::internal::read_concern(
+    create_many_options const& self) {
+    return create_index_options_impl::with(self._impl)->_read_concern;
+}
+
 bsoncxx::v1::stdx::optional<v1::write_concern> const& indexes::create_many_options::internal::write_concern(
     create_many_options const& self) {
     return create_index_options_impl::with(self._impl)->_write_concern;
@@ -1363,6 +1425,11 @@ bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value>& indexes::create_many_
     return create_index_options_impl::with(self._impl)->_commit_quorum;
 }
 
+bsoncxx::v1::stdx::optional<v1::read_concern>& indexes::create_many_options::internal::read_concern(
+    create_many_options& self) {
+    return create_index_options_impl::with(self._impl)->_read_concern;
+}
+
 bsoncxx::v1::stdx::optional<v1::write_concern>& indexes::create_many_options::internal::write_concern(
     create_many_options& self) {
     return create_index_options_impl::with(self._impl)->_write_concern;
@@ -1371,6 +1438,11 @@ bsoncxx::v1::stdx::optional<v1::write_concern>& indexes::create_many_options::in
 bsoncxx::v1::stdx::optional<bsoncxx::v1::types::value> const& indexes::drop_one_options::internal::comment(
     drop_one_options const& self) {
     return drop_index_options_impl::with(self._impl)->_comment;
+}
+
+bsoncxx::v1::stdx::optional<v1::read_concern> const& indexes::drop_one_options::internal::read_concern(
+    drop_one_options const& self) {
+    return drop_index_options_impl::with(self._impl)->_read_concern;
 }
 
 bsoncxx::v1::stdx::optional<v1::write_concern> const& indexes::drop_one_options::internal::write_concern(
@@ -1383,6 +1455,11 @@ bsoncxx::v1::stdx::optional<bsoncxx::v1::types::value>& indexes::drop_one_option
     return drop_index_options_impl::with(self._impl)->_comment;
 }
 
+bsoncxx::v1::stdx::optional<v1::read_concern>& indexes::drop_one_options::internal::read_concern(
+    drop_one_options& self) {
+    return drop_index_options_impl::with(self._impl)->_read_concern;
+}
+
 bsoncxx::v1::stdx::optional<v1::write_concern>& indexes::drop_one_options::internal::write_concern(
     drop_one_options& self) {
     return drop_index_options_impl::with(self._impl)->_write_concern;
@@ -1393,6 +1470,11 @@ bsoncxx::v1::stdx::optional<bsoncxx::v1::types::value> const& indexes::drop_all_
     return drop_index_options_impl::with(self._impl)->_comment;
 }
 
+bsoncxx::v1::stdx::optional<v1::read_concern> const& indexes::drop_all_options::internal::read_concern(
+    drop_all_options const& self) {
+    return drop_index_options_impl::with(self._impl)->_read_concern;
+}
+
 bsoncxx::v1::stdx::optional<v1::write_concern> const& indexes::drop_all_options::internal::write_concern(
     drop_all_options const& self) {
     return drop_index_options_impl::with(self._impl)->_write_concern;
@@ -1401,6 +1483,11 @@ bsoncxx::v1::stdx::optional<v1::write_concern> const& indexes::drop_all_options:
 bsoncxx::v1::stdx::optional<bsoncxx::v1::types::value>& indexes::drop_all_options::internal::comment(
     drop_all_options& self) {
     return drop_index_options_impl::with(self._impl)->_comment;
+}
+
+bsoncxx::v1::stdx::optional<v1::read_concern>& indexes::drop_all_options::internal::read_concern(
+    drop_all_options& self) {
+    return drop_index_options_impl::with(self._impl)->_read_concern;
 }
 
 bsoncxx::v1::stdx::optional<v1::write_concern>& indexes::drop_all_options::internal::write_concern(

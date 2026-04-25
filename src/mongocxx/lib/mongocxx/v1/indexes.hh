@@ -21,6 +21,7 @@
 #include <bsoncxx/v1/document/value-fwd.hpp>
 #include <bsoncxx/v1/types/value-fwd.hpp>
 
+#include <mongocxx/v1/read_concern-fwd.hpp>
 #include <mongocxx/v1/write_concern-fwd.hpp>
 
 #include <bsoncxx/v1/stdx/optional.hpp>
@@ -66,10 +67,12 @@ class indexes::create_one_options::internal {
     static bsoncxx::v1::stdx::optional<bsoncxx::v1::types::value> const& comment(create_one_options const& self);
     static bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> const& commit_quorum(
         create_one_options const& self);
+    static bsoncxx::v1::stdx::optional<v1::read_concern> const& read_concern(create_one_options const& self);
     static bsoncxx::v1::stdx::optional<v1::write_concern> const& write_concern(create_one_options const& self);
 
     static bsoncxx::v1::stdx::optional<bsoncxx::v1::types::value>& comment(create_one_options& self);
     static bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value>& commit_quorum(create_one_options& self);
+    static bsoncxx::v1::stdx::optional<v1::read_concern>& read_concern(create_one_options& self);
     static bsoncxx::v1::stdx::optional<v1::write_concern>& write_concern(create_one_options& self);
 };
 
@@ -78,28 +81,34 @@ class indexes::create_many_options::internal {
     static bsoncxx::v1::stdx::optional<bsoncxx::v1::types::value> const& comment(create_many_options const& self);
     static bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> const& commit_quorum(
         create_many_options const& self);
+    static bsoncxx::v1::stdx::optional<v1::read_concern> const& read_concern(create_many_options const& self);
     static bsoncxx::v1::stdx::optional<v1::write_concern> const& write_concern(create_many_options const& self);
 
     static bsoncxx::v1::stdx::optional<bsoncxx::v1::types::value>& comment(create_many_options& self);
     static bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value>& commit_quorum(create_many_options& self);
+    static bsoncxx::v1::stdx::optional<v1::read_concern>& read_concern(create_many_options& self);
     static bsoncxx::v1::stdx::optional<v1::write_concern>& write_concern(create_many_options& self);
 };
 
 class indexes::drop_one_options::internal {
    public:
     static bsoncxx::v1::stdx::optional<bsoncxx::v1::types::value> const& comment(drop_one_options const& self);
+    static bsoncxx::v1::stdx::optional<v1::read_concern> const& read_concern(drop_one_options const& self);
     static bsoncxx::v1::stdx::optional<v1::write_concern> const& write_concern(drop_one_options const& self);
 
     static bsoncxx::v1::stdx::optional<bsoncxx::v1::types::value>& comment(drop_one_options& self);
+    static bsoncxx::v1::stdx::optional<v1::read_concern>& read_concern(drop_one_options& self);
     static bsoncxx::v1::stdx::optional<v1::write_concern>& write_concern(drop_one_options& self);
 };
 
 class indexes::drop_all_options::internal {
    public:
     static bsoncxx::v1::stdx::optional<bsoncxx::v1::types::value> const& comment(drop_all_options const& self);
+    static bsoncxx::v1::stdx::optional<v1::read_concern> const& read_concern(drop_all_options const& self);
     static bsoncxx::v1::stdx::optional<v1::write_concern> const& write_concern(drop_all_options const& self);
 
     static bsoncxx::v1::stdx::optional<bsoncxx::v1::types::value>& comment(drop_all_options& self);
+    static bsoncxx::v1::stdx::optional<v1::read_concern>& read_concern(drop_all_options& self);
     static bsoncxx::v1::stdx::optional<v1::write_concern>& write_concern(drop_all_options& self);
 };
 

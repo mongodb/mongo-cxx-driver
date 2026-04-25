@@ -25,6 +25,7 @@
 
 #include <mongocxx/v1/client_session-fwd.hpp>
 #include <mongocxx/v1/cursor-fwd.hpp>
+#include <mongocxx/v1/read_concern-fwd.hpp>
 #include <mongocxx/v1/write_concern-fwd.hpp>
 
 #include <bsoncxx/v1/document/value.hpp>
@@ -430,6 +431,7 @@ class indexes {
     /// - `comment`
     /// - `commit_quorum` ("commitQuorum")
     /// - `max_time` ("maxTimeMS")
+    /// - `read_concern` ("readConcern")
     /// - `write_concern` ("writeConcern")
     ///
     class create_one_options {
@@ -512,6 +514,16 @@ class indexes {
         MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<std::chrono::milliseconds>) max_time() const;
 
         ///
+        /// Set the "readConcern" field.
+        ///
+        MONGOCXX_ABI_EXPORT_CDECL(create_one_options&) read_concern(v1::read_concern v);
+
+        ///
+        /// Return the current "readConcern" field.
+        ///
+        MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<v1::read_concern>) read_concern() const;
+
+        ///
         /// Set the "writeConcern" field.
         ///
         MONGOCXX_ABI_EXPORT_CDECL(create_one_options&) write_concern(v1::write_concern v);
@@ -531,6 +543,7 @@ class indexes {
     /// - `comment`
     /// - `commit_quorum` ("commitQuorum")
     /// - `max_time` ("maxTimeMS")
+    /// - `read_concern` ("readConcern")
     /// - `write_concern` ("writeConcern")
     ///
     class create_many_options {
@@ -612,6 +625,16 @@ class indexes {
         MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<std::chrono::milliseconds>) max_time() const;
 
         ///
+        /// Set the "readConcern" field.
+        ///
+        MONGOCXX_ABI_EXPORT_CDECL(create_many_options&) read_concern(v1::read_concern v);
+
+        ///
+        /// Return the current "readConcern" field.
+        ///
+        MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<v1::read_concern>) read_concern() const;
+
+        ///
         /// Set the "writeConcern" field.
         ///
         MONGOCXX_ABI_EXPORT_CDECL(create_many_options&) write_concern(v1::write_concern v);
@@ -630,6 +653,7 @@ class indexes {
     /// Supported fields include:
     /// - `comment`
     /// - `max_time` ("maxTimeMS")
+    /// - `read_concern` ("readConcern")
     /// - `write_concern` ("writeConcern")
     ///
     class drop_one_options {
@@ -701,6 +725,16 @@ class indexes {
         MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<std::chrono::milliseconds>) max_time() const;
 
         ///
+        /// Set the "readConcern" field.
+        ///
+        MONGOCXX_ABI_EXPORT_CDECL(drop_one_options&) read_concern(v1::read_concern v);
+
+        ///
+        /// Return the current "readConcern" field.
+        ///
+        MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<v1::read_concern>) read_concern() const;
+
+        ///
         /// Set the "writeConcern" field.
         ///
         MONGOCXX_ABI_EXPORT_CDECL(drop_one_options&) write_concern(v1::write_concern v);
@@ -719,6 +753,7 @@ class indexes {
     /// Supported fields include:
     /// - `comment`
     /// - `max_time` ("maxTimeMS")
+    /// - `read_concern` ("readConcern")
     /// - `write_concern` ("writeConcern")
     ///
     class drop_all_options {
@@ -788,6 +823,16 @@ class indexes {
         /// Return the current "maxTimeMS" field.
         ///
         MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<std::chrono::milliseconds>) max_time() const;
+
+        ///
+        /// Set the "readConcern" field.
+        ///
+        MONGOCXX_ABI_EXPORT_CDECL(drop_all_options&) read_concern(v1::read_concern v);
+
+        ///
+        /// Return the current "readConcern" field.
+        ///
+        MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<v1::read_concern>) read_concern() const;
 
         ///
         /// Set the "writeConcern" field.

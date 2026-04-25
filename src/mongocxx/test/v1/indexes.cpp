@@ -17,6 +17,7 @@
 //
 
 #include <mongocxx/v1/exception.hpp>
+#include <mongocxx/v1/read_concern.hpp>
 #include <mongocxx/v1/write_concern.hpp>
 
 #include <bsoncxx/test/v1/types/value.hh>
@@ -458,6 +459,7 @@ TEST_CASE("default", "[mongocxx][v1][indexes][create_one_options]") {
     CHECK_FALSE(opts.comment().has_value());
     CHECK_FALSE(opts.commit_quorum().has_value());
     CHECK_FALSE(opts.max_time().has_value());
+    CHECK_FALSE(opts.read_concern().has_value());
     CHECK_FALSE(opts.write_concern().has_value());
 }
 
@@ -467,6 +469,7 @@ TEST_CASE("default", "[mongocxx][v1][indexes][create_many_options]") {
     CHECK_FALSE(opts.comment().has_value());
     CHECK_FALSE(opts.commit_quorum().has_value());
     CHECK_FALSE(opts.max_time().has_value());
+    CHECK_FALSE(opts.read_concern().has_value());
     CHECK_FALSE(opts.write_concern().has_value());
 }
 
@@ -475,6 +478,7 @@ TEST_CASE("default", "[mongocxx][v1][indexes][drop_one_options]") {
 
     CHECK_FALSE(opts.comment().has_value());
     CHECK_FALSE(opts.max_time().has_value());
+    CHECK_FALSE(opts.read_concern().has_value());
     CHECK_FALSE(opts.write_concern().has_value());
 }
 
@@ -483,6 +487,7 @@ TEST_CASE("default", "[mongocxx][v1][indexes][drop_all_options]") {
 
     CHECK_FALSE(opts.comment().has_value());
     CHECK_FALSE(opts.max_time().has_value());
+    CHECK_FALSE(opts.read_concern().has_value());
     CHECK_FALSE(opts.write_concern().has_value());
 }
 
@@ -627,6 +632,17 @@ void test_create_index_options() {
         CHECK(CreateIndexOptions{}.max_time(v).max_time() == v);
     }
 
+    SECTION("read_concern") {
+        using T = v1::read_concern;
+
+        auto const v = GENERATE(values({
+            T{},
+            T{}.acknowledge_level(T::level::k_majority),
+        }));
+
+        CHECK(CreateIndexOptions{}.read_concern(v).read_concern() == v);
+    }
+
     SECTION("write_concern") {
         using T = v1::write_concern;
 
@@ -672,6 +688,17 @@ void test_drop_index_options() {
         auto const v = GENERATE(as<std::chrono::milliseconds>(), 0, 1);
 
         CHECK(DropIndexOptions{}.max_time(v).max_time() == v);
+    }
+
+    SECTION("read_concern") {
+        using T = v1::read_concern;
+
+        auto const v = GENERATE(values({
+            T{},
+            T{}.acknowledge_level(T::level::k_majority),
+        }));
+
+        CHECK(DropIndexOptions{}.read_concern(v).read_concern() == v);
     }
 
     SECTION("write_concern") {
