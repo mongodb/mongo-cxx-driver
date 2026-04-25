@@ -20,6 +20,7 @@
 #include <mongocxx/bulk_write.hpp>
 #include <mongocxx/client.hpp>
 #include <mongocxx/instance.hpp>
+#include <mongocxx/write_concern.hpp>
 
 #include <mongocxx/private/mongoc.hh>
 

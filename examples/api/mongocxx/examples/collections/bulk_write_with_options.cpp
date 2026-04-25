@@ -25,6 +25,7 @@
 #include <mongocxx/options/bulk_write.hpp>
 #include <mongocxx/result/bulk_write.hpp>
 #include <mongocxx/uri.hpp>
+#include <mongocxx/write_concern.hpp>
 
 #include <examples/api/concern.hh>
 #include <examples/api/db_lock.hh>
