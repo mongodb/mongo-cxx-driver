@@ -195,6 +195,11 @@ void append_to(v1::bulk_write::options const& opts, scoped_bson& doc) {
         doc += scoped_bson{BCON_NEW("ordered", BCON_BOOL(false))};
     }
 
+    if (auto const& opt = v1::bulk_write::options::internal::read_concern(opts)) {
+        auto const v = opt->to_document();
+        doc += scoped_bson{BCON_NEW("readConcern", BCON_DOCUMENT(scoped_bson_view{v}.bson()))};
+    }
+
     if (auto const& opt = v1::bulk_write::options::internal::write_concern(opts)) {
         auto const v = opt->to_document();
         doc += scoped_bson{BCON_NEW("writeConcern", BCON_DOCUMENT(scoped_bson_view{v}.bson()))};

@@ -34,6 +34,7 @@
 #include <mongocxx/v1/config/export.hpp>
 #include <mongocxx/v1/hint.hpp>
 #include <mongocxx/v1/pipeline.hpp>
+#include <mongocxx/v1/read_concern.hpp>
 #include <mongocxx/v1/write_concern.hpp>
 
 #include <cstdint>
@@ -899,6 +900,7 @@ class bulk_write::single {
 /// - `comment`
 /// - `let`
 /// - `ordered`
+/// - `read_concern` ("readConcern")
 /// - `write_concern` ("writeConcern")
 ///
 /// @see
@@ -994,6 +996,16 @@ class bulk_write::options {
     /// Return the current "ordered" field.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(bool) ordered() const;
+
+    ///
+    /// Set the "readConcern" field.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(options&) read_concern(v1::read_concern rc);
+
+    ///
+    /// Return the current "readConcern" field.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<v1::read_concern>) read_concern() const;
 
     ///
     /// Set the "writeConcern" field.

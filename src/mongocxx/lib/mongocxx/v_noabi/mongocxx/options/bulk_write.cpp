@@ -28,6 +28,7 @@ namespace options {
 
 bulk_write::bulk_write(v1::bulk_write::options opts)
     : _ordered{opts.ordered()},
+      _read_concern{std::move(v1::bulk_write::options::internal::read_concern(opts))},
       _write_concern{std::move(v1::bulk_write::options::internal::write_concern(opts))},
       _bypass_document_validation{opts.bypass_document_validation()},
       _let{[&]() -> decltype(_let) {
