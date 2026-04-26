@@ -17,6 +17,7 @@
 //
 
 #include <mongocxx/v1/hint.hpp>
+#include <mongocxx/v1/read_concern.hpp>
 #include <mongocxx/v1/return_document.hpp>
 #include <mongocxx/v1/write_concern.hpp>
 
@@ -84,6 +85,7 @@ TEST_CASE("v1", "[mongocxx][v_noabi][options][find_one_and_update]") {
     bsoncxx::v1::stdx::optional<v1::return_document> return_document;
     bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> ordering;
     bsoncxx::v1::stdx::optional<bool> upsert;
+    bsoncxx::v1::stdx::optional<v1::read_concern> read_concern;
     bsoncxx::v1::stdx::optional<v1::write_concern> write_concern;
     bsoncxx::v1::stdx::optional<bsoncxx::v1::array::value> array_filters;
 
@@ -98,6 +100,7 @@ TEST_CASE("v1", "[mongocxx][v_noabi][options][find_one_and_update]") {
         return_document.emplace();
         ordering.emplace();
         upsert.emplace();
+        read_concern.emplace();
         write_concern.emplace();
         array_filters.emplace();
     }
@@ -119,6 +122,7 @@ TEST_CASE("v1", "[mongocxx][v_noabi][options][find_one_and_update]") {
             from.return_document(*return_document);
             from.sort(*ordering);
             from.upsert(*upsert);
+            from.read_concern(*read_concern);
             from.write_concern(*write_concern);
             from.array_filters(*array_filters);
         }
@@ -136,6 +140,7 @@ TEST_CASE("v1", "[mongocxx][v_noabi][options][find_one_and_update]") {
             CHECK(to.return_document() == *return_document);
             CHECK(to.sort().value() == ordering->view());
             CHECK(to.upsert() == *upsert);
+            CHECK(to.read_concern() == *read_concern);
             CHECK(to.write_concern() == *write_concern);
             CHECK(to.array_filters().value() == array_filters->view());
         } else {
@@ -149,6 +154,7 @@ TEST_CASE("v1", "[mongocxx][v_noabi][options][find_one_and_update]") {
             CHECK_FALSE(to.return_document().has_value());
             CHECK_FALSE(to.sort().has_value());
             CHECK_FALSE(to.upsert().has_value());
+            CHECK_FALSE(to.read_concern().has_value());
             CHECK_FALSE(to.write_concern().has_value());
             CHECK_FALSE(to.array_filters().has_value());
         }
@@ -168,6 +174,7 @@ TEST_CASE("v1", "[mongocxx][v_noabi][options][find_one_and_update]") {
             from.return_document(*return_document);
             from.sort(from_v1(ordering->view()));
             from.upsert(*upsert);
+            from.read_concern(*read_concern);
             from.write_concern(*write_concern);
             from.array_filters(from_v1(array_filters->view()));
         }
@@ -185,6 +192,7 @@ TEST_CASE("v1", "[mongocxx][v_noabi][options][find_one_and_update]") {
             CHECK(to.return_document() == *return_document);
             CHECK(to.sort().value() == ordering->view());
             CHECK(to.upsert() == *upsert);
+            CHECK(to.read_concern() == *read_concern);
             CHECK(to.write_concern() == *write_concern);
             CHECK(to.array_filters().value() == array_filters->view());
         } else {
@@ -198,6 +206,7 @@ TEST_CASE("v1", "[mongocxx][v_noabi][options][find_one_and_update]") {
             CHECK_FALSE(to.return_document().has_value());
             CHECK_FALSE(to.sort().has_value());
             CHECK_FALSE(to.upsert().has_value());
+            CHECK_FALSE(to.read_concern().has_value());
             CHECK_FALSE(to.write_concern().has_value());
             CHECK_FALSE(to.array_filters().has_value());
         }

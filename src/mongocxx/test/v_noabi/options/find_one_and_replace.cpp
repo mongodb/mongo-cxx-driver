@@ -18,6 +18,7 @@
 
 #include <mongocxx/v1/hint.hpp>
 #include <mongocxx/v1/return_document.hpp>
+#include <mongocxx/v1/read_concern.hpp>
 #include <mongocxx/v1/write_concern.hpp>
 
 #include <bsoncxx/test/v1/document/value.hh>
@@ -79,6 +80,7 @@ TEST_CASE("v1", "[mongocxx][v_noabi][options][find_one_and_replace]") {
     bsoncxx::v1::stdx::optional<v1::return_document> return_document;
     bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> ordering;
     bsoncxx::v1::stdx::optional<bool> upsert;
+    bsoncxx::v1::stdx::optional<v1::read_concern> read_concern;
     bsoncxx::v1::stdx::optional<v1::write_concern> write_concern;
 
     if (has_value) {
@@ -92,6 +94,7 @@ TEST_CASE("v1", "[mongocxx][v_noabi][options][find_one_and_replace]") {
         return_document.emplace();
         ordering.emplace();
         upsert.emplace();
+        read_concern.emplace();
         write_concern.emplace();
     }
 
@@ -112,6 +115,7 @@ TEST_CASE("v1", "[mongocxx][v_noabi][options][find_one_and_replace]") {
             from.return_document(*return_document);
             from.sort(*ordering);
             from.upsert(*upsert);
+            from.read_concern(*read_concern);
             from.write_concern(*write_concern);
         }
 
@@ -128,6 +132,7 @@ TEST_CASE("v1", "[mongocxx][v_noabi][options][find_one_and_replace]") {
             CHECK(to.return_document() == *return_document);
             CHECK(to.sort().value() == ordering->view());
             CHECK(to.upsert() == *upsert);
+            CHECK(to.read_concern() == *read_concern);
             CHECK(to.write_concern() == *write_concern);
         } else {
             CHECK_FALSE(to.bypass_document_validation().has_value());
@@ -140,6 +145,7 @@ TEST_CASE("v1", "[mongocxx][v_noabi][options][find_one_and_replace]") {
             CHECK_FALSE(to.return_document().has_value());
             CHECK_FALSE(to.sort().has_value());
             CHECK_FALSE(to.upsert().has_value());
+            CHECK_FALSE(to.read_concern().has_value());
             CHECK_FALSE(to.write_concern().has_value());
         }
     }
@@ -158,6 +164,7 @@ TEST_CASE("v1", "[mongocxx][v_noabi][options][find_one_and_replace]") {
             from.return_document(*return_document);
             from.sort(from_v1(ordering->view()));
             from.upsert(*upsert);
+            from.read_concern(*read_concern);
             from.write_concern(*write_concern);
         }
 
@@ -174,6 +181,7 @@ TEST_CASE("v1", "[mongocxx][v_noabi][options][find_one_and_replace]") {
             CHECK(to.return_document() == *return_document);
             CHECK(to.sort().value() == ordering->view());
             CHECK(to.upsert() == *upsert);
+            CHECK(to.read_concern() == *read_concern);
             CHECK(to.write_concern() == *write_concern);
         } else {
             CHECK_FALSE(to.bypass_document_validation().has_value());
@@ -186,6 +194,7 @@ TEST_CASE("v1", "[mongocxx][v_noabi][options][find_one_and_replace]") {
             CHECK_FALSE(to.return_document().has_value());
             CHECK_FALSE(to.sort().has_value());
             CHECK_FALSE(to.upsert().has_value());
+            CHECK_FALSE(to.read_concern().has_value());
             CHECK_FALSE(to.write_concern().has_value());
         }
     }

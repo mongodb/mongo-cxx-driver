@@ -34,6 +34,7 @@
 #include <bsoncxx/types/bson_value/view_or_value.hpp>
 
 #include <mongocxx/hint.hpp>
+#include <mongocxx/read_concern.hpp>
 #include <mongocxx/write_concern.hpp>
 
 #include <mongocxx/config/prelude.hpp>
@@ -80,6 +81,10 @@ class find_one_and_delete {
 
         if (_ordering) {
             ret.sort(bsoncxx::v1::document::value{to_v1(_ordering->view())});
+        }
+
+        if (_read_concern) {
+            ret.read_concern(to_v1(*_read_concern));
         }
 
         if (_write_concern) {
@@ -225,6 +230,37 @@ class find_one_and_delete {
     }
 
     ///
+    /// Sets the read concern for this operation.
+    ///
+    /// @param read_concern
+    ///   Object representing the read concern.
+    ///
+    /// @return
+    ///   A reference to the object on which this member function is being called. This facilitates
+    ///   method chaining.
+    ///
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/findAndModify/
+    ///
+    find_one_and_delete& read_concern(v_noabi::read_concern read_concern) {
+        _read_concern = std::move(read_concern);
+        return *this;
+    }
+
+    ///
+    /// Gets the current read concern.
+    ///
+    /// @return
+    ///   The current read concern.
+    ///
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/findAndModify/
+    ///
+    bsoncxx::v_noabi::stdx::optional<v_noabi::read_concern> const& read_concern() const {
+        return _read_concern;
+    }
+
+    ///
     /// Sets the write concern for this operation.
     ///
     /// @param write_concern
@@ -337,6 +373,7 @@ class find_one_and_delete {
     bsoncxx::v_noabi::stdx::optional<std::chrono::milliseconds> _max_time;
     bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> _projection;
     bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> _ordering;
+    bsoncxx::v_noabi::stdx::optional<v_noabi::read_concern> _read_concern;
     bsoncxx::v_noabi::stdx::optional<v_noabi::write_concern> _write_concern;
     bsoncxx::v_noabi::stdx::optional<v_noabi::hint> _hint;
     bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> _let;
