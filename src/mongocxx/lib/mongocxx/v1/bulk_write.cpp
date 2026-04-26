@@ -1255,8 +1255,7 @@ bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> const& bulk_write::opt
     return impl::with(self)._let;
 }
 
-bsoncxx::v1::stdx::optional<v1::read_concern> const& bulk_write::options::internal::read_concern(
-    options const& self) {
+bsoncxx::v1::stdx::optional<v1::read_concern> const& bulk_write::options::internal::read_concern(options const& self) {
     return impl::with(self)._read_concern;
 }
 

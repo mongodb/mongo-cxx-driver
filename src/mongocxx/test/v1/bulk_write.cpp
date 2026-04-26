@@ -21,8 +21,8 @@
 
 #include <mongocxx/v1/exception.hpp>
 #include <mongocxx/v1/hint.hpp>
-#include <mongocxx/v1/server_error.hpp>
 #include <mongocxx/v1/read_concern.hpp>
+#include <mongocxx/v1/server_error.hpp>
 #include <mongocxx/v1/write_concern.hpp>
 
 #include <bsoncxx/test/v1/array/value.hh>
