@@ -681,6 +681,10 @@ bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> find_and_modify_impl(
     {
         scoped_bson extra;
 
+        if (auto const& opt = Options::internal::read_concern(options)) {
+            extra += scoped_bson{BCON_NEW("readConcern", BCON_DOCUMENT(scoped_bson{opt->to_document()}.bson()))};
+        }
+
         if (auto const& opt = Options::internal::write_concern(options)) {
             extra += scoped_bson{BCON_NEW("writeConcern", BCON_DOCUMENT(scoped_bson{opt->to_document()}.bson()))};
         }
