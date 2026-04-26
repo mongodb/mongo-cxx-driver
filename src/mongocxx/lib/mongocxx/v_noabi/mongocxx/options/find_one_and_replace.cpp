@@ -57,6 +57,7 @@ find_one_and_replace::find_one_and_replace(v1::find_one_and_replace_options opts
           return {};
       }()},
       _upsert{opts.upsert()},
+      _read_concern{std::move(v1::find_one_and_replace_options::internal::read_concern(opts))},
       _write_concern{std::move(v1::find_one_and_replace_options::internal::write_concern(opts))} {}
 
 } // namespace options

@@ -58,6 +58,7 @@ find_one_and_update::find_one_and_update(v1::find_one_and_update_options opts)
           return {};
       }()},
       _upsert{opts.upsert()},
+      _read_concern{std::move(v1::find_one_and_update_options::internal::read_concern(opts))},
       _write_concern{std::move(v1::find_one_and_update_options::internal::write_concern(opts))},
       _array_filters{[&]() -> decltype(_array_filters) {
           if (auto& opt = v1::find_one_and_update_options::internal::array_filters(opts)) {
