@@ -22,6 +22,7 @@
 
 #include <mongocxx/v1/hint.hpp>
 #include <mongocxx/v1/return_document.hpp>
+#include <mongocxx/v1/read_concern.hpp>
 #include <mongocxx/v1/write_concern.hpp>
 
 #include <chrono>
@@ -43,6 +44,7 @@ class find_one_and_replace_options::impl {
     bsoncxx::v1::stdx::optional<v1::return_document> _return_document;
     bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> _sort;
     bsoncxx::v1::stdx::optional<bool> _upsert;
+    bsoncxx::v1::stdx::optional<v1::read_concern> _read_concern;
     bsoncxx::v1::stdx::optional<v1::write_concern> _write_concern;
 
     static impl const& with(find_one_and_replace_options const& self) {
@@ -189,6 +191,15 @@ bsoncxx::v1::stdx::optional<bool> find_one_and_replace_options::upsert() const {
     return impl::with(this)->_upsert;
 }
 
+find_one_and_replace_options& find_one_and_replace_options::read_concern(v1::read_concern read_concern) {
+    impl::with(this)->_read_concern = std::move(read_concern);
+    return *this;
+}
+
+bsoncxx::v1::stdx::optional<v1::read_concern> find_one_and_replace_options::read_concern() const {
+    return impl::with(this)->_read_concern;
+}
+
 find_one_and_replace_options& find_one_and_replace_options::write_concern(v1::write_concern write_concern) {
     impl::with(this)->_write_concern = std::move(write_concern);
     return *this;
@@ -228,6 +239,11 @@ bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> const& find_one_and_re
     return impl::with(self)._sort;
 }
 
+bsoncxx::v1::stdx::optional<v1::read_concern> const& find_one_and_replace_options::internal::read_concern(
+    find_one_and_replace_options const& self) {
+    return impl::with(self)._read_concern;
+}
+
 bsoncxx::v1::stdx::optional<v1::write_concern> const& find_one_and_replace_options::internal::write_concern(
     find_one_and_replace_options const& self) {
     return impl::with(self)._write_concern;
@@ -261,6 +277,11 @@ bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value>& find_one_and_replace_
 bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value>& find_one_and_replace_options::internal::sort(
     find_one_and_replace_options& self) {
     return impl::with(self)._sort;
+}
+
+bsoncxx::v1::stdx::optional<v1::read_concern>& find_one_and_replace_options::internal::read_concern(
+    find_one_and_replace_options& self) {
+    return impl::with(self)._read_concern;
 }
 
 bsoncxx::v1::stdx::optional<v1::write_concern>& find_one_and_replace_options::internal::write_concern(
