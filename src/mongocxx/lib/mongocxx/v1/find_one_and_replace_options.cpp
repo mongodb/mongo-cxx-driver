@@ -21,8 +21,8 @@
 #include <bsoncxx/v1/types/value.hpp>
 
 #include <mongocxx/v1/hint.hpp>
-#include <mongocxx/v1/return_document.hpp>
 #include <mongocxx/v1/read_concern.hpp>
+#include <mongocxx/v1/return_document.hpp>
 #include <mongocxx/v1/write_concern.hpp>
 
 #include <chrono>

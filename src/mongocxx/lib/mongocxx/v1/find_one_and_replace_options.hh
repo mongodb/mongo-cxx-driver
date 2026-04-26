@@ -43,8 +43,7 @@ class find_one_and_replace_options::internal {
         find_one_and_replace_options const& self);
     static bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> const& sort(
         find_one_and_replace_options const& self);
-    static bsoncxx::v1::stdx::optional<v1::read_concern> const& read_concern(
-        find_one_and_replace_options const& self);
+    static bsoncxx::v1::stdx::optional<v1::read_concern> const& read_concern(find_one_and_replace_options const& self);
     static bsoncxx::v1::stdx::optional<v1::write_concern> const& write_concern(
         find_one_and_replace_options const& self);
 

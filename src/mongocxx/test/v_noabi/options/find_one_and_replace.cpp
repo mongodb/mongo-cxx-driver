@@ -17,8 +17,8 @@
 //
 
 #include <mongocxx/v1/hint.hpp>
-#include <mongocxx/v1/return_document.hpp>
 #include <mongocxx/v1/read_concern.hpp>
+#include <mongocxx/v1/return_document.hpp>
 #include <mongocxx/v1/write_concern.hpp>
 
 #include <bsoncxx/test/v1/document/value.hh>
