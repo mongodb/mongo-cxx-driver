@@ -112,7 +112,7 @@ class find_one_and_delete {
     ///   The new collation.
     ///
     /// @return
-    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   A reference to the object on which this member function is being called. This facilitates
     ///   method chaining.
     ///
     /// @see
@@ -143,7 +143,7 @@ class find_one_and_delete {
     ///   The max amount of running time (in milliseconds).
     ///
     /// @return
-    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   A reference to the object on which this member function is being called. This facilitates
     ///   method chaining.
     ///
     /// @see
@@ -173,7 +173,7 @@ class find_one_and_delete {
     ///   The projection document.
     ///
     /// @return
-    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   A reference to the object on which this member function is being called. This facilitates
     ///   method chaining.
     ///
     /// @see
@@ -206,7 +206,7 @@ class find_one_and_delete {
     ///   Document describing the order of the documents to be returned.
     ///
     /// @return
-    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   A reference to the object on which this member function is being called. This facilitates
     ///   method chaining.
     ///
     /// @see
@@ -267,7 +267,7 @@ class find_one_and_delete {
     ///   Object representing the write concern.
     ///
     /// @return
-    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   A reference to the object on which this member function is being called. This facilitates
     ///   method chaining.
     ///
     /// @see
@@ -301,7 +301,7 @@ class find_one_and_delete {
     ///   Object representing the index to use.
     ///
     /// @return
-    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   A reference to the object on which this member function is being called. This facilitates
     ///   method chaining.
     ///
     find_one_and_delete& hint(v_noabi::hint index_hint) {
@@ -325,7 +325,7 @@ class find_one_and_delete {
     ///   The new let option.
     ///
     /// @return
-    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   A reference to the object on which this member function is being called. This facilitates
     ///   method chaining.
     ///
     find_one_and_delete& let(bsoncxx::v_noabi::document::view_or_value let) {
@@ -350,7 +350,7 @@ class find_one_and_delete {
     ///   The new comment option.
     ///
     /// @return
-    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   A reference to the object on which this member function is being called. This facilitates
     ///   method chaining.
     ///
     find_one_and_delete& comment(bsoncxx::v_noabi::types::bson_value::view_or_value comment) {
