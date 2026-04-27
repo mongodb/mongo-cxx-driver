@@ -16,6 +16,7 @@
 
 //
 
+#include <mongocxx/v1/read_concern.hpp>
 #include <mongocxx/v1/write_concern.hpp>
 
 #include <bsoncxx/test/v1/document/value.hh>
@@ -35,11 +36,13 @@ void test_create_options() {
     auto const has_value = GENERATE(false, true);
 
     bsoncxx::v1::stdx::optional<std::chrono::milliseconds> max_time;
+    bsoncxx::v1::stdx::optional<v1::read_concern> read_concern;
     bsoncxx::v1::stdx::optional<v1::write_concern> write_concern;
     bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> commit_quorum;
 
     if (has_value) {
         max_time.emplace();
+        read_concern.emplace();
         write_concern.emplace();
         commit_quorum.emplace();
     }
@@ -56,6 +59,7 @@ void test_create_options() {
 
         if (has_value) {
             from.max_time(*max_time);
+            from.read_concern(*read_concern);
             from.write_concern(*write_concern);
             from.commit_quorum(*commit_quorum);
         }
@@ -64,10 +68,12 @@ void test_create_options() {
 
         if (has_value) {
             CHECK(to.max_time() == max_time);
+            CHECK(to.read_concern() == read_concern);
             CHECK(to.write_concern() == write_concern);
             CHECK(to.commit_quorum().value().view() == commit_quorum->view());
         } else {
             CHECK_FALSE(to.max_time().has_value());
+            CHECK_FALSE(to.read_concern().has_value());
             CHECK_FALSE(to.write_concern().has_value());
             CHECK_FALSE(to.commit_quorum().has_value());
         }

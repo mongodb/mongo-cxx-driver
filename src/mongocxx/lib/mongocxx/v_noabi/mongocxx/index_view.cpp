@@ -83,6 +83,10 @@ void append_create_to(CreateIndexOptions const& opts, scoped_bson& doc) {
         doc += scoped_bson{BCON_NEW("maxTimeMS", BCON_INT64(std::int64_t{opt->count()}))};
     }
 
+    if (auto const& opt = opts.read_concern()) {
+        doc += scoped_bson{BCON_NEW("readConcern", BCON_DOCUMENT(to_scoped_bson(opt->to_document()).bson()))};
+    }
+
     if (auto const& opt = opts.write_concern()) {
         doc += scoped_bson{BCON_NEW("writeConcern", BCON_DOCUMENT(to_scoped_bson(opt->to_document()).bson()))};
     }
@@ -92,6 +96,10 @@ template <typename DropIndexOptions>
 void append_drop_to(DropIndexOptions const& opts, scoped_bson& doc) {
     if (auto const& opt = opts.max_time()) {
         doc += scoped_bson{BCON_NEW("maxTimeMS", BCON_INT64(std::int64_t{opt->count()}))};
+    }
+
+    if (auto const& opt = opts.read_concern()) {
+        doc += scoped_bson{BCON_NEW("readConcern", BCON_DOCUMENT(to_scoped_bson(opt->to_document()).bson()))};
     }
 
     if (auto const& opt = opts.write_concern()) {
