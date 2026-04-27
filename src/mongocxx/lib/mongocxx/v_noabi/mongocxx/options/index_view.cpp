@@ -45,6 +45,7 @@ index_view::index_view(v1::indexes::create_one_options opts)
 index_view::index_view(v1::indexes::create_many_options opts)
     : _max_time(opts.max_time()),
       _read_concern{std::move(v1::indexes::create_many_options::internal::read_concern(opts))},
+      _write_concern{std::move(v1::indexes::create_many_options::internal::write_concern(opts))},
       _commit_quorum{[&]() -> decltype(_commit_quorum) {
           if (auto& opt = v1::indexes::create_many_options::internal::commit_quorum(opts)) {
               return bsoncxx::v_noabi::from_v1(std::move(*opt));
