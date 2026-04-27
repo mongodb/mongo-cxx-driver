@@ -17,6 +17,7 @@
 //
 
 #include <mongocxx/v1/hint.hpp>
+#include <mongocxx/v1/read_concern.hpp>
 #include <mongocxx/v1/write_concern.hpp>
 
 #include <bsoncxx/test/v1/document/value.hh>
@@ -68,6 +69,7 @@ TEST_CASE("v1", "[mongocxx][v_noabi][options][find_one_and_delete]") {
     bsoncxx::v1::stdx::optional<std::chrono::milliseconds> max_time;
     bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> projection;
     bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> ordering;
+    bsoncxx::v1::stdx::optional<v1::read_concern> read_concern;
     bsoncxx::v1::stdx::optional<v1::write_concern> write_concern;
     bsoncxx::v1::stdx::optional<v1::hint> hint;
     bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> let;
@@ -78,6 +80,7 @@ TEST_CASE("v1", "[mongocxx][v_noabi][options][find_one_and_delete]") {
         max_time.emplace();
         projection.emplace();
         ordering.emplace();
+        read_concern.emplace();
         write_concern.emplace();
         hint.emplace("hint");
         let.emplace();
@@ -95,6 +98,7 @@ TEST_CASE("v1", "[mongocxx][v_noabi][options][find_one_and_delete]") {
             from.max_time(*max_time);
             from.projection(*projection);
             from.sort(*ordering);
+            from.read_concern(*read_concern);
             from.write_concern(*write_concern);
             from.hint(*hint);
             from.let(*let);
@@ -108,6 +112,7 @@ TEST_CASE("v1", "[mongocxx][v_noabi][options][find_one_and_delete]") {
             CHECK(to.max_time() == *max_time);
             CHECK(to.projection().value() == projection->view());
             CHECK(to.sort().value() == ordering->view());
+            CHECK(to.read_concern() == *read_concern);
             CHECK(to.write_concern() == *write_concern);
             CHECK(to.hint().value().to_value() == hint->to_value());
             CHECK(to.let().value() == let->view());
@@ -117,6 +122,7 @@ TEST_CASE("v1", "[mongocxx][v_noabi][options][find_one_and_delete]") {
             CHECK_FALSE(to.max_time().has_value());
             CHECK_FALSE(to.projection().has_value());
             CHECK_FALSE(to.sort().has_value());
+            CHECK_FALSE(to.read_concern().has_value());
             CHECK_FALSE(to.write_concern().has_value());
             CHECK_FALSE(to.hint().has_value());
             CHECK_FALSE(to.let().has_value());
@@ -132,6 +138,7 @@ TEST_CASE("v1", "[mongocxx][v_noabi][options][find_one_and_delete]") {
             from.max_time(*max_time);
             from.projection(from_v1(projection->view()));
             from.sort(from_v1(ordering->view()));
+            from.read_concern(*read_concern);
             from.write_concern(*write_concern);
             from.hint(*hint);
             from.let(from_v1(let->view()));
@@ -145,6 +152,7 @@ TEST_CASE("v1", "[mongocxx][v_noabi][options][find_one_and_delete]") {
             CHECK(to.max_time() == *max_time);
             CHECK(to.projection().value() == projection->view());
             CHECK(to.sort().value() == ordering->view());
+            CHECK(to.read_concern() == *read_concern);
             CHECK(to.write_concern() == *write_concern);
             CHECK(to.hint().value().to_value() == hint->to_value());
             CHECK(to.let().value() == let->view());
@@ -154,6 +162,7 @@ TEST_CASE("v1", "[mongocxx][v_noabi][options][find_one_and_delete]") {
             CHECK_FALSE(to.max_time().has_value());
             CHECK_FALSE(to.projection().has_value());
             CHECK_FALSE(to.sort().has_value());
+            CHECK_FALSE(to.read_concern().has_value());
             CHECK_FALSE(to.write_concern().has_value());
             CHECK_FALSE(to.hint().has_value());
             CHECK_FALSE(to.let().has_value());

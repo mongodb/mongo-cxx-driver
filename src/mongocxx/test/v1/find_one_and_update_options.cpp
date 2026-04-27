@@ -17,6 +17,7 @@
 //
 
 #include <mongocxx/v1/hint.hpp>
+#include <mongocxx/v1/read_concern.hpp>
 #include <mongocxx/v1/return_document.hpp>
 #include <mongocxx/v1/write_concern.hpp>
 
@@ -89,6 +90,7 @@ TEST_CASE("default", "[mongocxx][v1][find_one_and_update_options]") {
     CHECK_FALSE(opts.return_document().has_value());
     CHECK_FALSE(opts.sort().has_value());
     CHECK_FALSE(opts.upsert().has_value());
+    CHECK_FALSE(opts.read_concern().has_value());
     CHECK_FALSE(opts.write_concern().has_value());
     CHECK_FALSE(opts.array_filters().has_value());
 }
@@ -182,6 +184,17 @@ TEST_CASE("upsert", "[mongocxx][v1][find_one_and_update_options]") {
     auto const v = GENERATE(false, true);
 
     CHECK(find_one_and_update_options{}.upsert(v).upsert() == v);
+}
+
+TEST_CASE("read_concern", "[mongocxx][v1][find_one_and_update_options]") {
+    using T = v1::read_concern;
+
+    auto const v = GENERATE(values({
+        T{},
+        T{}.acknowledge_level(T::level::k_majority),
+    }));
+
+    CHECK(find_one_and_update_options{}.read_concern(v).read_concern() == v);
 }
 
 TEST_CASE("write_concern", "[mongocxx][v1][find_one_and_update_options]") {

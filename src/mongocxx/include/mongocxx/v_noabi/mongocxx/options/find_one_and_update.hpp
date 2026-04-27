@@ -38,6 +38,7 @@
 
 #include <mongocxx/hint.hpp>
 #include <mongocxx/options/find_one_common_options.hpp>
+#include <mongocxx/read_concern.hpp>
 #include <mongocxx/write_concern.hpp>
 
 #include <mongocxx/config/prelude.hpp>
@@ -110,6 +111,10 @@ class find_one_and_update {
             ret.upsert(*_upsert);
         }
 
+        if (_read_concern) {
+            ret.read_concern(to_v1(*_read_concern));
+        }
+
         if (_write_concern) {
             ret.write_concern(to_v1(*_write_concern));
         }
@@ -127,7 +132,7 @@ class find_one_and_update {
     ///   The new collation.
     ///
     /// @return
-    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   A reference to the object on which this member function is being called. This facilitates
     ///   method chaining.
     ///
     /// @see
@@ -162,7 +167,7 @@ class find_one_and_update {
     ///   Whether or not to bypass document validation.
     ///
     /// @return
-    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   A reference to the object on which this member function is being called. This facilitates
     ///   method chaining.
     ///
     /// @see
@@ -196,7 +201,7 @@ class find_one_and_update {
     ///   Object representing the index to use.
     ///
     /// @return
-    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   A reference to the object on which this member function is being called. This facilitates
     ///   method chaining.
     ///
     find_one_and_update& hint(v_noabi::hint index_hint) {
@@ -220,7 +225,7 @@ class find_one_and_update {
     ///   The new let option.
     ///
     /// @return
-    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   A reference to the object on which this member function is being called. This facilitates
     ///   method chaining.
     ///
     find_one_and_update& let(bsoncxx::v_noabi::document::view_or_value let) {
@@ -245,7 +250,7 @@ class find_one_and_update {
     ///   The new comment option.
     ///
     /// @return
-    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   A reference to the object on which this member function is being called. This facilitates
     ///   method chaining.
     ///
     find_one_and_update& comment(bsoncxx::v_noabi::types::bson_value::view_or_value comment) {
@@ -270,7 +275,7 @@ class find_one_and_update {
     ///   The max amount of time (in milliseconds).
     ///
     /// @return
-    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   A reference to the object on which this member function is being called. This facilitates
     ///   method chaining.
     ///
     /// @see
@@ -300,7 +305,7 @@ class find_one_and_update {
     ///   The projection document.
     ///
     /// @return
-    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   A reference to the object on which this member function is being called. This facilitates
     ///   method chaining.
     ///
     /// @see
@@ -331,7 +336,7 @@ class find_one_and_update {
     ///   Version of document to return, either original or updated.
     ///
     /// @return
-    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   A reference to the object on which this member function is being called. This facilitates
     ///   method chaining.
     ///
     /// @see
@@ -366,7 +371,7 @@ class find_one_and_update {
     ///   Document describing the order of the documents to be returned.
     ///
     /// @return
-    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   A reference to the object on which this member function is being called. This facilitates
     ///   method chaining.
     ///
     /// @see
@@ -398,7 +403,7 @@ class find_one_and_update {
     ///   Whether or not to perform an upsert.
     ///
     /// @return
-    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   A reference to the object on which this member function is being called. This facilitates
     ///   method chaining.
     ///
     /// @see
@@ -422,13 +427,44 @@ class find_one_and_update {
     }
 
     ///
+    /// Sets the read concern for this operation.
+    ///
+    /// @param read_concern
+    ///   Object representing the read concern.
+    ///
+    /// @return
+    ///   A reference to the object on which this member function is being called. This facilitates
+    ///   method chaining.
+    ///
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/findAndModify/
+    ///
+    find_one_and_update& read_concern(v_noabi::read_concern read_concern) {
+        _read_concern = std::move(read_concern);
+        return *this;
+    }
+
+    ///
+    /// Gets the current read concern.
+    ///
+    /// @return
+    ///   The current read concern.
+    ///
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/findAndModify/
+    ///
+    bsoncxx::v_noabi::stdx::optional<v_noabi::read_concern> const& read_concern() const {
+        return _read_concern;
+    }
+
+    ///
     /// Sets the write concern for this operation.
     ///
     /// @param write_concern
     ///   Object representing the write concern.
     ///
     /// @return
-    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   A reference to the object on which this member function is being called. This facilitates
     ///   method chaining.
     ///
     /// @see
@@ -459,7 +495,7 @@ class find_one_and_update {
     ///   Array representing filters determining which array elements to modify.
     ///
     /// @return
-    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   A reference to the object on which this member function is being called. This facilitates
     ///   method chaining.
     ///
     /// @see
@@ -494,6 +530,7 @@ class find_one_and_update {
     bsoncxx::v_noabi::stdx::optional<v_noabi::options::return_document> _return_document;
     bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> _ordering;
     bsoncxx::v_noabi::stdx::optional<bool> _upsert;
+    bsoncxx::v_noabi::stdx::optional<v_noabi::read_concern> _read_concern;
     bsoncxx::v_noabi::stdx::optional<v_noabi::write_concern> _write_concern;
     bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::array::view_or_value> _array_filters;
 };

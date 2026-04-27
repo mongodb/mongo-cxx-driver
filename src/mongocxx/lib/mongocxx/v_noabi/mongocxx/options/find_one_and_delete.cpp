@@ -46,6 +46,7 @@ find_one_and_delete::find_one_and_delete(v1::find_one_and_delete_options opts)
           }
           return {};
       }()},
+      _read_concern{std::move(v1::find_one_and_delete_options::internal::read_concern(opts))},
       _write_concern{std::move(v1::find_one_and_delete_options::internal::write_concern(opts))},
       _hint{std::move(v1::find_one_and_delete_options::internal::hint(opts))},
       _let{[&]() -> decltype(_let) {

@@ -664,6 +664,10 @@ bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::value> find_and_mod
     {
         scoped_bson extra;
 
+        if (auto const& opt = options.read_concern()) {
+            extra += scoped_bson{BCON_NEW("readConcern", BCON_DOCUMENT(to_scoped_bson(opt->to_document()).bson()))};
+        }
+
         if (auto const& opt = options.write_concern()) {
             if (!opt->is_acknowledged() && options.collation()) {
                 throw v_noabi::logic_error{v_noabi::error_code::k_invalid_parameter};

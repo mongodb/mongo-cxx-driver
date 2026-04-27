@@ -22,6 +22,7 @@
 #include <bsoncxx/v1/types/value-fwd.hpp>
 
 #include <mongocxx/v1/hint-fwd.hpp>
+#include <mongocxx/v1/read_concern-fwd.hpp>
 #include <mongocxx/v1/write_concern-fwd.hpp>
 
 #include <bsoncxx/v1/stdx/optional.hpp>
@@ -37,6 +38,7 @@ class find_one_and_delete_options::internal {
         find_one_and_delete_options const& self);
     static bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> const& sort(
         find_one_and_delete_options const& self);
+    static bsoncxx::v1::stdx::optional<v1::read_concern> const& read_concern(find_one_and_delete_options const& self);
     static bsoncxx::v1::stdx::optional<v1::write_concern> const& write_concern(find_one_and_delete_options const& self);
     static bsoncxx::v1::stdx::optional<v1::hint> const& hint(find_one_and_delete_options const& self);
     static bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> const& let(
@@ -47,6 +49,7 @@ class find_one_and_delete_options::internal {
     static bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value>& collation(find_one_and_delete_options& self);
     static bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value>& projection(find_one_and_delete_options& self);
     static bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value>& sort(find_one_and_delete_options& self);
+    static bsoncxx::v1::stdx::optional<v1::read_concern>& read_concern(find_one_and_delete_options& self);
     static bsoncxx::v1::stdx::optional<v1::write_concern>& write_concern(find_one_and_delete_options& self);
     static bsoncxx::v1::stdx::optional<v1::hint>& hint(find_one_and_delete_options& self);
     static bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value>& let(find_one_and_delete_options& self);
