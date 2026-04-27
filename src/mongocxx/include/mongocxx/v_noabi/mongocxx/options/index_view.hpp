@@ -122,7 +122,7 @@ class index_view {
     ///   The max amount of time (in milliseconds).
     ///
     /// @return
-    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   A reference to the object on which this member function is being called. This facilitates
     ///   method chaining.
     ///
     /// @see
@@ -184,7 +184,7 @@ class index_view {
     ///   Object representing the write concern.
     ///
     /// @return
-    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   A reference to the object on which this member function is being called. This facilitates
     ///   method chaining.
     ///
     /// @see
