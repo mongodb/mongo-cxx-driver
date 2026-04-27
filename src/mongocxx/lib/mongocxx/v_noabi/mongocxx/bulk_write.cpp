@@ -247,6 +247,11 @@ bulk_write::internal::make(collection& coll, options::bulk_write const& opts, cl
         options += scoped_bson{BCON_NEW("ordered", BCON_BOOL(false))};
     }
 
+    if (auto const& opt = opts.read_concern()) {
+        auto const v = opt->to_document();
+        options += scoped_bson{BCON_NEW("readConcern", BCON_DOCUMENT(to_scoped_bson_view(v).bson()))};
+    }
+
     if (auto const& opt = opts.write_concern()) {
         auto const v = opt->to_document();
         options += scoped_bson{BCON_NEW("writeConcern", BCON_DOCUMENT(to_scoped_bson_view(v).bson()))};

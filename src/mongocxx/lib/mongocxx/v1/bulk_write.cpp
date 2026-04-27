@@ -22,6 +22,7 @@
 
 #include <mongocxx/v1/detail/macros.hpp>
 #include <mongocxx/v1/pipeline.hpp>
+#include <mongocxx/v1/read_concern.hpp>
 #include <mongocxx/v1/write_concern.hpp>
 
 #include <bsoncxx/v1/types/value.hh>
@@ -1136,6 +1137,7 @@ class bulk_write::options::impl {
     bsoncxx::v1::stdx::optional<bsoncxx::v1::types::value> _comment;
     bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> _let;
     bool _ordered = true;
+    bsoncxx::v1::stdx::optional<v1::read_concern> _read_concern;
     bsoncxx::v1::stdx::optional<v1::write_concern> _write_concern;
 
     static impl const& with(options const& self) {
@@ -1225,6 +1227,15 @@ bool bulk_write::options::ordered() const {
     return impl::with(this)->_ordered;
 }
 
+bulk_write::options& bulk_write::options::read_concern(v1::read_concern rc) {
+    impl::with(this)->_read_concern = std::move(rc);
+    return *this;
+}
+
+bsoncxx::v1::stdx::optional<v1::read_concern> bulk_write::options::read_concern() const {
+    return impl::with(this)->_read_concern;
+}
+
 bulk_write::options& bulk_write::options::write_concern(v1::write_concern wc) {
     impl::with(this)->_write_concern = std::move(wc);
     return *this;
@@ -1244,6 +1255,10 @@ bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> const& bulk_write::opt
     return impl::with(self)._let;
 }
 
+bsoncxx::v1::stdx::optional<v1::read_concern> const& bulk_write::options::internal::read_concern(options const& self) {
+    return impl::with(self)._read_concern;
+}
+
 bsoncxx::v1::stdx::optional<v1::write_concern> const& bulk_write::options::internal::write_concern(
     options const& self) {
     return impl::with(self)._write_concern;
@@ -1255,6 +1270,10 @@ bsoncxx::v1::stdx::optional<bsoncxx::v1::types::value>& bulk_write::options::int
 
 bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value>& bulk_write::options::internal::let(options& self) {
     return impl::with(self)._let;
+}
+
+bsoncxx::v1::stdx::optional<v1::read_concern>& bulk_write::options::internal::read_concern(options& self) {
+    return impl::with(self)._read_concern;
 }
 
 bsoncxx::v1::stdx::optional<v1::write_concern>& bulk_write::options::internal::write_concern(options& self) {

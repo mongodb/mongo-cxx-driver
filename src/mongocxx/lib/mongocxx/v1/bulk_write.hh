@@ -21,6 +21,7 @@
 #include <bsoncxx/v1/types/value-fwd.hpp>
 
 #include <mongocxx/v1/hint-fwd.hpp>
+#include <mongocxx/v1/read_concern-fwd.hpp>
 #include <mongocxx/v1/write_concern-fwd.hpp>
 
 #include <bsoncxx/v1/array/value.hpp>
@@ -109,10 +110,12 @@ class bulk_write::options::internal {
    public:
     static bsoncxx::v1::stdx::optional<bsoncxx::v1::types::value> const& comment(options const& self);
     static bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> const& let(options const& self);
+    static bsoncxx::v1::stdx::optional<v1::read_concern> const& read_concern(options const& self);
     static bsoncxx::v1::stdx::optional<v1::write_concern> const& write_concern(options const& self);
 
     static bsoncxx::v1::stdx::optional<bsoncxx::v1::types::value>& comment(options& self);
     static bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value>& let(options& self);
+    static bsoncxx::v1::stdx::optional<v1::read_concern>& read_concern(options& self);
     static bsoncxx::v1::stdx::optional<v1::write_concern>& write_concern(options& self);
 
     static void append_to(options const& self, scoped_bson& doc);

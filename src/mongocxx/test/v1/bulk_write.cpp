@@ -21,6 +21,7 @@
 
 #include <mongocxx/v1/exception.hpp>
 #include <mongocxx/v1/hint.hpp>
+#include <mongocxx/v1/read_concern.hpp>
 #include <mongocxx/v1/server_error.hpp>
 #include <mongocxx/v1/write_concern.hpp>
 
@@ -1334,6 +1335,7 @@ TEST_CASE("default", "[mongocxx][v1][bulk_write][options]") {
     CHECK_FALSE(opts.comment().has_value());
     CHECK_FALSE(opts.let().has_value());
     CHECK(opts.ordered());
+    CHECK_FALSE(opts.read_concern().has_value());
     CHECK_FALSE(opts.write_concern().has_value());
 }
 
@@ -1370,6 +1372,17 @@ TEST_CASE("ordered", "[mongocxx][v1][bulk_write][options]") {
     auto const v = GENERATE(false, true);
 
     CHECK(bulk_write::options{}.ordered(v).ordered() == v);
+}
+
+TEST_CASE("read_concern", "[mongocxx][v1][bulk_write][options]") {
+    using T = v1::read_concern;
+
+    auto const v = GENERATE(values({
+        T{},
+        T{}.acknowledge_level(T::level::k_majority),
+    }));
+
+    CHECK(bulk_write::options{}.read_concern(v).read_concern() == v);
 }
 
 TEST_CASE("write_concern", "[mongocxx][v1][bulk_write][options]") {
