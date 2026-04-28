@@ -9,7 +9,10 @@ Changes prior to 3.9.0 are documented as [release notes on GitHub](https://githu
 
 ## 4.4.0 [Unreleased]
 
-<!-- Will contain entries for the next minor release. -->
+### Deprecated
+
+- Support for MongoDB Server 4.2.
+  - See: [MongoDB Software Lifecycle Schedules](https://www.mongodb.com/legal/support-policy/lifecycles).
 
 ## 4.3.0
 
