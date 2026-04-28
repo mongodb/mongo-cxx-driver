@@ -48,7 +48,7 @@ import textwrap
 
 import click  # pip install Click
 from git import Repo  # pip install GitPython
-from github import Github  # pip install PyGithub
+from github import Auth, Github  # pip install PyGithub
 from jira import JIRA  # pip install jira
 from looseversion import LooseVersion
 
@@ -121,6 +121,11 @@ ISSUE_TYPE_ID = {
     help='Send release announcement draft output to the specified file',
 )
 @click.option(
+    '--allow-unreleased-changelog-entry',
+    is_flag=True,
+    help='Permit an [Unreleased] tag in the CHANGELOG version header',
+)
+@click.option(
     '--dry-run',
     '-n',
     is_flag=True,
@@ -139,6 +144,7 @@ def release(
     jira_token_file,
     github_token_file,
     allow_open_issues,
+    allow_unreleased_changelog_entry,
     remote,
     c_driver_build_ref,
     with_c_driver,
@@ -162,7 +168,7 @@ def release(
     auth_jira = JIRA(jira_options, token_auth=jira_token)
 
     github_token = read_github_creds(github_token_file)
-    auth_gh = Github(github_token)
+    auth_gh = Github(auth=Auth.Token(github_token))
 
     if not is_valid_remote(remote):
         click.echo(
@@ -242,7 +248,7 @@ def release(
 
     with open('CHANGELOG.md', 'r') as changelog:
         changelog_contents = changelog.read()
-    release_notes_text = generate_release_notes(release_version, changelog_contents)
+    release_notes_text = generate_release_notes(release_version, changelog_contents, allow_unreleased_changelog_entry)
 
     gh_repo = auth_gh.get_repo('mongodb/mongo-cxx-driver')
     gh_release_dict = get_github_releases(gh_repo)
@@ -414,7 +420,7 @@ def check_pre_release(tag_name):
     it starts with something like rX.Y.Z and nothing else.
     """
 
-    release_re = re.compile('^r[0-9]+\\.[0-9]+\\.[0-9]+')
+    release_re = re.compile('^r[0-9]+\\.[0-9]+\\.[0-9]+$')
 
     return not bool(release_re.match(tag_name))
 
@@ -552,7 +558,9 @@ def all_issues_closed(issues):
     return True
 
 
-def generate_release_notes(release_version: str, changelog_contents: str) -> str:
+def generate_release_notes(
+    release_version: str, changelog_contents: str, allow_unreleased_changelog_entry: bool = False
+) -> str:
     lines = []
     adding_to_lines = False
     for line in changelog_contents.splitlines(keepends=True):
@@ -563,16 +571,15 @@ def generate_release_notes(release_version: str, changelog_contents: str) -> str
             if matched_version == release_version:
                 # Found matching version.
                 extra = match.group(2)
-                if extra != '':
+                if extra != '' and not (allow_unreleased_changelog_entry and extra == '[Unreleased]'):
                     raise click.ClickException(
                         'Unexpected extra characters in CHANGELOG: {}. Is the CHANGELOG updated?'.format(extra)
                     )
                 if adding_to_lines:
                     raise click.ClickException(
                         'Unexpected second changelog entry matching version: {}: {}'.format(
-                            matched_version, release_version
-                        ),
-                        line,
+                            matched_version, line.rstrip()
+                        )
                     )
                 # Begin adding lines to `lines` list.
                 adding_to_lines = True
