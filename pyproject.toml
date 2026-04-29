@@ -53,6 +53,12 @@ make_release = [
     "pygithub>=2.1",
 ]
 
+test_make_release = [
+    # etc/test_make_release.py
+    {include-group = "make_release"},
+    "pytest>=8.0",
+]
+
 [tool.ruff]
 line-length = 120
 src = [".evergreen", "etc"]
