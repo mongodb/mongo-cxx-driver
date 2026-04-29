@@ -551,7 +551,10 @@ def all_issues_closed(issues):
         click.echo(msg, err=True)
 
         def open_filter(x):
-            return x.fields.status.name != 'Closed'
+            return x.fields.status.name not in {
+                'Closed',  # Normal issues.
+                'Development Complete',  # Epics.
+            }
 
         open_issues = [i.key for i in filter(open_filter, issues)]
         click.echo('{}'.format(', '.join(open_issues)), err=True)
