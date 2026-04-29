@@ -206,7 +206,7 @@ def release(
         click.echo('Tag {} does not point to HEAD...exiting!'.format(release_tag), err=True)
         sys.exit(1)
 
-    is_pre_release = check_pre_release(release_tag)
+    is_pre_release = is_pre_release_tag(release_tag)
 
     if not quiet:
         found_msg = 'Found release tag {}'.format(release_tag)
@@ -413,13 +413,14 @@ def release_tag_points_to_head(release_tag):
     return tag_commit == repo.head.commit
 
 
-def check_pre_release(tag_name):
+def is_pre_release_tag(tag_name):
     """
-    Check the given tag to determine if it is a release tag, that is, whether it
-    is of the form rX.Y.Z.  Tags that do not match (e.g., because they are
-    suffixed with someting like -beta# or -rc#) are considered pre-release tags.
-    Note that this assumes that the tag name has been validated to ensure that
-    it starts with something like rX.Y.Z and nothing else.
+    Return true when the given (valid) release tag is a pre-release tag.
+
+    A pre-release tag must contain "extra" labels delimited by a '-':
+    - Normal:      r3.9.0
+    - Pre-release: r3.9.0-rc0, r3.9.0-extra, etc.
+    - Invalid:     r3.9.0-, r3.9.0.extra, r3.9.0extra, etc.
     """
 
     match = RELEASE_TAG_RE.fullmatch(tag_name)
