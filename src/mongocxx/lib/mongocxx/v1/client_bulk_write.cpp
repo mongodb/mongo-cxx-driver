@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <mongocxx/v1/client_bulk_write.hpp>
+#include <mongocxx/v1/client_bulk_write.hh>
 
 //
 
@@ -135,29 +135,55 @@ bsoncxx::v1::stdx::optional<client_bulk_write::result> client_bulk_write::execut
     not_yet_implemented("client_bulk_write::execute");
 }
 
-class client_bulk_write::options::impl {};
+class client_bulk_write::options::impl {
+   public:
+    bsoncxx::v1::stdx::optional<bool> _bypass_document_validation;
+    bsoncxx::v1::stdx::optional<bsoncxx::v1::types::value> _comment;
+    bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> _let;
+    bsoncxx::v1::stdx::optional<bool> _ordered;
+    bsoncxx::v1::stdx::optional<bool> _verbose_results;
+    bsoncxx::v1::stdx::optional<v1::write_concern> _write_concern;
+
+    static impl const& with(options const& self) {
+        return *static_cast<impl const*>(self._impl);
+    }
+
+    static impl const* with(options const* self) {
+        return static_cast<impl const*>(self->_impl);
+    }
+
+    static impl& with(options& self) {
+        return *static_cast<impl*>(self._impl);
+    }
+
+    static impl* with(options* self) {
+        return static_cast<impl*>(self->_impl);
+    }
+
+    static impl* with(void* ptr) {
+        return static_cast<impl*>(ptr);
+    }
+};
 
 client_bulk_write::options::~options() {
-    delete static_cast<impl*>(_impl);
+    delete impl::with(this);
 }
 
 client_bulk_write::options::options(options&& other) noexcept : _impl{exchange(other._impl, nullptr)} {}
 
 client_bulk_write::options& client_bulk_write::options::operator=(options&& other) noexcept {
     if (this != &other) {
-        delete static_cast<impl*>(exchange(_impl, exchange(other._impl, nullptr)));
+        delete impl::with(exchange(_impl, exchange(other._impl, nullptr)));
     }
 
     return *this;
 }
 
-client_bulk_write::options::options(options const& /*other*/) : _impl{new impl{}} {}
+client_bulk_write::options::options(options const& other) : _impl{new impl{impl::with(other)}} {}
 
 client_bulk_write::options& client_bulk_write::options::operator=(options const& other) {
     if (this != &other) {
-        auto* const tmp = new impl{};
-        delete static_cast<impl*>(_impl);
-        _impl = tmp;
+        delete impl::with(exchange(_impl, new impl{impl::with(other)}));
     }
 
     return *this;
@@ -165,53 +191,86 @@ client_bulk_write::options& client_bulk_write::options::operator=(options const&
 
 client_bulk_write::options::options() : _impl{new impl{}} {}
 
-client_bulk_write::options& client_bulk_write::options::bypass_document_validation(
-    bool /*bypass_document_validation*/) {
+client_bulk_write::options& client_bulk_write::options::bypass_document_validation(bool bypass_document_validation) {
+    impl::with(this)->_bypass_document_validation = bypass_document_validation;
     return *this;
 }
 
 bsoncxx::v1::stdx::optional<bool> client_bulk_write::options::bypass_document_validation() const {
-    not_yet_implemented("client_bulk_write::options::bypass_document_validation");
+    return impl::with(this)->_bypass_document_validation;
 }
 
-client_bulk_write::options& client_bulk_write::options::comment(bsoncxx::v1::types::value /*comment*/) {
+client_bulk_write::options& client_bulk_write::options::comment(bsoncxx::v1::types::value comment) {
+    impl::with(this)->_comment = std::move(comment);
     return *this;
 }
 
 bsoncxx::v1::stdx::optional<bsoncxx::v1::types::view> client_bulk_write::options::comment() const {
-    not_yet_implemented("client_bulk_write::options::comment");
+    return impl::with(this)->_comment;
 }
 
-client_bulk_write::options& client_bulk_write::options::let(bsoncxx::v1::document::value /*let*/) {
+client_bulk_write::options& client_bulk_write::options::let(bsoncxx::v1::document::value let) {
+    impl::with(this)->_let = std::move(let);
     return *this;
 }
 
 bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view> client_bulk_write::options::let() const {
-    not_yet_implemented("client_bulk_write::options::let");
+    return impl::with(this)->_let;
 }
 
-client_bulk_write::options& client_bulk_write::options::ordered(bool /*ordered*/) {
+client_bulk_write::options& client_bulk_write::options::ordered(bool ordered) {
+    impl::with(this)->_ordered = ordered;
     return *this;
 }
 
 bool client_bulk_write::options::ordered() const {
-    not_yet_implemented("client_bulk_write::options::ordered");
+    return impl::with(this)->_ordered.value_or(true);
 }
 
-client_bulk_write::options& client_bulk_write::options::verbose_results(bool /*verbose_results*/) {
+client_bulk_write::options& client_bulk_write::options::verbose_results(bool verbose_results) {
+    impl::with(this)->_verbose_results = verbose_results;
     return *this;
 }
 
 bsoncxx::v1::stdx::optional<bool> client_bulk_write::options::verbose_results() const {
-    not_yet_implemented("client_bulk_write::options::verbose_results");
+    return impl::with(this)->_verbose_results;
 }
 
-client_bulk_write::options& client_bulk_write::options::write_concern(v1::write_concern /*wc*/) {
+client_bulk_write::options& client_bulk_write::options::write_concern(v1::write_concern wc) {
+    impl::with(this)->_write_concern = std::move(wc);
     return *this;
 }
 
 bsoncxx::v1::stdx::optional<v1::write_concern> client_bulk_write::options::write_concern() const {
-    not_yet_implemented("client_bulk_write::options::write_concern");
+    return impl::with(this)->_write_concern;
+}
+
+bsoncxx::v1::stdx::optional<bool> const& client_bulk_write::options::internal::bypass_document_validation(
+    options const& self) {
+    return impl::with(self)._bypass_document_validation;
+}
+
+bsoncxx::v1::stdx::optional<bsoncxx::v1::types::value> const& client_bulk_write::options::internal::comment(
+    options const& self) {
+    return impl::with(self)._comment;
+}
+
+bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> const& client_bulk_write::options::internal::let(
+    options const& self) {
+    return impl::with(self)._let;
+}
+
+bool client_bulk_write::options::internal::ordered(options const& self) {
+    return impl::with(self)._ordered.value_or(true);
+}
+
+bsoncxx::v1::stdx::optional<bool> const& client_bulk_write::options::internal::verbose_results(options const& self) {
+    return impl::with(self)._verbose_results;
+}
+
+bsoncxx::v1::stdx::optional<v1::write_concern> const& client_bulk_write::options::internal::write_concern(
+    options const& self) {
+    return impl::with(self)._write_concern;
 }
 
 class client_bulk_write::result::impl {};
