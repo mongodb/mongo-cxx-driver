@@ -544,7 +544,7 @@ podman run -it --rm -v "$(pwd):/pwd" 901841024863.dkr.ecr.us-east-1.amazonaws.co
 Update `etc/augmented.sbom.json` by running a patch build which executes the `sbom` task as described above in [SBOM Lite](#sbom-lite):
 
 ```
-evergreen patch -y -p mongo-cxx-driver -t sbom -v sbom -u
+evergreen patch -y -p mongo-cxx-driver -t sbom -v sbom -f -u
 ```
 
 Commit these changes to the `post-release-changes` branch:
