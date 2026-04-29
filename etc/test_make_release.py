@@ -1,7 +1,8 @@
+import sys
 import textwrap
-import unittest
 
 import click
+import pytest
 
 import make_release
 
@@ -83,37 +84,37 @@ CHANGELOG_DUPLICATE_VERSION = textwrap.dedent("""
 """).lstrip()
 
 
-class TestMakeRelease(unittest.TestCase):
+class TestGenerateReleaseNotes:
+    fn = staticmethod(make_release.generate_release_notes)
+
     def test_success(self):
-        got = make_release.generate_release_notes('3.9.0', CHANGELOG)
-        self.assertEqual(got, EXPECTED_RELEASE_NOTES)
+        got = self.fn('3.9.0', CHANGELOG)
+        assert got == EXPECTED_RELEASE_NOTES
 
-    def test_raises_when_version_not_found(self):
-        with self.assertRaises(click.ClickException) as ctx:
-            make_release.generate_release_notes('4.0.0', CHANGELOG)
-        self.assertIn('Failed to find', str(ctx.exception.message))
+    def test_missing(self):
+        with pytest.raises(click.ClickException, match='Failed to find'):
+            self.fn('4.0.0', CHANGELOG)
 
-    def test_raises_on_unexpected_extra_characters(self):
-        with self.assertRaises(click.ClickException) as ctx:
-            make_release.generate_release_notes('3.9.0', CHANGELOG_UNRELEASED)
-        self.assertIn('Unexpected extra characters', str(ctx.exception.message))
+    def test_extra(self):
+        with pytest.raises(click.ClickException, match='Unexpected extra characters'):
+            self.fn('3.9.0', CHANGELOG_UNRELEASED)
 
-    def test_allows_unreleased_tag(self):
-        got = make_release.generate_release_notes('3.9.0', CHANGELOG_UNRELEASED, allow_unreleased_changelog_entry=True)
-        self.assertEqual(got, EXPECTED_RELEASE_NOTES)
+    def test_allow_unreleased_changelog_entry(self):
+        got = self.fn('3.9.0', CHANGELOG_UNRELEASED, allow_unreleased_changelog_entry=True)
+        assert got == EXPECTED_RELEASE_NOTES
 
-    def test_allows_unreleased_tag_only(self):
-        with self.assertRaises(click.ClickException) as ctx:
-            make_release.generate_release_notes(
-                '3.9.0', make_changelog(' extra'), allow_unreleased_changelog_entry=True
-            )
-        self.assertIn('Unexpected extra characters', str(ctx.exception.message))
+    def test_allows_unreleased_changelog_entry_only(self):
+        with pytest.raises(click.ClickException, match='Unexpected extra characters'):
+            self.fn('3.9.0', make_changelog(' extra'), allow_unreleased_changelog_entry=True)
 
-    def test_raises_on_duplicate_version_entry(self):
-        with self.assertRaises(click.ClickException) as ctx:
-            make_release.generate_release_notes('3.9.0', CHANGELOG_DUPLICATE_VERSION)
-        self.assertIn('Unexpected second changelog entry', str(ctx.exception.message))
+    def test_duplicate(self):
+        with pytest.raises(click.ClickException, match='Unexpected second changelog entry'):
+            self.fn('3.9.0', CHANGELOG_DUPLICATE_VERSION)
+
+
+def main(argv=()):
+    sys.exit(pytest.main([__file__, *argv]))
 
 
 if __name__ == '__main__':
-    unittest.main()
+    main(sys.argv[1:])
