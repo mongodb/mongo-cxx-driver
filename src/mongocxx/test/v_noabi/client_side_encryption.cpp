@@ -3551,7 +3551,7 @@ TEST_CASE("27. Text Explicit Encryption", "[client_side_encryption]") {
         coll_substring.insert_one(make_document(kvp("_id", 0), kvp("encryptedText", encrypted_foobarbaz)));
     }
 
-    SECTION("can find a document by prefix") {
+    SECTION("Case 1: can find a document by prefix") {
         if (test_util::server_version_is_at_least("9.0")) {
             SKIP("MongoDB server 9.0 and newer does not support prefixPreview or suffixPreview");
         }
@@ -3571,7 +3571,7 @@ TEST_CASE("27. Text Explicit Encryption", "[client_side_encryption]") {
         CHECK(test_util::matches(found[0].view(), expected.view()));
     }
 
-    SECTION("can find a document by suffix") {
+    SECTION("Case 2: can find a document by suffix") {
         if (test_util::server_version_is_at_least("9.0")) {
             SKIP("MongoDB server 9.0 and newer does not support prefixPreview or suffixPreview");
         }
@@ -3591,7 +3591,7 @@ TEST_CASE("27. Text Explicit Encryption", "[client_side_encryption]") {
         CHECK(test_util::matches(found[0].view(), expected.view()));
     }
 
-    SECTION("assert no document found by prefix") {
+    SECTION("Case 3: assert no document found by prefix") {
         if (test_util::server_version_is_at_least("9.0")) {
             SKIP("MongoDB server 9.0 and newer does not support prefixPreview or suffixPreview");
         }
@@ -3609,7 +3609,7 @@ TEST_CASE("27. Text Explicit Encryption", "[client_side_encryption]") {
         REQUIRE(found.size() == 0);
     }
 
-    SECTION("assert no document found by suffix") {
+    SECTION("Case 4: assert no document found by suffix") {
         if (test_util::server_version_is_at_least("9.0")) {
             SKIP("MongoDB server 9.0 and newer does not support prefixPreview or suffixPreview");
         }
@@ -3627,7 +3627,7 @@ TEST_CASE("27. Text Explicit Encryption", "[client_side_encryption]") {
         REQUIRE(found.size() == 0);
     }
 
-    SECTION("can find a document by substring") {
+    SECTION("Case 5: can find a document by substring") {
         auto const encrypt_opts = default_encrypt_opts()
                                       .query_type(options::encrypt::encryption_query_type::k_substringPreview)
                                       .text_opts(default_text_opts().substring_opts(substring_opts));
@@ -3644,7 +3644,7 @@ TEST_CASE("27. Text Explicit Encryption", "[client_side_encryption]") {
         CHECK(test_util::matches(found[0].view(), expected.view()));
     }
 
-    SECTION("assert no document found by substring") {
+    SECTION("Case 6: assert no document found by substring") {
         auto const encrypt_opts = default_encrypt_opts()
                                       .query_type(options::encrypt::encryption_query_type::k_substringPreview)
                                       .text_opts(default_text_opts().substring_opts(substring_opts));
@@ -3659,7 +3659,7 @@ TEST_CASE("27. Text Explicit Encryption", "[client_side_encryption]") {
         REQUIRE(found.size() == 0);
     }
 
-    SECTION("assert contentionFactor is required") {
+    SECTION("Case 7: assert contentionFactor is required") {
         if (test_util::server_version_is_at_least("9.0")) {
             SKIP("MongoDB server 9.0 and newer does not support prefixPreview or suffixPreview");
         }
