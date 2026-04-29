@@ -3513,17 +3513,6 @@ TEST_CASE("27. Text Explicit Encryption", "[client_side_encryption]") {
     auto client_encryption = std::move(std::get<0>(tpl));
     auto encrypted_client = std::move(std::get<1>(tpl));
 
-    if (!test_util::server_version_is_at_least("9.0")) {
-        // Only test prefixPreview and suffixPreview on server < 9.0. Server 9.0 removes support.
-        _drop_and_create_collection("db", "prefix-suffix", "/explicit-encryption/encryptedFields-prefix-suffix.json");
-    }
-    _drop_and_create_collection("db", "substring", "/explicit-encryption/encryptedFields-substring.json");
-
-    auto const prefix_opts = text_options::prefix().str_max_query_length(10).str_min_query_length(2);
-    auto const suffix_opts = text_options::suffix().str_max_query_length(10).str_min_query_length(2);
-    auto const substring_opts =
-        text_options::substring().str_max_length(10).str_max_query_length(10).str_min_query_length(2);
-
     auto const default_encrypt_opts = [&]() {
         return options::encrypt()
             .key_id(key1_id)
@@ -3532,11 +3521,14 @@ TEST_CASE("27. Text Explicit Encryption", "[client_side_encryption]") {
     };
     auto const default_text_opts = [&]() { return text_options().case_sensitive(true).diacritic_sensitive(true); };
 
-    auto const foobarbaz_doc = make_document(kvp("_id", 0), kvp("encryptedText", "foobarbaz"));
-
-    auto coll_substring = encrypted_client["db"]["substring"];
+    auto const prefix_opts = text_options::prefix().str_max_query_length(10).str_min_query_length(2);
+    auto const suffix_opts = text_options::suffix().str_max_query_length(10).str_min_query_length(2);
+    auto const substring_opts =
+        text_options::substring().str_max_length(10).str_max_query_length(10).str_min_query_length(2);
     auto coll_prefix_suffix = encrypted_client["db"]["prefix-suffix"];
-    {
+    if (!test_util::server_version_is_at_least("9.0")) {
+        // Only test prefixPreview and suffixPreview on server < 9.0. Server 9.0 removes support.
+        _drop_and_create_collection("db", "prefix-suffix", "/explicit-encryption/encryptedFields-prefix-suffix.json");
         auto const encrypt_opts =
             default_encrypt_opts().text_opts(default_text_opts().prefix_opts(prefix_opts).suffix_opts(suffix_opts));
         auto const encrypted_foobarbaz = client_encryption.encrypt(make_value("foobarbaz"), encrypt_opts);
@@ -3544,12 +3536,16 @@ TEST_CASE("27. Text Explicit Encryption", "[client_side_encryption]") {
         coll_prefix_suffix.insert_one(make_document(kvp("_id", 0), kvp("encryptedText", encrypted_foobarbaz)));
     }
 
+    auto coll_substring = encrypted_client["db"]["substring"];
+    _drop_and_create_collection("db", "substring", "/explicit-encryption/encryptedFields-substring.json");
     {
         auto const encrypt_opts = default_encrypt_opts().text_opts(default_text_opts().substring_opts(substring_opts));
         auto const encrypted_foobarbaz = client_encryption.encrypt(make_value("foobarbaz"), encrypt_opts);
 
         coll_substring.insert_one(make_document(kvp("_id", 0), kvp("encryptedText", encrypted_foobarbaz)));
     }
+
+    auto const foobarbaz_doc = make_document(kvp("_id", 0), kvp("encryptedText", "foobarbaz"));
 
     SECTION("Case 1: can find a document by prefix") {
         if (test_util::server_version_is_at_least("9.0")) {
