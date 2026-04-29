@@ -3,6 +3,9 @@
 set -o errexit
 set -o pipefail
 
+declare script_dir
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
 declare -r mongoc_version="${mongoc_version:-"${mongoc_version_minimum:?"missing mongoc version"}"}"
 : "${mongoc_version:?}"
 
@@ -30,7 +33,7 @@ mkdir "${mongoc_dir}"
 curl -sS -o mongo-c-driver.tar.gz -L "https://api.github.com/repos/mongodb/mongo-c-driver/tarball/${mongoc_version}"
 tar xzf mongo-c-driver.tar.gz --directory "${mongoc_dir}" --strip-components=1
 
-. mongo-cxx-driver/.evergreen/scripts/install-build-tools.sh
+. "${script_dir:?}/install-build-tools.sh"
 install_build_tools
 
 # Default CMake generator to use if not already provided.

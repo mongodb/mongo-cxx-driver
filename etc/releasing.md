@@ -139,7 +139,7 @@ Run a patch build which executes the `sbom` task and download the "Augmented SBO
 
 ```bash
 # Ensure `-p` matches the correct Evergreen project for the current branch!
-evergreen patch -y -p mongo-cxx-driver -t all -v sbom -f
+evergreen patch -y -p mongo-cxx-driver -t sbom -v sbom -f -u
 ```
 
 Commit the updated SBOM documents if there are any substantial changes.
@@ -159,6 +159,10 @@ Download the "Augmented SBOM (Updated)" file from the latest EVG commit build in
 Inspect the list of projects in the latest report for the `mongodb/mongo-cxx-driver` target in [Snyk](https://app.snyk.io/org/dev-prod/).
 
 Deactivate any projects that will not be relevant in the upcoming release. Remove any projects that are not relevant to the current release.
+
+> [!TIP]
+> Use the "Project Origin" filter and select "github" and/or "cli" to exclude noise from deactivated and unsupported OCI
+> container images.
 
 ### Check Jira
 
@@ -209,6 +213,8 @@ git checkout releases/vX.Y
 
 In `etc/apidocmenu.md`, update the list of versions under "Driver Documentation By Version" and the table under "Driver Development Status" with a new entry corresponding to this release.
 
+Update `README.md` and sync the "Driver Development Status" table with the updated table from `etc/apidocmenu.md`.
+
 Update `CHANGELOG.md` with a summary of important changes in this release. Consult the list of related Jira tickets (updated ealier) as well as the list of commits since the last release.
 
 Remove the `[Unreleased]` tag from the relevant patch release section, e.g. for release `1.2.3`:
@@ -224,11 +230,11 @@ Remove the `[Unreleased]` tag from the relevant patch release section, e.g. for 
 
 ```
 
-Commit and push the updates to `etc/apidocmenu.md` and `CHANGELOG.md` to `releases/vX.Y` (a PR is not required):
+Commit and push the updates to `etc/apidocmenu.md`, `CHANGELOG.md`, and `README.md` to `releases/vX.Y` (a PR is not required):
 
 ```bash
 git commit -m 'Update CHANGELOG for X.Y.Z'
-git push upstream releases/vX.Y
+git push -u upstream releases/vX.Y
 ```
 
 #### ... for a Non-Patch Release
@@ -241,6 +247,8 @@ git checkout -b pre-release-changes upstream/master
 ```
 
 In `etc/apidocmenu.md`, update the list of versions under "Driver Documentation By Version" and the table under "Driver Development Status" with a new entry corresponding to this release.
+
+Update `README.md` and sync the "Driver Development Status" table with the updated table from `etc/apidocmenu.md`.
 
 Update `CHANGELOG.md` with a summary of important changes in this release. Consult the list of related Jira tickets (updated earlier) as well as the list of commits since the last release.
 
@@ -260,7 +268,7 @@ Remove the `[Unreleased]` tag from the relevant non-patch release section, e.g. 
 > [!IMPORTANT]
 > If there are entries under an unreleased patch release section with the old minor release number, move the entries into this release's section and remove the unreleased patch release section. For example, for a `1.3.0` minor release, move entries from `1.2.3 [Unreleased]` to `1.3.0` and remove `1.2.3 [Unreleased]`. Due to cherry-picking, a non-patch release should always (already) contain the changes targeting a patch release with a prior minor version number. (This is analogous to updating the fix version of Jira tickets, as done earlier.)
 
-Commit the updates to `etc/apidocmenu.md` and `CHANGELOG.md`.
+Commit the updates to `etc/apidocmenu.md`, `CHANGELOG.md`, and `README.md`.
 
 ```bash
 git commit -m 'Update CHANGELOG for X.Y.Z'
@@ -292,7 +300,7 @@ Create and activate a fresh Python 3 virtual environment with required packages 
 
 ```bash
 # Outside the mongo-cxx-driver-release directory!
-export UV_PROJECT_ENVIRONMENT="$HOME/mongo-cxx-driver-release-venv"
+export UV_PROJECT_ENVIRONMENT="$(mktemp -d)"
 
 # Install required packages into a new virtual environment.
 uv sync --frozen --group apidocs --group make_release
@@ -347,6 +355,7 @@ follows:
 
 - Use `--dry-run` to prevent unrecoverable effects.
 - Use `--skip-release-tag` to skip creating the release tag when it already exists.
+- Use `--allow-unreleased-changelog-entry` to skip errors when an `[Unreleased]` exists in the changelog.
 - If building the C driver fails, use an existing C driver build (ensure it is
   the right version) with `--with-c-driver /path/to/c-driver/install`.
 - Use `--skip-distcheck` to bypass time consuming checks when building the
@@ -383,13 +392,11 @@ Click the "..." next to the relevant version and select "Release".
 
 ### Update GitHub Webhook
 
-For a non-patch release, update the [Github Webhook](https://wiki.corp.mongodb.com/display/INTX/Githook) to include the new branch.
+For a non-patch release, request a team member with the Admin role to update the [Github Webhook](https://wiki.corp.mongodb.com/display/INTX/Githook) to include the new branch:
 
-Navigate to the [Webhook Settings](https://github.com/mongodb/mongo-cxx-driver/settings/hooks)
-
-Click `Edit` on the hook for `https://githook.mongodb.com/`.
-
-Add the new release branch to the `Payload URL`. Remove unmaintained release branches.
+- Navigate to the [Webhook Settings](https://github.com/mongodb/mongo-cxx-driver/settings/hooks)
+- Click `Edit` on the hook for `https://githook.mongodb.com/`.
+- Add the new release branch to the `Payload URL`. Remove unmaintained release branches.
 
 ### Update releases/stable
 
@@ -428,7 +435,7 @@ Push the new branch to the remote repository:
 git push upstream releases/vX.Y
 ```
 
-The new branch should be continuously tested on Evergreen. Update the "Display Name" and "Branch Name" of the [mongo-cxx-driver-latest-release Evergreen project](https://spruce.mongodb.com/project/mongo-cxx-driver-latest-release/settings/general) to refer to the new release branch.
+The new branch should be continuously tested on Evergreen. Update the "Display Name" and "Branch Name" of the [mongo-cxx-driver-latest-release Evergreen project](https://spruce.mongodb.com/project/mongo-cxx-driver-latest-release/settings/general) to refer to the new release branch. Trigger a "Force Repotracker Run" (under General Settings > Project Flags > Repotracker Settings) so the waterfall is updated with the new branch's commit history.
 
 ### Update SBOM serial number
 
@@ -445,16 +452,28 @@ podman run -it --rm -v "$(pwd):/pwd" 901841024863.dkr.ecr.us-east-1.amazonaws.co
   update --refresh --generate-new-serial-number -p "/pwd/etc/purls.txt" -i "/pwd/etc/cyclonedx.sbom.json" -o "/pwd/etc/cyclonedx.sbom.json"
 ```
 
-Update `etc/augmented.sbom.json` by running a patch build which executes the `sbom` task as described above in [SBOM Lite](#sbom-lite).
+Update `etc/augmented.sbom.json` by running a patch build which executes the `sbom` task as described above in [SBOM Lite](#sbom-lite):
 
-Commit and push these changes to the `releases/vX.Y` branch.
+```bash
+evergreen patch -y -p mongo-cxx-driver-latest-release -t sbom -v sbom -f -u
+```
+
+Commit and push these changes to the `releases/vX.Y` branch:
+
+```bash
+git commit -m "Update SBOM serial number"
+```
 
 ### Update Snyk
 
 > [!IMPORTANT]
 > Run the Snyk commands in a fresh clone of the post-release repository to avoid existing build and release artifacts from affecting Snyk.
 
-Checkout the new release tag.
+Checkout the new release tag in a clean repository:
+
+```bash
+git clone --revision rX.Y.Z https://github.com/mongodb/mongo-cxx-driver.git
+```
 
 Configure and build the CXX Driver (do not reuse an existing C Driver installation; use the auto-downloaded C Driver sources instead):
 
@@ -477,7 +496,7 @@ snyk auth "${SNYK_API_TOKEN:?}"
 
 # Verify third party dependency sources listed in etc/purls.txt are detected by Snyk.
 # If not, see: https://support.snyk.io/hc/en-us/requests/new
-# Use --exclude=extras until CXX-3042 is resolved
+# Use --exclude=extras until CXX-3062 is resolved
 snyk_args=(
   --org=dev-prod
   --remote-repo-url=https://github.com/mongodb/mongo-cxx-driver/
@@ -494,6 +513,9 @@ snyk monitor "${snyk_args[@]:?}"
 
 Verify the new Snyk target reference is present in the [Snyk project targets list](https://app.snyk.io/org/dev-prod/projects?groupBy=targets&before&after&searchQuery=mongo-cxx-driver&sortBy=highest+severity&filters[Show]=&filters[Integrations]=cli&filters[CollectionIds]=) for `mongodb/mongo-cxx-driver`.
 
+> [!NOTE]
+> The mongo-cxx-driver project itself will likely show up as a dependency. Ignore this entry.
+
 ### Post-Release Changes
 
 Create and checkout a new branch `post-release-changes` relative to `master` to contain documentation updates following the new release:
@@ -508,10 +530,6 @@ This branch will be used to create a PR later.
 > [!IMPORTANT]
 > Make sure the `post-release-changes` branch is created on `master`, not `rX.Y.Z` or `releases/vX.Y`!
 
-For a patch release, in `etc/apidocmenu.md`, update the list of versions under "Driver Documentation By Version" and the table under "Driver Development Status" with a new entry corresponding to this release.
-
-In `README.md`, sync the "Driver Development Status" table with the updated table from `etc/apidocmenu.md`.
-
 Update `etc/cyclonedx.sbom.json` with a new unique serial number for the next upcoming non-patch release (e.g. for `1.4.0` following the release of `1.3.0`):
 
 ```bash
@@ -521,12 +539,13 @@ podman pull 901841024863.dkr.ecr.us-east-1.amazonaws.com/release-infrastructure/
 # Output: "... writing sbom to file"
 podman run -it --rm -v "$(pwd):/pwd" 901841024863.dkr.ecr.us-east-1.amazonaws.com/release-infrastructure/silkbomb:2.0 \
   update --refresh --generate-new-serial-number -p "/pwd/etc/purls.txt" -i "/pwd/etc/cyclonedx.sbom.json" -o "/pwd/etc/cyclonedx.sbom.json"
-
-git add etc/cyclonedx.sbom.json
-git commit -m "update SBOM serial number"
 ```
 
-Update `etc/augmented.sbom.json` by running a patch build which executes the `sbom` task as described above in [SBOM Lite](#sbom-lite).
+Update `etc/augmented.sbom.json` by running a patch build which executes the `sbom` task as described above in [SBOM Lite](#sbom-lite):
+
+```
+evergreen patch -y -p mongo-cxx-driver -t sbom -v sbom -f -u
+```
 
 Commit these changes to the `post-release-changes` branch:
 
@@ -573,21 +592,21 @@ git commit -am "Prepare to generate rX.Y.Z release documentation"
 Ensure `doxygen` and `hugo` are locally installed and up-to-date.
 
 ```bash
-command -V doxygen hugo
+command -V doxygen hugo rsync
 ```
 
 > [!IMPORTANT]
 > The required Doxygen version is defined in `etc/generate-latest-apidocs.sh` as `$DOXYGEN_VERSION_REQUIRED`. If not already present, download the required version from [Doxygen Releases](https://www.doxygen.nl/download.html). Use the `DOXYGEN_BINARY` environment variable to override the default `doxygen` command with a path to a specific Doxygen binary.
 
-Run `git clean -dfx` to restore the repository to a clean state.
+Clone a clean copy of the repository.
 
-> [!WARNING]
-> Do NOT run `git clean -dfx` in your local development repository, as it may delete your local development files present in the repository (even if normally ignored by git)! Only run this in the command in the separate repository being used for this release!
+> [!TIP]
+> Clone a local filesystem repository via `git clone /path/to/local/repo` for better performance.
 
-Configure CMake using `build` as the binary directory. Leave all other configuration variables as their default.
+Configure CMake using `build` as the binary directory. Leave all configuration variables as their default (but `CMAKE_PREFIX_PATH` may be used to reuse an existing C driver libraries).
 
 ```bash
-cmake -S . -B build
+cmake -B build
 ```
 
 Test generating both Hugo and Doxygen docs locally by building the `docs` target:
@@ -668,6 +687,9 @@ Set `<lastmod>` for both the new entry and the `/current` sitemap entry to the c
 ...
 ```
 
+> [!NOTE]
+> Only the "current" and latest release entries should have a `<priority>` tag set to `1.0`.
+
 Commit and push these change to the `gh-pages` branch:
 
 ```bash
@@ -701,7 +723,13 @@ Add a section for the next patch release, e.g. following a `1.2.3` release:
 ## 1.2.2 <!-- Prior release. -->
 ```
 
-Commit the changes to the `releases/vX.Y` branch and push the branch to the remote repository (a PR is not required for this step).
+Commit the changes to the `releases/vX.Y` branch:
+
+```bash
+git commit -m 'Add changelog entry for the next patch release'
+```
+
+Push the branch to the remote repository (a PR is not required for this step).
 
 Checkout the `post-release-changes` branch.
 
@@ -744,7 +772,13 @@ Add a section for the next patch release, e.g. following a `1.2.0` release:
 ## 1.1.0 <!-- Prior release. -->
 ```
 
-Commit the changes to the `releases/vX.Y` branch and push the branch to the remote repository (a PR is not required for this step).
+Commit the changes to the `releases/vX.Y` branch:
+
+```bash
+git commit -m 'Add changelog entry for the next minor release'
+```
+
+Push the branch to the remote repository (a PR is not required for this step).
 
 Checkout the `post-release-changes` branch.
 
