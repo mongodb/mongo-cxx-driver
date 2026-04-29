@@ -168,6 +168,8 @@ def release(
     auth_jira = JIRA(jira_options, token_auth=jira_token)
 
     github_token = read_github_creds(github_token_file)
+    if not github_token:
+        sys.exit(1)
     auth_gh = Github(auth=Auth.Token(github_token))
 
     if not is_valid_remote(remote):
