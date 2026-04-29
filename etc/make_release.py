@@ -422,9 +422,8 @@ def check_pre_release(tag_name):
     it starts with something like rX.Y.Z and nothing else.
     """
 
-    release_re = re.compile('^r[0-9]+\\.[0-9]+\\.[0-9]+$')
-
-    return not bool(release_re.match(tag_name))
+    match = RELEASE_TAG_RE.fullmatch(tag_name)
+    return bool(match and match.group('verpre'))
 
 
 def ensure_c_driver(c_driver_build_ref, with_c_driver, quiet):
