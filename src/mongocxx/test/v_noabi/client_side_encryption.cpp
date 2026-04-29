@@ -3512,7 +3512,11 @@ TEST_CASE("27. Text Explicit Encryption", "[client_side_encryption]") {
     auto tpl = _setup_explicit_encryption(key1_document, &key_vault_client);
     auto client_encryption = std::move(std::get<0>(tpl));
     auto encrypted_client = std::move(std::get<1>(tpl));
-    _drop_and_create_collection("db", "prefix-suffix", "/explicit-encryption/encryptedFields-prefix-suffix.json");
+
+    if (!test_util::server_version_is_at_least("9.0")) {
+        // Only test prefixPreview and suffixPreview on server < 9.0. Server 9.0 removes support.
+        _drop_and_create_collection("db", "prefix-suffix", "/explicit-encryption/encryptedFields-prefix-suffix.json");
+    }
     _drop_and_create_collection("db", "substring", "/explicit-encryption/encryptedFields-substring.json");
 
     auto const prefix_opts = text_options::prefix().str_max_query_length(10).str_min_query_length(2);
@@ -3548,6 +3552,9 @@ TEST_CASE("27. Text Explicit Encryption", "[client_side_encryption]") {
     }
 
     SECTION("can find a document by prefix") {
+        if (test_util::server_version_is_at_least("9.0")) {
+            SKIP("MongoDB server 9.0 and newer does not support prefixPreview or suffixPreview");
+        }
         auto const encrypt_opts = default_encrypt_opts()
                                       .query_type(options::encrypt::encryption_query_type::k_prefixPreview)
                                       .text_opts(default_text_opts().prefix_opts(prefix_opts));
@@ -3565,6 +3572,9 @@ TEST_CASE("27. Text Explicit Encryption", "[client_side_encryption]") {
     }
 
     SECTION("can find a document by suffix") {
+        if (test_util::server_version_is_at_least("9.0")) {
+            SKIP("MongoDB server 9.0 and newer does not support prefixPreview or suffixPreview");
+        }
         auto const encrypt_opts = default_encrypt_opts()
                                       .query_type(options::encrypt::encryption_query_type::k_suffixPreview)
                                       .text_opts(default_text_opts().suffix_opts(suffix_opts));
@@ -3582,6 +3592,9 @@ TEST_CASE("27. Text Explicit Encryption", "[client_side_encryption]") {
     }
 
     SECTION("assert no document found by prefix") {
+        if (test_util::server_version_is_at_least("9.0")) {
+            SKIP("MongoDB server 9.0 and newer does not support prefixPreview or suffixPreview");
+        }
         auto const encrypt_opts = default_encrypt_opts()
                                       .query_type(options::encrypt::encryption_query_type::k_prefixPreview)
                                       .text_opts(default_text_opts().prefix_opts(prefix_opts));
@@ -3597,6 +3610,9 @@ TEST_CASE("27. Text Explicit Encryption", "[client_side_encryption]") {
     }
 
     SECTION("assert no document found by suffix") {
+        if (test_util::server_version_is_at_least("9.0")) {
+            SKIP("MongoDB server 9.0 and newer does not support prefixPreview or suffixPreview");
+        }
         auto const encrypt_opts = default_encrypt_opts()
                                       .query_type(options::encrypt::encryption_query_type::k_suffixPreview)
                                       .text_opts(default_text_opts().suffix_opts(suffix_opts));
@@ -3644,6 +3660,9 @@ TEST_CASE("27. Text Explicit Encryption", "[client_side_encryption]") {
     }
 
     SECTION("assert contentionFactor is required") {
+        if (test_util::server_version_is_at_least("9.0")) {
+            SKIP("MongoDB server 9.0 and newer does not support prefixPreview or suffixPreview");
+        }
         // Test that encrypting without contentionFactor throws an error
         auto const encrypt_opts_without_contention =
             options::encrypt()
