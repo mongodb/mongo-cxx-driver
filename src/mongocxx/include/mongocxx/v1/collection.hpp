@@ -32,7 +32,6 @@
 #include <mongocxx/v1/search_indexes-fwd.hpp>
 #include <mongocxx/v1/update_many_result-fwd.hpp>
 #include <mongocxx/v1/update_one_result-fwd.hpp>
-#include <mongocxx/v1/write_concern-fwd.hpp>
 
 #include <bsoncxx/v1/detail/type_traits.hpp>
 #include <bsoncxx/v1/document/value.hpp>
