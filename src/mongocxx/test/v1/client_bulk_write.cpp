@@ -486,5 +486,143 @@ TEST_CASE("verbose_results unset", "[mongocxx][v1][client_bulk_write][result]") 
     CHECK_FALSE(r.delete_results().has_value());
 }
 
+TEST_CASE("ownership", "[mongocxx][v1][client_bulk_write][exception]") {
+    auto source = client_bulk_write::exception::internal::make();
+    auto target = client_bulk_write::exception::internal::make();
+
+    auto const source_doc = scoped_bson{R"({"0": {"code": 1, "message": "src", "details": {}}})"};
+    auto const target_doc = scoped_bson{R"({"0": {"code": 2, "message": "tgt", "details": {}}})"};
+
+    client_bulk_write::exception::internal::write_errors(source) = source_doc.value();
+    client_bulk_write::exception::internal::write_errors(target) = target_doc.value();
+
+    REQUIRE(source.write_errors() == source_doc.view());
+    REQUIRE(target.write_errors() == target_doc.view());
+
+    SECTION("copy") {
+        auto copy = source;
+
+        CHECK(source.write_errors() == source_doc.view());
+        CHECK(copy.write_errors() == source_doc.view());
+
+        target = copy;
+
+        CHECK(copy.write_errors() == source_doc.view());
+        CHECK(target.write_errors() == source_doc.view());
+    }
+}
+
+namespace {
+
+struct exception_mocks_type {
+    using destroy_type = decltype(libmongoc::bulkwriteexception_destroy.create_instance());
+    using error_type = decltype(libmongoc::bulkwriteexception_error.create_instance());
+    using write_errors_type = decltype(libmongoc::bulkwriteexception_writeerrors.create_instance());
+    using write_concern_errors_type = decltype(libmongoc::bulkwriteexception_writeconcernerrors.create_instance());
+    using error_reply_type = decltype(libmongoc::bulkwriteexception_errorreply.create_instance());
+
+    identity_type exc_identity;
+
+    mongoc_bulkwriteexception_t* exc_id = reinterpret_cast<mongoc_bulkwriteexception_t*>(&exc_identity);
+
+    destroy_type destroy = libmongoc::bulkwriteexception_destroy.create_instance();
+    error_type error = libmongoc::bulkwriteexception_error.create_instance();
+    write_errors_type write_errors = libmongoc::bulkwriteexception_writeerrors.create_instance();
+    write_concern_errors_type write_concern_errors = libmongoc::bulkwriteexception_writeconcernerrors.create_instance();
+    error_reply_type error_reply = libmongoc::bulkwriteexception_errorreply.create_instance();
+
+    ~exception_mocks_type() = default;
+    exception_mocks_type(exception_mocks_type&& other) noexcept = delete;
+    exception_mocks_type& operator=(exception_mocks_type&& other) noexcept = delete;
+    exception_mocks_type(exception_mocks_type const& other) = delete;
+    exception_mocks_type& operator=(exception_mocks_type const& other) = delete;
+
+    exception_mocks_type() {
+        destroy->interpose([&](mongoc_bulkwriteexception_t* ptr) { CHECK(ptr == exc_id); }).forever();
+
+        error
+            ->interpose([&](mongoc_bulkwriteexception_t const* ptr, bson_error_t* /*err*/) -> bool {
+                CHECK(ptr == exc_id);
+                return false;
+            })
+            .forever();
+
+        write_errors
+            ->interpose([&](mongoc_bulkwriteexception_t const* ptr) -> bson_t const* {
+                CHECK(ptr == exc_id);
+                return nullptr;
+            })
+            .forever();
+
+        write_concern_errors
+            ->interpose([&](mongoc_bulkwriteexception_t const* ptr) -> bson_t const* {
+                CHECK(ptr == exc_id);
+                return nullptr;
+            })
+            .forever();
+
+        error_reply
+            ->interpose([&](mongoc_bulkwriteexception_t const* ptr) -> bson_t const* {
+                CHECK(ptr == exc_id);
+                return nullptr;
+            })
+            .forever();
+    }
+
+    client_bulk_write::exception make() {
+        return client_bulk_write::exception::internal::make(exc_id, bsoncxx::v1::stdx::nullopt);
+    }
+};
+
+} // namespace
+
+TEST_CASE("write_errors", "[mongocxx][v1][client_bulk_write][exception]") {
+    auto const v = scoped_bson{R"({"0": {"code": 123, "message": "err", "details": {}}})"};
+
+    exception_mocks_type mocks;
+    mocks.write_errors
+        ->interpose([&](mongoc_bulkwriteexception_t const* ptr) -> bson_t const* {
+            CHECK(ptr == mocks.exc_id);
+            return v.bson();
+        })
+        .forever();
+
+    auto const ex = mocks.make();
+
+    CHECK(ex.write_errors() == v.view());
+}
+
+TEST_CASE("write_concern_errors", "[mongocxx][v1][client_bulk_write][exception]") {
+    auto const v = scoped_bson{R"([{"code": 123, "message": "err", "details": {}}])"};
+
+    exception_mocks_type mocks;
+    mocks.write_concern_errors
+        ->interpose([&](mongoc_bulkwriteexception_t const* ptr) -> bson_t const* {
+            CHECK(ptr == mocks.exc_id);
+            return v.bson();
+        })
+        .forever();
+
+    auto const ex = mocks.make();
+
+    CHECK(ex.write_concern_errors() == v.array_view());
+}
+
+TEST_CASE("error_reply", "[mongocxx][v1][client_bulk_write][exception]") {
+    auto const v = scoped_bson{R"({"ok": 0, "code": 123, "errmsg": "err"})"};
+
+    exception_mocks_type mocks;
+    mocks.error_reply
+        ->interpose([&](mongoc_bulkwriteexception_t const* ptr) -> bson_t const* {
+            CHECK(ptr == mocks.exc_id);
+            return v.bson();
+        })
+        .forever();
+
+    auto const ex = mocks.make();
+
+    CHECK(ex.error_reply() == v.view());
+}
+
 } // namespace v1
 } // namespace mongocxx

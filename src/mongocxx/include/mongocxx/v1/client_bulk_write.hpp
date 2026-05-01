@@ -56,7 +56,7 @@ class client_bulk_write {
    public:
     class options;
     class result;
-    class exception;
+    class MONGOCXX_ABI_EXPORT exception;
 
     class insert_one_options;
     class update_one_options;

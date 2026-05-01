@@ -18,6 +18,7 @@
 //
 
 #include <bsoncxx/v1/document/value-fwd.hpp>
+#include <bsoncxx/v1/document/view-fwd.hpp>
 #include <bsoncxx/v1/types/value-fwd.hpp>
 
 #include <mongocxx/v1/write_concern-fwd.hpp>
@@ -62,6 +63,18 @@ class client_bulk_write::result::internal {
         result& self);
     static MONGOCXX_ABI_EXPORT_CDECL_TESTING(bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value>&) delete_results(
         result& self);
+};
+
+class client_bulk_write::exception::internal {
+   public:
+    static MONGOCXX_ABI_EXPORT_CDECL_TESTING(exception) make(
+        mongoc_bulkwriteexception_t* exc,
+        bsoncxx::v1::stdx::optional<result> partial_result);
+    static MONGOCXX_ABI_EXPORT_CDECL_TESTING(exception) make();
+
+    static MONGOCXX_ABI_EXPORT_CDECL_TESTING(bsoncxx::v1::document::value&) write_errors(exception& self);
+    static MONGOCXX_ABI_EXPORT_CDECL_TESTING(bsoncxx::v1::document::value&) write_concern_errors(exception& self);
+    static MONGOCXX_ABI_EXPORT_CDECL_TESTING(bsoncxx::v1::document::value&) error_reply(exception& self);
 };
 
 } // namespace v1

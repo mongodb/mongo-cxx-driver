@@ -436,28 +436,87 @@ bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value>& client_bulk_write::re
     return impl::with(self)._delete_results;
 }
 
-class client_bulk_write::exception::impl {};
+class client_bulk_write::exception::impl {
+   public:
+    bsoncxx::v1::document::value _write_errors;
+    bsoncxx::v1::document::value _write_concern_errors;
+    bsoncxx::v1::document::value _error_reply;
+    bsoncxx::v1::stdx::optional<result> _partial_result;
+};
 
 void client_bulk_write::exception::key_function() const {}
 
 bsoncxx::v1::document::view client_bulk_write::exception::write_errors() const {
-    not_yet_implemented("client_bulk_write::exception::write_errors");
+    return _impl->_write_errors;
 }
 
 bsoncxx::v1::array::view client_bulk_write::exception::write_concern_errors() const {
-    not_yet_implemented("client_bulk_write::exception::write_concern_errors");
+    return bsoncxx::v1::array::view{_impl->_write_concern_errors.view().data()};
 }
 
 bsoncxx::v1::document::view client_bulk_write::exception::error_reply() const {
-    not_yet_implemented("client_bulk_write::exception::error_reply");
+    return _impl->_error_reply;
 }
 
 bsoncxx::v1::stdx::optional<client_bulk_write::result> client_bulk_write::exception::partial_result() const {
-    not_yet_implemented("client_bulk_write::exception::partial_result");
+    return _impl->_partial_result;
 }
 
 client_bulk_write::exception::exception(int code, char const* message, std::unique_ptr<impl> impl)
     : v1::exception{v1::exception::internal::make(code, std::generic_category(), message)}, _impl{std::move(impl)} {}
+
+client_bulk_write::exception client_bulk_write::exception::internal::make(
+    mongoc_bulkwriteexception_t* exc,
+    bsoncxx::v1::stdx::optional<result> partial_result) {
+    struct deleter {
+        void operator()(mongoc_bulkwriteexception_t* ptr) const noexcept {
+            libmongoc::bulkwriteexception_destroy(ptr);
+        }
+    };
+
+    auto const guard = std::unique_ptr<mongoc_bulkwriteexception_t, deleter>{exc};
+
+    auto p = std::unique_ptr<impl>{new impl{}};
+
+    if (auto const* const doc = libmongoc::bulkwriteexception_writeerrors(exc)) {
+        p->_write_errors = scoped_bson_view{doc}.value();
+    }
+
+    if (auto const* const arr = libmongoc::bulkwriteexception_writeconcernerrors(exc)) {
+        p->_write_concern_errors = scoped_bson_view{arr}.value();
+    }
+
+    if (auto const* const doc = libmongoc::bulkwriteexception_errorreply(exc)) {
+        p->_error_reply = scoped_bson_view{doc}.value();
+    }
+
+    p->_partial_result = std::move(partial_result);
+
+    bson_error_t error = {};
+    auto const has_error = libmongoc::bulkwriteexception_error(exc, &error);
+
+    auto const code = has_error ? static_cast<int>(error.code) : 0;
+
+    auto const* const message = has_error ? error.message : "";
+
+    return exception{code, message, std::move(p)};
+}
+
+client_bulk_write::exception client_bulk_write::exception::internal::make() {
+    return exception{0, "", std::unique_ptr<impl>{new impl{}}};
+}
+
+bsoncxx::v1::document::value& client_bulk_write::exception::internal::write_errors(exception& self) {
+    return self._impl->_write_errors;
+}
+
+bsoncxx::v1::document::value& client_bulk_write::exception::internal::write_concern_errors(exception& self) {
+    return self._impl->_write_concern_errors;
+}
+
+bsoncxx::v1::document::value& client_bulk_write::exception::internal::error_reply(exception& self) {
+    return self._impl->_error_reply;
+}
 
 class client_bulk_write::insert_one_options::impl {};
 
