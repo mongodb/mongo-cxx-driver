@@ -37,6 +37,7 @@
 #include <system_error>
 #include <utility>
 
+#include <mongocxx/private/scoped_bson.hh>
 #include <mongocxx/private/utility.hh>
 
 namespace mongocxx {
@@ -273,64 +274,166 @@ bsoncxx::v1::stdx::optional<v1::write_concern> const& client_bulk_write::options
     return impl::with(self)._write_concern;
 }
 
-class client_bulk_write::result::impl {};
+class client_bulk_write::result::impl {
+   public:
+    std::int64_t _inserted_count = 0;
+    std::int64_t _upserted_count = 0;
+    std::int64_t _matched_count = 0;
+    std::int64_t _modified_count = 0;
+    std::int64_t _deleted_count = 0;
+    bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> _insert_results;
+    bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> _update_results;
+    bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> _delete_results;
+
+    static impl const& with(result const& self) {
+        return *static_cast<impl const*>(self._impl);
+    }
+
+    static impl const* with(result const* self) {
+        return static_cast<impl const*>(self->_impl);
+    }
+
+    static impl& with(result& self) {
+        return *static_cast<impl*>(self._impl);
+    }
+
+    static impl* with(result* self) {
+        return static_cast<impl*>(self->_impl);
+    }
+
+    static impl* with(void* ptr) {
+        return static_cast<impl*>(ptr);
+    }
+};
 
 client_bulk_write::result::~result() {
-    delete static_cast<impl*>(_impl);
+    delete impl::with(this);
+    _impl = nullptr; // scan-build: warning: Use of memory after it is freed [cplusplus.NewDelete]
 }
 
 client_bulk_write::result::result(result&& other) noexcept : _impl{exchange(other._impl, nullptr)} {}
 
 client_bulk_write::result& client_bulk_write::result::operator=(result&& other) noexcept {
     if (this != &other) {
-        delete static_cast<impl*>(exchange(_impl, exchange(other._impl, nullptr)));
+        delete impl::with(exchange(_impl, exchange(other._impl, nullptr)));
     }
 
     return *this;
 }
 
-client_bulk_write::result::result(result const& /*other*/) : _impl{new impl{}} {}
+client_bulk_write::result::result(result const& other) : _impl{new impl{impl::with(other)}} {}
 
 client_bulk_write::result& client_bulk_write::result::operator=(result const& other) {
     if (this != &other) {
-        auto* const tmp = new impl{};
-        delete static_cast<impl*>(_impl);
-        _impl = tmp;
+        delete impl::with(exchange(_impl, new impl{impl::with(other)}));
     }
 
     return *this;
 }
 
 std::int64_t client_bulk_write::result::inserted_count() const {
-    not_yet_implemented("client_bulk_write::result::inserted_count");
+    return impl::with(this)->_inserted_count;
 }
 
 std::int64_t client_bulk_write::result::upserted_count() const {
-    not_yet_implemented("client_bulk_write::result::upserted_count");
+    return impl::with(this)->_upserted_count;
 }
 
 std::int64_t client_bulk_write::result::matched_count() const {
-    not_yet_implemented("client_bulk_write::result::matched_count");
+    return impl::with(this)->_matched_count;
 }
 
 std::int64_t client_bulk_write::result::modified_count() const {
-    not_yet_implemented("client_bulk_write::result::modified_count");
+    return impl::with(this)->_modified_count;
 }
 
 std::int64_t client_bulk_write::result::deleted_count() const {
-    not_yet_implemented("client_bulk_write::result::deleted_count");
+    return impl::with(this)->_deleted_count;
 }
 
 bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view> client_bulk_write::result::insert_results() const {
-    not_yet_implemented("client_bulk_write::result::insert_results");
+    return impl::with(this)->_insert_results;
 }
 
 bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view> client_bulk_write::result::update_results() const {
-    not_yet_implemented("client_bulk_write::result::update_results");
+    return impl::with(this)->_update_results;
 }
 
 bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view> client_bulk_write::result::delete_results() const {
-    not_yet_implemented("client_bulk_write::result::delete_results");
+    return impl::with(this)->_delete_results;
+}
+
+client_bulk_write::result::result(void* impl_ptr) : _impl{impl_ptr} {}
+
+client_bulk_write::result client_bulk_write::result::internal::make(mongoc_bulkwriteresult_t* res) {
+    struct deleter {
+        void operator()(mongoc_bulkwriteresult_t* ptr) const noexcept {
+            libmongoc::bulkwriteresult_destroy(ptr);
+        }
+    };
+
+    auto const guard = std::unique_ptr<mongoc_bulkwriteresult_t, deleter>{res};
+
+    auto p = std::unique_ptr<impl>{new impl{}};
+
+    p->_inserted_count = libmongoc::bulkwriteresult_insertedcount(res);
+    p->_upserted_count = libmongoc::bulkwriteresult_upsertedcount(res);
+    p->_matched_count = libmongoc::bulkwriteresult_matchedcount(res);
+    p->_modified_count = libmongoc::bulkwriteresult_modifiedcount(res);
+    p->_deleted_count = libmongoc::bulkwriteresult_deletedcount(res);
+
+    if (auto const* const doc = libmongoc::bulkwriteresult_insertresults(res)) {
+        p->_insert_results = scoped_bson_view{doc}.value();
+    }
+
+    if (auto const* const doc = libmongoc::bulkwriteresult_updateresults(res)) {
+        p->_update_results = scoped_bson_view{doc}.value();
+    }
+
+    if (auto const* const doc = libmongoc::bulkwriteresult_deleteresults(res)) {
+        p->_delete_results = scoped_bson_view{doc}.value();
+    }
+
+    return result{static_cast<void*>(p.release())};
+}
+
+client_bulk_write::result client_bulk_write::result::internal::make() {
+    return result{static_cast<void*>(new impl{})};
+}
+
+std::int64_t& client_bulk_write::result::internal::inserted_count(result& self) {
+    return impl::with(self)._inserted_count;
+}
+
+std::int64_t& client_bulk_write::result::internal::upserted_count(result& self) {
+    return impl::with(self)._upserted_count;
+}
+
+std::int64_t& client_bulk_write::result::internal::matched_count(result& self) {
+    return impl::with(self)._matched_count;
+}
+
+std::int64_t& client_bulk_write::result::internal::modified_count(result& self) {
+    return impl::with(self)._modified_count;
+}
+
+std::int64_t& client_bulk_write::result::internal::deleted_count(result& self) {
+    return impl::with(self)._deleted_count;
+}
+
+bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value>& client_bulk_write::result::internal::insert_results(
+    result& self) {
+    return impl::with(self)._insert_results;
+}
+
+bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value>& client_bulk_write::result::internal::update_results(
+    result& self) {
+    return impl::with(self)._update_results;
+}
+
+bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value>& client_bulk_write::result::internal::delete_results(
+    result& self) {
+    return impl::with(self)._delete_results;
 }
 
 class client_bulk_write::exception::impl {};

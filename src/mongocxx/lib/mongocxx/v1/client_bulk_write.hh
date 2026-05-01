@@ -25,6 +25,7 @@
 #include <bsoncxx/v1/stdx/optional.hpp>
 
 #include <mongocxx/private/export.hh>
+#include <mongocxx/private/mongoc.hh>
 
 namespace mongocxx {
 namespace v1 {
@@ -42,6 +43,25 @@ class client_bulk_write::options::internal {
         options const& self);
     static MONGOCXX_ABI_EXPORT_CDECL_TESTING(bsoncxx::v1::stdx::optional<v1::write_concern> const&) write_concern(
         options const& self);
+};
+
+class client_bulk_write::result::internal {
+   public:
+    static MONGOCXX_ABI_EXPORT_CDECL_TESTING(result) make(mongoc_bulkwriteresult_t* res);
+    static MONGOCXX_ABI_EXPORT_CDECL_TESTING(result) make();
+
+    static MONGOCXX_ABI_EXPORT_CDECL_TESTING(std::int64_t&) inserted_count(result& self);
+    static MONGOCXX_ABI_EXPORT_CDECL_TESTING(std::int64_t&) upserted_count(result& self);
+    static MONGOCXX_ABI_EXPORT_CDECL_TESTING(std::int64_t&) matched_count(result& self);
+    static MONGOCXX_ABI_EXPORT_CDECL_TESTING(std::int64_t&) modified_count(result& self);
+    static MONGOCXX_ABI_EXPORT_CDECL_TESTING(std::int64_t&) deleted_count(result& self);
+
+    static MONGOCXX_ABI_EXPORT_CDECL_TESTING(bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value>&) insert_results(
+        result& self);
+    static MONGOCXX_ABI_EXPORT_CDECL_TESTING(bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value>&) update_results(
+        result& self);
+    static MONGOCXX_ABI_EXPORT_CDECL_TESTING(bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value>&) delete_results(
+        result& self);
 };
 
 } // namespace v1

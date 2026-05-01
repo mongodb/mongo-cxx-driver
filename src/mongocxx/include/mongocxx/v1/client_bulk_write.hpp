@@ -401,6 +401,9 @@ class client_bulk_write::result {
     MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view>) delete_results() const;
 
     class internal;
+
+   private:
+    /* explicit(false) */ result(void* impl);
 };
 
 BSONCXX_PRIVATE_WARNINGS_PUSH();
