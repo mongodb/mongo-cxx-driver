@@ -54,9 +54,8 @@ make_release = [
 ]
 
 generate_sbom = [
-    # etc/sbom/generate_sbom.py
+    # .github/scripts/sbom/
     "gitpython>=3.1",
-    # etc/sbom/config.py
     "semver>=3.0.0",
 ]
 

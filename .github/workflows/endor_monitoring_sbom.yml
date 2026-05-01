@@ -1,0 +1,106 @@
+name: Endor Labs Monitoring Scan and SBOM Generation
+
+# Runs a monitoring SCA scan, generates an SBOM, and opens a PR if the SBOM has changed.
+# Triggered when CMake files are pushed to master or release branches, or manually.
+# Internal documentation: go/sbom-coverage, go/sbom-scope
+
+on:
+  workflow_dispatch: {}
+  push:
+    branches:
+      - "master"
+      - "releases/v*"
+      - "debian/*"
+    paths:
+      - "**/CMakeLists.txt"
+      - "**/*.cmake"
+
+permissions:
+  id-token: write # Required to request a JWT for keyless authentication with Endor Labs
+  contents: write # Required for commit
+  pull-requests: write # Required for PR
+
+jobs:
+  endor_monitoring_sbom:
+    runs-on: ubuntu-latest
+
+    concurrency:
+      group: sbom-${{ github.ref }}
+      cancel-in-progress: false
+
+    steps:
+      - name: "Clone and Configure CMake"
+        uses: ./.github/actions/clone-and-configure
+
+      - name: Endor Labs Monitoring Scan
+        uses: endorlabs/github-action@b8992820cc4d9c9e7ded5022adf6cabe2dc11946 # v1.1.12 Released March 25, 2026
+        with:
+          additional_args: '--languages=c --include-path="build/_deps/**"'
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          log_level: info
+          log_verbose: false
+          namespace: mongodb.${{github.repository_owner}}
+          scan_dependencies: true
+          scan_summary_output_type: "table"
+          tags: github_action
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@1e862dfacbd1d6d858c55d9b792c756523627244 # v7.1.4
+        with:
+          python-version: "3.10"
+          activate-environment: true
+          enable-cache: true
+
+      - name: Stash existing SBOM, generate new SBOM
+        run: |
+          # If etc/sbom.json does not exist, create an empty file to avoid jq errors
+          echo >> etc/sbom.json
+          # Existing SBOM: Strip out nondeterministic SBOM fields and save to temp file
+          jq 'del(.version, .metadata.timestamp, .metadata.tools.services[].version)' etc/sbom.json > ${{runner.temp}}/sbom.existing.cdx.json
+          # .github/scripts/sbom/generate_sbom.py
+          uv run --group generate_sbom .github/scripts/sbom/generate_sbom.py --enable-github-action-token --target=branch --branch=${{ github.ref_name }} --sbom-metadata=.github/scripts/sbom/metadata.cdx.json --save-warnings=${{runner.temp}}/warnings.txt
+          # Generated SBOM: Strip out nondeterministic SBOM fields and save to temp file
+          jq 'del(.version, .metadata.timestamp, .metadata.tools.services[].version)' etc/sbom.json > ${{runner.temp}}/sbom.generated.cdx.json
+
+      - name: Validate SBOM with CycloneDX CLI
+        run: |
+          # cyclonedx-cli v0.31.0 Released April 29, 2026
+          curl -L -s -o ${{runner.temp}}/cyclonedx "https://github.com/CycloneDX/cyclonedx-cli/releases/download/v0.31.0/cyclonedx-linux-x64"
+          chmod +x ${{runner.temp}}/cyclonedx
+          ${{runner.temp}}/cyclonedx validate --input-file etc/sbom.json --fail-on-errors
+
+      - name: Check for SBOM changes
+        id: sbom_diff
+        run: |
+          # diff the temp SBOM files, save output to variable, suppress exit code
+          RESULT=$(diff --brief ${{runner.temp}}/sbom.existing.cdx.json ${{runner.temp}}/sbom.generated.cdx.json || true)
+          # Set the output variable
+          echo "result=$RESULT" | tee -a $GITHUB_OUTPUT
+
+      - name: Generate pull request content, if SBOM has changed
+        if: steps.sbom_diff.outputs.result
+        run: |
+          cat > ${{runner.temp}}/pr_body.txt << EOF
+          ## Automated SBOM Update
+
+          This PR was automatically generated based on Endor Labs SCA scan results and pre-defined SBOM metadata.
+
+          ### Triggered by
+          - Commit: ${{ github.sha }}
+          - Workflow run: [${{ github.run_id }}](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
+
+          ---
+          EOF
+          cat ${{runner.temp}}/warnings.txt >> ${{runner.temp}}/pr_body.txt
+
+      - name: Open Pull Request, if SBOM has changed
+        if: steps.sbom_diff.outputs.result
+        uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1 # v8.1.1
+        with:
+          add-paths: etc/sbom.json
+          body-path: ${{runner.temp}}/pr_body.txt
+          branch: auto-update-sbom-${{ github.ref_name }}
+          commit-message: "chore: Update SBOM after dependency changes"
+          delete-branch: true
+          labels: sbom
+          title: CXX Update SBOM action [${{ github.ref_name }}]

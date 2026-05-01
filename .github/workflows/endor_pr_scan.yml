@@ -1,0 +1,45 @@
+name: Endor Labs PR Scan
+
+# Runs a non-blocking SCA scan on pull requests and reports findings as a PR comment.
+# Triggered when CMake files change on master or release branches.
+# Internal documentation: go/sbom-coverage, go/sbom-scope
+
+on:
+  pull_request:
+    branches:
+      - "master"
+      - "releases/v*"
+      - "debian/*"
+    paths:
+      - "**/CMakeLists.txt"
+      - "**/*.cmake"
+
+permissions:
+  id-token: write # Required to request a JWT for keyless authentication with Endor Labs
+  pull-requests: write # Required for Endor Labs to write PR comments
+
+jobs:
+  endor_pr_scan:
+    runs-on: ubuntu-latest
+
+    concurrency:
+      group: endor-pr-scan-${{ github.ref }}
+      cancel-in-progress: true
+
+    steps:
+      - name: "Clone and Configure CMake"
+        uses: ./.github/actions/clone-and-configure
+
+      - name: Endor Labs PR Scan
+        uses: endorlabs/github-action@b8992820cc4d9c9e7ded5022adf6cabe2dc11946 # v1.1.12 Released March 25, 2026
+        with:
+          additional_args: '--languages=c --include-path="build/_deps/**"'
+          enable_pr_comments: true
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          log_level: info
+          log_verbose: false
+          namespace: mongodb.${{github.repository_owner}}
+          pr: true
+          scan_dependencies: true
+          scan_summary_output_type: "table"
+          tags: github_action

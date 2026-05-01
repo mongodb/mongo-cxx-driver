@@ -177,32 +177,6 @@ class GitInfo:
             self._repo.close()
             self._repo = None
 
-    def added_new_3p_folder(self, commit: Commit) -> bool:
-        """
-        Checks if a given commit added a new third-party subfolder.
-
-        Args:
-            commit: The GitPython Commit object to analyze.
-
-        Returns:
-            True if the commit added a new subfolder, False otherwise.
-        """
-        if not commit.parents:
-            # If it's the initial commit, all folders are "new"
-            # You might want to refine this logic based on your definition of "new"
-            # Check if there are any subfolders in the initial commit
-            return bool(commit.tree.trees)
-
-        parent_commit = commit.parents[0]
-        diff_index = commit.diff(parent_commit)
-
-        for diff in diff_index:
-            # Check for added items that are directories
-            if diff.change_type == 'A' and diff.b_is_dir:
-                return True
-        return False
-
-
 def print_banner(text: str) -> None:
     """print() a padded status message to stdout"""
     print()
@@ -241,6 +215,7 @@ def sbom_components_to_dict(sbom: dict, with_version: bool = False) -> dict:
 
 
 def check_metadata_sbom(meta_bom: dict) -> None:
+    """Run checks on SBOM component metadata for expected fields."""
     for component in meta_bom['components']:
         for field in METADATA_FIELDS_REQUIRED:
             if field not in component:
@@ -299,7 +274,7 @@ def write_list_to_text_file(str_list: list, file_path: str) -> None:
         logger.info(f'Text file saved to {file_path}')
 
 
-def set_component_version(component: dict, version: str, purl_version: str = None, cpe_version: str = None) -> None:
+def set_component_version(component: dict, version: str, purl_version: str = "", cpe_version: str = "") -> None:
     """Update the appropriate version fields in a component from the metadata SBOM"""
     if not purl_version:
         purl_version = version
@@ -331,29 +306,37 @@ def set_dependency_version(dependencies: list, meta_bom_ref: str, purl_version: 
                 d += 1
 
     logger.debug(f"set_dependency_version: '{meta_bom_ref}' updated {r} refs and {d} dependsOn")
+def add_component_property(component: dict, name: str, value: str) -> None:
+    """Add a key/value to to 'properties' in SBOM component"""
+    if 'properties' not in component:
+        component['properties'] = []
+    component['properties'].append({'name': name, 'value': value})
+
+def get_component_priority_version_source(component: dict) -> str:
+    """Get the priority version source, if defined in metadata file."""
+    priority_version_source = [
+        p.get('value')
+        for p in component.get('properties', [])
+        if p.get('name') == 'generate_sbom:priority_version_source'
+    ]
+    if len(priority_version_source):
+        # There should only be 1 result, if any
+        return priority_version_source[0]
+    else:
+        return ""
 
 
-def get_subfolders_dict(folder_path: str = '.') -> dict:
-    """Get list of all directories in the specified path"""
-    subfolders = []
-    try:
-        # Get all entries (files and directories) in the specified path
-        entries = os.listdir(folder_path)
+def del_component_priority_version_source(component: dict) -> None:
+    """Delete all priority version source properties."""
 
-        # Filter for directories
-        for entry in entries:
-            full_path = os.path.join(folder_path, entry)
-            if os.path.isdir(full_path):
-                subfolders.append(entry)
-    except FileNotFoundError:
-        logger.error(f"Error: Directory '{folder_path}' not found.")
-    except Exception as e:
-        logger.error(f'An error occurred: {e}')
-
-    subfolders.sort()
-    return {key: 0 for key in subfolders}
-
-
+    # Reverse iterate properties list to safely modify in situ
+    if 'properties' in component:
+        for i in range(len(component['properties']) - 1, -1, -1):
+            if component['properties'][i].get('name') == 'generate_sbom:priority_version_source':
+                logger.debug(
+                    f'PRIORITY VERSION SOURCE: {component["bom-ref"]}: Removing priority version source from SBOM metadata.'
+                )
+                del component['properties'][i]
 # endregion functions and classes
 
 
@@ -416,20 +399,20 @@ def main() -> None:
     files = parser.add_argument_group('SBOM files')
     files.add_argument(
         '--sbom-metadata',
-        help="Input path for template SBOM file with metadata (Default: './buildscripts/sbom/metadata.cdx.json')",
-        default='./buildscripts/sbom/metadata.cdx.json',
+        help="Input path for template SBOM file with metadata (Default: './github/scripts/sbom/metadata.cdx.json')",
+        default='./github/scripts/sbom/metadata.cdx.json',
         type=str,
     )
     files.add_argument(
         '--sbom-in',
-        help="Input path for previous SBOM file (Default: './sbom.json')",
-        default='./sbom.json',
+        help="Input path for previous SBOM file (Default: './etc/sbom.json')",
+        default='./etc/sbom.json',
         type=str,
     )
     files.add_argument(
         '--sbom-out',
-        help="Output path for SBOM file (Default: './sbom.json')",
-        default='./sbom.json',
+        help="Output path for SBOM file (Default: './etc/sbom.json')",
+        default='./etc/sbom.json',
         type=str,
     )
     parser.add_argument(
@@ -514,16 +497,16 @@ def main() -> None:
         sleep_duration,
         endorctl_path,
         config_path,
-        enable_github_action_token=enable_github_action_token,
+        enable_github_action_token,
     )
-    if target == 'commit':
-        endor_bom = endorctl.get_sbom_for_commit(git_info.project, git_info.commit)
-    elif target == 'branch':
-        endor_bom = endorctl.get_sbom_for_branch(git_info.project, git_info.branch)
-    elif target == 'project':
-        endor_bom = endorctl.get_sbom_for_project(git_info.project)
+    if target == 'project':
+        endor_bom = endorctl.get_sbom(git_info.project)
     else:
-        endor_bom = None
+        if target == 'branch':
+            ref = git_info.branch
+        elif target == 'commit':
+            ref = git_info.commit
+        endor_bom = endorctl.get_sbom(git_info.project, target, ref)
 
     if not endor_bom:
         logger.error('Empty result for Endor SBOM!')
@@ -662,7 +645,7 @@ def main() -> None:
         )
 
     # Release branch e.g., v7.0 or v8.2
-    elif target == 'branch' and re.fullmatch(config.REGEX_RELEASE_BRANCH, git_info.branch).group(0):
+    elif target == 'branch' and re.fullmatch(config.REGEX_RELEASE_BRANCH, git_info.branch):
         version = re.search(config.REGEX_RELEASE_BRANCH, git_info.branch).group(0)
         purl_version = version
         # remove leading 'v', add wildcard. e.g. 8.2.*
@@ -829,6 +812,27 @@ def main() -> None:
 
     # metadata.tools https://cyclonedx.org/docs/1.5/json/#metadata_tools
     meta_bom['metadata']['tools'] = endor_bom['metadata']['tools']
+
+    # Apply license expression/id replacements
+    for component in meta_bom.get('components', []):
+        for license_entry in component.get('licenses', []):
+            for old, new in config.license_replacements:
+                if license_entry.get('expression') == old:
+                    logger.info(
+                        'LICENSE REPLACEMENT: %s: replacing expression \'%s\' with \'%s\'',
+                        component.get('bom-ref', ''),
+                        old,
+                        new,
+                    )
+                    license_entry['expression'] = new
+                if license_entry.get('license', {}).get('id') == old:
+                    logger.info(
+                        'LICENSE REPLACEMENT: %s: replacing license.id \'%s\' with \'%s\'',
+                        component.get('bom-ref', ''),
+                        old,
+                        new,
+                    )
+                    license_entry['license']['id'] = new
 
     write_sbom_json_file(meta_bom, sbom_out_path)
 

@@ -5,7 +5,8 @@ set -o pipefail
 
 : "${branch_name:?}"
 : "${DOCKER_CONFIG:?}"
-: "${KONDUKTO_TOKEN:?}"
+: "${AWS_ACCESS_KEY_ID:?}"
+: "${AWS_SECRET_ACCESS_KEY:?}"
 
 command -v podman >/dev/null || {
   echo "missing required program podman" 1>&2
@@ -25,7 +26,7 @@ podman pull "${silkbomb:?}"
 silkbomb_augment_flags=(
   --repo mongodb/mongo-cxx-driver
   --branch "${branch_name:?}"
-  --sbom-in /pwd/sbom.json
+  --sbom-in /pwd/etc/sbom.json
   --sbom-out /pwd/etc/augmented.sbom.json.new
 
   # Any notable updates to the Augmented SBOM version should be done manually after careful inspection.
@@ -34,7 +35,7 @@ silkbomb_augment_flags=(
 )
 
 # Allow the timestamp to be updated in the Augmented SBOM for update purposes.
-podman run -it --rm -v "$(pwd):/pwd" --env 'KONDUKTO_TOKEN' "${silkbomb:?}" augment "${silkbomb_augment_flags[@]:?}"
+podman run -it --rm -v "$(pwd):/pwd" --env 'AWS_ACCESS_KEY_ID' --env 'AWS_SECRET_ACCESS_KEY' "${silkbomb:?}" augment "${silkbomb_augment_flags[@]:?}"
 
 [[ -f ./etc/augmented.sbom.json.new ]] || {
   echo "failed to download Augmented SBOM" 1>&2

@@ -19,34 +19,13 @@ TAG = 'sbom'
 
 
 class CustomCommand(BuiltInCommand):
-    command: str
+    custom_command: str
     model_config = ConfigDict(arbitrary_types_allowed=True)
 
 
 class CheckAugmentedSBOM(Function):
     name = 'check augmented sbom'
     commands = [
-        # Authenticate with Kondukto.
-        *[
-            ec2_assume_role(
-                command_type=EvgCommandType.SETUP,
-                role_arn='${KONDUKTO_ROLE_ARN}',
-            ),
-            bash_exec(
-                command_type=EvgCommandType.SETUP,
-                include_expansions_in_env=['AWS_ACCESS_KEY_ID', 'AWS_SECRET_ACCESS_KEY', 'AWS_SESSION_TOKEN'],
-                script="""\
-                    set -o errexit
-                    set -o pipefail
-                    kondukto_token="$(aws secretsmanager get-secret-value --secret-id "kondukto-token" --region "us-east-1" --query 'SecretString' --output text)"
-                    printf "KONDUKTO_TOKEN: %s\\n" "$kondukto_token" >|expansions.kondukto.yml
-                """,
-            ),
-            expansions_update(
-                command_type=EvgCommandType.SETUP,
-                file='expansions.kondukto.yml',
-            ),
-        ],
         # Authenticate with Amazon ECR.
         *[
             # Avoid inadvertently using a pre-existing and potentially conflicting Docker config.
@@ -70,7 +49,8 @@ class CheckAugmentedSBOM(Function):
             include_expansions_in_env=[
                 'branch_name',
                 'DOCKER_CONFIG',
-                'KONDUKTO_TOKEN',
+                'AWS_ACCESS_KEY_ID',
+                'AWS_SECRET_ACCESS_KEY',
             ],
             script='.evergreen/scripts/sbom.sh',
         ),

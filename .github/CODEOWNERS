@@ -1,2 +1,7 @@
 # Listing code owners is required by DRIVERS-3098
 * @mongodb/dbx-c-cxx
+
+# SBOM automation
+.github/actions/clone-and-configure/ @mongodb/ssdlc
+.github/workflows/endor*.yml @mongodb/ssdlc
+.github/workflows/scripts/sbom/ @mongodb/ssdlc

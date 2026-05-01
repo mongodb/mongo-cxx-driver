@@ -1,0 +1,506 @@
+{
+  "$schema": "http://cyclonedx.org/schema/bom-1.5.schema.json",
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.5",
+  "serialNumber": "urn:uuid:89685c6d-f505-4943-a685-0fc532b179f8",
+  "version": 1,
+  "metadata": {
+    "lifecycles": [
+      {
+        "phase": "pre-build"
+      }
+    ],
+    "component": {
+      "type": "library",
+      "bom-ref": "pkg:github/mongodb/mongo-cxx-driver@{{VERSION}}",
+      "supplier": {
+        "name": "MongoDB, Inc.",
+        "url": [
+          "https://mongodb.com"
+        ]
+      },
+      "author": "MongoDB, Inc.",
+      "publisher": "MongoDB, Inc.",
+      "group": "mongodb",
+      "name": "mongo-cxx-driver",
+      "version": "{{VERSION}}",
+      "description": "C++ Driver for MongoDB",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ],
+      "copyright": "2009-present, MongoDB, Inc.",
+      "cpe": "cpe:2.3:a:mongodb:c++:{{VERSION}}:*:*:*:*:*:*:*",
+      "purl": "pkg:github/mongodb/mongo-cxx-driver@{{VERSION}}",
+      "externalReferences": [
+        {
+          "url": "https://raw.githubusercontent.com/mongodb/mongo-cxx-driver/refs/heads/master/LICENSE",
+          "comment": "Apache License 2.0",
+          "type": "license"
+        },
+        {
+          "url": "https://www.mongodb.com/docs/languages/cpp/cpp-driver/",
+          "comment": "Documentation site for the official MongoDB C++ Driver.",
+          "type": "website"
+        },
+        {
+          "url": "https://github.com/mongodb/mongo-cxx-driver/blob/master/CHANGELOG.md",
+          "type": "release-notes"
+        },
+        {
+          "url": "https://github.com/mongodb/mongo-cxx-driver.git",
+          "type": "vcs"
+        }
+      ]
+    },
+    "supplier": {
+      "name": "MongoDB, Inc.",
+      "url": [
+        "https://mongodb.com"
+      ]
+    }
+  },
+  "components": [
+    {
+      "type": "library",
+      "bom-ref": "pkg:github/catchorg/catch2@{{VERSION}}",
+      "author": "Martin Ho\u0159e\u0148ovsk\u00fd",
+      "group": "catchorg",
+      "name": "Catch2",
+      "version": "{{VERSION}}",
+      "description": "A modern, C++-native, test framework for unit-tests, TDD and BDD.",
+      "scope": "excluded",
+      "licenses": [
+        {
+          "license": {
+            "id": "BSL-1.0"
+          }
+        }
+      ],
+      "copyright": "Copyright Catch2 Authors",
+      "purl": "pkg:github/catchorg/catch2@{{VERSION}}",
+      "externalReferences": [
+        {
+          "url": "https://github.com/catchorg/catch2.git",
+          "type": "distribution"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:github/cyrusimap/cyrus-sasl@unknown",
+      "supplier": {
+        "name": "The Cyrus Project",
+        "url": [
+          "https://www.cyrusimap.org/sasl/",
+          "https://www.cyrusimap.org/overview/who_is_cyrus.html"
+        ]
+      },
+      "author": "The Cyrus Team",
+      "group": "cyrus",
+      "name": "Cyrus SASL",
+      "version": "unknown",
+      "description": "Simple Authentication and Security Layer (SASL) is a specification that describes how authentication mechanisms can be plugged into an application protocol on the wire. Cyrus SASL is an implementation of SASL that makes it easy for application developers to integrate authentication mechanisms into their application in a generic way.",
+      "scope": "optional",
+      "licenses": [
+        {
+          "license": {
+            "id": "BSD-Attribution-HPND-disclaimer"
+          }
+        }
+      ],
+      "copyright": "Copyright (c) 1998-2003 Carnegie Mellon University. All rights reserved.",
+      "cpe": "cpe:2.3:a:cyrus:sasl:unknown:*:*:*:*:*:*:*",
+      "purl": "pkg:github/cyrusimap/cyrus-sasl@unknown",
+      "externalReferences": [
+        {
+          "url": "https://github.com/cyrusimap/cyrus-sasl.git",
+          "type": "distribution"
+        }
+      ],
+      "properties": [
+        {
+          "name": "user-specified",
+          "value": "true"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:github/facebook/zstd@unknown",
+      "supplier": {
+        "name": "Meta Open Source",
+        "url": [
+          "https://opensource.fb.com/"
+        ]
+      },
+      "author": "Meta Platforms, Inc.",
+      "group": "facebook",
+      "name": "Zstandard (zstd)",
+      "version": "unknown",
+      "description": "Zstandard - Fast real-time compression algorithm",
+      "scope": "optional",
+      "licenses": [
+        {
+          "expression": "BSD-3-Clause OR GPL-2.0-only"
+        }
+      ],
+      "copyright": "Copyright (c) Meta Platforms, Inc. and affiliates. All rights reserved.",
+      "cpe": "cpe:2.3:a:facebook:zstandard:unknown:*:*:*:*:*:*:*",
+      "purl": "pkg:github/facebook/zstd@unknown",
+      "externalReferences": [
+        {
+          "url": "https://github.com/facebook/zstd.git",
+          "type": "distribution"
+        }
+      ],
+      "properties": [
+        {
+          "name": "user-specified",
+          "value": "true"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:github/google/snappy@unknown",
+      "supplier": {
+        "name": "Google LLC",
+        "url": [
+          "https://opensource.google/"
+        ]
+      },
+      "author": "Snappy Project",
+      "group": "google.opensource",
+      "name": "snappy",
+      "version": "unknown",
+      "description": "A fast compressor/decompressor",
+      "scope": "optional",
+      "licenses": [
+        {
+          "license": {
+            "id": "BSD-3-Clause"
+          }
+        }
+      ],
+      "copyright": "Copyright 2011, Google Inc. All rights reserved.",
+      "cpe": "cpe:2.3:a:google:snappy:unknown:*:*:*:*:*:*:*",
+      "purl": "pkg:github/google/snappy@unknown",
+      "externalReferences": [
+        {
+          "url": "https://github.com/google/snappy.git",
+          "type": "distribution"
+        }
+      ],
+      "properties": [
+        {
+          "name": "user-specified",
+          "value": "true"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:github/juliastrings/utf8proc@{{VERSION}}",
+      "supplier": {
+        "name": "The Julia Programming Language",
+        "url": [
+          "https://julialang.org/"
+        ]
+      },
+      "author": "Jan Behrens, the Public Software Group, the Julia-language developers",
+      "group": "JuliaStrings",
+      "name": "utf8proc",
+      "version": "{{VERSION}}",
+      "description": "A clean C library for processing UTF-8 Unicode data",
+      "scope": "required",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ],
+      "copyright": "Copyright \u00a9 2014-2021 by Steven G. Johnson, Jiahao Chen, Tony Kelman, Jonas Fonseca, and other contributors listed in the git history.",
+      "purl": "pkg:github/juliastrings/utf8proc@{{VERSION}}",
+      "externalReferences": [
+        {
+          "url": "https://github.com/juliastrings/utf8proc.git",
+          "type": "distribution"
+        }
+      ],
+      "properties": [
+        {
+          "name": "bundled",
+          "value": "true"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:github/madler/zlib@{{VERSION}}",
+      "supplier": {
+        "name": "zlib",
+        "url": [
+          "https://zlib.net/"
+        ]
+      },
+      "author": "Jean-loup Gailly, Mark Adler",
+      "group": "madler",
+      "name": "zlib",
+      "version": "{{VERSION}}",
+      "description": "zlib is a general purpose data compression library.",
+      "scope": "optional",
+      "licenses": [
+        {
+          "license": {
+            "id": "Zlib"
+          }
+        }
+      ],
+      "copyright": "Copyright \u00a9 1995-2024 Jean-loup Gailly and Mark Adler.",
+      "cpe": "cpe:2.3:a:zlib:zlib:{{VERSION}}:*:*:*:*:*:*:*",
+      "purl": "pkg:github/madler/zlib@{{VERSION}}",
+      "externalReferences": [
+        {
+          "url": "https://zlib.net/fossils/",
+          "type": "distribution"
+        }
+      ],
+      "properties": [
+        {
+          "name": "bundled",
+          "value": "true"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:github/mongodb/libmongocrypt@{{VERSION}}",
+      "supplier": {
+        "name": "MongoDB, Inc.",
+        "url": [
+          "https://mongodb.com"
+        ]
+      },
+      "author": "MongoDB, Inc.",
+      "group": "mongodb",
+      "name": "libmongocrypt",
+      "version": "{{VERSION}}",
+      "description": "C library for Client Side and Queryable Encryption in MongoDB",
+      "scope": "optional",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ],
+      "copyright": "Copyright 2019-present MongoDB, Inc.",
+      "cpe": "cpe:2.3:a:mongodb:libmongocrypt:{{VERSION}}:*:*:*:*:*:*:*",
+      "purl": "pkg:github/mongodb/libmongocrypt@{{VERSION}}",
+      "externalReferences": [
+        {
+          "url": "https://github.com/mongodb/libmongocrypt.git",
+          "type": "distribution"
+        }
+      ],
+      "properties": [
+        {
+          "name": "minimumVersion",
+          "value": "1.15.1"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:github/mongodb/mongo-c-driver@{{VERSION}}",
+      "supplier": {
+        "name": "MongoDB, Inc.",
+        "url": [
+          "https://mongodb.com"
+        ]
+      },
+      "author": "MongoDB, Inc.",
+      "group": "mongodb",
+      "name": "MongoDB C Driver",
+      "version": "{{VERSION}}",
+      "description": "The Official MongoDB driver for C language",
+      "scope": "required",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ],
+      "copyright": "2009-present, MongoDB, Inc.",
+      "cpe": "cpe:2.3:a:mongodb:c_driver:{{VERSION}}:*:*:*:*:*:*:*",
+      "purl": "pkg:github/mongodb/mongo-c-driver@{{VERSION}}",
+      "externalReferences": [
+        {
+          "url": "https://github.com/mongodb/mongo-c-driver.git",
+          "type": "distribution"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:github/openssl/openssl@unknown",
+      "supplier": {
+        "name": "The OpenSSL Project"
+      },
+      "author": "https://raw.githubusercontent.com/openssl/openssl/refs/heads/master/AUTHORS.md",
+      "group": "openssl",
+      "name": "OpenSSL",
+      "version": "unknown",
+      "description": "TLS/SSL and crypto library",
+      "scope": "optional",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ],
+      "copyright": "Copyright (c) 1998-2025 The OpenSSL Project Authors",
+      "cpe": "cpe:2.3:a:openssl:openssl:unknown:*:*:*:*:*:*:*",
+      "purl": "pkg:github/openssl/openssl@unknown",
+      "externalReferences": [
+        {
+          "url": "https://www.openssl.org/",
+          "type": "website"
+        },
+        {
+          "url": "https://github.com/openssl/openssl",
+          "type": "vcs"
+        }
+      ],
+      "properties": [
+        {
+          "name": "user-specified",
+          "value": "true"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:github/philsquared/clara@{{VERSION}}",
+      "author": "Phil Nash",
+      "group": "catchorg",
+      "name": "Clara",
+      "version": "{{VERSION}}",
+      "description": "A simple to use, composable, command line parser for C++ 11 and beyond",
+      "scope": "excluded",
+      "licenses": [
+        {
+          "license": {
+            "id": "BSL-1.0"
+          }
+        }
+      ],
+      "copyright": "Copyright 2017 Two Blue Cubes Ltd. All rights reserved.",
+      "purl": "pkg:github/philsquared/clara@{{VERSION}}",
+      "externalReferences": [
+        {
+          "url": "https://github.com/philsquared/clara.git",
+          "type": "distribution"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:github/troydhanson/uthash@{{VERSION}}",
+      "author": "Troy D. Hanson",
+      "group": "troydhanson",
+      "name": "github.com/troydhanson/uthash",
+      "version": "{{VERSION}}",
+      "description": "C macros for hash tables and more",
+      "scope": "required",
+      "licenses": [
+        {
+          "license": {
+            "id": "BSD-1-Clause"
+          }
+        }
+      ],
+      "copyright": "Copyright (c) 2005-2025, Troy D. Hanson",
+      "purl": "pkg:github/troydhanson/uthash@{{VERSION}}",
+      "externalReferences": [
+        {
+          "url": "https://github.com/troydhanson/uthash.git",
+          "type": "distribution"
+        }
+      ]
+    }
+  ],
+  "dependencies": [
+    {
+      "ref": "pkg:github/catchorg/catch2@{{VERSION}}",
+      "dependsOn": [
+        "pkg:github/philsquared/clara@{{VERSION}}"
+      ]
+    },
+    {
+      "ref": "pkg:github/cyrusimap/cyrus-sasl@unknown",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:github/facebook/zstd@unknown",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:github/google/snappy@unknown",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:github/juliastrings/utf8proc@{{VERSION}}",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:github/madler/zlib@{{VERSION}}",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:github/mongodb/libmongocrypt@{{VERSION}}",
+      "dependsOn": [
+        "pkg:github/openssl/openssl@unknown"
+      ]
+    },
+    {
+      "ref": "pkg:github/mongodb/mongo-c-driver@{{VERSION}}",
+      "dependsOn": [
+        "pkg:github/cyrusimap/cyrus-sasl@unknown",
+        "pkg:github/facebook/zstd@unknown",
+        "pkg:github/google/snappy@unknown",
+        "pkg:github/juliastrings/utf8proc@{{VERSION}}",
+        "pkg:github/madler/zlib@{{VERSION}}",
+        "pkg:github/mongodb/libmongocrypt@{{VERSION}}",
+        "pkg:github/openssl/openssl@unknown",
+        "pkg:github/troydhanson/uthash@{{VERSION}}"
+      ]
+    },
+    {
+      "ref": "pkg:github/mongodb/mongo-cxx-driver@{{VERSION}}",
+      "dependsOn": [
+        "pkg:github/catchorg/catch2@{{VERSION}}",
+        "pkg:github/mongodb/mongo-c-driver@{{VERSION}}"
+      ]
+    },
+    {
+      "ref": "pkg:github/openssl/openssl@unknown",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:github/philsquared/clara@{{VERSION}}",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:github/troydhanson/uthash@{{VERSION}}",
+      "dependsOn": []
+    }
+  ]
+}

@@ -127,7 +127,7 @@ A GitHub Action automatically scans master and release branches using Endor Labs
   }
 }
 ```
-The `metadata.component.bom-ref` field does not need to change, but if you do change it be sure to also update the assocaited `dependencies[].ref` field. Note that the github PURL references the release tag (`rX.Y.Z`).
+The `metadata.component.bom-ref` field does not need to change, but if you do change it be sure to also update the associated `dependencies[].ref` field. Note that the github PURL references the release tag (`rX.Y.Z`).
 
 Ensure the container engine (e.g. `podman` or `docker`) is authenticated with the DevProd-provided Amazon ECR instance.
 

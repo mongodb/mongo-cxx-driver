@@ -201,29 +201,6 @@ functions:
         permissions: public-read
         remote_file: mongo-cxx-driver/${branch_name}/${revision}/${version_id}/${build_id}/${execution}/rpm-packages.tar.gz
   check augmented sbom:
-    - command: ec2.assume_role
-      type: setup
-      params:
-        role_arn: ${KONDUKTO_ROLE_ARN}
-    - command: subprocess.exec
-      type: setup
-      params:
-        binary: bash
-        include_expansions_in_env:
-          - AWS_ACCESS_KEY_ID
-          - AWS_SECRET_ACCESS_KEY
-          - AWS_SESSION_TOKEN
-        args:
-          - -c
-          - |
-            set -o errexit
-            set -o pipefail
-            kondukto_token="$(aws secretsmanager get-secret-value --secret-id "kondukto-token" --region "us-east-1" --query 'SecretString' --output text)"
-            printf "KONDUKTO_TOKEN: %s\n" "$kondukto_token" >|expansions.kondukto.yml
-    - command: expansions.update
-      type: setup
-      params:
-        file: expansions.kondukto.yml
     - command: expansions.update
       params:
         updates:
@@ -251,7 +228,8 @@ functions:
         include_expansions_in_env:
           - branch_name
           - DOCKER_CONFIG
-          - KONDUKTO_TOKEN
+          - AWS_ACCESS_KEY_ID
+          - AWS_SECRET_ACCESS_KEY
         args:
           - -c
           - .evergreen/scripts/sbom.sh
