@@ -178,7 +178,7 @@ class delete_options {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/read-concern/
     ///
-    delete_options& read_concern(read_concern rc) {
+    delete_options& read_concern(v_noabi::read_concern rc) {
         _read_concern = std::move(rc);
         return *this;
     }
@@ -209,7 +209,7 @@ class delete_options {
     /// @see
     /// - https://www.mongodb.com/docs/manual/core/write-concern/
     ///
-    delete_options& write_concern(write_concern wc) {
+    delete_options& write_concern(v_noabi::write_concern wc) {
         _write_concern = std::move(wc);
         return *this;
     }

@@ -25,6 +25,9 @@
 #include <bsoncxx/v1/types/value-fwd.hpp>
 
 #include <mongocxx/v1/hint-fwd.hpp>
+#include <mongocxx/v1/pipeline-fwd.hpp>
+#include <mongocxx/v1/read_concern-fwd.hpp>
+#include <mongocxx/v1/write_concern-fwd.hpp>
 
 #include <bsoncxx/v1/array/value.hpp>
 #include <bsoncxx/v1/document/value.hpp>
@@ -32,10 +35,6 @@
 #include <bsoncxx/v1/types/view.hpp>
 
 #include <mongocxx/v1/config/export.hpp>
-#include <mongocxx/v1/hint.hpp>
-#include <mongocxx/v1/pipeline.hpp>
-#include <mongocxx/v1/read_concern.hpp>
-#include <mongocxx/v1/write_concern.hpp>
 
 #include <cstdint>
 #include <map>
@@ -390,7 +389,7 @@ class bulk_write::update_many {
     ///
     /// Initialize with the given "filter" document and "update" aggregation pipeline.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL() update_many(bsoncxx::v1::document::value filter, pipeline const& update);
+    MONGOCXX_ABI_EXPORT_CDECL() update_many(bsoncxx::v1::document::value filter, v1::pipeline const& update);
 
     ///
     /// Return the current "filter" field.

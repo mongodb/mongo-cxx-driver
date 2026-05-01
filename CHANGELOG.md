@@ -37,6 +37,7 @@ Changes prior to 3.9.0 are documented as [release notes on GitHub](https://githu
         - If not upgrading, custom application retry logic may need to be adjusted to handle higher rates of overload errors.
     - Add URI option `maxAdaptiveRetries` to configure the maximum number of retries for operations that fail with a `SystemOverloadedError` (default: `2`).
     - Add URI option `enableOverloadRetargeting` to control whether retries of `SystemOverloadedError` will attempt to use a different server (default: `false`).
+- Added support for the "readConcern" option field to "find" and "update" operations.
 
 ## 4.2.0
 
