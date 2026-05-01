@@ -61,6 +61,7 @@
 #include <mongocxx/v1/replace_one_options.hpp>
 #include <mongocxx/v1/update_many_options.hpp>
 #include <mongocxx/v1/update_one_options.hpp>
+#include <mongocxx/v1/write_concern.hpp>
 
 #include <cstdint>
 #include <string>
