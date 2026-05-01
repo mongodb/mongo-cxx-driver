@@ -390,7 +390,7 @@ class bulk_write::update_many {
     ///
     /// Initialize with the given "filter" document and "update" aggregation pipeline.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL() update_many(bsoncxx::v1::document::value filter, pipeline const& update);
+    MONGOCXX_ABI_EXPORT_CDECL() update_many(bsoncxx::v1::document::value filter, v1::pipeline const& update);
 
     ///
     /// Return the current "filter" field.
