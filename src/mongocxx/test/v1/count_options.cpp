@@ -175,7 +175,7 @@ TEST_CASE("read_concern", "[mongocxx][v1][count_options]") {
     auto const v = GENERATE(values({
         T{},
         T{}.acknowledge_level(T::level::k_majority),
-    })); 
+    }));
 
     CHECK(count_options{}.read_concern(v).read_concern() == v);
 }
