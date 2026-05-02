@@ -17,6 +17,7 @@
 //
 
 #include <mongocxx/v1/hint.hpp>
+#include <mongocxx/v1/read_concern.hpp>
 #include <mongocxx/v1/read_preference.hpp>
 
 #include <bsoncxx/test/v1/types/value.hh>
@@ -83,6 +84,7 @@ TEST_CASE("default", "[mongocxx][v1][count_options]") {
     CHECK_FALSE(opts.max_time().has_value());
     CHECK_FALSE(opts.skip().has_value());
     CHECK_FALSE(opts.read_preference().has_value());
+    CHECK_FALSE(opts.read_concern().has_value());
 }
 
 TEST_CASE("collation", "[mongocxx][v1][count_options]") {
@@ -165,6 +167,17 @@ TEST_CASE("read_preference", "[mongocxx][v1][count_options]") {
     }));
 
     CHECK(count_options{}.read_preference(v).read_preference() == v);
+}
+
+TEST_CASE("read_concern", "[mongocxx][v1][count_options]") {
+    using T = v1::read_concern;
+
+    auto const v = GENERATE(values({
+        T{},
+        T{}.acknowledge_level(T::level::k_majority),
+    })); 
+
+    CHECK(count_options{}.read_concern(v).read_concern() == v);
 }
 
 } // namespace v1

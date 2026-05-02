@@ -22,6 +22,7 @@
 #include <bsoncxx/v1/types/value-fwd.hpp>
 
 #include <mongocxx/v1/hint-fwd.hpp>
+#include <mongocxx/v1/read_concern-fwd.hpp>
 #include <mongocxx/v1/read_preference-fwd.hpp>
 
 #include <bsoncxx/v1/stdx/optional.hpp>
@@ -35,11 +36,13 @@ class count_options::internal {
     static bsoncxx::v1::stdx::optional<v1::hint> const& hint(count_options const& self);
     static bsoncxx::v1::stdx::optional<bsoncxx::v1::types::value> const& comment(count_options const& self);
     static bsoncxx::v1::stdx::optional<v1::read_preference> const& read_preference(count_options const& self);
+    static bsoncxx::v1::stdx::optional<v1::read_concern> const& read_concern(count_options const& self);
 
     static bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value>& collation(count_options& self);
     static bsoncxx::v1::stdx::optional<v1::hint>& hint(count_options& self);
     static bsoncxx::v1::stdx::optional<bsoncxx::v1::types::value>& comment(count_options& self);
     static bsoncxx::v1::stdx::optional<v1::read_preference>& read_preference(count_options& self);
+    static bsoncxx::v1::stdx::optional<v1::read_concern>& read_concern(count_options& self);
 };
 
 } // namespace v1

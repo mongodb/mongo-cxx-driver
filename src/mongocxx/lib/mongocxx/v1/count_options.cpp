@@ -20,6 +20,7 @@
 #include <bsoncxx/v1/stdx/optional.hpp>
 #include <bsoncxx/v1/types/view.hpp>
 
+#include <mongocxx/v1/read_concern.hpp>
 #include <mongocxx/v1/read_preference.hpp>
 
 #include <bsoncxx/v1/types/value.hh>
@@ -44,6 +45,7 @@ class count_options::impl {
     bsoncxx::v1::stdx::optional<std::chrono::milliseconds> _max_time;
     bsoncxx::v1::stdx::optional<std::int64_t> _skip;
     bsoncxx::v1::stdx::optional<v1::read_preference> _rp;
+    bsoncxx::v1::stdx::optional<v1::read_concern> _read_concern;
 
     static impl const& with(count_options const& other) {
         return *static_cast<impl const*>(other._impl);
@@ -159,6 +161,15 @@ bsoncxx::v1::stdx::optional<v1::read_preference> count_options::read_preference(
     return impl::with(this)->_rp;
 }
 
+count_options& count_options::read_concern(v1::read_concern rc) {
+    impl::with(this)->_read_concern = std::move(rc);
+    return *this;
+}
+
+bsoncxx::v1::stdx::optional<v1::read_concern> count_options::read_concern() const {
+    return impl::with(this)->_read_concern;
+}
+
 bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> const& count_options::internal::collation(
     count_options const& self) {
     return impl::with(self)._collation;
@@ -178,6 +189,11 @@ bsoncxx::v1::stdx::optional<v1::read_preference> const& count_options::internal:
     return impl::with(self)._rp;
 }
 
+bsoncxx::v1::stdx::optional<v1::read_concern> const& count_options::internal::read_concern(
+    count_options const& self) {
+    return impl::with(self)._read_concern;
+}
+
 bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value>& count_options::internal::collation(count_options& self) {
     return impl::with(self)._collation;
 }
@@ -192,6 +208,10 @@ bsoncxx::v1::stdx::optional<bsoncxx::v1::types::value>& count_options::internal:
 
 bsoncxx::v1::stdx::optional<v1::read_preference>& count_options::internal::read_preference(count_options& self) {
     return impl::with(self)._rp;
+}
+
+bsoncxx::v1::stdx::optional<v1::read_concern>& count_options::internal::read_concern(count_options& self) {
+    return impl::with(self)._read_concern;
 }
 
 } // namespace v1
