@@ -626,6 +626,21 @@ TEST_CASE("error_reply", "[mongocxx][v1][client_bulk_write][exception]") {
     CHECK(ex.error_reply() == v.view());
 }
 
+TEST_CASE("ownership", "[mongocxx][v1][client_bulk_write][insert_one_options]") {
+    client_bulk_write::insert_one_options source;
+    client_bulk_write::insert_one_options target;
+
+    SECTION("copy") {
+        auto copy = source;
+        target = copy;
+    }
+
+    SECTION("move") {
+        auto moved = std::move(source);
+        target = std::move(moved);
+    }
+}
+
 TEST_CASE("ownership", "[mongocxx][v1][client_bulk_write][update_one_options]") {
     client_bulk_write::update_one_options source;
     client_bulk_write::update_one_options target;
