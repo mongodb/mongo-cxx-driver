@@ -653,10 +653,32 @@ bsoncxx::v1::stdx::optional<bool> client_bulk_write::update_one_options::upsert(
     return impl::with(*this)._upsert;
 }
 
-class client_bulk_write::update_many_options::impl {};
+class client_bulk_write::update_many_options::impl {
+   public:
+    bsoncxx::v1::stdx::optional<bsoncxx::v1::array::value> _array_filters;
+    bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> _collation;
+    bsoncxx::v1::stdx::optional<v1::hint> _hint;
+    bsoncxx::v1::stdx::optional<bool> _upsert;
+
+    static impl const& with(update_many_options const& self) {
+        return *static_cast<impl const*>(self._impl);
+    }
+
+    static impl& with(update_many_options& self) {
+        return *static_cast<impl*>(self._impl);
+    }
+
+    static impl* with(update_many_options* self) {
+        return static_cast<impl*>(self->_impl);
+    }
+
+    static impl* with(void* ptr) {
+        return static_cast<impl*>(ptr);
+    }
+};
 
 client_bulk_write::update_many_options::~update_many_options() {
-    delete static_cast<impl*>(_impl);
+    delete impl::with(this);
 }
 
 client_bulk_write::update_many_options::update_many_options(update_many_options&& other) noexcept
@@ -665,20 +687,19 @@ client_bulk_write::update_many_options::update_many_options(update_many_options&
 client_bulk_write::update_many_options& client_bulk_write::update_many_options::operator=(
     update_many_options&& other) noexcept {
     if (this != &other) {
-        delete static_cast<impl*>(exchange(_impl, exchange(other._impl, nullptr)));
+        delete impl::with(exchange(_impl, exchange(other._impl, nullptr)));
     }
 
     return *this;
 }
 
-client_bulk_write::update_many_options::update_many_options(update_many_options const& /*other*/) : _impl{new impl{}} {}
+client_bulk_write::update_many_options::update_many_options(update_many_options const& other)
+    : _impl{new impl{impl::with(other)}} {}
 
 client_bulk_write::update_many_options& client_bulk_write::update_many_options::operator=(
     update_many_options const& other) {
     if (this != &other) {
-        auto* const tmp = new impl{};
-        delete static_cast<impl*>(_impl);
-        _impl = tmp;
+        delete impl::with(exchange(_impl, new impl{impl::with(other)}));
     }
 
     return *this;
@@ -687,37 +708,41 @@ client_bulk_write::update_many_options& client_bulk_write::update_many_options::
 client_bulk_write::update_many_options::update_many_options() : _impl{new impl{}} {}
 
 client_bulk_write::update_many_options& client_bulk_write::update_many_options::array_filters(
-    bsoncxx::v1::array::value /*array_filters*/) {
+    bsoncxx::v1::array::value array_filters) {
+    impl::with(*this)._array_filters = std::move(array_filters);
     return *this;
 }
 
 bsoncxx::v1::stdx::optional<bsoncxx::v1::array::view> client_bulk_write::update_many_options::array_filters() const {
-    not_yet_implemented("client_bulk_write::update_many_options::array_filters");
+    return impl::with(*this)._array_filters;
 }
 
 client_bulk_write::update_many_options& client_bulk_write::update_many_options::collation(
-    bsoncxx::v1::document::value /*collation*/) {
+    bsoncxx::v1::document::value collation) {
+    impl::with(*this)._collation = std::move(collation);
     return *this;
 }
 
 bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view> client_bulk_write::update_many_options::collation() const {
-    not_yet_implemented("client_bulk_write::update_many_options::collation");
+    return impl::with(*this)._collation;
 }
 
-client_bulk_write::update_many_options& client_bulk_write::update_many_options::hint(v1::hint /*hint*/) {
+client_bulk_write::update_many_options& client_bulk_write::update_many_options::hint(v1::hint hint) {
+    impl::with(*this)._hint = std::move(hint);
     return *this;
 }
 
 bsoncxx::v1::stdx::optional<v1::hint> client_bulk_write::update_many_options::hint() const {
-    not_yet_implemented("client_bulk_write::update_many_options::hint");
+    return impl::with(*this)._hint;
 }
 
-client_bulk_write::update_many_options& client_bulk_write::update_many_options::upsert(bool /*upsert*/) {
+client_bulk_write::update_many_options& client_bulk_write::update_many_options::upsert(bool upsert) {
+    impl::with(*this)._upsert = upsert;
     return *this;
 }
 
 bsoncxx::v1::stdx::optional<bool> client_bulk_write::update_many_options::upsert() const {
-    not_yet_implemented("client_bulk_write::update_many_options::upsert");
+    return impl::with(*this)._upsert;
 }
 
 class client_bulk_write::replace_one_options::impl {};
