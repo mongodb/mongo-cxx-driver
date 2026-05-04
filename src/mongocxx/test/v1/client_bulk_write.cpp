@@ -879,5 +879,67 @@ TEST_CASE("upsert", "[mongocxx][v1][client_bulk_write][replace_one_options]") {
     CHECK(client_bulk_write::replace_one_options{}.upsert(v).upsert() == v);
 }
 
+TEST_CASE("ownership", "[mongocxx][v1][client_bulk_write][delete_one_options]") {
+    client_bulk_write::delete_one_options source;
+    client_bulk_write::delete_one_options target;
+
+    source.hint(v1::hint{"src"});
+    target.hint(v1::hint{"tgt"});
+
+    REQUIRE(source.hint() == v1::hint{"src"});
+    REQUIRE(target.hint() == v1::hint{"tgt"});
+
+    SECTION("move") {
+        auto move = std::move(source);
+
+        // source is in an assign-or-destroy-only state.
+
+        CHECK(move.hint() == v1::hint{"src"});
+
+        target = std::move(move);
+
+        // move is in an assign-or-destroy-only state.
+
+        CHECK(target.hint() == v1::hint{"src"});
+    }
+
+    SECTION("copy") {
+        auto copy = source;
+
+        CHECK(source.hint() == v1::hint{"src"});
+        CHECK(copy.hint() == v1::hint{"src"});
+
+        target = copy;
+
+        CHECK(copy.hint() == v1::hint{"src"});
+        CHECK(target.hint() == v1::hint{"src"});
+    }
+}
+
+TEST_CASE("default", "[mongocxx][v1][client_bulk_write][delete_one_options]") {
+    client_bulk_write::delete_one_options const opts;
+
+    CHECK_FALSE(opts.collation().has_value());
+    CHECK_FALSE(opts.hint().has_value());
+}
+
+TEST_CASE("collation", "[mongocxx][v1][client_bulk_write][delete_one_options]") {
+    auto const v = GENERATE(values({
+        scoped_bson{},
+        scoped_bson{R"({"locale": "en"})"},
+    }));
+
+    CHECK(client_bulk_write::delete_one_options{}.collation(v.value()).collation() == v.view());
+}
+
+TEST_CASE("hint", "[mongocxx][v1][client_bulk_write][delete_one_options]") {
+    auto const v = GENERATE(values({
+        v1::hint{"abc"},
+        v1::hint{scoped_bson{R"({"x": 1})"}.value()},
+    }));
+
+    CHECK(client_bulk_write::delete_one_options{}.hint(v).hint() == v);
+}
+
 } // namespace v1
 } // namespace mongocxx

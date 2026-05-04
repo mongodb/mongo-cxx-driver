@@ -837,10 +837,30 @@ bsoncxx::v1::stdx::optional<bool> client_bulk_write::replace_one_options::upsert
     return impl::with(*this)._upsert;
 }
 
-class client_bulk_write::delete_one_options::impl {};
+class client_bulk_write::delete_one_options::impl {
+   public:
+    bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> _collation;
+    bsoncxx::v1::stdx::optional<v1::hint> _hint;
+
+    static impl const& with(delete_one_options const& self) {
+        return *static_cast<impl const*>(self._impl);
+    }
+
+    static impl& with(delete_one_options& self) {
+        return *static_cast<impl*>(self._impl);
+    }
+
+    static impl* with(delete_one_options* self) {
+        return static_cast<impl*>(self->_impl);
+    }
+
+    static impl* with(void* ptr) {
+        return static_cast<impl*>(ptr);
+    }
+};
 
 client_bulk_write::delete_one_options::~delete_one_options() {
-    delete static_cast<impl*>(_impl);
+    delete impl::with(this);
 }
 
 client_bulk_write::delete_one_options::delete_one_options(delete_one_options&& other) noexcept
@@ -849,20 +869,19 @@ client_bulk_write::delete_one_options::delete_one_options(delete_one_options&& o
 client_bulk_write::delete_one_options& client_bulk_write::delete_one_options::operator=(
     delete_one_options&& other) noexcept {
     if (this != &other) {
-        delete static_cast<impl*>(exchange(_impl, exchange(other._impl, nullptr)));
+        delete impl::with(exchange(_impl, exchange(other._impl, nullptr)));
     }
 
     return *this;
 }
 
-client_bulk_write::delete_one_options::delete_one_options(delete_one_options const& /*other*/) : _impl{new impl{}} {}
+client_bulk_write::delete_one_options::delete_one_options(delete_one_options const& other)
+    : _impl{new impl{impl::with(other)}} {}
 
 client_bulk_write::delete_one_options& client_bulk_write::delete_one_options::operator=(
     delete_one_options const& other) {
     if (this != &other) {
-        auto* const tmp = new impl{};
-        delete static_cast<impl*>(_impl);
-        _impl = tmp;
+        delete impl::with(exchange(_impl, new impl{impl::with(other)}));
     }
 
     return *this;
@@ -871,20 +890,22 @@ client_bulk_write::delete_one_options& client_bulk_write::delete_one_options::op
 client_bulk_write::delete_one_options::delete_one_options() : _impl{new impl{}} {}
 
 client_bulk_write::delete_one_options& client_bulk_write::delete_one_options::collation(
-    bsoncxx::v1::document::value /*collation*/) {
+    bsoncxx::v1::document::value collation) {
+    impl::with(*this)._collation = std::move(collation);
     return *this;
 }
 
 bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view> client_bulk_write::delete_one_options::collation() const {
-    not_yet_implemented("client_bulk_write::delete_one_options::collation");
+    return impl::with(*this)._collation;
 }
 
-client_bulk_write::delete_one_options& client_bulk_write::delete_one_options::hint(v1::hint /*hint*/) {
+client_bulk_write::delete_one_options& client_bulk_write::delete_one_options::hint(v1::hint hint) {
+    impl::with(*this)._hint = std::move(hint);
     return *this;
 }
 
 bsoncxx::v1::stdx::optional<v1::hint> client_bulk_write::delete_one_options::hint() const {
-    not_yet_implemented("client_bulk_write::delete_one_options::hint");
+    return impl::with(*this)._hint;
 }
 
 class client_bulk_write::delete_many_options::impl {};
