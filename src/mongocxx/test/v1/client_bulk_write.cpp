@@ -800,5 +800,84 @@ TEST_CASE("upsert", "[mongocxx][v1][client_bulk_write][update_many_options]") {
     CHECK(client_bulk_write::update_many_options{}.upsert(v).upsert() == v);
 }
 
+TEST_CASE("ownership", "[mongocxx][v1][client_bulk_write][replace_one_options]") {
+    client_bulk_write::replace_one_options source;
+    client_bulk_write::replace_one_options target;
+
+    source.upsert(true);
+    target.upsert(false);
+
+    REQUIRE(source.upsert() == true);
+    REQUIRE(target.upsert() == false);
+
+    SECTION("move") {
+        auto move = std::move(source);
+
+        // source is in an assign-or-destroy-only state.
+
+        CHECK(move.upsert() == true);
+
+        target = std::move(move);
+
+        // move is in an assign-or-destroy-only state.
+
+        CHECK(target.upsert() == true);
+    }
+
+    SECTION("copy") {
+        auto copy = source;
+
+        CHECK(source.upsert() == true);
+        CHECK(copy.upsert() == true);
+
+        target = copy;
+
+        CHECK(copy.upsert() == true);
+        CHECK(target.upsert() == true);
+    }
+}
+
+TEST_CASE("default", "[mongocxx][v1][client_bulk_write][replace_one_options]") {
+    client_bulk_write::replace_one_options const opts;
+
+    CHECK_FALSE(opts.collation().has_value());
+    CHECK_FALSE(opts.hint().has_value());
+    CHECK_FALSE(opts.sort().has_value());
+    CHECK_FALSE(opts.upsert().has_value());
+}
+
+TEST_CASE("collation", "[mongocxx][v1][client_bulk_write][replace_one_options]") {
+    auto const v = GENERATE(values({
+        scoped_bson{},
+        scoped_bson{R"({"locale": "en"})"},
+    }));
+
+    CHECK(client_bulk_write::replace_one_options{}.collation(v.value()).collation() == v.view());
+}
+
+TEST_CASE("hint", "[mongocxx][v1][client_bulk_write][replace_one_options]") {
+    auto const v = GENERATE(values({
+        v1::hint{"abc"},
+        v1::hint{scoped_bson{R"({"x": 1})"}.value()},
+    }));
+
+    CHECK(client_bulk_write::replace_one_options{}.hint(v).hint() == v);
+}
+
+TEST_CASE("sort", "[mongocxx][v1][client_bulk_write][replace_one_options]") {
+    auto const v = GENERATE(values({
+        scoped_bson{},
+        scoped_bson{R"({"x": 1})"},
+    }));
+
+    CHECK(client_bulk_write::replace_one_options{}.sort(v.value()).sort() == v.view());
+}
+
+TEST_CASE("upsert", "[mongocxx][v1][client_bulk_write][replace_one_options]") {
+    auto const v = GENERATE(false, true);
+
+    CHECK(client_bulk_write::replace_one_options{}.upsert(v).upsert() == v);
+}
+
 } // namespace v1
 } // namespace mongocxx
