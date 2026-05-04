@@ -96,6 +96,10 @@ class count {
             ret.read_preference(to_v1(*_read_preference));
         }
 
+        if (_read_concern) {
+            ret.read_concern(to_v1(*_read_concern));
+        }
+
         return ret;
     }
 
