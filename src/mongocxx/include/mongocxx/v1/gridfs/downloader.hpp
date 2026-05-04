@@ -131,6 +131,7 @@ class downloader {
     /// underlying GridFS download stream was already closed.
     /// @throws mongocxx::v1::exception with @ref mongocxx::v1::gridfs::downloader::errc::corrupt_data if the
     /// GridFS file data is invalid or inconsistent.
+    /// @throws mongocxx::v1::server_error when a server-side error is encountered and a raw server error is available.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(std::size_t) read(std::uint8_t* data, std::size_t length);
 
