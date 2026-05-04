@@ -16,6 +16,7 @@
 
 //
 
+#include <mongocxx/v1/detail/macros.hpp>
 #include <mongocxx/v1/exception.hpp>
 #include <mongocxx/v1/server_error.hpp>
 
@@ -58,15 +59,21 @@ void client_session::start_transaction(
     bsoncxx::v_noabi::stdx::optional<options::transaction> const& transaction_opts) try {
     transaction_opts ? _session.start_transaction(v_noabi::options::transaction::internal::as_v1(*transaction_opts))
                      : _session.start_transaction();
+} catch (v1::server_error const&) {
+    MONGOCXX_PRIVATE_UNREACHABLE; // Only client-side errors.
 } catch (v1::exception const& ex) {
     v_noabi::throw_exception<v_noabi::operation_exception>(ex);
 }
 
-void client_session::commit_transaction() try { _session.commit_transaction(); } catch (v1::exception const& ex) {
+void client_session::commit_transaction() try { _session.commit_transaction(); } catch (v1::server_error const& ex) {
+    v_noabi::throw_exception<v_noabi::operation_exception>(ex);
+} catch (v1::exception const& ex) {
     v_noabi::throw_exception<v_noabi::operation_exception>(ex);
 }
 
-void client_session::abort_transaction() try { _session.abort_transaction(); } catch (v1::exception const& ex) {
+void client_session::abort_transaction() try { _session.abort_transaction(); } catch (v1::server_error const&) {
+    MONGOCXX_PRIVATE_UNREACHABLE; // Only client-side errors.
+} catch (v1::exception const& ex) {
     v_noabi::throw_exception<v_noabi::operation_exception>(ex);
 }
 
@@ -126,6 +133,8 @@ void client_session::with_transaction(with_transaction_cb cb, v_noabi::options::
         v_noabi::throw_exception<v_noabi::operation_exception>(
             bsoncxx::v_noabi::from_v1(std::move(reply).value()), error);
     }
+} catch (v1::server_error const& ex) {
+    v_noabi::throw_exception<v_noabi::operation_exception>(ex); // `ctx.eptr` may be a `v1::server_error`.
 } catch (v1::exception const& ex) {
     v_noabi::throw_exception<v_noabi::operation_exception>(ex);
 }

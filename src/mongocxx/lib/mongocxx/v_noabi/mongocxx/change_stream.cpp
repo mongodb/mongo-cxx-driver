@@ -83,6 +83,9 @@ change_stream::iterator& change_stream::iterator::operator++() {
     if (_change_stream) {
         try {
             v1::change_stream::internal::advance_iterator(_change_stream->_stream);
+        } catch (v1::server_error const& ex) {
+            _change_stream->_doc = {};
+            throw_exception<v_noabi::query_exception>(ex);
         } catch (v1::exception const& ex) {
             _change_stream->_doc = {};
             throw_exception<v_noabi::query_exception>(ex);
@@ -107,6 +110,9 @@ change_stream::iterator::iterator(change_stream* change_stream, bool is_end)
         try {
             // Advance to first event on begin() to keep operator*() state-machine-free.
             v1::change_stream::internal::advance_iterator(_change_stream->_stream);
+        } catch (v1::server_error const& ex) {
+            _change_stream->_doc = {};
+            throw_exception<v_noabi::query_exception>(ex);
         } catch (v1::exception const& ex) {
             _change_stream->_doc = {};
             throw_exception<v_noabi::query_exception>(ex);

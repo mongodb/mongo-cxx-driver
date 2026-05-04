@@ -107,14 +107,6 @@ template <
                           ? std::error_code{ex.code().value(), v_noabi::server_error_category()}
                           : ex.code();
 
-    // Server-side error.
-    if (auto const ptr = dynamic_cast<v1::server_error const*>(&ex)) {
-        throw exception_type{
-            code,
-            bsoncxx::v_noabi::document::value{from_v1(ptr->raw())},
-            strip_ec_msg(ptr->what(), ptr->code()).c_str()};
-    }
-
     // Propagate the original mongoc reply document as the "raw server error" document.
     if (auto const& reply = v1::exception::internal::get_reply(ex)) {
         throw exception_type{code, from_v1(*reply), strip_ec_msg(ex.what(), ex.code()).c_str()};
@@ -122,6 +114,21 @@ template <
 
     // No "raw server error" document is required.
     throw exception_type{code, strip_ec_msg(ex.what(), ex.code())};
+}
+
+template <
+    typename exception_type,
+    bsoncxx::detail::enable_if_t<std::is_base_of<operation_exception, exception_type>::value>* = nullptr>
+[[noreturn]] void throw_exception(v1::server_error const& ex) {
+    using bsoncxx::v_noabi::from_v1;
+
+    // `v1::server_error_category()` -> `v_noabi::server_error_category()`.
+    auto const code = ex.code() == v1::source_errc::server
+                          ? std::error_code{ex.code().value(), v_noabi::server_error_category()}
+                          : ex.code();
+
+    throw exception_type{
+        code, bsoncxx::v_noabi::document::value{from_v1(ex.raw())}, strip_ec_msg(ex.what(), ex.code()).c_str()};
 }
 
 template <

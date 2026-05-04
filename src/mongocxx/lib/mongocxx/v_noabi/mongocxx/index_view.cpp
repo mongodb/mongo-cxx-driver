@@ -17,6 +17,7 @@
 //
 
 #include <mongocxx/v1/exception.hpp>
+#include <mongocxx/v1/server_error.hpp>
 
 #include <mongocxx/v1/indexes.hh>
 
@@ -264,6 +265,8 @@ void index_view::drop_one(bsoncxx::v_noabi::stdx::string_view name, v_noabi::opt
     append_drop_to(options, doc);
 
     v1::indexes::internal::drop_one_impl(v1::indexes::internal::get_collection(_indexes), name, doc.bson());
+} catch (v1::server_error const& ex) {
+    v_noabi::throw_exception<v_noabi::operation_exception>(ex);
 } catch (v1::exception const& ex) {
     if (ex.code() == v1::indexes::errc::invalid_name) {
         throw v_noabi::logic_error{v_noabi::error_code::k_invalid_parameter};
@@ -283,6 +286,8 @@ void index_view::drop_one(
     v_noabi::client_session::internal::append_to(session, doc);
 
     v1::indexes::internal::drop_one_impl(v1::indexes::internal::get_collection(_indexes), name, doc.bson());
+} catch (v1::server_error const& ex) {
+    v_noabi::throw_exception<v_noabi::operation_exception>(ex);
 } catch (v1::exception const& ex) {
     if (ex.code() == v1::indexes::errc::invalid_name) {
         throw v_noabi::logic_error{v_noabi::error_code::k_invalid_parameter};
@@ -320,6 +325,8 @@ void index_view::drop_all(v_noabi::options::index_view const& options) try {
     append_drop_to(options, doc);
 
     v1::indexes::internal::drop_all_impl(v1::indexes::internal::get_collection(_indexes), doc.bson());
+} catch (v1::server_error const& ex) {
+    v_noabi::throw_exception<v_noabi::operation_exception>(ex);
 } catch (v1::exception const& ex) {
     if (ex.code() == v1::indexes::errc::invalid_name) {
         throw v_noabi::logic_error{v_noabi::error_code::k_invalid_parameter};
@@ -336,6 +343,8 @@ void index_view::drop_all(v_noabi::client_session const& session, v_noabi::optio
     v_noabi::client_session::internal::append_to(session, doc);
 
     v1::indexes::internal::drop_all_impl(v1::indexes::internal::get_collection(_indexes), doc.bson());
+} catch (v1::server_error const& ex) {
+    v_noabi::throw_exception<v_noabi::operation_exception>(ex);
 } catch (v1::exception const& ex) {
     if (ex.code() == v1::indexes::errc::invalid_name) {
         throw v_noabi::logic_error{v_noabi::error_code::k_invalid_parameter};

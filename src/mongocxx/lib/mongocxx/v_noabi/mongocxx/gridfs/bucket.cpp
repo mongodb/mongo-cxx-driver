@@ -18,6 +18,7 @@
 #include <bsoncxx/v1/document/value.hpp>
 
 #include <mongocxx/v1/exception.hpp>
+#include <mongocxx/v1/server_error.hpp>
 
 #include <mongocxx/v1/gridfs/bucket.hh>
 #include <mongocxx/v1/gridfs/upload_result.hh>
@@ -159,6 +160,8 @@ v_noabi::gridfs::uploader bucket::open_upload_stream_with_id(
         filename,
         options.chunk_size_bytes(),
         metadata_v1);
+} catch (v1::server_error const& ex) {
+    v_noabi::throw_exception<v_noabi::operation_exception>(ex);
 } catch (v1::exception const& ex) {
     rethrow_exception(ex);
 }
@@ -183,6 +186,8 @@ v_noabi::gridfs::uploader bucket::open_upload_stream_with_id(
         filename,
         options.chunk_size_bytes(),
         metadata_v1);
+} catch (v1::server_error const& ex) {
+    v_noabi::throw_exception<v_noabi::operation_exception>(ex);
 } catch (v1::exception const& ex) {
     rethrow_exception(ex);
 }
@@ -217,6 +222,8 @@ void bucket::upload_from_stream_with_id(
     v_noabi::options::gridfs::upload const& options) try {
     internal::upload_from_stream_with_id_impl(
         v_noabi::to_v1(this->open_upload_stream_with_id(id, filename, options)), *source);
+} catch (v1::server_error const& ex) {
+    v_noabi::throw_exception<v_noabi::operation_exception>(ex);
 } catch (v1::exception const& ex) {
     rethrow_exception(ex);
 }
@@ -229,12 +236,16 @@ void bucket::upload_from_stream_with_id(
     v_noabi::options::gridfs::upload const& options) try {
     internal::upload_from_stream_with_id_impl(
         v_noabi::to_v1(this->open_upload_stream_with_id(session, id, filename, options)), *source);
+} catch (v1::server_error const& ex) {
+    v_noabi::throw_exception<v_noabi::operation_exception>(ex);
 } catch (v1::exception const& ex) {
     rethrow_exception(ex);
 }
 
 v_noabi::gridfs::downloader bucket::open_download_stream(bsoncxx::v_noabi::types::view id) try {
     return internal::open_download_stream_impl(check_moved_from(_bucket), nullptr, bsoncxx::v_noabi::to_v1(id));
+} catch (v1::server_error const& ex) {
+    v_noabi::throw_exception<v_noabi::operation_exception>(ex);
 } catch (v1::exception const& ex) {
     rethrow_exception(ex);
 }
@@ -245,6 +256,8 @@ v_noabi::gridfs::downloader bucket::open_download_stream(
     auto const& session_v1 = v_noabi::client_session::internal::as_v1(session);
 
     return internal::open_download_stream_impl(check_moved_from(_bucket), &session_v1, bsoncxx::v_noabi::to_v1(id));
+} catch (v1::server_error const& ex) {
+    v_noabi::throw_exception<v_noabi::operation_exception>(ex);
 } catch (v1::exception const& ex) {
     rethrow_exception(ex);
 }
@@ -252,6 +265,8 @@ v_noabi::gridfs::downloader bucket::open_download_stream(
 void bucket::download_to_stream(bsoncxx::v_noabi::types::view id, std::ostream* destination) try {
     internal::download_to_stream_impl(
         v_noabi::to_v1(this->open_download_stream(bsoncxx::v_noabi::to_v1(id))), *destination);
+} catch (v1::server_error const& ex) {
+    v_noabi::throw_exception<v_noabi::operation_exception>(ex);
 } catch (v1::exception const& ex) {
     rethrow_exception(ex);
 }
@@ -269,6 +284,8 @@ void bucket::download_to_stream(
         *destination,
         static_cast<std::int64_t>(start),
         static_cast<std::int64_t>(end));
+} catch (v1::server_error const& ex) {
+    v_noabi::throw_exception<v_noabi::operation_exception>(ex);
 } catch (v1::exception const& ex) {
     rethrow_exception(ex);
 }
@@ -278,6 +295,8 @@ void bucket::download_to_stream(
     bsoncxx::v_noabi::types::view id,
     std::ostream* destination) try {
     internal::download_to_stream_impl(v_noabi::to_v1(this->open_download_stream(session, id)), *destination);
+} catch (v1::server_error const& ex) {
+    v_noabi::throw_exception<v_noabi::operation_exception>(ex);
 } catch (v1::exception const& ex) {
     rethrow_exception(ex);
 }
@@ -298,12 +317,16 @@ void bucket::download_to_stream(
         *destination,
         static_cast<std::int64_t>(start),
         static_cast<std::int64_t>(end));
+} catch (v1::server_error const& ex) {
+    v_noabi::throw_exception<v_noabi::operation_exception>(ex);
 } catch (v1::exception const& ex) {
     rethrow_exception(ex);
 }
 
 void bucket::delete_file(bsoncxx::v_noabi::types::view id) try {
     internal::delete_file_impl(check_moved_from(_bucket), nullptr, bsoncxx::v_noabi::to_v1(id));
+} catch (v1::server_error const& ex) {
+    v_noabi::throw_exception<v_noabi::operation_exception>(ex);
 } catch (v1::exception const& ex) {
     rethrow_exception(ex);
 }
@@ -312,6 +335,8 @@ void bucket::delete_file(v_noabi::client_session const& session, bsoncxx::v_noab
     auto const& session_v1 = v_noabi::client_session::internal::as_v1(session);
 
     internal::delete_file_impl(check_moved_from(_bucket), &session_v1, bsoncxx::v_noabi::to_v1(id));
+} catch (v1::server_error const& ex) {
+    v_noabi::throw_exception<v_noabi::operation_exception>(ex);
 } catch (v1::exception const& ex) {
     rethrow_exception(ex);
 }
