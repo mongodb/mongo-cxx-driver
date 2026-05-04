@@ -42,10 +42,6 @@ namespace array {
 /// should be used sparingly; array::view should be used instead wherever possible.
 ///
 class value {
-   private:
-    v1::array::value _value;
-    std::size_t _length;
-
    public:
     /// @copydoc v_noabi::document::value::deleter_type
     using deleter_type = void(BSONCXX_ABI_CDECL*)(std::uint8_t*);
@@ -53,6 +49,11 @@ class value {
     /// @copydoc v_noabi::document::value::unique_ptr_type
     using unique_ptr_type = std::unique_ptr<uint8_t[], deleter_type>;
 
+   private:
+    unique_ptr_type _data;
+    std::size_t _length{0};
+
+   public:
     /// @copydoc v_noabi::document::value::const_iterator
     using const_iterator = v_noabi::array::view::const_iterator;
 
@@ -89,7 +90,7 @@ class value {
     ///   A user provided deleter.
     ///
     value(std::uint8_t* data, std::size_t length, deleter_type deleter)
-        : _value{data, std::move(deleter)}, _length{length} {}
+        : _data{data, std::move(deleter)}, _length{length} {}
 
     ///
     /// Constructs a value from a std::unique_ptr to a buffer. The ownership
@@ -104,7 +105,7 @@ class value {
     /// @param length
     ///   The length of the document.
     ///
-    value(unique_ptr_type ptr, std::size_t length) : _value{std::move(ptr)}, _length{length} {}
+    value(unique_ptr_type ptr, std::size_t length) : _data{std::move(ptr)}, _length{length} {}
 
     ///
     /// Constructs a value from a view of an array. The data referenced
@@ -128,7 +129,7 @@ class value {
     /// @note `this->size()` is ignored.
     ///
     explicit operator v1::array::value() const& {
-        return _value;
+        return {_data.get(), _length, _data.get_deleter()};
     }
 
     ///
@@ -143,8 +144,9 @@ class value {
     /// @note `this->size()` is ignored.
     ///
     explicit operator v1::array::value() && {
+        auto const length = _length;
         _length = 0u;
-        return std::move(_value);
+        return {_data.release(), length, std::move(_data.get_deleter())};
     }
 
     ///
@@ -177,17 +179,17 @@ class value {
 
     /// @copydoc bsoncxx::v_noabi::array::view::find(std::uint32_t i) const
     const_iterator find(std::uint32_t i) const {
-        return const_iterator{*_value.view().find(i)};
+        return const_iterator{*this->view().find(i)};
     }
 
     /// @copydoc bsoncxx::v_noabi::array::view::operator[](std::uint32_t i) const
     v_noabi::document::element operator[](std::uint32_t i) const {
-        return _value.operator[](i);
+        return to_v1(this->view()).operator[](i);
     }
 
     /// @copydoc bsoncxx::v_noabi::array::view::data() const
     std::uint8_t const* data() const {
-        return _value.data();
+        return _data.get();
     }
 
     /// @copydoc bsoncxx::v_noabi::array::view::size() const
@@ -207,14 +209,14 @@ class value {
     /// empty document.
     ///
     bool empty() const {
-        return _length == 5; // Do NOT use _value.empty().
+        return _length == 5; // Do NOT use this->view().empty().
     }
 
     ///
     /// Get a view over the array owned by this value.
     ///
     v_noabi::array::view view() const noexcept {
-        return {_value.data(), _length};
+        return {_data.get(), _length};
     }
 
     ///
@@ -236,13 +238,7 @@ class value {
     /// @return A std::unique_ptr with ownership of the buffer.
     ///
     unique_ptr_type release() {
-        auto ptr = _value.release();
-
-        // Invariant: the underlying deleter type MUST be `deleter_type`.
-        auto const deleter_ptr = ptr.get_deleter().target<deleter_type>();
-
-        // Invariant: `ptr` implies `deleter_ptr`, but not the reverse.
-        return {ptr.release(), deleter_ptr ? *deleter_ptr : nullptr};
+        return std::move(_data);
     }
 
     ///
@@ -250,7 +246,7 @@ class value {
     /// This will make a copy of the passed-in view.
     ///
     void reset(v_noabi::array::view view) {
-        _value.reset(to_v1(view));
+        *this = value{view};
     }
 };
 

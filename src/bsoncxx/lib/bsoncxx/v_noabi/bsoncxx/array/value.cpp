@@ -18,6 +18,7 @@
 
 #include <cstring>
 
+#include <bsoncxx/private/macros.hh>
 #include <bsoncxx/private/type_traits.hh>
 
 namespace bsoncxx {
@@ -40,7 +41,7 @@ void uint8_t_deleter(std::uint8_t* ptr) {
 } // namespace
 
 value::value(v_noabi::array::view view)
-    : _value{[&]() -> unique_ptr_type {
+    : _data{[&]() -> unique_ptr_type {
           auto res = unique_ptr_type{new std::uint8_t[view.size()], uint8_t_deleter};
           std::memcpy(res.get(), view.data(), view.size());
           return res;
@@ -56,6 +57,9 @@ namespace v_noabi {
 
 // NOLINTNEXTLINE(cppcoreguidelines-rvalue-reference-param-not-moved): ownership transfer with `v.release()`.
 v_noabi::array::value from_v1(v1::array::value&& v) {
+#if BSONCXX_PRIVATE_NO_RTTI()
+    return from_v1(static_cast<v1::array::value const&>(v));
+#else
     auto const deleter_ptr = v.get_deleter().target<v_noabi::array::value::deleter_type>();
 
     if (!deleter_ptr || *deleter_ptr == &v1::document::value::noop_deleter) {
@@ -66,6 +70,7 @@ v_noabi::array::value from_v1(v1::array::value&& v) {
     auto const deleter = *deleter_ptr;
 
     return {v.release().release(), length, deleter};
+#endif
 }
 
 } // namespace v_noabi
