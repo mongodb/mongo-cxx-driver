@@ -16,6 +16,7 @@
 
 //
 
+#include <mongocxx/v1/read_concern.hpp>
 #include <mongocxx/v1/read_preference.hpp>
 
 #include <bsoncxx/test/v1/document/value.hh>
@@ -31,6 +32,7 @@
 #include <bsoncxx/document/view.hpp>
 #include <bsoncxx/types/bson_value/view.hpp>
 
+#include <mongocxx/read_concern.hpp>
 #include <mongocxx/read_preference.hpp>
 
 #include <bsoncxx/test/catch.hh>
@@ -50,6 +52,7 @@ TEST_CASE("distinct", "[distinct][option]") {
     CHECK_OPTIONAL_ARGUMENT(dist, collation, collation.view());
     CHECK_OPTIONAL_ARGUMENT(dist, max_time, std::chrono::milliseconds{1000});
     CHECK_OPTIONAL_ARGUMENT(dist, read_preference, read_preference{});
+    CHECK_OPTIONAL_ARGUMENT(dist, read_concern, read_concern{});
 }
 } // namespace
 
@@ -64,12 +67,14 @@ TEST_CASE("v1", "[mongocxx][v_noabi][options][distinct]") {
     bsoncxx::v1::stdx::optional<std::chrono::milliseconds> max_time;
     bsoncxx::v1::stdx::optional<bsoncxx::v1::types::value> comment;
     bsoncxx::v1::stdx::optional<v1::read_preference> read_preference;
+    bsoncxx::v1::stdx::optional<v1::read_concern> read_concern;
 
     if (has_value) {
         collation.emplace();
         max_time.emplace();
         comment.emplace();
         read_preference.emplace();
+        read_concern.emplace();
     }
 
     using v_noabi = v_noabi::options::distinct;
@@ -83,6 +88,7 @@ TEST_CASE("v1", "[mongocxx][v_noabi][options][distinct]") {
             from.max_time(*max_time);
             from.comment(*comment);
             from.read_preference(*read_preference);
+            from.read_concern(*read_concern);
         }
 
         v_noabi const to{from};
@@ -92,11 +98,13 @@ TEST_CASE("v1", "[mongocxx][v_noabi][options][distinct]") {
             CHECK(to.max_time() == *max_time);
             CHECK(to.comment().value() == *comment);
             CHECK(to.read_preference() == *read_preference);
+            CHECK(to.read_concern() == *read_concern);
         } else {
             CHECK_FALSE(to.collation().has_value());
             CHECK_FALSE(to.max_time().has_value());
             CHECK_FALSE(to.comment().has_value());
             CHECK_FALSE(to.read_preference().has_value());
+            CHECK_FALSE(to.read_concern().has_value());
         }
     }
 
@@ -108,6 +116,7 @@ TEST_CASE("v1", "[mongocxx][v_noabi][options][distinct]") {
             from.max_time(*max_time);
             from.comment(from_v1(comment->view()));
             from.read_preference(*read_preference);
+            from.read_concern(*read_concern);
         }
 
         v1 const to{from};
@@ -117,11 +126,13 @@ TEST_CASE("v1", "[mongocxx][v_noabi][options][distinct]") {
             CHECK(to.max_time() == *max_time);
             CHECK(to.comment().value() == *comment);
             CHECK(to.read_preference() == *read_preference);
+            CHECK(to.read_concern() == *read_concern);
         } else {
             CHECK_FALSE(to.collation().has_value());
             CHECK_FALSE(to.max_time().has_value());
             CHECK_FALSE(to.comment().has_value());
             CHECK_FALSE(to.read_preference().has_value());
+            CHECK_FALSE(to.read_concern().has_value());
         }
     }
 }

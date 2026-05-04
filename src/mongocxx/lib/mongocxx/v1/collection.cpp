@@ -296,6 +296,10 @@ void append_to(v1::distinct_options const& opts, scoped_bson& doc) {
         doc += scoped_bson{BCON_NEW("collation", BCON_DOCUMENT(scoped_bson_view{*opt}.bson()))};
     }
 
+    if (auto const& opt = v1::distinct_options::internal::read_concern(opts)) {
+        doc += scoped_bson{BCON_NEW("readConcern", BCON_DOCUMENT(scoped_bson{opt->to_document()}.bson()))};
+    }
+
     if (auto const& opt = v1::distinct_options::internal::comment(opts)) {
         append_comment(*opt, doc);
     }

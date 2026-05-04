@@ -19,6 +19,7 @@
 #include <bsoncxx/v1/document/value.hpp>
 #include <bsoncxx/v1/stdx/optional.hpp>
 
+#include <mongocxx/v1/read_concern.hpp>
 #include <mongocxx/v1/read_preference.hpp>
 
 #include <bsoncxx/v1/types/value.hh>
@@ -36,6 +37,7 @@ class distinct_options::impl {
     bsoncxx::v1::stdx::optional<std::chrono::milliseconds> _max_time;
     bsoncxx::v1::stdx::optional<bsoncxx::v1::types::value> _comment;
     bsoncxx::v1::stdx::optional<v1::read_preference> _read_preference;
+    bsoncxx::v1::stdx::optional<v1::read_concern> _read_concern;
 
     static impl const& with(distinct_options const& self) {
         return *static_cast<impl const*>(self._impl);
@@ -124,6 +126,15 @@ bsoncxx::v1::stdx::optional<v1::read_preference> distinct_options::read_preferen
     return impl::with(this)->_read_preference;
 }
 
+distinct_options& distinct_options::read_concern(v1::read_concern rc) {
+    impl::with(this)->_read_concern = std::move(rc);
+    return *this;
+}
+
+bsoncxx::v1::stdx::optional<v1::read_concern> distinct_options::read_concern() const {
+    return impl::with(this)->_read_concern;
+}
+
 bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> const& distinct_options::internal::collation(
     distinct_options const& self) {
     return impl::with(self)._collation;
@@ -144,6 +155,11 @@ bsoncxx::v1::stdx::optional<v1::read_preference> const& distinct_options::intern
     return impl::with(self)._read_preference;
 }
 
+bsoncxx::v1::stdx::optional<v1::read_concern> const& distinct_options::internal::read_concern(
+    distinct_options const& self) {
+    return impl::with(self)._read_concern;
+}
+
 bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value>& distinct_options::internal::collation(
     distinct_options& self) {
     return impl::with(self)._collation;
@@ -159,6 +175,10 @@ bsoncxx::v1::stdx::optional<bsoncxx::v1::types::value>& distinct_options::intern
 
 bsoncxx::v1::stdx::optional<v1::read_preference>& distinct_options::internal::read_preference(distinct_options& self) {
     return impl::with(self)._read_preference;
+}
+
+bsoncxx::v1::stdx::optional<v1::read_concern>& distinct_options::internal::read_concern(distinct_options& self) {
+    return impl::with(self)._read_concern;
 }
 
 } // namespace v1
