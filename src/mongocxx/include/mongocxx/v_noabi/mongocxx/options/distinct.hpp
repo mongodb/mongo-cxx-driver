@@ -233,7 +233,7 @@ class distinct {
     /// @return the current read_concern.
     ///
     /// @see
-    /// - https://www.mongodb.com/docs/manual/reference/read-concern/
+    /// - https://www.mongodb.com/docs/manual/reference/command/distinct/
     ///
     bsoncxx::v_noabi::stdx::optional<v_noabi::read_concern> const& read_concern() const {
         return _read_concern;
