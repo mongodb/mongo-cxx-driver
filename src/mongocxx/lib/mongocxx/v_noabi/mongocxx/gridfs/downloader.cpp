@@ -18,6 +18,8 @@
 
 #include <mongocxx/v1/exception-fwd.hpp>
 
+#include <mongocxx/v1/server_error.hpp>
+
 #include <mongocxx/v1/gridfs/downloader.hh>
 
 #include <cstddef>
@@ -53,11 +55,15 @@ Downloader& check_moved_from(Downloader& downloader) {
 
 std::size_t downloader::read(std::uint8_t* buffer, std::size_t length) try {
     return check_moved_from(_downloader).read(buffer, length);
+} catch (v1::server_error const& ex) {
+    v_noabi::throw_exception<v_noabi::operation_exception>(ex);
 } catch (v1::exception const& ex) {
     internal::rethrow_exception(ex);
 }
 
-void downloader::close() try { return check_moved_from(_downloader).close(); } catch (v1::exception const& ex) {
+void downloader::close() try { return check_moved_from(_downloader).close(); } catch (v1::server_error const& ex) {
+    v_noabi::throw_exception<v_noabi::operation_exception>(ex);
+} catch (v1::exception const& ex) {
     internal::rethrow_exception(ex);
 }
 
@@ -91,6 +97,8 @@ downloader downloader::internal::make(
         chunk_size,
         initial_chunk_offset,
         initial_byte_offset);
+} catch (v1::server_error const& ex) {
+    v_noabi::throw_exception<v_noabi::operation_exception>(ex);
 } catch (v1::exception const& ex) {
     rethrow_exception(ex);
 }

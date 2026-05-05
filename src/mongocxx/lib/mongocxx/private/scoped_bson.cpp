@@ -20,6 +20,7 @@
 #include <stdexcept>
 
 #include <bsoncxx/private/bson.hh>
+#include <bsoncxx/private/macros.hh>
 
 namespace mongocxx {
 
@@ -34,8 +35,12 @@ scoped_bson& scoped_bson::operator+=(scoped_bson_view const& other) {
 
     auto const is_self_assignment = _value.data() == other.data();
     auto const is_bson_freeable = [&]() -> bool {
+#if BSONCXX_PRIVATE_NO_RTTI()
+        return false;
+#else
         auto const deleter_ptr = _value.get_deleter().target<decltype(&bson_free)>();
         return deleter_ptr && *deleter_ptr == &bson_free;
+#endif
     }();
 
     // Copy is required for strong exception safety or allocator compatibility.

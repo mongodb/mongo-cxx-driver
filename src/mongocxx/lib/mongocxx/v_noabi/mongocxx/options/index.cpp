@@ -141,11 +141,15 @@ index::operator bsoncxx::v_noabi::document::view_or_value() {
     if (_storage_engine) {
         ret += scoped_bson{BCON_NEW("storageEngine", BCON_DOCUMENT(to_scoped_bson_view(*_storage_engine).bson()))};
     } else if (_storage_options) {
-        if (auto const wt_options =
-                dynamic_cast<options::index::wiredtiger_storage_options const*>(_storage_options.get())) {
+        if (_storage_options->type() ==
+            static_cast<int>(mongoc_index_storage_opt_type_t::MONGOC_INDEX_STORAGE_OPT_WIREDTIGER)) {
+            // Invariant: no other dynamic type must satisfy the type check above.
+            // NOLINTNEXTLINE(cppcoreguidelines-pro-type-static-cast-downcast)
+            auto const wso = static_cast<options::index::wiredtiger_storage_options const*>(_storage_options.get());
+
             scoped_bson v;
 
-            if (auto const& opt = wt_options->config_string()) {
+            if (auto const& opt = wso->config_string()) {
                 v += scoped_bson{BCON_NEW(
                     "storageEngine",
                     "{",

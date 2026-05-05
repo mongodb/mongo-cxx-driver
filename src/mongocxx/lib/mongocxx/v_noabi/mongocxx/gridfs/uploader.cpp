@@ -17,6 +17,7 @@
 //
 
 #include <mongocxx/v1/exception.hpp>
+#include <mongocxx/v1/server_error.hpp>
 
 #include <mongocxx/v1/gridfs/uploader.hh>
 
@@ -62,6 +63,8 @@ Uploader& check_moved_from(Uploader& uploader) {
 
 void uploader::write(std::uint8_t const* bytes, std::size_t length) try {
     check_moved_from(_uploader).write(bytes, length);
+} catch (v1::server_error const& ex) {
+    v_noabi::throw_exception<v_noabi::operation_exception>(ex);
 } catch (v1::exception const& ex) {
     internal::rethrow_exception(ex);
 }
@@ -72,6 +75,8 @@ v_noabi::result::gridfs::upload uploader::close() try {
     }
 
     return _uploader.close();
+} catch (v1::server_error const& ex) {
+    v_noabi::throw_exception<v_noabi::operation_exception>(ex);
 } catch (v1::exception const& ex) {
     internal::rethrow_exception(ex);
 }
@@ -82,6 +87,8 @@ void uploader::abort() try {
     }
 
     check_moved_from(_uploader).abort();
+} catch (v1::server_error const& ex) {
+    v_noabi::throw_exception<v_noabi::operation_exception>(ex);
 } catch (v1::exception const& ex) {
     internal::rethrow_exception(ex);
 }

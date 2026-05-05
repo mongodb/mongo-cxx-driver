@@ -16,7 +16,9 @@
 
 //
 
+#include <mongocxx/v1/detail/macros.hpp>
 #include <mongocxx/v1/exception.hpp>
+#include <mongocxx/v1/server_error.hpp>
 
 #include <mongocxx/v1/change_stream.hh>
 #include <mongocxx/v1/client.hh>
@@ -269,6 +271,8 @@ std::vector<std::string> client::list_database_names(bsoncxx::v_noabi::document:
     auto& c = const_cast<v1::client&>(check_moved_from(_client));
 
     return c.list_database_names(to_scoped_bson_view(filter).view());
+} catch (v1::server_error const& ex) {
+    v_noabi::throw_exception<v_noabi::operation_exception>(ex);
 } catch (v1::exception const& ex) {
     v_noabi::throw_exception<v_noabi::operation_exception>(ex);
 }
@@ -286,6 +290,8 @@ std::vector<std::string> client::list_database_names(
     opts += scoped_bson{BCON_NEW("filter", BCON_DOCUMENT(to_scoped_bson_view(filter).bson()))};
 
     return list_database_names_impl(v1::client::internal::as_mongoc(c), opts.bson());
+} catch (v1::server_error const&) {
+    MONGOCXX_PRIVATE_UNREACHABLE; // Only client errors or `v_noabi::operation_exception`.
 } catch (v1::exception const& ex) {
     v_noabi::throw_exception<v_noabi::operation_exception>(ex);
 }

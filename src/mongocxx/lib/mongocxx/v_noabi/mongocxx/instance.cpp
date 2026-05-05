@@ -16,8 +16,10 @@
 
 //
 
+#include <mongocxx/v1/detail/macros.hpp>
 #include <mongocxx/v1/exception.hpp>
 #include <mongocxx/v1/instance.hpp>
+#include <mongocxx/v1/server_error.hpp>
 
 #include <array>
 #include <atomic>
@@ -61,6 +63,8 @@ class instance::impl {
             // Cannot use `libmongoc::*` mock due to varargs.
             mongoc_log(MONGOC_LOG_LEVEL_INFO, "mongocxx", "libmongoc logging callback enabled");
         }
+    } catch (v1::server_error const&) {
+        MONGOCXX_PRIVATE_UNREACHABLE; // Only client-side errors.
     } catch (v1::exception const&) {
         throw v_noabi::logic_error{v_noabi::error_code::k_cannot_recreate_instance};
     }
