@@ -169,7 +169,7 @@ class value {
     /// @note `this->size()` is ignored.
     ///
     explicit operator v1::document::value() const& {
-        return {_data.get(), _length, _data.get_deleter()};
+        return v1::document::value{to_v1(this->view())};
     }
 
     ///
