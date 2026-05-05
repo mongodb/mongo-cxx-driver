@@ -38,7 +38,8 @@ count::count(v1::count_options opts)
       _limit{opts.limit()},
       _max_time{opts.max_time()},
       _skip{opts.skip()},
-      _read_preference{std::move(v1::count_options::internal::read_preference(opts))} {}
+      _read_preference{std::move(v1::count_options::internal::read_preference(opts))},
+      _read_concern{std::move(v1::count_options::internal::read_concern(opts))} {}
 
 } // namespace options
 } // namespace v_noabi

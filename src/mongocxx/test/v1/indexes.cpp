@@ -690,11 +690,11 @@ void test_drop_index_options() {
 } // namespace
 
 TEST_CASE("DropIndexOptions", "[mongocxx][v1][indexes][drop_one_options]") {
-    test_drop_index_options<indexes::create_one_options>();
+    test_drop_index_options<indexes::drop_one_options>();
 }
 
 TEST_CASE("DropIndexOptions", "[mongocxx][v1][indexes][drop_all_options]") {
-    test_drop_index_options<indexes::create_many_options>();
+    test_drop_index_options<indexes::drop_all_options>();
 }
 
 TEST_CASE("batch_size", "[mongocxx][v1][indexes][list_options]") {

@@ -232,6 +232,10 @@ void append_to(v_noabi::options::count const& opts, scoped_bson& doc) {
         doc += scoped_bson{BCON_NEW("collation", BCON_DOCUMENT(to_scoped_bson_view(*opt).bson()))};
     }
 
+    if (auto const& opt = opts.read_concern()) {
+        doc += scoped_bson{BCON_NEW("readConcern", BCON_DOCUMENT(to_scoped_bson_view(opt->to_document()).bson()))};
+    }
+
     if (auto const& opt = opts.max_time()) {
         doc += scoped_bson{BCON_NEW("maxTimeMS", BCON_INT64(std::int64_t{opt->count()}))};
     }
