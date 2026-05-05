@@ -220,7 +220,7 @@ class distinct {
     ///   method chaining.
     ///
     /// @see
-    /// - https://www.mongodb.com/docs/manual/reference/read-concern/
+    /// - https://www.mongodb.com/docs/manual/reference/command/distinct/
     ///
     distinct& read_concern(v_noabi::read_concern rc) {
         _read_concern = std::move(rc);
