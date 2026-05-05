@@ -12,7 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <mongocxx/v1/detail/macros.hpp>
 #include <mongocxx/v1/exception.hpp>
+#include <mongocxx/v1/server_error.hpp>
 
 #include <mongocxx/pool.hh>
 
@@ -94,6 +96,8 @@ pool::pool(v_noabi::uri const& mongodb_uri, v_noabi::options::pool const& option
         }
 #endif
     }
+} catch (v1::server_error const&) {
+    MONGOCXX_PRIVATE_UNREACHABLE; // Only client errors or `v_noabi::operation_exception`.
 } catch (v1::exception const& ex) {
     v_noabi::throw_exception<v_noabi::operation_exception>(ex);
 }

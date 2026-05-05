@@ -13,6 +13,7 @@
 // limitations under the License.
 
 #include <mongocxx/v1/exception.hpp>
+#include <mongocxx/v1/server_error.hpp>
 
 #include <mongocxx/search_index_view.hpp>
 
@@ -172,6 +173,8 @@ v_noabi::cursor search_index_view::list(v_noabi::options::aggregate const& optio
         nullptr,
         opts_doc.bson(),
         get_read_prefs(options));
+} catch (v1::server_error const& ex) {
+    v_noabi::throw_exception<v_noabi::operation_exception>(ex);
 } catch (v1::exception const& ex) {
     v_noabi::throw_exception<v_noabi::operation_exception>(ex);
 }
@@ -189,6 +192,8 @@ v_noabi::cursor search_index_view::list(
         nullptr,
         opts_doc.bson(),
         get_read_prefs(options));
+} catch (v1::server_error const& ex) {
+    v_noabi::throw_exception<v_noabi::operation_exception>(ex);
 } catch (v1::exception const& ex) {
     v_noabi::throw_exception<v_noabi::operation_exception>(ex);
 }
@@ -205,6 +210,8 @@ v_noabi::cursor search_index_view::list(
         name.terminated().data(),
         opts_doc.bson(),
         get_read_prefs(options));
+} catch (v1::server_error const& ex) {
+    v_noabi::throw_exception<v_noabi::operation_exception>(ex);
 } catch (v1::exception const& ex) {
     v_noabi::throw_exception<v_noabi::operation_exception>(ex);
 }
@@ -223,6 +230,8 @@ v_noabi::cursor search_index_view::list(
         name.terminated().data(),
         doc.bson(),
         get_read_prefs(options));
+} catch (v1::server_error const& ex) {
+    v_noabi::throw_exception<v_noabi::operation_exception>(ex);
 } catch (v1::exception const& ex) {
     v_noabi::throw_exception<v_noabi::operation_exception>(ex);
 }
@@ -234,6 +243,8 @@ std::string search_index_view::create_one(bsoncxx::v_noabi::document::view_or_va
 
     return v1::search_indexes::internal::create_one_impl(
         v1::search_indexes::internal::get_collection(check_moved_from(_indexes)), doc.bson(), nullptr);
+} catch (v1::server_error const& ex) {
+    v_noabi::throw_exception<v_noabi::operation_exception>(ex);
 } catch (v1::exception const& ex) {
     v_noabi::throw_exception<v_noabi::operation_exception>(ex);
 }
@@ -250,6 +261,8 @@ std::string search_index_view::create_one(
 
     return v1::search_indexes::internal::create_one_impl(
         v1::search_indexes::internal::get_collection(check_moved_from(_indexes)), doc.bson(), opt_doc.bson());
+} catch (v1::server_error const& ex) {
+    v_noabi::throw_exception<v_noabi::operation_exception>(ex);
 } catch (v1::exception const& ex) {
     v_noabi::throw_exception<v_noabi::operation_exception>(ex);
 }
@@ -263,6 +276,8 @@ std::string search_index_view::create_one(
 
     return v1::search_indexes::internal::create_one_impl(
         v1::search_indexes::internal::get_collection(check_moved_from(_indexes)), doc.bson(), nullptr);
+} catch (v1::server_error const& ex) {
+    v_noabi::throw_exception<v_noabi::operation_exception>(ex);
 } catch (v1::exception const& ex) {
     v_noabi::throw_exception<v_noabi::operation_exception>(ex);
 }
@@ -281,6 +296,8 @@ std::string search_index_view::create_one(
 
     return v1::search_indexes::internal::create_one_impl(
         v1::search_indexes::internal::get_collection(check_moved_from(_indexes)), doc.bson(), opts_doc.bson());
+} catch (v1::server_error const& ex) {
+    v_noabi::throw_exception<v_noabi::operation_exception>(ex);
 } catch (v1::exception const& ex) {
     v_noabi::throw_exception<v_noabi::operation_exception>(ex);
 }
@@ -292,6 +309,8 @@ std::string search_index_view::create_one(v_noabi::search_index_model const& mod
 
     return v1::search_indexes::internal::create_one_impl(
         v1::search_indexes::internal::get_collection(check_moved_from(_indexes)), doc.bson(), nullptr);
+} catch (v1::server_error const& ex) {
+    v_noabi::throw_exception<v_noabi::operation_exception>(ex);
 } catch (v1::exception const& ex) {
     v_noabi::throw_exception<v_noabi::operation_exception>(ex);
 }
@@ -307,6 +326,8 @@ std::string search_index_view::create_one(
 
     return v1::search_indexes::internal::create_one_impl(
         v1::search_indexes::internal::get_collection(check_moved_from(_indexes)), opts_doc.bson(), nullptr);
+} catch (v1::server_error const& ex) {
+    v_noabi::throw_exception<v_noabi::operation_exception>(ex);
 } catch (v1::exception const& ex) {
     v_noabi::throw_exception<v_noabi::operation_exception>(ex);
 }
@@ -329,6 +350,8 @@ std::vector<std::string> search_index_view::create_many(
 void search_index_view::drop_one(bsoncxx::v_noabi::string::view_or_value name) try {
     return v1::search_indexes::internal::drop_one_impl(
         v1::search_indexes::internal::get_collection(check_moved_from(_indexes)), name.terminated().data(), nullptr);
+} catch (v1::server_error const& ex) {
+    v_noabi::throw_exception<v_noabi::operation_exception>(ex);
 } catch (v1::exception const& ex) {
     v_noabi::throw_exception<v_noabi::operation_exception>(ex);
 }
@@ -344,6 +367,8 @@ void search_index_view::drop_one(
         v1::search_indexes::internal::get_collection(check_moved_from(_indexes)),
         name.terminated().data(),
         opts_doc.bson());
+} catch (v1::server_error const& ex) {
+    v_noabi::throw_exception<v_noabi::operation_exception>(ex);
 } catch (v1::exception const& ex) {
     v_noabi::throw_exception<v_noabi::operation_exception>(ex);
 }
@@ -356,6 +381,8 @@ void search_index_view::update_one(
         name.terminated().data(),
         bsoncxx::v_noabi::to_v1(definition.view()),
         nullptr);
+} catch (v1::server_error const& ex) {
+    v_noabi::throw_exception<v_noabi::operation_exception>(ex);
 } catch (v1::exception const& ex) {
     v_noabi::throw_exception<v_noabi::operation_exception>(ex);
 }
@@ -373,6 +400,8 @@ void search_index_view::update_one(
         name.terminated().data(),
         bsoncxx::v_noabi::to_v1(definition.view()),
         opts_doc.bson());
+} catch (v1::server_error const& ex) {
+    v_noabi::throw_exception<v_noabi::operation_exception>(ex);
 } catch (v1::exception const& ex) {
     v_noabi::throw_exception<v_noabi::operation_exception>(ex);
 }
