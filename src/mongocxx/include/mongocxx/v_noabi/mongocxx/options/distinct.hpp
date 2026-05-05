@@ -95,7 +95,7 @@ class distinct {
     ///   The new collation.
     ///
     /// @return
-    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   A reference to the object on which this member function is being called. This facilitates
     ///   method chaining.
     ///
     /// @see
@@ -126,7 +126,7 @@ class distinct {
     ///   The max amount of time (in milliseconds).
     ///
     /// @return
-    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   A reference to the object on which this member function is being called. This facilitates
     ///   method chaining.
     ///
     /// @see
@@ -156,7 +156,7 @@ class distinct {
     ///   The new comment.
     ///
     /// @return
-    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   A reference to the object on which this member function is being called. This facilitates
     ///   method chaining.
     ///
     /// @see
@@ -186,7 +186,7 @@ class distinct {
     ///   The new read_preference.
     ///
     /// @return
-    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   A reference to the object on which this member function is being called. This facilitates
     ///   method chaining.
     ///
     /// @see
