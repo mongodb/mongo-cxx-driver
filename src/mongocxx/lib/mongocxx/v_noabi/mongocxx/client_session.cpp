@@ -59,8 +59,8 @@ void client_session::start_transaction(
     bsoncxx::v_noabi::stdx::optional<options::transaction> const& transaction_opts) try {
     transaction_opts ? _session.start_transaction(v_noabi::options::transaction::internal::as_v1(*transaction_opts))
                      : _session.start_transaction();
-} catch (v1::server_error const&) {
-    MONGOCXX_PRIVATE_UNREACHABLE; // Only client-side errors.
+} catch (v1::server_error const& ex) {
+    v_noabi::throw_exception<v_noabi::operation_exception>(ex);
 } catch (v1::exception const& ex) {
     v_noabi::throw_exception<v_noabi::operation_exception>(ex);
 }
