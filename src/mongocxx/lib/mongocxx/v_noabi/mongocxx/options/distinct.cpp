@@ -35,8 +35,8 @@ distinct::distinct(v1::distinct_options opts)
       }()},
       _max_time{std::move(v1::distinct_options::internal::max_time(opts))},
       _comment{std::move(v1::distinct_options::internal::comment(opts))},
-      _read_concern{std::move(v1::distinct_options::internal::read_concern(opts))},
-      _read_preference{std::move(v1::distinct_options::internal::read_preference(opts))} {}
+      _read_preference{std::move(v1::distinct_options::internal::read_preference(opts))},
+      _read_concern{std::move(v1::distinct_options::internal::read_concern(opts))} {}
 
 } // namespace options
 } // namespace v_noabi
