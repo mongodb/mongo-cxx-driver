@@ -17,6 +17,7 @@
 //
 
 #include <mongocxx/v1/exception.hpp>
+#include <mongocxx/v1/server_error.hpp>
 
 #include <mongocxx/v1/cursor.hh>
 
@@ -60,6 +61,9 @@ cursor::iterator& cursor::iterator::operator++() {
     if (_cursor) {
         try {
             v1::cursor::internal::advance_iterator(_cursor->_cursor);
+        } catch (v1::server_error const& ex) {
+            _cursor->_doc = {};
+            throw_exception<v_noabi::query_exception>(ex);
         } catch (v1::exception const& ex) {
             _cursor->_doc = {};
             throw_exception<v_noabi::query_exception>(ex);
@@ -81,6 +85,9 @@ cursor::iterator::iterator(cursor* cursor) : _cursor{cursor} {
         try {
             // Advance to first event on begin() to keep operator*() state-machine-free.
             v1::cursor::internal::advance_iterator(_cursor->_cursor);
+        } catch (v1::server_error const& ex) {
+            _cursor->_doc = {};
+            throw_exception<v_noabi::query_exception>(ex);
         } catch (v1::exception const& ex) {
             _cursor->_doc = {};
             throw_exception<v_noabi::query_exception>(ex);

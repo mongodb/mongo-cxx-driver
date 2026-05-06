@@ -16,7 +16,9 @@
 
 //
 
+#include <mongocxx/v1/detail/macros.hpp>
 #include <mongocxx/v1/exception.hpp>
+#include <mongocxx/v1/server_error.hpp>
 
 #include <mongocxx/v1/uri.hh>
 
@@ -39,12 +41,16 @@ namespace v_noabi {
 std::string const uri::k_default_uri = "mongodb://localhost:27017";
 
 uri::uri(bsoncxx::v_noabi::string::view_or_value uri_string) try : _uri{uri_string.view()} {
+} catch (v1::server_error const&) {
+    MONGOCXX_PRIVATE_UNREACHABLE; // Only client-side errors.
 } catch (v1::exception const& ex) {
     throw v_noabi::logic_error{v_noabi::error_code::k_invalid_uri, strip_ec_msg(ex.what(), ex.code())};
 }
 
 void uri::server_selection_try_once(bool val) try {
     _uri.server_selection_try_once(val);
+} catch (v1::server_error const&) {
+    MONGOCXX_PRIVATE_UNREACHABLE; // Only client-side errors.
 } catch (v1::exception const&) {
     throw v_noabi::exception{v_noabi::error_code::k_invalid_uri, "failed to set 'serverSelectionTryOnce' option"};
 }

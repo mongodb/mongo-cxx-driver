@@ -19,6 +19,7 @@
 #include <bsoncxx/v1/document/value.hpp>
 
 #include <mongocxx/v1/exception.hpp>
+#include <mongocxx/v1/server_error.hpp>
 
 #include <bsoncxx/v1/types/value.hh>
 
@@ -455,6 +456,8 @@ bsoncxx::v_noabi::document::value client_encryption::encrypt_expression(
 
 bsoncxx::v_noabi::types::value client_encryption::decrypt(bsoncxx::v_noabi::types::bson_value::view value) try {
     return _ce.decrypt(bsoncxx::v1::types::value{bsoncxx::v_noabi::to_v1(value)});
+} catch (v1::server_error const& ex) {
+    v_noabi::throw_exception<v_noabi::operation_exception>(ex);
 } catch (v1::exception const& ex) {
     v_noabi::throw_exception<v_noabi::operation_exception>(ex);
 }
@@ -502,6 +505,8 @@ v_noabi::result::rewrap_many_datakey client_encryption::rewrap_many_datakey(
 v_noabi::result::delete_result client_encryption::delete_key(
     bsoncxx::v_noabi::types::bson_value::view_or_value id) try {
     return _ce.delete_key(bsoncxx::v1::types::value{bsoncxx::v_noabi::to_v1(id.view())});
+} catch (v1::server_error const& ex) {
+    v_noabi::throw_exception<v_noabi::operation_exception>(ex);
 } catch (v1::exception const& ex) {
     v_noabi::throw_exception<v_noabi::operation_exception>(ex);
 }
@@ -522,11 +527,15 @@ bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::value> empty_as_nul
 bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::value> client_encryption::get_key(
     bsoncxx::v_noabi::types::bson_value::view_or_value id) try {
     return empty_as_null(_ce.get_key(bsoncxx::v1::types::value{bsoncxx::v_noabi::to_v1(id.view())}));
+} catch (v1::server_error const& ex) {
+    v_noabi::throw_exception<v_noabi::operation_exception>(ex);
 } catch (v1::exception const& ex) {
     v_noabi::throw_exception<v_noabi::operation_exception>(ex);
 }
 
-v_noabi::cursor client_encryption::get_keys() try { return _ce.get_keys(); } catch (v1::exception const& ex) {
+v_noabi::cursor client_encryption::get_keys() try { return _ce.get_keys(); } catch (v1::server_error const& ex) {
+    v_noabi::throw_exception<v_noabi::operation_exception>(ex);
+} catch (v1::exception const& ex) {
     v_noabi::throw_exception<v_noabi::operation_exception>(ex);
 }
 
@@ -535,6 +544,8 @@ bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::value> client_encry
     bsoncxx::v_noabi::string::view_or_value key_alt_name) try {
     return empty_as_null(
         _ce.add_key_alt_name(bsoncxx::v1::types::value{bsoncxx::v_noabi::to_v1(id.view())}, key_alt_name.view()));
+} catch (v1::server_error const& ex) {
+    v_noabi::throw_exception<v_noabi::operation_exception>(ex);
 } catch (v1::exception const& ex) {
     v_noabi::throw_exception<v_noabi::operation_exception>(ex);
 }
@@ -544,6 +555,8 @@ bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::value> client_encry
     bsoncxx::v_noabi::string::view_or_value key_alt_name) try {
     return empty_as_null(
         _ce.remove_key_alt_name(bsoncxx::v1::types::value{bsoncxx::v_noabi::to_v1(id.view())}, key_alt_name.view()));
+} catch (v1::server_error const& ex) {
+    v_noabi::throw_exception<v_noabi::operation_exception>(ex);
 } catch (v1::exception const& ex) {
     v_noabi::throw_exception<v_noabi::operation_exception>(ex);
 }
@@ -551,6 +564,8 @@ bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::value> client_encry
 bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::value> client_encryption::get_key_by_alt_name(
     bsoncxx::v_noabi::string::view_or_value key_alt_name) try {
     return empty_as_null(_ce.get_key_by_alt_name(key_alt_name.view()));
+} catch (v1::server_error const& ex) {
+    v_noabi::throw_exception<v_noabi::operation_exception>(ex);
 } catch (v1::exception const& ex) {
     v_noabi::throw_exception<v_noabi::operation_exception>(ex);
 }

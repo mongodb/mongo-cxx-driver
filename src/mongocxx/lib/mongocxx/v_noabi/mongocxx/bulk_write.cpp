@@ -17,6 +17,7 @@
 //
 
 #include <mongocxx/v1/exception.hpp>
+#include <mongocxx/v1/server_error.hpp>
 
 #include <bsoncxx/v1/types/value.hh>
 
@@ -234,6 +235,8 @@ bsoncxx::v_noabi::stdx::optional<result::bulk_write> bulk_write::execute() const
     // Backward compatibility: `execute()` is not logically const.
     // NOLINTNEXTLINE(cppcoreguidelines-pro-type-const-cast)
     return const_cast<v1::bulk_write&>(_bulk).execute();
+} catch (v1::server_error const& ex) {
+    throw_exception<v_noabi::bulk_write_exception>(ex);
 } catch (v1::exception const& ex) {
     throw_exception<v_noabi::bulk_write_exception>(ex);
 }
