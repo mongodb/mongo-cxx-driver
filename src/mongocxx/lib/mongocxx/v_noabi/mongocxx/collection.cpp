@@ -294,6 +294,10 @@ void append_to(v_noabi::options::distinct const& opts, scoped_bson& doc) {
         doc += scoped_bson{BCON_NEW("collation", BCON_DOCUMENT(to_scoped_bson_view(*opt).bson()))};
     }
 
+    if (auto const& opt = opts.read_concern()) {
+        doc += scoped_bson{BCON_NEW("readConcern", BCON_DOCUMENT(to_scoped_bson(opt->to_document()).bson()))};
+    }
+
     if (auto const& opt = opts.comment()) {
         append_comment(*opt, doc);
     }
