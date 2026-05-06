@@ -843,7 +843,7 @@ Add an entry to the [C/C++ Release Info](https://docs.google.com/spreadsheets/d/
 
 ### Update Branch Protection Rules
 
-Notify a repository administrator that the previous stable release branch (which will no longer recieve any further updates) may now be "locked" by adding it to the list of branches in the "Restrict Branch Updates" ruleset.
+Notify a repository administrator that the previous stable release branch (which will no longer recieve any further updates) may now be "locked" by removing the exclude rule from the "Restrict Branch Updates" ruleset and adding an exclude rule for the new branch.
 
 Once the release process is complete, use [MANA](https://mana.corp.mongodb.com/resources/68029673d39aa9f7de6399f9) to remove yourself from the [dbx-c-cxx-releases](https://github.com/orgs/mongodb/teams/dbx-c-cxx-releases/) team or request a repository administrator to remove you instead.
 
