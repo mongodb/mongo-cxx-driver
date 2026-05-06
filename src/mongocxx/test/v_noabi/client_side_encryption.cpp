@@ -3512,13 +3512,6 @@ TEST_CASE("27. Text Explicit Encryption", "[client_side_encryption]") {
     auto tpl = _setup_explicit_encryption(key1_document, &key_vault_client);
     auto client_encryption = std::move(std::get<0>(tpl));
     auto encrypted_client = std::move(std::get<1>(tpl));
-    _drop_and_create_collection("db", "prefix-suffix", "/explicit-encryption/encryptedFields-prefix-suffix.json");
-    _drop_and_create_collection("db", "substring", "/explicit-encryption/encryptedFields-substring.json");
-
-    auto const prefix_opts = text_options::prefix().str_max_query_length(10).str_min_query_length(2);
-    auto const suffix_opts = text_options::suffix().str_max_query_length(10).str_min_query_length(2);
-    auto const substring_opts =
-        text_options::substring().str_max_length(10).str_max_query_length(10).str_min_query_length(2);
 
     auto const default_encrypt_opts = [&]() {
         return options::encrypt()
@@ -3528,26 +3521,36 @@ TEST_CASE("27. Text Explicit Encryption", "[client_side_encryption]") {
     };
     auto const default_text_opts = [&]() { return text_options().case_sensitive(true).diacritic_sensitive(true); };
 
-    auto const foobarbaz_doc = make_document(kvp("_id", 0), kvp("encryptedText", "foobarbaz"));
-
-    auto client_substring = encrypted_client["db"]["substring"];
-    auto client_prefix_suffix = encrypted_client["db"]["prefix-suffix"];
-    {
+    auto const prefix_opts = text_options::prefix().str_max_query_length(10).str_min_query_length(2);
+    auto const suffix_opts = text_options::suffix().str_max_query_length(10).str_min_query_length(2);
+    auto const substring_opts =
+        text_options::substring().str_max_length(10).str_max_query_length(10).str_min_query_length(2);
+    auto coll_prefix_suffix = encrypted_client["db"]["prefix-suffix"];
+    if (!test_util::server_version_is_at_least("9.0")) {
+        // Only test prefixPreview and suffixPreview on server < 9.0. Server 9.0 removes support.
+        _drop_and_create_collection("db", "prefix-suffix", "/explicit-encryption/encryptedFields-prefix-suffix.json");
         auto const encrypt_opts =
             default_encrypt_opts().text_opts(default_text_opts().prefix_opts(prefix_opts).suffix_opts(suffix_opts));
         auto const encrypted_foobarbaz = client_encryption.encrypt(make_value("foobarbaz"), encrypt_opts);
 
-        client_prefix_suffix.insert_one(make_document(kvp("_id", 0), kvp("encryptedText", encrypted_foobarbaz)));
+        coll_prefix_suffix.insert_one(make_document(kvp("_id", 0), kvp("encryptedText", encrypted_foobarbaz)));
     }
 
+    auto coll_substring = encrypted_client["db"]["substring"];
+    _drop_and_create_collection("db", "substring", "/explicit-encryption/encryptedFields-substring.json");
     {
         auto const encrypt_opts = default_encrypt_opts().text_opts(default_text_opts().substring_opts(substring_opts));
         auto const encrypted_foobarbaz = client_encryption.encrypt(make_value("foobarbaz"), encrypt_opts);
 
-        client_substring.insert_one(make_document(kvp("_id", 0), kvp("encryptedText", encrypted_foobarbaz)));
+        coll_substring.insert_one(make_document(kvp("_id", 0), kvp("encryptedText", encrypted_foobarbaz)));
     }
 
-    SECTION("can find a document by prefix") {
+    auto const foobarbaz_doc = make_document(kvp("_id", 0), kvp("encryptedText", "foobarbaz"));
+
+    SECTION("Case 1: can find a document by prefix") {
+        if (test_util::server_version_is_at_least("9.0")) {
+            SKIP("MongoDB server 9.0 and newer does not support prefixPreview or suffixPreview");
+        }
         auto const encrypt_opts = default_encrypt_opts()
                                       .query_type(options::encrypt::encryption_query_type::k_prefixPreview)
                                       .text_opts(default_text_opts().prefix_opts(prefix_opts));
@@ -3557,14 +3560,17 @@ TEST_CASE("27. Text Explicit Encryption", "[client_side_encryption]") {
             make_document(kvp(
                 "$encStrStartsWith", make_document(kvp("input", "$encryptedText"), kvp("prefix", encrypted_foo))))));
 
-        auto cursor = client_prefix_suffix.find(query.view());
+        auto cursor = coll_prefix_suffix.find(query.view());
         auto const found = std::vector<bsoncxx::document::value>(cursor.begin(), cursor.end());
         REQUIRE(found.size() == 1);
         auto const expected = mongocxx::scoped_bson(R"({ "encryptedText": "foobarbaz" })");
         CHECK(test_util::matches(found[0].view(), expected.view()));
     }
 
-    SECTION("can find a document by suffix") {
+    SECTION("Case 2: can find a document by suffix") {
+        if (test_util::server_version_is_at_least("9.0")) {
+            SKIP("MongoDB server 9.0 and newer does not support prefixPreview or suffixPreview");
+        }
         auto const encrypt_opts = default_encrypt_opts()
                                       .query_type(options::encrypt::encryption_query_type::k_suffixPreview)
                                       .text_opts(default_text_opts().suffix_opts(suffix_opts));
@@ -3574,14 +3580,17 @@ TEST_CASE("27. Text Explicit Encryption", "[client_side_encryption]") {
                 make_document(kvp(
                     "$encStrEndsWith", make_document(kvp("input", "$encryptedText"), kvp("suffix", encrypted_baz))))));
 
-        auto cursor = client_prefix_suffix.find(query.view());
+        auto cursor = coll_prefix_suffix.find(query.view());
         auto const found = std::vector<bsoncxx::document::value>(cursor.begin(), cursor.end());
         REQUIRE(found.size() == 1);
         auto const expected = mongocxx::scoped_bson(R"({ "encryptedText": "foobarbaz" })");
         CHECK(test_util::matches(found[0].view(), expected.view()));
     }
 
-    SECTION("assert no document found by prefix") {
+    SECTION("Case 3: assert no document found by prefix") {
+        if (test_util::server_version_is_at_least("9.0")) {
+            SKIP("MongoDB server 9.0 and newer does not support prefixPreview or suffixPreview");
+        }
         auto const encrypt_opts = default_encrypt_opts()
                                       .query_type(options::encrypt::encryption_query_type::k_prefixPreview)
                                       .text_opts(default_text_opts().prefix_opts(prefix_opts));
@@ -3591,12 +3600,15 @@ TEST_CASE("27. Text Explicit Encryption", "[client_side_encryption]") {
             make_document(kvp(
                 "$encStrStartsWith", make_document(kvp("input", "$encryptedText"), kvp("prefix", encrypted_baz))))));
 
-        auto cursor = client_prefix_suffix.find(query.view());
+        auto cursor = coll_prefix_suffix.find(query.view());
         auto const found = std::vector<bsoncxx::document::value>(cursor.begin(), cursor.end());
         REQUIRE(found.size() == 0);
     }
 
-    SECTION("assert no document found by suffix") {
+    SECTION("Case 4: assert no document found by suffix") {
+        if (test_util::server_version_is_at_least("9.0")) {
+            SKIP("MongoDB server 9.0 and newer does not support prefixPreview or suffixPreview");
+        }
         auto const encrypt_opts = default_encrypt_opts()
                                       .query_type(options::encrypt::encryption_query_type::k_suffixPreview)
                                       .text_opts(default_text_opts().suffix_opts(suffix_opts));
@@ -3606,12 +3618,12 @@ TEST_CASE("27. Text Explicit Encryption", "[client_side_encryption]") {
                 make_document(kvp(
                     "$encStrEndsWith", make_document(kvp("input", "$encryptedText"), kvp("suffix", encrypted_foo))))));
 
-        auto cursor = client_prefix_suffix.find(query.view());
+        auto cursor = coll_prefix_suffix.find(query.view());
         auto const found = std::vector<bsoncxx::document::value>(cursor.begin(), cursor.end());
         REQUIRE(found.size() == 0);
     }
 
-    SECTION("can find a document by substring") {
+    SECTION("Case 5: can find a document by substring") {
         auto const encrypt_opts = default_encrypt_opts()
                                       .query_type(options::encrypt::encryption_query_type::k_substringPreview)
                                       .text_opts(default_text_opts().substring_opts(substring_opts));
@@ -3621,14 +3633,14 @@ TEST_CASE("27. Text Explicit Encryption", "[client_side_encryption]") {
             make_document(kvp(
                 "$encStrContains", make_document(kvp("input", "$encryptedText"), kvp("substring", encrypted_bar))))));
 
-        auto cursor = client_substring.find(query.view());
+        auto cursor = coll_substring.find(query.view());
         auto const found = std::vector<bsoncxx::document::value>(cursor.begin(), cursor.end());
         REQUIRE(found.size() == 1);
         auto const expected = mongocxx::scoped_bson(R"({ "encryptedText": "foobarbaz" })");
         CHECK(test_util::matches(found[0].view(), expected.view()));
     }
 
-    SECTION("assert no document found by substring") {
+    SECTION("Case 6: assert no document found by substring") {
         auto const encrypt_opts = default_encrypt_opts()
                                       .query_type(options::encrypt::encryption_query_type::k_substringPreview)
                                       .text_opts(default_text_opts().substring_opts(substring_opts));
@@ -3638,12 +3650,15 @@ TEST_CASE("27. Text Explicit Encryption", "[client_side_encryption]") {
             make_document(kvp(
                 "$encStrContains", make_document(kvp("input", "$encryptedText"), kvp("substring", encrypted_qux))))));
 
-        auto cursor = client_substring.find(query.view());
+        auto cursor = coll_substring.find(query.view());
         auto const found = std::vector<bsoncxx::document::value>(cursor.begin(), cursor.end());
         REQUIRE(found.size() == 0);
     }
 
-    SECTION("assert contentionFactor is required") {
+    SECTION("Case 7: assert contentionFactor is required") {
+        if (test_util::server_version_is_at_least("9.0")) {
+            SKIP("MongoDB server 9.0 and newer does not support prefixPreview or suffixPreview");
+        }
         // Test that encrypting without contentionFactor throws an error
         auto const encrypt_opts_without_contention =
             options::encrypt()
