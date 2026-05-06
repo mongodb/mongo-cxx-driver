@@ -9,6 +9,15 @@ exec_timeout_secs: 3600
 #   - system: after test (purple).
 command_type: system
 
+# Do not (automatically) trigger builds for changes irrelevant to regular test coverage.
+ignore:
+  - ".git*"
+  - ".ycm*"
+  - "*.md"
+  - "docs"
+  - "extras"
+  - "THIRD-PARTY-NOTICES"
+
 # Ensure Evergreen tests earlier commits when a task fails.
 stepback: true
 
