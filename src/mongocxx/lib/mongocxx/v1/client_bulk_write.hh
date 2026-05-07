@@ -77,5 +77,11 @@ class client_bulk_write::exception::internal {
     static MONGOCXX_ABI_EXPORT_CDECL_TESTING(bsoncxx::v1::document::value&) error_reply(exception& self);
 };
 
+class client_bulk_write::internal {
+   public:
+    static MONGOCXX_ABI_EXPORT_CDECL_TESTING(client_bulk_write) make(mongoc_bulkwrite_t* bulk);
+    static MONGOCXX_ABI_EXPORT_CDECL_TESTING(mongoc_bulkwrite_t*) as_mongoc(client_bulk_write& self);
+};
+
 } // namespace v1
 } // namespace mongocxx

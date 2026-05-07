@@ -26,9 +26,11 @@
 
 #include <mongocxx/v1/hint.hpp>
 #include <mongocxx/v1/pipeline.hpp>
-#include <mongocxx/v1/write_concern.hpp>
+
+#include <bsoncxx/v1/types/value.hh>
 
 #include <mongocxx/v1/exception.hh>
+#include <mongocxx/v1/write_concern.hh>
 
 #include <cstdint>
 #include <memory>
@@ -43,97 +45,62 @@
 namespace mongocxx {
 namespace v1 {
 
-namespace {
-
-[[noreturn]] void not_yet_implemented(char const* where) {
-    throw std::logic_error(std::string{"mongocxx::v1::"} + where + ": not yet implemented");
-}
-
-} // namespace
-
 // NOLINTBEGIN(cppcoreguidelines-owning-memory): owning void* for ABI stability.
 
-class client_bulk_write::impl {};
+class client_bulk_write::impl {
+   public:
+    mongoc_bulkwrite_t* _bulk;
+
+    ~impl() {
+        libmongoc::bulkwrite_destroy(_bulk);
+    }
+
+    impl(impl&&) noexcept = delete;
+    impl& operator=(impl&&) noexcept = delete;
+    impl(impl const&) = delete;
+    impl& operator=(impl const&) = delete;
+
+    explicit impl(mongoc_bulkwrite_t* bulk) : _bulk{bulk} {}
+
+    static impl const& with(client_bulk_write const& self) {
+        return *static_cast<impl const*>(self._impl);
+    }
+
+    static impl& with(client_bulk_write& self) {
+        return *static_cast<impl*>(self._impl);
+    }
+
+    static impl* with(client_bulk_write* self) {
+        return static_cast<impl*>(self->_impl);
+    }
+
+    static impl* with(void* ptr) {
+        return static_cast<impl*>(ptr);
+    }
+};
 
 client_bulk_write::~client_bulk_write() {
-    delete static_cast<impl*>(_impl);
+    delete impl::with(this);
 }
 
 client_bulk_write::client_bulk_write(client_bulk_write&& other) noexcept : _impl{exchange(other._impl, nullptr)} {}
 
 client_bulk_write& client_bulk_write::operator=(client_bulk_write&& other) noexcept {
     if (this != &other) {
-        delete static_cast<impl*>(exchange(_impl, exchange(other._impl, nullptr)));
+        delete impl::with(exchange(_impl, exchange(other._impl, nullptr)));
     }
 
     return *this;
 }
 
-client_bulk_write::client_bulk_write(void* /*bulk*/) : _impl{new impl{}} {}
+client_bulk_write::client_bulk_write(void* bulk) : _impl{new impl{static_cast<mongoc_bulkwrite_t*>(bulk)}} {}
 
-client_bulk_write& client_bulk_write::append(
-    bsoncxx::v1::stdx::string_view /*ns*/,
-    bsoncxx::v1::document::value /*document*/,
-    insert_one_options const& /*opts*/) {
-    not_yet_implemented("client_bulk_write::append(insert_one_options)");
+client_bulk_write client_bulk_write::internal::make(mongoc_bulkwrite_t* bulk) {
+    return client_bulk_write{bulk};
 }
 
-client_bulk_write& client_bulk_write::append(
-    bsoncxx::v1::stdx::string_view /*ns*/,
-    bsoncxx::v1::document::value /*filter*/,
-    bsoncxx::v1::document::value /*update*/,
-    update_one_options const& /*opts*/) {
-    not_yet_implemented("client_bulk_write::append(update_one_options)");
-}
-
-client_bulk_write& client_bulk_write::append(
-    bsoncxx::v1::stdx::string_view /*ns*/,
-    bsoncxx::v1::document::value /*filter*/,
-    v1::pipeline const& /*update*/,
-    update_one_options const& /*opts*/) {
-    not_yet_implemented("client_bulk_write::append(pipeline, update_one_options)");
-}
-
-client_bulk_write& client_bulk_write::append(
-    bsoncxx::v1::stdx::string_view /*ns*/,
-    bsoncxx::v1::document::value /*filter*/,
-    bsoncxx::v1::document::value /*update*/,
-    update_many_options const& /*opts*/) {
-    not_yet_implemented("client_bulk_write::append(update_many_options)");
-}
-
-client_bulk_write& client_bulk_write::append(
-    bsoncxx::v1::stdx::string_view /*ns*/,
-    bsoncxx::v1::document::value /*filter*/,
-    v1::pipeline const& /*update*/,
-    update_many_options const& /*opts*/) {
-    not_yet_implemented("client_bulk_write::append(pipeline, update_many_options)");
-}
-
-client_bulk_write& client_bulk_write::append(
-    bsoncxx::v1::stdx::string_view /*ns*/,
-    bsoncxx::v1::document::value /*filter*/,
-    bsoncxx::v1::document::value /*replacement*/,
-    replace_one_options const& /*opts*/) {
-    not_yet_implemented("client_bulk_write::append(replace_one_options)");
-}
-
-client_bulk_write& client_bulk_write::append(
-    bsoncxx::v1::stdx::string_view /*ns*/,
-    bsoncxx::v1::document::value /*filter*/,
-    delete_one_options const& /*opts*/) {
-    not_yet_implemented("client_bulk_write::append(delete_one_options)");
-}
-
-client_bulk_write& client_bulk_write::append(
-    bsoncxx::v1::stdx::string_view /*ns*/,
-    bsoncxx::v1::document::value /*filter*/,
-    delete_many_options const& /*opts*/) {
-    not_yet_implemented("client_bulk_write::append(delete_many_options)");
-}
-
-bsoncxx::v1::stdx::optional<client_bulk_write::result> client_bulk_write::execute(options const& /*opts*/) {
-    not_yet_implemented("client_bulk_write::execute");
+mongoc_bulkwrite_t* client_bulk_write::internal::as_mongoc(client_bulk_write& self) {
+    return impl::with(self)._bulk;
 }
 
 class client_bulk_write::options::impl {
@@ -986,6 +953,428 @@ client_bulk_write::delete_many_options& client_bulk_write::delete_many_options::
 
 bsoncxx::v1::stdx::optional<v1::hint> client_bulk_write::delete_many_options::hint() const {
     return impl::with(*this)._hint;
+}
+
+namespace {
+
+struct update_one_options_c {
+    mongoc_bulkwrite_updateoneopts_t* _opts = nullptr;
+
+    ~update_one_options_c() {
+        libmongoc::bulkwrite_updateoneopts_destroy(_opts);
+    }
+
+    update_one_options_c(update_one_options_c&&) = delete;
+    update_one_options_c& operator=(update_one_options_c&&) = delete;
+    update_one_options_c(update_one_options_c const&) = delete;
+    update_one_options_c& operator=(update_one_options_c const&) = delete;
+
+    explicit update_one_options_c(client_bulk_write::update_one_options const& opts) {
+        if (!(opts.array_filters() || opts.collation() || opts.hint() || opts.sort() || opts.upsert())) {
+            return;
+        }
+
+        _opts = libmongoc::bulkwrite_updateoneopts_new();
+
+        if (auto const v = opts.array_filters()) {
+            libmongoc::bulkwrite_updateoneopts_set_arrayfilters(_opts, scoped_bson_view{*v});
+        }
+
+        if (auto const v = opts.collation()) {
+            libmongoc::bulkwrite_updateoneopts_set_collation(_opts, scoped_bson_view{*v});
+        }
+
+        if (auto const h = opts.hint()) {
+            auto const hv = bsoncxx::v1::types::value{h->to_value()};
+            libmongoc::bulkwrite_updateoneopts_set_hint(
+                _opts, &bsoncxx::v1::types::value::internal::get_bson_value(hv));
+        }
+
+        if (auto const v = opts.sort()) {
+            libmongoc::bulkwrite_updateoneopts_set_sort(_opts, scoped_bson_view{*v});
+        }
+
+        if (auto const v = opts.upsert()) {
+            libmongoc::bulkwrite_updateoneopts_set_upsert(_opts, *v);
+        }
+    }
+
+    mongoc_bulkwrite_updateoneopts_t* get() const {
+        return _opts;
+    }
+};
+
+struct update_many_options_c {
+    mongoc_bulkwrite_updatemanyopts_t* _opts = nullptr;
+
+    ~update_many_options_c() {
+        libmongoc::bulkwrite_updatemanyopts_destroy(_opts);
+    }
+
+    update_many_options_c(update_many_options_c&&) = delete;
+    update_many_options_c& operator=(update_many_options_c&&) = delete;
+    update_many_options_c(update_many_options_c const&) = delete;
+    update_many_options_c& operator=(update_many_options_c const&) = delete;
+
+    explicit update_many_options_c(client_bulk_write::update_many_options const& opts) {
+        if (!(opts.array_filters() || opts.collation() || opts.hint() || opts.upsert())) {
+            return;
+        }
+
+        _opts = libmongoc::bulkwrite_updatemanyopts_new();
+
+        if (auto const v = opts.array_filters()) {
+            libmongoc::bulkwrite_updatemanyopts_set_arrayfilters(_opts, scoped_bson_view{*v});
+        }
+
+        if (auto const v = opts.collation()) {
+            libmongoc::bulkwrite_updatemanyopts_set_collation(_opts, scoped_bson_view{*v});
+        }
+
+        if (auto const h = opts.hint()) {
+            auto const hv = bsoncxx::v1::types::value{h->to_value()};
+            libmongoc::bulkwrite_updatemanyopts_set_hint(
+                _opts, &bsoncxx::v1::types::value::internal::get_bson_value(hv));
+        }
+
+        if (auto const v = opts.upsert()) {
+            libmongoc::bulkwrite_updatemanyopts_set_upsert(_opts, *v);
+        }
+    }
+
+    mongoc_bulkwrite_updatemanyopts_t* get() const {
+        return _opts;
+    }
+};
+
+struct replace_one_options_c {
+    mongoc_bulkwrite_replaceoneopts_t* _opts = nullptr;
+
+    ~replace_one_options_c() {
+        libmongoc::bulkwrite_replaceoneopts_destroy(_opts);
+    }
+
+    replace_one_options_c(replace_one_options_c&&) = delete;
+    replace_one_options_c& operator=(replace_one_options_c&&) = delete;
+    replace_one_options_c(replace_one_options_c const&) = delete;
+    replace_one_options_c& operator=(replace_one_options_c const&) = delete;
+
+    explicit replace_one_options_c(client_bulk_write::replace_one_options const& opts) {
+        if (!(opts.collation() || opts.hint() || opts.sort() || opts.upsert())) {
+            return;
+        }
+
+        _opts = libmongoc::bulkwrite_replaceoneopts_new();
+
+        if (auto const v = opts.collation()) {
+            libmongoc::bulkwrite_replaceoneopts_set_collation(_opts, scoped_bson_view{*v});
+        }
+
+        if (auto const h = opts.hint()) {
+            auto const hv = bsoncxx::v1::types::value{h->to_value()};
+            libmongoc::bulkwrite_replaceoneopts_set_hint(
+                _opts, &bsoncxx::v1::types::value::internal::get_bson_value(hv));
+        }
+
+        if (auto const v = opts.sort()) {
+            libmongoc::bulkwrite_replaceoneopts_set_sort(_opts, scoped_bson_view{*v});
+        }
+
+        if (auto const v = opts.upsert()) {
+            libmongoc::bulkwrite_replaceoneopts_set_upsert(_opts, *v);
+        }
+    }
+
+    mongoc_bulkwrite_replaceoneopts_t* get() const {
+        return _opts;
+    }
+};
+
+struct delete_one_options_c {
+    mongoc_bulkwrite_deleteoneopts_t* _opts = nullptr;
+
+    ~delete_one_options_c() {
+        libmongoc::bulkwrite_deleteoneopts_destroy(_opts);
+    }
+
+    delete_one_options_c(delete_one_options_c&&) = delete;
+    delete_one_options_c& operator=(delete_one_options_c&&) = delete;
+    delete_one_options_c(delete_one_options_c const&) = delete;
+    delete_one_options_c& operator=(delete_one_options_c const&) = delete;
+
+    explicit delete_one_options_c(client_bulk_write::delete_one_options const& opts) {
+        if (!(opts.collation() || opts.hint())) {
+            return;
+        }
+
+        _opts = libmongoc::bulkwrite_deleteoneopts_new();
+
+        if (auto const v = opts.collation()) {
+            libmongoc::bulkwrite_deleteoneopts_set_collation(_opts, scoped_bson_view{*v});
+        }
+
+        if (auto const h = opts.hint()) {
+            auto const hv = bsoncxx::v1::types::value{h->to_value()};
+            libmongoc::bulkwrite_deleteoneopts_set_hint(
+                _opts, &bsoncxx::v1::types::value::internal::get_bson_value(hv));
+        }
+    }
+
+    mongoc_bulkwrite_deleteoneopts_t* get() const {
+        return _opts;
+    }
+};
+
+struct delete_many_options_c {
+    mongoc_bulkwrite_deletemanyopts_t* _opts = nullptr;
+
+    ~delete_many_options_c() {
+        libmongoc::bulkwrite_deletemanyopts_destroy(_opts);
+    }
+
+    delete_many_options_c(delete_many_options_c&&) = delete;
+    delete_many_options_c& operator=(delete_many_options_c&&) = delete;
+    delete_many_options_c(delete_many_options_c const&) = delete;
+    delete_many_options_c& operator=(delete_many_options_c const&) = delete;
+
+    explicit delete_many_options_c(client_bulk_write::delete_many_options const& opts) {
+        if (!(opts.collation() || opts.hint())) {
+            return;
+        }
+
+        _opts = libmongoc::bulkwrite_deletemanyopts_new();
+
+        if (auto const v = opts.collation()) {
+            libmongoc::bulkwrite_deletemanyopts_set_collation(_opts, scoped_bson_view{*v});
+        }
+
+        if (auto const h = opts.hint()) {
+            auto const hv = bsoncxx::v1::types::value{h->to_value()};
+            libmongoc::bulkwrite_deletemanyopts_set_hint(
+                _opts, &bsoncxx::v1::types::value::internal::get_bson_value(hv));
+        }
+    }
+
+    mongoc_bulkwrite_deletemanyopts_t* get() const {
+        return _opts;
+    }
+};
+
+struct bulk_write_options_c {
+    mongoc_bulkwriteopts_t* _opts;
+
+    ~bulk_write_options_c() {
+        libmongoc::bulkwriteopts_destroy(_opts);
+    }
+
+    bulk_write_options_c(bulk_write_options_c&&) = delete;
+    bulk_write_options_c& operator=(bulk_write_options_c&&) = delete;
+    bulk_write_options_c(bulk_write_options_c const&) = delete;
+    bulk_write_options_c& operator=(bulk_write_options_c const&) = delete;
+
+    explicit bulk_write_options_c(client_bulk_write::options const& opts) : _opts{libmongoc::bulkwriteopts_new()} {
+        if (!opts.ordered()) {
+            libmongoc::bulkwriteopts_set_ordered(_opts, false);
+        }
+
+        if (auto const v = opts.bypass_document_validation()) {
+            libmongoc::bulkwriteopts_set_bypassdocumentvalidation(_opts, *v);
+        }
+
+        if (auto const& v = client_bulk_write::options::internal::comment(opts)) {
+            libmongoc::bulkwriteopts_set_comment(_opts, &bsoncxx::v1::types::value::internal::get_bson_value(*v));
+        }
+
+        if (auto const v = opts.let()) {
+            libmongoc::bulkwriteopts_set_let(_opts, scoped_bson_view{*v});
+        }
+
+        if (auto const v = opts.verbose_results()) {
+            libmongoc::bulkwriteopts_set_verboseresults(_opts, *v);
+        }
+
+        if (auto const& v = client_bulk_write::options::internal::write_concern(opts)) {
+            libmongoc::bulkwriteopts_set_writeconcern(_opts, write_concern::internal::as_mongoc(*v));
+        }
+    }
+
+    mongoc_bulkwriteopts_t* get() const {
+        return _opts;
+    }
+};
+
+struct bulk_write_return {
+    mongoc_bulkwriteresult_t* res = nullptr;
+    mongoc_bulkwriteexception_t* exc = nullptr;
+
+    ~bulk_write_return() {
+        libmongoc::bulkwriteresult_destroy(res);
+        libmongoc::bulkwriteexception_destroy(exc);
+    }
+
+    bulk_write_return(bulk_write_return&&) = delete;
+    bulk_write_return& operator=(bulk_write_return&&) = delete;
+    bulk_write_return(bulk_write_return const&) = delete;
+    bulk_write_return& operator=(bulk_write_return const&) = delete;
+
+    explicit bulk_write_return(mongoc_bulkwritereturn_t ret) : res{ret.res}, exc{ret.exc} {}
+
+    bool has_exception() const {
+        return exc != nullptr;
+    }
+
+    bsoncxx::v1::stdx::optional<client_bulk_write::result> make_result() {
+        if (!res) {
+            return bsoncxx::v1::stdx::nullopt;
+        }
+
+        return client_bulk_write::result::internal::make(exchange(res, nullptr));
+    }
+
+    client_bulk_write::exception make_exception() {
+        return client_bulk_write::exception::internal::make(exchange(exc, nullptr), make_result());
+    }
+};
+
+} // namespace
+
+client_bulk_write& client_bulk_write::append(
+    bsoncxx::v1::stdx::string_view ns,
+    bsoncxx::v1::document::value document,
+    insert_one_options const& /*opts*/) {
+    bson_error_t error = {};
+
+    if (!libmongoc::bulkwrite_append_insertone(
+            impl::with(*this)._bulk, std::string{ns}.c_str(), scoped_bson_view{document}, nullptr, &error)) {
+        throw_exception(error);
+    }
+
+    return *this;
+}
+
+client_bulk_write& client_bulk_write::append(
+    bsoncxx::v1::stdx::string_view ns,
+    bsoncxx::v1::document::value filter,
+    bsoncxx::v1::document::value update,
+    update_one_options const& opts) {
+    update_one_options_c const c_opts{opts};
+
+    bson_error_t error = {};
+
+    if (!libmongoc::bulkwrite_append_updateone(
+            impl::with(*this)._bulk,
+            std::string{ns}.c_str(),
+            scoped_bson_view{filter},
+            scoped_bson_view{update},
+            c_opts.get(),
+            &error)) {
+        throw_exception(error);
+    }
+
+    return *this;
+}
+
+client_bulk_write& client_bulk_write::append(
+    bsoncxx::v1::stdx::string_view ns,
+    bsoncxx::v1::document::value filter,
+    v1::pipeline const& update,
+    update_one_options const& opts) {
+    return append(ns, std::move(filter), bsoncxx::v1::document::value{update.view_array()}, opts);
+}
+
+client_bulk_write& client_bulk_write::append(
+    bsoncxx::v1::stdx::string_view ns,
+    bsoncxx::v1::document::value filter,
+    bsoncxx::v1::document::value update,
+    update_many_options const& opts) {
+    update_many_options_c const c_opts{opts};
+
+    bson_error_t error = {};
+
+    if (!libmongoc::bulkwrite_append_updatemany(
+            impl::with(*this)._bulk,
+            std::string{ns}.c_str(),
+            scoped_bson_view{filter},
+            scoped_bson_view{update},
+            c_opts.get(),
+            &error)) {
+        throw_exception(error);
+    }
+
+    return *this;
+}
+
+client_bulk_write& client_bulk_write::append(
+    bsoncxx::v1::stdx::string_view ns,
+    bsoncxx::v1::document::value filter,
+    v1::pipeline const& update,
+    update_many_options const& opts) {
+    return append(ns, std::move(filter), bsoncxx::v1::document::value{update.view_array()}, opts);
+}
+
+client_bulk_write& client_bulk_write::append(
+    bsoncxx::v1::stdx::string_view ns,
+    bsoncxx::v1::document::value filter,
+    bsoncxx::v1::document::value replacement,
+    replace_one_options const& opts) {
+    replace_one_options_c const c_opts{opts};
+
+    bson_error_t error = {};
+
+    if (!libmongoc::bulkwrite_append_replaceone(
+            impl::with(*this)._bulk,
+            std::string{ns}.c_str(),
+            scoped_bson_view{filter},
+            scoped_bson_view{replacement},
+            c_opts.get(),
+            &error)) {
+        throw_exception(error);
+    }
+
+    return *this;
+}
+
+client_bulk_write& client_bulk_write::append(
+    bsoncxx::v1::stdx::string_view ns,
+    bsoncxx::v1::document::value filter,
+    delete_one_options const& opts) {
+    delete_one_options_c const c_opts{opts};
+
+    bson_error_t error = {};
+
+    if (!libmongoc::bulkwrite_append_deleteone(
+            impl::with(*this)._bulk, std::string{ns}.c_str(), scoped_bson_view{filter}, c_opts.get(), &error)) {
+        throw_exception(error);
+    }
+
+    return *this;
+}
+
+client_bulk_write& client_bulk_write::append(
+    bsoncxx::v1::stdx::string_view ns,
+    bsoncxx::v1::document::value filter,
+    delete_many_options const& opts) {
+    delete_many_options_c const c_opts{opts};
+
+    bson_error_t error = {};
+
+    if (!libmongoc::bulkwrite_append_deletemany(
+            impl::with(*this)._bulk, std::string{ns}.c_str(), scoped_bson_view{filter}, c_opts.get(), &error)) {
+        throw_exception(error);
+    }
+
+    return *this;
+}
+
+bsoncxx::v1::stdx::optional<client_bulk_write::result> client_bulk_write::execute(options const& opts) {
+    bulk_write_options_c const c_opts{opts};
+    bulk_write_return ret{libmongoc::bulkwrite_execute(impl::with(*this)._bulk, c_opts.get())};
+
+    if (ret.has_exception()) {
+        throw ret.make_exception();
+    }
+
+    return ret.make_result();
 }
 
 // NOLINTEND(cppcoreguidelines-owning-memory)
