@@ -9,6 +9,11 @@ Changes prior to 3.9.0 are documented as [release notes on GitHub](https://githu
 
 ## 4.4.0 [Unreleased]
 
+### Fixed
+
+- Include of `v1/text_options.hpp` (normal header) by `options/text-fwd.hpp` (forward header).
+- Include of v\_noabi macro guard headers by `text_options.hpp` (v1).
+
 ### Deprecated
 
 - Support for MongoDB Server 4.2.
