@@ -16,8 +16,6 @@
 
 #include <mongocxx/v1/text_options-fwd.hpp> // IWYU pragma: export
 
-#include <mongocxx/v1/text_options.hpp>
-
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
@@ -38,7 +36,7 @@ using v1::text_options;
 
 ///
 /// @file
-/// Declares utilities related to mongocxx logging.
+/// Declares @ref mongocxx::text_options.
 ///
 /// @par Includes
 /// - @ref mongocxx/v1/text_options-fwd.hpp

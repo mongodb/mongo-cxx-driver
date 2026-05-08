@@ -44,8 +44,8 @@ using v_noabi::options::text;
 
 ///
 /// @file
-/// Declares @ref mongocxx::v_noabi::options::range.
+/// Provides @ref mongocxx::text_options.
 ///
 /// @par Includes
-/// - @ref mongocxx/v1/range_options.hpp
+/// - @ref mongocxx/v1/text_options.hpp
 ///
