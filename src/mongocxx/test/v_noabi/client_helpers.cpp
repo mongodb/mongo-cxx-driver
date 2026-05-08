@@ -54,10 +54,18 @@ using bsoncxx::builder::basic::kvp;
 using bsoncxx::builder::basic::make_document;
 
 namespace {
+
+mongocxx::uri test_uri() {
+    if (auto const* env = std::getenv("MONGOCXX_TEST_OIDC_AUTH_URI")) {
+        return mongocxx::uri{env};
+    }
+    return mongocxx::uri{};
+}
+
 // These frequently used network calls are cached to avoid bottlenecks during tests.
 document::value get_is_master() {
     static auto reply = []() {
-        auto client = mongocxx::client{mongocxx::uri{}, test_util::add_test_server_api()};
+        auto client = mongocxx::client{test_uri(), test_util::add_test_server_api()};
         return client["admin"].run_command(make_document(kvp("isMaster", 1)));
     }();
     return reply;
@@ -65,7 +73,7 @@ document::value get_is_master() {
 
 document::value get_server_status() {
     static auto status = []() {
-        auto client = mongocxx::client{mongocxx::uri{}, test_util::add_test_server_api()};
+        auto client = mongocxx::client{test_uri(), test_util::add_test_server_api()};
         return client["admin"].run_command(make_document(kvp("serverStatus", 1)));
     }();
     return status;
@@ -73,7 +81,7 @@ document::value get_server_status() {
 
 bsoncxx::stdx::optional<document::value> get_shards() {
     static auto shards = []() {
-        auto client = mongocxx::client{mongocxx::uri{}, test_util::add_test_server_api()};
+        auto client = mongocxx::client{test_uri(), test_util::add_test_server_api()};
         return client["config"]["shards"].find_one({});
     }();
     return (shards) ? shards.value() : bsoncxx::stdx::optional<document::value>{};
@@ -280,7 +288,7 @@ std::string get_server_version() {
 document::value get_server_params() {
     // Cache reply.
     static auto reply = []() {
-        auto client = mongocxx::client{mongocxx::uri{}, test_util::add_test_server_api()};
+        auto client = mongocxx::client{test_uri(), test_util::add_test_server_api()};
         return client["admin"].run_command(make_document(kvp("getParameter", "*")));
     }();
 

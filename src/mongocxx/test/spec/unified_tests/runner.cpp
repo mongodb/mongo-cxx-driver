@@ -15,6 +15,9 @@
 #include "./assert.hh"
 #include "./operations.hh"
 
+#include <mongocxx/v1/oidc_callback.hpp>
+#include <mongocxx/v1/oidc_credential.hpp>
+
 #include <mongocxx/test/v_noabi/client_helpers.hh>
 
 #include <fstream>
@@ -28,6 +31,7 @@
 #include <bsoncxx/stdx/optional.hpp>
 #include <bsoncxx/stdx/string_view.hpp>
 #include <bsoncxx/string/to_string.hpp>
+#include <bsoncxx/types.hpp>
 #include <bsoncxx/types/bson_value/value.hpp>
 
 #include <mongocxx/client_encryption.hpp>
@@ -51,8 +55,15 @@ using namespace spec;
 using bsoncxx::builder::basic::kvp;
 using bsoncxx::builder::basic::make_document;
 
-using schema_versions_t = std::array<std::array<int, 3 /* major.minor.patch */>, 2 /* supported version */>;
-constexpr schema_versions_t schema_versions{{{{1, 1, 0}}, {{1, 8, 0}}}};
+using schema_versions_t = std::array<std::array<int, 3 /* major.minor.patch */>, 3 /* supported version */>;
+constexpr schema_versions_t schema_versions{{{{1, 1, 0}}, {{1, 8, 0}}, {{1, 19, 0}}}};
+
+mongocxx::uri test_uri() {
+    if (auto const* env = std::getenv("MONGOCXX_TEST_OIDC_AUTH_URI")) {
+        return mongocxx::uri{env};
+    }
+    return mongocxx::uri{"mongodb://localhost:27017"};
+}
 
 std::pair<std::unordered_map<std::string, spec::apm_checker>&, entity::map&> init_maps() {
     // Below initializes the static apm map and entity map if needed, in that order. This will also
@@ -283,6 +294,16 @@ bool compatible_with_server(bsoncxx::array::element const& requirement) {
         }
     }
 
+    if (auto const authMechanism = requirement["authMechanism"]) {
+        REQUIRE(authMechanism.type() == bsoncxx::type::k_string);
+        if (authMechanism.get_string().value == "MONGODB-OIDC") {
+            if (!std::getenv("MONGOCXX_TEST_OIDC_AUTH_URI")) {
+                // Test environment not configured for OIDC.
+                return false;
+            }
+        }
+    }
+
     return true;
 }
 
@@ -340,7 +361,23 @@ std::string uri_options_to_string(document::view object) {
     //  'readPreferenceTags' keys in the object.
     REQUIRE_FALSE(object["readPreferenceTags"]);
 
-    auto const json = to_json(object["uriOptions"].get_document());
+    auto uri_options_doc = bsoncxx::builder::basic::document{};
+    for (auto const& el : object["uriOptions"].get_document().value) {
+        auto const key = el.key();
+        auto const value = el.get_value();
+
+        if (key == "authMechanismProperties" && value.type() == bsoncxx::type::k_document &&
+            value.get_document().value == make_document(kvp("$$placeholder", 1))) {
+            REQUIRE(object["uriOptions"]["authMechanism"].type() == bsoncxx::type::k_string);
+            REQUIRE(object["uriOptions"]["authMechanism"].get_string().value == "MONGODB-OIDC");
+            // Skip authMechanismProperties with placeholder.
+            continue;
+        }
+
+        uri_options_doc.append(kvp(key, value));
+    }
+
+    auto const json = to_json(uri_options_doc.view());
     auto const opts = json_to_uri_opts(json);
 
     CAPTURE(json, opts);
@@ -348,7 +385,7 @@ std::string uri_options_to_string(document::view object) {
 }
 
 std::string get_hostnames(bsoncxx::document::view object) {
-    auto const uri0 = mongocxx::uri("mongodb://localhost:27017");
+    auto const uri0 = test_uri();
 
     // All test topologies should have either a mongod or mongos on localhost:27017.
     mongocxx::client const client0{uri0, test_util::add_test_server_api()};
@@ -676,6 +713,16 @@ client create_client(document::view object) {
         auto const server_api_opts = create_server_api(object);
         client_opts.server_api_opts(server_api_opts);
     }
+    if (object["uriOptions"]["authMechanism"] &&
+        object["uriOptions"]["authMechanism"].type() == bsoncxx::type::k_string &&
+        object["uriOptions"]["authMechanism"].get_string().value == "MONGODB-OIDC") {
+        client_opts.oidc_callback([](mongocxx::v1::oidc_callback_params const&) {
+            std::ifstream token_file("/tmp/tokens/test_machine");
+            REQUIRE(token_file.is_open());
+            return mongocxx::v1::oidc_credential(
+                std::string((std::istreambuf_iterator<char>(token_file)), std::istreambuf_iterator<char>()));
+        });
+    }
     auto& apm = get_apm_map()[string::to_string(object["id"].get_string().value)];
 
     add_observe_events(apm, apm_opts, object);
@@ -873,7 +920,10 @@ void assert_error(
             // { MONGOCRYPT_STATUS_ERROR_CLIENT, MONGOCRYPT_GENERIC_ERROR_CODE }
             // libmongocrypt: _kms_done
             "key material not expected length",
-        };
+
+            // { MONGOC_ERROR_STREAM, MONGOC_ERROR_STREAM_SOCKET }
+            // mongoc: _mongoc_buffer_append_from_stream
+            "socket error or timeout"};
 
         bsoncxx::stdx::string_view const message = exception.what();
 
@@ -1375,6 +1425,10 @@ TEST_CASE("index management spec automated tests", "[unified_format_specs]") {
 TEST_CASE("client side encryption unified format spec automated tests", "[unified_format_specs]") {
     CLIENT_SIDE_ENCRYPTION_ENABLED_OR_SKIP();
     run_unified_format_tests_in_env_dir("CLIENT_SIDE_ENCRYPTION_UNIFIED_TESTS_PATH");
+}
+
+TEST_CASE("auth spec automated tests", "[unified_format_specs],[oidc]") {
+    run_unified_format_tests_in_env_dir("AUTH_TESTS_PATH");
 }
 
 } // namespace
