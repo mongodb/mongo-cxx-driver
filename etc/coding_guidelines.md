@@ -71,6 +71,10 @@ src/<library>/
 └── ...
 ```
 
+> [!NOTE]
+> For `v_noabi` components, the path includes an extra `<library>/` subdirectory: `include/<library>/v_noabi/<library>/foo.hpp` rather than `include/<library>/v_noabi/foo.hpp`.
+> See [Unstable ABI Headers](#unstable-abi-headers) for the reason.
+
 - A component in directory `v<abi>/foo/bar/` must declare interfaces in namespace `v<abi>::foo::bar`.
     - This does not apply to detail, internal, private, and test interfaces.
 - Include What You Use priority:
@@ -79,6 +83,10 @@ src/<library>/
     - The internal (or normal) header must be the first include directive in the implementation file.
     - The internal (or normal) header must be the first include directive in the test header.
     - The test (or internal, or normal) header must be the first include directive in the test implementation file.
+- Each header must annotate its first include with `// IWYU pragma: export` so that consumers need not separately include the exported header:
+    - `foo.hpp` exports `foo-fwd.hpp` — including `foo.hpp` satisfies any IWYU requirement for `foo-fwd.hpp`.
+    - `foo.hh` (lib) exports `foo.hpp` — including `foo.hh` satisfies any IWYU requirement for `foo.hpp` (and transitively `foo-fwd.hpp`).
+    - `foo.hh` (test) exports `foo.hpp` or `foo.hh` (lib) — including the test header satisfies any IWYU requirement for whichever it exports.
 - The forward header declares (but does not define) class types.
     - Root namespace redeclarations for class types belong here.
 - The normal header declares functions, declares variables, defines class types, and declares type aliases.
@@ -95,8 +103,10 @@ src/<library>/
 ### Namespaces
 
 The library root namespace declares ABI namespaces (e.g. `mongocxx::v_noabi`, `mongocxx::v1`, etc.), within which symbols are declared according to their compatibility with an ABI version.
+`v_noabi` is the unstable ABI namespace (most existing features live here); `v1` is the stable ABI namespace (new features belong here).
 
-The library root namespace also redeclares ABI-specific entities without an ABI namespace qualifier (e.g. `mongocxx::v_noabi::document::view` as `mongocxx::document::view`) to allow users to automatically opt-into the latest supported ABI version of a given entity without requiring changes to source code. The root namespace redeclarations are intended to be the default method for using library entities. A user should only include the ABI namespace in a qualifier if they require compatibility with that specific ABI version.
+The library root namespace also redeclares ABI-specific entities without an ABI namespace qualifier (e.g. `mongocxx::v_noabi::document::view` as `mongocxx::document::view`) to allow users to automatically opt-into the latest supported ABI version of a given entity without requiring changes to source code.
+The root namespace redeclarations are intended to be the default method for using library entities. A user should only include the ABI namespace in a qualifier if they require compatibility with that specific ABI version.
 
 References to ABI-specific entities in ABI namespaces MUST always be (un)qualified such that it is not affected by changes to root namespace redeclarations:
 
@@ -138,30 +148,55 @@ void fn(mongocxx::example::type param);
 
 ### Public Headers
 
-Public headers are organized under `src/<library>/include/`. With the exception of generated headers, all header files under this directory are installed as-is to the install prefix with their existing structure. This includes headers within `detail` subdirectories, which are headers reserved for internal use only and are not a part of the public API.
+Public headers are organized under `src/<library>/include/`. With the exception of generated headers, all header files under this directory are installed as-is to the install prefix with their existing structure.
+This includes headers within `detail` subdirectories, which are headers reserved for internal use only and are not a part of the public API.
+Headers within `docs` subdirectories are for documentation purposes only and are excluded from installation.
 
 ```
 include/
-├── v_noabi/bsoncxx/
-│   ├── fwd.hpp
-│   ├── detail/
-│   │   └── ...
-│   ├── document/
-│   │   ├── value-fwd.hpp
-│   │   ├── value.hpp
-│   │   └── ...
-│   └── ...
-├── v1/
-│   ├── fwd.hpp
-│   ├── detail/
-│   │   └── ...
-│   ├── document/
-│   │   ├── value-fwd.hpp
-│   │   ├── value.hpp
-│   │   └── ...
-│   └── ...
+├── bsoncxx/
+│   ├── v_noabi/
+│   │   └── bsoncxx/
+│   │       ├── fwd.hpp
+│   │       ├── detail/
+│   │       │   └── ...
+│   │       ├── document/
+│   │       │   ├── value-fwd.hpp
+│   │       │   ├── value.hpp
+│   │       │   └── ...
+│   │       └── ...
+│   └── v1/
+│       ├── fwd.hpp
+│       ├── detail/
+│       │   └── ...
+│       ├── document/
+│       │   ├── value-fwd.hpp
+│       │   ├── value.hpp
+│       │   └── ...
+│       └── ...
 └── CMakeLists.txt
 ```
+
+#### Required Macro Guard Headers
+
+v1 public headers must wrap their content with `detail/prelude.hpp` and `detail/postlude.hpp`.
+The first include (the forward header or `fwd.hpp`) is separated from `prelude.hpp` by a blank comment line:
+
+```cpp
+#pragma once
+
+#include <bsoncxx/v1/foo-fwd.hpp> // IWYU pragma: export
+
+//
+
+#include <bsoncxx/v1/detail/prelude.hpp>
+
+// ... includes, namespace, declarations ...
+
+#include <bsoncxx/v1/detail/postlude.hpp>
+```
+
+This applies to headers under both `bsoncxx/v1/` and `mongocxx/v1/`.
 
 #### Stable ABI Headers
 
@@ -169,7 +204,7 @@ Headers under `vN/` directories provide stable ABI interfaces declared within AB
 
 #### Unstable ABI Headers
 
-Headers under `v_noabi/` declare both unstable (`v_noabi`) AND stable ABI interfaces. See [Unstable ABI Namespace](#unstable-abi-namespace) below.
+Headers under `v_noabi/` declare both unstable (`v_noabi`) AND stable ABI interfaces.
 
 > [!IMPORTANT]
 > Headers under `v_noabi/` MUST be placed under the additional `bsoncxx/` (or `mongocxx`) subdirectory for backward compatibility with unstable ABI header direct include style: `#include <bsoncxx/document/element.hpp>`.
@@ -194,25 +229,26 @@ Forward headers with the `-fwd` basename suffix declare (but do not define!) cla
 
 ```
 include/
-├── fwd.hpp
-├── v_noabi/bsoncxx/
-│   ├── fwd.hpp
-│   ├── document/
-│   │   ├── value-fwd.hpp # Forward header.
-│   │   ├── value.hpp
-│   │   └── ...
-│   └── ...
-├── v1/
-│   ├── fwd.hpp
-│   ├── document/
-│   │   ├── value-fwd.hpp # Forward header.
-│   │   ├── value.hpp
-│   │   └── ...
-│   └── ...
+├── bsoncxx/
+│   ├── v_noabi/
+│   │   └── bsoncxx/
+│   │       ├── fwd.hpp
+│   │       ├── document/
+│   │       │   ├── value-fwd.hpp # Forward header.
+│   │       │   ├── value.hpp
+│   │       │   └── ...
+│   │       └── ...
+│   └── v1/
+│       ├── fwd.hpp
+│       ├── document/
+│       │   ├── value-fwd.hpp # Forward header.
+│       │   ├── value.hpp
+│       │   └── ...
+│       └── ...
 └── CMakeLists.txt
 ```
 
-The special `fwd.hpp` headers present in the ABI (`v_noabi/`, `v1/`, etc.) and library root (`bsoncxx/`, etc.) directories provide all forward declarations for the given ABI namespace.
+The special `fwd.hpp` headers present in the ABI subdirectories (`v_noabi/bsoncxx/`, `v1/`, etc.) provide all forward declarations for the given ABI namespace.
 
 #### Source Files
 
@@ -277,7 +313,7 @@ lib/
 - Use `BSONCXX_ABI_EXPORT_CDECL` to export functions and operator overloads.
     - The `v` in `BSONCXX_ABI_EXPORT_CDECL(v)` must be the return type. For constructor and destructors, use `BSONCXX_ABI_EXPORT_CDECL()` without any `v`.
     - `BSONCXX_ABI_EXPORT_CDECL` must be immediately before the name of the function or operator overload, after any and all specifiers (e.g. `static`, `explicit`, etc.).
-- Use `BSONCXX_ABI_EXPORT` to export variables.
+- Use `BSONCXX_ABI_EXPORT` to export variables and class declarations.
 - Only polymorphic classes (e.g. exceptions) should be declared with `BSONCXX_ABI_EXPORT`.
     - `BSONCXX_ABI_EXPORT` must be applied to the _first_ declaration of the class (e.g. in the forward header when applicable).
     - All polymorphic classes must define _at least one_ virtual function (e.g. the virtual destructor) out-of-line within the implementation file as the ["key function"](https://itanium-cxx-abi.github.io/cxx-abi/abi.html#vague-vtable).
@@ -285,6 +321,8 @@ lib/
     - For function types: `ReturnType BSONCXX_ABI_CDECL(Params...)`.
     - For pointer-to-function types: `ReturnType (BSONCXX_ABI_CDECL*)(Params...)`.
     - This includes function types used as arguments to template parameters (e.g. `std::function<R BSONCXX_ABI_CDECL(Params...)>`).
+
+Analogous `MONGOCXX_`-prefixed variants of the above macros apply to the mongocxx library.
 
 ### Implicit vs. Explicit
 
@@ -334,7 +372,8 @@ if /* constexpr */ (is_nothrow<T>::value) {
 
 ### Error Codes
 
-- A component declared in `v<abi>::foo` which provides error codes should declare the error code enumeration in namespace `v<abi>::foo::errc` and the error category as `v<abi>::foo::error_category()`.
+- A component declared in `v<abi>::foo` which provides error codes for a specific class should declare the error code enumeration as a nested `errc` enum inside that class and the error category as a static `error_category()` member function of that class.
+    - When error codes belong to the namespace rather than a specific class (e.g. `exception.hpp`), declare the `errc` enumeration at namespace scope and the error category as a free function.
 
 ### Hidden Friends
 
@@ -379,4 +418,4 @@ private:
 ```
 
 > [!IMPORTANT]
-> Any non-defaulted special member function MUST be defined out-of-line as an exported ABI functions to support ABI compatibility.
+> Any non-defaulted special member function MUST be defined out-of-line as an exported ABI function to support ABI compatibility.
