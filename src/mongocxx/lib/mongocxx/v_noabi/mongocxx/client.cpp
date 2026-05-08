@@ -111,6 +111,10 @@ client::client(v_noabi::uri const& uri, options::client const& options) {
         v1::client::internal::set_apm(_client, v_noabi::to_v1(*opts));
     }
 
+    if (auto const& opts = options.oidc_callback()) {
+        v1::client::internal::set_oidc_callback(_client, *opts);
+    }
+
     if (auto const& opts = options.auto_encryption_opts()) {
         bson_error_t error = {};
 

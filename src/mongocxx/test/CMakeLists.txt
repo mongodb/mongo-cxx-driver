@@ -71,6 +71,7 @@ set(mongocxx_test_sources_v_noabi
     v_noabi/model/update_many.cpp
     v_noabi/model/update_one.cpp
     v_noabi/model/write.cpp
+    v_noabi/oidc_callback.cpp
     v_noabi/options/aggregate.cpp
     v_noabi/options/apm.cpp
     v_noabi/options/auto_encryption.cpp

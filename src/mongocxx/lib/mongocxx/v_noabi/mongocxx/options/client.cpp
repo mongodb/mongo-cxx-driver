@@ -32,7 +32,8 @@ client::client(v1::client::options opts)
     : _tls_opts{std::move(v1::client::options::internal::tls_opts(opts))},
       _apm_opts{std::move(v1::client::options::internal::apm_opts(opts))},
       _auto_encrypt_opts{},
-      _server_api_opts{std::move(v1::client::options::internal::server_api_opts(opts))} {}
+      _server_api_opts{std::move(v1::client::options::internal::server_api_opts(opts))},
+      _oidc_callback{std::move(v1::client::options::internal::oidc_callback(opts))} {}
 
 client::operator v1::client::options() const {
     using mongocxx::v_noabi::from_v1;
@@ -51,6 +52,10 @@ client::operator v1::client::options() const {
 
     if (_server_api_opts) {
         ret.server_api_opts(v_noabi::to_v1(*_server_api_opts));
+    }
+
+    if (_oidc_callback) {
+        ret.oidc_callback(*_oidc_callback);
     }
 
     return ret;

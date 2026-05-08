@@ -173,6 +173,30 @@ class client {
         return _server_api_opts;
     }
 
+    ///
+    /// Sets the OIDC callback.
+    ///
+    /// @param oidc_callback
+    ///   The OIDC callback.
+    ///
+    /// @return
+    ///   A reference to the object on which this member function is being called. This facilitates
+    ///   method chaining.
+    ///
+    client& oidc_callback(v1::oidc_callback oidc_callback) {
+        _oidc_callback = std::move(oidc_callback);
+        return *this;
+    }
+
+    ///
+    /// The current OIDC callback.
+    ///
+    /// @return The OIDC callback.
+    ///
+    bsoncxx::v_noabi::stdx::optional<v1::oidc_callback> const& oidc_callback() const {
+        return _oidc_callback;
+    }
+
     class internal;
 
    private:
@@ -180,6 +204,7 @@ class client {
     bsoncxx::v_noabi::stdx::optional<apm> _apm_opts;
     bsoncxx::v_noabi::stdx::optional<auto_encryption> _auto_encrypt_opts;
     bsoncxx::v_noabi::stdx::optional<server_api> _server_api_opts;
+    bsoncxx::v_noabi::stdx::optional<v1::oidc_callback> _oidc_callback;
 
     /* explicit(false) */ client(v1::client::options opts);
 
