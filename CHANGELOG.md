@@ -14,6 +14,10 @@ Changes prior to 3.9.0 are documented as [release notes on GitHub](https://githu
 - Support for MongoDB Server 4.2.
   - See: [MongoDB Software Lifecycle Schedules](https://www.mongodb.com/legal/support-policy/lifecycles).
 
+### Added
+
+- Support for the "readConcern" option field to "delete", "insert", "replace", "bulkWrite", "findOneAnd*", "count", and "distinct" operations.
+
 ## 4.3.0
 
 ### Fixed
