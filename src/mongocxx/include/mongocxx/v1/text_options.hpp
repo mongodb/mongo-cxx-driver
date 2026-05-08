@@ -18,11 +18,13 @@
 
 //
 
+#include <mongocxx/v1/detail/prelude.hpp>
+
 #include <bsoncxx/v1/stdx/optional.hpp>
 
-#include <cstdint>
+#include <mongocxx/v1/config/export.hpp>
 
-#include <mongocxx/config/prelude.hpp>
+#include <cstdint>
 
 namespace mongocxx {
 namespace v1 {
@@ -378,7 +380,7 @@ class text_options::substring {
 } // namespace v1
 } // namespace mongocxx
 
-#include <mongocxx/config/postlude.hpp>
+#include <mongocxx/v1/detail/postlude.hpp>
 
 ///
 /// @file
