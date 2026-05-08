@@ -37,6 +37,7 @@
 #include <mongocxx/v1/change_stream.hpp>
 #include <mongocxx/v1/client_session.hpp>
 #include <mongocxx/v1/config/export.hpp>
+#include <mongocxx/v1/oidc_callback.hpp>
 
 #include <string>
 #include <system_error>
@@ -299,6 +300,7 @@ class client {
 /// Supported fields include:
 /// - `apm_opts`
 /// - `auto_encryption_opts`
+/// - `oidc_callback`
 /// - `server_api_opts`
 /// - `tls_opts`
 ///
@@ -380,6 +382,16 @@ class client::options {
     /// Return the current "apm_opts" field.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<v1::apm>) apm_opts() const;
+
+    ///
+    /// Set the "oidc_callback" field.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(options&) oidc_callback(v1::oidc_callback v);
+
+    ///
+    /// Return the current "oidc_callback" field.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<v1::oidc_callback>) oidc_callback() const;
 
     ///
     /// Set the "server_api_opts" field.

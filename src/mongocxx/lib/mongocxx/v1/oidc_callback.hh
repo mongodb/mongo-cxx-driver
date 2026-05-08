@@ -12,39 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <mongocxx/v1/pool.hpp> // IWYU pragma: export
-
-//
-
-#include <mongocxx/v1/apm-fwd.hpp>
+#pragma once
 
 #include <mongocxx/v1/oidc_callback.hpp>
 
-#include <mongocxx/private/export.hh>
+//
+
 #include <mongocxx/private/mongoc.hh>
 
 namespace mongocxx {
 namespace v1 {
 
-class pool::internal {
-   public:
-    static MONGOCXX_ABI_EXPORT_CDECL_TESTING(pool) make(mongoc_client_pool_t* ptr);
-
-    static MONGOCXX_ABI_EXPORT_CDECL_TESTING(mongoc_client_pool_t*) as_mongoc(pool& self);
-
-    static void set_apm(pool& self, v1::apm v);
-    static void set_oidc_callback(pool& self, v1::oidc_callback v);
-};
-
-class pool::options::internal {
-   public:
-    static v1::client::options& client_opts(options& self);
-};
-
-class pool::entry::internal {
-   public:
-    static MONGOCXX_ABI_EXPORT_CDECL_TESTING(entry) make(mongoc_client_pool_t* pool, mongoc_client_t* client);
-};
+void set_oidc_callback(mongoc_client_t* client, v1::oidc_callback& fn);
+void set_oidc_callback(mongoc_client_pool_t* pool, v1::oidc_callback& fn);
 
 } // namespace v1
 } // namespace mongocxx

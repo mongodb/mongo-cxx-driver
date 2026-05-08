@@ -177,6 +177,9 @@ set(mongocxx_sources_v1
     mongocxx/v1/insert_one_result.cpp
     mongocxx/v1/instance.cpp
     mongocxx/v1/logger.cpp
+    mongocxx/v1/oidc_callback.cpp
+    mongocxx/v1/oidc_callback_params.cpp
+    mongocxx/v1/oidc_credential.cpp
     mongocxx/v1/pipeline.cpp
     mongocxx/v1/pool.cpp
     mongocxx/v1/range_options.cpp

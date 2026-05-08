@@ -32,6 +32,7 @@
 #include <mongocxx/v1/cursor.hh>
 #include <mongocxx/v1/database.hh>
 #include <mongocxx/v1/exception.hh>
+#include <mongocxx/v1/oidc_callback.hh>
 #include <mongocxx/v1/pipeline.hh>
 #include <mongocxx/v1/server_api.hh>
 #include <mongocxx/v1/tls.hh>
@@ -59,6 +60,7 @@ class client::impl {
    public:
     mongoc_client_t* _client;
     v1::apm _apm;
+    v1::oidc_callback _oidc_callback;
 
     ~impl() {
         libmongoc::client_destroy(_client);
@@ -126,6 +128,10 @@ client::client(v1::uri uri, options opts) : client{new impl{v1::uri::internal::a
 
     if (auto& opt = options::internal::apm_opts(opts)) {
         internal::set_apm(*this, std::move(*opt));
+    }
+
+    if (auto& opt = options::internal::oidc_callback(opts)) {
+        internal::set_oidc_callback(*this, std::move(*opt));
     }
 
     if (auto const& opt = options::internal::auto_encryption_opts(opts)) {
@@ -440,6 +446,12 @@ void client::internal::set_apm(client& self, v1::apm v) {
     v1::apm::internal::set_apm_callbacks(impl::with(self)._client, _apm);
 }
 
+void client::internal::set_oidc_callback(client& self, v1::oidc_callback v) {
+    auto& _oidc_callback = impl::with(self)._oidc_callback;
+    _oidc_callback = std::move(v);
+    v1::set_oidc_callback(impl::with(self)._client, _oidc_callback);
+}
+
 mongoc_client_t* client::internal::release(client& self) {
     return exchange(impl::with(self)._client, nullptr);
 }
@@ -457,6 +469,7 @@ class client::options::impl {
     bsoncxx::v1::stdx::optional<v1::tls> _tls_opts;
     bsoncxx::v1::stdx::optional<v1::auto_encryption_options> _auto_encryption_opts;
     bsoncxx::v1::stdx::optional<v1::apm> _apm_opts;
+    bsoncxx::v1::stdx::optional<v1::oidc_callback> _oidc_callback;
     bsoncxx::v1::stdx::optional<v1::server_api> _server_api_opts;
 
     static impl const& with(options const& self) {
@@ -537,6 +550,15 @@ bsoncxx::v1::stdx::optional<v1::apm> client::options::apm_opts() const {
     return impl::with(this)->_apm_opts;
 }
 
+client::options& client::options::oidc_callback(v1::oidc_callback v) {
+    impl::with(this)->_oidc_callback = std::move(v);
+    return *this;
+}
+
+bsoncxx::v1::stdx::optional<v1::oidc_callback> client::options::oidc_callback() const {
+    return impl::with(this)->_oidc_callback;
+}
+
 client::options& client::options::server_api_opts(v1::server_api v) {
     impl::with(this)->_server_api_opts = std::move(v);
     return *this;
@@ -557,6 +579,10 @@ bsoncxx::v1::stdx::optional<v1::auto_encryption_options>& client::options::inter
 
 bsoncxx::v1::stdx::optional<v1::apm>& client::options::internal::apm_opts(options& self) {
     return impl::with(self)._apm_opts;
+}
+
+bsoncxx::v1::stdx::optional<v1::oidc_callback>& client::options::internal::oidc_callback(options& self) {
+    return impl::with(self)._oidc_callback;
 }
 
 bsoncxx::v1::stdx::optional<v1::server_api>& client::options::internal::server_api_opts(options& self) {

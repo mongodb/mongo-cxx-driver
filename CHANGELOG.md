@@ -20,6 +20,9 @@ Changes prior to 3.9.0 are documented as [release notes on GitHub](https://githu
 
 - Added missing subscript operators for class types declared in `bsoncxx::vector::iterators`.
 
+### Added
+- Support for `MONGODB-OIDC` authMechanism.
+
 ### Deprecated
 
 - Support for Visual Studio 2015 (EOL since Oct 2025). Use Visual Studio 2017 or newer.
