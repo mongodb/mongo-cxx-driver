@@ -40,6 +40,8 @@
 #include <mongocxx/exception/operation_exception.hpp>
 #include <mongocxx/instance.hpp>
 
+#include <mongocxx/private/mongoc.hh>
+
 #include <bsoncxx/test/catch.hh>
 
 #include <mongocxx/test/spec/monitoring.hh>
@@ -349,6 +351,11 @@ std::string json_to_uri_opts(std::string const& input) {
     return std::accumulate(std::begin(output) + 1, std::end(output), output[0], join);
 }
 
+std::string to_lowercase(std::string in) {
+    std::transform(std::begin(in), std::end(in), std::begin(in), ::tolower);
+    return in;
+}
+
 std::string uri_options_to_string(document::view object) {
     // Spec: Optional object. Additional URI options to apply to the test suite's connection string
     // that is used to create this client. Any keys in this object MUST override conflicting keys in
@@ -366,7 +373,8 @@ std::string uri_options_to_string(document::view object) {
         auto const key = el.key();
         auto const value = el.get_value();
 
-        if (key == "authMechanismProperties" && value.type() == bsoncxx::type::k_document &&
+        if (to_lowercase(std::string(key)) == MONGOC_URI_AUTHMECHANISMPROPERTIES &&
+            value.type() == bsoncxx::type::k_document &&
             value.get_document().value == make_document(kvp("$$placeholder", 1))) {
             REQUIRE(object["uriOptions"]["authMechanism"].type() == bsoncxx::type::k_string);
             REQUIRE(object["uriOptions"]["authMechanism"].get_string().value == "MONGODB-OIDC");
