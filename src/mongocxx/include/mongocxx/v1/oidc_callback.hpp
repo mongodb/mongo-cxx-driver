@@ -44,6 +44,3 @@ using oidc_callback = std::function<oidc_credential MONGOCXX_ABI_CDECL(oidc_call
 /// @file
 /// Provides @ref mongocxx::v1::oidc_callback.
 ///
-/// @ref mongocxx::v1::oidc_callback is a type alias for a std::function that receives
-/// @ref mongocxx::v1::oidc_callback_params and returns @ref mongocxx::v1::oidc_credential.
-///
