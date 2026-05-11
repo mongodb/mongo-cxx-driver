@@ -44,6 +44,14 @@ Key CMake configuration options (given `option=(default|alternatives...)`):
 - `-D ENABLE_TESTS:BOOL=(OFF|ON)`: required to enable and build test targets.
 - `-D BUILD_TESTING:BOOL=(OFF|ON)`: include test targets in the "all" target (when `ENABLE_TESTS=ON`).
 
+**Build performance:** Ninja parallelizes builds across all available cores by default; to cap the job count, set `CMAKE_BUILD_PARALLEL_LEVEL=<N>` in the environment before running `cmake --build`.
+
+> [!NOTE]
+> For local development and testing, use the Debug configure in the [Running Tests](#running-tests) section instead of the release configure above.
+
+> [!NOTE]
+> `.evergreen/scripts/compile.sh` is the authoritative reference for CI configure-build-install routines. Consult it for details on Ninja generator selection, ccache integration, sanitizer flags (`USE_SANITIZER_ASAN`, `USE_SANITIZER_UBSAN`), polyfill selection (`BSONCXX_POLYFILL`), and other platform-specific options.
+
 ## Running Tests
 
 Tests use the Catch2 library and require C++14 or newer.
