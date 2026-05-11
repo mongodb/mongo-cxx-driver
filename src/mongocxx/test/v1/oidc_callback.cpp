@@ -70,6 +70,7 @@ class OIDCTestFixture {
     bsoncxx::v1::stdx::optional<v1::client> _client;
 };
 
+namespace {
 // Read token from /tmp/tokens/test_machine
 std::string read_token_from_file() {
     std::ifstream token_file("/tmp/tokens/test_machine");
@@ -87,6 +88,7 @@ void admin_command(std::string cmd) {
         mongocxx::v1::client(v1::uri("mongodb://localhost:27017/?retryReads=false&authMechanism=MONGODB-OIDC"), opts);
     client.database("admin").run_command(scoped_bson(cmd).view());
 }
+} // namespace
 
 TEST_CASE("OIDC prose tests", "[oidc]") {
     if (nullptr == std::getenv("MONGOCXX_TEST_OIDC_AUTH_URI")) {
