@@ -269,7 +269,7 @@ class encrypt {
     ///
     /// Sets the text options to use for encryption.
     ///
-    encrypt& text_opts(options::text opts) {
+    encrypt& text_opts(v1::text_options opts) {
         _text_opts = std::move(opts);
         return *this;
     }
@@ -277,7 +277,7 @@ class encrypt {
     ///
     /// Gets the current text options
     ///
-    bsoncxx::v_noabi::stdx::optional<options::text> const& text_opts() const {
+    bsoncxx::v_noabi::stdx::optional<v1::text_options> const& text_opts() const {
         return _text_opts;
     }
 
@@ -290,7 +290,7 @@ class encrypt {
     bsoncxx::v_noabi::stdx::optional<std::int64_t> _contention_factor;
     bsoncxx::v_noabi::stdx::optional<encryption_query_type> _query_type;
     bsoncxx::v_noabi::stdx::optional<options::range> _range_opts;
-    bsoncxx::v_noabi::stdx::optional<options::text> _text_opts;
+    bsoncxx::v_noabi::stdx::optional<v1::text_options> _text_opts;
 };
 
 } // namespace options

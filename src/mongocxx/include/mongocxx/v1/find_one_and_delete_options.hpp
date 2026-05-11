@@ -108,7 +108,7 @@ class find_one_and_delete_options {
     ///
     /// Set the "collation" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(find_one_and_delete_options&) collation(bsoncxx::v1::document::value collation);
+    MONGOCXX_ABI_EXPORT_CDECL(find_one_and_delete_options&) collation(bsoncxx::v1::document::value v);
 
     ///
     /// Return the current "collation" field.
@@ -118,7 +118,7 @@ class find_one_and_delete_options {
     ///
     /// Set the "maxTimeMS" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(find_one_and_delete_options&) max_time(std::chrono::milliseconds max_time);
+    MONGOCXX_ABI_EXPORT_CDECL(find_one_and_delete_options&) max_time(std::chrono::milliseconds v);
 
     ///
     /// Return the current "maxTimeMS" field.
@@ -128,7 +128,7 @@ class find_one_and_delete_options {
     ///
     /// Set the "projection" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(find_one_and_delete_options&) projection(bsoncxx::v1::document::value projection);
+    MONGOCXX_ABI_EXPORT_CDECL(find_one_and_delete_options&) projection(bsoncxx::v1::document::value v);
 
     ///
     /// Return the current "projection" field.
@@ -148,7 +148,7 @@ class find_one_and_delete_options {
     ///
     /// Set the "readConcern" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(find_one_and_delete_options&) read_concern(v1::read_concern read_concern);
+    MONGOCXX_ABI_EXPORT_CDECL(find_one_and_delete_options&) read_concern(v1::read_concern v);
 
     ///
     /// Return the current "readConcern" field.
@@ -158,7 +158,7 @@ class find_one_and_delete_options {
     ///
     /// Set the "writeConcern" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(find_one_and_delete_options&) write_concern(v1::write_concern write_concern);
+    MONGOCXX_ABI_EXPORT_CDECL(find_one_and_delete_options&) write_concern(v1::write_concern v);
 
     ///
     /// Return the current "writeConcern" field.
@@ -178,7 +178,7 @@ class find_one_and_delete_options {
     ///
     /// Set the "let" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(find_one_and_delete_options&) let(bsoncxx::v1::document::value let);
+    MONGOCXX_ABI_EXPORT_CDECL(find_one_and_delete_options&) let(bsoncxx::v1::document::value v);
 
     ///
     /// Return the current "let" field.
@@ -188,7 +188,7 @@ class find_one_and_delete_options {
     ///
     /// Set the "comment" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(find_one_and_delete_options&) comment(bsoncxx::v1::types::value comment);
+    MONGOCXX_ABI_EXPORT_CDECL(find_one_and_delete_options&) comment(bsoncxx::v1::types::value v);
 
     ///
     /// Return the current "comment" field.
