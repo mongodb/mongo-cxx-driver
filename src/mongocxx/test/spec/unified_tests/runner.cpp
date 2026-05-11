@@ -1427,7 +1427,7 @@ TEST_CASE("client side encryption unified format spec automated tests", "[unifie
     run_unified_format_tests_in_env_dir("CLIENT_SIDE_ENCRYPTION_UNIFIED_TESTS_PATH");
 }
 
-TEST_CASE("auth spec automated tests", "[unified_format_specs],[oidc]") {
+TEST_CASE("auth spec automated tests", "[unified_format_specs]") {
     run_unified_format_tests_in_env_dir("AUTH_TESTS_PATH");
 }
 
