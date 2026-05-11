@@ -66,7 +66,7 @@ cmake --build build
 > [!IMPORTANT]
 > The "Debug" config type is recommended for local testing and development.
 > If the project was already built with a different build type and the user has not requested a change, preserve the existing `CMAKE_BUILD_TYPE` rather than switching to `Debug`, and advise the user that switching to `Debug` is recommended for local testing and development.
-> This configure step replaces the release/installation configure above — running both is unnecessary when developing.
+> This configure step replaces the release/installation configure above - running both is unnecessary when developing.
 
 Test executables `test_*` are generated under `build/src/bsoncxx/test` and `build/src/mongocxx/test`:
 
@@ -78,7 +78,7 @@ Test executables `test_*` are generated under `build/src/bsoncxx/test` and `buil
 ```
 
 > [!IMPORTANT]
-> For multi-configuration generators (e.g. Visual Studio, Ninja Multi-Config), executables appear under a `<config>/` subdirectory (e.g. `build/src/bsoncxx/test/Debug/test_bson`).
+> For multi-configuration generators (e.g. "Visual Studio *", "Ninja Multi-Config"), executables appear under a `<config>/` subdirectory (e.g. `build/src/bsoncxx/test/Debug/test_bson`).
 
 Run a test executable with `--help` to explore available options (e.g. listing test cases and tags, filtering by name/pattern/tags, etc.).
 
