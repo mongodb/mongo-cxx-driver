@@ -376,8 +376,10 @@ std::string uri_options_to_string(document::view object) {
         if (to_lowercase(std::string(key)) == MONGOC_URI_AUTHMECHANISMPROPERTIES &&
             value.type() == bsoncxx::type::k_document &&
             value.get_document().value == make_document(kvp("$$placeholder", 1))) {
-            REQUIRE(object["uriOptions"]["authMechanism"].type() == bsoncxx::type::k_string);
-            REQUIRE(object["uriOptions"]["authMechanism"].get_string().value == "MONGODB-OIDC");
+            auto const auth_mechanism = object["uriOptions"]["authMechanism"];
+            REQUIRE(auth_mechanism);
+            REQUIRE(auth_mechanism.type() == bsoncxx::type::k_string);
+            REQUIRE(auth_mechanism.get_string().value == "MONGODB-OIDC");
             // Skip authMechanismProperties with placeholder.
             continue;
         }
@@ -721,15 +723,17 @@ client create_client(document::view object) {
         auto const server_api_opts = create_server_api(object);
         client_opts.server_api_opts(server_api_opts);
     }
-    if (object["uriOptions"]["authMechanism"] &&
-        object["uriOptions"]["authMechanism"].type() == bsoncxx::type::k_string &&
-        object["uriOptions"]["authMechanism"].get_string().value == "MONGODB-OIDC") {
-        client_opts.oidc_callback([](mongocxx::v1::oidc_callback_params const&) {
-            std::ifstream token_file("/tmp/tokens/test_machine");
-            REQUIRE(token_file.is_open());
-            return mongocxx::v1::oidc_credential(
-                std::string((std::istreambuf_iterator<char>(token_file)), std::istreambuf_iterator<char>()));
-        });
+    {
+        auto const auth_mechanism = object["uriOptions"]["authMechanism"];
+        if (auth_mechanism && auth_mechanism.type() == bsoncxx::type::k_string &&
+            auth_mechanism.get_string().value == "MONGODB-OIDC") {
+            client_opts.oidc_callback([](mongocxx::v1::oidc_callback_params const&) {
+                std::ifstream token_file("/tmp/tokens/test_machine");
+                REQUIRE(token_file.is_open());
+                return mongocxx::v1::oidc_credential(
+                    std::string((std::istreambuf_iterator<char>(token_file)), std::istreambuf_iterator<char>()));
+            });
+        }
     }
     auto& apm = get_apm_map()[string::to_string(object["id"].get_string().value)];
 
