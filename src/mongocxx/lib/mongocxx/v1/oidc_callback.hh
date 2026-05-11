@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include <mongocxx/v1/oidc_callback.hpp>
+#include <mongocxx/v1/oidc_callback.hpp> // IWYU pragma: export
 
 //
 
