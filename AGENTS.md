@@ -83,7 +83,7 @@ Test executables `test_*` are generated under `build/src/bsoncxx/test` and `buil
 Run a test executable with `--help` to explore available options (e.g. listing test cases and tags, filtering by name/pattern/tags, etc.).
 
 bsoncxx test cases do not require a live MongoDB server.
-Most mongocxx test cases require a live MongoDB server.
+Most mongocxx test cases require a live MongoDB server. `test_instance` is an exception - it tests instance lifecycle via subprocess and does not connect to a server.
 
 Test executables include:
 
@@ -104,8 +104,9 @@ Key environment variables controlling test behavior include:
 - `*_TESTS_PATH`: path to `data/` subdirectory containing spec test files (e.g. `CRUD_LEGACY_TESTS_PATH`, `COMMAND_MONITORING_TESTS_PATH`).
   - Explore calls to `run_tests_in_suite()` in test code for details.
 - `MONGOCXX_TEST_*`: additional test environment variables (TLS, AWS, Azure, GCP credentials, etc.).
-  - The most common: `MONGOCXX_TEST_URI=mongodb://localhost:27017` (required for integration tests connecting to a live server).
-  - Explore calls to `getenv_or_fail()` and `std::getenv()` in test code for additional variables.
+  - Integration tests that connect to a live server default to `mongodb://localhost:27017` (hardcoded); no URI env var is required for a standard local setup.
+  - `MONGODB_URI` is read by a small number of tests (e.g. search-index tests in `test_driver`) that skip themselves when it is unset.
+  - Explore calls to `getenv_or_fail()` and `std::getenv()` in test code for the full list of variables.
 
 ## Architecture
 
