@@ -9,6 +9,9 @@ Changes prior to 3.9.0 are documented as [release notes on GitHub](https://githu
 
 ## 4.4.0 [Unreleased]
 
+### Added
+- Support for `MONGODB-OIDC` authMechanism.
+
 ### Deprecated
 
 - Support for MongoDB Server 4.2.
@@ -19,9 +22,6 @@ Changes prior to 3.9.0 are documented as [release notes on GitHub](https://githu
 ### Fixed
 
 - Added missing subscript operators for class types declared in `bsoncxx::vector::iterators`.
-
-### Added
-- Support for `MONGODB-OIDC` authMechanism.
 
 ### Deprecated
 
