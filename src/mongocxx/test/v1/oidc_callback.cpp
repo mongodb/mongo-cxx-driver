@@ -431,10 +431,10 @@ TEST_CASE("OIDC prose tests", "[oidc]") {
         OIDCTestFixture tf(
             v1::uri("mongodb://localhost:27017/?retryReads=false&authMechanism=MONGODB-OIDC"), opts, is_pooled);
 
-        // Spec: "Perform a `insert` operation that succeeds"
-        CHECK_NOTHROW(tf.client().database("test").collection("test").insert_one(scoped_bson{}.view()));
+        // Spec: "Perform a `find` operation that succeeds"
+        CHECK_NOTHROW(tf.client().database("test").collection("test").find_one(scoped_bson{}.view()));
 
-        // Spec: "Set a fail point for `insert` commands"
+        // Spec: "Set a fail point for `find` commands"
         admin_command(R"({
             "configureFailPoint": "failCommand",
             "mode": { "times": 1 },
@@ -444,7 +444,7 @@ TEST_CASE("OIDC prose tests", "[oidc]") {
             }
         })");
 
-        // Spec: "Perform a `insert` operation that fails."
+        // Spec: "Perform a `find` operation that fails."
         CHECK_THROWS_WITH(
             tf.client().database("test").collection("test").find_one(scoped_bson{}.view()),
             Catch::Matchers::ContainsSubstring("Authentication failed"));
