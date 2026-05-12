@@ -12,10 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <mongocxx/v1/oidc_callback.hpp>
-#include <mongocxx/v1/oidc_callback_params.hpp>
-#include <mongocxx/v1/oidc_credential.hpp>
-
 #include <mongocxx/test/private/scoped_bson.hh>
 #include <mongocxx/test/v_noabi/catch_helpers.hh>
 #include <mongocxx/test/v_noabi/client_helpers.hh>
@@ -26,6 +22,9 @@
 #include <bsoncxx/v_noabi/bsoncxx/document/view.hpp>
 
 #include <mongocxx/client.hpp>
+#include <mongocxx/oidc_callback.hpp>
+#include <mongocxx/oidc_callback_params.hpp>
+#include <mongocxx/oidc_credential.hpp>
 #include <mongocxx/v_noabi/mongocxx/database.hpp>
 #include <mongocxx/v_noabi/mongocxx/exception/exception.hpp>
 #include <mongocxx/v_noabi/mongocxx/pool.hpp>
@@ -72,13 +71,13 @@ TEST_CASE("OIDC (v_noabi)", "[oidc]") {
 
     SECTION("Works") {
         auto callback_call_count = 0u;
-        v1::oidc_callback cb = [&](v1::oidc_callback_params const&) {
+        mongocxx::oidc_callback cb = [&](mongocxx::oidc_callback_params const&) {
             callback_call_count++;
             std::ifstream token_file(test_util::getenv_or_fail("OIDC_TOKEN_FILE"));
             REQUIRE(token_file.is_open());
             auto token_str =
                 std::string((std::istreambuf_iterator<char>(token_file)), std::istreambuf_iterator<char>());
-            return v1::oidc_credential(token_str);
+            return mongocxx::oidc_credential(token_str);
         };
 
         auto opts = v_noabi::options::client();
@@ -98,7 +97,9 @@ TEST_CASE("OIDC (v_noabi)", "[oidc]") {
     }
 
     SECTION("Throws exception in v_noabi namespace") {
-        v1::oidc_callback cb = [&](v1::oidc_callback_params const&) { return v1::oidc_credential(std::string("")); };
+        mongocxx::oidc_callback cb = [&](mongocxx::oidc_callback_params const&) {
+            return mongocxx::oidc_credential(std::string(""));
+        };
 
         auto opts = v_noabi::options::client();
         opts.oidc_callback(cb);
