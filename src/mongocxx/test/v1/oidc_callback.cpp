@@ -115,7 +115,7 @@ TEST_CASE("OIDC prose tests", "[oidc]") {
             v1::uri("mongodb://localhost:27017/?retryReads=false&authMechanism=MONGODB-OIDC"), opts, is_pooled);
 
         // Spec: "Perform a `find` operation that succeeds"
-        tf.client().database("test").collection("test").find_one(scoped_bson{}.view());
+        CHECK_NOTHROW(tf.client().database("test").collection("test").find_one(scoped_bson{}.view()));
 
         // Spec: "Assert that the callback was called 1 time"
         CHECK(callback_call_count == 1u);
@@ -153,6 +153,7 @@ TEST_CASE("OIDC prose tests", "[oidc]") {
             threads.emplace_back([&client]() {
                 auto const finds_per_thread = 100u;
                 for (auto i = 0u; i < finds_per_thread; i++) {
+                    // Omit CHECK_NOTHROW. Thread-safe assertions requires Catch2 opt-in.
                     client.database("test").collection("test").find_one(scoped_bson{}.view());
                 }
             });
@@ -210,7 +211,7 @@ TEST_CASE("OIDC prose tests", "[oidc]") {
         OIDCTestFixture tf(uri, opts, is_pooled);
 
         // Spec: "Perform a `find` operation that succeeds"
-        tf.client().database("test").collection("test").find_one(scoped_bson{}.view());
+        CHECK_NOTHROW(tf.client().database("test").collection("test").find_one(scoped_bson{}.view()));
 
         // Spec: "Assert that the OIDC callback was called"
         CHECK(callback_call_count == 1u);
@@ -370,7 +371,7 @@ TEST_CASE("OIDC prose tests", "[oidc]") {
         CHECK(callback_call_count == 1u);
 
         // Spec: "Perform a `find` operation that succeeds"
-        tf.client().database("test").collection("test").find_one(scoped_bson{}.view());
+        CHECK_NOTHROW(tf.client().database("test").collection("test").find_one(scoped_bson{}.view()));
 
         // Spec: "Assert that the callback has been called once"
         CHECK(callback_call_count == 1u);
@@ -403,7 +404,7 @@ TEST_CASE("OIDC prose tests", "[oidc]") {
         })");
 
         // Spec: "Perform a `find` operation that succeeds"
-        tf.client().database("test").collection("test").find_one(scoped_bson{}.view());
+        CHECK_NOTHROW(tf.client().database("test").collection("test").find_one(scoped_bson{}.view()));
 
         // Spec: "Assert that the callback was called 2 times"
         CHECK(callback_call_count == 2u);
@@ -431,7 +432,7 @@ TEST_CASE("OIDC prose tests", "[oidc]") {
             v1::uri("mongodb://localhost:27017/?retryReads=false&authMechanism=MONGODB-OIDC"), opts, is_pooled);
 
         // Spec: "Perform a `insert` operation that succeeds"
-        tf.client().database("test").collection("test").insert_one(scoped_bson{}.view());
+        CHECK_NOTHROW(tf.client().database("test").collection("test").insert_one(scoped_bson{}.view()));
 
         // Spec: "Set a fail point for `insert` commands"
         admin_command(R"({
@@ -474,7 +475,7 @@ TEST_CASE("OIDC prose tests", "[oidc]") {
             v1::uri("mongodb://localhost:27017/?retryReads=false&authMechanism=MONGODB-OIDC"), opts, is_pooled);
 
         // Spec: "Perform a `insert` operation that succeeds"
-        tf.client().database("test").collection("test").insert_one(scoped_bson{}.view());
+        CHECK_NOTHROW(tf.client().database("test").collection("test").insert_one(scoped_bson{}.view()));
 
         // Spec: "Set a fail point for `insert` commands"
         admin_command(R"({
@@ -527,7 +528,7 @@ TEST_CASE("OIDC prose tests", "[oidc]") {
         auto session = tf.client().start_session();
 
         // Spec: "Perform a `find` operation that succeeds"
-        tf.client().database("test").collection("test").find_one(session, scoped_bson{}.view());
+        CHECK_NOTHROW(tf.client().database("test").collection("test").find_one(session, scoped_bson{}.view()));
 
         // Spec: "Assert that the callback was called 2 times"
         CHECK(callback_call_count == 2u);

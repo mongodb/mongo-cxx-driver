@@ -90,7 +90,8 @@ TEST_CASE("OIDC (v_noabi)", "[mongocxx][v_noabi][oidc_callback]") {
             v_noabi::uri("mongodb://localhost:27017/?retryReads=false&authMechanism=MONGODB-OIDC"), opts, is_pooled);
 
         /// Expect auth to succeed:
-        tf.client().database("test").run_command(bsoncxx::v_noabi::from_v1(scoped_bson{R"({"ping": 1})"}.view()));
+        CHECK_NOTHROW(
+            tf.client().database("test").run_command(bsoncxx::v_noabi::from_v1(scoped_bson{R"({"ping": 1})"}.view())));
 
         // Expect callback was called:
         CHECK(callback_call_count == 1u);
