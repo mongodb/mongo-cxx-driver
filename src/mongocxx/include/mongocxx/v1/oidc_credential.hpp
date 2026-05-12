@@ -77,6 +77,7 @@ class oidc_credential {
 
     ///
     /// Construct a credential with an access token and expiry duration.
+    ///
     /// The expiry duration will be evaluated relative to the system clock immediately after the callback returns.
     ///
     explicit MONGOCXX_ABI_EXPORT_CDECL() oidc_credential(
