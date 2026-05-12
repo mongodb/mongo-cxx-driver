@@ -18,11 +18,14 @@ class TestOIDC(Function):
         command_type=EvgCommandType.TEST,
         working_dir='mongo-cxx-driver',
         script="""\
+            set -o errexit
             export LD_LIBRARY_PATH=$(pwd)/../mongoc/lib
 
             # Sets environment variables: OIDC_TOKEN_FILE, OIDC_ADMIN_USER, and OIDC_ADMIN_PWD.
-            source ${DRIVERS_TOOLS}/.evergreen/auth_oidc/secrets-export.sh
+            source "${DRIVERS_TOOLS}/.evergreen/auth_oidc/secrets-export.sh"
             ./build/src/mongocxx/test/test_driver '[oidc]'
+            export AUTH_TESTS_PATH="$(pwd)/data/auth/unified"
+            ./build/src/mongocxx/test/test_unified_format_specs "auth*" -c "mongodb-oidc-no-retry.json"
         """,
     )
 
