@@ -58,6 +58,7 @@ namespace {
 mongocxx::uri test_uri() {
     if (auto const* oidc_user = std::getenv("OIDC_ADMIN_USER")) {
         auto const* oidc_pwd = std::getenv("OIDC_ADMIN_PWD");
+        REQUIRE(oidc_pwd);
         // The OIDC test server requires auth. For test setup, use username/password.
         return mongocxx::uri{"mongodb://" + std::string(oidc_user) + ":" + std::string(oidc_pwd) + "@localhost:27017"};
     }
