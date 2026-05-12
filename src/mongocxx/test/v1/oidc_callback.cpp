@@ -173,6 +173,7 @@ TEST_CASE("OIDC prose tests", "[oidc]") {
     SECTION("2.1 Valid Callback Inputs") {
         auto callback_call_count = 0u;
         bool with_username = GENERATE(/* true, */ false); // TODO CDRIVER-6310: test 'true' once upgraded to 2.3.1.
+        CAPTURE(with_username);
         auto const token = read_token_from_file();
 
         oidc_callback cb = [&](oidc_callback_params const& params) {
