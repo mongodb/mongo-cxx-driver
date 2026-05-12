@@ -91,6 +91,27 @@ void admin_command(std::string cmd) {
     auto const uri = v1::uri{"mongodb://" + std::string(oidc_user) + ":" + std::string(oidc_pwd) + "@localhost:27017"};
     v1::client(uri).database("admin").run_command(scoped_bson(cmd).view());
 }
+
+struct failCommand_guard {
+    failCommand_guard(std::string cmd) {
+        admin_command(cmd);
+    }
+
+    ~failCommand_guard() {
+        try {
+            admin_command(R"({
+                    "configureFailPoint": "failCommand",
+                    "mode": "off"
+                })");
+        } catch (...) {
+        }
+    }
+
+    failCommand_guard(failCommand_guard const&) = delete;
+    failCommand_guard& operator=(failCommand_guard const&) = delete;
+    failCommand_guard(failCommand_guard&&) = delete;
+    failCommand_guard& operator=(failCommand_guard&&) = delete;
+};
 } // namespace
 
 TEST_CASE("OIDC prose tests", "[oidc]") {
@@ -359,7 +380,7 @@ TEST_CASE("OIDC prose tests", "[oidc]") {
             v1::uri("mongodb://localhost:27017/?retryReads=false&authMechanism=MONGODB-OIDC"), opts, is_pooled);
 
         // Spec: "Set a fail point for `saslStart` commands"
-        admin_command(R"({
+        failCommand_guard const guard(R"({
                 "configureFailPoint": "failCommand",
                 "mode": { "times": 1 },
                 "data": {
@@ -401,7 +422,7 @@ TEST_CASE("OIDC prose tests", "[oidc]") {
             v1::uri("mongodb://localhost:27017/?retryReads=false&authMechanism=MONGODB-OIDC"), opts, is_pooled);
 
         // Spec: "Set a fail point for `find` commands"
-        admin_command(R"({
+        failCommand_guard const guard(R"({
             "configureFailPoint": "failCommand",
             "mode": { "times": 1 },
             "data": {
@@ -443,7 +464,7 @@ TEST_CASE("OIDC prose tests", "[oidc]") {
         CHECK_NOTHROW(tf.client().database("test").collection("test").find_one(scoped_bson{}.view()));
 
         // Spec: "Set a fail point for `find` commands"
-        admin_command(R"({
+        failCommand_guard const guard(R"({
             "configureFailPoint": "failCommand",
             "mode": { "times": 1 },
             "data": {
@@ -487,7 +508,7 @@ TEST_CASE("OIDC prose tests", "[oidc]") {
         CHECK_NOTHROW(tf.client().database("test").collection("test").insert_one(scoped_bson{}.view()));
 
         // Spec: "Set a fail point for `insert` commands"
-        admin_command(R"({
+        failCommand_guard const guard(R"({
             "configureFailPoint": "failCommand",
             "mode": { "times": 1 },
             "data": {
@@ -525,7 +546,7 @@ TEST_CASE("OIDC prose tests", "[oidc]") {
             v1::uri("mongodb://localhost:27017/?retryReads=false&authMechanism=MONGODB-OIDC"), opts, is_pooled);
 
         // Spec: "Set a fail point for `find` commands"
-        admin_command(R"({
+        failCommand_guard const guard(R"({
             "configureFailPoint": "failCommand",
             "mode": { "times": 1 },
             "data": {
