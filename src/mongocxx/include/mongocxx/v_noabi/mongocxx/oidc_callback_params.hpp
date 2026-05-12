@@ -22,7 +22,7 @@
 
 ///
 /// @file
-/// Declares @ref mongocxx::oidc_callback_params.
+/// Provides @ref mongocxx::oidc_callback_params.
 ///
 /// @par Includes
 /// - @ref mongocxx/v1/oidc_callback_params.hpp

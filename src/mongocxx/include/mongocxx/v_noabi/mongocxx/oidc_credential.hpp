@@ -22,7 +22,7 @@
 
 ///
 /// @file
-/// Declares @ref mongocxx::oidc_credential.
+/// Provides @ref mongocxx::oidc_credential.
 ///
 /// @par Includes
 /// - @ref mongocxx/v1/oidc_credential.hpp
