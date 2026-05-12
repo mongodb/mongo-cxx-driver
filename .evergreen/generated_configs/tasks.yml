@@ -14789,7 +14789,7 @@ tasks:
           cxx_compiler: g++
   - name: oidc-auth-test-task
     run_on:
-      - ubuntu2404-small
+      - ubuntu2404-large
     commands:
       - command: expansions.update
         params:

@@ -7,7 +7,7 @@ from config_generator.components.funcs.compile import Compile
 from config_generator.components.funcs.fetch_det import FetchDET
 from config_generator.components.funcs.install_c_driver import InstallCDriver
 from config_generator.components.funcs.setup import Setup
-from config_generator.etc.distros import find_small_distro
+from config_generator.etc.distros import find_large_distro
 from config_generator.etc.function import Function
 from config_generator.etc.utils import bash_exec
 
@@ -35,21 +35,16 @@ def functions():
 
 
 def tasks():
-    updates = [KeyValueParam(key="build_type", value="Debug")]
-    icd_vars = {"SKIP_INSTALL_LIBMONGOCRYPT": 1}
-    compile_vars = {"ENABLE_TESTS": "ON"}
-    commands = [
-        expansions_update(updates=updates),
-        InstallCDriver.call(vars=icd_vars),
-        Compile.call(vars=compile_vars),
-        TestOIDC.call(),
-    ]
-
     return [
         EvgTask(
-            name="oidc-auth-test-task",
-            run_on=[find_small_distro("ubuntu2404").name],
-            commands=commands,
+            name='oidc-auth-test-task',
+            run_on=[find_large_distro('ubuntu2404').name],
+            commands=[
+                expansions_update(updates=[KeyValueParam(key='build_type', value='Debug')]),
+                InstallCDriver.call(vars={'SKIP_INSTALL_LIBMONGOCRYPT': 1}),
+                Compile.call(vars={'ENABLE_TESTS': 'ON'}),
+                TestOIDC.call(),
+            ],
         )
     ]
 
