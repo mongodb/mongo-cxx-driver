@@ -720,12 +720,12 @@ client create_client(document::view object) {
         auto const auth_mechanism = object["uriOptions"]["authMechanism"];
         if (auth_mechanism && auth_mechanism.type() == bsoncxx::type::k_string &&
             auth_mechanism.get_string().value == "MONGODB-OIDC") {
-            client_opts.oidc_callback([](mongocxx::v1::oidc_callback_params const&) {
-                std::ifstream token_file(test_util::getenv_or_fail("OIDC_TOKEN_FILE"));
-                REQUIRE(token_file.is_open());
-                return mongocxx::v1::oidc_credential(
-                    std::string((std::istreambuf_iterator<char>(token_file)), std::istreambuf_iterator<char>()));
-            });
+            std::ifstream token_file(test_util::getenv_or_fail("OIDC_TOKEN_FILE"));
+            REQUIRE(token_file.is_open());
+            auto const token =
+                std::string((std::istreambuf_iterator<char>(token_file)), std::istreambuf_iterator<char>());
+            client_opts.oidc_callback(
+                [=](mongocxx::v1::oidc_callback_params const&) { return mongocxx::v1::oidc_credential(token); });
         }
     }
     auto& apm = get_apm_map()[string::to_string(object["id"].get_string().value)];

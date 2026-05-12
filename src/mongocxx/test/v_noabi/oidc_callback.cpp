@@ -70,13 +70,14 @@ TEST_CASE("OIDC (v_noabi)", "[mongocxx][v_noabi][oidc_callback]") {
     }
 
     SECTION("Works") {
+        std::ifstream token_file(test_util::getenv_or_fail("OIDC_TOKEN_FILE"));
+        REQUIRE(token_file.is_open());
+        auto const token_str =
+            std::string((std::istreambuf_iterator<char>(token_file)), std::istreambuf_iterator<char>());
+
         auto callback_call_count = 0u;
         mongocxx::oidc_callback cb = [&](mongocxx::oidc_callback_params const&) {
             callback_call_count++;
-            std::ifstream token_file(test_util::getenv_or_fail("OIDC_TOKEN_FILE"));
-            REQUIRE(token_file.is_open());
-            auto token_str =
-                std::string((std::istreambuf_iterator<char>(token_file)), std::istreambuf_iterator<char>());
             return mongocxx::oidc_credential(token_str);
         };
 

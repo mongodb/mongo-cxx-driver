@@ -83,7 +83,8 @@ std::string read_token_from_file() {
 }
 
 void admin_command(std::string cmd) {
-    oidc_callback cb = [&](oidc_callback_params const&) { return oidc_credential(read_token_from_file()); };
+    auto const token = read_token_from_file();
+    oidc_callback cb = [&](oidc_callback_params const&) { return oidc_credential(token); };
 
     auto opts = v1::client::options();
     opts.oidc_callback(cb);
@@ -100,9 +101,10 @@ TEST_CASE("OIDC prose tests", "[oidc]") {
 
     SECTION("1.1 Callback is called during authentication") {
         auto callback_call_count = 0u;
+        auto const token = read_token_from_file();
         oidc_callback cb = [&](oidc_callback_params const&) {
             callback_call_count++;
-            return oidc_credential(read_token_from_file());
+            return oidc_credential(token);
         };
 
         auto opts = v1::client::options();
@@ -123,10 +125,11 @@ TEST_CASE("OIDC prose tests", "[oidc]") {
 
     SECTION("1.2 Callback is called once for multiple connections") {
         std::atomic_uint callback_call_count{0};
+        auto const token = read_token_from_file();
         oidc_callback cb = [&](oidc_callback_params const&) {
             callback_call_count.fetch_add(1);
 
-            return oidc_credential(read_token_from_file());
+            return oidc_credential(token);
         };
 
         auto opts = v1::client::options();
@@ -171,6 +174,7 @@ TEST_CASE("OIDC prose tests", "[oidc]") {
     SECTION("2.1 Valid Callback Inputs") {
         auto callback_call_count = 0u;
         bool with_username = GENERATE(/* true, */ false); // TODO CDRIVER-6310: test 'true' once upgraded to 2.3.1.
+        auto const token = read_token_from_file();
 
         oidc_callback cb = [&](oidc_callback_params const& params) {
             // Expect timeout is roughly 60 seconds:
@@ -194,7 +198,7 @@ TEST_CASE("OIDC prose tests", "[oidc]") {
             }
             callback_call_count++;
 
-            return oidc_credential(read_token_from_file());
+            return oidc_credential(token);
         };
 
         auto opts = v1::client::options();
@@ -338,9 +342,10 @@ TEST_CASE("OIDC prose tests", "[oidc]") {
 
     SECTION("3.3 Unexpected error code does not clear the cache") {
         auto callback_call_count = 0u;
+        auto const token = read_token_from_file();
         oidc_callback cb = [&](oidc_callback_params const&) {
             callback_call_count++;
-            return oidc_credential(read_token_from_file());
+            return oidc_credential(token);
         };
 
         auto opts = v1::client::options();
@@ -379,9 +384,10 @@ TEST_CASE("OIDC prose tests", "[oidc]") {
 
     SECTION("4.1 Reauthentication Succeeds") {
         auto callback_call_count = 0u;
+        auto const token = read_token_from_file();
         oidc_callback cb = [&](oidc_callback_params const&) {
             callback_call_count++;
-            return oidc_credential(read_token_from_file());
+            return oidc_credential(token);
         };
 
         auto opts = v1::client::options();
@@ -414,10 +420,11 @@ TEST_CASE("OIDC prose tests", "[oidc]") {
         // Spec: "Create a `MongoClient` whose OIDC callback returns one good token and then bad tokens after the first
         // call."
         auto callback_call_count = 0u;
+        auto const token = read_token_from_file();
         oidc_callback cb = [&](oidc_callback_params const&) {
             callback_call_count++;
             if (callback_call_count == 1u) {
-                return oidc_credential(read_token_from_file());
+                return oidc_credential(token);
             } else {
                 return oidc_credential(std::string("bad_token"));
             }
@@ -457,10 +464,11 @@ TEST_CASE("OIDC prose tests", "[oidc]") {
         // Spec: "Create a `MongoClient` whose OIDC callback returns one good token and then bad tokens after the first
         // call."
         auto callback_call_count = 0u;
+        auto const token = read_token_from_file();
         oidc_callback cb = [&](oidc_callback_params const&) {
             callback_call_count++;
             if (callback_call_count == 1u) {
-                return oidc_credential(read_token_from_file());
+                return oidc_credential(token);
             } else {
                 return oidc_credential(std::string("bad_token"));
             }
@@ -500,9 +508,10 @@ TEST_CASE("OIDC prose tests", "[oidc]") {
 
     SECTION("4.5 Reauthentication Succeeds when a Session is involved") {
         auto callback_call_count = 0u;
+        auto const token = read_token_from_file();
         oidc_callback cb = [&](oidc_callback_params const&) {
             callback_call_count++;
-            return oidc_credential(read_token_from_file());
+            return oidc_credential(token);
         };
 
         auto opts = v1::client::options();
