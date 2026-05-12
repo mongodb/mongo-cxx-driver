@@ -85,7 +85,8 @@ TEST_CASE("OIDC (v_noabi)", "[oidc]") {
         opts.oidc_callback(cb);
 
         // Create an OIDC configured client:
-        bool is_pooled = GENERATE(true, false);
+        bool const is_pooled = GENERATE(true, false);
+        CAPTURE(is_pooled);
         OIDCTestFixture tf(
             v_noabi::uri("mongodb://localhost:27017/?retryReads=false&authMechanism=MONGODB-OIDC"), opts, is_pooled);
 
@@ -103,7 +104,8 @@ TEST_CASE("OIDC (v_noabi)", "[oidc]") {
         opts.oidc_callback(cb);
 
         // Create an OIDC configured client with a bad callback:
-        bool is_pooled = GENERATE(true, false);
+        bool const is_pooled = GENERATE(true, false);
+        CAPTURE(is_pooled);
         OIDCTestFixture tf(
             v_noabi::uri("mongodb://localhost:27017/?retryReads=false&authMechanism=MONGODB-OIDC"), opts, is_pooled);
 

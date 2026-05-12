@@ -107,7 +107,8 @@ TEST_CASE("OIDC prose tests", "[oidc]") {
         opts.oidc_callback(cb);
 
         // Spec: "Create an OIDC configured client"
-        bool is_pooled = GENERATE(true, false);
+        bool const is_pooled = GENERATE(true, false);
+        CAPTURE(is_pooled);
         OIDCTestFixture tf(
             v1::uri("mongodb://localhost:27017/?retryReads=false&authMechanism=MONGODB-OIDC"), opts, is_pooled);
 
@@ -197,7 +198,8 @@ TEST_CASE("OIDC prose tests", "[oidc]") {
         opts.oidc_callback(cb);
 
         // Spec: "Create an OIDC configured client"
-        bool is_pooled = GENERATE(true, false);
+        bool const is_pooled = GENERATE(true, false);
+        CAPTURE(is_pooled);
 
         v1::uri uri = (with_username)
                           ? v1::uri("mongodb://user@localhost:27017/?retryReads=false&authMechanism=MONGODB-OIDC")
@@ -225,7 +227,8 @@ TEST_CASE("OIDC prose tests", "[oidc]") {
         opts.oidc_callback(cb);
 
         // Spec: "Create an OIDC configured client with an OIDC callback that returns `null`"
-        bool is_pooled = GENERATE(true, false);
+        bool const is_pooled = GENERATE(true, false);
+        CAPTURE(is_pooled);
         OIDCTestFixture tf(
             v1::uri("mongodb://localhost:27017/?retryReads=false&authMechanism=MONGODB-OIDC"), opts, is_pooled);
 
@@ -249,7 +252,8 @@ TEST_CASE("OIDC prose tests", "[oidc]") {
 
         // Spec: "Create an OIDC configured client with an OIDC callback that returns data not conforming to the
         // `OIDCCredential` with missing fields."
-        bool is_pooled = GENERATE(true, false);
+        bool const is_pooled = GENERATE(true, false);
+        CAPTURE(is_pooled);
         OIDCTestFixture tf(
             v1::uri("mongodb://localhost:27017/?retryReads=false&authMechanism=MONGODB-OIDC"), opts, is_pooled);
 
@@ -267,7 +271,8 @@ TEST_CASE("OIDC prose tests", "[oidc]") {
         opts.oidc_callback(cb);
 
         // Spec: "Create an OIDC configured client"
-        bool is_pooled = GENERATE(true, false);
+        bool const is_pooled = GENERATE(true, false);
+        CAPTURE(is_pooled);
 
         CHECK_THROWS_WITH(
             OIDCTestFixture(
@@ -286,7 +291,8 @@ TEST_CASE("OIDC prose tests", "[oidc]") {
         opts.oidc_callback(cb);
 
         // Spec: "Create an OIDC configured client"
-        bool is_pooled = GENERATE(true, false);
+        bool const is_pooled = GENERATE(true, false);
+        CAPTURE(is_pooled);
 
         CHECK_THROWS_WITH(
             OIDCTestFixture(
@@ -313,7 +319,8 @@ TEST_CASE("OIDC prose tests", "[oidc]") {
         auto opts = v1::client::options();
         opts.oidc_callback(cb);
 
-        bool is_pooled = GENERATE(true, false);
+        bool const is_pooled = GENERATE(true, false);
+        CAPTURE(is_pooled);
         OIDCTestFixture tf(
             v1::uri("mongodb://localhost:27017/?retryReads=false&authMechanism=MONGODB-OIDC"), opts, is_pooled);
 
@@ -337,7 +344,8 @@ TEST_CASE("OIDC prose tests", "[oidc]") {
         opts.oidc_callback(cb);
 
         // Spec: "Create an OIDC configured client"
-        bool is_pooled = GENERATE(true, false);
+        bool const is_pooled = GENERATE(true, false);
+        CAPTURE(is_pooled);
         OIDCTestFixture tf(
             v1::uri("mongodb://localhost:27017/?retryReads=false&authMechanism=MONGODB-OIDC"), opts, is_pooled);
 
@@ -377,7 +385,8 @@ TEST_CASE("OIDC prose tests", "[oidc]") {
         opts.oidc_callback(cb);
 
         // Spec: "Create an OIDC configured client"
-        bool is_pooled = GENERATE(true, false);
+        bool const is_pooled = GENERATE(true, false);
+        CAPTURE(is_pooled);
         OIDCTestFixture tf(
             v1::uri("mongodb://localhost:27017/?retryReads=false&authMechanism=MONGODB-OIDC"), opts, is_pooled);
 
@@ -414,7 +423,8 @@ TEST_CASE("OIDC prose tests", "[oidc]") {
         auto opts = v1::client::options();
         opts.oidc_callback(cb);
 
-        bool is_pooled = GENERATE(true, false);
+        bool const is_pooled = GENERATE(true, false);
+        CAPTURE(is_pooled);
         OIDCTestFixture tf(
             v1::uri("mongodb://localhost:27017/?retryReads=false&authMechanism=MONGODB-OIDC"), opts, is_pooled);
 
@@ -456,7 +466,8 @@ TEST_CASE("OIDC prose tests", "[oidc]") {
         auto opts = v1::client::options();
         opts.oidc_callback(cb);
 
-        bool is_pooled = GENERATE(true, false);
+        bool const is_pooled = GENERATE(true, false);
+        CAPTURE(is_pooled);
         OIDCTestFixture tf(
             v1::uri("mongodb://localhost:27017/?retryReads=false&authMechanism=MONGODB-OIDC"), opts, is_pooled);
 
@@ -495,7 +506,8 @@ TEST_CASE("OIDC prose tests", "[oidc]") {
         opts.oidc_callback(cb);
 
         // Spec: "Create an OIDC configured client"
-        bool is_pooled = GENERATE(true, false);
+        bool const is_pooled = GENERATE(true, false);
+        CAPTURE(is_pooled);
         OIDCTestFixture tf(
             v1::uri("mongodb://localhost:27017/?retryReads=false&authMechanism=MONGODB-OIDC"), opts, is_pooled);
 
