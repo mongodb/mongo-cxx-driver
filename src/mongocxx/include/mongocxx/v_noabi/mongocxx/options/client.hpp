@@ -19,6 +19,7 @@
 //
 
 #include <mongocxx/v1/client.hpp> // IWYU pragma: export
+#include <mongocxx/v1/oidc_callback.hpp>
 
 #include <string> // IWYU pragma: keep: backward compatibility, to be removed.
 #include <utility>
