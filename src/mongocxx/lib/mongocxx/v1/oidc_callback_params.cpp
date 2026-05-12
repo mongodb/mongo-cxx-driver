@@ -59,7 +59,7 @@ bsoncxx::v1::stdx::optional<bsoncxx::v1::stdx::string_view> oidc_callback_params
     return bsoncxx::v1::stdx::nullopt;
 }
 
-oidc_callback_params oidc_callback_params::internal::make(mongoc_oidc_callback_params_t* ptr) {
+oidc_callback_params oidc_callback_params::internal::make(mongoc_oidc_callback_params_t const* ptr) {
     return oidc_callback_params{ptr};
 }
 

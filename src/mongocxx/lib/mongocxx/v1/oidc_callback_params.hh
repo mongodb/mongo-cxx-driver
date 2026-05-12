@@ -25,7 +25,7 @@ namespace v1 {
 
 class oidc_callback_params::internal {
    public:
-    static oidc_callback_params make(mongoc_oidc_callback_params_t* ptr);
+    static oidc_callback_params make(mongoc_oidc_callback_params_t const* ptr);
 };
 
 } // namespace v1
