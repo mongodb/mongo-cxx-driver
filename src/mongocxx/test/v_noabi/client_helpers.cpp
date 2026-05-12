@@ -601,7 +601,7 @@ cseeos_result client_side_encryption_enabled_or_skip_impl() {
 
 #endif // defined(MONGOC_ENABLE_CLIENT_SIDE_ENCRYPTION)
 
-std::string getenv_or_fail(std::string const env_name) {
+std::string getenv_or_fail(std::string const& env_name) {
     auto val = std::getenv(env_name.c_str());
     if (!val) {
         FAIL("Please set the environment variable: " << env_name);
