@@ -25,6 +25,8 @@
 #include <mongocxx/v1/pool.hpp>
 #include <mongocxx/v1/uri.hpp>
 
+#include <bsoncxx/test/v1/stdx/optional.hh>
+
 #include <mongocxx/test/private/scoped_bson.hh>
 
 #include <atomic>

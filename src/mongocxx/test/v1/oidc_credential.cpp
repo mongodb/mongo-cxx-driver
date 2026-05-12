@@ -16,6 +16,8 @@
 
 //
 
+#include <bsoncxx/test/v1/stdx/optional.hh>
+
 #include <chrono>
 
 #include <catch2/catch_test_macros.hpp>
