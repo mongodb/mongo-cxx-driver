@@ -26,6 +26,7 @@ namespace mongocxx {
 namespace v_noabi {
 namespace options {
 
+// Preserved for backward compatibility. New v1 API should not be redeclared in v_noabi.
 using text = v1::text_options;
 
 } // namespace options
@@ -35,6 +36,7 @@ using text = v1::text_options;
 namespace mongocxx {
 namespace options {
 
+// Preserved for backward compatibility. New v1 API should not be redeclared in v_noabi.
 using v_noabi::options::text;
 
 } // namespace options
@@ -44,8 +46,8 @@ using v_noabi::options::text;
 
 ///
 /// @file
-/// Declares @ref mongocxx::v_noabi::options::range.
+/// Provides @ref mongocxx::text_options.
 ///
 /// @par Includes
-/// - @ref mongocxx/v1/range_options.hpp
+/// - @ref mongocxx/v1/text_options.hpp
 ///
