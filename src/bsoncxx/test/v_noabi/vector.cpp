@@ -138,6 +138,8 @@ void iterator_operations(
     BSONCXX_PRIVATE_WARNINGS_PUSH();
     BSONCXX_PRIVATE_WARNINGS_DISABLE(GNU("-Wfloat-equal"));
 
+    *begin = element_unit;
+    *(begin + 1) = static_cast<Element>(element_unit + Element{1});
     CHECK(iter_copy[0] == *begin);
     CHECK(iter_copy[1] == *(begin + 1));
 
