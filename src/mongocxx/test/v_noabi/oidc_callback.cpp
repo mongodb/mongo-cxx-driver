@@ -93,7 +93,7 @@ TEST_CASE("OIDC (v_noabi)", "[oidc]") {
         tf.client().database("test").run_command(bsoncxx::v_noabi::from_v1(scoped_bson{R"({"ping": 1})"}.view()));
 
         // Expect callback was called:
-        REQUIRE(callback_call_count == 1u);
+        CHECK(callback_call_count == 1u);
     }
 
     SECTION("Throws exception in v_noabi namespace") {

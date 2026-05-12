@@ -116,7 +116,7 @@ TEST_CASE("OIDC prose tests", "[oidc]") {
         tf.client().database("test").collection("test").find_one(scoped_bson{}.view());
 
         // Spec: "Assert that the callback was called 1 time"
-        REQUIRE(callback_call_count == 1u);
+        CHECK(callback_call_count == 1u);
     }
 
     SECTION("1.2 Callback is called once for multiple connections") {
@@ -162,7 +162,7 @@ TEST_CASE("OIDC prose tests", "[oidc]") {
         }
 
         // Spec: "Assert that the callback was called 1 time"
-        REQUIRE(callback_call_count == 1u);
+        CHECK(callback_call_count == 1u);
     }
 
     SECTION("2.1 Valid Callback Inputs") {
@@ -178,16 +178,16 @@ TEST_CASE("OIDC prose tests", "[oidc]") {
                 auto const epsilon = std::chrono::seconds(10);
                 auto low = std::chrono::steady_clock::now() + expected_duration - epsilon;
                 auto high = std::chrono::steady_clock::now() + expected_duration + epsilon;
-                REQUIRE(timeout >= low);
-                REQUIRE(timeout <= high);
+                CHECK(timeout >= low);
+                CHECK(timeout <= high);
             }
 
-            REQUIRE(params.version() == 1);
+            CHECK(params.version() == 1);
 
             if (with_username) {
                 CHECK(params.username() == "user");
             } else {
-                REQUIRE(!params.username().has_value());
+                CHECK(!params.username().has_value());
             }
             callback_call_count++;
 
@@ -210,7 +210,7 @@ TEST_CASE("OIDC prose tests", "[oidc]") {
         tf.client().database("test").collection("test").find_one(scoped_bson{}.view());
 
         // Spec: "Assert that the OIDC callback was called"
-        REQUIRE(callback_call_count == 1u);
+        CHECK(callback_call_count == 1u);
     }
 
     SECTION("2.2 OIDC Callback Returns Null") {
@@ -234,7 +234,7 @@ TEST_CASE("OIDC prose tests", "[oidc]") {
         CHECK_THROWS_WITH(
             tf.client().database("test").collection("test").find_one(scoped_bson{}.view()),
             Catch::Matchers::ContainsSubstring("Authentication failed"));
-        REQUIRE(callback_call_count == 1u);
+        CHECK(callback_call_count == 1u);
     }
 
     SECTION("2.3 OIDC Callback Returns Missing Data") {
@@ -258,7 +258,7 @@ TEST_CASE("OIDC prose tests", "[oidc]") {
         CHECK_THROWS_WITH(
             tf.client().database("test").collection("test").find_one(scoped_bson{}.view()),
             Catch::Matchers::ContainsSubstring("Authentication failed"));
-        REQUIRE(callback_call_count == 1u);
+        CHECK(callback_call_count == 1u);
     }
 
     SECTION("2.4 Invalid Client Configuration with Callback") {
@@ -324,7 +324,7 @@ TEST_CASE("OIDC prose tests", "[oidc]") {
             Catch::Matchers::ContainsSubstring("Authentication failed"));
 
         // Spec: "Assert that the callback was called 1 time"
-        REQUIRE(callback_call_count == 1u);
+        CHECK(callback_call_count == 1u);
     }
 
     SECTION("3.3 Unexpected error code does not clear the cache") {
@@ -358,13 +358,13 @@ TEST_CASE("OIDC prose tests", "[oidc]") {
             Catch::Matchers::ContainsSubstring("failpoint"));
 
         // Spec: "Assert that the callback has been called once"
-        REQUIRE(callback_call_count == 1u);
+        CHECK(callback_call_count == 1u);
 
         // Spec: "Perform a `find` operation that succeeds"
         tf.client().database("test").collection("test").find_one(scoped_bson{}.view());
 
         // Spec: "Assert that the callback has been called once"
-        REQUIRE(callback_call_count == 1u);
+        CHECK(callback_call_count == 1u);
     }
 
     SECTION("4.1 Reauthentication Succeeds") {
@@ -396,7 +396,7 @@ TEST_CASE("OIDC prose tests", "[oidc]") {
         tf.client().database("test").collection("test").find_one(scoped_bson{}.view());
 
         // Spec: "Assert that the callback was called 2 times"
-        REQUIRE(callback_call_count == 2u);
+        CHECK(callback_call_count == 2u);
     }
 
     SECTION("4.2 Read Commands Fail If Reauthentication Fails") {
@@ -438,7 +438,7 @@ TEST_CASE("OIDC prose tests", "[oidc]") {
             Catch::Matchers::ContainsSubstring("Authentication failed"));
 
         // Spec: "Assert that the callback was called 2 times"
-        REQUIRE(callback_call_count == 2u);
+        CHECK(callback_call_count == 2u);
     }
 
     SECTION("4.3 Write Commands Fail If Reauthentication Fails") {
@@ -480,7 +480,7 @@ TEST_CASE("OIDC prose tests", "[oidc]") {
             Catch::Matchers::ContainsSubstring("Authentication failed"));
 
         // Spec: "Assert that the callback was called 2 times"
-        REQUIRE(callback_call_count == 2u);
+        CHECK(callback_call_count == 2u);
     }
 
     // 4.4 is not implemented. Requires modifying "Client Cache" which is internal to libmongoc.
@@ -517,7 +517,7 @@ TEST_CASE("OIDC prose tests", "[oidc]") {
         tf.client().database("test").collection("test").find_one(session, scoped_bson{}.view());
 
         // Spec: "Assert that the callback was called 2 times"
-        REQUIRE(callback_call_count == 2u);
+        CHECK(callback_call_count == 2u);
     }
 
     // 5 is not implemented. Tested by libmongoc and requires no additional C++ driver code.
