@@ -23,7 +23,7 @@ class TestOIDC(Function):
 
             # Sets environment variables: OIDC_TOKEN_FILE, OIDC_ADMIN_USER, and OIDC_ADMIN_PWD.
             source "${DRIVERS_TOOLS}/.evergreen/auth_oidc/secrets-export.sh"
-            ./build/src/mongocxx/test/test_driver "[oidc]"
+            ./build/src/mongocxx/test/test_driver "[oidc],[oidc_callback]"
             export AUTH_TESTS_PATH="$(pwd)/data/auth/unified"
             ./build/src/mongocxx/test/test_unified_format_specs "auth*" -c "mongodb-oidc-no-retry.json"
         """,

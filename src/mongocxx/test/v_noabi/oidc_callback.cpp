@@ -64,7 +64,7 @@ class OIDCTestFixture {
     bsoncxx::v_noabi::stdx::optional<v_noabi::client> _client;
 };
 
-TEST_CASE("OIDC (v_noabi)", "[oidc]") {
+TEST_CASE("OIDC (v_noabi)", "[mongocxx][v_noabi][oidc_callback]") {
     if (nullptr == std::getenv("OIDC_TOKEN_FILE")) {
         SKIP("Set OIDC_TOKEN_FILE to run OIDC tests");
     }
