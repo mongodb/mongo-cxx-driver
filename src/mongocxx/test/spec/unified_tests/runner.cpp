@@ -60,13 +60,6 @@ using bsoncxx::builder::basic::make_document;
 using schema_versions_t = std::array<std::array<int, 3 /* major.minor.patch */>, 3 /* supported version */>;
 constexpr schema_versions_t schema_versions{{{{1, 1, 0}}, {{1, 8, 0}}, {{1, 19, 0}}}};
 
-mongocxx::uri test_uri() {
-    if (auto const* env = std::getenv("MONGOCXX_TEST_OIDC_AUTH_URI")) {
-        return mongocxx::uri{env};
-    }
-    return mongocxx::uri{"mongodb://localhost:27017"};
-}
-
 std::pair<std::unordered_map<std::string, spec::apm_checker>&, entity::map&> init_maps() {
     // Below initializes the static apm map and entity map if needed, in that order. This will also
     // ensure they are destroyed in reverse order, which prevents a "heap-use-after-free" error.
@@ -299,7 +292,7 @@ bool compatible_with_server(bsoncxx::array::element const& requirement) {
     if (auto const authMechanism = requirement["authMechanism"]) {
         REQUIRE(authMechanism.type() == bsoncxx::type::k_string);
         if (authMechanism.get_string().value == "MONGODB-OIDC") {
-            if (!std::getenv("MONGOCXX_TEST_OIDC_AUTH_URI")) {
+            if (!std::getenv("OIDC_TOKEN_FILE")) {
                 // Test environment not configured for OIDC.
                 return false;
             }
@@ -395,7 +388,12 @@ std::string uri_options_to_string(document::view object) {
 }
 
 std::string get_hostnames(bsoncxx::document::view object) {
-    auto const uri0 = test_uri();
+    auto uri0 = mongocxx::uri{"mongodb://localhost:27017"};
+    if (auto const* oidc_user = std::getenv("OIDC_ADMIN_USER")) {
+        auto const* oidc_pwd = std::getenv("OIDC_ADMIN_PWD");
+        // The OIDC test server requires auth. For test setup, use username/password.
+        uri0 = mongocxx::uri{"mongodb://" + std::string(oidc_user) + ":" + std::string(oidc_pwd) + "@localhost:27017"};
+    }
 
     // All test topologies should have either a mongod or mongos on localhost:27017.
     mongocxx::client const client0{uri0, test_util::add_test_server_api()};
@@ -728,7 +726,7 @@ client create_client(document::view object) {
         if (auth_mechanism && auth_mechanism.type() == bsoncxx::type::k_string &&
             auth_mechanism.get_string().value == "MONGODB-OIDC") {
             client_opts.oidc_callback([](mongocxx::v1::oidc_callback_params const&) {
-                std::ifstream token_file("/tmp/tokens/test_machine");
+                std::ifstream token_file(test_util::getenv_or_fail("OIDC_TOKEN_FILE"));
                 REQUIRE(token_file.is_open());
                 return mongocxx::v1::oidc_credential(
                     std::string((std::istreambuf_iterator<char>(token_file)), std::istreambuf_iterator<char>()));

@@ -56,10 +56,12 @@ using bsoncxx::builder::basic::make_document;
 namespace {
 
 mongocxx::uri test_uri() {
-    if (auto const* env = std::getenv("MONGOCXX_TEST_OIDC_AUTH_URI")) {
-        return mongocxx::uri{env};
+    if (auto const* oidc_user = std::getenv("OIDC_ADMIN_USER")) {
+        auto const* oidc_pwd = std::getenv("OIDC_ADMIN_PWD");
+        // The OIDC test server requires auth. For test setup, use username/password.
+        return mongocxx::uri{"mongodb://" + std::string(oidc_user) + ":" + std::string(oidc_pwd) + "@localhost:27017"};
     }
-    return mongocxx::uri{};
+    return mongocxx::uri{"mongodb://localhost:27017"};
 }
 
 // These frequently used network calls are cached to avoid bottlenecks during tests.
@@ -598,7 +600,7 @@ cseeos_result client_side_encryption_enabled_or_skip_impl() {
 
 #endif // defined(MONGOC_ENABLE_CLIENT_SIDE_ENCRYPTION)
 
-std::string getenv_or_fail(const std::string env_name) {
+std::string getenv_or_fail(std::string const env_name) {
     auto val = std::getenv(env_name.c_str());
     if (!val) {
         FAIL("Please set the environment variable: " << env_name);

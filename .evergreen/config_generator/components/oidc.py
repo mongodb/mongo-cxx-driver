@@ -19,7 +19,9 @@ class TestOIDC(Function):
         working_dir='mongo-cxx-driver',
         script="""\
             export LD_LIBRARY_PATH=$(pwd)/../mongoc/lib
-            export MONGOCXX_TEST_OIDC_AUTH_URI="mongodb://bob:pwd123@localhost:27017"
+
+            # Sets environment variables: OIDC_TOKEN_FILE, OIDC_ADMIN_USER, and OIDC_ADMIN_PWD.
+            source ${DRIVERS_TOOLS}/.evergreen/auth_oidc/secrets-export.sh
             ./build/src/mongocxx/test/test_driver '[oidc]'
         """,
     )

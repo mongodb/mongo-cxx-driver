@@ -71,9 +71,11 @@ class OIDCTestFixture {
 };
 
 namespace {
-// Read token from /tmp/tokens/test_machine
+// Read token from OIDC_TOKEN_FILE
 std::string read_token_from_file() {
-    std::ifstream token_file("/tmp/tokens/test_machine");
+    auto oidc_token_file = std::getenv("OIDC_TOKEN_FILE");
+    REQUIRE(oidc_token_file);
+    std::ifstream token_file(oidc_token_file);
     REQUIRE(token_file.is_open());
     return std::string((std::istreambuf_iterator<char>(token_file)), std::istreambuf_iterator<char>());
 }
@@ -91,8 +93,8 @@ void admin_command(std::string cmd) {
 } // namespace
 
 TEST_CASE("OIDC prose tests", "[oidc]") {
-    if (nullptr == std::getenv("MONGOCXX_TEST_OIDC_AUTH_URI")) {
-        SKIP("Set MONGOCXX_TEST_OIDC_AUTH_URI to run OIDC tests");
+    if (nullptr == std::getenv("OIDC_TOKEN_FILE")) {
+        SKIP("Set OIDC_TOKEN_FILE to run OIDC tests");
     }
 
     SECTION("1.1 Callback is called during authentication") {

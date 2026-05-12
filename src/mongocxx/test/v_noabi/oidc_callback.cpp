@@ -18,6 +18,7 @@
 
 #include <mongocxx/test/private/scoped_bson.hh>
 #include <mongocxx/test/v_noabi/catch_helpers.hh>
+#include <mongocxx/test/v_noabi/client_helpers.hh>
 
 #include <fstream>
 #include <string>
@@ -65,15 +66,15 @@ class OIDCTestFixture {
 };
 
 TEST_CASE("OIDC (v_noabi)", "[oidc]") {
-    if (nullptr == std::getenv("MONGOCXX_TEST_OIDC_AUTH_URI")) {
-        SKIP("Set MONGOCXX_TEST_OIDC_AUTH_URI to run OIDC tests");
+    if (nullptr == std::getenv("OIDC_TOKEN_FILE")) {
+        SKIP("Set OIDC_TOKEN_FILE to run OIDC tests");
     }
 
     SECTION("Works") {
         auto callback_call_count = 0u;
         v1::oidc_callback cb = [&](v1::oidc_callback_params const&) {
             callback_call_count++;
-            std::ifstream token_file("/tmp/tokens/test_machine");
+            std::ifstream token_file(test_util::getenv_or_fail("OIDC_TOKEN_FILE"));
             REQUIRE(token_file.is_open());
             auto token_str =
                 std::string((std::istreambuf_iterator<char>(token_file)), std::istreambuf_iterator<char>());
