@@ -52,28 +52,28 @@ def tasks():
 def task_groups():
     return [
         EvgTaskGroup(
-            name="test-oidc-task-group",
-            tasks=["oidc-auth-test-task"],
+            name='test-oidc-task-group',
+            tasks=['oidc-auth-test-task'],
             setup_group_can_fail_task=True,
             teardown_group_timeout_secs=180,  # 3 minutes
             setup_group=[
                 Setup.call(),
                 FetchDET.call(),
-                ec2_assume_role(role_arn="${aws_test_secrets_role}"),
+                ec2_assume_role(role_arn='${aws_test_secrets_role}'),
                 bash_exec(
                     command_type=EvgCommandType.SETUP,
                     include_expansions_in_env=[
-                        "AWS_ACCESS_KEY_ID",
-                        "AWS_SECRET_ACCESS_KEY",
-                        "AWS_SESSION_TOKEN",
+                        'AWS_ACCESS_KEY_ID',
+                        'AWS_SECRET_ACCESS_KEY',
+                        'AWS_SESSION_TOKEN',
                     ],
-                    script="./drivers-evergreen-tools/.evergreen/auth_oidc/setup.sh",
+                    script='./drivers-evergreen-tools/.evergreen/auth_oidc/setup.sh',
                 ),
             ],
             teardown_group=[
                 bash_exec(
                     command_type=EvgCommandType.SETUP,
-                    script="./drivers-evergreen-tools/.evergreen/auth_oidc/teardown.sh",
+                    script='./drivers-evergreen-tools/.evergreen/auth_oidc/teardown.sh',
                 )
             ],
         )
@@ -83,10 +83,10 @@ def task_groups():
 def variants():
     return [
         BuildVariant(
-            name="oidc",
-            display_name="OIDC",
+            name='oidc',
+            display_name='OIDC',
             tasks=[
-                EvgTaskRef(name="test-oidc-task-group"),
+                EvgTaskRef(name='test-oidc-task-group'),
             ],
         ),
     ]
