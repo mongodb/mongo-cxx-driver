@@ -61,12 +61,12 @@ TEST_CASE("ownership", "[mongocxx][v1][oidc_credential]") {
 
 TEST_CASE("getters", "[mongocxx][v1][oidc_credential]") {
     SECTION("without expiration") {
-        oidc_credential creds{"foo"};
+        oidc_credential const creds{"foo"};
         CHECK(creds.access_token() == "foo");
         CHECK(!creds.expires_in());
     }
     SECTION("with expiration") {
-        oidc_credential creds{"bar", std::chrono::milliseconds{123}};
+        oidc_credential const creds{"bar", std::chrono::milliseconds{123}};
         CHECK(creds.access_token() == "bar");
         CHECK(creds.expires_in());
         CHECK(creds.expires_in()->count() == 123);
