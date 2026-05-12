@@ -25,7 +25,7 @@ class TestOIDC(Function):
             source "${DRIVERS_TOOLS}/.evergreen/auth_oidc/secrets-export.sh"
             ./build/src/mongocxx/test/test_driver "[oidc],[oidc_callback]"
             export AUTH_TESTS_PATH="$(pwd)/data/auth/unified"
-            ./build/src/mongocxx/test/test_unified_format_specs "auth*" -c "mongodb-oidc-no-retry.json"
+            ./build/src/mongocxx/test/test_unified_format_specs "auth*" -p "c:mongodb-oidc-no-retry.json"
         """,
     )
 
