@@ -178,14 +178,15 @@ TEST_CASE("OIDC prose tests", "[oidc]") {
         oidc_callback cb = [&](oidc_callback_params const& params) {
             // Expect timeout is roughly 60 seconds:
             {
-                REQUIRE(params.timeout());
-                auto timeout = params.timeout().value();
+                auto const timeout = params.timeout();
+                auto const now = std::chrono::steady_clock::now();
+                REQUIRE(timeout);
                 auto const expected_duration = std::chrono::seconds(60);
                 auto const epsilon = std::chrono::seconds(10);
-                auto low = std::chrono::steady_clock::now() + expected_duration - epsilon;
-                auto high = std::chrono::steady_clock::now() + expected_duration + epsilon;
-                CHECK(timeout >= low);
-                CHECK(timeout <= high);
+                auto const low = now + expected_duration - epsilon;
+                auto const high = now + expected_duration + epsilon;
+                CHECK(timeout.value() >= low);
+                CHECK(timeout.value() <= high);
             }
 
             CHECK(params.version() == 1);
