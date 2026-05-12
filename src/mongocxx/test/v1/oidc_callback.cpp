@@ -49,14 +49,14 @@ class OIDCTestFixture {
             _client.emplace(uri, opts);
         }
     }
-    mongocxx::v1::client& client() {
+    v1::client& client() {
         if (_is_pooled) {
             return *(_pool_entry.value());
         } else {
             return *_client;
         }
     }
-    mongocxx::v1::pool& pool() {
+    v1::pool& pool() {
         if (!_is_pooled) {
             throw std::logic_error("Not a pooled client");
         }
@@ -86,8 +86,7 @@ void admin_command(std::string cmd) {
     auto opts = v1::client::options();
     opts.oidc_callback(cb);
 
-    auto client =
-        mongocxx::v1::client(v1::uri("mongodb://localhost:27017/?retryReads=false&authMechanism=MONGODB-OIDC"), opts);
+    auto client = v1::client(v1::uri("mongodb://localhost:27017/?retryReads=false&authMechanism=MONGODB-OIDC"), opts);
     client.database("admin").run_command(scoped_bson(cmd).view());
 }
 } // namespace
@@ -137,7 +136,7 @@ TEST_CASE("OIDC prose tests", "[oidc]") {
 
         // Spec: "Start 10 threads and run 100 `find` operations in each thread that all succeed."
         std::vector<std::thread> threads;
-        std::vector<mongocxx::v1::pool::entry> pool_entries;
+        std::vector<v1::pool::entry> pool_entries;
 
         auto const num_threads = 10u;
         // Acquire one client per thread:
@@ -200,9 +199,9 @@ TEST_CASE("OIDC prose tests", "[oidc]") {
         // Spec: "Create an OIDC configured client"
         bool is_pooled = GENERATE(true, false);
 
-        mongocxx::v1::uri uri =
-            (with_username) ? v1::uri("mongodb://user@localhost:27017/?retryReads=false&authMechanism=MONGODB-OIDC")
-                            : v1::uri("mongodb://localhost:27017/?retryReads=false&authMechanism=MONGODB-OIDC");
+        v1::uri uri = (with_username)
+                          ? v1::uri("mongodb://user@localhost:27017/?retryReads=false&authMechanism=MONGODB-OIDC")
+                          : v1::uri("mongodb://localhost:27017/?retryReads=false&authMechanism=MONGODB-OIDC");
 
         OIDCTestFixture tf(uri, opts, is_pooled);
 

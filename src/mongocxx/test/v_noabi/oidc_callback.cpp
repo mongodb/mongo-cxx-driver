@@ -42,7 +42,7 @@ namespace v_noabi {
 
 class OIDCTestFixture {
    public:
-    OIDCTestFixture(v_noabi::uri uri, mongocxx::v_noabi::options::client opts, bool is_pooled) : _is_pooled(is_pooled) {
+    OIDCTestFixture(v_noabi::uri uri, v_noabi::options::client opts, bool is_pooled) : _is_pooled(is_pooled) {
         if (is_pooled) {
             _pool.emplace(uri, opts);
             _pool_entry = _pool->acquire();
@@ -50,7 +50,7 @@ class OIDCTestFixture {
             _client.emplace(uri, opts);
         }
     }
-    mongocxx::v_noabi::client& client() {
+    v_noabi::client& client() {
         if (_is_pooled) {
             return *(_pool_entry.value());
         } else {
