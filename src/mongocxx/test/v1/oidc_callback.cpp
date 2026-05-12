@@ -83,14 +83,13 @@ std::string read_token_from_file() {
 }
 
 void admin_command(std::string cmd) {
-    auto const token = read_token_from_file();
-    oidc_callback cb = [&](oidc_callback_params const&) { return oidc_credential(token); };
-
-    auto opts = v1::client::options();
-    opts.oidc_callback(cb);
-
-    auto client = v1::client(v1::uri("mongodb://localhost:27017/?retryReads=false&authMechanism=MONGODB-OIDC"), opts);
-    client.database("admin").run_command(scoped_bson(cmd).view());
+    auto const* oidc_user = std::getenv("OIDC_ADMIN_USER");
+    REQUIRE(oidc_user);
+    auto const* oidc_pwd = std::getenv("OIDC_ADMIN_PWD");
+    REQUIRE(oidc_pwd);
+    // The OIDC test server requires auth. For test setup, use username/password.
+    auto const uri = v1::uri{"mongodb://" + std::string(oidc_user) + ":" + std::string(oidc_pwd) + "@localhost:27017"};
+    v1::client(uri).database("admin").run_command(scoped_bson(cmd).view());
 }
 } // namespace
 
