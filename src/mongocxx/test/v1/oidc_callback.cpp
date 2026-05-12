@@ -185,8 +185,7 @@ TEST_CASE("OIDC prose tests", "[oidc]") {
             REQUIRE(params.version() == 1);
 
             if (with_username) {
-                REQUIRE(params.username().has_value());
-                REQUIRE(params.username().value() == "user");
+                CHECK(params.username() == "user");
             } else {
                 REQUIRE(!params.username().has_value());
             }
