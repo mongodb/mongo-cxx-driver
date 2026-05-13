@@ -142,12 +142,11 @@ struct fail_command_guard {
 
     ~fail_command_guard() {
         // Try to disable failpoint. Ignore error.
-        scoped_bson data(BCON_NEW("appName", _appname.c_str()));
         auto cmd = scoped_bson(R"({
             "configureFailPoint": "failCommand",
             "mode": "off"
         })");
-        cmd += scoped_bson(BCON_NEW("data", BCON_DOCUMENT(data.bson())));
+        cmd += scoped_bson(BCON_NEW("data", "{", "appName", _appname.c_str(), "}"));
         try {
             admin_command(cmd.view());
         } catch (...) {
