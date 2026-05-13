@@ -34,8 +34,8 @@ namespace v1 {
 ///
 /// Parameters passed to an OIDC callback.
 ///
-/// @note This type is not user-constructible. Instances are only provided by the driver as arguments to the registered
-/// credential callback.
+/// @note This type is not user-constructible. The lifetime of associated views is limited to the scope of the OIDC
+/// callback function to which this argument is passed.
 ///
 class oidc_callback_params {
     void const* _impl; // mongoc_oidc_callback_params_t const
