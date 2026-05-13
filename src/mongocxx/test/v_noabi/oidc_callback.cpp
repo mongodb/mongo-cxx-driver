@@ -41,12 +41,13 @@ namespace v_noabi {
 
 class OIDCTestFixture {
    public:
-    OIDCTestFixture(v_noabi::uri uri, v_noabi::options::client opts, bool is_pooled) {
+    OIDCTestFixture(v_noabi::options::client opts, bool is_pooled) {
+        v_noabi::uri uri("mongodb://localhost:27017/?retryReads=false&authMechanism=MONGODB-OIDC");
         if (is_pooled) {
-            _pool.emplace(uri, opts);
+            _pool.emplace(uri, std::move(opts));
             _pool_entry = _pool->acquire();
         } else {
-            _client.emplace(uri, opts);
+            _client.emplace(uri, std::move(opts));
         }
     }
     v_noabi::client& client() {
@@ -86,8 +87,7 @@ TEST_CASE("OIDC (v_noabi)", "[mongocxx][v_noabi][oidc_callback]") {
         // Create an OIDC configured client:
         bool const is_pooled = GENERATE(true, false);
         CAPTURE(is_pooled);
-        OIDCTestFixture tf(
-            v_noabi::uri("mongodb://localhost:27017/?retryReads=false&authMechanism=MONGODB-OIDC"), opts, is_pooled);
+        OIDCTestFixture tf(opts, is_pooled);
 
         /// Expect auth to succeed:
         CHECK_NOTHROW(
@@ -108,8 +108,7 @@ TEST_CASE("OIDC (v_noabi)", "[mongocxx][v_noabi][oidc_callback]") {
         // Create an OIDC configured client with a bad callback:
         bool const is_pooled = GENERATE(true, false);
         CAPTURE(is_pooled);
-        OIDCTestFixture tf(
-            v_noabi::uri("mongodb://localhost:27017/?retryReads=false&authMechanism=MONGODB-OIDC"), opts, is_pooled);
+        OIDCTestFixture tf(opts, is_pooled);
 
         CHECK_THROWS_MATCHES(
             tf.client().database("test").run_command(bsoncxx::v_noabi::from_v1(scoped_bson{R"({"ping": 1})"}.view())),
