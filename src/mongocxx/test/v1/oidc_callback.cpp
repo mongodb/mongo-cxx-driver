@@ -138,13 +138,6 @@ struct fail_command_guard {
         })");
         cmd += scoped_bson(BCON_NEW("data", BCON_DOCUMENT(data.bson())));
         admin_command(cmd.view());
-
-        // The OIDC test server requires auth. For test setup, use username/password.
-        auto const* oidc_user = std::getenv("OIDC_ADMIN_USER");
-        REQUIRE(oidc_user);
-        auto const* oidc_pwd = std::getenv("OIDC_ADMIN_PWD");
-        REQUIRE(oidc_pwd);
-        _uri = v1::uri{"mongodb://" + std::string(oidc_user) + ":" + std::string(oidc_pwd) + "@localhost:27017"};
     }
 
     ~fail_command_guard() {
@@ -168,10 +161,10 @@ struct fail_command_guard {
 
    private:
     void admin_command(bsoncxx::v1::document::view cmd) {
-        v1::client(_uri).database("admin").run_command(cmd);
+        // configureFailPoint does not require auth.
+        v1::client(v1::uri()).database("admin").run_command(cmd);
     }
     std::string _appname;
-    v1::uri _uri;
 };
 
 } // namespace
