@@ -79,7 +79,7 @@ class OIDCTestURI {
 
 class OIDCTestFixture {
    public:
-    OIDCTestFixture(v1::uri const& uri, v1::client::options opts, bool is_pooled) : _is_pooled(is_pooled) {
+    OIDCTestFixture(v1::uri const& uri, v1::client::options opts, bool is_pooled) {
         if (is_pooled) {
             _pool.emplace(uri, std::move(opts));
             _pool_entry = _pool->acquire();
@@ -88,21 +88,20 @@ class OIDCTestFixture {
         }
     }
     v1::client& client() {
-        if (_is_pooled) {
-            return *(_pool_entry.value());
+        if (_pool_entry) {
+            return **_pool_entry;
         } else {
             return *_client;
         }
     }
     v1::pool& pool() {
-        if (!_is_pooled) {
+        if (!_pool) {
             throw std::logic_error("Not a pooled client");
         }
         return *_pool;
     }
 
    private:
-    bool _is_pooled;
     bsoncxx::v1::stdx::optional<v1::pool> _pool;
     bsoncxx::v1::stdx::optional<v1::pool::entry> _pool_entry;
     bsoncxx::v1::stdx::optional<v1::client> _client;
