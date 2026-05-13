@@ -123,10 +123,14 @@ std::string read_token_from_file() {
 }
 
 struct fail_command_guard {
-    fail_command_guard(std::string cmd_name, std::int32_t err_code, std::string appname) : _appname(appname) {
-        scoped_bson data(BCON_NEW("failCommands", "[", cmd_name.c_str(), "]"));
-        data += scoped_bson(BCON_NEW("errorCode", BCON_INT32(err_code)));
-        data += scoped_bson(BCON_NEW("appName", appname.c_str()));
+    fail_command_guard(std::string const& cmd_name, std::int32_t err_code, std::string appname)
+        : _appname(std::move(appname)) {
+        // clang-format off
+        scoped_bson data(BCON_NEW(
+            "failCommands", "[", cmd_name.c_str(), "]",
+            "errorCode", BCON_INT32(err_code),
+            "appName", _appname.c_str()));
+        // clang-format on
 
         auto cmd = scoped_bson(R"({
             "configureFailPoint": "failCommand",
