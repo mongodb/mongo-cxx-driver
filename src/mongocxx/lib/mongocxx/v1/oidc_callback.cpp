@@ -23,8 +23,6 @@
 
 #include <mongocxx/private/mongoc.hh>
 
-#include <mongoc/mongoc.h>
-
 namespace mongocxx {
 namespace v1 {
 
