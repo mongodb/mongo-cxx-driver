@@ -79,12 +79,12 @@ class OIDCTestURI {
 
 class OIDCTestFixture {
    public:
-    OIDCTestFixture(v1::uri uri, v1::client::options opts, bool is_pooled) : _is_pooled(is_pooled) {
+    OIDCTestFixture(v1::uri const& uri, v1::client::options opts, bool is_pooled) : _is_pooled(is_pooled) {
         if (is_pooled) {
-            _pool.emplace(uri, opts);
+            _pool.emplace(uri, std::move(opts));
             _pool_entry = _pool->acquire();
         } else {
-            _client.emplace(uri, opts);
+            _client.emplace(uri, std::move(opts));
         }
     }
     v1::client& client() {
