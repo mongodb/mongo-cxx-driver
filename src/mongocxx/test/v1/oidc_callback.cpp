@@ -154,7 +154,7 @@ struct fail_command_guard {
     fail_command_guard& operator=(fail_command_guard&&) = delete;
 
    private:
-    void admin_command(bsoncxx::v1::document::view cmd) {
+    static void admin_command(bsoncxx::v1::document::view cmd) {
         // configureFailPoint does not require auth.
         v1::client(v1::uri()).database("admin").run_command(cmd);
     }
