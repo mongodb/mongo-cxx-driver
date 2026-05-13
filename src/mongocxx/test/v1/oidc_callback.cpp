@@ -303,14 +303,18 @@ TEST_CASE("OIDC prose tests", "[oidc]") {
         bool const is_pooled = GENERATE(true, false);
         CAPTURE(is_pooled);
 
+        OIDCTestFixture tf(
+            v1::uri(
+                "mongodb://localhost:27017/"
+                "?retryReads=false&authMechanism=MONGODB-OIDC&authMechanismProperties=ENVIRONMENT:test"),
+            opts,
+            is_pooled);
+
+        // Spec: "Assert it returns a client configuration error upon client creation, or client connect if your driver
+        // validates on connection". C driver errors on connection.
         CHECK_THROWS_WITH(
-            OIDCTestFixture(
-                v1::uri(
-                    "mongodb://localhost:27017/"
-                    "?retryReads=false&authMechanism=MONGODB-OIDC&authMechanismProperties=ENVIRONMENT:test"),
-                opts,
-                is_pooled),
-            Catch::Matchers::ContainsSubstring("Unsupported value for authMechanism"));
+            tf.client().database("test").collection("test").find_one(scoped_bson{}.view()),
+            Catch::Matchers::ContainsSubstring("requested with both ENVIRONMENT and an OIDC Callback"));
     }
 
     SECTION("2.5 Invalid use of ALLOWED_HOSTS") {
