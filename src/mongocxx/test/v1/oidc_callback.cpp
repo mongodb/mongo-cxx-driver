@@ -80,9 +80,6 @@ class OIDCTestURI {
 class OIDCTestFixture {
    public:
     OIDCTestFixture(v1::uri uri, v1::client::options opts, bool is_pooled) : _is_pooled(is_pooled) {
-        if (uri.appname()) {
-            _appname.emplace(*uri.appname());
-        }
         if (is_pooled) {
             _pool.emplace(uri, opts);
             _pool_entry = _pool->acquire();
@@ -109,7 +106,6 @@ class OIDCTestFixture {
     bsoncxx::v1::stdx::optional<v1::pool> _pool;
     bsoncxx::v1::stdx::optional<v1::pool::entry> _pool_entry;
     bsoncxx::v1::stdx::optional<v1::client> _client;
-    bsoncxx::v1::stdx::optional<std::string> _appname;
 };
 
 namespace {
