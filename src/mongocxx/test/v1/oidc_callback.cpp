@@ -307,7 +307,7 @@ TEST_CASE("OIDC prose tests", "[oidc]") {
             OIDCTestFixture(
                 v1::uri(
                     "mongodb://localhost:27017/"
-                    "?retryReads=false&authMechanism=MONGODB-OIDC,authMechanismProperties=ENVIRONMENT:test"),
+                    "?retryReads=false&authMechanism=MONGODB-OIDC&authMechanismProperties=ENVIRONMENT:test"),
                 opts,
                 is_pooled),
             Catch::Matchers::ContainsSubstring("Unsupported value for authMechanism"));
