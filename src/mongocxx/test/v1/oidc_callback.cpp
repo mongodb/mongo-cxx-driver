@@ -30,6 +30,7 @@
 #include <mongocxx/test/private/scoped_bson.hh>
 
 #include <atomic>
+#include <cstdint>
 #include <fstream>
 #include <thread>
 
@@ -51,6 +52,10 @@ class OIDCTestURI {
         _extra_opts = std::move(extra_opts);
         return *this;
     }
+    OIDCTestURI& with_appname(std::string appname) {
+        _appname = std::move(appname);
+        return *this;
+    }
     v1::uri build() {
         std::string uri_str = "mongodb://";
         if (_username) {
@@ -60,17 +65,24 @@ class OIDCTestURI {
         if (_extra_opts) {
             uri_str += "&" + *_extra_opts;
         }
+        if (_appname) {
+            uri_str += "&appName=" + *_appname;
+        }
         return v1::uri(uri_str);
     }
 
    private:
     bsoncxx::v1::stdx::optional<std::string> _username;
+    bsoncxx::v1::stdx::optional<std::string> _appname;
     bsoncxx::v1::stdx::optional<std::string> _extra_opts;
 };
 
 class OIDCTestFixture {
    public:
     OIDCTestFixture(v1::uri uri, v1::client::options opts, bool is_pooled) : _is_pooled(is_pooled) {
+        if (uri.appname()) {
+            _appname.emplace(*uri.appname());
+        }
         if (is_pooled) {
             _pool.emplace(uri, opts);
             _pool_entry = _pool->acquire();
@@ -97,6 +109,7 @@ class OIDCTestFixture {
     bsoncxx::v1::stdx::optional<v1::pool> _pool;
     bsoncxx::v1::stdx::optional<v1::pool::entry> _pool_entry;
     bsoncxx::v1::stdx::optional<v1::client> _client;
+    bsoncxx::v1::stdx::optional<std::string> _appname;
 };
 
 namespace {
@@ -109,36 +122,54 @@ std::string read_token_from_file() {
     return std::string((std::istreambuf_iterator<char>(token_file)), std::istreambuf_iterator<char>());
 }
 
-void admin_command(std::string cmd) {
-    auto const* oidc_user = std::getenv("OIDC_ADMIN_USER");
-    REQUIRE(oidc_user);
-    auto const* oidc_pwd = std::getenv("OIDC_ADMIN_PWD");
-    REQUIRE(oidc_pwd);
-    // The OIDC test server requires auth. For test setup, use username/password.
-    auto const uri = v1::uri{"mongodb://" + std::string(oidc_user) + ":" + std::string(oidc_pwd) + "@localhost:27017"};
-    v1::client(uri).database("admin").run_command(scoped_bson(cmd).view());
-}
+struct fail_command_guard {
+    fail_command_guard(std::string cmd_name, std::int32_t err_code, std::string appname) : _appname(appname) {
+        scoped_bson data(BCON_NEW("failCommands", "[", cmd_name.c_str(), "]"));
+        data += scoped_bson(BCON_NEW("errorCode", BCON_INT32(err_code)));
+        data += scoped_bson(BCON_NEW("appName", appname.c_str()));
 
-struct failCommand_guard {
-    failCommand_guard(std::string cmd) {
-        admin_command(cmd);
+        auto cmd = scoped_bson(R"({
+            "configureFailPoint": "failCommand",
+            "mode": { "times": 1 }
+        })");
+        cmd += scoped_bson(BCON_NEW("data", BCON_DOCUMENT(data.bson())));
+        admin_command(cmd.view());
+
+        // The OIDC test server requires auth. For test setup, use username/password.
+        auto const* oidc_user = std::getenv("OIDC_ADMIN_USER");
+        REQUIRE(oidc_user);
+        auto const* oidc_pwd = std::getenv("OIDC_ADMIN_PWD");
+        REQUIRE(oidc_pwd);
+        _uri = v1::uri{"mongodb://" + std::string(oidc_user) + ":" + std::string(oidc_pwd) + "@localhost:27017"};
     }
 
-    ~failCommand_guard() {
+    ~fail_command_guard() {
+        // Try to disable failpoint. Ignore error.
+        scoped_bson data(BCON_NEW("appName", _appname.c_str()));
+        auto cmd = scoped_bson(R"({
+            "configureFailPoint": "failCommand",
+            "mode": "off"
+        })");
+        cmd += scoped_bson(BCON_NEW("data", BCON_DOCUMENT(data.bson())));
         try {
-            admin_command(R"({
-                    "configureFailPoint": "failCommand",
-                    "mode": "off"
-                })");
+            admin_command(cmd.view());
         } catch (...) {
         }
     }
 
-    failCommand_guard(failCommand_guard const&) = delete;
-    failCommand_guard& operator=(failCommand_guard const&) = delete;
-    failCommand_guard(failCommand_guard&&) = delete;
-    failCommand_guard& operator=(failCommand_guard&&) = delete;
+    fail_command_guard(fail_command_guard const&) = delete;
+    fail_command_guard& operator=(fail_command_guard const&) = delete;
+    fail_command_guard(fail_command_guard&&) = delete;
+    fail_command_guard& operator=(fail_command_guard&&) = delete;
+
+   private:
+    void admin_command(bsoncxx::v1::document::view cmd) {
+        v1::client(_uri).database("admin").run_command(cmd);
+    }
+    std::string _appname;
+    v1::uri _uri;
 };
+
 } // namespace
 
 TEST_CASE("OIDC prose tests", "[oidc]") {
@@ -393,17 +424,11 @@ TEST_CASE("OIDC prose tests", "[oidc]") {
         // Spec: "Create an OIDC configured client"
         bool const is_pooled = GENERATE(true, false);
         CAPTURE(is_pooled);
-        OIDCTestFixture tf(OIDCTestURI().build(), opts, is_pooled);
+        auto const appname = "oidc-3.3";
+        OIDCTestFixture tf(OIDCTestURI().with_appname(appname).build(), opts, is_pooled);
 
         // Spec: "Set a fail point for `saslStart` commands"
-        failCommand_guard const guard(R"({
-                "configureFailPoint": "failCommand",
-                "mode": { "times": 1 },
-                "data": {
-                    "failCommands": [ "saslStart" ],
-                    "errorCode": 20
-                }
-            })");
+        fail_command_guard const guard("saslStart", 20, appname);
 
         // Spec: "Perform a `find` operation that fails"
         CHECK_THROWS_WITH(
@@ -434,17 +459,11 @@ TEST_CASE("OIDC prose tests", "[oidc]") {
         // Spec: "Create an OIDC configured client"
         bool const is_pooled = GENERATE(true, false);
         CAPTURE(is_pooled);
-        OIDCTestFixture tf(OIDCTestURI().build(), opts, is_pooled);
+        auto const appname = "oidc-4.1";
+        OIDCTestFixture tf(OIDCTestURI().with_appname(appname).build(), opts, is_pooled);
 
         // Spec: "Set a fail point for `find` commands"
-        failCommand_guard const guard(R"({
-            "configureFailPoint": "failCommand",
-            "mode": { "times": 1 },
-            "data": {
-                "failCommands": [ "find" ],
-                "errorCode": 391
-            }
-        })");
+        fail_command_guard const guard("find", 391, appname);
 
         // Spec: "Perform a `find` operation that succeeds"
         CHECK_NOTHROW(tf.client().database("test").collection("test").find_one(scoped_bson{}.view()));
@@ -472,20 +491,14 @@ TEST_CASE("OIDC prose tests", "[oidc]") {
 
         bool const is_pooled = GENERATE(true, false);
         CAPTURE(is_pooled);
-        OIDCTestFixture tf(OIDCTestURI().build(), opts, is_pooled);
+        auto const appname = "oidc-4.2";
+        OIDCTestFixture tf(OIDCTestURI().with_appname(appname).build(), opts, is_pooled);
 
         // Spec: "Perform a `find` operation that succeeds"
         CHECK_NOTHROW(tf.client().database("test").collection("test").find_one(scoped_bson{}.view()));
 
         // Spec: "Set a fail point for `find` commands"
-        failCommand_guard const guard(R"({
-            "configureFailPoint": "failCommand",
-            "mode": { "times": 1 },
-            "data": {
-                "failCommands": [ "find" ],
-                "errorCode": 391
-            }
-        })");
+        fail_command_guard const guard("find", 391, appname);
 
         // Spec: "Perform a `find` operation that fails."
         CHECK_THROWS_WITH(
@@ -515,20 +528,14 @@ TEST_CASE("OIDC prose tests", "[oidc]") {
 
         bool const is_pooled = GENERATE(true, false);
         CAPTURE(is_pooled);
-        OIDCTestFixture tf(OIDCTestURI().build(), opts, is_pooled);
+        auto const appname = "oidc-4.3";
+        OIDCTestFixture tf(OIDCTestURI().with_appname(appname).build(), opts, is_pooled);
 
         // Spec: "Perform a `insert` operation that succeeds"
         CHECK_NOTHROW(tf.client().database("test").collection("test").insert_one(scoped_bson{}.view()));
 
         // Spec: "Set a fail point for `insert` commands"
-        failCommand_guard const guard(R"({
-            "configureFailPoint": "failCommand",
-            "mode": { "times": 1 },
-            "data": {
-                "failCommands": [ "insert" ],
-                "errorCode": 391
-            }
-        })");
+        fail_command_guard const guard("insert", 391, appname);
 
         // Spec: "Perform a `insert` operation that fails."
         CHECK_THROWS_WITH(
@@ -555,17 +562,11 @@ TEST_CASE("OIDC prose tests", "[oidc]") {
         // Spec: "Create an OIDC configured client"
         bool const is_pooled = GENERATE(true, false);
         CAPTURE(is_pooled);
-        OIDCTestFixture tf(OIDCTestURI().build(), opts, is_pooled);
+        auto const appname = "oidc-4.5";
+        OIDCTestFixture tf(OIDCTestURI().with_appname(appname).build(), opts, is_pooled);
 
         // Spec: "Set a fail point for `find` commands"
-        failCommand_guard const guard(R"({
-            "configureFailPoint": "failCommand",
-            "mode": { "times": 1 },
-            "data": {
-                "failCommands": [ "find" ],
-                "errorCode": 391
-            }
-        })");
+        fail_command_guard const guard("find", 391, appname);
 
         // Spec: "Start a new session"
         auto session = tf.client().start_session();
