@@ -56,7 +56,7 @@ class OIDCTestURI {
         _appname = std::move(appname);
         return *this;
     }
-    v1::uri build() {
+    v1::uri build() const {
         std::string uri_str = "mongodb://";
         if (_username) {
             uri_str += *_username + "@";
