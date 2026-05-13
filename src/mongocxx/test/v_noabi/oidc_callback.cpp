@@ -41,7 +41,7 @@ namespace v_noabi {
 
 class OIDCTestFixture {
    public:
-    OIDCTestFixture(v_noabi::uri uri, v_noabi::options::client opts, bool is_pooled) : _is_pooled(is_pooled) {
+    OIDCTestFixture(v_noabi::uri uri, v_noabi::options::client opts, bool is_pooled) {
         if (is_pooled) {
             _pool.emplace(uri, opts);
             _pool_entry = _pool->acquire();
@@ -50,15 +50,14 @@ class OIDCTestFixture {
         }
     }
     v_noabi::client& client() {
-        if (_is_pooled) {
-            return *(_pool_entry.value());
+        if (_pool_entry) {
+            return **_pool_entry;
         } else {
             return *_client;
         }
     }
 
    private:
-    bool _is_pooled;
     bsoncxx::v_noabi::stdx::optional<v_noabi::pool> _pool;
     bsoncxx::v_noabi::stdx::optional<v_noabi::pool::entry> _pool_entry;
     bsoncxx::v_noabi::stdx::optional<v_noabi::client> _client;
