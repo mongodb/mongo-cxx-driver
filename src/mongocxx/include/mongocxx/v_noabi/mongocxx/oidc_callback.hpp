@@ -28,7 +28,7 @@ using v1::oidc_callback;
 
 ///
 /// @file
-/// Declares @ref mongocxx::oidc_callback.
+/// Provides @ref mongocxx::oidc_callback.
 ///
 /// @par Includes
 /// - @ref mongocxx/v1/oidc_callback.hpp
