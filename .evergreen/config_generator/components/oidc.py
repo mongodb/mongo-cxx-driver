@@ -72,7 +72,6 @@ def task_groups():
             ],
             teardown_group=[
                 bash_exec(
-                    command_type=EvgCommandType.SETUP,
                     script='./drivers-evergreen-tools/.evergreen/auth_oidc/teardown.sh',
                 )
             ],

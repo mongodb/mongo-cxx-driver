@@ -22,7 +22,6 @@ task_groups:
       - oidc-auth-test-task
     teardown_group:
       - command: subprocess.exec
-        type: setup
         params:
           binary: bash
           args:
