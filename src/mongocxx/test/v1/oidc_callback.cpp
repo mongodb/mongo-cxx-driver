@@ -41,6 +41,33 @@
 namespace mongocxx {
 namespace v1 {
 
+class OIDCTestURI {
+   public:
+    OIDCTestURI& with_username(std::string username) {
+        _username = std::move(username);
+        return *this;
+    }
+    OIDCTestURI& with_extra_options(std::string extra_opts) {
+        _extra_opts = std::move(extra_opts);
+        return *this;
+    }
+    v1::uri build() {
+        std::string uri_str = "mongodb://";
+        if (_username) {
+            uri_str += *_username + "@";
+        }
+        uri_str += "localhost:27017/?retryReads=false&authMechanism=MONGODB-OIDC";
+        if (_extra_opts) {
+            uri_str += "&" + *_extra_opts;
+        }
+        return v1::uri(uri_str);
+    }
+
+   private:
+    bsoncxx::v1::stdx::optional<std::string> _username;
+    bsoncxx::v1::stdx::optional<std::string> _extra_opts;
+};
+
 class OIDCTestFixture {
    public:
     OIDCTestFixture(v1::uri uri, v1::client::options opts, bool is_pooled) : _is_pooled(is_pooled) {
@@ -133,8 +160,7 @@ TEST_CASE("OIDC prose tests", "[oidc]") {
         // Spec: "Create an OIDC configured client"
         bool const is_pooled = GENERATE(true, false);
         CAPTURE(is_pooled);
-        OIDCTestFixture tf(
-            v1::uri("mongodb://localhost:27017/?retryReads=false&authMechanism=MONGODB-OIDC"), opts, is_pooled);
+        OIDCTestFixture tf(OIDCTestURI().build(), opts, is_pooled);
 
         // Spec: "Perform a `find` operation that succeeds"
         CHECK_NOTHROW(tf.client().database("test").collection("test").find_one(scoped_bson{}.view()));
@@ -157,8 +183,7 @@ TEST_CASE("OIDC prose tests", "[oidc]") {
 
         // Spec: "Create an OIDC configured client"
         // Only test pool. Single-threaded client cannot be shared among threads.
-        OIDCTestFixture tf(
-            v1::uri("mongodb://localhost:27017/?retryReads=false&authMechanism=MONGODB-OIDC"), opts, true);
+        OIDCTestFixture tf(OIDCTestURI().build(), opts, true);
 
         // Spec: "Start 10 threads and run 100 `find` operations in each thread that all succeed."
         std::vector<std::thread> threads;
@@ -230,9 +255,7 @@ TEST_CASE("OIDC prose tests", "[oidc]") {
         bool const is_pooled = GENERATE(true, false);
         CAPTURE(is_pooled);
 
-        v1::uri uri = (with_username)
-                          ? v1::uri("mongodb://user@localhost:27017/?retryReads=false&authMechanism=MONGODB-OIDC")
-                          : v1::uri("mongodb://localhost:27017/?retryReads=false&authMechanism=MONGODB-OIDC");
+        v1::uri uri = (with_username) ? OIDCTestURI().with_username("user").build() : OIDCTestURI().build();
 
         OIDCTestFixture tf(uri, opts, is_pooled);
 
@@ -258,8 +281,7 @@ TEST_CASE("OIDC prose tests", "[oidc]") {
         // Spec: "Create an OIDC configured client with an OIDC callback that returns `null`"
         bool const is_pooled = GENERATE(true, false);
         CAPTURE(is_pooled);
-        OIDCTestFixture tf(
-            v1::uri("mongodb://localhost:27017/?retryReads=false&authMechanism=MONGODB-OIDC"), opts, is_pooled);
+        OIDCTestFixture tf(OIDCTestURI().build(), opts, is_pooled);
 
         // Spec: "Perform a `find` operation that fails"
         CHECK_THROWS_WITH(
@@ -283,8 +305,7 @@ TEST_CASE("OIDC prose tests", "[oidc]") {
         // `OIDCCredential` with missing fields."
         bool const is_pooled = GENERATE(true, false);
         CAPTURE(is_pooled);
-        OIDCTestFixture tf(
-            v1::uri("mongodb://localhost:27017/?retryReads=false&authMechanism=MONGODB-OIDC"), opts, is_pooled);
+        OIDCTestFixture tf(OIDCTestURI().build(), opts, is_pooled);
 
         // Spec: "Perform a `find` operation that fails"
         CHECK_THROWS_WITH(
@@ -304,11 +325,7 @@ TEST_CASE("OIDC prose tests", "[oidc]") {
         CAPTURE(is_pooled);
 
         OIDCTestFixture tf(
-            v1::uri(
-                "mongodb://localhost:27017/"
-                "?retryReads=false&authMechanism=MONGODB-OIDC&authMechanismProperties=ENVIRONMENT:test"),
-            opts,
-            is_pooled);
+            OIDCTestURI().with_extra_options("authMechanismProperties=ENVIRONMENT:test").build(), opts, is_pooled);
 
         // Spec: "Assert it returns a client configuration error upon client creation, or client connect if your driver
         // validates on connection". C driver errors on connection.
@@ -329,10 +346,7 @@ TEST_CASE("OIDC prose tests", "[oidc]") {
 
         CHECK_THROWS_WITH(
             OIDCTestFixture(
-                v1::uri(
-                    "mongodb://localhost:27017/"
-                    "?retryReads=false&authMechanism=MONGODB-OIDC&authMechanismProperties=ENVIRONMENT:azure,ALLOWED_"
-                    "HOSTS:"),
+                OIDCTestURI().with_extra_options("authMechanismProperties=ENVIRONMENT:azure,ALLOWED_HOSTS:").build(),
                 opts,
                 is_pooled),
             Catch::Matchers::ContainsSubstring("Unsupported 'MONGODB-OIDC' authentication mechanism property"));
@@ -354,8 +368,7 @@ TEST_CASE("OIDC prose tests", "[oidc]") {
 
         bool const is_pooled = GENERATE(true, false);
         CAPTURE(is_pooled);
-        OIDCTestFixture tf(
-            v1::uri("mongodb://localhost:27017/?retryReads=false&authMechanism=MONGODB-OIDC"), opts, is_pooled);
+        OIDCTestFixture tf(OIDCTestURI().build(), opts, is_pooled);
 
         // Spec: "Perform a `find` operation that fails"
         CHECK_THROWS_WITH(
@@ -380,8 +393,7 @@ TEST_CASE("OIDC prose tests", "[oidc]") {
         // Spec: "Create an OIDC configured client"
         bool const is_pooled = GENERATE(true, false);
         CAPTURE(is_pooled);
-        OIDCTestFixture tf(
-            v1::uri("mongodb://localhost:27017/?retryReads=false&authMechanism=MONGODB-OIDC"), opts, is_pooled);
+        OIDCTestFixture tf(OIDCTestURI().build(), opts, is_pooled);
 
         // Spec: "Set a fail point for `saslStart` commands"
         failCommand_guard const guard(R"({
@@ -422,8 +434,7 @@ TEST_CASE("OIDC prose tests", "[oidc]") {
         // Spec: "Create an OIDC configured client"
         bool const is_pooled = GENERATE(true, false);
         CAPTURE(is_pooled);
-        OIDCTestFixture tf(
-            v1::uri("mongodb://localhost:27017/?retryReads=false&authMechanism=MONGODB-OIDC"), opts, is_pooled);
+        OIDCTestFixture tf(OIDCTestURI().build(), opts, is_pooled);
 
         // Spec: "Set a fail point for `find` commands"
         failCommand_guard const guard(R"({
@@ -461,8 +472,7 @@ TEST_CASE("OIDC prose tests", "[oidc]") {
 
         bool const is_pooled = GENERATE(true, false);
         CAPTURE(is_pooled);
-        OIDCTestFixture tf(
-            v1::uri("mongodb://localhost:27017/?retryReads=false&authMechanism=MONGODB-OIDC"), opts, is_pooled);
+        OIDCTestFixture tf(OIDCTestURI().build(), opts, is_pooled);
 
         // Spec: "Perform a `find` operation that succeeds"
         CHECK_NOTHROW(tf.client().database("test").collection("test").find_one(scoped_bson{}.view()));
@@ -505,8 +515,7 @@ TEST_CASE("OIDC prose tests", "[oidc]") {
 
         bool const is_pooled = GENERATE(true, false);
         CAPTURE(is_pooled);
-        OIDCTestFixture tf(
-            v1::uri("mongodb://localhost:27017/?retryReads=false&authMechanism=MONGODB-OIDC"), opts, is_pooled);
+        OIDCTestFixture tf(OIDCTestURI().build(), opts, is_pooled);
 
         // Spec: "Perform a `insert` operation that succeeds"
         CHECK_NOTHROW(tf.client().database("test").collection("test").insert_one(scoped_bson{}.view()));
@@ -546,8 +555,7 @@ TEST_CASE("OIDC prose tests", "[oidc]") {
         // Spec: "Create an OIDC configured client"
         bool const is_pooled = GENERATE(true, false);
         CAPTURE(is_pooled);
-        OIDCTestFixture tf(
-            v1::uri("mongodb://localhost:27017/?retryReads=false&authMechanism=MONGODB-OIDC"), opts, is_pooled);
+        OIDCTestFixture tf(OIDCTestURI().build(), opts, is_pooled);
 
         // Spec: "Set a fail point for `find` commands"
         failCommand_guard const guard(R"({
