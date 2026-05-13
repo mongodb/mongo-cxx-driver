@@ -724,7 +724,7 @@ client create_client(document::view object) {
             std::ifstream token_file(test_util::getenv_or_fail("OIDC_TOKEN_FILE"));
             REQUIRE(token_file.is_open());
             auto const token =
-                std::string((std::istreambuf_iterator<char>(token_file)), std::istreambuf_iterator<char>());
+                std::string(std::istreambuf_iterator<char>(token_file), std::istreambuf_iterator<char>());
             client_opts.oidc_callback(
                 [=](mongocxx::v1::oidc_callback_params const&) { return mongocxx::v1::oidc_credential(token); });
         }
