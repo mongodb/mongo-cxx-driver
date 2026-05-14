@@ -15,6 +15,7 @@
 #include "./assert.hh"
 #include "./operations.hh"
 
+#include <mongocxx/v1/client_bulk_write.hpp>
 #include <mongocxx/v1/oidc_callback.hpp>
 #include <mongocxx/v1/oidc_credential.hpp>
 
@@ -1028,6 +1029,56 @@ void assert_error(mongocxx::exception& e, array::element const& ops) {
     REQUIRE_FALSE(/* TODO */ expect_error["errorCodeName"]);
 }
 
+void assert_error(mongocxx::v1::exception& e, array::element const& ops) {
+    CAPTURE(e.what());
+    auto const expect_error = ops["expectError"];
+    REQUIRE(expect_error);
+
+    if (expect_error["isError"])
+        return;
+
+    if (auto const is_client_error = expect_error["isClientError"]) {
+        REQUIRE(is_client_error.get_bool());
+    }
+
+    REQUIRE_FALSE(expect_error["expectResult"]);
+    REQUIRE_FALSE(expect_error["errorLabelsContain"]);
+    REQUIRE_FALSE(expect_error["errorLabelsOmit"]);
+
+    REQUIRE_FALSE(/* TODO */ expect_error["errorContains"]);
+    REQUIRE_FALSE(/* TODO */ expect_error["errorCode"]);
+    REQUIRE_FALSE(/* TODO */ expect_error["errorCodeName"]);
+}
+
+void assert_error(
+    mongocxx::v1::client_bulk_write::exception const& exception,
+    array::element const& expected,
+    document::view actual) {
+    CAPTURE(exception.what());
+
+    auto const expect_error = expected["expectError"];
+    REQUIRE(expect_error);
+
+    if (expect_error["isError"])
+        return;
+
+    auto const actual_result = actual["result"];
+    if (auto const expected_result = expect_error["expectResult"]) {
+        assert::matches(actual_result.get_value(), expected_result.get_value(), get_entity_map());
+    }
+
+    if (auto const is_client_error = expect_error["isClientError"]) {
+        REQUIRE(is_client_error.get_bool());
+    }
+
+    REQUIRE_FALSE(expect_error["errorLabelsContain"]);
+    REQUIRE_FALSE(expect_error["errorLabelsOmit"]);
+
+    REQUIRE_FALSE(/* TODO */ expect_error["errorContains"]);
+    REQUIRE_FALSE(/* TODO */ expect_error["errorCode"]);
+    REQUIRE_FALSE(/* TODO */ expect_error["errorCodeName"]);
+}
+
 void assert_events(array::element const& test) {
     if (!test["expectEvents"])
         return;
@@ -1177,6 +1228,10 @@ document::value bulk_write_result(mongocxx::bulk_write_exception const& e) {
     return result.extract();
 }
 
+document::value make_client_bulk_write_result_doc(mongocxx::client_bulk_write::exception const& e) {
+    return operations::make_client_bulk_write_result_doc(e.partial_result());
+}
+
 // Match test cases that should be skipped by both test and case descriptions.
 std::map<std::pair<bsoncxx::stdx::string_view, bsoncxx::stdx::string_view>, bsoncxx::stdx::string_view> const
     should_skip_test_cases = {
@@ -1287,11 +1342,20 @@ void run_tests(bsoncxx::stdx::string_view test_description, document::view test)
                         auto result = bulk_write_result(e);
                         assert_error(e, ops, result);
                     }
+                } catch (mongocxx::client_bulk_write::exception const& e) {
+                    if (!ignore_result_and_error) {
+                        auto result = make_client_bulk_write_result_doc(e);
+                        assert_error(e, ops, result);
+                    }
                 } catch (mongocxx::operation_exception const& e) {
                     if (!ignore_result_and_error) {
                         assert_error(e, ops, make_document());
                     }
                 } catch (mongocxx::exception& e) {
+                    if (!ignore_result_and_error) {
+                        assert_error(e, ops);
+                    }
+                } catch (mongocxx::v1::exception& e) {
                     if (!ignore_result_and_error) {
                         assert_error(e, ops);
                     }
@@ -1379,14 +1443,7 @@ TEST_CASE("session unified format spec automated tests", "[unified_format_specs]
 }
 
 TEST_CASE("CRUD unified format spec automated tests", "[unified_format_specs]") {
-    std::set<bsoncxx::stdx::string_view> const unsupported_tests = {
-        // Waiting on CXX-2494.
-        "client-bulkWrite-replaceOne-sort.json",
-        // Waiting on CXX-2494.
-        "client-bulkWrite-updateOne-sort.json",
-    };
-
-    run_unified_format_tests_in_env_dir("CRUD_UNIFIED_TESTS_PATH", unsupported_tests);
+    run_unified_format_tests_in_env_dir("CRUD_UNIFIED_TESTS_PATH");
 }
 
 TEST_CASE("change streams unified format spec automated tests", "[unified_format_specs]") {
