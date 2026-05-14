@@ -1,4 +1,33 @@
 task_groups:
+  - name: test-oidc-task-group
+    setup_group:
+      - func: setup
+      - func: fetch-det
+      - command: ec2.assume_role
+        params:
+          role_arn: ${aws_test_secrets_role}
+      - command: subprocess.exec
+        type: setup
+        params:
+          binary: bash
+          include_expansions_in_env:
+            - AWS_ACCESS_KEY_ID
+            - AWS_SECRET_ACCESS_KEY
+            - AWS_SESSION_TOKEN
+          args:
+            - -c
+            - ./drivers-evergreen-tools/.evergreen/auth_oidc/setup.sh
+    setup_group_can_fail_task: true
+    tasks:
+      - oidc-auth-test-task
+    teardown_group:
+      - command: subprocess.exec
+        params:
+          binary: bash
+          args:
+            - -c
+            - ./drivers-evergreen-tools/.evergreen/auth_oidc/teardown.sh
+    teardown_group_timeout_secs: 180
   - name: tg-abi-stability-impls-cxx11
     max_hosts: -1
     setup_task:

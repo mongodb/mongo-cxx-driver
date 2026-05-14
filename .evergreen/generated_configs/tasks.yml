@@ -14787,6 +14787,21 @@ tasks:
           build_type: Debug
           cc_compiler: gcc
           cxx_compiler: g++
+  - name: oidc-auth-test-task
+    run_on:
+      - ubuntu2404-large
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+      - func: install_c_driver
+        vars:
+          SKIP_INSTALL_LIBMONGOCRYPT: 1
+      - func: compile
+        vars:
+          ENABLE_TESTS: "ON"
+      - func: test-oidc
   - name: packaging-debian
     run_on: debian12-latest-large
     tags: [packaging, debian12-latest]

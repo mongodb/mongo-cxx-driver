@@ -18,6 +18,8 @@
 
 #include <mongocxx/v1/apm-fwd.hpp>
 
+#include <mongocxx/v1/oidc_callback.hpp>
+
 #include <mongocxx/private/export.hh>
 #include <mongocxx/private/mongoc.hh>
 
@@ -31,6 +33,7 @@ class pool::internal {
     static MONGOCXX_ABI_EXPORT_CDECL_TESTING(mongoc_client_pool_t*) as_mongoc(pool& self);
 
     static void set_apm(pool& self, v1::apm v);
+    static void set_oidc_callback(pool& self, v1::oidc_callback v);
 };
 
 class pool::options::internal {

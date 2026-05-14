@@ -25,6 +25,8 @@
 
 #include <bsoncxx/v1/stdx/optional.hpp>
 
+#include <mongocxx/v1/oidc_callback.hpp>
+
 #include <mongocxx/private/export.hh>
 #include <mongocxx/private/mongoc.hh>
 
@@ -36,6 +38,7 @@ class client::internal {
     static MONGOCXX_ABI_EXPORT_CDECL_TESTING(client) make(mongoc_client_t* client);
 
     static void set_apm(client& self, v1::apm v);
+    static void set_oidc_callback(client& self, v1::oidc_callback v);
 
     static mongoc_client_t* release(client& self);
 
@@ -48,6 +51,7 @@ class client::options::internal {
     static bsoncxx::v1::stdx::optional<v1::tls>& tls_opts(options& self);
     static bsoncxx::v1::stdx::optional<v1::auto_encryption_options>& auto_encryption_opts(options& self);
     static bsoncxx::v1::stdx::optional<v1::apm>& apm_opts(options& self);
+    static bsoncxx::v1::stdx::optional<v1::oidc_callback>& oidc_callback(options& self);
     static bsoncxx::v1::stdx::optional<v1::server_api>& server_api_opts(options& self);
 };
 

@@ -22,6 +22,7 @@ Changes prior to 3.9.0 are documented as [release notes on GitHub](https://githu
 ### Added
 
 - Support for the "readConcern" option field to "delete", "insert", "replace", "bulkWrite", "findOneAnd*", "count", and "distinct" operations.
+- Support for `MONGODB-OIDC` authMechanism.
 
 ## 4.3.0
 

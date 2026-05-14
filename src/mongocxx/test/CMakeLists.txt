@@ -71,6 +71,7 @@ set(mongocxx_test_sources_v_noabi
     v_noabi/model/update_many.cpp
     v_noabi/model/update_one.cpp
     v_noabi/model/write.cpp
+    v_noabi/oidc_callback.cpp
     v_noabi/options/aggregate.cpp
     v_noabi/options/apm.cpp
     v_noabi/options/auto_encryption.cpp
@@ -158,6 +159,8 @@ set(mongocxx_test_sources_v1
     v1/insert_one_options.cpp
     v1/insert_one_result.cpp
     v1/logger.cpp
+    v1/oidc_callback.cpp
+    v1/oidc_credential.cpp
     v1/pipeline.cpp
     v1/pool.cpp
     v1/range_options.cpp
@@ -386,6 +389,7 @@ set_property(TEST read_write_concern_specs APPEND PROPERTY ENVIRONMENT
 )
 
 set_property(TEST unified_format_specs APPEND PROPERTY ENVIRONMENT
+    "AUTH_TESTS_PATH=${DATA_SOURCE_DIR}/auth/unified"
     "CHANGE_STREAMS_UNIFIED_TESTS_PATH=${DATA_SOURCE_DIR}/change-streams/unified"
     "CLIENT_SIDE_ENCRYPTION_UNIFIED_TESTS_PATH=${DATA_SOURCE_DIR}/client_side_encryption/unified"
     "COLLECTION_MANAGEMENT_TESTS_PATH=${DATA_SOURCE_DIR}/collection-management"

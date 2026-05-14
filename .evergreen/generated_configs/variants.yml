@@ -68,6 +68,10 @@ buildvariants:
     display_name: macro-guards-matrix
     tasks:
       - name: .macro-guards
+  - name: oidc
+    display_name: OIDC
+    tasks:
+      - name: test-oidc-task-group
   - name: packaging
     display_name: Linux Distro Packaging
     tasks:
