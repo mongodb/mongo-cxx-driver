@@ -13,3 +13,11 @@
 // limitations under the License.
 
 #include <mongocxx/config/config.hpp>
+
+#if !defined(MONGOCXX_ABI_EXPORT_UNSTABLE)
+#error "mongocxx/v_noabi/mongocxx/config/config.hpp should define MONGOCXX_ABI_EXPORT_UNSTABLE"
+#endif
+
+#if !defined(MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE)
+#error "mongocxx/v_noabi/mongocxx/config/config.hpp should define MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE"
+#endif

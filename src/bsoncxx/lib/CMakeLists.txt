@@ -68,9 +68,13 @@ file(GLOB_RECURSE bsoncxx_headers
 
 list(APPEND bsoncxx_sources
     ${bsoncxx_sources_private}
-    ${bsoncxx_sources_v_noabi}
     ${bsoncxx_sources_v1}
 )
+
+if(BSONCXX_EXPORT_UNSTABLE_ABI)
+    list(APPEND bsoncxx_sources ${bsoncxx_sources_v_noabi})
+endif()
+
 list(TRANSFORM bsoncxx_sources PREPEND "${CMAKE_CURRENT_SOURCE_DIR}/")
 set(bsoncxx_sources "${bsoncxx_sources}" PARENT_SCOPE)
 
@@ -96,6 +100,17 @@ if(1)
         ${CMAKE_CURRENT_BINARY_DIR}/bsoncxx/v1/config/config.hpp
         ${CMAKE_CURRENT_BINARY_DIR}/bsoncxx/v1/config/version.hpp
         DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/bsoncxx/v1/config
+        COMPONENT dev
+    )
+
+    configure_file(
+        bsoncxx/v_noabi/bsoncxx/config/config.hpp.in
+        bsoncxx/v_noabi/bsoncxx/config/config.hpp
+    )
+
+    install(FILES
+        ${CMAKE_CURRENT_BINARY_DIR}/bsoncxx/v_noabi/bsoncxx/config/config.hpp
+        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/bsoncxx/v_noabi/bsoncxx/config
         COMPONENT dev
     )
 
@@ -169,6 +184,7 @@ set_dist_list(src_bsoncxx_lib_DIST
     ${bsoncxx_sources_v1}
     ${bsoncxx_headers}
     bsoncxx/private/config/config.hh.in
+    bsoncxx/v_noabi/bsoncxx/config/config.hpp.in
     bsoncxx/v_noabi/bsoncxx/fwd.hpp.in
     bsoncxx/v1/config/config.hpp.in
     bsoncxx/v1/config/version.hpp.in

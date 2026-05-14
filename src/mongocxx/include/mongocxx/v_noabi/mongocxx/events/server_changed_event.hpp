@@ -94,14 +94,14 @@ class server_changed_event {
     ///
     /// @return The server_description.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(server_description const) previous_description() const;
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(server_description const) previous_description() const;
 
     ///
     /// The server's description after it changed.
     ///
     /// @return The server_description.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(server_description const) new_description() const;
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(server_description const) new_description() const;
 };
 
 } // namespace events

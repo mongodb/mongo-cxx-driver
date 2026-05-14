@@ -132,7 +132,7 @@ class bulk_write {
     ///
     /// @throws mongocxx::v_noabi::logic_error if the given operation is invalid.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bulk_write&) append(v_noabi::model::write const& operation);
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(bulk_write&) append(v_noabi::model::write const& operation);
 
     ///
     /// Executes a bulk write.
@@ -144,7 +144,7 @@ class bulk_write {
     /// @see
     /// - https://www.mongodb.com/docs/manual/core/bulk-write-operations/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<result::bulk_write>) execute() const;
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(bsoncxx::v_noabi::stdx::optional<result::bulk_write>) execute() const;
 
     class internal;
 };

@@ -46,7 +46,7 @@ class tls {
     ///
     /// Construct with the @ref mongocxx::v1 equivalent.
     ///
-    /* explicit(false) */ MONGOCXX_ABI_EXPORT_CDECL() tls(v1::tls v);
+    /* explicit(false) */ MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE() tls(v1::tls v);
 
     ///
     /// Convert to the @ref mongocxx::v1 equivalent.

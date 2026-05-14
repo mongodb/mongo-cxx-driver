@@ -44,7 +44,7 @@ class replace_one {
     ///
     /// Construct with the @ref mongocxx::v1 equivalent.
     ///
-    /* explicit(false) */ MONGOCXX_ABI_EXPORT_CDECL() replace_one(v1::bulk_write::replace_one op);
+    /* explicit(false) */ MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE() replace_one(v1::bulk_write::replace_one op);
 
     ///
     /// Convert to the @ref mongocxx::v1 equivalent.

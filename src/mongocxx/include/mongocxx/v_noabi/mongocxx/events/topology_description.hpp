@@ -56,12 +56,12 @@ class topology_description {
         ///
         /// Move constructs a server_descriptions array.
         ///
-        MONGOCXX_ABI_EXPORT_CDECL() server_descriptions(server_descriptions&&) noexcept;
+        MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE() server_descriptions(server_descriptions&&) noexcept;
 
         ///
         /// Move assigns a server_descriptions array.
         ///
-        MONGOCXX_ABI_EXPORT_CDECL(server_descriptions&) operator=(server_descriptions&&) noexcept;
+        MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(server_descriptions&) operator=(server_descriptions&&) noexcept;
 
         server_descriptions(server_descriptions const&) = delete;
         server_descriptions& operator=(server_descriptions const&) = delete;
@@ -69,7 +69,7 @@ class topology_description {
         ///
         /// Destroys a server_descriptions array.
         ///
-        MONGOCXX_ABI_EXPORT_CDECL() ~server_descriptions();
+        MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE() ~server_descriptions();
 
         ///
         /// The array's iterator type.
@@ -124,7 +124,7 @@ class topology_description {
         std::size_t _size;
     };
 
-    explicit MONGOCXX_ABI_EXPORT_CDECL() topology_description(void const* td);
+    explicit MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE() topology_description(void const* td);
 
     ///
     /// Construct with the @ref mongocxx::v1 equivalent.
@@ -157,7 +157,7 @@ class topology_description {
     ///
     /// @return Whether there is a readable server available.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bool) has_readable_server(v_noabi::read_preference const& pref) const;
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(bool) has_readable_server(v_noabi::read_preference const& pref) const;
 
     ///
     /// Determines if the topology has a writable server available, such as a
@@ -176,7 +176,7 @@ class topology_description {
     ///
     /// @return An array of server_description objects.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(server_descriptions) servers() const;
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(server_descriptions) servers() const;
 };
 
 } // namespace events

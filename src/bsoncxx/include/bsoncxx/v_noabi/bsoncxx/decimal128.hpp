@@ -76,7 +76,7 @@ class decimal128 {
     /// @throws bsoncxx::v_noabi::exception if the string isn't a valid BSON Decimal128
     /// representation.
     ///
-    explicit BSONCXX_ABI_EXPORT_CDECL() decimal128(v1::stdx::string_view str);
+    explicit BSONCXX_ABI_EXPORT_CDECL_UNSTABLE() decimal128(v1::stdx::string_view str);
 
     ///
     /// Convert to the @ref bsoncxx::v1 equivalent.

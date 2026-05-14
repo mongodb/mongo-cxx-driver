@@ -55,7 +55,7 @@ class replace {
     ///
     /// Construct with the @ref mongocxx::v1 equivalent.
     ///
-    /* explicit(false) */ MONGOCXX_ABI_EXPORT_CDECL() replace(v1::replace_one_options opts);
+    /* explicit(false) */ MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE() replace(v1::replace_one_options opts);
 
     ///
     /// Convert to the @ref mongocxx::v1 equivalent.

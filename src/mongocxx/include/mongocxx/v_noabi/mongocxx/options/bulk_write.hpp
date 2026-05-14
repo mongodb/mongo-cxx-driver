@@ -55,7 +55,7 @@ class bulk_write {
     ///
     /// Construct with the @ref mongocxx::v1 equivalent.
     ///
-    /* explicit(false) */ MONGOCXX_ABI_EXPORT_CDECL() bulk_write(v1::bulk_write::options opts);
+    /* explicit(false) */ MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE() bulk_write(v1::bulk_write::options opts);
 
     ///
     /// Convert to the @ref mongocxx::v1 equivalent.

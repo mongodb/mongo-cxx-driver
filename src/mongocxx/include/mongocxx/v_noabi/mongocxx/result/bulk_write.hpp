@@ -50,7 +50,7 @@ class bulk_write {
     ///
     /// @deprecated For internal use only.
     ///
-    explicit MONGOCXX_ABI_EXPORT_CDECL() bulk_write(bsoncxx::v_noabi::document::value raw_response);
+    explicit MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE() bulk_write(bsoncxx::v_noabi::document::value raw_response);
 
     ///
     /// Construct with the @ref mongocxx::v1 equivalent.
@@ -81,35 +81,35 @@ class bulk_write {
     ///
     /// @return The number of documents that were inserted.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(std::int32_t) inserted_count() const;
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(std::int32_t) inserted_count() const;
 
     ///
     /// Gets the number of documents that were matched during this operation.
     ///
     /// @return The number of documents that were matched.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(std::int32_t) matched_count() const;
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(std::int32_t) matched_count() const;
 
     ///
     /// Gets the number of documents that were modified during this operation.
     ///
     /// @return The number of documents that were modified.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(std::int32_t) modified_count() const;
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(std::int32_t) modified_count() const;
 
     ///
     /// Gets the number of documents that were deleted during this operation.
     ///
     /// @return The number of documents that were deleted.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(std::int32_t) deleted_count() const;
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(std::int32_t) deleted_count() const;
 
     ///
     /// Gets the number of documents that were upserted during this operation.
     ///
     /// @return The number of documents that were upserted.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(std::int32_t) upserted_count() const;
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(std::int32_t) upserted_count() const;
 
     ///
     /// Gets the ids of the upserted documents.
@@ -117,9 +117,9 @@ class bulk_write {
     /// @note The returned id_map must not be accessed after the bulk_write object is destroyed.
     /// @return A map from bulk write index to _id field for upserted documents.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(id_map) upserted_ids() const;
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(id_map) upserted_ids() const;
 
-    friend MONGOCXX_ABI_EXPORT_CDECL(bool) operator==(bulk_write const& lhs, bulk_write const& rhs);
+    friend MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(bool) operator==(bulk_write const& lhs, bulk_write const& rhs);
 
     friend bool operator!=(bulk_write const& lhs, bulk_write const& rhs) {
         return !(lhs == rhs);

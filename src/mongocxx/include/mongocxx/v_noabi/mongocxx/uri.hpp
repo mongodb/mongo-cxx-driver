@@ -62,7 +62,7 @@ class uri {
     ///
     /// The default URI string: `"mongodb://localhost:27017"`.
     ///
-    static MONGOCXX_ABI_EXPORT const std::string k_default_uri;
+    static MONGOCXX_ABI_EXPORT_UNSTABLE const std::string k_default_uri;
 
     ///
     /// Constructs a uri from the provided MongoDB URI string.
@@ -71,7 +71,7 @@ class uri {
     /// - https://mongoc.org/libmongoc/current/mongoc_uri_t.html
     ///
     /// @{
-    /* explicit(false) */ MONGOCXX_ABI_EXPORT_CDECL() uri(bsoncxx::v_noabi::string::view_or_value uri_string);
+    /* explicit(false) */ MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE() uri(bsoncxx::v_noabi::string::view_or_value uri_string);
 
     template <
         typename T,
@@ -286,7 +286,8 @@ class uri {
     ///
     /// @return An optional bsoncxx::v_noabi::document::view
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view>) credentials();
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view>)
+    credentials();
 
     ///
     /// Returns the value of the option "srvMaxHosts" if present in the uri.
@@ -413,7 +414,7 @@ class uri {
     ///
     /// @throws mongocxx::v_noabi::exception if there is an error setting the option.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(void) server_selection_try_once(bool val);
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(void) server_selection_try_once(bool val);
 
     ///
     /// Returns the value of the option "socketTimeoutMS" if present in the uri.

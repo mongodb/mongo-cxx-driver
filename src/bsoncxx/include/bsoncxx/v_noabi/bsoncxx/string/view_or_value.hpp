@@ -82,7 +82,7 @@ class view_or_value : public v_noabi::view_or_value<stdx::string_view, std::stri
     ///
     /// @return A new view_or_value object.
     ///
-    BSONCXX_ABI_EXPORT_CDECL(view_or_value) terminated() const;
+    BSONCXX_ABI_EXPORT_CDECL_UNSTABLE(view_or_value) terminated() const;
 
     ///
     /// Call data() on this view_or_value's string_view. This method is not
@@ -91,7 +91,7 @@ class view_or_value : public v_noabi::view_or_value<stdx::string_view, std::stri
     ///
     /// @return A char const* of this string.
     ///
-    BSONCXX_ABI_EXPORT_CDECL(char const*) data() const;
+    BSONCXX_ABI_EXPORT_CDECL_UNSTABLE(char const*) data() const;
 };
 
 ///

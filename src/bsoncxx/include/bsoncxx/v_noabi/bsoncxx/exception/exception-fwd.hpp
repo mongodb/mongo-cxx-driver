@@ -21,7 +21,7 @@
 namespace bsoncxx {
 namespace v_noabi {
 
-class BSONCXX_ABI_EXPORT exception;
+class BSONCXX_ABI_EXPORT_UNSTABLE exception;
 
 } // namespace v_noabi
 } // namespace bsoncxx

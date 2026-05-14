@@ -135,12 +135,12 @@ class collection {
     ///
     /// Copy constructs a collection.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL() collection(collection const& other);
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE() collection(collection const& other);
 
     ///
     /// Copy assigns a collection.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(collection&) operator=(collection const& other);
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(collection&) operator=(collection const& other);
 
     ///
     /// Destroys a collection.
@@ -175,7 +175,7 @@ class collection {
     /// Returns true if the collection is valid, meaning it was not
     /// default constructed or moved from.
     ///
-    explicit MONGOCXX_ABI_EXPORT_CDECL() operator bool() const noexcept;
+    explicit MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE() operator bool() const noexcept;
 
     ///
     /// Runs an aggregation framework pipeline against this collection.
@@ -197,7 +197,7 @@ class collection {
     ///   collection level set read concern - collection::read_concern(rc).
     ///   (Write concern supported only for MongoDB 3.4+).
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(v_noabi::cursor)
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(v_noabi::cursor)
     aggregate(v_noabi::pipeline const& pipeline, v_noabi::options::aggregate const& options = {});
 
     ///
@@ -222,7 +222,7 @@ class collection {
     ///   collection level set read concern - collection::read_concern(rc).
     ///   (Write concern supported only for MongoDB 3.4+).
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(v_noabi::cursor)
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(v_noabi::cursor)
     aggregate(
         v_noabi::client_session const& session,
         v_noabi::pipeline const& pipeline,
@@ -238,7 +238,7 @@ class collection {
     /// @return
     ///    The newly-created bulk write.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(v_noabi::bulk_write)
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(v_noabi::bulk_write)
     create_bulk_write(v_noabi::options::bulk_write const& options = {});
 
     ///
@@ -253,7 +253,7 @@ class collection {
     /// @return
     ///    The newly-created bulk write.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(v_noabi::bulk_write)
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(v_noabi::bulk_write)
     create_bulk_write(v_noabi::client_session const& session, v_noabi::options::bulk_write const& options = {});
 
     ///
@@ -466,7 +466,7 @@ class collection {
     /// @see
     /// - @ref mongocxx::v_noabi::collection::estimated_document_count
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(std::int64_t)
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(std::int64_t)
     count_documents(bsoncxx::v_noabi::document::view_or_value filter, v_noabi::options::count const& options = {});
 
     ///
@@ -491,7 +491,7 @@ class collection {
     /// @see
     /// - @ref mongocxx::v_noabi::collection::estimated_document_count
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(std::int64_t)
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(std::int64_t)
     count_documents(
         v_noabi::client_session const& session,
         bsoncxx::v_noabi::document::view_or_value filter,
@@ -513,7 +513,7 @@ class collection {
     /// @see
     /// - @ref mongocxx::v_noabi::collection::count_documents
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(std::int64_t)
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(std::int64_t)
     estimated_document_count(v_noabi::options::estimated_document_count const& options = {});
 
     ///
@@ -596,7 +596,7 @@ class collection {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/delete/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<v_noabi::result::delete_result>)
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(bsoncxx::v_noabi::stdx::optional<v_noabi::result::delete_result>)
     delete_many(bsoncxx::v_noabi::document::view_or_value filter, v_noabi::options::delete_options const& options = {});
 
     ///
@@ -618,7 +618,7 @@ class collection {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/delete/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<v_noabi::result::delete_result>)
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(bsoncxx::v_noabi::stdx::optional<v_noabi::result::delete_result>)
     delete_many(
         v_noabi::client_session const& session,
         bsoncxx::v_noabi::document::view_or_value filter,
@@ -641,7 +641,7 @@ class collection {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/delete/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<v_noabi::result::delete_result>)
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(bsoncxx::v_noabi::stdx::optional<v_noabi::result::delete_result>)
     delete_one(bsoncxx::v_noabi::document::view_or_value filter, v_noabi::options::delete_options const& options = {});
 
     ///
@@ -663,7 +663,7 @@ class collection {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/delete/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<v_noabi::result::delete_result>)
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(bsoncxx::v_noabi::stdx::optional<v_noabi::result::delete_result>)
     delete_one(
         v_noabi::client_session const& session,
         bsoncxx::v_noabi::document::view_or_value filter,
@@ -686,7 +686,7 @@ class collection {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/distinct/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(v_noabi::cursor)
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(v_noabi::cursor)
     distinct(
         bsoncxx::v_noabi::string::view_or_value name,
         bsoncxx::v_noabi::document::view_or_value filter,
@@ -711,7 +711,7 @@ class collection {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/distinct/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(v_noabi::cursor)
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(v_noabi::cursor)
     distinct(
         v_noabi::client_session const& session,
         bsoncxx::v_noabi::string::view_or_value name,
@@ -737,7 +737,7 @@ class collection {
     /// @note
     ///   Write concern supported only for MongoDB 3.4+.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(void)
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(void)
     drop(
         bsoncxx::v_noabi::stdx::optional<v_noabi::write_concern> const& write_concern = {},
         bsoncxx::v_noabi::document::view_or_value collection_options = {});
@@ -762,7 +762,7 @@ class collection {
     /// @note
     ///   Write concern supported only for MongoDB 3.4+.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(void)
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(void)
     drop(
         v_noabi::client_session const& session,
         bsoncxx::v_noabi::stdx::optional<v_noabi::write_concern> const& write_concern = {},
@@ -786,7 +786,7 @@ class collection {
     /// @see
     /// - https://www.mongodb.com/docs/manual/core/read-operations-introduction/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(v_noabi::cursor)
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(v_noabi::cursor)
     find(bsoncxx::v_noabi::document::view_or_value filter, v_noabi::options::find const& options = {});
 
     ///
@@ -809,7 +809,7 @@ class collection {
     /// @see
     /// - https://www.mongodb.com/docs/manual/core/read-operations-introduction/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(v_noabi::cursor)
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(v_noabi::cursor)
     find(
         v_noabi::client_session const& session,
         bsoncxx::v_noabi::document::view_or_value filter,
@@ -830,7 +830,7 @@ class collection {
     /// @see
     /// - https://www.mongodb.com/docs/manual/core/read-operations-introduction/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::value>)
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::value>)
     find_one(bsoncxx::v_noabi::document::view_or_value filter, v_noabi::options::find const& options = {});
 
     ///
@@ -850,7 +850,7 @@ class collection {
     /// @see
     /// - https://www.mongodb.com/docs/manual/core/read-operations-introduction/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::value>)
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::value>)
     find_one(
         v_noabi::client_session const& session,
         bsoncxx::v_noabi::document::view_or_value filter,
@@ -873,7 +873,7 @@ class collection {
     /// @exception
     ///   Throws mongocxx::v_noabi::write_exception if the operation fails.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::value>)
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::value>)
     find_one_and_delete(
         bsoncxx::v_noabi::document::view_or_value filter,
         v_noabi::options::find_one_and_delete const& options = {});
@@ -897,7 +897,7 @@ class collection {
     /// @exception
     ///   Throws mongocxx::v_noabi::write_exception if the operation fails.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::value>)
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::value>)
     find_one_and_delete(
         v_noabi::client_session const& session,
         bsoncxx::v_noabi::document::view_or_value filter,
@@ -923,7 +923,7 @@ class collection {
     /// @exception
     ///   Throws mongocxx::v_noabi::write_exception if the operation fails.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::value>)
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::value>)
     find_one_and_replace(
         bsoncxx::v_noabi::document::view_or_value filter,
         bsoncxx::v_noabi::document::view_or_value replacement,
@@ -951,7 +951,7 @@ class collection {
     /// @exception
     ///   Throws mongocxx::v_noabi::write_exception if the operation fails.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::value>)
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::value>)
     find_one_and_replace(
         v_noabi::client_session const& session,
         bsoncxx::v_noabi::document::view_or_value filter,
@@ -978,7 +978,7 @@ class collection {
     /// @exception
     ///   Throws mongocxx::v_noabi::write_exception if the operation fails.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::value>)
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::value>)
     find_one_and_update(
         bsoncxx::v_noabi::document::view_or_value filter,
         bsoncxx::v_noabi::document::view_or_value update,
@@ -1004,7 +1004,7 @@ class collection {
     /// @exception
     ///   Throws mongocxx::v_noabi::write_exception if the operation fails.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::value>)
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::value>)
     find_one_and_update(
         bsoncxx::v_noabi::document::view_or_value filter,
         v_noabi::pipeline const& update,
@@ -1030,7 +1030,7 @@ class collection {
     /// @exception
     ///   Throws mongocxx::v_noabi::write_exception if the operation fails.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::value>)
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::value>)
     find_one_and_update(
         bsoncxx::v_noabi::document::view_or_value filter,
         std::initializer_list<_empty_doc_tag> update,
@@ -1058,7 +1058,7 @@ class collection {
     /// @exception
     ///   Throws mongocxx::v_noabi::write_exception if the operation fails.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::value>)
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::value>)
     find_one_and_update(
         v_noabi::client_session const& session,
         bsoncxx::v_noabi::document::view_or_value filter,
@@ -1087,7 +1087,7 @@ class collection {
     /// @exception
     ///   Throws mongocxx::v_noabi::write_exception if the operation fails.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::value>)
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::value>)
     find_one_and_update(
         v_noabi::client_session const& session,
         bsoncxx::v_noabi::document::view_or_value filter,
@@ -1116,7 +1116,7 @@ class collection {
     /// @exception
     ///   Throws mongocxx::v_noabi::write_exception if the operation fails.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::value>)
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::value>)
     find_one_and_update(
         v_noabi::client_session const& session,
         bsoncxx::v_noabi::document::view_or_value filter,
@@ -1138,7 +1138,7 @@ class collection {
     ///
     /// @throws mongocxx::v_noabi::bulk_write_exception if the operation fails.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<v_noabi::result::insert_one>)
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(bsoncxx::v_noabi::stdx::optional<v_noabi::result::insert_one>)
     insert_one(bsoncxx::v_noabi::document::view_or_value document, v_noabi::options::insert const& options = {});
 
     ///
@@ -1159,7 +1159,7 @@ class collection {
     ///
     /// @throws mongocxx::v_noabi::bulk_write_exception if the operation fails.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<v_noabi::result::insert_one>)
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(bsoncxx::v_noabi::stdx::optional<v_noabi::result::insert_one>)
     insert_one(
         v_noabi::client_session const& session,
         bsoncxx::v_noabi::document::view_or_value document,
@@ -1296,7 +1296,7 @@ class collection {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/listIndexes/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(v_noabi::cursor) list_indexes() const;
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(v_noabi::cursor) list_indexes() const;
 
     ///
     /// Returns a list of the indexes currently on this collection.
@@ -1311,7 +1311,7 @@ class collection {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/listIndexes/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(v_noabi::cursor) list_indexes(v_noabi::client_session const& session) const;
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(v_noabi::cursor) list_indexes(v_noabi::client_session const& session) const;
 
     ///
     /// Returns the name of this collection.
@@ -1319,7 +1319,7 @@ class collection {
     /// @return The name of the collection.  The return value of this method is invalidated by any
     /// subsequent call to collection::rename() on this collection object.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::string_view) name() const;
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(bsoncxx::v_noabi::stdx::string_view) name() const;
 
     ///
     /// Rename this collection.
@@ -1340,7 +1340,7 @@ class collection {
     /// @note
     ///   Write concern supported only for MongoDB 3.4+.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(void)
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(void)
     rename(
         bsoncxx::v_noabi::string::view_or_value new_name,
         bool drop_target_before_rename = false,
@@ -1367,7 +1367,7 @@ class collection {
     /// @note
     ///   Write concern supported only for MongoDB 3.4+.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(void)
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(void)
     rename(
         v_noabi::client_session const& session,
         bsoncxx::v_noabi::string::view_or_value new_name,
@@ -1384,7 +1384,7 @@ class collection {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/read-concern/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(void) read_concern(v_noabi::read_concern rc);
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(void) read_concern(v_noabi::read_concern rc);
 
     ///
     /// Gets the read_concern for the collection.
@@ -1394,7 +1394,7 @@ class collection {
     ///
     /// @return The current read_concern.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(v_noabi::read_concern) read_concern() const;
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(v_noabi::read_concern) read_concern() const;
 
     ///
     /// Sets the read_preference for this collection. Changes will not have any effect on existing
@@ -1406,7 +1406,7 @@ class collection {
     /// @see
     /// - https://www.mongodb.com/docs/manual/core/read-preference/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(void) read_preference(v_noabi::read_preference rp);
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(void) read_preference(v_noabi::read_preference rp);
 
     ///
     /// Gets the read_preference for the collection.
@@ -1416,7 +1416,7 @@ class collection {
     /// @see
     /// - https://www.mongodb.com/docs/manual/core/read-preference/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(v_noabi::read_preference) read_preference() const;
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(v_noabi::read_preference) read_preference() const;
 
     ///
     /// Replaces a single document matching the provided filter in this collection.
@@ -1439,7 +1439,7 @@ class collection {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/update/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<v_noabi::result::replace_one>)
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(bsoncxx::v_noabi::stdx::optional<v_noabi::result::replace_one>)
     replace_one(
         bsoncxx::v_noabi::document::view_or_value filter,
         bsoncxx::v_noabi::document::view_or_value replacement,
@@ -1468,7 +1468,7 @@ class collection {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/update/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<v_noabi::result::replace_one>)
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(bsoncxx::v_noabi::stdx::optional<v_noabi::result::replace_one>)
     replace_one(
         v_noabi::client_session const& session,
         bsoncxx::v_noabi::document::view_or_value filter,
@@ -1496,7 +1496,7 @@ class collection {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/update/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<v_noabi::result::update>)
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(bsoncxx::v_noabi::stdx::optional<v_noabi::result::update>)
     update_many(
         bsoncxx::v_noabi::document::view_or_value filter,
         bsoncxx::v_noabi::document::view_or_value update,
@@ -1523,7 +1523,7 @@ class collection {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/update/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<v_noabi::result::update>)
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(bsoncxx::v_noabi::stdx::optional<v_noabi::result::update>)
     update_many(
         bsoncxx::v_noabi::document::view_or_value filter,
         v_noabi::pipeline const& update,
@@ -1550,7 +1550,7 @@ class collection {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/update/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<v_noabi::result::update>)
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(bsoncxx::v_noabi::stdx::optional<v_noabi::result::update>)
     update_many(
         bsoncxx::v_noabi::document::view_or_value filter,
         std::initializer_list<_empty_doc_tag> update,
@@ -1579,7 +1579,7 @@ class collection {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/update/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<v_noabi::result::update>)
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(bsoncxx::v_noabi::stdx::optional<v_noabi::result::update>)
     update_many(
         v_noabi::client_session const& session,
         bsoncxx::v_noabi::document::view_or_value filter,
@@ -1609,7 +1609,7 @@ class collection {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/update/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<v_noabi::result::update>)
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(bsoncxx::v_noabi::stdx::optional<v_noabi::result::update>)
     update_many(
         v_noabi::client_session const& session,
         bsoncxx::v_noabi::document::view_or_value filter,
@@ -1639,7 +1639,7 @@ class collection {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/update/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<v_noabi::result::update>)
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(bsoncxx::v_noabi::stdx::optional<v_noabi::result::update>)
     update_many(
         v_noabi::client_session const& session,
         bsoncxx::v_noabi::document::view_or_value filter,
@@ -1667,7 +1667,7 @@ class collection {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/update/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<v_noabi::result::update>)
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(bsoncxx::v_noabi::stdx::optional<v_noabi::result::update>)
     update_one(
         bsoncxx::v_noabi::document::view_or_value filter,
         bsoncxx::v_noabi::document::view_or_value update,
@@ -1694,7 +1694,7 @@ class collection {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/update/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<v_noabi::result::update>)
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(bsoncxx::v_noabi::stdx::optional<v_noabi::result::update>)
     update_one(
         bsoncxx::v_noabi::document::view_or_value filter,
         v_noabi::pipeline const& update,
@@ -1721,7 +1721,7 @@ class collection {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/update/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<v_noabi::result::update>)
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(bsoncxx::v_noabi::stdx::optional<v_noabi::result::update>)
     update_one(
         bsoncxx::v_noabi::document::view_or_value filter,
         std::initializer_list<_empty_doc_tag> update,
@@ -1750,7 +1750,7 @@ class collection {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/update/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<v_noabi::result::update>)
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(bsoncxx::v_noabi::stdx::optional<v_noabi::result::update>)
     update_one(
         v_noabi::client_session const& session,
         bsoncxx::v_noabi::document::view_or_value filter,
@@ -1780,7 +1780,7 @@ class collection {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/update/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<v_noabi::result::update>)
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(bsoncxx::v_noabi::stdx::optional<v_noabi::result::update>)
     update_one(
         v_noabi::client_session const& session,
         bsoncxx::v_noabi::document::view_or_value filter,
@@ -1810,7 +1810,7 @@ class collection {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/update/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<v_noabi::result::update>)
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(bsoncxx::v_noabi::stdx::optional<v_noabi::result::update>)
     update_one(
         v_noabi::client_session const& session,
         bsoncxx::v_noabi::document::view_or_value filter,
@@ -1824,19 +1824,19 @@ class collection {
     /// @param wc
     ///   The new write_concern to use.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(void) write_concern(v_noabi::write_concern wc);
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(void) write_concern(v_noabi::write_concern wc);
 
     ///
     /// Gets the write_concern for the collection.
     ///
     /// @return The current write_concern.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(v_noabi::write_concern) write_concern() const;
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(v_noabi::write_concern) write_concern() const;
 
     ///
     /// Gets an index_view to the collection.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(v_noabi::index_view) indexes();
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(v_noabi::index_view) indexes();
 
     ///
     ///
@@ -1852,7 +1852,8 @@ class collection {
     /// @see
     /// - https://www.mongodb.com/docs/manual/changeStreams/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(v_noabi::change_stream) watch(v_noabi::options::change_stream const& options = {});
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(v_noabi::change_stream) watch(
+        v_noabi::options::change_stream const& options = {});
 
     ///
     /// @param session
@@ -1866,7 +1867,7 @@ class collection {
     /// @see
     /// - https://www.mongodb.com/docs/manual/changeStreams/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(v_noabi::change_stream)
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(v_noabi::change_stream)
     watch(v_noabi::client_session const& session, v_noabi::options::change_stream const& options = {});
 
     ///
@@ -1886,7 +1887,7 @@ class collection {
     /// @see
     /// - https://www.mongodb.com/docs/manual/changeStreams/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(v_noabi::change_stream)
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(v_noabi::change_stream)
     watch(v_noabi::pipeline const& pipe, v_noabi::options::change_stream const& options = {});
 
     ///
@@ -1905,7 +1906,7 @@ class collection {
     /// @see
     /// - https://www.mongodb.com/docs/manual/changeStreams/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(v_noabi::change_stream)
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(v_noabi::change_stream)
     watch(
         v_noabi::client_session const& session,
         v_noabi::pipeline const& pipe,
@@ -1914,21 +1915,21 @@ class collection {
     ///
     /// Gets a search_index_view to the collection.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(v_noabi::search_index_view) search_indexes();
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(v_noabi::search_index_view) search_indexes();
 
     class internal;
 
    private:
-    MONGOCXX_ABI_EXPORT_CDECL(v_noabi::bulk_write)
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(v_noabi::bulk_write)
     _init_insert_many(v_noabi::options::insert const& options, v_noabi::client_session const* session);
 
-    MONGOCXX_ABI_EXPORT_CDECL(void)
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(void)
     _insert_many_doc_handler(
         v_noabi::bulk_write& writes,
         bsoncxx::v_noabi::builder::basic::array& inserted_ids,
         bsoncxx::v_noabi::document::view doc) const;
 
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<v_noabi::result::insert_many>)
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(bsoncxx::v_noabi::stdx::optional<v_noabi::result::insert_many>)
     _exec_insert_many(v_noabi::bulk_write& writes, bsoncxx::v_noabi::builder::basic::array& inserted_ids);
 
     template <typename document_view_iterator_type>

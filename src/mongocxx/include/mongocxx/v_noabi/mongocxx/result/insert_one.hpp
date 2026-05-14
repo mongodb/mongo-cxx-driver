@@ -67,12 +67,12 @@ class insert_one {
     ///
     /// Construct with the @ref mongocxx::v1 equivalent.
     ///
-    /* explicit(false) */ MONGOCXX_ABI_EXPORT_CDECL() insert_one(v1::insert_one_result opts);
+    /* explicit(false) */ MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE() insert_one(v1::insert_one_result opts);
 
     ///
     /// Convert to the @ref mongocxx::v1 equivalent.
     ///
-    explicit MONGOCXX_ABI_EXPORT_CDECL() operator v1::insert_one_result() const;
+    explicit MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE() operator v1::insert_one_result() const;
 
     ///
     /// Returns the bulk write result for this insert operation.

@@ -242,7 +242,7 @@ class value {
     /// @warning The Symbol BSON type is deprecated. Usage is discouraged.
     /// @warning The Undefined BSON type is deprecated. Usage is discouraged.
     ///
-    /* explicit(false) */ BSONCXX_ABI_EXPORT_CDECL() value(v_noabi::type const id, v1::stdx::string_view v);
+    /* explicit(false) */ BSONCXX_ABI_EXPORT_CDECL_UNSTABLE() value(v_noabi::type const id, v1::stdx::string_view v);
 
     ///
     /// Constructs one of the following BSON values (each specified by the parenthesized type):
@@ -256,7 +256,7 @@ class value {
     /// @throws bsoncxx::v_noabi::exception if the type's value is not k_maxkey, k_minkey, or
     /// k_undefined.
     ///
-    /* explicit(false) */ BSONCXX_ABI_EXPORT_CDECL() value(v_noabi::type const id);
+    /* explicit(false) */ BSONCXX_ABI_EXPORT_CDECL_UNSTABLE() value(v_noabi::type const id);
 
     ///
     /// Constructs one of the following BSON values (each specified by the parenthesized type):
@@ -278,7 +278,7 @@ class value {
     ///   The BSON timestamp type is used internally by the MongoDB server - use by clients
     ///   is discouraged.
     ///
-    BSONCXX_ABI_EXPORT_CDECL() value(v_noabi::type const id, std::uint64_t a, std::uint64_t b);
+    BSONCXX_ABI_EXPORT_CDECL_UNSTABLE() value(v_noabi::type const id, std::uint64_t a, std::uint64_t b);
 
     ///
     /// Create an owning copy of a bson_value::view.

@@ -47,12 +47,13 @@ class server_description {
     ///
     /// @important `*this` MUST be used within the lifetime of `other`.
     ///
-    /* explicit(false) */ MONGOCXX_ABI_EXPORT_CDECL() server_description(v1::events::server_description const& other);
+    /* explicit(false) */ MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE() server_description(
+        v1::events::server_description const& other);
 
     ///
     /// Convert to the @ref mongocxx::v1 equivalent.
     ///
-    explicit MONGOCXX_ABI_EXPORT_CDECL() operator v1::events::server_description() const;
+    explicit MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE() operator v1::events::server_description() const;
 
     ///
     /// An opaque id, unique to this server for this mongocxx::v_noabi::client or
@@ -60,14 +61,14 @@ class server_description {
     ///
     /// @return The id.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(std::uint32_t) id() const;
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(std::uint32_t) id() const;
 
     ///
     /// The duration of the last hello call, indicating network latency.
     ///
     /// @return The duration in microseconds.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(std::int64_t) round_trip_time() const;
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(std::int64_t) round_trip_time() const;
 
     ///
     /// The server type: "Unknown", "Standalone", "Mongos", "PossiblePrimary", "RSPrimary",
@@ -75,7 +76,7 @@ class server_description {
     ///
     /// @return The type as a short-lived string view.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::string_view) type() const;
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(bsoncxx::v_noabi::stdx::string_view) type() const;
 
     ///
     /// @return The response as a short-lived document view.
@@ -92,21 +93,21 @@ class server_description {
     ///
     /// @return The response as a short-lived document view.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::document::view) hello() const;
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(bsoncxx::v_noabi::document::view) hello() const;
 
     ///
     /// Returns the server host name.
     ///
     /// @return The host name.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::string_view) host() const;
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(bsoncxx::v_noabi::stdx::string_view) host() const;
 
     ///
     /// Returns the server port.
     ///
     /// @return The port.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(std::uint16_t) port() const;
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(std::uint16_t) port() const;
 
    private:
     void const* _sd;

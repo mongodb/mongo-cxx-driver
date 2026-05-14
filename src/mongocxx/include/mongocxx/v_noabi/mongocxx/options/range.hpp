@@ -58,7 +58,7 @@ class range {
     ///
     /// Construct with the @ref mongocxx::v1 equivalent.
     ///
-    /* explicit(false) */ MONGOCXX_ABI_EXPORT_CDECL() range(v1::range_options opts);
+    /* explicit(false) */ MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE() range(v1::range_options opts);
 
     ///
     /// Convert to the @ref mongocxx::v1 equivalent.

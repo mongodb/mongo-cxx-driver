@@ -23,6 +23,9 @@ message(STATUS "mongocxx version: $CACHE{MONGOCXX_VERSION}")
 set(MONGOCXX_SOVERSION "_noabi" CACHE STRING "For internal use only.")
 message(STATUS "mongocxx soversion: ${MONGOCXX_SOVERSION}")
 
+cmake_dependent_option(MONGOCXX_EXPORT_UNSTABLE_ABI "Enable building with unstable ABI symbols." ON "BSONCXX_EXPORT_UNSTABLE_ABI" OFF)
+mark_as_advanced(MONGOCXX_EXPORT_UNSTABLE_ABI) # For internal use only.
+
 option(MONGOCXX_ENABLE_SSL "Enable SSL - if the underlying C driver offers it" ON)
 option(MONGOCXX_ENABLE_SLOW_TESTS "Run slow tests when invoking the the test target" OFF)
 

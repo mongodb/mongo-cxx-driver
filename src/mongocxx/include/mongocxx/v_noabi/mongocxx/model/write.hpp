@@ -47,7 +47,7 @@ class write {
     ///
     /// Construct with the @ref mongocxx::v1 equivalent.
     ///
-    /* explicit(false) */ MONGOCXX_ABI_EXPORT_CDECL() write(v1::bulk_write::single op);
+    /* explicit(false) */ MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE() write(v1::bulk_write::single op);
 
     ///
     /// Convert to the @ref mongocxx::v1 equivalent.
@@ -57,12 +57,12 @@ class write {
     ///
     /// @warning Invalidates all associated references.
     ///
-    explicit MONGOCXX_ABI_EXPORT_CDECL() operator v1::bulk_write::single() &&;
+    explicit MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE() operator v1::bulk_write::single() &&;
 
     ///
     /// Convert to the @ref mongocxx::v1 equivalent.
     ///
-    explicit MONGOCXX_ABI_EXPORT_CDECL() operator v1::bulk_write::single() const&;
+    explicit MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE() operator v1::bulk_write::single() const&;
 
     ///
     /// Constructs a write from a model::insert_one.

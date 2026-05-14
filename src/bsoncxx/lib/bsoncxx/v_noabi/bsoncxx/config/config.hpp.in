@@ -1,0 +1,60 @@
+// Copyright 2009-present MongoDB, Inc.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+// For backward compatibility.
+#include <bsoncxx/v1/config/config.hpp> // IWYU pragma: export
+
+#if !defined(BSONCXX_EXPORT_UNSTABLE_ABI)
+#cmakedefine01 BSONCXX_EXPORT_UNSTABLE_ABI
+#endif
+
+#if BSONCXX_EXPORT_UNSTABLE_ABI == 1
+#define BSONCXX_ABI_EXPORT_UNSTABLE BSONCXX_ABI_EXPORT
+#else
+#define BSONCXX_ABI_EXPORT_UNSTABLE BSONCXX_ABI_NO_EXPORT
+#endif
+
+#define BSONCXX_ABI_EXPORT_CDECL_UNSTABLE(...) BSONCXX_ABI_EXPORT_UNSTABLE __VA_ARGS__ BSONCXX_ABI_CDECL
+
+///
+/// @file
+/// Provides macros describing the bsoncxx (v_noabi) library configuration.
+///
+/// @par Includes
+/// - @ref bsoncxx/v1/config/config.hpp
+///
+
+///
+/// @def BSONCXX_EXPORT_UNSTABLE_ABI
+/// @hideinitializer
+/// Controls whether unstable ABI symbols are exported by the shared library.
+///
+/// @warning For internal use only!
+///
+
+///
+/// @def BSONCXX_ABI_EXPORT_UNSTABLE
+/// @hideinitializer
+/// Exports the associated entity as part of the unstable ABI.
+///
+/// @warning For internal use only!
+///
+
+///
+/// @def BSONCXX_ABI_EXPORT_CDECL_UNSTABLE
+/// @hideinitializer
+/// Equivalent to @ref BSONCXX_ABI_EXPORT_UNSTABLE with @ref BSONCXX_ABI_CDECL.
+///
+/// @warning For internal use only!
+///
