@@ -328,7 +328,6 @@ Declarations under `v_noabi/` must use the `_UNSTABLE` variants instead:
 
 - Use `BSONCXX_ABI_EXPORT_CDECL_UNSTABLE` in place of `BSONCXX_ABI_EXPORT_CDECL`.
 - Use `BSONCXX_ABI_EXPORT_UNSTABLE` in place of `BSONCXX_ABI_EXPORT`.
-- `BSONCXX_ABI_CDECL` is shared between stable and unstable ABI declarations (no `_UNSTABLE` variant).
 
 ### Implicit vs. Explicit
 
