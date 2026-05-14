@@ -24,6 +24,7 @@
 
 #include <mongocxx/v1/apm-fwd.hpp>
 #include <mongocxx/v1/auto_encryption_options-fwd.hpp>
+#include <mongocxx/v1/client_bulk_write-fwd.hpp>
 #include <mongocxx/v1/cursor-fwd.hpp>
 #include <mongocxx/v1/database-fwd.hpp>
 #include <mongocxx/v1/pipeline-fwd.hpp>
@@ -244,6 +245,15 @@ class client {
     MONGOCXX_ABI_EXPORT_CDECL(v1::change_stream) watch(v1::client_session const& session, v1::pipeline const& pipeline);
     /// @}
     ///
+
+    ///
+    /// Return a new client-level bulk write operation for use with this client.
+    ///
+    /// @{
+    MONGOCXX_ABI_EXPORT_CDECL(v1::client_bulk_write) create_bulk_write();
+
+    MONGOCXX_ABI_EXPORT_CDECL(v1::client_bulk_write) create_bulk_write(v1::client_session& session);
+    /// @}
 
     ///
     /// Invalidate this client object without invaliding existing cursors or sessions.

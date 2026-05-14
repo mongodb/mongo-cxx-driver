@@ -21,6 +21,7 @@
 #include <bsoncxx/v1/document/view-fwd.hpp>
 #include <bsoncxx/v1/types/value-fwd.hpp>
 
+#include <mongocxx/v1/client_session-fwd.hpp>
 #include <mongocxx/v1/write_concern-fwd.hpp>
 
 #include <bsoncxx/v1/stdx/optional.hpp>
@@ -81,6 +82,8 @@ class client_bulk_write::internal {
    public:
     static MONGOCXX_ABI_EXPORT_CDECL_TESTING(client_bulk_write) make(mongoc_bulkwrite_t* bulk);
     static MONGOCXX_ABI_EXPORT_CDECL_TESTING(mongoc_bulkwrite_t*) as_mongoc(client_bulk_write& self);
+
+    static MONGOCXX_ABI_EXPORT_CDECL_TESTING(void) set_session(client_bulk_write& self, v1::client_session& session);
 };
 
 } // namespace v1

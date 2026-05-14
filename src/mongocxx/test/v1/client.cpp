@@ -23,6 +23,7 @@
 
 #include <mongocxx/v1/auto_encryption_options.hh>
 #include <mongocxx/v1/change_stream.hh>
+#include <mongocxx/v1/client_bulk_write.hh>
 #include <mongocxx/v1/client_session.hh>
 #include <mongocxx/v1/cursor.hh>
 #include <mongocxx/v1/database.hh>
@@ -2086,6 +2087,75 @@ TEST_CASE("watch", "[mongocxx][v1][client]") {
             }
         }
     }
+}
+
+TEST_CASE("create_bulk_write", "[mongocxx][v1][client]") {
+    identity_type bulkwrite_id;
+    auto const bulkwrite_identity = reinterpret_cast<mongoc_bulkwrite_t*>(&bulkwrite_id);
+
+    identity_type client_id;
+    auto const client_identity = reinterpret_cast<mongoc_client_t*>(&client_id);
+
+    auto bulkwrite_destroy = libmongoc::bulkwrite_destroy.create_instance();
+    bulkwrite_destroy->interpose([&](mongoc_bulkwrite_t* bw) { CHECK(bw == bulkwrite_identity); }).forever();
+
+    auto client_destroy = libmongoc::client_destroy.create_instance();
+    client_destroy->interpose([&](mongoc_client_t* ptr) { CHECK(ptr == client_identity); }).forever();
+
+    auto client = v1::client::internal::make(client_identity);
+
+    auto client_bulkwrite_new = libmongoc::client_bulkwrite_new.create_instance();
+    client_bulkwrite_new->interpose([&](mongoc_client_t* c) -> mongoc_bulkwrite_t* {
+        CHECK(c == client_identity);
+        return bulkwrite_identity;
+    });
+
+    auto client_bulk_write = client.create_bulk_write();
+
+    CHECK(v1::client_bulk_write::internal::as_mongoc(client_bulk_write) == bulkwrite_identity);
+}
+
+TEST_CASE("create_bulk_write with session", "[mongocxx][v1][client]") {
+    identity_type bulkwrite_id;
+    auto const bulkwrite_identity = reinterpret_cast<mongoc_bulkwrite_t*>(&bulkwrite_id);
+
+    identity_type client_id;
+    auto const client_identity = reinterpret_cast<mongoc_client_t*>(&client_id);
+
+    identity_type session_id;
+    auto const session_identity = reinterpret_cast<mongoc_client_session_t*>(&session_id);
+
+    auto bulkwrite_destroy = libmongoc::bulkwrite_destroy.create_instance();
+    bulkwrite_destroy->interpose([&](mongoc_bulkwrite_t* bw) { CHECK(bw == bulkwrite_identity); }).forever();
+
+    auto client_destroy = libmongoc::client_destroy.create_instance();
+    client_destroy->interpose([&](mongoc_client_t* ptr) { CHECK(ptr == client_identity); }).forever();
+
+    auto session_destroy = libmongoc::client_session_destroy.create_instance();
+    session_destroy->interpose([&](mongoc_client_session_t* ptr) { CHECK(ptr == session_identity); }).forever();
+
+    auto client = v1::client::internal::make(client_identity);
+    auto session = v1::client_session::internal::make(session_identity, client);
+
+    auto client_bulkwrite_new = libmongoc::client_bulkwrite_new.create_instance();
+    client_bulkwrite_new->interpose([&](mongoc_client_t* c) -> mongoc_bulkwrite_t* {
+        CHECK(c == client_identity);
+        return bulkwrite_identity;
+    });
+
+    bool set_session_called = false;
+
+    auto set_session = libmongoc::bulkwrite_set_session.create_instance();
+    set_session->interpose([&](mongoc_bulkwrite_t* bw, mongoc_client_session_t* s) {
+        CHECK(bw == bulkwrite_identity);
+        CHECK(s == session_identity);
+        set_session_called = true;
+    });
+
+    auto client_bulk_write = client.create_bulk_write(session);
+
+    CHECK(v1::client_bulk_write::internal::as_mongoc(client_bulk_write) == bulkwrite_identity);
+    CHECK(set_session_called);
 }
 
 TEST_CASE("reset", "[mongocxx][v1][client]") {

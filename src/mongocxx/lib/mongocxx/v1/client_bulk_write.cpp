@@ -29,6 +29,7 @@
 
 #include <bsoncxx/v1/types/value.hh>
 
+#include <mongocxx/v1/client_session.hh>
 #include <mongocxx/v1/exception.hh>
 #include <mongocxx/v1/write_concern.hh>
 
@@ -101,6 +102,10 @@ client_bulk_write client_bulk_write::internal::make(mongoc_bulkwrite_t* bulk) {
 
 mongoc_bulkwrite_t* client_bulk_write::internal::as_mongoc(client_bulk_write& self) {
     return impl::with(self)._bulk;
+}
+
+void client_bulk_write::internal::set_session(client_bulk_write& self, v1::client_session& session) {
+    libmongoc::bulkwrite_set_session(as_mongoc(self), v1::client_session::internal::as_mongoc(session));
 }
 
 class client_bulk_write::options::impl {

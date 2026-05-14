@@ -151,6 +151,10 @@ v1::client_session const& client_session::internal::as_v1(client_session const& 
     return self._session;
 }
 
+v1::client_session& client_session::internal::as_v1(client_session& self) {
+    return self._session;
+}
+
 mongoc_client_session_t const* client_session::internal::as_mongoc(client_session const& self) {
     return v1::client_session::internal::as_mongoc(self._session);
 }
