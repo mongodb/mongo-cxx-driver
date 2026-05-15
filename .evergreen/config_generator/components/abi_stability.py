@@ -142,9 +142,9 @@ def generate_tasks():
 
     for func, (polyfill, cxx_standard) in product(funcs, MATRIX):
         if func is Abidiff:
-            distro_name = 'ubuntu2204'  # Clang 12, libabigail is not available on RHEL distros.
+            distro_name = 'ubuntu2204'  # Clang 14, libabigail is not available on RHEL distros.
         else:
-            distro_name = 'rhel95'  # Clang 19.
+            distro_name = 'rhel95'  # Clang 20.
 
         distro = find_large_distro(distro_name)
 
