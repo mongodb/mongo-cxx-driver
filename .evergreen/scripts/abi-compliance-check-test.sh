@@ -51,7 +51,7 @@ generate_abi_report() (
   # -keep-registers-and-offsets: abi-dumper doesn't detect `-Og` with Clang.
   # "WARNING: a "Struct" type with no attributes detected in the DWARF dump" is caused by missing mongoc debug-info.
   # "ERROR: missed type id <N>" is false-positive caused by otherwise-unused forward-decls in a template parameter.
-  parallel --halt now,fail=1 --tagstring '[{#}]' ::: \
+  parallel --halt now,fail=1 --keep-order --tagstring '[{#}]' ::: \
     "abi-dumper '${bsoncxx_old:?}' \
       -o bsoncxx-old.dump \
       -lver '${old_ver:?}' \
@@ -131,9 +131,11 @@ generate_abi_report() (
   echo "Generating ${label:?} ABI report... done."
 )
 
-declare stable_pid unstable_pid
-generate_abi_report "stable" "cxx-abi" "v1" "true" &
-stable_pid="$!"
-generate_abi_report "unstable" "cxx-noabi" "v_noabi" "false" &
-unstable_pid="$!"
-wait "${stable_pid:?}" "${unstable_pid:?}"
+export working_dir old_ver new_ver bsoncxx_old bsoncxx_new mongocxx_old mongocxx_new
+export -f generate_abi_report
+parallel --link --keep-order --tagstring '[{#}]' \
+  generate_abi_report {1} {2} {3} {4} \
+  ::: stable unstable \
+  ::: cxx-abi cxx-noabi \
+  ::: v1 v_noabi \
+  ::: true false
