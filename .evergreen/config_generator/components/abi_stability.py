@@ -43,7 +43,7 @@ class AbiComplianceCheck(Function):
             bucket='mciuploads',
             content_type='text/html',
             display_name='ABI Compliance Check (Stable): ',
-            local_files_include_filter='cxx-abi/compat_reports/**/compat_report.html',
+            local_files_include_filter=['cxx-abi/*.html'],
             permissions='public-read',
             remote_file='mongo-cxx-driver/${branch_name}/${revision}/${version_id}/${build_id}/${task_id}/${execution}/abi-compliance-check/abi/',
         ),
@@ -54,7 +54,7 @@ class AbiComplianceCheck(Function):
             bucket='mciuploads',
             content_type='text/plain',
             display_name='ABI Compliance Check (Stable): ',
-            local_files_include_filter='cxx-abi/logs/**/log.txt',
+            local_files_include_filter=['cxx-abi/**/*.log', 'cxx-abi/**/log.txt'],
             permissions='public-read',
             remote_file='mongo-cxx-driver/${branch_name}/${revision}/${version_id}/${build_id}/${task_id}/${execution}/abi-compliance-check/abi/',
         ),
@@ -65,7 +65,7 @@ class AbiComplianceCheck(Function):
             bucket='mciuploads',
             content_type='text/html',
             display_name='ABI Compliance Check (Unstable): ',
-            local_files_include_filter='cxx-noabi/compat_reports/**/compat_report.html',
+            local_files_include_filter=['cxx-noabi/*.html'],
             permissions='public-read',
             remote_file='mongo-cxx-driver/${branch_name}/${revision}/${version_id}/${build_id}/${task_id}/${execution}/abi-compliance-check/noabi/',
         ),
@@ -76,7 +76,7 @@ class AbiComplianceCheck(Function):
             bucket='mciuploads',
             content_type='text/plain',
             display_name='ABI Compliance Check (Unstable): ',
-            local_files_include_filter='cxx-noabi/logs/**/log.txt',
+            local_files_include_filter=['cxx-noabi/**/*.log', 'cxx-noabi/**/log.txt'],
             permissions='public-read',
             remote_file='mongo-cxx-driver/${branch_name}/${revision}/${version_id}/${build_id}/${task_id}/${execution}/abi-compliance-check/noabi/',
         ),
@@ -101,7 +101,7 @@ class Abidiff(Function):
             bucket='mciuploads',
             content_type='text/plain',
             display_name='abidiff (Stable): ',
-            local_files_include_filter='cxx-abi/*.txt',
+            local_files_include_filter=['cxx-abi/*.txt'],
             permissions='public-read',
             remote_file='mongo-cxx-driver/${branch_name}/${revision}/${version_id}/${build_id}/${task_id}/${execution}/abidiff/abi/',
         ),
@@ -112,7 +112,7 @@ class Abidiff(Function):
             bucket='mciuploads',
             content_type='text/plain',
             display_name='abidiff (Unstable): ',
-            local_files_include_filter='cxx-noabi/*.txt',
+            local_files_include_filter=['cxx-noabi/*.txt'],
             permissions='public-read',
             remote_file='mongo-cxx-driver/${branch_name}/${revision}/${version_id}/${build_id}/${task_id}/${execution}/abidiff/noabi/',
         ),
@@ -142,9 +142,9 @@ def generate_tasks():
 
     for func, (polyfill, cxx_standard) in product(funcs, MATRIX):
         if func is Abidiff:
-            distro_name = 'ubuntu2204'  # Clang 12, libabigail is not available on RHEL distros.
+            distro_name = 'ubuntu2204'  # Clang 14, libabigail is not available on RHEL distros.
         else:
-            distro_name = 'rhel95'  # Clang 19.
+            distro_name = 'rhel95'  # Clang 20.
 
         distro = find_large_distro(distro_name)
 
@@ -182,7 +182,7 @@ def task_groups():
             setup_task_can_fail_task=True,
             setup_task=[
                 git_get_project(directory='mongo-cxx-driver'),
-                InstallCDriver.call(),
+                InstallCDriver.call(vars={'SKIP_INSTALL_LIBMONGOCRYPT': 1}),
                 bash_exec(
                     command_type=EvgCommandType.SETUP,
                     env={
@@ -199,7 +199,7 @@ def task_groups():
                     bucket='mciuploads',
                     content_type='text/plain',
                     display_name='ABI Stability Setup: ',
-                    local_files_include_filter='*.log',
+                    local_files_include_filter=['*.log'],
                     permissions='public-read',
                     remote_file='mongo-cxx-driver/${branch_name}/${revision}/${version_id}/${build_id}/${task_id}/${execution}/abi-stability-setup/',
                 ),
