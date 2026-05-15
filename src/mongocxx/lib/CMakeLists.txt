@@ -133,6 +133,7 @@ set(mongocxx_sources_v1
     mongocxx/v1/config/export.cpp
     mongocxx/v1/config/version.cpp
     mongocxx/v1/count_options.cpp
+    mongocxx/v1/create_stream_processor_options.cpp
     mongocxx/v1/cursor.cpp
     mongocxx/v1/data_key_options.cpp
     mongocxx/v1/database.cpp
@@ -160,10 +161,14 @@ set(mongocxx_sources_v1
     mongocxx/v1/events/topology_description.cpp
     mongocxx/v1/events/topology_opening.cpp
     mongocxx/v1/exception.cpp
+    mongocxx/v1/failover_options.cpp
     mongocxx/v1/find_one_and_delete_options.cpp
     mongocxx/v1/find_one_and_replace_options.cpp
     mongocxx/v1/find_one_and_update_options.cpp
     mongocxx/v1/find_options.cpp
+    mongocxx/v1/get_stream_processor_samples_options.cpp
+    mongocxx/v1/get_stream_processor_samples_result.cpp
+    mongocxx/v1/get_stream_processor_stats_options.cpp
     mongocxx/v1/gridfs/bucket.cpp
     mongocxx/v1/gridfs/downloader.cpp
     mongocxx/v1/gridfs/upload_options.cpp
@@ -193,6 +198,11 @@ set(mongocxx_sources_v1
     mongocxx/v1/search_indexes.cpp
     mongocxx/v1/server_api.cpp
     mongocxx/v1/server_error.cpp
+    mongocxx/v1/start_stream_processor_options.cpp
+    mongocxx/v1/stream_processing_client.cpp
+    mongocxx/v1/stream_processor.cpp
+    mongocxx/v1/stream_processor_info.cpp
+    mongocxx/v1/stream_processors.cpp
     mongocxx/v1/text_options.cpp
     mongocxx/v1/tls.cpp
     mongocxx/v1/transaction_options.cpp
