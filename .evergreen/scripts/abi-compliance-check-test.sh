@@ -133,7 +133,7 @@ generate_abi_report() (
 
 export working_dir old_ver new_ver bsoncxx_old bsoncxx_new mongocxx_old mongocxx_new
 export -f generate_abi_report
-parallel --link --tagstring '[{#}]' \
+parallel --link --keep-order --tagstring '[{#}]' \
   generate_abi_report {1} {2} {3} {4} \
   ::: stable unstable \
   ::: cxx-abi cxx-noabi \
