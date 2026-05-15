@@ -106,7 +106,7 @@ DOC
 <skip_namespaces>
   bsoncxx::detail
   mongocxx::detail
-</skip_headers>
+</skip_namespaces>
 DOC
 
   cat >>cxx-noabi/old.xml <<DOC
