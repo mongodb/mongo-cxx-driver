@@ -92,14 +92,13 @@ stdlib) configure_flags+=("-DBSONCXX_POLY_USE_STD=ON") ;;
 esac
 
 # Build and install the base commit first.
-git -C mongo-cxx-driver stash push -u
-git -C mongo-cxx-driver reset --hard "${base:?}"
+git -C mongo-cxx-driver worktree add -d ../mongo-cxx-driver-base "${base:?}"
 
 # Install old (base) to install/old.
 echo "Building old libraries..."
 (
   cmake \
-    -S mongo-cxx-driver \
+    -S mongo-cxx-driver-base \
     -B build/old \
     -DCMAKE_INSTALL_PREFIX=install/old \
     -DBUILD_VERSION="${old_ver:?}-base" \
@@ -111,10 +110,6 @@ echo "Building old libraries..."
   exit 1
 }
 echo "Building old libraries... done."
-
-# Restore all pending changes.
-git -C mongo-cxx-driver reset --hard "HEAD@{1}"
-git -C mongo-cxx-driver stash pop -q || true # Only patch builds have stashed changes.
 
 # Install new (current) to install/new.
 echo "Building new libraries..."
