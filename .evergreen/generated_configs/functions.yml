@@ -29,7 +29,7 @@ functions:
     - command: s3.put
       type: system
       params:
-        display_name: "ABI Compliance Check (Stable) Logs: "
+        display_name: "ABI Compliance Check (Stable): "
         aws_key: ${aws_key}
         aws_secret: ${aws_secret}
         bucket: mciuploads
@@ -54,7 +54,7 @@ functions:
     - command: s3.put
       type: system
       params:
-        display_name: "ABI Compliance Check (Unstable) Logs: "
+        display_name: "ABI Compliance Check (Unstable): "
         aws_key: ${aws_key}
         aws_secret: ${aws_secret}
         bucket: mciuploads
