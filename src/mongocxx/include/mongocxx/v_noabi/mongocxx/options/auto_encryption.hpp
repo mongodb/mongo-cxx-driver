@@ -477,7 +477,7 @@ namespace v_noabi {
 /// provided as an argument to this conversion function.
 ///
 /// @{
-MONGOCXX_ABI_EXPORT_CDECL(v_noabi::options::auto_encryption) from_v1(v1::auto_encryption_options v);
+MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(v_noabi::options::auto_encryption) from_v1(v1::auto_encryption_options v);
 
 inline v_noabi::options::auto_encryption from_v1(v1::auto_encryption_options v, v_noabi::client* client) {
     auto ret = from_v1(std::move(v));
@@ -500,7 +500,7 @@ inline v_noabi::options::auto_encryption from_v1(v1::auto_encryption_options v, 
 /// provided as an argument to this conversion function.
 ///
 /// @{
-MONGOCXX_ABI_EXPORT_CDECL(v1::auto_encryption_options) to_v1(v_noabi::options::auto_encryption const& v);
+MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(v1::auto_encryption_options) to_v1(v_noabi::options::auto_encryption const& v);
 
 inline v1::auto_encryption_options to_v1(v_noabi::options::auto_encryption const& v, v1::client* client) {
     auto ret = to_v1(v);

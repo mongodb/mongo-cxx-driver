@@ -70,12 +70,12 @@ class insert_many {
     ///
     /// Construct with the @ref mongocxx::v1 equivalent.
     ///
-    /* explicit(false) */ MONGOCXX_ABI_EXPORT_CDECL() insert_many(v1::insert_many_result opts);
+    /* explicit(false) */ MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE() insert_many(v1::insert_many_result opts);
 
     ///
     /// Convert to the @ref mongocxx::v1 equivalent.
     ///
-    explicit MONGOCXX_ABI_EXPORT_CDECL() operator v1::insert_many_result() const;
+    explicit MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE() operator v1::insert_many_result() const;
 
     ///
     /// @deprecated For internal use only.
@@ -114,7 +114,7 @@ class insert_many {
         return _id_map;
     }
 
-    friend MONGOCXX_ABI_EXPORT_CDECL(bool) operator==(insert_many const& lhs, insert_many const& rhs);
+    friend MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(bool) operator==(insert_many const& lhs, insert_many const& rhs);
 
     friend bool operator!=(insert_many const& lhs, insert_many const& rhs) {
         return !(lhs == rhs);

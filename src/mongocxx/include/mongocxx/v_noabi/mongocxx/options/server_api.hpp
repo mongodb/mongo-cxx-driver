@@ -94,7 +94,7 @@ class server_api {
     /// @return
     ///   The string value of the given enum value.
     ///
-    static MONGOCXX_ABI_EXPORT_CDECL(std::string) version_to_string(version version);
+    static MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(std::string) version_to_string(version version);
 
     ///
     /// Converts a version string to its enum value.
@@ -107,7 +107,7 @@ class server_api {
     /// @return
     ///   The enum value of the given string.
     ///
-    static MONGOCXX_ABI_EXPORT_CDECL(version) version_from_string(bsoncxx::v_noabi::stdx::string_view version);
+    static MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(version) version_from_string(bsoncxx::v_noabi::stdx::string_view version);
 
     ///
     /// Sets the strict option, specifying whether the server should return

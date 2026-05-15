@@ -44,7 +44,7 @@ class delete_many {
     ///
     /// Construct with the @ref mongocxx::v1 equivalent.
     ///
-    /* explicit(false) */ MONGOCXX_ABI_EXPORT_CDECL() delete_many(v1::bulk_write::delete_many op);
+    /* explicit(false) */ MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE() delete_many(v1::bulk_write::delete_many op);
 
     ///
     /// Convert to the @ref mongocxx::v1 equivalent.

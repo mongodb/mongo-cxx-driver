@@ -53,12 +53,12 @@ class transaction {
     ///
     /// Copy constructs transaction options.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL() transaction(transaction const& other);
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE() transaction(transaction const& other);
 
     ///
     /// Copy assigns transaction options.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(transaction&) operator=(transaction const& other);
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(transaction&) operator=(transaction const& other);
 
     ///
     /// Move constructs transaction options.
@@ -107,7 +107,7 @@ class transaction {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(transaction&) read_concern(v_noabi::read_concern const& rc);
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(transaction&) read_concern(v_noabi::read_concern const& rc);
 
     ///
     /// Gets the current transaction read concern.
@@ -115,7 +115,7 @@ class transaction {
     /// @return
     ///    An optional containing the read concern. If the read concern has not been set, a
     ///    disengaged optional is returned.
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<v_noabi::read_concern>)
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(bsoncxx::v_noabi::stdx::optional<v_noabi::read_concern>)
     read_concern() const;
 
     ///
@@ -128,7 +128,7 @@ class transaction {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(transaction&)
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(transaction&)
     write_concern(v_noabi::write_concern const& wc);
 
     ///
@@ -139,7 +139,7 @@ class transaction {
     /// @return
     ///    An optional containing the write concern. If the write concern has not been set, a
     ///    disengaged optional is returned.
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<v_noabi::write_concern>)
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(bsoncxx::v_noabi::stdx::optional<v_noabi::write_concern>)
     write_concern() const;
 
     ///
@@ -152,7 +152,7 @@ class transaction {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(transaction&)
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(transaction&)
     read_preference(v_noabi::read_preference const& rp);
 
     ///
@@ -161,7 +161,7 @@ class transaction {
     /// @return
     ///    An optional containing the read preference. If the read preference has not been set, a
     ///    disengaged optional is returned.
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<v_noabi::read_preference>)
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(bsoncxx::v_noabi::stdx::optional<v_noabi::read_preference>)
     read_preference() const;
 
     ///
@@ -173,7 +173,7 @@ class transaction {
     /// @return
     ///   A reference to the object on which this function is being called.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(transaction&) max_commit_time_ms(std::chrono::milliseconds ms);
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(transaction&) max_commit_time_ms(std::chrono::milliseconds ms);
 
     ///
     /// Gets the current transaction commit time, in milliseconds.
@@ -182,7 +182,8 @@ class transaction {
     ///   An optional containing the timeout. If the max commit time has not been set,
     ///   a disengaged optional is returned.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<std::chrono::milliseconds>) max_commit_time_ms() const;
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(bsoncxx::v_noabi::stdx::optional<std::chrono::milliseconds>) max_commit_time_ms()
+        const;
 
     class internal;
 };

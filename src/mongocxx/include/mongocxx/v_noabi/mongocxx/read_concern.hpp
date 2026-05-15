@@ -116,7 +116,7 @@ class read_concern {
     ///   mongocxx::v_noabi::exception if rc_level is not k_local, k_majority, k_linearizable, or
     ///   k_server_default.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(void) acknowledge_level(level rc_level);
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(void) acknowledge_level(level rc_level);
 
     ///
     /// Gets the current read concern level.

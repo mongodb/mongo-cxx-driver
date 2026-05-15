@@ -98,7 +98,7 @@ class view {
     ///
     /// @returns A const_iterator to the first element of the document.
     ///
-    BSONCXX_ABI_EXPORT_CDECL(const_iterator) cbegin() const;
+    BSONCXX_ABI_EXPORT_CDECL_UNSTABLE(const_iterator) cbegin() const;
 
     ///
     /// @returns A const_iterator to the past-the-end element of the document.
@@ -130,7 +130,7 @@ class view {
     ///
     /// @return An iterator to the matching element, if found, or the past-the-end iterator.
     ///
-    BSONCXX_ABI_EXPORT_CDECL(const_iterator) find(v1::stdx::string_view key) const;
+    BSONCXX_ABI_EXPORT_CDECL_UNSTABLE(const_iterator) find(v1::stdx::string_view key) const;
 
     ///
     /// Finds the first element of the document with the provided key. If there is no
@@ -228,7 +228,7 @@ class view::const_iterator {
         return &_element;
     }
 
-    BSONCXX_ABI_EXPORT_CDECL(const_iterator&) operator++();
+    BSONCXX_ABI_EXPORT_CDECL_UNSTABLE(const_iterator&) operator++();
 
     const_iterator operator++(int) {
         const_iterator before(*this);

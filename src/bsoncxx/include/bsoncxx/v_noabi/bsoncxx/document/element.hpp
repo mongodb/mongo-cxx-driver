@@ -125,7 +125,7 @@ class element {
     ///
     /// @throws bsoncxx::v_noabi::exception if this element is invalid.
     ///
-    BSONCXX_ABI_EXPORT_CDECL(v_noabi::type) type() const;
+    BSONCXX_ABI_EXPORT_CDECL_UNSTABLE(v_noabi::type) type() const;
 
     ///
     /// Getter for the element's key.
@@ -134,11 +134,11 @@ class element {
     ///
     /// @throws bsoncxx::v_noabi::exception if this element is invalid.
     ///
-    BSONCXX_ABI_EXPORT_CDECL(v1::stdx::string_view) key() const;
+    BSONCXX_ABI_EXPORT_CDECL_UNSTABLE(v1::stdx::string_view) key() const;
 
 #pragma push_macro("X")
 #undef X
-#define X(_name, _value) BSONCXX_ABI_EXPORT_CDECL(v_noabi::types::b_##_name) get_##_name() const;
+#define X(_name, _value) BSONCXX_ABI_EXPORT_CDECL_UNSTABLE(v_noabi::types::b_##_name) get_##_name() const;
 
     ///
     /// Return the BSON type value of this element.
@@ -159,7 +159,7 @@ class element {
     ///
     /// @return the element's value.
     ///
-    BSONCXX_ABI_EXPORT_CDECL(v_noabi::types::bson_value::view) get_value() const;
+    BSONCXX_ABI_EXPORT_CDECL_UNSTABLE(v_noabi::types::bson_value::view) get_value() const;
 
     ///
     /// Getter for a types::bson_value::value variant wrapper of the value portion of
@@ -169,21 +169,21 @@ class element {
     ///
     /// @return an owning version of the element's value.
     ///
-    BSONCXX_ABI_EXPORT_CDECL(v_noabi::types::bson_value::value) get_owning_value() const;
+    BSONCXX_ABI_EXPORT_CDECL_UNSTABLE(v_noabi::types::bson_value::value) get_owning_value() const;
 
     ///
     /// Equivalent to @ref get_value() const.
     ///
     /// To support incremental migration to @ref bsoncxx::v1::element::view::type_view() const.
     ///
-    BSONCXX_ABI_EXPORT_CDECL(v_noabi::types::bson_value::view) type_view() const;
+    BSONCXX_ABI_EXPORT_CDECL_UNSTABLE(v_noabi::types::bson_value::view) type_view() const;
 
     ///
     /// Equivalent to @ref get_owning_value() const.
     ///
     /// To support incremental migration to @ref bsoncxx::v1::element::view::type_value() const.
     ///
-    BSONCXX_ABI_EXPORT_CDECL(v_noabi::types::bson_value::value) type_value() const;
+    BSONCXX_ABI_EXPORT_CDECL_UNSTABLE(v_noabi::types::bson_value::value) type_value() const;
 
     ///
     /// If this element is a document, finds the first element of the document
@@ -199,7 +199,7 @@ class element {
     ///
     /// @return The matching element, if found, or an invalid element.
     ///
-    BSONCXX_ABI_EXPORT_CDECL(element) operator[](v1::stdx::string_view key) const;
+    BSONCXX_ABI_EXPORT_CDECL_UNSTABLE(element) operator[](v1::stdx::string_view key) const;
 
     ///
     /// If this element is an array, indexes into this BSON array. If the
@@ -215,7 +215,7 @@ class element {
     ///
     /// @return The element if it exists, or an invalid element.
     ///
-    BSONCXX_ABI_EXPORT_CDECL(v_noabi::array::element) operator[](std::uint32_t i) const;
+    BSONCXX_ABI_EXPORT_CDECL_UNSTABLE(v_noabi::array::element) operator[](std::uint32_t i) const;
 };
 
 ///
@@ -226,7 +226,7 @@ class element {
 /// @{
 
 /// @relatesalso bsoncxx::v_noabi::document::element
-BSONCXX_ABI_EXPORT_CDECL(bool) operator==(element const& lhs, v_noabi::types::bson_value::view const& rhs);
+BSONCXX_ABI_EXPORT_CDECL_UNSTABLE(bool) operator==(element const& lhs, v_noabi::types::bson_value::view const& rhs);
 
 /// @relatesalso bsoncxx::v_noabi::document::element
 inline bool operator==(v_noabi::types::bson_value::view const& lhs, element const& rhs) {

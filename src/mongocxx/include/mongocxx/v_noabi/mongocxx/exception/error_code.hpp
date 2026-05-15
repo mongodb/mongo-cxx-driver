@@ -121,7 +121,7 @@ enum class error_code : std::int32_t {
 ///
 /// @return The mongocxx error_category
 ///
-MONGOCXX_ABI_EXPORT_CDECL(std::error_category const&) error_category();
+MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(std::error_category const&) error_category();
 
 ///
 /// Translate a mongocxx::v_noabi::error_code into a std::error_code.

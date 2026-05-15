@@ -52,7 +52,7 @@ class data_key {
     ///
     /// Construct with the @ref mongocxx::v1 equivalent.
     ///
-    /* explicit(false) */ MONGOCXX_ABI_EXPORT_CDECL() data_key(v1::data_key_options key);
+    /* explicit(false) */ MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE() data_key(v1::data_key_options key);
 
     ///
     /// Convert to the @ref mongocxx::v1 equivalent.

@@ -131,14 +131,14 @@ class downloader {
     /// @throws mongocxx::v_noabi::query_exception
     ///   if an error occurs when reading chunk data from the database for the requested file.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(std::size_t) read(std::uint8_t* buffer, std::size_t length);
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(std::size_t) read(std::uint8_t* buffer, std::size_t length);
 
     ///
     /// Closes the downloader stream.
     ///
     /// @throws mongocxx::v_noabi::logic_error if the download stream was already closed.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(void) close();
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(void) close();
 
     ///
     /// Gets the chunk size of the file being downloaded.
@@ -146,7 +146,7 @@ class downloader {
     /// @return
     ///   The chunk size in bytes.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(std::int32_t) chunk_size() const;
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(std::int32_t) chunk_size() const;
 
     ///
     /// Gets the length of the file being downloaded.
@@ -154,7 +154,7 @@ class downloader {
     /// @return
     ///   The length in bytes.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(std::int64_t) file_length() const;
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(std::int64_t) file_length() const;
 
     ///
     /// Gets the files collection document of the file being downloaded.
@@ -162,7 +162,7 @@ class downloader {
     /// @return
     ///    A view to the files collection document of the file being downloaded.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::document::view) files_document() const;
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(bsoncxx::v_noabi::document::view) files_document() const;
 
     class internal;
 };

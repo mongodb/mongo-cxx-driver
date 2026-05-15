@@ -164,7 +164,7 @@ enum class error_code : std::int32_t {
 ///
 /// @return The bsoncxx error_category
 ///
-BSONCXX_ABI_EXPORT_CDECL(std::error_category const&) error_category();
+BSONCXX_ABI_EXPORT_CDECL_UNSTABLE(std::error_category const&) error_category();
 
 ///
 /// Translate a bsoncxx::v_noabi::error_code into a std::error_code.

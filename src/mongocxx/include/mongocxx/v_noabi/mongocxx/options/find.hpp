@@ -59,7 +59,7 @@ class find {
     ///
     /// Construct with the @ref mongocxx::v1 equivalent.
     ///
-    /* explicit(false) */ MONGOCXX_ABI_EXPORT_CDECL() find(v1::find_options opts);
+    /* explicit(false) */ MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE() find(v1::find_options opts);
 
     ///
     /// Convert to the @ref mongocxx::v1 equivalent.

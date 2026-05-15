@@ -41,7 +41,7 @@ enum class server_error_code : std::int32_t {
 ///
 /// @return The mongocxx error_category
 ///
-MONGOCXX_ABI_EXPORT_CDECL(std::error_category const&) server_error_category();
+MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(std::error_category const&) server_error_category();
 
 ///
 /// Translate a mongocxx::v_noabi::server_error_code into a std::error_code.

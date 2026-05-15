@@ -75,7 +75,7 @@ class pool {
     /// @throws mongocxx::v_noabi::exception if invalid options are provided (whether from the URI
     /// or
     ///  provided client options).
-    explicit MONGOCXX_ABI_EXPORT_CDECL() pool(
+    explicit MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE() pool(
         v_noabi::uri const& mongodb_uri = {},
         v_noabi::options::pool const& options = {});
 
@@ -144,13 +144,13 @@ class pool {
     /// Acquires a client from the pool. The calling thread will block until a connection is
     /// available.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(entry) acquire();
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(entry) acquire();
 
     ///
     /// Acquires a client from the pool. This method will return immediately, but may return a
     /// disengaged optional if a client is not available.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<entry>) try_acquire();
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(bsoncxx::v_noabi::stdx::optional<entry>) try_acquire();
 
     class internal;
 };

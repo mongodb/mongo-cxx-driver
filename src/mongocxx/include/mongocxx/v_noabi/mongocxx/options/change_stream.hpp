@@ -59,7 +59,7 @@ class change_stream {
     ///
     /// Construct with the @ref mongocxx::v1 equivalent.
     ///
-    /* explicit(false) */ MONGOCXX_ABI_EXPORT_CDECL() change_stream(v1::change_stream::options opts);
+    /* explicit(false) */ MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE() change_stream(v1::change_stream::options opts);
 
     ///
     /// Convert to the @ref mongocxx::v1 equivalent.

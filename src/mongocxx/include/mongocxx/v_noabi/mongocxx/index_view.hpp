@@ -87,7 +87,7 @@ class index_view {
     ///
     /// Returns a cursor over all the indexes.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(v_noabi::cursor) list();
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(v_noabi::cursor) list();
 
     ///
     /// Returns a cursor over all the indexes.
@@ -95,7 +95,7 @@ class index_view {
     /// @param session
     ///   The mongocxx::v_noabi::client_session with which to perform the list operation.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(v_noabi::cursor) list(v_noabi::client_session const& session);
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(v_noabi::cursor) list(v_noabi::client_session const& session);
 
     ///
     /// Creates an index. A convenience method that calls create_many.
@@ -177,7 +177,7 @@ class index_view {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/method/cursor.maxTimeMS/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<std::string>)
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(bsoncxx::v_noabi::stdx::optional<std::string>)
     create_one(v_noabi::index_model const& index, v_noabi::options::index_view const& options = {});
 
     ///
@@ -201,7 +201,7 @@ class index_view {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/method/cursor.maxTimeMS/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<std::string>)
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(bsoncxx::v_noabi::stdx::optional<std::string>)
     create_one(
         v_noabi::client_session const& session,
         index_model const& index,
@@ -226,7 +226,7 @@ class index_view {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/method/cursor.maxTimeMS/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::document::value)
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(bsoncxx::v_noabi::document::value)
     create_many(std::vector<v_noabi::index_model> const& indexes, v_noabi::options::index_view const& options = {});
 
     ///
@@ -250,7 +250,7 @@ class index_view {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/method/cursor.maxTimeMS/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::document::value)
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(bsoncxx::v_noabi::document::value)
     create_many(
         v_noabi::client_session const& session,
         std::vector<v_noabi::index_model> const& indexes,
@@ -273,7 +273,7 @@ class index_view {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/method/cursor.maxTimeMS/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(void)
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(void)
     drop_one(bsoncxx::v_noabi::stdx::string_view name, v_noabi::options::index_view const& options = {});
 
     ///
@@ -295,7 +295,7 @@ class index_view {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/method/cursor.maxTimeMS/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(void)
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(void)
     drop_one(
         v_noabi::client_session const& session,
         bsoncxx::v_noabi::stdx::string_view name,
@@ -386,7 +386,7 @@ class index_view {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/method/cursor.maxTimeMS/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(void)
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(void)
     drop_one(v_noabi::index_model const& index, v_noabi::options::index_view const& options = {});
 
     ///
@@ -411,7 +411,7 @@ class index_view {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/method/cursor.maxTimeMS/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(void)
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(void)
     drop_one(client_session const& session, index_model const& index, v_noabi::options::index_view const& options = {});
 
     ///
@@ -427,7 +427,7 @@ class index_view {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/method/cursor.maxTimeMS/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(void)
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(void)
     drop_all(options::index_view const& options = {});
 
     ///
@@ -445,7 +445,7 @@ class index_view {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/method/cursor.maxTimeMS/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(void)
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(void)
     drop_all(v_noabi::client_session const& session, v_noabi::options::index_view const& options = {});
 };
 

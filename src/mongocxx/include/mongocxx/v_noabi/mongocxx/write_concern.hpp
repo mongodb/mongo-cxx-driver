@@ -127,7 +127,7 @@ class write_concern {
     /// available nodes will cause writes using this write concern to block forever if no timeout
     /// is set.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(void) nodes(std::int32_t confirm_from);
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(void) nodes(std::int32_t confirm_from);
 
     ///
     /// Sets the acknowledge level.
@@ -153,7 +153,7 @@ class write_concern {
     ///   Throws mongocxx::v_noabi::exception for setting a tag acknowledge level. Use tag()
     ///   instead.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(void) acknowledge_level(level confirm_level);
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(void) acknowledge_level(level confirm_level);
 
     ///
     /// Requires that a majority of the nodes in a replica set acknowledge a write operation before
@@ -193,7 +193,7 @@ class write_concern {
     ///
     /// @throws mongocxx::v_noabi::logic_error for an invalid timeout value.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(void) timeout(std::chrono::milliseconds timeout);
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(void) timeout(std::chrono::milliseconds timeout);
 
     ///
     /// Gets the current status of the journal parameter.
@@ -287,7 +287,7 @@ class write_concern {
     /// Compares two write_concern objects for (in)-equality.
     ///
     /// @{
-    friend MONGOCXX_ABI_EXPORT_CDECL(bool) operator==(write_concern const& lhs, write_concern const& rhs);
+    friend MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(bool) operator==(write_concern const& lhs, write_concern const& rhs);
 
     friend bool operator!=(write_concern const& lhs, write_concern const& rhs) {
         return !(lhs == rhs);

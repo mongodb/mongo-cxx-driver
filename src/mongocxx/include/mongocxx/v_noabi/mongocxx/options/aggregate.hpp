@@ -61,7 +61,7 @@ class aggregate {
     ///
     /// Construct with the @ref mongocxx::v1 equivalent.
     ///
-    /* explicit(false) */ MONGOCXX_ABI_EXPORT_CDECL() aggregate(v1::aggregate_options opts);
+    /* explicit(false) */ MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE() aggregate(v1::aggregate_options opts);
 
     ///
     /// Convert to the @ref mongocxx::v1 equivalent.

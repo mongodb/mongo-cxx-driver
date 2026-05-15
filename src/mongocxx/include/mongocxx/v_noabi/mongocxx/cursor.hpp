@@ -60,17 +60,17 @@ class cursor {
     ///
     /// Move constructs a cursor.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL() cursor(cursor&& other) noexcept;
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE() cursor(cursor&& other) noexcept;
 
     ///
     /// Move assigns a cursor.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(cursor&) operator=(cursor&& other) noexcept;
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(cursor&) operator=(cursor&& other) noexcept;
 
     ///
     /// Destroys a cursor.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL() ~cursor();
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE() ~cursor();
 
     ///
     /// This class is not copyable.
@@ -120,7 +120,7 @@ class cursor {
     ///
     /// @throws mongocxx::v_noabi::query_exception if the query failed
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(iterator) begin();
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(iterator) begin();
 
     ///
     /// A cursor::iterator indicating cursor exhaustion, meaning that
@@ -128,7 +128,7 @@ class cursor {
     ///
     /// @return the cursor::iterator
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(iterator) end();
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(iterator) end();
 
     class internal;
 };
@@ -165,19 +165,19 @@ class cursor::iterator {
     ///
     /// Dereferences the view for the document currently being pointed to.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::document::view const&) operator*() const;
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(bsoncxx::v_noabi::document::view const&) operator*() const;
 
     ///
     /// Accesses a member of the dereferenced document currently being pointed to.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::document::view const*) operator->() const;
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(bsoncxx::v_noabi::document::view const*) operator->() const;
 
     ///
     /// Pre-increments the iterator to move to the next document.
     ///
     /// @throws mongocxx::v_noabi::query_exception if the query failed
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(iterator&) operator++();
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(iterator&) operator++();
 
     ///
     /// Post-increments the iterator to move to the next document.
@@ -195,7 +195,7 @@ class cursor::iterator {
     /// they point to the same underlying cursor or if both are exhausted.
     ///
     /// @{
-    friend MONGOCXX_ABI_EXPORT_CDECL(bool) operator==(iterator const&, iterator const&);
+    friend MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(bool) operator==(iterator const&, iterator const&);
 
     friend bool operator!=(cursor::iterator const& lhs, cursor::iterator const& rhs) noexcept {
         return !(lhs == rhs);

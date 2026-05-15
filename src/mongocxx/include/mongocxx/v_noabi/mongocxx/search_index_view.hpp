@@ -53,8 +53,8 @@ class search_index_view {
     search_index_view(search_index_view&& other) noexcept = default;
     search_index_view& operator=(search_index_view&& other) noexcept = default;
 
-    MONGOCXX_ABI_EXPORT_CDECL() search_index_view(search_index_view const& other);
-    MONGOCXX_ABI_EXPORT_CDECL(search_index_view&) operator=(search_index_view const& other);
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE() search_index_view(search_index_view const& other);
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(search_index_view&) operator=(search_index_view const& other);
 
     ~search_index_view() = default;
 
@@ -91,7 +91,7 @@ class search_index_view {
     ///
     /// @return A cursor to the list of the search indexes returned.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(v_noabi::cursor)
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(v_noabi::cursor)
     list(v_noabi::options::aggregate const& options = {});
 
     ///
@@ -104,7 +104,7 @@ class search_index_view {
     ///
     /// @return A cursor to the list of the search indexes returned.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(v_noabi::cursor)
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(v_noabi::cursor)
     list(v_noabi::client_session const& session, v_noabi::options::aggregate const& options = {});
 
     ///
@@ -117,7 +117,7 @@ class search_index_view {
     ///
     /// @return A cursor to the list of the search indexes returned.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(v_noabi::cursor)
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(v_noabi::cursor)
     list(bsoncxx::v_noabi::string::view_or_value name, v_noabi::options::aggregate const& options = {});
 
     ///
@@ -132,7 +132,7 @@ class search_index_view {
     ///
     /// @return A cursor to the list of the search indexes returned.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(v_noabi::cursor)
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(v_noabi::cursor)
     list(
         v_noabi::client_session const& session,
         bsoncxx::v_noabi::string::view_or_value name,
@@ -146,7 +146,7 @@ class search_index_view {
     ///
     /// @return The name of the created search index.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(std::string)
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(std::string)
     create_one(bsoncxx::v_noabi::document::view_or_value definition);
 
     ///
@@ -159,7 +159,7 @@ class search_index_view {
     ///
     /// @return The name of the created search index.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(std::string)
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(std::string)
     create_one(v_noabi::client_session const& session, bsoncxx::v_noabi::document::view_or_value definition);
 
     ///
@@ -172,7 +172,7 @@ class search_index_view {
     ///
     /// @return The name of the created search index.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(std::string)
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(std::string)
     create_one(bsoncxx::v_noabi::string::view_or_value name, bsoncxx::v_noabi::document::view_or_value definition);
 
     ///
@@ -187,7 +187,7 @@ class search_index_view {
     ///
     /// @return The name of the created search index.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(std::string)
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(std::string)
     create_one(
         v_noabi::client_session const& session,
         bsoncxx::v_noabi::string::view_or_value name,
@@ -201,7 +201,7 @@ class search_index_view {
     ///
     /// @return The name of the created index.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(std::string) create_one(v_noabi::search_index_model const& model);
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(std::string) create_one(v_noabi::search_index_model const& model);
 
     ///
     /// This is a convenience method for creating a single search index.
@@ -213,7 +213,7 @@ class search_index_view {
     ///
     /// @return The name of the created index.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(std::string)
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(std::string)
     create_one(v_noabi::client_session const& session, v_noabi::search_index_model const& model);
 
     ///
@@ -224,7 +224,7 @@ class search_index_view {
     ///
     /// @return The names of the created indexes.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(std::vector<std::string>)
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(std::vector<std::string>)
     create_many(std::vector<v_noabi::search_index_model> const& models);
 
     ///
@@ -237,7 +237,7 @@ class search_index_view {
     ///
     /// @return The names of the created indexes.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(std::vector<std::string>)
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(std::vector<std::string>)
     create_many(v_noabi::client_session const& session, std::vector<v_noabi::search_index_model> const& models);
 
     ///
@@ -246,7 +246,7 @@ class search_index_view {
     /// @param name
     ///    The name of the search index to drop.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(void) drop_one(bsoncxx::v_noabi::string::view_or_value name);
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(void) drop_one(bsoncxx::v_noabi::string::view_or_value name);
 
     ///
     /// Drops a single search index from the collection by the index name.
@@ -256,7 +256,7 @@ class search_index_view {
     /// @param name
     ///   The name of the search index to drop.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(void)
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(void)
     drop_one(v_noabi::client_session const& session, bsoncxx::v_noabi::string::view_or_value name);
 
     ///
@@ -267,7 +267,7 @@ class search_index_view {
     /// @param definition
     ///   The definition to update the search index to.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(void)
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(void)
     update_one(bsoncxx::v_noabi::string::view_or_value name, bsoncxx::v_noabi::document::view_or_value definition);
 
     ///
@@ -280,7 +280,7 @@ class search_index_view {
     /// @param definition
     ///   The definition to update the search index to.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(void)
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(void)
     update_one(
         v_noabi::client_session const& session,
         bsoncxx::v_noabi::string::view_or_value name,

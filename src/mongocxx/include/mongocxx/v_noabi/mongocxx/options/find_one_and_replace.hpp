@@ -57,7 +57,8 @@ class find_one_and_replace {
     ///
     /// Construct with the @ref mongocxx::v1 equivalent.
     ///
-    /* explicit(false) */ MONGOCXX_ABI_EXPORT_CDECL() find_one_and_replace(v1::find_one_and_replace_options opts);
+    /* explicit(false) */ MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE() find_one_and_replace(
+        v1::find_one_and_replace_options opts);
 
     ///
     /// Convert to the @ref mongocxx::v1 equivalent.

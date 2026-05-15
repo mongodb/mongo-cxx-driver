@@ -43,10 +43,10 @@ class search_index_model {
     ///
     /// Initializes a new search_index_model over a mongocxx::v_noabi::collection.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL()
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE()
     search_index_model(bsoncxx::v_noabi::document::view_or_value definition);
 
-    MONGOCXX_ABI_EXPORT_CDECL()
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE()
     search_index_model(
         bsoncxx::v_noabi::string::view_or_value name,
         bsoncxx::v_noabi::document::view_or_value definition);
@@ -56,53 +56,53 @@ class search_index_model {
     ///
     /// Construct with the @ref mongocxx::v1 equivalent.
     ///
-    /* explicit(false) */ MONGOCXX_ABI_EXPORT_CDECL() search_index_model(v1::search_indexes::model opts);
+    /* explicit(false) */ MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE() search_index_model(v1::search_indexes::model opts);
 
     ///
     /// Convert to the @ref mongocxx::v1 equivalent.
     ///
-    explicit MONGOCXX_ABI_EXPORT_CDECL() operator v1::search_indexes::model() const;
+    explicit MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE() operator v1::search_indexes::model() const;
 
     ///
     /// Move constructs a search_index_model.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL() search_index_model(search_index_model&& other) noexcept;
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE() search_index_model(search_index_model&& other) noexcept;
 
     ///
     /// Move assigns a search_index_model.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(search_index_model&) operator=(search_index_model&& other) noexcept;
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(search_index_model&) operator=(search_index_model&& other) noexcept;
 
     ///
     /// Copy constructs a search_index_model.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL() search_index_model(search_index_model const& other);
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE() search_index_model(search_index_model const& other);
 
     ///
     /// Copy assigns a search_index_model.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(search_index_model&) operator=(search_index_model const& other);
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(search_index_model&) operator=(search_index_model const& other);
 
     ///
     /// Destroys a search_index_model.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL() ~search_index_model();
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE() ~search_index_model();
 
     ///
     /// Retrieves name of a search_index_model.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value>)
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value>)
     name() const;
 
     ///
     /// Retrieves definition of a search_index_model.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::document::view) definition() const;
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(bsoncxx::v_noabi::document::view) definition() const;
 
     ///
     /// Retrieves type of a search_index_model.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value>)
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value>)
     type() const;
 
     ///
@@ -111,7 +111,7 @@ class search_index_model {
     /// @param type The type for this index. Can be either "search" or "vectorSearch".
     ///
     /// @return A reference to this object to facilitate method chaining.
-    MONGOCXX_ABI_EXPORT_CDECL(search_index_model&)
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(search_index_model&)
     type(bsoncxx::v_noabi::string::view_or_value type);
 
     class internal;

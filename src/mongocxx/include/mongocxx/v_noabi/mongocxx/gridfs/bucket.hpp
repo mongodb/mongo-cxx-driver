@@ -96,12 +96,12 @@ class bucket {
     ///
     /// Copy constructs a bucket.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL() bucket(bucket const& other);
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE() bucket(bucket const& other);
 
     ///
     /// Copy assigns a bucket.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bucket&) operator=(bucket const& other);
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(bucket&) operator=(bucket const& other);
 
     ///
     /// Destroys a bucket.
@@ -165,7 +165,7 @@ class bucket {
     /// @throws mongocxx::v_noabi::operation_exception if an error occurs when building GridFS
     /// indexes.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(v_noabi::gridfs::uploader)
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(v_noabi::gridfs::uploader)
     open_upload_stream(
         bsoncxx::v_noabi::stdx::string_view filename,
         v_noabi::options::gridfs::upload const& options = {});
@@ -200,7 +200,7 @@ class bucket {
     /// @throws mongocxx::v_noabi::operation_exception if an error occurs when building GridFS
     /// indexes.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(v_noabi::gridfs::uploader)
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(v_noabi::gridfs::uploader)
     open_upload_stream(
         v_noabi::client_session const& session,
         bsoncxx::v_noabi::stdx::string_view filename,
@@ -234,7 +234,7 @@ class bucket {
     /// @throws mongocxx::v_noabi::operation_exception if an error occurs when building GridFS
     /// indexes.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(v_noabi::gridfs::uploader)
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(v_noabi::gridfs::uploader)
     open_upload_stream_with_id(
         bsoncxx::v_noabi::types::view id,
         bsoncxx::v_noabi::stdx::string_view filename,
@@ -272,7 +272,7 @@ class bucket {
     /// @throws mongocxx::v_noabi::operation_exception if an error occurs when building GridFS
     /// indexes.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(v_noabi::gridfs::uploader)
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(v_noabi::gridfs::uploader)
     open_upload_stream_with_id(
         v_noabi::client_session const& session,
         bsoncxx::v_noabi::types::view id,
@@ -320,7 +320,7 @@ class bucket {
     /// @throws mongocxx::v_noabi::operation_exception if an error occurs when building GridFS
     /// indexes.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(v_noabi::result::gridfs::upload)
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(v_noabi::result::gridfs::upload)
     upload_from_stream(
         bsoncxx::v_noabi::stdx::string_view filename,
         std::istream* source,
@@ -370,7 +370,7 @@ class bucket {
     /// @throws mongocxx::v_noabi::operation_exception if an error occurs when building GridFS
     /// indexes.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(v_noabi::result::gridfs::upload)
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(v_noabi::result::gridfs::upload)
     upload_from_stream(
         v_noabi::client_session const& session,
         bsoncxx::v_noabi::stdx::string_view filename,
@@ -418,7 +418,7 @@ class bucket {
     /// @throws mongocxx::v_noabi::operation_exception if an error occurs when building GridFS
     /// indexes.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(void)
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(void)
     upload_from_stream_with_id(
         bsoncxx::v_noabi::types::view id,
         bsoncxx::v_noabi::stdx::string_view filename,
@@ -469,7 +469,7 @@ class bucket {
     /// @throws mongocxx::v_noabi::operation_exception if an error occurs when building GridFS
     /// indexes.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(void)
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(void)
     upload_from_stream_with_id(
         v_noabi::client_session const& session,
         bsoncxx::v_noabi::types::view id,
@@ -492,7 +492,7 @@ class bucket {
     /// @throws mongocxx::v_noabi::query_exception
     ///   if an error occurs when reading from the files collection for this bucket.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(v_noabi::gridfs::downloader)
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(v_noabi::gridfs::downloader)
     open_download_stream(bsoncxx::v_noabi::types::view id);
 
     ///
@@ -514,7 +514,7 @@ class bucket {
     /// @throws mongocxx::v_noabi::query_exception
     ///   if an error occurs when reading from the files collection for this bucket.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(v_noabi::gridfs::downloader)
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(v_noabi::gridfs::downloader)
     open_download_stream(v_noabi::client_session const& session, bsoncxx::v_noabi::types::view id);
 
     ///
@@ -537,7 +537,7 @@ class bucket {
     ///   `badbit`, any exception thrown during execution of `destination::write()` will be
     ///   re-thrown.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(void)
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(void)
     download_to_stream(bsoncxx::v_noabi::types::view id, std::ostream* destination);
 
     ///
@@ -546,7 +546,7 @@ class bucket {
     /// @param start The byte offset to the beginning of content to download.
     /// @param end The byte offset to the end of content to download.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(void)
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(void)
     download_to_stream(bsoncxx::v_noabi::types::view id, std::ostream* destination, std::size_t start, std::size_t end);
 
     ///
@@ -572,7 +572,7 @@ class bucket {
     ///   `badbit`, any exception thrown during execution of `destination::write()` will be
     ///   re-thrown.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(void)
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(void)
     download_to_stream(
         v_noabi::client_session const& session,
         bsoncxx::v_noabi::types::view id,
@@ -584,7 +584,7 @@ class bucket {
     /// @param start The byte offset to the beginning of content to download.
     /// @param end The byte offset to the end of content to download.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(void)
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(void)
     download_to_stream(
         v_noabi::client_session const& session,
         bsoncxx::v_noabi::types::view id,
@@ -603,7 +603,7 @@ class bucket {
     /// @throws mongocxx::v_noabi::bulk_write_exception
     ///   if an error occurs when removing file data or chunk data from the database.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(void) delete_file(bsoncxx::v_noabi::types::view id);
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(void) delete_file(bsoncxx::v_noabi::types::view id);
 
     ///
     /// Deletes a GridFS file from the bucket.
@@ -619,7 +619,7 @@ class bucket {
     /// @throws mongocxx::v_noabi::bulk_write_exception
     ///   if an error occurs when removing file data or chunk data from the database.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(void)
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(void)
     delete_file(v_noabi::client_session const& session, bsoncxx::v_noabi::types::view id);
 
     ///
@@ -641,7 +641,7 @@ class bucket {
     /// @see
     /// - @ref mongocxx::v_noabi::collection::find.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(v_noabi::cursor)
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(v_noabi::cursor)
     find(bsoncxx::v_noabi::document::view_or_value filter, v_noabi::options::find const& options = {});
 
     ///
@@ -667,7 +667,7 @@ class bucket {
     /// @see
     /// - @ref mongocxx::v_noabi::collection::find.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(v_noabi::cursor)
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(v_noabi::cursor)
     find(
         v_noabi::client_session const& session,
         bsoncxx::v_noabi::document::view_or_value filter,
@@ -679,7 +679,7 @@ class bucket {
     /// @return
     ///   The name of the GridFS bucket.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::string_view) bucket_name() const;
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(bsoncxx::v_noabi::stdx::string_view) bucket_name() const;
 };
 
 } // namespace gridfs

@@ -34,26 +34,26 @@ namespace formats {
 
 /// @brief Vector format for 32-bit floating point elements, packed least significant byte first.
 struct f_float32 {
-    static BSONCXX_ABI_EXPORT_CDECL(std::uint32_t) length_for_append(std::size_t element_count);
-    static BSONCXX_ABI_EXPORT_CDECL(void)
+    static BSONCXX_ABI_EXPORT_CDECL_UNSTABLE(std::uint32_t) length_for_append(std::size_t element_count);
+    static BSONCXX_ABI_EXPORT_CDECL_UNSTABLE(void)
     write_frame(std::uint8_t* binary_data, std::uint32_t binary_data_length, std::size_t element_count);
-    static BSONCXX_ABI_EXPORT_CDECL(void) validate(types::b_binary const& binary);
+    static BSONCXX_ABI_EXPORT_CDECL_UNSTABLE(void) validate(types::b_binary const& binary);
 };
 
 /// @brief Vector format for signed 8-bit integer elements.
 struct f_int8 {
-    static BSONCXX_ABI_EXPORT_CDECL(std::uint32_t) length_for_append(std::size_t element_count);
-    static BSONCXX_ABI_EXPORT_CDECL(void)
+    static BSONCXX_ABI_EXPORT_CDECL_UNSTABLE(std::uint32_t) length_for_append(std::size_t element_count);
+    static BSONCXX_ABI_EXPORT_CDECL_UNSTABLE(void)
     write_frame(std::uint8_t* binary_data, std::uint32_t binary_data_length, std::size_t element_count);
-    static BSONCXX_ABI_EXPORT_CDECL(void) validate(types::b_binary const& binary);
+    static BSONCXX_ABI_EXPORT_CDECL_UNSTABLE(void) validate(types::b_binary const& binary);
 };
 
 /// @brief Vector format for single bit elements, packed most significant bit first.
 struct f_packed_bit {
-    static BSONCXX_ABI_EXPORT_CDECL(std::uint32_t) length_for_append(std::size_t element_count);
-    static BSONCXX_ABI_EXPORT_CDECL(void)
+    static BSONCXX_ABI_EXPORT_CDECL_UNSTABLE(std::uint32_t) length_for_append(std::size_t element_count);
+    static BSONCXX_ABI_EXPORT_CDECL_UNSTABLE(void)
     write_frame(std::uint8_t* binary_data, std::uint32_t binary_data_length, std::size_t element_count);
-    static BSONCXX_ABI_EXPORT_CDECL(void) validate(types::b_binary const& binary);
+    static BSONCXX_ABI_EXPORT_CDECL_UNSTABLE(void) validate(types::b_binary const& binary);
 };
 
 } // namespace formats

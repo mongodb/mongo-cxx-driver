@@ -50,7 +50,7 @@ class bucket {
     ///
     /// Construct with the @ref mongocxx::v1 equivalent.
     ///
-    /* explicit(false) */ MONGOCXX_ABI_EXPORT_CDECL() bucket(v1::gridfs::bucket::options opts);
+    /* explicit(false) */ MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE() bucket(v1::gridfs::bucket::options opts);
 
     ///
     /// Convert to the @ref mongocxx::v1 equivalent.

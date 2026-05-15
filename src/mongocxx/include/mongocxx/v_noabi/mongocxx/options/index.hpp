@@ -59,7 +59,7 @@ class index {
     ///
     /// @deprecated Use @ref mongocxx::v_noabi::options::index::storage_engine instead.
     ///
-    class MONGOCXX_ABI_EXPORT base_storage_options {
+    class MONGOCXX_ABI_EXPORT_UNSTABLE base_storage_options {
        public:
         virtual ~base_storage_options();
 
@@ -81,7 +81,7 @@ class index {
     ///
     /// @deprecated Use @ref mongocxx::v_noabi::options::index::storage_engine instead.
     ///
-    class MONGOCXX_ABI_EXPORT wiredtiger_storage_options final : public base_storage_options {
+    class MONGOCXX_ABI_EXPORT_UNSTABLE wiredtiger_storage_options final : public base_storage_options {
        public:
         ~wiredtiger_storage_options() override;
 
@@ -131,7 +131,7 @@ class index {
     ///
     /// @warning The fields owned by `opts` MUST outlive the views in this object.
     ///
-    /* explicit(false) */ MONGOCXX_ABI_EXPORT_CDECL() index(v1::indexes::options const& opts);
+    /* explicit(false) */ MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE() index(v1::indexes::options const& opts);
 
     ///
     /// Convert to the @ref mongocxx::v1 equivalent.
@@ -746,7 +746,7 @@ class index {
     ///
     /// @return A view of the current builder contents.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL() operator bsoncxx::v_noabi::document::view_or_value();
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE() operator bsoncxx::v_noabi::document::view_or_value();
 
     class internal;
 

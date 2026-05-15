@@ -44,7 +44,7 @@ class hint {
     ///
     /// Construct with the @ref mongocxx::v1 equivalent.
     ///
-    /* explicit(false) */ MONGOCXX_ABI_EXPORT_CDECL() hint(v1::hint hint);
+    /* explicit(false) */ MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE() hint(v1::hint hint);
 
     ///
     /// Convert to the @ref mongocxx::v1 equivalent.

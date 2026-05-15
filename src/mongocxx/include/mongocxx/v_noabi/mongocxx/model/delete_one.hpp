@@ -44,7 +44,7 @@ class delete_one {
     ///
     /// Construct with the @ref mongocxx::v1 equivalent.
     ///
-    /* explicit(false) */ MONGOCXX_ABI_EXPORT_CDECL() delete_one(v1::bulk_write::delete_one op);
+    /* explicit(false) */ MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE() delete_one(v1::bulk_write::delete_one op);
 
     ///
     /// Convert to the @ref mongocxx::v1 equivalent.
