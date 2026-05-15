@@ -35,6 +35,8 @@ task_groups:
         params:
           directory: mongo-cxx-driver
       - func: install_c_driver
+        vars:
+          SKIP_INSTALL_LIBMONGOCRYPT: 1
       - command: subprocess.exec
         type: setup
         params:
@@ -79,6 +81,8 @@ task_groups:
         params:
           directory: mongo-cxx-driver
       - func: install_c_driver
+        vars:
+          SKIP_INSTALL_LIBMONGOCRYPT: 1
       - command: subprocess.exec
         type: setup
         params:
@@ -123,6 +127,8 @@ task_groups:
         params:
           directory: mongo-cxx-driver
       - func: install_c_driver
+        vars:
+          SKIP_INSTALL_LIBMONGOCRYPT: 1
       - command: subprocess.exec
         type: setup
         params:
@@ -167,6 +173,8 @@ task_groups:
         params:
           directory: mongo-cxx-driver
       - func: install_c_driver
+        vars:
+          SKIP_INSTALL_LIBMONGOCRYPT: 1
       - command: subprocess.exec
         type: setup
         params:
@@ -211,6 +219,8 @@ task_groups:
         params:
           directory: mongo-cxx-driver
       - func: install_c_driver
+        vars:
+          SKIP_INSTALL_LIBMONGOCRYPT: 1
       - command: subprocess.exec
         type: setup
         params:

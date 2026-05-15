@@ -38,8 +38,8 @@ mongocxx_new="${working_dir:?}/install/new/lib/libmongocxx1.so"
 
 # Usage: generate_abi_report <label> <dir> <abi> <can_fail_task>
 #   label: "stable" or "unstable".
-#   dir: "cxx-abi" or "cxx-noabi"."
-#   abi: "v1" or "v_noabi"."
+#   dir: "cxx-abi" or "cxx-noabi".
+#   abi: "v1" or "v_noabi".
 #   can_fail_task: "true" or "false".
 generate_abi_report() (
   declare label="${1:?}" dir="${2:?}" abi="${3:?}" can_fail_task="${4:?}"
@@ -133,7 +133,7 @@ generate_abi_report() (
 
 export working_dir old_ver new_ver bsoncxx_old bsoncxx_new mongocxx_old mongocxx_new
 export -f generate_abi_report
-parallel --link --keep-order --tagstring '[{#}]' \
+parallel --link --tagstring '[{#}]' \
   generate_abi_report {1} {2} {3} {4} \
   ::: stable unstable \
   ::: cxx-abi cxx-noabi \

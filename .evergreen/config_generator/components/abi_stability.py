@@ -182,7 +182,7 @@ def task_groups():
             setup_task_can_fail_task=True,
             setup_task=[
                 git_get_project(directory='mongo-cxx-driver'),
-                InstallCDriver.call(),
+                InstallCDriver.call(vars={'SKIP_INSTALL_LIBMONGOCRYPT': 1}),
                 bash_exec(
                     command_type=EvgCommandType.SETUP,
                     env={
