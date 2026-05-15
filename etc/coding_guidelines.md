@@ -322,12 +322,12 @@ lib/
     - For pointer-to-function types: `ReturnType (BSONCXX_ABI_CDECL*)(Params...)`.
     - This includes function types used as arguments to template parameters (e.g. `std::function<R BSONCXX_ABI_CDECL(Params...)>`).
 
-Analogous `MONGOCXX_`-prefixed variants of the above macros apply to the mongocxx library.
-
 Declarations under `v_noabi/` must use the `_UNSTABLE` variants instead:
 
 - Use `BSONCXX_ABI_EXPORT_CDECL_UNSTABLE` in place of `BSONCXX_ABI_EXPORT_CDECL`.
 - Use `BSONCXX_ABI_EXPORT_UNSTABLE` in place of `BSONCXX_ABI_EXPORT`.
+
+Analogous `MONGOCXX_`-prefixed variants of the above macros apply to the mongocxx library.
 
 ### Implicit vs. Explicit
 
