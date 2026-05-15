@@ -35,7 +35,6 @@ functions:
         bucket: mciuploads
         content_type: text/plain
         local_files_include_filter:
-          - cxx-abi/*.log
           - cxx-abi/**/*.log
           - cxx-abi/**/log.txt
         permissions: public-read
@@ -61,7 +60,6 @@ functions:
         bucket: mciuploads
         content_type: text/plain
         local_files_include_filter:
-          - cxx-noabi/*.log
           - cxx-noabi/**/*.log
           - cxx-noabi/**/log.txt
         permissions: public-read
