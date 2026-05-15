@@ -19,6 +19,8 @@
 #undef BSONCXX_ABI_EXPORT_CDECL_UNSTABLE
 #pragma push_macro("BSONCXX_ABI_EXPORT_UNSTABLE")
 #undef BSONCXX_ABI_EXPORT_UNSTABLE
+#pragma push_macro("BSONCXX_EXPORT_UNSTABLE_ABI")
+#undef BSONCXX_EXPORT_UNSTABLE_ABI
 
 #include <bsoncxx/config/compiler.hpp> // IWYU pragma: export
 #include <bsoncxx/config/config.hpp>   // IWYU pragma: export

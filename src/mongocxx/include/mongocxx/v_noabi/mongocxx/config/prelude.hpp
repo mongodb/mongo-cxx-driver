@@ -19,6 +19,8 @@
 #undef MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE
 #pragma push_macro("MONGOCXX_ABI_EXPORT_UNSTABLE")
 #undef MONGOCXX_ABI_EXPORT_UNSTABLE
+#pragma push_macro("MONGOCXX_EXPORT_UNSTABLE_ABI")
+#undef MONGOCXX_EXPORT_UNSTABLE_ABI
 
 #include <mongocxx/config/compiler.hpp> // IWYU pragma: export
 #include <mongocxx/config/config.hpp>   // IWYU pragma: export
