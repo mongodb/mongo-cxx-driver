@@ -24,6 +24,18 @@ functions:
         content_type: text/html
         local_files_include_filter:
           - cxx-abi/*.html
+        permissions: public-read
+        remote_file: mongo-cxx-driver/${branch_name}/${revision}/${version_id}/${build_id}/${task_id}/${execution}/abi-compliance-check/abi/
+    - command: s3.put
+      type: system
+      params:
+        display_name: "ABI Compliance Check (Stable) Logs: "
+        aws_key: ${aws_key}
+        aws_secret: ${aws_secret}
+        bucket: mciuploads
+        content_type: text/plain
+        local_files_include_filter:
+          - cxx-abi/*.log
           - cxx-abi/**/*.log
           - cxx-abi/**/log.txt
         permissions: public-read
@@ -38,6 +50,18 @@ functions:
         content_type: text/html
         local_files_include_filter:
           - cxx-noabi/*.html
+        permissions: public-read
+        remote_file: mongo-cxx-driver/${branch_name}/${revision}/${version_id}/${build_id}/${task_id}/${execution}/abi-compliance-check/noabi/
+    - command: s3.put
+      type: system
+      params:
+        display_name: "ABI Compliance Check (Unstable) Logs: "
+        aws_key: ${aws_key}
+        aws_secret: ${aws_secret}
+        bucket: mciuploads
+        content_type: text/plain
+        local_files_include_filter:
+          - cxx-noabi/*.log
           - cxx-noabi/**/*.log
           - cxx-noabi/**/log.txt
         permissions: public-read
