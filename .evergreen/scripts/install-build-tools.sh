@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 
 export_uv_tool_dirs() {
-  UV_TOOL_DIR="$(mktemp -d)" || return
-  UV_TOOL_BIN_DIR="$(mktemp -d)" || return
+  : "${UV_TOOL_DIR:="$(mktemp -d)"}" || return
+  : "${UV_TOOL_BIN_DIR:="$(mktemp -d)"}" || return
 
-  PATH="${UV_TOOL_BIN_DIR:?}:${PATH:-}" || return
+  PATH="${UV_TOOL_BIN_DIR:?}:${PATH:-}"
 
   # Windows requires "C:\path\to\dir" instead of "/cygdrive/c/path/to/dir" (PATH is automatically converted).
   if [[ "${OSTYPE:?}" == cygwin ]]; then
@@ -12,10 +12,9 @@ export_uv_tool_dirs() {
     UV_TOOL_BIN_DIR="$(cygpath -aw "${UV_TOOL_BIN_DIR:?}")" || return
   fi
 
-  # PyPI `cmake` requires a sufficiently recent Python version.
-  UV_PYTHON_INSTALL_DIR="${UV_TOOL_DIR:?}" || return
+  UV_PYTHON_INSTALL_DIR="${UV_TOOL_DIR:?}"
 
-  export UV_TOOL_DIR UV_TOOL_BIN_DIR UV_PYTHON_INSTALL_DIR
+  export PATH UV_TOOL_DIR UV_TOOL_BIN_DIR UV_PYTHON_INSTALL_DIR
 }
 
 install_build_tools() {
@@ -26,7 +25,7 @@ install_build_tools() {
 
   uv tool install -q cmake || return
 
-  if [[ -f /etc/redhat-release ]]; then
+  if [[ -f /etc/redhat-release && -x /opt/mongodbtoolchain/v4/bin/ninja ]]; then
     # Avoid strange "Could NOT find Threads" CMake configuration error on RHEL when using PyPI CMake, PyPI Ninja, and
     # C++20 or newer by using MongoDB Toolchain's Ninja binary instead.
     ln -sf /opt/mongodbtoolchain/v4/bin/ninja "${UV_TOOL_BIN_DIR:?}/ninja" || return
@@ -42,4 +41,8 @@ install_build_tools() {
   cmake --version | head -n 1 || return
   echo "ninja version: $(ninja --version)" || return
   echo "pkgconf version: $(pkgconf --version 2>/dev/null)" || return
+
+  if [[ "${OSTYPE:?}" != "cygwin" ]]; then
+    export CMAKE_GENERATOR="${CMAKE_GENERATOR:="Ninja"}"
+  fi
 }
