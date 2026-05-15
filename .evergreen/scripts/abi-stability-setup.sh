@@ -71,8 +71,8 @@ mkdir -p "${working_dir}/install"
 
 # As encouraged by ABI compatibility checkers.
 export CFLAGS CXXFLAGS
-CFLAGS="-g -Og"
-CXXFLAGS="-g -Og"
+CFLAGS="-gdwarf-4 -Og"
+CXXFLAGS="-gdwarf-4 -Og"
 
 # Common configuration flags.
 configure_flags=(
