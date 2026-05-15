@@ -215,7 +215,7 @@ list(APPEND mongocxx_sources
     ${mongocxx_sources_v1}
 )
 
-if(MONGOCXX_EXPORT_UNSTABLE_ABI)
+if(MONGOCXX_ENABLE_UNSTABLE_ABI)
     list(APPEND mongocxx_sources ${mongocxx_sources_v_noabi})
 endif()
 

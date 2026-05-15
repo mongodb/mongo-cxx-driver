@@ -15,11 +15,11 @@
 // For backward compatibility.
 #include <mongocxx/v1/config/config.hpp> // IWYU pragma: export
 
-#if !defined(MONGOCXX_EXPORT_UNSTABLE_ABI)
-#cmakedefine01 MONGOCXX_EXPORT_UNSTABLE_ABI
+#if !defined(MONGOCXX_ENABLE_UNSTABLE_ABI)
+#cmakedefine01 MONGOCXX_ENABLE_UNSTABLE_ABI
 #endif
 
-#if MONGOCXX_EXPORT_UNSTABLE_ABI == 1
+#if MONGOCXX_ENABLE_UNSTABLE_ABI == 1
 #define MONGOCXX_ABI_EXPORT_UNSTABLE MONGOCXX_ABI_EXPORT
 #else
 #define MONGOCXX_ABI_EXPORT_UNSTABLE MONGOCXX_ABI_NO_EXPORT
@@ -36,7 +36,7 @@
 ///
 
 ///
-/// @def MONGOCXX_EXPORT_UNSTABLE_ABI
+/// @def MONGOCXX_ENABLE_UNSTABLE_ABI
 /// @hideinitializer
 /// Controls whether unstable ABI symbols are exported by the shared library.
 ///

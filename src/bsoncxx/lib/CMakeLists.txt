@@ -71,7 +71,7 @@ list(APPEND bsoncxx_sources
     ${bsoncxx_sources_v1}
 )
 
-if(BSONCXX_EXPORT_UNSTABLE_ABI)
+if(BSONCXX_ENABLE_UNSTABLE_ABI)
     list(APPEND bsoncxx_sources ${bsoncxx_sources_v_noabi})
 endif()
 

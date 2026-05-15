@@ -15,11 +15,11 @@
 // For backward compatibility.
 #include <bsoncxx/v1/config/config.hpp> // IWYU pragma: export
 
-#if !defined(BSONCXX_EXPORT_UNSTABLE_ABI)
-#cmakedefine01 BSONCXX_EXPORT_UNSTABLE_ABI
+#if !defined(BSONCXX_ENABLE_UNSTABLE_ABI)
+#cmakedefine01 BSONCXX_ENABLE_UNSTABLE_ABI
 #endif
 
-#if BSONCXX_EXPORT_UNSTABLE_ABI == 1
+#if BSONCXX_ENABLE_UNSTABLE_ABI == 1
 #define BSONCXX_ABI_EXPORT_UNSTABLE BSONCXX_ABI_EXPORT
 #else
 #define BSONCXX_ABI_EXPORT_UNSTABLE BSONCXX_ABI_NO_EXPORT
@@ -36,7 +36,7 @@
 ///
 
 ///
-/// @def BSONCXX_EXPORT_UNSTABLE_ABI
+/// @def BSONCXX_ENABLE_UNSTABLE_ABI
 /// @hideinitializer
 /// Controls whether unstable ABI symbols are exported by the shared library.
 ///

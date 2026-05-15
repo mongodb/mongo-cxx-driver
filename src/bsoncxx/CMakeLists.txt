@@ -23,8 +23,8 @@ message(STATUS "bsoncxx version: $CACHE{BSONCXX_VERSION}")
 set(BSONCXX_SOVERSION "_noabi" CACHE STRING "For internal use only.")
 message(STATUS "bsoncxx soversion: ${BSONCXX_SOVERSION}")
 
-option(BSONCXX_EXPORT_UNSTABLE_ABI "Enable building with unstable ABI symbols." ON)
-mark_as_advanced(BSONCXX_EXPORT_UNSTABLE_ABI) # For internal use only.
+option(BSONCXX_ENABLE_UNSTABLE_ABI "Enable building with unstable ABI symbols." ON)
+mark_as_advanced(BSONCXX_ENABLE_UNSTABLE_ABI) # For internal use only.
 
 option(BSONCXX_POLY_USE_IMPLS "Use bsoncxx implementations for stdx polyfills" OFF)
 option(BSONCXX_POLY_USE_STD "Use C++17 std library for stdx polyfills" OFF)
