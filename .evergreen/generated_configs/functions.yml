@@ -23,19 +23,9 @@ functions:
         bucket: mciuploads
         content_type: text/html
         local_files_include_filter:
-          - cxx-abi/compat_reports/**/compat_report.html
-        permissions: public-read
-        remote_file: mongo-cxx-driver/${branch_name}/${revision}/${version_id}/${build_id}/${task_id}/${execution}/abi-compliance-check/abi/
-    - command: s3.put
-      type: system
-      params:
-        display_name: "ABI Compliance Check (Stable): "
-        aws_key: ${aws_key}
-        aws_secret: ${aws_secret}
-        bucket: mciuploads
-        content_type: text/plain
-        local_files_include_filter:
-          - cxx-abi/logs/**/log.txt
+          - cxx-abi/*.html
+          - cxx-abi/**/*.log
+          - cxx-abi/**/log.txt
         permissions: public-read
         remote_file: mongo-cxx-driver/${branch_name}/${revision}/${version_id}/${build_id}/${task_id}/${execution}/abi-compliance-check/abi/
     - command: s3.put
@@ -47,19 +37,9 @@ functions:
         bucket: mciuploads
         content_type: text/html
         local_files_include_filter:
-          - cxx-noabi/compat_reports/**/compat_report.html
-        permissions: public-read
-        remote_file: mongo-cxx-driver/${branch_name}/${revision}/${version_id}/${build_id}/${task_id}/${execution}/abi-compliance-check/noabi/
-    - command: s3.put
-      type: system
-      params:
-        display_name: "ABI Compliance Check (Unstable): "
-        aws_key: ${aws_key}
-        aws_secret: ${aws_secret}
-        bucket: mciuploads
-        content_type: text/plain
-        local_files_include_filter:
-          - cxx-noabi/logs/**/log.txt
+          - cxx-noabi/*.html
+          - cxx-noabi/**/*.log
+          - cxx-noabi/**/log.txt
         permissions: public-read
         remote_file: mongo-cxx-driver/${branch_name}/${revision}/${version_id}/${build_id}/${task_id}/${execution}/abi-compliance-check/noabi/
   abi-prohibited-symbols:
