@@ -32,8 +32,7 @@ export ORCHESTRATION_FILE
 
 export PATH="${MONGODB_BINARIES:?}:${PATH:-}"
 
-echo "{ \"releases\": { \"default\": \"${MONGODB_BINARIES:?}\" }}" >"${MONGO_ORCHESTRATION_HOME:?}/orchestration.config"
-./.evergreen/run-orchestration.sh
+./.evergreen/run-mongodb.sh start
 
 # MacOS needs some assistance to ensure executable permissions(?).
 chmod +x ${MONGODB_BINARIES:?}/*

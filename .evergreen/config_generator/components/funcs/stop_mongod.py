@@ -6,19 +6,18 @@ from config_generator.etc.utils import bash_exec
 
 class StopMongod(Function):
     name = 'stop_mongod'
-    commands = bash_exec(
-        command_type=EvgCommandType.SYSTEM,
-        script="""\
+    commands = [
+        bash_exec(
+            command_type=EvgCommandType.SYSTEM,
+            script="""\
             set -o errexit
-            set -o pipefail
-            if cd drivers-evergreen-tools/.evergreen/orchestration 2>/dev/null; then
-                . ../venv-utils.sh
-                if venvactivate venv 2>/dev/null; then
-                    mongo-orchestration stop
-                fi
+            if test -d drivers-evergreen-tools; then
+                pushd drivers-evergreen-tools
+                .evergreen/run-mongodb.sh stop
             fi
-        """,
-    )
+            """,
+        )
+    ]
 
 
 def functions():
