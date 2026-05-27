@@ -46,8 +46,6 @@ namespace v1 {
 /// @see
 /// - [Insert Methods (MongoDB Manual)](https://www.mongodb.com/docs/manual/reference/insert-methods/)
 ///
-/// @attention This feature is experimental! It is not ready for use!
-///
 class insert_many_options {
    private:
     class impl;

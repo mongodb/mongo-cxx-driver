@@ -1,11 +1,4 @@
-///
-/// A MongoDB connection string.
-///
-/// @see
-/// - [Connection Strings (MongoDB Manual)](https://www.mongodb.com/docs/manual/reference/connection-string/)
-///
-/// @attention This feature is experimental! It is not ready for use!
-///// Copyright 2009-present MongoDB, Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -92,8 +85,6 @@ namespace v1 {
 ///
 /// @see
 /// - [Connection Strings (MongoDB Manual)](https://www.mongodb.com/docs/manual/reference/connection-string/)
-///
-/// @attention This feature is experimental! It is not ready for use!
 ///
 class uri {
    private:
@@ -380,8 +371,6 @@ class uri {
     ///
     /// Errors codes which may be returned by @ref mongocxx::v1::uri.
     ///
-    /// @attention This feature is experimental! It is not ready for use!
-    ///
     enum class errc {
         zero,        ///< Zero.
         set_failure, ///< Failed to set the requested URI option.
@@ -390,14 +379,10 @@ class uri {
     ///
     /// The error category for @ref mongocxx::v1::uri::errc.
     ///
-    /// @attention This feature is experimental! It is not ready for use!
-    ///
     static MONGOCXX_ABI_EXPORT_CDECL(std::error_category const&) error_category();
 
     ///
     /// Support implicit conversion to `std::error_code`.
-    ///
-    /// @attention This feature is experimental! It is not ready for use!
     ///
     friend std::error_code make_error_code(errc v) {
         return {static_cast<int>(v), error_category()};

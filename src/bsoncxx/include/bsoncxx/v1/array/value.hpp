@@ -36,8 +36,6 @@ namespace array {
 ///
 /// A BSON array.
 ///
-/// @attention This feature is experimental! It is not ready for use!
-///
 class value {
    private:
     v1::document::value _value;

@@ -37,8 +37,6 @@ namespace v1 {
 /// @see
 /// - [Rotate and Rewrap Encryption Keys (MongoDB Manual)](https://www.mongodb.com/docs/manual/core/queryable-encryption/fundamentals/manage-keys/)
 ///
-/// @attention This feature is experimental! It is not ready for use!
-///
 class rewrap_many_datakey_result {
    private:
     class impl;

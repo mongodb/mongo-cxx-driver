@@ -32,8 +32,6 @@ namespace v1 {
 ///
 /// Enumeration identifying the source of a @ref bsoncxx::v1 error.
 ///
-/// @attention This feature is experimental! It is not ready for use!
-///
 enum class source_errc {
     zero,    ///< Zero.
     bsoncxx, ///< From the bsoncxx library.
@@ -43,14 +41,10 @@ enum class source_errc {
 ///
 /// The error category for @ref bsoncxx::v1::source_errc.
 ///
-/// @attention This feature is experimental! It is not ready for use!
-///
 BSONCXX_ABI_EXPORT_CDECL(std::error_category const&) source_error_category();
 
 ///
 /// Support implicit conversion to `std::error_condition`.
-///
-/// @attention This feature is experimental! It is not ready for use!
 ///
 inline std::error_condition make_error_condition(source_errc code) {
     return {static_cast<int>(code), v1::source_error_category()};
@@ -58,8 +52,6 @@ inline std::error_condition make_error_condition(source_errc code) {
 
 ///
 /// Enumeration identifying the type (cause) of a @ref bsoncxx::v1 error.
-///
-/// @attention This feature is experimental! It is not ready for use!
 ///
 enum class type_errc {
     zero,             ///< Zero.
@@ -70,14 +62,10 @@ enum class type_errc {
 ///
 /// The error category for @ref bsoncxx::v1::type_errc.
 ///
-/// @attention This feature is experimental! It is not ready for use!
-///
 BSONCXX_ABI_EXPORT_CDECL(std::error_category const&) type_error_category();
 
 ///
 /// Support implicit conversion to `std::error_condition`.
-///
-/// @attention This feature is experimental! It is not ready for use!
 ///
 inline std::error_condition make_error_condition(type_errc code) {
     return {static_cast<int>(code), v1::type_error_category()};
@@ -92,8 +80,6 @@ BSONCXX_PRIVATE_WARNINGS_DISABLE(MSVC(4275));
 ///
 /// @par Inherits:
 /// - `std::system_error`
-///
-/// @attention This feature is experimental! It is not ready for use!
 ///
 class exception : public std::system_error {
    public:

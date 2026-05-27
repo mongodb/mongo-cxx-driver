@@ -54,8 +54,6 @@ namespace v1 {
 /// - [Encrypted Fields and Enabled Queries (MongoDB Manual)](https://mongodb.com/docs/manual/core/queryable-encryption/fundamentals/encrypt-and-query/)
 /// - [Encryption Schemas](https://www.mongodb.com/docs/manual/core/csfle/fundamentals/create-schema/)
 ///
-/// @attention This feature is experimental! It is not ready for use!
-///
 class encrypt_options {
     // This class implements `EncryptOpts`:
     //  - https://specifications.readthedocs.io/en/latest/client-side-encryption/client-side-encryption/
@@ -223,6 +221,8 @@ class encrypt_options {
 
     ///
     /// Set the "textOpts" field.
+    ///
+    /// @attention This feature is experimental! It is not ready for use!
     ///
     MONGOCXX_ABI_EXPORT_CDECL(encrypt_options&) text_opts(v1::text_options v);
 

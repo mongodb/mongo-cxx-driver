@@ -41,8 +41,6 @@ namespace document {
 ///
 /// A BSON document.
 ///
-/// @attention This feature is experimental! It is not ready for use!
-///
 class value {
    public:
     ///

@@ -69,8 +69,6 @@ namespace v1 {
 /// @see
 /// - [`find` (database command) (MongoDB Manual)](https://www.mongodb.com/docs/manual/reference/command/find/)
 ///
-/// @attention This feature is experimental! It is not ready for use!
-///
 class find_options {
    private:
     class impl;

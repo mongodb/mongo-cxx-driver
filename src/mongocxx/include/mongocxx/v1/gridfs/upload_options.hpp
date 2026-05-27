@@ -43,8 +43,6 @@ namespace gridfs {
 /// @see
 /// - [GridFS (MongoDB Manual)](https://www.mongodb.com/docs/manual/core/gridfs/)
 ///
-/// @attention This feature is experimental! It is not ready for use!
-///
 class upload_options {
    private:
     class impl;

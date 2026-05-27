@@ -44,8 +44,6 @@ namespace array {
 /// operation is not satisfiable due to invalid data, the operation will throw an @ref bsoncxx::v1::exception with @ref
 /// bsoncxx::v1::document::view::errc::invalid_data.
 ///
-/// @attention This feature is experimental! It is not ready for use!
-///
 class view {
    public:
     /// @copydoc v1::document::view::const_iterator

@@ -56,8 +56,6 @@ namespace v1 {
 /// - [Connection Monitoring and Pooling (MongoDB Specifications)](https://specifications.readthedocs.io/en/latest/connection-monitoring-and-pooling/connection-monitoring-and-pooling/)
 /// - [Connection Strings (MongoDB Manual)](https://www.mongodb.com/docs/manual/reference/connection-string/)
 ///
-/// @attention This feature is experimental! It is not ready for use!
-///
 class client {
    private:
     class impl;
@@ -264,8 +262,6 @@ class client {
     ///
     /// Errors codes which may be returned by @ref mongocxx::v1::client.
     ///
-    /// @attention This feature is experimental! It is not ready for use!
-    ///
     enum class errc {
         zero,              ///< Zero.
         tls_not_enabled,   ///< TLS is not enabled by URI options.
@@ -275,14 +271,10 @@ class client {
     ///
     /// The error category for @ref mongocxx::v1::client::errc.
     ///
-    /// @attention This feature is experimental! It is not ready for use!
-    ///
     static MONGOCXX_ABI_EXPORT_CDECL(std::error_category const&) error_category();
 
     ///
     /// Support implicit conversion to `std::error_code`.
-    ///
-    /// @attention This feature is experimental! It is not ready for use!
     ///
     friend std::error_code make_error_code(errc v) {
         return {static_cast<int>(v), error_category()};
@@ -303,8 +295,6 @@ class client {
 /// - `oidc_callback`
 /// - `server_api_opts`
 /// - `tls_opts`
-///
-/// @attention This feature is experimental! It is not ready for use!
 ///
 class client::options {
    private:
