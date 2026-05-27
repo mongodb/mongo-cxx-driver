@@ -1198,7 +1198,7 @@ struct bulk_write_options_c {
             libmongoc::bulkwriteopts_set_verboseresults(_opts, *v);
         }
 
-        if (auto const& v = client_bulk_write::options::internal::write_concern(opts)) {
+        if (auto const& v = opts.write_concern()) {
             libmongoc::bulkwriteopts_set_writeconcern(_opts, write_concern::internal::as_mongoc(*v));
         }
     }
