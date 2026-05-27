@@ -20,27 +20,9 @@
 
 #include <mongocxx/v1/client_bulk_write.hpp> // IWYU pragma: export
 
-#include <mongocxx/config/prelude.hpp>
-
-namespace mongocxx {
-namespace v_noabi {
-
-using client_bulk_write = v1::client_bulk_write;
-
-} // namespace v_noabi
-} // namespace mongocxx
-
-namespace mongocxx {
-
-using v_noabi::client_bulk_write;
-
-} // namespace mongocxx
-
-#include <mongocxx/config/postlude.hpp>
-
 ///
 /// @file
-/// Provides @ref mongocxx::v_noabi::client_bulk_write.
+/// Provides @ref mongocxx::client_bulk_write.
 ///
 /// @par Includes
 /// - @ref mongocxx/v1/client_bulk_write.hpp

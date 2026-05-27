@@ -314,11 +314,11 @@ v_noabi::client_session client::start_session(v_noabi::options::client_session c
     throw v_noabi::exception{v_noabi::error_code::k_cannot_create_session, error.message};
 }
 
-v_noabi::client_bulk_write client::create_bulk_write() {
+v1::client_bulk_write client::create_bulk_write() {
     return check_moved_from(_client).create_bulk_write();
 }
 
-v_noabi::client_bulk_write client::create_bulk_write(v_noabi::client_session& session) {
+v1::client_bulk_write client::create_bulk_write(v_noabi::client_session& session) {
     auto bulk_write = create_bulk_write();
 
     v1::client_bulk_write::internal::set_session(bulk_write, v_noabi::client_session::internal::as_v1(session));

@@ -472,9 +472,9 @@ class client {
     /// Return a new client-level bulk write operation for use with this client.
     ///
     /// @{
-    MONGOCXX_ABI_EXPORT_CDECL(v_noabi::client_bulk_write) create_bulk_write();
+    MONGOCXX_ABI_EXPORT_CDECL(v1::client_bulk_write) create_bulk_write();
 
-    MONGOCXX_ABI_EXPORT_CDECL(v_noabi::client_bulk_write) create_bulk_write(v_noabi::client_session& session);
+    MONGOCXX_ABI_EXPORT_CDECL(v1::client_bulk_write) create_bulk_write(v_noabi::client_session& session);
     /// @}
 
     ///
