@@ -203,6 +203,8 @@ class client_bulk_write::options {
     ///
     /// Destroy this object.
     ///
+    /// @warning Invalidates all associated views.
+    ///
     MONGOCXX_ABI_EXPORT_CDECL() ~options();
 
     ///
@@ -534,6 +536,8 @@ class client_bulk_write::update_one_options {
     ///
     /// Destroy this object.
     ///
+    /// @warning Invalidates all associated views.
+    ///
     MONGOCXX_ABI_EXPORT_CDECL() ~update_one_options();
 
     ///
@@ -640,6 +644,8 @@ class client_bulk_write::update_many_options {
     ///
     /// Destroy this object.
     ///
+    /// @warning Invalidates all associated views.
+    ///
     MONGOCXX_ABI_EXPORT_CDECL() ~update_many_options();
 
     ///
@@ -736,6 +742,8 @@ class client_bulk_write::replace_one_options {
     ///
     /// Destroy this object.
     ///
+    /// @warning Invalidates all associated views.
+    ///
     MONGOCXX_ABI_EXPORT_CDECL() ~replace_one_options();
 
     ///
@@ -830,6 +838,8 @@ class client_bulk_write::delete_one_options {
     ///
     /// Destroy this object.
     ///
+    /// @warning Invalidates all associated views.
+    ///
     MONGOCXX_ABI_EXPORT_CDECL() ~delete_one_options();
 
     ///
@@ -903,6 +913,8 @@ class client_bulk_write::delete_many_options {
    public:
     ///
     /// Destroy this object.
+    ///
+    /// @warning Invalidates all associated views.
     ///
     MONGOCXX_ABI_EXPORT_CDECL() ~delete_many_options();
 
