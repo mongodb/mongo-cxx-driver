@@ -772,7 +772,7 @@ bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::value> find_one_and
     v_noabi::options::find_one_and_replace const& options) {
     auto flags = MONGOC_FIND_AND_MODIFY_NONE;
 
-    if (options.upsert()) {
+    if (options.upsert().value_or(false)) {
         flags = static_cast<mongoc_find_and_modify_flags_t>(flags | MONGOC_FIND_AND_MODIFY_UPSERT);
     }
 
@@ -799,7 +799,7 @@ bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::value> find_one_and
     v_noabi::options::find_one_and_update const& options) {
     auto flags = MONGOC_FIND_AND_MODIFY_NONE;
 
-    if (options.upsert()) {
+    if (options.upsert().value_or(false)) {
         flags = static_cast<mongoc_find_and_modify_flags_t>(flags | MONGOC_FIND_AND_MODIFY_UPSERT);
     }
 
