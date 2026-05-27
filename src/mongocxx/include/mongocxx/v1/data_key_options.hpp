@@ -45,8 +45,6 @@ namespace v1 {
 /// @see
 /// - [Encryption Keys and Key Vaults (MongoDB Manual)](https://www.mongodb.com/docs/manual/core/queryable-encryption/fundamentals/keys-key-vaults/)
 ///
-/// @attention This feature is experimental! It is not ready for use!
-///
 class data_key_options {
    private:
     class impl;

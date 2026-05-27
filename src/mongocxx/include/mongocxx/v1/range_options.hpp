@@ -46,8 +46,6 @@ namespace v1 {
 /// - [Client Side Encryption (MongoDB Specifications)](https://specifications.readthedocs.io/en/latest/client-side-encryption/client-side-encryption/)
 /// - [Encrypted Fields and Enabled Queries (MongoDB Manual)](https://www.mongodb.com/docs/manual/core/queryable-encryption/fundamentals/encrypt-and-query/)
 ///
-/// @attention This feature is experimental! It is not ready for use!
-///
 class range_options {
    private:
     class impl;

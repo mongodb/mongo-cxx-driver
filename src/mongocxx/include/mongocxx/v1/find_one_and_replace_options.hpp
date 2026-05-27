@@ -60,8 +60,6 @@ namespace v1 {
 /// - [Query Documents (MongoDB Manual)](https://www.mongodb.com/docs/manual/tutorial/query-documents/)
 /// - [Update Methods (MongoDB Manual)](https://www.mongodb.com/docs/manual/reference/update-methods/)
 ///
-/// @attention This feature is experimental! It is not ready for use!
-///
 class find_one_and_replace_options {
    private:
     class impl;

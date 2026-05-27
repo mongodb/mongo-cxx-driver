@@ -52,8 +52,6 @@ namespace v1 {
 /// @see
 /// - [Databases and Collections in MongoDB (MongoDB Manual)](https://www.mongodb.com/docs/manual/core/databases-and-collections/)
 ///
-/// @attention This feature is experimental! It is not ready for use!
-///
 class database {
    private:
     class impl;

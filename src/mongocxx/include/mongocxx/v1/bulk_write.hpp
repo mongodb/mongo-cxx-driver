@@ -50,8 +50,6 @@ namespace v1 {
 /// - [Bulk Write Operations (MongoDB Manual)](https://www.mongodb.com/docs/manual/core/bulk-write-operations/)
 /// - [Update Methods (MongoDB Manual)](https://www.mongodb.com/docs/manual/reference/update-methods/)
 ///
-/// @attention This feature is experimental! It is not ready for use!
-///
 class bulk_write {
    private:
     class impl;
@@ -168,8 +166,6 @@ class bulk_write {
 /// @see
 /// - [Bulk Write Operations (MongoDB Manual)](https://www.mongodb.com/docs/manual/core/bulk-write-operations/)
 ///
-/// @attention This feature is experimental! It is not ready for use!
-///
 class bulk_write::insert_one {
    public:
     ///
@@ -204,8 +200,6 @@ class bulk_write::insert_one {
 ///
 /// @see
 /// - [Bulk Write Operations (MongoDB Manual)](https://www.mongodb.com/docs/manual/core/bulk-write-operations/)
-///
-/// @attention This feature is experimental! It is not ready for use!
 ///
 class bulk_write::update_one {
    private:
@@ -337,8 +331,6 @@ class bulk_write::update_one {
 /// @see
 /// - [Bulk Write Operations (MongoDB Manual)](https://www.mongodb.com/docs/manual/core/bulk-write-operations/)
 ///
-/// @attention This feature is experimental! It is not ready for use!
-///
 class bulk_write::update_many {
    private:
     class impl;
@@ -461,8 +453,6 @@ class bulk_write::update_many {
 /// @see
 /// - [Bulk Write Operations (MongoDB Manual)](https://www.mongodb.com/docs/manual/core/bulk-write-operations/)
 ///
-/// @attention This feature is experimental! It is not ready for use!
-///
 class bulk_write::replace_one {
    private:
     class impl;
@@ -579,8 +569,6 @@ class bulk_write::replace_one {
 /// @see
 /// - [Bulk Write Operations (MongoDB Manual)](https://www.mongodb.com/docs/manual/core/bulk-write-operations/)
 ///
-/// @attention This feature is experimental! It is not ready for use!
-///
 class bulk_write::delete_one {
    private:
     class impl;
@@ -670,8 +658,6 @@ class bulk_write::delete_one {
 /// @see
 /// - [Bulk Write Operations (MongoDB Manual)](https://www.mongodb.com/docs/manual/core/bulk-write-operations/)
 ///
-/// @attention This feature is experimental! It is not ready for use!
-///
 class bulk_write::delete_many {
    private:
     class impl;
@@ -756,8 +742,6 @@ class bulk_write::delete_many {
 /// @see
 /// - [Bulk Write Operations (MongoDB Manual)](https://www.mongodb.com/docs/manual/core/bulk-write-operations/)
 /// - [Update Methods (MongoDB Manual)](https://www.mongodb.com/docs/manual/reference/update-methods/)
-///
-/// @attention This feature is experimental! It is not ready for use!
 ///
 class bulk_write::single {
    private:
@@ -906,8 +890,6 @@ class bulk_write::single {
 /// - [Bulk Write Operations (MongoDB Manual)](https://www.mongodb.com/docs/manual/core/bulk-write-operations/)
 /// - [Update Methods (MongoDB Manual)](https://www.mongodb.com/docs/manual/reference/update-methods/)
 ///
-/// @attention This feature is experimental! It is not ready for use!
-///
 class bulk_write::options {
    private:
     class impl;
@@ -1037,8 +1019,6 @@ class bulk_write::options {
 /// - [CRUD API (MongoDB Specifications)](https://specifications.readthedocs.io/en/latest/crud/crud/)
 /// - [Bulk Write Operations (MongoDB Manual)](https://www.mongodb.com/docs/manual/core/bulk-write-operations/)
 /// - [Update Methods (MongoDB Manual)](https://www.mongodb.com/docs/manual/reference/update-methods/)
-///
-/// @attention This feature is experimental! It is not ready for use!
 ///
 class bulk_write::result {
    private:

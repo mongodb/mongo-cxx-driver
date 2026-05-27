@@ -36,8 +36,6 @@ namespace v1 {
 /// @see
 /// - [Cursors (MongoDB Manual)](https://www.mongodb.com/docs/manual/core/cursors/)
 ///
-/// @attention This feature is experimental! It is not ready for use!
-///
 class cursor {
    private:
     class impl;
@@ -135,8 +133,6 @@ class cursor {
 
 ///
 /// An iterator over the results of an associated cursor.
-///
-/// @attention This feature is experimental! It is not ready for use!
 ///
 /// @important All iterators associated with the same cursor object share the same state.
 /// @important The end iterator has no associated cursor.

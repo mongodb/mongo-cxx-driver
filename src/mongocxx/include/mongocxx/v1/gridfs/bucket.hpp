@@ -57,8 +57,6 @@ namespace gridfs {
 /// @see
 /// - [GridFS (MongoDB Manual)](https://www.mongodb.com/docs/manual/core/gridfs/)
 ///
-/// @attention This feature is experimental! It is not ready for use!
-///
 class bucket {
    private:
     class impl;
@@ -293,8 +291,6 @@ class bucket {
     ///
     /// Errors codes which may be returned by @ref mongocxx::v1::gridfs::bucket.
     ///
-    /// @attention This feature is experimental! It is not ready for use!
-    ///
     enum class errc {
         zero,                     ///< Zero.
         invalid_bucket_name,      ///< The "bucketName" field must not be empty.
@@ -307,14 +303,10 @@ class bucket {
     ///
     /// The error category for @ref mongocxx::v1::gridfs::bucket::errc.
     ///
-    /// @attention This feature is experimental! It is not ready for use!
-    ///
     static MONGOCXX_ABI_EXPORT_CDECL(std::error_category const&) error_category();
 
     ///
     /// Support implicit conversion to `std::error_code`.
-    ///
-    /// @attention This feature is experimental! It is not ready for use!
     ///
     friend std::error_code make_error_code(errc v) {
         return {static_cast<int>(v), error_category()};
@@ -339,8 +331,6 @@ class bucket {
 /// @see
 /// - [GridFS (MongoDB Specifications)](https://specifications.readthedocs.io/en/latest/gridfs/gridfs-spec/)
 /// - [GridFS for Self-Managed Deployments (MongoDB Manual)](https://www.mongodb.com/docs/manual/core/gridfs/)
-///
-/// @attention This feature is experimental! It is not ready for use!
 ///
 class bucket::options {
    private:

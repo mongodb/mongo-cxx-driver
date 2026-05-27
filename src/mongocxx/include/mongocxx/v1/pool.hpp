@@ -46,8 +46,6 @@ namespace v1 {
 /// - [Connection Monitoring and Pooling (MongoDB Specifications)](https://specifications.readthedocs.io/en/latest/connection-monitoring-and-pooling/connection-monitoring-and-pooling/)
 /// - [Connection Pool Overview (MongoDB Manual)](https://www.mongodb.com/docs/manual/administration/connection-pool-overview/)
 ///
-/// @attention This feature is experimental! It is not ready for use!
-///
 class pool {
    private:
     class impl;
@@ -150,8 +148,6 @@ class pool {
     ///
     /// Errors codes which may be returned by @ref mongocxx::v1::pool.
     ///
-    /// @attention This feature is experimental! It is not ready for use!
-    ///
     enum class errc {
         zero,               ///< Zero.
         wait_queue_timeout, ///< Failed to acquire a client object due to "waitQueueTimeoutMS".
@@ -160,14 +156,10 @@ class pool {
     ///
     /// The error category for @ref mongocxx::v1::pool::errc.
     ///
-    /// @attention This feature is experimental! It is not ready for use!
-    ///
     static MONGOCXX_ABI_EXPORT_CDECL(std::error_category const&) error_category();
 
     ///
     /// Support implicit conversion to `std::error_code`.
-    ///
-    /// @attention This feature is experimental! It is not ready for use!
     ///
     friend std::error_code make_error_code(errc v) {
         return {static_cast<int>(v), error_category()};
@@ -181,8 +173,6 @@ class pool {
 
 ///
 /// Options for @ref mongocxx::v1::pool.
-///
-/// @attention This feature is experimental! It is not ready for use!
 ///
 class pool::options {
    private:
@@ -244,8 +234,6 @@ class pool::options {
 
 ///
 /// A handle to a client object owned by an associated pool.
-///
-/// @attention This feature is experimental! It is not ready for use!
 ///
 class pool::entry {
    private:

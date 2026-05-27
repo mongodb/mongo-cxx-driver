@@ -40,8 +40,6 @@ namespace events {
 /// @see
 /// - [Command Logging and Monitoring (MongoDB Specifications)](https://specifications.readthedocs.io/en/latest/command-logging-and-monitoring/command-logging-and-monitoring/)
 ///
-/// @attention This feature is experimental! It is not ready for use!
-///
 class command_failed {
    private:
     void const* _impl; // mongoc_apm_command_failed_t const

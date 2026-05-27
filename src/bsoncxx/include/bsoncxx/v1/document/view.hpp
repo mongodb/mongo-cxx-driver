@@ -49,8 +49,6 @@ namespace document {
 /// operation is not satisfiable due to invalid data, the operation will throw an @ref bsoncxx::v1::exception with @ref
 /// bsoncxx::v1::document::view::errc::invalid_data.
 ///
-/// @attention This feature is experimental! It is not ready for use!
-///
 class view {
    public:
     class const_iterator;
@@ -215,8 +213,6 @@ class view {
     ///
     /// Errors codes which may be returned by @ref bsoncxx::v1::document::view.
     ///
-    /// @attention This feature is experimental! It is not ready for use!
-    ///
     enum class errc {
         zero,           ///< Zero.
         invalid_length, ///< Length is invalid.
@@ -226,14 +222,10 @@ class view {
     ///
     /// The error category for @ref bsoncxx::v1::document::view::errc.
     ///
-    /// @attention This feature is experimental! It is not ready for use!
-    ///
     static BSONCXX_ABI_EXPORT_CDECL(std::error_category const&) error_category();
 
     ///
     /// Support implicit conversion to `std::error_code`.
-    ///
-    /// @attention This feature is experimental! It is not ready for use!
     ///
     friend std::error_code make_error_code(errc v) {
         return {static_cast<int>(v), error_category()};
@@ -268,8 +260,6 @@ inline std::size_t view::size() const {
 /// @note This iterator almost satisfies Cpp17ForwardIterator, but `std::iterator_traits<T>::reference` is defined as
 /// `value_type`, similar to `std::vector<bool>::iterator` and `std::istreambuf_iterator<T>`. Therefore, this iterator
 /// only fully satisfies Cpp17InputIterator.
-///
-/// @attention This feature is experimental! It is not ready for use!
 ///
 class view::const_iterator {
    private:

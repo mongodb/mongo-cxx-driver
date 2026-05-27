@@ -53,8 +53,6 @@ namespace v1 {
 /// @see
 /// - [Indexes (MongoDB Manual)](https://www.mongodb.com/docs/manual/indexes/)
 ///
-/// @attention This feature is experimental! It is not ready for use!
-///
 class indexes {
     // This class implements `IndexView` ("Index View API"):
     //  - https://specifications.readthedocs.io/en/latest/index-management/index-management/
@@ -87,8 +85,6 @@ class indexes {
     /// - `version` ("v")
     /// - `weights`
     /// - `wildcard_projection` ("wildcardProjection")
-    ///
-    /// @attention This feature is experimental! It is not ready for use!
     ///
     class options {
         // This class implements `IndexOptions` ("Index View API"):
@@ -349,8 +345,6 @@ class indexes {
     ///
     /// @see
     /// - [Indexes (MongoDB Manual)](https://www.mongodb.com/docs/manual/indexes/)
-    ///
-    /// @attention This feature is experimental! It is not ready for use!
     ///
     class model {
         // This class implements `IndexModel` ("Index View API"):
@@ -1120,8 +1114,6 @@ class indexes {
     ///
     /// Errors codes which may be returned by @ref mongocxx::v1::indexes.
     ///
-    /// @attention This feature is experimental! It is not ready for use!
-    ///
     enum class errc {
         zero,              ///< Zero.
         expired_after_i32, ///< The "expiredAfterSeconds" field must be representable as an `std::int32_t`.
@@ -1131,14 +1123,10 @@ class indexes {
     ///
     /// The error category for @ref mongocxx::v1::instance::errc.
     ///
-    /// @attention This feature is experimental! It is not ready for use!
-    ///
     static MONGOCXX_ABI_EXPORT_CDECL(std::error_category const&) error_category();
 
     ///
     /// Support implicit conversion to `std::error_code`.
-    ///
-    /// @attention This feature is experimental! It is not ready for use!
     ///
     friend std::error_code make_error_code(errc v) {
         return {static_cast<int>(v), error_category()};

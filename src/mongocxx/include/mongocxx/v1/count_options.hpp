@@ -55,8 +55,6 @@ namespace v1 {
 /// @see
 /// - [CRUD API (MongoDB Specifications)](https://specifications.readthedocs.io/en/latest/crud/crud/)
 ///
-/// @attention This feature is experimental! It is not ready for use!
-///
 class count_options {
    private:
     class impl;

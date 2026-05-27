@@ -31,8 +31,6 @@ namespace v1 {
 ///
 /// The log level for an unstructured log message.
 ///
-/// @attention This feature is experimental! It is not ready for use!
-///
 enum class log_level {
     k_error,    ///< MONGOC_LOG_LEVEL_ERROR
     k_critical, ///< MONGOC_LOG_LEVEL_CRITICAL
@@ -53,8 +51,6 @@ BSONCXX_PRIVATE_WARNINGS_DISABLE(MSVC(4275));
 /// The interface for an unstructured log message handler.
 ///
 /// @important This interface does NOT fully conform to the CMAP specification!
-///
-/// @attention This feature is experimental! It is not ready for use!
 ///
 class logger {
    public:
@@ -111,8 +107,6 @@ BSONCXX_PRIVATE_WARNINGS_POP();
 
 ///
 /// A tag type representing mongoc's default unstructured log handler.
-///
-/// @attention This feature is experimental! It is not ready for use!
 ///
 class default_logger {};
 

@@ -39,8 +39,6 @@ namespace events {
 /// @see
 /// - [Server Discovery and Monitoring (MongoDB Specifications)](https://specifications.readthedocs.io/en/latest/server-discovery-and-monitoring/server-discovery-and-monitoring/)
 ///
-/// @attention This feature is experimental! It is not ready for use!
-///
 class server_description {
    private:
     void* _impl; // mongoc_server_description_t

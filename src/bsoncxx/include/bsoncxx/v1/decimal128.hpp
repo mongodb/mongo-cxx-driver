@@ -34,8 +34,6 @@ namespace v1 {
 ///
 /// A BSON Decimal128.
 ///
-/// @attention This feature is experimental! It is not ready for use!
-///
 class decimal128 {
    private:
     std::uint64_t _high = 0u;
@@ -101,8 +99,6 @@ class decimal128 {
     ///
     /// Errors codes which may be returned by @ref bsoncxx::v1::decimal128.
     ///
-    /// @attention This feature is experimental! It is not ready for use!
-    ///
     enum class errc {
         zero,                  ///< Zero.
         empty_string,          ///< String must not be empty.
@@ -113,14 +109,10 @@ class decimal128 {
     ///
     /// The error category for @ref bsoncxx::v1::decimal128::errc.
     ///
-    /// @attention This feature is experimental! It is not ready for use!
-    ///
     static BSONCXX_ABI_EXPORT_CDECL(std::error_category const&) error_category();
 
     ///
     /// Support implicit conversion to `std::error_code`.
-    ///
-    /// @attention This feature is experimental! It is not ready for use!
     ///
     friend std::error_code make_error_code(errc v) {
         return {static_cast<int>(v), error_category()};

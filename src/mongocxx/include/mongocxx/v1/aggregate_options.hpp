@@ -59,8 +59,6 @@ namespace v1 {
 /// @see
 /// - [`aggregate` (database command) (MongoDB Manual)](https://www.mongodb.com/docs/manual/aggregation/)
 ///
-/// @attention This feature is experimental! It is not ready for use!
-///
 class aggregate_options {
    private:
     class impl;

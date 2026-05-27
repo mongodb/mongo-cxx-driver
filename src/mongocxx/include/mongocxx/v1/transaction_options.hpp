@@ -45,8 +45,6 @@ namespace v1 {
 /// @see
 /// - [Transactions (MongoDB Manual)](https://www.mongodb.com/docs/manual/core/transactions/)
 ///
-/// @attention This feature is experimental! It is not ready for use!
-///
 class transaction_options {
    private:
     void* _impl; // mongoc_transaction_opt_t

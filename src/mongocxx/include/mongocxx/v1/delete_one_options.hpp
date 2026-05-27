@@ -50,8 +50,6 @@ namespace v1 {
 /// @see
 /// - [Delete Methods (MongoDB Manual)](https://www.mongodb.com/docs/manual/reference/delete-methods/)
 ///
-/// @attention This feature is experimental! It is not ready for use!
-///
 class delete_one_options {
    private:
     class impl;

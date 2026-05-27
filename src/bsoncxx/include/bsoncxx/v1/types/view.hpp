@@ -45,8 +45,6 @@ namespace types {
 ///
 /// BSON type value "64-bit Binary Floating Point".
 ///
-/// @attention This feature is experimental! It is not ready for use!
-///
 struct b_double {
     ///
     /// The type represented by this BSON type value.
@@ -96,8 +94,6 @@ struct b_double {
 ///
 /// BSON type value "UTF-8 String".
 ///
-/// @attention This feature is experimental! It is not ready for use!
-///
 struct b_string {
     ///
     /// The type represented by this BSON type value.
@@ -143,8 +139,6 @@ struct b_string {
 
 ///
 /// BSON type value "Embedded Document".
-///
-/// @attention This feature is experimental! It is not ready for use!
 ///
 struct b_document {
     ///
@@ -196,8 +190,6 @@ struct b_document {
 ///
 /// BSON type value "Array".
 ///
-/// @attention This feature is experimental! It is not ready for use!
-///
 struct b_array {
     ///
     /// The type represented by this BSON type value.
@@ -243,8 +235,6 @@ struct b_array {
 
 ///
 /// BSON type value "Binary Data".
-///
-/// @attention This feature is experimental! It is not ready for use!
 ///
 struct b_binary {
     ///
@@ -313,8 +303,6 @@ struct b_binary {
 ///
 /// @deprecated This BSON type is deprecated.
 ///
-/// @attention This feature is experimental! It is not ready for use!
-///
 struct b_undefined {
     ///
     /// The type represented by this BSON type value.
@@ -338,8 +326,6 @@ struct b_undefined {
 
 ///
 /// BSON type value "ObjectID".
-///
-/// @attention This feature is experimental! It is not ready for use!
 ///
 struct b_oid {
     ///
@@ -387,8 +373,6 @@ struct b_oid {
 ///
 /// BSON type value "Boolean".
 ///
-/// @attention This feature is experimental! It is not ready for use!
-///
 struct b_bool {
     ///
     /// The type represented by this BSON type value.
@@ -434,8 +418,6 @@ struct b_bool {
 
 ///
 /// BSON type value "UTC Datetime".
-///
-/// @attention This feature is experimental! It is not ready for use!
 ///
 struct b_date {
     ///
@@ -494,8 +476,6 @@ struct b_date {
 ///
 /// BSON type value "Null Value".
 ///
-/// @attention This feature is experimental! It is not ready for use!
-///
 struct b_null {
     ///
     /// The type represented by this BSON type value.
@@ -519,8 +499,6 @@ struct b_null {
 
 ///
 /// BSON type value "Regular Expression".
-///
-/// @attention This feature is experimental! It is not ready for use!
 ///
 struct b_regex {
     ///
@@ -573,8 +551,6 @@ struct b_regex {
 ///
 /// @deprecated This BSON type is deprecated.
 ///
-/// @attention This feature is experimental! It is not ready for use!
-///
 struct b_dbpointer {
     ///
     /// The type represented by this BSON type value.
@@ -618,8 +594,6 @@ struct b_dbpointer {
 
 ///
 /// BSON type value "JavaScript Code".
-///
-/// @attention This feature is experimental! It is not ready for use!
 ///
 struct b_code {
     ///
@@ -669,8 +643,6 @@ struct b_code {
 ///
 /// @deprecated This BSON type is deprecated.
 ///
-/// @attention This feature is experimental! It is not ready for use!
-///
 struct b_symbol {
     ///
     /// The type represented by this BSON type value.
@@ -719,8 +691,6 @@ struct b_symbol {
 ///
 /// @deprecated This BSON type is deprecated.
 ///
-/// @attention This feature is experimental! It is not ready for use!
-///
 struct b_codewscope {
     ///
     /// The type represented by this BSON type value.
@@ -764,8 +734,6 @@ struct b_codewscope {
 
 ///
 /// BSON type value "32-bit Integer".
-///
-/// @attention This feature is experimental! It is not ready for use!
 ///
 struct b_int32 {
     ///
@@ -813,8 +781,6 @@ struct b_int32 {
 ///
 /// BSON type value "Timestamp".
 ///
-/// @attention This feature is experimental! It is not ready for use!
-///
 struct b_timestamp {
     ///
     /// The type represented by this BSON type value.
@@ -858,8 +824,6 @@ struct b_timestamp {
 
 ///
 /// BSON type value "64-bit Integer".
-///
-/// @attention This feature is experimental! It is not ready for use!
 ///
 struct b_int64 {
     ///
@@ -907,8 +871,6 @@ struct b_int64 {
 ///
 /// BSON type value "Decimal128".
 ///
-/// @attention This feature is experimental! It is not ready for use!
-///
 struct b_decimal128 {
     ///
     /// The type represented by this BSON type value.
@@ -955,8 +917,6 @@ struct b_decimal128 {
 ///
 /// BSON type value "Max Key".
 ///
-/// @attention This feature is experimental! It is not ready for use!
-///
 struct b_maxkey {
     ///
     /// The type represented by this BSON type value.
@@ -980,8 +940,6 @@ struct b_maxkey {
 
 ///
 /// BSON type value "Min Key".
-///
-/// @attention This feature is experimental! It is not ready for use!
 ///
 struct b_minkey {
     ///
@@ -1017,8 +975,6 @@ BSONCXX_V1_TYPES_XMACRO(X)
 ///
 /// @note This class only represents the **value** of a BSON element without its key.
 /// @ref bsoncxx::v1::element::view represents a BSON element including its key.
-///
-/// @attention This feature is experimental! It is not ready for use!
 ///
 class view {
    private:
@@ -1188,8 +1144,6 @@ class view {
     ///
     /// Errors codes which may be returned by @ref bsoncxx::v1::types::view.
     ///
-    /// @attention This feature is experimental! It is not ready for use!
-    ///
     enum class errc {
         zero,          ///< Zero.
         type_mismatch, ///< Requested type does not match the underlying type.
@@ -1198,14 +1152,10 @@ class view {
     ///
     /// The error category for @ref bsoncxx::v1::types::view::errc.
     ///
-    /// @attention This feature is experimental! It is not ready for use!
-    ///
     static BSONCXX_ABI_EXPORT_CDECL(std::error_category const&) error_category();
 
     ///
     /// Support implicit conversion to `std::error_code`.
-    ///
-    /// @attention This feature is experimental! It is not ready for use!
     ///
     friend std::error_code make_error_code(errc v) {
         return {static_cast<int>(v), error_category()};

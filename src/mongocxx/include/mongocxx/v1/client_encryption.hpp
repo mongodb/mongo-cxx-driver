@@ -56,8 +56,6 @@ namespace v1 {
 ///   - [Queryable Encryption](https://www.mongodb.com/docs/manual/core/queryable-encryption/)
 ///   - [CSFLE](https://www.mongodb.com/docs/manual/core/csfle/)
 ///
-/// @attention This feature is experimental! It is not ready for use!
-///
 class client_encryption {
    private:
     void* _impl; // mongoc_client_encryption_t
@@ -286,8 +284,6 @@ class client_encryption {
 /// - `key_vault_namespace` ("keyVaultNamespace")
 /// - `kms_providers` ("kmsProviders")
 /// - `tls_opts` ("tlsOptions")
-///
-/// @attention This feature is experimental! It is not ready for use!
 ///
 class client_encryption::options {
    private:
