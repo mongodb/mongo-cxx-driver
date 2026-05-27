@@ -89,7 +89,7 @@ TEST_CASE("default", "[mongocxx][v1][client_bulk_write][options]") {
     CHECK_FALSE(opts.bypass_document_validation().has_value());
     CHECK_FALSE(opts.comment().has_value());
     CHECK_FALSE(opts.let().has_value());
-    CHECK(opts.ordered());
+    CHECK_FALSE(opts.ordered().has_value());
     CHECK_FALSE(opts.verbose_results().has_value());
     CHECK_FALSE(opts.write_concern().has_value());
 }

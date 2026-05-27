@@ -274,7 +274,7 @@ class client_bulk_write::options {
     ///
     /// Return the current "ordered" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bool) ordered() const;
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bool>) ordered() const;
 
     ///
     /// Set the "verboseResults" field.

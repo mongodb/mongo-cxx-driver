@@ -196,8 +196,8 @@ client_bulk_write::options& client_bulk_write::options::ordered(bool ordered) {
     return *this;
 }
 
-bool client_bulk_write::options::ordered() const {
-    return impl::with(this)->_ordered.value_or(true);
+bsoncxx::v1::stdx::optional<bool> client_bulk_write::options::ordered() const {
+    return impl::with(this)->_ordered;
 }
 
 client_bulk_write::options& client_bulk_write::options::verbose_results(bool verbose_results) {
@@ -233,8 +233,8 @@ bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> const& client_bulk_wri
     return impl::with(self)._let;
 }
 
-bool client_bulk_write::options::internal::ordered(options const& self) {
-    return impl::with(self)._ordered.value_or(true);
+bsoncxx::v1::stdx::optional<bool> const& client_bulk_write::options::internal::ordered(options const& self) {
+    return impl::with(self)._ordered;
 }
 
 bsoncxx::v1::stdx::optional<bool> const& client_bulk_write::options::internal::verbose_results(options const& self) {
@@ -1178,8 +1178,8 @@ struct bulk_write_options_c {
     bulk_write_options_c& operator=(bulk_write_options_c const&) = delete;
 
     explicit bulk_write_options_c(client_bulk_write::options const& opts) : _opts{libmongoc::bulkwriteopts_new()} {
-        if (!opts.ordered()) {
-            libmongoc::bulkwriteopts_set_ordered(_opts, false);
+        if (auto const v = opts.ordered()) {
+            libmongoc::bulkwriteopts_set_ordered(_opts, *v);
         }
 
         if (auto const v = opts.bypass_document_validation()) {
