@@ -11,7 +11,7 @@ Changes prior to 3.9.0 are documented as [release notes on GitHub](https://githu
 
 ### Fixed
 
-- Correctly set `upsert: false` for "findOneAnd*" commands when the option is explicitly set to `false` (regression in 4.2.0).
+- Do not set `upsert: true` in "findOneAnd*" operations when the option is explicitly set to `false` (regression in 4.2.0).
 - Include of `v1/text_options.hpp` (normal header) by `options/text-fwd.hpp` (forward header).
 - Include of v\_noabi macro guard headers by `text_options.hpp` (v1).
 
