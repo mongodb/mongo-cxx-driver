@@ -254,6 +254,7 @@ class client {
 
     MONGOCXX_ABI_EXPORT_CDECL(v1::client_bulk_write) create_bulk_write(v1::client_session& session);
     /// @}
+    ///
 
     ///
     /// Invalidate this client object without invaliding existing cursors or sessions.
