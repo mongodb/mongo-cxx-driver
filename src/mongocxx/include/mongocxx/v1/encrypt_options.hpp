@@ -222,10 +222,14 @@ class encrypt_options {
     ///
     /// Set the "textOpts" field.
     ///
+    /// @attention This feature is experimental! It is not ready for use!
+    ///
     MONGOCXX_ABI_EXPORT_CDECL(encrypt_options&) text_opts(v1::text_options v);
 
     ///
     /// Return the current "textOpts" field.
+    ///
+    /// @attention This feature is experimental! It is not ready for use!
     ///
     MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<v1::text_options>) text_opts() const;
 

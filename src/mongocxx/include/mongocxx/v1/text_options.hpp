@@ -43,6 +43,8 @@ namespace v1 {
 /// - [Client Side Encryption (MongoDB Specifications)](https://specifications.readthedocs.io/en/latest/client-side-encryption/client-side-encryption/)
 /// - [Encrypted Fields and Enabled Queries (MongoDB Manual)](https://www.mongodb.com/docs/manual/core/queryable-encryption/fundamentals/encrypt-and-query/)
 ///
+/// @attention This feature is experimental! It is not ready for use!
+///
 class text_options {
    private:
     class impl;
@@ -150,6 +152,8 @@ class text_options {
 ///
 /// Options related to prefix queries in Queryable Encryption.
 ///
+/// @attention This feature is experimental! It is not ready for use!
+///
 class text_options::prefix {
    private:
     class impl;
@@ -221,6 +225,8 @@ class text_options::prefix {
 ///
 /// Options related to suffix queries in Queryable Encryption.
 ///
+/// @attention This feature is experimental! It is not ready for use!
+///
 class text_options::suffix {
    private:
     class impl;
@@ -291,6 +297,8 @@ class text_options::suffix {
 
 ///
 /// Options related to substring queries in Queryable Encryption.
+///
+/// @attention This feature is experimental! It is not ready for use!
 ///
 class text_options::substring {
    private:
