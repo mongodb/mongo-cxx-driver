@@ -508,6 +508,22 @@ TEST_CASE("ownership", "[mongocxx][v1][client_bulk_write][exception]") {
     REQUIRE(source.write_errors() == source_doc.view());
     REQUIRE(target.write_errors() == target_doc.view());
 
+    auto const source_data = source.write_errors().data();
+
+    SECTION("move") {
+        auto move = std::move(source);
+
+        // source is in an assign-or-move-only state.
+
+        CHECK(move.write_errors().data() == source_data);
+
+        target = std::move(move);
+
+        // move is in an assign-or-move-only state.
+
+        CHECK(target.write_errors().data() == source_data);
+    }
+
     SECTION("copy") {
         auto copy = source;
 
