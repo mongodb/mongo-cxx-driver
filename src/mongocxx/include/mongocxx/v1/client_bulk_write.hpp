@@ -105,12 +105,13 @@ class client_bulk_write {
     ///
     /// @throws mongocxx::v1::exception when a client-side error is encountered.
     ///
-    /// @{
     MONGOCXX_ABI_EXPORT_CDECL(client_bulk_write&)
     append(bsoncxx::v1::stdx::string_view ns, bsoncxx::v1::document::view document, insert_one_options const& opts);
 
     ///
     /// Append an "Update One" operation targeting the given namespace.
+    ///
+    /// @throws mongocxx::v1::exception when a client-side error is encountered.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(client_bulk_write&) append(
         bsoncxx::v1::stdx::string_view ns,
@@ -121,6 +122,8 @@ class client_bulk_write {
     ///
     /// Append an "Update One" operation with an aggregation pipeline targeting the given namespace.
     ///
+    /// @throws mongocxx::v1::exception when a client-side error is encountered.
+    ///
     MONGOCXX_ABI_EXPORT_CDECL(client_bulk_write&) append(
         bsoncxx::v1::stdx::string_view ns,
         bsoncxx::v1::document::view filter,
@@ -129,6 +132,8 @@ class client_bulk_write {
 
     ///
     /// Append an "Update Many" operation targeting the given namespace.
+    ///
+    /// @throws mongocxx::v1::exception when a client-side error is encountered.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(client_bulk_write&) append(
         bsoncxx::v1::stdx::string_view ns,
@@ -139,6 +144,8 @@ class client_bulk_write {
     ///
     /// Append an "Update Many" operation with an aggregation pipeline targeting the given namespace.
     ///
+    /// @throws mongocxx::v1::exception when a client-side error is encountered.
+    ///
     MONGOCXX_ABI_EXPORT_CDECL(client_bulk_write&) append(
         bsoncxx::v1::stdx::string_view ns,
         bsoncxx::v1::document::view filter,
@@ -147,6 +154,8 @@ class client_bulk_write {
 
     ///
     /// Append a "Replace One" operation targeting the given namespace.
+    ///
+    /// @throws mongocxx::v1::exception when a client-side error is encountered.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(client_bulk_write&) append(
         bsoncxx::v1::stdx::string_view ns,
@@ -157,16 +166,18 @@ class client_bulk_write {
     ///
     /// Append a "Delete One" operation targeting the given namespace.
     ///
+    /// @throws mongocxx::v1::exception when a client-side error is encountered.
+    ///
     MONGOCXX_ABI_EXPORT_CDECL(client_bulk_write&)
     append(bsoncxx::v1::stdx::string_view ns, bsoncxx::v1::document::view filter, delete_one_options const& opts);
 
     ///
     /// Append a "Delete Many" operation targeting the given namespace.
     ///
+    /// @throws mongocxx::v1::exception when a client-side error is encountered.
+    ///
     MONGOCXX_ABI_EXPORT_CDECL(client_bulk_write&)
     append(bsoncxx::v1::stdx::string_view ns, bsoncxx::v1::document::view filter, delete_many_options const& opts);
-    /// @}
-    ///
 
     ///
     /// Execute the appended operations.
