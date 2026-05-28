@@ -421,7 +421,7 @@ bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value>& client_bulk_write::re
 class client_bulk_write::exception::impl {
    public:
     bsoncxx::v1::document::value _write_errors;
-    bsoncxx::v1::document::value _write_concern_errors;
+    bsoncxx::v1::array::value _write_concern_errors;
     bsoncxx::v1::document::value _error_reply;
     bsoncxx::v1::stdx::optional<result> _partial_result;
 };
@@ -433,7 +433,7 @@ bsoncxx::v1::document::view client_bulk_write::exception::write_errors() const {
 }
 
 bsoncxx::v1::array::view client_bulk_write::exception::write_concern_errors() const {
-    return bsoncxx::v1::array::view{_impl->_write_concern_errors.view().data()};
+    return _impl->_write_concern_errors;
 }
 
 bsoncxx::v1::document::view client_bulk_write::exception::error_reply() const {
@@ -465,7 +465,7 @@ client_bulk_write::exception client_bulk_write::exception::internal::make(
     }
 
     if (auto const* const arr = libmongoc::bulkwriteexception_writeconcernerrors(exc)) {
-        p->_write_concern_errors = scoped_bson_view{arr}.value();
+        p->_write_concern_errors = scoped_bson_view{arr}.array_view();
     }
 
     if (auto const* const doc = libmongoc::bulkwriteexception_errorreply(exc)) {
@@ -492,7 +492,7 @@ bsoncxx::v1::document::value& client_bulk_write::exception::internal::write_erro
     return self._impl->_write_errors;
 }
 
-bsoncxx::v1::document::value& client_bulk_write::exception::internal::write_concern_errors(exception& self) {
+bsoncxx::v1::array::value& client_bulk_write::exception::internal::write_concern_errors(exception& self) {
     return self._impl->_write_concern_errors;
 }
 

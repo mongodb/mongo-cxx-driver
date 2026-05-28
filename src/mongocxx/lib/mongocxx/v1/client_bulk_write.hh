@@ -74,7 +74,7 @@ class client_bulk_write::exception::internal {
     static MONGOCXX_ABI_EXPORT_CDECL_TESTING(exception) make();
 
     static MONGOCXX_ABI_EXPORT_CDECL_TESTING(bsoncxx::v1::document::value&) write_errors(exception& self);
-    static MONGOCXX_ABI_EXPORT_CDECL_TESTING(bsoncxx::v1::document::value&) write_concern_errors(exception& self);
+    static MONGOCXX_ABI_EXPORT_CDECL_TESTING(bsoncxx::v1::array::value&) write_concern_errors(exception& self);
     static MONGOCXX_ABI_EXPORT_CDECL_TESTING(bsoncxx::v1::document::value&) error_reply(exception& self);
 };
 
