@@ -511,8 +511,6 @@ class client_bulk_write::insert_one_options {
     /// Default initialization.
     ///
     MONGOCXX_ABI_EXPORT_CDECL() insert_one_options();
-
-    class internal;
 };
 
 ///
