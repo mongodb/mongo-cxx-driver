@@ -14,6 +14,10 @@
 
 #pragma once
 
+#include <mongocxx/v1/client_bulk_write-fwd.hpp> // IWYU pragma: export
+
+//
+
 #include <mongocxx/v1/detail/prelude.hpp>
 
 #include <bsoncxx/v1/array/view-fwd.hpp>
