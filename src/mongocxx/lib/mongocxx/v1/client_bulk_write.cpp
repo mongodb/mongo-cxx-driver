@@ -46,8 +46,6 @@
 namespace mongocxx {
 namespace v1 {
 
-// NOLINTBEGIN(cppcoreguidelines-owning-memory): owning void* for ABI stability.
-
 class client_bulk_write::impl {
    public:
     mongoc_bulkwrite_t* _bulk;
@@ -80,6 +78,8 @@ class client_bulk_write::impl {
     }
 };
 
+// NOLINTBEGIN(cppcoreguidelines-owning-memory): owning void* for ABI stability.
+
 client_bulk_write::~client_bulk_write() {
     delete impl::with(this);
 }
@@ -95,6 +95,8 @@ client_bulk_write& client_bulk_write::operator=(client_bulk_write&& other) noexc
 }
 
 client_bulk_write::client_bulk_write(void* bulk) : _impl{new impl{static_cast<mongoc_bulkwrite_t*>(bulk)}} {}
+
+// NOLINTEND(cppcoreguidelines-owning-memory)
 
 client_bulk_write client_bulk_write::internal::make(mongoc_bulkwrite_t* bulk) {
     return client_bulk_write{bulk};
@@ -138,6 +140,8 @@ class client_bulk_write::options::impl {
     }
 };
 
+// NOLINTBEGIN(cppcoreguidelines-owning-memory): owning void* for ABI stability.
+
 client_bulk_write::options::~options() {
     delete impl::with(this);
 }
@@ -163,6 +167,8 @@ client_bulk_write::options& client_bulk_write::options::operator=(options const&
 }
 
 client_bulk_write::options::options() : _impl{new impl{}} {}
+
+// NOLINTEND(cppcoreguidelines-owning-memory)
 
 client_bulk_write::options& client_bulk_write::options::bypass_document_validation(bool bypass_document_validation) {
     impl::with(this)->_bypass_document_validation = bypass_document_validation;
@@ -278,6 +284,8 @@ class client_bulk_write::result::impl {
     }
 };
 
+// NOLINTBEGIN(cppcoreguidelines-owning-memory): owning void* for ABI stability.
+
 client_bulk_write::result::~result() {
     delete impl::with(this);
     _impl = nullptr; // scan-build: warning: Use of memory after it is freed [cplusplus.NewDelete]
@@ -302,6 +310,8 @@ client_bulk_write::result& client_bulk_write::result::operator=(result const& ot
 
     return *this;
 }
+
+// NOLINTEND(cppcoreguidelines-owning-memory)
 
 std::int64_t client_bulk_write::result::inserted_count() const {
     return impl::with(this)->_inserted_count;
@@ -531,6 +541,8 @@ class client_bulk_write::update_one_options::impl {
     }
 };
 
+// NOLINTBEGIN(cppcoreguidelines-owning-memory): owning void* for ABI stability.
+
 client_bulk_write::update_one_options::~update_one_options() {
     delete impl::with(this);
 }
@@ -560,6 +572,8 @@ client_bulk_write::update_one_options& client_bulk_write::update_one_options::op
 }
 
 client_bulk_write::update_one_options::update_one_options() : _impl{new impl{}} {}
+
+// NOLINTEND(cppcoreguidelines-owning-memory)
 
 client_bulk_write::update_one_options& client_bulk_write::update_one_options::array_filters(
     bsoncxx::v1::array::value array_filters) {
@@ -632,6 +646,8 @@ class client_bulk_write::update_many_options::impl {
     }
 };
 
+// NOLINTBEGIN(cppcoreguidelines-owning-memory): owning void* for ABI stability.
+
 client_bulk_write::update_many_options::~update_many_options() {
     delete impl::with(this);
 }
@@ -661,6 +677,8 @@ client_bulk_write::update_many_options& client_bulk_write::update_many_options::
 }
 
 client_bulk_write::update_many_options::update_many_options() : _impl{new impl{}} {}
+
+// NOLINTEND(cppcoreguidelines-owning-memory)
 
 client_bulk_write::update_many_options& client_bulk_write::update_many_options::array_filters(
     bsoncxx::v1::array::value array_filters) {
@@ -724,6 +742,8 @@ class client_bulk_write::replace_one_options::impl {
     }
 };
 
+// NOLINTBEGIN(cppcoreguidelines-owning-memory): owning void* for ABI stability.
+
 client_bulk_write::replace_one_options::~replace_one_options() {
     delete impl::with(this);
 }
@@ -753,6 +773,8 @@ client_bulk_write::replace_one_options& client_bulk_write::replace_one_options::
 }
 
 client_bulk_write::replace_one_options::replace_one_options() : _impl{new impl{}} {}
+
+// NOLINTEND(cppcoreguidelines-owning-memory)
 
 client_bulk_write::replace_one_options& client_bulk_write::replace_one_options::collation(
     bsoncxx::v1::document::value collation) {
@@ -814,6 +836,8 @@ class client_bulk_write::delete_one_options::impl {
     }
 };
 
+// NOLINTBEGIN(cppcoreguidelines-owning-memory): owning void* for ABI stability.
+
 client_bulk_write::delete_one_options::~delete_one_options() {
     delete impl::with(this);
 }
@@ -843,6 +867,8 @@ client_bulk_write::delete_one_options& client_bulk_write::delete_one_options::op
 }
 
 client_bulk_write::delete_one_options::delete_one_options() : _impl{new impl{}} {}
+
+// NOLINTEND(cppcoreguidelines-owning-memory): owning void* for ABI stability.
 
 client_bulk_write::delete_one_options& client_bulk_write::delete_one_options::collation(
     bsoncxx::v1::document::value collation) {
@@ -885,6 +911,8 @@ class client_bulk_write::delete_many_options::impl {
     }
 };
 
+// NOLINTBEGIN(cppcoreguidelines-owning-memory): owning void* for ABI stability.
+
 client_bulk_write::delete_many_options::~delete_many_options() {
     delete impl::with(this);
 }
@@ -914,6 +942,8 @@ client_bulk_write::delete_many_options& client_bulk_write::delete_many_options::
 }
 
 client_bulk_write::delete_many_options::delete_many_options() : _impl{new impl{}} {}
+
+// NOLINTEND(cppcoreguidelines-owning-memory): owning void* for ABI stability.
 
 client_bulk_write::delete_many_options& client_bulk_write::delete_many_options::collation(
     bsoncxx::v1::document::value collation) {
@@ -1355,8 +1385,6 @@ bsoncxx::v1::stdx::optional<client_bulk_write::result> client_bulk_write::execut
 
     return ret.make_result();
 }
-
-// NOLINTEND(cppcoreguidelines-owning-memory)
 
 } // namespace v1
 } // namespace mongocxx
