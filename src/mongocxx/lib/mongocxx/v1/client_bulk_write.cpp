@@ -224,11 +224,6 @@ bsoncxx::v1::stdx::optional<v1::write_concern> client_bulk_write::options::write
     return impl::with(this)->_write_concern;
 }
 
-bsoncxx::v1::stdx::optional<bool> const& client_bulk_write::options::internal::bypass_document_validation(
-    options const& self) {
-    return impl::with(self)._bypass_document_validation;
-}
-
 bsoncxx::v1::stdx::optional<bsoncxx::v1::types::value> const& client_bulk_write::options::internal::comment(
     options const& self) {
     return impl::with(self)._comment;
@@ -237,19 +232,6 @@ bsoncxx::v1::stdx::optional<bsoncxx::v1::types::value> const& client_bulk_write:
 bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> const& client_bulk_write::options::internal::let(
     options const& self) {
     return impl::with(self)._let;
-}
-
-bsoncxx::v1::stdx::optional<bool> const& client_bulk_write::options::internal::ordered(options const& self) {
-    return impl::with(self)._ordered;
-}
-
-bsoncxx::v1::stdx::optional<bool> const& client_bulk_write::options::internal::verbose_results(options const& self) {
-    return impl::with(self)._verbose_results;
-}
-
-bsoncxx::v1::stdx::optional<v1::write_concern> const& client_bulk_write::options::internal::write_concern(
-    options const& self) {
-    return impl::with(self)._write_concern;
 }
 
 class client_bulk_write::result::impl {
