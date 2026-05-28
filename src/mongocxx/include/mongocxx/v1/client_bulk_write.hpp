@@ -245,7 +245,7 @@ class client_bulk_write::options {
     ///
     /// Set the "bypassDocumentValidation" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(options&) bypass_document_validation(bool bypass_document_validation);
+    MONGOCXX_ABI_EXPORT_CDECL(options&) bypass_document_validation(bool v);
 
     ///
     /// Return the current "bypassDocumentValidation" field.
@@ -255,7 +255,7 @@ class client_bulk_write::options {
     ///
     /// Set the "comment" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(options&) comment(bsoncxx::v1::types::value comment);
+    MONGOCXX_ABI_EXPORT_CDECL(options&) comment(bsoncxx::v1::types::value v);
 
     ///
     /// Return the current "comment" field.
@@ -265,7 +265,7 @@ class client_bulk_write::options {
     ///
     /// Set the "let" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(options&) let(bsoncxx::v1::document::value let);
+    MONGOCXX_ABI_EXPORT_CDECL(options&) let(bsoncxx::v1::document::value v);
 
     ///
     /// Return the current "let" field.
@@ -275,7 +275,7 @@ class client_bulk_write::options {
     ///
     /// Set the "ordered" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(options&) ordered(bool ordered);
+    MONGOCXX_ABI_EXPORT_CDECL(options&) ordered(bool v);
 
     ///
     /// Return the current "ordered" field.
@@ -285,7 +285,7 @@ class client_bulk_write::options {
     ///
     /// Set the "verboseResults" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(options&) verbose_results(bool verbose_results);
+    MONGOCXX_ABI_EXPORT_CDECL(options&) verbose_results(bool v);
 
     ///
     /// Return the current "verboseResults" field.
@@ -295,7 +295,7 @@ class client_bulk_write::options {
     ///
     /// Set the "writeConcern" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(options&) write_concern(v1::write_concern wc);
+    MONGOCXX_ABI_EXPORT_CDECL(options&) write_concern(v1::write_concern v);
 
     ///
     /// Return the current "writeConcern" field.
@@ -581,7 +581,7 @@ class client_bulk_write::update_one_options {
     ///
     /// Set the "arrayFilters" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(update_one_options&) array_filters(bsoncxx::v1::array::value array_filters);
+    MONGOCXX_ABI_EXPORT_CDECL(update_one_options&) array_filters(bsoncxx::v1::array::value v);
 
     ///
     /// Return the current "arrayFilters" field.
@@ -591,7 +591,7 @@ class client_bulk_write::update_one_options {
     ///
     /// Set the "collation" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(update_one_options&) collation(bsoncxx::v1::document::value collation);
+    MONGOCXX_ABI_EXPORT_CDECL(update_one_options&) collation(bsoncxx::v1::document::value v);
 
     ///
     /// Return the current "collation" field.
@@ -601,7 +601,7 @@ class client_bulk_write::update_one_options {
     ///
     /// Set the "hint" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(update_one_options&) hint(v1::hint hint);
+    MONGOCXX_ABI_EXPORT_CDECL(update_one_options&) hint(v1::hint v);
 
     ///
     /// Return the current "hint" field.
@@ -611,7 +611,7 @@ class client_bulk_write::update_one_options {
     ///
     /// Set the "sort" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(update_one_options&) sort(bsoncxx::v1::document::value sort);
+    MONGOCXX_ABI_EXPORT_CDECL(update_one_options&) sort(bsoncxx::v1::document::value v);
 
     ///
     /// Return the current "sort" field.
@@ -621,7 +621,7 @@ class client_bulk_write::update_one_options {
     ///
     /// Set the "upsert" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(update_one_options&) upsert(bool upsert);
+    MONGOCXX_ABI_EXPORT_CDECL(update_one_options&) upsert(bool v);
 
     ///
     /// Return the current "upsert" field.
@@ -689,7 +689,7 @@ class client_bulk_write::update_many_options {
     ///
     /// Set the "arrayFilters" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(update_many_options&) array_filters(bsoncxx::v1::array::value array_filters);
+    MONGOCXX_ABI_EXPORT_CDECL(update_many_options&) array_filters(bsoncxx::v1::array::value v);
 
     ///
     /// Return the current "arrayFilters" field.
@@ -699,7 +699,7 @@ class client_bulk_write::update_many_options {
     ///
     /// Set the "collation" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(update_many_options&) collation(bsoncxx::v1::document::value collation);
+    MONGOCXX_ABI_EXPORT_CDECL(update_many_options&) collation(bsoncxx::v1::document::value v);
 
     ///
     /// Return the current "collation" field.
@@ -709,7 +709,7 @@ class client_bulk_write::update_many_options {
     ///
     /// Set the "hint" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(update_many_options&) hint(v1::hint hint);
+    MONGOCXX_ABI_EXPORT_CDECL(update_many_options&) hint(v1::hint v);
 
     ///
     /// Return the current "hint" field.
@@ -719,7 +719,7 @@ class client_bulk_write::update_many_options {
     ///
     /// Set the "upsert" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(update_many_options&) upsert(bool upsert);
+    MONGOCXX_ABI_EXPORT_CDECL(update_many_options&) upsert(bool v);
 
     ///
     /// Return the current "upsert" field.
@@ -787,7 +787,7 @@ class client_bulk_write::replace_one_options {
     ///
     /// Set the "collation" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(replace_one_options&) collation(bsoncxx::v1::document::value collation);
+    MONGOCXX_ABI_EXPORT_CDECL(replace_one_options&) collation(bsoncxx::v1::document::value v);
 
     ///
     /// Return the current "collation" field.
@@ -797,7 +797,7 @@ class client_bulk_write::replace_one_options {
     ///
     /// Set the "hint" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(replace_one_options&) hint(v1::hint hint);
+    MONGOCXX_ABI_EXPORT_CDECL(replace_one_options&) hint(v1::hint v);
 
     ///
     /// Return the current "hint" field.
@@ -807,7 +807,7 @@ class client_bulk_write::replace_one_options {
     ///
     /// Set the "sort" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(replace_one_options&) sort(bsoncxx::v1::document::value sort);
+    MONGOCXX_ABI_EXPORT_CDECL(replace_one_options&) sort(bsoncxx::v1::document::value v);
 
     ///
     /// Return the current "sort" field.
@@ -817,7 +817,7 @@ class client_bulk_write::replace_one_options {
     ///
     /// Set the "upsert" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(replace_one_options&) upsert(bool upsert);
+    MONGOCXX_ABI_EXPORT_CDECL(replace_one_options&) upsert(bool v);
 
     ///
     /// Return the current "upsert" field.
@@ -883,7 +883,7 @@ class client_bulk_write::delete_one_options {
     ///
     /// Set the "collation" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(delete_one_options&) collation(bsoncxx::v1::document::value collation);
+    MONGOCXX_ABI_EXPORT_CDECL(delete_one_options&) collation(bsoncxx::v1::document::value v);
 
     ///
     /// Return the current "collation" field.
@@ -893,7 +893,7 @@ class client_bulk_write::delete_one_options {
     ///
     /// Set the "hint" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(delete_one_options&) hint(v1::hint hint);
+    MONGOCXX_ABI_EXPORT_CDECL(delete_one_options&) hint(v1::hint v);
 
     ///
     /// Return the current "hint" field.
@@ -959,7 +959,7 @@ class client_bulk_write::delete_many_options {
     ///
     /// Set the "collation" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(delete_many_options&) collation(bsoncxx::v1::document::value collation);
+    MONGOCXX_ABI_EXPORT_CDECL(delete_many_options&) collation(bsoncxx::v1::document::value v);
 
     ///
     /// Return the current "collation" field.
@@ -969,7 +969,7 @@ class client_bulk_write::delete_many_options {
     ///
     /// Set the "hint" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(delete_many_options&) hint(v1::hint hint);
+    MONGOCXX_ABI_EXPORT_CDECL(delete_many_options&) hint(v1::hint v);
 
     ///
     /// Return the current "hint" field.

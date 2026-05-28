@@ -172,8 +172,8 @@ client_bulk_write::options::options() : _impl{new impl{}} {}
 
 // NOLINTEND(cppcoreguidelines-owning-memory)
 
-client_bulk_write::options& client_bulk_write::options::bypass_document_validation(bool bypass_document_validation) {
-    impl::with(this)->_bypass_document_validation = bypass_document_validation;
+client_bulk_write::options& client_bulk_write::options::bypass_document_validation(bool v) {
+    impl::with(this)->_bypass_document_validation = v;
     return *this;
 }
 
@@ -181,8 +181,8 @@ bsoncxx::v1::stdx::optional<bool> client_bulk_write::options::bypass_document_va
     return impl::with(this)->_bypass_document_validation;
 }
 
-client_bulk_write::options& client_bulk_write::options::comment(bsoncxx::v1::types::value comment) {
-    impl::with(this)->_comment = std::move(comment);
+client_bulk_write::options& client_bulk_write::options::comment(bsoncxx::v1::types::value v) {
+    impl::with(this)->_comment = std::move(v);
     return *this;
 }
 
@@ -190,8 +190,8 @@ bsoncxx::v1::stdx::optional<bsoncxx::v1::types::view> client_bulk_write::options
     return impl::with(this)->_comment;
 }
 
-client_bulk_write::options& client_bulk_write::options::let(bsoncxx::v1::document::value let) {
-    impl::with(this)->_let = std::move(let);
+client_bulk_write::options& client_bulk_write::options::let(bsoncxx::v1::document::value v) {
+    impl::with(this)->_let = std::move(v);
     return *this;
 }
 
@@ -199,8 +199,8 @@ bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view> client_bulk_write::opti
     return impl::with(this)->_let;
 }
 
-client_bulk_write::options& client_bulk_write::options::ordered(bool ordered) {
-    impl::with(this)->_ordered = ordered;
+client_bulk_write::options& client_bulk_write::options::ordered(bool v) {
+    impl::with(this)->_ordered = v;
     return *this;
 }
 
@@ -208,8 +208,8 @@ bsoncxx::v1::stdx::optional<bool> client_bulk_write::options::ordered() const {
     return impl::with(this)->_ordered;
 }
 
-client_bulk_write::options& client_bulk_write::options::verbose_results(bool verbose_results) {
-    impl::with(this)->_verbose_results = verbose_results;
+client_bulk_write::options& client_bulk_write::options::verbose_results(bool v) {
+    impl::with(this)->_verbose_results = v;
     return *this;
 }
 
@@ -217,8 +217,8 @@ bsoncxx::v1::stdx::optional<bool> client_bulk_write::options::verbose_results() 
     return impl::with(this)->_verbose_results;
 }
 
-client_bulk_write::options& client_bulk_write::options::write_concern(v1::write_concern wc) {
-    impl::with(this)->_write_concern = std::move(wc);
+client_bulk_write::options& client_bulk_write::options::write_concern(v1::write_concern v) {
+    impl::with(this)->_write_concern = std::move(v);
     return *this;
 }
 
@@ -560,8 +560,8 @@ client_bulk_write::update_one_options::update_one_options() : _impl{new impl{}} 
 // NOLINTEND(cppcoreguidelines-owning-memory)
 
 client_bulk_write::update_one_options& client_bulk_write::update_one_options::array_filters(
-    bsoncxx::v1::array::value array_filters) {
-    impl::with(*this)._array_filters = std::move(array_filters);
+    bsoncxx::v1::array::value v) {
+    impl::with(*this)._array_filters = std::move(v);
     return *this;
 }
 
@@ -570,8 +570,8 @@ bsoncxx::v1::stdx::optional<bsoncxx::v1::array::view> client_bulk_write::update_
 }
 
 client_bulk_write::update_one_options& client_bulk_write::update_one_options::collation(
-    bsoncxx::v1::document::value collation) {
-    impl::with(*this)._collation = std::move(collation);
+    bsoncxx::v1::document::value v) {
+    impl::with(*this)._collation = std::move(v);
     return *this;
 }
 
@@ -579,8 +579,8 @@ bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view> client_bulk_write::upda
     return impl::with(*this)._collation;
 }
 
-client_bulk_write::update_one_options& client_bulk_write::update_one_options::hint(v1::hint hint) {
-    impl::with(*this)._hint = std::move(hint);
+client_bulk_write::update_one_options& client_bulk_write::update_one_options::hint(v1::hint v) {
+    impl::with(*this)._hint = std::move(v);
     return *this;
 }
 
@@ -588,8 +588,8 @@ bsoncxx::v1::stdx::optional<v1::hint> client_bulk_write::update_one_options::hin
     return impl::with(*this)._hint;
 }
 
-client_bulk_write::update_one_options& client_bulk_write::update_one_options::sort(bsoncxx::v1::document::value sort) {
-    impl::with(*this)._sort = std::move(sort);
+client_bulk_write::update_one_options& client_bulk_write::update_one_options::sort(bsoncxx::v1::document::value v) {
+    impl::with(*this)._sort = std::move(v);
     return *this;
 }
 
@@ -597,8 +597,8 @@ bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view> client_bulk_write::upda
     return impl::with(*this)._sort;
 }
 
-client_bulk_write::update_one_options& client_bulk_write::update_one_options::upsert(bool upsert) {
-    impl::with(*this)._upsert = upsert;
+client_bulk_write::update_one_options& client_bulk_write::update_one_options::upsert(bool v) {
+    impl::with(*this)._upsert = v;
     return *this;
 }
 
@@ -665,8 +665,8 @@ client_bulk_write::update_many_options::update_many_options() : _impl{new impl{}
 // NOLINTEND(cppcoreguidelines-owning-memory)
 
 client_bulk_write::update_many_options& client_bulk_write::update_many_options::array_filters(
-    bsoncxx::v1::array::value array_filters) {
-    impl::with(*this)._array_filters = std::move(array_filters);
+    bsoncxx::v1::array::value v) {
+    impl::with(*this)._array_filters = std::move(v);
     return *this;
 }
 
@@ -675,8 +675,8 @@ bsoncxx::v1::stdx::optional<bsoncxx::v1::array::view> client_bulk_write::update_
 }
 
 client_bulk_write::update_many_options& client_bulk_write::update_many_options::collation(
-    bsoncxx::v1::document::value collation) {
-    impl::with(*this)._collation = std::move(collation);
+    bsoncxx::v1::document::value v) {
+    impl::with(*this)._collation = std::move(v);
     return *this;
 }
 
@@ -684,8 +684,8 @@ bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view> client_bulk_write::upda
     return impl::with(*this)._collation;
 }
 
-client_bulk_write::update_many_options& client_bulk_write::update_many_options::hint(v1::hint hint) {
-    impl::with(*this)._hint = std::move(hint);
+client_bulk_write::update_many_options& client_bulk_write::update_many_options::hint(v1::hint v) {
+    impl::with(*this)._hint = std::move(v);
     return *this;
 }
 
@@ -693,8 +693,8 @@ bsoncxx::v1::stdx::optional<v1::hint> client_bulk_write::update_many_options::hi
     return impl::with(*this)._hint;
 }
 
-client_bulk_write::update_many_options& client_bulk_write::update_many_options::upsert(bool upsert) {
-    impl::with(*this)._upsert = upsert;
+client_bulk_write::update_many_options& client_bulk_write::update_many_options::upsert(bool v) {
+    impl::with(*this)._upsert = v;
     return *this;
 }
 
@@ -761,8 +761,8 @@ client_bulk_write::replace_one_options::replace_one_options() : _impl{new impl{}
 // NOLINTEND(cppcoreguidelines-owning-memory)
 
 client_bulk_write::replace_one_options& client_bulk_write::replace_one_options::collation(
-    bsoncxx::v1::document::value collation) {
-    impl::with(*this)._collation = std::move(collation);
+    bsoncxx::v1::document::value v) {
+    impl::with(*this)._collation = std::move(v);
     return *this;
 }
 
@@ -770,8 +770,8 @@ bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view> client_bulk_write::repl
     return impl::with(*this)._collation;
 }
 
-client_bulk_write::replace_one_options& client_bulk_write::replace_one_options::hint(v1::hint hint) {
-    impl::with(*this)._hint = std::move(hint);
+client_bulk_write::replace_one_options& client_bulk_write::replace_one_options::hint(v1::hint v) {
+    impl::with(*this)._hint = std::move(v);
     return *this;
 }
 
@@ -779,9 +779,8 @@ bsoncxx::v1::stdx::optional<v1::hint> client_bulk_write::replace_one_options::hi
     return impl::with(*this)._hint;
 }
 
-client_bulk_write::replace_one_options& client_bulk_write::replace_one_options::sort(
-    bsoncxx::v1::document::value sort) {
-    impl::with(*this)._sort = std::move(sort);
+client_bulk_write::replace_one_options& client_bulk_write::replace_one_options::sort(bsoncxx::v1::document::value v) {
+    impl::with(*this)._sort = std::move(v);
     return *this;
 }
 
@@ -789,8 +788,8 @@ bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view> client_bulk_write::repl
     return impl::with(*this)._sort;
 }
 
-client_bulk_write::replace_one_options& client_bulk_write::replace_one_options::upsert(bool upsert) {
-    impl::with(*this)._upsert = upsert;
+client_bulk_write::replace_one_options& client_bulk_write::replace_one_options::upsert(bool v) {
+    impl::with(*this)._upsert = v;
     return *this;
 }
 
@@ -855,8 +854,8 @@ client_bulk_write::delete_one_options::delete_one_options() : _impl{new impl{}} 
 // NOLINTEND(cppcoreguidelines-owning-memory): owning void* for ABI stability.
 
 client_bulk_write::delete_one_options& client_bulk_write::delete_one_options::collation(
-    bsoncxx::v1::document::value collation) {
-    impl::with(*this)._collation = std::move(collation);
+    bsoncxx::v1::document::value v) {
+    impl::with(*this)._collation = std::move(v);
     return *this;
 }
 
@@ -864,8 +863,8 @@ bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view> client_bulk_write::dele
     return impl::with(*this)._collation;
 }
 
-client_bulk_write::delete_one_options& client_bulk_write::delete_one_options::hint(v1::hint hint) {
-    impl::with(*this)._hint = std::move(hint);
+client_bulk_write::delete_one_options& client_bulk_write::delete_one_options::hint(v1::hint v) {
+    impl::with(*this)._hint = std::move(v);
     return *this;
 }
 
@@ -930,8 +929,8 @@ client_bulk_write::delete_many_options::delete_many_options() : _impl{new impl{}
 // NOLINTEND(cppcoreguidelines-owning-memory): owning void* for ABI stability.
 
 client_bulk_write::delete_many_options& client_bulk_write::delete_many_options::collation(
-    bsoncxx::v1::document::value collation) {
-    impl::with(*this)._collation = std::move(collation);
+    bsoncxx::v1::document::value v) {
+    impl::with(*this)._collation = std::move(v);
     return *this;
 }
 
@@ -939,8 +938,8 @@ bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view> client_bulk_write::dele
     return impl::with(*this)._collation;
 }
 
-client_bulk_write::delete_many_options& client_bulk_write::delete_many_options::hint(v1::hint hint) {
-    impl::with(*this)._hint = std::move(hint);
+client_bulk_write::delete_many_options& client_bulk_write::delete_many_options::hint(v1::hint v) {
+    impl::with(*this)._hint = std::move(v);
     return *this;
 }
 
