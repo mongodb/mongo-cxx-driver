@@ -537,6 +537,15 @@ TEST_CASE("ownership", "[mongocxx][v1][client_bulk_write][exception]") {
     }
 }
 
+TEST_CASE("default", "[mongocxx][v1][client_bulk_write][exception]") {
+    auto const ex = client_bulk_write::exception::internal::make();
+
+    CHECK(ex.write_errors().empty());
+    CHECK(ex.write_concern_errors().empty());
+    CHECK(ex.error_reply().empty());
+    CHECK_FALSE(ex.partial_result().has_value());
+}
+
 namespace {
 
 struct exception_mocks_type {
