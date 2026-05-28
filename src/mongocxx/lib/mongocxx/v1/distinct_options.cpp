@@ -90,8 +90,8 @@ distinct_options::distinct_options() : _impl{new impl{}} {}
 
 // NOLINTEND(cppcoreguidelines-owning-memory)
 
-distinct_options& distinct_options::collation(bsoncxx::v1::document::value collation) {
-    impl::with(this)->_collation = std::move(collation);
+distinct_options& distinct_options::collation(bsoncxx::v1::document::value v) {
+    impl::with(this)->_collation = std::move(v);
     return *this;
 }
 
@@ -99,8 +99,8 @@ bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view> distinct_options::colla
     return impl::with(this)->_collation;
 }
 
-distinct_options& distinct_options::max_time(std::chrono::milliseconds max_time) {
-    impl::with(this)->_max_time = std::move(max_time);
+distinct_options& distinct_options::max_time(std::chrono::milliseconds v) {
+    impl::with(this)->_max_time = std::move(v);
     return *this;
 }
 
@@ -108,8 +108,8 @@ bsoncxx::v1::stdx::optional<std::chrono::milliseconds> distinct_options::max_tim
     return impl::with(this)->_max_time;
 }
 
-distinct_options& distinct_options::comment(bsoncxx::v1::types::value comment) {
-    impl::with(this)->_comment = std::move(comment);
+distinct_options& distinct_options::comment(bsoncxx::v1::types::value v) {
+    impl::with(this)->_comment = std::move(v);
     return *this;
 }
 
@@ -117,8 +117,8 @@ bsoncxx::v1::stdx::optional<bsoncxx::v1::types::view> distinct_options::comment(
     return impl::with(this)->_comment;
 }
 
-distinct_options& distinct_options::read_preference(v1::read_preference rp) {
-    impl::with(this)->_read_preference = std::move(rp);
+distinct_options& distinct_options::read_preference(v1::read_preference v) {
+    impl::with(this)->_read_preference = std::move(v);
     return *this;
 }
 
@@ -126,8 +126,8 @@ bsoncxx::v1::stdx::optional<v1::read_preference> distinct_options::read_preferen
     return impl::with(this)->_read_preference;
 }
 
-distinct_options& distinct_options::read_concern(v1::read_concern rc) {
-    impl::with(this)->_read_concern = std::move(rc);
+distinct_options& distinct_options::read_concern(v1::read_concern v) {
+    impl::with(this)->_read_concern = std::move(v);
     return *this;
 }
 

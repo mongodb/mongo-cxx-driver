@@ -128,8 +128,8 @@ server_api::version server_api::version_from_string(bsoncxx::v1::stdx::string_vi
     throw v1::exception::internal::make(code::invalid_version);
 }
 
-server_api& server_api::strict(bool strict) {
-    impl::with(this)->_strict = strict;
+server_api& server_api::strict(bool v) {
+    impl::with(this)->_strict = v;
     return *this;
 }
 

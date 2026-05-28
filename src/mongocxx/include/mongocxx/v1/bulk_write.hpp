@@ -941,7 +941,7 @@ class bulk_write::options {
     ///
     /// Set the "bypassDocumentValidation" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(options&) bypass_document_validation(bool bypass_document_validation);
+    MONGOCXX_ABI_EXPORT_CDECL(options&) bypass_document_validation(bool v);
 
     ///
     /// Return the current "bypassDocumentValidation" field.
@@ -951,7 +951,7 @@ class bulk_write::options {
     ///
     /// Set the "comment" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(options&) comment(bsoncxx::v1::types::value comment);
+    MONGOCXX_ABI_EXPORT_CDECL(options&) comment(bsoncxx::v1::types::value v);
 
     ///
     /// Return the current "comment" field.
@@ -961,7 +961,7 @@ class bulk_write::options {
     ///
     /// Set the "let" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(options&) let(bsoncxx::v1::document::value let);
+    MONGOCXX_ABI_EXPORT_CDECL(options&) let(bsoncxx::v1::document::value v);
 
     ///
     /// Return the current "let" field.
@@ -971,7 +971,7 @@ class bulk_write::options {
     ///
     /// Set the "ordered" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(options&) ordered(bool ordered);
+    MONGOCXX_ABI_EXPORT_CDECL(options&) ordered(bool v);
 
     ///
     /// Return the current "ordered" field.
@@ -981,7 +981,7 @@ class bulk_write::options {
     ///
     /// Set the "readConcern" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(options&) read_concern(v1::read_concern rc);
+    MONGOCXX_ABI_EXPORT_CDECL(options&) read_concern(v1::read_concern v);
 
     ///
     /// Return the current "readConcern" field.
@@ -991,7 +991,7 @@ class bulk_write::options {
     ///
     /// Set the "writeConcern" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(options&) write_concern(v1::write_concern wc);
+    MONGOCXX_ABI_EXPORT_CDECL(options&) write_concern(v1::write_concern v);
 
     ///
     /// Return the current "writeConcern" field.

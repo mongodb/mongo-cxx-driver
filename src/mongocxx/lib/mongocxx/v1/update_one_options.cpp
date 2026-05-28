@@ -97,8 +97,8 @@ update_one_options::update_one_options() : _impl{new impl{}} {}
 
 // NOLINTEND(cppcoreguidelines-owning-memory)
 
-update_one_options& update_one_options::bypass_document_validation(bool bypass_document_validation) {
-    impl::with(this)->_bypass_document_validation = bypass_document_validation;
+update_one_options& update_one_options::bypass_document_validation(bool v) {
+    impl::with(this)->_bypass_document_validation = v;
     return *this;
 }
 
@@ -106,8 +106,8 @@ bsoncxx::v1::stdx::optional<bool> update_one_options::bypass_document_validation
     return impl::with(this)->_bypass_document_validation;
 }
 
-update_one_options& update_one_options::collation(bsoncxx::v1::document::value collation) {
-    impl::with(this)->_collation = std::move(collation);
+update_one_options& update_one_options::collation(bsoncxx::v1::document::value v) {
+    impl::with(this)->_collation = std::move(v);
     return *this;
 }
 
@@ -115,8 +115,8 @@ bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view> update_one_options::col
     return impl::with(this)->_collation;
 }
 
-update_one_options& update_one_options::hint(v1::hint index_hint) {
-    impl::with(this)->_hint = std::move(index_hint);
+update_one_options& update_one_options::hint(v1::hint v) {
+    impl::with(this)->_hint = std::move(v);
     return *this;
 }
 
@@ -124,8 +124,8 @@ bsoncxx::v1::stdx::optional<v1::hint> update_one_options::hint() const {
     return impl::with(this)->_hint;
 }
 
-update_one_options& update_one_options::let(bsoncxx::v1::document::value let) {
-    impl::with(this)->_let = std::move(let);
+update_one_options& update_one_options::let(bsoncxx::v1::document::value v) {
+    impl::with(this)->_let = std::move(v);
     return *this;
 }
 
@@ -133,8 +133,8 @@ bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view> const update_one_option
     return impl::with(this)->_let;
 }
 
-update_one_options& update_one_options::sort(bsoncxx::v1::document::value sort) {
-    impl::with(this)->_sort = std::move(sort);
+update_one_options& update_one_options::sort(bsoncxx::v1::document::value v) {
+    impl::with(this)->_sort = std::move(v);
     return *this;
 }
 
@@ -142,8 +142,8 @@ bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view> update_one_options::sor
     return impl::with(this)->_sort;
 }
 
-update_one_options& update_one_options::comment(bsoncxx::v1::types::value comment) {
-    impl::with(this)->_comment = std::move(comment);
+update_one_options& update_one_options::comment(bsoncxx::v1::types::value v) {
+    impl::with(this)->_comment = std::move(v);
     return *this;
 }
 
@@ -151,8 +151,8 @@ bsoncxx::v1::stdx::optional<bsoncxx::v1::types::view> const update_one_options::
     return impl::with(this)->_comment;
 }
 
-update_one_options& update_one_options::upsert(bool upsert) {
-    impl::with(this)->_upsert = upsert;
+update_one_options& update_one_options::upsert(bool v) {
+    impl::with(this)->_upsert = v;
     return *this;
 }
 
@@ -160,8 +160,8 @@ bsoncxx::v1::stdx::optional<bool> update_one_options::upsert() const {
     return impl::with(this)->_upsert;
 }
 
-update_one_options& update_one_options::read_concern(v1::read_concern rc) {
-    impl::with(this)->_read_concern = std::move(rc);
+update_one_options& update_one_options::read_concern(v1::read_concern v) {
+    impl::with(this)->_read_concern = std::move(v);
     return *this;
 }
 
@@ -169,8 +169,8 @@ bsoncxx::v1::stdx::optional<v1::read_concern> update_one_options::read_concern()
     return impl::with(this)->_read_concern;
 }
 
-update_one_options& update_one_options::write_concern(v1::write_concern wc) {
-    impl::with(this)->_write_concern = std::move(wc);
+update_one_options& update_one_options::write_concern(v1::write_concern v) {
+    impl::with(this)->_write_concern = std::move(v);
     return *this;
 }
 
@@ -178,8 +178,8 @@ bsoncxx::v1::stdx::optional<v1::write_concern> update_one_options::write_concern
     return impl::with(this)->_write_concern;
 }
 
-update_one_options& update_one_options::array_filters(bsoncxx::v1::array::value array_filters) {
-    impl::with(this)->_array_filters = std::move(array_filters);
+update_one_options& update_one_options::array_filters(bsoncxx::v1::array::value v) {
+    impl::with(this)->_array_filters = std::move(v);
     return *this;
 }
 

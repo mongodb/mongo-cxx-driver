@@ -96,7 +96,7 @@ class insert_many_options {
     ///
     /// Set the "bypassDocumentValidation" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(insert_many_options&) bypass_document_validation(bool bypass_document_validation);
+    MONGOCXX_ABI_EXPORT_CDECL(insert_many_options&) bypass_document_validation(bool v);
 
     ///
     /// Return the current "bypassDocumentValidation" field.
@@ -106,7 +106,7 @@ class insert_many_options {
     ///
     /// Set the "readConcern" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(insert_many_options&) read_concern(v1::read_concern rc);
+    MONGOCXX_ABI_EXPORT_CDECL(insert_many_options&) read_concern(v1::read_concern v);
 
     ///
     /// Return the current "readConcern" field.
@@ -116,7 +116,7 @@ class insert_many_options {
     ///
     /// Set the "writeConcern" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(insert_many_options&) write_concern(v1::write_concern wc);
+    MONGOCXX_ABI_EXPORT_CDECL(insert_many_options&) write_concern(v1::write_concern v);
 
     ///
     /// Return the current "writeConcern" field.
@@ -126,7 +126,7 @@ class insert_many_options {
     ///
     /// Set the "ordered" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(insert_many_options&) ordered(bool ordered);
+    MONGOCXX_ABI_EXPORT_CDECL(insert_many_options&) ordered(bool v);
 
     ///
     /// Return the current "ordered" field.
@@ -136,7 +136,7 @@ class insert_many_options {
     ///
     /// Set the "comment" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(insert_many_options&) comment(bsoncxx::v1::types::value comment);
+    MONGOCXX_ABI_EXPORT_CDECL(insert_many_options&) comment(bsoncxx::v1::types::value v);
 
     ///
     /// Return the current "comment" field.

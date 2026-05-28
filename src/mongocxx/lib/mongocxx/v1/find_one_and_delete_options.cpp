@@ -123,8 +123,8 @@ bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view> find_one_and_delete_opt
     return impl::with(this)->_projection;
 }
 
-find_one_and_delete_options& find_one_and_delete_options::sort(bsoncxx::v1::document::value ordering) {
-    impl::with(this)->_sort = std::move(ordering);
+find_one_and_delete_options& find_one_and_delete_options::sort(bsoncxx::v1::document::value v) {
+    impl::with(this)->_sort = std::move(v);
     return *this;
 }
 
@@ -150,8 +150,8 @@ bsoncxx::v1::stdx::optional<v1::write_concern> find_one_and_delete_options::writ
     return impl::with(this)->_write_concern;
 }
 
-find_one_and_delete_options& find_one_and_delete_options::hint(v1::hint index_hint) {
-    impl::with(this)->_hint = std::move(index_hint);
+find_one_and_delete_options& find_one_and_delete_options::hint(v1::hint v) {
+    impl::with(this)->_hint = std::move(v);
     return *this;
 }
 

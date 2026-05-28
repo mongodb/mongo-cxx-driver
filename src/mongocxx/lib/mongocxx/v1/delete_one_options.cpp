@@ -90,8 +90,8 @@ delete_one_options::delete_one_options() : _impl{new impl{}} {}
 
 // NOLINTEND(cppcoreguidelines-owning-memory)
 
-delete_one_options& delete_one_options::collation(bsoncxx::v1::document::value collation) {
-    impl::with(this)->_collation = std::move(collation);
+delete_one_options& delete_one_options::collation(bsoncxx::v1::document::value v) {
+    impl::with(this)->_collation = std::move(v);
     return *this;
 }
 
@@ -99,8 +99,8 @@ bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view> delete_one_options::col
     return impl::with(this)->_collation;
 }
 
-delete_one_options& delete_one_options::read_concern(v1::read_concern rc) {
-    impl::with(this)->_read_concern = std::move(rc);
+delete_one_options& delete_one_options::read_concern(v1::read_concern v) {
+    impl::with(this)->_read_concern = std::move(v);
     return *this;
 }
 
@@ -108,8 +108,8 @@ bsoncxx::v1::stdx::optional<v1::read_concern> delete_one_options::read_concern()
     return impl::with(this)->_read_concern;
 }
 
-delete_one_options& delete_one_options::write_concern(v1::write_concern wc) {
-    impl::with(this)->_write_concern = std::move(wc);
+delete_one_options& delete_one_options::write_concern(v1::write_concern v) {
+    impl::with(this)->_write_concern = std::move(v);
     return *this;
 }
 
@@ -117,8 +117,8 @@ bsoncxx::v1::stdx::optional<v1::write_concern> delete_one_options::write_concern
     return impl::with(this)->_write_concern;
 }
 
-delete_one_options& delete_one_options::hint(v1::hint index_hint) {
-    impl::with(this)->_hint = std::move(index_hint);
+delete_one_options& delete_one_options::hint(v1::hint v) {
+    impl::with(this)->_hint = std::move(v);
     return *this;
 }
 
@@ -126,8 +126,8 @@ bsoncxx::v1::stdx::optional<v1::hint> delete_one_options::hint() const {
     return impl::with(this)->_hint;
 }
 
-delete_one_options& delete_one_options::let(bsoncxx::v1::document::value let) {
-    impl::with(this)->_let = std::move(let);
+delete_one_options& delete_one_options::let(bsoncxx::v1::document::value v) {
+    impl::with(this)->_let = std::move(v);
     return *this;
 }
 
@@ -135,8 +135,8 @@ bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view> const delete_one_option
     return impl::with(this)->_let;
 }
 
-delete_one_options& delete_one_options::comment(bsoncxx::v1::types::value comment) {
-    impl::with(this)->_comment = std::move(comment);
+delete_one_options& delete_one_options::comment(bsoncxx::v1::types::value v) {
+    impl::with(this)->_comment = std::move(v);
     return *this;
 }
 

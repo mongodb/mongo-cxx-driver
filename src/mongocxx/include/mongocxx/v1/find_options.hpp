@@ -119,7 +119,7 @@ class find_options {
     ///
     /// Set the "allowDiskUse" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(find_options&) allow_disk_use(bool allow_disk_use);
+    MONGOCXX_ABI_EXPORT_CDECL(find_options&) allow_disk_use(bool v);
 
     ///
     /// Return the current "allowDiskUse" field.
@@ -129,7 +129,7 @@ class find_options {
     ///
     /// Set the "allowPartialResults" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(find_options&) allow_partial_results(bool allow_partial);
+    MONGOCXX_ABI_EXPORT_CDECL(find_options&) allow_partial_results(bool v);
 
     ///
     /// Return the current "allowPartialResults" field.
@@ -139,7 +139,7 @@ class find_options {
     ///
     /// Set the "batchSize" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(find_options&) batch_size(std::int32_t batch_size);
+    MONGOCXX_ABI_EXPORT_CDECL(find_options&) batch_size(std::int32_t v);
 
     ///
     /// Return the current "batchSize" field.
@@ -149,7 +149,7 @@ class find_options {
     ///
     /// Set the "collation" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(find_options&) collation(bsoncxx::v1::document::value collation);
+    MONGOCXX_ABI_EXPORT_CDECL(find_options&) collation(bsoncxx::v1::document::value v);
 
     ///
     /// Return the current "collation" field.
@@ -159,7 +159,7 @@ class find_options {
     ///
     /// Set the "comment" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(find_options&) comment(bsoncxx::v1::types::value comment);
+    MONGOCXX_ABI_EXPORT_CDECL(find_options&) comment(bsoncxx::v1::types::value v);
 
     ///
     /// Return the current "comment" field.
@@ -169,7 +169,7 @@ class find_options {
     ///
     /// Set the "cursorType" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(find_options&) cursor_type(v1::cursor::type cursor_type);
+    MONGOCXX_ABI_EXPORT_CDECL(find_options&) cursor_type(v1::cursor::type v);
 
     ///
     /// Return the current "cursorType" field.
@@ -179,7 +179,7 @@ class find_options {
     ///
     /// Set the "hint" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(find_options&) hint(v1::hint index_hint);
+    MONGOCXX_ABI_EXPORT_CDECL(find_options&) hint(v1::hint v);
 
     ///
     /// Return the current "hint" field.
@@ -189,7 +189,7 @@ class find_options {
     ///
     /// Set the "let" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(find_options&) let(bsoncxx::v1::document::value let);
+    MONGOCXX_ABI_EXPORT_CDECL(find_options&) let(bsoncxx::v1::document::value v);
 
     ///
     /// Return the current "let" field.
@@ -199,7 +199,7 @@ class find_options {
     ///
     /// Set the "limit" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(find_options&) limit(std::int64_t limit);
+    MONGOCXX_ABI_EXPORT_CDECL(find_options&) limit(std::int64_t v);
 
     ///
     /// Return the current "limit" field.
@@ -209,7 +209,7 @@ class find_options {
     ///
     /// Set the "max" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(find_options&) max(bsoncxx::v1::document::value max);
+    MONGOCXX_ABI_EXPORT_CDECL(find_options&) max(bsoncxx::v1::document::value v);
 
     ///
     /// Return the current "max" field.
@@ -219,7 +219,7 @@ class find_options {
     ///
     /// Set the "maxAwaitTimeMS" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(find_options&) max_await_time(std::chrono::milliseconds max_await_time);
+    MONGOCXX_ABI_EXPORT_CDECL(find_options&) max_await_time(std::chrono::milliseconds v);
 
     ///
     /// Return the current "maxAwaitTimeMS" field.
@@ -229,7 +229,7 @@ class find_options {
     ///
     /// Set the "maxTimeMS" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(find_options&) max_time(std::chrono::milliseconds max_time);
+    MONGOCXX_ABI_EXPORT_CDECL(find_options&) max_time(std::chrono::milliseconds v);
 
     ///
     /// Return the current "maxTimeMS" field.
@@ -239,7 +239,7 @@ class find_options {
     ///
     /// Set the "min" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(find_options&) min(bsoncxx::v1::document::value min);
+    MONGOCXX_ABI_EXPORT_CDECL(find_options&) min(bsoncxx::v1::document::value v);
 
     ///
     /// Return the current "min" field.
@@ -249,7 +249,7 @@ class find_options {
     ///
     /// Set the "noCursorTimeout" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(find_options&) no_cursor_timeout(bool no_cursor_timeout);
+    MONGOCXX_ABI_EXPORT_CDECL(find_options&) no_cursor_timeout(bool v);
 
     ///
     /// Return the current "noCursorTimeout" field.
@@ -259,7 +259,7 @@ class find_options {
     ///
     /// Set the "projection" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(find_options&) projection(bsoncxx::v1::document::value projection);
+    MONGOCXX_ABI_EXPORT_CDECL(find_options&) projection(bsoncxx::v1::document::value v);
 
     ///
     /// Return the current "projection" field.
@@ -269,7 +269,7 @@ class find_options {
     ///
     /// Set the "readPreference" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(find_options&) read_preference(v1::read_preference rp);
+    MONGOCXX_ABI_EXPORT_CDECL(find_options&) read_preference(v1::read_preference v);
 
     ///
     /// Return the current "readPreference" field.
@@ -279,7 +279,7 @@ class find_options {
     ///
     /// Set the "readConcern" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(find_options&) read_concern(v1::read_concern rc);
+    MONGOCXX_ABI_EXPORT_CDECL(find_options&) read_concern(v1::read_concern v);
 
     ///
     /// Return the current "readConcern" field.
@@ -289,7 +289,7 @@ class find_options {
     ///
     /// Set the "returnKey" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(find_options&) return_key(bool return_key);
+    MONGOCXX_ABI_EXPORT_CDECL(find_options&) return_key(bool v);
 
     ///
     /// Return the current "returnKey" field.
@@ -299,7 +299,7 @@ class find_options {
     ///
     /// Set the "showRecordId" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(find_options&) show_record_id(bool show_record_id);
+    MONGOCXX_ABI_EXPORT_CDECL(find_options&) show_record_id(bool v);
 
     ///
     /// Return the current "showRecordId" field.
@@ -309,7 +309,7 @@ class find_options {
     ///
     /// Set the "skip" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(find_options&) skip(std::int64_t skip);
+    MONGOCXX_ABI_EXPORT_CDECL(find_options&) skip(std::int64_t v);
 
     ///
     /// Return the current "skip" field.
@@ -319,7 +319,7 @@ class find_options {
     ///
     /// Set the "sort" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(find_options&) sort(bsoncxx::v1::document::value ordering);
+    MONGOCXX_ABI_EXPORT_CDECL(find_options&) sort(bsoncxx::v1::document::value v);
 
     ///
     /// Return the current "sort" field.
