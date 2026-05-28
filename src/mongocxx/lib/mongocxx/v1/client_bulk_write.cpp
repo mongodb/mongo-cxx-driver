@@ -490,47 +490,21 @@ bsoncxx::v1::document::value& client_bulk_write::exception::internal::error_repl
     return self._impl->_error_reply;
 }
 
-class client_bulk_write::insert_one_options::impl {
-   public:
-    static impl* with(insert_one_options* self) {
-        return static_cast<impl*>(self->_impl);
-    }
+class client_bulk_write::insert_one_options::impl {};
 
-    static impl* with(void* ptr) {
-        return static_cast<impl*>(ptr);
-    }
-};
+client_bulk_write::insert_one_options::~insert_one_options() = default;
 
-client_bulk_write::insert_one_options::~insert_one_options() {
-    delete impl::with(this);
-}
-
-client_bulk_write::insert_one_options::insert_one_options(insert_one_options&& other) noexcept
-    : _impl{exchange(other._impl, nullptr)} {}
+client_bulk_write::insert_one_options::insert_one_options(insert_one_options&& other) noexcept = default;
 
 client_bulk_write::insert_one_options& client_bulk_write::insert_one_options::operator=(
-    insert_one_options&& other) noexcept {
-    if (this != &other) {
-        delete impl::with(exchange(_impl, exchange(other._impl, nullptr)));
-    }
+    insert_one_options&& other) noexcept = default;
 
-    return *this;
-}
-
-client_bulk_write::insert_one_options::insert_one_options(insert_one_options const& /*other*/) : _impl{new impl{}} {}
+client_bulk_write::insert_one_options::insert_one_options(insert_one_options const& other) = default;
 
 client_bulk_write::insert_one_options& client_bulk_write::insert_one_options::operator=(
-    insert_one_options const& other) {
-    if (this != &other) {
-        auto* const tmp = new impl{};
-        delete impl::with(_impl);
-        _impl = tmp;
-    }
+    insert_one_options const& other) = default;
 
-    return *this;
-}
-
-client_bulk_write::insert_one_options::insert_one_options() : _impl{new impl{}} {}
+client_bulk_write::insert_one_options::insert_one_options() : _impl{nullptr} {}
 
 class client_bulk_write::update_one_options::impl {
    public:
