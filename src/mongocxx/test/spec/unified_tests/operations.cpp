@@ -357,17 +357,15 @@ template <typename Opts>
 void append_update(
     mongocxx::client_bulk_write& client_bulk_write,
     bsoncxx::stdx::string_view ns,
-    bsoncxx::v1::document::value filter,
+    bsoncxx::v1::document::view filter,
     document::element const& update_element,
     Opts const& opts) {
     if (update_element.type() == type::k_document) {
-        client_bulk_write.append(ns, std::move(filter), to_v1_value(update_element.get_document().value), opts);
+        client_bulk_write.append(
+            ns, filter, static_cast<bsoncxx::v1::document::view>(update_element.get_document().value), opts);
     } else {
         client_bulk_write.append(
-            ns,
-            std::move(filter),
-            static_cast<mongocxx::v1::pipeline>(build_pipeline(update_element.get_array().value)),
-            opts);
+            ns, filter, static_cast<mongocxx::v1::pipeline>(build_pipeline(update_element.get_array().value)), opts);
     }
 }
 
@@ -529,33 +527,39 @@ document::value run_client_bulk_write(mongocxx::client& client, client_session* 
 
         if (op_name == "insertOne") {
             client_bulk_write.append(
-                ns, to_v1_value(model_args["document"].get_document().value), client_bulk_write::insert_one_options{});
+                ns,
+                static_cast<bsoncxx::v1::document::view>(model_args["document"].get_document().value),
+                client_bulk_write::insert_one_options{});
         } else if (op_name == "updateOne") {
             append_update(
                 client_bulk_write,
                 ns,
-                to_v1_value(model_args["filter"].get_document().value),
+                static_cast<bsoncxx::v1::document::view>(model_args["filter"].get_document().value),
                 model_args["update"],
                 make_update_one_options(model_args));
         } else if (op_name == "updateMany") {
             append_update(
                 client_bulk_write,
                 ns,
-                to_v1_value(model_args["filter"].get_document().value),
+                static_cast<bsoncxx::v1::document::view>(model_args["filter"].get_document().value),
                 model_args["update"],
                 make_update_many_options(model_args));
         } else if (op_name == "replaceOne") {
             client_bulk_write.append(
                 ns,
-                to_v1_value(model_args["filter"].get_document().value),
-                to_v1_value(model_args["replacement"].get_document().value),
+                static_cast<bsoncxx::v1::document::view>(model_args["filter"].get_document().value),
+                static_cast<bsoncxx::v1::document::view>(model_args["replacement"].get_document().value),
                 make_replace_one_options(model_args));
         } else if (op_name == "deleteOne") {
             client_bulk_write.append(
-                ns, to_v1_value(model_args["filter"].get_document().value), make_delete_one_options(model_args));
+                ns,
+                static_cast<bsoncxx::v1::document::view>(model_args["filter"].get_document().value),
+                make_delete_one_options(model_args));
         } else if (op_name == "deleteMany") {
             client_bulk_write.append(
-                ns, to_v1_value(model_args["filter"].get_document().value), make_delete_many_options(model_args));
+                ns,
+                static_cast<bsoncxx::v1::document::view>(model_args["filter"].get_document().value),
+                make_delete_many_options(model_args));
         } else {
             FAIL("unrecognized clientBulkWrite model: " + string::to_string(op_name));
         }

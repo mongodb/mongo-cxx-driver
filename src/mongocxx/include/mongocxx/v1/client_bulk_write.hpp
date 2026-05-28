@@ -107,15 +107,15 @@ class client_bulk_write {
     ///
     /// @{
     MONGOCXX_ABI_EXPORT_CDECL(client_bulk_write&)
-    append(bsoncxx::v1::stdx::string_view ns, bsoncxx::v1::document::value document, insert_one_options const& opts);
+    append(bsoncxx::v1::stdx::string_view ns, bsoncxx::v1::document::view document, insert_one_options const& opts);
 
     ///
     /// Append an "Update One" operation targeting the given namespace.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(client_bulk_write&) append(
         bsoncxx::v1::stdx::string_view ns,
-        bsoncxx::v1::document::value filter,
-        bsoncxx::v1::document::value update,
+        bsoncxx::v1::document::view filter,
+        bsoncxx::v1::document::view update,
         update_one_options const& opts);
 
     ///
@@ -123,7 +123,7 @@ class client_bulk_write {
     ///
     MONGOCXX_ABI_EXPORT_CDECL(client_bulk_write&) append(
         bsoncxx::v1::stdx::string_view ns,
-        bsoncxx::v1::document::value filter,
+        bsoncxx::v1::document::view filter,
         v1::pipeline const& update,
         update_one_options const& opts);
 
@@ -132,8 +132,8 @@ class client_bulk_write {
     ///
     MONGOCXX_ABI_EXPORT_CDECL(client_bulk_write&) append(
         bsoncxx::v1::stdx::string_view ns,
-        bsoncxx::v1::document::value filter,
-        bsoncxx::v1::document::value update,
+        bsoncxx::v1::document::view filter,
+        bsoncxx::v1::document::view update,
         update_many_options const& opts);
 
     ///
@@ -141,7 +141,7 @@ class client_bulk_write {
     ///
     MONGOCXX_ABI_EXPORT_CDECL(client_bulk_write&) append(
         bsoncxx::v1::stdx::string_view ns,
-        bsoncxx::v1::document::value filter,
+        bsoncxx::v1::document::view filter,
         v1::pipeline const& update,
         update_many_options const& opts);
 
@@ -150,21 +150,21 @@ class client_bulk_write {
     ///
     MONGOCXX_ABI_EXPORT_CDECL(client_bulk_write&) append(
         bsoncxx::v1::stdx::string_view ns,
-        bsoncxx::v1::document::value filter,
-        bsoncxx::v1::document::value replacement,
+        bsoncxx::v1::document::view filter,
+        bsoncxx::v1::document::view replacement,
         replace_one_options const& opts);
 
     ///
     /// Append a "Delete One" operation targeting the given namespace.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(client_bulk_write&)
-    append(bsoncxx::v1::stdx::string_view ns, bsoncxx::v1::document::value filter, delete_one_options const& opts);
+    append(bsoncxx::v1::stdx::string_view ns, bsoncxx::v1::document::view filter, delete_one_options const& opts);
 
     ///
     /// Append a "Delete Many" operation targeting the given namespace.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(client_bulk_write&)
-    append(bsoncxx::v1::stdx::string_view ns, bsoncxx::v1::document::value filter, delete_many_options const& opts);
+    append(bsoncxx::v1::stdx::string_view ns, bsoncxx::v1::document::view filter, delete_many_options const& opts);
     /// @}
     ///
 

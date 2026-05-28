@@ -1233,7 +1233,7 @@ struct bulk_write_return {
 
 client_bulk_write& client_bulk_write::append(
     bsoncxx::v1::stdx::string_view ns,
-    bsoncxx::v1::document::value document,
+    bsoncxx::v1::document::view document,
     insert_one_options const& /*opts*/) {
     bson_error_t error = {};
 
@@ -1247,8 +1247,8 @@ client_bulk_write& client_bulk_write::append(
 
 client_bulk_write& client_bulk_write::append(
     bsoncxx::v1::stdx::string_view ns,
-    bsoncxx::v1::document::value filter,
-    bsoncxx::v1::document::value update,
+    bsoncxx::v1::document::view filter,
+    bsoncxx::v1::document::view update,
     update_one_options const& opts) {
     update_one_options_c const c_opts{opts};
 
@@ -1269,7 +1269,7 @@ client_bulk_write& client_bulk_write::append(
 
 client_bulk_write& client_bulk_write::append(
     bsoncxx::v1::stdx::string_view ns,
-    bsoncxx::v1::document::value filter,
+    bsoncxx::v1::document::view filter,
     v1::pipeline const& update,
     update_one_options const& opts) {
     return append(ns, std::move(filter), bsoncxx::v1::document::value{update.view_array()}, opts);
@@ -1277,8 +1277,8 @@ client_bulk_write& client_bulk_write::append(
 
 client_bulk_write& client_bulk_write::append(
     bsoncxx::v1::stdx::string_view ns,
-    bsoncxx::v1::document::value filter,
-    bsoncxx::v1::document::value update,
+    bsoncxx::v1::document::view filter,
+    bsoncxx::v1::document::view update,
     update_many_options const& opts) {
     update_many_options_c const c_opts{opts};
 
@@ -1299,7 +1299,7 @@ client_bulk_write& client_bulk_write::append(
 
 client_bulk_write& client_bulk_write::append(
     bsoncxx::v1::stdx::string_view ns,
-    bsoncxx::v1::document::value filter,
+    bsoncxx::v1::document::view filter,
     v1::pipeline const& update,
     update_many_options const& opts) {
     return append(ns, std::move(filter), bsoncxx::v1::document::value{update.view_array()}, opts);
@@ -1307,8 +1307,8 @@ client_bulk_write& client_bulk_write::append(
 
 client_bulk_write& client_bulk_write::append(
     bsoncxx::v1::stdx::string_view ns,
-    bsoncxx::v1::document::value filter,
-    bsoncxx::v1::document::value replacement,
+    bsoncxx::v1::document::view filter,
+    bsoncxx::v1::document::view replacement,
     replace_one_options const& opts) {
     replace_one_options_c const c_opts{opts};
 
@@ -1329,7 +1329,7 @@ client_bulk_write& client_bulk_write::append(
 
 client_bulk_write& client_bulk_write::append(
     bsoncxx::v1::stdx::string_view ns,
-    bsoncxx::v1::document::value filter,
+    bsoncxx::v1::document::view filter,
     delete_one_options const& opts) {
     delete_one_options_c const c_opts{opts};
 
@@ -1345,7 +1345,7 @@ client_bulk_write& client_bulk_write::append(
 
 client_bulk_write& client_bulk_write::append(
     bsoncxx::v1::stdx::string_view ns,
-    bsoncxx::v1::document::value filter,
+    bsoncxx::v1::document::view filter,
     delete_many_options const& opts) {
     delete_many_options_c const c_opts{opts};
 
