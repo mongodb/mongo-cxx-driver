@@ -9,7 +9,9 @@ Changes prior to 3.9.0 are documented as [release notes on GitHub](https://githu
 
 ## 4.3.1 [Unreleased]
 
-<!-- Will contain entries for the next patch release. -->
+### Fixed
+
+- Do not set `upsert: true` in "findOneAnd*" operations when the option is explicitly set to `false` (regression in 4.2.0).
 
 ## 4.3.0
 

@@ -1380,6 +1380,36 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             REQUIRE(doc);
             REQUIRE(doc->view()["x"].get_string().value == bsoncxx::stdx::string_view{"bar"});
         }
+
+        SECTION("upsert true inserts when no match") {
+            auto coll = db["find_one_and_update_upsert_true"];
+
+            CHECK_NOTHROW(coll.drop());
+            CHECK(coll.count_documents({}) == 0);
+
+            auto const missing = make_document(kvp("x", "1"));
+
+            options::find_one_and_update opts;
+            opts.upsert(true);
+
+            CHECK_NOTHROW(coll.find_one_and_update(missing.view(), update.view(), opts));
+            CHECK(coll.count_documents({}) == 1);
+        }
+
+        SECTION("upsert false does not insert when no match") {
+            auto coll = db["find_one_and_update_upsert_false"];
+
+            CHECK_NOTHROW(coll.drop());
+            CHECK(coll.count_documents({}) == 0);
+
+            auto const missing = make_document(kvp("x", "1"));
+
+            options::find_one_and_update opts;
+            opts.upsert(false);
+
+            CHECK_NOTHROW(coll.find_one_and_update(missing.view(), update.view(), opts));
+            CHECK(coll.count_documents({}) == 0);
+        }
     }
 
     SECTION("find_one_and_delete works", "[collection]") {

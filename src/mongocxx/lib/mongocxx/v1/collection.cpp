@@ -754,7 +754,7 @@ bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> find_one_and_replace_i
     v1::find_one_and_replace_options const& options) {
     auto flags = MONGOC_FIND_AND_MODIFY_NONE;
 
-    if (options.upsert()) {
+    if (options.upsert().value_or(false)) {
         flags = static_cast<mongoc_find_and_modify_flags_t>(flags | MONGOC_FIND_AND_MODIFY_UPSERT);
     }
 
@@ -781,7 +781,7 @@ bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> find_one_and_update_im
     v1::find_one_and_update_options const& options) {
     auto flags = MONGOC_FIND_AND_MODIFY_NONE;
 
-    if (options.upsert()) {
+    if (options.upsert().value_or(false)) {
         flags = static_cast<mongoc_find_and_modify_flags_t>(flags | MONGOC_FIND_AND_MODIFY_UPSERT);
     }
 
