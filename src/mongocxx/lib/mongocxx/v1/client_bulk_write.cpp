@@ -43,6 +43,8 @@
 #include <mongocxx/private/scoped_bson.hh>
 #include <mongocxx/private/utility.hh>
 
+#include <bson/error.h>
+
 namespace mongocxx {
 namespace v1 {
 
