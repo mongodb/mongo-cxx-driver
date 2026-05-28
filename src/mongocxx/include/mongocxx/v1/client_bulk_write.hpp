@@ -431,28 +431,28 @@ class client_bulk_write::exception : public v1::exception {
     ///
     /// @returns An empty document if there are no write errors.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::document::view) write_errors() const;
+    bsoncxx::v1::document::view MONGOCXX_ABI_CDECL write_errors() const;
 
     ///
     /// An array of write concern errors.
     ///
     /// @returns An empty array if there are no write concern errors.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::array::view) write_concern_errors() const;
+    bsoncxx::v1::array::view MONGOCXX_ABI_CDECL write_concern_errors() const;
 
     ///
     /// The server reply associated with the error, if any.
     ///
     /// @returns An empty document if no server reply is available.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::document::view) error_reply() const;
+    bsoncxx::v1::document::view MONGOCXX_ABI_CDECL error_reply() const;
 
     ///
     /// The partial result obtained before the error occurred, if any.
     ///
     /// @returns An empty optional when no operations succeeded before the error.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<result>) partial_result() const;
+    bsoncxx::v1::stdx::optional<result> MONGOCXX_ABI_CDECL partial_result() const;
 
     class internal;
 
