@@ -584,8 +584,9 @@ struct exception_mocks_type {
             .forever();
     }
 
-    client_bulk_write::exception make() {
-        return client_bulk_write::exception::internal::make(exc_id, bsoncxx::v1::stdx::nullopt);
+    client_bulk_write::exception make(
+        bsoncxx::v1::stdx::optional<client_bulk_write::result> partial_result = bsoncxx::v1::stdx::nullopt) {
+        return client_bulk_write::exception::internal::make(exc_id, std::move(partial_result));
     }
 };
 
@@ -637,6 +638,20 @@ TEST_CASE("error_reply", "[mongocxx][v1][client_bulk_write][exception]") {
     auto const ex = mocks.make();
 
     CHECK(ex.error_reply() == v.view());
+}
+
+TEST_CASE("partial_result", "[mongocxx][v1][client_bulk_write][exception]") {
+    auto const partial_result = [] {
+        auto r = client_bulk_write::result::internal::make();
+        client_bulk_write::result::internal::inserted_count(r) = 2;
+        return r;
+    }();
+
+    exception_mocks_type mocks;
+
+    auto const ex = mocks.make(partial_result);
+
+    CHECK(ex.partial_result()->inserted_count() == partial_result.inserted_count());
 }
 
 TEST_CASE("ownership", "[mongocxx][v1][client_bulk_write][update_one_options]") {
