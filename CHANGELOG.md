@@ -9,6 +9,15 @@ Changes prior to 3.9.0 are documented as [release notes on GitHub](https://githu
 
 ## 4.4.0 [Unreleased]
 
+> [!IMPORTANT]
+> This is the first release supporting a stable ABI for the bsoncxx and mongocxx libraries.
+>
+> - The stable ABI is declared under the `v1` namespace of the bsoncxx and mongocxx libraries.
+> - The unstable ABI declared under the `v_noabi` namespace is still supported.
+> - Root namespace redeclarations (e.g. `bsoncxx::document::value`) are recommended when ABI stability is not a requirement. These redeclarations will be updated to the latest ABI version equivalents in an upcoming API major release.
+>
+> See [ABI Versioning](https://www.mongodb.com/docs/languages/cpp/cpp-driver/current/reference/api-abi-versioning/abi-versioning/) for more information.
+
 ### Fixed
 
 - Do not set `upsert: true` in "findOneAnd*" operations when the option is explicitly set to `false` (regression in 4.2.0).
@@ -19,6 +28,14 @@ Changes prior to 3.9.0 are documented as [release notes on GitHub](https://githu
 
 - Support for MongoDB Server 4.2.
   - See: [MongoDB Software Lifecycle Schedules](https://www.mongodb.com/legal/support-policy/lifecycles).
+
+### Changed
+
+- Stable ABI (v1) is now officially supported for both bsoncxx and mongocxx libraries.
+- The soversion for both bsoncxx and mongocxx libraries is now set to `1`.
+- Library filenames now include the ABI version number, e.g. `libbsoncxx1.so.4.4.0`.
+- pkg-config config filenames now include the ABI version number, e.g. `bsoncxxConfig.cmake`.
+- CMake package config filenames now use `camelCase`, e.g. `bsoncxxConfig.cmake`.
 
 ### Added
 
