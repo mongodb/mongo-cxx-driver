@@ -465,6 +465,9 @@ class client_bulk_write::exception : public v1::exception {
 
 BSONCXX_PRIVATE_WARNINGS_POP();
 
+BSONCXX_PRIVATE_WARNINGS_PUSH();
+BSONCXX_PRIVATE_WARNINGS_DISABLE(Clang("-Wunused-private-field"));
+
 ///
 /// Options for an "Insert One" operation in a client bulk write.
 ///
@@ -512,6 +515,8 @@ class client_bulk_write::insert_one_options {
     ///
     MONGOCXX_ABI_EXPORT_CDECL() insert_one_options();
 };
+
+BSONCXX_PRIVATE_WARNINGS_POP();
 
 ///
 /// Options for an "Update One" operation in a client bulk write.
