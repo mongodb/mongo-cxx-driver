@@ -1051,7 +1051,7 @@ void assert_error(mongocxx::v1::exception& e, array::element const& ops) {
 }
 
 void assert_error(
-    mongocxx::v1::client_bulk_write::exception const& exception,
+    mongocxx::client_bulk_write::exception const& exception,
     array::element const& expected,
     document::view actual) {
     CAPTURE(exception.what());
