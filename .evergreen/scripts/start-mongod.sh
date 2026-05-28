@@ -22,8 +22,6 @@ if [ "Windows_NT" == "$OS" ]; then
 fi
 export DRIVERS_TOOLS
 
-export MONGODB_BINARIES="${DRIVERS_TOOLS:?}/mongodb/bin"
-export MONGO_ORCHESTRATION_HOME="${DRIVERS_TOOLS:?}/.evergreen/orchestration"
 export MONGODB_VERSION="${mongodb_version:?}"
 export AUTH
 export TOPOLOGY

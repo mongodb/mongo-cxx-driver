@@ -12,7 +12,7 @@ class StopMongod(Function):
             script="""\
             set -o errexit
             if test -d drivers-evergreen-tools; then
-                pushd drivers-evergreen-tools
+                cd drivers-evergreen-tools
                 .evergreen/run-mongodb.sh stop
             fi
             """,
