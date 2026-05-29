@@ -20,6 +20,7 @@
 #include <mongocxx/v1/oidc_credential.hpp>
 
 #include <mongocxx/v1/exception.hh>
+#include <mongocxx/v1/server_error.hh>
 
 #include <mongocxx/test/v_noabi/client_helpers.hh>
 
@@ -1056,7 +1057,7 @@ void assert_error(
     REQUIRE_FALSE(expect_error["errorLabelsOmit"]);
 
     if (auto const error_code = expect_error["errorCode"]) {
-        REQUIRE(e.code().value() == error_code.get_int32());
+        CHECK(e.code() == std::error_code{error_code.get_int32(), mongocxx::v1::server_error::internal::category()});
     }
 
     if (auto const error_response = expect_error["errorResponse"]) {
