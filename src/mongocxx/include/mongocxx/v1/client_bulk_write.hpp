@@ -50,8 +50,6 @@ namespace v1 {
 /// @see
 /// - [Bulk Write Operations (MongoDB Manual)](https://www.mongodb.com/docs/manual/core/bulk-write-operations/)
 ///
-/// @attention This feature is experimental! It is not ready for use!
-///
 class client_bulk_write {
    private:
     class impl;
@@ -330,8 +328,6 @@ class client_bulk_write::options {
 /// - [Bulk Write (MongoDB Specifications)](https://specifications.readthedocs.io/en/latest/crud/bulk-write/)
 /// - [Bulk Write Operations (MongoDB Manual)](https://www.mongodb.com/docs/manual/core/bulk-write-operations/)
 ///
-/// @attention This feature is experimental! It is not ready for use!
-///
 class client_bulk_write::result {
    private:
     class impl;
@@ -433,8 +429,6 @@ BSONCXX_PRIVATE_WARNINGS_DISABLE(MSVC(4275));
 /// @par Inherits:
 /// - @ref mongocxx::v1::exception
 ///
-/// @attention This feature is experimental! It is not ready for use!
-///
 class client_bulk_write::exception : public v1::exception {
    private:
     class impl;
@@ -485,8 +479,6 @@ BSONCXX_PRIVATE_WARNINGS_DISABLE(Clang("-Wunused-private-field"));
 
 ///
 /// Options for an "Insert One" operation in a client bulk write.
-///
-/// @attention This feature is experimental! It is not ready for use!
 ///
 class client_bulk_write::insert_one_options {
    private:
@@ -542,8 +534,6 @@ BSONCXX_PRIVATE_WARNINGS_POP();
 /// - `hint`
 /// - `sort`
 /// - `upsert`
-///
-/// @attention This feature is experimental! It is not ready for use!
 ///
 class client_bulk_write::update_one_options {
    private:
@@ -651,8 +641,6 @@ class client_bulk_write::update_one_options {
 /// - `hint`
 /// - `upsert`
 ///
-/// @attention This feature is experimental! It is not ready for use!
-///
 class client_bulk_write::update_many_options {
    private:
     class impl;
@@ -749,8 +737,6 @@ class client_bulk_write::update_many_options {
 /// - `sort`
 /// - `upsert`
 ///
-/// @attention This feature is experimental! It is not ready for use!
-///
 class client_bulk_write::replace_one_options {
    private:
     class impl;
@@ -845,8 +831,6 @@ class client_bulk_write::replace_one_options {
 /// - `collation`
 /// - `hint`
 ///
-/// @attention This feature is experimental! It is not ready for use!
-///
 class client_bulk_write::delete_one_options {
    private:
     class impl;
@@ -920,8 +904,6 @@ class client_bulk_write::delete_one_options {
 /// Supported fields include:
 /// - `collation`
 /// - `hint`
-///
-/// @attention This feature is experimental! It is not ready for use!
 ///
 class client_bulk_write::delete_many_options {
    private:
