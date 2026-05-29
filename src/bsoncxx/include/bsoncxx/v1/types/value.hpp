@@ -47,8 +47,6 @@ namespace types {
 ///
 /// A union of BSON type values.
 ///
-/// @attention This feature is experimental! It is not ready for use!
-///
 /// @note A "BSON type value" refers to the value of a BSON element without its key.
 ///
 class value {
@@ -295,8 +293,6 @@ class value {
     ///
     /// Errors codes which may be returned by @ref bsoncxx::v1::types::value.
     ///
-    /// @attention This feature is experimental! It is not ready for use!
-    ///
     enum class errc {
         zero,               ///< Zero.
         invalid_type,       ///< Requested BSON type is not supported.
@@ -306,14 +302,10 @@ class value {
     ///
     /// The error category for @ref bsoncxx::v1::types::value::errc.
     ///
-    /// @attention This feature is experimental! It is not ready for use!
-    ///
     static BSONCXX_ABI_EXPORT_CDECL(std::error_category const&) error_category();
 
     ///
     /// Support implicit conversion to `std::error_code`.
-    ///
-    /// @attention This feature is experimental! It is not ready for use!
     ///
     friend std::error_code make_error_code(errc v) {
         return {static_cast<int>(v), error_category()};

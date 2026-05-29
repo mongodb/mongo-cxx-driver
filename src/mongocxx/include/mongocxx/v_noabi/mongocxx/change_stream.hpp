@@ -53,12 +53,12 @@ class change_stream {
     ///
     /// Move constructs a change_stream.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL() change_stream(change_stream&& other) noexcept;
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE() change_stream(change_stream&& other) noexcept;
 
     ///
     /// Move assigns a change_stream.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(change_stream&) operator=(change_stream&& other) noexcept;
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(change_stream&) operator=(change_stream&& other) noexcept;
 
     ///
     /// This class is not copyable.
@@ -73,7 +73,7 @@ class change_stream {
     ///
     /// Destroys a change_stream.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL() ~change_stream();
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE() ~change_stream();
 
     ///
     /// Construct with the @ref mongocxx::v1 equivalent.
@@ -119,7 +119,7 @@ class change_stream {
     ///
     /// @warning This function is NOT logically const despite the const-qualifier.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(iterator) begin() const;
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(iterator) begin() const;
 
     ///
     /// A change_stream::iterator indicating stream exhaustion, meaning that
@@ -128,7 +128,7 @@ class change_stream {
     /// @return
     ///   The change_stream::iterator indicating exhaustion
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(iterator) end() const;
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(iterator) end() const;
 
     ///
     /// Returns a resume token for this change stream.
@@ -176,7 +176,7 @@ class change_stream::iterator {
     /// Default-constucted iterators can be compared (all default-constructed
     /// iterators are ==), assigned, and copied.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL() iterator();
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE() iterator();
 
     ///
     /// Dereferences the view for the document currently being pointed to.
@@ -187,7 +187,7 @@ class change_stream::iterator {
     /// @par Preconditions:
     /// - `*this` does not compare equal to the end iterator.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::document::view const&) operator*() const;
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(bsoncxx::v_noabi::document::view const&) operator*() const;
 
     ///
     /// Accesses a member of the dereferenced document currently being pointed to.
@@ -198,7 +198,7 @@ class change_stream::iterator {
     /// @par Preconditions:
     /// - `*this` does not compare equal to the end iterator.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::document::view const*) operator->() const;
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(bsoncxx::v_noabi::document::view const*) operator->() const;
 
     ///
     /// Pre-increments the iterator to move to the next document.
@@ -213,7 +213,7 @@ class change_stream::iterator {
     ///
     /// @throws mongocxx::v_noabi::query_exception if the query failed
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(iterator&) operator++();
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(iterator&) operator++();
 
     ///
     /// Post-increments the iterator to move to the next document.
@@ -241,7 +241,7 @@ class change_stream::iterator {
     /// exhausted.
     ///
     /// @{
-    friend MONGOCXX_ABI_EXPORT_CDECL(bool) operator==(
+    friend MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(bool) operator==(
         change_stream::iterator const& lhs,
         change_stream::iterator const& rhs) noexcept;
 

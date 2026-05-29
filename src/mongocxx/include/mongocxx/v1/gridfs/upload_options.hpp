@@ -43,8 +43,6 @@ namespace gridfs {
 /// @see
 /// - [GridFS (MongoDB Manual)](https://www.mongodb.com/docs/manual/core/gridfs/)
 ///
-/// @attention This feature is experimental! It is not ready for use!
-///
 class upload_options {
    private:
     class impl;
@@ -95,7 +93,7 @@ class upload_options {
     ///
     /// Set the "chunkSizeBytes" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(upload_options&) chunk_size_bytes(std::int32_t chunk_size_bytes);
+    MONGOCXX_ABI_EXPORT_CDECL(upload_options&) chunk_size_bytes(std::int32_t v);
 
     ///
     /// Return the current "chunkSizeBytes" field.
@@ -105,7 +103,7 @@ class upload_options {
     ///
     /// Set the "metadata" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(upload_options&) metadata(bsoncxx::v1::document::value metadata);
+    MONGOCXX_ABI_EXPORT_CDECL(upload_options&) metadata(bsoncxx::v1::document::value v);
 
     ///
     /// Return the current "metadata" field.

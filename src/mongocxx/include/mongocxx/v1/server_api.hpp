@@ -150,8 +150,6 @@ class server_api {
     ///
     /// Errors codes which may be returned by @ref mongocxx::v1::server_api.
     ///
-    /// @attention This feature is experimental! It is not ready for use!
-    ///
     enum class errc {
         zero,            ///< Zero.
         invalid_version, ///< The server API version is invalid.
@@ -160,14 +158,10 @@ class server_api {
     ///
     /// The error category for @ref mongocxx::v1::server_api::errc.
     ///
-    /// @attention This feature is experimental! It is not ready for use!
-    ///
     static MONGOCXX_ABI_EXPORT_CDECL(std::error_category const&) error_category();
 
     ///
     /// Support implicit conversion to `std::error_code`.
-    ///
-    /// @attention This feature is experimental! It is not ready for use!
     ///
     friend std::error_code make_error_code(errc v) {
         return {static_cast<int>(v), error_category()};

@@ -59,8 +59,6 @@ namespace v1 {
 /// @see
 /// - [`aggregate` (database command) (MongoDB Manual)](https://www.mongodb.com/docs/manual/aggregation/)
 ///
-/// @attention This feature is experimental! It is not ready for use!
-///
 class aggregate_options {
    private:
     class impl;
@@ -111,7 +109,7 @@ class aggregate_options {
     ///
     /// Set the "allowDiskUse" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(aggregate_options&) allow_disk_use(bool allow_disk_use);
+    MONGOCXX_ABI_EXPORT_CDECL(aggregate_options&) allow_disk_use(bool v);
 
     ///
     /// Return the current "allowDiskUse" field.
@@ -121,7 +119,7 @@ class aggregate_options {
     ///
     /// Set the "batchSize" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(aggregate_options&) batch_size(std::int32_t batch_size);
+    MONGOCXX_ABI_EXPORT_CDECL(aggregate_options&) batch_size(std::int32_t v);
 
     ///
     /// Return the current "batchSize" field.
@@ -131,7 +129,7 @@ class aggregate_options {
     ///
     /// Set the "collation" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(aggregate_options&) collation(bsoncxx::v1::document::value collation);
+    MONGOCXX_ABI_EXPORT_CDECL(aggregate_options&) collation(bsoncxx::v1::document::value v);
 
     ///
     /// Return the current "collation" field.
@@ -141,7 +139,7 @@ class aggregate_options {
     ///
     /// Set the "let" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(aggregate_options&) let(bsoncxx::v1::document::value let);
+    MONGOCXX_ABI_EXPORT_CDECL(aggregate_options&) let(bsoncxx::v1::document::value v);
 
     ///
     /// Return the current "let" field.
@@ -151,7 +149,7 @@ class aggregate_options {
     ///
     /// Set the "maxTimeMS" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(aggregate_options&) max_time(std::chrono::milliseconds max_time);
+    MONGOCXX_ABI_EXPORT_CDECL(aggregate_options&) max_time(std::chrono::milliseconds v);
 
     ///
     /// Return the current "maxTimeMS" field.
@@ -161,7 +159,7 @@ class aggregate_options {
     ///
     /// Set the "readPreference" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(aggregate_options&) read_preference(v1::read_preference rp);
+    MONGOCXX_ABI_EXPORT_CDECL(aggregate_options&) read_preference(v1::read_preference v);
 
     ///
     /// Return the current "readPreference" field.
@@ -171,7 +169,7 @@ class aggregate_options {
     ///
     /// Set the "bypassDocumentValidation" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(aggregate_options&) bypass_document_validation(bool bypass_document_validation);
+    MONGOCXX_ABI_EXPORT_CDECL(aggregate_options&) bypass_document_validation(bool v);
 
     ///
     /// Return the current "bypassDocumentValidation" field.
@@ -181,7 +179,7 @@ class aggregate_options {
     ///
     /// Set the "hint" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(aggregate_options&) hint(v1::hint index_hint);
+    MONGOCXX_ABI_EXPORT_CDECL(aggregate_options&) hint(v1::hint v);
 
     ///
     /// Return the current "hint" field.
@@ -191,7 +189,7 @@ class aggregate_options {
     ///
     /// Set the "writeConcern" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(aggregate_options&) write_concern(v1::write_concern write_concern);
+    MONGOCXX_ABI_EXPORT_CDECL(aggregate_options&) write_concern(v1::write_concern v);
 
     ///
     /// Return the current "writeConcern" field.
@@ -201,7 +199,7 @@ class aggregate_options {
     ///
     /// Set the "readConcern" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(aggregate_options&) read_concern(v1::read_concern read_concern);
+    MONGOCXX_ABI_EXPORT_CDECL(aggregate_options&) read_concern(v1::read_concern v);
 
     ///
     /// Return the current "readConcern" field.
@@ -211,7 +209,7 @@ class aggregate_options {
     ///
     /// Set the "comment" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(aggregate_options&) comment(bsoncxx::v1::types::value comment);
+    MONGOCXX_ABI_EXPORT_CDECL(aggregate_options&) comment(bsoncxx::v1::types::value v);
 
     ///
     /// Return the current "comment" field.

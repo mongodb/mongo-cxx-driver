@@ -90,8 +90,8 @@ data_key_options::data_key_options() : _impl{new impl{}} {}
 
 // NOLINTEND(cppcoreguidelines-owning-memory)
 
-data_key_options& data_key_options::master_key(bsoncxx::v1::document::value master_key) {
-    impl::with(this)->_master_key = std::move(master_key);
+data_key_options& data_key_options::master_key(bsoncxx::v1::document::value v) {
+    impl::with(this)->_master_key = std::move(v);
     return *this;
 }
 
@@ -99,8 +99,8 @@ bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view> data_key_options::maste
     return impl::with(this)->_master_key;
 }
 
-data_key_options& data_key_options::key_alt_names(std::vector<std::string> key_alt_names) {
-    impl::with(this)->_key_alt_names = std::move(key_alt_names);
+data_key_options& data_key_options::key_alt_names(std::vector<std::string> v) {
+    impl::with(this)->_key_alt_names = std::move(v);
     return *this;
 }
 
@@ -108,8 +108,8 @@ std::vector<std::string> data_key_options::key_alt_names() const {
     return impl::with(this)->_key_alt_names;
 }
 
-data_key_options& data_key_options::key_material(key_material_type key_material) {
-    impl::with(this)->_key_material = std::move(key_material);
+data_key_options& data_key_options::key_material(key_material_type v) {
+    impl::with(this)->_key_material = std::move(v);
     return *this;
 }
 

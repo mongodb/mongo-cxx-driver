@@ -44,8 +44,6 @@ namespace v1 {
 /// @see
 /// - [Read Preference (MongoDB Manual)](https://www.mongodb.com/docs/manual/core/read-preference/)
 ///
-/// @attention This feature is experimental! It is not ready for use!
-///
 class read_preference {
    private:
     void* _impl; // mongoc_read_prefs_t
@@ -56,8 +54,6 @@ class read_preference {
     ///
     /// @see
     /// - [Read Preference (MongoDB Manual)](https://www.mongodb.com/docs/manual/core/read-preference/)
-    ///
-    /// @attention This feature is experimental! It is not ready for use!
     ///
     enum class read_mode {
         ///

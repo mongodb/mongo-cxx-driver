@@ -53,8 +53,8 @@ class index_view {
     /// Construct with the @ref mongocxx::v1 equivalent.
     ///
     /// @{
-    /* explicit(false) */ MONGOCXX_ABI_EXPORT_CDECL() index_view(v1::indexes::create_one_options opts);
-    /* explicit(false) */ MONGOCXX_ABI_EXPORT_CDECL() index_view(v1::indexes::create_many_options opts);
+    /* explicit(false) */ MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE() index_view(v1::indexes::create_one_options opts);
+    /* explicit(false) */ MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE() index_view(v1::indexes::create_many_options opts);
     /// @}
     ///
 
@@ -185,7 +185,7 @@ class index_view {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/createIndexes
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(index_view&) commit_quorum(std::int32_t commit_quorum);
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(index_view&) commit_quorum(std::int32_t commit_quorum);
 
     ///
     /// Sets the commit quorum for this operation.
@@ -204,7 +204,7 @@ class index_view {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/createIndexes
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(index_view&) commit_quorum(std::string commit_quorum);
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(index_view&) commit_quorum(std::string commit_quorum);
 
     ///
     /// Gets the current commitQuorum setting.

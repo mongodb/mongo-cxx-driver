@@ -123,7 +123,7 @@ class uploader {
     ///   if the uploader requires more than 2^31-1 chunks to store the file at the requested chunk
     ///   size.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(void) write(std::uint8_t const* bytes, std::size_t length);
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(void) write(std::uint8_t const* bytes, std::size_t length);
 
     ///
     /// Closes the uploader stream.
@@ -137,7 +137,7 @@ class uploader {
     ///   if the uploader requires more than 2^31-1 chunks to store the file at the requested chunk
     ///   size.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(result::gridfs::upload) close();
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(result::gridfs::upload) close();
 
     ///
     /// Aborts uploading the file.
@@ -147,7 +147,7 @@ class uploader {
     /// @throws mongocxx::v_noabi::bulk_write_exception
     ///   if an error occurs when removing chunk data from the database.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(void) abort();
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(void) abort();
 
     ///
     /// Gets the chunk size of the file being uploaded.
@@ -155,7 +155,7 @@ class uploader {
     /// @return
     ///   The chunk size in bytes.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(std::int32_t) chunk_size() const;
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(std::int32_t) chunk_size() const;
 
     class internal;
 };

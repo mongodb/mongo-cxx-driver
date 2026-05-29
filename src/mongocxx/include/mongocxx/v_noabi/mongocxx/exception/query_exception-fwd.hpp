@@ -19,7 +19,7 @@
 namespace mongocxx {
 namespace v_noabi {
 
-class MONGOCXX_ABI_EXPORT query_exception;
+class MONGOCXX_ABI_EXPORT_UNSTABLE query_exception;
 
 } // namespace v_noabi
 } // namespace mongocxx

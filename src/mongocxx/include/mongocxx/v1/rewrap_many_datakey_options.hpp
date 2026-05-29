@@ -43,8 +43,6 @@ namespace v1 {
 /// @see
 /// - [Rotate and Rewrap Encryption Keys (MongoDB Manual)](https://www.mongodb.com/docs/manual/core/queryable-encryption/fundamentals/manage-keys/)
 ///
-/// @attention This feature is experimental! It is not ready for use!
-///
 class rewrap_many_datakey_options {
    private:
     class impl;
@@ -95,7 +93,7 @@ class rewrap_many_datakey_options {
     ///
     /// Set the "provider" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(rewrap_many_datakey_options&) provider(std::string provider);
+    MONGOCXX_ABI_EXPORT_CDECL(rewrap_many_datakey_options&) provider(std::string v);
 
     ///
     /// Return the current "provider" field.
@@ -105,7 +103,7 @@ class rewrap_many_datakey_options {
     ///
     /// Set the "masterKey" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(rewrap_many_datakey_options&) master_key(bsoncxx::v1::document::value master_key);
+    MONGOCXX_ABI_EXPORT_CDECL(rewrap_many_datakey_options&) master_key(bsoncxx::v1::document::value v);
 
     ///
     /// Return the current "masterKey" field.

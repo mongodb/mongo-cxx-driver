@@ -46,8 +46,6 @@ namespace v1 {
 /// @see
 /// - [Queries and Indexes (MongoDB Manual)](https://www.mongodb.com/docs/atlas/atlas-search/searching/)
 ///
-/// @attention This feature is experimental! It is not ready for use!
-///
 class search_indexes {
    private:
     class impl;
@@ -309,8 +307,6 @@ class search_indexes {
 ///
 /// @see
 /// - [Queries and Indexes (MongoDB Manual)](https://www.mongodb.com/docs/atlas/atlas-search/searching/)
-///
-/// @attention This feature is experimental! It is not ready for use!
 ///
 class search_indexes::model {
     // This class implements both `SearchIndexModel` and `SearchIndexOptions` ("Index View API"):

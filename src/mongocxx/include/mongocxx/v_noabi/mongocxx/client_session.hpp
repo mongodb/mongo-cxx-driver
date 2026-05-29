@@ -161,7 +161,7 @@ class client_session {
     /// are network or other transient failures, or if there are other errors such as a session with
     /// a transaction already in progress.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(void) start_transaction(
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(void) start_transaction(
         bsoncxx::v_noabi::stdx::optional<v_noabi::options::transaction> const& transaction_opts = {});
 
     ///
@@ -171,7 +171,7 @@ class client_session {
     /// are network or other transient failures, or if there are other errors such as a session with
     /// no transaction in progress.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(void) commit_transaction();
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(void) commit_transaction();
 
     ///
     /// Aborts a transaction on the current client session.
@@ -179,7 +179,7 @@ class client_session {
     /// @throws mongocxx::v_noabi::operation_exception if the options are misconfigured or if there
     /// are other errors such as a session with no transaction in progress.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(void) abort_transaction();
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(void) abort_transaction();
 
     ///
     /// Represents a callback invoked within a transaction.
@@ -215,7 +215,9 @@ class client_session {
     /// @throws mongocxx::v_noabi::operation_exception if there are errors completing the
     /// transaction.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(void) with_transaction(with_transaction_cb cb, v_noabi::options::transaction opts = {});
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(void) with_transaction(
+        with_transaction_cb cb,
+        v_noabi::options::transaction opts = {});
 
     class internal;
 

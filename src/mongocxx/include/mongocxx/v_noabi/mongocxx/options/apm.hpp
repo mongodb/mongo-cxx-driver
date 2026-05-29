@@ -59,7 +59,7 @@ class apm {
     ///
     /// Construct with the @ref mongocxx::v1 equivalent.
     ///
-    /* explicit(false) */ MONGOCXX_ABI_EXPORT_CDECL() apm(v1::apm other);
+    /* explicit(false) */ MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE() apm(v1::apm other);
 
     ///
     /// Convert to the @ref mongocxx::v1 equivalent.

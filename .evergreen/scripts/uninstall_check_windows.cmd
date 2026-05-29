@@ -1,8 +1,8 @@
 echo on
 echo
 
-set BSONCXX_BASENAME=bsoncxx
-set MONGOCXX_BASENAME=mongocxx
+set BSONCXX_BASENAME=bsoncxx1
+set MONGOCXX_BASENAME=mongocxx1
 
 set INSTALL_DIR=%CD%\build\install
 
@@ -10,14 +10,11 @@ dir %INSTALL_DIR%\share\mongo-cxx-driver
 
 dir %INSTALL_DIR% /s
 
-if exist %INSTALL_DIR%\lib\pkgconfig\lib%BSONCXX_BASENAME%1.pc (
-  echo lib%BSONCXX_BASENAME%1.pc found!
-  exit /B 1
-) else if exist %INSTALL_DIR%\lib\pkgconfig\lib%BSONCXX_BASENAME%.pc (
+if exist %INSTALL_DIR%\lib\pkgconfig\lib%BSONCXX_BASENAME%.pc (
   echo lib%BSONCXX_BASENAME%.pc found!
   exit /B 1
 ) else (
-  echo lib%BSONCXX_BASENAME%1.pc check ok
+  echo lib%BSONCXX_BASENAME%.pc check ok
 )
 if not exist %INSTALL_DIR%\lib\canary.txt (
   echo canary.txt not found!
@@ -31,14 +28,11 @@ if not exist %INSTALL_DIR%\lib (
 ) else (
   echo %INSTALL_DIR%\lib check ok
 )
-if exist %INSTALL_DIR%\lib\pkgconfig\lib%MONGOCXX_BASENAME%1.pc (
-  echo lib%MONGOCXX_BASENAME%1.pc found!
-  exit /B 1
-) else if exist %INSTALL_DIR%\lib\pkgconfig\lib%MONGOCXX_BASENAME%.pc (
+if exist %INSTALL_DIR%\lib\pkgconfig\lib%MONGOCXX_BASENAME%.pc (
   echo lib%MONGOCXX_BASENAME%.pc found!
   exit /B 1
 ) else (
-  echo lib%MONGOCXX_BASENAME%1.pc check ok
+  echo lib%MONGOCXX_BASENAME%.pc check ok
 )
 if exist %INSTALL_DIR%\include\bsoncxx\v_noabi\bsoncxx\json.hpp (
   echo bsoncxx\json.hpp found!

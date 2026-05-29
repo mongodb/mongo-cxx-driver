@@ -20,14 +20,17 @@ set(MONGOCXX_VERSION_NO_EXTRA ${MONGOCXX_VERSION_MAJOR}.${MONGOCXX_VERSION_MINOR
 set(MONGOCXX_VERSION ${MONGOCXX_VERSION_NO_EXTRA}${MONGOCXX_VERSION_EXTRA} CACHE INTERNAL "")
 message(STATUS "mongocxx version: $CACHE{MONGOCXX_VERSION}")
 
-set(MONGOCXX_SOVERSION "_noabi" CACHE STRING "For internal use only.")
+set(MONGOCXX_SOVERSION "1" CACHE STRING "The ABI version number for the mongocxx library.")
 message(STATUS "mongocxx soversion: ${MONGOCXX_SOVERSION}")
+
+cmake_dependent_option(MONGOCXX_ENABLE_UNSTABLE_ABI "Enable building with unstable ABI symbols." ON "BSONCXX_ENABLE_UNSTABLE_ABI" OFF)
+mark_as_advanced(MONGOCXX_ENABLE_UNSTABLE_ABI) # For internal use only.
 
 option(MONGOCXX_ENABLE_SSL "Enable SSL - if the underlying C driver offers it" ON)
 option(MONGOCXX_ENABLE_SLOW_TESTS "Run slow tests when invoking the the test target" OFF)
 
 option(MONGOCXX_API_OVERRIDE_DEFAULT_ABI "The default ABI namespace to use for root namespace redeclarations" OFF)
-mark_as_advanced(MONGOCXX_API_OVERRIDE_DEFAULT_ABI)
+mark_as_advanced(MONGOCXX_API_OVERRIDE_DEFAULT_ABI) # For internal use only.
 if(MONGOCXX_API_OVERRIDE_DEFAULT_ABI)
     message(WARNING "MONGOCXX_API_OVERRIDE_DEFAULT_ABI is an experimental feature")
 endif ()

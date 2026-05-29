@@ -45,8 +45,6 @@ namespace v1 {
 /// @see
 /// - [Insert Methods (MongoDB Manual)](https://www.mongodb.com/docs/manual/reference/insert-methods/)
 ///
-/// @attention This feature is experimental! It is not ready for use!
-///
 class insert_one_options {
    private:
     class impl;
@@ -97,7 +95,7 @@ class insert_one_options {
     ///
     /// Set the "bypassDocumentValidation" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(insert_one_options&) bypass_document_validation(bool bypass_document_validation);
+    MONGOCXX_ABI_EXPORT_CDECL(insert_one_options&) bypass_document_validation(bool v);
 
     ///
     /// Return the current "bypassDocumentValidation" field.
@@ -107,7 +105,7 @@ class insert_one_options {
     ///
     /// Set the "readConcern" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(insert_one_options&) read_concern(v1::read_concern rc);
+    MONGOCXX_ABI_EXPORT_CDECL(insert_one_options&) read_concern(v1::read_concern v);
 
     ///
     /// Return the current "readConcern" field.
@@ -117,7 +115,7 @@ class insert_one_options {
     ///
     /// Set the "writeConcern" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(insert_one_options&) write_concern(v1::write_concern wc);
+    MONGOCXX_ABI_EXPORT_CDECL(insert_one_options&) write_concern(v1::write_concern v);
 
     ///
     /// Return the current "writeConcern" field.
@@ -127,7 +125,7 @@ class insert_one_options {
     ///
     /// Set the "comment" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(insert_one_options&) comment(bsoncxx::v1::types::value comment);
+    MONGOCXX_ABI_EXPORT_CDECL(insert_one_options&) comment(bsoncxx::v1::types::value v);
 
     ///
     /// Return the current "comment" field.

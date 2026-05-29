@@ -48,7 +48,7 @@ class oid {
     ///
     /// Constructs an oid and initializes it to a newly generated ObjectId.
     ///
-    BSONCXX_ABI_EXPORT_CDECL() oid();
+    BSONCXX_ABI_EXPORT_CDECL_UNSTABLE() oid();
 
     ///
     /// Construct with the @ref bsoncxx::v1 equivalent.
@@ -65,7 +65,7 @@ class oid {
     ///
     /// @throws bsoncxx::v_noabi::exception if the length is not equal to oid::size().
     ///
-    explicit BSONCXX_ABI_EXPORT_CDECL() oid(char const* bytes, std::size_t len);
+    explicit BSONCXX_ABI_EXPORT_CDECL_UNSTABLE() oid(char const* bytes, std::size_t len);
 
     ///
     /// Constructs an oid and initializes it from the provided hex string.
@@ -76,7 +76,7 @@ class oid {
     /// @throws bsoncxx::v_noabi::exception if the string isn't an OID-sized hex
     /// string.
     ///
-    explicit BSONCXX_ABI_EXPORT_CDECL() oid(v1::stdx::string_view const& str);
+    explicit BSONCXX_ABI_EXPORT_CDECL_UNSTABLE() oid(v1::stdx::string_view const& str);
 
     ///
     /// Convert to the @ref bsoncxx::v1 equivalent.
@@ -162,7 +162,7 @@ class oid {
     ///
 
    private:
-    friend BSONCXX_ABI_EXPORT_CDECL(int) oid_compare(oid const& lhs, oid const& rhs);
+    friend BSONCXX_ABI_EXPORT_CDECL_UNSTABLE(int) oid_compare(oid const& lhs, oid const& rhs);
 };
 
 BSONCXX_PRIVATE_INLINE_CXX17 constexpr std::size_t oid::k_oid_length;

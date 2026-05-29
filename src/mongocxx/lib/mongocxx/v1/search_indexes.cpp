@@ -412,8 +412,8 @@ bsoncxx::v1::stdx::optional<bsoncxx::v1::stdx::string_view> search_indexes::mode
     return impl::with(this)->_type;
 }
 
-search_indexes::model& search_indexes::model::type(std::string type) {
-    impl::with(this)->_type = std::move(type);
+search_indexes::model& search_indexes::model::type(std::string v) {
+    impl::with(this)->_type = std::move(v);
     return *this;
 }
 

@@ -38,8 +38,6 @@ namespace v1 {
 /// @see
 /// - [Aggregation Operations (MongoDB Manual)](https://www.mongodb.com/docs/manual/core/aggregates/)
 ///
-/// @attention This feature is experimental! It is not ready for use!
-///
 class pipeline {
    private:
     class impl;

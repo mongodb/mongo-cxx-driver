@@ -50,8 +50,6 @@ namespace v1 {
 /// - [Bulk Write Operations (MongoDB Manual)](https://www.mongodb.com/docs/manual/core/bulk-write-operations/)
 /// - [Update Methods (MongoDB Manual)](https://www.mongodb.com/docs/manual/reference/update-methods/)
 ///
-/// @attention This feature is experimental! It is not ready for use!
-///
 class bulk_write {
    private:
     class impl;
@@ -168,8 +166,6 @@ class bulk_write {
 /// @see
 /// - [Bulk Write Operations (MongoDB Manual)](https://www.mongodb.com/docs/manual/core/bulk-write-operations/)
 ///
-/// @attention This feature is experimental! It is not ready for use!
-///
 class bulk_write::insert_one {
    public:
     ///
@@ -204,8 +200,6 @@ class bulk_write::insert_one {
 ///
 /// @see
 /// - [Bulk Write Operations (MongoDB Manual)](https://www.mongodb.com/docs/manual/core/bulk-write-operations/)
-///
-/// @attention This feature is experimental! It is not ready for use!
 ///
 class bulk_write::update_one {
    private:
@@ -337,8 +331,6 @@ class bulk_write::update_one {
 /// @see
 /// - [Bulk Write Operations (MongoDB Manual)](https://www.mongodb.com/docs/manual/core/bulk-write-operations/)
 ///
-/// @attention This feature is experimental! It is not ready for use!
-///
 class bulk_write::update_many {
    private:
     class impl;
@@ -461,8 +453,6 @@ class bulk_write::update_many {
 /// @see
 /// - [Bulk Write Operations (MongoDB Manual)](https://www.mongodb.com/docs/manual/core/bulk-write-operations/)
 ///
-/// @attention This feature is experimental! It is not ready for use!
-///
 class bulk_write::replace_one {
    private:
     class impl;
@@ -579,8 +569,6 @@ class bulk_write::replace_one {
 /// @see
 /// - [Bulk Write Operations (MongoDB Manual)](https://www.mongodb.com/docs/manual/core/bulk-write-operations/)
 ///
-/// @attention This feature is experimental! It is not ready for use!
-///
 class bulk_write::delete_one {
    private:
     class impl;
@@ -670,8 +658,6 @@ class bulk_write::delete_one {
 /// @see
 /// - [Bulk Write Operations (MongoDB Manual)](https://www.mongodb.com/docs/manual/core/bulk-write-operations/)
 ///
-/// @attention This feature is experimental! It is not ready for use!
-///
 class bulk_write::delete_many {
    private:
     class impl;
@@ -756,8 +742,6 @@ class bulk_write::delete_many {
 /// @see
 /// - [Bulk Write Operations (MongoDB Manual)](https://www.mongodb.com/docs/manual/core/bulk-write-operations/)
 /// - [Update Methods (MongoDB Manual)](https://www.mongodb.com/docs/manual/reference/update-methods/)
-///
-/// @attention This feature is experimental! It is not ready for use!
 ///
 class bulk_write::single {
    private:
@@ -906,8 +890,6 @@ class bulk_write::single {
 /// - [Bulk Write Operations (MongoDB Manual)](https://www.mongodb.com/docs/manual/core/bulk-write-operations/)
 /// - [Update Methods (MongoDB Manual)](https://www.mongodb.com/docs/manual/reference/update-methods/)
 ///
-/// @attention This feature is experimental! It is not ready for use!
-///
 class bulk_write::options {
    private:
     class impl;
@@ -959,7 +941,7 @@ class bulk_write::options {
     ///
     /// Set the "bypassDocumentValidation" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(options&) bypass_document_validation(bool bypass_document_validation);
+    MONGOCXX_ABI_EXPORT_CDECL(options&) bypass_document_validation(bool v);
 
     ///
     /// Return the current "bypassDocumentValidation" field.
@@ -969,7 +951,7 @@ class bulk_write::options {
     ///
     /// Set the "comment" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(options&) comment(bsoncxx::v1::types::value comment);
+    MONGOCXX_ABI_EXPORT_CDECL(options&) comment(bsoncxx::v1::types::value v);
 
     ///
     /// Return the current "comment" field.
@@ -979,7 +961,7 @@ class bulk_write::options {
     ///
     /// Set the "let" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(options&) let(bsoncxx::v1::document::value let);
+    MONGOCXX_ABI_EXPORT_CDECL(options&) let(bsoncxx::v1::document::value v);
 
     ///
     /// Return the current "let" field.
@@ -989,7 +971,7 @@ class bulk_write::options {
     ///
     /// Set the "ordered" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(options&) ordered(bool ordered);
+    MONGOCXX_ABI_EXPORT_CDECL(options&) ordered(bool v);
 
     ///
     /// Return the current "ordered" field.
@@ -999,7 +981,7 @@ class bulk_write::options {
     ///
     /// Set the "readConcern" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(options&) read_concern(v1::read_concern rc);
+    MONGOCXX_ABI_EXPORT_CDECL(options&) read_concern(v1::read_concern v);
 
     ///
     /// Return the current "readConcern" field.
@@ -1009,7 +991,7 @@ class bulk_write::options {
     ///
     /// Set the "writeConcern" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(options&) write_concern(v1::write_concern wc);
+    MONGOCXX_ABI_EXPORT_CDECL(options&) write_concern(v1::write_concern v);
 
     ///
     /// Return the current "writeConcern" field.
@@ -1037,8 +1019,6 @@ class bulk_write::options {
 /// - [CRUD API (MongoDB Specifications)](https://specifications.readthedocs.io/en/latest/crud/crud/)
 /// - [Bulk Write Operations (MongoDB Manual)](https://www.mongodb.com/docs/manual/core/bulk-write-operations/)
 /// - [Update Methods (MongoDB Manual)](https://www.mongodb.com/docs/manual/reference/update-methods/)
-///
-/// @attention This feature is experimental! It is not ready for use!
 ///
 class bulk_write::result {
    private:

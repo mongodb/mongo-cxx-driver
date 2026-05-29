@@ -84,8 +84,8 @@ upload_options::upload_options() : _impl{new impl{}} {}
 
 // NOLINTEND(cppcoreguidelines-owning-memory)
 
-upload_options& upload_options::chunk_size_bytes(std::int32_t chunk_size_bytes) {
-    impl::with(this)->_chunk_size_bytes = chunk_size_bytes;
+upload_options& upload_options::chunk_size_bytes(std::int32_t v) {
+    impl::with(this)->_chunk_size_bytes = v;
     return *this;
 }
 
@@ -93,8 +93,8 @@ bsoncxx::v1::stdx::optional<std::int32_t> upload_options::chunk_size_bytes() con
     return impl::with(this)->_chunk_size_bytes;
 }
 
-upload_options& upload_options::metadata(bsoncxx::v1::document::value metadata) {
-    impl::with(this)->_metadata = std::move(metadata);
+upload_options& upload_options::metadata(bsoncxx::v1::document::value v) {
+    impl::with(this)->_metadata = std::move(v);
     return *this;
 }
 

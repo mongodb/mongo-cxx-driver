@@ -42,8 +42,6 @@ namespace v1 {
 ///
 /// A MongoDB change stream.
 ///
-/// @attention This feature is experimental! It is not ready for use!
-///
 /// @see
 /// - [Change Streams (MongoDB Manual)](https://www.mongodb.com/docs/manual/changeStreams/)
 ///
@@ -168,8 +166,6 @@ class change_stream {
 /// - resume_after ("resumeAfter")
 /// - start_after ("startAfter")
 /// - start_at_operation_time ("startAtOperationTime")
-///
-/// @attention This feature is experimental! It is not ready for use!
 ///
 class change_stream::options {
    private:
@@ -317,8 +313,6 @@ class change_stream::options {
 
 ///
 /// An iterator over change stream events.
-///
-/// @attention This feature is experimental! It is not ready for use!
 ///
 /// @important All iterators associated with the same change stream object share the same state.
 /// @important The end iterator has no associated change stream.

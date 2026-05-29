@@ -281,7 +281,7 @@ class read_preference {
     ///
     /// @throws mongocxx::v_noabi::logic_error if the argument is invalid.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(read_preference&) max_staleness(std::chrono::seconds max_staleness);
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(read_preference&) max_staleness(std::chrono::seconds max_staleness);
 
     ///
     /// Returns the current max staleness setting for this read_preference.

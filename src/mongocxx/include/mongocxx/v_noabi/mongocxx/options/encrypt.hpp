@@ -55,7 +55,7 @@ class encrypt {
     ///
     /// Construct with the @ref mongocxx::v1 equivalent.
     ///
-    /* explicit(false) */ MONGOCXX_ABI_EXPORT_CDECL() encrypt(v1::encrypt_options opts);
+    /* explicit(false) */ MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE() encrypt(v1::encrypt_options opts);
 
     ///
     /// Convert to the @ref mongocxx::v1 equivalent.

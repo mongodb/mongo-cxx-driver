@@ -43,8 +43,6 @@ namespace v1 {
 /// - [Read Isolation, Consistency, and Recency (MongoDB Manual)](https://www.mongodb.com/docs/manual/core/read-isolation-consistency-recency/)
 /// - [Server Sessions (MongoDB Manual)](https://www.mongodb.com/docs/manual/reference/server-sessions/)
 ///
-/// @attention This feature is experimental! It is not ready for use!
-///
 class client_session {
    private:
     class impl;
@@ -55,8 +53,6 @@ class client_session {
 
     ///
     /// The state of an associated transaction.
-    ///
-    /// @attention This feature is experimental! It is not ready for use!
     ///
     enum class transaction_state {
         ///
@@ -279,8 +275,6 @@ class client_session {
 /// - `causal_consistency` ("causalConsistency")
 /// - `snapshot` ("snapshot")
 /// - `default_transaction_opts` ("defaultTransactionOptions")
-///
-/// @attention This feature is experimental! It is not ready for use!
 ///
 class client_session::options {
    private:

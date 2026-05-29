@@ -46,8 +46,6 @@ namespace v1 {
 /// - [Client Side Encryption (MongoDB Specifications)](https://specifications.readthedocs.io/en/latest/client-side-encryption/client-side-encryption/)
 /// - [Encrypted Fields and Enabled Queries (MongoDB Manual)](https://www.mongodb.com/docs/manual/core/queryable-encryption/fundamentals/encrypt-and-query/)
 ///
-/// @attention This feature is experimental! It is not ready for use!
-///
 class range_options {
    private:
     class impl;
@@ -98,7 +96,7 @@ class range_options {
     ///
     /// Set the "min" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(range_options&) min(bsoncxx::v1::types::value value);
+    MONGOCXX_ABI_EXPORT_CDECL(range_options&) min(bsoncxx::v1::types::value v);
 
     ///
     /// Return the current "min" field.
@@ -109,7 +107,7 @@ class range_options {
     ///
     /// Set the "max" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(range_options&) max(bsoncxx::v1::types::value value);
+    MONGOCXX_ABI_EXPORT_CDECL(range_options&) max(bsoncxx::v1::types::value v);
 
     ///
     /// Return the current "max" field.
@@ -120,7 +118,7 @@ class range_options {
     ///
     /// Set the "sparsity" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(range_options&) sparsity(std::int64_t value);
+    MONGOCXX_ABI_EXPORT_CDECL(range_options&) sparsity(std::int64_t v);
 
     ///
     /// Return the current "sparsity" field.
@@ -131,7 +129,7 @@ class range_options {
     ///
     /// Set the "trimFactor" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(range_options&) trim_factor(std::int32_t value);
+    MONGOCXX_ABI_EXPORT_CDECL(range_options&) trim_factor(std::int32_t v);
 
     ///
     /// Return the current "trimFactor" field.
@@ -142,7 +140,7 @@ class range_options {
     ///
     /// Set the "precision" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(range_options&) precision(std::int32_t value);
+    MONGOCXX_ABI_EXPORT_CDECL(range_options&) precision(std::int32_t v);
 
     ///
     /// Return the current "precision" field.

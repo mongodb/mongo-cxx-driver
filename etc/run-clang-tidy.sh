@@ -14,7 +14,6 @@ fi
 # shellcheck source=/dev/null
 . .evergreen/scripts/install-build-tools.sh
 install_build_tools
-export CMAKE_GENERATOR="Ninja"
 
 uv tool install -q clang-tidy
 version="$(clang-tidy --version | perl -lne 'print $1 if m|LLVM version (\d+\.\d+\.\d+)|')"

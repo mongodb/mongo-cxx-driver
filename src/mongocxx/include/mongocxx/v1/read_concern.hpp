@@ -39,8 +39,6 @@ namespace v1 {
 /// - [Read Concern (MongoDB Manual)](https://www.mongodb.com/docs/manual/reference/read-concern/)
 /// - [Default MongoDB Read Concerns/Write Concerns (MongoDB Manual)](https://www.mongodb.com/docs/manual/reference/mongodb-defaults/)
 ///
-/// @attention This feature is experimental! It is not ready for use!
-///
 class read_concern {
    private:
     void* _impl; // mongoc_read_concern_t
@@ -51,8 +49,6 @@ class read_concern {
     ///
     /// @see
     /// - [Read Concern (MongoDB Manual)](https://www.mongodb.com/docs/manual/reference/read-concern/)
-    ///
-    /// @attention This feature is experimental! It is not ready for use!
     ///
     enum class level {
         ///

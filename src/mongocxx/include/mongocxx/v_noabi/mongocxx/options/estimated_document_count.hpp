@@ -50,7 +50,7 @@ class estimated_document_count {
     ///
     /// Construct with the @ref mongocxx::v1 equivalent.
     ///
-    /* explicit(false) */ MONGOCXX_ABI_EXPORT_CDECL() estimated_document_count(
+    /* explicit(false) */ MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE() estimated_document_count(
         v1::estimated_document_count_options opts);
 
     ///

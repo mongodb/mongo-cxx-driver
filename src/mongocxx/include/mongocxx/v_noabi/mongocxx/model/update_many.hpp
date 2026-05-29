@@ -63,7 +63,7 @@ class update_many {
     ///
     /// Construct with the @ref mongocxx::v1 equivalent.
     ///
-    /* explicit(false) */ MONGOCXX_ABI_EXPORT_CDECL() update_many(v1::bulk_write::update_many op);
+    /* explicit(false) */ MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE() update_many(v1::bulk_write::update_many op);
 
     ///
     /// Convert to the @ref mongocxx::v1 equivalent.

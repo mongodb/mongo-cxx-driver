@@ -58,12 +58,12 @@ class upload {
     ///
     /// Construct with the @ref mongocxx::v1 equivalent.
     ///
-    /* explicit(false) */ MONGOCXX_ABI_EXPORT_CDECL() upload(v1::gridfs::upload_result opts);
+    /* explicit(false) */ MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE() upload(v1::gridfs::upload_result opts);
 
     ///
     /// Convert to the @ref mongocxx::v1 equivalent.
     ///
-    explicit MONGOCXX_ABI_EXPORT_CDECL() operator v1::gridfs::upload_result() const;
+    explicit MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE() operator v1::gridfs::upload_result() const;
 
     ///
     /// Gets the id of the uploaded GridFS file.

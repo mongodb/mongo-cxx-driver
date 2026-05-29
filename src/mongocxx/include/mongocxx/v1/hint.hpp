@@ -42,8 +42,6 @@ namespace v1 {
 /// @see
 /// - [Query Optimization (MongoDB Manual)](https://www.mongodb.com/docs/manual/core/query-optimization/)
 ///
-/// @attention This feature is experimental! It is not ready for use!
-///
 class hint {
    private:
     class impl;

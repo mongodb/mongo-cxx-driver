@@ -115,7 +115,7 @@ class value {
     /// @param view
     ///   A view of another array to copy.
     ///
-    explicit BSONCXX_ABI_EXPORT_CDECL() value(v_noabi::array::view view);
+    explicit BSONCXX_ABI_EXPORT_CDECL_UNSTABLE() value(v_noabi::array::view view);
 
     ///
     /// Convert to the @ref bsoncxx::v1 equivalent.
@@ -270,7 +270,7 @@ inline v_noabi::array::value from_v1(v1::array::value const& v) {
 /// @throws bsoncxx::v_noabi::exception with bsoncxx::v_noabi::error_code::k_invalid_deleter_type if the type of the
 /// deleter for `value` is not @ref bsoncxx::v_noabi::array::value::deleter_type.
 ///
-BSONCXX_ABI_EXPORT_CDECL(v_noabi::array::value) from_v1(v1::array::value&& v);
+BSONCXX_ABI_EXPORT_CDECL_UNSTABLE(v_noabi::array::value) from_v1(v1::array::value&& v);
 
 ///
 /// Convert to the @ref bsoncxx::v1 equivalent of `v`.

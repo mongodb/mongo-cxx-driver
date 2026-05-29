@@ -63,7 +63,7 @@ class update_one {
     ///
     /// Construct with the @ref mongocxx::v1 equivalent.
     ///
-    /* explicit(false) */ MONGOCXX_ABI_EXPORT_CDECL() update_one(v1::bulk_write::update_one op);
+    /* explicit(false) */ MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE() update_one(v1::bulk_write::update_one op);
 
     ///
     /// Convert to the @ref mongocxx::v1 equivalent.

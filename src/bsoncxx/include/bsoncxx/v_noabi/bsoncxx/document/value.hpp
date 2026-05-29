@@ -123,7 +123,7 @@ class value {
     /// @param view
     ///   A view of another document to copy.
     ///
-    explicit BSONCXX_ABI_EXPORT_CDECL() value(v_noabi::document::view view);
+    explicit BSONCXX_ABI_EXPORT_CDECL_UNSTABLE() value(v_noabi::document::view view);
 
     ///
     /// Constructor used for serialization of user objects. This uses argument-dependent lookup
@@ -373,7 +373,7 @@ inline v_noabi::document::value from_v1(v1::document::value const& v) {
 ///
 /// Convert from the @ref bsoncxx::v1 equivalent of `v`.
 ///
-BSONCXX_ABI_EXPORT_CDECL(v_noabi::document::value) from_v1(v1::document::value&& v);
+BSONCXX_ABI_EXPORT_CDECL_UNSTABLE(v_noabi::document::value) from_v1(v1::document::value&& v);
 
 ///
 /// Convert to the @ref bsoncxx::v1 equivalent of `v`.

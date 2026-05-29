@@ -119,7 +119,7 @@ class client {
     /// @throws mongocxx::v_noabi::exception if invalid options are provided
     /// (whether from the URI or provided client options).
     ///
-    MONGOCXX_ABI_EXPORT_CDECL() client(
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE() client(
         v_noabi::uri const& mongodb_uri,
         options::client const& options = options::client());
 
@@ -148,16 +148,16 @@ class client {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/read-concern/
     ///
-    MONGOCXX_DEPRECATED MONGOCXX_ABI_EXPORT_CDECL(void) read_concern(v_noabi::read_concern rc);
+    MONGOCXX_DEPRECATED MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(void) read_concern(v_noabi::read_concern rc);
 
-    MONGOCXX_ABI_EXPORT_CDECL(void) read_concern_deprecated(v_noabi::read_concern rc);
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(void) read_concern_deprecated(v_noabi::read_concern rc);
 
     ///
     /// Returns the current read concern for this client.
     ///
     /// @return The current @c read_concern
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(v_noabi::read_concern) read_concern() const;
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(v_noabi::read_concern) read_concern() const;
 
     ///
     /// Sets the read preference for this client.
@@ -176,9 +176,9 @@ class client {
     /// @see
     /// - https://www.mongodb.com/docs/manual/core/read-preference/
     ///
-    MONGOCXX_DEPRECATED MONGOCXX_ABI_EXPORT_CDECL(void) read_preference(v_noabi::read_preference rp);
+    MONGOCXX_DEPRECATED MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(void) read_preference(v_noabi::read_preference rp);
 
-    MONGOCXX_ABI_EXPORT_CDECL(void)
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(void)
     read_preference_deprecated(v_noabi::read_preference rp);
 
     ///
@@ -189,14 +189,14 @@ class client {
     /// @see
     /// - https://www.mongodb.com/docs/manual/core/read-preference/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(v_noabi::read_preference) read_preference() const;
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(v_noabi::read_preference) read_preference() const;
 
     ///
     /// Returns the current uri for this client.
     ///
     /// @return The @c uri that this client was created with.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(v_noabi::uri) uri() const;
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(v_noabi::uri) uri() const;
 
     ///
     /// Sets the write concern for this client.
@@ -212,15 +212,15 @@ class client {
     /// @param wc
     ///   The new write concern
     ///
-    MONGOCXX_DEPRECATED MONGOCXX_ABI_EXPORT_CDECL(void) write_concern(v_noabi::write_concern wc);
+    MONGOCXX_DEPRECATED MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(void) write_concern(v_noabi::write_concern wc);
 
-    MONGOCXX_ABI_EXPORT_CDECL(void) write_concern_deprecated(v_noabi::write_concern wc);
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(void) write_concern_deprecated(v_noabi::write_concern wc);
 
     ///
     /// Returns the current write concern for this client.
     ///
     /// @return the current @c write_concern
-    MONGOCXX_ABI_EXPORT_CDECL(v_noabi::write_concern) write_concern() const;
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(v_noabi::write_concern) write_concern() const;
 
     ///
     /// Obtains a database that represents a logical grouping of collections on a MongoDB server.
@@ -232,7 +232,7 @@ class client {
     ///
     /// @return The database
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(v_noabi::database)
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(v_noabi::database)
     database(bsoncxx::v_noabi::string::view_or_value name) const&;
 
     v_noabi::database database(bsoncxx::v_noabi::string::view_or_value name) const&& = delete;
@@ -269,7 +269,7 @@ class client {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/listDatabases
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(v_noabi::cursor) list_databases() const;
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(v_noabi::cursor) list_databases() const;
 
     ///
     /// Enumerates the databases in the client.
@@ -289,7 +289,7 @@ class client {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/listDatabases
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(v_noabi::cursor) list_databases(v_noabi::client_session const& session) const;
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(v_noabi::cursor) list_databases(v_noabi::client_session const& session) const;
 
     ///
     /// Enumerates the databases in the client.
@@ -309,7 +309,7 @@ class client {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/listDatabases
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(v_noabi::cursor)
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(v_noabi::cursor)
     list_databases(bsoncxx::v_noabi::document::view_or_value const opts) const;
 
     ///
@@ -333,7 +333,7 @@ class client {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/listDatabases
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(v_noabi::cursor)
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(v_noabi::cursor)
     list_databases(v_noabi::client_session const& session, bsoncxx::v_noabi::document::view_or_value const opts) const;
 
     ///
@@ -350,7 +350,7 @@ class client {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/listDatabases
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(std::vector<std::string>)
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(std::vector<std::string>)
     list_database_names(bsoncxx::v_noabi::document::view_or_value const filter = {}) const;
 
     ///
@@ -370,7 +370,7 @@ class client {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/listDatabases
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(std::vector<std::string>)
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(std::vector<std::string>)
     list_database_names(
         v_noabi::client_session const& session,
         bsoncxx::v_noabi::document::view_or_value const filter = {}) const;
@@ -385,7 +385,7 @@ class client {
     /// support, if options is misconfigured, or if the session is configured with options that the
     /// server does not support.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(v_noabi::client_session)
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(v_noabi::client_session)
     start_session(v_noabi::options::client_session const& options = {});
 
     ///
@@ -402,7 +402,8 @@ class client {
     /// @see
     /// - https://www.mongodb.com/docs/manual/changeStreams/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(v_noabi::change_stream) watch(v_noabi::options::change_stream const& options = {});
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(v_noabi::change_stream) watch(
+        v_noabi::options::change_stream const& options = {});
 
     ///
     /// Get a change stream on this client with an empty pipeline.
@@ -420,7 +421,7 @@ class client {
     /// @see
     /// - https://www.mongodb.com/docs/manual/changeStreams/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(v_noabi::change_stream)
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(v_noabi::change_stream)
     watch(v_noabi::client_session const& session, v_noabi::options::change_stream const& options = {});
 
     ///
@@ -441,7 +442,7 @@ class client {
     /// @see
     /// - https://www.mongodb.com/docs/manual/changeStreams/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(v_noabi::change_stream)
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(v_noabi::change_stream)
     watch(v_noabi::pipeline const& pipe, v_noabi::options::change_stream const& options = {});
 
     ///
@@ -462,7 +463,7 @@ class client {
     /// @see
     /// - https://www.mongodb.com/docs/manual/changeStreams/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(v_noabi::change_stream)
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(v_noabi::change_stream)
     watch(
         v_noabi::client_session const& session,
         v_noabi::pipeline const& pipe,
@@ -492,7 +493,7 @@ class client {
     /// they are destroyed. Client sessions from previous generations
     /// cannot be used and should be destroyed.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(void) reset();
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(void) reset();
 
     class internal;
 

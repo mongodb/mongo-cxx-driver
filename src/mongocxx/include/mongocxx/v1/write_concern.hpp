@@ -44,8 +44,6 @@ namespace v1 {
 /// @see
 /// - [Write Concern (MongoDB Manual)](https://www.mongodb.com/docs/manual/reference/write-concern/)
 ///
-/// @attention This feature is experimental! It is not ready for use!
-///
 class write_concern {
    private:
     void* _impl; // mongoc_write_concern_t
@@ -56,8 +54,6 @@ class write_concern {
     ///
     /// @see
     /// - [Write Concern (MongoDB Manual)](https://www.mongodb.com/docs/manual/reference/write-concern/)
-    ///
-    /// @attention This feature is experimental! It is not ready for use!
     ///
     enum class level {
         ///

@@ -104,8 +104,8 @@ aggregate_options::aggregate_options() : _impl{new impl{}} {}
 
 // NOLINTEND(cppcoreguidelines-owning-memory)
 
-aggregate_options& aggregate_options::allow_disk_use(bool allow_disk_use) {
-    impl::with(this)->_allow_disk_use = allow_disk_use;
+aggregate_options& aggregate_options::allow_disk_use(bool v) {
+    impl::with(this)->_allow_disk_use = v;
     return *this;
 }
 
@@ -113,8 +113,8 @@ bsoncxx::v1::stdx::optional<bool> aggregate_options::allow_disk_use() const {
     return impl::with(this)->_allow_disk_use;
 }
 
-aggregate_options& aggregate_options::batch_size(std::int32_t batch_size) {
-    impl::with(this)->_batch_size = batch_size;
+aggregate_options& aggregate_options::batch_size(std::int32_t v) {
+    impl::with(this)->_batch_size = v;
     return *this;
 }
 
@@ -122,8 +122,8 @@ bsoncxx::v1::stdx::optional<std::int32_t> aggregate_options::batch_size() const 
     return impl::with(this)->_batch_size;
 }
 
-aggregate_options& aggregate_options::collation(bsoncxx::v1::document::value collation) {
-    impl::with(this)->_collation = std::move(collation);
+aggregate_options& aggregate_options::collation(bsoncxx::v1::document::value v) {
+    impl::with(this)->_collation = std::move(v);
     return *this;
 }
 
@@ -131,8 +131,8 @@ bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view> aggregate_options::coll
     return impl::with(this)->_collation;
 }
 
-aggregate_options& aggregate_options::let(bsoncxx::v1::document::value let) {
-    impl::with(this)->_let = std::move(let);
+aggregate_options& aggregate_options::let(bsoncxx::v1::document::value v) {
+    impl::with(this)->_let = std::move(v);
     return *this;
 }
 
@@ -140,8 +140,8 @@ bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view> aggregate_options::let(
     return impl::with(this)->_let;
 }
 
-aggregate_options& aggregate_options::max_time(std::chrono::milliseconds max_time) {
-    impl::with(this)->_max_time = max_time;
+aggregate_options& aggregate_options::max_time(std::chrono::milliseconds v) {
+    impl::with(this)->_max_time = v;
     return *this;
 }
 
@@ -149,8 +149,8 @@ bsoncxx::v1::stdx::optional<std::chrono::milliseconds> aggregate_options::max_ti
     return impl::with(this)->_max_time;
 }
 
-aggregate_options& aggregate_options::read_preference(v1::read_preference rp) {
-    impl::with(this)->_read_preference = std::move(rp);
+aggregate_options& aggregate_options::read_preference(v1::read_preference v) {
+    impl::with(this)->_read_preference = std::move(v);
     return *this;
 }
 
@@ -158,8 +158,8 @@ bsoncxx::v1::stdx::optional<v1::read_preference> aggregate_options::read_prefere
     return impl::with(this)->_read_preference;
 }
 
-aggregate_options& aggregate_options::bypass_document_validation(bool bypass_document_validation) {
-    impl::with(this)->_bypass_document_validation = bypass_document_validation;
+aggregate_options& aggregate_options::bypass_document_validation(bool v) {
+    impl::with(this)->_bypass_document_validation = v;
     return *this;
 }
 
@@ -167,8 +167,8 @@ bsoncxx::v1::stdx::optional<bool> aggregate_options::bypass_document_validation(
     return impl::with(this)->_bypass_document_validation;
 }
 
-aggregate_options& aggregate_options::hint(v1::hint index_hint) {
-    impl::with(this)->_hint = std::move(index_hint);
+aggregate_options& aggregate_options::hint(v1::hint v) {
+    impl::with(this)->_hint = std::move(v);
     return *this;
 }
 
@@ -176,8 +176,8 @@ bsoncxx::v1::stdx::optional<v1::hint> aggregate_options::hint() const {
     return impl::with(this)->_hint;
 }
 
-aggregate_options& aggregate_options::write_concern(v1::write_concern write_concern) {
-    impl::with(this)->_write_concern = std::move(write_concern);
+aggregate_options& aggregate_options::write_concern(v1::write_concern v) {
+    impl::with(this)->_write_concern = std::move(v);
     return *this;
 }
 
@@ -185,8 +185,8 @@ bsoncxx::v1::stdx::optional<v1::write_concern> aggregate_options::write_concern(
     return impl::with(this)->_write_concern;
 }
 
-aggregate_options& aggregate_options::read_concern(v1::read_concern read_concern) {
-    impl::with(this)->_read_concern = std::move(read_concern);
+aggregate_options& aggregate_options::read_concern(v1::read_concern v) {
+    impl::with(this)->_read_concern = std::move(v);
     return *this;
 }
 
@@ -194,8 +194,8 @@ bsoncxx::v1::stdx::optional<v1::read_concern> aggregate_options::read_concern() 
     return impl::with(this)->_read_concern;
 }
 
-aggregate_options& aggregate_options::comment(bsoncxx::v1::types::value comment) {
-    impl::with(this)->_comment = std::move(comment);
+aggregate_options& aggregate_options::comment(bsoncxx::v1::types::value v) {
+    impl::with(this)->_comment = std::move(v);
     return *this;
 }
 

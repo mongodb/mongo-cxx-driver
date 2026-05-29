@@ -77,7 +77,7 @@ class view {
     }
 
     /// @copydoc bsoncxx::v_noabi::document::view::cbegin() const
-    BSONCXX_ABI_EXPORT_CDECL(const_iterator) cbegin() const;
+    BSONCXX_ABI_EXPORT_CDECL_UNSTABLE(const_iterator) cbegin() const;
 
     /// @copydoc bsoncxx::v_noabi::document::view::cend() const
     const_iterator cend() const;
@@ -98,7 +98,7 @@ class view {
     ///
     /// @return An iterator to the element if it exists, or the past-the-end iterator.
     ///
-    BSONCXX_ABI_EXPORT_CDECL(const_iterator) find(std::uint32_t i) const;
+    BSONCXX_ABI_EXPORT_CDECL_UNSTABLE(const_iterator) find(std::uint32_t i) const;
 
     ///
     /// Indexes into this BSON array. If the index is out-of-bounds, the invalid array::element
@@ -194,7 +194,7 @@ class view::const_iterator {
         return &_element;
     }
 
-    BSONCXX_ABI_EXPORT_CDECL(const_iterator&) operator++();
+    BSONCXX_ABI_EXPORT_CDECL_UNSTABLE(const_iterator&) operator++();
 
     const_iterator operator++(int) {
         const_iterator before(*this);

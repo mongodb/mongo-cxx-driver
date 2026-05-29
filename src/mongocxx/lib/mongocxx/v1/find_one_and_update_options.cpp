@@ -120,8 +120,8 @@ bsoncxx::v1::stdx::optional<bool> find_one_and_update_options::bypass_document_v
     return impl::with(this)->_bypass_document_validation;
 }
 
-find_one_and_update_options& find_one_and_update_options::hint(v1::hint index_hint) {
-    impl::with(this)->_hint = std::move(index_hint);
+find_one_and_update_options& find_one_and_update_options::hint(v1::hint v) {
+    impl::with(this)->_hint = std::move(v);
     return *this;
 }
 
@@ -174,8 +174,8 @@ bsoncxx::v1::stdx::optional<v1::return_document> find_one_and_update_options::re
     return impl::with(this)->_return_document;
 }
 
-find_one_and_update_options& find_one_and_update_options::sort(bsoncxx::v1::document::value ordering) {
-    impl::with(this)->_sort = std::move(ordering);
+find_one_and_update_options& find_one_and_update_options::sort(bsoncxx::v1::document::value v) {
+    impl::with(this)->_sort = std::move(v);
     return *this;
 }
 

@@ -35,7 +35,7 @@ class instance {
     ///
     /// Creates an instance of the driver.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL() instance();
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE() instance();
 
     ///
     /// Creates an instance of the driver with a user provided log handler.
@@ -43,7 +43,7 @@ class instance {
     ///
     /// @throws mongocxx::v_noabi::logic_error if an instance already exists.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL() instance(std::unique_ptr<v_noabi::logger> logger);
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE() instance(std::unique_ptr<v_noabi::logger> logger);
 
     ///
     /// Move constructs an instance of the driver.
@@ -51,7 +51,7 @@ class instance {
     /// @par Postconditions:
     /// - `other` is in an assign-or-destroy-only state.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL() instance(instance&& other) noexcept;
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE() instance(instance&& other) noexcept;
 
     ///
     /// Move assigns an instance of the driver.
@@ -59,12 +59,12 @@ class instance {
     /// @par Postconditions:
     /// - `other` is in an assign-or-destroy-only state.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(instance&) operator=(instance&& other) noexcept;
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(instance&) operator=(instance&& other) noexcept;
 
     ///
     /// Destroys an instance of the driver.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL() ~instance();
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE() ~instance();
 
     ///
     /// This class is not copyable.
@@ -79,7 +79,7 @@ class instance {
     ///
     /// @warning For internal use only!
     ///
-    static MONGOCXX_ABI_EXPORT_CDECL(instance&) current();
+    static MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(instance&) current();
 
    private:
     class impl;

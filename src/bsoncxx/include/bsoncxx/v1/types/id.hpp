@@ -32,8 +32,6 @@ namespace types {
 ///
 /// Enumeration identifying a BSON type.
 ///
-/// @attention This feature is experimental! It is not ready for use!
-///
 /// @showenumvalues
 ///
 enum class id : std::int8_t {
@@ -63,14 +61,10 @@ enum class id : std::int8_t {
 ///
 /// Return the name of the enumerator (e.g. `"double"` given `k_double`).
 ///
-/// @attention This feature is experimental! It is not ready for use!
-///
 BSONCXX_ABI_EXPORT_CDECL(std::string) to_string(id rhs);
 
 ///
 /// Enumeration identifying a BSON binary subtype.
-///
-/// @attention This feature is experimental! It is not ready for use!
 ///
 /// @showenumvalues
 ///
@@ -92,8 +86,6 @@ enum class binary_subtype : std::uint8_t {
 /// Return the name of the enumerator (e.g. `"binary"` given `k_binary`).
 ///
 /// @note Values in the range [0x80, 0xFF] are all equivalent to "k_user".
-///
-/// @attention This feature is experimental! It is not ready for use!
 ///
 BSONCXX_ABI_EXPORT_CDECL(std::string) to_string(binary_subtype rhs);
 

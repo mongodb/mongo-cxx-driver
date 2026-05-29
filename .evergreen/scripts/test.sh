@@ -249,8 +249,8 @@ export CXX_STANDARD="${REQUIRED_CXX_STANDARD:-"11"}"
 export CXXFLAGS="${example_projects_cxxflags:-}"
 export LDFLAGS="${example_projects_ldflags:-}"
 
-export BSONCXX_BASENAME="bsoncxx"
-export MONGOCXX_BASENAME="mongocxx"
+export BSONCXX_BASENAME="bsoncxx1"
+export MONGOCXX_BASENAME="mongocxx1"
 
 pushd "${working_dir:?}/build"
 

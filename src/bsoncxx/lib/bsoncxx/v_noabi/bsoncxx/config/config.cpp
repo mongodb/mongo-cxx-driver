@@ -17,3 +17,11 @@
 #if !defined(BSONCXX_POLY_USE_IMPLS) && !defined(BSONCXX_POLY_USE_STD)
 #error "bsoncxx/v_noabi/bsoncxx/config/config.hpp should define a polyfill library macro"
 #endif
+
+#if !defined(BSONCXX_ABI_EXPORT_UNSTABLE)
+#error "bsoncxx/v_noabi/bsoncxx/config/config.hpp should define BSONCXX_ABI_EXPORT_UNSTABLE"
+#endif
+
+#if !defined(BSONCXX_ABI_EXPORT_CDECL_UNSTABLE)
+#error "bsoncxx/v_noabi/bsoncxx/config/config.hpp should define BSONCXX_ABI_EXPORT_CDECL_UNSTABLE"
+#endif

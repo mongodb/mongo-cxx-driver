@@ -147,7 +147,7 @@ class view {
 
 #pragma push_macro("X")
 #undef X
-#define X(_name, _value) BSONCXX_ABI_EXPORT_CDECL(v_noabi::types::b_##_name const&) get_##_name() const;
+#define X(_name, _value) BSONCXX_ABI_EXPORT_CDECL_UNSTABLE(v_noabi::types::b_##_name const&) get_##_name() const;
 
     ///
     /// Return the underlying BSON type value.
@@ -167,7 +167,7 @@ class view {
     /// Compare two bson_value::views for equality
     ///
     /// @{
-    friend BSONCXX_ABI_EXPORT_CDECL(bool) operator==(view const& lhs, view const& rhs);
+    friend BSONCXX_ABI_EXPORT_CDECL_UNSTABLE(bool) operator==(view const& lhs, view const& rhs);
 
     friend bool operator!=(view const& lhs, view const& rhs) {
         return !(lhs == rhs);

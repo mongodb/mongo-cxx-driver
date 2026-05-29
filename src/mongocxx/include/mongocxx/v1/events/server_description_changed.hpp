@@ -40,8 +40,6 @@ namespace events {
 /// @see
 /// - [SDAM Logging and Monitoring (MongoDB Specifications)](https://specifications.readthedocs.io/en/latest/server-discovery-and-monitoring/server-discovery-and-monitoring-logging-and-monitoring/)
 ///
-/// @attention This feature is experimental! It is not ready for use!
-///
 class server_description_changed {
    private:
     void const* _impl; // mongoc_apm_server_changed_t const

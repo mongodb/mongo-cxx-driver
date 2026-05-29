@@ -47,12 +47,12 @@ class rewrap_many_datakey {
     ///
     /// Construct with the @ref mongocxx::v1 equivalent.
     ///
-    /* explicit(false) */ MONGOCXX_ABI_EXPORT_CDECL() rewrap_many_datakey(v1::rewrap_many_datakey_result opts);
+    /* explicit(false) */ MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE() rewrap_many_datakey(v1::rewrap_many_datakey_result opts);
 
     ///
     /// Convert to the @ref mongocxx::v1 equivalent.
     ///
-    explicit MONGOCXX_ABI_EXPORT_CDECL() operator v1::rewrap_many_datakey_result() const;
+    explicit MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE() operator v1::rewrap_many_datakey_result() const;
 
     ///
     /// @deprecated For internal use only.
