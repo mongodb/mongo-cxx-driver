@@ -11,7 +11,7 @@ INSTALL_DIR="$BUILD_DIR/install"
 ls -lR "$INSTALL_DIR"
 
 if test -f "$INSTALL_DIR/$LIB_DIR/pkgconfig/lib${BSONCXX_BASENAME:?}.pc"; then
-  echo "lib${BSONCXX_BASENAME:?}.pc found!" # CXX-804: fallback to old library filename pattern.
+  echo "lib${BSONCXX_BASENAME:?}.pc found!"
   exit 1
 else
   echo "lib${BSONCXX_BASENAME:?}.pc check ok"
@@ -29,7 +29,7 @@ else
   echo "$INSTALL_DIR/$LIB_DIR check ok"
 fi
 if test -f "$INSTALL_DIR/$LIB_DIR/pkgconfig/lib${MONGOCXX_BASENAME:?}.pc"; then
-  echo "lib${MONGOCXX_BASENAME:?}.pc found!" # CXX-804: fallback to old library filename pattern.
+  echo "lib${MONGOCXX_BASENAME:?}.pc found!"
   exit 1
 else
   echo "lib${MONGOCXX_BASENAME:?}.pc check ok"
