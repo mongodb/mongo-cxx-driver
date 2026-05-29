@@ -86,5 +86,9 @@ if [[ "${TOPOLOGY:-}" == replica_set ]]; then
   echo "Waiting for replset member 27017 to become primary... done."
 fi
 
+if [ -f "${DRIVERS_TOOLS:?}/mongodb/bin/mongocryptd" ]; then
+  cp "${DRIVERS_TOOLS:?}/mongodb/bin/mongocryptd" ../mongocryptd
+fi
+
 cd ../
 pwd
