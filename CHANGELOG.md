@@ -34,7 +34,7 @@ Changes prior to 3.9.0 are documented as [release notes on GitHub](https://githu
 - Stable ABI (v1) is now officially supported for both bsoncxx and mongocxx libraries.
 - The soversion for both bsoncxx and mongocxx libraries is now set to `1`.
 - Library filenames now include the ABI version number, e.g. `libbsoncxx1.so.4.4.0`.
-- pkg-config config filenames now include the ABI version number, e.g. `bsoncxxConfig.cmake`.
+- pkg-config config filenames now include the ABI version number, e.g. `libbsoncxx1.pc`.
 - CMake package config filenames now use `camelCase`, e.g. `bsoncxxConfig.cmake`.
 
 ### Added

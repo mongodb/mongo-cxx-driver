@@ -13,6 +13,7 @@ dir %INSTALL_DIR% /s
 if exist %INSTALL_DIR%\lib\pkgconfig\lib%BSONCXX_BASENAME%.pc (
   echo lib%BSONCXX_BASENAME%.pc found!
   exit /B 1
+) else (
   echo lib%BSONCXX_BASENAME%.pc check ok
 )
 if not exist %INSTALL_DIR%\lib\canary.txt (
@@ -30,6 +31,7 @@ if not exist %INSTALL_DIR%\lib (
 if exist %INSTALL_DIR%\lib\pkgconfig\lib%MONGOCXX_BASENAME%.pc (
   echo lib%MONGOCXX_BASENAME%.pc found!
   exit /B 1
+) else (
   echo lib%MONGOCXX_BASENAME%.pc check ok
 )
 if exist %INSTALL_DIR%\include\bsoncxx\v_noabi\bsoncxx\json.hpp (
