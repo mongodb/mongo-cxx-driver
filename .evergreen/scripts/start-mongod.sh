@@ -28,12 +28,9 @@ export TOPOLOGY
 export REQUIRE_API_VERSION
 export ORCHESTRATION_FILE
 
-export PATH="${MONGODB_BINARIES:?}:${PATH:-}"
+export PATH="${DRIVERS_TOOLS:?}/mongodb/bin:${PATH:-}"
 
 ./.evergreen/run-mongodb.sh start
-
-# MacOS needs some assistance to ensure executable permissions(?).
-chmod +x ${MONGODB_BINARIES:?}/*
 
 declare mongosh_binary
 if command -v mongosh >/dev/null; then
@@ -87,11 +84,6 @@ if [[ "${TOPOLOGY:-}" == replica_set ]]; then
   echo "Waiting for replset member 27017 to become primary..."
   wait_for_primary
   echo "Waiting for replset member 27017 to become primary... done."
-fi
-
-# Copy mongocryptd up so other functions can find it later, since we can't share PATHs
-if [ -f "${MONGODB_BINARIES:?}/mongocryptd" ]; then
-  cp "${MONGODB_BINARIES:?}/mongocryptd" ../mongocryptd
 fi
 
 cd ../
