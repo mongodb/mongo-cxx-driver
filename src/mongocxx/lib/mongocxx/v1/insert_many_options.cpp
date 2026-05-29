@@ -89,8 +89,8 @@ insert_many_options::insert_many_options() : _impl{new impl{}} {}
 
 // NOLINTEND(cppcoreguidelines-owning-memory)
 
-insert_many_options& insert_many_options::bypass_document_validation(bool bypass_document_validation) {
-    impl::with(this)->_bypass_document_validation = bypass_document_validation;
+insert_many_options& insert_many_options::bypass_document_validation(bool v) {
+    impl::with(this)->_bypass_document_validation = v;
     return *this;
 }
 
@@ -98,8 +98,8 @@ bsoncxx::v1::stdx::optional<bool> insert_many_options::bypass_document_validatio
     return impl::with(this)->_bypass_document_validation;
 }
 
-insert_many_options& insert_many_options::read_concern(v1::read_concern rc) {
-    impl::with(this)->_read_concern = std::move(rc);
+insert_many_options& insert_many_options::read_concern(v1::read_concern v) {
+    impl::with(this)->_read_concern = std::move(v);
     return *this;
 }
 
@@ -107,8 +107,8 @@ bsoncxx::v1::stdx::optional<v1::read_concern> insert_many_options::read_concern(
     return impl::with(this)->_read_concern;
 }
 
-insert_many_options& insert_many_options::write_concern(v1::write_concern wc) {
-    impl::with(this)->_write_concern = std::move(wc);
+insert_many_options& insert_many_options::write_concern(v1::write_concern v) {
+    impl::with(this)->_write_concern = std::move(v);
     return *this;
 }
 
@@ -116,8 +116,8 @@ bsoncxx::v1::stdx::optional<v1::write_concern> insert_many_options::write_concer
     return impl::with(this)->_write_concern;
 }
 
-insert_many_options& insert_many_options::ordered(bool ordered) {
-    impl::with(this)->_ordered = ordered;
+insert_many_options& insert_many_options::ordered(bool v) {
+    impl::with(this)->_ordered = v;
     return *this;
 }
 
@@ -125,8 +125,8 @@ bsoncxx::v1::stdx::optional<bool> insert_many_options::ordered() const {
     return impl::with(this)->_ordered;
 }
 
-insert_many_options& insert_many_options::comment(bsoncxx::v1::types::value comment) {
-    impl::with(this)->_comment = std::move(comment);
+insert_many_options& insert_many_options::comment(bsoncxx::v1::types::value v) {
+    impl::with(this)->_comment = std::move(v);
     return *this;
 }
 

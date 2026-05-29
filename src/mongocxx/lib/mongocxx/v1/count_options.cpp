@@ -98,8 +98,8 @@ count_options::count_options() : _impl{new impl{}} {}
 
 // NOLINTEND(cppcoreguidelines-owning-memory)
 
-count_options& count_options::collation(bsoncxx::v1::document::value collation) {
-    impl::with(this)->_collation = std::move(collation);
+count_options& count_options::collation(bsoncxx::v1::document::value v) {
+    impl::with(this)->_collation = std::move(v);
     return *this;
 }
 
@@ -107,8 +107,8 @@ bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view> count_options::collatio
     return impl::with(this)->_collation;
 }
 
-count_options& count_options::hint(v1::hint index_hint) {
-    impl::with(this)->_hint = std::move(index_hint);
+count_options& count_options::hint(v1::hint v) {
+    impl::with(this)->_hint = std::move(v);
     return *this;
 }
 
@@ -116,8 +116,8 @@ bsoncxx::v1::stdx::optional<v1::hint> count_options::hint() const {
     return impl::with(this)->_hint;
 }
 
-count_options& count_options::comment(bsoncxx::v1::types::value comment) {
-    impl::with(this)->_comment = std::move(comment);
+count_options& count_options::comment(bsoncxx::v1::types::value v) {
+    impl::with(this)->_comment = std::move(v);
     return *this;
 }
 
@@ -125,8 +125,8 @@ bsoncxx::v1::stdx::optional<bsoncxx::v1::types::view> count_options::comment() c
     return impl::with(this)->_comment;
 }
 
-count_options& count_options::limit(std::int64_t limit) {
-    impl::with(this)->_limit = limit;
+count_options& count_options::limit(std::int64_t v) {
+    impl::with(this)->_limit = v;
     return *this;
 }
 
@@ -134,8 +134,8 @@ bsoncxx::v1::stdx::optional<std::int64_t> count_options::limit() const {
     return impl::with(this)->_limit;
 }
 
-count_options& count_options::max_time(std::chrono::milliseconds max_time) {
-    impl::with(this)->_max_time = max_time;
+count_options& count_options::max_time(std::chrono::milliseconds v) {
+    impl::with(this)->_max_time = v;
     return *this;
 }
 
@@ -143,8 +143,8 @@ bsoncxx::v1::stdx::optional<std::chrono::milliseconds> count_options::max_time()
     return impl::with(this)->_max_time;
 }
 
-count_options& count_options::skip(std::int64_t skip) {
-    impl::with(this)->_skip = skip;
+count_options& count_options::skip(std::int64_t v) {
+    impl::with(this)->_skip = v;
     return *this;
 }
 
@@ -152,8 +152,8 @@ bsoncxx::v1::stdx::optional<std::int64_t> count_options::skip() const {
     return impl::with(this)->_skip;
 }
 
-count_options& count_options::read_preference(v1::read_preference rp) {
-    impl::with(this)->_rp = std::move(rp);
+count_options& count_options::read_preference(v1::read_preference v) {
+    impl::with(this)->_rp = std::move(v);
     return *this;
 }
 
@@ -161,8 +161,8 @@ bsoncxx::v1::stdx::optional<v1::read_preference> count_options::read_preference(
     return impl::with(this)->_rp;
 }
 
-count_options& count_options::read_concern(v1::read_concern rc) {
-    impl::with(this)->_read_concern = std::move(rc);
+count_options& count_options::read_concern(v1::read_concern v) {
+    impl::with(this)->_read_concern = std::move(v);
     return *this;
 }
 

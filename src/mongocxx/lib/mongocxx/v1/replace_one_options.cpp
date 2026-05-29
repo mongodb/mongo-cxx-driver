@@ -94,8 +94,8 @@ replace_one_options::replace_one_options() : _impl{new impl{}} {}
 
 // NOLINTEND(cppcoreguidelines-owning-memory)
 
-replace_one_options& replace_one_options::bypass_document_validation(bool bypass_document_validation) {
-    impl::with(this)->_bypass_document_validation = std::move(bypass_document_validation);
+replace_one_options& replace_one_options::bypass_document_validation(bool v) {
+    impl::with(this)->_bypass_document_validation = std::move(v);
     return *this;
 }
 
@@ -103,8 +103,8 @@ bsoncxx::v1::stdx::optional<bool> replace_one_options::bypass_document_validatio
     return impl::with(this)->_bypass_document_validation;
 }
 
-replace_one_options& replace_one_options::collation(bsoncxx::v1::document::value collation) {
-    impl::with(this)->_collation = std::move(collation);
+replace_one_options& replace_one_options::collation(bsoncxx::v1::document::value v) {
+    impl::with(this)->_collation = std::move(v);
     return *this;
 }
 
@@ -112,8 +112,8 @@ bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view> replace_one_options::co
     return impl::with(this)->_collation;
 }
 
-replace_one_options& replace_one_options::upsert(bool upsert) {
-    impl::with(this)->_upsert = std::move(upsert);
+replace_one_options& replace_one_options::upsert(bool v) {
+    impl::with(this)->_upsert = std::move(v);
     return *this;
 }
 
@@ -121,8 +121,8 @@ bsoncxx::v1::stdx::optional<bool> replace_one_options::upsert() const {
     return impl::with(this)->_upsert;
 }
 
-replace_one_options& replace_one_options::read_concern(v1::read_concern rc) {
-    impl::with(this)->_read_concern = std::move(rc);
+replace_one_options& replace_one_options::read_concern(v1::read_concern v) {
+    impl::with(this)->_read_concern = std::move(v);
     return *this;
 }
 
@@ -130,8 +130,8 @@ bsoncxx::v1::stdx::optional<v1::read_concern> replace_one_options::read_concern(
     return impl::with(this)->_read_concern;
 }
 
-replace_one_options& replace_one_options::write_concern(v1::write_concern wc) {
-    impl::with(this)->_write_concern = std::move(wc);
+replace_one_options& replace_one_options::write_concern(v1::write_concern v) {
+    impl::with(this)->_write_concern = std::move(v);
     return *this;
 }
 
@@ -139,8 +139,8 @@ bsoncxx::v1::stdx::optional<v1::write_concern> replace_one_options::write_concer
     return impl::with(this)->_write_concern;
 }
 
-replace_one_options& replace_one_options::hint(v1::hint index_hint) {
-    impl::with(this)->_hint = std::move(index_hint);
+replace_one_options& replace_one_options::hint(v1::hint v) {
+    impl::with(this)->_hint = std::move(v);
     return *this;
 }
 
@@ -148,8 +148,8 @@ bsoncxx::v1::stdx::optional<v1::hint> replace_one_options::hint() const {
     return impl::with(this)->_hint;
 }
 
-replace_one_options& replace_one_options::let(bsoncxx::v1::document::value let) {
-    impl::with(this)->_let = std::move(let);
+replace_one_options& replace_one_options::let(bsoncxx::v1::document::value v) {
+    impl::with(this)->_let = std::move(v);
     return *this;
 }
 
@@ -157,8 +157,8 @@ bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view> const replace_one_optio
     return impl::with(this)->_let;
 }
 
-replace_one_options& replace_one_options::sort(bsoncxx::v1::document::value sort) {
-    impl::with(this)->_sort = std::move(sort);
+replace_one_options& replace_one_options::sort(bsoncxx::v1::document::value v) {
+    impl::with(this)->_sort = std::move(v);
     return *this;
 }
 
@@ -166,8 +166,8 @@ bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view> replace_one_options::so
     return impl::with(this)->_sort;
 }
 
-replace_one_options& replace_one_options::comment(bsoncxx::v1::types::value comment) {
-    impl::with(this)->_comment = std::move(comment);
+replace_one_options& replace_one_options::comment(bsoncxx::v1::types::value v) {
+    impl::with(this)->_comment = std::move(v);
     return *this;
 }
 

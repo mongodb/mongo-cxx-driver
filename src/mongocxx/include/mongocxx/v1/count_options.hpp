@@ -105,7 +105,7 @@ class count_options {
     ///
     /// Set the "collation" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(count_options&) collation(bsoncxx::v1::document::value collation);
+    MONGOCXX_ABI_EXPORT_CDECL(count_options&) collation(bsoncxx::v1::document::value v);
 
     ///
     /// Return the current "collation" field.
@@ -115,7 +115,7 @@ class count_options {
     ///
     /// Set the "hint" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(count_options&) hint(v1::hint index_hint);
+    MONGOCXX_ABI_EXPORT_CDECL(count_options&) hint(v1::hint v);
 
     ///
     /// Return the current "hint" field.
@@ -125,7 +125,7 @@ class count_options {
     ///
     /// Set the "comment" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(count_options&) comment(bsoncxx::v1::types::value comment);
+    MONGOCXX_ABI_EXPORT_CDECL(count_options&) comment(bsoncxx::v1::types::value v);
 
     ///
     /// Return the current "comment" field.
@@ -135,7 +135,7 @@ class count_options {
     ///
     /// Set the "limit" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(count_options&) limit(std::int64_t limit);
+    MONGOCXX_ABI_EXPORT_CDECL(count_options&) limit(std::int64_t v);
 
     ///
     /// Return the current "limit" field.
@@ -145,7 +145,7 @@ class count_options {
     ///
     /// Set the "maxTimeMS" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(count_options&) max_time(std::chrono::milliseconds max_time);
+    MONGOCXX_ABI_EXPORT_CDECL(count_options&) max_time(std::chrono::milliseconds v);
 
     ///
     /// Return the current "maxTimeMS" field.
@@ -155,7 +155,7 @@ class count_options {
     ///
     /// Set the "skip" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(count_options&) skip(std::int64_t skip);
+    MONGOCXX_ABI_EXPORT_CDECL(count_options&) skip(std::int64_t v);
 
     ///
     /// Return the current "skip" field.
@@ -165,7 +165,7 @@ class count_options {
     ///
     /// Set the "readConcern" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(count_options&) read_concern(v1::read_concern rc);
+    MONGOCXX_ABI_EXPORT_CDECL(count_options&) read_concern(v1::read_concern v);
 
     ///
     /// Return the current "readConcern" field.
@@ -175,7 +175,7 @@ class count_options {
     ///
     /// Set the "readPreference" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(count_options&) read_preference(v1::read_preference rp);
+    MONGOCXX_ABI_EXPORT_CDECL(count_options&) read_preference(v1::read_preference v);
 
     ///
     /// Return the current "readPreference" field.

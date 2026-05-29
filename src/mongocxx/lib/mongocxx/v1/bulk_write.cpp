@@ -1191,8 +1191,8 @@ bulk_write::options::options() : _impl{new impl{}} {}
 
 // NOLINTEND(cppcoreguidelines-owning-memory)
 
-bulk_write::options& bulk_write::options::bypass_document_validation(bool bypass_document_validation) {
-    impl::with(this)->_bypass_document_validation = bypass_document_validation;
+bulk_write::options& bulk_write::options::bypass_document_validation(bool v) {
+    impl::with(this)->_bypass_document_validation = v;
     return *this;
 }
 
@@ -1200,8 +1200,8 @@ bsoncxx::v1::stdx::optional<bool> bulk_write::options::bypass_document_validatio
     return impl::with(this)->_bypass_document_validation;
 }
 
-bulk_write::options& bulk_write::options::comment(bsoncxx::v1::types::value comment) {
-    impl::with(this)->_comment = std::move(comment);
+bulk_write::options& bulk_write::options::comment(bsoncxx::v1::types::value v) {
+    impl::with(this)->_comment = std::move(v);
     return *this;
 }
 
@@ -1209,8 +1209,8 @@ bsoncxx::v1::stdx::optional<bsoncxx::v1::types::view> bulk_write::options::comme
     return impl::with(this)->_comment;
 }
 
-bulk_write::options& bulk_write::options::let(bsoncxx::v1::document::value let) {
-    impl::with(this)->_let = std::move(let);
+bulk_write::options& bulk_write::options::let(bsoncxx::v1::document::value v) {
+    impl::with(this)->_let = std::move(v);
     return *this;
 }
 
@@ -1218,8 +1218,8 @@ bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view> bulk_write::options::le
     return impl::with(this)->_let;
 }
 
-bulk_write::options& bulk_write::options::ordered(bool ordered) {
-    impl::with(this)->_ordered = ordered;
+bulk_write::options& bulk_write::options::ordered(bool v) {
+    impl::with(this)->_ordered = v;
     return *this;
 }
 
@@ -1227,8 +1227,8 @@ bool bulk_write::options::ordered() const {
     return impl::with(this)->_ordered;
 }
 
-bulk_write::options& bulk_write::options::read_concern(v1::read_concern rc) {
-    impl::with(this)->_read_concern = std::move(rc);
+bulk_write::options& bulk_write::options::read_concern(v1::read_concern v) {
+    impl::with(this)->_read_concern = std::move(v);
     return *this;
 }
 
@@ -1236,8 +1236,8 @@ bsoncxx::v1::stdx::optional<v1::read_concern> bulk_write::options::read_concern(
     return impl::with(this)->_read_concern;
 }
 
-bulk_write::options& bulk_write::options::write_concern(v1::write_concern wc) {
-    impl::with(this)->_write_concern = std::move(wc);
+bulk_write::options& bulk_write::options::write_concern(v1::write_concern v) {
+    impl::with(this)->_write_concern = std::move(v);
     return *this;
 }
 

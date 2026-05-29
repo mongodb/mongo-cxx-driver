@@ -110,8 +110,8 @@ find_options::find_options() : _impl{new impl{}} {}
 
 // NOLINTEND(cppcoreguidelines-owning-memory)
 
-find_options& find_options::allow_disk_use(bool allow_disk_use) {
-    impl::with(this)->_allow_disk_use = allow_disk_use;
+find_options& find_options::allow_disk_use(bool v) {
+    impl::with(this)->_allow_disk_use = v;
     return *this;
 }
 
@@ -119,8 +119,8 @@ bsoncxx::v1::stdx::optional<bool> find_options::allow_disk_use() const {
     return impl::with(this)->_allow_disk_use;
 }
 
-find_options& find_options::allow_partial_results(bool allow_partial) {
-    impl::with(this)->_allow_partial_results = allow_partial;
+find_options& find_options::allow_partial_results(bool v) {
+    impl::with(this)->_allow_partial_results = v;
     return *this;
 }
 
@@ -128,8 +128,8 @@ bsoncxx::v1::stdx::optional<bool> find_options::allow_partial_results() const {
     return impl::with(this)->_allow_partial_results;
 }
 
-find_options& find_options::batch_size(std::int32_t batch_size) {
-    impl::with(this)->_batch_size = batch_size;
+find_options& find_options::batch_size(std::int32_t v) {
+    impl::with(this)->_batch_size = v;
     return *this;
 }
 
@@ -137,8 +137,8 @@ bsoncxx::v1::stdx::optional<std::int32_t> find_options::batch_size() const {
     return impl::with(this)->_batch_size;
 }
 
-find_options& find_options::collation(bsoncxx::v1::document::value collation) {
-    impl::with(this)->_collation = std::move(collation);
+find_options& find_options::collation(bsoncxx::v1::document::value v) {
+    impl::with(this)->_collation = std::move(v);
     return *this;
 }
 
@@ -146,8 +146,8 @@ bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view> find_options::collation
     return impl::with(this)->_collation;
 }
 
-find_options& find_options::comment(bsoncxx::v1::types::value comment) {
-    impl::with(this)->_comment = std::move(comment);
+find_options& find_options::comment(bsoncxx::v1::types::value v) {
+    impl::with(this)->_comment = std::move(v);
     return *this;
 }
 
@@ -155,8 +155,8 @@ bsoncxx::v1::stdx::optional<bsoncxx::v1::types::view> find_options::comment() co
     return impl::with(this)->_comment;
 }
 
-find_options& find_options::cursor_type(v1::cursor::type cursor_type) {
-    impl::with(this)->_cursor_type = cursor_type;
+find_options& find_options::cursor_type(v1::cursor::type v) {
+    impl::with(this)->_cursor_type = v;
     return *this;
 }
 
@@ -164,8 +164,8 @@ bsoncxx::v1::stdx::optional<cursor::type> find_options::cursor_type() const {
     return impl::with(this)->_cursor_type;
 }
 
-find_options& find_options::hint(v1::hint index_hint) {
-    impl::with(this)->_hint = std::move(index_hint);
+find_options& find_options::hint(v1::hint v) {
+    impl::with(this)->_hint = std::move(v);
     return *this;
 }
 
@@ -173,8 +173,8 @@ bsoncxx::v1::stdx::optional<v1::hint> find_options::hint() const {
     return impl::with(this)->_hint;
 }
 
-find_options& find_options::let(bsoncxx::v1::document::value let) {
-    impl::with(this)->_let = std::move(let);
+find_options& find_options::let(bsoncxx::v1::document::value v) {
+    impl::with(this)->_let = std::move(v);
     return *this;
 }
 
@@ -182,8 +182,8 @@ bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view> const find_options::let
     return impl::with(this)->_let;
 }
 
-find_options& find_options::limit(std::int64_t limit) {
-    impl::with(this)->_limit = limit;
+find_options& find_options::limit(std::int64_t v) {
+    impl::with(this)->_limit = v;
     return *this;
 }
 
@@ -191,8 +191,8 @@ bsoncxx::v1::stdx::optional<std::int64_t> find_options::limit() const {
     return impl::with(this)->_limit;
 }
 
-find_options& find_options::max(bsoncxx::v1::document::value max) {
-    impl::with(this)->_max = std::move(max);
+find_options& find_options::max(bsoncxx::v1::document::value v) {
+    impl::with(this)->_max = std::move(v);
     return *this;
 }
 
@@ -200,8 +200,8 @@ bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view> find_options::max() con
     return impl::with(this)->_max;
 }
 
-find_options& find_options::max_await_time(std::chrono::milliseconds max_await_time) {
-    impl::with(this)->_max_await_time = max_await_time;
+find_options& find_options::max_await_time(std::chrono::milliseconds v) {
+    impl::with(this)->_max_await_time = v;
     return *this;
 }
 
@@ -209,8 +209,8 @@ bsoncxx::v1::stdx::optional<std::chrono::milliseconds> find_options::max_await_t
     return impl::with(this)->_max_await_time;
 }
 
-find_options& find_options::max_time(std::chrono::milliseconds max_time) {
-    impl::with(this)->_max_time = max_time;
+find_options& find_options::max_time(std::chrono::milliseconds v) {
+    impl::with(this)->_max_time = v;
     return *this;
 }
 
@@ -218,8 +218,8 @@ bsoncxx::v1::stdx::optional<std::chrono::milliseconds> find_options::max_time() 
     return impl::with(this)->_max_time;
 }
 
-find_options& find_options::min(bsoncxx::v1::document::value min) {
-    impl::with(this)->_min = std::move(min);
+find_options& find_options::min(bsoncxx::v1::document::value v) {
+    impl::with(this)->_min = std::move(v);
     return *this;
 }
 
@@ -227,8 +227,8 @@ bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view> find_options::min() con
     return impl::with(this)->_min;
 }
 
-find_options& find_options::no_cursor_timeout(bool no_cursor_timeout) {
-    impl::with(this)->_no_cursor_timeout = no_cursor_timeout;
+find_options& find_options::no_cursor_timeout(bool v) {
+    impl::with(this)->_no_cursor_timeout = v;
     return *this;
 }
 
@@ -236,8 +236,8 @@ bsoncxx::v1::stdx::optional<bool> find_options::no_cursor_timeout() const {
     return impl::with(this)->_no_cursor_timeout;
 }
 
-find_options& find_options::projection(bsoncxx::v1::document::value projection) {
-    impl::with(this)->_projection = std::move(projection);
+find_options& find_options::projection(bsoncxx::v1::document::value v) {
+    impl::with(this)->_projection = std::move(v);
     return *this;
 }
 
@@ -245,8 +245,8 @@ bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view> find_options::projectio
     return impl::with(this)->_projection;
 }
 
-find_options& find_options::read_preference(v1::read_preference rp) {
-    impl::with(this)->_read_preference = std::move(rp);
+find_options& find_options::read_preference(v1::read_preference v) {
+    impl::with(this)->_read_preference = std::move(v);
     return *this;
 }
 
@@ -254,8 +254,8 @@ bsoncxx::v1::stdx::optional<v1::read_preference> find_options::read_preference()
     return impl::with(this)->_read_preference;
 }
 
-find_options& find_options::read_concern(v1::read_concern rc) {
-    impl::with(this)->_read_concern = std::move(rc);
+find_options& find_options::read_concern(v1::read_concern v) {
+    impl::with(this)->_read_concern = std::move(v);
     return *this;
 }
 
@@ -263,8 +263,8 @@ bsoncxx::v1::stdx::optional<v1::read_concern> find_options::read_concern() const
     return impl::with(this)->_read_concern;
 }
 
-find_options& find_options::return_key(bool return_key) {
-    impl::with(this)->_return_key = return_key;
+find_options& find_options::return_key(bool v) {
+    impl::with(this)->_return_key = v;
     return *this;
 }
 
@@ -272,8 +272,8 @@ bsoncxx::v1::stdx::optional<bool> find_options::return_key() const {
     return impl::with(this)->_return_key;
 }
 
-find_options& find_options::show_record_id(bool show_record_id) {
-    impl::with(this)->_show_record_id = show_record_id;
+find_options& find_options::show_record_id(bool v) {
+    impl::with(this)->_show_record_id = v;
     return *this;
 }
 
@@ -281,8 +281,8 @@ bsoncxx::v1::stdx::optional<bool> find_options::show_record_id() const {
     return impl::with(this)->_show_record_id;
 }
 
-find_options& find_options::skip(std::int64_t skip) {
-    impl::with(this)->_skip = skip;
+find_options& find_options::skip(std::int64_t v) {
+    impl::with(this)->_skip = v;
     return *this;
 }
 
@@ -290,8 +290,8 @@ bsoncxx::v1::stdx::optional<std::int64_t> find_options::skip() const {
     return impl::with(this)->_skip;
 }
 
-find_options& find_options::sort(bsoncxx::v1::document::value ordering) {
-    impl::with(this)->_sort = std::move(ordering);
+find_options& find_options::sort(bsoncxx::v1::document::value v) {
+    impl::with(this)->_sort = std::move(v);
     return *this;
 }
 

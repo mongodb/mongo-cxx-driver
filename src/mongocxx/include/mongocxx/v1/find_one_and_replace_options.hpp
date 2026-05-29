@@ -130,7 +130,7 @@ class find_one_and_replace_options {
     ///
     /// Set the "hint" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(find_one_and_replace_options&) hint(v1::hint index_hint);
+    MONGOCXX_ABI_EXPORT_CDECL(find_one_and_replace_options&) hint(v1::hint v);
 
     ///
     /// Return the current "hint" field.
@@ -190,7 +190,7 @@ class find_one_and_replace_options {
     ///
     /// Set the "sort" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(find_one_and_replace_options&) sort(bsoncxx::v1::document::value ordering);
+    MONGOCXX_ABI_EXPORT_CDECL(find_one_and_replace_options&) sort(bsoncxx::v1::document::value v);
 
     ///
     /// Return the current "sort" field.
