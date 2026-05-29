@@ -307,6 +307,20 @@ class client_encryption {
     get_key_by_alt_name(bsoncxx::v_noabi::string::view_or_value key_alt_name);
 };
 
+///
+/// Convert from the @ref mongocxx::v1 equivalent of `v`.
+///
+inline v_noabi::client_encryption from_v1(v1::client_encryption v) {
+    return {std::move(v)};
+}
+
+///
+/// Convert to the @ref mongocxx::v1 equivalent of `v`.
+///
+inline v1::client_encryption to_v1(v_noabi::client_encryption v) {
+    return v1::client_encryption{std::move(v)};
+}
+
 } // namespace v_noabi
 } // namespace mongocxx
 
