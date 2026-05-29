@@ -704,6 +704,20 @@ class pipeline {
     class internal;
 };
 
+///
+/// Convert from the @ref mongocxx::v1 equivalent of `v`.
+///
+inline v_noabi::pipeline from_v1(v1::pipeline v) {
+    return {std::move(v)};
+}
+
+///
+/// Convert to the @ref mongocxx::v1 equivalent of `v`.
+///
+inline v1::pipeline to_v1(v_noabi::pipeline v) {
+    return v1::pipeline{std::move(v)};
+}
+
 } // namespace v_noabi
 } // namespace mongocxx
 
