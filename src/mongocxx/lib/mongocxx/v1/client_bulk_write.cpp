@@ -420,7 +420,7 @@ bsoncxx::v1::array::view client_bulk_write::exception::write_concern_errors() co
 }
 
 bsoncxx::v1::document::view client_bulk_write::exception::error_reply() const {
-    if (auto const r = v1::exception::internal::get_reply(*this)) {
+    if (auto const& r = v1::exception::internal::get_reply(*this)) {
         return r->view();
     }
 
