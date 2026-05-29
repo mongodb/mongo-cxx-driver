@@ -406,7 +406,6 @@ class client_bulk_write::exception::impl {
    public:
     bsoncxx::v1::document::value _write_errors;
     bsoncxx::v1::array::value _write_concern_errors;
-    bsoncxx::v1::document::value _error_reply;
     bsoncxx::v1::stdx::optional<result> _partial_result;
 };
 
@@ -421,7 +420,11 @@ bsoncxx::v1::array::view client_bulk_write::exception::write_concern_errors() co
 }
 
 bsoncxx::v1::document::view client_bulk_write::exception::error_reply() const {
-    return _impl->_error_reply;
+    if (auto const r = v1::exception::internal::get_reply(*this)) {
+        return r->view();
+    }
+
+    return {};
 }
 
 bsoncxx::v1::stdx::optional<client_bulk_write::result> client_bulk_write::exception::partial_result() const {
@@ -429,9 +432,7 @@ bsoncxx::v1::stdx::optional<client_bulk_write::result> client_bulk_write::except
 }
 
 client_bulk_write::exception::exception(int code, char const* message, std::unique_ptr<impl> impl)
-    : v1::exception{v1::exception::internal::make(code, std::generic_category(), message)}, _impl{std::move(impl)} {
-    v1::exception::internal::set_reply(*this, _impl->_error_reply);
-}
+    : v1::exception{v1::exception::internal::make(code, std::generic_category(), message)}, _impl{std::move(impl)} {}
 
 client_bulk_write::exception client_bulk_write::exception::internal::make(
     mongoc_bulkwriteexception_t* exc,
@@ -454,10 +455,6 @@ client_bulk_write::exception client_bulk_write::exception::internal::make(
         p->_write_concern_errors = scoped_bson_view{arr}.array_view();
     }
 
-    if (auto const* const doc = libmongoc::bulkwriteexception_errorreply(exc)) {
-        p->_error_reply = scoped_bson_view{doc}.value();
-    }
-
     p->_partial_result = std::move(partial_result);
 
     bson_error_t error = {};
@@ -467,7 +464,13 @@ client_bulk_write::exception client_bulk_write::exception::internal::make(
 
     auto const* const message = has_error ? error.message : "";
 
-    return exception{code, message, std::move(p)};
+    auto e = exception{code, message, std::move(p)};
+
+    if (auto const* const doc = libmongoc::bulkwriteexception_errorreply(exc)) {
+        v1::exception::internal::set_reply(e, scoped_bson_view{doc}.value());
+    }
+
+    return e;
 }
 
 client_bulk_write::exception client_bulk_write::exception::internal::make() {
@@ -480,10 +483,6 @@ bsoncxx::v1::document::value& client_bulk_write::exception::internal::write_erro
 
 bsoncxx::v1::array::value& client_bulk_write::exception::internal::write_concern_errors(exception& self) {
     return self._impl->_write_concern_errors;
-}
-
-bsoncxx::v1::document::value& client_bulk_write::exception::internal::error_reply(exception& self) {
-    return self._impl->_error_reply;
 }
 
 class client_bulk_write::insert_one_options::impl {};
