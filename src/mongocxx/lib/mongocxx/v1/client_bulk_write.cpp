@@ -429,7 +429,9 @@ bsoncxx::v1::stdx::optional<client_bulk_write::result> client_bulk_write::except
 }
 
 client_bulk_write::exception::exception(int code, char const* message, std::unique_ptr<impl> impl)
-    : v1::exception{v1::exception::internal::make(code, std::generic_category(), message)}, _impl{std::move(impl)} {}
+    : v1::exception{v1::exception::internal::make(code, std::generic_category(), message)}, _impl{std::move(impl)} {
+    v1::exception::internal::set_reply(*this, _impl->_error_reply);
+}
 
 client_bulk_write::exception client_bulk_write::exception::internal::make(
     mongoc_bulkwriteexception_t* exc,

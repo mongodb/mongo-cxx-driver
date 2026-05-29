@@ -19,6 +19,8 @@
 #include <mongocxx/v1/oidc_callback.hpp>
 #include <mongocxx/v1/oidc_credential.hpp>
 
+#include <mongocxx/v1/exception.hh>
+
 #include <mongocxx/test/v_noabi/client_helpers.hh>
 
 #include <fstream>
@@ -1029,7 +1031,10 @@ void assert_error(mongocxx::exception& e, array::element const& ops) {
     REQUIRE_FALSE(/* TODO */ expect_error["errorCodeName"]);
 }
 
-void assert_error(mongocxx::v1::exception& e, array::element const& ops) {
+void assert_error(
+    mongocxx::v1::exception const& e,
+    array::element const& ops,
+    stdx::optional<document::view> const& actual = stdx::nullopt) {
     CAPTURE(e.what());
     auto const expect_error = ops["expectError"];
     REQUIRE(expect_error);
@@ -1037,45 +1042,31 @@ void assert_error(mongocxx::v1::exception& e, array::element const& ops) {
     if (expect_error["isError"])
         return;
 
-    if (auto const is_client_error = expect_error["isClientError"]) {
-        REQUIRE(is_client_error.get_bool());
-    }
-
-    REQUIRE_FALSE(expect_error["expectResult"]);
-    REQUIRE_FALSE(expect_error["errorLabelsContain"]);
-    REQUIRE_FALSE(expect_error["errorLabelsOmit"]);
-
-    REQUIRE_FALSE(/* TODO */ expect_error["errorContains"]);
-    REQUIRE_FALSE(/* TODO */ expect_error["errorCode"]);
-    REQUIRE_FALSE(/* TODO */ expect_error["errorCodeName"]);
-}
-
-void assert_error(
-    mongocxx::client_bulk_write::exception const& exception,
-    array::element const& expected,
-    document::view actual) {
-    CAPTURE(exception.what());
-
-    auto const expect_error = expected["expectError"];
-    REQUIRE(expect_error);
-
-    if (expect_error["isError"])
-        return;
-
-    auto const actual_result = actual["result"];
     if (auto const expected_result = expect_error["expectResult"]) {
+        REQUIRE(actual.has_value());
+        auto const actual_result = (*actual)["result"];
         assert::matches(actual_result.get_value(), expected_result.get_value(), get_entity_map());
     }
 
     if (auto const is_client_error = expect_error["isClientError"]) {
-        REQUIRE(is_client_error.get_bool());
+        CHECK(e.code() != mongocxx::v1::source_errc::server);
     }
 
     REQUIRE_FALSE(expect_error["errorLabelsContain"]);
     REQUIRE_FALSE(expect_error["errorLabelsOmit"]);
 
+    if (auto const error_code = expect_error["errorCode"]) {
+        REQUIRE(e.code().value() == error_code.get_int32());
+    }
+
+    if (auto const error_response = expect_error["errorResponse"]) {
+        assert::matches(
+            types::bson_value::value(mongocxx::v1::exception::internal::get_reply(e).value()),
+            error_response.get_value(),
+            get_entity_map());
+    }
+
     REQUIRE_FALSE(/* TODO */ expect_error["errorContains"]);
-    REQUIRE_FALSE(/* TODO */ expect_error["errorCode"]);
     REQUIRE_FALSE(/* TODO */ expect_error["errorCodeName"]);
 }
 
@@ -1355,7 +1346,7 @@ void run_tests(bsoncxx::stdx::string_view test_description, document::view test)
                     if (!ignore_result_and_error) {
                         assert_error(e, ops);
                     }
-                } catch (mongocxx::v1::exception& e) {
+                } catch (mongocxx::v1::exception const& e) {
                     if (!ignore_result_and_error) {
                         assert_error(e, ops);
                     }

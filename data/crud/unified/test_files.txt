@@ -31,6 +31,7 @@ bulkWrite-updateOne-hint-unacknowledged.json
 bulkWrite-updateOne-let.json
 bulkWrite-updateOne-sort.json
 client-bulkWrite-delete-options.json
+client-bulkWrite-errorResponse.json
 client-bulkWrite-mixed-namespaces.json
 client-bulkWrite-options.json
 client-bulkWrite-ordered.json
