@@ -96,7 +96,7 @@ class range_options {
     ///
     /// Set the "min" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(range_options&) min(bsoncxx::v1::types::value value);
+    MONGOCXX_ABI_EXPORT_CDECL(range_options&) min(bsoncxx::v1::types::value v);
 
     ///
     /// Return the current "min" field.
@@ -107,7 +107,7 @@ class range_options {
     ///
     /// Set the "max" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(range_options&) max(bsoncxx::v1::types::value value);
+    MONGOCXX_ABI_EXPORT_CDECL(range_options&) max(bsoncxx::v1::types::value v);
 
     ///
     /// Return the current "max" field.
@@ -118,7 +118,7 @@ class range_options {
     ///
     /// Set the "sparsity" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(range_options&) sparsity(std::int64_t value);
+    MONGOCXX_ABI_EXPORT_CDECL(range_options&) sparsity(std::int64_t v);
 
     ///
     /// Return the current "sparsity" field.
@@ -129,7 +129,7 @@ class range_options {
     ///
     /// Set the "trimFactor" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(range_options&) trim_factor(std::int32_t value);
+    MONGOCXX_ABI_EXPORT_CDECL(range_options&) trim_factor(std::int32_t v);
 
     ///
     /// Return the current "trimFactor" field.
@@ -140,7 +140,7 @@ class range_options {
     ///
     /// Set the "precision" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(range_options&) precision(std::int32_t value);
+    MONGOCXX_ABI_EXPORT_CDECL(range_options&) precision(std::int32_t v);
 
     ///
     /// Return the current "precision" field.

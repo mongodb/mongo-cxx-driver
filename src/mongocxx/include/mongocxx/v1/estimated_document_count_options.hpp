@@ -98,7 +98,7 @@ class estimated_document_count_options {
     ///
     /// Set the "maxTimeMS" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(estimated_document_count_options&) max_time(std::chrono::milliseconds max_time);
+    MONGOCXX_ABI_EXPORT_CDECL(estimated_document_count_options&) max_time(std::chrono::milliseconds v);
 
     ///
     /// Return the current "maxTimeMS" field.
@@ -108,7 +108,7 @@ class estimated_document_count_options {
     ///
     /// Set the "comment" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(estimated_document_count_options&) comment(bsoncxx::v1::types::value comment);
+    MONGOCXX_ABI_EXPORT_CDECL(estimated_document_count_options&) comment(bsoncxx::v1::types::value v);
 
     ///
     /// Return the current "comment" field.
@@ -118,7 +118,7 @@ class estimated_document_count_options {
     ///
     /// Set the "readPreference" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(estimated_document_count_options&) read_preference(v1::read_preference rp);
+    MONGOCXX_ABI_EXPORT_CDECL(estimated_document_count_options&) read_preference(v1::read_preference v);
 
     ///
     /// Return the current "readPreference" field.

@@ -95,7 +95,7 @@ class data_key_options {
     ///
     /// Set the "masterKey" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(data_key_options&) master_key(bsoncxx::v1::document::value master_key);
+    MONGOCXX_ABI_EXPORT_CDECL(data_key_options&) master_key(bsoncxx::v1::document::value v);
 
     ///
     /// Return the current "masterKey" field.
@@ -105,7 +105,7 @@ class data_key_options {
     ///
     /// Set the "keyAltNames" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(data_key_options&) key_alt_names(std::vector<std::string> key_alt_names);
+    MONGOCXX_ABI_EXPORT_CDECL(data_key_options&) key_alt_names(std::vector<std::string> v);
 
     ///
     /// Return the current "keyAltNames" field.
@@ -120,7 +120,7 @@ class data_key_options {
     ///
     /// Set the "keyMaterial" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(data_key_options&) key_material(key_material_type key_material);
+    MONGOCXX_ABI_EXPORT_CDECL(data_key_options&) key_material(key_material_type v);
 
     ///
     /// Return the current "keyMaterial" field.

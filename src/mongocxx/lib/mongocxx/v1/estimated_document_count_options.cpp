@@ -90,8 +90,8 @@ estimated_document_count_options::estimated_document_count_options() : _impl{new
 
 // NOLINTEND(cppcoreguidelines-owning-memory)
 
-estimated_document_count_options& estimated_document_count_options::max_time(std::chrono::milliseconds max_time) {
-    impl::with(this)->_max_time = max_time;
+estimated_document_count_options& estimated_document_count_options::max_time(std::chrono::milliseconds v) {
+    impl::with(this)->_max_time = v;
     return *this;
 }
 
@@ -99,8 +99,8 @@ bsoncxx::v1::stdx::optional<std::chrono::milliseconds> estimated_document_count_
     return impl::with(this)->_max_time;
 }
 
-estimated_document_count_options& estimated_document_count_options::comment(bsoncxx::v1::types::value comment) {
-    impl::with(this)->_comment = std::move(comment);
+estimated_document_count_options& estimated_document_count_options::comment(bsoncxx::v1::types::value v) {
+    impl::with(this)->_comment = std::move(v);
     return *this;
 }
 
@@ -108,8 +108,8 @@ bsoncxx::v1::stdx::optional<bsoncxx::v1::types::view> estimated_document_count_o
     return impl::with(this)->_comment;
 }
 
-estimated_document_count_options& estimated_document_count_options::read_preference(v1::read_preference rp) {
-    impl::with(this)->_read_preference = std::move(rp);
+estimated_document_count_options& estimated_document_count_options::read_preference(v1::read_preference v) {
+    impl::with(this)->_read_preference = std::move(v);
     return *this;
 }
 

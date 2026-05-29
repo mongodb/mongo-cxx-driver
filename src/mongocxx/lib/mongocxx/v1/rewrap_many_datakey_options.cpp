@@ -85,8 +85,8 @@ rewrap_many_datakey_options::rewrap_many_datakey_options() : _impl{new impl{}} {
 
 // NOLINTEND(cppcoreguidelines-owning-memory)
 
-rewrap_many_datakey_options& rewrap_many_datakey_options::provider(std::string provider) {
-    impl::with(this)->_provider = std::move(provider);
+rewrap_many_datakey_options& rewrap_many_datakey_options::provider(std::string v) {
+    impl::with(this)->_provider = std::move(v);
     return *this;
 }
 
@@ -94,8 +94,8 @@ bsoncxx::v1::stdx::string_view rewrap_many_datakey_options::provider() const {
     return impl::with(this)->_provider;
 }
 
-rewrap_many_datakey_options& rewrap_many_datakey_options::master_key(bsoncxx::v1::document::value master_key) {
-    impl::with(this)->_master_key = std::move(master_key);
+rewrap_many_datakey_options& rewrap_many_datakey_options::master_key(bsoncxx::v1::document::value v) {
+    impl::with(this)->_master_key = std::move(v);
     return *this;
 }
 

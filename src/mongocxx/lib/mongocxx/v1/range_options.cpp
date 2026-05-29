@@ -85,8 +85,8 @@ range_options::range_options() : _impl{new impl{}} {}
 
 // NOLINTEND(cppcoreguidelines-owning-memory)
 
-range_options& range_options::min(bsoncxx::v1::types::value value) {
-    impl::with(this)->_min = std::move(value);
+range_options& range_options::min(bsoncxx::v1::types::value v) {
+    impl::with(this)->_min = std::move(v);
     return *this;
 }
 
@@ -94,8 +94,8 @@ bsoncxx::v1::stdx::optional<bsoncxx::v1::types::view> range_options::min() const
     return impl::with(this)->_min;
 }
 
-range_options& range_options::max(bsoncxx::v1::types::value value) {
-    impl::with(this)->_max = std::move(value);
+range_options& range_options::max(bsoncxx::v1::types::value v) {
+    impl::with(this)->_max = std::move(v);
     return *this;
 }
 
@@ -103,8 +103,8 @@ bsoncxx::v1::stdx::optional<bsoncxx::v1::types::view> range_options::max() const
     return impl::with(this)->_max;
 }
 
-range_options& range_options::sparsity(std::int64_t value) {
-    impl::with(this)->_sparsity = std::move(value);
+range_options& range_options::sparsity(std::int64_t v) {
+    impl::with(this)->_sparsity = std::move(v);
     return *this;
 }
 
@@ -112,8 +112,8 @@ bsoncxx::v1::stdx::optional<std::int64_t> range_options::sparsity() const {
     return impl::with(this)->_sparsity;
 }
 
-range_options& range_options::trim_factor(std::int32_t value) {
-    impl::with(this)->_trim_factor = std::move(value);
+range_options& range_options::trim_factor(std::int32_t v) {
+    impl::with(this)->_trim_factor = std::move(v);
     return *this;
 }
 
@@ -121,8 +121,8 @@ bsoncxx::v1::stdx::optional<std::int32_t> range_options::trim_factor() const {
     return impl::with(this)->_trim_factor;
 }
 
-range_options& range_options::precision(std::int32_t value) {
-    impl::with(this)->_precision = std::move(value);
+range_options& range_options::precision(std::int32_t v) {
+    impl::with(this)->_precision = std::move(v);
     return *this;
 }
 

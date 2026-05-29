@@ -98,8 +98,8 @@ update_many_options::update_many_options() : _impl{new impl{}} {}
 
 // NOLINTEND(cppcoreguidelines-owning-memory)
 
-update_many_options& update_many_options::bypass_document_validation(bool bypass_document_validation) {
-    impl::with(this)->_bypass_document_validation = bypass_document_validation;
+update_many_options& update_many_options::bypass_document_validation(bool v) {
+    impl::with(this)->_bypass_document_validation = v;
     return *this;
 }
 
@@ -107,8 +107,8 @@ bsoncxx::v1::stdx::optional<bool> update_many_options::bypass_document_validatio
     return impl::with(this)->_bypass_document_validation;
 }
 
-update_many_options& update_many_options::collation(bsoncxx::v1::document::value collation) {
-    impl::with(this)->_collation = std::move(collation);
+update_many_options& update_many_options::collation(bsoncxx::v1::document::value v) {
+    impl::with(this)->_collation = std::move(v);
     return *this;
 }
 
@@ -116,8 +116,8 @@ bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view> update_many_options::co
     return impl::with(this)->_collation;
 }
 
-update_many_options& update_many_options::hint(v1::hint index_hint) {
-    impl::with(this)->_hint = std::move(index_hint);
+update_many_options& update_many_options::hint(v1::hint v) {
+    impl::with(this)->_hint = std::move(v);
     return *this;
 }
 
@@ -125,8 +125,8 @@ bsoncxx::v1::stdx::optional<v1::hint> update_many_options::hint() const {
     return impl::with(this)->_hint;
 }
 
-update_many_options& update_many_options::let(bsoncxx::v1::document::value let) {
-    impl::with(this)->_let = std::move(let);
+update_many_options& update_many_options::let(bsoncxx::v1::document::value v) {
+    impl::with(this)->_let = std::move(v);
     return *this;
 }
 
@@ -134,8 +134,8 @@ bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view> const update_many_optio
     return impl::with(this)->_let;
 }
 
-update_many_options& update_many_options::comment(bsoncxx::v1::types::value comment) {
-    impl::with(this)->_comment = std::move(comment);
+update_many_options& update_many_options::comment(bsoncxx::v1::types::value v) {
+    impl::with(this)->_comment = std::move(v);
     return *this;
 }
 
@@ -143,8 +143,8 @@ bsoncxx::v1::stdx::optional<bsoncxx::v1::types::view> const update_many_options:
     return impl::with(this)->_comment;
 }
 
-update_many_options& update_many_options::upsert(bool upsert) {
-    impl::with(this)->_upsert = upsert;
+update_many_options& update_many_options::upsert(bool v) {
+    impl::with(this)->_upsert = v;
     return *this;
 }
 
@@ -152,8 +152,8 @@ bsoncxx::v1::stdx::optional<bool> update_many_options::upsert() const {
     return impl::with(this)->_upsert;
 }
 
-update_many_options& update_many_options::read_concern(v1::read_concern rc) {
-    impl::with(this)->_read_concern = std::move(rc);
+update_many_options& update_many_options::read_concern(v1::read_concern v) {
+    impl::with(this)->_read_concern = std::move(v);
     return *this;
 }
 
@@ -161,8 +161,8 @@ bsoncxx::v1::stdx::optional<v1::read_concern> update_many_options::read_concern(
     return impl::with(this)->_read_concern;
 }
 
-update_many_options& update_many_options::write_concern(v1::write_concern wc) {
-    impl::with(this)->_write_concern = std::move(wc);
+update_many_options& update_many_options::write_concern(v1::write_concern v) {
+    impl::with(this)->_write_concern = std::move(v);
     return *this;
 }
 
@@ -170,8 +170,8 @@ bsoncxx::v1::stdx::optional<v1::write_concern> update_many_options::write_concer
     return impl::with(this)->_write_concern;
 }
 
-update_many_options& update_many_options::array_filters(bsoncxx::v1::array::value array_filters) {
-    impl::with(this)->_array_filters = std::move(array_filters);
+update_many_options& update_many_options::array_filters(bsoncxx::v1::array::value v) {
+    impl::with(this)->_array_filters = std::move(v);
     return *this;
 }
 
