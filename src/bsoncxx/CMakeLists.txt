@@ -20,7 +20,7 @@ set(BSONCXX_VERSION_NO_EXTRA ${BSONCXX_VERSION_MAJOR}.${BSONCXX_VERSION_MINOR}.$
 set(BSONCXX_VERSION $CACHE{BSONCXX_VERSION_NO_EXTRA}${BSONCXX_VERSION_EXTRA} CACHE INTERNAL "")
 message(STATUS "bsoncxx version: $CACHE{BSONCXX_VERSION}")
 
-set(BSONCXX_SOVERSION "_noabi" CACHE STRING "For internal use only.")
+set(BSONCXX_SOVERSION "1" CACHE STRING "The ABI version number for the bsoncxx library.")
 message(STATUS "bsoncxx soversion: ${BSONCXX_SOVERSION}")
 
 option(BSONCXX_ENABLE_UNSTABLE_ABI "Enable building with unstable ABI symbols." ON)

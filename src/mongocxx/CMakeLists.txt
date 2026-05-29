@@ -20,7 +20,7 @@ set(MONGOCXX_VERSION_NO_EXTRA ${MONGOCXX_VERSION_MAJOR}.${MONGOCXX_VERSION_MINOR
 set(MONGOCXX_VERSION ${MONGOCXX_VERSION_NO_EXTRA}${MONGOCXX_VERSION_EXTRA} CACHE INTERNAL "")
 message(STATUS "mongocxx version: $CACHE{MONGOCXX_VERSION}")
 
-set(MONGOCXX_SOVERSION "_noabi" CACHE STRING "For internal use only.")
+set(MONGOCXX_SOVERSION "1" CACHE STRING "The ABI version number for the mongocxx library.")
 message(STATUS "mongocxx soversion: ${MONGOCXX_SOVERSION}")
 
 cmake_dependent_option(MONGOCXX_ENABLE_UNSTABLE_ABI "Enable building with unstable ABI symbols." ON "BSONCXX_ENABLE_UNSTABLE_ABI" OFF)
