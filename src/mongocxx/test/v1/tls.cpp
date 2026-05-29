@@ -38,13 +38,13 @@ TEST_CASE("ownership", "[mongocxx][v1][tls]") {
     SECTION("move") {
         auto move = std::move(source);
 
-        // source is in an assign-or-move-only state.
+        // source is in an assign-or-destroy-only state.
 
         CHECK(move.pem_file() == source_value);
 
         target = std::move(move);
 
-        // source is in an assign-or-move-only state.
+        // source is in an assign-or-destroy-only state.
 
         CHECK(target.pem_file() == source_value);
     }

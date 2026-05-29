@@ -74,13 +74,13 @@ TEST_CASE("ownership", "[mongocxx][v1][apm]") {
     SECTION("move") {
         auto move = std::move(source);
 
-        // source is in an assign-or-move-only state.
+        // source is in an assign-or-destroy-only state.
 
         CHECK(get_target(move.command_started()) == source_value);
 
         target = std::move(move);
 
-        // source is in an assign-or-move-only state.
+        // source is in an assign-or-destroy-only state.
 
         CHECK(get_target(target.command_started()) == source_value);
     }

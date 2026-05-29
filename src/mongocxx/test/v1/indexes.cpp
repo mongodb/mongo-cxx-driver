@@ -127,13 +127,13 @@ TEST_CASE("ownership", "[mongocxx][v1][indexes]") {
     SECTION("move") {
         auto move = std::move(source);
 
-        // source is in an assign-or-move-only state.
+        // source is in an assign-or-destroy-only state.
 
         CHECK(get_collection(move) == coll1_id);
 
         target = std::move(move);
 
-        // move is in an assign-or-move-only state.
+        // move is in an assign-or-destroy-only state.
 
         CHECK(get_collection(target) == coll1_id);
     }
@@ -167,13 +167,13 @@ TEST_CASE("ownership", "[mongocxx][v1][indexes][options]") {
     SECTION("move") {
         auto move = std::move(source);
 
-        // source is in an assign-or-move-only state.
+        // source is in an assign-or-destroy-only state.
 
         CHECK(move.name() == source_value);
 
         target = std::move(move);
 
-        // move is in an assign-or-move-only state.
+        // move is in an assign-or-destroy-only state.
 
         CHECK(target.name() == source_value);
     }
@@ -204,13 +204,13 @@ TEST_CASE("ownership", "[mongocxx][v1][indexes][model]") {
     SECTION("move") {
         auto move = std::move(source);
 
-        // source is in an assign-or-move-only state.
+        // source is in an assign-or-destroy-only state.
 
         CHECK(move.keys() == source_value.view());
 
         target = std::move(move);
 
-        // move is in an assign-or-move-only state.
+        // move is in an assign-or-destroy-only state.
 
         CHECK(target.keys() == source_value.view());
     }
@@ -244,13 +244,13 @@ TEST_CASE("ownership", "[mongocxx][v1][indexes][create_one_options]") {
     SECTION("move") {
         auto move = std::move(source);
 
-        // source is in an assign-or-move-only state.
+        // source is in an assign-or-destroy-only state.
 
         CHECK(move.comment() == source_value);
 
         target = std::move(move);
 
-        // move is in an assign-or-move-only state.
+        // move is in an assign-or-destroy-only state.
 
         CHECK(target.comment() == source_value);
     }
@@ -284,13 +284,13 @@ TEST_CASE("ownership", "[mongocxx][v1][indexes][create_many_options]") {
     SECTION("move") {
         auto move = std::move(source);
 
-        // source is in an assign-or-move-only state.
+        // source is in an assign-or-destroy-only state.
 
         CHECK(move.comment() == source_value);
 
         target = std::move(move);
 
-        // move is in an assign-or-move-only state.
+        // move is in an assign-or-destroy-only state.
 
         CHECK(target.comment() == source_value);
     }
@@ -324,13 +324,13 @@ TEST_CASE("ownership", "[mongocxx][v1][indexes][drop_one_options]") {
     SECTION("move") {
         auto move = std::move(source);
 
-        // source is in an assign-or-move-only state.
+        // source is in an assign-or-destroy-only state.
 
         CHECK(move.comment() == source_value);
 
         target = std::move(move);
 
-        // move is in an assign-or-move-only state.
+        // move is in an assign-or-destroy-only state.
 
         CHECK(target.comment() == source_value);
     }
@@ -364,13 +364,13 @@ TEST_CASE("ownership", "[mongocxx][v1][indexes][drop_all_options]") {
     SECTION("move") {
         auto move = std::move(source);
 
-        // source is in an assign-or-move-only state.
+        // source is in an assign-or-destroy-only state.
 
         CHECK(move.comment() == source_value);
 
         target = std::move(move);
 
-        // move is in an assign-or-move-only state.
+        // move is in an assign-or-destroy-only state.
 
         CHECK(target.comment() == source_value);
     }
@@ -404,13 +404,13 @@ TEST_CASE("ownership", "[mongocxx][v1][indexes][list_options]") {
     SECTION("move") {
         auto move = std::move(source);
 
-        // source is in an assign-or-move-only state.
+        // source is in an assign-or-destroy-only state.
 
         CHECK(move.batch_size() == source_value);
 
         target = std::move(move);
 
-        // move is in an assign-or-move-only state.
+        // move is in an assign-or-destroy-only state.
 
         CHECK(target.batch_size() == source_value);
     }

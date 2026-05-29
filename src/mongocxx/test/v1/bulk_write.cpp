@@ -295,14 +295,14 @@ TEST_CASE("ownership", "[mongocxx][v1][bulk_write]") {
         {
             auto move = std::move(source);
 
-            // source is in an assign-or-move-only state.
+            // source is in an assign-or-destroy-only state.
 
             CHECK(bulk_write::internal::as_mongoc(move) == bulk1);
             CHECK(destroy_count == 0);
 
             target = std::move(move);
 
-            // move is in an assign-or-move-only state.
+            // move is in an assign-or-destroy-only state.
 
             CHECK(bulk_write::internal::as_mongoc(target) == bulk1);
             CHECK(destroy_count == 1);
@@ -324,13 +324,13 @@ void test_ownership(Op& target, Op& source) {
     SECTION("move") {
         auto move = std::move(source);
 
-        // source is in an assign-or-move-only state.
+        // source is in an assign-or-destroy-only state.
 
         CHECK(move.filter() == source_value);
 
         target = std::move(move);
 
-        // source is in an assign-or-move-only state.
+        // source is in an assign-or-destroy-only state.
 
         CHECK(target.filter() == source_value);
     }
@@ -460,14 +460,14 @@ TEST_CASE("ownership", "[mongocxx][v1][bulk_write][single]") {
     SECTION("move") {
         auto move = std::move(source);
 
-        // source is in an assign-or-move-only state.
+        // source is in an assign-or-destroy-only state.
 
         CHECK(get_value(move).data() == source_data);
         CHECK(get_value(move) == source_value);
 
         target = std::move(move);
 
-        // move is in an assign-or-move-only state.
+        // move is in an assign-or-destroy-only state.
 
         CHECK(get_value(target).data() == source_data);
         CHECK(get_value(target) == source_value);
@@ -599,13 +599,13 @@ TEST_CASE("ownership", "[mongocxx][v1][bulk_write][options]") {
     SECTION("move") {
         auto move = std::move(source);
 
-        // source is in an assign-or-move-only state.
+        // source is in an assign-or-destroy-only state.
 
         CHECK(move.comment() == source_value);
 
         target = std::move(move);
 
-        // source is in an assign-or-move-only state.
+        // source is in an assign-or-destroy-only state.
 
         CHECK(target.comment() == source_value);
     }
@@ -640,13 +640,13 @@ TEST_CASE("ownership", "[mongocxx][v1][bulk_write][result]") {
     SECTION("move") {
         auto move = std::move(source);
 
-        // source is in an assign-or-move-only state.
+        // source is in an assign-or-destroy-only state.
 
         CHECK(reply(move).data() == source_data);
 
         target = std::move(move);
 
-        // source is in an assign-or-move-only state.
+        // source is in an assign-or-destroy-only state.
 
         CHECK(reply(target).data() == source_data);
     }

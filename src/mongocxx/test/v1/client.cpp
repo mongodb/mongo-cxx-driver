@@ -542,7 +542,7 @@ TEST_CASE("ownership", "[mongocxx][v1][client]") {
         {
             auto move = std::move(source);
 
-            // source is in an assign-or-move-only state.
+            // source is in an assign-or-destroy-only state.
             CHECK_FALSE(source);
 
             CHECK(move);
@@ -551,7 +551,7 @@ TEST_CASE("ownership", "[mongocxx][v1][client]") {
 
             target = std::move(move);
 
-            // move is in an assign-or-move-only state.
+            // move is in an assign-or-destroy-only state.
             CHECK_FALSE(move);
 
             CHECK(target);
@@ -579,13 +579,13 @@ TEST_CASE("ownership", "[mongocxx][v1][client][options]") {
     SECTION("move") {
         auto move = std::move(source);
 
-        // source is in an assign-or-move-only state.
+        // source is in an assign-or-destroy-only state.
 
         CHECK(move.tls_opts().value().ca_file() == source_value);
 
         target = std::move(move);
 
-        // source is in an assign-or-move-only state.
+        // source is in an assign-or-destroy-only state.
 
         CHECK(target.tls_opts().value().ca_file() == source_value);
     }

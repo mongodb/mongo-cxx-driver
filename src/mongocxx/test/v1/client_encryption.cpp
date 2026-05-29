@@ -70,14 +70,14 @@ TEST_CASE("ownership", "[mongocxx][v1][client_encryption]") {
         {
             auto move = std::move(source);
 
-            // source is in an assign-or-move-only state.
+            // source is in an assign-or-destroy-only state.
 
             CHECK(client_encryption::internal::as_mongoc(move) == ce1);
             CHECK(destroy_count == 0);
 
             target = std::move(move);
 
-            // move is in an assign-or-move-only state.
+            // move is in an assign-or-destroy-only state.
 
             CHECK(client_encryption::internal::as_mongoc(target) == ce1);
             CHECK(destroy_count == 1);
@@ -106,13 +106,13 @@ TEST_CASE("ownership", "[mongocxx][v1][client_encryption][options]") {
     SECTION("move") {
         auto move = std::move(source);
 
-        // source is in an assign-or-move-only state.
+        // source is in an assign-or-destroy-only state.
 
         CHECK(move.key_vault_client() == source_value);
 
         target = std::move(move);
 
-        // source is in an assign-or-move-only state.
+        // source is in an assign-or-destroy-only state.
 
         CHECK(target.key_vault_client() == source_value);
     }
