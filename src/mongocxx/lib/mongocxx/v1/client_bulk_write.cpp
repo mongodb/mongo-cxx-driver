@@ -457,20 +457,27 @@ client_bulk_write::exception client_bulk_write::exception::internal::make(
 
     p->_partial_result = std::move(partial_result);
 
-    bson_error_t error = {};
-    libmongoc::bulkwriteexception_error(exc, &error);
+    auto base = [&] {
+        bson_error_t error = {};
 
-    auto e = exception{v1::exception::internal::make(error), std::move(p)};
+        if (!libmongoc::bulkwriteexception_error(exc, &error)) {
+            return v1::exception::internal::make(0, std::generic_category());
+        }
 
-    if (auto const* const doc = libmongoc::bulkwriteexception_errorreply(exc)) {
-        v1::exception::internal::set_reply(e, scoped_bson_view{doc}.value());
-    }
+        auto e = v1::exception::internal::make(error);
 
-    return e;
+        if (auto const* const doc = libmongoc::bulkwriteexception_errorreply(exc)) {
+            v1::exception::internal::set_reply(e, scoped_bson_view{doc}.value());
+        }
+
+        return e;
+    }();
+
+    return {std::move(base), std::move(p)};
 }
 
 client_bulk_write::exception client_bulk_write::exception::internal::make() {
-    return exception{v1::exception::internal::make(0, std::generic_category(), ""), std::unique_ptr<impl>{new impl{}}};
+    return exception{v1::exception::internal::make(0, std::generic_category()), std::unique_ptr<impl>{new impl{}}};
 }
 
 bsoncxx::v1::document::value& client_bulk_write::exception::internal::write_errors(exception& self) {

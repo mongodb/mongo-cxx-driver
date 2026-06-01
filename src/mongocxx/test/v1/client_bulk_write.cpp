@@ -540,6 +540,9 @@ TEST_CASE("ownership", "[mongocxx][v1][client_bulk_write][exception]") {
 TEST_CASE("default", "[mongocxx][v1][client_bulk_write][exception]") {
     auto const ex = client_bulk_write::exception::internal::make();
 
+    CHECK(ex.code().category() == std::generic_category());
+    CHECK(ex.code().value() == 0);
+
     CHECK(ex.write_errors().empty());
     CHECK(ex.write_concern_errors().empty());
     CHECK(ex.error_reply().empty());
@@ -646,13 +649,25 @@ TEST_CASE("write_concern_errors", "[mongocxx][v1][client_bulk_write][exception]"
 
     auto const ex = mocks.make();
 
+    CHECK(ex.code().category() == std::generic_category());
+    CHECK(ex.code().value() == 0);
+
     CHECK(ex.write_concern_errors() == v.array_view());
 }
 
 TEST_CASE("error_reply", "[mongocxx][v1][client_bulk_write][exception]") {
+    auto const code = 1;
     auto const v = scoped_bson{R"({"ok": 0, "code": 123, "errmsg": "err"})"};
 
     exception_mocks_type mocks;
+    mocks.error
+        ->interpose([&](mongoc_bulkwriteexception_t const* ptr, bson_error_t* err) {
+            CHECK(ptr == mocks.exc_id);
+            err->reserved = 2; // MONGOC_ERROR_CATEGORY
+            err->code = code;
+            return true;
+        })
+        .forever();
     mocks.error_reply
         ->interpose([&](mongoc_bulkwriteexception_t const* ptr) -> bson_t const* {
             CHECK(ptr == mocks.exc_id);
@@ -661,6 +676,9 @@ TEST_CASE("error_reply", "[mongocxx][v1][client_bulk_write][exception]") {
         .forever();
 
     auto const ex = mocks.make();
+
+    CHECK(ex.code() == mongocxx::v1::source_errc::mongoc);
+    CHECK(ex.code().value() == code);
 
     CHECK(ex.error_reply() == v.view());
 }
