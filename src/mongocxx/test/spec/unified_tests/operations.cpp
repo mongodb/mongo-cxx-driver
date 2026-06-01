@@ -364,7 +364,7 @@ void append_update(
         client_bulk_write.append(ns, filter, bsoncxx::v_noabi::to_v1(update_element.get_document().value), opts);
     } else {
         client_bulk_write.append(
-            ns, filter, static_cast<mongocxx::v1::pipeline>(build_pipeline(update_element.get_array().value)), opts);
+            ns, filter, mongocxx::v_noabi::to_v1(build_pipeline(update_element.get_array().value)), opts);
     }
 }
 
