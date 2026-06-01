@@ -38,6 +38,7 @@ class exception::internal {
     static MONGOCXX_ABI_EXPORT_CDECL_TESTING(exception)
     make(int code, std::error_category const& category, char const* message);
     static MONGOCXX_ABI_EXPORT_CDECL_TESTING(exception) make(int code, std::error_category const& category);
+    static MONGOCXX_ABI_EXPORT_CDECL_TESTING(exception) make(bson_error_t const& error);
 
     template <
         typename Errc,

@@ -431,8 +431,8 @@ bsoncxx::v1::stdx::optional<client_bulk_write::result> client_bulk_write::except
     return _impl->_partial_result;
 }
 
-client_bulk_write::exception::exception(int code, char const* message, std::unique_ptr<impl> impl)
-    : v1::exception{v1::exception::internal::make(code, std::generic_category(), message)}, _impl{std::move(impl)} {}
+client_bulk_write::exception::exception(v1::exception e, std::unique_ptr<impl> impl)
+    : v1::exception{std::move(e)}, _impl{std::move(impl)} {}
 
 client_bulk_write::exception client_bulk_write::exception::internal::make(
     mongoc_bulkwriteexception_t* exc,
@@ -458,13 +458,9 @@ client_bulk_write::exception client_bulk_write::exception::internal::make(
     p->_partial_result = std::move(partial_result);
 
     bson_error_t error = {};
-    auto const has_error = libmongoc::bulkwriteexception_error(exc, &error);
+    libmongoc::bulkwriteexception_error(exc, &error);
 
-    auto const code = has_error ? static_cast<int>(error.code) : 0;
-
-    auto const* const message = has_error ? error.message : "";
-
-    auto e = exception{code, message, std::move(p)};
+    auto e = exception{v1::exception::internal::make(error), std::move(p)};
 
     if (auto const* const doc = libmongoc::bulkwriteexception_errorreply(exc)) {
         v1::exception::internal::set_reply(e, scoped_bson_view{doc}.value());
@@ -474,7 +470,7 @@ client_bulk_write::exception client_bulk_write::exception::internal::make(
 }
 
 client_bulk_write::exception client_bulk_write::exception::internal::make() {
-    return exception{0, "", std::unique_ptr<impl>{new impl{}}};
+    return exception{v1::exception::internal::make(0, std::generic_category(), ""), std::unique_ptr<impl>{new impl{}}};
 }
 
 bsoncxx::v1::document::value& client_bulk_write::exception::internal::write_errors(exception& self) {

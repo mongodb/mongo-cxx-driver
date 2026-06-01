@@ -467,7 +467,7 @@ class client_bulk_write::exception : public v1::exception {
 
    private:
     MONGOCXX_ABI_NO_EXPORT /* explicit(false) */
-    exception(int code, char const* message, std::unique_ptr<impl> impl);
+    exception(v1::exception e, std::unique_ptr<impl> impl);
 
     MONGOCXX_ABI_NO_EXPORT void key_function() const override;
 };
