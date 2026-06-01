@@ -47,13 +47,13 @@ TEST_CASE("ownership", "[mongocxx][v1][encrypt_options]") {
     SECTION("move") {
         auto move = std::move(source);
 
-        // source is in an assign-or-move-only state.
+        // source is in an assign-or-destroy-only state.
 
         CHECK(move.key_alt_name() == source_value);
 
         target = std::move(move);
 
-        // source is in an assign-or-move-only state.
+        // source is in an assign-or-destroy-only state.
 
         CHECK(target.key_alt_name() == source_value);
     }

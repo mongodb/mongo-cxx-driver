@@ -44,13 +44,13 @@ TEST_CASE("ownership", "[mongocxx][v1][gridfs][upload_options]") {
     SECTION("move") {
         auto move = std::move(source);
 
-        // source is in an assign-or-move-only state.
+        // source is in an assign-or-destroy-only state.
 
         CHECK(move.chunk_size_bytes() == source_value);
 
         target = std::move(move);
 
-        // move is in an assign-or-move-only state.
+        // move is in an assign-or-destroy-only state.
 
         CHECK(target.chunk_size_bytes() == source_value);
     }

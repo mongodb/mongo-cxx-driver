@@ -363,7 +363,7 @@ TEST_CASE("ownership", "[mongocxx][v1][pool]") {
         {
             auto move = std::move(source);
 
-            // source is in an assign-or-move-only state.
+            // source is in an assign-or-destroy-only state.
             CHECK_FALSE(source);
 
             CHECK(move);
@@ -372,7 +372,7 @@ TEST_CASE("ownership", "[mongocxx][v1][pool]") {
 
             target = std::move(move);
 
-            // move is in an assign-or-move-only state.
+            // move is in an assign-or-destroy-only state.
             CHECK_FALSE(move);
 
             CHECK(target);
@@ -401,13 +401,13 @@ TEST_CASE("ownership", "[mongocxx][v1][pool][options]") {
     SECTION("move") {
         auto move = std::move(source);
 
-        // source is in an assign-or-move-only state.
+        // source is in an assign-or-destroy-only state.
 
         CHECK(ca_file(move) == source_value);
 
         target = std::move(move);
 
-        // source is in an assign-or-move-only state.
+        // source is in an assign-or-destroy-only state.
 
         CHECK(ca_file(target) == source_value);
     }
@@ -476,7 +476,7 @@ TEST_CASE("ownership", "[mongocxx][v1][pool][entry]") {
         {
             auto move = std::move(source);
 
-            // source is in an assign-or-move-only state.
+            // source is in an assign-or-destroy-only state.
             CHECK_FALSE(source);
 
             REQUIRE(move);
@@ -487,7 +487,7 @@ TEST_CASE("ownership", "[mongocxx][v1][pool][entry]") {
 
             target = std::move(move);
 
-            // move is in an assign-or-move-only state.
+            // move is in an assign-or-destroy-only state.
             CHECK_FALSE(move);
 
             REQUIRE(target);

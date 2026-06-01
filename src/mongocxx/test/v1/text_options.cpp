@@ -38,13 +38,13 @@ TEST_CASE("ownership", "[mongocxx][v1][text_options]") {
     SECTION("move") {
         auto move = std::move(source);
 
-        // source is in an assign-or-move-only state.
+        // source is in an assign-or-destroy-only state.
 
         CHECK(move.case_sensitive() == source_value);
 
         target = std::move(move);
 
-        // move is in an assign-or-move-only state.
+        // move is in an assign-or-destroy-only state.
 
         CHECK(target.case_sensitive() == source_value);
     }
@@ -75,13 +75,13 @@ TEST_CASE("ownership", "[mongocxx][v1][text_options][prefix]") {
     SECTION("move") {
         auto move = std::move(source);
 
-        // source is in an assign-or-move-only state.
+        // source is in an assign-or-destroy-only state.
 
         CHECK(move.str_max_query_length() == source_value);
 
         target = std::move(move);
 
-        // move is in an assign-or-move-only state.
+        // move is in an assign-or-destroy-only state.
 
         CHECK(target.str_max_query_length() == source_value);
     }
@@ -112,13 +112,13 @@ TEST_CASE("ownership", "[mongocxx][v1][text_options][suffix]") {
     SECTION("move") {
         auto move = std::move(source);
 
-        // source is in an assign-or-move-only state.
+        // source is in an assign-or-destroy-only state.
 
         CHECK(move.str_max_query_length() == source_value);
 
         target = std::move(move);
 
-        // move is in an assign-or-move-only state.
+        // move is in an assign-or-destroy-only state.
 
         CHECK(target.str_max_query_length() == source_value);
     }
@@ -149,13 +149,13 @@ TEST_CASE("ownership", "[mongocxx][v1][text_options][substring]") {
     SECTION("move") {
         auto move = std::move(source);
 
-        // source is in an assign-or-move-only state.
+        // source is in an assign-or-destroy-only state.
 
         CHECK(move.str_max_length() == source_value);
 
         target = std::move(move);
 
-        // move is in an assign-or-move-only state.
+        // move is in an assign-or-destroy-only state.
 
         CHECK(target.str_max_length() == source_value);
     }

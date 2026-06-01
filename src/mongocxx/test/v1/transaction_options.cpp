@@ -44,13 +44,13 @@ TEST_CASE("ownership", "[mongocxx][v1][transaction_options]") {
     SECTION("move") {
         auto move = std::move(source);
 
-        // source is in an assign-or-move-only state.
+        // source is in an assign-or-destroy-only state.
 
         CHECK(move.max_commit_time_ms() == source_secs);
 
         target = std::move(move);
 
-        // source is in an assign-or-move-only state.
+        // source is in an assign-or-destroy-only state.
 
         CHECK(target.max_commit_time_ms() == source_secs);
     }

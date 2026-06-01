@@ -548,14 +548,14 @@ TEST_CASE("ownership", "[mongocxx][v1][client_session]") {
         {
             auto move = std::move(source);
 
-            // source is in an assign-or-move-only state.
+            // source is in an assign-or-destroy-only state.
 
             CHECK(client_session::internal::as_mongoc(move) == session1);
             CHECK(destroy_count == 0);
 
             target = std::move(move);
 
-            // move is in an assign-or-move-only state.
+            // move is in an assign-or-destroy-only state.
 
             CHECK(client_session::internal::as_mongoc(target) == session1);
             CHECK(destroy_count == 1);
@@ -598,14 +598,14 @@ TEST_CASE("ownership", "[mongocxx][v1][client_session][options]") {
         {
             auto move = std::move(source);
 
-            // source is in an assign-or-move-only state.
+            // source is in an assign-or-destroy-only state.
 
             CHECK(client_session::options::internal::as_mongoc(move) == opts1);
             CHECK(destroy_count == 0);
 
             target = std::move(move);
 
-            // move is in an assign-or-move-only state.
+            // move is in an assign-or-destroy-only state.
 
             CHECK(client_session::options::internal::as_mongoc(target) == opts1);
             CHECK(destroy_count == 1);
