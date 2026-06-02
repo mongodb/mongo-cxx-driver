@@ -20,7 +20,6 @@ Changes prior to 3.9.0 are documented as [release notes on GitHub](https://githu
 
 ### Fixed
 
-- Do not set `upsert: true` in "findOneAnd*" operations when the option is explicitly set to `false` (regression in 4.2.0).
 - Include of `v1/text_options.hpp` (normal header) by `options/text-fwd.hpp` (forward header).
 - Include of v\_noabi macro guard headers by `text_options.hpp` (v1).
 
@@ -41,6 +40,13 @@ Changes prior to 3.9.0 are documented as [release notes on GitHub](https://githu
 
 - Support for the "readConcern" option field to "delete", "insert", "replace", "bulkWrite", "findOneAnd*", "count", and "distinct" operations.
 - Support for `MONGODB-OIDC` authMechanism.
+
+## 4.3.1
+
+### Fixed
+
+- Do not set `upsert: true` in "findOneAnd*" operations when the option is explicitly set to `false` (regression in 4.2.0).
+
 
 ## 4.3.0
 
