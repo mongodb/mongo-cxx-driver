@@ -1,0 +1,25 @@
+var classmongocxx_1_1v1_1_1find__one__and__delete__options =
+[
+    [ "~find_one_and_delete_options", "classmongocxx_1_1v1_1_1find__one__and__delete__options.html#abcd71e878f5c6b995da6ecc3fa0c85a8", null ],
+    [ "find_one_and_delete_options", "classmongocxx_1_1v1_1_1find__one__and__delete__options.html#a0d4695894d525b5186a2cfb5b8781612", null ],
+    [ "find_one_and_delete_options", "classmongocxx_1_1v1_1_1find__one__and__delete__options.html#a6843705d2a6b8fd080e355b2801f799c", null ],
+    [ "find_one_and_delete_options", "classmongocxx_1_1v1_1_1find__one__and__delete__options.html#afbc571860bddea8d4019651065471b78", null ],
+    [ "collation", "classmongocxx_1_1v1_1_1find__one__and__delete__options.html#a66c6c133af0c77464cfd435316b9899c", null ],
+    [ "collation", "classmongocxx_1_1v1_1_1find__one__and__delete__options.html#a68134f1928a0fb39f9e0f3938a813fdc", null ],
+    [ "comment", "classmongocxx_1_1v1_1_1find__one__and__delete__options.html#a7ea30089d6ab6734778079011a8e5ad9", null ],
+    [ "comment", "classmongocxx_1_1v1_1_1find__one__and__delete__options.html#a05885de52af6967fdcfe6ae035763b34", null ],
+    [ "hint", "classmongocxx_1_1v1_1_1find__one__and__delete__options.html#a82bebb8e9dec629292dc82d39cc862c2", null ],
+    [ "hint", "classmongocxx_1_1v1_1_1find__one__and__delete__options.html#ae85901d3b8d26c1424d71d663487fef2", null ],
+    [ "let", "classmongocxx_1_1v1_1_1find__one__and__delete__options.html#a9af095b4e6b3d3105a801b63d911592d", null ],
+    [ "let", "classmongocxx_1_1v1_1_1find__one__and__delete__options.html#a2b95a848d2984fbd619f9a53f59dd6b3", null ],
+    [ "max_time", "classmongocxx_1_1v1_1_1find__one__and__delete__options.html#a4f52e1aadb19ef5b0e2290b8af099ce8", null ],
+    [ "max_time", "classmongocxx_1_1v1_1_1find__one__and__delete__options.html#a7afb3bd2e5350e5f9106959b93f6e19f", null ],
+    [ "operator=", "classmongocxx_1_1v1_1_1find__one__and__delete__options.html#a201987d3d68c305ec30b0f9b543e10e0", null ],
+    [ "operator=", "classmongocxx_1_1v1_1_1find__one__and__delete__options.html#ae3aa57f458ad30e421aa5aa77842da60", null ],
+    [ "projection", "classmongocxx_1_1v1_1_1find__one__and__delete__options.html#aa3e814a75be784f88fd5ae259174d54b", null ],
+    [ "projection", "classmongocxx_1_1v1_1_1find__one__and__delete__options.html#a887016591e711e2e7655d789765f4e37", null ],
+    [ "sort", "classmongocxx_1_1v1_1_1find__one__and__delete__options.html#a65ca1f461b1edd8605320853bcbc27ec", null ],
+    [ "sort", "classmongocxx_1_1v1_1_1find__one__and__delete__options.html#ac469f8fab205d62b15f2e614f31e018f", null ],
+    [ "write_concern", "classmongocxx_1_1v1_1_1find__one__and__delete__options.html#abf165696faf40caed30d56b276107ec6", null ],
+    [ "write_concern", "classmongocxx_1_1v1_1_1find__one__and__delete__options.html#a0409b970beb603337ea5c22555dd56cd", null ]
+];

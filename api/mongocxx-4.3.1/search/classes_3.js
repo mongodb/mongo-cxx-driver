@@ -1,0 +1,22 @@
+var searchData=
+[
+  ['data_5fkey_0',['data_key',['../classmongocxx_1_1options_1_1data__key.html',1,'mongocxx::options::data_key'],['../classmongocxx_1_1v__noabi_1_1options_1_1data__key.html',1,'mongocxx::v_noabi::options::data_key']]],
+  ['data_5fkey_5foptions_1',['data_key_options',['../classmongocxx_1_1v1_1_1data__key__options.html',1,'mongocxx::v1']]],
+  ['database_2',['database',['../classmongocxx_1_1database.html',1,'mongocxx::database'],['../classmongocxx_1_1v1_1_1database.html',1,'mongocxx::v1::database'],['../classmongocxx_1_1v__noabi_1_1database.html',1,'mongocxx::v_noabi::database']]],
+  ['decimal128_3',['decimal128',['../classbsoncxx_1_1decimal128.html',1,'bsoncxx::decimal128'],['../classbsoncxx_1_1v1_1_1decimal128.html',1,'bsoncxx::v1::decimal128'],['../classbsoncxx_1_1v__noabi_1_1decimal128.html',1,'bsoncxx::v_noabi::decimal128']]],
+  ['default_5flogger_4',['default_logger',['../classmongocxx_1_1default__logger.html',1,'mongocxx::default_logger'],['../classmongocxx_1_1v1_1_1default__logger.html',1,'mongocxx::v1::default_logger'],['../classmongocxx_1_1v__noabi_1_1default__logger.html',1,'mongocxx::v_noabi::default_logger']]],
+  ['delete_5fmany_5',['delete_many',['../classmongocxx_1_1model_1_1delete__many.html',1,'mongocxx::model::delete_many'],['../classmongocxx_1_1v1_1_1bulk__write_1_1delete__many.html',1,'mongocxx::v1::bulk_write::delete_many'],['../classmongocxx_1_1v__noabi_1_1model_1_1delete__many.html',1,'mongocxx::v_noabi::model::delete_many']]],
+  ['delete_5fmany_5foptions_6',['delete_many_options',['../classmongocxx_1_1v1_1_1delete__many__options.html',1,'mongocxx::v1']]],
+  ['delete_5fmany_5fresult_7',['delete_many_result',['../classmongocxx_1_1v1_1_1delete__many__result.html',1,'mongocxx::v1']]],
+  ['delete_5fone_8',['delete_one',['../classmongocxx_1_1model_1_1delete__one.html',1,'mongocxx::model::delete_one'],['../classmongocxx_1_1v1_1_1bulk__write_1_1delete__one.html',1,'mongocxx::v1::bulk_write::delete_one'],['../classmongocxx_1_1v__noabi_1_1model_1_1delete__one.html',1,'mongocxx::v_noabi::model::delete_one']]],
+  ['delete_5fone_5foptions_9',['delete_one_options',['../classmongocxx_1_1v1_1_1delete__one__options.html',1,'mongocxx::v1']]],
+  ['delete_5fone_5fresult_10',['delete_one_result',['../classmongocxx_1_1v1_1_1delete__one__result.html',1,'mongocxx::v1']]],
+  ['delete_5foptions_11',['delete_options',['../classmongocxx_1_1options_1_1delete__options.html',1,'mongocxx::options::delete_options'],['../classmongocxx_1_1v__noabi_1_1options_1_1delete__options.html',1,'mongocxx::v_noabi::options::delete_options']]],
+  ['delete_5fresult_12',['delete_result',['../classmongocxx_1_1result_1_1delete__result.html',1,'mongocxx::result::delete_result'],['../classmongocxx_1_1v__noabi_1_1result_1_1delete__result.html',1,'mongocxx::v_noabi::result::delete_result']]],
+  ['distinct_13',['distinct',['../classmongocxx_1_1options_1_1distinct.html',1,'mongocxx::options::distinct'],['../classmongocxx_1_1v__noabi_1_1options_1_1distinct.html',1,'mongocxx::v_noabi::options::distinct']]],
+  ['distinct_5foptions_14',['distinct_options',['../classmongocxx_1_1v1_1_1distinct__options.html',1,'mongocxx::v1']]],
+  ['document_15',['document',['../classbsoncxx_1_1builder_1_1basic_1_1document.html',1,'bsoncxx::builder::basic::document'],['../classbsoncxx_1_1builder_1_1document.html',1,'bsoncxx::builder::document'],['../classbsoncxx_1_1builder_1_1stream_1_1document.html',1,'bsoncxx::builder::stream::document'],['../classbsoncxx_1_1v__noabi_1_1builder_1_1basic_1_1document.html',1,'bsoncxx::v_noabi::builder::basic::document'],['../classbsoncxx_1_1v__noabi_1_1builder_1_1document.html',1,'bsoncxx::v_noabi::builder::document'],['../classbsoncxx_1_1v__noabi_1_1builder_1_1stream_1_1document.html',1,'bsoncxx::v_noabi::builder::stream::document']]],
+  ['downloader_16',['downloader',['../classmongocxx_1_1gridfs_1_1downloader.html',1,'mongocxx::gridfs::downloader'],['../classmongocxx_1_1v1_1_1gridfs_1_1downloader.html',1,'mongocxx::v1::gridfs::downloader'],['../classmongocxx_1_1v__noabi_1_1gridfs_1_1downloader.html',1,'mongocxx::v_noabi::gridfs::downloader']]],
+  ['drop_5fall_5foptions_17',['drop_all_options',['../classmongocxx_1_1v1_1_1indexes_1_1drop__all__options.html',1,'mongocxx::v1::indexes']]],
+  ['drop_5fone_5foptions_18',['drop_one_options',['../classmongocxx_1_1v1_1_1indexes_1_1drop__one__options.html',1,'mongocxx::v1::indexes']]]
+];
