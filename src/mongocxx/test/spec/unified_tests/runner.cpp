@@ -1050,7 +1050,12 @@ void assert_error(
     }
 
     if (auto const is_client_error = expect_error["isClientError"]) {
-        CHECK(e.code() != mongocxx::v1::source_errc::server);
+        CHECKED_IF(is_client_error.get_bool().value) {
+            CHECK(e.code() != mongocxx::v1::source_errc::server);
+        }
+        else {
+            CHECK(e.code() == mongocxx::v1::source_errc::server);
+        }
     }
 
     REQUIRE_FALSE(expect_error["errorLabelsContain"]);
@@ -1061,10 +1066,9 @@ void assert_error(
     }
 
     if (auto const error_response = expect_error["errorResponse"]) {
-        assert::matches(
-            types::bson_value::value(mongocxx::v1::exception::internal::get_reply(e).value()),
-            error_response.get_value(),
-            get_entity_map());
+        auto const& reply = mongocxx::v1::exception::internal::get_reply(e);
+        REQUIRE(reply);
+        assert::matches(types::bson_value::value(*reply), error_response.get_value(), get_entity_map());
     }
 
     REQUIRE_FALSE(/* TODO */ expect_error["errorContains"]);
