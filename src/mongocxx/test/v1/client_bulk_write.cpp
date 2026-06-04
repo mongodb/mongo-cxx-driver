@@ -1310,131 +1310,129 @@ TEST_CASE("append", "[mongocxx][v1][client_bulk_write]") {
 
     auto cbw = client_bulk_write::internal::make(identity);
 
-    SECTION("required fields") {
-        scoped_bson one{R"({"x": 1})"};
-        scoped_bson two{R"({"y": 2})"};
+    scoped_bson one{R"({"x": 1})"};
+    scoped_bson two{R"({"y": 2})"};
 
-        auto const one_data = one.data();
-        auto const two_data = two.data();
+    auto const one_data = one.data();
+    auto const two_data = two.data();
 
-        bsoncxx::v1::stdx::string_view const ns = "db.coll";
+    bsoncxx::v1::stdx::string_view const ns = "db.coll";
 
-        SECTION("insert_one") {
-            auto mock = libmongoc::bulkwrite_append_insertone.create_instance();
-            mock->interpose(
-                [&](mongoc_bulkwrite_t* bw,
-                    char const* ns_arg,
-                    bson_t const* doc,
-                    mongoc_bulkwrite_insertoneopts_t const* opts,
-                    bson_error_t*) -> bool {
-                    CHECK(bw == identity);
-                    CHECK(bsoncxx::v1::stdx::string_view{ns_arg} == ns);
-                    CHECK(scoped_bson_view{doc}.data() == one_data);
-                    CHECK(opts == nullptr);
-                    return true;
-                });
+    SECTION("insert_one") {
+        auto mock = libmongoc::bulkwrite_append_insertone.create_instance();
+        mock->interpose(
+            [&](mongoc_bulkwrite_t* bw,
+                char const* ns_arg,
+                bson_t const* doc,
+                mongoc_bulkwrite_insertoneopts_t const* opts,
+                bson_error_t*) -> bool {
+                CHECK(bw == identity);
+                CHECK(bsoncxx::v1::stdx::string_view{ns_arg} == ns);
+                CHECK(scoped_bson_view{doc}.data() == one_data);
+                CHECK(opts == nullptr);
+                return true;
+            });
 
-            CHECK_NOTHROW(cbw.append(ns, std::move(one).value(), client_bulk_write::insert_one_options{}));
-        }
+        CHECK_NOTHROW(cbw.append(ns, std::move(one).value(), client_bulk_write::insert_one_options{}));
+    }
 
-        SECTION("update_one") {
-            auto mock = libmongoc::bulkwrite_append_updateone.create_instance();
-            mock->interpose(
-                [&](mongoc_bulkwrite_t* bw,
-                    char const* ns_arg,
-                    bson_t const* filter,
-                    bson_t const* update,
-                    mongoc_bulkwrite_updateoneopts_t const* opts,
-                    bson_error_t*) -> bool {
-                    CHECK(bw == identity);
-                    CHECK(bsoncxx::v1::stdx::string_view{ns_arg} == ns);
-                    CHECK(scoped_bson_view{filter}.data() == one_data);
-                    CHECK(scoped_bson_view{update}.data() == two_data);
-                    CHECK(opts == nullptr);
-                    return true;
-                });
+    SECTION("update_one") {
+        auto mock = libmongoc::bulkwrite_append_updateone.create_instance();
+        mock->interpose(
+            [&](mongoc_bulkwrite_t* bw,
+                char const* ns_arg,
+                bson_t const* filter,
+                bson_t const* update,
+                mongoc_bulkwrite_updateoneopts_t const* opts,
+                bson_error_t*) -> bool {
+                CHECK(bw == identity);
+                CHECK(bsoncxx::v1::stdx::string_view{ns_arg} == ns);
+                CHECK(scoped_bson_view{filter}.data() == one_data);
+                CHECK(scoped_bson_view{update}.data() == two_data);
+                CHECK(opts == nullptr);
+                return true;
+            });
 
-            CHECK_NOTHROW(cbw.append(
-                ns, std::move(one).value(), std::move(two).value(), client_bulk_write::update_one_options{}));
-        }
+        CHECK_NOTHROW(
+            cbw.append(ns, std::move(one).value(), std::move(two).value(), client_bulk_write::update_one_options{}));
+    }
 
-        SECTION("update_many") {
-            auto mock = libmongoc::bulkwrite_append_updatemany.create_instance();
-            mock->interpose(
-                [&](mongoc_bulkwrite_t* bw,
-                    char const* ns_arg,
-                    bson_t const* filter,
-                    bson_t const* update,
-                    mongoc_bulkwrite_updatemanyopts_t const* opts,
-                    bson_error_t*) -> bool {
-                    CHECK(bw == identity);
-                    CHECK(bsoncxx::v1::stdx::string_view{ns_arg} == ns);
-                    CHECK(scoped_bson_view{filter}.data() == one_data);
-                    CHECK(scoped_bson_view{update}.data() == two_data);
-                    CHECK(opts == nullptr);
-                    return true;
-                });
+    SECTION("update_many") {
+        auto mock = libmongoc::bulkwrite_append_updatemany.create_instance();
+        mock->interpose(
+            [&](mongoc_bulkwrite_t* bw,
+                char const* ns_arg,
+                bson_t const* filter,
+                bson_t const* update,
+                mongoc_bulkwrite_updatemanyopts_t const* opts,
+                bson_error_t*) -> bool {
+                CHECK(bw == identity);
+                CHECK(bsoncxx::v1::stdx::string_view{ns_arg} == ns);
+                CHECK(scoped_bson_view{filter}.data() == one_data);
+                CHECK(scoped_bson_view{update}.data() == two_data);
+                CHECK(opts == nullptr);
+                return true;
+            });
 
-            CHECK_NOTHROW(cbw.append(
-                ns, std::move(one).value(), std::move(two).value(), client_bulk_write::update_many_options{}));
-        }
+        CHECK_NOTHROW(
+            cbw.append(ns, std::move(one).value(), std::move(two).value(), client_bulk_write::update_many_options{}));
+    }
 
-        SECTION("replace_one") {
-            auto mock = libmongoc::bulkwrite_append_replaceone.create_instance();
-            mock->interpose(
-                [&](mongoc_bulkwrite_t* bw,
-                    char const* ns_arg,
-                    bson_t const* filter,
-                    bson_t const* replacement,
-                    mongoc_bulkwrite_replaceoneopts_t const* opts,
-                    bson_error_t*) -> bool {
-                    CHECK(bw == identity);
-                    CHECK(bsoncxx::v1::stdx::string_view{ns_arg} == ns);
-                    CHECK(scoped_bson_view{filter}.data() == one_data);
-                    CHECK(scoped_bson_view{replacement}.data() == two_data);
-                    CHECK(opts == nullptr);
-                    return true;
-                });
+    SECTION("replace_one") {
+        auto mock = libmongoc::bulkwrite_append_replaceone.create_instance();
+        mock->interpose(
+            [&](mongoc_bulkwrite_t* bw,
+                char const* ns_arg,
+                bson_t const* filter,
+                bson_t const* replacement,
+                mongoc_bulkwrite_replaceoneopts_t const* opts,
+                bson_error_t*) -> bool {
+                CHECK(bw == identity);
+                CHECK(bsoncxx::v1::stdx::string_view{ns_arg} == ns);
+                CHECK(scoped_bson_view{filter}.data() == one_data);
+                CHECK(scoped_bson_view{replacement}.data() == two_data);
+                CHECK(opts == nullptr);
+                return true;
+            });
 
-            CHECK_NOTHROW(cbw.append(
-                ns, std::move(one).value(), std::move(two).value(), client_bulk_write::replace_one_options{}));
-        }
+        CHECK_NOTHROW(
+            cbw.append(ns, std::move(one).value(), std::move(two).value(), client_bulk_write::replace_one_options{}));
+    }
 
-        SECTION("delete_one") {
-            auto mock = libmongoc::bulkwrite_append_deleteone.create_instance();
-            mock->interpose(
-                [&](mongoc_bulkwrite_t* bw,
-                    char const* ns_arg,
-                    bson_t const* filter,
-                    mongoc_bulkwrite_deleteoneopts_t const* opts,
-                    bson_error_t*) -> bool {
-                    CHECK(bw == identity);
-                    CHECK(bsoncxx::v1::stdx::string_view{ns_arg} == ns);
-                    CHECK(scoped_bson_view{filter}.data() == one_data);
-                    CHECK(opts == nullptr);
-                    return true;
-                });
+    SECTION("delete_one") {
+        auto mock = libmongoc::bulkwrite_append_deleteone.create_instance();
+        mock->interpose(
+            [&](mongoc_bulkwrite_t* bw,
+                char const* ns_arg,
+                bson_t const* filter,
+                mongoc_bulkwrite_deleteoneopts_t const* opts,
+                bson_error_t*) -> bool {
+                CHECK(bw == identity);
+                CHECK(bsoncxx::v1::stdx::string_view{ns_arg} == ns);
+                CHECK(scoped_bson_view{filter}.data() == one_data);
+                CHECK(opts == nullptr);
+                return true;
+            });
 
-            CHECK_NOTHROW(cbw.append(ns, std::move(one).value(), client_bulk_write::delete_one_options{}));
-        }
+        CHECK_NOTHROW(cbw.append(ns, std::move(one).value(), client_bulk_write::delete_one_options{}));
+    }
 
-        SECTION("delete_many") {
-            auto mock = libmongoc::bulkwrite_append_deletemany.create_instance();
-            mock->interpose(
-                [&](mongoc_bulkwrite_t* bw,
-                    char const* ns_arg,
-                    bson_t const* filter,
-                    mongoc_bulkwrite_deletemanyopts_t const* opts,
-                    bson_error_t*) -> bool {
-                    CHECK(bw == identity);
-                    CHECK(bsoncxx::v1::stdx::string_view{ns_arg} == ns);
-                    CHECK(scoped_bson_view{filter}.data() == one_data);
-                    CHECK(opts == nullptr);
-                    return true;
-                });
+    SECTION("delete_many") {
+        auto mock = libmongoc::bulkwrite_append_deletemany.create_instance();
+        mock->interpose(
+            [&](mongoc_bulkwrite_t* bw,
+                char const* ns_arg,
+                bson_t const* filter,
+                mongoc_bulkwrite_deletemanyopts_t const* opts,
+                bson_error_t*) -> bool {
+                CHECK(bw == identity);
+                CHECK(bsoncxx::v1::stdx::string_view{ns_arg} == ns);
+                CHECK(scoped_bson_view{filter}.data() == one_data);
+                CHECK(opts == nullptr);
+                return true;
+            });
 
-            CHECK_NOTHROW(cbw.append(ns, std::move(one).value(), client_bulk_write::delete_many_options{}));
-        }
+        CHECK_NOTHROW(cbw.append(ns, std::move(one).value(), client_bulk_write::delete_many_options{}));
     }
 }
 
