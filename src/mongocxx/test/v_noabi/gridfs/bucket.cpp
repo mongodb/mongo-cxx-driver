@@ -20,6 +20,7 @@
 #include <cstdlib>
 #include <fstream>
 #include <functional>
+#include <limits>
 #include <memory>
 #include <numeric>
 #include <sstream>
@@ -37,13 +38,11 @@
 #include <mongocxx/exception/gridfs_exception.hpp>
 #include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/gridfs/bucket.hpp>
-#include <mongocxx/instance.hpp>
 #include <mongocxx/options/find.hpp>
+#include <mongocxx/options/gridfs/bucket.hpp>
 #include <mongocxx/options/gridfs/upload.hpp>
 #include <mongocxx/options/index.hpp>
-#include <mongocxx/read_concern.hpp>
 #include <mongocxx/uri.hpp>
-#include <mongocxx/write_concern.hpp>
 
 #include <bsoncxx/test/catch.hh>
 
@@ -973,10 +972,14 @@ TEST_CASE("gridfs::bucket::find works", "[gridfs::bucket]") {
 }
 
 TEST_CASE("gridfs upload large file", "[gridfs::bucket]") {
-    char* enable_slow_tests = std::getenv("MONGOCXX_ENABLE_SLOW_TESTS");
+    char const* const enable_slow_tests = std::getenv("MONGOCXX_ENABLE_SLOW_TESTS");
 
     if (!enable_slow_tests || bsoncxx::stdx::string_view{enable_slow_tests}.empty()) {
-        return;
+        SKIP("MONGOCXX_ENABLE_SLOW_TESTS is not enabled");
+    }
+
+    if (test_util::is_replica_set() || test_util::is_sharded_cluster()) {
+        SKIP("This test is too slow when run against a replica set or sharded cluster");
     }
 
     client client{uri{}, test_util::add_test_server_api()};
@@ -986,50 +989,55 @@ TEST_CASE("gridfs upload large file", "[gridfs::bucket]") {
     db["fs.files"].drop();
     db["fs.chunks"].drop();
 
-    constexpr std::size_t chunk_size = 7 * 1024 * 1024;
-    std::int64_t length = static_cast<std::int64_t>(std::numeric_limits<std::uint32_t>::max()) + 2;
+    static constexpr std::int32_t chunk_size{7 * 1024 * 1024};
+    static constexpr auto length = static_cast<std::int64_t>(std::numeric_limits<std::uint32_t>::max()) + 2;
 
     auto uploader = bucket.open_upload_stream("large_file", options::gridfs::upload{}.chunk_size_bytes(chunk_size));
 
     std::vector<std::uint8_t> bytes;
 
-    for (std::int64_t i = 0; i * static_cast<std::int64_t>(chunk_size) < length; ++i) {
-        std::size_t current_chunk_size = static_cast<std::size_t>(
-            std::min(static_cast<std::int64_t>(chunk_size), length - i * static_cast<std::int64_t>(chunk_size)));
-        bytes.assign(current_chunk_size, static_cast<std::uint8_t>(i % 200));
-
+    for (std::int64_t chunk_number = 0; chunk_number * chunk_size < length; ++chunk_number) {
+        auto const current_chunk_size =
+            static_cast<std::size_t>(std::min<std::int64_t>(chunk_size, length - chunk_number * chunk_size));
+        bytes.assign(current_chunk_size, static_cast<std::uint8_t>(chunk_number % 200));
         uploader.write(bytes.data(), current_chunk_size);
     }
 
     auto result = uploader.close();
     auto id = result.id();
 
+    std::vector<std::uint8_t> expected_bytes;
+
     validate_gridfs_file(
         db,
         "fs",
         id,
         "large_file",
-        [&, length](bsoncxx::types::b_binary const& data, std::size_t i) {
-            REQUIRE(data.sub_type == bsoncxx::binary_sub_type::k_binary);
-            REQUIRE(
+        [&](bsoncxx::types::b_binary const& data, std::size_t chunk_number) {
+            CAPTURE(chunk_number);
+
+            CHECK(data.sub_type == bsoncxx::binary_sub_type::k_binary);
+            CHECK(
                 static_cast<std::int64_t>(data.size) ==
-                std::min(static_cast<std::int64_t>(chunk_size), length - static_cast<std::int64_t>(i * chunk_size)));
+                std::min<std::int64_t>(
+                    chunk_size, length - static_cast<std::int64_t>(chunk_number) * std::int64_t{chunk_size}));
 
-            INFO("chunk_number: " << i);
-
-            REQUIRE(std::all_of(data.bytes, data.bytes + data.size, [i](std::uint8_t byte) {
-                return byte == static_cast<std::uint8_t>(i % 200);
-            }));
+            expected_bytes.assign(data.size, static_cast<std::uint8_t>(chunk_number % 200));
+            REQUIRE(std::vector<std::uint8_t>{data.bytes, data.bytes + data.size} == expected_bytes);
         },
         chunk_size,
         length);
 }
 
 TEST_CASE("gridfs download large file", "[gridfs::bucket]") {
-    char* enable_slow_tests = std::getenv("MONGOCXX_ENABLE_SLOW_TESTS");
+    char const* const enable_slow_tests = std::getenv("MONGOCXX_ENABLE_SLOW_TESTS");
 
     if (!enable_slow_tests || bsoncxx::stdx::string_view{enable_slow_tests}.empty()) {
-        return;
+        SKIP("MONGOCXX_ENABLE_SLOW_TESTS is not enabled");
+    }
+
+    if (test_util::is_replica_set() || test_util::is_sharded_cluster()) {
+        SKIP("This test is too slow when run against a replica set or sharded cluster");
     }
 
     client client{uri{}, test_util::add_test_server_api()};
@@ -1039,10 +1047,10 @@ TEST_CASE("gridfs download large file", "[gridfs::bucket]") {
     db["fs.files"].drop();
     db["fs.chunks"].drop();
 
-    constexpr std::size_t chunk_size = 7 * 1024 * 1024;
-    std::int64_t length = static_cast<std::size_t>(std::numeric_limits<std::uint32_t>::max()) + 2;
+    static constexpr std::int32_t chunk_size{7 * 1024 * 1024};
+    static constexpr auto length = static_cast<std::int64_t>(std::numeric_limits<std::uint32_t>::max()) + 2;
 
-    auto num_chunks_div = std::lldiv(length, chunk_size);
+    auto const num_chunks_div = std::lldiv(length, chunk_size);
     std::int32_t num_chunks = static_cast<std::int32_t>(num_chunks_div.quot);
 
     if (num_chunks_div.rem) {
@@ -1050,41 +1058,39 @@ TEST_CASE("gridfs download large file", "[gridfs::bucket]") {
     }
 
     bsoncxx::types::bson_value::view id{bsoncxx::types::b_oid{bsoncxx::oid{}}};
-    manual_gridfs_initialize(
-        db, num_chunks, static_cast<std::int32_t>(chunk_size), id, [&, num_chunks, length](std::int32_t chunk_num) {
-            std::int32_t current_chunk_size = static_cast<std::int32_t>(chunk_size);
+    manual_gridfs_initialize(db, num_chunks, chunk_size, id, [&, num_chunks](std::int32_t chunk_num) {
+        std::int32_t current_chunk_size = chunk_size;
 
-            if (chunk_num == num_chunks - 1) {
-                current_chunk_size = static_cast<std::int32_t>(
-                    static_cast<std::uint64_t>(length) - static_cast<std::uint32_t>(chunk_num) * chunk_size);
-            }
+        if (chunk_num == num_chunks - 1) {
+            current_chunk_size = static_cast<std::int32_t>(length - chunk_num * std::int64_t{chunk_size});
+        }
 
-            std::vector<std::uint8_t> bytes;
-            bytes.assign(static_cast<std::size_t>(current_chunk_size), static_cast<std::uint8_t>(chunk_num % 200));
+        std::vector<std::uint8_t> bytes;
+        bytes.assign(static_cast<std::size_t>(current_chunk_size), static_cast<std::uint8_t>(chunk_num % 200));
 
-            return bytes;
-        });
+        return bytes;
+    });
 
     auto downloader = bucket.open_download_stream(id);
 
     std::vector<std::uint8_t> bytes;
-    bytes.resize(chunk_size);
+    bytes.resize(std::size_t{chunk_size});
 
-    std::int64_t total_bytes_read = 0;
-    std::int32_t i = 0;
+    std::size_t total_bytes_read = 0u;
+    std::size_t chunk_number = 0u;
+    std::vector<std::uint8_t> expected_bytes;
 
-    while (std::size_t current_bytes_read = downloader.read(bytes.data(), chunk_size)) {
-        INFO("chunk number: " << i);
+    while (std::size_t current_bytes_read = downloader.read(bytes.data(), std::size_t{chunk_size})) {
+        CAPTURE(chunk_number);
 
-        REQUIRE(std::all_of(bytes.data(), bytes.data() + current_bytes_read, [i](std::uint8_t byte) {
-            return byte == static_cast<std::uint8_t>(i % 200);
-        }));
+        expected_bytes.assign(current_bytes_read, static_cast<std::uint8_t>(chunk_number % 200));
+        REQUIRE(std::vector<std::uint8_t>{bytes.data(), bytes.data() + current_bytes_read} == expected_bytes);
 
         total_bytes_read += current_bytes_read;
-        ++i;
+        ++chunk_number;
     }
 
-    REQUIRE(total_bytes_read == length);
+    REQUIRE(total_bytes_read == std::size_t{length});
 }
 
 std::string _gen_database_name(std::string name) {
