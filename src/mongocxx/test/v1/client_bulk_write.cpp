@@ -19,6 +19,10 @@
 #include <mongocxx/v1/hint.hpp>
 #include <mongocxx/v1/write_concern.hpp>
 
+#include <bsoncxx/v1/types/value.hh>
+
+#include <mongocxx/v1/write_concern.hh>
+
 #include <bsoncxx/test/v1/array/value.hh>
 #include <bsoncxx/test/v1/types/value.hh>
 
@@ -1295,6 +1299,120 @@ TEST_CASE("exceptions", "[mongocxx][v1][client_bulk_write]") {
     }
 }
 
+namespace {
+
+struct update_one_opts_mocks_type {
+    using new_type = decltype(libmongoc::bulkwrite_updateoneopts_new.create_instance());
+    using destroy_type = decltype(libmongoc::bulkwrite_updateoneopts_destroy.create_instance());
+
+    identity_type opts_identity;
+    mongoc_bulkwrite_updateoneopts_t* opts_id = reinterpret_cast<mongoc_bulkwrite_updateoneopts_t*>(&opts_identity);
+
+    new_type opts_new = libmongoc::bulkwrite_updateoneopts_new.create_instance();
+    destroy_type opts_destroy = libmongoc::bulkwrite_updateoneopts_destroy.create_instance();
+
+    ~update_one_opts_mocks_type() = default;
+    update_one_opts_mocks_type(update_one_opts_mocks_type&&) = delete;
+    update_one_opts_mocks_type& operator=(update_one_opts_mocks_type&&) = delete;
+    update_one_opts_mocks_type(update_one_opts_mocks_type const&) = delete;
+    update_one_opts_mocks_type& operator=(update_one_opts_mocks_type const&) = delete;
+
+    update_one_opts_mocks_type() {
+        opts_new->interpose([&]() { return opts_id; });
+        opts_destroy->interpose([&](mongoc_bulkwrite_updateoneopts_t* p) { CHECK(p == opts_id); });
+    }
+};
+
+struct update_many_opts_mocks_type {
+    using new_type = decltype(libmongoc::bulkwrite_updatemanyopts_new.create_instance());
+    using destroy_type = decltype(libmongoc::bulkwrite_updatemanyopts_destroy.create_instance());
+
+    identity_type opts_identity;
+    mongoc_bulkwrite_updatemanyopts_t* opts_id = reinterpret_cast<mongoc_bulkwrite_updatemanyopts_t*>(&opts_identity);
+
+    new_type opts_new = libmongoc::bulkwrite_updatemanyopts_new.create_instance();
+    destroy_type opts_destroy = libmongoc::bulkwrite_updatemanyopts_destroy.create_instance();
+
+    ~update_many_opts_mocks_type() = default;
+    update_many_opts_mocks_type(update_many_opts_mocks_type&&) = delete;
+    update_many_opts_mocks_type& operator=(update_many_opts_mocks_type&&) = delete;
+    update_many_opts_mocks_type(update_many_opts_mocks_type const&) = delete;
+    update_many_opts_mocks_type& operator=(update_many_opts_mocks_type const&) = delete;
+
+    update_many_opts_mocks_type() {
+        opts_new->interpose([&]() { return opts_id; });
+        opts_destroy->interpose([&](mongoc_bulkwrite_updatemanyopts_t* p) { CHECK(p == opts_id); });
+    }
+};
+
+struct replace_one_opts_mocks_type {
+    using new_type = decltype(libmongoc::bulkwrite_replaceoneopts_new.create_instance());
+    using destroy_type = decltype(libmongoc::bulkwrite_replaceoneopts_destroy.create_instance());
+
+    identity_type opts_identity;
+    mongoc_bulkwrite_replaceoneopts_t* opts_id = reinterpret_cast<mongoc_bulkwrite_replaceoneopts_t*>(&opts_identity);
+
+    new_type opts_new = libmongoc::bulkwrite_replaceoneopts_new.create_instance();
+    destroy_type opts_destroy = libmongoc::bulkwrite_replaceoneopts_destroy.create_instance();
+
+    ~replace_one_opts_mocks_type() = default;
+    replace_one_opts_mocks_type(replace_one_opts_mocks_type&&) = delete;
+    replace_one_opts_mocks_type& operator=(replace_one_opts_mocks_type&&) = delete;
+    replace_one_opts_mocks_type(replace_one_opts_mocks_type const&) = delete;
+    replace_one_opts_mocks_type& operator=(replace_one_opts_mocks_type const&) = delete;
+
+    replace_one_opts_mocks_type() {
+        opts_new->interpose([&]() { return opts_id; });
+        opts_destroy->interpose([&](mongoc_bulkwrite_replaceoneopts_t* p) { CHECK(p == opts_id); });
+    }
+};
+
+struct delete_one_opts_mocks_type {
+    using new_type = decltype(libmongoc::bulkwrite_deleteoneopts_new.create_instance());
+    using destroy_type = decltype(libmongoc::bulkwrite_deleteoneopts_destroy.create_instance());
+
+    identity_type opts_identity;
+    mongoc_bulkwrite_deleteoneopts_t* opts_id = reinterpret_cast<mongoc_bulkwrite_deleteoneopts_t*>(&opts_identity);
+
+    new_type opts_new = libmongoc::bulkwrite_deleteoneopts_new.create_instance();
+    destroy_type opts_destroy = libmongoc::bulkwrite_deleteoneopts_destroy.create_instance();
+
+    ~delete_one_opts_mocks_type() = default;
+    delete_one_opts_mocks_type(delete_one_opts_mocks_type&&) = delete;
+    delete_one_opts_mocks_type& operator=(delete_one_opts_mocks_type&&) = delete;
+    delete_one_opts_mocks_type(delete_one_opts_mocks_type const&) = delete;
+    delete_one_opts_mocks_type& operator=(delete_one_opts_mocks_type const&) = delete;
+
+    delete_one_opts_mocks_type() {
+        opts_new->interpose([&]() { return opts_id; });
+        opts_destroy->interpose([&](mongoc_bulkwrite_deleteoneopts_t* p) { CHECK(p == opts_id); });
+    }
+};
+
+struct delete_many_opts_mocks_type {
+    using new_type = decltype(libmongoc::bulkwrite_deletemanyopts_new.create_instance());
+    using destroy_type = decltype(libmongoc::bulkwrite_deletemanyopts_destroy.create_instance());
+
+    identity_type opts_identity;
+    mongoc_bulkwrite_deletemanyopts_t* opts_id = reinterpret_cast<mongoc_bulkwrite_deletemanyopts_t*>(&opts_identity);
+
+    new_type opts_new = libmongoc::bulkwrite_deletemanyopts_new.create_instance();
+    destroy_type opts_destroy = libmongoc::bulkwrite_deletemanyopts_destroy.create_instance();
+
+    ~delete_many_opts_mocks_type() = default;
+    delete_many_opts_mocks_type(delete_many_opts_mocks_type&&) = delete;
+    delete_many_opts_mocks_type& operator=(delete_many_opts_mocks_type&&) = delete;
+    delete_many_opts_mocks_type(delete_many_opts_mocks_type const&) = delete;
+    delete_many_opts_mocks_type& operator=(delete_many_opts_mocks_type const&) = delete;
+
+    delete_many_opts_mocks_type() {
+        opts_new->interpose([&]() { return opts_id; });
+        opts_destroy->interpose([&](mongoc_bulkwrite_deletemanyopts_t* p) { CHECK(p == opts_id); });
+    }
+};
+
+} // namespace
+
 TEST_CASE("append", "[mongocxx][v1][client_bulk_write]") {
     identity_type id;
     auto const identity = reinterpret_cast<mongoc_bulkwrite_t*>(&id);
@@ -1337,6 +1455,8 @@ TEST_CASE("append", "[mongocxx][v1][client_bulk_write]") {
     }
 
     SECTION("update_one") {
+        bool null_opts_expected = false;
+
         auto mock = libmongoc::bulkwrite_append_updateone.create_instance();
         mock->interpose(
             [&](mongoc_bulkwrite_t* bw,
@@ -1349,15 +1469,117 @@ TEST_CASE("append", "[mongocxx][v1][client_bulk_write]") {
                 CHECK(bsoncxx::v1::stdx::string_view{ns_arg} == ns);
                 CHECK(scoped_bson_view{filter}.data() == one_data);
                 CHECK(scoped_bson_view{update}.data() == two_data);
-                CHECK(opts == nullptr);
+                CHECK((opts == nullptr) == null_opts_expected);
                 return true;
             });
 
-        CHECK_NOTHROW(
-            cbw.append(ns, std::move(one).value(), std::move(two).value(), client_bulk_write::update_one_options{}));
+        SECTION("no fields set") {
+            null_opts_expected = true;
+            CHECK_NOTHROW(cbw.append(
+                ns, std::move(one).value(), std::move(two).value(), client_bulk_write::update_one_options{}));
+        }
+
+        SECTION("array_filters set") {
+            update_one_opts_mocks_type opts_mocks;
+
+            scoped_bson const af{R"([{"x": 1}])"};
+
+            auto set = libmongoc::bulkwrite_updateoneopts_set_arrayfilters.create_instance();
+            set->interpose([&](mongoc_bulkwrite_updateoneopts_t* p, bson_t const* v) {
+                CHECK(p == opts_mocks.opts_id);
+                CHECK(scoped_bson_view{v}.view() == af.view());
+            });
+
+            CHECK_NOTHROW(cbw.append(
+                ns,
+                std::move(one).value(),
+                std::move(two).value(),
+                client_bulk_write::update_one_options{}.array_filters(bsoncxx::v1::array::value{af.array_view()})));
+        }
+
+        SECTION("collation set") {
+            update_one_opts_mocks_type opts_mocks;
+
+            scoped_bson const collation{R"({"locale": "en"})"};
+
+            auto set = libmongoc::bulkwrite_updateoneopts_set_collation.create_instance();
+            set->interpose([&](mongoc_bulkwrite_updateoneopts_t* p, bson_t const* v) {
+                CHECK(p == opts_mocks.opts_id);
+                CHECK(scoped_bson_view{v}.view() == collation.view());
+            });
+
+            CHECK_NOTHROW(cbw.append(
+                ns,
+                std::move(one).value(),
+                std::move(two).value(),
+                client_bulk_write::update_one_options{}.collation(collation.value())));
+        }
+
+        SECTION("hint set") {
+            update_one_opts_mocks_type opts_mocks;
+
+            v1::hint const hint{"abc"};
+
+            auto set = libmongoc::bulkwrite_updateoneopts_set_hint.create_instance();
+            set->interpose([&](mongoc_bulkwrite_updateoneopts_t* p, bson_value_t const* v) {
+                CHECK(p == opts_mocks.opts_id);
+
+                auto const hint_value = bsoncxx::v1::types::value{hint.to_value()};
+                auto const& expected = bsoncxx::v1::types::value::internal::get_bson_value(hint_value);
+
+                CHECK(v->value_type == expected.value_type);
+                CHECK(
+                    bsoncxx::v1::stdx::string_view{v->value.v_utf8.str} ==
+                    bsoncxx::v1::stdx::string_view{expected.value.v_utf8.str});
+            });
+
+            CHECK_NOTHROW(cbw.append(
+                ns,
+                std::move(one).value(),
+                std::move(two).value(),
+                client_bulk_write::update_one_options{}.hint(hint)));
+        }
+
+        SECTION("sort set") {
+            update_one_opts_mocks_type opts_mocks;
+
+            scoped_bson const sort{R"({"x": 1})"};
+
+            auto set = libmongoc::bulkwrite_updateoneopts_set_sort.create_instance();
+            set->interpose([&](mongoc_bulkwrite_updateoneopts_t* p, bson_t const* v) {
+                CHECK(p == opts_mocks.opts_id);
+                CHECK(scoped_bson_view{v}.view() == sort.view());
+            });
+
+            CHECK_NOTHROW(cbw.append(
+                ns,
+                std::move(one).value(),
+                std::move(two).value(),
+                client_bulk_write::update_one_options{}.sort(sort.value())));
+        }
+
+        SECTION("upsert set") {
+            update_one_opts_mocks_type opts_mocks;
+
+            auto const upsert = true;
+
+            auto set = libmongoc::bulkwrite_updateoneopts_set_upsert.create_instance();
+            set->interpose([&](mongoc_bulkwrite_updateoneopts_t* p, bool v) {
+                CHECK(p == opts_mocks.opts_id);
+                CHECK(v == upsert);
+            });
+
+            CHECK_NOTHROW(cbw.append(
+                ns,
+                std::move(one).value(),
+                std::move(two).value(),
+                client_bulk_write::update_one_options{}.upsert(upsert)));
+        }
     }
 
     SECTION("update_many") {
+        bool null_opts_expected = false;
+
         auto mock = libmongoc::bulkwrite_append_updatemany.create_instance();
         mock->interpose(
             [&](mongoc_bulkwrite_t* bw,
@@ -1370,15 +1592,99 @@ TEST_CASE("append", "[mongocxx][v1][client_bulk_write]") {
                 CHECK(bsoncxx::v1::stdx::string_view{ns_arg} == ns);
                 CHECK(scoped_bson_view{filter}.data() == one_data);
                 CHECK(scoped_bson_view{update}.data() == two_data);
-                CHECK(opts == nullptr);
+                CHECK((opts == nullptr) == null_opts_expected);
                 return true;
             });
 
-        CHECK_NOTHROW(
-            cbw.append(ns, std::move(one).value(), std::move(two).value(), client_bulk_write::update_many_options{}));
+        SECTION("no fields set") {
+            null_opts_expected = true;
+            CHECK_NOTHROW(cbw.append(
+                ns, std::move(one).value(), std::move(two).value(), client_bulk_write::update_many_options{}));
+        }
+
+        SECTION("array_filters set") {
+            update_many_opts_mocks_type opts_mocks;
+
+            scoped_bson const af{R"([{"x": 1}])"};
+
+            auto set = libmongoc::bulkwrite_updatemanyopts_set_arrayfilters.create_instance();
+            set->interpose([&](mongoc_bulkwrite_updatemanyopts_t* p, bson_t const* v) {
+                CHECK(p == opts_mocks.opts_id);
+                CHECK(scoped_bson_view{v}.view() == af.view());
+            });
+
+            CHECK_NOTHROW(cbw.append(
+                ns,
+                std::move(one).value(),
+                std::move(two).value(),
+                client_bulk_write::update_many_options{}.array_filters(bsoncxx::v1::array::value{af.array_view()})));
+        }
+
+        SECTION("collation set") {
+            update_many_opts_mocks_type opts_mocks;
+
+            scoped_bson const collation{R"({"locale": "en"})"};
+
+            auto set = libmongoc::bulkwrite_updatemanyopts_set_collation.create_instance();
+            set->interpose([&](mongoc_bulkwrite_updatemanyopts_t* p, bson_t const* v) {
+                CHECK(p == opts_mocks.opts_id);
+                CHECK(scoped_bson_view{v}.view() == collation.view());
+            });
+
+            CHECK_NOTHROW(cbw.append(
+                ns,
+                std::move(one).value(),
+                std::move(two).value(),
+                client_bulk_write::update_many_options{}.collation(collation.value())));
+        }
+
+        SECTION("hint set") {
+            update_many_opts_mocks_type opts_mocks;
+
+            v1::hint const hint{"abc"};
+
+            auto set = libmongoc::bulkwrite_updatemanyopts_set_hint.create_instance();
+            set->interpose([&](mongoc_bulkwrite_updatemanyopts_t* p, bson_value_t const* v) {
+                CHECK(p == opts_mocks.opts_id);
+
+                auto const hint_value = bsoncxx::v1::types::value{hint.to_value()};
+                auto const& expected = bsoncxx::v1::types::value::internal::get_bson_value(hint_value);
+
+                CHECK(v->value_type == expected.value_type);
+                CHECK(
+                    bsoncxx::v1::stdx::string_view{v->value.v_utf8.str} ==
+                    bsoncxx::v1::stdx::string_view{expected.value.v_utf8.str});
+            });
+
+            CHECK_NOTHROW(cbw.append(
+                ns,
+                std::move(one).value(),
+                std::move(two).value(),
+                client_bulk_write::update_many_options{}.hint(hint)));
+        }
+
+        SECTION("upsert set") {
+            update_many_opts_mocks_type opts_mocks;
+
+            auto const upsert = true;
+
+            auto set = libmongoc::bulkwrite_updatemanyopts_set_upsert.create_instance();
+            set->interpose([&](mongoc_bulkwrite_updatemanyopts_t* p, bool v) {
+                CHECK(p == opts_mocks.opts_id);
+                CHECK(v == upsert);
+            });
+
+            CHECK_NOTHROW(cbw.append(
+                ns,
+                std::move(one).value(),
+                std::move(two).value(),
+                client_bulk_write::update_many_options{}.upsert(upsert)));
+        }
     }
 
     SECTION("replace_one") {
+        bool null_opts_expected = false;
+
         auto mock = libmongoc::bulkwrite_append_replaceone.create_instance();
         mock->interpose(
             [&](mongoc_bulkwrite_t* bw,
@@ -1391,15 +1697,99 @@ TEST_CASE("append", "[mongocxx][v1][client_bulk_write]") {
                 CHECK(bsoncxx::v1::stdx::string_view{ns_arg} == ns);
                 CHECK(scoped_bson_view{filter}.data() == one_data);
                 CHECK(scoped_bson_view{replacement}.data() == two_data);
-                CHECK(opts == nullptr);
+                CHECK((opts == nullptr) == null_opts_expected);
                 return true;
             });
 
-        CHECK_NOTHROW(
-            cbw.append(ns, std::move(one).value(), std::move(two).value(), client_bulk_write::replace_one_options{}));
+        SECTION("no fields set") {
+            null_opts_expected = true;
+            CHECK_NOTHROW(cbw.append(
+                ns, std::move(one).value(), std::move(two).value(), client_bulk_write::replace_one_options{}));
+        }
+
+        SECTION("collation set") {
+            replace_one_opts_mocks_type opts_mocks;
+
+            scoped_bson const collation{R"({"locale": "en"})"};
+
+            auto set = libmongoc::bulkwrite_replaceoneopts_set_collation.create_instance();
+            set->interpose([&](mongoc_bulkwrite_replaceoneopts_t* p, bson_t const* v) {
+                CHECK(p == opts_mocks.opts_id);
+                CHECK(scoped_bson_view{v}.view() == collation.view());
+            });
+
+            CHECK_NOTHROW(cbw.append(
+                ns,
+                std::move(one).value(),
+                std::move(two).value(),
+                client_bulk_write::replace_one_options{}.collation(collation.value())));
+        }
+
+        SECTION("hint set") {
+            replace_one_opts_mocks_type opts_mocks;
+
+            v1::hint const hint{"abc"};
+
+            auto set = libmongoc::bulkwrite_replaceoneopts_set_hint.create_instance();
+            set->interpose([&](mongoc_bulkwrite_replaceoneopts_t* p, bson_value_t const* v) {
+                CHECK(p == opts_mocks.opts_id);
+
+                auto const hint_value = bsoncxx::v1::types::value{hint.to_value()};
+                auto const& expected = bsoncxx::v1::types::value::internal::get_bson_value(hint_value);
+
+                CHECK(v->value_type == expected.value_type);
+                CHECK(
+                    bsoncxx::v1::stdx::string_view{v->value.v_utf8.str} ==
+                    bsoncxx::v1::stdx::string_view{expected.value.v_utf8.str});
+            });
+
+            CHECK_NOTHROW(cbw.append(
+                ns,
+                std::move(one).value(),
+                std::move(two).value(),
+                client_bulk_write::replace_one_options{}.hint(hint)));
+        }
+
+        SECTION("sort set") {
+            replace_one_opts_mocks_type opts_mocks;
+
+            scoped_bson const sort{R"({"x": 1})"};
+
+            auto set = libmongoc::bulkwrite_replaceoneopts_set_sort.create_instance();
+            set->interpose([&](mongoc_bulkwrite_replaceoneopts_t* p, bson_t const* v) {
+                CHECK(p == opts_mocks.opts_id);
+                CHECK(scoped_bson_view{v}.view() == sort.view());
+            });
+
+            CHECK_NOTHROW(cbw.append(
+                ns,
+                std::move(one).value(),
+                std::move(two).value(),
+                client_bulk_write::replace_one_options{}.sort(sort.value())));
+        }
+
+        SECTION("upsert set") {
+            replace_one_opts_mocks_type opts_mocks;
+
+            auto const upsert = true;
+
+            auto set = libmongoc::bulkwrite_replaceoneopts_set_upsert.create_instance();
+            set->interpose([&](mongoc_bulkwrite_replaceoneopts_t* p, bool v) {
+                CHECK(p == opts_mocks.opts_id);
+                CHECK(v == upsert);
+            });
+
+            CHECK_NOTHROW(cbw.append(
+                ns,
+                std::move(one).value(),
+                std::move(two).value(),
+                client_bulk_write::replace_one_options{}.upsert(upsert)));
+        }
     }
 
     SECTION("delete_one") {
+        bool null_opts_expected = false;
+
         auto mock = libmongoc::bulkwrite_append_deleteone.create_instance();
         mock->interpose(
             [&](mongoc_bulkwrite_t* bw,
@@ -1410,14 +1800,55 @@ TEST_CASE("append", "[mongocxx][v1][client_bulk_write]") {
                 CHECK(bw == identity);
                 CHECK(bsoncxx::v1::stdx::string_view{ns_arg} == ns);
                 CHECK(scoped_bson_view{filter}.data() == one_data);
-                CHECK(opts == nullptr);
+                CHECK((opts == nullptr) == null_opts_expected);
                 return true;
             });
 
-        CHECK_NOTHROW(cbw.append(ns, std::move(one).value(), client_bulk_write::delete_one_options{}));
+        SECTION("no fields set") {
+            null_opts_expected = true;
+            CHECK_NOTHROW(cbw.append(ns, std::move(one).value(), client_bulk_write::delete_one_options{}));
+        }
+
+        SECTION("collation set") {
+            delete_one_opts_mocks_type opts_mocks;
+
+            scoped_bson const collation{R"({"locale": "en"})"};
+
+            auto set_collation = libmongoc::bulkwrite_deleteoneopts_set_collation.create_instance();
+            set_collation->interpose([&](mongoc_bulkwrite_deleteoneopts_t* p, bson_t const* v) {
+                CHECK(p == opts_mocks.opts_id);
+                CHECK(scoped_bson_view{v}.view() == collation.view());
+            });
+
+            CHECK_NOTHROW(cbw.append(
+                ns, std::move(one).value(), client_bulk_write::delete_one_options{}.collation(collation.value())));
+        }
+
+        SECTION("hint set") {
+            delete_one_opts_mocks_type opts_mocks;
+
+            v1::hint const hint{"abc"};
+
+            auto set = libmongoc::bulkwrite_deleteoneopts_set_hint.create_instance();
+            set->interpose([&](mongoc_bulkwrite_deleteoneopts_t* p, bson_value_t const* v) {
+                CHECK(p == opts_mocks.opts_id);
+
+                auto const hint_value = bsoncxx::v1::types::value{hint.to_value()};
+                auto const& expected = bsoncxx::v1::types::value::internal::get_bson_value(hint_value);
+
+                CHECK(v->value_type == expected.value_type);
+                CHECK(
+                    bsoncxx::v1::stdx::string_view{v->value.v_utf8.str} ==
+                    bsoncxx::v1::stdx::string_view{expected.value.v_utf8.str});
+            });
+
+            CHECK_NOTHROW(cbw.append(ns, std::move(one).value(), client_bulk_write::delete_one_options{}.hint(hint)));
+        }
     }
 
     SECTION("delete_many") {
+        bool null_opts_expected = false;
+
         auto mock = libmongoc::bulkwrite_append_deletemany.create_instance();
         mock->interpose(
             [&](mongoc_bulkwrite_t* bw,
@@ -1428,13 +1859,78 @@ TEST_CASE("append", "[mongocxx][v1][client_bulk_write]") {
                 CHECK(bw == identity);
                 CHECK(bsoncxx::v1::stdx::string_view{ns_arg} == ns);
                 CHECK(scoped_bson_view{filter}.data() == one_data);
-                CHECK(opts == nullptr);
+                CHECK((opts == nullptr) == null_opts_expected);
                 return true;
             });
 
-        CHECK_NOTHROW(cbw.append(ns, std::move(one).value(), client_bulk_write::delete_many_options{}));
+        SECTION("no fields set") {
+            null_opts_expected = true;
+            CHECK_NOTHROW(cbw.append(ns, std::move(one).value(), client_bulk_write::delete_many_options{}));
+        }
+
+        SECTION("collation set") {
+            delete_many_opts_mocks_type opts_mocks;
+
+            scoped_bson const collation{R"({"locale": "en"})"};
+
+            auto set = libmongoc::bulkwrite_deletemanyopts_set_collation.create_instance();
+            set->interpose([&](mongoc_bulkwrite_deletemanyopts_t* p, bson_t const* v) {
+                CHECK(p == opts_mocks.opts_id);
+                CHECK(scoped_bson_view{v}.view() == collation.view());
+            });
+
+            CHECK_NOTHROW(cbw.append(
+                ns, std::move(one).value(), client_bulk_write::delete_many_options{}.collation(collation.value())));
+        }
+
+        SECTION("hint set") {
+            delete_many_opts_mocks_type opts_mocks;
+
+            v1::hint const hint{"abc"};
+
+            auto set = libmongoc::bulkwrite_deletemanyopts_set_hint.create_instance();
+            set->interpose([&](mongoc_bulkwrite_deletemanyopts_t* p, bson_value_t const* v) {
+                CHECK(p == opts_mocks.opts_id);
+
+                auto const hint_value = bsoncxx::v1::types::value{hint.to_value()};
+                auto const& expected = bsoncxx::v1::types::value::internal::get_bson_value(hint_value);
+
+                CHECK(v->value_type == expected.value_type);
+                CHECK(
+                    bsoncxx::v1::stdx::string_view{v->value.v_utf8.str} ==
+                    bsoncxx::v1::stdx::string_view{expected.value.v_utf8.str});
+            });
+
+            CHECK_NOTHROW(cbw.append(ns, std::move(one).value(), client_bulk_write::delete_many_options{}.hint(hint)));
+        }
     }
 }
+
+namespace {
+
+struct bulk_write_opts_mocks_type {
+    using new_type = decltype(libmongoc::bulkwriteopts_new.create_instance());
+    using destroy_type = decltype(libmongoc::bulkwriteopts_destroy.create_instance());
+
+    identity_type opts_identity;
+    mongoc_bulkwriteopts_t* opts_id = reinterpret_cast<mongoc_bulkwriteopts_t*>(&opts_identity);
+
+    new_type opts_new = libmongoc::bulkwriteopts_new.create_instance();
+    destroy_type opts_destroy = libmongoc::bulkwriteopts_destroy.create_instance();
+
+    ~bulk_write_opts_mocks_type() = default;
+    bulk_write_opts_mocks_type(bulk_write_opts_mocks_type&&) = delete;
+    bulk_write_opts_mocks_type& operator=(bulk_write_opts_mocks_type&&) = delete;
+    bulk_write_opts_mocks_type(bulk_write_opts_mocks_type const&) = delete;
+    bulk_write_opts_mocks_type& operator=(bulk_write_opts_mocks_type const&) = delete;
+
+    bulk_write_opts_mocks_type() {
+        opts_new->interpose([&]() { return opts_id; });
+        opts_destroy->interpose([&](mongoc_bulkwriteopts_t* p) { CHECK(p == opts_id); });
+    }
+};
+
+} // namespace
 
 TEST_CASE("execute", "[mongocxx][v1][client_bulk_write]") {
     identity_type id;
@@ -1451,49 +1947,162 @@ TEST_CASE("execute", "[mongocxx][v1][client_bulk_write]") {
 
     auto cbw = client_bulk_write::internal::make(identity);
 
-    identity_type opts_id;
-    auto const opts_identity = reinterpret_cast<mongoc_bulkwriteopts_t*>(&opts_id);
-
-    auto opts_new = libmongoc::bulkwriteopts_new.create_instance();
-    opts_new->interpose([&]() -> mongoc_bulkwriteopts_t* { return opts_identity; });
-
-    auto opts_destroy = libmongoc::bulkwriteopts_destroy.create_instance();
-    opts_destroy->interpose([&](mongoc_bulkwriteopts_t* opts) { CHECK(opts == opts_identity); });
-
-    auto const ordered = true;
-
-    auto opts_set_ordered = libmongoc::bulkwriteopts_set_ordered.create_instance();
-    opts_set_ordered->interpose([&](mongoc_bulkwriteopts_t* opts, bool v) {
-        CHECK(opts == opts_identity);
-        CHECK(v == ordered);
-    });
-
-    auto const opts = client_bulk_write::options{}.ordered(ordered);
+    result_mocks_type res_mocks;
+    bool null_opts_expected = false;
 
     auto execute = libmongoc::bulkwrite_execute.create_instance();
 
-    SECTION("acknowledged") {
-        result_mocks_type res_mocks;
+    SECTION("no fields set") {
+        null_opts_expected = true;
+
+        SECTION("acknowledged") {
+            execute->interpose(
+                [&](mongoc_bulkwrite_t* bw, mongoc_bulkwriteopts_t const* opts) -> mongoc_bulkwritereturn_t {
+                    CHECK(bw == identity);
+                    CHECK((opts == nullptr) == null_opts_expected);
+                    return {res_mocks.result_id, nullptr};
+                });
+
+            REQUIRE(cbw.execute(client_bulk_write::options{}).has_value());
+        }
+
+        SECTION("unacknowledged") {
+            execute->interpose(
+                [&](mongoc_bulkwrite_t* bw, mongoc_bulkwriteopts_t const* opts) -> mongoc_bulkwritereturn_t {
+                    CHECK(bw == identity);
+                    CHECK((opts == nullptr) == null_opts_expected);
+                    return {nullptr, nullptr};
+                });
+
+            CHECK_FALSE(cbw.execute(client_bulk_write::options{}).has_value());
+        }
+    }
+
+    auto const do_execute = [&](client_bulk_write::options opts) { REQUIRE(cbw.execute(std::move(opts)).has_value()); };
+
+    SECTION("ordered set") {
+        bulk_write_opts_mocks_type opts_mocks;
+
+        auto const ordered = true;
+
+        auto set = libmongoc::bulkwriteopts_set_ordered.create_instance();
+        set->interpose([&](mongoc_bulkwriteopts_t* p, bool v) {
+            CHECK(p == opts_mocks.opts_id);
+            CHECK(v == ordered);
+        });
 
         execute->interpose([&](mongoc_bulkwrite_t* bw, mongoc_bulkwriteopts_t const* opts) -> mongoc_bulkwritereturn_t {
             CHECK(bw == identity);
-            CHECK(opts == opts_identity);
+            CHECK(opts == opts_mocks.opts_id);
             return {res_mocks.result_id, nullptr};
         });
 
-        auto const ret = cbw.execute(opts);
-
-        REQUIRE(ret.has_value());
+        do_execute(client_bulk_write::options{}.ordered(ordered));
     }
 
-    SECTION("unacknowledged") {
-        execute->interpose([&](mongoc_bulkwrite_t* bw, mongoc_bulkwriteopts_t const* opts) -> mongoc_bulkwritereturn_t {
-            CHECK(bw == identity);
-            CHECK(opts == opts_identity);
-            return {nullptr, nullptr};
+    SECTION("bypass_document_validation set") {
+        bulk_write_opts_mocks_type opts_mocks;
+
+        auto const bypass = true;
+
+        auto set = libmongoc::bulkwriteopts_set_bypassdocumentvalidation.create_instance();
+        set->interpose([&](mongoc_bulkwriteopts_t* p, bool v) {
+            CHECK(p == opts_mocks.opts_id);
+            CHECK(v == bypass);
         });
 
-        CHECK_FALSE(cbw.execute(opts).has_value());
+        execute->interpose([&](mongoc_bulkwrite_t* bw, mongoc_bulkwriteopts_t const* opts) -> mongoc_bulkwritereturn_t {
+            CHECK(bw == identity);
+            CHECK(opts == opts_mocks.opts_id);
+            return {res_mocks.result_id, nullptr};
+        });
+
+        do_execute(client_bulk_write::options{}.bypass_document_validation(bypass));
+    }
+
+    SECTION("comment set") {
+        bulk_write_opts_mocks_type opts_mocks;
+
+        bsoncxx::v1::types::value const comment{"abc"};
+        auto const comment_bson = bsoncxx::v1::types::value::internal::get_bson_value(comment);
+
+        auto set = libmongoc::bulkwriteopts_set_comment.create_instance();
+        set->interpose([&](mongoc_bulkwriteopts_t* p, bson_value_t const* v) {
+            CHECK(p == opts_mocks.opts_id);
+            CHECK(v->value_type == comment_bson.value_type);
+            CHECK(
+                bsoncxx::v1::stdx::string_view{v->value.v_utf8.str} ==
+                bsoncxx::v1::stdx::string_view{comment_bson.value.v_utf8.str});
+        });
+
+        execute->interpose([&](mongoc_bulkwrite_t* bw, mongoc_bulkwriteopts_t const* opts) -> mongoc_bulkwritereturn_t {
+            CHECK(bw == identity);
+            CHECK(opts == opts_mocks.opts_id);
+            return {res_mocks.result_id, nullptr};
+        });
+
+        do_execute(client_bulk_write::options{}.comment(comment));
+    }
+
+    SECTION("let set") {
+        bulk_write_opts_mocks_type opts_mocks;
+
+        scoped_bson const let{R"({"x": 1})"};
+
+        auto set = libmongoc::bulkwriteopts_set_let.create_instance();
+        set->interpose([&](mongoc_bulkwriteopts_t* p, bson_t const* v) {
+            CHECK(p == opts_mocks.opts_id);
+            CHECK(scoped_bson_view{v}.view() == let.view());
+        });
+
+        execute->interpose([&](mongoc_bulkwrite_t* bw, mongoc_bulkwriteopts_t const* opts) -> mongoc_bulkwritereturn_t {
+            CHECK(bw == identity);
+            CHECK(opts == opts_mocks.opts_id);
+            return {res_mocks.result_id, nullptr};
+        });
+
+        do_execute(client_bulk_write::options{}.let(let.value()));
+    }
+
+    SECTION("verbose_results set") {
+        bulk_write_opts_mocks_type opts_mocks;
+
+        auto const verbose_results = true;
+
+        auto set = libmongoc::bulkwriteopts_set_verboseresults.create_instance();
+        set->interpose([&](mongoc_bulkwriteopts_t* p, bool v) {
+            CHECK(p == opts_mocks.opts_id);
+            CHECK(v == verbose_results);
+        });
+
+        execute->interpose([&](mongoc_bulkwrite_t* bw, mongoc_bulkwriteopts_t const* opts) -> mongoc_bulkwritereturn_t {
+            CHECK(bw == identity);
+            CHECK(opts == opts_mocks.opts_id);
+            return {res_mocks.result_id, nullptr};
+        });
+
+        do_execute(client_bulk_write::options{}.verbose_results(verbose_results));
+    }
+
+    SECTION("write_concern set") {
+        bulk_write_opts_mocks_type opts_mocks;
+
+        auto const wc = v1::write_concern{}.acknowledge_level(v1::write_concern::level::k_majority);
+
+        auto set = libmongoc::bulkwriteopts_set_writeconcern.create_instance();
+        set->interpose([&](mongoc_bulkwriteopts_t* p, mongoc_write_concern_t const* v) {
+            CHECK(p == opts_mocks.opts_id);
+            auto const actual = write_concern::internal::make(libmongoc::write_concern_copy(v));
+            CHECK(actual == wc);
+        });
+
+        execute->interpose([&](mongoc_bulkwrite_t* bw, mongoc_bulkwriteopts_t const* opts) -> mongoc_bulkwritereturn_t {
+            CHECK(bw == identity);
+            CHECK(opts == opts_mocks.opts_id);
+            return {res_mocks.result_id, nullptr};
+        });
+
+        do_execute(client_bulk_write::options{}.write_concern(wc));
     }
 }
 
