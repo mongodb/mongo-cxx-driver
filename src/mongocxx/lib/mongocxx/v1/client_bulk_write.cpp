@@ -1282,7 +1282,7 @@ client_bulk_write& client_bulk_write::append(
     bsoncxx::v1::document::view filter,
     v1::pipeline const& update,
     update_one_options const& opts) {
-    return append(ns, std::move(filter), bsoncxx::v1::document::value{update.view_array()}, opts);
+    return append(ns, filter, bsoncxx::v1::document::value{update.view_array()}, opts);
 }
 
 client_bulk_write& client_bulk_write::append(
@@ -1312,7 +1312,7 @@ client_bulk_write& client_bulk_write::append(
     bsoncxx::v1::document::view filter,
     v1::pipeline const& update,
     update_many_options const& opts) {
-    return append(ns, std::move(filter), bsoncxx::v1::document::value{update.view_array()}, opts);
+    return append(ns, filter, bsoncxx::v1::document::value{update.view_array()}, opts);
 }
 
 client_bulk_write& client_bulk_write::append(
