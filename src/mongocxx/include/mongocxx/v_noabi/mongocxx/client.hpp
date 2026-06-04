@@ -27,6 +27,7 @@
 #include <vector>
 
 #include <mongocxx/change_stream-fwd.hpp>
+#include <mongocxx/client_bulk_write-fwd.hpp> // IWYU pragma: export
 #include <mongocxx/client_session-fwd.hpp>
 #include <mongocxx/collection-fwd.hpp> // IWYU pragma: keep: backward compatibility, to be removed.
 #include <mongocxx/cursor-fwd.hpp>
@@ -467,6 +468,15 @@ class client {
         v_noabi::client_session const& session,
         v_noabi::pipeline const& pipe,
         v_noabi::options::change_stream const& options = {});
+
+    ///
+    /// Return a new client-level bulk write operation for use with this client.
+    ///
+    /// @{
+    MONGOCXX_ABI_EXPORT_CDECL(v1::client_bulk_write) create_bulk_write();
+
+    MONGOCXX_ABI_EXPORT_CDECL(v1::client_bulk_write) create_bulk_write(v_noabi::client_session& session);
+    /// @}
 
     ///
     /// Prevents resource cleanup in the child process from interfering

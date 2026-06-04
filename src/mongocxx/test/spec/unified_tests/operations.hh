@@ -14,6 +14,10 @@
 
 #pragma once
 
+#include <bsoncxx/v1/stdx/optional.hpp>
+
+#include <mongocxx/v1/client_bulk_write.hpp>
+
 #include <unordered_map>
 
 #include <bsoncxx/array/element.hpp>
@@ -36,6 +40,9 @@ bsoncxx::document::value run(
     std::unordered_map<std::string, spec::apm_checker>& apm,
     bsoncxx::array::element const& op,
     state& state);
+
+bsoncxx::document::value make_client_bulk_write_result_doc(
+    bsoncxx::stdx::optional<mongocxx::client_bulk_write::result> const& result);
 
 bsoncxx::stdx::optional<read_concern> lookup_read_concern(bsoncxx::document::view doc);
 bsoncxx::stdx::optional<write_concern> lookup_write_concern(bsoncxx::document::view doc);

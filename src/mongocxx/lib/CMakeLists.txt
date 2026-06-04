@@ -125,6 +125,7 @@ set(mongocxx_sources_v1
     mongocxx/v1/auto_encryption_options.cpp
     mongocxx/v1/bulk_write.cpp
     mongocxx/v1/change_stream.cpp
+    mongocxx/v1/client_bulk_write.cpp
     mongocxx/v1/client_encryption.cpp
     mongocxx/v1/client_session.cpp
     mongocxx/v1/client.cpp

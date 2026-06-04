@@ -28,6 +28,7 @@
 #include <mongocxx/v1/apm.hh>
 #include <mongocxx/v1/auto_encryption_options.hh>
 #include <mongocxx/v1/change_stream.hh>
+#include <mongocxx/v1/client_bulk_write.hh>
 #include <mongocxx/v1/client_session.hh>
 #include <mongocxx/v1/cursor.hh>
 #include <mongocxx/v1/database.hh>
@@ -367,6 +368,18 @@ v1::change_stream client::watch(v1::client_session const& session, v1::pipeline 
     v1::client_session::internal::append_to(session, doc);
 
     return watch_impl(impl::with(this)->_client, pipeline.view_array(), doc.bson());
+}
+
+v1::client_bulk_write client::create_bulk_write() {
+    return v1::client_bulk_write::internal::make(libmongoc::client_bulkwrite_new(impl::with(this)->_client));
+}
+
+v1::client_bulk_write client::create_bulk_write(v1::client_session& session) {
+    auto bulk_write = create_bulk_write();
+
+    v1::client_bulk_write::internal::set_session(bulk_write, session);
+
+    return bulk_write;
 }
 
 void client::reset() {

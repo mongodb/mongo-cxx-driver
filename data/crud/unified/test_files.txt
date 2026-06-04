@@ -30,7 +30,17 @@ bulkWrite-updateOne-dots_and_dollars.json
 bulkWrite-updateOne-hint-unacknowledged.json
 bulkWrite-updateOne-let.json
 bulkWrite-updateOne-sort.json
+client-bulkWrite-delete-options.json
+client-bulkWrite-errorResponse.json
+client-bulkWrite-mixed-namespaces.json
+client-bulkWrite-options.json
+client-bulkWrite-ordered.json
+client-bulkWrite-partialResults.json
 client-bulkWrite-replaceOne-sort.json
+client-bulkWrite-results.json
+client-bulkWrite-update-options.json
+client-bulkWrite-update-pipeline.json
+client-bulkWrite-update-validation.json
 client-bulkWrite-updateOne-sort.json
 countDocuments-comment.json
 db-aggregate-write-readPreference.json

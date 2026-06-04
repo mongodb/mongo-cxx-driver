@@ -215,9 +215,15 @@ exception::exception(std::error_code ec, std::unique_ptr<impl> impl) : std::syst
 //   vtable.
 void exception::key_function() const {}
 
-namespace {
+exception exception::internal::make(int code, std::error_category const& category, char const* message) {
+    return {std::error_code{code, category}, message, bsoncxx::make_unique<impl>()};
+}
 
-v1::exception make_exception(bson_error_t const& error) {
+exception exception::internal::make(int code, std::error_category const& category) {
+    return {std::error_code{code, category}, bsoncxx::make_unique<impl>()};
+}
+
+exception exception::internal::make(bson_error_t const& error) {
     auto const code = static_cast<int>(error.code);
     auto const raw_category = static_cast<int>(error.reserved);
     auto const message = static_cast<char const*>(error.message);
@@ -302,16 +308,6 @@ v1::exception make_exception(bson_error_t const& error) {
     }
 }
 
-} // namespace
-
-exception exception::internal::make(int code, std::error_category const& category, char const* message) {
-    return {std::error_code{code, category}, message, bsoncxx::make_unique<impl>()};
-}
-
-exception exception::internal::make(int code, std::error_category const& category) {
-    return {std::error_code{code, category}, bsoncxx::make_unique<impl>()};
-}
-
 namespace {
 
 void set_array_field(
@@ -346,20 +342,20 @@ bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> const& exception::inte
 }
 
 void throw_exception(bson_error_t const& error) {
-    throw make_exception(error);
+    throw exception::internal::make(error);
 }
 
 void throw_exception(bson_error_t const& error, bsoncxx::v1::document::value doc) {
     // Server-side error.
     if (auto const code = doc["code"]) {
         if (code.type_id() == bsoncxx::v1::types::id::k_int32) {
-            auto const ex = make_exception(error);
+            auto const ex = exception::internal::make(error);
             throw v1::server_error::internal::make(int{code.get_int32().value}, ex.what(), std::move(doc), ex.code());
         }
     }
 
     // Client-side error.
-    auto ex = make_exception(error);
+    auto ex = exception::internal::make(error);
 
     exception::internal::set_error_labels(ex, doc);
     exception::internal::set_reply(ex, std::move(doc));

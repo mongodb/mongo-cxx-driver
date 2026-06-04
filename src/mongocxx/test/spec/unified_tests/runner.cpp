@@ -15,8 +15,12 @@
 #include "./assert.hh"
 #include "./operations.hh"
 
+#include <mongocxx/v1/client_bulk_write.hpp>
 #include <mongocxx/v1/oidc_callback.hpp>
 #include <mongocxx/v1/oidc_credential.hpp>
+
+#include <mongocxx/v1/exception.hh>
+#include <mongocxx/v1/server_error.hh>
 
 #include <mongocxx/test/v_noabi/client_helpers.hh>
 
@@ -1028,6 +1032,49 @@ void assert_error(mongocxx::exception& e, array::element const& ops) {
     REQUIRE_FALSE(/* TODO */ expect_error["errorCodeName"]);
 }
 
+void assert_error(
+    mongocxx::v1::exception const& e,
+    array::element const& ops,
+    stdx::optional<document::view> const& actual = stdx::nullopt) {
+    CAPTURE(e.what());
+    auto const expect_error = ops["expectError"];
+    REQUIRE(expect_error);
+
+    if (expect_error["isError"])
+        return;
+
+    if (auto const expected_result = expect_error["expectResult"]) {
+        REQUIRE(actual.has_value());
+        auto const actual_result = (*actual)["result"];
+        assert::matches(actual_result.get_value(), expected_result.get_value(), get_entity_map());
+    }
+
+    if (auto const is_client_error = expect_error["isClientError"]) {
+        CHECKED_IF(is_client_error.get_bool().value) {
+            CHECK(e.code() != mongocxx::v1::source_errc::server);
+        }
+        else {
+            CHECK(e.code() == mongocxx::v1::source_errc::server);
+        }
+    }
+
+    REQUIRE_FALSE(/* TODO */ expect_error["errorLabelsContain"]);
+    REQUIRE_FALSE(/* TODO */ expect_error["errorLabelsOmit"]);
+
+    if (auto const error_code = expect_error["errorCode"]) {
+        CHECK(e.code() == std::error_code{error_code.get_int32(), mongocxx::v1::server_error::internal::category()});
+    }
+
+    if (auto const error_response = expect_error["errorResponse"]) {
+        auto const& reply = mongocxx::v1::exception::internal::get_reply(e);
+        REQUIRE(reply);
+        assert::matches(types::bson_value::value(*reply), error_response.get_value(), get_entity_map());
+    }
+
+    REQUIRE_FALSE(/* TODO */ expect_error["errorContains"]);
+    REQUIRE_FALSE(/* TODO */ expect_error["errorCodeName"]);
+}
+
 void assert_events(array::element const& test) {
     if (!test["expectEvents"])
         return;
@@ -1177,6 +1224,10 @@ document::value bulk_write_result(mongocxx::bulk_write_exception const& e) {
     return result.extract();
 }
 
+document::value make_client_bulk_write_result_doc(mongocxx::client_bulk_write::exception const& e) {
+    return operations::make_client_bulk_write_result_doc(e.partial_result());
+}
+
 // Match test cases that should be skipped by both test and case descriptions.
 std::map<std::pair<bsoncxx::stdx::string_view, bsoncxx::stdx::string_view>, bsoncxx::stdx::string_view> const
     should_skip_test_cases = {
@@ -1287,11 +1338,20 @@ void run_tests(bsoncxx::stdx::string_view test_description, document::view test)
                         auto result = bulk_write_result(e);
                         assert_error(e, ops, result);
                     }
+                } catch (mongocxx::client_bulk_write::exception const& e) {
+                    if (!ignore_result_and_error) {
+                        auto result = make_client_bulk_write_result_doc(e);
+                        assert_error(e, ops, result);
+                    }
                 } catch (mongocxx::operation_exception const& e) {
                     if (!ignore_result_and_error) {
                         assert_error(e, ops, make_document());
                     }
                 } catch (mongocxx::exception& e) {
+                    if (!ignore_result_and_error) {
+                        assert_error(e, ops);
+                    }
+                } catch (mongocxx::v1::exception const& e) {
                     if (!ignore_result_and_error) {
                         assert_error(e, ops);
                     }
@@ -1379,14 +1439,7 @@ TEST_CASE("session unified format spec automated tests", "[unified_format_specs]
 }
 
 TEST_CASE("CRUD unified format spec automated tests", "[unified_format_specs]") {
-    std::set<bsoncxx::stdx::string_view> const unsupported_tests = {
-        // Waiting on CXX-2494.
-        "client-bulkWrite-replaceOne-sort.json",
-        // Waiting on CXX-2494.
-        "client-bulkWrite-updateOne-sort.json",
-    };
-
-    run_unified_format_tests_in_env_dir("CRUD_UNIFIED_TESTS_PATH", unsupported_tests);
+    run_unified_format_tests_in_env_dir("CRUD_UNIFIED_TESTS_PATH");
 }
 
 TEST_CASE("change streams unified format spec automated tests", "[unified_format_specs]") {
