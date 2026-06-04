@@ -1157,7 +1157,7 @@ struct delete_many_options_c {
 };
 
 struct bulk_write_options_c {
-    mongoc_bulkwriteopts_t* _opts;
+    mongoc_bulkwriteopts_t* _opts = nullptr;
 
     ~bulk_write_options_c() {
         libmongoc::bulkwriteopts_destroy(_opts);
@@ -1168,7 +1168,14 @@ struct bulk_write_options_c {
     bulk_write_options_c(bulk_write_options_c const&) = delete;
     bulk_write_options_c& operator=(bulk_write_options_c const&) = delete;
 
-    explicit bulk_write_options_c(client_bulk_write::options const& opts) : _opts{libmongoc::bulkwriteopts_new()} {
+    explicit bulk_write_options_c(client_bulk_write::options const& opts) {
+        if (!(opts.ordered() || opts.bypass_document_validation() || opts.comment() || opts.let() ||
+              opts.verbose_results() || opts.write_concern())) {
+            return;
+        }
+
+        _opts = libmongoc::bulkwriteopts_new();
+
         if (auto const v = opts.ordered()) {
             libmongoc::bulkwriteopts_set_ordered(_opts, *v);
         }

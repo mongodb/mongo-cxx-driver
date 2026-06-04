@@ -1277,15 +1277,6 @@ TEST_CASE("exceptions", "[mongocxx][v1][client_bulk_write]") {
     }
 
     SECTION("execute") {
-        identity_type opts_id;
-        auto const opts_identity = reinterpret_cast<mongoc_bulkwriteopts_t*>(&opts_id);
-
-        auto opts_new = libmongoc::bulkwriteopts_new.create_instance();
-        opts_new->interpose([&]() -> mongoc_bulkwriteopts_t* { return opts_identity; });
-
-        auto opts_destroy = libmongoc::bulkwriteopts_destroy.create_instance();
-        opts_destroy->interpose([&](mongoc_bulkwriteopts_t* opts) { CHECK(opts == opts_identity); });
-
         SECTION("client_bulk_write::exception") {
             exception_mocks_type exc_mocks;
 
@@ -1471,6 +1462,16 @@ TEST_CASE("execute", "[mongocxx][v1][client_bulk_write]") {
     auto opts_destroy = libmongoc::bulkwriteopts_destroy.create_instance();
     opts_destroy->interpose([&](mongoc_bulkwriteopts_t* opts) { CHECK(opts == opts_identity); });
 
+    auto const ordered = true;
+
+    auto opts_set_ordered = libmongoc::bulkwriteopts_set_ordered.create_instance();
+    opts_set_ordered->interpose([&](mongoc_bulkwriteopts_t* opts, bool v) {
+        CHECK(opts == opts_identity);
+        CHECK(v == ordered);
+    });
+
+    auto const opts = client_bulk_write::options{}.ordered(ordered);
+
     auto execute = libmongoc::bulkwrite_execute.create_instance();
 
     SECTION("acknowledged") {
@@ -1482,7 +1483,7 @@ TEST_CASE("execute", "[mongocxx][v1][client_bulk_write]") {
             return {res_mocks.result_id, nullptr};
         });
 
-        auto const ret = cbw.execute(client_bulk_write::options{});
+        auto const ret = cbw.execute(opts);
 
         REQUIRE(ret.has_value());
     }
@@ -1494,7 +1495,7 @@ TEST_CASE("execute", "[mongocxx][v1][client_bulk_write]") {
             return {nullptr, nullptr};
         });
 
-        CHECK_FALSE(cbw.execute(client_bulk_write::options{}).has_value());
+        CHECK_FALSE(cbw.execute(opts).has_value());
     }
 }
 
