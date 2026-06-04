@@ -1206,21 +1206,21 @@ struct bulk_write_options_c {
     }
 };
 
-struct bulk_write_return {
+struct bulk_write_return_c {
     mongoc_bulkwriteresult_t* res = nullptr;
     mongoc_bulkwriteexception_t* exc = nullptr;
 
-    ~bulk_write_return() {
+    ~bulk_write_return_c() {
         libmongoc::bulkwriteresult_destroy(res);
         libmongoc::bulkwriteexception_destroy(exc);
     }
 
-    bulk_write_return(bulk_write_return&&) = delete;
-    bulk_write_return& operator=(bulk_write_return&&) = delete;
-    bulk_write_return(bulk_write_return const&) = delete;
-    bulk_write_return& operator=(bulk_write_return const&) = delete;
+    bulk_write_return_c(bulk_write_return_c&&) = delete;
+    bulk_write_return_c& operator=(bulk_write_return_c&&) = delete;
+    bulk_write_return_c(bulk_write_return_c const&) = delete;
+    bulk_write_return_c& operator=(bulk_write_return_c const&) = delete;
 
-    explicit bulk_write_return(mongoc_bulkwritereturn_t ret) : res{ret.res}, exc{ret.exc} {}
+    explicit bulk_write_return_c(mongoc_bulkwritereturn_t ret) : res{ret.res}, exc{ret.exc} {}
 
     bool has_exception() const {
         return exc != nullptr;
@@ -1371,7 +1371,7 @@ client_bulk_write& client_bulk_write::append(
 
 bsoncxx::v1::stdx::optional<client_bulk_write::result> client_bulk_write::execute(options const& opts) {
     bulk_write_options_c const c_opts{opts};
-    bulk_write_return ret{libmongoc::bulkwrite_execute(impl::with(*this)._bulk, c_opts.get())};
+    bulk_write_return_c ret{libmongoc::bulkwrite_execute(impl::with(*this)._bulk, c_opts.get())};
 
     if (ret.has_exception()) {
         throw ret.make_exception();
