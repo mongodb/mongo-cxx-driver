@@ -1058,8 +1058,8 @@ void assert_error(
         }
     }
 
-    REQUIRE_FALSE(expect_error["errorLabelsContain"]);
-    REQUIRE_FALSE(expect_error["errorLabelsOmit"]);
+    REQUIRE_FALSE(/* TODO */ expect_error["errorLabelsContain"]);
+    REQUIRE_FALSE(/* TODO */ expect_error["errorLabelsOmit"]);
 
     if (auto const error_code = expect_error["errorCode"]) {
         CHECK(e.code() == std::error_code{error_code.get_int32(), mongocxx::v1::server_error::internal::category()});
