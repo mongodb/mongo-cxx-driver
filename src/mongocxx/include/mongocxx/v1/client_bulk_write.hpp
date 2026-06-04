@@ -45,10 +45,15 @@ namespace v1 {
 
 ///
 /// A list of bulk write operations. Unlike @ref mongocxx::v1::bulk_write, this supports writes across more than one
-/// collection.
+/// collection and can group inserts, updates, and deletes in the same network payload.
+///
+/// @note
+///   @ref mongocxx::v1::client_bulk_write uses the bulkWrite server command. The bulkWrite command is only available on
+///   MongoDB servers 8.0 and newer.
 ///
 /// @see
 /// - [Bulk Write Operations (MongoDB Manual)](https://www.mongodb.com/docs/manual/core/bulk-write-operations/)
+/// - [bulkWrite (MongoDB Manual)](https://www.mongodb.com/docs/manual/reference/command/bulkWrite/)
 ///
 class client_bulk_write {
    private:
