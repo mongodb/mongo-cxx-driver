@@ -663,7 +663,7 @@ TEST_CASE("error_reply", "[mongocxx][v1][client_bulk_write][exception]") {
     mocks.error
         ->interpose([&](mongoc_bulkwriteexception_t const* ptr, bson_error_t* err) {
             CHECK(ptr == mocks.exc_id);
-            err->reserved = 2; // MONGOC_ERROR_CATEGORY
+            err->reserved = 3; // MONGOC_ERROR_CATEGORY_SERVER
             err->code = code;
             return true;
         })
@@ -677,7 +677,7 @@ TEST_CASE("error_reply", "[mongocxx][v1][client_bulk_write][exception]") {
 
     auto const ex = mocks.make();
 
-    CHECK(ex.code() == mongocxx::v1::source_errc::mongoc);
+    CHECK(ex.code() == mongocxx::v1::source_errc::server);
     CHECK(ex.code().value() == code);
 
     CHECK(ex.error_reply() == v.view());
