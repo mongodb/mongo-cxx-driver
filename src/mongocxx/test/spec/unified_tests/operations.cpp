@@ -350,7 +350,7 @@ bsoncxx::v1::document::value to_v1_value(document::view v) {
 }
 
 bsoncxx::v1::array::value to_v1_value(array::view v) {
-    return bsoncxx::v1::array::value{static_cast<bsoncxx::v1::array::view>(v)};
+    return bsoncxx::v1::array::value{bsoncxx::v_noabi::to_v1(v)};
 }
 
 template <typename Opts>
