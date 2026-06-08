@@ -1,6 +1,6 @@
 # Contributing Guidelines
 
-Follow the [MongoDB C++ Driver Coding Guidelines](https://github.com/mongodb/mongo-cxx-driver/etc/coding_guidelines.md), ensure files are formatted properly, and follow guidelines for writing PR titles and commit messages.
+Follow the [MongoDB C++ Driver Coding Guidelines](/etc/coding_guidelines.md), ensure files are formatted properly, and follow guidelines for writing PR titles and commit messages.
 
 All contributions must be made via a GitHub pull request (PR).
 
