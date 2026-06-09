@@ -41,7 +41,7 @@ Changes prior to 3.9.0 are documented as [release notes on GitHub](https://githu
 - Support for the "readConcern" option field to "delete", "insert", "replace", "bulkWrite", "findOneAnd*", "count", and "distinct" operations.
 - Support for `MONGODB-OIDC` authMechanism.
 - Support for client bulk write API (`mongocxx::client_bulk_write`).
-  - Unlike `mongocxx::bulk_write`, `mongocxx::client_bulk_write` supports writes across more than one collection and can group inserts, updates, and deletes in the same network payload.
+  - Unlike collection bulk write (`mongocxx::bulk_write`), client bulk write supports writes across more than one collection and can group inserts, updates, and deletes in the same network payload.
   - Requires MongoDB Server 8.0 or newer.
   - See:
     - [Bulk Write Operations (MongoDB Manual)](https://www.mongodb.com/docs/manual/core/bulk-write-operations/)
