@@ -3547,6 +3547,24 @@ TEST_CASE("27. Text Explicit Encryption", "[client_side_encryption]") {
 
     auto const foobarbaz_doc = make_document(kvp("_id", 0), kvp("encryptedText", "foobarbaz"));
 
+    auto const ci_di_text_opts = [&]() { return text_options().case_sensitive(false).diacritic_sensitive(false); };
+
+    // Create autoEncryptedClient (without bypassQueryAnalysis) for cases 8-11.
+    options::client auto_encrypted_client_opts{};
+    _add_client_encrypted_opts(&auto_encrypted_client_opts, {}, _make_kms_doc(false), {});
+    mongocxx::client auto_encrypted_client{
+        uri{},
+        test_util::add_test_server_api(auto_encrypted_client_opts),
+    };
+
+    if (!test_util::server_version_is_at_least("9.0")) {
+        // Skip prefixPreview / suffixPreview (will be changed for CXX-3467).
+        _drop_and_create_collection(
+            "db", "prefix-suffix-ci-di", "/explicit-encryption/encryptedFields-prefix-suffix-ci-di.json");
+    }
+
+    _drop_and_create_collection("db", "substring-ci-di", "/explicit-encryption/encryptedFields-substring-ci-di.json");
+
     SECTION("Case 1: can find a document by prefix") {
         if (test_util::server_version_is_at_least("9.0")) {
             SKIP("MongoDB server 9.0 and newer does not support prefixPreview or suffixPreview");
@@ -3671,6 +3689,149 @@ TEST_CASE("27. Text Explicit Encryption", "[client_side_encryption]") {
             client_encryption.encrypt(make_value("foo"), encrypt_opts_without_contention),
             Catch::Matchers::ContainsSubstring("contention factor is required for textPreview algorithm"));
     }
+
+    SECTION("Case 8: can find an auto-encrypted case-insensitively indexed document by prefix and suffix") {
+        if (test_util::server_version_is_at_least("9.0")) {
+            SKIP("MongoDB server 9.0 and newer does not support prefixPreview or suffixPreview");
+        }
+        write_concern wc_majority;
+        wc_majority.acknowledge_level(write_concern::level::k_majority);
+        options::insert insert_opts;
+        insert_opts.write_concern(wc_majority);
+        auto_encrypted_client["db"]["prefix-suffix-ci-di"].insert_one(
+            make_document(kvp("encryptedText", "BingQiLin")), insert_opts);
+
+        {
+            auto const encrypt_opts = default_encrypt_opts()
+                                          .query_type(options::encrypt::encryption_query_type::k_prefixPreview)
+                                          .text_opts(ci_di_text_opts().prefix_opts(prefix_opts));
+            auto const encrypted_bing = client_encryption.encrypt(make_value("bing"), encrypt_opts);
+            auto const query = make_document(
+                kvp("$expr",
+                    make_document(
+                        kvp("$encStrStartsWith",
+                            make_document(kvp("input", "$encryptedText"), kvp("prefix", encrypted_bing))))));
+            auto cursor = encrypted_client["db"]["prefix-suffix-ci-di"].find(query.view());
+            auto const found = std::vector<bsoncxx::document::value>(cursor.begin(), cursor.end());
+            REQUIRE(found.size() == 1);
+            auto const expected = mongocxx::scoped_bson(R"({ "encryptedText": "BingQiLin" })");
+            CHECK(test_util::matches(found[0].view(), expected.view()));
+        }
+
+        {
+            auto const encrypt_opts = default_encrypt_opts()
+                                          .query_type(options::encrypt::encryption_query_type::k_suffixPreview)
+                                          .text_opts(ci_di_text_opts().suffix_opts(suffix_opts));
+            auto const encrypted_lin = client_encryption.encrypt(make_value("lin"), encrypt_opts);
+            auto const query = make_document(kvp(
+                "$expr",
+                make_document(kvp(
+                    "$encStrEndsWith", make_document(kvp("input", "$encryptedText"), kvp("suffix", encrypted_lin))))));
+            auto cursor = encrypted_client["db"]["prefix-suffix-ci-di"].find(query.view());
+            auto const found = std::vector<bsoncxx::document::value>(cursor.begin(), cursor.end());
+            REQUIRE(found.size() == 1);
+            auto const expected = mongocxx::scoped_bson(R"({ "encryptedText": "BingQiLin" })");
+            CHECK(test_util::matches(found[0].view(), expected.view()));
+        }
+    }
+
+    SECTION("Case 9: can find an auto-encrypted diacritic-insensitively indexed document by prefix and suffix") {
+        if (test_util::server_version_is_at_least("9.0")) {
+            SKIP("MongoDB server 9.0 and newer does not support prefixPreview or suffixPreview");
+        }
+        write_concern wc_majority;
+        wc_majority.acknowledge_level(write_concern::level::k_majority);
+        options::insert insert_opts;
+        insert_opts.write_concern(wc_majority);
+
+#define E_ACCENT "\xC3\xA9"
+#define A_UMLAUT "\xC3\xA4"
+
+        auto_encrypted_client["db"]["prefix-suffix-ci-di"].insert_one(
+            make_document(kvp("encryptedText", "caf" E_ACCENT "barb" A_UMLAUT "z")), insert_opts);
+
+        {
+            auto const encrypt_opts = default_encrypt_opts()
+                                          .query_type(options::encrypt::encryption_query_type::k_prefixPreview)
+                                          .text_opts(ci_di_text_opts().prefix_opts(prefix_opts));
+            auto const encrypted_cafe = client_encryption.encrypt(make_value("cafe"), encrypt_opts);
+            auto const query = make_document(
+                kvp("$expr",
+                    make_document(
+                        kvp("$encStrStartsWith",
+                            make_document(kvp("input", "$encryptedText"), kvp("prefix", encrypted_cafe))))));
+            auto cursor = encrypted_client["db"]["prefix-suffix-ci-di"].find(query.view());
+            auto const found = std::vector<bsoncxx::document::value>(cursor.begin(), cursor.end());
+            REQUIRE(found.size() == 1);
+            auto const expected = make_document(kvp("encryptedText", "caf" E_ACCENT "barb" A_UMLAUT "z"));
+            CHECK(test_util::matches(found[0].view(), expected.view()));
+        }
+
+        {
+            auto const encrypt_opts = default_encrypt_opts()
+                                          .query_type(options::encrypt::encryption_query_type::k_suffixPreview)
+                                          .text_opts(ci_di_text_opts().suffix_opts(suffix_opts));
+            auto const encrypted_baz = client_encryption.encrypt(make_value("baz"), encrypt_opts);
+            auto const query = make_document(kvp(
+                "$expr",
+                make_document(kvp(
+                    "$encStrEndsWith", make_document(kvp("input", "$encryptedText"), kvp("suffix", encrypted_baz))))));
+            auto cursor = encrypted_client["db"]["prefix-suffix-ci-di"].find(query.view());
+            auto const found = std::vector<bsoncxx::document::value>(cursor.begin(), cursor.end());
+            REQUIRE(found.size() == 1);
+            auto const expected = make_document(kvp("encryptedText", "caf" E_ACCENT "barb" A_UMLAUT "z"));
+            CHECK(test_util::matches(found[0].view(), expected.view()));
+        }
+    }
+
+    SECTION("Case 10: can find an auto-encrypted case-insensitively indexed document by substring") {
+        write_concern wc_majority;
+        wc_majority.acknowledge_level(write_concern::level::k_majority);
+        options::insert insert_opts;
+        insert_opts.write_concern(wc_majority);
+        auto_encrypted_client["db"]["substring-ci-di"].insert_one(
+            make_document(kvp("encryptedText", "FooBarBaz")), insert_opts);
+
+        auto const encrypt_opts = default_encrypt_opts()
+                                      .query_type(options::encrypt::encryption_query_type::k_substringPreview)
+                                      .text_opts(ci_di_text_opts().substring_opts(substring_opts));
+        auto const encrypted_bar = client_encryption.encrypt(make_value("bar"), encrypt_opts);
+        auto const query = make_document(kvp(
+            "$expr",
+            make_document(kvp(
+                "$encStrContains", make_document(kvp("input", "$encryptedText"), kvp("substring", encrypted_bar))))));
+        auto cursor = encrypted_client["db"]["substring-ci-di"].find(query.view());
+        auto const found = std::vector<bsoncxx::document::value>(cursor.begin(), cursor.end());
+        REQUIRE(found.size() == 1);
+        auto const expected = mongocxx::scoped_bson(R"({ "encryptedText": "FooBarBaz" })");
+        CHECK(test_util::matches(found[0].view(), expected.view()));
+    }
+
+    SECTION("Case 11: can find an auto-encrypted diacritic-insensitively indexed document by substring") {
+        write_concern wc_majority;
+        wc_majority.acknowledge_level(write_concern::level::k_majority);
+        options::insert insert_opts;
+        insert_opts.write_concern(wc_majority);
+
+        auto_encrypted_client["db"]["substring-ci-di"].insert_one(
+            make_document(kvp("encryptedText", "foocaf" E_ACCENT "baz")), insert_opts);
+
+        auto const encrypt_opts = default_encrypt_opts()
+                                      .query_type(options::encrypt::encryption_query_type::k_substringPreview)
+                                      .text_opts(ci_di_text_opts().substring_opts(substring_opts));
+        auto const encrypted_cafe = client_encryption.encrypt(make_value("cafe"), encrypt_opts);
+        auto const query = make_document(kvp(
+            "$expr",
+            make_document(kvp(
+                "$encStrContains", make_document(kvp("input", "$encryptedText"), kvp("substring", encrypted_cafe))))));
+        auto cursor = encrypted_client["db"]["substring-ci-di"].find(query.view());
+        auto const found = std::vector<bsoncxx::document::value>(cursor.begin(), cursor.end());
+        REQUIRE(found.size() == 1);
+        auto const expected = make_document(kvp("encryptedText", "foocaf" E_ACCENT "baz"));
+        CHECK(test_util::matches(found[0].view(), expected.view()));
+    }
+#undef E_ACCENT
+#undef A_UMLAUT
 }
 
 } // namespace
