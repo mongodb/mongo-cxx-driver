@@ -3512,6 +3512,12 @@ TEST_CASE("27. Text Explicit Encryption", "[client_side_encryption]") {
     auto tpl = _setup_explicit_encryption(key1_document, &key_vault_client);
     auto client_encryption = std::move(std::get<0>(tpl));
     auto encrypted_client = std::move(std::get<1>(tpl));
+    options::insert insert_opts_majority;
+    {
+        write_concern wc_majority;
+        wc_majority.acknowledge_level(write_concern::level::k_majority);
+        insert_opts_majority.write_concern(wc_majority);
+    }
 
     auto const default_encrypt_opts = [&]() {
         return options::encrypt()
@@ -3533,7 +3539,8 @@ TEST_CASE("27. Text Explicit Encryption", "[client_side_encryption]") {
             default_encrypt_opts().text_opts(default_text_opts().prefix_opts(prefix_opts).suffix_opts(suffix_opts));
         auto const encrypted_foobarbaz = client_encryption.encrypt(make_value("foobarbaz"), encrypt_opts);
 
-        coll_prefix_suffix.insert_one(make_document(kvp("_id", 0), kvp("encryptedText", encrypted_foobarbaz)));
+        coll_prefix_suffix.insert_one(
+            make_document(kvp("_id", 0), kvp("encryptedText", encrypted_foobarbaz)), insert_opts_majority);
     }
 
     auto coll_substring = encrypted_client["db"]["substring"];
@@ -3542,7 +3549,8 @@ TEST_CASE("27. Text Explicit Encryption", "[client_side_encryption]") {
         auto const encrypt_opts = default_encrypt_opts().text_opts(default_text_opts().substring_opts(substring_opts));
         auto const encrypted_foobarbaz = client_encryption.encrypt(make_value("foobarbaz"), encrypt_opts);
 
-        coll_substring.insert_one(make_document(kvp("_id", 0), kvp("encryptedText", encrypted_foobarbaz)));
+        coll_substring.insert_one(
+            make_document(kvp("_id", 0), kvp("encryptedText", encrypted_foobarbaz)), insert_opts_majority);
     }
 
     auto const foobarbaz_doc = make_document(kvp("_id", 0), kvp("encryptedText", "foobarbaz"));
@@ -3694,12 +3702,8 @@ TEST_CASE("27. Text Explicit Encryption", "[client_side_encryption]") {
         if (test_util::server_version_is_at_least("9.0")) {
             SKIP("MongoDB server 9.0 and newer does not support prefixPreview or suffixPreview");
         }
-        write_concern wc_majority;
-        wc_majority.acknowledge_level(write_concern::level::k_majority);
-        options::insert insert_opts;
-        insert_opts.write_concern(wc_majority);
         auto_encrypted_client["db"]["prefix-suffix-ci-di"].insert_one(
-            make_document(kvp("encryptedText", "BingQiLin")), insert_opts);
+            make_document(kvp("encryptedText", "BingQiLin")), insert_opts_majority);
 
         {
             auto const encrypt_opts = default_encrypt_opts()
@@ -3739,16 +3743,12 @@ TEST_CASE("27. Text Explicit Encryption", "[client_side_encryption]") {
         if (test_util::server_version_is_at_least("9.0")) {
             SKIP("MongoDB server 9.0 and newer does not support prefixPreview or suffixPreview");
         }
-        write_concern wc_majority;
-        wc_majority.acknowledge_level(write_concern::level::k_majority);
-        options::insert insert_opts;
-        insert_opts.write_concern(wc_majority);
 
 #define E_ACCENT "\xC3\xA9"
 #define A_UMLAUT "\xC3\xA4"
 
         auto_encrypted_client["db"]["prefix-suffix-ci-di"].insert_one(
-            make_document(kvp("encryptedText", "caf" E_ACCENT "barb" A_UMLAUT "z")), insert_opts);
+            make_document(kvp("encryptedText", "caf" E_ACCENT "barb" A_UMLAUT "z")), insert_opts_majority);
 
         {
             auto const encrypt_opts = default_encrypt_opts()
@@ -3785,12 +3785,8 @@ TEST_CASE("27. Text Explicit Encryption", "[client_side_encryption]") {
     }
 
     SECTION("Case 10: can find an auto-encrypted case-insensitively indexed document by substring") {
-        write_concern wc_majority;
-        wc_majority.acknowledge_level(write_concern::level::k_majority);
-        options::insert insert_opts;
-        insert_opts.write_concern(wc_majority);
         auto_encrypted_client["db"]["substring-ci-di"].insert_one(
-            make_document(kvp("encryptedText", "FooBarBaz")), insert_opts);
+            make_document(kvp("encryptedText", "FooBarBaz")), insert_opts_majority);
 
         auto const encrypt_opts = default_encrypt_opts()
                                       .query_type(options::encrypt::encryption_query_type::k_substringPreview)
@@ -3808,13 +3804,8 @@ TEST_CASE("27. Text Explicit Encryption", "[client_side_encryption]") {
     }
 
     SECTION("Case 11: can find an auto-encrypted diacritic-insensitively indexed document by substring") {
-        write_concern wc_majority;
-        wc_majority.acknowledge_level(write_concern::level::k_majority);
-        options::insert insert_opts;
-        insert_opts.write_concern(wc_majority);
-
         auto_encrypted_client["db"]["substring-ci-di"].insert_one(
-            make_document(kvp("encryptedText", "foocaf" E_ACCENT "baz")), insert_opts);
+            make_document(kvp("encryptedText", "foocaf" E_ACCENT "baz")), insert_opts_majority);
 
         auto const encrypt_opts = default_encrypt_opts()
                                       .query_type(options::encrypt::encryption_query_type::k_substringPreview)
