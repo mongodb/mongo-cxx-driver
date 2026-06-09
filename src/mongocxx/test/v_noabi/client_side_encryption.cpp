@@ -3511,7 +3511,7 @@ TEST_CASE("27. Text Explicit Encryption", "[client_side_encryption]") {
     };
     auto tpl = _setup_explicit_encryption(key1_document, &key_vault_client);
     auto client_encryption = std::move(std::get<0>(tpl));
-    auto encrypted_client = std::move(std::get<1>(tpl));
+    auto explicit_encrypted_client = std::move(std::get<1>(tpl));
     options::insert insert_opts_majority;
     {
         write_concern wc_majority;
@@ -3531,7 +3531,7 @@ TEST_CASE("27. Text Explicit Encryption", "[client_side_encryption]") {
     auto const suffix_opts = text_options::suffix().str_max_query_length(10).str_min_query_length(2);
     auto const substring_opts =
         text_options::substring().str_max_length(10).str_max_query_length(10).str_min_query_length(2);
-    auto coll_prefix_suffix = encrypted_client["db"]["prefix-suffix"];
+    auto coll_prefix_suffix = explicit_encrypted_client["db"]["prefix-suffix"];
     if (!test_util::server_version_is_at_least("9.0")) {
         // Only test prefixPreview and suffixPreview on server < 9.0. Server 9.0 removes support.
         _drop_and_create_collection("db", "prefix-suffix", "/explicit-encryption/encryptedFields-prefix-suffix.json");
@@ -3543,7 +3543,7 @@ TEST_CASE("27. Text Explicit Encryption", "[client_side_encryption]") {
             make_document(kvp("_id", 0), kvp("encryptedText", encrypted_foobarbaz)), insert_opts_majority);
     }
 
-    auto coll_substring = encrypted_client["db"]["substring"];
+    auto coll_substring = explicit_encrypted_client["db"]["substring"];
     _drop_and_create_collection("db", "substring", "/explicit-encryption/encryptedFields-substring.json");
     {
         auto const encrypt_opts = default_encrypt_opts().text_opts(default_text_opts().substring_opts(substring_opts));
@@ -3715,7 +3715,7 @@ TEST_CASE("27. Text Explicit Encryption", "[client_side_encryption]") {
                     make_document(
                         kvp("$encStrStartsWith",
                             make_document(kvp("input", "$encryptedText"), kvp("prefix", encrypted_bing))))));
-            auto cursor = encrypted_client["db"]["prefix-suffix-ci-di"].find(query.view());
+            auto cursor = explicit_encrypted_client["db"]["prefix-suffix-ci-di"].find(query.view());
             auto const found = std::vector<bsoncxx::document::value>(cursor.begin(), cursor.end());
             REQUIRE(found.size() == 1);
             auto const expected = mongocxx::scoped_bson(R"({ "encryptedText": "BingQiLin" })");
@@ -3731,7 +3731,7 @@ TEST_CASE("27. Text Explicit Encryption", "[client_side_encryption]") {
                 "$expr",
                 make_document(kvp(
                     "$encStrEndsWith", make_document(kvp("input", "$encryptedText"), kvp("suffix", encrypted_lin))))));
-            auto cursor = encrypted_client["db"]["prefix-suffix-ci-di"].find(query.view());
+            auto cursor = explicit_encrypted_client["db"]["prefix-suffix-ci-di"].find(query.view());
             auto const found = std::vector<bsoncxx::document::value>(cursor.begin(), cursor.end());
             REQUIRE(found.size() == 1);
             auto const expected = mongocxx::scoped_bson(R"({ "encryptedText": "BingQiLin" })");
@@ -3760,7 +3760,7 @@ TEST_CASE("27. Text Explicit Encryption", "[client_side_encryption]") {
                     make_document(
                         kvp("$encStrStartsWith",
                             make_document(kvp("input", "$encryptedText"), kvp("prefix", encrypted_cafe))))));
-            auto cursor = encrypted_client["db"]["prefix-suffix-ci-di"].find(query.view());
+            auto cursor = explicit_encrypted_client["db"]["prefix-suffix-ci-di"].find(query.view());
             auto const found = std::vector<bsoncxx::document::value>(cursor.begin(), cursor.end());
             REQUIRE(found.size() == 1);
             auto const expected = make_document(kvp("encryptedText", "caf" E_ACCENT "barb" A_UMLAUT "z"));
@@ -3776,7 +3776,7 @@ TEST_CASE("27. Text Explicit Encryption", "[client_side_encryption]") {
                 "$expr",
                 make_document(kvp(
                     "$encStrEndsWith", make_document(kvp("input", "$encryptedText"), kvp("suffix", encrypted_baz))))));
-            auto cursor = encrypted_client["db"]["prefix-suffix-ci-di"].find(query.view());
+            auto cursor = explicit_encrypted_client["db"]["prefix-suffix-ci-di"].find(query.view());
             auto const found = std::vector<bsoncxx::document::value>(cursor.begin(), cursor.end());
             REQUIRE(found.size() == 1);
             auto const expected = make_document(kvp("encryptedText", "caf" E_ACCENT "barb" A_UMLAUT "z"));
@@ -3796,7 +3796,7 @@ TEST_CASE("27. Text Explicit Encryption", "[client_side_encryption]") {
             "$expr",
             make_document(kvp(
                 "$encStrContains", make_document(kvp("input", "$encryptedText"), kvp("substring", encrypted_bar))))));
-        auto cursor = encrypted_client["db"]["substring-ci-di"].find(query.view());
+        auto cursor = explicit_encrypted_client["db"]["substring-ci-di"].find(query.view());
         auto const found = std::vector<bsoncxx::document::value>(cursor.begin(), cursor.end());
         REQUIRE(found.size() == 1);
         auto const expected = mongocxx::scoped_bson(R"({ "encryptedText": "FooBarBaz" })");
@@ -3815,7 +3815,7 @@ TEST_CASE("27. Text Explicit Encryption", "[client_side_encryption]") {
             "$expr",
             make_document(kvp(
                 "$encStrContains", make_document(kvp("input", "$encryptedText"), kvp("substring", encrypted_cafe))))));
-        auto cursor = encrypted_client["db"]["substring-ci-di"].find(query.view());
+        auto cursor = explicit_encrypted_client["db"]["substring-ci-di"].find(query.view());
         auto const found = std::vector<bsoncxx::document::value>(cursor.begin(), cursor.end());
         REQUIRE(found.size() == 1);
         auto const expected = make_document(kvp("encryptedText", "foocaf" E_ACCENT "baz"));
