@@ -77,14 +77,14 @@ if [[ "${SKIP_INSTALL_LIBMONGOCRYPT:-}" != "1" ]]; then
   # references to the USE_NINJA environment variable).
   if [[ "${OSTYPE:?}" == cygwin && "${CMAKE_GENERATOR:?}" != Visual\ Studio\ * ]]; then
     (
-      git clone -q --revision=6528eb5cffdf278ec21da952ba2324cc5e2517ac https://github.com/mongodb/libmongocrypt # 1.17.1 or 1.18.0 when released.
+      git clone -q https://github.com/mongodb/libmongocrypt --branch 1.18.1 --depth 1
 
       declare -a crypt_cmake_flags=(
         "-DMONGOCRYPT_MONGOC_DIR=${mongoc_idir:?}"
         "-DBUILD_TESTING=OFF"
         "-DENABLE_ONLINE_TESTS=OFF"
         "-DENABLE_MONGOC=OFF"
-        "-DBUILD_VERSION=1.18.0-dev"
+        "-DBUILD_VERSION=1.18.1"
       )
 
       . "${mongoc_dir}/.evergreen/scripts/find-ccache.sh"
