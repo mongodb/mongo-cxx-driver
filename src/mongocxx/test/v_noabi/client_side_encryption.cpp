@@ -3512,12 +3512,7 @@ TEST_CASE("27. Text Explicit Encryption", "[client_side_encryption]") {
     auto tpl = _setup_explicit_encryption(key1_document, &key_vault_client);
     auto client_encryption = std::move(std::get<0>(tpl));
     auto explicit_encrypted_client = std::move(std::get<1>(tpl));
-    options::insert insert_opts_majority;
-    {
-        write_concern wc_majority;
-        wc_majority.acknowledge_level(write_concern::level::k_majority);
-        insert_opts_majority.write_concern(wc_majority);
-    }
+    auto const insert_opts_majority = std::move(v1::insert_one_options{}.write_concern(v1::write_concern{}.majority()));
 
     auto const default_encrypt_opts = [&]() {
         return options::encrypt()
