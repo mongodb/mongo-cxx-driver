@@ -3515,12 +3515,15 @@ TEST_CASE("27. Text Explicit Encryption", "[client_side_encryption]") {
     auto const insert_opts_majority = std::move(v1::insert_one_options{}.write_concern(v1::write_concern{}.majority()));
 
     auto const default_encrypt_opts = [&]() {
-        return options::encrypt()
-            .key_id(key1_id)
-            .algorithm(options::encrypt::encryption_algorithm::k_textPreview)
-            .contention_factor(0);
+        return std::move(
+            options::encrypt()
+                .key_id(key1_id)
+                .algorithm(options::encrypt::encryption_algorithm::k_textPreview)
+                .contention_factor(0));
     };
-    auto const default_text_opts = [&]() { return text_options().case_sensitive(true).diacritic_sensitive(true); };
+    auto const default_text_opts = [&]() {
+        return std::move(text_options().case_sensitive(true).diacritic_sensitive(true));
+    };
 
     auto const prefix_opts = text_options::prefix().str_max_query_length(10).str_min_query_length(2);
     auto const suffix_opts = text_options::suffix().str_max_query_length(10).str_min_query_length(2);
@@ -3550,7 +3553,9 @@ TEST_CASE("27. Text Explicit Encryption", "[client_side_encryption]") {
 
     auto const foobarbaz_doc = make_document(kvp("_id", 0), kvp("encryptedText", "foobarbaz"));
 
-    auto const ci_di_text_opts = [&]() { return text_options().case_sensitive(false).diacritic_sensitive(false); };
+    auto const ci_di_text_opts = [&]() {
+        return std::move(text_options().case_sensitive(false).diacritic_sensitive(false));
+    };
 
     // Create autoEncryptedClient (without bypassQueryAnalysis) for cases 8-11.
     options::client auto_encrypted_client_opts{};
