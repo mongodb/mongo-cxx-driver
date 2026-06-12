@@ -3530,8 +3530,8 @@ TEST_CASE("27. Text Explicit Encryption", "[client_side_encryption]") {
     auto const substring_opts =
         text_options::substring().str_max_length(10).str_max_query_length(10).str_min_query_length(2);
     auto coll_prefix_suffix = explicit_encrypted_client["db"]["prefix-suffix"];
+    // Only test prefixPreview and suffixPreview on server < 9.0. Server 9.0 removes support.
     if (!test_util::server_version_is_at_least("9.0")) {
-        // Only test prefixPreview and suffixPreview on server < 9.0. Server 9.0 removes support.
         _drop_and_create_collection("db", "prefix-suffix", "/explicit-encryption/encryptedFields-prefix-suffix.json");
         auto const encrypt_opts =
             default_encrypt_opts().text_opts(default_text_opts().prefix_opts(prefix_opts).suffix_opts(suffix_opts));
