@@ -3739,13 +3739,13 @@ TEST_CASE("27. Text Explicit Encryption", "[client_side_encryption]") {
         }
     }
 
+#define E_ACCENT "\xC3\xA9"
+#define A_UMLAUT "\xC3\xA4"
+
     SECTION("Case 9: can find an auto-encrypted diacritic-insensitively indexed document by prefix and suffix") {
         if (test_util::server_version_is_at_least("9.0")) {
             SKIP("MongoDB server 9.0 and newer does not support prefixPreview or suffixPreview");
         }
-
-#define E_ACCENT "\xC3\xA9"
-#define A_UMLAUT "\xC3\xA4"
 
         auto_encrypted_client["db"]["prefix-suffix-ci-di"].insert_one(
             make_document(kvp("encryptedText", "caf" E_ACCENT "barb" A_UMLAUT "z")), insert_opts_majority);
