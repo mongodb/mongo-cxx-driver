@@ -35,6 +35,7 @@ Changes prior to 3.9.0 are documented as [release notes on GitHub](https://githu
 - Library filenames now include the ABI version number, e.g. `libbsoncxx1.so.4.4.0`.
 - pkg-config config filenames now include the ABI version number, e.g. `libbsoncxx1.pc`.
 - CMake package config filenames now use `camelCase`, e.g. `bsoncxxConfig.cmake`.
+- Bump the minimum required C Driver version to [2.3.1](https://github.com/mongodb/mongo-c-driver/releases/tag/2.3.1).
 
 ### Added
 
