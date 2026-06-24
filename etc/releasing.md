@@ -775,7 +775,7 @@ Add a section for the next patch release, e.g. following a `1.2.0` release:
 Commit the changes to the `releases/vX.Y` branch:
 
 ```bash
-git commit -m 'Add changelog entry for the next minor release'
+git commit -m 'Add changelog entry for the next patch release'
 ```
 
 Push the branch to the remote repository (a PR is not required for this step).
@@ -797,7 +797,7 @@ Add a section for the next minor release, e.g. following a `1.3.0` release:
 Commit these changes to `post-release-changes`.
 
 ```bash
-git commit -m "Add CHANGELOG section for the next minor release"
+git commit -m "Add changelog entry for the next minor release"
 ```
 
 ### Merge Post-Release Changes
