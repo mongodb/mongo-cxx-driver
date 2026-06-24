@@ -828,7 +828,7 @@ Please note that this version of mongocxx requires [MongoDB C Driver A.B.C](http
 
 See the [MongoDB C++ Driver Manual](https://www.mongodb.com/docs/languages/cpp/cpp-driver/current/) and the [Driver Installation Instructions](https://www.mongodb.com/docs/languages/cpp/cpp-driver/current/installation/) for more details on downloading, installing, and using this driver.
 
-NOTE: The mongocxx X.Y.x series does not promise API or ABI stability across patch releases.
+NOTE: ABI stability is NOT supported for entities declared in the `v_noabi` namespace.
 
 Please feel free to post any questions on [Stack Overflow](https://stackoverflow.com/questions/tagged/mongodb%20c++). Bug reports should be filed against the [CXX](https://jira.mongodb.org/projects/CXX) project in the MongoDB JIRA. Your feedback on the C++11 driver is greatly appreciated.
 
