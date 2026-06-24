@@ -10,7 +10,7 @@
 set -o errexit
 set -o pipefail
 
-LATEST_VERSION="4.3.1"
+LATEST_VERSION="4.4.0"
 DOXYGEN_VERSION_REQUIRED="1.15.0"
 
 # Permit using a custom Doxygen binary.
