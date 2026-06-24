@@ -25,10 +25,10 @@ git clone -b releases/stable https://github.com/mongodb/mongo-cxx-driver.git
 > [!IMPORTANT]
 > Relevant bug fixes will be backported from the current major version to the previous major version for a period of one year after the new major version is released.
 
-| Version     | ABI Stability   | Development Stability       | Development Status |
+| Version     | Soversion       | Development Stability       | Development Status |
 | :---------: | :-------------: | :-------------------------: | :----------------: |
 | master      | N/A             | _Do not use in production!_ | Active             |
-| 4.4.0       | v1              | Ready for Use               | Bug Fixes Only     |
+| 4.4.0       | 1               | Ready for Use               | Bug Fixes Only     |
 | 4.3.1       | None            | Ready for Use               | Not Supported      |
 | ...         | ...             | ...                         | ...                |
 | 4.0.0       | None            | Ready for Use               | Not Supported      |
