@@ -1,0 +1,485 @@
+<!-- HTML header for doxygen 1.15.0-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-US">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.15.0"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>MongoDB C++ Driver: mongocxx::v1::insert_one_options Class Reference</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript">var page_layout=1;</script>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<script type="text/javascript" src="clipboard.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<script type="text/javascript" src="cookie.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/javascript">
+  $(function() { init_search(); });
+</script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+<link href="doxygen-extra.css" rel="stylesheet" type="text/css"/>
+<!-- Mixpanel Tracker -->
+<script type="text/javascript">
+  (function(e,c){if(!c.__SV){var l,h;window.mixpanel=c;c._i=[];c.init=function(q,r,f){function t(d,a){var g=a.split(".");2==g.length&&(d=d[g[0]],a=g[1]);d[a]=function(){d.push([a].concat(Array.prototype.slice.call(arguments,0)))}}var b=c;"undefined"!==typeof f?b=c[f]=[]:f="mixpanel";b.people=b.people||[];b.toString=function(d){var a="mixpanel";"mixpanel"!==f&&(a+="."+f);d||(a+=" (stub)");return a};b.people.toString=function(){return b.toString(1)+".people (stub)"};l="disable time_event track track_pageview track_links track_forms track_with_groups add_group set_group remove_group register register_once alias unregister identify name_tag set_config reset opt_in_tracking opt_out_tracking has_opted_in_tracking has_opted_out_tracking clear_opt_in_out_tracking start_batch_senders start_session_recording stop_session_recording people.set people.set_once people.unset people.increment people.append people.union people.track_charge people.clear_charges people.delete_user people.remove".split(" ");
+  for(h=0;h<l.length;h++)t(b,l[h]);var n="set set_once union unset remove delete".split(" ");b.get_group=function(){function d(p){a[p]=function(){b.push([g,[p].concat(Array.prototype.slice.call(arguments,0))])}}for(var a={},g=["get_group"].concat(Array.prototype.slice.call(arguments,0)),m=0;m<n.length;m++)d(n[m]);return a};c._i.push([q,r,f])};c.__SV=1.2;var k=e.createElement("script");k.type="text/javascript";k.async=!0;k.src="undefined"!==typeof MIXPANEL_CUSTOM_LIB_URL?MIXPANEL_CUSTOM_LIB_URL:"file:"===
+  e.location.protocol&&"//cdn.mxpnl.com/libs/mixpanel-2-latest.min.js".match(/^\/\//)?"https://cdn.mxpnl.com/libs/mixpanel-2-latest.min.js":"//cdn.mxpnl.com/libs/mixpanel-2-latest.min.js";e=e.getElementsByTagName("script")[0];e.parentNode.insertBefore(k,e)}})(document,window.mixpanel||[]); mixpanel.init('f2a38f26e5cc0eee429a9276f296c118', {
+    autocapture: true,
+    record_sessions_percent: 0,
+  })
+</script>
+<!-- patch-apidocs-current-redirects: mongocxx-4.4.0 -->
+<link rel="canonical" href="https://mongocxx.org/api/mongocxx-4.4.0/classmongocxx_1_1v1_1_1insert__one__options.html"/>
+<script type="text/javascript">
+if (window.location.pathname.startsWith("/api/current/")) {
+  window.location.replace(
+    window.location.href.replace("/api/current/", "/api/mongocxx-4.4.0/")
+  )
+}
+</script>
+</head>
+<body>
+<div id="side-nav" class="ui-resizable side-nav-resizable"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr id="projectrow">
+  <td id="projectalign">
+   <div id="projectname">MongoDB C++ Driver<span id="projectnumber">&#160;4.4.0</span>
+   </div>
+  </td>
+ </tr>
+   <tr><td colspan="2">        <div id="MSearchBox" class="MSearchBoxInactive">
+        <span class="left">
+          <span id="MSearchSelect" class="search-icon" onmouseover="return searchBox.OnSearchSelectShow()" onmouseout="return searchBox.OnSearchSelectHide()"><span class="search-icon-dropdown"></span></span>
+          <input type="text" id="MSearchField" value="" placeholder="Search" accesskey="S"
+               onfocus="searchBox.OnSearchFieldFocus(true)" 
+               onblur="searchBox.OnSearchFieldFocus(false)" 
+               onkeyup="searchBox.OnSearchFieldChange(event)"/>
+          </span><span class="right">
+            <a id="MSearchClose" href="javascript:searchBox.CloseResultsWindow()"><div id="MSearchCloseImg" class="close-icon"></div></a>
+          </span>
+        </div>
+</td></tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Generated by Doxygen 1.15.0 -->
+<script type="text/javascript">
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+</script>
+<script type="text/javascript">
+$(function() { codefold.init(); });
+</script>
+</div><!-- top -->
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+$(function(){initNavTree('classmongocxx_1_1v1_1_1insert__one__options.html','','classmongocxx_1_1v1_1_1insert__one__options-members'); });
+</script>
+<div id="container">
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Loading...</div>
+<div class="SRStatus" id="Searching">Searching...</div>
+<div class="SRStatus" id="NoMatches">No Matches</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="header">
+  <div class="headertitle"><div class="title">mongocxx::v1::insert_one_options Class Reference</div></div>
+</div><!--header-->
+<div class="contents">
+
+<p><code>#include &lt;<a class="el" href="insert__one__options_8hpp_source.html">mongocxx/v1/insert_one_options.hpp</a>&gt;</code></p>
+<a name="details" id="details"></a><h2 id="header-details" class="groupheader">Description</h2>
+<div class="textblock"><p>Options for an "insertOne" operation. </p>
+<p>Supported fields include:</p><ul>
+<li><span class="tt"><a class="el" href="#a622b1c30e3aec263823979f2eb0d4cf6" title="Set the &quot;bypassDocumentValidation&quot; field.">bypass_document_validation</a></span> ("bypassDocumentValidation")</li>
+<li><span class="tt"><a class="el" href="#a3458b2ebf752e7e8b2ea556887bbe012" title="Set the &quot;comment&quot; field.">comment</a></span></li>
+<li><span class="tt"><a class="el" href="classmongocxx_1_1v1_1_1read__concern.html" title="Options related to a MongoDB Read Concern.">read_concern</a></span> ("readConcern")</li>
+<li><span class="tt"><a class="el" href="classmongocxx_1_1v1_1_1write__concern.html" title="Options related to a MongoDB Write Concern.">write_concern</a></span> ("writeConcern")</li>
+</ul>
+<dl class="section see"><dt>See also</dt><dd><ul>
+<li><a href="https://www.mongodb.com/docs/manual/reference/insert-methods/">Insert Methods (MongoDB Manual)</a> </li>
+</ul>
+</dd></dl>
+</div><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
+Public Member Functions</h2></td></tr>
+<tr class="memitem:a7094e181fcc43d7b5ce1d6a023a07914" id="r_a7094e181fcc43d7b5ce1d6a023a07914"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7094e181fcc43d7b5ce1d6a023a07914">insert_one_options</a> ()</td></tr>
+<tr class="memdesc:a7094e181fcc43d7b5ce1d6a023a07914"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default initialization.  <br /></td></tr>
+<tr class="memitem:aff6494df75b40a0b8f06a8b338eaded4" id="r_aff6494df75b40a0b8f06a8b338eaded4"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aff6494df75b40a0b8f06a8b338eaded4">insert_one_options</a> (insert_one_options &amp;&amp;other) noexcept</td></tr>
+<tr class="memdesc:aff6494df75b40a0b8f06a8b338eaded4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Move constructor.  <br /></td></tr>
+<tr class="memitem:a990129a30044c276dd01f187bd5ba97c" id="r_a990129a30044c276dd01f187bd5ba97c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a990129a30044c276dd01f187bd5ba97c">insert_one_options</a> (insert_one_options const &amp;other)</td></tr>
+<tr class="memdesc:a990129a30044c276dd01f187bd5ba97c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Copy construction.  <br /></td></tr>
+<tr class="memitem:ac9e8df71c4f89da8573892c9aa56a9c5" id="r_ac9e8df71c4f89da8573892c9aa56a9c5"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac9e8df71c4f89da8573892c9aa56a9c5">~insert_one_options</a> ()</td></tr>
+<tr class="memdesc:ac9e8df71c4f89da8573892c9aa56a9c5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destroy this object.  <br /></td></tr>
+<tr class="memitem:a28dfb4e62055ac77747dc2c4dd1894c7" id="r_a28dfb4e62055ac77747dc2c4dd1894c7"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classbsoncxx_1_1v1_1_1stdx_1_1optional.html">bsoncxx::v1::stdx::optional</a>&lt; bool &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a28dfb4e62055ac77747dc2c4dd1894c7">bypass_document_validation</a> () const</td></tr>
+<tr class="memdesc:a28dfb4e62055ac77747dc2c4dd1894c7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the current "bypassDocumentValidation" field.  <br /></td></tr>
+<tr class="memitem:a622b1c30e3aec263823979f2eb0d4cf6" id="r_a622b1c30e3aec263823979f2eb0d4cf6"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#aff6494df75b40a0b8f06a8b338eaded4">insert_one_options</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a622b1c30e3aec263823979f2eb0d4cf6">bypass_document_validation</a> (bool v)</td></tr>
+<tr class="memdesc:a622b1c30e3aec263823979f2eb0d4cf6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the "bypassDocumentValidation" field.  <br /></td></tr>
+<tr class="memitem:ac1cdce72de9f498cf533bc489661a2f1" id="r_ac1cdce72de9f498cf533bc489661a2f1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classbsoncxx_1_1v1_1_1stdx_1_1optional.html">bsoncxx::v1::stdx::optional</a>&lt; <a class="el" href="classbsoncxx_1_1v1_1_1types_1_1view.html">bsoncxx::v1::types::view</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac1cdce72de9f498cf533bc489661a2f1">comment</a> () const</td></tr>
+<tr class="memdesc:ac1cdce72de9f498cf533bc489661a2f1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the current "comment" field.  <br /></td></tr>
+<tr class="memitem:a3458b2ebf752e7e8b2ea556887bbe012" id="r_a3458b2ebf752e7e8b2ea556887bbe012"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#aff6494df75b40a0b8f06a8b338eaded4">insert_one_options</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3458b2ebf752e7e8b2ea556887bbe012">comment</a> (<a class="el" href="classbsoncxx_1_1v1_1_1types_1_1value.html">bsoncxx::v1::types::value</a> v)</td></tr>
+<tr class="memdesc:a3458b2ebf752e7e8b2ea556887bbe012"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the "comment" field.  <br /></td></tr>
+<tr class="memitem:ad06243f038cc638842a29faa6e3918ff" id="r_ad06243f038cc638842a29faa6e3918ff"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#aff6494df75b40a0b8f06a8b338eaded4">insert_one_options</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad06243f038cc638842a29faa6e3918ff">operator=</a> (<a class="el" href="#aff6494df75b40a0b8f06a8b338eaded4">insert_one_options</a> &amp;&amp;other) noexcept</td></tr>
+<tr class="memdesc:ad06243f038cc638842a29faa6e3918ff"><td class="mdescLeft">&#160;</td><td class="mdescRight">Move assignment.  <br /></td></tr>
+<tr class="memitem:a2af91b1d9ad3f1c9c748d4aa467e960b" id="r_a2af91b1d9ad3f1c9c748d4aa467e960b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#aff6494df75b40a0b8f06a8b338eaded4">insert_one_options</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2af91b1d9ad3f1c9c748d4aa467e960b">operator=</a> (<a class="el" href="#aff6494df75b40a0b8f06a8b338eaded4">insert_one_options</a> const &amp;other)</td></tr>
+<tr class="memdesc:a2af91b1d9ad3f1c9c748d4aa467e960b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Copy assignment.  <br /></td></tr>
+<tr class="memitem:a34e705452cad599c529c5ed1ba1ff783" id="r_a34e705452cad599c529c5ed1ba1ff783"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classbsoncxx_1_1v1_1_1stdx_1_1optional.html">bsoncxx::v1::stdx::optional</a>&lt; <a class="el" href="classmongocxx_1_1v1_1_1read__concern.html">v1::read_concern</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a34e705452cad599c529c5ed1ba1ff783">read_concern</a> () const</td></tr>
+<tr class="memdesc:a34e705452cad599c529c5ed1ba1ff783"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the current "readConcern" field.  <br /></td></tr>
+<tr class="memitem:a32a76bb8619e3952251a62b277d50173" id="r_a32a76bb8619e3952251a62b277d50173"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#aff6494df75b40a0b8f06a8b338eaded4">insert_one_options</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a32a76bb8619e3952251a62b277d50173">read_concern</a> (<a class="el" href="classmongocxx_1_1v1_1_1read__concern.html">v1::read_concern</a> v)</td></tr>
+<tr class="memdesc:a32a76bb8619e3952251a62b277d50173"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the "readConcern" field.  <br /></td></tr>
+<tr class="memitem:a8e3557e5a2bba62f539e7f6638733a7e" id="r_a8e3557e5a2bba62f539e7f6638733a7e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classbsoncxx_1_1v1_1_1stdx_1_1optional.html">bsoncxx::v1::stdx::optional</a>&lt; <a class="el" href="classmongocxx_1_1v1_1_1write__concern.html">v1::write_concern</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8e3557e5a2bba62f539e7f6638733a7e">write_concern</a> () const</td></tr>
+<tr class="memdesc:a8e3557e5a2bba62f539e7f6638733a7e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the current "writeConcern" field.  <br /></td></tr>
+<tr class="memitem:a5b31ecc5521fec2fe1819d48dc2dd251" id="r_a5b31ecc5521fec2fe1819d48dc2dd251"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#aff6494df75b40a0b8f06a8b338eaded4">insert_one_options</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5b31ecc5521fec2fe1819d48dc2dd251">write_concern</a> (<a class="el" href="classmongocxx_1_1v1_1_1write__concern.html">v1::write_concern</a> v)</td></tr>
+<tr class="memdesc:a5b31ecc5521fec2fe1819d48dc2dd251"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the "writeConcern" field.  <br /></td></tr>
+</table>
+<a name="doc-constructors" id="doc-constructors"></a><h2 id="header-doc-constructors" class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="ac9e8df71c4f89da8573892c9aa56a9c5" name="ac9e8df71c4f89da8573892c9aa56a9c5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac9e8df71c4f89da8573892c9aa56a9c5">&#9670;&#160;</a></span>~insert_one_options()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">mongocxx::v1::insert_one_options::~insert_one_options </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Destroy this object. </p>
+<dl class="section warning"><dt>Warning</dt><dd>Invalidates all associated views. </dd></dl>
+
+</div>
+</div>
+<a id="aff6494df75b40a0b8f06a8b338eaded4" name="aff6494df75b40a0b8f06a8b338eaded4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aff6494df75b40a0b8f06a8b338eaded4">&#9670;&#160;</a></span>insert_one_options() <span class="overload">[1/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">mongocxx::v1::insert_one_options::insert_one_options </td>
+          <td>(</td>
+          <td class="paramtype">insert_one_options &amp;&amp;</td>          <td class="paramname"><span class="paramname"><em>other</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel noexcept">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Move constructor. </p>
+<dl class="section user"><dt>Postconditions:</dt><dd><ul>
+<li><span class="tt">other</span> is in an assign-or-destroy-only state. </li>
+</ul>
+</dd></dl>
+
+</div>
+</div>
+<a id="a990129a30044c276dd01f187bd5ba97c" name="a990129a30044c276dd01f187bd5ba97c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a990129a30044c276dd01f187bd5ba97c">&#9670;&#160;</a></span>insert_one_options() <span class="overload">[2/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">mongocxx::v1::insert_one_options::insert_one_options </td>
+          <td>(</td>
+          <td class="paramtype">insert_one_options const &amp;</td>          <td class="paramname"><span class="paramname"><em>other</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Copy construction. </p>
+
+</div>
+</div>
+<a id="a7094e181fcc43d7b5ce1d6a023a07914" name="a7094e181fcc43d7b5ce1d6a023a07914"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7094e181fcc43d7b5ce1d6a023a07914">&#9670;&#160;</a></span>insert_one_options() <span class="overload">[3/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">mongocxx::v1::insert_one_options::insert_one_options </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Default initialization. </p>
+<dl class="section user"><dt>Postconditions:</dt><dd><ul>
+<li>All supported fields are "unset" or zero-initialized. </li>
+</ul>
+</dd></dl>
+
+</div>
+</div>
+<a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Member Function Documentation</h2>
+<a id="a28dfb4e62055ac77747dc2c4dd1894c7" name="a28dfb4e62055ac77747dc2c4dd1894c7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a28dfb4e62055ac77747dc2c4dd1894c7">&#9670;&#160;</a></span>bypass_document_validation() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classbsoncxx_1_1v1_1_1stdx_1_1optional.html">bsoncxx::v1::stdx::optional</a>&lt; bool &gt; mongocxx::v1::insert_one_options::bypass_document_validation </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Return the current "bypassDocumentValidation" field. </p>
+
+</div>
+</div>
+<a id="a622b1c30e3aec263823979f2eb0d4cf6" name="a622b1c30e3aec263823979f2eb0d4cf6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a622b1c30e3aec263823979f2eb0d4cf6">&#9670;&#160;</a></span>bypass_document_validation() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#aff6494df75b40a0b8f06a8b338eaded4">insert_one_options</a> &amp; mongocxx::v1::insert_one_options::bypass_document_validation </td>
+          <td>(</td>
+          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>v</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Set the "bypassDocumentValidation" field. </p>
+
+</div>
+</div>
+<a id="ac1cdce72de9f498cf533bc489661a2f1" name="ac1cdce72de9f498cf533bc489661a2f1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac1cdce72de9f498cf533bc489661a2f1">&#9670;&#160;</a></span>comment() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classbsoncxx_1_1v1_1_1stdx_1_1optional.html">bsoncxx::v1::stdx::optional</a>&lt; <a class="el" href="classbsoncxx_1_1v1_1_1types_1_1view.html">bsoncxx::v1::types::view</a> &gt; mongocxx::v1::insert_one_options::comment </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Return the current "comment" field. </p>
+
+</div>
+</div>
+<a id="a3458b2ebf752e7e8b2ea556887bbe012" name="a3458b2ebf752e7e8b2ea556887bbe012"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3458b2ebf752e7e8b2ea556887bbe012">&#9670;&#160;</a></span>comment() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#aff6494df75b40a0b8f06a8b338eaded4">insert_one_options</a> &amp; mongocxx::v1::insert_one_options::comment </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classbsoncxx_1_1v1_1_1types_1_1value.html">bsoncxx::v1::types::value</a></td>          <td class="paramname"><span class="paramname"><em>v</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Set the "comment" field. </p>
+
+</div>
+</div>
+<a id="ad06243f038cc638842a29faa6e3918ff" name="ad06243f038cc638842a29faa6e3918ff"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad06243f038cc638842a29faa6e3918ff">&#9670;&#160;</a></span>operator=() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#aff6494df75b40a0b8f06a8b338eaded4">insert_one_options</a> &amp; mongocxx::v1::insert_one_options::operator= </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="#aff6494df75b40a0b8f06a8b338eaded4">insert_one_options</a> &amp;&amp;</td>          <td class="paramname"><span class="paramname"><em>other</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel noexcept">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Move assignment. </p>
+<dl class="section user"><dt>Postconditions:</dt><dd><ul>
+<li><span class="tt">other</span> is in an assign-or-destroy-only state. </li>
+</ul>
+</dd></dl>
+
+</div>
+</div>
+<a id="a2af91b1d9ad3f1c9c748d4aa467e960b" name="a2af91b1d9ad3f1c9c748d4aa467e960b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2af91b1d9ad3f1c9c748d4aa467e960b">&#9670;&#160;</a></span>operator=() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#aff6494df75b40a0b8f06a8b338eaded4">insert_one_options</a> &amp; mongocxx::v1::insert_one_options::operator= </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="#aff6494df75b40a0b8f06a8b338eaded4">insert_one_options</a> const &amp;</td>          <td class="paramname"><span class="paramname"><em>other</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Copy assignment. </p>
+
+</div>
+</div>
+<a id="a34e705452cad599c529c5ed1ba1ff783" name="a34e705452cad599c529c5ed1ba1ff783"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a34e705452cad599c529c5ed1ba1ff783">&#9670;&#160;</a></span>read_concern() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classbsoncxx_1_1v1_1_1stdx_1_1optional.html">bsoncxx::v1::stdx::optional</a>&lt; <a class="el" href="classmongocxx_1_1v1_1_1read__concern.html">v1::read_concern</a> &gt; mongocxx::v1::insert_one_options::read_concern </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Return the current "readConcern" field. </p>
+
+</div>
+</div>
+<a id="a32a76bb8619e3952251a62b277d50173" name="a32a76bb8619e3952251a62b277d50173"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a32a76bb8619e3952251a62b277d50173">&#9670;&#160;</a></span>read_concern() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#aff6494df75b40a0b8f06a8b338eaded4">insert_one_options</a> &amp; mongocxx::v1::insert_one_options::read_concern </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classmongocxx_1_1v1_1_1read__concern.html">v1::read_concern</a></td>          <td class="paramname"><span class="paramname"><em>v</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Set the "readConcern" field. </p>
+
+</div>
+</div>
+<a id="a8e3557e5a2bba62f539e7f6638733a7e" name="a8e3557e5a2bba62f539e7f6638733a7e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8e3557e5a2bba62f539e7f6638733a7e">&#9670;&#160;</a></span>write_concern() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classbsoncxx_1_1v1_1_1stdx_1_1optional.html">bsoncxx::v1::stdx::optional</a>&lt; <a class="el" href="classmongocxx_1_1v1_1_1write__concern.html">v1::write_concern</a> &gt; mongocxx::v1::insert_one_options::write_concern </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Return the current "writeConcern" field. </p>
+
+</div>
+</div>
+<a id="a5b31ecc5521fec2fe1819d48dc2dd251" name="a5b31ecc5521fec2fe1819d48dc2dd251"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5b31ecc5521fec2fe1819d48dc2dd251">&#9670;&#160;</a></span>write_concern() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#aff6494df75b40a0b8f06a8b338eaded4">insert_one_options</a> &amp; mongocxx::v1::insert_one_options::write_concern </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classmongocxx_1_1v1_1_1write__concern.html">v1::write_concern</a></td>          <td class="paramname"><span class="paramname"><em>v</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Set the "writeConcern" field. </p>
+
+</div>
+</div>
+<hr/>The documentation for this class was generated from the following file:<ul>
+<li>mongocxx/v1/<a class="el" href="insert__one__options_8hpp_source.html">insert_one_options.hpp</a></li>
+</ul>
+</div><!-- contents -->
+</div><!-- doc-content -->
+<div id="page-nav" class="page-nav-panel">
+<div id="page-nav-resize-handle"></div>
+<div id="page-nav-tree">
+<div id="page-nav-contents">
+</div><!-- page-nav-contents -->
+</div><!-- page-nav-tree -->
+</div><!-- page-nav -->
+</div><!-- container -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a href="namespacemongocxx.html">mongocxx</a></li><li class="navelem"><a href="namespacemongocxx_1_1v1.html">v1</a></li><li class="navelem"><a href="classmongocxx_1_1v1_1_1insert__one__options.html">insert_one_options</a></li>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.15.0 </li>
+  </ul>
+</div>
+</body>
+</html>

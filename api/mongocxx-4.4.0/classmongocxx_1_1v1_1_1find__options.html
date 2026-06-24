@@ -1,0 +1,1216 @@
+<!-- HTML header for doxygen 1.15.0-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-US">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.15.0"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>MongoDB C++ Driver: mongocxx::v1::find_options Class Reference</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript">var page_layout=1;</script>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<script type="text/javascript" src="clipboard.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<script type="text/javascript" src="cookie.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/javascript">
+  $(function() { init_search(); });
+</script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+<link href="doxygen-extra.css" rel="stylesheet" type="text/css"/>
+<!-- Mixpanel Tracker -->
+<script type="text/javascript">
+  (function(e,c){if(!c.__SV){var l,h;window.mixpanel=c;c._i=[];c.init=function(q,r,f){function t(d,a){var g=a.split(".");2==g.length&&(d=d[g[0]],a=g[1]);d[a]=function(){d.push([a].concat(Array.prototype.slice.call(arguments,0)))}}var b=c;"undefined"!==typeof f?b=c[f]=[]:f="mixpanel";b.people=b.people||[];b.toString=function(d){var a="mixpanel";"mixpanel"!==f&&(a+="."+f);d||(a+=" (stub)");return a};b.people.toString=function(){return b.toString(1)+".people (stub)"};l="disable time_event track track_pageview track_links track_forms track_with_groups add_group set_group remove_group register register_once alias unregister identify name_tag set_config reset opt_in_tracking opt_out_tracking has_opted_in_tracking has_opted_out_tracking clear_opt_in_out_tracking start_batch_senders start_session_recording stop_session_recording people.set people.set_once people.unset people.increment people.append people.union people.track_charge people.clear_charges people.delete_user people.remove".split(" ");
+  for(h=0;h<l.length;h++)t(b,l[h]);var n="set set_once union unset remove delete".split(" ");b.get_group=function(){function d(p){a[p]=function(){b.push([g,[p].concat(Array.prototype.slice.call(arguments,0))])}}for(var a={},g=["get_group"].concat(Array.prototype.slice.call(arguments,0)),m=0;m<n.length;m++)d(n[m]);return a};c._i.push([q,r,f])};c.__SV=1.2;var k=e.createElement("script");k.type="text/javascript";k.async=!0;k.src="undefined"!==typeof MIXPANEL_CUSTOM_LIB_URL?MIXPANEL_CUSTOM_LIB_URL:"file:"===
+  e.location.protocol&&"//cdn.mxpnl.com/libs/mixpanel-2-latest.min.js".match(/^\/\//)?"https://cdn.mxpnl.com/libs/mixpanel-2-latest.min.js":"//cdn.mxpnl.com/libs/mixpanel-2-latest.min.js";e=e.getElementsByTagName("script")[0];e.parentNode.insertBefore(k,e)}})(document,window.mixpanel||[]); mixpanel.init('f2a38f26e5cc0eee429a9276f296c118', {
+    autocapture: true,
+    record_sessions_percent: 0,
+  })
+</script>
+<!-- patch-apidocs-current-redirects: mongocxx-4.4.0 -->
+<link rel="canonical" href="https://mongocxx.org/api/mongocxx-4.4.0/classmongocxx_1_1v1_1_1find__options.html"/>
+<script type="text/javascript">
+if (window.location.pathname.startsWith("/api/current/")) {
+  window.location.replace(
+    window.location.href.replace("/api/current/", "/api/mongocxx-4.4.0/")
+  )
+}
+</script>
+</head>
+<body>
+<div id="side-nav" class="ui-resizable side-nav-resizable"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr id="projectrow">
+  <td id="projectalign">
+   <div id="projectname">MongoDB C++ Driver<span id="projectnumber">&#160;4.4.0</span>
+   </div>
+  </td>
+ </tr>
+   <tr><td colspan="2">        <div id="MSearchBox" class="MSearchBoxInactive">
+        <span class="left">
+          <span id="MSearchSelect" class="search-icon" onmouseover="return searchBox.OnSearchSelectShow()" onmouseout="return searchBox.OnSearchSelectHide()"><span class="search-icon-dropdown"></span></span>
+          <input type="text" id="MSearchField" value="" placeholder="Search" accesskey="S"
+               onfocus="searchBox.OnSearchFieldFocus(true)" 
+               onblur="searchBox.OnSearchFieldFocus(false)" 
+               onkeyup="searchBox.OnSearchFieldChange(event)"/>
+          </span><span class="right">
+            <a id="MSearchClose" href="javascript:searchBox.CloseResultsWindow()"><div id="MSearchCloseImg" class="close-icon"></div></a>
+          </span>
+        </div>
+</td></tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Generated by Doxygen 1.15.0 -->
+<script type="text/javascript">
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+</script>
+<script type="text/javascript">
+$(function() { codefold.init(); });
+</script>
+</div><!-- top -->
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+$(function(){initNavTree('classmongocxx_1_1v1_1_1find__options.html','','classmongocxx_1_1v1_1_1find__options-members'); });
+</script>
+<div id="container">
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Loading...</div>
+<div class="SRStatus" id="Searching">Searching...</div>
+<div class="SRStatus" id="NoMatches">No Matches</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="header">
+  <div class="headertitle"><div class="title">mongocxx::v1::find_options Class Reference</div></div>
+</div><!--header-->
+<div class="contents">
+
+<p><code>#include &lt;<a class="el" href="find__options_8hpp_source.html">mongocxx/v1/find_options.hpp</a>&gt;</code></p>
+<a name="details" id="details"></a><h2 id="header-details" class="groupheader">Description</h2>
+<div class="textblock"><p>Options for a "find" command. </p>
+<p>Supported fields include:</p><ul>
+<li><span class="tt"><a class="el" href="#a72b0a4b55456782c0622d535a1dfe4d7" title="Set the &quot;allowDiskUse&quot; field.">allow_disk_use</a></span> ("allowDiskUse")</li>
+<li><span class="tt"><a class="el" href="#a83fa7273c81fd21b904a13316b64f4b0" title="Set the &quot;allowPartialResults&quot; field.">allow_partial_results</a></span> ("allowPartialResults")</li>
+<li><span class="tt"><a class="el" href="#a4da94d78992852a1a1adda76e58b62ab" title="Set the &quot;batchSize&quot; field.">batch_size</a></span> ("batchSize")</li>
+<li><span class="tt"><a class="el" href="#a62cbce9eec9be22ae9d37e9bbeda31cd" title="Set the &quot;collation&quot; field.">collation</a></span></li>
+<li><span class="tt"><a class="el" href="#a06ab46c54d4a0986444175b6b74d4206" title="Set the &quot;comment&quot; field.">comment</a></span></li>
+<li><span class="tt"><a class="el" href="#af39e6b3a2d4273cf61c1f429ec97ff55" title="Set the &quot;cursorType&quot; field.">cursor_type</a></span> ("cursorType")</li>
+<li><span class="tt"><a class="el" href="classmongocxx_1_1v1_1_1hint.html" title="Options related to a MongoDB query hint.">hint</a></span></li>
+<li><span class="tt"><a class="el" href="#ae85e32fe93a79b61b111308b33dc2fff" title="Set the &quot;let&quot; field.">let</a></span></li>
+<li><span class="tt"><a class="el" href="#abf4ed87d101e0de717665a33c88d5e5b" title="Set the &quot;limit&quot; field.">limit</a></span></li>
+<li><span class="tt"><a class="el" href="#a7540a92b98b1f04d53b59e3f20376648" title="Set the &quot;maxAwaitTimeMS&quot; field.">max_await_time</a></span> ("maxAwaitTimeMS")</li>
+<li><span class="tt"><a class="el" href="#a76d929be9c9d9d33153165c5d1be2d54" title="Set the &quot;maxTimeMS&quot; field.">max_time</a></span> ("maxTimeMS")</li>
+<li><span class="tt"><a class="el" href="#a1f9702d36e6073999d3d57f78cd954fa" title="Set the &quot;max&quot; field.">max</a></span></li>
+<li><span class="tt"><a class="el" href="#acb376ef8987c79986dca7e302015fcb1" title="Set the &quot;min&quot; field.">min</a></span></li>
+<li><span class="tt"><a class="el" href="#a87ccd8b1bae571ce6dd68e1347a33c09" title="Set the &quot;noCursorTimeout&quot; field.">no_cursor_timeout</a></span> ("noCursorTimeout")</li>
+<li><span class="tt"><a class="el" href="#a72c47a78df2f60a18c27ebf1e15e6e3e" title="Set the &quot;projection&quot; field.">projection</a></span></li>
+<li><span class="tt"><a class="el" href="classmongocxx_1_1v1_1_1read__preference.html" title="Options related to a MongoDB Read Preference.">read_preference</a></span> ("readPreference")</li>
+<li><span class="tt"><a class="el" href="classmongocxx_1_1v1_1_1read__concern.html" title="Options related to a MongoDB Read Concern.">read_concern</a></span> ("readConcern")</li>
+<li><span class="tt"><a class="el" href="#a58e55863279aea6c252627879679e9d9" title="Set the &quot;returnKey&quot; field.">return_key</a></span> ("returnKey")</li>
+<li><span class="tt"><a class="el" href="#a379dec7ed1183e0723ef8d2f118816af" title="Set the &quot;showRecordId&quot; field.">show_record_id</a></span> ("showRecordId")</li>
+<li><span class="tt"><a class="el" href="#a8d8f190504d6de7f121e5ad912957d0c" title="Set the &quot;skip&quot; field.">skip</a></span></li>
+<li><span class="tt"><a class="el" href="#a6f757ca64a3791c5ae9f2bd33fc845b3" title="Set the &quot;sort&quot; field.">sort</a></span></li>
+</ul>
+<dl class="section see"><dt>See also</dt><dd><ul>
+<li><a href="https://www.mongodb.com/docs/manual/reference/command/find/"><span class="tt">find</span> (database command) (MongoDB Manual)</a> </li>
+</ul>
+</dd></dl>
+</div><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
+Public Member Functions</h2></td></tr>
+<tr class="memitem:a3b85e0502d7ee95340aab3518b880b3e" id="r_a3b85e0502d7ee95340aab3518b880b3e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3b85e0502d7ee95340aab3518b880b3e">find_options</a> ()</td></tr>
+<tr class="memdesc:a3b85e0502d7ee95340aab3518b880b3e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default initialization.  <br /></td></tr>
+<tr class="memitem:a1ee0ff8c95b2baf5babf88fe83265f75" id="r_a1ee0ff8c95b2baf5babf88fe83265f75"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1ee0ff8c95b2baf5babf88fe83265f75">find_options</a> (find_options &amp;&amp;other) noexcept</td></tr>
+<tr class="memdesc:a1ee0ff8c95b2baf5babf88fe83265f75"><td class="mdescLeft">&#160;</td><td class="mdescRight">Move constructor.  <br /></td></tr>
+<tr class="memitem:a3d9993357ad8fc8f4e841b06b704f15a" id="r_a3d9993357ad8fc8f4e841b06b704f15a"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3d9993357ad8fc8f4e841b06b704f15a">find_options</a> (find_options const &amp;other)</td></tr>
+<tr class="memdesc:a3d9993357ad8fc8f4e841b06b704f15a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Copy construction.  <br /></td></tr>
+<tr class="memitem:a6946508312ca6b876d21aef29c20e174" id="r_a6946508312ca6b876d21aef29c20e174"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6946508312ca6b876d21aef29c20e174">~find_options</a> ()</td></tr>
+<tr class="memdesc:a6946508312ca6b876d21aef29c20e174"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destroy this object.  <br /></td></tr>
+<tr class="memitem:ae349b18952f811e517bd121d50ecc859" id="r_ae349b18952f811e517bd121d50ecc859"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classbsoncxx_1_1v1_1_1stdx_1_1optional.html">bsoncxx::v1::stdx::optional</a>&lt; bool &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae349b18952f811e517bd121d50ecc859">allow_disk_use</a> () const</td></tr>
+<tr class="memdesc:ae349b18952f811e517bd121d50ecc859"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the current "allowDiskUse" field.  <br /></td></tr>
+<tr class="memitem:a72b0a4b55456782c0622d535a1dfe4d7" id="r_a72b0a4b55456782c0622d535a1dfe4d7"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#a1ee0ff8c95b2baf5babf88fe83265f75">find_options</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a72b0a4b55456782c0622d535a1dfe4d7">allow_disk_use</a> (bool v)</td></tr>
+<tr class="memdesc:a72b0a4b55456782c0622d535a1dfe4d7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the "allowDiskUse" field.  <br /></td></tr>
+<tr class="memitem:a241558a567f0145dfe99d33768e6efce" id="r_a241558a567f0145dfe99d33768e6efce"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classbsoncxx_1_1v1_1_1stdx_1_1optional.html">bsoncxx::v1::stdx::optional</a>&lt; bool &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a241558a567f0145dfe99d33768e6efce">allow_partial_results</a> () const</td></tr>
+<tr class="memdesc:a241558a567f0145dfe99d33768e6efce"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the current "allowPartialResults" field.  <br /></td></tr>
+<tr class="memitem:a83fa7273c81fd21b904a13316b64f4b0" id="r_a83fa7273c81fd21b904a13316b64f4b0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#a1ee0ff8c95b2baf5babf88fe83265f75">find_options</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a83fa7273c81fd21b904a13316b64f4b0">allow_partial_results</a> (bool v)</td></tr>
+<tr class="memdesc:a83fa7273c81fd21b904a13316b64f4b0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the "allowPartialResults" field.  <br /></td></tr>
+<tr class="memitem:ae03e76d9b9fc9e99316aabfbd8c004ba" id="r_ae03e76d9b9fc9e99316aabfbd8c004ba"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classbsoncxx_1_1v1_1_1stdx_1_1optional.html">bsoncxx::v1::stdx::optional</a>&lt; std::int32_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae03e76d9b9fc9e99316aabfbd8c004ba">batch_size</a> () const</td></tr>
+<tr class="memdesc:ae03e76d9b9fc9e99316aabfbd8c004ba"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the current "batchSize" field.  <br /></td></tr>
+<tr class="memitem:a4da94d78992852a1a1adda76e58b62ab" id="r_a4da94d78992852a1a1adda76e58b62ab"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#a1ee0ff8c95b2baf5babf88fe83265f75">find_options</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4da94d78992852a1a1adda76e58b62ab">batch_size</a> (std::int32_t v)</td></tr>
+<tr class="memdesc:a4da94d78992852a1a1adda76e58b62ab"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the "batchSize" field.  <br /></td></tr>
+<tr class="memitem:a14b203222371850d794d215b26bf46b6" id="r_a14b203222371850d794d215b26bf46b6"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classbsoncxx_1_1v1_1_1stdx_1_1optional.html">bsoncxx::v1::stdx::optional</a>&lt; <a class="el" href="classbsoncxx_1_1v1_1_1document_1_1view.html">bsoncxx::v1::document::view</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a14b203222371850d794d215b26bf46b6">collation</a> () const</td></tr>
+<tr class="memdesc:a14b203222371850d794d215b26bf46b6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the current "collation" field.  <br /></td></tr>
+<tr class="memitem:a62cbce9eec9be22ae9d37e9bbeda31cd" id="r_a62cbce9eec9be22ae9d37e9bbeda31cd"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#a1ee0ff8c95b2baf5babf88fe83265f75">find_options</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a62cbce9eec9be22ae9d37e9bbeda31cd">collation</a> (<a class="el" href="classbsoncxx_1_1v1_1_1document_1_1value.html">bsoncxx::v1::document::value</a> v)</td></tr>
+<tr class="memdesc:a62cbce9eec9be22ae9d37e9bbeda31cd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the "collation" field.  <br /></td></tr>
+<tr class="memitem:aa81b659e30dc4e683d1bc8f3bd184e30" id="r_aa81b659e30dc4e683d1bc8f3bd184e30"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classbsoncxx_1_1v1_1_1stdx_1_1optional.html">bsoncxx::v1::stdx::optional</a>&lt; <a class="el" href="classbsoncxx_1_1v1_1_1types_1_1view.html">bsoncxx::v1::types::view</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa81b659e30dc4e683d1bc8f3bd184e30">comment</a> () const</td></tr>
+<tr class="memdesc:aa81b659e30dc4e683d1bc8f3bd184e30"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the current "comment" field.  <br /></td></tr>
+<tr class="memitem:a06ab46c54d4a0986444175b6b74d4206" id="r_a06ab46c54d4a0986444175b6b74d4206"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#a1ee0ff8c95b2baf5babf88fe83265f75">find_options</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a06ab46c54d4a0986444175b6b74d4206">comment</a> (<a class="el" href="classbsoncxx_1_1v1_1_1types_1_1value.html">bsoncxx::v1::types::value</a> v)</td></tr>
+<tr class="memdesc:a06ab46c54d4a0986444175b6b74d4206"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the "comment" field.  <br /></td></tr>
+<tr class="memitem:ac8c9e454ba597c3e708ca5d59a633dbb" id="r_ac8c9e454ba597c3e708ca5d59a633dbb"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classbsoncxx_1_1v1_1_1stdx_1_1optional.html">bsoncxx::v1::stdx::optional</a>&lt; <a class="el" href="classmongocxx_1_1v1_1_1cursor.html#a7163beb5661a455c975a6bc7ac2e211e">cursor::type</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac8c9e454ba597c3e708ca5d59a633dbb">cursor_type</a> () const</td></tr>
+<tr class="memdesc:ac8c9e454ba597c3e708ca5d59a633dbb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the current "cursorType" field.  <br /></td></tr>
+<tr class="memitem:af39e6b3a2d4273cf61c1f429ec97ff55" id="r_af39e6b3a2d4273cf61c1f429ec97ff55"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#a1ee0ff8c95b2baf5babf88fe83265f75">find_options</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af39e6b3a2d4273cf61c1f429ec97ff55">cursor_type</a> (<a class="el" href="classmongocxx_1_1v1_1_1cursor.html#a7163beb5661a455c975a6bc7ac2e211e">v1::cursor::type</a> v)</td></tr>
+<tr class="memdesc:af39e6b3a2d4273cf61c1f429ec97ff55"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the "cursorType" field.  <br /></td></tr>
+<tr class="memitem:a2ad348b7a3669eca1ca06a260586cc6f" id="r_a2ad348b7a3669eca1ca06a260586cc6f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classbsoncxx_1_1v1_1_1stdx_1_1optional.html">bsoncxx::v1::stdx::optional</a>&lt; <a class="el" href="classmongocxx_1_1v1_1_1hint.html">v1::hint</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2ad348b7a3669eca1ca06a260586cc6f">hint</a> () const</td></tr>
+<tr class="memdesc:a2ad348b7a3669eca1ca06a260586cc6f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the current "hint" field.  <br /></td></tr>
+<tr class="memitem:a00c83baea3d74b84564d67633631e140" id="r_a00c83baea3d74b84564d67633631e140"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#a1ee0ff8c95b2baf5babf88fe83265f75">find_options</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a00c83baea3d74b84564d67633631e140">hint</a> (<a class="el" href="classmongocxx_1_1v1_1_1hint.html">v1::hint</a> v)</td></tr>
+<tr class="memdesc:a00c83baea3d74b84564d67633631e140"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the "hint" field.  <br /></td></tr>
+<tr class="memitem:a176d588247bdce3b8275219ac489fe67" id="r_a176d588247bdce3b8275219ac489fe67"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classbsoncxx_1_1v1_1_1stdx_1_1optional.html">bsoncxx::v1::stdx::optional</a>&lt; <a class="el" href="classbsoncxx_1_1v1_1_1document_1_1view.html">bsoncxx::v1::document::view</a> &gt; const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a176d588247bdce3b8275219ac489fe67">let</a> () const</td></tr>
+<tr class="memdesc:a176d588247bdce3b8275219ac489fe67"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the current "let" field.  <br /></td></tr>
+<tr class="memitem:ae85e32fe93a79b61b111308b33dc2fff" id="r_ae85e32fe93a79b61b111308b33dc2fff"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#a1ee0ff8c95b2baf5babf88fe83265f75">find_options</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae85e32fe93a79b61b111308b33dc2fff">let</a> (<a class="el" href="classbsoncxx_1_1v1_1_1document_1_1value.html">bsoncxx::v1::document::value</a> v)</td></tr>
+<tr class="memdesc:ae85e32fe93a79b61b111308b33dc2fff"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the "let" field.  <br /></td></tr>
+<tr class="memitem:a73e9b4d7efaf0e3b9d7ab4c076024903" id="r_a73e9b4d7efaf0e3b9d7ab4c076024903"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classbsoncxx_1_1v1_1_1stdx_1_1optional.html">bsoncxx::v1::stdx::optional</a>&lt; std::int64_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a73e9b4d7efaf0e3b9d7ab4c076024903">limit</a> () const</td></tr>
+<tr class="memdesc:a73e9b4d7efaf0e3b9d7ab4c076024903"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the current "limit" field.  <br /></td></tr>
+<tr class="memitem:abf4ed87d101e0de717665a33c88d5e5b" id="r_abf4ed87d101e0de717665a33c88d5e5b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#a1ee0ff8c95b2baf5babf88fe83265f75">find_options</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abf4ed87d101e0de717665a33c88d5e5b">limit</a> (std::int64_t v)</td></tr>
+<tr class="memdesc:abf4ed87d101e0de717665a33c88d5e5b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the "limit" field.  <br /></td></tr>
+<tr class="memitem:af2d8c053b0fe6e6802cad4828d010be0" id="r_af2d8c053b0fe6e6802cad4828d010be0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classbsoncxx_1_1v1_1_1stdx_1_1optional.html">bsoncxx::v1::stdx::optional</a>&lt; <a class="el" href="classbsoncxx_1_1v1_1_1document_1_1view.html">bsoncxx::v1::document::view</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af2d8c053b0fe6e6802cad4828d010be0">max</a> () const</td></tr>
+<tr class="memdesc:af2d8c053b0fe6e6802cad4828d010be0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the current "max" field.  <br /></td></tr>
+<tr class="memitem:a1f9702d36e6073999d3d57f78cd954fa" id="r_a1f9702d36e6073999d3d57f78cd954fa"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#a1ee0ff8c95b2baf5babf88fe83265f75">find_options</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1f9702d36e6073999d3d57f78cd954fa">max</a> (<a class="el" href="classbsoncxx_1_1v1_1_1document_1_1value.html">bsoncxx::v1::document::value</a> v)</td></tr>
+<tr class="memdesc:a1f9702d36e6073999d3d57f78cd954fa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the "max" field.  <br /></td></tr>
+<tr class="memitem:a33570527e3661405767cb934532cafbb" id="r_a33570527e3661405767cb934532cafbb"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classbsoncxx_1_1v1_1_1stdx_1_1optional.html">bsoncxx::v1::stdx::optional</a>&lt; std::chrono::milliseconds &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a33570527e3661405767cb934532cafbb">max_await_time</a> () const</td></tr>
+<tr class="memdesc:a33570527e3661405767cb934532cafbb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the current "maxAwaitTimeMS" field.  <br /></td></tr>
+<tr class="memitem:a7540a92b98b1f04d53b59e3f20376648" id="r_a7540a92b98b1f04d53b59e3f20376648"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#a1ee0ff8c95b2baf5babf88fe83265f75">find_options</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7540a92b98b1f04d53b59e3f20376648">max_await_time</a> (std::chrono::milliseconds v)</td></tr>
+<tr class="memdesc:a7540a92b98b1f04d53b59e3f20376648"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the "maxAwaitTimeMS" field.  <br /></td></tr>
+<tr class="memitem:a36baab4075043972766ea6dcbd6b4867" id="r_a36baab4075043972766ea6dcbd6b4867"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classbsoncxx_1_1v1_1_1stdx_1_1optional.html">bsoncxx::v1::stdx::optional</a>&lt; std::chrono::milliseconds &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a36baab4075043972766ea6dcbd6b4867">max_time</a> () const</td></tr>
+<tr class="memdesc:a36baab4075043972766ea6dcbd6b4867"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the current "maxTimeMS" field.  <br /></td></tr>
+<tr class="memitem:a76d929be9c9d9d33153165c5d1be2d54" id="r_a76d929be9c9d9d33153165c5d1be2d54"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#a1ee0ff8c95b2baf5babf88fe83265f75">find_options</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a76d929be9c9d9d33153165c5d1be2d54">max_time</a> (std::chrono::milliseconds v)</td></tr>
+<tr class="memdesc:a76d929be9c9d9d33153165c5d1be2d54"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the "maxTimeMS" field.  <br /></td></tr>
+<tr class="memitem:a406f5a8634b0ee10e33724e915b770d8" id="r_a406f5a8634b0ee10e33724e915b770d8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classbsoncxx_1_1v1_1_1stdx_1_1optional.html">bsoncxx::v1::stdx::optional</a>&lt; <a class="el" href="classbsoncxx_1_1v1_1_1document_1_1view.html">bsoncxx::v1::document::view</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a406f5a8634b0ee10e33724e915b770d8">min</a> () const</td></tr>
+<tr class="memdesc:a406f5a8634b0ee10e33724e915b770d8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the current "min" field.  <br /></td></tr>
+<tr class="memitem:acb376ef8987c79986dca7e302015fcb1" id="r_acb376ef8987c79986dca7e302015fcb1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#a1ee0ff8c95b2baf5babf88fe83265f75">find_options</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#acb376ef8987c79986dca7e302015fcb1">min</a> (<a class="el" href="classbsoncxx_1_1v1_1_1document_1_1value.html">bsoncxx::v1::document::value</a> v)</td></tr>
+<tr class="memdesc:acb376ef8987c79986dca7e302015fcb1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the "min" field.  <br /></td></tr>
+<tr class="memitem:ae14c9e144cedf3c7b4c635d7374e001a" id="r_ae14c9e144cedf3c7b4c635d7374e001a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classbsoncxx_1_1v1_1_1stdx_1_1optional.html">bsoncxx::v1::stdx::optional</a>&lt; bool &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae14c9e144cedf3c7b4c635d7374e001a">no_cursor_timeout</a> () const</td></tr>
+<tr class="memdesc:ae14c9e144cedf3c7b4c635d7374e001a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the current "noCursorTimeout" field.  <br /></td></tr>
+<tr class="memitem:a87ccd8b1bae571ce6dd68e1347a33c09" id="r_a87ccd8b1bae571ce6dd68e1347a33c09"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#a1ee0ff8c95b2baf5babf88fe83265f75">find_options</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a87ccd8b1bae571ce6dd68e1347a33c09">no_cursor_timeout</a> (bool v)</td></tr>
+<tr class="memdesc:a87ccd8b1bae571ce6dd68e1347a33c09"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the "noCursorTimeout" field.  <br /></td></tr>
+<tr class="memitem:a3b8d232c34ed509b34d3a17b2df8ad98" id="r_a3b8d232c34ed509b34d3a17b2df8ad98"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#a1ee0ff8c95b2baf5babf88fe83265f75">find_options</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3b8d232c34ed509b34d3a17b2df8ad98">operator=</a> (<a class="el" href="#a1ee0ff8c95b2baf5babf88fe83265f75">find_options</a> &amp;&amp;other) noexcept</td></tr>
+<tr class="memdesc:a3b8d232c34ed509b34d3a17b2df8ad98"><td class="mdescLeft">&#160;</td><td class="mdescRight">Move assignment.  <br /></td></tr>
+<tr class="memitem:a120bc890513a7ec82059730423695cd2" id="r_a120bc890513a7ec82059730423695cd2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#a1ee0ff8c95b2baf5babf88fe83265f75">find_options</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a120bc890513a7ec82059730423695cd2">operator=</a> (<a class="el" href="#a1ee0ff8c95b2baf5babf88fe83265f75">find_options</a> const &amp;other)</td></tr>
+<tr class="memdesc:a120bc890513a7ec82059730423695cd2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Copy assignment.  <br /></td></tr>
+<tr class="memitem:a2a87b5730d46e0871150ae16f98b4062" id="r_a2a87b5730d46e0871150ae16f98b4062"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classbsoncxx_1_1v1_1_1stdx_1_1optional.html">bsoncxx::v1::stdx::optional</a>&lt; <a class="el" href="classbsoncxx_1_1v1_1_1document_1_1view.html">bsoncxx::v1::document::view</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2a87b5730d46e0871150ae16f98b4062">projection</a> () const</td></tr>
+<tr class="memdesc:a2a87b5730d46e0871150ae16f98b4062"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the current "projection" field.  <br /></td></tr>
+<tr class="memitem:a72c47a78df2f60a18c27ebf1e15e6e3e" id="r_a72c47a78df2f60a18c27ebf1e15e6e3e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#a1ee0ff8c95b2baf5babf88fe83265f75">find_options</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a72c47a78df2f60a18c27ebf1e15e6e3e">projection</a> (<a class="el" href="classbsoncxx_1_1v1_1_1document_1_1value.html">bsoncxx::v1::document::value</a> v)</td></tr>
+<tr class="memdesc:a72c47a78df2f60a18c27ebf1e15e6e3e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the "projection" field.  <br /></td></tr>
+<tr class="memitem:a084279e9a00567cd241638e7c65d1fc7" id="r_a084279e9a00567cd241638e7c65d1fc7"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classbsoncxx_1_1v1_1_1stdx_1_1optional.html">bsoncxx::v1::stdx::optional</a>&lt; <a class="el" href="classmongocxx_1_1v1_1_1read__concern.html">v1::read_concern</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a084279e9a00567cd241638e7c65d1fc7">read_concern</a> () const</td></tr>
+<tr class="memdesc:a084279e9a00567cd241638e7c65d1fc7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the current "readConcern" field.  <br /></td></tr>
+<tr class="memitem:a4e4cbe7757d72d034382b2e0047dd7b2" id="r_a4e4cbe7757d72d034382b2e0047dd7b2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#a1ee0ff8c95b2baf5babf88fe83265f75">find_options</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4e4cbe7757d72d034382b2e0047dd7b2">read_concern</a> (<a class="el" href="classmongocxx_1_1v1_1_1read__concern.html">v1::read_concern</a> v)</td></tr>
+<tr class="memdesc:a4e4cbe7757d72d034382b2e0047dd7b2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the "readConcern" field.  <br /></td></tr>
+<tr class="memitem:a062f230ef502df5bdb7a31ef44d4c923" id="r_a062f230ef502df5bdb7a31ef44d4c923"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classbsoncxx_1_1v1_1_1stdx_1_1optional.html">bsoncxx::v1::stdx::optional</a>&lt; <a class="el" href="classmongocxx_1_1v1_1_1read__preference.html">v1::read_preference</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a062f230ef502df5bdb7a31ef44d4c923">read_preference</a> () const</td></tr>
+<tr class="memdesc:a062f230ef502df5bdb7a31ef44d4c923"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the current "readPreference" field.  <br /></td></tr>
+<tr class="memitem:a02c193e66fc4611910cbae7414bf1222" id="r_a02c193e66fc4611910cbae7414bf1222"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#a1ee0ff8c95b2baf5babf88fe83265f75">find_options</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a02c193e66fc4611910cbae7414bf1222">read_preference</a> (<a class="el" href="classmongocxx_1_1v1_1_1read__preference.html">v1::read_preference</a> v)</td></tr>
+<tr class="memdesc:a02c193e66fc4611910cbae7414bf1222"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the "readPreference" field.  <br /></td></tr>
+<tr class="memitem:a0c6fae9125dc764718e619a72c294c32" id="r_a0c6fae9125dc764718e619a72c294c32"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classbsoncxx_1_1v1_1_1stdx_1_1optional.html">bsoncxx::v1::stdx::optional</a>&lt; bool &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0c6fae9125dc764718e619a72c294c32">return_key</a> () const</td></tr>
+<tr class="memdesc:a0c6fae9125dc764718e619a72c294c32"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the current "returnKey" field.  <br /></td></tr>
+<tr class="memitem:a58e55863279aea6c252627879679e9d9" id="r_a58e55863279aea6c252627879679e9d9"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#a1ee0ff8c95b2baf5babf88fe83265f75">find_options</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a58e55863279aea6c252627879679e9d9">return_key</a> (bool v)</td></tr>
+<tr class="memdesc:a58e55863279aea6c252627879679e9d9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the "returnKey" field.  <br /></td></tr>
+<tr class="memitem:a09f319a7df51d4ac09c572511343d3e8" id="r_a09f319a7df51d4ac09c572511343d3e8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classbsoncxx_1_1v1_1_1stdx_1_1optional.html">bsoncxx::v1::stdx::optional</a>&lt; bool &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a09f319a7df51d4ac09c572511343d3e8">show_record_id</a> () const</td></tr>
+<tr class="memdesc:a09f319a7df51d4ac09c572511343d3e8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the current "showRecordId" field.  <br /></td></tr>
+<tr class="memitem:a379dec7ed1183e0723ef8d2f118816af" id="r_a379dec7ed1183e0723ef8d2f118816af"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#a1ee0ff8c95b2baf5babf88fe83265f75">find_options</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a379dec7ed1183e0723ef8d2f118816af">show_record_id</a> (bool v)</td></tr>
+<tr class="memdesc:a379dec7ed1183e0723ef8d2f118816af"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the "showRecordId" field.  <br /></td></tr>
+<tr class="memitem:a962e538c5e657970ca291240171df573" id="r_a962e538c5e657970ca291240171df573"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classbsoncxx_1_1v1_1_1stdx_1_1optional.html">bsoncxx::v1::stdx::optional</a>&lt; std::int64_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a962e538c5e657970ca291240171df573">skip</a> () const</td></tr>
+<tr class="memdesc:a962e538c5e657970ca291240171df573"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the current "skip" field.  <br /></td></tr>
+<tr class="memitem:a8d8f190504d6de7f121e5ad912957d0c" id="r_a8d8f190504d6de7f121e5ad912957d0c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#a1ee0ff8c95b2baf5babf88fe83265f75">find_options</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8d8f190504d6de7f121e5ad912957d0c">skip</a> (std::int64_t v)</td></tr>
+<tr class="memdesc:a8d8f190504d6de7f121e5ad912957d0c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the "skip" field.  <br /></td></tr>
+<tr class="memitem:a8d8c3fb8b98b5e01851bf1ff5990f428" id="r_a8d8c3fb8b98b5e01851bf1ff5990f428"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classbsoncxx_1_1v1_1_1stdx_1_1optional.html">bsoncxx::v1::stdx::optional</a>&lt; <a class="el" href="classbsoncxx_1_1v1_1_1document_1_1view.html">bsoncxx::v1::document::view</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8d8c3fb8b98b5e01851bf1ff5990f428">sort</a> () const</td></tr>
+<tr class="memdesc:a8d8c3fb8b98b5e01851bf1ff5990f428"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the current "sort" field.  <br /></td></tr>
+<tr class="memitem:a6f757ca64a3791c5ae9f2bd33fc845b3" id="r_a6f757ca64a3791c5ae9f2bd33fc845b3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#a1ee0ff8c95b2baf5babf88fe83265f75">find_options</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6f757ca64a3791c5ae9f2bd33fc845b3">sort</a> (<a class="el" href="classbsoncxx_1_1v1_1_1document_1_1value.html">bsoncxx::v1::document::value</a> v)</td></tr>
+<tr class="memdesc:a6f757ca64a3791c5ae9f2bd33fc845b3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the "sort" field.  <br /></td></tr>
+</table>
+<a name="doc-constructors" id="doc-constructors"></a><h2 id="header-doc-constructors" class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="a6946508312ca6b876d21aef29c20e174" name="a6946508312ca6b876d21aef29c20e174"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6946508312ca6b876d21aef29c20e174">&#9670;&#160;</a></span>~find_options()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">mongocxx::v1::find_options::~find_options </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Destroy this object. </p>
+<dl class="section warning"><dt>Warning</dt><dd>Invalidates all associated views. </dd></dl>
+
+</div>
+</div>
+<a id="a1ee0ff8c95b2baf5babf88fe83265f75" name="a1ee0ff8c95b2baf5babf88fe83265f75"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1ee0ff8c95b2baf5babf88fe83265f75">&#9670;&#160;</a></span>find_options() <span class="overload">[1/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">mongocxx::v1::find_options::find_options </td>
+          <td>(</td>
+          <td class="paramtype">find_options &amp;&amp;</td>          <td class="paramname"><span class="paramname"><em>other</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel noexcept">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Move constructor. </p>
+<dl class="section user"><dt>Postconditions:</dt><dd><ul>
+<li><span class="tt">other</span> is in an assign-or-destroy-only state. </li>
+</ul>
+</dd></dl>
+
+</div>
+</div>
+<a id="a3d9993357ad8fc8f4e841b06b704f15a" name="a3d9993357ad8fc8f4e841b06b704f15a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3d9993357ad8fc8f4e841b06b704f15a">&#9670;&#160;</a></span>find_options() <span class="overload">[2/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">mongocxx::v1::find_options::find_options </td>
+          <td>(</td>
+          <td class="paramtype">find_options const &amp;</td>          <td class="paramname"><span class="paramname"><em>other</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Copy construction. </p>
+
+</div>
+</div>
+<a id="a3b85e0502d7ee95340aab3518b880b3e" name="a3b85e0502d7ee95340aab3518b880b3e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3b85e0502d7ee95340aab3518b880b3e">&#9670;&#160;</a></span>find_options() <span class="overload">[3/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">mongocxx::v1::find_options::find_options </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Default initialization. </p>
+<dl class="section user"><dt>Postconditions:</dt><dd><ul>
+<li>All supported fields are "unset" or zero-initialized. </li>
+</ul>
+</dd></dl>
+
+</div>
+</div>
+<a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Member Function Documentation</h2>
+<a id="ae349b18952f811e517bd121d50ecc859" name="ae349b18952f811e517bd121d50ecc859"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae349b18952f811e517bd121d50ecc859">&#9670;&#160;</a></span>allow_disk_use() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classbsoncxx_1_1v1_1_1stdx_1_1optional.html">bsoncxx::v1::stdx::optional</a>&lt; bool &gt; mongocxx::v1::find_options::allow_disk_use </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Return the current "allowDiskUse" field. </p>
+
+</div>
+</div>
+<a id="a72b0a4b55456782c0622d535a1dfe4d7" name="a72b0a4b55456782c0622d535a1dfe4d7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a72b0a4b55456782c0622d535a1dfe4d7">&#9670;&#160;</a></span>allow_disk_use() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#a1ee0ff8c95b2baf5babf88fe83265f75">find_options</a> &amp; mongocxx::v1::find_options::allow_disk_use </td>
+          <td>(</td>
+          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>v</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Set the "allowDiskUse" field. </p>
+
+</div>
+</div>
+<a id="a241558a567f0145dfe99d33768e6efce" name="a241558a567f0145dfe99d33768e6efce"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a241558a567f0145dfe99d33768e6efce">&#9670;&#160;</a></span>allow_partial_results() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classbsoncxx_1_1v1_1_1stdx_1_1optional.html">bsoncxx::v1::stdx::optional</a>&lt; bool &gt; mongocxx::v1::find_options::allow_partial_results </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Return the current "allowPartialResults" field. </p>
+
+</div>
+</div>
+<a id="a83fa7273c81fd21b904a13316b64f4b0" name="a83fa7273c81fd21b904a13316b64f4b0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a83fa7273c81fd21b904a13316b64f4b0">&#9670;&#160;</a></span>allow_partial_results() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#a1ee0ff8c95b2baf5babf88fe83265f75">find_options</a> &amp; mongocxx::v1::find_options::allow_partial_results </td>
+          <td>(</td>
+          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>v</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Set the "allowPartialResults" field. </p>
+
+</div>
+</div>
+<a id="ae03e76d9b9fc9e99316aabfbd8c004ba" name="ae03e76d9b9fc9e99316aabfbd8c004ba"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae03e76d9b9fc9e99316aabfbd8c004ba">&#9670;&#160;</a></span>batch_size() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classbsoncxx_1_1v1_1_1stdx_1_1optional.html">bsoncxx::v1::stdx::optional</a>&lt; std::int32_t &gt; mongocxx::v1::find_options::batch_size </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Return the current "batchSize" field. </p>
+
+</div>
+</div>
+<a id="a4da94d78992852a1a1adda76e58b62ab" name="a4da94d78992852a1a1adda76e58b62ab"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4da94d78992852a1a1adda76e58b62ab">&#9670;&#160;</a></span>batch_size() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#a1ee0ff8c95b2baf5babf88fe83265f75">find_options</a> &amp; mongocxx::v1::find_options::batch_size </td>
+          <td>(</td>
+          <td class="paramtype">std::int32_t</td>          <td class="paramname"><span class="paramname"><em>v</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Set the "batchSize" field. </p>
+
+</div>
+</div>
+<a id="a14b203222371850d794d215b26bf46b6" name="a14b203222371850d794d215b26bf46b6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a14b203222371850d794d215b26bf46b6">&#9670;&#160;</a></span>collation() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classbsoncxx_1_1v1_1_1stdx_1_1optional.html">bsoncxx::v1::stdx::optional</a>&lt; <a class="el" href="classbsoncxx_1_1v1_1_1document_1_1view.html">bsoncxx::v1::document::view</a> &gt; mongocxx::v1::find_options::collation </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Return the current "collation" field. </p>
+
+</div>
+</div>
+<a id="a62cbce9eec9be22ae9d37e9bbeda31cd" name="a62cbce9eec9be22ae9d37e9bbeda31cd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a62cbce9eec9be22ae9d37e9bbeda31cd">&#9670;&#160;</a></span>collation() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#a1ee0ff8c95b2baf5babf88fe83265f75">find_options</a> &amp; mongocxx::v1::find_options::collation </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classbsoncxx_1_1v1_1_1document_1_1value.html">bsoncxx::v1::document::value</a></td>          <td class="paramname"><span class="paramname"><em>v</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Set the "collation" field. </p>
+
+</div>
+</div>
+<a id="aa81b659e30dc4e683d1bc8f3bd184e30" name="aa81b659e30dc4e683d1bc8f3bd184e30"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa81b659e30dc4e683d1bc8f3bd184e30">&#9670;&#160;</a></span>comment() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classbsoncxx_1_1v1_1_1stdx_1_1optional.html">bsoncxx::v1::stdx::optional</a>&lt; <a class="el" href="classbsoncxx_1_1v1_1_1types_1_1view.html">bsoncxx::v1::types::view</a> &gt; mongocxx::v1::find_options::comment </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Return the current "comment" field. </p>
+
+</div>
+</div>
+<a id="a06ab46c54d4a0986444175b6b74d4206" name="a06ab46c54d4a0986444175b6b74d4206"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a06ab46c54d4a0986444175b6b74d4206">&#9670;&#160;</a></span>comment() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#a1ee0ff8c95b2baf5babf88fe83265f75">find_options</a> &amp; mongocxx::v1::find_options::comment </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classbsoncxx_1_1v1_1_1types_1_1value.html">bsoncxx::v1::types::value</a></td>          <td class="paramname"><span class="paramname"><em>v</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Set the "comment" field. </p>
+
+</div>
+</div>
+<a id="ac8c9e454ba597c3e708ca5d59a633dbb" name="ac8c9e454ba597c3e708ca5d59a633dbb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac8c9e454ba597c3e708ca5d59a633dbb">&#9670;&#160;</a></span>cursor_type() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classbsoncxx_1_1v1_1_1stdx_1_1optional.html">bsoncxx::v1::stdx::optional</a>&lt; <a class="el" href="classmongocxx_1_1v1_1_1cursor.html#a7163beb5661a455c975a6bc7ac2e211e">cursor::type</a> &gt; mongocxx::v1::find_options::cursor_type </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Return the current "cursorType" field. </p>
+
+</div>
+</div>
+<a id="af39e6b3a2d4273cf61c1f429ec97ff55" name="af39e6b3a2d4273cf61c1f429ec97ff55"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af39e6b3a2d4273cf61c1f429ec97ff55">&#9670;&#160;</a></span>cursor_type() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#a1ee0ff8c95b2baf5babf88fe83265f75">find_options</a> &amp; mongocxx::v1::find_options::cursor_type </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classmongocxx_1_1v1_1_1cursor.html#a7163beb5661a455c975a6bc7ac2e211e">v1::cursor::type</a></td>          <td class="paramname"><span class="paramname"><em>v</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Set the "cursorType" field. </p>
+
+</div>
+</div>
+<a id="a2ad348b7a3669eca1ca06a260586cc6f" name="a2ad348b7a3669eca1ca06a260586cc6f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2ad348b7a3669eca1ca06a260586cc6f">&#9670;&#160;</a></span>hint() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classbsoncxx_1_1v1_1_1stdx_1_1optional.html">bsoncxx::v1::stdx::optional</a>&lt; <a class="el" href="classmongocxx_1_1v1_1_1hint.html">v1::hint</a> &gt; mongocxx::v1::find_options::hint </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Return the current "hint" field. </p>
+
+</div>
+</div>
+<a id="a00c83baea3d74b84564d67633631e140" name="a00c83baea3d74b84564d67633631e140"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a00c83baea3d74b84564d67633631e140">&#9670;&#160;</a></span>hint() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#a1ee0ff8c95b2baf5babf88fe83265f75">find_options</a> &amp; mongocxx::v1::find_options::hint </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classmongocxx_1_1v1_1_1hint.html">v1::hint</a></td>          <td class="paramname"><span class="paramname"><em>v</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Set the "hint" field. </p>
+
+</div>
+</div>
+<a id="a176d588247bdce3b8275219ac489fe67" name="a176d588247bdce3b8275219ac489fe67"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a176d588247bdce3b8275219ac489fe67">&#9670;&#160;</a></span>let() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classbsoncxx_1_1v1_1_1stdx_1_1optional.html">bsoncxx::v1::stdx::optional</a>&lt; <a class="el" href="classbsoncxx_1_1v1_1_1document_1_1view.html">bsoncxx::v1::document::view</a> &gt; const mongocxx::v1::find_options::let </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Return the current "let" field. </p>
+
+</div>
+</div>
+<a id="ae85e32fe93a79b61b111308b33dc2fff" name="ae85e32fe93a79b61b111308b33dc2fff"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae85e32fe93a79b61b111308b33dc2fff">&#9670;&#160;</a></span>let() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#a1ee0ff8c95b2baf5babf88fe83265f75">find_options</a> &amp; mongocxx::v1::find_options::let </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classbsoncxx_1_1v1_1_1document_1_1value.html">bsoncxx::v1::document::value</a></td>          <td class="paramname"><span class="paramname"><em>v</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Set the "let" field. </p>
+
+</div>
+</div>
+<a id="a73e9b4d7efaf0e3b9d7ab4c076024903" name="a73e9b4d7efaf0e3b9d7ab4c076024903"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a73e9b4d7efaf0e3b9d7ab4c076024903">&#9670;&#160;</a></span>limit() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classbsoncxx_1_1v1_1_1stdx_1_1optional.html">bsoncxx::v1::stdx::optional</a>&lt; std::int64_t &gt; mongocxx::v1::find_options::limit </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Return the current "limit" field. </p>
+
+</div>
+</div>
+<a id="abf4ed87d101e0de717665a33c88d5e5b" name="abf4ed87d101e0de717665a33c88d5e5b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abf4ed87d101e0de717665a33c88d5e5b">&#9670;&#160;</a></span>limit() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#a1ee0ff8c95b2baf5babf88fe83265f75">find_options</a> &amp; mongocxx::v1::find_options::limit </td>
+          <td>(</td>
+          <td class="paramtype">std::int64_t</td>          <td class="paramname"><span class="paramname"><em>v</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Set the "limit" field. </p>
+
+</div>
+</div>
+<a id="af2d8c053b0fe6e6802cad4828d010be0" name="af2d8c053b0fe6e6802cad4828d010be0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af2d8c053b0fe6e6802cad4828d010be0">&#9670;&#160;</a></span>max() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classbsoncxx_1_1v1_1_1stdx_1_1optional.html">bsoncxx::v1::stdx::optional</a>&lt; <a class="el" href="classbsoncxx_1_1v1_1_1document_1_1view.html">bsoncxx::v1::document::view</a> &gt; mongocxx::v1::find_options::max </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Return the current "max" field. </p>
+
+</div>
+</div>
+<a id="a1f9702d36e6073999d3d57f78cd954fa" name="a1f9702d36e6073999d3d57f78cd954fa"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1f9702d36e6073999d3d57f78cd954fa">&#9670;&#160;</a></span>max() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#a1ee0ff8c95b2baf5babf88fe83265f75">find_options</a> &amp; mongocxx::v1::find_options::max </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classbsoncxx_1_1v1_1_1document_1_1value.html">bsoncxx::v1::document::value</a></td>          <td class="paramname"><span class="paramname"><em>v</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Set the "max" field. </p>
+
+</div>
+</div>
+<a id="a33570527e3661405767cb934532cafbb" name="a33570527e3661405767cb934532cafbb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a33570527e3661405767cb934532cafbb">&#9670;&#160;</a></span>max_await_time() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classbsoncxx_1_1v1_1_1stdx_1_1optional.html">bsoncxx::v1::stdx::optional</a>&lt; std::chrono::milliseconds &gt; mongocxx::v1::find_options::max_await_time </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Return the current "maxAwaitTimeMS" field. </p>
+
+</div>
+</div>
+<a id="a7540a92b98b1f04d53b59e3f20376648" name="a7540a92b98b1f04d53b59e3f20376648"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7540a92b98b1f04d53b59e3f20376648">&#9670;&#160;</a></span>max_await_time() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#a1ee0ff8c95b2baf5babf88fe83265f75">find_options</a> &amp; mongocxx::v1::find_options::max_await_time </td>
+          <td>(</td>
+          <td class="paramtype">std::chrono::milliseconds</td>          <td class="paramname"><span class="paramname"><em>v</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Set the "maxAwaitTimeMS" field. </p>
+
+</div>
+</div>
+<a id="a36baab4075043972766ea6dcbd6b4867" name="a36baab4075043972766ea6dcbd6b4867"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a36baab4075043972766ea6dcbd6b4867">&#9670;&#160;</a></span>max_time() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classbsoncxx_1_1v1_1_1stdx_1_1optional.html">bsoncxx::v1::stdx::optional</a>&lt; std::chrono::milliseconds &gt; mongocxx::v1::find_options::max_time </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Return the current "maxTimeMS" field. </p>
+
+</div>
+</div>
+<a id="a76d929be9c9d9d33153165c5d1be2d54" name="a76d929be9c9d9d33153165c5d1be2d54"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a76d929be9c9d9d33153165c5d1be2d54">&#9670;&#160;</a></span>max_time() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#a1ee0ff8c95b2baf5babf88fe83265f75">find_options</a> &amp; mongocxx::v1::find_options::max_time </td>
+          <td>(</td>
+          <td class="paramtype">std::chrono::milliseconds</td>          <td class="paramname"><span class="paramname"><em>v</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Set the "maxTimeMS" field. </p>
+
+</div>
+</div>
+<a id="a406f5a8634b0ee10e33724e915b770d8" name="a406f5a8634b0ee10e33724e915b770d8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a406f5a8634b0ee10e33724e915b770d8">&#9670;&#160;</a></span>min() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classbsoncxx_1_1v1_1_1stdx_1_1optional.html">bsoncxx::v1::stdx::optional</a>&lt; <a class="el" href="classbsoncxx_1_1v1_1_1document_1_1view.html">bsoncxx::v1::document::view</a> &gt; mongocxx::v1::find_options::min </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Return the current "min" field. </p>
+
+</div>
+</div>
+<a id="acb376ef8987c79986dca7e302015fcb1" name="acb376ef8987c79986dca7e302015fcb1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acb376ef8987c79986dca7e302015fcb1">&#9670;&#160;</a></span>min() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#a1ee0ff8c95b2baf5babf88fe83265f75">find_options</a> &amp; mongocxx::v1::find_options::min </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classbsoncxx_1_1v1_1_1document_1_1value.html">bsoncxx::v1::document::value</a></td>          <td class="paramname"><span class="paramname"><em>v</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Set the "min" field. </p>
+
+</div>
+</div>
+<a id="ae14c9e144cedf3c7b4c635d7374e001a" name="ae14c9e144cedf3c7b4c635d7374e001a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae14c9e144cedf3c7b4c635d7374e001a">&#9670;&#160;</a></span>no_cursor_timeout() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classbsoncxx_1_1v1_1_1stdx_1_1optional.html">bsoncxx::v1::stdx::optional</a>&lt; bool &gt; mongocxx::v1::find_options::no_cursor_timeout </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Return the current "noCursorTimeout" field. </p>
+
+</div>
+</div>
+<a id="a87ccd8b1bae571ce6dd68e1347a33c09" name="a87ccd8b1bae571ce6dd68e1347a33c09"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a87ccd8b1bae571ce6dd68e1347a33c09">&#9670;&#160;</a></span>no_cursor_timeout() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#a1ee0ff8c95b2baf5babf88fe83265f75">find_options</a> &amp; mongocxx::v1::find_options::no_cursor_timeout </td>
+          <td>(</td>
+          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>v</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Set the "noCursorTimeout" field. </p>
+
+</div>
+</div>
+<a id="a3b8d232c34ed509b34d3a17b2df8ad98" name="a3b8d232c34ed509b34d3a17b2df8ad98"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3b8d232c34ed509b34d3a17b2df8ad98">&#9670;&#160;</a></span>operator=() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#a1ee0ff8c95b2baf5babf88fe83265f75">find_options</a> &amp; mongocxx::v1::find_options::operator= </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="#a1ee0ff8c95b2baf5babf88fe83265f75">find_options</a> &amp;&amp;</td>          <td class="paramname"><span class="paramname"><em>other</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel noexcept">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Move assignment. </p>
+<dl class="section user"><dt>Postconditions:</dt><dd><ul>
+<li><span class="tt">other</span> is in an assign-or-destroy-only state. </li>
+</ul>
+</dd></dl>
+
+</div>
+</div>
+<a id="a120bc890513a7ec82059730423695cd2" name="a120bc890513a7ec82059730423695cd2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a120bc890513a7ec82059730423695cd2">&#9670;&#160;</a></span>operator=() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#a1ee0ff8c95b2baf5babf88fe83265f75">find_options</a> &amp; mongocxx::v1::find_options::operator= </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="#a1ee0ff8c95b2baf5babf88fe83265f75">find_options</a> const &amp;</td>          <td class="paramname"><span class="paramname"><em>other</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Copy assignment. </p>
+
+</div>
+</div>
+<a id="a2a87b5730d46e0871150ae16f98b4062" name="a2a87b5730d46e0871150ae16f98b4062"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2a87b5730d46e0871150ae16f98b4062">&#9670;&#160;</a></span>projection() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classbsoncxx_1_1v1_1_1stdx_1_1optional.html">bsoncxx::v1::stdx::optional</a>&lt; <a class="el" href="classbsoncxx_1_1v1_1_1document_1_1view.html">bsoncxx::v1::document::view</a> &gt; mongocxx::v1::find_options::projection </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Return the current "projection" field. </p>
+
+</div>
+</div>
+<a id="a72c47a78df2f60a18c27ebf1e15e6e3e" name="a72c47a78df2f60a18c27ebf1e15e6e3e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a72c47a78df2f60a18c27ebf1e15e6e3e">&#9670;&#160;</a></span>projection() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#a1ee0ff8c95b2baf5babf88fe83265f75">find_options</a> &amp; mongocxx::v1::find_options::projection </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classbsoncxx_1_1v1_1_1document_1_1value.html">bsoncxx::v1::document::value</a></td>          <td class="paramname"><span class="paramname"><em>v</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Set the "projection" field. </p>
+
+</div>
+</div>
+<a id="a084279e9a00567cd241638e7c65d1fc7" name="a084279e9a00567cd241638e7c65d1fc7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a084279e9a00567cd241638e7c65d1fc7">&#9670;&#160;</a></span>read_concern() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classbsoncxx_1_1v1_1_1stdx_1_1optional.html">bsoncxx::v1::stdx::optional</a>&lt; <a class="el" href="classmongocxx_1_1v1_1_1read__concern.html">v1::read_concern</a> &gt; mongocxx::v1::find_options::read_concern </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Return the current "readConcern" field. </p>
+
+</div>
+</div>
+<a id="a4e4cbe7757d72d034382b2e0047dd7b2" name="a4e4cbe7757d72d034382b2e0047dd7b2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4e4cbe7757d72d034382b2e0047dd7b2">&#9670;&#160;</a></span>read_concern() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#a1ee0ff8c95b2baf5babf88fe83265f75">find_options</a> &amp; mongocxx::v1::find_options::read_concern </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classmongocxx_1_1v1_1_1read__concern.html">v1::read_concern</a></td>          <td class="paramname"><span class="paramname"><em>v</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Set the "readConcern" field. </p>
+
+</div>
+</div>
+<a id="a062f230ef502df5bdb7a31ef44d4c923" name="a062f230ef502df5bdb7a31ef44d4c923"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a062f230ef502df5bdb7a31ef44d4c923">&#9670;&#160;</a></span>read_preference() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classbsoncxx_1_1v1_1_1stdx_1_1optional.html">bsoncxx::v1::stdx::optional</a>&lt; <a class="el" href="classmongocxx_1_1v1_1_1read__preference.html">v1::read_preference</a> &gt; mongocxx::v1::find_options::read_preference </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Return the current "readPreference" field. </p>
+
+</div>
+</div>
+<a id="a02c193e66fc4611910cbae7414bf1222" name="a02c193e66fc4611910cbae7414bf1222"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a02c193e66fc4611910cbae7414bf1222">&#9670;&#160;</a></span>read_preference() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#a1ee0ff8c95b2baf5babf88fe83265f75">find_options</a> &amp; mongocxx::v1::find_options::read_preference </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classmongocxx_1_1v1_1_1read__preference.html">v1::read_preference</a></td>          <td class="paramname"><span class="paramname"><em>v</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Set the "readPreference" field. </p>
+
+</div>
+</div>
+<a id="a0c6fae9125dc764718e619a72c294c32" name="a0c6fae9125dc764718e619a72c294c32"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0c6fae9125dc764718e619a72c294c32">&#9670;&#160;</a></span>return_key() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classbsoncxx_1_1v1_1_1stdx_1_1optional.html">bsoncxx::v1::stdx::optional</a>&lt; bool &gt; mongocxx::v1::find_options::return_key </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Return the current "returnKey" field. </p>
+
+</div>
+</div>
+<a id="a58e55863279aea6c252627879679e9d9" name="a58e55863279aea6c252627879679e9d9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a58e55863279aea6c252627879679e9d9">&#9670;&#160;</a></span>return_key() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#a1ee0ff8c95b2baf5babf88fe83265f75">find_options</a> &amp; mongocxx::v1::find_options::return_key </td>
+          <td>(</td>
+          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>v</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Set the "returnKey" field. </p>
+
+</div>
+</div>
+<a id="a09f319a7df51d4ac09c572511343d3e8" name="a09f319a7df51d4ac09c572511343d3e8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a09f319a7df51d4ac09c572511343d3e8">&#9670;&#160;</a></span>show_record_id() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classbsoncxx_1_1v1_1_1stdx_1_1optional.html">bsoncxx::v1::stdx::optional</a>&lt; bool &gt; mongocxx::v1::find_options::show_record_id </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Return the current "showRecordId" field. </p>
+
+</div>
+</div>
+<a id="a379dec7ed1183e0723ef8d2f118816af" name="a379dec7ed1183e0723ef8d2f118816af"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a379dec7ed1183e0723ef8d2f118816af">&#9670;&#160;</a></span>show_record_id() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#a1ee0ff8c95b2baf5babf88fe83265f75">find_options</a> &amp; mongocxx::v1::find_options::show_record_id </td>
+          <td>(</td>
+          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>v</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Set the "showRecordId" field. </p>
+
+</div>
+</div>
+<a id="a962e538c5e657970ca291240171df573" name="a962e538c5e657970ca291240171df573"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a962e538c5e657970ca291240171df573">&#9670;&#160;</a></span>skip() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classbsoncxx_1_1v1_1_1stdx_1_1optional.html">bsoncxx::v1::stdx::optional</a>&lt; std::int64_t &gt; mongocxx::v1::find_options::skip </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Return the current "skip" field. </p>
+
+</div>
+</div>
+<a id="a8d8f190504d6de7f121e5ad912957d0c" name="a8d8f190504d6de7f121e5ad912957d0c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8d8f190504d6de7f121e5ad912957d0c">&#9670;&#160;</a></span>skip() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#a1ee0ff8c95b2baf5babf88fe83265f75">find_options</a> &amp; mongocxx::v1::find_options::skip </td>
+          <td>(</td>
+          <td class="paramtype">std::int64_t</td>          <td class="paramname"><span class="paramname"><em>v</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Set the "skip" field. </p>
+
+</div>
+</div>
+<a id="a8d8c3fb8b98b5e01851bf1ff5990f428" name="a8d8c3fb8b98b5e01851bf1ff5990f428"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8d8c3fb8b98b5e01851bf1ff5990f428">&#9670;&#160;</a></span>sort() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classbsoncxx_1_1v1_1_1stdx_1_1optional.html">bsoncxx::v1::stdx::optional</a>&lt; <a class="el" href="classbsoncxx_1_1v1_1_1document_1_1view.html">bsoncxx::v1::document::view</a> &gt; mongocxx::v1::find_options::sort </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Return the current "sort" field. </p>
+
+</div>
+</div>
+<a id="a6f757ca64a3791c5ae9f2bd33fc845b3" name="a6f757ca64a3791c5ae9f2bd33fc845b3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6f757ca64a3791c5ae9f2bd33fc845b3">&#9670;&#160;</a></span>sort() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#a1ee0ff8c95b2baf5babf88fe83265f75">find_options</a> &amp; mongocxx::v1::find_options::sort </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classbsoncxx_1_1v1_1_1document_1_1value.html">bsoncxx::v1::document::value</a></td>          <td class="paramname"><span class="paramname"><em>v</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Set the "sort" field. </p>
+
+</div>
+</div>
+<hr/>The documentation for this class was generated from the following file:<ul>
+<li>mongocxx/v1/<a class="el" href="find__options_8hpp_source.html">find_options.hpp</a></li>
+</ul>
+</div><!-- contents -->
+</div><!-- doc-content -->
+<div id="page-nav" class="page-nav-panel">
+<div id="page-nav-resize-handle"></div>
+<div id="page-nav-tree">
+<div id="page-nav-contents">
+</div><!-- page-nav-contents -->
+</div><!-- page-nav-tree -->
+</div><!-- page-nav -->
+</div><!-- container -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a href="namespacemongocxx.html">mongocxx</a></li><li class="navelem"><a href="namespacemongocxx_1_1v1.html">v1</a></li><li class="navelem"><a href="classmongocxx_1_1v1_1_1find__options.html">find_options</a></li>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.15.0 </li>
+  </ul>
+</div>
+</body>
+</html>

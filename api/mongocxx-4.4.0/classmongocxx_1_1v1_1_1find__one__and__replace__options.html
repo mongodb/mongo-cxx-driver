@@ -1,0 +1,830 @@
+<!-- HTML header for doxygen 1.15.0-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-US">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.15.0"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>MongoDB C++ Driver: mongocxx::v1::find_one_and_replace_options Class Reference</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript">var page_layout=1;</script>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<script type="text/javascript" src="clipboard.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<script type="text/javascript" src="cookie.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/javascript">
+  $(function() { init_search(); });
+</script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+<link href="doxygen-extra.css" rel="stylesheet" type="text/css"/>
+<!-- Mixpanel Tracker -->
+<script type="text/javascript">
+  (function(e,c){if(!c.__SV){var l,h;window.mixpanel=c;c._i=[];c.init=function(q,r,f){function t(d,a){var g=a.split(".");2==g.length&&(d=d[g[0]],a=g[1]);d[a]=function(){d.push([a].concat(Array.prototype.slice.call(arguments,0)))}}var b=c;"undefined"!==typeof f?b=c[f]=[]:f="mixpanel";b.people=b.people||[];b.toString=function(d){var a="mixpanel";"mixpanel"!==f&&(a+="."+f);d||(a+=" (stub)");return a};b.people.toString=function(){return b.toString(1)+".people (stub)"};l="disable time_event track track_pageview track_links track_forms track_with_groups add_group set_group remove_group register register_once alias unregister identify name_tag set_config reset opt_in_tracking opt_out_tracking has_opted_in_tracking has_opted_out_tracking clear_opt_in_out_tracking start_batch_senders start_session_recording stop_session_recording people.set people.set_once people.unset people.increment people.append people.union people.track_charge people.clear_charges people.delete_user people.remove".split(" ");
+  for(h=0;h<l.length;h++)t(b,l[h]);var n="set set_once union unset remove delete".split(" ");b.get_group=function(){function d(p){a[p]=function(){b.push([g,[p].concat(Array.prototype.slice.call(arguments,0))])}}for(var a={},g=["get_group"].concat(Array.prototype.slice.call(arguments,0)),m=0;m<n.length;m++)d(n[m]);return a};c._i.push([q,r,f])};c.__SV=1.2;var k=e.createElement("script");k.type="text/javascript";k.async=!0;k.src="undefined"!==typeof MIXPANEL_CUSTOM_LIB_URL?MIXPANEL_CUSTOM_LIB_URL:"file:"===
+  e.location.protocol&&"//cdn.mxpnl.com/libs/mixpanel-2-latest.min.js".match(/^\/\//)?"https://cdn.mxpnl.com/libs/mixpanel-2-latest.min.js":"//cdn.mxpnl.com/libs/mixpanel-2-latest.min.js";e=e.getElementsByTagName("script")[0];e.parentNode.insertBefore(k,e)}})(document,window.mixpanel||[]); mixpanel.init('f2a38f26e5cc0eee429a9276f296c118', {
+    autocapture: true,
+    record_sessions_percent: 0,
+  })
+</script>
+<!-- patch-apidocs-current-redirects: mongocxx-4.4.0 -->
+<link rel="canonical" href="https://mongocxx.org/api/mongocxx-4.4.0/classmongocxx_1_1v1_1_1find__one__and__replace__options.html"/>
+<script type="text/javascript">
+if (window.location.pathname.startsWith("/api/current/")) {
+  window.location.replace(
+    window.location.href.replace("/api/current/", "/api/mongocxx-4.4.0/")
+  )
+}
+</script>
+</head>
+<body>
+<div id="side-nav" class="ui-resizable side-nav-resizable"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr id="projectrow">
+  <td id="projectalign">
+   <div id="projectname">MongoDB C++ Driver<span id="projectnumber">&#160;4.4.0</span>
+   </div>
+  </td>
+ </tr>
+   <tr><td colspan="2">        <div id="MSearchBox" class="MSearchBoxInactive">
+        <span class="left">
+          <span id="MSearchSelect" class="search-icon" onmouseover="return searchBox.OnSearchSelectShow()" onmouseout="return searchBox.OnSearchSelectHide()"><span class="search-icon-dropdown"></span></span>
+          <input type="text" id="MSearchField" value="" placeholder="Search" accesskey="S"
+               onfocus="searchBox.OnSearchFieldFocus(true)" 
+               onblur="searchBox.OnSearchFieldFocus(false)" 
+               onkeyup="searchBox.OnSearchFieldChange(event)"/>
+          </span><span class="right">
+            <a id="MSearchClose" href="javascript:searchBox.CloseResultsWindow()"><div id="MSearchCloseImg" class="close-icon"></div></a>
+          </span>
+        </div>
+</td></tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Generated by Doxygen 1.15.0 -->
+<script type="text/javascript">
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+</script>
+<script type="text/javascript">
+$(function() { codefold.init(); });
+</script>
+</div><!-- top -->
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+$(function(){initNavTree('classmongocxx_1_1v1_1_1find__one__and__replace__options.html','','classmongocxx_1_1v1_1_1find__one__and__replace__options-members'); });
+</script>
+<div id="container">
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Loading...</div>
+<div class="SRStatus" id="Searching">Searching...</div>
+<div class="SRStatus" id="NoMatches">No Matches</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="header">
+  <div class="headertitle"><div class="title">mongocxx::v1::find_one_and_replace_options Class Reference</div></div>
+</div><!--header-->
+<div class="contents">
+
+<p><code>#include &lt;<a class="el" href="find__one__and__replace__options_8hpp_source.html">mongocxx/v1/find_one_and_replace_options.hpp</a>&gt;</code></p>
+<a name="details" id="details"></a><h2 id="header-details" class="groupheader">Description</h2>
+<div class="textblock"><p>Options for a "findOneAndReplace" operation. </p>
+<p>Supported fields include:</p><ul>
+<li><span class="tt"><a class="el" href="#a7d8dbd6d4e636e681df2493f3c1f5427" title="Set the &quot;bypassDocumentValidation&quot; field.">bypass_document_validation</a></span> ("bypassDocumentValidation")</li>
+<li><span class="tt"><a class="el" href="#a4a69a37cf5ae99761f0684e26d7f1f0e" title="Set the &quot;collation&quot; field.">collation</a></span></li>
+<li><span class="tt"><a class="el" href="#a591f771b6ac1c90db01f6143968fe401" title="Set the &quot;comment&quot; field.">comment</a></span></li>
+<li><span class="tt"><a class="el" href="classmongocxx_1_1v1_1_1hint.html" title="Options related to a MongoDB query hint.">hint</a></span></li>
+<li><span class="tt"><a class="el" href="#a29e95eace233e0e5ee0c6aab192243e8" title="Set the &quot;let&quot; field.">let</a></span></li>
+<li><span class="tt"><a class="el" href="#a9cbe96e69e6e704099fd27d43177e033" title="Set the &quot;maxTimeMS&quot; field.">max_time</a></span> ("maxTimeMS")</li>
+<li><span class="tt"><a class="el" href="#aac86285008eb3ee3bbaf3f1eb35f6c30" title="Set the &quot;projection&quot; field.">projection</a></span></li>
+<li><span class="tt"><a class="el" href="classmongocxx_1_1v1_1_1read__concern.html" title="Options related to a MongoDB Read Concern.">read_concern</a></span> ("readConcern")</li>
+<li><span class="tt"><a class="el" href="#a68933d3a6b318503aa4b7b4c688fc36b" title="Set the &quot;returnDocument&quot; field.">return_document</a></span> ("returnDocument")</li>
+<li><span class="tt"><a class="el" href="#ad5d0f5ba5263e31065987035abf81510" title="Set the &quot;sort&quot; field.">sort</a></span></li>
+<li><span class="tt"><a class="el" href="#a6ed24f301ed4563788e51e41eb2b99f3" title="Set the &quot;upsert&quot; field.">upsert</a></span></li>
+<li><span class="tt"><a class="el" href="classmongocxx_1_1v1_1_1write__concern.html" title="Options related to a MongoDB Write Concern.">write_concern</a></span> ("writeConcern")</li>
+</ul>
+<dl class="section see"><dt>See also</dt><dd><ul>
+<li><a href="https://www.mongodb.com/docs/manual/tutorial/query-documents/">Query Documents (MongoDB Manual)</a></li>
+<li><a href="https://www.mongodb.com/docs/manual/reference/update-methods/">Update Methods (MongoDB Manual)</a> </li>
+</ul>
+</dd></dl>
+</div><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
+Public Member Functions</h2></td></tr>
+<tr class="memitem:ab99d7bd13ec7a1228f26265e3c1e0245" id="r_ab99d7bd13ec7a1228f26265e3c1e0245"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab99d7bd13ec7a1228f26265e3c1e0245">find_one_and_replace_options</a> ()</td></tr>
+<tr class="memdesc:ab99d7bd13ec7a1228f26265e3c1e0245"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default initialization.  <br /></td></tr>
+<tr class="memitem:a9a94960e791180f835b9854c63764185" id="r_a9a94960e791180f835b9854c63764185"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9a94960e791180f835b9854c63764185">find_one_and_replace_options</a> (find_one_and_replace_options &amp;&amp;other) noexcept</td></tr>
+<tr class="memdesc:a9a94960e791180f835b9854c63764185"><td class="mdescLeft">&#160;</td><td class="mdescRight">Move constructor.  <br /></td></tr>
+<tr class="memitem:afcb573f1b397804f6a9b22d38864bf76" id="r_afcb573f1b397804f6a9b22d38864bf76"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#afcb573f1b397804f6a9b22d38864bf76">find_one_and_replace_options</a> (find_one_and_replace_options const &amp;other)</td></tr>
+<tr class="memdesc:afcb573f1b397804f6a9b22d38864bf76"><td class="mdescLeft">&#160;</td><td class="mdescRight">Copy construction.  <br /></td></tr>
+<tr class="memitem:ae045ca07f88ccd3d3681539a3fb586f7" id="r_ae045ca07f88ccd3d3681539a3fb586f7"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae045ca07f88ccd3d3681539a3fb586f7">~find_one_and_replace_options</a> ()</td></tr>
+<tr class="memdesc:ae045ca07f88ccd3d3681539a3fb586f7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destroy this object.  <br /></td></tr>
+<tr class="memitem:ac3cde53d1e17891c2c673c9e26984d27" id="r_ac3cde53d1e17891c2c673c9e26984d27"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classbsoncxx_1_1v1_1_1stdx_1_1optional.html">bsoncxx::v1::stdx::optional</a>&lt; bool &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac3cde53d1e17891c2c673c9e26984d27">bypass_document_validation</a> () const</td></tr>
+<tr class="memdesc:ac3cde53d1e17891c2c673c9e26984d27"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the current "bypassDocumentValidation" field.  <br /></td></tr>
+<tr class="memitem:a7d8dbd6d4e636e681df2493f3c1f5427" id="r_a7d8dbd6d4e636e681df2493f3c1f5427"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#a9a94960e791180f835b9854c63764185">find_one_and_replace_options</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7d8dbd6d4e636e681df2493f3c1f5427">bypass_document_validation</a> (bool v)</td></tr>
+<tr class="memdesc:a7d8dbd6d4e636e681df2493f3c1f5427"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the "bypassDocumentValidation" field.  <br /></td></tr>
+<tr class="memitem:af2f642db6eb816b46dbd4d5f3eef0a48" id="r_af2f642db6eb816b46dbd4d5f3eef0a48"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classbsoncxx_1_1v1_1_1stdx_1_1optional.html">bsoncxx::v1::stdx::optional</a>&lt; <a class="el" href="classbsoncxx_1_1v1_1_1document_1_1view.html">bsoncxx::v1::document::view</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af2f642db6eb816b46dbd4d5f3eef0a48">collation</a> () const</td></tr>
+<tr class="memdesc:af2f642db6eb816b46dbd4d5f3eef0a48"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the current "collation" field.  <br /></td></tr>
+<tr class="memitem:a4a69a37cf5ae99761f0684e26d7f1f0e" id="r_a4a69a37cf5ae99761f0684e26d7f1f0e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#a9a94960e791180f835b9854c63764185">find_one_and_replace_options</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4a69a37cf5ae99761f0684e26d7f1f0e">collation</a> (<a class="el" href="classbsoncxx_1_1v1_1_1document_1_1value.html">bsoncxx::v1::document::value</a> v)</td></tr>
+<tr class="memdesc:a4a69a37cf5ae99761f0684e26d7f1f0e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the "collation" field.  <br /></td></tr>
+<tr class="memitem:a98735aea284ff7350599f9319f71f1b0" id="r_a98735aea284ff7350599f9319f71f1b0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classbsoncxx_1_1v1_1_1stdx_1_1optional.html">bsoncxx::v1::stdx::optional</a>&lt; <a class="el" href="classbsoncxx_1_1v1_1_1types_1_1view.html">bsoncxx::v1::types::view</a> &gt; const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a98735aea284ff7350599f9319f71f1b0">comment</a> () const</td></tr>
+<tr class="memdesc:a98735aea284ff7350599f9319f71f1b0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the current "comment" field.  <br /></td></tr>
+<tr class="memitem:a591f771b6ac1c90db01f6143968fe401" id="r_a591f771b6ac1c90db01f6143968fe401"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#a9a94960e791180f835b9854c63764185">find_one_and_replace_options</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a591f771b6ac1c90db01f6143968fe401">comment</a> (<a class="el" href="classbsoncxx_1_1v1_1_1types_1_1value.html">bsoncxx::v1::types::value</a> v)</td></tr>
+<tr class="memdesc:a591f771b6ac1c90db01f6143968fe401"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the "comment" field.  <br /></td></tr>
+<tr class="memitem:a1748d7aeb12f5f0477325e5bec3b42de" id="r_a1748d7aeb12f5f0477325e5bec3b42de"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classbsoncxx_1_1v1_1_1stdx_1_1optional.html">bsoncxx::v1::stdx::optional</a>&lt; <a class="el" href="classmongocxx_1_1v1_1_1hint.html">v1::hint</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1748d7aeb12f5f0477325e5bec3b42de">hint</a> () const</td></tr>
+<tr class="memdesc:a1748d7aeb12f5f0477325e5bec3b42de"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the current "hint" field.  <br /></td></tr>
+<tr class="memitem:a30ccc9daca5cc3b4c5f95f814952ad3b" id="r_a30ccc9daca5cc3b4c5f95f814952ad3b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#a9a94960e791180f835b9854c63764185">find_one_and_replace_options</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a30ccc9daca5cc3b4c5f95f814952ad3b">hint</a> (<a class="el" href="classmongocxx_1_1v1_1_1hint.html">v1::hint</a> v)</td></tr>
+<tr class="memdesc:a30ccc9daca5cc3b4c5f95f814952ad3b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the "hint" field.  <br /></td></tr>
+<tr class="memitem:a14912052e77223a232e9c172c708e548" id="r_a14912052e77223a232e9c172c708e548"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classbsoncxx_1_1v1_1_1stdx_1_1optional.html">bsoncxx::v1::stdx::optional</a>&lt; <a class="el" href="classbsoncxx_1_1v1_1_1document_1_1view.html">bsoncxx::v1::document::view</a> &gt; const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a14912052e77223a232e9c172c708e548">let</a> () const</td></tr>
+<tr class="memdesc:a14912052e77223a232e9c172c708e548"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the current "let" field.  <br /></td></tr>
+<tr class="memitem:a29e95eace233e0e5ee0c6aab192243e8" id="r_a29e95eace233e0e5ee0c6aab192243e8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#a9a94960e791180f835b9854c63764185">find_one_and_replace_options</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a29e95eace233e0e5ee0c6aab192243e8">let</a> (<a class="el" href="classbsoncxx_1_1v1_1_1document_1_1value.html">bsoncxx::v1::document::value</a> v)</td></tr>
+<tr class="memdesc:a29e95eace233e0e5ee0c6aab192243e8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the "let" field.  <br /></td></tr>
+<tr class="memitem:a0ebb8344842da0cb142878911a5d4331" id="r_a0ebb8344842da0cb142878911a5d4331"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classbsoncxx_1_1v1_1_1stdx_1_1optional.html">bsoncxx::v1::stdx::optional</a>&lt; std::chrono::milliseconds &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0ebb8344842da0cb142878911a5d4331">max_time</a> () const</td></tr>
+<tr class="memdesc:a0ebb8344842da0cb142878911a5d4331"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the current "maxTimeMS" field.  <br /></td></tr>
+<tr class="memitem:a9cbe96e69e6e704099fd27d43177e033" id="r_a9cbe96e69e6e704099fd27d43177e033"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#a9a94960e791180f835b9854c63764185">find_one_and_replace_options</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9cbe96e69e6e704099fd27d43177e033">max_time</a> (std::chrono::milliseconds v)</td></tr>
+<tr class="memdesc:a9cbe96e69e6e704099fd27d43177e033"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the "maxTimeMS" field.  <br /></td></tr>
+<tr class="memitem:af3652ec3b71f29012e145cd99c2e9a79" id="r_af3652ec3b71f29012e145cd99c2e9a79"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#a9a94960e791180f835b9854c63764185">find_one_and_replace_options</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af3652ec3b71f29012e145cd99c2e9a79">operator=</a> (<a class="el" href="#a9a94960e791180f835b9854c63764185">find_one_and_replace_options</a> &amp;&amp;other) noexcept</td></tr>
+<tr class="memdesc:af3652ec3b71f29012e145cd99c2e9a79"><td class="mdescLeft">&#160;</td><td class="mdescRight">Move assignment.  <br /></td></tr>
+<tr class="memitem:a72c90444c9dada5e9cf1ac8ee6a9501f" id="r_a72c90444c9dada5e9cf1ac8ee6a9501f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#a9a94960e791180f835b9854c63764185">find_one_and_replace_options</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a72c90444c9dada5e9cf1ac8ee6a9501f">operator=</a> (<a class="el" href="#a9a94960e791180f835b9854c63764185">find_one_and_replace_options</a> const &amp;other)</td></tr>
+<tr class="memdesc:a72c90444c9dada5e9cf1ac8ee6a9501f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Copy assignment.  <br /></td></tr>
+<tr class="memitem:a7b840e189079a73cf7d5f2d04dadc3cf" id="r_a7b840e189079a73cf7d5f2d04dadc3cf"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classbsoncxx_1_1v1_1_1stdx_1_1optional.html">bsoncxx::v1::stdx::optional</a>&lt; <a class="el" href="classbsoncxx_1_1v1_1_1document_1_1view.html">bsoncxx::v1::document::view</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7b840e189079a73cf7d5f2d04dadc3cf">projection</a> () const</td></tr>
+<tr class="memdesc:a7b840e189079a73cf7d5f2d04dadc3cf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the current "projection" field.  <br /></td></tr>
+<tr class="memitem:aac86285008eb3ee3bbaf3f1eb35f6c30" id="r_aac86285008eb3ee3bbaf3f1eb35f6c30"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#a9a94960e791180f835b9854c63764185">find_one_and_replace_options</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aac86285008eb3ee3bbaf3f1eb35f6c30">projection</a> (<a class="el" href="classbsoncxx_1_1v1_1_1document_1_1value.html">bsoncxx::v1::document::value</a> v)</td></tr>
+<tr class="memdesc:aac86285008eb3ee3bbaf3f1eb35f6c30"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the "projection" field.  <br /></td></tr>
+<tr class="memitem:a563b62138501419cb14d21db5550d49f" id="r_a563b62138501419cb14d21db5550d49f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classbsoncxx_1_1v1_1_1stdx_1_1optional.html">bsoncxx::v1::stdx::optional</a>&lt; <a class="el" href="classmongocxx_1_1v1_1_1read__concern.html">v1::read_concern</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a563b62138501419cb14d21db5550d49f">read_concern</a> () const</td></tr>
+<tr class="memdesc:a563b62138501419cb14d21db5550d49f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the current "readConcern" field.  <br /></td></tr>
+<tr class="memitem:ace667fbfb5d728f7e18d36f262e60c64" id="r_ace667fbfb5d728f7e18d36f262e60c64"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#a9a94960e791180f835b9854c63764185">find_one_and_replace_options</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ace667fbfb5d728f7e18d36f262e60c64">read_concern</a> (<a class="el" href="classmongocxx_1_1v1_1_1read__concern.html">v1::read_concern</a> v)</td></tr>
+<tr class="memdesc:ace667fbfb5d728f7e18d36f262e60c64"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the "readConcern" field.  <br /></td></tr>
+<tr class="memitem:ada3e967131675d859ccc3ca75b3834e3" id="r_ada3e967131675d859ccc3ca75b3834e3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classbsoncxx_1_1v1_1_1stdx_1_1optional.html">bsoncxx::v1::stdx::optional</a>&lt; <a class="el" href="namespacemongocxx_1_1v1.html#a94f46ce1caab9a4c50084205fa990115">v1::return_document</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ada3e967131675d859ccc3ca75b3834e3">return_document</a> () const</td></tr>
+<tr class="memdesc:ada3e967131675d859ccc3ca75b3834e3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the current "returnDocument" field.  <br /></td></tr>
+<tr class="memitem:a68933d3a6b318503aa4b7b4c688fc36b" id="r_a68933d3a6b318503aa4b7b4c688fc36b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#a9a94960e791180f835b9854c63764185">find_one_and_replace_options</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a68933d3a6b318503aa4b7b4c688fc36b">return_document</a> (<a class="el" href="namespacemongocxx_1_1v1.html#a94f46ce1caab9a4c50084205fa990115">v1::return_document</a> v)</td></tr>
+<tr class="memdesc:a68933d3a6b318503aa4b7b4c688fc36b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the "returnDocument" field.  <br /></td></tr>
+<tr class="memitem:ac256b8fac21e9bcd8d490e9fbac82efb" id="r_ac256b8fac21e9bcd8d490e9fbac82efb"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classbsoncxx_1_1v1_1_1stdx_1_1optional.html">bsoncxx::v1::stdx::optional</a>&lt; <a class="el" href="classbsoncxx_1_1v1_1_1document_1_1view.html">bsoncxx::v1::document::view</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac256b8fac21e9bcd8d490e9fbac82efb">sort</a> () const</td></tr>
+<tr class="memdesc:ac256b8fac21e9bcd8d490e9fbac82efb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the current "sort" field.  <br /></td></tr>
+<tr class="memitem:ad5d0f5ba5263e31065987035abf81510" id="r_ad5d0f5ba5263e31065987035abf81510"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#a9a94960e791180f835b9854c63764185">find_one_and_replace_options</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad5d0f5ba5263e31065987035abf81510">sort</a> (<a class="el" href="classbsoncxx_1_1v1_1_1document_1_1value.html">bsoncxx::v1::document::value</a> v)</td></tr>
+<tr class="memdesc:ad5d0f5ba5263e31065987035abf81510"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the "sort" field.  <br /></td></tr>
+<tr class="memitem:aaa19e5a776d9c1368425ef37f301a65c" id="r_aaa19e5a776d9c1368425ef37f301a65c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classbsoncxx_1_1v1_1_1stdx_1_1optional.html">bsoncxx::v1::stdx::optional</a>&lt; bool &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aaa19e5a776d9c1368425ef37f301a65c">upsert</a> () const</td></tr>
+<tr class="memdesc:aaa19e5a776d9c1368425ef37f301a65c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the current "upsert" field.  <br /></td></tr>
+<tr class="memitem:a6ed24f301ed4563788e51e41eb2b99f3" id="r_a6ed24f301ed4563788e51e41eb2b99f3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#a9a94960e791180f835b9854c63764185">find_one_and_replace_options</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6ed24f301ed4563788e51e41eb2b99f3">upsert</a> (bool v)</td></tr>
+<tr class="memdesc:a6ed24f301ed4563788e51e41eb2b99f3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the "upsert" field.  <br /></td></tr>
+<tr class="memitem:aafb86d663c60bd2a6f4c526fcb537f86" id="r_aafb86d663c60bd2a6f4c526fcb537f86"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classbsoncxx_1_1v1_1_1stdx_1_1optional.html">bsoncxx::v1::stdx::optional</a>&lt; <a class="el" href="classmongocxx_1_1v1_1_1write__concern.html">v1::write_concern</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aafb86d663c60bd2a6f4c526fcb537f86">write_concern</a> () const</td></tr>
+<tr class="memdesc:aafb86d663c60bd2a6f4c526fcb537f86"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the current "writeConcern" field.  <br /></td></tr>
+<tr class="memitem:ac15239a69bbda40f09f6b0fda415d7b4" id="r_ac15239a69bbda40f09f6b0fda415d7b4"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#a9a94960e791180f835b9854c63764185">find_one_and_replace_options</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac15239a69bbda40f09f6b0fda415d7b4">write_concern</a> (<a class="el" href="classmongocxx_1_1v1_1_1write__concern.html">v1::write_concern</a> v)</td></tr>
+<tr class="memdesc:ac15239a69bbda40f09f6b0fda415d7b4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the "writeConcern" field.  <br /></td></tr>
+</table>
+<a name="doc-constructors" id="doc-constructors"></a><h2 id="header-doc-constructors" class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="ae045ca07f88ccd3d3681539a3fb586f7" name="ae045ca07f88ccd3d3681539a3fb586f7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae045ca07f88ccd3d3681539a3fb586f7">&#9670;&#160;</a></span>~find_one_and_replace_options()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">mongocxx::v1::find_one_and_replace_options::~find_one_and_replace_options </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Destroy this object. </p>
+<dl class="section warning"><dt>Warning</dt><dd>Invalidates all associated views. </dd></dl>
+
+</div>
+</div>
+<a id="a9a94960e791180f835b9854c63764185" name="a9a94960e791180f835b9854c63764185"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9a94960e791180f835b9854c63764185">&#9670;&#160;</a></span>find_one_and_replace_options() <span class="overload">[1/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">mongocxx::v1::find_one_and_replace_options::find_one_and_replace_options </td>
+          <td>(</td>
+          <td class="paramtype">find_one_and_replace_options &amp;&amp;</td>          <td class="paramname"><span class="paramname"><em>other</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel noexcept">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Move constructor. </p>
+<dl class="section user"><dt>Postconditions:</dt><dd><ul>
+<li><span class="tt">other</span> is in an assign-or-destroy-only state. </li>
+</ul>
+</dd></dl>
+
+</div>
+</div>
+<a id="afcb573f1b397804f6a9b22d38864bf76" name="afcb573f1b397804f6a9b22d38864bf76"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afcb573f1b397804f6a9b22d38864bf76">&#9670;&#160;</a></span>find_one_and_replace_options() <span class="overload">[2/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">mongocxx::v1::find_one_and_replace_options::find_one_and_replace_options </td>
+          <td>(</td>
+          <td class="paramtype">find_one_and_replace_options const &amp;</td>          <td class="paramname"><span class="paramname"><em>other</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Copy construction. </p>
+
+</div>
+</div>
+<a id="ab99d7bd13ec7a1228f26265e3c1e0245" name="ab99d7bd13ec7a1228f26265e3c1e0245"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab99d7bd13ec7a1228f26265e3c1e0245">&#9670;&#160;</a></span>find_one_and_replace_options() <span class="overload">[3/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">mongocxx::v1::find_one_and_replace_options::find_one_and_replace_options </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Default initialization. </p>
+<dl class="section user"><dt>Postconditions:</dt><dd><ul>
+<li>All supported fields are "unset" or zero-initialized. </li>
+</ul>
+</dd></dl>
+
+</div>
+</div>
+<a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Member Function Documentation</h2>
+<a id="ac3cde53d1e17891c2c673c9e26984d27" name="ac3cde53d1e17891c2c673c9e26984d27"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac3cde53d1e17891c2c673c9e26984d27">&#9670;&#160;</a></span>bypass_document_validation() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classbsoncxx_1_1v1_1_1stdx_1_1optional.html">bsoncxx::v1::stdx::optional</a>&lt; bool &gt; mongocxx::v1::find_one_and_replace_options::bypass_document_validation </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Return the current "bypassDocumentValidation" field. </p>
+
+</div>
+</div>
+<a id="a7d8dbd6d4e636e681df2493f3c1f5427" name="a7d8dbd6d4e636e681df2493f3c1f5427"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7d8dbd6d4e636e681df2493f3c1f5427">&#9670;&#160;</a></span>bypass_document_validation() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#a9a94960e791180f835b9854c63764185">find_one_and_replace_options</a> &amp; mongocxx::v1::find_one_and_replace_options::bypass_document_validation </td>
+          <td>(</td>
+          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>v</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Set the "bypassDocumentValidation" field. </p>
+
+</div>
+</div>
+<a id="af2f642db6eb816b46dbd4d5f3eef0a48" name="af2f642db6eb816b46dbd4d5f3eef0a48"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af2f642db6eb816b46dbd4d5f3eef0a48">&#9670;&#160;</a></span>collation() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classbsoncxx_1_1v1_1_1stdx_1_1optional.html">bsoncxx::v1::stdx::optional</a>&lt; <a class="el" href="classbsoncxx_1_1v1_1_1document_1_1view.html">bsoncxx::v1::document::view</a> &gt; mongocxx::v1::find_one_and_replace_options::collation </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Return the current "collation" field. </p>
+
+</div>
+</div>
+<a id="a4a69a37cf5ae99761f0684e26d7f1f0e" name="a4a69a37cf5ae99761f0684e26d7f1f0e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4a69a37cf5ae99761f0684e26d7f1f0e">&#9670;&#160;</a></span>collation() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#a9a94960e791180f835b9854c63764185">find_one_and_replace_options</a> &amp; mongocxx::v1::find_one_and_replace_options::collation </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classbsoncxx_1_1v1_1_1document_1_1value.html">bsoncxx::v1::document::value</a></td>          <td class="paramname"><span class="paramname"><em>v</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Set the "collation" field. </p>
+
+</div>
+</div>
+<a id="a98735aea284ff7350599f9319f71f1b0" name="a98735aea284ff7350599f9319f71f1b0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a98735aea284ff7350599f9319f71f1b0">&#9670;&#160;</a></span>comment() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classbsoncxx_1_1v1_1_1stdx_1_1optional.html">bsoncxx::v1::stdx::optional</a>&lt; <a class="el" href="classbsoncxx_1_1v1_1_1types_1_1view.html">bsoncxx::v1::types::view</a> &gt; const mongocxx::v1::find_one_and_replace_options::comment </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Return the current "comment" field. </p>
+
+</div>
+</div>
+<a id="a591f771b6ac1c90db01f6143968fe401" name="a591f771b6ac1c90db01f6143968fe401"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a591f771b6ac1c90db01f6143968fe401">&#9670;&#160;</a></span>comment() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#a9a94960e791180f835b9854c63764185">find_one_and_replace_options</a> &amp; mongocxx::v1::find_one_and_replace_options::comment </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classbsoncxx_1_1v1_1_1types_1_1value.html">bsoncxx::v1::types::value</a></td>          <td class="paramname"><span class="paramname"><em>v</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Set the "comment" field. </p>
+
+</div>
+</div>
+<a id="a1748d7aeb12f5f0477325e5bec3b42de" name="a1748d7aeb12f5f0477325e5bec3b42de"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1748d7aeb12f5f0477325e5bec3b42de">&#9670;&#160;</a></span>hint() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classbsoncxx_1_1v1_1_1stdx_1_1optional.html">bsoncxx::v1::stdx::optional</a>&lt; <a class="el" href="classmongocxx_1_1v1_1_1hint.html">v1::hint</a> &gt; mongocxx::v1::find_one_and_replace_options::hint </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Return the current "hint" field. </p>
+
+</div>
+</div>
+<a id="a30ccc9daca5cc3b4c5f95f814952ad3b" name="a30ccc9daca5cc3b4c5f95f814952ad3b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a30ccc9daca5cc3b4c5f95f814952ad3b">&#9670;&#160;</a></span>hint() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#a9a94960e791180f835b9854c63764185">find_one_and_replace_options</a> &amp; mongocxx::v1::find_one_and_replace_options::hint </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classmongocxx_1_1v1_1_1hint.html">v1::hint</a></td>          <td class="paramname"><span class="paramname"><em>v</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Set the "hint" field. </p>
+
+</div>
+</div>
+<a id="a14912052e77223a232e9c172c708e548" name="a14912052e77223a232e9c172c708e548"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a14912052e77223a232e9c172c708e548">&#9670;&#160;</a></span>let() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classbsoncxx_1_1v1_1_1stdx_1_1optional.html">bsoncxx::v1::stdx::optional</a>&lt; <a class="el" href="classbsoncxx_1_1v1_1_1document_1_1view.html">bsoncxx::v1::document::view</a> &gt; const mongocxx::v1::find_one_and_replace_options::let </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Return the current "let" field. </p>
+
+</div>
+</div>
+<a id="a29e95eace233e0e5ee0c6aab192243e8" name="a29e95eace233e0e5ee0c6aab192243e8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a29e95eace233e0e5ee0c6aab192243e8">&#9670;&#160;</a></span>let() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#a9a94960e791180f835b9854c63764185">find_one_and_replace_options</a> &amp; mongocxx::v1::find_one_and_replace_options::let </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classbsoncxx_1_1v1_1_1document_1_1value.html">bsoncxx::v1::document::value</a></td>          <td class="paramname"><span class="paramname"><em>v</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Set the "let" field. </p>
+
+</div>
+</div>
+<a id="a0ebb8344842da0cb142878911a5d4331" name="a0ebb8344842da0cb142878911a5d4331"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0ebb8344842da0cb142878911a5d4331">&#9670;&#160;</a></span>max_time() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classbsoncxx_1_1v1_1_1stdx_1_1optional.html">bsoncxx::v1::stdx::optional</a>&lt; std::chrono::milliseconds &gt; mongocxx::v1::find_one_and_replace_options::max_time </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Return the current "maxTimeMS" field. </p>
+
+</div>
+</div>
+<a id="a9cbe96e69e6e704099fd27d43177e033" name="a9cbe96e69e6e704099fd27d43177e033"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9cbe96e69e6e704099fd27d43177e033">&#9670;&#160;</a></span>max_time() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#a9a94960e791180f835b9854c63764185">find_one_and_replace_options</a> &amp; mongocxx::v1::find_one_and_replace_options::max_time </td>
+          <td>(</td>
+          <td class="paramtype">std::chrono::milliseconds</td>          <td class="paramname"><span class="paramname"><em>v</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Set the "maxTimeMS" field. </p>
+
+</div>
+</div>
+<a id="af3652ec3b71f29012e145cd99c2e9a79" name="af3652ec3b71f29012e145cd99c2e9a79"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af3652ec3b71f29012e145cd99c2e9a79">&#9670;&#160;</a></span>operator=() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#a9a94960e791180f835b9854c63764185">find_one_and_replace_options</a> &amp; mongocxx::v1::find_one_and_replace_options::operator= </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="#a9a94960e791180f835b9854c63764185">find_one_and_replace_options</a> &amp;&amp;</td>          <td class="paramname"><span class="paramname"><em>other</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel noexcept">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Move assignment. </p>
+<dl class="section user"><dt>Postconditions:</dt><dd><ul>
+<li><span class="tt">other</span> is in an assign-or-destroy-only state. </li>
+</ul>
+</dd></dl>
+
+</div>
+</div>
+<a id="a72c90444c9dada5e9cf1ac8ee6a9501f" name="a72c90444c9dada5e9cf1ac8ee6a9501f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a72c90444c9dada5e9cf1ac8ee6a9501f">&#9670;&#160;</a></span>operator=() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#a9a94960e791180f835b9854c63764185">find_one_and_replace_options</a> &amp; mongocxx::v1::find_one_and_replace_options::operator= </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="#a9a94960e791180f835b9854c63764185">find_one_and_replace_options</a> const &amp;</td>          <td class="paramname"><span class="paramname"><em>other</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Copy assignment. </p>
+
+</div>
+</div>
+<a id="a7b840e189079a73cf7d5f2d04dadc3cf" name="a7b840e189079a73cf7d5f2d04dadc3cf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7b840e189079a73cf7d5f2d04dadc3cf">&#9670;&#160;</a></span>projection() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classbsoncxx_1_1v1_1_1stdx_1_1optional.html">bsoncxx::v1::stdx::optional</a>&lt; <a class="el" href="classbsoncxx_1_1v1_1_1document_1_1view.html">bsoncxx::v1::document::view</a> &gt; mongocxx::v1::find_one_and_replace_options::projection </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Return the current "projection" field. </p>
+
+</div>
+</div>
+<a id="aac86285008eb3ee3bbaf3f1eb35f6c30" name="aac86285008eb3ee3bbaf3f1eb35f6c30"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aac86285008eb3ee3bbaf3f1eb35f6c30">&#9670;&#160;</a></span>projection() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#a9a94960e791180f835b9854c63764185">find_one_and_replace_options</a> &amp; mongocxx::v1::find_one_and_replace_options::projection </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classbsoncxx_1_1v1_1_1document_1_1value.html">bsoncxx::v1::document::value</a></td>          <td class="paramname"><span class="paramname"><em>v</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Set the "projection" field. </p>
+
+</div>
+</div>
+<a id="a563b62138501419cb14d21db5550d49f" name="a563b62138501419cb14d21db5550d49f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a563b62138501419cb14d21db5550d49f">&#9670;&#160;</a></span>read_concern() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classbsoncxx_1_1v1_1_1stdx_1_1optional.html">bsoncxx::v1::stdx::optional</a>&lt; <a class="el" href="classmongocxx_1_1v1_1_1read__concern.html">v1::read_concern</a> &gt; mongocxx::v1::find_one_and_replace_options::read_concern </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Return the current "readConcern" field. </p>
+
+</div>
+</div>
+<a id="ace667fbfb5d728f7e18d36f262e60c64" name="ace667fbfb5d728f7e18d36f262e60c64"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ace667fbfb5d728f7e18d36f262e60c64">&#9670;&#160;</a></span>read_concern() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#a9a94960e791180f835b9854c63764185">find_one_and_replace_options</a> &amp; mongocxx::v1::find_one_and_replace_options::read_concern </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classmongocxx_1_1v1_1_1read__concern.html">v1::read_concern</a></td>          <td class="paramname"><span class="paramname"><em>v</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Set the "readConcern" field. </p>
+
+</div>
+</div>
+<a id="ada3e967131675d859ccc3ca75b3834e3" name="ada3e967131675d859ccc3ca75b3834e3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ada3e967131675d859ccc3ca75b3834e3">&#9670;&#160;</a></span>return_document() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classbsoncxx_1_1v1_1_1stdx_1_1optional.html">bsoncxx::v1::stdx::optional</a>&lt; <a class="el" href="namespacemongocxx_1_1v1.html#a94f46ce1caab9a4c50084205fa990115">v1::return_document</a> &gt; mongocxx::v1::find_one_and_replace_options::return_document </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Return the current "returnDocument" field. </p>
+
+</div>
+</div>
+<a id="a68933d3a6b318503aa4b7b4c688fc36b" name="a68933d3a6b318503aa4b7b4c688fc36b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a68933d3a6b318503aa4b7b4c688fc36b">&#9670;&#160;</a></span>return_document() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#a9a94960e791180f835b9854c63764185">find_one_and_replace_options</a> &amp; mongocxx::v1::find_one_and_replace_options::return_document </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespacemongocxx_1_1v1.html#a94f46ce1caab9a4c50084205fa990115">v1::return_document</a></td>          <td class="paramname"><span class="paramname"><em>v</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Set the "returnDocument" field. </p>
+
+</div>
+</div>
+<a id="ac256b8fac21e9bcd8d490e9fbac82efb" name="ac256b8fac21e9bcd8d490e9fbac82efb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac256b8fac21e9bcd8d490e9fbac82efb">&#9670;&#160;</a></span>sort() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classbsoncxx_1_1v1_1_1stdx_1_1optional.html">bsoncxx::v1::stdx::optional</a>&lt; <a class="el" href="classbsoncxx_1_1v1_1_1document_1_1view.html">bsoncxx::v1::document::view</a> &gt; mongocxx::v1::find_one_and_replace_options::sort </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Return the current "sort" field. </p>
+
+</div>
+</div>
+<a id="ad5d0f5ba5263e31065987035abf81510" name="ad5d0f5ba5263e31065987035abf81510"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad5d0f5ba5263e31065987035abf81510">&#9670;&#160;</a></span>sort() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#a9a94960e791180f835b9854c63764185">find_one_and_replace_options</a> &amp; mongocxx::v1::find_one_and_replace_options::sort </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classbsoncxx_1_1v1_1_1document_1_1value.html">bsoncxx::v1::document::value</a></td>          <td class="paramname"><span class="paramname"><em>v</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Set the "sort" field. </p>
+
+</div>
+</div>
+<a id="aaa19e5a776d9c1368425ef37f301a65c" name="aaa19e5a776d9c1368425ef37f301a65c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aaa19e5a776d9c1368425ef37f301a65c">&#9670;&#160;</a></span>upsert() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classbsoncxx_1_1v1_1_1stdx_1_1optional.html">bsoncxx::v1::stdx::optional</a>&lt; bool &gt; mongocxx::v1::find_one_and_replace_options::upsert </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Return the current "upsert" field. </p>
+
+</div>
+</div>
+<a id="a6ed24f301ed4563788e51e41eb2b99f3" name="a6ed24f301ed4563788e51e41eb2b99f3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6ed24f301ed4563788e51e41eb2b99f3">&#9670;&#160;</a></span>upsert() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#a9a94960e791180f835b9854c63764185">find_one_and_replace_options</a> &amp; mongocxx::v1::find_one_and_replace_options::upsert </td>
+          <td>(</td>
+          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>v</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Set the "upsert" field. </p>
+
+</div>
+</div>
+<a id="aafb86d663c60bd2a6f4c526fcb537f86" name="aafb86d663c60bd2a6f4c526fcb537f86"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aafb86d663c60bd2a6f4c526fcb537f86">&#9670;&#160;</a></span>write_concern() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classbsoncxx_1_1v1_1_1stdx_1_1optional.html">bsoncxx::v1::stdx::optional</a>&lt; <a class="el" href="classmongocxx_1_1v1_1_1write__concern.html">v1::write_concern</a> &gt; mongocxx::v1::find_one_and_replace_options::write_concern </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Return the current "writeConcern" field. </p>
+
+</div>
+</div>
+<a id="ac15239a69bbda40f09f6b0fda415d7b4" name="ac15239a69bbda40f09f6b0fda415d7b4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac15239a69bbda40f09f6b0fda415d7b4">&#9670;&#160;</a></span>write_concern() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#a9a94960e791180f835b9854c63764185">find_one_and_replace_options</a> &amp; mongocxx::v1::find_one_and_replace_options::write_concern </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classmongocxx_1_1v1_1_1write__concern.html">v1::write_concern</a></td>          <td class="paramname"><span class="paramname"><em>v</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Set the "writeConcern" field. </p>
+
+</div>
+</div>
+<hr/>The documentation for this class was generated from the following file:<ul>
+<li>mongocxx/v1/<a class="el" href="find__one__and__replace__options_8hpp_source.html">find_one_and_replace_options.hpp</a></li>
+</ul>
+</div><!-- contents -->
+</div><!-- doc-content -->
+<div id="page-nav" class="page-nav-panel">
+<div id="page-nav-resize-handle"></div>
+<div id="page-nav-tree">
+<div id="page-nav-contents">
+</div><!-- page-nav-contents -->
+</div><!-- page-nav-tree -->
+</div><!-- page-nav -->
+</div><!-- container -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a href="namespacemongocxx.html">mongocxx</a></li><li class="navelem"><a href="namespacemongocxx_1_1v1.html">v1</a></li><li class="navelem"><a href="classmongocxx_1_1v1_1_1find__one__and__replace__options.html">find_one_and_replace_options</a></li>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.15.0 </li>
+  </ul>
+</div>
+</body>
+</html>

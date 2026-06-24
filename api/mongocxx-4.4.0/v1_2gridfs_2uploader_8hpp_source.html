@@ -1,0 +1,264 @@
+<!-- HTML header for doxygen 1.15.0-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-US">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.15.0"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>MongoDB C++ Driver: mongocxx/v1/gridfs/uploader.hpp Source File</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript">var page_layout=1;</script>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<script type="text/javascript" src="clipboard.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<script type="text/javascript" src="cookie.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/javascript">
+  $(function() { init_search(); });
+</script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+<link href="doxygen-extra.css" rel="stylesheet" type="text/css"/>
+<!-- Mixpanel Tracker -->
+<script type="text/javascript">
+  (function(e,c){if(!c.__SV){var l,h;window.mixpanel=c;c._i=[];c.init=function(q,r,f){function t(d,a){var g=a.split(".");2==g.length&&(d=d[g[0]],a=g[1]);d[a]=function(){d.push([a].concat(Array.prototype.slice.call(arguments,0)))}}var b=c;"undefined"!==typeof f?b=c[f]=[]:f="mixpanel";b.people=b.people||[];b.toString=function(d){var a="mixpanel";"mixpanel"!==f&&(a+="."+f);d||(a+=" (stub)");return a};b.people.toString=function(){return b.toString(1)+".people (stub)"};l="disable time_event track track_pageview track_links track_forms track_with_groups add_group set_group remove_group register register_once alias unregister identify name_tag set_config reset opt_in_tracking opt_out_tracking has_opted_in_tracking has_opted_out_tracking clear_opt_in_out_tracking start_batch_senders start_session_recording stop_session_recording people.set people.set_once people.unset people.increment people.append people.union people.track_charge people.clear_charges people.delete_user people.remove".split(" ");
+  for(h=0;h<l.length;h++)t(b,l[h]);var n="set set_once union unset remove delete".split(" ");b.get_group=function(){function d(p){a[p]=function(){b.push([g,[p].concat(Array.prototype.slice.call(arguments,0))])}}for(var a={},g=["get_group"].concat(Array.prototype.slice.call(arguments,0)),m=0;m<n.length;m++)d(n[m]);return a};c._i.push([q,r,f])};c.__SV=1.2;var k=e.createElement("script");k.type="text/javascript";k.async=!0;k.src="undefined"!==typeof MIXPANEL_CUSTOM_LIB_URL?MIXPANEL_CUSTOM_LIB_URL:"file:"===
+  e.location.protocol&&"//cdn.mxpnl.com/libs/mixpanel-2-latest.min.js".match(/^\/\//)?"https://cdn.mxpnl.com/libs/mixpanel-2-latest.min.js":"//cdn.mxpnl.com/libs/mixpanel-2-latest.min.js";e=e.getElementsByTagName("script")[0];e.parentNode.insertBefore(k,e)}})(document,window.mixpanel||[]); mixpanel.init('f2a38f26e5cc0eee429a9276f296c118', {
+    autocapture: true,
+    record_sessions_percent: 0,
+  })
+</script>
+<!-- patch-apidocs-current-redirects: mongocxx-4.4.0 -->
+<link rel="canonical" href="https://mongocxx.org/api/mongocxx-4.4.0/v1_2gridfs_2uploader_8hpp_source.html"/>
+<script type="text/javascript">
+if (window.location.pathname.startsWith("/api/current/")) {
+  window.location.replace(
+    window.location.href.replace("/api/current/", "/api/mongocxx-4.4.0/")
+  )
+}
+</script>
+</head>
+<body>
+<div id="side-nav" class="ui-resizable side-nav-resizable"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr id="projectrow">
+  <td id="projectalign">
+   <div id="projectname">MongoDB C++ Driver<span id="projectnumber">&#160;4.4.0</span>
+   </div>
+  </td>
+ </tr>
+   <tr><td colspan="2">        <div id="MSearchBox" class="MSearchBoxInactive">
+        <span class="left">
+          <span id="MSearchSelect" class="search-icon" onmouseover="return searchBox.OnSearchSelectShow()" onmouseout="return searchBox.OnSearchSelectHide()"><span class="search-icon-dropdown"></span></span>
+          <input type="text" id="MSearchField" value="" placeholder="Search" accesskey="S"
+               onfocus="searchBox.OnSearchFieldFocus(true)" 
+               onblur="searchBox.OnSearchFieldFocus(false)" 
+               onkeyup="searchBox.OnSearchFieldChange(event)"/>
+          </span><span class="right">
+            <a id="MSearchClose" href="javascript:searchBox.CloseResultsWindow()"><div id="MSearchCloseImg" class="close-icon"></div></a>
+          </span>
+        </div>
+</td></tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Generated by Doxygen 1.15.0 -->
+<script type="text/javascript">
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+</script>
+<script type="text/javascript">
+$(function() { codefold.init(); });
+</script>
+</div><!-- top -->
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+$(function(){initNavTree('v1_2gridfs_2uploader_8hpp_source.html','',''); });
+</script>
+<div id="container">
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Loading...</div>
+<div class="SRStatus" id="Searching">Searching...</div>
+<div class="SRStatus" id="NoMatches">No Matches</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="header">
+  <div class="headertitle"><div class="title">uploader.hpp</div></div>
+</div><!--header-->
+<div class="contents">
+<a href="v1_2gridfs_2uploader_8hpp.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">// Copyright 2009-present MongoDB, Inc.</span></div>
+<div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="comment">//</span></div>
+<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="comment">// Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span></div>
+<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="comment">// you may not use this file except in compliance with the License.</span></div>
+<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="comment">// You may obtain a copy of the License at</span></div>
+<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="comment">//</span></div>
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="comment">// http://www.apache.org/licenses/LICENSE-2.0</span></div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="comment">//</span></div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="comment">// Unless required by applicable law or agreed to in writing, software</span></div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="comment">// distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span></div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="comment">// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span></div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="comment">// See the License for the specific language governing permissions and</span></div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="comment">// limitations under the License.</span></div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span> </div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="preprocessor">#pragma once</span></div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span> </div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="preprocessor">#include &lt;<a class="code" href="v1_2gridfs_2uploader-fwd_8hpp.html">mongocxx/v1/gridfs/uploader-fwd.hpp</a>&gt;</span> <span class="comment">// IWYU pragma: export</span></div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span> </div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="comment">//</span></div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span> </div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="preprocessor">#include &lt;<a class="code" href="mongocxx_2v1_2detail_2prelude_8hpp.html">mongocxx/v1/detail/prelude.hpp</a>&gt;</span></div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span> </div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="preprocessor">#include &lt;<a class="code" href="upload__result-fwd_8hpp.html">mongocxx/v1/gridfs/upload_result-fwd.hpp</a>&gt;</span></div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span> </div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="preprocessor">#include &lt;<a class="code" href="mongocxx_2v1_2config_2export_8hpp.html">mongocxx/v1/config/export.hpp</a>&gt;</span></div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span> </div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="preprocessor">#include &lt;cstddef&gt;</span></div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="preprocessor">#include &lt;cstdint&gt;</span></div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="preprocessor">#include &lt;system_error&gt;</span></div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span><span class="preprocessor">#include &lt;type_traits&gt;</span></div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span> </div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespacemongocxx.html">mongocxx</a> {</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespacemongocxx_1_1v1.html">v1</a> {</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespacemongocxx_1_1v1_1_1gridfs.html">gridfs</a> {</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span></div>
+<div class="foldopen" id="foldopen00042" data-start="{" data-end="};">
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno"><a class="line" href="classmongocxx_1_1v1_1_1gridfs_1_1uploader.html">   42</a></span><span class="keyword">class </span><a class="code hl_function" href="classmongocxx_1_1v1_1_1gridfs_1_1uploader.html#a97eeddb4da8e939c0a554d26bd298880">uploader</a> {</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>   <span class="keyword">private</span>:</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>    <span class="keyword">class </span>impl;</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>    <span class="keywordtype">void</span>* _impl;</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span> </div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>   <span class="keyword">public</span>:</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno"><a class="line" href="classmongocxx_1_1v1_1_1gridfs_1_1uploader.html#a9bf31888a788c862f59b89959e9f6664">   56</a></span>    <a class="code hl_define" href="mongocxx_2v1_2config_2export_8hpp.html#a753ba55c7c3b23542b2ec9f00333c6ba">MONGOCXX_ABI_EXPORT_CDECL</a>() <a class="code hl_function" href="classmongocxx_1_1v1_1_1gridfs_1_1uploader.html#a9bf31888a788c862f59b89959e9f6664">~uploader</a>();</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span></div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno"><a class="line" href="classmongocxx_1_1v1_1_1gridfs_1_1uploader.html#a97eeddb4da8e939c0a554d26bd298880">   64</a></span>    <a class="code hl_define" href="mongocxx_2v1_2config_2export_8hpp.html#a753ba55c7c3b23542b2ec9f00333c6ba">MONGOCXX_ABI_EXPORT_CDECL</a>() <a class="code hl_function" href="classmongocxx_1_1v1_1_1gridfs_1_1uploader.html#a97eeddb4da8e939c0a554d26bd298880">uploader</a>(<a class="code hl_function" href="classmongocxx_1_1v1_1_1gridfs_1_1uploader.html#a97eeddb4da8e939c0a554d26bd298880">uploader</a>&amp;&amp; other) noexcept;</div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span></div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno"><a class="line" href="classmongocxx_1_1v1_1_1gridfs_1_1uploader.html#ad2a179a4a0f8fadd6ae316dfdaf8f1a1">   72</a></span>    <a class="code hl_define" href="mongocxx_2v1_2config_2export_8hpp.html#a753ba55c7c3b23542b2ec9f00333c6ba">MONGOCXX_ABI_EXPORT_CDECL</a>(<a class="code hl_function" href="classmongocxx_1_1v1_1_1gridfs_1_1uploader.html#a97eeddb4da8e939c0a554d26bd298880">uploader</a>&amp;) operator=(<a class="code hl_function" href="classmongocxx_1_1v1_1_1gridfs_1_1uploader.html#a97eeddb4da8e939c0a554d26bd298880">uploader</a>&amp;&amp; other) noexcept;</div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span></div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno"><a class="line" href="classmongocxx_1_1v1_1_1gridfs_1_1uploader.html#a1f809fc01ab96b26532fdd434cb77d7a">   77</a></span>    <a class="code hl_function" href="classmongocxx_1_1v1_1_1gridfs_1_1uploader.html#a97eeddb4da8e939c0a554d26bd298880">uploader</a>(<a class="code hl_function" href="classmongocxx_1_1v1_1_1gridfs_1_1uploader.html#a97eeddb4da8e939c0a554d26bd298880">uploader</a> const&amp; other) = delete;</div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span></div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno"><a class="line" href="classmongocxx_1_1v1_1_1gridfs_1_1uploader.html#a4c632aa8804adf56b8aacd11c0b4905c">   82</a></span>    <a class="code hl_function" href="classmongocxx_1_1v1_1_1gridfs_1_1uploader.html#a97eeddb4da8e939c0a554d26bd298880">uploader</a>&amp; operator=(<a class="code hl_function" href="classmongocxx_1_1v1_1_1gridfs_1_1uploader.html#a97eeddb4da8e939c0a554d26bd298880">uploader</a> const&amp; other) = delete;</div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span></div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno"><a class="line" href="classmongocxx_1_1v1_1_1gridfs_1_1uploader.html#aa7792676e24abf9bf27527c0a32bd7a0">   90</a></span>    <a class="code hl_define" href="mongocxx_2v1_2config_2export_8hpp.html#a753ba55c7c3b23542b2ec9f00333c6ba">MONGOCXX_ABI_EXPORT_CDECL</a>() <a class="code hl_function" href="classmongocxx_1_1v1_1_1gridfs_1_1uploader.html#a97eeddb4da8e939c0a554d26bd298880">uploader</a>();</div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span></div>
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno"><a class="line" href="classmongocxx_1_1v1_1_1gridfs_1_1uploader.html#ae3b7051064e8400f8c2c992611b9b298">   95</a></span>    explicit <a class="code hl_define" href="mongocxx_2v1_2config_2export_8hpp.html#a753ba55c7c3b23542b2ec9f00333c6ba">MONGOCXX_ABI_EXPORT_CDECL</a>() operator <span class="keywordtype">bool</span>() const;</div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span></div>
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno"><a class="line" href="classmongocxx_1_1v1_1_1gridfs_1_1uploader.html#abc39b510d34527f62985212ac6f2a5a0">  100</a></span>    <a class="code hl_define" href="mongocxx_2v1_2config_2export_8hpp.html#a753ba55c7c3b23542b2ec9f00333c6ba">MONGOCXX_ABI_EXPORT_CDECL</a>(<span class="keywordtype">bool</span>) <a class="code hl_function" href="classmongocxx_1_1v1_1_1gridfs_1_1uploader.html#abc39b510d34527f62985212ac6f2a5a0">is_open</a>() const;</div>
+<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span></div>
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno"><a class="line" href="classmongocxx_1_1v1_1_1gridfs_1_1uploader.html#a3b8b85c2849f7654ece59a07c1698cea">  113</a></span>    <a class="code hl_define" href="mongocxx_2v1_2config_2export_8hpp.html#a753ba55c7c3b23542b2ec9f00333c6ba">MONGOCXX_ABI_EXPORT_CDECL</a>(<a class="code hl_namespace" href="namespacemongocxx_1_1v1.html">v1</a>::<a class="code hl_namespace" href="namespacemongocxx_1_1v1_1_1gridfs.html">gridfs</a>::<a class="code hl_class" href="classmongocxx_1_1v1_1_1gridfs_1_1upload__result.html">upload_result</a>) <a class="code hl_function" href="classmongocxx_1_1v1_1_1gridfs_1_1uploader.html#a3b8b85c2849f7654ece59a07c1698cea">close</a>();</div>
+<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span></div>
+<div class="line"><a id="l00129" name="l00129"></a><span class="lineno"><a class="line" href="classmongocxx_1_1v1_1_1gridfs_1_1uploader.html#a3ab43a051bfcd20aaa0de90b480e9f12">  129</a></span>    <a class="code hl_define" href="mongocxx_2v1_2config_2export_8hpp.html#a753ba55c7c3b23542b2ec9f00333c6ba">MONGOCXX_ABI_EXPORT_CDECL</a>(<span class="keywordtype">void</span>) <a class="code hl_function" href="classmongocxx_1_1v1_1_1gridfs_1_1uploader.html#a3ab43a051bfcd20aaa0de90b480e9f12">abort</a>();</div>
+<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span></div>
+<div class="line"><a id="l00134" name="l00134"></a><span class="lineno"><a class="line" href="classmongocxx_1_1v1_1_1gridfs_1_1uploader.html#aa3fbe35c6150eadec9a23bb334f8d8dc">  134</a></span>    <a class="code hl_define" href="mongocxx_2v1_2config_2export_8hpp.html#a753ba55c7c3b23542b2ec9f00333c6ba">MONGOCXX_ABI_EXPORT_CDECL</a>(std::int32_t) <a class="code hl_function" href="classmongocxx_1_1v1_1_1gridfs_1_1uploader.html#aa3fbe35c6150eadec9a23bb334f8d8dc">chunk_size</a>() const;</div>
+<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span></div>
+<div class="line"><a id="l00156" name="l00156"></a><span class="lineno"><a class="line" href="classmongocxx_1_1v1_1_1gridfs_1_1uploader.html#aacdde6f880bd27a310c5ab880a5e9043">  156</a></span>    <a class="code hl_define" href="mongocxx_2v1_2config_2export_8hpp.html#a753ba55c7c3b23542b2ec9f00333c6ba">MONGOCXX_ABI_EXPORT_CDECL</a>(<span class="keywordtype">void</span>) <a class="code hl_function" href="classmongocxx_1_1v1_1_1gridfs_1_1uploader.html#aacdde6f880bd27a310c5ab880a5e9043">write</a>(std::uint8_t const* data, std::<span class="keywordtype">size_t</span> length);</div>
+<div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span></div>
+<div class="line"><a id="l00169" name="l00169"></a><span class="lineno"><a class="line" href="classmongocxx_1_1v1_1_1gridfs_1_1uploader.html#addd940d0043a37352c5dad4544f7369e">  169</a></span>    <a class="code hl_define" href="mongocxx_2v1_2config_2export_8hpp.html#a753ba55c7c3b23542b2ec9f00333c6ba">MONGOCXX_ABI_EXPORT_CDECL</a>(<span class="keywordtype">void</span>) <a class="code hl_function" href="classmongocxx_1_1v1_1_1gridfs_1_1uploader.html#addd940d0043a37352c5dad4544f7369e">flush</a>();</div>
+<div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span></div>
+<div class="foldopen" id="foldopen00174" data-start="{" data-end="};">
+<div class="line"><a id="l00174" name="l00174"></a><span class="lineno"><a class="line" href="classmongocxx_1_1v1_1_1gridfs_1_1uploader.html#ae916d59a30e05f664d346fd2aa6bd643">  174</a></span>    enum class <a class="code hl_enumeration" href="classmongocxx_1_1v1_1_1gridfs_1_1uploader.html#ae916d59a30e05f664d346fd2aa6bd643">errc</a> {</div>
+<div class="line"><a id="l00175" name="l00175"></a><span class="lineno"><a class="line" href="classmongocxx_1_1v1_1_1gridfs_1_1uploader.html#ae916d59a30e05f664d346fd2aa6bd643ad02c4c4cde7ae76252540d116a40f23a">  175</a></span>        <a class="code hl_enumvalue" href="classmongocxx_1_1v1_1_1gridfs_1_1uploader.html#ae916d59a30e05f664d346fd2aa6bd643ad02c4c4cde7ae76252540d116a40f23a">zero</a>,            </div>
+<div class="line"><a id="l00176" name="l00176"></a><span class="lineno"><a class="line" href="classmongocxx_1_1v1_1_1gridfs_1_1uploader.html#ae916d59a30e05f664d346fd2aa6bd643a8da26ba680a4bc49270f115861546f0e">  176</a></span>        <a class="code hl_enumvalue" href="classmongocxx_1_1v1_1_1gridfs_1_1uploader.html#ae916d59a30e05f664d346fd2aa6bd643a8da26ba680a4bc49270f115861546f0e">is_closed</a>,       </div>
+<div class="line"><a id="l00177" name="l00177"></a><span class="lineno"><a class="line" href="classmongocxx_1_1v1_1_1gridfs_1_1uploader.html#ae916d59a30e05f664d346fd2aa6bd643aea08773fae2f161d0ab739611f4884bd">  177</a></span>        <a class="code hl_enumvalue" href="classmongocxx_1_1v1_1_1gridfs_1_1uploader.html#ae916d59a30e05f664d346fd2aa6bd643aea08773fae2f161d0ab739611f4884bd">too_many_chunks</a>, </div>
+<div class="line"><a id="l00178" name="l00178"></a><span class="lineno">  178</span>    };</div>
+</div>
+<div class="line"><a id="l00179" name="l00179"></a><span class="lineno">  179</span></div>
+<div class="line"><a id="l00183" name="l00183"></a><span class="lineno"><a class="line" href="classmongocxx_1_1v1_1_1gridfs_1_1uploader.html#a700298d6bf0d46438b0b88af21548c30">  183</a></span>    <span class="keyword">static</span> <a class="code hl_define" href="mongocxx_2v1_2config_2export_8hpp.html#a753ba55c7c3b23542b2ec9f00333c6ba">MONGOCXX_ABI_EXPORT_CDECL</a>(std::error_category <span class="keyword">const</span>&amp;) <a class="code hl_function" href="classmongocxx_1_1v1_1_1gridfs_1_1uploader.html#a700298d6bf0d46438b0b88af21548c30">error_category</a>();</div>
+<div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span></div>
+<div class="foldopen" id="foldopen00188" data-start="{" data-end="}">
+<div class="line"><a id="l00188" name="l00188"></a><span class="lineno"><a class="line" href="classmongocxx_1_1v1_1_1gridfs_1_1uploader.html#a94547ece96a465df7b4ef04abbc99547">  188</a></span>    <span class="keyword">friend</span> std::error_code <a class="code hl_friend" href="classmongocxx_1_1v1_1_1gridfs_1_1uploader.html#a94547ece96a465df7b4ef04abbc99547">make_error_code</a>(<a class="code hl_enumeration" href="classmongocxx_1_1v1_1_1gridfs_1_1uploader.html#ae916d59a30e05f664d346fd2aa6bd643">errc</a> v) {</div>
+<div class="line"><a id="l00189" name="l00189"></a><span class="lineno">  189</span>        <span class="keywordflow">return</span> {<span class="keyword">static_cast&lt;</span><span class="keywordtype">int</span><span class="keyword">&gt;</span>(v), <a class="code hl_function" href="classmongocxx_1_1v1_1_1gridfs_1_1uploader.html#a700298d6bf0d46438b0b88af21548c30">error_category</a>()};</div>
+<div class="line"><a id="l00190" name="l00190"></a><span class="lineno">  190</span>    }</div>
+</div>
+<div class="line"><a id="l00191" name="l00191"></a><span class="lineno">  191</span> </div>
+<div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span>    <span class="keyword">class </span>internal;</div>
+<div class="line"><a id="l00193" name="l00193"></a><span class="lineno">  193</span> </div>
+<div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span>   <span class="keyword">private</span>:</div>
+<div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span>    <span class="comment">/* explicit(false) */</span> <a class="code hl_function" href="classmongocxx_1_1v1_1_1gridfs_1_1uploader.html#aa7792676e24abf9bf27527c0a32bd7a0">uploader</a>(<span class="keywordtype">void</span>* impl);</div>
+<div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span> </div>
+<div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span>    <span class="keywordtype">void</span> save_chunk();</div>
+<div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span>};</div>
+</div>
+<div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span> </div>
+<div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span>} <span class="comment">// namespace gridfs</span></div>
+<div class="line"><a id="l00201" name="l00201"></a><span class="lineno">  201</span>} <span class="comment">// namespace v1</span></div>
+<div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span>} <span class="comment">// namespace mongocxx</span></div>
+<div class="line"><a id="l00203" name="l00203"></a><span class="lineno">  203</span> </div>
+<div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span><span class="keyword">namespace </span>std {</div>
+<div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span> </div>
+<div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span><span class="keyword">template</span> &lt;&gt;</div>
+<div class="line"><a id="l00207" name="l00207"></a><span class="lineno">  207</span><span class="keyword">struct </span>is_error_code_enum&lt;<a class="code hl_enumvalue" href="namespacemongocxx_1_1v1.html#a3abce3903b2660d64216efaf31916b2aa8df27a4961583890efc4e6e3c4512b0d">mongocxx</a>::v1::gridfs::uploader::errc&gt; : true_type {};</div>
+<div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span> </div>
+<div class="line"><a id="l00209" name="l00209"></a><span class="lineno">  209</span>} <span class="comment">// namespace std</span></div>
+<div class="line"><a id="l00210" name="l00210"></a><span class="lineno">  210</span> </div>
+<div class="line"><a id="l00211" name="l00211"></a><span class="lineno">  211</span><span class="preprocessor">#include &lt;<a class="code" href="mongocxx_2v1_2detail_2postlude_8hpp.html">mongocxx/v1/detail/postlude.hpp</a>&gt;</span></div>
+<div class="line"><a id="l00212" name="l00212"></a><span class="lineno">  212</span></div>
+<div class="ttc" id="aclassmongocxx_1_1v1_1_1gridfs_1_1upload__result_html"><div class="ttname"><a href="classmongocxx_1_1v1_1_1gridfs_1_1upload__result.html">mongocxx::v1::gridfs::upload_result</a></div><div class="ttdoc">Result of uploading a file to a GridFS bucket.</div><div class="ttdef"><b>Definition</b> upload_result.hpp:40</div></div>
+<div class="ttc" id="aclassmongocxx_1_1v1_1_1gridfs_1_1uploader_html_a3ab43a051bfcd20aaa0de90b480e9f12"><div class="ttname"><a href="classmongocxx_1_1v1_1_1gridfs_1_1uploader.html#a3ab43a051bfcd20aaa0de90b480e9f12">mongocxx::v1::gridfs::uploader::abort</a></div><div class="ttdeci">void abort()</div><div class="ttdoc">Abort uploading this GridFS file.</div></div>
+<div class="ttc" id="aclassmongocxx_1_1v1_1_1gridfs_1_1uploader_html_a3b8b85c2849f7654ece59a07c1698cea"><div class="ttname"><a href="classmongocxx_1_1v1_1_1gridfs_1_1uploader.html#a3b8b85c2849f7654ece59a07c1698cea">mongocxx::v1::gridfs::uploader::close</a></div><div class="ttdeci">v1::gridfs::upload_result close()</div><div class="ttdoc">Complete the upload of this GridFS file.</div></div>
+<div class="ttc" id="aclassmongocxx_1_1v1_1_1gridfs_1_1uploader_html_a700298d6bf0d46438b0b88af21548c30"><div class="ttname"><a href="classmongocxx_1_1v1_1_1gridfs_1_1uploader.html#a700298d6bf0d46438b0b88af21548c30">mongocxx::v1::gridfs::uploader::error_category</a></div><div class="ttdeci">static std::error_category const &amp; error_category()</div><div class="ttdoc">The error category for mongocxx::v1::gridfs::uploader::errc.</div></div>
+<div class="ttc" id="aclassmongocxx_1_1v1_1_1gridfs_1_1uploader_html_a94547ece96a465df7b4ef04abbc99547"><div class="ttname"><a href="classmongocxx_1_1v1_1_1gridfs_1_1uploader.html#a94547ece96a465df7b4ef04abbc99547">mongocxx::v1::gridfs::uploader::make_error_code</a></div><div class="ttdeci">friend std::error_code make_error_code(errc v)</div><div class="ttdoc">Support implicit conversion to std::error_code.</div><div class="ttdef"><b>Definition</b> uploader.hpp:188</div></div>
+<div class="ttc" id="aclassmongocxx_1_1v1_1_1gridfs_1_1uploader_html_a97eeddb4da8e939c0a554d26bd298880"><div class="ttname"><a href="classmongocxx_1_1v1_1_1gridfs_1_1uploader.html#a97eeddb4da8e939c0a554d26bd298880">mongocxx::v1::gridfs::uploader::uploader</a></div><div class="ttdeci">uploader(uploader &amp;&amp;other) noexcept</div><div class="ttdoc">Move constructor.</div></div>
+<div class="ttc" id="aclassmongocxx_1_1v1_1_1gridfs_1_1uploader_html_a9bf31888a788c862f59b89959e9f6664"><div class="ttname"><a href="classmongocxx_1_1v1_1_1gridfs_1_1uploader.html#a9bf31888a788c862f59b89959e9f6664">mongocxx::v1::gridfs::uploader::~uploader</a></div><div class="ttdeci">~uploader()</div><div class="ttdoc">Destroy this object.</div></div>
+<div class="ttc" id="aclassmongocxx_1_1v1_1_1gridfs_1_1uploader_html_aa3fbe35c6150eadec9a23bb334f8d8dc"><div class="ttname"><a href="classmongocxx_1_1v1_1_1gridfs_1_1uploader.html#aa3fbe35c6150eadec9a23bb334f8d8dc">mongocxx::v1::gridfs::uploader::chunk_size</a></div><div class="ttdeci">std::int32_t chunk_size() const</div><div class="ttdoc">Return the chunk size (in bytes) of the associated GridFS file.</div></div>
+<div class="ttc" id="aclassmongocxx_1_1v1_1_1gridfs_1_1uploader_html_aa7792676e24abf9bf27527c0a32bd7a0"><div class="ttname"><a href="classmongocxx_1_1v1_1_1gridfs_1_1uploader.html#aa7792676e24abf9bf27527c0a32bd7a0">mongocxx::v1::gridfs::uploader::uploader</a></div><div class="ttdeci">uploader()</div><div class="ttdoc">Default initialization.</div></div>
+<div class="ttc" id="aclassmongocxx_1_1v1_1_1gridfs_1_1uploader_html_aacdde6f880bd27a310c5ab880a5e9043"><div class="ttname"><a href="classmongocxx_1_1v1_1_1gridfs_1_1uploader.html#aacdde6f880bd27a310c5ab880a5e9043">mongocxx::v1::gridfs::uploader::write</a></div><div class="ttdeci">void write(std::uint8_t const *data, std::size_t length)</div><div class="ttdoc">Write length bytes of the associated GridFS file.</div></div>
+<div class="ttc" id="aclassmongocxx_1_1v1_1_1gridfs_1_1uploader_html_abc39b510d34527f62985212ac6f2a5a0"><div class="ttname"><a href="classmongocxx_1_1v1_1_1gridfs_1_1uploader.html#abc39b510d34527f62985212ac6f2a5a0">mongocxx::v1::gridfs::uploader::is_open</a></div><div class="ttdeci">bool is_open() const</div><div class="ttdoc">Return true when the underlying GridFS file stream is open for writing.</div></div>
+<div class="ttc" id="aclassmongocxx_1_1v1_1_1gridfs_1_1uploader_html_addd940d0043a37352c5dad4544f7369e"><div class="ttname"><a href="classmongocxx_1_1v1_1_1gridfs_1_1uploader.html#addd940d0043a37352c5dad4544f7369e">mongocxx::v1::gridfs::uploader::flush</a></div><div class="ttdeci">void flush()</div><div class="ttdoc">Flush the internal buffer.</div></div>
+<div class="ttc" id="aclassmongocxx_1_1v1_1_1gridfs_1_1uploader_html_ae916d59a30e05f664d346fd2aa6bd643"><div class="ttname"><a href="classmongocxx_1_1v1_1_1gridfs_1_1uploader.html#ae916d59a30e05f664d346fd2aa6bd643">mongocxx::v1::gridfs::uploader::errc</a></div><div class="ttdeci">errc</div><div class="ttdoc">Errors codes which may be returned by mongocxx::v1::gridfs::uploader.</div><div class="ttdef"><b>Definition</b> uploader.hpp:174</div></div>
+<div class="ttc" id="aclassmongocxx_1_1v1_1_1gridfs_1_1uploader_html_ae916d59a30e05f664d346fd2aa6bd643a8da26ba680a4bc49270f115861546f0e"><div class="ttname"><a href="classmongocxx_1_1v1_1_1gridfs_1_1uploader.html#ae916d59a30e05f664d346fd2aa6bd643a8da26ba680a4bc49270f115861546f0e">mongocxx::v1::gridfs::uploader::errc::is_closed</a></div><div class="ttdeci">@ is_closed</div><div class="ttdoc">The GridFS file upload stream is not open.</div><div class="ttdef"><b>Definition</b> uploader.hpp:176</div></div>
+<div class="ttc" id="aclassmongocxx_1_1v1_1_1gridfs_1_1uploader_html_ae916d59a30e05f664d346fd2aa6bd643ad02c4c4cde7ae76252540d116a40f23a"><div class="ttname"><a href="classmongocxx_1_1v1_1_1gridfs_1_1uploader.html#ae916d59a30e05f664d346fd2aa6bd643ad02c4c4cde7ae76252540d116a40f23a">mongocxx::v1::gridfs::uploader::errc::zero</a></div><div class="ttdeci">@ zero</div><div class="ttdoc">Zero.</div><div class="ttdef"><b>Definition</b> uploader.hpp:175</div></div>
+<div class="ttc" id="aclassmongocxx_1_1v1_1_1gridfs_1_1uploader_html_ae916d59a30e05f664d346fd2aa6bd643aea08773fae2f161d0ab739611f4884bd"><div class="ttname"><a href="classmongocxx_1_1v1_1_1gridfs_1_1uploader.html#ae916d59a30e05f664d346fd2aa6bd643aea08773fae2f161d0ab739611f4884bd">mongocxx::v1::gridfs::uploader::errc::too_many_chunks</a></div><div class="ttdeci">@ too_many_chunks</div><div class="ttdoc">The total number of chunks must be less than INT32_MAX.</div><div class="ttdef"><b>Definition</b> uploader.hpp:177</div></div>
+<div class="ttc" id="amongocxx_2v1_2config_2export_8hpp_html"><div class="ttname"><a href="mongocxx_2v1_2config_2export_8hpp.html">export.hpp</a></div><div class="ttdoc">Provides macros to control the set of symbols exported in the ABI.</div></div>
+<div class="ttc" id="amongocxx_2v1_2config_2export_8hpp_html_a753ba55c7c3b23542b2ec9f00333c6ba"><div class="ttname"><a href="mongocxx_2v1_2config_2export_8hpp.html#a753ba55c7c3b23542b2ec9f00333c6ba">MONGOCXX_ABI_EXPORT_CDECL</a></div><div class="ttdeci">#define MONGOCXX_ABI_EXPORT_CDECL(...)</div><div class="ttdoc">Equivalent to MONGOCXX_ABI_EXPORT with MONGOCXX_ABI_CDECL.</div><div class="ttdef"><b>Definition</b> export.hpp:52</div></div>
+<div class="ttc" id="amongocxx_2v1_2detail_2postlude_8hpp_html"><div class="ttname"><a href="mongocxx_2v1_2detail_2postlude_8hpp.html">postlude.hpp</a></div><div class="ttdoc">The mongocxx v1 macro guard postlude header.</div></div>
+<div class="ttc" id="amongocxx_2v1_2detail_2prelude_8hpp_html"><div class="ttname"><a href="mongocxx_2v1_2detail_2prelude_8hpp.html">prelude.hpp</a></div><div class="ttdoc">The mongocxx v1 macro guard prelude header.</div></div>
+<div class="ttc" id="anamespacemongocxx_1_1v1_1_1gridfs_html"><div class="ttname"><a href="namespacemongocxx_1_1v1_1_1gridfs.html">mongocxx::v1::gridfs</a></div><div class="ttdoc">Declares entities related to GridFS.</div></div>
+<div class="ttc" id="anamespacemongocxx_1_1v1_html"><div class="ttname"><a href="namespacemongocxx_1_1v1.html">mongocxx::v1</a></div><div class="ttdoc">Declares entities whose ABI stability is guaranteed for documented symbols.</div></div>
+<div class="ttc" id="anamespacemongocxx_1_1v1_html_a3abce3903b2660d64216efaf31916b2aa8df27a4961583890efc4e6e3c4512b0d"><div class="ttname"><a href="namespacemongocxx_1_1v1.html#a3abce3903b2660d64216efaf31916b2aa8df27a4961583890efc4e6e3c4512b0d">mongocxx::v1::source_errc::mongocxx</a></div><div class="ttdeci">@ mongocxx</div><div class="ttdoc">From the mongocxx library.</div><div class="ttdef"><b>Definition</b> exception.hpp:40</div></div>
+<div class="ttc" id="anamespacemongocxx_html"><div class="ttname"><a href="namespacemongocxx.html">mongocxx</a></div><div class="ttdoc">The top-level namespace within which all mongocxx library entities are declared.</div></div>
+<div class="ttc" id="aupload__result-fwd_8hpp_html"><div class="ttname"><a href="upload__result-fwd_8hpp.html">upload_result-fwd.hpp</a></div><div class="ttdoc">Declares mongocxx::v1::gridfs::upload_result.</div></div>
+<div class="ttc" id="av1_2gridfs_2uploader-fwd_8hpp_html"><div class="ttname"><a href="v1_2gridfs_2uploader-fwd_8hpp.html">uploader-fwd.hpp</a></div><div class="ttdoc">Declares mongocxx::v1::gridfs::uploader.</div></div>
+</div><!-- fragment --></div><!-- contents -->
+</div><!-- doc-content -->
+</div><!-- container -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a href="dir_91a8f5678cf74af486032aa453ef5c2e.html">mongocxx</a></li><li class="navelem"><a href="dir_f4020fe3fe50540feaa0641bb256a47f.html">v1</a></li><li class="navelem"><a href="dir_aab5f0e9fc1b385ef34c3f44d4885292.html">gridfs</a></li><li class="navelem"><a href="v1_2gridfs_2uploader_8hpp.html">uploader.hpp</a></li>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.15.0 </li>
+  </ul>
+</div>
+</body>
+</html>

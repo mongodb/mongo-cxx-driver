@@ -1,0 +1,437 @@
+<!-- HTML header for doxygen 1.15.0-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-US">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.15.0"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>MongoDB C++ Driver: bsoncxx/v1/document/view.hpp Source File</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript">var page_layout=1;</script>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<script type="text/javascript" src="clipboard.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<script type="text/javascript" src="cookie.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/javascript">
+  $(function() { init_search(); });
+</script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+<link href="doxygen-extra.css" rel="stylesheet" type="text/css"/>
+<!-- Mixpanel Tracker -->
+<script type="text/javascript">
+  (function(e,c){if(!c.__SV){var l,h;window.mixpanel=c;c._i=[];c.init=function(q,r,f){function t(d,a){var g=a.split(".");2==g.length&&(d=d[g[0]],a=g[1]);d[a]=function(){d.push([a].concat(Array.prototype.slice.call(arguments,0)))}}var b=c;"undefined"!==typeof f?b=c[f]=[]:f="mixpanel";b.people=b.people||[];b.toString=function(d){var a="mixpanel";"mixpanel"!==f&&(a+="."+f);d||(a+=" (stub)");return a};b.people.toString=function(){return b.toString(1)+".people (stub)"};l="disable time_event track track_pageview track_links track_forms track_with_groups add_group set_group remove_group register register_once alias unregister identify name_tag set_config reset opt_in_tracking opt_out_tracking has_opted_in_tracking has_opted_out_tracking clear_opt_in_out_tracking start_batch_senders start_session_recording stop_session_recording people.set people.set_once people.unset people.increment people.append people.union people.track_charge people.clear_charges people.delete_user people.remove".split(" ");
+  for(h=0;h<l.length;h++)t(b,l[h]);var n="set set_once union unset remove delete".split(" ");b.get_group=function(){function d(p){a[p]=function(){b.push([g,[p].concat(Array.prototype.slice.call(arguments,0))])}}for(var a={},g=["get_group"].concat(Array.prototype.slice.call(arguments,0)),m=0;m<n.length;m++)d(n[m]);return a};c._i.push([q,r,f])};c.__SV=1.2;var k=e.createElement("script");k.type="text/javascript";k.async=!0;k.src="undefined"!==typeof MIXPANEL_CUSTOM_LIB_URL?MIXPANEL_CUSTOM_LIB_URL:"file:"===
+  e.location.protocol&&"//cdn.mxpnl.com/libs/mixpanel-2-latest.min.js".match(/^\/\//)?"https://cdn.mxpnl.com/libs/mixpanel-2-latest.min.js":"//cdn.mxpnl.com/libs/mixpanel-2-latest.min.js";e=e.getElementsByTagName("script")[0];e.parentNode.insertBefore(k,e)}})(document,window.mixpanel||[]); mixpanel.init('f2a38f26e5cc0eee429a9276f296c118', {
+    autocapture: true,
+    record_sessions_percent: 0,
+  })
+</script>
+<!-- patch-apidocs-current-redirects: mongocxx-4.4.0 -->
+<link rel="canonical" href="https://mongocxx.org/api/mongocxx-4.4.0/v1_2document_2view_8hpp_source.html"/>
+<script type="text/javascript">
+if (window.location.pathname.startsWith("/api/current/")) {
+  window.location.replace(
+    window.location.href.replace("/api/current/", "/api/mongocxx-4.4.0/")
+  )
+}
+</script>
+</head>
+<body>
+<div id="side-nav" class="ui-resizable side-nav-resizable"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr id="projectrow">
+  <td id="projectalign">
+   <div id="projectname">MongoDB C++ Driver<span id="projectnumber">&#160;4.4.0</span>
+   </div>
+  </td>
+ </tr>
+   <tr><td colspan="2">        <div id="MSearchBox" class="MSearchBoxInactive">
+        <span class="left">
+          <span id="MSearchSelect" class="search-icon" onmouseover="return searchBox.OnSearchSelectShow()" onmouseout="return searchBox.OnSearchSelectHide()"><span class="search-icon-dropdown"></span></span>
+          <input type="text" id="MSearchField" value="" placeholder="Search" accesskey="S"
+               onfocus="searchBox.OnSearchFieldFocus(true)" 
+               onblur="searchBox.OnSearchFieldFocus(false)" 
+               onkeyup="searchBox.OnSearchFieldChange(event)"/>
+          </span><span class="right">
+            <a id="MSearchClose" href="javascript:searchBox.CloseResultsWindow()"><div id="MSearchCloseImg" class="close-icon"></div></a>
+          </span>
+        </div>
+</td></tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Generated by Doxygen 1.15.0 -->
+<script type="text/javascript">
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+</script>
+<script type="text/javascript">
+$(function() { codefold.init(); });
+</script>
+</div><!-- top -->
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+$(function(){initNavTree('v1_2document_2view_8hpp_source.html','',''); });
+</script>
+<div id="container">
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Loading...</div>
+<div class="SRStatus" id="Searching">Searching...</div>
+<div class="SRStatus" id="NoMatches">No Matches</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="header">
+  <div class="headertitle"><div class="title">view.hpp</div></div>
+</div><!--header-->
+<div class="contents">
+<a href="v1_2document_2view_8hpp.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">// Copyright 2009-present MongoDB, Inc.</span></div>
+<div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="comment">//</span></div>
+<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="comment">// Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span></div>
+<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="comment">// you may not use this file except in compliance with the License.</span></div>
+<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="comment">// You may obtain a copy of the License at</span></div>
+<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="comment">//</span></div>
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="comment">// http://www.apache.org/licenses/LICENSE-2.0</span></div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="comment">//</span></div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="comment">// Unless required by applicable law or agreed to in writing, software</span></div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="comment">// distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span></div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="comment">// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span></div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="comment">// See the License for the specific language governing permissions and</span></div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="comment">// limitations under the License.</span></div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span> </div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="preprocessor">#pragma once</span></div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span> </div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="preprocessor">#include &lt;<a class="code" href="v1_2document_2view-fwd_8hpp.html">bsoncxx/v1/document/view-fwd.hpp</a>&gt;</span> <span class="comment">// IWYU pragma: export</span></div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span> </div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="comment">//</span></div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span> </div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="preprocessor">#include &lt;<a class="code" href="bsoncxx_2v1_2detail_2prelude_8hpp.html">bsoncxx/v1/detail/prelude.hpp</a>&gt;</span></div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span> </div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="preprocessor">#include &lt;<a class="code" href="bsoncxx_2v1_2config_2export_8hpp.html">bsoncxx/v1/config/export.hpp</a>&gt;</span></div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="preprocessor">#include &lt;<a class="code" href="bit_8hpp.html">bsoncxx/v1/detail/bit.hpp</a>&gt;</span></div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="preprocessor">#include &lt;<a class="code" href="v1_2element_2view_8hpp.html">bsoncxx/v1/element/view.hpp</a>&gt;</span> <span class="comment">// IWYU pragma: export</span></div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="preprocessor">#include &lt;<a class="code" href="v1_2stdx_2string__view_8hpp.html">bsoncxx/v1/stdx/string_view.hpp</a>&gt;</span></div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span> </div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="preprocessor">#include &lt;cstddef&gt;</span></div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="preprocessor">#include &lt;cstdint&gt;</span></div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span><span class="preprocessor">#include &lt;cstring&gt;</span></div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span><span class="preprocessor">#include &lt;iterator&gt;</span></div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span><span class="preprocessor">#include &lt;system_error&gt;</span></div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span><span class="preprocessor">#include &lt;type_traits&gt;</span></div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span> </div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespacebsoncxx.html">bsoncxx</a> {</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespacebsoncxx_1_1v1.html">v1</a> {</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespacebsoncxx_1_1v1_1_1document.html">document</a> {</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span></div>
+<div class="foldopen" id="foldopen00052" data-start="{" data-end="};">
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno"><a class="line" href="classbsoncxx_1_1v1_1_1document_1_1view.html">   52</a></span><span class="keyword">class </span><a class="code hl_function" href="classbsoncxx_1_1v1_1_1document_1_1view.html#a1b4c0df2fbd1669d4a9ee5eb7a72a3dc">view</a> {</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>   <span class="keyword">public</span>:</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>    <span class="keyword">class </span><a class="code hl_class" href="classbsoncxx_1_1v1_1_1document_1_1view_1_1const__iterator.html">const_iterator</a>;</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span></div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno"><a class="line" href="classbsoncxx_1_1v1_1_1document_1_1view.html#a2871182420c6f218fbb6d8e169d81531">   59</a></span>    <span class="keyword">using </span><a class="code hl_typedef" href="classbsoncxx_1_1v1_1_1document_1_1view.html#a2871182420c6f218fbb6d8e169d81531">iterator</a> = <a class="code hl_class" href="classbsoncxx_1_1v1_1_1document_1_1view_1_1const__iterator.html">const_iterator</a>;</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span> </div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>   <span class="keyword">private</span>:</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>    enum : std::size_t { _empty_length = 5u };</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span> </div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>    std::uint8_t <span class="keyword">const</span>* _data;</div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span> </div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>    <span class="keyword">template</span> &lt;detail::endian e = detail::endian::native&gt;</div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>    std::int32_t raw_size() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span> </div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>   <span class="keyword">public</span>:</div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno"><a class="line" href="classbsoncxx_1_1v1_1_1document_1_1view.html#a1b4c0df2fbd1669d4a9ee5eb7a72a3dc">   78</a></span>    <a class="code hl_define" href="bsoncxx_2v1_2config_2export_8hpp.html#a531d4aedac14b1f20ca7c0795dbd083f">BSONCXX_ABI_EXPORT_CDECL</a>() <a class="code hl_function" href="classbsoncxx_1_1v1_1_1document_1_1view.html#a1b4c0df2fbd1669d4a9ee5eb7a72a3dc">view</a>();</div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span></div>
+<div class="line"><a id="l00087" name="l00087"></a><span class="lineno"><a class="line" href="classbsoncxx_1_1v1_1_1document_1_1view.html#ab1bfd78f953c034a14e11a11cb76e1be">   87</a></span>    explicit <a class="code hl_function" href="classbsoncxx_1_1v1_1_1document_1_1view.html#a1b4c0df2fbd1669d4a9ee5eb7a72a3dc">view</a>(std::uint8_t const* <a class="code hl_function" href="classbsoncxx_1_1v1_1_1document_1_1view.html#abb09350566ab5d7b0c19ee0c2b221a28">data</a>) : _data{<a class="code hl_function" href="classbsoncxx_1_1v1_1_1document_1_1view.html#abb09350566ab5d7b0c19ee0c2b221a28">data</a>} {}</div>
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span></div>
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno"><a class="line" href="classbsoncxx_1_1v1_1_1document_1_1view.html#aaa9f9fa90182f6b3253a3f2982d09bb5">   99</a></span>    <a class="code hl_define" href="bsoncxx_2v1_2config_2export_8hpp.html#a1ed85cdf0f512a1ec7a9b0f9c92553c8">BSONCXX_ABI_EXPORT</a> <a class="code hl_function" href="classbsoncxx_1_1v1_1_1document_1_1view.html#aaa9f9fa90182f6b3253a3f2982d09bb5">view</a>(std::uint8_t <span class="keyword">const</span>* <a class="code hl_function" href="classbsoncxx_1_1v1_1_1document_1_1view.html#abb09350566ab5d7b0c19ee0c2b221a28">data</a>, std::size_t <a class="code hl_function" href="classbsoncxx_1_1v1_1_1document_1_1view.html#a85e81ef27a789065f99713ab61c03b56">length</a>);</div>
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span></div>
+<div class="foldopen" id="foldopen00104" data-start="{" data-end="}">
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno"><a class="line" href="classbsoncxx_1_1v1_1_1document_1_1view.html#abb09350566ab5d7b0c19ee0c2b221a28">  104</a></span>    std::uint8_t <span class="keyword">const</span>* <a class="code hl_function" href="classbsoncxx_1_1v1_1_1document_1_1view.html#abb09350566ab5d7b0c19ee0c2b221a28">data</a>()<span class="keyword"> const </span>{</div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>        <span class="keywordflow">return</span> _data;</div>
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>    }</div>
+</div>
+<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span></div>
+<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>    std::size_t <a class="code hl_function" href="classbsoncxx_1_1v1_1_1document_1_1view.html#ac974606c73362cde9016ad587f73e4ce">size</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span></div>
+<div class="foldopen" id="foldopen00119" data-start="{" data-end="}">
+<div class="line"><a id="l00119" name="l00119"></a><span class="lineno"><a class="line" href="classbsoncxx_1_1v1_1_1document_1_1view.html#a85e81ef27a789065f99713ab61c03b56">  119</a></span>    std::size_t <a class="code hl_function" href="classbsoncxx_1_1v1_1_1document_1_1view.html#a85e81ef27a789065f99713ab61c03b56">length</a>()<span class="keyword"> const </span>{</div>
+<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>        <span class="keywordflow">return</span> this-&gt;<a class="code hl_function" href="classbsoncxx_1_1v1_1_1document_1_1view.html#ac974606c73362cde9016ad587f73e4ce">size</a>();</div>
+<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>    }</div>
+</div>
+<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span></div>
+<div class="foldopen" id="foldopen00132" data-start="{" data-end="}">
+<div class="line"><a id="l00132" name="l00132"></a><span class="lineno"><a class="line" href="classbsoncxx_1_1v1_1_1document_1_1view.html#a7ca27c0afa9d6cc956785b839d1aff35">  132</a></span>    <span class="keywordtype">bool</span> <a class="code hl_function" href="classbsoncxx_1_1v1_1_1document_1_1view.html#a7ca27c0afa9d6cc956785b839d1aff35">empty</a>()<span class="keyword"> const </span>{</div>
+<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span>        <span class="keywordflow">return</span> this-&gt;<a class="code hl_function" href="classbsoncxx_1_1v1_1_1document_1_1view.html#ac974606c73362cde9016ad587f73e4ce">size</a>() == _empty_length &amp;&amp; _data[4] == 0u;</div>
+<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span>    }</div>
+</div>
+<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span></div>
+<div class="foldopen" id="foldopen00141" data-start="{" data-end="}">
+<div class="line"><a id="l00141" name="l00141"></a><span class="lineno"><a class="line" href="classbsoncxx_1_1v1_1_1document_1_1view.html#a7da6c267b909f1d80ac20fafaefc2bfa">  141</a></span>    <span class="keyword">explicit</span> <span class="keyword">operator</span> bool()<span class="keyword"> const </span>{</div>
+<div class="line"><a id="l00142" name="l00142"></a><span class="lineno">  142</span>        <span class="keywordflow">return</span> this-&gt;<a class="code hl_function" href="classbsoncxx_1_1v1_1_1document_1_1view.html#ac974606c73362cde9016ad587f73e4ce">size</a>() &gt;= _empty_length;</div>
+<div class="line"><a id="l00143" name="l00143"></a><span class="lineno">  143</span>    }</div>
+</div>
+<div class="line"><a id="l00144" name="l00144"></a><span class="lineno">  144</span></div>
+<div class="line"><a id="l00153" name="l00153"></a><span class="lineno"><a class="line" href="classbsoncxx_1_1v1_1_1document_1_1view.html#ae0cbc76c38db1cc3dcf784225ef7046e">  153</a></span>    <a class="code hl_define" href="bsoncxx_2v1_2config_2export_8hpp.html#a531d4aedac14b1f20ca7c0795dbd083f">BSONCXX_ABI_EXPORT_CDECL</a>(<a class="code hl_class" href="classbsoncxx_1_1v1_1_1document_1_1view_1_1const__iterator.html">const_iterator</a>) <a class="code hl_function" href="classbsoncxx_1_1v1_1_1document_1_1view.html#ae0cbc76c38db1cc3dcf784225ef7046e">cbegin</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span></div>
+<div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span>    <a class="code hl_class" href="classbsoncxx_1_1v1_1_1document_1_1view_1_1const__iterator.html">const_iterator</a> <a class="code hl_function" href="classbsoncxx_1_1v1_1_1document_1_1view.html#abc58e57aebe2b5688946a664ef0127f1">cend</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span></div>
+<div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span>    <a class="code hl_class" href="classbsoncxx_1_1v1_1_1document_1_1view_1_1const__iterator.html">const_iterator</a> <a class="code hl_function" href="classbsoncxx_1_1v1_1_1document_1_1view.html#aae6049f10351f0f157bb63de25d610fc">begin</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span></div>
+<div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span>    <a class="code hl_class" href="classbsoncxx_1_1v1_1_1document_1_1view_1_1const__iterator.html">const_iterator</a> <a class="code hl_function" href="classbsoncxx_1_1v1_1_1document_1_1view.html#ac0fbb13e54cc3fdc015ff247cbc4f565">end</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span></div>
+<div class="line"><a id="l00177" name="l00177"></a><span class="lineno"><a class="line" href="classbsoncxx_1_1v1_1_1document_1_1view.html#aca646fa3b9b1ef9006bc14beb75ea796">  177</a></span>    <a class="code hl_define" href="bsoncxx_2v1_2config_2export_8hpp.html#a531d4aedac14b1f20ca7c0795dbd083f">BSONCXX_ABI_EXPORT_CDECL</a>(<a class="code hl_class" href="classbsoncxx_1_1v1_1_1document_1_1view_1_1const__iterator.html">const_iterator</a>) <a class="code hl_function" href="classbsoncxx_1_1v1_1_1document_1_1view.html#aca646fa3b9b1ef9006bc14beb75ea796">find</a>(<a class="code hl_class" href="classbsoncxx_1_1v1_1_1stdx_1_1string__view.html">v1::stdx::string_view</a> key) <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00178" name="l00178"></a><span class="lineno">  178</span></div>
+<div class="line"><a id="l00190" name="l00190"></a><span class="lineno">  190</span>    <a class="code hl_class" href="classbsoncxx_1_1v1_1_1element_1_1view.html">v1::element::view</a> <a class="code hl_function" href="classbsoncxx_1_1v1_1_1document_1_1view.html#a628e40f9dc6cee23961cde6eccc53368">operator[]</a>(<a class="code hl_class" href="classbsoncxx_1_1v1_1_1stdx_1_1string__view.html">v1::stdx::string_view</a> key) <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00191" name="l00191"></a><span class="lineno">  191</span></div>
+<div class="foldopen" id="foldopen00199" data-start="{" data-end="}">
+<div class="line"><a id="l00199" name="l00199"></a><span class="lineno"><a class="line" href="classbsoncxx_1_1v1_1_1document_1_1view.html#a5c13ba2cd87141e05dc46571d243138b">  199</a></span>    <span class="keyword">friend</span> <span class="keywordtype">bool</span> <a class="code hl_friend" href="classbsoncxx_1_1v1_1_1document_1_1view.html#a5c13ba2cd87141e05dc46571d243138b">operator==</a>(<a class="code hl_function" href="classbsoncxx_1_1v1_1_1document_1_1view.html#a1b4c0df2fbd1669d4a9ee5eb7a72a3dc">view</a> lhs, <a class="code hl_function" href="classbsoncxx_1_1v1_1_1document_1_1view.html#a1b4c0df2fbd1669d4a9ee5eb7a72a3dc">view</a> rhs) {</div>
+<div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span>        <span class="keywordflow">if</span> (!lhs != !rhs) {</div>
+<div class="line"><a id="l00201" name="l00201"></a><span class="lineno">  201</span>            <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span>        }</div>
+<div class="line"><a id="l00203" name="l00203"></a><span class="lineno">  203</span> </div>
+<div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span>        <span class="keywordflow">return</span> !lhs || (lhs.<a class="code hl_function" href="classbsoncxx_1_1v1_1_1document_1_1view.html#a85e81ef27a789065f99713ab61c03b56">length</a>() == rhs.<a class="code hl_function" href="classbsoncxx_1_1v1_1_1document_1_1view.html#a85e81ef27a789065f99713ab61c03b56">length</a>() &amp;&amp; std::memcmp(lhs.<a class="code hl_function" href="classbsoncxx_1_1v1_1_1document_1_1view.html#abb09350566ab5d7b0c19ee0c2b221a28">data</a>(), rhs.<a class="code hl_function" href="classbsoncxx_1_1v1_1_1document_1_1view.html#abb09350566ab5d7b0c19ee0c2b221a28">data</a>(), lhs.<a class="code hl_function" href="classbsoncxx_1_1v1_1_1document_1_1view.html#a85e81ef27a789065f99713ab61c03b56">length</a>()) == 0);</div>
+<div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span>    }</div>
+</div>
+<div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span> </div>
+<div class="foldopen" id="foldopen00207" data-start="{" data-end="}">
+<div class="line"><a id="l00207" name="l00207"></a><span class="lineno"><a class="line" href="classbsoncxx_1_1v1_1_1document_1_1view.html#a5bc60a40c676369a8ba84a525e3cbfb7">  207</a></span>    <span class="keyword">friend</span> <span class="keywordtype">bool</span> <a class="code hl_friend" href="classbsoncxx_1_1v1_1_1document_1_1view.html#a5bc60a40c676369a8ba84a525e3cbfb7">operator!=</a>(<a class="code hl_function" href="classbsoncxx_1_1v1_1_1document_1_1view.html#a1b4c0df2fbd1669d4a9ee5eb7a72a3dc">view</a> lhs, <a class="code hl_function" href="classbsoncxx_1_1v1_1_1document_1_1view.html#a1b4c0df2fbd1669d4a9ee5eb7a72a3dc">view</a> rhs) {</div>
+<div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span>        <span class="keywordflow">return</span> !(lhs == rhs);</div>
+<div class="line"><a id="l00209" name="l00209"></a><span class="lineno">  209</span>    }</div>
+</div>
+<div class="line"><a id="l00210" name="l00210"></a><span class="lineno">  210</span></div>
+<div class="line"><a id="l00212" name="l00212"></a><span class="lineno">  212</span></div>
+<div class="foldopen" id="foldopen00216" data-start="{" data-end="};">
+<div class="line"><a id="l00216" name="l00216"></a><span class="lineno"><a class="line" href="classbsoncxx_1_1v1_1_1document_1_1view.html#a5edbe75f2d8e3fb7d941deee6d87c312">  216</a></span>    <span class="keyword">enum class</span> <a class="code hl_enumeration" href="classbsoncxx_1_1v1_1_1document_1_1view.html#a5edbe75f2d8e3fb7d941deee6d87c312">errc</a> {</div>
+<div class="line"><a id="l00217" name="l00217"></a><span class="lineno"><a class="line" href="classbsoncxx_1_1v1_1_1document_1_1view.html#a5edbe75f2d8e3fb7d941deee6d87c312ad02c4c4cde7ae76252540d116a40f23a">  217</a></span>        <a class="code hl_enumvalue" href="classbsoncxx_1_1v1_1_1document_1_1view.html#a5edbe75f2d8e3fb7d941deee6d87c312ad02c4c4cde7ae76252540d116a40f23a">zero</a>,           </div>
+<div class="line"><a id="l00218" name="l00218"></a><span class="lineno"><a class="line" href="classbsoncxx_1_1v1_1_1document_1_1view.html#a5edbe75f2d8e3fb7d941deee6d87c312a2970685bea59a5d3e9bbd92de36caccc">  218</a></span>        <a class="code hl_enumvalue" href="classbsoncxx_1_1v1_1_1document_1_1view.html#a5edbe75f2d8e3fb7d941deee6d87c312a2970685bea59a5d3e9bbd92de36caccc">invalid_length</a>, </div>
+<div class="line"><a id="l00219" name="l00219"></a><span class="lineno"><a class="line" href="classbsoncxx_1_1v1_1_1document_1_1view.html#a5edbe75f2d8e3fb7d941deee6d87c312af066046fed1ddb2a6d6eb43e445b50a6">  219</a></span>        <a class="code hl_enumvalue" href="classbsoncxx_1_1v1_1_1document_1_1view.html#a5edbe75f2d8e3fb7d941deee6d87c312af066046fed1ddb2a6d6eb43e445b50a6">invalid_data</a>,   </div>
+<div class="line"><a id="l00220" name="l00220"></a><span class="lineno">  220</span>    };</div>
+</div>
+<div class="line"><a id="l00221" name="l00221"></a><span class="lineno">  221</span></div>
+<div class="line"><a id="l00225" name="l00225"></a><span class="lineno"><a class="line" href="classbsoncxx_1_1v1_1_1document_1_1view.html#ade1f434783d0db48364f129b5f71f059">  225</a></span>    <span class="keyword">static</span> <a class="code hl_define" href="bsoncxx_2v1_2config_2export_8hpp.html#a531d4aedac14b1f20ca7c0795dbd083f">BSONCXX_ABI_EXPORT_CDECL</a>(std::error_category <span class="keyword">const</span>&amp;) <a class="code hl_function" href="classbsoncxx_1_1v1_1_1document_1_1view.html#ade1f434783d0db48364f129b5f71f059">error_category</a>();</div>
+<div class="line"><a id="l00226" name="l00226"></a><span class="lineno">  226</span></div>
+<div class="foldopen" id="foldopen00230" data-start="{" data-end="}">
+<div class="line"><a id="l00230" name="l00230"></a><span class="lineno"><a class="line" href="classbsoncxx_1_1v1_1_1document_1_1view.html#a94547ece96a465df7b4ef04abbc99547">  230</a></span>    <span class="keyword">friend</span> std::error_code <a class="code hl_friend" href="classbsoncxx_1_1v1_1_1document_1_1view.html#a94547ece96a465df7b4ef04abbc99547">make_error_code</a>(<a class="code hl_enumeration" href="classbsoncxx_1_1v1_1_1document_1_1view.html#a5edbe75f2d8e3fb7d941deee6d87c312">errc</a> v) {</div>
+<div class="line"><a id="l00231" name="l00231"></a><span class="lineno">  231</span>        <span class="keywordflow">return</span> {<span class="keyword">static_cast&lt;</span><span class="keywordtype">int</span><span class="keyword">&gt;</span>(v), <a class="code hl_function" href="classbsoncxx_1_1v1_1_1document_1_1view.html#ade1f434783d0db48364f129b5f71f059">error_category</a>()};</div>
+<div class="line"><a id="l00232" name="l00232"></a><span class="lineno">  232</span>    }</div>
+</div>
+<div class="line"><a id="l00233" name="l00233"></a><span class="lineno">  233</span>};</div>
+</div>
+<div class="line"><a id="l00234" name="l00234"></a><span class="lineno">  234</span> </div>
+<div class="line"><a id="l00235" name="l00235"></a><span class="lineno">  235</span><span class="keyword">template</span> &lt;&gt;</div>
+<div class="line"><a id="l00236" name="l00236"></a><span class="lineno">  236</span><span class="keyword">inline</span> std::int32_t view::raw_size&lt;detail::endian::little&gt;()<span class="keyword"> const </span>{</div>
+<div class="line"><a id="l00237" name="l00237"></a><span class="lineno">  237</span>    std::int32_t res;</div>
+<div class="line"><a id="l00238" name="l00238"></a><span class="lineno">  238</span>    std::memcpy(&amp;res, _data, <span class="keyword">sizeof</span>(res));</div>
+<div class="line"><a id="l00239" name="l00239"></a><span class="lineno">  239</span>    <span class="keywordflow">return</span> res;</div>
+<div class="line"><a id="l00240" name="l00240"></a><span class="lineno">  240</span>}</div>
+<div class="line"><a id="l00241" name="l00241"></a><span class="lineno">  241</span> </div>
+<div class="line"><a id="l00242" name="l00242"></a><span class="lineno">  242</span><span class="keyword">template</span> &lt;&gt;</div>
+<div class="line"><a id="l00243" name="l00243"></a><span class="lineno">  243</span><span class="keyword">inline</span> std::int32_t view::raw_size&lt;detail::endian::big&gt;()<span class="keyword"> const </span>{</div>
+<div class="line"><a id="l00244" name="l00244"></a><span class="lineno">  244</span>    std::int32_t res;</div>
+<div class="line"><a id="l00245" name="l00245"></a><span class="lineno">  245</span>    <span class="keyword">auto</span> <span class="keyword">const</span> bytes = <span class="keyword">reinterpret_cast&lt;</span><span class="keywordtype">unsigned</span> <span class="keywordtype">char</span>*<span class="keyword">&gt;</span>(&amp;res);</div>
+<div class="line"><a id="l00246" name="l00246"></a><span class="lineno">  246</span>    bytes[0] = _data[3];</div>
+<div class="line"><a id="l00247" name="l00247"></a><span class="lineno">  247</span>    bytes[1] = _data[2];</div>
+<div class="line"><a id="l00248" name="l00248"></a><span class="lineno">  248</span>    bytes[2] = _data[1];</div>
+<div class="line"><a id="l00249" name="l00249"></a><span class="lineno">  249</span>    bytes[3] = _data[0];</div>
+<div class="line"><a id="l00250" name="l00250"></a><span class="lineno">  250</span>    <span class="keywordflow">return</span> res;</div>
+<div class="line"><a id="l00251" name="l00251"></a><span class="lineno">  251</span>}</div>
+<div class="line"><a id="l00252" name="l00252"></a><span class="lineno">  252</span> </div>
+<div class="foldopen" id="foldopen00253" data-start="{" data-end="}">
+<div class="line"><a id="l00253" name="l00253"></a><span class="lineno"><a class="line" href="classbsoncxx_1_1v1_1_1document_1_1view.html#ac974606c73362cde9016ad587f73e4ce">  253</a></span><span class="keyword">inline</span> std::size_t <a class="code hl_function" href="classbsoncxx_1_1v1_1_1document_1_1view.html#ac974606c73362cde9016ad587f73e4ce">view::size</a>()<span class="keyword"> const </span>{</div>
+<div class="line"><a id="l00254" name="l00254"></a><span class="lineno">  254</span>    <span class="keywordflow">return</span> _data ? <span class="keyword">static_cast&lt;</span>std::uint32_t<span class="keyword">&gt;</span>(this-&gt;raw_size()) : 0u;</div>
+<div class="line"><a id="l00255" name="l00255"></a><span class="lineno">  255</span>}</div>
+</div>
+<div class="line"><a id="l00256" name="l00256"></a><span class="lineno">  256</span></div>
+<div class="foldopen" id="foldopen00264" data-start="{" data-end="};">
+<div class="line"><a id="l00264" name="l00264"></a><span class="lineno"><a class="line" href="classbsoncxx_1_1v1_1_1document_1_1view_1_1const__iterator.html">  264</a></span><span class="keyword">class </span><a class="code hl_class" href="classbsoncxx_1_1v1_1_1document_1_1view_1_1const__iterator.html">view::const_iterator</a> {</div>
+<div class="line"><a id="l00265" name="l00265"></a><span class="lineno">  265</span>   <span class="keyword">private</span>:</div>
+<div class="line"><a id="l00266" name="l00266"></a><span class="lineno">  266</span>    <a class="code hl_class" href="classbsoncxx_1_1v1_1_1element_1_1view.html">v1::element::view</a> _element;</div>
+<div class="line"><a id="l00267" name="l00267"></a><span class="lineno">  267</span> </div>
+<div class="line"><a id="l00268" name="l00268"></a><span class="lineno">  268</span>   <span class="keyword">public</span>:</div>
+<div class="line"><a id="l00272" name="l00272"></a><span class="lineno"><a class="line" href="classbsoncxx_1_1v1_1_1document_1_1view_1_1const__iterator.html#ae13fc89ff3817dc34af8de6211d21f01">  272</a></span>    <span class="keyword">using </span><a class="code hl_typedef" href="classbsoncxx_1_1v1_1_1document_1_1view_1_1const__iterator.html#ae13fc89ff3817dc34af8de6211d21f01">iterator_category</a> = std::input_iterator_tag;</div>
+<div class="line"><a id="l00273" name="l00273"></a><span class="lineno">  273</span></div>
+<div class="line"><a id="l00277" name="l00277"></a><span class="lineno"><a class="line" href="classbsoncxx_1_1v1_1_1document_1_1view_1_1const__iterator.html#a94be9b0b776d9463a77e0f1a9ac090ec">  277</a></span>    <span class="keyword">using </span><a class="code hl_typedef" href="classbsoncxx_1_1v1_1_1document_1_1view_1_1const__iterator.html#a94be9b0b776d9463a77e0f1a9ac090ec">value_type</a> = <a class="code hl_class" href="classbsoncxx_1_1v1_1_1element_1_1view.html">v1::element::view</a>;</div>
+<div class="line"><a id="l00278" name="l00278"></a><span class="lineno">  278</span></div>
+<div class="line"><a id="l00282" name="l00282"></a><span class="lineno"><a class="line" href="classbsoncxx_1_1v1_1_1document_1_1view_1_1const__iterator.html#aaf4e9c7fe73e951910db00d698feb613">  282</a></span>    <span class="keyword">using </span><a class="code hl_typedef" href="classbsoncxx_1_1v1_1_1document_1_1view_1_1const__iterator.html#aaf4e9c7fe73e951910db00d698feb613">difference_type</a> = std::ptrdiff_t;</div>
+<div class="line"><a id="l00283" name="l00283"></a><span class="lineno">  283</span></div>
+<div class="line"><a id="l00287" name="l00287"></a><span class="lineno"><a class="line" href="classbsoncxx_1_1v1_1_1document_1_1view_1_1const__iterator.html#abb4678441e266d1e0f4785cdf7ec62b9">  287</a></span>    <span class="keyword">using </span><a class="code hl_typedef" href="classbsoncxx_1_1v1_1_1document_1_1view_1_1const__iterator.html#abb4678441e266d1e0f4785cdf7ec62b9">pointer</a> = <a class="code hl_typedef" href="classbsoncxx_1_1v1_1_1document_1_1view_1_1const__iterator.html#a94be9b0b776d9463a77e0f1a9ac090ec">value_type</a> <span class="keyword">const</span>*;</div>
+<div class="line"><a id="l00288" name="l00288"></a><span class="lineno">  288</span></div>
+<div class="line"><a id="l00292" name="l00292"></a><span class="lineno"><a class="line" href="classbsoncxx_1_1v1_1_1document_1_1view_1_1const__iterator.html#aa7a2446c79ed7467ebe6c241bb5b3e26">  292</a></span>    <span class="keyword">using </span><a class="code hl_typedef" href="classbsoncxx_1_1v1_1_1document_1_1view_1_1const__iterator.html#aa7a2446c79ed7467ebe6c241bb5b3e26">reference</a> = <a class="code hl_typedef" href="classbsoncxx_1_1v1_1_1document_1_1view_1_1const__iterator.html#a94be9b0b776d9463a77e0f1a9ac090ec">value_type</a>;</div>
+<div class="line"><a id="l00293" name="l00293"></a><span class="lineno">  293</span></div>
+<div class="line"><a id="l00297" name="l00297"></a><span class="lineno"><a class="line" href="classbsoncxx_1_1v1_1_1document_1_1view_1_1const__iterator.html#a4d022395764a4b662c61d300f3970889">  297</a></span>    <a class="code hl_function" href="classbsoncxx_1_1v1_1_1document_1_1view_1_1const__iterator.html#a4d022395764a4b662c61d300f3970889">const_iterator</a>() = <span class="keywordflow">default</span>;</div>
+<div class="line"><a id="l00298" name="l00298"></a><span class="lineno">  298</span></div>
+<div class="foldopen" id="foldopen00304" data-start="{" data-end="}">
+<div class="line"><a id="l00304" name="l00304"></a><span class="lineno"><a class="line" href="classbsoncxx_1_1v1_1_1document_1_1view_1_1const__iterator.html#ac4f6eab8803af719a14c0ccbd69eb428">  304</a></span>    <a class="code hl_typedef" href="classbsoncxx_1_1v1_1_1document_1_1view_1_1const__iterator.html#aa7a2446c79ed7467ebe6c241bb5b3e26">reference</a> <a class="code hl_function" href="classbsoncxx_1_1v1_1_1document_1_1view_1_1const__iterator.html#ac4f6eab8803af719a14c0ccbd69eb428">operator*</a>()<span class="keyword"> const </span>{</div>
+<div class="line"><a id="l00305" name="l00305"></a><span class="lineno">  305</span>        <span class="keywordflow">return</span> _element;</div>
+<div class="line"><a id="l00306" name="l00306"></a><span class="lineno">  306</span>    }</div>
+</div>
+<div class="line"><a id="l00307" name="l00307"></a><span class="lineno">  307</span></div>
+<div class="foldopen" id="foldopen00313" data-start="{" data-end="}">
+<div class="line"><a id="l00313" name="l00313"></a><span class="lineno"><a class="line" href="classbsoncxx_1_1v1_1_1document_1_1view_1_1const__iterator.html#a9f0d6d23ad2a6ed092ec65674ffd5dd9">  313</a></span>    <a class="code hl_typedef" href="classbsoncxx_1_1v1_1_1document_1_1view_1_1const__iterator.html#abb4678441e266d1e0f4785cdf7ec62b9">pointer</a> <a class="code hl_function" href="classbsoncxx_1_1v1_1_1document_1_1view_1_1const__iterator.html#a9f0d6d23ad2a6ed092ec65674ffd5dd9">operator-&gt;</a>()<span class="keyword"> const </span>{</div>
+<div class="line"><a id="l00314" name="l00314"></a><span class="lineno">  314</span>        <span class="keywordflow">return</span> &amp;_element;</div>
+<div class="line"><a id="l00315" name="l00315"></a><span class="lineno">  315</span>    }</div>
+</div>
+<div class="line"><a id="l00316" name="l00316"></a><span class="lineno">  316</span></div>
+<div class="line"><a id="l00322" name="l00322"></a><span class="lineno"><a class="line" href="classbsoncxx_1_1v1_1_1document_1_1view_1_1const__iterator.html#a793a255b55085dbd6faa4a2931309943">  322</a></span>    <a class="code hl_define" href="bsoncxx_2v1_2config_2export_8hpp.html#a531d4aedac14b1f20ca7c0795dbd083f">BSONCXX_ABI_EXPORT_CDECL</a>(<a class="code hl_function" href="classbsoncxx_1_1v1_1_1document_1_1view_1_1const__iterator.html#a4d022395764a4b662c61d300f3970889">const_iterator</a>&amp;) <a class="code hl_function" href="classbsoncxx_1_1v1_1_1document_1_1view_1_1const__iterator.html#a793a255b55085dbd6faa4a2931309943">operator++</a>();</div>
+<div class="line"><a id="l00323" name="l00323"></a><span class="lineno">  323</span></div>
+<div class="foldopen" id="foldopen00329" data-start="{" data-end="}">
+<div class="line"><a id="l00329" name="l00329"></a><span class="lineno"><a class="line" href="classbsoncxx_1_1v1_1_1document_1_1view_1_1const__iterator.html#a35c50ba821f5b33e15e1caca56ba7582">  329</a></span>    <a class="code hl_function" href="classbsoncxx_1_1v1_1_1document_1_1view_1_1const__iterator.html#a4d022395764a4b662c61d300f3970889">const_iterator</a> <a class="code hl_function" href="classbsoncxx_1_1v1_1_1document_1_1view_1_1const__iterator.html#a35c50ba821f5b33e15e1caca56ba7582">operator++</a>(<span class="keywordtype">int</span>) {</div>
+<div class="line"><a id="l00330" name="l00330"></a><span class="lineno">  330</span>        <a class="code hl_function" href="classbsoncxx_1_1v1_1_1document_1_1view_1_1const__iterator.html#a4d022395764a4b662c61d300f3970889">const_iterator</a> tmp = *<span class="keyword">this</span>;</div>
+<div class="line"><a id="l00331" name="l00331"></a><span class="lineno">  331</span>        this-&gt;<a class="code hl_function" href="classbsoncxx_1_1v1_1_1document_1_1view_1_1const__iterator.html#a793a255b55085dbd6faa4a2931309943">operator++</a>();</div>
+<div class="line"><a id="l00332" name="l00332"></a><span class="lineno">  332</span>        <span class="keywordflow">return</span> tmp;</div>
+<div class="line"><a id="l00333" name="l00333"></a><span class="lineno">  333</span>    }</div>
+</div>
+<div class="line"><a id="l00334" name="l00334"></a><span class="lineno">  334</span></div>
+<div class="foldopen" id="foldopen00341" data-start="{" data-end="}">
+<div class="line"><a id="l00341" name="l00341"></a><span class="lineno"><a class="line" href="classbsoncxx_1_1v1_1_1document_1_1view_1_1const__iterator.html#a6ead42d616535c3e3b76e57aab15f828">  341</a></span>    <span class="keyword">friend</span> <span class="keywordtype">bool</span> <a class="code hl_friend" href="classbsoncxx_1_1v1_1_1document_1_1view_1_1const__iterator.html#a6ead42d616535c3e3b76e57aab15f828">operator==</a>(<a class="code hl_function" href="classbsoncxx_1_1v1_1_1document_1_1view_1_1const__iterator.html#a4d022395764a4b662c61d300f3970889">const_iterator</a> <span class="keyword">const</span>&amp; lhs, <a class="code hl_function" href="classbsoncxx_1_1v1_1_1document_1_1view_1_1const__iterator.html#a4d022395764a4b662c61d300f3970889">const_iterator</a> <span class="keyword">const</span>&amp; rhs) {</div>
+<div class="line"><a id="l00342" name="l00342"></a><span class="lineno">  342</span>        <span class="keywordflow">if</span> (!lhs._element != !rhs._element) {</div>
+<div class="line"><a id="l00343" name="l00343"></a><span class="lineno">  343</span>            <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00344" name="l00344"></a><span class="lineno">  344</span>        }</div>
+<div class="line"><a id="l00345" name="l00345"></a><span class="lineno">  345</span> </div>
+<div class="line"><a id="l00346" name="l00346"></a><span class="lineno">  346</span>        <span class="keywordflow">return</span> !lhs._element ||</div>
+<div class="line"><a id="l00347" name="l00347"></a><span class="lineno">  347</span>               (lhs._element.<a class="code hl_function" href="classbsoncxx_1_1v1_1_1element_1_1view.html#a5bf858fa6098af2d7af0c7a5b372cc9c">raw</a>() == rhs._element.<a class="code hl_function" href="classbsoncxx_1_1v1_1_1element_1_1view.html#a5bf858fa6098af2d7af0c7a5b372cc9c">raw</a>() &amp;&amp; lhs._element.<a class="code hl_function" href="classbsoncxx_1_1v1_1_1element_1_1view.html#a8866334eefce49ab4ec34eceeed3c9e1">offset</a>() == rhs._element.<a class="code hl_function" href="classbsoncxx_1_1v1_1_1element_1_1view.html#a8866334eefce49ab4ec34eceeed3c9e1">offset</a>());</div>
+<div class="line"><a id="l00348" name="l00348"></a><span class="lineno">  348</span>    }</div>
+</div>
+<div class="line"><a id="l00349" name="l00349"></a><span class="lineno">  349</span></div>
+<div class="foldopen" id="foldopen00353" data-start="{" data-end="}">
+<div class="line"><a id="l00353" name="l00353"></a><span class="lineno"><a class="line" href="classbsoncxx_1_1v1_1_1document_1_1view_1_1const__iterator.html#a477257c99c31ffd909ede2c4d26b5c76">  353</a></span>    <span class="keyword">friend</span> <span class="keywordtype">bool</span> <a class="code hl_friend" href="classbsoncxx_1_1v1_1_1document_1_1view_1_1const__iterator.html#a477257c99c31ffd909ede2c4d26b5c76">operator!=</a>(<a class="code hl_function" href="classbsoncxx_1_1v1_1_1document_1_1view_1_1const__iterator.html#a4d022395764a4b662c61d300f3970889">const_iterator</a> <span class="keyword">const</span>&amp; lhs, <a class="code hl_function" href="classbsoncxx_1_1v1_1_1document_1_1view_1_1const__iterator.html#a4d022395764a4b662c61d300f3970889">const_iterator</a> <span class="keyword">const</span>&amp; rhs) {</div>
+<div class="line"><a id="l00354" name="l00354"></a><span class="lineno">  354</span>        <span class="keywordflow">return</span> !(lhs == rhs);</div>
+<div class="line"><a id="l00355" name="l00355"></a><span class="lineno">  355</span>    }</div>
+</div>
+<div class="line"><a id="l00356" name="l00356"></a><span class="lineno">  356</span> </div>
+<div class="line"><a id="l00357" name="l00357"></a><span class="lineno">  357</span>    <span class="keyword">class </span>internal;</div>
+<div class="line"><a id="l00358" name="l00358"></a><span class="lineno">  358</span> </div>
+<div class="line"><a id="l00359" name="l00359"></a><span class="lineno">  359</span>   <span class="keyword">private</span>:</div>
+<div class="line"><a id="l00360" name="l00360"></a><span class="lineno">  360</span>    <span class="keyword">explicit</span> <a class="code hl_define" href="bsoncxx_2v1_2config_2export_8hpp.html#a531d4aedac14b1f20ca7c0795dbd083f">BSONCXX_ABI_EXPORT_CDECL</a>() <a class="code hl_class" href="classbsoncxx_1_1v1_1_1document_1_1view_1_1const__iterator.html">const_iterator</a>(<a class="code hl_namespace" href="namespacebsoncxx_1_1v1.html">v1</a>::<a class="code hl_namespace" href="namespacebsoncxx_1_1v1_1_1element.html">element</a>::<a class="code hl_function" href="classbsoncxx_1_1v1_1_1document_1_1view.html#a1b4c0df2fbd1669d4a9ee5eb7a72a3dc">view</a> <a class="code hl_namespace" href="namespacebsoncxx_1_1v1_1_1element.html">element</a>);</div>
+<div class="line"><a id="l00361" name="l00361"></a><span class="lineno">  361</span>};</div>
+</div>
+<div class="line"><a id="l00362" name="l00362"></a><span class="lineno">  362</span> </div>
+<div class="foldopen" id="foldopen00363" data-start="{" data-end="}">
+<div class="line"><a id="l00363" name="l00363"></a><span class="lineno"><a class="line" href="classbsoncxx_1_1v1_1_1document_1_1view.html#abc58e57aebe2b5688946a664ef0127f1">  363</a></span>inline <a class="code hl_function" href="classbsoncxx_1_1v1_1_1document_1_1view.html#a1b4c0df2fbd1669d4a9ee5eb7a72a3dc">view</a>::<a class="code hl_class" href="classbsoncxx_1_1v1_1_1document_1_1view_1_1const__iterator.html">const_iterator</a> <a class="code hl_function" href="classbsoncxx_1_1v1_1_1document_1_1view.html#a1b4c0df2fbd1669d4a9ee5eb7a72a3dc">view</a>::<a class="code hl_function" href="classbsoncxx_1_1v1_1_1document_1_1view.html#abc58e57aebe2b5688946a664ef0127f1">cend</a>()<span class="keyword"> const </span>{</div>
+<div class="line"><a id="l00364" name="l00364"></a><span class="lineno">  364</span>    <span class="keywordflow">return</span> {};</div>
+<div class="line"><a id="l00365" name="l00365"></a><span class="lineno">  365</span>}</div>
+</div>
+<div class="line"><a id="l00366" name="l00366"></a><span class="lineno">  366</span> </div>
+<div class="foldopen" id="foldopen00367" data-start="{" data-end="}">
+<div class="line"><a id="l00367" name="l00367"></a><span class="lineno"><a class="line" href="classbsoncxx_1_1v1_1_1document_1_1view.html#aae6049f10351f0f157bb63de25d610fc">  367</a></span><span class="keyword">inline</span> <a class="code hl_class" href="classbsoncxx_1_1v1_1_1document_1_1view_1_1const__iterator.html">view::const_iterator</a> <a class="code hl_function" href="classbsoncxx_1_1v1_1_1document_1_1view.html#aae6049f10351f0f157bb63de25d610fc">view::begin</a>()<span class="keyword"> const </span>{</div>
+<div class="line"><a id="l00368" name="l00368"></a><span class="lineno">  368</span>    <span class="keywordflow">return</span> this-&gt;<a class="code hl_function" href="classbsoncxx_1_1v1_1_1document_1_1view.html#ae0cbc76c38db1cc3dcf784225ef7046e">cbegin</a>();</div>
+<div class="line"><a id="l00369" name="l00369"></a><span class="lineno">  369</span>}</div>
+</div>
+<div class="line"><a id="l00370" name="l00370"></a><span class="lineno">  370</span> </div>
+<div class="foldopen" id="foldopen00371" data-start="{" data-end="}">
+<div class="line"><a id="l00371" name="l00371"></a><span class="lineno"><a class="line" href="classbsoncxx_1_1v1_1_1document_1_1view.html#ac0fbb13e54cc3fdc015ff247cbc4f565">  371</a></span><span class="keyword">inline</span> <a class="code hl_class" href="classbsoncxx_1_1v1_1_1document_1_1view_1_1const__iterator.html">view::const_iterator</a> <a class="code hl_function" href="classbsoncxx_1_1v1_1_1document_1_1view.html#ac0fbb13e54cc3fdc015ff247cbc4f565">view::end</a>()<span class="keyword"> const </span>{</div>
+<div class="line"><a id="l00372" name="l00372"></a><span class="lineno">  372</span>    <span class="keywordflow">return</span> this-&gt;<a class="code hl_function" href="classbsoncxx_1_1v1_1_1document_1_1view.html#abc58e57aebe2b5688946a664ef0127f1">cend</a>();</div>
+<div class="line"><a id="l00373" name="l00373"></a><span class="lineno">  373</span>}</div>
+</div>
+<div class="line"><a id="l00374" name="l00374"></a><span class="lineno">  374</span> </div>
+<div class="foldopen" id="foldopen00375" data-start="{" data-end="}">
+<div class="line"><a id="l00375" name="l00375"></a><span class="lineno"><a class="line" href="classbsoncxx_1_1v1_1_1document_1_1view.html#a628e40f9dc6cee23961cde6eccc53368">  375</a></span><span class="keyword">inline</span> <a class="code hl_class" href="classbsoncxx_1_1v1_1_1element_1_1view.html">v1::element::view</a> <a class="code hl_function" href="classbsoncxx_1_1v1_1_1document_1_1view.html#a628e40f9dc6cee23961cde6eccc53368">view::operator[]</a>(<a class="code hl_class" href="classbsoncxx_1_1v1_1_1stdx_1_1string__view.html">v1::stdx::string_view</a> key)<span class="keyword"> const </span>{</div>
+<div class="line"><a id="l00376" name="l00376"></a><span class="lineno">  376</span>    <span class="keywordflow">return</span> *(this-&gt;<a class="code hl_function" href="classbsoncxx_1_1v1_1_1document_1_1view.html#aca646fa3b9b1ef9006bc14beb75ea796">find</a>(key));</div>
+<div class="line"><a id="l00377" name="l00377"></a><span class="lineno">  377</span>}</div>
+</div>
+<div class="line"><a id="l00378" name="l00378"></a><span class="lineno">  378</span> </div>
+<div class="line"><a id="l00379" name="l00379"></a><span class="lineno">  379</span>} <span class="comment">// namespace document</span></div>
+<div class="line"><a id="l00380" name="l00380"></a><span class="lineno">  380</span>} <span class="comment">// namespace v1</span></div>
+<div class="line"><a id="l00381" name="l00381"></a><span class="lineno">  381</span>} <span class="comment">// namespace bsoncxx</span></div>
+<div class="line"><a id="l00382" name="l00382"></a><span class="lineno">  382</span> </div>
+<div class="line"><a id="l00383" name="l00383"></a><span class="lineno">  383</span><span class="keyword">template</span> &lt;&gt;</div>
+<div class="line"><a id="l00384" name="l00384"></a><span class="lineno">  384</span><span class="keyword">struct </span>std::is_error_code_enum&lt;<a class="code hl_namespace" href="namespacebsoncxx.html">bsoncxx</a>::<a class="code hl_enumeration" href="classbsoncxx_1_1v1_1_1document_1_1view.html#a5edbe75f2d8e3fb7d941deee6d87c312">v1::document::view::errc</a>&gt; : true_type {};</div>
+<div class="line"><a id="l00385" name="l00385"></a><span class="lineno">  385</span> </div>
+<div class="line"><a id="l00386" name="l00386"></a><span class="lineno">  386</span><span class="preprocessor">#include &lt;<a class="code" href="bsoncxx_2v1_2detail_2postlude_8hpp.html">bsoncxx/v1/detail/postlude.hpp</a>&gt;</span></div>
+<div class="line"><a id="l00387" name="l00387"></a><span class="lineno">  387</span></div>
+<div class="ttc" id="abit_8hpp_html"><div class="ttname"><a href="bit_8hpp.html">bit.hpp</a></div><div class="ttdoc">For internal use only!</div></div>
+<div class="ttc" id="absoncxx_2v1_2config_2export_8hpp_html"><div class="ttname"><a href="bsoncxx_2v1_2config_2export_8hpp.html">export.hpp</a></div><div class="ttdoc">Provides macros to control the set of symbols exported in the ABI.</div></div>
+<div class="ttc" id="absoncxx_2v1_2config_2export_8hpp_html_a1ed85cdf0f512a1ec7a9b0f9c92553c8"><div class="ttname"><a href="bsoncxx_2v1_2config_2export_8hpp.html#a1ed85cdf0f512a1ec7a9b0f9c92553c8">BSONCXX_ABI_EXPORT</a></div><div class="ttdeci">#define BSONCXX_ABI_EXPORT</div><div class="ttdoc">Exports the associated entity as part of the ABI.</div><div class="ttdef"><b>Definition</b> export.hpp:15</div></div>
+<div class="ttc" id="absoncxx_2v1_2config_2export_8hpp_html_a531d4aedac14b1f20ca7c0795dbd083f"><div class="ttname"><a href="bsoncxx_2v1_2config_2export_8hpp.html#a531d4aedac14b1f20ca7c0795dbd083f">BSONCXX_ABI_EXPORT_CDECL</a></div><div class="ttdeci">#define BSONCXX_ABI_EXPORT_CDECL(...)</div><div class="ttdoc">Equivalent to BSONCXX_ABI_EXPORT with BSONCXX_ABI_CDECL.</div><div class="ttdef"><b>Definition</b> export.hpp:52</div></div>
+<div class="ttc" id="absoncxx_2v1_2detail_2postlude_8hpp_html"><div class="ttname"><a href="bsoncxx_2v1_2detail_2postlude_8hpp.html">postlude.hpp</a></div><div class="ttdoc">The bsoncxx v1 macro guard postlude header.</div></div>
+<div class="ttc" id="absoncxx_2v1_2detail_2prelude_8hpp_html"><div class="ttname"><a href="bsoncxx_2v1_2detail_2prelude_8hpp.html">prelude.hpp</a></div><div class="ttdoc">The bsoncxx v1 macro guard prelude header.</div></div>
+<div class="ttc" id="aclassbsoncxx_1_1v1_1_1document_1_1view_1_1const__iterator_html"><div class="ttname"><a href="classbsoncxx_1_1v1_1_1document_1_1view_1_1const__iterator.html">bsoncxx::v1::document::view::const_iterator</a></div><div class="ttdoc">A const iterator over the elements of a view.</div><div class="ttdef"><b>Definition</b> view.hpp:264</div></div>
+<div class="ttc" id="aclassbsoncxx_1_1v1_1_1document_1_1view_1_1const__iterator_html_a35c50ba821f5b33e15e1caca56ba7582"><div class="ttname"><a href="classbsoncxx_1_1v1_1_1document_1_1view_1_1const__iterator.html#a35c50ba821f5b33e15e1caca56ba7582">bsoncxx::v1::document::view::const_iterator::operator++</a></div><div class="ttdeci">const_iterator operator++(int)</div><div class="ttdoc">Post-increment this iterator.</div><div class="ttdef"><b>Definition</b> view.hpp:329</div></div>
+<div class="ttc" id="aclassbsoncxx_1_1v1_1_1document_1_1view_1_1const__iterator_html_a477257c99c31ffd909ede2c4d26b5c76"><div class="ttname"><a href="classbsoncxx_1_1v1_1_1document_1_1view_1_1const__iterator.html#a477257c99c31ffd909ede2c4d26b5c76">bsoncxx::v1::document::view::const_iterator::operator!=</a></div><div class="ttdeci">friend bool operator!=(const_iterator const &amp;lhs, const_iterator const &amp;rhs)</div><div class="ttdoc">Equivalent to !(lhs == rhs).</div><div class="ttdef"><b>Definition</b> view.hpp:353</div></div>
+<div class="ttc" id="aclassbsoncxx_1_1v1_1_1document_1_1view_1_1const__iterator_html_a4d022395764a4b662c61d300f3970889"><div class="ttname"><a href="classbsoncxx_1_1v1_1_1document_1_1view_1_1const__iterator.html#a4d022395764a4b662c61d300f3970889">bsoncxx::v1::document::view::const_iterator::const_iterator</a></div><div class="ttdeci">const_iterator()=default</div><div class="ttdoc">Initialize as an end iterator.</div></div>
+<div class="ttc" id="aclassbsoncxx_1_1v1_1_1document_1_1view_1_1const__iterator_html_a6ead42d616535c3e3b76e57aab15f828"><div class="ttname"><a href="classbsoncxx_1_1v1_1_1document_1_1view_1_1const__iterator.html#a6ead42d616535c3e3b76e57aab15f828">bsoncxx::v1::document::view::const_iterator::operator==</a></div><div class="ttdeci">friend bool operator==(const_iterator const &amp;lhs, const_iterator const &amp;rhs)</div><div class="ttdoc">Compare equal when lhs and rhs point to the same element within the same range of BSON bytes.</div><div class="ttdef"><b>Definition</b> view.hpp:341</div></div>
+<div class="ttc" id="aclassbsoncxx_1_1v1_1_1document_1_1view_1_1const__iterator_html_a793a255b55085dbd6faa4a2931309943"><div class="ttname"><a href="classbsoncxx_1_1v1_1_1document_1_1view_1_1const__iterator.html#a793a255b55085dbd6faa4a2931309943">bsoncxx::v1::document::view::const_iterator::operator++</a></div><div class="ttdeci">const_iterator &amp; operator++()</div><div class="ttdoc">Pre-increment this iterator.</div></div>
+<div class="ttc" id="aclassbsoncxx_1_1v1_1_1document_1_1view_1_1const__iterator_html_a94be9b0b776d9463a77e0f1a9ac090ec"><div class="ttname"><a href="classbsoncxx_1_1v1_1_1document_1_1view_1_1const__iterator.html#a94be9b0b776d9463a77e0f1a9ac090ec">bsoncxx::v1::document::view::const_iterator::value_type</a></div><div class="ttdeci">v1::element::view value_type</div><div class="ttdoc">Provide std::iterator_traits&lt;T&gt;::value_type.</div><div class="ttdef"><b>Definition</b> view.hpp:277</div></div>
+<div class="ttc" id="aclassbsoncxx_1_1v1_1_1document_1_1view_1_1const__iterator_html_a9f0d6d23ad2a6ed092ec65674ffd5dd9"><div class="ttname"><a href="classbsoncxx_1_1v1_1_1document_1_1view_1_1const__iterator.html#a9f0d6d23ad2a6ed092ec65674ffd5dd9">bsoncxx::v1::document::view::const_iterator::operator-&gt;</a></div><div class="ttdeci">pointer operator-&gt;() const</div><div class="ttdoc">Access the current element.</div><div class="ttdef"><b>Definition</b> view.hpp:313</div></div>
+<div class="ttc" id="aclassbsoncxx_1_1v1_1_1document_1_1view_1_1const__iterator_html_aa7a2446c79ed7467ebe6c241bb5b3e26"><div class="ttname"><a href="classbsoncxx_1_1v1_1_1document_1_1view_1_1const__iterator.html#aa7a2446c79ed7467ebe6c241bb5b3e26">bsoncxx::v1::document::view::const_iterator::reference</a></div><div class="ttdeci">value_type reference</div><div class="ttdoc">Provide std::iterator_traits&lt;T&gt;::reference.</div><div class="ttdef"><b>Definition</b> view.hpp:292</div></div>
+<div class="ttc" id="aclassbsoncxx_1_1v1_1_1document_1_1view_1_1const__iterator_html_aaf4e9c7fe73e951910db00d698feb613"><div class="ttname"><a href="classbsoncxx_1_1v1_1_1document_1_1view_1_1const__iterator.html#aaf4e9c7fe73e951910db00d698feb613">bsoncxx::v1::document::view::const_iterator::difference_type</a></div><div class="ttdeci">std::ptrdiff_t difference_type</div><div class="ttdoc">Provide std::iterator_traits&lt;T&gt;::difference_type.</div><div class="ttdef"><b>Definition</b> view.hpp:282</div></div>
+<div class="ttc" id="aclassbsoncxx_1_1v1_1_1document_1_1view_1_1const__iterator_html_abb4678441e266d1e0f4785cdf7ec62b9"><div class="ttname"><a href="classbsoncxx_1_1v1_1_1document_1_1view_1_1const__iterator.html#abb4678441e266d1e0f4785cdf7ec62b9">bsoncxx::v1::document::view::const_iterator::pointer</a></div><div class="ttdeci">value_type const  * pointer</div><div class="ttdoc">Provide std::iterator_traits&lt;T&gt;::pointer.</div><div class="ttdef"><b>Definition</b> view.hpp:287</div></div>
+<div class="ttc" id="aclassbsoncxx_1_1v1_1_1document_1_1view_1_1const__iterator_html_ac4f6eab8803af719a14c0ccbd69eb428"><div class="ttname"><a href="classbsoncxx_1_1v1_1_1document_1_1view_1_1const__iterator.html#ac4f6eab8803af719a14c0ccbd69eb428">bsoncxx::v1::document::view::const_iterator::operator*</a></div><div class="ttdeci">reference operator*() const</div><div class="ttdoc">Return the current element.</div><div class="ttdef"><b>Definition</b> view.hpp:304</div></div>
+<div class="ttc" id="aclassbsoncxx_1_1v1_1_1document_1_1view_1_1const__iterator_html_ae13fc89ff3817dc34af8de6211d21f01"><div class="ttname"><a href="classbsoncxx_1_1v1_1_1document_1_1view_1_1const__iterator.html#ae13fc89ff3817dc34af8de6211d21f01">bsoncxx::v1::document::view::const_iterator::iterator_category</a></div><div class="ttdeci">std::input_iterator_tag iterator_category</div><div class="ttdoc">Provide std::iterator_traits&lt;T&gt;::iterator_category.</div><div class="ttdef"><b>Definition</b> view.hpp:272</div></div>
+<div class="ttc" id="aclassbsoncxx_1_1v1_1_1document_1_1view_html_a1b4c0df2fbd1669d4a9ee5eb7a72a3dc"><div class="ttname"><a href="classbsoncxx_1_1v1_1_1document_1_1view.html#a1b4c0df2fbd1669d4a9ee5eb7a72a3dc">bsoncxx::v1::document::view::view</a></div><div class="ttdeci">view()</div><div class="ttdoc">Initialize as an empty view.</div></div>
+<div class="ttc" id="aclassbsoncxx_1_1v1_1_1document_1_1view_html_a2871182420c6f218fbb6d8e169d81531"><div class="ttname"><a href="classbsoncxx_1_1v1_1_1document_1_1view.html#a2871182420c6f218fbb6d8e169d81531">bsoncxx::v1::document::view::iterator</a></div><div class="ttdeci">const_iterator iterator</div><div class="ttdoc">Equivalent to const_iterator.</div><div class="ttdef"><b>Definition</b> view.hpp:59</div></div>
+<div class="ttc" id="aclassbsoncxx_1_1v1_1_1document_1_1view_html_a5bc60a40c676369a8ba84a525e3cbfb7"><div class="ttname"><a href="classbsoncxx_1_1v1_1_1document_1_1view.html#a5bc60a40c676369a8ba84a525e3cbfb7">bsoncxx::v1::document::view::operator!=</a></div><div class="ttdeci">friend bool operator!=(view lhs, view rhs)</div><div class="ttdoc">Compare equal when the BSON bytes represented by lhs and rhs compare equal.</div><div class="ttdef"><b>Definition</b> view.hpp:207</div></div>
+<div class="ttc" id="aclassbsoncxx_1_1v1_1_1document_1_1view_html_a5c13ba2cd87141e05dc46571d243138b"><div class="ttname"><a href="classbsoncxx_1_1v1_1_1document_1_1view.html#a5c13ba2cd87141e05dc46571d243138b">bsoncxx::v1::document::view::operator==</a></div><div class="ttdeci">friend bool operator==(view lhs, view rhs)</div><div class="ttdoc">Compare equal when the BSON bytes represented by lhs and rhs compare equal.</div><div class="ttdef"><b>Definition</b> view.hpp:199</div></div>
+<div class="ttc" id="aclassbsoncxx_1_1v1_1_1document_1_1view_html_a5edbe75f2d8e3fb7d941deee6d87c312"><div class="ttname"><a href="classbsoncxx_1_1v1_1_1document_1_1view.html#a5edbe75f2d8e3fb7d941deee6d87c312">bsoncxx::v1::document::view::errc</a></div><div class="ttdeci">errc</div><div class="ttdoc">Errors codes which may be returned by bsoncxx::v1::document::view.</div><div class="ttdef"><b>Definition</b> view.hpp:216</div></div>
+<div class="ttc" id="aclassbsoncxx_1_1v1_1_1document_1_1view_html_a5edbe75f2d8e3fb7d941deee6d87c312a2970685bea59a5d3e9bbd92de36caccc"><div class="ttname"><a href="classbsoncxx_1_1v1_1_1document_1_1view.html#a5edbe75f2d8e3fb7d941deee6d87c312a2970685bea59a5d3e9bbd92de36caccc">bsoncxx::v1::document::view::errc::invalid_length</a></div><div class="ttdeci">@ invalid_length</div><div class="ttdoc">Length is invalid.</div><div class="ttdef"><b>Definition</b> view.hpp:218</div></div>
+<div class="ttc" id="aclassbsoncxx_1_1v1_1_1document_1_1view_html_a5edbe75f2d8e3fb7d941deee6d87c312ad02c4c4cde7ae76252540d116a40f23a"><div class="ttname"><a href="classbsoncxx_1_1v1_1_1document_1_1view.html#a5edbe75f2d8e3fb7d941deee6d87c312ad02c4c4cde7ae76252540d116a40f23a">bsoncxx::v1::document::view::errc::zero</a></div><div class="ttdeci">@ zero</div><div class="ttdoc">Zero.</div><div class="ttdef"><b>Definition</b> view.hpp:217</div></div>
+<div class="ttc" id="aclassbsoncxx_1_1v1_1_1document_1_1view_html_a5edbe75f2d8e3fb7d941deee6d87c312af066046fed1ddb2a6d6eb43e445b50a6"><div class="ttname"><a href="classbsoncxx_1_1v1_1_1document_1_1view.html#a5edbe75f2d8e3fb7d941deee6d87c312af066046fed1ddb2a6d6eb43e445b50a6">bsoncxx::v1::document::view::errc::invalid_data</a></div><div class="ttdeci">@ invalid_data</div><div class="ttdoc">Data is invalid.</div><div class="ttdef"><b>Definition</b> view.hpp:219</div></div>
+<div class="ttc" id="aclassbsoncxx_1_1v1_1_1document_1_1view_html_a628e40f9dc6cee23961cde6eccc53368"><div class="ttname"><a href="classbsoncxx_1_1v1_1_1document_1_1view.html#a628e40f9dc6cee23961cde6eccc53368">bsoncxx::v1::document::view::operator[]</a></div><div class="ttdeci">v1::element::view operator[](v1::stdx::string_view key) const</div><div class="ttdoc">Return the first element within the represented BSON document whose key compares equal to key.</div><div class="ttdef"><b>Definition</b> view.hpp:375</div></div>
+<div class="ttc" id="aclassbsoncxx_1_1v1_1_1document_1_1view_html_a7ca27c0afa9d6cc956785b839d1aff35"><div class="ttname"><a href="classbsoncxx_1_1v1_1_1document_1_1view.html#a7ca27c0afa9d6cc956785b839d1aff35">bsoncxx::v1::document::view::empty</a></div><div class="ttdeci">bool empty() const</div><div class="ttdoc">Return true when the BSON bytes represents an empty view:</div><div class="ttdef"><b>Definition</b> view.hpp:132</div></div>
+<div class="ttc" id="aclassbsoncxx_1_1v1_1_1document_1_1view_html_a85e81ef27a789065f99713ab61c03b56"><div class="ttname"><a href="classbsoncxx_1_1v1_1_1document_1_1view.html#a85e81ef27a789065f99713ab61c03b56">bsoncxx::v1::document::view::length</a></div><div class="ttdeci">std::size_t length() const</div><div class="ttdoc">Return the length of the BSON bytes being represented.</div><div class="ttdef"><b>Definition</b> view.hpp:119</div></div>
+<div class="ttc" id="aclassbsoncxx_1_1v1_1_1document_1_1view_html_a94547ece96a465df7b4ef04abbc99547"><div class="ttname"><a href="classbsoncxx_1_1v1_1_1document_1_1view.html#a94547ece96a465df7b4ef04abbc99547">bsoncxx::v1::document::view::make_error_code</a></div><div class="ttdeci">friend std::error_code make_error_code(errc v)</div><div class="ttdoc">Support implicit conversion to std::error_code.</div><div class="ttdef"><b>Definition</b> view.hpp:230</div></div>
+<div class="ttc" id="aclassbsoncxx_1_1v1_1_1document_1_1view_html_aaa9f9fa90182f6b3253a3f2982d09bb5"><div class="ttname"><a href="classbsoncxx_1_1v1_1_1document_1_1view.html#aaa9f9fa90182f6b3253a3f2982d09bb5">bsoncxx::v1::document::view::view</a></div><div class="ttdeci">view(std::uint8_t const *data, std::size_t length)</div><div class="ttdoc">Equivalent to view(std::uint8_t const* data), but validates the embedded length against length.</div></div>
+<div class="ttc" id="aclassbsoncxx_1_1v1_1_1document_1_1view_html_aae6049f10351f0f157bb63de25d610fc"><div class="ttname"><a href="classbsoncxx_1_1v1_1_1document_1_1view.html#aae6049f10351f0f157bb63de25d610fc">bsoncxx::v1::document::view::begin</a></div><div class="ttdeci">const_iterator begin() const</div><div class="ttdoc">Return a const iterator to the beginning of the range of BSON elements within this view.</div><div class="ttdef"><b>Definition</b> view.hpp:367</div></div>
+<div class="ttc" id="aclassbsoncxx_1_1v1_1_1document_1_1view_html_abb09350566ab5d7b0c19ee0c2b221a28"><div class="ttname"><a href="classbsoncxx_1_1v1_1_1document_1_1view.html#abb09350566ab5d7b0c19ee0c2b221a28">bsoncxx::v1::document::view::data</a></div><div class="ttdeci">std::uint8_t const * data() const</div><div class="ttdoc">Return a pointer to the BSON bytes being represented.</div><div class="ttdef"><b>Definition</b> view.hpp:104</div></div>
+<div class="ttc" id="aclassbsoncxx_1_1v1_1_1document_1_1view_html_abc58e57aebe2b5688946a664ef0127f1"><div class="ttname"><a href="classbsoncxx_1_1v1_1_1document_1_1view.html#abc58e57aebe2b5688946a664ef0127f1">bsoncxx::v1::document::view::cend</a></div><div class="ttdeci">const_iterator cend() const</div><div class="ttdoc">Return a const iterator to the end of the range of BSON elements within this view.</div><div class="ttdef"><b>Definition</b> view.hpp:363</div></div>
+<div class="ttc" id="aclassbsoncxx_1_1v1_1_1document_1_1view_html_ac0fbb13e54cc3fdc015ff247cbc4f565"><div class="ttname"><a href="classbsoncxx_1_1v1_1_1document_1_1view.html#ac0fbb13e54cc3fdc015ff247cbc4f565">bsoncxx::v1::document::view::end</a></div><div class="ttdeci">const_iterator end() const</div><div class="ttdoc">Return a const iterator to the end of the range of BSON elements within this view.</div><div class="ttdef"><b>Definition</b> view.hpp:371</div></div>
+<div class="ttc" id="aclassbsoncxx_1_1v1_1_1document_1_1view_html_ac974606c73362cde9016ad587f73e4ce"><div class="ttname"><a href="classbsoncxx_1_1v1_1_1document_1_1view.html#ac974606c73362cde9016ad587f73e4ce">bsoncxx::v1::document::view::size</a></div><div class="ttdeci">std::size_t size() const</div><div class="ttdoc">Return the length of the BSON bytes being represented.</div><div class="ttdef"><b>Definition</b> view.hpp:253</div></div>
+<div class="ttc" id="aclassbsoncxx_1_1v1_1_1document_1_1view_html_aca646fa3b9b1ef9006bc14beb75ea796"><div class="ttname"><a href="classbsoncxx_1_1v1_1_1document_1_1view.html#aca646fa3b9b1ef9006bc14beb75ea796">bsoncxx::v1::document::view::find</a></div><div class="ttdeci">const_iterator find(v1::stdx::string_view key) const</div><div class="ttdoc">Return a const iterator to the element within the represented BSON document whose key compares equal ...</div></div>
+<div class="ttc" id="aclassbsoncxx_1_1v1_1_1document_1_1view_html_ade1f434783d0db48364f129b5f71f059"><div class="ttname"><a href="classbsoncxx_1_1v1_1_1document_1_1view.html#ade1f434783d0db48364f129b5f71f059">bsoncxx::v1::document::view::error_category</a></div><div class="ttdeci">static std::error_category const &amp; error_category()</div><div class="ttdoc">The error category for bsoncxx::v1::document::view::errc.</div></div>
+<div class="ttc" id="aclassbsoncxx_1_1v1_1_1document_1_1view_html_ae0cbc76c38db1cc3dcf784225ef7046e"><div class="ttname"><a href="classbsoncxx_1_1v1_1_1document_1_1view.html#ae0cbc76c38db1cc3dcf784225ef7046e">bsoncxx::v1::document::view::cbegin</a></div><div class="ttdeci">const_iterator cbegin() const</div><div class="ttdoc">Return a const iterator to the beginning of the range of BSON elements within this view.</div></div>
+<div class="ttc" id="aclassbsoncxx_1_1v1_1_1element_1_1view_html"><div class="ttname"><a href="classbsoncxx_1_1v1_1_1element_1_1view.html">bsoncxx::v1::element::view</a></div><div class="ttdoc">A non-owning, read-only BSON element.</div><div class="ttdef"><b>Definition</b> view.hpp:82</div></div>
+<div class="ttc" id="aclassbsoncxx_1_1v1_1_1element_1_1view_html_a5bf858fa6098af2d7af0c7a5b372cc9c"><div class="ttname"><a href="classbsoncxx_1_1v1_1_1element_1_1view.html#a5bf858fa6098af2d7af0c7a5b372cc9c">bsoncxx::v1::element::view::raw</a></div><div class="ttdeci">std::uint8_t const * raw() const</div><div class="ttdoc">Return the &quot;raw&quot; component of the underlying BSON bytes.</div></div>
+<div class="ttc" id="aclassbsoncxx_1_1v1_1_1element_1_1view_html_a8866334eefce49ab4ec34eceeed3c9e1"><div class="ttname"><a href="classbsoncxx_1_1v1_1_1element_1_1view.html#a8866334eefce49ab4ec34eceeed3c9e1">bsoncxx::v1::element::view::offset</a></div><div class="ttdeci">std::uint32_t offset() const</div><div class="ttdoc">Return the &quot;offset&quot; component of the underlying BSON bytes.</div></div>
+<div class="ttc" id="aclassbsoncxx_1_1v1_1_1stdx_1_1string__view_html"><div class="ttname"><a href="classbsoncxx_1_1v1_1_1stdx_1_1string__view.html">bsoncxx::v1::stdx::string_view</a></div><div class="ttdoc">A polyfill for std::string_view.</div><div class="ttdef"><b>Definition</b> string_view.hpp:412</div></div>
+<div class="ttc" id="anamespacebsoncxx_1_1v1_1_1document_html"><div class="ttname"><a href="namespacebsoncxx_1_1v1_1_1document.html">bsoncxx::v1::document</a></div><div class="ttdoc">Declares entities representing a BSON document.</div></div>
+<div class="ttc" id="anamespacebsoncxx_1_1v1_1_1element_html"><div class="ttname"><a href="namespacebsoncxx_1_1v1_1_1element.html">bsoncxx::v1::element</a></div><div class="ttdoc">Declares entities representing a BSON element.</div></div>
+<div class="ttc" id="anamespacebsoncxx_1_1v1_html"><div class="ttname"><a href="namespacebsoncxx_1_1v1.html">bsoncxx::v1</a></div><div class="ttdoc">Declares entities whose ABI stability is guaranteed for documented symbols.</div></div>
+<div class="ttc" id="anamespacebsoncxx_html"><div class="ttname"><a href="namespacebsoncxx.html">bsoncxx</a></div><div class="ttdoc">The top-level namespace within which all bsoncxx library entities are declared.</div></div>
+<div class="ttc" id="av1_2document_2view-fwd_8hpp_html"><div class="ttname"><a href="v1_2document_2view-fwd_8hpp.html">view-fwd.hpp</a></div><div class="ttdoc">Declares bsoncxx::v1::document::view.</div></div>
+<div class="ttc" id="av1_2element_2view_8hpp_html"><div class="ttname"><a href="v1_2element_2view_8hpp.html">view.hpp</a></div><div class="ttdoc">Provides bsoncxx::v1::element::view.</div></div>
+<div class="ttc" id="av1_2stdx_2string__view_8hpp_html"><div class="ttname"><a href="v1_2stdx_2string__view_8hpp.html">string_view.hpp</a></div><div class="ttdoc">Provides std::string_view-related polyfills for library API usage.</div></div>
+</div><!-- fragment --></div><!-- contents -->
+</div><!-- doc-content -->
+</div><!-- container -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a href="dir_7255de1ab5b960dddf89328379275115.html">bsoncxx</a></li><li class="navelem"><a href="dir_1154fd516d86eead8962da927141f014.html">v1</a></li><li class="navelem"><a href="dir_112e4ac638482561d35ef87ef2432bd3.html">document</a></li><li class="navelem"><a href="v1_2document_2view_8hpp.html">view.hpp</a></li>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.15.0 </li>
+  </ul>
+</div>
+</body>
+</html>

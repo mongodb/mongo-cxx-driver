@@ -1,0 +1,513 @@
+<!-- HTML header for doxygen 1.15.0-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-US">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.15.0"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>MongoDB C++ Driver: mongocxx/v_noabi/mongocxx/options/find_one_and_replace.hpp Source File</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript">var page_layout=1;</script>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<script type="text/javascript" src="clipboard.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<script type="text/javascript" src="cookie.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/javascript">
+  $(function() { init_search(); });
+</script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+<link href="doxygen-extra.css" rel="stylesheet" type="text/css"/>
+<!-- Mixpanel Tracker -->
+<script type="text/javascript">
+  (function(e,c){if(!c.__SV){var l,h;window.mixpanel=c;c._i=[];c.init=function(q,r,f){function t(d,a){var g=a.split(".");2==g.length&&(d=d[g[0]],a=g[1]);d[a]=function(){d.push([a].concat(Array.prototype.slice.call(arguments,0)))}}var b=c;"undefined"!==typeof f?b=c[f]=[]:f="mixpanel";b.people=b.people||[];b.toString=function(d){var a="mixpanel";"mixpanel"!==f&&(a+="."+f);d||(a+=" (stub)");return a};b.people.toString=function(){return b.toString(1)+".people (stub)"};l="disable time_event track track_pageview track_links track_forms track_with_groups add_group set_group remove_group register register_once alias unregister identify name_tag set_config reset opt_in_tracking opt_out_tracking has_opted_in_tracking has_opted_out_tracking clear_opt_in_out_tracking start_batch_senders start_session_recording stop_session_recording people.set people.set_once people.unset people.increment people.append people.union people.track_charge people.clear_charges people.delete_user people.remove".split(" ");
+  for(h=0;h<l.length;h++)t(b,l[h]);var n="set set_once union unset remove delete".split(" ");b.get_group=function(){function d(p){a[p]=function(){b.push([g,[p].concat(Array.prototype.slice.call(arguments,0))])}}for(var a={},g=["get_group"].concat(Array.prototype.slice.call(arguments,0)),m=0;m<n.length;m++)d(n[m]);return a};c._i.push([q,r,f])};c.__SV=1.2;var k=e.createElement("script");k.type="text/javascript";k.async=!0;k.src="undefined"!==typeof MIXPANEL_CUSTOM_LIB_URL?MIXPANEL_CUSTOM_LIB_URL:"file:"===
+  e.location.protocol&&"//cdn.mxpnl.com/libs/mixpanel-2-latest.min.js".match(/^\/\//)?"https://cdn.mxpnl.com/libs/mixpanel-2-latest.min.js":"//cdn.mxpnl.com/libs/mixpanel-2-latest.min.js";e=e.getElementsByTagName("script")[0];e.parentNode.insertBefore(k,e)}})(document,window.mixpanel||[]); mixpanel.init('f2a38f26e5cc0eee429a9276f296c118', {
+    autocapture: true,
+    record_sessions_percent: 0,
+  })
+</script>
+<!-- patch-apidocs-current-redirects: mongocxx-4.4.0 -->
+<link rel="canonical" href="https://mongocxx.org/api/mongocxx-4.4.0/find__one__and__replace_8hpp_source.html"/>
+<script type="text/javascript">
+if (window.location.pathname.startsWith("/api/current/")) {
+  window.location.replace(
+    window.location.href.replace("/api/current/", "/api/mongocxx-4.4.0/")
+  )
+}
+</script>
+</head>
+<body>
+<div id="side-nav" class="ui-resizable side-nav-resizable"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr id="projectrow">
+  <td id="projectalign">
+   <div id="projectname">MongoDB C++ Driver<span id="projectnumber">&#160;4.4.0</span>
+   </div>
+  </td>
+ </tr>
+   <tr><td colspan="2">        <div id="MSearchBox" class="MSearchBoxInactive">
+        <span class="left">
+          <span id="MSearchSelect" class="search-icon" onmouseover="return searchBox.OnSearchSelectShow()" onmouseout="return searchBox.OnSearchSelectHide()"><span class="search-icon-dropdown"></span></span>
+          <input type="text" id="MSearchField" value="" placeholder="Search" accesskey="S"
+               onfocus="searchBox.OnSearchFieldFocus(true)" 
+               onblur="searchBox.OnSearchFieldFocus(false)" 
+               onkeyup="searchBox.OnSearchFieldChange(event)"/>
+          </span><span class="right">
+            <a id="MSearchClose" href="javascript:searchBox.CloseResultsWindow()"><div id="MSearchCloseImg" class="close-icon"></div></a>
+          </span>
+        </div>
+</td></tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Generated by Doxygen 1.15.0 -->
+<script type="text/javascript">
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+</script>
+<script type="text/javascript">
+$(function() { codefold.init(); });
+</script>
+</div><!-- top -->
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+$(function(){initNavTree('find__one__and__replace_8hpp_source.html','',''); });
+</script>
+<div id="container">
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Loading...</div>
+<div class="SRStatus" id="Searching">Searching...</div>
+<div class="SRStatus" id="NoMatches">No Matches</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="header">
+  <div class="headertitle"><div class="title">find_one_and_replace.hpp</div></div>
+</div><!--header-->
+<div class="contents">
+<a href="find__one__and__replace_8hpp.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">// Copyright 2009-present MongoDB, Inc.</span></div>
+<div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="comment">//</span></div>
+<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="comment">// Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span></div>
+<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="comment">// you may not use this file except in compliance with the License.</span></div>
+<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="comment">// You may obtain a copy of the License at</span></div>
+<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="comment">//</span></div>
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="comment">// http://www.apache.org/licenses/LICENSE-2.0</span></div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="comment">//</span></div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="comment">// Unless required by applicable law or agreed to in writing, software</span></div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="comment">// distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span></div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="comment">// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span></div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="comment">// See the License for the specific language governing permissions and</span></div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="comment">// limitations under the License.</span></div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span> </div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="preprocessor">#pragma once</span></div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span> </div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="preprocessor">#include &lt;<a class="code" href="find__one__and__replace-fwd_8hpp.html">mongocxx/options/find_one_and_replace-fwd.hpp</a>&gt;</span> <span class="comment">// IWYU pragma: export</span></div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span> </div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="comment">//</span></div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span> </div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="preprocessor">#include &lt;<a class="code" href="v1_2document_2value_8hpp.html">bsoncxx/v1/document/value.hpp</a>&gt;</span></div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="preprocessor">#include &lt;<a class="code" href="v1_2types_2value_8hpp.html">bsoncxx/v1/types/value.hpp</a>&gt;</span></div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span> </div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="preprocessor">#include &lt;<a class="code" href="find__one__and__replace__options_8hpp.html">mongocxx/v1/find_one_and_replace_options.hpp</a>&gt;</span> <span class="comment">// IWYU pragma: export</span></div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span> </div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="preprocessor">#include &lt;chrono&gt;</span></div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="preprocessor">#include &lt;cstdint&gt;</span> <span class="comment">// IWYU pragma: keep: backward compatibility, to be removed.</span></div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="preprocessor">#include &lt;utility&gt;</span></div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span> </div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span><span class="preprocessor">#include &lt;<a class="code" href="v__noabi_2bsoncxx_2document_2view_8hpp.html">bsoncxx/document/view.hpp</a>&gt;</span></div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span><span class="preprocessor">#include &lt;<a class="code" href="document_2view__or__value_8hpp.html">bsoncxx/document/view_or_value.hpp</a>&gt;</span></div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span><span class="preprocessor">#include &lt;<a class="code" href="v__noabi_2bsoncxx_2stdx_2optional_8hpp.html">bsoncxx/stdx/optional.hpp</a>&gt;</span></div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span><span class="preprocessor">#include &lt;<a class="code" href="v__noabi_2bsoncxx_2types_2bson__value_2view_8hpp.html">bsoncxx/types/bson_value/view.hpp</a>&gt;</span></div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span><span class="preprocessor">#include &lt;<a class="code" href="types_2bson__value_2view__or__value_8hpp.html">bsoncxx/types/bson_value/view_or_value.hpp</a>&gt;</span></div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span> </div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span><span class="preprocessor">#include &lt;<a class="code" href="v__noabi_2mongocxx_2hint_8hpp.html">mongocxx/hint.hpp</a>&gt;</span></div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span><span class="preprocessor">#include &lt;<a class="code" href="find__one__common__options_8hpp.html">mongocxx/options/find_one_common_options.hpp</a>&gt;</span></div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span><span class="preprocessor">#include &lt;<a class="code" href="v__noabi_2mongocxx_2read__concern_8hpp.html">mongocxx/read_concern.hpp</a>&gt;</span></div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span><span class="preprocessor">#include &lt;<a class="code" href="v__noabi_2mongocxx_2write__concern_8hpp.html">mongocxx/write_concern.hpp</a>&gt;</span></div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span> </div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span><span class="preprocessor">#include &lt;<a class="code" href="mongocxx_2v__noabi_2mongocxx_2config_2prelude_8hpp.html">mongocxx/config/prelude.hpp</a>&gt;</span></div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span> </div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespacemongocxx.html">mongocxx</a> {</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespacemongocxx_1_1v__noabi.html">v_noabi</a> {</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespacemongocxx_1_1v__noabi_1_1options.html">options</a> {</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span></div>
+<div class="foldopen" id="foldopen00050" data-start="{" data-end="};">
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno"><a class="line" href="classmongocxx_1_1options_1_1find__one__and__replace.html">   50</a></span><span class="keyword">class </span><a class="code hl_function" href="classmongocxx_1_1options_1_1find__one__and__replace.html#ab757c4269b31b0e702f473d244eb9b23">find_one_and_replace</a> {</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>   <span class="keyword">public</span>:</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno"><a class="line" href="classmongocxx_1_1v__noabi_1_1options_1_1find__one__and__replace.html#ab757c4269b31b0e702f473d244eb9b23">   55</a></span>    <a class="code hl_function" href="classmongocxx_1_1v__noabi_1_1options_1_1find__one__and__replace.html#ab757c4269b31b0e702f473d244eb9b23">find_one_and_replace</a>() = <span class="keywordflow">default</span>;</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span></div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno"><a class="line" href="classmongocxx_1_1v__noabi_1_1options_1_1find__one__and__replace.html#ac82e0a427316deecdbb91f62481295ce">   60</a></span>    <span class="comment">/* explicit(false) */</span> <a class="code hl_define" href="mongocxx_2v__noabi_2mongocxx_2config_2config_8hpp.html#a6fe50afd475b4ab93d580599a39ebb76">MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE</a>() <a class="code hl_function" href="classmongocxx_1_1v__noabi_1_1options_1_1find__one__and__replace.html#ab757c4269b31b0e702f473d244eb9b23">find_one_and_replace</a>(</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>        <a class="code hl_namespace" href="namespacemongocxx_1_1v1.html">v1</a>::<a class="code hl_function" href="classmongocxx_1_1v__noabi_1_1options_1_1find__one__and__replace.html#ab4e644cac222515b5f066ddd11e17a31">find_one_and_replace_options</a> opts);</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span></div>
+<div class="foldopen" id="foldopen00066" data-start="{" data-end="}">
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno"><a class="line" href="classmongocxx_1_1v__noabi_1_1options_1_1find__one__and__replace.html#ab4e644cac222515b5f066ddd11e17a31">   66</a></span>    explicit operator <a class="code hl_namespace" href="namespacemongocxx_1_1v1.html">v1</a>::<a class="code hl_function" href="classmongocxx_1_1v__noabi_1_1options_1_1find__one__and__replace.html#ab4e644cac222515b5f066ddd11e17a31">find_one_and_replace_options</a>()<span class="keyword"> const </span>{</div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>        <span class="keyword">using </span><a class="code hl_function" href="namespacebsoncxx_1_1v__noabi.html#aba368dc494264aaa3f62b4857ce4e1ce">bsoncxx::v_noabi::to_v1</a>;</div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>        <span class="keyword">using </span><a class="code hl_function" href="namespacemongocxx_1_1v__noabi.html#aa0c3f10c7aacb9c68ceadfd8e884cf34">mongocxx::v_noabi::to_v1</a>;</div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span> </div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>        <a class="code hl_class" href="classmongocxx_1_1v1_1_1find__one__and__replace__options.html">v1::find_one_and_replace_options</a> ret;</div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span> </div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>        <span class="keywordflow">if</span> (_bypass_document_validation) {</div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>            ret.<a class="code hl_function" href="classmongocxx_1_1v1_1_1find__one__and__replace__options.html#a7d8dbd6d4e636e681df2493f3c1f5427">bypass_document_validation</a>(*_bypass_document_validation);</div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>        }</div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span> </div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>        <span class="keywordflow">if</span> (_collation) {</div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>            ret.<a class="code hl_function" href="classmongocxx_1_1v1_1_1find__one__and__replace__options.html#a4a69a37cf5ae99761f0684e26d7f1f0e">collation</a>(<a class="code hl_class" href="classbsoncxx_1_1v1_1_1document_1_1value.html">bsoncxx::v1::document::value</a>{<a class="code hl_function" href="namespacemongocxx_1_1v__noabi.html#aa0c3f10c7aacb9c68ceadfd8e884cf34">to_v1</a>(_collation-&gt;view())});</div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>        }</div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span> </div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>        <span class="keywordflow">if</span> (_hint) {</div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>            ret.<a class="code hl_function" href="classmongocxx_1_1v1_1_1find__one__and__replace__options.html#a30ccc9daca5cc3b4c5f95f814952ad3b">hint</a>(<a class="code hl_function" href="namespacemongocxx_1_1v__noabi.html#aa0c3f10c7aacb9c68ceadfd8e884cf34">to_v1</a>(*_hint));</div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>        }</div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span> </div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>        <span class="keywordflow">if</span> (_let) {</div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>            ret.<a class="code hl_function" href="classmongocxx_1_1v1_1_1find__one__and__replace__options.html#a29e95eace233e0e5ee0c6aab192243e8">let</a>(<a class="code hl_class" href="classbsoncxx_1_1v1_1_1document_1_1value.html">bsoncxx::v1::document::value</a>{<a class="code hl_function" href="namespacemongocxx_1_1v__noabi.html#aa0c3f10c7aacb9c68ceadfd8e884cf34">to_v1</a>(_let-&gt;view())});</div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>        }</div>
+<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span> </div>
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>        <span class="keywordflow">if</span> (_comment) {</div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>            ret.<a class="code hl_function" href="classmongocxx_1_1v1_1_1find__one__and__replace__options.html#a591f771b6ac1c90db01f6143968fe401">comment</a>(<a class="code hl_class" href="classbsoncxx_1_1v1_1_1types_1_1value.html">bsoncxx::v1::types::value</a>{<a class="code hl_function" href="namespacemongocxx_1_1v__noabi.html#aa0c3f10c7aacb9c68ceadfd8e884cf34">to_v1</a>(*_comment)});</div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>        }</div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span> </div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>        <span class="keywordflow">if</span> (_max_time) {</div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>            ret.<a class="code hl_function" href="classmongocxx_1_1v1_1_1find__one__and__replace__options.html#a9cbe96e69e6e704099fd27d43177e033">max_time</a>(*_max_time);</div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>        }</div>
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span> </div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>        <span class="keywordflow">if</span> (_projection) {</div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>            ret.<a class="code hl_function" href="classmongocxx_1_1v1_1_1find__one__and__replace__options.html#aac86285008eb3ee3bbaf3f1eb35f6c30">projection</a>(<a class="code hl_class" href="classbsoncxx_1_1v1_1_1document_1_1value.html">bsoncxx::v1::document::value</a>{<a class="code hl_function" href="namespacemongocxx_1_1v__noabi.html#aa0c3f10c7aacb9c68ceadfd8e884cf34">to_v1</a>(_projection-&gt;view())});</div>
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>        }</div>
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span> </div>
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>        <span class="keywordflow">if</span> (_return_document) {</div>
+<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>            ret.<a class="code hl_function" href="classmongocxx_1_1v1_1_1find__one__and__replace__options.html#a68933d3a6b318503aa4b7b4c688fc36b">return_document</a>(*_return_document);</div>
+<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>        }</div>
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span> </div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>        <span class="keywordflow">if</span> (_ordering) {</div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>            ret.<a class="code hl_function" href="classmongocxx_1_1v1_1_1find__one__and__replace__options.html#ad5d0f5ba5263e31065987035abf81510">sort</a>(<a class="code hl_class" href="classbsoncxx_1_1v1_1_1document_1_1value.html">bsoncxx::v1::document::value</a>{<a class="code hl_function" href="namespacemongocxx_1_1v__noabi.html#aa0c3f10c7aacb9c68ceadfd8e884cf34">to_v1</a>(_ordering-&gt;view())});</div>
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>        }</div>
+<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span> </div>
+<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>        <span class="keywordflow">if</span> (_upsert) {</div>
+<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>            ret.<a class="code hl_function" href="classmongocxx_1_1v1_1_1find__one__and__replace__options.html#a6ed24f301ed4563788e51e41eb2b99f3">upsert</a>(*_upsert);</div>
+<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>        }</div>
+<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span> </div>
+<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>        <span class="keywordflow">if</span> (_read_concern) {</div>
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>            ret.<a class="code hl_function" href="classmongocxx_1_1v1_1_1find__one__and__replace__options.html#ace667fbfb5d728f7e18d36f262e60c64">read_concern</a>(<a class="code hl_function" href="namespacemongocxx_1_1v__noabi.html#aa0c3f10c7aacb9c68ceadfd8e884cf34">to_v1</a>(*_read_concern));</div>
+<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>        }</div>
+<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span> </div>
+<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>        <span class="keywordflow">if</span> (_write_concern) {</div>
+<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>            ret.<a class="code hl_function" href="classmongocxx_1_1v1_1_1find__one__and__replace__options.html#ac15239a69bbda40f09f6b0fda415d7b4">write_concern</a>(<a class="code hl_function" href="namespacemongocxx_1_1v__noabi.html#aa0c3f10c7aacb9c68ceadfd8e884cf34">to_v1</a>(*_write_concern));</div>
+<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>        }</div>
+<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span> </div>
+<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>        <span class="keywordflow">return</span> ret;</div>
+<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>    }</div>
+</div>
+<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span></div>
+<div class="foldopen" id="foldopen00135" data-start="{" data-end="}">
+<div class="line"><a id="l00135" name="l00135"></a><span class="lineno"><a class="line" href="classmongocxx_1_1v__noabi_1_1options_1_1find__one__and__replace.html#ab9e6f82262dc3ab8606f0aee1f5c2a16">  135</a></span>    <a class="code hl_function" href="classmongocxx_1_1v__noabi_1_1options_1_1find__one__and__replace.html#ab757c4269b31b0e702f473d244eb9b23">find_one_and_replace</a>&amp; <a class="code hl_function" href="classmongocxx_1_1v__noabi_1_1options_1_1find__one__and__replace.html#ab9e6f82262dc3ab8606f0aee1f5c2a16">collation</a>(<a class="code hl_typedef" href="namespacebsoncxx_1_1v__noabi_1_1document.html#a27a650a3413ace3ad63734eeca5e4e69">bsoncxx::v_noabi::document::view_or_value</a> <a class="code hl_function" href="classmongocxx_1_1v__noabi_1_1options_1_1find__one__and__replace.html#ab9e6f82262dc3ab8606f0aee1f5c2a16">collation</a>) {</div>
+<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span>        _collation = std::move(<a class="code hl_function" href="classmongocxx_1_1v__noabi_1_1options_1_1find__one__and__replace.html#ab9e6f82262dc3ab8606f0aee1f5c2a16">collation</a>);</div>
+<div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span>        <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
+<div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span>    }</div>
+</div>
+<div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span></div>
+<div class="foldopen" id="foldopen00149" data-start="{" data-end="}">
+<div class="line"><a id="l00149" name="l00149"></a><span class="lineno"><a class="line" href="classmongocxx_1_1v__noabi_1_1options_1_1find__one__and__replace.html#ac8ba8851d9aa0037b8fdba90e4b97bfe">  149</a></span>    <a class="code hl_class" href="classbsoncxx_1_1v1_1_1stdx_1_1optional.html">bsoncxx::v_noabi::stdx::optional&lt;bsoncxx::v_noabi::document::view_or_value&gt;</a> <span class="keyword">const</span>&amp; <a class="code hl_function" href="classmongocxx_1_1v__noabi_1_1options_1_1find__one__and__replace.html#ac8ba8851d9aa0037b8fdba90e4b97bfe">collation</a>()<span class="keyword"> const </span>{</div>
+<div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span>        <span class="keywordflow">return</span> _collation;</div>
+<div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span>    }</div>
+</div>
+<div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span></div>
+<div class="foldopen" id="foldopen00170" data-start="{" data-end="}">
+<div class="line"><a id="l00170" name="l00170"></a><span class="lineno"><a class="line" href="classmongocxx_1_1v__noabi_1_1options_1_1find__one__and__replace.html#a5680db33337a323218840fd0a7098ec4">  170</a></span>    <a class="code hl_function" href="classmongocxx_1_1v__noabi_1_1options_1_1find__one__and__replace.html#ab757c4269b31b0e702f473d244eb9b23">find_one_and_replace</a>&amp; <a class="code hl_function" href="classmongocxx_1_1v__noabi_1_1options_1_1find__one__and__replace.html#a5680db33337a323218840fd0a7098ec4">bypass_document_validation</a>(<span class="keywordtype">bool</span> <a class="code hl_function" href="classmongocxx_1_1v__noabi_1_1options_1_1find__one__and__replace.html#a5680db33337a323218840fd0a7098ec4">bypass_document_validation</a>) {</div>
+<div class="line"><a id="l00171" name="l00171"></a><span class="lineno">  171</span>        _bypass_document_validation = <a class="code hl_function" href="classmongocxx_1_1v__noabi_1_1options_1_1find__one__and__replace.html#a5680db33337a323218840fd0a7098ec4">bypass_document_validation</a>;</div>
+<div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span>        <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
+<div class="line"><a id="l00173" name="l00173"></a><span class="lineno">  173</span>    }</div>
+</div>
+<div class="line"><a id="l00174" name="l00174"></a><span class="lineno">  174</span></div>
+<div class="foldopen" id="foldopen00183" data-start="{" data-end="}">
+<div class="line"><a id="l00183" name="l00183"></a><span class="lineno"><a class="line" href="classmongocxx_1_1v__noabi_1_1options_1_1find__one__and__replace.html#a0e866f14d29778c5c769133182677399">  183</a></span>    <a class="code hl_class" href="classbsoncxx_1_1v1_1_1stdx_1_1optional.html">bsoncxx::v_noabi::stdx::optional&lt;bool&gt;</a> <span class="keyword">const</span>&amp; <a class="code hl_function" href="classmongocxx_1_1v__noabi_1_1options_1_1find__one__and__replace.html#a0e866f14d29778c5c769133182677399">bypass_document_validation</a>()<span class="keyword"> const </span>{</div>
+<div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span>        <span class="keywordflow">return</span> _bypass_document_validation;</div>
+<div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span>    }</div>
+</div>
+<div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span></div>
+<div class="foldopen" id="foldopen00200" data-start="{" data-end="}">
+<div class="line"><a id="l00200" name="l00200"></a><span class="lineno"><a class="line" href="classmongocxx_1_1v__noabi_1_1options_1_1find__one__and__replace.html#ae6175ffea09f9243ffca8256a02bfa90">  200</a></span>    <a class="code hl_function" href="classmongocxx_1_1v__noabi_1_1options_1_1find__one__and__replace.html#ab757c4269b31b0e702f473d244eb9b23">find_one_and_replace</a>&amp; <a class="code hl_function" href="classmongocxx_1_1v__noabi_1_1options_1_1find__one__and__replace.html#ae6175ffea09f9243ffca8256a02bfa90">hint</a>(<a class="code hl_class" href="classmongocxx_1_1v__noabi_1_1hint.html">v_noabi::hint</a> index_hint) {</div>
+<div class="line"><a id="l00201" name="l00201"></a><span class="lineno">  201</span>        _hint = std::move(index_hint);</div>
+<div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span>        <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
+<div class="line"><a id="l00203" name="l00203"></a><span class="lineno">  203</span>    }</div>
+</div>
+<div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span></div>
+<div class="foldopen" id="foldopen00210" data-start="{" data-end="}">
+<div class="line"><a id="l00210" name="l00210"></a><span class="lineno"><a class="line" href="classmongocxx_1_1v__noabi_1_1options_1_1find__one__and__replace.html#a9f03634105b0b5a680c0cc60cfc897a1">  210</a></span>    <a class="code hl_class" href="classbsoncxx_1_1v1_1_1stdx_1_1optional.html">bsoncxx::v_noabi::stdx::optional&lt;v_noabi::hint&gt;</a> <span class="keyword">const</span>&amp; <a class="code hl_function" href="classmongocxx_1_1v__noabi_1_1options_1_1find__one__and__replace.html#a9f03634105b0b5a680c0cc60cfc897a1">hint</a>()<span class="keyword"> const </span>{</div>
+<div class="line"><a id="l00211" name="l00211"></a><span class="lineno">  211</span>        <span class="keywordflow">return</span> _hint;</div>
+<div class="line"><a id="l00212" name="l00212"></a><span class="lineno">  212</span>    }</div>
+</div>
+<div class="line"><a id="l00213" name="l00213"></a><span class="lineno">  213</span></div>
+<div class="foldopen" id="foldopen00224" data-start="{" data-end="}">
+<div class="line"><a id="l00224" name="l00224"></a><span class="lineno"><a class="line" href="classmongocxx_1_1v__noabi_1_1options_1_1find__one__and__replace.html#a23ae70d839c4f8ff9f4858cba99365a0">  224</a></span>    <a class="code hl_function" href="classmongocxx_1_1v__noabi_1_1options_1_1find__one__and__replace.html#ab757c4269b31b0e702f473d244eb9b23">find_one_and_replace</a>&amp; <a class="code hl_function" href="classmongocxx_1_1v__noabi_1_1options_1_1find__one__and__replace.html#a23ae70d839c4f8ff9f4858cba99365a0">let</a>(<a class="code hl_typedef" href="namespacebsoncxx_1_1v__noabi_1_1document.html#a27a650a3413ace3ad63734eeca5e4e69">bsoncxx::v_noabi::document::view_or_value</a> <a class="code hl_function" href="classmongocxx_1_1v__noabi_1_1options_1_1find__one__and__replace.html#a23ae70d839c4f8ff9f4858cba99365a0">let</a>) {</div>
+<div class="line"><a id="l00225" name="l00225"></a><span class="lineno">  225</span>        _let = std::move(<a class="code hl_function" href="classmongocxx_1_1v__noabi_1_1options_1_1find__one__and__replace.html#a23ae70d839c4f8ff9f4858cba99365a0">let</a>);</div>
+<div class="line"><a id="l00226" name="l00226"></a><span class="lineno">  226</span>        <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
+<div class="line"><a id="l00227" name="l00227"></a><span class="lineno">  227</span>    }</div>
+</div>
+<div class="line"><a id="l00228" name="l00228"></a><span class="lineno">  228</span></div>
+<div class="foldopen" id="foldopen00235" data-start="{" data-end="}">
+<div class="line"><a id="l00235" name="l00235"></a><span class="lineno"><a class="line" href="classmongocxx_1_1v__noabi_1_1options_1_1find__one__and__replace.html#acd5aff0a0ede032d2e381fc190fedf05">  235</a></span>    <a class="code hl_class" href="classbsoncxx_1_1v1_1_1stdx_1_1optional.html">bsoncxx::v_noabi::stdx::optional&lt;bsoncxx::v_noabi::document::view_or_value&gt;</a> <span class="keyword">const</span> <a class="code hl_function" href="classmongocxx_1_1v__noabi_1_1options_1_1find__one__and__replace.html#acd5aff0a0ede032d2e381fc190fedf05">let</a>()<span class="keyword"> const </span>{</div>
+<div class="line"><a id="l00236" name="l00236"></a><span class="lineno">  236</span>        <span class="keywordflow">return</span> _let;</div>
+<div class="line"><a id="l00237" name="l00237"></a><span class="lineno">  237</span>    }</div>
+</div>
+<div class="line"><a id="l00238" name="l00238"></a><span class="lineno">  238</span></div>
+<div class="foldopen" id="foldopen00249" data-start="{" data-end="}">
+<div class="line"><a id="l00249" name="l00249"></a><span class="lineno"><a class="line" href="classmongocxx_1_1v__noabi_1_1options_1_1find__one__and__replace.html#a4a58edcdb8da9c780e9be65ed74859c6">  249</a></span>    <a class="code hl_function" href="classmongocxx_1_1v__noabi_1_1options_1_1find__one__and__replace.html#ab757c4269b31b0e702f473d244eb9b23">find_one_and_replace</a>&amp; <a class="code hl_function" href="classmongocxx_1_1v__noabi_1_1options_1_1find__one__and__replace.html#a4a58edcdb8da9c780e9be65ed74859c6">comment</a>(<a class="code hl_typedef" href="namespacebsoncxx_1_1v__noabi_1_1types_1_1bson__value.html#ae5540a8c52ced60054e03d9acbe92fef">bsoncxx::v_noabi::types::bson_value::view_or_value</a> <a class="code hl_function" href="classmongocxx_1_1v__noabi_1_1options_1_1find__one__and__replace.html#a4a58edcdb8da9c780e9be65ed74859c6">comment</a>) {</div>
+<div class="line"><a id="l00250" name="l00250"></a><span class="lineno">  250</span>        _comment = std::move(<a class="code hl_function" href="classmongocxx_1_1v__noabi_1_1options_1_1find__one__and__replace.html#a4a58edcdb8da9c780e9be65ed74859c6">comment</a>);</div>
+<div class="line"><a id="l00251" name="l00251"></a><span class="lineno">  251</span>        <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
+<div class="line"><a id="l00252" name="l00252"></a><span class="lineno">  252</span>    }</div>
+</div>
+<div class="line"><a id="l00253" name="l00253"></a><span class="lineno">  253</span></div>
+<div class="foldopen" id="foldopen00260" data-start="{" data-end="}">
+<div class="line"><a id="l00260" name="l00260"></a><span class="lineno"><a class="line" href="classmongocxx_1_1v__noabi_1_1options_1_1find__one__and__replace.html#a18c092daf70b0ad809ded99236db010a">  260</a></span>    <a class="code hl_class" href="classbsoncxx_1_1v1_1_1stdx_1_1optional.html">bsoncxx::v_noabi::stdx::optional&lt;bsoncxx::v_noabi::types::bson_value::view_or_value&gt;</a> <span class="keyword">const</span> <a class="code hl_function" href="classmongocxx_1_1v__noabi_1_1options_1_1find__one__and__replace.html#a18c092daf70b0ad809ded99236db010a">comment</a>()<span class="keyword"> const </span>{</div>
+<div class="line"><a id="l00261" name="l00261"></a><span class="lineno">  261</span>        <span class="keywordflow">return</span> _comment;</div>
+<div class="line"><a id="l00262" name="l00262"></a><span class="lineno">  262</span>    }</div>
+</div>
+<div class="line"><a id="l00263" name="l00263"></a><span class="lineno">  263</span></div>
+<div class="foldopen" id="foldopen00277" data-start="{" data-end="}">
+<div class="line"><a id="l00277" name="l00277"></a><span class="lineno"><a class="line" href="classmongocxx_1_1v__noabi_1_1options_1_1find__one__and__replace.html#a8786466c7d5f17f53285e9663097ad86">  277</a></span>    <a class="code hl_function" href="classmongocxx_1_1v__noabi_1_1options_1_1find__one__and__replace.html#ab757c4269b31b0e702f473d244eb9b23">find_one_and_replace</a>&amp; <a class="code hl_function" href="classmongocxx_1_1v__noabi_1_1options_1_1find__one__and__replace.html#a8786466c7d5f17f53285e9663097ad86">max_time</a>(std::chrono::milliseconds <a class="code hl_function" href="classmongocxx_1_1v__noabi_1_1options_1_1find__one__and__replace.html#a8786466c7d5f17f53285e9663097ad86">max_time</a>) {</div>
+<div class="line"><a id="l00278" name="l00278"></a><span class="lineno">  278</span>        _max_time = <a class="code hl_function" href="classmongocxx_1_1v__noabi_1_1options_1_1find__one__and__replace.html#a8786466c7d5f17f53285e9663097ad86">max_time</a>;</div>
+<div class="line"><a id="l00279" name="l00279"></a><span class="lineno">  279</span>        <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
+<div class="line"><a id="l00280" name="l00280"></a><span class="lineno">  280</span>    }</div>
+</div>
+<div class="line"><a id="l00281" name="l00281"></a><span class="lineno">  281</span></div>
+<div class="foldopen" id="foldopen00290" data-start="{" data-end="}">
+<div class="line"><a id="l00290" name="l00290"></a><span class="lineno"><a class="line" href="classmongocxx_1_1v__noabi_1_1options_1_1find__one__and__replace.html#ad48d7a240e07b4324d701132dd5c4ab1">  290</a></span>    <a class="code hl_class" href="classbsoncxx_1_1v1_1_1stdx_1_1optional.html">bsoncxx::v_noabi::stdx::optional&lt;std::chrono::milliseconds&gt;</a> <span class="keyword">const</span>&amp; <a class="code hl_function" href="classmongocxx_1_1v__noabi_1_1options_1_1find__one__and__replace.html#ad48d7a240e07b4324d701132dd5c4ab1">max_time</a>()<span class="keyword"> const </span>{</div>
+<div class="line"><a id="l00291" name="l00291"></a><span class="lineno">  291</span>        <span class="keywordflow">return</span> _max_time;</div>
+<div class="line"><a id="l00292" name="l00292"></a><span class="lineno">  292</span>    }</div>
+</div>
+<div class="line"><a id="l00293" name="l00293"></a><span class="lineno">  293</span></div>
+<div class="foldopen" id="foldopen00307" data-start="{" data-end="}">
+<div class="line"><a id="l00307" name="l00307"></a><span class="lineno"><a class="line" href="classmongocxx_1_1v__noabi_1_1options_1_1find__one__and__replace.html#a7c3cea0110cc4f973c115b3c8a56f3cb">  307</a></span>    <a class="code hl_function" href="classmongocxx_1_1v__noabi_1_1options_1_1find__one__and__replace.html#ab757c4269b31b0e702f473d244eb9b23">find_one_and_replace</a>&amp; <a class="code hl_function" href="classmongocxx_1_1v__noabi_1_1options_1_1find__one__and__replace.html#a7c3cea0110cc4f973c115b3c8a56f3cb">projection</a>(<a class="code hl_typedef" href="namespacebsoncxx_1_1v__noabi_1_1document.html#a27a650a3413ace3ad63734eeca5e4e69">bsoncxx::v_noabi::document::view_or_value</a> <a class="code hl_function" href="classmongocxx_1_1v__noabi_1_1options_1_1find__one__and__replace.html#a7c3cea0110cc4f973c115b3c8a56f3cb">projection</a>) {</div>
+<div class="line"><a id="l00308" name="l00308"></a><span class="lineno">  308</span>        _projection = std::move(<a class="code hl_function" href="classmongocxx_1_1v__noabi_1_1options_1_1find__one__and__replace.html#a7c3cea0110cc4f973c115b3c8a56f3cb">projection</a>);</div>
+<div class="line"><a id="l00309" name="l00309"></a><span class="lineno">  309</span>        <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
+<div class="line"><a id="l00310" name="l00310"></a><span class="lineno">  310</span>    }</div>
+</div>
+<div class="line"><a id="l00311" name="l00311"></a><span class="lineno">  311</span></div>
+<div class="foldopen" id="foldopen00320" data-start="{" data-end="}">
+<div class="line"><a id="l00320" name="l00320"></a><span class="lineno"><a class="line" href="classmongocxx_1_1v__noabi_1_1options_1_1find__one__and__replace.html#aaed556d7a3a495afdcdc9e14face4e1f">  320</a></span>    <a class="code hl_class" href="classbsoncxx_1_1v1_1_1stdx_1_1optional.html">bsoncxx::v_noabi::stdx::optional&lt;bsoncxx::v_noabi::document::view_or_value&gt;</a> <span class="keyword">const</span>&amp; <a class="code hl_function" href="classmongocxx_1_1v__noabi_1_1options_1_1find__one__and__replace.html#aaed556d7a3a495afdcdc9e14face4e1f">projection</a>()<span class="keyword"> const </span>{</div>
+<div class="line"><a id="l00321" name="l00321"></a><span class="lineno">  321</span>        <span class="keywordflow">return</span> _projection;</div>
+<div class="line"><a id="l00322" name="l00322"></a><span class="lineno">  322</span>    }</div>
+</div>
+<div class="line"><a id="l00323" name="l00323"></a><span class="lineno">  323</span></div>
+<div class="foldopen" id="foldopen00339" data-start="{" data-end="}">
+<div class="line"><a id="l00339" name="l00339"></a><span class="lineno"><a class="line" href="classmongocxx_1_1v__noabi_1_1options_1_1find__one__and__replace.html#a15d9a7bae6b1e780e53a068653428520">  339</a></span>    <a class="code hl_function" href="classmongocxx_1_1v__noabi_1_1options_1_1find__one__and__replace.html#ab757c4269b31b0e702f473d244eb9b23">find_one_and_replace</a>&amp; <a class="code hl_function" href="classmongocxx_1_1v__noabi_1_1options_1_1find__one__and__replace.html#a15d9a7bae6b1e780e53a068653428520">return_document</a>(<a class="code hl_function" href="classmongocxx_1_1v__noabi_1_1options_1_1find__one__and__replace.html#a15d9a7bae6b1e780e53a068653428520">return_document</a> <a class="code hl_function" href="classmongocxx_1_1v__noabi_1_1options_1_1find__one__and__replace.html#a15d9a7bae6b1e780e53a068653428520">return_document</a>) {</div>
+<div class="line"><a id="l00340" name="l00340"></a><span class="lineno">  340</span>        _return_document = <a class="code hl_function" href="classmongocxx_1_1v__noabi_1_1options_1_1find__one__and__replace.html#a15d9a7bae6b1e780e53a068653428520">return_document</a>;</div>
+<div class="line"><a id="l00341" name="l00341"></a><span class="lineno">  341</span>        <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
+<div class="line"><a id="l00342" name="l00342"></a><span class="lineno">  342</span>    }</div>
+</div>
+<div class="line"><a id="l00343" name="l00343"></a><span class="lineno">  343</span></div>
+<div class="foldopen" id="foldopen00353" data-start="{" data-end="}">
+<div class="line"><a id="l00353" name="l00353"></a><span class="lineno"><a class="line" href="classmongocxx_1_1v__noabi_1_1options_1_1find__one__and__replace.html#a0a1d80e5ce5b28caa0b71da5b1666066">  353</a></span>    <a class="code hl_class" href="classbsoncxx_1_1v1_1_1stdx_1_1optional.html">bsoncxx::v_noabi::stdx::optional&lt;v_noabi::options::return_document&gt;</a> <span class="keyword">const</span>&amp; <a class="code hl_function" href="classmongocxx_1_1v__noabi_1_1options_1_1find__one__and__replace.html#a0a1d80e5ce5b28caa0b71da5b1666066">return_document</a>()<span class="keyword"> const </span>{</div>
+<div class="line"><a id="l00354" name="l00354"></a><span class="lineno">  354</span>        <span class="keywordflow">return</span> _return_document;</div>
+<div class="line"><a id="l00355" name="l00355"></a><span class="lineno">  355</span>    }</div>
+</div>
+<div class="line"><a id="l00356" name="l00356"></a><span class="lineno">  356</span></div>
+<div class="foldopen" id="foldopen00373" data-start="{" data-end="}">
+<div class="line"><a id="l00373" name="l00373"></a><span class="lineno"><a class="line" href="classmongocxx_1_1v__noabi_1_1options_1_1find__one__and__replace.html#a0fc824d98492adf86a72983f5cf46c59">  373</a></span>    <a class="code hl_function" href="classmongocxx_1_1v__noabi_1_1options_1_1find__one__and__replace.html#ab757c4269b31b0e702f473d244eb9b23">find_one_and_replace</a>&amp; <a class="code hl_function" href="classmongocxx_1_1v__noabi_1_1options_1_1find__one__and__replace.html#a0fc824d98492adf86a72983f5cf46c59">sort</a>(<a class="code hl_typedef" href="namespacebsoncxx_1_1v__noabi_1_1document.html#a27a650a3413ace3ad63734eeca5e4e69">bsoncxx::v_noabi::document::view_or_value</a> ordering) {</div>
+<div class="line"><a id="l00374" name="l00374"></a><span class="lineno">  374</span>        _ordering = std::move(ordering);</div>
+<div class="line"><a id="l00375" name="l00375"></a><span class="lineno">  375</span>        <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
+<div class="line"><a id="l00376" name="l00376"></a><span class="lineno">  376</span>    }</div>
+</div>
+<div class="line"><a id="l00377" name="l00377"></a><span class="lineno">  377</span></div>
+<div class="foldopen" id="foldopen00386" data-start="{" data-end="}">
+<div class="line"><a id="l00386" name="l00386"></a><span class="lineno"><a class="line" href="classmongocxx_1_1v__noabi_1_1options_1_1find__one__and__replace.html#a9df846a7b567cd50cbbe403d593d4eaa">  386</a></span>    <a class="code hl_class" href="classbsoncxx_1_1v1_1_1stdx_1_1optional.html">bsoncxx::v_noabi::stdx::optional&lt;bsoncxx::v_noabi::document::view_or_value&gt;</a> <span class="keyword">const</span>&amp; <a class="code hl_function" href="classmongocxx_1_1v__noabi_1_1options_1_1find__one__and__replace.html#a9df846a7b567cd50cbbe403d593d4eaa">sort</a>()<span class="keyword"> const </span>{</div>
+<div class="line"><a id="l00387" name="l00387"></a><span class="lineno">  387</span>        <span class="keywordflow">return</span> _ordering;</div>
+<div class="line"><a id="l00388" name="l00388"></a><span class="lineno">  388</span>    }</div>
+</div>
+<div class="line"><a id="l00389" name="l00389"></a><span class="lineno">  389</span></div>
+<div class="foldopen" id="foldopen00405" data-start="{" data-end="}">
+<div class="line"><a id="l00405" name="l00405"></a><span class="lineno"><a class="line" href="classmongocxx_1_1v__noabi_1_1options_1_1find__one__and__replace.html#a07f0ea356914375162e4b5d65e05c4ae">  405</a></span>    <a class="code hl_function" href="classmongocxx_1_1v__noabi_1_1options_1_1find__one__and__replace.html#ab757c4269b31b0e702f473d244eb9b23">find_one_and_replace</a>&amp; <a class="code hl_function" href="classmongocxx_1_1v__noabi_1_1options_1_1find__one__and__replace.html#a07f0ea356914375162e4b5d65e05c4ae">upsert</a>(<span class="keywordtype">bool</span> <a class="code hl_function" href="classmongocxx_1_1v__noabi_1_1options_1_1find__one__and__replace.html#a07f0ea356914375162e4b5d65e05c4ae">upsert</a>) {</div>
+<div class="line"><a id="l00406" name="l00406"></a><span class="lineno">  406</span>        _upsert = <a class="code hl_function" href="classmongocxx_1_1v__noabi_1_1options_1_1find__one__and__replace.html#a07f0ea356914375162e4b5d65e05c4ae">upsert</a>;</div>
+<div class="line"><a id="l00407" name="l00407"></a><span class="lineno">  407</span>        <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
+<div class="line"><a id="l00408" name="l00408"></a><span class="lineno">  408</span>    }</div>
+</div>
+<div class="line"><a id="l00409" name="l00409"></a><span class="lineno">  409</span></div>
+<div class="foldopen" id="foldopen00418" data-start="{" data-end="}">
+<div class="line"><a id="l00418" name="l00418"></a><span class="lineno"><a class="line" href="classmongocxx_1_1v__noabi_1_1options_1_1find__one__and__replace.html#a5b6ebb9001ccde2b2dd963ab16827b70">  418</a></span>    <a class="code hl_class" href="classbsoncxx_1_1v1_1_1stdx_1_1optional.html">bsoncxx::v_noabi::stdx::optional&lt;bool&gt;</a> <span class="keyword">const</span>&amp; <a class="code hl_function" href="classmongocxx_1_1v__noabi_1_1options_1_1find__one__and__replace.html#a5b6ebb9001ccde2b2dd963ab16827b70">upsert</a>()<span class="keyword"> const </span>{</div>
+<div class="line"><a id="l00419" name="l00419"></a><span class="lineno">  419</span>        <span class="keywordflow">return</span> _upsert;</div>
+<div class="line"><a id="l00420" name="l00420"></a><span class="lineno">  420</span>    }</div>
+</div>
+<div class="line"><a id="l00421" name="l00421"></a><span class="lineno">  421</span></div>
+<div class="foldopen" id="foldopen00435" data-start="{" data-end="}">
+<div class="line"><a id="l00435" name="l00435"></a><span class="lineno"><a class="line" href="classmongocxx_1_1v__noabi_1_1options_1_1find__one__and__replace.html#a4f70692e849bc44184dd87948796f33f">  435</a></span>    <a class="code hl_function" href="classmongocxx_1_1v__noabi_1_1options_1_1find__one__and__replace.html#ab757c4269b31b0e702f473d244eb9b23">find_one_and_replace</a>&amp; <a class="code hl_function" href="classmongocxx_1_1v__noabi_1_1options_1_1find__one__and__replace.html#a4f70692e849bc44184dd87948796f33f">read_concern</a>(<a class="code hl_class" href="classmongocxx_1_1v__noabi_1_1read__concern.html">v_noabi::read_concern</a> <a class="code hl_function" href="classmongocxx_1_1v__noabi_1_1options_1_1find__one__and__replace.html#a4f70692e849bc44184dd87948796f33f">read_concern</a>) {</div>
+<div class="line"><a id="l00436" name="l00436"></a><span class="lineno">  436</span>        _read_concern = std::move(<a class="code hl_function" href="classmongocxx_1_1v__noabi_1_1options_1_1find__one__and__replace.html#a4f70692e849bc44184dd87948796f33f">read_concern</a>);</div>
+<div class="line"><a id="l00437" name="l00437"></a><span class="lineno">  437</span>        <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
+<div class="line"><a id="l00438" name="l00438"></a><span class="lineno">  438</span>    }</div>
+</div>
+<div class="line"><a id="l00439" name="l00439"></a><span class="lineno">  439</span></div>
+<div class="foldopen" id="foldopen00449" data-start="{" data-end="}">
+<div class="line"><a id="l00449" name="l00449"></a><span class="lineno"><a class="line" href="classmongocxx_1_1v__noabi_1_1options_1_1find__one__and__replace.html#a03f36dd0b11d0617b77bb40e6bf79b9c">  449</a></span>    <a class="code hl_class" href="classbsoncxx_1_1v1_1_1stdx_1_1optional.html">bsoncxx::v_noabi::stdx::optional&lt;v_noabi::read_concern&gt;</a> <span class="keyword">const</span>&amp; <a class="code hl_function" href="classmongocxx_1_1v__noabi_1_1options_1_1find__one__and__replace.html#a03f36dd0b11d0617b77bb40e6bf79b9c">read_concern</a>()<span class="keyword"> const </span>{</div>
+<div class="line"><a id="l00450" name="l00450"></a><span class="lineno">  450</span>        <span class="keywordflow">return</span> _read_concern;</div>
+<div class="line"><a id="l00451" name="l00451"></a><span class="lineno">  451</span>    }</div>
+</div>
+<div class="line"><a id="l00452" name="l00452"></a><span class="lineno">  452</span></div>
+<div class="foldopen" id="foldopen00466" data-start="{" data-end="}">
+<div class="line"><a id="l00466" name="l00466"></a><span class="lineno"><a class="line" href="classmongocxx_1_1v__noabi_1_1options_1_1find__one__and__replace.html#ac16b5ee269a0028cbfa6b6f173ef52d4">  466</a></span>    <a class="code hl_function" href="classmongocxx_1_1v__noabi_1_1options_1_1find__one__and__replace.html#ab757c4269b31b0e702f473d244eb9b23">find_one_and_replace</a>&amp; <a class="code hl_function" href="classmongocxx_1_1v__noabi_1_1options_1_1find__one__and__replace.html#ac16b5ee269a0028cbfa6b6f173ef52d4">write_concern</a>(<a class="code hl_class" href="classmongocxx_1_1v__noabi_1_1write__concern.html">v_noabi::write_concern</a> <a class="code hl_function" href="classmongocxx_1_1v__noabi_1_1options_1_1find__one__and__replace.html#ac16b5ee269a0028cbfa6b6f173ef52d4">write_concern</a>) {</div>
+<div class="line"><a id="l00467" name="l00467"></a><span class="lineno">  467</span>        _write_concern = std::move(<a class="code hl_function" href="classmongocxx_1_1v__noabi_1_1options_1_1find__one__and__replace.html#ac16b5ee269a0028cbfa6b6f173ef52d4">write_concern</a>);</div>
+<div class="line"><a id="l00468" name="l00468"></a><span class="lineno">  468</span>        <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
+<div class="line"><a id="l00469" name="l00469"></a><span class="lineno">  469</span>    }</div>
+</div>
+<div class="line"><a id="l00470" name="l00470"></a><span class="lineno">  470</span></div>
+<div class="foldopen" id="foldopen00480" data-start="{" data-end="}">
+<div class="line"><a id="l00480" name="l00480"></a><span class="lineno"><a class="line" href="classmongocxx_1_1v__noabi_1_1options_1_1find__one__and__replace.html#a3dc2984d1e2641d76f5cbaf847e90d48">  480</a></span>    <a class="code hl_class" href="classbsoncxx_1_1v1_1_1stdx_1_1optional.html">bsoncxx::v_noabi::stdx::optional&lt;v_noabi::write_concern&gt;</a> <span class="keyword">const</span>&amp; <a class="code hl_function" href="classmongocxx_1_1v__noabi_1_1options_1_1find__one__and__replace.html#a3dc2984d1e2641d76f5cbaf847e90d48">write_concern</a>()<span class="keyword"> const </span>{</div>
+<div class="line"><a id="l00481" name="l00481"></a><span class="lineno">  481</span>        <span class="keywordflow">return</span> _write_concern;</div>
+<div class="line"><a id="l00482" name="l00482"></a><span class="lineno">  482</span>    }</div>
+</div>
+<div class="line"><a id="l00483" name="l00483"></a><span class="lineno">  483</span> </div>
+<div class="line"><a id="l00484" name="l00484"></a><span class="lineno">  484</span>   <span class="keyword">private</span>:</div>
+<div class="line"><a id="l00485" name="l00485"></a><span class="lineno">  485</span>    <a class="code hl_class" href="classbsoncxx_1_1v1_1_1stdx_1_1optional.html">bsoncxx::v_noabi::stdx::optional&lt;bool&gt;</a> _bypass_document_validation;</div>
+<div class="line"><a id="l00486" name="l00486"></a><span class="lineno">  486</span>    <a class="code hl_class" href="classbsoncxx_1_1v1_1_1stdx_1_1optional.html">bsoncxx::v_noabi::stdx::optional&lt;bsoncxx::v_noabi::document::view_or_value&gt;</a> _collation;</div>
+<div class="line"><a id="l00487" name="l00487"></a><span class="lineno">  487</span>    <a class="code hl_class" href="classbsoncxx_1_1v1_1_1stdx_1_1optional.html">bsoncxx::v_noabi::stdx::optional&lt;v_noabi::hint&gt;</a> _hint;</div>
+<div class="line"><a id="l00488" name="l00488"></a><span class="lineno">  488</span>    <a class="code hl_class" href="classbsoncxx_1_1v1_1_1stdx_1_1optional.html">bsoncxx::v_noabi::stdx::optional&lt;bsoncxx::v_noabi::document::view_or_value&gt;</a> _let;</div>
+<div class="line"><a id="l00489" name="l00489"></a><span class="lineno">  489</span>    <a class="code hl_class" href="classbsoncxx_1_1v1_1_1stdx_1_1optional.html">bsoncxx::v_noabi::stdx::optional&lt;bsoncxx::v_noabi::types::bson_value::view_or_value&gt;</a> _comment;</div>
+<div class="line"><a id="l00490" name="l00490"></a><span class="lineno">  490</span>    <a class="code hl_class" href="classbsoncxx_1_1v1_1_1stdx_1_1optional.html">bsoncxx::v_noabi::stdx::optional&lt;std::chrono::milliseconds&gt;</a> _max_time;</div>
+<div class="line"><a id="l00491" name="l00491"></a><span class="lineno">  491</span>    <a class="code hl_class" href="classbsoncxx_1_1v1_1_1stdx_1_1optional.html">bsoncxx::v_noabi::stdx::optional&lt;bsoncxx::v_noabi::document::view_or_value&gt;</a> _projection;</div>
+<div class="line"><a id="l00492" name="l00492"></a><span class="lineno">  492</span>    <a class="code hl_class" href="classbsoncxx_1_1v1_1_1stdx_1_1optional.html">bsoncxx::v_noabi::stdx::optional&lt;v_noabi::options::return_document&gt;</a> _return_document;</div>
+<div class="line"><a id="l00493" name="l00493"></a><span class="lineno">  493</span>    <a class="code hl_class" href="classbsoncxx_1_1v1_1_1stdx_1_1optional.html">bsoncxx::v_noabi::stdx::optional&lt;bsoncxx::v_noabi::document::view_or_value&gt;</a> _ordering;</div>
+<div class="line"><a id="l00494" name="l00494"></a><span class="lineno">  494</span>    <a class="code hl_class" href="classbsoncxx_1_1v1_1_1stdx_1_1optional.html">bsoncxx::v_noabi::stdx::optional&lt;bool&gt;</a> _upsert;</div>
+<div class="line"><a id="l00495" name="l00495"></a><span class="lineno">  495</span>    <a class="code hl_class" href="classbsoncxx_1_1v1_1_1stdx_1_1optional.html">bsoncxx::v_noabi::stdx::optional&lt;v_noabi::read_concern&gt;</a> _read_concern;</div>
+<div class="line"><a id="l00496" name="l00496"></a><span class="lineno">  496</span>    <a class="code hl_class" href="classbsoncxx_1_1v1_1_1stdx_1_1optional.html">bsoncxx::v_noabi::stdx::optional&lt;v_noabi::write_concern&gt;</a> _write_concern;</div>
+<div class="line"><a id="l00497" name="l00497"></a><span class="lineno">  497</span>};</div>
+</div>
+<div class="line"><a id="l00498" name="l00498"></a><span class="lineno">  498</span> </div>
+<div class="line"><a id="l00499" name="l00499"></a><span class="lineno">  499</span>} <span class="comment">// namespace options</span></div>
+<div class="line"><a id="l00500" name="l00500"></a><span class="lineno">  500</span>} <span class="comment">// namespace v_noabi</span></div>
+<div class="line"><a id="l00501" name="l00501"></a><span class="lineno">  501</span>} <span class="comment">// namespace mongocxx</span></div>
+<div class="line"><a id="l00502" name="l00502"></a><span class="lineno">  502</span> </div>
+<div class="line"><a id="l00503" name="l00503"></a><span class="lineno">  503</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespacemongocxx.html">mongocxx</a> {</div>
+<div class="line"><a id="l00504" name="l00504"></a><span class="lineno">  504</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespacemongocxx_1_1v__noabi.html">v_noabi</a> {</div>
+<div class="line"><a id="l00505" name="l00505"></a><span class="lineno">  505</span></div>
+<div class="foldopen" id="foldopen00509" data-start="{" data-end="}">
+<div class="line"><a id="l00509" name="l00509"></a><span class="lineno"><a class="line" href="namespacemongocxx_1_1v__noabi.html#a9c0a38c2603be08f123c1a1ba639c611">  509</a></span><span class="keyword">inline</span> <a class="code hl_class" href="classmongocxx_1_1v__noabi_1_1options_1_1find__one__and__replace.html">v_noabi::options::find_one_and_replace</a> <a class="code hl_function" href="namespacemongocxx_1_1v__noabi.html#aa4be10b29ea4a57c48818b58171a7d1e">from_v1</a>(<a class="code hl_class" href="classmongocxx_1_1v1_1_1find__one__and__replace__options.html">v1::find_one_and_replace_options</a> v) {</div>
+<div class="line"><a id="l00510" name="l00510"></a><span class="lineno">  510</span>    <span class="keywordflow">return</span> {std::move(v)};</div>
+<div class="line"><a id="l00511" name="l00511"></a><span class="lineno">  511</span>}</div>
+</div>
+<div class="line"><a id="l00512" name="l00512"></a><span class="lineno">  512</span></div>
+<div class="foldopen" id="foldopen00516" data-start="{" data-end="}">
+<div class="line"><a id="l00516" name="l00516"></a><span class="lineno"><a class="line" href="namespacemongocxx_1_1v__noabi.html#a462a45f48264ce242ae4eeee6309aa62">  516</a></span><span class="keyword">inline</span> <a class="code hl_class" href="classmongocxx_1_1v1_1_1find__one__and__replace__options.html">v1::find_one_and_replace_options</a> <a class="code hl_function" href="namespacemongocxx_1_1v__noabi.html#aa0c3f10c7aacb9c68ceadfd8e884cf34">to_v1</a>(<a class="code hl_class" href="classmongocxx_1_1v__noabi_1_1options_1_1find__one__and__replace.html">v_noabi::options::find_one_and_replace</a> <span class="keyword">const</span>&amp; v) {</div>
+<div class="line"><a id="l00517" name="l00517"></a><span class="lineno">  517</span>    <span class="keywordflow">return</span> <a class="code hl_class" href="classmongocxx_1_1v1_1_1find__one__and__replace__options.html">v1::find_one_and_replace_options</a>{v};</div>
+<div class="line"><a id="l00518" name="l00518"></a><span class="lineno">  518</span>}</div>
+</div>
+<div class="line"><a id="l00519" name="l00519"></a><span class="lineno">  519</span> </div>
+<div class="line"><a id="l00520" name="l00520"></a><span class="lineno">  520</span>} <span class="comment">// namespace v_noabi</span></div>
+<div class="line"><a id="l00521" name="l00521"></a><span class="lineno">  521</span>} <span class="comment">// namespace mongocxx</span></div>
+<div class="line"><a id="l00522" name="l00522"></a><span class="lineno">  522</span> </div>
+<div class="line"><a id="l00523" name="l00523"></a><span class="lineno">  523</span><span class="preprocessor">#include &lt;<a class="code" href="mongocxx_2v__noabi_2mongocxx_2config_2postlude_8hpp.html">mongocxx/config/postlude.hpp</a>&gt;</span></div>
+<div class="line"><a id="l00524" name="l00524"></a><span class="lineno">  524</span></div>
+<div class="ttc" id="aclassbsoncxx_1_1v1_1_1document_1_1value_html"><div class="ttname"><a href="classbsoncxx_1_1v1_1_1document_1_1value.html">bsoncxx::v1::document::value</a></div><div class="ttdoc">A BSON document.</div><div class="ttdef"><b>Definition</b> value.hpp:44</div></div>
+<div class="ttc" id="aclassbsoncxx_1_1v1_1_1stdx_1_1optional_html"><div class="ttname"><a href="classbsoncxx_1_1v1_1_1stdx_1_1optional.html">bsoncxx::v1::stdx::optional</a></div><div class="ttdoc">A polyfill for std::optional&lt;T&gt;.</div><div class="ttdef"><b>Definition</b> optional.hpp:799</div></div>
+<div class="ttc" id="aclassbsoncxx_1_1v1_1_1types_1_1value_html"><div class="ttname"><a href="classbsoncxx_1_1v1_1_1types_1_1value.html">bsoncxx::v1::types::value</a></div><div class="ttdoc">A union of BSON type values.</div><div class="ttdef"><b>Definition</b> value.hpp:52</div></div>
+<div class="ttc" id="aclassmongocxx_1_1options_1_1find__one__and__replace_html_ab757c4269b31b0e702f473d244eb9b23"><div class="ttname"><a href="classmongocxx_1_1options_1_1find__one__and__replace.html#ab757c4269b31b0e702f473d244eb9b23">mongocxx::options::find_one_and_replace::find_one_and_replace</a></div><div class="ttdeci">find_one_and_replace()=default</div><div class="ttdoc">Default initialization.</div></div>
+<div class="ttc" id="aclassmongocxx_1_1v1_1_1find__one__and__replace__options_html"><div class="ttname"><a href="classmongocxx_1_1v1_1_1find__one__and__replace__options.html">mongocxx::v1::find_one_and_replace_options</a></div><div class="ttdoc">Options for a &quot;findOneAndReplace&quot; operation.</div><div class="ttdef"><b>Definition</b> find_one_and_replace_options.hpp:63</div></div>
+<div class="ttc" id="aclassmongocxx_1_1v1_1_1find__one__and__replace__options_html_a29e95eace233e0e5ee0c6aab192243e8"><div class="ttname"><a href="classmongocxx_1_1v1_1_1find__one__and__replace__options.html#a29e95eace233e0e5ee0c6aab192243e8">mongocxx::v1::find_one_and_replace_options::let</a></div><div class="ttdeci">find_one_and_replace_options &amp; let(bsoncxx::v1::document::value v)</div><div class="ttdoc">Set the &quot;let&quot; field.</div></div>
+<div class="ttc" id="aclassmongocxx_1_1v1_1_1find__one__and__replace__options_html_a30ccc9daca5cc3b4c5f95f814952ad3b"><div class="ttname"><a href="classmongocxx_1_1v1_1_1find__one__and__replace__options.html#a30ccc9daca5cc3b4c5f95f814952ad3b">mongocxx::v1::find_one_and_replace_options::hint</a></div><div class="ttdeci">find_one_and_replace_options &amp; hint(v1::hint v)</div><div class="ttdoc">Set the &quot;hint&quot; field.</div></div>
+<div class="ttc" id="aclassmongocxx_1_1v1_1_1find__one__and__replace__options_html_a4a69a37cf5ae99761f0684e26d7f1f0e"><div class="ttname"><a href="classmongocxx_1_1v1_1_1find__one__and__replace__options.html#a4a69a37cf5ae99761f0684e26d7f1f0e">mongocxx::v1::find_one_and_replace_options::collation</a></div><div class="ttdeci">find_one_and_replace_options &amp; collation(bsoncxx::v1::document::value v)</div><div class="ttdoc">Set the &quot;collation&quot; field.</div></div>
+<div class="ttc" id="aclassmongocxx_1_1v1_1_1find__one__and__replace__options_html_a591f771b6ac1c90db01f6143968fe401"><div class="ttname"><a href="classmongocxx_1_1v1_1_1find__one__and__replace__options.html#a591f771b6ac1c90db01f6143968fe401">mongocxx::v1::find_one_and_replace_options::comment</a></div><div class="ttdeci">find_one_and_replace_options &amp; comment(bsoncxx::v1::types::value v)</div><div class="ttdoc">Set the &quot;comment&quot; field.</div></div>
+<div class="ttc" id="aclassmongocxx_1_1v1_1_1find__one__and__replace__options_html_a68933d3a6b318503aa4b7b4c688fc36b"><div class="ttname"><a href="classmongocxx_1_1v1_1_1find__one__and__replace__options.html#a68933d3a6b318503aa4b7b4c688fc36b">mongocxx::v1::find_one_and_replace_options::return_document</a></div><div class="ttdeci">find_one_and_replace_options &amp; return_document(v1::return_document v)</div><div class="ttdoc">Set the &quot;returnDocument&quot; field.</div></div>
+<div class="ttc" id="aclassmongocxx_1_1v1_1_1find__one__and__replace__options_html_a6ed24f301ed4563788e51e41eb2b99f3"><div class="ttname"><a href="classmongocxx_1_1v1_1_1find__one__and__replace__options.html#a6ed24f301ed4563788e51e41eb2b99f3">mongocxx::v1::find_one_and_replace_options::upsert</a></div><div class="ttdeci">find_one_and_replace_options &amp; upsert(bool v)</div><div class="ttdoc">Set the &quot;upsert&quot; field.</div></div>
+<div class="ttc" id="aclassmongocxx_1_1v1_1_1find__one__and__replace__options_html_a7d8dbd6d4e636e681df2493f3c1f5427"><div class="ttname"><a href="classmongocxx_1_1v1_1_1find__one__and__replace__options.html#a7d8dbd6d4e636e681df2493f3c1f5427">mongocxx::v1::find_one_and_replace_options::bypass_document_validation</a></div><div class="ttdeci">find_one_and_replace_options &amp; bypass_document_validation(bool v)</div><div class="ttdoc">Set the &quot;bypassDocumentValidation&quot; field.</div></div>
+<div class="ttc" id="aclassmongocxx_1_1v1_1_1find__one__and__replace__options_html_a9cbe96e69e6e704099fd27d43177e033"><div class="ttname"><a href="classmongocxx_1_1v1_1_1find__one__and__replace__options.html#a9cbe96e69e6e704099fd27d43177e033">mongocxx::v1::find_one_and_replace_options::max_time</a></div><div class="ttdeci">find_one_and_replace_options &amp; max_time(std::chrono::milliseconds v)</div><div class="ttdoc">Set the &quot;maxTimeMS&quot; field.</div></div>
+<div class="ttc" id="aclassmongocxx_1_1v1_1_1find__one__and__replace__options_html_aac86285008eb3ee3bbaf3f1eb35f6c30"><div class="ttname"><a href="classmongocxx_1_1v1_1_1find__one__and__replace__options.html#aac86285008eb3ee3bbaf3f1eb35f6c30">mongocxx::v1::find_one_and_replace_options::projection</a></div><div class="ttdeci">find_one_and_replace_options &amp; projection(bsoncxx::v1::document::value v)</div><div class="ttdoc">Set the &quot;projection&quot; field.</div></div>
+<div class="ttc" id="aclassmongocxx_1_1v1_1_1find__one__and__replace__options_html_ac15239a69bbda40f09f6b0fda415d7b4"><div class="ttname"><a href="classmongocxx_1_1v1_1_1find__one__and__replace__options.html#ac15239a69bbda40f09f6b0fda415d7b4">mongocxx::v1::find_one_and_replace_options::write_concern</a></div><div class="ttdeci">find_one_and_replace_options &amp; write_concern(v1::write_concern v)</div><div class="ttdoc">Set the &quot;writeConcern&quot; field.</div></div>
+<div class="ttc" id="aclassmongocxx_1_1v1_1_1find__one__and__replace__options_html_ace667fbfb5d728f7e18d36f262e60c64"><div class="ttname"><a href="classmongocxx_1_1v1_1_1find__one__and__replace__options.html#ace667fbfb5d728f7e18d36f262e60c64">mongocxx::v1::find_one_and_replace_options::read_concern</a></div><div class="ttdeci">find_one_and_replace_options &amp; read_concern(v1::read_concern v)</div><div class="ttdoc">Set the &quot;readConcern&quot; field.</div></div>
+<div class="ttc" id="aclassmongocxx_1_1v1_1_1find__one__and__replace__options_html_ad5d0f5ba5263e31065987035abf81510"><div class="ttname"><a href="classmongocxx_1_1v1_1_1find__one__and__replace__options.html#ad5d0f5ba5263e31065987035abf81510">mongocxx::v1::find_one_and_replace_options::sort</a></div><div class="ttdeci">find_one_and_replace_options &amp; sort(bsoncxx::v1::document::value v)</div><div class="ttdoc">Set the &quot;sort&quot; field.</div></div>
+<div class="ttc" id="aclassmongocxx_1_1v__noabi_1_1hint_html"><div class="ttname"><a href="classmongocxx_1_1v__noabi_1_1hint.html">mongocxx::v_noabi::hint</a></div><div class="ttdoc">The index to &quot;hint&quot; or force a MongoDB server to use when performing a query.</div><div class="ttdef"><b>Definition</b> hint.hpp:42</div></div>
+<div class="ttc" id="aclassmongocxx_1_1v__noabi_1_1options_1_1find__one__and__replace_html"><div class="ttname"><a href="classmongocxx_1_1v__noabi_1_1options_1_1find__one__and__replace.html">mongocxx::v_noabi::options::find_one_and_replace</a></div><div class="ttdoc">Used by mongocxx::v_noabi::collection.</div><div class="ttdef"><b>Definition</b> find_one_and_replace.hpp:50</div></div>
+<div class="ttc" id="aclassmongocxx_1_1v__noabi_1_1options_1_1find__one__and__replace_html_a03f36dd0b11d0617b77bb40e6bf79b9c"><div class="ttname"><a href="classmongocxx_1_1v__noabi_1_1options_1_1find__one__and__replace.html#a03f36dd0b11d0617b77bb40e6bf79b9c">mongocxx::v_noabi::options::find_one_and_replace::read_concern</a></div><div class="ttdeci">bsoncxx::v_noabi::stdx::optional&lt; v_noabi::read_concern &gt; const &amp; read_concern() const</div><div class="ttdoc">Gets the current read concern.</div><div class="ttdef"><b>Definition</b> find_one_and_replace.hpp:449</div></div>
+<div class="ttc" id="aclassmongocxx_1_1v__noabi_1_1options_1_1find__one__and__replace_html_a07f0ea356914375162e4b5d65e05c4ae"><div class="ttname"><a href="classmongocxx_1_1v__noabi_1_1options_1_1find__one__and__replace.html#a07f0ea356914375162e4b5d65e05c4ae">mongocxx::v_noabi::options::find_one_and_replace::upsert</a></div><div class="ttdeci">find_one_and_replace &amp; upsert(bool upsert)</div><div class="ttdoc">Sets the upsert flag on the operation. When true, the operation creates a new document if no document...</div><div class="ttdef"><b>Definition</b> find_one_and_replace.hpp:405</div></div>
+<div class="ttc" id="aclassmongocxx_1_1v__noabi_1_1options_1_1find__one__and__replace_html_a0a1d80e5ce5b28caa0b71da5b1666066"><div class="ttname"><a href="classmongocxx_1_1v__noabi_1_1options_1_1find__one__and__replace.html#a0a1d80e5ce5b28caa0b71da5b1666066">mongocxx::v_noabi::options::find_one_and_replace::return_document</a></div><div class="ttdeci">bsoncxx::v_noabi::stdx::optional&lt; v_noabi::options::return_document &gt; const &amp; return_document() const</div><div class="ttdoc">Which version of the replaced document to return.</div><div class="ttdef"><b>Definition</b> find_one_and_replace.hpp:353</div></div>
+<div class="ttc" id="aclassmongocxx_1_1v__noabi_1_1options_1_1find__one__and__replace_html_a0e866f14d29778c5c769133182677399"><div class="ttname"><a href="classmongocxx_1_1v__noabi_1_1options_1_1find__one__and__replace.html#a0e866f14d29778c5c769133182677399">mongocxx::v_noabi::options::find_one_and_replace::bypass_document_validation</a></div><div class="ttdeci">bsoncxx::v_noabi::stdx::optional&lt; bool &gt; const &amp; bypass_document_validation() const</div><div class="ttdoc">The current setting for bypassing document validation.</div><div class="ttdef"><b>Definition</b> find_one_and_replace.hpp:183</div></div>
+<div class="ttc" id="aclassmongocxx_1_1v__noabi_1_1options_1_1find__one__and__replace_html_a0fc824d98492adf86a72983f5cf46c59"><div class="ttname"><a href="classmongocxx_1_1v__noabi_1_1options_1_1find__one__and__replace.html#a0fc824d98492adf86a72983f5cf46c59">mongocxx::v_noabi::options::find_one_and_replace::sort</a></div><div class="ttdeci">find_one_and_replace &amp; sort(bsoncxx::v_noabi::document::view_or_value ordering)</div><div class="ttdoc">Sets the order by which to search the collection for a matching document.</div><div class="ttdef"><b>Definition</b> find_one_and_replace.hpp:373</div></div>
+<div class="ttc" id="aclassmongocxx_1_1v__noabi_1_1options_1_1find__one__and__replace_html_a15d9a7bae6b1e780e53a068653428520"><div class="ttname"><a href="classmongocxx_1_1v__noabi_1_1options_1_1find__one__and__replace.html#a15d9a7bae6b1e780e53a068653428520">mongocxx::v_noabi::options::find_one_and_replace::return_document</a></div><div class="ttdeci">find_one_and_replace &amp; return_document(return_document return_document)</div><div class="ttdoc">Set the desired version of the replaced document to return, either the original document,...</div><div class="ttdef"><b>Definition</b> find_one_and_replace.hpp:339</div></div>
+<div class="ttc" id="aclassmongocxx_1_1v__noabi_1_1options_1_1find__one__and__replace_html_a18c092daf70b0ad809ded99236db010a"><div class="ttname"><a href="classmongocxx_1_1v__noabi_1_1options_1_1find__one__and__replace.html#a18c092daf70b0ad809ded99236db010a">mongocxx::v_noabi::options::find_one_and_replace::comment</a></div><div class="ttdeci">bsoncxx::v_noabi::stdx::optional&lt; bsoncxx::v_noabi::types::bson_value::view_or_value &gt; const comment() const</div><div class="ttdoc">Gets the current value of the comment option.</div><div class="ttdef"><b>Definition</b> find_one_and_replace.hpp:260</div></div>
+<div class="ttc" id="aclassmongocxx_1_1v__noabi_1_1options_1_1find__one__and__replace_html_a23ae70d839c4f8ff9f4858cba99365a0"><div class="ttname"><a href="classmongocxx_1_1v__noabi_1_1options_1_1find__one__and__replace.html#a23ae70d839c4f8ff9f4858cba99365a0">mongocxx::v_noabi::options::find_one_and_replace::let</a></div><div class="ttdeci">find_one_and_replace &amp; let(bsoncxx::v_noabi::document::view_or_value let)</div><div class="ttdoc">Set the value of the let option.</div><div class="ttdef"><b>Definition</b> find_one_and_replace.hpp:224</div></div>
+<div class="ttc" id="aclassmongocxx_1_1v__noabi_1_1options_1_1find__one__and__replace_html_a3dc2984d1e2641d76f5cbaf847e90d48"><div class="ttname"><a href="classmongocxx_1_1v__noabi_1_1options_1_1find__one__and__replace.html#a3dc2984d1e2641d76f5cbaf847e90d48">mongocxx::v_noabi::options::find_one_and_replace::write_concern</a></div><div class="ttdeci">bsoncxx::v_noabi::stdx::optional&lt; v_noabi::write_concern &gt; const &amp; write_concern() const</div><div class="ttdoc">Gets the current write concern.</div><div class="ttdef"><b>Definition</b> find_one_and_replace.hpp:480</div></div>
+<div class="ttc" id="aclassmongocxx_1_1v__noabi_1_1options_1_1find__one__and__replace_html_a4a58edcdb8da9c780e9be65ed74859c6"><div class="ttname"><a href="classmongocxx_1_1v__noabi_1_1options_1_1find__one__and__replace.html#a4a58edcdb8da9c780e9be65ed74859c6">mongocxx::v_noabi::options::find_one_and_replace::comment</a></div><div class="ttdeci">find_one_and_replace &amp; comment(bsoncxx::v_noabi::types::bson_value::view_or_value comment)</div><div class="ttdoc">Set the value of the comment option.</div><div class="ttdef"><b>Definition</b> find_one_and_replace.hpp:249</div></div>
+<div class="ttc" id="aclassmongocxx_1_1v__noabi_1_1options_1_1find__one__and__replace_html_a4f70692e849bc44184dd87948796f33f"><div class="ttname"><a href="classmongocxx_1_1v__noabi_1_1options_1_1find__one__and__replace.html#a4f70692e849bc44184dd87948796f33f">mongocxx::v_noabi::options::find_one_and_replace::read_concern</a></div><div class="ttdeci">find_one_and_replace &amp; read_concern(v_noabi::read_concern read_concern)</div><div class="ttdoc">Sets the read concern for this operation.</div><div class="ttdef"><b>Definition</b> find_one_and_replace.hpp:435</div></div>
+<div class="ttc" id="aclassmongocxx_1_1v__noabi_1_1options_1_1find__one__and__replace_html_a5680db33337a323218840fd0a7098ec4"><div class="ttname"><a href="classmongocxx_1_1v__noabi_1_1options_1_1find__one__and__replace.html#a5680db33337a323218840fd0a7098ec4">mongocxx::v_noabi::options::find_one_and_replace::bypass_document_validation</a></div><div class="ttdeci">find_one_and_replace &amp; bypass_document_validation(bool bypass_document_validation)</div><div class="ttdoc">Whether or not to bypass document validation for this operation.</div><div class="ttdef"><b>Definition</b> find_one_and_replace.hpp:170</div></div>
+<div class="ttc" id="aclassmongocxx_1_1v__noabi_1_1options_1_1find__one__and__replace_html_a5b6ebb9001ccde2b2dd963ab16827b70"><div class="ttname"><a href="classmongocxx_1_1v__noabi_1_1options_1_1find__one__and__replace.html#a5b6ebb9001ccde2b2dd963ab16827b70">mongocxx::v_noabi::options::find_one_and_replace::upsert</a></div><div class="ttdeci">bsoncxx::v_noabi::stdx::optional&lt; bool &gt; const &amp; upsert() const</div><div class="ttdoc">Gets the current upsert setting.</div><div class="ttdef"><b>Definition</b> find_one_and_replace.hpp:418</div></div>
+<div class="ttc" id="aclassmongocxx_1_1v__noabi_1_1options_1_1find__one__and__replace_html_a7c3cea0110cc4f973c115b3c8a56f3cb"><div class="ttname"><a href="classmongocxx_1_1v__noabi_1_1options_1_1find__one__and__replace.html#a7c3cea0110cc4f973c115b3c8a56f3cb">mongocxx::v_noabi::options::find_one_and_replace::projection</a></div><div class="ttdeci">find_one_and_replace &amp; projection(bsoncxx::v_noabi::document::view_or_value projection)</div><div class="ttdoc">Sets a projection, which limits the fields to return.</div><div class="ttdef"><b>Definition</b> find_one_and_replace.hpp:307</div></div>
+<div class="ttc" id="aclassmongocxx_1_1v__noabi_1_1options_1_1find__one__and__replace_html_a8786466c7d5f17f53285e9663097ad86"><div class="ttname"><a href="classmongocxx_1_1v__noabi_1_1options_1_1find__one__and__replace.html#a8786466c7d5f17f53285e9663097ad86">mongocxx::v_noabi::options::find_one_and_replace::max_time</a></div><div class="ttdeci">find_one_and_replace &amp; max_time(std::chrono::milliseconds max_time)</div><div class="ttdoc">Sets the maximum amount of time for this operation to run (server-side) in milliseconds.</div><div class="ttdef"><b>Definition</b> find_one_and_replace.hpp:277</div></div>
+<div class="ttc" id="aclassmongocxx_1_1v__noabi_1_1options_1_1find__one__and__replace_html_a9df846a7b567cd50cbbe403d593d4eaa"><div class="ttname"><a href="classmongocxx_1_1v__noabi_1_1options_1_1find__one__and__replace.html#a9df846a7b567cd50cbbe403d593d4eaa">mongocxx::v_noabi::options::find_one_and_replace::sort</a></div><div class="ttdeci">bsoncxx::v_noabi::stdx::optional&lt; bsoncxx::v_noabi::document::view_or_value &gt; const &amp; sort() const</div><div class="ttdoc">Gets the current sort ordering.</div><div class="ttdef"><b>Definition</b> find_one_and_replace.hpp:386</div></div>
+<div class="ttc" id="aclassmongocxx_1_1v__noabi_1_1options_1_1find__one__and__replace_html_a9f03634105b0b5a680c0cc60cfc897a1"><div class="ttname"><a href="classmongocxx_1_1v__noabi_1_1options_1_1find__one__and__replace.html#a9f03634105b0b5a680c0cc60cfc897a1">mongocxx::v_noabi::options::find_one_and_replace::hint</a></div><div class="ttdeci">bsoncxx::v_noabi::stdx::optional&lt; v_noabi::hint &gt; const &amp; hint() const</div><div class="ttdoc">Gets the current hint.</div><div class="ttdef"><b>Definition</b> find_one_and_replace.hpp:210</div></div>
+<div class="ttc" id="aclassmongocxx_1_1v__noabi_1_1options_1_1find__one__and__replace_html_aaed556d7a3a495afdcdc9e14face4e1f"><div class="ttname"><a href="classmongocxx_1_1v__noabi_1_1options_1_1find__one__and__replace.html#aaed556d7a3a495afdcdc9e14face4e1f">mongocxx::v_noabi::options::find_one_and_replace::projection</a></div><div class="ttdeci">bsoncxx::v_noabi::stdx::optional&lt; bsoncxx::v_noabi::document::view_or_value &gt; const &amp; projection() const</div><div class="ttdoc">Gets the current projection for this operation.</div><div class="ttdef"><b>Definition</b> find_one_and_replace.hpp:320</div></div>
+<div class="ttc" id="aclassmongocxx_1_1v__noabi_1_1options_1_1find__one__and__replace_html_ab4e644cac222515b5f066ddd11e17a31"><div class="ttname"><a href="classmongocxx_1_1v__noabi_1_1options_1_1find__one__and__replace.html#ab4e644cac222515b5f066ddd11e17a31">mongocxx::v_noabi::options::find_one_and_replace::find_one_and_replace_options</a></div><div class="ttdeci">operator v1::find_one_and_replace_options() const</div><div class="ttdoc">Convert to the mongocxx::v1 equivalent.</div><div class="ttdef"><b>Definition</b> find_one_and_replace.hpp:66</div></div>
+<div class="ttc" id="aclassmongocxx_1_1v__noabi_1_1options_1_1find__one__and__replace_html_ab757c4269b31b0e702f473d244eb9b23"><div class="ttname"><a href="classmongocxx_1_1v__noabi_1_1options_1_1find__one__and__replace.html#ab757c4269b31b0e702f473d244eb9b23">mongocxx::v_noabi::options::find_one_and_replace::find_one_and_replace</a></div><div class="ttdeci">find_one_and_replace()=default</div><div class="ttdoc">Default initialization.</div></div>
+<div class="ttc" id="aclassmongocxx_1_1v__noabi_1_1options_1_1find__one__and__replace_html_ab9e6f82262dc3ab8606f0aee1f5c2a16"><div class="ttname"><a href="classmongocxx_1_1v__noabi_1_1options_1_1find__one__and__replace.html#ab9e6f82262dc3ab8606f0aee1f5c2a16">mongocxx::v_noabi::options::find_one_and_replace::collation</a></div><div class="ttdeci">find_one_and_replace &amp; collation(bsoncxx::v_noabi::document::view_or_value collation)</div><div class="ttdoc">Sets the collation for this operation.</div><div class="ttdef"><b>Definition</b> find_one_and_replace.hpp:135</div></div>
+<div class="ttc" id="aclassmongocxx_1_1v__noabi_1_1options_1_1find__one__and__replace_html_ac16b5ee269a0028cbfa6b6f173ef52d4"><div class="ttname"><a href="classmongocxx_1_1v__noabi_1_1options_1_1find__one__and__replace.html#ac16b5ee269a0028cbfa6b6f173ef52d4">mongocxx::v_noabi::options::find_one_and_replace::write_concern</a></div><div class="ttdeci">find_one_and_replace &amp; write_concern(v_noabi::write_concern write_concern)</div><div class="ttdoc">Sets the write concern for this operation.</div><div class="ttdef"><b>Definition</b> find_one_and_replace.hpp:466</div></div>
+<div class="ttc" id="aclassmongocxx_1_1v__noabi_1_1options_1_1find__one__and__replace_html_ac8ba8851d9aa0037b8fdba90e4b97bfe"><div class="ttname"><a href="classmongocxx_1_1v__noabi_1_1options_1_1find__one__and__replace.html#ac8ba8851d9aa0037b8fdba90e4b97bfe">mongocxx::v_noabi::options::find_one_and_replace::collation</a></div><div class="ttdeci">bsoncxx::v_noabi::stdx::optional&lt; bsoncxx::v_noabi::document::view_or_value &gt; const &amp; collation() const</div><div class="ttdoc">Retrieves the current collation for this operation.</div><div class="ttdef"><b>Definition</b> find_one_and_replace.hpp:149</div></div>
+<div class="ttc" id="aclassmongocxx_1_1v__noabi_1_1options_1_1find__one__and__replace_html_acd5aff0a0ede032d2e381fc190fedf05"><div class="ttname"><a href="classmongocxx_1_1v__noabi_1_1options_1_1find__one__and__replace.html#acd5aff0a0ede032d2e381fc190fedf05">mongocxx::v_noabi::options::find_one_and_replace::let</a></div><div class="ttdeci">bsoncxx::v_noabi::stdx::optional&lt; bsoncxx::v_noabi::document::view_or_value &gt; const let() const</div><div class="ttdoc">Gets the current value of the let option.</div><div class="ttdef"><b>Definition</b> find_one_and_replace.hpp:235</div></div>
+<div class="ttc" id="aclassmongocxx_1_1v__noabi_1_1options_1_1find__one__and__replace_html_ad48d7a240e07b4324d701132dd5c4ab1"><div class="ttname"><a href="classmongocxx_1_1v__noabi_1_1options_1_1find__one__and__replace.html#ad48d7a240e07b4324d701132dd5c4ab1">mongocxx::v_noabi::options::find_one_and_replace::max_time</a></div><div class="ttdeci">bsoncxx::v_noabi::stdx::optional&lt; std::chrono::milliseconds &gt; const &amp; max_time() const</div><div class="ttdoc">The current max_time setting.</div><div class="ttdef"><b>Definition</b> find_one_and_replace.hpp:290</div></div>
+<div class="ttc" id="aclassmongocxx_1_1v__noabi_1_1options_1_1find__one__and__replace_html_ae6175ffea09f9243ffca8256a02bfa90"><div class="ttname"><a href="classmongocxx_1_1v__noabi_1_1options_1_1find__one__and__replace.html#ae6175ffea09f9243ffca8256a02bfa90">mongocxx::v_noabi::options::find_one_and_replace::hint</a></div><div class="ttdeci">find_one_and_replace &amp; hint(v_noabi::hint index_hint)</div><div class="ttdoc">Sets the index to use for this operation.</div><div class="ttdef"><b>Definition</b> find_one_and_replace.hpp:200</div></div>
+<div class="ttc" id="aclassmongocxx_1_1v__noabi_1_1read__concern_html"><div class="ttname"><a href="classmongocxx_1_1v__noabi_1_1read__concern.html">mongocxx::v_noabi::read_concern</a></div><div class="ttdoc">Controls the consistency and isolation properties of data read from replica sets and sharded clusters...</div><div class="ttdef"><b>Definition</b> read_concern.hpp:54</div></div>
+<div class="ttc" id="aclassmongocxx_1_1v__noabi_1_1write__concern_html"><div class="ttname"><a href="classmongocxx_1_1v__noabi_1_1write__concern.html">mongocxx::v_noabi::write_concern</a></div><div class="ttdoc">The level of acknowledgment requested for write operations to a MongoDB server.</div><div class="ttdef"><b>Definition</b> write_concern.hpp:54</div></div>
+<div class="ttc" id="adocument_2view__or__value_8hpp_html"><div class="ttname"><a href="document_2view__or__value_8hpp.html">view_or_value.hpp</a></div><div class="ttdoc">Provides bsoncxx::v_noabi::document::view_or_value.</div></div>
+<div class="ttc" id="afind__one__and__replace-fwd_8hpp_html"><div class="ttname"><a href="find__one__and__replace-fwd_8hpp.html">find_one_and_replace-fwd.hpp</a></div><div class="ttdoc">Declares mongocxx::v_noabi::options::find_one_and_replace.</div></div>
+<div class="ttc" id="afind__one__and__replace__options_8hpp_html"><div class="ttname"><a href="find__one__and__replace__options_8hpp.html">find_one_and_replace_options.hpp</a></div><div class="ttdoc">Provides mongocxx::v1::find_one_and_replace_options.</div></div>
+<div class="ttc" id="afind__one__common__options_8hpp_html"><div class="ttname"><a href="find__one__common__options_8hpp.html">find_one_common_options.hpp</a></div><div class="ttdoc">Provides mongocxx::v_noabi::options::return_document.</div></div>
+<div class="ttc" id="amongocxx_2v__noabi_2mongocxx_2config_2config_8hpp_html_a6fe50afd475b4ab93d580599a39ebb76"><div class="ttname"><a href="mongocxx_2v__noabi_2mongocxx_2config_2config_8hpp.html#a6fe50afd475b4ab93d580599a39ebb76">MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE</a></div><div class="ttdeci">#define MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(...)</div><div class="ttdoc">Equivalent to MONGOCXX_ABI_EXPORT_UNSTABLE with MONGOCXX_ABI_CDECL.</div><div class="ttdef"><b>Definition</b> config.hpp:28</div></div>
+<div class="ttc" id="amongocxx_2v__noabi_2mongocxx_2config_2postlude_8hpp_html"><div class="ttname"><a href="mongocxx_2v__noabi_2mongocxx_2config_2postlude_8hpp.html">postlude.hpp</a></div><div class="ttdoc">The mongocxx v_noabi macro guard postlude header.</div></div>
+<div class="ttc" id="amongocxx_2v__noabi_2mongocxx_2config_2prelude_8hpp_html"><div class="ttname"><a href="mongocxx_2v__noabi_2mongocxx_2config_2prelude_8hpp.html">prelude.hpp</a></div><div class="ttdoc">The mongocxx v_noabi macro guard prelude header.</div></div>
+<div class="ttc" id="anamespacebsoncxx_1_1v__noabi_1_1document_html_a27a650a3413ace3ad63734eeca5e4e69"><div class="ttname"><a href="namespacebsoncxx_1_1v__noabi_1_1document.html#a27a650a3413ace3ad63734eeca5e4e69">bsoncxx::v_noabi::document::view_or_value</a></div><div class="ttdeci">v_noabi::view_or_value&lt; v_noabi::document::view, v_noabi::document::value &gt; view_or_value</div><div class="ttdoc">Equivalent to v_noabi::view_or_value&lt;v_noabi::document::view, v_noabi::document::value&gt;.</div><div class="ttdef"><b>Definition</b> view_or_value.hpp:30</div></div>
+<div class="ttc" id="anamespacebsoncxx_1_1v__noabi_1_1types_1_1bson__value_html_ae5540a8c52ced60054e03d9acbe92fef"><div class="ttname"><a href="namespacebsoncxx_1_1v__noabi_1_1types_1_1bson__value.html#ae5540a8c52ced60054e03d9acbe92fef">bsoncxx::v_noabi::types::bson_value::view_or_value</a></div><div class="ttdeci">v_noabi::view_or_value&lt; view, value &gt; view_or_value</div><div class="ttdoc">Equivalent to v_noabi::view_or_value&lt;view, value&gt;.</div><div class="ttdef"><b>Definition</b> view_or_value.hpp:31</div></div>
+<div class="ttc" id="anamespacebsoncxx_1_1v__noabi_html_aba368dc494264aaa3f62b4857ce4e1ce"><div class="ttname"><a href="namespacebsoncxx_1_1v__noabi.html#aba368dc494264aaa3f62b4857ce4e1ce">bsoncxx::v_noabi::to_v1</a></div><div class="ttdeci">v1::element::view to_v1(v_noabi::array::element const &amp;v)</div><div class="ttdoc">Convert to the bsoncxx::v1 equivalent of v.</div><div class="ttdef"><b>Definition</b> element.hpp:132</div></div>
+<div class="ttc" id="anamespacemongocxx_1_1v1_html"><div class="ttname"><a href="namespacemongocxx_1_1v1.html">mongocxx::v1</a></div><div class="ttdoc">Declares entities whose ABI stability is guaranteed for documented symbols.</div></div>
+<div class="ttc" id="anamespacemongocxx_1_1v__noabi_1_1options_html"><div class="ttname"><a href="namespacemongocxx_1_1v__noabi_1_1options.html">mongocxx::v_noabi::options</a></div><div class="ttdoc">Declares entities representing options to use with various commands.</div></div>
+<div class="ttc" id="anamespacemongocxx_1_1v__noabi_html"><div class="ttname"><a href="namespacemongocxx_1_1v__noabi.html">mongocxx::v_noabi</a></div><div class="ttdoc">Declares entities whose ABI stability is NOT guaranteed.</div></div>
+<div class="ttc" id="anamespacemongocxx_1_1v__noabi_html_aa0c3f10c7aacb9c68ceadfd8e884cf34"><div class="ttname"><a href="namespacemongocxx_1_1v__noabi.html#aa0c3f10c7aacb9c68ceadfd8e884cf34">mongocxx::v_noabi::to_v1</a></div><div class="ttdeci">v1::bulk_write to_v1(v_noabi::bulk_write v)</div><div class="ttdoc">Convert to the mongocxx::v1 equivalent of v.</div><div class="ttdef"><b>Definition</b> bulk_write.hpp:162</div></div>
+<div class="ttc" id="anamespacemongocxx_1_1v__noabi_html_aa4be10b29ea4a57c48818b58171a7d1e"><div class="ttname"><a href="namespacemongocxx_1_1v__noabi.html#aa4be10b29ea4a57c48818b58171a7d1e">mongocxx::v_noabi::from_v1</a></div><div class="ttdeci">v_noabi::bulk_write from_v1(v1::bulk_write v)</div><div class="ttdoc">Convert to the mongocxx::v_noabi equivalent of v.</div><div class="ttdef"><b>Definition</b> bulk_write.hpp:155</div></div>
+<div class="ttc" id="anamespacemongocxx_html"><div class="ttname"><a href="namespacemongocxx.html">mongocxx</a></div><div class="ttdoc">The top-level namespace within which all mongocxx library entities are declared.</div></div>
+<div class="ttc" id="atypes_2bson__value_2view__or__value_8hpp_html"><div class="ttname"><a href="types_2bson__value_2view__or__value_8hpp.html">view_or_value.hpp</a></div><div class="ttdoc">Provides bsoncxx::v_noabi::types::bson_value::view_or_value.</div></div>
+<div class="ttc" id="av1_2document_2value_8hpp_html"><div class="ttname"><a href="v1_2document_2value_8hpp.html">value.hpp</a></div><div class="ttdoc">Provides bsoncxx::v1::document::value.</div></div>
+<div class="ttc" id="av1_2types_2value_8hpp_html"><div class="ttname"><a href="v1_2types_2value_8hpp.html">value.hpp</a></div><div class="ttdoc">Provides bsoncxx::v1::types::value.</div></div>
+<div class="ttc" id="av__noabi_2bsoncxx_2document_2view_8hpp_html"><div class="ttname"><a href="v__noabi_2bsoncxx_2document_2view_8hpp.html">view.hpp</a></div><div class="ttdoc">Provides bsoncxx::v_noabi::document::view.</div></div>
+<div class="ttc" id="av__noabi_2bsoncxx_2stdx_2optional_8hpp_html"><div class="ttname"><a href="v__noabi_2bsoncxx_2stdx_2optional_8hpp.html">optional.hpp</a></div><div class="ttdoc">Provides std::optional-related polyfills for library API usage.</div></div>
+<div class="ttc" id="av__noabi_2bsoncxx_2types_2bson__value_2view_8hpp_html"><div class="ttname"><a href="v__noabi_2bsoncxx_2types_2bson__value_2view_8hpp.html">view.hpp</a></div><div class="ttdoc">Provides bsoncxx::v_noabi::types::bson_value::view.</div></div>
+<div class="ttc" id="av__noabi_2mongocxx_2hint_8hpp_html"><div class="ttname"><a href="v__noabi_2mongocxx_2hint_8hpp.html">hint.hpp</a></div><div class="ttdoc">Provides mongocxx::v_noabi::hint.</div></div>
+<div class="ttc" id="av__noabi_2mongocxx_2read__concern_8hpp_html"><div class="ttname"><a href="v__noabi_2mongocxx_2read__concern_8hpp.html">read_concern.hpp</a></div><div class="ttdoc">Provides mongocxx::v_noabi::read_concern.</div></div>
+<div class="ttc" id="av__noabi_2mongocxx_2write__concern_8hpp_html"><div class="ttname"><a href="v__noabi_2mongocxx_2write__concern_8hpp.html">write_concern.hpp</a></div><div class="ttdoc">Provides mongocxx::v_noabi::write_concern.</div></div>
+</div><!-- fragment --></div><!-- contents -->
+</div><!-- doc-content -->
+</div><!-- container -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a href="dir_91a8f5678cf74af486032aa453ef5c2e.html">mongocxx</a></li><li class="navelem"><a href="dir_20fe7bd1919403314c0c5ffd8abfb4e2.html">v_noabi</a></li><li class="navelem"><a href="dir_4d35c5ae879d3be4d434b5d0db378afa.html">mongocxx</a></li><li class="navelem"><a href="dir_0748ba104e038884dae1ea12b891e686.html">options</a></li><li class="navelem"><a href="find__one__and__replace_8hpp.html">find_one_and_replace.hpp</a></li>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.15.0 </li>
+  </ul>
+</div>
+</body>
+</html>

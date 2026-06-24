@@ -1,0 +1,230 @@
+<!-- HTML header for doxygen 1.15.0-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-US">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.15.0"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>MongoDB C++ Driver: mongocxx/v1/transaction_options.hpp Source File</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript">var page_layout=1;</script>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<script type="text/javascript" src="clipboard.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<script type="text/javascript" src="cookie.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/javascript">
+  $(function() { init_search(); });
+</script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+<link href="doxygen-extra.css" rel="stylesheet" type="text/css"/>
+<!-- Mixpanel Tracker -->
+<script type="text/javascript">
+  (function(e,c){if(!c.__SV){var l,h;window.mixpanel=c;c._i=[];c.init=function(q,r,f){function t(d,a){var g=a.split(".");2==g.length&&(d=d[g[0]],a=g[1]);d[a]=function(){d.push([a].concat(Array.prototype.slice.call(arguments,0)))}}var b=c;"undefined"!==typeof f?b=c[f]=[]:f="mixpanel";b.people=b.people||[];b.toString=function(d){var a="mixpanel";"mixpanel"!==f&&(a+="."+f);d||(a+=" (stub)");return a};b.people.toString=function(){return b.toString(1)+".people (stub)"};l="disable time_event track track_pageview track_links track_forms track_with_groups add_group set_group remove_group register register_once alias unregister identify name_tag set_config reset opt_in_tracking opt_out_tracking has_opted_in_tracking has_opted_out_tracking clear_opt_in_out_tracking start_batch_senders start_session_recording stop_session_recording people.set people.set_once people.unset people.increment people.append people.union people.track_charge people.clear_charges people.delete_user people.remove".split(" ");
+  for(h=0;h<l.length;h++)t(b,l[h]);var n="set set_once union unset remove delete".split(" ");b.get_group=function(){function d(p){a[p]=function(){b.push([g,[p].concat(Array.prototype.slice.call(arguments,0))])}}for(var a={},g=["get_group"].concat(Array.prototype.slice.call(arguments,0)),m=0;m<n.length;m++)d(n[m]);return a};c._i.push([q,r,f])};c.__SV=1.2;var k=e.createElement("script");k.type="text/javascript";k.async=!0;k.src="undefined"!==typeof MIXPANEL_CUSTOM_LIB_URL?MIXPANEL_CUSTOM_LIB_URL:"file:"===
+  e.location.protocol&&"//cdn.mxpnl.com/libs/mixpanel-2-latest.min.js".match(/^\/\//)?"https://cdn.mxpnl.com/libs/mixpanel-2-latest.min.js":"//cdn.mxpnl.com/libs/mixpanel-2-latest.min.js";e=e.getElementsByTagName("script")[0];e.parentNode.insertBefore(k,e)}})(document,window.mixpanel||[]); mixpanel.init('f2a38f26e5cc0eee429a9276f296c118', {
+    autocapture: true,
+    record_sessions_percent: 0,
+  })
+</script>
+<!-- patch-apidocs-current-redirects: mongocxx-4.4.0 -->
+<link rel="canonical" href="https://mongocxx.org/api/mongocxx-4.4.0/transaction__options_8hpp_source.html"/>
+<script type="text/javascript">
+if (window.location.pathname.startsWith("/api/current/")) {
+  window.location.replace(
+    window.location.href.replace("/api/current/", "/api/mongocxx-4.4.0/")
+  )
+}
+</script>
+</head>
+<body>
+<div id="side-nav" class="ui-resizable side-nav-resizable"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr id="projectrow">
+  <td id="projectalign">
+   <div id="projectname">MongoDB C++ Driver<span id="projectnumber">&#160;4.4.0</span>
+   </div>
+  </td>
+ </tr>
+   <tr><td colspan="2">        <div id="MSearchBox" class="MSearchBoxInactive">
+        <span class="left">
+          <span id="MSearchSelect" class="search-icon" onmouseover="return searchBox.OnSearchSelectShow()" onmouseout="return searchBox.OnSearchSelectHide()"><span class="search-icon-dropdown"></span></span>
+          <input type="text" id="MSearchField" value="" placeholder="Search" accesskey="S"
+               onfocus="searchBox.OnSearchFieldFocus(true)" 
+               onblur="searchBox.OnSearchFieldFocus(false)" 
+               onkeyup="searchBox.OnSearchFieldChange(event)"/>
+          </span><span class="right">
+            <a id="MSearchClose" href="javascript:searchBox.CloseResultsWindow()"><div id="MSearchCloseImg" class="close-icon"></div></a>
+          </span>
+        </div>
+</td></tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Generated by Doxygen 1.15.0 -->
+<script type="text/javascript">
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+</script>
+<script type="text/javascript">
+$(function() { codefold.init(); });
+</script>
+</div><!-- top -->
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+$(function(){initNavTree('transaction__options_8hpp_source.html','',''); });
+</script>
+<div id="container">
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Loading...</div>
+<div class="SRStatus" id="Searching">Searching...</div>
+<div class="SRStatus" id="NoMatches">No Matches</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="header">
+  <div class="headertitle"><div class="title">transaction_options.hpp</div></div>
+</div><!--header-->
+<div class="contents">
+<a href="transaction__options_8hpp.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">// Copyright 2009-present MongoDB, Inc.</span></div>
+<div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="comment">//</span></div>
+<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="comment">// Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span></div>
+<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="comment">// you may not use this file except in compliance with the License.</span></div>
+<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="comment">// You may obtain a copy of the License at</span></div>
+<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="comment">//</span></div>
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="comment">// http://www.apache.org/licenses/LICENSE-2.0</span></div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="comment">//</span></div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="comment">// Unless required by applicable law or agreed to in writing, software</span></div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="comment">// distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span></div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="comment">// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span></div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="comment">// See the License for the specific language governing permissions and</span></div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="comment">// limitations under the License.</span></div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span> </div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="preprocessor">#pragma once</span></div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span> </div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="preprocessor">#include &lt;<a class="code" href="transaction__options-fwd_8hpp.html">mongocxx/v1/transaction_options-fwd.hpp</a>&gt;</span> <span class="comment">// IWYU pragma: export</span></div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span> </div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="comment">//</span></div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span> </div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="preprocessor">#include &lt;<a class="code" href="mongocxx_2v1_2detail_2prelude_8hpp.html">mongocxx/v1/detail/prelude.hpp</a>&gt;</span></div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span> </div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="preprocessor">#include &lt;<a class="code" href="v1_2read__concern-fwd_8hpp.html">mongocxx/v1/read_concern-fwd.hpp</a>&gt;</span></div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="preprocessor">#include &lt;<a class="code" href="v1_2read__preference-fwd_8hpp.html">mongocxx/v1/read_preference-fwd.hpp</a>&gt;</span></div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="preprocessor">#include &lt;<a class="code" href="v1_2write__concern-fwd_8hpp.html">mongocxx/v1/write_concern-fwd.hpp</a>&gt;</span></div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span> </div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="preprocessor">#include &lt;<a class="code" href="v1_2stdx_2optional_8hpp.html">bsoncxx/v1/stdx/optional.hpp</a>&gt;</span></div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span> </div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="preprocessor">#include &lt;<a class="code" href="mongocxx_2v1_2config_2export_8hpp.html">mongocxx/v1/config/export.hpp</a>&gt;</span></div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span> </div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span><span class="preprocessor">#include &lt;chrono&gt;</span></div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span> </div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespacemongocxx.html">mongocxx</a> {</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespacemongocxx_1_1v1.html">v1</a> {</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span></div>
+<div class="foldopen" id="foldopen00048" data-start="{" data-end="};">
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno"><a class="line" href="classmongocxx_1_1v1_1_1transaction__options.html">   48</a></span><span class="keyword">class </span><a class="code hl_function" href="classmongocxx_1_1v1_1_1transaction__options.html#a25b43875778338b2e988a5dd0572b3f4">transaction_options</a> {</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>   <span class="keyword">private</span>:</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>    <span class="keywordtype">void</span>* _impl; <span class="comment">// mongoc_transaction_opt_t</span></div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span> </div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>   <span class="keyword">public</span>:</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno"><a class="line" href="classmongocxx_1_1v1_1_1transaction__options.html#ac861fd4772d9d1a8de017ff381577149">   58</a></span>    <a class="code hl_define" href="mongocxx_2v1_2config_2export_8hpp.html#a753ba55c7c3b23542b2ec9f00333c6ba">MONGOCXX_ABI_EXPORT_CDECL</a>() <a class="code hl_function" href="classmongocxx_1_1v1_1_1transaction__options.html#ac861fd4772d9d1a8de017ff381577149">~transaction_options</a>();</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span></div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno"><a class="line" href="classmongocxx_1_1v1_1_1transaction__options.html#a25b43875778338b2e988a5dd0572b3f4">   66</a></span>    <a class="code hl_define" href="mongocxx_2v1_2config_2export_8hpp.html#a753ba55c7c3b23542b2ec9f00333c6ba">MONGOCXX_ABI_EXPORT_CDECL</a>() <a class="code hl_function" href="classmongocxx_1_1v1_1_1transaction__options.html#a25b43875778338b2e988a5dd0572b3f4">transaction_options</a>(<a class="code hl_function" href="classmongocxx_1_1v1_1_1transaction__options.html#a25b43875778338b2e988a5dd0572b3f4">transaction_options</a>&amp;&amp; other) noexcept;</div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span></div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno"><a class="line" href="classmongocxx_1_1v1_1_1transaction__options.html#a55a74e6c622bea22ff7697d611f78c1d">   74</a></span>    <a class="code hl_define" href="mongocxx_2v1_2config_2export_8hpp.html#a753ba55c7c3b23542b2ec9f00333c6ba">MONGOCXX_ABI_EXPORT_CDECL</a>(<a class="code hl_function" href="classmongocxx_1_1v1_1_1transaction__options.html#a25b43875778338b2e988a5dd0572b3f4">transaction_options</a>&amp;) operator=(<a class="code hl_function" href="classmongocxx_1_1v1_1_1transaction__options.html#a25b43875778338b2e988a5dd0572b3f4">transaction_options</a>&amp;&amp; other) noexcept;</div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span></div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno"><a class="line" href="classmongocxx_1_1v1_1_1transaction__options.html#a69ca90b432bea596dd8853b26d1f92a0">   79</a></span>    <a class="code hl_define" href="mongocxx_2v1_2config_2export_8hpp.html#a753ba55c7c3b23542b2ec9f00333c6ba">MONGOCXX_ABI_EXPORT_CDECL</a>() <a class="code hl_function" href="classmongocxx_1_1v1_1_1transaction__options.html#a25b43875778338b2e988a5dd0572b3f4">transaction_options</a>(<a class="code hl_function" href="classmongocxx_1_1v1_1_1transaction__options.html#a25b43875778338b2e988a5dd0572b3f4">transaction_options</a> const&amp; other);</div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span></div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno"><a class="line" href="classmongocxx_1_1v1_1_1transaction__options.html#adc042197fd56fd148f0f08d2238cf346">   84</a></span>    <a class="code hl_define" href="mongocxx_2v1_2config_2export_8hpp.html#a753ba55c7c3b23542b2ec9f00333c6ba">MONGOCXX_ABI_EXPORT_CDECL</a>(<a class="code hl_function" href="classmongocxx_1_1v1_1_1transaction__options.html#a25b43875778338b2e988a5dd0572b3f4">transaction_options</a>&amp;) operator=(<a class="code hl_function" href="classmongocxx_1_1v1_1_1transaction__options.html#a25b43875778338b2e988a5dd0572b3f4">transaction_options</a> const&amp; other);</div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span></div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno"><a class="line" href="classmongocxx_1_1v1_1_1transaction__options.html#ab9e322b8ee71919e35afd182ec1898dc">   92</a></span>    <a class="code hl_define" href="mongocxx_2v1_2config_2export_8hpp.html#a753ba55c7c3b23542b2ec9f00333c6ba">MONGOCXX_ABI_EXPORT_CDECL</a>() <a class="code hl_function" href="classmongocxx_1_1v1_1_1transaction__options.html#a25b43875778338b2e988a5dd0572b3f4">transaction_options</a>();</div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span></div>
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno"><a class="line" href="classmongocxx_1_1v1_1_1transaction__options.html#a1900e01669c8860332be6bd219b04d2e">   99</a></span>    <a class="code hl_define" href="mongocxx_2v1_2config_2export_8hpp.html#a753ba55c7c3b23542b2ec9f00333c6ba">MONGOCXX_ABI_EXPORT_CDECL</a>(<a class="code hl_function" href="classmongocxx_1_1v1_1_1transaction__options.html#a25b43875778338b2e988a5dd0572b3f4">transaction_options</a>&amp;) <a class="code hl_function" href="classmongocxx_1_1v1_1_1transaction__options.html#a1900e01669c8860332be6bd219b04d2e">max_commit_time_ms</a>(std::chrono::milliseconds v);</div>
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span></div>
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno"><a class="line" href="classmongocxx_1_1v1_1_1transaction__options.html#ae4d5b4fa4bb168aa94658badbaee395b">  106</a></span>    <a class="code hl_define" href="mongocxx_2v1_2config_2export_8hpp.html#a753ba55c7c3b23542b2ec9f00333c6ba">MONGOCXX_ABI_EXPORT_CDECL</a>(<a class="code hl_namespace" href="namespacebsoncxx.html">bsoncxx</a>::<a class="code hl_namespace" href="namespacemongocxx_1_1v1.html">v1</a>::stdx::optional&lt;std::chrono::milliseconds&gt;) <a class="code hl_function" href="classmongocxx_1_1v1_1_1transaction__options.html#a1900e01669c8860332be6bd219b04d2e">max_commit_time_ms</a>() const;</div>
+<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span></div>
+<div class="line"><a id="l00111" name="l00111"></a><span class="lineno"><a class="line" href="classmongocxx_1_1v1_1_1transaction__options.html#a885b61ffad99455b9c7ec460c32d2257">  111</a></span>    <a class="code hl_define" href="mongocxx_2v1_2config_2export_8hpp.html#a753ba55c7c3b23542b2ec9f00333c6ba">MONGOCXX_ABI_EXPORT_CDECL</a>(<a class="code hl_function" href="classmongocxx_1_1v1_1_1transaction__options.html#a25b43875778338b2e988a5dd0572b3f4">transaction_options</a>&amp;) <a class="code hl_function" href="classmongocxx_1_1v1_1_1transaction__options.html#a885b61ffad99455b9c7ec460c32d2257">read_concern</a>(<a class="code hl_namespace" href="namespacemongocxx_1_1v1.html">v1</a>::<a class="code hl_function" href="classmongocxx_1_1v1_1_1transaction__options.html#a885b61ffad99455b9c7ec460c32d2257">read_concern</a> const&amp; v);</div>
+<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span></div>
+<div class="line"><a id="l00116" name="l00116"></a><span class="lineno"><a class="line" href="classmongocxx_1_1v1_1_1transaction__options.html#ae2770d20775a26a3ba92cc3dac5a25c5">  116</a></span>    <a class="code hl_define" href="mongocxx_2v1_2config_2export_8hpp.html#a753ba55c7c3b23542b2ec9f00333c6ba">MONGOCXX_ABI_EXPORT_CDECL</a>(<a class="code hl_namespace" href="namespacebsoncxx.html">bsoncxx</a>::<a class="code hl_namespace" href="namespacemongocxx_1_1v1.html">v1</a>::stdx::optional&lt;<a class="code hl_namespace" href="namespacemongocxx_1_1v1.html">v1</a>::<a class="code hl_function" href="classmongocxx_1_1v1_1_1transaction__options.html#a885b61ffad99455b9c7ec460c32d2257">read_concern</a>&gt;) <a class="code hl_function" href="classmongocxx_1_1v1_1_1transaction__options.html#a885b61ffad99455b9c7ec460c32d2257">read_concern</a>() const;</div>
+<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span></div>
+<div class="line"><a id="l00121" name="l00121"></a><span class="lineno"><a class="line" href="classmongocxx_1_1v1_1_1transaction__options.html#a16ced78c592b2b3c6f23a14754c20def">  121</a></span>    <a class="code hl_define" href="mongocxx_2v1_2config_2export_8hpp.html#a753ba55c7c3b23542b2ec9f00333c6ba">MONGOCXX_ABI_EXPORT_CDECL</a>(<a class="code hl_function" href="classmongocxx_1_1v1_1_1transaction__options.html#a25b43875778338b2e988a5dd0572b3f4">transaction_options</a>&amp;) <a class="code hl_function" href="classmongocxx_1_1v1_1_1transaction__options.html#a16ced78c592b2b3c6f23a14754c20def">read_preference</a>(<a class="code hl_namespace" href="namespacemongocxx_1_1v1.html">v1</a>::<a class="code hl_function" href="classmongocxx_1_1v1_1_1transaction__options.html#a16ced78c592b2b3c6f23a14754c20def">read_preference</a> const&amp; v);</div>
+<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span></div>
+<div class="line"><a id="l00126" name="l00126"></a><span class="lineno"><a class="line" href="classmongocxx_1_1v1_1_1transaction__options.html#ac2b8cd5ddb72f102aa3b0c5ef3a08dc2">  126</a></span>    <a class="code hl_define" href="mongocxx_2v1_2config_2export_8hpp.html#a753ba55c7c3b23542b2ec9f00333c6ba">MONGOCXX_ABI_EXPORT_CDECL</a>(<a class="code hl_namespace" href="namespacebsoncxx.html">bsoncxx</a>::<a class="code hl_namespace" href="namespacemongocxx_1_1v1.html">v1</a>::stdx::optional&lt;<a class="code hl_namespace" href="namespacemongocxx_1_1v1.html">v1</a>::<a class="code hl_function" href="classmongocxx_1_1v1_1_1transaction__options.html#a16ced78c592b2b3c6f23a14754c20def">read_preference</a>&gt;) <a class="code hl_function" href="classmongocxx_1_1v1_1_1transaction__options.html#a16ced78c592b2b3c6f23a14754c20def">read_preference</a>() const;</div>
+<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span></div>
+<div class="line"><a id="l00131" name="l00131"></a><span class="lineno"><a class="line" href="classmongocxx_1_1v1_1_1transaction__options.html#a9dd11476baa1a0c86df02454cb9d6d6b">  131</a></span>    <a class="code hl_define" href="mongocxx_2v1_2config_2export_8hpp.html#a753ba55c7c3b23542b2ec9f00333c6ba">MONGOCXX_ABI_EXPORT_CDECL</a>(<a class="code hl_function" href="classmongocxx_1_1v1_1_1transaction__options.html#a25b43875778338b2e988a5dd0572b3f4">transaction_options</a>&amp;) <a class="code hl_function" href="classmongocxx_1_1v1_1_1transaction__options.html#a9dd11476baa1a0c86df02454cb9d6d6b">write_concern</a>(<a class="code hl_namespace" href="namespacemongocxx_1_1v1.html">v1</a>::<a class="code hl_function" href="classmongocxx_1_1v1_1_1transaction__options.html#a9dd11476baa1a0c86df02454cb9d6d6b">write_concern</a> const&amp; v);</div>
+<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span></div>
+<div class="line"><a id="l00136" name="l00136"></a><span class="lineno"><a class="line" href="classmongocxx_1_1v1_1_1transaction__options.html#ac23b4c09fd746e89ec16dc0c00e2fa21">  136</a></span>    <a class="code hl_define" href="mongocxx_2v1_2config_2export_8hpp.html#a753ba55c7c3b23542b2ec9f00333c6ba">MONGOCXX_ABI_EXPORT_CDECL</a>(<a class="code hl_namespace" href="namespacebsoncxx.html">bsoncxx</a>::<a class="code hl_namespace" href="namespacemongocxx_1_1v1.html">v1</a>::stdx::optional&lt;<a class="code hl_namespace" href="namespacemongocxx_1_1v1.html">v1</a>::<a class="code hl_function" href="classmongocxx_1_1v1_1_1transaction__options.html#a9dd11476baa1a0c86df02454cb9d6d6b">write_concern</a>&gt;) <a class="code hl_function" href="classmongocxx_1_1v1_1_1transaction__options.html#a9dd11476baa1a0c86df02454cb9d6d6b">write_concern</a>() const;</div>
+<div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span> </div>
+<div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span>    class internal;</div>
+<div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span> </div>
+<div class="line"><a id="l00140" name="l00140"></a><span class="lineno">  140</span>   private:</div>
+<div class="line"><a id="l00141" name="l00141"></a><span class="lineno">  141</span>    <span class="comment">/* explicit(false) */</span> <a class="code hl_function" href="classmongocxx_1_1v1_1_1transaction__options.html#a25b43875778338b2e988a5dd0572b3f4">transaction_options</a>(<span class="keywordtype">void</span>* impl);</div>
+<div class="line"><a id="l00142" name="l00142"></a><span class="lineno">  142</span>};</div>
+</div>
+<div class="line"><a id="l00143" name="l00143"></a><span class="lineno">  143</span> </div>
+<div class="line"><a id="l00144" name="l00144"></a><span class="lineno">  144</span>} <span class="comment">// namespace v1</span></div>
+<div class="line"><a id="l00145" name="l00145"></a><span class="lineno">  145</span>} <span class="comment">// namespace mongocxx</span></div>
+<div class="line"><a id="l00146" name="l00146"></a><span class="lineno">  146</span> </div>
+<div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span><span class="preprocessor">#include &lt;mongocxx/v1/detail/postlude.hpp&gt;</span></div>
+<div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span></div>
+<div class="ttc" id="aclassmongocxx_1_1v1_1_1transaction__options_html_a16ced78c592b2b3c6f23a14754c20def"><div class="ttname"><a href="classmongocxx_1_1v1_1_1transaction__options.html#a16ced78c592b2b3c6f23a14754c20def">mongocxx::v1::transaction_options::read_preference</a></div><div class="ttdeci">transaction_options &amp; read_preference(v1::read_preference const &amp;v)</div><div class="ttdoc">Set the &quot;readPreference&quot; field.</div></div>
+<div class="ttc" id="aclassmongocxx_1_1v1_1_1transaction__options_html_a1900e01669c8860332be6bd219b04d2e"><div class="ttname"><a href="classmongocxx_1_1v1_1_1transaction__options.html#a1900e01669c8860332be6bd219b04d2e">mongocxx::v1::transaction_options::max_commit_time_ms</a></div><div class="ttdeci">transaction_options &amp; max_commit_time_ms(std::chrono::milliseconds v)</div><div class="ttdoc">Set the &quot;maxCommitTimeMS&quot; field.</div></div>
+<div class="ttc" id="aclassmongocxx_1_1v1_1_1transaction__options_html_a25b43875778338b2e988a5dd0572b3f4"><div class="ttname"><a href="classmongocxx_1_1v1_1_1transaction__options.html#a25b43875778338b2e988a5dd0572b3f4">mongocxx::v1::transaction_options::transaction_options</a></div><div class="ttdeci">transaction_options(transaction_options &amp;&amp;other) noexcept</div><div class="ttdoc">Move constructor.</div></div>
+<div class="ttc" id="aclassmongocxx_1_1v1_1_1transaction__options_html_a885b61ffad99455b9c7ec460c32d2257"><div class="ttname"><a href="classmongocxx_1_1v1_1_1transaction__options.html#a885b61ffad99455b9c7ec460c32d2257">mongocxx::v1::transaction_options::read_concern</a></div><div class="ttdeci">transaction_options &amp; read_concern(v1::read_concern const &amp;v)</div><div class="ttdoc">Set the &quot;readConcern&quot; field.</div></div>
+<div class="ttc" id="aclassmongocxx_1_1v1_1_1transaction__options_html_a9dd11476baa1a0c86df02454cb9d6d6b"><div class="ttname"><a href="classmongocxx_1_1v1_1_1transaction__options.html#a9dd11476baa1a0c86df02454cb9d6d6b">mongocxx::v1::transaction_options::write_concern</a></div><div class="ttdeci">transaction_options &amp; write_concern(v1::write_concern const &amp;v)</div><div class="ttdoc">Set the &quot;writeConcern&quot; field.</div></div>
+<div class="ttc" id="aclassmongocxx_1_1v1_1_1transaction__options_html_ac861fd4772d9d1a8de017ff381577149"><div class="ttname"><a href="classmongocxx_1_1v1_1_1transaction__options.html#ac861fd4772d9d1a8de017ff381577149">mongocxx::v1::transaction_options::~transaction_options</a></div><div class="ttdeci">~transaction_options()</div><div class="ttdoc">Destroy this object.</div></div>
+<div class="ttc" id="amongocxx_2v1_2config_2export_8hpp_html"><div class="ttname"><a href="mongocxx_2v1_2config_2export_8hpp.html">export.hpp</a></div><div class="ttdoc">Provides macros to control the set of symbols exported in the ABI.</div></div>
+<div class="ttc" id="amongocxx_2v1_2config_2export_8hpp_html_a753ba55c7c3b23542b2ec9f00333c6ba"><div class="ttname"><a href="mongocxx_2v1_2config_2export_8hpp.html#a753ba55c7c3b23542b2ec9f00333c6ba">MONGOCXX_ABI_EXPORT_CDECL</a></div><div class="ttdeci">#define MONGOCXX_ABI_EXPORT_CDECL(...)</div><div class="ttdoc">Equivalent to MONGOCXX_ABI_EXPORT with MONGOCXX_ABI_CDECL.</div><div class="ttdef"><b>Definition</b> export.hpp:52</div></div>
+<div class="ttc" id="amongocxx_2v1_2detail_2prelude_8hpp_html"><div class="ttname"><a href="mongocxx_2v1_2detail_2prelude_8hpp.html">prelude.hpp</a></div><div class="ttdoc">The mongocxx v1 macro guard prelude header.</div></div>
+<div class="ttc" id="anamespacebsoncxx_html"><div class="ttname"><a href="namespacebsoncxx.html">bsoncxx</a></div><div class="ttdoc">The top-level namespace within which all bsoncxx library entities are declared.</div></div>
+<div class="ttc" id="anamespacemongocxx_1_1v1_html"><div class="ttname"><a href="namespacemongocxx_1_1v1.html">mongocxx::v1</a></div><div class="ttdoc">Declares entities whose ABI stability is guaranteed for documented symbols.</div></div>
+<div class="ttc" id="anamespacemongocxx_html"><div class="ttname"><a href="namespacemongocxx.html">mongocxx</a></div><div class="ttdoc">The top-level namespace within which all mongocxx library entities are declared.</div></div>
+<div class="ttc" id="atransaction__options-fwd_8hpp_html"><div class="ttname"><a href="transaction__options-fwd_8hpp.html">transaction_options-fwd.hpp</a></div><div class="ttdoc">Declares mongocxx::v1::transaction_options.</div></div>
+<div class="ttc" id="av1_2read__concern-fwd_8hpp_html"><div class="ttname"><a href="v1_2read__concern-fwd_8hpp.html">read_concern-fwd.hpp</a></div><div class="ttdoc">Declares mongocxx::v1::read_concern.</div></div>
+<div class="ttc" id="av1_2read__preference-fwd_8hpp_html"><div class="ttname"><a href="v1_2read__preference-fwd_8hpp.html">read_preference-fwd.hpp</a></div><div class="ttdoc">Declares mongocxx::v1::read_preference.</div></div>
+<div class="ttc" id="av1_2stdx_2optional_8hpp_html"><div class="ttname"><a href="v1_2stdx_2optional_8hpp.html">optional.hpp</a></div><div class="ttdoc">Provides std::optional-related polyfills for library API usage.</div></div>
+<div class="ttc" id="av1_2write__concern-fwd_8hpp_html"><div class="ttname"><a href="v1_2write__concern-fwd_8hpp.html">write_concern-fwd.hpp</a></div><div class="ttdoc">Declares mongocxx::v1::write_concern.</div></div>
+</div><!-- fragment --></div><!-- contents -->
+</div><!-- doc-content -->
+</div><!-- container -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a href="dir_91a8f5678cf74af486032aa453ef5c2e.html">mongocxx</a></li><li class="navelem"><a href="dir_f4020fe3fe50540feaa0641bb256a47f.html">v1</a></li><li class="navelem"><a href="transaction__options_8hpp.html">transaction_options.hpp</a></li>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.15.0 </li>
+  </ul>
+</div>
+</body>
+</html>
