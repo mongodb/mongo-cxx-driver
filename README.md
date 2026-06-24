@@ -28,8 +28,8 @@ git clone -b releases/stable https://github.com/mongodb/mongo-cxx-driver.git
 | Version     | ABI Stability   | Development Stability       | Development Status |
 | :---------: | :-------------: | :-------------------------: | :----------------: |
 | master      | N/A             | _Do not use in production!_ | Active             |
-| 4.3.1       | None            | Ready for Use               | Bug Fixes Only     |
-| 4.3.0       | None            | Ready for Use               | Not Supported      |
+| 4.4.0       | v1              | Ready for Use               | Bug Fixes Only     |
+| 4.3.1       | None            | Ready for Use               | Not Supported      |
 | ...         | ...             | ...                         | ...                |
 | 4.0.0       | None            | Ready for Use               | Not Supported      |
 | 3.11.1      | None            | Ready for Use               | Not Supported      |
