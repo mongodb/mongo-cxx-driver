@@ -35,8 +35,8 @@ elseif(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
     # https://en.wikipedia.org/wiki/Microsoft_Visual_C%2B%2B#Internal_version_numbering
     # https://learn.microsoft.com/en-us/cpp/overview/compiler-versions
     # https://learn.microsoft.com/en-us/cpp/overview/visual-cpp-language-conformance
-    if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS "19.10.25017")
-        message(FATAL_ERROR "Visual Studio 2017 version 15.0 or newer is required")
+    if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS "19.16.27023")
+        message(FATAL_ERROR "Visual Studio 2017 version 15.9 or newer is required")
     endif()
 elseif(CMAKE_CXX_COMPILER_ID STREQUAL "AppleClang")
     # https://developer.apple.com/xcode/cpp/

@@ -11,7 +11,7 @@ Changes prior to 3.9.0 are documented as [release notes on GitHub](https://githu
 
 ### Removed
 
-- Support for Visual Studio 2015 (EOL since Oct 2025). Use Visual Studio 2017 or newer.
+- Support for Visual Studio 2015 (EOL since Oct 2025). Use Visual Studio 2017 15.9 (MSVC 19.16.27023) or newer.
 
 ## 4.4.0
 
