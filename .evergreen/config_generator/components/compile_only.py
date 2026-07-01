@@ -36,7 +36,6 @@ MATRIX = [
     ('debian12-latest', 'gcc',    [11, 17, 20, 23]), # GCC 12.2 (max: C++23)
     ('ubuntu2404',      'gcc-13', [11, 17, 20, 23]), # GCC 13.3 (max: C++23)
 
-    ('windows-vsCurrent', 'vs2015x64', [11, 14,             'latest']), # Max: C++14
     ('windows-vsCurrent', 'vs2017x64', [11, 14, 17, 20,     'latest']), # Max: C++20
     ('windows-vsCurrent', 'vs2019x64', [11, 14, 17, 20, 23, 'latest']), # Max: C++23
     ('windows-vsCurrent', 'vs2022x64', [11, 14, 17, 20, 23, 'latest']), # Max: C++23
