@@ -365,12 +365,7 @@ using invoke_result_t = decltype(invoke(std::declval<F>(), std::declval<Args>().
 // @tparam F A invocable: A function pointer or callable object, or a member pointer
 // @tparam Args The arguments to match against
 template <typename F, typename... Args>
-#if defined(_MSC_VER) && _MSC_VER < 1910
-using is_invocable = is_detected<invoke_result_t, F, Args...>;
-#else
-struct is_invocable : is_detected<invoke_result_t, F, Args...> {
-};
-#endif
+struct is_invocable : is_detected<invoke_result_t, F, Args...> {};
 
 // Trait detects whether the given types are the same after the removal of top-level CV-ref
 // qualifiers
