@@ -19,7 +19,7 @@ Vcs-Browser: https://github.com/mongodb/mongo-cxx-driver/tree/master
 Package: libmongocxx-dev
 Section: libdevel
 Architecture: any
-Depends: libmongocxx-noabi (= ${binary:Version}),
+Depends: libmongocxx1-1 (= ${binary:Version}),
          libbsoncxx-dev (= ${binary:Version}),
          libssl-dev,
          zlib1g-dev,
@@ -33,7 +33,7 @@ Description: MongoDB C++ client library - dev files
  This package contains all files necessary to develop applications which
  use libmongocxx.
 
-Package: libmongocxx-noabi
+Package: libmongocxx1-1
 Architecture: any
 Depends: ${misc:Depends},
          ${shlibs:Depends}
@@ -57,7 +57,7 @@ Description: MongoDB C++ client library - documentation
 Package: libbsoncxx-dev
 Section: libdevel
 Architecture: any
-Depends: libbsoncxx-noabi (= ${binary:Version}),
+Depends: libbsoncxx1-1 (= ${binary:Version}),
          ${misc:Depends}
 Description: Library to parse and generate BSON documents - dev files
  libbsoncxx parses and generates BSON documents, the data format for
@@ -68,7 +68,7 @@ Description: Library to parse and generate BSON documents - dev files
  This package contains all files necessary to develop applications which
  use libbsoncxx.
 
-Package: libbsoncxx-noabi
+Package: libbsoncxx1-1
 Architecture: any
 Depends: ${misc:Depends},
          ${shlibs:Depends}

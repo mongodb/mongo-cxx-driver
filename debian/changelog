@@ -1,8 +1,9 @@
-mongo-cxx-driver (4.1.4-2) UNRELEASED; urgency=medium
+mongo-cxx-driver (4.4.0-1) UNRELEASED; urgency=medium
 
+  * New upstream release
   * d/patches/0002_fix_api_docs_generation.patch: dropped, included upstream
 
- -- Roberto C. Sanchez <roberto@connexer.com>  Thu, 09 Oct 2025 15:54:03 -0400
+ -- Roberto C. Sanchez <roberto@connexer.com>  Thu, 02 Jul 2026 15:32:31 -0400
 
 mongo-cxx-driver (4.1.4-1) experimental; urgency=medium
 

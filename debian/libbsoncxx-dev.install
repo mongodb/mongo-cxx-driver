@@ -1,4 +1,4 @@
-usr/include/bsoncxx*
+usr/include/bsoncxx/v1/*
 usr/lib/*/libbsoncxx*.so
 usr/lib/*/pkgconfig/libbsoncxx*
 usr/lib/*/cmake/*bsoncxx*

@@ -1,0 +1,6 @@
+# Chosen not to maintain a symbols file, we'll check ABI stability with other
+# tools.
+libbsoncxx1-1: no-symbols-control-file
+
+# False positive on the spelling error
+libbsoncxx1-1: spelling-error-in-binary ment meant [usr/lib/x86_64-linux-gnu/libbsoncxx1.so.4.4.0]
