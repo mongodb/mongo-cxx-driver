@@ -122,18 +122,6 @@ struct detection<true> {
     using f = Oper<Args...>;
 };
 
-// Workaround: MSVC 14.0 forgets whether a type resulting from the evaluation
-// of a template-template parameter to an alias template is a reference.
-template <typename Dflt, typename Void, template <class...> class Oper, typename... Args>
-struct vc140_detection {
-    using type = Dflt;
-};
-
-template <typename Dflt, template <class...> class Oper, typename... Args>
-struct vc140_detection<Dflt, void_t<Oper<Args...>>, Oper, Args...> {
-    using type = Oper<Args...>;
-};
-
 } // namespace impl_detection
 
 // The type yielded by detected_t if the given type operator does not yield a type.
@@ -158,12 +146,7 @@ struct is_detected : decltype(impl_detection::is_detected_f<Oper>(static_cast<mp
 // @tparam Args The arguments to give to the Oper metafunction
 template <typename Dflt, template <class...> class Oper, typename... Args>
 using detected_or =
-#if defined(_MSC_VER) && _MSC_VER < 1910
-    typename impl_detection::vc140_detection<Dflt, void, Oper, Args...>::type
-#else
-    typename impl_detection::detection<is_detected<Oper, Args...>::value>::template f<Dflt, Oper, Args...>
-#endif
-    ;
+    typename impl_detection::detection<is_detected<Oper, Args...>::value>::template f<Dflt, Oper, Args...>;
 
 // If Oper<Args...> evaluates to a type, yields that type. Otherwise, yields the sentinel type
 // `nonesuch`.
