@@ -44,10 +44,10 @@ using bsoncxx::v1::stdx::in_place;
 using bsoncxx::v1::stdx::nullopt;
 using bsoncxx::v1::stdx::optional;
 
-#if defined(_MSC_VER) && _MSC_VER < 1910 || defined(__apple_build_version__)
+#if defined(__apple_build_version__)
 /// ! Prior to LWG 2543, uttering the name of an invalid std::hash is ill-formed.
-/// ! This is fixed in C++11, but MSVC 2015 (19.00) and old AppleClang libc++ don't
-/// !have the fix. As such, one cannot detect whether a type is hashable.
+/// ! This is fixed in C++11, but old AppleClang libc++ doesn't have the fix.
+/// ! As such, one cannot detect whether a type is hashable.
 #define NO_LWG_2543
 #endif
 
