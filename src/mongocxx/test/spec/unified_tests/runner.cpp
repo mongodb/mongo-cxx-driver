@@ -824,11 +824,21 @@ std::vector<document::view> array_elements_to_documents(array::view array) {
     return docs;
 }
 
+mongocxx::client get_internal_client() {
+    auto uri0 = mongocxx::uri{"mongodb://localhost:27017"};
+    if (auto const* oidc_user = std::getenv("OIDC_ADMIN_USER")) {
+        auto const* oidc_pwd = std::getenv("OIDC_ADMIN_PWD");
+        REQUIRE(oidc_pwd);
+        // The OIDC test server requires auth. For test setup, use username/password.
+        uri0 = mongocxx::uri{"mongodb://" + std::string(oidc_user) + ":" + std::string(oidc_pwd) + "@localhost:27017"};
+    }
+    return mongocxx::client{uri0, test_util::add_test_server_api()};
+}
+
 void add_data_to_collection(array::element const& data) {
     auto const db_name = data["databaseName"].get_string().value;
-    auto& map = get_entity_map();
-    auto& db = map.get_database_by_name(db_name);
-    auto insert_opts = mongocxx::options::insert();
+    auto client = get_internal_client();
+    auto db = client.database(db_name);
 
     auto wc = write_concern{};
     wc.acknowledge_level(write_concern::level::k_majority);
@@ -1112,7 +1122,8 @@ void assert_outcome(array::element const& test) {
         auto const coll_name = outcome["collectionName"].get_string().value;
         auto const docs = outcome["documents"].get_array().value;
 
-        auto const db = get_entity_map().get_database_by_name(db_name);
+        auto client = get_internal_client();
+        auto db = client.database(db_name);
         auto coll = db.collection(coll_name);
 
         struct coll_state_guard_type {
